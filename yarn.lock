@@ -35,7 +35,7 @@
   resolved "https://registry.npmjs.org/@babel/compat-data/-/compat-data-7.24.9.tgz"
   integrity sha512-e701mcfApCJqMMueQI0Fb68Amflj83+dvAvHawoBpAz+GDjCIyGHzNwnefjsWJ3xiYAqqiQFoWbspGYBdb2/ng==
 
-"@babel/core@7.4.3", "@babel/core@^7.1.0", "@babel/core@^7.1.6":
+"@babel/core@7.4.3":
   version "7.4.3"
   resolved "https://registry.npmjs.org/@babel/core/-/core-7.4.3.tgz"
   integrity sha512-oDpASqKFlbspQfzAE7yaeTmdljSH2ADIvBlb0RwbStltTuWa0+7CCI1fYVINNv9saHPa1W7oaKeuNuKj+RQCvA==
@@ -77,7 +77,7 @@
     semver "^5.4.1"
     source-map "^0.5.0"
 
-"@babel/core@^7.4.5":
+"@babel/core@^7.1.0", "@babel/core@^7.1.6", "@babel/core@^7.4.5":
   version "7.24.9"
   resolved "https://registry.npmjs.org/@babel/core/-/core-7.24.9.tgz"
   integrity sha512-5e3FI4Q3M3Pbr21+5xJwCv6ZT6KmGkI0vw3Tozy5ODAQFTIWe37iT8Cr7Ice2Ntb+M3iSKCEWMB1MBgKrW3whg==
@@ -1359,19 +1359,19 @@
 
 "@emotion/is-prop-valid@1.2.2":
   version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@emotion/is-prop-valid/-/is-prop-valid-1.2.2.tgz#d4175076679c6a26faa92b03bb786f9e52612337"
+  resolved "https://registry.npmjs.org/@emotion/is-prop-valid/-/is-prop-valid-1.2.2.tgz"
   integrity sha512-uNsoYd37AFmaCdXlg6EYD1KaPOaRWRByMCYzbKUX4+hhMfrxdVSelShywL4JVaAeM/eHUOSprYBQls+/neX3pw==
   dependencies:
     "@emotion/memoize" "^0.8.1"
 
 "@emotion/memoize@^0.8.1":
   version "0.8.1"
-  resolved "https://registry.yarnpkg.com/@emotion/memoize/-/memoize-0.8.1.tgz#c1ddb040429c6d21d38cc945fe75c818cfb68e17"
+  resolved "https://registry.npmjs.org/@emotion/memoize/-/memoize-0.8.1.tgz"
   integrity sha512-W2P2c/VRW1/1tLox0mVUalvnWXxavmv/Oum2aPsRcoDJuob75FC3Y8FbpfLwUegRcxINtGUMPq0tFCvYNTBXNA==
 
 "@emotion/unitless@0.8.1":
   version "0.8.1"
-  resolved "https://registry.yarnpkg.com/@emotion/unitless/-/unitless-0.8.1.tgz#182b5a4704ef8ad91bde93f7a860a88fd92c79a3"
+  resolved "https://registry.npmjs.org/@emotion/unitless/-/unitless-0.8.1.tgz"
   integrity sha512-KOEGMu6dmJZtpadb476IsZBclKvILjopjUii3V+7MnXIQCYh8W3NgNcgwo21n9LXZX6EDIKvqfjYxXebDwxKmQ==
 
 "@hapi/address@2.x.x":
@@ -1627,7 +1627,7 @@
 
 "@remix-run/router@1.18.0":
   version "1.18.0"
-  resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.18.0.tgz#20b033d1f542a100c1d57cfd18ecf442d1784732"
+  resolved "https://registry.npmjs.org/@remix-run/router/-/router-1.18.0.tgz"
   integrity sha512-L3jkqmqoSVBVKHfpGZmLrex0lxR5SucGA0sUfFzGctehw+S/ggL9L/0NnC5mw6P8HUWpFZ3nQw3cRApjjWx9Sw==
 
 "@sinclair/typebox@^0.27.8":
@@ -1905,7 +1905,7 @@
 
 "@types/stylis@4.2.5":
   version "4.2.5"
-  resolved "https://registry.yarnpkg.com/@types/stylis/-/stylis-4.2.5.tgz#1daa6456f40959d06157698a653a9ab0a70281df"
+  resolved "https://registry.npmjs.org/@types/stylis/-/stylis-4.2.5.tgz"
   integrity sha512-1Xve+NMN7FWjY14vLoY5tL3BVEQ/n42YLwaqJIPYhotZ9uBHt87VceMwWQpzmdEt2TNXIorIFG+YeCUUW7RInw==
 
 "@types/testing-library__jest-dom@^5.9.1":
@@ -3057,7 +3057,7 @@ camelcase@^5.0.0, camelcase@^5.2.0, camelcase@^5.3.1:
 
 camelize@^1.0.0:
   version "1.0.1"
-  resolved "https://registry.yarnpkg.com/camelize/-/camelize-1.0.1.tgz#89b7e16884056331a35d6b5ad064332c91daa6c3"
+  resolved "https://registry.npmjs.org/camelize/-/camelize-1.0.1.tgz"
   integrity sha512-dU+Tx2fsypxTgtLoE36npi3UqcjSSMNYfkqgmoEhtZrraP5VWq0K7FkWVTYa8eMPtnU/G2txVsfdCJTn9uzpuQ==
 
 caniuse-api@^3.0.0:
@@ -3592,7 +3592,7 @@ css-blank-pseudo@^0.1.4:
 
 css-color-keywords@^1.0.0:
   version "1.0.0"
-  resolved "https://registry.yarnpkg.com/css-color-keywords/-/css-color-keywords-1.0.0.tgz#fea2616dc676b2962686b3af8dbdbe180b244e05"
+  resolved "https://registry.npmjs.org/css-color-keywords/-/css-color-keywords-1.0.0.tgz"
   integrity sha512-FyyrDHZKEjXDpNJYvVsV960FiqQyXc/LlYmsxl2BcdMb2WPx0OGRVgTg55rPSyLSNMqP52R9r8geSp7apN3Ofg==
 
 css-color-names@0.0.4, css-color-names@^0.0.4:
@@ -3668,7 +3668,7 @@ css-select@^4.1.3:
 
 css-to-react-native@3.2.0:
   version "3.2.0"
-  resolved "https://registry.yarnpkg.com/css-to-react-native/-/css-to-react-native-3.2.0.tgz#cdd8099f71024e149e4f6fe17a7d46ecd55f1e32"
+  resolved "https://registry.npmjs.org/css-to-react-native/-/css-to-react-native-3.2.0.tgz"
   integrity sha512-e8RKaLXMOFii+02mOlqwjbD00KSEKqblnpO9e++1aXS1fPQOpS1YoqdVHBqPjHNoxeF2mimzVqawm2KCbEdtHQ==
   dependencies:
     camelize "^1.0.0"
@@ -6721,7 +6721,7 @@ jest@24.7.1:
 
 jotai@^2.9.1:
   version "2.9.1"
-  resolved "https://registry.yarnpkg.com/jotai/-/jotai-2.9.1.tgz#f32dd16fc16b7b32d940a3a8d452eddfcb16218c"
+  resolved "https://registry.npmjs.org/jotai/-/jotai-2.9.1.tgz"
   integrity sha512-t4Q7FIqQB3N/1art4OcqdlEtPmQ2h4DNIzTFhvt06WE0kCpQ1QoG+1A1IGTaQBi2KdDRsnywj+ojmHHKgw6PDA==
 
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
@@ -7478,7 +7478,7 @@ nan@^2.12.1:
 
 nanoid@^3.3.7:
   version "3.3.7"
-  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.7.tgz#d0c301a691bc8d54efa0a2226ccf3fe2fd656bd8"
+  resolved "https://registry.npmjs.org/nanoid/-/nanoid-3.3.7.tgz"
   integrity sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==
 
 nanomatch@^1.2.9:
@@ -8811,7 +8811,7 @@ postcss-values-parser@^2.0.0, postcss-values-parser@^2.0.1:
 
 postcss@8.4.38:
   version "8.4.38"
-  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.4.38.tgz#b387d533baf2054288e337066d81c6bee9db9e0e"
+  resolved "https://registry.npmjs.org/postcss/-/postcss-8.4.38.tgz"
   integrity sha512-Wglpdk03BSfXkHoQa3b/oulrotAkwrlLDRSOb9D0bN86FdRyE9lppSp33aHNPgBa0JKCoB+drFLZkQoRRYae5A==
   dependencies:
     nanoid "^3.3.7"
@@ -9130,7 +9130,7 @@ react-is@^18.0.0:
 
 react-router-dom@^6.25.1:
   version "6.25.1"
-  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-6.25.1.tgz#b89f8d63fc8383ea4e89c44bf31c5843e1f7afa0"
+  resolved "https://registry.npmjs.org/react-router-dom/-/react-router-dom-6.25.1.tgz"
   integrity sha512-0tUDpbFvk35iv+N89dWNrJp+afLgd+y4VtorJZuOCXK0kkCWjEvb3vTJM++SYvMEpbVwXKf3FjeVveVEb6JpDQ==
   dependencies:
     "@remix-run/router" "1.18.0"
@@ -9138,7 +9138,7 @@ react-router-dom@^6.25.1:
 
 react-router@6.25.1:
   version "6.25.1"
-  resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.25.1.tgz#70b4f1af79954cfcfd23f6ddf5c883e8c904203e"
+  resolved "https://registry.npmjs.org/react-router/-/react-router-6.25.1.tgz"
   integrity sha512-u8ELFr5Z6g02nUtpPAggP73Jigj1mRePSwhS/2nkTrlPU5yEkH1vYzWNyvSnSzeeE2DNqWdH+P8OhIh9wuXhTw==
   dependencies:
     "@remix-run/router" "1.18.0"
@@ -9851,7 +9851,7 @@ shallow-clone@^1.0.0:
 
 shallowequal@1.1.0:
   version "1.1.0"
-  resolved "https://registry.yarnpkg.com/shallowequal/-/shallowequal-1.1.0.tgz#188d521de95b9087404fd4dcb68b13df0ae4e7f8"
+  resolved "https://registry.npmjs.org/shallowequal/-/shallowequal-1.1.0.tgz"
   integrity sha512-y0m1JoUZSlPAjXVtPPW70aZWfIL/dSP7AFkRnniLCrK/8MDKog3TySTBmckD+RObVxH0v4Tox67+F14PdED2oQ==
 
 shebang-command@^1.2.0:
@@ -9996,7 +9996,7 @@ source-list-map@^2.0.0:
 
 source-map-js@^1.2.0:
   version "1.2.0"
-  resolved "https://registry.yarnpkg.com/source-map-js/-/source-map-js-1.2.0.tgz#16b809c162517b5b8c3e7dcd315a2a5c2612b2af"
+  resolved "https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.0.tgz"
   integrity sha512-itJW8lvSA0TXEphiRoawsCksnlf8SyvmFzIhltqAHluXd88pkCd+cXJVHTDwdCr0IzwptSm035IHQktUu1QUMg==
 
 source-map-resolve@^0.5.0:
@@ -10336,7 +10336,7 @@ style-loader@0.23.1:
 
 styled-components@^6.1.12:
   version "6.1.12"
-  resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-6.1.12.tgz#0d9d511aacfb9052936146dcc2856559e6fae4df"
+  resolved "https://registry.npmjs.org/styled-components/-/styled-components-6.1.12.tgz"
   integrity sha512-n/O4PzRPhbYI0k1vKKayfti3C/IGcPf+DqcrOB7O/ab9x4u/zjqraneT5N45+sIe87cxrCApXM8Bna7NYxwoTA==
   dependencies:
     "@emotion/is-prop-valid" "1.2.2"
@@ -10360,7 +10360,7 @@ stylehacks@^4.0.0:
 
 stylis@4.3.2:
   version "4.3.2"
-  resolved "https://registry.yarnpkg.com/stylis/-/stylis-4.3.2.tgz#8f76b70777dd53eb669c6f58c997bf0a9972e444"
+  resolved "https://registry.npmjs.org/stylis/-/stylis-4.3.2.tgz"
   integrity sha512-bhtUjWd/z6ltJiQwg0dUfxEJ+W+jdqQd8TbWLWyeIJHlnsqmGLRFFd8e5mA0AZi/zx90smXRlN66YMTcaSFifg==
 
 supports-color@^2.0.0:
@@ -10592,7 +10592,7 @@ ts-pnp@1.1.2, ts-pnp@^1.0.0:
 
 tslib@2.6.2:
   version "2.6.2"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.6.2.tgz#703ac29425e7b37cd6fd456e92404d46d1f3e4ae"
+  resolved "https://registry.npmjs.org/tslib/-/tslib-2.6.2.tgz"
   integrity sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==
 
 tslib@^1.8.1, tslib@^1.9.0:
