@@ -1,23 +1,25 @@
-import logo from './logo.svg';
+import React, { useEffect, useState } from "react";
 import './App.css';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Lending from './pages/Lending';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {/* 스타일 컴퍼넌트 적용 */}
+      {/* <GlobalStyles /> */}
+
+      {/* 라우터 적용 */}
+      <BrowserRouter>
+
+        <Routes>
+          <Route path="/" element={<Lending />}></Route>
+          {/* <Route path="/dashBoard" element={<DashBoard />}></Route> */}
+
+          {/* 상단에 위치하는 라우트들의 규칙을 모두 확인, 일치하는 라우트가 없는경우 처리 */}
+          <Route path="*" element={<Lending />}> </Route>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
