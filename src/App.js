@@ -1,25 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import PageLogin from './components/pages/PageLogin';
+import PageSignup from './components/pages/PageSignup';
+import PageLoginSuccess from './components/pages/PageLoginSuccess';
 import Lending from './pages/Lending';
 
 function App() {
   return (
     <div className="App">
-      {/* 스타일 컴퍼넌트 적용 */}
-      {/* <GlobalStyles /> */}
-
-      {/* 라우터 적용 */}
-      <BrowserRouter>
-
+      <Router>
         <Routes>
-          <Route path="/" element={<Lending />}></Route>
-          {/* <Route path="/dashBoard" element={<DashBoard />}></Route> */}
-
-          {/* 상단에 위치하는 라우트들의 규칙을 모두 확인, 일치하는 라우트가 없는경우 처리 */}
-          <Route path="*" element={<Lending />}> </Route>
+          <Route path="/" element={<Lending />} />
+          <Route path="/login" element={<PageLogin />} />
+          <Route path="/signup" element={<PageSignup />} />
+          <Route path="/success" element={<PageLoginSuccess />} />
+          <Route path="*" element={<Lending />} />
         </Routes>
-      </BrowserRouter>
+      </Router>
     </div>
   );
 }
