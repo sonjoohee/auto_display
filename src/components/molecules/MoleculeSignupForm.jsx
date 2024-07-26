@@ -1,4 +1,5 @@
-// MoleculeSignupForm.jsx
+// src/components/molecules/MoleculeSignupForm.jsx
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AtomInput from '../atoms/AtomInput';
@@ -23,8 +24,8 @@ const MoleculeSignupForm = () => {
         body: JSON.stringify({ name, email, password, role, status })
       });
       if (response.ok) {
-        const result = await response.json();
-        console.log(result.message);
+        // const result = await response.json();
+        // console.log(result.message);
         navigate('/login');
       } else {
         const result = await response.json();

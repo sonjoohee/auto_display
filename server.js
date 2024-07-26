@@ -1,81 +1,141 @@
+// server.js
+
 const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
 const mariadb = require('mariadb');
-const bcrypt = require('bcrypt');  // 비밀번호 암호화를 위한 bcrypt 모듈
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const bcrypt = require('bcrypt');
+// const crypto = require('crypto'); // 주석 처리된 부분
+// const nodemailer = require('nodemailer'); // 주석 처리된 부분
 
 const app = express();
-const port = 3001;
+app.use(bodyParser.json());
+app.use(cors({
+  origin: 'http://localhost:3000', // 클라이언트 주소
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type'],
+  credentials: true
+}));
 
-// MariaDB 연결 풀 설정
+// COOP 및 COEP 설정 추가
+app.use((req, res, next) => {
+  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+  res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
+  next();
+});
+
 const pool = mariadb.createPool({
   host: 'localhost',
   user: 'root',
-  password: 'root',  // MariaDB 사용자 비밀번호
-  database: 'user_management', // 사용할 데이터베이스 이름
-  connectionLimit: 5,
-  charset: 'utf8mb4'  // charset 설정 추가
+  password: 'root', // 사용자 비밀번호
+  database: 'user_management',
+  connectionLimit: 5
 });
 
-app.use(cors());
-app.use(bodyParser.json());
+/*
+const transporter = nodemailer.createTransport({
+  service: 'Gmail',
+  auth: {
+    user: 'endnjs33@gmail.com',
+    pass: 'fprmcetbdjwrivjk', // 앱 비밀번호
+  },
+});
 
-// 회원가입 엔드포인트
+const sendVerificationEmail = async (to, link) => {
+  const mailOptions = {
+    from: 'endnjs33@gmail.com',
+    to,
+    subject: '이메일 인증',
+    text: `다음 링크를 클릭하여 이메일 인증을 완료하세요: ${link}`,
+  };
+
+  await transporter.sendMail(mailOptions);
+};
+*/
+
 app.post('/signup', async (req, res) => {
   const { name, email, password, role, status } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 10);
+  // const token = crypto.randomBytes(32).toString('hex'); // 이메일 인증 토큰 생성
 
+  let conn;
   try {
-    const conn = await pool.getConnection();
-    
-    // 비밀번호 암호화
-    const hashedPassword = await bcrypt.hash(password, 10);
+    conn = await pool.getConnection();
+    const query = `
+      INSERT INTO users (name, email, password, role, status)
+      VALUES (?, ?, ?, ?, ?)
+    `;
+    await conn.query(query, [name, email, hashedPassword, role, status]);
 
-    // 회원 정보 저장
-    const insertQuery = 'INSERT INTO users (name, email, password, role, status) VALUES (?, ?, ?, ?, ?)';
-    await conn.query(insertQuery, [name, email, hashedPassword, role, status]);
-    conn.release();
-    res.status(200).json({ message: '회원가입이 성공적으로 완료되었습니다!' });
+    // 인증 이메일 발송
+    // const verificationLink = `http://localhost:3000/verify-email?token=${token}`;
+    // await sendVerificationEmail(email, verificationLink);
+
+    res.status(200).send('회원가입 성공.');
   } catch (err) {
-    console.error(err);
-    if (err.code === 'ER_DUP_ENTRY') {
-      res.status(400).json({ error: '이미 사용 중인 이메일입니다.' });
-    } else {
-      res.status(500).json({ error: '데이터베이스 오류가 발생했습니다.' });
-    }
+    console.error('회원가입 실패:', err);
+    res.status(500).send('서버 오류');
+  } finally {
+    if (conn) conn.release();
   }
 });
 
-// 로그인 엔드포인트
+/*
+app.get('/verify-email', async (req, res) => {
+  const { token } = req.query;
+
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const query = `UPDATE users SET status = 'active', token = NULL WHERE token = ? AND status = 'inactive'`;
+    const result = await conn.query(query, [token]);
+
+    if (result.affectedRows === 0) {
+      res.status(400).send('잘못되었거나 만료된 토큰입니다.');
+    } else {
+      res.status(200).send('이메일 인증이 완료되었습니다.');
+    }
+  } catch (err) {
+    console.error('이메일 인증 실패:', err);
+    res.status(500).send('서버 오류');
+  } finally {
+    if (conn) conn.release();
+  }
+});
+*/
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
+  let conn;
   try {
-    const conn = await pool.getConnection();
-
-    // 이메일로 사용자 검색
-    const selectQuery = 'SELECT * FROM users WHERE email = ?';
-    const rows = await conn.query(selectQuery, [email]);
-    conn.release();
+    conn = await pool.getConnection();
+    const query = `SELECT * FROM users WHERE email = ?`;
+    const rows = await conn.query(query, [email]);
 
     if (rows.length === 0) {
-      return res.status(400).json({ error: '존재하지 않는 이메일입니다.' });
+      return res.status(400).send({ error: '사용자를 찾을 수 없습니다.' });
     }
 
     const user = rows[0];
 
-    // 비밀번호 비교
+    if (user.status !== 'active') {
+      return res.status(400).send({ error: '이메일이 인증되지 않았습니다.' });
+    }
+    
     const isPasswordValid = await bcrypt.compare(password, user.password);
+
     if (!isPasswordValid) {
-      return res.status(400).json({ error: '비밀번호가 일치하지 않습니다.' });
+      return res.status(400).send({ error: '비밀번호가 올바르지 않습니다.' });
     }
 
-    res.status(200).json({ message: '로그인에 성공했습니다.', user });
+    res.status(200).send({ user });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: '데이터베이스 오류가 발생했습니다.' });
+    console.error('로그인 실패:', err);
+    res.status(500).send('서버 오류');
+  } finally {
+    if (conn) conn.release();
   }
 });
-
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+app.listen(3001, () => {
+  console.log('Server is running on http://localhost:3001');
 });
