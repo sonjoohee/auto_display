@@ -49,3 +49,6 @@ jsx 파일 구조로 가며, 주요 파일들은 jsx파일로 구성한다.
 npm install bcrypt
 npm install mariadb
 npm install cors
+
+** google 로그인 관련 설치파일
+npm install firebase

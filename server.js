@@ -103,6 +103,7 @@ app.get('/verify-email', async (req, res) => {
   }
 });
 */
+
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
@@ -136,6 +137,29 @@ app.post('/login', async (req, res) => {
     if (conn) conn.release();
   }
 });
+
+app.post('/google-login', async (req, res) => {
+  const { uid, name, email } = req.body;
+
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const query = `
+      INSERT INTO users (uid, name, email, status)
+      VALUES (?, ?, ?, 'active')
+      ON DUPLICATE KEY UPDATE name = ?, email = ?
+    `;
+    await conn.query(query, [uid, name, email, name, email]);
+
+    res.status(200).send({ user: { uid, name, email } });
+  } catch (err) {
+    console.error('사용자 정보 저장 실패:', err);
+    res.status(500).send('서버 오류');
+  } finally {
+    if (conn) conn.release();
+  }
+});
+
 app.listen(3001, () => {
   console.log('Server is running on http://localhost:3001');
 });

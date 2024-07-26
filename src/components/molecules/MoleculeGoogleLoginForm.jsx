@@ -14,7 +14,7 @@ const MoleculeGoogleLoginForm = () => {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      // MariaDB에 사용자 정보 저장 또는 업데이트
+      // Firebase 인증 후 사용자 정보를 서버에 저장
       await axios.post('http://localhost:3001/google-login', {
         uid: user.uid,
         name: user.displayName,
