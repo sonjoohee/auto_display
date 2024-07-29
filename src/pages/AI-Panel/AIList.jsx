@@ -17,7 +17,7 @@ const AIPanelList = () =>{
 
   return(
     <>
-      <Header />
+      <Header /> 
 
       <ContentsWrap>
         <TabMenu>
