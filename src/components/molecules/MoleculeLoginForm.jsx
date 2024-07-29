@@ -1,29 +1,39 @@
-// MoleculeLoginForm.jsx
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
+import { useAtom } from 'jotai';
 import { useNavigate } from 'react-router-dom';
 import AtomInput from '../atoms/AtomInput';
 import AtomButton from '../atoms/AtomButton';
+import { isValidEmail } from '../atoms/AtomValidation';
+import { emailAtom, passwordAtom, currentUserAtom, errorAtom } from '../../AtomStates';
 import styles from '../../assets/styles/molecules_css/MoleculeLoginForm.module.css';
-import { useAtom } from 'jotai';
-import { currentUserAtom } from '../../AtomStates';
 
 const MoleculeLoginForm = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
-  const [error, setError] = useState('');
+  const [email, setEmail] = useAtom(emailAtom);
+  const [password, setPassword] = useAtom(passwordAtom);
+  const [error, setError] = useAtom(errorAtom);
+  const [, setCurrentUser] = useAtom(currentUserAtom);
   const navigate = useNavigate();
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
+  useEffect(() => {
+    setError('');
+  }, [setError]);
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
+  const validateForm = () => {
+    if (!email || !password) {
+      setError('모든 필드를 입력해주세요.');
+      return false;
+    }
+    if (!isValidEmail(email)) {
+      setError('유효한 이메일 주소를 입력해주세요.');
+      return false;
+    }
+    return true;
   };
 
   const handleLogin = async () => {
     setError('');
+    if (!validateForm()) return;
+
     try {
       const response = await fetch('http://localhost:3001/login', {
         method: 'POST',
@@ -44,6 +54,9 @@ const MoleculeLoginForm = () => {
   };
 
   const handleSignup = () => {
+    setEmail('');
+    setPassword('');
+    setError('');
     navigate('/signup');
   };
 
@@ -53,13 +66,13 @@ const MoleculeLoginForm = () => {
       <AtomInput
         type="email"
         value={email}
-        onChange={handleEmailChange}
+        onChange={(e) => setEmail(e.target.value)}
         placeholder="이메일"
       />
       <AtomInput
         type="password"
         value={password}
-        onChange={handlePasswordChange}
+        onChange={(e) => setPassword(e.target.value)}
         placeholder="비밀번호"
       />
       {error && <p className={styles.error}>{error}</p>}

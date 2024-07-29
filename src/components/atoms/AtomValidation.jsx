@@ -1,4 +1,5 @@
 // AtomValidation.jsx
+//이메일 양식 확인, 비밀번호 조건(8~16자, 영문.특문.숫자 중 2개 이상)
 export const isValidEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
