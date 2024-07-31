@@ -7,7 +7,7 @@ import OrganismHeader from '../organisms/OrganismHeader';
 import OrganismSearchSection from '../organisms/OrganismSearchSection';
 import OrganismPanelListSection from '../organisms/OrganismPanelListSection';
 import OrganismPanelListSectionBiz from '../organisms/OrganismPanelListSectionBiz';
-import OrganismPanelListSectionInstruction from '../organisms/OrganismPanelListSectionInstruntion';
+import OrganismPanelListSectionInstruction from '../organisms/OrganismPanelListSectionInstruction';
 import { ContentsWrap } from '../../assets/styles/Common';
 import MoleculeTabMenu from "../molecules/MoleculeTabMenu";
 import { selectedPanelCountAtom, selectedPanelsAtom,loadedPanelCountAtom } from '../../../AtomStates';
