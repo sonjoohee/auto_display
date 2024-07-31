@@ -160,6 +160,33 @@ app.post('/google-login', async (req, res) => {
   }
 });
 
+app.get('/current-user', async (req, res) => {
+  const { userId } = req.query; // 클라이언트에서 userId를 쿼리로 받아옴
+
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const query = `SELECT name FROM users WHERE id = ?`;
+    const rows = await conn.query(query, [userId]);
+
+    if (rows.length === 0) {
+      return res.status(400).send({ error: '사용자를 찾을 수 없습니다.' });
+    }
+
+    const user = rows[0];
+    res.status(200).send({ user });
+  } catch (err) {
+    console.error('사용자 정보 조회 실패:', err);
+    res.status(500).send('서버 오류');
+  } finally {
+    if (conn) conn.release();
+  }
+});
+
+
+
 app.listen(3001, () => {
   console.log('Server is running on http://localhost:3001');
 });
+
+
