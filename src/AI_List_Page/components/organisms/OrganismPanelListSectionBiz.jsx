@@ -49,7 +49,7 @@ const PanelList = styled.ul`
   gap: 20px;
 `;
 
-const OrganismPanelListSection = ({ service, time }) => {
+const OrganismPanelListSectionBiz = ({ service, time }) => {
   const [selectedCount, setSelectedCount] = useState(0);
 
   const handleSelect = (isSelected) => {
