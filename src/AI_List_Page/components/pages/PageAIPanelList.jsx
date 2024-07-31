@@ -6,8 +6,8 @@ import styled from 'styled-components';
 import OrganismHeader from '../organisms/OrganismHeader';
 import OrganismSearchSection from '../organisms/OrganismSearchSection';
 import OrganismPanelListSection from '../organisms/OrganismPanelListSection';
-import OrganismPanelListSectionBiz from '../organisms/OrganismPanelListSection_biz';
-import OrganismPanelListSectionInst from '../organisms/OrganismPanelListSection_inst';
+import OrganismPanelListSectionBiz from '../organisms/OrganismPanelListSectionBiz';
+import OrganismPanelListSectionInstruction from '../organisms/OrganismPanelListSectionInstruntion';
 import { ContentsWrap } from '../../assets/styles/Common';
 import MoleculeTabMenu from "../molecules/MoleculeTabMenu";
 import { selectedPanelCountAtom, selectedPanelsAtom,loadedPanelCountAtom } from '../../../AtomStates';
@@ -37,7 +37,7 @@ const PageAIPanelListInfinite = () => {
       case 'biz':
         return <OrganismPanelListSectionBiz onSelect={handleSelect} />;
       case 'preset':
-        return <OrganismPanelListSectionInst onSelect={handleSelect} />;
+        return <OrganismPanelListSectionInstruction onSelect={handleSelect} />;
       default:
         return <OrganismPanelListSection onSelect={handleSelect} />;
     }
