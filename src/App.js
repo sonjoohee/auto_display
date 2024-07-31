@@ -5,11 +5,19 @@ import PageLogin from './components/pages/PageLogin';
 import PageSignup from './components/pages/PageSignup';
 import PageLoginSuccess from './components/pages/PageLoginSuccess';
 import PageList from './List_Page/components/pages/PageList';
+import GlobalStyles from "./assets/GlobalStyle";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Lending from './pages/Lending';
+
 function App() {
   return (
     <div className="App">
-      <Router>
+      {/* 스타일 컴퍼넌트 적용 */}
+      <GlobalStyles />
+
+      {/* 라우터 적용 */}
+      <BrowserRouter>
+
         <Routes>
           <Route path="/" element={<Lending />} />
           <Route path="/login" element={<PageLogin />} />
@@ -18,7 +26,7 @@ function App() {
           <Route path="/list" element={<PageList />} />
           <Route path="*" element={<Lending />} />
         </Routes>
-      </Router>
+      </BrowserRouter>
     </div>
   );
 }
