@@ -73,29 +73,41 @@ const OrganismPanelListSection = () => {
   
   // 최초 패널 리스트
   useEffect(() => {
+    const searchParams = {
+      searchBehabioralType,
+      searchUtilizationTime,
+      searchGender,
+      searchAge,
+    };
     const fetchInitialPanelList = async () => {
       console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
       try {
-        const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/panels/list?page=1&size=20`);
-        setPanelList(response.data.results); // 초기화 하여 최초 20명만 가져오기
-        console.log(response.data.results);
+        const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/panels/list?page=1&size=20`, searchParams);
+        setPanelList(response.data.results);
+        console.log(searchParams);
       } catch (error) {
         console.error("Error fetching panel list:", error);
       }
     };
 
     fetchInitialPanelList();
-  }, []); // 빈 배열을 의존성 배열로 사용하여 최초 마운트 시에만 실행
+  }, []);
 
   // 추가 패널 리스트
   useEffect(() => {
+    const searchParams = {
+      searchBehabioralType,
+      searchUtilizationTime,
+      searchGender,
+      searchAge,
+    };
     if (panelListPageCount > 1) {
       const fetchAdditionalPanelList = async () => {
         console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
         try {
-          const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/panels/list?page=${panelListPageCount}&size=20`);
+          const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/panels/list?page=${panelListPageCount}&size=20`, searchParams);
           setPanelList(prevPanelList => [...prevPanelList, ...response.data.results]); // 리스트 초기화 하지 않고 아래에 붙이기
-          console.log(response.data.results);
+          console.log(searchParams);
         } catch (error) {
           console.error("Error fetching panel list:", error);
         }
