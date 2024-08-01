@@ -1,6 +1,7 @@
 import Filter from "../images/Filter.svg";
 import BgSearch from "../images/BgSearch.png";
 import Search from "../images/Search.svg";
+import BtnClose from "../images/btnClose.svg";
 
 import BtnFirst from "../images/btnFirst.svg";
 import BtnPrev from "../images/btnPrev.svg";
@@ -15,6 +16,7 @@ const images = {
   BtnPrev,
   BtnNext,
   BtnEnd,
+  BtnClose,
 }
 
 export default images;

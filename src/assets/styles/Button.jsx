@@ -7,6 +7,7 @@ const StyleButton = styled.button`
     if (props.Full) return '100%';
     else return 'auto';
   }};
+  font-family: 'Pretendard';
   font-size: ${props => {
     if (props.ExtraSmall) return '0.875rem';
     else if (props.Small) return '1rem';
@@ -20,13 +21,14 @@ const StyleButton = styled.button`
   color: ${props => {
     if (props.Black) return palette.white;
     else if (props.Blue) return palette.white;
+    else if (props.LineBlack) return palette.black;
     else return palette.gray;
   }};
   padding: ${props => {
     if (props.Small) return `5px 15px`;
     else if (props.Medium) return '20px 30px';
     else if (props.Full) return '12px 20px';
-    else return `10px 40px`;
+    else return `10px 20px`;
   }};
   border-radius:${props => (props.Round ? '50px' : '8px')}; 
   border: ${props => {
@@ -42,6 +44,11 @@ const StyleButton = styled.button`
     else return palette.white;
   }};
   transition:all .5s;
+
+  &:disabled {
+    color:${palette.lightGray};
+    pointer-events:none;
+  }
 `;
 
 function Button({ children, ...rest }) {
