@@ -6,7 +6,6 @@ export const ContentsWrap = styled.div`
   max-width:1240px;
   width:100%;
   margin:110px auto 0;
-  overflow:hidden;
 `;
 
 
@@ -41,16 +40,23 @@ export const Popup = styled.div`
   }
 
   > div {
-    position:fixed;
+    position:${props => {
+      if (props.Panel) return `absolute`;
+      else return `fixed`;
+    }};
     top:50%;
     left:50%;
     transform:translate(-50%, -50%);
-    width:100%;
+    width:${props => {
+      if (props.Panel) return `130%`;
+      else return `100%`;
+    }};
     max-width:${props => {
       if (props.Panel) return `450px`;
       else return `860px`;
     }};
     text-align:left;
+    padding:20px;
     border-radius:10px;
     background:${palette.white};
     box-shadow:${props => {
@@ -79,10 +85,8 @@ export const Popup = styled.div`
       &:after {transform:translate(-50%, -50%) rotate(-45deg);}
     }
 
-  
     > div {
       max-height:60vh;
-      padding:30px;
       overflow-y:auto;
     }
   }
@@ -114,7 +118,13 @@ export const Popup = styled.div`
       }
     }
   }
-  
+
+  .panelTag {
+    display:flex;
+    gap:5px;
+    margin-top:15px;
+  }
+
   .subTitle {
     padding:0;
     border:0;

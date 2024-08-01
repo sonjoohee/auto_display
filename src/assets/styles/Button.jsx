@@ -16,12 +16,15 @@ const StyleButton = styled.button`
   }};
   font-weight: ${props => {
     if (props.Small) return '400';
+    else if (props.LineWhite) return `400`;
     else return '600';
   }};
   color: ${props => {
     if (props.Black) return palette.white;
     else if (props.Blue) return palette.white;
     else if (props.LineBlack) return palette.black;
+    else if (props.LineBlue) return palette.blue;
+    else if (props.LineWhite) return palette.white;
     else return palette.gray;
   }};
   padding: ${props => {
@@ -30,17 +33,19 @@ const StyleButton = styled.button`
     else if (props.Full) return '12px 20px';
     else return `10px 20px`;
   }};
-  border-radius:${props => (props.Round ? '50px' : '8px')}; 
+  border-radius:${props => (props.Round ? '50px' : '10px')}; 
   border: ${props => {
     if (props.Blue) return 'none';
-    else if (props.LineBlue) return `1px solid ${palette.blue}`;
     else if (props.Black) return 'none';
+    else if (props.LineBlue) return `1px solid ${palette.blue}`;
+    else if (props.LineWhite) return `1px solid ${palette.white}`;
     else return `1px solid ${palette.lineGray}`;
   }};
   background: ${props => {
     if (props.Blue) return 'rgba(4,83,244,.8)';
-    else if (props.LineBlue) return palette.blue;
+    else if (props.LineBlue) return palette.white;
     else if (props.Black) return palette.black;
+    else if (props.LineWhite) return `none`;
     else return palette.white;
   }};
   transition:all .5s;
