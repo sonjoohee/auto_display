@@ -64,6 +64,7 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
           consumption={consumption} 
           productGroup={productGroup} 
           isSelected={isSelected}
+          tags={tags}
           toggleSelection={handleSelectButtonClick}
         />
       )}

@@ -5,6 +5,8 @@ import styled from "styled-components";
 import MoleculePanelItem from "../molecules/MoleculePanelItem";
 import MoleculePanelControls from "../molecules/MoleculePanelControls";
 import { palette } from "../../assets/styles/Palette";
+import { Link } from "react-router-dom";
+import OrganismPanelListSectionBottomBar from "./OrganismPanelListSectionBottomBar"; // 하단 바 컴포넌트 import
 
 import panelimages from "../../assets/styles/PanelImages";
 import { useAtom } from "jotai";
@@ -30,7 +32,8 @@ const OrganismPanelListSection = () => {
   const [searchUtilizationTime, setSearchUtilizationTime] = useAtom(SEARCH_UTILIZATION_TIME);
   const [searchGender, setSearchGender] = useAtom(SEARCH_GENDER);
   const [searchAge, setSearchAge] = useAtom(SEARCH_AGE);
-  
+  const [isAllPanelsLoaded, setIsAllPanelsLoaded] = useState(false);
+
   // 패널 데이터의 실제 개수를 고려하여 초기 visiblePanels 설정
   const initialVisiblePanels = panelList?.length ? Math.min(panelList.length, 20) : 0;
   const [visiblePanels, setVisiblePanels] = useState(initialVisiblePanels);
@@ -59,7 +62,11 @@ const OrganismPanelListSection = () => {
   const handleLoadMore = () => {
     setVisiblePanels((prevCount) => {
       const remainingPanels = panelList.length - prevCount;
-      return prevCount + (remainingPanels >= 20 ? 20 : remainingPanels);
+      const newCount = prevCount + (remainingPanels >= 20 ? 20 : remainingPanels);
+      if (newCount >= panelList.length) {
+        setIsAllPanelsLoaded(true); // 모든 패널이 로드되었음을 표시
+      }
+      return newCount;
     });
   };
 
@@ -84,43 +91,66 @@ const OrganismPanelListSection = () => {
     fetchPanelList();
   }, [setPanelList]);
 
+  // 하단 바가 나타날 때 스크롤 조정
+  useEffect(() => {
+    if (selectedCount > 0) {
+      window.scrollBy({
+        top: 100, // 하단 바 높이만큼 조정
+        behavior: "smooth",
+      });
+    }
+  }, [selectedCount]);
+
   // panelData가 유효한지 확인
   if (!Array.isArray(panelList) || panelList.length === 0) {
     return <p>패널 데이터가 없습니다.</p>;
   }
 
   return (
-    <PanelWrap>
-      <MoleculePanelControls
-        selectedCount={selectedCount}
-        onViewChange={handleViewChange}
-        onSelectAll={handleSelectAll}
-        loadedPanelCount={panelList.length}
-      />
-      <PanelList>
-        {panelList.map((panel) => (
-          <MoleculePanelItem
-            key={panel.id}
-            id={panel.id}
-            gender={panel.gender}
-            age={panel.age}
-            job={panel.job}
-            address={panel.address}
-            subAddress={panel.subAddress}
-            imgSrc={panel.img}
-            tags={panel.tag}
-            comment={panel.comment}
-            lifeStyle={panel.lifeStyle}
-            consumption={panel.consumptionPropensity}
-            productGroup={panel.productGroup}
-            onSelect={handleSelect}
-          />
+    <>
+      <PanelWrap>
+        <MoleculePanelControls
+          selectedCount={selectedCount}
+          onViewChange={handleViewChange}
+          onSelectAll={handleSelectAll}
+          loadedPanelCount={panelList.length}
+        />
+        <PanelList>
+          {panelList.map((panel) => (
+            <MoleculePanelItem
+              key={panel.id}
+              id={panel.id}
+              gender={panel.gender}
+              age={panel.age}
+              job={panel.job}
+              address={panel.address}
+              subAddress={panel.subAddress}
+              imgSrc={panel.img}
+              tags={panel.tag}
+              comment={panel.comment}
+              lifeStyle={panel.lifeStyle}
+              consumption={panel.consumptionPropensity}
+              productGroup={panel.productGroup}
+              onSelect={handleSelect}
+            />
           ))}
-      </PanelList>
-      {visiblePanels < panelList.length && (
-        <LoadMoreButton onClick={handleLoadMore}>20명의 패널 더보기</LoadMoreButton>
+        </PanelList>
+        {isAllPanelsLoaded ? (
+          <CreatePanelLink to="/createpanel" isBottomBarVisible={selectedCount > 0}>
+          원하시는 패널이 없나요? 직접 만들어 보세요!
+        </CreatePanelLink>
+        ) : (
+          visiblePanels < panelList.length && (
+            <LoadMoreButton isBottomBarVisible={selectedCount > 0} onClick={handleLoadMore}>
+              20명의 패널 더보기
+            </LoadMoreButton>
+          )
+        )}
+      </PanelWrap>
+      {selectedCount > 0 && (
+        <OrganismPanelListSectionBottomBar onSaveSelection={() => alert("선택패널이 저장되었습니다.")} />
       )}
-    </PanelWrap>
+    </>
   );
 };
 
@@ -166,15 +196,30 @@ const PanelList = styled.ul`
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
+  margin-bottom: 10px; /* 기본적으로 충분한 하단 여백 추가 */
 `;
 
 const LoadMoreButton = styled.button`
   display: block;
-  margin: 20px auto;
+  margin: ${({ isBottomBarVisible }) => (isBottomBarVisible ? '20px auto 120px' : '20px auto')}; /* 하단 바가 보일 때 더 위로 이동 */
   padding: 10px 20px;
   background-color: ${palette.blue};
   color: ${palette.white};
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  position: relative;
+  z-index: 10;
+`;
+const CreatePanelLink = styled(Link)`
+  display: block;
+  margin: ${({ isBottomBarVisible }) => (isBottomBarVisible ? '20px auto 120px' : '20px auto')}; /* 하단 바가 보일 때 더 위로 이동 */
+  padding: 10px 20px;
+  background-color: ${palette.blue};
+  color: ${palette.white};
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  position: relative;
+  z-index: 10;
 `;
