@@ -54,35 +54,20 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
         </PanelDetails>
       </PanelItem>
       {isDetailsVisible && (
-        <MoleculePanelItemDetail 
+        <MoleculePanelItemDetail
+          gender={gender}
+          age={age}
+          job={job}
+          address={address} 
           onClose={handleCloseDetails} 
           lifeStyle={lifeStyle} 
           consumption={consumption} 
           productGroup={productGroup} 
+          isSelected={isSelected}
+          toggleSelection={handleSelectButtonClick}
         />
       )}
     </>
-  );
-};
-
-// 뺼거
-const DetailsModal = ({ onClose, lifeStyle, consumption, productGroup }) => {
-  const handleOverlayClick = (e) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
-
-  return (
-    <ModalOverlay onClick={handleOverlayClick}>
-      <ModalContent>
-        <CloseButton onClick={onClose}>X</CloseButton>
-        <h2>패널 상세 정보</h2>
-        <p><strong>라이프 스타일:</strong> {lifeStyle}</p>
-        <p><strong>소비 성향:</strong> {consumption}</p>
-        <p><strong>관심 제품군:</strong> {productGroup}</p>
-      </ModalContent>
-    </ModalOverlay>
   );
 };
 
