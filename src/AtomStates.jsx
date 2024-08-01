@@ -30,6 +30,7 @@ export const SELECTED_PANEL_COUNT = atom(0);
 
 // 패널 리스트
 export const PANEL_LIST = atom([]);
+export const PANEL_LIST_PAGE_COUNT = atom(1);
 
 // 검색어 상태
 export const SEARCH_BEHABIORAL_TYPE = atom("");

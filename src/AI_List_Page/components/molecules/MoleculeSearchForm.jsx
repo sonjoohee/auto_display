@@ -15,6 +15,7 @@ import {
   SEARCH_CHILD, 
   SEARCH_CONSUMPTION, 
   SEARCH_TECHNOLOGY,
+  PANEL_LIST_PAGE_COUNT,
 } from "../../../AtomStates";
 
 import styled from "styled-components";
@@ -29,6 +30,7 @@ const MoleculeSearchForm = () => {
   const [totalPanelCount, setTotalPanelCount] = useAtom(TOTAL_PANEL_COUNT);
   const [panelList, setPanelList] = useAtom(PANEL_LIST);
   const [selectedPanelCount, setSelectedPanelCount] = useAtom(SELECTED_PANEL_COUNT);
+  const [panelListPageCount, setPanelListPageCount] = useAtom(PANEL_LIST_PAGE_COUNT);
 
   // 검색 관련 atoms
   const [searchBehabioralType, setSearchBehabioralType] = useAtom(SEARCH_BEHABIORAL_TYPE);
@@ -39,9 +41,6 @@ const MoleculeSearchForm = () => {
   const [searchChild, setSearchChild] = useAtom(SEARCH_CHILD);
   const [searchConsumption, setSearchConsumption] = useAtom(SEARCH_CONSUMPTION);
   const [searchTechnology, setSearchTechnology] = useAtom(SEARCH_TECHNOLOGY);
-
-  const [viewMode, setViewMode] = useState("card");
-  const [isAllSelected, setIsAllSelected] = useState(false);
 
   const [showDetailOption, setShowDetailOption] = useState(false);
   const [showTimeOption, setShowTimeOption] = useState(false);
@@ -56,6 +55,16 @@ const MoleculeSearchForm = () => {
     technology: "",
   });
   
+  const [shouldSearch, setShouldSearch] = useState(false);
+
+  // 검색어값이 초기화 안되는 이슈 -> 검색어값이 바뀔 때 마다 handleSearch() 함수 호출
+  useEffect(() => {
+    if (shouldSearch) {
+      handleSearch();
+      setShouldSearch(false);
+    }
+  }, [shouldSearch, searchBehabioralType, searchUtilizationTime, searchGender, searchAge])
+
   const handleDetailOptionToggle = () => {
     if (showTimeOption) setShowTimeOption((prev) => !prev);
     setShowDetailOption((prev) => !prev);
@@ -65,7 +74,7 @@ const MoleculeSearchForm = () => {
     setShowTimeOption((prev) => !prev);
   };
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     const searchParams = {
       searchBehabioralType,
       searchUtilizationTime,
@@ -77,29 +86,64 @@ const MoleculeSearchForm = () => {
       //searchTechnology,
     };
 
-    console.log(searchParams);
-    axios.post(`${process.env.REACT_APP_SERVER_URL}/panels/search`, searchParams)
-      .then(response => {
-        setPanelList(response.data.results);
-      })
-      .catch(error => {
-        console.error("Error fetching filtered panel list:", error);
-      });
+    console.log(searchParams); // 검색값 테스트용
+
+    try {
+      console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
+      const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/panels/list?page=1&size=20`, searchParams);
+      setPanelList(response.data.results);
+      console.log(searchParams);
+    } catch (error) {
+      console.error("Error fetching panel list:", error);
+    }
   };
 
   const handleApplyDetail = () => {
     setSelectedFilters({
-      searchBehabioralType,
-      searchUtilizationTime,
-      searchGender,
-      searchAge,
-      searchMarriage,
-      searchChild,
-      searchConsumption,
-      searchTechnology,
+      behabioralType: searchBehabioralType,
+      utilizationTime: searchUtilizationTime,
+      gender: searchGender,
+      age: searchAge,
+      marriage: searchMarriage,
+      child: searchChild,
+      consumption: searchConsumption,
+      technology: searchTechnology,
     });
     setShowDetailOption(false);
     setShowTimeOption(false);
+  };
+
+  const handleRemoveFilter = (filterKey) => {
+    // 칩 삭제하면 페이징 초기화
+    setPanelListPageCount(1)
+
+    // 칩 삭제하면 검색값상태 초기화
+    if(filterKey === "behabioralType") {
+      setSearchBehabioralType('');
+      setSearchUtilizationTime('');
+    }
+    else if(filterKey === "gender") {
+      setSearchGender('');
+    }
+    else if(filterKey === "age") {
+      setSearchAge('');
+    }
+
+    setSelectedFilters(prevFilters => {
+      const newFilters = { ...prevFilters, [filterKey]: "" };
+      if (filterKey === "behabioralType") {
+        newFilters.behabioralType = "";
+        newFilters.utilizationTime = "";
+      }
+      else if (filterKey === "gender") {
+        newFilters.gender = "";
+      }
+      else if (filterKey === "age") {
+        newFilters.age = "";
+      }
+      return newFilters;
+    });
+    setShouldSearch(true);
   };
 
   return (
@@ -153,9 +197,46 @@ const MoleculeSearchForm = () => {
           </div>
         </DetailOptions>
       )}
+      <SelectedFilters>
+        {selectedFilters.behabioralType || selectedFilters.utilizationTime || selectedFilters.gender || selectedFilters.age ? (
+          <FilterChipArea>
+            <FilterChip onClick={() => handleRemoveFilter('behabioralType')}>
+              {selectedFilters.behabioralType} <span>X</span>
+            </FilterChip> 
+            <span>에 시간을</span> 
+            <FilterChip>
+              {selectedFilters.utilizationTime} <span>X</span>
+            </FilterChip> 
+            <span>활용하는,</span>
+          </FilterChipArea>
+        ) : (
+          <FilterChipArea>
+            <span>예시)</span>
+            <FilterChip>건강관리</FilterChip>
+            <span>에 시간을</span>
+            <FilterChip>많이</FilterChip>
+            <span>활용하는,</span>
+            <FilterChip>여성</FilterChip>
+            <FilterChip>20대</FilterChip>
+            <FilterChip>30대</FilterChip>
+          </FilterChipArea>
+        )}
+        {selectedFilters.gender && (
+          <FilterChip onClick={() => handleRemoveFilter('gender')}>
+            {selectedFilters.gender === 'M' ? '남성' : '여성'}
+            <span>X</span>
+          </FilterChip>
+        )}
+        {selectedFilters.age && (
+          <FilterChip onClick={() => handleRemoveFilter('age')}>
+            {selectedFilters.age}대
+            <span>X</span>
+          </FilterChip>
+        )}
+      </SelectedFilters>
     </SearchFormWrap>
-  </>
-  )
+    </>
+  );
 };
 
 export default MoleculeSearchForm;
@@ -207,5 +288,38 @@ const DetailOptions = styled.div`
         color:${palette.white};
       }
     }
+  }
+`;
+
+const SelectedFilters = styled.div`
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+`;
+
+const FilterChip = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  margin-left: 5px;
+  background: ${palette.lightGray};
+  border-radius: 15px;
+  cursor: pointer;
+
+  span {
+    margin-left: 5px;
+    color: ${palette.white};
+    border-radius: 50%;
+    padding: 0 5px;
+  }
+`;
+
+const FilterChipArea = styled.div`
+  display: flex;
+  align-items: center;
+  span {
+  margin-left: 5px;
+  margin-right: 5px;
   }
 `;
