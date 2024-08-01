@@ -1,8 +1,10 @@
 // MoleculePanelItem.jsx
+// This file contains the MoleculePanelItem component, which displays a panel item with an option to view detailed information.
 
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { palette } from '../../assets/styles/Palette';
+import MoleculePanelItemDetailImage from './MoleculePanelItemDetailImage';
 
 const PanelItem = styled.li`
   position: relative;
@@ -37,6 +39,7 @@ const Overlay = styled.div`
   background: rgba(0, 0, 0, 0.5);
   color: white;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   opacity: 0;
@@ -50,6 +53,7 @@ const InfoButton = styled.button`
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
+  margin-top: 10px;
 `;
 
 const PanelDetails = styled.div`
@@ -74,18 +78,50 @@ const PanelDetails = styled.div`
   }
 `;
 
-const MoleculePanelItem = ({ id, imgSrc, altText, description, tags, onSelect }) => {
+const Checkbox = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid ${({ isSelected }) => (isSelected ? palette.blue : 'rgba(255, 255, 255, 0.5)')};
+  background-color: ${({ isSelected }) => (isSelected ? palette.blue : 'rgba(255, 255, 255, 0.5)')};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+
+  &::after {
+    content: ${({ isSelected }) => (isSelected ? "'✔'" : "''")};
+    color: white;
+    font-size: 14px;
+  }
+`;
+
+const MoleculePanelItem = ({ id, imgSrc, altText, description, tags, onSelect, lifeStyle, consumption, interest }) => {
   const [isSelected, setSelected] = useState(false);
   const [isDetailsVisible, setDetailsVisible] = useState(false);
 
-  const handlePanelClick = () => {
-    setSelected(!isSelected);
-    onSelect(!isSelected);
+  const handlePanelClick = (e) => {
+    if (e.target.tagName === 'BUTTON') {
+      return;
+    }
+    const newSelected = !isSelected;
+    setSelected(newSelected);
+    onSelect(newSelected);
   };
 
   const handleDetailsClick = (e) => {
     e.stopPropagation();
     setDetailsVisible(true);
+  };
+
+  const handleSelectButtonClick = (e) => {
+    e.stopPropagation();
+    const newSelected = !isSelected;
+    setSelected(newSelected);
+    onSelect(newSelected);
   };
 
   const handleCloseDetails = () => {
@@ -95,13 +131,17 @@ const MoleculePanelItem = ({ id, imgSrc, altText, description, tags, onSelect })
   return (
     <>
       <PanelItem className={isSelected ? 'selected' : ''} onClick={handlePanelClick}>
+        <Checkbox isSelected={isSelected} />
         <Image src={imgSrc} alt={altText} />
         <Overlay className="overlay">
           <InfoButton onClick={handleDetailsClick}>패널정보 상세보기</InfoButton>
+          <InfoButton onClick={handleSelectButtonClick}>
+            {isSelected ? '✅ 패널 선택됨' : '패널 선택하기'}
+          </InfoButton>
         </Overlay>
         <PanelDetails>
           <p>{description}</p>
-          <strong>의료서비스받기에 5시간이상 활용하고 있어요</strong>
+          <strong>{lifeStyle}</strong>
           <ol>
             {tags.map((tag, index) => (
               <li key={index}>{tag}</li>
@@ -110,60 +150,21 @@ const MoleculePanelItem = ({ id, imgSrc, altText, description, tags, onSelect })
         </PanelDetails>
       </PanelItem>
       {isDetailsVisible && (
-        <DetailsModal onClose={handleCloseDetails} />
+        <MoleculePanelItemDetailImage 
+          onClose={handleCloseDetails} 
+          imgSrc={imgSrc} 
+          altText={altText} 
+          description={description} 
+          lifeStyle={lifeStyle} 
+          consumption={consumption} 
+          interest={interest} 
+          tags={tags} 
+          isSelected={isSelected} 
+          toggleSelection={() => setSelected(!isSelected)}
+        />
       )}
     </>
   );
 };
-
-const DetailsModal = ({ onClose }) => {
-  const handleOverlayClick = (e) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
-
-  return (
-    <ModalOverlay onClick={handleOverlayClick}>
-      <ModalContent>
-        <CloseButton onClick={onClose}>X</CloseButton>
-        <h2>패널 상세 정보</h2>
-        <p>여기에 패널에 대한 자세한 정보를 입력합니다.</p>
-      </ModalContent>
-    </ModalOverlay>
-  );
-};
-
-const ModalOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-`;
-
-const ModalContent = styled.div`
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  width: 80%;
-  max-width: 600px;
-  position: relative;
-`;
-
-const CloseButton = styled.button`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-`;
 
 export default MoleculePanelItem;

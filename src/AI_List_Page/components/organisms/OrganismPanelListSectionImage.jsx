@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import MoleculePanelItem from "../molecules/MoleculePanelItem";
+import MoleculePanelItemImage from "../molecules/MoleculePanelItem";
 import MoleculePanelControls from "../molecules/MoleculePanelControls";
 import { palette } from "../../assets/styles/Palette";
-import panelData from "../../data/panelData";  // 더미 데이터 또는 API 호출
+import panelDataImage from "../../data/panelDataImage";  // 더미 데이터 또는 API 호출
 
 const PanelWrap = styled.section`
   .sortBooth {
@@ -58,9 +58,9 @@ const LoadMoreButton = styled.button`
   cursor: pointer;
 `;
 
-const OrganismPanelListSection = ({ service, time }) => {
+const OrganismPanelListSectionImage = ({ service, time }) => {
   // 패널 데이터의 실제 개수를 고려하여 초기 visiblePanels 설정
-  const initialVisiblePanels = panelData?.length ? Math.min(panelData.length, 20) : 0;
+  const initialVisiblePanels = panelDataImage?.length ? Math.min(panelDataImage.length, 20) : 0;
   const [visiblePanels, setVisiblePanels] = useState(initialVisiblePanels);
   const [selectedCount, setSelectedCount] = useState(0);
   const [selectedPanels, setSelectedPanels] = useState(new Set());
@@ -79,14 +79,14 @@ const OrganismPanelListSection = ({ service, time }) => {
   };
 
   const handleSelectAll = (isSelected) => {
-    const allPanelIds = panelData.slice(0, visiblePanels).map(panel => panel.id);
+    const allPanelIds = panelDataImage.slice(0, visiblePanels).map(panel => panel.id);
     setSelectedPanels(isSelected ? new Set(allPanelIds) : new Set());
     setSelectedCount(isSelected ? allPanelIds.length : 0);
   };
 
   const handleLoadMore = () => {
     setVisiblePanels((prevCount) => {
-      const remainingPanels = panelData.length - prevCount;
+      const remainingPanels = panelDataImage.length - prevCount;
       return prevCount + (remainingPanels >= 20 ? 20 : remainingPanels);
     });
   };
@@ -95,8 +95,8 @@ const OrganismPanelListSection = ({ service, time }) => {
     console.log(`View changed to: ${e.target.value}`);
   };
 
-  // panelData가 유효한지 확인
-  if (!Array.isArray(panelData) || panelData.length === 0) {
+  // panelDataImage가 유효한지 확인
+  if (!Array.isArray(panelDataImage) || panelDataImage.length === 0) {
     return <p>패널 데이터가 없습니다.</p>;
   }
 
@@ -109,30 +109,28 @@ const OrganismPanelListSection = ({ service, time }) => {
         loadedPanelCount={visiblePanels}
       />
       <PanelList>
-        {panelData.slice(0, visiblePanels).map((panel) => (
-          <MoleculePanelItem
+        {panelDataImage.slice(0, visiblePanels).map((panel) => (
+          <MoleculePanelItemImage
             key={panel.id}
             id={panel.id}
-            name={panel.name}
-            gender={panel.gender}
-            age={panel.age}
-            address={panel.address}
-            job={panel.job}
-            tag={panel.tag}
+            imgSrc={panel.imgSrc}
+            altText={panel.altText}
+            description={panel.description}
+            tags={panel.tags}
             lifeStyle={panel.lifeStyle}
-            consumptionPropensity={panel.consumptionPropensity}
-            productGroup={panel.productGroup}
+            consumption={panel.consumption}
+            interest={panel.interest}
             onSelect={(isSelected) => handleSelect(isSelected, panel.id)}
             service={service}
             time={time}
           />
         ))}
       </PanelList>
-      {visiblePanels < panelData.length && (
+      {visiblePanels < panelDataImage.length && (
         <LoadMoreButton onClick={handleLoadMore}>20명의 패널 더보기</LoadMoreButton>
       )}
     </PanelWrap>
   );
 };
 
-export default OrganismPanelListSection;
+export default OrganismPanelListSectionImage;
