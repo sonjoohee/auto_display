@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useAtom } from 'jotai';
 import MoleculePanelItem from "../molecules/MoleculePanelItem";
 import MoleculePanelControls from "../molecules/MoleculePanelControls";
 import { palette } from "../../assets/styles/Palette";
-import panelData from "../../data/panelData";  // 더미 데이터 또는 API 호출
-import { selectedPanelCountAtom, loadedPanelCountAtom, selectedPanelsAtom } from '../../../AtomStates';
+import panelDataImage from "../../data/panelDataImage";  // 더미 데이터 또는 API 호출
 
 const PanelWrap = styled.section`
   .sortBooth {
@@ -60,57 +58,37 @@ const LoadMoreButton = styled.button`
   cursor: pointer;
 `;
 
-const OrganismPanelListSectionInfinite = ({ service, time, onSelect }) => {
-  const [visiblePanels, setVisiblePanels] = useState(20);
-  const [selectedCount, setSelectedCount] = useAtom(selectedPanelCountAtom);
-  const [selectedPanels, setSelectedPanels] = useAtom(selectedPanelsAtom);
-  const [, setLoadedPanelCount] = useAtom(loadedPanelCountAtom);
+const OrganismPanelListSectionInstructionImage = ({ service, time }) => {
+  // 패널 데이터의 실제 개수를 고려하여 초기 visiblePanels 설정
+  const initialVisiblePanels = panelDataImage.length < 20 ? panelDataImage.length : 20;
+  const [visiblePanels, setVisiblePanels] = useState(initialVisiblePanels);
+  const [selectedCount, setSelectedCount] = useState(0);
+  const [selectedPanels, setSelectedPanels] = useState(new Set());
 
-  useEffect(() => {
-    setLoadedPanelCount(visiblePanels);
-  }, [visiblePanels, setLoadedPanelCount]);
-
-  // const handleSelect = (isSelected, panelId) => {
-  //   setSelectedPanels(prevSelected => {
-  //     const newSelected = new Set(prevSelected);
-  //     if (isSelected) {
-  //       newSelected.add(panelId);
-  //     } else {
-  //       newSelected.delete(panelId);
-  //     }
-  //     setSelectedCount(newSelected.size); // Update selectedCount based on the size of the set
-  //     return newSelected;
-  //   });
-  //   onSelect(isSelected);
-  // };
-  
   const handleSelect = (isSelected, panelId) => {
     setSelectedCount((prevCount) => isSelected ? prevCount + 1 : prevCount - 1);
-    if (isSelected) {
-      setSelectedPanels(prevSelected => new Set(prevSelected).add(panelId));
-    } else {
-      setSelectedPanels(prevSelected => {
-        const newSelected = new Set(prevSelected);
+    setSelectedPanels((prevSelected) => {
+      const newSelected = new Set(prevSelected);
+      if (isSelected) {
+        newSelected.add(panelId);
+      } else {
         newSelected.delete(panelId);
-        return newSelected;
-      });
-    }
-    onSelect(isSelected);
-  };
-  const handleLoadMore = () => {
-    setVisiblePanels((prevCount) => prevCount + 20);
+      }
+      return newSelected;
+    });
   };
 
-  // const handleSelectAll = (isSelected) => {
-  //   const allPanelIds = panelData.slice(0, visiblePanels).map(panel => panel.id);
-  //   const newSelectedPanels = isSelected ? new Set(allPanelIds) : new Set();
-  //   setSelectedPanels(newSelectedPanels);
-  //   setSelectedCount(newSelectedPanels.size); // Update selectedCount based on the size of the set
-  // };
   const handleSelectAll = (isSelected) => {
-    const allPanelIds = panelData.slice(0, visiblePanels).map(panel => panel.id);
+    const allPanelIds = panelDataImage.slice(0, visiblePanels).map(panel => panel.id);
     setSelectedPanels(isSelected ? new Set(allPanelIds) : new Set());
     setSelectedCount(isSelected ? allPanelIds.length : 0);
+  };
+
+  const handleLoadMore = () => {
+    setVisiblePanels((prevCount) => {
+      const remainingPanels = panelDataImage.length - prevCount;
+      return prevCount + (remainingPanels >= 20 ? 20 : remainingPanels);
+    });
   };
 
   const handleViewChange = (e) => {
@@ -121,12 +99,12 @@ const OrganismPanelListSectionInfinite = ({ service, time, onSelect }) => {
     <PanelWrap>
       <MoleculePanelControls
         selectedCount={selectedCount}
-        onSelectAll={handleSelectAll}
         onViewChange={handleViewChange}
-        loadedPanelCount={visiblePanels}  // Add this prop to pass the loaded panel count
+        onSelectAll={handleSelectAll}
+        loadedPanelCount={visiblePanels}
       />
       <PanelList>
-        {panelData.slice(0, visiblePanels).map((panel) => (
+        {panelDataImage.slice(0, visiblePanels).map((panel) => (
           <MoleculePanelItem
             key={panel.id}
             id={panel.id}
@@ -143,11 +121,11 @@ const OrganismPanelListSectionInfinite = ({ service, time, onSelect }) => {
           />
         ))}
       </PanelList>
-      {visiblePanels < panelData.length && (
+      {visiblePanels < panelDataImage.length && (
         <LoadMoreButton onClick={handleLoadMore}>20명의 패널 더보기</LoadMoreButton>
       )}
     </PanelWrap>
   );
 };
 
-export default OrganismPanelListSectionInfinite;
+export default OrganismPanelListSectionInstructionImage;

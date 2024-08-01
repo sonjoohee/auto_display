@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import MoleculePanelItem from "../molecules/MoleculePanelItem";
-import AtomCheckbox from "../atoms/AtomCheckbox";
+import MoleculePanelControls from "../molecules/MoleculePanelControls";
 import { palette } from "../../assets/styles/Palette";
 
 import panelimages from "../../assets/styles/PanelImages";
@@ -30,12 +30,47 @@ const OrganismPanelListSection = () => {
   const [searchUtilizationTime, setSearchUtilizationTime] = useAtom(SEARCH_UTILIZATION_TIME);
   const [searchGender, setSearchGender] = useAtom(SEARCH_GENDER);
   const [searchAge, setSearchAge] = useAtom(SEARCH_AGE);
-
+  
+  // 패널 데이터의 실제 개수를 고려하여 초기 visiblePanels 설정
+  const initialVisiblePanels = panelData?.length ? Math.min(panelData.length, 20) : 0;
+  const [visiblePanels, setVisiblePanels] = useState(initialVisiblePanels);
   const [selectedCount, setSelectedCount] = useState(0);
+  const [selectedPanels, setSelectedPanels] = useState(new Set());
 
-  const handleSelect = (isSelected) => {
+  const handleSelect = (isSelected, panelId) => {
     setSelectedCount((prevCount) => isSelected ? prevCount + 1 : prevCount - 1);
+    setSelectedPanels((prevSelected) => {
+      const newSelected = new Set(prevSelected);
+      if (isSelected) {
+        newSelected.add(panelId);
+      } else {
+        newSelected.delete(panelId);
+      }
+      return newSelected;
+    });
   };
+
+  const handleSelectAll = (isSelected) => {
+    const allPanelIds = panelData.slice(0, visiblePanels).map(panel => panel.id);
+    setSelectedPanels(isSelected ? new Set(allPanelIds) : new Set());
+    setSelectedCount(isSelected ? allPanelIds.length : 0);
+  };
+
+  const handleLoadMore = () => {
+    setVisiblePanels((prevCount) => {
+      const remainingPanels = panelData.length - prevCount;
+      return prevCount + (remainingPanels >= 20 ? 20 : remainingPanels);
+    });
+  };
+
+  const handleViewChange = (e) => {
+    console.log(`View changed to: ${e.target.value}`);
+  };
+
+  // panelData가 유효한지 확인
+  if (!Array.isArray(panelData) || panelData.length === 0) {
+    return <p>패널 데이터가 없습니다.</p>;
+  }
 
   // 최초 패널 리스트
   useEffect(() => {
@@ -87,6 +122,9 @@ const OrganismPanelListSection = () => {
           />
           ))}
       </PanelList>
+      {visiblePanels < panelData.length && (
+        <LoadMoreButton onClick={handleLoadMore}>20명의 패널 더보기</LoadMoreButton>
+      )}
     </PanelWrap>
   );
 };
@@ -133,4 +171,15 @@ const PanelList = styled.ul`
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
+`;
+
+const LoadMoreButton = styled.button`
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: ${palette.blue};
+  color: ${palette.white};
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 `;

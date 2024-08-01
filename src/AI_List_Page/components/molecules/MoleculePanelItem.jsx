@@ -1,10 +1,12 @@
-// src/AI_List_Page/components/molecules/MoleculePanelItem.jsx
+// MoleculePanelItem.jsx
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { palette } from '../../assets/styles/Palette';
 import panelimages from "../../assets/images/panel/PanelImage1.png"
+import MoleculePanelItemDetail from './MoleculePanelItemDetail';
 
 const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, comment, tags, onSelect, lifeStyle, consumption, productGroup }) => {
+
   const [isSelected, setSelected] = useState(false);
   const [isDetailsVisible, setDetailsVisible] = useState(false);
 
@@ -52,7 +54,7 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
         </PanelDetails>
       </PanelItem>
       {isDetailsVisible && (
-        <DetailsModal 
+        <MoleculePanelItemDetail 
           onClose={handleCloseDetails} 
           lifeStyle={lifeStyle} 
           consumption={consumption} 
@@ -63,6 +65,7 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
   );
 };
 
+// 뺼거
 const DetailsModal = ({ onClose, lifeStyle, consumption, productGroup }) => {
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
