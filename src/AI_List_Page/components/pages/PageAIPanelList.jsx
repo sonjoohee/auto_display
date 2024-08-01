@@ -1,5 +1,4 @@
-// src/AI_List_Page/components/pages/PageAIPanelListInfinite.jsx
-
+// PageAIPanelListInfinite.jsx
 import React, { useState } from 'react';
 import { useAtom } from 'jotai';
 import styled from 'styled-components';
@@ -18,16 +17,15 @@ const PageAIPanelListInfinite = () => {
   const [, setSelectedPanels] = useAtom(selectedPanelsAtom);
   const [, setloadedPanelCount] = useAtom(loadedPanelCountAtom);
 
-
   const handleSelect = (isSelected) => {
     setSelectedCount(prevCount => isSelected ? prevCount + 1 : prevCount - 1);
   };
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
-    setSelectedCount(0);  // 탭을 변경할 때 선택된 패널의 갯수를 초기화
+    setSelectedCount(0);
     setloadedPanelCount(0);
-    setSelectedPanels(new Set());  // 선택된 패널의 상태 초기화
+    setSelectedPanels(new Set());
   };
 
   const renderPanelListSection = () => {
@@ -47,8 +45,8 @@ const PageAIPanelListInfinite = () => {
     <>
       <OrganismHeader />
       <ContentsWrap>
-        <OrganismSearchSection />
         <MoleculeTabMenu activeTab={activeTab} onSelectTab={handleTabChange} />
+        <OrganismSearchSection />
         {renderPanelListSection()}
       </ContentsWrap>
     </>

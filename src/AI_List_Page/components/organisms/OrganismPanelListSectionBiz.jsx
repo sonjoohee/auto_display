@@ -1,9 +1,7 @@
-// src/AI_List_Page/components/organisms/OrganismPanelListSection.jsx
-
 import React, { useState } from "react";
 import styled from "styled-components";
 import MoleculePanelItem from "../molecules/MoleculePanelItem";
-import AtomCheckbox from "../atoms/AtomCheckbox";
+import MoleculePanelControls from "../molecules/MoleculePanelControls";
 import { palette } from "../../assets/styles/Palette";
 import panelData from "../../data/panelData";  // 더미 데이터 또는 API 호출
 
@@ -49,45 +47,90 @@ const PanelList = styled.ul`
   gap: 20px;
 `;
 
-const OrganismPanelListSectionBiz = ({ service, time }) => {
-  const [selectedCount, setSelectedCount] = useState(0);
+const LoadMoreButton = styled.button`
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: ${palette.blue};
+  color: ${palette.white};
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+`;
 
-  const handleSelect = (isSelected) => {
+const OrganismPanelListSection = ({ service, time }) => {
+  // 패널 데이터의 실제 개수를 고려하여 초기 visiblePanels 설정
+  const initialVisiblePanels = panelData?.length ? Math.min(panelData.length, 20) : 0;
+  const [visiblePanels, setVisiblePanels] = useState(initialVisiblePanels);
+  const [selectedCount, setSelectedCount] = useState(0);
+  const [selectedPanels, setSelectedPanels] = useState(new Set());
+
+  const handleSelect = (isSelected, panelId) => {
     setSelectedCount((prevCount) => isSelected ? prevCount + 1 : prevCount - 1);
+    setSelectedPanels((prevSelected) => {
+      const newSelected = new Set(prevSelected);
+      if (isSelected) {
+        newSelected.add(panelId);
+      } else {
+        newSelected.delete(panelId);
+      }
+      return newSelected;
+    });
   };
+
+  const handleSelectAll = (isSelected) => {
+    const allPanelIds = panelData.slice(0, visiblePanels).map(panel => panel.id);
+    setSelectedPanels(isSelected ? new Set(allPanelIds) : new Set());
+    setSelectedCount(isSelected ? allPanelIds.length : 0);
+  };
+
+  const handleLoadMore = () => {
+    setVisiblePanels((prevCount) => {
+      const remainingPanels = panelData.length - prevCount;
+      return prevCount + (remainingPanels >= 20 ? 20 : remainingPanels);
+    });
+  };
+
+  const handleViewChange = (e) => {
+    console.log(`View changed to: ${e.target.value}`);
+  };
+
+  // panelData가 유효한지 확인
+  if (!Array.isArray(panelData) || panelData.length === 0) {
+    return <p>패널 데이터가 없습니다.</p>;
+  }
 
   return (
     <PanelWrap>
-      <div className="sortBooth">
-        <AtomCheckbox id="allChk" label="전체 선택" />
-        <div className="choicePanel">
-          210명의 패널 중 <strong>{selectedCount}</strong>명의 패널을 선택하셨어요
-        </div>
-        <div className="viewList">
-          <input type="radio" id="setCardType" name="viewGroup" value="card" />
-          <label htmlFor="setCardType">카드보기</label>
-          <input type="radio" id="setListType" name="viewGroup" value="list" />
-          <label htmlFor="setListType">목록보기</label>
-        </div>
-      </div>
+      <MoleculePanelControls
+        selectedCount={selectedCount}
+        onViewChange={handleViewChange}
+        onSelectAll={handleSelectAll}
+        loadedPanelCount={visiblePanels}
+      />
       <PanelList>
-        {panelData.map((panel) => (
+        {panelData.slice(0, visiblePanels).map((panel) => (
           <MoleculePanelItem
             key={panel.id}
             id={panel.id}
-            imgSrc={panel.imgSrc}
-            altText={panel.altText}
-            description={panel.description}
-            tags={panel.tags}
+            name={panel.name}
+            gender={panel.gender}
+            age={panel.age}
+            address={panel.address}
+            job={panel.job}
+            tag={panel.tag}
             lifeStyle={panel.lifeStyle}
-            consumption={panel.consumption}
-            interest={panel.interest}
-            onSelect={handleSelect}
+            consumptionPropensity={panel.consumptionPropensity}
+            productGroup={panel.productGroup}
+            onSelect={(isSelected) => handleSelect(isSelected, panel.id)}
             service={service}
             time={time}
           />
         ))}
       </PanelList>
+      {visiblePanels < panelData.length && (
+        <LoadMoreButton onClick={handleLoadMore}>20명의 패널 더보기</LoadMoreButton>
+      )}
     </PanelWrap>
   );
 };

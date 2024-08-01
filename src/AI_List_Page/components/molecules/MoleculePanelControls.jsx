@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import AtomCheckbox from '../atoms/AtomCheckbox';
 import { palette } from '../../assets/styles/Palette';
@@ -40,15 +40,12 @@ const ViewList = styled.div`
 const MoleculePanelControls = ({ selectedCount, onViewChange, onSelectAll, loadedPanelCount }) => {
   const [isChecked, setIsChecked] = useState(false);
 
-  const handleSelectAll = () => {
+  const handleSelectAll = useCallback(() => {
     const newCheckedState = !isChecked;
     setIsChecked(newCheckedState);
     onSelectAll(newCheckedState);
-  };
-
-  useEffect(() => {
-    onSelectAll(isChecked);
   }, [isChecked, onSelectAll]);
+
 
   return (
     <ControlsWrapper>
