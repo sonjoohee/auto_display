@@ -2,7 +2,121 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { palette } from '../../assets/styles/Palette';
+import panelimages from "../../assets/images/panel/PanelImage1.png"
 import MoleculePanelItemDetail from './MoleculePanelItemDetail';
+
+const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, comment, tags, onSelect, lifeStyle, consumption, productGroup }) => {
+
+  const [isSelected, setSelected] = useState(false);
+  const [isDetailsVisible, setDetailsVisible] = useState(false);
+
+  const handlePanelClick = (e) => {
+    if (e.target.tagName === 'BUTTON') {
+      return;
+    }
+    const newSelected = !isSelected;
+    setSelected(newSelected);
+    onSelect(newSelected);
+  };
+
+  const handleDetailsClick = (e) => {
+    e.stopPropagation();
+    setDetailsVisible(true);
+  };
+
+  const handleSelectButtonClick = (e) => {
+    e.stopPropagation();
+    const newSelected = !isSelected;
+    setSelected(newSelected);
+    onSelect(newSelected);
+  };
+
+  const handleCloseDetails = () => {
+    setDetailsVisible(false);
+  };
+
+  return (
+    <>
+      <PanelItem className={isSelected ? 'selected' : ''} onClick={handlePanelClick}>
+        <Image src={panelimages} />
+        <Overlay className="overlay">
+          <InfoButton onClick={handleDetailsClick}>패널정보 상세보기</InfoButton>
+          <InfoButton onClick={handleSelectButtonClick}>
+            {isSelected ? '✅ 패널 선택됨' : '패널 선택하기'}
+          </InfoButton>
+        </Overlay>
+        <PanelDetails>
+          <p>{gender === "M" ? "남성" : "여성"}({age}세) | {job}</p>
+          <strong>{comment}</strong>
+          <ol>
+            {tags}
+          </ol>
+        </PanelDetails>
+      </PanelItem>
+      {isDetailsVisible && (
+        <MoleculePanelItemDetail 
+          onClose={handleCloseDetails} 
+          lifeStyle={lifeStyle} 
+          consumption={consumption} 
+          productGroup={productGroup} 
+        />
+      )}
+    </>
+  );
+};
+
+// 뺼거
+const DetailsModal = ({ onClose, lifeStyle, consumption, productGroup }) => {
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
+  return (
+    <ModalOverlay onClick={handleOverlayClick}>
+      <ModalContent>
+        <CloseButton onClick={onClose}>X</CloseButton>
+        <h2>패널 상세 정보</h2>
+        <p><strong>라이프 스타일:</strong> {lifeStyle}</p>
+        <p><strong>소비 성향:</strong> {consumption}</p>
+        <p><strong>관심 제품군:</strong> {productGroup}</p>
+      </ModalContent>
+    </ModalOverlay>
+  );
+};
+
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+const ModalContent = styled.div`
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 600px;
+  position: relative;
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+`;
 
 const PanelItem = styled.li`
   position: relative;
@@ -75,71 +189,5 @@ const PanelDetails = styled.div`
     margin-top: 8px;
   }
 `;
-
-const MoleculePanelItem = ({ id, name, gender, age, address, job, tag, lifeStyle, consumptionPropensity, productGroup, onSelect }) => {
-  const [isSelected, setSelected] = useState(false);
-  const [isDetailsVisible, setDetailsVisible] = useState(false);
-
-  const handlePanelClick = (e) => {
-    if (e.target.tagName === 'BUTTON') {
-      return;
-    }
-    const newSelected = !isSelected;
-    setSelected(newSelected);
-    onSelect(newSelected);
-  };
-
-  const handleDetailsClick = (e) => {
-    e.stopPropagation();
-    setDetailsVisible(true);
-  };
-
-  const handleSelectButtonClick = (e) => {
-    e.stopPropagation();
-    const newSelected = !isSelected;
-    setSelected(newSelected);
-    onSelect(newSelected);
-  };
-
-  const handleCloseDetails = () => {
-    setDetailsVisible(false);
-  };
-
-  return (
-    <>
-      <PanelItem className={isSelected ? 'selected' : ''} onClick={handlePanelClick}>
-        <PanelDetails>
-          <p>{name} | {job}</p>
-          <strong>{lifeStyle}</strong>
-          <ol>
-            {(tag ? tag.split(',') : []).map((t, index) => (
-              <li key={index}>{t.trim()}</li>
-            ))}
-          </ol>
-        </PanelDetails>
-        <Overlay className="overlay">
-          <InfoButton onClick={handleDetailsClick}>패널정보 상세보기</InfoButton>
-          <InfoButton onClick={handleSelectButtonClick}>
-            {isSelected ? '✅ 패널 선택됨' : '패널 선택하기'}
-          </InfoButton>
-        </Overlay>
-      </PanelItem>
-      {isDetailsVisible && (
-        <MoleculePanelItemDetail 
-          onClose={handleCloseDetails} 
-          imgSrc={null} // 이미지가 필요하면 해당 속성 추가
-          altText={`${name}의 이미지`}
-          description={`${name} | ${job}`}
-          lifeStyle={lifeStyle}
-          consumption={consumptionPropensity}
-          interest={productGroup}
-          tags={tag ? tag.split(',').map(t => t.trim()) : []}
-          isSelected={isSelected}
-          toggleSelection={handleSelectButtonClick}
-        />
-      )}
-    </>
-  );
-};
 
 export default MoleculePanelItem;
