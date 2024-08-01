@@ -32,7 +32,7 @@ const OrganismPanelListSectionBiz = () => {
   const [searchAge, setSearchAge] = useAtom(SEARCH_AGE);
   
   // 패널 데이터의 실제 개수를 고려하여 초기 visiblePanels 설정
-  const initialVisiblePanels = panelData?.length ? Math.min(panelData.length, 20) : 0;
+  const initialVisiblePanels = panelList?.length ? Math.min(panelList.length, 20) : 0;
   const [visiblePanels, setVisiblePanels] = useState(initialVisiblePanels);
   const [selectedCount, setSelectedCount] = useState(0);
   const [selectedPanels, setSelectedPanels] = useState(new Set());
@@ -51,14 +51,14 @@ const OrganismPanelListSectionBiz = () => {
   };
 
   const handleSelectAll = (isSelected) => {
-    const allPanelIds = panelData.slice(0, visiblePanels).map(panel => panel.id);
+    const allPanelIds = panelList.slice(0, visiblePanels).map(panel => panel.id);
     setSelectedPanels(isSelected ? new Set(allPanelIds) : new Set());
     setSelectedCount(isSelected ? allPanelIds.length : 0);
   };
 
   const handleLoadMore = () => {
     setVisiblePanels((prevCount) => {
-      const remainingPanels = panelData.length - prevCount;
+      const remainingPanels = panelList.length - prevCount;
       return prevCount + (remainingPanels >= 20 ? 20 : remainingPanels);
     });
   };
@@ -66,11 +66,6 @@ const OrganismPanelListSectionBiz = () => {
   const handleViewChange = (e) => {
     console.log(`View changed to: ${e.target.value}`);
   };
-
-  // panelData가 유효한지 확인
-  if (!Array.isArray(panelData) || panelData.length === 0) {
-    return <p>패널 데이터가 없습니다.</p>;
-  }
 
   // 최초 패널 리스트
   useEffect(() => {
@@ -87,21 +82,20 @@ const OrganismPanelListSectionBiz = () => {
 
     fetchPanelList();
   }, [setPanelList]);
+  
+  // panelData가 유효한지 확인
+  if (!Array.isArray(panelList) || panelList.length === 0) {
+    return <p>패널 데이터가 없습니다.</p>;
+  }
 
   return (
     <PanelWrap>
-      <div className="sortBooth">
-        <AtomCheckbox id="allChk" label="전체 선택" />
-        <div className="choicePanel">
-          {panelList.length}명의 패널 중 <strong>{selectedCount}</strong>명의 패널을 선택하셨어요
-        </div>
-        <div className="viewList">
-          <input type="radio" id="setCardType" name="viewGroup" value="card" />
-          <label htmlFor="setCardType">카드보기</label>
-          <input type="radio" id="setListType" name="viewGroup" value="list" />
-          <label htmlFor="setListType">목록보기</label>
-        </div>
-      </div>
+      <MoleculePanelControls
+        selectedCount={selectedCount}
+        onViewChange={handleViewChange}
+        onSelectAll={handleSelectAll}
+        loadedPanelCount={panelList.length}
+      />
       <PanelList>
         {panelList.map((panel) => (
           <MoleculePanelItem
@@ -122,7 +116,7 @@ const OrganismPanelListSectionBiz = () => {
           />
           ))}
       </PanelList>
-      {visiblePanels < panelData.length && (
+      {visiblePanels < panelList.length && (
         <LoadMoreButton onClick={handleLoadMore}>20명의 패널 더보기</LoadMoreButton>
       )}
     </PanelWrap>
