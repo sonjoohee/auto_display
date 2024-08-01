@@ -12,10 +12,9 @@ import axios from "axios";
 import { 
   TOTAL_PANEL_COUNT,
   PANEL_LIST,
-  FILTERED_PANEL_LIST,
   SELECTED_PANEL_COUNT,
-  SEARCH_KEYWORD,
-  SEARCH_TIME, 
+  SEARCH_BEHABIORAL_TYPE,
+  SEARCH_UTILIZATION_TIME, 
   SEARCH_GENDER, 
   SEARCH_AGE, 
   SEARCH_MARRIAGE, 
@@ -27,9 +26,8 @@ import {
 const OrganismPanelListSection = () => {
 
   const [panelList, setPanelList] = useAtom(PANEL_LIST);
-  const [filteredPanelList, setFilteredPanelList] = useAtom(FILTERED_PANEL_LIST);
-  const [searchKeyword, setSearchKeyword] = useAtom(SEARCH_KEYWORD);
-  const [searchTime, setSearchTime] = useAtom(SEARCH_TIME);
+  const [searchBehabioralType, setSearchBehabioralType] = useAtom(SEARCH_BEHABIORAL_TYPE);
+  const [searchUtilizationTime, setSearchUtilizationTime] = useAtom(SEARCH_UTILIZATION_TIME);
   const [searchGender, setSearchGender] = useAtom(SEARCH_GENDER);
   const [searchAge, setSearchAge] = useAtom(SEARCH_AGE);
 
@@ -39,13 +37,14 @@ const OrganismPanelListSection = () => {
     setSelectedCount((prevCount) => isSelected ? prevCount + 1 : prevCount - 1);
   };
 
-  // 전체 패널 리스트 
+  // 최초 패널 리스트
   useEffect(() => {
     const fetchPanelList = async () => {
       console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
       try {
         const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/panels/list?page=1&size=20`);
         setPanelList(response.data.results);
+        console.log(response.data.results);
       } catch (error) {
         console.error("Error fetching panel list:", error);
       }
@@ -54,19 +53,12 @@ const OrganismPanelListSection = () => {
     fetchPanelList();
   }, [setPanelList]);
 
-  // 검색어가 없을 때 필터링된 리스트는 전체 리스트
-  useEffect(() => {
-    if (searchKeyword === "" && searchTime === "" && searchGender === "" && searchAge === "") {
-        setFilteredPanelList(panelList);
-    }
-  }, [panelList, searchKeyword, searchTime, searchGender, searchAge, setFilteredPanelList]);
-
   return (
     <PanelWrap>
       <div className="sortBooth">
         <AtomCheckbox id="allChk" label="전체 선택" />
         <div className="choicePanel">
-          210명의 패널 중 <strong>{selectedCount}</strong>명의 패널을 선택하셨어요
+          {panelList.length}명의 패널 중 <strong>{selectedCount}</strong>명의 패널을 선택하셨어요
         </div>
         <div className="viewList">
           <input type="radio" id="setCardType" name="viewGroup" value="card" />
@@ -76,19 +68,22 @@ const OrganismPanelListSection = () => {
         </div>
       </div>
       <PanelList>
-        {filteredPanelList.map((panel) => (
+        {panelList.map((panel) => (
           <MoleculePanelItem
             key={panel.id}
             id={panel.id}
             gender={panel.gender}
             age={panel.age}
+            job={panel.job}
+            address={panel.address}
+            subAddress={panel.subAddress}
             imgSrc={panel.img}
             tags={panel.tag}
+            comment={panel.comment}
             lifeStyle={panel.lifeStyle}
             consumption={panel.consumptionPropensity}
-            interest={panel.productGroup}
+            productGroup={panel.productGroup}
             onSelect={handleSelect}
-            time={panel.timeImportance}
           />
           ))}
       </PanelList>

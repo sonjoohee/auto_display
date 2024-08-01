@@ -28,15 +28,12 @@ export const selectedPanelsAtom = atom(new Set());
 export const TOTAL_PANEL_COUNT = atom(0);
 export const SELECTED_PANEL_COUNT = atom(0);
 
-// 상세 옵션 적용 전 패널 리스트
+// 패널 리스트
 export const PANEL_LIST = atom([]);
 
-// 싱세 옵션 적용 후 패널 리스트, 실제로 보여지는 패널 리스트
-export const FILTERED_PANEL_LIST = atom([]);
-
 // 검색어 상태
-export const SEARCH_KEYWORD = atom("");
-export const SEARCH_TIME = atom("");
+export const SEARCH_BEHABIORAL_TYPE = atom("");
+export const SEARCH_UTILIZATION_TIME = atom("");
 export const SEARCH_GENDER = atom("");
 export const SEARCH_AGE = atom("");
 export const SEARCH_MARRIAGE = atom("");

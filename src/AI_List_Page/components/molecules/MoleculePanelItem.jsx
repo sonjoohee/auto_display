@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { palette } from '../../assets/styles/Palette';
 import panelimages from "../../assets/images/panel/PanelImage1.png"
 
-const MoleculePanelItem = ({ id, imgSrc, gender, age, tags, onSelect, lifeStyle, consumption, interest }) => {
+const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, comment, tags, onSelect, lifeStyle, consumption, productGroup }) => {
   const [isSelected, setSelected] = useState(false);
   const [isDetailsVisible, setDetailsVisible] = useState(false);
 
@@ -44,8 +44,8 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, tags, onSelect, lifeStyle,
           </InfoButton>
         </Overlay>
         <PanelDetails>
-          <p>{gender === "M" ? "남성" : "여성"}({age}세)</p>
-          <strong>{lifeStyle}</strong>
+          <p>{gender === "M" ? "남성" : "여성"}({age}세) | {job}</p>
+          <strong>{comment}</strong>
           <ol>
             {tags}
           </ol>
@@ -56,14 +56,14 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, tags, onSelect, lifeStyle,
           onClose={handleCloseDetails} 
           lifeStyle={lifeStyle} 
           consumption={consumption} 
-          interest={interest} 
+          productGroup={productGroup} 
         />
       )}
     </>
   );
 };
 
-const DetailsModal = ({ onClose, lifeStyle, consumption, interest }) => {
+const DetailsModal = ({ onClose, lifeStyle, consumption, productGroup }) => {
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
@@ -77,7 +77,7 @@ const DetailsModal = ({ onClose, lifeStyle, consumption, interest }) => {
         <h2>패널 상세 정보</h2>
         <p><strong>라이프 스타일:</strong> {lifeStyle}</p>
         <p><strong>소비 성향:</strong> {consumption}</p>
-        <p><strong>관심 제품군:</strong> {interest}</p>
+        <p><strong>관심 제품군:</strong> {productGroup}</p>
       </ModalContent>
     </ModalOverlay>
   );

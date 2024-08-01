@@ -6,10 +6,9 @@ import axios from "axios";
 import { 
   TOTAL_PANEL_COUNT,
   PANEL_LIST,
-  FILTERED_PANEL_LIST,
   SELECTED_PANEL_COUNT,
-  SEARCH_KEYWORD,
-  SEARCH_TIME, 
+  SEARCH_BEHABIORAL_TYPE,
+  SEARCH_UTILIZATION_TIME, 
   SEARCH_GENDER, 
   SEARCH_AGE, 
   SEARCH_MARRIAGE, 
@@ -29,12 +28,11 @@ const MoleculeSearchForm = () => {
 
   const [totalPanelCount, setTotalPanelCount] = useAtom(TOTAL_PANEL_COUNT);
   const [panelList, setPanelList] = useAtom(PANEL_LIST);
-  const [filteredPanelList, setFilteredPanelList] = useAtom(FILTERED_PANEL_LIST);
   const [selectedPanelCount, setSelectedPanelCount] = useAtom(SELECTED_PANEL_COUNT);
 
   // 검색 관련 atoms
-  const [searchKeyword, setSearchKeyword] = useAtom(SEARCH_KEYWORD);
-  const [searchTime, setSearchTime] = useAtom(SEARCH_TIME);
+  const [searchBehabioralType, setSearchBehabioralType] = useAtom(SEARCH_BEHABIORAL_TYPE);
+  const [searchUtilizationTime, setSearchUtilizationTime] = useAtom(SEARCH_UTILIZATION_TIME);
   const [searchGender, setSearchGender] = useAtom(SEARCH_GENDER);
   const [searchAge, setSearchAge] = useAtom(SEARCH_AGE);
   const [searchMarriage, setSearchMarriage] = useAtom(SEARCH_MARRIAGE);
@@ -48,8 +46,8 @@ const MoleculeSearchForm = () => {
   const [showDetailOption, setShowDetailOption] = useState(false);
   const [showTimeOption, setShowTimeOption] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState({
-    keyword: "",
-    time: "",
+    behabioralType: "",
+    utilizationTime: "",
     gender: "",
     age: "",
     marriage: "",
@@ -69,31 +67,30 @@ const MoleculeSearchForm = () => {
 
   const handleSearch = () => {
     const searchParams = {
-      searchKeyword,
-      searchTime,
+      searchBehabioralType,
+      searchUtilizationTime,
+      searchGender,
+      searchAge,
+      //searchMarriage,
+      //searchChild,
+      //searchConsumption,
+      //searchTechnology,
     };
 
     console.log(searchParams);
-    setSelectedPanelCount(0);
-    // axios.post(`${process.env.REACT_APP_SERVER_URL}/panels/search`, searchParams)
-    //   .then(response => {
-    //     setPanelList(response.data);
-    //   })
-    //   .catch(error => {
-    //     console.error("Error fetching filtered panel list:", error);
-    //   });
-
-    // 상세 옵션 필터링
-    setFilteredPanelList(panelList.filter(panel => {
-      const isGenderMatch = panel.gender === searchGender || searchGender === "";
-      const isAgeMatch = searchAge.includes(Math.floor(panel.age / 10) * 10) || searchAge === "";
-      return isGenderMatch && isAgeMatch}));
+    axios.post(`${process.env.REACT_APP_SERVER_URL}/panels/search`, searchParams)
+      .then(response => {
+        setPanelList(response.data.results);
+      })
+      .catch(error => {
+        console.error("Error fetching filtered panel list:", error);
+      });
   };
 
   const handleApplyDetail = () => {
     setSelectedFilters({
-      searchKeyword,
-      searchTime,
+      searchBehabioralType,
+      searchUtilizationTime,
       searchGender,
       searchAge,
       searchMarriage,
@@ -111,7 +108,7 @@ const MoleculeSearchForm = () => {
       <div className="searchForm">
         <div>
           <span>행동 타입</span>
-          <InputField None type="text" name="type" placeholder="입력하세요" value={searchKeyword} onChange={(e) => setSearchKeyword(e.target.value)}/>
+          <InputField None type="text" name="type" placeholder="입력하세요" value={searchBehabioralType} onChange={(e) => setSearchBehabioralType(e.target.value)}/>
         </div>
         <div onClick={handleTimeOptionToggle}>
           <span>활용 시간</span>
@@ -150,9 +147,9 @@ const MoleculeSearchForm = () => {
       {showTimeOption && (
         <DetailOptions>
           <div>
-            <button className={searchTime === '적게' ? 'active' : ''} onClick={() => setSearchTime('적게')}>적게</button>
-            <button className={searchTime === '보통' ? 'active' : ''} onClick={() => setSearchTime('보통')}>보통</button>
-            <button className={searchTime === '많이' ? 'active' : ''} onClick={() => setSearchTime('많이')}>많이</button>
+            <button className={searchUtilizationTime === '적게' ? 'active' : ''} onClick={() => setSearchUtilizationTime('적게')}>적게</button>
+            <button className={searchUtilizationTime === '보통' ? 'active' : ''} onClick={() => setSearchUtilizationTime('보통')}>보통</button>
+            <button className={searchUtilizationTime === '많이' ? 'active' : ''} onClick={() => setSearchUtilizationTime('많이')}>많이</button>
           </div>
         </DetailOptions>
       )}
