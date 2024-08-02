@@ -1,0 +1,201 @@
+// src/AI_List_Page/components/organisms/OrganismPanelListSection.jsx
+
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import MoleculePanelItem from "../molecules/MoleculePanelItem";
+import MoleculePanelControls from "../molecules/MoleculePanelControls";
+import { palette } from "../../assets/styles/Palette";
+
+import panelimages from "../../assets/styles/PanelImages";
+import { useAtom } from "jotai";
+import axios from "axios";
+import { 
+  TOTAL_PANEL_COUNT,
+  PANEL_LIST,
+  SELECTED_PANEL_COUNT,
+  SEARCH_BEHABIORAL_TYPE,
+  SEARCH_UTILIZATION_TIME, 
+  SEARCH_GENDER, 
+  SEARCH_AGE, 
+  SEARCH_MARRIAGE, 
+  SEARCH_CHILD, 
+  SEARCH_CONSUMPTION, 
+  SEARCH_TECHNOLOGY,
+  PANEL_LIST_PAGE_COUNT,
+} from "../../../AtomStates";
+
+const OrganismPanelListSectionInstruction = () => {
+
+  const [panelList, setPanelList] = useAtom(PANEL_LIST);
+  const [searchBehabioralType, setSearchBehabioralType] = useAtom(SEARCH_BEHABIORAL_TYPE);
+  const [searchUtilizationTime, setSearchUtilizationTime] = useAtom(SEARCH_UTILIZATION_TIME);
+  const [searchGender, setSearchGender] = useAtom(SEARCH_GENDER);
+  const [searchAge, setSearchAge] = useAtom(SEARCH_AGE);
+  const [panelListPageCount, setPanelListPageCount] = useAtom(PANEL_LIST_PAGE_COUNT);
+  
+  const [visiblePanels, setVisiblePanels] = useState(20);
+  const [selectedCount, setSelectedCount] = useState(0);
+  const [selectedPanels, setSelectedPanels] = useState(new Set());
+
+  const handleSelect = (isSelected, panelId) => {
+    setSelectedCount((prevCount) => isSelected ? prevCount + 1 : prevCount - 1);
+    setSelectedPanels((prevSelected) => {
+      const newSelected = new Set(prevSelected);
+      if (isSelected) {
+        newSelected.add(panelId);
+      } else {
+        newSelected.delete(panelId);
+      }
+      return newSelected;
+    });
+  };
+
+  const handleSelectAll = (isSelected) => {
+    const allPanelIds = panelList.slice(0, visiblePanels).map(panel => panel.id);
+    setSelectedPanels(isSelected ? new Set(allPanelIds) : new Set());
+    setSelectedCount(isSelected ? allPanelIds.length : 0);
+  };
+
+  // const handleLoadMore = () => {
+  //   setVisiblePanels((prevCount) => {
+  //     const remainingPanels = panelList.length - prevCount;
+  //     return prevCount + (remainingPanels >= 20 ? 20 : remainingPanels);
+  //   });
+  // };
+  const handleLoadMore = () => {
+    setPanelListPageCount(prevPageCount => prevPageCount + 1);
+  };
+
+  const handleViewChange = (e) => {
+    console.log(`View changed to: ${e.target.value}`);
+  };
+
+  
+  // 최초 패널 리스트
+  useEffect(() => {
+    const fetchInitialPanelList = async () => {
+      console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/panels/list?page=1&size=20`);
+        setPanelList(response.data.results); // 초기화 하여 최초 20명만 가져오기
+        console.log(response.data.results);
+      } catch (error) {
+        console.error("Error fetching panel list:", error);
+      }
+    };
+
+    fetchInitialPanelList();
+  }, []); // 빈 배열을 의존성 배열로 사용하여 최초 마운트 시에만 실행
+
+  // 추가 패널 리스트
+  useEffect(() => {
+    if (panelListPageCount > 1) {
+      const fetchAdditionalPanelList = async () => {
+        console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
+        try {
+          const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/panels/list?page=${panelListPageCount}&size=20`);
+          setPanelList(prevPanelList => [...prevPanelList, ...response.data.results]); // 리스트 초기화 하지 않고 아래에 붙이기
+          console.log(response.data.results);
+        } catch (error) {
+          console.error("Error fetching panel list:", error);
+        }
+      };
+
+      fetchAdditionalPanelList();
+    }
+  }, [panelListPageCount]); // panelListPageCount가 변경될 때마다 실행
+
+  // panelData가 유효한지 확인
+  if (!Array.isArray(panelList) || panelList.length === 0) {
+    return <p>패널 데이터가 없습니다.</p>;
+  }
+
+  return (
+    <PanelWrap>
+      <MoleculePanelControls
+        selectedCount={selectedCount}
+        onViewChange={handleViewChange}
+        onSelectAll={handleSelectAll}
+        loadedPanelCount={panelList.length}
+      />
+      <PanelList>
+        {panelList.map((panel) => (
+          <MoleculePanelItem
+            key={panel.id}
+            id={panel.id}
+            gender={panel.gender}
+            age={panel.age}
+            job={panel.job}
+            address={panel.address}
+            subAddress={panel.subAddress}
+            imgSrc={panel.img}
+            tags={panel.tag}
+            comment={panel.comment}
+            lifeStyle={panel.lifeStyle}
+            consumption={panel.consumptionPropensity}
+            productGroup={panel.productGroup}
+            onSelect={handleSelect}
+          />
+          ))}
+      </PanelList>
+      {visiblePanels <= panelList.length && (
+        <LoadMoreButton onClick={handleLoadMore}>20명의 패널 더보기</LoadMoreButton>
+      )}
+    </PanelWrap>
+  );
+};
+
+export default OrganismPanelListSectionInstruction;
+
+const PanelWrap = styled.section`
+  .sortBooth {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+
+  .choicePanel {
+    strong {
+      font-weight: 400;
+      margin: 0 12px;
+      padding: 4px 20px;
+      border-radius: 10px;
+      background: rgba(4, 83, 244, 0.1);
+    }
+  }
+
+  .viewList {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 30px;
+
+    input[type="radio"] {
+      opacity: 0;
+    }
+
+    input[type="radio"] + label {
+      position: relative;
+      padding-left: 28px;
+      cursor: pointer;
+    }
+  }
+`;
+
+const PanelList = styled.ul`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+`;
+
+const LoadMoreButton = styled.button`
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: ${palette.blue};
+  color: ${palette.white};
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+`;
