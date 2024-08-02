@@ -33,14 +33,6 @@ const pool = mariadb.createPool({
 });
 
 /*
-const transporter = nodemailer.createTransport({
-  service: 'Gmail',
-  auth: {
-    user: 'endnjs33@gmail.com',
-    pass: 'fprmcetbdjwrivjk', // 앱 비밀번호
-  },
-});
-
 const sendVerificationEmail = async (to, link) => {
   const mailOptions = {
     from: 'endnjs33@gmail.com',
