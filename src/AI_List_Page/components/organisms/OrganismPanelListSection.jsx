@@ -23,6 +23,7 @@ import {
   SEARCH_CHILD, 
   SEARCH_CONSUMPTION, 
   SEARCH_TECHNOLOGY,
+  PANEL_LIST_PAGE_COUNT,
 } from "../../../AtomStates";
 
 const OrganismPanelListSection = () => {
@@ -32,11 +33,10 @@ const OrganismPanelListSection = () => {
   const [searchUtilizationTime, setSearchUtilizationTime] = useAtom(SEARCH_UTILIZATION_TIME);
   const [searchGender, setSearchGender] = useAtom(SEARCH_GENDER);
   const [searchAge, setSearchAge] = useAtom(SEARCH_AGE);
-  const [isAllPanelsLoaded, setIsAllPanelsLoaded] = useState(false);
+  const [panelListPageCount, setPanelListPageCount] = useAtom(PANEL_LIST_PAGE_COUNT);
 
-  // 패널 데이터의 실제 개수를 고려하여 초기 visiblePanels 설정
-  const initialVisiblePanels = panelList?.length ? Math.min(panelList.length, 20) : 0;
-  const [visiblePanels, setVisiblePanels] = useState(initialVisiblePanels);
+  const [isAllPanelsLoaded, setIsAllPanelsLoaded] = useState(false);
+  const [visiblePanels, setVisiblePanels] = useState(20);
   const [selectedCount, setSelectedCount] = useState(0);
   const [selectedPanels, setSelectedPanels] = useState(new Set());
 
@@ -60,14 +60,8 @@ const OrganismPanelListSection = () => {
   };
 
   const handleLoadMore = () => {
-    setVisiblePanels((prevCount) => {
-      const remainingPanels = panelList.length - prevCount;
-      const newCount = prevCount + (remainingPanels >= 20 ? 20 : remainingPanels);
-      if (newCount >= panelList.length) {
-        setIsAllPanelsLoaded(true); // 모든 패널이 로드되었음을 표시
-      }
-      return newCount;
-    });
+    setPanelListPageCount(prevPageCount => prevPageCount + 1);
+    // 20개 이하로 데이터가 오면 동작
   };
 
   const handleViewChange = (e) => {
@@ -77,19 +71,49 @@ const OrganismPanelListSection = () => {
   
   // 최초 패널 리스트
   useEffect(() => {
-    const fetchPanelList = async () => {
+    const searchParams = {
+      searchBehabioralType,
+      searchUtilizationTime,
+      searchGender,
+      searchAge,
+    };
+    const fetchInitialPanelList = async () => {
       console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
       try {
-        const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/panels/list?page=1&size=20`);
+        const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/panels/list?page=1&size=20`, searchParams);
         setPanelList(response.data.results);
-        console.log(response.data.results);
+        console.log(searchParams);
       } catch (error) {
         console.error("Error fetching panel list:", error);
       }
     };
 
-    fetchPanelList();
-  }, [setPanelList]);
+    fetchInitialPanelList();
+  }, []);
+
+  // 추가 패널 리스트
+  useEffect(() => {
+    const searchParams = {
+      searchBehabioralType,
+      searchUtilizationTime,
+      searchGender,
+      searchAge,
+    };
+    if (panelListPageCount > 1) {
+      const fetchAdditionalPanelList = async () => {
+        console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
+        try {
+          const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/panels/list?page=${panelListPageCount}&size=20`, searchParams);
+          setPanelList(prevPanelList => [...prevPanelList, ...response.data.results]); // 리스트 초기화 하지 않고 아래에 붙이기
+          console.log(searchParams);
+        } catch (error) {
+          console.error("Error fetching panel list:", error);
+        }
+      };
+
+      fetchAdditionalPanelList();
+    }
+  }, [panelListPageCount]); // panelListPageCount가 변경될 때마다 실행
 
   // 하단 바가 나타날 때 스크롤 조정
   useEffect(() => {
@@ -140,7 +164,7 @@ const OrganismPanelListSection = () => {
           원하시는 패널이 없나요? 직접 만들어 보세요!
         </CreatePanelLink>
         ) : (
-          visiblePanels < panelList.length && (
+          visiblePanels <= panelList.length && (
             <LoadMoreButton isBottomBarVisible={selectedCount > 0} onClick={handleLoadMore}>
               20명의 패널 더보기
             </LoadMoreButton>
