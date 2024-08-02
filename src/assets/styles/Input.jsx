@@ -8,9 +8,7 @@ export const InputField = styled.input`
     if (props.None) return `40px`;
     else return `50px`;
   }};
-  font-family: 'Pretendard';
   font-size:1rem;
-  color:${palette.black};
   padding:${props => {
     if (props.None) return `6px 0`;
     else return `8px 16px`;
@@ -24,7 +22,6 @@ export const InputField = styled.input`
   transition:all .5s;
 
   &::placeholder {
-    font-family: 'Pretendard';
     color:${palette.lightGray};
     font-weight:400;
   }
@@ -35,11 +32,7 @@ export const CheckBox = styled.div`
   position:relative;
   display:flex;
   flex-wrap:wrap;
-  gap:${props => {
-    if (props.Button) return `6px`;
-    else return `20px`;
-  }};
-:;
+  gap:20px;
   align-items:center;
 
   input {
@@ -48,37 +41,12 @@ export const CheckBox = styled.div`
 
     + label {
       position:relative;
-      display:${props => {
-        if (props.Button) return `flex`;
-        else return `inline-block`;
-      }};
-      flex-wrap:${props => {
-        if (props.Button) return `wrap`;
-        else return `nowrap`;
-      }};
+      display:inline-block;
       font-family:Pretendard, Poppins;
-      font-size:${props => {
-        if (props.Small) return `0.875rem`;
-        else if (props.Button) return '1rem';
-        else return `1.125rem`;
-      }};
+      font-size: ${props => (props.Small ? "0.875rem" : "1.125rem")};
       line-height:22px;
-      text-align:center;
-      padding:${props => {
-        if (props.Small) return `0 0 0 30px`;
-        else if (props.Button) return '6px 10px';
-        else return `0 0 0 30px`;
-      }};
-      border-radius:${props => {
-        if (props.Button) return `3px`;
-        else return `0`;
-      }};
-      border:${props => {
-        if (props.Button) return `1px solid ${palette.lineGray}`;
-        else return `0`;
-      }};
+      padding-left:30px;
       vertical-align:top;
-      transition:all .5s;
       cursor:pointer;
 
       &:before {
@@ -92,10 +60,6 @@ export const CheckBox = styled.div`
         background:${palette.white};
         transition:all .5s;
         content:'';
-        display:${props => {
-          if (props.Button) return `none`;
-          else return `block`;
-        }};
       }
 
       &:after {
@@ -111,10 +75,6 @@ export const CheckBox = styled.div`
         transition:all .5s;
         opacity:0;
         content:'';
-        display:${props => {
-          if (props.Button) return `none`;
-          else return `block`;
-        }};
       }
     }
 
@@ -124,21 +84,6 @@ export const CheckBox = styled.div`
 
     &:checked + label:after {
       opacity:1;
-    }
-
-    &:checked + label {
-      color:${props => {
-        if (props.Button) return `${palette.blue}`;
-        else return `${palette.blue}`;
-      }};
-      border:${props => {
-        if (props.Button) return `1px solid ${palette.blue}`;
-        else return `0`;
-      }};
-      background:${props => {
-        if (props.Button) return `rgba(4,83,244,.05)`;
-        else return `0`;
-      }};
     }
   }
 `;
