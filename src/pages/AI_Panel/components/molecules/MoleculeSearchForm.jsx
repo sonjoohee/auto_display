@@ -90,7 +90,11 @@ const MoleculeSearchForm = () => {
 
     try {
       console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
-      const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/panels/list?page=1&size=20`, searchParams);
+      const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/panels/list?page=1&size=20`, {
+        params: {
+          searchParams
+        }
+      });
       setPanelList(response.data.results);
       console.log(searchParams);
     } catch (error) {

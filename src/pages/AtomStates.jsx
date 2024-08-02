@@ -31,19 +31,19 @@ export const SELECTED_PANEL_COUNT = atom(0);
 // 패널 리스트
 export const PANEL_LIST = atom([
     {
-	"id": 1,
-	"userIndex": null,
-	"gender": "F",
-	"age": "33",
-	"job": "임시데이터",
-	"address": "Chuncheon",
-	"subAddress": null,
-	"image": null,
-	"comment": null,
-	"lifeStyle": "Expresses creativity through art, passionate about work.",
-	"tag": "#creative, #passionate, #individualistic",
-	"consumptionPropensity": "Moderate spender on art supplies and personal projects",
-	"productGroup": "Art supplies, Laptop, Smartphone"
+	    "id": 1,
+	    "userIndex": null,
+	    "gender": "F",
+	    "age": "33",
+	    "job": "임시데이터",
+	    "address": "Chuncheon",
+	    "subAddress": null,
+	    "image": null,
+	    "comment": null,
+	    "lifeStyle": "Expresses creativity through art, passionate about work.",
+	    "tag": "#creative, #passionate, #individualistic",
+	    "consumptionPropensity": "Moderate spender on art supplies and personal projects",
+	    "productGroup": "Art supplies, Laptop, Smartphone"
     },
     {
         "id": 2,
