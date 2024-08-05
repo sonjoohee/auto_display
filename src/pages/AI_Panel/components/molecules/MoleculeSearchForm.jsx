@@ -103,6 +103,9 @@ const MoleculeSearchForm = () => {
         }
       });
       setPanelList(response.data.results);
+
+      // if (response.data.results.length <= 20) setIsAllPanelsLoaded(true); // 20개 이하로 데이터가 오면 동작
+      
     } catch (error) {
       console.error("Error fetching panel list:", error);
     }

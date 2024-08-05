@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import AtomCheckbox from '../atoms/AtomCheckbox';
 import { palette } from '../../../../assets/styles/Palette';
@@ -6,7 +6,7 @@ import { palette } from '../../../../assets/styles/Palette';
 const MoleculePanelControls = ({ selectedCount, onViewChange, loadedPanelCount }) => {
   return (
     <ControlsWrapper>
-      <AtomCheckbox id="allChk" label="전체 선택"/>
+      <AtomCheckbox id="allChk" label="전체 선택" />
       <ChoicePanel>
         {loadedPanelCount}명의 패널 중 <strong>{selectedCount}</strong>명의 패널을 선택하셨어요
       </ChoicePanel>

@@ -16,7 +16,7 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
     }
     const newSelected = !isSelected;
     setSelected(newSelected);
-    onSelect(newSelected);
+    onSelect(newSelected, id);
   };
 
   const handleDetailsClick = (e) => {
@@ -28,7 +28,7 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
     e.stopPropagation();
     const newSelected = !isSelected;
     setSelected(newSelected);
-    onSelect(newSelected);
+    onSelect(newSelected, id);
   };
 
   const handleCloseDetails = () => {

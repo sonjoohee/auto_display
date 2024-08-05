@@ -18,12 +18,14 @@ import {
   SEARCH_BEHABIORAL_TYPE,
   SEARCH_UTILIZATION_TIME, 
   SEARCH_GENDER, 
-  SEARCH_AGE, 
+  SEARCH_AGE,
   SEARCH_MARRIAGE, 
   SEARCH_CHILD, 
   SEARCH_CONSUMPTION, 
   SEARCH_TECHNOLOGY,
   PANEL_LIST_PAGE_COUNT,
+  SELECTED_COUNT,
+  SELECTED_PANELS
 } from "../../../AtomStates";
 
 const OrganismPanelListSection = () => {
@@ -34,13 +36,18 @@ const OrganismPanelListSection = () => {
   const [searchGender, setSearchGender] = useAtom(SEARCH_GENDER);
   const [searchAge, setSearchAge] = useAtom(SEARCH_AGE);
   const [panelListPageCount, setPanelListPageCount] = useAtom(PANEL_LIST_PAGE_COUNT);
+  const [selectedCount, setSelectedCount] = useAtom(SELECTED_COUNT);
+  const [selectedPanels, setSelectedPanels] = useAtom(SELECTED_PANELS); // 선택된 패널의 ID 저장
 
   const [isAllPanelsLoaded, setIsAllPanelsLoaded] = useState(false);
-  const [visiblePanels, setVisiblePanels] = useState(20);
-  const [selectedCount, setSelectedCount] = useState(0);
-  const [selectedPanels, setSelectedPanels] = useState(new Set());
+
+  // 패널 저장 테스트용
+  useEffect(() => {
+    console.log("selectedPanels:", selectedPanels);
+  }, [selectedPanels]);
 
   const handleSelect = (isSelected, panelId) => {
+    console.log("Selected Panel ID:", panelId);
     setSelectedCount((prevCount) => isSelected ? prevCount + 1 : prevCount - 1);
     setSelectedPanels((prevSelected) => {
       const newSelected = new Set(prevSelected);
@@ -79,7 +86,7 @@ const OrganismPanelListSection = () => {
         });
         setPanelList(response.data.results);
         
-        if (panelList.length <= 20) setIsAllPanelsLoaded(true); // 20개 이하로 데이터가 오면 동작
+        // if (response.data.results.length <= 20) setIsAllPanelsLoaded(true); // 20개 이하로 데이터가 오면 동작
 
         console.log(searchParams);
       } catch (error) {
@@ -108,6 +115,9 @@ const OrganismPanelListSection = () => {
             }
           });
           setPanelList(prevPanelList => [...prevPanelList, ...response.data.results]); // 리스트 초기화 하지 않고 아래에 붙이기
+          
+          // if (response.data.results.length <= 20) setIsAllPanelsLoaded(true); // 20개 이하로 데이터가 오면 동작
+
           console.log(searchParams);
         } catch (error) {
           console.error("Error fetching panel list:", error);
@@ -166,7 +176,7 @@ const OrganismPanelListSection = () => {
           원하시는 패널이 없나요? 직접 만들어 보세요!
         </CreatePanelLink>
         ) : (
-          visiblePanels <= panelList.length && (
+          20 <= panelList.length && (
             <LoadMoreButton isBottomBarVisible={selectedCount > 0} onClick={handleLoadMore}>
               20명의 패널 더보기
             </LoadMoreButton>
