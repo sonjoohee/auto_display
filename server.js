@@ -5,8 +5,9 @@ const mariadb = require('mariadb');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
-// const crypto = require('crypto'); // 주석 처리된 부분
-// const nodemailer = require('nodemailer'); // 주석 처리된 부분
+const crypto = require('crypto'); // 주석 처리된 부분
+const nodemailer = require('nodemailer'); // 주석 처리된 부분
+require('dotenv').config(); // .env 파일에서 환경변수를 로드합니다.
 
 const app = express();
 app.use(bodyParser.json());
@@ -32,47 +33,60 @@ const pool = mariadb.createPool({
   connectionLimit: 5
 });
 
-/*
+
+// nodemailer 전송기 설정
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL,
+    pass: process.env.APP_PASSWORD,
+  },
+});
+
 const sendVerificationEmail = async (to, link) => {
   const mailOptions = {
     from: 'endnjs33@gmail.com',
     to,
     subject: '이메일 인증',
-    text: `다음 링크를 클릭하여 이메일 인증을 완료하세요: ${link}`,
+    html: `<p>다음 링크를 클릭하여 이메일 인증을 완료하세요: <a href="${link}">이메일 인증하기</a></p>`
   };
 
   await transporter.sendMail(mailOptions);
 };
-*/
 
 app.post('/signup', async (req, res) => {
-  const { name, email, password, role, status } = req.body;
+  const { name, email, password, role } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
-  // const token = crypto.randomBytes(32).toString('hex'); // 이메일 인증 토큰 생성
+  const token = crypto.randomBytes(32).toString('hex'); // 이메일 인증 토큰 생성
 
   let conn;
   try {
     conn = await pool.getConnection();
     const query = `
-      INSERT INTO users (name, email, password, role, status)
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO users (name, email, password, role, status, token)
+      VALUES (?, ?, ?, ?, 'inactive', ?)
     `;
-    await conn.query(query, [name, email, hashedPassword, role, status]);
+    await conn.query(query, [name, email, hashedPassword, role, token]);
 
     // 인증 이메일 발송
-    // const verificationLink = `http://localhost:3000/verify-email?token=${token}`;
-    // await sendVerificationEmail(email, verificationLink);
+    const verificationLink = `http://localhost:3000/verify-email?token=${token}`;
+    await sendVerificationEmail(email, verificationLink);
 
-    res.status(200).send('회원가입 성공.');
+    res.status(200).send('회원가입 성공. 이메일을 확인하여 인증을 완료하세요.');
   } catch (err) {
     console.error('회원가입 실패:', err);
-    res.status(500).send('서버 오류');
+    
+    // MariaDB에서 발생한 오류 중 'Duplicate entry'인 경우 처리
+    if (err.code === 'ER_DUP_ENTRY') {
+      res.status(400).send({ error: '이미 사용 중인 이메일 주소입니다.' });
+    } else {
+      res.status(500).send('서버 오류');
+    }
   } finally {
     if (conn) conn.release();
   }
 });
 
-/*
 app.get('/verify-email', async (req, res) => {
   const { token } = req.query;
 
@@ -85,7 +99,8 @@ app.get('/verify-email', async (req, res) => {
     if (result.affectedRows === 0) {
       res.status(400).send('잘못되었거나 만료된 토큰입니다.');
     } else {
-      res.status(200).send('이메일 인증이 완료되었습니다.');
+      res.status(200).json({ message: '이메일 인증이 완료되었습니다.' });
+      // res.redirect('http://localhost:3000/email-verified'); // 성공 시 임시 페이지로 리디렉션
     }
   } catch (err) {
     console.error('이메일 인증 실패:', err);
@@ -94,7 +109,7 @@ app.get('/verify-email', async (req, res) => {
     if (conn) conn.release();
   }
 });
-*/
+
 
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
