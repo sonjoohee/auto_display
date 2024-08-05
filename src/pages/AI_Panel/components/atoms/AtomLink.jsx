@@ -3,6 +3,15 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
+const AtomLink = ({ to, children, className, ...props }) => (
+  <StyledLink to={to} className={className} {...props}>
+    {children}
+  </StyledLink>
+);
+
+export default AtomLink;
+
+
 const StyledLink = styled(Link)`
   display: inline-block;
   width: 33px;
@@ -33,11 +42,3 @@ const StyledLink = styled(Link)`
     opacity: 0.3;
   }
 `;
-
-const AtomLink = ({ to, children, className, ...props }) => (
-  <StyledLink to={to} className={className} {...props}>
-    {children}
-  </StyledLink>
-);
-
-export default AtomLink;

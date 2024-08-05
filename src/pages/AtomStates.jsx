@@ -336,8 +336,8 @@ export const PANEL_LIST_PAGE_COUNT = atom(1);
 // 검색어 상태
 export const SEARCH_BEHABIORAL_TYPE = atom("");
 export const SEARCH_UTILIZATION_TIME = atom("");
-export const SEARCH_GENDER = atom("");
-export const SEARCH_AGE = atom("");
+export const SEARCH_GENDER = atom([]);
+export const SEARCH_AGE = atom([]);
 export const SEARCH_MARRIAGE = atom("");
 export const SEARCH_CHILD = atom("");
 export const SEARCH_CONSUMPTION = atom("");

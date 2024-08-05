@@ -3,7 +3,45 @@ import styled from 'styled-components';
 import AtomCheckbox from '../atoms/AtomCheckbox';
 import { palette } from '../../../../assets/styles/Palette';
 
+const MoleculePanelControls = ({ selectedCount, onViewChange, loadedPanelCount }) => {
+  return (
+    <ControlsWrapper>
+      <AtomCheckbox id="allChk" label="전체 선택"/>
+      <ChoicePanel>
+        {loadedPanelCount}명의 패널 중 <strong>{selectedCount}</strong>명의 패널을 선택하셨어요
+      </ChoicePanel>
+      <ViewList>
+        <input
+          type="radio"
+          id="setCardType"
+          name="viewGroup"
+          value="card"
+          onChange={onViewChange}
+        />
+        <label for="setCardType">카드보기</label>
+        <input
+          type="radio"
+          id="setListType"
+          name="viewGroup"
+          value="list"
+          onChange={onViewChange}
+        />
+        <label for="setListType">목록보기</label>
+      </ViewList>
+    </ControlsWrapper>
+  );
+};
+
+export default MoleculePanelControls;
+
 const ControlsWrapper = styled.div`
+  .sortBooth {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:32px;
+  }
+    
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -36,43 +74,3 @@ const ViewList = styled.div`
     cursor: pointer;
   }
 `;
-
-const MoleculePanelControls = ({ selectedCount, onViewChange, onSelectAll, loadedPanelCount }) => {
-  const [isChecked, setIsChecked] = useState(false);
-
-  const handleSelectAll = useCallback(() => {
-    const newCheckedState = !isChecked;
-    setIsChecked(newCheckedState);
-    onSelectAll(newCheckedState);
-  }, [isChecked, onSelectAll]);
-
-
-  return (
-    <ControlsWrapper>
-      <AtomCheckbox id="allChk" label="전체 선택" checked={isChecked} onChange={handleSelectAll} />
-      <ChoicePanel>
-        {loadedPanelCount}명의 패널 중 <strong>{selectedCount}</strong>명의 패널을 선택하셨어요
-      </ChoicePanel>
-      <ViewList>
-        <input
-          type="radio"
-          id="setCardType"
-          name="viewGroup"
-          value="card"
-          onChange={onViewChange}
-        />
-        <label htmlFor="setCardType">카드보기</label>
-        <input
-          type="radio"
-          id="setListType"
-          name="viewGroup"
-          value="list"
-          onChange={onViewChange}
-        />
-        <label htmlFor="setListType">목록보기</label>
-      </ViewList>
-    </ControlsWrapper>
-  );
-};
-
-export default MoleculePanelControls;

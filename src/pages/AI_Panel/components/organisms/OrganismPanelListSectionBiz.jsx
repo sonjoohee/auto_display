@@ -115,15 +115,15 @@ const OrganismPanelListSectionBiz = () => {
     }
   }, [panelListPageCount]); // panelListPageCount가 변경될 때마다 실행
 
-  // 하단 바가 나타날 때 스크롤 조정
-  useEffect(() => {
-    if (selectedCount > 0) {
-      window.scrollBy({
-        top: 100, // 하단 바 높이만큼 조정
-        behavior: "smooth",
-      });
-    }
-  }, [selectedCount]);
+  // // 하단 바가 나타날 때 스크롤 조정
+  // useEffect(() => {
+  //   if (selectedCount > 0) {
+  //     window.scrollBy({
+  //       top: 100, // 하단 바 높이만큼 조정
+  //       behavior: "smooth",
+  //     });
+  //   }
+  // }, [selectedCount]);
 
   // panelData가 유효한지 확인
   if (!Array.isArray(panelList) || panelList.length === 0) {

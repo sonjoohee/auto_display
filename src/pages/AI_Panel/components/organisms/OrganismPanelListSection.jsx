@@ -53,12 +53,6 @@ const OrganismPanelListSection = () => {
     });
   };
 
-  const handleSelectAll = (isSelected) => {
-    const allPanelIds = panelList.slice(0, visiblePanels).map(panel => panel.id);
-    setSelectedPanels(isSelected ? new Set(allPanelIds) : new Set());
-    setSelectedCount(isSelected ? allPanelIds.length : 0);
-  };
-
   const handleLoadMore = () => {
     setPanelListPageCount(prevPageCount => prevPageCount + 1);
   };
@@ -124,15 +118,15 @@ const OrganismPanelListSection = () => {
     }
   }, [panelListPageCount]); // panelListPageCount가 변경될 때마다 실행
 
-  // 하단 바가 나타날 때 스크롤 조정
-  useEffect(() => {
-    if (selectedCount > 0) {
-      window.scrollBy({
-        top: 100, // 하단 바 높이만큼 조정
-        behavior: "smooth",
-      });
-    }
-  }, [selectedCount]);
+  // // 하단 바가 나타날 때 스크롤 조정
+  // useEffect(() => {
+  //   if (selectedCount > 0) {
+  //     window.scrollBy({
+  //       top: 100, // 하단 바 높이만큼 조정
+  //       behavior: "smooth",
+  //     });
+  //   }
+  // }, [selectedCount]);
 
   // panelData가 유효한지 확인
   if (!Array.isArray(panelList) || panelList.length === 0) {
@@ -145,7 +139,6 @@ const OrganismPanelListSection = () => {
         <MoleculePanelControls
           selectedCount={selectedCount}
           onViewChange={handleViewChange}
-          onSelectAll={handleSelectAll}
           loadedPanelCount={panelList.length}
         />
         <PanelList>

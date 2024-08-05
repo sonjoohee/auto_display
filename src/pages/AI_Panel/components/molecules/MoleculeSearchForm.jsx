@@ -22,7 +22,6 @@ import styled from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import { InputField, CheckBox } from "../../../../assets/styles/Input";
 import Button from "../../../../assets/styles/Button";
-
 import images from "../../../../assets/styles/Images";
 
 const MoleculeSearchForm = () => {
@@ -47,23 +46,28 @@ const MoleculeSearchForm = () => {
   const [selectedFilters, setSelectedFilters] = useState({
     behabioralType: "",
     utilizationTime: "",
-    gender: "",
-    age: "",
+    gender: [],
+    age: [],
     marriage: "",
     child: "",
     consumption: "",
     technology: "",
   });
   
-  const [shouldSearch, setShouldSearch] = useState(false);
+  const [shouldSearch, setShouldSearch] = useState(false); // 필터가 변경되어 검색이 필요한지?
+  const [isAfterSearch, setIsAfterSearch] = useState(false); // 검색을 하기전인지 하고난후인지?
 
-  // 검색어값이 초기화 안되는 이슈 -> 검색어값이 바뀔 때 마다 handleSearch() 함수 호출
   useEffect(() => {
-    if (shouldSearch) {
+    // 모든 필터가 해제되었다면 검색 여부 초기화
+    if (!searchBehabioralType && !searchUtilizationTime && !searchGender && !searchAge.length) {
+      setIsAfterSearch(false);
+    }
+    // 검색을 하고 난 후 필터가 변경되었다면 재검색
+    if (shouldSearch && isAfterSearch) {
       handleSearch();
       setShouldSearch(false);
     }
-  }, [shouldSearch, searchBehabioralType, searchUtilizationTime, searchGender, searchAge])
+  }, [isAfterSearch, shouldSearch, searchBehabioralType, searchUtilizationTime, searchGender, searchAge])
 
   const handleDetailOptionToggle = () => {
     if (showTimeOption) setShowTimeOption((prev) => !prev);
@@ -75,6 +79,9 @@ const MoleculeSearchForm = () => {
   };
 
   const handleSearch = async () => {
+
+    setIsAfterSearch(true)
+    
     const searchParams = {
       searchBehabioralType,
       searchUtilizationTime,
@@ -96,13 +103,31 @@ const MoleculeSearchForm = () => {
         }
       });
       setPanelList(response.data.results);
-      console.log(searchParams);
     } catch (error) {
       console.error("Error fetching panel list:", error);
     }
   };
 
   const handleApplyDetail = () => {
+
+    const regex = /^[가-힣a-zA-Z0-9\s.,'"-]*$/;
+    if (!regex.test(searchBehabioralType)) {
+      alert("한글, 영문 외 특수문자는 입력할 수 없어요. 자음이나 모음만 입력한 경우 검색이 제한되니, 문장을 완전하게 입력해주세요.");
+      return;
+    }
+    if (searchBehabioralType.length > 100) {
+      alert("행동 타입은 100자 이내로 입력주세요.");
+      return;
+    }
+    if (!searchBehabioralType && searchUtilizationTime) {
+      alert('행동 타입을 입력해주세요.');
+      return;
+    }
+    if (searchBehabioralType && !searchUtilizationTime) {
+      alert('활용 시간을 입력해주세요.');
+      return;
+    }
+
     setSelectedFilters({
       behabioralType: searchBehabioralType,
       utilizationTime: searchUtilizationTime,
@@ -117,37 +142,55 @@ const MoleculeSearchForm = () => {
     setShowTimeOption(false);
   };
 
-  const handleRemoveFilter = (filterKey) => {
+  const handleRemoveFilter = (filterKey, filterValue = null) => {
     // 칩 삭제하면 페이징 초기화
     setPanelListPageCount(1)
 
     // 칩 삭제하면 검색값상태 초기화
     if(filterKey === "behabioralType") {
-      setSearchBehabioralType('');
+      selectedFilters.behabioralType = '';
+      selectedFilters.utilizationTime = '';
       setSearchUtilizationTime('');
+      setSearchBehabioralType('');
     }
     else if(filterKey === "gender") {
-      setSearchGender('');
+      if (filterValue !== null) {
+        setSearchGender((prevGender) => prevGender.filter((gender) => gender !== filterValue));
+        selectedFilters.gender.filter((gender) => gender !== filterValue);
+      } else {
+        setSearchGender([]);
+      }
     }
-    else if(filterKey === "age") {
-      setSearchAge('');
+    else if (filterKey === "age") {
+      if (filterValue !== null) {
+        setSearchAge((prevAge) => prevAge.filter((age) => age !== filterValue));
+        selectedFilters.age.filter((age) => age !== filterValue);
+      } else {
+        setSearchAge([]);
+      }
     }
 
-    setSelectedFilters(prevFilters => {
-      const newFilters = { ...prevFilters, [filterKey]: "" };
-      if (filterKey === "behabioralType") {
-        newFilters.behabioralType = "";
-        newFilters.utilizationTime = "";
-      }
-      else if (filterKey === "gender") {
-        newFilters.gender = "";
-      }
-      else if (filterKey === "age") {
-        newFilters.age = "";
-      }
+    setSelectedFilters((prevFilters) => {
+      const newFilters = { ...prevFilters, [filterKey]: filterValue !== null ? prevFilters[filterKey].filter((age) => age !== filterValue) : "" };
       return newFilters;
     });
+
     setShouldSearch(true);
+  };
+
+  // 상세 옵션 중복선택 관련 함수
+  const toggleMultipleOptions = (key, val) => {
+    if(key == "age") {
+      setSearchAge((prevAge) => {
+        const newSet = new Set(prevAge);
+        if (newSet.has(val)) {
+          newSet.delete(val);
+        } else {
+          newSet.add(val);
+        }
+        return Array.from(newSet);
+      });
+    }
   };
 
   return (
@@ -175,18 +218,18 @@ const MoleculeSearchForm = () => {
           <div>
             <h4>성별</h4>
             <div>
-              <button className={searchGender === 'M' ? 'active' : ''} onClick={() => setSearchGender('M')}>남성</button>
-              <button className={searchGender === 'F' ? 'active' : ''} onClick={() => setSearchGender('F')}>여성</button>
-              <button className={searchGender === '상관없음' ? 'active' : ''} onClick={() => setSearchGender('상관없음')}>상관없음</button>
+              <button className={searchGender.includes('M') ? 'active' : ''} onClick={() => setSearchGender('M')}>남성</button>
+              <button className={searchGender.includes('F') ? 'active' : ''} onClick={() => setSearchGender('F')}>여성</button>
+              <button className={['M', 'F'].every(gender => searchGender.includes(gender)) ? 'active' : ''} onClick={() => setSearchGender(['M', 'F'])}>상관없음</button>
             </div>
             <div>
               <h4>나이</h4>
-              <button className={searchAge.includes('20') ? 'active' : ''} onClick={() => setSearchAge('20')}>20대</button>
-              <button className={searchAge.includes('30') ? 'active' : ''} onClick={() => setSearchAge('30')}>30대</button>
-              <button className={searchAge.includes('40') ? 'active' : ''} onClick={() => setSearchAge('40')}>40대</button>
-              <button className={searchAge.includes('50') ? 'active' : ''} onClick={() => setSearchAge('50')}>50대</button>
-              <button className={searchAge.includes('60') ? 'active' : ''} onClick={() => setSearchAge('60')}>60대</button>
-              <button className={searchAge.includes('상관없음') ? 'active' : ''} onClick={() => setSearchAge('상관없음')}>상관없음</button>
+              <button className={searchAge.includes(20) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',20)}>20대</button>
+              <button className={searchAge.includes(30) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',30)}>30대</button>
+              <button className={searchAge.includes(40) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',40)}>40대</button>
+              <button className={searchAge.includes(50) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',50)}>50대</button>
+              <button className={searchAge.includes(60) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',60)}>60대</button>
+              <button className={[20, 30, 40, 50, 60].every(age => searchAge.includes(age)) ? 'active' : ''} onClick={() => setSearchAge([20,30,40,50,60])}>상관없음</button>
             </div>
           </div>
           <Button Black onClick={handleApplyDetail}>선택 적용</Button>
@@ -202,11 +245,11 @@ const MoleculeSearchForm = () => {
         </DetailOptions>
       )}
       <SelectedFilters>
-        {selectedFilters.behabioralType || selectedFilters.utilizationTime || selectedFilters.gender || selectedFilters.age ? (
+        {selectedFilters.behabioralType && selectedFilters.utilizationTime ? (
           <FilterChipArea>
             <FilterChip onClick={() => handleRemoveFilter('behabioralType')}>
               {selectedFilters.behabioralType} <span>X</span>
-            </FilterChip> 
+            </FilterChip>
             <span>에 시간을</span> 
             <FilterChip>
               {selectedFilters.utilizationTime} <span>X</span>
@@ -214,29 +257,34 @@ const MoleculeSearchForm = () => {
             <span>활용하는,</span>
           </FilterChipArea>
         ) : (
-          <FilterChipArea>
-            <span>예시)</span>
-            <FilterChip>건강관리</FilterChip>
-            <span>에 시간을</span>
-            <FilterChip>많이</FilterChip>
-            <span>활용하는,</span>
-            <FilterChip>여성</FilterChip>
-            <FilterChip>20대</FilterChip>
-            <FilterChip>30대</FilterChip>
-          </FilterChipArea>
+          !selectedFilters.gender &&
+          selectedFilters.age.length === 0 && (
+            <FilterChipArea>
+              <span>예시)</span>
+              <FilterChip>건강관리</FilterChip>
+              <span>에 시간을</span>
+              <FilterChip>많이</FilterChip>
+              <span>활용하는,</span>
+              <FilterChip>여성</FilterChip>
+              <FilterChip>20대</FilterChip>
+              <FilterChip>30대</FilterChip>
+            </FilterChipArea>
+          )
         )}
-        {selectedFilters.gender && (
-          <FilterChip onClick={() => handleRemoveFilter('gender')}>
-            {selectedFilters.gender === 'M' ? '남성' : '여성'}
-            <span>X</span>
-          </FilterChip>
-        )}
-        {selectedFilters.age && (
-          <FilterChip onClick={() => handleRemoveFilter('age')}>
-            {selectedFilters.age}대
-            <span>X</span>
-          </FilterChip>
-        )}
+        {selectedFilters.gender.length > 0 &&
+          selectedFilters.gender.map((gender) => (
+            <FilterChip key={gender} onClick={() => handleRemoveFilter("gender", gender)}>
+              {gender === 'M' ? '남성' : '여성'}
+              <span>X</span>
+            </FilterChip>
+        ))}
+        {selectedFilters.age.length > 0 &&
+          selectedFilters.age.map((age) => (
+            <FilterChip key={age} onClick={() => handleRemoveFilter("age", age)}>
+              {age}대
+              <span>X</span>
+            </FilterChip>
+          ))}
       </SelectedFilters>
     </SearchFormWrap>
     </>
