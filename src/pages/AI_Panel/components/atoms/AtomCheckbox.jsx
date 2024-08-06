@@ -1,25 +1,13 @@
 // AtomCheckbox.jsx
 import React from "react";
 import styled from "styled-components";
+import { CheckBox } from "../../../../assets/styles/Input";
 
 const AtomCheckbox = ({ id, label }) => (
-  <CheckBoxWrapper>
-    <input type="checkbox" id={id} />
-    <label htmlFor={id}>{label}</label>
-  </CheckBoxWrapper>
+  <CheckBox>
+    <input type="checkbox" id={id} className=""/>
+    <label for={id}>{label}</label>
+  </CheckBox>
 );
 
 export default AtomCheckbox;
-
-const CheckBoxWrapper = styled.div`
-  input[type="checkbox"] {
-    opacity: 0;
-  }
-
-  input[type="checkbox"] + label {
-    position: relative;
-    display: inline-block;
-    padding-left: 28px;
-    cursor: pointer;
-  }
-`;

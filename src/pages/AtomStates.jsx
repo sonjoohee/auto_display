@@ -22,6 +22,8 @@ export const errorAtom = atom(''); // 에러 상태 추가
 export const selectedPanelCountAtom = atom(0);
 export const loadedPanelCountAtom = atom(0);
 export const selectedPanelsAtom = atom(new Set());
+export const SELECTED_COUNT = atom(0);
+export const SELECTED_PANELS = atom(new Set()); // 선택된 패널의 ID 저장
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -31,19 +33,19 @@ export const SELECTED_PANEL_COUNT = atom(0);
 // 패널 리스트
 export const PANEL_LIST = atom([
     {
-	"id": 1,
-	"userIndex": null,
-	"gender": "F",
-	"age": "33",
-	"job": "임시데이터",
-	"address": "Chuncheon",
-	"subAddress": null,
-	"image": null,
-	"comment": null,
-	"lifeStyle": "Expresses creativity through art, passionate about work.",
-	"tag": "#creative, #passionate, #individualistic",
-	"consumptionPropensity": "Moderate spender on art supplies and personal projects",
-	"productGroup": "Art supplies, Laptop, Smartphone"
+	    "id": 1,
+	    "userIndex": null,
+	    "gender": "F",
+	    "age": "33",
+	    "job": "임시데이터",
+	    "address": "Chuncheon",
+	    "subAddress": null,
+	    "image": null,
+	    "comment": null,
+	    "lifeStyle": "Expresses creativity through art, passionate about work.",
+	    "tag": "#creative, #passionate, #individualistic",
+	    "consumptionPropensity": "Moderate spender on art supplies and personal projects",
+	    "productGroup": "Art supplies, Laptop, Smartphone"
     },
     {
         "id": 2,
@@ -336,8 +338,8 @@ export const PANEL_LIST_PAGE_COUNT = atom(1);
 // 검색어 상태
 export const SEARCH_BEHABIORAL_TYPE = atom("");
 export const SEARCH_UTILIZATION_TIME = atom("");
-export const SEARCH_GENDER = atom("");
-export const SEARCH_AGE = atom("");
+export const SEARCH_GENDER = atom([]);
+export const SEARCH_AGE = atom([]);
 export const SEARCH_MARRIAGE = atom("");
 export const SEARCH_CHILD = atom("");
 export const SEARCH_CONSUMPTION = atom("");
