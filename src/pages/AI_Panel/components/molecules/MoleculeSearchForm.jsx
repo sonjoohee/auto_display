@@ -135,7 +135,7 @@ const MoleculeSearchForm = () => {
     const searchParams = {
       searchBehabioralType,
       searchUtilizationTime,
-      searchGender,
+      searchGender: ['M', 'F'].every(gender => searchGender.includes(gender)) ? ['N'] : searchGender, 
       searchAge,
       //searchMarriage,
       //searchChild,
@@ -180,6 +180,10 @@ const MoleculeSearchForm = () => {
     //   alert('활용 시간을 입력해주세요.');
     //   return;
     // }
+    if (!tempBehabioralType && !tempUtilizationTime && !tempGender.length && !tempAge.length) {
+      alert('상세 검색에 적용할 항목을 선택해주세요.');
+      return;
+    }
 
     setSelectedFilters({
       behabioralType: tempBehabioralType,
@@ -284,7 +288,7 @@ const MoleculeSearchForm = () => {
               <button className={tempAge.includes(40) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',40)}>40대</button>
               <button className={tempAge.includes(50) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',50)}>50대</button>
               <button className={tempAge.includes(60) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',60)}>60대</button>
-              <button className={[20, 30, 40, 50, 60].every(age => searchAge.includes(age)) ? 'active' : ''} onClick={() => setTempAge([20,30,40,50,60])}>상관없음</button>
+              <button className={[20, 30, 40, 50, 60].every(age => tempAge.includes(age)) ? 'active' : ''} onClick={() => setTempAge([20,30,40,50,60])}>상관없음</button>
             </div>
           </div>
           <Button Black onClick={handleApplyDetail}>선택 적용</Button>
