@@ -79,14 +79,14 @@ const OrganismPanelListSection = () => {
     const fetchInitialPanelList = async () => {
       console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
       try {
-        const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/panels/list?page=1&size=20`, {
+        const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/panels/list?page=1&size=20&field_go=식당`, {
           params: {
             searchParams
           }
         });
         setPanelList(response.data.results);
         
-        // if (response.data.results.length <= 20) setIsAllPanelsLoaded(true); // 20개 이하로 데이터가 오면 동작
+        if (response.data.results.length < 20) setIsAllPanelsLoaded(true); // 20개 미만의 데이터가 오면 동작
 
         console.log(searchParams);
       } catch (error) {
@@ -109,14 +109,14 @@ const OrganismPanelListSection = () => {
       const fetchAdditionalPanelList = async () => {
         console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
         try {
-          const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/panels/list?page=${panelListPageCount}&size=20`, {
+          const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/panels/list?page=${panelListPageCount}&size=20&field_go=식당`, {
             params: {
               searchParams
             }
           });
           setPanelList(prevPanelList => [...prevPanelList, ...response.data.results]); // 리스트 초기화 하지 않고 아래에 붙이기
           
-          // if (response.data.results.length <= 20) setIsAllPanelsLoaded(true); // 20개 이하로 데이터가 오면 동작
+          if (response.data.results.length < 20) setIsAllPanelsLoaded(true); // 20개 미만의 데이터가 오면 동작
 
           console.log(searchParams);
         } catch (error) {

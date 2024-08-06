@@ -57,9 +57,11 @@ const MoleculeSearchForm = () => {
   const [shouldSearch, setShouldSearch] = useState(false); // 필터가 변경되어 검색이 필요한지?
   const [isAfterSearch, setIsAfterSearch] = useState(false); // 검색을 하기전인지 하고난후인지?
 
+  const [isAllPanelsLoaded, setIsAllPanelsLoaded] = useState(false);
+
   useEffect(() => {
     // 모든 필터가 해제되었다면 검색 여부 초기화
-    if (!searchBehabioralType && !searchUtilizationTime && !searchGender && !searchAge.length) {
+    if (!searchBehabioralType && !searchUtilizationTime && !searchGender.length && !searchAge.length) {
       setIsAfterSearch(false);
     }
     // 검색을 하고 난 후 필터가 변경되었다면 재검색
@@ -97,14 +99,14 @@ const MoleculeSearchForm = () => {
 
     try {
       console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
-      const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/panels/list?page=1&size=20`, {
+      const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/panels/list?page=1&size=20field_go=식당`, {
         params: {
           searchParams
         }
       });
       setPanelList(response.data.results);
 
-      // if (response.data.results.length <= 20) setIsAllPanelsLoaded(true); // 20개 이하로 데이터가 오면 동작
+      if (response.data.results.length < 20) setIsAllPanelsLoaded(true); // 20개 미만의 데이터가 오면 동작
       
     } catch (error) {
       console.error("Error fetching panel list:", error);
@@ -126,10 +128,10 @@ const MoleculeSearchForm = () => {
       alert('행동 타입을 입력해주세요.');
       return;
     }
-    if (searchBehabioralType && !searchUtilizationTime) {
-      alert('활용 시간을 입력해주세요.');
-      return;
-    }
+    // if (searchBehabioralType && !searchUtilizationTime) {
+    //   alert('활용 시간을 입력해주세요.');
+    //   return;
+    // }
 
     setSelectedFilters({
       behabioralType: searchBehabioralType,
@@ -174,7 +176,7 @@ const MoleculeSearchForm = () => {
     }
 
     setSelectedFilters((prevFilters) => {
-      const newFilters = { ...prevFilters, [filterKey]: filterValue !== null ? prevFilters[filterKey].filter((age) => age !== filterValue) : "" };
+      const newFilters = { ...prevFilters, [filterKey]: filterValue !== null ? prevFilters[filterKey].filter((item) => item !== filterValue) : "" };
       return newFilters;
     });
 
@@ -221,8 +223,8 @@ const MoleculeSearchForm = () => {
           <div>
             <h4>성별</h4>
             <div>
-              <button className={searchGender.includes('M') ? 'active' : ''} onClick={() => setSearchGender('M')}>남성</button>
-              <button className={searchGender.includes('F') ? 'active' : ''} onClick={() => setSearchGender('F')}>여성</button>
+              <button className={searchGender.includes('M') ? 'active' : ''} onClick={() => setSearchGender(['M'])}>남성</button>
+              <button className={searchGender.includes('F') ? 'active' : ''} onClick={() => setSearchGender(['F'])}>여성</button>
               <button className={['M', 'F'].every(gender => searchGender.includes(gender)) ? 'active' : ''} onClick={() => setSearchGender(['M', 'F'])}>상관없음</button>
             </div>
             <div>
@@ -260,7 +262,7 @@ const MoleculeSearchForm = () => {
             <span>활용하는,</span>
           </FilterChipArea>
         ) : (
-          !selectedFilters.gender &&
+          selectedFilters.gender.length === 0 &&
           selectedFilters.age.length === 0 && (
             <FilterChipArea>
               <span>예시)</span>
