@@ -27,6 +27,7 @@ export const SELECTED_PANELS = atom(new Set()); // 선택된 패널의 ID 저장
 
 ///////////////////////////////////////////////////////////////////////////
 
+export const VIEW_PANEL_TYPE = atom(true); // true=카드, false=목록
 export const TOTAL_PANEL_COUNT = atom(0);
 export const SELECTED_PANEL_COUNT = atom(0);
 

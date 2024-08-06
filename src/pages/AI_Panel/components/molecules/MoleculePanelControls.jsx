@@ -2,8 +2,14 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import AtomCheckbox from '../atoms/AtomCheckbox';
 import { palette } from '../../../../assets/styles/Palette';
+import { useAtom } from "jotai";
+import { 
+  VIEW_PANEL_TYPE,
+} from "../../../AtomStates";
 
-const MoleculePanelControls = ({ selectedCount, onViewChange, loadedPanelCount }) => {
+const MoleculePanelControls = ({ selectedCount, loadedPanelCount }) => {
+  const [viewPanelType, setViewPanelType] = useAtom(VIEW_PANEL_TYPE);
+   
   return (
     <ControlsWrapper>
       <AtomCheckbox id="allChk" label="전체 선택" />
@@ -16,7 +22,7 @@ const MoleculePanelControls = ({ selectedCount, onViewChange, loadedPanelCount }
           id="setCardType"
           name="viewGroup"
           value="card"
-          onChange={onViewChange}
+          onClick={() => setViewPanelType(true)}
         />
         <label for="setCardType">카드보기</label>
         <input
@@ -24,7 +30,7 @@ const MoleculePanelControls = ({ selectedCount, onViewChange, loadedPanelCount }
           id="setListType"
           name="viewGroup"
           value="list"
-          onChange={onViewChange}
+          onClick={() => setViewPanelType(false)}
         />
         <label for="setListType">목록보기</label>
       </ViewList>

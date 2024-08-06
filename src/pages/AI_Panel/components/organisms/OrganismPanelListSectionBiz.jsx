@@ -25,7 +25,8 @@ import {
   SEARCH_TECHNOLOGY,
   PANEL_LIST_PAGE_COUNT,
   SELECTED_COUNT,
-  SELECTED_PANELS
+  SELECTED_PANELS,
+  VIEW_PANEL_TYPE,
 } from "../../../AtomStates";
 
 const OrganismPanelListSectionBiz = () => {
@@ -38,6 +39,7 @@ const OrganismPanelListSectionBiz = () => {
   const [panelListPageCount, setPanelListPageCount] = useAtom(PANEL_LIST_PAGE_COUNT);
   const [selectedCount, setSelectedCount] = useAtom(SELECTED_COUNT);
   const [selectedPanels, setSelectedPanels] = useAtom(SELECTED_PANELS); // 선택된 패널의 ID 저장
+  const [viewPanelType, setViewPanelType] = useAtom(VIEW_PANEL_TYPE);
 
   const [isAllPanelsLoaded, setIsAllPanelsLoaded] = useState(false);
 
@@ -148,40 +150,45 @@ const OrganismPanelListSectionBiz = () => {
       <PanelWrap>
         <MoleculePanelControls
           selectedCount={selectedCount}
-          onViewChange={handleViewChange}
           loadedPanelCount={panelList.length}
         />
-        <PanelList>
-          {panelList.map((panel) => (
-            <MoleculePanelItem
-              key={panel.id}
-              id={panel.id}
-              gender={panel.gender}
-              age={panel.age}
-              job={panel.job}
-              address={panel.address}
-              subAddress={panel.subAddress}
-              imgSrc={panel.img}
-              tags={panel.tag}
-              comment={panel.comment}
-              lifeStyle={panel.lifeStyle}
-              consumption={panel.consumptionPropensity}
-              productGroup={panel.productGroup}
-              onSelect={handleSelect}
-            />
-          ))}
-        </PanelList>
-        {isAllPanelsLoaded ? (
-          <CreatePanelLink to="/createpanel" isBottomBarVisible={selectedCount > 0}>
-          원하시는 패널이 없나요? 직접 만들어 보세요!
-        </CreatePanelLink>
-        ) : (
-          20 <= panelList.length && (
-            <LoadMoreButton isBottomBarVisible={selectedCount > 0} onClick={handleLoadMore}>
-              20명의 패널 더보기
-            </LoadMoreButton>
-          )
-        )}
+        {viewPanelType ?
+          <>
+          <PanelList>
+            {panelList.map((panel) => (
+              <MoleculePanelItem
+                key={panel.id}
+                id={panel.id}
+                gender={panel.gender}
+                age={panel.age}
+                job={panel.job}
+                address={panel.address}
+                subAddress={panel.subAddress}
+                imgSrc={panel.img}
+                tags={panel.tag}
+                comment={panel.comment}
+                lifeStyle={panel.lifeStyle}
+                consumption={panel.consumptionPropensity}
+                productGroup={panel.productGroup}
+                onSelect={handleSelect}
+              />
+            ))}
+          </PanelList>
+          {isAllPanelsLoaded ? (
+            <CreatePanelLink to="/createpanel" isBottomBarVisible={selectedCount > 0}>
+            원하시는 패널이 없나요? 직접 만들어 보세요!
+          </CreatePanelLink>
+          ) : (
+            20 <= panelList.length && (
+              <LoadMoreButton isBottomBarVisible={selectedCount > 0} onClick={handleLoadMore}>
+                20명의 패널 더보기
+              </LoadMoreButton>
+            )
+          )}
+          </>
+          :
+          "목록보기"
+        }
       </PanelWrap>
       {selectedCount > 0 && (
         <OrganismPanelListSectionBottomBar onSaveSelection={() => alert("선택패널이 저장되었습니다.")} />
