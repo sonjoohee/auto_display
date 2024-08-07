@@ -24,6 +24,7 @@ export const loadedPanelCountAtom = atom(0);
 export const selectedPanelsAtom = atom(new Set());
 export const SELECTED_COUNT = atom(0);
 export const SELECTED_PANELS = atom(new Set()); // 선택된 패널의 ID 저장
+export const SELECTED_ALL_PANELS = atom(false); 
 
 ///////////////////////////////////////////////////////////////////////////
 

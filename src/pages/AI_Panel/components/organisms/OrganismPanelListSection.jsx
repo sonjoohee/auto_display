@@ -27,6 +27,7 @@ import {
   SELECTED_COUNT,
   SELECTED_PANELS,
   VIEW_PANEL_TYPE,
+  SELECTED_ALL_PANELS,
 } from "../../../AtomStates";
 
 const OrganismPanelListSection = () => {
@@ -40,9 +41,23 @@ const OrganismPanelListSection = () => {
   const [selectedCount, setSelectedCount] = useAtom(SELECTED_COUNT);
   const [selectedPanels, setSelectedPanels] = useAtom(SELECTED_PANELS); // 선택된 패널의 ID 저장
   const [viewPanelType, setViewPanelType] = useAtom(VIEW_PANEL_TYPE);
+  const [selectedAllPanels, setSelectedAllPanels] = useAtom(SELECTED_ALL_PANELS); // 전체 선택 버튼
 
   const [isAllPanelsLoaded, setIsAllPanelsLoaded] = useState(false);
 
+  // 전체선택 버튼 (비)활성화 상태관리
+  useEffect(() => {
+    panelList.length === selectedCount ? setSelectedAllPanels(true) : setSelectedAllPanels(false);
+  }, [selectedCount, panelList])
+
+  useEffect(() => {
+    if(selectedAllPanels) {
+      const allPanelIds = new Set(panelList.map((panel) => panel.id));
+      setSelectedCount(panelList.length);
+      setSelectedPanels(allPanelIds);
+    }
+  }, [selectedAllPanels])
+  
   // 패널 저장 테스트용
   useEffect(() => {
     console.log("selectedPanels:", selectedPanels);
