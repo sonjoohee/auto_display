@@ -12,9 +12,12 @@ import {
   SEARCH_GENDER, 
   SEARCH_AGE, 
   SEARCH_MARRIAGE, 
-  SEARCH_CHILD, 
-  SEARCH_CONSUMPTION, 
-  SEARCH_TECHNOLOGY,
+  SEARCH_CHILD_M, 
+  SEARCH_CHILD_F,
+  SEARCH_TAG_1,
+  SEARCH_TAG_2,
+  SEARCH_TAG_3,
+  SEARCH_TAG_4,
   PANEL_LIST_PAGE_COUNT,
 } from "../../../AtomStates";
 
@@ -37,9 +40,12 @@ const MoleculeSearchForm = () => {
   const [searchGender, setSearchGender] = useAtom(SEARCH_GENDER);
   const [searchAge, setSearchAge] = useAtom(SEARCH_AGE);
   const [searchMarriage, setSearchMarriage] = useAtom(SEARCH_MARRIAGE);
-  const [searchChild, setSearchChild] = useAtom(SEARCH_CHILD);
-  const [searchConsumption, setSearchConsumption] = useAtom(SEARCH_CONSUMPTION);
-  const [searchTechnology, setSearchTechnology] = useAtom(SEARCH_TECHNOLOGY);
+  const [searchChildM, setSearchChildM] = useAtom(SEARCH_CHILD_M);
+  const [searchChildF, setSearchChildF] = useAtom(SEARCH_CHILD_F);
+  const [searchTag1, setSearchTag1] = useAtom(SEARCH_TAG_1);
+  const [searchTag2, setSearchTag2] = useAtom(SEARCH_TAG_2);
+  const [searchTag3, setSearchTag3] = useAtom(SEARCH_TAG_3);
+  const [searchTag4, setSearchTag4] = useAtom(SEARCH_TAG_4);
 
   const [showDetailOption, setShowDetailOption] = useState(false);
   const [showTimeOption, setShowTimeOption] = useState(false);
@@ -48,24 +54,37 @@ const MoleculeSearchForm = () => {
     utilizationTime: "",
     gender: [],
     age: [],
-    marriage: "",
-    child: "",
-    consumption: "",
-    technology: "",
+    marriage: [],
+    childM: "",
+    childF: "",
+    tag1: [],
+    tag2: [],
+    tag3: [],
+    tag4: [],
   });
   const [tempBehabioralType, setTempBehabioralType] = useState("");
   const [tempUtilizationTime, setTempUtilizationTime] = useState("");
   const [tempGender, setTempGender] = useState([]);
   const [tempAge, setTempAge] = useState([]);
+  const [tempMarriage, setTempMarriage] = useState([]);
+  const [tempChildM, setTempChildM] = useState("");
+  const [tempChildF, setTempChildF] = useState("");
+  const [tempTag1, setTempTag1] = useState([]);
+  const [tempTag2, setTempTag2] = useState([]);
+  const [tempTag3, setTempTag3] = useState([]);
+  const [tempTag4, setTempTag4] = useState([]);
   
   const [shouldSearch, setShouldSearch] = useState(false); // 필터가 변경되어 검색이 필요한지?
   const [isAfterSearch, setIsAfterSearch] = useState(false); // 검색을 하기전인지 하고난후인지?
 
   const [isAllPanelsLoaded, setIsAllPanelsLoaded] = useState(false);
+  const [isChild, setisChild] = useState(false);
 
   useEffect(() => {
     // 모든 필터가 해제되었다면 검색 여부 초기화
-    if (!searchBehabioralType && !searchUtilizationTime && !searchGender.length && !searchAge.length) {
+    if (!searchBehabioralType && !searchUtilizationTime && !searchGender.length && !searchAge.length
+      && !searchMarriage.length && !searchChildM && !searchChildF && !searchTag1 && !searchTag2 && !searchTag3 && !searchTag4
+    ) {
       setIsAfterSearch(false);
     }
     // 검색을 하고 난 후 필터가 변경되었다면 재검색
@@ -79,8 +98,16 @@ const MoleculeSearchForm = () => {
     setTempUtilizationTime(searchUtilizationTime)
     setTempGender(searchGender)
     setTempAge(searchAge)
+    setTempMarriage(searchMarriage)
+    setTempChildM(searchChildM)
+    setTempChildF(searchChildF)
+    setTempTag1(searchTag1)
+    setTempTag2(searchTag2)
+    setTempTag3(searchTag3)
+    setTempTag4(searchTag4)
 
-  }, [isAfterSearch, shouldSearch, searchBehabioralType, searchUtilizationTime, searchGender, searchAge])
+  }, [isAfterSearch, shouldSearch, searchBehabioralType, searchUtilizationTime, searchGender,
+     searchAge, searchMarriage, searchChildM, searchChildF, searchTag1, searchTag2, searchTag3, searchTag4])
 
   // 상세옵션 취소 함수
   const cancleDetailOption = () => {
@@ -91,6 +118,13 @@ const MoleculeSearchForm = () => {
     setTempUtilizationTime(searchUtilizationTime)
     setTempGender(searchGender)
     setTempAge(searchAge)
+    setTempMarriage(searchMarriage)
+    setTempChildM(searchChildM)
+    setTempChildF(searchChildF)
+    setTempTag1(searchTag1)
+    setTempTag2(searchTag2)
+    setTempTag3(searchTag3)
+    setTempTag4(searchTag4)
   };
 
   // 선택 초기화 함수
@@ -100,21 +134,38 @@ const MoleculeSearchForm = () => {
       utilizationTime: "",
       gender: [],
       age: [],
-      marriage: "",
-      child: "",
-      consumption: "",
-      technology: "",
+      marriage: [],
+      childM: "",
+      childF: "",
+      tag1: [],
+      tag2: [],
+      tag3: [],
+      tag4: [],
     });
 
     setTempBehabioralType("");
     setTempUtilizationTime("");
     setTempGender([]);
     setTempAge([]);
+    setTempMarriage([]);
+    setTempChildM("");
+    setTempChildF("");
+    setTempTag1([]);
+    setTempTag2([]);
+    setTempTag3([]);
+    setTempTag4([]);
 
     setSearchBehabioralType("");
     setSearchUtilizationTime("");
     setSearchGender([]);
     setSearchAge([]);
+    setSearchMarriage([]);
+    setSearchChildM("");
+    setSearchChildF("");
+    setSearchTag1([]);
+    setSearchTag2([]);
+    setSearchTag3([]);
+    setSearchTag4([]);
 
     setShouldSearch(true);
   };
@@ -131,27 +182,14 @@ const MoleculeSearchForm = () => {
   const handleSearch = async () => {
 
     setIsAfterSearch(true)
-    
-    const searchParams = {
-      searchBehabioralType,
-      searchUtilizationTime,
-      searchGender: ['M', 'F'].every(gender => searchGender.includes(gender)) ? ['N'] : searchGender, 
-      searchAge,
-      //searchMarriage,
-      //searchChild,
-      //searchConsumption,
-      //searchTechnology,
-    };
-
-    console.log(searchParams); // 검색값 테스트용
 
     try {
       console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
-      const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/panels/list?page=1&size=20field_go=식당`, {
-        params: {
-          searchParams
-        }
-      });
+      const response = await axios.get(
+        `${process.env.REACT_APP_SERVER_URL}/panels/list?page=1&size=20&searchBehabioralType=${searchBehabioralType}&searchUtilizationTime=${searchUtilizationTime}&searchGender=${searchGender}&searchAge=${searchAge}&searchTag=${searchTag1}&searchMarriage=${searchMarriage}&searchChildM=${searchChildM}&searchChildF=${searchChildF}`
+      );
+      console.log(response)
+      
       setPanelList(response.data.results);
 
       if (response.data.results.length < 20) setIsAllPanelsLoaded(true); // 20개 미만의 데이터가 오면 동작
@@ -180,22 +218,36 @@ const MoleculeSearchForm = () => {
     //   alert('활용 시간을 입력해주세요.');
     //   return;
     // }
-    if (!tempBehabioralType && !tempUtilizationTime && !tempGender.length && !tempAge.length) {
-      alert('상세 검색에 적용할 항목을 선택해주세요.');
-      return;
-    }
+    // if (!tempBehabioralType && !tempUtilizationTime && !tempGender.length && !tempAge.length) {
+    //   alert('상세 검색에 적용할 항목을 선택해주세요.');
+    //   return;
+    // }
 
     setSelectedFilters({
       behabioralType: tempBehabioralType,
       utilizationTime: tempUtilizationTime,
       gender: tempGender,
       age: tempAge,
+      marriage: tempMarriage,
+      childM: tempChildM,
+      childF: tempChildF,
+      tag1: tempTag1,
+      tag2: tempTag2,
+      tag3: tempTag3,
+      tag4: tempTag4,
     });
 
     setSearchBehabioralType(tempBehabioralType);
     setSearchUtilizationTime(tempUtilizationTime);
     setSearchGender(tempGender);
     setSearchAge(tempAge);
+    setSearchMarriage(tempMarriage);
+    setSearchChildM(tempChildM);
+    setSearchChildF(tempChildF);
+    setSearchTag1(tempTag1);
+    setSearchTag2(tempTag2);
+    setSearchTag3(tempTag3);
+    setSearchTag4(tempTag4);
 
     setShowDetailOption(false);
     setShowTimeOption(false);
@@ -228,7 +280,54 @@ const MoleculeSearchForm = () => {
         setSearchAge([]);
       }
     }
-
+    else if (filterKey === "marriage") {
+      if (filterValue !== null) {
+        setSearchMarriage((prevMarriage) => prevMarriage.filter((marriage) => marriage !== filterValue));
+        selectedFilters.marriage.filter((marriage) => marriage !== filterValue);
+      } else {
+        setSearchMarriage([]);
+      }
+    }
+    else if (filterKey === "childM") {
+      selectedFilters.childM = '';
+      setSearchChildM('');
+    }
+    else if (filterKey === "childF") {
+      selectedFilters.childF = '';
+      setSearchChildF('');
+    }
+    else if (filterKey === "tag1") {
+      if (filterValue !== null) {
+        setSearchTag1((prevtag1) => prevtag1.filter((tag1) => tag1 !== filterValue));
+        selectedFilters.tag1.filter((tag1) => tag1 !== filterValue);
+      } else {
+        setSearchTag1([]);
+      }
+    }
+    else if (filterKey === "tag2") {
+      if (filterValue !== null) {
+        setSearchTag2((prevtag2) => prevtag2.filter((tag2) => tag2 !== filterValue));
+        selectedFilters.tag2.filter((tag2) => tag2 !== filterValue);
+      } else {
+        setSearchTag2([]);
+      }
+    }
+    else if (filterKey === "tag3") {
+      if (filterValue !== null) {
+        setSearchTag3((prevtag3) => prevtag3.filter((tag3) => tag3 !== filterValue));
+        selectedFilters.tag3.filter((tag3) => tag3 !== filterValue);
+      } else {
+        setSearchTag4([]);
+      }
+    }
+    else if (filterKey === "tag4") {
+      if (filterValue !== null) {
+        setSearchTag4((prevtag4) => prevtag4.filter((tag4) => tag4 !== filterValue));
+        selectedFilters.tag4.filter((tag4) => tag4 !== filterValue);
+      } else {
+        setSearchTag4([]);
+      }
+    }
     setSelectedFilters((prevFilters) => {
       const newFilters = { ...prevFilters, [filterKey]: filterValue !== null ? prevFilters[filterKey].filter((item) => item !== filterValue) : "" };
       return newFilters;
@@ -281,6 +380,7 @@ const MoleculeSearchForm = () => {
               <button className={tempGender.includes('F') ? 'active' : ''} onClick={() => setTempGender(['F'])}>여성</button>
               <button className={['M', 'F'].every(gender => tempGender.includes(gender)) ? 'active' : ''} onClick={() => setTempGender(['M', 'F'])}>상관없음</button>
             </div>
+            <br/>
             <div>
               <h4>나이</h4>
               <button className={tempAge.includes(20) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',20)}>20대</button>
@@ -289,6 +389,54 @@ const MoleculeSearchForm = () => {
               <button className={tempAge.includes(50) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',50)}>50대</button>
               <button className={tempAge.includes(60) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',60)}>60대</button>
               <button className={[20, 30, 40, 50, 60].every(age => tempAge.includes(age)) ? 'active' : ''} onClick={() => setTempAge([20,30,40,50,60])}>상관없음</button>
+            </div>
+            <br/>
+            <h4>결혼 여부</h4>
+            <div>
+              <button className={tempMarriage.includes('미혼') ? 'active' : ''} onClick={() => setTempMarriage(['미혼'])}>미혼</button>
+              <button className={tempMarriage.includes('기혼') ? 'active' : ''} onClick={() => setTempMarriage(['기혼'])}>기혼</button>
+              <button className={tempMarriage.includes('사별') ? 'active' : ''} onClick={() => setTempMarriage(['사별'])}>사별</button>
+              <button className={['미혼', '기혼', '사별'].every(marriage => tempMarriage.includes(marriage)) ? 'active' : ''} onClick={() => setTempMarriage(['미혼', '기혼', '사별'])}>상관없음</button>
+            </div>
+            <br/>
+            <h4>자녀 정보</h4>
+            <div>
+              <button className={tempChildM === 100 && tempChildF === 100 ? 'active' : ''} onClick={() => {setTempChildM(100); setTempChildF(100); setisChild(true);}}>있음</button>
+              <button className={tempChildM === 0 && tempChildF === 0 ? 'active' : ''} onClick={() => {setTempChildM(0); setTempChildF(0); setisChild(false);}}>없음</button>
+              <button className={tempChildM === 99 && tempChildF === 99 ? 'active' : ''} onClick={() => {setTempChildM(99); setTempChildF(99); setisChild(false);}}>상관없음</button>
+              {isChild &&
+                <>
+                <InputField Black type="text" name="type" placeholder="남아 수" value={tempChildM} onChange={(e) => setTempChildM(e.target.value)}/>
+                <InputField Black type="text" name="type" placeholder="여아 수" value={tempChildF} onChange={(e) => setTempChildF(e.target.value)}/>
+                </>
+              }
+              </div>
+            <br/>
+            <h4>소비 성향</h4>
+            <div>
+              <button className={tempTag1.includes("충동구매자" ) ? 'active' : ''} onClick={() => setTempTag1(["충동구매자"])}>충동 구매자</button>
+              <button className={tempTag1.includes("계획구매자") ? 'active' : ''} onClick={() => setTempTag1(["계획구매자"])}>계획 구매자</button>
+              <button className={["충동구매자","계획구매자"].every(tag1 => tempTag1.includes(tag1)) ? 'active' : ''} 
+                      onClick={() => setTempTag1(["충동구매자","계획구매자"])}>상관없음</button>
+              <br/>
+              <button className={tempTag2.includes("절약형") ? 'active' : ''} onClick={() => setTempTag2(["절약형"])}>절약형</button>
+              <button className={tempTag2.includes("고급형") ? 'active' : ''} onClick={() => setTempTag2(["고급형"])}>고급형</button>
+              <button className={["절약형","고급형"].every(tag2 => tempTag2.includes(tag2)) ? 'active' : ''} 
+                      onClick={() => setTempTag2(["절약형","고급형"])}>상관없음</button>
+            </div>
+            <br/>
+            <h4>기술 수용도</h4>
+            <div>
+              <button className={tempTag3.includes("이노베이터" ) ? 'active' : ''} onClick={() => setTempTag3(["이노베이터"])}>이노베이터</button>
+              <button className={tempTag3.includes("얼리어답터") ? 'active' : ''} onClick={() => setTempTag3(["얼리어답터"])}>얼리어답터</button>
+              <button className={["이노베이터","얼리어답터"].every(tag3 => tempTag3.includes(tag3)) ? 'active' : ''} 
+                      onClick={() => setTempTag3(["이노베이터","얼리어답터"])}>상관없음</button>
+              <br/>
+              <button className={tempTag4.includes("전기 다수수용자") ? 'active' : ''} onClick={() => setTempTag4(["전기 다수수용자"])}>전기 다수수용자</button>
+              <button className={tempTag4.includes("후기 다수수용자") ? 'active' : ''} onClick={() => setTempTag4(["후기 다수수용자"])}>후기 다수수용자</button>
+              <button className={tempTag4.includes("지각 수용자") ? 'active' : ''} onClick={() => setTempTag4(["지각 수용자"])}>지각 수용자</button>
+              <button className={["전기 다수수용자","후기 다수수용자", "지각 수용자"].every(tag4 => tempTag4.includes(tag4)) ? 'active' : ''} 
+                      onClick={() => setTempTag4(["전기 다수수용자", "후기 다수수용자", "지각 수용자"])}>상관없음</button>
             </div>
           </div>
           <Button Black onClick={handleApplyDetail}>선택 적용</Button>
@@ -318,7 +466,14 @@ const MoleculeSearchForm = () => {
           </FilterChipArea>
         ) : (
           selectedFilters.gender.length === 0 &&
-          selectedFilters.age.length === 0 && (
+          selectedFilters.age.length === 0 &&
+          selectedFilters.marriage.length === 0 &&
+          selectedFilters.childM === "" &&
+          selectedFilters.childF === "" &&
+          selectedFilters.tag1.length === 0 &&
+          selectedFilters.tag2.length === 0 &&
+          selectedFilters.tag3.length === 0 &&
+          selectedFilters.tag4.length === 0 && (
             <FilterChipArea>
               <span>예시)</span>
               <FilterChip>건강관리</FilterChip>
@@ -345,7 +500,53 @@ const MoleculeSearchForm = () => {
               <span>X</span>
             </FilterChip>
           ))}
-        {(selectedFilters.behabioralType > 0 || selectedFilters.utilizationTime > 0 || selectedFilters.gender.length > 0 || selectedFilters.age.length > 0) &&
+        {selectedFilters.marriage.length > 0 &&
+          selectedFilters.marriage.map((marriage) => (
+            <FilterChip key={marriage} onClick={() => handleRemoveFilter("marriage", marriage)}>
+              {marriage}
+              <span>X</span>
+            </FilterChip>
+          ))}
+        {selectedFilters.childM !== "" &&
+            <FilterChip onClick={() => handleRemoveFilter('childM')}>
+            남아 {selectedFilters.childM}명 <span>X</span>
+          </FilterChip>
+        }
+        {selectedFilters.childF !== "" &&
+          <FilterChip onClick={() => handleRemoveFilter('childF')}>
+            여아 {selectedFilters.childF}명 <span>X</span>
+          </FilterChip>
+        }
+        {selectedFilters.tag1.length > 0 &&
+          selectedFilters.tag1.map((tag1) => (
+            <FilterChip key={tag1} onClick={() => handleRemoveFilter("tag1", tag1)}>
+              {tag1}
+              <span>X</span>
+            </FilterChip>
+          ))}
+        {selectedFilters.tag2.length > 0 &&
+          selectedFilters.tag2.map((tag2) => (
+            <FilterChip key={tag2} onClick={() => handleRemoveFilter("tag2", tag2)}>
+              {tag2}
+              <span>X</span>
+            </FilterChip>
+          ))}
+        {selectedFilters.tag3.length > 0 &&
+          selectedFilters.tag3.map((tag3) => (
+            <FilterChip key={tag3} onClick={() => handleRemoveFilter("tag3", tag3)}>
+              {tag3}
+              <span>X</span>
+            </FilterChip>
+          ))}
+        {selectedFilters.tag4.length > 0 &&
+          selectedFilters.tag4.map((tag4) => (
+            <FilterChip key={tag4} onClick={() => handleRemoveFilter("tag4", tag4)}>
+              {tag4}
+              <span>X</span>
+            </FilterChip>
+          ))}
+        {(selectedFilters.behabioralType || selectedFilters.utilizationTime || selectedFilters.gender.length > 0 || selectedFilters.age.length > 0 || selectedFilters.marriage.length > 0
+         || selectedFilters.childM || selectedFilters.childF || selectedFilters.tag1.length > 0 || selectedFilters.tag2.length > 0 || selectedFilters.tag3.length > 0 || selectedFilters.tag4.length > 0) &&
           <Button Black onClick={resetSelectionOption}>초기화</Button>
         }
       </SelectedFilters>

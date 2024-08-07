@@ -20,9 +20,12 @@ import {
   SEARCH_GENDER, 
   SEARCH_AGE,
   SEARCH_MARRIAGE, 
-  SEARCH_CHILD, 
-  SEARCH_CONSUMPTION, 
-  SEARCH_TECHNOLOGY,
+  SEARCH_CHILD_M, 
+  SEARCH_CHILD_F,
+  SEARCH_TAG_1,
+  SEARCH_TAG_2,
+  SEARCH_TAG_3,
+  SEARCH_TAG_4,
   PANEL_LIST_PAGE_COUNT,
   SELECTED_COUNT,
   SELECTED_PANELS,
@@ -37,6 +40,13 @@ const OrganismPanelListSection = () => {
   const [searchUtilizationTime, setSearchUtilizationTime] = useAtom(SEARCH_UTILIZATION_TIME);
   const [searchGender, setSearchGender] = useAtom(SEARCH_GENDER);
   const [searchAge, setSearchAge] = useAtom(SEARCH_AGE);
+  const [searchMarriage, setSearchMarriage] = useAtom(SEARCH_MARRIAGE);
+  const [searchChildM, setSearchChildM] = useAtom(SEARCH_CHILD_M);
+  const [searchChildF, setSearchChildF] = useAtom(SEARCH_CHILD_F);
+  const [searchTag1, setSearchTag1] = useAtom(SEARCH_TAG_1);
+  const [searchTag2, setSearchTag2] = useAtom(SEARCH_TAG_2);
+  const [searchTag3, setSearchTag3] = useAtom(SEARCH_TAG_3);
+  const [searchTag4, setSearchTag4] = useAtom(SEARCH_TAG_4);
   const [panelListPageCount, setPanelListPageCount] = useAtom(PANEL_LIST_PAGE_COUNT);
   const [selectedCount, setSelectedCount] = useAtom(SELECTED_COUNT);
   const [selectedPanels, setSelectedPanels] = useAtom(SELECTED_PANELS); // 선택된 패널의 ID 저장
@@ -87,25 +97,18 @@ const OrganismPanelListSection = () => {
 
   // 최초 패널 리스트
   useEffect(() => {
-    const searchParams = {
-      searchBehabioralType,
-      searchUtilizationTime,
-      searchGender,
-      searchAge,
-    };
     const fetchInitialPanelList = async () => {
       console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
       try {
-        const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/panels/list?page=1&size=20&field_go=식당`, {
-          params: {
-            searchParams
-          }
-        });
-        setPanelList(response.data.results);
-        
-        if (response.data.results.length < 20) setIsAllPanelsLoaded(true); // 20개 미만의 데이터가 오면 동작
+      const response = await axios.get(
+        `${process.env.REACT_APP_SERVER_URL}/panels/list?page=1&size=20&searchBehabioralType=${searchBehabioralType}&searchUtilizationTime=${searchUtilizationTime}&searchGender=${searchGender}&searchAge=${searchAge}&searchTag=${searchTag1}&searchMarriage=${searchMarriage}&searchChildM=${searchChildM}&searchChildF=${searchChildF}`
+      );
+      console.log(response)
 
-        console.log(searchParams);
+      setPanelList(response.data.results);
+        
+      if (response.data.results.length < 20) setIsAllPanelsLoaded(true); // 20개 미만의 데이터가 오면 동작
+
       } catch (error) {
         console.error("Error fetching panel list:", error);
       }
@@ -116,26 +119,19 @@ const OrganismPanelListSection = () => {
 
   // 추가 패널 리스트
   useEffect(() => {
-    const searchParams = {
-      searchBehabioralType,
-      searchUtilizationTime,
-      searchGender,
-      searchAge,
-    };
     if (panelListPageCount > 1) {
       const fetchAdditionalPanelList = async () => {
         console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
         try {
-          const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/panels/list?page=${panelListPageCount}&size=20&field_go=식당`, {
-            params: {
-              searchParams
-            }
-          });
+          const response = await axios.get(
+            `${process.env.REACT_APP_SERVER_URL}/panels/list?page=${panelListPageCount}&size=20&&searchBehabioralType=${searchBehabioralType}&searchUtilizationTime=${searchUtilizationTime}&searchGender=${searchGender}&searchAge=${searchAge}&searchTag=${searchTag1}&searchMarriage=${searchMarriage}&searchChildM=${searchChildM}&searchChildF=${searchChildF}`
+          );
+          console.log(response)
+          
           setPanelList(prevPanelList => [...prevPanelList, ...response.data.results]); // 리스트 초기화 하지 않고 아래에 붙이기
           
           if (response.data.results.length < 20) setIsAllPanelsLoaded(true); // 20개 미만의 데이터가 오면 동작
 
-          console.log(searchParams);
         } catch (error) {
           console.error("Error fetching panel list:", error);
         }
