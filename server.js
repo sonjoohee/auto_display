@@ -43,16 +43,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const sendPasswordResetEmail = async (to, link) => {
-  const mailOptions = {
-    from: process.env.EMAIL,
-    to,
-    subject: '비밀번호 재설정',
-    html: `비밀번호 재설정을 위해 다음 링크를 클릭하세요: <a href="${link}">${link}</a>`,
-  };
-
-  await transporter.sendMail(mailOptions);
-};
 const sendVerificationEmail = async (to, link) => {
   const mailOptions = {
     from: 'endnjs33@gmail.com',
