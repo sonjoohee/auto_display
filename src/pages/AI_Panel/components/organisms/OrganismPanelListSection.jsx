@@ -236,17 +236,24 @@ const PanelList = styled.ul`
 `;
 
 const LoadMoreButton = styled.button`
-  display: block;
-  margin: ${({ isBottomBarVisible }) => (isBottomBarVisible ? '20px auto 120px' : '20px auto')}; /* 하단 바가 보일 때 더 위로 이동 */
-  padding: 10px 20px;
-  background-color: ${palette.blue};
-  color: ${palette.white};
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
   position: relative;
+  font-size:0.88rem;
+  color: ${palette.gray};
+  display: block;
+  margin: ${({ isBottomBarVisible }) => (isBottomBarVisible ? '50px auto 120px' : '50px auto 120px')}; /* 하단 바가 보일 때 더 위로 이동 */
+  padding: 12px 20px;
+  border: 1px solid ${palette.gray};
+  border-radius: 40px;
+  cursor: pointer;
+  background-color: ${palette.white};
   z-index: 10;
+  transition:all .5s;
+
+  &:hover {
+    background-color: rgba(0,0,0,.05);
+  }
 `;
+
 const CreatePanelLink = styled(Link)`
   display: block;
   margin: ${({ isBottomBarVisible }) => (isBottomBarVisible ? '20px auto 120px' : '20px auto')}; /* 하단 바가 보일 때 더 위로 이동 */

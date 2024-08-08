@@ -4,6 +4,7 @@ import axios from "axios";
 import styled from "styled-components";
 import images from "../../../../assets/styles/Images"; 
 import MoleculeSearchForm from "../molecules/MoleculeSearchForm";
+import { palette } from "../../../../assets/styles/Palette";
 import { useAtom } from "jotai";
 import { 
   currentUserAtom, 
@@ -50,11 +51,12 @@ const StyledSearchSection = styled.section`
   background: url(${images.BgSearch}) center no-repeat;
   background-size: cover;
   h2 {
-    font-size: 3rem;
-    color: white;
-    margin-bottom: 60px;
+    font-size: 2.5rem;
+    color: ${palette.white};
+    margin-bottom: 56px;
+
     p {
-      font-size: 1rem;
+      font-size: 0.88rem;
       font-weight: normal;
     }
   }

@@ -201,97 +201,101 @@ const MoleculeSearchForm = () => {
   return (
     <>
       <SearchFormWrap>
-      <div className="searchForm">
-        <div>
-          <span>행동 타입</span>
-          <InputField None type="text" name="type" placeholder="입력하세요" value={searchBehabioralType} onChange={(e) => setSearchBehabioralType(e.target.value)}/>
-        </div>
-        <div onClick={handleTimeOptionToggle}>
-          <span>활용 시간</span>
-          <InputField None type="text" name="type" placeholder="선택하세요" />
-        </div>
-        <div onClick={handleDetailOptionToggle}>
-          <span>상세 옵션</span>
-          <InputField None type="text" name="type" placeholder="선택하세요" />
-        </div>
-        <Button Black onClick={handleSearch}>
-          <img src={images.Search} alt="" />검색
-        </Button>
-      </div>
-      {showDetailOption && (
-        <DetailOptions>
+        <div className="searchForm">
           <div>
-            <h4>성별</h4>
-            <div>
-              <button className={searchGender.includes('M') ? 'active' : ''} onClick={() => setSearchGender(['M'])}>남성</button>
-              <button className={searchGender.includes('F') ? 'active' : ''} onClick={() => setSearchGender(['F'])}>여성</button>
-              <button className={['M', 'F'].every(gender => searchGender.includes(gender)) ? 'active' : ''} onClick={() => setSearchGender(['M', 'F'])}>상관없음</button>
-            </div>
-            <div>
-              <h4>나이</h4>
-              <button className={searchAge.includes(20) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',20)}>20대</button>
-              <button className={searchAge.includes(30) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',30)}>30대</button>
-              <button className={searchAge.includes(40) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',40)}>40대</button>
-              <button className={searchAge.includes(50) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',50)}>50대</button>
-              <button className={searchAge.includes(60) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',60)}>60대</button>
-              <button className={[20, 30, 40, 50, 60].every(age => searchAge.includes(age)) ? 'active' : ''} onClick={() => setSearchAge([20,30,40,50,60])}>상관없음</button>
-            </div>
+            <span>행동 타입</span>
+            <InputField None type="text" name="type" placeholder="입력하세요" value={searchBehabioralType} onChange={(e) => setSearchBehabioralType(e.target.value)}/>
           </div>
-          <Button Black onClick={handleApplyDetail}>선택 적용</Button>
-        </DetailOptions>
-      )}
-      {showTimeOption && (
-        <DetailOptions>
-          <div>
-            <button className={searchUtilizationTime === '적게' ? 'active' : ''} onClick={() => setSearchUtilizationTime('적게')}>적게</button>
-            <button className={searchUtilizationTime === '보통' ? 'active' : ''} onClick={() => setSearchUtilizationTime('보통')}>보통</button>
-            <button className={searchUtilizationTime === '많이' ? 'active' : ''} onClick={() => setSearchUtilizationTime('많이')}>많이</button>
+          <div onClick={handleTimeOptionToggle}>
+            <span>활용 시간</span>
+            <Button SelectBtn>선택하세요</Button>
+            {/* <InputField None type="text" name="type" placeholder="선택하세요" /> */}
           </div>
-        </DetailOptions>
-      )}
-      <SelectedFilters>
-        {selectedFilters.behabioralType && selectedFilters.utilizationTime ? (
-          <FilterChipArea>
-            <FilterChip onClick={() => handleRemoveFilter('behabioralType')}>
-              {selectedFilters.behabioralType} <span>X</span>
-            </FilterChip>
-            <span>에 시간을</span> 
-            <FilterChip>
-              {selectedFilters.utilizationTime} <span>X</span>
-            </FilterChip> 
-            <span>활용하는,</span>
-          </FilterChipArea>
-        ) : (
-          selectedFilters.gender.length === 0 &&
-          selectedFilters.age.length === 0 && (
-            <FilterChipArea>
-              <span>예시)</span>
-              <FilterChip>건강관리</FilterChip>
-              <span>에 시간을</span>
-              <FilterChip>많이</FilterChip>
-              <span>활용하는,</span>
-              <FilterChip>여성</FilterChip>
-              <FilterChip>20대</FilterChip>
-              <FilterChip>30대</FilterChip>
-            </FilterChipArea>
-          )
+          <div onClick={handleDetailOptionToggle}>
+            <span>상세 옵션</span>
+            <Button SelectBtn>선택하세요</Button>
+            {/* <InputField None type="text" name="type" placeholder="선택하세요" /> */}
+          </div>
+          <Button Black onClick={handleSearch}>
+            <img src={images.Search} alt="" />검색
+          </Button>
+        </div>
+        {showDetailOption && (
+          <DetailOptions>
+            <div>
+              <h4>성별</h4>
+              <div>
+                <button className={searchGender.includes('M') ? 'active' : ''} onClick={() => setSearchGender(['M'])}>남성</button>
+                <button className={searchGender.includes('F') ? 'active' : ''} onClick={() => setSearchGender(['F'])}>여성</button>
+                <button className={['M', 'F'].every(gender => searchGender.includes(gender)) ? 'active' : ''} onClick={() => setSearchGender(['M', 'F'])}>상관없음</button>
+              </div>
+              <div>
+                <h4>나이</h4>
+                <button className={searchAge.includes(20) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',20)}>20대</button>
+                <button className={searchAge.includes(30) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',30)}>30대</button>
+                <button className={searchAge.includes(40) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',40)}>40대</button>
+                <button className={searchAge.includes(50) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',50)}>50대</button>
+                <button className={searchAge.includes(60) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',60)}>60대</button>
+                <button className={[20, 30, 40, 50, 60].every(age => searchAge.includes(age)) ? 'active' : ''} onClick={() => setSearchAge([20,30,40,50,60])}>상관없음</button>
+              </div>
+            </div>
+            <Button Black onClick={handleApplyDetail}>선택 적용</Button>
+          </DetailOptions>
         )}
-        {selectedFilters.gender.length > 0 &&
-          selectedFilters.gender.map((gender) => (
-            <FilterChip key={gender} onClick={() => handleRemoveFilter("gender", gender)}>
-              {gender === 'M' ? '남성' : '여성'}
-              <span>X</span>
-            </FilterChip>
-        ))}
-        {selectedFilters.age.length > 0 &&
-          selectedFilters.age.map((age) => (
-            <FilterChip key={age} onClick={() => handleRemoveFilter("age", age)}>
-              {age}대
-              <span>X</span>
-            </FilterChip>
+        {showTimeOption && (
+          <DetailOptions>
+            <div>
+              <button className={searchUtilizationTime === '적게' ? 'active' : ''} onClick={() => setSearchUtilizationTime('적게')}>적게</button>
+              <button className={searchUtilizationTime === '보통' ? 'active' : ''} onClick={() => setSearchUtilizationTime('보통')}>보통</button>
+              <button className={searchUtilizationTime === '많이' ? 'active' : ''} onClick={() => setSearchUtilizationTime('많이')}>많이</button>
+            </div>
+          </DetailOptions>
+        )}
+        <SelectedFilters>
+          {selectedFilters.behabioralType && selectedFilters.utilizationTime ? (
+            <FilterChipArea>
+              <FilterChip onClick={() => handleRemoveFilter('behabioralType')}>
+                {selectedFilters.behabioralType} 
+                {/* <span>X</span> */}
+              </FilterChip>
+              <span>에 시간을</span> 
+              <FilterChip>
+                {selectedFilters.utilizationTime} 
+                {/* <span>X</span> */}
+              </FilterChip> 
+              <span>활용하는,</span>
+            </FilterChipArea>
+          ) : (
+            selectedFilters.gender.length === 0 &&
+            selectedFilters.age.length === 0 && (
+              <FilterChipArea>
+                <span>예시)</span>
+                <FilterChip>건강관리</FilterChip>
+                <span>에 시간을</span>
+                <FilterChip>많이</FilterChip>
+                <span>활용하는,</span>
+                <FilterChip bgGray>여성</FilterChip>
+                <FilterChip bgGray>20대</FilterChip>
+                <FilterChip bgGray>30대</FilterChip>
+              </FilterChipArea>
+            )
+          )}
+          {selectedFilters.gender.length > 0 &&
+            selectedFilters.gender.map((gender) => (
+              <FilterChip bgGray key={gender} onClick={() => handleRemoveFilter("gender", gender)}>
+                {gender === 'M' ? '남성' : '여성'}
+                {/* <span>X</span> */}
+              </FilterChip>
           ))}
-      </SelectedFilters>
-    </SearchFormWrap>
+          {selectedFilters.age.length > 0 &&
+            selectedFilters.age.map((age) => (
+              <FilterChip bgGray key={age} onClick={() => handleRemoveFilter("age", age)}>
+                {age}대
+                {/* <span>X</span> */}
+              </FilterChip>
+            ))}
+        </SelectedFilters>
+      </SearchFormWrap>
     </>
   );
 };
@@ -299,6 +303,7 @@ const MoleculeSearchForm = () => {
 export default MoleculeSearchForm;
 
 const SearchFormWrap = styled.div`
+  position:relative;
   padding:20px 30px;
   border-radius:15px;
   background:${palette.white};
@@ -307,34 +312,69 @@ const SearchFormWrap = styled.div`
     display:flex;
     justify-content:space-between;
     align-items:stretch;
+    gap:40px;
 
-    button {
+    > div {
+      position:relative;
+      flex:1 1 0;
+
+      + div:before {
+        position:absolute;
+        left:-20px;
+        top:50%;
+        transform:translateY(-50%);
+        width:1px;
+        height:100%;
+        background:${palette.lineGray};
+        content:'';
+      }
+
+      button {
+        margin-top:0;
+
+        &:hover {background:none;}
+      }
+    }
+
+    span {
+      font-size:0.75rem;
+      color:${palette.lightGray};
+    }
+
+    > button {
       display:flex;
       align-items:center;
       gap:10px;
+      margin-top:0;
     }
   }
 `;
 
 const DetailOptions = styled.div`
-  margin-top:20px;
+  position:absolute;
+  left:50%;
+  top:95px;
+  transform:translateX(-50%);
+  width:calc(100% - 60px);
   padding:20px;
   border:1px solid ${palette.gray};
-  border-radius:15px;
+  border-radius:10px;
   background:${palette.white};
+  z-index:1;
 
   h4 {
     margin-bottom:10px;
     font-size:1.2rem;
   }
 
-  div {
-    margin-bottom:20px;
+  > div {
+    display:flex;
+    gap:10px;
 
     button {
       background:${palette.white};
       color:${palette.black};
-      margin-right:10px;
+      margin:0;
       padding:10px 20px;
       border:1px solid ${palette.gray};
       border-radius:5px;
@@ -350,19 +390,43 @@ const DetailOptions = styled.div`
 
 const SelectedFilters = styled.div`
   margin-top: 20px;
+  padding-top:20px;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  border-top:1px solid ${palette.lineGray};
 `;
 
 const FilterChip = styled.div`
+  position:relative;
   display: flex;
   align-items: center;
-  padding: 5px 10px;
-  margin-left: 5px;
-  background: ${palette.lightGray};
-  border-radius: 15px;
+  font-size:0.88rem;
+  padding: 8px 30px 8px 10px;
+  background:${props => {
+    if (props.bgGray) return `rgba(0,0,0,0.05)`;
+    else return `rgba(4,83,244,0.1)`;
+  }};
+  border-radius: 10px;
   cursor: pointer;
+
+  &:before, &:after {
+    position:absolute;
+    right:15px;
+    top:50%;
+    width:1px;
+    height:10px;
+    background:${palette.lightGray};
+    content:'';
+  }
+
+  &:before {
+    transform:translateY(-50%) rotate(45deg);
+  }
+
+  &:after {
+    transform:translateY(-50%) rotate(-45deg);
+  }
 
   span {
     margin-left: 5px;
@@ -375,8 +439,9 @@ const FilterChip = styled.div`
 const FilterChipArea = styled.div`
   display: flex;
   align-items: center;
+  gap:10px;
+
   span {
-  margin-left: 5px;
-  margin-right: 5px;
+    color:${palette.lightGray};
   }
 `;
