@@ -24,9 +24,11 @@ export const loadedPanelCountAtom = atom(0);
 export const selectedPanelsAtom = atom(new Set());
 export const SELECTED_COUNT = atom(0);
 export const SELECTED_PANELS = atom(new Set()); // 선택된 패널의 ID 저장
+export const SELECTED_ALL_PANELS = atom(false); 
 
 ///////////////////////////////////////////////////////////////////////////
 
+export const VIEW_PANEL_TYPE = atom(true); // true=카드, false=목록
 export const TOTAL_PANEL_COUNT = atom(0);
 export const SELECTED_PANEL_COUNT = atom(0);
 
@@ -340,7 +342,10 @@ export const SEARCH_BEHABIORAL_TYPE = atom("");
 export const SEARCH_UTILIZATION_TIME = atom("");
 export const SEARCH_GENDER = atom([]);
 export const SEARCH_AGE = atom([]);
-export const SEARCH_MARRIAGE = atom("");
-export const SEARCH_CHILD = atom("");
-export const SEARCH_CONSUMPTION = atom("");
-export const SEARCH_TECHNOLOGY = atom("");
+export const SEARCH_MARRIAGE = atom([]);
+export const SEARCH_CHILD_M = atom("");
+export const SEARCH_CHILD_F = atom("");
+export const SEARCH_TAG_1 = atom([]);
+export const SEARCH_TAG_2 = atom([]);
+export const SEARCH_TAG_3 = atom([]);
+export const SEARCH_TAG_4 = atom([]);
