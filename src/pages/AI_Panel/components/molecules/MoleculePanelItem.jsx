@@ -77,12 +77,11 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
         </Overlay>
         <PanelDetails>
           <p>{gender === "M" ? "남성" : "여성"}({age}세) | {job}</p>
-
+          
           {maxBehabioralType && maxUtilizationTime<60 && <><strong>{maxBehabioralType}에 {maxUtilizationTime}분이상 활용하고 있어요</strong><br/><br/></>}
           {maxBehabioralType && maxUtilizationTime%60===0 && <><strong>{maxBehabioralType}에 {maxUtilizationTime/60}시간이상 활용하고 있어요</strong><br/><br/></>}
           {maxBehabioralType && maxUtilizationTime>=60 && maxUtilizationTime%60!==0 && <><strong>{maxBehabioralType}에 {Math.floor(maxUtilizationTime/60)}시간 {maxUtilizationTime%60}분이상 활용하고 있어요</strong><br/><br/></>}
-          
-          <strong>{comment}</strong>
+          {!maxBehabioralType && <strong>{comment}</strong>}
           <ol>
             {tags}
           </ol>
@@ -196,6 +195,7 @@ const PanelDetails = styled.div`
   p {
     font-size: 0.88rem;
     font-weight: 400;
+    margin-bottom: 8px;
   }
 
   strong {
