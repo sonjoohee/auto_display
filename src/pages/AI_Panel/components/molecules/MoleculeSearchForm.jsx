@@ -466,9 +466,9 @@ const MoleculeSearchForm = () => {
               <span>에 시간을</span>
               <FilterChip>많이</FilterChip>
               <span>활용하는,</span>
-              <FilterChip>여성</FilterChip>
-              <FilterChip>20대</FilterChip>
-              <FilterChip>30대</FilterChip>
+              <FilterChip bgGray>여성</FilterChip>
+              <FilterChip bgGray>20대</FilterChip>
+              <FilterChip bgGray>30대</FilterChip>
             </FilterChipArea>
           )
         )}
@@ -476,36 +476,36 @@ const MoleculeSearchForm = () => {
           selectedFilters.gender.map((gender) => (
             <FilterChip key={gender} onClick={() => handleRemoveFilter("gender", gender)}>
               {gender === 'M' ? '남성' : '여성'}
-              <span>X</span>
+              {/* <span>X</span> */}
             </FilterChip>
         ))}
         {selectedFilters.age.length > 0 &&
           selectedFilters.age.map((age) => (
             <FilterChip key={age} onClick={() => handleRemoveFilter("age", age)}>
               {age}대
-              <span>X</span>
+              {/* <span>X</span> */}
             </FilterChip>
           ))}
         {selectedFilters.marriage.length > 0 &&
           selectedFilters.marriage.map((marriage) => (
             <FilterChip key={marriage} onClick={() => handleRemoveFilter("marriage", marriage)}>
               {marriage}
-              <span>X</span>
+              {/* <span>X</span> */}
             </FilterChip>
           ))}
         {selectedFilters.childM !== "" &&
             <FilterChip onClick={() => handleRemoveFilter('childM')}>
-              {selectedFilters.childM === 0 && <>남아(없음) <span>X</span></>}
-              {selectedFilters.childM === 99 && <>남아(상관없음) <span>X</span></>}
-              {selectedFilters.childM === 100 && <>남아(있음) <span>X</span></>}
+              {selectedFilters.childM === 0 && <>남아(없음) {/* <span>X</span> */}</>}
+              {selectedFilters.childM === 99 && <>남아(상관없음) {/* <span>X</span> */}</>}
+              {selectedFilters.childM === 100 && <>남아(있음) {/* <span>X</span> */}</>}
               {/* {selectedFilters.childM !== 0 && selectedFilters.childM !== 99 && <>남아({selectedFilters.childM}명) <span>X</span></>} */}
           </FilterChip>
         }
         {selectedFilters.childF !== "" &&
           <FilterChip onClick={() => handleRemoveFilter('childF')}>
-              {selectedFilters.childF === 0 && <>여아(없음) <span>X</span></>}
-              {selectedFilters.childF === 99 && <>여아(상관없음) <span>X</span></>}
-              {selectedFilters.childF === 100 && <>여아(있음) <span>X</span></>}
+              {selectedFilters.childF === 0 && <>여아(없음) {/* <span>X</span> */}</>}
+              {selectedFilters.childF === 99 && <>여아(상관없음) {/* <span>X</span> */}</>}
+              {selectedFilters.childF === 100 && <>여아(있음) {/* <span>X</span> */}</>}
               {/* {selectedFilters.childF !== 0 && selectedFilters.childF !== 99 && <>여아({selectedFilters.childM}명) <span>X</span></>} */}
           </FilterChip>
         }
@@ -513,21 +513,21 @@ const MoleculeSearchForm = () => {
           selectedFilters.tag1.map((tag1) => (
             <FilterChip key={tag1} onClick={() => handleRemoveFilter("tag1", tag1)}>
               {tag1}
-              <span>X</span>
+              {/* <span>X</span> */}
             </FilterChip>
           ))}
         {selectedFilters.tag2.length > 0 &&
           selectedFilters.tag2.map((tag2) => (
             <FilterChip key={tag2} onClick={() => handleRemoveFilter("tag2", tag2)}>
               {tag2}
-              <span>X</span>
+              {/* <span>X</span> */}
             </FilterChip>
           ))}
         {selectedFilters.tag3.length > 0 &&
           selectedFilters.tag3.map((tag3) => (
             <FilterChip key={tag3} onClick={() => handleRemoveFilter("tag3", tag3)}>
               {tag3}
-              <span>X</span>
+              {/* <span>X</span> */}
             </FilterChip>
           ))}
       </SelectedFilters>
