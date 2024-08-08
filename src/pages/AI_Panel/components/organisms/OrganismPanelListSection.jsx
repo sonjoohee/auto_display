@@ -50,6 +50,8 @@ const OrganismPanelListSection = () => {
   const [viewPanelType, setViewPanelType] = useAtom(VIEW_PANEL_TYPE);
   const [selectedAllPanels, setSelectedAllPanels] = useAtom(SELECTED_ALL_PANELS); // 전체 선택 버튼
 
+  const [totalPanelCount, setTotalPanelCount] = useAtom(TOTAL_PANEL_COUNT);
+
   const [isAllPanelsLoaded, setIsAllPanelsLoaded] = useState(false);
 
   // 전체선택 버튼 (비)활성화 상태관리
@@ -102,8 +104,9 @@ const OrganismPanelListSection = () => {
         `${process.env.REACT_APP_SERVER_URL}/panels/list?page=1&size=20&searchBehabioralType=${searchBehabioralType}&searchUtilizationTime=${searchUtilizationTime}&searchGender=${searchGender}&searchAge=${searchAge}&searchTag=${searchTag1}&searchMarriage=${searchMarriage}&searchChildM=${searchChildM}&searchChildF=${searchChildF}`
       );
       setPanelList(response.data.results);
-
-      console.log(panelList)
+      setTotalPanelCount(response.data.count); // 전체 패널 개수
+      
+      console.log(response);
         
       if (response.data.results.length < 20) setIsAllPanelsLoaded(true); // 20개 미만의 데이터가 오면 동작
 

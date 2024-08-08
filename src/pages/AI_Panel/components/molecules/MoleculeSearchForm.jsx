@@ -44,6 +44,7 @@ const MoleculeSearchForm = () => {
   const [searchTag1, setSearchTag1] = useAtom(SEARCH_TAG_1);
   const [searchTag2, setSearchTag2] = useAtom(SEARCH_TAG_2);
   const [searchTag3, setSearchTag3] = useAtom(SEARCH_TAG_3);
+  
 
   const [showDetailOption, setShowDetailOption] = useState(false);
   const [showTimeOption, setShowTimeOption] = useState(false);
