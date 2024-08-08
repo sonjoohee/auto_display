@@ -118,11 +118,12 @@ const OrganismPanelListSection = () => {
   // 추가 패널 리스트
   useEffect(() => {
     if (panelListPageCount > 1) {
+      const combinedTags = [...searchTag1, ...searchTag2, ...searchTag3]; // 소비습관, 기술수용도 하나의 태그에 담아서 보냄
       const fetchAdditionalPanelList = async () => {
         console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
         try {
           const response = await axios.get(
-            `${process.env.REACT_APP_SERVER_URL}/panels/list?page=${panelListPageCount}&size=20&&searchBehabioralType=${searchBehabioralType}&searchUtilizationTime=${searchUtilizationTime}&searchGender=${searchGender}&searchAge=${searchAge}&searchTag=${searchTag1}&searchMarriage=${searchMarriage}&searchChildM=${searchChildM}&searchChildF=${searchChildF}`
+            `${process.env.REACT_APP_SERVER_URL}/panels/list?page=${panelListPageCount}&size=20&&searchBehabioralType=${searchBehabioralType}&searchUtilizationTime=${searchUtilizationTime}&searchGender=${searchGender}&searchAge=${searchAge}&searchTag=${combinedTags}&searchMarriage=${searchMarriage}&searchChildM=${searchChildM}&searchChildF=${searchChildF}`
           );
           setPanelList(prevPanelList => [...prevPanelList, ...response.data.results]); // 리스트 초기화 하지 않고 아래에 붙이기
           
@@ -173,7 +174,7 @@ const OrganismPanelListSection = () => {
                 target_2={panel.target_2}
                 target_3={panel.target_3}
                 target_4={panel.target_4}
-                targe_5={panel.target_5}
+                target_5={panel.target_5}
                 value_1={panel.value_1}
                 value_2={panel.value_2}
                 value_3={panel.value_3}
