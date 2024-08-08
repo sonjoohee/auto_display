@@ -19,8 +19,6 @@ export const currentUserAtom = atom(null);
 export const errorAtom = atom(''); // 에러 상태 추가
 
 // 패널 선택 상태
-export const selectedPanelCountAtom = atom(0);
-export const loadedPanelCountAtom = atom(0);
 export const selectedPanelsAtom = atom(new Set());
 export const SELECTED_COUNT = atom(0);
 export const SELECTED_PANELS = atom(new Set()); // 선택된 패널의 ID 저장
@@ -31,6 +29,7 @@ export const SELECTED_ALL_PANELS = atom(false);
 export const VIEW_PANEL_TYPE = atom(true); // true=카드, false=목록
 export const TOTAL_PANEL_COUNT = atom(0);
 export const SELECTED_PANEL_COUNT = atom(0);
+export const FILTERD_PANEL_COUNT = atom(0); // 필터링된 패널 개수
 
 // 패널 리스트
 export const PANEL_LIST = atom([

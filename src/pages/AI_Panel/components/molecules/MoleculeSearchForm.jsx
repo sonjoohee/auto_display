@@ -19,6 +19,7 @@ import {
   SEARCH_TAG_3,
   PANEL_LIST_PAGE_COUNT,
   IS_ALL_PANELS_LOADED,
+  FILTERD_PANEL_COUNT,
 } from "../../../AtomStates";
 
 import styled from "styled-components";
@@ -45,8 +46,10 @@ const MoleculeSearchForm = () => {
   const [searchTag1, setSearchTag1] = useAtom(SEARCH_TAG_1);
   const [searchTag2, setSearchTag2] = useAtom(SEARCH_TAG_2);
   const [searchTag3, setSearchTag3] = useAtom(SEARCH_TAG_3);
-  
 
+  const [isAllPanelsLoaded, setIsAllPanelsLoaded] = useAtom(IS_ALL_PANELS_LOADED);
+  const [filterdPanelCount, setFilterdPanelCount] = useAtom(FILTERD_PANEL_COUNT);
+  
   const [showDetailOption, setShowDetailOption] = useState(false);
   const [showTimeOption, setShowTimeOption] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState({
@@ -75,8 +78,8 @@ const MoleculeSearchForm = () => {
   const [shouldSearch, setShouldSearch] = useState(false); // 필터가 변경되어 검색이 필요한지?
   const [isAfterSearch, setIsAfterSearch] = useState(false); // 검색을 하기전인지 하고난후인지?
 
-  const [isAllPanelsLoaded, setIsAllPanelsLoaded] = useAtom(IS_ALL_PANELS_LOADED);
-  const [isChild, setisChild] = useState(false);
+  const [isChildExist, setIsChildExist] = useState(false);
+  const [isChildNotExist, setIsChildNotExist] = useState(false);
 
   useEffect(() => {
     // 모든 필터가 해제되었다면 검색 여부 초기화
@@ -188,6 +191,7 @@ const MoleculeSearchForm = () => {
       console.log(response)
       
       setPanelList(response.data.results);
+      setFilterdPanelCount(response.data.count); // 필터링된 패널 개수
 
       if (response.data.results.length < 20) setIsAllPanelsLoaded(true); // 20개 미만의 데이터가 오면 동작
       else setIsAllPanelsLoaded(false);
@@ -212,10 +216,10 @@ const MoleculeSearchForm = () => {
       alert('행동 타입을 입력해주세요.');
       return;
     }
-    // if (tempBehabioralType && !tempUtilizationTime) {
-    //   alert('활용 시간을 입력해주세요.');
-    //   return;
-    // }
+    if (tempBehabioralType && !tempUtilizationTime) {
+      alert('활용 시간을 입력해주세요.');
+      return;
+    }
     // if (!tempBehabioralType && !tempUtilizationTime && !tempGender.length && !tempAge.length) {
     //   alert('상세 검색에 적용할 항목을 선택해주세요.');
     //   return;
@@ -339,6 +343,28 @@ const MoleculeSearchForm = () => {
     }
   };
 
+  // 자녀 정보 버튼 클릭 이벤트 핸들러
+  const handleChildExistClick = () => {
+    setIsChildExist(true);
+    setIsChildNotExist(false);
+    setTempChildM(100); 
+    setTempChildF(100);
+  };
+
+  const handleChildNotExistClick = () => {
+    setIsChildExist(false);
+    setIsChildNotExist(true);
+    setTempChildM(0); 
+    setTempChildF(0); 
+  };
+
+  const handleChildNoMatterClick = () => {
+    setIsChildExist(true);
+    setIsChildNotExist(true);
+    setTempChildM(99); 
+    setTempChildF(99);
+  };
+
   return (
     <>
       <SearchFormWrap>
@@ -371,12 +397,16 @@ const MoleculeSearchForm = () => {
             <br/>
             <div>
               <h4>나이</h4>
+              <button className={tempAge.includes(10) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',10)}>10대</button>
               <button className={tempAge.includes(20) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',20)}>20대</button>
               <button className={tempAge.includes(30) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',30)}>30대</button>
               <button className={tempAge.includes(40) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',40)}>40대</button>
               <button className={tempAge.includes(50) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',50)}>50대</button>
               <button className={tempAge.includes(60) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',60)}>60대</button>
-              <button className={[20, 30, 40, 50, 60].every(age => tempAge.includes(age)) ? 'active' : ''} onClick={() => setTempAge([20,30,40,50,60])}>상관없음</button>
+              <button className={tempAge.includes(70) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',70)}>70대</button>
+              <button className={tempAge.includes(80) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',80)}>80대</button>
+              <button className={tempAge.includes(90) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',90)}>90대</button>
+              <button className={[10, 20, 30, 40, 50, 60, 70, 80, 90].every(age => tempAge.includes(age)) ? 'active' : ''} onClick={() => setTempAge([10,20,30,40,50,60,70,80,90])}>상관없음</button>
             </div>
             <br/>
             <h4>결혼 여부</h4>
@@ -389,9 +419,12 @@ const MoleculeSearchForm = () => {
             <br/>
             <h4>자녀 정보</h4>
             <div>
-              <button className={tempChildM === 100 && tempChildF === 100 ? 'active' : ''} onClick={() => {setTempChildM(100); setTempChildF(100); setisChild(true);}}>있음</button>
-              <button className={tempChildM === 0 && tempChildF === 0 ? 'active' : ''} onClick={() => {setTempChildM(0); setTempChildF(0); setisChild(false);}}>없음</button>
-              <button className={tempChildM === 99 && tempChildF === 99 ? 'active' : ''} onClick={() => {setTempChildM(99); setTempChildF(99); setisChild(false);}}>상관없음</button>
+              <button className={isChildExist ? 'active' : ''} onClick={handleChildExistClick}>있음</button>
+              <button className={isChildNotExist ? 'active' : ''} onClick={handleChildNotExistClick}>없음</button>
+              <button className={isChildExist && isChildNotExist ? 'active' : ''} onClick={handleChildNoMatterClick}>상관없음</button>
+              {/* <button className={tempChildM === 100 && tempChildF === 100 ? 'active' : ''} onClick={() => {setTempChildM(100); setTempChildF(100);}}>있음</button>
+              <button className={tempChildM === 0 && tempChildF === 0 ? 'active' : ''} onClick={() => {setTempChildM(0); setTempChildF(0);}}>없음</button>
+              <button className={tempChildM === 99 && tempChildF === 99 ? 'active' : ''} onClick={() => {setTempChildM(99); setTempChildF(99);}}>상관없음</button> */}
               {/* {isChild &&
                 <>
                 <InputField Black type="text" name="type" placeholder="남아 수" value={tempChildM === 100 ? '' : tempChildM} onChange={(e) => setTempChildM(e.target.value)}/>
@@ -434,6 +467,7 @@ const MoleculeSearchForm = () => {
             <button className={tempUtilizationTime === '적게' ? 'active' : ''} onClick={() => setTempUtilizationTime('적게')}>적게</button>
             <button className={tempUtilizationTime === '보통' ? 'active' : ''} onClick={() => setTempUtilizationTime('보통')}>보통</button>
             <button className={tempUtilizationTime === '많이' ? 'active' : ''} onClick={() => setTempUtilizationTime('많이')}>많이</button>
+            <button className={tempUtilizationTime === '모두' ? 'active' : ''} onClick={() => setTempUtilizationTime('모두')}>모두</button>
           </div>
         </DetailOptions>
       )}
@@ -491,20 +525,27 @@ const MoleculeSearchForm = () => {
               <span>X</span>
             </FilterChip>
           ))}
-        {selectedFilters.childM !== "" &&
-            <FilterChip onClick={() => handleRemoveFilter('childM')}>
-              {selectedFilters.childM === 0 && <>남아(없음) <span>X</span></>}
-              {selectedFilters.childM === 99 && <>남아(상관없음) <span>X</span></>}
-              {selectedFilters.childM === 100 && <>남아(있음) <span>X</span></>}
-              {/* {selectedFilters.childM !== 0 && selectedFilters.childM !== 99 && <>남아({selectedFilters.childM}명) <span>X</span></>} */}
+        {/* {selectedFilters.childM !== "" &&
+          <FilterChip onClick={() => handleRemoveFilter('childM')}>
+            {selectedFilters.childM === 0 && <>남아(없음) <span>X</span></>}
+            {selectedFilters.childM === 99 && <>남아(상관없음) <span>X</span></>}
+            {selectedFilters.childM === 100 && <>남아(있음) <span>X</span></>}
+            {selectedFilters.childM !== 0 && selectedFilters.childM !== 99 && <>남아({selectedFilters.childM}명) <span>X</span></>}
           </FilterChip>
         }
         {selectedFilters.childF !== "" &&
           <FilterChip onClick={() => handleRemoveFilter('childF')}>
-              {selectedFilters.childF === 0 && <>여아(없음) <span>X</span></>}
-              {selectedFilters.childF === 99 && <>여아(상관없음) <span>X</span></>}
-              {selectedFilters.childF === 100 && <>여아(있음) <span>X</span></>}
-              {/* {selectedFilters.childF !== 0 && selectedFilters.childF !== 99 && <>여아({selectedFilters.childM}명) <span>X</span></>} */}
+            {selectedFilters.childF === 0 && <>여아(없음) <span>X</span></>}
+            {selectedFilters.childF === 99 && <>여아(상관없음) <span>X</span></>}
+            {selectedFilters.childF === 100 && <>여아(있음) <span>X</span></>}
+            {selectedFilters.childF !== 0 && selectedFilters.childF !== 99 && <>여아({selectedFilters.childM}명) <span>X</span></>}
+          </FilterChip>
+        } */}
+        {selectedFilters.childM !== "" && selectedFilters.childF !== "" &&
+          <FilterChip onClick={() => {handleRemoveFilter('childM'); handleRemoveFilter('childF');}}>
+            {selectedFilters.childM === 0 && <>자녀(없음) <span>X</span></>}
+            {selectedFilters.childM === 99 && <>자녀(상관없음) <span>X</span></>}
+            {selectedFilters.childM === 100 && <>자녀(있음) <span>X</span></>}
           </FilterChip>
         }
         {selectedFilters.tag1.length > 0 &&

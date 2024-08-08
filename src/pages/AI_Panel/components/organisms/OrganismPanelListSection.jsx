@@ -29,6 +29,7 @@ import {
   VIEW_PANEL_TYPE,
   SELECTED_ALL_PANELS,
   IS_ALL_PANELS_LOADED,
+  FILTERD_PANEL_COUNT,
 } from "../../../AtomStates";
 
 const OrganismPanelListSection = () => {
@@ -52,6 +53,7 @@ const OrganismPanelListSection = () => {
   const [selectedAllPanels, setSelectedAllPanels] = useAtom(SELECTED_ALL_PANELS); // 전체 선택 버튼
 
   const [totalPanelCount, setTotalPanelCount] = useAtom(TOTAL_PANEL_COUNT);
+  const [filterdPanelCount, setFilterdPanelCount] = useAtom(FILTERD_PANEL_COUNT);
 
   const [isAllPanelsLoaded, setIsAllPanelsLoaded] = useAtom(IS_ALL_PANELS_LOADED);
   
@@ -106,6 +108,7 @@ const OrganismPanelListSection = () => {
       );
       setPanelList(response.data.results);
       setTotalPanelCount(response.data.count); // 전체 패널 개수
+      setFilterdPanelCount(response.data.count); // 필터링된 패널 개수
       
       console.log(response);
         
@@ -130,6 +133,7 @@ const OrganismPanelListSection = () => {
             `${process.env.REACT_APP_SERVER_URL}/panels/list?page=${panelListPageCount}&size=20&&searchBehabioralType=${searchBehabioralType}&searchUtilizationTime=${searchUtilizationTime}&searchGender=${searchGender}&searchAge=${searchAge}&searchTag=${combinedTags}&searchMarriage=${searchMarriage}&searchChildM=${searchChildM}&searchChildF=${searchChildF}`
           );
           setPanelList(prevPanelList => [...prevPanelList, ...response.data.results]); // 리스트 초기화 하지 않고 아래에 붙이기
+          setFilterdPanelCount(response.data.count); // 필터링된 패널 개수
           
           console.log(panelList)
           
