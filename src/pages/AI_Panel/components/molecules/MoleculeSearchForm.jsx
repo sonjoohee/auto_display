@@ -18,6 +18,7 @@ import {
   SEARCH_TAG_2,
   SEARCH_TAG_3,
   PANEL_LIST_PAGE_COUNT,
+  IS_ALL_PANELS_LOADED,
 } from "../../../AtomStates";
 
 import styled from "styled-components";
@@ -74,7 +75,7 @@ const MoleculeSearchForm = () => {
   const [shouldSearch, setShouldSearch] = useState(false); // 필터가 변경되어 검색이 필요한지?
   const [isAfterSearch, setIsAfterSearch] = useState(false); // 검색을 하기전인지 하고난후인지?
 
-  const [isAllPanelsLoaded, setIsAllPanelsLoaded] = useState(false);
+  const [isAllPanelsLoaded, setIsAllPanelsLoaded] = useAtom(IS_ALL_PANELS_LOADED);
   const [isChild, setisChild] = useState(false);
 
   useEffect(() => {
@@ -124,6 +125,9 @@ const MoleculeSearchForm = () => {
 
   // 선택 초기화 함수
   const resetSelectionOption = () => {
+
+    setIsAllPanelsLoaded(false);
+    
     setSelectedFilters({
       behabioralType: "",
       utilizationTime: "",
@@ -186,6 +190,7 @@ const MoleculeSearchForm = () => {
       setPanelList(response.data.results);
 
       if (response.data.results.length < 20) setIsAllPanelsLoaded(true); // 20개 미만의 데이터가 오면 동작
+      else setIsAllPanelsLoaded(false);
       
     } catch (error) {
       console.error("Error fetching panel list:", error);
@@ -490,14 +495,16 @@ const MoleculeSearchForm = () => {
             <FilterChip onClick={() => handleRemoveFilter('childM')}>
               {selectedFilters.childM === 0 && <>남아(없음) <span>X</span></>}
               {selectedFilters.childM === 99 && <>남아(상관없음) <span>X</span></>}
-              {selectedFilters.childM !== 0 && selectedFilters.childM !== 99 && <>남아({selectedFilters.childM}명) <span>X</span></>}
+              {selectedFilters.childM === 100 && <>남아(있음) <span>X</span></>}
+              {/* {selectedFilters.childM !== 0 && selectedFilters.childM !== 99 && <>남아({selectedFilters.childM}명) <span>X</span></>} */}
           </FilterChip>
         }
         {selectedFilters.childF !== "" &&
           <FilterChip onClick={() => handleRemoveFilter('childF')}>
               {selectedFilters.childF === 0 && <>여아(없음) <span>X</span></>}
               {selectedFilters.childF === 99 && <>여아(상관없음) <span>X</span></>}
-              {selectedFilters.childF !== 0 && selectedFilters.childF !== 99 && <>여아({selectedFilters.childM}명) <span>X</span></>}
+              {selectedFilters.childF === 100 && <>여아(있음) <span>X</span></>}
+              {/* {selectedFilters.childF !== 0 && selectedFilters.childF !== 99 && <>여아({selectedFilters.childM}명) <span>X</span></>} */}
           </FilterChip>
         }
         {selectedFilters.tag1.length > 0 &&

@@ -28,6 +28,7 @@ import {
   SELECTED_PANELS,
   VIEW_PANEL_TYPE,
   SELECTED_ALL_PANELS,
+  IS_ALL_PANELS_LOADED,
 } from "../../../AtomStates";
 
 const OrganismPanelListSection = () => {
@@ -52,8 +53,8 @@ const OrganismPanelListSection = () => {
 
   const [totalPanelCount, setTotalPanelCount] = useAtom(TOTAL_PANEL_COUNT);
 
-  const [isAllPanelsLoaded, setIsAllPanelsLoaded] = useState(false);
-
+  const [isAllPanelsLoaded, setIsAllPanelsLoaded] = useAtom(IS_ALL_PANELS_LOADED);
+  
   // 전체선택 버튼 (비)활성화 상태관리
   useEffect(() => {
     panelList.length === selectedCount ? setSelectedAllPanels(true) : setSelectedAllPanels(false);

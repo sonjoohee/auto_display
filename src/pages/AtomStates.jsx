@@ -336,6 +336,7 @@ export const PANEL_LIST = atom([
     },
 ]);
 export const PANEL_LIST_PAGE_COUNT = atom(1);
+export const IS_ALL_PANELS_LOADED = atom(false);
 
 // 검색어 상태
 export const SEARCH_BEHABIORAL_TYPE = atom("");
