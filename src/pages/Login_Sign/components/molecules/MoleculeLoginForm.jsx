@@ -60,10 +60,11 @@ const MoleculeLoginForm = () => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-
-  const handlePasswordReset = () => {
-    navigate('/reset-password');
+  const handlePasswordReset = (event) => {
+    // event.preventDefault(); // 기본 동작 방지
+    navigate('/request-reset-password');
   };
+  
 
   return (
     <LoginFormContainer>
@@ -95,7 +96,7 @@ const MoleculeLoginForm = () => {
         <StyledLoginButton onClick={handleLogin}>로그인</StyledLoginButton>
       </ButtonContainer>
       <PasswordResetLink>
-        <a href="#" onClick={handlePasswordReset}>비밀번호 찾기</a>
+        <a onClick={handlePasswordReset}>비밀번호 찾기</a>
       </PasswordResetLink>
     </LoginFormContainer>
   );

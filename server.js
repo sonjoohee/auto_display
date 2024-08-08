@@ -43,6 +43,16 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+const sendPasswordResetEmail = async (to, link) => {
+  const mailOptions = {
+    from: process.env.EMAIL,
+    to,
+    subject: '비밀번호 재설정',
+    html: `비밀번호 재설정을 위해 다음 링크를 클릭하세요: <a href="${link}">${link}</a>`,
+  };
+
+  await transporter.sendMail(mailOptions);
+};
 const sendVerificationEmail = async (to, link) => {
   const mailOptions = {
     from: 'endnjs33@gmail.com',
@@ -55,28 +65,26 @@ const sendVerificationEmail = async (to, link) => {
 };
 
 app.post('/signup', async (req, res) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, password, role, status } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
-  const token = crypto.randomBytes(32).toString('hex'); // 이메일 인증 토큰 생성
+  const token = crypto.randomBytes(32).toString('hex');
+  const tokenExpiration = new Date(Date.now() + 3600000); // 1시간 후 만료
 
   let conn;
   try {
     conn = await pool.getConnection();
     const query = `
-      INSERT INTO users (name, email, password, role, status, token)
-      VALUES (?, ?, ?, ?, 'inactive', ?)
+      INSERT INTO users (name, email, password, role, status, token, tokenExpiration)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
     `;
-    await conn.query(query, [name, email, hashedPassword, role, token]);
+    await conn.query(query, [name, email, hashedPassword, role, 'inactive', token, tokenExpiration]);
 
-    // 인증 이메일 발송
     const verificationLink = `http://localhost:3000/verify-email?token=${token}`;
     await sendVerificationEmail(email, verificationLink);
 
-    res.status(200).send('회원가입 성공. 이메일을 확인하여 인증을 완료하세요.');
+    res.status(200).send('회원가입 성공.');
   } catch (err) {
     console.error('회원가입 실패:', err);
-    
-    // MariaDB에서 발생한 오류 중 'Duplicate entry'인 경우 처리
     if (err.code === 'ER_DUP_ENTRY') {
       res.status(400).send({ error: '이미 사용 중인 이메일 주소입니다.' });
     } else {
@@ -86,6 +94,7 @@ app.post('/signup', async (req, res) => {
     if (conn) conn.release();
   }
 });
+
 
 app.get('/verify-email', async (req, res) => {
   const { token } = req.query;
@@ -104,6 +113,69 @@ app.get('/verify-email', async (req, res) => {
     }
   } catch (err) {
     console.error('이메일 인증 실패:', err);
+    res.status(500).send('서버 오류');
+  } finally {
+    if (conn) conn.release();
+  }
+});
+app.post('/request-reset-password', async (req, res) => {
+  const { email } = req.body;
+  
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const user = await conn.query('SELECT * FROM users WHERE email = ?', [email]);
+
+    if (user.length === 0) {
+      return res.status(404).send({ error: '등록되지 않은 이메일입니다.' });
+    }
+
+    const token = crypto.randomBytes(32).toString('hex');
+    const tokenExpiration = new Date();
+    tokenExpiration.setHours(tokenExpiration.getHours() + 1); // 1시간 유효기간
+
+    await conn.query('UPDATE users SET token = ?, tokenExpiration = ? WHERE email = ?', [token, tokenExpiration, email]);
+
+    const resetLink = `http://localhost:3000/reset-password?token=${token}`;
+
+    const mailOptions = {
+      from: 'endnjs33@gmail.com',
+      to: email,
+      subject: '비밀번호 재설정 요청',
+      html: `<p>다음 링크를 클릭하여 비밀번호를 재설정하세요:</p><a href="${resetLink}">${resetLink}</a>`,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res.status(200).send('비밀번호 재설정 링크가 이메일로 전송되었습니다.');
+  } catch (err) {
+    console.error('비밀번호 재설정 요청 중 오류 발생:', err);
+    res.status(500).send('서버 오류');
+  } finally {
+    if (conn) conn.release();
+  }
+});
+
+app.post('/reset-password', async (req, res) => {
+  const { token, newPassword } = req.body;
+
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const query = 'SELECT * FROM users WHERE token = ? AND tokenExpiration > NOW()';
+    const rows = await conn.query(query, [token]);
+
+    if (rows.length === 0) {
+      return res.status(400).send({ error: '토큰이 유효하지 않거나 만료되었습니다.' });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const updateQuery = 'UPDATE users SET password = ?, token = NULL, tokenExpiration = NULL WHERE token = ?';
+    await conn.query(updateQuery, [hashedPassword, token]);
+
+    res.status(200).send({ message: '비밀번호가 성공적으로 재설정되었습니다.' });
+  } catch (err) {
+    console.error('비밀번호 재설정 실패:', err);
     res.status(500).send('서버 오류');
   } finally {
     if (conn) conn.release();
