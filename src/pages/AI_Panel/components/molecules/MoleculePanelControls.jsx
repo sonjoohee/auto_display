@@ -14,7 +14,9 @@ const MoleculePanelControls = ({ selectedCount, loadedPanelCount }) => {
 
   return (
     <ControlsWrapper>
-      <AtomCheckbox id="allChk" label="전체 선택" checked={selectedAllPanels} onChange={(e) => setSelectedAllPanels(e.target.checked)}/>
+      <div></div>
+      <div></div>
+      {/* <AtomCheckbox id="allChk" label="전체 선택" checked={selectedAllPanels} onChange={(e) => setSelectedAllPanels(e.target.checked)}/> */}
       <ChoicePanel>
         {loadedPanelCount}명의 패널 중 <strong>{selectedCount}</strong>명의 패널을 선택하셨어요
       </ChoicePanel>
