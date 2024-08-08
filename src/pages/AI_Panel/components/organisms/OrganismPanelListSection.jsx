@@ -1,6 +1,4 @@
-// src/AI_List_Page/components/organisms/OrganismPanelListSection.jsx
-
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import MoleculePanelItem from "../molecules/MoleculePanelItem";
 import MoleculePanelControls from "../molecules/MoleculePanelControls";
@@ -8,7 +6,6 @@ import { palette } from "../../../../assets/styles/Palette";
 import { Link } from "react-router-dom";
 import OrganismPanelListSectionBottomBar from "./OrganismPanelListSectionBottomBar"; // 하단 바 컴포넌트 import
 
-import panelimages from "../../../../assets/styles/PanelImages";
 import { useAtom } from "jotai";
 import axios from "axios";
 import { 
@@ -45,6 +42,7 @@ const OrganismPanelListSection = () => {
   useEffect(() => {
     console.log("selectedPanels:", selectedPanels);
   }, [selectedPanels]);
+
 
   const handleSelect = (isSelected, panelId) => {
     console.log("Selected Panel ID:", panelId);
@@ -127,16 +125,6 @@ const OrganismPanelListSection = () => {
       fetchAdditionalPanelList();
     }
   }, [panelListPageCount]); // panelListPageCount가 변경될 때마다 실행
-
-  // // 하단 바가 나타날 때 스크롤 조정
-  // useEffect(() => {
-  //   if (selectedCount > 0) {
-  //     window.scrollBy({
-  //       top: 100, // 하단 바 높이만큼 조정
-  //       behavior: "smooth",
-  //     });
-  //   }
-  // }, [selectedCount]);
 
   // panelData가 유효한지 확인
   if (!Array.isArray(panelList) || panelList.length === 0) {
@@ -247,6 +235,7 @@ const LoadMoreButton = styled.button`
   position: relative;
   z-index: 10;
 `;
+
 const CreatePanelLink = styled(Link)`
   display: block;
   margin: ${({ isBottomBarVisible }) => (isBottomBarVisible ? '20px auto 120px' : '20px auto')}; /* 하단 바가 보일 때 더 위로 이동 */
