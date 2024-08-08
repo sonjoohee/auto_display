@@ -103,9 +103,9 @@ const OrganismPanelListSection = () => {
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_URL}/panels/list?page=1&size=20&searchBehabioralType=${searchBehabioralType}&searchUtilizationTime=${searchUtilizationTime}&searchGender=${searchGender}&searchAge=${searchAge}&searchTag=${searchTag1}&searchMarriage=${searchMarriage}&searchChildM=${searchChildM}&searchChildF=${searchChildF}`
       );
-      console.log(response)
-
       setPanelList(response.data.results);
+
+      console.log(panelList)
         
       if (response.data.results.length < 20) setIsAllPanelsLoaded(true); // 20개 미만의 데이터가 오면 동작
 
@@ -126,9 +126,9 @@ const OrganismPanelListSection = () => {
           const response = await axios.get(
             `${process.env.REACT_APP_SERVER_URL}/panels/list?page=${panelListPageCount}&size=20&&searchBehabioralType=${searchBehabioralType}&searchUtilizationTime=${searchUtilizationTime}&searchGender=${searchGender}&searchAge=${searchAge}&searchTag=${searchTag1}&searchMarriage=${searchMarriage}&searchChildM=${searchChildM}&searchChildF=${searchChildF}`
           );
-          console.log(response)
-          
           setPanelList(prevPanelList => [...prevPanelList, ...response.data.results]); // 리스트 초기화 하지 않고 아래에 붙이기
+          
+          console.log(panelList)
           
           if (response.data.results.length < 20) setIsAllPanelsLoaded(true); // 20개 미만의 데이터가 오면 동작
 
@@ -181,6 +181,16 @@ const OrganismPanelListSection = () => {
                 lifeStyle={panel.lifeStyle}
                 consumption={panel.consumptionPropensity}
                 productGroup={panel.productGroup}
+                target_1={panel.target_1}
+                target_2={panel.target_2}
+                target_3={panel.target_3}
+                target_4={panel.target_4}
+                targe_5={panel.target_5}
+                value_1={panel.value_1}
+                value_2={panel.value_2}
+                value_3={panel.value_3}
+                value_4={panel.value_4}
+                value_5={panel.value_5}
                 onSelect={handleSelect}
               />
             ))}

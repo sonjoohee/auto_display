@@ -1,15 +1,45 @@
 // MoleculePanelItem.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { palette } from '../../../../assets/styles/Palette';
 import panelimages from "../../../../assets/images/panel/PanelImage.png"
 import MoleculePanelItemDetail from './MoleculePanelItemDetail';
+import { useAtom } from 'jotai';
+import { 
+} from "../../../AtomStates";
+import timeCode from '../../assets/time-code.json';
 
-const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, comment, tags, onSelect, lifeStyle, consumption, productGroup }) => {
+const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, comment, tags, onSelect, lifeStyle, consumption, productGroup, 
+  target_1, target_2, target_3, target_4, target_5, value_1, value_2, value_3, value_4, value_5,}) => {
+  
+  const [maxBehabioralType, setMaxBehabioralType] = useState("");
+  const [maxUtilizationTime, setMaxUtilizationTime] = useState(0);
 
   const [isSelected, setSelected] = useState(false);
   const [isDetailsVisible, setDetailsVisible] = useState(false);
+  
+  // 행동타입 검색을 했을 때 최대 시간량 데이터를 찾는 로직
+  useEffect(() => {
+    if (target_1) {
+      const maxTime = Math.max(value_1, value_2, value_3, value_4, value_5);
+      setMaxUtilizationTime(maxTime);
 
+      let maxType;
+      if (maxTime === value_1) {
+        maxType = target_1;
+      } else if (maxTime === value_2) {
+        maxType = target_2;
+      } else if (maxTime === value_3) {
+        maxType = target_3;
+      } else if (maxTime === value_4) {
+        maxType = target_4;
+      } else {
+        maxType = target_5;
+      }
+      setMaxBehabioralType(timeCode[maxType]);
+    }
+  }, [target_1, value_1, value_2, value_3, value_4, value_5, setMaxUtilizationTime, setMaxBehabioralType]);
+  
   const handlePanelClick = (e) => {
     if (e.target.tagName === 'BUTTON') {
       return;
@@ -47,6 +77,11 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
         </Overlay>
         <PanelDetails>
           <p>{gender === "M" ? "남성" : "여성"}({age}세) | {job}</p>
+
+          {maxBehabioralType && maxUtilizationTime<60 && <><strong>{maxBehabioralType}에 {maxUtilizationTime}분이상 활용하고 있어요</strong><br/><br/></>}
+          {maxBehabioralType && maxUtilizationTime%60===0 && <><strong>{maxBehabioralType}에 {maxUtilizationTime/60}시간이상 활용하고 있어요</strong><br/><br/></>}
+          {maxBehabioralType && maxUtilizationTime>=60 && maxUtilizationTime%60!==0 && <><strong>{maxBehabioralType}에 {Math.floor(maxUtilizationTime/60)}시간 {maxUtilizationTime%60}분이상 활용하고 있어요</strong><br/><br/></>}
+          
           <strong>{comment}</strong>
           <ol>
             {tags}
