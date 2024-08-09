@@ -6,12 +6,15 @@ import images from '../../../../assets/styles/Images';
 import MoleculePanelItemDetail from './MoleculePanelItemDetail';
 import { useAtom } from 'jotai';
 import {
+  SELECTED_PANELS,
 } from "../../../AtomStates";
 import timeCode from '../../assets/time-code.json';
 
 const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, comment, tags, onSelect, lifeStyle, consumption, productGroup, 
   target_1, target_2, target_3, target_4, target_5, value_1, value_2, value_3, value_4, value_5,}) => {
   
+  const [selectedPanels, setSelectedPanels] = useAtom(SELECTED_PANELS);
+
   const [randomSet, setRandomSet] = useState(9999);
 
   const [maxBehabioralType, setMaxBehabioralType] = useState("");
@@ -63,13 +66,19 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
     onSelect(newSelected, id);
   };
 
+  // 선택상태 초기화
+  useEffect(() => {
+    setSelected(selectedPanels.has(id)); 
+  }, [selectedPanels, id]);
+
   const handleCloseDetails = () => {
     setDetailsVisible(false);
   };
 
   // 패널 이미지 랜덤으로 선택
   let imgTarget = "";
-  const imgAge = age >= 70 ? 60 : Math.floor(parseInt(age) / 10) * 10;
+  let imgAge = age >= 70 ? 60 : Math.floor(parseInt(age) / 10) * 10;
+  if(imgAge === 10) imgAge = 20;
   const imgGender = gender == "M" ? "m" : "w";
   if (randomSet == 9999) {
     setRandomSet(Math.floor(Math.random() * 10) + 1);

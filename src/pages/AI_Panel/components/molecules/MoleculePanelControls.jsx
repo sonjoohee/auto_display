@@ -28,6 +28,7 @@ const MoleculePanelControls = ({ selectedCount, loadedPanelCount }) => {
           id="setCardType"
           name="viewGroup"
           value="card"
+          defaultChecked
           onClick={() => setViewPanelType(true)}
         />
         <label for="setCardType">카드보기</label>
