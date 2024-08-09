@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 
 const ResetPassword = () => {
   const [newPassword, setNewPassword] = useState('');
@@ -29,7 +30,7 @@ const ResetPassword = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:3001/reset-password', {
+      const response = await fetch('http://localhost:4008/reset-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token, newPassword })
@@ -47,24 +48,74 @@ const ResetPassword = () => {
   };
 
   return (
-    <div>
-      <h2>비밀번호 재설정</h2>
-      <input
+    <ResetPasswordContainer>
+      <ResetPasswordHeader>비밀번호 재설정</ResetPasswordHeader>
+      <ResetPasswordInput
         type="password"
         value={newPassword}
         onChange={(e) => setNewPassword(e.target.value)}
         placeholder="새 비밀번호를 입력하세요"
       />
-      <input
+      <ResetPasswordInput
         type="password"
         value={confirmPassword}
         onChange={(e) => setConfirmPassword(e.target.value)}
         placeholder="비밀번호를 다시 입력하세요"
       />
-      <button onClick={handleResetPassword}>비밀번호 재설정</button>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-    </div>
+      <ResetPasswordButton onClick={handleResetPassword}>비밀번호 재설정</ResetPasswordButton>
+      {error && <ErrorMessage>{error}</ErrorMessage>}
+    </ResetPasswordContainer>
   );
 };
 
 export default ResetPassword;
+
+// CSS-in-JS 스타일링
+const ResetPasswordContainer = styled.div`
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+`;
+
+const ResetPasswordHeader = styled.h2`
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+`;
+
+const ResetPasswordInput = styled.input`
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box;
+`;
+
+const ResetPasswordButton = styled.button`
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+const ErrorMessage = styled.p`
+  color: red;
+  text-align: center;
+  margin-top: 20px;
+`;

@@ -10,7 +10,7 @@ const RequestResetPassword = () => {
 
   const handleRequestReset = async () => {
     try {
-      const response = await fetch('http://localhost:3001/request-reset-password', {
+      const response = await fetch('http://localhost:4008/request-reset-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email }), // 이름과 이메일을 함께 전송
@@ -34,7 +34,7 @@ const RequestResetPassword = () => {
 
   const handleResendEmail = async () => {
     try {
-      const response = await fetch('http://localhost:3001/resend-password-reset-email', {
+      const response = await fetch('http://localhost:4008/resend-password-reset-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email })
