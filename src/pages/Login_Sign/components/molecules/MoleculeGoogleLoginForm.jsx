@@ -20,7 +20,7 @@ const MoleculeGoogleLoginForm = () => {
       const user = result.user;
 
       // Firebase 인증 후 사용자 정보를 서버에 저장
-      await axios.post('http://localhost:3001/google-login', {
+      await axios.post('http://localhost:4008/google-login', {
         uid: user.uid,
         name: user.displayName,
         email: user.email,

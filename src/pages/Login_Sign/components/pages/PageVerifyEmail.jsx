@@ -9,7 +9,7 @@ const VerifyEmail = () => {
     const token = queryParams.get('token');
   
     if (token) {
-      fetch(`http://localhost:3001/verify-email?token=${token}`)
+      fetch(`http://localhost:4008/verify-email?token=${token}`)
         .then(response => response.json())
         .then(data => {
           if (data.message === '이메일 인증이 완료되었습니다.') {
