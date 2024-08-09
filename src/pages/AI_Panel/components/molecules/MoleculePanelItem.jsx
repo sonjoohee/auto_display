@@ -206,7 +206,6 @@ const PanelItem = styled.li`
 
 const Image = styled.img`
   width: 100%;
-  border-radius: 15px;
 `;
 
 const Overlay = styled.div`

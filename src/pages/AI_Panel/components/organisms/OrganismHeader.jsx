@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
+import images from "../../../../assets/styles/Images";
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 경로 수정
 
 const HeaderWrap = styled.header`
@@ -19,7 +20,11 @@ const HeaderWrap = styled.header`
   z-index: 99;
 
   h1 {
-    font-size: 2rem;
+    width:250px;
+    height:40px;
+    font-size:0;
+    background:url(${images.Logo}) left center no-repeat;
+    background-size:auto 100%;
   }
 
   ul {
