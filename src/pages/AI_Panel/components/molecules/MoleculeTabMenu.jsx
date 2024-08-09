@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import images from "../../../../assets/styles/Images";
+import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeTabMenu = ({ activeTab, onSelectTab }) => (
   <StyledTabMenu>
@@ -38,11 +39,11 @@ const StyledTabMenu = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 60px auto 50px;
+  margin: 56px auto 40px;
 
   a {
     position: relative;
-    color: lightgray;
+    color: ${palette.lightGray};
     padding: 0 56px;
     transition: all 0.5s;
 
@@ -53,7 +54,7 @@ const StyledTabMenu = styled.div`
 
     &:hover,
     &.active {
-      color: black;
+      color: ${palette.black};
 
       img {
         opacity: 1;
@@ -67,7 +68,7 @@ const StyledTabMenu = styled.div`
       transform: translateY(-50%);
       width: 1px;
       height: 90%;
-      background: gray;
+      background: ${palette.lineGray};
       content: '';
     }
   }

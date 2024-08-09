@@ -349,11 +349,13 @@ const MoleculeSearchForm = () => {
         </div>
         <div onClick={handleTimeOptionToggle}>
           <span>활용 시간</span>
-          <InputField None type="text" name="type" placeholder="선택하세요" />
+          <Button SelectBtn>선택하세요</Button>
+          {/* <InputField None type="text" name="type" placeholder="선택하세요" /> */}
         </div>
         <div onClick={handleDetailOptionToggle}>
           <span>상세 옵션</span>
-          <InputField None type="text" name="type" placeholder="선택하세요" />
+          <Button SelectBtn>선택하세요</Button>
+          {/* <InputField None type="text" name="type" placeholder="선택하세요" /> */}
         </div>
         <Button Black onClick={handleSearch}>
           <img src={images.Search} alt="" />검색
@@ -464,9 +466,9 @@ const MoleculeSearchForm = () => {
               <span>에 시간을</span>
               <FilterChip>많이</FilterChip>
               <span>활용하는,</span>
-              <FilterChip>여성</FilterChip>
-              <FilterChip>20대</FilterChip>
-              <FilterChip>30대</FilterChip>
+              <FilterChip bgGray>여성</FilterChip>
+              <FilterChip bgGray>20대</FilterChip>
+              <FilterChip bgGray>30대</FilterChip>
             </FilterChipArea>
           )
         )}
@@ -474,36 +476,36 @@ const MoleculeSearchForm = () => {
           selectedFilters.gender.map((gender) => (
             <FilterChip key={gender} onClick={() => handleRemoveFilter("gender", gender)}>
               {gender === 'M' ? '남성' : '여성'}
-              <span>X</span>
+              {/* <span>X</span> */}
             </FilterChip>
         ))}
         {selectedFilters.age.length > 0 &&
           selectedFilters.age.map((age) => (
             <FilterChip key={age} onClick={() => handleRemoveFilter("age", age)}>
               {age}대
-              <span>X</span>
+              {/* <span>X</span> */}
             </FilterChip>
           ))}
         {selectedFilters.marriage.length > 0 &&
           selectedFilters.marriage.map((marriage) => (
             <FilterChip key={marriage} onClick={() => handleRemoveFilter("marriage", marriage)}>
               {marriage}
-              <span>X</span>
+              {/* <span>X</span> */}
             </FilterChip>
           ))}
         {selectedFilters.childM !== "" &&
             <FilterChip onClick={() => handleRemoveFilter('childM')}>
-              {selectedFilters.childM === 0 && <>남아(없음) <span>X</span></>}
-              {selectedFilters.childM === 99 && <>남아(상관없음) <span>X</span></>}
-              {selectedFilters.childM === 100 && <>남아(있음) <span>X</span></>}
+              {selectedFilters.childM === 0 && <>남아(없음) {/* <span>X</span> */}</>}
+              {selectedFilters.childM === 99 && <>남아(상관없음) {/* <span>X</span> */}</>}
+              {selectedFilters.childM === 100 && <>남아(있음) {/* <span>X</span> */}</>}
               {/* {selectedFilters.childM !== 0 && selectedFilters.childM !== 99 && <>남아({selectedFilters.childM}명) <span>X</span></>} */}
           </FilterChip>
         }
         {selectedFilters.childF !== "" &&
           <FilterChip onClick={() => handleRemoveFilter('childF')}>
-              {selectedFilters.childF === 0 && <>여아(없음) <span>X</span></>}
-              {selectedFilters.childF === 99 && <>여아(상관없음) <span>X</span></>}
-              {selectedFilters.childF === 100 && <>여아(있음) <span>X</span></>}
+              {selectedFilters.childF === 0 && <>여아(없음) {/* <span>X</span> */}</>}
+              {selectedFilters.childF === 99 && <>여아(상관없음) {/* <span>X</span> */}</>}
+              {selectedFilters.childF === 100 && <>여아(있음) {/* <span>X</span> */}</>}
               {/* {selectedFilters.childF !== 0 && selectedFilters.childF !== 99 && <>여아({selectedFilters.childM}명) <span>X</span></>} */}
           </FilterChip>
         }
@@ -511,26 +513,26 @@ const MoleculeSearchForm = () => {
           selectedFilters.tag1.map((tag1) => (
             <FilterChip key={tag1} onClick={() => handleRemoveFilter("tag1", tag1)}>
               {tag1}
-              <span>X</span>
+              {/* <span>X</span> */}
             </FilterChip>
           ))}
         {selectedFilters.tag2.length > 0 &&
           selectedFilters.tag2.map((tag2) => (
             <FilterChip key={tag2} onClick={() => handleRemoveFilter("tag2", tag2)}>
               {tag2}
-              <span>X</span>
+              {/* <span>X</span> */}
             </FilterChip>
           ))}
         {selectedFilters.tag3.length > 0 &&
           selectedFilters.tag3.map((tag3) => (
             <FilterChip key={tag3} onClick={() => handleRemoveFilter("tag3", tag3)}>
               {tag3}
-              <span>X</span>
+              {/* <span>X</span> */}
             </FilterChip>
           ))}
       </SelectedFilters>
       {(selectedFilters.behabioralType || selectedFilters.utilizationTime || selectedFilters.gender.length > 0 || selectedFilters.age.length > 0 || selectedFilters.marriage.length > 0
-         || selectedFilters.childM || selectedFilters.childF || selectedFilters.tag1.length > 0 || selectedFilters.tag2.length > 0 || selectedFilters.tag3.length > 0) &&
+        || selectedFilters.childM || selectedFilters.childF || selectedFilters.tag1.length > 0 || selectedFilters.tag2.length > 0 || selectedFilters.tag3.length > 0) &&
           <Button Black onClick={resetSelectionOption}>초기화</Button>
       }
     </SearchFormWrap>
@@ -541,6 +543,7 @@ const MoleculeSearchForm = () => {
 export default MoleculeSearchForm;
 
 const SearchFormWrap = styled.div`
+  position:relative;
   padding:20px 30px;
   border-radius:15px;
   background:${palette.white};
@@ -549,34 +552,69 @@ const SearchFormWrap = styled.div`
     display:flex;
     justify-content:space-between;
     align-items:stretch;
+    gap:40px;
 
-    button {
+    > div {
+      position:relative;
+      flex:1 1 0;
+
+      + div:before {
+        position:absolute;
+        left:-20px;
+        top:50%;
+        transform:translateY(-50%);
+        width:1px;
+        height:100%;
+        background:${palette.lineGray};
+        content:'';
+      }
+
+      button {
+        margin-top:0;
+
+        &:hover {background:none;}
+      }
+    }
+
+    span {
+      font-size:0.75rem;
+      color:${palette.lightGray};
+    }
+
+    > button {
       display:flex;
       align-items:center;
       gap:10px;
+      margin-top:0;
     }
   }
 `;
 
 const DetailOptions = styled.div`
-  margin-top:20px;
+  position:absolute;
+  left:50%;
+  top:95px;
+  transform:translateX(-50%);
+  width:calc(100% - 60px);
   padding:20px;
   border:1px solid ${palette.gray};
-  border-radius:15px;
+  border-radius:10px;
   background:${palette.white};
+  z-index:1;
 
   h4 {
     margin-bottom:10px;
     font-size:1.2rem;
   }
 
-  div {
-    margin-bottom:20px;
+  > div {
+    display:flex;
+    gap:10px;
 
     button {
       background:${palette.white};
       color:${palette.black};
-      margin-right:10px;
+      margin:0;
       padding:10px 20px;
       border:1px solid ${palette.gray};
       border-radius:5px;
@@ -592,19 +630,43 @@ const DetailOptions = styled.div`
 
 const SelectedFilters = styled.div`
   margin-top: 20px;
+  padding-top:20px;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  border-top:1px solid ${palette.lineGray};
 `;
 
 const FilterChip = styled.div`
+  position:relative;
   display: flex;
   align-items: center;
-  padding: 5px 10px;
-  margin-left: 5px;
-  background: ${palette.lightGray};
-  border-radius: 15px;
+  font-size:0.88rem;
+  padding: 8px 30px 8px 10px;
+  background:${props => {
+    if (props.bgGray) return `rgba(0,0,0,0.05)`;
+    else return `rgba(4,83,244,0.1)`;
+  }};
+  border-radius: 10px;
   cursor: pointer;
+
+  &:before, &:after {
+    position:absolute;
+    right:15px;
+    top:50%;
+    width:1px;
+    height:10px;
+    background:${palette.lightGray};
+    content:'';
+  }
+
+  &:before {
+    transform:translateY(-50%) rotate(45deg);
+  }
+
+  &:after {
+    transform:translateY(-50%) rotate(-45deg);
+  }
 
   span {
     margin-left: 5px;
@@ -617,8 +679,9 @@ const FilterChip = styled.div`
 const FilterChipArea = styled.div`
   display: flex;
   align-items: center;
+  gap:10px;
+
   span {
-  margin-left: 5px;
-  margin-right: 5px;
+    color:${palette.lightGray};
   }
 `;

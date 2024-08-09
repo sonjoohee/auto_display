@@ -8,6 +8,7 @@ export const InputField = styled.input`
     if (props.None) return `40px`;
     else return `50px`;
   }};
+  font-family: 'Pretendard';
   font-size:1rem;
   padding:${props => {
     if (props.None) return `6px 0`;
@@ -43,7 +44,7 @@ export const CheckBox = styled.div`
       position:relative;
       display:inline-block;
       font-family:Pretendard, Poppins;
-      font-size: ${props => (props.Small ? "0.875rem" : "1.125rem")};
+      font-size: ${props => (props.Small ? "0.875rem" : "1rem")};
       line-height:22px;
       padding-left:30px;
       vertical-align:top;
