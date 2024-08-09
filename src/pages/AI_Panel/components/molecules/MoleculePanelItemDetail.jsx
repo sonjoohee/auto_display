@@ -37,7 +37,7 @@ const MoleculePanelItemDetail = ({ id, imgSrc, gender, age, job, address, subAdd
   return (
     <ModalOverlay onClick={handleOverlayClick}>
       <ModalContent>
-        <CloseButton onClick={onClose}>X</CloseButton>
+        <CloseButton onClick={onClose}>닫기</CloseButton>
         <Header>
           <ProfileImage>😊</ProfileImage>
           <HeaderText>
@@ -47,7 +47,7 @@ const MoleculePanelItemDetail = ({ id, imgSrc, gender, age, job, address, subAdd
         </Header>
         <TagsContainer>
           {tags.split(',').filter(tags => tags.trim() !== '').map((tags, index) => (
-            <Tag key={index}>{tags.trim()}</Tag>
+            <Tag key={index}>#{tags.trim()}</Tag>
           ))}
         </TagsContainer>
         <TabMenu>
@@ -114,12 +114,33 @@ const ModalContent = styled.div`
 
 const CloseButton = styled.button`
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 20px;
+  right: 20px;
+  width:20px;
+  height:20px;
+  font-size:0;
   background: none;
   border: none;
-  font-size: 16px;
   cursor: pointer;
+
+  &:before, &:after {
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:100%;
+    height:2px;
+    display:block;
+    border-radisu:50%;
+    background:${palette.gray};
+    content:'';
+  }
+
+  &:before {
+    transform:translate(-50%, -50%) rotate(45deg);
+  }
+  &:after {
+    transform:translate(-50%, -50%) rotate(-45deg);
+  }
 `;
 
 const Header = styled.div`
@@ -189,6 +210,7 @@ const TabButton = styled.button`
   margin-top:0;
   color: ${(props) => (props.active ? `${palette.black}` : `${palette.gray}`)};
   border-radius:20px;
+  border:0;
   background: ${(props) => (props.active ? `${palette.white}` : 'none')};
   cursor: pointer;
 
@@ -198,6 +220,7 @@ const TabButton = styled.button`
 `;
 
 const Content = styled.div`
+  min-height:150px;
   max-height:150px;
   font-size: 0.88rem;
   color: ${palette.gray};
@@ -241,6 +264,7 @@ const ActionButton = styled.button`
   justify-content:center;
   gap:8px;
   min-width:100px;
+  font-family: 'Pretendard';
   font-size: 0.88rem;
   color: ${props => {
     if (props.Blue) return palette.white;

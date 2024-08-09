@@ -107,7 +107,7 @@ const MoleculeSearchForm = () => {
     setTempTag3(searchTag3)
 
   }, [isAfterSearch, shouldSearch, searchBehabioralType, searchUtilizationTime, searchGender,
-     searchAge, searchMarriage, searchChildM, searchChildF, searchTag1, searchTag2, searchTag3])
+    searchAge, searchMarriage, searchChildM, searchChildF, searchTag1, searchTag2, searchTag3])
 
   // 상세옵션 취소 함수
   const cancleDetailOption = () => {
@@ -291,10 +291,14 @@ const MoleculeSearchForm = () => {
     else if (filterKey === "childM") {
       selectedFilters.childM = '';
       setSearchChildM('');
+      setIsChildExist(false);
+      setIsChildNotExist(false);
     }
     else if (filterKey === "childF") {
       selectedFilters.childF = '';
       setSearchChildF('');
+      setIsChildExist(false);
+      setIsChildNotExist(false);
     }
     else if (filterKey === "tag1") {
       if (filterValue !== null) {
@@ -373,209 +377,237 @@ const MoleculeSearchForm = () => {
           <span>행동 타입</span>
           <InputField None type="text" name="type" placeholder="입력하세요" value={tempBehabioralType} onChange={(e) => setTempBehabioralType(e.target.value)}/>
         </div>
-        <div onClick={handleTimeOptionToggle}>
+        <div>
           <span>활용 시간</span>
-          <Button SelectBtn>선택하세요</Button>
+          <Button SelectBtn onClick={handleTimeOptionToggle}>선택하세요</Button>
           {/* <InputField None type="text" name="type" placeholder="선택하세요" /> */}
+          {showTimeOption && (
+            <DetailOptions>
+              <div>
+                <div>
+                <button className={tempUtilizationTime === '적게' ? 'active' : ''} onClick={() => setTempUtilizationTime('적게')}>적게</button>
+                <button className={tempUtilizationTime === '보통' ? 'active' : ''} onClick={() => setTempUtilizationTime('보통')}>보통</button>
+                <button className={tempUtilizationTime === '많이' ? 'active' : ''} onClick={() => setTempUtilizationTime('많이')}>많이</button>
+                <button className={tempUtilizationTime === '모두' ? 'active' : ''} onClick={() => setTempUtilizationTime('모두')}>모두</button>
+                </div>
+              </div>
+            </DetailOptions>
+          )}
         </div>
-        <div onClick={handleDetailOptionToggle}>
+        <div>
           <span>상세 옵션</span>
-          <Button SelectBtn>선택하세요</Button>
+          <Button SelectBtn onClick={handleDetailOptionToggle}>선택하세요</Button>
           {/* <InputField None type="text" name="type" placeholder="선택하세요" /> */}
+          {showDetailOption && (
+            <DetailOptions Full>
+              <h4 onClick={handleDetailOptionToggle}>상세옵션<span></span></h4>
+
+              <div>
+                <p>성별</p>
+                <div className="gender">
+                  <button className={tempGender.includes('M') ? 'active' : ''} onClick={() => setTempGender(['M'])}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="33" viewBox="0 0 15 33" fill="none">
+                      <path d="M4.33359 13.4999V29.9999C4.33133 30.1975 4.36859 30.3936 4.44317 30.5766C4.51775 30.7596 4.62815 30.9259 4.76789 31.0656C4.90763 31.2054 5.07389 31.3158 5.2569 31.3904C5.43991 31.4649 5.63598 31.5022 5.83359 31.4999C6.0312 31.5022 6.22727 31.4649 6.41028 31.3904C6.59329 31.3158 6.75955 31.2054 6.89929 31.0656C7.03903 30.9259 7.14944 30.7596 7.22402 30.5766C7.2986 30.3936 7.33585 30.1975 7.33359 29.9999" stroke="#777" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
+                      <path d="M7.33359 21.4999V29.9999C7.33133 30.1975 7.36859 30.3936 7.44317 30.5766C7.51775 30.7596 7.62815 30.9259 7.76789 31.0656C7.90763 31.2054 8.07389 31.3158 8.2569 31.3904C8.43991 31.4649 8.63598 31.5022 8.83359 31.4999C9.0312 31.5022 9.22727 31.4649 9.41028 31.3904C9.59329 31.3158 9.75955 31.2054 9.89929 31.0656C10.039 30.9259 10.1494 30.7596 10.224 30.5766C10.2986 30.3936 10.3359 30.1975 10.3336 29.9999V13.4999" stroke="#777" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
+                      <path d="M4.3336 12.4999V17.9999C4.33595 18.1976 4.29875 18.3937 4.2242 18.5767C4.14965 18.7598 4.03925 18.9261 3.89949 19.0658C3.75973 19.2056 3.59344 19.316 3.41039 19.3905C3.22734 19.4651 3.03123 19.5023 2.8336 19.4999C2.63597 19.5023 2.43986 19.4651 2.25681 19.3905C2.07376 19.316 1.90747 19.2056 1.76771 19.0658C1.62795 18.9261 1.51755 18.7598 1.443 18.5767C1.36845 18.3937 1.33125 18.1976 1.3336 17.9999V12.4999C1.3336 11.7043 1.64967 10.9412 2.21228 10.3786C2.77489 9.81601 3.53795 9.49994 4.3336 9.49994H10.3336C11.1293 9.49994 11.8923 9.81601 12.4549 10.3786C13.0175 10.9412 13.3336 11.7043 13.3336 12.4999V17.9999C13.3359 18.1976 13.2988 18.3937 13.2242 18.5767C13.1497 18.7598 13.0393 18.9261 12.8995 19.0658C12.7597 19.2056 12.5934 19.316 12.4104 19.3905C12.2273 19.4651 12.0312 19.5023 11.8336 19.4999C11.636 19.5023 11.4399 19.4651 11.2568 19.3905C11.0738 19.316 10.9075 19.2056 10.7677 19.0658C10.628 18.9261 10.5176 18.7598 10.443 18.5767C10.3684 18.3937 10.3313 18.1976 10.3336 17.9999V12.4999" stroke="#777" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
+                      <path d="M7.3335 6.49997C8.71421 6.49997 9.8335 5.38068 9.8335 3.99997C9.8335 2.61926 8.71421 1.49997 7.3335 1.49997C5.95278 1.49997 4.8335 2.61926 4.8335 3.99997C4.8335 5.38068 5.95278 6.49997 7.3335 6.49997Z" stroke="#777" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
+                    </svg>
+                    <span>남성</span>
+                  </button>
+                  <button className={tempGender.includes('F') ? 'active' : ''} onClick={() => setTempGender(['F'])}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="33" viewBox="0 0 18 33" fill="none">
+                      <path d="M5.99912 23.5V30C5.99686 30.1976 6.03411 30.3937 6.10869 30.5767C6.18328 30.7597 6.29368 30.9259 6.43342 31.0657C6.57316 31.2054 6.73942 31.3158 6.92243 31.3904C7.10544 31.465 7.30151 31.5022 7.49912 31.5C7.69673 31.5022 7.8928 31.465 8.07581 31.3904C8.25882 31.3158 8.42508 31.2054 8.56482 31.0657C8.70456 30.9259 8.81497 30.7597 8.88955 30.5767C8.96413 30.3937 9.00138 30.1976 8.99912 30" stroke="#777777" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
+                      <path d="M9.00071 23.5V30C8.99845 30.1976 9.0357 30.3936 9.11028 30.5767C9.18486 30.7597 9.29527 30.9259 9.43501 31.0657C9.57475 31.2054 9.74101 31.3158 9.92402 31.3904C10.107 31.465 10.3031 31.5022 10.5007 31.5C10.6983 31.5022 10.8944 31.465 11.0774 31.3904C11.2604 31.3158 11.4267 31.2054 11.5664 31.0657C11.7061 30.9259 11.8166 30.7597 11.8911 30.5767C11.9657 30.3936 12.003 30.1976 12.0007 30V23.5M4.43821 17.625C4.38416 17.8151 4.29265 17.9925 4.16907 18.1467C4.04549 18.301 3.89232 18.429 3.71857 18.5232C3.54482 18.6174 3.354 18.6759 3.1573 18.6953C2.96061 18.7147 2.76202 18.6946 2.57321 18.6362C2.38311 18.5822 2.20573 18.4907 2.0515 18.3671C1.89728 18.2435 1.76933 18.0903 1.67517 17.9165C1.581 17.7428 1.52254 17.5519 1.5032 17.3552C1.48387 17.1586 1.50406 16.96 1.56258 16.7712L3.12508 11.5037C3.29738 10.9246 3.65215 10.4167 4.13655 10.0556C4.62095 9.69458 5.20904 9.49967 5.81321 9.49997H12.1882C12.7924 9.49988 13.3805 9.69503 13.8648 10.0563C14.3491 10.4176 14.7037 10.9258 14.8757 11.505L16.4382 16.7725C16.4967 16.9612 16.5169 17.1598 16.4976 17.3565C16.4783 17.5532 16.4198 17.744 16.3256 17.9178C16.2315 18.0915 16.1035 18.2447 15.9493 18.3683C15.7951 18.4919 15.6177 18.5834 15.4276 18.6375C15.2389 18.6953 15.0406 18.7149 14.8443 18.6951C14.648 18.6753 14.4576 18.6166 14.2842 18.5223C14.1109 18.428 13.9581 18.3001 13.8348 18.146C13.7116 17.9919 13.6203 17.8148 13.5663 17.625" stroke="#777777" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
+                      <path d="M8.99902 6.49997C10.3797 6.49997 11.499 5.38068 11.499 3.99997C11.499 2.61926 10.3797 1.49997 8.99902 1.49997C7.61831 1.49997 6.49902 2.61926 6.49902 3.99997C6.49902 5.38068 7.61831 6.49997 8.99902 6.49997Z" stroke="#777777" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
+                      <path d="M5.99902 12.5L2.99902 22.5H14.999L11.999 12.5" stroke="#777777" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>여성</span>
+                  </button>
+                  <button className={['M', 'F'].every(gender => tempGender.includes(gender)) ? 'active' : ''} onClick={() => setTempGender(['M', 'F'])}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="23" height="33" viewBox="0 0 23 24" fill="none">
+                      <path d="M4.8985 19.001L4.49328 18.3699L4.8985 19.001L8.82365 16.4807C8.99383 16.3714 9.21658 16.4989 9.20853 16.701L9.02021 21.4303C8.98067 22.4234 9.77502 23.25 10.7688 23.25H12.5582C13.5566 23.25 14.3527 22.4161 14.3063 21.4188L14.0877 16.7111C14.0782 16.5083 14.3016 16.3794 14.4725 16.4891L18.3944 19.0074C19.2319 19.5452 20.3488 19.2771 20.8509 18.4177L21.7833 16.8219C22.2888 15.9568 21.9661 14.8447 21.0761 14.3845L16.9312 12.2414C16.7516 12.1485 16.7508 11.8919 16.9299 11.7979L21.0886 9.616C21.9722 9.15242 22.2899 8.04501 21.7865 7.18347L20.8509 5.58225C20.3488 4.72287 19.2319 4.45477 18.3944 4.99255L14.4725 7.51081C14.3016 7.62049 14.0782 7.49162 14.0877 7.28884L14.3063 2.58118C14.3527 1.58387 13.5566 0.749969 12.5582 0.749969H10.7688C9.77502 0.749969 8.98067 1.57658 9.02021 2.5696L9.20853 7.29894C9.21657 7.50102 8.99383 7.62852 8.82365 7.51925L4.8985 4.99893C4.05444 4.45696 2.92845 4.73396 2.43217 5.60567L1.52729 7.19507C1.03744 8.05548 1.35831 9.15057 2.23504 9.61056L6.40412 11.7979C6.58319 11.8919 6.58242 12.1485 6.4028 12.2414L2.2474 14.3899C1.36427 14.8466 1.03847 15.9463 1.53036 16.8103L2.43217 18.3943C2.92846 19.266 4.05444 19.543 4.8985 19.001Z" stroke="#777777" stroke-width="1.5"/>
+                    </svg>
+                    <span>상관없음</span>
+                  </button>
+                </div>
+
+                <p>나이</p>
+                <div>
+                  <button className={tempAge.includes(10) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',10)}>10대</button>
+                  <button className={tempAge.includes(20) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',20)}>20대</button>
+                  <button className={tempAge.includes(30) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',30)}>30대</button>
+                  <button className={tempAge.includes(40) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',40)}>40대</button>
+                  <button className={tempAge.includes(50) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',50)}>50대</button>
+                  <button className={tempAge.includes(60) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',60)}>60대</button>
+                  <button className={tempAge.includes(70) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',70)}>70대</button>
+                  <button className={tempAge.includes(80) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',80)}>80대</button>
+                  <button className={tempAge.includes(90) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',90)}>90대</button>
+                  <button className={[10, 20, 30, 40, 50, 60, 70, 80, 90].every(age => tempAge.includes(age)) ? 'active' : ''} onClick={() => setTempAge([10,20,30,40,50,60,70,80,90])}>상관없음</button>
+                </div>
+
+                <p>결혼 및 자녀 정보</p>
+                <div>
+                  <button className={tempMarriage.includes('미혼') ? 'active' : ''} onClick={() => setTempMarriage(['미혼'])}>미혼</button>
+                  <button className={tempMarriage.includes('기혼') ? 'active' : ''} onClick={() => setTempMarriage(['기혼'])}>기혼</button>
+                  <button className={tempMarriage.includes('사별') ? 'active' : ''} onClick={() => setTempMarriage(['사별'])}>사별</button>
+                  <button className={['미혼', '기혼', '사별'].every(marriage => tempMarriage.includes(marriage)) ? 'active' : ''} onClick={() => setTempMarriage(['미혼', '기혼', '사별'])}>상관없음</button>
+                </div>
+                <div className="kids">
+                  <button className={isChildExist ? 'active' : ''} onClick={handleChildExistClick}>자녀 있음</button>
+                  <button className={isChildNotExist ? 'active' : ''} onClick={handleChildNotExistClick}>자녀 없음</button>
+                  <button className={isChildExist && isChildNotExist ? 'active' : ''} onClick={handleChildNoMatterClick}>자녀 상관없음</button>
+                  {/* <button className={tempChildM === 100 && tempChildF === 100 ? 'active' : ''} onClick={() => {setTempChildM(100); setTempChildF(100);}}>있음</button>
+                  <button className={tempChildM === 0 && tempChildF === 0 ? 'active' : ''} onClick={() => {setTempChildM(0); setTempChildF(0);}}>없음</button>
+                  <button className={tempChildM === 99 && tempChildF === 99 ? 'active' : ''} onClick={() => {setTempChildM(99); setTempChildF(99);}}>상관없음</button> */}
+                  {/* {isChild &&
+                    <>
+                    <InputField Black type="text" name="type" placeholder="남아 수" value={tempChildM === 100 ? '' : tempChildM} onChange={(e) => setTempChildM(e.target.value)}/>
+                    <InputField Black type="text" name="type" placeholder="여아 수" value={tempChildF} onChange={(e) => setTempChildF(e.target.value)}/>
+                    </>
+                  } */}
+                </div>
+
+                <p>소비 성향</p>
+                <div>
+                  <button className={tempTag1.includes("충동구매자" ) ? 'active' : ''} onClick={() => setTempTag1(["충동구매자"])}>충동 구매자</button>
+                  <button className={tempTag1.includes("계획구매자") ? 'active' : ''} onClick={() => setTempTag1(["계획구매자"])}>계획 구매자</button>
+                  <button className={["충동구매자","계획구매자"].every(tag1 => tempTag1.includes(tag1)) ? 'active' : ''} onClick={() => setTempTag1(["충동구매자","계획구매자"])}>상관없음</button>
+                  <br/>
+                  <button className={tempTag2.includes("절약형") ? 'active' : ''} onClick={() => setTempTag2(["절약형"])}>절약형</button>
+                  <button className={tempTag2.includes("고급형") ? 'active' : ''} onClick={() => setTempTag2(["고급형"])}>고급형</button>
+                  <button className={["절약형","고급형"].every(tag2 => tempTag2.includes(tag2)) ? 'active' : ''} onClick={() => setTempTag2(["절약형","고급형"])}>상관없음</button>
+                </div>
+
+                <p>기술 수용도</p>
+                <div>
+                  <button className={tempTag3.includes("이노베이터" ) ? 'active' : ''} onClick={() => setTempTag3(["이노베이터"])}>이노베이터</button>
+                  <button className={tempTag3.includes("얼리어답터") ? 'active' : ''} onClick={() => setTempTag3(["얼리어답터"])}>얼리어답터</button>
+                  <button className={tempTag3.includes("전기 다수수용자") ? 'active' : ''} onClick={() => setTempTag3(["전기 다수수용자"])}>전기 다수수용자</button>
+                  <button className={tempTag3.includes("후기 다수수용자") ? 'active' : ''} onClick={() => setTempTag3(["후기 다수수용자"])}>후기 다수수용자</button>
+                  <button className={tempTag3.includes("지각 수용자") ? 'active' : ''} onClick={() => setTempTag3(["지각 수용자"])}>지각 수용자</button>
+                  <button className={["이노베이터","얼리어답터","전기 다수수용자","후기 다수수용자", "지각 수용자"].every(tag3 => tempTag3.includes(tag3)) ? 'active' : ''} onClick={() => setTempTag3(["이노베이터","얼리어답터","전기 다수수용자", "후기 다수수용자", "지각 수용자"])}>상관없음</button>
+                </div>
+              </div>
+
+              <ButtonWrap>
+                <Button onClick={cancleDetailOption}>취소</Button>
+                <Button Blue onClick={handleApplyDetail}>선택 적용</Button>
+              </ButtonWrap>
+            </DetailOptions>
+          )}
         </div>
         <Button Black onClick={handleSearch}>
           <img src={images.Search} alt="" />검색
         </Button>
       </div>
-      {showDetailOption && (
-        <DetailOptions>
-          <div>
-            <h4>성별</h4>
-            <div>
-              <button className={tempGender.includes('M') ? 'active' : ''} onClick={() => setTempGender(['M'])}>남성</button>
-              <button className={tempGender.includes('F') ? 'active' : ''} onClick={() => setTempGender(['F'])}>여성</button>
-              <button className={['M', 'F'].every(gender => tempGender.includes(gender)) ? 'active' : ''} onClick={() => setTempGender(['M', 'F'])}>상관없음</button>
-            </div>
-            <br/>
-            <div>
-              <h4>나이</h4>
-              <button className={tempAge.includes(10) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',10)}>10대</button>
-              <button className={tempAge.includes(20) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',20)}>20대</button>
-              <button className={tempAge.includes(30) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',30)}>30대</button>
-              <button className={tempAge.includes(40) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',40)}>40대</button>
-              <button className={tempAge.includes(50) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',50)}>50대</button>
-              <button className={tempAge.includes(60) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',60)}>60대</button>
-              <button className={tempAge.includes(70) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',70)}>70대</button>
-              <button className={tempAge.includes(80) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',80)}>80대</button>
-              <button className={tempAge.includes(90) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',90)}>90대</button>
-              <button className={[10, 20, 30, 40, 50, 60, 70, 80, 90].every(age => tempAge.includes(age)) ? 'active' : ''} onClick={() => setTempAge([10,20,30,40,50,60,70,80,90])}>상관없음</button>
-            </div>
-            <br/>
-            <h4>결혼 여부</h4>
-            <div>
-              <button className={tempMarriage.includes('미혼') ? 'active' : ''} onClick={() => setTempMarriage(['미혼'])}>미혼</button>
-              <button className={tempMarriage.includes('기혼') ? 'active' : ''} onClick={() => setTempMarriage(['기혼'])}>기혼</button>
-              <button className={tempMarriage.includes('사별') ? 'active' : ''} onClick={() => setTempMarriage(['사별'])}>사별</button>
-              <button className={['미혼', '기혼', '사별'].every(marriage => tempMarriage.includes(marriage)) ? 'active' : ''} onClick={() => setTempMarriage(['미혼', '기혼', '사별'])}>상관없음</button>
-            </div>
-            <br/>
-            <h4>자녀 정보</h4>
-            <div>
-              <button className={isChildExist ? 'active' : ''} onClick={handleChildExistClick}>있음</button>
-              <button className={isChildNotExist ? 'active' : ''} onClick={handleChildNotExistClick}>없음</button>
-              <button className={isChildExist && isChildNotExist ? 'active' : ''} onClick={handleChildNoMatterClick}>상관없음</button>
-              {/* <button className={tempChildM === 100 && tempChildF === 100 ? 'active' : ''} onClick={() => {setTempChildM(100); setTempChildF(100);}}>있음</button>
-              <button className={tempChildM === 0 && tempChildF === 0 ? 'active' : ''} onClick={() => {setTempChildM(0); setTempChildF(0);}}>없음</button>
-              <button className={tempChildM === 99 && tempChildF === 99 ? 'active' : ''} onClick={() => {setTempChildM(99); setTempChildF(99);}}>상관없음</button> */}
-              {/* {isChild &&
-                <>
-                <InputField Black type="text" name="type" placeholder="남아 수" value={tempChildM === 100 ? '' : tempChildM} onChange={(e) => setTempChildM(e.target.value)}/>
-                <InputField Black type="text" name="type" placeholder="여아 수" value={tempChildF} onChange={(e) => setTempChildF(e.target.value)}/>
-                </>
-              } */}
-              </div>
-            <br/>
-            <h4>소비 성향</h4>
-            <div>
-              <button className={tempTag1.includes("충동구매자" ) ? 'active' : ''} onClick={() => setTempTag1(["충동구매자"])}>충동 구매자</button>
-              <button className={tempTag1.includes("계획구매자") ? 'active' : ''} onClick={() => setTempTag1(["계획구매자"])}>계획 구매자</button>
-              <button className={["충동구매자","계획구매자"].every(tag1 => tempTag1.includes(tag1)) ? 'active' : ''} 
-                      onClick={() => setTempTag1(["충동구매자","계획구매자"])}>상관없음</button>
-              <br/>
-              <button className={tempTag2.includes("절약형") ? 'active' : ''} onClick={() => setTempTag2(["절약형"])}>절약형</button>
-              <button className={tempTag2.includes("고급형") ? 'active' : ''} onClick={() => setTempTag2(["고급형"])}>고급형</button>
-              <button className={["절약형","고급형"].every(tag2 => tempTag2.includes(tag2)) ? 'active' : ''} 
-                      onClick={() => setTempTag2(["절약형","고급형"])}>상관없음</button>
-            </div>
-            <br/>
-            <h4>기술 수용도</h4>
-            <div>
-              <button className={tempTag3.includes("이노베이터" ) ? 'active' : ''} onClick={() => setTempTag3(["이노베이터"])}>이노베이터</button>
-              <button className={tempTag3.includes("얼리어답터") ? 'active' : ''} onClick={() => setTempTag3(["얼리어답터"])}>얼리어답터</button>
-              <br/>
-              <button className={tempTag3.includes("전기 다수수용자") ? 'active' : ''} onClick={() => setTempTag3(["전기 다수수용자"])}>전기 다수수용자</button>
-              <button className={tempTag3.includes("후기 다수수용자") ? 'active' : ''} onClick={() => setTempTag3(["후기 다수수용자"])}>후기 다수수용자</button>
-              <button className={tempTag3.includes("지각 수용자") ? 'active' : ''} onClick={() => setTempTag3(["지각 수용자"])}>지각 수용자</button>
-              <button className={["이노베이터","얼리어답터","전기 다수수용자","후기 다수수용자", "지각 수용자"].every(tag3 => tempTag3.includes(tag3)) ? 'active' : ''} 
-                      onClick={() => setTempTag3(["이노베이터","얼리어답터","전기 다수수용자", "후기 다수수용자", "지각 수용자"])}>상관없음</button>
-            </div>
-          </div>
-          <Button Black onClick={handleApplyDetail}>선택 적용</Button> <Button Black onClick={cancleDetailOption}>취소</Button>
-        </DetailOptions>
-      )}
-      {showTimeOption && (
-        <DetailOptions>
-          <div>
-            <button className={tempUtilizationTime === '적게' ? 'active' : ''} onClick={() => setTempUtilizationTime('적게')}>적게</button>
-            <button className={tempUtilizationTime === '보통' ? 'active' : ''} onClick={() => setTempUtilizationTime('보통')}>보통</button>
-            <button className={tempUtilizationTime === '많이' ? 'active' : ''} onClick={() => setTempUtilizationTime('많이')}>많이</button>
-            <button className={tempUtilizationTime === '모두' ? 'active' : ''} onClick={() => setTempUtilizationTime('모두')}>모두</button>
-          </div>
-        </DetailOptions>
-      )}
-      <SelectedFilters>
-        {selectedFilters.behabioralType && selectedFilters.utilizationTime ? (
-          <FilterChipArea>
-            <FilterChip onClick={() => handleRemoveFilter('behabioralType')}>
-              {selectedFilters.behabioralType} <span>X</span>
-            </FilterChip>
-            <span>에 시간을</span> 
-            <FilterChip>
-              {selectedFilters.utilizationTime} <span>X</span>
-            </FilterChip> 
-            <span>활용하는,</span>
-          </FilterChipArea>
-        ) : (
-          selectedFilters.gender.length === 0 &&
-          selectedFilters.age.length === 0 &&
-          selectedFilters.marriage.length === 0 &&
-          selectedFilters.childM === "" &&
-          selectedFilters.childF === "" &&
-          selectedFilters.tag1.length === 0 &&
-          selectedFilters.tag2.length === 0 &&
-          selectedFilters.tag3.length === 0 && (
+
+      <SelectedFiltersDisplay>
+        <SelectedFilters>
+          {selectedFilters.behabioralType && selectedFilters.utilizationTime ? (
             <FilterChipArea>
-              <span>예시)</span>
-              <FilterChip>건강관리</FilterChip>
-              <span>에 시간을</span>
-              <FilterChip>많이</FilterChip>
+              <FilterChip onClick={() => handleRemoveFilter('behabioralType')}>
+                {selectedFilters.behabioralType}
+                {/* <span>X</span> */}
+              </FilterChip>
+              <span>에 시간을</span> 
+              <FilterChip>
+                {selectedFilters.utilizationTime}
+                {/* <span>X</span> */}
+              </FilterChip> 
               <span>활용하는,</span>
-              <FilterChip bgGray>여성</FilterChip>
-              <FilterChip bgGray>20대</FilterChip>
-              <FilterChip bgGray>30대</FilterChip>
             </FilterChipArea>
-          )
-        )}
-        {selectedFilters.gender.length > 0 &&
-          selectedFilters.gender.map((gender) => (
-            <FilterChip key={gender} onClick={() => handleRemoveFilter("gender", gender)}>
-              {gender === 'M' ? '남성' : '여성'}
-              {/* <span>X</span> */}
-            </FilterChip>
-        ))}
-        {selectedFilters.age.length > 0 &&
-          selectedFilters.age.map((age) => (
-            <FilterChip key={age} onClick={() => handleRemoveFilter("age", age)}>
-              {age}대
-              {/* <span>X</span> */}
-            </FilterChip>
+          ) : (
+            selectedFilters.gender.length === 0 &&
+            selectedFilters.age.length === 0 &&
+            selectedFilters.marriage.length === 0 &&
+            selectedFilters.childM === "" &&
+            selectedFilters.childF === "" &&
+            selectedFilters.tag1.length === 0 &&
+            selectedFilters.tag2.length === 0 &&
+            selectedFilters.tag3.length === 0 && (
+              <FilterChipArea>
+                <span>예시)</span>
+                <FilterChip>건강관리</FilterChip>
+                <span>에 시간을</span>
+                <FilterChip>많이</FilterChip>
+                <span>활용하는,</span>
+                <FilterChip bgGray>여성</FilterChip>
+                <FilterChip bgGray>20대</FilterChip>
+                <FilterChip bgGray>30대</FilterChip>
+              </FilterChipArea>
+            )
+          )}
+          {selectedFilters.gender.length > 0 &&
+            selectedFilters.gender.map((gender) => (
+              <FilterChip bgGray key={gender} onClick={() => handleRemoveFilter("gender", gender)}>
+                {gender === 'M' ? '남성' : '여성'}
+                {/* <span>X</span> */}
+              </FilterChip>
           ))}
-        {selectedFilters.marriage.length > 0 &&
-          selectedFilters.marriage.map((marriage) => (
-            <FilterChip key={marriage} onClick={() => handleRemoveFilter("marriage", marriage)}>
-              {marriage}
-              {/* <span>X</span> */}
+          {selectedFilters.age.length > 0 &&
+            selectedFilters.age.map((age) => (
+              <FilterChip bgGray key={age} onClick={() => handleRemoveFilter("age", age)}>
+                {age}대
+                {/* <span>X</span> */}
+              </FilterChip>
+            ))}
+          {selectedFilters.marriage.length > 0 &&
+            selectedFilters.marriage.map((marriage) => (
+              <FilterChip bgGray key={marriage} onClick={() => handleRemoveFilter("marriage", marriage)}>
+                {marriage}
+                {/* <span>X</span> */}
+              </FilterChip>
+            ))}
+          {/* {selectedFilters.childM !== "" &&
+            <FilterChip onClick={() => handleRemoveFilter('childM')}>
+              {selectedFilters.childM === 0 && <>남아(없음) <span>X</span></>}
+              {selectedFilters.childM === 99 && <>남아(상관없음) <span>X</span></>}
+              {selectedFilters.childM === 100 && <>남아(있음) <span>X</span></>}
+              {selectedFilters.childM !== 0 && selectedFilters.childM !== 99 && <>남아({selectedFilters.childM}명) <span>X</span></>}
             </FilterChip>
-          ))}
-        {/* {selectedFilters.childM !== "" &&
-          <FilterChip onClick={() => handleRemoveFilter('childM')}>
-            {selectedFilters.childM === 0 && <>남아(없음) <span>X</span></>}
-            {selectedFilters.childM === 99 && <>남아(상관없음) <span>X</span></>}
-            {selectedFilters.childM === 100 && <>남아(있음) <span>X</span></>}
-            {selectedFilters.childM !== 0 && selectedFilters.childM !== 99 && <>남아({selectedFilters.childM}명) <span>X</span></>}
-          </FilterChip>
+          }
+          {selectedFilters.childF !== "" &&
+            <FilterChip onClick={() => handleRemoveFilter('childF')}>
+              {selectedFilters.childF === 0 && <>여아(없음) <span>X</span></>}
+              {selectedFilters.childF === 99 && <>여아(상관없음) <span>X</span></>}
+              {selectedFilters.childF === 100 && <>여아(있음) <span>X</span></>}
+              {selectedFilters.childF !== 0 && selectedFilters.childF !== 99 && <>여아({selectedFilters.childM}명) <span>X</span></>}
+            </FilterChip>
+          } */}
+          {selectedFilters.childM !== "" && selectedFilters.childF !== "" &&
+            <FilterChip bgGray onClick={() => {handleRemoveFilter('childM'); handleRemoveFilter('childF');}}>
+              {selectedFilters.childM === 0 && <>자녀(없음) </>}
+              {selectedFilters.childM === 99 && <>자녀(상관없음) </>}
+              {selectedFilters.childM === 100 && <>자녀(있음) </>}
+            </FilterChip>
+          }
+          {selectedFilters.tag1.length > 0 &&
+            selectedFilters.tag1.map((tag1) => (
+              <FilterChip bgGray key={tag1} onClick={() => handleRemoveFilter("tag1", tag1)}>
+                {tag1}
+                {/* <span>X</span> */}
+              </FilterChip>
+            ))}
+          {selectedFilters.tag2.length > 0 &&
+            selectedFilters.tag2.map((tag2) => (
+              <FilterChip bgGray key={tag2} onClick={() => handleRemoveFilter("tag2", tag2)}>
+                {tag2}
+                {/* <span>X</span> */}
+              </FilterChip>
+            ))}
+          {selectedFilters.tag3.length > 0 &&
+            selectedFilters.tag3.map((tag3) => (
+              <FilterChip bgGray key={tag3} onClick={() => handleRemoveFilter("tag3", tag3)}>
+                {tag3}
+                {/* <span>X</span> */}
+              </FilterChip>
+            ))}
+        </SelectedFilters>
+        {(selectedFilters.behabioralType || selectedFilters.utilizationTime || selectedFilters.gender.length > 0 || selectedFilters.age.length > 0 || selectedFilters.marriage.length > 0
+          || selectedFilters.childM || selectedFilters.childF || selectedFilters.tag1.length > 0 || selectedFilters.tag2.length > 0 || selectedFilters.tag3.length > 0) &&
+            <Button onClick={resetSelectionOption}>초기화</Button>
         }
-        {selectedFilters.childF !== "" &&
-          <FilterChip onClick={() => handleRemoveFilter('childF')}>
-            {selectedFilters.childF === 0 && <>여아(없음) <span>X</span></>}
-            {selectedFilters.childF === 99 && <>여아(상관없음) <span>X</span></>}
-            {selectedFilters.childF === 100 && <>여아(있음) <span>X</span></>}
-            {selectedFilters.childF !== 0 && selectedFilters.childF !== 99 && <>여아({selectedFilters.childM}명) <span>X</span></>}
-          </FilterChip>
-        } */}
-        {selectedFilters.childM !== "" && selectedFilters.childF !== "" &&
-          <FilterChip onClick={() => {handleRemoveFilter('childM'); handleRemoveFilter('childF');}}>
-            {selectedFilters.childM === 0 && <>자녀(없음) </>}
-            {selectedFilters.childM === 99 && <>자녀(상관없음) </>}
-            {selectedFilters.childM === 100 && <>자녀(있음) </>}
-          </FilterChip>
-        }
-        {selectedFilters.tag1.length > 0 &&
-          selectedFilters.tag1.map((tag1) => (
-            <FilterChip key={tag1} onClick={() => handleRemoveFilter("tag1", tag1)}>
-              {tag1}
-              {/* <span>X</span> */}
-            </FilterChip>
-          ))}
-        {selectedFilters.tag2.length > 0 &&
-          selectedFilters.tag2.map((tag2) => (
-            <FilterChip key={tag2} onClick={() => handleRemoveFilter("tag2", tag2)}>
-              {tag2}
-              {/* <span>X</span> */}
-            </FilterChip>
-          ))}
-        {selectedFilters.tag3.length > 0 &&
-          selectedFilters.tag3.map((tag3) => (
-            <FilterChip key={tag3} onClick={() => handleRemoveFilter("tag3", tag3)}>
-              {tag3}
-              {/* <span>X</span> */}
-            </FilterChip>
-          ))}
-      </SelectedFilters>
-      {(selectedFilters.behabioralType || selectedFilters.utilizationTime || selectedFilters.gender.length > 0 || selectedFilters.age.length > 0 || selectedFilters.marriage.length > 0
-        || selectedFilters.childM || selectedFilters.childF || selectedFilters.tag1.length > 0 || selectedFilters.tag2.length > 0 || selectedFilters.tag3.length > 0) &&
-          <Button Black onClick={resetSelectionOption}>초기화</Button>
-      }
+      </SelectedFiltersDisplay>
     </SearchFormWrap>
     </>
   );
@@ -615,6 +647,10 @@ const SearchFormWrap = styled.div`
 
         &:hover {background:none;}
       }
+
+      > button {
+        letter-spacing:-2px;
+      }
     }
 
     span {
@@ -633,49 +669,223 @@ const SearchFormWrap = styled.div`
 
 const DetailOptions = styled.div`
   position:absolute;
-  left:50%;
-  top:95px;
-  transform:translateX(-50%);
-  width:calc(100% - 60px);
-  padding:20px;
-  border:1px solid ${palette.gray};
-  border-radius:10px;
+  left:0;
+  top:75px;
+  width:${props => {
+    if (props.Full) return `calc(188% - 30px)`;
+    else return `100%`;
+  }};
+  padding:${props => {
+    if (props.Full) return `36px`;
+    else return `20px`;
+  }};
+  border-radius:15px;
   background:${palette.white};
+  box-shadow:0 4px 30px rgba(0,0,0,.16);
   z-index:1;
 
   h4 {
-    margin-bottom:10px;
-    font-size:1.2rem;
+    position:relative;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+    padding-bottom:20px;
+    border-bottom:1px solid ${palette.lineGray};
+
+    > span {
+      position:relative;
+      width:16px;
+      height:16px;
+
+      &:before, &:after {
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform:translate(-50%, -50%);
+        width:2px;
+        height:16px;
+        border-radius:10px;
+        background:${palette.gray};
+        cursor:pointer;
+        content:'';
+      }
+
+      &:before {
+        transform:translate(-50%, -50%) rotate(45deg);
+      }
+
+      &:after {
+        transform:translate(-50%, -50%) rotate(-45deg);
+      }
+    }
   }
 
   > div {
     display:flex;
+    flex-direction:column;
     gap:10px;
 
-    button {
-      background:${palette.white};
-      color:${palette.black};
-      margin:0;
-      padding:10px 20px;
-      border:1px solid ${palette.gray};
-      border-radius:5px;
-      cursor:pointer;
+    > p {
+      font-size:0.88rem;
+      font-weight:300;
+      color:${palette.gray};
 
-      &.active {
-        background:${palette.blue};
-        color:${palette.white};
+      ~ p {
+        margin-top:30px;
+      }
+    }
+
+    > div {
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+
+      button {
+        font-family: 'Pretendard';
+        color:${palette.gray};
+        display:flex;
+        align-items:center;
+        gap:4px;
+        margin:0;
+        padding:6px 20px;
+        border-radius:15px;
+        border:1px solid #F6F6F6;
+        background:#F6F6F6;
+        cursor:pointer;
+
+        &:hover {
+          background:#F6F6F6 !important;
+        }
+  
+        &.active {
+          color:${palette.blue};
+          border:1px solid ${palette.blue};
+          background:${palette.white};
+
+          &:before {
+            display:inline-block;
+            width:10px;
+            height:10px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='9' viewBox='0 0 10 9' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M9.72288 0.385952C10.0513 0.661821 10.0939 1.15169 9.81803 1.48011L3.90529 8.51908C3.76071 8.6912 3.54865 8.79223 3.3239 8.79607C3.09915 8.79991 2.88377 8.70618 2.7334 8.5391L0.199365 5.72351C-0.0875578 5.4047 -0.0617137 4.91366 0.25709 4.62674C0.575894 4.33982 1.06693 4.36566 1.35386 4.68447L3.29043 6.83622L8.62873 0.481096C8.9046 0.15268 9.39447 0.110083 9.72288 0.385952Z' fill='%230453F4'/%3E%3C/svg%3E") center no-repeat;
+            content:'';
+          }
+        }
+      }
+    }
+
+    .gender {
+      > button {
+        flex: 1 1 0;
+        flex-direction:column;
+        gap:8px;
+        padding:12px;
+        border:1px solid ${palette.lineGray};
+        background:${palette.white};
+        box-sizing:border-box;
+
+        &.active {
+          span {
+            font-weight:700;
+            color:${palette.blue};
+          }
+          svg path {
+            stroke:${palette.blue};
+          }
+          &:before {
+            display:none;
+          }
+        }
+      }
+    }
+
+    .kids {
+      gap:12px;
+
+      button {
+        position:relative;
+        padding:0;
+        border:0 !important;
+        background:none;
+
+        &:hover {
+          background:none !important;
+        }
+
+        &:before {
+          width:20px !important;
+          height:20px !important;
+          border-radius:4px;
+          border:1px solid ${palette.lineGray};
+          content:'';
+        }
+
+        &:after {
+          position:absolute;
+          left:6px;
+          top:6px;
+          transform:rotate(-45deg);
+          width:9px;
+          height:6px;
+          border-left:2px solid ${palette.blue};
+          border-bottom:2px solid ${palette.blue};
+        }
+
+        &.active {
+          background:none;
+
+          &:before {
+            border:1px solid ${palette.blue};
+          }
+        }
       }
     }
   }
 `;
 
-const SelectedFilters = styled.div`
+const ButtonWrap = styled.div`
+  display:flex;
+  justify-content:space-between;
+  flex-direction:row !important;
+  margin-top:40px;
+  padding-top:20px;
+  border-top:1px solid ${palette.lineGray};
+
+  > button {
+    padding:10px 16px;
+
+    &:hover {
+      background:auto !important;
+    }
+  }
+`;
+
+const SelectedFiltersDisplay = styled.div`
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap: 30px;
   margin-top: 20px;
   padding-top:20px;
+  border-top:1px solid ${palette.lineGray};
+
+  > div {
+    width:85%;
+  }
+
+  > button {
+    flex-shrink:0;
+    font-size:0.88rem;
+    padding:8px 16px;
+    border:1px solid ${palette.lineGray};
+  }
+`;
+
+
+const SelectedFilters = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  border-top:1px solid ${palette.lineGray};
 `;
 
 const FilterChip = styled.div`

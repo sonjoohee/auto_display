@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useAtom } from 'jotai';
 import { isLoggedInAtom } from "../../../../pages/AtomStates"; // Jotai 상태 임포트
 import { palette } from "../../../../assets/styles/Palette";
+import images from "../../../../assets/styles/Images";
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 경로 수정
 import NotificationIcon from '../../../../assets/images/btnNotification.svg'; // 알림 아이콘 경로
 
@@ -23,7 +24,11 @@ const HeaderWrap = styled.header`
   z-index: 99;
 
   h1 {
-    font-size: 2rem;
+    width:250px;
+    height:40px;
+    font-size:0;
+    background:url(${images.Logo}) left center no-repeat;
+    background-size:auto 100%;
   }
 
   ul {
