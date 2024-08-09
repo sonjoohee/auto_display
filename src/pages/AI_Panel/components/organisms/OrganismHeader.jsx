@@ -1,6 +1,4 @@
 // OrganismHeader.jsx
-// This file defines the header component for the Create_Panel section.
-
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
@@ -35,6 +33,7 @@ const HeaderWrap = styled.header`
     gap: 50px;
 
     a {
+      font-size:0.88rem;
       color: ${palette.gray};
     }
   }
@@ -51,7 +50,7 @@ const HeaderWrap = styled.header`
       transition: all 0.5s;
       text-decoration: none;
       color: ${palette.gray};
-      font-weight: bold;
+      font-weight: 700;
       cursor: pointer;
 
       &:hover {
