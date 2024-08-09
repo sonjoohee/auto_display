@@ -162,7 +162,7 @@ const OrganismPanelListSection = () => {
 
   // panelData가 유효한지 확인
   if (!Array.isArray(panelList) || panelList.length === 0) {
-    return <p>패널 데이터가 없습니다.</p>;
+    return <NoData>패널 데이터가 없습니다.</NoData>;
   }
 
   return (
@@ -229,6 +229,10 @@ const OrganismPanelListSection = () => {
 };
 
 export default OrganismPanelListSection;
+
+const NoData = styled.p `
+  min-height:700px;
+`;
 
 const PanelWrap = styled.section`
   .sortBooth {

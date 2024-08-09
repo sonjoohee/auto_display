@@ -1,3 +1,5 @@
+import Logo from "../images/logoInterviewx.svg";
+
 import Filter from "../images/Filter.svg";
 import BgSearch from "../images/BgSearch.png";
 import Search from "../images/Search.svg";
@@ -16,6 +18,8 @@ import BtnNext from "../images/btnNext.svg";
 import BtnEnd from "../images/btnEnd.svg";
 
 const images = {
+  Logo,
+  
   Filter,
   BgSearch,
   Search,

@@ -109,7 +109,7 @@ const MoleculeSearchForm = () => {
     setTempTag3(searchTag3)
 
   }, [isAfterSearch, shouldSearch, searchBehabioralType, searchUtilizationTime, searchGender,
-     searchAge, searchMarriage, searchChildM, searchChildF, searchTag1, searchTag2, searchTag3])
+    searchAge, searchMarriage, searchChildM, searchChildF, searchTag1, searchTag2, searchTag3])
 
   // 상세옵션 취소 함수
   const cancleDetailOption = () => {
@@ -428,7 +428,7 @@ const MoleculeSearchForm = () => {
                     <span>여성</span>
                   </button>
                   <button className={['M', 'F'].every(gender => tempGender.includes(gender)) ? 'active' : ''} onClick={() => setTempGender(['M', 'F'])}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="23" height="24" viewBox="0 0 23 24" fill="none">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="23" height="33" viewBox="0 0 23 24" fill="none">
                       <path d="M4.8985 19.001L4.49328 18.3699L4.8985 19.001L8.82365 16.4807C8.99383 16.3714 9.21658 16.4989 9.20853 16.701L9.02021 21.4303C8.98067 22.4234 9.77502 23.25 10.7688 23.25H12.5582C13.5566 23.25 14.3527 22.4161 14.3063 21.4188L14.0877 16.7111C14.0782 16.5083 14.3016 16.3794 14.4725 16.4891L18.3944 19.0074C19.2319 19.5452 20.3488 19.2771 20.8509 18.4177L21.7833 16.8219C22.2888 15.9568 21.9661 14.8447 21.0761 14.3845L16.9312 12.2414C16.7516 12.1485 16.7508 11.8919 16.9299 11.7979L21.0886 9.616C21.9722 9.15242 22.2899 8.04501 21.7865 7.18347L20.8509 5.58225C20.3488 4.72287 19.2319 4.45477 18.3944 4.99255L14.4725 7.51081C14.3016 7.62049 14.0782 7.49162 14.0877 7.28884L14.3063 2.58118C14.3527 1.58387 13.5566 0.749969 12.5582 0.749969H10.7688C9.77502 0.749969 8.98067 1.57658 9.02021 2.5696L9.20853 7.29894C9.21657 7.50102 8.99383 7.62852 8.82365 7.51925L4.8985 4.99893C4.05444 4.45696 2.92845 4.73396 2.43217 5.60567L1.52729 7.19507C1.03744 8.05548 1.35831 9.15057 2.23504 9.61056L6.40412 11.7979C6.58319 11.8919 6.58242 12.1485 6.4028 12.2414L2.2474 14.3899C1.36427 14.8466 1.03847 15.9463 1.53036 16.8103L2.43217 18.3943C2.92846 19.266 4.05444 19.543 4.8985 19.001Z" stroke="#777777" stroke-width="1.5"/>
                     </svg>
                     <span>상관없음</span>
@@ -500,109 +500,113 @@ const MoleculeSearchForm = () => {
           <img src={images.Search} alt="" />검색
         </Button>
       </div>
-      <SelectedFilters>
-        {selectedFilters.behabioralType && selectedFilters.utilizationTime ? (
-          <FilterChipArea>
-            <FilterChip onClick={() => handleRemoveFilter('behabioralType')}>
-              {selectedFilters.behabioralType}
-            </FilterChip>
-            <span>에 시간을</span> 
-            <FilterChip>
-              {selectedFilters.utilizationTime}
-            </FilterChip> 
-            <span>활용하는,</span>
-          </FilterChipArea>
-        ) : (
-          selectedFilters.gender.length === 0 &&
-          selectedFilters.age.length === 0 &&
-          selectedFilters.marriage.length === 0 &&
-          selectedFilters.childM === "" &&
-          selectedFilters.childF === "" &&
-          selectedFilters.tag1.length === 0 &&
-          selectedFilters.tag2.length === 0 &&
-          selectedFilters.tag3.length === 0 && (
+      <SelectedFiltersDisplay>
+        <SelectedFilters>
+          {selectedFilters.behabioralType && selectedFilters.utilizationTime ? (
             <FilterChipArea>
-              <span>예시)</span>
-              <FilterChip>건강관리</FilterChip>
-              <span>에 시간을</span>
-              <FilterChip>많이</FilterChip>
+              <FilterChip onClick={() => handleRemoveFilter('behabioralType')}>
+                {selectedFilters.behabioralType}
+                {/* <span>X</span> */}
+              </FilterChip>
+              <span>에 시간을</span> 
+              <FilterChip>
+                {selectedFilters.utilizationTime}
+                {/* <span>X</span> */}
+              </FilterChip> 
               <span>활용하는,</span>
-              <FilterChip bgGray>여성</FilterChip>
-              <FilterChip bgGray>20대</FilterChip>
-              <FilterChip bgGray>30대</FilterChip>
             </FilterChipArea>
-          )
-        )}
-        {selectedFilters.gender.length > 0 &&
-          selectedFilters.gender.map((gender) => (
-            <FilterChip key={gender} onClick={() => handleRemoveFilter("gender", gender)}>
-              {gender === 'M' ? '남성' : '여성'}
-              {/* <span>X</span> */}
-            </FilterChip>
-        ))}
-        {selectedFilters.age.length > 0 &&
-          selectedFilters.age.map((age) => (
-            <FilterChip key={age} onClick={() => handleRemoveFilter("age", age)}>
-              {age}대
-              {/* <span>X</span> */}
-            </FilterChip>
+          ) : (
+            selectedFilters.gender.length === 0 &&
+            selectedFilters.age.length === 0 &&
+            selectedFilters.marriage.length === 0 &&
+            selectedFilters.childM === "" &&
+            selectedFilters.childF === "" &&
+            selectedFilters.tag1.length === 0 &&
+            selectedFilters.tag2.length === 0 &&
+            selectedFilters.tag3.length === 0 && (
+              <FilterChipArea>
+                <span>예시)</span>
+                <FilterChip>건강관리</FilterChip>
+                <span>에 시간을</span>
+                <FilterChip>많이</FilterChip>
+                <span>활용하는,</span>
+                <FilterChip bgGray>여성</FilterChip>
+                <FilterChip bgGray>20대</FilterChip>
+                <FilterChip bgGray>30대</FilterChip>
+              </FilterChipArea>
+            )
+          )}
+          {selectedFilters.gender.length > 0 &&
+            selectedFilters.gender.map((gender) => (
+              <FilterChip bgGray key={gender} onClick={() => handleRemoveFilter("gender", gender)}>
+                {gender === 'M' ? '남성' : '여성'}
+                {/* <span>X</span> */}
+              </FilterChip>
           ))}
-        {selectedFilters.marriage.length > 0 &&
-          selectedFilters.marriage.map((marriage) => (
-            <FilterChip key={marriage} onClick={() => handleRemoveFilter("marriage", marriage)}>
-              {marriage}
-              {/* <span>X</span> */}
+          {selectedFilters.age.length > 0 &&
+            selectedFilters.age.map((age) => (
+              <FilterChip bgGray key={age} onClick={() => handleRemoveFilter("age", age)}>
+                {age}대
+                {/* <span>X</span> */}
+              </FilterChip>
+            ))}
+          {selectedFilters.marriage.length > 0 &&
+            selectedFilters.marriage.map((marriage) => (
+              <FilterChip bgGray key={marriage} onClick={() => handleRemoveFilter("marriage", marriage)}>
+                {marriage}
+                {/* <span>X</span> */}
+              </FilterChip>
+            ))}
+          {/* {selectedFilters.childM !== "" &&
+            <FilterChip onClick={() => handleRemoveFilter('childM')}>
+              {selectedFilters.childM === 0 && <>남아(없음) <span>X</span></>}
+              {selectedFilters.childM === 99 && <>남아(상관없음) <span>X</span></>}
+              {selectedFilters.childM === 100 && <>남아(있음) <span>X</span></>}
+              {selectedFilters.childM !== 0 && selectedFilters.childM !== 99 && <>남아({selectedFilters.childM}명) <span>X</span></>}
             </FilterChip>
-          ))}
-        {/* {selectedFilters.childM !== "" &&
-          <FilterChip onClick={() => handleRemoveFilter('childM')}>
-            {selectedFilters.childM === 0 && <>남아(없음) <span>X</span></>}
-            {selectedFilters.childM === 99 && <>남아(상관없음) <span>X</span></>}
-            {selectedFilters.childM === 100 && <>남아(있음) <span>X</span></>}
-            {selectedFilters.childM !== 0 && selectedFilters.childM !== 99 && <>남아({selectedFilters.childM}명) <span>X</span></>}
-          </FilterChip>
+          }
+          {selectedFilters.childF !== "" &&
+            <FilterChip onClick={() => handleRemoveFilter('childF')}>
+              {selectedFilters.childF === 0 && <>여아(없음) <span>X</span></>}
+              {selectedFilters.childF === 99 && <>여아(상관없음) <span>X</span></>}
+              {selectedFilters.childF === 100 && <>여아(있음) <span>X</span></>}
+              {selectedFilters.childF !== 0 && selectedFilters.childF !== 99 && <>여아({selectedFilters.childM}명) <span>X</span></>}
+            </FilterChip>
+          } */}
+          {selectedFilters.childM !== "" && selectedFilters.childF !== "" &&
+            <FilterChip bgGray onClick={() => {handleRemoveFilter('childM'); handleRemoveFilter('childF');}}>
+              {selectedFilters.childM === 0 && <>자녀(없음) </>}
+              {selectedFilters.childM === 99 && <>자녀(상관없음) </>}
+              {selectedFilters.childM === 100 && <>자녀(있음) </>}
+            </FilterChip>
+          }
+          {selectedFilters.tag1.length > 0 &&
+            selectedFilters.tag1.map((tag1) => (
+              <FilterChip bgGray key={tag1} onClick={() => handleRemoveFilter("tag1", tag1)}>
+                {tag1}
+                {/* <span>X</span> */}
+              </FilterChip>
+            ))}
+          {selectedFilters.tag2.length > 0 &&
+            selectedFilters.tag2.map((tag2) => (
+              <FilterChip bgGray key={tag2} onClick={() => handleRemoveFilter("tag2", tag2)}>
+                {tag2}
+                {/* <span>X</span> */}
+              </FilterChip>
+            ))}
+          {selectedFilters.tag3.length > 0 &&
+            selectedFilters.tag3.map((tag3) => (
+              <FilterChip bgGray key={tag3} onClick={() => handleRemoveFilter("tag3", tag3)}>
+                {tag3}
+                {/* <span>X</span> */}
+              </FilterChip>
+            ))}
+        </SelectedFilters>
+        {(selectedFilters.behabioralType || selectedFilters.utilizationTime || selectedFilters.gender.length > 0 || selectedFilters.age.length > 0 || selectedFilters.marriage.length > 0
+          || selectedFilters.childM || selectedFilters.childF || selectedFilters.tag1.length > 0 || selectedFilters.tag2.length > 0 || selectedFilters.tag3.length > 0) &&
+            <Button onClick={resetSelectionOption}>초기화</Button>
         }
-        {selectedFilters.childF !== "" &&
-          <FilterChip onClick={() => handleRemoveFilter('childF')}>
-            {selectedFilters.childF === 0 && <>여아(없음) <span>X</span></>}
-            {selectedFilters.childF === 99 && <>여아(상관없음) <span>X</span></>}
-            {selectedFilters.childF === 100 && <>여아(있음) <span>X</span></>}
-            {selectedFilters.childF !== 0 && selectedFilters.childF !== 99 && <>여아({selectedFilters.childM}명) <span>X</span></>}
-          </FilterChip>
-        } */}
-        {selectedFilters.childM !== "" && selectedFilters.childF !== "" &&
-          <FilterChip onClick={() => {handleRemoveFilter('childM'); handleRemoveFilter('childF');}}>
-            {selectedFilters.childM === 0 && <>자녀(없음) </>}
-            {selectedFilters.childM === 99 && <>자녀(상관없음) </>}
-            {selectedFilters.childM === 100 && <>자녀(있음) </>}
-          </FilterChip>
-        }
-        {selectedFilters.tag1.length > 0 &&
-          selectedFilters.tag1.map((tag1) => (
-            <FilterChip key={tag1} onClick={() => handleRemoveFilter("tag1", tag1)}>
-              {tag1}
-              {/* <span>X</span> */}
-            </FilterChip>
-          ))}
-        {selectedFilters.tag2.length > 0 &&
-          selectedFilters.tag2.map((tag2) => (
-            <FilterChip key={tag2} onClick={() => handleRemoveFilter("tag2", tag2)}>
-              {tag2}
-              {/* <span>X</span> */}
-            </FilterChip>
-          ))}
-        {selectedFilters.tag3.length > 0 &&
-          selectedFilters.tag3.map((tag3) => (
-            <FilterChip key={tag3} onClick={() => handleRemoveFilter("tag3", tag3)}>
-              {tag3}
-              {/* <span>X</span> */}
-            </FilterChip>
-          ))}
-      </SelectedFilters>
-      {(selectedFilters.behabioralType || selectedFilters.utilizationTime || selectedFilters.gender.length > 0 || selectedFilters.age.length > 0 || selectedFilters.marriage.length > 0
-        || selectedFilters.childM || selectedFilters.childF || selectedFilters.tag1.length > 0 || selectedFilters.tag2.length > 0 || selectedFilters.tag3.length > 0) &&
-          <Button Black onClick={resetSelectionOption}>초기화</Button>
-      }
+      </SelectedFiltersDisplay>
     </SearchFormWrap>
     </>
   );
@@ -641,6 +645,10 @@ const SearchFormWrap = styled.div`
         margin-top:0;
 
         &:hover {background:none;}
+      }
+
+      > button {
+        letter-spacing:-2px;
       }
     }
 
@@ -844,16 +852,39 @@ const ButtonWrap = styled.div`
 
   > button {
     padding:10px 16px;
+
+    &:hover {
+      background:auto !important;
+    }
   }
 `;
 
-const SelectedFilters = styled.div`
+const SelectedFiltersDisplay = styled.div`
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap: 30px;
   margin-top: 20px;
   padding-top:20px;
+  border-top:1px solid ${palette.lineGray};
+
+  > div {
+    width:85%;
+  }
+
+  > button {
+    flex-shrink:0;
+    font-size:0.88rem;
+    padding:8px 16px;
+    border:1px solid ${palette.lineGray};
+  }
+`;
+
+
+const SelectedFilters = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  border-top:1px solid ${palette.lineGray};
 `;
 
 const FilterChip = styled.div`

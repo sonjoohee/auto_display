@@ -14,6 +14,8 @@ import GlobalStyles from "./assets/GlobalStyle";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Lending from './pages/Lending';
 
+import BusinessTool from './pages/Business_Tool'; // 비즈니스 툴
+
 function App() {
   return (
     <div className="App">
@@ -35,6 +37,9 @@ function App() {
           <Route path="/reset-password" element={<PageResetPassword />} />
           <Route path="/request-reset-password" element={<PageRequestResetPassword />} />
           <Route path="/AI_Panel" element={<PageAIPanelList />}></Route>
+
+          <Route path="/business-tool" element={<BusinessTool />}></Route> {/* 비즈니스 툴 */}
+
         </Routes>
       </BrowserRouter>
     </div>

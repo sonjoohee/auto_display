@@ -69,7 +69,17 @@ const StyleButton = styled.button`
         border-bottom:2px solid ${palette.black};
         content:'';
       }
-    `}
+    `
+  }
+
+  &:hover {
+    background: ${props => {
+      if (props.Blue) return 'rgba(4,83,244,.7) !important';
+      else if (props.LineBlue) return palette.blue;
+      else if (props.Black) return palette.black;
+      else return palette.white;
+    }};
+  }
 
 `;
 

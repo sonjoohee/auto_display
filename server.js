@@ -26,11 +26,12 @@ app.use((req, res, next) => {
 });
 
 const pool = mariadb.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: 'root', // 사용자 비밀번호
-  database: 'user_management',
-  connectionLimit: 5
+  host: 'biz-dev.c5mscy7z94yn.ap-northeast-2.rds.amazonaws.com',
+  user: 'admin',
+  password: 'Userconnect0304!',
+  database: 'doowon_user_management',
+  connectionLimit: 5,
+  port: 4008 // MariaDB 기본 포트는 3306입니다.
 });
 
 
@@ -108,16 +109,17 @@ app.get('/verify-email', async (req, res) => {
     if (conn) conn.release();
   }
 });
+
 app.post('/request-reset-password', async (req, res) => {
-  const { email } = req.body;
+  const { name, email } = req.body;
   
   let conn;
   try {
     conn = await pool.getConnection();
-    const user = await conn.query('SELECT * FROM users WHERE email = ?', [email]);
+    const user = await conn.query('SELECT * FROM users WHERE name = ? AND email = ?', [name, email]);
 
     if (user.length === 0) {
-      return res.status(404).send({ error: '등록되지 않은 이메일입니다.' });
+      return res.status(404).send({ error: '등록되지 않은 이름 또는 이메일입니다.' });
     }
 
     const token = crypto.randomBytes(32).toString('hex');
@@ -143,6 +145,19 @@ app.post('/request-reset-password', async (req, res) => {
     res.status(500).send('서버 오류');
   } finally {
     if (conn) conn.release();
+  }
+});
+
+app.use(express.json()); // JSON 형식의 요청 본문을 처리하도록 미들웨어 설정
+
+app.post('/resend-password-reset-email', async (req, res) => {
+  try {
+    const { email } = req.body;
+    // 여기에서 이메일 확인 및 재발송 로직을 처리
+    res.json({ success: true, message: '비밀번호 재설정 이메일이 발송되었습니다.' });
+  } catch (error) {
+    console.error('이메일 재발송 중 오류 발생:', error);
+    res.status(500).json({ error: '서버 오류가 발생했습니다.' });
   }
 });
 
@@ -253,9 +268,39 @@ app.get('/current-user', async (req, res) => {
 });
 
 
+// 이메일 재발송 엔드포인트
+app.post('/resend-verification-email', async (req, res) => {
+  const { email } = req.body;
 
-app.listen(3001, () => {
-  console.log('Server is running on http://localhost:3001');
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const user = await conn.query('SELECT * FROM users WHERE email = ?', [email]);
+
+    if (user.length === 0) {
+      return res.status(404).send({ error: '등록되지 않은 이메일입니다.' });
+    }
+
+    const token = user[0].token || crypto.randomBytes(32).toString('hex');
+    const tokenExpiration = new Date();
+    tokenExpiration.setHours(tokenExpiration.getHours() + 1); // 1시간 유효기간
+
+    await conn.query('UPDATE users SET token = ?, tokenExpiration = ? WHERE email = ?', [token, tokenExpiration, email]);
+
+    const verificationLink = `http://localhost:3000/verify-email?token=${token}`;
+    await sendVerificationEmail(email, verificationLink);
+
+    res.status(200).send('인증 이메일이 재발송되었습니다.');
+  } catch (err) {
+    console.error('이메일 재발송 중 오류 발생:', err);
+    res.status(500).send('서버 오류');
+  } finally {
+    if (conn) conn.release();
+  }
+});
+
+app.listen(4008, () => {
+  console.log('Server is running on http://localhost:4008');
 });
 
 
