@@ -47,7 +47,7 @@ const MoleculePanelItemDetail = ({ id, imgSrc, gender, age, job, address, subAdd
         </Header>
         <TagsContainer>
           {tags.split(',').filter(tags => tags.trim() !== '').map((tags, index) => (
-            <Tag key={index}>{tags.trim()}</Tag>
+            <Tag key={index}>#{tags.trim()}</Tag>
           ))}
         </TagsContainer>
         <TabMenu>

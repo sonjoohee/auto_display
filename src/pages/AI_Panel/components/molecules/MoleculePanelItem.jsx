@@ -1,18 +1,19 @@
 // MoleculePanelItem.jsx
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
-import panelimages from "../../../../assets/images/panel/PanelImage.png"
 import MoleculePanelItemDetail from './MoleculePanelItemDetail';
 import { useAtom } from 'jotai';
-import { 
+import {
 } from "../../../AtomStates";
 import timeCode from '../../assets/time-code.json';
 
 const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, comment, tags, onSelect, lifeStyle, consumption, productGroup, 
   target_1, target_2, target_3, target_4, target_5, value_1, value_2, value_3, value_4, value_5,}) => {
   
+  const [randomSet, setRandomSet] = useState(9999);
+
   const [maxBehabioralType, setMaxBehabioralType] = useState("");
   const [maxUtilizationTime, setMaxUtilizationTime] = useState(0);
 
@@ -66,10 +67,21 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
     setDetailsVisible(false);
   };
 
+  // 패널 이미지 랜덤으로 선택
+  let imgTarget = "";
+  const imgAge = age >= 70 ? 60 : Math.floor(parseInt(age) / 10) * 10;
+  const imgGender = gender == "M" ? "m" : "w";
+  if (randomSet == 9999) {
+    setRandomSet(Math.floor(Math.random() * 10) + 1);
+  }
+  imgTarget = imgAge + "s_" + imgGender + "_" + randomSet + ".jpg";
+
   return (
     <>
       <PanelItem className={isSelected ? 'selected' : ''} onClick={handlePanelClick}>
-        <Image src={panelimages} />
+
+        <Image src={`../../../../images/panel/${imgGender}/${imgTarget}`} alt=""/>
+        
         <span className="panelChk">패널체크</span>
         <Overlay className="overlay">
           <InfoButton onClick={handleDetailsClick}><img src={images.IconView} alt="" />패널정보 상세보기</InfoButton>
@@ -96,7 +108,9 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
           {maxBehabioralType && maxUtilizationTime>=60 && maxUtilizationTime%60!==0 && <><strong>{maxBehabioralType}에 {Math.floor(maxUtilizationTime/60)}시간 {maxUtilizationTime%60}분이상 활용하고 있어요</strong><br/><br/></>}
           {!maxBehabioralType && <strong>{comment}</strong>}
           <span>
-            {tags}
+            {tags.split(',').filter(tags => tags.trim() !== '').map((tags, index) => (
+              <div key={index}>#{tags.trim()}</div>
+            ))}
           </span>
         </PanelDetails>
       </PanelItem>
