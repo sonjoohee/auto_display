@@ -68,6 +68,10 @@ const OrganismPanelListSection = () => {
       setSelectedCount(panelList.length);
       setSelectedPanels(allPanelIds);
     }
+    else {
+      setSelectedCount(0);
+      setSelectedPanels(new Set());
+    }
   }, [selectedAllPanels])
   
   // 패널 저장 테스트용
@@ -78,11 +82,16 @@ const OrganismPanelListSection = () => {
 
   const handleSelect = (isSelected, panelId) => {
     console.log("Selected Panel ID:", panelId);
-    setSelectedCount((prevCount) => isSelected ? prevCount + 1 : prevCount - 1);
+    setSelectedCount((prevCount) => {
+      const newCount = isSelected ? prevCount + 1 : prevCount - 1;
+      return Math.min(filterdPanelCount, Math.max(0, newCount)); // 마이너스 방지
+    });
     setSelectedPanels((prevSelected) => {
       const newSelected = new Set(prevSelected);
       if (isSelected) {
-        newSelected.add(panelId);
+        if (newSelected.size < filterdPanelCount) {
+          newSelected.add(panelId);
+        }
       } else {
         newSelected.delete(panelId);
       }
@@ -91,7 +100,9 @@ const OrganismPanelListSection = () => {
   };
 
   const handleLoadMore = () => {
-    setPanelListPageCount(prevPageCount => prevPageCount + 1);
+    if (panelList.length < filterdPanelCount) {
+      setPanelListPageCount((prevPageCount) => prevPageCount + 1);
+    }
   };
 
   const handleViewChange = (e) => {
@@ -124,7 +135,7 @@ const OrganismPanelListSection = () => {
 
   // 추가 패널 리스트
   useEffect(() => {
-    if (panelListPageCount > 1) {
+    if (panelListPageCount > 1 && panelList.length < filterdPanelCount) {
       const combinedTags = [...searchTag1, ...searchTag2, ...searchTag3]; // 소비습관, 기술수용도 하나의 태그에 담아서 보냄
       const fetchAdditionalPanelList = async () => {
         console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
@@ -137,7 +148,8 @@ const OrganismPanelListSection = () => {
           
           console.log(panelList)
           
-          if (response.data.results.length < 20) setIsAllPanelsLoaded(true); // 20개 미만의 데이터가 오면 동작
+          // 20개 미만의 패널이 오거나, 더 이상 불러올 패널이 없을 때 활성화
+          if (response.data.results.length < 20 || panelList.length + response.data.results.length >= filterdPanelCount) setIsAllPanelsLoaded(true); 
 
         } catch (error) {
           console.error("Error fetching panel list:", error);
@@ -193,13 +205,14 @@ const OrganismPanelListSection = () => {
             ))}
           </PanelList>
           {isAllPanelsLoaded ? (
-            <CreatePanelLink to="/createpanel" isBottomBarVisible={selectedCount > 0}>
-            원하시는 패널이 없나요? 직접 만들어 보세요!
-          </CreatePanelLink>
+          //   <CreatePanelLink to="/createpanel" isBottomBarVisible={selectedCount > 0}>
+          //   원하시는 패널이 없나요? 직접 만들어 보세요!
+          // </CreatePanelLink>
+          <><br/><br/><br/><br/><br/><br/><br/></>
           ) : (
-            20 <= panelList.length && (
+            panelList.length <= panelList.length && (
               <LoadMoreButton isBottomBarVisible={selectedCount > 0} onClick={handleLoadMore}>
-                20명의 패널 더보기
+                패널 더보기
               </LoadMoreButton>
             )
           )}

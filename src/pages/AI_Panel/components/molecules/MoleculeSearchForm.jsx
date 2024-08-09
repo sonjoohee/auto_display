@@ -6,7 +6,7 @@ import axios from "axios";
 import { 
   TOTAL_PANEL_COUNT,
   PANEL_LIST,
-  SELECTED_PANEL_COUNT,
+  SELECTED_COUNT,
   SEARCH_BEHABIORAL_TYPE,
   SEARCH_UTILIZATION_TIME, 
   SEARCH_GENDER, 
@@ -20,6 +20,7 @@ import {
   PANEL_LIST_PAGE_COUNT,
   IS_ALL_PANELS_LOADED,
   FILTERD_PANEL_COUNT,
+  SELECTED_PANELS,
 } from "../../../AtomStates";
 
 import styled from "styled-components";
@@ -32,7 +33,7 @@ const MoleculeSearchForm = () => {
 
   const [totalPanelCount, setTotalPanelCount] = useAtom(TOTAL_PANEL_COUNT);
   const [panelList, setPanelList] = useAtom(PANEL_LIST);
-  const [selectedPanelCount, setSelectedPanelCount] = useAtom(SELECTED_PANEL_COUNT);
+  const [selectedCount, setSelectedCount] = useAtom(SELECTED_COUNT);
   const [panelListPageCount, setPanelListPageCount] = useAtom(PANEL_LIST_PAGE_COUNT);
 
   // 검색 관련 atoms
@@ -49,6 +50,7 @@ const MoleculeSearchForm = () => {
 
   const [isAllPanelsLoaded, setIsAllPanelsLoaded] = useAtom(IS_ALL_PANELS_LOADED);
   const [filterdPanelCount, setFilterdPanelCount] = useAtom(FILTERD_PANEL_COUNT);
+  const [selectedPanels, setSelectedPanels] = useAtom(SELECTED_PANELS); // 선택된 패널의 ID 저장
   
   const [showDetailOption, setShowDetailOption] = useState(false);
   const [showTimeOption, setShowTimeOption] = useState(false);
@@ -192,6 +194,8 @@ const MoleculeSearchForm = () => {
       
       setPanelList(response.data.results);
       setFilterdPanelCount(response.data.count); // 필터링된 패널 개수
+      setSelectedCount(0); // 선택된 패널 개수 초기화
+      setSelectedPanels(new Set()); // 선택된 패널 ID 초기화
 
       if (response.data.results.length < 20) setIsAllPanelsLoaded(true); // 20개 미만의 데이터가 오면 동작
       else setIsAllPanelsLoaded(false);
@@ -433,16 +437,12 @@ const MoleculeSearchForm = () => {
 
                 <p>나이</p>
                 <div>
-                  <button className={tempAge.includes(10) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',10)}>10대</button>
                   <button className={tempAge.includes(20) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',20)}>20대</button>
                   <button className={tempAge.includes(30) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',30)}>30대</button>
                   <button className={tempAge.includes(40) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',40)}>40대</button>
                   <button className={tempAge.includes(50) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',50)}>50대</button>
-                  <button className={tempAge.includes(60) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',60)}>60대</button>
-                  <button className={tempAge.includes(70) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',70)}>70대</button>
-                  <button className={tempAge.includes(80) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',80)}>80대</button>
-                  <button className={tempAge.includes(90) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',90)}>90대</button>
-                  <button className={[10, 20, 30, 40, 50, 60, 70, 80, 90].every(age => tempAge.includes(age)) ? 'active' : ''} onClick={() => setTempAge([10,20,30,40,50,60,70,80,90])}>상관없음</button>
+                  <button className={tempAge.includes(60) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',60)}>60대 이상</button>
+                  <button className={[20, 30, 40, 50, 60].every(age => tempAge.includes(age)) ? 'active' : ''} onClick={() => setTempAge([20,30,40,50,60])}>상관없음</button>
                 </div>
 
                 <p>결혼 및 자녀 정보</p>
@@ -480,12 +480,12 @@ const MoleculeSearchForm = () => {
 
                 <p>기술 수용도</p>
                 <div>
-                  <button className={tempTag3.includes("이노베이터" ) ? 'active' : ''} onClick={() => setTempTag3(["이노베이터"])}>이노베이터</button>
+                  <button className={tempTag3.includes("혁신가" ) ? 'active' : ''} onClick={() => setTempTag3(["혁신가"])}>혁신가</button>
                   <button className={tempTag3.includes("얼리어답터") ? 'active' : ''} onClick={() => setTempTag3(["얼리어답터"])}>얼리어답터</button>
-                  <button className={tempTag3.includes("전기 다수수용자") ? 'active' : ''} onClick={() => setTempTag3(["전기 다수수용자"])}>전기 다수수용자</button>
-                  <button className={tempTag3.includes("후기 다수수용자") ? 'active' : ''} onClick={() => setTempTag3(["후기 다수수용자"])}>후기 다수수용자</button>
-                  <button className={tempTag3.includes("지각 수용자") ? 'active' : ''} onClick={() => setTempTag3(["지각 수용자"])}>지각 수용자</button>
-                  <button className={["이노베이터","얼리어답터","전기 다수수용자","후기 다수수용자", "지각 수용자"].every(tag3 => tempTag3.includes(tag3)) ? 'active' : ''} onClick={() => setTempTag3(["이노베이터","얼리어답터","전기 다수수용자", "후기 다수수용자", "지각 수용자"])}>상관없음</button>
+                  <button className={tempTag3.includes("보통 사용자") ? 'active' : ''} onClick={() => setTempTag3(["보통 사용자"])}>보통 사용자</button>
+                  <button className={tempTag3.includes("후기 사용자") ? 'active' : ''} onClick={() => setTempTag3(["후기 사용자"])}>후기 사용자</button>
+                  <button className={tempTag3.includes("보수적 사용자") ? 'active' : ''} onClick={() => setTempTag3(["보수적 사용자"])}>보수적 사용자</button>
+                  <button className={["혁신가","얼리어답터","보통 사용자","후기 사용자", "보수적 사용자"].every(tag3 => tempTag3.includes(tag3)) ? 'active' : ''} onClick={() => setTempTag3(["혁신가","얼리어답터","보통 사용자", "후기 사용자", "보수적 사용자"])}>상관없음</button>
                 </div>
               </div>
 
@@ -504,11 +504,11 @@ const MoleculeSearchForm = () => {
         {selectedFilters.behabioralType && selectedFilters.utilizationTime ? (
           <FilterChipArea>
             <FilterChip onClick={() => handleRemoveFilter('behabioralType')}>
-              {selectedFilters.behabioralType} <span>X</span>
+              {selectedFilters.behabioralType}
             </FilterChip>
             <span>에 시간을</span> 
             <FilterChip>
-              {selectedFilters.utilizationTime} <span>X</span>
+              {selectedFilters.utilizationTime}
             </FilterChip> 
             <span>활용하는,</span>
           </FilterChipArea>
