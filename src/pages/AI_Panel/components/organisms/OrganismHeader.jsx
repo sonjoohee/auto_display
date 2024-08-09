@@ -29,6 +29,7 @@ const HeaderWrap = styled.header`
     gap: 50px;
 
     a {
+      font-size:0.88rem;
       color: ${palette.gray};
     }
   }
@@ -45,7 +46,7 @@ const HeaderWrap = styled.header`
       transition: all 0.5s;
       text-decoration: none;
       color: ${palette.gray};
-      font-weight: bold; /* 글자 진하게 설정 */
+      font-weight: 700;
       cursor: pointer;
 
       &:hover {
