@@ -291,10 +291,14 @@ const MoleculeSearchForm = () => {
     else if (filterKey === "childM") {
       selectedFilters.childM = '';
       setSearchChildM('');
+      setIsChildExist(false);
+      setIsChildNotExist(false);
     }
     else if (filterKey === "childF") {
       selectedFilters.childF = '';
       setSearchChildF('');
+      setIsChildExist(false);
+      setIsChildNotExist(false);
     }
     else if (filterKey === "tag1") {
       if (filterValue !== null) {
@@ -496,7 +500,6 @@ const MoleculeSearchForm = () => {
           <img src={images.Search} alt="" />검색
         </Button>
       </div>
-
       <SelectedFilters>
         {selectedFilters.behabioralType && selectedFilters.utilizationTime ? (
           <FilterChipArea>
