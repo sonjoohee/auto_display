@@ -74,7 +74,7 @@ const StyleButton = styled.button`
 
   &:hover {
     background: ${props => {
-      if (props.Blue) return 'rgba(4,83,244,.5) !important';
+      if (props.Blue) return 'rgba(4,83,244,.7) !important';
       else if (props.LineBlue) return palette.blue;
       else if (props.Black) return palette.black;
       else return palette.white;
