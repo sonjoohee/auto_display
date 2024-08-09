@@ -30,7 +30,8 @@ const BottomBar = styled.div`
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  width: 60%;
+  width:100%;
+  max-width:606px;
   color: ${palette.white};
   display: flex;
   justify-content: space-between;
