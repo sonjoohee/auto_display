@@ -25,7 +25,7 @@ const BusinessTool = () => {
         </BusonessToolWrap>
 
         <BusinessField>
-          <h3>다양한 분야에서 사용하는 툴이에요 !!</h3>
+          <h3>다양한 분야에서 사용하는 툴이에요 !</h3>
 
           <FieldTool>
             <div>
@@ -77,6 +77,7 @@ const BusonessToolWrap = styled.div`
 
 const TextareaWrap = styled.div`
   padding:30px;
+  padding-bottom:20px;
   border-radius:20px;
   border:2px solid ${palette.blue};
 
@@ -84,7 +85,7 @@ const TextareaWrap = styled.div`
     width:100%;
     height:90px;
     font-family: 'Pretendard';
-    font-size:1.5rem;
+    font-size:1rem;
     border:0;
     outline:0;
     resize:none;

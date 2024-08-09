@@ -29,6 +29,12 @@ const HeaderWrap = styled.header`
     font-size:0;
     background:url(${images.Logo}) left center no-repeat;
     background-size:auto 100%;
+  a {
+      display: block;
+      width: 100%;
+      height: 100%;
+      padding: 0; /* Optional, adjust if needed */
+    }
   }
 
   ul {
@@ -101,7 +107,7 @@ const OrganismHeader = () => {
 
   return (
     <HeaderWrap>
-      <h1><Link to="/">Crowd Insight</Link></h1>
+      <h1><Link to="/AI_Panel"></Link></h1>
       <ul>
         <li><Link to="/">맞춤패널 생성</Link></li>
         <li><Link to="/">Template</Link></li>
