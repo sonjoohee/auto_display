@@ -15,21 +15,6 @@ const OrganismSearchSection = () => {
   const [currentUser] = useAtom(currentUserAtom);
   const [totalPanelCount, setTotalPanelCount] = useAtom(TOTAL_PANEL_COUNT);
 
-  // 전체 AI 패널 수
-  useEffect(() => {
-    const fetchPanelCount = async () => {
-      console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/users/hello`);
-        setTotalPanelCount(response.data.value);
-      } catch (error) {
-        console.error("Error fetching panel count:", error);
-      }
-    };
-
-    fetchPanelCount();
-  }, [setTotalPanelCount]);
-
   return (
     <StyledSearchSection>
       <h2>

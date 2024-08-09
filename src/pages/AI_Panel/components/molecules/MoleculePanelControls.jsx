@@ -6,11 +6,13 @@ import { useAtom } from "jotai";
 import { 
   SELECTED_ALL_PANELS,
   VIEW_PANEL_TYPE,
+  FILTERD_PANEL_COUNT,
 } from "../../../AtomStates";
 
 const MoleculePanelControls = ({ selectedCount, loadedPanelCount }) => {
   const [viewPanelType, setViewPanelType] = useAtom(VIEW_PANEL_TYPE);
   const [selectedAllPanels, setSelectedAllPanels] = useAtom(SELECTED_ALL_PANELS);
+  const [filterdPanelCount, setFilterdPanelCount] = useAtom(FILTERD_PANEL_COUNT);
 
   return (
     <ControlsWrapper>
@@ -18,7 +20,7 @@ const MoleculePanelControls = ({ selectedCount, loadedPanelCount }) => {
       <div></div>
       {/* <AtomCheckbox id="allChk" label="전체 선택" checked={selectedAllPanels} onChange={(e) => setSelectedAllPanels(e.target.checked)}/> */}
       <ChoicePanel>
-        {loadedPanelCount}명의 패널 중 <strong>{selectedCount}</strong>명의 패널을 선택하셨어요
+        {filterdPanelCount}명의 패널 중 <strong>{selectedCount}</strong>명의 패널을 선택하셨어요
       </ChoicePanel>
       <ViewList>
         <input
