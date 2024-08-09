@@ -7,12 +7,9 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import images from '../../assets/styles/Images'; // Images.jsx 임포트
-import { useAtom } from 'jotai';
-import { isLoggedInAtom, loginSuccessAtom } from '../../../../pages/AtomStates'; // 아톰 임포트
 
 const MoleculeGoogleLoginForm = () => {
-  const [, setIsLoggedIn] = useAtom(isLoggedInAtom);
-  const [, setLoginSuccess] = useAtom(loginSuccessAtom);
+  const navigate = useNavigate();
 
   const handleGoogleLogin = async () => {
     try {
@@ -26,14 +23,12 @@ const MoleculeGoogleLoginForm = () => {
         email: user.email,
       }, { withCredentials: true });
 
-      // 로그인 성공 시 처리
-      setIsLoggedIn(true); // 아톰 업데이트
-      setLoginSuccess(true);
+      // 로그인 성공 후 원하는 페이지로 이동
+      navigate('/success');
     } catch (error) {
       console.error(error);
     }
   };
-
 
   return (
     <GoogleLoginForm>

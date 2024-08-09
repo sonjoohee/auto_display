@@ -1,10 +1,10 @@
-// MoleculeLoginPopup.jsx
+// src/pages/Login_Sign/components/molecules/MoleculeLoginPopup.jsx
 
 import React from 'react';
 import styled from 'styled-components';
 import MoleculeLogin from './MoleculeLogin';
 
-const MoleculeLoginPopup = ({ onClose = () => {} }) => { // 기본값으로 빈 함수 설정
+const MoleculeLoginPopup = ({ onClose }) => {
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
@@ -15,7 +15,7 @@ const MoleculeLoginPopup = ({ onClose = () => {} }) => { // 기본값으로 빈 
     <LoginPopupOverlay onClick={handleOverlayClick}>
       <PopupContent>
         <CloseButton onClick={onClose}>X</CloseButton>
-        <MoleculeLogin onClosePopup={onClose} /> {/* 함수 전달 */}
+        <MoleculeLogin />
       </PopupContent>
     </LoginPopupOverlay>
   );
@@ -52,3 +52,4 @@ const CloseButton = styled.button`
   font-size: 20px;
   cursor: pointer;
 `;
+

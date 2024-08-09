@@ -9,7 +9,6 @@ import AtomInput from '../atoms/AtomInput';
 import AtomButton from '../atoms/AtomButton';
 import { isValidEmail } from '../atoms/AtomValidation';
 import { emailAtom, passwordAtom, currentUserAtom, errorAtom } from '../../../AtomStates';
-import { isLoggedInAtom } from '../../../AtomStates'; // Jotai 상태 임포트
 
 const MoleculeLoginForm = () => {
   const [email, setEmail] = useAtom(emailAtom);
@@ -18,7 +17,6 @@ const MoleculeLoginForm = () => {
   const [, setCurrentUser] = useAtom(currentUserAtom);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom);
 
   useEffect(() => {
     setError('');
@@ -49,8 +47,7 @@ const MoleculeLoginForm = () => {
       if (response.ok) {
         const result = await response.json();
         setCurrentUser(result.user);
-        setIsLoggedIn(true);
-        navigate('/AI_Panel');
+        navigate('/success');
       } else {
         const result = await response.json();
         setError(result.error);
