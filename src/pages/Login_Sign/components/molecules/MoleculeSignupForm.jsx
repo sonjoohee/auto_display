@@ -1,3 +1,4 @@
+// MoleculeSignupForm.jsx
 import React, { useEffect, useState } from 'react';
 import { useAtom } from 'jotai';
 import { useNavigate } from 'react-router-dom';
@@ -7,6 +8,7 @@ import AtomInput from '../atoms/AtomInput';
 import AtomButton from '../atoms/AtomButton';
 import { isValidEmail, isValidPassword } from '../atoms/AtomValidation';
 import { nameAtom, signupEmailAtom, signupPasswordAtom, confirmPasswordAtom, roleAtom, statusAtom, errorAtom } from '../../../AtomStates';
+import MoleculeSignupPopup from './MoleculeSignupPopup'; // 팝업 컴포넌트 임포트
 
 const MoleculeSignupForm = () => {
   const [name, setName] = useAtom(nameAtom);
@@ -19,6 +21,8 @@ const MoleculeSignupForm = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isSignupSuccessful, setSignupSuccessful] = useState(false); // 회원가입 성공 상태
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,31 +53,35 @@ const MoleculeSignupForm = () => {
     return true;
   };
 
-  const handleSignup = async () => {
+  const handleSignup = async (e) => {
+    e.preventDefault();
     setError('');
     if (!validateForm()) return;
 
+    setIsLoading(true); // 로딩 상태 시작
+
     try {
-      const response = await fetch('http://localhost:3001/signup', {
+      const response = await fetch('http://localhost:4008/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password, role, status })
       });
       if (response.ok) {
+        setSignupSuccessful(true); // 회원가입 성공 상태 설정
         setName('');
-        setEmail('');
+        // setEmail('');
         setPassword('');
         setConfirmPassword('');
         setRole('user');
-        // setStatus('active');
         setStatus('inactive');
-        navigate('/login');
       } else {
         const result = await response.json();
         setError(result.error || '회원가입 중 오류가 발생했습니다.');
       }
     } catch (error) {
       setError('서버와의 통신 중 오류가 발생했습니다.');
+    } finally {
+      setIsLoading(false); // 로딩 상태 종료
     }
   };
 
@@ -83,6 +91,11 @@ const MoleculeSignupForm = () => {
 
   const toggleConfirmPasswordVisibility = () => {
     setShowConfirmPassword(!showConfirmPassword);
+  };
+
+  const closePopup = () => {
+    setSignupSuccessful(false);
+    navigate('/login');
   };
 
   return (
@@ -142,10 +155,19 @@ const MoleculeSignupForm = () => {
         />
         <label htmlFor="terms">서비스 <a href="#">이용약관</a>과 <a href="#">개인정보처리방침</a>에 동의합니다.</label>
       </TermsAndConditions>
-      <StyledAtomButton onClick={handleSignup}>회원가입</StyledAtomButton>
+      <StyledAtomButton onClick={handleSignup} disabled={isLoading}>
+        {isLoading ? "메일을 전송 중입니다..." : "회원가입"}
+      </StyledAtomButton>
       <Footer>
         이미 가입하셨나요? <a href="/login">로그인하기</a>
       </Footer>
+
+      {isSignupSuccessful && (
+        <MoleculeSignupPopup 
+          onClose={closePopup} 
+          email={email}
+        />
+      )}
     </SignupFormContainer>
   );
 };
@@ -265,6 +287,11 @@ const StyledAtomButton = styled(AtomButton)`
   &:active {
     background-color: #0d47a1;
     transform: scale(1);
+  }
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
   }
 `;
 

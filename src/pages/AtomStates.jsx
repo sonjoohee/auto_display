@@ -4,6 +4,8 @@ import { atom } from 'jotai';
 // 로그인 상태
 export const emailAtom = atom('');
 export const passwordAtom = atom('');
+export const isLoggedInAtom = atom(false);
+export const loginSuccessAtom = atom(null);
 
 // 회원가입 상태
 export const nameAtom = atom('');

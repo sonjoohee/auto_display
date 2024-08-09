@@ -1,11 +1,25 @@
 // src/pages/Login_Sign/components/molecules/MoleculeLogin.jsx
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import { useAtom } from 'jotai';
 import MoleculeGoogleLoginForm from './MoleculeGoogleLoginForm';
 import MoleculeLoginForm from './MoleculeLoginForm';
+import { loginSuccessAtom } from '../../../../pages/AtomStates'; // 아톰 임포트
 
-const MoleculeLogin = () => {
+const MoleculeLogin = ({ onClosePopup = () => {} }) => {
+  const [loginSuccess, setLoginSuccess] = useAtom(loginSuccessAtom);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (loginSuccess) {
+      navigate('/ai_panel');    // 페이지 이동
+      if (onClosePopup) onClosePopup(); // 팝업 닫기
+      setLoginSuccess(null);    // 상태 초기화
+    }
+  }, [loginSuccess, navigate, setLoginSuccess]);
+
   return (
     <LoginContainer>
       <MoleculeGoogleLoginForm />
