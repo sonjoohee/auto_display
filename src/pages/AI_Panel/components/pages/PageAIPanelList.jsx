@@ -11,7 +11,7 @@ import OrganismPanelListSectionInstruction from '../organisms/OrganismPanelListS
 import OrganismPanelListSectionBottomBar from '../organisms/OrganismPanelListSectionBottomBar'; // 수정된 컴포넌트 이름
 import { ContentsWrap } from '../../../../assets/styles/Common';
 import MoleculeTabMenu from "../molecules/MoleculeTabMenu";
-import { SELECTED_COUNT, selectedPanelsAtom, PANEL_LIST_PAGE_COUNT } from '../../../AtomStates';
+import { SELECTED_COUNT, selectedPanelsAtom, PANEL_LIST_PAGE_COUNT, IS_FIRST_PANELS_LOADED, } from '../../../AtomStates';
 import BusinessTool from '../../../Business_Tool';
 
 const PageAIPanelListInfinite = () => {
@@ -19,7 +19,12 @@ const PageAIPanelListInfinite = () => {
   const [selectedCount, setSelectedCount] = useAtom(SELECTED_COUNT);
   const [, setSelectedPanels] = useAtom(selectedPanelsAtom);
   const [, setPanelListPageCount] = useAtom(PANEL_LIST_PAGE_COUNT);
+  const [isFirstPanelsLoaded, setIsFirstPanelsLoaded] = useAtom(IS_FIRST_PANELS_LOADED);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setIsFirstPanelsLoaded(false);
+  }, [])
 
   const handleSelect = (isSelected) => {
     setSelectedCount(prevCount => isSelected ? prevCount + 1 : prevCount - 1);

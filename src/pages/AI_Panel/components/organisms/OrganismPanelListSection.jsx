@@ -117,13 +117,14 @@ const OrganismPanelListSection = () => {
       console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
       try {
       const response = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}/panels/list?page=1&size=20&searchBehabioralType=${searchBehabioralType}&searchUtilizationTime=${searchUtilizationTime}&searchGender=${searchGender}&searchAge=${searchAge}&searchTag=${searchTag1}&searchMarriage=${searchMarriage}&searchChildM=${searchChildM}&searchChildF=${searchChildF}`
+        `${process.env.REACT_APP_SERVER_URL}/panels/list?page=1&size=20&searchBehabioralType=&searchUtilizationTime=&searchGender=&searchAge=&searchTag=&searchMarriage=&searchChildM=&searchChildF=`
       );
       setPanelList(response.data.results);
       setTotalPanelCount(response.data.count); // 전체 패널 개수
       setFilterdPanelCount(response.data.count); // 필터링된 패널 개수
       setIsFirstPanelsLoaded(true);
       
+      console.log(panelList)
       console.log(response);
         
       if (response.data.results.length < 20) setIsAllPanelsLoaded(true); // 20개 미만의 데이터가 오면 동작
@@ -150,6 +151,7 @@ const OrganismPanelListSection = () => {
           setFilterdPanelCount(response.data.count); // 필터링된 패널 개수
           
           console.log(panelList)
+          console.log(response)
           
           // 20개 미만의 패널이 오거나, 더 이상 불러올 패널이 없을 때 활성화
           if (response.data.results.length < 20 || panelList.length + response.data.results.length >= filterdPanelCount) setIsAllPanelsLoaded(true); 

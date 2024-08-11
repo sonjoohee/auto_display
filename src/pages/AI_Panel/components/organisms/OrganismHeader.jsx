@@ -98,7 +98,7 @@ const OrganismHeader = () => {
 
   return (
     <HeaderWrap>
-      <h1><Link to="/AI_Panel"></Link></h1>
+      <h1><a href="/AI_Panel"></a></h1>
       <ul>
         <li><Link to="">맞춤패널 생성</Link></li>
         <li><Link to="">Template</Link></li>
