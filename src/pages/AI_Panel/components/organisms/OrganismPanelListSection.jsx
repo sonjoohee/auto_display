@@ -30,6 +30,7 @@ import {
   SELECTED_ALL_PANELS,
   IS_ALL_PANELS_LOADED,
   FILTERD_PANEL_COUNT,
+  IS_FIRST_PANELS_LOADED,
 } from "../../../AtomStates";
 
 const OrganismPanelListSection = () => {
@@ -56,6 +57,7 @@ const OrganismPanelListSection = () => {
   const [filterdPanelCount, setFilterdPanelCount] = useAtom(FILTERD_PANEL_COUNT);
 
   const [isAllPanelsLoaded, setIsAllPanelsLoaded] = useAtom(IS_ALL_PANELS_LOADED);
+  const [isFirstPanelsLoaded, setIsFirstPanelsLoaded] = useAtom(IS_FIRST_PANELS_LOADED);
   
   // 전체선택 버튼 (비)활성화 상태관리
   useEffect(() => {
@@ -120,6 +122,7 @@ const OrganismPanelListSection = () => {
       setPanelList(response.data.results);
       setTotalPanelCount(response.data.count); // 전체 패널 개수
       setFilterdPanelCount(response.data.count); // 필터링된 패널 개수
+      setIsFirstPanelsLoaded(true);
       
       console.log(response);
         
@@ -162,7 +165,8 @@ const OrganismPanelListSection = () => {
 
   // panelData가 유효한지 확인
   if (!Array.isArray(panelList) || panelList.length === 0) {
-    return <NoData>패널 데이터가 없습니다.</NoData>;
+    if(!isFirstPanelsLoaded) return <NoData>패널 데이터를 불러오고 있습니다.</NoData>;  
+    else return <NoData>패널 데이터가 없습니다.</NoData>; 
   }
 
   return (

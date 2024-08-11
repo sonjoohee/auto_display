@@ -15,7 +15,7 @@ import { SELECTED_COUNT, selectedPanelsAtom, PANEL_LIST_PAGE_COUNT } from '../..
 import BusinessTool from '../../../Business_Tool';
 
 const PageAIPanelListInfinite = () => {
-  const [activeTab, setActiveTab] = useState('ai');
+  const [activeTab, setActiveTab] = useState('aiPanel');
   const [selectedCount, setSelectedCount] = useAtom(SELECTED_COUNT);
   const [, setSelectedPanels] = useAtom(selectedPanelsAtom);
   const [, setPanelListPageCount] = useAtom(PANEL_LIST_PAGE_COUNT);
@@ -32,24 +32,17 @@ const PageAIPanelListInfinite = () => {
     setSelectedPanels(new Set());
   };
 
-  // 임시로 비즈니스 툴로
-  useEffect(() => {
-    if (activeTab === 'biz') {
-      navigate('/');
-    }
-  }, [activeTab, navigate]);
-
   const handleSaveSelection = () => {
     alert('선택패널이 저장되었습니다.');
   };
 
   const renderPanelListSection = () => {
     switch (activeTab) {
-      case 'ai':
+      case 'aiPanel':
         return <OrganismPanelListSection onSelect={handleSelect} />;
-      // case 'biz':
-      //   return <BusinessTool onSelect={handleSelect} />;
-      case 'preset':
+      case 'biz':
+        return <BusinessTool onSelect={handleSelect} />;
+      case 'instruction':
         return <OrganismPanelListSectionInstruction onSelect={handleSelect} />;
       default:
         return <OrganismPanelListSection onSelect={handleSelect} />;

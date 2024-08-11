@@ -8,14 +8,15 @@ import images from '../../../../assets/styles/Images';
 const OrganismPanelListSectionBottomBar = ({ onSaveSelection }) => {
   return (
     <BottomBar>
-      <SaveButton onClick={onSaveSelection}>
+      <SaveButton>
+      {/* <SaveButton onClick={onSaveSelection}> */}
         <img src={images.IconDownload} alt="" />선택패널 저장
       </SaveButton>
       <div>
-        <LinkButton to="/interview">
+        <LinkButton to="">
           <InterviewIcon></InterviewIcon>인터뷰하기
         </LinkButton>
-        <LinkButton to="/quickreport">
+        <LinkButton to="">
           <ReportIcon></ReportIcon>퀵 리포트
         </LinkButton>
       </div>

@@ -37,6 +37,7 @@ const MoleculePanelControls = ({ selectedCount, loadedPanelCount }) => {
           id="setListType"
           name="viewGroup"
           value="list"
+          disabled // 임시로 비활성화
           // onClick={() => setViewPanelType(false)}
         />
         <label for="setListType">목록보기</label>
