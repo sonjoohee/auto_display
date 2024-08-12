@@ -56,7 +56,21 @@ const OrganismPanelListSection = () => {
   const [filterdPanelCount, setFilterdPanelCount] = useAtom(FILTERD_PANEL_COUNT);
 
   const [isAllPanelsLoaded, setIsAllPanelsLoaded] = useAtom(IS_ALL_PANELS_LOADED);
-  
+    // handleAllSelectChange 함수 추가
+    const handleAllSelectChange = (e) => {
+      if (e.target.checked) {
+        // 전체 선택 상태로 설정
+        const allPanelIds = new Set(panelList.map((panel) => panel.id));
+        setSelectedPanels(allPanelIds);
+        setSelectedCount(panelList.length);
+        setSelectedAllPanels(true);
+      } else {
+        // 전체 선택 해제 상태로 설정
+        setSelectedPanels(new Set());
+        setSelectedCount(0);
+        setSelectedAllPanels(false);
+      }
+    };
   // 전체선택 버튼 (비)활성화 상태관리
   useEffect(() => {
     panelList.length === selectedCount ? setSelectedAllPanels(true) : setSelectedAllPanels(false);
@@ -69,8 +83,8 @@ const OrganismPanelListSection = () => {
       setSelectedPanels(allPanelIds);
     }
     else {
-      setSelectedCount(0);
-      setSelectedPanels(new Set());
+      // setSelectedCount(0);
+      // setSelectedPanels(new Set());
     }
   }, [selectedAllPanels])
   
@@ -171,6 +185,8 @@ const OrganismPanelListSection = () => {
         <MoleculePanelControls
           selectedCount={selectedCount}
           loadedPanelCount={panelList.length}
+          handleAllSelectChange={handleAllSelectChange} // 전달
+
         />
         {viewPanelType ?
           <>
