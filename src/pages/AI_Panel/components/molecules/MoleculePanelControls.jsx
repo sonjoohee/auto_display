@@ -36,7 +36,7 @@ const MoleculePanelControls = ({ selectedCount, loadedPanelCount, handleAllSelec
           id="setListType"
           name="viewGroup"
           value="list"
-          onClick={() => setViewPanelType(false)}
+          // onClick={() => setViewPanelType(false)}
         />
         <label for="setListType">목록보기</label>
       </ViewList>
