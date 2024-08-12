@@ -1,0 +1,146 @@
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import { palette } from "../../assets_copy/styles/Palette";
+import {
+  AGE_AREA_VALUE,
+  AI_ALL_DATA,
+  AI_PERSONA_LIST,
+  GENDER_AREA_VALUE,
+  PASS_SATATE,
+  TEXT_AREA_VALUE,
+} from "./state/persona_manager";
+import { useAtom } from "jotai";
+import axios from "axios";
+import { Router, useNavigate } from "react-router-dom";
+
+const Loading = () => {
+  const [currentNumber, setCurrentNumber] = useState(0);
+
+  const [textAreaValue, setTextAreaValue] = useAtom(TEXT_AREA_VALUE);
+  const [genderAreaValue, setGenderAreaValue] = useAtom(GENDER_AREA_VALUE);
+  const [ageAreaValue, setAgeAreaValue] = useAtom(AGE_AREA_VALUE);
+
+  const [aiAllData, setAiAllData] = useAtom(AI_ALL_DATA);
+  const [aiPersonaList, setAiPersonaList] = useAtom(AI_PERSONA_LIST);
+
+  // console.log("로딩페이지 넘어온 데이터.");
+  // console.log("유저가 작성한 값 : ", textAreaValue);
+  // console.log("유저가 선택한 성별: ", genderAreaValue);
+  // console.log("유저가 선택한 나이: ", ageAreaValue);
+
+  const [passSate, setPassState] = useAtom(PASS_SATATE);
+
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState(null);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (passSate === 0) {
+      console.log("정상 PASS값 :", passSate);
+      sendDataToAPI();
+      setPassState(1);
+    }
+
+    if (passSate === 1) {
+      console.log("잘못된접근 PASS값 :", passSate);
+      navigate("/");
+    }
+
+    return () => {};
+  }, []);
+
+  const sendDataToAPI = async () => {
+    try {
+      const response = await axios.post(
+        // "http://192.168.50.138:8000/generate_persona",
+        // "https://ab35-58-72-4-187.ngrok-free.app/generate_persona",
+        // "http://localhost:7300/api/v1/zbiz/targetMake",
+        "https://wishpoll.co.kr/api/v1/zbiz/targetMake",
+
+        {
+          product_info: textAreaValue,
+          panel_gender: genderAreaValue,
+          panel_age: ageAreaValue,
+        },
+        {
+          withCredentials: false, // 클라이언트와 서버가 통신할때 쿠키와 같은 인증 정보 값을 공유하겠다는 설정
+          credentials: "include",
+        }
+      );
+
+      setAiPersonaList(response.data);
+
+      console.log("Jotai에 데이터가 저장되었습니다:", response.data);
+      setTimeout(() => {
+        //Router.push("/PersonaGenerator");
+        //history.push("/PersonaGenerator");
+        if (response) {
+          navigate("/TargetChoice", { state: response.data });
+        } else {
+          navigate("/");
+          alert("데이터 오류 발생, 첫 화면으로 이동합니다.");
+        }
+      }, 3000);
+    } catch (error) {
+      console.error("Error sending data to API:", error);
+      navigate("/");
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <NumberWrap>
+        <div>
+          <strong>AI 페르소나 기본정보를 생성중입니다....</strong>
+          <NumberCounter>{loading ? "로딩중" : null}</NumberCounter>
+          <p>1~3분정도 소요됩니다</p>
+        </div>
+      </NumberWrap>
+    </>
+  );
+};
+
+export default Loading;
+
+const NumberCounter = styled.div`
+  width: 120px;
+  height: 120px;
+  font-size: 0;
+  border: 16px solid ${palette.lightGray};
+  border-radius: 50%;
+  border-top: 16px solid ${palette.blue};
+  margin: 40px auto;
+  animation: spin 2s linear infinite;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+`;
+
+const NumberWrap = styled.div`
+  position: relative;
+  height: 100dvh;
+
+  > div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  strong {
+    font-size: 1.25rem;
+  }
+
+  p {
+    font-size: 0.875rem;
+    color: ${palette.gray};
+  }
+`;

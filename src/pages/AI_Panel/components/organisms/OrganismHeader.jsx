@@ -54,8 +54,8 @@ const HeaderWrap = styled.header`
     justify-content: space-between;
     align-items: center;
     gap: 20px;
-
-    .button {
+  
+    .button, .join {
       padding: 10px 20px;
       border-radius: 30px;
       transition: all 0.5s;
@@ -63,22 +63,13 @@ const HeaderWrap = styled.header`
       color: ${palette.gray};
       font-weight: 700;
       cursor: pointer;
-
+  
       &:hover {
         color: ${palette.white};
         background: ${palette.black};
       }
     }
-
-    .join {
-      border: 1px solid ${palette.black};
-
-      &:hover {
-        color: ${palette.white};
-        background: ${palette.black};
-      }
-    }
-
+  
     img {
       width: 20px;
       height: 20px;
@@ -107,12 +98,12 @@ const OrganismHeader = () => {
 
   return (
     <HeaderWrap>
-      <h1><Link to="/AI_Panel"></Link></h1>
+      <h1><a href="/"></a></h1>
       <ul>
-        <li><Link to="/">맞춤패널 생성</Link></li>
-        <li><Link to="/">Template</Link></li>
-        <li><Link to="/">Price</Link></li>
-        <li><Link to="/">Contents</Link></li>
+        <li><Link to="">맞춤패널 생성</Link></li>
+        <li><Link to="">Template</Link></li>
+        <li><Link to="">Price</Link></li>
+        <li><Link to="">Contents</Link></li>
       </ul>
       <div className="gnbWrap">
         {isLoggedIn ? (

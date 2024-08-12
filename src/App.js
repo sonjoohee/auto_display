@@ -16,6 +16,13 @@ import Lending from './pages/Lending';
 
 import BusinessTool from './pages/Business_Tool'; // 비즈니스 툴
 
+// Biz 라우팅
+import TargetSetting from "./pages/Persona/TargetSetting";
+import TargetChoice from "./pages/Persona/TargetChoice";
+import PersonaGenerator from "./pages/Persona/PersonaGenerator";
+import Loading from "./pages/Persona/Loading";
+import LoadingPersona from "./pages/Persona/LoadingPersona";
+
 function App() {
   return (
     <div className="App">
@@ -26,12 +33,12 @@ function App() {
       <BrowserRouter>
 
         <Routes>
-          {/* <Route path="/" element={<Lending />} /> */}
-          <Route path="/" element={<BusinessTool />} />
+          <Route path="/Biz" element={<Lending />} />
+          <Route path="/QuickReport" element={<BusinessTool />} />
           <Route path="/login" element={<PageLogin />} />
           <Route path="/signup" element={<PageSignup />} />
           <Route path="/success" element={<PageLoginSuccess />} />
-          <Route path="*" element={<BusinessTool />} />
+          <Route path="*" element={<PageAIPanelList />} />
           <Route path="/verify-email" element={<PageVerifyEmail />} />
           <Route path="/email-verified" element={<PageEmailVerified />} /> {/* 임시 페이지 추가 */}
           <Route path="/email-verification-failed" element={<PageEmailVerificationFailed />} /> {/* 이메일 인증 실패 페이지 추가 */}
@@ -39,7 +46,18 @@ function App() {
           <Route path="/request-reset-password" element={<PageRequestResetPassword />} />
           <Route path="/AI_Panel" element={<PageAIPanelList />}></Route>
 
-          <Route path="/" element={<BusinessTool />}></Route> {/* 비즈니스 툴 */}
+          <Route path="/" element={<PageAIPanelList />}></Route>
+
+          {/* Biz 라우팅 */}
+          <Route path="/TargetSetting" element={<TargetSetting />}></Route>
+          <Route path="/TargetChoice" element={<TargetChoice />}></Route>
+          <Route path="/Loading" element={<Loading />}></Route>
+          <Route path="/LoadingPersona" element={<LoadingPersona />}></Route>
+
+          <Route
+            path="/PersonaGenerator"
+            element={<PersonaGenerator />}
+          ></Route>
 
         </Routes>
       </BrowserRouter>

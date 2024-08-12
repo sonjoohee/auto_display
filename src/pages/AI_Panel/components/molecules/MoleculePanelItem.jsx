@@ -227,7 +227,7 @@ const Overlay = styled.div`
   color: ${palette.white};
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  padding-top: 40%;
   align-items: center;
   gap:10px;
   opacity: 0;

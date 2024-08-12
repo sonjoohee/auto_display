@@ -8,14 +8,14 @@ const MoleculeTabMenu = ({ activeTab, onSelectTab }) => (
   <StyledTabMenu>
     <Link
       to="#"
-      className={activeTab === "ai" ? "active" : ""}
-      onClick={() => onSelectTab("ai")}
+      className={activeTab === "aiPanel" ? "active" : ""}
+      onClick={() => onSelectTab("aiPanel")}
     >
       <img src={images.Filter} alt="" />
       <span>AI 패널 필터</span>
     </Link>
     <Link
-      to="#"
+      to="/Biz"
       className={activeTab === "biz" ? "active" : ""}
       onClick={() => onSelectTab("biz")}
     >
@@ -23,9 +23,9 @@ const MoleculeTabMenu = ({ activeTab, onSelectTab }) => (
       <span>비즈니스 맞춤 패널</span>
     </Link>
     <Link
-      to="#"
-      className={activeTab === "preset" ? "active" : ""}
-      onClick={() => onSelectTab("preset")}
+      // to="#"
+      // className={activeTab === "instruction" ? "active" : ""}
+      // onClick={() => onSelectTab("instruction")}
     >
       <img src={images.Filter} alt="" />
       <span>산업별 프리셋 패널</span>

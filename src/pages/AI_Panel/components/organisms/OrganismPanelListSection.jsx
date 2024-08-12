@@ -30,6 +30,7 @@ import {
   SELECTED_ALL_PANELS,
   IS_ALL_PANELS_LOADED,
   FILTERD_PANEL_COUNT,
+  IS_FIRST_PANELS_LOADED,
 } from "../../../AtomStates";
 
 const OrganismPanelListSection = () => {
@@ -56,6 +57,8 @@ const OrganismPanelListSection = () => {
   const [filterdPanelCount, setFilterdPanelCount] = useAtom(FILTERD_PANEL_COUNT);
 
   const [isAllPanelsLoaded, setIsAllPanelsLoaded] = useAtom(IS_ALL_PANELS_LOADED);
+  const [isFirstPanelsLoaded, setIsFirstPanelsLoaded] = useAtom(IS_FIRST_PANELS_LOADED);
+ 
     // handleAllSelectChange 함수 추가
     const handleAllSelectChange = (e) => {
       if (e.target.checked) {
@@ -71,6 +74,7 @@ const OrganismPanelListSection = () => {
         setSelectedAllPanels(false);
       }
     };
+
   // 전체선택 버튼 (비)활성화 상태관리
   useEffect(() => {
     panelList.length === selectedCount ? setSelectedAllPanels(true) : setSelectedAllPanels(false);
@@ -129,12 +133,14 @@ const OrganismPanelListSection = () => {
       console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
       try {
       const response = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}/panels/list?page=1&size=20&searchBehabioralType=${searchBehabioralType}&searchUtilizationTime=${searchUtilizationTime}&searchGender=${searchGender}&searchAge=${searchAge}&searchTag=${searchTag1}&searchMarriage=${searchMarriage}&searchChildM=${searchChildM}&searchChildF=${searchChildF}`
+        `${process.env.REACT_APP_SERVER_URL}/panels/list?page=1&size=20&searchBehabioralType=&searchUtilizationTime=&searchGender=&searchAge=&searchTag=&searchMarriage=&searchChildM=&searchChildF=`
       );
       setPanelList(response.data.results);
       setTotalPanelCount(response.data.count); // 전체 패널 개수
       setFilterdPanelCount(response.data.count); // 필터링된 패널 개수
+      setIsFirstPanelsLoaded(true);
       
+      console.log(panelList)
       console.log(response);
         
       if (response.data.results.length < 20) setIsAllPanelsLoaded(true); // 20개 미만의 데이터가 오면 동작
@@ -161,6 +167,7 @@ const OrganismPanelListSection = () => {
           setFilterdPanelCount(response.data.count); // 필터링된 패널 개수
           
           console.log(panelList)
+          console.log(response)
           
           // 20개 미만의 패널이 오거나, 더 이상 불러올 패널이 없을 때 활성화
           if (response.data.results.length < 20 || panelList.length + response.data.results.length >= filterdPanelCount) setIsAllPanelsLoaded(true); 
@@ -176,7 +183,8 @@ const OrganismPanelListSection = () => {
 
   // panelData가 유효한지 확인
   if (!Array.isArray(panelList) || panelList.length === 0) {
-    return <NoData>패널 데이터가 없습니다.</NoData>;
+    if(!isFirstPanelsLoaded) return <NoData>패널 데이터를 불러오고 있습니다.</NoData>;  
+    else return <NoData>패널 데이터가 없습니다.</NoData>; 
   }
 
   return (

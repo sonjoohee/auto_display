@@ -75,10 +75,12 @@ const MoleculePanelItemDetail = ({ id, imgSrc, gender, age, job, address, subAdd
               </>
             )}
           <div>
-            <Link to={`/interview/${id}`}>
+            <Link to="">
+            {/* <Link to={`/interview/${id}`}> */}
               <ActionButton><img src={images.Interview} alt="" />인터뷰</ActionButton>
             </Link>
-            <Link to={`/quickreport/${id}`}>
+            <Link to="/QuickReport">
+            {/* <Link to={`/quickreport/${id}`}> */}
               <ActionButton Blue><img src={images.Report} alt="" />퀵 리포트</ActionButton>
             </Link>
           </div>

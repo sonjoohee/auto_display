@@ -83,6 +83,54 @@ const MoleculeSearchForm = () => {
   const [isChildExist, setIsChildExist] = useState(false);
   const [isChildNotExist, setIsChildNotExist] = useState(false);
 
+  // 초기상태 설정
+  useEffect(() => {
+    setTotalPanelCount(0);
+    setPanelList([]);
+    setSelectedCount(0);
+    setSearchBehabioralType("");
+    setSearchUtilizationTime("");
+    setSearchGender([]);
+    setSearchAge([]);
+    setSearchMarriage([]);
+    setSearchChildM("");
+    setSearchChildF("");
+    setSearchTag1([]);
+    setSearchTag2([]);
+    setSearchTag3([]);
+    setIsAllPanelsLoaded(false);
+    setFilterdPanelCount(0);
+    setSelectedPanels(new Set());
+    setShowDetailOption(false);
+    setShowTimeOption(false);
+    setSelectedFilters({
+      behabioralType: "",
+      utilizationTime: "",
+      gender: [],
+      age: [],
+      marriage: [],
+      childM: "",
+      childF: "",
+      tag1: [],
+      tag2: [],
+      tag3: [],
+    });
+    setTempBehabioralType("");
+    setTempUtilizationTime("");
+    setTempGender([]);
+    setTempAge([]);
+    setTempMarriage([]);
+    setTempChildM("");
+    setTempChildF("");
+    setTempTag1([]);
+    setTempTag2([]);
+    setTempTag3([]);
+    setShouldSearch(false);
+    setIsAfterSearch(false);
+    setIsChildExist(false);
+    setIsChildNotExist(false);
+  }, []);
+
   useEffect(() => {
     // 모든 필터가 해제되었다면 검색 여부 초기화
     if (!searchBehabioralType && !searchUtilizationTime && !searchGender.length && !searchAge.length

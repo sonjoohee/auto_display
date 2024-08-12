@@ -1,4 +1,3 @@
-// src/AI_List_Page/components/organisms/OrganismSearchSection.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
@@ -9,16 +8,16 @@ import { useAtom } from "jotai";
 import { 
   currentUserAtom, 
   TOTAL_PANEL_COUNT,
-} from "../../../AtomStates";  // currentUserAtom import
+} from "../../../AtomStates";
 
 const OrganismSearchSection = () => {
   const [currentUser] = useAtom(currentUserAtom);
   const [totalPanelCount, setTotalPanelCount] = useAtom(TOTAL_PANEL_COUNT);
-
+  
   return (
     <StyledSearchSection>
       <h2>
-        {totalPanelCount}명의 AI 패널 대기 중
+        {totalPanelCount.toLocaleString()}명의 AI 패널 대기 중
         <p>{currentUser ? `${currentUser.name} 님의 비즈니스를 함께 할 패널을 찾아보세요` : "당신의 비즈니스를 함께 할 패널을 찾아보세요"}</p>
       </h2>
       <MoleculeSearchForm />
