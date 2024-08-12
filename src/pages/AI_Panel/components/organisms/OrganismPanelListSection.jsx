@@ -199,7 +199,7 @@ const OrganismPanelListSection = () => {
         {viewPanelType ?
           <>
           <PanelList>
-            {panelList.map((panel) => (
+            {panelList.map((panel, index) => (
               <MoleculePanelItem
                 key={panel.id}
                 id={panel.id}
@@ -208,7 +208,8 @@ const OrganismPanelListSection = () => {
                 job={panel.job}
                 address={panel.address}
                 subAddress={panel.subAddress}
-                imgSrc={panel.img}
+                // imgSrc={panel.img}
+                imgSrc={(index % 10) + 1} // 1부터 10까지 반복되는 숫자
                 tags={panel.tag}
                 comment={panel.comment}
                 lifeStyle={panel.lifeStyle}

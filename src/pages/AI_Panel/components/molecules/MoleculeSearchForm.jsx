@@ -82,6 +82,8 @@ const MoleculeSearchForm = () => {
 
   const [isChildExist, setIsChildExist] = useState(false);
   const [isChildNotExist, setIsChildNotExist] = useState(false);
+  
+  const [isRightSearch, setIsRightSearch] = useState(false); // 검색 옵션을 적용하여 올바른 검색을 했는지?
 
   // 초기상태 설정
   useEffect(() => {
@@ -134,9 +136,10 @@ const MoleculeSearchForm = () => {
   useEffect(() => {
     // 모든 필터가 해제되었다면 검색 여부 초기화
     if (!searchBehabioralType && !searchUtilizationTime && !searchGender.length && !searchAge.length
-      && !searchMarriage.length && !searchChildM && !searchChildF && !searchTag1 && !searchTag2 && !searchTag3
+      && !searchMarriage.length && !searchChildM && !searchChildF && !searchTag1.length && !searchTag2.length && !searchTag3.length
     ) {
       setIsAfterSearch(false);
+      setIsRightSearch(false);
     }
     // 검색을 하고 난 후 필터가 변경되었다면 재검색
     if (shouldSearch && isAfterSearch) {
@@ -233,6 +236,23 @@ const MoleculeSearchForm = () => {
     setIsAfterSearch(true)
     const combinedTags = [...searchTag1, ...searchTag2, ...searchTag3]; // 소비습관, 기술수용도 하나의 태그에 담아서 보냄
 
+    // 모든 검색 조건이 비어 있는지 확인
+    const isEmptySearch = [
+      searchBehabioralType,
+      searchUtilizationTime,
+      searchGender.length,
+      searchAge.length,
+      combinedTags.length,
+      searchMarriage.length,
+      searchChildM,
+      searchChildF,
+    ].every((condition) => !condition);
+    
+    console.log(isEmptySearch, isRightSearch);
+    if (isEmptySearch && !isRightSearch) {
+      alert("상세 검색에 적용할 항목을 선택해주세요.");
+      return;
+    }
     try {
       console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
       const response = await axios.get(
@@ -254,6 +274,8 @@ const MoleculeSearchForm = () => {
   };
 
   const handleApplyDetail = () => {
+
+    setIsRightSearch(true);
 
     const regex = /^[가-힣a-zA-Z0-9\s.,'"-]*$/;
     if (!regex.test(tempBehabioralType)) {
@@ -652,7 +674,7 @@ const MoleculeSearchForm = () => {
         </SelectedFilters>
         {(selectedFilters.behabioralType || selectedFilters.utilizationTime || selectedFilters.gender.length > 0 || selectedFilters.age.length > 0 || selectedFilters.marriage.length > 0
           || selectedFilters.childM || selectedFilters.childF || selectedFilters.tag1.length > 0 || selectedFilters.tag2.length > 0 || selectedFilters.tag3.length > 0) &&
-            <Button onClick={resetSelectionOption}>초기화</Button>
+            <Button onClick={() => {resetSelectionOption(); setIsRightSearch(true);}}>초기화</Button>
         }
       </SelectedFiltersDisplay>
     </SearchFormWrap>

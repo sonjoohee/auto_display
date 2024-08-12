@@ -33,20 +33,18 @@ function App() {
       <BrowserRouter>
 
         <Routes>
-          <Route path="/Biz" element={<Lending />} />
+          <Route path="/" element={<Lending />} />
           <Route path="/QuickReport" element={<BusinessTool />} />
           <Route path="/login" element={<PageLogin />} />
           <Route path="/signup" element={<PageSignup />} />
           <Route path="/success" element={<PageLoginSuccess />} />
-          <Route path="*" element={<PageAIPanelList />} />
+          <Route path="*" element={<Lending />} />
           <Route path="/verify-email" element={<PageVerifyEmail />} />
           <Route path="/email-verified" element={<PageEmailVerified />} /> {/* 임시 페이지 추가 */}
           <Route path="/email-verification-failed" element={<PageEmailVerificationFailed />} /> {/* 이메일 인증 실패 페이지 추가 */}
           <Route path="/reset-password" element={<PageResetPassword />} />
           <Route path="/request-reset-password" element={<PageRequestResetPassword />} />
           <Route path="/AI_Panel" element={<PageAIPanelList />}></Route>
-
-          <Route path="/" element={<PageAIPanelList />}></Route>
 
           {/* Biz 라우팅 */}
           <Route path="/TargetSetting" element={<TargetSetting />}></Route>

@@ -15,8 +15,6 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
   
   const [selectedPanels, setSelectedPanels] = useAtom(SELECTED_PANELS);
 
-  const [randomSet, setRandomSet] = useState(9999);
-
   const [maxBehabioralType, setMaxBehabioralType] = useState("");
   const [maxUtilizationTime, setMaxUtilizationTime] = useState(0);
 
@@ -75,15 +73,12 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
     setDetailsVisible(false);
   };
 
-  // 패널 이미지 랜덤으로 선택
+  // 패널 이미지 선택
   let imgTarget = "";
   let imgAge = age >= 70 ? 60 : Math.floor(parseInt(age) / 10) * 10;
   if(imgAge === 10) imgAge = 20;
   const imgGender = gender == "M" ? "m" : "w";
-  if (randomSet == 9999) {
-    setRandomSet(Math.floor(Math.random() * 10) + 1);
-  }
-  imgTarget = imgAge + "s_" + imgGender + "_" + randomSet + ".jpg";
+  imgTarget = imgAge + "s_" + imgGender + "_" + imgSrc + ".jpg";
 
   return (
     <>

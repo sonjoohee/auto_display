@@ -15,7 +15,7 @@ const MoleculeTabMenu = ({ activeTab, onSelectTab }) => (
       <span>AI 패널 필터</span>
     </Link>
     <Link
-      to="/Biz"
+      to="/"
       className={activeTab === "biz" ? "active" : ""}
       onClick={() => onSelectTab("biz")}
     >
