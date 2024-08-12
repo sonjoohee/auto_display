@@ -19,7 +19,7 @@ const MoleculePanelControls = ({ selectedCount, loadedPanelCount, handleAllSelec
     <ControlsWrapper>
       <AtomCheckbox id="allChk" label="전체 선택" checked={selectedAllPanels} onChange={handleAllSelectChange}/>
       <ChoicePanel>
-        {filterdPanelCount}명의 패널 중 <strong>{selectedCount}</strong>명의 패널을 선택하셨어요
+        {filterdPanelCount.toLocaleString()}명의 패널 중 <strong>{selectedCount}</strong>명의 패널을 선택하셨어요
       </ChoicePanel>
       <ViewList>
         <input
