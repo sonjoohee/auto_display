@@ -16,7 +16,7 @@ const OrganismPanelListSectionBottomBar = ({ onSaveSelection }) => {
         <LinkButton to="">
           <InterviewIcon></InterviewIcon>인터뷰하기
         </LinkButton>
-        <LinkButton to="">
+        <LinkButton to="/QuickReport">
           <ReportIcon></ReportIcon>퀵 리포트
         </LinkButton>
       </div>

@@ -14,7 +14,7 @@ const BusinessTool = () => {
 
       <ContentsWrap>
         <BusonessToolWrap>
-          <h2>비즈니스 툴</h2>
+          <h2>퀵 리포트</h2>
           <TextareaWrap>
             <textarea placeholder="아이템(비즈니스)에 맞춤형 툴을 추천해드려요. 아이템에 대한 정보를 입력해 주세요."></textarea>
             <div>
