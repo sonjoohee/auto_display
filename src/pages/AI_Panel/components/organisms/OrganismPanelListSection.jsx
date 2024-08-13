@@ -36,6 +36,7 @@ import {
 } from "../../../AtomStates";
 
 const OrganismPanelListSection = () => {
+  const [isLoading, setIsLoading] = useState(false);
 
   const [panelList, setPanelList] = useAtom(PANEL_LIST);
   const [searchBehabioralType, setSearchBehabioralType] = useAtom(SEARCH_BEHABIORAL_TYPE);
@@ -173,6 +174,7 @@ const OrganismPanelListSection = () => {
       
       const combinedTags = [...searchTag1, ...searchTag2, ...searchTag3]; // 소비습관, 기술수용도 하나의 태그에 담아서 보냄
       
+      setIsLoading(true); // 검색 시작 시 로딩 상태 활성화
       const fetchAdditionalPanelList = async () => {
         
         console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
@@ -203,6 +205,7 @@ const OrganismPanelListSection = () => {
           console.error("Error fetching panel list:", error);
         } finally {
           setIsPanelNull(false);
+          setIsLoading(false); // 검색 완료 시 로딩 상태 비활성화
         }
       };
 
@@ -218,6 +221,11 @@ const OrganismPanelListSection = () => {
 
   return (
     <>
+      {isLoading && (
+          <LoadingOverlay>
+            <div className="loader"></div>
+          </LoadingOverlay>
+      )}
       <PanelWrap>
         <MoleculePanelControls
           selectedCount={selectedCount}
@@ -361,4 +369,31 @@ const CreatePanelLink = styled(Link)`
   cursor: pointer;
   position: relative;
   z-index: 10;
+`;
+
+const LoadingOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+
+  .loader {
+    border: 12px solid #f3f3f3; /* Light grey */
+    border-top: 12px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    animation: spin 2s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
 `;
