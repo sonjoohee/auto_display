@@ -126,7 +126,7 @@ const OrganismHeader = () => {
         ) : (
           <>
             <Link to="#" className="button" onClick={handleLoginClick}>로그인</Link>
-            <Link to="/signup" className="join">회원가입</Link>
+            <Link to="/signup" className="button">회원가입</Link>
           </>
         )}
       </div>
