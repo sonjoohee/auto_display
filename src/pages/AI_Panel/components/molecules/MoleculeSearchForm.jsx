@@ -21,6 +21,9 @@ import {
   IS_ALL_PANELS_LOADED,
   FILTERD_PANEL_COUNT,
   SELECTED_PANELS,
+  IS_RE_SEARCH,
+  PANEL_TOTAL_VALUE,
+  IS_PANEL_NULL,
 } from "../../../AtomStates";
 
 import styled from "styled-components";
@@ -51,7 +54,18 @@ const MoleculeSearchForm = () => {
   const [isAllPanelsLoaded, setIsAllPanelsLoaded] = useAtom(IS_ALL_PANELS_LOADED);
   const [filterdPanelCount, setFilterdPanelCount] = useAtom(FILTERD_PANEL_COUNT);
   const [selectedPanels, setSelectedPanels] = useAtom(SELECTED_PANELS); // 선택된 패널의 ID 저장
+
+  // 행동타입이 필터에 걸려있을때 최초검색(0)인지 재검색(1)인지
+  // 재검색은 패널더보기, 칩삭제
+  const [isReSearch, setIsReSearch] = useAtom(IS_RE_SEARCH);
+
+  // 행동타입값 5개 저장
+  const [panelTotalValue, setPanelTotalValue] = useAtom(PANEL_TOTAL_VALUE);
+
+  const [isPanelNull, setIsPanelNull] = useAtom(IS_PANEL_NULL);
+
   const [isLoading, setIsLoading] = useState(false);
+
   const [showDetailOption, setShowDetailOption] = useState(false);
   const [showTimeOption, setShowTimeOption] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState({
@@ -82,8 +96,6 @@ const MoleculeSearchForm = () => {
 
   const [isChildExist, setIsChildExist] = useState(false);
   const [isChildNotExist, setIsChildNotExist] = useState(false);
-  
-  const [isRightSearch, setIsRightSearch] = useState(false); // 검색 옵션을 적용하여 올바른 검색을 했는지?
 
   // 초기상태 설정
   useEffect(() => {
@@ -117,6 +129,7 @@ const MoleculeSearchForm = () => {
       tag2: [],
       tag3: [],
     });
+
     setTempBehabioralType("");
     setTempUtilizationTime("");
     setTempGender([]);
@@ -131,7 +144,14 @@ const MoleculeSearchForm = () => {
     setIsAfterSearch(false);
     setIsChildExist(false);
     setIsChildNotExist(false);
+    setIsReSearch(0);
+    setPanelTotalValue([]);
   }, []);
+
+  // 행동 타입만 해제되었다면 재검색 여부 초기화
+  useEffect(() => {
+    setIsReSearch(0);
+  }, [searchBehabioralType]);
 
   useEffect(() => {
     // 모든 필터가 해제되었다면 검색 여부 초기화
@@ -139,8 +159,8 @@ const MoleculeSearchForm = () => {
       && !searchMarriage.length && !searchChildM && !searchChildF && !searchTag1.length && !searchTag2.length && !searchTag3.length
     ) {
       setIsAfterSearch(false);
-      setIsRightSearch(false);
     }
+    
     // 검색을 하고 난 후 필터가 변경되었다면 재검색
     if (shouldSearch && isAfterSearch) {
       handleSearch();
@@ -174,6 +194,24 @@ const MoleculeSearchForm = () => {
     setTempMarriage(searchMarriage)
     setTempChildM(searchChildM)
     setTempChildF(searchChildF)
+
+    if(searchChildM === "") {
+      setIsChildNotExist(false);
+      setIsChildExist(false);
+    }
+    else if(searchChildM == 0) {
+      setIsChildNotExist(true);
+      setIsChildExist(false);
+    }
+    else if(searchChildM == 100) {
+      setIsChildNotExist(false);
+      setIsChildExist(true);
+    }
+    else {
+      setIsChildNotExist(true);
+      setIsChildExist(true);
+    }
+
     setTempTag1(searchTag1)
     setTempTag2(searchTag2)
     setTempTag3(searchTag3)
@@ -204,6 +242,8 @@ const MoleculeSearchForm = () => {
     setTempMarriage([]);
     setTempChildM("");
     setTempChildF("");
+    setIsChildNotExist(false);
+    setIsChildExist(false);
     setTempTag1([]);
     setTempTag2([]);
     setTempTag3([]);
@@ -232,37 +272,52 @@ const MoleculeSearchForm = () => {
   };
 
   const handleSearch = async () => {
+    setIsAfterSearch(true);
+    setIsPanelNull(true);
 
+    setPanelList([]); // 검색할 때마다 패널리스트 초기화 
     setIsAfterSearch(true)
     setIsLoading(true); // 검색 시작 시 로딩 상태 활성화
+
     const combinedTags = [...searchTag1, ...searchTag2, ...searchTag3]; // 소비습관, 기술수용도 하나의 태그에 담아서 보냄
 
-    // 모든 검색 조건이 비어 있는지 확인
-    const isEmptySearch = [
-      searchBehabioralType,
-      searchUtilizationTime,
-      searchGender.length,
-      searchAge.length,
-      combinedTags.length,
-      searchMarriage.length,
-      searchChildM,
-      searchChildF,
-    ].every((condition) => !condition);
-    
-    console.log(isEmptySearch, isRightSearch);
-    if (isEmptySearch && !isRightSearch) {
-      alert("상세 검색에 적용할 항목을 선택해주세요.");
-      return;
-    }
     try {
       console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
-      const response = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}/panels/list?page=1&size=20&searchBehabioralType=${searchBehabioralType}&searchUtilizationTime=${searchUtilizationTime}&searchGender=${searchGender}&searchAge=${searchAge}&searchTag=${combinedTags}&searchMarriage=${searchMarriage}&searchChildM=${searchChildM}&searchChildF=${searchChildF}`
-      );
+
+      let apiUrl = ``;
+      if (!searchBehabioralType || isReSearch === 0) {
+        apiUrl = `${process.env.REACT_APP_SERVER_URL}/panels/list?page=1&size=20
+        &searchCode=&searchBehabioralType=${searchBehabioralType}&searchUtilizationTime=${searchUtilizationTime}&searchGender=${searchGender}&searchAge=${searchAge}&searchTag=${combinedTags}&searchMarriage=${searchMarriage}&searchChildM=${searchChildM}&searchChildF=${searchChildF}`;
+      } // 행동타입 최초검색 또는 행동타입이 검색 조건에 없을 때
+      else {
+        apiUrl = `${process.env.REACT_APP_SERVER_URL}/panels/list?page=1&size=20
+        &searchCode=${panelTotalValue}&searchBehabioralType=${searchBehabioralType}&searchUtilizationTime=${searchUtilizationTime}&searchGender=${searchGender}&searchAge=${searchAge}&searchTag=${combinedTags}&searchMarriage=${searchMarriage}&searchChildM=${searchChildM}&searchChildF=${searchChildF}`;
+      } // 행동타입 재검색
+  
+      const response = await axios.get(apiUrl);
+      
       console.log(response)
+
+      if(searchBehabioralType) setIsReSearch(1); // 행동타입 검색을 했으면 재검색 모드
       
       setPanelList(response.data.results);
       setFilterdPanelCount(response.data.count); // 필터링된 패널 개수
+      
+      if (response.data.results.length > 0) {
+        const firstResult = response.data.results[0];
+  
+        // target_1 속성 존재 여부 확인
+        setPanelTotalValue([
+          firstResult.hasOwnProperty('target_1') ? firstResult.target_1 : null,
+          firstResult.hasOwnProperty('target_2') ? firstResult.target_2 : null,
+          firstResult.hasOwnProperty('target_3') ? firstResult.target_3 : null,
+          firstResult.hasOwnProperty('target_4') ? firstResult.target_4 : null,
+          firstResult.hasOwnProperty('target_5') ? firstResult.target_5 : null,
+        ]);
+      } else {
+        setPanelTotalValue([]); 
+      }
+
       setSelectedCount(0); // 선택된 패널 개수 초기화
       setSelectedPanels(new Set()); // 선택된 패널 ID 초기화
 
@@ -271,15 +326,13 @@ const MoleculeSearchForm = () => {
       
     } catch (error) {
       console.error("Error fetching panel list:", error);
-    }
-      finally {
-      setIsLoading(false); // 검색 완료 시 로딩 상태 비활성화
+    } finally {
+      setIsPanelNull(false);
+      setIsLoading(false);
     }
   };
 
   const handleApplyDetail = () => {
-
-    setIsRightSearch(true);
 
     const regex = /^[가-힣a-zA-Z0-9\s.,'"-]*$/;
     if (!regex.test(tempBehabioralType)) {
@@ -683,7 +736,7 @@ const MoleculeSearchForm = () => {
         </SelectedFilters>
         {(selectedFilters.behabioralType || selectedFilters.utilizationTime || selectedFilters.gender.length > 0 || selectedFilters.age.length > 0 || selectedFilters.marriage.length > 0
           || selectedFilters.childM || selectedFilters.childF || selectedFilters.tag1.length > 0 || selectedFilters.tag2.length > 0 || selectedFilters.tag3.length > 0) &&
-            <Button onClick={() => {resetSelectionOption(); setIsRightSearch(true);}}>초기화</Button>
+            <Button onClick={resetSelectionOption}>초기화</Button>
         }
       </SelectedFiltersDisplay>
     </SearchFormWrap>

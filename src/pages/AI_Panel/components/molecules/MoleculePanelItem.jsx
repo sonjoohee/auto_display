@@ -21,6 +21,11 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
   const [isSelected, setSelected] = useState(false);
   const [isDetailsVisible, setDetailsVisible] = useState(false);
   
+  useEffect(() => {
+    setMaxBehabioralType("");
+    setMaxUtilizationTime(0);
+  },[])
+
   // 행동타입 검색을 했을 때 최대 시간량 데이터를 찾는 로직
   useEffect(() => {
     if (target_1) {
