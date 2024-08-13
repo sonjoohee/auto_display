@@ -19,12 +19,7 @@ const PageAIPanelListInfinite = () => {
   const [selectedCount, setSelectedCount] = useAtom(SELECTED_COUNT);
   const [, setSelectedPanels] = useAtom(selectedPanelsAtom);
   const [, setPanelListPageCount] = useAtom(PANEL_LIST_PAGE_COUNT);
-  const [isFirstPanelsLoaded, setIsFirstPanelsLoaded] = useAtom(IS_FIRST_PANELS_LOADED);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    setIsFirstPanelsLoaded(false);
-  }, [])
 
   const handleSelect = (isSelected) => {
     setSelectedCount(prevCount => isSelected ? prevCount + 1 : prevCount - 1);

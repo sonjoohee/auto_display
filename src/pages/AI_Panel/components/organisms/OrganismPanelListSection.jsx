@@ -30,7 +30,9 @@ import {
   SELECTED_ALL_PANELS,
   IS_ALL_PANELS_LOADED,
   FILTERD_PANEL_COUNT,
-  IS_FIRST_PANELS_LOADED,
+  IS_RE_SEARCH,
+  PANEL_TOTAL_VALUE,
+  IS_PANEL_NULL,
 } from "../../../AtomStates";
 
 const OrganismPanelListSection = () => {
@@ -57,8 +59,16 @@ const OrganismPanelListSection = () => {
   const [filterdPanelCount, setFilterdPanelCount] = useAtom(FILTERD_PANEL_COUNT);
 
   const [isAllPanelsLoaded, setIsAllPanelsLoaded] = useAtom(IS_ALL_PANELS_LOADED);
-  const [isFirstPanelsLoaded, setIsFirstPanelsLoaded] = useAtom(IS_FIRST_PANELS_LOADED);
- 
+
+  const [isPanelNull, setIsPanelNull] = useAtom(IS_PANEL_NULL);
+
+  // 행동타입이 필터에 걸려있을때 최초검색(0)인지 재검색(1)인지
+  // 재검색은 패널더보기, 칩삭제
+  const [isReSearch, setIsReSearch] = useAtom(IS_RE_SEARCH);
+
+  // 행동타입값 5개 저장
+  const [panelTotalValue, setPanelTotalValue] = useAtom(PANEL_TOTAL_VALUE);
+  
     // handleAllSelectChange 함수 추가
     const handleAllSelectChange = (e) => {
       if (e.target.checked) {
@@ -129,6 +139,8 @@ const OrganismPanelListSection = () => {
 
   // 최초 패널 리스트
   useEffect(() => {
+    setIsPanelNull(true);
+
     const fetchInitialPanelList = async () => {
       console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
       try {
@@ -138,7 +150,6 @@ const OrganismPanelListSection = () => {
       setPanelList(response.data.results);
       setTotalPanelCount(response.data.count); // 전체 패널 개수
       setFilterdPanelCount(response.data.count); // 필터링된 패널 개수
-      setIsFirstPanelsLoaded(true);
       
       console.log(panelList)
       console.log(response);
@@ -147,6 +158,8 @@ const OrganismPanelListSection = () => {
 
       } catch (error) {
         console.error("Error fetching panel list:", error);
+      } finally {
+        setIsPanelNull(false);
       }
     };
 
@@ -156,16 +169,30 @@ const OrganismPanelListSection = () => {
   // 추가 패널 리스트
   useEffect(() => {
     if (panelListPageCount > 1 && panelList.length < filterdPanelCount) {
+      setIsPanelNull(true);
+      
       const combinedTags = [...searchTag1, ...searchTag2, ...searchTag3]; // 소비습관, 기술수용도 하나의 태그에 담아서 보냄
+      
       const fetchAdditionalPanelList = async () => {
+        
         console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
+        
         try {
-          const response = await axios.get(
-            `${process.env.REACT_APP_SERVER_URL}/panels/list?page=${panelListPageCount}&size=20&&searchBehabioralType=${searchBehabioralType}&searchUtilizationTime=${searchUtilizationTime}&searchGender=${searchGender}&searchAge=${searchAge}&searchTag=${combinedTags}&searchMarriage=${searchMarriage}&searchChildM=${searchChildM}&searchChildF=${searchChildF}`
-          );
+          let apiUrl = ``;
+          if (!searchBehabioralType || isReSearch === 0) {
+            apiUrl = `${process.env.REACT_APP_SERVER_URL}/panels/list?page=${panelListPageCount}&size=20
+            &searchCode=&searchBehabioralType=${searchBehabioralType}&searchUtilizationTime=${searchUtilizationTime}&searchGender=${searchGender}&searchAge=${searchAge}&searchTag=${combinedTags}&searchMarriage=${searchMarriage}&searchChildM=${searchChildM}&searchChildF=${searchChildF}`;
+          } // 행동타입 최초검색 또는 행동타입이 검색 조건에 없을 때
+          else {
+            apiUrl = `${process.env.REACT_APP_SERVER_URL}/panels/list?page=${panelListPageCount}&size=20
+            &searchCode=${panelTotalValue}&searchBehabioralType=${searchBehabioralType}&searchUtilizationTime=${searchUtilizationTime}&searchGender=${searchGender}&searchAge=${searchAge}&searchTag=${combinedTags}&searchMarriage=${searchMarriage}&searchChildM=${searchChildM}&searchChildF=${searchChildF}`;
+          } // 행동타입 재검색
+
+          const response = await axios.get(apiUrl);
+
           setPanelList(prevPanelList => [...prevPanelList, ...response.data.results]); // 리스트 초기화 하지 않고 아래에 붙이기
           setFilterdPanelCount(response.data.count); // 필터링된 패널 개수
-          
+
           console.log(panelList)
           console.log(response)
           
@@ -174,6 +201,8 @@ const OrganismPanelListSection = () => {
 
         } catch (error) {
           console.error("Error fetching panel list:", error);
+        } finally {
+          setIsPanelNull(false);
         }
       };
 
@@ -183,8 +212,8 @@ const OrganismPanelListSection = () => {
 
   // panelData가 유효한지 확인
   if (!Array.isArray(panelList) || panelList.length === 0) {
-    if(!isFirstPanelsLoaded) return <NoData>패널 데이터를 불러오고 있습니다.</NoData>;  
-    else return <NoData>패널 데이터가 없습니다.</NoData>; 
+    if(isPanelNull) return <NoData>패널 데이터를 불러오고 있습니다.</NoData>;  
+    else return <NoData>패널 데이터가 없습니다.</NoData>;
   }
 
   return (

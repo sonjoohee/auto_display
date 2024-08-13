@@ -336,7 +336,7 @@ export const PANEL_LIST = atom([
 ]);
 export const PANEL_LIST_PAGE_COUNT = atom(1);
 export const IS_ALL_PANELS_LOADED = atom(false); // 모든 패널을 불러와서 더이상 더보기할 패널이 없는지
-export const IS_FIRST_PANELS_LOADED = atom(false); // 초기의 패널이 불러와졌는지
+export const IS_PANEL_NULL = atom(true);
 
 // 검색어 상태
 export const SEARCH_BEHABIORAL_TYPE = atom("");
@@ -350,3 +350,10 @@ export const SEARCH_TAG_1 = atom([]);
 export const SEARCH_TAG_2 = atom([]);
 export const SEARCH_TAG_3 = atom([]);
 export const SEARCH_TAG_4 = atom([]);
+
+// 행동타입이 필터에 걸려있을때 최초검색(0)인지 재검색(1)인지
+// 재검색은 패널더보기, 칩삭제
+export const IS_RE_SEARCH = atom(0);
+
+// 행동타입값 5개 저장
+export const PANEL_TOTAL_VALUE = atom([]);
