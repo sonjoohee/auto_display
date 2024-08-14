@@ -14,6 +14,8 @@ import GlobalStyles from "./assets/GlobalStyle";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Lending from './pages/Lending';
 
+import Loading2 from './pages/Loading'; //검색결과 로딩
+
 import BusinessTool from './pages/Business_Tool'; // 비즈니스 툴
 
 // Biz 라우팅
@@ -51,6 +53,8 @@ function App() {
           <Route path="/TargetChoice" element={<TargetChoice />}></Route>
           <Route path="/Loading" element={<Loading />}></Route>
           <Route path="/LoadingPersona" element={<LoadingPersona />}></Route>
+
+          <Route path="/Loading2" element={<Loading2 />}></Route>
 
           <Route
             path="/PersonaGenerator"
