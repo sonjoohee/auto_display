@@ -94,9 +94,6 @@ const MoleculeSearchForm = () => {
   const [shouldSearch, setShouldSearch] = useState(false); // 필터가 변경되어 검색이 필요한지?
   const [isAfterSearch, setIsAfterSearch] = useState(false); // 검색을 하기전인지 하고난후인지?
 
-  const [isChildExist, setIsChildExist] = useState(false);
-  const [isChildNotExist, setIsChildNotExist] = useState(false);
-
   // 초기상태 설정
   useEffect(() => {
     setTotalPanelCount(0);
@@ -142,8 +139,6 @@ const MoleculeSearchForm = () => {
     setTempTag3([]);
     setShouldSearch(false);
     setIsAfterSearch(false);
-    setIsChildExist(false);
-    setIsChildNotExist(false);
     setIsReSearch(0);
     setPanelTotalValue([]);
   }, []);
@@ -194,24 +189,6 @@ const MoleculeSearchForm = () => {
     setTempMarriage(searchMarriage)
     setTempChildM(searchChildM)
     setTempChildF(searchChildF)
-
-    if(searchChildM === "") {
-      setIsChildNotExist(false);
-      setIsChildExist(false);
-    }
-    else if(searchChildM == 0) {
-      setIsChildNotExist(true);
-      setIsChildExist(false);
-    }
-    else if(searchChildM == 100) {
-      setIsChildNotExist(false);
-      setIsChildExist(true);
-    }
-    else {
-      setIsChildNotExist(true);
-      setIsChildExist(true);
-    }
-
     setTempTag1(searchTag1)
     setTempTag2(searchTag2)
     setTempTag3(searchTag3)
@@ -242,8 +219,6 @@ const MoleculeSearchForm = () => {
     setTempMarriage([]);
     setTempChildM("");
     setTempChildF("");
-    setIsChildNotExist(false);
-    setIsChildExist(false);
     setTempTag1([]);
     setTempTag2([]);
     setTempTag3([]);
@@ -352,7 +327,7 @@ const MoleculeSearchForm = () => {
       return;
     }
     if (!tempBehabioralType && !tempUtilizationTime && !tempGender.length && !tempAge.length && !tempMarriage.length
-      && !tempChildM && !tempChildF && !tempTag1.length && !tempTag2.length && !tempTag3.length
+      && tempChildM==="" && !tempChildF==="" && !tempTag1.length && !tempTag2.length && !tempTag3.length
     ) {
       alert('상세 검색에 적용할 항목을 선택해주세요.');
       return;
@@ -389,7 +364,7 @@ const MoleculeSearchForm = () => {
   const handleRemoveFilter = (filterKey, filterValue = null) => {
     // 칩 삭제하면 페이징 초기화
     setPanelListPageCount(1)
-
+    console.log(filterKey, filterValue);
     // 칩 삭제하면 검색값상태 초기화
     if(filterKey === "behabioralType") {
       selectedFilters.behabioralType = '';
@@ -398,40 +373,51 @@ const MoleculeSearchForm = () => {
       setSearchBehabioralType('');
     }
     else if(filterKey === "gender") {
-      if (filterValue !== null) {
+      if (selectedFilters.gender.length === 2) {
+        setSearchGender([]);
+        selectedFilters.gender = [];
+      }
+      else if (filterValue !== null) {
         setSearchGender((prevGender) => prevGender.filter((gender) => gender !== filterValue));
         selectedFilters.gender.filter((gender) => gender !== filterValue);
       } else {
         setSearchGender([]);
+        selectedFilters.gender = [];
       }
     }
     else if (filterKey === "age") {
-      if (filterValue !== null) {
+      if (selectedFilters.age.length === 6) {
+        setSearchAge([]);
+        selectedFilters.age = [];
+      }
+      else if (filterValue !== null) {
         setSearchAge((prevAge) => prevAge.filter((age) => age !== filterValue));
         selectedFilters.age.filter((age) => age !== filterValue);
       } else {
         setSearchAge([]);
+        selectedFilters.age = [];
       }
     }
     else if (filterKey === "marriage") {
-      if (filterValue !== null) {
+      if (selectedFilters.marriage.length === 3) {
+        setSearchMarriage([]);
+        selectedFilters.marriage = [];
+      }
+      else if (filterValue !== null) {
         setSearchMarriage((prevMarriage) => prevMarriage.filter((marriage) => marriage !== filterValue));
         selectedFilters.marriage.filter((marriage) => marriage !== filterValue);
       } else {
         setSearchMarriage([]);
+        selectedFilters.marriage = [];
       }
     }
     else if (filterKey === "childM") {
       selectedFilters.childM = '';
       setSearchChildM('');
-      setIsChildExist(false);
-      setIsChildNotExist(false);
     }
     else if (filterKey === "childF") {
       selectedFilters.childF = '';
       setSearchChildF('');
-      setIsChildExist(false);
-      setIsChildNotExist(false);
     }
     else if (filterKey === "tag1") {
       if (filterValue !== null) {
@@ -450,11 +436,16 @@ const MoleculeSearchForm = () => {
       }
     }
     else if (filterKey === "tag3") {
-      if (filterValue !== null) {
+      if (selectedFilters.tag3.length === 5) {
+        setSearchTag3([]);
+        selectedFilters.tag3 = [];
+      }
+      else if (filterValue !== null) {
         setSearchTag3((prevtag3) => prevtag3.filter((tag3) => tag3 !== filterValue));
         selectedFilters.tag3.filter((tag3) => tag3 !== filterValue);
       } else {
         setSearchTag3([]);
+        selectedFilters.tag3 = [];
       }
     }
     setSelectedFilters((prevFilters) => {
@@ -465,12 +456,102 @@ const MoleculeSearchForm = () => {
     setShouldSearch(true);
   };
 
+  // 상세 옵션 단일선택 관련 함수
+  const handleSingleOptionSelect = (key, val) => {
+    if (key === "utilizationTime") {
+      setTempUtilizationTime((prevUtilizationTime) => {
+        if (!prevUtilizationTime || prevUtilizationTime != val) {
+          return val;
+        }
+        else {
+          return "";
+        }
+      });
+    }
+    else if (key === "gender") {
+      setTempGender((prevGender) => {
+        if (val === 'all') {
+          return prevGender.length === 2 ? [] : ['M','F'];
+        }
+        else if (prevGender.length === 2) {
+          return [val];
+        } else {
+          return prevGender.includes(val) ? [] : [val];
+        }
+      });
+    } else if (key === "marriage") {
+      setTempMarriage((prevMarriage) => {
+        if (val === 'all') {
+          return prevMarriage.length === 3 ? [] : ['미혼','기혼', '사별'];
+        }
+        else if (prevMarriage.length === 3) {
+          return [val];
+        } else {
+          return prevMarriage.includes(val) ? [] : [val];
+        }
+      });
+    } else if (key === "child") {
+      setTempChildM((prevChildM) => {
+        if (prevChildM === val) {
+          return "";
+        }
+        else {
+          return val;
+        }
+      });
+      setTempChildF((prevChildF) => {
+        if (prevChildF === val) {
+          return "";
+        }
+        else {
+          return val;
+        }
+      });
+    } else if (key === "tag1") {
+      setTempTag1((prevTag1) => {
+        if (val === 'all') {
+          return prevTag1.length === 2 ? [] : ["충동구매자", "계획구매자"];
+        }
+        else if (prevTag1.length === 2) {
+          return [val];
+        } else {
+          return prevTag1.includes(val) ? [] : [val];
+        }
+      });
+    } else if (key === "tag2") {
+      setTempTag2((prevTag2) => {
+        if (val === 'all') {
+          return prevTag2.length === 2 ? [] : ["절약형", "고급형"];
+        }
+        else if (prevTag2.length === 2) {
+          return [val];
+        } else {
+          return prevTag2.includes(val) ? [] : [val];
+        }
+      });
+    } else if (key === "tag3") {
+      setTempTag3((prevTag3) => {
+        if (val === 'all') {
+          return prevTag3.length === 5 ? [] : ["혁신가","얼리어답터","보통 사용자", "후기 사용자", "보수적 사용자"];
+        }
+        else if (prevTag3.length === 5) {
+          return [val];
+        } else {
+          return prevTag3.includes(val) ? [] : [val];
+        }
+      });
+    }
+  };
+
   // 상세 옵션 중복선택 관련 함수
-  const toggleMultipleOptions = (key, val) => {
+  const handleMultipleOptionSelect = (key, val) => {
     if(key == "age") {
       setTempAge((prevAge) => {
         const newSet = new Set(prevAge);
-        if (newSet.has(val)) {
+        if (val === 'all') {
+          return prevAge.length === 6 ? [] : [10, 20, 30, 40, 50, 60];
+        }
+        else if (newSet.has(val)) {
           newSet.delete(val);
         } else {
           newSet.add(val);
@@ -478,28 +559,6 @@ const MoleculeSearchForm = () => {
         return Array.from(newSet);
       });
     }
-  };
-
-  // 자녀 정보 버튼 클릭 이벤트 핸들러
-  const handleChildExistClick = () => {
-    setIsChildExist(true);
-    setIsChildNotExist(false);
-    setTempChildM(100); 
-    setTempChildF(100);
-  };
-
-  const handleChildNotExistClick = () => {
-    setIsChildExist(false);
-    setIsChildNotExist(true);
-    setTempChildM(0); 
-    setTempChildF(0); 
-  };
-
-  const handleChildNoMatterClick = () => {
-    setIsChildExist(true);
-    setIsChildNotExist(true);
-    setTempChildM(99); 
-    setTempChildF(99);
   };
 
   return (
@@ -523,10 +582,10 @@ const MoleculeSearchForm = () => {
             <DetailOptions>
               <div>
                 <div>
-                <button className={tempUtilizationTime === '적게' ? 'active' : ''} onClick={() => setTempUtilizationTime('적게')}>적게</button>
-                <button className={tempUtilizationTime === '보통' ? 'active' : ''} onClick={() => setTempUtilizationTime('보통')}>보통</button>
-                <button className={tempUtilizationTime === '많이' ? 'active' : ''} onClick={() => setTempUtilizationTime('많이')}>많이</button>
-                <button className={tempUtilizationTime === '모두' ? 'active' : ''} onClick={() => setTempUtilizationTime('모두')}>모두</button>
+                <button className={tempUtilizationTime === '적게' ? 'active' : ''} onClick={() => handleSingleOptionSelect('utilizationTime', '적게')}>적게</button>
+                <button className={tempUtilizationTime === '보통' ? 'active' : ''} onClick={() => handleSingleOptionSelect('utilizationTime', '보통')}>보통</button>
+                <button className={tempUtilizationTime === '많이' ? 'active' : ''} onClick={() => handleSingleOptionSelect('utilizationTime', '많이')}>많이</button>
+                <button className={tempUtilizationTime === '모두' ? 'active' : ''} onClick={() => handleSingleOptionSelect('utilizationTime', '모두')}>모두</button>
                 </div>
               </div>
             </DetailOptions>
@@ -543,7 +602,7 @@ const MoleculeSearchForm = () => {
               <div>
                 <p>성별</p>
                 <div className="gender">
-                  <button className={tempGender.includes('M') ? 'active' : ''} onClick={() => setTempGender(['M'])}>
+                  <button className={tempGender.includes('M') ? 'active' : ''} onClick={() => handleSingleOptionSelect('gender', 'M')}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="33" viewBox="0 0 15 33" fill="none">
                       <path d="M4.33359 13.4999V29.9999C4.33133 30.1975 4.36859 30.3936 4.44317 30.5766C4.51775 30.7596 4.62815 30.9259 4.76789 31.0656C4.90763 31.2054 5.07389 31.3158 5.2569 31.3904C5.43991 31.4649 5.63598 31.5022 5.83359 31.4999C6.0312 31.5022 6.22727 31.4649 6.41028 31.3904C6.59329 31.3158 6.75955 31.2054 6.89929 31.0656C7.03903 30.9259 7.14944 30.7596 7.22402 30.5766C7.2986 30.3936 7.33585 30.1975 7.33359 29.9999" stroke="#777" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
                       <path d="M7.33359 21.4999V29.9999C7.33133 30.1975 7.36859 30.3936 7.44317 30.5766C7.51775 30.7596 7.62815 30.9259 7.76789 31.0656C7.90763 31.2054 8.07389 31.3158 8.2569 31.3904C8.43991 31.4649 8.63598 31.5022 8.83359 31.4999C9.0312 31.5022 9.22727 31.4649 9.41028 31.3904C9.59329 31.3158 9.75955 31.2054 9.89929 31.0656C10.039 30.9259 10.1494 30.7596 10.224 30.5766C10.2986 30.3936 10.3359 30.1975 10.3336 29.9999V13.4999" stroke="#777" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
@@ -552,7 +611,7 @@ const MoleculeSearchForm = () => {
                     </svg>
                     <span>남성</span>
                   </button>
-                  <button className={tempGender.includes('F') ? 'active' : ''} onClick={() => setTempGender(['F'])}>
+                  <button className={tempGender.includes('F') ? 'active' : ''} onClick={() => handleSingleOptionSelect('gender', 'F')}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="33" viewBox="0 0 18 33" fill="none">
                       <path d="M5.99912 23.5V30C5.99686 30.1976 6.03411 30.3937 6.10869 30.5767C6.18328 30.7597 6.29368 30.9259 6.43342 31.0657C6.57316 31.2054 6.73942 31.3158 6.92243 31.3904C7.10544 31.465 7.30151 31.5022 7.49912 31.5C7.69673 31.5022 7.8928 31.465 8.07581 31.3904C8.25882 31.3158 8.42508 31.2054 8.56482 31.0657C8.70456 30.9259 8.81497 30.7597 8.88955 30.5767C8.96413 30.3937 9.00138 30.1976 8.99912 30" stroke="#777777" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
                       <path d="M9.00071 23.5V30C8.99845 30.1976 9.0357 30.3936 9.11028 30.5767C9.18486 30.7597 9.29527 30.9259 9.43501 31.0657C9.57475 31.2054 9.74101 31.3158 9.92402 31.3904C10.107 31.465 10.3031 31.5022 10.5007 31.5C10.6983 31.5022 10.8944 31.465 11.0774 31.3904C11.2604 31.3158 11.4267 31.2054 11.5664 31.0657C11.7061 30.9259 11.8166 30.7597 11.8911 30.5767C11.9657 30.3936 12.003 30.1976 12.0007 30V23.5M4.43821 17.625C4.38416 17.8151 4.29265 17.9925 4.16907 18.1467C4.04549 18.301 3.89232 18.429 3.71857 18.5232C3.54482 18.6174 3.354 18.6759 3.1573 18.6953C2.96061 18.7147 2.76202 18.6946 2.57321 18.6362C2.38311 18.5822 2.20573 18.4907 2.0515 18.3671C1.89728 18.2435 1.76933 18.0903 1.67517 17.9165C1.581 17.7428 1.52254 17.5519 1.5032 17.3552C1.48387 17.1586 1.50406 16.96 1.56258 16.7712L3.12508 11.5037C3.29738 10.9246 3.65215 10.4167 4.13655 10.0556C4.62095 9.69458 5.20904 9.49967 5.81321 9.49997H12.1882C12.7924 9.49988 13.3805 9.69503 13.8648 10.0563C14.3491 10.4176 14.7037 10.9258 14.8757 11.505L16.4382 16.7725C16.4967 16.9612 16.5169 17.1598 16.4976 17.3565C16.4783 17.5532 16.4198 17.744 16.3256 17.9178C16.2315 18.0915 16.1035 18.2447 15.9493 18.3683C15.7951 18.4919 15.6177 18.5834 15.4276 18.6375C15.2389 18.6953 15.0406 18.7149 14.8443 18.6951C14.648 18.6753 14.4576 18.6166 14.2842 18.5223C14.1109 18.428 13.9581 18.3001 13.8348 18.146C13.7116 17.9919 13.6203 17.8148 13.5663 17.625" stroke="#777777" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
@@ -561,7 +620,7 @@ const MoleculeSearchForm = () => {
                     </svg>
                     <span>여성</span>
                   </button>
-                  <button className={['M', 'F'].every(gender => tempGender.includes(gender)) ? 'active' : ''} onClick={() => setTempGender(['M', 'F'])}>
+                  <button className={tempGender.length === 2 ? 'active' : ''} onClick={() => handleSingleOptionSelect('gender', 'all')}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="23" height="33" viewBox="0 0 23 24" fill="none">
                       <path d="M4.8985 19.001L4.49328 18.3699L4.8985 19.001L8.82365 16.4807C8.99383 16.3714 9.21658 16.4989 9.20853 16.701L9.02021 21.4303C8.98067 22.4234 9.77502 23.25 10.7688 23.25H12.5582C13.5566 23.25 14.3527 22.4161 14.3063 21.4188L14.0877 16.7111C14.0782 16.5083 14.3016 16.3794 14.4725 16.4891L18.3944 19.0074C19.2319 19.5452 20.3488 19.2771 20.8509 18.4177L21.7833 16.8219C22.2888 15.9568 21.9661 14.8447 21.0761 14.3845L16.9312 12.2414C16.7516 12.1485 16.7508 11.8919 16.9299 11.7979L21.0886 9.616C21.9722 9.15242 22.2899 8.04501 21.7865 7.18347L20.8509 5.58225C20.3488 4.72287 19.2319 4.45477 18.3944 4.99255L14.4725 7.51081C14.3016 7.62049 14.0782 7.49162 14.0877 7.28884L14.3063 2.58118C14.3527 1.58387 13.5566 0.749969 12.5582 0.749969H10.7688C9.77502 0.749969 8.98067 1.57658 9.02021 2.5696L9.20853 7.29894C9.21657 7.50102 8.99383 7.62852 8.82365 7.51925L4.8985 4.99893C4.05444 4.45696 2.92845 4.73396 2.43217 5.60567L1.52729 7.19507C1.03744 8.05548 1.35831 9.15057 2.23504 9.61056L6.40412 11.7979C6.58319 11.8919 6.58242 12.1485 6.4028 12.2414L2.2474 14.3899C1.36427 14.8466 1.03847 15.9463 1.53036 16.8103L2.43217 18.3943C2.92846 19.266 4.05444 19.543 4.8985 19.001Z" stroke="#777777" stroke-width="1.5"/>
                     </svg>
@@ -571,25 +630,28 @@ const MoleculeSearchForm = () => {
 
                 <p>나이</p>
                 <div>
-                  <button className={tempAge.includes(20) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',20)}>20대</button>
-                  <button className={tempAge.includes(30) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',30)}>30대</button>
-                  <button className={tempAge.includes(40) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',40)}>40대</button>
-                  <button className={tempAge.includes(50) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',50)}>50대</button>
-                  <button className={tempAge.includes(60) ? 'active' : ''} onClick={() => toggleMultipleOptions('age',60)}>60대 이상</button>
-                  <button className={[20, 30, 40, 50, 60].every(age => tempAge.includes(age)) ? 'active' : ''} onClick={() => setTempAge([20,30,40,50,60])}>상관없음</button>
+                  <button className={tempAge.includes(10) ? 'active' : ''} onClick={() => handleMultipleOptionSelect('age',10)}>10대</button>
+                  <button className={tempAge.includes(20) ? 'active' : ''} onClick={() => handleMultipleOptionSelect('age',20)}>20대</button>
+                  <button className={tempAge.includes(30) ? 'active' : ''} onClick={() => handleMultipleOptionSelect('age',30)}>30대</button>
+                  <button className={tempAge.includes(40) ? 'active' : ''} onClick={() => handleMultipleOptionSelect('age',40)}>40대</button>
+                </div>
+                <div> 
+                  <button className={tempAge.includes(50) ? 'active' : ''} onClick={() => handleMultipleOptionSelect('age',50)}>50대</button>
+                  <button className={tempAge.includes(60) ? 'active' : ''} onClick={() => handleMultipleOptionSelect('age',60)}>60대 이상</button>
+                  <button className={tempAge.length === 6 ? 'active' : ''} onClick={() => handleMultipleOptionSelect('age','all')}>상관없음</button>
                 </div>
 
                 <p>결혼 및 자녀 정보</p>
                 <div>
-                  <button className={tempMarriage.includes('미혼') ? 'active' : ''} onClick={() => setTempMarriage(['미혼'])}>미혼</button>
-                  <button className={tempMarriage.includes('기혼') ? 'active' : ''} onClick={() => setTempMarriage(['기혼'])}>기혼</button>
-                  <button className={tempMarriage.includes('사별') ? 'active' : ''} onClick={() => setTempMarriage(['사별'])}>사별</button>
-                  <button className={['미혼', '기혼', '사별'].every(marriage => tempMarriage.includes(marriage)) ? 'active' : ''} onClick={() => setTempMarriage(['미혼', '기혼', '사별'])}>상관없음</button>
+                  <button className={tempMarriage.includes('미혼') ? 'active' : ''} onClick={() => handleSingleOptionSelect('marriage', '미혼')}>미혼</button>
+                  <button className={tempMarriage.includes('기혼') ? 'active' : ''} onClick={() => handleSingleOptionSelect('marriage', '기혼')}>기혼</button>
+                  <button className={tempMarriage.includes('사별') ? 'active' : ''} onClick={() => handleSingleOptionSelect('marriage', '사별')}>사별</button>
+                  <button className={tempMarriage.length === 3 ? 'active' : ''} onClick={() => handleSingleOptionSelect('marriage', 'all')}>상관없음</button>
                 </div>
                 <div className="kids">
-                  <button className={isChildExist ? 'active' : ''} onClick={handleChildExistClick}>자녀 있음</button>
-                  <button className={isChildNotExist ? 'active' : ''} onClick={handleChildNotExistClick}>자녀 없음</button>
-                  <button className={isChildExist && isChildNotExist ? 'active' : ''} onClick={handleChildNoMatterClick}>자녀 상관없음</button>
+                  <button className={(tempChildM === 100 && tempChildF === 100) || (tempChildM === 99 && tempChildF === 99) ? 'active' : ''} onClick={() => handleSingleOptionSelect('child', 100)}>자녀 있음</button>
+                  <button className={(tempChildM === 0 && tempChildF === 0) || (tempChildM === 99 && tempChildF === 99) ? 'active' : ''} onClick={() => handleSingleOptionSelect('child', 0)}>자녀 없음</button>
+                  <button className={tempChildM === 99 && tempChildF === 99 ? 'active' : ''} onClick={() => handleSingleOptionSelect('child', 99)}>자녀 상관없음</button>
                   {/* <button className={tempChildM === 100 && tempChildF === 100 ? 'active' : ''} onClick={() => {setTempChildM(100); setTempChildF(100);}}>있음</button>
                   <button className={tempChildM === 0 && tempChildF === 0 ? 'active' : ''} onClick={() => {setTempChildM(0); setTempChildF(0);}}>없음</button>
                   <button className={tempChildM === 99 && tempChildF === 99 ? 'active' : ''} onClick={() => {setTempChildM(99); setTempChildF(99);}}>상관없음</button> */}
@@ -603,23 +665,23 @@ const MoleculeSearchForm = () => {
 
                 <p>소비 성향</p>
                 <div>
-                  <button className={tempTag1.includes("충동구매자" ) ? 'active' : ''} onClick={() => setTempTag1(["충동구매자"])}>충동 구매자</button>
-                  <button className={tempTag1.includes("계획구매자") ? 'active' : ''} onClick={() => setTempTag1(["계획구매자"])}>계획 구매자</button>
-                  <button className={["충동구매자","계획구매자"].every(tag1 => tempTag1.includes(tag1)) ? 'active' : ''} onClick={() => setTempTag1(["충동구매자","계획구매자"])}>상관없음</button>
+                  <button className={tempTag1.includes("충동구매자" ) ? 'active' : ''} onClick={() => handleSingleOptionSelect('tag1',"충동구매자")}>충동 구매자</button>
+                  <button className={tempTag1.includes("계획구매자") ? 'active' : ''} onClick={() => handleSingleOptionSelect('tag1',"계획구매자")}>계획 구매자</button>
+                  <button className={tempTag1.length===2 ? 'active' : ''} onClick={() => setTempTag1(["충동구매자","계획구매자"])}>상관없음</button>
                   <br/>
-                  <button className={tempTag2.includes("절약형") ? 'active' : ''} onClick={() => setTempTag2(["절약형"])}>절약형</button>
-                  <button className={tempTag2.includes("고급형") ? 'active' : ''} onClick={() => setTempTag2(["고급형"])}>고급형</button>
-                  <button className={["절약형","고급형"].every(tag2 => tempTag2.includes(tag2)) ? 'active' : ''} onClick={() => setTempTag2(["절약형","고급형"])}>상관없음</button>
+                  <button className={tempTag2.includes("절약형") ? 'active' : ''} onClick={() => handleSingleOptionSelect('tag2',"절약형")}>절약형</button>
+                  <button className={tempTag2.includes("고급형") ? 'active' : ''} onClick={() => handleSingleOptionSelect('tag2',"고급형")}>고급형</button>
+                  <button className={tempTag2.length===2 ? 'active' : ''} onClick={() => setTempTag2(["절약형","고급형"])}>상관없음</button>
                 </div>
 
                 <p>기술 수용도</p>
                 <div>
-                  <button className={tempTag3.includes("혁신가" ) ? 'active' : ''} onClick={() => setTempTag3(["혁신가"])}>혁신가</button>
-                  <button className={tempTag3.includes("얼리어답터") ? 'active' : ''} onClick={() => setTempTag3(["얼리어답터"])}>얼리어답터</button>
-                  <button className={tempTag3.includes("보통 사용자") ? 'active' : ''} onClick={() => setTempTag3(["보통 사용자"])}>보통 사용자</button>
-                  <button className={tempTag3.includes("후기 사용자") ? 'active' : ''} onClick={() => setTempTag3(["후기 사용자"])}>후기 사용자</button>
-                  <button className={tempTag3.includes("보수적 사용자") ? 'active' : ''} onClick={() => setTempTag3(["보수적 사용자"])}>보수적 사용자</button>
-                  <button className={["혁신가","얼리어답터","보통 사용자","후기 사용자", "보수적 사용자"].every(tag3 => tempTag3.includes(tag3)) ? 'active' : ''} onClick={() => setTempTag3(["혁신가","얼리어답터","보통 사용자", "후기 사용자", "보수적 사용자"])}>상관없음</button>
+                  <button className={tempTag3.includes("혁신가" ) ? 'active' : ''} onClick={() => handleSingleOptionSelect('tag3',"혁신가")}>혁신가</button>
+                  <button className={tempTag3.includes("얼리어답터") ? 'active' : ''} onClick={() => handleSingleOptionSelect('tag3',"얼리어답터")}>얼리어답터</button>
+                  <button className={tempTag3.includes("보통 사용자") ? 'active' : ''} onClick={() => handleSingleOptionSelect('tag3',"보통 사용자")}>보통 사용자</button>
+                  <button className={tempTag3.includes("후기 사용자") ? 'active' : ''} onClick={() => handleSingleOptionSelect('tag3',"후기 사용자")}>후기 사용자</button>
+                  <button className={tempTag3.includes("보수적 사용자") ? 'active' : ''} onClick={() => handleSingleOptionSelect('tag3',"보수적 사용자")}>보수적 사용자</button>
+                  <button className={tempTag3.length === 5 ? 'active' : ''} onClick={() => handleSingleOptionSelect('tag3',"all")}>상관없음</button>
                 </div>
               </div>
 
@@ -640,12 +702,10 @@ const MoleculeSearchForm = () => {
             <FilterChipArea>
               <FilterChip onClick={() => handleRemoveFilter('behabioralType')}>
                 {selectedFilters.behabioralType}
-                {/* <span>X</span> */}
               </FilterChip>
               <span>에 시간을</span> 
               <FilterChip>
                 {selectedFilters.utilizationTime}
-                {/* <span>X</span> */}
               </FilterChip> 
               <span>활용하는,</span>
             </FilterChipArea>
@@ -670,27 +730,39 @@ const MoleculeSearchForm = () => {
               </FilterChipArea>
             )
           )}
-          {selectedFilters.gender.length > 0 &&
+          {selectedFilters.gender.length > 0 && selectedFilters.gender.length < 2 &&
             selectedFilters.gender.map((gender) => (
               <FilterChip bgGray key={gender} onClick={() => handleRemoveFilter("gender", gender)}>
                 {gender === 'M' ? '남성' : '여성'}
-                {/* <span>X</span> */}
-              </FilterChip>
-          ))}
-          {selectedFilters.age.length > 0 &&
-            selectedFilters.age.map((age) => (
-              <FilterChip bgGray key={age} onClick={() => handleRemoveFilter("age", age)}>
-                {age}대
-                {/* <span>X</span> */}
               </FilterChip>
             ))}
-          {selectedFilters.marriage.length > 0 &&
+          {selectedFilters.gender.length === 2 &&
+            <FilterChip bgGray onClick={() => handleRemoveFilter("gender", selectedFilters.gender)}>
+              성별(상관없음)
+            </FilterChip>
+          }
+          
+          {selectedFilters.age.length > 0 && selectedFilters.age.length < 6 &&
+            selectedFilters.age.sort((a, b) => a - b).map((age) => ( // 오름차순 정렬
+              <FilterChip bgGray key={age} onClick={() => handleRemoveFilter("age", age)}>
+                {age === 60 ? `${age}대 이상`: `${age}대`}
+              </FilterChip>
+            ))}
+          {selectedFilters.age.length === 6 &&
+            <FilterChip bgGray onClick={() => handleRemoveFilter("age", selectedFilters.age)}>
+              나이(상관없음)
+            </FilterChip>}
+          
+          {selectedFilters.marriage.length > 0 && selectedFilters.marriage.length < 3 &&
             selectedFilters.marriage.map((marriage) => (
               <FilterChip bgGray key={marriage} onClick={() => handleRemoveFilter("marriage", marriage)}>
                 {marriage}
-                {/* <span>X</span> */}
               </FilterChip>
             ))}
+          {selectedFilters.marriage.length === 3 &&
+            <FilterChip bgGray onClick={() => handleRemoveFilter("marriage", selectedFilters.marriage)}>
+              결혼정보(상관없음)
+            </FilterChip>}
           {/* {selectedFilters.childM !== "" &&
             <FilterChip onClick={() => handleRemoveFilter('childM')}>
               {selectedFilters.childM === 0 && <>남아(없음) <span>X</span></>}
@@ -714,27 +786,30 @@ const MoleculeSearchForm = () => {
               {selectedFilters.childM === 100 && <>자녀(있음) </>}
             </FilterChip>
           }
+
           {selectedFilters.tag1.length > 0 &&
             selectedFilters.tag1.map((tag1) => (
               <FilterChip bgGray key={tag1} onClick={() => handleRemoveFilter("tag1", tag1)}>
                 {tag1}
-                {/* <span>X</span> */}
               </FilterChip>
             ))}
           {selectedFilters.tag2.length > 0 &&
             selectedFilters.tag2.map((tag2) => (
               <FilterChip bgGray key={tag2} onClick={() => handleRemoveFilter("tag2", tag2)}>
                 {tag2}
-                {/* <span>X</span> */}
               </FilterChip>
             ))}
-          {selectedFilters.tag3.length > 0 &&
+
+          {selectedFilters.tag3.length > 0 && selectedFilters.tag3.length < 5 &&
             selectedFilters.tag3.map((tag3) => (
               <FilterChip bgGray key={tag3} onClick={() => handleRemoveFilter("tag3", tag3)}>
                 {tag3}
-                {/* <span>X</span> */}
               </FilterChip>
             ))}
+          {selectedFilters.tag3.length === 5 &&
+            <FilterChip bgGray onClick={() => handleRemoveFilter("tag3", selectedFilters.tag3)}>
+              기술수용도(상관없음)
+            </FilterChip>}
         </SelectedFilters>
         {(selectedFilters.behabioralType || selectedFilters.utilizationTime || selectedFilters.gender.length > 0 || selectedFilters.age.length > 0 || selectedFilters.marriage.length > 0
           || selectedFilters.childM || selectedFilters.childF || selectedFilters.tag1.length > 0 || selectedFilters.tag2.length > 0 || selectedFilters.tag3.length > 0) &&
