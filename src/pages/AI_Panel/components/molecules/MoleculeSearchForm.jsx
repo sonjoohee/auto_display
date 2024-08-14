@@ -351,10 +351,12 @@ const MoleculeSearchForm = () => {
       alert('활용 시간을 입력해주세요.');
       return;
     }
-    // if (!tempBehabioralType && !tempUtilizationTime && !tempGender.length && !tempAge.length) {
-    //   alert('상세 검색에 적용할 항목을 선택해주세요.');
-    //   return;
-    // }
+    if (!tempBehabioralType && !tempUtilizationTime && !tempGender.length && !tempAge.length && !tempMarriage.length
+      && !tempChildM && !tempChildF && !tempTag1.length && !tempTag2.length && !tempTag3.length
+    ) {
+      alert('상세 검색에 적용할 항목을 선택해주세요.');
+      return;
+    }
 
     setSelectedFilters({
       behabioralType: tempBehabioralType,

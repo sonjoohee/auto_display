@@ -41,6 +41,7 @@ export const CheckBox = styled.div`
     visibility:hidden;
 
     + label {
+      z-index: 1; // 전체선택 시 input 태그 영역에 가려져서 클릭 안되는 현상 방지
       position:relative;
       display:inline-block;
       font-family:Pretendard, Poppins;
