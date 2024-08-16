@@ -247,6 +247,11 @@ const MoleculeSearchForm = () => {
   };
 
   const handleSearch = async () => {
+    if (tempBehabioralType && !tempUtilizationTime) {
+      alert('활용 시간을 입력해주세요.');
+      return;
+    }
+    
     setIsAfterSearch(true);
     setIsPanelNull(true);
 
@@ -308,34 +313,15 @@ const MoleculeSearchForm = () => {
   };
 
   const handleApplyDetail = () => {
-
-    const regex = /^[가-힣a-zA-Z0-9\s.,'"-]*$/;
-    if (!regex.test(tempBehabioralType)) {
-      alert("한글, 영문 외 특수문자는 입력할 수 없어요. 자음이나 모음만 입력한 경우 검색이 제한되니, 문장을 완전하게 입력해주세요.");
-      return;
-    }
-    if (tempBehabioralType.length > 100) {
-      alert("행동 타입은 100자 이내로 입력주세요.");
-      return;
-    }
-    if (!tempBehabioralType && tempUtilizationTime) {
-      alert('행동 타입을 입력해주세요.');
-      return;
-    }
-    if (tempBehabioralType && !tempUtilizationTime) {
-      alert('활용 시간을 입력해주세요.');
-      return;
-    }
-    if (!tempBehabioralType && !tempUtilizationTime && !tempGender.length && !tempAge.length && !tempMarriage.length
-      && tempChildM==="" && !tempChildF==="" && !tempTag1.length && !tempTag2.length && !tempTag3.length
+    if (!tempGender.length && !tempAge.length && !tempMarriage.length
+      && tempChildM==="" && tempChildF==="" && !tempTag1.length && !tempTag2.length && !tempTag3.length
     ) {
-      alert('상세 검색에 적용할 항목을 선택해주세요.');
+      alert('상세 옵션에 적용할 항목을 선택해주세요.');
       return;
     }
 
-    setSelectedFilters({
-      behabioralType: tempBehabioralType,
-      utilizationTime: tempUtilizationTime,
+    setSelectedFilters((prevFilters) => ({
+      ...prevFilters,
       gender: tempGender,
       age: tempAge,
       marriage: tempMarriage,
@@ -344,10 +330,8 @@ const MoleculeSearchForm = () => {
       tag1: tempTag1,
       tag2: tempTag2,
       tag3: tempTag3,
-    });
+    }));
 
-    setSearchBehabioralType(tempBehabioralType);
-    setSearchUtilizationTime(tempUtilizationTime);
     setSearchGender(tempGender);
     setSearchAge(tempAge);
     setSearchMarriage(tempMarriage);
@@ -358,7 +342,6 @@ const MoleculeSearchForm = () => {
     setSearchTag3(tempTag3);
 
     setShowDetailOption(false);
-    setShowTimeOption(false);
   };
 
   const handleRemoveFilter = (filterKey, filterValue = null) => {
@@ -420,7 +403,11 @@ const MoleculeSearchForm = () => {
       setSearchChildF('');
     }
     else if (filterKey === "tag1") {
-      if (filterValue !== null) {
+      if (selectedFilters.tag1.length === 2) {
+        setSearchTag1([]);
+        selectedFilters.tag1 = [];
+      }
+      else if (filterValue !== null) {
         setSearchTag1((prevtag1) => prevtag1.filter((tag1) => tag1 !== filterValue));
         selectedFilters.tag1.filter((tag1) => tag1 !== filterValue);
       } else {
@@ -428,18 +415,16 @@ const MoleculeSearchForm = () => {
       }
     }
     else if (filterKey === "tag2") {
-      if (filterValue !== null) {
+      if (selectedFilters.tag2.length === 2) {
+        setSearchTag2([]);
+        selectedFilters.tag2 = [];
+      }
+      else if (filterValue !== null) {
         setSearchTag2((prevtag2) => prevtag2.filter((tag2) => tag2 !== filterValue));
         selectedFilters.tag2.filter((tag2) => tag2 !== filterValue);
       } else {
         setSearchTag2([]);
       }
-    }
-    else if (filterKey === "tag12") {
-      setSearchTag1([]);
-      setSearchTag2([]);
-      selectedFilters.tag1 = [];
-      selectedFilters.tag2 = [];
     }
     else if (filterKey === "tag3") {
       if (selectedFilters.tag3.length === 5) {
@@ -462,19 +447,9 @@ const MoleculeSearchForm = () => {
     setShouldSearch(true);
   };
 
-  // 상세옵션 선택 관련 함수
+  // 상세옵션 선택 함수
   const handleDetailOptionSelect = (key, val) => {
-    if (key === "utilizationTime") {
-      setTempUtilizationTime((prevUtilizationTime) => {
-        if (!prevUtilizationTime || prevUtilizationTime != val) {
-          return val;
-        }
-        else {
-          return "";
-        }
-      });
-    }
-    else if (key === "gender") {
+    if (key === "gender") {
       setTempGender((prevGender) => {
         if (val === 'all') {
           return prevGender.length === 2 ? [] : ['M','F'];
@@ -504,15 +479,17 @@ const MoleculeSearchForm = () => {
     }
     else if (key === "marriage") {
       setTempMarriage((prevMarriage) => {
+        const newSet = new Set(prevMarriage);
         if (val === 'all') {
-          return prevMarriage.length === 3 ? [] : ['미혼','기혼', '사별'];
+          return prevMarriage.length === 3 ? [] : ["미혼","기혼","사별"];
         }
-        else if (prevMarriage.length === 3) {
-          return [val];
+        else if (newSet.has(val)) {
+          newSet.delete(val);
         } 
         else {
-          return prevMarriage.includes(val) ? [] : [val];
+          newSet.add(val);
         }
+        return Array.from(newSet);
       });
     } 
     else if (key === "child") {
@@ -535,70 +512,104 @@ const MoleculeSearchForm = () => {
     } 
     else if (key === "tag1") {
       setTempTag1((prevTag1) => {
-        if (prevTag1.length === 2) { 
-          setTempTag2([]);
+        if (val === 'all') {
+          return prevTag1.length === 2 ? [] : ['충동구매자','계획구매자'];
+        }
+        else if (prevTag1.length === 2) {
           return [val];
-        }
-        else if (prevTag1.includes(val)) {
-          return [];
-        }
+        } 
         else {
-          return [val];
+          return prevTag1.includes(val) ? [] : [val];
         }
       });
     } 
     else if (key === "tag2") {
       setTempTag2((prevTag2) => {
-        if (prevTag2.length === 2) { 
-          setTempTag1([]);
-          return [val];
-        }
-        else if (prevTag2.includes(val)) {
-          return [];
-        }
-        else {
-          return [val];
-        }
-      })
-    } 
-    else if (key === "tag12") {
-      setTempTag1((prevTag1) => {
-        if (!prevTag1.length) {
-          return ["충동구매자","계획구매자"];
-        }
-        else if (prevTag1.length === 2) {
-          return [];
-        }
-        else {
-          return ["충동구매자","계획구매자"];
-        }
-      });
-      setTempTag2((prevTag2) => {
-        if (!prevTag2.length) {
-          return ["절약형","고급형"];
+        if (val === 'all') {
+          return prevTag2.length === 2 ? [] : ['절약형','고급형'];
         }
         else if (prevTag2.length === 2) {
-          return [];
-        }
-        else {
-          return ["절약형","고급형"];
-        }
-      });
-    } 
-    else if (key === "tag3") {
-      setTempTag3((prevTag3) => {
-        if (val === 'all') {
-          return prevTag3.length === 5 ? [] : ["혁신가","얼리어답터","보통 사용자", "후기 사용자", "보수적 사용자"];
-        }
-        else if (prevTag3.length === 5) {
           return [val];
         } 
         else {
-          return prevTag3.includes(val) ? [] : [val];
+          return prevTag2.includes(val) ? [] : [val];
         }
+      })
+    } 
+    else if (key === "tag3") {
+      setTempTag3((prevTag3) => {
+        const newSet = new Set(prevTag3);
+        if (val === 'all') {
+          return prevTag3.length === 5 ? [] : ["혁신가","얼리어답터","보통 사용자","후기 사용자","보수적 사용자"];
+        }
+        else if (newSet.has(val)) {
+          newSet.delete(val);
+        } 
+        else {
+          newSet.add(val);
+        }
+        return Array.from(newSet);
       });
     }
   };
+
+  // 활용시간 선택 함수
+  const handleTimeOptionSelect = (val) => {
+    if (!tempBehabioralType) {
+      alert('행동 타입을 입력해주세요.');
+      return;
+    }
+    setTempUtilizationTime((prevUtilizationTime) => {
+      // if (!prevUtilizationTime || prevUtilizationTime != val) {
+      //   return val;
+      // }
+      // else {
+      //   return "";
+      // }
+      return val;
+    });
+  }
+
+  useEffect(() => {
+    if (tempUtilizationTime) {
+      handleBehabioralTimeOption();
+    }
+  }, [tempUtilizationTime]);
+
+  useEffect(() => {
+    if (tempUtilizationTime) {
+      setTempBehabioralType("");
+      setSearchBehabioralType("");
+      selectedFilters.behabioralType = "";
+
+      setTempUtilizationTime("");
+      setSearchUtilizationTime("");
+      selectedFilters.utilizationTime = "";
+
+      setShouldSearch(true);
+    }
+  }, [tempBehabioralType]);
+
+  // 행동타입, 활용시간 선택적용 함수
+  const handleBehabioralTimeOption = () => {
+    const regex = /^[가-힣a-zA-Z0-9\s.,'"-]*$/;
+    if (!regex.test(tempBehabioralType)) {
+      alert("행동 타입에 한글, 영문 외 특수문자는 입력할 수 없어요. 자음이나 모음만 입력한 경우 검색이 제한되니, 문장을 완전하게 입력해주세요.");
+      return;
+    }
+    if (tempBehabioralType.length > 100) {
+      alert("행동 타입은 100자 이내로 입력주세요.");
+      return;
+    }
+    
+    selectedFilters.behabioralType = tempBehabioralType;
+    selectedFilters.utilizationTime = tempUtilizationTime;
+
+    setSearchBehabioralType(tempBehabioralType);
+    setSearchUtilizationTime(tempUtilizationTime);
+
+    setShowTimeOption(false);
+  }
 
   return (
     <>
@@ -615,16 +626,16 @@ const MoleculeSearchForm = () => {
         </div>
         <div>
           <span>활용 시간</span>
-          <Button SelectBtn onClick={handleTimeOptionToggle}>선택하세요</Button>
+          <Button SelectBtn onClick={handleTimeOptionToggle}>{!tempUtilizationTime ? "선택하세요" : tempUtilizationTime}</Button>
           {/* <InputField None type="text" name="type" placeholder="선택하세요" /> */}
           {showTimeOption && (
             <DetailOptions>
               <div>
                 <div>
-                <button className={tempUtilizationTime === '적게' ? 'active' : ''} onClick={() => handleDetailOptionSelect('utilizationTime', '적게')}>적게</button>
-                <button className={tempUtilizationTime === '보통' ? 'active' : ''} onClick={() => handleDetailOptionSelect('utilizationTime', '보통')}>보통</button>
-                <button className={tempUtilizationTime === '많이' ? 'active' : ''} onClick={() => handleDetailOptionSelect('utilizationTime', '많이')}>많이</button>
-                <button className={tempUtilizationTime === '모두' ? 'active' : ''} onClick={() => handleDetailOptionSelect('utilizationTime', '모두')}>모두</button>
+                <button className={tempUtilizationTime === '적게' ? 'active' : ''} onClick={() => {handleTimeOptionSelect('적게');}}>적게</button>
+                <button className={tempUtilizationTime === '보통' ? 'active' : ''} onClick={() => {handleTimeOptionSelect('보통');}}>보통</button>
+                <button className={tempUtilizationTime === '많이' ? 'active' : ''} onClick={() => {handleTimeOptionSelect('많이');}}>많이</button>
+                <button className={tempUtilizationTime === '모두' ? 'active' : ''} onClick={() => {handleTimeOptionSelect('모두');}}>모두</button>
                 </div>
               </div>
             </DetailOptions>
@@ -706,11 +717,12 @@ const MoleculeSearchForm = () => {
                 <div>
                   <button className={tempTag1.includes("충동구매자" ) ? 'active' : ''} onClick={() => handleDetailOptionSelect('tag1',"충동구매자")}>충동 구매자</button>
                   <button className={tempTag1.includes("계획구매자") ? 'active' : ''} onClick={() => handleDetailOptionSelect('tag1',"계획구매자")}>계획 구매자</button>
+                  <button className={tempTag1.length===2 ? 'active' : ''} onClick={() => handleDetailOptionSelect('tag1',"all")}>상관없음</button>
                 </div>
                 <div>
                   <button className={tempTag2.includes("절약형") ? 'active' : ''} onClick={() => handleDetailOptionSelect('tag2',"절약형")}>절약형</button>
                   <button className={tempTag2.includes("고급형") ? 'active' : ''} onClick={() => handleDetailOptionSelect('tag2',"고급형")}>고급형</button>
-                  <button className={tempTag1.length===2 && tempTag2.length===2 ? 'active' : ''} onClick={() => handleDetailOptionSelect('tag12',"all")}>상관없음</button>
+                  <button className={tempTag2.length===2 ? 'active' : ''} onClick={() => handleDetailOptionSelect('tag2',"all")}>상관없음</button>
                 </div>
 
                 <p>기술 수용도</p>
@@ -838,9 +850,14 @@ const MoleculeSearchForm = () => {
                 {tag2}
               </FilterChip>
             ))}
-          {selectedFilters.tag1.length === 2 && selectedFilters.tag2.length === 2 &&
-            <FilterChip bgGray onClick={() => handleRemoveFilter("tag12")}>
-              소비성향(상관없음)
+          {selectedFilters.tag1.length === 2 &&
+            <FilterChip bgGray onClick={() => handleRemoveFilter("tag1")}>
+              소비성향1(상관없음)
+            </FilterChip>
+          }
+          {selectedFilters.tag2.length === 2 &&
+            <FilterChip bgGray onClick={() => handleRemoveFilter("tag2")}>
+              소비성향2(상관없음)
             </FilterChip>
           }
 
