@@ -1,12 +1,12 @@
-// src/AI_List_Page/components/organisms/OrganismPanelListSection.jsx
+// src/AI_List_Page/components/organisms/OrganismPanelCardSection.jsx
 
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import MoleculePanelItem from "../molecules/MoleculePanelItem";
+import MoleculePanelItemCard from "../molecules/MoleculePanelItemCard";
 import MoleculePanelControls from "../molecules/MoleculePanelControls";
 import { palette } from "../../../../assets/styles/Palette";
 import { Link } from "react-router-dom";
-import OrganismPanelListSectionBottomBar from "./OrganismPanelListSectionBottomBar"; // 하단 바 컴포넌트 import
+import OrganismPanelSectionBottomBar from "./OrganismPanelSectionBottomBar"; // 하단 바 컴포넌트 import
 
 import panelimages from "../../../../assets/styles/PanelImages";
 import { useAtom } from "jotai";
@@ -33,7 +33,7 @@ import {
   SELECTED_ALL_PANELS,
 } from "../../../AtomStates";
 
-const OrganismPanelListSectionInstruction = () => {
+const OrganismPanelCardSectionBiz = () => {
 
   const [panelList, setPanelList] = useAtom(PANEL_LIST);
   const [searchBehabioralType, setSearchBehabioralType] = useAtom(SEARCH_BEHABIORAL_TYPE);
@@ -167,7 +167,7 @@ const OrganismPanelListSectionInstruction = () => {
           <>
           <PanelList>
             {panelList.map((panel) => (
-              <MoleculePanelItem
+              <MoleculePanelItemCard
                 key={panel.id}
                 id={panel.id}
                 gender={panel.gender}
@@ -202,13 +202,13 @@ const OrganismPanelListSectionInstruction = () => {
         }
       </PanelWrap>
       {selectedCount > 0 && (
-        <OrganismPanelListSectionBottomBar onSaveSelection={() => alert("선택패널이 저장되었습니다.")} />
+        <OrganismPanelSectionBottomBar onSaveSelection={() => alert("선택패널이 저장되었습니다.")} />
       )}
     </>
   );
 };
 
-export default OrganismPanelListSectionInstruction;
+export default OrganismPanelCardSectionBiz;
 
 const PanelWrap = styled.section`
   .sortBooth {
