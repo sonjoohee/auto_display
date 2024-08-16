@@ -3,7 +3,7 @@ import React from "react";
 import OrganismHeader from "../organisms/OrganismHeader";
 import MoleculeTabMenu from "../molecules/MoleculeTabMenu";
 import OrganismSearchSection from "../organisms/OrganismSearchSection";
-import OrganismPanelListSection from "../organisms/OrganismPanelListSection";
+import OrganismPanelCardSection from "../organisms/OrganismPanelCardSection";
 import OrganismPagination from "../organisms/OrganismPagination.jsx페이지네이션";
 import { ContentsWrap } from "../../../../assets/styles/Common";
 
@@ -13,7 +13,7 @@ const TemplateAIPanelList = () => (
     <ContentsWrap>
       <MoleculeTabMenu />
       <OrganismSearchSection />
-      <OrganismPanelListSection />
+      <OrganismPanelCardSection />
       <OrganismPagination /> {/* 페이지네이션 여기만 포함 */}
     </ContentsWrap>
   </>

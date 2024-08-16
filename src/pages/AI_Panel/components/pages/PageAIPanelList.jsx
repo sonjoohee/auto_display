@@ -5,10 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import OrganismHeader from '../organisms/OrganismHeader';
 import OrganismSearchSection from '../organisms/OrganismSearchSection';
-import OrganismPanelListSection from '../organisms/OrganismPanelListSection';
-import OrganismPanelListSectionBiz from '../organisms/OrganismPanelListSectionBiz';
-import OrganismPanelListSectionInstruction from '../organisms/OrganismPanelListSectionInstruction';
-import OrganismPanelListSectionBottomBar from '../organisms/OrganismPanelListSectionBottomBar'; // 수정된 컴포넌트 이름
+import OrganismPanelCardSection from '../organisms/OrganismPanelCardSection';
+import OrganismPanelCardSectionBiz from '../organisms/OrganismPanelCardSectionBiz';
+import OrganismPanelCardSectionInstruction from '../organisms/OrganismPanelCardSectionInstruction';
+import OrganismPanelCardSectionBottomBar from '../organisms/OrganismPanelCardSectionBottomBar'; // 수정된 컴포넌트 이름
 import { ContentsWrap } from '../../../../assets/styles/Common';
 import MoleculeTabMenu from "../molecules/MoleculeTabMenu";
 import { SELECTED_COUNT, selectedPanelsAtom, PANEL_LIST_PAGE_COUNT, IS_FIRST_PANELS_LOADED, } from '../../../AtomStates';
@@ -39,13 +39,13 @@ const PageAIPanelListInfinite = () => {
   const renderPanelListSection = () => {
     switch (activeTab) {
       case 'aiPanel':
-        return <OrganismPanelListSection onSelect={handleSelect} />;
+        return <OrganismPanelCardSection onSelect={handleSelect} />;
       case 'biz':
         return <BusinessTool onSelect={handleSelect} />;
       case 'instruction':
-        return <OrganismPanelListSectionInstruction onSelect={handleSelect} />;
+        return <OrganismPanelCardSectionInstruction onSelect={handleSelect} />;
       default:
-        return <OrganismPanelListSection onSelect={handleSelect} />;
+        return <OrganismPanelCardSection onSelect={handleSelect} />;
     }
   };
 
@@ -58,7 +58,7 @@ const PageAIPanelListInfinite = () => {
         {renderPanelListSection()}
       </ContentsWrap>
       {selectedCount > 0 && (
-        <OrganismPanelListSectionBottomBar onSaveSelection={handleSaveSelection} />
+        <OrganismPanelCardSectionBottomBar onSaveSelection={handleSaveSelection} />
       )}
     </>
   );

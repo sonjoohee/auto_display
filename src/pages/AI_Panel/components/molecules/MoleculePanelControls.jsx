@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import AtomCheckbox from '../atoms/AtomCheckbox';
 import { palette } from '../../../../assets/styles/Palette';
@@ -14,6 +14,9 @@ const MoleculePanelControls = ({ selectedCount, loadedPanelCount, handleAllSelec
   const [selectedAllPanels, setSelectedAllPanels] = useAtom(SELECTED_ALL_PANELS);
   const [filterdPanelCount, setFilterdPanelCount] = useAtom(FILTERD_PANEL_COUNT);
 
+  const onToggleView = () => {
+    setViewPanelType(prev => !prev);
+  };
 
   return (
     <ControlsWrapper>
@@ -27,19 +30,20 @@ const MoleculePanelControls = ({ selectedCount, loadedPanelCount, handleAllSelec
           id="setCardType"
           name="viewGroup"
           value="card"
-          defaultChecked
+          defaultChecked={viewPanelType}
           onClick={() => setViewPanelType(true)}
         />
-        <label for="setCardType">카드보기</label>
+        <label htmlFor="setCardType">카드보기</label>
         <input
           type="radio"
           id="setListType"
           name="viewGroup"
           value="list"
-          disabled // 임시로 비활성화
-          // onClick={() => setViewPanelType(false)}
+          checked={!viewPanelType}
+          onClick={() => setViewPanelType(false)}
         />
-        <label for="setListType">목록보기</label>
+        <label htmlFor="setListType">목록보기</label>
+        {/* <button onClick={onToggleView}>목록보기</button> */}
       </ViewList>
     </ControlsWrapper>
   );
