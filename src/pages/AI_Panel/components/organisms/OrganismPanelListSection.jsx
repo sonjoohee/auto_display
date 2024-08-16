@@ -1,7 +1,7 @@
 // OrganismPanelListSection.jsx
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import MoleculePanelItem2 from "../molecules/MoleculePanelItem2"; // 수정된 MoleculePanelItem2를 import
+import MoleculePanelItemList from "../molecules/MoleculePanelItemList"; // 수정된 MoleculePanelItem2를 import
 import { palette } from "../../../../assets/styles/Palette";
 import OrganismPanelCardSectionBottomBar from "./OrganismPanelCardSectionBottomBar";
 import { useAtom } from "jotai";
@@ -182,7 +182,7 @@ const OrganismPanelListSection = () => {
       <PanelWrap>
         <PanelList>
           {panelList.map((panel, index) => (
-            <MoleculePanelItem2
+            <MoleculePanelItemList
               key={panel.id}
               id={panel.id}
               gender={panel.gender}

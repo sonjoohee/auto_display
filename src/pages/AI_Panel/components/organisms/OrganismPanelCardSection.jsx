@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
-import MoleculePanelItem from "../molecules/MoleculePanelItem";
+import MoleculePanelItemCard from "../molecules/MoleculePanelItemCard";
 import MoleculePanelControls from "../molecules/MoleculePanelControls";
 import { palette } from "../../../../assets/styles/Palette";
 import { Link } from "react-router-dom";
@@ -237,7 +237,7 @@ const OrganismPanelCardSection = () => {
           <>
             <PanelList>
               {panelList.map((panel, index) => (
-                <MoleculePanelItem
+                <MoleculePanelItemCard
                   key={panel.id}
                   id={panel.id}
                   gender={panel.gender}

@@ -9,7 +9,7 @@ import {
 import timeCode from '../../assets/time-code.json';
 import MoleculePanelItemDetail from './MoleculePanelItemDetail';
 
-const MoleculePanelItem2 = ({ id, imgSrc, gender, age, job, address, subAddress, comment, tags, onSelect, lifeStyle, consumption, productGroup, 
+const MoleculePanelItemList = ({ id, imgSrc, gender, age, job, address, subAddress, comment, tags, onSelect, lifeStyle, consumption, productGroup, 
   target_1, target_2, target_3, target_4, target_5, value_1, value_2, value_3, value_4, value_5,}) => {
 
   const [selectedPanels, setSelectedPanels] = useAtom(SELECTED_PANELS);
@@ -205,4 +205,4 @@ const MenuIcon = styled.div`
   }
 `;
 
-export default MoleculePanelItem2;
+export default MoleculePanelItemList;
