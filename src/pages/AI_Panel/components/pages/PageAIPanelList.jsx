@@ -5,9 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import OrganismHeader from '../organisms/OrganismHeader';
 import OrganismSearchSection from '../organisms/OrganismSearchSection';
-import OrganismPanelCardSection from '../organisms/OrganismPanelCardSection';
-import OrganismPanelCardSectionBiz from '../organisms/OrganismPanelCardSectionBiz';
-import OrganismPanelCardSectionInstruction from '../organisms/OrganismPanelCardSectionInstruction';
+import OrganismPanelSection from '../organisms/OrganismPanelSection';
+import OrganismPanelSectionBiz from '../organisms/OrganismPanelSectionBiz';
+import OrganismPanelSectionInstruction from '../organisms/OrganismPanelSectionInstruction';
 import OrganismPanelSectionBottomBar from '../organisms/OrganismPanelSectionBottomBar'; // 수정된 컴포넌트 이름
 import { ContentsWrap } from '../../../../assets/styles/Common';
 import MoleculeTabMenu from "../molecules/MoleculeTabMenu";
@@ -39,13 +39,13 @@ const PageAIPanelListInfinite = () => {
   const renderPanelListSection = () => {
     switch (activeTab) {
       case 'aiPanel':
-        return <OrganismPanelCardSection onSelect={handleSelect} />;
+        return <OrganismPanelSection onSelect={handleSelect} />;
       case 'biz':
         return <BusinessTool onSelect={handleSelect} />;
       case 'instruction':
-        return <OrganismPanelCardSectionInstruction onSelect={handleSelect} />;
+        return <OrganismPanelSectionInstruction onSelect={handleSelect} />;
       default:
-        return <OrganismPanelCardSection onSelect={handleSelect} />;
+        return <OrganismPanelSection onSelect={handleSelect} />;
     }
   };
 
