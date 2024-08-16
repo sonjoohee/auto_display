@@ -8,7 +8,7 @@ import OrganismSearchSection from '../organisms/OrganismSearchSection';
 import OrganismPanelCardSection from '../organisms/OrganismPanelCardSection';
 import OrganismPanelCardSectionBiz from '../organisms/OrganismPanelCardSectionBiz';
 import OrganismPanelCardSectionInstruction from '../organisms/OrganismPanelCardSectionInstruction';
-import OrganismPanelCardSectionBottomBar from '../organisms/OrganismPanelCardSectionBottomBar'; // 수정된 컴포넌트 이름
+import OrganismPanelSectionBottomBar from '../organisms/OrganismPanelSectionBottomBar'; // 수정된 컴포넌트 이름
 import { ContentsWrap } from '../../../../assets/styles/Common';
 import MoleculeTabMenu from "../molecules/MoleculeTabMenu";
 import { SELECTED_COUNT, selectedPanelsAtom, PANEL_LIST_PAGE_COUNT, IS_FIRST_PANELS_LOADED, } from '../../../AtomStates';
@@ -58,7 +58,7 @@ const PageAIPanelListInfinite = () => {
         {renderPanelListSection()}
       </ContentsWrap>
       {selectedCount > 0 && (
-        <OrganismPanelCardSectionBottomBar onSaveSelection={handleSaveSelection} />
+        <OrganismPanelSectionBottomBar onSaveSelection={handleSaveSelection} />
       )}
     </>
   );

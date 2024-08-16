@@ -1,11 +1,11 @@
-// OrganismPanelCardSectionBottomBar.jsx
+// OrganismPanelSectionBottomBar.jsx
 import React from 'react';
 import styled from 'styled-components';
 import { palette } from '../../../../assets/styles/Palette';
 import { Link } from "react-router-dom";
 import images from '../../../../assets/styles/Images';
 
-const OrganismPanelCardSectionBottomBar = ({ onSaveSelection }) => {
+const OrganismPanelSectionBottomBar = ({ onSaveSelection }) => {
   return (
     <BottomBar>
       <SaveButton>
@@ -24,7 +24,7 @@ const OrganismPanelCardSectionBottomBar = ({ onSaveSelection }) => {
   );
 };
 
-export default OrganismPanelCardSectionBottomBar;
+export default OrganismPanelSectionBottomBar;
 
 const BottomBar = styled.div`
   position: fixed;

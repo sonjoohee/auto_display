@@ -4,7 +4,7 @@ import MoleculePanelItemCard from "../molecules/MoleculePanelItemCard";
 import MoleculePanelControls from "../molecules/MoleculePanelControls";
 import { palette } from "../../../../assets/styles/Palette";
 import { Link } from "react-router-dom";
-import OrganismPanelCardSectionBottomBar from "./OrganismPanelCardSectionBottomBar"; // 하단 바 컴포넌트 import
+import OrganismPanelSectionBottomBar from "./OrganismPanelSectionBottomBar"; // 하단 바 컴포넌트 import
 import OrganismPanelListSection from "./OrganismPanelListSection"; // Import the second list section component
 
 import { useAtom } from "jotai";
@@ -278,7 +278,7 @@ const OrganismPanelCardSection = () => {
         )}
       </PanelWrap>
       {selectedCount > 0 && (
-        <OrganismPanelCardSectionBottomBar onSaveSelection={() => alert("선택패널이 저장되었습니다.")} />
+        <OrganismPanelSectionBottomBar onSaveSelection={() => alert("선택패널이 저장되었습니다.")} />
       )}
     </>
   );

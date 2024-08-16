@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import MoleculePanelItemList from "../molecules/MoleculePanelItemList"; // 수정된 MoleculePanelItem2를 import
 import { palette } from "../../../../assets/styles/Palette";
-import OrganismPanelCardSectionBottomBar from "./OrganismPanelCardSectionBottomBar";
+import OrganismPanelSectionBottomBar from "./OrganismPanelSectionBottomBar";
 import { useAtom } from "jotai";
 import axios from "axios";
 import { 
@@ -219,7 +219,7 @@ const OrganismPanelListSection = () => {
         )}
       </PanelWrap>
       {selectedCount > 0 && (
-        <OrganismPanelCardSectionBottomBar onSaveSelection={() => alert("선택패널이 저장되었습니다.")} />
+        <OrganismPanelSectionBottomBar onSaveSelection={() => alert("선택패널이 저장되었습니다.")} />
       )}
     </>
   );
