@@ -9,7 +9,7 @@ import AtomInput from '../atoms/AtomInput';
 import AtomButton from '../atoms/AtomButton';
 import { isValidEmail } from '../atoms/AtomValidation';
 import { emailAtom, passwordAtom, currentUserAtom, errorAtom } from '../../../AtomStates';
-import { isLoggedInAtom } from '../../../AtomStates'; // Jotai 상태 임포트
+import { isLoggedInAtom, loginSuccessAtom } from '../../../../pages/AtomStates'; // 아톰 임포트
 
 const MoleculeLoginForm = () => {
   const [email, setEmail] = useAtom(emailAtom);
@@ -19,6 +19,7 @@ const MoleculeLoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom);
+  const [, setLoginSuccess] = useAtom(loginSuccessAtom);
 
   useEffect(() => {
     setError('');
@@ -39,7 +40,8 @@ const MoleculeLoginForm = () => {
   const handleLogin = async () => {
     setError('');
     if (!validateForm()) return;
-
+//http://localhost:4008/login
+//http://52.79.204.29:7800/api/user/login/normal/
     try {
       const response = await fetch('http://localhost:4008/login', {
         method: 'POST',
@@ -50,6 +52,7 @@ const MoleculeLoginForm = () => {
         const result = await response.json();
         setCurrentUser(result.user);
         setIsLoggedIn(true);
+        setLoginSuccess(true);
         navigate('/AI_Panel');
       } else {
         const result = await response.json();
