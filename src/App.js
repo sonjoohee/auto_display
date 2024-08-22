@@ -11,6 +11,7 @@ import PageResetPassword from './pages/Login_Sign/components/pages/PageResetPass
 import PageRequestResetPassword from './pages/Login_Sign/components/pages/PageRequestResetPassword';
 import PageAIPanelList from './pages/AI_Panel/components/pages/PageAIPanelList';
 import PagePayTest from './pages/Purchase_Credit/components/pages/PagePayTest';
+import PageMeetAiExpert from './pages/Meet_Ai_Expert/components/pages/PageMeetAiExpert';
 import GlobalStyles from "./assets/GlobalStyle";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Lending from './pages/Lending';
@@ -44,6 +45,7 @@ function App() {
             <Route path="/request-reset-password" element={<PageRequestResetPassword />} />
             <Route path="/AI_Panel" element={<PageAIPanelList />} />
             <Route path="/PagePayTest" element={<PagePayTest />} />
+            <Route path="/PageMeetAiExpert" element={<PageMeetAiExpert />} />
 
             {/* Biz 라우팅 */}
             <Route path="/TargetSetting" element={<TargetSetting />} />

@@ -43,7 +43,7 @@ const MoleculeLoginForm = () => {
 //http://localhost:4008/login
 //http://52.79.204.29:7800/api/user/login/normal/
     try {
-      const response = await fetch('http://localhost:4008/login', {
+      const response = await fetch('http://52.79.204.29:7800/api/user/login/normal/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
