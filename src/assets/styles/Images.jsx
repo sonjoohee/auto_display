@@ -17,6 +17,10 @@ import BtnPrev from "../images/btnPrev.svg";
 import BtnNext from "../images/btnNext.svg";
 import BtnEnd from "../images/btnEnd.svg";
 
+import Chat from "../images/Chat.svg";
+import Folder from "../images/Folder.svg";
+import Clock from "../images/Clock.svg";
+
 const images = {
   Logo,
   
@@ -36,6 +40,10 @@ const images = {
   BtnPrev,
   BtnNext,
   BtnEnd,
+
+  Chat,
+  Folder,
+  Clock,
 }
 
 export default images;
