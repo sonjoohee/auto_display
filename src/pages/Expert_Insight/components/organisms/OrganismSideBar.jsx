@@ -221,6 +221,7 @@ const AccordionItem = styled.div`
   }
 
   .accordion-label {
+    position:relative;
     display:flex;
     align-items:center;
     gap:16px;
