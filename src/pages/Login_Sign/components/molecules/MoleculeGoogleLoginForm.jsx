@@ -34,7 +34,6 @@ const MoleculeGoogleLoginForm = () => {
     }
   };
 
-
   return (
     <GoogleLoginForm>
       <LoginButton onClick={handleGoogleLogin}>

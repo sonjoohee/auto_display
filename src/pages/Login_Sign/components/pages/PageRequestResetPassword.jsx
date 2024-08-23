@@ -7,9 +7,13 @@ const RequestResetPassword = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleRequestReset = async () => {
+    setIsLoading(true); // 검색 시작 시 로딩 상태 활성화
+
     try {
+      // http://localhost:4008/request-reset-password
       const response = await fetch('http://localhost:4008/request-reset-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -26,12 +30,13 @@ const RequestResetPassword = () => {
     } catch (error) {
       setMessage('서버와의 통신 중 오류가 발생했습니다.');
     }
+    setIsLoading(false); // 검색 완료 시 로딩 상태 비활성화
   };
 
   const handleClosePopup = () => {
     setIsPopupOpen(false); // 팝업을 닫는 상태 설정
   };
-
+  // http://localhost:4008/resend-password-reset-email
   const handleResendEmail = async () => {
     try {
       const response = await fetch('http://localhost:4008/resend-password-reset-email', {
@@ -57,6 +62,12 @@ const RequestResetPassword = () => {
   };
 
   return (
+    <>
+    {isLoading && (
+      <LoadingOverlay>
+        <div className="loader"></div>
+      </LoadingOverlay>
+    )}
     <RequestResetContainer>
       <Header>비밀번호 재설정 요청</Header>
       <Label htmlFor="name">이름</Label>
@@ -87,6 +98,7 @@ const RequestResetPassword = () => {
         />
       )}
     </RequestResetContainer>
+    </>
   );
 };
 
@@ -158,4 +170,30 @@ const Message = styled.p`
   color: #333;
   font-size: 14px;
   text-align: center;
+`;
+const LoadingOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+
+  .loader {
+    border: 12px solid #f3f3f3; /* Light grey */
+    border-top: 12px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    animation: spin 2s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
 `;

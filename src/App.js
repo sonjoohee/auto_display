@@ -1,24 +1,26 @@
 import React from 'react';
-// import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
+import GlobalStyles from "./assets/GlobalStyle";
+import { PayPalScriptProvider } from '@paypal/react-paypal-js'; // PayPalScriptProvider 임포트
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+
 import PageLogin from './pages/Login_Sign/components/pages/PageLogin';
 import PageSignup from './pages/Login_Sign/components/pages/PageSignup';
 import PageLoginSuccess from './pages/Login_Sign/components/pages/PageLoginSuccess';
-import PageVerifyEmail  from './pages/Login_Sign/components/pages/PageVerifyEmail';
-import PageEmailVerified from './pages/Login_Sign/components/pages/PageEmailVerified'; // 생성한 페이지 임포트
-import PageEmailVerificationFailed from './pages/Login_Sign/components/pages/PageEmailVerificationFailed'; // 이메일 인증 실패 페이지 추가
-import PageResetPassword from './pages/Login_Sign/components/pages/PageResetPassword'; // 비멀번호 초기화 페이지
-import PageRequestResetPassword from './pages/Login_Sign/components/pages/PageRequestResetPassword'; // 비멀번호 변경 요청 페이지
+import PageVerifyEmail from './pages/Login_Sign/components/pages/PageVerifyEmail';
+import PageEmailVerified from './pages/Login_Sign/components/pages/PageEmailVerified';
+import PageEmailVerificationFailed from './pages/Login_Sign/components/pages/PageEmailVerificationFailed';
+import PageResetPassword from './pages/Login_Sign/components/pages/PageResetPassword';
+import PageRequestResetPassword from './pages/Login_Sign/components/pages/PageRequestResetPassword';
+import PagePayTest from './pages/Purchase_Credit/components/pages/PagePayTest';
+
 import PageAIPanelList from './pages/AI_Panel/components/pages/PageAIPanelList';
-import GlobalStyles from "./assets/GlobalStyle";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import BusinessTool from './pages/Business_Tool';
+import PageMeetAiExpert from './pages/Meet_Ai_Expert/components/pages/PageMeetAiExpert';
+import PageExpertInsight from "./pages/Expert_Insight/components/pages/PageExpertInsight";
+
+// Biz
 import Lending from './pages/Lending';
-
-import Loading2 from './pages/Loading'; //검색결과 로딩
-
-import BusinessTool from './pages/Business_Tool'; // 비즈니스 툴
-
-// Biz 라우팅
 import TargetSetting from "./pages/Persona/TargetSetting";
 import TargetChoice from "./pages/Persona/TargetChoice";
 import PersonaGenerator from "./pages/Persona/PersonaGenerator";
@@ -31,38 +33,38 @@ function App() {
       {/* 스타일 컴퍼넌트 적용 */}
       <GlobalStyles />
 
-      {/* 라우터 적용 */}
-      <BrowserRouter>
+      {/* PayPalScriptProvider로 PayPal SDK를 감싸기 */}
+      <PayPalScriptProvider options={{ "client-id": "AZ8YnURNB0jk4DtQea_FPZ7Zq-MfLHCU05aWjD51tpCJKHEGhoW6VwBvWGFqo-iMRpf0Qe05DVupI6Nb" }}>
+        <BrowserRouter>
+          <Routes>
 
-        <Routes>
-          <Route path="/" element={<Lending />} />
-          <Route path="/QuickReport" element={<BusinessTool />} />
-          <Route path="/login" element={<PageLogin />} />
-          <Route path="/signup" element={<PageSignup />} />
-          <Route path="/success" element={<PageLoginSuccess />} />
-          <Route path="*" element={<Lending />} />
-          <Route path="/verify-email" element={<PageVerifyEmail />} />
-          <Route path="/email-verified" element={<PageEmailVerified />} /> {/* 임시 페이지 추가 */}
-          <Route path="/email-verification-failed" element={<PageEmailVerificationFailed />} /> {/* 이메일 인증 실패 페이지 추가 */}
-          <Route path="/reset-password" element={<PageResetPassword />} />
-          <Route path="/request-reset-password" element={<PageRequestResetPassword />} />
-          <Route path="/AI_Panel" element={<PageAIPanelList />}></Route>
+            <Route path="/login" element={<PageLogin />} />
+            <Route path="/signup" element={<PageSignup />} />
+            <Route path="/success" element={<PageLoginSuccess />} />
+            <Route path="/verify-email" element={<PageVerifyEmail />} />
+            <Route path="/email-verified" element={<PageEmailVerified />} />
+            <Route path="/email-verification-failed" element={<PageEmailVerificationFailed />} />
+            <Route path="/reset-password" element={<PageResetPassword />} />
+            <Route path="/request-reset-password" element={<PageRequestResetPassword />} />
+            <Route path="/PagePayTest" element={<PagePayTest />} />
 
-          {/* Biz 라우팅 */}
-          <Route path="/TargetSetting" element={<TargetSetting />}></Route>
-          <Route path="/TargetChoice" element={<TargetChoice />}></Route>
-          <Route path="/Loading" element={<Loading />}></Route>
-          <Route path="/LoadingPersona" element={<LoadingPersona />}></Route>
+            <Route path="/" element={<PageMeetAiExpert />} />
+            <Route path="*" element={<PageMeetAiExpert />} />
+            <Route path="/ExpertInsight" element={<PageExpertInsight />}></Route>
+            <Route path="/AI_Panel" element={<PageAIPanelList />} />
+            <Route path="/QuickReport" element={<BusinessTool />} />
 
-          <Route path="/Loading2" element={<Loading2 />}></Route>
+            {/* Biz */}
+            <Route path="Lending" element={<Lending />} />
+            <Route path="/TargetSetting" element={<TargetSetting />} />
+            <Route path="/TargetChoice" element={<TargetChoice />} />
+            <Route path="/Loading" element={<Loading />} />
+            <Route path="/LoadingPersona" element={<LoadingPersona />} />
+            <Route path="/PersonaGenerator" element={<PersonaGenerator />} />
 
-          <Route
-            path="/PersonaGenerator"
-            element={<PersonaGenerator />}
-          ></Route>
-
-        </Routes>
-      </BrowserRouter>
+          </Routes>
+        </BrowserRouter>
+      </PayPalScriptProvider>
     </div>
   );
 }

@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
-import MoleculePanelItem from "../molecules/MoleculePanelItem";
+import MoleculePanelItemCard from "../molecules/MoleculePanelItemCard";
+import MoleculePanelItemList from "../molecules/MoleculePanelItemList";
 import MoleculePanelControls from "../molecules/MoleculePanelControls";
 import { palette } from "../../../../assets/styles/Palette";
 import { Link } from "react-router-dom";
-import OrganismPanelListSectionBottomBar from "./OrganismPanelListSectionBottomBar"; // 하단 바 컴포넌트 import
+import OrganismPanelSectionBottomBar from "./OrganismPanelSectionBottomBar"; // 하단 바 컴포넌트 import
 
 import { useAtom } from "jotai";
 import axios from "axios";
@@ -35,7 +36,7 @@ import {
   IS_PANEL_NULL,
 } from "../../../AtomStates";
 
-const OrganismPanelListSection = () => {
+const OrganismPanelSection = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [panelList, setPanelList] = useAtom(PANEL_LIST);
@@ -222,75 +223,97 @@ const OrganismPanelListSection = () => {
   return (
     <>
       {isLoading && (
-          <LoadingOverlay>
-            <div className="loader"></div>
-          </LoadingOverlay>
+        <LoadingOverlay>
+          <div className="loader"></div>
+        </LoadingOverlay>
       )}
       <PanelWrap>
         <MoleculePanelControls
           selectedCount={selectedCount}
           loadedPanelCount={panelList.length}
-          handleAllSelectChange={handleAllSelectChange} // 전달
-
+          handleAllSelectChange={handleAllSelectChange}
         />
-        {viewPanelType ?
+        {viewPanelType ? (
           <>
-          <PanelList>
-            {panelList.map((panel, index) => (
-              <MoleculePanelItem
-                key={panel.id}
-                id={panel.id}
-                gender={panel.gender}
-                age={panel.age}
-                job={panel.job}
-                address={panel.address}
-                subAddress={panel.subAddress}
-                // imgSrc={panel.img}
-                imgSrc={(index % 10) + 1} // 1부터 10까지 반복되는 숫자
-                tags={panel.tag}
-                comment={panel.comment}
-                lifeStyle={panel.lifeStyle}
-                consumption={panel.consumptionPropensity}
-                productGroup={panel.productGroup}
-                target_1={panel.target_1}
-                target_2={panel.target_2}
-                target_3={panel.target_3}
-                target_4={panel.target_4}
-                target_5={panel.target_5}
-                value_1={panel.value_1}
-                value_2={panel.value_2}
-                value_3={panel.value_3}
-                value_4={panel.value_4}
-                value_5={panel.value_5}
-                onSelect={handleSelect}
-              />
-            ))}
-          </PanelList>
-          {isAllPanelsLoaded ? (
-          //   <CreatePanelLink to="/createpanel" isBottomBarVisible={selectedCount > 0}>
-          //   원하시는 패널이 없나요? 직접 만들어 보세요!
-          // </CreatePanelLink>
-          <><br/><br/><br/><br/><br/><br/><br/></>
-          ) : (
-            panelList.length <= panelList.length && (
-              <LoadMoreButton isBottomBarVisible={selectedCount > 0} onClick={handleLoadMore}>
-                패널 더보기
-              </LoadMoreButton>
-            )
-          )}
+            <CardViewContainer>
+              {panelList.map((panel, index) => (
+                <MoleculePanelItemCard
+                  key={panel.id}
+                  id={panel.id}
+                  gender={panel.gender}
+                  age={panel.age}
+                  job={panel.job}
+                  address={panel.address}
+                  subAddress={panel.subAddress}
+                  imgSrc={(index % 10) + 1} // 1부터 10까지 반복되는 숫자
+                  tags={panel.tag}
+                  comment={panel.comment}
+                  lifeStyle={panel.lifeStyle}
+                  consumption={panel.consumptionPropensity}
+                  productGroup={panel.productGroup}
+                  target_1={panel.target_1}
+                  target_2={panel.target_2}
+                  target_3={panel.target_3}
+                  target_4={panel.target_4}
+                  target_5={panel.target_5}
+                  value_1={panel.value_1}
+                  value_2={panel.value_2}
+                  value_3={panel.value_3}
+                  value_4={panel.value_4}
+                  value_5={panel.value_5}
+                  onSelect={handleSelect}
+                />
+              ))}
+            </CardViewContainer>
           </>
-          :
-          "목록보기"
-        }
+        ) : (
+          <ListViewContainer>
+          {panelList.map((panel, index) => (
+            <MoleculePanelItemList
+              key={panel.id}
+              id={panel.id}
+              gender={panel.gender}
+              age={panel.age}
+              job={panel.job}
+              address={panel.address}
+              subAddress={panel.subAddress}
+              imgSrc={(index % 10) + 1} // 1부터 10까지 반복되는 숫자
+              tags={panel.tag}
+              comment={panel.comment}
+              lifeStyle={panel.lifeStyle}
+              consumption={panel.consumptionPropensity}
+              productGroup={panel.productGroup}
+              target_1={panel.target_1}
+              target_2={panel.target_2}
+              target_3={panel.target_3}
+              target_4={panel.target_4}
+              target_5={panel.target_5}
+              value_1={panel.value_1}
+              value_2={panel.value_2}
+              value_3={panel.value_3}
+              value_4={panel.value_4}
+              value_5={panel.value_5}
+              onSelect={handleSelect}
+            />
+          ))}
+        </ListViewContainer>
+        )}
+        {isAllPanelsLoaded ? (
+          <><br/><br/><br/><br/><br/><br/><br/></>
+        ) : (
+          <LoadMoreButton isBottomBarVisible={selectedCount > 0} onClick={handleLoadMore}>
+            패널 더보기
+          </LoadMoreButton>
+        )}
       </PanelWrap>
       {selectedCount > 0 && (
-        <OrganismPanelListSectionBottomBar onSaveSelection={() => alert("선택패널이 저장되었습니다.")} />
+        <OrganismPanelSectionBottomBar onSaveSelection={() => alert("선택패널이 저장되었습니다.")} />
       )}
     </>
   );
-};
+}
 
-export default OrganismPanelListSection;
+export default OrganismPanelSection;
 
 const NoData = styled.p `
   min-height:700px;
@@ -332,11 +355,18 @@ const PanelWrap = styled.section`
   }
 `;
 
-const PanelList = styled.ul`
+const CardViewContainer = styled.ul`
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
   margin-bottom: 10px; /* 기본적으로 충분한 하단 여백 추가 */
+`;
+
+const ListViewContainer = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 10px;
 `;
 
 const LoadMoreButton = styled.button`
