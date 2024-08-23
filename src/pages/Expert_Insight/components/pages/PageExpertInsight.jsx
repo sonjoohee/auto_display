@@ -1,6 +1,6 @@
 // C:\dev\Crowd_Insight-\src\pages\Expert_Insight\components\pages\PageExpertInsight.jsx
 
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,14 +9,17 @@ import OrganismSideBar from '../organisms/OrganismSideBar';
 import OrganismSearchBottomBar from '../organisms/OrganismSearchBottomBar';
 import MoleculeBizName from '../molecules/MoleculeBizName';
 import MoleculeSystemMessage from '../molecules/MoleculeSystemMessage';
-import OrganismBizAnalysisSection from '../organisms/OrganismBizAnalysisSection'; // 이미 작성된 컴포넌트
+import MoleculeUserMessage from '../molecules/MoleculeUserMessage';
+import OrganismBizAnalysisSection from '../organisms/OrganismBizAnalysisSection';
 import OrganismBizExpertSelect from '../organisms/OrganismBizExpertSelect';
 
 const PageExpertInsight = () => {
   const navigate = useNavigate();
+  const [userMessage, setUserMessage] = useState('');
 
   const handleSearch = (inputValue) => {
     console.log("Searching for:", inputValue);
+    setUserMessage(inputValue);
   };
 
   return (
@@ -33,6 +36,9 @@ const PageExpertInsight = () => {
 
         {/* 비즈니스 분석 섹션 */}
         <OrganismBizAnalysisSection />
+
+        {/* 유저 메시지 */}
+        <MoleculeUserMessage message={userMessage} />
 
         {/* 전문가 선택 섹션 */}
         <OrganismBizExpertSelect />
@@ -51,4 +57,7 @@ const MainContent = styled.div`
   padding: 200px 20px 20px; /* 상단 패딩 추가 */
   background-color: #fff; /* 메인 콘텐츠 배경색 */
   min-height: 100vh;
+  display: flex;
+  flex-direction: column; /* 요소들이 수직으로 배치되도록 설정 */
 `;
+

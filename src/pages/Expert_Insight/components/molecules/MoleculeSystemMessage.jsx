@@ -14,12 +14,30 @@ const MoleculeSystemMessage = () => {
 export default MoleculeSystemMessage;
 
 const SystemMessageContainer = styled.div`
-  width: 100%;
+  max-width: 100%; /* 최대 너비 설정 */
+  display: inline-block; /* 텍스트 길이에 따라 말풍선 크기가 조절되도록 함 */
+  width: auto; /* 자동 너비 설정 */
   padding: 15px 20px;
-  background-color: #f4f4f4;
-  border-radius: 8px;
+  background-color: #e0f7fa; /* 말풍선 스타일을 위한 밝은 배경색 */
+  border-radius: 15px;
   font-size: 1rem;
   font-weight: 500;
   color: #333;
-  margin-bottom: 20px; /* 아래 요소와의 간격 */
+  margin-bottom: 20px;
+  margin-left: 0; /* 왼쪽에 딱 붙이기 */
+  margin-right: auto; /* 오른쪽 여백을 자동으로 설정하여 왼쪽에 붙임 */
+  position: relative;
+  &:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -10px; /* 왼쪽에 말풍선 꼬리를 추가 */
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+    border-right-color: #e0f7fa;
+    border-left: 0;
+    margin-top: -10px;
+  }
+    
 `;
