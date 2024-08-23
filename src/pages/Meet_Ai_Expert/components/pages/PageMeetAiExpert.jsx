@@ -1,8 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import OrganismHeader from '../../../../pages/AI_Panel/components/organisms/OrganismHeader';
+import { useNavigate } from "react-router-dom";
+import OrganismHeader from '../../../organisms/OrganismHeader';
 
 const PageMeetAiExpert = () => {
+
+  const navigate = useNavigate();
+  
   return (
     <div>
       <OrganismHeader />
@@ -13,24 +17,24 @@ const PageMeetAiExpert = () => {
           단 한 줄의 사업 아이디어로 시작하는 AI 전문가와의 짧고 강력한 인사이트 세션
         </Subtitle>
 
-        <InputField placeholder="당신의 비즈니스를 간단히 입력한 후 시작해보세요!" />
+        <InputField placeholder="당신의 비즈니스를 간단히 입력한 후 시작해보세요!"/>
 
         <ExpertSelectionSection>
-          <ExpertCard selected>
+          <ExpertCard selected onClick={() => {navigate("/ExpertInsight");}}>
             <Icon>💡</Icon>
             <ExpertTitle>서비스/프로덕트 전략가</ExpertTitle>
             <ExpertDescription>
               10년 경력 시장에서 통하는 전략을 확인해보세요
             </ExpertDescription>
           </ExpertCard>
-          <ExpertCard>
+          <ExpertCard onClick={() => {navigate("/ExpertInsight");}}>
             <Icon>💡</Icon>
             <ExpertTitle>마케팅 구축</ExpertTitle>
             <ExpertDescription>
               브랜드/마케팅 교수와의 컨설팅 미팅
             </ExpertDescription>
           </ExpertCard>
-          <ExpertCard>
+          <ExpertCard onClick={() => {navigate("/ExpertInsight");}}>
             <Icon>💡</Icon>
             <ExpertTitle>고객 인사이트 전문가</ExpertTitle>
             <ExpertDescription>

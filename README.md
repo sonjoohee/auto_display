@@ -55,3 +55,6 @@ npm install firebase
 
 ** 아이콘 관련 설치파일  
 npm install react-icons  
+
+** 페이팔 관련 설치파일
+npm install @paypal/react-paypal-js
