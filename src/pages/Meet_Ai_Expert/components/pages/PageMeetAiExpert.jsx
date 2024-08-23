@@ -1,11 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
 import styled from 'styled-components';
 import { useNavigate } from "react-router-dom";
+import { useAtom } from 'jotai';
+import {
+  SELECTED_EXPERT_INDEX,
+  INPUT_BUSINESS_INFO, 
+} from '../../../AtomStates';
+
 import OrganismHeader from '../../../organisms/OrganismHeader';
 
 const PageMeetAiExpert = () => {
 
   const navigate = useNavigate();
+
+  const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
+  const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
+
+  useEffect(() => {
+    setSelectedExpertIndex(SELECTED_EXPERT_INDEX);
+    setInputBusinessInfo(INPUT_BUSINESS_INFO);
+  }, []);
   
   return (
     <div>
@@ -17,24 +31,25 @@ const PageMeetAiExpert = () => {
           단 한 줄의 사업 아이디어로 시작하는 AI 전문가와의 짧고 강력한 인사이트 세션
         </Subtitle>
 
-        <InputField placeholder="당신의 비즈니스를 간단히 입력한 후 시작해보세요!"/>
+        <InputField placeholder="당신의 비즈니스를 간단히 입력한 후 시작해보세요!" onChange={(e) => setInputBusinessInfo(e.target.value)}/>
+        <div onClick={() => {setSelectedExpertIndex(0); navigate("/ExpertInsight");}}>Let's go</div>
 
         <ExpertSelectionSection>
-          <ExpertCard selected onClick={() => {navigate("/ExpertInsight");}}>
+          <ExpertCard selected onClick={() => {setSelectedExpertIndex(1); navigate("/ExpertInsight");}}>
             <Icon>💡</Icon>
             <ExpertTitle>서비스/프로덕트 전략가</ExpertTitle>
             <ExpertDescription>
               10년 경력 시장에서 통하는 전략을 확인해보세요
             </ExpertDescription>
           </ExpertCard>
-          <ExpertCard onClick={() => {navigate("/ExpertInsight");}}>
+          <ExpertCard onClick={() => {setSelectedExpertIndex(2); navigate("/ExpertInsight");}}>
             <Icon>💡</Icon>
             <ExpertTitle>마케팅 구축</ExpertTitle>
             <ExpertDescription>
               브랜드/마케팅 교수와의 컨설팅 미팅
             </ExpertDescription>
           </ExpertCard>
-          <ExpertCard onClick={() => {navigate("/ExpertInsight");}}>
+          <ExpertCard onClick={() => {setSelectedExpertIndex(3); navigate("/ExpertInsight");}}>
             <Icon>💡</Icon>
             <ExpertTitle>고객 인사이트 전문가</ExpertTitle>
             <ExpertDescription>
