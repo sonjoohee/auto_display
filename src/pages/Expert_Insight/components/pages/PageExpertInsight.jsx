@@ -3,15 +3,29 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { useAtom } from 'jotai';
+import {
+  SELECTED_EXPERT_INDEX,
+  INPUT_BUSINESS_INFO,
+  MAIN_FEATURES_OF_BUSINESS_INFORMATION,
+  MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
+  BUSINESS_INFORMATION_TARGET_CUSTOMER,
+} from '../../../AtomStates';
 
 import OrganismHeader from '../../../organisms/OrganismHeader';
 import OrganismSideBar from '../organisms/OrganismSideBar';
+import OrganismTakingChargeAiExpert from '../organisms/OrganismTakingChargeAiExpert';
+import OrganismBizAnalysisSection from '../organisms/OrganismBizAnalysisSection';
 import OrganismSearchBottomBar from '../organisms/OrganismSearchBottomBar';
 import MoleculeBizName from '../molecules/MoleculeBizName';
 import MoleculeSystemMessage from '../molecules/MoleculeSystemMessage';
+<<<<<<< HEAD
 import MoleculeUserMessage from '../molecules/MoleculeUserMessage';
 import OrganismBizAnalysisSection from '../organisms/OrganismBizAnalysisSection';
+=======
+>>>>>>> 2b6ba8ec5b24fa6e96e1a33bcb74ba08ec89763f
 import OrganismBizExpertSelect from '../organisms/OrganismBizExpertSelect';
+
 
 const PageExpertInsight = () => {
   const navigate = useNavigate();
@@ -22,8 +36,19 @@ const PageExpertInsight = () => {
     setUserMessage(inputValue);
   };
 
+  const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
+  const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
+  const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
+  const [mainCharacteristicOfBusinessInformation, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
+  const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
+
   return (
     <>
+        {/* <OrganismHeader/> */}
+        <OrganismSideBar/>
+    
+        {selectedExpertIndex !== 0 ? <OrganismTakingChargeAiExpert/> : ''}
+
       <OrganismHeader />
       <OrganismSideBar />
 
