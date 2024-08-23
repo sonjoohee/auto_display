@@ -19,11 +19,8 @@ import OrganismBizAnalysisSection from '../organisms/OrganismBizAnalysisSection'
 import OrganismSearchBottomBar from '../organisms/OrganismSearchBottomBar';
 import MoleculeBizName from '../molecules/MoleculeBizName';
 import MoleculeSystemMessage from '../molecules/MoleculeSystemMessage';
-<<<<<<< HEAD
+
 import MoleculeUserMessage from '../molecules/MoleculeUserMessage';
-import OrganismBizAnalysisSection from '../organisms/OrganismBizAnalysisSection';
-=======
->>>>>>> 2b6ba8ec5b24fa6e96e1a33bcb74ba08ec89763f
 import OrganismBizExpertSelect from '../organisms/OrganismBizExpertSelect';
 
 
