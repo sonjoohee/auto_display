@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+// C:\dev\Crowd_Insight-\src\pages\Expert_Insight\components\organisms\OrganismSideBar.jsx
+
+import React from 'react';
 import styled from 'styled-components';
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';

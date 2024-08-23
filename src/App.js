@@ -1,7 +1,8 @@
+// App.js
 import React from 'react';
 import './App.css';
 import GlobalStyles from "./assets/GlobalStyle";
-import { PayPalScriptProvider } from '@paypal/react-paypal-js'; // PayPalScriptProvider 임포트
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import PageLogin from './pages/Login_Sign/components/pages/PageLogin';
@@ -18,6 +19,7 @@ import PageAIPanelList from './pages/AI_Panel/components/pages/PageAIPanelList';
 import BusinessTool from './pages/Business_Tool';
 import PageMeetAiExpert from './pages/Meet_Ai_Expert/components/pages/PageMeetAiExpert';
 import PageExpertInsight from "./pages/Expert_Insight/components/pages/PageExpertInsight";
+import PageTestIndexedDB from './pages/Meet_Ai_Expert/components/pages/PageTestIndexedDB'; // 추가된 부분
 
 // Biz
 import Lending from './pages/Lending';
@@ -37,7 +39,6 @@ function App() {
       <PayPalScriptProvider options={{ "client-id": "AZ8YnURNB0jk4DtQea_FPZ7Zq-MfLHCU05aWjD51tpCJKHEGhoW6VwBvWGFqo-iMRpf0Qe05DVupI6Nb" }}>
         <BrowserRouter>
           <Routes>
-
             <Route path="/login" element={<PageLogin />} />
             <Route path="/signup" element={<PageSignup />} />
             <Route path="/success" element={<PageLoginSuccess />} />
@@ -55,13 +56,17 @@ function App() {
             <Route path="/QuickReport" element={<BusinessTool />} />
 
             {/* Biz */}
-            <Route path="Lending" element={<Lending />} />
+            <Route path="/Lending" element={<Lending />} />
             <Route path="/TargetSetting" element={<TargetSetting />} />
             <Route path="/TargetChoice" element={<TargetChoice />} />
             <Route path="/Loading" element={<Loading />} />
             <Route path="/LoadingPersona" element={<LoadingPersona />} />
             <Route path="/PersonaGenerator" element={<PersonaGenerator />} />
 
+            {/* 추가된 Route */}
+            <Route path="/test-indexeddb" element={<PageTestIndexedDB />} />
+            <Route path="/test-indexeddb/:id" element={<PageTestIndexedDB />} />
+            
           </Routes>
         </BrowserRouter>
       </PayPalScriptProvider>
