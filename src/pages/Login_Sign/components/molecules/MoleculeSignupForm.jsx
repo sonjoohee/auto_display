@@ -59,9 +59,10 @@ const MoleculeSignupForm = () => {
     if (!validateForm()) return;
 
     setIsLoading(true); // 로딩 상태 시작
-
+// http://52.79.204.29:7800/api/user/signup/
+// http://localhost:4008/signup
     try {
-      const response = await fetch('http://localhost:4008/signup', {
+      const response = await fetch('http://52.79.204.29:7800/api/user/signup/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password, role, status })
@@ -99,6 +100,12 @@ const MoleculeSignupForm = () => {
   };
 
   return (
+    <>
+    {isLoading && (
+      <LoadingOverlay>
+        <div className="loader"></div>
+      </LoadingOverlay>
+    )}
     <SignupFormContainer>
       <Header>회원가입</Header>
       <Label htmlFor="name">이름</Label>
@@ -169,7 +176,8 @@ const MoleculeSignupForm = () => {
         />
       )}
     </SignupFormContainer>
-  );
+    </>
+    );
 };
 
 export default MoleculeSignupForm;
@@ -309,5 +317,31 @@ const Footer = styled.div`
 
   a:hover {
     text-decoration: underline;
+  }
+`;
+const LoadingOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+
+  .loader {
+    border: 12px solid #f3f3f3; /* Light grey */
+    border-top: 12px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    animation: spin 2s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
 `;
