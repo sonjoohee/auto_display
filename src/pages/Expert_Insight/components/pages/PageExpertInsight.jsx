@@ -38,26 +38,29 @@ const PageExpertInsight = () => {
   return (
     <>
         {/* <OrganismHeader/> */}
-        <OrganismSideBar/>
+        {/* <OrganismSideBar/> */}
     
         {selectedExpertIndex !== 0 ? <OrganismTakingChargeAiExpert/> : ''}
 
       <OrganismHeader />
-      <OrganismSideBar />
 
-      {/* Biz Name Section */}
-      <MoleculeBizName />
+      <ContentsWrap>
+        <OrganismSideBar />
 
-      <MainContent>
-        {/* 시스템 메시지 */}
-        <MoleculeSystemMessage />
+        {/* Biz Name Section */}
+        <MoleculeBizName />
 
-        {/* 비즈니스 분석 섹션 */}
-        <OrganismBizAnalysisSection />
+        <MainContent>
+          {/* 시스템 메시지 */}
+          <MoleculeSystemMessage />
 
-        {/* 전문가 선택 섹션 */}
-        <OrganismBizExpertSelect />
-      </MainContent>
+          {/* 비즈니스 분석 섹션 */}
+          <OrganismBizAnalysisSection />
+
+          {/* 전문가 선택 섹션 */}
+          <OrganismBizExpertSelect />
+        </MainContent>
+      </ContentsWrap>
 
       <OrganismSearchBottomBar onSearch={handleSearch} />
     </>

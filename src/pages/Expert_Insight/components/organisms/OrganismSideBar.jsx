@@ -1,6 +1,6 @@
 // C:\dev\Crowd_Insight-\src\pages\Expert_Insight\components\organisms\OrganismSideBar.jsx
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
@@ -135,6 +135,7 @@ export default OrganismSideBar;
 
 const SideBar = styled.div`
   position:sticky;
+  top:150px;
   width:100%;
   max-width:360px;
   height:calc(100vh - 12rem);
@@ -232,6 +233,23 @@ const AccordionItem = styled.div`
     border:0;
     background:none;
     cursor:pointer;
+
+    &:after {
+      position:absolute;
+      right:20px;
+      top:50%;
+      transform:translateY(-50%) rotate(45deg);
+      width:8px;
+      height:8px;
+      border-left:2px solid ${palette.black};
+      border-top:2px solid ${palette.black};
+      transition:all .5s;
+      content:'';
+    }
+  }
+
+  .accordion-toggle:checked + .accordion-label:after {
+    transform:translateY(-50%) rotate(-135deg);
   }
 
   .accordion-toggle:checked + .accordion-label + div {
