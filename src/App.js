@@ -23,6 +23,9 @@ import PersonaGenerator from "./pages/Persona/PersonaGenerator";
 import Loading from "./pages/Persona/Loading";
 import LoadingPersona from "./pages/Persona/LoadingPersona";
 
+// Expert Insight
+import PageExpertInsight from "./pages/Expert_Insight/PageExpertInsight";
+
 function App() {
   return (
     <div className="App">
@@ -51,11 +54,9 @@ function App() {
           <Route path="/TargetChoice" element={<TargetChoice />}></Route>
           <Route path="/Loading" element={<Loading />}></Route>
           <Route path="/LoadingPersona" element={<LoadingPersona />}></Route>
+          <Route path="/PersonaGenerator" element={<PersonaGenerator />}></Route>
 
-          <Route
-            path="/PersonaGenerator"
-            element={<PersonaGenerator />}
-          ></Route>
+          <Route path="/ExpertInsight" element={<PageExpertInsight />}></Route>
 
         </Routes>
       </BrowserRouter>
