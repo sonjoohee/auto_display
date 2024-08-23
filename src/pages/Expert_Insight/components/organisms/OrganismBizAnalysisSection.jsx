@@ -14,7 +14,6 @@ import {
 import OrganismHeader from '../../../organisms/OrganismHeader';
 import OrganismSideBar from '../organisms/OrganismSideBar';
 import OrganismTakingChargeAiExpert from '../organisms/OrganismTakingChargeAiExpert';
-import MoleculeBottomInputBar from '../molecules/MoleculeBottomInputBar';
 
 const OrganismBizAnalysisSection = () => {
 
