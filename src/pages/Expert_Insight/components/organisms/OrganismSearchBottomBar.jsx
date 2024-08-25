@@ -50,7 +50,7 @@ const BottomBar = styled.div`
   border-radius: 40px;
   background: black;
   box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
+  z-index: 98;
 `;
 
 const InputContainer = styled.div`
