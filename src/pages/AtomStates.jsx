@@ -90,3 +90,4 @@ export const BUSINESS_INFORMATION_TARGET_CUSTOMER = atom([
     "피부 노화 방지에 관심 있는 중장년층 : 노화 징후를 예방하고자 하는 40대 이상 중장년층이 ...??",
 ]);
 
+export const SAVED_REPORTS = atom([]);

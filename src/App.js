@@ -28,6 +28,7 @@ import TargetChoice from "./pages/Persona/TargetChoice";
 import PersonaGenerator from "./pages/Persona/PersonaGenerator";
 import Loading from "./pages/Persona/Loading";
 import LoadingPersona from "./pages/Persona/LoadingPersona";
+import OrganismReportPopup from './pages/Expert_Insight/components/organisms/OrganismReportPopup'; 
 
 function App() {
   return (
@@ -51,6 +52,7 @@ function App() {
 
             <Route path="/" element={<PageMeetAiExpert />} />
             <Route path="*" element={<PageMeetAiExpert />} />
+            <Route path="PageMeetAiExpert" element={<PageMeetAiExpert />} />
             <Route path="/ExpertInsight" element={<PageExpertInsight />}></Route>
             <Route path="/AI_Panel" element={<PageAIPanelList />} />
             <Route path="/QuickReport" element={<BusinessTool />} />
@@ -66,7 +68,7 @@ function App() {
             {/* 추가된 Route */}
             <Route path="/test-indexeddb" element={<PageTestIndexedDB />} />
             <Route path="/test-indexeddb/:id" element={<PageTestIndexedDB />} />
-            
+            <Route path="/report/:id" element={<OrganismReportPopup />} />
           </Routes>
         </BrowserRouter>
       </PayPalScriptProvider>

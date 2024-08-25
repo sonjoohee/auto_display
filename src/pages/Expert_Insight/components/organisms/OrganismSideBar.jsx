@@ -1,16 +1,31 @@
 // C:\dev\Crowd_Insight-\src\pages\Expert_Insight\components\organisms\OrganismSideBar.jsx
 
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import images from '../../../../assets/images/Search.svg'; // Search.svg 이미지 import
+import { useAtom } from 'jotai';
+import { INPUT_BUSINESS_INFO, SAVED_REPORTS } from '../../../AtomStates';
+import images from '../../../../assets/images/Search.svg';
+import OrganismReportPopup from './OrganismReportPopup'; // 팝업 컴포넌트 임포트
 
 const OrganismSideBar = () => {
+  const [bizName] = useAtom(INPUT_BUSINESS_INFO);
+  const [savedReports] = useAtom(SAVED_REPORTS);
+  const [selectedReport, setSelectedReport] = useState(null); // 선택된 보고서 상태 관리
+
+  const handleReportClick = (index) => {
+    setSelectedReport(savedReports[index]); // 보고서 선택
+  };
+
+  const closePopup = () => {
+    setSelectedReport(null); // 팝업 닫기
+  };
+
   return (
     <SideBarContainer>
       <SideBarHeader>
         <Link to="/new-chat">
-          <img src={images}  alt="새 대화 시작하기" />
+          <img src={images} alt="새 대화 시작하기" />
           새 대화 시작하기
         </Link>
       </SideBarHeader>
@@ -18,20 +33,22 @@ const OrganismSideBar = () => {
       <SideBarContent>
         <SectionTitle>최근 기록</SectionTitle>
         <RecentRecordList>
+          {bizName && (
+            <RecordItem>
+              <Link to="#" onClick={() => handleReportClick(0)}>
+                <RecordTitle>{bizName}</RecordTitle>
+                <RecordDate>오늘</RecordDate>
+              </Link>
+            </RecordItem>
+          )}
           <RecordItem>
-            <Link to="/report/1">
-              <RecordTitle>보고서 정보 업로드</RecordTitle>
-              <RecordDate>오늘</RecordDate>
-            </Link>
-          </RecordItem>
-          <RecordItem>
-            <Link to="/report/2">
+            <Link to="#" onClick={() => handleReportClick(1)}>
               <RecordTitle>조사 데이터 정리 분석</RecordTitle>
               <RecordDate>어제</RecordDate>
             </Link>
           </RecordItem>
           <RecordItem>
-            <Link to="/report/3">
+            <Link to="#" onClick={() => handleReportClick(2)}>
               <RecordTitle>시장 분석 데이터 수집</RecordTitle>
               <RecordDate>2024.08.22</RecordDate>
             </Link>
@@ -40,19 +57,25 @@ const OrganismSideBar = () => {
 
         <SectionTitle>저장된 항목</SectionTitle>
         <SavedItemsList>
-          <SavedItem>
-            <Link to="/saved-item/1">저장된 보고서 1</Link>
-          </SavedItem>
-          <SavedItem>
-            <Link to="/saved-item/2">저장된 보고서 2</Link>
-          </SavedItem>
+          {savedReports.map((report, index) => (
+            <SavedItem key={index}>
+              <Link to="#" onClick={() => handleReportClick(index)}>
+                {report.title}
+              </Link>
+            </SavedItem>
+          ))}
         </SavedItemsList>
       </SideBarContent>
+
+      {selectedReport && (
+        <OrganismReportPopup report={selectedReport} onClose={closePopup} />
+      )}
     </SideBarContainer>
   );
 };
 
 export default OrganismSideBar;
+
 
 const SideBarContainer = styled.div`
   position: fixed;
@@ -63,7 +86,7 @@ const SideBarContainer = styled.div`
   background-color: #f4f4f4;
   padding: 20px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  z-index: 99; /* MoleculeBizName의 z-index보다 높게 설정 */
+  z-index: 98; /* MoleculeBizName의 z-index보다 높게 설정 */
 `;
 
 const SideBarHeader = styled.div`
