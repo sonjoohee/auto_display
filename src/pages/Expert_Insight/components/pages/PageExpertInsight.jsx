@@ -8,7 +8,7 @@ import {
 } from '../../../AtomStates';
 
 import OrganismHeader from '../../../organisms/OrganismHeader';
-import OrganismSideBar from '../organisms/OrganismSideBar';
+import OrganismLeftSideBar from '../organisms/OrganismLeftSideBar';
 import OrganismRightSideBar from '../organisms/OrganismRightSideBar';
 import OrganismBizAnalysisSection from '../organisms/OrganismBizAnalysisSection';
 import OrganismSearchBottomBar from '../organisms/OrganismSearchBottomBar';
@@ -73,7 +73,7 @@ const PageExpertInsight = () => {
       <OrganismHeader />
 
       <ContentsWrap>
-        <OrganismSideBar />
+        <OrganismLeftSideBar />
         <OrganismRightSideBar />
 
         <MainContent>

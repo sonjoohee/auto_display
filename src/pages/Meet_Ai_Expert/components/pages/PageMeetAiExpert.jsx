@@ -74,7 +74,7 @@ const PageMeetAiExpert = () => {
           <h2><img src={images.Chat} alt="" />AI 전문가 선택해서 시작하기</h2>
 
           <ExpertSelectBox>
-            <ExpertCard select onClick={() => {setSelectedExpertIndex(1); navigate("/ExpertInsight");}}>
+            <ExpertCard onClick={() => {setSelectedExpertIndex(1); navigate("/ExpertInsight");}}>
               <span><img src={images.IconChat} alt="" /></span>
               <p>가볍게 시작하는 내 비즈니스 전략 팁</p>
               <strong>전략 디렉터와 1:1 커피챗</strong>
