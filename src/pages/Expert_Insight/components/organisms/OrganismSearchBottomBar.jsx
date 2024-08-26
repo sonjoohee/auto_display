@@ -38,7 +38,7 @@ const BottomBar = styled.div`
   left: 50%;
   transform: translateX(-50%);
   width:100%;
-  max-width:1240px;
+  max-width:1135px;
   color: white;
   display: flex;
   flex-direction:column;
@@ -60,6 +60,11 @@ const SearchBar = styled.div`
   border-radius:50px;
   border:1px solid ${palette.lineGray};
   background:#F5F9FF;
+
+  input {
+    font-family: 'Pretendard';
+    color:${palette.white};
+  }
 
   > button {
     width:50px;

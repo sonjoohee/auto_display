@@ -47,10 +47,10 @@ const PageExpertInsight = () => {
       <ContentsWrap>
         <OrganismSideBar />
 
-        {/* Biz Name Section */}
-        <MoleculeBizName />
-
         <MainContent>
+          {/* Biz Name Section */}
+          <MoleculeBizName />
+
           {/* 시스템 메시지 */}
           <MoleculeSystemMessage />
 
@@ -71,13 +71,22 @@ export default PageExpertInsight;
 
 // MainContent에 상단 패딩 추가
 const MainContent = styled.div`
-  margin-left: 240px; /* 사이드바가 차지하는 공간을 고려하여 여백 설정 */
-  padding: 200px 20px 20px; /* 상단 패딩 추가 */
-  background-color: #fff; /* 메인 콘텐츠 배경색 */
-  min-height: 100vh;
+  grid-area:content;
+  min-width:1px;
+  max-width:1135px;
+  padding-bottom:150px;
+  margin:0 auto;
 `;
+
 const ContentsWrap = styled.div`
   position:relative;
   width:calc(100% - 45px);
+  // display:grid;
+  // grid-template-rows:auto 1fr;
+  // grid-template-columns:1fr 4fr;
+  // grid-template-areas:"toc content";
+  // gap:40px;
   margin:150px auto 0;
+  padding-left:380px;
+  padding-right:380px;
 `;

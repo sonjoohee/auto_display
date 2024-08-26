@@ -3,10 +3,13 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import { palette } from '../../../../assets/styles/Palette';
+
 const OrganismFooterBar = ({ onLoginClick }) => {
   return (
     <FooterBar>
-      <FooterButton onClick={onLoginClick}>로그인</FooterButton>
+      <p>이미 가입하셨나요?</p>
+      <FooterButton onClick={onLoginClick}>로그인하기</FooterButton>
     </FooterBar>
   );
 };
@@ -15,15 +18,21 @@ export default OrganismFooterBar;
 
 // CSS-in-JS 스타일링
 const FooterBar = styled.div`
-  position: fixed;
-  bottom: 0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
   width: 100%;
-  background-color: #f1f1f1;
+  font-size:1rem;
   text-align: center;
-  padding: 10px 0;
+  margin:100px auto;
 `;
 
 const FooterButton = styled.button`
-  padding: 10px 20px;
-  font-size: 16px;
+  font-family: 'Pretendard';
+  font-size:1rem;
+  color:${palette.blue};
+  text-decoration:underline;
+  border:0;
+  background:none;
 `;
