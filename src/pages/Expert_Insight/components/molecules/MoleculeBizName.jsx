@@ -3,11 +3,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const MoleculeBizName = () => {
+const MoleculeBizName = ({ bizName }) => {
   return (
     <BizNameContainer>
       <BizNameText>
-        피부과 시술을 집에서 쉽고 안전하게 경험하는 홈케어 뷰티 디바이스와 기능성화장품
+      {bizName || "비즈니스 이름을 입력하세요"}
       </BizNameText>
     </BizNameContainer>
   );
@@ -23,7 +23,7 @@ const BizNameContainer = styled.div`
   padding: 20px 0;
   background-color: #f4f4f4;  /* 배경색 설정 */
   text-align: center;
-  z-index: 98; /* 헤더보다 뒤에 위치하도록 z-index 설정 */
+  z-index: 90; /* 헤더보다 뒤에 위치하도록 z-index 설정 */
 `;
 
 const BizNameText = styled.h2`

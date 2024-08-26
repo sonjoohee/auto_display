@@ -1,3 +1,5 @@
+// C:\dev\Crowd_Insight-\src\pages\Expert_Insight\components\pages\PageMeetAiExpert.jsx
+
 import React, { useEffect, useState } from "react";
 import styled from 'styled-components';
 import { useNavigate } from "react-router-dom";
@@ -14,11 +16,10 @@ const PageMeetAiExpert = () => {
   const navigate = useNavigate();
 
   const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
-  const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
+  const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO); // 상태값으로 설정
 
   useEffect(() => {
     setSelectedExpertIndex(SELECTED_EXPERT_INDEX);
-    setInputBusinessInfo(INPUT_BUSINESS_INFO);
   }, []);
   
   return (
@@ -31,7 +32,11 @@ const PageMeetAiExpert = () => {
           단 한 줄의 사업 아이디어로 시작하는 AI 전문가와의 짧고 강력한 인사이트 세션
         </Subtitle>
 
-        <InputField placeholder="당신의 비즈니스를 간단히 입력한 후 시작해보세요!" onChange={(e) => setInputBusinessInfo(e.target.value)}/>
+        <InputField 
+          placeholder="당신의 비즈니스를 간단히 입력한 후 시작해보세요!" 
+          value={inputBusinessInfo}
+          onChange={(e) => setInputBusinessInfo(e.target.value)} // 입력 시 상태 업데이트
+        />
         <div onClick={() => {setSelectedExpertIndex(0); navigate("/ExpertInsight");}}>Let's go</div>
 
         <ExpertSelectionSection>
@@ -83,6 +88,9 @@ const PageMeetAiExpert = () => {
 };
 
 export default PageMeetAiExpert;
+
+// 스타일 정의는 기존대로 유지
+
 
 const Container = styled.div`
   display: flex;
