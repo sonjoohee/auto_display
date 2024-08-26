@@ -5,8 +5,7 @@ import styled from 'styled-components';
 import MoleculeSignupForm from '../molecules/MoleculeSignupForm';
 import OrganismFooterBar from '../organisms/OrganismFooterBar';
 import MoleculeLoginPopupManager from '../molecules/MoleculeLoginPopupManager';
-// AI_Panel페이지의 헤더 가져옴-나중에 전역으로 뺄수도 있음
-import OrganismHeader from '../../../../pages/AI_Panel/components/organisms/OrganismHeader';
+import OrganismHeader from '../../../organisms/OrganismHeader';
 
 import { palette } from '../../../../assets/styles/Palette';
 
