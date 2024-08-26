@@ -22,8 +22,10 @@ const OrganismBizAnalysisSection = () => {
   const [savedReports, setSavedReports] = useAtom(SAVED_REPORTS);
 
   const [newAddContent, setNewAddContent] = useState('');
+  const [isAddingNow, setIsAddingNow] = useState(false);
   const [newEditContent, setNewEditContent] = useState('');
   const [editingIndex, setEditingIndex] = useState(-1);
+  const [isEditingNow, setIsEditingNow] = useState(false);
 
   const saveReport = () => {
     setSavedReports((prevReports) => [
@@ -36,37 +38,35 @@ const OrganismBizAnalysisSection = () => {
     ]);
   };
 
-  const addContent = () => {
-    if (newAddContent.trim() !== '') {
-      setMainFeaturesOfBusinessInformation([...mainFeaturesOfBusinessInformation, newAddContent]);
-      setNewAddContent('');
-    }
-  };
-  
-  const deleteContent = (index) => {
-    setMainFeaturesOfBusinessInformation(
-      mainFeaturesOfBusinessInformation.filter((_, i) => i !== index)
-    );
-  };
-
   const handleEditStart = (index) => {
     setEditingIndex(index);
     setNewEditContent(mainFeaturesOfBusinessInformation[index]);
   };
-
   const handleEditSave = (index) => {
     const updatedFeatures = [...mainFeaturesOfBusinessInformation];
     updatedFeatures[index] = newEditContent;
     setMainFeaturesOfBusinessInformation(updatedFeatures);
     setEditingIndex(-1);
   };
-
   const handleEditCancel = () => {
     setEditingIndex(-1);
   };
 
+  const hadleAddSave = () => {
+    if (newAddContent.trim() !== '') {
+      setMainFeaturesOfBusinessInformation([...mainFeaturesOfBusinessInformation, newAddContent]);
+      setNewAddContent('');
+      setIsAddingNow(false)
+    }
+  };
+
+  const handleDelete = (index) => {
+    setMainFeaturesOfBusinessInformation(
+      mainFeaturesOfBusinessInformation.filter((_, i) => i !== index)
+    );
+  };
+
   return (
-    <>
       <AnalysisSection>
         <h1>{titleOfBusinessInfo}</h1>
 
@@ -202,14 +202,13 @@ const OrganismBizAnalysisSection = () => {
           <button type="button"><img src={images.IconWrite2} alt="" />비즈니스 설명 다시 하기</button>
           <div>
             <button type="button"><img src={images.IconRefresh} alt="" />재생성하기</button>
-            <button type="button"><img src={images.IconEdit} alt="" />수정하기</button>
+            <button type="button" onClick={() => setIsEditingNow(true)}><img src={images.IconEdit} alt="" />수정하기</button>
             <button type="button"><img src={images.IconCopy} alt="" />복사하기</button>
-            <button type="button"><img src={images.IconSave} alt="" />저장하기</button>
+            <button type="button "onClick={() => saveReport()}><img src={images.IconSave} alt="" />저장하기</button>
           </div>
         </ButtonWrap>
 
       </AnalysisSection>
-    </>
   );
 };
 

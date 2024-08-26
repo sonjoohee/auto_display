@@ -80,6 +80,10 @@ const OrganismSideBar = () => {
             </AccordionContent>
           </AccordionItem>
 
+          {selectedReport && (
+            <OrganismReportPopup report={selectedReport} onClose={closePopup} />
+          )}
+
           <AccordionItem>
             <input type="checkbox" id="section2" className="accordion-toggle" />
             <label for="section2" className="accordion-label">
@@ -90,10 +94,10 @@ const OrganismSideBar = () => {
               <div>
                 <strong>최근 작업</strong>
                 <ul>
-                  <Link to="#" onClick={() => handleReportClick(0)>
+                  <li onClick={() => handleReportClick(0)}>
                     <p>{bizName}</p>
                     <span>오늘</span>
-                  </Link>
+                  </li>
                   <li>
                     <p>운동을 좋아하는 20대 직장인</p>
                     <span>24.08.20</span>
