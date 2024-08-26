@@ -18,6 +18,7 @@ const OrganismBizAnalysisSection = () => {
   const [savedReports, setSavedReports] = useAtom(SAVED_REPORTS);
 
   const [newAddContent, setNewAddContent] = useState('');
+  const [isAdding, setIsAdding] = useState(false);
   const [newEditContent, setNewEditContent] = useState('');
   const [editingIndex, setEditingIndex] = useState(-1);
 
@@ -32,40 +33,42 @@ const OrganismBizAnalysisSection = () => {
     ]);
   };
 
-  const addContent = () => {
-    if (newAddContent.trim() !== '') {
-      setMainFeaturesOfBusinessInformation([...mainFeaturesOfBusinessInformation, newAddContent]);
-      setNewAddContent('');
-    }
-  };
-  
-  const deleteContent = (index) => {
-    setMainFeaturesOfBusinessInformation(
-      mainFeaturesOfBusinessInformation.filter((_, i) => i !== index)
-    );
-  };
-
   const handleEditStart = (index) => {
     setEditingIndex(index);
     setNewEditContent(mainFeaturesOfBusinessInformation[index]);
   };
-
   const handleEditSave = (index) => {
     const updatedFeatures = [...mainFeaturesOfBusinessInformation];
     updatedFeatures[index] = newEditContent;
     setMainFeaturesOfBusinessInformation(updatedFeatures);
     setEditingIndex(-1);
   };
-
   const handleEditCancel = () => {
     setEditingIndex(-1);
+  };
+
+  const hadleAddSave = () => {
+    if (newAddContent.trim() !== '') {
+      setMainFeaturesOfBusinessInformation([...mainFeaturesOfBusinessInformation, newAddContent]);
+      setNewAddContent('');
+      setIsAdding(false)
+    }
+  };
+
+  const handleDelete = (index) => {
+    setMainFeaturesOfBusinessInformation(
+      mainFeaturesOfBusinessInformation.filter((_, i) => i !== index)
+    );
   };
 
   return (
     <>
       <h1>{titleOfBusinessInfo}</h1>
       
-      <h2>주요 특징</h2>
+      <div>
+        <h2>주요 특징</h2>
+        <button onClick={() => setIsAdding(true)}>추가</button>
+      </div>
       <ul>
         {mainFeaturesOfBusinessInformation.map((content, index) => (
           <li key={index}>
@@ -76,7 +79,7 @@ const OrganismBizAnalysisSection = () => {
                 onChange={(e) => setNewEditContent(e.target.value)}
               />
             ) : (
-              <span onDoubleClick={() => handleEditStart(index)}>{content}</span>
+              <span>{content}</span>
             )}
             {editingIndex === index ? (
               <>
@@ -84,20 +87,31 @@ const OrganismBizAnalysisSection = () => {
                 <button onClick={handleEditCancel}>취소</button>
               </>
             ) : (
-              <button onClick={() => deleteContent(index)}>삭제</button>
+              <>
+                {index !== 0 && 
+                  <>
+                    <button onClick={() => handleEditStart(index)}>수정</button>
+                    <button onClick={() => handleDelete(index)}>삭제</button>
+                  </>
+                }
+              </>
             )}
           </li>
         ))}
       </ul>
-
-      <input 
-        type="text" 
-        value={newAddContent} 
-        onChange={(e) => setNewAddContent(e.target.value)} 
-        placeholder="새로운 정보를 추가해보세요"
-      />
-
-      <button onClick={addContent}>추가</button>
+      {isAdding && 
+      <div>
+        <input 
+          type="text" 
+          value={newAddContent} 
+          onChange={(e) => setNewAddContent(e.target.value)} 
+          placeholder="새로운 정보를 추가해보세요"
+        />
+        <button onClick={() => hadleAddSave()}>저장</button>
+        <button onClick={() => setIsAdding(false)}>취소</button>
+      </div>
+      }
+      
       <button onClick={saveReport}>보고서 저장</button> {/* 저장 버튼 추가 */}
     </>
   );
