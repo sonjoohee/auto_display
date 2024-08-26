@@ -1,11 +1,16 @@
 // C:\dev\Crowd_Insight-\src\pages\Expert_Insight\components\organisms\OrganismSideBar.jsx
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { palette } from '../../../../assets/styles/Palette';
+import images from '../../../../assets/styles/Images';
+import panelimages from '../../../../assets/styles/PanelImages';
+
+import { Link } from "react-router-dom";
 import { useAtom } from 'jotai';
+import { useNavigate } from 'react-router-dom';
 import { INPUT_BUSINESS_INFO, SAVED_REPORTS } from '../../../AtomStates';
-import images from '../../../../assets/images/Search.svg';
+
 import OrganismReportPopup from './OrganismReportPopup'; // 팝업 컴포넌트 임포트
 
 const OrganismSideBar = () => {
@@ -20,158 +25,520 @@ const OrganismSideBar = () => {
   const closePopup = () => {
     setSelectedReport(null); // 팝업 닫기
   };
+  
+  useEffect(() => {
+    const checkboxes = document.querySelectorAll('.accordion-toggle');
+    checkboxes.forEach((checkbox) => {
+      checkbox.addEventListener('change', function() {
+        if (this.checked) {
+          checkboxes.forEach((otherCheckbox) => {
+            if (otherCheckbox !== this) {
+              otherCheckbox.checked = false;
+            }
+          });
+        }
+      });
+    });
+
+    // Cleanup 이벤트 리스너
+    return () => {
+      checkboxes.forEach((checkbox) => {
+        checkbox.removeEventListener('change', () => {});
+      });
+    };
+  }, []);
 
   return (
-    <SideBarContainer>
-      <SideBarHeader>
-        <Link to="/new-chat">
-          <img src={images} alt="새 대화 시작하기" />
-          새 대화 시작하기
-        </Link>
-      </SideBarHeader>
+    <>
+    <SideBar>
+      <div className="logo">
+        <Link to="#"></Link>
+        <button type="button">닫기</button>
+      </div>
 
-      <SideBarContent>
-        <SectionTitle>최근 기록</SectionTitle>
-        <RecentRecordList>
-          {bizName && (
-            <RecordItem>
-              <Link to="#" onClick={() => handleReportClick(0)}>
-                <RecordTitle>{bizName}</RecordTitle>
-                <RecordDate>오늘</RecordDate>
-              </Link>
-            </RecordItem>
-          )}
-          <RecordItem>
-            <Link to="#" onClick={() => handleReportClick(1)}>
-              <RecordTitle>조사 데이터 정리 분석</RecordTitle>
-              <RecordDate>어제</RecordDate>
-            </Link>
-          </RecordItem>
-          <RecordItem>
-            <Link to="#" onClick={() => handleReportClick(2)}>
-              <RecordTitle>시장 분석 데이터 수집</RecordTitle>
-              <RecordDate>2024.08.22</RecordDate>
-            </Link>
-          </RecordItem>
-        </RecentRecordList>
+      <SideBarMenu>
+        <button type="button" className="newChat">
+          <img src={images.Chat} alt ="" />
+          새 프로젝트 시작
+        </button>
 
-        <SectionTitle>저장된 항목</SectionTitle>
-        <SavedItemsList>
-          {savedReports.map((report, index) => (
-            <SavedItem key={index}>
-              <Link to="#" onClick={() => handleReportClick(index)}>
-                {report.title}
-              </Link>
-            </SavedItem>
-          ))}
-        </SavedItemsList>
-      </SideBarContent>
+        <AccordionMenu>
+          <AccordionItem>
+            <input type="checkbox" id="section1" className="accordion-toggle" />
+            <label for="section1" className="accordion-label">
+              <img src={images.Folder} alt ="" />
+              인사이트 보관함
+            </label>
+            <AccordionContent>
+              {savedReports.map((report, index) => (
+                <div key={index}>
+                  <Link to="#" onClick={() => handleReportClick(index)}>
+                    {report.title}
+                  </Link>
+                </div>
+              ))}
+            </AccordionContent>
+          </AccordionItem>
 
-      {selectedReport && (
-        <OrganismReportPopup report={selectedReport} onClose={closePopup} />
-      )}
-    </SideBarContainer>
+          <AccordionItem>
+            <input type="checkbox" id="section2" className="accordion-toggle" />
+            <label for="section2" className="accordion-label">
+              <img src={images.Clock} alt ="" />
+              프로젝트 히스토리
+            </label>
+            <AccordionContent>
+              <div>
+                <strong>최근 작업</strong>
+                <ul>
+                  <Link to="#" onClick={() => handleReportClick(0)>
+                    <p>{bizName}</p>
+                    <span>오늘</span>
+                  </Link>
+                  <li>
+                    <p>운동을 좋아하는 20대 직장인</p>
+                    <span>24.08.20</span>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <strong>지난 7일 대화</strong>
+                <ul>
+                  <li>
+                    <p>운동을 좋아하는 20대 직장인</p>
+                    <span>오늘</span>
+                  </li>
+                  <li>
+                    <p>운동을 좋아하는 20대 직장인</p>
+                    <span>24.08.20</span>
+                  </li>
+                </ul>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </AccordionMenu>
+      </SideBarMenu>
+    </SideBar>
+
+    {/* 담당 AI 전문가 */}
+    <SideBar Right>
+      <AIProfileWrap>
+        <div>
+          <h3>담당 AI 전문가</h3>
+
+          <AIProfile>
+            <div className="thumb">
+              <img src={panelimages.PanelIMG} alt="" />
+            </div>
+            <div className="name">
+              <strong>김도원 - 제품 전략가</strong>
+              <p>제품 전략 총괄 디렉터</p>
+            </div>
+            <div className="field">
+              <strong>
+                <img src={images.IconChatSmile} alt="" />
+                전문분석 분야
+              </strong>
+
+              <p>
+                <span>핵심 가치 제안 분석</span>
+                <span>제품 개발 로드맵 구상</span>
+                <span>제품 포지셔닝 전략</span>
+              </p>
+            </div>
+          </AIProfile>
+
+          <Link to="#">상세 정보 확인하기</Link>
+        </div>
+      </AIProfileWrap>
+
+      <IdeaWrap>
+        <strong>김도원 디렉터님의 추천 사항이에요</strong>
+
+        <div>
+          <Link to="#">
+            <svg width="13" height="13" viewBox="0 0 21 21" fill="#ABABAB" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15.0674 13.3651H14.1407L13.8122 13.0486C15.22 11.4077 15.9473 9.16911 15.5484 6.78983C14.9971 3.53149 12.2753 0.929517 8.99053 0.531016C4.02811 -0.078456 -0.148303 4.09408 0.461735 9.0519C0.860606 12.3337 3.465 15.0529 6.72635 15.6037C9.10785 16.0022 11.3486 15.2756 12.991 13.8691L13.3077 14.1973V15.1232L18.2936 20.1044C18.7746 20.585 19.5606 20.585 20.0416 20.1044C20.5226 19.6239 20.5226 18.8386 20.0416 18.3581L15.0674 13.3651ZM8.02855 13.3651C5.10741 13.3651 2.74938 11.0092 2.74938 8.09081C2.74938 5.17238 5.10741 2.81654 8.02855 2.81654C10.9497 2.81654 13.3077 5.17238 13.3077 8.09081C13.3077 11.0092 10.9497 13.3651 8.02855 13.3651Z" fill="#ABABAB"/>
+            </svg>
+            "이런 페르소나"의 의견 들어보기
+          </Link>
+          <Link to="#">
+            <svg width="13" height="13" viewBox="0 0 21 21" fill="#ABABAB" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15.0674 13.3651H14.1407L13.8122 13.0486C15.22 11.4077 15.9473 9.16911 15.5484 6.78983C14.9971 3.53149 12.2753 0.929517 8.99053 0.531016C4.02811 -0.078456 -0.148303 4.09408 0.461735 9.0519C0.860606 12.3337 3.465 15.0529 6.72635 15.6037C9.10785 16.0022 11.3486 15.2756 12.991 13.8691L13.3077 14.1973V15.1232L18.2936 20.1044C18.7746 20.585 19.5606 20.585 20.0416 20.1044C20.5226 19.6239 20.5226 18.8386 20.0416 18.3581L15.0674 13.3651ZM8.02855 13.3651C5.10741 13.3651 2.74938 11.0092 2.74938 8.09081C2.74938 5.17238 5.10741 2.81654 8.02855 2.81654C10.9497 2.81654 13.3077 5.17238 13.3077 8.09081C13.3077 11.0092 10.9497 13.3651 8.02855 13.3651Z" fill="#ABABAB"/>
+            </svg>
+            "이런 페르소나"의 의견 들어보기
+          </Link>
+          <Link to="#">
+            <svg width="13" height="13" viewBox="0 0 21 21" fill="#ABABAB" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15.0674 13.3651H14.1407L13.8122 13.0486C15.22 11.4077 15.9473 9.16911 15.5484 6.78983C14.9971 3.53149 12.2753 0.929517 8.99053 0.531016C4.02811 -0.078456 -0.148303 4.09408 0.461735 9.0519C0.860606 12.3337 3.465 15.0529 6.72635 15.6037C9.10785 16.0022 11.3486 15.2756 12.991 13.8691L13.3077 14.1973V15.1232L18.2936 20.1044C18.7746 20.585 19.5606 20.585 20.0416 20.1044C20.5226 19.6239 20.5226 18.8386 20.0416 18.3581L15.0674 13.3651ZM8.02855 13.3651C5.10741 13.3651 2.74938 11.0092 2.74938 8.09081C2.74938 5.17238 5.10741 2.81654 8.02855 2.81654C10.9497 2.81654 13.3077 5.17238 13.3077 8.09081C13.3077 11.0092 10.9497 13.3651 8.02855 13.3651Z" fill="#ABABAB"/>
+            </svg>
+            "이런 페르소나"의 의견 들어보기
+          </Link>
+        </div>
+      </IdeaWrap>
+    </SideBar>
+    </>
   );
 };
 
 export default OrganismSideBar;
 
+const SideBar = styled.div`
+  position:sticky;
+  top:150px;
+  float:${props => {
+    if (props.Right) return `right`;
+    else return `left`;
+  }};
+  grid-area:toc;
+  width:100%;
+  max-width:360px;
+  // height:calc(100vh - 12rem);
+  margin-left:${props => {
+    if (props.Right) return `0`;
+    else return `-380px`;
+  }};
+  margin-right:${props => {
+    if (props.Right) return `-380px`;
+    else return `0`;
+  }};
+  margin-bottom:150px;
+  padding:${props => {
+    if (props.Right) return `0`;
+    else return `40px 28px`;
+  }};
+  border-radius:20px;
+  border:${props => {
+    if (props.Right) return `none`;
+    else return `1px solid ${palette.lineGray}`;
+  }};
+  background:${props => {
+    if (props.Right) return palette.white;
+    else return `rgba(0,0,0,.02)`;
+  }};
 
-const SideBarContainer = styled.div`
-  position: fixed;
-  top: 110px; /* 헤더 바로 아래 */
-  left: 0;
-  width: 240px;
-  height: calc(100% - 110px); /* 헤더를 제외한 전체 높이 */
-  background-color: #f4f4f4;
-  padding: 20px;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  z-index: 98; /* MoleculeBizName의 z-index보다 높게 설정 */
+  box-shadow:${props => {
+    if (props.Right) return `none`;
+    else return `0 4px 10px rgba(0,0,0,.1)`;
+  }};
+
+  h3 {
+    font-size:1rem;
+    font-weight:400;
+    text-align:left;
+    margin-bottom:20px;
+  }
+
+  .logo {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:40px;
+
+    a {
+      width:44px;
+      height:44px;
+      font-size:0;
+      background:url(${images.SymbolLogo}) left center no-repeat;
+      background-size:auto 100%;
+    }
+
+    button {
+      position:relative;
+      font-size:0;
+      width:30px;
+      height:30px;
+      border-radius:50%;
+      border:0;
+      background:${palette.white};
+      box-shadow:2px 2px 2px rgba(0,0,0,.1);
+
+      &:before {
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform:translate(-50%, -50%);
+        width:7px;
+        height:2px;
+        border-radius:10px;
+        background:${palette.black};
+        content:'';
+      }
+
+      &:after {
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform:translate(-50%, -50%) rotate(45deg);
+        width:8px;
+        height:8px;
+        border-left:2px solid ${palette.black};
+        border-bottom:2px solid ${palette.black};
+        content:'';
+      }
+    }
+  }
 `;
 
-const SideBarHeader = styled.div`
-  margin-bottom: 40px;
+const SideBarMenu = styled.div`
+  display:flex;
+  flex-direction:column;
+
+  .newChat {
+    display:flex;
+    align-items:center;
+    gap:16px;
+    font-family: 'Pretendard';
+    font-size:1rem;
+    font-weight:500;
+    padding:12px 16px;
+    border:0;
+    background:none;
+  }
+`;
+
+const AccordionMenu = styled.div`
+  width: 100%;
+`;
+
+const AccordionItem = styled.div`
+  .accordion-toggle {
+    display: none;
+  }
+
+  .accordion-label {
+    position:relative;
+    display:flex;
+    align-items:center;
+    gap:16px;
+    font-family: 'Pretendard';
+    font-size:1rem;
+    font-weight:500;
+    padding:12px 16px;
+    border:0;
+    background:none;
+    cursor:pointer;
+
+    &:after {
+      position:absolute;
+      right:20px;
+      top:50%;
+      transform:translateY(-50%) rotate(45deg);
+      width:8px;
+      height:8px;
+      border-right:2px solid ${palette.black};
+      border-bottom:2px solid ${palette.black};
+      transition:all .5s;
+      content:'';
+    }
+  }
+
+  .accordion-toggle:checked + .accordion-label:after {
+    transform:translateY(-50%) rotate(-135deg);
+  }
+
+  .accordion-toggle:checked + .accordion-label + div {
+    max-height: 1000px;
+    margin-top:20px;
+    padding:0 16px;
+  }
+`;
+
+const AccordionContent = styled.div`
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 16px;
+  transition: max-height 0.5s ease, padding 0.5s ease;
+
+  > div + div {
+    margin-top:30px;
+  }
+
+  strong {
+    font-size:0.75rem;
+    font-weight:400;
+    color:${palette.gray};
+    text-align:left;
+    display:block;
+  }
+
+  ul {
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    margin-top:10px;
+  }
+
+  li {
+    position:relative;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-family: 'Pretendard';
+    font-size:0.88rem;
+    color:${palette.gray};
+    text-align:left;
+    padding:8px 12px 8px 25px;
+
+    &:before {
+      position:absolute;
+      left:0;
+      top:50%;
+      transform:translateY(-50%);
+      width:10px;
+      height:10px;
+      background:${palette.lightGray};
+      content:'';
+    }
+
+    p {
+      width:70%;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      overflow:hidden;
+    }
+
+    span {
+      font-size:0.75rem;
+      color:${palette.lightGray};
+    }
+  }
+`;
+
+const AIProfileWrap = styled.div`
+  padding:30px;
+  border-radius:20px;
+  border:1px solid ${palette.lineGray};
+  box-shadow:0 4px 10px rgba(0,0,0,.05);
+  background:${palette.white};
+
+  + div {
+    margin-top:28px;
+  }
 
   a {
-    display: flex;
-    align-items: center;
-    padding: 10px 15px;
-    border-radius: 30px;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
+    position:relative;
+    font-size:0.88rem;
+    text-decoration:underline;
+    padding-right:16px;
+    margin-top:20px;
+
+    &:after {
+      position:absolute;
+      right:0;
+      top:50%;
+      transform:translateY(-50%) rotate(45deg);
+      width:8px;
+      height:8px;
+      border-top:2px solid ${palette.black};
+      border-right:2px solid ${palette.black};
+      content:'';
+    }
+  }
+`;
+
+const AIProfile = styled.div`
+  display:flex;
+  flex-direction:column;
+  padding:25px;
+  border-radius:12px;
+  border:1px solid ${palette.lineGray};
+  background:rgba(0,0,0,.04);
+
+  .thumb {
+    position:relative;
+    width:160px;
+    height:160px;
+    margin:0 auto;
+    border-radius:50%;
+    overflow:hidden;
 
     img {
-      margin-right: 10px;
-      width: 16px;
-      height: 16px;
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%, -50%);
+      width:100%;
+      height:100%;
+      object-fit: cover;
+    }
+  }
+
+  .name {
+    margin-top:30px;
+
+    strong {
+      font-size:1.25rem;
+      font-weight:700;
     }
 
-    &:hover {
-      background-color: #e0e0e0;
+    p {
+      color:${palette.gray};
+      margin-top:15px;
+    }
+  }
+
+  .field {
+    display:flex;
+    flex-direction:column;
+    margin:25px auto 0;
+
+    strong {
+      display:flex;
+      align-items:center;
+      gap:5px;
+      font-weight:400;
+      color:${palette.blue};
+      margin-bottom:12px;
+    }
+
+    p {
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:8px;
+    }
+
+    span {
+      font-size:0.88rem;
+      padding:8px 16px;
+      border-radius:25px;
+      border:1px solid ${palette.lineGray};
+      background:${palette.white};
     }
   }
 `;
 
-const SideBarContent = styled.div`
-  overflow-y: auto;
-`;
+const IdeaWrap = styled.div`
+  text-align:left;
+  padding:30px;
+  border-radius:20px;
+  border:1px solid ${palette.lineGray};
+  box-shadow:0 4px 10px rgba(0,0,0,.05);
 
-const SectionTitle = styled.h3`
-  font-size: 1rem;
-  font-weight: bold;
-  margin-bottom: 15px;
-`;
-
-const RecentRecordList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  margin-bottom: 40px;
-`;
-
-const RecordItem = styled.li`
-  margin-bottom: 15px;
-
-  a {
-    display: flex;
-    justify-content: space-between;
-    text-decoration: none;
-    color: #333;
-
-    &:hover {
-      color: #000;
-    }
+  strong {
+    display:block;
+    padding-bottom:10px;
+    margin-bottom:20px;
+    border-bottom:1px solid ${palette.lineGray};
   }
-`;
 
-const RecordTitle = styled.span`
-  font-size: 0.88rem;
-  font-weight: 500;
-`;
+  div {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:20px;
 
-const RecordDate = styled.span`
-  font-size: 0.75rem;
-  color: #999;
-`;
+    a {
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      width:100%;
+      font-size:0.81rem;
+      color:${palette.gray};
+    }
 
-const SavedItemsList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-`;
-
-const SavedItem = styled.li`
-  margin-bottom: 15px;
-
-  a {
-    text-decoration: none;
-    color: #333;
-
-    &:hover {
-      color: #000;
+    svg {
+      flex-shrink:0;
     }
   }
 `;

@@ -68,32 +68,34 @@ const PageExpertInsight = () => {
 
   return (
     <>
+      {selectedExpertIndex !== 0 ? <OrganismTakingChargeAiExpert/> : ''}
+
       <OrganismHeader />
-      <OrganismSideBar />
-      <OrganismRightSideBar />
 
-      {/* 전문가가 선택된 경우 */}
-      {selectedExpertIndex !== 0 && <OrganismTakingChargeAiExpert />}
+      <ContentsWrap>
+        <OrganismSideBar />
+        <OrganismRightSideBar />
 
-      {/* Biz Name Section */}
-      <MoleculeBizName bizName={inputBusinessInfo} />
+        <MainContent>
+          {/* Biz Name Section */}
+          <MoleculeBizName bizName={inputBusinessInfo}/>
 
-      <MainContent>
-        {/* 대화 내용 누적 출력 */}
-        {conversation.map((item, index) => {
-          if (item.type === 'user') {
-            return <MoleculeUserMessage key={index} message={item.message} />;
-          } else if (item.type === 'system') {
-            return <MoleculeSystemMessage key={index} message={item.message} />;
-          } else if (item.type === 'analysis') {
-            return <OrganismBizAnalysisSection key={index} />;
-          }
-          return null;
-        })}
+          {/* 대화 내용 누적 출력 */}
+          {conversation.map((item, index) => {
+            if (item.type === 'user') {
+              return <MoleculeUserMessage key={index} message={item.message} />;
+            } else if (item.type === 'system') {
+              return <MoleculeSystemMessage key={index} message={item.message} />;
+            } else if (item.type === 'analysis') {
+              return <OrganismBizAnalysisSection key={index} />;
+            }
+            return null;
+          })}
 
-        {/* 전문가 선택 섹션 */}
-        <OrganismBizExpertSelect />
-      </MainContent>
+          {/* 전문가 선택 섹션 */}
+          <OrganismBizExpertSelect />
+        </MainContent>
+      </ContentsWrap>
 
       <OrganismSearchBottomBar onSearch={handleSearch} />
     </>
@@ -103,12 +105,22 @@ const PageExpertInsight = () => {
 export default PageExpertInsight;
 
 const MainContent = styled.div`
-  margin-left: 240px;
-  margin-right: 240px;
-  padding: 200px 20px 20px;
-  background-color: #fff;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  grid-area:content;
+  min-width:1px;
+  max-width:1135px;
+  padding-bottom:150px;
+  margin:0 auto;
+`;
+
+const ContentsWrap = styled.div`
+  position:relative;
+  width:calc(100% - 45px);
+  // display:grid;
+  // grid-template-rows:auto 1fr;
+  // grid-template-columns:1fr 4fr;
+  // grid-template-areas:"toc content";
+  // gap:40px;
+  margin:150px auto 0;
+  padding-left:380px;
+  padding-right:380px;
 `;

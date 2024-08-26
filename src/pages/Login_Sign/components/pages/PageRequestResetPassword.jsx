@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import MoleculePasswordResetPopup from '../molecules/MoleculePasswordResetPopup';
+import OrganismHeader from '../../../AI_Panel/components/organisms/OrganismHeader';
+
+import { palette } from '../../../../assets/styles/Palette';
 
 const RequestResetPassword = () => {
   const [name, setName] = useState('');
@@ -63,31 +66,46 @@ const RequestResetPassword = () => {
 
   return (
     <>
+    <OrganismHeader />
     {isLoading && (
       <LoadingOverlay>
         <div className="loader"></div>
       </LoadingOverlay>
     )}
     <RequestResetContainer>
-      <Header>비밀번호 재설정 요청</Header>
-      <Label htmlFor="name">이름</Label>
-      <StyledInput
-        type="text"
-        id="name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="이름을 입력하세요"
-      />
-      <Label htmlFor="email">이메일</Label>
-      <StyledInput
-        type="email"
-        id="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="이메일 주소를 입력하세요"
-      />
-      <StyledButton onClick={handleRequestReset}>비밀번호 재설정 링크 보내기</StyledButton>
-      {message && <Message>{message}</Message>}
+      <Header>
+        비밀번호를 잊어버리셨나요?
+        <p>가입하신 이메일 주소로 비밀번호를 재설정 할 수 있는 링크를 보내드려요 </p>
+      </Header>
+
+      <PasswordFormContainer>
+        <div>
+          <label htmlFor="name">이름<span>*</span></label>
+          <StyledInput
+            type="text"
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="이름을 입력하세요"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="email">이메일<span>*</span></label>
+          <StyledInput
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="이메일 주소를 입력하세요"
+          />
+        </div>
+
+        <StyledButton onClick={handleRequestReset}>비밀번호 재설정 링크 보내기</StyledButton>
+
+        {message && <Message>{message}</Message>}
+      </PasswordFormContainer>
+
 
       {isPopupOpen && (
         <MoleculePasswordResetPopup
@@ -106,71 +124,92 @@ export default RequestResetPassword;
 
 // CSS-in-JS 스타일링
 const RequestResetContainer = styled.div`
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position:relative;
+  max-width:450px;
+  width:100%;
+  margin:220px auto 0;
 `;
 
 const Header = styled.h2`
-  font-size: 18px;
-  color: #333;
-  margin-bottom: 20px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  font-size: 2rem;
+  margin: 110px auto;
   text-align: center;
+
+  p {
+    font-size:1rem;
+    font-weight:300;
+    color:${palette.gray};
+  }
 `;
 
-const Label = styled.label`
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-  font-size: 14px;
-  color: #333;
-  align-self: flex-start;
-  text-align: left; /* 왼쪽 정렬 */
+const PasswordFormContainer = styled.div`
+  max-width:400px;
+  margin:0 auto;
+
+  > div {
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+
+    label {
+      font-size:0.75rem;
+      text-align:left;
+      display:flex;
+      align-items:flex-start;
+      gap:5px;
+
+      span {
+        color:${palette.red};
+      }
+    }
+
+    p {
+      font-size:0.63rem;
+      color:${palette.gray};
+      text-align:left;
+    }
+
+    + div {
+      margin-top:20px;
+    }
+  }
 `;
 
 const StyledInput = styled.input`
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  font-family: 'Pretendard', 'Poppins';
+  font-size:1rem;
+  padding: 12px 16px;
+  border-radius:8px;
+  border: 1px solid ${palette.lineGray};
   box-sizing: border-box;
-  margin-bottom: 10px;
 `;
 
 const StyledButton = styled.button`
-  margin-top: 20px;
   width: 100%;
+  font-size:1rem;
+  font-weight:700;
+  color:${palette.white};
+  margin-top: 50px;
   padding: 15px;
-  background-color: #1a73e8;
-  color: white;
-  border: none;
   border-radius: 8px;
-  font-size: 18px;
-  font-weight: bold;
+  border: none;
+  background-color:${palette.blue};
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease;
-
-  &:hover {
-    background-color: #135cbf;
-    transform: scale(1.05);
-  }
-
-  &:active {
-    background-color: #0d47a1;
-    transform: scale(1);
-  }
 `;
 
 const Message = styled.p`
+  font-size:0.75rem;
+  color:${palette.red};
   margin-top: 20px;
-  color: #333;
-  font-size: 14px;
   text-align: center;
 `;
+
 const LoadingOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -183,17 +222,45 @@ const LoadingOverlay = styled.div`
   align-items: center;
   z-index: 9999;
 
-  .loader {
-    border: 12px solid #f3f3f3; /* Light grey */
-    border-top: 12px solid #3498db; /* Blue */
+  .loader,
+  .loader:after {
     border-radius: 50%;
-    width: 80px;
-    height: 80px;
-    animation: spin 2s linear infinite;
+    width: 10em;
+    height: 10em;
   }
-
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  .loader {
+    margin: 60px auto;
+    font-size: 10px;
+    position: relative;
+    text-indent: -9999em;
+    border-top: 1.1em solid rgba(255,255,255, 0);
+    border-right: 1.1em solid rgba(255,255,255, 0);
+    border-bottom: 1.1em solid rgba(255,255,255, 0);
+    border-left: 1.1em solid #0453f4;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-animation: load8 1.1s infinite linear;
+    animation: load8 1.1s infinite linear;
+  }
+  @-webkit-keyframes load8 {
+    0% {
+      -webkit-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes load8 {
+    0% {
+      -webkit-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
   }
 `;

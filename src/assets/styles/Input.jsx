@@ -20,6 +20,10 @@ export const InputField = styled.input`
   }};
   outline:0;
   border-radius:5px;
+  background:${props => {
+    if (props.None) return `none`;
+    else return `${palette.white}`;
+  }};
   transition:all .5s;
 
   &::placeholder {

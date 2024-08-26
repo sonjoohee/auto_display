@@ -10,6 +10,8 @@ import images from '../../assets/styles/Images'; // Images.jsx 임포트
 import { useAtom } from 'jotai';
 import { isLoggedInAtom, loginSuccessAtom } from '../../../../pages/AtomStates'; // 아톰 임포트
 
+import { palette } from '../../../../assets/styles/Palette';
+
 const MoleculeGoogleLoginForm = () => {
   const [, setIsLoggedIn] = useAtom(isLoggedInAtom);
   const [, setLoginSuccess] = useAtom(loginSuccessAtom);
@@ -58,21 +60,17 @@ const LoginButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 20px;
-  background-color: white;
-  color: #555;
-  border: 1px solid #ddd;
-  border-radius: 25px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
   width: 100%;
-  max-width: 300px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: 'Pretendard', 'Poppins';
+  font-size: 1rem;
+  font-weight: 700;
+  color: ${palette.gray};
+  padding: 14px 16px;
+  border-radius: 8px;
+  border: 1px solid ${palette.lineGray};
+  background-color:${palette.white};
+  cursor: pointer;
 
-  &:hover {
-    background-color: #f7f7f7;
-  }
 `;
 
 const GoogleIconStyled = styled.img`
