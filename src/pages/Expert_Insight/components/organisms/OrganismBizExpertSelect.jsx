@@ -18,7 +18,6 @@ const OrganismBizExpertSelect = () => {
           <Button>지금 바로 만나 타겟 고객 확인하기</Button>
         </Option>
       </SelectOptions>
-      <TextInput placeholder="질문을 입력해주세요" />
     </BizExpertSelectContainer>
   );
 };
@@ -31,6 +30,7 @@ const BizExpertSelectContainer = styled.div`
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 80px; /* 하단 마진 추가하여 하단바와 겹치지 않도록 조정 */
 
   h2 {
     font-size: 1.25rem;
@@ -67,13 +67,4 @@ const Button = styled.button`
   &:hover {
     background-color: #e0e0e0;
   }
-`;
-
-const TextInput = styled.input`
-  width: 100%;
-  padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 1rem;
-  color: #333;
 `;

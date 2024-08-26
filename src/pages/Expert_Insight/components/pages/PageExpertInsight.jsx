@@ -1,5 +1,3 @@
-// C:\dev\Crowd_Insight-\src\pages\Expert_Insight\components\pages\PageExpertInsight.jsx
-
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useAtom } from 'jotai';
@@ -19,7 +17,6 @@ import MoleculeSystemMessage from '../molecules/MoleculeSystemMessage';
 
 import MoleculeUserMessage from '../molecules/MoleculeUserMessage';
 import OrganismBizExpertSelect from '../organisms/OrganismBizExpertSelect';
-import MoleculeUserMessage from '../molecules/MoleculeUserMessage';
 import OrganismTakingChargeAiExpert from '../organisms/OrganismTakingChargeAiExpert';
 
 const PageExpertInsight = () => {
@@ -45,14 +42,9 @@ const PageExpertInsight = () => {
         ...prev,
         { type: 'system', message: `${inputValue}를 바탕으로 분석을 진행하겠습니다.` },
         { type: 'analysis' },
+        { type: 'system', message: `${inputValue}에 대한 리포트 입니다. 추가로 궁금하신 부분이 있다면 질문해주세요.` }
       ]);
-      setConversationStage(2);
-    } else if (conversationStage === 2 && inputBusinessInfo) {
-      setConversation((prev) => [
-        ...prev,
-        { type: 'system', message: `${titleOfBusinessInfo}에 대한 리포트 입니다. 추가로 궁금하신 부분이 있다면 질문해주세요.` },
-      ]);
-      setConversationStage(3);
+      setConversationStage(3);  // Stage를 3으로 바로 설정
     } else if (conversationStage === 3) {
       setConversation((prev) => [
         ...prev,
@@ -60,20 +52,6 @@ const PageExpertInsight = () => {
       ]);
     }
   };
-  
-
-  useEffect(() => {
-    // OrganismBizAnalysisSection이 추가된 후에 새로운 시스템 메시지를 추가
-    if (conversationStage === 2 && titleOfBusinessInfo) {
-      setConversation((prev) => [
-        ...prev,
-        {
-          type: 'system',
-          message: `${titleOfBusinessInfo}에 대한 리포트 입니다. 추가로 궁금하신 부분이 있다면 질문해주세요.`,
-        },
-      ]);
-    }
-  }, [conversationStage, titleOfBusinessInfo]);
 
   const getInitialSystemMessage = () => {
     switch (selectedExpertIndex) {
@@ -134,4 +112,3 @@ const MainContent = styled.div`
   flex-direction: column;
   gap: 20px;
 `;
-
