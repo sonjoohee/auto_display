@@ -58,46 +58,43 @@ const PageExpertInsight = () => {
 
   const handleSearch = (inputValue) => {
     const updatedConversation = [
-        ...conversation,
-        { type: 'user', message: inputValue },
+      ...conversation,
+      { type: 'user', message: inputValue },
     ];
 
     if (conversationStage === 1) {
-        const analysisResult = `분석 결과: ${inputValue}에 대한 상세 분석 내용`;
-        setInputBusinessInfo(inputValue);
-        updatedConversation.push(
-            { type: 'system', message: `${inputValue}를 바탕으로 분석을 진행하겠습니다.` },
-            { type: 'analysis', message: analysisResult },
-            { type: 'system', message: `${inputValue}에 대한 리포트 입니다. 추가로 궁금하신 부분이 있다면 질문해주세요.` }
-        );
-        setConversationStage(2);
+      setInputBusinessInfo(inputValue);
+      updatedConversation.push(
+        { type: 'system', message: `${inputValue}를 바탕으로 분석을 진행하겠습니다.` },
+        { type: 'analysis' },
+        { type: 'system', message: `${inputValue}에 대한 리포트 입니다. 추가로 궁금하신 부분이 있다면 질문해주세요.` }
+      );
+      setConversationStage(2);
     } else if (conversationStage === 2) {
-        const strategyContent = '전략 내용: 해당 비즈니스에 대한 전략적 접근';
-        updatedConversation.push(
-            { type: 'system', message: '리포트를 바탕으로 전략 보고서를 작성하겠습니다.' },
-            { type: 'strategy', message: strategyContent },
-            { type: 'system', message: '전략 보고서를 기반으로 추가적인 질문을 해주세요.' },
-        );
-        setConversationStage(3);
+      updatedConversation.push(
+        { type: 'system', message: '리포트를 바탕으로 전략 보고서를 작성하겠습니다.' },
+        { type: 'strategy' },
+        { type: 'system', message: '전략 보고서를 기반으로 추가적인 질문을 해주세요.' },
+      );
+      setConversationStage(3);
     } else if (conversationStage === 3) {
-        updatedConversation.push(
-            { type: 'system', message: '해당 질문에 대한 답변을 준비 중입니다.' }
-        );
+      updatedConversation.push(
+        { type: 'system', message: '해당 질문에 대한 답변을 준비 중입니다.' }
+      );
     }
 
     setConversation(updatedConversation);
 
     // 대화 내역을 IndexedDB에 저장
     saveConversationToIndexedDB({
-        id: conversationId,
-        conversation: updatedConversation,
-        conversationStage: conversationStage + 1,
-        inputBusinessInfo,
-        titleOfBusinessInfo,
-        timestamp: Date.now(),
+      id: conversationId,
+      conversation: updatedConversation,
+      conversationStage: conversationStage + 1,
+      inputBusinessInfo,
+      titleOfBusinessInfo,
+      timestamp: Date.now(),
     });
-};
-
+  };
 
   const getInitialSystemMessage = () => {
     switch (selectedExpertIndex) {
@@ -124,17 +121,17 @@ const PageExpertInsight = () => {
           <MoleculeBizName bizName={inputBusinessInfo} />
 
           {conversation.map((item, index) => {
-                    if (item.type === 'user') {
-                        return <MoleculeUserMessage key={index} message={item.message} />;
-                    } else if (item.type === 'system') {
-                        return <MoleculeSystemMessage key={index} message={item.message} />;
-                    } else if (item.type === 'analysis') {
-                        return <OrganismBizAnalysisSection key={index} analysisContent={item.message} />;
-                    } else if (item.type === 'strategy') {
-                        return <OrganismStrategyReportSection key={index} strategyContent={item.message} />;
-                    }
-                    return null;
-                })}
+            if (item.type === 'user') {
+              return <MoleculeUserMessage key={index} message={item.message} />;
+            } else if (item.type === 'system') {
+              return <MoleculeSystemMessage key={index} message={item.message} />;
+            } else if (item.type === 'analysis') {
+              return <OrganismBizAnalysisSection key={index} />;
+            } else if (item.type === 'strategy') {
+              return <OrganismStrategyReportSection key={index} />;
+            }
+            return null;
+          })}
 
           <OrganismBizExpertSelect />
         </MainContent>

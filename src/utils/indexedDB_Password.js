@@ -1,5 +1,18 @@
 // utils/indexedDB.js
 import axios from 'axios';
+import CryptoJS from 'crypto-js';
+
+// 암호화 함수
+export const encryptData = (data, secretKey) => {
+  return CryptoJS.AES.encrypt(JSON.stringify(data), secretKey).toString();
+};
+
+// 복호화 함수
+export const decryptData = (cipherText, secretKey) => {
+  const bytes = CryptoJS.AES.decrypt(cipherText, secretKey);
+  const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
+  return JSON.parse(decryptedData);
+};
 
 export const fetchDataById = async (id) => {
   try {
@@ -35,16 +48,21 @@ export const openDB = () => {
   });
 };
 
-export const saveConversationToIndexedDB = async (conversation) => {
+export const saveConversationToIndexedDB = async (conversation, secretKey) => {
   const db = await openDB();
   const transaction = db.transaction('conversations', 'readwrite');
   const store = transaction.objectStore('conversations');
+
+  // 데이터 암호화
+  const encryptedConversation = encryptData(conversation, secretKey);
+
   return new Promise((resolve, reject) => {
-    const request = store.put(conversation);
+    const request = store.put({ id: conversation.id, data: encryptedConversation });
     request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject('Failed to save conversation to IndexedDB');
+    request.onerror = () => reject('Failed to save encrypted conversation to IndexedDB');
   });
 };
+
 
 export const getAllConversationsFromIndexedDB = async () => {
   const db = await openDB();
@@ -56,16 +74,27 @@ export const getAllConversationsFromIndexedDB = async () => {
     request.onerror = () => reject('Failed to fetch conversations from IndexedDB');
   });
 };
-export const getConversationByIdFromIndexedDB = async (id) => {
+
+export const getConversationByIdFromIndexedDB = async (id, secretKey) => {
   const db = await openDB();
   const transaction = db.transaction('conversations', 'readonly');
   const store = transaction.objectStore('conversations');
+
   return new Promise((resolve, reject) => {
     const request = store.get(id);
-    request.onsuccess = () => resolve(request.result);
+    request.onsuccess = () => {
+      if (request.result) {
+        // 데이터 복호화
+        const decryptedConversation = decryptData(request.result.data, secretKey);
+        resolve(decryptedConversation);
+      } else {
+        resolve(null);
+      }
+    };
     request.onerror = () => reject('Failed to fetch conversation from IndexedDB');
   });
 };
+
 export const saveRecordToIndexedDB = async (record) => {
   const db = await openDB();
   const transaction = db.transaction('records', 'readwrite');

@@ -1,22 +1,35 @@
-// C:\dev\Crowd_Insight-\src\pages\Expert_Insight\components\organisms\OrganismSideBar.jsx
-
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
 import panelimages from '../../../../assets/styles/PanelImages';
-
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAtom } from 'jotai';
-import { useNavigate } from 'react-router-dom';
 import { INPUT_BUSINESS_INFO, SAVED_REPORTS } from '../../../AtomStates';
+import { getAllConversationsFromIndexedDB } from '../../../../utils/indexedDB'; // IndexedDB에서 대화 내역 가져오기
 
 import OrganismReportPopup from './OrganismReportPopup'; // 팝업 컴포넌트 임포트
 
 const OrganismSideBar = () => {
+  const navigate = useNavigate();
   const [bizName] = useAtom(INPUT_BUSINESS_INFO);
   const [savedReports] = useAtom(SAVED_REPORTS);
   const [selectedReport, setSelectedReport] = useState(null); // 선택된 보고서 상태 관리
+  const [conversations, setConversations] = useState([]); // 저장된 대화 상태 관리
+
+  useEffect(() => {
+    // IndexedDB에서 저장된 모든 대화 내역 가져오기
+    const loadConversations = async () => {
+      const allConversations = await getAllConversationsFromIndexedDB();
+      setConversations(allConversations);
+    };
+    loadConversations();
+  }, []);
+
+  const handleConversationClick = (id) => {
+    // 클릭 시 해당 대화로 이동
+    navigate(`/conversation/${id}`);
+  };
 
   const handleReportClick = (index) => {
     setSelectedReport(savedReports[index]); // 보고서 선택
@@ -94,29 +107,15 @@ const OrganismSideBar = () => {
               <div>
                 <strong>최근 작업</strong>
                 <ul>
-                  <li onClick={() => handleReportClick(0)}>
-                    <p>{bizName}</p>
-                    <span>오늘</span>
-                  </li>
-                  <li>
-                    <p>운동을 좋아하는 20대 직장인</p>
-                    <span>24.08.20</span>
-                  </li>
+                  {conversations.map((conversation, index) => (
+                    <li key={index} onClick={() => handleConversationClick(conversation.id)}>
+                      <p>{conversation.inputBusinessInfo}</p>
+                      <span>{new Date(conversation.timestamp).toLocaleDateString()}</span>
+                    </li>
+                  ))}
                 </ul>
               </div>
-              <div>
-                <strong>지난 7일 대화</strong>
-                <ul>
-                  <li>
-                    <p>운동을 좋아하는 20대 직장인</p>
-                    <span>오늘</span>
-                  </li>
-                  <li>
-                    <p>운동을 좋아하는 20대 직장인</p>
-                    <span>24.08.20</span>
-                  </li>
-                </ul>
-              </div>
+              {/* 기존의 지난 7일 대화 코드 삭제 또는 수정 가능 */}
             </AccordionContent>
           </AccordionItem>
         </AccordionMenu>
