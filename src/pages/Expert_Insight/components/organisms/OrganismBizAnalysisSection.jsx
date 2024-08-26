@@ -6,9 +6,13 @@ import {
   INPUT_BUSINESS_INFO,
   TITLE_OF_BUSINESS_INFORMATION,
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
+  MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
   SAVED_REPORTS,
+  IS_EDITING_NOW,
 } from '../../../AtomStates';
+
+import MoleculeReportController from '../molecules/MoleculeReportController';
 
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
@@ -19,24 +23,15 @@ const OrganismBizAnalysisSection = () => {
   const [inputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
-  const [savedReports, setSavedReports] = useAtom(SAVED_REPORTS);
+  const [mainCharacteristicOfBusinessInformation, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
+  const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
+  const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
 
+  const [bizAnalysisReportIndex, setBizAnalysisReportIndex] = useState(0);
   const [newAddContent, setNewAddContent] = useState('');
   const [isAddingNow, setIsAddingNow] = useState(false);
   const [newEditContent, setNewEditContent] = useState('');
   const [editingIndex, setEditingIndex] = useState(-1);
-  const [isEditingNow, setIsEditingNow] = useState(false);
-
-  const saveReport = () => {
-    setSavedReports((prevReports) => [
-      ...prevReports,
-      {
-        title: titleOfBusinessInfo,
-        date: new Date().toLocaleDateString(),
-        content: mainFeaturesOfBusinessInformation,
-      },
-    ]);
-  };
 
   const handleEditStart = (index) => {
     setEditingIndex(index);
@@ -72,7 +67,6 @@ const OrganismBizAnalysisSection = () => {
 
         <BoxWrap>
           <strong><img src={images.StarChack} alt="" />주요 특징</strong>
-          {isEditingNow && <button onClick={() => setIsAddingNow(true)}>추가</button>}
           <ul>
           {mainFeaturesOfBusinessInformation.map((content, index) => (
             <li key={index}>
@@ -80,7 +74,7 @@ const OrganismBizAnalysisSection = () => {
                 <input
                   type="text"
                   value={newEditContent}
-                  onChange={(e) => setNewEditContent(e.target.value)}
+                  onChange={(e) => {setBizAnalysisReportIndex(0); setNewEditContent(e.target.value);}}
                 />
               ) : (
                 <p>{content}</p>
@@ -102,19 +96,21 @@ const OrganismBizAnalysisSection = () => {
             )}
             </li>
           ))}
+          <AddInfo>
+            {isEditingNow && !isAddingNow && <InputField onClick={() => setIsAddingNow(true)} placeholder="특징 추가하기 +"></InputField>}
+            {isAddingNow &&
+              <>           
+                <InputField autoFocus value={newAddContent} onChange={(e)=>{setNewAddContent(e.target.value);}}></InputField>
+                <button onClick={() => hadleAddSave()}>저장</button>
+                <button onClick={() => setIsAddingNow(false)}>취소</button>
+              </>     
+            }
+          </AddInfo>
           </ul>
-          {isAddingNow && 
-            <AddInfo>
-              <InputField value={newAddContent} onChange={(e)=>{setNewAddContent(e.target.value);}} placeholder="새로운 정보를 추가해보세요"></InputField>
-              <button onClick={() => hadleAddSave()}>저장</button>
-              <button onClick={() => setIsAddingNow(false)}>취소</button>
-            </AddInfo>
-          }
         </BoxWrap>
 
         <BoxWrap>
           <strong><img src={images.StarChack} alt="" />주요 기능</strong>
-          {isEditingNow && <button onClick={() => setIsAddingNow(true)}>추가</button>}
           <ul>
           {mainFeaturesOfBusinessInformation.map((content, index) => (
             <li key={index}>
@@ -144,19 +140,21 @@ const OrganismBizAnalysisSection = () => {
             )}
             </li>
           ))}
+          <AddInfo>
+            {isEditingNow && !isAddingNow && <InputField onClick={() => setIsAddingNow(true)} placeholder="기능 추가하기 +"></InputField>}
+            {isAddingNow &&
+              <>           
+                <InputField autoFocus value={newAddContent} onChange={(e)=>{setNewAddContent(e.target.value);}}></InputField>
+                <button onClick={() => hadleAddSave()}>저장</button>
+                <button onClick={() => setIsAddingNow(false)}>취소</button>
+              </>     
+            }
+          </AddInfo>
           </ul>
-          {isAddingNow && 
-            <AddInfo>
-              <InputField value={newAddContent} onChange={(e)=>{setNewAddContent(e.target.value);}} placeholder="새로운 정보를 추가해보세요"></InputField>
-              <button onClick={() => hadleAddSave()}>저장</button>
-              <button onClick={() => setIsAddingNow(false)}>취소</button>
-            </AddInfo>
-          }
         </BoxWrap>
 
         <BoxWrap>
           <strong><img src={images.StarChack} alt="" />목표 고객</strong>
-          {isEditingNow && <button onClick={() => setIsAddingNow(true)}>추가</button>}
           <ul>
           {mainFeaturesOfBusinessInformation.map((content, index) => (
             <li key={index}>
@@ -186,27 +184,22 @@ const OrganismBizAnalysisSection = () => {
             )}
             </li>
           ))}
+          <AddInfo>
+            {isEditingNow && !isAddingNow && <InputField onClick={() => setIsAddingNow(true)} placeholder="목표 고객 추가하기 +"></InputField>}
+            {isAddingNow &&
+              <>           
+                <InputField autoFocus value={newAddContent} onChange={(e)=>{setNewAddContent(e.target.value);}}></InputField>
+                <button onClick={() => hadleAddSave()}>저장</button>
+                <button onClick={() => setIsAddingNow(false)}>취소</button>
+              </>     
+            }
+          </AddInfo>
           </ul>
-          {isAddingNow && 
-            <AddInfo>
-              <InputField value={newAddContent} onChange={(e)=>{setNewAddContent(e.target.value);}} placeholder="새로운 정보를 추가해보세요"></InputField>
-              <button onClick={() => hadleAddSave()}>저장</button>
-              <button onClick={() => setIsAddingNow(false)}>취소</button>
-            </AddInfo>
-          }
         </BoxWrap>
 
         <p>입력을 바탕으로 위와 같이 이해하고 정리하였습니다. <span>제가 이해한 내용이 맞습니까? 확인해 주시기 바랍니다.</span> 정확한 정보를 바탕으로 최상의 보고서를 작성하기 위해서는 고객님의 피드백이 매우 중요합니다. 감사합니다!</p>
-
-        <ButtonWrap>
-          <button type="button"><img src={images.IconWrite2} alt="" />비즈니스 설명 다시 하기</button>
-          <div>
-            <button type="button"><img src={images.IconRefresh} alt="" />재생성하기</button>
-            <button type="button" onClick={() => setIsEditingNow(true)}><img src={images.IconEdit} alt="" />수정하기</button>
-            <button type="button"><img src={images.IconCopy} alt="" />복사하기</button>
-            <button type="button "onClick={() => saveReport()}><img src={images.IconSave} alt="" />저장하기</button>
-          </div>
-        </ButtonWrap>
+        
+        <MoleculeReportController/>
 
       </AnalysisSection>
   );

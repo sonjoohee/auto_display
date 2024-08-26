@@ -1,4 +1,4 @@
-// C:\dev\Crowd_Insight-\src\pages\Expert_Insight\components\organisms\OrganismSideBar.jsx
+// C:\dev\Crowd_Insight-\src\pages\Expert_Insight\components\organisms\OrganismLeftSideBar.jsx
 
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
@@ -13,7 +13,7 @@ import { INPUT_BUSINESS_INFO, SAVED_REPORTS } from '../../../AtomStates';
 
 import OrganismReportPopup from './OrganismReportPopup'; // 팝업 컴포넌트 임포트
 
-const OrganismSideBar = () => {
+const OrganismLeftSideBar = () => {
   const [bizName] = useAtom(INPUT_BUSINESS_INFO);
   const [savedReports] = useAtom(SAVED_REPORTS);
   const [selectedReport, setSelectedReport] = useState(null); // 선택된 보고서 상태 관리
@@ -122,69 +122,11 @@ const OrganismSideBar = () => {
         </AccordionMenu>
       </SideBarMenu>
     </SideBar>
-
-    {/* 담당 AI 전문가 */}
-    <SideBar Right>
-      <AIProfileWrap>
-        <div>
-          <h3>담당 AI 전문가</h3>
-
-          <AIProfile>
-            <div className="thumb">
-              <img src={panelimages.PanelIMG} alt="" />
-            </div>
-            <div className="name">
-              <strong>김도원 - 제품 전략가</strong>
-              <p>제품 전략 총괄 디렉터</p>
-            </div>
-            <div className="field">
-              <strong>
-                <img src={images.IconChatSmile} alt="" />
-                전문분석 분야
-              </strong>
-
-              <p>
-                <span>핵심 가치 제안 분석</span>
-                <span>제품 개발 로드맵 구상</span>
-                <span>제품 포지셔닝 전략</span>
-              </p>
-            </div>
-          </AIProfile>
-
-          <Link to="#">상세 정보 확인하기</Link>
-        </div>
-      </AIProfileWrap>
-
-      <IdeaWrap>
-        <strong>김도원 디렉터님의 추천 사항이에요</strong>
-
-        <div>
-          <Link to="#">
-            <svg width="13" height="13" viewBox="0 0 21 21" fill="#ABABAB" xmlns="http://www.w3.org/2000/svg">
-              <path d="M15.0674 13.3651H14.1407L13.8122 13.0486C15.22 11.4077 15.9473 9.16911 15.5484 6.78983C14.9971 3.53149 12.2753 0.929517 8.99053 0.531016C4.02811 -0.078456 -0.148303 4.09408 0.461735 9.0519C0.860606 12.3337 3.465 15.0529 6.72635 15.6037C9.10785 16.0022 11.3486 15.2756 12.991 13.8691L13.3077 14.1973V15.1232L18.2936 20.1044C18.7746 20.585 19.5606 20.585 20.0416 20.1044C20.5226 19.6239 20.5226 18.8386 20.0416 18.3581L15.0674 13.3651ZM8.02855 13.3651C5.10741 13.3651 2.74938 11.0092 2.74938 8.09081C2.74938 5.17238 5.10741 2.81654 8.02855 2.81654C10.9497 2.81654 13.3077 5.17238 13.3077 8.09081C13.3077 11.0092 10.9497 13.3651 8.02855 13.3651Z" fill="#ABABAB"/>
-            </svg>
-            "이런 페르소나"의 의견 들어보기
-          </Link>
-          <Link to="#">
-            <svg width="13" height="13" viewBox="0 0 21 21" fill="#ABABAB" xmlns="http://www.w3.org/2000/svg">
-              <path d="M15.0674 13.3651H14.1407L13.8122 13.0486C15.22 11.4077 15.9473 9.16911 15.5484 6.78983C14.9971 3.53149 12.2753 0.929517 8.99053 0.531016C4.02811 -0.078456 -0.148303 4.09408 0.461735 9.0519C0.860606 12.3337 3.465 15.0529 6.72635 15.6037C9.10785 16.0022 11.3486 15.2756 12.991 13.8691L13.3077 14.1973V15.1232L18.2936 20.1044C18.7746 20.585 19.5606 20.585 20.0416 20.1044C20.5226 19.6239 20.5226 18.8386 20.0416 18.3581L15.0674 13.3651ZM8.02855 13.3651C5.10741 13.3651 2.74938 11.0092 2.74938 8.09081C2.74938 5.17238 5.10741 2.81654 8.02855 2.81654C10.9497 2.81654 13.3077 5.17238 13.3077 8.09081C13.3077 11.0092 10.9497 13.3651 8.02855 13.3651Z" fill="#ABABAB"/>
-            </svg>
-            "이런 페르소나"의 의견 들어보기
-          </Link>
-          <Link to="#">
-            <svg width="13" height="13" viewBox="0 0 21 21" fill="#ABABAB" xmlns="http://www.w3.org/2000/svg">
-              <path d="M15.0674 13.3651H14.1407L13.8122 13.0486C15.22 11.4077 15.9473 9.16911 15.5484 6.78983C14.9971 3.53149 12.2753 0.929517 8.99053 0.531016C4.02811 -0.078456 -0.148303 4.09408 0.461735 9.0519C0.860606 12.3337 3.465 15.0529 6.72635 15.6037C9.10785 16.0022 11.3486 15.2756 12.991 13.8691L13.3077 14.1973V15.1232L18.2936 20.1044C18.7746 20.585 19.5606 20.585 20.0416 20.1044C20.5226 19.6239 20.5226 18.8386 20.0416 18.3581L15.0674 13.3651ZM8.02855 13.3651C5.10741 13.3651 2.74938 11.0092 2.74938 8.09081C2.74938 5.17238 5.10741 2.81654 8.02855 2.81654C10.9497 2.81654 13.3077 5.17238 13.3077 8.09081C13.3077 11.0092 10.9497 13.3651 8.02855 13.3651Z" fill="#ABABAB"/>
-            </svg>
-            "이런 페르소나"의 의견 들어보기
-          </Link>
-        </div>
-      </IdeaWrap>
-    </SideBar>
     </>
   );
 };
 
-export default OrganismSideBar;
+export default OrganismLeftSideBar;
 
 const SideBar = styled.div`
   position:sticky;

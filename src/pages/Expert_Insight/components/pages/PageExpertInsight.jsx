@@ -11,7 +11,7 @@ import {
 } from '../../../AtomStates';
 
 import OrganismHeader from '../../../organisms/OrganismHeader';
-import OrganismSideBar from '../organisms/OrganismSideBar';
+import OrganismLeftSideBar from '../organisms/OrganismLeftSideBar';
 import OrganismRightSideBar from '../organisms/OrganismRightSideBar';
 import OrganismBizAnalysisSection from '../organisms/OrganismBizAnalysisSection';
 import OrganismStrategyReportSection from '../organisms/OrganismStrategyReportSection';
@@ -128,33 +128,30 @@ const PageExpertInsight = () => {
       {selectedExpertIndex !== 0 ? <OrganismTakingChargeAiExpert/> : ''}
 
       <OrganismHeader />
-        {/* <OrganismRightSideBar /> */}
-        <ContentsWrap>
-        <OrganismSideBar />
-      {/* 전문가가 선택된 경우 */}
-      {selectedExpertIndex !== 0 && <OrganismTakingChargeAiExpert />}
+    
+      <ContentsWrap>
+        <OrganismLeftSideBar />
+        <OrganismRightSideBar />
 
-      {/* Biz Name Section */}
-      <MoleculeBizName bizName={inputBusinessInfo} /> {/* 사용자 입력 값을 표시 */}
+        <MainContent>
+          {/* Biz Name Section */}
+          <MoleculeBizName bizName={inputBusinessInfo}/>
 
-      <MainContent>
-        {/* 대화 내용 누적 출력 */}
-        {conversation.map((item, index) => {
-          if (item.type === 'user') {
-            return <MoleculeUserMessage key={index} message={item.message} />;
-          } else if (item.type === 'system') {
-            return <MoleculeSystemMessage key={index} message={item.message} />;
-          } else if (item.type === 'analysis') {
-            return <OrganismBizAnalysisSection key={index} />;
-          } else if (item.type === 'strategy') {
-            return <OrganismStrategyReportSection key={index} />;
-          }
-          return null;
-        })}
+          {/* 대화 내용 누적 출력 */}
+          {conversation.map((item, index) => {
+            if (item.type === 'user') {
+              return <MoleculeUserMessage key={index} message={item.message} />;
+            } else if (item.type === 'system') {
+              return <MoleculeSystemMessage key={index} message={item.message} />;
+            } else if (item.type === 'analysis') {
+              return <OrganismBizAnalysisSection key={index} />;
+            }
+            return null;
+          })}
 
-        {/* 전문가 선택 섹션 */}
-        <OrganismBizExpertSelect />
-      </MainContent>
+          {/* 전문가 선택 섹션 */}
+          <OrganismBizExpertSelect />
+        </MainContent>
       </ContentsWrap>
       <OrganismSearchBottomBar onSearch={handleSearch} />
     </>
