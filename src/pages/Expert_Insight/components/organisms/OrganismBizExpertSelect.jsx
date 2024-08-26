@@ -27,7 +27,6 @@ const OrganismBizExpertSelect = () => {
           <button type="button">시작하기</button>
         </div>
       </SelectOptions>
-      {/* <TextInput placeholder="질문을 입력해주세요" /> */}
     </BizExpertSelectContainer>
   );
 };

@@ -1,3 +1,5 @@
+// C:\dev\Crowd_Insight-\src\pages\Expert_Insight\components\pages\PageMeetAiExpert.jsx
+
 import React, { useEffect, useState } from "react";
 import styled, { css } from 'styled-components';
 import { useNavigate } from "react-router-dom";
@@ -19,11 +21,10 @@ const PageMeetAiExpert = () => {
   const navigate = useNavigate();
 
   const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
-  const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
+  const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO); // 상태값으로 설정
 
   useEffect(() => {
     setSelectedExpertIndex(SELECTED_EXPERT_INDEX);
-    setInputBusinessInfo(INPUT_BUSINESS_INFO);
   }, []);
   
   useEffect(() => {
@@ -95,8 +96,6 @@ const PageMeetAiExpert = () => {
               </div>
             </ExpertCard>
           </ExpertSelectBox>
-
-          <Link>다른 분야 전문가가 필요하신가요?</Link>
         </ExpertSelectWrap>
 
         {/* 
@@ -168,6 +167,9 @@ const PageMeetAiExpert = () => {
 };
 
 export default PageMeetAiExpert;
+
+// 스타일 정의는 기존대로 유지
+
 
 const Container = styled.div`
   display: flex;

@@ -1,4 +1,5 @@
-// OrganismSearchBottomBar.jsx
+// C:\dev\Crowd_Insight-\src\pages\Expert_Insight\components\organisms\OrganismSearchBottomBar.jsx
+
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import images from '../../../../assets/images/Search.svg'; // Search.svg 이미지 import
@@ -31,6 +32,9 @@ const OrganismSearchBottomBar = ({ onSearch }) => {
 };
 
 export default OrganismSearchBottomBar;
+
+// 스타일 정의는 그대로 사용
+
 
 const BottomBar = styled.div`
   position: fixed;

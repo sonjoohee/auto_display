@@ -6,14 +6,14 @@ import styled from 'styled-components';
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
 
-const MoleculeBizName = () => {
+const MoleculeBizName = ({ bizName }) => {
   return (
     <BizNameContainer>
       <div>
         <span><img src={images.File} alt="" /></span>
         <NameTitle>
           <strong>
-            피부과 시술을 집에서 쉽고 안전하게 경험하는 홈케어 뷰티 디바이스와 기능성화장품
+            {bizName || "비즈니스 이름을 입력하세요"}
             <Badge>Edited by AI</Badge>
           </strong>
           <p>10 min ago</p>

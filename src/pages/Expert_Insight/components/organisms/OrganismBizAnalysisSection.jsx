@@ -1,39 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import {
   SELECTED_EXPERT_INDEX,
   INPUT_BUSINESS_INFO,
   TITLE_OF_BUSINESS_INFORMATION,
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
-  MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
+  SAVED_REPORTS,
 } from '../../../AtomStates';
 
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
 import { InputField } from '../../../../assets/styles/Input';
 
-import OrganismHeader from '../../../organisms/OrganismHeader';
-import OrganismSideBar from '../organisms/OrganismSideBar';
-import OrganismTakingChargeAiExpert from '../organisms/OrganismTakingChargeAiExpert';
-
 const OrganismBizAnalysisSection = () => {
-
-  const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
-  const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
-  const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
+  const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
+  const [inputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
+  const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
-  const [mainCharacteristicOfBusinessInformation, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
-  const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
+  const [savedReports, setSavedReports] = useAtom(SAVED_REPORTS);
 
-  const [newAddContent, setNewAddContent] = useState(''); // 내용 추가 입력값 임시 저장용
-  const [newEditContent, setNewEditContent] = useState(''); // 내용 수정 입력값 임시 저장용
-  const [editingIndex, setEditingIndex] = useState(-1); // 수정 중인 항목의 인덱스 저장
+  const [newAddContent, setNewAddContent] = useState('');
+  const [newEditContent, setNewEditContent] = useState('');
+  const [editingIndex, setEditingIndex] = useState(-1);
 
-  console.log("전문가 인덱스:", selectedExpertIndex, "인풋값:", inputBusinessInfo);
-  console.log("주요특징 내용", mainFeaturesOfBusinessInformation);
+  const saveReport = () => {
+    setSavedReports((prevReports) => [
+      ...prevReports,
+      {
+        title: titleOfBusinessInfo,
+        date: new Date().toLocaleDateString(),
+        content: mainFeaturesOfBusinessInformation,
+      },
+    ]);
+  };
 
   const addContent = () => {
     if (newAddContent.trim() !== '') {
@@ -71,6 +72,7 @@ const OrganismBizAnalysisSection = () => {
 
         <BoxWrap>
           <strong><img src={images.StarChack} alt="" />주요 특징</strong>
+          {isEditingNow && <button onClick={() => setIsAddingNow(true)}>추가</button>}
           <ul>
           {mainFeaturesOfBusinessInformation.map((content, index) => (
             <li key={index}>
@@ -81,26 +83,38 @@ const OrganismBizAnalysisSection = () => {
                   onChange={(e) => setNewEditContent(e.target.value)}
                 />
               ) : (
-                <p onDoubleClick={() => handleEditStart(index)}>{content}</p>
+                <p>{content}</p>
               )}
               {editingIndex === index ? (
                 <>
                   <button onClick={() => handleEditSave(index)}>저장</button>
                   <button onClick={handleEditCancel}>취소</button>
                 </>
-              ) : <button onClick={() => deleteContent(index)}>삭제</button>}
+              ) : (
+              <>
+                {index !== 0 && isEditingNow &&
+                  <>
+                    <button onClick={() => handleEditStart(index)}>수정</button>
+                    <button onClick={() => handleDelete(index)}>삭제</button>
+                  </>
+                }
+              </>
+            )}
             </li>
           ))}
           </ul>
-
-          <AddInfo>
-            <InputField value={newAddContent} onChange={(e)=>{setNewAddContent(e.target.value);}} placeholder="새로운 정보를 추가해보세요"></InputField>
-            <button onClick={addContent} className="add">추가</button>
-          </AddInfo>
+          {isAddingNow && 
+            <AddInfo>
+              <InputField value={newAddContent} onChange={(e)=>{setNewAddContent(e.target.value);}} placeholder="새로운 정보를 추가해보세요"></InputField>
+              <button onClick={() => hadleAddSave()}>저장</button>
+              <button onClick={() => setIsAddingNow(false)}>취소</button>
+            </AddInfo>
+          }
         </BoxWrap>
 
         <BoxWrap>
-          <strong><img src={images.IconSetting} alt="" />주요 기능</strong>
+          <strong><img src={images.StarChack} alt="" />주요 기능</strong>
+          {isEditingNow && <button onClick={() => setIsAddingNow(true)}>추가</button>}
           <ul>
           {mainFeaturesOfBusinessInformation.map((content, index) => (
             <li key={index}>
@@ -111,26 +125,38 @@ const OrganismBizAnalysisSection = () => {
                   onChange={(e) => setNewEditContent(e.target.value)}
                 />
               ) : (
-                <p onDoubleClick={() => handleEditStart(index)}>{content}</p>
+                <p>{content}</p>
               )}
               {editingIndex === index ? (
                 <>
                   <button onClick={() => handleEditSave(index)}>저장</button>
                   <button onClick={handleEditCancel}>취소</button>
                 </>
-              ) : <button onClick={() => deleteContent(index)}>삭제</button>}
+              ) : (
+              <>
+                {index !== 0 && isEditingNow &&
+                  <>
+                    <button onClick={() => handleEditStart(index)}>수정</button>
+                    <button onClick={() => handleDelete(index)}>삭제</button>
+                  </>
+                }
+              </>
+            )}
             </li>
           ))}
           </ul>
-
-          <AddInfo>
-            <InputField value={newAddContent} onChange={(e)=>{setNewAddContent(e.target.value);}} placeholder="새로운 정보를 추가해보세요"></InputField>
-            <button onClick={addContent} className="add">추가</button>
-          </AddInfo>
+          {isAddingNow && 
+            <AddInfo>
+              <InputField value={newAddContent} onChange={(e)=>{setNewAddContent(e.target.value);}} placeholder="새로운 정보를 추가해보세요"></InputField>
+              <button onClick={() => hadleAddSave()}>저장</button>
+              <button onClick={() => setIsAddingNow(false)}>취소</button>
+            </AddInfo>
+          }
         </BoxWrap>
 
         <BoxWrap>
-          <strong><img src={images.IconTarget} alt="" />목표 고객</strong>
+          <strong><img src={images.StarChack} alt="" />목표 고객</strong>
+          {isEditingNow && <button onClick={() => setIsAddingNow(true)}>추가</button>}
           <ul>
           {mainFeaturesOfBusinessInformation.map((content, index) => (
             <li key={index}>
@@ -141,22 +167,33 @@ const OrganismBizAnalysisSection = () => {
                   onChange={(e) => setNewEditContent(e.target.value)}
                 />
               ) : (
-                <p onDoubleClick={() => handleEditStart(index)}>{content}</p>
+                <p>{content}</p>
               )}
               {editingIndex === index ? (
                 <>
                   <button onClick={() => handleEditSave(index)}>저장</button>
                   <button onClick={handleEditCancel}>취소</button>
                 </>
-              ) : <button onClick={() => deleteContent(index)}>삭제</button>}
+              ) : (
+              <>
+                {index !== 0 && isEditingNow &&
+                  <>
+                    <button onClick={() => handleEditStart(index)}>수정</button>
+                    <button onClick={() => handleDelete(index)}>삭제</button>
+                  </>
+                }
+              </>
+            )}
             </li>
           ))}
           </ul>
-
-          <AddInfo>
-            <InputField value={newAddContent} onChange={(e)=>{setNewAddContent(e.target.value);}} placeholder="새로운 정보를 추가해보세요"></InputField>
-            <button onClick={addContent} className="add">추가</button>
-          </AddInfo>
+          {isAddingNow && 
+            <AddInfo>
+              <InputField value={newAddContent} onChange={(e)=>{setNewAddContent(e.target.value);}} placeholder="새로운 정보를 추가해보세요"></InputField>
+              <button onClick={() => hadleAddSave()}>저장</button>
+              <button onClick={() => setIsAddingNow(false)}>취소</button>
+            </AddInfo>
+          }
         </BoxWrap>
 
         <p>입력을 바탕으로 위와 같이 이해하고 정리하였습니다. <span>제가 이해한 내용이 맞습니까? 확인해 주시기 바랍니다.</span> 정확한 정보를 바탕으로 최상의 보고서를 작성하기 위해서는 고객님의 피드백이 매우 중요합니다. 감사합니다!</p>

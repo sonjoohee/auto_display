@@ -1,6 +1,6 @@
 // C:\dev\Crowd_Insight-\src\pages\Expert_Insight\components\organisms\OrganismSideBar.jsx
 
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
@@ -9,11 +9,23 @@ import panelimages from '../../../../assets/styles/PanelImages';
 import { Link } from "react-router-dom";
 import { useAtom } from 'jotai';
 import { useNavigate } from 'react-router-dom';
-import { 
-} from '../../../AtomStates';
+import { INPUT_BUSINESS_INFO, SAVED_REPORTS } from '../../../AtomStates';
+
+import OrganismReportPopup from './OrganismReportPopup'; // 팝업 컴포넌트 임포트
 
 const OrganismSideBar = () => {
+  const [bizName] = useAtom(INPUT_BUSINESS_INFO);
+  const [savedReports] = useAtom(SAVED_REPORTS);
+  const [selectedReport, setSelectedReport] = useState(null); // 선택된 보고서 상태 관리
 
+  const handleReportClick = (index) => {
+    setSelectedReport(savedReports[index]); // 보고서 선택
+  };
+
+  const closePopup = () => {
+    setSelectedReport(null); // 팝업 닫기
+  };
+  
   useEffect(() => {
     const checkboxes = document.querySelectorAll('.accordion-toggle');
     checkboxes.forEach((checkbox) => {
@@ -58,32 +70,13 @@ const OrganismSideBar = () => {
               인사이트 보관함
             </label>
             <AccordionContent>
-              <div>
-                <strong>최근 작업</strong>
-                <ul>
-                  <li>
-                    <p>운동을 좋아하는 20대 직장인</p>
-                    <span>오늘</span>
-                  </li>
-                  <li>
-                    <p>운동을 좋아하는 20대 직장인</p>
-                    <span>24.08.20</span>
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <strong>지난 7일 대화</strong>
-                <ul>
-                  <li>
-                    <p>운동을 좋아하는 20대 직장인</p>
-                    <span>오늘</span>
-                  </li>
-                  <li>
-                    <p>운동을 좋아하는 20대 직장인</p>
-                    <span>24.08.20</span>
-                  </li>
-                </ul>
-              </div>
+              {savedReports.map((report, index) => (
+                <div key={index}>
+                  <Link to="#" onClick={() => handleReportClick(index)}>
+                    {report.title}
+                  </Link>
+                </div>
+              ))}
             </AccordionContent>
           </AccordionItem>
 
@@ -97,10 +90,10 @@ const OrganismSideBar = () => {
               <div>
                 <strong>최근 작업</strong>
                 <ul>
-                  <li>
-                    <p>운동을 좋아하는 20대 직장인</p>
+                  <Link to="#" onClick={() => handleReportClick(0)>
+                    <p>{bizName}</p>
                     <span>오늘</span>
-                  </li>
+                  </Link>
                   <li>
                     <p>운동을 좋아하는 20대 직장인</p>
                     <span>24.08.20</span>
@@ -549,4 +542,3 @@ const IdeaWrap = styled.div`
     }
   }
 `;
-

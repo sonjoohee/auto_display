@@ -1,20 +1,12 @@
-// C:\dev\Crowd_Insight-\src\pages\Expert_Insight\components\molecules\MoleculeSystemMessage.jsx
-
 import React from 'react';
 import styled from 'styled-components';
-
 import { palette } from '../../../../assets/styles/Palette';
 
-const MoleculeSystemMessage = () => {
+const MoleculeSystemMessage = ({ message }) => {
   return (
     <>
     <SystemMessageContainer>
-      <div><p>입력해주신 비즈니스(아이디어) 정보를 바탕으로 분석을 진행하겠습니다.</p></div>
-      <span>1 min ago</span>
-    </SystemMessageContainer>
-
-    <SystemMessageContainer Myself>
-      <div><p>10년차 전략 디렉터와 1:1 커피챗을 진행하고 싶습니다.</p></div>
+      <div><p>{message}</p></div>
       <span>1 min ago</span>
     </SystemMessageContainer>
     </>
