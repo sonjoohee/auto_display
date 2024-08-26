@@ -69,6 +69,7 @@ function App() {
             <Route path="/test-indexeddb" element={<PageTestIndexedDB />} />
             <Route path="/test-indexeddb/:id" element={<PageTestIndexedDB />} />
             <Route path="/report/:id" element={<OrganismReportPopup />} />
+            <Route path="/conversation/:conversationId" element={<PageExpertInsight />} />
           </Routes>
         </BrowserRouter>
       </PayPalScriptProvider>

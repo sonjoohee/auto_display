@@ -93,3 +93,5 @@ export const BUSINESS_INFORMATION_TARGET_CUSTOMER = atom([
 export const SAVED_REPORTS = atom([]);
 
 export const IS_EDITING_NOW = atom(false);
+
+export const SAVED_CONVERSATIONS = atom({});
