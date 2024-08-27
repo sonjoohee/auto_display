@@ -9,6 +9,9 @@ import {
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
   MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
+  TEMP_MAIN_FEATURES_OF_BUSINESS_INFORMATION,
+  TEMP_MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
+  TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER,
   SAVED_REPORTS,
   IS_EDITING_NOW,
 } from '../../../AtomStates';
@@ -19,21 +22,23 @@ import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '.
 
 const MoleculeReportController = ({ reportIndex, conversationId }) => {
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
-  const [mainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
   const [isClickExpertSelect] = useAtom(IS_CLICK_EXPERT_SELECT);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [inputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
+  const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
   const [mainCharacteristicOfBusinessInformation, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
   const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
+  const [tempMainFeaturesOfBusinessInformation, setTempMainFeaturesOfBusinessInformation] = useAtom(TEMP_MAIN_FEATURES_OF_BUSINESS_INFORMATION);
+  const [tempMainCharacteristicOfBusinessInformation, setTempMainCharacteristicOfBusinessInformation] = useAtom(TEMP_MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
+  const [tempMusinessInformationTargetCustomer, setTemptBusinessInformationTargetCustomer] = useAtom(TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER);
+  
   const [savedReports, setSavedReports] = useAtom(SAVED_REPORTS);
-
   const [bizAnalysisReportIndex, setBizAnalysisReportIndex] = useState(0);
   const [newAddContent, setNewAddContent] = useState('');
   const [isAddingNow, setIsAddingNow] = useState({ section: '', isAdding: false });
   const [newEditContent, setNewEditContent] = useState('');
   const [editingIndex, setEditingIndex] = useState({ section: '', index: -1 });
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
-
   const [warningMessage, setWarningMessage] = useState('');
 
   const analysisReportData = {
@@ -62,14 +67,33 @@ const MoleculeReportController = ({ reportIndex, conversationId }) => {
     setIsEditingNow(false);
   };
 
+  const handleEditConfirm = () => {
+    handleEditSave(); 
+    setIsEditingNow(false);
 
-
-
+    setTempMainFeaturesOfBusinessInformation(mainFeaturesOfBusinessInformation);
+    setTempMainCharacteristicOfBusinessInformation(mainCharacteristicOfBusinessInformation);
+    setTemptBusinessInformationTargetCustomer(businessInformationTargetCustomer);
+  };
 
   const handleEditCancel = () => {
-    setEditingIndex({ section: '', index: -1 });
-    setWarningMessage('');  // 경고 메시지를 초기화합니다.
+    // 임시로 confirm 함수 사용
+    // eslint-disable-next-line no-restricted-globals
+    let isCancel = confirm("정말 취소하시겠습니까?");
+
+    if (isCancel) {
+      setMainFeaturesOfBusinessInformation(tempMainFeaturesOfBusinessInformation)
+      setMainCharacteristicOfBusinessInformation(tempMainCharacteristicOfBusinessInformation)
+      setBusinessInformationTargetCustomer(tempMusinessInformationTargetCustomer)
+      setIsEditingNow(false);
+    }
   };
+
+  // const handleEditCancel = () => {
+  //   setEditingIndex({ section: '', index: -1 });
+  //   setWarningMessage('');  // 경고 메시지를 초기화합니다.
+  // };
+
   const saveReport = async () => {
     const analysisData = {
       title: titleOfBusinessInfo,
@@ -98,6 +122,11 @@ const MoleculeReportController = ({ reportIndex, conversationId }) => {
     saveConversationToIndexedDB(updatedConversation);
   };
 
+  // reportIndex === 0 : 비즈니스 분석 리포트 (아이디어 설명 다시하기, 재생성하기, 수정하기, 복사하기, 저장하기)
+    // isClickExpertSelect === true :  전문가를 선택했을 때 비즈니스 분석 리포트 (복사하시, 저장하기)
+    // isEditingNow === true : 수정중인 비즈니스 분석 리포트 (취소하기, 수정완료하기)
+  
+  // reportIndex === 1 : 전문가 리포트 (재생성하기, 복사하기, 저장하기)
   return (
     <>
       {reportIndex === 0 ? (
@@ -147,10 +176,10 @@ const MoleculeReportController = ({ reportIndex, conversationId }) => {
                 <ButtonWrap>
                   <div />
                   <div>
-                    <button type="button" onClick={() => setIsEditingNow(false)}>
+                    <button type="button" onClick={() => handleEditCancel()}>
                       취소하기
                     </button>
-                    <button type="button" onClick={() => {handleEditSave(); setIsEditingNow(false);}}>
+                    <button type="button" onClick={() => handleEditConfirm()}>
                       수정 완료하기
                     </button>
                   </div>

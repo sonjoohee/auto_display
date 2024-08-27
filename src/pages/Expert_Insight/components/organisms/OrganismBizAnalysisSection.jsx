@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useAtom } from 'jotai';
 import {
@@ -8,6 +8,9 @@ import {
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
   MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
+  TEMP_MAIN_FEATURES_OF_BUSINESS_INFORMATION,
+  TEMP_MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
+  TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER,
   SAVED_REPORTS,
   IS_EDITING_NOW,
 } from '../../../AtomStates';
@@ -24,6 +27,9 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
   const [mainCharacteristicOfBusinessInformation, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
   const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
+  const [tempMainFeaturesOfBusinessInformation, setTempMainFeaturesOfBusinessInformation] = useAtom(TEMP_MAIN_FEATURES_OF_BUSINESS_INFORMATION);
+  const [tempMainCharacteristicOfBusinessInformation, setTempMainCharacteristicOfBusinessInformation] = useAtom(TEMP_MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
+  const [tempMusinessInformationTargetCustomer, seTemptBusinessInformationTargetCustomer] = useAtom(TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [savedReports, setSavedReports] = useAtom(SAVED_REPORTS);
 
   const [bizAnalysisReportIndex, setBizAnalysisReportIndex] = useState(0);
@@ -35,6 +41,42 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
 
   const [warningMessage, setWarningMessage] = useState('');
+
+  useEffect(() => {
+    setTempMainFeaturesOfBusinessInformation(mainFeaturesOfBusinessInformation);
+    setTempMainCharacteristicOfBusinessInformation(mainCharacteristicOfBusinessInformation);
+    seTemptBusinessInformationTargetCustomer(businessInformationTargetCustomer);
+  },[])
+
+  const saveReport = async () => {
+    const analysisData = {
+      title: titleOfBusinessInfo,
+      mainFeatures: mainFeaturesOfBusinessInformation,
+      keyFunctions: mainCharacteristicOfBusinessInformation,
+      targetCustomers: businessInformationTargetCustomer,
+    };
+
+    setSavedReports((prevReports) => [
+      ...prevReports,
+      {
+        title: titleOfBusinessInfo,
+        date: new Date().toLocaleDateString(),
+        content: analysisData,
+      },
+    ]);
+
+    // 기존 대화 내역을 유지하면서 새로운 정보를 추가
+    const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
+    const updatedConversation = {
+      ...existingConversation,
+      mainFeatures: mainFeaturesOfBusinessInformation,
+      mainCharacter: mainCharacteristicOfBusinessInformation,
+      mainCustomer: businessInformationTargetCustomer,
+      timestamp: Date.now(),
+    };
+
+    saveConversationToIndexedDB(updatedConversation);
+  };
 
   const handleEditStart = (section, index) => {
     setEditingIndex({ section, index });
@@ -86,6 +128,8 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   };
 
   const handleDelete = (section, index) => {
+    alert("정말 삭제하시겠습니까?");
+    
     if (section === 'mainFeatures') {
       setMainFeaturesOfBusinessInformation(
         mainFeaturesOfBusinessInformation.filter((_, i) => i !== index)
@@ -107,7 +151,8 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
 
       <BoxWrap>
         <strong><img src={images.StarChack} alt="" />주요 특징</strong>
-        {isEditingNow && <button onClick={() => setIsAddingNow({ section: 'mainFeatures', isAdding: true })}>추가</button>}
+        {/* 주요특징 추가 기능 없음 */}
+        {/* {isEditingNow && <button onClick={() => setIsAddingNow({ section: 'mainFeatures', isAdding: true })}>추가</button>} */}
         <ul>
           {mainFeaturesOfBusinessInformation.map((content, index) => (
             <li key={index}>
@@ -130,7 +175,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                   {isEditingNow && (
                     <>
                       <button onClick={() => handleEditStart('mainFeatures', index)}>수정</button>
-                      <button onClick={() => handleDelete('mainFeatures', index)}>삭제</button>
+                      <button onClick={() => {handleDelete('mainFeatures', index)}}>삭제</button>
                     </>
                   )}
                 </>
