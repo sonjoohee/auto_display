@@ -15,6 +15,7 @@ import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 
 import OrganismHeader from '../../../organisms/OrganismHeader';
+import OrganismLeftSideBar from '../../../Expert_Insight/components/organisms/OrganismLeftSideBar';
 
 const PageMeetAiExpert = () => {
 
@@ -54,6 +55,8 @@ const PageMeetAiExpert = () => {
       <OrganismHeader />
 
       <Container>
+      <OrganismLeftSideBar />
+
         <Title>
           Meet AI Expert
           <p>한 줄의 아이디어로 시작하는, AI 전문가와의 맞춤형 인사이트 세션</p>

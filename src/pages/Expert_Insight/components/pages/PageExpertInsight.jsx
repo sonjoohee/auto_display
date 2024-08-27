@@ -10,6 +10,8 @@ import {
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
   MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
+  SAVED_CONVERSATIONS,
+  IS_CLICK_EXPERT_SELECT,
 } from '../../../AtomStates';
 
 import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
@@ -38,8 +40,8 @@ const PageExpertInsight = () => {
   const [mainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
   const [businessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
-  const [savedConversations, setSavedConversations] = useAtom(SAVED_CONVERSATIONS);
   const [isClickExpertSelect, setIsClickExpertSelect] = useAtom(IS_CLICK_EXPERT_SELECT);
+
 
   useEffect(() => {
     const loadConversation = async () => {
@@ -122,38 +124,38 @@ const PageExpertInsight = () => {
   };
 
   return (
-    <>
-      {selectedExpertIndex !== 0 && <OrganismTakingChargeAiExpert />}
+      <>
+        {selectedExpertIndex !== 0 && <OrganismTakingChargeAiExpert />}
 
-      <OrganismHeader />
-    
-      <ContentsWrap>
-        <OrganismLeftSideBar />
-        <OrganismRightSideBar />
-      <ContentsWrap>
-        <OrganismSideBar />
+        <OrganismHeader />
+      
+        <ContentsWrap>
+          <OrganismLeftSideBar />
+          <OrganismRightSideBar />
+          {/* <OrganismSideBar /> */}
 
-        <MainContent>
-          <MoleculeBizName bizName={inputBusinessInfo} />
+          <MainContent>
+            <MoleculeBizName bizName={inputBusinessInfo} />
 
-          {conversation.map((item, index) => {
-            if (item.type === 'user') {
-              return <MoleculeUserMessage key={index} message={item.message} />;
-            } else if (item.type === 'system') {
-              return <MoleculeSystemMessage key={index} message={item.message} />;
-            } else if (item.type === 'analysis') {
-              return <OrganismBizAnalysisSection conversationId={conversationId} />;
-            } else if (item.type === 'strategy') {
-              return <OrganismStrategyReportSection key={index} />;
-            }
-            return null;
-          })}
+            {conversation.map((item, index) => {
+              if (item.type === 'user') {
+                return <MoleculeUserMessage key={index} message={item.message} />;
+              } else if (item.type === 'system') {
+                return <MoleculeSystemMessage key={index} message={item.message} />;
+              } else if (item.type === 'analysis') {
+                return <OrganismBizAnalysisSection conversationId={conversationId} />;
+              } else if (item.type === 'strategy') {
+                return <OrganismStrategyReportSection key={index} />;
+              }
+              return null;
+            })}
+            {/* 전략 보고서 섹션 */}
+            {isClickExpertSelect && <OrganismStrategyReportSection />}
+            <OrganismBizExpertSelect />
+          </MainContent>
+        </ContentsWrap>
 
-          <OrganismBizExpertSelect />
-        </MainContent>
-      </ContentsWrap>
-
-      <OrganismSearchBottomBar onSearch={handleSearch} />
+        <OrganismSearchBottomBar onSearch={handleSearch} />
     </>
   );
 };

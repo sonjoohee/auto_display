@@ -15,6 +15,7 @@ import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '.
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
 import { InputField } from '../../../../assets/styles/Input';
+import MoleculeReportController from '../molecules/MoleculeReportController';
 
 const OrganismBizAnalysisSection = ({ conversationId }) => {
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
@@ -30,7 +31,9 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   const [isAddingNow, setIsAddingNow] = useState({ section: '', isAdding: false });
   const [newEditContent, setNewEditContent] = useState('');
   const [editingIndex, setEditingIndex] = useState({ section: '', index: -1 });
-  const [isEditingNow, setIsEditingNow] = useState(false);
+  // const [isEditingNow, setIsEditingNow] = useState(false);
+  const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
+
   const [warningMessage, setWarningMessage] = useState('');
 
   const saveReport = async () => {
@@ -281,7 +284,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
 
       {warningMessage && <WarningMessage>{warningMessage}</WarningMessage>} {/* 경고 메시지 출력 */}
 
-      <ButtonWrap>
+      {/* <ButtonWrap>
         <button type="button"><img src={images.IconWrite2} alt="" />비즈니스 설명 다시 하기</button>
         <div>
           <button type="button"><img src={images.IconRefresh} alt="" />재생성하기</button>
@@ -294,7 +297,8 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
           {!isEditingNow && <button type="button" onClick={saveReport}><img src={images.IconSave} alt="" />저장하기</button>}
         </div>
       </ButtonWrap>
-
+       */}
+      <MoleculeReportController reportIndex={0} conversationId={conversationId}  />
     </AnalysisSection>
   );
 };
