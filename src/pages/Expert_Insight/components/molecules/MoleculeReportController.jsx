@@ -23,7 +23,6 @@ import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '.
 const MoleculeReportController = ({ reportIndex, conversationId }) => {
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [isClickExpertSelect] = useAtom(IS_CLICK_EXPERT_SELECT);
-
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [inputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
@@ -42,6 +41,13 @@ const MoleculeReportController = ({ reportIndex, conversationId }) => {
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
   const [warningMessage, setWarningMessage] = useState('');
 
+  const analysisReportData = {
+    title: titleOfBusinessInfo,
+    mainFeatures: mainFeaturesOfBusinessInformation,
+    mainCharacter: mainCharacteristicOfBusinessInformation,
+    mainCustomer: businessInformationTargetCustomer,
+  };
+
   const handleEditSave = async () => {
     if (editingIndex.section !== '' && editingIndex.index !== -1) {
       setWarningMessage('변경 사항을 적용해주세요.');
@@ -49,13 +55,13 @@ const MoleculeReportController = ({ reportIndex, conversationId }) => {
     }
 
     const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
+
     const updatedConversation = {
       ...existingConversation,
-      mainFeatures: mainFeaturesOfBusinessInformation,
-      mainCharacter: mainCharacteristicOfBusinessInformation,
-      mainCustomer: businessInformationTargetCustomer,
+      analysisReportData,
       timestamp: Date.now(),
     };
+
 
     await saveConversationToIndexedDB(updatedConversation);
     setIsEditingNow(false);
@@ -109,9 +115,7 @@ const MoleculeReportController = ({ reportIndex, conversationId }) => {
     const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
     const updatedConversation = {
       ...existingConversation,
-      mainFeatures: mainFeaturesOfBusinessInformation,
-      mainCharacter: mainCharacteristicOfBusinessInformation,
-      mainCustomer: businessInformationTargetCustomer,
+      analysisReportData,
       timestamp: Date.now(),
     };
 

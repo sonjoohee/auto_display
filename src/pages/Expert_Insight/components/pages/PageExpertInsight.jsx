@@ -37,11 +37,18 @@ const PageExpertInsight = () => {
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
-  const [mainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
-  const [businessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
+  const [mainCharacteristicOfBusinessInformation, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);  // 추가
+  const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);  // 추가
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [isClickExpertSelect, setIsClickExpertSelect] = useAtom(IS_CLICK_EXPERT_SELECT);
 
+  const analysisReportData = {
+    title: titleOfBusinessInfo,
+    mainFeatures: mainFeaturesOfBusinessInformation,
+    mainCharacter: mainCharacteristicOfBusinessInformation,
+    mainCustomer: businessInformationTargetCustomer,
+  };
+  
 
   useEffect(() => {
     const loadConversation = async () => {
@@ -53,9 +60,13 @@ const PageExpertInsight = () => {
           setConversation(savedConversation.conversation);
           setConversationStage(savedConversation.conversationStage);
           setInputBusinessInfo(savedConversation.inputBusinessInfo);
-          setTitleOfBusinessInfo(savedConversation.titleOfBusinessInfo);
-          setMainFeaturesOfBusinessInformation(savedConversation.mainFeatures);
-          // 같은 방식으로 나머지 데이터를 복원
+  
+          // analysisReportData에서 데이터를 복원
+          const analysisData = savedConversation.analysisReportData || {};
+          setTitleOfBusinessInfo(analysisData.title || "");
+          setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
+          setMainCharacteristicOfBusinessInformation(analysisData.mainCharacter || []);
+          setBusinessInformationTargetCustomer(analysisData.mainCustomer || []);
         } else {
           if (selectedExpertIndex) {
             const initialMessage = getInitialSystemMessage();
@@ -65,7 +76,18 @@ const PageExpertInsight = () => {
       }
     };
     loadConversation();
-  }, [paramConversationId, conversationId, navigate, selectedExpertIndex, setInputBusinessInfo, setTitleOfBusinessInfo, setMainFeaturesOfBusinessInformation]);
+  }, [
+    paramConversationId, 
+    conversationId, 
+    navigate, 
+    selectedExpertIndex, 
+    setInputBusinessInfo, 
+    setTitleOfBusinessInfo, 
+    setMainFeaturesOfBusinessInformation, 
+    setMainCharacteristicOfBusinessInformation, 
+    setBusinessInformationTargetCustomer
+  ]);
+  
 
   const handleSearch = (inputValue) => {
     const updatedConversation = [
@@ -102,10 +124,7 @@ const PageExpertInsight = () => {
       conversation: updatedConversation,
       conversationStage: conversationStage + 1,
       inputBusinessInfo,
-      titleOfBusinessInfo,
-      mainFeatures: mainFeaturesOfBusinessInformation,
-      mainCharacter: mainCharacteristicOfBusinessInformation,
-      mainCustomer: businessInformationTargetCustomer,
+      analysisReportData,
       timestamp: Date.now(),
     });
   };

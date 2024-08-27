@@ -108,25 +108,6 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
     setWarningMessage('');  // 경고 메시지를 초기화합니다.
   };
 
-  const handleEditSave = async () => {
-    if (editingIndex.section !== '' && editingIndex.index !== -1) {
-      setWarningMessage('변경 사항을 적용해주세요.');
-      return;
-    }
-
-    const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
-    const updatedConversation = {
-      ...existingConversation,
-      mainFeatures: mainFeaturesOfBusinessInformation,
-      mainCharacter: mainCharacteristicOfBusinessInformation,
-      mainCustomer: businessInformationTargetCustomer,
-      timestamp: Date.now(),
-    };
-
-    await saveConversationToIndexedDB(updatedConversation);
-    setIsEditingNow(false);
-  };
-
   const handleEditCancel = () => {
     setEditingIndex({ section: '', index: -1 });
     setWarningMessage('');  // 경고 메시지를 초기화합니다.
@@ -298,21 +279,6 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
       <p>입력을 바탕으로 위와 같이 이해하고 정리하였습니다. <span>제가 이해한 내용이 맞습니까? 확인해 주시기 바랍니다.</span> 정확한 정보를 바탕으로 최상의 보고서를 작성하기 위해서는 고객님의 피드백이 매우 중요합니다. 감사합니다!</p>
 
       {warningMessage && <WarningMessage>{warningMessage}</WarningMessage>} {/* 경고 메시지 출력 */}
-
-      {/* <ButtonWrap>
-        <button type="button"><img src={images.IconWrite2} alt="" />비즈니스 설명 다시 하기</button>
-        <div>
-          <button type="button"><img src={images.IconRefresh} alt="" />재생성하기</button>
-          {isEditingNow ? (
-            <button type="button" onClick={handleEditSave}><img src={images.IconSave} alt="" />수정 완료</button>
-          ) : (
-            <button type="button" onClick={() => setIsEditingNow(true)}><img src={images.IconEdit} alt="" />수정하기</button>
-          )}
-          <button type="button"><img src={images.IconCopy} alt="" />복사하기</button>
-          {!isEditingNow && <button type="button" onClick={saveReport}><img src={images.IconSave} alt="" />저장하기</button>}
-        </div>
-      </ButtonWrap>
-       */}
       <MoleculeReportController reportIndex={0} conversationId={conversationId}  />
     </AnalysisSection>
   );
