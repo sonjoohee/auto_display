@@ -4,12 +4,6 @@ import { useAtom } from 'jotai';
 import {
   SELECTED_EXPERT_INDEX,
   INPUT_BUSINESS_INFO,
-  TITLE_OF_BUSINESS_INFORMATION,
-  MAIN_FEATURES_OF_BUSINESS_INFORMATION,
-  MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
-  BUSINESS_INFORMATION_TARGET_CUSTOMER,
-  SAVED_REPORTS,
-  IS_EDITING_NOW,
   STRATEGY_REPORT_CUSTOMER_BENEFITS_TITLE_1,
   STRATEGY_REPORT_CUSTOMER_BENEFITS_TITLE_2,
   STRATEGY_REPORT_CUSTOMER_BENEFITS_TITLE_3,
@@ -42,11 +36,6 @@ import { InputField } from '../../../../assets/styles/Input';
 const OrganismStrategyReportSection = () => {
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [inputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
-  const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
-  const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
-  const [mainCharacteristicOfBusinessInformation, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
-  const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
 
   const [bizAnalysisReportIndex, setBizAnalysisReportIndex] = useState(0);
   const [newAddContent, setNewAddContent] = useState('');
@@ -150,8 +139,7 @@ const OrganismStrategyReportSection = () => {
         </BoxWrap>
         <p>{strategyReportCompetitionDifferentiation4}</p>
 
-        
-        <MoleculeReportController/>
+        <MoleculeReportController reportIndex={1} />
 
       </AnalysisSection>
   );

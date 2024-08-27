@@ -161,3 +161,5 @@ export const SAVED_REPORTS = atom([]);
 export const IS_EDITING_NOW = atom(false);
 
 export const SAVED_CONVERSATIONS = atom({});
+
+export const IS_CLICK_EXPERT_SELECT = atom(false);

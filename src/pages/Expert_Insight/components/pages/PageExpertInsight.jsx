@@ -8,6 +8,7 @@ import {
   INPUT_BUSINESS_INFO,
   TITLE_OF_BUSINESS_INFORMATION,
   SAVED_CONVERSATIONS,
+  IS_CLICK_EXPERT_SELECT,
 } from '../../../AtomStates';
 
 import OrganismHeader from '../../../organisms/OrganismHeader';
@@ -32,6 +33,7 @@ const PageExpertInsight = () => {
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [savedConversations, setSavedConversations] = useAtom(SAVED_CONVERSATIONS);
+  const [isClickExpertSelect, setIsClickExpertSelect] = useAtom(IS_CLICK_EXPERT_SELECT);
 
   // conversationId가 처음 설정되었을 때 URL을 업데이트하거나 기존 대화 불러오기
   useEffect(() => {
@@ -150,7 +152,7 @@ const PageExpertInsight = () => {
           })}
 
           {/* 전략 보고서 섹션 */}
-          <OrganismStrategyReportSection />
+          {isClickExpertSelect && <OrganismStrategyReportSection />}
 
           {/* 전문가 선택 섹션 */}
           <OrganismBizExpertSelect />
