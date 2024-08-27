@@ -1,35 +1,49 @@
-// C:\dev\Crowd_Insight-\src\pages\Expert_Insight\components\organisms\OrganismLeftSideBar.jsx
-
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
 import panelimages from '../../../../assets/styles/PanelImages';
-
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAtom } from 'jotai';
-import { useNavigate } from 'react-router-dom';
 import { INPUT_BUSINESS_INFO, SAVED_REPORTS } from '../../../AtomStates';
+import { getAllConversationsFromIndexedDB } from '../../../../utils/indexedDB'; // IndexedDB에서 대화 내역 가져오기
 
 import OrganismReportPopup from './OrganismReportPopup'; // 팝업 컴포넌트 임포트
 
 const OrganismLeftSideBar = () => {
+  const navigate = useNavigate();
   const [bizName] = useAtom(INPUT_BUSINESS_INFO);
   const [savedReports] = useAtom(SAVED_REPORTS);
   const [selectedReport, setSelectedReport] = useState(null); // 선택된 보고서 상태 관리
+  const [conversations, setConversations] = useState([]); // 저장된 대화 상태 관리
+
+  useEffect(() => {
+    // IndexedDB에서 저장된 모든 대화 내역 가져오기
+    const loadConversations = async () => {
+      const allConversations = await getAllConversationsFromIndexedDB();
+      setConversations(allConversations);
+    };
+    loadConversations();
+  }, []);
+
+  const handleConversationClick = (id) => {
+    // 클릭 시 해당 대화로 이동
+    navigate(`/conversation/${id}`);
+  };
 
   const handleReportClick = (index) => {
-    setSelectedReport(savedReports[index]); // 보고서 선택
+    // 저장된 보고서를 클릭하면 해당 보고서를 선택하여 팝업에 표시
+    setSelectedReport(savedReports[index]);
   };
 
   const closePopup = () => {
     setSelectedReport(null); // 팝업 닫기
   };
-  
+
   useEffect(() => {
     const checkboxes = document.querySelectorAll('.accordion-toggle');
     checkboxes.forEach((checkbox) => {
-      checkbox.addEventListener('change', function() {
+      checkbox.addEventListener('change', function () {
         if (this.checked) {
           checkboxes.forEach((otherCheckbox) => {
             if (otherCheckbox !== this) {
@@ -43,90 +57,76 @@ const OrganismLeftSideBar = () => {
     // Cleanup 이벤트 리스너
     return () => {
       checkboxes.forEach((checkbox) => {
-        checkbox.removeEventListener('change', () => {});
+        checkbox.removeEventListener('change', () => { });
       });
     };
   }, []);
 
   return (
     <>
-    <SideBar>
-      <div className="logo">
-        <Link to="#"></Link>
-        <button type="button">닫기</button>
-      </div>
+      <SideBar>
+        <div className="logo">
+          <Link to="#"></Link>
+          <button type="button">닫기</button>
+        </div>
 
-      <SideBarMenu>
-        <button type="button" className="newChat">
-          <img src={images.Chat} alt ="" />
-          새 프로젝트 시작
-        </button>
+        <SideBarMenu>
+          <button type="button" className="newChat">
+            <img src={images.Chat} alt="" />
+            새 프로젝트 시작
+          </button>
 
-        <AccordionMenu>
-          <AccordionItem>
-            <input type="checkbox" id="section1" className="accordion-toggle" />
-            <label for="section1" className="accordion-label">
-              <img src={images.Folder} alt ="" />
-              인사이트 보관함
-            </label>
-            <AccordionContent>
-              {savedReports.map((report, index) => (
-                <div key={index}>
-                  <Link to="#" onClick={() => handleReportClick(index)}>
-                    {report.title}
-                  </Link>
+          <AccordionMenu>
+            <AccordionItem>
+              <input type="checkbox" id="section1" className="accordion-toggle" />
+              <label htmlFor="section1" className="accordion-label">
+                <img src={images.Folder} alt="" />
+                인사이트 보관함
+              </label>
+              <AccordionContent>
+                {savedReports.map((report, index) => (
+                  <div key={index}>
+                    <Link to="#" onClick={() => handleReportClick(index)}>
+                      {report.title}
+                    </Link>
+                  </div>
+                ))}
+              </AccordionContent>
+            </AccordionItem>
+
+            {selectedReport && (
+              <OrganismReportPopup report={selectedReport} onClose={closePopup} />
+            )}
+
+            <AccordionItem>
+              <input type="checkbox" id="section2" className="accordion-toggle" />
+              <label htmlFor="section2" className="accordion-label">
+                <img src={images.Clock} alt="" />
+                프로젝트 히스토리
+              </label>
+              <AccordionContent>
+                <div>
+                  <strong>최근 작업</strong>
+                  <ul>
+                    {conversations.map((conversation, index) => (
+                      <li key={index} onClick={() => handleConversationClick(conversation.id)}>
+                        <p>{conversation.inputBusinessInfo}</p>
+                        <span>{new Date(conversation.timestamp).toLocaleDateString()}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              ))}
-            </AccordionContent>
-          </AccordionItem>
-
-          {selectedReport && (
-            <OrganismReportPopup report={selectedReport} onClose={closePopup} />
-          )}
-
-          <AccordionItem>
-            <input type="checkbox" id="section2" className="accordion-toggle" />
-            <label for="section2" className="accordion-label">
-              <img src={images.Clock} alt ="" />
-              프로젝트 히스토리
-            </label>
-            <AccordionContent>
-              <div>
-                <strong>최근 작업</strong>
-                <ul>
-                  <li onClick={() => handleReportClick(0)}>
-                    <p>{bizName}</p>
-                    <span>오늘</span>
-                  </li>
-                  <li>
-                    <p>운동을 좋아하는 20대 직장인</p>
-                    <span>24.08.20</span>
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <strong>지난 7일 대화</strong>
-                <ul>
-                  <li>
-                    <p>운동을 좋아하는 20대 직장인</p>
-                    <span>오늘</span>
-                  </li>
-                  <li>
-                    <p>운동을 좋아하는 20대 직장인</p>
-                    <span>24.08.20</span>
-                  </li>
-                </ul>
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-        </AccordionMenu>
-      </SideBarMenu>
-    </SideBar>
+              </AccordionContent>
+            </AccordionItem>
+          </AccordionMenu>
+        </SideBarMenu>
+      </SideBar>
     </>
   );
 };
 
 export default OrganismLeftSideBar;
+
 
 const SideBar = styled.div`
   position:sticky;
