@@ -149,6 +149,9 @@ const PageExpertInsight = () => {
             return null;
           })}
 
+          {/* 전략 보고서 섹션 */}
+          <OrganismStrategyReportSection />
+
           {/* 전문가 선택 섹션 */}
           <OrganismBizExpertSelect />
         </MainContent>
