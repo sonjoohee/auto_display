@@ -9,19 +9,21 @@ import {
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
   SAVED_REPORTS,
   IS_EDITING_NOW,
+  IS_CLICK_EXPERT_SELECT,
 } from '../../../AtomStates';
 
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
 import { InputField } from '../../../../assets/styles/Input';
 
-const OrganismBizAnalysisSection = () => {
+const OrganismBizAnalysisSection = ({ reportIndex }) => {
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [inputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
   const [savedReports, setSavedReports] = useAtom(SAVED_REPORTS);
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
+  const [isClickExpertSelect, setIsClickExpertSelect] = useAtom(IS_CLICK_EXPERT_SELECT);
 
   const [newAddContent, setNewAddContent] = useState('');
   const [isAddingNow, setIsAddingNow] = useState(false);
@@ -39,27 +41,61 @@ const OrganismBizAnalysisSection = () => {
       },
     ]);
   };
+  
+  // reportIndex === 0 : 비즈니스 분석 리포트 (아이디어 설명 다시하기, 재생성하기, 수정하기, 복사하기, 저장하기)
+    // isClickExpertSelect === true :  전문가를 선택했을 때 비즈니스 분석 리포트 (복사하시, 저장하기)
+    // isEditingNow === true : 수정중인 비즈니스 분석 리포트 (취소하기, 수정완료하기)
 
+  // reportIndex === 1 : 전문가 리포트 (재생성하기, 복사하기, 저장하기)
   return (
     <>
-    {!isEditingNow ? 
+    {reportIndex === 0 ?
+      <>
+      {isClickExpertSelect ? 
+      <>
         <ButtonWrap>
-            <button type="button"><img src={images.IconWrite2} alt="" />비즈니스 설명 다시 하기</button>
-            <div>
-                <button type="button"><img src={images.IconRefresh} alt="" />재생성하기</button>
-                <button type="button" onClick={() => setIsEditingNow(true)}><img src={images.IconEdit} alt="" />수정하기</button>
-                <button type="button"><img src={images.IconCopy} alt="" />복사하기</button>
-                <button type="button "onClick={() => saveReport()}><img src={images.IconSave} alt="" />저장하기</button>
-            </div>
+          <div/>
+          <div>
+            <button type="button"><img src={images.IconCopy} alt="" />복사하기</button>
+            <button type="button "onClick={() => saveReport()}><img src={images.IconSave} alt="" />저장하기</button>
+          </div>
         </ButtonWrap>
-    : 
-        <ButtonWrap>
-            <div/>
-            <div>
-                <button type="button" onClick={() => setIsEditingNow(false)}>취소하기</button>
-                <button type="button" onClick={() => setIsEditingNow(false)}>수정 완료하기</button>
-            </div>
-        </ButtonWrap>
+      </>
+      : 
+      <>
+        {!isEditingNow ? 
+          <ButtonWrap>
+              <button type="button"><img src={images.IconWrite2} alt="" />비즈니스 설명 다시 하기</button>
+              <div>
+                  <button type="button"><img src={images.IconRefresh} alt="" />재생성하기</button>
+                  <button type="button" onClick={() => setIsEditingNow(true)}><img src={images.IconEdit} alt="" />수정하기</button>
+                  <button type="button"><img src={images.IconCopy} alt="" />복사하기</button>
+                  <button type="button "onClick={() => saveReport()}><img src={images.IconSave} alt="" />저장하기</button>
+              </div>
+          </ButtonWrap>
+        : 
+          <ButtonWrap>
+              <div/>
+              <div>
+                  <button type="button" onClick={() => setIsEditingNow(false)}>취소하기</button>
+                  <button type="button" onClick={() => setIsEditingNow(false)}>수정 완료하기</button>
+              </div>
+          </ButtonWrap>
+        }
+      </>
+      }
+
+      </>
+    :
+    <ButtonWrap>
+      <div/>
+      <div>
+        <button type="button"><img src={images.IconRefresh} alt="" />재생성하기</button>
+        <button type="button"><img src={images.IconCopy} alt="" />복사하기</button>
+        <button type="button "onClick={() => saveReport()}><img src={images.IconSave} alt="" />저장하기</button>
+      </div>
+    </ButtonWrap>
+
     }
     </>
   );

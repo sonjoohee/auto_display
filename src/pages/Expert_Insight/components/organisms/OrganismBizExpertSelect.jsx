@@ -2,11 +2,17 @@
 
 import React from 'react';
 import styled from 'styled-components';
-
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
 
+import { useAtom } from 'jotai';
+import {
+  IS_CLICK_EXPERT_SELECT,
+} from '../../../AtomStates';
+
 const OrganismBizExpertSelect = () => {
+  const [isClickExpertSelect, setIsClickExpertSelect] = useAtom(IS_CLICK_EXPERT_SELECT);
+
   return (
     <BizExpertSelectContainer>
       <h1>홈케어 뷰티 디바이스와 기능성화장품에 대해 전문가에게 직접 확인해보세요</h1>
@@ -14,17 +20,17 @@ const OrganismBizExpertSelect = () => {
         <div>
           <img src={images.ImgChat} alt="" />
           <p>10차시 전략 다회차 1:1 커피챗하기</p>
-          <button type="button">시작하기</button>
+          <button type="button" onClick={()=>setIsClickExpertSelect(true)}>시작하기</button>
         </div>
         <div>
           <img src={images.ImgWrite} alt="" />
           <p>브랜드 전문가의 10초 맞춤 제안서 받기</p>
-          <button type="button">시작하기</button>
+          <button type="button" onClick={()=>setIsClickExpertSelect(true)}>시작하기</button>
         </div>
         <div>
           <img src={images.ImgTarget} alt="" />
           <p>지금 바로 만나 타겟 고객 확인하기</p>
-          <button type="button">시작하기</button>
+          <button type="button" onClick={()=>setIsClickExpertSelect(true)}>시작하기</button>
         </div>
       </SelectOptions>
     </BizExpertSelectContainer>
