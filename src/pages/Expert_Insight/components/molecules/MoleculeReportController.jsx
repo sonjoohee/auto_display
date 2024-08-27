@@ -20,14 +20,9 @@ import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '.
 const MoleculeReportController = ({ reportIndex, conversationId }) => {
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [mainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
-  // const [savedReports, setSavedReports] = useAtom(SAVED_REPORTS);
-  // const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
   const [isClickExpertSelect] = useAtom(IS_CLICK_EXPERT_SELECT);
-
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [inputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
-  // const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
-  // const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
   const [mainCharacteristicOfBusinessInformation, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
   const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [savedReports, setSavedReports] = useAtom(SAVED_REPORTS);
@@ -37,11 +32,16 @@ const MoleculeReportController = ({ reportIndex, conversationId }) => {
   const [isAddingNow, setIsAddingNow] = useState({ section: '', isAdding: false });
   const [newEditContent, setNewEditContent] = useState('');
   const [editingIndex, setEditingIndex] = useState({ section: '', index: -1 });
-  // const [isEditingNow, setIsEditingNow] = useState(false);
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
 
   const [warningMessage, setWarningMessage] = useState('');
 
+  const analysisReportData = {
+    title: titleOfBusinessInfo,
+    mainFeatures: mainFeaturesOfBusinessInformation,
+    mainCharacter: mainCharacteristicOfBusinessInformation,
+    mainCustomer: businessInformationTargetCustomer,
+  };
 
   const handleEditSave = async () => {
     if (editingIndex.section !== '' && editingIndex.index !== -1) {
@@ -50,13 +50,13 @@ const MoleculeReportController = ({ reportIndex, conversationId }) => {
     }
 
     const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
+
     const updatedConversation = {
       ...existingConversation,
-      mainFeatures: mainFeaturesOfBusinessInformation,
-      mainCharacter: mainCharacteristicOfBusinessInformation,
-      mainCustomer: businessInformationTargetCustomer,
+      analysisReportData,
       timestamp: Date.now(),
     };
+
 
     await saveConversationToIndexedDB(updatedConversation);
     setIsEditingNow(false);
@@ -91,9 +91,7 @@ const MoleculeReportController = ({ reportIndex, conversationId }) => {
     const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
     const updatedConversation = {
       ...existingConversation,
-      mainFeatures: mainFeaturesOfBusinessInformation,
-      mainCharacter: mainCharacteristicOfBusinessInformation,
-      mainCustomer: businessInformationTargetCustomer,
+      analysisReportData,
       timestamp: Date.now(),
     };
 
