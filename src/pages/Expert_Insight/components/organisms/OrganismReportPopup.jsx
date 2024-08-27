@@ -4,17 +4,35 @@ import styled from 'styled-components';
 const OrganismReportPopup = ({ report, onClose }) => {
   if (!report) return null;
 
+  const { mainFeatures, keyFunctions, targetCustomers } = report.content;
+
   return (
     <PopupOverlay onClick={onClose}>
       <PopupContent onClick={(e) => e.stopPropagation()}>
         <h1>{report.title}</h1>
         <p>{report.date}</p>
+
         <h2>주요 특징</h2>
         <ul>
-          {report.content.map((feature, index) => (
+          {mainFeatures.map((feature, index) => (
             <li key={index}>{feature}</li>
           ))}
         </ul>
+
+        <h2>주요 기능</h2>
+        <ul>
+          {keyFunctions.map((functionality, index) => (
+            <li key={index}>{functionality}</li>
+          ))}
+        </ul>
+
+        <h2>목표 고객</h2>
+        <ul>
+          {targetCustomers.map((customer, index) => (
+            <li key={index}>{customer}</li>
+          ))}
+        </ul>
+
         <CloseButton onClick={onClose}>닫기</CloseButton>
       </PopupContent>
     </PopupOverlay>
