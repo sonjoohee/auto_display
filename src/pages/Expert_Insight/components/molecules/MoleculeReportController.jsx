@@ -95,6 +95,8 @@ const MoleculeReportController = ({ reportIndex, conversationId }) => {
   // };
 
   const saveReport = async () => {
+    alert("저장되었습니다.")
+
     const analysisData = {
       title: titleOfBusinessInfo,
       mainFeatures: mainFeaturesOfBusinessInformation,
@@ -121,6 +123,29 @@ const MoleculeReportController = ({ reportIndex, conversationId }) => {
 
     saveConversationToIndexedDB(updatedConversation);
   };
+
+const handleCopyContent = () => {
+const contentToCopy = `
+${titleOfBusinessInfo}
+
+주요 특징
+${mainFeaturesOfBusinessInformation.map(feature => `- ${feature}`).join('\n')}
+
+주요 특성
+${mainCharacteristicOfBusinessInformation.map(character => `- ${character}`).join('\n')}
+
+대상 고객
+${businessInformationTargetCustomer.map(customer => `- ${customer}`).join('\n')}
+    `;
+
+navigator.clipboard.writeText(contentToCopy)
+  .then(() => {
+    alert("복사가 완료되었습니다.");
+  })
+  .catch(error => {
+    console.error("복사 실패?", error);
+  });
+};
 
   // reportIndex === 0 : 비즈니스 분석 리포트 (아이디어 설명 다시하기, 재생성하기, 수정하기, 복사하기, 저장하기)
     // isClickExpertSelect === true :  전문가를 선택했을 때 비즈니스 분석 리포트 (복사하시, 저장하기)
@@ -162,7 +187,7 @@ const MoleculeReportController = ({ reportIndex, conversationId }) => {
                       <img src={images.IconEdit} alt="" />
                       수정하기
                     </button>
-                    <button type="button">
+                    <button type="button" onClick={handleCopyContent}>
                       <img src={images.IconCopy} alt="" />
                       복사하기
                     </button>
