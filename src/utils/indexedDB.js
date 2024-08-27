@@ -46,6 +46,17 @@ export const saveConversationToIndexedDB = async (conversation) => {
   });
 };
 
+export const getRecordByIdFromIndexedDB = async (id) => {
+  const db = await openDB();
+  const transaction = db.transaction('records', 'readonly');
+  const store = transaction.objectStore('conversations');
+  return new Promise((resolve, reject) => {
+    const request = store.get(id);
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject('Failed to fetch record from IndexedDB');
+  });
+};
+
 export const getAllConversationsFromIndexedDB = async () => {
   const db = await openDB();
   const transaction = db.transaction('conversations', 'readonly');
@@ -88,13 +99,3 @@ export const getAllRecordsFromIndexedDB = async () => {
   });
 };
 
-export const getRecordByIdFromIndexedDB = async (id) => {
-  const db = await openDB();
-  const transaction = db.transaction('records', 'readonly');
-  const store = transaction.objectStore('records');
-  return new Promise((resolve, reject) => {
-    const request = store.get(id);
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject('Failed to fetch record from IndexedDB');
-  });
-};

@@ -7,6 +7,9 @@ import {
   SELECTED_EXPERT_INDEX,
   INPUT_BUSINESS_INFO,
   TITLE_OF_BUSINESS_INFORMATION,
+  MAIN_FEATURES_OF_BUSINESS_INFORMATION,
+  MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
+  BUSINESS_INFORMATION_TARGET_CUSTOMER,
 } from '../../../AtomStates';
 
 import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
@@ -31,9 +34,11 @@ const PageExpertInsight = () => {
   const [conversationStage, setConversationStage] = useState(1);
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
+  const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
+  const [mainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
+  const [businessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
 
-  // conversationId가 처음 설정되었을 때 URL을 업데이트하거나 기존 대화 불러오기
   useEffect(() => {
     const loadConversation = async () => {
       if (!paramConversationId) {
@@ -45,6 +50,8 @@ const PageExpertInsight = () => {
           setConversationStage(savedConversation.conversationStage);
           setInputBusinessInfo(savedConversation.inputBusinessInfo);
           setTitleOfBusinessInfo(savedConversation.titleOfBusinessInfo);
+          setMainFeaturesOfBusinessInformation(savedConversation.mainFeatures);
+          // 같은 방식으로 나머지 데이터를 복원
         } else {
           if (selectedExpertIndex) {
             const initialMessage = getInitialSystemMessage();
@@ -54,50 +61,50 @@ const PageExpertInsight = () => {
       }
     };
     loadConversation();
-  }, [paramConversationId, conversationId, navigate, selectedExpertIndex]);
+  }, [paramConversationId, conversationId, navigate, selectedExpertIndex, setInputBusinessInfo, setTitleOfBusinessInfo, setMainFeaturesOfBusinessInformation]);
 
   const handleSearch = (inputValue) => {
     const updatedConversation = [
-        ...conversation,
-        { type: 'user', message: inputValue },
+      ...conversation,
+      { type: 'user', message: inputValue },
     ];
 
     if (conversationStage === 1) {
-        const analysisResult = `분석 결과: ${inputValue}에 대한 상세 분석 내용`;
-        setInputBusinessInfo(inputValue);
-        updatedConversation.push(
-            { type: 'system', message: `${inputValue}를 바탕으로 분석을 진행하겠습니다.` },
-            { type: 'analysis', message: analysisResult },
-            { type: 'system', message: `${inputValue}에 대한 리포트 입니다. 추가로 궁금하신 부분이 있다면 질문해주세요.` }
-        );
-        setConversationStage(2);
+      setInputBusinessInfo(inputValue);
+      updatedConversation.push(
+        { type: 'system', message: `${inputValue}를 바탕으로 분석을 진행하겠습니다.` },
+        { type: 'analysis' },
+        { type: 'system', message: `${inputValue}에 대한 리포트 입니다. 추가로 궁금하신 부분이 있다면 질문해주세요.` }
+      );
+      setConversationStage(2);
     } else if (conversationStage === 2) {
-        const strategyContent = '전략 내용: 해당 비즈니스에 대한 전략적 접근';
-        updatedConversation.push(
-            { type: 'system', message: '리포트를 바탕으로 전략 보고서를 작성하겠습니다.' },
-            { type: 'strategy', message: strategyContent },
-            { type: 'system', message: '전략 보고서를 기반으로 추가적인 질문을 해주세요.' },
-        );
-        setConversationStage(3);
+      updatedConversation.push(
+        { type: 'system', message: '리포트를 바탕으로 전략 보고서를 작성하겠습니다.' },
+        { type: 'strategy' },
+        { type: 'system', message: '전략 보고서를 기반으로 추가적인 질문을 해주세요.' },
+      );
+      setConversationStage(3);
     } else if (conversationStage === 3) {
-        updatedConversation.push(
-            { type: 'system', message: '해당 질문에 대한 답변을 준비 중입니다.' }
-        );
+      updatedConversation.push(
+        { type: 'system', message: '해당 질문에 대한 답변을 준비 중입니다.' }
+      );
     }
 
     setConversation(updatedConversation);
 
     // 대화 내역을 IndexedDB에 저장
     saveConversationToIndexedDB({
-        id: conversationId,
-        conversation: updatedConversation,
-        conversationStage: conversationStage + 1,
-        inputBusinessInfo,
-        titleOfBusinessInfo,
-        timestamp: Date.now(),
+      id: conversationId,
+      conversation: updatedConversation,
+      conversationStage: conversationStage + 1,
+      inputBusinessInfo,
+      titleOfBusinessInfo,
+      mainFeatures: mainFeaturesOfBusinessInformation,
+      mainCharacter: mainCharacteristicOfBusinessInformation,
+      mainCustomer: businessInformationTargetCustomer,
+      timestamp: Date.now(),
     });
-};
-
+  };
 
   const getInitialSystemMessage = () => {
     switch (selectedExpertIndex) {
@@ -124,17 +131,17 @@ const PageExpertInsight = () => {
           <MoleculeBizName bizName={inputBusinessInfo} />
 
           {conversation.map((item, index) => {
-                    if (item.type === 'user') {
-                        return <MoleculeUserMessage key={index} message={item.message} />;
-                    } else if (item.type === 'system') {
-                        return <MoleculeSystemMessage key={index} message={item.message} />;
-                    } else if (item.type === 'analysis') {
-                        return <OrganismBizAnalysisSection key={index} analysisContent={item.message} />;
-                    } else if (item.type === 'strategy') {
-                        return <OrganismStrategyReportSection key={index} strategyContent={item.message} />;
-                    }
-                    return null;
-                })}
+            if (item.type === 'user') {
+              return <MoleculeUserMessage key={index} message={item.message} />;
+            } else if (item.type === 'system') {
+              return <MoleculeSystemMessage key={index} message={item.message} />;
+            } else if (item.type === 'analysis') {
+              return <OrganismBizAnalysisSection conversationId={conversationId} />;
+            } else if (item.type === 'strategy') {
+              return <OrganismStrategyReportSection key={index} />;
+            }
+            return null;
+          })}
 
           <OrganismBizExpertSelect />
         </MainContent>

@@ -32,17 +32,18 @@ const OrganismSideBar = () => {
   };
 
   const handleReportClick = (index) => {
-    setSelectedReport(savedReports[index]); // 보고서 선택
+    // 저장된 보고서를 클릭하면 해당 보고서를 선택하여 팝업에 표시
+    setSelectedReport(savedReports[index]);
   };
 
   const closePopup = () => {
     setSelectedReport(null); // 팝업 닫기
   };
-  
+
   useEffect(() => {
     const checkboxes = document.querySelectorAll('.accordion-toggle');
     checkboxes.forEach((checkbox) => {
-      checkbox.addEventListener('change', function() {
+      checkbox.addEventListener('change', function () {
         if (this.checked) {
           checkboxes.forEach((otherCheckbox) => {
             if (otherCheckbox !== this) {
@@ -56,129 +57,128 @@ const OrganismSideBar = () => {
     // Cleanup 이벤트 리스너
     return () => {
       checkboxes.forEach((checkbox) => {
-        checkbox.removeEventListener('change', () => {});
+        checkbox.removeEventListener('change', () => { });
       });
     };
   }, []);
 
   return (
     <>
-    <SideBar>
-      <div className="logo">
-        <Link to="#"></Link>
-        <button type="button">닫기</button>
-      </div>
+      <SideBar>
+        <div className="logo">
+          <Link to="#"></Link>
+          <button type="button">닫기</button>
+        </div>
 
-      <SideBarMenu>
-        <button type="button" className="newChat">
-          <img src={images.Chat} alt ="" />
-          새 프로젝트 시작
-        </button>
+        <SideBarMenu>
+          <button type="button" className="newChat">
+            <img src={images.Chat} alt="" />
+            새 프로젝트 시작
+          </button>
 
-        <AccordionMenu>
-          <AccordionItem>
-            <input type="checkbox" id="section1" className="accordion-toggle" />
-            <label for="section1" className="accordion-label">
-              <img src={images.Folder} alt ="" />
-              인사이트 보관함
-            </label>
-            <AccordionContent>
-              {savedReports.map((report, index) => (
-                <div key={index}>
-                  <Link to="#" onClick={() => handleReportClick(index)}>
-                    {report.title}
-                  </Link>
+          <AccordionMenu>
+            <AccordionItem>
+              <input type="checkbox" id="section1" className="accordion-toggle" />
+              <label htmlFor="section1" className="accordion-label">
+                <img src={images.Folder} alt="" />
+                인사이트 보관함
+              </label>
+              <AccordionContent>
+                {savedReports.map((report, index) => (
+                  <div key={index}>
+                    <Link to="#" onClick={() => handleReportClick(index)}>
+                      {report.title}
+                    </Link>
+                  </div>
+                ))}
+              </AccordionContent>
+            </AccordionItem>
+
+            {selectedReport && (
+              <OrganismReportPopup report={selectedReport} onClose={closePopup} />
+            )}
+
+            <AccordionItem>
+              <input type="checkbox" id="section2" className="accordion-toggle" />
+              <label htmlFor="section2" className="accordion-label">
+                <img src={images.Clock} alt="" />
+                프로젝트 히스토리
+              </label>
+              <AccordionContent>
+                <div>
+                  <strong>최근 작업</strong>
+                  <ul>
+                    {conversations.map((conversation, index) => (
+                      <li key={index} onClick={() => handleConversationClick(conversation.id)}>
+                        <p>{conversation.inputBusinessInfo}</p>
+                        <span>{new Date(conversation.timestamp).toLocaleDateString()}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              ))}
-            </AccordionContent>
-          </AccordionItem>
+              </AccordionContent>
+            </AccordionItem>
+          </AccordionMenu>
+        </SideBarMenu>
+      </SideBar>
 
-          {selectedReport && (
-            <OrganismReportPopup report={selectedReport} onClose={closePopup} />
-          )}
+      {/* 담당 AI 전문가 */}
+      <SideBar Right>
+        <AIProfileWrap>
+          <div>
+            <h3>담당 AI 전문가</h3>
 
-          <AccordionItem>
-            <input type="checkbox" id="section2" className="accordion-toggle" />
-            <label for="section2" className="accordion-label">
-              <img src={images.Clock} alt ="" />
-              프로젝트 히스토리
-            </label>
-            <AccordionContent>
-              <div>
-                <strong>최근 작업</strong>
-                <ul>
-                  {conversations.map((conversation, index) => (
-                    <li key={index} onClick={() => handleConversationClick(conversation.id)}>
-                      <p>{conversation.inputBusinessInfo}</p>
-                      <span>{new Date(conversation.timestamp).toLocaleDateString()}</span>
-                    </li>
-                  ))}
-                </ul>
+            <AIProfile>
+              <div className="thumb">
+                <img src={panelimages.PanelIMG} alt="" />
               </div>
-              {/* 기존의 지난 7일 대화 코드 삭제 또는 수정 가능 */}
-            </AccordionContent>
-          </AccordionItem>
-        </AccordionMenu>
-      </SideBarMenu>
-    </SideBar>
+              <div className="name">
+                <strong>김도원 - 제품 전략가</strong>
+                <p>제품 전략 총괄 디렉터</p>
+              </div>
+              <div className="field">
+                <strong>
+                  <img src={images.IconChatSmile} alt="" />
+                  전문분석 분야
+                </strong>
 
-    {/* 담당 AI 전문가 */}
-    <SideBar Right>
-      <AIProfileWrap>
-        <div>
-          <h3>담당 AI 전문가</h3>
+                <p>
+                  <span>핵심 가치 제안 분석</span>
+                  <span>제품 개발 로드맵 구상</span>
+                  <span>제품 포지셔닝 전략</span>
+                </p>
+              </div>
+            </AIProfile>
 
-          <AIProfile>
-            <div className="thumb">
-              <img src={panelimages.PanelIMG} alt="" />
-            </div>
-            <div className="name">
-              <strong>김도원 - 제품 전략가</strong>
-              <p>제품 전략 총괄 디렉터</p>
-            </div>
-            <div className="field">
-              <strong>
-                <img src={images.IconChatSmile} alt="" />
-                전문분석 분야
-              </strong>
+            <Link to="#">상세 정보 확인하기</Link>
+          </div>
+        </AIProfileWrap>
 
-              <p>
-                <span>핵심 가치 제안 분석</span>
-                <span>제품 개발 로드맵 구상</span>
-                <span>제품 포지셔닝 전략</span>
-              </p>
-            </div>
-          </AIProfile>
+        <IdeaWrap>
+          <strong>김도원 디렉터님의 추천 사항이에요</strong>
 
-          <Link to="#">상세 정보 확인하기</Link>
-        </div>
-      </AIProfileWrap>
-
-      <IdeaWrap>
-        <strong>김도원 디렉터님의 추천 사항이에요</strong>
-
-        <div>
-          <Link to="#">
-            <svg width="13" height="13" viewBox="0 0 21 21" fill="#ABABAB" xmlns="http://www.w3.org/2000/svg">
-              <path d="M15.0674 13.3651H14.1407L13.8122 13.0486C15.22 11.4077 15.9473 9.16911 15.5484 6.78983C14.9971 3.53149 12.2753 0.929517 8.99053 0.531016C4.02811 -0.078456 -0.148303 4.09408 0.461735 9.0519C0.860606 12.3337 3.465 15.0529 6.72635 15.6037C9.10785 16.0022 11.3486 15.2756 12.991 13.8691L13.3077 14.1973V15.1232L18.2936 20.1044C18.7746 20.585 19.5606 20.585 20.0416 20.1044C20.5226 19.6239 20.5226 18.8386 20.0416 18.3581L15.0674 13.3651ZM8.02855 13.3651C5.10741 13.3651 2.74938 11.0092 2.74938 8.09081C2.74938 5.17238 5.10741 2.81654 8.02855 2.81654C10.9497 2.81654 13.3077 5.17238 13.3077 8.09081C13.3077 11.0092 10.9497 13.3651 8.02855 13.3651Z" fill="#ABABAB"/>
-            </svg>
-            "이런 페르소나"의 의견 들어보기
-          </Link>
-          <Link to="#">
-            <svg width="13" height="13" viewBox="0 0 21 21" fill="#ABABAB" xmlns="http://www.w3.org/2000/svg">
-              <path d="M15.0674 13.3651H14.1407L13.8122 13.0486C15.22 11.4077 15.9473 9.16911 15.5484 6.78983C14.9971 3.53149 12.2753 0.929517 8.99053 0.531016C4.02811 -0.078456 -0.148303 4.09408 0.461735 9.0519C0.860606 12.3337 3.465 15.0529 6.72635 15.6037C9.10785 16.0022 11.3486 15.2756 12.991 13.8691L13.3077 14.1973V15.1232L18.2936 20.1044C18.7746 20.585 19.5606 20.585 20.0416 20.1044C20.5226 19.6239 20.5226 18.8386 20.0416 18.3581L15.0674 13.3651ZM8.02855 13.3651C5.10741 13.3651 2.74938 11.0092 2.74938 8.09081C2.74938 5.17238 5.10741 2.81654 8.02855 2.81654C10.9497 2.81654 13.3077 5.17238 13.3077 8.09081C13.3077 11.0092 10.9497 13.3651 8.02855 13.3651Z" fill="#ABABAB"/>
-            </svg>
-            "이런 페르소나"의 의견 들어보기
-          </Link>
-          <Link to="#">
-            <svg width="13" height="13" viewBox="0 0 21 21" fill="#ABABAB" xmlns="http://www.w3.org/2000/svg">
-              <path d="M15.0674 13.3651H14.1407L13.8122 13.0486C15.22 11.4077 15.9473 9.16911 15.5484 6.78983C14.9971 3.53149 12.2753 0.929517 8.99053 0.531016C4.02811 -0.078456 -0.148303 4.09408 0.461735 9.0519C0.860606 12.3337 3.465 15.0529 6.72635 15.6037C9.10785 16.0022 11.3486 15.2756 12.991 13.8691L13.3077 14.1973V15.1232L18.2936 20.1044C18.7746 20.585 19.5606 20.585 20.0416 20.1044C20.5226 19.6239 20.5226 18.8386 20.0416 18.3581L15.0674 13.3651ZM8.02855 13.3651C5.10741 13.3651 2.74938 11.0092 2.74938 8.09081C2.74938 5.17238 5.10741 2.81654 8.02855 2.81654C10.9497 2.81654 13.3077 5.17238 13.3077 8.09081C13.3077 11.0092 10.9497 13.3651 8.02855 13.3651Z" fill="#ABABAB"/>
-            </svg>
-            "이런 페르소나"의 의견 들어보기
-          </Link>
-        </div>
-      </IdeaWrap>
-    </SideBar>
+          <div>
+            <Link to="#">
+              <svg width="13" height="13" viewBox="0 0 21 21" fill="#ABABAB" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.0674 13.3651H14.1407L13.8122 13.0486C15.22 11.4077 15.9473 9.16911 15.5484 6.78983C14.9971 3.53149 12.2753 0.929517 8.99053 0.531016C4.02811 -0.078456 -0.148303 4.09408 0.461735 9.0519C0.860606 12.3337 3.465 15.0529 6.72635 15.6037C9.10785 16.0022 11.3486 15.2756 12.991 13.8691L13.3077 14.1973V15.1232L18.2936 20.1044C18.7746 20.585 19.5606 20.585 20.0416 20.1044C20.5226 19.6239 20.5226 18.8386 20.0416 18.3581L15.0674 13.3651ZM8.02855 13.3651C5.10741 13.3651 2.74938 11.0092 2.74938 8.09081C2.74938 5.17238 5.10741 2.81654 8.02855 2.81654C10.9497 2.81654 13.3077 5.17238 13.3077 8.09081C13.3077 11.0092 10.9497 13.3651 8.02855 13.3651Z" fill="#ABABAB" />
+              </svg>
+              "이런 페르소나"의 의견 들어보기
+            </Link>
+            <Link to="#">
+              <svg width="13" height="13" viewBox="0 0 21 21" fill="#ABABAB" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.0674 13.3651H14.1407L13.8122 13.0486C15.22 11.4077 15.9473 9.16911 15.5484 6.78983C14.9971 3.53149 12.2753 0.929517 8.99053 0.531016C4.02811 -0.078456 -0.148303 4.09408 0.461735 9.0519C0.860606 12.3337 3.465 15.0529 6.72635 15.6037C9.10785 16.0022 11.3486 15.2756 12.991 13.8691L13.3077 14.1973V15.1232L18.2936 20.1044C18.7746 20.585 19.5606 20.585 20.0416 20.1044C20.5226 19.6239 20.5226 18.8386 20.0416 18.3581L15.0674 13.3651ZM8.02855 13.3651C5.10741 13.3651 2.74938 11.0092 2.74938 8.09081C2.74938 5.17238 5.10741 2.81654 8.02855 2.81654C10.9497 2.81654 13.3077 5.17238 13.3077 8.09081C13.3077 11.0092 10.9497 13.3651 8.02855 13.3651Z" fill="#ABABAB" />
+              </svg>
+              "이런 페르소나"의 의견 들어보기
+            </Link>
+            <Link to="#">
+              <svg width="13" height="13" viewBox="0 0 21 21" fill="#ABABAB" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.0674 13.3651H14.1407L13.8122 13.0486C15.22 11.4077 15.9473 9.16911 15.5484 6.78983C14.9971 3.53149 12.2753 0.929517 8.99053 0.531016C4.02811 -0.078456 -0.148303 4.09408 0.461735 9.0519C0.860606 12.3337 3.465 15.0529 6.72635 15.6037C9.10785 16.0022 11.3486 15.2756 12.991 13.8691L13.3077 14.1973V15.1232L18.2936 20.1044C18.7746 20.585 19.5606 20.585 20.0416 20.1044C20.5226 19.6239 20.5226 18.8386 20.0416 18.3581L15.0674 13.3651ZM8.02855 13.3651C5.10741 13.3651 2.74938 11.0092 2.74938 8.09081C2.74938 5.17238 5.10741 2.81654 8.02855 2.81654C10.9497 2.81654 13.3077 5.17238 13.3077 8.09081C13.3077 11.0092 10.9497 13.3651 8.02855 13.3651Z" fill="#ABABAB" />
+              </svg>
+              "이런 페르소나"의 의견 들어보기
+            </Link>
+          </div>
+        </IdeaWrap>
+      </SideBar>
     </>
   );
 };
