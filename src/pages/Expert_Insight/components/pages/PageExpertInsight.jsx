@@ -15,7 +15,7 @@ import {
 import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
 
 import OrganismHeader from '../../../organisms/OrganismHeader';
-import OrganismSideBar from '../organisms/OrganismSideBar';
+import OrganismLeftSideBar from '../organisms/OrganismLeftSideBar';
 import OrganismRightSideBar from '../organisms/OrganismRightSideBar';
 import OrganismBizAnalysisSection from '../organisms/OrganismBizAnalysisSection';
 import OrganismStrategyReportSection from '../organisms/OrganismStrategyReportSection';
@@ -38,6 +38,8 @@ const PageExpertInsight = () => {
   const [mainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
   const [businessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
+  const [savedConversations, setSavedConversations] = useAtom(SAVED_CONVERSATIONS);
+  const [isClickExpertSelect, setIsClickExpertSelect] = useAtom(IS_CLICK_EXPERT_SELECT);
 
   useEffect(() => {
     const loadConversation = async () => {
@@ -124,6 +126,10 @@ const PageExpertInsight = () => {
       {selectedExpertIndex !== 0 && <OrganismTakingChargeAiExpert />}
 
       <OrganismHeader />
+    
+      <ContentsWrap>
+        <OrganismLeftSideBar />
+        <OrganismRightSideBar />
       <ContentsWrap>
         <OrganismSideBar />
 

@@ -9,6 +9,7 @@ import {
   MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
   SAVED_REPORTS,
+  IS_EDITING_NOW,
 } from '../../../AtomStates';
 import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
 import { palette } from '../../../../assets/styles/Palette';
@@ -24,6 +25,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [savedReports, setSavedReports] = useAtom(SAVED_REPORTS);
 
+  const [bizAnalysisReportIndex, setBizAnalysisReportIndex] = useState(0);
   const [newAddContent, setNewAddContent] = useState('');
   const [isAddingNow, setIsAddingNow] = useState({ section: '', isAdding: false });
   const [newEditContent, setNewEditContent] = useState('');
@@ -159,7 +161,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                 <InputField
                   type="text"
                   value={newEditContent}
-                  onChange={(e) => setNewEditContent(e.target.value)}
+                  onChange={(e) => {setBizAnalysisReportIndex(0); setNewEditContent(e.target.value);}}
                 />
               ) : (
                 <p>{content}</p>
