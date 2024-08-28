@@ -2,6 +2,74 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useAtom } from 'jotai';
 import {
+  EXPERT1_TAB1_CT1_TITLE,
+  EXPERT1_TAB1_CT2_TITLE,
+  EXPERT1_TAB1_CT3_TITLE,
+  EXPERT1_TAB1_CT4_TITLE,
+  EXPERT1_TAB1_CT5_TITLE,
+  EXPERT1_TAB2_CT1_TITLE,
+  EXPERT1_TAB2_CT2_TITLE,
+  EXPERT1_TAB2_CT3_TITLE,
+  EXPERT1_TAB2_CT4_TITLE,
+  EXPERT1_TAB3_CT1_TITLE,
+  EXPERT1_TAB3_CT2_TITLE,
+  EXPERT1_TAB3_CT3_TITLE,
+  EXPERT1_TAB3_CT4_TITLE,
+  EXPERT1_TAB1_CT1,
+  EXPERT1_TAB1_CT2,
+  EXPERT1_TAB1_CT3,
+  EXPERT1_TAB1_CT4,
+  EXPERT1_TAB1_CT5,
+  EXPERT1_TAB1_CT6,
+  EXPERT1_TAB2_CT1,
+  EXPERT1_TAB2_CT2,
+  EXPERT1_TAB2_CT3,
+  EXPERT1_TAB2_CT4,
+  EXPERT1_TAB2_CT5,
+  EXPERT1_TAB3_CT1,
+  EXPERT1_TAB3_CT2,
+  EXPERT1_TAB3_CT3,
+  EXPERT1_TAB3_CT4,
+  EXPERT1_TAB3_CT5,
+  EXPERT2_TAB1_CT1_TITLE,
+  EXPERT2_TAB1_CT2_TITLE,
+  EXPERT2_TAB1_CT3_TITLE,
+  EXPERT2_TAB1_CT4_TITLE,
+  EXPERT2_TAB2_CT1_TITLE,
+  EXPERT2_TAB2_CT2_TITLE,
+  EXPERT2_TAB2_CT3_TITLE,
+  EXPERT2_TAB3_CT1_TITLE,
+  EXPERT2_TAB3_CT2_TITLE,
+  EXPERT2_TAB3_CT3_TITLE,
+  EXPERT2_TAB1_CT1,
+  EXPERT2_TAB1_CT2,
+  EXPERT2_TAB1_CT3,
+  EXPERT2_TAB1_CT4,
+  EXPERT2_TAB1_CT5,
+  EXPERT2_TAB2_CT1,
+  EXPERT2_TAB2_CT2,
+  EXPERT2_TAB2_CT3,
+  EXPERT2_TAB2_CT4,
+  EXPERT2_TAB3_CT1,
+  EXPERT2_TAB3_CT2,
+  EXPERT2_TAB3_CT3,
+  EXPERT2_TAB3_CT4,
+  EXPERT3_TAB1_CT1_TITLE,
+  EXPERT3_TAB1_CT2_TITLE,
+  EXPERT3_TAB1_CT3_TITLE,
+  EXPERT3_TAB1_CT4_TITLE,
+  EXPERT3_TAB2_CT1_TITLE,
+  EXPERT3_TAB2_CT2_TITLE,
+  EXPERT3_TAB2_CT3_TITLE,
+  EXPERT3_TAB1_CT1,
+  EXPERT3_TAB1_CT2,
+  EXPERT3_TAB1_CT3,
+  EXPERT3_TAB1_CT4,
+  EXPERT3_TAB1_CT5,
+  EXPERT3_TAB2_CT1,
+  EXPERT3_TAB2_CT2,
+  EXPERT3_TAB2_CT3,
+  EXPERT3_TAB2_CT4,
   TITLE_OF_BUSINESS_INFORMATION,
   IS_CLICK_EXPERT_SELECT,
   SELECTED_EXPERT_INDEX,
@@ -85,6 +153,75 @@ const MoleculeReportController = ({ reportIndex, conversationId }) => {
   const [strategyReportCompetitionDifferentiation3, setStrategyReportCompetitionDifferentiation3] = useAtom(STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_3);
   const [strategyReportCompetitionDifferentiation4, setStrategyReportCompetitionDifferentiation4] = useAtom(STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_4);
 
+  const [expert1Tab1Ct1Title, setExpert1Tab1Ct1Title] = useAtom(EXPERT1_TAB1_CT1_TITLE);
+  const [expert1Tab1Ct2Title, setExpert1Tab1Ct2Title] = useAtom(EXPERT1_TAB1_CT2_TITLE);
+  const [expert1Tab1Ct3Title, setExpert1Tab1Ct3Title] = useAtom(EXPERT1_TAB1_CT3_TITLE);
+  const [expert1Tab1Ct4Title, setExpert1Tab1Ct4Title] = useAtom(EXPERT1_TAB1_CT4_TITLE);
+  const [expert1Tab1Ct5Title, setExpert1Tab1Ct5Title] = useAtom(EXPERT1_TAB1_CT5_TITLE);
+  const [expert1Tab2Ct1Title, setExpert1Tab2Ct1Title] = useAtom(EXPERT1_TAB2_CT1_TITLE);
+  const [expert1Tab2Ct2Title, setExpert1Tab2Ct2Title] = useAtom(EXPERT1_TAB2_CT2_TITLE);
+  const [expert1Tab2Ct3Title, setExpert1Tab2Ct3Title] = useAtom(EXPERT1_TAB2_CT3_TITLE);
+  const [expert1Tab2Ct4Title, setExpert1Tab2Ct4Title] = useAtom(EXPERT1_TAB2_CT4_TITLE);
+  const [expert1Tab3Ct1Title, setExpert1Tab3Ct1Title] = useAtom(EXPERT1_TAB3_CT1_TITLE);
+  const [expert1Tab3Ct2Title, setExpert1Tab3Ct2Title] = useAtom(EXPERT1_TAB3_CT2_TITLE);
+  const [expert1Tab3Ct3Title, setExpert1Tab3Ct3Title] = useAtom(EXPERT1_TAB3_CT3_TITLE);
+  const [expert1Tab3Ct4Title, setExpert1Tab3Ct4Title] = useAtom(EXPERT1_TAB3_CT4_TITLE);
+  const [expert1Tab1Ct1, setExpert1Tab1Ct1] = useAtom(EXPERT1_TAB1_CT1);
+  const [expert1Tab1Ct2, setExpert1Tab1Ct2] = useAtom(EXPERT1_TAB1_CT2);
+  const [expert1Tab1Ct3, setExpert1Tab1Ct3] = useAtom(EXPERT1_TAB1_CT3);
+  const [expert1Tab1Ct4, setExpert1Tab1Ct4] = useAtom(EXPERT1_TAB1_CT4);
+  const [expert1Tab1Ct5, setExpert1Tab1Ct5] = useAtom(EXPERT1_TAB1_CT5);
+  const [expert1Tab1Ct6, setExpert1Tab1Ct6] = useAtom(EXPERT1_TAB1_CT6);
+  const [expert1Tab2Ct1, setExpert1Tab2Ct1] = useAtom(EXPERT1_TAB2_CT1);
+  const [expert1Tab2Ct2, setExpert1Tab2Ct2] = useAtom(EXPERT1_TAB2_CT2);
+  const [expert1Tab2Ct3, setExpert1Tab2Ct3] = useAtom(EXPERT1_TAB2_CT3);
+  const [expert1Tab2Ct4, setExpert1Tab2Ct4] = useAtom(EXPERT1_TAB2_CT4);
+  const [expert1Tab2Ct5, setExpert1Tab2Ct5] = useAtom(EXPERT1_TAB2_CT5);
+  const [expert1Tab3Ct1, setExpert1Tab3Ct1] = useAtom(EXPERT1_TAB3_CT1);
+  const [expert1Tab3Ct2, setExpert1Tab3Ct2] = useAtom(EXPERT1_TAB3_CT2);
+  const [expert1Tab3Ct3, setExpert1Tab3Ct3] = useAtom(EXPERT1_TAB3_CT3);
+  const [expert1Tab3Ct4, setExpert1Tab3Ct4] = useAtom(EXPERT1_TAB3_CT4);
+  const [expert1Tab3Ct5, setExpert1Tab3Ct5] = useAtom(EXPERT1_TAB3_CT5);
+  const [expert2Tab1Ct1Title, setExpert2Tab1Ct1Title] = useAtom(EXPERT2_TAB1_CT1_TITLE);
+  const [expert2Tab1Ct2Title, setExpert2Tab1Ct2Title] = useAtom(EXPERT2_TAB1_CT2_TITLE);
+  const [expert2Tab1Ct3Title, setExpert2Tab1Ct3Title] = useAtom(EXPERT2_TAB1_CT3_TITLE);
+  const [expert2Tab1Ct4Title, setExpert2Tab1Ct4Title] = useAtom(EXPERT2_TAB1_CT4_TITLE);
+  const [expert2Tab2Ct1Title, setExpert2Tab2Ct1Title] = useAtom(EXPERT2_TAB2_CT1_TITLE);
+  const [expert2Tab2Ct2Title, setExpert2Tab2Ct2Title] = useAtom(EXPERT2_TAB2_CT2_TITLE);
+  const [expert2Tab2Ct3Title, setExpert2Tab2Ct3Title] = useAtom(EXPERT2_TAB2_CT3_TITLE);
+  const [expert2Tab3Ct1Title, setExpert2Tab3Ct1Title] = useAtom(EXPERT2_TAB3_CT1_TITLE);
+  const [expert2Tab3Ct2Title, setExpert2Tab3Ct2Title] = useAtom(EXPERT2_TAB3_CT2_TITLE);
+  const [expert2Tab3Ct3Title, setExpert2Tab3Ct3Title] = useAtom(EXPERT2_TAB3_CT3_TITLE);
+  const [expert2Tab1Ct1, setExpert2Tab1Ct1] = useAtom(EXPERT2_TAB1_CT1);
+  const [expert2Tab1Ct2, setExpert2Tab1Ct2] = useAtom(EXPERT2_TAB1_CT2);
+  const [expert2Tab1Ct3, setExpert2Tab1Ct3] = useAtom(EXPERT2_TAB1_CT3);
+  const [expert2Tab1Ct4, setExpert2Tab1Ct4] = useAtom(EXPERT2_TAB1_CT4);
+  const [expert2Tab1Ct5, setExpert2Tab1Ct5] = useAtom(EXPERT2_TAB1_CT5);
+  const [expert2Tab2Ct1, setExpert2Tab2Ct1] = useAtom(EXPERT2_TAB2_CT1);
+  const [expert2Tab2Ct2, setExpert2Tab2Ct2] = useAtom(EXPERT2_TAB2_CT2);
+  const [expert2Tab2Ct3, setExpert2Tab2Ct3] = useAtom(EXPERT2_TAB2_CT3);
+  const [expert2Tab2Ct4, setExpert2Tab2Ct4] = useAtom(EXPERT2_TAB2_CT4);
+  const [expert2Tab3Ct1, setExpert2Tab3Ct1] = useAtom(EXPERT2_TAB3_CT1);
+  const [expert2Tab3Ct2, setExpert2Tab3Ct2] = useAtom(EXPERT2_TAB3_CT2);
+  const [expert2Tab3Ct3, setExpert2Tab3Ct3] = useAtom(EXPERT2_TAB3_CT3);
+  const [expert2Tab3Ct4, setExpert2Tab3Ct4] = useAtom(EXPERT2_TAB3_CT4);
+  const [expert3Tab1Ct1Title, setExpert3Tab1Ct1Title] = useAtom(EXPERT3_TAB1_CT1_TITLE);
+  const [expert3Tab1Ct2Title, setExpert3Tab1Ct2Title] = useAtom(EXPERT3_TAB1_CT2_TITLE);
+  const [expert3Tab1Ct3Title, setExpert3Tab1Ct3Title] = useAtom(EXPERT3_TAB1_CT3_TITLE);
+  const [expert3Tab1Ct4Title, setExpert3Tab1Ct4Title] = useAtom(EXPERT3_TAB1_CT4_TITLE);
+  const [expert3Tab2Ct1Title, setExpert3Tab2Ct1Title] = useAtom(EXPERT3_TAB2_CT1_TITLE);
+  const [expert3Tab2Ct2Title, setExpert3Tab2Ct2Title] = useAtom(EXPERT3_TAB2_CT2_TITLE);
+  const [expert3Tab2Ct3Title, setExpert3Tab2Ct3Title] = useAtom(EXPERT3_TAB2_CT3_TITLE);
+  const [expert3Tab1Ct1, setExpert3Tab1Ct1] = useAtom(EXPERT3_TAB1_CT1);
+  const [expert3Tab1Ct2, setExpert3Tab1Ct2] = useAtom(EXPERT3_TAB1_CT2);
+  const [expert3Tab1Ct3, setExpert3Tab1Ct3] = useAtom(EXPERT3_TAB1_CT3);
+  const [expert3Tab1Ct4, setExpert3Tab1Ct4] = useAtom(EXPERT3_TAB1_CT4);
+  const [expert3Tab1Ct5, setExpert3Tab1Ct5] = useAtom(EXPERT3_TAB1_CT5);
+  const [expert3Tab2Ct1, setExpert3Tab2Ct1] = useAtom(EXPERT3_TAB2_CT1);
+  const [expert3Tab2Ct2, setExpert3Tab2Ct2] = useAtom(EXPERT3_TAB2_CT2);
+  const [expert3Tab2Ct3, setExpert3Tab2Ct3] = useAtom(EXPERT3_TAB2_CT3);
+  const [expert3Tab2Ct4, setExpert3Tab2Ct4] = useAtom(EXPERT3_TAB2_CT4);
+
   const analysisReportData = {
     title: titleOfBusinessInfo,
     mainFeatures: mainFeaturesOfBusinessInformation,
@@ -139,6 +276,8 @@ const MoleculeReportController = ({ reportIndex, conversationId }) => {
   // };
 
   const saveReport = async () => {
+    alert("저장되었습니다.")
+
     let reportData;
   
     if (reportIndex === 0) {
@@ -206,7 +345,39 @@ const MoleculeReportController = ({ reportIndex, conversationId }) => {
   
     await saveConversationToIndexedDB(updatedConversation);
   };
-  
+
+const handleCopyContent = () => {
+
+let contentToCopy = ``
+
+if (selectedExpertIndex === 0) {
+contentToCopy = `
+${titleOfBusinessInfo}
+
+주요 특징
+${mainFeaturesOfBusinessInformation.map(feature => `- ${feature}`).join('\n')}
+
+주요 특성
+${mainCharacteristicOfBusinessInformation.map(character => `- ${character}`).join('\n')}
+
+대상 고객
+${businessInformationTargetCustomer.map(customer => `- ${customer}`).join('\n')}
+    `;
+}
+
+else {
+  return;
+}
+
+navigator.clipboard.writeText(contentToCopy)
+  .then(() => {
+    alert("복사가 완료되었습니다.");
+  })
+  .catch(error => {
+    console.error("복사 실패?", error);
+  });
+};
+
   // reportIndex === 0 : 비즈니스 분석 리포트 (아이디어 설명 다시하기, 재생성하기, 수정하기, 복사하기, 저장하기)
     // isClickExpertSelect === true :  전문가를 선택했을 때 비즈니스 분석 리포트 (복사하시, 저장하기)
     // isEditingNow === true : 수정중인 비즈니스 분석 리포트 (취소하기, 수정완료하기)
@@ -247,7 +418,7 @@ const MoleculeReportController = ({ reportIndex, conversationId }) => {
                       <img src={images.IconEdit} alt="" />
                       수정하기
                     </button>
-                    <button type="button">
+                    <button type="button" onClick={handleCopyContent}>
                       <img src={images.IconCopy} alt="" />
                       복사하기
                     </button>
