@@ -146,8 +146,8 @@ const MoleculeReportController = ({ reportIndex, conversationId }) => {
       reportData = {
         title: titleOfBusinessInfo,
         mainFeatures: mainFeaturesOfBusinessInformation,
-        keyFunctions: mainCharacteristicOfBusinessInformation,
-        targetCustomers: businessInformationTargetCustomer,
+        mainCharacter: mainCharacteristicOfBusinessInformation,
+        mainCustomer: businessInformationTargetCustomer,
       };
     } else if (reportIndex === 1) {
       // 전략 보고서 데이터 저장

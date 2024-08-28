@@ -171,7 +171,7 @@ const OrganismStrategyReportSection = ({ conversationId }) => {
         </>
       )}
 
-    <MoleculeReportController reportIndex={1} conversationId={conversationId}  />
+    <MoleculeReportController reportIndex={1} conversationId={conversationId}/>
     </AnalysisSection>
   );
 };

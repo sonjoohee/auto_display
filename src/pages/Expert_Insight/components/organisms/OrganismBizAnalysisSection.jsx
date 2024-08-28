@@ -20,7 +20,7 @@ import images from '../../../../assets/styles/Images';
 import { InputField } from '../../../../assets/styles/Input';
 import MoleculeReportController from '../molecules/MoleculeReportController';
 
-const OrganismBizAnalysisSection = ({ conversationId, report }) => {
+const OrganismBizAnalysisSection = ({ conversationId }) => {
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [inputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);

@@ -160,8 +160,8 @@ const BoxWrap = styled.div`
 
 const BizAnalysisSection = ({ report }) => {
   const mainFeatures = report.content.mainFeatures || [];
-  const keyFunctions = report.content.keyFunctions || [];
-  const targetCustomers = report.content.targetCustomers || [];
+  const mainCharacter = report.content.mainCharacter || [];
+  const mainCustomer = report.content.mainCustomer || [];
 
   return (
     <BoxWrap>
@@ -173,13 +173,13 @@ const BizAnalysisSection = ({ report }) => {
       </List>
       <SectionTitle>주요 기능</SectionTitle>
       <List>
-        {keyFunctions.map((func, index) => (
+        {mainCharacter.map((func, index) => (
           <ListItem key={index}>{func}</ListItem>
         ))}
       </List>
       <SectionTitle>목표 고객</SectionTitle>
       <List>
-        {targetCustomers.map((customer, index) => (
+        {mainCustomer.map((customer, index) => (
           <ListItem key={index}>{customer}</ListItem>
         ))}
       </List>
