@@ -1,98 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useAtom } from 'jotai';
-import {
-  SELECTED_EXPERT_INDEX,
-  INPUT_BUSINESS_INFO,
-  STRATEGY_REPORT_CUSTOMER_BENEFITS_TITLE_1,
-  STRATEGY_REPORT_CUSTOMER_BENEFITS_TITLE_2,
-  STRATEGY_REPORT_CUSTOMER_BENEFITS_TITLE_3,
-  STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_TITLE_1,
-  STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_TITLE_2,
-  STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_TITLE_3,
-  STRATEGY_REPORT_COSTOMER_NEEDS_1,
-  STRATEGY_REPORT_COSTOMER_NEEDS_2,
-  STRATEGY_REPORT_COSTOMER_NEEDS_3,
-  STRATEGY_REPORT_COSTOMER_NEEDS_4,
-  STRATEGY_REPORT_COSTOMER_NEEDS_5,
-  STRATEGY_REPORT_COSTOMER_NEEDS_6,
-  STRATEGY_REPORT_CUSTOMER_BENEFITS_1,
-  STRATEGY_REPORT_CUSTOMER_BENEFITS_2,
-  STRATEGY_REPORT_CUSTOMER_BENEFITS_3,
-  STRATEGY_REPORT_CUSTOMER_BENEFITS_4,
-  STRATEGY_REPORT_CUSTOMER_BENEFITS_5,
-  STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_1,
-  STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_2,
-  STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_3,
-  STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_4,
-} from '../../../AtomStates';
-
-import MoleculeReportController from '../molecules/MoleculeReportController';
 
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
-import { InputField } from '../../../../assets/styles/Input';
+import MoleculeReportController from '../molecules/MoleculeReportController';
+import sampleData from './sample.json'; // sample.json 파일을 불러옵니다.
+import { useAtom } from 'jotai';
 
 const OrganismStrategyReportSection = ({ conversationId }) => {
-  const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
-  const [inputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
-  const [selectedTab, setSelectedTab] = useState('tab1'); // 추가: 기본 탭은 'needs'로 설정
-  const handleTabClick = (tab) => {
-    setSelectedTab(tab); // 선택한 탭을 상태로 설정
+  const [selectedTab, setSelectedTab] = useState(0); // 탭을 인덱스로 관리
+  const [tabs, setTabs] = useState([]);
+  const [sections, setSections] = useState([]);
+
+  useEffect(() => {
+    // sample.json의 탭 데이터를 설정합니다.
+    setTabs(sampleData.tabs);
+
+    // 탭이 선택되면 해당 탭의 섹션을 설정합니다.
+    if (sampleData.tabs.length > 0) {
+      setSections(sampleData.tabs[selectedTab].sections);
+    }
+  }, [selectedTab]);
+
+  const handleTabClick = (index) => {
+    setSelectedTab(index);
   };
-  const [bizAnalysisReportIndex, setBizAnalysisReportIndex] = useState(0);
-  const [newAddContent, setNewAddContent] = useState('');
-  const [isAddingNow, setIsAddingNow] = useState(false);
-  const [newEditContent, setNewEditContent] = useState('');
-  const [editingIndex, setEditingIndex] = useState(-1);
-
-  const [strategyReportCustomerNeeds1, setStrategyReportCustomerNeeds1] = useAtom(STRATEGY_REPORT_COSTOMER_NEEDS_1);
-  const [strategyReportCustomerNeeds2, setStrategyReportCustomerNeeds2] = useAtom(STRATEGY_REPORT_COSTOMER_NEEDS_2);
-  const [strategyReportCustomerNeeds3, setStrategyReportCustomerNeeds3] = useAtom(STRATEGY_REPORT_COSTOMER_NEEDS_3);
-  const [strategyReportCustomerNeeds4, setStrategyReportCustomerNeeds4] = useAtom(STRATEGY_REPORT_COSTOMER_NEEDS_4);
-  const [strategyReportCustomerNeeds5, setStrategyReportCustomerNeeds5] = useAtom(STRATEGY_REPORT_COSTOMER_NEEDS_5);
-  const [strategyReportCustomerNeeds6, setStrategyReportCustomerNeeds6] = useAtom(STRATEGY_REPORT_COSTOMER_NEEDS_6);
-
-  const [strategyReportCustomerBenefitsTitle1, setStrategyReportCustomerBenefitsTitle1] = useAtom(STRATEGY_REPORT_CUSTOMER_BENEFITS_TITLE_1);
-  const [strategyReportCustomerBenefitsTitle2, setStrategyReportCustomerBenefitsTitle2] = useAtom(STRATEGY_REPORT_CUSTOMER_BENEFITS_TITLE_2);
-  const [strategyReportCustomerBenefitsTitle3, setStrategyReportCustomerBenefitsTitle3] = useAtom(STRATEGY_REPORT_CUSTOMER_BENEFITS_TITLE_3);
-  const [strategyReportCustomerBenefits1, setStrategyReportCustomerBenefits1] = useAtom(STRATEGY_REPORT_CUSTOMER_BENEFITS_1);
-  const [strategyReportCustomerBenefits2, setStrategyReportCustomerBenefits2] = useAtom(STRATEGY_REPORT_CUSTOMER_BENEFITS_2);
-  const [strategyReportCustomerBenefits3, setStrategyReportCustomerBenefits3] = useAtom(STRATEGY_REPORT_CUSTOMER_BENEFITS_3);
-  const [strategyReportCustomerBenefits4, setStrategyReportCustomerBenefits4] = useAtom(STRATEGY_REPORT_CUSTOMER_BENEFITS_4);
-  const [strategyReportCustomerBenefits5, setStrategyReportCustomerBenefits5] = useAtom(STRATEGY_REPORT_CUSTOMER_BENEFITS_5);
-
-  const [strategyReportCompetitionDifferentiationTitle1, setStrategyReportCompetitionDifferentiationTitle1] = useAtom(STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_TITLE_1);
-  const [strategyReportCompetitionDifferentiationTitle2, setStrategyReportCompetitionDifferentiationTitle2] = useAtom(STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_TITLE_2);
-  const [strategyReportCompetitionDifferentiationTitle3, setStrategyReportCompetitionDifferentiationTitle3] = useAtom(STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_TITLE_3);
-  const [strategyReportCompetitionDifferentiation1, setStrategyReportCompetitionDifferentiation1] = useAtom(STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_1);
-  const [strategyReportCompetitionDifferentiation2, setStrategyReportCompetitionDifferentiation2] = useAtom(STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_2);
-  const [strategyReportCompetitionDifferentiation3, setStrategyReportCompetitionDifferentiation3] = useAtom(STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_3);
-  const [strategyReportCompetitionDifferentiation4, setStrategyReportCompetitionDifferentiation4] = useAtom(STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_4)
 
   return (
     <AnalysisSection Strategy>
       <TabHeader>
-        <TabButton
-          active={selectedTab === 'tab1'}
-          onClick={() => handleTabClick('tab1')}
-        >
-          해결할 문제와 고객 니즈
-        </TabButton>
-        <TabButton
-          active={selectedTab === 'tab2'}
-          onClick={() => handleTabClick('tab2')}
-        >
-          고객 주요 혜택
-        </TabButton>
-        <TabButton
-          active={selectedTab === 'tab3'}
-          onClick={() => handleTabClick('tab3')}
-        >
-          경쟁 차별화 전략
-        </TabButton>
+        {tabs.map((tab, index) => (
+          <TabButton
+            key={index}
+            active={selectedTab === index}
+            onClick={() => handleTabClick(index)}
+          >
+            {tab.title}
+          </TabButton>
+        ))}
       </TabHeader>
 
+<<<<<<< HEAD
       {selectedTab === 'tab1' && (
         <>
           {/* <h1>해결할 문제와 고객 니즈</h1> */}
@@ -178,7 +126,36 @@ const OrganismStrategyReportSection = ({ conversationId }) => {
       )}
 
     <MoleculeReportController reportIndex={1} conversationId={conversationId}/>
+=======
+      {sections.map((section, index) => (
+        <Section key={index} title={section.title} content={section.content} />
+      ))}
+
+      <MoleculeReportController reportIndex={1} conversationId={conversationId} sampleData={sampleData} />
+>>>>>>> dd3e7d76c586c8038460e5e1f27f1ea464b5ad01
     </AnalysisSection>
+  );
+};
+
+const Section = ({ title, content }) => {
+  const hasSubTitles = content.some(item => item.subTitle); // 서브 타이틀이 있는지 확인
+
+  return (
+    <BoxWrap>
+      {title && <strong><img src={images.StarChack} alt="" />{title}</strong>}
+      {hasSubTitles ? (
+        <TwoColumnGrid>
+          {content.map((item, index) => (
+            <div key={index}>
+              {item.subTitle && <SubTitle>{item.subTitle}</SubTitle>}
+              <p>{item.text}</p>
+            </div>
+          ))}
+        </TwoColumnGrid>
+      ) : (
+        content.map((item, index) => <p key={index}>{item.text}</p>)
+      )}
+    </BoxWrap>
   );
 };
 
@@ -227,32 +204,9 @@ const BoxWrap = styled.div`
     margin-bottom:10px;
   }
 
-  li {
-    position:relative;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:10px;
-    padding-left:10px;
-
-    &:before {
-      position:absolute;
-      left:0;
-      top:50%;
-      transform:translateY(-50%);
-      width:5px;
-      height:1px;
-      background:${palette.black};
-      content:'';
-    }
-
-    + li {
-      margin-top:5px;
-    }
-  }
-
   p {
     font-size:0.88rem;
+<<<<<<< HEAD
     line-height:1.5;
   }
 
@@ -271,59 +225,12 @@ const BoxWrap = styled.div`
       border:1px solid ${palette.black};
       background:${palette.black};
     }
+=======
+    margin-bottom:10px;
+>>>>>>> dd3e7d76c586c8038460e5e1f27f1ea464b5ad01
   }
 `;
 
-const AddInfo = styled.div`
-  display:flex;
-  align-items:stretch;
-  gap:10px;
-  margin-top:20px;
-
-  input {
-    font-size:0.88rem;
-    height:40px;
-    padding:4px 10px;
-  }
-`;
-
-const ButtonWrap = styled.div`
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-top:20px;
-  padding-top:20px;
-  border-top:1px solid ${palette.lineGray};
-
-  button {
-    display:flex;
-    align-items:center;
-    gap:10px;
-    font-family: 'Pretendard';
-    fpmt-size:0.75rem;
-    color:${palette.gray};
-    border:0;
-    background:none;
-  }
-
-  > button {
-    padding:8px 16px;
-    border-radius:10px;
-    border:1px solid ${palette.lineGray};
-  }
-
-  > div {
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:30px;
-    // padding:8px 15px;
-    // border-radius:6px;
-    // border:1px solid ${palette.lineGray};
-    // background:${palette.white};
-    // box-shadow:0 4px 28px rgba(0,0,0,.1);
-  }
-`;
 const TabHeader = styled.div`
   display: flex;
   gap:40px;
@@ -348,6 +255,7 @@ const TabButton = styled.button`
     outline: none;
   }
 `;
+<<<<<<< HEAD
 
 const TabContenst = styled.div`
   height: ${props => {
@@ -357,4 +265,25 @@ const TabContenst = styled.div`
     else return 'auto';
   }};
   overflow-y:auto;
+=======
+const TwoColumnGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 10px;
+  margin-top: 10px;
+
+  strong {
+    font-weight: 500;
+  }
+
+  p {
+    margin: 0;
+  }
+`;
+const SubTitle = styled.div`
+  font-weight: bold;
+  font-size: 0.9rem;  /* 글자 크기를 작게 설정 */
+  color: #6c757d;     /* 회색으로 설정 */
+  margin-bottom: 8px;
+>>>>>>> dd3e7d76c586c8038460e5e1f27f1ea464b5ad01
 `;
