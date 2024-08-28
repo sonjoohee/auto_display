@@ -14,27 +14,6 @@ import {
   TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER,
   SAVED_REPORTS,
   IS_EDITING_NOW,
-  STRATEGY_REPORT_CUSTOMER_BENEFITS_TITLE_1,
-  STRATEGY_REPORT_CUSTOMER_BENEFITS_TITLE_2,
-  STRATEGY_REPORT_CUSTOMER_BENEFITS_TITLE_3,
-  STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_TITLE_1,
-  STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_TITLE_2,
-  STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_TITLE_3,
-  STRATEGY_REPORT_COSTOMER_NEEDS_1,
-  STRATEGY_REPORT_COSTOMER_NEEDS_2,
-  STRATEGY_REPORT_COSTOMER_NEEDS_3,
-  STRATEGY_REPORT_COSTOMER_NEEDS_4,
-  STRATEGY_REPORT_COSTOMER_NEEDS_5,
-  STRATEGY_REPORT_COSTOMER_NEEDS_6,
-  STRATEGY_REPORT_CUSTOMER_BENEFITS_1,
-  STRATEGY_REPORT_CUSTOMER_BENEFITS_2,
-  STRATEGY_REPORT_CUSTOMER_BENEFITS_3,
-  STRATEGY_REPORT_CUSTOMER_BENEFITS_4,
-  STRATEGY_REPORT_CUSTOMER_BENEFITS_5,
-  STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_1,
-  STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_2,
-  STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_3,
-  STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_4,
   SELECTED_TAB,
   EXPERT_REPORT_DATA,
 } from '../../../AtomStates';
@@ -63,29 +42,6 @@ const MoleculeReportController = ({ reportIndex, conversationId, sampleData }) =
   const [editingIndex, setEditingIndex] = useState({ section: '', index: -1 });
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
   const [warningMessage, setWarningMessage] = useState('');
-  const [strategyReportCustomerNeeds1, setStrategyReportCustomerNeeds1] = useAtom(STRATEGY_REPORT_COSTOMER_NEEDS_1);
-  const [strategyReportCustomerNeeds2, setStrategyReportCustomerNeeds2] = useAtom(STRATEGY_REPORT_COSTOMER_NEEDS_2);
-  const [strategyReportCustomerNeeds3, setStrategyReportCustomerNeeds3] = useAtom(STRATEGY_REPORT_COSTOMER_NEEDS_3);
-  const [strategyReportCustomerNeeds4, setStrategyReportCustomerNeeds4] = useAtom(STRATEGY_REPORT_COSTOMER_NEEDS_4);
-  const [strategyReportCustomerNeeds5, setStrategyReportCustomerNeeds5] = useAtom(STRATEGY_REPORT_COSTOMER_NEEDS_5);
-  const [strategyReportCustomerNeeds6, setStrategyReportCustomerNeeds6] = useAtom(STRATEGY_REPORT_COSTOMER_NEEDS_6);
-
-  const [strategyReportCustomerBenefitsTitle1, setStrategyReportCustomerBenefitsTitle1] = useAtom(STRATEGY_REPORT_CUSTOMER_BENEFITS_TITLE_1);
-  const [strategyReportCustomerBenefitsTitle2, setStrategyReportCustomerBenefitsTitle2] = useAtom(STRATEGY_REPORT_CUSTOMER_BENEFITS_TITLE_2);
-  const [strategyReportCustomerBenefitsTitle3, setStrategyReportCustomerBenefitsTitle3] = useAtom(STRATEGY_REPORT_CUSTOMER_BENEFITS_TITLE_3);
-  const [strategyReportCustomerBenefits1, setStrategyReportCustomerBenefits1] = useAtom(STRATEGY_REPORT_CUSTOMER_BENEFITS_1);
-  const [strategyReportCustomerBenefits2, setStrategyReportCustomerBenefits2] = useAtom(STRATEGY_REPORT_CUSTOMER_BENEFITS_2);
-  const [strategyReportCustomerBenefits3, setStrategyReportCustomerBenefits3] = useAtom(STRATEGY_REPORT_CUSTOMER_BENEFITS_3);
-  const [strategyReportCustomerBenefits4, setStrategyReportCustomerBenefits4] = useAtom(STRATEGY_REPORT_CUSTOMER_BENEFITS_4);
-  const [strategyReportCustomerBenefits5, setStrategyReportCustomerBenefits5] = useAtom(STRATEGY_REPORT_CUSTOMER_BENEFITS_5);
-
-  const [strategyReportCompetitionDifferentiationTitle1, setStrategyReportCompetitionDifferentiationTitle1] = useAtom(STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_TITLE_1);
-  const [strategyReportCompetitionDifferentiationTitle2, setStrategyReportCompetitionDifferentiationTitle2] = useAtom(STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_TITLE_2);
-  const [strategyReportCompetitionDifferentiationTitle3, setStrategyReportCompetitionDifferentiationTitle3] = useAtom(STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_TITLE_3);
-  const [strategyReportCompetitionDifferentiation1, setStrategyReportCompetitionDifferentiation1] = useAtom(STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_1);
-  const [strategyReportCompetitionDifferentiation2, setStrategyReportCompetitionDifferentiation2] = useAtom(STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_2);
-  const [strategyReportCompetitionDifferentiation3, setStrategyReportCompetitionDifferentiation3] = useAtom(STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_3);
-  const [strategyReportCompetitionDifferentiation4, setStrategyReportCompetitionDifferentiation4] = useAtom(STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_4);
 
   const [selectedTab, setSelectedTab] = useAtom(SELECTED_TAB);
 
@@ -235,7 +191,7 @@ const handleCopyContent = () => {
     .then(() => {
       alert("복사가 완료되었습니다.");
     })
-    .ctch(error => {
+    .catch(error => {
       console.error("복사 실패?", error);
     });
   };
