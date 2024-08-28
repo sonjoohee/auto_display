@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
 import MoleculeReportController from '../molecules/MoleculeReportController';
 import sampleData from './sample.json'; // sample.json 파일을 불러옵니다.
+import { useAtom } from 'jotai';
 
 const OrganismStrategyReportSection = ({ conversationId }) => {
   const [selectedTab, setSelectedTab] = useState(0); // 탭을 인덱스로 관리
