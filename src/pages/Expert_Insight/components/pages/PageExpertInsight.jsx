@@ -41,7 +41,7 @@ const PageExpertInsight = () => {
   const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);  // 추가
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [isClickExpertSelect, setIsClickExpertSelect] = useAtom(IS_CLICK_EXPERT_SELECT);
-
+  const [sections, setSections] = useState([]);
   const analysisReportData = {
     title: titleOfBusinessInfo,
     mainFeatures: mainFeaturesOfBusinessInformation,
@@ -67,6 +67,13 @@ const PageExpertInsight = () => {
           setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
           setMainCharacteristicOfBusinessInformation(analysisData.mainCharacter || []);
           setBusinessInformationTargetCustomer(analysisData.mainCustomer || []);
+  
+          // strategyReportData에서 데이터를 복원
+          const strategyData = savedConversation.strategyReportData || {};
+          if (strategyData.tabs) {
+            // sample.json의 구조를 그대로 사용하고 있기 때문에, 탭과 섹션을 관리하는 상태에 맞춰 데이터를 복원합니다.
+            setSections(strategyData.tabs);
+          }
         } else {
           if (selectedExpertIndex) {
             const initialMessage = getInitialSystemMessage();
@@ -85,8 +92,10 @@ const PageExpertInsight = () => {
     setTitleOfBusinessInfo, 
     setMainFeaturesOfBusinessInformation, 
     setMainCharacteristicOfBusinessInformation, 
-    setBusinessInformationTargetCustomer
+    setBusinessInformationTargetCustomer,
+    setSections // 추가된 부분
   ]);
+  
   
 
   const handleSearch = (inputValue) => {

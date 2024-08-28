@@ -109,7 +109,7 @@ import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
 import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
 
-const MoleculeReportController = ({ reportIndex, conversationId }) => {
+const MoleculeReportController = ({ reportIndex, conversationId, sampleData }) => {
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [isClickExpertSelect] = useAtom(IS_CLICK_EXPERT_SELECT);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
@@ -276,12 +276,12 @@ const MoleculeReportController = ({ reportIndex, conversationId }) => {
   // };
 
   const saveReport = async () => {
-    alert("저장되었습니다.")
+    alert("저장되었습니다.");
 
     let reportData;
-  
+
     if (reportIndex === 0) {
-      // 비즈니스 분석 리포트 데이터 저장
+      // 비즈니스 분석 리포트 데이터 저장 (이 부분은 기존 로직을 유지합니다)
       reportData = {
         title: titleOfBusinessInfo,
         mainFeatures: mainFeaturesOfBusinessInformation,
@@ -289,52 +289,24 @@ const MoleculeReportController = ({ reportIndex, conversationId }) => {
         mainCustomer: businessInformationTargetCustomer,
       };
     } else if (reportIndex === 1) {
-      // 전략 보고서 데이터 저장
-      reportData = {
-        strategyCustomerNeeds: {
-          title1: strategyReportCustomerNeeds1,
-          title2: strategyReportCustomerNeeds2,
-          title3: strategyReportCustomerNeeds3,
-          title4: strategyReportCustomerNeeds4,
-          title5: strategyReportCustomerNeeds5,
-          title6: strategyReportCustomerNeeds6,
-        },
-        strategyCustomerBenefits: {
-          title1: strategyReportCustomerBenefitsTitle1,
-          benefits1: strategyReportCustomerBenefits1,
-          title2: strategyReportCustomerBenefitsTitle2,
-          benefits2: strategyReportCustomerBenefits2,
-          title3: strategyReportCustomerBenefitsTitle3,
-          benefits3: strategyReportCustomerBenefits3,
-          benefits4: strategyReportCustomerBenefits4,
-          benefits5: strategyReportCustomerBenefits5,
-        },
-        strategyCompetitionDifferentiation: {
-          title1: strategyReportCompetitionDifferentiationTitle1,
-          differentiation1: strategyReportCompetitionDifferentiation1,
-          title2: strategyReportCompetitionDifferentiationTitle2,
-          differentiation2: strategyReportCompetitionDifferentiation2,
-          title3: strategyReportCompetitionDifferentiationTitle3,
-          differentiation3: strategyReportCompetitionDifferentiation3,
-          differentiation4: strategyReportCompetitionDifferentiation4,
-        },
-      };
+      // 전략 보고서 데이터 저장 - sampleData 사용
+      reportData = sampleData; // sampleData를 그대로 저장합니다
     }
-  
-  // 기존 리포트에 새로운 리포트 추가
-  setSavedReports((prevReports) => [
-    ...prevReports,
-    {
-      title: titleOfBusinessInfo,
-      date: new Date().toLocaleDateString(),
-      content: reportData,
-      reportIndex: reportIndex, // reportIndex를 추가하여 저장
-    },
-  ]);
-  console.log(reportData)
-  
+
+    // 기존 리포트에 새로운 리포트 추가
+    setSavedReports((prevReports) => [
+      ...prevReports,
+      {
+        title: titleOfBusinessInfo,
+        date: new Date().toLocaleDateString(),
+        content: reportData,
+        reportIndex: reportIndex, // reportIndex를 추가하여 저장
+      },
+    ]);
+
+    console.log(reportData);
+
     // 기존 대화 내역에 리포트 데이터 추가
-    console.log(conversationId)
     const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
     const updatedConversation = {
       ...existingConversation,
@@ -342,7 +314,7 @@ const MoleculeReportController = ({ reportIndex, conversationId }) => {
       strategyReportData: reportIndex === 1 ? reportData : existingConversation.strategyReportData,
       timestamp: Date.now(),
     };
-  
+
     await saveConversationToIndexedDB(updatedConversation);
   };
 
@@ -383,6 +355,7 @@ navigator.clipboard.writeText(contentToCopy)
     // isEditingNow === true : 수정중인 비즈니스 분석 리포트 (취소하기, 수정완료하기)
   
   // reportIndex === 1 : 전문가 리포트 (재생성하기, 복사하기, 저장하기)
+  
   return (
     <>
       {reportIndex === 0 ? (
