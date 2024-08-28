@@ -87,20 +87,25 @@ const PageExpertInsight = () => {
     setMainCharacteristicOfBusinessInformation, 
     setBusinessInformationTargetCustomer
   ]);
-  
 
+  // 검색을 통해 들어왔으면 handleSearch 실행
+  useEffect(() => {
+    if(inputBusinessInfo) handleSearch(-1);
+  },[])
+  
   const handleSearch = (inputValue) => {
-    const updatedConversation = [
-      ...conversation,
-      { type: 'user', message: inputValue },
-    ];
+  
+    const updatedConversation = [...conversation];
+
+    if (inputValue !== -1) { 
+      updatedConversation.push({ type: 'user', message: inputValue }); 
+    }
 
     if (conversationStage === 1) {
-      setInputBusinessInfo(inputValue);
+      // setInputBusinessInfo(inputValue);
       updatedConversation.push(
-        { type: 'system', message: `${inputValue}를 바탕으로 분석을 진행하겠습니다.` },
+        { type: 'system', message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻` },
         { type: 'analysis' },
-        { type: 'system', message: `${inputValue}에 대한 리포트 입니다. 추가로 궁금하신 부분이 있다면 질문해주세요.` }
       );
       setConversationStage(2);
     } else if (conversationStage === 2) {
