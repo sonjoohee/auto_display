@@ -202,7 +202,6 @@ const handleCopyContent = () => {
     // isEditingNow === true : 수정중인 비즈니스 분석 리포트 (취소하기, 수정완료하기)
   
   // reportIndex === 1 : 전문가 리포트 (재생성하기, 복사하기, 저장하기)
-<<<<<<< HEAD
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isPopupOpenCancel, setIsPopupOpenCancel] = useState(false);
@@ -220,9 +219,6 @@ const handleCopyContent = () => {
     }
   };
 
-=======
-  
->>>>>>> dd3e7d76c586c8038460e5e1f27f1ea464b5ad01
   return (
     <>
       {reportIndex === 0 ? (

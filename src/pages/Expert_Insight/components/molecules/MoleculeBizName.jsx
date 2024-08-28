@@ -8,7 +8,6 @@ import images from '../../../../assets/styles/Images';
 
 const MoleculeBizName = ({ bizName }) => {
   return (
-<<<<<<< HEAD
     <>
       {/* 아이디어 분석 완료시 */}
       {/*
@@ -55,21 +54,7 @@ const MoleculeBizName = ({ bizName }) => {
         </div>
       </BizNameContainer>
     </>
-=======
-    <BizNameContainer>
-      <div>
-        <span><img src={images.File} alt="" /></span>
-        <NameTitle>
-          <strong>
-            {bizName || "아이템(아이디어)를 설명해주시면, 분석된 내용이 적용됩니다"}
-            <Badge>Edited by AI</Badge>
-          </strong>
-          <p>10 min ago</p>
-        </NameTitle>
-      </div>
-      <button type="button">내가 쓴 설명 보기</button>
-    </BizNameContainer>
->>>>>>> dd3e7d76c586c8038460e5e1f27f1ea464b5ad01
+
   );
 };
 

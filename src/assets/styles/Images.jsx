@@ -7,6 +7,7 @@ import Search from "../images/Search.svg";
 
 import IconView from "../images/iconView.svg";
 import IconCheck from "../images/icoCheck.svg";
+import Check from "../images/Check.svg"
 import IconClose from "../images/iconClose.svg";
 import Interview from "../images/Interview.svg";
 import Report from "../images/Report.svg";
@@ -67,6 +68,7 @@ const images = {
 
   IconView,
   IconCheck,
+  Check,
   IconClose,
   Interview,
   Report,
