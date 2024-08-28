@@ -82,6 +82,27 @@ import {
   TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER,
   SAVED_REPORTS,
   IS_EDITING_NOW,
+  STRATEGY_REPORT_CUSTOMER_BENEFITS_TITLE_1,
+  STRATEGY_REPORT_CUSTOMER_BENEFITS_TITLE_2,
+  STRATEGY_REPORT_CUSTOMER_BENEFITS_TITLE_3,
+  STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_TITLE_1,
+  STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_TITLE_2,
+  STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_TITLE_3,
+  STRATEGY_REPORT_COSTOMER_NEEDS_1,
+  STRATEGY_REPORT_COSTOMER_NEEDS_2,
+  STRATEGY_REPORT_COSTOMER_NEEDS_3,
+  STRATEGY_REPORT_COSTOMER_NEEDS_4,
+  STRATEGY_REPORT_COSTOMER_NEEDS_5,
+  STRATEGY_REPORT_COSTOMER_NEEDS_6,
+  STRATEGY_REPORT_CUSTOMER_BENEFITS_1,
+  STRATEGY_REPORT_CUSTOMER_BENEFITS_2,
+  STRATEGY_REPORT_CUSTOMER_BENEFITS_3,
+  STRATEGY_REPORT_CUSTOMER_BENEFITS_4,
+  STRATEGY_REPORT_CUSTOMER_BENEFITS_5,
+  STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_1,
+  STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_2,
+  STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_3,
+  STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_4,
 } from '../../../AtomStates';
 
 import { palette } from '../../../../assets/styles/Palette';
@@ -108,6 +129,29 @@ const MoleculeReportController = ({ reportIndex, conversationId }) => {
   const [editingIndex, setEditingIndex] = useState({ section: '', index: -1 });
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
   const [warningMessage, setWarningMessage] = useState('');
+  const [strategyReportCustomerNeeds1, setStrategyReportCustomerNeeds1] = useAtom(STRATEGY_REPORT_COSTOMER_NEEDS_1);
+  const [strategyReportCustomerNeeds2, setStrategyReportCustomerNeeds2] = useAtom(STRATEGY_REPORT_COSTOMER_NEEDS_2);
+  const [strategyReportCustomerNeeds3, setStrategyReportCustomerNeeds3] = useAtom(STRATEGY_REPORT_COSTOMER_NEEDS_3);
+  const [strategyReportCustomerNeeds4, setStrategyReportCustomerNeeds4] = useAtom(STRATEGY_REPORT_COSTOMER_NEEDS_4);
+  const [strategyReportCustomerNeeds5, setStrategyReportCustomerNeeds5] = useAtom(STRATEGY_REPORT_COSTOMER_NEEDS_5);
+  const [strategyReportCustomerNeeds6, setStrategyReportCustomerNeeds6] = useAtom(STRATEGY_REPORT_COSTOMER_NEEDS_6);
+
+  const [strategyReportCustomerBenefitsTitle1, setStrategyReportCustomerBenefitsTitle1] = useAtom(STRATEGY_REPORT_CUSTOMER_BENEFITS_TITLE_1);
+  const [strategyReportCustomerBenefitsTitle2, setStrategyReportCustomerBenefitsTitle2] = useAtom(STRATEGY_REPORT_CUSTOMER_BENEFITS_TITLE_2);
+  const [strategyReportCustomerBenefitsTitle3, setStrategyReportCustomerBenefitsTitle3] = useAtom(STRATEGY_REPORT_CUSTOMER_BENEFITS_TITLE_3);
+  const [strategyReportCustomerBenefits1, setStrategyReportCustomerBenefits1] = useAtom(STRATEGY_REPORT_CUSTOMER_BENEFITS_1);
+  const [strategyReportCustomerBenefits2, setStrategyReportCustomerBenefits2] = useAtom(STRATEGY_REPORT_CUSTOMER_BENEFITS_2);
+  const [strategyReportCustomerBenefits3, setStrategyReportCustomerBenefits3] = useAtom(STRATEGY_REPORT_CUSTOMER_BENEFITS_3);
+  const [strategyReportCustomerBenefits4, setStrategyReportCustomerBenefits4] = useAtom(STRATEGY_REPORT_CUSTOMER_BENEFITS_4);
+  const [strategyReportCustomerBenefits5, setStrategyReportCustomerBenefits5] = useAtom(STRATEGY_REPORT_CUSTOMER_BENEFITS_5);
+
+  const [strategyReportCompetitionDifferentiationTitle1, setStrategyReportCompetitionDifferentiationTitle1] = useAtom(STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_TITLE_1);
+  const [strategyReportCompetitionDifferentiationTitle2, setStrategyReportCompetitionDifferentiationTitle2] = useAtom(STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_TITLE_2);
+  const [strategyReportCompetitionDifferentiationTitle3, setStrategyReportCompetitionDifferentiationTitle3] = useAtom(STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_TITLE_3);
+  const [strategyReportCompetitionDifferentiation1, setStrategyReportCompetitionDifferentiation1] = useAtom(STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_1);
+  const [strategyReportCompetitionDifferentiation2, setStrategyReportCompetitionDifferentiation2] = useAtom(STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_2);
+  const [strategyReportCompetitionDifferentiation3, setStrategyReportCompetitionDifferentiation3] = useAtom(STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_3);
+  const [strategyReportCompetitionDifferentiation4, setStrategyReportCompetitionDifferentiation4] = useAtom(STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_4);
 
   const [expert1Tab1Ct1Title, setExpert1Tab1Ct1Title] = useAtom(EXPERT1_TAB1_CT1_TITLE);
   const [expert1Tab1Ct2Title, setExpert1Tab1Ct2Title] = useAtom(EXPERT1_TAB1_CT2_TITLE);
@@ -234,31 +278,72 @@ const MoleculeReportController = ({ reportIndex, conversationId }) => {
   const saveReport = async () => {
     alert("저장되었습니다.")
 
-    const analysisData = {
-      title: titleOfBusinessInfo,
-      mainFeatures: mainFeaturesOfBusinessInformation,
-      keyFunctions: mainCharacteristicOfBusinessInformation,
-      targetCustomers: businessInformationTargetCustomer,
-    };
-
-    setSavedReports((prevReports) => [
-      ...prevReports,
-      {
+    let reportData;
+  
+    if (reportIndex === 0) {
+      // 비즈니스 분석 리포트 데이터 저장
+      reportData = {
         title: titleOfBusinessInfo,
-        date: new Date().toLocaleDateString(),
-        content: analysisData,
-      },
-    ]);
-
-    // 기존 대화 내역을 유지하면서 새로운 정보를 추가
+        mainFeatures: mainFeaturesOfBusinessInformation,
+        keyFunctions: mainCharacteristicOfBusinessInformation,
+        targetCustomers: businessInformationTargetCustomer,
+      };
+    } else if (reportIndex === 1) {
+      // 전략 보고서 데이터 저장
+      reportData = {
+        strategyCustomerNeeds: {
+          title1: strategyReportCustomerNeeds1,
+          title2: strategyReportCustomerNeeds2,
+          title3: strategyReportCustomerNeeds3,
+          title4: strategyReportCustomerNeeds4,
+          title5: strategyReportCustomerNeeds5,
+          title6: strategyReportCustomerNeeds6,
+        },
+        strategyCustomerBenefits: {
+          title1: strategyReportCustomerBenefitsTitle1,
+          benefits1: strategyReportCustomerBenefits1,
+          title2: strategyReportCustomerBenefitsTitle2,
+          benefits2: strategyReportCustomerBenefits2,
+          title3: strategyReportCustomerBenefitsTitle3,
+          benefits3: strategyReportCustomerBenefits3,
+          benefits4: strategyReportCustomerBenefits4,
+          benefits5: strategyReportCustomerBenefits5,
+        },
+        strategyCompetitionDifferentiation: {
+          title1: strategyReportCompetitionDifferentiationTitle1,
+          differentiation1: strategyReportCompetitionDifferentiation1,
+          title2: strategyReportCompetitionDifferentiationTitle2,
+          differentiation2: strategyReportCompetitionDifferentiation2,
+          title3: strategyReportCompetitionDifferentiationTitle3,
+          differentiation3: strategyReportCompetitionDifferentiation3,
+          differentiation4: strategyReportCompetitionDifferentiation4,
+        },
+      };
+    }
+  
+  // 기존 리포트에 새로운 리포트 추가
+  setSavedReports((prevReports) => [
+    ...prevReports,
+    {
+      title: titleOfBusinessInfo,
+      date: new Date().toLocaleDateString(),
+      content: reportData,
+      reportIndex: reportIndex, // reportIndex를 추가하여 저장
+    },
+  ]);
+  console.log(reportData)
+  
+    // 기존 대화 내역에 리포트 데이터 추가
+    console.log(conversationId)
     const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
     const updatedConversation = {
       ...existingConversation,
-      analysisReportData,
+      analysisReportData: reportIndex === 0 ? reportData : existingConversation.analysisReportData,
+      strategyReportData: reportIndex === 1 ? reportData : existingConversation.strategyReportData,
       timestamp: Date.now(),
     };
-
-    saveConversationToIndexedDB(updatedConversation);
+  
+    await saveConversationToIndexedDB(updatedConversation);
   };
 
 const handleCopyContent = () => {
