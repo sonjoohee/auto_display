@@ -25,6 +25,7 @@ import {
   STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_2,
   STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_3,
   STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_4,
+  SELECTED_TAB,
 } from '../../../AtomStates';
 
 import MoleculeReportController from '../molecules/MoleculeReportController';
@@ -36,7 +37,7 @@ import { InputField } from '../../../../assets/styles/Input';
 const OrganismStrategyReportSection = ({ conversationId }) => {
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [inputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
-  const [selectedTab, setSelectedTab] = useState('tab1'); // 추가: 기본 탭은 'needs'로 설정
+  const [selectedTab, setSelectedTab] = useAtom(SELECTED_TAB); // 추가: 기본 탭은 'needs'로 설정
   const handleTabClick = (tab) => {
     setSelectedTab(tab); // 선택한 탭을 상태로 설정
   };
