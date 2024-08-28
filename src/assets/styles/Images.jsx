@@ -21,6 +21,7 @@ import BtnEnd from "../images/btnEnd.svg";
 import Chat from "../images/Chat.svg";
 import Folder from "../images/Folder.svg";
 import File from "../images/File.svg";
+import Graph from "../images/Graph.svg";
 import Clock from "../images/Clock.svg";
 
 import StarChack from "../images/StarChack.svg";
@@ -43,6 +44,18 @@ import IconSearch from "../images/iconSearch.svg"
 import IconChat from "../images/iconChat.svg"
 import IconWrite from "../images/iconWrite.svg"
 import IconTarget2 from "../images/iconTarget2.svg"
+
+import ExclamationMark from "../images/iconExclamationMark.svg"
+
+import ProfessionalValue from "../images/ProfessionalValue.svg"
+import ProfessionalRoadmap from "../images/ProfessionalRoadmap.svg"
+import ProfessionalPositioning from "../images/ProfessionalPositioning.svg"
+import ProfessionalBrand from "../images/ProfessionalBrand.svg"
+import ProfessionalContent from "../images/ProfessionalContent.svg"
+import ProfessionalDigital from "../images/ProfessionalDigital.svg"
+import ProfessionalBehavior from "../images/ProfessionalBehavior.svg"
+import ProfessionalUX from "../images/ProfessionalUX.svg"
+import ProfessionalData from "../images/ProfessionalData.svg"
 
 const images = {
   Logo,
@@ -68,6 +81,7 @@ const images = {
   Chat,
   Folder,
   File,
+  Graph,
   Clock,
 
   StarChack,
@@ -90,6 +104,18 @@ const images = {
   IconChat,
   IconWrite,
   IconTarget2,
+
+  ExclamationMark,
+
+  ProfessionalValue,
+  ProfessionalRoadmap,
+  ProfessionalPositioning,
+  ProfessionalBrand,
+  ProfessionalContent,
+  ProfessionalDigital,
+  ProfessionalBehavior,
+  ProfessionalUX,
+  ProfessionalData,
 }
 
 export default images;

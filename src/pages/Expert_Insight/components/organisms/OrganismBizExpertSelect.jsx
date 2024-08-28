@@ -73,14 +73,15 @@ const SelectOptions = styled.div`
     button {
       position:relative;
       font-family: 'Pretendard';
-      font-size:0;
+      font-size:0.75rem;
       color:${palette.gray};
-      width:22px;
-      height:22px;
+      // width:22px;
+      // height:22px;
       margin-left:auto;
-      border-radius:50px;
-      border:0;
-      background:rgba(0,0,0,.05);
+      padding:8px 16px;
+      border-radius:10px;
+      border:1px solid ${palette.lineGray};
+      background:${palette.white};
 
       &:before {
         position:absolute;
@@ -91,7 +92,7 @@ const SelectOptions = styled.div`
         height:7px;
         border-top:1px solid ${palette.gray};
         border-right:1px solid ${palette.gray};
-        content:'';
+        // content:'';
       }
     }
   }

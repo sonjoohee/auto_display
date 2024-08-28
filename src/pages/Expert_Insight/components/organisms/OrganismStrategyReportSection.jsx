@@ -71,7 +71,7 @@ const OrganismStrategyReportSection = ({ conversationId }) => {
   const [strategyReportCompetitionDifferentiation4, setStrategyReportCompetitionDifferentiation4] = useAtom(STRATEGY_REPORT_COMPETITION_DIFFERENTIATION_4)
 
   return (
-    <AnalysisSection>
+    <AnalysisSection Strategy>
       <TabHeader>
         <TabButton
           active={selectedTab === 'tab1'}
@@ -95,79 +95,85 @@ const OrganismStrategyReportSection = ({ conversationId }) => {
 
       {selectedTab === 'tab1' && (
         <>
-          <h1>해결할 문제와 고객 니즈</h1>
-          <BoxWrap>
-            <strong><img src={images.StarChack} alt="" />1번탭 변수1</strong>
-            <p>{strategyReportCustomerNeeds1}</p>
-          </BoxWrap>
-          <BoxWrap>
-            <strong><img src={images.StarChack} alt="" />1번탭 변수2</strong>
-            <p>{strategyReportCustomerNeeds2[0]}</p>
-            <p>{strategyReportCustomerNeeds2[1]}</p>
-          </BoxWrap>
-          <BoxWrap>
-            <strong><img src={images.StarChack} alt="" />1번탭 변수3</strong>
-            <p>{strategyReportCustomerNeeds3[0]}</p>
-            <p>{strategyReportCustomerNeeds3[1]}</p>
-          </BoxWrap>
-          <BoxWrap>
-            <strong><img src={images.StarChack} alt="" />문제 해결의 시급성(1번탭 고정1)</strong>
-            <p>{strategyReportCustomerNeeds4[0]}</p>
-            <p>{strategyReportCustomerNeeds4[1]}</p>
-          </BoxWrap>
-          <BoxWrap>
-            <strong><img src={images.StarChack} alt="" />이상적인 시장 포지셔닝(1번탭 고정2)</strong>
-            <p>{strategyReportCustomerNeeds5}</p>
-          </BoxWrap>
-          <p>{strategyReportCustomerNeeds6}</p>
+          {/* <h1>해결할 문제와 고객 니즈</h1> */}
+          <TabContenst Insight>
+            <BoxWrap>
+              <strong><img src={images.StarChack} alt="" />1번탭 변수1</strong>
+              <p>{strategyReportCustomerNeeds1}</p>
+            </BoxWrap>
+            <BoxWrap>
+              <strong><img src={images.StarChack} alt="" />1번탭 변수2</strong>
+              <p>{strategyReportCustomerNeeds2[0]}</p>
+              <p>{strategyReportCustomerNeeds2[1]}</p>
+            </BoxWrap>
+            <BoxWrap>
+              <strong><img src={images.StarChack} alt="" />1번탭 변수3</strong>
+              <p>{strategyReportCustomerNeeds3[0]}</p>
+              <p>{strategyReportCustomerNeeds3[1]}</p>
+            </BoxWrap>
+            <BoxWrap>
+              <strong><img src={images.StarChack} alt="" />문제 해결의 시급성(1번탭 고정1)</strong>
+              <p>{strategyReportCustomerNeeds4[0]}</p>
+              <p>{strategyReportCustomerNeeds4[1]}</p>
+            </BoxWrap>
+            <BoxWrap>
+              <strong><img src={images.StarChack} alt="" />이상적인 시장 포지셔닝(1번탭 고정2)</strong>
+              <p>{strategyReportCustomerNeeds5}</p>
+            </BoxWrap>
+            <p>{strategyReportCustomerNeeds6}</p>
+          </TabContenst>
         </>
       )}
 
       {selectedTab === 'tab2' && (
         <>
-          <h1>고객 주요 혜택</h1>
-          <BoxWrap>
-            <strong><img src={images.StarChack} alt="" />{strategyReportCustomerBenefitsTitle1}</strong>
-            <p>{strategyReportCustomerBenefits1[0]}</p>
-            <p>{strategyReportCustomerBenefits1[1]}</p>
-          </BoxWrap>
-          <BoxWrap>
-            <strong><img src={images.StarChack} alt="" />{strategyReportCustomerBenefitsTitle2}</strong>
-            <p>{strategyReportCustomerBenefits2[0]}</p>
-            <p>{strategyReportCustomerBenefits2[1]}</p>
-          </BoxWrap>
-          <BoxWrap>
-            <strong><img src={images.StarChack} alt="" />{strategyReportCustomerBenefitsTitle3}</strong>
-            <p>{strategyReportCustomerBenefits3[0]}</p>
-            <p>{strategyReportCustomerBenefits3[1]}</p>
-          </BoxWrap>
-          <BoxWrap>
-            <strong><img src={images.StarChack} alt="" />우선순위와 영향 분석(2번탭 고정1)</strong>
-            <p>{strategyReportCustomerBenefits4[0]}</p>
-            <p>{strategyReportCustomerBenefits4[1]}</p>
-          </BoxWrap>
-          <p>{strategyReportCustomerBenefits5}</p>
+          {/* <h1>고객 주요 혜택</h1> */}
+          <TabContenst Strategy>
+            <BoxWrap>
+              <strong><img src={images.StarChack} alt="" />{strategyReportCustomerBenefitsTitle1}</strong>
+              <p>{strategyReportCustomerBenefits1[0]}</p>
+              <p>{strategyReportCustomerBenefits1[1]}</p>
+            </BoxWrap>
+            <BoxWrap>
+              <strong><img src={images.StarChack} alt="" />{strategyReportCustomerBenefitsTitle2}</strong>
+              <p>{strategyReportCustomerBenefits2[0]}</p>
+              <p>{strategyReportCustomerBenefits2[1]}</p>
+            </BoxWrap>
+            <BoxWrap>
+              <strong><img src={images.StarChack} alt="" />{strategyReportCustomerBenefitsTitle3}</strong>
+              <p>{strategyReportCustomerBenefits3[0]}</p>
+              <p>{strategyReportCustomerBenefits3[1]}</p>
+            </BoxWrap>
+            <BoxWrap>
+              <strong><img src={images.StarChack} alt="" />우선순위와 영향 분석(2번탭 고정1)</strong>
+              <p>{strategyReportCustomerBenefits4[0]}</p>
+              <p>{strategyReportCustomerBenefits4[1]}</p>
+            </BoxWrap>
+            <p>{strategyReportCustomerBenefits5}</p>
+          </TabContenst>
         </>
       )}
 
       {selectedTab === 'tab3' && (
         <>
-          <h1>경쟁 차별화 전략</h1>
-          <BoxWrap>
-            <strong><img src={images.StarChack} alt="" />{strategyReportCompetitionDifferentiationTitle1}</strong>
-            <p>{strategyReportCompetitionDifferentiation1}</p>
-          </BoxWrap>
-          <BoxWrap>
-            <strong><img src={images.StarChack} alt="" />{strategyReportCompetitionDifferentiationTitle2}</strong>
-            <p>{strategyReportCompetitionDifferentiation2[0]}</p>
-            <p>{strategyReportCompetitionDifferentiation2[1]}</p>
-          </BoxWrap>
-          <BoxWrap>
-            <strong><img src={images.StarChack} alt="" />{strategyReportCompetitionDifferentiationTitle3}</strong>
-            <p>{strategyReportCompetitionDifferentiation3[0]}</p>
-            <p>{strategyReportCompetitionDifferentiation3[1]}</p>
-          </BoxWrap>
-          <p>{strategyReportCompetitionDifferentiation4}</p>
+          {/* <h1>경쟁 차별화 전략</h1> */}
+          <TabContenst Insight>
+            <BoxWrap>
+              <strong><img src={images.StarChack} alt="" />{strategyReportCompetitionDifferentiationTitle1}</strong>
+              <p>{strategyReportCompetitionDifferentiation1}</p>
+            </BoxWrap>
+            <BoxWrap>
+              <strong><img src={images.StarChack} alt="" />{strategyReportCompetitionDifferentiationTitle2}</strong>
+              <p>{strategyReportCompetitionDifferentiation2[0]}</p>
+              <p>{strategyReportCompetitionDifferentiation2[1]}</p>
+            </BoxWrap>
+            <BoxWrap>
+              <strong><img src={images.StarChack} alt="" />{strategyReportCompetitionDifferentiationTitle3}</strong>
+              <p>{strategyReportCompetitionDifferentiation3[0]}</p>
+              <p>{strategyReportCompetitionDifferentiation3[1]}</p>
+            </BoxWrap>
+            <p>{strategyReportCompetitionDifferentiation4}</p>
+          </TabContenst>
         </>
       )}
 
@@ -180,6 +186,8 @@ export default OrganismStrategyReportSection;
 
 const AnalysisSection = styled.div`
   position:relative;
+  max-width:1135px;
+  width:91.5%;
   text-align:left;
   margin-top:25px;
   padding:30px;
@@ -192,7 +200,7 @@ const AnalysisSection = styled.div`
     margin-bottom:20px;
   }
 
-  > p {
+  p {
     font-size:0.88rem;
     line-height:1.5;
     margin-top:30px;
@@ -245,6 +253,7 @@ const BoxWrap = styled.div`
 
   p {
     font-size:0.88rem;
+    line-height:1.5;
   }
 
   button {
@@ -317,27 +326,35 @@ const ButtonWrap = styled.div`
 `;
 const TabHeader = styled.div`
   display: flex;
+  gap:40px;
   margin-bottom: 20px;
-  border-bottom: 2px solid ${palette.lineGray};
 `;
 
 const TabButton = styled.button`
-  flex: 1;
-  padding: 10px 15px;
-  font-size: 1rem;
-  font-weight: ${props => (props.active ? 'bold' : 'normal')};
-  color: ${props => (props.active ? palette.black : palette.gray)};
-  background: ${props => (props.active ? palette.white : palette.lightGray)};
+  font-size: 1.25rem;
+  font-weight: ${props => (props.active ? '600' : '400')};
+  color: ${props => (props.active ? palette.black : palette.lightGray)};
   border: none;
-  border-bottom: ${props => (props.active ? `2px solid ${palette.black}` : 'none')};
+  border-bottom: ${props => (props.active ? `1px solid ${palette.black}` : 'none')};
+  background: ${palette.white};
   cursor: pointer;
+  transition:all .5s;
 
   &:hover {
-    background: ${palette.white};
     color: ${palette.black};
   }
 
   &:focus {
     outline: none;
   }
+`;
+
+const TabContenst = styled.div`
+  height: ${props => {
+    if (props.Strategy) return '980px'; // '전략 전문가' 일경우, 세로길이
+    else if (props.Marketing) return '840px'; // '마케팅 전문가' 일경우, 세로길이
+    else if (props.Insight) return '980px'; // '고객 인사이트 전문가' 일경우, 세로길이
+    else return 'auto';
+  }};
+  overflow-y:auto;
 `;

@@ -77,7 +77,7 @@ const OrganismStrategyReportSection = () => {
           active={selectedTab === 'needs'}
           onClick={() => handleTabClick('needs')}
         >
-          해결할 문제와 고객 니즈
+          해결할 문제와 고객 니즈1
         </TabButton>
         <TabButton
           active={selectedTab === 'benefits'}
