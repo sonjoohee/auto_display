@@ -33,10 +33,10 @@ import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
 import { InputField } from '../../../../assets/styles/Input';
 
-const OrganismStrategyReportSection = ({ conversationId }) => {
+const OrganismStrategyReportSection = () => {
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [inputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
-  const [selectedTab, setSelectedTab] = useState('tab1'); // 추가: 기본 탭은 'needs'로 설정
+  const [selectedTab, setSelectedTab] = useState('needs'); // 추가: 기본 탭은 'needs'로 설정
   const handleTabClick = (tab) => {
     setSelectedTab(tab); // 선택한 탭을 상태로 설정
   };
@@ -74,56 +74,56 @@ const OrganismStrategyReportSection = ({ conversationId }) => {
     <AnalysisSection>
       <TabHeader>
         <TabButton
-          active={selectedTab === 'tab1'}
-          onClick={() => handleTabClick('tab1')}
+          active={selectedTab === 'needs'}
+          onClick={() => handleTabClick('needs')}
         >
           해결할 문제와 고객 니즈
         </TabButton>
         <TabButton
-          active={selectedTab === 'tab2'}
-          onClick={() => handleTabClick('tab2')}
+          active={selectedTab === 'benefits'}
+          onClick={() => handleTabClick('benefits')}
         >
           고객 주요 혜택
         </TabButton>
         <TabButton
-          active={selectedTab === 'tab3'}
-          onClick={() => handleTabClick('tab3')}
+          active={selectedTab === 'differentiation'}
+          onClick={() => handleTabClick('differentiation')}
         >
           경쟁 차별화 전략
         </TabButton>
       </TabHeader>
 
-      {selectedTab === 'tab1' && (
+      {selectedTab === 'needs' && (
         <>
           <h1>해결할 문제와 고객 니즈</h1>
           <BoxWrap>
-            <strong><img src={images.StarChack} alt="" />1번탭 변수1</strong>
+            <strong><img src={images.StarChack} alt="" />타겟 시장 세분화</strong>
             <p>{strategyReportCustomerNeeds1}</p>
           </BoxWrap>
           <BoxWrap>
-            <strong><img src={images.StarChack} alt="" />1번탭 변수2</strong>
+            <strong><img src={images.StarChack} alt="" />고객의 주요 불편사항 분석</strong>
             <p>{strategyReportCustomerNeeds2[0]}</p>
             <p>{strategyReportCustomerNeeds2[1]}</p>
           </BoxWrap>
           <BoxWrap>
-            <strong><img src={images.StarChack} alt="" />1번탭 변수3</strong>
+            <strong><img src={images.StarChack} alt="" />잠재적 니즈 및 기회</strong>
             <p>{strategyReportCustomerNeeds3[0]}</p>
             <p>{strategyReportCustomerNeeds3[1]}</p>
           </BoxWrap>
           <BoxWrap>
-            <strong><img src={images.StarChack} alt="" />문제 해결의 시급성(1번탭 고정1)</strong>
+            <strong><img src={images.StarChack} alt="" />문제 해결의 시급성</strong>
             <p>{strategyReportCustomerNeeds4[0]}</p>
             <p>{strategyReportCustomerNeeds4[1]}</p>
           </BoxWrap>
           <BoxWrap>
-            <strong><img src={images.StarChack} alt="" />이상적인 시장 포지셔닝(1번탭 고정2)</strong>
+            <strong><img src={images.StarChack} alt="" />이상적인 시장 포지셔닝</strong>
             <p>{strategyReportCustomerNeeds5}</p>
           </BoxWrap>
           <p>{strategyReportCustomerNeeds6}</p>
         </>
       )}
 
-      {selectedTab === 'tab2' && (
+      {selectedTab === 'benefits' && (
         <>
           <h1>고객 주요 혜택</h1>
           <BoxWrap>
@@ -142,7 +142,7 @@ const OrganismStrategyReportSection = ({ conversationId }) => {
             <p>{strategyReportCustomerBenefits3[1]}</p>
           </BoxWrap>
           <BoxWrap>
-            <strong><img src={images.StarChack} alt="" />우선순위와 영향 분석(2번탭 고정1)</strong>
+            <strong><img src={images.StarChack} alt="" />우선순위와 영향 분석</strong>
             <p>{strategyReportCustomerBenefits4[0]}</p>
             <p>{strategyReportCustomerBenefits4[1]}</p>
           </BoxWrap>
@@ -150,7 +150,7 @@ const OrganismStrategyReportSection = ({ conversationId }) => {
         </>
       )}
 
-      {selectedTab === 'tab3' && (
+      {selectedTab === 'differentiation' && (
         <>
           <h1>경쟁 차별화 전략</h1>
           <BoxWrap>
@@ -171,7 +171,7 @@ const OrganismStrategyReportSection = ({ conversationId }) => {
         </>
       )}
 
-    <MoleculeReportController reportIndex={1} conversationId={conversationId}  />
+      <MoleculeReportController reportIndex={1} />
     </AnalysisSection>
   );
 };
