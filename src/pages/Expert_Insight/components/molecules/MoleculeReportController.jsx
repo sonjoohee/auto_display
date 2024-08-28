@@ -235,7 +235,7 @@ const handleCopyContent = () => {
     .then(() => {
       alert("복사가 완료되었습니다.");
     })
-    .ctch(error => {
+    .catch(error => {
       console.error("복사 실패?", error);
     });
   };
