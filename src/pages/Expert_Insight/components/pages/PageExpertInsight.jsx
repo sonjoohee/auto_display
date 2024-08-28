@@ -164,7 +164,7 @@ const PageExpertInsight = () => {
               } else if (item.type === 'analysis') {
                 return <OrganismBizAnalysisSection conversationId={conversationId} />;
               } else if (item.type === 'strategy') {
-                return <OrganismStrategyReportSection key={index} />;
+                return <OrganismStrategyReportSection conversationId={conversationId} />;
               }
               return null;
             })}
