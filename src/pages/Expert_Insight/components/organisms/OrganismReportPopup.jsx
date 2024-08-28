@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { palette } from '../../../../assets/styles/Palette';
 
@@ -9,7 +9,7 @@ const OrganismReportPopup = ({ report, onClose }) => {
     ? report.reportIndex
     : report.type === 'strategy'
     ? 1
-    : 0; // 예를 들어 type이 strategy면 1, 아니면 0으로 가정
+    : 0;
 
   return (
     <PopupOverlay onClick={onClose}>
@@ -17,19 +17,15 @@ const OrganismReportPopup = ({ report, onClose }) => {
         <h1>{report.title}</h1>
         <p>{report.date}</p>
 
-        {reportIndex === 0 && (
-          <BizAnalysisSection report={report} />
-        )}
-
-        {reportIndex === 1 && (
-          <StrategyReportSection report={report} />
-        )}
+        {reportIndex === 0 && <BizAnalysisSection report={report} />}
+        {reportIndex === 1 && <StrategyReportSection report={report} />}
 
         <CloseButton onClick={onClose}>닫기</CloseButton>
       </PopupContent>
     </PopupOverlay>
   );
 };
+
 export default OrganismReportPopup;
 
 const PopupOverlay = styled.div`
@@ -188,38 +184,101 @@ const BizAnalysisSection = ({ report }) => {
 };
 
 const StrategyReportSection = ({ report }) => {
-  const strategyCustomerNeeds = report.content.strategyCustomerNeeds || {};
-  const strategyCustomerBenefits = report.content.strategyCustomerBenefits || {};
-  const strategyCompetitionDifferentiation = report.content.strategyCompetitionDifferentiation || {};
+  const [selectedTab, setSelectedTab] = useState(0);
+
+  // 탭 제목과 섹션 데이터를 report에서 가져옵니다.
+  const tabs = report.content.tabs || [];
+
+  const handleTabClick = (index) => {
+    setSelectedTab(index);
+  };
 
   return (
-    <BoxWrap>
-      <SectionTitle>해결할 문제와 고객 니즈</SectionTitle>
-      <List>
-        {Object.keys(strategyCustomerNeeds).map((key, index) => (
-          <ListItem key={index}>{strategyCustomerNeeds[key]}</ListItem>
+    <>
+      <TabHeader>
+        {tabs.map((tab, index) => (
+          <TabButton
+            key={index}
+            active={selectedTab === index}
+            onClick={() => handleTabClick(index)}
+          >
+            {tab.title}
+          </TabButton>
         ))}
-      </List>
-      <SectionTitle>고객 주요 혜택</SectionTitle>
-      <List>
-        {Object.keys(strategyCustomerBenefits).map((key, index) => (
-          <ListItem key={index}>
-            {Array.isArray(strategyCustomerBenefits[key])
-              ? strategyCustomerBenefits[key].join(', ')
-              : strategyCustomerBenefits[key]}
-          </ListItem>
-        ))}
-      </List>
-      <SectionTitle>경쟁 차별화 전략</SectionTitle>
-      <List>
-        {Object.keys(strategyCompetitionDifferentiation).map((key, index) => (
-          <ListItem key={index}>
-            {Array.isArray(strategyCompetitionDifferentiation[key])
-              ? strategyCompetitionDifferentiation[key].join(', ')
-              : strategyCompetitionDifferentiation[key]}
-          </ListItem>
-        ))}
-      </List>
-    </BoxWrap>
+      </TabHeader>
+
+      {tabs[selectedTab]?.sections?.map((section, index) => (
+        <BoxWrap key={index}>
+          {section.title && <SectionTitle>{section.title}</SectionTitle>}
+          {section.content && (
+            section.content.some((item) => item.subTitle) ? (
+              <TwoColumnGrid>
+                {section.content.map((item, idx) => (
+                  <div key={idx}>
+                    {item.subTitle && <SubTitle>{item.subTitle}</SubTitle>}
+                    <p>{item.text}</p>
+                  </div>
+                ))}
+              </TwoColumnGrid>
+            ) : (
+              <List>
+                {section.content.map((item, idx) => (
+                  <ListItem key={idx}>{item.text}</ListItem>
+                ))}
+              </List>
+            )
+          )}
+        </BoxWrap>
+      ))}
+    </>
   );
 };
+
+const TabHeader = styled.div`
+  display: flex;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #ddd;
+`;
+
+const TabButton = styled.button`
+  flex: 1;
+  padding: 10px 15px;
+  font-size: 1rem;
+  font-weight: ${(props) => (props.active ? 'bold' : 'normal')};
+  color: ${(props) => (props.active ? '#000' : '#666')};
+  background: ${(props) => (props.active ? '#fff' : '#f7f7f7')};
+  border: none;
+  border-bottom: ${(props) => (props.active ? `2px solid #000` : 'none')};
+  cursor: pointer;
+
+  &:hover {
+    background: #fff;
+    color: #000;
+  }
+
+  &:focus {
+    outline: none;
+  }
+`;
+
+const TwoColumnGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 10px;
+  margin-top: 10px;
+
+  strong {
+    font-weight: 500;
+  }
+
+  p {
+    margin: 0;
+  }
+`;
+
+const SubTitle = styled.div`
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin-bottom: 8px;
+`;
