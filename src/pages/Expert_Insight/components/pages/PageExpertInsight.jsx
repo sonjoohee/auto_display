@@ -167,7 +167,7 @@ const PageExpertInsight = () => {
           {/* <OrganismSideBar /> */}
 
           <MainContent>
-            <MoleculeBizName bizName={inputBusinessInfo} />
+            <MoleculeBizName bizName={titleOfBusinessInfo} />
 
             {conversation.map((item, index) => {
               if (item.type === 'user') {
@@ -182,8 +182,8 @@ const PageExpertInsight = () => {
               return null;
             })}
             {/* 전략 보고서 섹션 */}
-            {isClickExpertSelect && <OrganismStrategyReportSection />}
-            <OrganismBizExpertSelect />
+            {isClickExpertSelect && <OrganismStrategyReportSection conversationId={conversationId} />}
+            {conversationStage !== 1 && <OrganismBizExpertSelect />}
           </MainContent>
         </ContentsWrap>
 

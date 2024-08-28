@@ -13,7 +13,7 @@ const MoleculeBizName = ({ bizName }) => {
         <span><img src={images.File} alt="" /></span>
         <NameTitle>
           <strong>
-            {bizName || "비즈니스 이름을 입력하세요"}
+            {bizName || "아이템(아이디어)를 설명해주시면, 분석된 내용이 적용됩니다"}
             <Badge>Edited by AI</Badge>
           </strong>
           <p>10 min ago</p>
