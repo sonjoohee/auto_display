@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { palette } from '../../../../assets/styles/Palette';
+import ReactDOM from 'react-dom';
 
 const OrganismReportPopup = ({ report, onClose }) => {
   if (!report) return null;
@@ -11,18 +12,24 @@ const OrganismReportPopup = ({ report, onClose }) => {
     ? 1
     : 0;
 
-  return (
+  return ReactDOM.createPortal(
     <PopupOverlay onClick={onClose}>
       <PopupContent onClick={(e) => e.stopPropagation()}>
         <h1>{report.title}</h1>
         <p>{report.date}</p>
 
-        {reportIndex === 0 && <BizAnalysisSection report={report} />}
-        {reportIndex === 1 && <StrategyReportSection report={report} />}
+        {reportIndex === 0 && (
+          <BizAnalysisSection report={report} />
+        )}
+
+        {reportIndex === 1 && (
+          <StrategyReportSection report={report} />
+        )}
 
         <CloseButton onClick={onClose}>닫기</CloseButton>
       </PopupContent>
-    </PopupOverlay>
+    </PopupOverlay>,
+    document.body  // 팝업을 document.body 아래에 렌더링
   );
 };
 
@@ -38,7 +45,7 @@ const PopupOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 10000;
 `;
 
 const PopupContent = styled.div`
@@ -51,6 +58,7 @@ const PopupContent = styled.div`
   overflow-y: auto;
   text-align: left;
   border: 1px solid ${palette.lineGray};
+  z-index: 10001; /* 팝업 컨텐츠 자체의 z-index도 높게 설정 */
 
   h1 {
     font-size: 1.25rem;
@@ -217,15 +225,17 @@ const StrategyReportSection = ({ report }) => {
                   <div key={idx}>
                     {item.subTitle && <SubTitle>{item.subTitle}</SubTitle>}
                     <p>{item.text}</p>
+                    {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
                   </div>
                 ))}
               </TwoColumnGrid>
             ) : (
-              <List>
-                {section.content.map((item, idx) => (
-                  <ListItem key={idx}>{item.text}</ListItem>
-                ))}
-              </List>
+              section.content.map((item, idx) => (
+                <div key={idx}>
+                  <p>{item.text}</p>
+                  {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
+                </div>
+              ))
             )
           )}
         </BoxWrap>
@@ -234,6 +244,7 @@ const StrategyReportSection = ({ report }) => {
   );
 };
 
+// 스타일 컴포넌트들
 const TabHeader = styled.div`
   display: flex;
   margin-bottom: 20px;
@@ -261,19 +272,12 @@ const TabButton = styled.button`
   }
 `;
 
+
 const TwoColumnGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 2fr;
   gap: 10px;
   margin-top: 10px;
-
-  strong {
-    font-weight: 500;
-  }
-
-  p {
-    margin: 0;
-  }
 `;
 
 const SubTitle = styled.div`
@@ -281,4 +285,14 @@ const SubTitle = styled.div`
   font-size: 0.9rem;
   color: #6c757d;
   margin-bottom: 8px;
+`;
+
+const SubTextBox = styled.div`
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-size: 0.85rem;
+  color: #666;
 `;

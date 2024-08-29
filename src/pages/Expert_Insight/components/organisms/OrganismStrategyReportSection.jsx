@@ -4,8 +4,7 @@ import styled from 'styled-components';
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
 import MoleculeReportController from '../molecules/MoleculeReportController';
-import sampleData from './sample.json'; // sample.json 파일을 불러옵니다.
-import { useAtom } from 'jotai';
+import sampleData from './sample3.json'; // sample.json 파일을 불러옵니다.
 
 const OrganismStrategyReportSection = ({ conversationId }) => {
   const [selectedTab, setSelectedTab] = useState(0); // 탭을 인덱스로 관리
@@ -50,22 +49,29 @@ const OrganismStrategyReportSection = ({ conversationId }) => {
 };
 
 const Section = ({ title, content }) => {
-  const hasSubTitles = content.some(item => item.subTitle); // 서브 타이틀이 있는지 확인
+  // 서브 타이틀이 있는지 확인하고, 그 갯수를 셉니다.
+  const subTitles = content.filter(item => item.subTitle);
 
   return (
     <BoxWrap>
       {title && <strong><img src={images.Check} alt="" />{title}</strong>}
-      {hasSubTitles ? (
-        <TwoColumnGrid>
+      {subTitles.length > 0 ? (
+        <DynamicGrid columns={subTitles.length}>
           {content.map((item, index) => (
             <div key={index}>
               {item.subTitle && <SubTitle>{item.subTitle}</SubTitle>}
               <p>{item.text}</p>
+              {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
             </div>
           ))}
-        </TwoColumnGrid>
+        </DynamicGrid>
       ) : (
-        content.map((item, index) => <p key={index}>{item.text}</p>)
+        content.map((item, index) => (
+          <div key={index}>
+            <p>{item.text}</p>
+            {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
+          </div>
+        ))
       )}
     </BoxWrap>
   );
@@ -146,10 +152,13 @@ const TabButton = styled.button`
     outline: none;
   }
 `;
-const TwoColumnGrid = styled.div`
-  display: flex;
-  align-items:stretch;
-  gap:12px;
+
+// DynamicGrid로 그리드 컬럼의 갯수를 서브 타이틀 갯수에 맞춰 동적으로 설정
+const DynamicGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(${props => props.columns}, 1fr);
+  gap: 10px;
+  margin-top: 10px;
 
   div {
     flex:1;
@@ -164,9 +173,20 @@ const TwoColumnGrid = styled.div`
     margin: 0;
   }
 `;
+
 const SubTitle = styled.strong`
   font-size:0.88rem;
   font-weight: 500;
   color:${palette.gray};
   text-align:left;
+`;
+
+const SubTextBox = styled.div`
+  background: ${palette.white};
+  padding: 16px;
+  border-radius: 10px;
+  margin-top: 10px;
+  font-size: 0.88rem;
+  color: ${palette.gray};
+  border:0 !important;
 `;

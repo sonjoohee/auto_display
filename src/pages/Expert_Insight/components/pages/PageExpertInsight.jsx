@@ -26,7 +26,6 @@ import MoleculeBizName from '../molecules/MoleculeBizName';
 import MoleculeSystemMessage from '../molecules/MoleculeSystemMessage';
 import MoleculeUserMessage from '../molecules/MoleculeUserMessage';
 import OrganismBizExpertSelect from '../organisms/OrganismBizExpertSelect';
-import OrganismTakingChargeAiExpert from '../organisms/OrganismTakingChargeAiExpert';
 
 const PageExpertInsight = () => {
   const navigate = useNavigate();
@@ -157,7 +156,6 @@ const PageExpertInsight = () => {
 
   return (
       <>
-        {/* {selectedExpertIndex !== 0 && <OrganismTakingChargeAiExpert />} */}
 
         {/* <OrganismHeader /> */}
       
@@ -201,6 +199,8 @@ const MainContent = styled.div`
   max-width: 1240px;
   padding-bottom: 150px;
   margin: 0 auto;
+  position:relative;
+  top:40px;
 `;
 
 const ContentsWrap = styled.div`
