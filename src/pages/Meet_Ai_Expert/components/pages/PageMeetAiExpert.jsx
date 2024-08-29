@@ -1,5 +1,3 @@
-// C:\dev\Crowd_Insight-\src\pages\Expert_Insight\components\pages\PageMeetAiExpert.jsx
-
 import React, { useEffect, useState } from "react";
 import styled, { css } from 'styled-components';
 import { useNavigate } from "react-router-dom";
@@ -74,8 +72,7 @@ const PageMeetAiExpert = () => {
           <InputWrap>
             <div className="inputWrap">
               <textarea placeholder="당신의 아이템 또는 프로젝트 아이디어를 적어 주세요 (예: 원격 근무자를 위한 생산성 관리 툴)" onChange={(e) => setInputBusinessInfo(e.target.value)}></textarea>
-              {/* <InputField None placeholder="당신의 비즈니스를 간단히 입력한 후 시작해보세요!" onChange={(e) => setInputBusinessInfo(e.target.value)}/> */}
-              <button type="button" onClick={() => {handledExpertSelect(0)}}>검색</button>
+              <button type="button" onClick={() => handledExpertSelect(0)}>검색</button>
             </div>
             <div className="maxLetter">
               <span>0/300</span>
@@ -86,17 +83,17 @@ const PageMeetAiExpert = () => {
             <h2><img src={images.Chat} alt="" />AI 전문가 선택해서 시작하기</h2>
 
             <ExpertSelectBox>
-              <ExpertCard onClick={() => {handledExpertSelect(1)}}>
+              <ExpertCard onClick={() => handledExpertSelect(1)}>
                 <span><img src={images.IconChat} alt="" /></span>
                 <p>가볍게 시작하는 내 비즈니스 전략 팁</p>
                 <strong>전략 디렉터와 1:1 커피챗</strong>
               </ExpertCard>
-              <ExpertCard onClick={() => {handledExpertSelect(2)}}>
+              <ExpertCard onClick={() => handledExpertSelect(2)}>
                 <span><img src={images.IconWrite} alt="" /></span>
                 <p>지금 바로 쓸 수 있는 브랜딩 솔루션</p>
                 <strong>10초 맞춤 제안서 받기</strong>
               </ExpertCard>
-              <ExpertCard onClick={() => {handledExpertSelect(3)}}>
+              <ExpertCard onClick={() => handledExpertSelect(3)}>
                 <span><img src={images.IconTarget2} alt="" /></span>
                 <p>고객 데이터 전문가의 맞춤 타겟 추천</p>
                 <strong>당장 만나야할 고객은?</strong>
@@ -109,70 +106,6 @@ const PageMeetAiExpert = () => {
               </ExpertCard>
             </ExpertSelectBox>
           </ExpertSelectWrap>
-
-          {/* 
-          <FAQSection>
-            <h2>
-              <select>
-                <option value="스타트업 창업자">스타트업 창업자</option>
-              </select>
-              는 주로 이런 질문을 많이 해요.
-            </h2>
-
-
-            <AccordionMenu>
-              <AccordionItem>
-                <input type="checkbox" id="section1" className="accordion-toggle" />
-                <label for="section1" className="accordion-label">
-                  우리 스타트업의 비즈니스 모델을 어떻게 검증하고 개선할 수 있을까요?
-                </label>
-                <AccordionContent>
-                  <div>우리 스타트업의 비즈니스 모델을 어떻게 검증하고 개선할 수 있을까요? 우리 스타트업의 비즈니스 모델을 어떻게 검증하고 개선할 수 있을까요? 우리 스타트업의 비즈니스 모델을 어떻게 검증하고 개선할 수 있을까요?</div>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem>
-                <input type="checkbox" id="section2" className="accordion-toggle" />
-                <label for="section2" className="accordion-label">
-                  초기 단계에서 효과적으로 자금을 조달하는 방법은 무엇인가요?
-                </label>
-                <AccordionContent>
-                  <div>초기 단계에서 효과적으로 자금을 조달하는 방법은 무엇인가요? 초기 단계에서 효과적으로 자금을 조달하는 방법은 무엇인가요? 초기 단계에서 효과적으로 자금을 조달하는 방법은 무엇인가요?</div>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem>
-                <input type="checkbox" id="section3" className="accordion-toggle" />
-                <label for="section3" className="accordion-label">
-                  제품-시장 적합성(Product-Market Fit)을 빠르게 달성하기 위한 전략은 무엇인가요?
-                </label>
-                <AccordionContent>
-                  <div>제품-시장 적합성(Product-Market Fit)을 빠르게 달성하기 위한 전략은 무엇인가요? 제품-시장 적합성(Product-Market Fit)을 빠르게 달성하기 위한 전략은 무엇인가요? 제품-시장 적합성(Product-Market Fit)을 빠르게 달성하기 위한 전략은 무엇인가요?</div>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem>
-                <input type="checkbox" id="section4" className="accordion-toggle" />
-                <label for="section4" className="accordion-label">
-                  초기 고객을 확보하고 사용자 기반을 빠르게 확장하는 방법은 무엇인가요?
-                </label>
-                <AccordionContent>
-                  <div>초기 고객을 확보하고 사용자 기반을 빠르게 확장하는 방법은 무엇인가요? 초기 고객을 확보하고 사용자 기반을 빠르게 확장하는 방법은 무엇인가요? 초기 고객을 확보하고 사용자 기반을 빠르게 확장하는 방법은 무엇인가요?</div>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem>
-                <input type="checkbox" id="section5" className="accordion-toggle" />
-                <label for="section5" className="accordion-label">
-                  스타트업의 성장 단계에 따라 어떻게 조직 구조와 문화를 발전시켜 나가야 할까요?
-                </label>
-                <AccordionContent>
-                  <div>스타트업의 성장 단계에 따라 어떻게 조직 구조와 문화를 발전시켜 나가야 할까요? 스타트업의 성장 단계에 따라 어떻게 조직 구조와 문화를 발전시켜 나가야 할까요? 스타트업의 성장 단계에 따라 어떻게 조직 구조와 문화를 발전시켜 나가야 할까요?</div>
-                </AccordionContent>
-              </AccordionItem>
-            </AccordionMenu>
-          </FAQSection> 
-          */}
         </MainContent>
       </ContentsWrap>
     </div>
@@ -191,18 +124,11 @@ const MainContent = styled.div`
   margin: 0 auto;
 `;
 
-
 const ContentsWrap = styled.div`
-  // display: flex;
-  // flex-direction: column;
-  // align-items: center;
-  // padding: 110px 20px 40px;
   position: relative;
   width: calc(100% - 45px);
   margin:0 auto;
   padding:0 300px 0;
-  // padding-left: 380px;
-  // padding-right: 380px;
 `;
 
 const Title = styled.h1`
@@ -524,4 +450,3 @@ const AccordionContent = styled.div`
     margin-top:30px;
   }
 `;
-
