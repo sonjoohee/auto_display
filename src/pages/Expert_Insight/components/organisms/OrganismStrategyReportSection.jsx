@@ -5,18 +5,12 @@ import {
   SELECTED_EXPERT_INDEX,
   EXPERT1_REPORT_DATA,
   EXPERT2_REPORT_DATA,
-  EXPERT3_REPORT_DATA
+  EXPERT3_REPORT_DATA,
+  SELECTED_TAB,
 } from '../../../AtomStates'; // Atom 불러오기
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
 import MoleculeReportController from '../molecules/MoleculeReportController';
-import { useAtom } from 'jotai';
-import {
-  SELECTED_TAB,
-  EXPERT1_REPORT_DATA,
-  EXPERT2_REPORT_DATA,
-  EXPERT3_REPORT_DATA,
-} from '../../../AtomStates'; 
 import sampleData1 from './sample1.json';
 import sampleData2 from './sample2.json';
 import sampleData3 from './sample3.json';
