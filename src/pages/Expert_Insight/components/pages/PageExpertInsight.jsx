@@ -13,6 +13,8 @@ import {
   SAVED_CONVERSATIONS,
   IS_CLICK_EXPERT_SELECT,
   APPROACH_PATH,
+  STRATEGY_REPORT_DATA,
+  SELECTED_ADDITIONAL_KEYWORD,
   EXPERT1_REPORT_DATA,
   EXPERT2_REPORT_DATA,
   EXPERT3_REPORT_DATA,
@@ -31,6 +33,7 @@ import MoleculeSystemMessage from '../molecules/MoleculeSystemMessage';
 import MoleculeUserMessage from '../molecules/MoleculeUserMessage';
 import OrganismBizExpertSelect from '../organisms/OrganismBizExpertSelect';
 import MoleculeAdditionalKeyword from '../molecules/MoleculeAdditionalKeyword';
+import OrganismAdditionalReport from '../organisms/OrganismAdditionalReport';
 
 const PageExpertInsight = () => {
   const navigate = useNavigate();
@@ -46,6 +49,9 @@ const PageExpertInsight = () => {
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [isClickExpertSelect, setIsClickExpertSelect] = useAtom(IS_CLICK_EXPERT_SELECT);
   const [sections, setSections] = useState([]);
+
+  const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA); // 전략 리포트 데이터를 atom으로 관리
+  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
 
   // 각 전문가의 보고서를 관리하는 Atom
   const [expert1ReportData, setExpert1ReportData] = useAtom(EXPERT1_REPORT_DATA);
@@ -171,8 +177,12 @@ const PageExpertInsight = () => {
   }, []);
 
   useEffect(() => {
-    if (approachPath) handleSearch(-1);
-  }, [selectedExpertIndex]);
+    if(approachPath) handleSearch(-1);
+  },[selectedExpertIndex])
+
+  useEffect(() => {
+    if(selectedAdditionalKeyword) handleSearch(-1);
+  },[selectedAdditionalKeyword])
 
   const handleSearch = (inputValue) => {
     const updatedConversation = [...conversation];
@@ -198,16 +208,24 @@ const PageExpertInsight = () => {
       }
       newConversationStage = 2;
     } else if (conversationStage === 2) {
-      if (!selectedExpertIndex) {
-        alert("전문가를 선택해 주세요.");
-        return;
-      }
+        if (!selectedExpertIndex) {
+          alert("전문가를 선택해 주세요.");
+          return;
+        }
+        updatedConversation.push(
+          { type: 'user', message: '10년차 전략 디렉터와 1:1 커피챗, 지금 바로 시작하겠습니다 🙌🏻' },
+          { type: 'system', message: `안녕하세요, 김도원입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"`},
+          { type: `strategy_${selectedExpertIndex}` }, // 전문가 인덱스에 따라 전략 보고서 타입 변경
+          { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊'},
+          { type: 'addition' },
+        );
+      newConversationStage = 3;
+    } else if (conversationStage === 3) {
+      updatedConversation.pop();
       updatedConversation.push(
-        { type: 'user', message: '10년차 전략 디렉터와 1:1 커피챗, 지금 바로 시작하겠습니다 🙌🏻' },
-        { type: 'system', message: `안녕하세요, 김도원입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"` },
-        { type: `strategy_${selectedExpertIndex}` }, // 전문가 인덱스에 따라 전략 보고서 타입 저장
-        { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊' },
+        { type: 'user', message: `제 프로젝트와 관련된 "${selectedAdditionalKeyword}"를 요청드려요` },
         { type: 'addition' },
+        { type: 'system', message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${selectedAdditionalKeyword}를 찾아드렸어요`},
       );
     }
 
@@ -255,8 +273,11 @@ const PageExpertInsight = () => {
                 />
               );
             } else if (item.type === 'addition') {
-              return <MoleculeAdditionalKeyword key={index} />;
-            }
+                if(selectedAdditionalKeyword) {
+                  return <OrganismAdditionalReport conversationId={conversationId}/>;
+                }
+                else return <MoleculeAdditionalKeyword/>;
+              }
             return null;
           })}
           {conversationStage !== 1 && <OrganismBizExpertSelect />}

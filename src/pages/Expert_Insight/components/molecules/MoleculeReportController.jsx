@@ -87,19 +87,6 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
     setTemptBusinessInformationTargetCustomer(businessInformationTargetCustomer);
   };
 
-  const handleEditCancel = () => {
-    // 임시로 confirm 함수 사용
-    // eslint-disable-next-line no-restricted-globals
-    let isCancel = confirm("정말 취소하시겠습니까?");
-
-    if (isCancel) {
-      setMainFeaturesOfBusinessInformation(tempMainFeaturesOfBusinessInformation)
-      setMainCharacteristicOfBusinessInformation(tempMainCharacteristicOfBusinessInformation)
-      setBusinessInformationTargetCustomer(tempMusinessInformationTargetCustomer)
-      setIsEditingNow(false);
-    }
-  };
-
   // const handleEditCancel = () => {
   //   setEditingIndex({ section: '', index: -1 });
   //   setWarningMessage('');  // 경고 메시지를 초기화합니다.
@@ -227,6 +214,14 @@ ${businessInformationTargetCustomer.map(customer => `- ${customer}`).join('\n')}
     }
   };
 
+  const handleEditCancel = () => {
+    setMainFeaturesOfBusinessInformation(tempMainFeaturesOfBusinessInformation)
+    setMainCharacteristicOfBusinessInformation(tempMainCharacteristicOfBusinessInformation)
+    setBusinessInformationTargetCustomer(tempMusinessInformationTargetCustomer)
+    setIsEditingNow(false);
+    togglePopupCancel();
+  };
+
   return (
     <>
       {reportIndex === 0 ? (
@@ -348,7 +343,7 @@ ${businessInformationTargetCustomer.map(customer => `- ${customer}`).join('\n')}
             </p>
             <div className="btnWrap">
               <button type="button" onClick={togglePopupCancel}>아니오</button>
-              <button type="button">네, 취소할게요</button>
+              <button type="button" onClick={handleEditCancel}>네, 취소할게요</button>
             </div>
           </div>
         </Popup>

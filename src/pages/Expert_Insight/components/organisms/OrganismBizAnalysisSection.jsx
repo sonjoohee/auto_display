@@ -186,14 +186,25 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
             </li>
           ))}
         </ul>
-        {isAddingNow.section === 'mainFeatures' && isAddingNow.isAdding &&
+        {isAddingNow.section === 'mainFeatures' && isAddingNow.isAdding ? (
           <AddInfo>
-            <InputField value={newAddContent} onChange={(e) => { setNewAddContent(e.target.value); }} placeholder="새로운 정보를 추가해보세요"></InputField>
-            <button onClick={() => handleAddSave('mainFeatures')}>저장</button>
-            <button onClick={() => setIsAddingNow({ section: '', isAdding: false })}>취소</button>
+            <InputField
+              value={newAddContent}
+              onChange={(e) => { setNewAddContent(e.target.value); }}
+              placeholder="새로운 정보를 추가해보세요"
+            />
+            <BtnWrap>
+              <button onClick={() => handleAddSave('mainFeatures')}>저장</button>
+              <button onClick={() => setIsAddingNow({ section: '', isAdding: false })}>취소</button>
+            </BtnWrap>
           </AddInfo>
-        }
-        {isEditingNow && <button className="moreButton" onClick={() => setIsAddingNow({ section: 'mainFeatures', isAdding: true })}>특징 추가하기 +</button>}
+        ) : (
+          isEditingNow && (
+            <button className="moreButton" onClick={() => setIsAddingNow({ section: 'mainFeatures', isAdding: true })}>
+              특징 추가하기 +
+            </button>
+          )
+        )}
       </BoxWrap>
 
       <BoxWrap>
@@ -232,14 +243,23 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
             </li>
           ))}
         </ul>
-        {isAddingNow.section === 'mainCharacteristic' && isAddingNow.isAdding &&
+        {isAddingNow.section === 'mainCharacteristic' && isAddingNow.isAdding ? (
           <AddInfo>
-            <InputField value={newAddContent} onChange={(e) => { setNewAddContent(e.target.value); }} placeholder="새로운 정보를 추가해보세요"></InputField>
+            <InputField
+              value={newAddContent}
+              onChange={(e) => { setNewAddContent(e.target.value); }}
+              placeholder="새로운 정보를 추가해보세요"
+            />
             <button onClick={() => handleAddSave('mainCharacteristic')}>저장</button>
             <button onClick={() => setIsAddingNow({ section: '', isAdding: false })}>취소</button>
           </AddInfo>
-        }
-        {isEditingNow && <button className="moreButton" onClick={() => setIsAddingNow({ section: 'mainCharacteristic', isAdding: true })}>기능 추가하기 +</button>}
+        ) : (
+          isEditingNow && (
+            <button className="moreButton" onClick={() => setIsAddingNow({ section: 'mainCharacteristic', isAdding: true })}>
+              기능 추가하기 +
+            </button>
+          )
+        )}
       </BoxWrap>
 
       <BoxWrap>
@@ -278,14 +298,23 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
             </li>
           ))}
         </ul>
-        {isAddingNow.section === 'targetCustomer' && isAddingNow.isAdding &&
+        {isAddingNow.section === 'targetCustomer' && isAddingNow.isAdding ? (
           <AddInfo>
-            <InputField value={newAddContent} onChange={(e) => { setNewAddContent(e.target.value); }} placeholder="새로운 정보를 추가해보세요"></InputField>
+            <InputField
+              value={newAddContent}
+              onChange={(e) => { setNewAddContent(e.target.value); }}
+              placeholder="새로운 정보를 추가해보세요"
+            />
             <button onClick={() => handleAddSave('targetCustomer')}>저장</button>
             <button onClick={() => setIsAddingNow({ section: '', isAdding: false })}>취소</button>
           </AddInfo>
-        }
-        {isEditingNow && <button className="moreButton" onClick={() => setIsAddingNow({ section: 'targetCustomer', isAdding: true })}>목표 고객 추가하기 +</button>}
+        ) : (
+          isEditingNow && (
+            <button className="moreButton" onClick={() => setIsAddingNow({ section: 'targetCustomer', isAdding: true })}>
+              목표 고객 추가하기 +
+            </button>
+          )
+        )}
       </BoxWrap>
 
       <p>입력을 바탕으로 위와 같이 이해하고 정리하였습니다. <span>제가 이해한 내용이 맞습니까? 확인해 주시기 바랍니다.</span> 정확한 정보를 바탕으로 최상의 보고서를 작성하기 위해서는 고객님의 피드백이 매우 중요합니다. 감사합니다!</p>
