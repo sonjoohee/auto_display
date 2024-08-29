@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useAtom } from 'jotai';
-import { 
+import {
   SELECTED_EXPERT_INDEX,
   EXPERT1_REPORT_DATA,
   EXPERT2_REPORT_DATA,
   EXPERT3_REPORT_DATA,
   SELECTED_TAB,
-} from '../../../AtomStates'; // Atom 불러오기
+} from '../../../AtomStates';
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
 import MoleculeReportController from '../molecules/MoleculeReportController';
@@ -16,58 +16,43 @@ import sampleData2 from './sample2.json';
 import sampleData3 from './sample3.json';
 import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
 
-const OrganismStrategyReportSection = ({ conversationId }) => {
-  const [expert1ReprotData, setExpert1ReprotData] = useAtom(EXPERT1_REPORT_DATA); 
-  const [expert2ReprotData, setExpert2ReprotData] = useAtom(EXPERT2_REPORT_DATA); 
-  const [expert3ReprotData, setExpert3ReprotData] = useAtom(EXPERT3_REPORT_DATA);
-
+const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const [selectedTab, setSelectedTab] = useAtom(SELECTED_TAB); // 탭을 인덱스로 관리
   const [tabs, setTabs] = useState([]);
   const [sections, setSections] = useState([]);
 
-  // 현재 선택된 전문가를 가져옴
-  const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
-
-  // 전문가에 따라 알맞은 Atom을 선택
-  let strategyReportAtom;
-  let sampleData;
-
-  if (selectedExpertIndex === 1) {
-    strategyReportAtom = EXPERT1_REPORT_DATA;
-    sampleData = sampleData1;
-  } else if (selectedExpertIndex === 2) {
-    strategyReportAtom = EXPERT2_REPORT_DATA;
-    sampleData = sampleData2;
-  } else if (selectedExpertIndex === 3) {
-    strategyReportAtom = EXPERT3_REPORT_DATA;
-    sampleData = sampleData3;
-  }
+  // 전문가 인덱스에 따라 해당 Atom을 선택
+  const strategyReportAtomMap = {
+    '1': EXPERT1_REPORT_DATA,
+    '2': EXPERT2_REPORT_DATA,
+    '3': EXPERT3_REPORT_DATA,
+    // 필요한 경우 추가할 수 있음
+  };
+  
+  const sampleDataMap = {
+    '1': sampleData1,
+    '2': sampleData2,
+    '3': sampleData3,
+    // 필요한 경우 추가할 수 있음
+  };
+  
+  // expertIndex가 1, 2, 3 이외의 값일 경우 예외 처리
+  const strategyReportAtom = strategyReportAtomMap[expertIndex] || EXPERT3_REPORT_DATA; 
+  const sampleData = sampleDataMap[expertIndex] || sampleData3;
+  
 
   const [strategyReportData, setStrategyReportData] = useAtom(strategyReportAtom);
-
-  useEffect(() => {
-    if (sampleData.expert_id === 1) {
-      setExpert1ReprotData(sampleData);
-    }
-    else if (sampleData.expert_id === 2) {
-      setExpert2ReprotData(sampleData);
-    }
-    else if (sampleData.expert_id === 3) {
-      setExpert3ReprotData(sampleData);
-    }
-    else return;
-  },[])
 
   useEffect(() => {
     const loadData = async () => {
       try {
         const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
-        const currentReportKey = `strategyReportData_EX${selectedExpertIndex}`;
+        const currentReportKey = `strategyReportData_EX${expertIndex}`;
 
         if (
-          existingConversation && 
+          existingConversation &&
           existingConversation[currentReportKey] &&
-          existingConversation[currentReportKey].expert_id === selectedExpertIndex
+          existingConversation[currentReportKey].expert_id === parseInt(expertIndex, 10)
         ) {
           // IndexedDB에 현재 선택된 전문가의 데이터가 있는 경우 해당 데이터를 사용합니다.
           const strategyData = existingConversation[currentReportKey];
@@ -93,12 +78,12 @@ const OrganismStrategyReportSection = ({ conversationId }) => {
           setSections(strategyReportData.tabs[selectedTab].sections);
         }
       } catch (error) {
-        console.error("Error loading data:", error);
+        console.error('Error loading data:', error);
       }
     };
 
     loadData();
-  }, [conversationId, selectedTab, selectedExpertIndex]);
+  }, [conversationId, selectedTab, expertIndex]);
 
   const handleTabClick = (index) => {
     setSelectedTab(index);
@@ -111,11 +96,7 @@ const OrganismStrategyReportSection = ({ conversationId }) => {
     <AnalysisSection Strategy>
       <TabHeader>
         {tabs.map((tab, index) => (
-          <TabButton
-            key={index}
-            active={selectedTab === index}
-            onClick={() => handleTabClick(index)}
-          >
+          <TabButton key={index} active={selectedTab === index} onClick={() => handleTabClick(index)}>
             {tab.title}
           </TabButton>
         ))}
@@ -126,7 +107,6 @@ const OrganismStrategyReportSection = ({ conversationId }) => {
       ))}
 
       <MoleculeReportController reportIndex={1} strategyReportID={sampleData.expert_id} conversationId={conversationId} sampleData={sampleData} />
-
     </AnalysisSection>
   );
 };
@@ -135,11 +115,16 @@ const OrganismStrategyReportSection = ({ conversationId }) => {
 
 const Section = ({ title, content }) => {
   // 서브 타이틀이 있는지 확인하고, 그 갯수를 셉니다.
-  const subTitles = content.filter(item => item.subTitle);
+  const subTitles = content.filter((item) => item.subTitle);
 
   return (
     <BoxWrap>
-      {title && <strong><img src={images.Check} alt="" />{title}</strong>}
+      {title && (
+        <strong>
+          <img src={images.Check} alt="" />
+          {title}
+        </strong>
+      )}
       {subTitles.length > 0 ? (
         <DynamicGrid columns={subTitles.length}>
           {content.map((item, index) => (
