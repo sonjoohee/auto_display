@@ -12,6 +12,7 @@ import {
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
   SAVED_CONVERSATIONS,
   IS_CLICK_EXPERT_SELECT,
+  APPROACH_PATH,
 } from '../../../AtomStates';
 
 import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
@@ -47,6 +48,7 @@ const PageExpertInsight = () => {
     mainCharacter: mainCharacteristicOfBusinessInformation,
     mainCustomer: businessInformationTargetCustomer,
   };
+  const [approachPath] = useAtom(APPROACH_PATH);
   
 
   useEffect(() => {
@@ -86,7 +88,7 @@ const PageExpertInsight = () => {
     paramConversationId, 
     conversationId, 
     navigate, 
-    selectedExpertIndex, 
+    // selectedExpertIndex,
     setInputBusinessInfo, 
     setTitleOfBusinessInfo, 
     setMainFeaturesOfBusinessInformation, 
@@ -99,6 +101,10 @@ const PageExpertInsight = () => {
   useEffect(() => {
     if(inputBusinessInfo) handleSearch(-1);
   },[])
+
+  useEffect(() => {
+    if(approachPath) handleSearch(-1);
+  },[selectedExpertIndex])
   
   const handleSearch = (inputValue) => {
   
@@ -111,21 +117,22 @@ const PageExpertInsight = () => {
     if (conversationStage === 1) {
       // setInputBusinessInfo(inputValue);
       updatedConversation.push(
-        { type: 'system', message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻` },
+        { type: 'system', message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻`},
         { type: 'analysis' },
       );
       setConversationStage(2);
     } else if (conversationStage === 2) {
       updatedConversation.push(
-        { type: 'system', message: '리포트를 바탕으로 전략 보고서를 작성하겠습니다.' },
+        { type: 'user', message: '10년차 전략 디렉터와 1:1 커피챗, 지금 바로 시작하겠습니다 🙌🏻' },
+        { type: 'system', message: '안녕하세요, 김도원입니다! {Product_name}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"'},
         { type: 'strategy' },
-        { type: 'system', message: '전략 보고서를 기반으로 추가적인 질문을 해주세요.' },
+        { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊'},
       );
-      setConversationStage(3);
-    } else if (conversationStage === 3) {
-      updatedConversation.push(
-        { type: 'system', message: '해당 질문에 대한 답변을 준비 중입니다.' }
-      );
+    //   setConversationStage(3);
+    // } else if (conversationStage === 3) {
+    //   updatedConversation.push(
+    //     { type: 'system', message: '해당 질문에 대한 답변을 준비 중입니다.' }
+    //   );
     }
 
     setConversation(updatedConversation);
@@ -179,8 +186,7 @@ const PageExpertInsight = () => {
               }
               return null;
             })}
-            {/* 전략 보고서 섹션 */}
-            {isClickExpertSelect && <OrganismStrategyReportSection conversationId={conversationId} />}
+            {/* {isClickExpertSelect && <OrganismStrategyReportSection conversationId={conversationId} />} */}
             {conversationStage !== 1 && <OrganismBizExpertSelect />}
           </MainContent>
         </ContentsWrap>

@@ -119,3 +119,6 @@ export const SELECTED_TAB = atom(0);
 export const EXPERT1_REPORT_DATA = atom({});
 export const EXPERT2_REPORT_DATA = atom({});
 export const EXPERT3_REPORT_DATA = atom({});
+
+/* 0: AI 전문가 선택해서 시작하기, 1: 나중에 선택하기*/
+export const APPROACH_PATH = atom(0);

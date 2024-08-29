@@ -9,11 +9,19 @@ import { useAtom } from 'jotai';
 import {
   IS_CLICK_EXPERT_SELECT,
   SELECTED_EXPERT_INDEX,
+  APPROACH_PATH,
 } from '../../../AtomStates';
 
 const OrganismBizExpertSelect = () => {
   const [isClickExpertSelect, setIsClickExpertSelect] = useAtom(IS_CLICK_EXPERT_SELECT);
   const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
+  const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
+
+  const handledExpertSelect = (index) => {
+    setSelectedExpertIndex(index);
+    setIsClickExpertSelect(true);
+    setApproachPath(1);
+  }
   
   return (
     <BizExpertSelectContainer>
@@ -22,17 +30,17 @@ const OrganismBizExpertSelect = () => {
         <div>
           <img src={images.ImgChat} alt="" />
           <p>10차시 전략 다회차 1:1 커피챗하기</p>
-          <button type="button" onClick={()=> {setSelectedExpertIndex(1); setIsClickExpertSelect(true)}}>시작하기</button>
+          <button type="button" onClick={() => handledExpertSelect(1)}>시작하기</button>
         </div>
         <div>
           <img src={images.ImgWrite} alt="" />
           <p>브랜드 전문가의 10초 맞춤 제안서 받기</p>
-          <button type="button" onClick={()=> {setSelectedExpertIndex(2); setIsClickExpertSelect(true)}}>시작하기</button>
+          <button type="button" onClick={() => handledExpertSelect(2)}>시작하기</button>
         </div>
         <div>
           <img src={images.ImgTarget} alt="" />
           <p>지금 바로 만나 타겟 고객 확인하기</p>
-          <button type="button" onClick={()=> {setSelectedExpertIndex(3);setIsClickExpertSelect(true)}}>시작하기</button>
+          <button type="button" onClick={()=> handledExpertSelect(3)}>시작하기</button>
         </div>
       </SelectOptions>
     </BizExpertSelectContainer>
