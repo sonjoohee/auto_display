@@ -12,6 +12,7 @@ import {
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
   SAVED_CONVERSATIONS,
   IS_CLICK_EXPERT_SELECT,
+  APPROACH_PATH,
   STRATEGY_REPORT_DATA, // 추가된 부분
 } from '../../../AtomStates';
 
@@ -27,6 +28,7 @@ import MoleculeBizName from '../molecules/MoleculeBizName';
 import MoleculeSystemMessage from '../molecules/MoleculeSystemMessage';
 import MoleculeUserMessage from '../molecules/MoleculeUserMessage';
 import OrganismBizExpertSelect from '../organisms/OrganismBizExpertSelect';
+import MoleculeAdditionalKeyword from '../molecules/MoleculeAdditionalKeyword';
 
 const PageExpertInsight = () => {
   const navigate = useNavigate();
@@ -50,6 +52,8 @@ const PageExpertInsight = () => {
     mainCharacter: mainCharacteristicOfBusinessInformation,
     mainCustomer: businessInformationTargetCustomer,
   };
+
+  const [approachPath] = useAtom(APPROACH_PATH);
 
   const saveConversation = (updatedConversation, newConversationStage) => {
     saveConversationToIndexedDB({
@@ -99,7 +103,7 @@ const PageExpertInsight = () => {
     paramConversationId, 
     conversationId, 
     navigate, 
-    selectedExpertIndex, 
+    // selectedExpertIndex,
     setInputBusinessInfo, 
     setTitleOfBusinessInfo, 
     setMainFeaturesOfBusinessInformation, 
@@ -110,9 +114,13 @@ const PageExpertInsight = () => {
 
   // 검색을 통해 들어왔으면 handleSearch 실행
   useEffect(() => {
-    if(inputBusinessInfo) handleSearch(-1);
-  }, []);
+    if(approachPath === -1) handleSearch(-1);
+  },[])
 
+  useEffect(() => {
+    if(approachPath) handleSearch(-1);
+  },[selectedExpertIndex])
+  
   const handleSearch = (inputValue) => {
     const updatedConversation = [...conversation];
 
@@ -123,27 +131,37 @@ const PageExpertInsight = () => {
     let newConversationStage = conversationStage;
 
     if (conversationStage === 1) {
-      updatedConversation.push(
-        { type: 'system', message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻` },
-        { type: 'analysis' },
-      );
+      if(approachPath === 0) {
+        updatedConversation.push(
+          { type: 'strategy' },
+          { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊'},
+        );
+      }
+      else {
+        // setInputBusinessInfo(inputValue);
+        updatedConversation.push(
+          { type: 'system', message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻`},
+          { type: 'analysis' },
+        );
+      }
       newConversationStage = 2;
     } else if (conversationStage === 2) {
-      if (!selectedExpertIndex) {
-        alert("전문가를 선택해 주세요.");
-        return;
-      }
-      
-      updatedConversation.push(
-        { type: 'system', message: '리포트를 바탕으로 전략 보고서를 작성하겠습니다.' },
-        { type: `strategy_${selectedExpertIndex}` }, // 전문가 인덱스에 따라 전략 보고서 타입 변경
-        { type: 'system', message: '전략 보고서를 기반으로 추가적인 질문을 해주세요.' },
-      );
-      newConversationStage = 3;
-    } else if (conversationStage === 3) {
-      updatedConversation.push(
-        { type: 'system', message: '해당 질문에 대한 답변을 준비 중입니다.' }
-      );
+        if (!selectedExpertIndex) {
+          alert("전문가를 선택해 주세요.");
+          return;
+        }
+        updatedConversation.push(
+          { type: 'user', message: '10년차 전략 디렉터와 1:1 커피챗, 지금 바로 시작하겠습니다 🙌🏻' },
+          { type: 'system', message: `안녕하세요, 김도원입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"`},
+          { type: `strategy_${selectedExpertIndex}` }, // 전문가 인덱스에 따라 전략 보고서 타입 변경
+          { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊'},
+          { type: 'addition' },
+        );
+    //   newConversationStage = 3;
+    // } else if (conversationStage === 3) {
+    //   updatedConversation.push(
+    //     { type: 'system', message: '해당 질문에 대한 답변을 준비 중입니다.' }
+    //   );
     }
 
     setConversation(updatedConversation);
@@ -156,11 +174,11 @@ const PageExpertInsight = () => {
   const getInitialSystemMessage = () => {
     switch (selectedExpertIndex) {
       case 1:
-        return '안녕하세요, 저는 서비스/프로덕트 전략가입니다. 비즈니스(아이디어)를 입력해주세요.';
+        return "안녕하세요! 저는 전략 전문가 김도원입니다. 😊 여러분의 아이디어를 구체화하고, 성공적인 전략을 세우는 데 도움을 드리겠습니다.\n아이디어나 비즈니스 아이템을 간단히 작성해 주세요. 분석 후, 여러분의 비즈니스에 맞는 전략 리포트를 제공하겠습니다!";
       case 2:
-        return '안녕하세요, 저는 마케팅 구축 전문가입니다. 비즈니스(아이디어)를 입력해주세요.';
+        return "안녕하세요! 마케팅 전문가 이지현입니다. 😄 여러분의 아이디어를 효과적으로 시장에 알릴 수 있는 전략을 함께 고민해 보아요.\n아이디어나 비즈니스 아이템을 여기에 작성해 주세요. 제가 분석하고, 효과적인 마케팅 전략 리포트를 준비해 드리겠습니다!";
       case 3:
-        return '안녕하세요, 저는 고객 인사이트 전문가입니다. 비즈니스(아이디어)를 입력해주세요.';
+        return "반갑습니다! 저는 고객 인사이트 전문가 박서연입니다. 😊 여러분의 비즈니스가 목표 고객에게 잘 다가갈 수 있도록 돕겠습니다. 아이디어나 비즈니스 아이템을 작성해 주세요. 분석 후, 타겟 고객을 정의하고 세분화 방법에 대한 리포트를 제공해 드리겠습니다!";
       default:
         return '비즈니스(아이디어)를 입력해주세요.';
     }
@@ -168,33 +186,37 @@ const PageExpertInsight = () => {
 
   return (
     <>
-      <OrganismHeader />
-      
-      <ContentsWrap>
-        <OrganismLeftSideBar />
-        <OrganismRightSideBar />
+      /*<OrganismHeader />*/
+        <ContentsWrap>
+          <OrganismLeftSideBar />
+          
+          {/* <OrganismSideBar /> */}
 
-        <MainContent>
-          <MoleculeBizName bizName={titleOfBusinessInfo} />
+          <MainContent>
+            <OrganismRightSideBar />
+    
+            <MoleculeBizName bizName={titleOfBusinessInfo} />
 
-          {conversation.map((item, index) => {
-            if (item.type === 'user') {
-              return <MoleculeUserMessage key={index} message={item.message} />;
-            } else if (item.type === 'system') {
-              return <MoleculeSystemMessage key={index} message={item.message} />;
-            } else if (item.type === 'analysis') {
-              return <OrganismBizAnalysisSection conversationId={conversationId} />;
-            } else if (item.type.startsWith('strategy_')) {  // 전략 보고서 타입이 전문가에 따라 구분되도록 변경
-              return <OrganismStrategyReportSection conversationId={conversationId} />;
-            }
-            return null;
-          })}
-          {isClickExpertSelect && <OrganismStrategyReportSection conversationId={conversationId} />}
-          {conversationStage !== 1 && <OrganismBizExpertSelect />}
-        </MainContent>
-      </ContentsWrap>
+            {conversation.map((item, index) => {
+              if (item.type === 'user') {
+                return <MoleculeUserMessage key={index} message={item.message} />;
+              } else if (item.type === 'system') {
+                return <MoleculeSystemMessage key={index} message={item.message} />;
+              } else if (item.type === 'analysis') {
+                return <OrganismBizAnalysisSection conversationId={conversationId} />;
+              } else if (item.type.startsWith('strategy_')) {  // 전략 보고서 타입이 전문가에 따라 구분되도록 변경
+                return <OrganismStrategyReportSection conversationId={conversationId} />;
+              } else if (item.type === 'addition') {
+                return <MoleculeAdditionalKeyword/>;
+              }
+              return null;
+            })}
+            {/* {isClickExpertSelect && <OrganismStrategyReportSection conversationId={conversationId} />} */}
+            {conversationStage !== 1 && <OrganismBizExpertSelect />}
+          </MainContent>
+        </ContentsWrap>
 
-      <OrganismSearchBottomBar onSearch={handleSearch} />
+        <OrganismSearchBottomBar onSearch={handleSearch} />
     </>
   );
 };

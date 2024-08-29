@@ -7,7 +7,7 @@ const MoleculeUserMessage = ({ message }) => {
   return (
     <UserMessageContainer>
       <div>
-        <p>{message || '분석 내용을 확인하였습니다. 추가로 궁금한 사항이 있습니다.'}</p>
+        <p>{message}</p>
       </div>
     </UserMessageContainer>
   );
