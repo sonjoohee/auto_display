@@ -6,9 +6,12 @@ import images from '../../../../assets/styles/Images';
 import MoleculeReportController from '../molecules/MoleculeReportController';
 import sampleData from './sample.json'; // sample.json 파일을 불러옵니다.
 import { useAtom } from 'jotai';
+import {
+  SELECTED_TAB,
+} from '../../../AtomStates';
 
 const OrganismStrategyReportSection = ({ conversationId }) => {
-  const [selectedTab, setSelectedTab] = useState(0); // 탭을 인덱스로 관리
+  const [selectedTab, setSelectedTab] = useAtom(SELECTED_TAB); // 탭을 인덱스로 관리
   const [tabs, setTabs] = useState([]);
   const [sections, setSections] = useState([]);
 

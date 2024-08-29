@@ -114,10 +114,12 @@ export const SAVED_CONVERSATIONS = atom({});
 
 export const IS_CLICK_EXPERT_SELECT = atom(false);
 
-export const SELECTED_TAB = atom("tab1")
+export const SELECTED_TAB = atom(0)
 
 export const EXPERT_REPORT_DATA = atom(
-    {
+  {
+    "tabs": [
+      {
         "title": "해결할 문제와 고객 니즈",
         "sections": [
           {
@@ -286,11 +288,9 @@ export const EXPERT_REPORT_DATA = atom(
             "title": "제안 사항",
             "content": [
               {
-                "subTitle": "탭3 - 제목4: 서브 타이틀 1",
                 "text": "1. **소셜 미디어 마케팅 강화**: 10대 소비자와의 소통을 강화하기 위해 인스타그램, 틱톡 등 소셜 미디어 플랫폼을 활용한 마케팅 캠페인을 진행합니다."
               },
               {
-                "subTitle": "탭3 - 제목4: 서브 타이틀 2",
                 "text": "2. **브랜드 스토리텔링**: 제품의 원재료와 생산 과정을 강조하는 스토리텔링 마케팅을 통해 소비자들의 신뢰를 구축합니다."
               }
             ]
@@ -305,4 +305,6 @@ export const EXPERT_REPORT_DATA = atom(
           }
         ]
       }
+    ]
+  }
 )

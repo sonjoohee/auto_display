@@ -157,7 +157,7 @@ const handleCopyContent = () => {
     주요 특성
     ${mainCharacteristicOfBusinessInformation.map(character => `- ${character}`).join('\n')}
 
-    대상 고객
+    목표 고객
     ${businessInformationTargetCustomer.map(customer => `- ${customer}`).join('\n')}
         `;
   }
