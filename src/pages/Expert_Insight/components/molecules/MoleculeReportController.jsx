@@ -230,7 +230,7 @@ ${businessInformationTargetCustomer.map(customer => `- ${customer}`).join('\n')}
             <ButtonWrap>
               <div />
               <div>
-                <button type="button">
+                <button type="button" onClick={handleCopyContent}>
                   <img src={images.IconCopy} alt="" />
                   복사하기
                 </button>
