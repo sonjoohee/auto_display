@@ -26,7 +26,6 @@ import MoleculeBizName from '../molecules/MoleculeBizName';
 import MoleculeSystemMessage from '../molecules/MoleculeSystemMessage';
 import MoleculeUserMessage from '../molecules/MoleculeUserMessage';
 import OrganismBizExpertSelect from '../organisms/OrganismBizExpertSelect';
-import OrganismTakingChargeAiExpert from '../organisms/OrganismTakingChargeAiExpert';
 
 const PageExpertInsight = () => {
   const navigate = useNavigate();
@@ -157,7 +156,6 @@ const PageExpertInsight = () => {
 
   return (
       <>
-        {selectedExpertIndex !== 0 && <OrganismTakingChargeAiExpert />}
 
         <OrganismHeader />
       
