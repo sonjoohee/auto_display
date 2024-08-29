@@ -15,6 +15,9 @@ import {
   APPROACH_PATH,
   STRATEGY_REPORT_DATA,
   SELECTED_ADDITIONAL_KEYWORD,
+  EXPERT1_REPORT_DATA,
+  EXPERT2_REPORT_DATA,
+  EXPERT3_REPORT_DATA,
 } from '../../../AtomStates';
 
 import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
@@ -41,13 +44,49 @@ const PageExpertInsight = () => {
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
-  const [mainCharacteristicOfBusinessInformation, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);  // 추가
-  const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);  // 추가
+  const [mainCharacteristicOfBusinessInformation, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
+  const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [isClickExpertSelect, setIsClickExpertSelect] = useAtom(IS_CLICK_EXPERT_SELECT);
   const [sections, setSections] = useState([]);
+
   const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA); // 전략 리포트 데이터를 atom으로 관리
   const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
+
+  // 각 전문가의 보고서를 관리하는 Atom
+  const [expert1ReportData, setExpert1ReportData] = useAtom(EXPERT1_REPORT_DATA);
+  const [expert2ReportData, setExpert2ReportData] = useAtom(EXPERT2_REPORT_DATA);
+  const [expert3ReportData, setExpert3ReportData] = useAtom(EXPERT3_REPORT_DATA);
+
+  // 현재 선택된 전문가에 맞는 보고서 데이터를 결정
+  const getStrategyReportData = () => {
+    switch (selectedExpertIndex) {
+      case 1:
+        return expert1ReportData;
+      case 2:
+        return expert2ReportData;
+      case 3:
+        return expert3ReportData;
+      default:
+        return {};
+    }
+  };
+
+  const setStrategyReportData = (data) => {
+    switch (selectedExpertIndex) {
+      case 1:
+        setExpert1ReportData(data);
+        break;
+      case 2:
+        setExpert2ReportData(data);
+        break;
+      case 3:
+        setExpert3ReportData(data);
+        break;
+      default:
+        break;
+    }
+  };
 
   const analysisReportData = {
     title: titleOfBusinessInfo,
@@ -59,66 +98,83 @@ const PageExpertInsight = () => {
   const [approachPath] = useAtom(APPROACH_PATH);
 
   const saveConversation = (updatedConversation, newConversationStage) => {
+    const existingConversation = getConversationByIdFromIndexedDB(conversationId);
+
+    // 기존의 모든 보고서를 함께 저장
+    const existingReports = {
+      strategyReportData_EX1: expert1ReportData,
+      strategyReportData_EX2: expert2ReportData,
+      strategyReportData_EX3: expert3ReportData,
+    };
+
     saveConversationToIndexedDB({
       id: conversationId,
       conversation: updatedConversation,
       conversationStage: newConversationStage,
       inputBusinessInfo,
       analysisReportData,
-      strategyReportData,
+      ...existingReports, // 기존의 모든 보고서를 함께 저장
       timestamp: Date.now(),
     });
   };
 
   useEffect(() => {
     const loadConversation = async () => {
-      if (!paramConversationId) {
-        navigate(`/conversation/${conversationId}`, { replace: true });
-      } else {
-        const savedConversation = await getConversationByIdFromIndexedDB(conversationId);
-        if (savedConversation) {
-          setConversation(savedConversation.conversation);
-          setConversationStage(savedConversation.conversationStage);
-          setInputBusinessInfo(savedConversation.inputBusinessInfo);
-
-          // analysisReportData에서 데이터를 복원
-          const analysisData = savedConversation.analysisReportData || {};
-          setTitleOfBusinessInfo(analysisData.title || "");
-          setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
-          setMainCharacteristicOfBusinessInformation(analysisData.mainCharacter || []);
-          setBusinessInformationTargetCustomer(analysisData.mainCustomer || []);
-
-          // strategyReportData에서 데이터를 복원
-          const strategyData = savedConversation.strategyReportData || {};
-          if (strategyData.tabs) {
-            setSections(strategyData.tabs);
-          }
+        if (!paramConversationId) {
+            navigate(`/conversation/${conversationId}`, { replace: true });
         } else {
-          if (selectedExpertIndex) {
-            const initialMessage = getInitialSystemMessage();
-            setConversation([{ type: 'system', message: initialMessage }]);
-          }
+            const savedConversation = await getConversationByIdFromIndexedDB(conversationId);
+            if (savedConversation) {
+                setConversation(savedConversation.conversation);
+                setConversationStage(savedConversation.conversationStage);
+                setInputBusinessInfo(savedConversation.inputBusinessInfo);
+
+                // analysisReportData에서 데이터를 복원
+                const analysisData = savedConversation.analysisReportData || {};
+                setTitleOfBusinessInfo(analysisData.title || "");
+                setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
+                setMainCharacteristicOfBusinessInformation(analysisData.mainCharacter || []);
+                setBusinessInformationTargetCustomer(analysisData.mainCustomer || []);
+
+                // 전략 보고서 데이터를 전문가별로 복원
+                setExpert1ReportData(savedConversation.strategyReportData_EX1 || {});
+                setExpert2ReportData(savedConversation.strategyReportData_EX2 || {});
+                setExpert3ReportData(savedConversation.strategyReportData_EX3 || {});
+
+                // 전문가가 바뀌었을 때 해당 전문가의 전략 보고서 바로 적용
+                const currentReportKey = `strategyReportData_EX${selectedExpertIndex}`;
+                setStrategyReportData(savedConversation[currentReportKey] || {});
+            } else {
+                if (selectedExpertIndex) {
+                    const initialMessage = getInitialSystemMessage();
+                    setConversation([{ type: 'system', message: initialMessage }]);
+                }
+            }
         }
-      }
     };
+
     loadConversation();
-  }, [
-    paramConversationId, 
-    conversationId, 
-    navigate, 
-    // selectedExpertIndex,
-    setInputBusinessInfo, 
-    setTitleOfBusinessInfo, 
-    setMainFeaturesOfBusinessInformation, 
-    setMainCharacteristicOfBusinessInformation, 
+}, [
+    paramConversationId,
+    conversationId,
+    navigate,
+    selectedExpertIndex, // 전문가가 바뀔 때마다 실행
+    setInputBusinessInfo,
+    setTitleOfBusinessInfo,
+    setMainFeaturesOfBusinessInformation,
+    setMainCharacteristicOfBusinessInformation,
     setBusinessInformationTargetCustomer,
-    setSections 
-  ]);
+    setSections,
+    setExpert1ReportData,
+    setExpert2ReportData,
+    setExpert3ReportData,
+    setStrategyReportData, // 추가: 전문가가 바뀌면 바로 반영되도록
+]);
 
   // 검색을 통해 들어왔으면 handleSearch 실행
   useEffect(() => {
-    if(approachPath === -1) handleSearch(-1);
-  },[])
+    if (approachPath === -1) handleSearch(-1);
+  }, []);
 
   useEffect(() => {
     if(approachPath) handleSearch(-1);
@@ -127,28 +183,27 @@ const PageExpertInsight = () => {
   useEffect(() => {
     if(selectedAdditionalKeyword) handleSearch(-1);
   },[selectedAdditionalKeyword])
-  
+
   const handleSearch = (inputValue) => {
     const updatedConversation = [...conversation];
 
-    if (inputValue !== -1) { 
-      updatedConversation.push({ type: 'user', message: inputValue }); 
+    if (inputValue !== -1) {
+      updatedConversation.push({ type: 'user', message: inputValue });
     }
 
     let newConversationStage = conversationStage;
 
     if (conversationStage === 1) {
-      if(approachPath === 0) {
+      if (approachPath === 0) {
         updatedConversation.push(
-          { type: 'strategy' },
-          { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊'},
-        );
-      }
-      else {
-        // setInputBusinessInfo(inputValue);
-        updatedConversation.push(
-          { type: 'system', message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻`},
           { type: 'analysis' },
+          { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊' },
+        );
+      } else {
+        updatedConversation.push(
+          { type: 'system', message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻` },
+          { type: 'analysis' },
+          
         );
       }
       newConversationStage = 2;
@@ -196,40 +251,39 @@ const PageExpertInsight = () => {
 
   return (
     <>
-        {/* <OrganismHeader /> */}
-        <ContentsWrap>
-          <OrganismLeftSideBar />
-          
-          {/* <OrganismSideBar /> */}
-
-          <MainContent>
-            <OrganismRightSideBar />
-    
-            <MoleculeBizName bizName={titleOfBusinessInfo} />
-
-            {conversation.map((item, index) => {
-              if (item.type === 'user') {
-                return <MoleculeUserMessage key={index} message={item.message} />;
-              } else if (item.type === 'system') {
-                return <MoleculeSystemMessage key={index} message={item.message} />;
-              } else if (item.type === 'analysis') {
-                return <OrganismBizAnalysisSection conversationId={conversationId} />;
-              } else if (item.type.startsWith('strategy_')) {  // 전략 보고서 타입이 전문가에 따라 구분되도록 변경
-                return <OrganismStrategyReportSection conversationId={conversationId} />;
-              } else if (item.type === 'addition') {
+      <ContentsWrap>
+        <OrganismLeftSideBar />
+        <MainContent>
+          <OrganismRightSideBar />
+          <MoleculeBizName bizName={titleOfBusinessInfo} />
+          {conversation.map((item, index) => {
+            if (item.type === 'user') {
+              return <MoleculeUserMessage key={index} message={item.message} />;
+            } else if (item.type === 'system') {
+              return <MoleculeSystemMessage key={index} message={item.message} />;
+            } else if (item.type === 'analysis') {
+              return <OrganismBizAnalysisSection conversationId={conversationId} />;
+            } else if (item.type.startsWith('strategy_')) {
+              const expertIndex = item.type.split('_')[1]; // 전략 보고서 타입에서 전문가 인덱스 추출
+              return (
+                <OrganismStrategyReportSection
+                  key={`strategy_${expertIndex}_${index}`} // 키를 고유하게 설정
+                  conversationId={conversationId}
+                  expertIndex={expertIndex} // 전문가 인덱스를 Prop으로 전달
+                />
+              );
+            } else if (item.type === 'addition') {
                 if(selectedAdditionalKeyword) {
                   return <OrganismAdditionalReport conversationId={conversationId}/>;
                 }
                 else return <MoleculeAdditionalKeyword/>;
               }
-              return null;
-            })}
-            {/* {isClickExpertSelect && <OrganismStrategyReportSection conversationId={conversationId} />} */}
-            {conversationStage !== 1 && <OrganismBizExpertSelect />}
-          </MainContent>
-        </ContentsWrap>
-
-        <OrganismSearchBottomBar onSearch={handleSearch} />
+            return null;
+          })}
+          {conversationStage !== 1 && <OrganismBizExpertSelect />}
+        </MainContent>
+      </ContentsWrap>
+      <OrganismSearchBottomBar onSearch={handleSearch} />
     </>
   );
 };
@@ -251,6 +305,4 @@ const ContentsWrap = styled.div`
   width: calc(100% - 45px);
   margin:0 auto;
   padding:0 300px 0;
-  // padding-left: 380px;
-  // padding-right: 380px;
 `;
