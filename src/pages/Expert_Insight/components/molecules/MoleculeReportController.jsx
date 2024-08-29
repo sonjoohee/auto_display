@@ -15,14 +15,16 @@ import {
   SAVED_REPORTS,
   IS_EDITING_NOW,
   SELECTED_TAB,
-  EXPERT_REPORT_DATA,
+  EXPERT1_REPORT_DATA,
+  EXPERT2_REPORT_DATA,
+  EXPERT3_REPORT_DATA,
 } from '../../../AtomStates';
 
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
 import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
 
-const MoleculeReportController = ({ reportIndex, conversationId, sampleData }) => {
+const MoleculeReportController = ({ reportIndex, strategyReportID, conversationId, sampleData }) => {
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [isClickExpertSelect] = useAtom(IS_CLICK_EXPERT_SELECT);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
@@ -45,7 +47,9 @@ const MoleculeReportController = ({ reportIndex, conversationId, sampleData }) =
 
   const [selectedTab, setSelectedTab] = useAtom(SELECTED_TAB);
 
-  const [expertReportData, setExpertReportData] = useAtom(EXPERT_REPORT_DATA);
+  const [expert1ReprotData, setExpert1ReprotData] = useAtom(EXPERT1_REPORT_DATA); 
+  const [expert2ReprotData, setExpert2ReprotData] = useAtom(EXPERT2_REPORT_DATA); 
+  const [expert3ReprotData, setExpert3ReprotData] = useAtom(EXPERT3_REPORT_DATA);
 
   const analysisReportData = {
     title: titleOfBusinessInfo,
@@ -147,23 +151,25 @@ const handleCopyContent = () => {
 
   let contentToCopy = ``
 
-  if (selectedExpertIndex === 0) {
-    contentToCopy = `
-    ${titleOfBusinessInfo}
+  const getSelectedTabData = (selectedTab) => {
+    if(strategyReportID === 1) return expert1ReprotData.tabs[selectedTab];
+    else if(strategyReportID === 2) return expert2ReprotData.tabs[selectedTab];
+    else if(strategyReportID === 3) return expert3ReprotData.tabs[selectedTab];
+    else return;
+  };
 
-    주요 특징
-    ${mainFeaturesOfBusinessInformation.map(feature => `- ${feature}`).join('\n')}
-
-    주요 특성
-    ${mainCharacteristicOfBusinessInformation.map(character => `- ${character}`).join('\n')}
-
-    목표 고객
-    ${businessInformationTargetCustomer.map(customer => `- ${customer}`).join('\n')}
-        `;
-  }
-
-  else {
-    // 재귀적으로 JSON 데이터에서 모든 텍스트 내용을 추출하는 함수
+if (selectedExpertIndex === 0) {
+contentToCopy = `
+${titleOfBusinessInfo}
+주요 특징
+${mainFeaturesOfBusinessInformation.map(feature => `- ${feature}`).join('\n')}
+주요 특성
+${mainCharacteristicOfBusinessInformation.map(character => `- ${character}`).join('\n')}
+목표 고객
+${businessInformationTargetCustomer.map(customer => `- ${customer}`).join('\n')}
+    `;
+}
+  else if (selectedExpertIndex === 1) {
     const extractTextContent = (data) => {
       let textContent = '';
 
@@ -184,8 +190,10 @@ const handleCopyContent = () => {
       return textContent;
     };
 
-    contentToCopy = extractTextContent(expertReportData);
+  const selectedTabData = getSelectedTabData(selectedTab);
+  contentToCopy = extractTextContent(selectedTabData);
   }
+  else return;
 
   navigator.clipboard.writeText(contentToCopy.trim())
     .then(() => {

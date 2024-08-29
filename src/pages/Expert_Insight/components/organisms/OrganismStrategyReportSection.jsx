@@ -7,17 +7,38 @@ import MoleculeReportController from '../molecules/MoleculeReportController';
 import { useAtom } from 'jotai';
 import {
   SELECTED_TAB,
-} from '../../../AtomStates';
+  EXPERT1_REPORT_DATA,
+  EXPERT2_REPORT_DATA,
+  EXPERT3_REPORT_DATA,
+} from '../../../AtomStates'; 
 import sampleData from './sample3.json'; // sample.json 파일을 불러옵니다.
 
 const OrganismStrategyReportSection = ({ conversationId }) => {
+  const [expert1ReprotData, setExpert1ReprotData] = useAtom(EXPERT1_REPORT_DATA); 
+  const [expert2ReprotData, setExpert2ReprotData] = useAtom(EXPERT2_REPORT_DATA); 
+  const [expert3ReprotData, setExpert3ReprotData] = useAtom(EXPERT3_REPORT_DATA);
+
   const [selectedTab, setSelectedTab] = useAtom(SELECTED_TAB); // 탭을 인덱스로 관리
   const [tabs, setTabs] = useState([]);
   const [sections, setSections] = useState([]);
 
   useEffect(() => {
+    if (sampleData.expert_id === 1) {
+      setExpert1ReprotData(sampleData);
+    }
+    else if (sampleData.expert_id === 2) {
+      setExpert2ReprotData(sampleData);
+    }
+    else if (sampleData.expert_id === 3) {
+      setExpert3ReprotData(sampleData);
+    }
+    else return;
+  },[])
+
+  useEffect(() => {
     // sample.json의 탭 데이터를 설정합니다.
     setTabs(sampleData.tabs);
+    
 
     // 탭이 선택되면 해당 탭의 섹션을 설정합니다.
     if (sampleData.tabs.length > 0) {
@@ -47,7 +68,7 @@ const OrganismStrategyReportSection = ({ conversationId }) => {
         <Section key={index} title={section.title} content={section.content} />
       ))}
 
-      <MoleculeReportController reportIndex={1} conversationId={conversationId} sampleData={sampleData} />
+      <MoleculeReportController reportIndex={1} strategyReportID={sampleData.expert_id} conversationId={conversationId} sampleData={sampleData} />
     </AnalysisSection>
   );
 };
