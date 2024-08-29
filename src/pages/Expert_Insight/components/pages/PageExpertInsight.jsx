@@ -204,15 +204,18 @@ export default PageExpertInsight;
 const MainContent = styled.div`
   grid-area: content;
   min-width: 1px;
-  max-width: 1135px;
+  max-width: 1240px;
   padding-bottom: 150px;
   margin: 0 auto;
+  position:relative;
+  top:40px;
 `;
 
 const ContentsWrap = styled.div`
   position: relative;
   width: calc(100% - 45px);
-  margin: 150px auto 0;
-  padding-left: 380px;
-  padding-right: 380px;
+  margin:0 auto;
+  padding:0 300px 0;
+  // padding-left: 380px;
+  // padding-right: 380px;
 `;

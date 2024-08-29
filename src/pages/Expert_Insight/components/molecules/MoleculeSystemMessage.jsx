@@ -31,7 +31,7 @@ const SystemMessageContainer = styled.div`
     border-radius:15px;
     border:1px solid ${props => {
       if (props.Myself) return `rgba(4,83,244,.05)`;
-      else return `rgba(0,0,0,.05)`;
+      else return `0`;
     }};
     background:${props => {
       if (props.Myself) return `rgba(4,83,244,.05)`;
@@ -41,6 +41,7 @@ const SystemMessageContainer = styled.div`
 
   p {
     line-height:1.8;
+    text-align:left;
   }
 
   span {

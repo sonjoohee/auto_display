@@ -8,19 +8,53 @@ import images from '../../../../assets/styles/Images';
 
 const MoleculeBizName = ({ bizName }) => {
   return (
-    <BizNameContainer>
-      <div>
-        <span><img src={images.File} alt="" /></span>
-        <NameTitle>
-          <strong>
-            {bizName || "아이템(아이디어)를 설명해주시면, 분석된 내용이 적용됩니다"}
-            <Badge>Edited by AI</Badge>
-          </strong>
-          <p>10 min ago</p>
-        </NameTitle>
-      </div>
-      <button type="button">내가 쓴 설명 보기</button>
-    </BizNameContainer>
+    <>
+      {/* 아이디어 분석 완료시 */}
+      {/*
+      <BizNameContainer>
+        <div>
+          <span><img src={images.Graph} alt="" /></span>
+          <NameTitle>
+            <strong>
+              {bizName || "비즈니스 이름을 입력하세요"}
+              <Badge>Edited by AI</Badge>
+            </strong>
+            <p>10 min ago</p>
+          </NameTitle>
+        </div>
+        <button type="button">내가 쓴 설명 보기</button>
+      </BizNameContainer>
+      */}
+
+      {/* 아이디어 설명 입력 데이터만 있는 경우 */}
+      {/*
+      <BizNameContainer>
+        <div>
+          <span><img src={images.Graph} alt="" /></span>
+          <NameTitle>
+            <strong>
+              {bizName || "비즈니스 이름을 입력하세요"}
+            </strong>
+            <p>10 min ago</p>
+          </NameTitle>
+        </div>
+      </BizNameContainer>
+      */}
+
+      {/* 아이디어 설명 없는 경우 */}
+      <BizNameContainer>
+        <div>
+          <span><img src={images.Graph} alt="" /></span>
+          <NameTitle Nodata>
+            <strong>
+              {bizName || "비즈니스 이름을 입력하세요"}
+            </strong>
+            <p>10 min ago</p>
+          </NameTitle>
+        </div>
+      </BizNameContainer>
+    </>
+
   );
 };
 
@@ -28,15 +62,16 @@ export default MoleculeBizName;
 
 const BizNameContainer = styled.div`
   position: sticky;
-  top: 150px;
+  top: 40px;
   width: 100%;
   display:flex;
   align-items:center;
   justify-content:space-between;
   padding: 24px 35px;
+  margin-bottom:70px;
   text-align: center;
   border-radius:15px;
-  border:2px solid ${palette.black};
+  border:1px solid ${palette.lineGray};
   background:${palette.white};
   box-shadow:0 4px 20px rgba(0,0,0,.05);
   z-index: 98;
@@ -86,6 +121,10 @@ const NameTitle = styled.div`
     font-size:1.5rem;
     font-weight:700;
     text-align:left;
+    color: ${props => {
+      if (props.Nodata) return palette.gray;
+      else return palette.black;
+    }};
   }
 
   p {
@@ -97,6 +136,7 @@ const NameTitle = styled.div`
 
 const Badge = styled.div`
   font-size:0.63rem;
+  font-weight:400;
   color:${palette.blue};
   text-align:center;
   padding:2px 6px;

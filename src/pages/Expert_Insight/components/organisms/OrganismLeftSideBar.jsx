@@ -66,7 +66,7 @@ const OrganismLeftSideBar = () => {
     <>
       <SideBar>
         <div className="logo">
-          <Link to="#"></Link>
+          <Link to="/"></Link>
           <button type="button">닫기</button>
         </div>
 
@@ -84,13 +84,20 @@ const OrganismLeftSideBar = () => {
                 인사이트 보관함
               </label>
               <AccordionContent>
+                <ul>
                 {savedReports.map((report, index) => (
-                  <div key={index}>
-                    <Link to="#" onClick={() => handleReportClick(index)}>
-                      {report.title}
-                    </Link>
-                  </div>
+                  <li key={index} onClick={() => handleReportClick(index)}>
+                    <p>{report.title}</p>
+                    <span>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="3" viewBox="0 0 14 3" fill="none">
+                        <circle cx="2.0067" cy="1.51283" r="1.49694" transform="rotate(-90 2.0067 1.51283)" fill="#A0A0A0"/>
+                        <circle cx="7.00084" cy="1.51283" r="1.49694" transform="rotate(-90 7.00084 1.51283)" fill="#A0A0A0"/>
+                        <circle cx="11.993" cy="1.51283" r="1.49694" transform="rotate(-90 11.993 1.51283)" fill="#A0A0A0"/>
+                      </svg>
+                    </span>
+                  </li>
                 ))}
+                </ul>
               </AccordionContent>
             </AccordionItem>
 
@@ -111,7 +118,14 @@ const OrganismLeftSideBar = () => {
                     {conversations.map((conversation, index) => (
                       <li key={index} onClick={() => handleConversationClick(conversation.id)}>
                         <p>{conversation.inputBusinessInfo}</p>
-                        <span>{new Date(conversation.timestamp).toLocaleDateString()}</span>
+                        {/* <span>{new Date(conversation.timestamp).toLocaleDateString()}</span> */}
+                        <span>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="3" viewBox="0 0 14 3" fill="none">
+                            <circle cx="2.0067" cy="1.51283" r="1.49694" transform="rotate(-90 2.0067 1.51283)" fill="#A0A0A0"/>
+                            <circle cx="7.00084" cy="1.51283" r="1.49694" transform="rotate(-90 7.00084 1.51283)" fill="#A0A0A0"/>
+                            <circle cx="11.993" cy="1.51283" r="1.49694" transform="rotate(-90 11.993 1.51283)" fill="#A0A0A0"/>
+                          </svg>
+                        </span>
                       </li>
                     ))}
                   </ul>
@@ -129,30 +143,32 @@ export default OrganismLeftSideBar;
 
 
 const SideBar = styled.div`
-  position:sticky;
-  top:150px;
+  // position:sticky;
+  position:fixed;
+  top:40px;
   float:${props => {
     if (props.Right) return `right`;
     else return `left`;
   }};
   grid-area:toc;
   width:100%;
-  max-width:360px;
+  height:calc(100vh - 5rem);
+  max-width:257px;
   // height:calc(100vh - 12rem);
   margin-left:${props => {
     if (props.Right) return `0`;
-    else return `-380px`;
+    else return `-300px`;
   }};
   margin-right:${props => {
-    if (props.Right) return `-380px`;
+    if (props.Right) return `-300px`;
     else return `0`;
   }};
   margin-bottom:150px;
   padding:${props => {
     if (props.Right) return `0`;
-    else return `40px 28px`;
+    else return `30px 20px`;
   }};
-  border-radius:20px;
+  border-radius:15px;
   border:${props => {
     if (props.Right) return `none`;
     else return `1px solid ${palette.lineGray}`;
@@ -164,7 +180,7 @@ const SideBar = styled.div`
 
   box-shadow:${props => {
     if (props.Right) return `none`;
-    else return `0 4px 10px rgba(0,0,0,.1)`;
+    else return `0 4px 10px rgba(0,0,0,.05)`;
   }};
 
   h3 {
@@ -175,13 +191,15 @@ const SideBar = styled.div`
   }
 
   .logo {
+    position:relative;
     display:flex;
     justify-content:space-between;
     align-items:center;
     margin-bottom:40px;
 
     a {
-      width:44px;
+      // width:44px;
+      width:135px;
       height:44px;
       font-size:0;
       background:url(${images.SymbolLogo}) left center no-repeat;
@@ -189,7 +207,11 @@ const SideBar = styled.div`
     }
 
     button {
-      position:relative;
+      // position:relative;
+      position:absolute;
+      right:-30px;
+      top:50%;
+      transform:translateY(-50%);
       font-size:0;
       width:30px;
       height:30px;
@@ -236,7 +258,7 @@ const SideBarMenu = styled.div`
     font-family: 'Pretendard';
     font-size:1rem;
     font-weight:500;
-    padding:12px 16px;
+    padding:12px 0;
     border:0;
     background:none;
   }
@@ -260,7 +282,7 @@ const AccordionItem = styled.div`
     font-family: 'Pretendard';
     font-size:1rem;
     font-weight:500;
-    padding:12px 16px;
+    padding:12px 0;
     border:0;
     background:none;
     cursor:pointer;
@@ -285,16 +307,20 @@ const AccordionItem = styled.div`
 
   .accordion-toggle:checked + .accordion-label + div {
     max-height: 1000px;
-    margin-top:20px;
-    padding:0 16px;
+    // margin-top:20px;
+    padding:0;
   }
 `;
 
 const AccordionContent = styled.div`
   max-height: 0;
   overflow: hidden;
-  padding: 0 16px;
+  padding: 0;
   transition: max-height 0.5s ease, padding 0.5s ease;
+
+  > div {
+    margin-top:20px;
+  }
 
   > div + div {
     margin-top:30px;
@@ -312,7 +338,8 @@ const AccordionContent = styled.div`
     display:flex;
     flex-direction:column;
     gap:4px;
-    margin-top:10px;
+    margin:0 12px;
+    // margin-top:10px;
   }
 
   li {
@@ -324,7 +351,8 @@ const AccordionContent = styled.div`
     font-size:0.88rem;
     color:${palette.gray};
     text-align:left;
-    padding:8px 12px 8px 25px;
+    padding:8px 0 8px 15px;
+    cursor:pointer;
 
     &:before {
       position:absolute;
@@ -342,11 +370,13 @@ const AccordionContent = styled.div`
       text-overflow:ellipsis;
       white-space:nowrap;
       overflow:hidden;
+      color:${palette.darkGray};
     }
 
     span {
       font-size:0.75rem;
       color:${palette.lightGray};
+      flex-shrink:0;
     }
   }
 `;

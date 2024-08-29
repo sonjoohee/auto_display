@@ -14,7 +14,7 @@ const HeaderWrap = styled.header`
   top: 0;
   left: 0;
   width: 100%;
-  height: 110px;
+  height: 80px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -25,10 +25,11 @@ const HeaderWrap = styled.header`
 
   h1 {
     width:250px;
-    height:40px;
+    height:30px;
     font-size:0;
     background:url(${images.Logo}) left center no-repeat;
     background-size:auto 100%;
+
   a {
       display: block;
       width: 100%;

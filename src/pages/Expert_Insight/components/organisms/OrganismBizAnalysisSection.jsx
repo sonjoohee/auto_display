@@ -152,7 +152,6 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
       <BoxWrap>
         <strong><img src={images.StarChack} alt="" />주요 특징</strong>
         {/* 주요특징 추가 기능 없음 */}
-        {/* {isEditingNow && <button onClick={() => setIsAddingNow({ section: 'mainFeatures', isAdding: true })}>추가</button>} */}
         <ul>
           {mainFeaturesOfBusinessInformation.map((content, index) => (
             <li key={index}>
@@ -167,15 +166,19 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               )}
               {editingIndex.section === 'mainFeatures' && editingIndex.index === index ? (
                 <>
-                  <button onClick={handleApplyChange}>적용</button>
-                  <button onClick={handleEditCancel}>취소</button>
+                  <BtnWrap>
+                    <button onClick={handleApplyChange}>적용</button>
+                    <button onClick={handleEditCancel}>취소</button>
+                  </BtnWrap>
                 </>
               ) : (
                 <>
                   {isEditingNow && (
                     <>
-                      <button onClick={() => handleEditStart('mainFeatures', index)}>수정</button>
-                      <button onClick={() => {handleDelete('mainFeatures', index)}}>삭제</button>
+                      <BtnWrap>
+                        <button onClick={() => handleEditStart('mainFeatures', index)}>수정</button>
+                        <button onClick={() => {handleDelete('mainFeatures', index)}}>삭제</button>
+                      </BtnWrap>
                     </>
                   )}
                 </>
@@ -190,11 +193,11 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
             <button onClick={() => setIsAddingNow({ section: '', isAdding: false })}>취소</button>
           </AddInfo>
         }
+        {isEditingNow && <button className="moreButton" onClick={() => setIsAddingNow({ section: 'mainFeatures', isAdding: true })}>특징 추가하기 +</button>}
       </BoxWrap>
 
       <BoxWrap>
-        <strong><img src={images.StarChack} alt="" />주요 기능</strong>
-        {isEditingNow && <button onClick={() => setIsAddingNow({ section: 'mainCharacteristic', isAdding: true })}>추가</button>}
+        <strong><img src={images.IconSetting} alt="" />주요 기능</strong>
         <ul>
           {mainCharacteristicOfBusinessInformation.map((content, index) => (
             <li key={index}>
@@ -209,15 +212,19 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               )}
               {editingIndex.section === 'mainCharacteristic' && editingIndex.index === index ? (
                 <>
-                  <button onClick={handleApplyChange}>적용</button>
-                  <button onClick={handleEditCancel}>취소</button>
+                  <BtnWrap>
+                    <button onClick={handleApplyChange}>적용</button>
+                    <button onClick={handleEditCancel}>취소</button>
+                  </BtnWrap>
                 </>
               ) : (
                 <>
                   {isEditingNow && (
                     <>
-                      <button onClick={() => handleEditStart('mainCharacteristic', index)}>수정</button>
-                      <button onClick={() => handleDelete('mainCharacteristic', index)}>삭제</button>
+                      <BtnWrap>
+                        <button onClick={() => handleEditStart('mainCharacteristic', index)}>수정</button>
+                        <button onClick={() => handleDelete('mainCharacteristic', index)}>삭제</button>
+                      </BtnWrap>
                     </>
                   )}
                 </>
@@ -232,11 +239,11 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
             <button onClick={() => setIsAddingNow({ section: '', isAdding: false })}>취소</button>
           </AddInfo>
         }
+        {isEditingNow && <button className="moreButton" onClick={() => setIsAddingNow({ section: 'mainCharacteristic', isAdding: true })}>기능 추가하기 +</button>}
       </BoxWrap>
 
       <BoxWrap>
-        <strong><img src={images.StarChack} alt="" />목표 고객</strong>
-        {isEditingNow && <button onClick={() => setIsAddingNow({ section: 'targetCustomer', isAdding: true })}>추가</button>}
+        <strong><img src={images.IconTarget} alt="" />목표 고객</strong>
         <ul>
           {businessInformationTargetCustomer.map((content, index) => (
             <li key={index}>
@@ -251,15 +258,19 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               )}
               {editingIndex.section === 'targetCustomer' && editingIndex.index === index ? (
                 <>
-                  <button onClick={handleApplyChange}>적용</button>
-                  <button onClick={handleEditCancel}>취소</button>
+                  <BtnWrap>
+                    <button onClick={handleApplyChange}>적용</button>
+                    <button onClick={handleEditCancel}>취소</button>
+                  </BtnWrap>
                 </>
               ) : (
                 <>
                   {isEditingNow && (
                     <>
-                      <button onClick={() => handleEditStart('targetCustomer', index)}>수정</button>
-                      <button onClick={() => handleDelete('targetCustomer', index)}>삭제</button>
+                      <BtnWrap>
+                        <button onClick={() => handleEditStart('targetCustomer', index)}>수정</button>
+                        <button onClick={() => handleDelete('targetCustomer', index)}>삭제</button>
+                      </BtnWrap>
                     </>
                   )}
                 </>
@@ -274,6 +285,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
             <button onClick={() => setIsAddingNow({ section: '', isAdding: false })}>취소</button>
           </AddInfo>
         }
+        {isEditingNow && <button className="moreButton" onClick={() => setIsAddingNow({ section: 'targetCustomer', isAdding: true })}>목표 고객 추가하기 +</button>}
       </BoxWrap>
 
       <p>입력을 바탕으로 위와 같이 이해하고 정리하였습니다. <span>제가 이해한 내용이 맞습니까? 확인해 주시기 바랍니다.</span> 정확한 정보를 바탕으로 최상의 보고서를 작성하기 위해서는 고객님의 피드백이 매우 중요합니다. 감사합니다!</p>
@@ -289,6 +301,8 @@ export default OrganismBizAnalysisSection;
 
 const AnalysisSection = styled.div`
   position:relative;
+  max-width:1135px;
+  width:91.5%;
   text-align:left;
   margin-top:25px;
   padding:30px;
@@ -350,6 +364,13 @@ const BoxWrap = styled.div`
     + li {
       margin-top:5px;
     }
+
+    input {
+      height:30px;
+      font-size:0.88rem;
+      padding:4px 12px;
+      border:0;
+    }
   }
 
   p {
@@ -372,6 +393,20 @@ const BoxWrap = styled.div`
       background:${palette.black};
     }
   }
+
+  .moreButton {
+    width:100%;
+    margin-top:4px;
+    padding:8px;
+    border:0;
+  }
+`;
+
+const BtnWrap = styled.div`
+  display:flex;
+  align-items:center;
+  flex-shrink:0;
+  gap:5px;
 `;
 
 const AddInfo = styled.div`
