@@ -306,3 +306,7 @@ export const EXPERT_REPORT_DATA = atom(
         ]
       }
 )
+export const STRATEGY_REPORT_DATA = atom({});
+export const EXPERT1_REPORT_DATA = atom({});
+export const EXPERT2_REPORT_DATA = atom({});
+export const EXPERT3_REPORT_DATA = atom({});

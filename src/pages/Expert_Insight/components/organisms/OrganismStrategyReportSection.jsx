@@ -1,28 +1,92 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-
+import { useAtom } from 'jotai';
+import { 
+  SELECTED_EXPERT_INDEX,
+  EXPERT1_REPORT_DATA,
+  EXPERT2_REPORT_DATA,
+  EXPERT3_REPORT_DATA
+} from '../../../AtomStates'; // Atom 불러오기
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
 import MoleculeReportController from '../molecules/MoleculeReportController';
-import sampleData from './sample3.json'; // sample.json 파일을 불러옵니다.
+import sampleData1 from './sample1.json';
+import sampleData2 from './sample2.json';
+import sampleData3 from './sample3.json';
+import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
 
 const OrganismStrategyReportSection = ({ conversationId }) => {
-  const [selectedTab, setSelectedTab] = useState(0); // 탭을 인덱스로 관리
+  const [selectedTab, setSelectedTab] = useState(0); 
   const [tabs, setTabs] = useState([]);
   const [sections, setSections] = useState([]);
 
-  useEffect(() => {
-    // sample.json의 탭 데이터를 설정합니다.
-    setTabs(sampleData.tabs);
+  // 현재 선택된 전문가를 가져옴
+  const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
 
-    // 탭이 선택되면 해당 탭의 섹션을 설정합니다.
-    if (sampleData.tabs.length > 0) {
-      setSections(sampleData.tabs[selectedTab].sections);
-    }
-  }, [selectedTab]);
+  // 전문가에 따라 알맞은 Atom을 선택
+  let strategyReportAtom;
+  let sampleData;
+
+  if (selectedExpertIndex === 1) {
+    strategyReportAtom = EXPERT1_REPORT_DATA;
+    sampleData = sampleData1;
+  } else if (selectedExpertIndex === 2) {
+    strategyReportAtom = EXPERT2_REPORT_DATA;
+    sampleData = sampleData2;
+  } else if (selectedExpertIndex === 3) {
+    strategyReportAtom = EXPERT3_REPORT_DATA;
+    sampleData = sampleData3;
+  }
+
+  const [strategyReportData, setStrategyReportData] = useAtom(strategyReportAtom);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
+        const currentReportKey = `strategyReportData_EX${selectedExpertIndex}`;
+
+        if (
+          existingConversation && 
+          existingConversation[currentReportKey] &&
+          existingConversation[currentReportKey].expert_id === selectedExpertIndex
+        ) {
+          // IndexedDB에 현재 선택된 전문가의 데이터가 있는 경우 해당 데이터를 사용합니다.
+          const strategyData = existingConversation[currentReportKey];
+          setStrategyReportData(strategyData);
+          setTabs(strategyData.tabs);
+          setSections(strategyData.tabs[selectedTab].sections);
+        } else if (Object.keys(strategyReportData).length === 0) {
+          // IndexedDB에 데이터가 없고 atom에도 데이터가 없으면 JSON 데이터를 사용합니다.
+          setStrategyReportData(sampleData); // atom에 sampleData 저장
+          setTabs(sampleData.tabs);
+          setSections(sampleData.tabs[selectedTab].sections);
+
+          // 새 데이터를 IndexedDB에 저장합니다.
+          const updatedConversation = {
+            ...existingConversation,
+            [currentReportKey]: sampleData, // 전문가를 키로 저장
+            timestamp: Date.now(),
+          };
+          await saveConversationToIndexedDB(updatedConversation);
+        } else {
+          // atom에 데이터가 있으면 그 데이터를 사용합니다.
+          setTabs(strategyReportData.tabs);
+          setSections(strategyReportData.tabs[selectedTab].sections);
+        }
+      } catch (error) {
+        console.error("Error loading data:", error);
+      }
+    };
+
+    loadData();
+  }, [conversationId, selectedTab, selectedExpertIndex]);
 
   const handleTabClick = (index) => {
     setSelectedTab(index);
+    if (tabs.length > 0) {
+      setSections(tabs[index].sections);
+    }
   };
 
   return (
@@ -43,10 +107,12 @@ const OrganismStrategyReportSection = ({ conversationId }) => {
         <Section key={index} title={section.title} content={section.content} />
       ))}
 
-      <MoleculeReportController reportIndex={1} conversationId={conversationId} sampleData={sampleData} />
+      <MoleculeReportController reportIndex={1} conversationId={conversationId} sampleData={strategyReportData} />
     </AnalysisSection>
   );
 };
+
+// ... (아래 부분은 동일)
 
 const Section = ({ title, content }) => {
   // 서브 타이틀이 있는지 확인하고, 그 갯수를 셉니다.

@@ -1,7 +1,8 @@
 {
+  "expert_id": 2,
   "tabs": [
     {
-      "title": "고객 문제 및 니즈 분석",
+      "title": "2번 전문가 데이터",
       "sections": [
         {
           "title": "시장 세그먼트 분석",

@@ -1,7 +1,8 @@
 {
-    "tabs": [
+  "expert_id": 1,
+  "tabs": [
       {
-        "title": "해결할 문제와 고객 니즈",
+        "title": "1번 전문가 데이터",
         "sections": [
           {
             "title": "타겟 시장 세그먼트",
