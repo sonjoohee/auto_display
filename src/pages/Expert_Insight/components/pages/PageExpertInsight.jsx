@@ -99,7 +99,7 @@ const PageExpertInsight = () => {
 
   // 검색을 통해 들어왔으면 handleSearch 실행
   useEffect(() => {
-    if(inputBusinessInfo) handleSearch(-1);
+    if(approachPath === -1) handleSearch(-1);
   },[])
 
   useEffect(() => {
@@ -115,19 +115,27 @@ const PageExpertInsight = () => {
     }
 
     if (conversationStage === 1) {
-      // setInputBusinessInfo(inputValue);
-      updatedConversation.push(
-        { type: 'system', message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻`},
-        { type: 'analysis' },
-      );
+      if(!approachPath) {
+        updatedConversation.push(
+          { type: 'strategy' },
+          { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊'},
+        );
+      }
+      else {
+        // setInputBusinessInfo(inputValue);
+        updatedConversation.push(
+          { type: 'system', message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻`},
+          { type: 'analysis' },
+        );
+      }
       setConversationStage(2);
     } else if (conversationStage === 2) {
-      updatedConversation.push(
-        { type: 'user', message: '10년차 전략 디렉터와 1:1 커피챗, 지금 바로 시작하겠습니다 🙌🏻' },
-        { type: 'system', message: '안녕하세요, 김도원입니다! {Product_name}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"'},
-        { type: 'strategy' },
-        { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊'},
-      );
+        updatedConversation.push(
+          { type: 'user', message: '10년차 전략 디렉터와 1:1 커피챗, 지금 바로 시작하겠습니다 🙌🏻' },
+          { type: 'system', message: `안녕하세요, 김도원입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"`},
+          { type: 'strategy' },
+          { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊'},
+        );
     //   setConversationStage(3);
     // } else if (conversationStage === 3) {
     //   updatedConversation.push(
@@ -151,11 +159,11 @@ const PageExpertInsight = () => {
   const getInitialSystemMessage = () => {
     switch (selectedExpertIndex) {
       case 1:
-        return '안녕하세요, 저는 서비스/프로덕트 전략가입니다. 비즈니스(아이디어)를 입력해주세요.';
+        return "안녕하세요! 저는 전략 전문가 김도원입니다. 😊 여러분의 아이디어를 구체화하고, 성공적인 전략을 세우는 데 도움을 드리겠습니다.\n아이디어나 비즈니스 아이템을 간단히 작성해 주세요. 분석 후, 여러분의 비즈니스에 맞는 전략 리포트를 제공하겠습니다!";
       case 2:
-        return '안녕하세요, 저는 마케팅 구축 전문가입니다. 비즈니스(아이디어)를 입력해주세요.';
+        return "안녕하세요! 마케팅 전문가 이지현입니다. 😄 여러분의 아이디어를 효과적으로 시장에 알릴 수 있는 전략을 함께 고민해 보아요.\n아이디어나 비즈니스 아이템을 여기에 작성해 주세요. 제가 분석하고, 효과적인 마케팅 전략 리포트를 준비해 드리겠습니다!";
       case 3:
-        return '안녕하세요, 저는 고객 인사이트 전문가입니다. 비즈니스(아이디어)를 입력해주세요.';
+        return "반갑습니다! 저는 고객 인사이트 전문가 박서연입니다. 😊 여러분의 비즈니스가 목표 고객에게 잘 다가갈 수 있도록 돕겠습니다. 아이디어나 비즈니스 아이템을 작성해 주세요. 분석 후, 타겟 고객을 정의하고 세분화 방법에 대한 리포트를 제공해 드리겠습니다!";
       default:
         return '비즈니스(아이디어)를 입력해주세요.';
     }

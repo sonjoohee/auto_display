@@ -39,12 +39,12 @@ const experts = [
   },
   {
     id: 2,
-    title: '박지원 - 마케팅 구축',
+    title: '이지현 - 마케팅 구축',
     description: '마케팅 구축 총괄 디렉터',
   },
   {
     id: 3,
-    title: '이민영 - 고객 인사이트 전문가',
+    title: '박서연 - 고객 인사이트 전문가',
     description: '고객 인사이트 디렉터',
   },
 ];
