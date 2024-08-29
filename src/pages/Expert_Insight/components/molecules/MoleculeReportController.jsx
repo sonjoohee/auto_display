@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { useAtom } from 'jotai';
+
 import {
   TITLE_OF_BUSINESS_INFORMATION,
   IS_CLICK_EXPERT_SELECT,
@@ -209,7 +210,23 @@ ${businessInformationTargetCustomer.map(customer => `- ${customer}`).join('\n')}
     // isEditingNow === true : 수정중인 비즈니스 분석 리포트 (취소하기, 수정완료하기)
   
   // reportIndex === 1 : 전문가 리포트 (재생성하기, 복사하기, 저장하기)
-  
+
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isPopupOpenCancel, setIsPopupOpenCancel] = useState(false);
+  const [clickState, setClickState] = useState(false);
+
+  const togglePopup = () => {
+    if (clickState == false) {
+      setIsPopupOpen(!isPopupOpen);
+    }
+  };
+
+  const togglePopupCancel = () => {
+    if (clickState == false) {
+      setIsPopupOpenCancel(!isPopupOpenCancel);
+    }
+  };
+
   return (
     <>
       {reportIndex === 0 ? (
@@ -237,7 +254,7 @@ ${businessInformationTargetCustomer.map(customer => `- ${customer}`).join('\n')}
                     비즈니스 설명 다시 하기
                   </button>
                   <div>
-                    <button type="button">
+                    <button type="button" onClick={togglePopup}>
                       <img src={images.IconRefresh} alt="" />
                       재생성하기
                     </button>
@@ -259,10 +276,11 @@ ${businessInformationTargetCustomer.map(customer => `- ${customer}`).join('\n')}
                 <ButtonWrap>
                   <div />
                   <div>
-                    <button type="button" onClick={() => handleEditCancel()}>
+                    {/* <button type="button" className="lineBtn" onClick={() => handleEditCancel()}> */}
+                    <button type="button" className="lineBtn" onClick={togglePopupCancel}>
                       취소하기
                     </button>
-                    <button type="button" onClick={() => handleEditConfirm()}>
+                    <button type="button" className="lineBtn" onClick={() => handleEditConfirm()}>
                       수정 완료하기
                     </button>
                   </div>
@@ -275,7 +293,7 @@ ${businessInformationTargetCustomer.map(customer => `- ${customer}`).join('\n')}
         <ButtonWrap>
           <div />
           <div>
-            <button type="button">
+            <button type="button" onClick={togglePopup}>
               <img src={images.IconRefresh} alt="" />
               재생성하기
             </button>
@@ -290,9 +308,56 @@ ${businessInformationTargetCustomer.map(customer => `- ${customer}`).join('\n')}
           </div>
         </ButtonWrap>
       )}
+
+      {isPopupOpen && (
+        <Popup
+          onClick={(e) => {
+            // 팝업 내용 영역인 div를 클릭할 때는 팝업을 닫지 않도록 합니다.
+            if (e.target === e.currentTarget) {
+              togglePopup();
+            }
+          }}
+        >
+          <div>
+            <button type="button" className="closePopup" onClick={togglePopup}>닫기</button>
+            <span><img src={images.ExclamationMark} alt="" /></span>
+            <p>해당 기능을 사용하시려면 로그인이 필요해요<br />로그인 하시겠습니까?</p>
+            <div className="btnWrap">
+              <button type="button">회원가입</button>
+              <button type="button">로그인</button>
+            </div>
+          </div>
+        </Popup>
+      )}
+
+      {isPopupOpenCancel && (
+        <Popup Cancel
+          onClick={(e) => {
+            // 팝업 내용 영역인 div를 클릭할 때는 팝업을 닫지 않도록 합니다.
+            if (e.target === e.currentTarget) {
+              togglePopupCancel();
+            }
+          }}
+        >
+          <div>
+            <button type="button" className="closePopup" onClick={togglePopupCancel}>닫기</button>
+            <span><img src={images.ExclamationMark} alt="" /></span>
+            <p>
+              <strong>정말 취소하시겠습니까?</strong>
+              <span>취소 시 수정하신 내용은 저장되지 않습니다</span>
+            </p>
+            <div className="btnWrap">
+              <button type="button" onClick={togglePopupCancel}>아니오</button>
+              <button type="button">네, 취소할게요</button>
+            </div>
+          </div>
+        </Popup>
+      )}
     </>
   );
 };
+
+
 
 export default MoleculeReportController;
 
@@ -300,6 +365,7 @@ const ButtonWrap = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap:16px;
   margin-top: 20px;
   padding-top: 20px;
   border-top: 1px solid ${palette.lineGray};
@@ -311,8 +377,21 @@ const ButtonWrap = styled.div`
     font-family: 'Pretendard';
     font-size: 0.75rem;
     color: ${palette.gray};
+    padding:4px 8px;
+    border-radius:5px;
     border: 0;
     background: none;
+    transition:all .5s;
+
+    &:hover {
+      background:rgba(0,0,0,.03);
+    }
+  }
+
+  .lineBtn {
+    padding:8px 16px;
+    border-radius:10px;
+    border:1px solid ${palette.lineGray};
   }
 
   > button {
@@ -325,6 +404,128 @@ const ButtonWrap = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 30px;
+    gap: 15px;
   }
 `;
+
+const Popup = styled.div`
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,.5);
+  transition:all .5s;
+  z-index:9999;
+
+  .closePopup {
+    position:absolute;
+    right:24px;
+    top:24px;
+    width:16px;
+    height:16px;
+    font-size:0;
+    padding:11px;
+    border:0;
+    background:none;
+
+    &:before, &:after {
+      position:absolute;
+      top:50%;
+      left:50%;
+      width:2px;
+      height:100%;
+      border-radius:10px;
+      background:${palette.black};
+      content:'';
+    }
+
+    &:before {
+      transform:translate(-50%, -50%) rotate(45deg);
+    }
+
+    &:after {
+      transform:translate(-50%, -50%) rotate(-45deg);
+    }
+  }
+
+  > div {
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    display:flex;
+    flex-direction:column;
+    width:100%;
+    max-width:540px;
+    text-align:center;
+    // overflow:hidden;
+    padding:60px 24px 24px;
+    border-radius:10px;
+    background:${palette.white};
+
+    p {
+      font-size:1.25rem;
+      margin:30px auto 40px;
+  }
+
+  .btnWrap {
+    display:flex;
+    align-items:center;
+    gap:16px;
+
+    button {
+      flex:1;
+      font-size:1.25rem;
+      font-weight:600;
+      color:${palette.blue};
+      padding:15px;
+      border-radius:12px;
+      border:1px solid ${palette.blue};
+      background:${palette.white};
+
+      &:last-child {
+        color:${palette.white};
+        background:${palette.blue};
+      }
+    }
+  }
+
+  
+  ${props =>
+    props.Cancel &&
+    css`
+      p {
+        strong {
+          font-weight:600;
+          display:block;
+        }
+        span {
+          font-size:1rem;
+          display:block;
+          margin-top:8px;
+        }
+      }
+
+      .btnWrap {
+        padding-top:25px;
+        border-top:1px solid ${palette.lineGray};
+
+        button {
+          color:${palette.gray};
+          font-weight:600;
+          padding:0;
+          border:0;
+          background:none;
+
+          &:last-child {
+            color:${palette.blue};
+            background:none;
+          }
+        }
+      }
+    `
+  }
+
+`;
+

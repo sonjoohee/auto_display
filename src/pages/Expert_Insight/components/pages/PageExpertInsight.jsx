@@ -13,6 +13,7 @@ import {
   SAVED_CONVERSATIONS,
   IS_CLICK_EXPERT_SELECT,
   APPROACH_PATH,
+  STRATEGY_REPORT_DATA, // 추가된 부분
 } from '../../../AtomStates';
 
 import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
@@ -43,14 +44,28 @@ const PageExpertInsight = () => {
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [isClickExpertSelect, setIsClickExpertSelect] = useAtom(IS_CLICK_EXPERT_SELECT);
   const [sections, setSections] = useState([]);
+  const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA); // 전략 리포트 데이터를 atom으로 관리
+
   const analysisReportData = {
     title: titleOfBusinessInfo,
     mainFeatures: mainFeaturesOfBusinessInformation,
     mainCharacter: mainCharacteristicOfBusinessInformation,
     mainCustomer: businessInformationTargetCustomer,
   };
+
   const [approachPath] = useAtom(APPROACH_PATH);
-  
+
+  const saveConversation = (updatedConversation, newConversationStage) => {
+    saveConversationToIndexedDB({
+      id: conversationId,
+      conversation: updatedConversation,
+      conversationStage: newConversationStage,
+      inputBusinessInfo,
+      analysisReportData,
+      strategyReportData,
+      timestamp: Date.now(),
+    });
+  };
 
   useEffect(() => {
     const loadConversation = async () => {
@@ -62,18 +77,17 @@ const PageExpertInsight = () => {
           setConversation(savedConversation.conversation);
           setConversationStage(savedConversation.conversationStage);
           setInputBusinessInfo(savedConversation.inputBusinessInfo);
-  
+
           // analysisReportData에서 데이터를 복원
           const analysisData = savedConversation.analysisReportData || {};
           setTitleOfBusinessInfo(analysisData.title || "");
           setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
           setMainCharacteristicOfBusinessInformation(analysisData.mainCharacter || []);
           setBusinessInformationTargetCustomer(analysisData.mainCustomer || []);
-  
+
           // strategyReportData에서 데이터를 복원
           const strategyData = savedConversation.strategyReportData || {};
           if (strategyData.tabs) {
-            // sample.json의 구조를 그대로 사용하고 있기 때문에, 탭과 섹션을 관리하는 상태에 맞춰 데이터를 복원합니다.
             setSections(strategyData.tabs);
           }
         } else {
@@ -95,7 +109,7 @@ const PageExpertInsight = () => {
     setMainFeaturesOfBusinessInformation, 
     setMainCharacteristicOfBusinessInformation, 
     setBusinessInformationTargetCustomer,
-    setSections // 추가된 부분
+    setSections 
   ]);
 
   // 검색을 통해 들어왔으면 handleSearch 실행
@@ -108,12 +122,13 @@ const PageExpertInsight = () => {
   },[selectedExpertIndex])
   
   const handleSearch = (inputValue) => {
-  
     const updatedConversation = [...conversation];
 
     if (inputValue !== -1) { 
       updatedConversation.push({ type: 'user', message: inputValue }); 
     }
+
+    let newConversationStage = conversationStage;
 
     if (conversationStage === 1) {
       if(approachPath === 0) {
@@ -129,16 +144,20 @@ const PageExpertInsight = () => {
           { type: 'analysis' },
         );
       }
-      setConversationStage(2);
+      newConversationStage = 2;
     } else if (conversationStage === 2) {
+        if (!selectedExpertIndex) {
+          alert("전문가를 선택해 주세요.");
+          return;
+        }
         updatedConversation.push(
           { type: 'user', message: '10년차 전략 디렉터와 1:1 커피챗, 지금 바로 시작하겠습니다 🙌🏻' },
           { type: 'system', message: `안녕하세요, 김도원입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"`},
-          { type: 'strategy' },
+          { type: `strategy_${selectedExpertIndex}` }, // 전문가 인덱스에 따라 전략 보고서 타입 변경
           { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊'},
           { type: 'addition' },
         );
-    //   setConversationStage(3);
+    //   newConversationStage = 3;
     // } else if (conversationStage === 3) {
     //   updatedConversation.push(
     //     { type: 'system', message: '해당 질문에 대한 답변을 준비 중입니다.' }
@@ -146,16 +165,10 @@ const PageExpertInsight = () => {
     }
 
     setConversation(updatedConversation);
+    setConversationStage(newConversationStage);
 
-    // 대화 내역을 IndexedDB에 저장
-    saveConversationToIndexedDB({
-      id: conversationId,
-      conversation: updatedConversation,
-      conversationStage: conversationStage + 1,
-      inputBusinessInfo,
-      analysisReportData,
-      timestamp: Date.now(),
-    });
+    // 대화 내역을 저장
+    saveConversation(updatedConversation, newConversationStage);
   };
 
   const getInitialSystemMessage = () => {
@@ -172,16 +185,16 @@ const PageExpertInsight = () => {
   };
 
   return (
-      <>
-
-        <OrganismHeader />
-      
+    <>
+      /*<OrganismHeader />*/
         <ContentsWrap>
           <OrganismLeftSideBar />
-          <OrganismRightSideBar />
+          
           {/* <OrganismSideBar /> */}
 
           <MainContent>
+            <OrganismRightSideBar />
+    
             <MoleculeBizName bizName={titleOfBusinessInfo} />
 
             {conversation.map((item, index) => {
@@ -191,7 +204,7 @@ const PageExpertInsight = () => {
                 return <MoleculeSystemMessage key={index} message={item.message} />;
               } else if (item.type === 'analysis') {
                 return <OrganismBizAnalysisSection conversationId={conversationId} />;
-              } else if (item.type === 'strategy') {
+              } else if (item.type.startsWith('strategy_')) {  // 전략 보고서 타입이 전문가에 따라 구분되도록 변경
                 return <OrganismStrategyReportSection conversationId={conversationId} />;
               } else if (item.type === 'addition') {
                 return <MoleculeAdditionalKeyword/>;
@@ -213,15 +226,18 @@ export default PageExpertInsight;
 const MainContent = styled.div`
   grid-area: content;
   min-width: 1px;
-  max-width: 1135px;
+  max-width: 1240px;
   padding-bottom: 150px;
   margin: 0 auto;
+  position:relative;
+  top:40px;
 `;
 
 const ContentsWrap = styled.div`
   position: relative;
   width: calc(100% - 45px);
-  margin: 150px auto 0;
-  padding-left: 380px;
-  padding-right: 380px;
+  margin:0 auto;
+  padding:0 300px 0;
+  // padding-left: 380px;
+  // padding-right: 380px;
 `;

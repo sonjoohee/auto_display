@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-
+import { useAtom } from 'jotai';
+import { 
+  SELECTED_EXPERT_INDEX,
+  EXPERT1_REPORT_DATA,
+  EXPERT2_REPORT_DATA,
+  EXPERT3_REPORT_DATA
+} from '../../../AtomStates'; // Atom 불러오기
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
 import MoleculeReportController from '../molecules/MoleculeReportController';
@@ -11,7 +17,10 @@ import {
   EXPERT2_REPORT_DATA,
   EXPERT3_REPORT_DATA,
 } from '../../../AtomStates'; 
-import sampleData from './sample3.json'; // sample.json 파일을 불러옵니다.
+import sampleData1 from './sample1.json';
+import sampleData2 from './sample2.json';
+import sampleData3 from './sample3.json';
+import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
 
 const OrganismStrategyReportSection = ({ conversationId }) => {
   const [expert1ReprotData, setExpert1ReprotData] = useAtom(EXPERT1_REPORT_DATA); 
@@ -21,6 +30,26 @@ const OrganismStrategyReportSection = ({ conversationId }) => {
   const [selectedTab, setSelectedTab] = useAtom(SELECTED_TAB); // 탭을 인덱스로 관리
   const [tabs, setTabs] = useState([]);
   const [sections, setSections] = useState([]);
+
+  // 현재 선택된 전문가를 가져옴
+  const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
+
+  // 전문가에 따라 알맞은 Atom을 선택
+  let strategyReportAtom;
+  let sampleData;
+
+  if (selectedExpertIndex === 1) {
+    strategyReportAtom = EXPERT1_REPORT_DATA;
+    sampleData = sampleData1;
+  } else if (selectedExpertIndex === 2) {
+    strategyReportAtom = EXPERT2_REPORT_DATA;
+    sampleData = sampleData2;
+  } else if (selectedExpertIndex === 3) {
+    strategyReportAtom = EXPERT3_REPORT_DATA;
+    sampleData = sampleData3;
+  }
+
+  const [strategyReportData, setStrategyReportData] = useAtom(strategyReportAtom);
 
   useEffect(() => {
     if (sampleData.expert_id === 1) {
@@ -36,22 +65,56 @@ const OrganismStrategyReportSection = ({ conversationId }) => {
   },[])
 
   useEffect(() => {
-    // sample.json의 탭 데이터를 설정합니다.
-    setTabs(sampleData.tabs);
-    
+    const loadData = async () => {
+      try {
+        const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
+        const currentReportKey = `strategyReportData_EX${selectedExpertIndex}`;
 
-    // 탭이 선택되면 해당 탭의 섹션을 설정합니다.
-    if (sampleData.tabs.length > 0) {
-      setSections(sampleData.tabs[selectedTab].sections);
-    }
-  }, [selectedTab]);
+        if (
+          existingConversation && 
+          existingConversation[currentReportKey] &&
+          existingConversation[currentReportKey].expert_id === selectedExpertIndex
+        ) {
+          // IndexedDB에 현재 선택된 전문가의 데이터가 있는 경우 해당 데이터를 사용합니다.
+          const strategyData = existingConversation[currentReportKey];
+          setStrategyReportData(strategyData);
+          setTabs(strategyData.tabs);
+          setSections(strategyData.tabs[selectedTab].sections);
+        } else if (Object.keys(strategyReportData).length === 0) {
+          // IndexedDB에 데이터가 없고 atom에도 데이터가 없으면 JSON 데이터를 사용합니다.
+          setStrategyReportData(sampleData); // atom에 sampleData 저장
+          setTabs(sampleData.tabs);
+          setSections(sampleData.tabs[selectedTab].sections);
+
+          // 새 데이터를 IndexedDB에 저장합니다.
+          const updatedConversation = {
+            ...existingConversation,
+            [currentReportKey]: sampleData, // 전문가를 키로 저장
+            timestamp: Date.now(),
+          };
+          await saveConversationToIndexedDB(updatedConversation);
+        } else {
+          // atom에 데이터가 있으면 그 데이터를 사용합니다.
+          setTabs(strategyReportData.tabs);
+          setSections(strategyReportData.tabs[selectedTab].sections);
+        }
+      } catch (error) {
+        console.error("Error loading data:", error);
+      }
+    };
+
+    loadData();
+  }, [conversationId, selectedTab, selectedExpertIndex]);
 
   const handleTabClick = (index) => {
     setSelectedTab(index);
+    if (tabs.length > 0) {
+      setSections(tabs[index].sections);
+    }
   };
 
   return (
-    <AnalysisSection>
+    <AnalysisSection Strategy>
       <TabHeader>
         {tabs.map((tab, index) => (
           <TabButton
@@ -69,9 +132,12 @@ const OrganismStrategyReportSection = ({ conversationId }) => {
       ))}
 
       <MoleculeReportController reportIndex={1} strategyReportID={sampleData.expert_id} conversationId={conversationId} sampleData={sampleData} />
+
     </AnalysisSection>
   );
 };
+
+// ... (아래 부분은 동일)
 
 const Section = ({ title, content }) => {
   // 서브 타이틀이 있는지 확인하고, 그 갯수를 셉니다.
@@ -79,7 +145,7 @@ const Section = ({ title, content }) => {
 
   return (
     <BoxWrap>
-      {title && <strong><img src={images.StarChack} alt="" />{title}</strong>}
+      {title && <strong><img src={images.Check} alt="" />{title}</strong>}
       {subTitles.length > 0 ? (
         <DynamicGrid columns={subTitles.length}>
           {content.map((item, index) => (
@@ -106,6 +172,8 @@ export default OrganismStrategyReportSection;
 
 const AnalysisSection = styled.div`
   position:relative;
+  max-width:1135px;
+  width:91.5%;
   text-align:left;
   margin-top:25px;
   padding:30px;
@@ -121,7 +189,7 @@ const AnalysisSection = styled.div`
   > p {
     font-size:0.88rem;
     line-height:1.5;
-    margin-top:30px;
+    margin-top:15px;
 
     span {
       color:${palette.red};
@@ -153,23 +221,21 @@ const BoxWrap = styled.div`
 
 const TabHeader = styled.div`
   display: flex;
+  gap:40px;
   margin-bottom: 20px;
-  border-bottom: 2px solid ${palette.lineGray};
 `;
 
 const TabButton = styled.button`
-  flex: 1;
-  padding: 10px 15px;
-  font-size: 1rem;
-  font-weight: ${props => (props.active ? 'bold' : 'normal')};
-  color: ${props => (props.active ? palette.black : palette.gray)};
-  background: ${props => (props.active ? palette.white : palette.lightGray)};
+  font-size: 1.25rem;
+  font-weight: ${props => (props.active ? '600' : '400')};
+  color: ${props => (props.active ? palette.black : palette.lightGray)};
   border: none;
-  border-bottom: ${props => (props.active ? `2px solid ${palette.black}` : 'none')};
+  border-bottom: ${props => (props.active ? `1px solid ${palette.black}` : 'none')};
+  background: ${palette.white};
   cursor: pointer;
+  transition:all .5s;
 
   &:hover {
-    background: ${palette.white};
     color: ${palette.black};
   }
 
@@ -185,8 +251,13 @@ const DynamicGrid = styled.div`
   gap: 10px;
   margin-top: 10px;
 
-  strong {
-    font-weight: 500;
+  div {
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid ${palette.lineGray};
   }
 
   p {
@@ -194,19 +265,19 @@ const DynamicGrid = styled.div`
   }
 `;
 
-const SubTitle = styled.div`
-  font-weight: bold;
-  font-size: 0.9rem;
-  color: #6c757d;
-  margin-bottom: 8px;
+const SubTitle = styled.strong`
+  font-size:0.88rem;
+  font-weight: 500;
+  color:${palette.gray};
+  text-align:left;
 `;
 
 const SubTextBox = styled.div`
   background: ${palette.white};
-  padding: 10px;
-  border-radius: 8px;
+  padding: 16px;
+  border-radius: 10px;
   margin-top: 10px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   color: ${palette.gray};
+  border:0 !important;
 `;

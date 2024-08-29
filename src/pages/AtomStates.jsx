@@ -116,6 +116,7 @@ export const IS_CLICK_EXPERT_SELECT = atom(false);
 
 export const SELECTED_TAB = atom(0);
 
+export const STRATEGY_REPORT_DATA = atom({});
 export const EXPERT1_REPORT_DATA = atom({});
 export const EXPERT2_REPORT_DATA = atom({});
 export const EXPERT3_REPORT_DATA = atom({});

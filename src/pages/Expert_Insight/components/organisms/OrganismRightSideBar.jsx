@@ -34,17 +34,20 @@ import { SELECTED_EXPERT_INDEX } from '../../../AtomStates';
 const experts = [
   {
     id: 1,
-    title: '김도원 - 제품 전략가',
+    name: '김도원',
+    title: '제품 전략가',
     description: '제품 전략 총괄 디렉터',
   },
   {
     id: 2,
-    title: '이지현 - 마케팅 구축',
+    name: '이지현',
+    title: '마케팅 구축',
     description: '마케팅 구축 총괄 디렉터',
   },
   {
     id: 3,
-    title: '박서연 - 고객 인사이트 전문가',
+    name: '박서연',
+    title: '고객 인사이트 전문가',
     description: '고객 인사이트 디렉터',
   },
 ];
@@ -59,61 +62,67 @@ const OrganismRightSideBar = () => {
   return (
     <>
       <SideBar Right>
-      <AIProfileWrap>
-        <div>
-          <h3>담당 AI 전문가</h3>
+        <AIProfileWrap>
+          <div>
+            {/* <h3>담당 AI 전문가</h3> */}
 
-          <AIProfile>
-            <div className="thumb">
-              <img src={panelimages.PanelIMG} alt="" />
-            </div>
-            <div className="name">
-              <strong>{selectedExpert.title}</strong>
-              <p>{selectedExpert.description}</p>
-            </div>
-            <div className="field">
-              <strong>
-                <img src={images.IconChatSmile} alt="" />
-                전문분석 분야
-              </strong>
+            <AIProfile>
+              <div className="profileInfo">
+                <div className="thumb">
+                  <img src={panelimages.PanelIMG} alt="" />
+                </div>
+                <div className="name">
+                  <strong>{selectedExpert.title}</strong>
+                  <ul>
+                    <li>이름 : {selectedExpert.name}</li>
+                    <li>주요경력 : {selectedExpert.description}</li>
+                  </ul>
+                </div>
+              </div>
 
-              <p>
-                <span>핵심 가치 제안 분석</span>
-                <span>제품 개발 로드맵 구상</span>
-                <span>제품 포지셔닝 전략</span>
-              </p>
-            </div>
-          </AIProfile>
+              <div className="field">
+                <strong>
+                  {/* <img src={images.IconChatSmile} alt="" /> */}
+                  전문분석 분야
+                </strong>
 
-          <Link to="#">상세 정보 확인하기</Link>
-        </div>
-      </AIProfileWrap>
+                <p>
+                  <span><img src={images.ProfessionalValue} alt="" />핵심 가치 제안 분석</span>
+                  <span><img src={images.ProfessionalRoadmap} alt="" />제품 개발 로드맵 구상</span>
+                  <span><img src={images.ProfessionalPositioning} alt="" />제품 포지셔닝 전략</span>
+                </p>
+              </div>
+            </AIProfile>
 
-      <IdeaWrap>
-        <strong>김도원 디렉터님의 추천 사항이에요</strong>
+            <Link to="#">상세 정보 확인하기</Link>
+          </div>
+        </AIProfileWrap>
 
-        <div>
-          <Link to="#">
-            <svg width="13" height="13" viewBox="0 0 21 21" fill="#ABABAB" xmlns="http://www.w3.org/2000/svg">
-              <path d="M15.0674 13.3651H14.1407L13.8122 13.0486C15.22 11.4077 15.9473 9.16911 15.5484 6.78983C14.9971 3.53149 12.2753 0.929517 8.99053 0.531016C4.02811 -0.078456 -0.148303 4.09408 0.461735 9.0519C0.860606 12.3337 3.465 15.0529 6.72635 15.6037C9.10785 16.0022 11.3486 15.2756 12.991 13.8691L13.3077 14.1973V15.1232L18.2936 20.1044C18.7746 20.585 19.5606 20.585 20.0416 20.1044C20.5226 19.6239 20.5226 18.8386 20.0416 18.3581L15.0674 13.3651ZM8.02855 13.3651C5.10741 13.3651 2.74938 11.0092 2.74938 8.09081C2.74938 5.17238 5.10741 2.81654 8.02855 2.81654C10.9497 2.81654 13.3077 5.17238 13.3077 8.09081C13.3077 11.0092 10.9497 13.3651 8.02855 13.3651Z" fill="#ABABAB"/>
-            </svg>
-            "이런 페르소나"의 의견 들어보기
-          </Link>
-          <Link to="#">
-            <svg width="13" height="13" viewBox="0 0 21 21" fill="#ABABAB" xmlns="http://www.w3.org/2000/svg">
-              <path d="M15.0674 13.3651H14.1407L13.8122 13.0486C15.22 11.4077 15.9473 9.16911 15.5484 6.78983C14.9971 3.53149 12.2753 0.929517 8.99053 0.531016C4.02811 -0.078456 -0.148303 4.09408 0.461735 9.0519C0.860606 12.3337 3.465 15.0529 6.72635 15.6037C9.10785 16.0022 11.3486 15.2756 12.991 13.8691L13.3077 14.1973V15.1232L18.2936 20.1044C18.7746 20.585 19.5606 20.585 20.0416 20.1044C20.5226 19.6239 20.5226 18.8386 20.0416 18.3581L15.0674 13.3651ZM8.02855 13.3651C5.10741 13.3651 2.74938 11.0092 2.74938 8.09081C2.74938 5.17238 5.10741 2.81654 8.02855 2.81654C10.9497 2.81654 13.3077 5.17238 13.3077 8.09081C13.3077 11.0092 10.9497 13.3651 8.02855 13.3651Z" fill="#ABABAB"/>
-            </svg>
-            "이런 페르소나"의 의견 들어보기
-          </Link>
-          <Link to="#">
-            <svg width="13" height="13" viewBox="0 0 21 21" fill="#ABABAB" xmlns="http://www.w3.org/2000/svg">
-              <path d="M15.0674 13.3651H14.1407L13.8122 13.0486C15.22 11.4077 15.9473 9.16911 15.5484 6.78983C14.9971 3.53149 12.2753 0.929517 8.99053 0.531016C4.02811 -0.078456 -0.148303 4.09408 0.461735 9.0519C0.860606 12.3337 3.465 15.0529 6.72635 15.6037C9.10785 16.0022 11.3486 15.2756 12.991 13.8691L13.3077 14.1973V15.1232L18.2936 20.1044C18.7746 20.585 19.5606 20.585 20.0416 20.1044C20.5226 19.6239 20.5226 18.8386 20.0416 18.3581L15.0674 13.3651ZM8.02855 13.3651C5.10741 13.3651 2.74938 11.0092 2.74938 8.09081C2.74938 5.17238 5.10741 2.81654 8.02855 2.81654C10.9497 2.81654 13.3077 5.17238 13.3077 8.09081C13.3077 11.0092 10.9497 13.3651 8.02855 13.3651Z" fill="#ABABAB"/>
-            </svg>
-            "이런 페르소나"의 의견 들어보기
-          </Link>
-        </div>
-      </IdeaWrap>
-    </SideBar>
+        {/* <IdeaWrap>
+          <strong>김도원 디렉터님의 추천 사항이에요</strong>
+
+          <div>
+            <Link to="#">
+              <svg width="13" height="13" viewBox="0 0 21 21" fill="#ABABAB" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.0674 13.3651H14.1407L13.8122 13.0486C15.22 11.4077 15.9473 9.16911 15.5484 6.78983C14.9971 3.53149 12.2753 0.929517 8.99053 0.531016C4.02811 -0.078456 -0.148303 4.09408 0.461735 9.0519C0.860606 12.3337 3.465 15.0529 6.72635 15.6037C9.10785 16.0022 11.3486 15.2756 12.991 13.8691L13.3077 14.1973V15.1232L18.2936 20.1044C18.7746 20.585 19.5606 20.585 20.0416 20.1044C20.5226 19.6239 20.5226 18.8386 20.0416 18.3581L15.0674 13.3651ZM8.02855 13.3651C5.10741 13.3651 2.74938 11.0092 2.74938 8.09081C2.74938 5.17238 5.10741 2.81654 8.02855 2.81654C10.9497 2.81654 13.3077 5.17238 13.3077 8.09081C13.3077 11.0092 10.9497 13.3651 8.02855 13.3651Z" fill="#ABABAB"/>
+              </svg>
+              "이런 페르소나"의 의견 들어보기
+            </Link>
+            <Link to="#">
+              <svg width="13" height="13" viewBox="0 0 21 21" fill="#ABABAB" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.0674 13.3651H14.1407L13.8122 13.0486C15.22 11.4077 15.9473 9.16911 15.5484 6.78983C14.9971 3.53149 12.2753 0.929517 8.99053 0.531016C4.02811 -0.078456 -0.148303 4.09408 0.461735 9.0519C0.860606 12.3337 3.465 15.0529 6.72635 15.6037C9.10785 16.0022 11.3486 15.2756 12.991 13.8691L13.3077 14.1973V15.1232L18.2936 20.1044C18.7746 20.585 19.5606 20.585 20.0416 20.1044C20.5226 19.6239 20.5226 18.8386 20.0416 18.3581L15.0674 13.3651ZM8.02855 13.3651C5.10741 13.3651 2.74938 11.0092 2.74938 8.09081C2.74938 5.17238 5.10741 2.81654 8.02855 2.81654C10.9497 2.81654 13.3077 5.17238 13.3077 8.09081C13.3077 11.0092 10.9497 13.3651 8.02855 13.3651Z" fill="#ABABAB"/>
+              </svg>
+              "이런 페르소나"의 의견 들어보기
+            </Link>
+            <Link to="#">
+              <svg width="13" height="13" viewBox="0 0 21 21" fill="#ABABAB" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.0674 13.3651H14.1407L13.8122 13.0486C15.22 11.4077 15.9473 9.16911 15.5484 6.78983C14.9971 3.53149 12.2753 0.929517 8.99053 0.531016C4.02811 -0.078456 -0.148303 4.09408 0.461735 9.0519C0.860606 12.3337 3.465 15.0529 6.72635 15.6037C9.10785 16.0022 11.3486 15.2756 12.991 13.8691L13.3077 14.1973V15.1232L18.2936 20.1044C18.7746 20.585 19.5606 20.585 20.0416 20.1044C20.5226 19.6239 20.5226 18.8386 20.0416 18.3581L15.0674 13.3651ZM8.02855 13.3651C5.10741 13.3651 2.74938 11.0092 2.74938 8.09081C2.74938 5.17238 5.10741 2.81654 8.02855 2.81654C10.9497 2.81654 13.3077 5.17238 13.3077 8.09081C13.3077 11.0092 10.9497 13.3651 8.02855 13.3651Z" fill="#ABABAB"/>
+              </svg>
+              "이런 페르소나"의 의견 들어보기
+            </Link>
+          </div>
+        </IdeaWrap> */}
+      </SideBar>
     </>
   );
 };
@@ -122,24 +131,24 @@ export default OrganismRightSideBar;
 
 const SideBar = styled.div`
   position:sticky;
-  top:150px;
+  top:40px;
   float:${props => {
     if (props.Right) return `right`;
     else return `left`;
   }};
   grid-area:toc;
   width:100%;
-  max-width:360px;
+  max-width:240px;
   // height:calc(100vh - 12rem);
   margin-left:${props => {
     if (props.Right) return `0`;
-    else return `-380px`;
+    else return `-300px`;
   }};
   margin-right:${props => {
-    if (props.Right) return `-380px`;
+    if (props.Right) return `-300px`;
     else return `0`;
   }};
-  margin-bottom:150px;
+  // margin-bottom:150px;
   padding:${props => {
     if (props.Right) return `0`;
     else return `40px 28px`;
@@ -218,7 +227,7 @@ const SideBar = styled.div`
 `;
 
 const AIProfileWrap = styled.div`
-  padding:30px;
+  padding:24px 20px 20px;
   border-radius:20px;
   border:1px solid ${palette.lineGray};
   box-shadow:0 4px 10px rgba(0,0,0,.05);
@@ -230,10 +239,15 @@ const AIProfileWrap = styled.div`
 
   a {
     position:relative;
-    font-size:0.88rem;
-    text-decoration:underline;
-    padding-right:16px;
-    margin-top:20px;
+    width:100%;
+    font-size:0.75rem;
+    color:${palette.gray};
+    // text-decoration:underline;
+    // padding-right:16px;
+    padding:8px 16px;
+    margin-top:25px;
+    border-radius:10px;
+    border:1px solid ${palette.lineGray};
 
     &:after {
       position:absolute;
@@ -244,7 +258,7 @@ const AIProfileWrap = styled.div`
       height:8px;
       border-top:2px solid ${palette.black};
       border-right:2px solid ${palette.black};
-      content:'';
+      // content:'';
     }
   }
 `;
@@ -252,15 +266,18 @@ const AIProfileWrap = styled.div`
 const AIProfile = styled.div`
   display:flex;
   flex-direction:column;
-  padding:25px;
-  border-radius:12px;
-  border:1px solid ${palette.lineGray};
-  background:rgba(0,0,0,.04);
+
+  .profileInfo {
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
 
   .thumb {
     position:relative;
-    width:160px;
-    height:160px;
+    flex-shrink:0;
+    width:48px;
+    height:48px;
     margin:0 auto;
     border-radius:50%;
     overflow:hidden;
@@ -277,11 +294,25 @@ const AIProfile = styled.div`
   }
 
   .name {
-    margin-top:30px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    text-align:left;
 
     strong {
-      font-size:1.25rem;
+      font-size:1rem;
       font-weight:700;
+    }
+
+    li {
+      display:flex;
+      align-items:center;
+      font-size:0.75rem;
+      color:${palette.darkGray};
+
+      + li {
+        margin-top:5px;
+      }
     }
 
     p {
@@ -293,15 +324,18 @@ const AIProfile = styled.div`
   .field {
     display:flex;
     flex-direction:column;
-    margin:25px auto 0;
+    width:100%;
+    margin:20px auto 0;
+    padding-top:20px;
+    border-top:1px solid ${palette.lineGray};
 
     strong {
       display:flex;
       align-items:center;
       gap:5px;
+      font-size:1rem;
       font-weight:400;
-      color:${palette.blue};
-      margin-bottom:12px;
+      margin-bottom:15px;
     }
 
     p {
@@ -312,11 +346,16 @@ const AIProfile = styled.div`
     }
 
     span {
+      display:flex;
+      align-items:center;
+      gap:8px;
+      width:100%;
       font-size:0.88rem;
-      padding:8px 16px;
-      border-radius:25px;
-      border:1px solid ${palette.lineGray};
-      background:${palette.white};
+      font-weight:300;
+      // padding:8px 16px;
+      // border-radius:25px;
+      // border:1px solid ${palette.lineGray};
+      // background:${palette.white};
     }
   }
 `;
