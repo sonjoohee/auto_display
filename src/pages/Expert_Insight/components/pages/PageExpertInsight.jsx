@@ -27,6 +27,7 @@ import MoleculeBizName from '../molecules/MoleculeBizName';
 import MoleculeSystemMessage from '../molecules/MoleculeSystemMessage';
 import MoleculeUserMessage from '../molecules/MoleculeUserMessage';
 import OrganismBizExpertSelect from '../organisms/OrganismBizExpertSelect';
+import MoleculeAdditionalKeyword from '../molecules/MoleculeAdditionalKeyword';
 
 const PageExpertInsight = () => {
   const navigate = useNavigate();
@@ -135,6 +136,7 @@ const PageExpertInsight = () => {
           { type: 'system', message: `안녕하세요, 김도원입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"`},
           { type: 'strategy' },
           { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊'},
+          { type: 'addition' },
         );
     //   setConversationStage(3);
     // } else if (conversationStage === 3) {
@@ -191,6 +193,8 @@ const PageExpertInsight = () => {
                 return <OrganismBizAnalysisSection conversationId={conversationId} />;
               } else if (item.type === 'strategy') {
                 return <OrganismStrategyReportSection conversationId={conversationId} />;
+              } else if (item.type === 'addition') {
+                return <MoleculeAdditionalKeyword/>;
               }
               return null;
             })}
