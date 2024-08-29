@@ -27,7 +27,6 @@ const MoleculeBizName = ({ bizName }) => {
       */}
 
       {/* 아이디어 설명 입력 데이터만 있는 경우 */}
-      {/*
       <BizNameContainer>
         <div>
           <span><img src={images.Graph} alt="" /></span>
@@ -39,20 +38,21 @@ const MoleculeBizName = ({ bizName }) => {
           </NameTitle>
         </div>
       </BizNameContainer>
-      */}
 
       {/* 아이디어 설명 없는 경우 */}
+      {/* 
       <BizNameContainer>
         <div>
           <span><img src={images.Graph} alt="" /></span>
           <NameTitle Nodata>
             <strong>
-              {bizName || "비즈니스 이름을 입력하세요"}
+              {bizName || "아이템(아이디어)를 설명해주시면, 분석된 내용이 적용됩니다"}
             </strong>
             <p>10 min ago</p>
           </NameTitle>
         </div>
       </BizNameContainer>
+      */}
     </>
 
   );
@@ -67,8 +67,8 @@ const BizNameContainer = styled.div`
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding: 24px 35px;
-  margin-bottom:70px;
+  padding: 20px;
+  margin-bottom:47px;
   text-align: center;
   border-radius:15px;
   border:1px solid ${palette.lineGray};

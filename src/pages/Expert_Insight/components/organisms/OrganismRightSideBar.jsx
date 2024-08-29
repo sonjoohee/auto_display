@@ -145,7 +145,7 @@ const SideBar = styled.div`
     else return `-300px`;
   }};
   margin-right:${props => {
-    if (props.Right) return `-300px`;
+    if (props.Right) return `-280px`;
     else return `0`;
   }};
   // margin-bottom:150px;

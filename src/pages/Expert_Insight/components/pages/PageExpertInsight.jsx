@@ -168,13 +168,14 @@ const PageExpertInsight = () => {
 
   return (
     <>
-      <OrganismHeader />
+      {/* <OrganismHeader /> */}
       
       <ContentsWrap>
         <OrganismLeftSideBar />
-        <OrganismRightSideBar />
 
         <MainContent>
+          <OrganismRightSideBar />
+          
           <MoleculeBizName bizName={titleOfBusinessInfo} />
 
           {conversation.map((item, index) => {
