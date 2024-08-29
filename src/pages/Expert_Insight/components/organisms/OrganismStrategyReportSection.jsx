@@ -5,7 +5,8 @@ import {
   SELECTED_EXPERT_INDEX,
   EXPERT1_REPORT_DATA,
   EXPERT2_REPORT_DATA,
-  EXPERT3_REPORT_DATA
+  EXPERT3_REPORT_DATA,
+  SELECTED_TAB,
 } from '../../../AtomStates'; // Atom 불러오기
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
@@ -16,7 +17,11 @@ import sampleData3 from './sample3.json';
 import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
 
 const OrganismStrategyReportSection = ({ conversationId }) => {
-  const [selectedTab, setSelectedTab] = useState(0); 
+  const [expert1ReprotData, setExpert1ReprotData] = useAtom(EXPERT1_REPORT_DATA); 
+  const [expert2ReprotData, setExpert2ReprotData] = useAtom(EXPERT2_REPORT_DATA); 
+  const [expert3ReprotData, setExpert3ReprotData] = useAtom(EXPERT3_REPORT_DATA);
+
+  const [selectedTab, setSelectedTab] = useAtom(SELECTED_TAB); // 탭을 인덱스로 관리
   const [tabs, setTabs] = useState([]);
   const [sections, setSections] = useState([]);
 
@@ -39,6 +44,19 @@ const OrganismStrategyReportSection = ({ conversationId }) => {
   }
 
   const [strategyReportData, setStrategyReportData] = useAtom(strategyReportAtom);
+
+  useEffect(() => {
+    if (sampleData.expert_id === 1) {
+      setExpert1ReprotData(sampleData);
+    }
+    else if (sampleData.expert_id === 2) {
+      setExpert2ReprotData(sampleData);
+    }
+    else if (sampleData.expert_id === 3) {
+      setExpert3ReprotData(sampleData);
+    }
+    else return;
+  },[])
 
   useEffect(() => {
     const loadData = async () => {
@@ -107,7 +125,8 @@ const OrganismStrategyReportSection = ({ conversationId }) => {
         <Section key={index} title={section.title} content={section.content} />
       ))}
 
-      <MoleculeReportController reportIndex={1} conversationId={conversationId} sampleData={strategyReportData} />
+      <MoleculeReportController reportIndex={1} strategyReportID={sampleData.expert_id} conversationId={conversationId} sampleData={sampleData} />
+
     </AnalysisSection>
   );
 };

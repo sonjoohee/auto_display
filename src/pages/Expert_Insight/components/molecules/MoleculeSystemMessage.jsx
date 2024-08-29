@@ -46,6 +46,7 @@ const SystemMessageContainer = styled.div`
 
   span {
     font-size:0.75rem;
-    color:${palette.lightGray}
+    color:${palette.lightGray};
+    flex-shrink:0;
   }
 `;

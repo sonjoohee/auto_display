@@ -86,8 +86,8 @@ const OrganismLeftSideBar = () => {
               <AccordionContent>
                 <ul>
                 {savedReports.map((report, index) => (
-                  <li key={index} onClick={() => handleReportClick(index)}>
-                    <p>{report.title}</p>
+                  <li key={index}>
+                    <p onClick={() => handleReportClick(index)}>{report.title}</p>
                     <span>
                       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="3" viewBox="0 0 14 3" fill="none">
                         <circle cx="2.0067" cy="1.51283" r="1.49694" transform="rotate(-90 2.0067 1.51283)" fill="#A0A0A0"/>
@@ -116,8 +116,8 @@ const OrganismLeftSideBar = () => {
                   <strong>최근 작업</strong>
                   <ul>
                     {conversations.map((conversation, index) => (
-                      <li key={index} onClick={() => handleConversationClick(conversation.id)}>
-                        <p>{conversation.inputBusinessInfo}</p>
+                      <li key={index}>
+                        <p onClick={() => handleConversationClick(conversation.id)}>{conversation.inputBusinessInfo}</p>
                         {/* <span>{new Date(conversation.timestamp).toLocaleDateString()}</span> */}
                         <span>
                           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="3" viewBox="0 0 14 3" fill="none">
@@ -347,6 +347,7 @@ const AccordionContent = styled.div`
     display:flex;
     justify-content:space-between;
     align-items:center;
+    gap:10px;
     font-family: 'Pretendard';
     font-size:0.88rem;
     color:${palette.gray};
@@ -357,16 +358,18 @@ const AccordionContent = styled.div`
     &:before {
       position:absolute;
       left:0;
-      top:50%;
-      transform:translateY(-50%);
+      top:14px;
       width:10px;
       height:10px;
+      border-radius:2px;
       background:${palette.lightGray};
       content:'';
+      transition:all .5s;
     }
 
     p {
-      width:70%;
+      width:100%;
+      min-height:19px;
       text-overflow:ellipsis;
       white-space:nowrap;
       overflow:hidden;
@@ -377,6 +380,17 @@ const AccordionContent = styled.div`
       font-size:0.75rem;
       color:${palette.lightGray};
       flex-shrink:0;
+      display:none;
+    }
+
+    &:hover {
+      &:before {
+        background:${palette.blue};
+      }
+
+      span {
+        display:block;
+      }
     }
   }
 `;
