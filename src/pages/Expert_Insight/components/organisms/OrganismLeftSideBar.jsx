@@ -244,6 +244,7 @@ const SideBarMenu = styled.div`
 
 const AccordionMenu = styled.div`
   width: 100%;
+  
 `;
 
 const AccordionItem = styled.div`
