@@ -115,7 +115,7 @@ const PageExpertInsight = () => {
     }
 
     if (conversationStage === 1) {
-      if(!approachPath) {
+      if(approachPath === 0) {
         updatedConversation.push(
           { type: 'strategy' },
           { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊'},
