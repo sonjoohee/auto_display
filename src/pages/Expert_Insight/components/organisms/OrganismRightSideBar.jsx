@@ -132,22 +132,17 @@ export default OrganismRightSideBar;
 const SideBar = styled.div`
   position:sticky;
   top:40px;
-  float:${props => {
-    if (props.Right) return `right`;
-    else return `left`;
-  }};
+  right:40px;
   grid-area:toc;
   width:100%;
   max-width:240px;
+  height:calc(100vh - 200px);
   // height:calc(100vh - 12rem);
   margin-left:${props => {
     if (props.Right) return `0`;
     else return `-300px`;
   }};
-  margin-right:${props => {
-    if (props.Right) return `-280px`;
-    else return `0`;
-  }};
+  margin-right:0;
   // margin-bottom:150px;
   padding:${props => {
     if (props.Right) return `0`;

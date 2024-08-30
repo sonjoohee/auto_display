@@ -167,8 +167,8 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               {editingIndex.section === 'mainFeatures' && editingIndex.index === index ? (
                 <>
                   <BtnWrap>
-                    <button onClick={handleApplyChange}>적용</button>
-                    <button onClick={handleEditCancel}>취소</button>
+                    <button onClick={handleApplyChange}><img src={images.IconClose2} alt="" />적용</button>
+                    <button onClick={handleEditCancel}><img src={images.IconCheck2} alt="" />취소</button>
                   </BtnWrap>
                 </>
               ) : (
@@ -176,8 +176,8 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                   {isEditingNow && (
                     <>
                       <BtnWrap>
-                        <button onClick={() => handleEditStart('mainFeatures', index)}>수정</button>
-                        <button onClick={() => {handleDelete('mainFeatures', index)}}>삭제</button>
+                        <button onClick={() => handleEditStart('mainFeatures', index)}><img src={images.IconEdit2} alt="" />수정</button>
+                        <button onClick={() => {handleDelete('mainFeatures', index)}}><img src={images.IconDelete2} alt="" />삭제</button>
                       </BtnWrap>
                     </>
                   )}
@@ -187,11 +187,11 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
           ))}
         </ul>
         {isAddingNow.section === 'mainFeatures' && isAddingNow.isAdding &&
-          <AddInfo>
-            <InputField value={newAddContent} onChange={(e) => { setNewAddContent(e.target.value); }} placeholder="새로운 정보를 추가해보세요"></InputField>
-            <button onClick={() => handleAddSave('mainFeatures')}>저장</button>
-            <button onClick={() => setIsAddingNow({ section: '', isAdding: false })}>취소</button>
-          </AddInfo>
+          <BtnWrap>
+            <InputField type="text" value={newAddContent} onChange={(e) => { setNewAddContent(e.target.value); }} placeholder="새로운 정보를 추가해보세요"></InputField>
+            <button onClick={() => handleAddSave('mainFeatures')}><img src={images.IconEdit2} alt="" />저장</button>
+            <button onClick={() => setIsAddingNow({ section: '', isAdding: false })}><img src={images.IconDelete2} alt="" />취소</button>
+          </BtnWrap>
         }
         {isEditingNow && <button className="moreButton" onClick={() => setIsAddingNow({ section: 'mainFeatures', isAdding: true })}>특징 추가하기 +</button>}
       </BoxWrap>
@@ -213,8 +213,8 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               {editingIndex.section === 'mainCharacteristic' && editingIndex.index === index ? (
                 <>
                   <BtnWrap>
-                    <button onClick={handleApplyChange}>적용</button>
-                    <button onClick={handleEditCancel}>취소</button>
+                    <button onClick={handleApplyChange}><img src={images.IconClose2} alt="" />적용</button>
+                    <button onClick={handleEditCancel}><img src={images.IconCheck2} alt="" />취소</button>
                   </BtnWrap>
                 </>
               ) : (
@@ -222,8 +222,8 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                   {isEditingNow && (
                     <>
                       <BtnWrap>
-                        <button onClick={() => handleEditStart('mainCharacteristic', index)}>수정</button>
-                        <button onClick={() => handleDelete('mainCharacteristic', index)}>삭제</button>
+                        <button onClick={() => handleEditStart('mainCharacteristic', index)}><img src={images.IconEdit2} alt="" />수정</button>
+                        <button onClick={() => handleDelete('mainCharacteristic', index)}><img src={images.IconDelete2} alt="" />삭제</button>
                       </BtnWrap>
                     </>
                   )}
@@ -233,11 +233,11 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
           ))}
         </ul>
         {isAddingNow.section === 'mainCharacteristic' && isAddingNow.isAdding &&
-          <AddInfo>
-            <InputField value={newAddContent} onChange={(e) => { setNewAddContent(e.target.value); }} placeholder="새로운 정보를 추가해보세요"></InputField>
-            <button onClick={() => handleAddSave('mainCharacteristic')}>저장</button>
-            <button onClick={() => setIsAddingNow({ section: '', isAdding: false })}>취소</button>
-          </AddInfo>
+          <BtnWrap>
+            <InputField type="text" value={newAddContent} onChange={(e) => { setNewAddContent(e.target.value); }} placeholder="새로운 정보를 추가해보세요"></InputField>
+            <button onClick={() => handleAddSave('mainCharacteristic')}><img src={images.IconEdit2} alt="" />저장</button>
+            <button onClick={() => setIsAddingNow({ section: '', isAdding: false })}><img src={images.IconDelete2} alt="" />취소</button>
+          </BtnWrap>
         }
         {isEditingNow && <button className="moreButton" onClick={() => setIsAddingNow({ section: 'mainCharacteristic', isAdding: true })}>기능 추가하기 +</button>}
       </BoxWrap>
@@ -259,8 +259,8 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               {editingIndex.section === 'targetCustomer' && editingIndex.index === index ? (
                 <>
                   <BtnWrap>
-                    <button onClick={handleApplyChange}>적용</button>
-                    <button onClick={handleEditCancel}>취소</button>
+                    <button onClick={handleApplyChange}><img src={images.IconClose2} alt="" />적용</button>
+                    <button onClick={handleEditCancel}><img src={images.IconCheck2} alt="" />취소</button>
                   </BtnWrap>
                 </>
               ) : (
@@ -268,8 +268,8 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                   {isEditingNow && (
                     <>
                       <BtnWrap>
-                        <button onClick={() => handleEditStart('targetCustomer', index)}>수정</button>
-                        <button onClick={() => handleDelete('targetCustomer', index)}>삭제</button>
+                        <button onClick={() => handleEditStart('targetCustomer', index)}><img src={images.IconEdit2} alt="" />수정</button>
+                        <button onClick={() => handleDelete('targetCustomer', index)}><img src={images.IconDelete2} alt="" />삭제</button>
                       </BtnWrap>
                     </>
                   )}
@@ -279,11 +279,11 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
           ))}
         </ul>
         {isAddingNow.section === 'targetCustomer' && isAddingNow.isAdding &&
-          <AddInfo>
-            <InputField value={newAddContent} onChange={(e) => { setNewAddContent(e.target.value); }} placeholder="새로운 정보를 추가해보세요"></InputField>
-            <button onClick={() => handleAddSave('targetCustomer')}>저장</button>
-            <button onClick={() => setIsAddingNow({ section: '', isAdding: false })}>취소</button>
-          </AddInfo>
+          <BtnWrap>
+            <InputField type="text" value={newAddContent} onChange={(e) => { setNewAddContent(e.target.value); }} placeholder="새로운 정보를 추가해보세요"></InputField>
+            <button onClick={() => handleAddSave('targetCustomer')}><img src={images.IconEdit2} alt="" />저장</button>
+            <button onClick={() => setIsAddingNow({ section: '', isAdding: false })}><img src={images.IconDelete2} alt="" />취소</button>
+          </BtnWrap>
         }
         {isEditingNow && <button className="moreButton" onClick={() => setIsAddingNow({ section: 'targetCustomer', isAdding: true })}>목표 고객 추가하기 +</button>}
       </BoxWrap>
@@ -347,7 +347,7 @@ const BoxWrap = styled.div`
     display:flex;
     justify-content:space-between;
     align-items:center;
-    gap:10px;
+    gap:5px;
     padding-left:10px;
 
     &:before {
@@ -362,10 +362,10 @@ const BoxWrap = styled.div`
     }
 
     + li {
-      margin-top:5px;
+      margin-bottom:5px;
     }
 
-    input {
+    input[type=text] {
       height:30px;
       font-size:0.88rem;
       padding:4px 12px;
@@ -380,12 +380,19 @@ const BoxWrap = styled.div`
   button {
     flex-shrink:0;
     font-family: 'Pretendard';
-    font-size:0.75rem;
+    // font-size:0.75rem;
+    font-size:0;
     color:${palette.gray};
-    padding:5px 10px;
+    padding:5px 8px;
     border-radius:5px;
-    border:1px solid ${palette.lineGray};
+    // border:1px solid ${palette.lineGray};
+    border:0;
     background:${palette.white};
+
+    img {
+      width:14px;
+      height:14px;
+    }
 
     &.add {
       color:${palette.white};
@@ -396,6 +403,7 @@ const BoxWrap = styled.div`
 
   .moreButton {
     width:100%;
+    font-size:0.75rem;
     margin-top:4px;
     padding:8px;
     border:0;
@@ -407,6 +415,15 @@ const BtnWrap = styled.div`
   align-items:center;
   flex-shrink:0;
   gap:5px;
+  border-radius:5px;
+  // background:${palette.white};
+
+  input[type=text] {
+    height:30px;
+    font-size:0.88rem;
+    padding:4px 12px;
+    border:0;
+  }
 `;
 
 const AddInfo = styled.div`

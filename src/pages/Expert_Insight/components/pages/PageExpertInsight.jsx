@@ -235,31 +235,35 @@ const PageExpertInsight = () => {
     <>
       <ContentsWrap>
         <OrganismLeftSideBar />
+
         <MainContent>
+          <div>
+            <MoleculeBizName bizName={titleOfBusinessInfo} />
+            {conversation.map((item, index) => {
+              if (item.type === 'user') {
+                return <MoleculeUserMessage key={index} message={item.message} />;
+              } else if (item.type === 'system') {
+                return <MoleculeSystemMessage key={index} message={item.message} />;
+              } else if (item.type === 'analysis') {
+                return <OrganismBizAnalysisSection conversationId={conversationId} />;
+              } else if (item.type.startsWith('strategy_')) {
+                const expertIndex = item.type.split('_')[1]; // 전략 보고서 타입에서 전문가 인덱스 추출
+                return (
+                  <OrganismStrategyReportSection
+                    key={`strategy_${expertIndex}_${index}`} // 키를 고유하게 설정
+                    conversationId={conversationId}
+                    expertIndex={expertIndex} // 전문가 인덱스를 Prop으로 전달
+                  />
+                );
+              } else if (item.type === 'addition') {
+                return <MoleculeAdditionalKeyword key={index} />;
+              }
+              return null;
+            })}
+            {conversationStage !== 1 && <OrganismBizExpertSelect />}
+          </div>
+
           <OrganismRightSideBar />
-          <MoleculeBizName bizName={titleOfBusinessInfo} />
-          {conversation.map((item, index) => {
-            if (item.type === 'user') {
-              return <MoleculeUserMessage key={index} message={item.message} />;
-            } else if (item.type === 'system') {
-              return <MoleculeSystemMessage key={index} message={item.message} />;
-            } else if (item.type === 'analysis') {
-              return <OrganismBizAnalysisSection conversationId={conversationId} />;
-            } else if (item.type.startsWith('strategy_')) {
-              const expertIndex = item.type.split('_')[1]; // 전략 보고서 타입에서 전문가 인덱스 추출
-              return (
-                <OrganismStrategyReportSection
-                  key={`strategy_${expertIndex}_${index}`} // 키를 고유하게 설정
-                  conversationId={conversationId}
-                  expertIndex={expertIndex} // 전문가 인덱스를 Prop으로 전달
-                />
-              );
-            } else if (item.type === 'addition') {
-              return <MoleculeAdditionalKeyword key={index} />;
-            }
-            return null;
-          })}
-          {conversationStage !== 1 && <OrganismBizExpertSelect />}
         </MainContent>
       </ContentsWrap>
       <OrganismSearchBottomBar onSearch={handleSearch} />
@@ -270,18 +274,27 @@ const PageExpertInsight = () => {
 export default PageExpertInsight;
 
 const MainContent = styled.div`
-  grid-area: content;
-  min-width: 1px;
-  max-width: 1240px;
-  padding-bottom: 150px;
-  margin: 0 auto;
   position:relative;
   top:40px;
+  grid-area: content;
+  display:flex;
+  flex-direction:row;
+  gap:40px;
+  min-width: 1px;
+  // max-width: 1240px;
+  max-width:1484px;
+  width:calc(100% - 40px);
+  padding-bottom: 150px;
+  margin: 0 auto;
+
+  > div:first-child {
+    max-width:1240px;
+    width:100%;
+    margin:0 40px;
+  }
 `;
 
 const ContentsWrap = styled.div`
   position: relative;
-  width: calc(100% - 45px);
-  margin:0 auto;
-  padding:0 300px 0;
+  display:flex;
 `;
