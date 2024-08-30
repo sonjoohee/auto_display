@@ -15,8 +15,14 @@ const OrganismReportPopup = ({ report, onClose }) => {
   return ReactDOM.createPortal(
     <PopupOverlay onClick={onClose}>
       <PopupContent onClick={(e) => e.stopPropagation()}>
-        <h1>{report.title}</h1>
-        <p>{report.date}</p>
+        <div className="title">
+          <h1>{report.title}</h1>
+          <p>
+            <span>마케팅</span>
+            <span>생성 : {report.date}</span>
+            <span>저장 : {report.date}</span>
+          </p>
+        </div>
 
         {reportIndex === 0 && (
           <BizAnalysisSection report={report} />
@@ -24,6 +30,10 @@ const OrganismReportPopup = ({ report, onClose }) => {
 
         {reportIndex === 1 && (
           <StrategyReportSection report={report} />
+        )}
+
+        {reportIndex === 2 && (
+          <AdditionalReportSection report={report} />
         )}
 
         <CloseButton onClick={onClose}>닫기</CloseButton>
@@ -49,38 +59,48 @@ const PopupOverlay = styled.div`
 `;
 
 const PopupContent = styled.div`
-  background: white;
-  padding: 30px;
-  border-radius: 15px;
-  max-width: 800px;
+  position:relative;
+  max-width: 1200px;
+  width: 100%;
   max-height: 80%;
-  width: 90%;
-  overflow-y: auto;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
   text-align: left;
-  border: 1px solid ${palette.lineGray};
-  z-index: 10001; /* 팝업 컨텐츠 자체의 z-index도 높게 설정 */
+  padding: 32px;
+  border-radius: 15px;
+  background:${palette.white};
+  z-index: 10001;
+
+  .title {
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    padding:20px;
+    margin-bottom:40px;
+    border-radius:15px;
+    border:1px solid ${palette.lineGray};
+    background:${palette.white};
+    box-shadow:0 4px 20px rgba(0,0,0,.05);
+  }
 
   h1 {
     font-size: 1.25rem;
-    font-weight: 400;
-    margin-bottom: 20px;
+    font-weight: 600;
   }
 
   p {
-    font-size: 0.88rem;
-    line-height: 1.5;
-    margin-top: 30px;
-
-    span {
-      color: ${palette.red};
-    }
+    font-size: 0.75rem;
+    color:${palette.gray};
+    display:flex;
+    align-items:center;
+    gap:20px;
   }
 `;
 
 const SectionTitle = styled.h2`
-  font-size: 1.25rem;
-  margin-top: 20px;
-  margin-bottom: 10px;
+  font-size: 1rem;
+  margin-bottom: 12px;
 `;
 
 const List = styled.ul`
@@ -94,13 +114,36 @@ const ListItem = styled.li`
 `;
 
 const CloseButton = styled.button`
-  background: #007bff;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 20px;
+  position:absolute;
+  right:0;
+  top:-40px;
+  font-family: 'Pretendard';
+  font-size:1rem;
+  color:${palette.white};
+  padding:5px 26px 5px 0;
+  border:0;
+  outline:none;
+  background:none;
+  cursor:pointer;
+
+  &:before, &:after {
+    position:absolute;
+    top:50%;
+    right:6px;
+    width:2px;
+    height:18px;
+    border-radius:5px;
+    background:${palette.white};
+    content:'';
+  }
+
+  &:before {
+    transform:translateY(-50%) rotate(45deg);
+  }
+
+  &:after {
+    transform:translateY(-50%) rotate(-45deg);
+  }
 `;
 
 const BoxWrap = styled.div`
@@ -141,7 +184,10 @@ const BoxWrap = styled.div`
   }
 
   p {
-    font-size: 0.88rem;
+    font-size:0.88rem;
+    font-size:400;
+    color:${palette.darkGray};
+    line-height:1.5;
   }
 
   button {
@@ -203,88 +249,98 @@ const StrategyReportSection = ({ report }) => {
 
   return (
     <>
-      <TabHeader>
-        {tabs.map((tab, index) => (
-          <TabButton
-            key={index}
-            active={selectedTab === index}
-            onClick={() => handleTabClick(index)}
-          >
-            {tab.title}
-          </TabButton>
-        ))}
-      </TabHeader>
+      <ContentsWrap>
+        <TabHeader>
+          {tabs.map((tab, index) => (
+            <TabButton
+              key={index}
+              active={selectedTab === index}
+              onClick={() => handleTabClick(index)}
+            >
+              {tab.title}
+            </TabButton>
+          ))}
+        </TabHeader>
 
-      {tabs[selectedTab]?.sections?.map((section, index) => (
-        <BoxWrap key={index}>
-          {section.title && <SectionTitle>{section.title}</SectionTitle>}
-          {section.content && (
-            section.content.some((item) => item.subTitle) ? (
-              <TwoColumnGrid>
-                {section.content.map((item, idx) => (
+        {tabs[selectedTab]?.sections?.map((section, index) => (
+          <BoxWrap key={index}>
+            {section.title && <SectionTitle>{section.title}</SectionTitle>}
+            {section.content && (
+              section.content.some((item) => item.subTitle) ? (
+                <TwoColumnGrid>
+                  {section.content.map((item, idx) => (
+                    <div key={idx}>
+                      {item.subTitle && <SubTitle>{item.subTitle}</SubTitle>}
+                      <p>{item.text}</p>
+                      {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
+                    </div>
+                  ))}
+                </TwoColumnGrid>
+              ) : (
+                section.content.map((item, idx) => (
                   <div key={idx}>
-                    {item.subTitle && <SubTitle>{item.subTitle}</SubTitle>}
                     <p>{item.text}</p>
                     {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
                   </div>
-                ))}
-              </TwoColumnGrid>
-            ) : (
-              section.content.map((item, idx) => (
-                <div key={idx}>
-                  <p>{item.text}</p>
-                  {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
-                </div>
-              ))
-            )
-          )}
-        </BoxWrap>
-      ))}
+                ))
+              )
+            )}
+          </BoxWrap>
+        ))}
+      </ContentsWrap>
     </>
   );
 };
 
 // 스타일 컴포넌트들
+const ContentsWrap = styled.div`
+  padding:28px;
+  border-radius:15px;
+  border:1px solid ${palette.lineGray};
+  overflow-y:auto;
+`;
+
 const TabHeader = styled.div`
   display: flex;
+  align-items:center;
+  gap:40px;
   margin-bottom: 20px;
-  border-bottom: 2px solid #ddd;
 `;
 
 const TabButton = styled.button`
-  flex: 1;
-  padding: 10px 15px;
-  font-size: 1rem;
-  font-weight: ${(props) => (props.active ? 'bold' : 'normal')};
-  color: ${(props) => (props.active ? '#000' : '#666')};
-  background: ${(props) => (props.active ? '#fff' : '#f7f7f7')};
+  font-family: 'Pretendard';
+  font-size: 1.25rem;
+  font-weight: ${(props) => (props.active ? '500' : '400')};
+  color: ${(props) => (props.active ? `${palette.black}` : 'rgba(0,0,0,.2)')};
   border: none;
-  border-bottom: ${(props) => (props.active ? `2px solid #000` : 'none')};
+  outline: none;
+  border-bottom: ${(props) => (props.active ? `1px solid ${palette.black}` : 'none')};
+  background:${palette.white};
   cursor: pointer;
+  transition:all .5s;
 
   &:hover {
-    background: #fff;
-    color: #000;
-  }
-
-  &:focus {
-    outline: none;
+    color: ${palette.black};
   }
 `;
-
 
 const TwoColumnGrid = styled.div`
   display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 10px;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
   margin-top: 10px;
+
+  > div {
+    padding:12px;
+    border-radius:10px;
+    border:1px solid ${palette.lineGray};
+  }
 `;
 
 const SubTitle = styled.div`
-  font-weight: bold;
-  font-size: 0.9rem;
-  color: #6c757d;
-  margin-bottom: 8px;
+  font-size: 0.88rem;
+  color:${palette.gray};
+  margin-bottom:5px;
 `;
 
 const SubTextBox = styled.div`
@@ -296,3 +352,18 @@ const SubTextBox = styled.div`
   font-size: 0.85rem;
   color: #666;
 `;
+
+const AdditionalReportSection = ({ report }) => {
+  return (
+    <BoxWrap>
+      {report.content.title && (
+        <SectionTitle>{report.content.title}</SectionTitle>
+      )}
+      <List>
+        {report.content.content.map((item, index) => (
+          <ListItem key={index}>{item.text}</ListItem>
+        ))}
+      </List>
+    </BoxWrap>
+  );
+};

@@ -18,23 +18,26 @@ const MoleculeAdditionalKeyword = ({ reportIndex, strategyReportID, conversation
   const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
   const [questionList] = useAtom(QUESTION_LIST);
 
-  const [randomSelections, setRandomSelections] = useState({
-    방법론관련: '',
-    사례제시: '',
-    아이디어제공: '',
-  });
+  
+  const [randomSelections, setRandomSelections] = useState({});
 
   useEffect(() => {
     const getRandomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
-    if (selectedExpertIndex === 1 || selectedExpertIndex === 2 || selectedExpertIndex === 3) {
-      const directions = questionList[selectedExpertIndex];
-      setRandomSelections({
-        방법론관련: getRandomItem(directions.방법론관련),
-        사례제시: getRandomItem(directions.사례제시),
-        아이디어제공: getRandomItem(directions.아이디어제공),
-      });
-    }
+    let directions;
+
+    if (selectedExpertIndex === 1) directions = questionList[1];
+    else if (selectedExpertIndex === 2) directions = questionList[2];
+    else if (selectedExpertIndex === 3) directions = questionList[3];
+
+    const selections = {
+      방법론관련: getRandomItem(directions.방법론관련),
+      사례제시: getRandomItem(directions.사례제시),
+      아이디어제공: getRandomItem(directions.아이디어제공),
+    };
+
+    setRandomSelections(selections);
+
   }, [selectedExpertIndex, questionList]);
 
   return (

@@ -18,6 +18,7 @@ import {
   EXPERT1_REPORT_DATA,
   EXPERT2_REPORT_DATA,
   EXPERT3_REPORT_DATA,
+  ADDITIONAL_REPORT_DATA,
 } from '../../../AtomStates';
 
 import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
@@ -57,6 +58,7 @@ const PageExpertInsight = () => {
   const [expert1ReportData, setExpert1ReportData] = useAtom(EXPERT1_REPORT_DATA);
   const [expert2ReportData, setExpert2ReportData] = useAtom(EXPERT2_REPORT_DATA);
   const [expert3ReportData, setExpert3ReportData] = useAtom(EXPERT3_REPORT_DATA);
+  const [additionalReportData, setAdditionalReportData] = useAtom(ADDITIONAL_REPORT_DATA);
 
   // 현재 선택된 전문가에 맞는 보고서 데이터를 결정
   const getStrategyReportData = () => {
@@ -105,6 +107,10 @@ const PageExpertInsight = () => {
       strategyReportData_EX1: expert1ReportData,
       strategyReportData_EX2: expert2ReportData,
       strategyReportData_EX3: expert3ReportData,
+
+      additionalReportData_EX1: additionalReportData,
+      additionalReportData_EX2: additionalReportData, 
+      additionalReportData_EX3: additionalReportData, 
     };
 
     saveConversationToIndexedDB({
@@ -144,6 +150,11 @@ const PageExpertInsight = () => {
                 // 전문가가 바뀌었을 때 해당 전문가의 전략 보고서 바로 적용
                 const currentReportKey = `strategyReportData_EX${selectedExpertIndex}`;
                 setStrategyReportData(savedConversation[currentReportKey] || {});
+
+                // 추가 보고서 데이터 복원
+                setAdditionalReportData(savedConversation.additionalReportData_EX1 || {});
+                setAdditionalReportData(savedConversation.additionalReportData_EX2 || {});
+                setAdditionalReportData(savedConversation.additionalReportData_EX3 || {});
             } else {
                 if (selectedExpertIndex) {
                     const initialMessage = getInitialSystemMessage();
@@ -169,6 +180,7 @@ const PageExpertInsight = () => {
     setExpert2ReportData,
     setExpert3ReportData,
     setStrategyReportData, // 추가: 전문가가 바뀌면 바로 반영되도록
+    setAdditionalReportData,
 ]);
 
 const resetConversationState = () => {
@@ -284,8 +296,9 @@ const resetConversationState = () => {
     <>
       <ContentsWrap>
         <OrganismLeftSideBar />
+
         <MainContent>
-          <OrganismRightSideBar />
+          <div>
           <MoleculeBizName bizName={titleOfBusinessInfo} />
           {conversation.map((item, index) => {
             if (item.type === 'user') {
@@ -312,6 +325,9 @@ const resetConversationState = () => {
             return null;
           })}
           {conversationStage !== 1 && <OrganismBizExpertSelect />}
+          </div>
+
+          <OrganismRightSideBar />
         </MainContent>
       </ContentsWrap>
       <OrganismSearchBottomBar onSearch={handleSearch} />
@@ -322,18 +338,27 @@ const resetConversationState = () => {
 export default PageExpertInsight;
 
 const MainContent = styled.div`
-  grid-area: content;
-  min-width: 1px;
-  max-width: 1240px;
-  padding-bottom: 150px;
-  margin: 0 auto;
   position:relative;
   top:40px;
+  grid-area: content;
+  display:flex;
+  flex-direction:row;
+  gap:40px;
+  min-width: 1px;
+  // max-width: 1240px;
+  max-width:1484px;
+  width:calc(100% - 40px);
+  padding-bottom: 150px;
+  margin: 0 auto;
+
+  > div:first-child {
+    max-width:1240px;
+    width:100%;
+    margin:0 40px;
+  }
 `;
 
 const ContentsWrap = styled.div`
   position: relative;
-  width: calc(100% - 45px);
-  margin:0 auto;
-  padding:0 300px 0;
+  display:flex;
 `;

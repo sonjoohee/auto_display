@@ -3,97 +3,39 @@ import styled from 'styled-components';
 import { useAtom } from 'jotai';
 import { 
   SELECTED_EXPERT_INDEX,
-  EXPERT1_REPORT_DATA,
-  EXPERT2_REPORT_DATA,
-  EXPERT3_REPORT_DATA,
-  SELECTED_TAB,
   ADDITIONAL_REPORT_DATA,
-} from '../../../AtomStates'; // Atom 불러오기
+} from '../../../AtomStates'; 
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
 import MoleculeReportController from '../molecules/MoleculeReportController';
-import sampleData1 from './sample1.json';
-import sampleData2 from './sample2.json';
-import sampleData3 from './sample3.json';
 import sampleData4 from './sample4.json';
 import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
 
 const OrganismAdditionalReport = ({ conversationId }) => {
-  const [expert1ReprotData, setExpert1ReprotData] = useAtom(EXPERT1_REPORT_DATA); 
-  const [expert2ReprotData, setExpert2ReprotData] = useAtom(EXPERT2_REPORT_DATA); 
-  const [expert3ReprotData, setExpert3ReprotData] = useAtom(EXPERT3_REPORT_DATA);
-  const [additionalReportData, setAdditionalReportDat] = useAtom(ADDITIONAL_REPORT_DATA);
-
-  const [selectedTab, setSelectedTab] = useAtom(SELECTED_TAB); // 탭을 인덱스로 관리
-  const [tabs, setTabs] = useState([]);
-  const [sections, setSections] = useState([]);
-
-  // 현재 선택된 전문가를 가져옴
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
-
-  // 전문가에 따라 알맞은 Atom을 선택
-  let strategyReportAtom;
-  let sampleData;
-
-  if (selectedExpertIndex === 1) {
-    strategyReportAtom = ADDITIONAL_REPORT_DATA;
-    sampleData = sampleData4;
-  } else if (selectedExpertIndex === 2) {
-    strategyReportAtom = ADDITIONAL_REPORT_DATA;
-    sampleData = sampleData4;
-  } else if (selectedExpertIndex === 3) {
-    strategyReportAtom = ADDITIONAL_REPORT_DATA;
-    sampleData = sampleData4;
-  }
-
-  const [strategyReportData, setStrategyReportData] = useAtom(strategyReportAtom);
-
-  useEffect(() => {
-    if (sampleData.expert_id === 1) {
-      setExpert1ReprotData(sampleData);
-    }
-    else if (sampleData.expert_id === 2) {
-      setExpert2ReprotData(sampleData);
-    }
-    else if (sampleData.expert_id === 3) {
-      setExpert3ReprotData(sampleData);
-    }
-    else return;
-  },[])
+  const [additionalReportData, setAdditionalReportData] = useAtom(ADDITIONAL_REPORT_DATA);
 
   useEffect(() => {
     const loadData = async () => {
       try {
         const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
-        const currentReportKey = `strategyReportData_EX${selectedExpertIndex}`;
+        const currentReportKey = `additionalReportData_EX${selectedExpertIndex}`;
 
         if (
-          existingConversation && 
+          existingConversation &&
           existingConversation[currentReportKey] &&
           existingConversation[currentReportKey].expert_id === selectedExpertIndex
         ) {
-          // IndexedDB에 현재 선택된 전문가의 데이터가 있는 경우 해당 데이터를 사용합니다.
-          const strategyData = existingConversation[currentReportKey];
-          setStrategyReportData(strategyData);
-          setTabs(strategyData.tabs);
-          setSections(strategyData.tabs[selectedTab].sections);
-        } else if (Object.keys(strategyReportData).length === 0) {
-          // IndexedDB에 데이터가 없고 atom에도 데이터가 없으면 JSON 데이터를 사용합니다.
-          setStrategyReportData(sampleData); // atom에 sampleData 저장
-          setTabs(sampleData.tabs);
-          setSections(sampleData.tabs[selectedTab].sections);
+          setAdditionalReportData(existingConversation[currentReportKey]);
+        } else if (Object.keys(additionalReportData).length === 0) {
+          setAdditionalReportData(sampleData4);
 
-          // 새 데이터를 IndexedDB에 저장합니다.
           const updatedConversation = {
             ...existingConversation,
-            [currentReportKey]: sampleData, // 전문가를 키로 저장
+            [currentReportKey]: sampleData4,
             timestamp: Date.now(),
           };
           await saveConversationToIndexedDB(updatedConversation);
-        } else {
-          // atom에 데이터가 있으면 그 데이터를 사용합니다.
-          setTabs(strategyReportData.tabs);
-          setSections(strategyReportData.tabs[selectedTab].sections);
         }
       } catch (error) {
         console.error("Error loading data:", error);
@@ -101,67 +43,29 @@ const OrganismAdditionalReport = ({ conversationId }) => {
     };
 
     loadData();
-  }, [conversationId, selectedTab, selectedExpertIndex]);
-
-  const handleTabClick = (index) => {
-    setSelectedTab(index);
-    if (tabs.length > 0) {
-      setSections(tabs[index].sections);
-    }
-  };
+  }, [conversationId, selectedExpertIndex]);
 
   return (
-    <AnalysisSection Strategy>
-      <TabHeader>
-        {tabs.map((tab, index) => (
-          <TabButton
-            key={index}
-            active={selectedTab === index}
-            onClick={() => handleTabClick(index)}
-          >
-            {tab.title}
-          </TabButton>
-        ))}
-      </TabHeader>
-
-      {sections.map((section, index) => (
-        <Section key={index} title={section.title} content={section.content} />
-      ))}
-
-      <MoleculeReportController reportIndex={1} strategyReportID={sampleData.expert_id} conversationId={conversationId} sampleData={sampleData} />
-
-    </AnalysisSection>
-  );
-};
-
-// ... (아래 부분은 동일)
-
-const Section = ({ title, content }) => {
-  // 서브 타이틀이 있는지 확인하고, 그 갯수를 셉니다.
-  const subTitles = content.filter(item => item.subTitle);
-
-  return (
-    <BoxWrap>
-      {title && <strong><img src={images.Check} alt="" />{title}</strong>}
-      {subTitles.length > 0 ? (
-        <DynamicGrid columns={subTitles.length}>
-          {content.map((item, index) => (
-            <div key={index}>
-              {item.subTitle && <SubTitle>{item.subTitle}</SubTitle>}
-              <p>{item.text}</p>
-              {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
-            </div>
+    <AnalysisSection>
+      <BoxWrap>
+        {additionalReportData.title && (
+          <strong>
+            <img src={images.Check} alt="" />
+            {additionalReportData.title}
+          </strong>
+        )}
+        {additionalReportData.content &&
+          additionalReportData.content.map((item, index) => (
+            <p key={index}>{item.text}</p>
           ))}
-        </DynamicGrid>
-      ) : (
-        content.map((item, index) => (
-          <div key={index}>
-            <p>{item.text}</p>
-            {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
-          </div>
-        ))
-      )}
-    </BoxWrap>
+      </BoxWrap>
+      <MoleculeReportController
+        reportIndex={2}
+        strategyReportID={sampleData4.expert_id}
+        conversationId={conversationId}
+        sampleData={sampleData4}
+      />
+    </AnalysisSection>
   );
 };
 

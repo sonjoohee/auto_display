@@ -120,7 +120,17 @@ export const STRATEGY_REPORT_DATA = atom({});
 export const EXPERT1_REPORT_DATA = atom({});
 export const EXPERT2_REPORT_DATA = atom({});
 export const EXPERT3_REPORT_DATA = atom({});
-export const ADDITIONAL_REPORT_DATA = atom({});
+export const ADDITIONAL_REPORT_DATA = atom(
+  {
+    "expert_id": 1,
+    "title": "MZ세대 타겟 성공 전략", 
+    "content": [
+      { "text": "MZ세대를 사로잡기 위한 핵심은 '진정성'과 '참여'입니다." },
+      { "text": "단순히 제품을 홍보하는 것을 넘어, 그들의 가치관과 공감하고 소통하는 브랜드 경험을 제공해야 합니다." },
+      { "text": "챌린지, 이벤트 참여 등 능동적으로 참여할 수 있는 기회를 제공하고, 이를 통해 브랜드와 연결되는 경험을 선사하는 것이 중요합니다." }
+    ]
+  }
+);
 
 /* -1: 검색으로 시작하기, 0: AI 전문가 선택해서 시작하기, 1: 전문가 나중에 선택하기*/
 export const APPROACH_PATH = atom(0);
