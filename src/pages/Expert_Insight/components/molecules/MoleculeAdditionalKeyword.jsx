@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useAtom } from 'jotai';
 import {
@@ -56,19 +56,25 @@ const MoleculeAdditionalKeyword = ({ reportIndex, strategyReportID, conversation
   const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
   const [questionList] = useAtom(QUESTION_LIST);
   
-  let directions;
+  const [randomSelections, setRandomSelections] = useState({});
 
-  if(selectedExpertIndex === 1) directions = questionList[1]
-  else if(selectedExpertIndex === 2) directions = questionList[2]
-  else if(selectedExpertIndex === 3) directions = questionList[3]
+  useEffect(() => {
+    const getRandomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
-  const getRandomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
-  
-  const randomSelections = {
-    방법론관련: getRandomItem(directions.방법론관련),
-    사례제시: getRandomItem(directions.사례제시),
-    아이디어제공: getRandomItem(directions.아이디어제공),
-  };
+    let directions;
+
+    if (selectedExpertIndex === 1) directions = questionList[1];
+    else if (selectedExpertIndex === 2) directions = questionList[2];
+    else if (selectedExpertIndex === 3) directions = questionList[3];
+
+    const selections = {
+      방법론관련: getRandomItem(directions.방법론관련),
+      사례제시: getRandomItem(directions.사례제시),
+      아이디어제공: getRandomItem(directions.아이디어제공),
+    };
+
+    setRandomSelections(selections);
+  }, [selectedExpertIndex, questionList]);
 
   return (
     <>
