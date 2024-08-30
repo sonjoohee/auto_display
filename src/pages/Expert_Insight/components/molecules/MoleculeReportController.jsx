@@ -108,6 +108,8 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
     } else if (reportIndex === 1) {
       // 전략 보고서 데이터 저장 - sampleData 사용
       reportData = sampleData; // sampleData를 그대로 저장합니다
+    } else if (reportIndex === 2) {
+      reportData = sampleData;
     }
 
     // 기존 리포트에 새로운 리포트 추가
@@ -129,6 +131,7 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
       ...existingConversation,
       analysisReportData: reportIndex === 0 ? reportData : existingConversation.analysisReportData,
       strategyReportData: reportIndex === 1 ? reportData : existingConversation.strategyReportData,
+      additionalReportData: reportIndex === 2 ? reportData : existingConversation.additionalReportData,
       timestamp: Date.now(),
     };
 
