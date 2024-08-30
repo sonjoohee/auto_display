@@ -51,10 +51,16 @@ const PageMeetAiExpert = () => {
   }, []);
 
   const handledExpertSelect = (index) => {
-    if(!index) setApproachPath(-1);
+    if (index === 0) {
+        setApproachPath(-1);  // 검색을 통해 들어가는 경우
+    } else {
+        setApproachPath(index);  // 전문가를 선택하는 경우 approachPath를 전문가 인덱스로 설정
+        setInputBusinessInfo(""); // 또는 null, undefined로 초기화
+    }
+
     setSelectedExpertIndex(index);
     navigate("/ExpertInsight");
-  }
+}
 
   return (
     <div>

@@ -120,8 +120,8 @@ const PageExpertInsight = () => {
 
   useEffect(() => {
     const loadConversation = async () => {
-        if (!paramConversationId) {
-            navigate(`/conversation/${conversationId}`, { replace: true });
+      if (!paramConversationId) {
+        navigate(`/conversation/${conversationId}`, { replace: true });
         } else {
             const savedConversation = await getConversationByIdFromIndexedDB(conversationId);
             if (savedConversation) {
@@ -171,10 +171,31 @@ const PageExpertInsight = () => {
     setStrategyReportData, // 추가: 전문가가 바뀌면 바로 반영되도록
 ]);
 
+const resetConversationState = () => {
+  setTitleOfBusinessInfo("");
+  setMainFeaturesOfBusinessInformation([]);
+  setMainCharacteristicOfBusinessInformation([]);
+  setBusinessInformationTargetCustomer([]);
+  setExpert1ReportData({});
+  setExpert2ReportData({});
+  setExpert3ReportData({});
+  setConversation([]); // 대화 초기화
+  setConversationStage(1); // 초기 대화 단계 설정
+};
+
   // 검색을 통해 들어왔으면 handleSearch 실행
   useEffect(() => {
-    if (approachPath === -1) handleSearch(-1);
-  }, []);
+    if (approachPath === -1) {
+        resetConversationState(); 
+        handleSearch(-1); // 검색을 통해 접근한 경우
+    } else if (approachPath > 0) {
+        // 새로운 전문가를 선택하여 대화를 시작하는 경우 상태를 초기화
+        setInputBusinessInfo(""); // 입력된 비즈니스 정보 초기화
+        resetConversationState(); 
+        const initialMessage = getInitialSystemMessage();
+        setConversation([{ type: 'system', message: initialMessage }]);
+    }
+}, [approachPath, selectedExpertIndex]);
 
   useEffect(() => {
     if(approachPath) handleSearch(-1);
@@ -187,46 +208,56 @@ const PageExpertInsight = () => {
   const handleSearch = (inputValue) => {
     const updatedConversation = [...conversation];
 
+    // 사용자가 입력한 경우에만 inputBusinessInfo를 업데이트
     if (inputValue !== -1) {
-      updatedConversation.push({ type: 'user', message: inputValue });
+        setInputBusinessInfo(inputValue);
+        updatedConversation.push({ type: 'user', message: inputValue });
     }
 
     let newConversationStage = conversationStage;
 
     if (conversationStage === 1) {
-      if (approachPath === 0) {
-        updatedConversation.push(
-          { type: 'analysis' },
-          { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊' },
-        );
-      } else {
-        updatedConversation.push(
-          { type: 'system', message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻` },
-          { type: 'analysis' },
-          
-        );
+        if (inputBusinessInfo || inputValue !== -1) {  // inputValue가 입력되었을 때도 대화 진행
+            const businessInfo = inputBusinessInfo || inputValue;  // inputValue가 더 우선
+            // inputBusinessInfo가 존재하거나, 유저가 입력한 경우 대화 진행
+            if (approachPath === 0) {
+                updatedConversation.push(
+                    { type: 'analysis' },
+                    { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊' },
+                );
+            } else {
+                updatedConversation.push(
+                    { type: 'system', message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻` },
+                    { type: 'analysis', businessInfo },  // 입력된 비즈니스 정보를 분석
+                );
+            }
+            newConversationStage = 2;
+        } else if (!inputBusinessInfo && approachPath !== 0) {
+          // inputBusinessInfo가 비어 있고, 검색을 통해 접근하지 않은 경우 전문가 인덱스에 따라 메시지 추가
+          const expertPromptMessage = getInitialSystemMessage();
+          updatedConversation.push({ type: 'system', message: expertPromptMessage });
       }
-      newConversationStage = 2;
+      
     } else if (conversationStage === 2) {
         if (!selectedExpertIndex) {
-          alert("전문가를 선택해 주세요.");
-          return;
+            alert("전문가를 선택해 주세요.");
+            return;
         }
         updatedConversation.push(
-          { type: 'user', message: '10년차 전략 디렉터와 1:1 커피챗, 지금 바로 시작하겠습니다 🙌🏻' },
-          { type: 'system', message: `안녕하세요, 김도원입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"`},
-          { type: `strategy_${selectedExpertIndex}` }, // 전문가 인덱스에 따라 전략 보고서 타입 변경
-          { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊'},
-          { type: 'addition' },
+            { type: 'user', message: '10년차 전략 디렉터와 1:1 커피챗, 지금 바로 시작하겠습니다 🙌🏻' },
+            { type: 'system', message: `안녕하세요, 김도원입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"`},
+            { type: `strategy_${selectedExpertIndex}` }, // 전문가 인덱스에 따라 전략 보고서 타입 변경
+            { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊'},
+            { type: 'addition' },
         );
-      newConversationStage = 3;
+        newConversationStage = 3;
     } else if (conversationStage === 3) {
-      updatedConversation.pop();
-      updatedConversation.push(
-        { type: 'user', message: `제 프로젝트와 관련된 "${selectedAdditionalKeyword}"를 요청드려요` },
-        { type: 'addition' },
-        { type: 'system', message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${selectedAdditionalKeyword}를 찾아드렸어요`},
-      );
+        updatedConversation.pop();
+        updatedConversation.push(
+            { type: 'user', message: `제 프로젝트와 관련된 "${selectedAdditionalKeyword}"를 요청드려요` },
+            { type: 'addition' },
+            { type: 'system', message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${selectedAdditionalKeyword}를 찾아드렸어요`},
+        );
     }
 
     setConversation(updatedConversation);
@@ -234,7 +265,7 @@ const PageExpertInsight = () => {
 
     // 대화 내역을 저장
     saveConversation(updatedConversation, newConversationStage);
-  };
+};
 
   const getInitialSystemMessage = () => {
     switch (selectedExpertIndex) {
