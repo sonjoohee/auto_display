@@ -220,3 +220,4 @@ export const QUESTION_LIST = atom({
       ]
     }
   });
+  export const CONVERSATION_STAGE = atom(1); // 초기값 1
