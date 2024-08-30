@@ -7,17 +7,21 @@ import {
   IS_CLICK_EXPERT_SELECT,
   SELECTED_EXPERT_INDEX,
   APPROACH_PATH,
+  CONVERSATION_STAGE ,
 } from '../../../AtomStates';
 
 const OrganismBizExpertSelect = () => {
   const [isClickExpertSelect, setIsClickExpertSelect] = useAtom(IS_CLICK_EXPERT_SELECT);
   const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
+  const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
 
   const handledExpertSelect = (index) => {
     setSelectedExpertIndex(index);
     setIsClickExpertSelect(true);
     setApproachPath(1);
+    setConversationStage(2); // stage를 2로 설정
+      //  여기에 샘플질문 초기화 추가
   }
   
   return (

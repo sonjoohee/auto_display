@@ -19,6 +19,7 @@ import {
   EXPERT2_REPORT_DATA,
   EXPERT3_REPORT_DATA,
   ADDITIONAL_REPORT_DATA,
+  CONVERSATION_STAGE ,
 } from '../../../AtomStates';
 
 import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
@@ -41,7 +42,7 @@ const PageExpertInsight = () => {
   const { conversationId: paramConversationId } = useParams();
   const conversationId = paramConversationId || nanoid();
   const [conversation, setConversation] = useState([]);
-  const [conversationStage, setConversationStage] = useState(1);
+  const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
@@ -193,6 +194,7 @@ const resetConversationState = () => {
   setExpert3ReportData({});
   setConversation([]); // 대화 초기화
   setConversationStage(1); // 초기 대화 단계 설정
+  setAdditionalReportData({});
 };
 
   // 검색을 통해 들어왔으면 handleSearch 실행

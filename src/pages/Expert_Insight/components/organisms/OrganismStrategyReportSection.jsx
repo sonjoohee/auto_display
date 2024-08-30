@@ -114,8 +114,9 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
 // ... (아래 부분은 동일)
 
 const Section = ({ title, content }) => {
-  // 서브 타이틀이 있는지 확인하고, 그 갯수를 셉니다.
-  const subTitles = content.filter((item) => item.subTitle);
+  // 서브 타이틀이 있는 항목과 없는 항목을 분리
+  const subTitleItems = content.filter((item) => item.subTitle);
+  const nonSubTitleItems = content.filter((item) => !item.subTitle);
 
   return (
     <BoxWrap>
@@ -125,9 +126,21 @@ const Section = ({ title, content }) => {
           {title}
         </strong>
       )}
-      {subTitles.length > 0 ? (
-        <DynamicGrid columns={subTitles.length}>
-          {content.map((item, index) => (
+
+      {/* nonSubTitleItems는 일반적으로 title과 text만 표시 */}
+      {nonSubTitleItems.length > 0 && (
+        nonSubTitleItems.map((item, index) => (
+          <div key={index}>
+            <p>{item.text}</p>
+            {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
+          </div>
+        ))
+      )}
+
+      {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
+      {subTitleItems.length > 0 && (
+        <DynamicGrid columns={subTitleItems.length}>
+          {subTitleItems.map((item, index) => (
             <div key={index}>
               {item.subTitle && <SubTitle>{item.subTitle}</SubTitle>}
               <p>{item.text}</p>
@@ -135,13 +148,6 @@ const Section = ({ title, content }) => {
             </div>
           ))}
         </DynamicGrid>
-      ) : (
-        content.map((item, index) => (
-          <div key={index}>
-            <p>{item.text}</p>
-            {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
-          </div>
-        ))
       )}
     </BoxWrap>
   );
