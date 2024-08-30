@@ -7,7 +7,14 @@ import {
   IS_CLICK_EXPERT_SELECT,
   SELECTED_EXPERT_INDEX,
   APPROACH_PATH,
-  CONVERSATION_STAGE ,
+  CONVERSATION_STAGE,
+  ADDITIONAL_REPORT_DATA1,
+  ADDITIONAL_REPORT_DATA2,
+  ADDITIONAL_REPORT_DATA3,
+  ADDITIONAL_QUESTION_1,
+  ADDITIONAL_QUESTION_2,
+  ADDITIONAL_QUESTION_3,
+  SELECTED_ADDITIONAL_KEYWORD,
 } from '../../../AtomStates';
 
 const OrganismBizExpertSelect = () => {
@@ -16,12 +23,25 @@ const OrganismBizExpertSelect = () => {
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
 
+  const [additionalReportData1, setAdditionalReportData1] = useAtom(ADDITIONAL_REPORT_DATA1);
+  const [additionalReportData2, setAdditionalReportData2] = useAtom(ADDITIONAL_REPORT_DATA2);
+  const [additionalReportData3, setAdditionalReportData3] = useAtom(ADDITIONAL_REPORT_DATA3);
+
+  const [addtionalQuestion1, setAddtionalQuestion1] = useAtom(ADDITIONAL_QUESTION_1);
+  const [addtionalQuestion2, setAddtionalQuestion2] = useAtom(ADDITIONAL_QUESTION_2);
+  const [addtionalQuestion3, setAddtionalQuestion3] = useAtom(ADDITIONAL_QUESTION_3);
+
+  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
+
   const handledExpertSelect = (index) => {
     setSelectedExpertIndex(index);
     setIsClickExpertSelect(true);
     setApproachPath(1);
     setConversationStage(2); // stage를 2로 설정
-      //  여기에 샘플질문 초기화 추가
+    setAddtionalQuestion1("");
+    setAddtionalQuestion2("");
+    setAddtionalQuestion3("");
+    setSelectedAdditionalKeyword("");
   }
   
   return (

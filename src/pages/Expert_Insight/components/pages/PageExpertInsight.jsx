@@ -128,37 +128,32 @@ const PageExpertInsight = () => {
 
   const [approachPath] = useAtom(APPROACH_PATH);
 
-  useEffect(() => {
-
-  }, )
-    const saveConversation = (updatedConversation, newConversationStage) => {
-      const existingConversation = getConversationByIdFromIndexedDB(conversationId);
-
-      // 기존의 모든 보고서를 함께 저장
-      const existingReports = {
-        strategyReportData_EX1: expert1ReportData,
-        strategyReportData_EX2: expert2ReportData,
-        strategyReportData_EX3: expert3ReportData,
-
-        additionalReportData_EX1: additionalReportData1,
-        additionalReportData_EX2: additionalReportData2, 
-        additionalReportData_EX3: additionalReportData3, 
-      };
-      console.log(addtionalQuestion1);
-      saveConversationToIndexedDB({
-        id: conversationId,
-        conversation: updatedConversation,
-        conversationStage: newConversationStage,
-        inputBusinessInfo,
-        analysisReportData,
-        addtionalQuestion1: addtionalQuestion1,
-        addtionalQuestion2: addtionalQuestion2,
-        addtionalQuestion3: addtionalQuestion3,
-        selectedAdditionalKeyword: selectedAdditionalKeyword,
-        ...existingReports, // 기존의 모든 보고서를 함께 저장
-        timestamp: Date.now(),
-      });
+  const saveConversation = (updatedConversation, newConversationStage) => {
+    const existingConversation = getConversationByIdFromIndexedDB(conversationId);
+    // 기존의 모든 보고서를 함께 저장
+    const existingReports = {
+      strategyReportData_EX1: expert1ReportData,
+      strategyReportData_EX2: expert2ReportData,
+      strategyReportData_EX3: expert3ReportData,
+      additionalReportData_EX1: additionalReportData1,
+      additionalReportData_EX2: additionalReportData2, 
+      additionalReportData_EX3: additionalReportData3, 
     };
+    console.log(addtionalQuestion1);
+    saveConversationToIndexedDB({
+      id: conversationId,
+      conversation: updatedConversation,
+      conversationStage: newConversationStage,
+      inputBusinessInfo,
+      analysisReportData,
+      addtionalQuestion1: addtionalQuestion1,
+      addtionalQuestion2: addtionalQuestion2,
+      addtionalQuestion3: addtionalQuestion3,
+      selectedAdditionalKeyword: selectedAdditionalKeyword,
+      ...existingReports, // 기존의 모든 보고서를 함께 저장
+      timestamp: Date.now(),
+    });
+  };
 
   useEffect(() => {
     const loadConversation = async () => {
