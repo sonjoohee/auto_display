@@ -29,7 +29,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [tempMainFeaturesOfBusinessInformation, setTempMainFeaturesOfBusinessInformation] = useAtom(TEMP_MAIN_FEATURES_OF_BUSINESS_INFORMATION);
   const [tempMainCharacteristicOfBusinessInformation, setTempMainCharacteristicOfBusinessInformation] = useAtom(TEMP_MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
-  const [tempMusinessInformationTargetCustomer, seTemptBusinessInformationTargetCustomer] = useAtom(TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER);
+  const [tempMusinessInformationTargetCustomer, setTempBusinessInformationTargetCustomer] = useAtom(TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [savedReports, setSavedReports] = useAtom(SAVED_REPORTS);
 
   const [bizAnalysisReportIndex, setBizAnalysisReportIndex] = useState(0);
@@ -45,7 +45,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   useEffect(() => {
     setTempMainFeaturesOfBusinessInformation(mainFeaturesOfBusinessInformation);
     setTempMainCharacteristicOfBusinessInformation(mainCharacteristicOfBusinessInformation);
-    seTemptBusinessInformationTargetCustomer(businessInformationTargetCustomer);
+    setTempBusinessInformationTargetCustomer(businessInformationTargetCustomer);
   },[])
 
   const saveReport = async () => {

@@ -33,7 +33,7 @@ const OrganismReportPopup = ({ report, onClose }) => {
         )}
 
         {reportIndex === 2 && (
-          <AdditionalReportSection report={report} />
+          <StrategyReportSection report={report} />
         )}
 
         <CloseButton onClick={onClose}>닫기</CloseButton>
@@ -352,18 +352,3 @@ const SubTextBox = styled.div`
   font-size: 0.85rem;
   color: #666;
 `;
-
-const AdditionalReportSection = ({ report }) => {
-  return (
-    <BoxWrap>
-      {report.content.title && (
-        <SectionTitle>{report.content.title}</SectionTitle>
-      )}
-      <List>
-        {report.content.content.map((item, index) => (
-          <ListItem key={index}>{item.text}</ListItem>
-        ))}
-      </List>
-    </BoxWrap>
-  );
-};

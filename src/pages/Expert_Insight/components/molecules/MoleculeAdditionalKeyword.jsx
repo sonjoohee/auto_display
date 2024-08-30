@@ -6,39 +6,48 @@ import {
   SELECTED_EXPERT_INDEX,
   SELECTED_ADDITIONAL_KEYWORD,
   QUESTION_LIST,
+  ADDITIONAL_QUESTION_1,
+  ADDITIONAL_QUESTION_2,
+  ADDITIONAL_QUESTION_3,
 } from '../../../AtomStates';
 
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
 import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
 
-const MoleculeAdditionalKeyword = ({ reportIndex, strategyReportID, conversationId, sampleData }) => {
+const MoleculeAdditionalKeyword = () => {
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
+  const [addtionalQuestion1, setAddtionalQuestion1] = useAtom(ADDITIONAL_QUESTION_1);
+  const [addtionalQuestion2, setAddtionalQuestion2] = useAtom(ADDITIONAL_QUESTION_2);
+  const [addtionalQuestion3, setAddtionalQuestion3] = useAtom(ADDITIONAL_QUESTION_3);
   const [questionList] = useAtom(QUESTION_LIST);
 
-  
   const [randomSelections, setRandomSelections] = useState({});
 
   useEffect(() => {
     const getRandomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
-
+  
     let directions;
-
-    if (selectedExpertIndex === 1) directions = questionList[1];
-    else if (selectedExpertIndex === 2) directions = questionList[2];
-    else if (selectedExpertIndex === 3) directions = questionList[3];
-
+  
+    if (questionList && questionList[selectedExpertIndex]) {
+      directions = questionList[selectedExpertIndex];
+    } else {
+      directions = questionList[1];
+    }
+  
     const selections = {
       방법론관련: getRandomItem(directions.방법론관련),
       사례제시: getRandomItem(directions.사례제시),
       아이디어제공: getRandomItem(directions.아이디어제공),
     };
-
+  
     setRandomSelections(selections);
-
-  }, [selectedExpertIndex, questionList]);
+    setAddtionalQuestion1(selections.방법론관련);
+    setAddtionalQuestion2(selections.사례제시);
+    setAddtionalQuestion3(selections.아이디어제공);
+  }, []);
 
   return (
     <>
