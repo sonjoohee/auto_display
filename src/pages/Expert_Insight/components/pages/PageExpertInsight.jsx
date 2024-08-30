@@ -18,8 +18,14 @@ import {
   EXPERT1_REPORT_DATA,
   EXPERT2_REPORT_DATA,
   EXPERT3_REPORT_DATA,
-  ADDITIONAL_REPORT_DATA,
+  ADDITIONAL_REPORT_DATA1,
+  ADDITIONAL_REPORT_DATA2,
+  ADDITIONAL_REPORT_DATA3,
+  ADDITIONAL_QUESTION_1,
+  ADDITIONAL_QUESTION_2,
+  ADDITIONAL_QUESTION_3,
   CONVERSATION_STAGE ,
+
 } from '../../../AtomStates';
 
 import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
@@ -59,7 +65,13 @@ const PageExpertInsight = () => {
   const [expert1ReportData, setExpert1ReportData] = useAtom(EXPERT1_REPORT_DATA);
   const [expert2ReportData, setExpert2ReportData] = useAtom(EXPERT2_REPORT_DATA);
   const [expert3ReportData, setExpert3ReportData] = useAtom(EXPERT3_REPORT_DATA);
-  const [additionalReportData, setAdditionalReportData] = useAtom(ADDITIONAL_REPORT_DATA);
+  const [additionalReportData1, setAdditionalReportData1] = useAtom(ADDITIONAL_REPORT_DATA1);
+  const [additionalReportData2, setAdditionalReportData2] = useAtom(ADDITIONAL_REPORT_DATA2);
+  const [additionalReportData3, setAdditionalReportData3] = useAtom(ADDITIONAL_REPORT_DATA3);
+
+  const [addtionalQuestion1, setAddtionalQuestion1] = useAtom(ADDITIONAL_QUESTION_1);
+  const [addtionalQuestion2, setAddtionalQuestion2] = useAtom(ADDITIONAL_QUESTION_2);
+  const [addtionalQuestion3, setAddtionalQuestion3] = useAtom(ADDITIONAL_QUESTION_3);
 
   // 현재 선택된 전문가에 맞는 보고서 데이터를 결정
   const getStrategyReportData = () => {
@@ -91,6 +103,22 @@ const PageExpertInsight = () => {
     }
   };
 
+  const setAdditionalReportData = (data) => {
+    switch (selectedExpertIndex) {
+      case 1:
+        setAdditionalReportData1(data);
+        break;
+      case 2:
+        setAdditionalReportData2(data);
+        break;
+      case 3:
+        setAdditionalReportData3(data);
+        break;
+      default:
+        break;
+    }
+  };
+
   const analysisReportData = {
     title: titleOfBusinessInfo,
     mainFeatures: mainFeaturesOfBusinessInformation,
@@ -100,30 +128,37 @@ const PageExpertInsight = () => {
 
   const [approachPath] = useAtom(APPROACH_PATH);
 
-  const saveConversation = (updatedConversation, newConversationStage) => {
-    const existingConversation = getConversationByIdFromIndexedDB(conversationId);
+  useEffect(() => {
 
-    // 기존의 모든 보고서를 함께 저장
-    const existingReports = {
-      strategyReportData_EX1: expert1ReportData,
-      strategyReportData_EX2: expert2ReportData,
-      strategyReportData_EX3: expert3ReportData,
+  }, )
+    const saveConversation = (updatedConversation, newConversationStage) => {
+      const existingConversation = getConversationByIdFromIndexedDB(conversationId);
 
-      additionalReportData_EX1: additionalReportData,
-      additionalReportData_EX2: additionalReportData, 
-      additionalReportData_EX3: additionalReportData, 
+      // 기존의 모든 보고서를 함께 저장
+      const existingReports = {
+        strategyReportData_EX1: expert1ReportData,
+        strategyReportData_EX2: expert2ReportData,
+        strategyReportData_EX3: expert3ReportData,
+
+        additionalReportData_EX1: additionalReportData1,
+        additionalReportData_EX2: additionalReportData2, 
+        additionalReportData_EX3: additionalReportData3, 
+      };
+      console.log(addtionalQuestion1);
+      saveConversationToIndexedDB({
+        id: conversationId,
+        conversation: updatedConversation,
+        conversationStage: newConversationStage,
+        inputBusinessInfo,
+        analysisReportData,
+        addtionalQuestion1: addtionalQuestion1,
+        addtionalQuestion2: addtionalQuestion2,
+        addtionalQuestion3: addtionalQuestion3,
+        selectedAdditionalKeyword: selectedAdditionalKeyword,
+        ...existingReports, // 기존의 모든 보고서를 함께 저장
+        timestamp: Date.now(),
+      });
     };
-
-    saveConversationToIndexedDB({
-      id: conversationId,
-      conversation: updatedConversation,
-      conversationStage: newConversationStage,
-      inputBusinessInfo,
-      analysisReportData,
-      ...existingReports, // 기존의 모든 보고서를 함께 저장
-      timestamp: Date.now(),
-    });
-  };
 
   useEffect(() => {
     const loadConversation = async () => {
@@ -153,9 +188,15 @@ const PageExpertInsight = () => {
                 setStrategyReportData(savedConversation[currentReportKey] || {});
 
                 // 추가 보고서 데이터 복원
-                setAdditionalReportData(savedConversation.additionalReportData_EX1 || {});
-                setAdditionalReportData(savedConversation.additionalReportData_EX2 || {});
-                setAdditionalReportData(savedConversation.additionalReportData_EX3 || {});
+                setAdditionalReportData1(savedConversation.additionalReportData_EX1 || {});
+                setAdditionalReportData2(savedConversation.additionalReportData_EX2 || {});
+                setAdditionalReportData3(savedConversation.additionalReportData_EX3 || {});
+
+                // 전문가가 바뀌었을 때 해당 전문가의 전략 보고서 바로 적용
+                const currentReportKey2 = `additionalReportData_EX${selectedExpertIndex}`;
+                setAdditionalReportData(savedConversation[currentReportKey2] || {});
+
+                setSelectedAdditionalKeyword(savedConversation.selectedAdditionalKeyword);
             } else {
                 if (selectedExpertIndex) {
                     const initialMessage = getInitialSystemMessage();
@@ -181,6 +222,9 @@ const PageExpertInsight = () => {
     setExpert2ReportData,
     setExpert3ReportData,
     setStrategyReportData, // 추가: 전문가가 바뀌면 바로 반영되도록
+    setAdditionalReportData1,
+    setAdditionalReportData2,
+    setAdditionalReportData3,
     setAdditionalReportData,
 ]);
 
@@ -192,6 +236,9 @@ const resetConversationState = () => {
   setExpert1ReportData({});
   setExpert2ReportData({});
   setExpert3ReportData({});
+  setAdditionalReportData1({});
+  setAdditionalReportData2({});
+  setAdditionalReportData3({});
   setConversation([]); // 대화 초기화
   setConversationStage(1); // 초기 대화 단계 설정
   setAdditionalReportData({});
@@ -216,7 +263,7 @@ const resetConversationState = () => {
   },[selectedExpertIndex])
 
   useEffect(() => {
-    if(selectedAdditionalKeyword) handleSearch(-1);
+    if(selectedAdditionalKeyword && conversationStage <= 3) handleSearch(-1);
   },[selectedAdditionalKeyword])
 
   const handleSearch = (inputValue) => {
@@ -262,16 +309,17 @@ const resetConversationState = () => {
             { type: 'system', message: `안녕하세요, 김도원입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"`},
             { type: `strategy_${selectedExpertIndex}` }, // 전문가 인덱스에 따라 전략 보고서 타입 변경
             { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊'},
-            { type: 'addition' },
+            { type: `addition_${selectedExpertIndex}` },
         );
         newConversationStage = 3;
     } else if (conversationStage === 3) {
         updatedConversation.pop();
         updatedConversation.push(
             { type: 'user', message: `제 프로젝트와 관련된 "${selectedAdditionalKeyword}"를 요청드려요` },
-            { type: 'addition' },
+            { type: `addition_${selectedExpertIndex}` },
             { type: 'system', message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${selectedAdditionalKeyword}를 찾아드렸어요`},
         );
+        newConversationStage = 4;
     }
 
     setConversation(updatedConversation);
@@ -318,9 +366,14 @@ const resetConversationState = () => {
                   expertIndex={expertIndex} // 전문가 인덱스를 Prop으로 전달
                 />
               );
-            } else if (item.type === 'addition') {
+            } else if (item.type.startsWith('addition_')) {
+              const expertIndex = item.type.split('_')[1];
                 if(selectedAdditionalKeyword) {
-                  return <OrganismAdditionalReport conversationId={conversationId}/>;
+                  return <OrganismAdditionalReport 
+                          key={`addition_${expertIndex}_${index}`}
+                          conversationId={conversationId}
+                          expertIndex={expertIndex}
+                        />;
                 }
                 else return <MoleculeAdditionalKeyword/>;
               }
