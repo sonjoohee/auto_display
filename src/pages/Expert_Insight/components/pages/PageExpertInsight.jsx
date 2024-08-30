@@ -15,6 +15,8 @@ import {
   APPROACH_PATH,
   STRATEGY_REPORT_DATA,
   SELECTED_ADDITIONAL_KEYWORD,
+  STRATEGY_REPORT_DATA,
+  SELECTED_ADDITIONAL_KEYWORD,
   EXPERT1_REPORT_DATA,
   EXPERT2_REPORT_DATA,
   EXPERT3_REPORT_DATA,
@@ -50,7 +52,7 @@ const PageExpertInsight = () => {
   const [isClickExpertSelect, setIsClickExpertSelect] = useAtom(IS_CLICK_EXPERT_SELECT);
   const [sections, setSections] = useState([]);
 
-  const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA); // 전략 리포트 데이터를 atom으로 관리
+  // const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA); // 전략 리포트 데이터를 atom으로 관리
   const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
 
   // 각 전문가의 보고서를 관리하는 Atom
