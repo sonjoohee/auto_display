@@ -58,6 +58,14 @@ import ProfessionalBehavior from "../images/ProfessionalBehavior.svg"
 import ProfessionalUX from "../images/ProfessionalUX.svg"
 import ProfessionalData from "../images/ProfessionalData.svg"
 
+import IconDelete from "../images/iconDelete.svg"
+import IconWrite3 from "../images/iconWrite3.svg"
+
+import IconEdit2 from "../images/iconEdit2.svg"
+import IconDelete2 from "../images/iconDelete2.svg"
+import IconClose2 from "../images/iconClose2.svg"
+import IconCheck2 from "../images/iconCheck2.svg"
+
 const images = {
   Logo,
   SymbolLogo,
@@ -118,6 +126,14 @@ const images = {
   ProfessionalBehavior,
   ProfessionalUX,
   ProfessionalData,
+
+  IconDelete,
+  IconWrite3,
+
+  IconEdit2,
+  IconDelete2,
+  IconClose2,
+  IconCheck2,
 }
 
 export default images;

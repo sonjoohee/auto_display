@@ -205,6 +205,7 @@ const TabHeader = styled.div`
 `;
 
 const TabButton = styled.button`
+  font-family: 'Pretendard';
   font-size: 1.25rem;
   font-weight: ${props => (props.active ? '600' : '400')};
   color: ${props => (props.active ? palette.black : palette.lightGray)};

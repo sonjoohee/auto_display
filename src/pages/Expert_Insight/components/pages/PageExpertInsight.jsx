@@ -265,8 +265,9 @@ const PageExpertInsight = () => {
     <>
       <ContentsWrap>
         <OrganismLeftSideBar />
+
         <MainContent>
-          <OrganismRightSideBar />
+          <div>
           <MoleculeBizName bizName={titleOfBusinessInfo} />
           {conversation.map((item, index) => {
             if (item.type === 'user') {
@@ -293,6 +294,9 @@ const PageExpertInsight = () => {
             return null;
           })}
           {conversationStage !== 1 && <OrganismBizExpertSelect />}
+          </div>
+
+          <OrganismRightSideBar />
         </MainContent>
       </ContentsWrap>
       <OrganismSearchBottomBar onSearch={handleSearch} />
@@ -303,18 +307,27 @@ const PageExpertInsight = () => {
 export default PageExpertInsight;
 
 const MainContent = styled.div`
-  grid-area: content;
-  min-width: 1px;
-  max-width: 1240px;
-  padding-bottom: 150px;
-  margin: 0 auto;
   position:relative;
   top:40px;
+  grid-area: content;
+  display:flex;
+  flex-direction:row;
+  gap:40px;
+  min-width: 1px;
+  // max-width: 1240px;
+  max-width:1484px;
+  width:calc(100% - 40px);
+  padding-bottom: 150px;
+  margin: 0 auto;
+
+  > div:first-child {
+    max-width:1240px;
+    width:100%;
+    margin:0 40px;
+  }
 `;
 
 const ContentsWrap = styled.div`
   position: relative;
-  width: calc(100% - 45px);
-  margin:0 auto;
-  padding:0 300px 0;
+  display:flex;
 `;

@@ -100,8 +100,8 @@ const PageMeetAiExpert = () => {
               </ExpertCard>
               <ExpertCard More>
                 <div>
-                  <span>More</span>
-                  <p>다른 분야 전문가가 필요하신가요?</p>
+                  {/* <span>More</span> */}
+                  <p>Coming Soon</p>
                 </div>
               </ExpertCard>
             </ExpertSelectBox>
@@ -117,18 +117,27 @@ export default PageMeetAiExpert;
 // 스타일 정의는 기존대로 유지
 
 const MainContent = styled.div`
-  grid-area: content;
-  min-width: 1px;
-  max-width: 1240px;
-  padding-bottom: 150px;
-  margin: 0 auto;
+  // grid-area: content;
+  // min-width: 1px;
+  // max-width: 1240px;
+  // padding-bottom: 150px;
+  // margin: 0 auto;
+
+  display:flex;
+  flex-direction:column;
+  width:100%;
+  height:100%;
+  justify-content:center;  
 `;
 
 const ContentsWrap = styled.div`
   position: relative;
-  width: calc(100% - 45px);
-  margin:0 auto;
-  padding:0 300px 0;
+  width: calc(100% - 40px);
+  // padding:0 300px 0;
+  display:flex;
+  gap:40px;
+  flex-direction:row;
+  height:100dvh;
 `;
 
 const Title = styled.h1`
@@ -138,7 +147,7 @@ const Title = styled.h1`
   gap:8px;
   font-size:3.13rem;
   font-weight:600;
-  margin:150px auto 55px;
+  margin:0 auto 55px;
 
   p {
     font-size:1.25rem;
@@ -254,7 +263,14 @@ const ExpertCard = styled.div`
     if (props.select) return `0 4px 30px rgba(0, 0, 0, 0.1)`;
     else return `none`;
   }};
-  cursor:pointer;
+  cursor: ${props => {
+    if (props.More) return `auto`;
+    else return `pointer`;
+  }};
+  pointer-events: ${props => {
+    if (props.More) return `auto`;
+    else return `auto`;
+  }};
   transition:all .5s;
 
   span {

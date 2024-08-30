@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
 import panelimages from '../../../../assets/styles/PanelImages';
@@ -62,14 +62,20 @@ const OrganismLeftSideBar = () => {
     };
   }, []);
 
+  // 클릭 시 이동
+  const [isOpen, setIsOpen] = useState(true);
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <>
-      <SideBar>
-        <div className="logo">
-          <Link to="/"></Link>
-          <button type="button">닫기</button>
-        </div>
+      <Logo isOpen={isOpen}>
+        <Link to="/"></Link>
+        <button type="button" onClick={toggleSidebar}>닫기</button>
+      </Logo>
 
+      <SideBar isOpen={isOpen} bgNone={!isOpen}>
         <SideBarMenu>
           <button type="button" className="newChat">
             <img src={images.Chat} alt="" />
@@ -86,8 +92,8 @@ const OrganismLeftSideBar = () => {
               <AccordionContent>
                 <ul>
                 {savedReports.map((report, index) => (
-                  <li key={index} onClick={() => handleReportClick(index)}>
-                    <p>{report.title}</p>
+                  <li key={index}>
+                    <p onClick={() => handleReportClick(index)}>{report.title}</p>
                     <span>
                       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="3" viewBox="0 0 14 3" fill="none">
                         <circle cx="2.0067" cy="1.51283" r="1.49694" transform="rotate(-90 2.0067 1.51283)" fill="#A0A0A0"/>
@@ -116,8 +122,8 @@ const OrganismLeftSideBar = () => {
                   <strong>최근 작업</strong>
                   <ul>
                     {conversations.map((conversation, index) => (
-                      <li key={index} onClick={() => handleConversationClick(conversation.id)}>
-                        <p>{conversation.inputBusinessInfo}</p>
+                      <li key={index}>
+                        <p onClick={() => handleConversationClick(conversation.id)}>{conversation.inputBusinessInfo}</p>
                         {/* <span>{new Date(conversation.timestamp).toLocaleDateString()}</span> */}
                         <span>
                           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="3" viewBox="0 0 14 3" fill="none">
@@ -141,47 +147,87 @@ const OrganismLeftSideBar = () => {
 
 export default OrganismLeftSideBar;
 
+const Logo = styled.div`
+  position:fixed;
+  top:72px;
+  left:60px;
+  width:250px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  z-index:1;
+
+  a {
+    // width:44px;
+    width:135px;
+    height:44px;
+    font-size:0;
+    background:url(${images.SymbolLogo}) left center no-repeat;
+    background-size:auto 100%;
+  }
+
+  button {
+    position:relative;
+    font-size:0;
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    border:0;
+    background:${palette.white};
+    box-shadow:2px 2px 2px rgba(0,0,0,.1);
+
+    &:before {
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%, -50%);
+      width:7px;
+      height:2px;
+      border-radius:10px;
+      background:${palette.black};
+      transition:all .5s;
+      content:'';
+    }
+
+    &:after {
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%, -50%) rotate(45deg);
+      width:8px;
+      height:8px;
+      border-left:2px solid ${palette.black};
+      border-bottom:2px solid ${palette.black};
+      transition:all .5s;
+      content:'';
+    }
+  }
+
+  ${props =>
+    css`
+      button:after {
+        transform: ${props.isOpen ? 'translate(-50%, -50%) rotate(45deg)' : 'translate(-50%, -50%) rotate(225deg)'} !important;
+      }
+    `
+  }
+`;
 
 const SideBar = styled.div`
-  // position:sticky;
-  position:fixed;
+  position:sticky;
   top:40px;
-  float:${props => {
-    if (props.Right) return `right`;
-    else return `left`;
-  }};
-  grid-area:toc;
-  width:100%;
-  height:calc(100vh - 5rem);
-  max-width:257px;
-  // height:calc(100vh - 12rem);
-  margin-left:${props => {
-    if (props.Right) return `0`;
-    else return `-300px`;
-  }};
-  margin-right:${props => {
-    if (props.Right) return `-300px`;
-    else return `0`;
-  }};
-  margin-bottom:150px;
-  padding:${props => {
-    if (props.Right) return `0`;
-    else return `30px 20px`;
-  }};
+  display:flex;
+  flex-direction:column;
+  width: ${(props) => (props.bgNone ? "0" : "257px")};
+  height:calc(100vh - 80px);
+  padding:96px 20px 30px;
+  margin: ${(props) => (props.bgNone ? "40px 0 0 0" : "40px 0 0 40px")};
+  // margin: 40px 0 0 40px;
   border-radius:15px;
-  border:${props => {
-    if (props.Right) return `none`;
-    else return `1px solid ${palette.lineGray}`;
-  }};
-  background:${props => {
-    if (props.Right) return palette.white;
-    else return `rgba(0,0,0,.02)`;
-  }};
-
-  box-shadow:${props => {
-    if (props.Right) return `none`;
-    else return `0 4px 10px rgba(0,0,0,.05)`;
-  }};
+  border:1px solid ${palette.lineGray};
+  background: ${(props) => (props.bgNone ? "none" : "rgba(0,0,0,.02)")};
+  box-shadow:0 4px 10px rgba(0,0,0,.05);
+  transition:all .5s;
+  transform: ${(props) => (props.bgNone ? "translateX(-257px)" : "0")};
 
   h3 {
     font-size:1rem;
@@ -191,11 +237,15 @@ const SideBar = styled.div`
   }
 
   .logo {
-    position:relative;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:40px;
+    position:fixed;
+    top:40px;
+    left:40px;
+    width:215px;
+    transform: translateX(0);
+    // display:flex;
+    // justify-content:space-between;
+    // align-items:center;
+    // margin-bottom:40px;
 
     a {
       // width:44px;
@@ -307,8 +357,10 @@ const AccordionItem = styled.div`
 
   .accordion-toggle:checked + .accordion-label + div {
     max-height: 1000px;
+    // max-height:calc(100vh - 22rem);
     // margin-top:20px;
     padding:0;
+    overflow-y:auto;
   }
 `;
 
@@ -347,6 +399,7 @@ const AccordionContent = styled.div`
     display:flex;
     justify-content:space-between;
     align-items:center;
+    gap:10px;
     font-family: 'Pretendard';
     font-size:0.88rem;
     color:${palette.gray};
@@ -361,12 +414,15 @@ const AccordionContent = styled.div`
       transform:translateY(-50%);
       width:10px;
       height:10px;
+      border-radius:2px;
       background:${palette.lightGray};
       content:'';
+      transition:all .5s;
     }
 
     p {
-      width:70%;
+      width:100%;
+      min-height:19px;
       text-overflow:ellipsis;
       white-space:nowrap;
       overflow:hidden;
@@ -377,7 +433,45 @@ const AccordionContent = styled.div`
       font-size:0.75rem;
       color:${palette.lightGray};
       flex-shrink:0;
+      display:none;
+      align-items:center;
     }
+
+    &:hover {
+      &:before {
+        background:${palette.blue};
+      }
+
+      span {
+        display:flex;
+      }
+    }
+  }
+`;
+
+const ToogleMenu = styled.div`
+  position:absolute;
+  right:-260px;
+  top:0;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+  min-width:217px;
+  padding:20px;
+  border-radius:15px;
+  border:1px solid ${palette.lineGray};
+  background:${palette.white};
+  box-shadow:0 4px 28px rgba(0,0,0,.05);
+
+  button {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-family: 'Pretendard';
+    font-size:0.88rem;
+    color:${palette.gray};
+    border:0;
+    background:none;
   }
 `;
 
