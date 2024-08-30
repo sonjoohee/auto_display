@@ -193,6 +193,7 @@ const resetConversationState = () => {
   setExpert3ReportData({});
   setConversation([]); // 대화 초기화
   setConversationStage(1); // 초기 대화 단계 설정
+  setAdditionalReportData({});
 };
 
   // 검색을 통해 들어왔으면 handleSearch 실행
