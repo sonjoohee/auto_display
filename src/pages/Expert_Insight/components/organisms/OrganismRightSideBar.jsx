@@ -1,56 +1,11 @@
-// C:\dev\Crowd_Insight-\src\pages\Expert_Insight\components\organisms\OrganismRightSideBar.jsx
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
 import panelimages from '../../../../assets/styles/PanelImages';
-
-import { Link } from "react-router-dom";
 import { useAtom } from 'jotai';
 import { SELECTED_EXPERT_INDEX } from '../../../AtomStates';
-
-// const experts = [
-//   {
-//     id: 1,
-//     title: '서비스/프로덕트 전략가',
-//     description: '10년 경력 시장에서 통하는 전략을 확인해보세요',
-//     details: '서비스와 프로덕트에 대한 깊이 있는 전략을 제시합니다. 다양한 성공 사례를 통해 실질적인 인사이트를 제공합니다.',
-//   },
-//   {
-//     id: 2,
-//     title: '마케팅 구축',
-//     description: '브랜드/마케팅 교수와의 컨설팅 미팅',
-//     details: '브랜드 구축과 마케팅 전략에 대한 깊이 있는 이해를 바탕으로 스타트업의 성장 로드맵을 제시합니다.',
-//   },
-//   {
-//     id: 3,
-//     title: '고객 인사이트 전문가',
-//     description: '고객 이탈 극복 노하우 비즈니스 팁을 공유해요',
-//     details: '고객 분석을 통해 비즈니스의 핵심 문제를 파악하고 이를 해결할 수 있는 전략을 제안합니다.',
-//   },
-// ];
-
-const experts = [
-  {
-    id: 1,
-    name: '김도원',
-    title: '제품 전략가',
-    description: '제품 전략 총괄 디렉터',
-  },
-  {
-    id: 2,
-    name: '이지현',
-    title: '마케팅 구축',
-    description: '마케팅 구축 총괄 디렉터',
-  },
-  {
-    id: 3,
-    name: '박서연',
-    title: '고객 인사이트 전문가',
-    description: '고객 인사이트 디렉터',
-  },
-];
+import expertsData from './experts_info.json';
 
 const OrganismRightSideBar = () => {
 
@@ -61,7 +16,8 @@ const OrganismRightSideBar = () => {
 
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
 
-  const selectedExpert = experts.find((expert) => expert.id === selectedExpertIndex);
+  // 선택된 전문가 정보
+  const selectedExpert = expertsData.find((expert) => expert.id === selectedExpertIndex);
 
   if (!selectedExpert) return null; // 선택된 전문가가 없을 경우 아무것도 표시하지 않음
 
@@ -70,8 +26,6 @@ const OrganismRightSideBar = () => {
       <SideBar Right>
         <AIProfileWrap>
           <div>
-            {/* <h3>담당 AI 전문가</h3> */}
-
             <AIProfile>
               <div className="profileInfo">
                 <div className="thumb">
@@ -90,40 +44,27 @@ const OrganismRightSideBar = () => {
                 <strong>주요 이력</strong>
                 <div>
                   <FieldUl isOpen={isOpen}>
-                    <li>삼성전자 갤럭시 시리즈 기획</li>
-                    <li>카카오 신규 서비스 개발 총괄</li>
-                    <li>네이버 제품 전략 총괄</li>
-                    <li>MIT슬론 경영대학원 MBA</li>
-                    <li>서울대학교 경영학과 졸업</li>
+                    {selectedExpert.career.map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
                   </FieldUl>
                 </div>
               </FieldWrap>
 
               <div className="field">
-                <strong>
-                  {/* <img src={images.IconChatSmile} alt="" /> */}
-                  전문분석 분야
-                </strong>
+                <strong>전문분석 분야</strong>
 
                 <div>
-                  <strong><img src={images.ProfessionalValue} alt="" />핵심 가치 제안 분석</strong>
-                  <FieldUl isOpen={isOpen}>
-                    <li>문제 해결과 니즈 파악</li>
-                    <li>핵심 이점 식별</li>
-                    <li>독특한 가치 제안 도출</li>
-                  </FieldUl>
-                  <strong><img src={images.ProfessionalRoadmap} alt="" />제품 개발 로드맵 구상</strong>
-                  <FieldUl isOpen={isOpen}>
-                    <li>최소 기능 제품 정의</li>
-                    <li>장기적 제품 비전 검토</li>
-                    <li>기술적 확장성 계획</li>
-                  </FieldUl>
-                  <strong><img src={images.ProfessionalPositioning} alt="" />제품 포지셔닝 전략</strong>
-                  <FieldUl isOpen={isOpen}>
-                    <li>시장 내 제품/서비스 포지셔닝</li>
-                    <li>차별화 요소(USP) 식별</li>
-                    <li>브랜드와 제품 일관성 검토</li>
-                  </FieldUl>
+                  {selectedExpert.expertise.fields.map((field, index) => (
+                    <React.Fragment key={index}>
+                      <strong><img src={images.ProfessionalValue} alt="" />{field.category}</strong>
+                      <FieldUl isOpen={isOpen}>
+                        {field.details.map((detail, i) => (
+                          <li key={i}>{detail}</li>
+                        ))}
+                      </FieldUl>
+                    </React.Fragment>
+                  ))}
                 </div>
               </div>
             </AIProfile>
@@ -131,37 +72,15 @@ const OrganismRightSideBar = () => {
             <button type="button" onClick={moreProfile}>상세 정보 확인하기</button>
           </div>
         </AIProfileWrap>
-
-        {/* <IdeaWrap>
-          <strong>김도원 디렉터님의 추천 사항이에요</strong>
-
-          <div>
-            <Link to="#">
-              <svg width="13" height="13" viewBox="0 0 21 21" fill="#ABABAB" xmlns="http://www.w3.org/2000/svg">
-                <path d="M15.0674 13.3651H14.1407L13.8122 13.0486C15.22 11.4077 15.9473 9.16911 15.5484 6.78983C14.9971 3.53149 12.2753 0.929517 8.99053 0.531016C4.02811 -0.078456 -0.148303 4.09408 0.461735 9.0519C0.860606 12.3337 3.465 15.0529 6.72635 15.6037C9.10785 16.0022 11.3486 15.2756 12.991 13.8691L13.3077 14.1973V15.1232L18.2936 20.1044C18.7746 20.585 19.5606 20.585 20.0416 20.1044C20.5226 19.6239 20.5226 18.8386 20.0416 18.3581L15.0674 13.3651ZM8.02855 13.3651C5.10741 13.3651 2.74938 11.0092 2.74938 8.09081C2.74938 5.17238 5.10741 2.81654 8.02855 2.81654C10.9497 2.81654 13.3077 5.17238 13.3077 8.09081C13.3077 11.0092 10.9497 13.3651 8.02855 13.3651Z" fill="#ABABAB"/>
-              </svg>
-              "이런 페르소나"의 의견 들어보기
-            </Link>
-            <Link to="#">
-              <svg width="13" height="13" viewBox="0 0 21 21" fill="#ABABAB" xmlns="http://www.w3.org/2000/svg">
-                <path d="M15.0674 13.3651H14.1407L13.8122 13.0486C15.22 11.4077 15.9473 9.16911 15.5484 6.78983C14.9971 3.53149 12.2753 0.929517 8.99053 0.531016C4.02811 -0.078456 -0.148303 4.09408 0.461735 9.0519C0.860606 12.3337 3.465 15.0529 6.72635 15.6037C9.10785 16.0022 11.3486 15.2756 12.991 13.8691L13.3077 14.1973V15.1232L18.2936 20.1044C18.7746 20.585 19.5606 20.585 20.0416 20.1044C20.5226 19.6239 20.5226 18.8386 20.0416 18.3581L15.0674 13.3651ZM8.02855 13.3651C5.10741 13.3651 2.74938 11.0092 2.74938 8.09081C2.74938 5.17238 5.10741 2.81654 8.02855 2.81654C10.9497 2.81654 13.3077 5.17238 13.3077 8.09081C13.3077 11.0092 10.9497 13.3651 8.02855 13.3651Z" fill="#ABABAB"/>
-              </svg>
-              "이런 페르소나"의 의견 들어보기
-            </Link>
-            <Link to="#">
-              <svg width="13" height="13" viewBox="0 0 21 21" fill="#ABABAB" xmlns="http://www.w3.org/2000/svg">
-                <path d="M15.0674 13.3651H14.1407L13.8122 13.0486C15.22 11.4077 15.9473 9.16911 15.5484 6.78983C14.9971 3.53149 12.2753 0.929517 8.99053 0.531016C4.02811 -0.078456 -0.148303 4.09408 0.461735 9.0519C0.860606 12.3337 3.465 15.0529 6.72635 15.6037C9.10785 16.0022 11.3486 15.2756 12.991 13.8691L13.3077 14.1973V15.1232L18.2936 20.1044C18.7746 20.585 19.5606 20.585 20.0416 20.1044C20.5226 19.6239 20.5226 18.8386 20.0416 18.3581L15.0674 13.3651ZM8.02855 13.3651C5.10741 13.3651 2.74938 11.0092 2.74938 8.09081C2.74938 5.17238 5.10741 2.81654 8.02855 2.81654C10.9497 2.81654 13.3077 5.17238 13.3077 8.09081C13.3077 11.0092 10.9497 13.3651 8.02855 13.3651Z" fill="#ABABAB"/>
-              </svg>
-              "이런 페르소나"의 의견 들어보기
-            </Link>
-          </div>
-        </IdeaWrap> */}
       </SideBar>
     </>
   );
 };
 
 export default OrganismRightSideBar;
+
+// 기존 styled-components 스타일링 코드 (생략)
+
 
 const SideBar = styled.div`
   position:sticky;

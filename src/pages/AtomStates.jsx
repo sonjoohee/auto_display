@@ -216,3 +216,5 @@ export const QUESTION_LIST = atom({
 export const ADDITIONAL_QUESTION_1 = atom("");
 export const ADDITIONAL_QUESTION_2 = atom("");
 export const ADDITIONAL_QUESTION_3 = atom("");
+
+export const CONVERSATION_STAGE = atom(1); // 초기값 1
