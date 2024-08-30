@@ -1,6 +1,6 @@
 // C:\dev\Crowd_Insight-\src\pages\Expert_Insight\components\organisms\OrganismRightSideBar.jsx
 
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
@@ -53,6 +53,12 @@ const experts = [
 ];
 
 const OrganismRightSideBar = () => {
+
+  const [isOpen, setIsOpen] = useState(true);
+  const moreProfile = () => {
+    setIsOpen(!isOpen);
+  };
+
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
 
   const selectedExpert = experts.find((expert) => expert.id === selectedExpertIndex);
@@ -80,21 +86,49 @@ const OrganismRightSideBar = () => {
                 </div>
               </div>
 
+              <FieldWrap isOpen={isOpen}>
+                <strong>주요 이력</strong>
+                <div>
+                  <FieldUl isOpen={isOpen}>
+                    <li>삼성전자 갤럭시 시리즈 기획</li>
+                    <li>카카오 신규 서비스 개발 총괄</li>
+                    <li>네이버 제품 전략 총괄</li>
+                    <li>MIT슬론 경영대학원 MBA</li>
+                    <li>서울대학교 경영학과 졸업</li>
+                  </FieldUl>
+                </div>
+              </FieldWrap>
+
               <div className="field">
                 <strong>
                   {/* <img src={images.IconChatSmile} alt="" /> */}
                   전문분석 분야
                 </strong>
 
-                <p>
-                  <span><img src={images.ProfessionalValue} alt="" />핵심 가치 제안 분석</span>
-                  <span><img src={images.ProfessionalRoadmap} alt="" />제품 개발 로드맵 구상</span>
-                  <span><img src={images.ProfessionalPositioning} alt="" />제품 포지셔닝 전략</span>
-                </p>
+                <div>
+                  <strong><img src={images.ProfessionalValue} alt="" />핵심 가치 제안 분석</strong>
+                  <FieldUl isOpen={isOpen}>
+                    <li>문제 해결과 니즈 파악</li>
+                    <li>핵심 이점 식별</li>
+                    <li>독특한 가치 제안 도출</li>
+                  </FieldUl>
+                  <strong><img src={images.ProfessionalRoadmap} alt="" />제품 개발 로드맵 구상</strong>
+                  <FieldUl isOpen={isOpen}>
+                    <li>최소 기능 제품 정의</li>
+                    <li>장기적 제품 비전 검토</li>
+                    <li>기술적 확장성 계획</li>
+                  </FieldUl>
+                  <strong><img src={images.ProfessionalPositioning} alt="" />제품 포지셔닝 전략</strong>
+                  <FieldUl isOpen={isOpen}>
+                    <li>시장 내 제품/서비스 포지셔닝</li>
+                    <li>차별화 요소(USP) 식별</li>
+                    <li>브랜드와 제품 일관성 검토</li>
+                  </FieldUl>
+                </div>
               </div>
             </AIProfile>
 
-            <Link to="#">상세 정보 확인하기</Link>
+            <button type="button" onClick={moreProfile}>상세 정보 확인하기</button>
           </div>
         </AIProfileWrap>
 
@@ -232,7 +266,7 @@ const AIProfileWrap = styled.div`
     margin-top:28px;
   }
 
-  a {
+  button {
     position:relative;
     width:100%;
     font-size:0.75rem;
@@ -243,6 +277,7 @@ const AIProfileWrap = styled.div`
     margin-top:25px;
     border-radius:10px;
     border:1px solid ${palette.lineGray};
+    background:${palette.white};
 
     &:after {
       position:absolute;
@@ -324,7 +359,7 @@ const AIProfile = styled.div`
     padding-top:20px;
     border-top:1px solid ${palette.lineGray};
 
-    strong {
+    > strong {
       display:flex;
       align-items:center;
       gap:5px;
@@ -333,24 +368,82 @@ const AIProfile = styled.div`
       margin-bottom:15px;
     }
 
-    p {
+    div {
       display:flex;
       flex-direction:column;
       align-items:center;
       gap:8px;
-    }
 
-    span {
-      display:flex;
-      align-items:center;
-      gap:8px;
-      width:100%;
-      font-size:0.88rem;
-      font-weight:300;
-      // padding:8px 16px;
-      // border-radius:25px;
-      // border:1px solid ${palette.lineGray};
-      // background:${palette.white};
+      strong {
+        display:flex;
+        align-items:center;
+        gap:8px;
+        width:100%;
+        font-size:0.88rem;
+        font-weight:300;
+        color:${palette.darkGray};
+        // padding:8px 16px;
+        // border-radius:25px;
+        // border:1px solid ${palette.lineGray};
+        // background:${palette.white};
+      }
+    }
+  }
+`;
+
+const FieldWrap = styled.div`
+  display:flex;
+  flex-direction:column;
+  width:100%;
+  max-height: ${(props) => (props.isOpen ? "0" : "1000px")};
+  margin:20px auto 0;
+  padding-top: ${(props) => (props.isOpen ? "0" : "20px")};
+  overflow:hidden;
+  transition: max-height 0.5s ease, padding 0.5s ease;
+
+  strong {
+    display:flex;
+    align-items:center;
+    gap:5px;
+    font-size:1rem;
+    font-weight:400;
+    margin-bottom:15px;
+  }
+
+  div {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+  }
+`;
+
+const FieldUl = styled.ul`
+  width:100%;
+  max-height: ${(props) => (props.isOpen ? "0" : "1000px")};
+  display:flex;
+  flex-direction:column;
+  padding:0 8px;
+  overflow:hidden;
+  transition: max-height 0.5s ease, padding 0.5s ease;
+
+  li {
+    position:relative;
+    font-size:0.75rem;
+    line-height:1.5;
+    text-align:left;
+    color:${palette.darkGray};
+    padding-left:20px;
+
+    &:before {
+      position:absolute;
+      left:0;
+      top:7px;
+      width:3px;
+      height:3px;
+      border-radius:10px;
+      background:${palette.darkGray};
+      content:'';
     }
   }
 `;
