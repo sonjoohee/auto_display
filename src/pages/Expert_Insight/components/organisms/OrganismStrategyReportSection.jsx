@@ -16,10 +16,29 @@ import sampleData2 from './sample2.json';
 import sampleData3 from './sample3.json';
 import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
 
+import { emailAtom, passwordAtom, currentUserAtom, errorAtom,
+  TITLE_OF_BUSINESS_INFORMATION,
+  MAIN_FEATURES_OF_BUSINESS_INFORMATION,
+  MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
+  BUSINESS_INFORMATION_TARGET_CUSTOMER, 
+} from '../../../AtomStates';
+
 const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const [selectedTab, setSelectedTab] = useAtom(SELECTED_TAB); // 탭을 인덱스로 관리
   const [tabs, setTabs] = useState([]);
   const [sections, setSections] = useState([]);
+
+  const [email, setEmail] = useAtom(emailAtom);
+  const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
+  const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
+  const [mainCharacteristicOfBusinessInformation, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
+  const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
+  const analysisReportData = {
+    title: titleOfBusinessInfo,
+    mainFeatures: mainFeaturesOfBusinessInformation,
+    mainCharacter: mainCharacteristicOfBusinessInformation,
+    mainCustomer: businessInformationTargetCustomer,
+  };
 
   // 전문가 인덱스에 따라 해당 Atom을 선택
   const strategyReportAtomMap = {
@@ -64,6 +83,22 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
           setStrategyReportData(sampleData); // atom에 sampleData 저장
           setTabs(sampleData.tabs);
           setSections(sampleData.tabs[selectedTab].sections);
+
+
+        // IndexedDB에 데이터가 없고 atom에도 데이터가 없으면 서버에서 데이터를 가져옵니다.(위에꺼 주석처리하고)
+        // 서버에 email, conversationId, expertIndex, 기초보고서(analysisReportData) 를 보내서 해당 보고서 생성요청 - expertIndex가 1이면 1번 전문가의 보고서 생성
+        // const response = await axios.post('http://your-server-url/api/endpoint', {
+        //   email,
+        //   conversationId,
+        //   expertIndex,
+        //   analysisReportData,
+        // });
+
+        // const strategyData = response.data;
+        // setStrategyReportData(strategyData); // atom에 서버에서 받아온 데이터 저장
+        // setTabs(strategyData.tabs);
+        // setSections(strategyData.tabs[selectedTab].sections);
+
 
           // 새 데이터를 IndexedDB에 저장합니다.
           const updatedConversation = {
