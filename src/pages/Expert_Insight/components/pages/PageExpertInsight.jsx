@@ -246,7 +246,7 @@ const PageExpertInsight = () => {
     }
     loadConversationOther();
   }, []);
-  
+
 // const resetConversationState = () => {
 //   setTitleOfBusinessInfo("");
 //   setMainFeaturesOfBusinessInformation([]);
@@ -282,7 +282,7 @@ const PageExpertInsight = () => {
   // },[selectedExpertIndex])
 
   useEffect(() => {
-    if((selectedAdditionalKeyword1 || selectedAdditionalKeyword2 || selectedAdditionalKeyword3) && conversationStage <= 3) handleSearch(-1);
+    if(selectedAdditionalKeyword1 || selectedAdditionalKeyword2 || selectedAdditionalKeyword3) handleSearch(-1);
   },[
     selectedAdditionalKeyword1,
     selectedAdditionalKeyword2,
@@ -293,9 +293,9 @@ const PageExpertInsight = () => {
     const updatedConversation = [...conversation];
 
     // 사용자가 입력한 경우에만 inputBusinessInfo를 업데이트
-    if (inputValue !== -1) {
-        setInputBusinessInfo(inputValue);
-        updatedConversation.push({ type: 'user', message: inputValue });
+    if (approachPath === 1 && inputValue !== -1) {
+      setInputBusinessInfo(inputValue);
+      updatedConversation.push({ type: 'user', message: inputValue });
     }
 
     let newConversationStage = conversationStage;
@@ -303,20 +303,12 @@ const PageExpertInsight = () => {
     if (conversationStage === 1) {
         if (inputBusinessInfo || inputValue !== -1) {  // inputValue가 입력되었을 때도 대화 진행
             const businessInfo = inputBusinessInfo || inputValue;  // inputValue가 더 우선
-            // inputBusinessInfo가 존재하거나, 유저가 입력한 경우 대화 진행
-            if (approachPath === 0) {
-                updatedConversation.push(
-                    { type: 'analysis' },
-                    { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊' },
-                );
-            } else {
-                updatedConversation.push(
-                    { type: 'system', message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻` },
-                    { type: 'analysis', businessInfo },  // 입력된 비즈니스 정보를 분석
-                );
-            }
+            updatedConversation.push(
+                { type: 'system', message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻` },
+                { type: 'analysis', businessInfo },  // 입력된 비즈니스 정보를 분석
+            );
             newConversationStage = 2;
-        } else if (!inputBusinessInfo && approachPath !== 0) {
+        } else if (!inputBusinessInfo && approachPath === 1) {
           // inputBusinessInfo가 비어 있고, 검색을 통해 접근하지 않은 경우 전문가 인덱스에 따라 메시지 추가
           const expertPromptMessage = getInitialSystemMessage();
           updatedConversation.push({ type: 'system', message: expertPromptMessage });
@@ -327,38 +319,54 @@ const PageExpertInsight = () => {
             alert("전문가를 선택해 주세요.");
             return;
         }
+        // // 마지막 요소가 keyword 이면 제거
+        // if (updatedConversation.length > 0 && updatedConversation[updatedConversation.length - 1].type === 'keyword') {
+        //   updatedConversation.pop(); 
+        // }
         updatedConversation.push(
             { type: 'user', message: '10년차 전략 디렉터와 1:1 커피챗, 지금 바로 시작하겠습니다 🙌🏻' },
             { type: 'system', message: `안녕하세요, 김도원입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"`},
             { type: `strategy_${selectedExpertIndex}` }, // 전문가 인덱스에 따라 전략 보고서 타입 변경
             { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊'},
-            { type: `addition_${selectedExpertIndex}` },
+            { type: `keyword` },
         );
         newConversationStage = 3;
     } else if (conversationStage === 3) {
         updatedConversation.pop();
-        if(selectedExpertIndex === 1) {
+
+        // stage3 에서 사용자가 직접 추가 질문을 했을 때
+        if(inputValue !== -1) {
+          if(selectedExpertIndex === 1) setSelectedAdditionalKeyword1(inputValue);
+          else if(selectedExpertIndex === 2) setSelectedAdditionalKeyword2(inputValue);
+          else setSelectedAdditionalKeyword3(inputValue);
+        }
+        else if(selectedExpertIndex === 1) {
           updatedConversation.push(
             { type: 'user', message: `제 프로젝트와 관련된 "${selectedAdditionalKeyword1}"를 요청드려요` },
             { type: `addition_${selectedExpertIndex}` },
-            { type: 'system', message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${selectedAdditionalKeyword1}를 찾아드렸어요`},
+            { type: 'system', 
+              message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${selectedAdditionalKeyword1}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`},
+            { type: `keyword` },
           );
         }
         else if(selectedExpertIndex === 2) {
           updatedConversation.push(
             { type: 'user', message: `제 프로젝트와 관련된 "${selectedAdditionalKeyword2}"를 요청드려요` },
             { type: `addition_${selectedExpertIndex}` },
-            { type: 'system', message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${selectedAdditionalKeyword2}를 찾아드렸어요`},
+            { type: 'system', 
+              message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${selectedAdditionalKeyword2}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`},
+            { type: `keyword` },
           );
         }
         else if(selectedExpertIndex === 3) {
           updatedConversation.push(
             { type: 'user', message: `제 프로젝트와 관련된 "${selectedAdditionalKeyword3}"를 요청드려요` },
             { type: `addition_${selectedExpertIndex}` },
-            { type: 'system', message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${selectedAdditionalKeyword3}를 찾아드렸어요`},
+            { type: 'system', 
+              message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${selectedAdditionalKeyword3}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`},
+            { type: `keyword` },
           );
         }
-        newConversationStage = 4;
     }
 
     setConversation(updatedConversation);
@@ -375,7 +383,7 @@ const PageExpertInsight = () => {
       case 2:
         return "안녕하세요! 마케팅 전문가 이지현입니다. 😄 여러분의 아이디어를 효과적으로 시장에 알릴 수 있는 전략을 함께 고민해 보아요.\n아이디어나 비즈니스 아이템을 여기에 작성해 주세요. 제가 분석하고, 효과적인 마케팅 전략 리포트를 준비해 드리겠습니다!";
       case 3:
-        return "반갑습니다! 저는 고객 인사이트 전문가 박서연입니다. 😊 여러분의 비즈니스가 목표 고객에게 잘 다가갈 수 있도록 돕겠습니다. 아이디어나 비즈니스 아이템을 작성해 주세요. 분석 후, 타겟 고객을 정의하고 세분화 방법에 대한 리포트를 제공해 드리겠습니다!";
+        return "반갑습니다! 저는 고객 인사이트 전문가 박서연입니다. 😊 여러분의 비즈니스가 목표 고객에게 잘 다가갈 수 있도록 돕겠습니다.\n아이디어나 비즈니스 아이템을 작성해 주세요. 분석 후, 타겟 고객을 정의하고 세분화 방법에 대한 리포트를 제공해 드리겠습니다!";
       default:
         return '비즈니스(아이디어)를 입력해주세요.';
     }
@@ -408,35 +416,29 @@ const PageExpertInsight = () => {
             } else if (item.type.startsWith('addition_')) {
               const expertIndex = item.type.split('_')[1];
                 if(expertIndex === '1') {
-                  if(selectedAdditionalKeyword1) {
-                    return <OrganismAdditionalReport 
+                  return <OrganismAdditionalReport 
                             key={`addition_${expertIndex}_${index}`}
                             conversationId={conversationId}
                             expertIndex={expertIndex}
                           />;
-                  }
-                  else return <MoleculeAdditionalKeyword/>;
                 }
                 else if(expertIndex === '2') {
-                  if(selectedAdditionalKeyword2) {
-                    return <OrganismAdditionalReport 
+                  return <OrganismAdditionalReport 
                             key={`addition_${expertIndex}_${index}`}
                             conversationId={conversationId}
                             expertIndex={expertIndex}
                           />;
-                  }
-                  else return <MoleculeAdditionalKeyword/>;
                 }
                 else if(expertIndex === '3') {
-                  if(selectedAdditionalKeyword3) {
-                    return <OrganismAdditionalReport 
+                  return <OrganismAdditionalReport 
                             key={`addition_${expertIndex}_${index}`}
                             conversationId={conversationId}
                             expertIndex={expertIndex}
                           />;
-                  }
-                  else return <MoleculeAdditionalKeyword/>;
                 }
+              }
+              else if (item.type === 'keyword') {
+                return <MoleculeAdditionalKeyword/>;
               }
             return null;
           })}
