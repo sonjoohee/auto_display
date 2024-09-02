@@ -124,10 +124,12 @@ export const ADDITIONAL_REPORT_DATA1 = atom({});
 export const ADDITIONAL_REPORT_DATA2 = atom({});
 export const ADDITIONAL_REPORT_DATA3 = atom({});
 
-/* -1: 검색으로 시작하기, 0: AI 전문가 선택해서 시작하기, 1: 전문가 나중에 선택하기*/
+/* -1: 검색으로 시작하기, 1: AI 전문가 선택해서 시작하기*/
 export const APPROACH_PATH = atom(0);
 
-export const SELECTED_ADDITIONAL_KEYWORD = atom("")
+export const SELECTED_ADDITIONAL_KEYWORD1 = atom("")
+export const SELECTED_ADDITIONAL_KEYWORD2 = atom("")
+export const SELECTED_ADDITIONAL_KEYWORD3 = atom("")
 
 export const QUESTION_LIST = atom({
     1: {

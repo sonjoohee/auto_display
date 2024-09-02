@@ -4,10 +4,17 @@ import React from 'react';
 import styled from 'styled-components';
 
 const MoleculeUserMessage = ({ message }) => {
+  const messageWithLineBreaks = message.split('\n').map((line, index) => 
+    <React.Fragment key={index}>
+      {line}
+      <br /> 
+    </React.Fragment>
+  );
+
   return (
     <UserMessageContainer>
       <div>
-        <p>{message}</p>
+        <p>{messageWithLineBreaks}</p>
       </div>
     </UserMessageContainer>
   );

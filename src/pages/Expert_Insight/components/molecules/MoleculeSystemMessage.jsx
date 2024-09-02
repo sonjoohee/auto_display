@@ -3,11 +3,18 @@ import styled from 'styled-components';
 import { palette } from '../../../../assets/styles/Palette';
 
 const MoleculeSystemMessage = ({ message }) => {
+  const messageWithLineBreaks = message.split('\n').map((line, index) => 
+    <React.Fragment key={index}>
+      {line}
+      <br /> 
+    </React.Fragment>
+  );
+
   return (
     <>
     <SystemMessageContainer>
-      <div><p>{message}</p></div>
-      <span>1 min ago</span>
+      <div><p>{messageWithLineBreaks}</p></div>
+      {/* <span>1 min ago</span> */}
     </SystemMessageContainer>
     </>
   );
