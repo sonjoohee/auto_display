@@ -129,7 +129,6 @@ const PageExpertInsight = () => {
   const [approachPath] = useAtom(APPROACH_PATH);
 
   const saveConversation = (updatedConversation, newConversationStage) => {
-    const existingConversation = getConversationByIdFromIndexedDB(conversationId);
     // 기존의 모든 보고서를 함께 저장
     const existingReports = {
       strategyReportData_EX1: expert1ReportData,
@@ -244,7 +243,7 @@ const PageExpertInsight = () => {
     if (approachPath === -1) {
         // resetConversationState(); 
         handleSearch(-1); // 검색을 통해 접근한 경우
-    } else if (approachPath > 0) {
+    } else if (approachPath === 1) {
         // 새로운 전문가를 선택하여 대화를 시작하는 경우 상태를 초기화
         setInputBusinessInfo(""); // 입력된 비즈니스 정보 초기화
         // resetConversationState(); 
@@ -253,9 +252,9 @@ const PageExpertInsight = () => {
     }
 }, [approachPath, selectedExpertIndex]);
 
-  useEffect(() => {
-    if(approachPath) handleSearch(-1);
-  },[selectedExpertIndex])
+  // useEffect(() => {
+  //   if(approachPath) handleSearch(-1);
+  // },[selectedExpertIndex])
 
   useEffect(() => {
     if(selectedAdditionalKeyword && conversationStage <= 3) handleSearch(-1);
@@ -374,7 +373,9 @@ const PageExpertInsight = () => {
               }
             return null;
           })}
-          {conversationStage !== 1 && <OrganismBizExpertSelect />}
+          {approachPath !== 1 && (Object.keys(expert1ReportData).length === 0 || Object.keys(expert2ReportData).length === 0 || Object.keys(expert3ReportData).length === 0) &&
+            <OrganismBizExpertSelect />
+          }
           </div>
 
           <OrganismRightSideBar />

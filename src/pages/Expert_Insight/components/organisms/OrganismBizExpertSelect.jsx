@@ -8,61 +8,66 @@ import {
   SELECTED_EXPERT_INDEX,
   APPROACH_PATH,
   CONVERSATION_STAGE,
-  ADDITIONAL_REPORT_DATA1,
-  ADDITIONAL_REPORT_DATA2,
-  ADDITIONAL_REPORT_DATA3,
+  EXPERT1_REPORT_DATA,
+  EXPERT2_REPORT_DATA,
+  EXPERT3_REPORT_DATA,
   ADDITIONAL_QUESTION_1,
   ADDITIONAL_QUESTION_2,
   ADDITIONAL_QUESTION_3,
   SELECTED_ADDITIONAL_KEYWORD,
 } from '../../../AtomStates';
 
-const OrganismBizExpertSelect = () => {
+const OrganismBizExpertSelect = ({ conversationId }) => {
   const [isClickExpertSelect, setIsClickExpertSelect] = useAtom(IS_CLICK_EXPERT_SELECT);
   const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
 
-  const [additionalReportData1, setAdditionalReportData1] = useAtom(ADDITIONAL_REPORT_DATA1);
-  const [additionalReportData2, setAdditionalReportData2] = useAtom(ADDITIONAL_REPORT_DATA2);
-  const [additionalReportData3, setAdditionalReportData3] = useAtom(ADDITIONAL_REPORT_DATA3);
+  const [expert1ReportData, setExpert1ReportData] = useAtom(EXPERT1_REPORT_DATA);
+  const [expert2ReportData, setExpert2ReportData] = useAtom(EXPERT2_REPORT_DATA);
+  const [expert3ReportData, setExpert3ReportData] = useAtom(EXPERT3_REPORT_DATA);
 
   const [addtionalQuestion1, setAddtionalQuestion1] = useAtom(ADDITIONAL_QUESTION_1);
   const [addtionalQuestion2, setAddtionalQuestion2] = useAtom(ADDITIONAL_QUESTION_2);
   const [addtionalQuestion3, setAddtionalQuestion3] = useAtom(ADDITIONAL_QUESTION_3);
 
   const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
-
+  
   const handledExpertSelect = (index) => {
     setSelectedExpertIndex(index);
     setIsClickExpertSelect(true);
-    setApproachPath(1);
     setConversationStage(2); // stage를 2로 설정
     setAddtionalQuestion1("");
     setAddtionalQuestion2("");
     setAddtionalQuestion3("");
     setSelectedAdditionalKeyword("");
   }
-  
+
   return (
     <BizExpertSelectContainer>
       <h1>홈케어 뷰티 디바이스와 기능성화장품에 대해 전문가에게 직접 확인해보세요</h1>
       <SelectOptions>
-        <div>
-          <img src={images.ImgChat} alt="" />
-          <p>10차시 전략 다회차 1:1 커피챗하기</p>
-          <button type="button" onClick={() => handledExpertSelect(1)}>시작하기</button>
+        { Object.keys(expert1ReportData).length === 0 &&
+          <div>
+            <img src={images.ImgChat} alt="" />
+            <p>10차시 전략 다회차 1:1 커피챗하기</p>
+            <button type="button" onClick={() => handledExpertSelect(1)}>시작하기</button>
+          </div>
+        }
+        { Object.keys(expert2ReportData).length === 0 &&     
+          <div>
+            <img src={images.ImgWrite} alt="" />
+            <p>브랜드 전문가의 10초 맞춤 제안서 받기</p>
+            <button type="button" onClick={() => handledExpertSelect(2)}>시작하기</button>
+          </div>
+        }
+        { Object.keys(expert3ReportData).length === 0 &&     
+          <div>
+            <img src={images.ImgTarget} alt="" />
+            <p>지금 바로 만나 타겟 고객 확인하기</p>
+            <button type="button" onClick={()=> handledExpertSelect(3)}>시작하기</button>
         </div>
-        <div>
-          <img src={images.ImgWrite} alt="" />
-          <p>브랜드 전문가의 10초 맞춤 제안서 받기</p>
-          <button type="button" onClick={() => handledExpertSelect(2)}>시작하기</button>
-        </div>
-        <div>
-          <img src={images.ImgTarget} alt="" />
-          <p>지금 바로 만나 타겟 고객 확인하기</p>
-          <button type="button" onClick={()=> handledExpertSelect(3)}>시작하기</button>
-        </div>
+        }                
       </SelectOptions>
     </BizExpertSelectContainer>
   );
