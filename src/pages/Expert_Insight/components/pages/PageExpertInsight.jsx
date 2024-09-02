@@ -59,6 +59,7 @@ const PageExpertInsight = () => {
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [isClickExpertSelect, setIsClickExpertSelect] = useAtom(IS_CLICK_EXPERT_SELECT);
   const [sections, setSections] = useState([]);
+  const [additionalReportCount, setAdditionalReportCount] = useState(0);
 
   // const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA); // 전략 리포트 데이터를 atom으로 관리
   const [selectedAdditionalKeyword1, setSelectedAdditionalKeyword1] = useAtom(SELECTED_ADDITIONAL_KEYWORD1);
@@ -277,9 +278,9 @@ const PageExpertInsight = () => {
     }
 }, [approachPath, selectedExpertIndex]);
 
-  // useEffect(() => {
-  //   if(approachPath) handleSearch(-1);
-  // },[selectedExpertIndex])
+  useEffect(() => {
+    if(approachPath) handleSearch(-1);
+  },[selectedExpertIndex])
 
   useEffect(() => {
     if(selectedAdditionalKeyword1 || selectedAdditionalKeyword2 || selectedAdditionalKeyword3) handleSearch(-1);
@@ -315,17 +316,33 @@ const PageExpertInsight = () => {
       }
       
     } else if (conversationStage === 2) {
-        if (!selectedExpertIndex) {
+        if (!selectedExpertIndex || (inputValue !== -1 && approachPath === 1)) {
             alert("전문가를 선택해 주세요.");
             return;
         }
-        // // 마지막 요소가 keyword 이면 제거
-        // if (updatedConversation.length > 0 && updatedConversation[updatedConversation.length - 1].type === 'keyword') {
-        //   updatedConversation.pop(); 
-        // }
-        updatedConversation.push(
+        // 마지막 요소가 keyword 이면 제거
+        if (updatedConversation.length > 0 && updatedConversation[updatedConversation.length - 1].type === 'keyword') {
+          updatedConversation.pop(); 
+        }
+        if(selectedExpertIndex === 1) {
+          updatedConversation.push(
             { type: 'user', message: '10년차 전략 디렉터와 1:1 커피챗, 지금 바로 시작하겠습니다 🙌🏻' },
             { type: 'system', message: `안녕하세요, 김도원입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"`},
+          )
+        }
+        if(selectedExpertIndex === 2) {
+          updatedConversation.push(
+            { type: 'user', message: '지금 바로 쓸 수 있는 브랜딩 솔루션 10초 맞춤 제안서 받기, 지금 바로 시작하겠습니다 🙌🏻' },
+            { type: 'system', message: `안녕하세요, 이지현입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"`},
+          )
+        }
+        if(selectedExpertIndex === 3) {
+          updatedConversation.push(
+            { type: 'user', message: '고객 데이터 전문가의 맞춤 타겟 추천, 지금 바로 시작하겠습니다 🙌🏻' },
+            { type: 'system', message: `안녕하세요, 박서연입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"`},
+          )
+        }
+        updatedConversation.push(
             { type: `strategy_${selectedExpertIndex}` }, // 전문가 인덱스에 따라 전략 보고서 타입 변경
             { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊'},
             { type: `keyword` },
@@ -333,6 +350,11 @@ const PageExpertInsight = () => {
         newConversationStage = 3;
     } else if (conversationStage === 3) {
         updatedConversation.pop();
+
+        if (additionalReportCount >= 3) {
+          alert("추가 리포트는 최대 3개까지 요청 가능합니다. 더 보려면 로그인 해주세요!");
+          return;
+        }
 
         // stage3 에서 사용자가 직접 추가 질문을 했을 때
         if(inputValue !== -1) {
@@ -367,6 +389,7 @@ const PageExpertInsight = () => {
             { type: `keyword` },
           );
         }
+        setAdditionalReportCount(additionalReportCount + 1);
     }
 
     setConversation(updatedConversation);
@@ -442,7 +465,7 @@ const PageExpertInsight = () => {
               }
             return null;
           })}
-          {approachPath !== 1 && (Object.keys(expert1ReportData).length === 0 || Object.keys(expert2ReportData).length === 0 || Object.keys(expert3ReportData).length === 0) &&
+          {conversationStage > 1 && (Object.keys(expert1ReportData).length === 0 || Object.keys(expert2ReportData).length === 0 || Object.keys(expert3ReportData).length === 0) &&
             <OrganismBizExpertSelect />
           }
           </div>
