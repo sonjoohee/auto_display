@@ -14,7 +14,9 @@ import {
   ADDITIONAL_QUESTION_1,
   ADDITIONAL_QUESTION_2,
   ADDITIONAL_QUESTION_3,
-  SELECTED_ADDITIONAL_KEYWORD,
+  SELECTED_ADDITIONAL_KEYWORD1,
+  SELECTED_ADDITIONAL_KEYWORD2,
+  SELECTED_ADDITIONAL_KEYWORD3,
 } from '../../../AtomStates';
 
 const OrganismBizExpertSelect = ({ conversationId }) => {
@@ -31,7 +33,9 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
   const [addtionalQuestion2, setAddtionalQuestion2] = useAtom(ADDITIONAL_QUESTION_2);
   const [addtionalQuestion3, setAddtionalQuestion3] = useAtom(ADDITIONAL_QUESTION_3);
 
-  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
+  const [selectedAdditionalKeyword1, setSelectedAdditionalKeyword1] = useAtom(SELECTED_ADDITIONAL_KEYWORD1);
+  const [selectedAdditionalKeyword2, setSelectedAdditionalKeyword2] = useAtom(SELECTED_ADDITIONAL_KEYWORD2);
+  const [selectedAdditionalKeyword3, setSelectedAdditionalKeyword3] = useAtom(SELECTED_ADDITIONAL_KEYWORD3);
   
   const handledExpertSelect = (index) => {
     setSelectedExpertIndex(index);
@@ -40,7 +44,16 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
     setAddtionalQuestion1("");
     setAddtionalQuestion2("");
     setAddtionalQuestion3("");
-    setSelectedAdditionalKeyword("");
+    
+    if(index === 1) {
+      setSelectedAdditionalKeyword1("");
+    }
+    else if(index === 2) {
+      setSelectedAdditionalKeyword2("");
+    }
+    else if(index === 3) {
+      setSelectedAdditionalKeyword3("");
+    }
   }
 
   return (

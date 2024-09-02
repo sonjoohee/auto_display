@@ -14,7 +14,9 @@ import {
   IS_CLICK_EXPERT_SELECT,
   APPROACH_PATH,
   STRATEGY_REPORT_DATA,
-  SELECTED_ADDITIONAL_KEYWORD,
+  SELECTED_ADDITIONAL_KEYWORD1,
+  SELECTED_ADDITIONAL_KEYWORD2,
+  SELECTED_ADDITIONAL_KEYWORD3,
   EXPERT1_REPORT_DATA,
   EXPERT2_REPORT_DATA,
   EXPERT3_REPORT_DATA,
@@ -59,7 +61,9 @@ const PageExpertInsight = () => {
   const [sections, setSections] = useState([]);
 
   // const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA); // 전략 리포트 데이터를 atom으로 관리
-  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
+  const [selectedAdditionalKeyword1, setSelectedAdditionalKeyword1] = useAtom(SELECTED_ADDITIONAL_KEYWORD1);
+  const [selectedAdditionalKeyword2, setSelectedAdditionalKeyword2] = useAtom(SELECTED_ADDITIONAL_KEYWORD2);
+  const [selectedAdditionalKeyword3, setSelectedAdditionalKeyword3] = useAtom(SELECTED_ADDITIONAL_KEYWORD3);
 
   // 각 전문가의 보고서를 관리하는 Atom
   const [expert1ReportData, setExpert1ReportData] = useAtom(EXPERT1_REPORT_DATA);
@@ -148,7 +152,9 @@ const PageExpertInsight = () => {
       addtionalQuestion1: addtionalQuestion1,
       addtionalQuestion2: addtionalQuestion2,
       addtionalQuestion3: addtionalQuestion3,
-      selectedAdditionalKeyword: selectedAdditionalKeyword,
+      selectedAdditionalKeyword1: selectedAdditionalKeyword1,
+      selectedAdditionalKeyword2: selectedAdditionalKeyword2,
+      selectedAdditionalKeyword3: selectedAdditionalKeyword3,
       ...existingReports, // 기존의 모든 보고서를 함께 저장
       timestamp: Date.now(),
     });
@@ -190,7 +196,9 @@ const PageExpertInsight = () => {
                 const currentReportKey2 = `additionalReportData_EX${selectedExpertIndex}`;
                 setAdditionalReportData(savedConversation[currentReportKey2] || {});
 
-                setSelectedAdditionalKeyword(savedConversation.selectedAdditionalKeyword);
+                // setSelectedAdditionalKeyword1(savedConversation.selectedAdditionalKeyword1);
+                // setSelectedAdditionalKeyword2(savedConversation.selectedAdditionalKeyword2);
+                // setSelectedAdditionalKeyword3(savedConversation.selectedAdditionalKeyword3);
             } else {
                 if (selectedExpertIndex) {
                     const initialMessage = getInitialSystemMessage();
@@ -222,6 +230,23 @@ const PageExpertInsight = () => {
     // setAdditionalReportData,
 ]);
 
+  useEffect(() => {
+    const loadConversationOther = async () => {
+      const savedConversation = await getConversationByIdFromIndexedDB(conversationId);
+      if (savedConversation) {
+          const analysisData = savedConversation.analysisReportData || {};
+          setTitleOfBusinessInfo(analysisData.title || "");
+          setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
+          setMainCharacteristicOfBusinessInformation(analysisData.mainCharacter || []);
+          setBusinessInformationTargetCustomer(analysisData.mainCustomer || []);
+          setSelectedAdditionalKeyword1(savedConversation.selectedAdditionalKeyword1 || "");
+          setSelectedAdditionalKeyword2(savedConversation.selectedAdditionalKeyword2 || "");
+          setSelectedAdditionalKeyword3(savedConversation.selectedAdditionalKeyword3 || "");
+      }
+    }
+    loadConversationOther();
+  }, []);
+  
 // const resetConversationState = () => {
 //   setTitleOfBusinessInfo("");
 //   setMainFeaturesOfBusinessInformation([]);
@@ -257,8 +282,12 @@ const PageExpertInsight = () => {
   // },[selectedExpertIndex])
 
   useEffect(() => {
-    if(selectedAdditionalKeyword && conversationStage <= 3) handleSearch(-1);
-  },[selectedAdditionalKeyword])
+    if((selectedAdditionalKeyword1 || selectedAdditionalKeyword2 || selectedAdditionalKeyword3) && conversationStage <= 3) handleSearch(-1);
+  },[
+    selectedAdditionalKeyword1,
+    selectedAdditionalKeyword2,
+    selectedAdditionalKeyword3,
+  ])
 
   const handleSearch = (inputValue) => {
     const updatedConversation = [...conversation];
@@ -308,11 +337,27 @@ const PageExpertInsight = () => {
         newConversationStage = 3;
     } else if (conversationStage === 3) {
         updatedConversation.pop();
-        updatedConversation.push(
-            { type: 'user', message: `제 프로젝트와 관련된 "${selectedAdditionalKeyword}"를 요청드려요` },
+        if(selectedExpertIndex === 1) {
+          updatedConversation.push(
+            { type: 'user', message: `제 프로젝트와 관련된 "${selectedAdditionalKeyword1}"를 요청드려요` },
             { type: `addition_${selectedExpertIndex}` },
-            { type: 'system', message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${selectedAdditionalKeyword}를 찾아드렸어요`},
-        );
+            { type: 'system', message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${selectedAdditionalKeyword1}를 찾아드렸어요`},
+          );
+        }
+        else if(selectedExpertIndex === 2) {
+          updatedConversation.push(
+            { type: 'user', message: `제 프로젝트와 관련된 "${selectedAdditionalKeyword2}"를 요청드려요` },
+            { type: `addition_${selectedExpertIndex}` },
+            { type: 'system', message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${selectedAdditionalKeyword2}를 찾아드렸어요`},
+          );
+        }
+        else if(selectedExpertIndex === 3) {
+          updatedConversation.push(
+            { type: 'user', message: `제 프로젝트와 관련된 "${selectedAdditionalKeyword3}"를 요청드려요` },
+            { type: `addition_${selectedExpertIndex}` },
+            { type: 'system', message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${selectedAdditionalKeyword3}를 찾아드렸어요`},
+          );
+        }
         newConversationStage = 4;
     }
 
@@ -362,14 +407,36 @@ const PageExpertInsight = () => {
               );
             } else if (item.type.startsWith('addition_')) {
               const expertIndex = item.type.split('_')[1];
-                if(selectedAdditionalKeyword) {
-                  return <OrganismAdditionalReport 
-                          key={`addition_${expertIndex}_${index}`}
-                          conversationId={conversationId}
-                          expertIndex={expertIndex}
-                        />;
+                if(expertIndex === '1') {
+                  if(selectedAdditionalKeyword1) {
+                    return <OrganismAdditionalReport 
+                            key={`addition_${expertIndex}_${index}`}
+                            conversationId={conversationId}
+                            expertIndex={expertIndex}
+                          />;
+                  }
+                  else return <MoleculeAdditionalKeyword/>;
                 }
-                else return <MoleculeAdditionalKeyword/>;
+                else if(expertIndex === '2') {
+                  if(selectedAdditionalKeyword2) {
+                    return <OrganismAdditionalReport 
+                            key={`addition_${expertIndex}_${index}`}
+                            conversationId={conversationId}
+                            expertIndex={expertIndex}
+                          />;
+                  }
+                  else return <MoleculeAdditionalKeyword/>;
+                }
+                else if(expertIndex === '3') {
+                  if(selectedAdditionalKeyword3) {
+                    return <OrganismAdditionalReport 
+                            key={`addition_${expertIndex}_${index}`}
+                            conversationId={conversationId}
+                            expertIndex={expertIndex}
+                          />;
+                  }
+                  else return <MoleculeAdditionalKeyword/>;
+                }
               }
             return null;
           })}
