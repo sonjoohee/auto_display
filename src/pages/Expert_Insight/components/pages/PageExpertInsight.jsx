@@ -166,12 +166,12 @@ const PageExpertInsight = () => {
                 setConversationStage(savedConversation.conversationStage);
                 setInputBusinessInfo(savedConversation.inputBusinessInfo);
 
-                // analysisReportData에서 데이터를 복원
-                const analysisData = savedConversation.analysisReportData || {};
-                setTitleOfBusinessInfo(analysisData.title || "");
-                setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
-                setMainCharacteristicOfBusinessInformation(analysisData.mainCharacter || []);
-                setBusinessInformationTargetCustomer(analysisData.mainCustomer || []);
+                // // analysisReportData에서 데이터를 복원
+                // const analysisData = savedConversation.analysisReportData || {};
+                // setTitleOfBusinessInfo(analysisData.title || "");
+                // setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
+                // setMainCharacteristicOfBusinessInformation(analysisData.mainCharacter || []);
+                // setBusinessInformationTargetCustomer(analysisData.mainCustomer || []);
 
                 // 전략 보고서 데이터를 전문가별로 복원
                 setExpert1ReportData(savedConversation.strategyReportData_EX1 || {});
@@ -207,47 +207,47 @@ const PageExpertInsight = () => {
     conversationId,
     navigate,
     selectedExpertIndex, // 전문가가 바뀔 때마다 실행
-    setInputBusinessInfo,
-    setTitleOfBusinessInfo,
-    setMainFeaturesOfBusinessInformation,
-    setMainCharacteristicOfBusinessInformation,
-    setBusinessInformationTargetCustomer,
-    setSections,
-    setExpert1ReportData,
-    setExpert2ReportData,
-    setExpert3ReportData,
     setStrategyReportData, // 추가: 전문가가 바뀌면 바로 반영되도록
-    setAdditionalReportData1,
-    setAdditionalReportData2,
-    setAdditionalReportData3,
-    setAdditionalReportData,
+    // setInputBusinessInfo,
+    // setTitleOfBusinessInfo,
+    // setMainFeaturesOfBusinessInformation,
+    // setMainCharacteristicOfBusinessInformation,
+    // setBusinessInformationTargetCustomer,
+    // setSections,
+    // setExpert1ReportData,
+    // setExpert2ReportData,
+    // setExpert3ReportData,
+    // setAdditionalReportData1,
+    // setAdditionalReportData2,
+    // setAdditionalReportData3,
+    // setAdditionalReportData,
 ]);
 
-const resetConversationState = () => {
-  setTitleOfBusinessInfo("");
-  setMainFeaturesOfBusinessInformation([]);
-  setMainCharacteristicOfBusinessInformation([]);
-  setBusinessInformationTargetCustomer([]);
-  setExpert1ReportData({});
-  setExpert2ReportData({});
-  setExpert3ReportData({});
-  setAdditionalReportData1({});
-  setAdditionalReportData2({});
-  setAdditionalReportData3({});
-  setConversation([]); // 대화 초기화
-  setConversationStage(1); // 초기 대화 단계 설정
-  setAdditionalReportData({});
-};
+// const resetConversationState = () => {
+//   setTitleOfBusinessInfo("");
+//   setMainFeaturesOfBusinessInformation([]);
+//   setMainCharacteristicOfBusinessInformation([]);
+//   setBusinessInformationTargetCustomer([]);
+//   setExpert1ReportData({});
+//   setExpert2ReportData({});
+//   setExpert3ReportData({});
+//   setAdditionalReportData1({});
+//   setAdditionalReportData2({});
+//   setAdditionalReportData3({});
+//   setConversation([]); // 대화 초기화
+//   setConversationStage(1); // 초기 대화 단계 설정
+//   setAdditionalReportData({});
+// };
 
   // 검색을 통해 들어왔으면 handleSearch 실행
   useEffect(() => {
     if (approachPath === -1) {
-        resetConversationState(); 
+        // resetConversationState(); 
         handleSearch(-1); // 검색을 통해 접근한 경우
     } else if (approachPath > 0) {
         // 새로운 전문가를 선택하여 대화를 시작하는 경우 상태를 초기화
         setInputBusinessInfo(""); // 입력된 비즈니스 정보 초기화
-        resetConversationState(); 
+        // resetConversationState(); 
         const initialMessage = getInitialSystemMessage();
         setConversation([{ type: 'system', message: initialMessage }]);
     }
