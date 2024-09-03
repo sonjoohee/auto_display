@@ -13,6 +13,7 @@ const MoleculeSystemMessage = ({ message }) => {
   return (
     <>
     <SystemMessageContainer>
+
       <div><p>{messageWithLineBreaks}</p></div>
       {/* <span>1 min ago</span> */}
     </SystemMessageContainer>

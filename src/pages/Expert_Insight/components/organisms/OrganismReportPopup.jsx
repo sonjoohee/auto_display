@@ -19,7 +19,7 @@ const OrganismReportPopup = ({ report, onClose }) => {
           <h1>{report.title}</h1>
           <p>
             <span>마케팅</span>
-            <span>생성 : {report.date}</span>
+            {/* <span>생성 : {report.date}</span> */}
             <span>저장 : {report.date}</span>
           </p>
         </div>
