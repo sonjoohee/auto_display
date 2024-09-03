@@ -30,6 +30,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const [sections, setSections] = useState([]);
   const axiosConfig = {
     timeout: 100000, // 100초
+    headers: { 'Content-Type': 'application/json' }, withCredentials: true // 쿠키 포함 요청 (필요한 경우)
   };
   const [email, setEmail] = useAtom(emailAtom);
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
