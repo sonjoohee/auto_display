@@ -18,6 +18,7 @@ import {
   TEMP_MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
   TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER,
   INPUT_BUSINESS_INFO,
+  IS_EDITING_NOW,
 } from '../../../AtomStates';
 
 const OrganismBizAnalysisSection = ({ conversationId }) => {
@@ -37,7 +38,8 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   const [isAddingNow, setIsAddingNow] = useState({ section: '', isAdding: false });
   const [newEditContent, setNewEditContent] = useState('');
   const [editingIndex, setEditingIndex] = useState({ section: '', index: -1 });
-  const [isEditingNow, setIsEditingNow] = useState(false);
+  // const [isEditingNow, setIsEditingNow] = useState(false);
+  const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
   const [warningMessage, setWarningMessage] = useState('');
   const axiosConfig = {
     timeout: 100000, // 100초
@@ -51,61 +53,61 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
     mainCharacter: mainCharacteristicOfBusinessInformation,
     mainCustomer: businessInformationTargetCustomer,
   };
-  useEffect(() => {
-    setIsLoading(true);
-    const loadAndSaveData = async () => {
-      // JSON 데이터를 상태로 설정
-      // setTitleOfBusinessInfo(businessTemplate["명칭"]);
-      // setMainFeaturesOfBusinessInformation(businessTemplate["주요기능"].map((item) => item));
-      // setMainCharacteristicOfBusinessInformation(businessTemplate["주요기능"].map((item) => item));
-      // setBusinessInformationTargetCustomer(businessTemplate["목표고객"].map((item) => item));
-      const response = await axios.post('http://52.79.204.29:7800/panels/business', data, axiosConfig);
-      const businessData = response.data.business_analysis;
-      // Temp 상태에도 초기 데이터를 설정
-      setTitleOfBusinessInfo(businessData["명칭"]);
-      setTempMainFeaturesOfBusinessInformation(businessData["주요_목적_및_특징"].map((item) => item));
-      setTempMainCharacteristicOfBusinessInformation(businessData["주요기능"].map((item) => item));
-      setTempBusinessInformationTargetCustomer(businessData["목표고객"].map((item) => item));
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   const loadAndSaveData = async () => {
+  //     // JSON 데이터를 상태로 설정
+  //     // setTitleOfBusinessInfo(businessTemplate["명칭"]);
+  //     // setMainFeaturesOfBusinessInformation(businessTemplate["mainFeatures"].map((item) => item));
+  //     // setMainCharacteristicOfBusinessInformation(businessTemplate["mainFeatures"].map((item) => item));
+  //     // setBusinessInformationTargetCustomer(businessTemplate["목표고객"].map((item) => item));
+  //     const response = await axios.post('http://52.79.204.29:7800/panels/business', data, axiosConfig);
+  //     const businessData = response.data.business_analysis;
+  //     // Temp 상태에도 초기 데이터를 설정
+  //     setTitleOfBusinessInfo(businessData["명칭"]);
+  //     setTempMainFeaturesOfBusinessInformation(businessData["주요_목적_및_특징"].map((item) => item));
+  //     setTempMainCharacteristicOfBusinessInformation(businessData["주요기능"].map((item) => item));
+  //     setTempBusinessInformationTargetCustomer(businessData["목표고객"].map((item) => item));
 
-      setMainFeaturesOfBusinessInformation(businessData["주요_목적_및_특징"].map((item) => item));
-      setMainCharacteristicOfBusinessInformation(businessData["주요기능"].map((item) => item));
-      setBusinessInformationTargetCustomer(businessData["목표고객"].map((item) => item));
+  //     setMainFeaturesOfBusinessInformation(businessData["주요_목적_및_특징"].map((item) => item));
+  //     setMainCharacteristicOfBusinessInformation(businessData["주요기능"].map((item) => item));
+  //     setBusinessInformationTargetCustomer(businessData["목표고객"].map((item) => item));
 
-      // 기존 대화 내역을 유지하면서 새로운 정보를 추가
-      const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
-      // const updatedConversation = {
-      //   ...existingConversation,
-      //   mainFeatures: businessData["주요_목적_및_특징"].map((item) => item),
-      //   mainCharacter: businessData["주요기능"].map((item) => item),
-      //   mainCustomer: businessData["목표고객"].map((item) => item),
-      //   timestamp: Date.now(),
-      // };
-      const updatedConversation = {
-        ...existingConversation,
-        analysisReportData,
-        timestamp: Date.now(),
-      };
-      console.log("___________기초보고서_____________")
-      console.log(analysisReportData)
-      await saveConversationToIndexedDB(updatedConversation);
-    };
-    loadAndSaveData();
-    setIsLoading(false);
-  }, [
-    conversationId,
-    setTitleOfBusinessInfo,
-    setMainFeaturesOfBusinessInformation,
-    setMainCharacteristicOfBusinessInformation,
-    setBusinessInformationTargetCustomer,
-    setTempMainFeaturesOfBusinessInformation,
-    setTempMainCharacteristicOfBusinessInformation,
-    setTempBusinessInformationTargetCustomer
-  ]);
+  //     // 기존 대화 내역을 유지하면서 새로운 정보를 추가
+  //     const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
+  //     // const updatedConversation = {
+  //     //   ...existingConversation,
+  //     //   mainFeatures: businessData["주요_목적_및_특징"].map((item) => item),
+  //     //   mainCharacter: businessData["mainFeatures"].map((item) => item),
+  //     //   mainCustomer: businessData["목표고객"].map((item) => item),
+  //     //   timestamp: Date.now(),
+  //     // };
+  //     const updatedConversation = {
+  //       ...existingConversation,
+  //       analysisReportData,
+  //       timestamp: Date.now(),
+  //     };
+  //     console.log("___________기초보고서_____________")
+  //     console.log(analysisReportData)
+  //     await saveConversationToIndexedDB(updatedConversation);
+  //   };
+  //   loadAndSaveData();
+  //   setIsLoading(false);
+  // }, [
+  //   conversationId,
+  //   setTitleOfBusinessInfo,
+  //   setMainFeaturesOfBusinessInformation,
+  //   setMainCharacteristicOfBusinessInformation,
+  //   setBusinessInformationTargetCustomer,
+  //   setTempMainFeaturesOfBusinessInformation,
+  //   setTempMainCharacteristicOfBusinessInformation,
+  //   setTempBusinessInformationTargetCustomer
+  // ]);
 
 //   const handleEditStart = (section, index) => {
 //     setEditingIndex({ section, index });
 //     setIsEditingNow(true);
-//     if (section === '주요기능') {
+//     if (section === 'mainFeatures') {
 //       setNewEditContent(tempMainFeaturesOfBusinessInformation[index]);
 //     } else if (section === 'mainCharacteristic') {
 //       setNewEditContent(tempMainCharacteristicOfBusinessInformation[index]);
@@ -136,19 +138,6 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   };
 
   const handleApplyChange = () => {
-    if (editingIndex.section === '주요기능') {
-      const updatedFeatures = [...tempMainFeaturesOfBusinessInformation];
-      updatedFeatures[editingIndex.index] = newEditContent;
-      setTempMainFeaturesOfBusinessInformation(updatedFeatures);
-    } else if (editingIndex.section === 'mainCharacteristic') {
-      const updatedFeatures = [...tempMainCharacteristicOfBusinessInformation];
-      updatedFeatures[editingIndex.index] = newEditContent;
-      setTempMainCharacteristicOfBusinessInformation(updatedFeatures);
-    } else if (editingIndex.section === 'targetCustomer') {
-      const updatedCustomers = [...tempBusinessInformationTargetCustomer];
-      updatedCustomers[editingIndex.index] = newEditContent;
-      setTempBusinessInformationTargetCustomer(updatedCustomers);
-
     if (newEditContent.trim() === '') {
       alert("내용을 입력해주세요.");  // 비어있는 내용에 대한 경고 메시지
       return;
@@ -177,9 +166,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
     }
   
     setEditingIndex({ section: '', index: -1 });
-
     setWarningMessage('');
-    setIsEditingNow(false);
     setNewEditContent('');
     console.log("Updated State:", updatedArray);
   };
@@ -187,18 +174,17 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   const handleEditCancel = () => {
     setEditingIndex({ section: '', index: -1 });
     setWarningMessage('');
-    setIsEditingNow(false);
     setNewEditContent('');
   };
 
   const handleAddSave = (section) => {
     if (newAddContent.trim() !== '') {
-      if (section === '주요기능') {
-        setTempMainFeaturesOfBusinessInformation([...tempMainFeaturesOfBusinessInformation, newAddContent]);
+      if (section === 'mainFeatures') {
+        setMainFeaturesOfBusinessInformation([...mainFeaturesOfBusinessInformation, newAddContent]);
       } else if (section === 'mainCharacteristic') {
-        setTempMainCharacteristicOfBusinessInformation([...tempMainCharacteristicOfBusinessInformation, newAddContent]);
+        setMainCharacteristicOfBusinessInformation([...mainCharacteristicOfBusinessInformation, newAddContent]);
       } else if (section === 'targetCustomer') {
-        setTempBusinessInformationTargetCustomer([...tempBusinessInformationTargetCustomer, newAddContent]);
+        setBusinessInformationTargetCustomer([...businessInformationTargetCustomer, newAddContent]);
       }
       setNewAddContent('');
       setIsAddingNow({ section: '', isAdding: false });
@@ -206,19 +192,19 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   };
 
   const handleDelete = (section, index) => {
-    alert("정말 삭제하시겠습니까?");
+    alert(index+section+"정말 삭제하시겠습니까?");
     
-    if (section === '주요기능') {
-      setTempMainFeaturesOfBusinessInformation(
-        tempMainFeaturesOfBusinessInformation.filter((_, i) => i !== index)
+    if (section === 'mainFeatures') {
+      setMainFeaturesOfBusinessInformation(
+        mainFeaturesOfBusinessInformation.filter((_, i) => i !== index)
       );
     } else if (section === 'mainCharacteristic') {
-      setTempMainCharacteristicOfBusinessInformation(
-        tempMainCharacteristicOfBusinessInformation.filter((_, i) => i !== index)
+      setMainCharacteristicOfBusinessInformation(
+        mainCharacteristicOfBusinessInformation.filter((_, i) => i !== index)
       );
     } else if (section === 'targetCustomer') {
-      setTempBusinessInformationTargetCustomer(
-        tempBusinessInformationTargetCustomer.filter((_, i) => i !== index)
+      setBusinessInformationTargetCustomer(
+        businessInformationTargetCustomer.filter((_, i) => i !== index)
       );
     }
   };
@@ -238,7 +224,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
         <ul>
           {mainFeaturesOfBusinessInformation.map((content, index) => (
             <li key={index}>
-              {editingIndex.section === '주요기능' && editingIndex.index === index ? (
+              {editingIndex.section === 'mainFeatures' && editingIndex.index === index ? (
                 <InputField
                   type="text"
                   value={newEditContent}
@@ -247,7 +233,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               ) : (
                 <p>{content}</p>
               )}
-              {editingIndex.section === '주요기능' && editingIndex.index === index ? (
+              {editingIndex.section === 'mainFeatures' && editingIndex.index === index ? (
                 <>
                   <BtnWrap>
                     <button onClick={handleEditCancel}><img src={images.IconClose2} alt="" />취소</button>
@@ -259,8 +245,8 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                   {isEditingNow && (
                     <>
                       <BtnWrap>
-                        <button onClick={() => handleEditStart('주요기능', index)}><img src={images.IconEdit2} alt="" />수정</button>
-                        <button onClick={() => {handleDelete('주요기능', index)}}><img src={images.IconDelete2} alt="" />삭제</button>
+                        <button onClick={() => handleEditStart('mainFeatures', index)}><img src={images.IconEdit2} alt="" />수정</button>
+                        <button onClick={() => handleDelete('mainFeatures', index)}><img src={images.IconDelete2} alt="" />삭제</button>
                       </BtnWrap>
                     </>
                   )}
@@ -269,7 +255,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
             </li>
           ))}
         </ul>
-        {isAddingNow.section === '주요기능' && isAddingNow.isAdding ? (
+        {isAddingNow.section === 'mainFeatures' && isAddingNow.isAdding ? (
           <AddInfo>
             <InputField
               value={newAddContent}
@@ -277,16 +263,13 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               placeholder="새로운 정보를 추가해보세요"
             />
             <BtnWrap>
-//               <button onClick={() => handleAddSave('주요기능')}><img src={images.IconEdit2} alt="" />저장</button>
-//               <button onClick={() => setIsAddingNow({ section: '', isAdding: false })}><img src={images.IconDelete2} alt="" />취소</button>
               <button onClick={() => setIsAddingNow({ section: '', isAdding: false })}><img src={images.IconClose2} alt="" />취소</button>
               <button onClick={() => handleAddSave('mainFeatures')}><img src={images.IconCheck2} alt="" />저장</button>
-
             </BtnWrap>
           </AddInfo>
         ) : (
           isEditingNow && (
-            <button className="moreButton" onClick={() => setIsAddingNow({ section: '주요기능', isAdding: true })}>
+            <button className="moreButton" onClick={() => setIsAddingNow({ section: 'mainFeatures', isAdding: true })}>
               특징 추가하기 +
             </button>
           )
