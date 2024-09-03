@@ -254,7 +254,7 @@ const PageExpertInsight = () => {
       }
     }
     loadConversationOther();
-  }, []);
+  }, [navigate]);
 
 // const resetConversationState = () => {
 //   setTitleOfBusinessInfo("");
@@ -464,7 +464,7 @@ const PageExpertInsight = () => {
 
         <MainContent>
           <div>
-          <MoleculeBizName bizName={titleOfBusinessInfo} />
+          <MoleculeBizName />
           {conversation.map((item, index) => {
             if (item.type === 'user') {
               return <MoleculeUserMessage key={index} message={item.message} />;
