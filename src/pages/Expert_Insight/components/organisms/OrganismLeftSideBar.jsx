@@ -7,6 +7,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAtom } from 'jotai';
 import { INPUT_BUSINESS_INFO, SAVED_REPORTS } from '../../../AtomStates';
 import { getAllConversationsFromIndexedDB } from '../../../../utils/indexedDB'; // IndexedDB에서 대화 내역 가져오기
+import { isLoggedInAtom } from '../../../AtomStates'; // isLoggedInAtom 임포트
+import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
 
 import OrganismReportPopup from './OrganismReportPopup'; // 팝업 컴포넌트 임포트
 
@@ -16,6 +18,8 @@ const OrganismLeftSideBar = () => {
   const [savedReports] = useAtom(SAVED_REPORTS);
   const [selectedReport, setSelectedReport] = useState(null); // 선택된 보고서 상태 관리
   const [conversations, setConversations] = useState([]); // 저장된 대화 상태 관리
+  const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 관리
+  const [isLoginPopupOpen, setLoginPopupOpen] = useState(false); // 로그인 팝업 상태 관리
 
   useEffect(() => {
     // IndexedDB에서 저장된 모든 대화 내역 가져오기
@@ -31,11 +35,25 @@ const OrganismLeftSideBar = () => {
     navigate(`/conversation/${id}`);
   };
 
+  const handleLoginClick = () => {
+    setLoginPopupOpen(true); // 로그인 팝업 열기
+  };
+
+  const closeLoginPopup = () => {
+    setLoginPopupOpen(false); // 로그인 팝업 닫기
+  };
+
+  const handleLogout = () => {
+    // 로그아웃 시 처리
+    setIsLoggedIn(false);
+    navigate('/PageMeetAiExpert');
+  };
+
   const handleReportClick = (index) => {
     // 저장된 보고서를 클릭하면 해당 보고서를 선택하여 팝업에 표시
     setSelectedReport(savedReports[index]);
   };
-
+  
   const closePopup = () => {
     setSelectedReport(null); // 팝업 닫기
   };
@@ -124,7 +142,6 @@ const OrganismLeftSideBar = () => {
                     {conversations.map((conversation, index) => (
                       <li key={index}>
                         <p onClick={() => handleConversationClick(conversation.id)}>{conversation.inputBusinessInfo}</p>
-                        {/* <span>{new Date(conversation.timestamp).toLocaleDateString()}</span> */}
                         <span>
                           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="3" viewBox="0 0 14 3" fill="none">
                             <circle cx="2.0067" cy="1.51283" r="1.49694" transform="rotate(-90 2.0067 1.51283)" fill="#A0A0A0"/>
@@ -139,13 +156,48 @@ const OrganismLeftSideBar = () => {
               </AccordionContent>
             </AccordionItem>
           </AccordionMenu>
+
+          <AuthButtons>
+            {isLoggedIn ? (
+              <button onClick={handleLogout}>로그아웃</button>
+            ) : (
+              <>
+                <button onClick={handleLoginClick}>로그인</button>
+                <Link to="/signup">회원가입</Link>
+              </>
+            )}
+          </AuthButtons>
         </SideBarMenu>
       </SideBar>
+
+      {isLoginPopupOpen && <MoleculeLoginPopup onClose={closeLoginPopup} />}
     </>
   );
 };
 
 export default OrganismLeftSideBar;
+
+const AuthButtons = styled.div`
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+
+  button {
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    background-color: ${palette.blue};
+    color: ${palette.white};
+    cursor: pointer;
+    font-size: 1rem;
+
+    &:hover {
+      background-color: ${palette.darkBlue};
+    }
+  }
+`;
 
 const Logo = styled.div`
   position:fixed;

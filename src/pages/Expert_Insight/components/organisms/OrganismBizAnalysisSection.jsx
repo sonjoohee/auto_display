@@ -80,7 +80,6 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
       console.log("기초보고서2")
       console.log(analysisReportData)
       setIsLoading(false);
-
     };
     loadAndSaveData();
 
