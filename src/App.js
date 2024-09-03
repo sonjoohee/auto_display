@@ -52,7 +52,7 @@ function App() {
 
             <Route path="/" element={<PageMeetAiExpert />} />
             <Route path="*" element={<PageMeetAiExpert />} />
-            <Route path="PageMeetAiExpert" element={<PageMeetAiExpert />} />
+            <Route path="/PageMeetAiExpert" element={<PageMeetAiExpert />} />
             <Route path="/ExpertInsight" element={<PageExpertInsight />}></Route>
             <Route path="/AI_Panel" element={<PageAIPanelList />} />
             <Route path="/QuickReport" element={<BusinessTool />} />

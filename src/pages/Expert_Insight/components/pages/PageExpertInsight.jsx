@@ -162,6 +162,10 @@ const PageExpertInsight = () => {
         } else {
             const savedConversation = await getConversationByIdFromIndexedDB(conversationId);
             if (savedConversation) {
+                // 기존 데이터가 이미 로드된 경우 상태를 업데이트하지 않도록 조건 추가
+                if (savedConversation.conversationStage === conversationStage) {
+                    return;
+                }
                 setConversation(savedConversation.conversation);
                 setConversationStage(savedConversation.conversationStage);
                 setInputBusinessInfo(savedConversation.inputBusinessInfo);
@@ -285,6 +289,7 @@ const resetConversationState = () => {
                 updatedConversation.push(
                     { type: 'system', message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻` },
                     { type: 'analysis', businessInfo },  // 입력된 비즈니스 정보를 분석
+                    { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊' },
                 );
             }
             newConversationStage = 2;

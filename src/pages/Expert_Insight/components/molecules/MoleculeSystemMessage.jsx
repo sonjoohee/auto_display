@@ -7,7 +7,7 @@ const MoleculeSystemMessage = ({ message }) => {
     <>
     <SystemMessageContainer>
       <div><p>{message}</p></div>
-      <span>1 min ago</span>
+      {/* <span>1 min ago</span> */}
     </SystemMessageContainer>
     </>
   );

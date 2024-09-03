@@ -71,7 +71,7 @@ const OrganismLeftSideBar = () => {
   return (
     <>
       <Logo isOpen={isOpen}>
-        <Link to="/"></Link>
+        <a href="/"></a> {/* Link를 a 태그로 변경 */}
         <button type="button" onClick={toggleSidebar}>닫기</button>
       </Logo>
 
