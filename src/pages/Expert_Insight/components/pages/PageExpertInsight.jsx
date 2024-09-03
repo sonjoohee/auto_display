@@ -28,6 +28,7 @@ import {
   ADDITIONAL_QUESTION_3,
   CONVERSATION_STAGE,
   iS_CLICK_CHECK_REPORT_RIGHTAWAY,
+  CONVERSATION,
 } from '../../../AtomStates';
 
 import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
@@ -50,7 +51,7 @@ const PageExpertInsight = () => {
   const navigate = useNavigate();
   const { conversationId: paramConversationId } = useParams();
   const conversationId = paramConversationId || nanoid();
-  const [conversation, setConversation] = useState([]);
+  const [conversation, setConversation] = useAtom(CONVERSATION);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
@@ -147,7 +148,7 @@ const PageExpertInsight = () => {
       additionalReportData_EX2: additionalReportData2, 
       additionalReportData_EX3: additionalReportData3, 
     };
-    console.log(addtionalQuestion1);
+
     saveConversationToIndexedDB({
       id: conversationId,
       conversation: updatedConversation,
@@ -221,6 +222,7 @@ const PageExpertInsight = () => {
 }, [
     paramConversationId,
     conversationId,
+    conversation,
     navigate,
     selectedExpertIndex, // 전문가가 바뀔 때마다 실행
     setStrategyReportData, // 추가: 전문가가 바뀌면 바로 반영되도록
@@ -326,7 +328,7 @@ const PageExpertInsight = () => {
     const updatedConversation = [...conversation];
 
     // 사용자가 입력한 경우에만 inputBusinessInfo를 업데이트
-    if (approachPath === 1 && inputValue !== -1) {
+    if (conversationStage < 3 && inputValue !== -1) {
       setInputBusinessInfo(inputValue);
       updatedConversation.push({ type: 'user', message: inputValue });
     }
@@ -513,7 +515,7 @@ const PageExpertInsight = () => {
               }
             return null;
           })}
-          {approachPath === -1 && (Object.keys(expert1ReportData).length === 0 || Object.keys(expert2ReportData).length === 0 || Object.keys(expert3ReportData).length === 0) &&
+          {approachPath === -1 && inputBusinessInfo && (Object.keys(expert1ReportData).length === 0 || Object.keys(expert2ReportData).length === 0 || Object.keys(expert3ReportData).length === 0) &&
             <OrganismBizExpertSelect />
           }
           </div>
