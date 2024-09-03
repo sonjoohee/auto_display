@@ -15,7 +15,7 @@ const MoleculeLogin = ({ onClosePopup = () => {} }) => {
 
   useEffect(() => {
     if (loginSuccess) {
-      navigate('/ai_panel');    // 페이지 이동
+      navigate('/');    // 페이지 이동
       if (onClosePopup) onClosePopup(); // 팝업 닫기
       setLoginSuccess(null);    // 상태 초기화
     }

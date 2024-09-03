@@ -81,7 +81,7 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
             "question_info": keyword
           };
 
-          const response = await axios.post('http://52.79.204.29:7800/panels/add_question', data, axiosConfig);
+          const response = await axios.post('https://wishresearch.kr/panels/add_question', data, axiosConfig);
           console.log(response)
           const answerData = response.data.additional_question;
           setAnswerData(answerData);
@@ -97,6 +97,7 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
             timestamp: Date.now(),
           };
           await saveConversationToIndexedDB(updatedConversation);
+          console.log()
         } else {
           // 기존 데이터가 있을 때 처리
           setTabs(additionalReportData[selectedTab]?.tabs || []);

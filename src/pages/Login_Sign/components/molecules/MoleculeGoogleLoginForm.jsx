@@ -21,9 +21,9 @@ const MoleculeGoogleLoginForm = () => {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 // 'http://localhost:4008/google-login'
-// 'http://52.79.204.29:7800/api/user/login/google/'
+// 'https://wishresearch.kr/api/user/login/google/'
       // Firebase 인증 후 사용자 정보를 서버에 저장
-      await axios.post('http://52.79.204.29:7800/api/user/login/google/', {
+      await axios.post('https://wishresearch.kr/api/user/login/google/', {
         uid: user.uid,
         name: user.displayName,
         email: user.email,

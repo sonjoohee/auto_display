@@ -61,10 +61,10 @@ const MoleculeSignupForm = () => {
     if (!validateForm()) return;
 
     setIsLoading(true); // 로딩 상태 시작
-// http://52.79.204.29:7800/api/user/signup/
+// https://wishresearch.kr/api/user/signup/
 // http://localhost:4008/signup
     try {
-      const response = await fetch('http://52.79.204.29:7800/api/user/signup/', {
+      const response = await fetch('https://wishresearch.kr/api/user/signup/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password, role, status })
