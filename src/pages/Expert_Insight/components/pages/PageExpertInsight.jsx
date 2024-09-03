@@ -78,6 +78,8 @@ const PageExpertInsight = () => {
   const [addtionalQuestion2, setAddtionalQuestion2] = useAtom(ADDITIONAL_QUESTION_2);
   const [addtionalQuestion3, setAddtionalQuestion3] = useAtom(ADDITIONAL_QUESTION_3);
 
+  const [inputAdditionalQuestion, setInputAdditionalQuestion] = useState("");
+
   // 현재 선택된 전문가에 맞는 보고서 데이터를 결정
   const getStrategyReportData = () => {
     switch (selectedExpertIndex) {
@@ -290,6 +292,26 @@ const PageExpertInsight = () => {
     selectedAdditionalKeyword3,
   ])
 
+  // // 추가 질문 입력 API
+  // const fetchInputAdditionalQuestion = async ({ input }) => {
+  //   console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
+  //   try {
+  //   const response = await axios.get(
+  //     `${process.env.REACT_APP_SERVER_URL}/${input}`
+  //   );
+  //   console.log(response);
+  //   setInputAdditionalQuestion(response.data);
+
+  //   if(selectedExpertIndex === 1) setSelectedAdditionalKeyword1(inputAdditionalQuestion);
+  //   else if(selectedExpertIndex === 2) setSelectedAdditionalKeyword2(inputAdditionalQuestion);
+  //   else setSelectedAdditionalKeyword3(inputAdditionalQuestion);
+
+  //   } catch (error) {
+  //     console.error("Error fetching ...:", error);
+  //   } finally {
+  //   }
+  // };  
+
   const handleSearch = (inputValue) => {
     const updatedConversation = [...conversation];
 
@@ -358,6 +380,8 @@ const PageExpertInsight = () => {
 
         // stage3 에서 사용자가 직접 추가 질문을 했을 때
         if(inputValue !== -1) {
+          // fetchInputAdditionalQuestion(inputValue);
+
           if(selectedExpertIndex === 1) setSelectedAdditionalKeyword1(inputValue);
           else if(selectedExpertIndex === 2) setSelectedAdditionalKeyword2(inputValue);
           else setSelectedAdditionalKeyword3(inputValue);
