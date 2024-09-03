@@ -72,7 +72,7 @@ export const SELECTED_EXPERT_INDEX = atom(0);
 export const INPUT_BUSINESS_INFO = atom("");
 
 // 프롬프트 진입 비즈니스 분석
-export const TITLE_OF_BUSINESS_INFORMATION = atom([]);
+export const TITLE_OF_BUSINESS_INFORMATION = atom("");
 export const MAIN_FEATURES_OF_BUSINESS_INFORMATION = atom([]);
 export const MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION =atom([]);
 export const BUSINESS_INFORMATION_TARGET_CUSTOMER = atom([]);
