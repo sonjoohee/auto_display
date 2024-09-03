@@ -4,9 +4,18 @@ import React from 'react';
 import styled from 'styled-components';
 
 const MoleculeUserMessage = ({ message }) => {
+  const messageWithLineBreaks = message.split('\n').map((line, index) => 
+    <React.Fragment key={index}>
+      {line}
+      <br /> 
+    </React.Fragment>
+  );
+
   return (
     <UserMessageContainer>
-      {message || '분석 내용을 확인하였습니다. 추가로 궁금한 사항이 있습니다.'}
+      <div>
+        <p>{messageWithLineBreaks}</p>
+      </div>
     </UserMessageContainer>
   );
 };
@@ -14,19 +23,34 @@ const MoleculeUserMessage = ({ message }) => {
 export default MoleculeUserMessage;
 
 const UserMessageContainer = styled.div`
-  max-width: 70%;
-  display: inline-block;
-  width: auto;
-  padding: 15px 20px;
-  background-color: #ffe0b2;
-  border-radius: 15px;
-  font-size: 1rem;
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 20px;
-  margin-left: auto;
-  margin-right: 0;
+  // max-width: 70%;
+  display:flex;
+  align-items:flex-end;
+  flex-direction:row-reverse;
+  // width: auto;
+  // padding: 15px 20px;
+  // background-color: #ffe0b2;
+  // border-radius: 15px;
+  // font-size: 1rem;
+  // font-weight: 500;
+  // color: #333;
+  // margin-bottom: 20px;
+  // margin-left: auto;
+  // margin-right: 0;
+  margin-top:40px;
   position: relative;
+
+  > div {
+    font-size:0.88rem;
+    padding:14px 20px;
+    border-radius:15px;
+    background:#EBF3FE;
+
+    p {
+      line-height:1.8;
+    }
+  }
+
   &:after {
     content: '';
     position: absolute;
@@ -35,7 +59,7 @@ const UserMessageContainer = styled.div`
     width: 0;
     height: 0;
     border: 10px solid transparent;
-    border-left-color: #ffe0b2;
+    border-left-color: #EBF3FE;
     border-right: 0;
     margin-top: -10px;
   }

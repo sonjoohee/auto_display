@@ -10,6 +10,8 @@ import images from '../../assets/styles/Images'; // Images.jsx 임포트
 import { useAtom } from 'jotai';
 import { isLoggedInAtom, loginSuccessAtom } from '../../../../pages/AtomStates'; // 아톰 임포트
 
+import { palette } from '../../../../assets/styles/Palette';
+
 const MoleculeGoogleLoginForm = () => {
   const [, setIsLoggedIn] = useAtom(isLoggedInAtom);
   const [, setLoginSuccess] = useAtom(loginSuccessAtom);
@@ -19,9 +21,9 @@ const MoleculeGoogleLoginForm = () => {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 // 'http://localhost:4008/google-login'
-// 'http://52.79.204.29:7800/api/user/login/google/'
+// 'https://wishresearch.kr/api/user/login/google/'
       // Firebase 인증 후 사용자 정보를 서버에 저장
-      await axios.post('http://52.79.204.29:7800/api/user/login/google/', {
+      await axios.post('https://wishresearch.kr/api/user/login/google/', {
         uid: user.uid,
         name: user.displayName,
         email: user.email,
@@ -58,21 +60,17 @@ const LoginButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 20px;
-  background-color: white;
-  color: #555;
-  border: 1px solid #ddd;
-  border-radius: 25px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
   width: 100%;
-  max-width: 300px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: 'Pretendard', 'Poppins';
+  font-size: 1rem;
+  font-weight: 700;
+  color: ${palette.gray};
+  padding: 14px 16px;
+  border-radius: 8px;
+  border: 1px solid ${palette.lineGray};
+  background-color:${palette.white};
+  cursor: pointer;
 
-  &:hover {
-    background-color: #f7f7f7;
-  }
 `;
 
 const GoogleIconStyled = styled.img`

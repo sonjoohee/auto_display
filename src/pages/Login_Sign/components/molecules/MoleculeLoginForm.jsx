@@ -5,11 +5,13 @@ import { useAtom } from 'jotai';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import AtomInput from '../atoms/AtomInput';
 import AtomButton from '../atoms/AtomButton';
 import { isValidEmail } from '../atoms/AtomValidation';
 import { emailAtom, passwordAtom, currentUserAtom, errorAtom } from '../../../AtomStates';
 import { isLoggedInAtom, loginSuccessAtom } from '../../../../pages/AtomStates'; // 아톰 임포트
+import { Link } from 'react-router-dom';
+
+import { palette } from '../../../../assets/styles/Palette';
 
 const MoleculeLoginForm = () => {
   const [email, setEmail] = useAtom(emailAtom);
@@ -41,9 +43,9 @@ const MoleculeLoginForm = () => {
     setError('');
     if (!validateForm()) return;
 //http://localhost:4008/login
-//http://52.79.204.29:7800/api/user/login/normal/
+//https://wishresearch.kr/api/user/login/normal/
     try {
-      const response = await fetch('http://52.79.204.29:7800/api/user/login/normal/', {
+      const response = await fetch('https://wishresearch.kr/api/user/login/normal/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -74,8 +76,8 @@ const MoleculeLoginForm = () => {
 
   return (
     <LoginFormContainer>
-      <Label htmlFor="email">아이디</Label>
-      <InputContainer>
+      <div>
+        <label htmlFor="email">아이디<span>*</span></label>
         <StyledAtomInput
           type="email"
           id="email"
@@ -83,9 +85,10 @@ const MoleculeLoginForm = () => {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="이메일 주소를 입력해주세요"
         />
-      </InputContainer>
-      <Label htmlFor="password">비밀번호</Label>
-      <InputContainer>
+      </div>
+
+      <div>
+        <label htmlFor="password">비밀번호<span>*</span></label>
         <StyledAtomInput
           type={showPassword ? "text" : "password"}
           id="password"
@@ -96,14 +99,20 @@ const MoleculeLoginForm = () => {
         <TogglePasswordButton onClick={togglePasswordVisibility}>
           {showPassword ? <FaEye /> : <FaEyeSlash />}
         </TogglePasswordButton>
-      </InputContainer>
+      </div>
+
       {error && <ErrorMessage>{error}</ErrorMessage>}
-      <ButtonContainer>
-        <StyledLoginButton onClick={handleLogin}>로그인</StyledLoginButton>
-      </ButtonContainer>
+
       <PasswordResetLink>
         <a onClick={handlePasswordReset}>비밀번호 찾기</a>
       </PasswordResetLink>
+
+      <StyledLoginButton onClick={handleLogin}>로그인</StyledLoginButton>
+
+      <JoinWrap>
+        <p>Crowd Insight가 처음이에요</p>
+        <Link to="/signup">가입하기</Link>
+      </JoinWrap>
     </LoginFormContainer>
   );
 };
@@ -112,42 +121,46 @@ export default MoleculeLoginForm;
 
 // CSS-in-JS 스타일링
 const LoginFormContainer = styled.div`
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-`;
-
-const Label = styled.label`
-  text-align: left;
-  color: #333; // 라벨 텍스트 색상을 명확하게 설정
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-  font-size: 14px;
-`;
-
-const InputContainer = styled.div`
-  position: relative;
-  margin-bottom: 20px;
-`;
-
-const StyledAtomInput = styled(AtomInput)`
   width: 100%;
-  padding: 10px;
-  padding-right: 40px; /* Add padding to accommodate the eye icon */
-  border: 1px solid #ccc;
-  border-radius: 5px;
+
+  > div {
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+
+    label {
+      font-size:0.75rem;
+      text-align:left;
+      display:flex;
+      align-items:flex-start;
+      gap:5px;
+
+      span {
+        color:${palette.red};
+      }
+    }
+
+    + div {
+      margin-top:20px;
+    }
+  }
+`;
+
+const StyledAtomInput = styled.input`
+  width: 100%;
+  font-family: 'Pretendard', 'Poppins';
+  font-size:1rem;
+  padding: 12px 16px;
+  border-radius:8px;
+  border: 1px solid ${palette.lineGray};
   box-sizing: border-box;
 `;
 
 const TogglePasswordButton = styled.button`
   position: absolute;
-  top: 50%;
-  right: 10px;
+  right:10px;
+  bottom: 0;
   transform: translateY(-50%);
   background: none;
   border: none;
@@ -160,42 +173,50 @@ const TogglePasswordButton = styled.button`
   }
 `;
 
-const StyledLoginButton = styled(AtomButton)`
-  width: 100%;
-  padding: 15px;
-  border: none;
-  border-radius: 5px;
-  background-color: #4285F4;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #357ae8;
-  }
-`;
-
 const ErrorMessage = styled.p`
-  color: red;
-  margin-bottom: 10px;
+  font-size:0.75rem;
+  color:${palette.red};
+  margin-top: 20px;
   text-align: center;
 `;
 
-const ButtonContainer = styled.div`
-  margin-top: 20px;
-`;
-
 const PasswordResetLink = styled.div`
-  margin-top: 10px;
+  margin: 20px auto 30px;
   text-align: right;
+  cursor:pointer;
 
   a {
-    color: #007bff;
-    text-decoration: none;
-    font-size: 14px;
+    color:${palette.gray};
+    font-size:0.75rem;
   }
 
   a:hover {
     text-decoration: underline;
+  }
+`;
+
+const StyledLoginButton = styled.button`
+  width: 100%;
+  color:${palette.white};
+  padding: 15px;
+  border-radius: 8px;
+  border: none;
+  background-color:${palette.blue};
+  font-size: 16px;
+  cursor: pointer;
+`;
+
+const JoinWrap = styled.div`
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:row !important;
+  gap:12px;
+  font-size:1rem;
+  margin-top:80px;
+
+  a {
+    color:${palette.blue};
+    text-decoration:underline;
   }
 `;

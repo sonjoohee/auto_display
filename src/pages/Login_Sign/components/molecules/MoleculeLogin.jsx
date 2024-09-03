@@ -7,6 +7,7 @@ import { useAtom } from 'jotai';
 import MoleculeGoogleLoginForm from './MoleculeGoogleLoginForm';
 import MoleculeLoginForm from './MoleculeLoginForm';
 import { loginSuccessAtom } from '../../../../pages/AtomStates'; // 아톰 임포트
+import { palette } from '../../../../assets/styles/Palette';
 
 const MoleculeLogin = ({ onClosePopup = () => {} }) => {
   const [loginSuccess, setLoginSuccess] = useAtom(loginSuccessAtom);
@@ -14,7 +15,7 @@ const MoleculeLogin = ({ onClosePopup = () => {} }) => {
 
   useEffect(() => {
     if (loginSuccess) {
-      navigate('/ai_panel');    // 페이지 이동
+      navigate('/');    // 페이지 이동
       if (onClosePopup) onClosePopup(); // 팝업 닫기
       setLoginSuccess(null);    // 상태 초기화
     }
@@ -35,12 +36,9 @@ export default MoleculeLogin;
 
 // CSS-in-JS 스타일링
 const LoginContainer = styled.div`
-  max-width: 600px;
+  min-width: 400px;
   margin: 0 auto;
-  padding: 40px;
   background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
 `;
 
@@ -48,17 +46,17 @@ const Separator = styled.div`
   display: flex;
   align-items: center;
   text-align: center;
-  margin: 20px 0;
+  margin: 32px 0;
 
   hr {
     flex: 1;
     border: none;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid ${palette.lineGray};
   }
 
   span {
     margin: 0 15px;
-    color: #bbb;
-    font-weight: bold;
+    font-size:1rem;
+    color: ${palette.gray};
   }
 `;

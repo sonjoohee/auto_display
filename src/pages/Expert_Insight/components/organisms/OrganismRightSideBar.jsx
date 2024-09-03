@@ -1,73 +1,403 @@
-// C:\dev\Crowd_Insight-\src\pages\Expert_Insight\components\organisms\OrganismRightSideBar.jsx
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { palette } from '../../../../assets/styles/Palette';
+import images from '../../../../assets/styles/Images';
+import panelimages from '../../../../assets/styles/PanelImages';
 import { useAtom } from 'jotai';
 import { SELECTED_EXPERT_INDEX } from '../../../AtomStates';
-
-const experts = [
-  {
-    id: 1,
-    title: '서비스/프로덕트 전략가',
-    description: '10년 경력 시장에서 통하는 전략을 확인해보세요',
-    details: '서비스와 프로덕트에 대한 깊이 있는 전략을 제시합니다. 다양한 성공 사례를 통해 실질적인 인사이트를 제공합니다.',
-  },
-  {
-    id: 2,
-    title: '마케팅 구축',
-    description: '브랜드/마케팅 교수와의 컨설팅 미팅',
-    details: '브랜드 구축과 마케팅 전략에 대한 깊이 있는 이해를 바탕으로 스타트업의 성장 로드맵을 제시합니다.',
-  },
-  {
-    id: 3,
-    title: '고객 인사이트 전문가',
-    description: '고객 이탈 극복 노하우 비즈니스 팁을 공유해요',
-    details: '고객 분석을 통해 비즈니스의 핵심 문제를 파악하고 이를 해결할 수 있는 전략을 제안합니다.',
-  },
-];
+import expertsData from './experts_info.json';
 
 const OrganismRightSideBar = () => {
+
+  const [isOpen, setIsOpen] = useState(true);
+  const moreProfile = () => {
+    setIsOpen(!isOpen);
+  };
+
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
 
-  const selectedExpert = experts.find((expert) => expert.id === selectedExpertIndex);
+  // 선택된 전문가 정보
+  const selectedExpert = expertsData.find((expert) => expert.id === selectedExpertIndex);
 
   if (!selectedExpert) return null; // 선택된 전문가가 없을 경우 아무것도 표시하지 않음
 
   return (
-    <RightSideBarContainer>
-      <ProfileTitle>{selectedExpert.title}</ProfileTitle>
-      <ProfileDescription>{selectedExpert.description}</ProfileDescription>
-      <ProfileDetails>{selectedExpert.details}</ProfileDetails>
-    </RightSideBarContainer>
+    <>
+      <SideBar Right>
+        <AIProfileWrap>
+          <div>
+            <AIProfile>
+              <div className="profileInfo">
+                <div className="thumb">
+                  <img src={panelimages.PanelIMG} alt="" />
+                </div>
+                <div className="name">
+                  <strong>{selectedExpert.title}</strong>
+                  <ul>
+                    <li>이름 : {selectedExpert.name}</li>
+                    <li>주요경력 : {selectedExpert.description}</li>
+                  </ul>
+                </div>
+              </div>
+
+              <FieldWrap isOpen={isOpen}>
+                <strong>주요 이력</strong>
+                <div>
+                  <FieldUl isOpen={isOpen}>
+                    {selectedExpert.career.map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
+                  </FieldUl>
+                </div>
+              </FieldWrap>
+
+              <div className="field">
+                <strong>전문분석 분야</strong>
+
+                <div>
+                  {selectedExpert.expertise.fields.map((field, index) => (
+                    <React.Fragment key={index}>
+                      <strong><img src={images.ProfessionalValue} alt="" />{field.category}</strong>
+                      <FieldUl isOpen={isOpen}>
+                        {field.details.map((detail, i) => (
+                          <li key={i}>{detail}</li>
+                        ))}
+                      </FieldUl>
+                    </React.Fragment>
+                  ))}
+                </div>
+              </div>
+            </AIProfile>
+
+            <button type="button" onClick={moreProfile}>상세 정보 확인하기</button>
+          </div>
+        </AIProfileWrap>
+      </SideBar>
+    </>
   );
 };
 
 export default OrganismRightSideBar;
 
-const RightSideBarContainer = styled.div`
-  position: fixed;
-  top: 110px; /* 헤더 바로 아래 */
-  right: 0;
-  width: 240px;
-  height: calc(100% - 110px); /* 헤더를 제외한 전체 높이 */
-  background-color: #f4f4f4;
-  padding: 20px;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-  z-index: 98;
+// 기존 styled-components 스타일링 코드 (생략)
+
+
+const SideBar = styled.div`
+  position:sticky;
+  top:40px;
+  right:40px;
+  grid-area:toc;
+  width:100%;
+  max-width:240px;
+  height:calc(100vh - 200px);
+  // height:calc(100vh - 12rem);
+  margin-left:${props => {
+    if (props.Right) return `0`;
+    else return `-300px`;
+  }};
+  margin-right:0;
+  // margin-bottom:150px;
+  padding:${props => {
+    if (props.Right) return `0`;
+    else return `40px 28px`;
+  }};
+  border-radius:20px;
+  border:${props => {
+    if (props.Right) return `none`;
+    else return `1px solid ${palette.lineGray}`;
+  }};
+  background:${props => {
+    if (props.Right) return palette.white;
+    else return `rgba(0,0,0,.02)`;
+  }};
+
+  box-shadow:${props => {
+    if (props.Right) return `none`;
+    else return `0 4px 10px rgba(0,0,0,.1)`;
+  }};
+
+  h3 {
+    font-size:1rem;
+    font-weight:400;
+    text-align:left;
+    margin-bottom:20px;
+  }
+
+  .logo {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:40px;
+
+    a {
+      width:44px;
+      height:44px;
+      font-size:0;
+      background:url(${images.SymbolLogo}) left center no-repeat;
+      background-size:auto 100%;
+    }
+
+    button {
+      position:relative;
+      font-size:0;
+      width:30px;
+      height:30px;
+      border-radius:50%;
+      border:0;
+      background:${palette.white};
+      box-shadow:2px 2px 2px rgba(0,0,0,.1);
+
+      &:before {
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform:translate(-50%, -50%);
+        width:7px;
+        height:2px;
+        border-radius:10px;
+        background:${palette.black};
+        content:'';
+      }
+
+      &:after {
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform:translate(-50%, -50%) rotate(45deg);
+        width:8px;
+        height:8px;
+        border-left:2px solid ${palette.black};
+        border-bottom:2px solid ${palette.black};
+        content:'';
+      }
+    }
+  }
 `;
 
-const ProfileTitle = styled.h2`
-  font-size: 1.25rem;
-  font-weight: bold;
-  margin-bottom: 10px;
+const AIProfileWrap = styled.div`
+  padding:24px 20px 20px;
+  border-radius:20px;
+  border:1px solid ${palette.lineGray};
+  box-shadow:0 4px 10px rgba(0,0,0,.05);
+  background:${palette.white};
+
+  + div {
+    margin-top:28px;
+  }
+
+  button {
+    position:relative;
+    width:100%;
+    font-size:0.75rem;
+    color:${palette.gray};
+    // text-decoration:underline;
+    // padding-right:16px;
+    padding:8px 16px;
+    margin-top:25px;
+    border-radius:10px;
+    border:1px solid ${palette.lineGray};
+    background:${palette.white};
+
+    &:after {
+      position:absolute;
+      right:0;
+      top:50%;
+      transform:translateY(-50%) rotate(45deg);
+      width:8px;
+      height:8px;
+      border-top:2px solid ${palette.black};
+      border-right:2px solid ${palette.black};
+      // content:'';
+    }
+  }
 `;
 
-const ProfileDescription = styled.p`
-  font-size: 0.88rem;
-  margin-bottom: 15px;
+const AIProfile = styled.div`
+  display:flex;
+  flex-direction:column;
+
+  .profileInfo {
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+
+  .thumb {
+    position:relative;
+    flex-shrink:0;
+    width:48px;
+    height:48px;
+    margin:0 auto;
+    border-radius:50%;
+    overflow:hidden;
+
+    img {
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%, -50%);
+      width:100%;
+      height:100%;
+      object-fit: cover;
+    }
+  }
+
+  .name {
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    text-align:left;
+
+    strong {
+      font-size:1rem;
+      font-weight:700;
+    }
+
+    li {
+      display:flex;
+      align-items:center;
+      font-size:0.75rem;
+      color:${palette.darkGray};
+
+      + li {
+        margin-top:5px;
+      }
+    }
+
+    p {
+      color:${palette.gray};
+      margin-top:15px;
+    }
+  }
+
+  .field {
+    display:flex;
+    flex-direction:column;
+    width:100%;
+    margin:20px auto 0;
+    padding-top:20px;
+    border-top:1px solid ${palette.lineGray};
+
+    > strong {
+      display:flex;
+      align-items:center;
+      gap:5px;
+      font-size:1rem;
+      font-weight:400;
+      margin-bottom:15px;
+    }
+
+    div {
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:8px;
+
+      strong {
+        display:flex;
+        align-items:center;
+        gap:8px;
+        width:100%;
+        font-size:0.88rem;
+        font-weight:300;
+        color:${palette.darkGray};
+        // padding:8px 16px;
+        // border-radius:25px;
+        // border:1px solid ${palette.lineGray};
+        // background:${palette.white};
+      }
+    }
+  }
 `;
 
-const ProfileDetails = styled.p`
-  font-size: 0.75rem;
-  color: #666;
+const FieldWrap = styled.div`
+  display:flex;
+  flex-direction:column;
+  width:100%;
+  max-height: ${(props) => (props.isOpen ? "0" : "1000px")};
+  margin:20px auto 0;
+  padding-top: ${(props) => (props.isOpen ? "0" : "20px")};
+  overflow:hidden;
+  transition: max-height 0.5s ease, padding 0.5s ease;
+
+  strong {
+    display:flex;
+    align-items:center;
+    gap:5px;
+    font-size:1rem;
+    font-weight:400;
+    margin-bottom:15px;
+  }
+
+  div {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+  }
+`;
+
+const FieldUl = styled.ul`
+  width:100%;
+  max-height: ${(props) => (props.isOpen ? "0" : "1000px")};
+  display:flex;
+  flex-direction:column;
+  padding:0 8px;
+  overflow:hidden;
+  transition: max-height 0.5s ease, padding 0.5s ease;
+
+  li {
+    position:relative;
+    font-size:0.75rem;
+    line-height:1.5;
+    text-align:left;
+    color:${palette.darkGray};
+    padding-left:20px;
+
+    &:before {
+      position:absolute;
+      left:0;
+      top:7px;
+      width:3px;
+      height:3px;
+      border-radius:10px;
+      background:${palette.darkGray};
+      content:'';
+    }
+  }
+`;
+
+const IdeaWrap = styled.div`
+  text-align:left;
+  padding:30px;
+  border-radius:20px;
+  border:1px solid ${palette.lineGray};
+  box-shadow:0 4px 10px rgba(0,0,0,.05);
+
+  strong {
+    display:block;
+    padding-bottom:10px;
+    margin-bottom:20px;
+    border-bottom:1px solid ${palette.lineGray};
+  }
+
+  div {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:20px;
+
+    a {
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      width:100%;
+      font-size:0.81rem;
+      color:${palette.gray};
+    }
+
+    svg {
+      flex-shrink:0;
+    }
+  }
 `;

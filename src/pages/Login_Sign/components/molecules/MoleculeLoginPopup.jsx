@@ -34,6 +34,7 @@ const LoginPopupOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 9999;
 `;
 
 const PopupContent = styled.div`

@@ -5,21 +5,25 @@ import styled from 'styled-components';
 import MoleculeSignupForm from '../molecules/MoleculeSignupForm';
 import OrganismFooterBar from '../organisms/OrganismFooterBar';
 import MoleculeLoginPopupManager from '../molecules/MoleculeLoginPopupManager';
-// AI_Panel페이지의 헤더 가져옴-나중에 전역으로 뺄수도 있음
-import OrganismHeader from '../../../../pages/AI_Panel/components/organisms/OrganismHeader';
+import OrganismHeader from '../../../organisms/OrganismHeader';
+
+import { palette } from '../../../../assets/styles/Palette';
+
 const PageSignup = () => {
   return (
     <>
     <OrganismHeader />
+    
     <MoleculeLoginPopupManager>
       {(handleLoginClick) => (
         <SignupPageContainer>
           <SignupHeader>
-            지금 바로 가입하고 수천명의 AI 패널을 만나보세요
+            Crowd Insight 회원가입
+            <p>지금 바로 가입하고 수천명의 AI 패널을 만나보세요</p>
           </SignupHeader>
-          <FormContainer>
-            <MoleculeSignupForm />
-          </FormContainer>
+
+          <MoleculeSignupForm />
+
           <OrganismFooterBar onLoginClick={handleLoginClick} />
           <FooterText>
             {/* 이미 가입하셨나요? <a href="/login">로그인하기</a> */}
@@ -35,29 +39,25 @@ export default PageSignup;
 
 // CSS-in-JS 스타일링
 const SignupPageContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background-color: #f5f5f5;
-  padding: 20px;
+  position:relative;
+  max-width:400px;
+  width:100%;
+  margin:220px auto 0;
 `;
 
 const SignupHeader = styled.h2`
-  font-size: 18px;
-  color: #333;
-  margin-bottom: 30px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  font-size: 2rem;
+  margin: 110px auto;
   text-align: center;
-`;
 
-const FormContainer = styled.div`
-  background-color: #fff;
-  border-radius: 10px;
-  padding: 40px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 600px;
+  p {
+    font-size:1rem;
+    font-weight:300;
+    color:${palette.gray};
+  }
 `;
 
 const FooterText = styled.div`

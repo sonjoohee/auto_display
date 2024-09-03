@@ -10,6 +10,8 @@ import { isValidEmail, isValidPassword } from '../atoms/AtomValidation';
 import { nameAtom, signupEmailAtom, signupPasswordAtom, confirmPasswordAtom, roleAtom, statusAtom, errorAtom } from '../../../AtomStates';
 import MoleculeSignupPopup from './MoleculeSignupPopup'; // 팝업 컴포넌트 임포트
 
+import { palette } from '../../../../assets/styles/Palette';
+
 const MoleculeSignupForm = () => {
   const [name, setName] = useAtom(nameAtom);
   const [email, setEmail] = useAtom(signupEmailAtom);
@@ -59,10 +61,10 @@ const MoleculeSignupForm = () => {
     if (!validateForm()) return;
 
     setIsLoading(true); // 로딩 상태 시작
-// http://52.79.204.29:7800/api/user/signup/
+// https://wishresearch.kr/api/user/signup/
 // http://localhost:4008/signup
     try {
-      const response = await fetch('http://52.79.204.29:7800/api/user/signup/', {
+      const response = await fetch('https://wishresearch.kr/api/user/signup/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password, role, status })
@@ -107,52 +109,59 @@ const MoleculeSignupForm = () => {
       </LoadingOverlay>
     )}
     <SignupFormContainer>
-      <Header>회원가입</Header>
-      <Label htmlFor="name">이름</Label>
-      <AtomInput
-        id="name"
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="이름을 입력해주세요"
-      />
-      <Label htmlFor="email">이메일</Label>
-      <AtomInput
-        id="email"
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="이메일 주소를 입력해주세요"
-      />
-      <Label htmlFor="password">비밀번호</Label>
-      <InputContainer>
+      <div>
+        <label htmlFor="name">이름<span>*</span></label>
         <StyledAtomInput
-          type={showPassword ? "text" : "password"}
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="비밀번호를 입력해주세요"
+          id="name"
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="이름을 입력해주세요"
         />
-        <TogglePasswordButton onClick={togglePasswordVisibility}>
-          {showPassword ? <FaEye /> : <FaEyeSlash />}
-        </TogglePasswordButton>
-      </InputContainer>
-      <InputContainer style={{ marginTop: '-10px' }}>
+      </div>
+
+      <div>
+        <label htmlFor="email">이메일<span>*</span></label>
         <StyledAtomInput
-          type={showConfirmPassword ? "text" : "password"}
-          id="confirmPassword"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          placeholder="비밀번호 확인을 입력해주세요"
+          id="email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="이메일 주소를 입력해주세요"
         />
-        <TogglePasswordButton onClick={toggleConfirmPasswordVisibility}>
-          {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
-        </TogglePasswordButton>
-      </InputContainer>
-      <PasswordHint>
-        영문/숫자/특수문자 2가지 이상 혼합, 8~16자
-      </PasswordHint>
+      </div>
+
+      <div>
+        <label htmlFor="password">비밀번호<span>*</span></label>
+        <InputWrap>
+          <StyledAtomInput
+            type={showPassword ? "text" : "password"}
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="비밀번호를 입력해주세요"
+          />
+          <TogglePasswordButton onClick={togglePasswordVisibility}>
+            {showPassword ? <FaEye /> : <FaEyeSlash />}
+          </TogglePasswordButton>
+        </InputWrap>
+        <InputWrap>
+          <StyledAtomInput
+            type={showConfirmPassword ? "text" : "password"}
+            id="confirmPassword"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="비밀번호 확인을 입력해주세요"
+          />
+          <TogglePasswordButton onClick={toggleConfirmPasswordVisibility}>
+            {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
+          </TogglePasswordButton>
+        </InputWrap>
+        <p>영문/숫자/특수문자 2가지 이상 혼합. 8~16자</p>
+      </div>
+
       {error && <ErrorMessage>{error}</ErrorMessage>}
+
       <TermsAndConditions>
         <input
           type="checkbox"
@@ -162,12 +171,14 @@ const MoleculeSignupForm = () => {
         />
         <label htmlFor="terms">서비스 <a href="#">이용약관</a>과 <a href="#">개인정보처리방침</a>에 동의합니다.</label>
       </TermsAndConditions>
+
       <StyledAtomButton onClick={handleSignup} disabled={isLoading}>
         {isLoading ? "메일을 전송 중입니다..." : "회원가입"}
       </StyledAtomButton>
-      <Footer>
+
+      {/* <Footer>
         이미 가입하셨나요? <a href="/login">로그인하기</a>
-      </Footer>
+      </Footer> */}
 
       {isSignupSuccessful && (
         <MoleculeSignupPopup 
@@ -184,50 +195,54 @@ export default MoleculeSignupForm;
 
 // CSS-in-JS 스타일링
 const SignupFormContainer = styled.div`
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  > div {
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+
+    label {
+      font-size:0.75rem;
+      text-align:left;
+      display:flex;
+      align-items:flex-start;
+      gap:5px;
+
+      span {
+        color:${palette.red};
+      }
+    }
+
+    p {
+      font-size:0.63rem;
+      color:${palette.gray};
+      text-align:left;
+    }
+
+    + div {
+      margin-top:20px;
+    }
+  }
 `;
 
-const Header = styled.h2`
-  font-size: 18px;
-  color: #333;
-  margin-bottom: 20px;
-  text-align: center;
+const InputWrap = styled.div`
+  position:relative;
 `;
 
-const Label = styled.label`
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-  font-size: 14px;
-  color: #333;
-  align-self: flex-start;
-  text-align: left; /* 왼쪽 정렬 추가 */
-`;
-
-const InputContainer = styled.div`
-  position: relative;
-  margin-bottom: 5px;
-`;
-
-const StyledAtomInput = styled(AtomInput)`
+const StyledAtomInput = styled.input`
   width: 100%;
-  padding: 10px;
-  padding-right: 40px; /* Add padding to accommodate the eye icon */
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  font-family: 'Pretendard', 'Poppins';
+  font-size:1rem;
+  padding: 12px 16px;
+  border-radius:8px;
+  border: 1px solid ${palette.lineGray};
   box-sizing: border-box;
 `;
 
 const TogglePasswordButton = styled.button`
   position: absolute;
-  top: 50%;
-  right: 10px;
+  right:10px;
+  bottom: 0;
   transform: translateY(-50%);
   background: none;
   border: none;
@@ -240,32 +255,27 @@ const TogglePasswordButton = styled.button`
   }
 `;
 
-const PasswordHint = styled.p`
-  font-size: 12px;
-  color: #666;
-  margin-top: -10px;
-  margin-bottom: 20px;
-  text-align: left;
-`;
-
 const ErrorMessage = styled.p`
-  color: red;
-  margin: 10px 0;
+  font-size:0.75rem;
+  color:${palette.red};
+  margin-top: 20px;
   text-align: center;
 `;
 
 const TermsAndConditions = styled.div`
-  margin-top: 20px;
+  display:flex;
+  flex-direction:row !important;
+  margin-top: 30px !important;
+  gap:8px;
   text-align: left;
-  font-size: 12px;
-  color: #666;
 
-  input {
-    margin-right: 8px;
+  label {
+    font-size: 0.88rem !important;
+    color: ${palette.gray};
   }
 
   a {
-    color: #007bff;
+    color:${palette.blue};
     text-decoration: none;
   }
 
@@ -274,51 +284,25 @@ const TermsAndConditions = styled.div`
   }
 `;
 
-const StyledAtomButton = styled(AtomButton)`
-  margin-top: 20px;
+const StyledAtomButton = styled.button`
   width: 100%;
+  color:${palette.white};
+  font-size: 1rem;
+  font-weight: 700;
+  margin-top: 20px;
   padding: 15px;
-  background-color: #1a73e8;
-  color: white;
-  border: none;
   border-radius: 8px;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
+  border: none;
   transition: background-color 0.3s ease, transform 0.3s ease;
-
-  &:hover {
-    background-color: #135cbf;
-    transform: scale(1.05);
-  }
-
-  &:active {
-    background-color: #0d47a1;
-    transform: scale(1);
-  }
+  background: ${palette.blue};
+  cursor: pointer;
 
   &:disabled {
-    background-color: #ccc;
+    background-color: ${palette.lightGray};
     cursor: not-allowed;
   }
 `;
 
-const Footer = styled.div`
-  margin-top: 20px;
-  font-size: 14px;
-  color: #333;
-  text-align: center;
-
-  a {
-    color: #007bff;
-    text-decoration: none;
-    font-weight: bold;
-  }
-
-  a:hover {
-    text-decoration: underline;
-  }
-`;
 const LoadingOverlay = styled.div`
   position: fixed;
   top: 0;
