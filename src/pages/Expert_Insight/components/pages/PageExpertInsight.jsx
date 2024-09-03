@@ -78,6 +78,8 @@ const PageExpertInsight = () => {
   const [addtionalQuestion2, setAddtionalQuestion2] = useAtom(ADDITIONAL_QUESTION_2);
   const [addtionalQuestion3, setAddtionalQuestion3] = useAtom(ADDITIONAL_QUESTION_3);
 
+  const [inputAdditionalQuestion, setInputAdditionalQuestion] = useState("");
+
   // 현재 선택된 전문가에 맞는 보고서 데이터를 결정
   const getStrategyReportData = () => {
     switch (selectedExpertIndex) {
@@ -294,6 +296,26 @@ const PageExpertInsight = () => {
     selectedAdditionalKeyword3,
   ])
 
+  // // 추가 질문 입력 API
+  // const fetchInputAdditionalQuestion = async ({ input }) => {
+  //   console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
+  //   try {
+  //   const response = await axios.get(
+  //     `${process.env.REACT_APP_SERVER_URL}/${input}`
+  //   );
+  //   console.log(response);
+  //   setInputAdditionalQuestion(response.data);
+
+  //   if(selectedExpertIndex === 1) setSelectedAdditionalKeyword1(inputAdditionalQuestion);
+  //   else if(selectedExpertIndex === 2) setSelectedAdditionalKeyword2(inputAdditionalQuestion);
+  //   else setSelectedAdditionalKeyword3(inputAdditionalQuestion);
+
+  //   } catch (error) {
+  //     console.error("Error fetching ...:", error);
+  //   } finally {
+  //   }
+  // };  
+
   const handleSearch = (inputValue) => {
     const updatedConversation = [...conversation];
 
@@ -308,27 +330,17 @@ const PageExpertInsight = () => {
     if (conversationStage === 1) {
         if (inputBusinessInfo || inputValue !== -1) {  // inputValue가 입력되었을 때도 대화 진행
             const businessInfo = inputBusinessInfo || inputValue;  // inputValue가 더 우선
-            // inputBusinessInfo가 존재하거나, 유저가 입력한 경우 대화 진행
-            if (approachPath === 0) {
-                updatedConversation.push(
-                    { type: 'analysis' },
-                    { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊' },
-                );
-            } else {
-                updatedConversation.push(
-                    { type: 'system', message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻` },
-                    { type: 'analysis', businessInfo },  // 입력된 비즈니스 정보를 분석
-                    { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊' },
-                );
-            }
-
+            updatedConversation.push(
+                { type: 'system', message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻` },
+                { type: 'analysis', businessInfo },  // 입력된 비즈니스 정보를 분석
+                { type: 'system', message: '비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 전문가들의 의견을 확인하여 아이디어를 한 단계 더 발전시켜 보세요 🔍' },
+            );
             newConversationStage = 2;
         } else if (!inputBusinessInfo && approachPath === 1) {
           // inputBusinessInfo가 비어 있고, 검색을 통해 접근하지 않은 경우 전문가 인덱스에 따라 메시지 추가
           const expertPromptMessage = getInitialSystemMessage();
           updatedConversation.push({ type: 'system', message: expertPromptMessage });
       }
-      
     } else if (conversationStage === 2) {
         if (!selectedExpertIndex || (inputValue !== -1 && approachPath === 1)) {
             alert("전문가를 선택해 주세요.");
@@ -372,6 +384,8 @@ const PageExpertInsight = () => {
 
         // stage3 에서 사용자가 직접 추가 질문을 했을 때
         if(inputValue !== -1) {
+          // fetchInputAdditionalQuestion(inputValue);
+
           if(selectedExpertIndex === 1) setSelectedAdditionalKeyword1(inputValue);
           else if(selectedExpertIndex === 2) setSelectedAdditionalKeyword2(inputValue);
           else setSelectedAdditionalKeyword3(inputValue);
