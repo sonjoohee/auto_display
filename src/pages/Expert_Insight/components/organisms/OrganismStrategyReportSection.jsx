@@ -67,8 +67,8 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const [strategyReportData, setStrategyReportData] = useAtom(strategyReportAtom);
 
   useEffect(() => {
-    setIsLoading(true);
     const loadData = async () => {
+      setIsLoading(true);
       try {
         const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
         const currentReportKey = `strategyReportData_EX${expertIndex}`;
@@ -133,24 +133,24 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
           ],
           "page_index": 1
       }
-// 첫 번째 요청
-const response1 = await axios.post('http://52.79.204.29:7800/panels/expert', data, axiosConfig);
+        // 첫 번째 요청
+        const response1 = await axios.post('http://52.79.204.29:7800/panels/expert', data, axiosConfig);
 
-let finalResponse = response1.data;
+        let finalResponse = response1.data;
 
-// total_page_index에 따라 추가 요청 처리
-if (finalResponse.total_page_index === 2) {
-  const response2 = await axios.post('http://52.79.204.29:7800/panels/expert', finalResponse, axiosConfig);
-  finalResponse = response2.data;
-} else if (finalResponse.total_page_index === 3) {
-  const response2 = await axios.post('http://52.79.204.29:7800/panels/expert', finalResponse, axiosConfig);
-  const response3 = await axios.post('http://52.79.204.29:7800/panels/expert', response2.data, axiosConfig);
-  finalResponse = response3.data;
-}
+        // total_page_index에 따라 추가 요청 처리
+        if (finalResponse.total_page_index === 2) {
+          const response2 = await axios.post('http://52.79.204.29:7800/panels/expert', finalResponse, axiosConfig);
+          finalResponse = response2.data;
+        } else if (finalResponse.total_page_index === 3) {
+          const response2 = await axios.post('http://52.79.204.29:7800/panels/expert', finalResponse, axiosConfig);
+          const response3 = await axios.post('http://52.79.204.29:7800/panels/expert', response2.data, axiosConfig);
+          finalResponse = response3.data;
+        }
 
-console.log('Final response data:', finalResponse);
+        console.log('Final response data:', finalResponse);
 
-const strategyData = finalResponse;
+        const strategyData = finalResponse;
 
         // const strategyData = response.data;
         setStrategyReportData(strategyData); // atom에 서버에서 받아온 데이터 저장
@@ -173,9 +173,9 @@ const strategyData = finalResponse;
       } catch (error) {
         console.error('Error loading data:', error);
       }
+      setIsLoading(false);
     };
     loadData();
-    setIsLoading(false);
 
   }, [conversationId, selectedTab, expertIndex]);
 

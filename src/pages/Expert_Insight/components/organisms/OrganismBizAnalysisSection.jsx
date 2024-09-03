@@ -51,14 +51,11 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
     mainCharacter: mainCharacteristicOfBusinessInformation,
     mainCustomer: businessInformationTargetCustomer,
   };
+
   useEffect(() => {
+    console.log("기초보고서1")
     setIsLoading(true);
     const loadAndSaveData = async () => {
-      // JSON 데이터를 상태로 설정
-      // setTitleOfBusinessInfo(businessTemplate["명칭"]);
-      // setMainFeaturesOfBusinessInformation(businessTemplate["주요기능"].map((item) => item));
-      // setMainCharacteristicOfBusinessInformation(businessTemplate["주요기능"].map((item) => item));
-      // setBusinessInformationTargetCustomer(businessTemplate["목표고객"].map((item) => item));
       const response = await axios.post('http://52.79.204.29:7800/panels/business', data, axiosConfig);
       const businessData = response.data.business_analysis;
       // Temp 상태에도 초기 데이터를 설정
@@ -73,24 +70,20 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
 
       // 기존 대화 내역을 유지하면서 새로운 정보를 추가
       const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
-      // const updatedConversation = {
-      //   ...existingConversation,
-      //   mainFeatures: businessData["주요_목적_및_특징"].map((item) => item),
-      //   mainCharacter: businessData["주요기능"].map((item) => item),
-      //   mainCustomer: businessData["목표고객"].map((item) => item),
-      //   timestamp: Date.now(),
-      // };
       const updatedConversation = {
         ...existingConversation,
         analysisReportData,
         timestamp: Date.now(),
       };
-      console.log("___________기초보고서_____________")
-      console.log(analysisReportData)
       await saveConversationToIndexedDB(updatedConversation);
+      console.log("___________기초보고서_____________")
+      console.log("기초보고서2")
+      console.log(analysisReportData)
+      setIsLoading(false);
+
     };
     loadAndSaveData();
-    setIsLoading(false);
+
   }, [
     conversationId,
     setTitleOfBusinessInfo,
@@ -147,7 +140,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
     } else if (editingIndex.section === 'targetCustomer') {
       const updatedCustomers = [...tempBusinessInformationTargetCustomer];
       updatedCustomers[editingIndex.index] = newEditContent;
-      setTempBusinessInformationTargetCustomer(updatedCustomers);
+      setTempBusinessInformationTargetCustomer(updatedCustomers);}
 
     if (newEditContent.trim() === '') {
       alert("내용을 입력해주세요.");  // 비어있는 내용에 대한 경고 메시지
@@ -223,7 +216,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
     }
   };
 
-  return (
+return (
     <>
     {isLoading && (
       <LoadingOverlay>
@@ -277,8 +270,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               placeholder="새로운 정보를 추가해보세요"
             />
             <BtnWrap>
-//               <button onClick={() => handleAddSave('주요기능')}><img src={images.IconEdit2} alt="" />저장</button>
-//               <button onClick={() => setIsAddingNow({ section: '', isAdding: false })}><img src={images.IconDelete2} alt="" />취소</button>
+
               <button onClick={() => setIsAddingNow({ section: '', isAdding: false })}><img src={images.IconClose2} alt="" />취소</button>
               <button onClick={() => handleAddSave('mainFeatures')}><img src={images.IconCheck2} alt="" />저장</button>
 
@@ -407,13 +399,12 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
 
       {warningMessage && <WarningMessage>{warningMessage}</WarningMessage>} {/* 경고 메시지 출력 */}
       <MoleculeReportController reportIndex={0} conversationId={conversationId}  />
-    </AnalysisSection>
+      </AnalysisSection>
     </>
   );
-};
+}
 
 export default OrganismBizAnalysisSection;
-
 
 const AnalysisSection = styled.div`
   position:relative;
@@ -596,6 +587,7 @@ const WarningMessage = styled.div`
   margin-top: 10px;
   text-align: center;
 `;
+
 const LoadingOverlay = styled.div`
   position: fixed;
   top: 0;
