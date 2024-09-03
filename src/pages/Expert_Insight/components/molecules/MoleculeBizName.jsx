@@ -44,11 +44,14 @@ const MoleculeBizName = () => {
           <span><img src={images.Graph} alt="" /></span>
           <NameTitle Nodata>
             <strong>
-              {titleOfBusinessInfo.length === 0 ? "아이템(아이디어)를 설명해주시면, 분석된 내용이 적용됩니다" : titleOfBusinessInfo}
+              {!inputBusinessInfo ? "아이템(아이디어)를 설명해주시면, 분석된 내용이 적용됩니다" 
+              : titleOfBusinessInfo.length === 0 ? inputBusinessInfo : titleOfBusinessInfo}
+              {titleOfBusinessInfo.length !== 0 && <Badge>Edited by AI</Badge>}
             </strong>
             <p>2024-09-03</p>
           </NameTitle>
         </div>
+        {titleOfBusinessInfo.length !== 0 && <button type="button">내가 쓴 설명 보기</button>}
       </BizNameContainer>
       </>
       }
