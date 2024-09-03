@@ -23,6 +23,7 @@ import {
   ADDITIONAL_QUESTION_3,
   iS_CLICK_CHECK_REPORT_RIGHTAWAY,
   CONVERSATION,
+  BUTTON_STATE,
 } from '../../../AtomStates';
 
 import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
@@ -63,16 +64,13 @@ const PageExpertInsight = () => {
   const [expert2ReportData, setExpert2ReportData] = useAtom(EXPERT2_REPORT_DATA);
   const [expert3ReportData, setExpert3ReportData] = useAtom(EXPERT3_REPORT_DATA);
 
-  const [additionalReportData1, setAdditionalReportData1] = useAtom(ADDITIONAL_REPORT_DATA1);
-  const [additionalReportData2, setAdditionalReportData2] = useAtom(ADDITIONAL_REPORT_DATA2);
-  const [additionalReportData3, setAdditionalReportData3] = useAtom(ADDITIONAL_REPORT_DATA3);
-
   const [addtionalQuestion1, setAddtionalQuestion1] = useAtom(ADDITIONAL_QUESTION_1);
   const [addtionalQuestion2, setAddtionalQuestion2] = useAtom(ADDITIONAL_QUESTION_2);
   const [addtionalQuestion3, setAddtionalQuestion3] = useAtom(ADDITIONAL_QUESTION_3);
 
   const [inputAdditionalQuestion, setInputAdditionalQuestion] = useState("");
   const [isClickCheckReportRightAway, setIsClickCheckReportRightAway] = useAtom(iS_CLICK_CHECK_REPORT_RIGHTAWAY);
+  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
 
   // 현재 선택된 전문가에 맞는 보고서 데이터를 결정
   const getStrategyReportData = () => {
@@ -104,21 +102,21 @@ const PageExpertInsight = () => {
     }
   };
 
-  const setAdditionalReportData = (data) => {
-    switch (selectedExpertIndex) {
-      case 1:
-        setAdditionalReportData1(data);
-        break;
-      case 2:
-        setAdditionalReportData2(data);
-        break;
-      case 3:
-        setAdditionalReportData3(data);
-        break;
-      default:
-        break;
-    }
-  };
+  // const setAdditionalReportData = (data) => {
+  //   switch (selectedExpertIndex) {
+  //     case 1:
+  //       setAdditionalReportData1(data);
+  //       break;
+  //     case 2:
+  //       setAdditionalReportData2(data);
+  //       break;
+  //     case 3:
+  //       setAdditionalReportData3(data);
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // };
 
 
   const analysisReportData = {
@@ -200,22 +198,19 @@ const PageExpertInsight = () => {
   
   
 
-  useEffect(() => {
-    const loadConversationOther = async () => {
-      const savedConversation = await getConversationByIdFromIndexedDB(conversationId);
-      if (savedConversation) {
-          const analysisData = savedConversation.analysisReportData || {};
-          setTitleOfBusinessInfo(analysisData.title || "");
-          setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
-          setMainCharacteristicOfBusinessInformation(analysisData.mainCharacter || []);
-          setBusinessInformationTargetCustomer(analysisData.mainCustomer || []);
-          setSelectedAdditionalKeyword1(savedConversation.selectedAdditionalKeyword1 || "");
-          setSelectedAdditionalKeyword2(savedConversation.selectedAdditionalKeyword2 || "");
-          setSelectedAdditionalKeyword3(savedConversation.selectedAdditionalKeyword3 || "");
-      }
-    }
-    loadConversationOther();
-  }, [navigate]);
+  // useEffect(() => {
+  //   const loadConversationOther = async () => {
+  //     const savedConversation = await getConversationByIdFromIndexedDB(conversationId);
+  //     if (savedConversation) {
+  //         const analysisData = savedConversation.analysisReportData || {};
+  //         setTitleOfBusinessInfo(analysisData.title || "");
+  //         setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
+  //         setMainCharacteristicOfBusinessInformation(analysisData.mainCharacter || []);
+  //         setBusinessInformationTargetCustomer(analysisData.mainCustomer || []);
+  //     }
+  //   }
+  //   loadConversationOther();
+  // }, [navigate]);
 
 // const resetConversationState = () => {
 //   setTitleOfBusinessInfo("");
@@ -250,16 +245,18 @@ const PageExpertInsight = () => {
   }, [
     selectedAdditionalKeyword,
   ]);
+
+  useEffect(() => {
     if(approachPath) handleSearch(-1);
   },[selectedExpertIndex])
 
-  useEffect(() => {
-    if(selectedAdditionalKeyword1 || selectedAdditionalKeyword2 || selectedAdditionalKeyword3) handleSearch(-1);
-  },[
-    selectedAdditionalKeyword1,
-    selectedAdditionalKeyword2,
-    selectedAdditionalKeyword3,
-  ])
+  // useEffect(() => {
+  //   if(selectedAdditionalKeyword1 || selectedAdditionalKeyword2 || selectedAdditionalKeyword3) handleSearch(-1);
+  // },[
+  //   selectedAdditionalKeyword1,
+  //   selectedAdditionalKeyword2,
+  //   selectedAdditionalKeyword3,
+  // ])
 
   useEffect(() => {
     if(isClickCheckReportRightAway) handleSearch(-1);
@@ -290,14 +287,15 @@ const PageExpertInsight = () => {
 
     // 사용자가 입력한 경우에만 inputBusinessInfo를 업데이트
     if (conversationStage < 3 && inputValue !== -1) {
+      setButtonState(1);
       setInputBusinessInfo(inputValue);
+      console.log(inputValue);
       updatedConversation.push({ type: 'user', message: inputValue });
     }
 
     let newConversationStage = conversationStage;
 
     if (conversationStage === 1) {
-
         if (inputBusinessInfo || inputValue !== -1) {  // inputValue가 입력되었을 때도 대화 진행
             const businessInfo = inputBusinessInfo || inputValue;  // inputValue가 더 우선
             updatedConversation.push(
@@ -331,46 +329,30 @@ const PageExpertInsight = () => {
           || (updatedConversation.length > 0 && updatedConversation[updatedConversation.length - 1].type === 'report_button')) {
           updatedConversation.pop(); 
         }
+
         if(selectedExpertIndex === 1) {
           updatedConversation.push(
             { type: 'user', message: '10년차 전략 디렉터와 1:1 커피챗, 지금 바로 시작하겠습니다 🙌🏻' },
             { type: 'system', message: `안녕하세요, 김도원입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"`},
           )
         }
-        if(selectedExpertIndex === 2) {
+        else if(selectedExpertIndex === 2) {
           updatedConversation.push(
             { type: 'user', message: '지금 바로 쓸 수 있는 브랜딩 솔루션 10초 맞춤 제안서 받기, 지금 바로 시작하겠습니다 🙌🏻' },
             { type: 'system', message: `안녕하세요, 이지현입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"`},
           )
         }
-        if(selectedExpertIndex === 3) {
+        else if(selectedExpertIndex === 3) {
           updatedConversation.push(
             { type: 'user', message: '고객 데이터 전문가의 맞춤 타겟 추천, 지금 바로 시작하겠습니다 🙌🏻' },
             { type: 'system', message: `안녕하세요, 박서연입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"`},
           )
         }
         updatedConversation.push(
-          { type: 'user', message: '10년차 전략 디렉터와 1:1 커피챗, 지금 바로 시작하겠습니다 🙌🏻' },
-          { type: 'system', message: `안녕하세요, 김도원입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"` },
+          { type: `strategy_${selectedExpertIndex}` },
+          { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊'},
+          { type: `keyword` },
         );
-      }
-      if (selectedExpertIndex === 2) {
-        updatedConversation.push(
-          { type: 'user', message: '지금 바로 쓸 수 있는 브랜딩 솔루션 10초 맞춤 제안서 받기, 지금 바로 시작하겠습니다 🙌🏻' },
-          { type: 'system', message: `안녕하세요, 이지현입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"` },
-        );
-      }
-      if (selectedExpertIndex === 3) {
-        updatedConversation.push(
-          { type: 'user', message: '고객 데이터 전문가의 맞춤 타겟 추천, 지금 바로 시작하겠습니다 🙌🏻' },
-          { type: 'system', message: `안녕하세요, 박서연입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"` },
-        );
-      }
-      updatedConversation.push(
-        { type: `strategy_${selectedExpertIndex}` },
-        { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊' },
-        { type: `keyword` },
-      );
       newConversationStage = 3;
     } else if (conversationStage === 3) {
       updatedConversation.pop();
@@ -422,7 +404,7 @@ const PageExpertInsight = () => {
 
         <MainContent>
           <div>
-            <MoleculeBizName bizName={titleOfBusinessInfo} />
+            <MoleculeBizName />
             {conversation.map((item, index) => {
               if (item.type === 'user') {
                 return <MoleculeUserMessage key={index} message={item.message} />;
