@@ -26,8 +26,9 @@ import {
   ADDITIONAL_QUESTION_1,
   ADDITIONAL_QUESTION_2,
   ADDITIONAL_QUESTION_3,
-  CONVERSATION_STAGE ,
-
+  CONVERSATION_STAGE,
+  iS_CLICK_CHECK_REPORT_RIGHTAWAY,
+  CONVERSATION,
 } from '../../../AtomStates';
 
 import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
@@ -44,12 +45,13 @@ import MoleculeUserMessage from '../molecules/MoleculeUserMessage';
 import OrganismBizExpertSelect from '../organisms/OrganismBizExpertSelect';
 import MoleculeAdditionalKeyword from '../molecules/MoleculeAdditionalKeyword';
 import OrganismAdditionalReport from '../organisms/OrganismAdditionalReport';
+import MoleculeCheckReportRightAway from '../molecules/MoleculeCheckReportRightAway';
 
 const PageExpertInsight = () => {
   const navigate = useNavigate();
   const { conversationId: paramConversationId } = useParams();
   const conversationId = paramConversationId || nanoid();
-  const [conversation, setConversation] = useState([]);
+  const [conversation, setConversation] = useAtom(CONVERSATION);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
@@ -79,6 +81,7 @@ const PageExpertInsight = () => {
   const [addtionalQuestion3, setAddtionalQuestion3] = useAtom(ADDITIONAL_QUESTION_3);
 
   const [inputAdditionalQuestion, setInputAdditionalQuestion] = useState("");
+  const [isClickCheckReportRightAway, setIsClickCheckReportRightAway] = useAtom(iS_CLICK_CHECK_REPORT_RIGHTAWAY);
 
   // 현재 선택된 전문가에 맞는 보고서 데이터를 결정
   const getStrategyReportData = () => {
@@ -145,7 +148,7 @@ const PageExpertInsight = () => {
       additionalReportData_EX2: additionalReportData2, 
       additionalReportData_EX3: additionalReportData3, 
     };
-    console.log(addtionalQuestion1);
+
     saveConversationToIndexedDB({
       id: conversationId,
       conversation: updatedConversation,
@@ -219,6 +222,7 @@ const PageExpertInsight = () => {
 }, [
     paramConversationId,
     conversationId,
+    conversation,
     navigate,
     selectedExpertIndex, // 전문가가 바뀔 때마다 실행
     setStrategyReportData, // 추가: 전문가가 바뀌면 바로 반영되도록
@@ -252,7 +256,7 @@ const PageExpertInsight = () => {
       }
     }
     loadConversationOther();
-  }, []);
+  }, [navigate]);
 
 // const resetConversationState = () => {
 //   setTitleOfBusinessInfo("");
@@ -296,6 +300,10 @@ const PageExpertInsight = () => {
     selectedAdditionalKeyword3,
   ])
 
+  useEffect(() => {
+    if(isClickCheckReportRightAway) handleSearch(-1);
+  },[isClickCheckReportRightAway])
+
   // // 추가 질문 입력 API
   // const fetchInputAdditionalQuestion = async ({ input }) => {
   //   console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
@@ -320,7 +328,7 @@ const PageExpertInsight = () => {
     const updatedConversation = [...conversation];
 
     // 사용자가 입력한 경우에만 inputBusinessInfo를 업데이트
-    if (approachPath === 1 && inputValue !== -1) {
+    if (conversationStage < 3 && inputValue !== -1) {
       setInputBusinessInfo(inputValue);
       updatedConversation.push({ type: 'user', message: inputValue });
     }
@@ -333,8 +341,18 @@ const PageExpertInsight = () => {
             updatedConversation.push(
                 { type: 'system', message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻` },
                 { type: 'analysis', businessInfo },  // 입력된 비즈니스 정보를 분석
-                { type: 'system', message: '비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 전문가들의 의견을 확인하여 아이디어를 한 단계 더 발전시켜 보세요 🔍' },
             );
+            if(approachPath === 1) {
+              updatedConversation.push(
+                { type: 'system', message: '비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 지금 바로 전략 보고서를 준비해드려요.' },
+                { type: 'report_button'},
+              );
+            }
+            else {
+              updatedConversation.push(
+                { type: 'system', message: '비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 전문가들의 의견을 확인하여 아이디어를 한 단계 더 발전시켜 보세요 🔍' },
+              );
+            }
             newConversationStage = 2;
         } else if (!inputBusinessInfo && approachPath === 1) {
           // inputBusinessInfo가 비어 있고, 검색을 통해 접근하지 않은 경우 전문가 인덱스에 따라 메시지 추가
@@ -346,8 +364,9 @@ const PageExpertInsight = () => {
             alert("전문가를 선택해 주세요.");
             return;
         }
-        // 마지막 요소가 keyword 이면 제거
-        if (updatedConversation.length > 0 && updatedConversation[updatedConversation.length - 1].type === 'keyword') {
+        // 마지막 요소가 keyword 이거나 report_button 이면 pop
+        if ((updatedConversation.length > 0 && updatedConversation[updatedConversation.length - 1].type === 'keyword')
+          || (updatedConversation.length > 0 && updatedConversation[updatedConversation.length - 1].type === 'report_button')) {
           updatedConversation.pop(); 
         }
         if(selectedExpertIndex === 1) {
@@ -396,7 +415,7 @@ const PageExpertInsight = () => {
             { type: `addition_${selectedExpertIndex}` },
             { type: 'system', 
               message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${selectedAdditionalKeyword1}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`},
-            { type: `keyword` },
+            { type: `` },
           );
         }
         else if(selectedExpertIndex === 2) {
@@ -447,7 +466,7 @@ const PageExpertInsight = () => {
 
         <MainContent>
           <div>
-          <MoleculeBizName bizName={titleOfBusinessInfo} />
+          <MoleculeBizName />
           {conversation.map((item, index) => {
             if (item.type === 'user') {
               return <MoleculeUserMessage key={index} message={item.message} />;
@@ -491,9 +510,12 @@ const PageExpertInsight = () => {
               else if (item.type === 'keyword') {
                 return <MoleculeAdditionalKeyword/>;
               }
+              else if (item.type === 'report_button') {
+                return <MoleculeCheckReportRightAway/>;
+              }
             return null;
           })}
-          {conversationStage > 1 && (Object.keys(expert1ReportData).length === 0 || Object.keys(expert2ReportData).length === 0 || Object.keys(expert3ReportData).length === 0) &&
+          {approachPath === -1 && inputBusinessInfo && (Object.keys(expert1ReportData).length === 0 || Object.keys(expert2ReportData).length === 0 || Object.keys(expert3ReportData).length === 0) &&
             <OrganismBizExpertSelect />
           }
           </div>

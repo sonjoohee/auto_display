@@ -30,6 +30,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const [sections, setSections] = useState([]);
   const axiosConfig = {
     timeout: 100000, // 100초
+    headers: { 'Content-Type': 'application/json' }, withCredentials: true // 쿠키 포함 요청 (필요한 경우)
   };
   const [email, setEmail] = useAtom(emailAtom);
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
@@ -134,17 +135,17 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
           "page_index": 1
       }
 // 첫 번째 요청
-const response1 = await axios.post('http://52.79.204.29:7800/panels/expert', data, axiosConfig);
+const response1 = await axios.post('https://wishresearch.kr/panels/expert', data, axiosConfig);
 
 let finalResponse = response1.data;
 
 // total_page_index에 따라 추가 요청 처리
 if (finalResponse.total_page_index === 2) {
-  const response2 = await axios.post('http://52.79.204.29:7800/panels/expert', finalResponse, axiosConfig);
+  const response2 = await axios.post('https://wishresearch.kr/panels/expert', finalResponse, axiosConfig);
   finalResponse = response2.data;
 } else if (finalResponse.total_page_index === 3) {
-  const response2 = await axios.post('http://52.79.204.29:7800/panels/expert', finalResponse, axiosConfig);
-  const response3 = await axios.post('http://52.79.204.29:7800/panels/expert', response2.data, axiosConfig);
+  const response2 = await axios.post('https://wishresearch.kr/panels/expert', finalResponse, axiosConfig);
+  const response3 = await axios.post('https://wishresearch.kr/panels/expert', response2.data, axiosConfig);
   finalResponse = response3.data;
 }
 

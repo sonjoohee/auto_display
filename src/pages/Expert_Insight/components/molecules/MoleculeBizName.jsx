@@ -2,59 +2,38 @@
 
 import React from 'react';
 import styled from 'styled-components';
-
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
 
-const MoleculeBizName = ({ bizName }) => {
+import { useAtom } from 'jotai';
+import {
+  INPUT_BUSINESS_INFO,
+  TITLE_OF_BUSINESS_INFORMATION,
+  APPROACH_PATH,
+} from '../../../AtomStates';
+
+const MoleculeBizName = () => {
+  const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
+  const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
+  const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
+
   return (
     <>
-      {/* 아이디어 분석 완료시 */}
-      {/*
       <BizNameContainer>
         <div>
           <span><img src={images.Graph} alt="" /></span>
-          <NameTitle>
+          <NameTitle Nodata={!inputBusinessInfo}>
             <strong>
-              {bizName || "비즈니스 이름을 입력하세요"}
-              <Badge>Edited by AI</Badge>
+              {!inputBusinessInfo ? "아이템(아이디어)를 설명해주시면, 분석된 내용이 적용됩니다" 
+              : titleOfBusinessInfo.length === 0 ? inputBusinessInfo : titleOfBusinessInfo}
+              {titleOfBusinessInfo.length !== 0 && <Badge>Edited by AI</Badge>}
             </strong>
-            <p>10 min ago</p>
+            <p>2024-09-03</p>
           </NameTitle>
         </div>
-        <button type="button">내가 쓴 설명 보기</button>
+        {titleOfBusinessInfo.length !== 0 && <button type="button">내가 쓴 설명 보기</button>}
       </BizNameContainer>
-      */}
-
-      {/* 아이디어 설명 입력 데이터만 있는 경우 */}
-      <BizNameContainer>
-        <div>
-          <span><img src={images.Graph} alt="" /></span>
-          <NameTitle>
-            <strong>
-              {bizName || "비즈니스 이름을 입력하세요"}
-            </strong>
-            <p>10 min ago</p>
-          </NameTitle>
-        </div>
-      </BizNameContainer>
-
-      {/* 아이디어 설명 없는 경우 */}
-      {/* 
-      <BizNameContainer>
-        <div>
-          <span><img src={images.Graph} alt="" /></span>
-          <NameTitle Nodata>
-            <strong>
-              {bizName || "아이템(아이디어)를 설명해주시면, 분석된 내용이 적용됩니다"}
-            </strong>
-            <p>10 min ago</p>
-          </NameTitle>
-        </div>
-      </BizNameContainer>
-      */}
     </>
-
   );
 };
 

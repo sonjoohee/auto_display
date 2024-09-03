@@ -43,6 +43,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   const [warningMessage, setWarningMessage] = useState('');
   const axiosConfig = {
     timeout: 100000, // 100초
+    headers: { 'Content-Type': 'application/json' }, withCredentials: true // 쿠키 포함 요청 (필요한 경우)
   };
   const data = {
     "business_idea": inputBusinessInfo
@@ -61,7 +62,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
       // setMainFeaturesOfBusinessInformation(businessTemplate["mainFeatures"].map((item) => item));
       // setMainCharacteristicOfBusinessInformation(businessTemplate["mainFeatures"].map((item) => item));
       // setBusinessInformationTargetCustomer(businessTemplate["목표고객"].map((item) => item));
-      const response = await axios.post('http://52.79.204.29:7800/panels/business', data, axiosConfig);
+      const response = await axios.post('https://wishresearch.kr/panels/business', data, axiosConfig);
       const businessData = response.data.business_analysis;
       // Temp 상태에도 초기 데이터를 설정
       setTitleOfBusinessInfo(businessData["명칭"]);
@@ -192,7 +193,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   };
 
   const handleDelete = (section, index) => {
-    alert(index+section+"정말 삭제하시겠습니까?");
+    alert("정말 삭제하시겠습니까?");
     
     if (section === 'mainFeatures') {
       setMainFeaturesOfBusinessInformation(

@@ -133,6 +133,8 @@ export const ADDITIONAL_REPORT_DATA3 = atom({});
 /* -1: 검색으로 시작하기, 1: AI 전문가 선택해서 시작하기*/
 export const APPROACH_PATH = atom(0);
 
+export const SELECTED_ADDITIONAL_KEYWORD = atom([]);
+
 export const SELECTED_ADDITIONAL_KEYWORD1 = atom("")
 export const SELECTED_ADDITIONAL_KEYWORD2 = atom("")
 export const SELECTED_ADDITIONAL_KEYWORD3 = atom("")
@@ -227,3 +229,7 @@ export const ADDITIONAL_QUESTION_3 = atom("");
 
 export const CONVERSATION_STAGE = atom(1); // 초기값 1
 export const isDataLoadedAtom = atom(false);
+
+export const iS_CLICK_CHECK_REPORT_RIGHTAWAY = atom(false);
+
+export const CONVERSATION = atom([]);
