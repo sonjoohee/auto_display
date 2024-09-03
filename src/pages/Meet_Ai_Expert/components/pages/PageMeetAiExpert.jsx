@@ -6,6 +6,7 @@ import {
   SELECTED_EXPERT_INDEX,
   INPUT_BUSINESS_INFO,
   APPROACH_PATH, 
+  BUTTON_STATE,
 } from '../../../AtomStates';
 
 import { Link } from "react-router-dom";
@@ -19,6 +20,7 @@ import OrganismLeftSideBar from '../../../Expert_Insight/components/organisms/Or
 const PageMeetAiExpert = () => {
 
   const navigate = useNavigate();
+  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
 
   const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO); // 상태값으로 설정
@@ -53,6 +55,7 @@ const PageMeetAiExpert = () => {
   const handledExpertSelect = (index) => {
     if (index === 0) {
         setApproachPath(-1);  // 검색을 통해 들어가는 경우
+        setButtonState(1);  // 버튼 상태를 1로 설정
     } else {
         setApproachPath(1);
         setInputBusinessInfo(""); // 또는 null, undefined로 초기화
@@ -60,7 +63,7 @@ const PageMeetAiExpert = () => {
 
     setSelectedExpertIndex(index);
     navigate("/ExpertInsight");
-}
+  }
 
   return (
     <div>
@@ -77,7 +80,10 @@ const PageMeetAiExpert = () => {
 
           <InputWrap>
             <div className="inputWrap">
-              <textarea placeholder="당신의 아이템 또는 프로젝트 아이디어를 적어 주세요 (예: 원격 근무자를 위한 생산성 관리 툴)" onChange={(e) => setInputBusinessInfo(e.target.value)}></textarea>
+              <textarea 
+                placeholder="당신의 아이템 또는 프로젝트 아이디어를 적어 주세요 (예: 원격 근무자를 위한 생산성 관리 툴)"
+                onChange={(e) => setInputBusinessInfo(e.target.value)}
+              ></textarea>
               <button type="button" onClick={() => handledExpertSelect(0)}>검색</button>
             </div>
             <div className="maxLetter">
@@ -123,12 +129,6 @@ export default PageMeetAiExpert;
 // 스타일 정의는 기존대로 유지
 
 const MainContent = styled.div`
-  // grid-area: content;
-  // min-width: 1px;
-  // max-width: 1240px;
-  // padding-bottom: 150px;
-  // margin: 0 auto;
-
   display:flex;
   flex-direction:column;
   width:100%;
@@ -139,7 +139,6 @@ const MainContent = styled.div`
 const ContentsWrap = styled.div`
   position: relative;
   width: calc(100% - 40px);
-  // padding:0 300px 0;
   display:flex;
   gap:40px;
   flex-direction:row;

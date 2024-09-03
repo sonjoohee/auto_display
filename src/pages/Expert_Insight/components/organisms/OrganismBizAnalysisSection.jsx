@@ -19,6 +19,7 @@ import {
   TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER,
   INPUT_BUSINESS_INFO,
   IS_EDITING_NOW,
+  BUTTON_STATE,
 } from '../../../AtomStates';
 
 const OrganismBizAnalysisSection = ({ conversationId }) => {
@@ -32,18 +33,19 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   const [tempMainCharacteristicOfBusinessInformation, setTempMainCharacteristicOfBusinessInformation] = useAtom(TEMP_MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
   const [tempBusinessInformationTargetCustomer, setTempBusinessInformationTargetCustomer] = useAtom(TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
 
   const [newAddContent, setNewAddContent] = useState('');
   const [isAddingNow, setIsAddingNow] = useState({ section: '', isAdding: false });
   const [newEditContent, setNewEditContent] = useState('');
   const [editingIndex, setEditingIndex] = useState({ section: '', index: -1 });
-  // const [isEditingNow, setIsEditingNow] = useState(false);
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
   const [warningMessage, setWarningMessage] = useState('');
   const axiosConfig = {
     timeout: 100000, // 100초
-    headers: { 'Content-Type': 'application/json' }, withCredentials: true // 쿠키 포함 요청 (필요한 경우)
+    headers: {
+      'Content-Type': 'application/json'  
+    },  withCredentials: true // 쿠키 포함 요청 (필요한 경우)
   };
   const data = {
     "business_idea": inputBusinessInfo
@@ -54,46 +56,68 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
     mainCharacter: mainCharacteristicOfBusinessInformation,
     mainCustomer: businessInformationTargetCustomer,
   };
+
   useEffect(() => {
+    console.log("기초보고서1")
     setIsLoading(true);
     const loadAndSaveData = async () => {
-      // JSON 데이터를 상태로 설정
-      // setTitleOfBusinessInfo(businessTemplate["명칭"]);
-      // setMainFeaturesOfBusinessInformation(businessTemplate["mainFeatures"].map((item) => item));
-      // setMainCharacteristicOfBusinessInformation(businessTemplate["mainFeatures"].map((item) => item));
-      // setBusinessInformationTargetCustomer(businessTemplate["목표고객"].map((item) => item));
-      const response = await axios.post('https://wishresearch.kr/panels/business', data, axiosConfig);
-      const businessData = response.data.business_analysis;
-      // Temp 상태에도 초기 데이터를 설정
-      setTitleOfBusinessInfo(businessData["명칭"]);
-      setTempMainFeaturesOfBusinessInformation(businessData["주요_목적_및_특징"].map((item) => item));
-      setTempMainCharacteristicOfBusinessInformation(businessData["주요기능"].map((item) => item));
-      setTempBusinessInformationTargetCustomer(businessData["목표고객"].map((item) => item));
+      let businessData;
 
-      setMainFeaturesOfBusinessInformation(businessData["주요_목적_및_특징"].map((item) => item));
-      setMainCharacteristicOfBusinessInformation(businessData["주요기능"].map((item) => item));
-      setBusinessInformationTargetCustomer(businessData["목표고객"].map((item) => item));
+      if (buttonState === 1) {
+        // 버튼 클릭으로 API 호출
+        console.log("기초보고서api호출")
+        const response = await axios.post('https://wishresearch.kr/panels/business', data, axiosConfig);
+        businessData = response.data.business_analysis;
+
+        setTitleOfBusinessInfo(businessData["명칭"]);
+        setTempMainFeaturesOfBusinessInformation(businessData["주요_목적_및_특징"].map((item) => item));
+        setTempMainCharacteristicOfBusinessInformation(businessData["주요기능"].map((item) => item));
+        setTempBusinessInformationTargetCustomer(businessData["목표고객"].map((item) => item));
+  
+        setMainFeaturesOfBusinessInformation(businessData["주요_목적_및_특징"].map((item) => item));
+        setMainCharacteristicOfBusinessInformation(businessData["주요기능"].map((item) => item));
+        setBusinessInformationTargetCustomer(businessData["목표고객"].map((item) => item));
+
+        setButtonState(0);
+      } else {
+        // IndexedDB에서 기존 데이터를 가져와 적용
+        const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
+      
+        if (existingConversation && existingConversation.analysisReportData) {
+          const storedData = existingConversation.analysisReportData;
+      
+          // 저장된 데이터를 각 상태에 적용
+          setTitleOfBusinessInfo(storedData.title);
+          setTempMainFeaturesOfBusinessInformation(storedData.mainFeatures);
+          setTempMainCharacteristicOfBusinessInformation(storedData.mainCharacter);
+          setTempBusinessInformationTargetCustomer(storedData.mainCustomer);
+      
+          setMainFeaturesOfBusinessInformation(storedData.mainFeatures);
+          setMainCharacteristicOfBusinessInformation(storedData.mainCharacter);
+          setBusinessInformationTargetCustomer(storedData.mainCustomer);
+        } else {
+          console.warn('No saved analysis data found.');
+        }
+      }
+      // Temp 상태에도 초기 데이터를 설정
+
 
       // 기존 대화 내역을 유지하면서 새로운 정보를 추가
       const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
-      // const updatedConversation = {
-      //   ...existingConversation,
-      //   mainFeatures: businessData["주요_목적_및_특징"].map((item) => item),
-      //   mainCharacter: businessData["mainFeatures"].map((item) => item),
-      //   mainCustomer: businessData["목표고객"].map((item) => item),
-      //   timestamp: Date.now(),
-      // };
+
       const updatedConversation = {
         ...existingConversation,
         analysisReportData,
         timestamp: Date.now(),
       };
-      console.log("___________기초보고서_____________")
-      console.log(analysisReportData)
       await saveConversationToIndexedDB(updatedConversation);
+      console.log("___________기초보고서_____________")
+      console.log("기초보고서2")
+      console.log(analysisReportData)
+      setIsLoading(false);
     };
     loadAndSaveData();
-    setIsLoading(false);
+
   }, [
     conversationId,
     setTitleOfBusinessInfo,
@@ -210,7 +234,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
     }
   };
 
-  return (
+return (
     <>
     {isLoading && (
       <LoadingOverlay>
@@ -391,13 +415,12 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
 
       {warningMessage && <WarningMessage>{warningMessage}</WarningMessage>} {/* 경고 메시지 출력 */}
       <MoleculeReportController reportIndex={0} conversationId={conversationId}  />
-    </AnalysisSection>
+      </AnalysisSection>
     </>
   );
-};
+}
 
 export default OrganismBizAnalysisSection;
-
 
 const AnalysisSection = styled.div`
   position:relative;
@@ -580,6 +603,7 @@ const WarningMessage = styled.div`
   margin-top: 10px;
   text-align: center;
 `;
+
 const LoadingOverlay = styled.div`
   position: fixed;
   top: 0;

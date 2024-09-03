@@ -4,25 +4,18 @@ import { useAtom } from 'jotai';
 import {
   TITLE_OF_BUSINESS_INFORMATION,
   SELECTED_EXPERT_INDEX,
-  SELECTED_ADDITIONAL_KEYWORD1,
-  SELECTED_ADDITIONAL_KEYWORD2,
-  SELECTED_ADDITIONAL_KEYWORD3,
+  SELECTED_ADDITIONAL_KEYWORD,
   QUESTION_LIST,
   ADDITIONAL_QUESTION_1,
   ADDITIONAL_QUESTION_2,
   ADDITIONAL_QUESTION_3,
 } from '../../../AtomStates';
-
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
-import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
 
 const MoleculeAdditionalKeyword = () => {
-  const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
-  const [selectedAdditionalKeyword1, setSelectedAdditionalKeyword1] = useAtom(SELECTED_ADDITIONAL_KEYWORD1);
-  const [selectedAdditionalKeyword2, setSelectedAdditionalKeyword2] = useAtom(SELECTED_ADDITIONAL_KEYWORD2);
-  const [selectedAdditionalKeyword3, setSelectedAdditionalKeyword3] = useAtom(SELECTED_ADDITIONAL_KEYWORD3);
+  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
   const [addtionalQuestion1, setAddtionalQuestion1] = useAtom(ADDITIONAL_QUESTION_1);
   const [addtionalQuestion2, setAddtionalQuestion2] = useAtom(ADDITIONAL_QUESTION_2);
   const [addtionalQuestion3, setAddtionalQuestion3] = useAtom(ADDITIONAL_QUESTION_3);
@@ -58,15 +51,10 @@ const MoleculeAdditionalKeyword = () => {
     setAddtionalQuestion3(newSelections.아이디어제공);
   };
 
-  const setSelectedAdditionalKeyword = (keyword) => {
-    console.log(keyword)
-    if (selectedExpertIndex === 1) {
-      setSelectedAdditionalKeyword1(keyword);
-    } else if (selectedExpertIndex === 2) {
-      setSelectedAdditionalKeyword2(keyword);
-    } else if (selectedExpertIndex === 3) {
-      setSelectedAdditionalKeyword3(keyword);
-    }
+  const updateSelectedAdditionalKeyword = (keyword) => {
+    const updatedKeywords = [...selectedAdditionalKeyword];
+    updatedKeywords[selectedExpertIndex - 1] = keyword; // Update the keyword at the expert index
+    setSelectedAdditionalKeyword(updatedKeywords);
   };
 
   useEffect(() => {
@@ -76,13 +64,13 @@ const MoleculeAdditionalKeyword = () => {
   return (
     <>
       <ButtonWrap>
-        <button onClick={() => setSelectedAdditionalKeyword(randomSelections.방법론관련)}>
+        <button onClick={() => updateSelectedAdditionalKeyword(randomSelections.방법론관련)}>
           {randomSelections.방법론관련}
         </button>
-        <button onClick={() => setSelectedAdditionalKeyword(randomSelections.사례제시)}>
+        <button onClick={() => updateSelectedAdditionalKeyword(randomSelections.사례제시)}>
           {randomSelections.사례제시}
         </button>
-        <button onClick={() => setSelectedAdditionalKeyword(randomSelections.아이디어제공)}>
+        <button onClick={() => updateSelectedAdditionalKeyword(randomSelections.아이디어제공)}>
           {randomSelections.아이디어제공}
         </button>
         <button
