@@ -24,9 +24,11 @@ import {
   iS_CLICK_CHECK_REPORT_RIGHTAWAY,
   CONVERSATION,
   BUTTON_STATE,
+  isLoggedInAtom,
 } from '../../../AtomStates';
 
 import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
+import { createChatOnServer } from '../../../../utils/indexedDB'; // 서버와 대화 ID 생성 함수
 
 import OrganismLeftSideBar from '../organisms/OrganismLeftSideBar';
 import OrganismRightSideBar from '../organisms/OrganismRightSideBar';
@@ -44,7 +46,7 @@ import MoleculeCheckReportRightAway from '../molecules/MoleculeCheckReportRightA
 const PageExpertInsight = () => {
   const navigate = useNavigate();
   const { conversationId: paramConversationId } = useParams();
-  const conversationId = paramConversationId || nanoid();
+  const [conversationId, setConversationId] = useState(paramConversationId || nanoid());
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
@@ -71,6 +73,7 @@ const PageExpertInsight = () => {
   const [inputAdditionalQuestion, setInputAdditionalQuestion] = useState("");
   const [isClickCheckReportRightAway, setIsClickCheckReportRightAway] = useAtom(iS_CLICK_CHECK_REPORT_RIGHTAWAY);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
+  const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
 
   // 현재 선택된 전문가에 맞는 보고서 데이터를 결정
   const getStrategyReportData = () => {
@@ -149,7 +152,20 @@ const PageExpertInsight = () => {
   useEffect(() => {
     const loadConversation = async () => {
       if (!paramConversationId) {
-        navigate(`/conversation/${conversationId}`, { replace: true });
+        if (isLoggedIn) {
+          try {
+            // 서버에서 새로운 대화 ID를 생성하고 설정
+            const newConversationId = await createChatOnServer();
+            setConversationId(newConversationId);
+            navigate(`/conversation/${newConversationId}`, { replace: true });
+          } catch (error) {
+            console.error('Failed to create conversation on server:', error);
+            // 서버에서 ID를 가져오지 못했을 경우 로컬 ID 사용
+            navigate(`/conversation/${conversationId}`, { replace: true });
+          }
+        } else {
+          navigate(`/conversation/${conversationId}`, { replace: true });
+        }
       } else {
         const savedConversation = await getConversationByIdFromIndexedDB(conversationId);
         if (savedConversation) {
