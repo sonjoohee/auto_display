@@ -19,6 +19,7 @@ import {
   TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER,
   INPUT_BUSINESS_INFO,
   IS_EDITING_NOW,
+  BUTTON_STATE,
 } from '../../../AtomStates';
 
 const OrganismBizAnalysisSection = ({ conversationId }) => {
@@ -32,13 +33,12 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   const [tempMainCharacteristicOfBusinessInformation, setTempMainCharacteristicOfBusinessInformation] = useAtom(TEMP_MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
   const [tempBusinessInformationTargetCustomer, setTempBusinessInformationTargetCustomer] = useAtom(TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
 
   const [newAddContent, setNewAddContent] = useState('');
   const [isAddingNow, setIsAddingNow] = useState({ section: '', isAdding: false });
   const [newEditContent, setNewEditContent] = useState('');
   const [editingIndex, setEditingIndex] = useState({ section: '', index: -1 });
-  // const [isEditingNow, setIsEditingNow] = useState(false);
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
   const [warningMessage, setWarningMessage] = useState('');
   const axiosConfig = {
@@ -61,18 +61,47 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
     console.log("기초보고서1")
     setIsLoading(true);
     const loadAndSaveData = async () => {
+      let businessData;
 
-      const response = await axios.post('http://52.79.204.29:7800/panels/business', data, axiosConfig);
-      const businessData = response.data.business_analysis;
+      if (buttonState === 1) {
+        // 버튼 클릭으로 API 호출
+        console.log("기초보고서api호출")
+        const response = await axios.post('http://52.79.204.29:7800/panels/business', data, axiosConfig);
+        businessData = response.data.business_analysis;
+
+        setTitleOfBusinessInfo(businessData["명칭"]);
+        setTempMainFeaturesOfBusinessInformation(businessData["주요_목적_및_특징"].map((item) => item));
+        setTempMainCharacteristicOfBusinessInformation(businessData["주요기능"].map((item) => item));
+        setTempBusinessInformationTargetCustomer(businessData["목표고객"].map((item) => item));
+  
+        setMainFeaturesOfBusinessInformation(businessData["주요_목적_및_특징"].map((item) => item));
+        setMainCharacteristicOfBusinessInformation(businessData["주요기능"].map((item) => item));
+        setBusinessInformationTargetCustomer(businessData["목표고객"].map((item) => item));
+
+        setButtonState(0);
+      } else {
+        // IndexedDB에서 기존 데이터를 가져와 적용
+        const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
+      
+        if (existingConversation && existingConversation.analysisReportData) {
+          const storedData = existingConversation.analysisReportData;
+      
+          // 저장된 데이터를 각 상태에 적용
+          setTitleOfBusinessInfo(storedData.title);
+          setTempMainFeaturesOfBusinessInformation(storedData.mainFeatures);
+          setTempMainCharacteristicOfBusinessInformation(storedData.mainCharacter);
+          setTempBusinessInformationTargetCustomer(storedData.mainCustomer);
+      
+          setMainFeaturesOfBusinessInformation(storedData.mainFeatures);
+          setMainCharacteristicOfBusinessInformation(storedData.mainCharacter);
+          setBusinessInformationTargetCustomer(storedData.mainCustomer);
+        } else {
+          console.warn('No saved analysis data found.');
+        }
+      }
+
       // Temp 상태에도 초기 데이터를 설정
-      setTitleOfBusinessInfo(businessData["명칭"]);
-      setTempMainFeaturesOfBusinessInformation(businessData["주요_목적_및_특징"].map((item) => item));
-      setTempMainCharacteristicOfBusinessInformation(businessData["주요기능"].map((item) => item));
-      setTempBusinessInformationTargetCustomer(businessData["목표고객"].map((item) => item));
 
-      setMainFeaturesOfBusinessInformation(businessData["주요_목적_및_특징"].map((item) => item));
-      setMainCharacteristicOfBusinessInformation(businessData["주요기능"].map((item) => item));
-      setBusinessInformationTargetCustomer(businessData["목표고객"].map((item) => item));
 
       // 기존 대화 내역을 유지하면서 새로운 정보를 추가
       const existingConversation = await getConversationByIdFromIndexedDB(conversationId);

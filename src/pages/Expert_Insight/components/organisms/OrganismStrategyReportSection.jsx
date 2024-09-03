@@ -36,12 +36,14 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
   const [mainCharacteristicOfBusinessInformation, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
   const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
+  
   const analysisReportData = {
     title: titleOfBusinessInfo,
     mainFeatures: mainFeaturesOfBusinessInformation,
     mainCharacter: mainCharacteristicOfBusinessInformation,
     mainCustomer: businessInformationTargetCustomer,
   };
+
   const [isLoading, setIsLoading] = useState(false);
 
   // 전문가 인덱스에 따라 해당 Atom을 선택
@@ -49,20 +51,16 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
     '1': EXPERT1_REPORT_DATA,
     '2': EXPERT2_REPORT_DATA,
     '3': EXPERT3_REPORT_DATA,
-    // 필요한 경우 추가할 수 있음
   };
   
   const sampleDataMap = {
     '1': sampleData1,
     '2': sampleData2,
     '3': sampleData3,
-    // 필요한 경우 추가할 수 있음
   };
   
-  // expertIndex가 1, 2, 3 이외의 값일 경우 예외 처리
   const strategyReportAtom = strategyReportAtomMap[expertIndex] || EXPERT3_REPORT_DATA; 
   const sampleData = sampleDataMap[expertIndex] || sampleData3;
-  
 
   const [strategyReportData, setStrategyReportData] = useAtom(strategyReportAtom);
 
@@ -78,95 +76,54 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
           existingConversation[currentReportKey] &&
           existingConversation[currentReportKey].expert_id === parseInt(expertIndex, 10)
         ) {
-          // IndexedDB에 현재 선택된 전문가의 데이터가 있는 경우 해당 데이터를 사용합니다.
           const strategyData = existingConversation[currentReportKey];
           setStrategyReportData(strategyData);
           setTabs(strategyData.tabs);
           setSections(strategyData.tabs[selectedTab].sections);
         } else if (Object.keys(strategyReportData).length === 0) {
-          // IndexedDB에 데이터가 없고 atom에도 데이터가 없으면 JSON 데이터를 사용합니다.
-          // setStrategyReportData(sampleData); // atom에 sampleData 저장
-          // setTabs(sampleData.tabs);
-          // setSections(sampleData.tabs[selectedTab].sections);
-
-
-        // IndexedDB에 데이터가 없고 atom에도 데이터가 없으면 서버에서 데이터를 가져옵니다.(위에꺼 주석처리하고)
-        // 서버에 email, conversationId, expertIndex, 기초보고서(analysisReportData) 를 보내서 해당 보고서 생성요청 - expertIndex가 1이면 1번 전문가의 보고서 생성
-        const data = {
-          "expert_id": "1",
-          "business_info": "초고속 팝업 텐트",
-          "business_analysis_data" : {
-              "명칭":"초고속 팝업 텐트",
-              "개요":{
-                  "주요_목적_및_특징":"초고속 팝업 텐트는 30초 만에 설치가 가능한 휴대용 텐트로,  캠핑, 야외 활동, 비상 대피 시 빠르고 간편하게 사용할 수 있는 것이 가장 큰 특징입니다.  가볍고 컴팩트한 디자인으로 휴대 및 보관이 용이하며,  내구성이 뛰어나 다양한 환경에서 안전하게 사용할 수 있습니다."
+          const data = {
+            expert_id: expertIndex,
+            business_info: titleOfBusinessInfo, // DB에서 가져온 titleOfBusinessInfo 사용
+            business_analysis_data: {
+              명칭: analysisReportData.title,
+              개요: {
+                주요_목적_및_특징: analysisReportData.mainFeatures.map((feature) => feature.기능),
               },
-              "주요기능":[
-                  {
-                      "기능":"초고속 설치",
-                      "설명":"특허 받은 팝업 구조를 적용하여 30초 만에 텐트를 설치할 수 있습니다.  텐트를 펼치면 자동으로 프레임이 형성되어 별도의 조립 과정이 필요하지 않습니다.  캠핑, 야외 활동, 비상 대피 시 빠르게 텐트를 설치하여 안전하고 편리하게 사용할 수 있습니다."
-                  },
-                  {
-                      "기능":"휴대성 및 보관 용이성",
-                      "설명":"가볍고 컴팩트한 디자인으로 휴대 및 보관이 용이합니다.  전용 가방에 담아 손쉽게 이동 및 보관할 수 있으며,  차량 트렁크나 백팩에 넣어 휴대하기에도 편리합니다."
-                  },
-                  {
-                      "기능":"내구성 및 안전성",
-                      "설명":"고품질 소재와 튼튼한 프레임 구조로 제작되어 험한 환경에서도 안전하게 사용할 수 있습니다.  방수, 방풍, 자외선 차단 기능을 갖추어 다양한 기후 조건에서도 쾌적하게 사용할 수 있습니다."
-                  }
-              ],
-              "목표고객":[
-                  {
-                      "고객_세그먼트":"캠핑 및 야외 활동 애호가",
-                      "설명":"캠핑, 백패킹, 낚시, 등산 등 다양한 야외 활동을 즐기는 사람들로,  빠르고 간편한 텐트 설치를 선호하며,  휴대 및 보관이 용이한 제품을 찾습니다.  초고속 팝업 텐트는 빠른 설치 시간, 휴대성, 내구성을 갖추어 이러한 고객들의 요구를 충족시킬 수 있습니다."
-                  },
-                  {
-                      "고객_세그먼트":"가족 단위 여행객",
-                      "설명":"가족 단위로 여행을 자주 다니는 사람들로,  아이들과 함께 캠핑을 즐기거나,  여행 중 갑작스러운 비나 추위로부터 보호할 수 있는 텐트를 필요로 합니다.  초고속 팝업 텐트는 빠르고 간편한 설치, 넓은 공간, 안전성을 갖추어 가족 단위 여행객에게 안성맞춤입니다."
-                  },
-                  {
-                      "고객_세그먼트":"비상 대피 및 재난 대비 용품 구매자",
-                      "설명":"자연 재해 발생 시 대피를 위한 텐트를 구비하고자 하는 사람들로,  빠른 설치, 휴대성, 내구성을 중요하게 생각합니다.  초고속 팝업 텐트는  비상 상황에서 빠르게 설치하여 안전을 확보하고,  휴대 및 보관이 용이하여 비상 대피 용품으로 적합합니다."
-                  }
-              ]
-          },
-          "tabs": [
-          ],
-          "page_index": 1
-      }
-        // 첫 번째 요청
-        const response1 = await axios.post('http://52.79.204.29:7800/panels/expert', data, axiosConfig);
+              주요기능: analysisReportData.mainFeatures,
+              목표고객: analysisReportData.mainCustomer,
+            },
+            tabs: [],
+            page_index: 1,
+          };
 
-        let finalResponse = response1.data;
+          const response1 = await axios.post('http://52.79.204.29:7800/panels/expert', data, axiosConfig);
 
-        // total_page_index에 따라 추가 요청 처리
-        if (finalResponse.total_page_index === 2) {
-          const response2 = await axios.post('http://52.79.204.29:7800/panels/expert', finalResponse, axiosConfig);
-          finalResponse = response2.data;
-        } else if (finalResponse.total_page_index === 3) {
-          const response2 = await axios.post('http://52.79.204.29:7800/panels/expert', finalResponse, axiosConfig);
-          const response3 = await axios.post('http://52.79.204.29:7800/panels/expert', response2.data, axiosConfig);
-          finalResponse = response3.data;
-        }
+          let finalResponse = response1.data;
 
-        console.log('Final response data:', finalResponse);
+          if (finalResponse.total_page_index === 2) {
+            const response2 = await axios.post('http://52.79.204.29:7800/panels/expert', finalResponse, axiosConfig);
+            finalResponse = response2.data;
+          } else if (finalResponse.total_page_index === 3) {
+            const response2 = await axios.post('http://52.79.204.29:7800/panels/expert', finalResponse, axiosConfig);
+            const response3 = await axios.post('http://52.79.204.29:7800/panels/expert', response2.data, axiosConfig);
+            finalResponse = response3.data;
+          }
 
-        const strategyData = finalResponse;
+          console.log('Final response data:', finalResponse);
 
-        // const strategyData = response.data;
-        setStrategyReportData(strategyData); // atom에 서버에서 받아온 데이터 저장
-        setTabs(strategyData.tabs);
-        setSections(strategyData.tabs[selectedTab].sections);
+          const strategyData = finalResponse;
 
+          setStrategyReportData(strategyData);
+          setTabs(strategyData.tabs);
+          setSections(strategyData.tabs[selectedTab].sections);
 
-          // 새 데이터를 IndexedDB에 저장합니다.
           const updatedConversation = {
             ...existingConversation,
-            [currentReportKey]: strategyData, // 전문가를 키로 저장
+            [currentReportKey]: strategyData,
             timestamp: Date.now(),
           };
           await saveConversationToIndexedDB(updatedConversation);
         } else {
-          // atom에 데이터가 있으면 그 데이터를 사용합니다.
           setTabs(strategyReportData.tabs);
           setSections(strategyReportData.tabs[selectedTab].sections);
         }
@@ -176,7 +133,6 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
       setIsLoading(false);
     };
     loadData();
-
   }, [conversationId, selectedTab, expertIndex]);
 
   const handleTabClick = (index) => {
@@ -184,8 +140,8 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
     if (tabs.length > 0) {
       setSections(tabs[index].sections);
     }
-    
   };
+  
 
   return (
     <>
