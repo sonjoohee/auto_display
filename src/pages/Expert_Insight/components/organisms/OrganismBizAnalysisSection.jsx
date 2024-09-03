@@ -32,7 +32,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   const [tempBusinessInformationTargetCustomer, setTempBusinessInformationTargetCustomer] = useAtom(TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [bizAnalysisReportIndex, setBizAnalysisReportIndex] = useState(0);
+
   const [newAddContent, setNewAddContent] = useState('');
   const [isAddingNow, setIsAddingNow] = useState({ section: '', isAdding: false });
   const [newEditContent, setNewEditContent] = useState('');
@@ -102,15 +102,36 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
     setTempBusinessInformationTargetCustomer
   ]);
 
+//   const handleEditStart = (section, index) => {
+//     setEditingIndex({ section, index });
+//     setIsEditingNow(true);
+//     if (section === '주요기능') {
+//       setNewEditContent(tempMainFeaturesOfBusinessInformation[index]);
+//     } else if (section === 'mainCharacteristic') {
+//       setNewEditContent(tempMainCharacteristicOfBusinessInformation[index]);
+//     } else if (section === 'targetCustomer') {
+//       setNewEditContent(tempBusinessInformationTargetCustomer[index]);
+
+//       setTempMainFeaturesOfBusinessInformation(mainFeaturesOfBusinessInformation);
+//     setTempMainCharacteristicOfBusinessInformation(mainCharacteristicOfBusinessInformation);
+//     setTempBusinessInformationTargetCustomer(businessInformationTargetCustomer);
+//   },[])
+
   const handleEditStart = (section, index) => {
     setEditingIndex({ section, index });
-    setIsEditingNow(true);
-    if (section === '주요기능') {
-      setNewEditContent(tempMainFeaturesOfBusinessInformation[index]);
-    } else if (section === 'mainCharacteristic') {
-      setNewEditContent(tempMainCharacteristicOfBusinessInformation[index]);
-    } else if (section === 'targetCustomer') {
-      setNewEditContent(tempBusinessInformationTargetCustomer[index]);
+    
+    switch (section) {
+      case 'mainFeatures':
+        setNewEditContent(mainFeaturesOfBusinessInformation[index]);
+        break;
+      case 'mainCharacteristic':
+        setNewEditContent(mainCharacteristicOfBusinessInformation[index]);
+        break;
+      case 'targetCustomer':
+        setNewEditContent(businessInformationTargetCustomer[index]);
+        break;
+      default:
+        break;
     }
   };
 
@@ -127,17 +148,47 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
       const updatedCustomers = [...tempBusinessInformationTargetCustomer];
       updatedCustomers[editingIndex.index] = newEditContent;
       setTempBusinessInformationTargetCustomer(updatedCustomers);
-    }
 
+    if (newEditContent.trim() === '') {
+      alert("내용을 입력해주세요.");  // 비어있는 내용에 대한 경고 메시지
+      return;
+    }
+  
+    let updatedArray;
+    
+    switch (editingIndex.section) {
+      case 'mainFeatures':
+        updatedArray = [...mainFeaturesOfBusinessInformation];
+        updatedArray[editingIndex.index] = newEditContent;
+        setMainFeaturesOfBusinessInformation(updatedArray);
+        break;
+      case 'mainCharacteristic':
+        updatedArray = [...mainCharacteristicOfBusinessInformation];
+        updatedArray[editingIndex.index] = newEditContent;
+        setMainCharacteristicOfBusinessInformation(updatedArray);
+        break;
+      case 'targetCustomer':
+        updatedArray = [...businessInformationTargetCustomer];
+        updatedArray[editingIndex.index] = newEditContent;
+        setBusinessInformationTargetCustomer(updatedArray);
+        break;
+      default:
+        break;
+    }
+  
     setEditingIndex({ section: '', index: -1 });
+
     setWarningMessage('');
     setIsEditingNow(false);
+    setNewEditContent('');
+    console.log("Updated State:", updatedArray);
   };
 
   const handleEditCancel = () => {
     setEditingIndex({ section: '', index: -1 });
     setWarningMessage('');
     setIsEditingNow(false);
+    setNewEditContent('');
   };
 
   const handleAddSave = (section) => {
@@ -191,7 +242,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                 <InputField
                   type="text"
                   value={newEditContent}
-                  onChange={(e) => {setBizAnalysisReportIndex(0); setNewEditContent(e.target.value);}}
+                  onChange={(e) => setNewEditContent(e.target.value)}
                 />
               ) : (
                 <p>{content}</p>
@@ -199,8 +250,8 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               {editingIndex.section === '주요기능' && editingIndex.index === index ? (
                 <>
                   <BtnWrap>
-                    <button onClick={handleApplyChange}><img src={images.IconClose2} alt="" />적용</button>
-                    <button onClick={handleEditCancel}><img src={images.IconCheck2} alt="" />취소</button>
+                    <button onClick={handleEditCancel}><img src={images.IconClose2} alt="" />취소</button>
+                    <button onClick={handleApplyChange}><img src={images.IconCheck2} alt="" />적용</button>
                   </BtnWrap>
                 </>
               ) : (
@@ -226,8 +277,11 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               placeholder="새로운 정보를 추가해보세요"
             />
             <BtnWrap>
-              <button onClick={() => handleAddSave('주요기능')}><img src={images.IconEdit2} alt="" />저장</button>
-              <button onClick={() => setIsAddingNow({ section: '', isAdding: false })}><img src={images.IconDelete2} alt="" />취소</button>
+//               <button onClick={() => handleAddSave('주요기능')}><img src={images.IconEdit2} alt="" />저장</button>
+//               <button onClick={() => setIsAddingNow({ section: '', isAdding: false })}><img src={images.IconDelete2} alt="" />취소</button>
+              <button onClick={() => setIsAddingNow({ section: '', isAdding: false })}><img src={images.IconClose2} alt="" />취소</button>
+              <button onClick={() => handleAddSave('mainFeatures')}><img src={images.IconCheck2} alt="" />저장</button>
+
             </BtnWrap>
           </AddInfo>
         ) : (
@@ -256,8 +310,8 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               {editingIndex.section === 'mainCharacteristic' && editingIndex.index === index ? (
                 <>
                   <BtnWrap>
-                    <button onClick={handleApplyChange}><img src={images.IconClose2} alt="" />적용</button>
-                    <button onClick={handleEditCancel}><img src={images.IconCheck2} alt="" />취소</button>
+                    <button onClick={handleEditCancel}><img src={images.IconClose2} alt="" />취소</button>
+                    <button onClick={handleApplyChange}><img src={images.IconCheck2} alt="" />적용</button>
                   </BtnWrap>
                 </>
               ) : (
@@ -282,8 +336,8 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               onChange={(e) => { setNewAddContent(e.target.value); }}
               placeholder="새로운 정보를 추가해보세요"
             />
-            <button onClick={() => handleAddSave('mainCharacteristic')}><img src={images.IconEdit2} alt="" />저장</button>
-            <button onClick={() => setIsAddingNow({ section: '', isAdding: false })}><img src={images.IconDelete2} alt="" />취소</button>
+            <button onClick={() => setIsAddingNow({ section: '', isAdding: false })}><img src={images.IconClose2} alt="" />취소</button>
+            <button onClick={() => handleAddSave('mainCharacteristic')}><img src={images.IconCheck2} alt="" />저장</button>
           </AddInfo>
         ) : (
           isEditingNow && (
@@ -311,8 +365,8 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               {editingIndex.section === 'targetCustomer' && editingIndex.index === index ? (
                 <>
                   <BtnWrap>
-                    <button onClick={handleApplyChange}><img src={images.IconClose2} alt="" />적용</button>
-                    <button onClick={handleEditCancel}><img src={images.IconCheck2} alt="" />취소</button>
+                    <button onClick={handleEditCancel}><img src={images.IconClose2} alt="" />취소</button>
+                    <button onClick={handleApplyChange}><img src={images.IconCheck2} alt="" />적용</button>
                   </BtnWrap>
                 </>
               ) : (
@@ -337,8 +391,8 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               onChange={(e) => { setNewAddContent(e.target.value); }}
               placeholder="새로운 정보를 추가해보세요"
             />
-            <button onClick={() => handleAddSave('targetCustomer')}><img src={images.IconEdit2} alt="" />저장</button>
-            <button onClick={() => setIsAddingNow({ section: '', isAdding: false })}><img src={images.IconDelete2} alt="" />취소</button>
+          <button onClick={() => setIsAddingNow({ section: '', isAdding: false })}><img src={images.IconClose2} alt="" />취소</button>
+          <button onClick={() => handleAddSave('targetCustomer')}><img src={images.IconCheck2} alt="" />저장</button>
           </AddInfo>
         ) : (
           isEditingNow && (
