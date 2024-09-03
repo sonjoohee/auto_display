@@ -53,56 +53,56 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
     mainCharacter: mainCharacteristicOfBusinessInformation,
     mainCustomer: businessInformationTargetCustomer,
   };
-  // useEffect(() => {
-  //   setIsLoading(true);
-  //   const loadAndSaveData = async () => {
-  //     // JSON 데이터를 상태로 설정
-  //     // setTitleOfBusinessInfo(businessTemplate["명칭"]);
-  //     // setMainFeaturesOfBusinessInformation(businessTemplate["mainFeatures"].map((item) => item));
-  //     // setMainCharacteristicOfBusinessInformation(businessTemplate["mainFeatures"].map((item) => item));
-  //     // setBusinessInformationTargetCustomer(businessTemplate["목표고객"].map((item) => item));
-  //     const response = await axios.post('http://52.79.204.29:7800/panels/business', data, axiosConfig);
-  //     const businessData = response.data.business_analysis;
-  //     // Temp 상태에도 초기 데이터를 설정
-  //     setTitleOfBusinessInfo(businessData["명칭"]);
-  //     setTempMainFeaturesOfBusinessInformation(businessData["주요_목적_및_특징"].map((item) => item));
-  //     setTempMainCharacteristicOfBusinessInformation(businessData["주요기능"].map((item) => item));
-  //     setTempBusinessInformationTargetCustomer(businessData["목표고객"].map((item) => item));
+  useEffect(() => {
+    setIsLoading(true);
+    const loadAndSaveData = async () => {
+      // JSON 데이터를 상태로 설정
+      // setTitleOfBusinessInfo(businessTemplate["명칭"]);
+      // setMainFeaturesOfBusinessInformation(businessTemplate["mainFeatures"].map((item) => item));
+      // setMainCharacteristicOfBusinessInformation(businessTemplate["mainFeatures"].map((item) => item));
+      // setBusinessInformationTargetCustomer(businessTemplate["목표고객"].map((item) => item));
+      const response = await axios.post('http://52.79.204.29:7800/panels/business', data, axiosConfig);
+      const businessData = response.data.business_analysis;
+      // Temp 상태에도 초기 데이터를 설정
+      setTitleOfBusinessInfo(businessData["명칭"]);
+      setTempMainFeaturesOfBusinessInformation(businessData["주요_목적_및_특징"].map((item) => item));
+      setTempMainCharacteristicOfBusinessInformation(businessData["주요기능"].map((item) => item));
+      setTempBusinessInformationTargetCustomer(businessData["목표고객"].map((item) => item));
 
-  //     setMainFeaturesOfBusinessInformation(businessData["주요_목적_및_특징"].map((item) => item));
-  //     setMainCharacteristicOfBusinessInformation(businessData["주요기능"].map((item) => item));
-  //     setBusinessInformationTargetCustomer(businessData["목표고객"].map((item) => item));
+      setMainFeaturesOfBusinessInformation(businessData["주요_목적_및_특징"].map((item) => item));
+      setMainCharacteristicOfBusinessInformation(businessData["주요기능"].map((item) => item));
+      setBusinessInformationTargetCustomer(businessData["목표고객"].map((item) => item));
 
-  //     // 기존 대화 내역을 유지하면서 새로운 정보를 추가
-  //     const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
-  //     // const updatedConversation = {
-  //     //   ...existingConversation,
-  //     //   mainFeatures: businessData["주요_목적_및_특징"].map((item) => item),
-  //     //   mainCharacter: businessData["mainFeatures"].map((item) => item),
-  //     //   mainCustomer: businessData["목표고객"].map((item) => item),
-  //     //   timestamp: Date.now(),
-  //     // };
-  //     const updatedConversation = {
-  //       ...existingConversation,
-  //       analysisReportData,
-  //       timestamp: Date.now(),
-  //     };
-  //     console.log("___________기초보고서_____________")
-  //     console.log(analysisReportData)
-  //     await saveConversationToIndexedDB(updatedConversation);
-  //   };
-  //   loadAndSaveData();
-  //   setIsLoading(false);
-  // }, [
-  //   conversationId,
-  //   setTitleOfBusinessInfo,
-  //   setMainFeaturesOfBusinessInformation,
-  //   setMainCharacteristicOfBusinessInformation,
-  //   setBusinessInformationTargetCustomer,
-  //   setTempMainFeaturesOfBusinessInformation,
-  //   setTempMainCharacteristicOfBusinessInformation,
-  //   setTempBusinessInformationTargetCustomer
-  // ]);
+      // 기존 대화 내역을 유지하면서 새로운 정보를 추가
+      const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
+      // const updatedConversation = {
+      //   ...existingConversation,
+      //   mainFeatures: businessData["주요_목적_및_특징"].map((item) => item),
+      //   mainCharacter: businessData["mainFeatures"].map((item) => item),
+      //   mainCustomer: businessData["목표고객"].map((item) => item),
+      //   timestamp: Date.now(),
+      // };
+      const updatedConversation = {
+        ...existingConversation,
+        analysisReportData,
+        timestamp: Date.now(),
+      };
+      console.log("___________기초보고서_____________")
+      console.log(analysisReportData)
+      await saveConversationToIndexedDB(updatedConversation);
+    };
+    loadAndSaveData();
+    setIsLoading(false);
+  }, [
+    conversationId,
+    setTitleOfBusinessInfo,
+    setMainFeaturesOfBusinessInformation,
+    setMainCharacteristicOfBusinessInformation,
+    setBusinessInformationTargetCustomer,
+    setTempMainFeaturesOfBusinessInformation,
+    setTempMainCharacteristicOfBusinessInformation,
+    setTempBusinessInformationTargetCustomer
+  ]);
 
 //   const handleEditStart = (section, index) => {
 //     setEditingIndex({ section, index });
