@@ -41,6 +41,9 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   const [warningMessage, setWarningMessage] = useState('');
   const axiosConfig = {
     timeout: 100000, // 100초
+    headers: {
+      'Content-Type': 'application/json'  
+    },  withCredentials: true // 쿠키 포함 요청 (필요한 경우)
   };
   const data = {
     "business_idea": inputBusinessInfo

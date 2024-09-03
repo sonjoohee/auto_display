@@ -457,6 +457,7 @@ const PageExpertInsight = () => {
                             key={`addition_${expertIndex}_${index}`}
                             conversationId={conversationId}
                             expertIndex={expertIndex}
+                            keyword = {setSelectedAdditionalKeyword1}
                           />;
                 }
                 else if(expertIndex === '2') {
@@ -464,6 +465,7 @@ const PageExpertInsight = () => {
                             key={`addition_${expertIndex}_${index}`}
                             conversationId={conversationId}
                             expertIndex={expertIndex}
+                            keyword = {setSelectedAdditionalKeyword2}
                           />;
                 }
                 else if(expertIndex === '3') {
@@ -471,6 +473,7 @@ const PageExpertInsight = () => {
                             key={`addition_${expertIndex}_${index}`}
                             conversationId={conversationId}
                             expertIndex={expertIndex}
+                            keyword = {setSelectedAdditionalKeyword3}
                           />;
                 }
               }

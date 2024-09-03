@@ -14,13 +14,13 @@ import {
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
 import MoleculeReportController from '../molecules/MoleculeReportController';
-import sampleData4 from './sample4.json';
-import sampleData5 from './sample5.json';
-import sampleData6 from './sample6.json';
+// import sampleData4 from './sample4.json';
+// import sampleData5 from './sample5.json';
+// import sampleData6 from './sample6.json';
 import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
 import axios from 'axios';
 
-const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
+const OrganismAdditionalReport = ({ conversationId, expertIndex ,keyword}) => {
   const [selectedTab, setSelectedTab] = useAtom(SELECTED_TAB); // 탭을 인덱스로 관리
   const [tabs, setTabs] = useState([]);
   const [sections, setSections] = useState([]);
@@ -35,17 +35,18 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
     // 필요한 경우 추가할 수 있음
   };
   
-  const sampleDataMap = {
-    '1': sampleData4,
-    '2': sampleData5,
-    '3': sampleData6,
-    // 필요한 경우 추가할 수 있음
-  };
+  // const sampleDataMap = {
+  //   '1': sampleData4,
+  //   '2': sampleData5,
+  //   '3': sampleData6,
+  //   // 필요한 경우 추가할 수 있음
+  // };
   
   // expertIndex가 1, 2, 3 이외의 값일 경우 예외 처리
   const additionalReportAtom = strategyReportAtomMap[expertIndex] || ADDITIONAL_REPORT_DATA1; 
-  const sampleData = sampleDataMap[expertIndex] || sampleData4;
-  
+  // const sampleData = sampleDataMap[expertIndex] || sampleData4;
+  const [answerData, setAnswerData] = useState(null);
+
 
   const [additionalReportData, setAdditionalReportData] = useAtom(additionalReportAtom);
 
@@ -71,12 +72,11 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
           // setAdditionalReportData(sampleData); // atom에 sampleData 저장
           // setTabs(sampleData.tabs);
           // setSections(sampleData.tabs[selectedTab].sections);
-          
+
           // business_analysis_data는 기초보고서 내용 넣기
           const data = {
-          business_info: "초고속 팝업 텐트",  // 비즈니스 정보를 적절히 대체
+          business_info: "초고속 팝업 텐트", 
           business_analysis_data: {
-            "expert_id": "1",
             "business_info": "초고속 팝업 텐트",
             "business_analysis_data" : { 
                 "명칭":"초고속 팝업 텐트",
@@ -116,17 +116,18 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
             ],
             "page_index": 1
           },
-            question_info: "마케팅을 어떻게 하는게 좋을까요?"  // 필요에 따라 질문 정보를 설정
+            "question_info": {keyword}
           };
 
           const response = await axios.post('http://52.79.204.29:7800/panels/add_question', data, axiosConfig);
           const answerData = response.tabs.business_analysis_data;
+          setAnswerData(answerData)
           setSections(answerData.tabs[selectedTab].sections);
 
           // 새 데이터를 IndexedDB에 저장합니다.
           const updatedConversation = {
             ...existingConversation,
-            [currentReportKey]: sampleData, // 전문가를 키로 저장
+            [currentReportKey]: answerData, // 전문가를 키로 저장
             timestamp: Date.now(),
           };
           await saveConversationToIndexedDB(updatedConversation);
@@ -164,7 +165,7 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
         <Section key={index} title={section.title} content={section.content} />
       ))}
 
-      <MoleculeReportController reportIndex={2} strategyReportID={sampleData.expert_id} conversationId={conversationId} sampleData={sampleData} />
+      <MoleculeReportController reportIndex={2} conversationId={conversationId} sampleData={answerData} />
     </AnalysisSection>
   );
 };
