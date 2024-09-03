@@ -30,6 +30,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const [sections, setSections] = useState([]);
   const axiosConfig = {
     timeout: 100000, // 100초
+    headers: { 'Content-Type': 'application/json' }, withCredentials: true // 쿠키 포함 요청 (필요한 경우)
   };
   const [email, setEmail] = useAtom(emailAtom);
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
@@ -95,6 +96,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             tabs: [],
             page_index: 1,
           };
+
 
           const response1 = await axios.post('http://52.79.204.29:7800/panels/expert', data, axiosConfig);
 

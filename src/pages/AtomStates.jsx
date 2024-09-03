@@ -233,3 +233,7 @@ export const CONVERSATION_STAGE = atom(1); // 초기값 1
 export const isDataLoadedAtom = atom(false);
 export const BUSINESS_ANALYSIS_DATA = atom([]);
 export const BUTTON_STATE = atom(0);
+
+export const iS_CLICK_CHECK_REPORT_RIGHTAWAY = atom(false);
+
+export const CONVERSATION = atom([]);

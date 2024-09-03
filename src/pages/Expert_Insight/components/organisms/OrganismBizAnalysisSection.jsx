@@ -66,7 +66,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
       if (buttonState === 1) {
         // 버튼 클릭으로 API 호출
         console.log("기초보고서api호출")
-        const response = await axios.post('http://52.79.204.29:7800/panels/business', data, axiosConfig);
+        const response = await axios.post('https://wishresearch.kr/panels/business', data, axiosConfig);
         businessData = response.data.business_analysis;
 
         setTitleOfBusinessInfo(businessData["명칭"]);
@@ -99,7 +99,6 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
           console.warn('No saved analysis data found.');
         }
       }
-
       // Temp 상태에도 초기 데이터를 설정
 
 
@@ -218,7 +217,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   };
 
   const handleDelete = (section, index) => {
-    alert(index+section+"정말 삭제하시겠습니까?");
+    alert("정말 삭제하시겠습니까?");
     
     if (section === 'mainFeatures') {
       setMainFeaturesOfBusinessInformation(

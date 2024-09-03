@@ -18,6 +18,11 @@ import {
   EXPERT3_REPORT_DATA,
   ADDITIONAL_REPORT_DATA,  // Import the new list-based atom
   CONVERSATION_STAGE,
+  ADDITIONAL_QUESTION_1,
+  ADDITIONAL_QUESTION_2,
+  ADDITIONAL_QUESTION_3,
+  iS_CLICK_CHECK_REPORT_RIGHTAWAY,
+  CONVERSATION,
 } from '../../../AtomStates';
 
 import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
@@ -33,12 +38,13 @@ import MoleculeUserMessage from '../molecules/MoleculeUserMessage';
 import OrganismBizExpertSelect from '../organisms/OrganismBizExpertSelect';
 import MoleculeAdditionalKeyword from '../molecules/MoleculeAdditionalKeyword';
 import OrganismAdditionalReport from '../organisms/OrganismAdditionalReport';
+import MoleculeCheckReportRightAway from '../molecules/MoleculeCheckReportRightAway';
 
 const PageExpertInsight = () => {
   const navigate = useNavigate();
   const { conversationId: paramConversationId } = useParams();
   const conversationId = paramConversationId || nanoid();
-  const [conversation, setConversation] = useState([]);
+  const [conversation, setConversation] = useAtom(CONVERSATION);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
@@ -56,6 +62,64 @@ const PageExpertInsight = () => {
   const [expert1ReportData, setExpert1ReportData] = useAtom(EXPERT1_REPORT_DATA);
   const [expert2ReportData, setExpert2ReportData] = useAtom(EXPERT2_REPORT_DATA);
   const [expert3ReportData, setExpert3ReportData] = useAtom(EXPERT3_REPORT_DATA);
+
+  const [additionalReportData1, setAdditionalReportData1] = useAtom(ADDITIONAL_REPORT_DATA1);
+  const [additionalReportData2, setAdditionalReportData2] = useAtom(ADDITIONAL_REPORT_DATA2);
+  const [additionalReportData3, setAdditionalReportData3] = useAtom(ADDITIONAL_REPORT_DATA3);
+
+  const [addtionalQuestion1, setAddtionalQuestion1] = useAtom(ADDITIONAL_QUESTION_1);
+  const [addtionalQuestion2, setAddtionalQuestion2] = useAtom(ADDITIONAL_QUESTION_2);
+  const [addtionalQuestion3, setAddtionalQuestion3] = useAtom(ADDITIONAL_QUESTION_3);
+
+  const [inputAdditionalQuestion, setInputAdditionalQuestion] = useState("");
+  const [isClickCheckReportRightAway, setIsClickCheckReportRightAway] = useAtom(iS_CLICK_CHECK_REPORT_RIGHTAWAY);
+
+  // 현재 선택된 전문가에 맞는 보고서 데이터를 결정
+  const getStrategyReportData = () => {
+    switch (selectedExpertIndex) {
+      case 1:
+        return expert1ReportData;
+      case 2:
+        return expert2ReportData;
+      case 3:
+        return expert3ReportData;
+      default:
+        return {};
+    }
+  };
+
+  const setStrategyReportData = (data) => {
+    switch (selectedExpertIndex) {
+      case 1:
+        setExpert1ReportData(data);
+        break;
+      case 2:
+        setExpert2ReportData(data);
+        break;
+      case 3:
+        setExpert3ReportData(data);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const setAdditionalReportData = (data) => {
+    switch (selectedExpertIndex) {
+      case 1:
+        setAdditionalReportData1(data);
+        break;
+      case 2:
+        setAdditionalReportData2(data);
+        break;
+      case 3:
+        setAdditionalReportData3(data);
+        break;
+      default:
+        break;
+    }
+  };
+
 
   const analysisReportData = {
     title: titleOfBusinessInfo,
@@ -122,6 +186,7 @@ const PageExpertInsight = () => {
   }, [
     paramConversationId,
     conversationId,
+    conversation,
     navigate,
     selectedExpertIndex,
     setExpert1ReportData,
@@ -136,6 +201,41 @@ const PageExpertInsight = () => {
   
 
   useEffect(() => {
+    const loadConversationOther = async () => {
+      const savedConversation = await getConversationByIdFromIndexedDB(conversationId);
+      if (savedConversation) {
+          const analysisData = savedConversation.analysisReportData || {};
+          setTitleOfBusinessInfo(analysisData.title || "");
+          setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
+          setMainCharacteristicOfBusinessInformation(analysisData.mainCharacter || []);
+          setBusinessInformationTargetCustomer(analysisData.mainCustomer || []);
+          setSelectedAdditionalKeyword1(savedConversation.selectedAdditionalKeyword1 || "");
+          setSelectedAdditionalKeyword2(savedConversation.selectedAdditionalKeyword2 || "");
+          setSelectedAdditionalKeyword3(savedConversation.selectedAdditionalKeyword3 || "");
+      }
+    }
+    loadConversationOther();
+  }, [navigate]);
+
+// const resetConversationState = () => {
+//   setTitleOfBusinessInfo("");
+//   setMainFeaturesOfBusinessInformation([]);
+//   setMainCharacteristicOfBusinessInformation([]);
+//   setBusinessInformationTargetCustomer([]);
+//   setExpert1ReportData({});
+//   setExpert2ReportData({});
+//   setExpert3ReportData({});
+//   setAdditionalReportData1({});
+//   setAdditionalReportData2({});
+//   setAdditionalReportData3({});
+//   setConversation([]); // 대화 초기화
+//   setConversationStage(1); // 초기 대화 단계 설정
+//   setAdditionalReportData({});
+// };
+
+  // 검색을 통해 들어왔으면 handleSearch 실행
+  useEffect(() => {
+
     if (approachPath === -1) {
       handleSearch(-1);
     } else if (approachPath === 1) {
@@ -150,11 +250,46 @@ const PageExpertInsight = () => {
   }, [
     selectedAdditionalKeyword,
   ]);
+    if(approachPath) handleSearch(-1);
+  },[selectedExpertIndex])
+
+  useEffect(() => {
+    if(selectedAdditionalKeyword1 || selectedAdditionalKeyword2 || selectedAdditionalKeyword3) handleSearch(-1);
+  },[
+    selectedAdditionalKeyword1,
+    selectedAdditionalKeyword2,
+    selectedAdditionalKeyword3,
+  ])
+
+  useEffect(() => {
+    if(isClickCheckReportRightAway) handleSearch(-1);
+  },[isClickCheckReportRightAway])
+
+  // // 추가 질문 입력 API
+  // const fetchInputAdditionalQuestion = async ({ input }) => {
+  //   console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
+  //   try {
+  //   const response = await axios.get(
+  //     `${process.env.REACT_APP_SERVER_URL}/${input}`
+  //   );
+  //   console.log(response);
+  //   setInputAdditionalQuestion(response.data);
+
+  //   if(selectedExpertIndex === 1) setSelectedAdditionalKeyword1(inputAdditionalQuestion);
+  //   else if(selectedExpertIndex === 2) setSelectedAdditionalKeyword2(inputAdditionalQuestion);
+  //   else setSelectedAdditionalKeyword3(inputAdditionalQuestion);
+
+  //   } catch (error) {
+  //     console.error("Error fetching ...:", error);
+  //   } finally {
+  //   }
+  // };  
 
   const handleSearch = (inputValue) => {
     const updatedConversation = [...conversation];
 
-    if (approachPath === 1 && inputValue !== -1) {
+    // 사용자가 입력한 경우에만 inputBusinessInfo를 업데이트
+    if (conversationStage < 3 && inputValue !== -1) {
       setInputBusinessInfo(inputValue);
       updatedConversation.push({ type: 'user', message: inputValue });
     }
@@ -162,27 +297,58 @@ const PageExpertInsight = () => {
     let newConversationStage = conversationStage;
 
     if (conversationStage === 1) {
-      if (inputBusinessInfo || inputValue !== -1) {
-        const businessInfo = inputBusinessInfo || inputValue;
-        updatedConversation.push(
-          { type: 'system', message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻` },
-          { type: 'analysis', businessInfo },
-          { type: 'system', message: '비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 전문가들의 의견을 확인하여 아이디어를 한 단계 더 발전시켜 보세요 🔍' },
-        );
-        newConversationStage = 2;
-      } else if (!inputBusinessInfo && approachPath === 1) {
-        const expertPromptMessage = getInitialSystemMessage();
-        updatedConversation.push({ type: 'system', message: expertPromptMessage });
+
+        if (inputBusinessInfo || inputValue !== -1) {  // inputValue가 입력되었을 때도 대화 진행
+            const businessInfo = inputBusinessInfo || inputValue;  // inputValue가 더 우선
+            updatedConversation.push(
+                { type: 'system', message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻` },
+                { type: 'analysis', businessInfo },  // 입력된 비즈니스 정보를 분석
+            );
+            if(approachPath === 1) {
+              updatedConversation.push(
+                { type: 'system', message: '비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 지금 바로 전략 보고서를 준비해드려요.' },
+                { type: 'report_button'},
+              );
+            }
+            else {
+              updatedConversation.push(
+                { type: 'system', message: '비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 전문가들의 의견을 확인하여 아이디어를 한 단계 더 발전시켜 보세요 🔍' },
+              );
+            }
+            newConversationStage = 2;
+        } else if (!inputBusinessInfo && approachPath === 1) {
+          // inputBusinessInfo가 비어 있고, 검색을 통해 접근하지 않은 경우 전문가 인덱스에 따라 메시지 추가
+          const expertPromptMessage = getInitialSystemMessage();
+          updatedConversation.push({ type: 'system', message: expertPromptMessage });
       }
     } else if (conversationStage === 2) {
-      if (!selectedExpertIndex || (inputValue !== -1 && approachPath === 1)) {
-        alert("전문가를 선택해 주세요.");
-        return;
-      }
-      if (updatedConversation.length > 0 && updatedConversation[updatedConversation.length - 1].type === 'keyword') {
-        updatedConversation.pop();
-      }
-      if (selectedExpertIndex === 1) {
+        if (!selectedExpertIndex || (inputValue !== -1 && approachPath === 1)) {
+            alert("전문가를 선택해 주세요.");
+            return;
+        }
+        // 마지막 요소가 keyword 이거나 report_button 이면 pop
+        if ((updatedConversation.length > 0 && updatedConversation[updatedConversation.length - 1].type === 'keyword')
+          || (updatedConversation.length > 0 && updatedConversation[updatedConversation.length - 1].type === 'report_button')) {
+          updatedConversation.pop(); 
+        }
+        if(selectedExpertIndex === 1) {
+          updatedConversation.push(
+            { type: 'user', message: '10년차 전략 디렉터와 1:1 커피챗, 지금 바로 시작하겠습니다 🙌🏻' },
+            { type: 'system', message: `안녕하세요, 김도원입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"`},
+          )
+        }
+        if(selectedExpertIndex === 2) {
+          updatedConversation.push(
+            { type: 'user', message: '지금 바로 쓸 수 있는 브랜딩 솔루션 10초 맞춤 제안서 받기, 지금 바로 시작하겠습니다 🙌🏻' },
+            { type: 'system', message: `안녕하세요, 이지현입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"`},
+          )
+        }
+        if(selectedExpertIndex === 3) {
+          updatedConversation.push(
+            { type: 'user', message: '고객 데이터 전문가의 맞춤 타겟 추천, 지금 바로 시작하겠습니다 🙌🏻' },
+            { type: 'system', message: `안녕하세요, 박서연입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"`},
+          )
+        }
         updatedConversation.push(
           { type: 'user', message: '10년차 전략 디렉터와 1:1 커피챗, 지금 바로 시작하겠습니다 🙌🏻' },
           { type: 'system', message: `안녕하세요, 김도원입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"` },
@@ -286,11 +452,16 @@ const PageExpertInsight = () => {
               } else if (item.type === 'keyword') {
                 return <MoleculeAdditionalKeyword />;
               }
+              else if (item.type === 'report_button') {
+                return <MoleculeCheckReportRightAway/>;
+              }
               return null;
             })}
-            {conversationStage > 1 && (Object.keys(expert1ReportData).length === 0 || Object.keys(expert2ReportData).length === 0 || Object.keys(expert3ReportData).length === 0) &&
-              <OrganismBizExpertSelect />
-            }
+            
+          {approachPath === -1 && inputBusinessInfo && (Object.keys(expert1ReportData).length === 0 || Object.keys(expert2ReportData).length === 0 || Object.keys(expert3ReportData).length === 0) &&
+            <OrganismBizExpertSelect />
+          }
+
           </div>
 
           <OrganismRightSideBar />
