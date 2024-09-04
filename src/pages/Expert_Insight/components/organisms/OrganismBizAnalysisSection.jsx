@@ -429,7 +429,9 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                 </li>
               ))}
             </ul>
-            {isAddingNow.section === "mainFeatures" && isAddingNow.isAdding ? (
+            {isAddingNow.section === "mainFeatures" && 
+            isAddingNow.isAdding &&
+            isEditingNow ? (
               <AddInfo>
                 <InputField
                   value={newAddContent}
@@ -528,7 +530,8 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               ))}
             </ul>
             {isAddingNow.section === "mainCharacteristic" &&
-            isAddingNow.isAdding ? (
+            isAddingNow.isAdding &&
+            isEditingNow ? (
               <AddInfo>
                 <InputField
                   value={newAddContent}
@@ -628,7 +631,8 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               ))}
             </ul>
             {isAddingNow.section === "targetCustomer" &&
-            isAddingNow.isAdding ? (
+            isAddingNow.isAdding &&
+            isEditingNow ? (
               <AddInfo>
                 <InputField
                   value={newAddContent}

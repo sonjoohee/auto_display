@@ -139,6 +139,7 @@ const MoleculeReportController = ({
   const togglePopupCancel = () => {
     if (clickState == false) {
       setIsPopupOpenCancel(!isPopupOpenCancel);
+      setIsAddingNow({ section: "", isAdding: false });
     }
   };
   const handleEditCancel = () => {
@@ -148,6 +149,7 @@ const MoleculeReportController = ({
     );
     setBusinessInformationTargetCustomer(tempMusinessInformationTargetCustomer);
     setIsEditingNow(false);
+    setIsAddingNow({ section: "", isAdding: false });
     togglePopupCancel();
   };
 
