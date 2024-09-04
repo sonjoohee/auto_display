@@ -160,16 +160,17 @@ const PageExpertInsight = () => {
       } else {
         const savedConversation = await getConversationByIdFromIndexedDB(conversationId);
         if (savedConversation) {
-          // 복구된 데이터를 로컬 상태로 설정
-          setConversation(savedConversation.conversation);
-          setConversationStage(savedConversation.conversationStage);
-          setInputBusinessInfo(savedConversation.inputBusinessInfo);
 
           const analysisData = savedConversation.analysisReportData || {};
           setTitleOfBusinessInfo(analysisData.title || "");
           setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
           setMainCharacteristicOfBusinessInformation(analysisData.mainCharacter || []);
           setBusinessInformationTargetCustomer(analysisData.mainCustomer || []);
+
+          // 복구된 데이터를 로컬 상태로 설정
+          setConversation(savedConversation.conversation);
+          setConversationStage(savedConversation.conversationStage);
+          setInputBusinessInfo(savedConversation.inputBusinessInfo);
   
           // 전략 보고서 데이터를 복구
           setExpert1ReportData(savedConversation.strategyReportData_EX1 || {});
@@ -197,19 +198,16 @@ const PageExpertInsight = () => {
   }, [
     paramConversationId,
     conversationId,
+    conversation,
     navigate,
-    // selectedExpertIndex, // 전문가가 바뀔 때마다 실행
-    // setInputBusinessInfo,
-    // setTitleOfBusinessInfo,
-    // setMainFeaturesOfBusinessInformation,
-    // setMainCharacteristicOfBusinessInformation,
-    // setBusinessInformationTargetCustomer,
-    // setSections,
-    // setExpert1ReportData,
-    // setExpert2ReportData,
-    // setExpert3ReportData,
-    // setStrategyReportData, // 추가: 전문가가 바뀌면 바로 반영되도록
-    // setAdditionalReportData,
+    selectedExpertIndex,
+    setExpert1ReportData,
+    setExpert2ReportData,
+    setExpert3ReportData,
+    setAdditionalReportData,
+    setSelectedAdditionalKeyword,
+    setConversation,
+    setConversationStage,
   ]);
 
   // useEffect(() => {
