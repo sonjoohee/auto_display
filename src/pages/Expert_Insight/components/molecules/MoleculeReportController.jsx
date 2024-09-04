@@ -344,7 +344,7 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
                   <img src={images.IconCopy} alt="" />
                   복사하기
                 </button>
-                <button type="button" onClick={saveReport}>
+                <button type="button" onClick={toogleSave}>
                   <img src={images.IconSave} alt="" />
                   저장하기
                 </button>
@@ -371,7 +371,7 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
                       <img src={images.IconCopy} alt="" />
                       복사하기
                     </button>
-                    <button type="button" onClick={saveReport}>
+                    <button type="button" onClick={toogleSave}>
                       <img src={images.IconSave} alt="" />
                       저장하기
                     </button>
@@ -408,7 +408,7 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
               <img src={images.IconCopy} alt="" />
               복사하기
             </button>
-            <button type="button" onClick={saveReport}>
+            <button type="button" onClick={toogleSave}>
               <img src={images.IconSave} alt="" />
               저장하기
             </button>
