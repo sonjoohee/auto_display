@@ -1,9 +1,11 @@
 // App.js
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import GlobalStyles from "./assets/GlobalStyle";
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { useAtom } from 'jotai';
+import { isLoggedInAtom } from './pages/AtomStates'; // 로그인 상태 아톰 임포트
 
 import PageLogin from './pages/Login_Sign/components/pages/PageLogin';
 import PageSignup from './pages/Login_Sign/components/pages/PageSignup';
@@ -30,6 +32,17 @@ import LoadingPersona from "./pages/Persona/LoadingPersona";
 import OrganismReportPopup from './pages/Expert_Insight/components/organisms/OrganismReportPopup'; 
 
 function App() {
+  const [, setIsLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태를 위한 아톰
+  // 애플리케이션이 로드될 때 로그인 상태 확인
+  useEffect(() => {
+    const token = sessionStorage.getItem('accessToken'); // sessionStorage에서 토큰 확인
+    if (token) {
+      setIsLoggedIn(true);  // 토큰이 있으면 로그인 상태로 설정
+    } else {
+      setIsLoggedIn(false); // 토큰이 없으면 로그아웃 상태로 설정
+    }
+  }, [setIsLoggedIn]);
+
   return (
     <div className="App">
       {/* 스타일 컴퍼넌트 적용 */}
