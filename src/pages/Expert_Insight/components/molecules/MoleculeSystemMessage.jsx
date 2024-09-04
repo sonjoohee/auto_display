@@ -76,6 +76,7 @@ const Bubble = styled.div`
 
 const TypingEffect = styled.div`
   overflow: hidden;
+  text-align:left;
   white-space: pre-wrap; /* 줄바꿈을 유지 */
   display: inline-block;
   border-right: ${({ isTyping }) => (isTyping ? `2px solid ${palette.lightGray}` : 'none')}; /* Cursor effect */
