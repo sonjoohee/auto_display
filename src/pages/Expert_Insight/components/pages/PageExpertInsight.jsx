@@ -294,10 +294,11 @@ const PageExpertInsight = () => {
           updatedConversation.push({ type: 'system', message: expertPromptMessage });
       }
     } else if (conversationStage === 2) {
-        if (!selectedExpertIndex || (inputValue !== -1 && approachPath === 1)) {
-            alert("전문가를 선택해 주세요.");
-            return;
-        }
+        // 임시로 비활성화, 새로고침이나 뒤로가기 막는 기능 필요함
+        // if (!selectedExpertIndex || (inputValue !== -1 && approachPath === -1)) {
+        //     alert("전문가를 선택해 주세요.");
+        //     return;
+        // }
         // 마지막 요소가 keyword 이거나 report_button 이면 pop
         if ((updatedConversation.length > 0 && updatedConversation[updatedConversation.length - 1].type === 'keyword')
           || (updatedConversation.length > 0 && updatedConversation[updatedConversation.length - 1].type === 'report_button')) {
