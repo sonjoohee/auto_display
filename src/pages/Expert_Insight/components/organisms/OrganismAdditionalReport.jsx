@@ -39,6 +39,9 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
   const [answerData, setAnswerData] = useState(null);
   const axiosConfig = {
     timeout: 100000, // 100초
+    headers: {
+      'Content-Type': 'application/json'  
+    },  withCredentials: true // 쿠키 포함 요청 (필요한 경우)
   };
 
   
@@ -51,7 +54,7 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
         const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
   
         if (buttonState === 1) {  // 버튼 상태가 1일 때만 API 요청 실행
-          const keyword = selectedKeywords[expertIndex - 1]; // Use the keyword based on expertIndex
+          const keyword = selectedKeywords[0]; // Use the keyword based on expertIndex
   
           const data = {
             business_info: titleOfBusinessInfo,
@@ -63,7 +66,7 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
                 주요기능: analysisReportData.mainFeatures,
                 목표고객: analysisReportData.mainCustomer,
               },
-            question_info: selectedKeywords
+            question_info: keyword
             };
   
           const response = await axios.post('https://wishresearch.kr/panels/add_question', data, axiosConfig);
