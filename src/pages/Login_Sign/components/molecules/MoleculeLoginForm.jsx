@@ -127,12 +127,8 @@ const MoleculeLoginForm = () => {
 
       <JoinWrap>
         <p>InterviewX가 처음이에요</p>
-        {/* <Link to="/signup">가입하기</Link> */}
-        <Link to="/signup" onClick={handleSignupClick}>가입하기</Link>
-// =======
-//         <Link to="/signup">가입하기</Link>
-//         {/* <Link to="#" onClick={handleSignupClick}>가입하기</Link> */}
-// >>>>>>> main
+        <Link to="/signup">가입하기</Link>
+        {/* <Link to="#" onClick={handleSignupClick}>가입하기</Link> */}
         {isSignupPopupOpen && <MoleculeSignupPopup onClose={handleClosePopup} />}
       </JoinWrap>
     </LoginFormContainer>
