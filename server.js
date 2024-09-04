@@ -300,7 +300,7 @@ app.post('/resend-verification-email', async (req, res) => {
 });
 
 app.listen(4008, () => {
-  console.log('Server is running on http://localhost:4008');
+  console.log('Server is running on https://wishresearch.kr');
 });
 
 

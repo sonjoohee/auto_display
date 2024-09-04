@@ -42,7 +42,7 @@ const MoleculeLoginForm = () => {
   const handleLogin = async () => {
     setError('');
     if (!validateForm()) return;
-//http://localhost:4008/login
+//https://wishresearch.kr/login
 //https://wishresearch.kr/api/user/login/normal/
     try {
       const response = await fetch('https://wishresearch.kr/api/user/login/normal/', {

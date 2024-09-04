@@ -62,7 +62,7 @@ const MoleculeSignupForm = () => {
 
     setIsLoading(true); // 로딩 상태 시작
 // https://wishresearch.kr/api/user/signup/
-// http://localhost:4008/signup
+// https://wishresearch.kr/signup
     try {
       const response = await fetch('https://wishresearch.kr/api/user/signup/', {
         method: 'POST',

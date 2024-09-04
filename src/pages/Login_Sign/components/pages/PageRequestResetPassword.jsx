@@ -16,8 +16,8 @@ const RequestResetPassword = () => {
     setIsLoading(true); // 검색 시작 시 로딩 상태 활성화
 
     try {
-      // http://localhost:4008/request-reset-password
-      const response = await fetch('http://localhost:4008/request-reset-password', {
+      // https://wishresearch.kr/request-reset-password
+      const response = await fetch('https://wishresearch.kr/request-reset-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email }), // 이름과 이메일을 함께 전송
@@ -39,10 +39,10 @@ const RequestResetPassword = () => {
   const handleClosePopup = () => {
     setIsPopupOpen(false); // 팝업을 닫는 상태 설정
   };
-  // http://localhost:4008/resend-password-reset-email
+  // https://wishresearch.kr/resend-password-reset-email
   const handleResendEmail = async () => {
     try {
-      const response = await fetch('http://localhost:4008/resend-password-reset-email', {
+      const response = await fetch('https://wishresearch.kr/resend-password-reset-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email })
