@@ -73,7 +73,8 @@ const OrganismLeftSideBar = () => {
     sessionStorage.removeItem("accessToken"); // 세션 스토리지에서 토큰 삭제
     sessionStorage.removeItem("userName");
     sessionStorage.removeItem("userEmail");
-
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userEmail");
     setIsLoggedIn(false); // 로그아웃 상태로 전환
     setUserName("");
     setUserEmail("");
@@ -283,8 +284,10 @@ const OrganismLeftSideBar = () => {
             <>
               <LogoutBtnWrap>
                 <div>
-                  <strong>{userName}</strong> {/* 유저 이름 표시 */}
-                  <p>{userEmail}</p> {/* 유저 이메일 표시 */}
+                  <strong>{localStorage.getItem("userName")}</strong>{" "}
+                  {/* 유저 이름 표시 */}
+                  <p>{localStorage.getItem("userEmail")}</p>{" "}
+                  {/* 유저 이메일 표시 */}
                 </div>
 
                 <button type="button" className="more" onClick={moreProfile}>
@@ -294,8 +297,10 @@ const OrganismLeftSideBar = () => {
 
               <LogoutToogle isToogle={isToogle}>
                 <div className="info">
-                  <strong>{userName}</strong> {/* 유저 이름 표시 */}
-                  <p>{userEmail}</p> {/* 유저 이메일 표시 */}
+                  <strong>{localStorage.getItem("userName")}</strong>{" "}
+                  {/* 유저 이름 표시 */}
+                  <p>{localStorage.getItem("userEmail")}</p>{" "}
+                  {/* 유저 이메일 표시 */}
                 </div>
 
                 <ul>
