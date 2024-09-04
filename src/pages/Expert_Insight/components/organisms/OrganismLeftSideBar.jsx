@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import styled, { css } from 'styled-components';
-import { palette } from '../../../../assets/styles/Palette';
-import images from '../../../../assets/styles/Images';
-import panelimages from '../../../../assets/styles/PanelImages';
+import React, { useState, useEffect } from "react";
+import styled, { css } from "styled-components";
+import { palette } from "../../../../assets/styles/Palette";
+import images from "../../../../assets/styles/Images";
+import panelimages from "../../../../assets/styles/PanelImages";
 import { Link, useNavigate } from "react-router-dom";
 import { useAtom } from 'jotai';
 import { INPUT_BUSINESS_INFO, SAVED_REPORTS, isLoggedInAtom, USER_NAME, USER_EMAIL} from '../../../AtomStates';
 import { getAllConversationsFromIndexedDB } from '../../../../utils/indexedDB'; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
 
-import OrganismReportPopup from './OrganismReportPopup'; // 팝업 컴포넌트 임포트
+import OrganismReportPopup from "./OrganismReportPopup"; // 팝업 컴포넌트 임포트
 
 const OrganismLeftSideBar = () => {
   const navigate = useNavigate();
@@ -54,14 +54,9 @@ const OrganismLeftSideBar = () => {
   const handleLogoutConfirm = () => {
     // 로그아웃 확인 버튼을 눌렀을 때 실행
     sessionStorage.removeItem('accessToken'); // 세션 스토리지에서 토큰 삭제
-    sessionStorage.removeItem('userName');
-    sessionStorage.removeItem('userEmail');
-    
-    setUserName('');
-    setUserEmail('');
     setIsLoggedIn(false); // 로그아웃 상태로 전환
     setIsLogoutPopup(false); // 로그아웃 팝업 닫기
-    navigate('/PageMeetAiExpert'); // 페이지 이동
+    navigate("/PageMeetAiExpert"); // 페이지 이동
   };
 
   const handleCloseLogoutPopup = () => {
@@ -73,15 +68,15 @@ const OrganismLeftSideBar = () => {
     // 저장된 보고서를 클릭하면 해당 보고서를 선택하여 팝업에 표시
     setSelectedReport(savedReports[index]);
   };
-  
+
   const closePopup = () => {
     setSelectedReport(null); // 팝업 닫기
   };
 
   useEffect(() => {
-    const checkboxes = document.querySelectorAll('.accordion-toggle');
+    const checkboxes = document.querySelectorAll(".accordion-toggle");
     checkboxes.forEach((checkbox) => {
-      checkbox.addEventListener('change', function () {
+      checkbox.addEventListener("change", function () {
         if (this.checked) {
           checkboxes.forEach((otherCheckbox) => {
             if (otherCheckbox !== this) {
@@ -95,7 +90,7 @@ const OrganismLeftSideBar = () => {
     // Cleanup 이벤트 리스너
     return () => {
       checkboxes.forEach((checkbox) => {
-        checkbox.removeEventListener('change', () => { });
+        checkbox.removeEventListener("change", () => {});
       });
     };
   }, []);
@@ -106,61 +101,94 @@ const OrganismLeftSideBar = () => {
     setIsOpen(!isOpen);
   };
 
-
-
-
   const [isToogle, setIsToogle] = useState(true);
   const moreProfile = () => {
     setIsToogle(!isToogle);
   };
 
-
-
   return (
     <>
       <Logo isOpen={isOpen}>
         <a href="/"></a>
-        <button type="button" onClick={toggleSidebar}>닫기</button>
+        <button type="button" onClick={toggleSidebar}>
+          닫기
+        </button>
       </Logo>
 
       <SideBar isOpen={isOpen} bgNone={!isOpen}>
         <SideBarMenu>
           <button type="button" className="newChat">
-            <img src={images.Chat} alt="" />
-            새 프로젝트 시작
+            <img src={images.Chat} alt="" />새 프로젝트 시작
           </button>
 
           <AccordionMenu>
             <AccordionItem>
-              <input type="checkbox" id="section1" className="accordion-toggle" />
+              <input
+                type="checkbox"
+                id="section1"
+                className="accordion-toggle"
+              />
               <label htmlFor="section1" className="accordion-label">
                 <img src={images.Folder} alt="" />
                 인사이트 보관함
               </label>
               <AccordionContent>
                 <ul>
-                {savedReports.map((report, index) => (
-                  <li key={index}>
-                    <p onClick={() => handleReportClick(index)}>{report.title}</p>
-                    <span>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="3" viewBox="0 0 14 3" fill="none">
-                        <circle cx="2.0067" cy="1.51283" r="1.49694" transform="rotate(-90 2.0067 1.51283)" fill="#A0A0A0"/>
-                        <circle cx="7.00084" cy="1.51283" r="1.49694" transform="rotate(-90 7.00084 1.51283)" fill="#A0A0A0"/>
-                        <circle cx="11.993" cy="1.51283" r="1.49694" transform="rotate(-90 11.993 1.51283)" fill="#A0A0A0"/>
-                      </svg>
-                    </span>
-                  </li>
-                ))}
+                  {savedReports.map((report, index) => (
+                    <li key={index}>
+                      <p onClick={() => handleReportClick(index)}>
+                        {report.title}
+                      </p>
+                      <span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="14"
+                          height="3"
+                          viewBox="0 0 14 3"
+                          fill="none"
+                        >
+                          <circle
+                            cx="2.0067"
+                            cy="1.51283"
+                            r="1.49694"
+                            transform="rotate(-90 2.0067 1.51283)"
+                            fill="#A0A0A0"
+                          />
+                          <circle
+                            cx="7.00084"
+                            cy="1.51283"
+                            r="1.49694"
+                            transform="rotate(-90 7.00084 1.51283)"
+                            fill="#A0A0A0"
+                          />
+                          <circle
+                            cx="11.993"
+                            cy="1.51283"
+                            r="1.49694"
+                            transform="rotate(-90 11.993 1.51283)"
+                            fill="#A0A0A0"
+                          />
+                        </svg>
+                      </span>
+                    </li>
+                  ))}
                 </ul>
               </AccordionContent>
             </AccordionItem>
 
             {selectedReport && (
-              <OrganismReportPopup report={selectedReport} onClose={closePopup} />
+              <OrganismReportPopup
+                report={selectedReport}
+                onClose={closePopup}
+              />
             )}
 
             <AccordionItem>
-              <input type="checkbox" id="section2" className="accordion-toggle" />
+              <input
+                type="checkbox"
+                id="section2"
+                className="accordion-toggle"
+              />
               <label htmlFor="section2" className="accordion-label">
                 <img src={images.Clock} alt="" />
                 프로젝트 히스토리
@@ -171,12 +199,42 @@ const OrganismLeftSideBar = () => {
                   <ul>
                     {conversations.map((conversation, index) => (
                       <li key={index}>
-                        <p onClick={() => handleConversationClick(conversation.id)}>{conversation.inputBusinessInfo}</p>
+                        <p
+                          onClick={() =>
+                            handleConversationClick(conversation.id)
+                          }
+                        >
+                          {conversation.inputBusinessInfo}
+                        </p>
                         <span>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="3" viewBox="0 0 14 3" fill="none">
-                            <circle cx="2.0067" cy="1.51283" r="1.49694" transform="rotate(-90 2.0067 1.51283)" fill="#A0A0A0"/>
-                            <circle cx="7.00084" cy="1.51283" r="1.49694" transform="rotate(-90 7.00084 1.51283)" fill="#A0A0A0"/>
-                            <circle cx="11.993" cy="1.51283" r="1.49694" transform="rotate(-90 11.993 1.51283)" fill="#A0A0A0"/>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="14"
+                            height="3"
+                            viewBox="0 0 14 3"
+                            fill="none"
+                          >
+                            <circle
+                              cx="2.0067"
+                              cy="1.51283"
+                              r="1.49694"
+                              transform="rotate(-90 2.0067 1.51283)"
+                              fill="#A0A0A0"
+                            />
+                            <circle
+                              cx="7.00084"
+                              cy="1.51283"
+                              r="1.49694"
+                              transform="rotate(-90 7.00084 1.51283)"
+                              fill="#A0A0A0"
+                            />
+                            <circle
+                              cx="11.993"
+                              cy="1.51283"
+                              r="1.49694"
+                              transform="rotate(-90 11.993 1.51283)"
+                              fill="#A0A0A0"
+                            />
                           </svg>
                         </span>
                       </li>
@@ -197,7 +255,11 @@ const OrganismLeftSideBar = () => {
                 <strong>{userName}</strong> {/* 유저 이름 표시 */}
                 <p>{userEmail}</p> {/* 유저 이메일 표시 */}
                 </div>
-                <button type="button" className="more" onClick={moreProfile}></button>
+                <button
+                  type="button"
+                  className="more"
+                  onClick={moreProfile}
+                ></button>
               </LogoutBtnWrap>
 
               <LogoutToogle isToogle={isToogle} onClick={moreProfile}>
@@ -207,10 +269,20 @@ const OrganismLeftSideBar = () => {
                 </div>
 
                 <ul>
-                  <li><button type="button">계정 설정</button></li>
-                  <li><button type="button">정책 및 약관 정보</button></li>
-                  <li><button type="button">문의사항</button></li>
-                  <li><button type="button" onClick={handleLogoutClick}>로그아웃</button></li>
+                  <li>
+                    <button type="button">계정 설정</button>
+                  </li>
+                  <li>
+                    <button type="button">정책 및 약관 정보</button>
+                  </li>
+                  <li>
+                    <button type="button">문의사항</button>
+                  </li>
+                  <li>
+                    <button type="button" onClick={handleLogoutClick}>
+                      로그아웃
+                    </button>
+                  </li>
                 </ul>
               </LogoutToogle>
             </>
@@ -233,16 +305,25 @@ const OrganismLeftSideBar = () => {
       {isLogoutPopup && (
         <Popup Cancel>
           <div>
-            <button type="button" className="closePopup" onClick={handleCloseLogoutPopup}>닫기</button>
-            <span><img src={images.CheckMark} alt="" /></span>
+            <button
+              type="button"
+              className="closePopup"
+              onClick={handleCloseLogoutPopup}
+            >
+              닫기
+            </button>
+            <span>
+              <img src={images.CheckMark} alt="" />
+            </span>
             <p>정말 로그아웃하시겠습니까?</p>
             <div className="btnWrap">
-              <button type="button" onClick={handleLogoutConfirm}>확인</button>
+              <button type="button" onClick={handleLogoutConfirm}>
+                확인
+              </button>
             </div>
           </div>
         </Popup>
       )}
-
     </>
   );
 };
@@ -250,124 +331,123 @@ const OrganismLeftSideBar = () => {
 export default OrganismLeftSideBar;
 
 const Popup = styled.div`
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,.5);
-  transition:all .5s;
-  z-index:9999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  transition: all 0.5s;
+  z-index: 9999;
 
   .closePopup {
-    position:absolute;
-    right:24px;
-    top:24px;
-    width:16px;
-    height:16px;
-    font-size:0;
-    padding:11px;
-    border:0;
-    background:none;
+    position: absolute;
+    right: 24px;
+    top: 24px;
+    width: 16px;
+    height: 16px;
+    font-size: 0;
+    padding: 11px;
+    border: 0;
+    background: none;
 
-    &:before, &:after {
-      position:absolute;
-      top:50%;
-      left:50%;
-      width:2px;
-      height:100%;
-      border-radius:10px;
-      background:${palette.black};
-      content:'';
+    &:before,
+    &:after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 2px;
+      height: 100%;
+      border-radius: 10px;
+      background: ${palette.black};
+      content: "";
     }
 
     &:before {
-      transform:translate(-50%, -50%) rotate(45deg);
+      transform: translate(-50%, -50%) rotate(45deg);
     }
 
     &:after {
-      transform:translate(-50%, -50%) rotate(-45deg);
+      transform: translate(-50%, -50%) rotate(-45deg);
     }
   }
 
   > div {
-    position:fixed;
-    top:50%;
-    left:50%;
-    transform:translate(-50%, -50%);
-    display:flex;
-    flex-direction:column;
-    width:100%;
-    max-width:540px;
-    text-align:center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 540px;
+    text-align: center;
     // overflow:hidden;
-    padding:60px 24px 24px;
-    border-radius:10px;
-    background:${palette.white};
+    padding: 60px 24px 24px;
+    border-radius: 10px;
+    background: ${palette.white};
 
     p {
-      font-size:1.25rem;
-      margin:30px auto 40px;
-  }
+      font-size: 1.25rem;
+      margin: 30px auto 40px;
+    }
 
-  .btnWrap {
-    display:flex;
-    align-items:center;
-    gap:16px;
+    .btnWrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
 
-    button {
-      flex:1;
-      font-size:1.25rem;
-      font-weight:600;
-      color:${palette.blue};
-      padding:15px;
-      border-radius:12px;
-      border:1px solid ${palette.blue};
-      background:${palette.white};
+      button {
+        flex: 1;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: ${palette.blue};
+        padding: 15px;
+        border-radius: 12px;
+        border: 1px solid ${palette.blue};
+        background: ${palette.white};
 
-      &:last-child {
-        color:${palette.white};
-        background:${palette.blue};
+        &:last-child {
+          color: ${palette.white};
+          background: ${palette.blue};
+        }
       }
     }
-  }
 
-  
-  ${props =>
-    props.Cancel &&
-    css`
-      p {
-        strong {
-          font-weight:600;
-          display:block;
-        }
-        span {
-          font-size:1rem;
-          display:block;
-          margin-top:8px;
-        }
-      }
-
-      .btnWrap {
-        padding-top:25px;
-        border-top:1px solid ${palette.lineGray};
-
-        button {
-          color:${palette.gray};
-          font-weight:600;
-          padding:0;
-          border:0;
-          background:none;
-
-          &:last-child {
-            color:${palette.blue};
-            background:none;
+    ${(props) =>
+      props.Cancel &&
+      css`
+        p {
+          strong {
+            font-weight: 600;
+            display: block;
+          }
+          span {
+            font-size: 1rem;
+            display: block;
+            margin-top: 8px;
           }
         }
-      }
-    `
-  }
 
+        .btnWrap {
+          padding-top: 25px;
+          border-top: 1px solid ${palette.lineGray};
+
+          button {
+            color: ${palette.gray};
+            font-weight: 600;
+            padding: 0;
+            border: 0;
+            background: none;
+
+            &:last-child {
+              color: ${palette.blue};
+              background: none;
+            }
+          }
+        }
+      `}
+  }
 `;
 
 const AuthButtons = styled.div`
@@ -393,104 +473,106 @@ const AuthButtons = styled.div`
 `;
 
 const Logo = styled.div`
-  position:fixed;
-  top:72px;
-  left:60px;
-  width:250px;
-  display:flex;
+  position: fixed;
+  top: 72px;
+  left: 60px;
+  width: 250px;
+  display: flex;
   // justify-content:space-between;
-  justify-content: ${(props) => (props.isOpen ? "space-between" : "flex-start")};
-  align-items:center;
+  justify-content: ${(props) =>
+    props.isOpen ? "space-between" : "flex-start"};
+  align-items: center;
   gap: ${(props) => (props.isOpen ? "20px" : "0")};
-  z-index:1;
-  transition:all .5s;
+  z-index: 1;
+  transition: all 0.5s;
 
   a {
     // width:44px;
     width: ${(props) => (props.isOpen ? "135px" : "44px")};
     // width:135px;
-    height:44px;
-    font-size:0;
-    background:url(${images.SymbolLogo}) left center no-repeat;
-    background-size:auto 100%;
+    height: 44px;
+    font-size: 0;
+    background: url(${images.SymbolLogo}) left center no-repeat;
+    background-size: auto 100%;
   }
 
   button {
-    position:relative;
-    font-size:0;
-    width:30px;
-    height:30px;
-    border-radius:50%;
-    border:0;
-    background:${palette.white};
-    box-shadow:2px 2px 2px rgba(0,0,0,.1);
-    transition:all .5s;
+    position: relative;
+    font-size: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 0;
+    background: ${palette.white};
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
+    transition: all 0.5s;
 
     &:before {
-      position:absolute;
-      top:50%;
-      left:50%;
-      transform:translate(-50%, -50%);
-      width:7px;
-      height:2px;
-      border-radius:10px;
-      background:${palette.black};
-      transition:all .5s;
-      content:'';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 7px;
+      height: 2px;
+      border-radius: 10px;
+      background: ${palette.black};
+      transition: all 0.5s;
+      content: "";
     }
 
     &:after {
-      position:absolute;
-      top:50%;
-      left:50%;
-      transform:translate(-50%, -50%) rotate(45deg);
-      width:8px;
-      height:8px;
-      border-left:2px solid ${palette.black};
-      border-bottom:2px solid ${palette.black};
-      transition:all .5s;
-      content:'';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(45deg);
+      width: 8px;
+      height: 8px;
+      border-left: 2px solid ${palette.black};
+      border-bottom: 2px solid ${palette.black};
+      transition: all 0.5s;
+      content: "";
     }
   }
 
-  ${props =>
+  ${(props) =>
     css`
       button:after {
-        transform: ${props.isOpen ? 'translate(-50%, -50%) rotate(45deg)' : 'translate(-50%, -50%) rotate(225deg)'} !important;
+        transform: ${props.isOpen
+          ? "translate(-50%, -50%) rotate(45deg)"
+          : "translate(-50%, -50%) rotate(225deg)"} !important;
       }
-    `
-  }
+    `}
 `;
 
 const SideBar = styled.div`
-  position:sticky;
-  top:40px;
-  display:flex;
-  flex-direction:column;
-  max-width:257px;
-  height:calc(100vh - 80px);
-  padding:96px 20px 30px;
+  position: sticky;
+  top: 40px;
+  display: flex;
+  flex-direction: column;
+  max-width: 257px;
+  height: calc(100vh - 80px);
+  padding: 96px 20px 30px;
   margin: ${(props) => (props.bgNone ? "40px 0 0 0" : "40px 0 0 40px")};
   // margin: 40px 0 0 40px;
-  border-radius:15px;
-  border:1px solid ${palette.lineGray};
+  border-radius: 15px;
+  border: 1px solid ${palette.lineGray};
   background: ${(props) => (props.bgNone ? "none" : "rgba(0,0,0,.02)")};
-  box-shadow:0 4px 10px rgba(0,0,0,.05);
-  transition:all .5s;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: all 0.5s;
   transform: ${(props) => (props.bgNone ? "translateX(-257px)" : "0")};
 
   h3 {
-    font-size:1rem;
-    font-weight:400;
-    text-align:left;
-    margin-bottom:20px;
+    font-size: 1rem;
+    font-weight: 400;
+    text-align: left;
+    margin-bottom: 20px;
   }
 
   .logo {
-    position:fixed;
-    top:40px;
-    left:40px;
-    width:215px;
+    position: fixed;
+    top: 40px;
+    left: 40px;
+    width: 215px;
     transform: translateX(0);
     // display:flex;
     // justify-content:space-between;
@@ -499,95 +581,94 @@ const SideBar = styled.div`
 
     a {
       // width:44px;
-      width:135px;
-      height:44px;
-      font-size:0;
-      background:url(${images.SymbolLogo}) left center no-repeat;
-      background-size:auto 100%;
+      width: 135px;
+      height: 44px;
+      font-size: 0;
+      background: url(${images.SymbolLogo}) left center no-repeat;
+      background-size: auto 100%;
     }
 
     button {
       // position:relative;
-      position:absolute;
-      right:-30px;
-      top:50%;
-      transform:translateY(-50%);
-      font-size:0;
-      width:30px;
-      height:30px;
-      border-radius:50%;
-      border:0;
-      background:${palette.white};
-      box-shadow:2px 2px 2px rgba(0,0,0,.1);
+      position: absolute;
+      right: -30px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 0;
+      background: ${palette.white};
+      box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
 
       &:before {
-        position:absolute;
-        top:50%;
-        left:50%;
-        transform:translate(-50%, -50%);
-        width:7px;
-        height:2px;
-        border-radius:10px;
-        background:${palette.black};
-        content:'';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 7px;
+        height: 2px;
+        border-radius: 10px;
+        background: ${palette.black};
+        content: "";
       }
 
       &:after {
-        position:absolute;
-        top:50%;
-        left:50%;
-        transform:translate(-50%, -50%) rotate(45deg);
-        width:8px;
-        height:8px;
-        border-left:2px solid ${palette.black};
-        border-bottom:2px solid ${palette.black};
-        content:'';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(45deg);
+        width: 8px;
+        height: 8px;
+        border-left: 2px solid ${palette.black};
+        border-bottom: 2px solid ${palette.black};
+        content: "";
       }
     }
   }
-  
-  ${props =>
+
+  ${(props) =>
     props.bgNone &&
     css`
       .logBtn {
-        transform:translateX(257px);
+        transform: translateX(257px);
 
         .more {
-          width:40px;
-          height:40px;
-          font-size:0;
-          background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M5.86737 1.23877C5.86737 1.51491 5.64351 1.73877 5.36737 1.73877L3.26709 1.73877C2.43866 1.73877 1.76709 2.41034 1.76709 3.23877L1.76709 10.6754C1.76709 11.5038 2.43866 12.1754 3.26709 12.1754H5.36737C5.64351 12.1754 5.86737 12.3993 5.86737 12.6754C5.86737 12.9516 5.64351 13.1754 5.36737 13.1754H3.26709C1.88638 13.1754 0.76709 12.0561 0.76709 10.6754V3.23877C0.76709 1.85806 1.88638 0.73877 3.26709 0.73877H5.36737C5.64351 0.73877 5.86737 0.962627 5.86737 1.23877ZM13.2332 6.95753C13.2332 7.23367 13.0093 7.45753 12.7332 7.45753L5.76741 7.45753L8.38732 10.0774C8.58258 10.2727 8.58258 10.5893 8.38732 10.7845C8.19206 10.9798 7.87548 10.9798 7.68022 10.7846L4.92287 8.0272C4.33848 7.44282 4.33688 6.49584 4.91928 5.90948L7.67902 3.13097C7.87362 2.93504 8.1902 2.93397 8.38612 3.12857C8.58205 3.32317 8.58312 3.63975 8.38852 3.83567L5.78438 6.45753L12.7332 6.45753C13.0093 6.45753 13.2332 6.68139 13.2332 6.95753Z' fill='black' fill-opacity='0.6'/%3E%3C/svg%3E") center no-repeat;
+          width: 40px;
+          height: 40px;
+          font-size: 0;
+          background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M5.86737 1.23877C5.86737 1.51491 5.64351 1.73877 5.36737 1.73877L3.26709 1.73877C2.43866 1.73877 1.76709 2.41034 1.76709 3.23877L1.76709 10.6754C1.76709 11.5038 2.43866 12.1754 3.26709 12.1754H5.36737C5.64351 12.1754 5.86737 12.3993 5.86737 12.6754C5.86737 12.9516 5.64351 13.1754 5.36737 13.1754H3.26709C1.88638 13.1754 0.76709 12.0561 0.76709 10.6754V3.23877C0.76709 1.85806 1.88638 0.73877 3.26709 0.73877H5.36737C5.64351 0.73877 5.86737 0.962627 5.86737 1.23877ZM13.2332 6.95753C13.2332 7.23367 13.0093 7.45753 12.7332 7.45753L5.76741 7.45753L8.38732 10.0774C8.58258 10.2727 8.58258 10.5893 8.38732 10.7845C8.19206 10.9798 7.87548 10.9798 7.68022 10.7846L4.92287 8.0272C4.33848 7.44282 4.33688 6.49584 4.91928 5.90948L7.67902 3.13097C7.87362 2.93504 8.1902 2.93397 8.38612 3.12857C8.58205 3.32317 8.58312 3.63975 8.38852 3.83567L5.78438 6.45753L12.7332 6.45753C13.0093 6.45753 13.2332 6.68139 13.2332 6.95753Z' fill='black' fill-opacity='0.6'/%3E%3C/svg%3E")
+            center no-repeat;
         }
 
         .terms {
-          transform:translateX(0);
-          display:none;
+          transform: translateX(0);
+          display: none;
         }
       }
-    `
-  }
+    `}
 `;
 
 const SideBarMenu = styled.div`
-  display:flex;
-  flex-direction:column;
+  display: flex;
+  flex-direction: column;
 
   .newChat {
-    display:flex;
-    align-items:center;
-    gap:16px;
-    font-family: 'Pretendard';
-    font-size:1rem;
-    font-weight:500;
-    padding:12px 0;
-    border:0;
-    background:none;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-family: "Pretendard";
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 12px 0;
+    border: 0;
+    background: none;
   }
 `;
 
 const AccordionMenu = styled.div`
   width: 100%;
-  
 `;
 
 const AccordionItem = styled.div`
@@ -596,59 +677,59 @@ const AccordionItem = styled.div`
   }
 
   .accordion-label {
-    position:relative;
-    display:flex;
-    align-items:center;
-    gap:16px;
-    font-family: 'Pretendard';
-    font-size:1rem;
-    font-weight:500;
-    padding:12px 0;
-    border:0;
-    background:none;
-    cursor:pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-family: "Pretendard";
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 12px 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
 
     &:after {
-      position:absolute;
-      right:20px;
-      top:50%;
-      transform:translateY(-50%) rotate(45deg);
-      width:8px;
-      height:8px;
-      border-right:2px solid ${palette.black};
-      border-bottom:2px solid ${palette.black};
-      transition:all .5s;
-      content:'';
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%) rotate(45deg);
+      width: 8px;
+      height: 8px;
+      border-right: 2px solid ${palette.black};
+      border-bottom: 2px solid ${palette.black};
+      transition: all 0.5s;
+      content: "";
     }
   }
 
   .accordion-toggle:checked + .accordion-label:after {
-    transform:translateY(-50%) rotate(-135deg);
+    transform: translateY(-50%) rotate(-135deg);
   }
 
   .accordion-toggle:checked + .accordion-label + div {
     // max-height: 1000px;
-    max-height:calc(100vh - 30rem);
+    max-height: calc(100vh - 30rem);
     // margin-top:20px;
-    padding:0;
-    overflow-y:auto;
+    padding: 0;
+    overflow-y: auto;
 
     &::-webkit-scrollbar {
-      width:5px;
+      width: 5px;
     }
 
-    &::-webkit-scrollbar-track{
+    &::-webkit-scrollbar-track {
       border-radius: 10px;
-      background-color:transparent;
+      background-color: transparent;
     }
-    
+
     &::-webkit-scrollbar-button {
-      display:none;
+      display: none;
     }
 
     &::-webkit-scrollbar-thumb {
       background: ${palette.lineGray};
-      border-radius: 10px; 
+      border-radius: 10px;
     }
   }
 `;
@@ -660,362 +741,364 @@ const AccordionContent = styled.div`
   transition: max-height 0.5s ease, padding 0.5s ease;
 
   > div {
-    margin-top:20px;
+    margin-top: 20px;
   }
 
   > div + div {
-    margin-top:30px;
+    margin-top: 30px;
   }
 
   strong {
-    font-size:0.75rem;
-    font-weight:400;
-    color:${palette.gray};
-    text-align:left;
-    display:block;
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: ${palette.gray};
+    text-align: left;
+    display: block;
   }
 
   ul {
-    display:flex;
-    flex-direction:column;
-    gap:4px;
-    margin:0 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 0 12px;
     // margin-top:10px;
   }
 
   li {
-    position:relative;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:10px;
-    font-family: 'Pretendard';
-    font-size:0.88rem;
-    color:${palette.gray};
-    text-align:left;
-    padding:8px 0 8px 15px;
-    cursor:pointer;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    font-family: "Pretendard";
+    font-size: 0.88rem;
+    color: ${palette.gray};
+    text-align: left;
+    padding: 8px 0 8px 15px;
+    cursor: pointer;
 
     &:before {
-      position:absolute;
-      left:0;
-      top:50%;
-      transform:translateY(-50%);
-      width:10px;
-      height:10px;
-      border-radius:2px;
-      background:${palette.lightGray};
-      content:'';
-      transition:all .5s;
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      background: ${palette.lightGray};
+      content: "";
+      transition: all 0.5s;
     }
 
     p {
-      width:100%;
-      min-height:19px;
-      text-overflow:ellipsis;
-      white-space:nowrap;
-      overflow:hidden;
-      color:${palette.darkGray};
+      width: 100%;
+      min-height: 19px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      color: ${palette.darkGray};
     }
 
     span {
-      font-size:0.75rem;
-      color:${palette.lightGray};
-      flex-shrink:0;
-      display:none;
-      align-items:center;
+      font-size: 0.75rem;
+      color: ${palette.lightGray};
+      flex-shrink: 0;
+      display: none;
+      align-items: center;
     }
 
     &:hover {
       &:before {
-        background:${palette.blue};
+        background: ${palette.blue};
       }
 
       span {
-        display:flex;
+        display: flex;
       }
     }
   }
 `;
 
 const ToogleMenu = styled.div`
-  position:absolute;
-  right:-260px;
-  top:0;
-  display:flex;
-  flex-direction:column;
-  gap:20px;
-  min-width:217px;
-  padding:20px;
-  border-radius:15px;
-  border:1px solid ${palette.lineGray};
-  background:${palette.white};
-  box-shadow:0 4px 28px rgba(0,0,0,.05);
+  position: absolute;
+  right: -260px;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 217px;
+  padding: 20px;
+  border-radius: 15px;
+  border: 1px solid ${palette.lineGray};
+  background: ${palette.white};
+  box-shadow: 0 4px 28px rgba(0, 0, 0, 0.05);
 
   button {
-    display:flex;
-    align-items:center;
-    gap:8px;
-    font-family: 'Pretendard';
-    font-size:0.88rem;
-    color:${palette.gray};
-    border:0;
-    background:none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: "Pretendard";
+    font-size: 0.88rem;
+    color: ${palette.gray};
+    border: 0;
+    background: none;
   }
 `;
 
 const AIProfileWrap = styled.div`
-  padding:30px;
-  border-radius:20px;
-  border:1px solid ${palette.lineGray};
-  box-shadow:0 4px 10px rgba(0,0,0,.05);
-  background:${palette.white};
+  padding: 30px;
+  border-radius: 20px;
+  border: 1px solid ${palette.lineGray};
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  background: ${palette.white};
 
   + div {
-    margin-top:28px;
+    margin-top: 28px;
   }
 
   a {
-    position:relative;
-    font-size:0.88rem;
-    text-decoration:underline;
-    padding-right:16px;
-    margin-top:20px;
+    position: relative;
+    font-size: 0.88rem;
+    text-decoration: underline;
+    padding-right: 16px;
+    margin-top: 20px;
 
     &:after {
-      position:absolute;
-      right:0;
-      top:50%;
-      transform:translateY(-50%) rotate(45deg);
-      width:8px;
-      height:8px;
-      border-top:2px solid ${palette.black};
-      border-right:2px solid ${palette.black};
-      content:'';
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%) rotate(45deg);
+      width: 8px;
+      height: 8px;
+      border-top: 2px solid ${palette.black};
+      border-right: 2px solid ${palette.black};
+      content: "";
     }
   }
 `;
 
 const AIProfile = styled.div`
-  display:flex;
-  flex-direction:column;
-  padding:25px;
-  border-radius:12px;
-  border:1px solid ${palette.lineGray};
-  background:rgba(0,0,0,.04);
+  display: flex;
+  flex-direction: column;
+  padding: 25px;
+  border-radius: 12px;
+  border: 1px solid ${palette.lineGray};
+  background: rgba(0, 0, 0, 0.04);
 
   .thumb {
-    position:relative;
-    width:160px;
-    height:160px;
-    margin:0 auto;
-    border-radius:50%;
-    overflow:hidden;
+    position: relative;
+    width: 160px;
+    height: 160px;
+    margin: 0 auto;
+    border-radius: 50%;
+    overflow: hidden;
 
     img {
-      position:absolute;
-      top:50%;
-      left:50%;
-      transform:translate(-50%, -50%);
-      width:100%;
-      height:100%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
       object-fit: cover;
     }
   }
 
   .name {
-    margin-top:30px;
+    margin-top: 30px;
 
     strong {
-      font-size:1.25rem;
-      font-weight:700;
+      font-size: 1.25rem;
+      font-weight: 700;
     }
 
     p {
-      color:${palette.gray};
-      margin-top:15px;
+      color: ${palette.gray};
+      margin-top: 15px;
     }
   }
 
   .field {
-    display:flex;
-    flex-direction:column;
-    margin:25px auto 0;
+    display: flex;
+    flex-direction: column;
+    margin: 25px auto 0;
 
     strong {
-      display:flex;
-      align-items:center;
-      gap:5px;
-      font-weight:400;
-      color:${palette.blue};
-      margin-bottom:12px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 400;
+      color: ${palette.blue};
+      margin-bottom: 12px;
     }
 
     p {
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
     }
 
     span {
-      font-size:0.88rem;
-      padding:8px 16px;
-      border-radius:25px;
-      border:1px solid ${palette.lineGray};
-      background:${palette.white};
+      font-size: 0.88rem;
+      padding: 8px 16px;
+      border-radius: 25px;
+      border: 1px solid ${palette.lineGray};
+      background: ${palette.white};
     }
   }
 `;
 
 const IdeaWrap = styled.div`
-  text-align:left;
-  padding:30px;
-  border-radius:20px;
-  border:1px solid ${palette.lineGray};
-  box-shadow:0 4px 10px rgba(0,0,0,.05);
+  text-align: left;
+  padding: 30px;
+  border-radius: 20px;
+  border: 1px solid ${palette.lineGray};
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 
   strong {
-    display:block;
-    padding-bottom:10px;
-    margin-bottom:20px;
-    border-bottom:1px solid ${palette.lineGray};
+    display: block;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid ${palette.lineGray};
   }
 
   div {
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
 
     a {
-      display:flex;
-      align-items:flex-start;
-      gap:10px;
-      width:100%;
-      font-size:0.81rem;
-      color:${palette.gray};
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      width: 100%;
+      font-size: 0.81rem;
+      color: ${palette.gray};
     }
 
     svg {
-      flex-shrink:0;
+      flex-shrink: 0;
     }
   }
 `;
 
 const LoginButtonWrap = styled.div`
-  position:relative;
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  margin-top:auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: auto;
 
   button {
-    font-family: 'Pretendard';
-    color:${palette.gray};
-    padding:12px 16px;
-    border-radius:10px;
-    border:1px solid ${palette.lineGray};
-    background:${palette.white};
+    font-family: "Pretendard";
+    color: ${palette.gray};
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid ${palette.lineGray};
+    background: ${palette.white};
   }
 
   div {
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
 
     a {
-      font-size:0.75rem;
-      color:${palette.gray};
+      font-size: 0.75rem;
+      color: ${palette.gray};
 
       &:last-child:before {
-        width:1px;
-        height:8px;
-        display:inline-block;
-        margin-right:10px;
-        background:${palette.lineGray};
-        content:'';
+        width: 1px;
+        height: 8px;
+        display: inline-block;
+        margin-right: 10px;
+        background: ${palette.lineGray};
+        content: "";
       }
     }
   }
 `;
 
 const LogoutBtnWrap = styled.div`
-  justify-content:space-between !important;
-  padding:12px 16px;
-  border-radius:10px;
-  border:1px solid ${palette.lineGray};
+  justify-content: space-between !important;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid ${palette.lineGray};
 
   > div {
-    flex-direction:column;
-    gap:4px;
-    font-size:0.75rem;
-    color:${palette.gray};
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.75rem;
+    color: ${palette.gray};
 
     strong {
-      display:flex;
-      width:100%;
+      display: flex;
+      width: 100%;
     }
   }
 
   button {
-    width:15px;
-    height:15px;
-    padding:0;
-    border:0;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M8.86724 2.23147L8.51621 1.47925C8.30624 1.02933 7.66602 1.03062 7.45787 1.48139L7.10987 2.23502C6.67141 3.18455 5.57856 3.63981 4.59565 3.28238L3.81553 2.9987C3.34892 2.82902 2.89712 3.28264 3.06868 3.74857L3.3555 4.52753C3.71689 5.509 3.26604 6.60367 2.31828 7.04596L1.56606 7.39699C1.11613 7.60695 1.11742 8.24718 1.56819 8.45533L2.32182 8.80333C3.27136 9.24179 3.72661 10.3346 3.36918 11.3175L3.0855 12.0977C2.91582 12.5643 3.36945 13.0161 3.83537 12.8445L4.61434 12.5577C5.5958 12.1963 6.69047 12.6472 7.13276 13.5949L7.48379 14.3471C7.69376 14.7971 8.33398 14.7958 8.54213 14.345L8.89013 13.5914C9.32859 12.6418 10.4214 12.1866 11.4044 12.544L12.1845 12.8277C12.6511 12.9974 13.1029 12.5437 12.9313 12.0778L12.6445 11.2989C12.2831 10.3174 12.734 9.22272 13.6817 8.78044L14.4339 8.4294C14.8839 8.21944 14.8826 7.57921 14.4318 7.37106L13.6782 7.02307C12.7286 6.5846 12.2734 5.49175 12.6308 4.50884L12.9145 3.72873C13.0842 3.26212 12.6306 2.81032 12.1646 2.98188L11.3857 3.2687C10.4042 3.63008 9.30953 3.17923 8.86724 2.23147ZM9.16348 1.1772C8.69645 0.176413 7.27237 0.179282 6.80938 1.18194L6.46138 1.93557C6.17858 2.548 5.47371 2.84163 4.83975 2.6111L4.05963 2.32742C3.02174 1.95 2.01679 2.959 2.39839 3.99537L2.68521 4.77434C2.9183 5.40737 2.62751 6.11341 2.01622 6.39868L1.264 6.74971C0.263217 7.21674 0.266087 8.64082 1.26874 9.10381L2.02237 9.45181C2.63481 9.73461 2.92844 10.4395 2.6979 11.0734L2.41422 11.8536C2.0368 12.8915 3.04581 13.8964 4.08218 13.5148L4.86114 13.228C5.49417 12.9949 6.20022 13.2857 6.48549 13.897L6.83652 14.6492C7.30355 15.65 8.72763 15.6471 9.19062 14.6445L9.53862 13.8908C9.82142 13.2784 10.5263 12.9848 11.1603 13.2153L11.9404 13.499C12.9783 13.8764 13.9832 12.8674 13.6016 11.831L13.3148 11.0521C13.0817 10.419 13.3725 9.71298 13.9838 9.42771L14.736 9.07668C15.7368 8.60965 15.7339 7.18557 14.7313 6.72258L13.9776 6.37458C13.3652 6.09178 13.0716 5.38691 13.3021 4.75295L13.5858 3.97283C13.9632 2.93493 12.9542 1.92998 11.9178 2.31158L11.1389 2.59841C10.5058 2.83149 9.79978 2.5407 9.51452 1.92941L9.16348 1.1772Z' fill='%238C8C8C'/%3E%3Cpath d='M10.7611 7.91279C10.7611 9.43735 9.52524 10.6732 8.00068 10.6732C6.47613 10.6732 5.24023 9.43735 5.24023 7.91279C5.24023 6.38824 6.47613 5.15234 8.00068 5.15234C9.52524 5.15234 10.7611 6.38824 10.7611 7.91279Z' fill='white'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M8.00068 9.95896C9.13075 9.95896 10.0468 9.04286 10.0468 7.91279C10.0468 6.78273 9.13075 5.86663 8.00068 5.86663C6.87062 5.86663 5.95452 6.78273 5.95452 7.91279C5.95452 9.04286 6.87062 9.95896 8.00068 9.95896ZM8.00068 10.6732C9.52524 10.6732 10.7611 9.43735 10.7611 7.91279C10.7611 6.38824 9.52524 5.15234 8.00068 5.15234C6.47613 5.15234 5.24023 6.38824 5.24023 7.91279C5.24023 9.43735 6.47613 10.6732 8.00068 10.6732Z' fill='%238C8C8C'/%3E%3C/svg%3E") center no-repeat !important;
+    width: 15px;
+    height: 15px;
+    padding: 0;
+    border: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M8.86724 2.23147L8.51621 1.47925C8.30624 1.02933 7.66602 1.03062 7.45787 1.48139L7.10987 2.23502C6.67141 3.18455 5.57856 3.63981 4.59565 3.28238L3.81553 2.9987C3.34892 2.82902 2.89712 3.28264 3.06868 3.74857L3.3555 4.52753C3.71689 5.509 3.26604 6.60367 2.31828 7.04596L1.56606 7.39699C1.11613 7.60695 1.11742 8.24718 1.56819 8.45533L2.32182 8.80333C3.27136 9.24179 3.72661 10.3346 3.36918 11.3175L3.0855 12.0977C2.91582 12.5643 3.36945 13.0161 3.83537 12.8445L4.61434 12.5577C5.5958 12.1963 6.69047 12.6472 7.13276 13.5949L7.48379 14.3471C7.69376 14.7971 8.33398 14.7958 8.54213 14.345L8.89013 13.5914C9.32859 12.6418 10.4214 12.1866 11.4044 12.544L12.1845 12.8277C12.6511 12.9974 13.1029 12.5437 12.9313 12.0778L12.6445 11.2989C12.2831 10.3174 12.734 9.22272 13.6817 8.78044L14.4339 8.4294C14.8839 8.21944 14.8826 7.57921 14.4318 7.37106L13.6782 7.02307C12.7286 6.5846 12.2734 5.49175 12.6308 4.50884L12.9145 3.72873C13.0842 3.26212 12.6306 2.81032 12.1646 2.98188L11.3857 3.2687C10.4042 3.63008 9.30953 3.17923 8.86724 2.23147ZM9.16348 1.1772C8.69645 0.176413 7.27237 0.179282 6.80938 1.18194L6.46138 1.93557C6.17858 2.548 5.47371 2.84163 4.83975 2.6111L4.05963 2.32742C3.02174 1.95 2.01679 2.959 2.39839 3.99537L2.68521 4.77434C2.9183 5.40737 2.62751 6.11341 2.01622 6.39868L1.264 6.74971C0.263217 7.21674 0.266087 8.64082 1.26874 9.10381L2.02237 9.45181C2.63481 9.73461 2.92844 10.4395 2.6979 11.0734L2.41422 11.8536C2.0368 12.8915 3.04581 13.8964 4.08218 13.5148L4.86114 13.228C5.49417 12.9949 6.20022 13.2857 6.48549 13.897L6.83652 14.6492C7.30355 15.65 8.72763 15.6471 9.19062 14.6445L9.53862 13.8908C9.82142 13.2784 10.5263 12.9848 11.1603 13.2153L11.9404 13.499C12.9783 13.8764 13.9832 12.8674 13.6016 11.831L13.3148 11.0521C13.0817 10.419 13.3725 9.71298 13.9838 9.42771L14.736 9.07668C15.7368 8.60965 15.7339 7.18557 14.7313 6.72258L13.9776 6.37458C13.3652 6.09178 13.0716 5.38691 13.3021 4.75295L13.5858 3.97283C13.9632 2.93493 12.9542 1.92998 11.9178 2.31158L11.1389 2.59841C10.5058 2.83149 9.79978 2.5407 9.51452 1.92941L9.16348 1.1772Z' fill='%238C8C8C'/%3E%3Cpath d='M10.7611 7.91279C10.7611 9.43735 9.52524 10.6732 8.00068 10.6732C6.47613 10.6732 5.24023 9.43735 5.24023 7.91279C5.24023 6.38824 6.47613 5.15234 8.00068 5.15234C9.52524 5.15234 10.7611 6.38824 10.7611 7.91279Z' fill='white'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M8.00068 9.95896C9.13075 9.95896 10.0468 9.04286 10.0468 7.91279C10.0468 6.78273 9.13075 5.86663 8.00068 5.86663C6.87062 5.86663 5.95452 6.78273 5.95452 7.91279C5.95452 9.04286 6.87062 9.95896 8.00068 9.95896ZM8.00068 10.6732C9.52524 10.6732 10.7611 9.43735 10.7611 7.91279C10.7611 6.38824 9.52524 5.15234 8.00068 5.15234C6.47613 5.15234 5.24023 6.38824 5.24023 7.91279C5.24023 9.43735 6.47613 10.6732 8.00068 10.6732Z' fill='%238C8C8C'/%3E%3C/svg%3E")
+      center no-repeat !important;
   }
 `;
 
 const LogoutToogle = styled.div`
-  position:absolute;
-  bottom:0;
-  display:flex;
-  flex-direction:column;
-  width:100%;
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
   max-height: ${(props) => (props.isToogle ? "0" : "1000px")};
   padding: ${(props) => (props.isToogle ? "0" : "20px")};
-  overflow:hidden;
-  border-radius:15px;
-  background:${palette.white};
-  box-shadow:0 4px 28px rgba(0,0,0,.05);
+  overflow: hidden;
+  border-radius: 15px;
+  background: ${palette.white};
+  box-shadow: 0 4px 28px rgba(0, 0, 0, 0.05);
   transition: max-height 0.5s ease, padding 0.5s ease;
 
   .info {
-    font-size:0.75rem;
-    color:${palette.gray};
-    width:100%;
-    display:flex;
-    flex-direction:column;
-    gap:6px;
-    padding-bottom:15px;
-    margin-bottom:15px;
-    border-bottom:1px solid ${palette.lineGray};
+    font-size: 0.75rem;
+    color: ${palette.gray};
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid ${palette.lineGray};
   }
 
-  ul, strong, p {
-    display:block;
-    width:100%;
-    text-align:left;
+  ul,
+  strong,
+  p {
+    display: block;
+    width: 100%;
+    text-align: left;
   }
 
   li {
-    font-size:0.88rem;
-    display:flex;
-    align-items:center;
-    justify-content:flex-start;
-    gap:8px;
+    font-size: 0.88rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
 
     + li {
-      margin-top:20px;
+      margin-top: 20px;
     }
 
     button {
-      padding:0;
-      border:0;
-      background:none;
+      padding: 0;
+      border: 0;
+      background: none;
     }
   }
-
 `;

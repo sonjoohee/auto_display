@@ -198,16 +198,16 @@ const PageExpertInsight = () => {
   }, [
     paramConversationId,
     conversationId,
-    conversation,
+    // conversation,
     navigate,
-    selectedExpertIndex,
-    setExpert1ReportData,
-    setExpert2ReportData,
-    setExpert3ReportData,
-    setAdditionalReportData,
-    setSelectedAdditionalKeyword,
-    setConversation,
-    setConversationStage,
+    // selectedExpertIndex,
+    // setExpert1ReportData,
+    // setExpert2ReportData,
+    // setExpert3ReportData,
+    // setAdditionalReportData,
+    // setSelectedAdditionalKeyword,
+    // setConversation,
+    // setConversationStage,
   ]);
 
   // useEffect(() => {
