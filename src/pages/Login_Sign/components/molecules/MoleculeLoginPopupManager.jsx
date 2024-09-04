@@ -19,7 +19,7 @@ const MoleculeLoginPopupManager = ({ children }) => {
   const handleLoginSuccess = () => {
     // 팝업을 통한 로그인일 경우 팝업 닫기
     setLoginPopupOpen(false);
-    navigate('/ai_panel');
+    navigate('/');
   };
 
   return (

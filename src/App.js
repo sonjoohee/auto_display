@@ -53,16 +53,16 @@ function App() {
             <Route path="*" element={<PageMeetAiExpert />} />
             <Route path="/PageMeetAiExpert" element={<PageMeetAiExpert />} />
             <Route path="/ExpertInsight" element={<PageExpertInsight />}></Route>
-            <Route path="/AI_Panel" element={<PageAIPanelList />} />
-            <Route path="/QuickReport" element={<BusinessTool />} />
+            {/* <Route path="/AI_Panel" element={<PageAIPanelList />} />
+            <Route path="/QuickReport" element={<BusinessTool />} /> */}
 
             {/* Biz */}
-            <Route path="/Lending" element={<Lending />} />
+            {/* <Route path="/Lending" element={<Lending />} />
             <Route path="/TargetSetting" element={<TargetSetting />} />
             <Route path="/TargetChoice" element={<TargetChoice />} />
             <Route path="/Loading" element={<Loading />} />
             <Route path="/LoadingPersona" element={<LoadingPersona />} />
-            <Route path="/PersonaGenerator" element={<PersonaGenerator />} />
+            <Route path="/PersonaGenerator" element={<PersonaGenerator />} /> */}
 
             {/* 추가된 Route */}
 
