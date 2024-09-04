@@ -185,9 +185,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
       </AnalysisSection>
     </>
   );
-  
-
-// ... (아래 부분은 동일)
+  };
 
 const Section = ({ title, content }) => {
   // 서브 타이틀이 있는 항목과 없는 항목을 분리
@@ -230,6 +228,7 @@ const Section = ({ title, content }) => {
 };
 
 export default OrganismStrategyReportSection;
+
 const blinkAnimation = keyframes`
   0% { opacity: 1; }
   50% { opacity: 0.5; }
