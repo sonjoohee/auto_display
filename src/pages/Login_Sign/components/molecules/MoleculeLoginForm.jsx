@@ -56,7 +56,7 @@ const MoleculeLoginForm = () => {
         setCurrentUser(result.user);
         setIsLoggedIn(true);
         setLoginSuccess(true);
-        navigate('/AI_Panel');
+        navigate('/');
       } else {
         const result = await response.json();
         setError(result.error);
