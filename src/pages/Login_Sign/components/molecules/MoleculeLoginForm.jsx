@@ -123,9 +123,9 @@ const MoleculeLoginForm = () => {
       <StyledLoginButton onClick={handleLogin}>로그인</StyledLoginButton>
 
       <JoinWrap>
-        <p>Crowd Insight가 처음이에요</p>
+        <p>InterviewX가 처음이에요</p>
         {/* <Link to="/signup">가입하기</Link> */}
-        <Link to="#" onClick={handleSignupClick}>가입하기</Link>
+        <Link to="/signup" onClick={handleSignupClick}>가입하기</Link>
         {isSignupPopupOpen && <MoleculeSignupPopup onClose={handleClosePopup} />}
       </JoinWrap>
     </LoginFormContainer>

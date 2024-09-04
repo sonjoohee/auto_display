@@ -25,6 +25,7 @@ import {
   SELECTED_ADDITIONAL_KEYWORD,
   CONVERSATION,
   isLoggedInAtom,
+  ADDITION_BUTTON_STATE,
 } from '../../../AtomStates';
 
 import { palette } from '../../../../assets/styles/Palette';
@@ -45,6 +46,7 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
   const [tempMainCharacteristicOfBusinessInformation, setTempMainCharacteristicOfBusinessInformation] = useAtom(TEMP_MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
   const [tempMusinessInformationTargetCustomer, setTemptBusinessInformationTargetCustomer] = useAtom(TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 관리
+  const [buttonState, setButtonState] = useAtom(ADDITION_BUTTON_STATE);
 
   const [savedReports, setSavedReports] = useAtom(SAVED_REPORTS);
   const [bizAnalysisReportIndex, setBizAnalysisReportIndex] = useState(0);
@@ -167,12 +169,15 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
   };
 
   const regenerateReport = async () => {
-    if (!isLoggedIn) {
-      // 로그인 상태가 아닐 경우 팝업을 띄움
-      setIsPopupOpen(true); // 팝업 열기
-      return; // 로그인 상태가 아닐 경우 함수를 종료
-    }
-    alert("재생성되었습니다.");
+    // if (!isLoggedIn) {
+    //   // 로그인 상태가 아닐 경우 팝업을 띄움
+    //   setIsPopupOpen(true); // 팝업 열기
+    //   return; // 로그인 상태가 아닐 경우 함수를 종료
+    // }
+    // else {
+      setButtonState(1);
+      console.log(buttonState) 
+    // }
   }
 
   const saveReport = async () => {

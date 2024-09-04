@@ -72,6 +72,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
         const response = await axios.post('https://wishresearch.kr/panels/business', data, axiosConfig);
         businessData = response.data.business_analysis;
 
+        console.log(businessData)
         setTitleOfBusinessInfo(businessData["명칭"]);
         setTempMainFeaturesOfBusinessInformation(businessData["주요_목적_및_특징"].map((item) => item));
         setTempMainCharacteristicOfBusinessInformation(businessData["주요기능"].map((item) => item));
@@ -82,6 +83,27 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
         setBusinessInformationTargetCustomer(businessData["목표고객"].map((item) => item));
 
         setButtonState(0);
+
+        // API 응답 데이터를 사용하여 analysisReportData 객체 생성
+        const newAnalysisReportData = {
+          title: businessData["명칭"],
+          mainFeatures: businessData["주요_목적_및_특징"].map((item) => item),
+          mainCharacter: businessData["주요기능"].map((item) => item),
+          mainCustomer: businessData["목표고객"].map((item) => item),
+        };
+
+        // IndexedDB에서 기존 대화 데이터를 가져오기
+        const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
+
+        // 기존 대화 데이터에 analysisReportData를 추가하고 저장
+        const updatedConversation = {
+          ...existingConversation,
+          analysisReportData: newAnalysisReportData, // 새로 생성된 객체 사용
+          timestamp: Date.now(),
+        };
+
+        await saveConversationToIndexedDB(updatedConversation);
+
       } else {
         // IndexedDB에서 기존 데이터를 가져와 적용
         const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
@@ -102,21 +124,31 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
           console.warn('No saved analysis data found.');
         }
       }
-      // Temp 상태에도 초기 데이터를 설정
+      // // Temp 상태에도 초기 데이터를 설정
 
+      //   // API 응답 데이터를 사용하여 analysisReportData 객체 생성
+      //   const newAnalysisReportData = {
+      //     title: titleOfBusinessInfo,
+      //     mainFeatures: businessData["주요_목적_및_특징"].map((item) => item),
+      //     mainCharacter: businessData["주요기능"].map((item) => item),
+      //     mainCustomer: businessData["목표고객"].map((item) => item),
+      //   };
 
-      // 기존 대화 내역을 유지하면서 새로운 정보를 추가
-      const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
+      //   // IndexedDB에서 기존 대화 데이터를 가져오기
+      //   const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
 
-      const updatedConversation = {
-        ...existingConversation,
-        analysisReportData,
-        timestamp: Date.now(),
-      };
-      await saveConversationToIndexedDB(updatedConversation);
-      console.log("___________기초보고서_____________")
-      console.log("기초보고서2")
-      console.log(analysisReportData)
+      //   // 기존 대화 데이터에 analysisReportData를 추가하고 저장
+      //   const updatedConversation = {
+      //     ...existingConversation,
+      //     analysisReportData: newAnalysisReportData, // 새로 생성된 객체 사용
+      //     timestamp: Date.now(),
+      //   };
+
+      //   await saveConversationToIndexedDB(updatedConversation);
+        
+      // console.log("___________기초보고서_____________")
+      // console.log("기초보고서2")
+      // console.log(analysisReportData)
 //       setTimeout(() => {
 //         setIsLoading(false);
 //       }, 3000);
@@ -125,6 +157,8 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
     loadAndSaveData();
 
   }, [
+    buttonState,
+    setButtonState,
     conversationId,
     setTitleOfBusinessInfo,
     setMainFeaturesOfBusinessInformation,
