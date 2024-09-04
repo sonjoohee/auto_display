@@ -40,7 +40,7 @@ const StyledSearchSection = styled.section`
     margin-bottom: 56px;
 
     p {
-      font-size: 0.88rem;
+      font-size: 0.875rem;
       font-weight: normal;
     }
   }

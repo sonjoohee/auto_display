@@ -41,7 +41,7 @@ const UserMessageContainer = styled.div`
   position: relative;
 
   > div {
-    font-size:0.88rem;
+    font-size:0.875rem;
     padding:14px 20px;
     border-radius:15px;
     background:#EBF3FE;

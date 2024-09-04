@@ -159,7 +159,7 @@ const Title = styled.h1`
 
   p {
     // font-size:1.25rem;
-    font-size:0.88rem;
+    font-size:0.875rem;
     font-weight:400;
   }
 `;

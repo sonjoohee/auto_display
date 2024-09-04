@@ -99,7 +99,7 @@ const BizExpertSelectContainer = styled.div`
   border-top:1px solid ${palette.lineGray};
 
   h1 {
-    font-size:0.88rem;
+    font-size:0.875rem;
     font-weight:500;
     color:${palette.gray};
     margin-bottom:20px;

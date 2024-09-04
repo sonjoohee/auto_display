@@ -364,7 +364,7 @@ const PanelList = styled.ul`
 
 const LoadMoreButton = styled.button`
   position: relative;
-  font-size:0.88rem;
+  font-size:0.875rem;
   color: ${palette.gray};
   display: block;
   margin: ${({ isBottomBarVisible }) => (isBottomBarVisible ? '50px auto 120px' : '50px auto 120px')}; /* 하단 바가 보일 때 더 위로 이동 */

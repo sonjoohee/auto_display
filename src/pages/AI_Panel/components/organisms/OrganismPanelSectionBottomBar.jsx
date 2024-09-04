@@ -52,7 +52,7 @@ const BottomBar = styled.div`
 
 const SaveButton = styled.button`
   font-family: 'Pretendard';
-  font-size: 0.88rem;
+  font-size: 0.875rem;
   color: white;
   display: flex;
   align-items: center;
@@ -72,7 +72,7 @@ const LinkButton = styled(Link)`
   display: flex;
   align-items: center;
   gap:8px;
-  font-size: 0.88rem;
+  font-size: 0.875rem;
   font-weight:500;
   color: ${palette.white};
   padding: 12px 20px;

@@ -242,7 +242,7 @@ const InfoButton = styled.button`
   max-width:170px;
   width:100%;
   font-family: 'Pretendard';
-  font-size:0.88rem;
+  font-size:0.875rem;
   color: ${palette.white};
   padding: 8px 16px;
   margin:0 auto;
@@ -266,7 +266,7 @@ const PanelDetails = styled.div`
   text-align: left;
 
   p {
-    font-size: 0.88rem;
+    font-size: 0.875rem;
     font-weight: 300;
     margin-bottom: 8px;
   }
@@ -278,7 +278,7 @@ const PanelDetails = styled.div`
   span {
     display: flex;
     gap: 8px;
-    font-size: 0.88rem;
+    font-size: 0.875rem;
     color: #999;
     margin-top: auto;
   }

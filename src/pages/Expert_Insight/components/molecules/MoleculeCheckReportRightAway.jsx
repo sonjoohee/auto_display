@@ -39,7 +39,7 @@ const ButtonWrap = styled.div`
     align-items: center;
     gap: 12px;
     font-family: 'Pretendard';
-    font-size: 0.88rem;
+    font-size: 0.875rem;
     color: ${palette.darkGray};
     border: 0;
     background: none;

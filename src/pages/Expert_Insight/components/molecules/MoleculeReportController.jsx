@@ -510,7 +510,7 @@ const MoleculeReportController = ({
               닫기
             </button>
             <span>
-              <img src={images.ExclamationMark} alt="" />
+              <img src={images.CheckMark} alt="" />
             </span>
             <p>
               해당 기능을 사용하시려면 로그인이 필요해요
@@ -762,16 +762,17 @@ const Popup = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-width: 540px;
+    max-width: 400px;
     text-align: center;
     // overflow:hidden;
-    padding: 60px 24px 24px;
+    padding: 45px 24px 24px;
     border-radius: 10px;
     background: ${palette.white};
 
     p {
-      font-size: 1.25rem;
-      margin: 30px auto 40px;
+      font-size: 0.875rem;
+      font-weight:500;
+      margin: 20px auto 24px;
     }
 
     .btnWrap {
@@ -781,11 +782,11 @@ const Popup = styled.div`
 
       button {
         flex: 1;
-        font-size: 1.25rem;
+        font-size: 0.875rem;
         font-weight: 600;
         color: ${palette.blue};
-        padding: 15px;
-        border-radius: 12px;
+        padding: 12px 20px;
+        border-radius: 8px;
         border: 1px solid ${palette.blue};
         background: ${palette.white};
 
@@ -801,18 +802,20 @@ const Popup = styled.div`
       css`
         p {
           strong {
-            font-weight: 600;
+            font-weight: 500;
             display: block;
           }
           span {
-            font-size: 1rem;
+            font-size: 0.75rem;
+            font-weight:400;
+            color:${palette.gray500};
             display: block;
             margin-top: 8px;
           }
         }
 
         .btnWrap {
-          padding-top: 25px;
+          padding-top: 16px;
           border-top: 1px solid ${palette.lineGray};
 
           button {

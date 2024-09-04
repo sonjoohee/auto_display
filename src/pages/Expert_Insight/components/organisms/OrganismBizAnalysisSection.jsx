@@ -912,7 +912,7 @@ const AnalysisSection = styled.div`
   }
 
   > p {
-    font-size: 0.88rem;
+    font-size: 0.875rem;
     line-height: 1.5;
     margin-top: 30px;
 
@@ -964,14 +964,14 @@ const BoxWrap = styled.div`
 
     input[type="text"] {
       height: 30px;
-      font-size: 0.88rem;
+      font-size: 0.875rem;
       padding: 4px 12px;
       border: 0;
     }
   }
 
   p {
-    font-size: 0.88rem;
+    font-size: 0.875rem;
     color: ${palette.darkGray};
     line-height: 1.5;
   }
@@ -1017,7 +1017,7 @@ const BtnWrap = styled.div`
 
   input[type="text"] {
     height: 30px;
-    font-size: 0.88rem;
+    font-size: 0.875rem;
     padding: 4px 12px;
     border: 0;
   }
@@ -1030,7 +1030,7 @@ const AddInfo = styled.div`
   margin-top: 20px;
 
   input {
-    font-size: 0.88rem;
+    font-size: 0.875rem;
     height: 40px;
     padding: 4px 10px;
     border: 1px solid ${palette.lineGray}; /* 테두리 색상 */

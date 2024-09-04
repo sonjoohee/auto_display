@@ -461,6 +461,7 @@ const SideBar = styled.div`
   display:flex;
   flex-direction:column;
   max-width:257px;
+  width:100%;
   height:calc(100vh - 80px);
   padding:96px 20px 30px;
   margin: ${(props) => (props.bgNone ? "40px 0 0 0" : "40px 0 0 40px")};
@@ -683,7 +684,7 @@ const AccordionContent = styled.div`
     align-items:center;
     gap:10px;
     font-family: 'Pretendard';
-    font-size:0.88rem;
+    font-size:0.875rem;
     color:${palette.gray};
     text-align:left;
     padding:8px 0 8px 15px;
@@ -750,7 +751,7 @@ const ToogleMenu = styled.div`
     align-items:center;
     gap:8px;
     font-family: 'Pretendard';
-    font-size:0.88rem;
+    font-size:0.875rem;
     color:${palette.gray};
     border:0;
     background:none;
@@ -770,7 +771,7 @@ const AIProfileWrap = styled.div`
 
   a {
     position:relative;
-    font-size:0.88rem;
+    font-size:0.875rem;
     text-decoration:underline;
     padding-right:16px;
     margin-top:20px;
@@ -852,7 +853,7 @@ const AIProfile = styled.div`
     }
 
     span {
-      font-size:0.88rem;
+      font-size:0.875rem;
       padding:8px 16px;
       border-radius:25px;
       border:1px solid ${palette.lineGray};
@@ -994,7 +995,7 @@ const LogoutToogle = styled.div`
   }
 
   li {
-    font-size:0.88rem;
+    font-size:0.875rem;
     display:flex;
     align-items:center;
     justify-content:flex-start;

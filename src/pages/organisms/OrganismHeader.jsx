@@ -45,7 +45,7 @@ const HeaderWrap = styled.header`
     gap: 50px;
 
     a {
-      font-size:0.88rem;
+      font-size:0.875rem;
       color: ${palette.gray};
     }
   }
