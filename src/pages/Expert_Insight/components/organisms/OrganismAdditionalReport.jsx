@@ -11,6 +11,9 @@ import {
   MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
   ADDITION_BUTTON_STATE,
+  CONVERSATION,
+  APPROACH_PATH,
+  IS_LOADING,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -20,8 +23,18 @@ import {
   getConversationByIdFromIndexedDB,
 } from "../../../../utils/indexedDB";
 import axios from "axios";
+import {
+  SkeletonH1,
+  SkeletonTitle,
+  SkeletonLine,
+} from "../../../../assets/styles/Skeleton";
 
 const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
+  const [conversation, setConversation] = useAtom(CONVERSATION);
+  const [approachPath] = useAtom(APPROACH_PATH);
+  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
+  const [isLoading, setIsLoading] = useAtom(IS_LOADING);
+
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [
     mainFeaturesOfBusinessInformation,
@@ -72,6 +85,7 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
         if (buttonState === 1) {
           // 버튼 상태가 1일 때만 API 요청 실행
           setButtonState(0); // 버튼 상태 초기화
+          setIsLoading(true);
 
           const keyword = selectedKeywords[selectedKeywords.length - 1]; // Use the keyword based on expertIndex
 
@@ -171,6 +185,15 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
             timestamp: Date.now(),
           };
           await saveConversationToIndexedDB(updatedConversation);
+
+          setIsLoading(false);
+
+          const updatedConversation2 = [...conversation];
+          updatedConversation2.push(
+            { type: 'system', message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${selectedAdditionalKeyword[selectedAdditionalKeyword.length-1]}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻` },
+            { type: `keyword` },
+          );
+          setConversation(updatedConversation2);
         } else {
           // 기존 데이터가 있을 때 처리
           if (existingConversation && additionalReportData.length > 0) {
@@ -211,6 +234,22 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
 
   return (
     <AnalysisSection Strategy>
+      {isLoading ? (
+        <>
+          <SkeletonTitle className="title-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
+          <SkeletonTitle className="title-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
+          <SkeletonTitle className="title-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+        </>
+      ) :
+      <>
       <TabHeader>
         {tabs.map((tab, index) => (
           <TabButton
@@ -232,6 +271,8 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
         conversationId={conversationId}
         sampleData={answerData}
       />
+      </>
+    }
     </AnalysisSection>
   );
 };
@@ -421,4 +462,8 @@ const LoadingOverlay = styled.div`
       transform: rotate(360deg);
     }
   }
+`;
+
+const Spacing = styled.div`
+  margin-bottom: 40px; /* 제목과 본문 사이의 간격 */
 `;
