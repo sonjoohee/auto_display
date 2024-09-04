@@ -362,6 +362,8 @@ const Section = ({ title, content }) => {
           <div key={index}>
             <p>{item.text}</p>
             {item.subText1 && <SubTextBox>{item.subText1}</SubTextBox>}
+            {item.subText2 && <SubTextBox>{item.subText2}</SubTextBox>}
+            {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
           </div>
         ))}
 
@@ -373,6 +375,8 @@ const Section = ({ title, content }) => {
               {item.subTitle && <SubTitle>{item.subTitle}</SubTitle>}
               <p>{item.text}</p>
               {item.subText1 && <SubTextBox>{item.subText1}</SubTextBox>}
+              {item.subText2 && <SubTextBox>{item.subText2}</SubTextBox>}
+              {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
             </div>
           ))}
         </DynamicGrid>
