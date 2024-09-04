@@ -71,6 +71,9 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
   const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [isLoginPopupOpen, setLoginPopupOpen] = useState(false); // 로그인 팝업 상태 관리
+
+  const [isPopupCopy, setIsPopupCopy] = useState(false);
+
   const navigate = useNavigate();
 
   const handleSignupClick = () => {
