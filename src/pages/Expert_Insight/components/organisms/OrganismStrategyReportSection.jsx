@@ -8,6 +8,8 @@ import {
   EXPERT3_REPORT_DATA,
   SELECTED_TAB,
   EXPERT_BUTTON_STATE,
+  CONVERSATION,
+  APPROACH_PATH,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -38,6 +40,9 @@ import {
 } from "../../../AtomStates";
 
 const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
+  const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
+  const [approachPath] = useAtom(APPROACH_PATH);
+  const [conversation, setConversation] = useAtom(CONVERSATION);
   const [selectedTab, setSelectedTab] = useAtom(SELECTED_TAB); // 탭을 인덱스로 관리
   const [tabs, setTabs] = useState([]);
   const [sections, setSections] = useState([]);
@@ -182,6 +187,13 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
           console.error("Error loading data:", error);
         }
         setIsLoading(false);
+
+        const updatedConversation = [...conversation];
+        updatedConversation.push(
+          { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊'},
+          { type: `keyword` },
+        );
+        setConversation(updatedConversation);
       }
     };
     loadData();
@@ -284,9 +296,17 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
 
         {isLoading ? (
           <>
-            <SkeletonTitle className="title-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <SkeletonLine className="content-placeholder" />
+          <SkeletonTitle className="title-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
+          <SkeletonTitle className="title-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
+          <SkeletonTitle className="title-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <SkeletonLine className="content-placeholder" />
           </>
         ) : sections.length > 0 ? (
           sections.map((section, index) => (

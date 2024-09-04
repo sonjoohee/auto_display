@@ -29,9 +29,9 @@ const OrganismLeftSideBar = () => {
   const [selectedConversation, setSelectedConversation] = useState(null); // 선택한 대화 내용 저장
 
   const [isLogoutPopup, setIsLogoutPopup] = useState(false); // 로그아웃 팝업 상태 관리
-  const [userName,setUserName] = useAtom(USER_NAME); // 아톰에서 유저 이름 불러오기
+  const [userName, setUserName] = useAtom(USER_NAME); // 아톰에서 유저 이름 불러오기
   const [userEmail, setUserEmail] = useAtom(USER_EMAIL); // 아톰에서 유저 이메일 불러오기
-  
+
   useEffect(() => {
     // IndexedDB에서 저장된 모든 대화 내역 가져오기
     const loadConversations = async () => {
@@ -106,7 +106,6 @@ const OrganismLeftSideBar = () => {
     setLoginPopupOpen(false); // 로그인 팝업 닫기
   };
 
-  
   const handleAccountClick = () => {
     setAccountPopupOpen(true); // 계정설정 팝업 열기
   };
@@ -115,8 +114,6 @@ const OrganismLeftSideBar = () => {
     setAccountPopupOpen(false); // 계정설정 팝업 닫기
   };
 
-
-
   const handleLogoutClick = () => {
     // 로그아웃 버튼 클릭 시 로그아웃 팝업 열기
     setIsLogoutPopup(true);
@@ -124,14 +121,15 @@ const OrganismLeftSideBar = () => {
 
   const handleLogoutConfirm = () => {
     // 로그아웃 확인 버튼을 눌렀을 때 실행
-    sessionStorage.removeItem('accessToken'); // 세션 스토리지에서 토큰 삭제
-    sessionStorage.removeItem('userName');
-    sessionStorage.removeItem('userEmail');
-
+    sessionStorage.removeItem("accessToken"); // 세션 스토리지에서 토큰 삭제
+    sessionStorage.removeItem("userName");
+    sessionStorage.removeItem("userEmail");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userEmail");
     setIsLoggedIn(false); // 로그아웃 상태로 전환
-    setUserName('');
-    setUserEmail('');
-    
+    setUserName("");
+    setUserEmail("");
+
     setIsLogoutPopup(false); // 로그아웃 팝업 닫기
     navigate("/PageMeetAiExpert"); // 페이지 이동
   };
@@ -192,6 +190,10 @@ const OrganismLeftSideBar = () => {
     setIsToogle(!isToogle);
   };
 
+  const handleNewProjectClick = () => {
+    window.location.href = "/"; // 첫 페이지로 이동
+  };
+
   return (
     <>
       <Logo isOpen={isOpen}>
@@ -203,7 +205,11 @@ const OrganismLeftSideBar = () => {
 
       <SideBar isOpen={isOpen} bgNone={!isOpen}>
         <SideBarMenu>
-          <button type="button" className="newChat">
+          <button
+            type="button"
+            className="newChat"
+            onClick={handleNewProjectClick}
+          >
             <img src={images.Chat} alt="" />새 프로젝트 시작
           </button>
 
@@ -333,38 +339,48 @@ const OrganismLeftSideBar = () => {
             <>
               <LogoutBtnWrap>
                 <div>
-                  <strong>{userName}</strong> {/* 유저 이름 표시 */}
-                  <p>{userEmail}</p> {/* 유저 이메일 표시 */}
+                  <strong>{localStorage.getItem("userName")}</strong>{" "}
+                  {/* 유저 이름 표시 */}
+                  <p>{localStorage.getItem("userEmail")}</p>{" "}
+                  {/* 유저 이메일 표시 */}
                 </div>
 
-                <button
-                  type="button"
-                  className="more"
-                  onClick={moreProfile}
-                >
+                <button type="button" className="more" onClick={moreProfile}>
                   <img src={images.AccountSetting} alt="" />
                 </button>
               </LogoutBtnWrap>
 
               <LogoutToogle isToogle={isToogle}>
                 <div className="info">
-                  <strong>{userName}</strong> {/* 유저 이름 표시 */}
-                  <p>{userEmail}</p> {/* 유저 이메일 표시 */}
+                  <strong>{localStorage.getItem("userName")}</strong>{" "}
+                  {/* 유저 이름 표시 */}
+                  <p>{localStorage.getItem("userEmail")}</p>{" "}
+                  {/* 유저 이메일 표시 */}
                 </div>
 
                 <ul>
                   <li>
-                    <button type="button" onClick={handleAccountClick}><img src={images.AccountSetting} alt="" />계정 설정</button>
+                    <button type="button" onClick={handleAccountClick}>
+                      <img src={images.AccountSetting} alt="" />
+                      계정 설정
+                    </button>
                   </li>
                   <li>
-                    <button type="button"><img src={images.AccountInfo} alt="" />정책 및 약관 정보</button>
+                    <button type="button">
+                      <img src={images.AccountInfo} alt="" />
+                      정책 및 약관 정보
+                    </button>
                   </li>
                   <li>
-                    <button type="button"><img src={images.AccountInquiry} alt="" />문의사항</button>
+                    <button type="button">
+                      <img src={images.AccountInquiry} alt="" />
+                      문의사항
+                    </button>
                   </li>
                   <li>
                     <button type="button" onClick={handleLogoutClick}>
-                      <img src={images.AccountLogout} alt="" />로그아웃
+                      <img src={images.AccountLogout} alt="" />
+                      로그아웃
                     </button>
                   </li>
                 </ul>
@@ -386,7 +402,9 @@ const OrganismLeftSideBar = () => {
 
       {isLoginPopupOpen && <MoleculeLoginPopup onClose={closeLoginPopup} />}
 
-      {isAccountPopupOpen && <MoleculeAccountPopup onClose={closeAccountPopup} />}
+      {isAccountPopupOpen && (
+        <MoleculeAccountPopup onClose={closeAccountPopup} />
+      )}
 
       {isLogoutPopup && (
         <Popup Cancel onClick={handleCloseLogoutPopup}>
@@ -475,7 +493,7 @@ const Popup = styled.div`
 
     p {
       font-size: 0.875rem;
-      font-weight:500;
+      font-weight: 500;
       margin: 20px auto 24px;
     }
 
@@ -632,14 +650,14 @@ const Logo = styled.div`
 `;
 
 const SideBar = styled.div`
-  position:sticky;
-  top:40px;
-  display:flex;
-  flex-direction:column;
-  max-width:257px;
-  width:100%;
-  height:calc(100vh - 80px);
-  padding:96px 20px 30px;
+  position: sticky;
+  top: 40px;
+  display: flex;
+  flex-direction: column;
+  max-width: 257px;
+  width: 100%;
+  height: calc(100vh - 80px);
+  padding: 96px 20px 30px;
   margin: ${(props) => (props.bgNone ? "40px 0 0 0" : "40px 0 0 40px")};
   // margin: 40px 0 0 40px;
   border-radius: 15px;
@@ -648,7 +666,7 @@ const SideBar = styled.div`
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   transition: all 0.5s;
   transform: ${(props) => (props.bgNone ? "translateX(-257px)" : "0")};
-  z-index:9999;
+  z-index: 9999;
 
   h3 {
     font-size: 1rem;
@@ -798,7 +816,7 @@ const AccordionItem = styled.div`
 
   .accordion-toggle:checked + .accordion-label + div {
     // max-height: 1000px;
-    max-height:calc(100vh - 26rem);
+    max-height: calc(100vh - 26rem);
     // margin-top:20px;
     padding: 0;
     overflow-y: auto;
@@ -854,17 +872,17 @@ const AccordionContent = styled.div`
   }
 
   li {
-    position:relative;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:10px;
-    font-family: 'Pretendard';
-    font-size:0.875rem;
-    color:${palette.gray};
-    text-align:left;
-    padding:8px 0 8px 15px;
-    cursor:pointer;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    font-family: "Pretendard";
+    font-size: 0.875rem;
+    color: ${palette.gray};
+    text-align: left;
+    padding: 8px 0 8px 15px;
+    cursor: pointer;
 
     &:before {
       position: absolute;
@@ -923,14 +941,14 @@ const ToogleMenu = styled.div`
   box-shadow: 0 4px 28px rgba(0, 0, 0, 0.05);
 
   button {
-    display:flex;
-    align-items:center;
-    gap:8px;
-    font-family: 'Pretendard';
-    font-size:0.875rem;
-    color:${palette.gray};
-    border:0;
-    background:none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: "Pretendard";
+    font-size: 0.875rem;
+    color: ${palette.gray};
+    border: 0;
+    background: none;
   }
 `;
 
@@ -946,11 +964,11 @@ const AIProfileWrap = styled.div`
   }
 
   a {
-    position:relative;
-    font-size:0.875rem;
-    text-decoration:underline;
-    padding-right:16px;
-    margin-top:20px;
+    position: relative;
+    font-size: 0.875rem;
+    text-decoration: underline;
+    padding-right: 16px;
+    margin-top: 20px;
 
     &:after {
       position: absolute;
@@ -1029,11 +1047,11 @@ const AIProfile = styled.div`
     }
 
     span {
-      font-size:0.875rem;
-      padding:8px 16px;
-      border-radius:25px;
-      border:1px solid ${palette.lineGray};
-      background:${palette.white};
+      font-size: 0.875rem;
+      padding: 8px 16px;
+      border-radius: 25px;
+      border: 1px solid ${palette.lineGray};
+      background: ${palette.white};
     }
   }
 `;
@@ -1118,7 +1136,7 @@ const LogoutBtnWrap = styled.div`
   border: 1px solid ${palette.lineGray};
 
   > div {
-    width:85%;
+    width: 85%;
     flex-direction: column;
     gap: 4px;
     font-size: 0.75rem;
@@ -1130,11 +1148,11 @@ const LogoutBtnWrap = styled.div`
     }
 
     p {
-      overflow:hidden;
-      text-overflow:ellipsis;
-      white-space:nowrap;
-      text-align:left;
-      width:100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: left;
+      width: 100%;
     }
   }
 
@@ -1143,7 +1161,7 @@ const LogoutBtnWrap = styled.div`
     height: 15px;
     padding: 0;
     border: 0;
-    flex-shrink:0;
+    flex-shrink: 0;
     // background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M8.86724 2.23147L8.51621 1.47925C8.30624 1.02933 7.66602 1.03062 7.45787 1.48139L7.10987 2.23502C6.67141 3.18455 5.57856 3.63981 4.59565 3.28238L3.81553 2.9987C3.34892 2.82902 2.89712 3.28264 3.06868 3.74857L3.3555 4.52753C3.71689 5.509 3.26604 6.60367 2.31828 7.04596L1.56606 7.39699C1.11613 7.60695 1.11742 8.24718 1.56819 8.45533L2.32182 8.80333C3.27136 9.24179 3.72661 10.3346 3.36918 11.3175L3.0855 12.0977C2.91582 12.5643 3.36945 13.0161 3.83537 12.8445L4.61434 12.5577C5.5958 12.1963 6.69047 12.6472 7.13276 13.5949L7.48379 14.3471C7.69376 14.7971 8.33398 14.7958 8.54213 14.345L8.89013 13.5914C9.32859 12.6418 10.4214 12.1866 11.4044 12.544L12.1845 12.8277C12.6511 12.9974 13.1029 12.5437 12.9313 12.0778L12.6445 11.2989C12.2831 10.3174 12.734 9.22272 13.6817 8.78044L14.4339 8.4294C14.8839 8.21944 14.8826 7.57921 14.4318 7.37106L13.6782 7.02307C12.7286 6.5846 12.2734 5.49175 12.6308 4.50884L12.9145 3.72873C13.0842 3.26212 12.6306 2.81032 12.1646 2.98188L11.3857 3.2687C10.4042 3.63008 9.30953 3.17923 8.86724 2.23147ZM9.16348 1.1772C8.69645 0.176413 7.27237 0.179282 6.80938 1.18194L6.46138 1.93557C6.17858 2.548 5.47371 2.84163 4.83975 2.6111L4.05963 2.32742C3.02174 1.95 2.01679 2.959 2.39839 3.99537L2.68521 4.77434C2.9183 5.40737 2.62751 6.11341 2.01622 6.39868L1.264 6.74971C0.263217 7.21674 0.266087 8.64082 1.26874 9.10381L2.02237 9.45181C2.63481 9.73461 2.92844 10.4395 2.6979 11.0734L2.41422 11.8536C2.0368 12.8915 3.04581 13.8964 4.08218 13.5148L4.86114 13.228C5.49417 12.9949 6.20022 13.2857 6.48549 13.897L6.83652 14.6492C7.30355 15.65 8.72763 15.6471 9.19062 14.6445L9.53862 13.8908C9.82142 13.2784 10.5263 12.9848 11.1603 13.2153L11.9404 13.499C12.9783 13.8764 13.9832 12.8674 13.6016 11.831L13.3148 11.0521C13.0817 10.419 13.3725 9.71298 13.9838 9.42771L14.736 9.07668C15.7368 8.60965 15.7339 7.18557 14.7313 6.72258L13.9776 6.37458C13.3652 6.09178 13.0716 5.38691 13.3021 4.75295L13.5858 3.97283C13.9632 2.93493 12.9542 1.92998 11.9178 2.31158L11.1389 2.59841C10.5058 2.83149 9.79978 2.5407 9.51452 1.92941L9.16348 1.1772Z' fill='%238C8C8C'/%3E%3Cpath d='M10.7611 7.91279C10.7611 9.43735 9.52524 10.6732 8.00068 10.6732C6.47613 10.6732 5.24023 9.43735 5.24023 7.91279C5.24023 6.38824 6.47613 5.15234 8.00068 5.15234C9.52524 5.15234 10.7611 6.38824 10.7611 7.91279Z' fill='white'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M8.00068 9.95896C9.13075 9.95896 10.0468 9.04286 10.0468 7.91279C10.0468 6.78273 9.13075 5.86663 8.00068 5.86663C6.87062 5.86663 5.95452 6.78273 5.95452 7.91279C5.95452 9.04286 6.87062 9.95896 8.00068 9.95896ZM8.00068 10.6732C9.52524 10.6732 10.7611 9.43735 10.7611 7.91279C10.7611 6.38824 9.52524 5.15234 8.00068 5.15234C6.47613 5.15234 5.24023 6.38824 5.24023 7.91279C5.24023 9.43735 6.47613 10.6732 8.00068 10.6732Z' fill='%238C8C8C'/%3E%3C/svg%3E")
     //   center no-repeat !important;
   }
@@ -1164,8 +1182,8 @@ const LogoutToogle = styled.div`
   visibility: ${(props) => (props.isToogle ? "hidden" : "visible")};
   opacity: ${(props) => (props.isToogle ? "0" : "1")};
   // transition: max-height 0.5s ease, padding 0.5s ease;
-  transform:translateX(260px);
-  transition:all .5s;
+  transform: translateX(260px);
+  transition: all 0.5s;
 
   .info {
     font-size: 0.75rem;
@@ -1185,25 +1203,25 @@ const LogoutToogle = styled.div`
     display: block;
     width: 100%;
     text-align: left;
-    word-wrap:break-word;
-    word-break:break-word;
+    word-wrap: break-word;
+    word-break: break-word;
   }
 
   li {
-    font-size:0.875rem;
-    display:flex;
-    align-items:center;
-    justify-content:flex-start;
-    gap:8px;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
 
     + li {
       margin-top: 20px;
     }
 
     button {
-      display:flex;
-      align-items:center;
-      gap:8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
       padding: 0;
       border: 0;
       background: none;

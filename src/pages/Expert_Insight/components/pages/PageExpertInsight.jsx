@@ -276,17 +276,17 @@ const PageExpertInsight = () => {
                 { type: 'system', message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻` },
                 { type: 'analysis', businessInfo },  // 입력된 비즈니스 정보를 분석
             );
-            if(approachPath === 1) {
-              updatedConversation.push(
-                { type: 'system', message: '비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 지금 바로 전략 보고서를 준비해드려요.' },
-                { type: 'report_button'},
-              );
-            }
-            else {
-              updatedConversation.push(
-                { type: 'system', message: '비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 전문가들의 의견을 확인하여 아이디어를 한 단계 더 발전시켜 보세요 🔍' },
-              );
-            }
+            // if(approachPath === 1) {
+            //   updatedConversation.push(
+            //     { type: 'system', message: '비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 지금 바로 전략 보고서를 준비해드려요.' },
+            //     { type: 'report_button'},
+            //   );
+            // }
+            // else {
+            //   updatedConversation.push(
+            //     { type: 'system', message: '비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 전문가들의 의견을 확인하여 아이디어를 한 단계 더 발전시켜 보세요 🔍' },
+            //   );
+            // }
             newConversationStage = 2;
         } else if (!inputBusinessInfo && approachPath === 1) {
           // inputBusinessInfo가 비어 있고, 검색을 통해 접근하지 않은 경우 전문가 인덱스에 따라 메시지 추가
@@ -325,8 +325,8 @@ const PageExpertInsight = () => {
         }
         updatedConversation.push(
           { type: `strategy_${selectedExpertIndex}` },
-          { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊'},
-          { type: `keyword` },
+          // { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊'},
+          // { type: `keyword` },
         );
       newConversationStage = 3;
     } else if (conversationStage === 3) {
@@ -346,8 +346,8 @@ const PageExpertInsight = () => {
       updatedConversation.push(
         { type: 'user', message: `제 프로젝트와 관련된 "${selectedAdditionalKeyword[selectedAdditionalKeyword.length-1]}"를 요청드려요` },
         { type: `addition_${selectedExpertIndex}` },
-        { type: 'system', message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${selectedAdditionalKeyword[selectedAdditionalKeyword.length-1]}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻` },
-        { type: `keyword` },
+        // { type: 'system', message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${selectedAdditionalKeyword[selectedAdditionalKeyword.length-1]}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻` },
+        // { type: `keyword` },
       );
 
       setAdditionalReportCount(additionalReportCount + 1);
@@ -370,26 +370,6 @@ const PageExpertInsight = () => {
         return '비즈니스(아이디어)를 입력해주세요.';
     }
   };
-
-  // 추가 질문 입력 API
-  // const fetchInputAdditionalQuestion = async ({ input }) => {
-  //   console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
-  //   try {
-  //   const response = await axios.get(
-  //     `${process.env.REACT_APP_SERVER_URL}/${input}`
-  //   );
-  //   console.log(response);
-  //   setInputAdditionalQuestion(response.data);
-
-  //   if(selectedExpertIndex === 1) setSelectedAdditionalKeyword1(inputAdditionalQuestion);
-  //   else if(selectedExpertIndex === 2) setSelectedAdditionalKeyword2(inputAdditionalQuestion);
-  //   else setSelectedAdditionalKeyword3(inputAdditionalQuestion);
-
-  //   } catch (error) {
-  //     console.error("Error fetching ...:", error);
-  //   } finally {
-  //   }
-  // }; 
 
   return (
     <>
