@@ -20,6 +20,8 @@ const OrganismLeftSideBar = () => {
   const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 관리
   const [isLoginPopupOpen, setLoginPopupOpen] = useState(false); // 로그인 팝업 상태 관리
 
+  const [isLogoutPopup, setIsLogoutPopup] = useState(false);
+
   useEffect(() => {
     // IndexedDB에서 저장된 모든 대화 내역 가져오기
     const loadConversations = async () => {
@@ -45,6 +47,7 @@ const OrganismLeftSideBar = () => {
   const handleLogout = () => {
     // 로그아웃 시 처리
     setIsLoggedIn(false);
+    setIsLogoutPopup(true);
     navigate('/PageMeetAiExpert');
   };
 
@@ -191,11 +194,147 @@ const OrganismLeftSideBar = () => {
       </SideBar>
 
       {isLoginPopupOpen && <MoleculeLoginPopup onClose={closeLoginPopup} />}
+
+      
+      {isLogoutPopup && (
+        <Popup Cancel>
+          <div>
+            <button type="button" className="closePopup" onClick={handleLogout}>닫기</button>
+            <span><img src={images.CheckMark} alt="" /></span>
+            <p>정말 로그아웃하시겠습니까?</p>
+            <div className="btnWrap">
+              <button type="button" onClick={handleLogout}>확인</button>
+            </div>
+          </div>
+        </Popup>
+      )}
+
     </>
   );
 };
 
 export default OrganismLeftSideBar;
+
+const Popup = styled.div`
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,.5);
+  transition:all .5s;
+  z-index:9999;
+
+  .closePopup {
+    position:absolute;
+    right:24px;
+    top:24px;
+    width:16px;
+    height:16px;
+    font-size:0;
+    padding:11px;
+    border:0;
+    background:none;
+
+    &:before, &:after {
+      position:absolute;
+      top:50%;
+      left:50%;
+      width:2px;
+      height:100%;
+      border-radius:10px;
+      background:${palette.black};
+      content:'';
+    }
+
+    &:before {
+      transform:translate(-50%, -50%) rotate(45deg);
+    }
+
+    &:after {
+      transform:translate(-50%, -50%) rotate(-45deg);
+    }
+  }
+
+  > div {
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    display:flex;
+    flex-direction:column;
+    width:100%;
+    max-width:540px;
+    text-align:center;
+    // overflow:hidden;
+    padding:60px 24px 24px;
+    border-radius:10px;
+    background:${palette.white};
+
+    p {
+      font-size:1.25rem;
+      margin:30px auto 40px;
+  }
+
+  .btnWrap {
+    display:flex;
+    align-items:center;
+    gap:16px;
+
+    button {
+      flex:1;
+      font-size:1.25rem;
+      font-weight:600;
+      color:${palette.blue};
+      padding:15px;
+      border-radius:12px;
+      border:1px solid ${palette.blue};
+      background:${palette.white};
+
+      &:last-child {
+        color:${palette.white};
+        background:${palette.blue};
+      }
+    }
+  }
+
+  
+  ${props =>
+    props.Cancel &&
+    css`
+      p {
+        strong {
+          font-weight:600;
+          display:block;
+        }
+        span {
+          font-size:1rem;
+          display:block;
+          margin-top:8px;
+        }
+      }
+
+      .btnWrap {
+        padding-top:25px;
+        border-top:1px solid ${palette.lineGray};
+
+        button {
+          color:${palette.gray};
+          font-weight:600;
+          padding:0;
+          border:0;
+          background:none;
+
+          &:last-child {
+            color:${palette.blue};
+            background:none;
+          }
+        }
+      }
+    `
+  }
+
+`;
 
 const AuthButtons = styled.div`
   margin-top: auto;
