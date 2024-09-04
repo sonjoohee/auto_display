@@ -95,17 +95,17 @@ const PageMeetAiExpert = () => {
             <h2><img src={images.Chat} alt="" />AI 전문가 선택해서 시작하기</h2>
 
             <ExpertSelectBox>
-              <ExpertCard onClick={() => handledExpertSelect(1)}>
+              <ExpertCard onClick={() => {setButtonState(1); handledExpertSelect(1);}}>
                 <span><img src={images.IconChat} alt="" /></span>
                 <p>가볍게 시작하는 내 비즈니스 전략 팁</p>
                 <strong>전략 디렉터와 1:1 커피챗</strong>
               </ExpertCard>
-              <ExpertCard onClick={() => handledExpertSelect(2)}>
+              <ExpertCard onClick={() => {setButtonState(1); handledExpertSelect(2);}}>
                 <span><img src={images.IconWrite} alt="" /></span>
                 <p>지금 바로 쓸 수 있는 브랜딩 솔루션</p>
                 <strong>10초 맞춤 제안서 받기</strong>
               </ExpertCard>
-              <ExpertCard onClick={() => handledExpertSelect(3)}>
+              <ExpertCard onClick={() => {setButtonState(1); handledExpertSelect(3);}}>
                 <span><img src={images.IconTarget2} alt="" /></span>
                 <p>고객 데이터 전문가의 맞춤 타겟 추천</p>
                 <strong>당장 만나야할 고객은?</strong>
