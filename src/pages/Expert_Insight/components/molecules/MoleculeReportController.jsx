@@ -147,6 +147,15 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
     setTemptBusinessInformationTargetCustomer(businessInformationTargetCustomer);
   };
 
+  const regenerateReport = async () => {
+    if (!isLoggedIn) {
+      // 로그인 상태가 아닐 경우 팝업을 띄움
+      setIsPopupOpen(true); // 팝업 열기
+      return; // 로그인 상태가 아닐 경우 함수를 종료
+    }
+    alert("재생성되었습니다.");
+  }
+
   const saveReport = async () => {
     if (!isLoggedIn) {
       // 로그인 상태가 아닐 경우 팝업을 띄움
@@ -348,7 +357,7 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
                     아이디어 설명 다시 하기
                   </button>
                   <div>
-                    <button type="button" onClick={togglePopup}>
+                    <button type="button" onClick={regenerateReport}>
                       <img src={images.IconRefresh} alt="" />
                       재생성하기
                     </button>
@@ -388,7 +397,7 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
           <div />
           <div>
             {selectedAdditionalKeyword.length === 0 && 
-              <button type="button" onClick={togglePopup}>
+              <button type="button" onClick={regenerateReport}>
                 <img src={images.IconRefresh} alt="" />
                 재생성하기
               </button>
