@@ -54,7 +54,13 @@ const OrganismLeftSideBar = () => {
   const handleLogoutConfirm = () => {
     // 로그아웃 확인 버튼을 눌렀을 때 실행
     sessionStorage.removeItem('accessToken'); // 세션 스토리지에서 토큰 삭제
+    sessionStorage.removeItem('userName');
+    sessionStorage.removeItem('userEmail');
+
     setIsLoggedIn(false); // 로그아웃 상태로 전환
+    setUserName('');
+    setUserEmail('');
+    
     setIsLogoutPopup(false); // 로그아웃 팝업 닫기
     navigate("/PageMeetAiExpert"); // 페이지 이동
   };
