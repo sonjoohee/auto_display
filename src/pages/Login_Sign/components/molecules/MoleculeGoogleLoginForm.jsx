@@ -53,7 +53,7 @@ export default MoleculeGoogleLoginForm;
 const GoogleLoginForm = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 52px;
 `;
 
 const LoginButton = styled.button`

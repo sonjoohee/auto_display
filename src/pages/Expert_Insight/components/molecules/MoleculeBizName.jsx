@@ -45,7 +45,7 @@ const BizNameContainer = styled.div`
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding: 20px;
+  padding:16px 20px;
   margin-bottom:47px;
   text-align: center;
   border-radius:15px;
@@ -120,4 +120,53 @@ const Badge = styled.div`
   padding:2px 6px;
   border-radius:10px;
   background:#E2E8FE;
+`;
+
+const AutosavePopup = styled.div`
+  position:absolute;
+  right:-70px;
+  top:77px;
+  max-width:304px;
+  flex-direction:column;
+  gap:20px !important;
+  text-align:left;
+  padding:24px;
+  border-radius:20px;
+  background:${palette.white};
+  box-shadow:0 4px 20px rgba(0,0,0,.2);
+
+  &:before {
+    position:absolute;
+    top:-12px;
+    left:50%;
+    transform:translateX(-50%);
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0px 20px 12px 20px;
+    border-color: transparent transparent ${palette.white} transparent;
+    filter:drop-shadow(0 4px 20px rgba(0,0,0,.2));
+    content:'';
+    zindex:0;
+  }
+
+  strong {
+    font-size:0.75rem;
+    font-weight:700;
+    color:${palette.gray};
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    width:100%;
+  }
+
+  span {
+    font-size:0.63rem;
+    font-weight:300;
+  }
+
+  p {
+    font-size:0.75rem;
+    line-height:1.5;
+  }
 `;

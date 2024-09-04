@@ -37,15 +37,18 @@ export default OrganismSearchBottomBar;
 
 
 const BottomBar = styled.div`
-  position: fixed;
+  position: sticky;
   bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
+  left:0;
+  // left: 50%;
+  // transform: translateX(-50%);
   width:100%;
   max-width:1240px;
   color: white;
   display: flex;
   flex-direction:column;
+  flex-basis: 100% !important;
+  margin:0 20px;
   z-index: 1000;
 
   > p {

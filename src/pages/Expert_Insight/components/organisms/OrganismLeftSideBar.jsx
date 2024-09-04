@@ -5,9 +5,8 @@ import images from '../../../../assets/styles/Images';
 import panelimages from '../../../../assets/styles/PanelImages';
 import { Link, useNavigate } from "react-router-dom";
 import { useAtom } from 'jotai';
-import { INPUT_BUSINESS_INFO, SAVED_REPORTS } from '../../../AtomStates';
+import { INPUT_BUSINESS_INFO, SAVED_REPORTS, isLoggedInAtom } from '../../../AtomStates';
 import { getAllConversationsFromIndexedDB } from '../../../../utils/indexedDB'; // IndexedDB에서 대화 내역 가져오기
-import { isLoggedInAtom } from '../../../AtomStates'; // isLoggedInAtom 임포트
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
 
 import OrganismReportPopup from './OrganismReportPopup'; // 팝업 컴포넌트 임포트
@@ -86,6 +85,11 @@ const OrganismLeftSideBar = () => {
     setIsOpen(!isOpen);
   };
 
+
+
+
+
+
   return (
     <>
       <Logo isOpen={isOpen}>
@@ -157,7 +161,7 @@ const OrganismLeftSideBar = () => {
             </AccordionItem>
           </AccordionMenu>
 
-          <AuthButtons>
+          {/* <AuthButtons>
             {isLoggedIn ? (
               <button onClick={handleLogout}>로그아웃</button>
             ) : (
@@ -166,8 +170,24 @@ const OrganismLeftSideBar = () => {
                 <Link to="/signup">회원가입</Link>
               </>
             )}
-          </AuthButtons>
+          </AuthButtons> */}
         </SideBarMenu>
+
+        <LoginButtonWrap>
+          {isLoggedIn ? (
+            <button onClick={handleLogout}>로그아웃</button>
+          ) : (
+            <>
+              <button onClick={handleLoginClick}>로그인</button>
+              {/* <Link to="/signup">회원가입</Link> */}
+            </>
+          )}
+
+          <div>
+            <Link to="#">이용약관</Link>
+            <Link to="#">개인정보처리방침</Link>
+          </div>
+        </LoginButtonWrap>
       </SideBar>
 
       {isLoginPopupOpen && <MoleculeLoginPopup onClose={closeLoginPopup} />}
@@ -662,6 +682,43 @@ const IdeaWrap = styled.div`
 
     svg {
       flex-shrink:0;
+    }
+  }
+`;
+
+const LoginButtonWrap = styled.div`
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  margin-top:auto;
+
+  button {
+    font-family: 'Pretendard';
+    color:${palette.gray};
+    padding:12px 16px;
+    border-radius:10px;
+    border:1px solid ${palette.lineGray};
+    background:${palette.white};
+  }
+
+  div {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+
+    a {
+      font-size:0.75rem;
+      color:${palette.gray};
+
+      &:last-child:before {
+        width:1px;
+        height:8px;
+        display:inline-block;
+        margin-right:10px;
+        background:${palette.lineGray};
+        content:'';
+      }
     }
   }
 `;

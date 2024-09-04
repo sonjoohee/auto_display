@@ -4,6 +4,7 @@ import { useAtom } from 'jotai';
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
 import { InputField } from '../../../../assets/styles/Input';
+import { SkeletonH1, SkeletonTitle, SkeletonLine } from '../../../../assets/styles/Skeleton';
 import MoleculeReportController from '../molecules/MoleculeReportController';
 import businessTemplate from './sample_analyse.json'; // JSON 파일 불러오기
 import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
@@ -244,19 +245,19 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
     <AnalysisSection>
       {isLoading ? (
         <>
-          <TitlePlaceholder className="title-placeholder" />
-          <ContentPlaceholder className="content-placeholder" />
-          <ContentPlaceholder className="content-placeholder" />
+          <SkeletonTitle className="title-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <SkeletonLine className="content-placeholder" />
           <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
 
-          <TitlePlaceholder className="title-placeholder" />
-          <ContentPlaceholder className="content-placeholder" />
-          <ContentPlaceholder className="content-placeholder" />
+          <SkeletonTitle className="title-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <SkeletonLine className="content-placeholder" />
           <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
 
-          <TitlePlaceholder className="title-placeholder" />
-          <ContentPlaceholder className="content-placeholder" />
-          <ContentPlaceholder className="content-placeholder" />
+          <SkeletonTitle className="title-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <SkeletonLine className="content-placeholder" />
         </>
       ) : (
         <>
@@ -706,14 +707,15 @@ const BoxWrap = styled.div`
     padding-left: 10px;
 
     &:before {
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 5px;
-      height: 1px;
-      background: ${palette.black};
-      content: '';
+      position:absolute;
+      left:0;
+      top:10px;
+      // top:50%;
+      // transform:translateY(-50%);
+      width:5px;
+      height:1px;
+      background:${palette.darkGray};
+      content:'';
     }
 
     + li {
@@ -730,7 +732,9 @@ const BoxWrap = styled.div`
   }
 
   p {
-    font-size: 0.88rem;
+    font-size:0.88rem;
+    color:${palette.darkGray};
+    line-height:1.5;
   }
 
   button {

@@ -11,6 +11,8 @@ import {
 } from '../../../AtomStates';
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
+import { SkeletonTitle, SkeletonLine } from '../../../../assets/styles/Skeleton';
+
 import MoleculeReportController from '../molecules/MoleculeReportController';
 import sampleData1 from './sample1.json';
 import sampleData2 from './sample2.json';
@@ -235,9 +237,9 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   
         {isLoading ? (
           <>
-            <TitlePlaceholder className="title-placeholder" />
-            <ContentPlaceholder className="content-placeholder" />
-            <ContentPlaceholder className="content-placeholder" />
+            <SkeletonTitle className="title-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+            <SkeletonLine className="content-placeholder" />
             <Spacing />
           </>
         ) : (
@@ -247,9 +249,9 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             ))
           ) : (
             <>
-              <TitlePlaceholder className="title-placeholder" />
-              <ContentPlaceholder className="content-placeholder" />
-              <ContentPlaceholder className="content-placeholder" />
+              <SkeletonTitle className="title-placeholder" />
+              <SkeletonLine className="content-placeholder" />
+              <SkeletonLine className="content-placeholder" />
               <Spacing />
             </>
           )
@@ -401,7 +403,9 @@ const BoxWrap = styled.div`
 
   p {
     font-size:0.88rem;
-    margin-bottom:10px;
+    color:${palette.darkGray};
+    line-height:1.5;
+    // margin-bottom:10px;
   }
 `;
 

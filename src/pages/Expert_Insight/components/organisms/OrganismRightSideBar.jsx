@@ -69,7 +69,11 @@ const OrganismRightSideBar = () => {
               </div>
             </AIProfile>
 
-            <button type="button" onClick={moreProfile}>상세 정보 확인하기</button>
+            <button type="button" onClick={moreProfile}>
+              {isOpen ? '상세 정보 확인하기' : '접기'}
+            </button>
+
+            <p isOpen={isOpen}>본 전문가는 가상으로 제작된 인물입니다.</p>
           </div>
         </AIProfileWrap>
       </SideBar>
@@ -106,10 +110,7 @@ const SideBar = styled.div`
     if (props.Right) return `none`;
     else return `1px solid ${palette.lineGray}`;
   }};
-  background:${props => {
-    if (props.Right) return palette.white;
-    else return `rgba(0,0,0,.02)`;
-  }};
+  background:none;
 
   box-shadow:${props => {
     if (props.Right) return `none`;
@@ -188,12 +189,13 @@ const AIProfileWrap = styled.div`
   button {
     position:relative;
     width:100%;
+    font-family: 'Pretendard';
     font-size:0.75rem;
     color:${palette.gray};
     // text-decoration:underline;
     // padding-right:16px;
     padding:8px 16px;
-    margin-top:25px;
+    margin-top:9px;
     border-radius:10px;
     border:1px solid ${palette.lineGray};
     background:${palette.white};
@@ -209,6 +211,12 @@ const AIProfileWrap = styled.div`
       border-right:2px solid ${palette.black};
       // content:'';
     }
+  }
+
+  p {
+    font-size:0.63rem;
+    color:${palette.gray};
+    margin-top:8px;
   }
 `;
 
@@ -274,7 +282,7 @@ const AIProfile = styled.div`
     display:flex;
     flex-direction:column;
     width:100%;
-    margin:20px auto 0;
+    margin:4px auto 0;
     padding-top:20px;
     border-top:1px solid ${palette.lineGray};
 
@@ -343,6 +351,7 @@ const FieldUl = styled.ul`
   display:flex;
   flex-direction:column;
   padding:0 8px;
+  margin-bottom: ${(props) => (props.isOpen ? "0" : "16px")};
   overflow:hidden;
   transition: max-height 0.5s ease, padding 0.5s ease;
 

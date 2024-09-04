@@ -663,9 +663,9 @@ const PageExpertInsight = () => {
           </div>
 
           <OrganismRightSideBar />
+          <OrganismSearchBottomBar onSearch={handleSearch} />
         </MainContent>
       </ContentsWrap>
-      <OrganismSearchBottomBar onSearch={handleSearch} />
     </>
   );
 };
@@ -678,17 +678,23 @@ const MainContent = styled.div`
   grid-area: content;
   display:flex;
   flex-direction:row;
-  gap:40px;
+  flex-wrap:wrap;
+  // gap:40px;
   min-width: 1px;
   max-width:1484px;
   width:calc(100% - 40px);
-  padding-bottom: 150px;
+  // padding-bottom: 150px;
   margin: 0 auto;
+
+  > div {
+    flex:1;
+  }
 
   > div:first-child {
     max-width:1240px;
     width:100%;
-    margin:0 40px;
+    margin:0 20px;
+    padding-bottom: 60px;
   }
 `;
 
