@@ -43,9 +43,24 @@ export const saveConversationToIndexedDB = async (conversation, isLoggedIn) => {
   if (isLoggedIn) {
     // 사용자 로그인 시 서버에 저장
     try {
+      const token = sessionStorage.getItem('accessToken'); // 액세스 토큰을 세션에서 가져오기
+      console.log("token")
+      console.log(token)
+
+      if (!token) {
+        throw new Error("액세스 토큰이 존재하지 않습니다.");
+      }
+
       await axios.post(
         "https://wishresearch.kr/panels/create_chat",
-        conversation
+        conversation,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Bearer 토큰을 헤더에 추가
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true // 쿠키와 함께 자격 증명을 전달 (optional)
+        }
       );
     } catch (error) {
       console.error("Error saving conversation to server:", error);
@@ -63,6 +78,7 @@ export const saveConversationToIndexedDB = async (conversation, isLoggedIn) => {
     });
   }
 };
+
 
 export const getConversationByIdFromIndexedDB = async (id, isLoggedIn) => {
   if (isLoggedIn) {

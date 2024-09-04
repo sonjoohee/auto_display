@@ -75,7 +75,7 @@ const MoleculeReportController = ({
     setTempBusinessInformationTargetCustomer,
   ] = useAtom(TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 관리
-
+  const token = sessionStorage.getItem('accessToken');
   const [savedReports, setSavedReports] = useAtom(SAVED_REPORTS);
   const [bizAnalysisReportIndex, setBizAnalysisReportIndex] = useState(0);
   const [newAddContent, setNewAddContent] = useState("");
@@ -210,10 +210,11 @@ const MoleculeReportController = ({
       setIsPopupOpen(true); // 팝업 열기
       return; // 로그인 상태가 아닐 경우 함수를 종료
     }
+  
     setIsPopupSave(true); // 저장 팝업 열기
-
+  
     let reportData;
-
+  
     if (reportIndex === 0) {
       // 비즈니스 분석 리포트 데이터 저장 (이 부분은 기존 로직을 유지합니다)
       reportData = {
@@ -228,42 +229,80 @@ const MoleculeReportController = ({
     } else if (reportIndex === 2) {
       reportData = sampleData;
     }
-
-    // 기존 리포트에 새로운 리포트 추가
-    setSavedReports((prevReports) => [
-      ...prevReports,
-      {
-        title: titleOfBusinessInfo,
+  
+    // API에 저장 요청
+    try {
+      const accessToken = sessionStorage.getItem('accessToken'); // 저장된 토큰을 가져옴
+      const config = {
+        headers: {
+          Authorization: `Bearer ${accessToken}`, // 토큰을 헤더에 포함
+          'Content-Type': 'application/json',
+        },
+      };
+  
+      const postData = {
+        title: reportData.title,
         date: new Date().toLocaleDateString(),
         content: reportData,
-        reportIndex: reportIndex, // reportIndex를 추가하여 저장
-      },
-    ]);
-
-    // 기존 대화 내역에 리포트 데이터 추가
-    const existingConversation = await getConversationByIdFromIndexedDB(
-      conversationId
-    );
-    const updatedConversation = {
-      ...existingConversation,
-      analysisReportData:
-        reportIndex === 0
-          ? reportData
-          : existingConversation.analysisReportData,
-      strategyReportData:
-        reportIndex === 1
-          ? reportData
-          : existingConversation.strategyReportData,
-      additionalReportData:
-        reportIndex === 2
-          ? reportData
-          : existingConversation.additionalReportData,
-      timestamp: Date.now(),
-    };
-
-    await saveConversationToIndexedDB(updatedConversation);
+        reportIndex: reportIndex, // 보고서 인덱스를 추가하여 저장
+      };
+  
+      // API로 보고서 저장 요청
+      const response = await axios.post(
+        'https://wishresearch.kr/panels/insight',
+        postData,  // 요청 본문에 보낼 데이터
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,  // Bearer 토큰을 헤더에 추가
+            'Content-Type': 'application/json',  // 필요에 따라 Content-Type 설정
+          },
+          withCredentials: true,  // 쿠키와 함께 자격 증명을 전달 (optional)
+        }
+      );
+      
+      if (response.status === 200) {
+        // 성공적으로 저장된 경우 savedReports 아톰 업데이트
+        setSavedReports((prevReports) => [
+          ...prevReports,
+          {
+            title: reportData.title,
+            date: new Date().toLocaleDateString(),
+            content: reportData,
+            reportIndex: reportIndex, // reportIndex를 추가하여 저장
+          },
+        ]);
+  
+        // 기존 대화 내역에 리포트 데이터 추가
+        const existingConversation = await getConversationByIdFromIndexedDB(
+          conversationId
+        );
+  
+        const updatedConversation = {
+          ...existingConversation,
+          analysisReportData:
+            reportIndex === 0
+              ? reportData
+              : existingConversation.analysisReportData,
+          strategyReportData:
+            reportIndex === 1
+              ? reportData
+              : existingConversation.strategyReportData,
+          additionalReportData:
+            reportIndex === 2
+              ? reportData
+              : existingConversation.additionalReportData,
+          timestamp: Date.now(),
+        };
+  
+        await saveConversationToIndexedDB(updatedConversation);
+      } else {
+        console.error("API 응답 에러", response.status);
+      }
+    } catch (error) {
+      console.error("API 요청 실패", error);
+    }
   };
-
+  
   const toogleCopy = () => {
     let contentToCopy = ``;
 
