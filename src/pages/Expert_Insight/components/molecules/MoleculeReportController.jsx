@@ -64,17 +64,18 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
   const [expert3ReprotData, setExpert3ReportData] = useAtom(EXPERT3_REPORT_DATA);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isPopupOpenCancel, setIsPopupOpenCancel] = useState(false);
-  const [isPopupCopy, setIsPopupCopy] = useState(false);
-  const [isPopupSave, setIsPopupSave] = useState(false);
-
-  
   const [clickState, setClickState] = useState(false);
+
+  const [isPopupSave, setIsPopupSave] = useState(false);
 
   const [approachPath] = useAtom(APPROACH_PATH);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [isLoginPopupOpen, setLoginPopupOpen] = useState(false); // 로그인 팝업 상태 관리
+
+  const [isPopupCopy, setIsPopupCopy] = useState(false);
+
   const navigate = useNavigate();
 
   const handleSignupClick = () => {
@@ -91,21 +92,12 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
       setIsPopupOpen(!isPopupOpen);
     }
   };
-  
-
-  const toogleCopy = () => {
-    if (clickState == false) {
-      setIsPopupCopy(!isPopupCopy);
-    }
+    const closePopupCopy = () => {
+      setIsPopupCopy(false); // 팝업 닫기
   };
-
-  const toogleSave = () => {
-    if (clickState == false) {
-      setIsPopupSave(!isPopupSave);
-    }
+  const closePopupSave = () => {
+    setIsPopupSave(false); // 팝업 닫기
   };
-
-
 
   const togglePopupCancel = () => {
     if (clickState == false) {
@@ -181,12 +173,13 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
   }
 
   const saveReport = async () => {
+//   const toogleSave = async () => {
     if (!isLoggedIn) {
       // 로그인 상태가 아닐 경우 팝업을 띄움
       setIsPopupOpen(true); // 팝업 열기
       return; // 로그인 상태가 아닐 경우 함수를 종료
     }
-    alert("저장되었습니다.");
+    setIsPopupSave(true); // 저장 팝업 열기
 
     let reportData;
 
@@ -229,7 +222,7 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
     await saveConversationToIndexedDB(updatedConversation);
   };
 
-  const handleCopyContent = () => {
+  const toogleCopy = () => {
     let contentToCopy = ``
 
     const getSelectedTabData = (selectedTab) => {
@@ -315,7 +308,7 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
 
     navigator.clipboard.writeText(contentToCopy.trim())
       .then(() => {
-        // alert("복사가 완료되었습니다.");
+        setIsPopupCopy(true); // 복사 팝업 열기
       })
       .catch(error => {
         console.error("복사 실패?", error);
@@ -362,12 +355,10 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
             <ButtonWrap>
               <div />
               <div>
-                {/* <button type="button" onClick={handleCopyContent}> */}
                 <button type="button" onClick={toogleCopy}>
                   <img src={images.IconCopy} alt="" />
                   복사하기
                 </button>
-                {/* <button type="button" onClick={saveReport}> */}
                 <button type="button" onClick={toogleSave}>
                   <img src={images.IconSave} alt="" />
                   저장하기
@@ -383,7 +374,7 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
                     아이디어 설명 다시 하기
                   </button>
                   <div>
-                    <button type="button" onClick={regenerateReport}>
+                    <button type="button" onClick={handleRetryIdea}>
                       <img src={images.IconRefresh} alt="" />
                       재생성하기
                     </button>
@@ -391,12 +382,10 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
                       <img src={images.IconEdit} alt="" />
                       수정하기
                     </button>
-                    {/* <button type="button" onClick={handleCopyContent}> */}
                     <button type="button" onClick={toogleCopy}>
                       <img src={images.IconCopy} alt="" />
                       복사하기
                     </button>
-                    {/* <button type="button" onClick={saveReport}> */}
                     <button type="button" onClick={toogleSave}>
                       <img src={images.IconSave} alt="" />
                       저장하기
@@ -425,17 +414,16 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
           <div />
           <div>
             {selectedAdditionalKeyword.length === 0 && 
-              <button type="button" onClick={regenerateReport}>
+              <button type="button" onClick={handleRetryIdea}>
                 <img src={images.IconRefresh} alt="" />
                 재생성하기
               </button>
             }
-            <button type="button" onClick={handleCopyContent}>
+            <button type="button" onClick={toogleCopy}>
               <img src={images.IconCopy} alt="" />
               복사하기
             </button>
-            {/* <button type="button" onClick={saveReport}> */}
-            <button type="button" onClick={togglePopup}>
+            <button type="button" onClick={toogleSave}>
               <img src={images.IconSave} alt="" />
               저장하기
             </button>
@@ -464,82 +452,6 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
         </Popup>
       )}
 
-      {isPopupCopy && (
-        <Popup Cancel
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              toogleCopy();
-            }
-          }}
-        >
-          <div>
-            <button type="button" className="closePopup" onClick={toogleCopy}>닫기</button>
-            <span><img src={images.CheckMark} alt="" /></span>
-            <p>복사가 완료되었습니다</p>
-            <div className="btnWrap">
-              <button type="button" onClick={toogleCopy}>확인</button>
-            </div>
-          </div>
-        </Popup>
-      )}
-
-      {isPopupSave && (
-        <Popup Cancel
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              toogleSave();
-            }
-          }}
-        >
-          <div>
-            <button type="button" className="closePopup" onClick={toogleSave}>닫기</button>
-            <span><img src={images.CheckMark} alt="" /></span>
-            <p>저장되었습니다.<br />인사이트 보관함을 확인해주세요</p>
-            <div className="btnWrap">
-              <button type="button" onClick={toogleSave}>확인</button>
-            </div>
-          </div>
-        </Popup>
-      )}
-
-      {isPopupCopy && (
-        <Popup Cancel
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              toogleCopy();
-            }
-          }}
-        >
-          <div>
-            <button type="button" className="closePopup" onClick={toogleCopy}>닫기</button>
-            <span><img src={images.CheckMark} alt="" /></span>
-            <p>복사가 완료되었습니다</p>
-            <div className="btnWrap">
-              <button type="button" onClick={toogleCopy}>확인</button>
-            </div>
-          </div>
-        </Popup>
-      )}
-
-      {isPopupSave && (
-        <Popup Cancel
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              toogleSave();
-            }
-          }}
-        >
-          <div>
-            <button type="button" className="closePopup" onClick={toogleSave}>닫기</button>
-            <span><img src={images.CheckMark} alt="" /></span>
-            <p>저장되었습니다.<br />인사이트 보관함을 확인해주세요</p>
-            <div className="btnWrap">
-              <button type="button" onClick={toogleSave}>확인</button>
-            </div>
-          </div>
-        </Popup>
-      )}
-
       {isPopupOpenCancel && (
         <Popup Cancel
           onClick={(e) => {
@@ -562,6 +474,63 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
           </div>
         </Popup>
       )}
+      {isPopupCopy && (
+        <Popup Cancel
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              closePopupCopy();
+            }
+          }}
+        >
+          <div>
+            <button type="button" className="closePopup" onClick={closePopupCopy}>닫기</button>
+            <span><img src={images.CheckMark} alt="" /></span>
+            <p>복사가 완료되었습니다</p>
+            <div className="btnWrap">
+              <button type="button" onClick={closePopupCopy}>확인</button>
+            </div>
+          </div>
+        </Popup>
+      )}
+
+{isPopupSave && (
+  <Popup Cancel
+    onClick={(e) => {
+      if (e.target === e.currentTarget) {
+        closePopupSave();  // 상태를 false로 설정
+      }
+    }}
+  >
+    <div>
+      <button type="button" className="closePopup" onClick={closePopupSave}>닫기</button>
+      <span><img src={images.CheckMark} alt="" /></span>
+      <p>저장되었습니다.<br />인사이트 보관함을 확인해주세요</p>
+      <div className="btnWrap">
+        <button type="button" onClick={closePopupSave}>확인</button>
+      </div>
+    </div>
+  </Popup>
+)}
+
+{isPopupCopy && (
+  <Popup Cancel
+    onClick={(e) => {
+      if (e.target === e.currentTarget) {
+        closePopupCopy();  // 상태를 false로 설정
+      }
+    }}
+  >
+    <div>
+      <button type="button" className="closePopup" onClick={closePopupCopy}>닫기</button>
+      <span><img src={images.CheckMark} alt="" /></span>
+      <p>복사가 완료되었습니다</p>
+      <div className="btnWrap">
+        <button type="button" onClick={closePopupCopy}>확인</button>
+      </div>
+    </div>
+  </Popup>
+)}
+
       {isLoginPopupOpen && <MoleculeLoginPopup onClose={closeLoginPopup} />}
     </>
   );
@@ -722,7 +691,6 @@ const Popup = styled.div`
 
         button {
           color:${palette.gray};
-          font-family: 'Pretendard';
           font-weight:600;
           padding:0;
           border:0;
