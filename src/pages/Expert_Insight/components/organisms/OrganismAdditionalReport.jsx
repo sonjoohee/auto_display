@@ -32,7 +32,9 @@ import {
 const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [approachPath] = useAtom(APPROACH_PATH);
-  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
+  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
+    SELECTED_ADDITIONAL_KEYWORD
+  );
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
 
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
@@ -121,64 +123,6 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
           ];
           setAdditionalReportData(updatedAdditionalReportData);
 
-          //         // Report fetching logic
-          //         if (!existingConversation || additionalReportData.length === 0) {
-          //           const keyword = selectedKeywords[expertIndex - 1]; // Use the keyword based on expertIndex
-
-          //           const data = {
-          //             business_info: "초고속 팝업 텐트",
-          //             business_analysis_data: {
-          //               business_info: "초고속 팝업 텐트",
-          //               business_analysis_data: {
-          //                 "명칭":"초고속 팝업 텐트",
-          //                 "개요": {
-          //                   "주요_목적_및_특징":"초고속 팝업 텐트는 30초 만에 설치가 가능한 휴대용 텐트로, 캠핑, 야외 활동, 비상 대피 시 빠르고 간편하게 사용할 수 있는 것이 가장 큰 특징입니다. 가볍고 컴팩트한 디자인으로 휴대 및 보관이 용이하며, 내구성이 뛰어나 다양한 환경에서 안전하게 사용할 수 있습니다."
-          //                 },
-          //                 "주요기능":[
-          //                   {
-          //                     "기능":"초고속 설치",
-          //                     "설명":"특허 받은 팝업 구조를 적용하여 30초 만에 텐트를 설치할 수 있습니다. 텐트를 펼치면 자동으로 프레임이 형성되어 별도의 조립 과정이 필요하지 않습니다. 캠핑, 야외 활동, 비상 대피 시 빠르게 텐트를 설치하여 안전하고 편리하게 사용할 수 있습니다."
-          //                   },
-          //                   {
-          //                     "기능":"휴대성 및 보관 용이성",
-          //                     "설명":"가볍고 컴팩트한 디자인으로 휴대 및 보관이 용이합니다. 전용 가방에 담아 손쉽게 이동 및 보관할 수 있으며, 차량 트렁크나 백팩에 넣어 휴대하기에도 편리합니다."
-          //                   },
-          //                   {
-          //                     "기능":"내구성 및 안전성",
-          //                     "설명":"고품질 소재와 튼튼한 프레임 구조로 제작되어 험한 환경에서도 안전하게 사용할 수 있습니다. 방수, 방풍, 자외선 차단 기능을 갖추어 다양한 기후 조건에서도 쾌적하게 사용할 수 있습니다."
-          //                   }
-          //                 ],
-          //                 "목표고객":[
-          //                   {
-          //                     "고객_세그먼트":"캠핑 및 야외 활동 애호가",
-          //                     "설명":"캠핑, 백패킹, 낚시, 등산 등 다양한 야외 활동을 즐기는 사람들로, 빠르고 간편한 텐트 설치를 선호하며, 휴대 및 보관이 용이한 제품을 찾습니다. 초고속 팝업 텐트는 빠른 설치 시간, 휴대성, 내구성을 갖추어 이러한 고객들의 요구를 충족시킬 수 있습니다."
-          //                   },
-          //                   {
-          //                     "고객_세그먼트":"가족 단위 여행객",
-          //                     "설명":"가족 단위로 여행을 자주 다니는 사람들로, 아이들과 함께 캠핑을 즐기거나, 여행 중 갑작스러운 비나 추위로부터 보호할 수 있는 텐트를 필요로 합니다. 초고속 팝업 텐트는 빠르고 간편한 설치, 넓은 공간, 안전성을 갖추어 가족 단위 여행객에게 안성맞춤입니다."
-          //                   },
-          //                   {
-          //                     "고객_세그먼트":"비상 대피 및 재난 대비 용품 구매자",
-          //                     "설명":"자연 재해 발생 시 대피를 위한 텐트를 구비하고자 하는 사람들로, 빠른 설치, 휴대성, 내구성을 중요하게 생각합니다. 초고속 팝업 텐트는 비상 상황에서 빠르게 설치하여 안전을 확보하고, 휴대 및 보관이 용이하여 비상 대피 용품으로 적합합니다."
-          //                   }
-          //                 ]
-          //               },
-          //               "tabs": [],
-          //               "page_index": 1
-          //             },
-          //             "question_info": keyword
-          //           };
-
-          //           const response = await axios.post('https://wishresearch.kr/panels/add_question', data, axiosConfig);
-          //           console.log(response)
-          //           const answerData = response.data.additional_question;
-          //           setAnswerData(answerData);
-          //           setSections(answerData.sections);
-
-          //           // 기존의 추가 리포트 데이터에 새로 가져온 데이터를 추가합니다.
-          //           const updatedAdditionalReportData = [...additionalReportData, answerData];
-          //           setAdditionalReportData(updatedAdditionalReportData);
-
           const updatedConversation = {
             ...existingConversation,
             additionalReportData: updatedAdditionalReportData, // 전체 리스트를 저장
@@ -190,8 +134,13 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
 
           const updatedConversation2 = [...conversation];
           updatedConversation2.push(
-            { type: 'system', message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${selectedAdditionalKeyword[selectedAdditionalKeyword.length-1]}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻` },
-            { type: `keyword` },
+            {
+              type: "system",
+              message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${
+                selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]
+              }를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
+            },
+            { type: `keyword` }
           );
           setConversation(updatedConversation2);
         } else {
@@ -202,11 +151,6 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
           } else {
             // console.warn('No saved additional report data found.');
           }
-          //           console.log()
-          //         } else {
-          //           // 기존 데이터가 있을 때 처리
-          //           setTabs(additionalReportData[selectedTab]?.tabs || []);
-          //           setSections(additionalReportData[selectedTab]?.sections || []);
         }
       } catch (error) {
         console.error("Error loading data:", error);
@@ -221,9 +165,6 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
     selectedKeywords,
     buttonState, // buttonState 의존성 추가
   ]);
-
-  //     loadData();
-  //   }, [conversationId, selectedTab, expertIndex, selectedKeywords]);
 
   const handleTabClick = (index) => {
     setSelectedTab(index);
@@ -243,36 +184,36 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
           <SkeletonTitle className="title-placeholder" />
           <SkeletonLine className="content-placeholder" />
           <SkeletonLine className="content-placeholder" />
-          <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
         </>
-      ) :
-      <>
-      <TabHeader>
-        {tabs.map((tab, index) => (
-          <TabButton
-            key={index}
-            active={selectedTab === index}
-            onClick={() => handleTabClick(index)}
-          >
-            {tab.title}
-          </TabButton>
-        ))}
-      </TabHeader>
+      ) : (
+        <>
+          <TabHeader>
+            {tabs.map((tab, index) => (
+              <TabButton
+                key={index}
+                active={selectedTab === index}
+                onClick={() => handleTabClick(index)}
+              >
+                {tab.title}
+              </TabButton>
+            ))}
+          </TabHeader>
 
-      {sections.map((section, index) => (
-        <Section key={index} title={section.title} content={section.content} />
-      ))}
+          {sections.map((section, index) => (
+            <Section
+              key={index}
+              title={section.title}
+              content={section.content}
+            />
+          ))}
 
-      <MoleculeReportController
-        reportIndex={2}
-        conversationId={conversationId}
-        sampleData={answerData}
-      />
-      </>
-    }
+          <MoleculeReportController
+            reportIndex={2}
+            conversationId={conversationId}
+            sampleData={answerData}
+          />
+        </>
+      )}
     </AnalysisSection>
   );
 };
@@ -337,9 +278,9 @@ const AnalysisSection = styled.div`
   }
 
   > p {
-    font-size:0.875rem;
-    line-height:1.5;
-    margin-top:15px;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin-top: 15px;
 
     span {
       color: ${palette.red};
@@ -364,8 +305,8 @@ const BoxWrap = styled.div`
   }
 
   p {
-    font-size:0.875rem;
-    margin-bottom:10px;
+    font-size: 0.875rem;
+    margin-bottom: 10px;
   }
 `;
 
@@ -418,7 +359,7 @@ const DynamicGrid = styled.div`
 `;
 
 const SubTitle = styled.strong`
-  font-size:0.875rem;
+  font-size: 0.875rem;
   font-weight: 500;
   color: ${palette.gray};
   text-align: left;
