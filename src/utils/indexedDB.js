@@ -39,20 +39,24 @@ export const openDB = () => {
   });
 };
 
-export const saveConversationToIndexedDB = async (conversation, isLoggedIn) => {
+export const saveConversationToIndexedDB = async (conversation, isLoggedIn, conversationId) => {
   if (isLoggedIn) {
     // 사용자 로그인 시 서버에 저장
     try {
       const token = sessionStorage.getItem('accessToken'); // 액세스 토큰을 세션에서 가져오기
-      console.log("token")
-      console.log(token)
+      console.log("token", token);
 
       if (!token) {
         throw new Error("액세스 토큰이 존재하지 않습니다.");
       }
 
-      await axios.post(
-        "https://wishresearch.kr/panels/create_chat",
+      if (!conversationId) {
+        throw new Error("대화 ID가 필요합니다.");
+      }
+
+      // 서버에 업데이트 요청을 보냄 (PUT 메서드 사용)
+      await axios.put(
+        `https://wishresearch.kr/panels/update_chat`,
         conversation,
         {
           headers: {
@@ -63,7 +67,7 @@ export const saveConversationToIndexedDB = async (conversation, isLoggedIn) => {
         }
       );
     } catch (error) {
-      console.error("Error saving conversation to server:", error);
+      console.error("Error updating conversation on server:", error);
     }
   } else {
     // 비로그인 시 IndexedDB에 저장
@@ -78,6 +82,7 @@ export const saveConversationToIndexedDB = async (conversation, isLoggedIn) => {
     });
   }
 };
+
 
 
 export const getConversationByIdFromIndexedDB = async (id, isLoggedIn) => {
@@ -142,12 +147,30 @@ export const getAllRecordsFromIndexedDB = async () => {
 
 export const createChatOnServer = async () => {
   try {
+    const token = sessionStorage.getItem('accessToken'); // 세션에서 액세스 토큰 가져오기
+    console.log("token")
+    console.log(token)
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
     const response = await axios.post(
-      "https://wishresearch.kr/panels/create_chat"
+      "https://wishresearch.kr/panels/create_chat",
+      {}, // POST 요청에 보낼 데이터가 없는 경우 빈 객체 전달
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Bearer 토큰을 헤더에 추가
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true // 쿠키와 자격 증명 포함 (필요 시)
+      }
     );
-    return response.data.conversationId; // 서버로부터 가져온 conversationId를 반환
+
+    console.log(response.data.inserted_id)
+    return response.data.inserted_id; // 서버로부터 가져온 conversationId 반환
   } catch (error) {
     console.error("Error creating chat on server:", error);
     throw error;
   }
 };
+
