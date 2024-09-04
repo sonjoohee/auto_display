@@ -959,7 +959,7 @@ const BoxWrap = styled.div`
     }
 
     + li {
-      margin-bottom: 5px;
+      margin-top: 5px;
     }
 
     input[type="text"] {
