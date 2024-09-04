@@ -160,11 +160,17 @@ const PageExpertInsight = () => {
       } else {
         const savedConversation = await getConversationByIdFromIndexedDB(conversationId);
         if (savedConversation) {
+
+          const analysisData = savedConversation.analysisReportData || {};
+          setTitleOfBusinessInfo(analysisData.title || "");
+          setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
+          setMainCharacteristicOfBusinessInformation(analysisData.mainCharacter || []);
+          setBusinessInformationTargetCustomer(analysisData.mainCustomer || []);
+
           // 복구된 데이터를 로컬 상태로 설정
           setConversation(savedConversation.conversation);
           setConversationStage(savedConversation.conversationStage);
           setInputBusinessInfo(savedConversation.inputBusinessInfo);
-
   
           // 전략 보고서 데이터를 복구
           setExpert1ReportData(savedConversation.strategyReportData_EX1 || {});
@@ -204,19 +210,23 @@ const PageExpertInsight = () => {
     setConversationStage,
   ]);
 
-  useEffect(() => {
-    const loadConversationOther = async () => {
-      const savedConversation = await getConversationByIdFromIndexedDB(conversationId);
-      if (savedConversation) {
-          const analysisData = savedConversation.analysisReportData || {};
-          setTitleOfBusinessInfo(analysisData.title || "");
-          setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
-          setMainCharacteristicOfBusinessInformation(analysisData.mainCharacter || []);
-          setBusinessInformationTargetCustomer(analysisData.mainCustomer || []);
-      }
-    }
-    loadConversationOther();
-  }, [navigate]);
+  // useEffect(() => {
+  //   const loadConversationOther = async () => {
+  //     const savedConversation = await getConversationByIdFromIndexedDB(conversationId);
+  //     if (savedConversation) {
+  //       const analysisData = savedConversation.analysisReportData || {};
+  //         setTitleOfBusinessInfo(analysisData.title || "");
+  //         setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
+  //         setMainCharacteristicOfBusinessInformation(analysisData.mainCharacter || []);
+  //         setBusinessInformationTargetCustomer(analysisData.mainCustomer || []);
+  //     }
+  //   }
+  //   loadConversationOther();
+  // }, [
+  //   navigate,
+  //   conversation,
+  //   setConversation,
+  // ]);
   
   // 검색을 통해 들어왔으면 handleSearch 실행
   useEffect(() => {
@@ -252,7 +262,6 @@ const PageExpertInsight = () => {
 
     // 사용자가 입력한 경우에만 inputBusinessInfo를 업데이트
     if (conversationStage < 3 && inputValue !== -1) {
-      setButtonState(1);
       setInputBusinessInfo(inputValue);
       console.log(inputValue);
       updatedConversation.push({ type: 'user', message: inputValue });

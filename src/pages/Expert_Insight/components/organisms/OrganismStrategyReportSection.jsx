@@ -72,6 +72,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
     const loadData = async () => {
       if (buttonState === 1) {  // BUTTON_STATE가 1일 때만 API 호출
         setIsLoading(true);
+        setButtonState(0); // BUTTON_STATE를 초기화
         try {
           const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
           const currentReportKey = `strategyReportData_EX${expertIndex}`;
@@ -136,7 +137,6 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
           console.error('Error loading data:', error);
         }
         setIsLoading(false);
-        setButtonState(0); // BUTTON_STATE를 초기화
       }
     };
     loadData();
