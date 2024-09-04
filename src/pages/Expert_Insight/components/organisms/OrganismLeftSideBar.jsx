@@ -8,6 +8,7 @@ import { useAtom } from 'jotai';
 import { INPUT_BUSINESS_INFO, SAVED_REPORTS, isLoggedInAtom, USER_NAME, USER_EMAIL} from '../../../AtomStates';
 import { getAllConversationsFromIndexedDB } from '../../../../utils/indexedDB'; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
+import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/MoleculeAccountPopup"; // 계정설정 팝업 컴포넌트 임포트
 
 import OrganismReportPopup from "./OrganismReportPopup"; // 팝업 컴포넌트 임포트
 
@@ -19,6 +20,8 @@ const OrganismLeftSideBar = () => {
   const [conversations, setConversations] = useState([]); // 저장된 대화 상태 관리
   const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 관리
   const [isLoginPopupOpen, setLoginPopupOpen] = useState(false); // 로그인 팝업 상태 관리
+
+  const [isAccountPopupOpen, setAccountPopupOpen] = useState(false); // 계정설정 팝업
 
   const [isLogoutPopup, setIsLogoutPopup] = useState(false); // 로그아웃 팝업 상태 관리
   const [userName,setUserName] = useAtom(USER_NAME); // 아톰에서 유저 이름 불러오기
@@ -45,6 +48,17 @@ const OrganismLeftSideBar = () => {
   const closeLoginPopup = () => {
     setLoginPopupOpen(false); // 로그인 팝업 닫기
   };
+
+  
+  const handleAccountClick = () => {
+    setAccountPopupOpen(true); // 계정설정 팝업 열기
+  };
+
+  const closeAccountPopup = () => {
+    setAccountPopupOpen(false); // 계정설정 팝업 닫기
+  };
+
+
 
   const handleLogoutClick = () => {
     // 로그아웃 버튼 클릭 시 로그아웃 팝업 열기
@@ -279,7 +293,7 @@ const OrganismLeftSideBar = () => {
 
                 <ul>
                   <li>
-                    <button type="button"><img src={images.AccountSetting} alt="" />계정 설정</button>
+                    <button type="button" onClick={handleAccountClick}><img src={images.AccountSetting} alt="" />계정 설정</button>
                   </li>
                   <li>
                     <button type="button"><img src={images.AccountInfo} alt="" />정책 및 약관 정보</button>
@@ -310,6 +324,8 @@ const OrganismLeftSideBar = () => {
       </SideBar>
 
       {isLoginPopupOpen && <MoleculeLoginPopup onClose={closeLoginPopup} />}
+
+      {isAccountPopupOpen && <MoleculeAccountPopup onClose={closeAccountPopup} />}
 
       {isLogoutPopup && (
         <Popup Cancel onClick={handleCloseLogoutPopup}>
