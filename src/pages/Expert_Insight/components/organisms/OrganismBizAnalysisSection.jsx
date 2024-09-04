@@ -19,7 +19,7 @@ import {
   TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER,
   INPUT_BUSINESS_INFO,
   IS_EDITING_NOW,
-  BUTTON_STATE,
+  ANALYSIS_BUTTON_STATE,
   IS_LOADING ,
 } from '../../../AtomStates';
 
@@ -35,7 +35,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   const [tempBusinessInformationTargetCustomer, setTempBusinessInformationTargetCustomer] = useAtom(TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING); // useState 대신 useAtom으로 변경
 //   const [isLoading, setIsLoading] = useState(false);
-  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
+  const [buttonState, setButtonState] = useAtom(ANALYSIS_BUTTON_STATE);
 
   const [newAddContent, setNewAddContent] = useState('');
   const [isAddingNow, setIsAddingNow] = useState({ section: '', isAdding: false });

@@ -10,7 +10,7 @@ import {
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
   MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
   BUSINESS_INFORMATION_TARGET_CUSTOMER, 
-  BUTTON_STATE,
+  ADDITION_BUTTON_STATE,
 } from '../../../AtomStates';
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
@@ -23,7 +23,7 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
   const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
   const [mainCharacteristicOfBusinessInformation, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
   const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
+  const [buttonState, setButtonState] = useAtom(ADDITION_BUTTON_STATE);
 
   const analysisReportData = {
     title: titleOfBusinessInfo,
@@ -149,7 +149,7 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
             setTabs(additionalReportData[selectedTab]?.tabs || []);
             setSections(additionalReportData[selectedTab]?.sections || []);
           } else {
-            console.warn('No saved additional report data found.');
+            // console.warn('No saved additional report data found.');
           }
 //           console.log()
 //         } else {
