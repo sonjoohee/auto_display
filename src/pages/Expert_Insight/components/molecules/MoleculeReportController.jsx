@@ -62,15 +62,18 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
   const [expert3ReprotData, setExpert3ReportData] = useAtom(EXPERT3_REPORT_DATA);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isPopupOpenCancel, setIsPopupOpenCancel] = useState(false);
-  const [isPopupCopy, setIsPopupCopy] = useState(false);
-  const [isPopupSave, setIsPopupSave] = useState(false);
   const [clickState, setClickState] = useState(false);
+
+  const [isPopupSave, setIsPopupSave] = useState(false);
 
   const [approachPath] = useAtom(APPROACH_PATH);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [isLoginPopupOpen, setLoginPopupOpen] = useState(false); // 로그인 팝업 상태 관리
+
+  const [isPopupCopy, setIsPopupCopy] = useState(false);
+
   const navigate = useNavigate();
 
   const handleSignupClick = () => {

@@ -180,13 +180,13 @@ const MoleculeSignupForm = () => {
         이미 가입하셨나요? <a href="/login">로그인하기</a>
       </Footer> */}
 
-      {isSignupSuccessful && (
+    </SignupFormContainer>
+    {isSignupSuccessful && (
         <MoleculeSignupPopup 
           onClose={closePopup} 
           email={email}
         />
       )}
-    </SignupFormContainer>
     </>
     );
 };
