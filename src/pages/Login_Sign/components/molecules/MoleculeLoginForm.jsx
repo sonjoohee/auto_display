@@ -8,7 +8,7 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import AtomButton from '../atoms/AtomButton';
 import { isValidEmail } from '../atoms/AtomValidation';
 import { emailAtom, passwordAtom, currentUserAtom, errorAtom } from '../../../AtomStates';
-import { isLoggedInAtom, loginSuccessAtom } from '../../../../pages/AtomStates'; // 아톰 임포트
+import { isLoggedInAtom, loginSuccessAtom ,USER_NAME, USER_EMAIL} from '../../../../pages/AtomStates'; // 아톰 임포트
 import { Link } from 'react-router-dom';
 import { palette } from '../../../../assets/styles/Palette';
 
@@ -23,7 +23,9 @@ const MoleculeLoginForm = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom);
   const [, setLoginSuccess] = useAtom(loginSuccessAtom);
-
+  const [, setUserName] = useAtom(USER_NAME); // 유저 이름 아톰
+  const [, setUserEmail] = useAtom(USER_EMAIL); // 유저 이메일 아톰
+  
   useEffect(() => {
     setError('');
   }, [setError]);
@@ -45,21 +47,45 @@ const MoleculeLoginForm = () => {
     if (!validateForm()) return;
   
     try {
+      // 로그인 요청
       const response = await fetch('https://wishresearch.kr/api/user/login/normal/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
-      
+  
       if (response.ok) {
         const result = await response.json();
+        console.log(result);
+        const accessToken = result.access_token;
   
-        sessionStorage.setItem('accessToken', result.access_token);
+        // accessToken을 세션 스토리지에 저장
+        sessionStorage.setItem('accessToken', accessToken);
   
-        setCurrentUser(result.user);
-        setIsLoggedIn(true);
-        setLoginSuccess(true);
-        navigate('/');
+        // 유저 정보를 요청하기 위해 accessToken을 사용
+        const userInfoResponse = await fetch('https://wishresearch.kr/api/user/userInfo/', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`, // 토큰을 Authorization 헤더에 추가
+            'Content-Type': 'application/json'
+          }
+        });
+  
+        if (userInfoResponse.ok) {
+          const userInfo = await userInfoResponse.json();
+          console.log(userInfo);
+  
+          // 유저 정보 (이름과 이메일)를 아톰에 저장
+          setUserName(userInfo.name);  // 아톰에 유저 이름 저장
+          setUserEmail(userInfo.email);  // 아톰에 유저 이메일 저장
+  
+          // 로그인 성공 처리
+          setIsLoggedIn(true);
+          setLoginSuccess(true);
+          navigate('/');
+        } else {
+          setError('유저 정보를 불러오는 중 오류가 발생했습니다.');
+        }
       } else {
         // 서버에서 받은 에러 메시지 처리
         const result = await response.json();
@@ -69,6 +95,7 @@ const MoleculeLoginForm = () => {
       setError('로그인 중 오류가 발생했습니다.');
     }
   };
+  
   
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);

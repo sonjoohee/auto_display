@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { useAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
-
+import axios from 'axios';
 import {
   TITLE_OF_BUSINESS_INFORMATION,
   IS_CLICK_EXPERT_SELECT,
@@ -25,6 +25,7 @@ import {
   SELECTED_ADDITIONAL_KEYWORD,
   CONVERSATION,
   isLoggedInAtom,
+  IS_LOADING,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -71,7 +72,7 @@ const MoleculeReportController = ({
   ] = useAtom(TEMP_MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
   const [
     tempMusinessInformationTargetCustomer,
-    setTemptBusinessInformationTargetCustomer,
+    setTempBusinessInformationTargetCustomer,
   ] = useAtom(TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 관리
 
@@ -110,6 +111,7 @@ const MoleculeReportController = ({
   const [isLoginPopupOpen, setLoginPopupOpen] = useState(false); // 로그인 팝업 상태 관리
 
   const [isPopupCopy, setIsPopupCopy] = useState(false);
+  const [isLoading, setIsLoading] = useAtom(IS_LOADING);
 
   const navigate = useNavigate();
 
@@ -159,7 +161,7 @@ const MoleculeReportController = ({
   //   // Temp 상태에도 초기 데이터를 설정
   //   // setTempMainFeaturesOfBusinessInformation(businessTemplate["주요기능"]);
   //   // setTempMainCharacteristicOfBusinessInformation(businessTemplate["주요기능"]);
-  //   // setTemptBusinessInformationTargetCustomer(businessTemplate["목표고객"]);
+  //   // setTempBusinessInformationTargetCustomer(businessTemplate["목표고객"]);
   // }, [setTitleOfBusinessInfo, setMainFeaturesOfBusinessInformation, setMainCharacteristicOfBusinessInformation, setBusinessInformationTargetCustomer]);
 
   const analysisReportData = {
@@ -197,7 +199,7 @@ const MoleculeReportController = ({
     setTempMainCharacteristicOfBusinessInformation(
       mainCharacteristicOfBusinessInformation
     );
-    setTemptBusinessInformationTargetCustomer(
+    setTempBusinessInformationTargetCustomer(
       businessInformationTargetCustomer
     );
   };
@@ -391,6 +393,83 @@ const MoleculeReportController = ({
     });
   };
 
+  const axiosConfig = {
+    timeout: 100000, // 100초
+    headers: {
+      'Content-Type': 'application/json'  
+    },  withCredentials: true // 쿠키 포함 요청 (필요한 경우)
+  };
+
+  const data = {
+    "business_idea": inputBusinessInfo
+  }
+  
+// 기초 보고서 재생성
+const regenerateReport = async () => {
+  setIsLoading(true);
+  let businessData;
+
+    // 버튼 클릭으로 API 호출
+    console.log("기초보고서api호출");
+    const response = await axios.post('https://wishresearch.kr/panels/business', data, axiosConfig);
+    businessData = response.data.business_analysis;
+
+    // 데이터를 받아온 직후 아톰에 값을 설정합니다.
+    if (Array.isArray(businessData["주요_목적_및_특징"])) {
+      setTempMainFeaturesOfBusinessInformation(businessData["주요_목적_및_특징"].map((item) => item));
+      setMainFeaturesOfBusinessInformation(businessData["주요_목적_및_특징"].map((item) => item));
+    } else {
+      setTempMainFeaturesOfBusinessInformation(businessData["주요_목적_및_특징"] ? [businessData["주요_목적_및_특징"]] : []);
+      setMainFeaturesOfBusinessInformation(businessData["주요_목적_및_특징"] ? [businessData["주요_목적_및_특징"]] : []);
+    }
+    
+    if (Array.isArray(businessData["주요기능"])) {
+      setTempMainCharacteristicOfBusinessInformation(businessData["주요기능"].map((item) => item));
+      setMainCharacteristicOfBusinessInformation(businessData["주요기능"].map((item) => item));
+    } else {
+      setTempMainCharacteristicOfBusinessInformation(businessData["주요기능"] ? [businessData["주요기능"]] : []);
+      setMainCharacteristicOfBusinessInformation(businessData["주요기능"] ? [businessData["주요기능"]] : []);
+    }
+    
+    if (Array.isArray(businessData["목표고객"])) {
+      setTempBusinessInformationTargetCustomer(businessData["목표고객"].map((item) => item));
+      setBusinessInformationTargetCustomer(businessData["목표고객"].map((item) => item));
+    } else {
+      setTempBusinessInformationTargetCustomer(businessData["목표고객"] ? [businessData["목표고객"]] : []);
+      setBusinessInformationTargetCustomer(businessData["목표고객"] ? [businessData["목표고객"]] : []);
+    }
+    
+    // 명칭은 배열이 아니므로 기존 방식 유지
+    setTitleOfBusinessInfo(businessData["명칭"]);
+
+    // 아톰이 업데이트된 후에 analysisReportData를 생성합니다.
+    const analysisReportData = {
+      title: businessData["명칭"],
+      mainFeatures: Array.isArray(businessData["주요_목적_및_특징"]) ? businessData["주요_목적_및_특징"] : [],
+      mainCharacter: Array.isArray(businessData["주요기능"]) ? businessData["주요기능"] : [],
+      mainCustomer: Array.isArray(businessData["목표고객"]) ? businessData["목표고객"] : [],
+    };
+
+    // 기존 대화 내역을 유지하면서 새로운 정보를 추가
+    const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
+
+    const updatedConversation = {
+      ...existingConversation,
+      analysisReportData,
+      timestamp: Date.now(),
+    };
+    await saveConversationToIndexedDB(updatedConversation);
+    console.log("___________기초보고서_____________");
+    console.log("기초보고서2");
+    console.log(analysisReportData);
+    setIsLoading(false);
+}
+
+// 전문가 보고서 재생성
+const regenerateReport2 = async () => {
+  
+}
+
   const handleRetryIdea = () => {
     alert("정말 다시 하시겠습니까?");
 
@@ -431,7 +510,7 @@ const MoleculeReportController = ({
                     아이디어 설명 다시 하기
                   </button>
                   <div>
-                    <button type="button" onClick={handleRetryIdea}>
+                    <button type="button" onClick={regenerateReport}>
                       <img src={images.IconRefresh} alt="" />
                       재생성하기
                     </button>
@@ -479,7 +558,7 @@ const MoleculeReportController = ({
             <div />
             <div>
               {selectedAdditionalKeyword.length === 0 && (
-                <button type="button" onClick={handleRetryIdea}>
+                <button type="button" onClick={regenerateReport}>
                   <img src={images.IconRefresh} alt="" />
                   재생성하기
                 </button>
