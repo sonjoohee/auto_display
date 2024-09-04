@@ -139,7 +139,7 @@ const OrganismLeftSideBar = () => {
                 <img src={images.Clock} alt="" />
                 프로젝트 히스토리
               </label>
-              <AccordionContent>
+              <AccordionContent className="scrollbar">
                 <div>
                   <strong>최근 작업</strong>
                   <ul>
@@ -225,13 +225,17 @@ const Logo = styled.div`
   left:60px;
   width:250px;
   display:flex;
-  justify-content:space-between;
+  // justify-content:space-between;
+  justify-content: ${(props) => (props.isOpen ? "space-between" : "flex-start")};
   align-items:center;
+  gap: ${(props) => (props.isOpen ? "20px" : "0")};
   z-index:1;
+  transition:all .5s;
 
   a {
     // width:44px;
-    width:135px;
+    width: ${(props) => (props.isOpen ? "135px" : "44px")};
+    // width:135px;
     height:44px;
     font-size:0;
     background:url(${images.SymbolLogo}) left center no-repeat;
@@ -247,6 +251,7 @@ const Logo = styled.div`
     border:0;
     background:${palette.white};
     box-shadow:2px 2px 2px rgba(0,0,0,.1);
+    transition:all .5s;
 
     &:before {
       position:absolute;
@@ -428,11 +433,29 @@ const AccordionItem = styled.div`
   }
 
   .accordion-toggle:checked + .accordion-label + div {
-    max-height: 1000px;
-    // max-height:calc(100vh - 22rem);
+    // max-height: 1000px;
+    max-height:calc(100vh - 30rem);
     // margin-top:20px;
     padding:0;
     overflow-y:auto;
+
+    &::-webkit-scrollbar {
+      width:5px;
+    }
+
+    &::-webkit-scrollbar-track{
+      border-radius: 10px;
+      background-color:transparent;
+    }
+    
+    &::-webkit-scrollbar-button {
+      display:none;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: ${palette.lineGray};
+      border-radius: 10px; 
+    }
   }
 `;
 
