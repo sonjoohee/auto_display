@@ -20,7 +20,7 @@ const OrganismLeftSideBar = () => {
   const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 관리
   const [isLoginPopupOpen, setLoginPopupOpen] = useState(false); // 로그인 팝업 상태 관리
 
-  const [isLogoutPopup, setIsLogoutPopup] = useState(false);
+  const [isLogoutPopup, setIsLogoutPopup] = useState(false); // 로그아웃 팝업 상태 관리
 
   useEffect(() => {
     // IndexedDB에서 저장된 모든 대화 내역 가져오기
@@ -44,11 +44,22 @@ const OrganismLeftSideBar = () => {
     setLoginPopupOpen(false); // 로그인 팝업 닫기
   };
 
-  const handleLogout = () => {
-    // 로그아웃 시 처리
-    setIsLoggedIn(false);
+  const handleLogoutClick = () => {
+    // 로그아웃 버튼 클릭 시 로그아웃 팝업 열기
     setIsLogoutPopup(true);
-    navigate('/PageMeetAiExpert');
+  };
+
+  const handleLogoutConfirm = () => {
+    // 로그아웃 확인 버튼을 눌렀을 때 실행
+    sessionStorage.removeItem('accessToken'); // 세션 스토리지에서 토큰 삭제
+    setIsLoggedIn(false); // 로그아웃 상태로 전환
+    setIsLogoutPopup(false); // 로그아웃 팝업 닫기
+    navigate('/PageMeetAiExpert'); // 페이지 이동
+  };
+
+  const handleCloseLogoutPopup = () => {
+    // 로그아웃 팝업 닫기
+    setIsLogoutPopup(false);
   };
 
   const handleReportClick = (index) => {
@@ -87,11 +98,6 @@ const OrganismLeftSideBar = () => {
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
-
-
-
-
-
 
   return (
     <>
@@ -163,22 +169,11 @@ const OrganismLeftSideBar = () => {
               </AccordionContent>
             </AccordionItem>
           </AccordionMenu>
-
-          {/* <AuthButtons>
-            {isLoggedIn ? (
-              <button onClick={handleLogout}>로그아웃</button>
-            ) : (
-              <>
-                <button onClick={handleLoginClick}>로그인</button>
-                <Link to="/signup">회원가입</Link>
-              </>
-            )}
-          </AuthButtons> */}
         </SideBarMenu>
 
         <LoginButtonWrap>
           {isLoggedIn ? (
-            <button onClick={handleLogout}>로그아웃</button>
+            <button onClick={handleLogoutClick}>로그아웃</button>
           ) : (
             <>
               <button onClick={handleLoginClick}>로그인</button>
@@ -195,15 +190,14 @@ const OrganismLeftSideBar = () => {
 
       {isLoginPopupOpen && <MoleculeLoginPopup onClose={closeLoginPopup} />}
 
-      
       {isLogoutPopup && (
         <Popup Cancel>
           <div>
-            <button type="button" className="closePopup" onClick={handleLogout}>닫기</button>
+            <button type="button" className="closePopup" onClick={handleCloseLogoutPopup}>닫기</button>
             <span><img src={images.CheckMark} alt="" /></span>
             <p>정말 로그아웃하시겠습니까?</p>
             <div className="btnWrap">
-              <button type="button" onClick={handleLogout}>확인</button>
+              <button type="button" onClick={handleLogoutConfirm}>확인</button>
             </div>
           </div>
         </Popup>

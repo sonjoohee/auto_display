@@ -43,32 +43,33 @@ const MoleculeLoginForm = () => {
   const handleLogin = async () => {
     setError('');
     if (!validateForm()) return;
-
-//https://wishresearch.kr/api/user/login/normal/
+  
     try {
       const response = await fetch('https://wishresearch.kr/api/user/login/normal/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
+      
       if (response.ok) {
         const result = await response.json();
-        
+  
         sessionStorage.setItem('accessToken', result.access_token);
-
+  
         setCurrentUser(result.user);
         setIsLoggedIn(true);
         setLoginSuccess(true);
         navigate('/');
       } else {
+        // 서버에서 받은 에러 메시지 처리
         const result = await response.json();
-        setError(result.error);
+        setError(result.message || '로그인 중 오류가 발생했습니다.'); // 서버 메시지 표시
       }
     } catch (error) {
       setError('로그인 중 오류가 발생했습니다.');
     }
   };
-
+  
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
