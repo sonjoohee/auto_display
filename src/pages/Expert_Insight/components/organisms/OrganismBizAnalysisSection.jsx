@@ -29,9 +29,14 @@ import {
   IS_EDITING_NOW,
   ANALYSIS_BUTTON_STATE,
   IS_LOADING,
+  CONVERSATION,
+  APPROACH_PATH,
 } from "../../../AtomStates";
 
 const OrganismBizAnalysisSection = ({ conversationId }) => {
+  const [conversation, setConversation] = useAtom(CONVERSATION);
+  const [approachPath] = useAtom(APPROACH_PATH);
+
   const [inputBusinessInfo, setInputBusinessInfo] =
     useAtom(INPUT_BUSINESS_INFO);
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
@@ -220,6 +225,19 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
         }
         setIsLoading(false);
       }
+      const updatedConversation = [...conversation];
+      if(approachPath === 1) {
+        updatedConversation.push(
+          { type: 'system', message: '비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 지금 바로 전략 보고서를 준비해드려요.' },
+          { type: 'report_button'},
+        );
+      }
+      else {
+        updatedConversation.push(
+          { type: 'system', message: '비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 전문가들의 의견을 확인하여 아이디어를 한 단계 더 발전시켜 보세요 🔍' },
+        );
+      }
+      setConversation(updatedConversation);
     };
     loadAndSaveData();
   }, [
