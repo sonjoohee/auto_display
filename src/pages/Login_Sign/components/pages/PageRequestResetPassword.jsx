@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import MoleculePasswordResetPopup from '../molecules/MoleculePasswordResetPopup';
-import OrganismHeader from '../../../AI_Panel/components/organisms/OrganismHeader';
+import React, { useState } from "react";
+import styled from "styled-components";
+import MoleculePasswordResetPopup from "../molecules/MoleculePasswordResetPopup";
+import OrganismLeftSideBar from "/Users/uc-sungeun/dev/interviewx_web/Crowd_Insight-/src/pages/Expert_Insight/components/organisms/OrganismLeftSideBar.jsx";
 
-import { palette } from '../../../../assets/styles/Palette';
+import { palette } from "../../../../assets/styles/Palette";
 
 const RequestResetPassword = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -17,21 +17,26 @@ const RequestResetPassword = () => {
 
     try {
       // https://wishresearch.kr/request-reset-password
-      const response = await fetch('https://wishresearch.kr/request-reset-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email }), // 이름과 이메일을 함께 전송
-      });
+      const response = await fetch(
+        "https://wishresearch.kr/request-reset-password",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email }), // 이름과 이메일을 함께 전송
+        }
+      );
 
       if (response.ok) {
-        setMessage('비밀번호 재설정 링크가 이메일로 전송되었습니다.');
+        setMessage("비밀번호 재설정 링크가 이메일로 전송되었습니다.");
         setIsPopupOpen(true); // 팝업을 열도록 상태 설정
       } else {
         const result = await response.json();
-        setMessage(result.error || '비밀번호 재설정 요청 중 오류가 발생했습니다.');
+        setMessage(
+          result.error || "비밀번호 재설정 요청 중 오류가 발생했습니다."
+        );
       }
     } catch (error) {
-      setMessage('서버와의 통신 중 오류가 발생했습니다.');
+      setMessage("서버와의 통신 중 오류가 발생했습니다.");
     }
     setIsLoading(false); // 검색 완료 시 로딩 상태 비활성화
   };
@@ -42,80 +47,96 @@ const RequestResetPassword = () => {
   // https://wishresearch.kr/resend-password-reset-email
   const handleResendEmail = async () => {
     try {
-      const response = await fetch('https://wishresearch.kr/resend-password-reset-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
-      });
+      const response = await fetch(
+        "https://wishresearch.kr/resend-password-reset-email",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        }
+      );
 
       if (response.ok) {
-        alert('비밀번호 재설정 이메일이 재발송되었습니다.');
+        alert("비밀번호 재설정 이메일이 재발송되었습니다.");
       } else {
         const result = await response.json();
-        alert(result.error || '이메일 재발송 중 오류가 발생했습니다.');
+        alert(result.error || "이메일 재발송 중 오류가 발생했습니다.");
       }
     } catch (error) {
-      console.error('이메일 재발송 요청 중 오류 발생:', error);
-      alert('서버와의 통신 중 오류가 발생했습니다.');
+      console.error("이메일 재발송 요청 중 오류 발생:", error);
+      alert("서버와의 통신 중 오류가 발생했습니다.");
     }
   };
 
   const handleGoToLogin = () => {
-    window.location.href = '/login'; // 로그인 페이지로 이동
+    window.location.href = "/login"; // 로그인 페이지로 이동
   };
 
   return (
     <>
-    <OrganismHeader />
-    {isLoading && (
-      <LoadingOverlay>
-        <div className="loader"></div>
-      </LoadingOverlay>
-    )}
-    <RequestResetContainer>
-      <Header>
-        비밀번호를 잊어버리셨나요?
-        <p>가입하신 이메일 주소로 비밀번호를 재설정 할 수 있는 링크를 보내드려요 </p>
-      </Header>
+      <ContentsWrap>
+        <OrganismLeftSideBar />
 
-      <PasswordFormContainer>
-        <div>
-          <label htmlFor="name">이름<span>*</span></label>
-          <StyledInput
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="이름을 입력하세요"
-          />
-        </div>
+        <MainContent>
+          {isLoading && (
+            <LoadingOverlay>
+              <div className="loader"></div>
+            </LoadingOverlay>
+          )}
+          <RequestResetContainer>
+            <Header>
+              비밀번호를 잊어버리셨나요?
+              <p>
+                가입하신 이메일 주소로 비밀번호를 재설정 할 수 있는 링크를
+                보내드려요{" "}
+              </p>
+            </Header>
 
-        <div>
-          <label htmlFor="email">이메일<span>*</span></label>
-          <StyledInput
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="이메일 주소를 입력하세요"
-          />
-        </div>
+            <PasswordFormContainer>
+              <div>
+                <label htmlFor="name">
+                  이름<span>*</span>
+                </label>
+                <StyledInput
+                  type="text"
+                  id="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="이름을 입력하세요"
+                />
+              </div>
 
-        <StyledButton onClick={handleRequestReset}>비밀번호 찾기</StyledButton>
+              <div>
+                <label htmlFor="email">
+                  이메일<span>*</span>
+                </label>
+                <StyledInput
+                  type="email"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="이메일 주소를 입력하세요"
+                />
+              </div>
 
-        {message && <Message>{message}</Message>}
-      </PasswordFormContainer>
+              <StyledButton onClick={handleRequestReset}>
+                비밀번호 찾기
+              </StyledButton>
 
+              {message && <Message>{message}</Message>}
+            </PasswordFormContainer>
 
-      {isPopupOpen && (
-        <MoleculePasswordResetPopup
-          onClose={handleClosePopup}
-          email={email}
-          handleResendEmail={handleResendEmail}
-          handleGoToLogin={handleGoToLogin}
-        />
-      )}
-    </RequestResetContainer>
+            {isPopupOpen && (
+              <MoleculePasswordResetPopup
+                onClose={handleClosePopup}
+                email={email}
+                handleResendEmail={handleResendEmail}
+                handleGoToLogin={handleGoToLogin}
+              />
+            )}
+          </RequestResetContainer>
+        </MainContent>
+      </ContentsWrap>
     </>
   );
 };
@@ -124,88 +145,88 @@ export default RequestResetPassword;
 
 // CSS-in-JS 스타일링
 const RequestResetContainer = styled.div`
-  position:relative;
-  max-width:450px;
-  width:100%;
-  margin:220px auto 0;
+  position: relative;
+  max-width: 450px;
+  width: 100%;
+  margin: 220px auto 0;
 `;
 
 const Header = styled.h2`
-  display:flex;
-  flex-direction:column;
-  gap:8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   font-size: 2rem;
   margin: 110px auto;
   text-align: center;
 
   p {
-    font-size:1rem;
-    font-weight:300;
-    color:${palette.gray};
+    font-size: 1rem;
+    font-weight: 300;
+    color: ${palette.gray};
   }
 `;
 
 const PasswordFormContainer = styled.div`
-  max-width:400px;
-  margin:0 auto;
+  max-width: 400px;
+  margin: 0 auto;
 
   > div {
-    position:relative;
-    display:flex;
-    flex-direction:column;
-    gap:8px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 
     label {
-      font-size:0.75rem;
-      text-align:left;
-      display:flex;
-      align-items:flex-start;
-      gap:5px;
+      font-size: 0.75rem;
+      text-align: left;
+      display: flex;
+      align-items: flex-start;
+      gap: 5px;
 
       span {
-        color:${palette.red};
+        color: ${palette.red};
       }
     }
 
     p {
-      font-size:0.63rem;
-      color:${palette.gray};
-      text-align:left;
+      font-size: 0.63rem;
+      color: ${palette.gray};
+      text-align: left;
     }
 
     + div {
-      margin-top:20px;
+      margin-top: 20px;
     }
   }
 `;
 
 const StyledInput = styled.input`
   width: 100%;
-  font-family: 'Pretendard', 'Poppins';
-  font-size:1rem;
+  font-family: "Pretendard", "Poppins";
+  font-size: 1rem;
   padding: 12px 16px;
-  border-radius:8px;
+  border-radius: 8px;
   border: 1px solid ${palette.lineGray};
   box-sizing: border-box;
 `;
 
 const StyledButton = styled.button`
   width: 100%;
-  font-size:1rem;
-  font-weight:700;
-  color:${palette.white};
+  font-size: 1rem;
+  font-weight: 700;
+  color: ${palette.white};
   margin-top: 50px;
   padding: 15px;
   border-radius: 8px;
   border: none;
-  background-color:${palette.blue};
+  background-color: ${palette.blue};
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease;
 `;
 
 const Message = styled.p`
-  font-size:0.75rem;
-  color:${palette.red};
+  font-size: 0.75rem;
+  color: ${palette.red};
   margin-top: 20px;
   text-align: center;
 `;
@@ -233,9 +254,9 @@ const LoadingOverlay = styled.div`
     font-size: 10px;
     position: relative;
     text-indent: -9999em;
-    border-top: 1.1em solid rgba(255,255,255, 0);
-    border-right: 1.1em solid rgba(255,255,255, 0);
-    border-bottom: 1.1em solid rgba(255,255,255, 0);
+    border-top: 1.1em solid rgba(255, 255, 255, 0);
+    border-right: 1.1em solid rgba(255, 255, 255, 0);
+    border-bottom: 1.1em solid rgba(255, 255, 255, 0);
     border-left: 1.1em solid #0453f4;
     -webkit-transform: translateZ(0);
     -ms-transform: translateZ(0);
@@ -263,4 +284,35 @@ const LoadingOverlay = styled.div`
       transform: rotate(360deg);
     }
   }
+`;
+
+const MainContent = styled.div`
+  position: relative;
+  top: 40px;
+  grid-area: content;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  // gap:40px;
+  min-width: 1px;
+  max-width: 1484px;
+  width: calc(100% - 40px);
+  // padding-bottom: 150px;
+  margin: 0 auto;
+
+  > div {
+    flex: 1;
+  }
+
+  > div:first-child {
+    max-width: 1240px;
+    width: 100%;
+    margin: 0 20px;
+    padding-bottom: 60px;
+  }
+`;
+
+const ContentsWrap = styled.div`
+  position: relative;
+  display: flex;
 `;

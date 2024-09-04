@@ -191,7 +191,7 @@ const OrganismLeftSideBar = () => {
   };
 
   const handleNewProjectClick = () => {
-    window.location.href = "/"; // 첫 페이지로 이동
+    navigate("/");
   };
 
   return (
@@ -588,7 +588,7 @@ const Logo = styled.div`
     props.isOpen ? "space-between" : "flex-start"};
   align-items: center;
   gap: ${(props) => (props.isOpen ? "20px" : "0")};
-  z-index: 1;
+  z-index: 10000;
   transition: all 0.5s;
 
   a {

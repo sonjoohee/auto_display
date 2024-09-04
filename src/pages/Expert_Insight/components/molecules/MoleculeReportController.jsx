@@ -599,12 +599,12 @@ const regenerateReport2 = async () => {
           <ButtonWrap>
             <div />
             <div>
-              {selectedAdditionalKeyword.length === 0 && (
+              {/* {selectedAdditionalKeyword.length === 0 && (
                 <button type="button" onClick={regenerateReport}>
                   <img src={images.IconRefresh} alt="" />
                   재생성하기
                 </button>
-              )}
+              )} */}
               <button type="button" onClick={toogleCopy}>
                 <img src={images.IconCopy} alt="" />
                 복사하기
