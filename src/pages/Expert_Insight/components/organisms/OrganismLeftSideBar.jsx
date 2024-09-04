@@ -4,13 +4,9 @@ import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import panelimages from "../../../../assets/styles/PanelImages";
 import { Link, useNavigate } from "react-router-dom";
-import { useAtom } from "jotai";
-import {
-  INPUT_BUSINESS_INFO,
-  SAVED_REPORTS,
-  isLoggedInAtom,
-} from "../../../AtomStates";
-import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
+import { useAtom } from 'jotai';
+import { INPUT_BUSINESS_INFO, SAVED_REPORTS, isLoggedInAtom, USER_NAME, USER_EMAIL} from '../../../AtomStates';
+import { getAllConversationsFromIndexedDB } from '../../../../utils/indexedDB'; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
 
 import OrganismReportPopup from "./OrganismReportPopup"; // 팝업 컴포넌트 임포트
@@ -25,7 +21,9 @@ const OrganismLeftSideBar = () => {
   const [isLoginPopupOpen, setLoginPopupOpen] = useState(false); // 로그인 팝업 상태 관리
 
   const [isLogoutPopup, setIsLogoutPopup] = useState(false); // 로그아웃 팝업 상태 관리
-
+  const [userName,setUserName] = useAtom(USER_NAME); // 아톰에서 유저 이름 불러오기
+  const [userEmail, setUserEmail] = useAtom(USER_EMAIL); // 아톰에서 유저 이메일 불러오기
+  
   useEffect(() => {
     // IndexedDB에서 저장된 모든 대화 내역 가져오기
     const loadConversations = async () => {
@@ -55,8 +53,14 @@ const OrganismLeftSideBar = () => {
 
   const handleLogoutConfirm = () => {
     // 로그아웃 확인 버튼을 눌렀을 때 실행
-    sessionStorage.removeItem("accessToken"); // 세션 스토리지에서 토큰 삭제
+    sessionStorage.removeItem('accessToken'); // 세션 스토리지에서 토큰 삭제
+    sessionStorage.removeItem('userName');
+    sessionStorage.removeItem('userEmail');
+
     setIsLoggedIn(false); // 로그아웃 상태로 전환
+    setUserName('');
+    setUserEmail('');
+    
     setIsLogoutPopup(false); // 로그아웃 팝업 닫기
     navigate("/PageMeetAiExpert"); // 페이지 이동
   };
@@ -254,8 +258,8 @@ const OrganismLeftSideBar = () => {
             <>
               <LogoutBtnWrap>
                 <div>
-                  <strong>이혜은</strong>
-                  <p>hyeeun@userconnect.kr</p>
+                <strong>{userName}</strong> {/* 유저 이름 표시 */}
+                <p>{userEmail}</p> {/* 유저 이메일 표시 */}
                 </div>
                 <button
                   type="button"
@@ -266,8 +270,8 @@ const OrganismLeftSideBar = () => {
 
               <LogoutToogle isToogle={isToogle} onClick={moreProfile}>
                 <div className="info">
-                  <strong>이혜은</strong>
-                  <p>hyeeun@userconnect.kr</p>
+                <strong>{userName}</strong> {/* 유저 이름 표시 */}
+                <p>{userEmail}</p> {/* 유저 이메일 표시 */}
                 </div>
 
                 <ul>
