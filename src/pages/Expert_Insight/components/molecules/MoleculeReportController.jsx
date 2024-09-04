@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { useAtom } from 'jotai';
+import { useNavigate } from 'react-router-dom';
 
 import {
   TITLE_OF_BUSINESS_INFORMATION,
@@ -23,12 +24,14 @@ import {
   CONVERSATION_STAGE,
   SELECTED_ADDITIONAL_KEYWORD,
   CONVERSATION,
+  isLoggedInAtom,
 } from '../../../AtomStates';
 
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
 import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
 // import businessTemplate from '../organisms/sample_analyse.json'; // JSON 파일 불러오기
+import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
 
 const MoleculeReportController = ({ reportIndex, strategyReportID, conversationId, sampleData,  }) => {
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
@@ -41,7 +44,8 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
   const [tempMainFeaturesOfBusinessInformation, setTempMainFeaturesOfBusinessInformation] = useAtom(TEMP_MAIN_FEATURES_OF_BUSINESS_INFORMATION);
   const [tempMainCharacteristicOfBusinessInformation, setTempMainCharacteristicOfBusinessInformation] = useAtom(TEMP_MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
   const [tempMusinessInformationTargetCustomer, setTemptBusinessInformationTargetCustomer] = useAtom(TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  
+  const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 관리
+
   const [savedReports, setSavedReports] = useAtom(SAVED_REPORTS);
   const [bizAnalysisReportIndex, setBizAnalysisReportIndex] = useState(0);
   const [newAddContent, setNewAddContent] = useState('');
@@ -68,17 +72,17 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
   const [conversation, setConversation] = useAtom(CONVERSATION);
-    
-  const toogleCopy = () => {
-    if (clickState == false) {
-      setIsPopupCopy(!isPopupCopy);
-    }
+  const [isLoginPopupOpen, setLoginPopupOpen] = useState(false); // 로그인 팝업 상태 관리
+  const navigate = useNavigate();
+
+  const handleSignupClick = () => {
+    navigate('/signup');
   };
-  
-  const toogleSave = () => {
-    if (clickState == false) {
-      setIsPopupSave(!isPopupSave);
-    }
+  const handleLoginClick = () => {
+    setLoginPopupOpen(true); // 로그인 팝업 열기
+  };
+  const closeLoginPopup = () => {
+    setLoginPopupOpen(false); // 로그인 팝업 닫기
   };
   const togglePopup = () => {
     if (clickState == false) {
@@ -86,6 +90,21 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
     }
   };
   
+
+  const toogleCopy = () => {
+    if (clickState == false) {
+      setIsPopupCopy(!isPopupCopy);
+    }
+  };
+
+  const toogleSave = () => {
+    if (clickState == false) {
+      setIsPopupSave(!isPopupSave);
+    }
+  };
+
+
+
   const togglePopupCancel = () => {
     if (clickState == false) {
       setIsPopupOpenCancel(!isPopupOpenCancel);
@@ -147,7 +166,21 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
     setTemptBusinessInformationTargetCustomer(businessInformationTargetCustomer);
   };
 
+  const regenerateReport = async () => {
+    if (!isLoggedIn) {
+      // 로그인 상태가 아닐 경우 팝업을 띄움
+      setIsPopupOpen(true); // 팝업 열기
+      return; // 로그인 상태가 아닐 경우 함수를 종료
+    }
+    alert("재생성되었습니다.");
+  }
+
   const saveReport = async () => {
+    if (!isLoggedIn) {
+      // 로그인 상태가 아닐 경우 팝업을 띄움
+      setIsPopupOpen(true); // 팝업 열기
+      return; // 로그인 상태가 아닐 경우 함수를 종료
+    }
     alert("저장되었습니다.");
 
     let reportData;
@@ -345,7 +378,7 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
                     아이디어 설명 다시 하기
                   </button>
                   <div>
-                    <button type="button" onClick={togglePopup}>
+                    <button type="button" onClick={regenerateReport}>
                       <img src={images.IconRefresh} alt="" />
                       재생성하기
                     </button>
@@ -387,7 +420,7 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
           <div />
           <div>
             {selectedAdditionalKeyword.length === 0 && 
-              <button type="button" onClick={togglePopup}>
+              <button type="button" onClick={regenerateReport}>
                 <img src={images.IconRefresh} alt="" />
                 재생성하기
               </button>
@@ -419,8 +452,46 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
             <span><img src={images.ExclamationMark} alt="" /></span>
             <p>해당 기능을 사용하시려면 로그인이 필요해요<br />로그인 하시겠습니까?</p>
             <div className="btnWrap">
-              <button type="button">회원가입</button>
-              <button type="button">로그인</button>
+              <button type="button" onClick={handleSignupClick}>회원가입</button>
+              <button type="button"onClick={handleLoginClick}>로그인</button>
+            </div>
+          </div>
+        </Popup>
+      )}
+
+      {isPopupCopy && (
+        <Popup Cancel
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              toogleCopy();
+            }
+          }}
+        >
+          <div>
+            <button type="button" className="closePopup" onClick={toogleCopy}>닫기</button>
+            <span><img src={images.CheckMark} alt="" /></span>
+            <p>복사가 완료되었습니다</p>
+            <div className="btnWrap">
+              <button type="button" onClick={toogleCopy}>확인</button>
+            </div>
+          </div>
+        </Popup>
+      )}
+
+      {isPopupSave && (
+        <Popup Cancel
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              toogleSave();
+            }
+          }}
+        >
+          <div>
+            <button type="button" className="closePopup" onClick={toogleSave}>닫기</button>
+            <span><img src={images.CheckMark} alt="" /></span>
+            <p>저장되었습니다.<br />인사이트 보관함을 확인해주세요</p>
+            <div className="btnWrap">
+              <button type="button" onClick={toogleSave}>확인</button>
             </div>
           </div>
         </Popup>
@@ -486,6 +557,7 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
           </div>
         </Popup>
       )}
+      {isLoginPopupOpen && <MoleculeLoginPopup onClose={closeLoginPopup} />}
     </>
   );
 };
