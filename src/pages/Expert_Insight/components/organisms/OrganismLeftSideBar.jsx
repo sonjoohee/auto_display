@@ -621,7 +621,7 @@ const AccordionItem = styled.div`
 
   .accordion-toggle:checked + .accordion-label + div {
     // max-height: 1000px;
-    max-height:calc(100vh - 30rem);
+    max-height:calc(100vh - 26rem);
     // margin-top:20px;
     padding:0;
     overflow-y:auto;

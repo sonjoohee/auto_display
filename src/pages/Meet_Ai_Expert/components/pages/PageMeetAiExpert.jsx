@@ -194,7 +194,7 @@ const InputWrap = styled.div`
       resize:none;
 
       &::placeholder {
-        color:${palette.gray};
+        color:${palette.gray500};
       }
     }
 
@@ -212,6 +212,7 @@ const InputWrap = styled.div`
     display:flex;
     justify-content:flex-end;
     font-size:0.75rem;
+    color:${palette.gray500};
     padding:15px 35px;
     border-top:1px solid ${palette.lineGray};
     background:#EBF3FE;
@@ -305,14 +306,14 @@ const ExpertCard = styled.div`
   }
 
   p {
-    font-size:0.88rem;
+    font-size:0.75rem;
     font-weight:400;
     color:${(props) => (props.select ? palette.white : palette.lightGray)};
     margin-top:auto;
   }
 
   strong {
-    font-size:1.25rem;
+    font-size:1rem;
     font-weight:700;
     color:${(props) => (props.select ? palette.white : palette.darkGray)};
     letter-spacing:-1px;

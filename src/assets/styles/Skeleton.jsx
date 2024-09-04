@@ -40,9 +40,9 @@ export const SkeletonTitle = styled.div`
   margin-bottom: 10px;
   // animation: shimmer 1.5s infinite linear;
   animation: ${loadingAnimation} 3s infinite linear;
-  background: #EBEBEB;
-  background-image: -webkit-linear-gradient(to right, #EBEBEB 0%, #f2f3f5 20%, #EBEBEB 40%, #EBEBEB 100%);
-  background-image: linear-gradient(to right, #EBEBEB 0%, #f2f3f5 20%, #EBEBEB 40%, #EBEBEB 100%);
+  background: #F4F4F4;
+  background-image: -webkit-linear-gradient(to right, #F4F4F4 0%, #FCFCFC 20%, #F4F4F4 40%, #F4F4F4 100%);
+  background-image: linear-gradient(to right, #F4F4F4 0%, #FCFCFC 20%, #F4F4F4 40%, #F4F4F4 100%);
   background-repeat: no-repeat;
 
   @keyframes shimmer {
@@ -62,9 +62,9 @@ export const SkeletonLine = styled.div`
   margin-top: 8px;
   // animation: shimmer 1.5s infinite linear;
   animation: ${loadingAnimation} 3s infinite linear;
-  background: #EBEBEB;
-  background-image: -webkit-linear-gradient(to right, #EBEBEB 0%, #f2f3f5 20%, #EBEBEB 40%, #EBEBEB 100%);
-  background-image: linear-gradient(to right, #EBEBEB 0%, #f2f3f5 20%, #EBEBEB 40%, #EBEBEB 100%);
+  background: #F4F4F4;
+  background-image: -webkit-linear-gradient(to right, #F4F4F4 0%, #FCFCFC 20%, #F4F4F4 40%, #F4F4F4 100%);
+  background-image: linear-gradient(to right, #F4F4F4 0%, #FCFCFC 20%, #F4F4F4 40%, #F4F4F4 100%);
   background-repeat: no-repeat;
 
   @keyframes shimmer {
