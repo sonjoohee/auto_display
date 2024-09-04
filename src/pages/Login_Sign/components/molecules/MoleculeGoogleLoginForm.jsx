@@ -23,11 +23,14 @@ const MoleculeGoogleLoginForm = () => {
 // 'https://wishresearch.kr/google-login'
 // 'https://wishresearch.kr/api/user/login/google/'
       // Firebase 인증 후 사용자 정보를 서버에 저장
-      await axios.post('https://wishresearch.kr/api/user/login/google/', {
+      const response = await axios.post('https://wishresearch.kr/api/user/login/google/', {
         uid: user.uid,
         name: user.displayName,
         email: user.email,
       }, { withCredentials: true });
+
+      const serverAccessToken = response.data.access_token; // 서버에서 받은 토큰
+      sessionStorage.setItem('accessToken', serverAccessToken); // 서버 토큰 저장
 
       // 로그인 성공 시 처리
       setIsLoggedIn(true); // 아톰 업데이트
