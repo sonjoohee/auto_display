@@ -1,5 +1,15 @@
-import styled, { css } from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { palette } from "./Palette";
+
+export const loadingAnimation = keyframes`
+  0% {
+    background-position: -1000px;
+  }
+  100% {
+    background-position: 1200px;
+  }
+`;
+
 
 export const SkeletonH1 = styled.h1`
   width: 40%;
@@ -7,20 +17,11 @@ export const SkeletonH1 = styled.h1`
   border-radius: 6px;
   margin-bottom: 20px;
   // animation: shimmer 1.5s infinite linear;
-  animation: loading 3s infinite linear;
+  animation: ${loadingAnimation} 3s infinite linear;
   background: #F4F4F4;
   background-image: -webkit-linear-gradient(to right, #F4F4F4 0%, #FCFCFC 20%, #F4F4F4 40%, #F4F4F4 100%);
   background-image: linear-gradient(to right, #F4F4F4 0%, #FCFCFC 20%, #F4F4F4 40%, #F4F4F4 100%);
   background-repeat: no-repeat;
-
-  @keyframes loading {
-    0% {
-      background-position: -1000px;
-    }
-    100% {
-    background-position: 1200px;
-    }
-  }
 
   @keyframes shimmer {
     0% {
@@ -38,20 +39,11 @@ export const SkeletonTitle = styled.div`
   border-radius: 6px;
   margin-bottom: 10px;
   // animation: shimmer 1.5s infinite linear;
-  animation: loading 3s infinite linear;
+  animation: ${loadingAnimation} 3s infinite linear;
   background: #EBEBEB;
   background-image: -webkit-linear-gradient(to right, #EBEBEB 0%, #f2f3f5 20%, #EBEBEB 40%, #EBEBEB 100%);
   background-image: linear-gradient(to right, #EBEBEB 0%, #f2f3f5 20%, #EBEBEB 40%, #EBEBEB 100%);
   background-repeat: no-repeat;
-
-  @keyframes loading {
-    0% {
-      background-position: 0;
-    }
-    100% {
-    background-position: 1200px;
-    }
-  }
 
   @keyframes shimmer {
     0% {
@@ -69,20 +61,11 @@ export const SkeletonLine = styled.div`
   border-radius: 6px;
   margin-top: 8px;
   // animation: shimmer 1.5s infinite linear;
-  animation: loading 3s infinite linear;
+  animation: ${loadingAnimation} 3s infinite linear;
   background: #EBEBEB;
   background-image: -webkit-linear-gradient(to right, #EBEBEB 0%, #f2f3f5 20%, #EBEBEB 40%, #EBEBEB 100%);
   background-image: linear-gradient(to right, #EBEBEB 0%, #f2f3f5 20%, #EBEBEB 40%, #EBEBEB 100%);
   background-repeat: no-repeat;
-
-  @keyframes loading {
-    0% {
-      background-position: 0;
-    }
-    100% {
-    background-position: 1200px;
-    }
-  }
 
   @keyframes shimmer {
     0% {

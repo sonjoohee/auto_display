@@ -14,7 +14,7 @@ const MoleculePasswordResetPopup = ({ onClose, email }) => {
 
   const handleResendEmail = async () => {
     try {
-      const response = await fetch('http://localhost:4008/resend-password-reset-email', {
+      const response = await fetch('https://wishresearch.kr/resend-password-reset-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email })

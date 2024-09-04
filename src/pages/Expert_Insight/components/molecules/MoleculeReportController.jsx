@@ -19,6 +19,10 @@ import {
   EXPERT1_REPORT_DATA,
   EXPERT2_REPORT_DATA,
   EXPERT3_REPORT_DATA,
+  APPROACH_PATH,
+  CONVERSATION_STAGE,
+  SELECTED_ADDITIONAL_KEYWORD,
+  CONVERSATION,
 } from '../../../AtomStates';
 
 import { palette } from '../../../../assets/styles/Palette';
@@ -30,7 +34,7 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [isClickExpertSelect] = useAtom(IS_CLICK_EXPERT_SELECT);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
-  const [inputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
+  const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
   const [mainCharacteristicOfBusinessInformation, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
   const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
@@ -49,9 +53,9 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
 
   const [selectedTab, setSelectedTab] = useAtom(SELECTED_TAB);
 
-  const [expert1ReprotData, setExpert1ReprotData] = useAtom(EXPERT1_REPORT_DATA); 
-  const [expert2ReprotData, setExpert2ReprotData] = useAtom(EXPERT2_REPORT_DATA); 
-  const [expert3ReprotData, setExpert3ReprotData] = useAtom(EXPERT3_REPORT_DATA);
+  const [expert1ReprotData, setExpert1ReportData] = useAtom(EXPERT1_REPORT_DATA); 
+  const [expert2ReprotData, setExpert2ReportData] = useAtom(EXPERT2_REPORT_DATA); 
+  const [expert3ReprotData, setExpert3ReportData] = useAtom(EXPERT3_REPORT_DATA);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isPopupOpenCancel, setIsPopupOpenCancel] = useState(false);
   const [isPopupCopy, setIsPopupCopy] = useState(false);
@@ -59,7 +63,12 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
 
   
   const [clickState, setClickState] = useState(false);
-  
+
+  const [approachPath] = useAtom(APPROACH_PATH);
+  const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
+  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
+  const [conversation, setConversation] = useAtom(CONVERSATION);
+    
   const toogleCopy = () => {
     if (clickState == false) {
       setIsPopupCopy(!isPopupCopy);
@@ -71,7 +80,6 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
       setIsPopupSave(!isPopupSave);
     }
   };
-
   const togglePopup = () => {
     if (clickState == false) {
       setIsPopupOpen(!isPopupOpen);
@@ -193,40 +201,79 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
       else return;
     };
 
-    if (selectedExpertIndex === 0) {
-      contentToCopy = `
-      ${titleOfBusinessInfo}
-      주요 특징
-      ${mainFeaturesOfBusinessInformation.map(feature => `- ${feature}`).join('\n')}
-      주요 특성
-      ${mainCharacteristicOfBusinessInformation.map(character => `- ${character}`).join('\n')}
-      목표 고객
-      ${businessInformationTargetCustomer.map(customer => `- ${customer}`).join('\n')}
-    `;
-    } else if (selectedExpertIndex === 1) {
-      const extractTextContent = (data) => {
-        let textContent = '';
+    // 전문가 선택하고 진입 시
+    if (approachPath === 1) {
+      if (conversationStage === 2) {
+        contentToCopy = `
+        ${titleOfBusinessInfo}
+        주요 특징
+        ${mainFeaturesOfBusinessInformation.map(feature => `- ${feature}`).join('\n')}
+        주요 특성
+        ${mainCharacteristicOfBusinessInformation.map(character => `- ${character}`).join('\n')}
+        목표 고객
+        ${businessInformationTargetCustomer.map(customer => `- ${customer}`).join('\n')}
+        `;
+      }
+      else if(conversationStage === 3) {
+        const extractTextContent = (data) => {
+          let textContent = '';
+          if (typeof data === 'string') {
+            return data + '\n';
+          }
+          if (Array.isArray(data)) {
+            data.forEach(item => {
+              textContent += extractTextContent(item);
+            });
+          } else if (typeof data === 'object' && data !== null) {
+            Object.values(data).forEach(value => {
+              textContent += extractTextContent(value);
+            });
+          }
+          return textContent;
+        };
+        const selectedTabData = getSelectedTabData(selectedTab);
+        contentToCopy = extractTextContent(selectedTabData);
+      }
+      else return;
+    }
+    // 검색창 입력하고 진입 시
+    else {
+      if (selectedExpertIndex === 0) {
+          contentToCopy = `
+          ${titleOfBusinessInfo}
+          주요 특징
+          ${mainFeaturesOfBusinessInformation.map(feature => `- ${feature}`).join('\n')}
+          주요 특성
+          ${mainCharacteristicOfBusinessInformation.map(character => `- ${character}`).join('\n')}
+          목표 고객
+          ${businessInformationTargetCustomer.map(customer => `- ${customer}`).join('\n')}
+          `;
+      } else if (selectedExpertIndex === 1) {
+        const extractTextContent = (data) => {
+          let textContent = '';
 
-        if (typeof data === 'string') {
-          return data + '\n';
-        }
+          if (typeof data === 'string') {
+            return data + '\n';
+          }
 
-        if (Array.isArray(data)) {
-          data.forEach(item => {
-            textContent += extractTextContent(item);
-          });
-        } else if (typeof data === 'object' && data !== null) {
-          Object.values(data).forEach(value => {
-            textContent += extractTextContent(value);
-          });
-        }
+          if (Array.isArray(data)) {
+            data.forEach(item => {
+              textContent += extractTextContent(item);
+            });
+          } else if (typeof data === 'object' && data !== null) {
+            Object.values(data).forEach(value => {
+              textContent += extractTextContent(value);
+            });
+          }
 
-        return textContent;
-      };
+          return textContent;
+        };
 
-      const selectedTabData = getSelectedTabData(selectedTab);
-      contentToCopy = extractTextContent(selectedTabData);
-    } else return;
+        const selectedTabData = getSelectedTabData(selectedTab);
+        contentToCopy = extractTextContent(selectedTabData);
+      } 
+      else return;
+    }
 
     navigator.clipboard.writeText(contentToCopy.trim())
       .then(() => {
@@ -236,12 +283,44 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
         console.error("복사 실패?", error);
       });
   };
+
+  const resetConversationState = () => {
+    setTitleOfBusinessInfo([]);
+    setMainFeaturesOfBusinessInformation([]);
+    setMainCharacteristicOfBusinessInformation([]);
+    setBusinessInformationTargetCustomer([]);
+    setConversation([]);
+    setConversationStage(1);
+    setInputBusinessInfo("");
+
+    saveConversationToIndexedDB({
+      id: conversationId,
+      conversation: [],
+      conversationStage: 1,
+      inputBusinessInfo: "",
+      analysisReportData: {
+        title: [],
+        mainFeatures: [],
+        mainCharacter: [],
+        mainCustomer: [],
+      },
+      timestamp: Date.now(), 
+    });
+  };
+
+  const handleRetryIdea = () => {
+    alert("정말 다시 하시겠습니까?");
+
+    resetConversationState();
+
+    setConversation([{ type: 'system', message: "아래 검색창에 아이템(아이디어)를 설명해주세요!" }]);
+  };
   
   return (
     <>
       {reportIndex === 0 ? (
         <>
-          {isClickExpertSelect ? (
+          {conversationStage > 2 ? (
             <ButtonWrap>
               <div />
               <div>
@@ -261,9 +340,9 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
             <>
               {!isEditingNow ? (
                 <ButtonWrap>
-                  <button type="button">
+                  <button type="button" onClick={handleRetryIdea}>
                     <img src={images.IconWrite2} alt="" />
-                    비즈니스 설명 다시 하기
+                    아이디어 설명 다시 하기
                   </button>
                   <div>
                     <button type="button" onClick={togglePopup}>
@@ -303,15 +382,17 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
           )}
         </>
       ) : (
+        <>
         <ButtonWrap>
           <div />
           <div>
-            <button type="button" onClick={togglePopup}>
-              <img src={images.IconRefresh} alt="" />
-              재생성하기
-            </button>
-            {/* <button type="button" onClick={handleCopyContent}> */}
-            <button type="button" onClick={toogleCopy}>
+            {selectedAdditionalKeyword.length === 0 && 
+              <button type="button" onClick={togglePopup}>
+                <img src={images.IconRefresh} alt="" />
+                재생성하기
+              </button>
+            }
+            <button type="button" onClick={handleCopyContent}>
               <img src={images.IconCopy} alt="" />
               복사하기
             </button>
@@ -322,6 +403,7 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
             </button>
           </div>
         </ButtonWrap>
+        </>
       )}
 
       {isPopupOpen && (

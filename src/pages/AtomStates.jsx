@@ -72,7 +72,7 @@ export const SELECTED_EXPERT_INDEX = atom(0);
 export const INPUT_BUSINESS_INFO = atom("");
 
 // 프롬프트 진입 비즈니스 분석
-export const TITLE_OF_BUSINESS_INFORMATION = atom([]);
+export const TITLE_OF_BUSINESS_INFORMATION = atom("");
 export const MAIN_FEATURES_OF_BUSINESS_INFORMATION = atom([]);
 export const MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION =atom([]);
 export const BUSINESS_INFORMATION_TARGET_CUSTOMER = atom([]);
@@ -130,8 +130,12 @@ export const ADDITIONAL_REPORT_DATA1 = atom({});
 export const ADDITIONAL_REPORT_DATA2 = atom({});
 export const ADDITIONAL_REPORT_DATA3 = atom({});
 
+export const ADDITIONAL_REPORT_DATA = atom([]);
+
 /* -1: 검색으로 시작하기, 1: AI 전문가 선택해서 시작하기*/
 export const APPROACH_PATH = atom(0);
+
+export const SELECTED_ADDITIONAL_KEYWORD = atom([]);
 
 export const SELECTED_ADDITIONAL_KEYWORD1 = atom("")
 export const SELECTED_ADDITIONAL_KEYWORD2 = atom("")
@@ -227,3 +231,10 @@ export const ADDITIONAL_QUESTION_3 = atom("");
 
 export const CONVERSATION_STAGE = atom(1); // 초기값 1
 export const isDataLoadedAtom = atom(false);
+export const BUSINESS_ANALYSIS_DATA = atom([]);
+export const BUTTON_STATE = atom(0);
+
+export const iS_CLICK_CHECK_REPORT_RIGHTAWAY = atom(false);
+
+export const CONVERSATION = atom([]);
+export const IS_LOADING = atom(false);
