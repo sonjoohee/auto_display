@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import MoleculePasswordResetPopup from "../molecules/MoleculePasswordResetPopup";
-import OrganismLeftSideBar from "/Users/uc-sungeun/dev/interviewx_web/Crowd_Insight-/src/pages/Expert_Insight/components/organisms/OrganismLeftSideBar.jsx";
+import OrganismLeftSideBar from "../../../organisms/OrganismHeader";
 
 import { palette } from "../../../../assets/styles/Palette";
 
