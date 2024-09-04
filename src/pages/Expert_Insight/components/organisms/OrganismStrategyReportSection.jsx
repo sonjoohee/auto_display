@@ -71,6 +71,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   useEffect(() => {
     const loadData = async () => {
       if (buttonState === 1) {  // BUTTON_STATE가 1일 때만 API 호출
+        setButtonState(0);
         setIsLoading(true);
         try {
           const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
@@ -136,7 +137,6 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
           console.error('Error loading data:', error);
         }
         setIsLoading(false);
-        setButtonState(0); // BUTTON_STATE를 초기화
       }
     };
     loadData();
@@ -240,7 +240,6 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             <SkeletonTitle className="title-placeholder" />
             <SkeletonLine className="content-placeholder" />
             <SkeletonLine className="content-placeholder" />
-            <Spacing />
           </>
         ) : (
           sections.length > 0 ? (
@@ -252,7 +251,6 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               <SkeletonTitle className="title-placeholder" />
               <SkeletonLine className="content-placeholder" />
               <SkeletonLine className="content-placeholder" />
-              <Spacing />
             </>
           )
         )}

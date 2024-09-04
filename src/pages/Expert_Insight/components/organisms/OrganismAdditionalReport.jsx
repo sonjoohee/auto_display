@@ -54,6 +54,8 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
         const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
   
         if (buttonState === 1) {  // 버튼 상태가 1일 때만 API 요청 실행
+          setButtonState(0);  // 버튼 상태 초기화
+
           const keyword = selectedKeywords[0]; // Use the keyword based on expertIndex
   
           const data = {
@@ -145,7 +147,6 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
           };
           await saveConversationToIndexedDB(updatedConversation);
   
-          setButtonState(0);  // 버튼 상태 초기화
         } else {
           // 기존 데이터가 있을 때 처리
           if (existingConversation && additionalReportData.length > 0) {
