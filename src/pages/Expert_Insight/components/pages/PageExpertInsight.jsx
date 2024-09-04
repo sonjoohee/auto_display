@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { nanoid } from 'nanoid';
 import styled from 'styled-components';
 import { useAtom } from 'jotai';
@@ -54,11 +54,11 @@ const PageExpertInsight = () => {
   const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
   const [mainCharacteristicOfBusinessInformation, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
   const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
+  const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [sections, setSections] = useState([]);
   const [additionalReportCount, setAdditionalReportCount] = useState(0);
   const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
-  const [approachPath] = useAtom(APPROACH_PATH);
+  const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
 
   const [additionalReportData, setAdditionalReportData] = useAtom(ADDITIONAL_REPORT_DATA);  // Use the new list-based atom
 
@@ -74,6 +74,28 @@ const PageExpertInsight = () => {
   const [isClickCheckReportRightAway, setIsClickCheckReportRightAway] = useAtom(iS_CLICK_CHECK_REPORT_RIGHTAWAY);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
+
+  // setConversation([]);
+  // setConversationStage(1);
+  // setInputBusinessInfo('');
+  // setTitleOfBusinessInfo('');
+  // setMainFeaturesOfBusinessInformation([]);
+  // setMainCharacteristicOfBusinessInformation([]);
+  // setBusinessInformationTargetCustomer([]);
+  // setSelectedExpertIndex(1);
+  // setSections([]);
+  // setAdditionalReportCount(0);
+  // setSelectedAdditionalKeyword([]);
+  // setApproachPath(0);
+  // setAdditionalReportData([]);
+  // setExpert1ReportData({});
+  // setExpert2ReportData({});
+  // setExpert3ReportData({});
+  // setAddtionalQuestion1('');
+  // setAddtionalQuestion2('');
+  // setAddtionalQuestion3('');
+  // setInputAdditionalQuestion('');
+  // setIsClickCheckReportRightAway(false);
 
   // 현재 선택된 전문가에 맞는 보고서 데이터를 결정
   const getStrategyReportData = () => {
@@ -332,10 +354,11 @@ const PageExpertInsight = () => {
     } else if (conversationStage === 3) {
       updatedConversation.pop();
 
-      if (additionalReportCount >= 3) {
-        alert("추가 리포트는 최대 3개까지 요청 가능합니다. 더 보려면 로그인 해주세요!");
-        return;
-      }
+      // 로그인 상태에 따라 활성화 또는 비활성화 해야함
+      // if (additionalReportCount >= 3) {
+      //   alert("추가 리포트는 최대 3개까지 요청 가능합니다. 더 보려면 로그인 해주세요!");
+      //   return;
+      // }
 
       if (inputValue !== -1) {
         const updatedKeywords = [...selectedAdditionalKeyword];
