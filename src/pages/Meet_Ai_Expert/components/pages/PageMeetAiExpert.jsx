@@ -95,17 +95,17 @@ const PageMeetAiExpert = () => {
             <h2><img src={images.Chat} alt="" />AI 전문가 선택해서 시작하기</h2>
 
             <ExpertSelectBox>
-              <ExpertCard onClick={() => handledExpertSelect(1)}>
+              <ExpertCard onClick={() => {setButtonState(1); handledExpertSelect(1);}}>
                 <span><img src={images.IconChat} alt="" /></span>
                 <p>가볍게 시작하는 내 비즈니스 전략 팁</p>
                 <strong>전략 디렉터와 1:1 커피챗</strong>
               </ExpertCard>
-              <ExpertCard onClick={() => handledExpertSelect(2)}>
+              <ExpertCard onClick={() => {setButtonState(1); handledExpertSelect(2);}}>
                 <span><img src={images.IconWrite} alt="" /></span>
                 <p>지금 바로 쓸 수 있는 브랜딩 솔루션</p>
                 <strong>10초 맞춤 제안서 받기</strong>
               </ExpertCard>
-              <ExpertCard onClick={() => handledExpertSelect(3)}>
+              <ExpertCard onClick={() => {setButtonState(1); handledExpertSelect(3);}}>
                 <span><img src={images.IconTarget2} alt="" /></span>
                 <p>고객 데이터 전문가의 맞춤 타겟 추천</p>
                 <strong>당장 만나야할 고객은?</strong>
@@ -132,7 +132,7 @@ const MainContent = styled.div`
   display:flex;
   flex-direction:column;
   width:100%;
-  height:100%;
+  // height:100%;
   justify-content:center;  
 `;
 
@@ -142,7 +142,7 @@ const ContentsWrap = styled.div`
   display:flex;
   gap:40px;
   flex-direction:row;
-  height:100dvh;
+  // height:100dvh;
 `;
 
 const Title = styled.h1`
@@ -150,18 +150,22 @@ const Title = styled.h1`
   flex-direction: column;
   align-items: center;
   gap:8px;
-  font-size:3.13rem;
+  // font-size:3.13rem;
+  font-size:2rem;
   font-weight:600;
-  margin:0 auto 55px;
+  // margin:0 auto 55px;
+  margin:120px auto 55px;
 
   p {
-    font-size:1.25rem;
+    // font-size:1.25rem;
+    font-size:0.88rem;
     font-weight:400;
   }
 `;
 
 const InputWrap = styled.div`
-  max-width:1000px;
+  // max-width:1000px;
+  max-width:820px;
   width:100%;
   display:flex;
   flex-direction:column;
@@ -176,16 +180,21 @@ const InputWrap = styled.div`
     display:flex;
     justify-content:space-between;
     gap:20px;
-    padding:28px 38px;
+    // padding:28px 38px;
+    padding:28px;
 
     textarea {
       width:100%;
       height:40px;
-      font-family: 'Pretendard';
+      font-family: 'Pretendard', 'Poppins';
       font-size:1rem;
       outline:0;
       border:0;
       resize:none;
+
+      &::placeholder {
+        color:${palette.gray};
+      }
     }
 
     button {
@@ -210,7 +219,7 @@ const InputWrap = styled.div`
 
 const ExpertSelectWrap = styled.div`
   position:relative;
-  max-width:1210px;
+  max-width:1240px;
   width:100%;
   margin:120px auto 100px;
 
@@ -239,7 +248,7 @@ const ExpertSelectBox = styled.div`
   flex-wrap:wrap;
   justify-content:space-between;
   gap:20px;
-  margin-bottom:30px;
+  // margin-bottom:30px;
 
   > div {
     flex:1 1 20%;
@@ -297,14 +306,14 @@ const ExpertCard = styled.div`
   p {
     font-size:0.88rem;
     font-weight:400;
-    color:${(props) => (props.select ? palette.white : palette.black)};
+    color:${(props) => (props.select ? palette.white : palette.lightGray)};
     margin-top:auto;
   }
 
   strong {
-    font-size:1.38rem;
+    font-size:1.25rem;
     font-weight:700;
-    color:${(props) => (props.select ? palette.white : palette.black)};
+    color:${(props) => (props.select ? palette.white : palette.darkGray)};
     letter-spacing:-1px;
   }
 

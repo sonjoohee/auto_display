@@ -73,6 +73,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
       if (buttonState === 1) {  // BUTTON_STATE가 1일 때만 API 호출
         setButtonState(0);
         setIsLoading(true);
+        setButtonState(0); // BUTTON_STATE를 초기화
         try {
           const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
           const currentReportKey = `strategyReportData_EX${expertIndex}`;

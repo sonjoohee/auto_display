@@ -455,7 +455,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
             )}
           </BoxWrap>
 
-          <p>입력을 바탕으로 위와 같이 이해하고 정리하였습니다. <span>제가 이해한 내용이 맞습니까? 확인해 주시기 바랍니다.</span> 정확한 정보를 바탕으로 최상의 보고서를 작성하기 위해서는 고객님의 피드백이 매우 중요합니다. 감사합니다!</p>
+          <p>입력을 바탕으로 위와 같이 이해하고 정리하였습니다. 제가 이해한 내용이 맞습니까? 확인해 주시기 바랍니다. 정확한 정보를 바탕으로 최상의 보고서를 작성하기 위해서는 고객님의 피드백이 매우 중요합니다. 감사합니다!</p>
 
           {warningMessage && <WarningMessage>{warningMessage}</WarningMessage>} {/* 경고 메시지 출력 */}
           <MoleculeReportController reportIndex={0} conversationId={conversationId} />
