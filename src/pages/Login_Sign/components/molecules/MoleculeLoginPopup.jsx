@@ -3,6 +3,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import MoleculeLogin from './MoleculeLogin';
+import { palette } from '../../../../assets/styles/Palette';
 
 const MoleculeLoginPopup = ({ onClose = () => {} }) => { // 기본값으로 빈 함수 설정
   const handleOverlayClick = (e) => {
@@ -14,7 +15,7 @@ const MoleculeLoginPopup = ({ onClose = () => {} }) => { // 기본값으로 빈 
   return (
     <LoginPopupOverlay onClick={handleOverlayClick}>
       <PopupContent>
-        <CloseButton onClick={onClose}>X</CloseButton>
+        <CloseButton onClick={onClose}>닫기</CloseButton>
         <MoleculeLogin onClosePopup={onClose} /> {/* 함수 전달 */}
       </PopupContent>
     </LoginPopupOverlay>
@@ -38,18 +39,43 @@ const LoginPopupOverlay = styled.div`
 `;
 
 const PopupContent = styled.div`
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
   position: relative;
+  max-width:690px;
+  width:100%;
+  border-radius: 20px;
+  padding: 64px 144px;
+  background: ${palette.white};
 `;
 
 const CloseButton = styled.button`
   position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
+  top: -40px;
+  right: 0;
+  font-family: 'Pretendard';
+  font-size:1rem;
+  color:${palette.white};
+  padding:5px 26px 5px 0;
   border: none;
-  font-size: 20px;
+  outline:none;
+  background: none;
   cursor: pointer;
+
+  &:before, &:after {
+    position:absolute;
+    top:50%;
+    right:6px;
+    width:2px;
+    height:18px;
+    border-radius:5px;
+    background:${palette.white};
+    content:'';
+  }
+
+  &:before {
+    transform:translateY(-50%) rotate(45deg);
+  }
+
+  &:after {
+    transform:translateY(-50%) rotate(-45deg);
+  }
 `;

@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { palette } from '../../../../assets/styles/Palette';
 import ReactDOM from 'react-dom';
 
+import images from '../../../../assets/styles/Images';
+
 const OrganismReportPopup = ({ report, onClose }) => {
   if (!report) return null;
 
@@ -18,9 +20,9 @@ const OrganismReportPopup = ({ report, onClose }) => {
         <div className="title">
           <h1>{report.title}</h1>
           <p>
-            <span>마케팅</span>
+            <span><img src={images.IconList} alt="" />마케팅</span>
             {/* <span>생성 : {report.date}</span> */}
-            <span>저장 : {report.date}</span>
+            <span><img src={images.IconSaveDate} alt="" />저장 : {report.date}</span>
           </p>
         </div>
 
@@ -65,7 +67,7 @@ const PopupContent = styled.div`
   max-height: 80%;
   display:flex;
   flex-direction:column;
-  gap:20px;
+  gap:44px;
   text-align: left;
   padding: 32px;
   border-radius: 15px;
@@ -76,8 +78,7 @@ const PopupContent = styled.div`
     display:flex;
     flex-direction:column;
     gap:12px;
-    padding:20px;
-    margin-bottom:40px;
+    padding:16px 20px;
     border-radius:15px;
     border:1px solid ${palette.lineGray};
     background:${palette.white};
@@ -95,22 +96,50 @@ const PopupContent = styled.div`
     display:flex;
     align-items:center;
     gap:20px;
+
+    span {
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
   }
 `;
 
 const SectionTitle = styled.h2`
   font-size: 1rem;
+  display:flex;
+  align-items:center;
+  gap:8px;
   margin-bottom: 12px;
 `;
 
 const List = styled.ul`
-  padding-left: 20px;
-  margin-bottom: 20px;
+  // padding-left: 20px;
+  // margin-bottom: 20px;
 `;
 
 const ListItem = styled.li`
-  font-size: 0.88rem;
-  margin-bottom: 10px;
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  padding-left:10px;
+
+  &:before {
+    position:absolute;
+    left:0;
+    top:10px;
+    width:5px;
+    height:1px;
+    background:${palette.darkGray};
+    content:'';
+  }
+
+  p {
+    font-size:0.88rem;
+    color:${palette.darkGray};
+    line-height:1.5;
+  }
 `;
 
 const CloseButton = styled.button`
@@ -150,7 +179,6 @@ const BoxWrap = styled.div`
   padding: 20px;
   border-radius: 10px;
   background: rgba(0, 0, 0, 0.04);
-  margin-top: 12px;
 
   strong {
     display: flex;
@@ -167,27 +195,9 @@ const BoxWrap = styled.div`
     gap: 10px;
     padding-left: 10px;
 
-    &:before {
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 5px;
-      height: 1px;
-      background: ${palette.black};
-      content: '';
-    }
-
     + li {
       margin-top: 5px;
     }
-  }
-
-  p {
-    font-size:0.88rem;
-    font-size:400;
-    color:${palette.darkGray};
-    line-height:1.5;
   }
 
   button {
@@ -206,6 +216,12 @@ const BoxWrap = styled.div`
       background: ${palette.black};
     }
   }
+
+  p {
+    font-size:0.88rem;
+    color:${palette.darkGray};
+    line-height:1.5;
+  }
 `;
 
 const BizAnalysisSection = ({ report }) => {
@@ -214,26 +230,35 @@ const BizAnalysisSection = ({ report }) => {
   const mainCustomer = report.content.mainCustomer || [];
 
   return (
-    <BoxWrap>
-      <SectionTitle>주요 특징</SectionTitle>
-      <List>
-        {mainFeatures.map((feature, index) => (
-          <ListItem key={index}>{feature}</ListItem>
-        ))}
-      </List>
-      <SectionTitle>주요 기능</SectionTitle>
-      <List>
-        {mainCharacter.map((func, index) => (
-          <ListItem key={index}>{func}</ListItem>
-        ))}
-      </List>
-      <SectionTitle>목표 고객</SectionTitle>
-      <List>
-        {mainCustomer.map((customer, index) => (
-          <ListItem key={index}>{customer}</ListItem>
-        ))}
-      </List>
-    </BoxWrap>
+    <>
+    <ContentsWrap>
+      <h1>{report.title}</h1>
+      <BoxWrap>
+        <SectionTitle><img src={images.StarChack} alt="" />주요 특징</SectionTitle>
+        <List>
+          {mainFeatures.map((feature, index) => (
+            <ListItem key={index}><p>{feature}</p></ListItem>
+          ))}
+        </List>
+      </BoxWrap>
+      <BoxWrap>
+        <SectionTitle><img src={images.IconSetting} alt="" />주요 기능</SectionTitle>
+        <List>
+          {mainCharacter.map((func, index) => (
+            <ListItem key={index}><p>{func}</p></ListItem>
+          ))}
+        </List>
+      </BoxWrap>
+      <BoxWrap>
+        <SectionTitle><img src={images.IconTarget} alt="" />목표 고객</SectionTitle>
+        <List>
+          {mainCustomer.map((customer, index) => (
+            <ListItem key={index}><p>{customer}</p></ListItem>
+          ))}
+        </List>
+      </BoxWrap>
+    </ContentsWrap>
+    </>
   );
 };
 
@@ -264,7 +289,7 @@ const StrategyReportSection = ({ report }) => {
 
         {tabs[selectedTab]?.sections?.map((section, index) => (
           <BoxWrap key={index}>
-            {section.title && <SectionTitle>{section.title}</SectionTitle>}
+            {section.title && <SectionTitle><img src={images.Check} alt="" />{section.title}</SectionTitle>}
             {section.content && (
               section.content.some((item) => item.subTitle) ? (
                 <TwoColumnGrid>
@@ -294,10 +319,19 @@ const StrategyReportSection = ({ report }) => {
 
 // 스타일 컴포넌트들
 const ContentsWrap = styled.div`
+  display:flex;
+  flex-direction:column;
+  gap:12px;
   padding:28px;
   border-radius:15px;
   border:1px solid ${palette.lineGray};
   overflow-y:auto;
+
+  h1 {
+    font-size:1.25rem;
+    font-weight:400;
+    margin-bottom:8px;
+  }
 `;
 
 const TabHeader = styled.div`

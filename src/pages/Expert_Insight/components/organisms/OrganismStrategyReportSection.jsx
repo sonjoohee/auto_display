@@ -302,7 +302,9 @@ const BoxWrap = styled.div`
 
   p {
     font-size:0.88rem;
-    margin-bottom:10px;
+    color:${palette.darkGray};
+    line-height:1.5;
+    // margin-bottom:10px;
   }
 `;
 

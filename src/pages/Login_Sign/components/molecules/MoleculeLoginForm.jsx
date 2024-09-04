@@ -10,8 +10,9 @@ import { isValidEmail } from '../atoms/AtomValidation';
 import { emailAtom, passwordAtom, currentUserAtom, errorAtom } from '../../../AtomStates';
 import { isLoggedInAtom, loginSuccessAtom } from '../../../../pages/AtomStates'; // 아톰 임포트
 import { Link } from 'react-router-dom';
-
 import { palette } from '../../../../assets/styles/Palette';
+
+import MoleculeSignupPopup from './MoleculeSignupPopup';
 
 const MoleculeLoginForm = () => {
   const [email, setEmail] = useAtom(emailAtom);
@@ -72,6 +73,18 @@ const MoleculeLoginForm = () => {
     // event.preventDefault(); // 기본 동작 방지
     navigate('/request-reset-password');
   };
+
+  const [isSignupPopupOpen, setIsSignupPopupOpen] = useState(false);
+
+  const handleSignupClick = (e) => {
+    e.preventDefault();
+    setIsSignupPopupOpen(true);
+  };
+
+  const handleClosePopup = () => {
+    setIsSignupPopupOpen(false);
+  };
+
   
 
   return (
@@ -111,7 +124,9 @@ const MoleculeLoginForm = () => {
 
       <JoinWrap>
         <p>Crowd Insight가 처음이에요</p>
-        <Link to="/signup">가입하기</Link>
+        {/* <Link to="/signup">가입하기</Link> */}
+        <Link to="#" onClick={handleSignupClick}>가입하기</Link>
+        {isSignupPopupOpen && <MoleculeSignupPopup onClose={handleClosePopup} />}
       </JoinWrap>
     </LoginFormContainer>
   );
@@ -197,6 +212,7 @@ const PasswordResetLink = styled.div`
 
 const StyledLoginButton = styled.button`
   width: 100%;
+  font-family: 'Pretendard';
   color:${palette.white};
   padding: 15px;
   border-radius: 8px;
@@ -213,6 +229,7 @@ const JoinWrap = styled.div`
   flex-direction:row !important;
   gap:12px;
   font-size:1rem;
+  color:${palette.gray};
   margin-top:80px;
 
   a {

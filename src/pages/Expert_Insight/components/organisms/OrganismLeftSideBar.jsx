@@ -5,10 +5,11 @@ import images from '../../../../assets/styles/Images';
 import panelimages from '../../../../assets/styles/PanelImages';
 import { Link, useNavigate } from "react-router-dom";
 import { useAtom } from 'jotai';
-import { INPUT_BUSINESS_INFO, SAVED_REPORTS } from '../../../AtomStates';
+import { INPUT_BUSINESS_INFO, SAVED_REPORTS, isLoggedInAtom } from '../../../AtomStates';
 import { getAllConversationsFromIndexedDB } from '../../../../utils/indexedDB'; // IndexedDB에서 대화 내역 가져오기
 
 import OrganismReportPopup from './OrganismReportPopup'; // 팝업 컴포넌트 임포트
+import MoleculeLoginPopup from '../../../Login_Sign/components/molecules/MoleculeLoginPopup';
 
 const OrganismLeftSideBar = () => {
   const navigate = useNavigate();
@@ -67,6 +68,29 @@ const OrganismLeftSideBar = () => {
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
+
+
+  const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom); // Jotai의 로그인 상태 및 상태 업데이트 함수 구독
+  const [isLoginPopupOpen, setLoginPopupOpen] = useState(false);
+
+  const handleLoginClick = (e) => {
+    e.preventDefault();
+    setLoginPopupOpen(true);
+  };
+
+  const handleClosePopup = () => {
+    setLoginPopupOpen(false);
+  };
+
+  const handleLogout = () => {
+    // 로그아웃 시 Jotai 상태 업데이트
+    setIsLoggedIn(false);
+    // 로그아웃 후 추가적인 처리 (예: 리디렉션)
+  };
+
+
+
+
 
   return (
     <>
@@ -140,7 +164,16 @@ const OrganismLeftSideBar = () => {
             </AccordionItem>
           </AccordionMenu>
         </SideBarMenu>
+
+        <LoginButtonWrap>
+          <button type="button" onClick={handleLoginClick}>로그인</button>
+          <div>
+            <Link to="#">이용약관</Link>
+            <Link to="#">개인정보처리방침</Link>
+          </div>
+        </LoginButtonWrap>
       </SideBar>
+      {isLoginPopupOpen && <MoleculeLoginPopup onClose={handleClosePopup} />}
     </>
   );
 };
@@ -610,6 +643,43 @@ const IdeaWrap = styled.div`
 
     svg {
       flex-shrink:0;
+    }
+  }
+`;
+
+const LoginButtonWrap = styled.div`
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  margin-top:auto;
+
+  button {
+    font-family: 'Pretendard';
+    color:${palette.gray};
+    padding:12px 16px;
+    border-radius:10px;
+    border:1px solid ${palette.lineGray};
+    background:${palette.white};
+  }
+
+  div {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+
+    a {
+      font-size:0.75rem;
+      color:${palette.gray};
+
+      &:last-child:before {
+        width:1px;
+        height:8px;
+        display:inline-block;
+        margin-right:10px;
+        background:${palette.lineGray};
+        content:'';
+      }
     }
   }
 `;

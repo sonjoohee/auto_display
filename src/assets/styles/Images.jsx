@@ -47,6 +47,7 @@ import IconWrite from "../images/iconWrite.svg"
 import IconTarget2 from "../images/iconTarget2.svg"
 
 import ExclamationMark from "../images/iconExclamationMark.svg"
+import CheckMark from "../images/CheckMark.svg"
 
 import ProfessionalValue from "../images/ProfessionalValue.svg"
 import ProfessionalRoadmap from "../images/ProfessionalRoadmap.svg"
@@ -65,6 +66,9 @@ import IconEdit2 from "../images/iconEdit2.svg"
 import IconDelete2 from "../images/iconDelete2.svg"
 import IconClose2 from "../images/iconClose2.svg"
 import IconCheck2 from "../images/iconCheck2.svg"
+
+import IconList from "../images/iconList.svg"
+import IconSaveDate from "../images/iconSaveDate.svg"
 
 const images = {
   Logo,
@@ -116,6 +120,7 @@ const images = {
   IconTarget2,
 
   ExclamationMark,
+  CheckMark,
 
   ProfessionalValue,
   ProfessionalRoadmap,
@@ -134,6 +139,9 @@ const images = {
   IconDelete2,
   IconClose2,
   IconCheck2,
+
+  IconList,
+  IconSaveDate
 }
 
 export default images;

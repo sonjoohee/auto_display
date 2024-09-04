@@ -8,6 +8,7 @@ import MoleculeGoogleLoginForm from './MoleculeGoogleLoginForm';
 import MoleculeLoginForm from './MoleculeLoginForm';
 import { loginSuccessAtom } from '../../../../pages/AtomStates'; // 아톰 임포트
 import { palette } from '../../../../assets/styles/Palette';
+import images from '../../../../assets/styles/Images';
 
 const MoleculeLogin = ({ onClosePopup = () => {} }) => {
   const [loginSuccess, setLoginSuccess] = useAtom(loginSuccessAtom);
@@ -23,6 +24,11 @@ const MoleculeLogin = ({ onClosePopup = () => {} }) => {
 
   return (
     <LoginContainer>
+      <h1>
+        <img src={images.Logo} alt="" />
+        <span>시작하기</span>
+      </h1>
+
       <MoleculeGoogleLoginForm />
       <Separator>
         <hr /><span>or</span><hr />
@@ -36,6 +42,16 @@ export default MoleculeLogin;
 
 // CSS-in-JS 스타일링
 const LoginContainer = styled.div`
+  h1 {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    font-size:2rem;
+    font-weight:400;
+  }
+  
+
   min-width: 400px;
   margin: 0 auto;
   background-color: #fff;

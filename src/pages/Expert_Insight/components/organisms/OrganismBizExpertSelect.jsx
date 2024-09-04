@@ -63,7 +63,7 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
         { Object.keys(expert1ReportData).length === 0 &&
           <div>
             <img src={images.ImgChat} alt="" />
-            <p>10차시 전략 다회차 1:1 커피챗하기</p>
+            <p>10년차 전략 디렉터와 1:1 커피챗하기</p>
             <button type="button" onClick={() => handledExpertSelect(1)}>시작하기</button>
           </div>
         }

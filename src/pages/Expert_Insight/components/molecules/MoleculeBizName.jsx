@@ -1,16 +1,22 @@
 // C:\dev\Crowd_Insight-\src\pages\Expert_Insight\components\molecules\MoleculeBizName.jsx
 
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
 
 const MoleculeBizName = ({ bizName }) => {
+
+  const [isOpen, setIsOpen] = useState(false);
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <>
       {/* 아이디어 분석 완료시 */}
-      {/*
+      
       <BizNameContainer>
         <div>
           <span><img src={images.Graph} alt="" /></span>
@@ -22,11 +28,22 @@ const MoleculeBizName = ({ bizName }) => {
             <p>10 min ago</p>
           </NameTitle>
         </div>
-        <button type="button">내가 쓴 설명 보기</button>
+        <button type="button" onClick={toggleMenu}>내가 쓴 설명 보기</button>
+
+        {isOpen && (
+        <AutosavePopup>
+          <strong>
+            <span>일시 : 2024년 8월 28일</span>
+            내가 작성한 아이템 및 아이디어 설명
+          </strong>
+          <p>유데미 큐레이션 이벤트 페이지를 이용하려는 20대 여자 취업준비생인데 부트캠프, 자격증패키지, 기획전,스터디모임 등등을 알아보려하는 모습</p>
+        </AutosavePopup>
+      )}
       </BizNameContainer>
-      */}
+    
 
       {/* 아이디어 설명 입력 데이터만 있는 경우 */}
+      {/*
       <BizNameContainer>
         <div>
           <span><img src={images.Graph} alt="" /></span>
@@ -38,6 +55,7 @@ const MoleculeBizName = ({ bizName }) => {
           </NameTitle>
         </div>
       </BizNameContainer>
+    */}
 
       {/* 아이디어 설명 없는 경우 */}
       {/* 
@@ -67,7 +85,7 @@ const BizNameContainer = styled.div`
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding: 20px;
+  padding:16px 20px;
   margin-bottom:47px;
   text-align: center;
   border-radius:15px;
@@ -142,4 +160,53 @@ const Badge = styled.div`
   padding:2px 6px;
   border-radius:10px;
   background:#E2E8FE;
+`;
+
+const AutosavePopup = styled.div`
+  position:absolute;
+  right:-70px;
+  top:77px;
+  max-width:304px;
+  flex-direction:column;
+  gap:20px !important;
+  text-align:left;
+  padding:24px;
+  border-radius:20px;
+  background:${palette.white};
+  box-shadow:0 4px 20px rgba(0,0,0,.2);
+
+  &:before {
+    position:absolute;
+    top:-12px;
+    left:50%;
+    transform:translateX(-50%);
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0px 20px 12px 20px;
+    border-color: transparent transparent ${palette.white} transparent;
+    filter:drop-shadow(0 4px 20px rgba(0,0,0,.2));
+    content:'';
+    zindex:0;
+  }
+
+  strong {
+    font-size:0.75rem;
+    font-weight:700;
+    color:${palette.gray};
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    width:100%;
+  }
+
+  span {
+    font-size:0.63rem;
+    font-weight:300;
+  }
+
+  p {
+    font-size:0.75rem;
+    line-height:1.5;
+  }
 `;
