@@ -1,6 +1,6 @@
-import axios from 'axios';
-import { useAtom } from 'jotai';
-import { isLoggedInAtom } from '../pages/AtomStates'; // AtomStates 파일에서 isLoggedInAtom 임포트
+import axios from "axios";
+import { useAtom } from "jotai";
+import { isLoggedInAtom } from "../pages/AtomStates"; // AtomStates 파일에서 isLoggedInAtom 임포트
 
 export const fetchDataById = async (id) => {
   try {
@@ -8,21 +8,24 @@ export const fetchDataById = async (id) => {
     const response = await axios.get(apiUrl);
     return response.data;
   } catch (error) {
-    console.error('Error fetching data from server:', error);
+    console.error("Error fetching data from server:", error);
     throw error;
   }
 };
 
 export const openDB = () => {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open('MyAppDB', 2); // 버전이 1인지 확인
+    const request = indexedDB.open("MyAppDB", 2); // 버전이 1인지 확인
 
     request.onupgradeneeded = (event) => {
       const db = event.target.result;
 
       // 오브젝트 스토어가 없으면 생성
-      if (!db.objectStoreNames.contains('conversations')) {
-        db.createObjectStore('conversations', { keyPath: 'id', autoIncrement: false });
+      if (!db.objectStoreNames.contains("conversations")) {
+        db.createObjectStore("conversations", {
+          keyPath: "id",
+          autoIncrement: false,
+        });
       }
     };
 
@@ -31,7 +34,7 @@ export const openDB = () => {
     };
 
     request.onerror = (event) => {
-      reject('IndexedDB Error: ' + event.target.errorCode);
+      reject("IndexedDB Error: " + event.target.errorCode);
     };
   });
 };
@@ -40,19 +43,23 @@ export const saveConversationToIndexedDB = async (conversation, isLoggedIn) => {
   if (isLoggedIn) {
     // 사용자 로그인 시 서버에 저장
     try {
-      await axios.post('https://wishresearch.kr/panels/create_chat', conversation);
+      await axios.post(
+        "https://wishresearch.kr/panels/create_chat",
+        conversation
+      );
     } catch (error) {
-      console.error('Error saving conversation to server:', error);
+      console.error("Error saving conversation to server:", error);
     }
   } else {
     // 비로그인 시 IndexedDB에 저장
     const db = await openDB();
-    const transaction = db.transaction('conversations', 'readwrite');
-    const store = transaction.objectStore('conversations');
+    const transaction = db.transaction("conversations", "readwrite");
+    const store = transaction.objectStore("conversations");
     return new Promise((resolve, reject) => {
       const request = store.put(conversation);
       request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject('Failed to save conversation to IndexedDB');
+      request.onerror = () =>
+        reject("Failed to save conversation to IndexedDB");
     });
   }
 };
@@ -61,64 +68,70 @@ export const getConversationByIdFromIndexedDB = async (id, isLoggedIn) => {
   if (isLoggedIn) {
     // 사용자 로그인 시 서버에서 데이터 가져오기
     try {
-      const response = await axios.get(`https://wishresearch.kr/panels/chat_list`);
+      const response = await axios.get(
+        `https://wishresearch.kr/panels/chat_list`
+      );
       return response.data;
     } catch (error) {
-      console.error('Error fetching conversation from server:', error);
+      console.error("Error fetching conversation from server:", error);
       return null;
     }
   } else {
     // 비로그인 시 IndexedDB에서 데이터 가져오기
     const db = await openDB();
-    const transaction = db.transaction('conversations', 'readonly');
-    const store = transaction.objectStore('conversations');
+    const transaction = db.transaction("conversations", "readonly");
+    const store = transaction.objectStore("conversations");
     return new Promise((resolve, reject) => {
       const request = store.get(id);
       request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject('Failed to fetch conversation from IndexedDB');
+      request.onerror = () =>
+        reject("Failed to fetch conversation from IndexedDB");
     });
   }
 };
 
 export const getAllConversationsFromIndexedDB = async () => {
   const db = await openDB();
-  const transaction = db.transaction('conversations', 'readonly');
-  const store = transaction.objectStore('conversations');
+  const transaction = db.transaction("conversations", "readonly");
+  const store = transaction.objectStore("conversations");
   return new Promise((resolve, reject) => {
     const request = store.getAll();
     request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject('Failed to fetch conversations from IndexedDB');
+    request.onerror = () =>
+      reject("Failed to fetch conversations from IndexedDB");
   });
 };
 
 export const saveRecordToIndexedDB = async (record) => {
   const db = await openDB();
-  const transaction = db.transaction('records', 'readwrite');
-  const store = transaction.objectStore('records');
+  const transaction = db.transaction("records", "readwrite");
+  const store = transaction.objectStore("records");
   return new Promise((resolve, reject) => {
     const request = store.add(record);
     request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject('Failed to save record to IndexedDB');
+    request.onerror = () => reject("Failed to save record to IndexedDB");
   });
 };
 
 export const getAllRecordsFromIndexedDB = async () => {
   const db = await openDB();
-  const transaction = db.transaction('records', 'readonly');
-  const store = transaction.objectStore('records');
+  const transaction = db.transaction("records", "readonly");
+  const store = transaction.objectStore("records");
   return new Promise((resolve, reject) => {
     const request = store.getAll();
     request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject('Failed to fetch records from IndexedDB');
+    request.onerror = () => reject("Failed to fetch records from IndexedDB");
   });
 };
 
 export const createChatOnServer = async () => {
   try {
-    const response = await axios.post('http://127.0.0.1:8000/panels/create_chat');
+    const response = await axios.post(
+      "https://wishresearch.kr/panels/create_chat"
+    );
     return response.data.conversationId; // 서버로부터 가져온 conversationId를 반환
   } catch (error) {
-    console.error('Error creating chat on server:', error);
+    console.error("Error creating chat on server:", error);
     throw error;
   }
 };
