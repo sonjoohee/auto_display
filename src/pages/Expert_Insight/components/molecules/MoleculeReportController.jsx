@@ -460,58 +460,59 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
         <Popup Cancel
           onClick={(e) => {
             if (e.target === e.currentTarget) {
-              toogleCopy();
+              closePopupCopy();
             }
           }}
         >
           <div>
-            <button type="button" className="closePopup" onClick={toogleCopy}>닫기</button>
+            <button type="button" className="closePopup" onClick={closePopupCopy}>닫기</button>
             <span><img src={images.CheckMark} alt="" /></span>
             <p>복사가 완료되었습니다</p>
             <div className="btnWrap">
-              <button type="button" onClick={toogleCopy}>확인</button>
+              <button type="button" onClick={closePopupCopy}>확인</button>
             </div>
           </div>
         </Popup>
       )}
 
-      {isPopupSave && (
-        <Popup Cancel
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              toogleSave();
-            }
-          }}
-        >
-          <div>
-            <button type="button" className="closePopup" onClick={toogleSave}>닫기</button>
-            <span><img src={images.CheckMark} alt="" /></span>
-            <p>저장되었습니다.<br />인사이트 보관함을 확인해주세요</p>
-            <div className="btnWrap">
-              <button type="button" onClick={toogleSave}>확인</button>
-            </div>
-          </div>
-        </Popup>
-      )}
+{isPopupSave && (
+  <Popup Cancel
+    onClick={(e) => {
+      if (e.target === e.currentTarget) {
+        closePopupSave();  // 상태를 false로 설정
+      }
+    }}
+  >
+    <div>
+      <button type="button" className="closePopup" onClick={closePopupSave}>닫기</button>
+      <span><img src={images.CheckMark} alt="" /></span>
+      <p>저장되었습니다.<br />인사이트 보관함을 확인해주세요</p>
+      <div className="btnWrap">
+        <button type="button" onClick={closePopupSave}>확인</button>
+      </div>
+    </div>
+  </Popup>
+)}
 
-      {isPopupCopy && (
-        <Popup Cancel
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              toogleCopy();
-            }
-          }}
-        >
-          <div>
-            <button type="button" className="closePopup" onClick={toogleCopy}>닫기</button>
-            <span><img src={images.CheckMark} alt="" /></span>
-            <p>복사가 완료되었습니다</p>
-            <div className="btnWrap">
-              <button type="button" onClick={toogleCopy}>확인</button>
-            </div>
-          </div>
-        </Popup>
-      )}
+{isPopupCopy && (
+  <Popup Cancel
+    onClick={(e) => {
+      if (e.target === e.currentTarget) {
+        closePopupCopy();  // 상태를 false로 설정
+      }
+    }}
+  >
+    <div>
+      <button type="button" className="closePopup" onClick={closePopupCopy}>닫기</button>
+      <span><img src={images.CheckMark} alt="" /></span>
+      <p>복사가 완료되었습니다</p>
+      <div className="btnWrap">
+        <button type="button" onClick={closePopupCopy}>확인</button>
+      </div>
+    </div>
+  </Popup>
+)}
+
       {isLoginPopupOpen && <MoleculeLoginPopup onClose={closeLoginPopup} />}
     </>
   );
