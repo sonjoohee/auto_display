@@ -97,6 +97,7 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
             timestamp: Date.now(),
           };
           await saveConversationToIndexedDB(updatedConversation);
+          console.log()
         } else {
           // 기존 데이터가 있을 때 처리
           setTabs(additionalReportData[selectedTab]?.tabs || []);

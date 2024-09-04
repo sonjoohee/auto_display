@@ -19,7 +19,6 @@ import PageAIPanelList from './pages/AI_Panel/components/pages/PageAIPanelList';
 import BusinessTool from './pages/Business_Tool';
 import PageMeetAiExpert from './pages/Meet_Ai_Expert/components/pages/PageMeetAiExpert';
 import PageExpertInsight from "./pages/Expert_Insight/components/pages/PageExpertInsight";
-import PageTestIndexedDB from './pages/Meet_Ai_Expert/components/pages/PageTestIndexedDB'; // 추가된 부분
 
 // Biz
 import Lending from './pages/Lending';
@@ -66,8 +65,7 @@ function App() {
             <Route path="/PersonaGenerator" element={<PersonaGenerator />} />
 
             {/* 추가된 Route */}
-            <Route path="/test-indexeddb" element={<PageTestIndexedDB />} />
-            <Route path="/test-indexeddb/:id" element={<PageTestIndexedDB />} />
+
             <Route path="/report/:id" element={<OrganismReportPopup />} />
             <Route path="/conversation/:conversationId" element={<PageExpertInsight />} />
           </Routes>
