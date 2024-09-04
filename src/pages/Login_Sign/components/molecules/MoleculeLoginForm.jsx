@@ -116,8 +116,6 @@ const MoleculeLoginForm = () => {
     setIsSignupPopupOpen(false);
   };
 
-  
-
   return (
     <LoginFormContainer>
       <div>
@@ -151,7 +149,7 @@ const MoleculeLoginForm = () => {
         <a onClick={handlePasswordReset}>비밀번호 찾기</a>
       </PasswordResetLink>
 
-      <StyledLoginButton onClick={handleLogin}>로그인</StyledLoginButton>
+      <StyledLoginButton onClick={handleLogin} disabled={!email || !password}>로그인</StyledLoginButton>
 
       <JoinWrap>
         <p>InterviewX가 처음이에요</p>
@@ -255,6 +253,11 @@ const StyledLoginButton = styled.button`
   background-color:${palette.blue};
   font-size: 16px;
   cursor: pointer;
+
+  &:disabled {
+    background:#D6D6D6;
+    pointer-events:none;
+  }
 `;
 
 const JoinWrap = styled.div`

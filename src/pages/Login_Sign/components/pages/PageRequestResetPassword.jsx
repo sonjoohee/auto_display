@@ -101,7 +101,7 @@ const RequestResetPassword = () => {
           />
         </div>
 
-        <StyledButton onClick={handleRequestReset}>비밀번호 재설정 링크 보내기</StyledButton>
+        <StyledButton onClick={handleRequestReset}>비밀번호 찾기</StyledButton>
 
         {message && <Message>{message}</Message>}
       </PasswordFormContainer>
