@@ -1,18 +1,31 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { palette } from '../../../../assets/styles/Palette';
-import ReactDOM from 'react-dom';
+import React, { useState } from "react";
+import styled from "styled-components";
+import { palette } from "../../../../assets/styles/Palette";
+import ReactDOM from "react-dom";
 
-import images from '../../../../assets/styles/Images';
+import images from "../../../../assets/styles/Images";
 
 const OrganismReportPopup = ({ report, onClose }) => {
   if (!report) return null;
 
-  const reportIndex = report.reportIndex !== undefined
-    ? report.reportIndex
-    : report.type === 'strategy'
-    ? 1
-    : 0;
+  const reportIndex =
+    report.reportIndex !== undefined
+      ? report.reportIndex
+      : report.type === "strategy"
+      ? 1
+      : 0;
+  let reportTypeText;
+  {
+    reportIndex === 0 && (reportTypeText = "비즈니스 분석");
+  }
+
+  {
+    reportIndex === 1 && (reportTypeText = "전문가 보고서");
+  }
+
+  {
+    reportIndex === 2 && (reportTypeText = "전문가 보고서");
+  }
 
   return ReactDOM.createPortal(
     <PopupOverlay onClick={onClose}>
@@ -20,28 +33,28 @@ const OrganismReportPopup = ({ report, onClose }) => {
         <div className="title">
           <h1>{report.title}</h1>
           <p>
-            <span><img src={images.IconList} alt="" />마케팅</span>
+            <span>
+              <img src={images.IconList} alt="" />
+              {reportTypeText}
+            </span>
             {/* <span>생성 : {report.date}</span> */}
-            <span><img src={images.IconSaveDate} alt="" />저장 : {report.date}</span>
+            <span>
+              <img src={images.IconSaveDate} alt="" />
+              저장 : {report.date}
+            </span>
           </p>
         </div>
 
-        {reportIndex === 0 && (
-          <BizAnalysisSection report={report} />
-        )}
+        {reportIndex === 0 && <BizAnalysisSection report={report} />}
 
-        {reportIndex === 1 && (
-          <StrategyReportSection report={report} />
-        )}
+        {reportIndex === 1 && <StrategyReportSection report={report} />}
 
-        {reportIndex === 2 && (
-          <StrategyReportSection report={report} />
-        )}
+        {reportIndex === 2 && <StrategyReportSection report={report} />}
 
         <CloseButton onClick={onClose}>닫기</CloseButton>
       </PopupContent>
     </PopupOverlay>,
-    document.body  // 팝업을 document.body 아래에 렌더링
+    document.body // 팝업을 document.body 아래에 렌더링
   );
 };
 
@@ -61,28 +74,28 @@ const PopupOverlay = styled.div`
 `;
 
 const PopupContent = styled.div`
-  position:relative;
+  position: relative;
   max-width: 1200px;
   width: 100%;
   max-height: 80%;
-  display:flex;
-  flex-direction:column;
-  gap:44px;
+  display: flex;
+  flex-direction: column;
+  gap: 44px;
   text-align: left;
   padding: 32px;
   border-radius: 15px;
-  background:${palette.white};
+  background: ${palette.white};
   z-index: 10001;
 
   .title {
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-    padding:16px 20px;
-    border-radius:15px;
-    border:1px solid ${palette.lineGray};
-    background:${palette.white};
-    box-shadow:0 4px 20px rgba(0,0,0,.05);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px 20px;
+    border-radius: 15px;
+    border: 1px solid ${palette.lineGray};
+    background: ${palette.white};
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   }
 
   h1 {
@@ -92,24 +105,24 @@ const PopupContent = styled.div`
 
   p {
     font-size: 0.75rem;
-    color:${palette.gray};
-    display:flex;
-    align-items:center;
-    gap:20px;
+    color: ${palette.gray};
+    display: flex;
+    align-items: center;
+    gap: 20px;
 
     span {
-      display:flex;
-      align-items:center;
-      gap:6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
   }
 `;
 
 const SectionTitle = styled.h2`
   font-size: 1rem;
-  display:flex;
-  align-items:center;
-  gap:8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin-bottom: 12px;
 `;
 
@@ -119,59 +132,60 @@ const List = styled.ul`
 `;
 
 const ListItem = styled.li`
-  position:relative;
-  display:flex;
-  align-items:center;
-  gap:5px;
-  padding-left:10px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding-left: 10px;
 
   &:before {
-    position:absolute;
-    left:0;
-    top:10px;
-    width:5px;
-    height:1px;
-    background:${palette.darkGray};
-    content:'';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 5px;
+    height: 1px;
+    background: ${palette.darkGray};
+    content: "";
   }
 
   p {
-    font-size:0.875rem;
-    color:${palette.darkGray};
-    line-height:1.5;
+    font-size: 0.875rem;
+    color: ${palette.darkGray};
+    line-height: 1.5;
   }
 `;
 
 const CloseButton = styled.button`
-  position:absolute;
-  right:0;
-  top:-40px;
-  font-family: 'Pretendard';
-  font-size:1rem;
-  color:${palette.white};
-  padding:5px 26px 5px 0;
-  border:0;
-  outline:none;
-  background:none;
-  cursor:pointer;
+  position: absolute;
+  right: 0;
+  top: -40px;
+  font-family: "Pretendard";
+  font-size: 1rem;
+  color: ${palette.white};
+  padding: 5px 26px 5px 0;
+  border: 0;
+  outline: none;
+  background: none;
+  cursor: pointer;
 
-  &:before, &:after {
-    position:absolute;
-    top:50%;
-    right:6px;
-    width:2px;
-    height:18px;
-    border-radius:5px;
-    background:${palette.white};
-    content:'';
+  &:before,
+  &:after {
+    position: absolute;
+    top: 50%;
+    right: 6px;
+    width: 2px;
+    height: 18px;
+    border-radius: 5px;
+    background: ${palette.white};
+    content: "";
   }
 
   &:before {
-    transform:translateY(-50%) rotate(45deg);
+    transform: translateY(-50%) rotate(45deg);
   }
 
   &:after {
-    transform:translateY(-50%) rotate(-45deg);
+    transform: translateY(-50%) rotate(-45deg);
   }
 `;
 
@@ -202,7 +216,7 @@ const BoxWrap = styled.div`
 
   button {
     flex-shrink: 0;
-    font-family: 'Pretendard';
+    font-family: "Pretendard";
     font-size: 0.75rem;
     color: ${palette.gray};
     padding: 5px 10px;
@@ -218,9 +232,9 @@ const BoxWrap = styled.div`
   }
 
   p {
-    font-size:0.875rem;
-    color:${palette.darkGray};
-    line-height:1.5;
+    font-size: 0.875rem;
+    color: ${palette.darkGray};
+    line-height: 1.5;
   }
 `;
 
@@ -231,33 +245,48 @@ const BizAnalysisSection = ({ report }) => {
 
   return (
     <>
-    <ContentsWrap>
-      <h1>{report.title}</h1>
-      <BoxWrap>
-        <SectionTitle><img src={images.StarChack} alt="" />주요 특징</SectionTitle>
-        <List>
-          {mainFeatures.map((feature, index) => (
-            <ListItem key={index}><p>{feature}</p></ListItem>
-          ))}
-        </List>
-      </BoxWrap>
-      <BoxWrap>
-        <SectionTitle><img src={images.IconSetting} alt="" />주요 기능</SectionTitle>
-        <List>
-          {mainCharacter.map((func, index) => (
-            <ListItem key={index}><p>{func}</p></ListItem>
-          ))}
-        </List>
-      </BoxWrap>
-      <BoxWrap>
-        <SectionTitle><img src={images.IconTarget} alt="" />목표 고객</SectionTitle>
-        <List>
-          {mainCustomer.map((customer, index) => (
-            <ListItem key={index}><p>{customer}</p></ListItem>
-          ))}
-        </List>
-      </BoxWrap>
-    </ContentsWrap>
+      <ContentsWrap>
+        <h1>{report.title}</h1>
+        <BoxWrap>
+          <SectionTitle>
+            <img src={images.StarChack} alt="" />
+            주요 특징
+          </SectionTitle>
+          <List>
+            {mainFeatures.map((feature, index) => (
+              <ListItem key={index}>
+                <p>{feature}</p>
+              </ListItem>
+            ))}
+          </List>
+        </BoxWrap>
+        <BoxWrap>
+          <SectionTitle>
+            <img src={images.IconSetting} alt="" />
+            주요 기능
+          </SectionTitle>
+          <List>
+            {mainCharacter.map((func, index) => (
+              <ListItem key={index}>
+                <p>{func}</p>
+              </ListItem>
+            ))}
+          </List>
+        </BoxWrap>
+        <BoxWrap>
+          <SectionTitle>
+            <img src={images.IconTarget} alt="" />
+            목표 고객
+          </SectionTitle>
+          <List>
+            {mainCustomer.map((customer, index) => (
+              <ListItem key={index}>
+                <p>{customer}</p>
+              </ListItem>
+            ))}
+          </List>
+        </BoxWrap>
+      </ContentsWrap>
     </>
   );
 };
@@ -289,9 +318,14 @@ const StrategyReportSection = ({ report }) => {
 
         {tabs[selectedTab]?.sections?.map((section, index) => (
           <BoxWrap key={index}>
-            {section.title && <SectionTitle><img src={images.Check} alt="" />{section.title}</SectionTitle>}
-            {section.content && (
-              section.content.some((item) => item.subTitle) ? (
+            {section.title && (
+              <SectionTitle>
+                <img src={images.Check} alt="" />
+                {section.title}
+              </SectionTitle>
+            )}
+            {section.content &&
+              (section.content.some((item) => item.subTitle) ? (
                 <TwoColumnGrid>
                   {section.content.map((item, idx) => (
                     <div key={idx}>
@@ -308,8 +342,7 @@ const StrategyReportSection = ({ report }) => {
                     {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
                   </div>
                 ))
-              )
-            )}
+              ))}
           </BoxWrap>
         ))}
       </ContentsWrap>
@@ -319,39 +352,40 @@ const StrategyReportSection = ({ report }) => {
 
 // 스타일 컴포넌트들
 const ContentsWrap = styled.div`
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  padding:28px;
-  border-radius:15px;
-  border:1px solid ${palette.lineGray};
-  overflow-y:auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 28px;
+  border-radius: 15px;
+  border: 1px solid ${palette.lineGray};
+  overflow-y: auto;
 
   h1 {
-    font-size:1.25rem;
-    font-weight:400;
-    margin-bottom:8px;
+    font-size: 1.25rem;
+    font-weight: 400;
+    margin-bottom: 8px;
   }
 `;
 
 const TabHeader = styled.div`
   display: flex;
-  align-items:center;
-  gap:40px;
+  align-items: center;
+  gap: 40px;
   margin-bottom: 20px;
 `;
 
 const TabButton = styled.button`
-  font-family: 'Pretendard';
+  font-family: "Pretendard";
   font-size: 1.25rem;
-  font-weight: ${(props) => (props.active ? '500' : '400')};
-  color: ${(props) => (props.active ? `${palette.black}` : 'rgba(0,0,0,.2)')};
+  font-weight: ${(props) => (props.active ? "500" : "400")};
+  color: ${(props) => (props.active ? `${palette.black}` : "rgba(0,0,0,.2)")};
   border: none;
   outline: none;
-  border-bottom: ${(props) => (props.active ? `1px solid ${palette.black}` : 'none')};
-  background:${palette.white};
+  border-bottom: ${(props) =>
+    props.active ? `1px solid ${palette.black}` : "none"};
+  background: ${palette.white};
   cursor: pointer;
-  transition:all .5s;
+  transition: all 0.5s;
 
   &:hover {
     color: ${palette.black};
@@ -365,16 +399,16 @@ const TwoColumnGrid = styled.div`
   margin-top: 10px;
 
   > div {
-    padding:12px;
-    border-radius:10px;
-    border:1px solid ${palette.lineGray};
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid ${palette.lineGray};
   }
 `;
 
 const SubTitle = styled.div`
   font-size: 0.875rem;
-  color:${palette.gray};
-  margin-bottom:5px;
+  color: ${palette.gray};
+  margin-bottom: 5px;
 `;
 
 const SubTextBox = styled.div`
