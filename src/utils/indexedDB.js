@@ -89,7 +89,7 @@ export const getConversationByIdFromIndexedDB = async (id, isLoggedIn) => {
   if (isLoggedIn) {
     // 사용자 로그인 시 서버에서 데이터 가져오기
     try {
-      const response = await axios.get(
+      const response = await axios.put(
         `https://wishresearch.kr/panels/chat_list`
       );
       return response.data;
