@@ -53,7 +53,7 @@ const MoleculeLoginForm = () => {
       
       if (response.ok) {
         const result = await response.json();
-  
+        console.log(result)
         sessionStorage.setItem('accessToken', result.access_token);
   
         setCurrentUser(result.user);

@@ -4,8 +4,8 @@ import './App.css';
 import GlobalStyles from "./assets/GlobalStyle";
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { useAtom } from 'jotai';
-import { isLoggedInAtom } from './pages/AtomStates'; // 로그인 상태 아톰 임포트
+import { useAtom , } from 'jotai';
+import { isLoggedInAtom,USER_NAME, USER_EMAIL } from './pages/AtomStates'; // 로그인 상태 아톰 임포트
 
 import PageLogin from './pages/Login_Sign/components/pages/PageLogin';
 import PageSignup from './pages/Login_Sign/components/pages/PageSignup';
@@ -33,15 +33,30 @@ import OrganismReportPopup from './pages/Expert_Insight/components/organisms/Org
 
 function App() {
   const [, setIsLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태를 위한 아톰
+  const [, setUserName] = useAtom(USER_NAME); // 유저 이름 아톰
+  const [, setUserEmail] = useAtom(USER_EMAIL); // 유저 이메일 아톰
+
   // 애플리케이션이 로드될 때 로그인 상태 확인
   useEffect(() => {
     const token = sessionStorage.getItem('accessToken'); // sessionStorage에서 토큰 확인
+    const storedUserName = sessionStorage.getItem('userName');
+    const storedUserEmail = sessionStorage.getItem('userEmail');
+
     if (token) {
       setIsLoggedIn(true);  // 토큰이 있으면 로그인 상태로 설정
     } else {
       setIsLoggedIn(false); // 토큰이 없으면 로그아웃 상태로 설정
     }
-  }, [setIsLoggedIn]);
+
+    if (storedUserName) {
+      setUserName(storedUserName); // 이름 아톰 업데이트
+    }
+
+    if (storedUserEmail) {
+      setUserEmail(storedUserEmail); // 이메일 아톰 업데이트
+    }
+  }, [setIsLoggedIn, setUserName, setUserEmail]);
+
 
   return (
     <div className="App">

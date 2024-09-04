@@ -8,14 +8,16 @@ import styled from 'styled-components';
 import axios from 'axios';
 import images from '../../assets/styles/Images'; // Images.jsx 임포트
 import { useAtom } from 'jotai';
-import { isLoggedInAtom, loginSuccessAtom } from '../../../../pages/AtomStates'; // 아톰 임포트
+import { isLoggedInAtom, loginSuccessAtom ,USER_NAME, USER_EMAIL} from '../../../../pages/AtomStates'; // 아톰 임포트
 
 import { palette } from '../../../../assets/styles/Palette';
 
 const MoleculeGoogleLoginForm = () => {
   const [, setIsLoggedIn] = useAtom(isLoggedInAtom);
   const [, setLoginSuccess] = useAtom(loginSuccessAtom);
-
+  const [, setUserName] = useAtom(USER_NAME); // 유저 이름 아톰
+  const [, setUserEmail] = useAtom(USER_EMAIL); // 유저 이메일 아톰
+  
   const handleGoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, provider);
@@ -28,12 +30,19 @@ const MoleculeGoogleLoginForm = () => {
         name: user.displayName,
         email: user.email,
       }, { withCredentials: true });
-
+      
+      const userName = user.displayName;
+      const userEmail = user.email;
       const serverAccessToken = response.data.access_token; // 서버에서 받은 토큰
       sessionStorage.setItem('accessToken', serverAccessToken); // 서버 토큰 저장
-
+      sessionStorage.setItem('userName', userName); // 서버 토큰 저장
+      sessionStorage.setItem('userEmail', userEmail); // 서버 토큰 저장
+      console.log(userName ,userEmail )
+      
       // 로그인 성공 시 처리
       setIsLoggedIn(true); // 아톰 업데이트
+      setUserName(userName); // 유저 이름 업데이트
+      setUserEmail(userEmail); // 유저 이메일 업데이트
       setLoginSuccess(true);
     } catch (error) {
       console.error(error);

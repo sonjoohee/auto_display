@@ -6,7 +6,8 @@ export const emailAtom = atom('');
 export const passwordAtom = atom('');
 export const isLoggedInAtom = atom(false);
 export const loginSuccessAtom = atom(null);
-
+export const USER_NAME = atom(''); // 유저 이름
+export const USER_EMAIL = atom(''); // 유저 이메일
 // 회원가입 상태
 export const nameAtom = atom('');
 export const signupEmailAtom = atom('');
