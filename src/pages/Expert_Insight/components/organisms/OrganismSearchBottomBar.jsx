@@ -84,7 +84,7 @@ const BottomBar = styled.div`
   flex-basis: 100% !important;
   // margin:0 20px;
   margin-top: 40px;
-  z-index: 1000;
+  z-index: 998;
   flex: auto !important;
 
   > p {
