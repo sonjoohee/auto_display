@@ -256,7 +256,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
           )
         )}
   
-        <MoleculeReportController reportIndex={1} strategyReportID={sampleData.expert_id} conversationId={conversationId} sampleData={sampleData} />
+        <MoleculeReportController reportIndex={1} strategyReportID={strategyReportAtom.expert_id} conversationId={conversationId} sampleData={strategyReportAtom} />
       </AnalysisSection>
     </>
   );
