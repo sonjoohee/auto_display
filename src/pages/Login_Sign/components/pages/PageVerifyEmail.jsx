@@ -10,7 +10,7 @@ const VerifyEmail = () => {
     const token = queryParams.get('token');
     const userid = queryParams.get('id');
     // https://wishresearch.kr/api/user/activate/4?auth=${token}
-    // http://localhost:4008/verify-email?token=${token}
+
     if (token && !isVerified) { // isVerified가 false일 때만 요청
       fetch(`https://wishresearch.kr/api/user/activate/${userid}?auth=${token}`)
         .then(response => {

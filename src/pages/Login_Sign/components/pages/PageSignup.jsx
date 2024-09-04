@@ -18,7 +18,7 @@ const PageSignup = () => {
       {(handleLoginClick) => (
         <SignupPageContainer>
           <SignupHeader>
-            Crowd Insight 회원가입
+            InterviewX 회원가입
             <p>지금 바로 가입하고 수천명의 AI 패널을 만나보세요</p>
           </SignupHeader>
 

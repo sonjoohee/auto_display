@@ -2,7 +2,7 @@
   "name": "crowd_insight",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://52.79.204.29:7800",
+  "proxy": "https://wishresearch.kr",
   "dependencies": {
     "@paypal/react-paypal-js": "^8.5.0",
     "@testing-library/jest-dom": "^5.17.0",

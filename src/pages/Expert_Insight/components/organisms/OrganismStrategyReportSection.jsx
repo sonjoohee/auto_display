@@ -139,6 +139,80 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
     };
     loadData();
   }, [buttonState, conversationId, selectedTab, expertIndex]);  // buttonState 의존성 추가
+// =======
+
+//   useEffect(() => {
+//     const loadData = async () => {
+//       setIsLoading(true);
+//       try {
+//         const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
+//         const currentReportKey = `strategyReportData_EX${expertIndex}`;
+
+//         if (
+//           existingConversation &&
+//           existingConversation[currentReportKey] &&
+//           existingConversation[currentReportKey].expert_id === parseInt(expertIndex, 10)
+//         ) {
+//           const strategyData = existingConversation[currentReportKey];
+//           setStrategyReportData(strategyData);
+//           setTabs(strategyData.tabs);
+//           setSections(strategyData.tabs[selectedTab].sections);
+//         } else if (Object.keys(strategyReportData).length === 0) {
+//           const data = {
+//             expert_id: expertIndex,
+//             business_info: titleOfBusinessInfo, // DB에서 가져온 titleOfBusinessInfo 사용
+//             business_analysis_data: {
+//               명칭: analysisReportData.title,
+//               개요: {
+//                 주요_목적_및_특징: analysisReportData.mainFeatures.map((feature) => feature.기능),
+//               },
+//               주요기능: analysisReportData.mainFeatures,
+//               목표고객: analysisReportData.mainCustomer,
+//             },
+//             tabs: [],
+//             page_index: 1,
+//           };
+
+
+//           const response1 = await axios.post('https://wishresearch.kr/panels/expert', data, axiosConfig);
+
+//           let finalResponse = response1.data;
+
+//           if (finalResponse.total_page_index === 2) {
+//             const response2 = await axios.post('https://wishresearch.kr/panels/expert', finalResponse, axiosConfig);
+//             finalResponse = response2.data;
+//           } else if (finalResponse.total_page_index === 3) {
+//             const response2 = await axios.post('https://wishresearch.kr/panels/expert', finalResponse, axiosConfig);
+//             const response3 = await axios.post('https://wishresearch.kr/panels/expert', response2.data, axiosConfig);
+//             finalResponse = response3.data;
+//           }
+
+//           console.log('Final response data:', finalResponse);
+
+//           const strategyData = finalResponse;
+
+//           setStrategyReportData(strategyData);
+//           setTabs(strategyData.tabs);
+//           setSections(strategyData.tabs[selectedTab].sections);
+
+//           const updatedConversation = {
+//             ...existingConversation,
+//             [currentReportKey]: strategyData,
+//             timestamp: Date.now(),
+//           };
+//           await saveConversationToIndexedDB(updatedConversation);
+//         } else {
+//           setTabs(strategyReportData.tabs);
+//           setSections(strategyReportData.tabs[selectedTab].sections);
+//         }
+//       } catch (error) {
+//         console.error('Error loading data:', error);
+//       }
+//       setIsLoading(false);
+//     };
+//     loadData();
+//   }, [conversationId, selectedTab, expertIndex]);
+// >>>>>>> main
 
   const handleTabClick = (index) => {
     setSelectedTab(index);
@@ -186,6 +260,33 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
     </>
   );
   };
+// =======
+//     {isLoading && (
+//       <LoadingOverlay>
+//         <div className="loader"></div>
+//       </LoadingOverlay>
+//     )}
+//     <AnalysisSection Strategy>
+//       <TabHeader>
+//         {tabs.map((tab, index) => (
+//           <TabButton key={index} active={selectedTab === index} onClick={() => handleTabClick(index)}>
+//             {tab.title}
+//           </TabButton>
+//         ))}
+//       </TabHeader>
+
+//       {sections.map((section, index) => (
+//         <Section key={index} title={section.title} content={section.content} />
+//       ))}
+
+//       <MoleculeReportController reportIndex={1} strategyReportID={sampleData.expert_id} conversationId={conversationId} sampleData={sampleData} />
+//     </AnalysisSection>
+//     </>
+//   );
+// };
+
+// // ... (아래 부분은 동일)
+// >>>>>>> main
 
 const Section = ({ title, content }) => {
   // 서브 타이틀이 있는 항목과 없는 항목을 분리
