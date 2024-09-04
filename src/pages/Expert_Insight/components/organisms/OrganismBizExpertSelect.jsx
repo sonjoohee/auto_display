@@ -17,6 +17,7 @@ import {
   SELECTED_ADDITIONAL_KEYWORD1,
   SELECTED_ADDITIONAL_KEYWORD2,
   SELECTED_ADDITIONAL_KEYWORD3,
+  EXPERT_BUTTON_STATE,
 } from '../../../AtomStates';
 
 const OrganismBizExpertSelect = ({ conversationId }) => {
@@ -36,7 +37,9 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
   const [selectedAdditionalKeyword1, setSelectedAdditionalKeyword1] = useAtom(SELECTED_ADDITIONAL_KEYWORD1);
   const [selectedAdditionalKeyword2, setSelectedAdditionalKeyword2] = useAtom(SELECTED_ADDITIONAL_KEYWORD2);
   const [selectedAdditionalKeyword3, setSelectedAdditionalKeyword3] = useAtom(SELECTED_ADDITIONAL_KEYWORD3);
-  
+
+  const [expertButtonState, setExpertButtonState] = useAtom(EXPERT_BUTTON_STATE); // 추가된 부분
+
   const handledExpertSelect = (index) => {
     setSelectedExpertIndex(index);
     setIsClickExpertSelect(true);
@@ -44,6 +47,7 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
     setAddtionalQuestion1("");
     setAddtionalQuestion2("");
     setAddtionalQuestion3("");
+    setExpertButtonState(1);
     
     if(index === 1) {
       setSelectedAdditionalKeyword1("");

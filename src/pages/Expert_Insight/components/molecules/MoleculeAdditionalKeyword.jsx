@@ -9,7 +9,7 @@ import {
   ADDITIONAL_QUESTION_1,
   ADDITIONAL_QUESTION_2,
   ADDITIONAL_QUESTION_3,
-  BUTTON_STATE, // BUTTON_STATE 추가
+  ADDITION_BUTTON_STATE, // BUTTON_STATE 추가
 } from '../../../AtomStates';
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
@@ -21,7 +21,7 @@ const MoleculeAdditionalKeyword = () => {
   const [addtionalQuestion2, setAddtionalQuestion2] = useAtom(ADDITIONAL_QUESTION_2);
   const [addtionalQuestion3, setAddtionalQuestion3] = useAtom(ADDITIONAL_QUESTION_3);
   const [questionList] = useAtom(QUESTION_LIST);
-  const [buttonState, setButtonState] = useAtom(BUTTON_STATE); // BUTTON_STATE 가져오기
+  const [buttonState, setButtonState] = useAtom(ADDITION_BUTTON_STATE); // BUTTON_STATE 가져오기
 
   const [randomSelections, setRandomSelections] = useState({});
 

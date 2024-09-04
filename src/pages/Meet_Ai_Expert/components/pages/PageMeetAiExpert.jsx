@@ -6,7 +6,7 @@ import {
   SELECTED_EXPERT_INDEX,
   INPUT_BUSINESS_INFO,
   APPROACH_PATH, 
-  BUTTON_STATE,
+  ANALYSIS_BUTTON_STATE,
 } from '../../../AtomStates';
 
 import { Link } from "react-router-dom";
@@ -20,7 +20,7 @@ import OrganismLeftSideBar from '../../../Expert_Insight/components/organisms/Or
 const PageMeetAiExpert = () => {
 
   const navigate = useNavigate();
-  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
+  const [buttonState, setButtonState] = useAtom(ANALYSIS_BUTTON_STATE);
 
   const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO); // 상태값으로 설정

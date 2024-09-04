@@ -7,7 +7,7 @@ import {
   EXPERT2_REPORT_DATA,
   EXPERT3_REPORT_DATA,
   SELECTED_TAB,
-  BUTTON_STATE,
+  EXPERT_BUTTON_STATE,
 } from '../../../AtomStates';
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
@@ -38,7 +38,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
   const [mainCharacteristicOfBusinessInformation, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
   const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [buttonState, setButtonState] = useAtom(BUTTON_STATE); // BUTTON_STATE 사용
+  const [buttonState, setButtonState] = useAtom(EXPERT_BUTTON_STATE); // BUTTON_STATE 사용
 
   const analysisReportData = {
     title: titleOfBusinessInfo,
