@@ -46,7 +46,7 @@ import IconChat from "../images/iconChat.svg"
 import IconWrite from "../images/iconWrite.svg"
 import IconTarget2 from "../images/iconTarget2.svg"
 
-import ExclamationMark from "../images/iconExclamationMark.svg"
+import ExclamationMark from "../images/iconExclamationMark1.svg"
 import CheckMark from "../images/CheckMark.svg"
 
 import ProfessionalValue from "../images/ProfessionalValue.svg"
@@ -69,6 +69,11 @@ import IconCheck2 from "../images/iconCheck2.svg"
 
 import IconList from "../images/iconList.svg"
 import IconSaveDate from "../images/iconSaveDate.svg"
+
+import AccountSetting from "../images/AccountSetting.svg"
+import AccountInfo from "../images/AccountInfo.svg"
+import AccountInquiry from "../images/AccountInquiry.svg"
+import AccountLogout from "../images/AccountLogout.svg"
 
 const images = {
   Logo,
@@ -141,7 +146,12 @@ const images = {
   IconCheck2,
 
   IconList,
-  IconSaveDate
+  IconSaveDate,
+
+  AccountSetting,
+  AccountInfo,
+  AccountInquiry,
+  AccountLogout,
 }
 
 export default images;
