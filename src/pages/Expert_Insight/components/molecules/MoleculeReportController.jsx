@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import styled, { css } from 'styled-components';
-import { useAtom } from 'jotai';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import styled, { css } from "styled-components";
+import { useAtom } from "jotai";
+import { useNavigate } from "react-router-dom";
 
 import {
   TITLE_OF_BUSINESS_INFORMATION,
@@ -25,41 +25,76 @@ import {
   SELECTED_ADDITIONAL_KEYWORD,
   CONVERSATION,
   isLoggedInAtom,
-} from '../../../AtomStates';
+} from "../../../AtomStates";
 
-import { palette } from '../../../../assets/styles/Palette';
-import images from '../../../../assets/styles/Images';
-import { saveConversationToIndexedDB, getConversationByIdFromIndexedDB } from '../../../../utils/indexedDB';
+import { palette } from "../../../../assets/styles/Palette";
+import images from "../../../../assets/styles/Images";
+import {
+  saveConversationToIndexedDB,
+  getConversationByIdFromIndexedDB,
+} from "../../../../utils/indexedDB";
 // import businessTemplate from '../organisms/sample_analyse.json'; // JSON 파일 불러오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
 
-const MoleculeReportController = ({ reportIndex, strategyReportID, conversationId, sampleData,  }) => {
-  const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
+const MoleculeReportController = ({
+  reportIndex,
+  strategyReportID,
+  conversationId,
+  sampleData,
+}) => {
+  const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
+    TITLE_OF_BUSINESS_INFORMATION
+  );
   const [isClickExpertSelect] = useAtom(IS_CLICK_EXPERT_SELECT);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
-  const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
-  const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
-  const [mainCharacteristicOfBusinessInformation, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
-  const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [tempMainFeaturesOfBusinessInformation, setTempMainFeaturesOfBusinessInformation] = useAtom(TEMP_MAIN_FEATURES_OF_BUSINESS_INFORMATION);
-  const [tempMainCharacteristicOfBusinessInformation, setTempMainCharacteristicOfBusinessInformation] = useAtom(TEMP_MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
-  const [tempMusinessInformationTargetCustomer, setTemptBusinessInformationTargetCustomer] = useAtom(TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER);
+  const [inputBusinessInfo, setInputBusinessInfo] =
+    useAtom(INPUT_BUSINESS_INFO);
+  const [
+    mainFeaturesOfBusinessInformation,
+    setMainFeaturesOfBusinessInformation,
+  ] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
+  const [
+    mainCharacteristicOfBusinessInformation,
+    setMainCharacteristicOfBusinessInformation,
+  ] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
+  const [
+    businessInformationTargetCustomer,
+    setBusinessInformationTargetCustomer,
+  ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
+  const [
+    tempMainFeaturesOfBusinessInformation,
+    setTempMainFeaturesOfBusinessInformation,
+  ] = useAtom(TEMP_MAIN_FEATURES_OF_BUSINESS_INFORMATION);
+  const [
+    tempMainCharacteristicOfBusinessInformation,
+    setTempMainCharacteristicOfBusinessInformation,
+  ] = useAtom(TEMP_MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
+  const [
+    tempMusinessInformationTargetCustomer,
+    setTemptBusinessInformationTargetCustomer,
+  ] = useAtom(TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 관리
 
   const [savedReports, setSavedReports] = useAtom(SAVED_REPORTS);
   const [bizAnalysisReportIndex, setBizAnalysisReportIndex] = useState(0);
-  const [newAddContent, setNewAddContent] = useState('');
-  const [isAddingNow, setIsAddingNow] = useState({ section: '', isAdding: false });
-  const [newEditContent, setNewEditContent] = useState('');
-  const [editingIndex, setEditingIndex] = useState({ section: '', index: -1 });
+  const [newAddContent, setNewAddContent] = useState("");
+  const [isAddingNow, setIsAddingNow] = useState({
+    section: "",
+    isAdding: false,
+  });
+  const [newEditContent, setNewEditContent] = useState("");
+  const [editingIndex, setEditingIndex] = useState({ section: "", index: -1 });
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
-  const [warningMessage, setWarningMessage] = useState('');
+  const [warningMessage, setWarningMessage] = useState("");
 
   const [selectedTab, setSelectedTab] = useAtom(SELECTED_TAB);
 
-  const [expert1ReprotData, setExpert1ReportData] = useAtom(EXPERT1_REPORT_DATA); 
-  const [expert2ReprotData, setExpert2ReportData] = useAtom(EXPERT2_REPORT_DATA); 
-  const [expert3ReprotData, setExpert3ReportData] = useAtom(EXPERT3_REPORT_DATA);
+  const [expert1ReprotData, setExpert1ReportData] =
+    useAtom(EXPERT1_REPORT_DATA);
+  const [expert2ReprotData, setExpert2ReportData] =
+    useAtom(EXPERT2_REPORT_DATA);
+  const [expert3ReprotData, setExpert3ReportData] =
+    useAtom(EXPERT3_REPORT_DATA);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isPopupOpenCancel, setIsPopupOpenCancel] = useState(false);
   const [clickState, setClickState] = useState(false);
@@ -68,7 +103,9 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
 
   const [approachPath] = useAtom(APPROACH_PATH);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
-  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
+  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
+    SELECTED_ADDITIONAL_KEYWORD
+  );
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [isLoginPopupOpen, setLoginPopupOpen] = useState(false); // 로그인 팝업 상태 관리
 
@@ -77,7 +114,7 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
   const navigate = useNavigate();
 
   const handleSignupClick = () => {
-    navigate('/signup');
+    navigate("/signup");
   };
   const handleLoginClick = () => {
     setLoginPopupOpen(true); // 로그인 팝업 열기
@@ -90,8 +127,8 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
       setIsPopupOpen(!isPopupOpen);
     }
   };
-    const closePopupCopy = () => {
-      setIsPopupCopy(false); // 팝업 닫기
+  const closePopupCopy = () => {
+    setIsPopupCopy(false); // 팝업 닫기
   };
   const closePopupSave = () => {
     setIsPopupSave(false); // 팝업 닫기
@@ -103,9 +140,11 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
     }
   };
   const handleEditCancel = () => {
-    setMainFeaturesOfBusinessInformation(tempMainFeaturesOfBusinessInformation)
-    setMainCharacteristicOfBusinessInformation(tempMainCharacteristicOfBusinessInformation)
-    setBusinessInformationTargetCustomer(tempMusinessInformationTargetCustomer)
+    setMainFeaturesOfBusinessInformation(tempMainFeaturesOfBusinessInformation);
+    setMainCharacteristicOfBusinessInformation(
+      tempMainCharacteristicOfBusinessInformation
+    );
+    setBusinessInformationTargetCustomer(tempMusinessInformationTargetCustomer);
     setIsEditingNow(false);
     togglePopupCancel();
   };
@@ -131,12 +170,14 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
   };
 
   const handleEditSave = async () => {
-    if (editingIndex.section !== '' && editingIndex.index !== -1) {
-      setWarningMessage('변경 사항을 적용해주세요.');
+    if (editingIndex.section !== "" && editingIndex.index !== -1) {
+      setWarningMessage("변경 사항을 적용해주세요.");
       return;
     }
 
-    const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
+    const existingConversation = await getConversationByIdFromIndexedDB(
+      conversationId
+    );
 
     const updatedConversation = {
       ...existingConversation,
@@ -144,18 +185,21 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
       timestamp: Date.now(),
     };
 
-
     await saveConversationToIndexedDB(updatedConversation);
     setIsEditingNow(false);
   };
 
   const handleEditConfirm = () => {
-    handleEditSave(); 
+    handleEditSave();
     setIsEditingNow(false);
 
     setTempMainFeaturesOfBusinessInformation(mainFeaturesOfBusinessInformation);
-    setTempMainCharacteristicOfBusinessInformation(mainCharacteristicOfBusinessInformation);
-    setTemptBusinessInformationTargetCustomer(businessInformationTargetCustomer);
+    setTempMainCharacteristicOfBusinessInformation(
+      mainCharacteristicOfBusinessInformation
+    );
+    setTemptBusinessInformationTargetCustomer(
+      businessInformationTargetCustomer
+    );
   };
 
   const toogleSave = async () => {
@@ -195,12 +239,23 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
     ]);
 
     // 기존 대화 내역에 리포트 데이터 추가
-    const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
+    const existingConversation = await getConversationByIdFromIndexedDB(
+      conversationId
+    );
     const updatedConversation = {
       ...existingConversation,
-      analysisReportData: reportIndex === 0 ? reportData : existingConversation.analysisReportData,
-      strategyReportData: reportIndex === 1 ? reportData : existingConversation.strategyReportData,
-      additionalReportData: reportIndex === 2 ? reportData : existingConversation.additionalReportData,
+      analysisReportData:
+        reportIndex === 0
+          ? reportData
+          : existingConversation.analysisReportData,
+      strategyReportData:
+        reportIndex === 1
+          ? reportData
+          : existingConversation.strategyReportData,
+      additionalReportData:
+        reportIndex === 2
+          ? reportData
+          : existingConversation.additionalReportData,
       timestamp: Date.now(),
     };
 
@@ -208,12 +263,14 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
   };
 
   const toogleCopy = () => {
-    let contentToCopy = ``
+    let contentToCopy = ``;
 
     const getSelectedTabData = (selectedTab) => {
-      if(strategyReportID === 1) return expert1ReprotData.tabs[selectedTab];
-      else if(strategyReportID === 2) return expert2ReprotData.tabs[selectedTab];
-      else if(strategyReportID === 3) return expert3ReprotData.tabs[selectedTab];
+      if (strategyReportID === 1) return expert1ReprotData.tabs[selectedTab];
+      else if (strategyReportID === 2)
+        return expert2ReprotData.tabs[selectedTab];
+      else if (strategyReportID === 3)
+        return expert3ReprotData.tabs[selectedTab];
       else return;
     };
 
@@ -223,25 +280,30 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
         contentToCopy = `
         ${titleOfBusinessInfo}
         주요 특징
-        ${mainFeaturesOfBusinessInformation.map(feature => `- ${feature}`).join('\n')}
+        ${mainFeaturesOfBusinessInformation
+          .map((feature) => `- ${feature}`)
+          .join("\n")}
         주요 특성
-        ${mainCharacteristicOfBusinessInformation.map(character => `- ${character}`).join('\n')}
+        ${mainCharacteristicOfBusinessInformation
+          .map((character) => `- ${character}`)
+          .join("\n")}
         목표 고객
-        ${businessInformationTargetCustomer.map(customer => `- ${customer}`).join('\n')}
+        ${businessInformationTargetCustomer
+          .map((customer) => `- ${customer}`)
+          .join("\n")}
         `;
-      }
-      else if(conversationStage === 3) {
+      } else if (conversationStage === 3) {
         const extractTextContent = (data) => {
-          let textContent = '';
-          if (typeof data === 'string') {
-            return data + '\n';
+          let textContent = "";
+          if (typeof data === "string") {
+            return data + "\n";
           }
           if (Array.isArray(data)) {
-            data.forEach(item => {
+            data.forEach((item) => {
               textContent += extractTextContent(item);
             });
-          } else if (typeof data === 'object' && data !== null) {
-            Object.values(data).forEach(value => {
+          } else if (typeof data === "object" && data !== null) {
+            Object.values(data).forEach((value) => {
               textContent += extractTextContent(value);
             });
           }
@@ -249,35 +311,40 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
         };
         const selectedTabData = getSelectedTabData(selectedTab);
         contentToCopy = extractTextContent(selectedTabData);
-      }
-      else return;
+      } else return;
     }
     // 검색창 입력하고 진입 시
     else {
       if (selectedExpertIndex === 0) {
-          contentToCopy = `
+        contentToCopy = `
           ${titleOfBusinessInfo}
           주요 특징
-          ${mainFeaturesOfBusinessInformation.map(feature => `- ${feature}`).join('\n')}
+          ${mainFeaturesOfBusinessInformation
+            .map((feature) => `- ${feature}`)
+            .join("\n")}
           주요 특성
-          ${mainCharacteristicOfBusinessInformation.map(character => `- ${character}`).join('\n')}
+          ${mainCharacteristicOfBusinessInformation
+            .map((character) => `- ${character}`)
+            .join("\n")}
           목표 고객
-          ${businessInformationTargetCustomer.map(customer => `- ${customer}`).join('\n')}
+          ${businessInformationTargetCustomer
+            .map((customer) => `- ${customer}`)
+            .join("\n")}
           `;
       } else if (selectedExpertIndex === 1) {
         const extractTextContent = (data) => {
-          let textContent = '';
+          let textContent = "";
 
-          if (typeof data === 'string') {
-            return data + '\n';
+          if (typeof data === "string") {
+            return data + "\n";
           }
 
           if (Array.isArray(data)) {
-            data.forEach(item => {
+            data.forEach((item) => {
               textContent += extractTextContent(item);
             });
-          } else if (typeof data === 'object' && data !== null) {
-            Object.values(data).forEach(value => {
+          } else if (typeof data === "object" && data !== null) {
+            Object.values(data).forEach((value) => {
               textContent += extractTextContent(value);
             });
           }
@@ -287,15 +354,15 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
 
         const selectedTabData = getSelectedTabData(selectedTab);
         contentToCopy = extractTextContent(selectedTabData);
-      } 
-      else return;
+      } else return;
     }
 
-    navigator.clipboard.writeText(contentToCopy.trim())
+    navigator.clipboard
+      .writeText(contentToCopy.trim())
       .then(() => {
         setIsPopupCopy(true); // 복사 팝업 열기
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("복사 실패?", error);
       });
   };
@@ -320,7 +387,7 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
         mainCharacter: [],
         mainCustomer: [],
       },
-      timestamp: Date.now(), 
+      timestamp: Date.now(),
     });
   };
 
@@ -329,9 +396,14 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
 
     resetConversationState();
 
-    setConversation([{ type: 'system', message: "아래 검색창에 아이템(아이디어)를 설명해주세요!" }]);
+    setConversation([
+      {
+        type: "system",
+        message: "아래 검색창에 아이템(아이디어)를 설명해주세요!",
+      },
+    ]);
   };
-  
+
   return (
     <>
       {reportIndex === 0 ? (
@@ -381,10 +453,18 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
                 <ButtonWrap>
                   <div />
                   <div>
-                    <button type="button" className="lineBtn" onClick={togglePopupCancel}>
+                    <button
+                      type="button"
+                      className="lineBtn"
+                      onClick={togglePopupCancel}
+                    >
                       취소하기
                     </button>
-                    <button type="button" className="lineBtn" onClick={() => handleEditConfirm()}>
+                    <button
+                      type="button"
+                      className="lineBtn"
+                      onClick={() => handleEditConfirm()}
+                    >
                       수정 완료하기
                     </button>
                   </div>
@@ -395,25 +475,25 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
         </>
       ) : (
         <>
-        <ButtonWrap>
-          <div />
-          <div>
-            {selectedAdditionalKeyword.length === 0 && 
-              <button type="button" onClick={handleRetryIdea}>
-                <img src={images.IconRefresh} alt="" />
-                재생성하기
+          <ButtonWrap>
+            <div />
+            <div>
+              {selectedAdditionalKeyword.length === 0 && (
+                <button type="button" onClick={handleRetryIdea}>
+                  <img src={images.IconRefresh} alt="" />
+                  재생성하기
+                </button>
+              )}
+              <button type="button" onClick={toogleCopy}>
+                <img src={images.IconCopy} alt="" />
+                복사하기
               </button>
-            }
-            <button type="button" onClick={toogleCopy}>
-              <img src={images.IconCopy} alt="" />
-              복사하기
-            </button>
-            <button type="button" onClick={toogleSave}>
-              <img src={images.IconSave} alt="" />
-              저장하기
-            </button>
-          </div>
-        </ButtonWrap>
+              <button type="button" onClick={toogleSave}>
+                <img src={images.IconSave} alt="" />
+                저장하기
+              </button>
+            </div>
+          </ButtonWrap>
         </>
       )}
 
@@ -426,19 +506,32 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
           }}
         >
           <div>
-            <button type="button" className="closePopup" onClick={togglePopup}>닫기</button>
-            <span><img src={images.ExclamationMark} alt="" /></span>
-            <p>해당 기능을 사용하시려면 로그인이 필요해요<br />로그인 하시겠습니까?</p>
+            <button type="button" className="closePopup" onClick={togglePopup}>
+              닫기
+            </button>
+            <span>
+              <img src={images.ExclamationMark} alt="" />
+            </span>
+            <p>
+              해당 기능을 사용하시려면 로그인이 필요해요
+              <br />
+              로그인 하시겠습니까?
+            </p>
             <div className="btnWrap">
-              <button type="button" onClick={handleSignupClick}>회원가입</button>
-              <button type="button"onClick={handleLoginClick}>로그인</button>
+              <button type="button" onClick={handleSignupClick}>
+                회원가입
+              </button>
+              <button type="button" onClick={handleLoginClick}>
+                로그인
+              </button>
             </div>
           </div>
         </Popup>
       )}
 
       {isPopupOpenCancel && (
-        <Popup Cancel
+        <Popup
+          Cancel
           onClick={(e) => {
             if (e.target === e.currentTarget) {
               togglePopupCancel();
@@ -446,21 +539,34 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
           }}
         >
           <div>
-            <button type="button" className="closePopup" onClick={togglePopupCancel}>닫기</button>
-            <span><img src={images.ExclamationMark} alt="" /></span>
+            <button
+              type="button"
+              className="closePopup"
+              onClick={togglePopupCancel}
+            >
+              닫기
+            </button>
+            <span>
+              <img src={images.ExclamationMark} alt="" />
+            </span>
             <p>
               <strong>정말 취소하시겠습니까?</strong>
               <span>취소 시 수정하신 내용은 저장되지 않습니다</span>
             </p>
             <div className="btnWrap">
-              <button type="button" onClick={togglePopupCancel}>아니오</button>
-              <button type="button" onClick={handleEditCancel}>네, 취소할게요</button>
+              <button type="button" onClick={togglePopupCancel}>
+                아니오
+              </button>
+              <button type="button" onClick={handleEditCancel}>
+                네, 취소할게요
+              </button>
             </div>
           </div>
         </Popup>
       )}
       {isPopupCopy && (
-        <Popup Cancel
+        <Popup
+          Cancel
           onClick={(e) => {
             if (e.target === e.currentTarget) {
               closePopupCopy();
@@ -468,53 +574,89 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
           }}
         >
           <div>
-            <button type="button" className="closePopup" onClick={closePopupCopy}>닫기</button>
-            <span><img src={images.CheckMark} alt="" /></span>
+            <button
+              type="button"
+              className="closePopup"
+              onClick={closePopupCopy}
+            >
+              닫기
+            </button>
+            <span>
+              <img src={images.CheckMark} alt="" />
+            </span>
             <p>복사가 완료되었습니다</p>
             <div className="btnWrap">
-              <button type="button" onClick={closePopupCopy}>확인</button>
+              <button type="button" onClick={closePopupCopy}>
+                확인
+              </button>
             </div>
           </div>
         </Popup>
       )}
 
-{isPopupSave && (
-  <Popup Cancel
-    onClick={(e) => {
-      if (e.target === e.currentTarget) {
-        closePopupSave();  // 상태를 false로 설정
-      }
-    }}
-  >
-    <div>
-      <button type="button" className="closePopup" onClick={closePopupSave}>닫기</button>
-      <span><img src={images.CheckMark} alt="" /></span>
-      <p>저장되었습니다.<br />인사이트 보관함을 확인해주세요</p>
-      <div className="btnWrap">
-        <button type="button" onClick={closePopupSave}>확인</button>
-      </div>
-    </div>
-  </Popup>
-)}
+      {isPopupSave && (
+        <Popup
+          Cancel
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              closePopupSave(); // 상태를 false로 설정
+            }
+          }}
+        >
+          <div>
+            <button
+              type="button"
+              className="closePopup"
+              onClick={closePopupSave}
+            >
+              닫기
+            </button>
+            <span>
+              <img src={images.CheckMark} alt="" />
+            </span>
+            <p>
+              저장되었습니다.
+              <br />
+              인사이트 보관함을 확인해주세요
+            </p>
+            <div className="btnWrap">
+              <button type="button" onClick={closePopupSave}>
+                확인
+              </button>
+            </div>
+          </div>
+        </Popup>
+      )}
 
-{isPopupCopy && (
-  <Popup Cancel
-    onClick={(e) => {
-      if (e.target === e.currentTarget) {
-        closePopupCopy();  // 상태를 false로 설정
-      }
-    }}
-  >
-    <div>
-      <button type="button" className="closePopup" onClick={closePopupCopy}>닫기</button>
-      <span><img src={images.CheckMark} alt="" /></span>
-      <p>복사가 완료되었습니다</p>
-      <div className="btnWrap">
-        <button type="button" onClick={closePopupCopy}>확인</button>
-      </div>
-    </div>
-  </Popup>
-)}
+      {isPopupCopy && (
+        <Popup
+          Cancel
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              closePopupCopy(); // 상태를 false로 설정
+            }
+          }}
+        >
+          <div>
+            <button
+              type="button"
+              className="closePopup"
+              onClick={closePopupCopy}
+            >
+              닫기
+            </button>
+            <span>
+              <img src={images.CheckMark} alt="" />
+            </span>
+            <p>복사가 완료되었습니다</p>
+            <div className="btnWrap">
+              <button type="button" onClick={closePopupCopy}>
+                확인
+              </button>
+            </div>
+          </div>
+        </Popup>
+      )}
 
       {isLoginPopupOpen && <MoleculeLoginPopup onClose={closeLoginPopup} />}
     </>
@@ -523,12 +665,11 @@ const MoleculeReportController = ({ reportIndex, strategyReportID, conversationI
 
 export default MoleculeReportController;
 
-
 const ButtonWrap = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap:16px;
+  gap: 16px;
   margin-top: 20px;
   padding-top: 20px;
   border-top: 1px solid ${palette.lineGray};
@@ -537,24 +678,24 @@ const ButtonWrap = styled.div`
     display: flex;
     align-items: center;
     gap: 10px;
-    font-family: 'Pretendard';
+    font-family: "Pretendard";
     font-size: 0.75rem;
     color: ${palette.gray};
-    padding:4px 8px;
-    border-radius:5px;
+    padding: 4px 8px;
+    border-radius: 5px;
     border: 0;
     background: none;
-    transition:all .5s;
+    transition: all 0.5s;
 
     &:hover {
-      background:rgba(0,0,0,.03);
+      background: rgba(0, 0, 0, 0.03);
     }
   }
 
   .lineBtn {
-    padding:8px 16px;
-    border-radius:10px;
-    border:1px solid ${palette.lineGray};
+    padding: 8px 16px;
+    border-radius: 10px;
+    border: 1px solid ${palette.lineGray};
   }
 
   > button {
@@ -572,123 +713,121 @@ const ButtonWrap = styled.div`
 `;
 
 const Popup = styled.div`
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,.5);
-  transition:all .5s;
-  z-index:9999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  transition: all 0.5s;
+  z-index: 9999;
 
   .closePopup {
-    position:absolute;
-    right:24px;
-    top:24px;
-    width:16px;
-    height:16px;
-    font-size:0;
-    padding:11px;
-    border:0;
-    background:none;
+    position: absolute;
+    right: 24px;
+    top: 24px;
+    width: 16px;
+    height: 16px;
+    font-size: 0;
+    padding: 11px;
+    border: 0;
+    background: none;
 
-    &:before, &:after {
-      position:absolute;
-      top:50%;
-      left:50%;
-      width:2px;
-      height:100%;
-      border-radius:10px;
-      background:${palette.black};
-      content:'';
+    &:before,
+    &:after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 2px;
+      height: 100%;
+      border-radius: 10px;
+      background: ${palette.black};
+      content: "";
     }
 
     &:before {
-      transform:translate(-50%, -50%) rotate(45deg);
+      transform: translate(-50%, -50%) rotate(45deg);
     }
 
     &:after {
-      transform:translate(-50%, -50%) rotate(-45deg);
+      transform: translate(-50%, -50%) rotate(-45deg);
     }
   }
 
   > div {
-    position:fixed;
-    top:50%;
-    left:50%;
-    transform:translate(-50%, -50%);
-    display:flex;
-    flex-direction:column;
-    width:100%;
-    max-width:540px;
-    text-align:center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 540px;
+    text-align: center;
     // overflow:hidden;
-    padding:60px 24px 24px;
-    border-radius:10px;
-    background:${palette.white};
+    padding: 60px 24px 24px;
+    border-radius: 10px;
+    background: ${palette.white};
 
     p {
-      font-size:1.25rem;
-      margin:30px auto 40px;
-  }
+      font-size: 1.25rem;
+      margin: 30px auto 40px;
+    }
 
-  .btnWrap {
-    display:flex;
-    align-items:center;
-    gap:16px;
+    .btnWrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
 
-    button {
-      flex:1;
-      font-size:1.25rem;
-      font-weight:600;
-      color:${palette.blue};
-      padding:15px;
-      border-radius:12px;
-      border:1px solid ${palette.blue};
-      background:${palette.white};
+      button {
+        flex: 1;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: ${palette.blue};
+        padding: 15px;
+        border-radius: 12px;
+        border: 1px solid ${palette.blue};
+        background: ${palette.white};
 
-      &:last-child {
-        color:${palette.white};
-        background:${palette.blue};
+        &:last-child {
+          color: ${palette.white};
+          background: ${palette.blue};
+        }
       }
     }
-  }
 
-  
-  ${props =>
-    props.Cancel &&
-    css`
-      p {
-        strong {
-          font-weight:600;
-          display:block;
-        }
-        span {
-          font-size:1rem;
-          display:block;
-          margin-top:8px;
-        }
-      }
-
-      .btnWrap {
-        padding-top:25px;
-        border-top:1px solid ${palette.lineGray};
-
-        button {
-          color:${palette.gray};
-          font-weight:600;
-          padding:0;
-          border:0;
-          background:none;
-
-          &:last-child {
-            color:${palette.blue};
-            background:none;
+    ${(props) =>
+      props.Cancel &&
+      css`
+        p {
+          strong {
+            font-weight: 600;
+            display: block;
+          }
+          span {
+            font-size: 1rem;
+            display: block;
+            margin-top: 8px;
           }
         }
-      }
-    `
+
+        .btnWrap {
+          padding-top: 25px;
+          border-top: 1px solid ${palette.lineGray};
+
+          button {
+            color: ${palette.gray};
+            font-weight: 600;
+            padding: 0;
+            border: 0;
+            background: none;
+
+            &:last-child {
+              color: ${palette.blue};
+              background: none;
+            }
+          }
+        }
+      `}
   }
-
 `;
-

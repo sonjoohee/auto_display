@@ -7,6 +7,7 @@ import {
   INPUT_BUSINESS_INFO,
   APPROACH_PATH, 
   ANALYSIS_BUTTON_STATE,
+  isLoggedInAtom,
 } from '../../../AtomStates';
 
 import { Link } from "react-router-dom";
