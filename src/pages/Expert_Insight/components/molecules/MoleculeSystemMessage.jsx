@@ -34,7 +34,7 @@ const SystemMessageContainer = styled.div`
   margin-top: 40px;
 
   > div {
-    font-size:0.88rem;
+    font-size:0.875rem;
     padding:14px 20px;
     border-radius:15px;
     border:1px solid ${props => {

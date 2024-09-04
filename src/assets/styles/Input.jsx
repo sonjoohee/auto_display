@@ -8,7 +8,7 @@ export const InputField = styled.input`
     if (props.None) return `40px`;
     else return `50px`;
   }};
-  font-family: 'Pretendard';
+  font-family: 'Pretendard', 'Poppins';
   font-size:1rem;
   padding:${props => {
     if (props.None) return `6px 0`;

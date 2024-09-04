@@ -296,9 +296,9 @@ const AnalysisSection = styled.div`
   }
 
   > p {
-    font-size: 0.88rem;
-    line-height: 1.5;
-    margin-top: 15px;
+    font-size:0.875rem;
+    line-height:1.5;
+    margin-top:15px;
 
     span {
       color: ${palette.red};
@@ -323,8 +323,8 @@ const BoxWrap = styled.div`
   }
 
   p {
-    font-size: 0.88rem;
-    margin-bottom: 10px;
+    font-size:0.875rem;
+    margin-bottom:10px;
   }
 `;
 
@@ -377,7 +377,7 @@ const DynamicGrid = styled.div`
 `;
 
 const SubTitle = styled.strong`
-  font-size: 0.88rem;
+  font-size:0.875rem;
   font-weight: 500;
   color: ${palette.gray};
   text-align: left;
@@ -388,7 +388,7 @@ const SubTextBox = styled.div`
   padding: 16px;
   border-radius: 10px;
   margin-top: 10px;
-  font-size: 0.88rem;
+  font-size: 0.875rem;
   color: ${palette.gray};
   border: 0 !important;
 `;

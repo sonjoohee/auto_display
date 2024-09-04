@@ -996,7 +996,7 @@ const DetailOptions = styled.div`
     gap:10px;
 
     > p {
-      font-size:0.88rem;
+      font-size:0.875rem;
       font-weight:300;
       color:${palette.gray};
 
@@ -1144,7 +1144,7 @@ const SelectedFiltersDisplay = styled.div`
 
   > button {
     flex-shrink:0;
-    font-size:0.88rem;
+    font-size:0.875rem;
     padding:8px 16px;
     border:1px solid ${palette.lineGray};
   }
@@ -1161,7 +1161,7 @@ const FilterChip = styled.div`
   position:relative;
   display: flex;
   align-items: center;
-  font-size:0.88rem;
+  font-size:0.875rem;
   padding: 8px 30px 8px 10px;
   background:${props => {
     if (props.bgGray) return `rgba(0,0,0,0.05)`;

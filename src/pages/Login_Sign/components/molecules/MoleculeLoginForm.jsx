@@ -201,6 +201,10 @@ const StyledAtomInput = styled.input`
   border-radius:8px;
   border: 1px solid ${palette.lineGray};
   box-sizing: border-box;
+
+  &::placeholder {
+    font-size:0.875rem;
+  }
 `;
 
 const TogglePasswordButton = styled.button`

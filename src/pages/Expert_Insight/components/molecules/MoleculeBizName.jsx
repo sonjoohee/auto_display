@@ -96,7 +96,7 @@ const NameTitle = styled.div`
     display:flex;
     align-items:center;
     gap:8px;
-    font-size:1.5rem;
+    font-size:1rem;
     font-weight:700;
     text-align:left;
     color: ${props => {

@@ -136,7 +136,7 @@ const ListItem = styled.li`
   }
 
   p {
-    font-size:0.88rem;
+    font-size:0.875rem;
     color:${palette.darkGray};
     line-height:1.5;
   }
@@ -218,7 +218,7 @@ const BoxWrap = styled.div`
   }
 
   p {
-    font-size:0.88rem;
+    font-size:0.875rem;
     color:${palette.darkGray};
     line-height:1.5;
   }
@@ -372,7 +372,7 @@ const TwoColumnGrid = styled.div`
 `;
 
 const SubTitle = styled.div`
-  font-size: 0.88rem;
+  font-size: 0.875rem;
   color:${palette.gray};
   margin-bottom:5px;
 `;

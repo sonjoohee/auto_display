@@ -551,13 +551,14 @@ const Logo = styled.div`
 `;
 
 const SideBar = styled.div`
-  position: sticky;
-  top: 40px;
-  display: flex;
-  flex-direction: column;
-  max-width: 257px;
-  height: calc(100vh - 80px);
-  padding: 96px 20px 30px;
+  position:sticky;
+  top:40px;
+  display:flex;
+  flex-direction:column;
+  max-width:257px;
+  width:100%;
+  height:calc(100vh - 80px);
+  padding:96px 20px 30px;
   margin: ${(props) => (props.bgNone ? "40px 0 0 0" : "40px 0 0 40px")};
   // margin: 40px 0 0 40px;
   border-radius: 15px;
@@ -715,7 +716,7 @@ const AccordionItem = styled.div`
 
   .accordion-toggle:checked + .accordion-label + div {
     // max-height: 1000px;
-    max-height: calc(100vh - 30rem);
+    max-height:calc(100vh - 26rem);
     // margin-top:20px;
     padding: 0;
     overflow-y: auto;
@@ -771,17 +772,17 @@ const AccordionContent = styled.div`
   }
 
   li {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    font-family: "Pretendard";
-    font-size: 0.88rem;
-    color: ${palette.gray};
-    text-align: left;
-    padding: 8px 0 8px 15px;
-    cursor: pointer;
+    position:relative;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    font-family: 'Pretendard';
+    font-size:0.875rem;
+    color:${palette.gray};
+    text-align:left;
+    padding:8px 0 8px 15px;
+    cursor:pointer;
 
     &:before {
       position: absolute;
@@ -840,14 +841,14 @@ const ToogleMenu = styled.div`
   box-shadow: 0 4px 28px rgba(0, 0, 0, 0.05);
 
   button {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: "Pretendard";
-    font-size: 0.88rem;
-    color: ${palette.gray};
-    border: 0;
-    background: none;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-family: 'Pretendard';
+    font-size:0.875rem;
+    color:${palette.gray};
+    border:0;
+    background:none;
   }
 `;
 
@@ -863,11 +864,11 @@ const AIProfileWrap = styled.div`
   }
 
   a {
-    position: relative;
-    font-size: 0.88rem;
-    text-decoration: underline;
-    padding-right: 16px;
-    margin-top: 20px;
+    position:relative;
+    font-size:0.875rem;
+    text-decoration:underline;
+    padding-right:16px;
+    margin-top:20px;
 
     &:after {
       position: absolute;
@@ -946,11 +947,11 @@ const AIProfile = styled.div`
     }
 
     span {
-      font-size: 0.88rem;
-      padding: 8px 16px;
-      border-radius: 25px;
-      border: 1px solid ${palette.lineGray};
-      background: ${palette.white};
+      font-size:0.875rem;
+      padding:8px 16px;
+      border-radius:25px;
+      border:1px solid ${palette.lineGray};
+      background:${palette.white};
     }
   }
 `;
@@ -1091,11 +1092,11 @@ const LogoutToogle = styled.div`
   }
 
   li {
-    font-size: 0.88rem;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 8px;
+    font-size:0.875rem;
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    gap:8px;
 
     + li {
       margin-top: 20px;

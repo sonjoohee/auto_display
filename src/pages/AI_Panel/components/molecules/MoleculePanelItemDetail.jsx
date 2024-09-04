@@ -175,7 +175,7 @@ const UserInfo = styled.div`
 `;
 
 const UserDetails = styled.div`
-  font-size: 0.88rem;
+  font-size: 0.875rem;
   color: ${palette.black};
 `;
 
@@ -207,7 +207,7 @@ const TabMenu = styled.div`
 const TabButton = styled.button`
   flex: 1 1 0;
   font-family: 'Pretendard';
-  font-size: 0.88rem;
+  font-size: 0.875rem;
   padding: 6px 12px;
   margin-top:0;
   color: ${(props) => (props.active ? `${palette.black}` : `${palette.gray}`)};
@@ -224,7 +224,7 @@ const TabButton = styled.button`
 const Content = styled.div`
   min-height:150px;
   max-height:150px;
-  font-size: 0.88rem;
+  font-size: 0.875rem;
   color: ${palette.gray};
   text-align:left;
   line-height: 1.5;
@@ -239,7 +239,7 @@ const ProductGroupContainer = styled.div`
 `;
 
 const ProductGroupItem = styled.div`
-  font-size: 0.88rem;
+  font-size: 0.875rem;
   color: ${palette.gray};
   padding: 5px 12px;
   border-radius: 5px;
@@ -267,7 +267,7 @@ const ActionButton = styled.button`
   gap:8px;
   min-width:100px;
   font-family: 'Pretendard';
-  font-size: 0.88rem;
+  font-size: 0.875rem;
   color: ${props => {
     if (props.Blue) return palette.white;
     else if (props.PanelChk) return palette.gray;

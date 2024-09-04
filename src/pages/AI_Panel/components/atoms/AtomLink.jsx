@@ -16,7 +16,7 @@ const StyledLink = styled(Link)`
   display: inline-block;
   width: 33px;
   height: 33px;
-  font-size: 0.88rem;
+  font-size: 0.875rem;
   color: ${(props) => props.color || "inherit"};
   line-height: 33px;
   margin: 0 2px;

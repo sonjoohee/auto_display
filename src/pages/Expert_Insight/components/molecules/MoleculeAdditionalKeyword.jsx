@@ -94,9 +94,12 @@ const MoleculeAdditionalKeyword = () => {
             updateSelectedAdditionalKeyword(randomSelections.아이디어제공)
           }
         >
-          {randomSelections.아이디어제공}
-        </button>
-        <button className="other" onClick={handleOtherInsightClick}>
+          <img src={images.IconRefresh} alt="" />
+// =======
+//           {randomSelections.아이디어제공}
+//         </button>
+//         <button className="other" onClick={handleOtherInsightClick}>
+// >>>>>>> main
           다른 인사이트 확인
         </button>
       </ButtonWrap>
@@ -116,8 +119,8 @@ const ButtonWrap = styled.div`
     display: flex;
     align-items: center;
     gap: 12px;
-    font-family: "Pretendard";
-    font-size: 0.88rem;
+    font-family: 'Pretendard';
+    font-size: 0.875rem;
     color: ${palette.darkGray};
     border: 0;
     background: none;
@@ -134,5 +137,10 @@ const ButtonWrap = styled.div`
     color: ${palette.lightGray};
     font-size: 0.75rem;
     border: none;
+    gap:4px;
+
+    img {
+      height:19px;
+    }
   }
 `;

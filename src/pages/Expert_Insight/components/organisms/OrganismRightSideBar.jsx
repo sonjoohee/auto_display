@@ -57,7 +57,11 @@ const OrganismRightSideBar = () => {
                 <div>
                   {selectedExpert.expertise.fields.map((field, index) => (
                     <React.Fragment key={index}>
-                      <strong><img src={images.ProfessionalValue} alt="" />{field.category}</strong>
+                      <strong>
+                        <img src={images.ProfessionalValue} alt="" />
+                        {/* <img src={field.images} alt={field.category} /> */}
+                        {field.category}
+                      </strong>
                       <FieldUl isOpen={isOpen}>
                         {field.details.map((detail, i) => (
                           <li key={i}>{detail}</li>
@@ -306,7 +310,7 @@ const AIProfile = styled.div`
         align-items:center;
         gap:8px;
         width:100%;
-        font-size:0.88rem;
+        font-size:0.875rem;
         font-weight:300;
         color:${palette.darkGray};
         // padding:8px 16px;

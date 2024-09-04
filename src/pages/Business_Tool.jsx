@@ -116,7 +116,7 @@ const TextareaWrap = styled.div`
 
   button {
     font-family: 'Pretendard';
-    font-size:0.88rem;
+    font-size:0.75rem;
     font-weight:500;
     padding:12px 20px;
   }
@@ -134,7 +134,7 @@ const BusinessField = styled.div`
 
   > button {
     font-family: 'Pretendard';
-    font-size:0.88rem;
+    font-size:0.875rem;
     font-weight:400;
     color:${palette.black};
     padding:10px 20px;
@@ -158,7 +158,7 @@ const FieldTool = styled.div`
     gap:10px;
     flex:1 1 18%;
     height:200px;
-    font-size:0.88rem;
+    font-size:0.875rem;
     color:${palette.gray};
     text-align:left;
     padding:20px;

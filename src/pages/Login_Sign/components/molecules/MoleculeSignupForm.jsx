@@ -270,7 +270,7 @@ const TermsAndConditions = styled.div`
   text-align: left;
 
   label {
-    font-size: 0.88rem !important;
+    font-size: 0.875rem !important;
     color: ${palette.gray};
   }
 
