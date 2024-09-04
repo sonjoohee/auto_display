@@ -178,7 +178,7 @@ const PageExpertInsight = () => {
           setExpert3ReportData(savedConversation.strategyReportData_EX3 || {});
   
           setAdditionalReportData(savedConversation.additionalReportData || []);
-          // setSelectedAdditionalKeyword(savedConversation.selectedAdditionalKeyword || []);
+          setSelectedAdditionalKeyword(savedConversation.selectedAdditionalKeyword || []);
   
           // 복구된 conversationStage가 올바른지 확인
           if (savedConversation.conversationStage === 1) {
@@ -343,7 +343,7 @@ const PageExpertInsight = () => {
       }
 
       updatedConversation.push(
-        { type: 'user', message: `제 프로젝트와 관련된 "${selectedAdditionalKeyword[0]}"를 요청드려요` },
+        { type: 'user', message: `제 프로젝트와 관련된 "${selectedAdditionalKeyword[selectedAdditionalKeyword.length-1]}"를 요청드려요` },
         { type: `addition_${selectedExpertIndex}` },
         { type: 'system', message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${selectedAdditionalKeyword[0]}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻` },
         { type: `keyword` },
