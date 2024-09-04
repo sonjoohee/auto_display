@@ -9,10 +9,10 @@ const VerifyEmail = () => {
     const queryParams = new URLSearchParams(window.location.search);
     const token = queryParams.get('token');
     const userid = queryParams.get('id');
-    // http://52.79.204.29:7800/api/user/activate/4?auth=${token}
-    // http://localhost:4008/verify-email?token=${token}
+    // https://wishresearch.kr/api/user/activate/4?auth=${token}
+    // https://wishresearch.kr/verify-email?token=${token}
     if (token && !isVerified) { // isVerified가 false일 때만 요청
-      fetch(`http://52.79.204.29:7800/api/user/activate/${userid}?auth=${token}`)
+      fetch(`https://wishresearch.kr/api/user/activate/${userid}?auth=${token}`)
         .then(response => {
           console.log('Response status:', response.status);
           if (response.ok) {
