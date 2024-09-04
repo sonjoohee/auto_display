@@ -9,6 +9,7 @@ import {
   ADDITIONAL_QUESTION_1,
   ADDITIONAL_QUESTION_2,
   ADDITIONAL_QUESTION_3,
+  BUTTON_STATE, // BUTTON_STATE 추가
 } from '../../../AtomStates';
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
@@ -20,6 +21,7 @@ const MoleculeAdditionalKeyword = () => {
   const [addtionalQuestion2, setAddtionalQuestion2] = useAtom(ADDITIONAL_QUESTION_2);
   const [addtionalQuestion3, setAddtionalQuestion3] = useAtom(ADDITIONAL_QUESTION_3);
   const [questionList] = useAtom(QUESTION_LIST);
+  const [buttonState, setButtonState] = useAtom(BUTTON_STATE); // BUTTON_STATE 가져오기
 
   const [randomSelections, setRandomSelections] = useState({});
 
@@ -55,6 +57,7 @@ const MoleculeAdditionalKeyword = () => {
     const updatedKeywords = [...selectedAdditionalKeyword];
     updatedKeywords[selectedExpertIndex - 1] = keyword; // Update the keyword at the expert index
     setSelectedAdditionalKeyword(updatedKeywords);
+    setButtonState(1); // 버튼 클릭 시 buttonState를 1로 설정
   };
 
   useEffect(() => {
