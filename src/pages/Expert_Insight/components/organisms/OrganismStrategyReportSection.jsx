@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import styled ,{keyframes} from 'styled-components';
 import { useAtom } from 'jotai';
 import {
   SELECTED_EXPERT_INDEX,
@@ -7,6 +7,7 @@ import {
   EXPERT2_REPORT_DATA,
   EXPERT3_REPORT_DATA,
   SELECTED_TAB,
+  BUTTON_STATE,
 } from '../../../AtomStates';
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
@@ -37,7 +38,8 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
   const [mainCharacteristicOfBusinessInformation, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
   const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  
+  const [buttonState, setButtonState] = useAtom(BUTTON_STATE); // BUTTON_STATE 사용
+
   const analysisReportData = {
     title: titleOfBusinessInfo,
     mainFeatures: mainFeaturesOfBusinessInformation,
@@ -64,78 +66,79 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const sampleData = sampleDataMap[expertIndex] || sampleData3;
 
   const [strategyReportData, setStrategyReportData] = useAtom(strategyReportAtom);
-
   useEffect(() => {
     const loadData = async () => {
-      setIsLoading(true);
-      try {
-        const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
-        const currentReportKey = `strategyReportData_EX${expertIndex}`;
+      if (buttonState === 1) {  // BUTTON_STATE가 1일 때만 API 호출
+        setIsLoading(true);
+        try {
+          const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
+          const currentReportKey = `strategyReportData_EX${expertIndex}`;
 
-        if (
-          existingConversation &&
-          existingConversation[currentReportKey] &&
-          existingConversation[currentReportKey].expert_id === parseInt(expertIndex, 10)
-        ) {
-          const strategyData = existingConversation[currentReportKey];
-          setStrategyReportData(strategyData);
-          setTabs(strategyData.tabs);
-          setSections(strategyData.tabs[selectedTab].sections);
-        } else if (Object.keys(strategyReportData).length === 0) {
-          const data = {
-            expert_id: expertIndex,
-            business_info: titleOfBusinessInfo, // DB에서 가져온 titleOfBusinessInfo 사용
-            business_analysis_data: {
-              명칭: analysisReportData.title,
-              개요: {
-                주요_목적_및_특징: analysisReportData.mainFeatures.map((feature) => feature.기능),
+          if (
+            existingConversation &&
+            existingConversation[currentReportKey] &&
+            existingConversation[currentReportKey].expert_id === parseInt(expertIndex, 10)
+          ) {
+            const strategyData = existingConversation[currentReportKey];
+            setStrategyReportData(strategyData);
+            setTabs(strategyData.tabs);
+            setSections(strategyData.tabs[selectedTab].sections);
+          } else if (Object.keys(strategyReportData).length === 0) {
+            const data = {
+              expert_id: expertIndex,
+              business_info: titleOfBusinessInfo, // DB에서 가져온 titleOfBusinessInfo 사용
+              business_analysis_data: {
+                명칭: analysisReportData.title,
+                개요: {
+                  주요_목적_및_특징: analysisReportData.mainFeatures.map((feature) => feature.기능),
+                },
+                주요기능: analysisReportData.mainFeatures,
+                목표고객: analysisReportData.mainCustomer,
               },
-              주요기능: analysisReportData.mainFeatures,
-              목표고객: analysisReportData.mainCustomer,
-            },
-            tabs: [],
-            page_index: 1,
-          };
+              tabs: [],
+              page_index: 1,
+            };
 
+            const response1 = await axios.post('https://wishresearch.kr/panels/expert', data, axiosConfig);
 
-          const response1 = await axios.post('https://wishresearch.kr/panels/expert', data, axiosConfig);
+            let finalResponse = response1.data;
 
-          let finalResponse = response1.data;
+            if (finalResponse.total_page_index === 2) {
+              const response2 = await axios.post('https://wishresearch.kr/panels/expert', finalResponse, axiosConfig);
+              finalResponse = response2.data;
+            } else if (finalResponse.total_page_index === 3) {
+              const response2 = await axios.post('https://wishresearch.kr/panels/expert', finalResponse, axiosConfig);
+              const response3 = await axios.post('https://wishresearch.kr/panels/expert', response2.data, axiosConfig);
+              finalResponse = response3.data;
+            }
 
-          if (finalResponse.total_page_index === 2) {
-            const response2 = await axios.post('https://wishresearch.kr/panels/expert', finalResponse, axiosConfig);
-            finalResponse = response2.data;
-          } else if (finalResponse.total_page_index === 3) {
-            const response2 = await axios.post('https://wishresearch.kr/panels/expert', finalResponse, axiosConfig);
-            const response3 = await axios.post('https://wishresearch.kr/panels/expert', response2.data, axiosConfig);
-            finalResponse = response3.data;
+            console.log('Final response data:', finalResponse);
+
+            const strategyData = finalResponse;
+
+            setStrategyReportData(strategyData);
+            setTabs(strategyData.tabs);
+            setSections(strategyData.tabs[selectedTab].sections);
+
+            const updatedConversation = {
+              ...existingConversation,
+              [currentReportKey]: strategyData,
+              timestamp: Date.now(),
+            };
+            await saveConversationToIndexedDB(updatedConversation);
+          } else {
+            setTabs(strategyReportData.tabs);
+            setSections(strategyReportData.tabs[selectedTab].sections);
           }
-
-          console.log('Final response data:', finalResponse);
-
-          const strategyData = finalResponse;
-
-          setStrategyReportData(strategyData);
-          setTabs(strategyData.tabs);
-          setSections(strategyData.tabs[selectedTab].sections);
-
-          const updatedConversation = {
-            ...existingConversation,
-            [currentReportKey]: strategyData,
-            timestamp: Date.now(),
-          };
-          await saveConversationToIndexedDB(updatedConversation);
-        } else {
-          setTabs(strategyReportData.tabs);
-          setSections(strategyReportData.tabs[selectedTab].sections);
+        } catch (error) {
+          console.error('Error loading data:', error);
         }
-      } catch (error) {
-        console.error('Error loading data:', error);
+        setIsLoading(false);
+        setButtonState(0); // BUTTON_STATE를 초기화
       }
-      setIsLoading(false);
     };
     loadData();
-  }, [conversationId, selectedTab, expertIndex]);
+  }, [buttonState, conversationId, selectedTab, expertIndex]);  // buttonState 의존성 추가
 
   const handleTabClick = (index) => {
     setSelectedTab(index);
@@ -147,29 +150,42 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
 
   return (
     <>
-    {isLoading && (
-      <LoadingOverlay>
-        <div className="loader"></div>
-      </LoadingOverlay>
-    )}
-    <AnalysisSection Strategy>
-      <TabHeader>
-        {tabs.map((tab, index) => (
-          <TabButton key={index} active={selectedTab === index} onClick={() => handleTabClick(index)}>
-            {tab.title}
-          </TabButton>
-        ))}
-      </TabHeader>
-
-      {sections.map((section, index) => (
-        <Section key={index} title={section.title} content={section.content} />
-      ))}
-
-      <MoleculeReportController reportIndex={1} strategyReportID={sampleData.expert_id} conversationId={conversationId} sampleData={sampleData} />
-    </AnalysisSection>
+      <AnalysisSection Strategy>
+        <TabHeader>
+          {tabs.map((tab, index) => (
+            <TabButton key={index} active={selectedTab === index} onClick={() => handleTabClick(index)}>
+              {tab.title}
+            </TabButton>
+          ))}
+        </TabHeader>
+  
+        {isLoading ? (
+          <>
+            <TitlePlaceholder className="title-placeholder" />
+            <ContentPlaceholder className="content-placeholder" />
+            <ContentPlaceholder className="content-placeholder" />
+            <Spacing />
+          </>
+        ) : (
+          sections.length > 0 ? (
+            sections.map((section, index) => (
+              <Section key={index} title={section.title} content={section.content} />
+            ))
+          ) : (
+            <>
+              <TitlePlaceholder className="title-placeholder" />
+              <ContentPlaceholder className="content-placeholder" />
+              <ContentPlaceholder className="content-placeholder" />
+              <Spacing />
+            </>
+          )
+        )}
+  
+        <MoleculeReportController reportIndex={1} strategyReportID={sampleData.expert_id} conversationId={conversationId} sampleData={sampleData} />
+      </AnalysisSection>
     </>
   );
-};
+  
 
 // ... (아래 부분은 동일)
 
@@ -214,7 +230,32 @@ const Section = ({ title, content }) => {
 };
 
 export default OrganismStrategyReportSection;
+const blinkAnimation = keyframes`
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+`;
 
+const TitlePlaceholder = styled.div`
+  width: 60%;
+  height: 30px;
+  background-color: ${palette.lineGray};
+  border-radius: 4px;
+  animation: ${blinkAnimation} 1.5s ease-in-out infinite;
+  margin-bottom: 20px;
+`;
+const ContentPlaceholder = styled.div`
+  width: 100%;
+  height: 20px;
+  background-color: ${palette.lineGray};
+  border-radius: 4px;
+  animation: ${blinkAnimation} 1.5s ease-in-out infinite;
+  margin-bottom: 10px;
+
+  &:last-child {
+    margin-bottom: 30px;
+  }
+`;
 const AnalysisSection = styled.div`
   position:relative;
   max-width:1135px;
@@ -352,4 +393,7 @@ const LoadingOverlay = styled.div`
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
+`;
+const Spacing = styled.div`
+  margin-bottom: 40px; /* 제목과 본문 사이의 간격 */
 `;
