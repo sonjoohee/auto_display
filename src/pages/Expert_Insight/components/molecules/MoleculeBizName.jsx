@@ -141,9 +141,9 @@ const Badge = styled.div`
 
 const AutosavePopup = styled.div`
   position:absolute;
-  right:-70px;
+  right: ${(props) => (props.isAutoSaveToogle ? "0" : "-70px")};
   top:70px;
-  max-width:304px;
+  max-width: 304px;
   max-height: ${(props) => (props.isAutoSaveToogle ? "0" : "1000px")};
   flex-direction:column;
   gap:20px !important;

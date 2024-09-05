@@ -120,7 +120,9 @@ const BizExpertSelectContainer = styled.div`
   text-align: left;
   margin: 48px auto 0;
   padding-top: 30px;
-  border-top: 1px solid ${palette.lineGray};
+  padding-bottom:40px;
+  border-top:1px solid ${palette.lineGray};
+
 
   h1 {
     font-size: 0.875rem;

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { nanoid } from "nanoid";
 import styled from "styled-components";
+import { palette } from "../../../../assets/styles/Palette";
 import { useAtom } from "jotai";
 import {
   SELECTED_EXPERT_INDEX,
@@ -388,9 +389,9 @@ const PageExpertInsight = () => {
 
   // 검색을 통해 들어왔으면 handleSearch 실행
   useEffect(() => {
-    console.log(111111111);
     if (conversationId && conversationId.length >= 2) {
       if (approachPath === -1) {
+        console.log(111111111);
         handleSearch(-1);
       } else if (approachPath === 1) {
         setInputBusinessInfo("");
@@ -496,7 +497,7 @@ const PageExpertInsight = () => {
         //   message: expertPromptMessage,
         // });
       }
-    } else if (conversationStage === 2) {
+    } else if (conversationStage === 2 && titleOfBusinessInfo) {
       // 임시로 비활성화, 새로고침이나 뒤로가기 막는 기능 필요함
       // if (!selectedExpertIndex || (inputValue !== -1 && approachPath === -1)) {
       //     alert("전문가를 선택해 주세요.");
@@ -592,6 +593,22 @@ const PageExpertInsight = () => {
     saveConversation(updatedConversation, newConversationStage);
     setIsLoading(false); // 로딩 완료
   };
+
+  // 스크롤
+  const [isScrolled, setIsScrolled] = useState(false);
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 160) {
+        setIsScrolled(true); // 스크롤이 내려가면 상태를 true로 변경
+      } else {
+        setIsScrolled(false); // 스크롤이 최상단에 있을 때 상태를 false로 변경
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll); // 메모리 누수 방지
+    };
+  }, []);
 
   const getInitialSystemMessage = () => {
     switch (selectedExpertIndex) {
@@ -712,7 +729,7 @@ const MainContent = styled.div`
     max-width: 1240px;
     width: 100%;
     margin: 0 20px;
-    padding-bottom: 60px;
+    // padding-bottom: 60px;
   }
 `;
 
@@ -722,6 +739,24 @@ const ContentsWrap = styled.div`
 `;
 
 const ChatWrap = styled.div`
-  position: relative;
-  height: 90%;
+  position:relative;
+  height:90%;
+  
+  &:before {
+    position:sticky;
+    top:0;
+    left:0;
+    width:100%;
+    height:0;
+    display:block;
+    // height:170px;
+    background: rgb(255,255,255);
+    background: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 30%);
+    z-index:1;
+    content:'';
+  }
+
+  &.scrolled:before {
+    height: 180px;
+  }
 `;
