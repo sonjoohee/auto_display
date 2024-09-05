@@ -14,6 +14,8 @@ import {
   CONVERSATION,
   APPROACH_PATH,
   IS_LOADING,
+  isLoggedInAtom,
+
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -30,6 +32,8 @@ import {
 } from "../../../../assets/styles/Skeleton";
 
 const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
+  const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
+
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [approachPath] = useAtom(APPROACH_PATH);
   const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
@@ -129,7 +133,7 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
             additionalReportData: updatedAdditionalReportData, // 전체 리스트를 저장
             timestamp: Date.now(),
           };
-          await saveConversationToIndexedDB(updatedConversation);
+          await saveConversationToIndexedDB(updatedConversation,isLoggedIn,conversationId);
 
           setIsLoading(false);
 

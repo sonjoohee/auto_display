@@ -31,9 +31,13 @@ import {
   IS_LOADING,
   CONVERSATION,
   APPROACH_PATH,
+  isLoggedInAtom,
+
 } from "../../../AtomStates";
 
 const OrganismBizAnalysisSection = ({ conversationId }) => {
+  const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
+
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [approachPath] = useAtom(APPROACH_PATH);
 
@@ -185,6 +189,9 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
             : [],
         };
 
+        console.log("OrganismBizAnalysisSectionconversationId")
+        console.log(conversationId)
+
         // 기존 대화 내역을 유지하면서 새로운 정보를 추가
         const existingConversation = await getConversationByIdFromIndexedDB(
           conversationId
@@ -195,7 +202,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
           analysisReportData,
           timestamp: Date.now(),
         };
-        await saveConversationToIndexedDB(updatedConversation);
+        await saveConversationToIndexedDB(updatedConversation,isLoggedIn,conversationId);
         console.log("___________기초보고서_____________");
         console.log("기초보고서2");
         console.log(analysisReportData);
