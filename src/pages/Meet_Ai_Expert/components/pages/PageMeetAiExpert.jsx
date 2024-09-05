@@ -8,6 +8,26 @@ import {
   APPROACH_PATH,
   ANALYSIS_BUTTON_STATE,
   isLoggedInAtom,
+  SAVED_REPORTS,
+  USER_NAME,
+  USER_EMAIL,
+  TITLE_OF_BUSINESS_INFORMATION,
+  MAIN_FEATURES_OF_BUSINESS_INFORMATION,
+  MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
+  BUSINESS_INFORMATION_TARGET_CUSTOMER,
+  STRATEGY_REPORT_DATA,
+  SELECTED_ADDITIONAL_KEYWORD,
+  EXPERT1_REPORT_DATA,
+  EXPERT2_REPORT_DATA,
+  EXPERT3_REPORT_DATA,
+  ADDITIONAL_REPORT_DATA, // Import the new list-based atom
+  CONVERSATION_STAGE,
+  ADDITIONAL_QUESTION_1,
+  ADDITIONAL_QUESTION_2,
+  ADDITIONAL_QUESTION_3,
+  iS_CLICK_CHECK_REPORT_RIGHTAWAY,
+  CONVERSATION,
+  BUTTON_STATE,
 } from "../../../AtomStates";
 
 import { Link } from "react-router-dom";
@@ -31,6 +51,78 @@ const PageMeetAiExpert = () => {
 
   useEffect(() => {
     setSelectedExpertIndex(SELECTED_EXPERT_INDEX);
+  }, []);
+  const [conversation, setConversation] = useAtom(CONVERSATION);
+  const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
+  const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
+    TITLE_OF_BUSINESS_INFORMATION
+  );
+  const [
+    mainFeaturesOfBusinessInformation,
+    setMainFeaturesOfBusinessInformation,
+  ] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
+  const [
+    mainCharacteristicOfBusinessInformation,
+    setMainCharacteristicOfBusinessInformation,
+  ] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
+  const [
+    businessInformationTargetCustomer,
+    setBusinessInformationTargetCustomer,
+  ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
+  const [sections, setSections] = useState([]);
+  const [additionalReportCount, setAdditionalReportCount] = useState(0);
+  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
+    SELECTED_ADDITIONAL_KEYWORD
+  );
+
+  const [additionalReportData, setAdditionalReportData] = useAtom(
+    ADDITIONAL_REPORT_DATA
+  ); // Use the new list-based atom
+
+  const [expert1ReportData, setExpert1ReportData] =
+    useAtom(EXPERT1_REPORT_DATA);
+  const [expert2ReportData, setExpert2ReportData] =
+    useAtom(EXPERT2_REPORT_DATA);
+  const [expert3ReportData, setExpert3ReportData] =
+    useAtom(EXPERT3_REPORT_DATA);
+
+  const [addtionalQuestion1, setAddtionalQuestion1] = useAtom(
+    ADDITIONAL_QUESTION_1
+  );
+  const [addtionalQuestion2, setAddtionalQuestion2] = useAtom(
+    ADDITIONAL_QUESTION_2
+  );
+  const [addtionalQuestion3, setAddtionalQuestion3] = useAtom(
+    ADDITIONAL_QUESTION_3
+  );
+
+  const [inputAdditionalQuestion, setInputAdditionalQuestion] = useState("");
+  const [isClickCheckReportRightAway, setIsClickCheckReportRightAway] = useAtom(
+    iS_CLICK_CHECK_REPORT_RIGHTAWAY
+  );
+
+  useEffect(() => {
+    setConversation([]);
+    setConversationStage(1);
+    setInputBusinessInfo("");
+    setTitleOfBusinessInfo("");
+    setMainFeaturesOfBusinessInformation([]);
+    setMainCharacteristicOfBusinessInformation([]);
+    setBusinessInformationTargetCustomer([]);
+    setSelectedExpertIndex(1);
+    setSections([]);
+    setAdditionalReportCount(0);
+    setSelectedAdditionalKeyword([]);
+    setApproachPath(0);
+    setAdditionalReportData([]);
+    setExpert1ReportData({});
+    setExpert2ReportData({});
+    setExpert3ReportData({});
+    setAddtionalQuestion1("");
+    setAddtionalQuestion2("");
+    setAddtionalQuestion3("");
+    setInputAdditionalQuestion("");
+    setIsClickCheckReportRightAway(false);
   }, []);
 
   useEffect(() => {
@@ -259,7 +351,7 @@ const InputWrap = styled.div`
       font-size: 0;
       border: 0;
       background: url(${images.IconSearch}) center no-repeat;
-      transition:all .5s;
+      transition: all 0.5s;
 
       &:hover {
         background: url(${images.IconSearchHover}) center no-repeat;
