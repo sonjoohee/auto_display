@@ -58,8 +58,8 @@ const OrganismRightSideBar = () => {
                   {selectedExpert.expertise.fields.map((field, index) => (
                     <React.Fragment key={index}>
                       <strong>
-                        <img src={images.ProfessionalValue} alt="" />
-                        {/* <img src={field.images} alt={field.category} /> */}
+                        {/* <img src={images.ProfessionalValue} alt="" /> */}
+                        <img src={field.images} alt={field.category} />
                         {field.category}
                       </strong>
                       <FieldUl isOpen={isOpen}>
