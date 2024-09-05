@@ -41,6 +41,7 @@ import {
 } from "../../../AtomStates";
 
 const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
+  console.log("🚀 ~ OrganismStrategyReportSection ~ expertIndex:", expertIndex);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [approachPath] = useAtom(APPROACH_PATH);
   const [conversation, setConversation] = useAtom(CONVERSATION);
@@ -105,20 +106,22 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
 
   const [strategyReportData, setStrategyReportData] =
     useAtom(strategyReportAtom);
+
   useEffect(() => {
     const loadData = async () => {
-      let finalResponse
+      let finalResponse;
       if (buttonState === 1) {
         // BUTTON_STATE가 1일 때만 API 호출
-        setButtonState(0);
         setIsLoading(true);
         setButtonState(0); // BUTTON_STATE를 초기화
         try {
           const existingConversation = await getConversationByIdFromIndexedDB(
-            conversationId
+            conversationId,
+            isLoggedIn
           );
-          const currentReportKey = `strategyReportData_EX${expertIndex}`;
+          let currentReportKey = `strategyReportData_EX${expertIndex}`;
 
+          console.log("🚀 ~ loadData ~ currentReportKey:", currentReportKey);
           if (
             existingConversation &&
             existingConversation[currentReportKey] &&
@@ -176,9 +179,10 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               finalResponse = response3.data;
             }
 
-            console.log("Final response data:", finalResponse);
+            // console.log("Final response data:", finalResponse);
 
             const strategyData = finalResponse;
+            console.log("🚀 ~ loadData ~ strategyData:", strategyData);
 
             setStrategyReportData(strategyData);
             setTabs(strategyData.tabs);
@@ -196,14 +200,17 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               [currentReportKey]: strategyData,
               timestamp: Date.now(),
             };
-            await saveConversationToIndexedDB({
-              id: conversationId,
-              analysisReportData,
-              [currentReportKey]: strategyData,
-              timestamp: Date.now(),
-            }
-            ,isLoggedIn,conversationId
-            );          } else {
+            await saveConversationToIndexedDB(
+              {
+                id: conversationId,
+                analysisReportData,
+                [currentReportKey]: strategyData,
+                timestamp: Date.now(),
+              },
+              isLoggedIn,
+              conversationId
+            );
+          } else {
             setTabs(strategyReportData.tabs);
             setSections(strategyReportData.tabs[selectedTab].sections);
           }
@@ -224,14 +231,16 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
         setConversation(updatedConversation);
         const currentReportKey = `strategyReportData_EX${expertIndex}`;
         const strategyData = finalResponse;
-        await saveConversationToIndexedDB({
-          id: conversationId,
-          analysisReportData,
-          conversation: updatedConversation, // 여기서는 { updatedConversation }가 아니라 그대로 updatedConversation로 넘겨야 함
-          [currentReportKey]: strategyData,
-          timestamp: Date.now(),
-        }
-        ,isLoggedIn,conversationId
+        await saveConversationToIndexedDB(
+          {
+            id: conversationId,
+            analysisReportData,
+            conversation: updatedConversation, // 여기서는 { updatedConversation }가 아니라 그대로 updatedConversation로 넘겨야 함
+            [currentReportKey]: strategyData,
+            timestamp: Date.now(),
+          },
+          isLoggedIn,
+          conversationId
         );
       }
     };

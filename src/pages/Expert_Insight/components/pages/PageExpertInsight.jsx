@@ -193,19 +193,21 @@ const PageExpertInsight = () => {
           ]
         : selectedAdditionalKeyword;
 
-    saveConversationToIndexedDB({
-      id: conversationId,
-      conversation: {updatedConversation},
-      conversationStage: newConversationStage,
-      inputBusinessInfo,
-      analysisReportData,
-      selectedAdditionalKeyword: updatedSelectedAdditionalKeyword,
-      additionalReportData, // Save the entire list of additional reports
-      ...existingReports,
-      timestamp: Date.now(),
-    },
-    isLoggedIn
-  ,conversationId);
+    saveConversationToIndexedDB(
+      {
+        id: conversationId,
+        conversation: { updatedConversation },
+        conversationStage: newConversationStage,
+        inputBusinessInfo,
+        analysisReportData,
+        selectedAdditionalKeyword: updatedSelectedAdditionalKeyword,
+        additionalReportData, // Save the entire list of additional reports
+        ...existingReports,
+        timestamp: Date.now(),
+      },
+      isLoggedIn,
+      conversationId
+    );
   };
 
   useEffect(() => {
@@ -229,27 +231,45 @@ const PageExpertInsight = () => {
           }
         } else {
           // 3. 대화 ID가 이미 존재하면 IndexedDB에서 대화 불러오기
-          const savedConversation = await getConversationByIdFromIndexedDB(conversationId);
+          const savedConversation = await getConversationByIdFromIndexedDB(
+            conversationId
+          );
           if (savedConversation) {
             const analysisData = savedConversation.analysisReportData || {};
             setTitleOfBusinessInfo(analysisData.title || "");
-            setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
-            setMainCharacteristicOfBusinessInformation(analysisData.mainCharacter || []);
-            setBusinessInformationTargetCustomer(analysisData.mainCustomer || []);
-  
+            setMainFeaturesOfBusinessInformation(
+              analysisData.mainFeatures || []
+            );
+            setMainCharacteristicOfBusinessInformation(
+              analysisData.mainCharacter || []
+            );
+            setBusinessInformationTargetCustomer(
+              analysisData.mainCustomer || []
+            );
+
             // 복구된 데이터를 로컬 상태로 설정
             setConversation(savedConversation.conversation);
             setConversationStage(savedConversation.conversationStage);
             setInputBusinessInfo(savedConversation.inputBusinessInfo);
-  
+
             // 전략 보고서 데이터 복구
-            setExpert1ReportData(savedConversation.strategyReportData_EX1 || {});
-            setExpert2ReportData(savedConversation.strategyReportData_EX2 || {});
-            setExpert3ReportData(savedConversation.strategyReportData_EX3 || {});
-  
-            setAdditionalReportData(savedConversation.additionalReportData || []);
-            setSelectedAdditionalKeyword(savedConversation.selectedAdditionalKeyword || []);
-  
+            setExpert1ReportData(
+              savedConversation.strategyReportData_EX1 || {}
+            );
+            setExpert2ReportData(
+              savedConversation.strategyReportData_EX2 || {}
+            );
+            setExpert3ReportData(
+              savedConversation.strategyReportData_EX3 || {}
+            );
+
+            setAdditionalReportData(
+              savedConversation.additionalReportData || []
+            );
+            setSelectedAdditionalKeyword(
+              savedConversation.selectedAdditionalKeyword || []
+            );
+
             // 대화 단계가 초기 상태라면 초기 시스템 메시지 설정
             if (savedConversation.conversationStage === 1) {
               const initialMessage = getInitialSystemMessage();
@@ -271,27 +291,45 @@ const PageExpertInsight = () => {
           setIsLoading(false); // 로딩 완료
           navigate(`/conversation/${conversationId}`, { replace: true });
         } else {
-          const savedConversation = await getConversationByIdFromIndexedDB(conversationId);
+          const savedConversation = await getConversationByIdFromIndexedDB(
+            conversationId
+          );
           if (savedConversation) {
             const analysisData = savedConversation.analysisReportData || {};
             setTitleOfBusinessInfo(analysisData.title || "");
-            setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
-            setMainCharacteristicOfBusinessInformation(analysisData.mainCharacter || []);
-            setBusinessInformationTargetCustomer(analysisData.mainCustomer || []);
-  
+            setMainFeaturesOfBusinessInformation(
+              analysisData.mainFeatures || []
+            );
+            setMainCharacteristicOfBusinessInformation(
+              analysisData.mainCharacter || []
+            );
+            setBusinessInformationTargetCustomer(
+              analysisData.mainCustomer || []
+            );
+
             // 복구된 데이터를 로컬 상태로 설정
             setConversation(savedConversation.conversation);
             setConversationStage(savedConversation.conversationStage);
             setInputBusinessInfo(savedConversation.inputBusinessInfo);
-  
+
             // 전략 보고서 데이터 복구
-            setExpert1ReportData(savedConversation.strategyReportData_EX1 || {});
-            setExpert2ReportData(savedConversation.strategyReportData_EX2 || {});
-            setExpert3ReportData(savedConversation.strategyReportData_EX3 || {});
-  
-            setAdditionalReportData(savedConversation.additionalReportData || []);
-            setSelectedAdditionalKeyword(savedConversation.selectedAdditionalKeyword || []);
-  
+            setExpert1ReportData(
+              savedConversation.strategyReportData_EX1 || {}
+            );
+            setExpert2ReportData(
+              savedConversation.strategyReportData_EX2 || {}
+            );
+            setExpert3ReportData(
+              savedConversation.strategyReportData_EX3 || {}
+            );
+
+            setAdditionalReportData(
+              savedConversation.additionalReportData || []
+            );
+            setSelectedAdditionalKeyword(
+              savedConversation.selectedAdditionalKeyword || []
+            );
+
             // 대화 단계가 초기 상태라면 초기 시스템 메시지 설정
             if (savedConversation.conversationStage === 1) {
               const initialMessage = getInitialSystemMessage();
@@ -308,8 +346,8 @@ const PageExpertInsight = () => {
         }
       }
     };
-  
-    loadConversation();  
+
+    loadConversation();
   }, [
     paramConversationId,
     conversationId,
@@ -357,56 +395,71 @@ const PageExpertInsight = () => {
       }
     }
   }, [approachPath, selectedExpertIndex, isLoading]);
-  
+
   useEffect(() => {
-    if (conversationId && conversationId.length >= 2 && selectedAdditionalKeyword.length > 0 && !isLoading) {
+    if (
+      conversationId &&
+      conversationId.length >= 2 &&
+      selectedAdditionalKeyword.length > 0 &&
+      !isLoading
+    ) {
       console.log(22222222);
       handleSearch(-1);
     }
   }, [selectedAdditionalKeyword, isLoading]);
-  
+
   useEffect(() => {
-    if (conversationId && conversationId.length >= 2 && approachPath && !isLoading) {
+    if (
+      conversationId &&
+      conversationId.length >= 2 &&
+      approachPath &&
+      !isLoading
+    ) {
       console.log(3333333333);
       handleSearch(-1);
     }
   }, [selectedExpertIndex, isLoading]);
-  
+
   useEffect(() => {
-    if (conversationId && conversationId.length >= 2 && isClickCheckReportRightAway && !isLoading) {
+    if (
+      conversationId &&
+      conversationId.length >= 2 &&
+      isClickCheckReportRightAway &&
+      !isLoading
+    ) {
       console.log(444444444);
       handleSearch(-1);
     }
   }, [isClickCheckReportRightAway, isLoading]);
 
-const handleSearch = async (inputValue) => {
-if (isLoggedIn) {
-  if (!paramConversationId) {
-    try {
-      // 로그인 상태에서 새로운 대화 ID를 서버에서 생성
-      const newConversationId = await createChatOnServer();
-      setConversationId(newConversationId); // 생성된 대화 ID 설정
-      console.log("newConversationId", newConversationId);
-      // 새로운 대화 ID로 경로 변경
-      navigate(`/conversation/${newConversationId}`, { replace: true });
-      return; // 새로운 대화 생성 후 return
-    } catch (error) {
-      console.error("Failed to create conversation on server:", error);
-      return;
+  const handleSearch = async (inputValue) => {
+    if (isLoggedIn) {
+      if (!paramConversationId) {
+        try {
+          // 로그인 상태에서 새로운 대화 ID를 서버에서 생성
+          const newConversationId = await createChatOnServer();
+          setConversationId(newConversationId); // 생성된 대화 ID 설정
+          console.log("newConversationId", newConversationId);
+          // 새로운 대화 ID로 경로 변경
+          navigate(`/conversation/${newConversationId}`, { replace: true });
+          return; // 새로운 대화 생성 후 return
+        } catch (error) {
+          console.error("Failed to create conversation on server:", error);
+          return;
+        }
+      }
     }
-  }
-} 
 
-const updatedConversation = [...conversation];
+    const updatedConversation = [...conversation];
 
-// 사용자가 입력한 경우에만 inputBusinessInfo를 업데이트
-if (conversationStage < 3 && inputValue !== -1) {
-  setInputBusinessInfo(inputValue);
-  console.log(inputValue);
-  updatedConversation.push({ type: "user", message: inputValue });
-}
+    // 사용자가 입력한 경우에만 inputBusinessInfo를 업데이트
+    if (conversationStage < 3 && inputValue !== -1) {
+      setInputBusinessInfo(inputValue);
+      console.log(inputValue);
+      updatedConversation.push({ type: "user", message: inputValue });
+    }
 
-let newConversationStage = conversationStage;
+    let newConversationStage = conversationStage;
 
     if (conversationStage === 1) {
       if (inputBusinessInfo || inputValue !== -1) {
@@ -575,53 +628,55 @@ let newConversationStage = conversationStage;
 
         <MainContent>
           <div>
-          <ChatWrap className={isScrolled ? "scrolled" : ""}>
-            <MoleculeBizName />
-            {conversation.map((item, index) => {
-              if (item.type === "user") {
-                return (
-                  <MoleculeUserMessage key={index} message={item.message} />
-                );
-              } else if (item.type === "system") {
-                return (
-                  <MoleculeSystemMessage key={index} message={item.message} />
-                );
-              } else if (item.type === "analysis") {
-                return (
-                  <OrganismBizAnalysisSection conversationId={conversationId} />
-                );
-              } else if (item.type.startsWith("strategy_")) {
-                const expertIndex = item.type.split("_")[1];
-                return (
-                  <OrganismStrategyReportSection
-                    key={`strategy_${expertIndex}_${index}`}
-                    conversationId={conversationId}
-                    expertIndex={expertIndex}
-                  />
-                );
-              } else if (item.type.startsWith("addition_")) {
-                console.log("🚀 ~ {conversation.map ~ item:", item, index);
-                const expertIndex = item.type.split("_")[1];
+            <ChatWrap className={isScrolled ? "scrolled" : ""}>
+              <MoleculeBizName />
+              {conversation.map((item, index) => {
+                if (item.type === "user") {
+                  return (
+                    <MoleculeUserMessage key={index} message={item.message} />
+                  );
+                } else if (item.type === "system") {
+                  return (
+                    <MoleculeSystemMessage key={index} message={item.message} />
+                  );
+                } else if (item.type === "analysis") {
+                  return (
+                    <OrganismBizAnalysisSection
+                      conversationId={conversationId}
+                    />
+                  );
+                } else if (item.type.startsWith("strategy_")) {
+                  const expertIndex = item.type.split("_")[1];
+                  return (
+                    <OrganismStrategyReportSection
+                      key={`strategy_${expertIndex}_${index}`}
+                      conversationId={conversationId}
+                      expertIndex={expertIndex}
+                    />
+                  );
+                } else if (item.type.startsWith("addition_")) {
+                  console.log("🚀 ~ {conversation.map ~ item:", item, index);
+                  const expertIndex = item.type.split("_")[1];
 
-                return (
-                  <OrganismAdditionalReport
-                    key={`addition_${expertIndex}_${index}`}
-                    conversationId={conversationId}
-                    expertIndex={expertIndex}
-                    keyword={
-                      selectedAdditionalKeyword[
-                        selectedAdditionalKeyword.length - 1
-                      ]
-                    }
-                  />
-                );
-              } else if (item.type === "keyword") {
-                return <MoleculeAdditionalKeyword />;
-              } else if (item.type === "report_button") {
-                return <MoleculeCheckReportRightAway />;
-              }
-              return null;
-            })}
+                  return (
+                    <OrganismAdditionalReport
+                      key={`addition_${expertIndex}_${index}`}
+                      conversationId={conversationId}
+                      expertIndex={expertIndex}
+                      keyword={
+                        selectedAdditionalKeyword[
+                          selectedAdditionalKeyword.length - 1
+                        ]
+                      }
+                    />
+                  );
+                } else if (item.type === "keyword") {
+                  return <MoleculeAdditionalKeyword />;
+                } else if (item.type === "report_button") {
+                  return <MoleculeCheckReportRightAway />;
+                }
+                return null;
+              })}
 
               {approachPath === -1 &&
                 inputBusinessInfo &&
@@ -629,7 +684,7 @@ let newConversationStage = conversationStage;
                   Object.keys(expert2ReportData).length === 0 ||
                   Object.keys(expert3ReportData).length === 0) && (
                   <OrganismBizExpertSelect />
-              )}
+                )}
             </ChatWrap>
 
             <OrganismSearchBottomBar onSearch={handleSearch} />
@@ -680,17 +735,21 @@ const ChatWrap = styled.div`
   height:calc(100% - 55px);
   
   &:before {
-    position:sticky;
-    top:0;
-    left:0;
-    width:100%;
-    height:0;
-    display:block;
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    display: block;
     // height:170px;
-    background: rgb(255,255,255);
-    background: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 30%);
-    z-index:1;
-    content:'';
+    background: rgb(255, 255, 255);
+    background: linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 1) 30%
+    );
+    z-index: 1;
+    content: "";
   }
 
   &.scrolled:before {
