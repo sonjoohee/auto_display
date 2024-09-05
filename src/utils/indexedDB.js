@@ -40,33 +40,47 @@ export const openDB = () => {
   });
 };
 
-export const saveConversationToIndexedDB = async (conversation, isLoggedIn, conversationId) => {
+export const saveConversationToIndexedDB = async (
+  conversation,
+  isLoggedIn,
+  id
+) => {
+  console.log("🚀 ~ conversationId:", id);
+  console.log("🚀 ~ saveConversationToIndexedDB ~ conversation:", conversation);
+  const PUT_DATA = {
+    id: id,
+    data: conversation,
+  };
+  console.log("🚀 ~ PUT_DATA:", PUT_DATA);
   if (isLoggedIn) {
     // 사용자 로그인 시 서버에 저장
     try {
-      const token = sessionStorage.getItem('accessToken'); // 액세스 토큰을 세션에서 가져오기
+      const token = sessionStorage.getItem("accessToken"); // 액세스 토큰을 세션에서 가져오기
       console.log("token", token);
 
       if (!token) {
         throw new Error("액세스 토큰이 존재하지 않습니다.");
       }
 
-      if (!conversationId) {
+      if (!id) {
         throw new Error("대화 ID가 필요합니다.");
       }
       console.log("conversation")
       console.log(conversation)
 
+      // 전체 대화 리스트에서 conversationId과 일치하는 객체 찾기
+
       // 서버에 업데이트 요청을 보냄 (PUT 메서드 사용)
       await axios.put(
         `https://wishresearch.kr/panels/update_chat`,
-        conversation,
+
+        conversation, // 객체 하나 통으로 전달
         {
           headers: {
             Authorization: `Bearer ${token}`, // Bearer 토큰을 헤더에 추가
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
-          withCredentials: true // 쿠키와 함께 자격 증명을 전달 (optional)
+          withCredentials: true, // 쿠키와 함께 자격 증명을 전달 (optional)
         }
       );
     } catch (error) {
@@ -87,8 +101,6 @@ export const saveConversationToIndexedDB = async (conversation, isLoggedIn, conv
     });
   }
 };
-
-
 
 export const getConversationByIdFromIndexedDB = async (id, isLoggedIn) => {
   if (isLoggedIn) {
@@ -152,9 +164,9 @@ export const getAllRecordsFromIndexedDB = async () => {
 
 export const createChatOnServer = async () => {
   try {
-    const token = sessionStorage.getItem('accessToken'); // 세션에서 액세스 토큰 가져오기
-    console.log("token")
-    console.log(token)
+    const token = sessionStorage.getItem("accessToken"); // 세션에서 액세스 토큰 가져오기
+    console.log("token");
+    console.log(token);
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
@@ -165,17 +177,18 @@ export const createChatOnServer = async () => {
       {
         headers: {
           Authorization: `Bearer ${token}`, // Bearer 토큰을 헤더에 추가
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        withCredentials: true // 쿠키와 자격 증명 포함 (필요 시)
+        withCredentials: true, // 쿠키와 자격 증명 포함 (필요 시)
       }
     );
 
-    console.log(response.data.inserted_id)
+    // const newConversationId = await createChatOnServer();
+    // setConversationId(newConversationId);
+    console.log(response.data.inserted_id);
     return response.data.inserted_id; // 서버로부터 가져온 conversationId 반환
   } catch (error) {
     console.error("Error creating chat on server:", error);
     throw error;
   }
 };
-

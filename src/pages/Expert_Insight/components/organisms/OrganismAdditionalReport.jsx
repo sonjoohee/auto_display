@@ -188,15 +188,12 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
         </>
       ) : (
         <>
-          {answerData.title &&
-          <TabHeader>
-            <TabTitle>
-              {answerData.title}
-            </TabTitle>
-            <TabContent>
-              {answerData.sections[0].content[0].text}
-            </TabContent>
-          </TabHeader>}
+          {answerData.title && (
+            <TabHeader>
+              <TabTitle>{answerData.title}</TabTitle>
+              <TabContent>{answerData.sections[0].content[0].text}</TabContent>
+            </TabHeader>
+          )}
 
           {sections.map((section, index) => (
             <Section
@@ -318,7 +315,7 @@ const TabTitle = styled.div`
   font-family: "Pretendard";
   font-size: 1.25rem;
   font-weight: 500;
-  color: palette.black;
+  color: ${palette.black};
   border: none;
   border-bottom: none;
   background: ${palette.white};
