@@ -937,6 +937,7 @@ const Popup = styled.div`
     background: ${palette.white};
 
     p {
+      font-family: 'Pretendard', 'Poppins';
       font-size: 0.875rem;
       font-weight: 500;
       margin: 20px auto 24px;
@@ -949,6 +950,7 @@ const Popup = styled.div`
 
       button {
         flex: 1;
+        font-family: 'Pretendard', 'Poppins';
         font-size: 0.875rem;
         font-weight: 600;
         color: ${palette.blue};
@@ -986,6 +988,7 @@ const Popup = styled.div`
           border-top: 1px solid ${palette.lineGray};
 
           button {
+            font-family: 'Pretendard', 'Poppins';
             color: ${palette.gray};
             font-weight: 600;
             padding: 0;
