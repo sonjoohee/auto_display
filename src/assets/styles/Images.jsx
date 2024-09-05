@@ -77,6 +77,8 @@ import AccountInquiry from "../images/AccountInquiry.svg"
 import AccountLogout from "../images/AccountLogout.svg"
 import IconMagic from "../images/iconMagic.svg"
 
+import iconMailSuccess from "../images/iconMailSuccess.svg"
+
 const images = {
   Logo,
   SymbolLogo,
@@ -157,6 +159,7 @@ const images = {
   AccountLogout,
 
   IconMagic,
+  iconMailSuccess,
 }
 
 export default images;

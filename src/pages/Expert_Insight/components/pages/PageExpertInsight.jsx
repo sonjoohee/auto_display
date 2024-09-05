@@ -666,7 +666,7 @@ const MainContent = styled.div`
     max-width: 1240px;
     width: 100%;
     margin: 0 20px;
-    // padding-bottom: 60px;
+    padding-bottom: 60px;
   }
 `;
 
@@ -677,7 +677,7 @@ const ContentsWrap = styled.div`
 
 const ChatWrap = styled.div`
   position:relative;
-  height:90%;
+  height:calc(100% - 55px);
   
   &:before {
     position:sticky;
