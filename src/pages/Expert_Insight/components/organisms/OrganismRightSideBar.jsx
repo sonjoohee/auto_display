@@ -329,6 +329,7 @@ const FieldWrap = styled.div`
   max-height: ${(props) => (props.isOpen ? "0" : "1000px")};
   margin:20px auto 0;
   padding-top: ${(props) => (props.isOpen ? "0" : "20px")};
+  border-top:${(props) => (props.isOpen ? "0" : "1px solid ${palette.lineGray}")};
   overflow:hidden;
   transition: max-height 0.5s ease, padding 0.5s ease;
 
