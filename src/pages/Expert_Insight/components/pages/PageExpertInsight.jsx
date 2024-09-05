@@ -347,9 +347,9 @@ const PageExpertInsight = () => {
 
   // 검색을 통해 들어왔으면 handleSearch 실행
   useEffect(() => {
-    console.log(111111111);
     if (conversationId && conversationId.length >= 2) {
       if (approachPath === -1) {
+        console.log(111111111);
         handleSearch(-1);
       } else if (approachPath === 1) {
         setInputBusinessInfo("");
@@ -360,22 +360,22 @@ const PageExpertInsight = () => {
   }, [approachPath, selectedExpertIndex, isLoading]);
   
   useEffect(() => {
-    console.log(22222222);
     if (conversationId && conversationId.length >= 2 && selectedAdditionalKeyword.length > 0 && !isLoading) {
+      console.log(22222222);
       handleSearch(-1);
     }
   }, [selectedAdditionalKeyword, isLoading]);
   
   useEffect(() => {
-    console.log(3333333333);
     if (conversationId && conversationId.length >= 2 && approachPath && !isLoading) {
+      console.log(3333333333);
       handleSearch(-1);
     }
   }, [selectedExpertIndex, isLoading]);
   
   useEffect(() => {
-    console.log(444444444);
     if (conversationId && conversationId.length >= 2 && isClickCheckReportRightAway && !isLoading) {
+      console.log(444444444);
       handleSearch(-1);
     }
   }, [isClickCheckReportRightAway, isLoading]);
@@ -440,7 +440,7 @@ let newConversationStage = conversationStage;
         //   message: expertPromptMessage,
         // });
       }
-    } else if (conversationStage === 2) {
+    } else if (conversationStage === 2 && titleOfBusinessInfo) {
       // 임시로 비활성화, 새로고침이나 뒤로가기 막는 기능 필요함
       // if (!selectedExpertIndex || (inputValue !== -1 && approachPath === -1)) {
       //     alert("전문가를 선택해 주세요.");
