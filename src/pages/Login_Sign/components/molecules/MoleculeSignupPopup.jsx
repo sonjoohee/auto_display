@@ -56,11 +56,11 @@ const MoleculeSignupPopup = ({ onClose, email }) => {
         </p>
 
         <div className="btnWrap">
-          <button type="button" onClick={handleGoToLogin}>
-            회원가입
-          </button>
           <button type="button" onClick={handleResendEmail}>
-            로그인
+            재발송하기
+          </button>
+          <button type="button" onClick={handleGoToLogin}>
+            로그인 바로가기
           </button>
         </div>
 
