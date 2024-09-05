@@ -65,7 +65,7 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
   const [additionalReportData, setAdditionalReportData] = useAtom(
     ADDITIONAL_REPORT_DATA
   ); // Use the list-based atom
-  const [answerData, setAnswerData] = useState(null);
+  const [answerData, setAnswerData] = useState("");
   const axiosConfig = {
     timeout: 100000, // 100초
     headers: {
@@ -115,6 +115,7 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
           const answerData = response.data.additional_question;
           setAnswerData(answerData);
           setSections(answerData.sections);
+          console.log(answerData.title);
 
           // 기존의 추가 리포트 데이터에 새로 가져온 데이터를 추가합니다.
           const updatedAdditionalReportData = [
@@ -187,17 +188,15 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
         </>
       ) : (
         <>
+          {answerData.title &&
           <TabHeader>
-            {tabs.map((tab, index) => (
-              <TabButton
-                key={index}
-                active={selectedTab === index}
-                onClick={() => handleTabClick(index)}
-              >
-                {tab.title}
-              </TabButton>
-            ))}
-          </TabHeader>
+            <TabTitle>
+              {answerData.title}
+            </TabTitle>
+            <TabContent>
+              {answerData.sections[0].content[0].text}
+            </TabContent>
+          </TabHeader>}
 
           {sections.map((section, index) => (
             <Section
@@ -311,30 +310,29 @@ const BoxWrap = styled.div`
 `;
 
 const TabHeader = styled.div`
-  display: flex;
   gap: 40px;
   margin-bottom: 20px;
 `;
 
-const TabButton = styled.button`
+const TabTitle = styled.div`
   font-family: "Pretendard";
   font-size: 1.25rem;
-  font-weight: ${(props) => (props.active ? "600" : "400")};
-  color: ${(props) => (props.active ? palette.black : palette.lightGray)};
+  font-weight: 500;
+  color: palette.black;
   border: none;
-  border-bottom: ${(props) =>
-    props.active ? `1px solid ${palette.black}` : "none"};
+  border-bottom: none;
   background: ${palette.white};
-  cursor: pointer;
-  transition: all 0.5s;
+  margin-bottom: 10px;
+`;
 
-  &:hover {
-    color: ${palette.black};
-  }
-
-  &:focus {
-    outline: none;
-  }
+const TabContent = styled.div`
+  font-family: "Pretendard";
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: ${palette.black};
+  border: none;
+  border-bottom: none;
+  background: ${palette.white};
 `;
 
 // DynamicGrid로 그리드 컬럼의 갯수를 서브 타이틀 갯수에 맞춰 동적으로 설정
