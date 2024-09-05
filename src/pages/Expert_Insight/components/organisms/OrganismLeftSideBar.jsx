@@ -4,11 +4,36 @@ import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import panelimages from "../../../../assets/styles/PanelImages";
 import { Link, useNavigate } from "react-router-dom";
-import { useAtom } from 'jotai';
+import { useAtom } from "jotai";
 import axios from "axios";
 
-import { INPUT_BUSINESS_INFO, SAVED_REPORTS, isLoggedInAtom, USER_NAME, USER_EMAIL} from '../../../AtomStates';
-import { getAllConversationsFromIndexedDB } from '../../../../utils/indexedDB'; // IndexedDB에서 대화 내역 가져오기
+import {
+  INPUT_BUSINESS_INFO,
+  SAVED_REPORTS,
+  isLoggedInAtom,
+  USER_NAME,
+  USER_EMAIL,
+  TITLE_OF_BUSINESS_INFORMATION,
+  MAIN_FEATURES_OF_BUSINESS_INFORMATION,
+  MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
+  BUSINESS_INFORMATION_TARGET_CUSTOMER,
+  APPROACH_PATH,
+  STRATEGY_REPORT_DATA,
+  SELECTED_ADDITIONAL_KEYWORD,
+  EXPERT1_REPORT_DATA,
+  EXPERT2_REPORT_DATA,
+  EXPERT3_REPORT_DATA,
+  ADDITIONAL_REPORT_DATA, // Import the new list-based atom
+  CONVERSATION_STAGE,
+  ADDITIONAL_QUESTION_1,
+  ADDITIONAL_QUESTION_2,
+  ADDITIONAL_QUESTION_3,
+  iS_CLICK_CHECK_REPORT_RIGHTAWAY,
+  CONVERSATION,
+  BUTTON_STATE,
+  SELECTED_EXPERT_INDEX,
+} from "../../../AtomStates";
+import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
 import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/MoleculeAccountPopup"; // 계정설정 팝업 컴포넌트 임포트
 
@@ -32,6 +57,61 @@ const OrganismLeftSideBar = () => {
   const [userName, setUserName] = useAtom(USER_NAME); // 아톰에서 유저 이름 불러오기
   const [userEmail, setUserEmail] = useAtom(USER_EMAIL); // 아톰에서 유저 이메일 불러오기
 
+  const [conversation, setConversation] = useAtom(CONVERSATION);
+  const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
+  const [inputBusinessInfo, setInputBusinessInfo] =
+    useAtom(INPUT_BUSINESS_INFO);
+  const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
+    TITLE_OF_BUSINESS_INFORMATION
+  );
+  const [
+    mainFeaturesOfBusinessInformation,
+    setMainFeaturesOfBusinessInformation,
+  ] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
+  const [
+    mainCharacteristicOfBusinessInformation,
+    setMainCharacteristicOfBusinessInformation,
+  ] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
+  const [
+    businessInformationTargetCustomer,
+    setBusinessInformationTargetCustomer,
+  ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
+  const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(
+    SELECTED_EXPERT_INDEX
+  );
+  const [sections, setSections] = useState([]);
+  const [additionalReportCount, setAdditionalReportCount] = useState(0);
+  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
+    SELECTED_ADDITIONAL_KEYWORD
+  );
+  const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
+
+  const [additionalReportData, setAdditionalReportData] = useAtom(
+    ADDITIONAL_REPORT_DATA
+  ); // Use the new list-based atom
+
+  const [expert1ReportData, setExpert1ReportData] =
+    useAtom(EXPERT1_REPORT_DATA);
+  const [expert2ReportData, setExpert2ReportData] =
+    useAtom(EXPERT2_REPORT_DATA);
+  const [expert3ReportData, setExpert3ReportData] =
+    useAtom(EXPERT3_REPORT_DATA);
+
+  const [addtionalQuestion1, setAddtionalQuestion1] = useAtom(
+    ADDITIONAL_QUESTION_1
+  );
+  const [addtionalQuestion2, setAddtionalQuestion2] = useAtom(
+    ADDITIONAL_QUESTION_2
+  );
+  const [addtionalQuestion3, setAddtionalQuestion3] = useAtom(
+    ADDITIONAL_QUESTION_3
+  );
+
+  const [inputAdditionalQuestion, setInputAdditionalQuestion] = useState("");
+  const [isClickCheckReportRightAway, setIsClickCheckReportRightAway] = useAtom(
+    iS_CLICK_CHECK_REPORT_RIGHTAWAY
+  );
+
   useEffect(() => {
     // IndexedDB에서 저장된 모든 대화 내역 가져오기
     const loadConversations = async () => {
@@ -45,12 +125,15 @@ const OrganismLeftSideBar = () => {
   useEffect(() => {
     const fetchChatList = async () => {
       try {
-        const accessToken = sessionStorage.getItem('accessToken'); 
-        const response = await axios.get('https://wishresearch.kr/panels/chat_list', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+        const accessToken = sessionStorage.getItem("accessToken");
+        const response = await axios.get(
+          "https://wishresearch.kr/panels/chat_list",
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
         setChatList(response.data); // 서버에서 받은 대화 리스트 저장
       } catch (error) {
         console.error("대화 목록 가져오기 오류:", error);
@@ -59,17 +142,19 @@ const OrganismLeftSideBar = () => {
     fetchChatList();
   }, []);
 
-
   useEffect(() => {
     // 서버에서 보고서 목록을 가져오는 함수
     const fetchReports = async () => {
       try {
-        const accessToken = sessionStorage.getItem('accessToken'); // 저장된 토큰 가져오기
-        const response = await axios.get('https://wishresearch.kr/panels/insight_list', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+        const accessToken = sessionStorage.getItem("accessToken"); // 저장된 토큰 가져오기
+        const response = await axios.get(
+          "https://wishresearch.kr/panels/insight_list",
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
         setReports(response.data); // 보고서 리스트를 상태로 설정
       } catch (error) {
         console.error("보고서 목록 가져오기 오류:", error);
@@ -77,22 +162,25 @@ const OrganismLeftSideBar = () => {
     };
     fetchReports();
   }, []);
-  
+
   // const handleConversationClick = (id) => {
   //   // 클릭 시 해당 대화로 이동
   //   navigate(`/conversation/${id}`);
   // };
   const handleConversationClick = async (conversationId) => {
     try {
-      const accessToken = sessionStorage.getItem('accessToken');
-      const response = await axios.get(`https://wishresearch.kr/panels/chat/${conversationId}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      console.log("response")
+      const accessToken = sessionStorage.getItem("accessToken");
+      const response = await axios.get(
+        `https://wishresearch.kr/panels/chat/${conversationId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log("response");
 
-      console.log(response)
+      console.log(response);
       setSelectedConversation(response.data); // 선택된 대화 내용 저장
     } catch (error) {
       console.error("대화 내용 가져오기 오류:", error);
@@ -141,12 +229,15 @@ const OrganismLeftSideBar = () => {
 
   const handleReportClick = async (reportId) => {
     try {
-      const accessToken = sessionStorage.getItem('accessToken'); // 저장된 토큰 가져오기
-      const response = await axios.get(`https://wishresearch.kr/panels/insight/${reportId}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const accessToken = sessionStorage.getItem("accessToken"); // 저장된 토큰 가져오기
+      const response = await axios.get(
+        `https://wishresearch.kr/panels/insight/${reportId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
       setSelectedReport(response.data); // 선택된 보고서의 상세 데이터 상태로 설정
     } catch (error) {
       console.error("보고서 상세 정보 가져오기 오류:", error);
@@ -156,7 +247,7 @@ const OrganismLeftSideBar = () => {
   const closePopup = () => {
     setSelectedReport(null); // 팝업 닫기
   };
-  
+
   useEffect(() => {
     const checkboxes = document.querySelectorAll(".accordion-toggle");
     checkboxes.forEach((checkbox) => {
@@ -197,12 +288,33 @@ const OrganismLeftSideBar = () => {
 
   const handleNewProjectClick = () => {
     navigate("/");
+    setConversation([]);
+    setConversationStage(1);
+    setInputBusinessInfo("");
+    setTitleOfBusinessInfo("");
+    setMainFeaturesOfBusinessInformation([]);
+    setMainCharacteristicOfBusinessInformation([]);
+    setBusinessInformationTargetCustomer([]);
+    setSelectedExpertIndex(1);
+    setSections([]);
+    setAdditionalReportCount(0);
+    setSelectedAdditionalKeyword([]);
+    setApproachPath(0);
+    setAdditionalReportData([]);
+    setExpert1ReportData({});
+    setExpert2ReportData({});
+    setExpert3ReportData({});
+    setAddtionalQuestion1("");
+    setAddtionalQuestion2("");
+    setAddtionalQuestion3("");
+    setInputAdditionalQuestion("");
+    setIsClickCheckReportRightAway(false);
   };
 
   return (
     <>
       <Logo isOpen={isOpen}>
-        <a href="/"></a>
+        <a href="/" onClick={handleNewProjectClick}></a>
         <button type="button" onClick={toggleSidebar}>
           닫기
         </button>
@@ -233,7 +345,9 @@ const OrganismLeftSideBar = () => {
                 <ul>
                   {reports.map((report, index) => (
                     <li key={index}>
-                    <p onClick={() => handleReportClick(report.id)}>{report.title}</p>
+                      <p onClick={() => handleReportClick(report.id)}>
+                        {report.title}
+                      </p>
                       <span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -292,10 +406,9 @@ const OrganismLeftSideBar = () => {
                 <div>
                   <strong>최근 작업</strong>
                   <ul>
-                  {chatList.map((chat, index) => (
+                    {chatList.map((chat, index) => (
                       <li key={index}>
                         <p onClick={() => handleConversationClick(chat.id)}>
-
                           {chat.inputBusinessInfo}
                         </p>
                         <span onClick={editBoxToogle}>
@@ -344,12 +457,10 @@ const OrganismLeftSideBar = () => {
                     ))}
                   </ul>
                 </div>
-
               </AccordionContent>
             </AccordionItem>
           </AccordionMenu>
         </SideBarMenu>
-
 
         <LoginButtonWrap className="logBtn">
           {isLoggedIn ? (
@@ -407,7 +518,9 @@ const OrganismLeftSideBar = () => {
             </>
           ) : (
             <>
-              <button onClick={handleLoginClick} className="login">로그인</button>
+              <button onClick={handleLoginClick} className="login">
+                로그인
+              </button>
               {/* <Link to="/signup">회원가입</Link> */}
 
               <div className="terms">
@@ -774,45 +887,45 @@ const SideBar = styled.div`
         }
 
         .login {
-          width:40px;
-          height:40px;
-          font-size:0;
-          transform:translateX(40px);
-          padding:0;
-          border-radius:10px;
-          background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M5.86737 1.23877C5.86737 1.51491 5.64351 1.73877 5.36737 1.73877L3.26709 1.73877C2.43866 1.73877 1.76709 2.41034 1.76709 3.23877L1.76709 10.6754C1.76709 11.5038 2.43866 12.1754 3.26709 12.1754H5.36737C5.64351 12.1754 5.86737 12.3993 5.86737 12.6754C5.86737 12.9516 5.64351 13.1754 5.36737 13.1754H3.26709C1.88638 13.1754 0.76709 12.0561 0.76709 10.6754V3.23877C0.76709 1.85806 1.88638 0.73877 3.26709 0.73877H5.36737C5.64351 0.73877 5.86737 0.962627 5.86737 1.23877ZM13.2332 6.95753C13.2332 7.23367 13.0093 7.45753 12.7332 7.45753L5.76741 7.45753L8.38732 10.0774C8.58258 10.2727 8.58258 10.5893 8.38732 10.7845C8.19206 10.9798 7.87548 10.9798 7.68022 10.7846L4.92287 8.0272C4.33848 7.44282 4.33688 6.49584 4.91928 5.90948L7.67902 3.13097C7.87362 2.93504 8.1902 2.93397 8.38612 3.12857C8.58205 3.32317 8.58312 3.63975 8.38852 3.83567L5.78438 6.45753L12.7332 6.45753C13.0093 6.45753 13.2332 6.68139 13.2332 6.95753Z' fill='black' fill-opacity='0.6'/%3E%3C/svg%3E") center no-repeat;
+          width: 40px;
+          height: 40px;
+          font-size: 0;
+          transform: translateX(40px);
+          padding: 0;
+          border-radius: 10px;
+          background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M5.86737 1.23877C5.86737 1.51491 5.64351 1.73877 5.36737 1.73877L3.26709 1.73877C2.43866 1.73877 1.76709 2.41034 1.76709 3.23877L1.76709 10.6754C1.76709 11.5038 2.43866 12.1754 3.26709 12.1754H5.36737C5.64351 12.1754 5.86737 12.3993 5.86737 12.6754C5.86737 12.9516 5.64351 13.1754 5.36737 13.1754H3.26709C1.88638 13.1754 0.76709 12.0561 0.76709 10.6754V3.23877C0.76709 1.85806 1.88638 0.73877 3.26709 0.73877H5.36737C5.64351 0.73877 5.86737 0.962627 5.86737 1.23877ZM13.2332 6.95753C13.2332 7.23367 13.0093 7.45753 12.7332 7.45753L5.76741 7.45753L8.38732 10.0774C8.58258 10.2727 8.58258 10.5893 8.38732 10.7845C8.19206 10.9798 7.87548 10.9798 7.68022 10.7846L4.92287 8.0272C4.33848 7.44282 4.33688 6.49584 4.91928 5.90948L7.67902 3.13097C7.87362 2.93504 8.1902 2.93397 8.38612 3.12857C8.58205 3.32317 8.58312 3.63975 8.38852 3.83567L5.78438 6.45753L12.7332 6.45753C13.0093 6.45753 13.2332 6.68139 13.2332 6.95753Z' fill='black' fill-opacity='0.6'/%3E%3C/svg%3E")
+            center no-repeat;
         }
       }
 
       .logInfo {
-        padding:0;
-        border:0;
+        padding: 0;
+        border: 0;
 
         div {
-          display:none;
+          display: none;
         }
 
         button {
-          display:flex;
-          overflow:hidden;
-          padding:10px !important;
-          border:1px solid ${palette.lineGray};
-          background:none !important;
-          transform:translateX(40px);
+          display: flex;
+          overflow: hidden;
+          padding: 10px !important;
+          border: 1px solid ${palette.lineGray};
+          background: none !important;
+          transform: translateX(40px);
 
           span {
-            font-size:0.88rem !important;
-            overflow:hidden;
-            display:block;
+            font-size: 0.88rem !important;
+            overflow: hidden;
+            display: block;
           }
         }
       }
 
       .AccountInfo {
-        transform:translateX(90px);
+        transform: translateX(90px);
       }
-    `
-  }
+    `}
 `;
 
 const SideBarMenu = styled.div`
@@ -834,12 +947,12 @@ const SideBarMenu = styled.div`
 
 const EditBox = styled.div`
   position: fixed;
-  left:0;
+  left: 0;
   display: flex;
   flex-direction: column;
-  gap:20px;
-  max-width:217px;
-  width:30%;
+  gap: 20px;
+  max-width: 217px;
+  width: 30%;
   max-height: ${(props) => (props.isEditToogle ? "0" : "1000px")};
   padding: ${(props) => (props.isEditToogle ? "0" : "20px")};
   overflow: hidden;
@@ -853,14 +966,14 @@ const EditBox = styled.div`
   transition: all 0.5s;
 
   button {
-    display:flex;
-    align-items:center;
-    gap:8px;
-    font-family: 'Pretendard', 'Poppins';
-    font-size:0.875rem;
-    color:${palette.gray};
-    border:0;
-    background:none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: "Pretendard", "Poppins";
+    font-size: 0.875rem;
+    color: ${palette.gray};
+    border: 0;
+    background: none;
   }
 `;
 
@@ -1249,7 +1362,7 @@ const LogoutBtnWrap = styled.div`
   button {
     width: 15px;
     height: 15px;
-    font-size:0;
+    font-size: 0;
     padding: 0;
     border: 0;
     flex-shrink: 0;
