@@ -39,11 +39,15 @@ export const openDB = () => {
   });
 };
 
-export const saveConversationToIndexedDB = async (conversation, isLoggedIn, conversationId) => {
+export const saveConversationToIndexedDB = async (
+  conversation,
+  isLoggedIn,
+  conversationId
+) => {
   if (isLoggedIn) {
     // 사용자 로그인 시 서버에 저장
     try {
-      const token = sessionStorage.getItem('accessToken'); // 액세스 토큰을 세션에서 가져오기
+      const token = sessionStorage.getItem("accessToken"); // 액세스 토큰을 세션에서 가져오기
       console.log("token", token);
 
       if (!token) {
@@ -53,8 +57,8 @@ export const saveConversationToIndexedDB = async (conversation, isLoggedIn, conv
       if (!conversationId) {
         throw new Error("대화 ID가 필요합니다.");
       }
-      console.log("saveConversationToIndexedDB")
-      console.log(conversation)
+      console.log("saveConversationToIndexedDB");
+      console.log(conversation);
       // 서버에 업데이트 요청을 보냄 (PUT 메서드 사용)
       const PUT_DATA = {
         id: conversationId,
@@ -62,18 +66,14 @@ export const saveConversationToIndexedDB = async (conversation, isLoggedIn, conv
         chat_title: conversation.analysisReportData.title,
         chat_date: conversation.timestamp,
         chat_data: conversation,
-      }
-      await axios.put(
-        `https://wishresearch.kr/panels/update_chat`,
-        PUT_DATA,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Bearer 토큰을 헤더에 추가
-            'Content-Type': 'application/json'
-          },
-          withCredentials: true // 쿠키와 함께 자격 증명을 전달 (optional)
-        }
-      );
+      };
+      await axios.put(`https://wishresearch.kr/panels/update_chat`, PUT_DATA, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Bearer 토큰을 헤더에 추가
+          "Content-Type": "application/json",
+        },
+        withCredentials: true, // 쿠키와 함께 자격 증명을 전달 (optional)
+      });
     } catch (error) {
       console.error("Error updating conversation on server:", error);
     }
@@ -95,10 +95,30 @@ export const getConversationByIdFromIndexedDB = async (id, isLoggedIn) => {
   if (isLoggedIn) {
     // 사용자 로그인 시 서버에서 데이터 가져오기
     try {
+      const accessToken = sessionStorage.getItem("accessToken");
       const response = await axios.get(
-        `https://wishresearch.kr/panels/chat_list`
+        `https://wishresearch.kr/panels/chat/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
       );
-      return response.data;
+      console.log("response");
+
+      console.log(response);
+      // setSelectedConversation(response.data); // 선택된 대화 내용 저장
+
+      console.log(
+        "🚀 ~ getConversationByIdFromIndexedDB ~ response.data.chat_data:",
+        response.data.chat_data
+      );
+      return response.data.chat_data;
+
+      // const response = await axios.get(
+      //   `https://wishresearch.kr/panels/chat_list`
+      // );
+      // return response.data;
     } catch (error) {
       console.error("Error fetching conversation from server:", error);
       return null;
@@ -153,9 +173,9 @@ export const getAllRecordsFromIndexedDB = async () => {
 
 export const createChatOnServer = async () => {
   try {
-    const token = sessionStorage.getItem('accessToken'); // 세션에서 액세스 토큰 가져오기
-    console.log("token")
-    console.log(token)
+    const token = sessionStorage.getItem("accessToken"); // 세션에서 액세스 토큰 가져오기
+    console.log("token");
+    console.log(token);
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
@@ -166,17 +186,16 @@ export const createChatOnServer = async () => {
       {
         headers: {
           Authorization: `Bearer ${token}`, // Bearer 토큰을 헤더에 추가
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        withCredentials: true // 쿠키와 자격 증명 포함 (필요 시)
+        withCredentials: true, // 쿠키와 자격 증명 포함 (필요 시)
       }
     );
 
-    console.log(response.data.inserted_id)
+    console.log(response.data.inserted_id);
     return response.data.inserted_id; // 서버로부터 가져온 conversationId 반환
   } catch (error) {
     console.error("Error creating chat on server:", error);
     throw error;
   }
 };
-
