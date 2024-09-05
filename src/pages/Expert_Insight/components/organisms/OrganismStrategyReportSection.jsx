@@ -11,7 +11,6 @@ import {
   CONVERSATION,
   APPROACH_PATH,
   isLoggedInAtom,
-
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -71,9 +70,12 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [buttonState, setButtonState] = useAtom(EXPERT_BUTTON_STATE); // BUTTON_STATE 사용
 
-  const [expert1ReprotData, setExpert1ReportData] = useAtom(EXPERT1_REPORT_DATA);
-  const [expert2ReprotData, setExpert2ReportData] = useAtom(EXPERT2_REPORT_DATA);
-  const [expert3ReprotData, setExpert3ReportData] = useAtom(EXPERT3_REPORT_DATA);
+  const [expert1ReprotData, setExpert1ReportData] =
+    useAtom(EXPERT1_REPORT_DATA);
+  const [expert2ReprotData, setExpert2ReportData] =
+    useAtom(EXPERT2_REPORT_DATA);
+  const [expert3ReprotData, setExpert3ReportData] =
+    useAtom(EXPERT3_REPORT_DATA);
 
   const analysisReportData = {
     title: titleOfBusinessInfo,
@@ -127,7 +129,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             setStrategyReportData(strategyData);
             setTabs(strategyData.tabs);
             setSections(strategyData.tabs[selectedTab].sections);
-          } else if (Object.keys(strategyReportData).length === 0) {
+          } else if (Object.keys(strategyReportData).length >= 0) {
             const data = {
               expert_id: expertIndex,
               business_info: titleOfBusinessInfo, // DB에서 가져온 titleOfBusinessInfo 사용
@@ -182,9 +184,12 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             setTabs(strategyData.tabs);
             setSections(strategyData.tabs[selectedTab].sections);
 
-            if(strategyData.expert_id === 1) setExpert1ReportData(strategyData);
-            else if(strategyData.expert_id === 2) setExpert2ReportData(strategyData);
-            else if(strategyData.expert_id === 3) setExpert3ReportData(strategyData);
+            if (strategyData.expert_id === 1)
+              setExpert1ReportData(strategyData);
+            else if (strategyData.expert_id === 2)
+              setExpert2ReportData(strategyData);
+            else if (strategyData.expert_id === 3)
+              setExpert3ReportData(strategyData);
 
             const updatedConversation = {
               ...existingConversation,
@@ -209,8 +214,12 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
 
         const updatedConversation = [...conversation];
         updatedConversation.push(
-          { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊'},
-          { type: `keyword` },
+          {
+            type: "system",
+            message:
+              "리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊",
+          },
+          { type: `keyword` }
         );
         setConversation(updatedConversation);
         const currentReportKey = `strategyReportData_EX${expertIndex}`;
@@ -253,17 +262,17 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
 
         {isLoading ? (
           <>
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
+            <SkeletonTitle className="title-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+            <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
+            <SkeletonTitle className="title-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+            <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
+            <SkeletonTitle className="title-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+            <SkeletonLine className="content-placeholder" />
           </>
         ) : sections.length > 0 ? (
           sections.map((section, index) => (
@@ -380,9 +389,9 @@ const AnalysisSection = styled.div`
   }
 
   > p {
-    font-size:0.875rem;
-    line-height:1.5;
-    margin-top:15px;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin-top: 15px;
 
     span {
       color: ${palette.red};
@@ -407,9 +416,9 @@ const BoxWrap = styled.div`
   }
 
   p {
-    font-size:0.875rem;
-    color:${palette.darkGray};
-    line-height:1.5;
+    font-size: 0.875rem;
+    color: ${palette.darkGray};
+    line-height: 1.5;
     // margin-bottom:10px;
   }
 `;
@@ -463,7 +472,7 @@ const DynamicGrid = styled.div`
 `;
 
 const SubTitle = styled.strong`
-  font-size:0.875rem;
+  font-size: 0.875rem;
   font-weight: 500;
   color: ${palette.gray};
   text-align: left;
