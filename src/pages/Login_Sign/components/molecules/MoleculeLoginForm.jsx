@@ -24,6 +24,7 @@ import { palette } from "../../../../assets/styles/Palette";
 
 import MoleculeSignupPopup from "./MoleculeSignupPopup";
 import MoleculeSignPopup from "./MoleculeSignPopup";
+import MoleculeResetPasswordPopup from "./MoleculeResetPasswordPopup";
 
 const MoleculeLoginForm = () => {
   const [email, setEmail] = useAtom(emailAtom);
@@ -134,13 +135,20 @@ const MoleculeLoginForm = () => {
   };
 
 
-  const [isSignPopupOpen, setIsSignPopupOpen] = useState(false); // 로그인 팝업 상태 관리
+  const [isSignPopupOpen, setIsSignPopupOpen] = useState(false); // 회원가입 팝업 상태 관리
   const handleSignClick = () => {
     setIsSignPopupOpen(true); // 회원가입 팝업 열기
   };
-
   const closeSignPopup = () => {
     setIsSignPopupOpen(false); // 회원가입 팝업 닫기
+  };
+
+  const [isPasswordRestPopupOpen, setIsPasswordRestPopupOpen] = useState(false); // 비밀번호 리셋 팝업 상태 관리
+  const handlePasswordRestClick = () => {
+    setIsPasswordRestPopupOpen(true); // 비밀번호 리셋 팝업 열기
+  };
+  const closePasswordRestPopup = () => {
+    setIsPasswordRestPopupOpen(false); // 비밀번호 리셋 팝업 닫기
   };
 
 
@@ -179,7 +187,8 @@ const MoleculeLoginForm = () => {
       {error && <ErrorMessage>{error}</ErrorMessage>}
 
       <PasswordResetLink>
-        <a onClick={handlePasswordReset}>비밀번호 찾기</a>
+        <a onClick={handlePasswordRestClick}>비밀번호 찾기</a>
+        {/* <a onClick={handlePasswordReset}>비밀번호 찾기</a> */}
       </PasswordResetLink>
 
       <StyledLoginButton onClick={handleLogin} disabled={!email || !password}>
@@ -198,7 +207,9 @@ const MoleculeLoginForm = () => {
       </JoinWrap>
 
     </LoginFormContainer>
+
     {isSignPopupOpen && <MoleculeSignPopup onClose={closeSignPopup} />}
+    {isPasswordRestPopupOpen && <MoleculeResetPasswordPopup onClose={closePasswordRestPopup} />}
     </>
   );
 };
