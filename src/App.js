@@ -31,6 +31,8 @@ import Loading from "./pages/Persona/Loading";
 import LoadingPersona from "./pages/Persona/LoadingPersona";
 import OrganismReportPopup from './pages/Expert_Insight/components/organisms/OrganismReportPopup'; 
 
+import PageCompletedMail from './pages/Login_Sign/components/pages/PageCompletedMail';
+
 function App() {
   const [, setIsLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태를 위한 아톰
   const [, setUserName] = useAtom(USER_NAME); // 유저 이름 아톰
@@ -81,6 +83,10 @@ function App() {
             <Route path="*" element={<PageMeetAiExpert />} />
             <Route path="/PageMeetAiExpert" element={<PageMeetAiExpert />} />
             <Route path="/ExpertInsight" element={<PageExpertInsight />}></Route>
+
+            <Route path="/CompletedMail" element={<PageCompletedMail />}></Route>
+
+
             {/* <Route path="/AI_Panel" element={<PageAIPanelList />} />
             <Route path="/QuickReport" element={<BusinessTool />} /> */}
 
