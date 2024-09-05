@@ -15,7 +15,6 @@ import {
   APPROACH_PATH,
   IS_LOADING,
   isLoggedInAtom,
-
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -85,7 +84,8 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
     const loadData = async () => {
       try {
         const existingConversation = await getConversationByIdFromIndexedDB(
-          conversationId
+          conversationId,
+          isLoggedIn
         );
 
         if (buttonState === 1) {
@@ -133,7 +133,11 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
             additionalReportData: updatedAdditionalReportData, // 전체 리스트를 저장
             timestamp: Date.now(),
           };
-          await saveConversationToIndexedDB(updatedConversation,isLoggedIn,conversationId);
+          await saveConversationToIndexedDB(
+            updatedConversation,
+            isLoggedIn,
+            conversationId
+          );
 
           setIsLoading(false);
 
@@ -160,7 +164,7 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
       } catch (error) {
         console.error("Error loading data:", error);
       }
-      console.log("🚀 ~ loadData ~ conversationId:", conversationId);
+      // console.log("🚀 ~ loadData ~ conversationId:", conversationId);
     };
 
     loadData();

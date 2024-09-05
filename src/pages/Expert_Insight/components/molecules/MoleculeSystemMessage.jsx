@@ -11,7 +11,7 @@ const MoleculeSystemMessage = ({ message }) => {
     let lineIndex = 0; // 현재 줄 인덱스
     let charIndex = 0; // 현재 글자 인덱스
     let currentText = ""; // 현재까지 출력된 텍스트
-    const typingSpeed = 25; // 타이핑 속도 (50ms에 한 글자씩)
+    const typingSpeed = 10; // 타이핑 속도 (50ms에 한 글자씩)
 
     const typeNextChar = () => {
       // 줄이 모두 출력되었는지 확인
