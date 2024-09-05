@@ -87,7 +87,7 @@ const BottomBar = styled.div`
   flex-direction: column;
   flex-basis: 100% !important;
   // margin:0 20px;
-  margin-top: 40px;
+  // margin-top: 40px;
   z-index: 998;
   flex: auto !important;
 
