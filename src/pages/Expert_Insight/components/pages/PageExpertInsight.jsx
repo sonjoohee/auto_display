@@ -482,6 +482,7 @@ const PageExpertInsight = () => {
 
         <MainContent>
           <div>
+          <ChatWrap>
             <MoleculeBizName />
             {conversation.map((item, index) => {
               if (item.type === "user") {
@@ -529,13 +530,14 @@ const PageExpertInsight = () => {
               return null;
             })}
 
-            {approachPath === -1 &&
-              inputBusinessInfo &&
-              (Object.keys(expert1ReportData).length === 0 ||
-                Object.keys(expert2ReportData).length === 0 ||
-                Object.keys(expert3ReportData).length === 0) && (
-                <OrganismBizExpertSelect />
+              {approachPath === -1 &&
+                inputBusinessInfo &&
+                (Object.keys(expert1ReportData).length === 0 ||
+                  Object.keys(expert2ReportData).length === 0 ||
+                  Object.keys(expert3ReportData).length === 0) && (
+                  <OrganismBizExpertSelect />
               )}
+            </ChatWrap>
 
             <OrganismSearchBottomBar onSearch={handleSearch} />
           </div>
@@ -578,4 +580,10 @@ const MainContent = styled.div`
 const ContentsWrap = styled.div`
   position: relative;
   display: flex;
+`;
+
+const ChatWrap = styled.div`
+  position:relative;
+  height:90%;
+  
 `;
