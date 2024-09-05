@@ -151,7 +151,7 @@ const PageExpertInsight = () => {
 
     saveConversationToIndexedDB({
       id: conversationId,
-      conversation: updatedConversation,
+      conversation: {updatedConversation},
       conversationStage: newConversationStage,
       inputBusinessInfo,
       analysisReportData,
@@ -170,6 +170,19 @@ const PageExpertInsight = () => {
             // 서버에서 새로운 대화 ID를 생성하고 설정
             const newConversationId = await createChatOnServer();
             setConversationId(newConversationId);
+            console.log("newConversationId")
+            console.log(newConversationId)
+            await saveConversationToIndexedDB({
+              id: conversationId,
+              conversation: {},
+              conversationStage: 1,
+              inputBusinessInfo,
+              analysisReportData,
+              additionalReportData,  // Save the entire list of additional reports
+              timestamp: Date.now(),
+            });
+
+
             navigate(`/conversation/${newConversationId}`, { replace: true });
           } catch (error) {
             console.error('Failed to create conversation on server:', error);
@@ -378,10 +391,6 @@ const PageExpertInsight = () => {
 
     setConversation(updatedConversation);
     setConversationStage(newConversationStage);
-    
-    console.log("conversationId")
-
-    console.log(conversationId)
     saveConversation(updatedConversation, newConversationStage);
   };
 

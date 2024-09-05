@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useAtom } from "jotai";
 import { isLoggedInAtom } from "../pages/AtomStates"; // AtomStates 파일에서 isLoggedInAtom 임포트
+const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
 
 export const fetchDataById = async (id) => {
   try {
@@ -53,6 +54,8 @@ export const saveConversationToIndexedDB = async (conversation, isLoggedIn, conv
       if (!conversationId) {
         throw new Error("대화 ID가 필요합니다.");
       }
+      console.log("conversation")
+      console.log(conversation)
 
       // 서버에 업데이트 요청을 보냄 (PUT 메서드 사용)
       await axios.put(
@@ -70,6 +73,8 @@ export const saveConversationToIndexedDB = async (conversation, isLoggedIn, conv
       console.error("Error updating conversation on server:", error);
     }
   } else {
+    console.log("비로그인상태")
+
     // 비로그인 시 IndexedDB에 저장
     const db = await openDB();
     const transaction = db.transaction("conversations", "readwrite");

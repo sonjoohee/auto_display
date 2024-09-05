@@ -34,6 +34,7 @@ import {
 } from "../../../AtomStates";
 
 const OrganismBizAnalysisSection = ({ conversationId }) => {
+
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [approachPath] = useAtom(APPROACH_PATH);
 
@@ -185,6 +186,9 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
             : [],
         };
 
+        console.log("OrganismBizAnalysisSectionconversationId")
+        console.log(conversationId)
+        
         // 기존 대화 내역을 유지하면서 새로운 정보를 추가
         const existingConversation = await getConversationByIdFromIndexedDB(
           conversationId
