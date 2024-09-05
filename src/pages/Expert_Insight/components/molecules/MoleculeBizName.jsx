@@ -16,6 +16,11 @@ const MoleculeBizName = () => {
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
 
+  const [isAutoSaveToogle, setIsAutoSaveToogle] = useState(true);
+  const autoSaveToogle = () => {
+    setIsAutoSaveToogle(!isAutoSaveToogle);
+  };
+
   return (
     <>
       <BizNameContainer>
@@ -30,7 +35,15 @@ const MoleculeBizName = () => {
             <p>2024-09-03</p>
           </NameTitle>
         </div>
-        {titleOfBusinessInfo && <button type="button">내가 쓴 설명 보기</button>}
+        {titleOfBusinessInfo && <button type="button" onClick={autoSaveToogle}>내가 쓴 설명 보기<img src={images.IconMagic} alt="" /></button>}
+        
+        <AutosavePopup isAutoSaveToogle={isAutoSaveToogle}>
+          <div>
+            <span>일시 : 2024년 8월 28일</span>
+            <strong>내가 작성한 아이템 및 아이디어 설명</strong>
+            <p>유데미 큐레이션 이벤트 페이지를 이용하려는 20대 여자 취업준비생인데 부트캠프, 자격증패키지, 기획전,스터디모임 등등을 알아보려하는 모습</p>
+          </div>
+        </AutosavePopup>
       </BizNameContainer>
     </>
   );
@@ -77,6 +90,10 @@ const BizNameContainer = styled.div`
   }
 
   > button {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-family: 'Pretendard', 'Poppins';
     font-size:0.75rem;
     color:${palette.gray};
     letter-spacing:-1px;
@@ -125,15 +142,18 @@ const Badge = styled.div`
 const AutosavePopup = styled.div`
   position:absolute;
   right:-70px;
-  top:77px;
+  top:70px;
   max-width:304px;
+  max-height: ${(props) => (props.isAutoSaveToogle ? "0" : "1000px")};
   flex-direction:column;
   gap:20px !important;
   text-align:left;
-  padding:24px;
+  padding: ${(props) => (props.isAutoSaveToogle ? "0" : "24px")};
   border-radius:20px;
   background:${palette.white};
   box-shadow:0 4px 20px rgba(0,0,0,.2);
+  visibility: ${(props) => (props.isAutoSaveToogle ? "hidden" : "visible")};
+  opacity: ${(props) => (props.isAutoSaveToogle ? "0" : "1")};
 
   &:before {
     position:absolute;
@@ -163,10 +183,12 @@ const AutosavePopup = styled.div`
   span {
     font-size:0.63rem;
     font-weight:300;
+    color:${palette.gray};
   }
 
   p {
     font-size:0.75rem;
     line-height:1.5;
+    margin-top:20px;
   }
 `;

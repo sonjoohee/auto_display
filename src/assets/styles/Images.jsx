@@ -41,6 +41,7 @@ import ImgTarget from "../images/imgTarget.svg"
 import IconChatSmile from "../images/iconChatSmile.svg"
 
 import IconSearch from "../images/iconSearch.svg"
+import IconSearchHover from "../images/iconSearchHover.svg"
 
 import IconChat from "../images/iconChat.svg"
 import IconWrite from "../images/iconWrite.svg"
@@ -74,6 +75,7 @@ import AccountSetting from "../images/AccountSetting.svg"
 import AccountInfo from "../images/AccountInfo.svg"
 import AccountInquiry from "../images/AccountInquiry.svg"
 import AccountLogout from "../images/AccountLogout.svg"
+import IconMagic from "../images/iconMagic.svg"
 
 const images = {
   Logo,
@@ -119,6 +121,7 @@ const images = {
   IconChatSmile,
 
   IconSearch,
+  IconSearchHover,
 
   IconChat,
   IconWrite,
@@ -152,6 +155,8 @@ const images = {
   AccountInfo,
   AccountInquiry,
   AccountLogout,
+
+  IconMagic,
 }
 
 export default images;

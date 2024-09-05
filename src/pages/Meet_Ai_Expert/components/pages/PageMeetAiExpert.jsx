@@ -259,6 +259,11 @@ const InputWrap = styled.div`
       font-size: 0;
       border: 0;
       background: url(${images.IconSearch}) center no-repeat;
+      transition:all .5s;
+
+      &:hover {
+        background: url(${images.IconSearchHover}) center no-repeat;
+      }
     }
   }
 
@@ -314,7 +319,7 @@ const ExpertSelectBox = styled.div`
 const ExpertCard = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
   height: 280px;
   text-align: left;
   padding: 40px;
