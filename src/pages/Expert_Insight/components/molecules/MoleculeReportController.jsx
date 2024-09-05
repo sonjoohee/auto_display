@@ -43,6 +43,10 @@ const MoleculeReportController = ({
   conversationId,
   sampleData,
 }) => {
+  console.log( reportIndex,
+    strategyReportID,
+    conversationId,
+    sampleData,)
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
     TITLE_OF_BUSINESS_INFORMATION
   );
@@ -310,10 +314,10 @@ const MoleculeReportController = ({
     let contentToCopy = ``;
 
     const getSelectedTabData = (selectedTab) => {
-      if (strategyReportID === 1) return expert1ReprotData.tabs[selectedTab];
-      else if (strategyReportID === 2)
+      if (strategyReportID === "1") return expert1ReprotData.tabs[selectedTab];
+      else if (strategyReportID === "2")
         return expert2ReprotData.tabs[selectedTab];
-      else if (strategyReportID === 3)
+      else if (strategyReportID === "3")
         return expert3ReprotData.tabs[selectedTab];
       else return;
     };
@@ -375,7 +379,7 @@ const MoleculeReportController = ({
             .map((customer) => `- ${customer}`)
             .join("\n")}
           `;
-      } else if (selectedExpertIndex === 1) {
+      } else if (strategyReportID === "1") {
         const extractTextContent = (data) => {
           let textContent = "";
 
@@ -547,10 +551,11 @@ const regenerateReport2 = async () => {
             <>
               {!isEditingNow ? (
                 <ButtonWrap>
-                  <button type="button" onClick={handleRetryIdea}>
+                  <div />
+                  {/* <button type="button" onClick={handleRetryIdea}>
                     <img src={images.IconWrite2} alt="" />
                     아이디어 설명 다시 하기
-                  </button>
+                  </button> */}
                   <div>
                     <button type="button" onClick={regenerateReport}>
                       <img src={images.IconRefresh} alt="" />
