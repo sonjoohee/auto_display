@@ -202,7 +202,6 @@ const PageExpertInsight = () => {
       additionalReportData, // Save the entire list of additional reports
       ...existingReports,
       timestamp: Date.now(),
-      
     },
     isLoggedIn
   ,conversationId);
