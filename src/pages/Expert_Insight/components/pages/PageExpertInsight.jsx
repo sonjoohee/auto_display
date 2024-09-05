@@ -482,58 +482,60 @@ const PageExpertInsight = () => {
 
         <MainContent>
           <div>
-            <MoleculeBizName />
-            {conversation.map((item, index) => {
-              if (item.type === "user") {
-                return (
-                  <MoleculeUserMessage key={index} message={item.message} />
-                );
-              } else if (item.type === "system") {
-                return (
-                  <MoleculeSystemMessage key={index} message={item.message} />
-                );
-              } else if (item.type === "analysis") {
-                return (
-                  <OrganismBizAnalysisSection conversationId={conversationId} />
-                );
-              } else if (item.type.startsWith("strategy_")) {
-                const expertIndex = item.type.split("_")[1];
-                return (
-                  <OrganismStrategyReportSection
-                    key={`strategy_${expertIndex}_${index}`}
-                    conversationId={conversationId}
-                    expertIndex={expertIndex}
-                  />
-                );
-              } else if (item.type.startsWith("addition_")) {
-                const expertIndex = item.type.split("_")[1];
-                return (
-                  <OrganismAdditionalReport
-                    key={`addition_${expertIndex}_${index}`}
-                    conversationId={conversationId}
-                    expertIndex={expertIndex}
-                    keyword={
-                      selectedAdditionalKeyword[
-                        selectedAdditionalKeyword.length - 1
-                      ]
-                    }
-                  />
-                );
-              } else if (item.type === "keyword") {
-                return <MoleculeAdditionalKeyword />;
-              } else if (item.type === "report_button") {
-                return <MoleculeCheckReportRightAway />;
-              }
-              return null;
-            })}
+            <ChatWrap>
+              <MoleculeBizName />
+              {conversation.map((item, index) => {
+                if (item.type === "user") {
+                  return (
+                    <MoleculeUserMessage key={index} message={item.message} />
+                  );
+                } else if (item.type === "system") {
+                  return (
+                    <MoleculeSystemMessage key={index} message={item.message} />
+                  );
+                } else if (item.type === "analysis") {
+                  return (
+                    <OrganismBizAnalysisSection conversationId={conversationId} />
+                  );
+                } else if (item.type.startsWith("strategy_")) {
+                  const expertIndex = item.type.split("_")[1];
+                  return (
+                    <OrganismStrategyReportSection
+                      key={`strategy_${expertIndex}_${index}`}
+                      conversationId={conversationId}
+                      expertIndex={expertIndex}
+                    />
+                  );
+                } else if (item.type.startsWith("addition_")) {
+                  const expertIndex = item.type.split("_")[1];
+                  return (
+                    <OrganismAdditionalReport
+                      key={`addition_${expertIndex}_${index}`}
+                      conversationId={conversationId}
+                      expertIndex={expertIndex}
+                      keyword={
+                        selectedAdditionalKeyword[
+                          selectedAdditionalKeyword.length - 1
+                        ]
+                      }
+                    />
+                  );
+                } else if (item.type === "keyword") {
+                  return <MoleculeAdditionalKeyword />;
+                } else if (item.type === "report_button") {
+                  return <MoleculeCheckReportRightAway />;
+                }
+                return null;
+              })}
 
-            {approachPath === -1 &&
-              inputBusinessInfo &&
-              (Object.keys(expert1ReportData).length === 0 ||
-                Object.keys(expert2ReportData).length === 0 ||
-                Object.keys(expert3ReportData).length === 0) && (
-                <OrganismBizExpertSelect />
+              {approachPath === -1 &&
+                inputBusinessInfo &&
+                (Object.keys(expert1ReportData).length === 0 ||
+                  Object.keys(expert2ReportData).length === 0 ||
+                  Object.keys(expert3ReportData).length === 0) && (
+                  <OrganismBizExpertSelect />
               )}
+            </ChatWrap>
 
             <OrganismSearchBottomBar onSearch={handleSearch} />
           </div>
@@ -576,4 +578,10 @@ const MainContent = styled.div`
 const ContentsWrap = styled.div`
   position: relative;
   display: flex;
+`;
+
+const ChatWrap = styled.div`
+  position:relative;
+  height:100%;
+  
 `;
