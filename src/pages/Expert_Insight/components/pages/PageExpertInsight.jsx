@@ -360,11 +360,11 @@ const PageExpertInsight = () => {
         newConversationStage = 2;
       } else if (!inputBusinessInfo && approachPath === 1) {
         // inputBusinessInfo가 비어 있고, 검색을 통해 접근하지 않은 경우 전문가 인덱스에 따라 메시지 추가
-        const expertPromptMessage = getInitialSystemMessage();
-        updatedConversation.push({
-          type: "system",
-          message: expertPromptMessage,
-        });
+        // const expertPromptMessage = getInitialSystemMessage();
+        // updatedConversation.push({
+        //   type: "system",
+        //   message: expertPromptMessage,
+        // });
       }
     } else if (conversationStage === 2) {
       // 임시로 비활성화, 새로고침이나 뒤로가기 막는 기능 필요함
@@ -506,7 +506,9 @@ const PageExpertInsight = () => {
                   />
                 );
               } else if (item.type.startsWith("addition_")) {
+                console.log("🚀 ~ {conversation.map ~ item:", item, index);
                 const expertIndex = item.type.split("_")[1];
+
                 return (
                   <OrganismAdditionalReport
                     key={`addition_${expertIndex}_${index}`}
