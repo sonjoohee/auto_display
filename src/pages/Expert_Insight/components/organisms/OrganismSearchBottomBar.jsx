@@ -8,6 +8,7 @@ import { InputField } from "../../../../assets/styles/Input";
 
 const OrganismSearchBottomBar = ({ onSearch }) => {
   const [inputValue, setInputValue] = useState("");
+  const [inputFocused, setInputFocused] = useState(false);
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
@@ -17,6 +18,7 @@ const OrganismSearchBottomBar = ({ onSearch }) => {
     if (onSearch) {
       onSearch(inputValue);
     }
+    setInputValue("");
   };
 
   return (
@@ -31,7 +33,7 @@ const OrganismSearchBottomBar = ({ onSearch }) => {
         <button type="button" onClick={handleSearch}>검색</button>
       </SearchBar> */}
 
-      <SearchBar Blue>
+      <SearchBar Blue={inputFocused}>
         <svg
           width="20"
           height="20"
@@ -52,6 +54,8 @@ const OrganismSearchBottomBar = ({ onSearch }) => {
           placeholder="당신의 아이템 또는 프로젝트 아이디어를 적어 주세요 (예: 원격 근무자를 위한 생산성 관리 툴)"
           value={inputValue}
           onChange={handleInputChange}
+          onFocus={() => setInputFocused(true)}
+          onBlur={() => setInputFocused(false)}
         />
 
         <button type="button" onClick={handleSearch}>
