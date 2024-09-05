@@ -301,7 +301,7 @@ const MoleculeReportController = ({
           timestamp: Date.now(),
         };
   
-        await saveConversationToIndexedDB(updatedConversation);
+        await saveConversationToIndexedDB(updatedConversation,isLoggedIn,conversationId);
       } else {
         console.error("API 응답 에러", response.status);
       }
@@ -436,7 +436,8 @@ const MoleculeReportController = ({
         mainCustomer: [],
       },
       timestamp: Date.now(),
-    });
+    },
+    isLoggedIn, conversationId);
   };
 
   const axiosConfig = {

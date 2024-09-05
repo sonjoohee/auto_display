@@ -134,6 +134,9 @@ const OrganismLeftSideBar = () => {
           }
         );
         setChatList(response.data); // 서버에서 받은 대화 리스트 저장
+        
+        console.log(chatList)
+        // setChatList(response.chat_data); // 서버에서 받은 대화 리스트 저장
       } catch (error) {
         console.error("대화 목록 가져오기 오류:", error);
       }
@@ -186,6 +189,7 @@ const OrganismLeftSideBar = () => {
       console.error("대화 내용 가져오기 오류:", error);
     }
   };
+
   const handleLoginClick = () => {
     setLoginPopupOpen(true); // 로그인 팝업 열기
   };
@@ -409,7 +413,7 @@ const OrganismLeftSideBar = () => {
                     {chatList.map((chat, index) => (
                       <li key={index}>
                         <p onClick={() => handleConversationClick(chat.id)}>
-                          {chat.inputBusinessInfo}
+                          {chat.id}
                         </p>
                         <span onClick={editBoxToogle}>
                           <svg

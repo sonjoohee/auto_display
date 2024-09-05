@@ -47,6 +47,8 @@ import OrganismAdditionalReport from "../organisms/OrganismAdditionalReport";
 import MoleculeCheckReportRightAway from "../molecules/MoleculeCheckReportRightAway";
 
 const PageExpertInsight = () => {
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
+
   const navigate = useNavigate();
   const { conversationId: paramConversationId } = useParams();
   const [conversationId, setConversationId] = useState(
@@ -200,85 +202,118 @@ const PageExpertInsight = () => {
       additionalReportData, // Save the entire list of additional reports
       ...existingReports,
       timestamp: Date.now(),
-    });
+      
+    },
+    isLoggedIn
+  ,conversationId);
   };
 
   useEffect(() => {
     const loadConversation = async () => {
-      if (!paramConversationId) {
-        if (isLoggedIn) {
+      // 1. 로그인 여부 확인
+      if (isLoggedIn) {
+        // 2. 로그인 상태라면 서버에서 새로운 대화 ID를 생성하거나, 저장된 대화를 불러옴
+        if (!paramConversationId) {
           try {
-            // 서버에서 새로운 대화 ID를 생성하고 설정
+            // 서버에서 새로운 대화 ID 생성
             const newConversationId = await createChatOnServer();
-            setConversationId(newConversationId);
-            console.log("newConversationId")
-            console.log(newConversationId)
-            await saveConversationToIndexedDB({
-              id: conversationId,
-              conversation: {},
-              conversationStage: 1,
-              inputBusinessInfo,
-              analysisReportData,
-              additionalReportData,  // Save the entire list of additional reports
-              timestamp: Date.now(),
-            });
-
-
+            setConversationId(newConversationId); // 생성된 대화 ID 설정
+            console.log("newConversationId", newConversationId);
+            setIsLoading(false); // 로딩 완료
+            // 새로운 대화 ID로 경로 변경
             navigate(`/conversation/${newConversationId}`, { replace: true });
           } catch (error) {
+            setIsLoading(false); // 로딩 완료
             console.error("Failed to create conversation on server:", error);
-            // 서버에서 ID를 가져오지 못했을 경우 로컬 ID 사용
             navigate(`/conversation/${conversationId}`, { replace: true });
           }
         } else {
-          navigate(`/conversation/${conversationId}`, { replace: true });
+          // 3. 대화 ID가 이미 존재하면 IndexedDB에서 대화 불러오기
+          const savedConversation = await getConversationByIdFromIndexedDB(conversationId);
+          if (savedConversation) {
+            const analysisData = savedConversation.analysisReportData || {};
+            setTitleOfBusinessInfo(analysisData.title || "");
+            setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
+            setMainCharacteristicOfBusinessInformation(analysisData.mainCharacter || []);
+            setBusinessInformationTargetCustomer(analysisData.mainCustomer || []);
+  
+            // 복구된 데이터를 로컬 상태로 설정
+            setConversation(savedConversation.conversation);
+            setConversationStage(savedConversation.conversationStage);
+            setInputBusinessInfo(savedConversation.inputBusinessInfo);
+  
+            // 전략 보고서 데이터 복구
+            setExpert1ReportData(savedConversation.strategyReportData_EX1 || {});
+            setExpert2ReportData(savedConversation.strategyReportData_EX2 || {});
+            setExpert3ReportData(savedConversation.strategyReportData_EX3 || {});
+  
+            setAdditionalReportData(savedConversation.additionalReportData || []);
+            setSelectedAdditionalKeyword(savedConversation.selectedAdditionalKeyword || []);
+  
+            // 대화 단계가 초기 상태라면 초기 시스템 메시지 설정
+            if (savedConversation.conversationStage === 1) {
+              const initialMessage = getInitialSystemMessage();
+              setConversation([{ type: "system", message: initialMessage }]);
+            }
+          } else {
+            // 저장된 대화가 없으면 초기 메시지 설정
+            if (selectedExpertIndex) {
+              const initialMessage = getInitialSystemMessage();
+              setConversation([{ type: "system", message: initialMessage }]);
+            }
+          }
+          setIsLoading(false); // 로딩 완료
         }
       } else {
-        const savedConversation = await getConversationByIdFromIndexedDB(
-          conversationId
-        );
-        if (savedConversation) {
-          const analysisData = savedConversation.analysisReportData || {};
-          setTitleOfBusinessInfo(analysisData.title || "");
-          setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
-          setMainCharacteristicOfBusinessInformation(
-            analysisData.mainCharacter || []
-          );
-          setBusinessInformationTargetCustomer(analysisData.mainCustomer || []);
-
-          // 복구된 데이터를 로컬 상태로 설정
-          setConversation(savedConversation.conversation);
-          setConversationStage(savedConversation.conversationStage);
-          setInputBusinessInfo(savedConversation.inputBusinessInfo);
-
-          // 전략 보고서 데이터를 복구
-          setExpert1ReportData(savedConversation.strategyReportData_EX1 || {});
-          setExpert2ReportData(savedConversation.strategyReportData_EX2 || {});
-          setExpert3ReportData(savedConversation.strategyReportData_EX3 || {});
-
-          setAdditionalReportData(savedConversation.additionalReportData || []);
-          setSelectedAdditionalKeyword(
-            savedConversation.selectedAdditionalKeyword || []
-          );
-
-          // 복구된 conversationStage가 올바른지 확인
-          if (savedConversation.conversationStage === 1) {
-            const initialMessage = getInitialSystemMessage();
-            setConversation([{ type: "system", message: initialMessage }]);
-          }
+        // 4. 비로그인 상태인 경우, 새로운 로컬 대화 ID 생성 또는 기존 대화 로드
+        if (!paramConversationId) {
+          setConversationId(nanoid()); // 비로그인 시 로컬에서 새로운 ID 생성
+          setIsLoading(false); // 로딩 완료
+          navigate(`/conversation/${conversationId}`, { replace: true });
         } else {
-          if (selectedExpertIndex) {
-            const initialMessage = getInitialSystemMessage();
-            setConversation([{ type: "system", message: initialMessage }]);
+          const savedConversation = await getConversationByIdFromIndexedDB(conversationId);
+          if (savedConversation) {
+            const analysisData = savedConversation.analysisReportData || {};
+            setTitleOfBusinessInfo(analysisData.title || "");
+            setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
+            setMainCharacteristicOfBusinessInformation(analysisData.mainCharacter || []);
+            setBusinessInformationTargetCustomer(analysisData.mainCustomer || []);
+  
+            // 복구된 데이터를 로컬 상태로 설정
+            setConversation(savedConversation.conversation);
+            setConversationStage(savedConversation.conversationStage);
+            setInputBusinessInfo(savedConversation.inputBusinessInfo);
+  
+            // 전략 보고서 데이터 복구
+            setExpert1ReportData(savedConversation.strategyReportData_EX1 || {});
+            setExpert2ReportData(savedConversation.strategyReportData_EX2 || {});
+            setExpert3ReportData(savedConversation.strategyReportData_EX3 || {});
+  
+            setAdditionalReportData(savedConversation.additionalReportData || []);
+            setSelectedAdditionalKeyword(savedConversation.selectedAdditionalKeyword || []);
+  
+            // 대화 단계가 초기 상태라면 초기 시스템 메시지 설정
+            if (savedConversation.conversationStage === 1) {
+              const initialMessage = getInitialSystemMessage();
+              setConversation([{ type: "system", message: initialMessage }]);
+            }
+          } else {
+            // 저장된 대화가 없으면 초기 메시지 설정
+            if (selectedExpertIndex) {
+              const initialMessage = getInitialSystemMessage();
+              setConversation([{ type: "system", message: initialMessage }]);
+            }
           }
+          setIsLoading(false); // 로딩 완료
         }
       }
     };
-
-    loadConversation();
+  
+    loadConversation();  
   }, [
     paramConversationId,
     conversationId,
+    isLoggedIn,
     // conversation,
     navigate,
     // selectedExpertIndex,
@@ -312,41 +347,66 @@ const PageExpertInsight = () => {
   // 검색을 통해 들어왔으면 handleSearch 실행
   useEffect(() => {
     console.log(111111111);
-    if (approachPath === -1) {
-      handleSearch(-1);
-    } else if (approachPath === 1) {
-      setInputBusinessInfo("");
-      const initialMessage = getInitialSystemMessage();
-      setConversation([{ type: "system", message: initialMessage }]);
+    if (conversationId && conversationId.length >= 2) {
+      if (approachPath === -1) {
+        handleSearch(-1);
+      } else if (approachPath === 1) {
+        setInputBusinessInfo("");
+        const initialMessage = getInitialSystemMessage();
+        setConversation([{ type: "system", message: initialMessage }]);
+      }
     }
-  }, [approachPath, selectedExpertIndex]);
-
+  }, [approachPath, selectedExpertIndex, isLoading]);
+  
   useEffect(() => {
     console.log(22222222);
-    if (selectedAdditionalKeyword) handleSearch(-1);
-  }, [selectedAdditionalKeyword]);
-
+    if (conversationId && conversationId.length >= 2 && selectedAdditionalKeyword.length > 0 && !isLoading) {
+      handleSearch(-1);
+    }
+  }, [selectedAdditionalKeyword, isLoading]);
+  
   useEffect(() => {
     console.log(3333333333);
-    if (approachPath) handleSearch(-1);
-  }, [selectedExpertIndex]);
-
+    if (conversationId && conversationId.length >= 2 && approachPath && !isLoading) {
+      handleSearch(-1);
+    }
+  }, [selectedExpertIndex, isLoading]);
+  
   useEffect(() => {
     console.log(444444444);
-    if (isClickCheckReportRightAway) handleSearch(-1);
-  }, [isClickCheckReportRightAway]);
-
-  const handleSearch = (inputValue) => {
-    const updatedConversation = [...conversation];
-
-    // 사용자가 입력한 경우에만 inputBusinessInfo를 업데이트
-    if (conversationStage < 3 && inputValue !== -1) {
-      setInputBusinessInfo(inputValue);
-      console.log(inputValue);
-      updatedConversation.push({ type: "user", message: inputValue });
+    if (conversationId && conversationId.length >= 2 && isClickCheckReportRightAway && !isLoading) {
+      handleSearch(-1);
     }
+  }, [isClickCheckReportRightAway, isLoading]);
 
-    let newConversationStage = conversationStage;
+const handleSearch = async (inputValue) => {
+if (isLoggedIn) {
+  if (!paramConversationId) {
+    try {
+      // 로그인 상태에서 새로운 대화 ID를 서버에서 생성
+      const newConversationId = await createChatOnServer();
+      setConversationId(newConversationId); // 생성된 대화 ID 설정
+      console.log("newConversationId", newConversationId);
+      // 새로운 대화 ID로 경로 변경
+      navigate(`/conversation/${newConversationId}`, { replace: true });
+      return; // 새로운 대화 생성 후 return
+    } catch (error) {
+      console.error("Failed to create conversation on server:", error);
+      return;
+    }
+  }
+} 
+
+const updatedConversation = [...conversation];
+
+// 사용자가 입력한 경우에만 inputBusinessInfo를 업데이트
+if (conversationStage < 3 && inputValue !== -1) {
+  setInputBusinessInfo(inputValue);
+  console.log(inputValue);
+  updatedConversation.push({ type: "user", message: inputValue });
+}
+
+let newConversationStage = conversationStage;
 
     if (conversationStage === 1) {
       if (inputBusinessInfo || inputValue !== -1) {
@@ -473,6 +533,7 @@ const PageExpertInsight = () => {
     setConversation(updatedConversation);
     setConversationStage(newConversationStage);
     saveConversation(updatedConversation, newConversationStage);
+    setIsLoading(false); // 로딩 완료
   };
 
   const getInitialSystemMessage = () => {
@@ -488,6 +549,9 @@ const PageExpertInsight = () => {
     }
   };
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
   return (
     <>
       <ContentsWrap>

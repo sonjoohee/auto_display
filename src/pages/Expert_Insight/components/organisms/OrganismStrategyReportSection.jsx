@@ -10,6 +10,8 @@ import {
   EXPERT_BUTTON_STATE,
   CONVERSATION,
   APPROACH_PATH,
+  isLoggedInAtom,
+
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -46,6 +48,8 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const [selectedTab, setSelectedTab] = useAtom(SELECTED_TAB); // 탭을 인덱스로 관리
   const [tabs, setTabs] = useState([]);
   const [sections, setSections] = useState([]);
+  const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
+
   const axiosConfig = {
     timeout: 100000, // 100초
     headers: { "Content-Type": "application/json" },
@@ -186,7 +190,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               [currentReportKey]: strategyData,
               timestamp: Date.now(),
             };
-            await saveConversationToIndexedDB(updatedConversation);
+            await saveConversationToIndexedDB(updatedConversation,isLoggedIn,conversationId);
           } else {
             setTabs(strategyReportData.tabs);
             setSections(strategyReportData.tabs[selectedTab].sections);
