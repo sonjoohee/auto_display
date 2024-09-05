@@ -360,11 +360,11 @@ const PageExpertInsight = () => {
         newConversationStage = 2;
       } else if (!inputBusinessInfo && approachPath === 1) {
         // inputBusinessInfo가 비어 있고, 검색을 통해 접근하지 않은 경우 전문가 인덱스에 따라 메시지 추가
-        const expertPromptMessage = getInitialSystemMessage();
-        updatedConversation.push({
-          type: "system",
-          message: expertPromptMessage,
-        });
+        // const expertPromptMessage = getInitialSystemMessage();
+        // updatedConversation.push({
+        //   type: "system",
+        //   message: expertPromptMessage,
+        // });
       }
     } else if (conversationStage === 2) {
       // 임시로 비활성화, 새로고침이나 뒤로가기 막는 기능 필요함
@@ -482,51 +482,53 @@ const PageExpertInsight = () => {
 
         <MainContent>
           <div>
-            <ChatWrap>
-              <MoleculeBizName />
-              {conversation.map((item, index) => {
-                if (item.type === "user") {
-                  return (
-                    <MoleculeUserMessage key={index} message={item.message} />
-                  );
-                } else if (item.type === "system") {
-                  return (
-                    <MoleculeSystemMessage key={index} message={item.message} />
-                  );
-                } else if (item.type === "analysis") {
-                  return (
-                    <OrganismBizAnalysisSection conversationId={conversationId} />
-                  );
-                } else if (item.type.startsWith("strategy_")) {
-                  const expertIndex = item.type.split("_")[1];
-                  return (
-                    <OrganismStrategyReportSection
-                      key={`strategy_${expertIndex}_${index}`}
-                      conversationId={conversationId}
-                      expertIndex={expertIndex}
-                    />
-                  );
-                } else if (item.type.startsWith("addition_")) {
-                  const expertIndex = item.type.split("_")[1];
-                  return (
-                    <OrganismAdditionalReport
-                      key={`addition_${expertIndex}_${index}`}
-                      conversationId={conversationId}
-                      expertIndex={expertIndex}
-                      keyword={
-                        selectedAdditionalKeyword[
-                          selectedAdditionalKeyword.length - 1
-                        ]
-                      }
-                    />
-                  );
-                } else if (item.type === "keyword") {
-                  return <MoleculeAdditionalKeyword />;
-                } else if (item.type === "report_button") {
-                  return <MoleculeCheckReportRightAway />;
-                }
-                return null;
-              })}
+          <ChatWrap>
+            <MoleculeBizName />
+            {conversation.map((item, index) => {
+              if (item.type === "user") {
+                return (
+                  <MoleculeUserMessage key={index} message={item.message} />
+                );
+              } else if (item.type === "system") {
+                return (
+                  <MoleculeSystemMessage key={index} message={item.message} />
+                );
+              } else if (item.type === "analysis") {
+                return (
+                  <OrganismBizAnalysisSection conversationId={conversationId} />
+                );
+              } else if (item.type.startsWith("strategy_")) {
+                const expertIndex = item.type.split("_")[1];
+                return (
+                  <OrganismStrategyReportSection
+                    key={`strategy_${expertIndex}_${index}`}
+                    conversationId={conversationId}
+                    expertIndex={expertIndex}
+                  />
+                );
+              } else if (item.type.startsWith("addition_")) {
+                console.log("🚀 ~ {conversation.map ~ item:", item, index);
+                const expertIndex = item.type.split("_")[1];
+
+                return (
+                  <OrganismAdditionalReport
+                    key={`addition_${expertIndex}_${index}`}
+                    conversationId={conversationId}
+                    expertIndex={expertIndex}
+                    keyword={
+                      selectedAdditionalKeyword[
+                        selectedAdditionalKeyword.length - 1
+                      ]
+                    }
+                  />
+                );
+              } else if (item.type === "keyword") {
+                return <MoleculeAdditionalKeyword />;
+              } else if (item.type === "report_button") {
+                return <MoleculeCheckReportRightAway />;
+              }
+              return null;
+            })}
 
               {approachPath === -1 &&
                 inputBusinessInfo &&
@@ -582,6 +584,6 @@ const ContentsWrap = styled.div`
 
 const ChatWrap = styled.div`
   position:relative;
-  height:100%;
+  height:90%;
   
 `;
