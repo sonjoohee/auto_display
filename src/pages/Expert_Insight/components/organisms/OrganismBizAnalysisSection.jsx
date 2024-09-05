@@ -202,7 +202,14 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
           analysisReportData,
           timestamp: Date.now(),
         };
-        await saveConversationToIndexedDB(updatedConversation,isLoggedIn,conversationId);
+        await saveConversationToIndexedDB({
+          id: conversationId,
+          inputBusinessInfo,
+          analysisReportData,
+          timestamp: Date.now(),
+        }
+        ,isLoggedIn,conversationId
+        );
         console.log("___________기초보고서_____________");
         console.log("기초보고서2");
         console.log(analysisReportData);
@@ -232,19 +239,44 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
         }
         setIsLoading(false);
       }
-      const updatedConversation = [...conversation];
+      const updatedConversation2 = [...conversation];
       if(approachPath === 1) {
-        updatedConversation.push(
+        updatedConversation2.push(
           { type: 'system', message: '비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 지금 바로 전략 보고서를 준비해드려요.' },
           { type: 'report_button'},
         );
       }
       else {
-        updatedConversation.push(
+        updatedConversation2.push(
           { type: 'system', message: '비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 전문가들의 의견을 확인하여 아이디어를 한 단계 더 발전시켜 보세요 🔍' },
         );
       }
-      setConversation(updatedConversation);
+      setConversation(updatedConversation2);
+      
+      const analysisReportData = {
+        title: businessData["명칭"],
+        mainFeatures: Array.isArray(businessData["주요_목적_및_특징"])
+          ? businessData["주요_목적_및_특징"]
+          : [],
+        mainCharacter: Array.isArray(businessData["주요기능"])
+          ? businessData["주요기능"]
+          : [],
+        mainCustomer: Array.isArray(businessData["목표고객"])
+          ? businessData["목표고객"]
+          : [],
+      };
+
+      console.log("updatedConversation2")
+      console.log(updatedConversation2)
+      await saveConversationToIndexedDB({
+        id: conversationId,
+        conversation: updatedConversation2, // 여기서는 { updatedConversation }가 아니라 그대로 updatedConversation로 넘겨야 함
+        analysisReportData,
+        inputBusinessInfo,
+        timestamp: Date.now(),
+      }
+      ,isLoggedIn,conversationId
+      );
     };
     loadAndSaveData();
   }, [
