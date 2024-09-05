@@ -4,15 +4,11 @@ import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import panelimages from "../../../../assets/styles/PanelImages";
 import { Link, useNavigate } from "react-router-dom";
-import { useAtom } from "jotai";
-import {
-  INPUT_BUSINESS_INFO,
-  SAVED_REPORTS,
-  isLoggedInAtom,
-  USER_NAME,
-  USER_EMAIL,
-} from "../../../AtomStates";
-import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
+import { useAtom } from 'jotai';
+import axios from "axios";
+
+import { INPUT_BUSINESS_INFO, SAVED_REPORTS, isLoggedInAtom, USER_NAME, USER_EMAIL} from '../../../AtomStates';
+import { getAllConversationsFromIndexedDB } from '../../../../utils/indexedDB'; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
 import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/MoleculeAccountPopup"; // 계정설정 팝업 컴포넌트 임포트
 
@@ -21,13 +17,16 @@ import OrganismReportPopup from "./OrganismReportPopup"; // 팝업 컴포넌트 
 const OrganismLeftSideBar = () => {
   const navigate = useNavigate();
   const [bizName] = useAtom(INPUT_BUSINESS_INFO);
-  const [savedReports] = useAtom(SAVED_REPORTS);
+  // const [savedReports] = useAtom(SAVED_REPORTS);
   const [selectedReport, setSelectedReport] = useState(null); // 선택된 보고서 상태 관리
   const [conversations, setConversations] = useState([]); // 저장된 대화 상태 관리
   const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 관리
   const [isLoginPopupOpen, setLoginPopupOpen] = useState(false); // 로그인 팝업 상태 관리
+  const [reports, setReports] = useState([]); // 서버에서 가져온 보고서 리스트 상태
+  const [chatList, setChatList] = useState([]); // 서버에서 가져온 대화 리스트
 
   const [isAccountPopupOpen, setAccountPopupOpen] = useState(false); // 계정설정 팝업
+  const [selectedConversation, setSelectedConversation] = useState(null); // 선택한 대화 내용 저장
 
   const [isLogoutPopup, setIsLogoutPopup] = useState(false); // 로그아웃 팝업 상태 관리
   const [userName, setUserName] = useAtom(USER_NAME); // 아톰에서 유저 이름 불러오기
@@ -42,11 +41,63 @@ const OrganismLeftSideBar = () => {
     loadConversations();
   }, []);
 
-  const handleConversationClick = (id) => {
-    // 클릭 시 해당 대화로 이동
-    navigate(`/conversation/${id}`);
-  };
+  // 대화 리스트 가져오기 (챗 리스트)
+  useEffect(() => {
+    const fetchChatList = async () => {
+      try {
+        const accessToken = sessionStorage.getItem('accessToken'); 
+        const response = await axios.get('https://wishresearch.kr/panels/chat_list', {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        setChatList(response.data); // 서버에서 받은 대화 리스트 저장
+      } catch (error) {
+        console.error("대화 목록 가져오기 오류:", error);
+      }
+    };
+    fetchChatList();
+  }, []);
 
+
+  useEffect(() => {
+    // 서버에서 보고서 목록을 가져오는 함수
+    const fetchReports = async () => {
+      try {
+        const accessToken = sessionStorage.getItem('accessToken'); // 저장된 토큰 가져오기
+        const response = await axios.get('https://wishresearch.kr/panels/insight_list', {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        setReports(response.data); // 보고서 리스트를 상태로 설정
+      } catch (error) {
+        console.error("보고서 목록 가져오기 오류:", error);
+      }
+    };
+    fetchReports();
+  }, []);
+  
+  // const handleConversationClick = (id) => {
+  //   // 클릭 시 해당 대화로 이동
+  //   navigate(`/conversation/${id}`);
+  // };
+  const handleConversationClick = async (conversationId) => {
+    try {
+      const accessToken = sessionStorage.getItem('accessToken');
+      const response = await axios.get(`https://wishresearch.kr/panels/chat/${conversationId}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log("response")
+
+      console.log(response)
+      setSelectedConversation(response.data); // 선택된 대화 내용 저장
+    } catch (error) {
+      console.error("대화 내용 가져오기 오류:", error);
+    }
+  };
   const handleLoginClick = () => {
     setLoginPopupOpen(true); // 로그인 팝업 열기
   };
@@ -88,15 +139,24 @@ const OrganismLeftSideBar = () => {
     setIsLogoutPopup(false);
   };
 
-  const handleReportClick = (index) => {
-    // 저장된 보고서를 클릭하면 해당 보고서를 선택하여 팝업에 표시
-    setSelectedReport(savedReports[index]);
+  const handleReportClick = async (reportId) => {
+    try {
+      const accessToken = sessionStorage.getItem('accessToken'); // 저장된 토큰 가져오기
+      const response = await axios.get(`https://wishresearch.kr/panels/insight/${reportId}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      setSelectedReport(response.data); // 선택된 보고서의 상세 데이터 상태로 설정
+    } catch (error) {
+      console.error("보고서 상세 정보 가져오기 오류:", error);
+    }
   };
 
   const closePopup = () => {
     setSelectedReport(null); // 팝업 닫기
   };
-
+  
   useEffect(() => {
     const checkboxes = document.querySelectorAll(".accordion-toggle");
     checkboxes.forEach((checkbox) => {
@@ -171,11 +231,9 @@ const OrganismLeftSideBar = () => {
               </label>
               <AccordionContent>
                 <ul>
-                  {savedReports.map((report, index) => (
+                  {reports.map((report, index) => (
                     <li key={index}>
-                      <p onClick={() => handleReportClick(index)}>
-                        {report.title}
-                      </p>
+                    <p onClick={() => handleReportClick(report.id)}>{report.title}</p>
                       <span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -234,14 +292,11 @@ const OrganismLeftSideBar = () => {
                 <div>
                   <strong>최근 작업</strong>
                   <ul>
-                    {conversations.map((conversation, index) => (
+                  {chatList.map((chat, index) => (
                       <li key={index}>
-                        <p
-                          onClick={() =>
-                            handleConversationClick(conversation.id)
-                          }
-                        >
-                          {conversation.inputBusinessInfo}
+                        <p onClick={() => handleConversationClick(chat.id)}>
+
+                          {chat.inputBusinessInfo}
                         </p>
                         <span onClick={editBoxToogle}>
                           <svg
