@@ -130,6 +130,11 @@ const OrganismLeftSideBar = () => {
     setIsToogle(!isToogle);
   };
 
+  const [isEditToogle, setIsEditToogle] = useState(true);
+  const editBoxToogle = () => {
+    setIsEditToogle(!isEditToogle);
+  };
+
   const handleNewProjectClick = () => {
     navigate("/");
   };
@@ -238,7 +243,7 @@ const OrganismLeftSideBar = () => {
                         >
                           {conversation.inputBusinessInfo}
                         </p>
-                        <span>
+                        <span onClick={editBoxToogle}>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="14"
@@ -269,14 +274,27 @@ const OrganismLeftSideBar = () => {
                             />
                           </svg>
                         </span>
+
+                        <EditBox isEditToogle={isEditToogle}>
+                          <button type="button">
+                            <img src={images.IconDelete2} alt="" />
+                            삭제
+                          </button>
+                          <button type="button">
+                            <img src={images.IconEdit2} alt="" />
+                            이름 변경
+                          </button>
+                        </EditBox>
                       </li>
                     ))}
                   </ul>
                 </div>
+
               </AccordionContent>
             </AccordionItem>
           </AccordionMenu>
         </SideBarMenu>
+
 
         <LoginButtonWrap className="logBtn">
           {isLoggedIn ? (
@@ -756,6 +774,38 @@ const SideBarMenu = styled.div`
     padding: 12px 0;
     border: 0;
     background: none;
+  }
+`;
+
+const EditBox = styled.div`
+  position: fixed;
+  left:0;
+  display: flex;
+  flex-direction: column;
+  gap:20px;
+  max-width:217px;
+  width:30%;
+  max-height: ${(props) => (props.isEditToogle ? "0" : "1000px")};
+  padding: ${(props) => (props.isEditToogle ? "0" : "20px")};
+  overflow: hidden;
+  border-radius: 15px;
+  background: ${palette.white};
+  box-shadow: 0 4px 28px rgba(0, 0, 0, 0.05);
+  visibility: ${(props) => (props.isEditToogle ? "hidden" : "visible")};
+  opacity: ${(props) => (props.isEditToogle ? "0" : "1")};
+  // transition: max-height 0.5s ease, padding 0.5s ease;
+  transform: translateX(260px);
+  transition: all 0.5s;
+
+  button {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-family: 'Pretendard', 'Poppins';
+    font-size:0.875rem;
+    color:${palette.gray};
+    border:0;
+    background:none;
   }
 `;
 
