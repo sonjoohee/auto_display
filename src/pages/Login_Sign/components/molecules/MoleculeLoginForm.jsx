@@ -23,6 +23,7 @@ import { Link } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
 
 import MoleculeSignupPopup from "./MoleculeSignupPopup";
+import MoleculeSignPopup from "./MoleculeSignPopup";
 
 const MoleculeLoginForm = () => {
   const [email, setEmail] = useAtom(emailAtom);
@@ -132,7 +133,19 @@ const MoleculeLoginForm = () => {
     setIsSignupPopupOpen(false);
   };
 
+
+  const [isSignPopupOpen, setIsSignPopupOpen] = useState(false); // 로그인 팝업 상태 관리
+  const handleSignClick = () => {
+    setIsSignPopupOpen(true); // 회원가입 팝업 열기
+  };
+
+  const closeSignPopup = () => {
+    setIsSignPopupOpen(false); // 회원가입 팝업 닫기
+  };
+
+
   return (
+    <>
     <LoginFormContainer>
       <div>
         <label htmlFor="email">
@@ -175,13 +188,18 @@ const MoleculeLoginForm = () => {
 
       <JoinWrap>
         <p>InterviewX가 처음이에요</p>
-        <Link to="/signup">가입하기</Link>
+        <Link to="#" onClick={handleSignClick}>가입하기</Link>
+
+        {/* <Link to="/signup">가입하기</Link> */}
         {/* <Link to="#" onClick={handleSignupClick}>가입하기</Link> */}
         {isSignupPopupOpen && (
           <MoleculeSignupPopup onClose={handleClosePopup} />
         )}
       </JoinWrap>
+
     </LoginFormContainer>
+    {isSignPopupOpen && <MoleculeSignPopup onClose={closeSignPopup} />}
+    </>
   );
 };
 
