@@ -5,7 +5,7 @@ import styled from "styled-components";
 import MoleculeSignupForm from "../molecules/MoleculeSignupForm";
 import OrganismFooterBar from "../organisms/OrganismFooterBar";
 import MoleculeLoginPopupManager from "../molecules/MoleculeLoginPopupManager";
-import OrganismLeftSideBar from "../../../organisms/OrganismHeader";
+import OrganismLeftSideBar from "../../../Expert_Insight/components/organisms/OrganismLeftSideBar";
 
 import { palette } from "../../../../assets/styles/Palette";
 
