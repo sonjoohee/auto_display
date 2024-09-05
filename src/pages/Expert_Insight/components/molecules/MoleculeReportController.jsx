@@ -43,12 +43,12 @@ const MoleculeReportController = ({
   conversationId,
   sampleData,
 }) => {
-  // console.log(
-  //   "🚀 ~ strategyReportID,  conversationId,  sampleData,:",
-  //   strategyReportID,
-  //   conversationId,
-  //   sampleData
-  // );
+  console.log(
+    "🚀 ~ strategyReportID,  conversationId,  sampleData,:",
+    strategyReportID,
+    conversationId,
+    sampleData
+  );
   // console.log(reportIndex, strategyReportID, conversationId, sampleData);
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
     TITLE_OF_BUSINESS_INFORMATION
@@ -187,8 +187,7 @@ const MoleculeReportController = ({
     }
 
     const existingConversation = await getConversationByIdFromIndexedDB(
-      conversationId,
-      isLoggedIn
+      conversationId
     );
 
     const updatedConversation = {
@@ -283,8 +282,7 @@ const MoleculeReportController = ({
 
         // 기존 대화 내역에 리포트 데이터 추가
         const existingConversation = await getConversationByIdFromIndexedDB(
-          conversationId,
-          isLoggedIn
+          conversationId
         );
 
         const updatedConversation = {
@@ -303,12 +301,8 @@ const MoleculeReportController = ({
               : existingConversation.additionalReportData,
           timestamp: Date.now(),
         };
-
-        await saveConversationToIndexedDB(
-          updatedConversation,
-          isLoggedIn,
-          conversationId
-        );
+  
+        await saveConversationToIndexedDB(updatedConversation,isLoggedIn,conversationId);
       } else {
         console.error("API 응답 에러", response.status);
       }
@@ -431,23 +425,20 @@ const MoleculeReportController = ({
     setConversationStage(1);
     setInputBusinessInfo("");
 
-    saveConversationToIndexedDB(
-      {
-        id: conversationId,
-        conversation: [],
-        conversationStage: 1,
-        inputBusinessInfo: "",
-        analysisReportData: {
-          title: [],
-          mainFeatures: [],
-          mainCharacter: [],
-          mainCustomer: [],
-        },
-        timestamp: Date.now(),
+    saveConversationToIndexedDB({
+      id: conversationId,
+      conversation: [],
+      conversationStage: 1,
+      inputBusinessInfo: "",
+      analysisReportData: {
+        title: [],
+        mainFeatures: [],
+        mainCharacter: [],
+        mainCustomer: [],
       },
-      isLoggedIn,
-      conversationId
-    );
+      timestamp: Date.now(),
+    },
+    isLoggedIn, conversationId);
   };
 
   const axiosConfig = {
@@ -548,8 +539,7 @@ const MoleculeReportController = ({
 
     // 기존 대화 내역을 유지하면서 새로운 정보를 추가
     const existingConversation = await getConversationByIdFromIndexedDB(
-      conversationId,
-      isLoggedIn
+      conversationId
     );
 
     const updatedConversation = {
