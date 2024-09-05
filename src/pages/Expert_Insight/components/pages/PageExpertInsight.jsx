@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { nanoid } from "nanoid";
 import styled from "styled-components";
+import { palette } from "../../../../assets/styles/Palette";
 import { useAtom } from "jotai";
 import {
   SELECTED_EXPERT_INDEX,
@@ -536,6 +537,22 @@ let newConversationStage = conversationStage;
     setIsLoading(false); // 로딩 완료
   };
 
+  // 스크롤
+  const [isScrolled, setIsScrolled] = useState(false);
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 160) {
+        setIsScrolled(true); // 스크롤이 내려가면 상태를 true로 변경
+      } else {
+        setIsScrolled(false); // 스크롤이 최상단에 있을 때 상태를 false로 변경
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll); // 메모리 누수 방지
+    };
+  }, []);
+
   const getInitialSystemMessage = () => {
     switch (selectedExpertIndex) {
       case 1:
@@ -559,7 +576,7 @@ let newConversationStage = conversationStage;
 
         <MainContent>
           <div>
-          <ChatWrap>
+          <ChatWrap className={isScrolled ? "scrolled" : ""}>
             <MoleculeBizName />
             {conversation.map((item, index) => {
               if (item.type === "user") {
@@ -650,7 +667,7 @@ const MainContent = styled.div`
     max-width: 1240px;
     width: 100%;
     margin: 0 20px;
-    padding-bottom: 60px;
+    // padding-bottom: 60px;
   }
 `;
 
@@ -663,4 +680,21 @@ const ChatWrap = styled.div`
   position:relative;
   height:90%;
   
+  &:before {
+    position:sticky;
+    top:0;
+    left:0;
+    width:100%;
+    height:0;
+    display:block;
+    // height:170px;
+    background: rgb(255,255,255);
+    background: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 30%);
+    z-index:1;
+    content:'';
+  }
+
+  &.scrolled:before {
+    height: 180px;
+  }
 `;

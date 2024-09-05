@@ -232,6 +232,8 @@ const AIProfile = styled.div`
     display:flex;
     align-items:center;
     gap:12px;
+    padding-bottom:20px;
+    border-bottom:1px solid ${palette.lineGray};
   }
 
   .thumb {
@@ -286,9 +288,9 @@ const AIProfile = styled.div`
     display:flex;
     flex-direction:column;
     width:100%;
-    margin:4px auto 0;
+    // margin:4px auto 0;
     padding-top:20px;
-    border-top:1px solid ${palette.lineGray};
+    // border-top:1px solid ${palette.lineGray};
 
     > strong {
       display:flex;
@@ -327,10 +329,8 @@ const FieldWrap = styled.div`
   flex-direction:column;
   width:100%;
   max-height: ${(props) => (props.isOpen ? "0" : "1000px")};
-  margin:20px auto 0;
+  // margin: 20px auto 0;
   padding-top: ${(props) => (props.isOpen ? "0" : "20px")};
-  border-top: ${(props) =>
-    props.isOpen ? "none" : `1px solid ${palette.lineGray}`};
   overflow:hidden;
   transition: max-height 0.5s ease, padding 0.5s ease;
 
