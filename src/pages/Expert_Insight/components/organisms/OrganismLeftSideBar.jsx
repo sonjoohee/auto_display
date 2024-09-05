@@ -31,33 +31,37 @@ const OrganismLeftSideBar = () => {
   const [isLogoutPopup, setIsLogoutPopup] = useState(false); // 로그아웃 팝업 상태 관리
   const [userName, setUserName] = useAtom(USER_NAME); // 아톰에서 유저 이름 불러오기
   const [userEmail, setUserEmail] = useAtom(USER_EMAIL); // 아톰에서 유저 이메일 불러오기
-
+  
   useEffect(() => {
-    // IndexedDB에서 저장된 모든 대화 내역 가져오기
     const loadConversations = async () => {
-      const allConversations = await getAllConversationsFromIndexedDB();
-      setConversations(allConversations);
-    };
-    loadConversations();
-  }, []);
-
-  // 대화 리스트 가져오기 (챗 리스트)
-  useEffect(() => {
-    const fetchChatList = async () => {
-      try {
-        const accessToken = sessionStorage.getItem('accessToken'); 
-        const response = await axios.get('https://wishresearch.kr/panels/chat_list', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        setChatList(response.data); // 서버에서 받은 대화 리스트 저장
-      } catch (error) {
-        console.error("대화 목록 가져오기 오류:", error);
+  
+      if (isLoggedIn) {
+        // 로그인 상태일 경우 서버에서 대화 목록 가져오기
+        try {
+          const accessToken = sessionStorage.getItem('accessToken'); 
+          const response = await axios.get('https://wishresearch.kr/panels/chat_list', {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
+          setConversations(response.data); // 서버에서 받은 대화 리스트 저장
+        } catch (error) {
+          console.error("대화 목록 가져오기 오류:", error);
+        }
+      } else {
+        // 비로그인 상태일 경우 IndexedDB에서 대화 내역 가져오기
+        try {
+          const allConversations = await getAllConversationsFromIndexedDB();
+          setConversations(allConversations);
+        } catch (error) {
+          console.error("IndexedDB 대화 목록 가져오기 오류:", error);
+        }
       }
     };
-    fetchChatList();
-  }, []);
+  
+    loadConversations();
+  }, [isLoggedInAtom]); // 로그인 상태가 변경되면 다시 대화 내역을 로드
+  
 
 
   useEffect(() => {

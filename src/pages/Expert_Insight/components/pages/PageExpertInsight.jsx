@@ -378,6 +378,10 @@ const PageExpertInsight = () => {
 
     setConversation(updatedConversation);
     setConversationStage(newConversationStage);
+    
+    console.log("conversationId")
+
+    console.log(conversationId)
     saveConversation(updatedConversation, newConversationStage);
   };
 
