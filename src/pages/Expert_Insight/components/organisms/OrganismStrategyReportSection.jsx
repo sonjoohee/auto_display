@@ -105,6 +105,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
     useAtom(strategyReportAtom);
   useEffect(() => {
     const loadData = async () => {
+      let finalResponse
       if (buttonState === 1) {
         // BUTTON_STATE가 1일 때만 API 호출
         setButtonState(0);
@@ -150,7 +151,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               axiosConfig
             );
 
-            let finalResponse = response1.data;
+            finalResponse = response1.data;
 
             if (finalResponse.total_page_index === 2) {
               const response2 = await axios.post(
@@ -190,8 +191,14 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               [currentReportKey]: strategyData,
               timestamp: Date.now(),
             };
-            await saveConversationToIndexedDB(updatedConversation,isLoggedIn,conversationId);
-          } else {
+            await saveConversationToIndexedDB({
+              id: conversationId,
+              analysisReportData,
+              [currentReportKey]: strategyData,
+              timestamp: Date.now(),
+            }
+            ,isLoggedIn,conversationId
+            );          } else {
             setTabs(strategyReportData.tabs);
             setSections(strategyReportData.tabs[selectedTab].sections);
           }
@@ -206,6 +213,17 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
           { type: `keyword` },
         );
         setConversation(updatedConversation);
+        const currentReportKey = `strategyReportData_EX${expertIndex}`;
+        const strategyData = finalResponse;
+        await saveConversationToIndexedDB({
+          id: conversationId,
+          analysisReportData,
+          conversation: updatedConversation, // 여기서는 { updatedConversation }가 아니라 그대로 updatedConversation로 넘겨야 함
+          [currentReportKey]: strategyData,
+          timestamp: Date.now(),
+        }
+        ,isLoggedIn,conversationId
+        );
       }
     };
     loadData();
