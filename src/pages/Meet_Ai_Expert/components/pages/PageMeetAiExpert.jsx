@@ -41,6 +41,7 @@ import OrganismLeftSideBar from "../../../Expert_Insight/components/organisms/Or
 const PageMeetAiExpert = () => {
   const navigate = useNavigate();
   const [buttonState, setButtonState] = useAtom(ANALYSIS_BUTTON_STATE);
+  const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
 
   const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(
     SELECTED_EXPERT_INDEX
@@ -103,6 +104,7 @@ const PageMeetAiExpert = () => {
 
   const [isPopupRegex, setIsPopupRegex] = useState(false);
   const [isPopupRegex2, setIsPopupRegex2] = useState(false);
+  const [isPopupLogin, setIsPopupLogin] = useState(false); // 로그인 상태가 아닐 때 팝업을 띄우기 위한 상태
 
   const closePopupRegex = () => {
     setInputBusinessInfo("");
@@ -111,7 +113,9 @@ const PageMeetAiExpert = () => {
   const closePopupRegex2 = () => {
     setIsPopupRegex2(false);
   };
-
+  const closePopupLogin = () => {
+    setIsPopupLogin(false); // 로그인 필요 팝업 닫기
+  };
   useEffect(() => {
     setConversation([]);
     setConversationStage(1);
@@ -120,7 +124,7 @@ const PageMeetAiExpert = () => {
     setMainFeaturesOfBusinessInformation([]);
     setMainCharacteristicOfBusinessInformation([]);
     setBusinessInformationTargetCustomer([]);
-    setSelectedExpertIndex(1);
+    setSelectedExpertIndex("1");
     setSections([]);
     setAdditionalReportCount(0);
     setSelectedAdditionalKeyword([]);
@@ -168,21 +172,32 @@ const PageMeetAiExpert = () => {
       setIsPopupRegex2(true);
       return;
     }
-
-    setApproachPath(-1); // 검색을 통해 들어가는 경우
-    setButtonState(1); // 버튼 상태를 1로 설정
-
-    setSelectedExpertIndex(0);
-    navigate("/ExpertInsight");
+    if (isLoggedIn) {
+      setApproachPath(-1); // 검색을 통해 들어가는 경우
+      setButtonState(1); // 버튼 상태를 1로 설정
+      setSelectedExpertIndex("0");
+      navigate("/ExpertInsight");
+    } else {
+      setIsPopupLogin(true); // 로그인 상태가 아니라면 로그인 팝업 띄우기
+    }
   };
 
-  const handledExpertSelect = (index) => {
+  // const handledExpertSelect = (index) => {
+  //   setApproachPath(1);
+  //   setInputBusinessInfo(""); // 또는 null, undefined로 초기화
+  //   setSelectedExpertIndex(index);
+  //   navigate("/ExpertInsight");
+  // };
+  const handledExpertSelect = (index) => {    if (isLoggedIn) {
     setApproachPath(1);
     setInputBusinessInfo(""); // 또는 null, undefined로 초기화
     setSelectedExpertIndex(index);
     navigate("/ExpertInsight");
-  };
+  } else {
+    setIsPopupLogin(true); // 로그인 상태가 아니라면 로그인 팝업 띄우기
+  }
 
+  };
   return (
     <>
       {/* <OrganismHeader /> */}
@@ -247,7 +262,7 @@ const PageMeetAiExpert = () => {
               <ExpertCard
                 onClick={() => {
                   setButtonState(1);
-                  handledExpertSelect(1);
+                  handledExpertSelect("1");
                 }}
               >
                 <span>
@@ -259,7 +274,7 @@ const PageMeetAiExpert = () => {
               <ExpertCard
                 onClick={() => {
                   setButtonState(1);
-                  handledExpertSelect(2);
+                  handledExpertSelect("2");
                 }}
               >
                 <span>
@@ -271,7 +286,7 @@ const PageMeetAiExpert = () => {
               <ExpertCard
                 onClick={() => {
                   setButtonState(1);
-                  handledExpertSelect(3);
+                  handledExpertSelect("3");
                 }}
               >
                 <span>
@@ -311,7 +326,10 @@ const PageMeetAiExpert = () => {
             <span>
               <img src={images.ExclamationMark2} alt="" />
             </span>
-            <p>한글, 영문 외 특수문자는 입력할 수 없어요. 자음이나 모음만 입력한 경우 검색이 제한되니, 문장을 완전하게 입력해주세요.</p>
+            <p>
+              한글, 영문 외 특수문자는 입력할 수 없어요. 자음이나 모음만 입력한
+              경우 검색이 제한되니, 문장을 완전하게 입력해주세요.
+            </p>
             <div className="btnWrap">
               <button type="button" onClick={closePopupRegex}>
                 확인
@@ -343,6 +361,36 @@ const PageMeetAiExpert = () => {
             <p>비즈니스 분석을 위해 내용을 입력해주세요</p>
             <div className="btnWrap">
               <button type="button" onClick={closePopupRegex2}>
+                확인
+              </button>
+            </div>
+          </div>
+        </Popup>
+      )}
+
+{isPopupLogin && (
+        <Popup
+          Cancel
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              closePopupLogin(); // 팝업 닫기
+            }
+          }}
+        >
+          <div>
+            <button
+              type="button"
+              className="closePopup"
+              onClick={closePopupLogin}
+            >
+              닫기
+            </button>
+            <span>
+              <img src={images.ExclamationMark2} alt="" />
+            </span>
+            <p>로그인 후 사용해 주세요.</p>
+            <div className="btnWrap">
+              <button type="button" onClick={closePopupLogin}>
                 확인
               </button>
             </div>
