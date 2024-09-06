@@ -196,7 +196,7 @@ const PageExpertInsight = () => {
     saveConversationToIndexedDB(
       {
         id: conversationId,
-        conversation: updatedConversation ,
+        conversation: updatedConversation,
         conversationStage: newConversationStage,
         inputBusinessInfo,
         analysisReportData,
@@ -510,7 +510,7 @@ const PageExpertInsight = () => {
         updatedConversation.pop();
       }
 
-      if (selectedExpertIndex === 1) {
+      if (selectedExpertIndex === "1") {
         updatedConversation.push(
           {
             type: "user",
@@ -522,7 +522,7 @@ const PageExpertInsight = () => {
             message: `안녕하세요, 김도원입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"`,
           }
         );
-      } else if (selectedExpertIndex === 2) {
+      } else if (selectedExpertIndex === "2") {
         updatedConversation.push(
           {
             type: "user",
@@ -534,7 +534,7 @@ const PageExpertInsight = () => {
             message: `안녕하세요, 이지현입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"`,
           }
         );
-      } else if (selectedExpertIndex === 3) {
+      } else if (selectedExpertIndex === "3") {
         updatedConversation.push(
           {
             type: "user",
@@ -583,6 +583,10 @@ const PageExpertInsight = () => {
       setAdditionalReportCount(additionalReportCount + 1);
     }
 
+    console.log(
+      "🚀 ~ handleSearch ~ updatedConversation:",
+      updatedConversation
+    );
     setConversation(updatedConversation);
     setConversationStage(newConversationStage);
     saveConversation(updatedConversation, newConversationStage);
@@ -655,7 +659,7 @@ const PageExpertInsight = () => {
                     />
                   );
                 } else if (item.type.startsWith("addition_")) {
-                  console.log("🚀 ~ {conversation.map ~ item:", item, index);
+                  // console.log("🚀 ~ {conversation.map ~ item:", item, index);
                   const expertIndex = item.type.split("_")[1];
 
                   return (
@@ -731,9 +735,9 @@ const ContentsWrap = styled.div`
 `;
 
 const ChatWrap = styled.div`
-  position:relative;
-  height:calc(100% - 55px);
-  
+  position: relative;
+  height: calc(100% - 55px);
+
   &:before {
     position: sticky;
     top: 0;
