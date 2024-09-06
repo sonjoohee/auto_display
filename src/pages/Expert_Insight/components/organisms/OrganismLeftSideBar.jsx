@@ -118,38 +118,35 @@ const OrganismLeftSideBar = () => {
   );
   const insightEditBoxRef = useRef(null);
   const historyEditBoxRef = useRef(null);
-
+  
   const [editToggleIndex, setEditToggleIndex] = useState(null); // 특정 인덱스를 저장
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        insightEditBoxRef.current &&
-        !insightEditBoxRef.current.contains(event.target)
-      ) {
-        setInsightEditToggleIndex(null);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [insightEditBoxRef]);
+useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (insightEditBoxRef.current && !insightEditBoxRef.current.contains(event.target)) {
+      setInsightEditToggleIndex(null);
+    }
+  };
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, [insightEditBoxRef]);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        historyEditBoxRef.current &&
-        !historyEditBoxRef.current.contains(event.target)
-      ) {
-        setEditToggleIndex(null); // setInsightEditToggleIndex가 아닌 히스토리용 상태를 업데이트
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [historyEditBoxRef]);
+
+useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (historyEditBoxRef.current && !historyEditBoxRef.current.contains(event.target)) {
+      setEditToggleIndex(null); // setInsightEditToggleIndex가 아닌 히스토리용 상태를 업데이트
+    }
+  };
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, [historyEditBoxRef]);
+
+
 
   const editBoxToogle = (index) => {
     if (editToggleIndex === index) {
@@ -177,7 +174,7 @@ const OrganismLeftSideBar = () => {
       setInsightEditToggleIndex(index); // 해당 인덱스의 EditBox 열기
     }
   };
-
+  
   useEffect(() => {
     const loadConversations = async () => {
       const allConversations = await getAllConversationsFromIndexedDB();
@@ -200,7 +197,7 @@ const OrganismLeftSideBar = () => {
           }
         );
         setChatList(response.data); // 서버에서 받은 대화 리스트 저장
-
+        
         // setChatList(response.chat_data); // 서버에서 받은 대화 리스트 저장
       } catch (error) {
         console.error("대화 목록 가져오기 오류:", error);
@@ -208,6 +205,7 @@ const OrganismLeftSideBar = () => {
     };
     fetchChatList();
   }, []);
+
 
   useEffect(() => {
     // 서버에서 보고서 목록을 가져오는 함수
@@ -251,32 +249,25 @@ const OrganismLeftSideBar = () => {
       setConversationStage(chatData.conversationStage); // 대화 단계 설정
       setInputBusinessInfo(chatData.inputBusinessInfo); // 비즈니스 정보 설정
       setTitleOfBusinessInfo(chatData.analysisReportData.title); // 분석 데이터 설정
-      setMainFeaturesOfBusinessInformation(
-        chatData.analysisReportData.mainFeatures
-      ); // 주요 특징 설정
-      setMainCharacteristicOfBusinessInformation(
-        chatData.analysisReportData.mainCharacter
-      ); // 주요 특징 설정
-      setBusinessInformationTargetCustomer(
-        chatData.analysisReportData.mainCustomer
-      ); // 목표 고객 설정
-
+      setMainFeaturesOfBusinessInformation(chatData.analysisReportData.mainFeatures); // 주요 특징 설정
+      setMainCharacteristicOfBusinessInformation(chatData.analysisReportData.mainCharacter); // 주요 특징 설정
+      setBusinessInformationTargetCustomer(chatData.analysisReportData.mainCustomer); // 목표 고객 설정
+  
       // 전문가 보고서 데이터 복구
       setExpert1ReportData(response.data.strategyReportData_EX1 || {});
       setExpert2ReportData(response.data.strategyReportData_EX2 || {});
       setExpert3ReportData(response.data.strategyReportData_EX3 || {});
-
+  
       // 필요하다면 추가 상태 업데이트
-      setSelectedAdditionalKeyword(
-        response.data.selectedAdditionalKeyword || []
-      );
+      setSelectedAdditionalKeyword(response.data.selectedAdditionalKeyword || []);
       setAdditionalReportData(response.data.additionalReportData || []);
-
+      
       // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
       // set어프로치패스(2)
 
       // 페이지를 대화가 이어지는 형태로 전환
       navigate(`/conversation/${conversationId}`);
+
     } catch (error) {
       console.error("대화 내용 가져오기 오류:", error);
     }
@@ -343,7 +334,7 @@ const OrganismLeftSideBar = () => {
   const closePopup = () => {
     setSelectedReport(null); // 팝업 닫기
   };
-
+  
   const handleDeleteInsightConfirm = async () => {
     try {
       const accessToken = sessionStorage.getItem("accessToken"); // 저장된 토큰 가져오기
@@ -357,16 +348,15 @@ const OrganismLeftSideBar = () => {
       );
 
       // 삭제가 성공적으로 이루어진 경우 처리할 코드
-      console.log("삭제 성공:", response.data);
-
+      console.log('삭제 성공:', response.data);
+      
       // 삭제 후에 상태 업데이트 (예: 삭제된 항목을 리스트에서 제거)
-      setReports((prevReports) =>
-        prevReports.filter((report) => report.id !== reportIdToDelete)
-      );
-
+      setReports((prevReports) => prevReports.filter(report => report.id !== reportIdToDelete));
+      
       // 팝업 닫기 및 삭제할 reportId 초기화
       setIsDeletePopupOpen(false);
       setReportIdToDelete(null);
+  
     } catch (error) {
       console.error("삭제 요청 오류:", error);
     }
@@ -385,20 +375,20 @@ const OrganismLeftSideBar = () => {
       );
 
       // 삭제가 성공적으로 이루어진 경우 처리할 코드
-      console.log("삭제 성공:", response.data);
-
+      console.log('삭제 성공:', response.data);
+      
       // 삭제 후에 상태 업데이트 (예: 삭제된 항목을 리스트에서 제거)
-      setReports((prevReports) =>
-        prevReports.filter((chat) => chat.id !== chatIdToDelete)
-      );
-
+      setReports((prevReports) => prevReports.filter(chat => chat.id !== chatIdToDelete));
+      
       // 팝업 닫기 및 삭제할 reportId 초기화
       setChatIsDeletePopupOpen(false);
       setChatIdToDelete(null);
+  
     } catch (error) {
       console.error("삭제 요청 오류:", error);
     }
   };
+
 
   // 삭제 취소 처리 함수
   const handleDeleteCancel = () => {
@@ -509,7 +499,7 @@ const OrganismLeftSideBar = () => {
                         {report.business_info}
                       </p>
                       <span onClick={() => insightEditBoxToggle(index)}>
-                        <svg
+                      <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="14"
                           height="3"
@@ -540,24 +530,19 @@ const OrganismLeftSideBar = () => {
                         </svg>
                       </span>
                       {insightEditToggleIndex === index && (
-                        <div ref={insightEditBoxRef}>
-                          <EditBox
-                            isEditToogle={insightEditToggleIndex === index}
-                          >
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteButtonClick(report.id)}
-                            >
-                              <img src={images.IconDelete2} alt="" />
-                              삭제
-                            </button>
-                            <button type="button">
-                              <img src={images.IconEdit2} alt="" />
-                              이름 변경
-                            </button>
-                          </EditBox>
-                        </div>
-                      )}
+                          <div ref={insightEditBoxRef}>
+                            <EditBox isEditToogle={insightEditToggleIndex === index}>
+                              <button type="button" onClick={() => handleDeleteButtonClick(report.id)}>
+                                <img src={images.IconDelete2} alt="" />
+                                삭제
+                              </button>
+                              <button type="button">
+                                <img src={images.IconEdit2} alt="" />
+                                이름 변경
+                              </button>
+                            </EditBox>
+                          </div>
+                        )}
                     </li>
                   ))}
                 </ul>
@@ -624,14 +609,10 @@ const OrganismLeftSideBar = () => {
 
                         {editToggleIndex === index && (
                           <div ref={historyEditBoxRef}>
+                            
                             <EditBox isEditToogle={editToggleIndex === index}>
                               {/* <button type="button"> */}
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  handleChatDeleteButtonClick(chat.id)
-                                }
-                              >
+                              <button type="button" onClick={() => handleChatDeleteButtonClick(chat.id)}>
                                 <img src={images.IconDelete2} alt="" />
                                 삭제
                               </button>
@@ -690,12 +671,12 @@ const OrganismLeftSideBar = () => {
                       정책 및 약관 정보
                     </button>
                   </li>
-                  {/* <li>
+                  <li>
                     <button type="button">
                       <img src={images.AccountInquiry} alt="" />
                       문의사항
                     </button>
-                  </li> */}
+                  </li>
                   <li>
                     <button type="button" onClick={handleLogoutClick}>
                       <img src={images.AccountLogout} alt="" />
@@ -727,7 +708,7 @@ const OrganismLeftSideBar = () => {
         <MoleculeAccountPopup onClose={closeAccountPopup} />
       )}
 
-      {isDeletePopupOpen && (
+    {isDeletePopupOpen && (
         <Popup Cancel onClick={handleDeleteCancel}>
           <div>
             <button
@@ -752,7 +733,7 @@ const OrganismLeftSideBar = () => {
           </div>
         </Popup>
       )}
-      {isChatDeletePopupOpen && (
+    {isChatDeletePopupOpen && (
         <Popup Cancel onClick={handleDeleteCancel}>
           <div>
             <button

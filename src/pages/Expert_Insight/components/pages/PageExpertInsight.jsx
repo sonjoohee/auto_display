@@ -691,7 +691,7 @@ const PageExpertInsight = () => {
                 )}
             </ChatWrap>
 
-            <OrganismSearchBottomBar onSearch={handleSearch} />
+            {approachPath === 1 && conversationStage == 1 && <OrganismSearchBottomBar onSearch={handleSearch} />}
           </div>
 
           <OrganismRightSideBar />
