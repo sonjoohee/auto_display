@@ -180,8 +180,7 @@ const OrganismLeftSideBar = () => {
           },
         }
       );
-      console.log("response")
-      console.log(response)
+
       const chatData = response.data.chat_data;
       setConversation(chatData.conversation); // 이전 대화 내역 설정
       setConversationStage(chatData.conversationStage); // 대화 단계 설정
@@ -210,7 +209,6 @@ const OrganismLeftSideBar = () => {
       console.error("대화 내용 가져오기 오류:", error);
     }
   };
-  
 
   const handleLoginClick = () => {
     setLoginPopupOpen(true); // 로그인 팝업 열기
