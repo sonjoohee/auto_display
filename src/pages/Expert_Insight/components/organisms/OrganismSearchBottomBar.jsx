@@ -167,6 +167,7 @@ const BottomBar = styled.div`
   display: flex;
   flex-direction: column;
   flex-basis: 100% !important;
+  align-items:center;
   // margin:0 20px;
   // margin-top: 40px;
   z-index: 998;
@@ -175,15 +176,29 @@ const BottomBar = styled.div`
   > p {
     font-size: 0.75rem;
     color: ${palette.gray};
-    margin-top: 10px;
+    padding-top: 10px;
+  }
+
+  &:before {
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    height:60px;
+    background:rgb(255, 255, 255);
+    background:linear-gradient( 0deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 30% );
+    content:'';
+    z-index:-1;
   }
 `;
 
 const SearchBar = styled.div`
+  position:relative;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   gap: 10px;
+  width:100%;  
   padding: 14px 32px;
   border-radius: 50px;
   border: 2px solid
