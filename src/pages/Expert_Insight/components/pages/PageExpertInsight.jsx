@@ -196,7 +196,7 @@ const PageExpertInsight = () => {
     saveConversationToIndexedDB(
       {
         id: conversationId,
-        conversation: { updatedConversation },
+        conversation: updatedConversation ,
         conversationStage: newConversationStage,
         inputBusinessInfo,
         analysisReportData,

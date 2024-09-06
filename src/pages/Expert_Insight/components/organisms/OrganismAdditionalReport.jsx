@@ -83,9 +83,10 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
 
   useEffect(() => {
     const loadData = async () => {
+      let answerData
       try {
         const existingConversation = await getConversationByIdFromIndexedDB(
-          conversationId
+          conversationId, isLoggedIn
         );
 
         if (buttonState === 1) {
@@ -116,7 +117,7 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
             axiosConfig
           );
           console.log(response);
-          const answerData = response.data.additional_question;
+          answerData = response.data.additional_question;
           setAnswerData(answerData);
           setSections(answerData.sections);
           console.log(answerData.title);
@@ -133,8 +134,13 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
             additionalReportData: updatedAdditionalReportData, // 전체 리스트를 저장
             timestamp: Date.now(),
           };
-          await saveConversationToIndexedDB(updatedConversation,isLoggedIn,conversationId);
-
+          await saveConversationToIndexedDB({
+            ...existingConversation,
+            answerData,
+            timestamp: Date.now(),
+          }
+          ,isLoggedIn,conversationId
+          );
           setIsLoading(false);
 
           const updatedConversation2 = [...conversation];
@@ -148,6 +154,14 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
             { type: `keyword` }
           );
           setConversation(updatedConversation2);
+          await saveConversationToIndexedDB({
+            ...existingConversation,
+            conversation: updatedConversation2,
+            answerData,
+            timestamp: Date.now(),
+          }
+          ,isLoggedIn,conversationId
+          );
         } else {
           // 기존 데이터가 있을 때 처리
           if (existingConversation && additionalReportData.length > 0) {

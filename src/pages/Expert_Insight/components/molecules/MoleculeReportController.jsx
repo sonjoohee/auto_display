@@ -262,7 +262,7 @@ const MoleculeReportController = ({
         postData, // 요청 본문에 보낼 데이터
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Bearer 토큰을 헤더에 추가
+            Authorization: `Bearer ${accessToken}`, // Bearer 토큰을 헤더에 추가
             "Content-Type": "application/json", // 필요에 따라 Content-Type 설정
           },
           withCredentials: true, // 쿠키와 함께 자격 증명을 전달 (optional)
