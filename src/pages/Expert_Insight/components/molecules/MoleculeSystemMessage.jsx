@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import panelimages from "../../../../assets/styles/PanelImages";
+import { useAtom } from "jotai";
+import { SELECTED_EXPERT_INDEX } from "../../../AtomStates";
 
 const MoleculeSystemMessage = ({ message }) => {
   const [displayedText, setDisplayedText] = useState(""); // 현재까지 타이핑된 텍스트
   const [isTyping, setIsTyping] = useState(true); // 타이핑 중인지 여부
+  const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
 
   useEffect(() => {
     const messageLines = message.split("\n"); // 메시지를 줄바꿈 기준으로 나눔
@@ -46,7 +49,9 @@ const MoleculeSystemMessage = ({ message }) => {
   return (
     <>
       <SystemMessageContainer>
-        <Thumb><img src={panelimages.expert_1} alt="" /></Thumb>
+        <Thumb>
+          <img src={panelimages[`expert_${selectedExpertIndex}`]} alt="" />
+        </Thumb>
         <Bubble>
           <TypingEffect isTyping={isTyping}>
             <p>{displayedText}</p>
@@ -60,19 +65,19 @@ const MoleculeSystemMessage = ({ message }) => {
 export default MoleculeSystemMessage;
 
 const Thumb = styled.div`
-  position:relative;
-  width:55px;
-  height:55px;
-  border-radius:100px;
-  overflow:hidden;
+  position: relative;
+  width: 55px;
+  height: 55px;
+  border-radius: 100px;
+  overflow: hidden;
 
   img {
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%, -50%);
-    width:100%;
-    height:100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
     object-fit: cover;
   }
 `;
@@ -80,7 +85,7 @@ const Thumb = styled.div`
 const SystemMessageContainer = styled.div`
   display: flex;
   // align-items: flex-end;
-  align-items:center;
+  align-items: center;
   flex-direction: ${(props) => (props.Myself ? "row-reverse" : "row")};
   gap: 18px;
   margin-top: 40px;

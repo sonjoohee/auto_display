@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { palette } from '../../../../assets/styles/Palette';
-import images from '../../../../assets/styles/Images';
-import panelimages from '../../../../assets/styles/PanelImages';
-import { useAtom } from 'jotai';
-import { SELECTED_EXPERT_INDEX } from '../../../AtomStates';
-import expertsData from './experts_info.json';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { palette } from "../../../../assets/styles/Palette";
+import images from "../../../../assets/styles/Images";
+import panelimages from "../../../../assets/styles/PanelImages";
+import { useAtom } from "jotai";
+import { SELECTED_EXPERT_INDEX } from "../../../AtomStates";
+import expertsData from "./experts_info.json";
 
 const OrganismRightSideBar = () => {
-
   const [isOpen, setIsOpen] = useState(true);
   const moreProfile = () => {
     setIsOpen(!isOpen);
@@ -17,7 +16,9 @@ const OrganismRightSideBar = () => {
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
 
   // 선택된 전문가 정보
-  const selectedExpert = expertsData.find((expert) => expert.id === selectedExpertIndex);
+  const selectedExpert = expertsData.find(
+    (expert) => expert.id === selectedExpertIndex
+  );
 
   if (!selectedExpert) return null; // 선택된 전문가가 없을 경우 아무것도 표시하지 않음
 
@@ -29,7 +30,10 @@ const OrganismRightSideBar = () => {
             <AIProfile>
               <div className="profileInfo">
                 <div className="thumb">
-                  <img src={selectedExpert.images} alt="" />
+                  <img
+                    src={panelimages[`expert_${selectedExpertIndex}`]}
+                    alt=""
+                  />
                 </div>
                 <div className="name">
                   <strong>{selectedExpert.title}</strong>
@@ -74,7 +78,7 @@ const OrganismRightSideBar = () => {
             </AIProfile>
 
             <button type="button" onClick={moreProfile}>
-              {isOpen ? '상세 정보 확인하기' : '접기'}
+              {isOpen ? "상세 정보 확인하기" : "접기"}
             </button>
 
             <p isOpen={isOpen}>본 전문가는 가상으로 제작된 인물입니다.</p>
@@ -89,232 +93,231 @@ export default OrganismRightSideBar;
 
 // 기존 styled-components 스타일링 코드 (생략)
 
-
 const SideBar = styled.div`
-  position:sticky;
-  top:40px;
-  right:40px;
-  grid-area:toc;
-  width:100%;
-  max-width:240px;
-  height:calc(100vh - 200px);
+  position: sticky;
+  top: 40px;
+  right: 40px;
+  grid-area: toc;
+  width: 100%;
+  max-width: 240px;
+  height: calc(100vh - 200px);
   // height:calc(100vh - 12rem);
-  margin-left:${props => {
+  margin-left: ${(props) => {
     if (props.Right) return `0`;
     else return `-300px`;
   }};
-  margin-right:0;
+  margin-right: 0;
   // margin-bottom:150px;
-  padding:${props => {
+  padding: ${(props) => {
     if (props.Right) return `0`;
     else return `40px 28px`;
   }};
-  border-radius:20px;
-  border:${props => {
+  border-radius: 20px;
+  border: ${(props) => {
     if (props.Right) return `none`;
     else return `1px solid ${palette.lineGray}`;
   }};
-  background:none;
+  background: none;
 
-  box-shadow:${props => {
+  box-shadow: ${(props) => {
     if (props.Right) return `none`;
     else return `0 4px 10px rgba(0,0,0,.1)`;
   }};
 
   h3 {
-    font-size:1rem;
-    font-weight:400;
-    text-align:left;
-    margin-bottom:20px;
+    font-size: 1rem;
+    font-weight: 400;
+    text-align: left;
+    margin-bottom: 20px;
   }
 
   .logo {
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
 
     a {
-      width:44px;
-      height:44px;
-      font-size:0;
-      background:url(${images.SymbolLogo}) left center no-repeat;
-      background-size:auto 100%;
+      width: 44px;
+      height: 44px;
+      font-size: 0;
+      background: url(${images.SymbolLogo}) left center no-repeat;
+      background-size: auto 100%;
     }
 
     button {
-      position:relative;
-      font-size:0;
-      width:30px;
-      height:30px;
-      border-radius:50%;
-      border:0;
-      background:${palette.white};
-      box-shadow:2px 2px 2px rgba(0,0,0,.1);
+      position: relative;
+      font-size: 0;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 0;
+      background: ${palette.white};
+      box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
 
       &:before {
-        position:absolute;
-        top:50%;
-        left:50%;
-        transform:translate(-50%, -50%);
-        width:7px;
-        height:2px;
-        border-radius:10px;
-        background:${palette.black};
-        content:'';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 7px;
+        height: 2px;
+        border-radius: 10px;
+        background: ${palette.black};
+        content: "";
       }
 
       &:after {
-        position:absolute;
-        top:50%;
-        left:50%;
-        transform:translate(-50%, -50%) rotate(45deg);
-        width:8px;
-        height:8px;
-        border-left:2px solid ${palette.black};
-        border-bottom:2px solid ${palette.black};
-        content:'';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(45deg);
+        width: 8px;
+        height: 8px;
+        border-left: 2px solid ${palette.black};
+        border-bottom: 2px solid ${palette.black};
+        content: "";
       }
     }
   }
 `;
 
 const AIProfileWrap = styled.div`
-  padding:24px 20px 20px;
-  border-radius:20px;
-  border:1px solid ${palette.lineGray};
-  box-shadow:0 4px 10px rgba(0,0,0,.05);
-  background:${palette.white};
+  padding: 24px 20px 20px;
+  border-radius: 20px;
+  border: 1px solid ${palette.lineGray};
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  background: ${palette.white};
 
   + div {
-    margin-top:28px;
+    margin-top: 28px;
   }
 
   button {
-    position:relative;
-    width:100%;
-    font-family: 'Pretendard';
-    font-size:0.75rem;
-    color:${palette.gray};
+    position: relative;
+    width: 100%;
+    font-family: "Pretendard";
+    font-size: 0.75rem;
+    color: ${palette.gray};
     // text-decoration:underline;
     // padding-right:16px;
-    padding:8px 16px;
-    margin-top:9px;
-    border-radius:10px;
-    border:1px solid ${palette.lineGray};
-    background:${palette.white};
+    padding: 8px 16px;
+    margin-top: 9px;
+    border-radius: 10px;
+    border: 1px solid ${palette.lineGray};
+    background: ${palette.white};
 
     &:after {
-      position:absolute;
-      right:0;
-      top:50%;
-      transform:translateY(-50%) rotate(45deg);
-      width:8px;
-      height:8px;
-      border-top:2px solid ${palette.black};
-      border-right:2px solid ${palette.black};
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%) rotate(45deg);
+      width: 8px;
+      height: 8px;
+      border-top: 2px solid ${palette.black};
+      border-right: 2px solid ${palette.black};
       // content:'';
     }
   }
 
   p {
-    font-size:0.63rem;
-    color:${palette.gray};
-    margin-top:8px;
+    font-size: 0.63rem;
+    color: ${palette.gray};
+    margin-top: 8px;
   }
 `;
 
 const AIProfile = styled.div`
-  display:flex;
-  flex-direction:column;
+  display: flex;
+  flex-direction: column;
 
   .profileInfo {
-    display:flex;
-    align-items:center;
-    gap:12px;
-    padding-bottom:20px;
-    border-bottom:1px solid ${palette.lineGray};
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid ${palette.lineGray};
   }
 
   .thumb {
-    position:relative;
-    flex-shrink:0;
-    width:48px;
-    height:48px;
-    margin:0 auto;
-    border-radius:50%;
-    overflow:hidden;
+    position: relative;
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    margin: 0 auto;
+    border-radius: 50%;
+    overflow: hidden;
 
     img {
-      position:absolute;
-      top:50%;
-      left:50%;
-      transform:translate(-50%, -50%);
-      width:100%;
-      height:100%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
       object-fit: cover;
     }
   }
 
   .name {
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    text-align:left;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: left;
 
     strong {
-      font-size:1rem;
-      font-weight:700;
+      font-size: 1rem;
+      font-weight: 700;
     }
 
     li {
-      display:flex;
-      align-items:center;
-      font-size:0.75rem;
-      color:${palette.darkGray};
+      display: flex;
+      align-items: center;
+      font-size: 0.75rem;
+      color: ${palette.darkGray};
 
       + li {
-        margin-top:5px;
+        margin-top: 5px;
       }
     }
 
     p {
-      color:${palette.gray};
-      margin-top:15px;
+      color: ${palette.gray};
+      margin-top: 15px;
     }
   }
 
   .field {
-    display:flex;
-    flex-direction:column;
-    width:100%;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
     // margin:4px auto 0;
-    padding-top:20px;
+    padding-top: 20px;
     // border-top:1px solid ${palette.lineGray};
 
     > strong {
-      display:flex;
-      align-items:center;
-      gap:5px;
-      font-size:1rem;
-      font-weight:400;
-      margin-bottom:15px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 1rem;
+      font-weight: 400;
+      margin-bottom: 15px;
     }
 
     div {
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
 
       strong {
-        display:flex;
-        align-items:center;
-        gap:8px;
-        width:100%;
-        font-size:0.875rem;
-        font-weight:300;
-        color:${palette.darkGray};
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        font-size: 0.875rem;
+        font-weight: 300;
+        color: ${palette.darkGray};
         // padding:8px 16px;
         // border-radius:25px;
         // border:1px solid ${palette.lineGray};
@@ -325,94 +328,94 @@ const AIProfile = styled.div`
 `;
 
 const FieldWrap = styled.div`
-  display:flex;
-  flex-direction:column;
-  width:100%;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
   max-height: ${(props) => (props.isOpen ? "0" : "1000px")};
   // margin: 20px auto 0;
   padding-top: ${(props) => (props.isOpen ? "0" : "20px")};
-  overflow:hidden;
+  overflow: hidden;
   transition: max-height 0.5s ease, padding 0.5s ease;
 
   strong {
-    display:flex;
-    align-items:center;
-    gap:5px;
-    font-size:1rem;
-    font-weight:400;
-    margin-bottom:15px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 1rem;
+    font-weight: 400;
+    margin-bottom: 15px;
   }
 
   div {
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
   }
 `;
 
 const FieldUl = styled.ul`
-  width:100%;
+  width: 100%;
   max-height: ${(props) => (props.isOpen ? "0" : "1000px")};
-  display:flex;
-  flex-direction:column;
-  padding:0 8px;
+  display: flex;
+  flex-direction: column;
+  padding: 0 8px;
   margin-bottom: ${(props) => (props.isOpen ? "0" : "16px")};
-  overflow:hidden;
+  overflow: hidden;
   transition: max-height 0.5s ease, padding 0.5s ease;
 
   li {
-    position:relative;
-    font-size:0.75rem;
-    line-height:1.5;
-    text-align:left;
-    color:${palette.darkGray};
-    padding-left:20px;
+    position: relative;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    text-align: left;
+    color: ${palette.darkGray};
+    padding-left: 20px;
 
     &:before {
-      position:absolute;
-      left:0;
-      top:7px;
-      width:3px;
-      height:3px;
-      border-radius:10px;
-      background:${palette.darkGray};
-      content:'';
+      position: absolute;
+      left: 0;
+      top: 7px;
+      width: 3px;
+      height: 3px;
+      border-radius: 10px;
+      background: ${palette.darkGray};
+      content: "";
     }
   }
 `;
 
 const IdeaWrap = styled.div`
-  text-align:left;
-  padding:30px;
-  border-radius:20px;
-  border:1px solid ${palette.lineGray};
-  box-shadow:0 4px 10px rgba(0,0,0,.05);
+  text-align: left;
+  padding: 30px;
+  border-radius: 20px;
+  border: 1px solid ${palette.lineGray};
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 
   strong {
-    display:block;
-    padding-bottom:10px;
-    margin-bottom:20px;
-    border-bottom:1px solid ${palette.lineGray};
+    display: block;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid ${palette.lineGray};
   }
 
   div {
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
 
     a {
-      display:flex;
-      align-items:flex-start;
-      gap:10px;
-      width:100%;
-      font-size:0.81rem;
-      color:${palette.gray};
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      width: 100%;
+      font-size: 0.81rem;
+      color: ${palette.gray};
     }
 
     svg {
-      flex-shrink:0;
+      flex-shrink: 0;
     }
   }
 `;

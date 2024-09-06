@@ -317,12 +317,12 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
           </>
         )}
 
-        <MoleculeReportController
+        {!isLoading && <MoleculeReportController
           reportIndex={1}
           strategyReportID={strategyReportData.expert_id}
           conversationId={conversationId}
           sampleData={strategyReportData}
-        />
+        />}
       </AnalysisSection>
     </>
   );
