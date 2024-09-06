@@ -216,8 +216,9 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
         setIsLoading(false);
       } else {
         // IndexedDB에서 기존 데이터를 가져와 적용
+        console.log("IndexedDB에서기존 데이터를 가져와 적용")
         const existingConversation = await getConversationByIdFromIndexedDB(
-          conversationId
+          conversationId, isLoggedIn
         );
 
         if (existingConversation && existingConversation.analysisReportData) {
@@ -252,7 +253,8 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
         );
       }
       setConversation(updatedConversation2);
-      
+      console.log("businessData")
+      console.log(businessData)
       const analysisReportData = {
         title: businessData["명칭"],
         mainFeatures: Array.isArray(businessData["주요_목적_및_특징"])

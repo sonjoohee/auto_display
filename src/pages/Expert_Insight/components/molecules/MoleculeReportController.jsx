@@ -249,16 +249,17 @@ const MoleculeReportController = ({
       };
 
       const postData = {
+        business_info: reportData.title,
         title: reportData.title,
         date: new Date().toLocaleDateString(),
         content: reportData,
         reportIndex: reportIndex, // 보고서 인덱스를 추가하여 저장
       };
-
+      console.log("accessToken")
+      console.log(accessToken)
       // API로 보고서 저장 요청
       const response = await axios.post(
         "https://wishresearch.kr/panels/insight",
-        reportData.title,
         postData, // 요청 본문에 보낼 데이터
         {
           headers: {

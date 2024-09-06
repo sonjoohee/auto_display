@@ -135,7 +135,6 @@ const OrganismLeftSideBar = () => {
         );
         setChatList(response.data); // 서버에서 받은 대화 리스트 저장
         
-        console.log(chatList)
         // setChatList(response.chat_data); // 서버에서 받은 대화 리스트 저장
       } catch (error) {
         console.error("대화 목록 가져오기 오류:", error);
@@ -181,14 +180,37 @@ const OrganismLeftSideBar = () => {
           },
         }
       );
-      console.log("response");
+      console.log("response")
+      console.log(response)
+      const chatData = response.data.chat_data;
+      setConversation(chatData.conversation); // 이전 대화 내역 설정
+      setConversationStage(chatData.conversationStage); // 대화 단계 설정
+      setInputBusinessInfo(chatData.inputBusinessInfo); // 비즈니스 정보 설정
+      setTitleOfBusinessInfo(chatData.analysisReportData.title); // 분석 데이터 설정
+      setMainFeaturesOfBusinessInformation(chatData.analysisReportData.mainFeatures); // 주요 특징 설정
+      setMainCharacteristicOfBusinessInformation(chatData.analysisReportData.mainCharacter); // 주요 특징 설정
+      setBusinessInformationTargetCustomer(chatData.analysisReportData.mainCustomer); // 목표 고객 설정
+  
+      // 전문가 보고서 데이터 복구
+      setExpert1ReportData(response.data.strategyReportData_EX1 || {});
+      setExpert2ReportData(response.data.strategyReportData_EX2 || {});
+      setExpert3ReportData(response.data.strategyReportData_EX3 || {});
+  
+      // 필요하다면 추가 상태 업데이트
+      setSelectedAdditionalKeyword(response.data.selectedAdditionalKeyword || []);
+      setAdditionalReportData(response.data.additionalReportData || []);
+      
+      // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
+      // set어프로치패스(2)
 
-      console.log(response);
-      setSelectedConversation(response.data); // 선택된 대화 내용 저장
+      // 페이지를 대화가 이어지는 형태로 전환
+      navigate(`/conversation/${conversationId}`);
+
     } catch (error) {
       console.error("대화 내용 가져오기 오류:", error);
     }
   };
+  
 
   const handleLoginClick = () => {
     setLoginPopupOpen(true); // 로그인 팝업 열기
@@ -350,7 +372,7 @@ const OrganismLeftSideBar = () => {
                   {reports.map((report, index) => (
                     <li key={index}>
                       <p onClick={() => handleReportClick(report.id)}>
-                        {report.title}
+                        {report.business_info}
                       </p>
                       <span>
                         <svg
@@ -413,7 +435,7 @@ const OrganismLeftSideBar = () => {
                     {chatList.map((chat, index) => (
                       <li key={index}>
                         <p onClick={() => handleConversationClick(chat.id)}>
-                          {chat.id}
+                          {chat.business_info}
                         </p>
                         <span onClick={editBoxToogle}>
                           <svg
