@@ -301,7 +301,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             <SkeletonLine className="content-placeholder" />
             <SkeletonLine className="content-placeholder" />
           </>
-        ) : Array.isArray(sections) && sections.length > 0 ? (
+        ) : sections.length > 0 ? (
           sections.map((section, index) => (
             <Section
               key={index}
