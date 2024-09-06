@@ -135,7 +135,7 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
             timestamp: Date.now(),
           };
           await saveConversationToIndexedDB({
-            existingConversation,
+            ...existingConversation,
             answerData,
             timestamp: Date.now(),
           }
@@ -155,7 +155,7 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
           );
           setConversation(updatedConversation2);
           await saveConversationToIndexedDB({
-            existingConversation,
+            ...existingConversation,
             conversation: updatedConversation2,
             answerData,
             timestamp: Date.now(),
