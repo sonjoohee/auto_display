@@ -11,7 +11,7 @@ import {
   APPROACH_PATH,
 } from "../../../AtomStates";
 
-const MoleculeBizName = () => {
+const MoleculeBizName = ({ date }) => {
   const [inputBusinessInfo, setInputBusinessInfo] =
     useAtom(INPUT_BUSINESS_INFO);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
@@ -22,6 +22,21 @@ const MoleculeBizName = () => {
   const [isAutoSaveToogle, setIsAutoSaveToogle] = useState(true);
   const autoSaveToogle = () => {
     setIsAutoSaveToogle(!isAutoSaveToogle);
+  };
+
+  const formatDate = (lang, timestamp) => {
+    const dateObj = new Date(timestamp);
+    const year = dateObj.getFullYear();
+
+    if(lang === "ko") {
+      const month = String(dateObj.getMonth() + 1);
+      const day = String(dateObj.getDate());
+      return `${year}년 ${month}월 ${day}일`;
+    } else {
+      const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const day = String(dateObj.getDate()).padStart(2, '0');
+      return `${year}.${month}.${day}`;
+    }
   };
 
   return (
@@ -40,7 +55,7 @@ const MoleculeBizName = () => {
                 : titleOfBusinessInfo}
               {titleOfBusinessInfo && <Badge>Edited by AI</Badge>}
             </strong>
-            <p>2024-09-03</p>
+            <p>{formatDate("en", date)}</p>
           </NameTitle>
         </div>
         {titleOfBusinessInfo && (
@@ -52,7 +67,7 @@ const MoleculeBizName = () => {
 
         <AutosavePopup isAutoSaveToogle={isAutoSaveToogle}>
           <div>
-            <span>일시 : 2024년 8월 28일</span>
+            <span>일시 : {formatDate("ko", date)}</span>
             <strong>{titleOfBusinessInfo}</strong>
             <p>{inputBusinessInfo}</p>
           </div>
@@ -191,6 +206,7 @@ const AutosavePopup = styled.div`
     flex-direction: column;
     gap: 4px;
     width: 100%;
+    margin-top: 5px;
   }
 
   span {
