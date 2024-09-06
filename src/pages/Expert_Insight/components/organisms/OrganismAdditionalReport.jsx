@@ -109,7 +109,6 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
           await saveConversationToIndexedDB({
             ...existingConversation,
             conversation: updatedConversation1,
-            answerData,
             timestamp: Date.now(),
           }
           ,isLoggedIn,conversationId
@@ -120,12 +119,8 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
             business_info: titleOfBusinessInfo,
             business_analysis_data: {
               명칭: analysisReportData.title,
-              개요: {
-                주요_목적_및_특징: analysisReportData.mainFeatures.map(
-                  (feature) => feature.기능
-                ),
-              },
-              주요기능: analysisReportData.mainFeatures,
+              주요_목적_및_특징: analysisReportData.mainFeatures,
+              주요기능: analysisReportData.mainCharacter,
               목표고객: analysisReportData.mainCustomer,
             },
             question_info: keyword,
@@ -142,12 +137,13 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
           setSections(answerData.sections);
           console.log(answerData.title);
 
-          // 기존의 추가 리포트 데이터에 새로 가져온 데이터를 추가합니다.
+          // 새로운 데이터를 배열의 맨 앞에 추가합니다.
           const updatedAdditionalReportData = [
-            ...additionalReportData,
-            answerData,
+            answerData,               // 새로 가져온 데이터
+            ...additionalReportData,  // 기존 데이터
           ];
           setAdditionalReportData(updatedAdditionalReportData);
+
 
           const updatedConversation = {
             ...existingConversation,
@@ -156,7 +152,8 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
           };
           await saveConversationToIndexedDB({
             ...existingConversation,
-            answerData,
+            // answerData,
+            additionalReportData : updatedAdditionalReportData,
             timestamp: Date.now(),
           }
           ,isLoggedIn,conversationId
@@ -177,7 +174,7 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
           await saveConversationToIndexedDB({
             ...existingConversation,
             conversation: updatedConversation2,
-            answerData,
+            additionalReportData : updatedAdditionalReportData,
             timestamp: Date.now(),
           }
           ,isLoggedIn,conversationId
