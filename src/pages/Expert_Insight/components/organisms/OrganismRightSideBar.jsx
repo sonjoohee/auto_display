@@ -29,7 +29,7 @@ const OrganismRightSideBar = () => {
             <AIProfile>
               <div className="profileInfo">
                 <div className="thumb">
-                  <img src={panelimages.expert_1} alt="" />
+                  <img src={selectedExpert.images} alt="" />
                 </div>
                 <div className="name">
                   <strong>{selectedExpert.title}</strong>
