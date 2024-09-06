@@ -15,6 +15,7 @@ import {
   APPROACH_PATH,
   IS_LOADING,
   isLoggedInAtom,
+
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -84,17 +85,12 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
 
   useEffect(() => {
     const loadData = async () => {
-      let answerData;
+      let answerData
       try {
         const existingConversation = await getConversationByIdFromIndexedDB(
-          conversationId,
-          isLoggedIn
+          conversationId, isLoggedIn
         );
 
-        console.log(
-          "🚀 ~ loadData ~ existingConversation:",
-          existingConversation
-        );
         if (buttonState === 1) {
           // 버튼 상태가 1일 때만 API 요청 실행
           setButtonState(0); // 버튼 상태 초기화
@@ -110,15 +106,13 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
             { type: `keyword` }
           );
           setConversation(updatedConversation2);
-          await saveConversationToIndexedDB(
-            {
-              ...existingConversation,
-              conversation: updatedConversation1,
-              answerData,
-              timestamp: Date.now(),
-            },
-            isLoggedIn,
-            conversationId
+          await saveConversationToIndexedDB({
+            ...existingConversation,
+            conversation: updatedConversation1,
+            answerData,
+            timestamp: Date.now(),
+          }
+          ,isLoggedIn,conversationId
           );
           const keyword = selectedKeywords[selectedKeywords.length - 1]; // Use the keyword based on expertIndex
 
@@ -160,14 +154,12 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
             additionalReportData: updatedAdditionalReportData, // 전체 리스트를 저장
             timestamp: Date.now(),
           };
-          await saveConversationToIndexedDB(
-            {
-              ...existingConversation,
-              answerData,
-              timestamp: Date.now(),
-            },
-            isLoggedIn,
-            conversationId
+          await saveConversationToIndexedDB({
+            ...existingConversation,
+            answerData,
+            timestamp: Date.now(),
+          }
+          ,isLoggedIn,conversationId
           );
           setIsLoading(false);
 
@@ -182,15 +174,13 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
             { type: `keyword` }
           );
           setConversation(updatedConversation2);
-          await saveConversationToIndexedDB(
-            {
-              ...existingConversation,
-              conversation: updatedConversation2,
-              answerData,
-              timestamp: Date.now(),
-            },
-            isLoggedIn,
-            conversationId
+          await saveConversationToIndexedDB({
+            ...existingConversation,
+            conversation: updatedConversation2,
+            answerData,
+            timestamp: Date.now(),
+          }
+          ,isLoggedIn,conversationId
           );
         } else {
           // 기존 데이터가 있을 때 처리
@@ -252,13 +242,11 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
             />
           ))}
 
-          {!isLoading && (
-            <MoleculeReportController
-              reportIndex={2}
-              conversationId={conversationId}
-              sampleData={answerData}
-            />
-          )}
+          {!isLoading && <MoleculeReportController
+            reportIndex={2}
+            conversationId={conversationId}
+            sampleData={answerData}
+          />}
         </>
       )}
     </AnalysisSection>
