@@ -161,6 +161,7 @@ const CloseButton = styled.button`
   right:24px;
   top:24px;
   width:16px;
+  font-family: 'Pretendard', 'Poppins';
   height:16px;
   font-size:0;
   padding:11px;
@@ -211,6 +212,7 @@ const ActionButton = styled.button`
   border-radius: 5px;
   cursor: pointer;
   background: ${props => props.primary ? '#000' : '#fff'};
+  font-family: 'Pretendard', 'Poppins';
   color: ${props => props.primary ? '#fff' : '#000'};
   font-weight: bold;
   

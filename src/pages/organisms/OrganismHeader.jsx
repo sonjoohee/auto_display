@@ -61,6 +61,7 @@ const HeaderWrap = styled.header`
       border-radius: 30px;
       transition: all 0.5s;
       text-decoration: none;
+      font-family: 'Pretendard', 'Poppins';
       color: ${palette.gray};
       font-weight: 700;
       cursor: pointer;

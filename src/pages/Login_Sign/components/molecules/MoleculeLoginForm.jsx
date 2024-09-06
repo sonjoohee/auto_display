@@ -267,6 +267,7 @@ const TogglePasswordButton = styled.button`
   border: none;
   cursor: pointer;
   font-size: 16px;
+  font-family: 'Pretendard', 'Poppins';
   color: #888;
 
   &:focus {
@@ -298,7 +299,7 @@ const PasswordResetLink = styled.div`
 
 const StyledLoginButton = styled.button`
   width: 100%;
-  font-family: "Pretendard";
+  font-family: 'Pretendard', 'Poppins';
   color: ${palette.white};
   padding: 15px;
   border-radius: 8px;

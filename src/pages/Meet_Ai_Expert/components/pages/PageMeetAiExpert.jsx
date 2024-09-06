@@ -430,6 +430,7 @@ const InputWrap = styled.div`
       flex-shrink: 0;
       width: 27px;
       height: 27px;
+      font-family: 'Pretendard', 'Poppins';
       font-size: 0;
       border: 0;
       background: url(${images.IconSearch}) center no-repeat;
