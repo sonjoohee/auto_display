@@ -43,12 +43,12 @@ const MoleculeReportController = ({
   conversationId,
   sampleData,
 }) => {
-  console.log(
-    "🚀 ~ strategyReportID,  conversationId,  sampleData,:",
-    strategyReportID,
-    conversationId,
-    sampleData
-  );
+  // console.log(
+  //   "🚀 ~ strategyReportID,  conversationId,  sampleData,:",
+  //   strategyReportID,
+  //   conversationId,
+  //   sampleData
+  // );
   // console.log(reportIndex, strategyReportID, conversationId, sampleData);
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
     TITLE_OF_BUSINESS_INFORMATION
@@ -187,7 +187,8 @@ const MoleculeReportController = ({
     }
 
     const existingConversation = await getConversationByIdFromIndexedDB(
-      conversationId
+      conversationId,
+      isLoggedIn
     );
 
     const updatedConversation = {
@@ -282,7 +283,8 @@ const MoleculeReportController = ({
 
         // 기존 대화 내역에 리포트 데이터 추가
         const existingConversation = await getConversationByIdFromIndexedDB(
-          conversationId
+          conversationId,
+          isLoggedIn
         );
 
         const updatedConversation = {
@@ -301,8 +303,12 @@ const MoleculeReportController = ({
               : existingConversation.additionalReportData,
           timestamp: Date.now(),
         };
-  
-        await saveConversationToIndexedDB(updatedConversation,isLoggedIn,conversationId);
+
+        await saveConversationToIndexedDB(
+          updatedConversation,
+          isLoggedIn,
+          conversationId
+        );
       } else {
         console.error("API 응답 에러", response.status);
       }
@@ -425,20 +431,23 @@ const MoleculeReportController = ({
     setConversationStage(1);
     setInputBusinessInfo("");
 
-    saveConversationToIndexedDB({
-      id: conversationId,
-      conversation: [],
-      conversationStage: 1,
-      inputBusinessInfo: "",
-      analysisReportData: {
-        title: [],
-        mainFeatures: [],
-        mainCharacter: [],
-        mainCustomer: [],
+    saveConversationToIndexedDB(
+      {
+        id: conversationId,
+        conversation: [],
+        conversationStage: 1,
+        inputBusinessInfo: "",
+        analysisReportData: {
+          title: [],
+          mainFeatures: [],
+          mainCharacter: [],
+          mainCustomer: [],
+        },
+        timestamp: Date.now(),
       },
-      timestamp: Date.now(),
-    },
-    isLoggedIn, conversationId);
+      isLoggedIn,
+      conversationId
+    );
   };
 
   const axiosConfig = {
@@ -539,7 +548,8 @@ const MoleculeReportController = ({
 
     // 기존 대화 내역을 유지하면서 새로운 정보를 추가
     const existingConversation = await getConversationByIdFromIndexedDB(
-      conversationId
+      conversationId,
+      isLoggedIn
     );
 
     const updatedConversation = {
@@ -937,7 +947,7 @@ const Popup = styled.div`
     background: ${palette.white};
 
     p {
-      font-family: 'Pretendard', 'Poppins';
+      font-family: "Pretendard", "Poppins";
       font-size: 0.875rem;
       font-weight: 500;
       margin: 20px auto 24px;
@@ -950,7 +960,7 @@ const Popup = styled.div`
 
       button {
         flex: 1;
-        font-family: 'Pretendard', 'Poppins';
+        font-family: "Pretendard", "Poppins";
         font-size: 0.875rem;
         font-weight: 600;
         color: ${palette.blue};
@@ -988,7 +998,7 @@ const Popup = styled.div`
           border-top: 1px solid ${palette.lineGray};
 
           button {
-            font-family: 'Pretendard', 'Poppins';
+            font-family: "Pretendard", "Poppins";
             color: ${palette.gray};
             font-weight: 600;
             padding: 0;
