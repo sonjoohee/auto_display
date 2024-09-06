@@ -28,6 +28,7 @@ import {
   iS_CLICK_CHECK_REPORT_RIGHTAWAY,
   CONVERSATION,
   BUTTON_STATE,
+  CONVERSATION_ID,
 } from "../../../AtomStates";
 
 import { Link } from "react-router-dom";
@@ -53,6 +54,8 @@ const PageMeetAiExpert = () => {
   useEffect(() => {
     setSelectedExpertIndex(SELECTED_EXPERT_INDEX);
   }, []);
+
+  const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
@@ -118,6 +121,7 @@ const PageMeetAiExpert = () => {
   };
   useEffect(() => {
     setConversation([]);
+    // setConversationId("");
     setConversationStage(1);
     setInputBusinessInfo("");
     setTitleOfBusinessInfo("");
