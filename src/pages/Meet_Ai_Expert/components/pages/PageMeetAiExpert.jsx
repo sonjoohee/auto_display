@@ -120,7 +120,7 @@ const PageMeetAiExpert = () => {
     setMainFeaturesOfBusinessInformation([]);
     setMainCharacteristicOfBusinessInformation([]);
     setBusinessInformationTargetCustomer([]);
-    setSelectedExpertIndex(1);
+    setSelectedExpertIndex('1');
     setSections([]);
     setAdditionalReportCount(0);
     setSelectedAdditionalKeyword([]);
@@ -247,7 +247,7 @@ const PageMeetAiExpert = () => {
               <ExpertCard
                 onClick={() => {
                   setButtonState(1);
-                  handledExpertSelect(1);
+                  handledExpertSelect('1');
                 }}
               >
                 <span>
@@ -259,7 +259,7 @@ const PageMeetAiExpert = () => {
               <ExpertCard
                 onClick={() => {
                   setButtonState(1);
-                  handledExpertSelect(2);
+                  handledExpertSelect('2');
                 }}
               >
                 <span>
@@ -271,7 +271,7 @@ const PageMeetAiExpert = () => {
               <ExpertCard
                 onClick={() => {
                   setButtonState(1);
-                  handledExpertSelect(3);
+                  handledExpertSelect('3');
                 }}
               >
                 <span>
