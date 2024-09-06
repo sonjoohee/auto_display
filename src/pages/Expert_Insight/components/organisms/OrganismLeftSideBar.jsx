@@ -576,7 +576,10 @@ useEffect(() => {
                         <p onClick={() => handleConversationClick(chat.id)}>
                           {chat.business_info}
                         </p>
-                        <span onClick={() => editBoxToogle(index)}>
+                        <span 
+                            style={{ display: 'inline-block', padding: '10px', cursor: 'pointer' }} 
+                            onClick={() => editBoxToogle(index)}
+                          >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="14"
