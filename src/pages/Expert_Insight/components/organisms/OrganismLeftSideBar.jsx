@@ -228,6 +228,7 @@ useEffect(() => {
     fetchReports();
   }, []);
 
+
   // const handleConversationClick = (id) => {
   //   // 클릭 시 해당 대화로 이동
   //   navigate(`/conversation/${id}`);
@@ -638,23 +639,23 @@ useEffect(() => {
             <>
               <LogoutBtnWrap className="logInfo">
                 <div>
-                  <strong>{localStorage.getItem("userName")}</strong>{" "}
+                  <strong>{sessionStorage.getItem("userName")}</strong>{" "}
                   {/* 유저 이름 표시 */}
-                  <p>{localStorage.getItem("userEmail")}</p>{" "}
+                  <p>{sessionStorage.getItem("userEmail")}</p>{" "}
                   {/* 유저 이메일 표시 */}
                 </div>
 
                 <button type="button" className="more" onClick={moreProfile}>
                   {/* <img src={images.AccountSetting} alt="" /> */}
-                  <span>{localStorage.getItem("userName")}</span>
+                  <span>{sessionStorage.getItem("userName")}</span>
                 </button>
               </LogoutBtnWrap>
 
               <LogoutToogle isToogle={isToogle} className="AccountInfo">
                 <div className="info">
-                  <strong>{localStorage.getItem("userName")}</strong>{" "}
+                  <strong>{sessionStorage.getItem("userName")}</strong>{" "}
                   {/* 유저 이름 표시 */}
-                  <p>{localStorage.getItem("userEmail")}</p>{" "}
+                  <p>{sessionStorage.getItem("userEmail")}</p>{" "}
                   {/* 유저 이메일 표시 */}
                 </div>
 
