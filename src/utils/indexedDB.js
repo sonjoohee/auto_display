@@ -115,6 +115,7 @@ export const getConversationByIdFromIndexedDB = async (id, isLoggedIn) => {
         "🚀 ~ getConversationByIdFromIndexedDB ~ response.data.chat_data:",
         response.data.chat_data
       );
+
       return response.data.chat_data;
 
       // const response = await axios.get(

@@ -241,5 +241,6 @@ export const ADDITION_BUTTON_STATE = atom(0);
 
 export const iS_CLICK_CHECK_REPORT_RIGHTAWAY = atom(false);
 
+export const CONVERSATION_ID = atom("");
 export const CONVERSATION = atom([]);
 export const IS_LOADING = atom(false);
