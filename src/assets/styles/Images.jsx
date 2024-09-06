@@ -47,6 +47,7 @@ import IconChat from "../images/iconChat.svg"
 import IconWrite from "../images/iconWrite.svg"
 import IconTarget2 from "../images/iconTarget2.svg"
 
+import ExclamationMark2 from "../images/iconExclamationMark.svg"
 import ExclamationMark from "../images/iconExclamationMark1.svg"
 import CheckMark from "../images/CheckMark.svg"
 
@@ -129,6 +130,7 @@ const images = {
   IconWrite,
   IconTarget2,
 
+  ExclamationMark2,
   ExclamationMark,
   CheckMark,
 

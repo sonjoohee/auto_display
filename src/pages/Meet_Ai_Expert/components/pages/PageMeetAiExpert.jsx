@@ -101,6 +101,17 @@ const PageMeetAiExpert = () => {
     iS_CLICK_CHECK_REPORT_RIGHTAWAY
   );
 
+  const [isPopupRegex, setIsPopupRegex] = useState(false);
+  const [isPopupRegex2, setIsPopupRegex2] = useState(false);
+
+  const closePopupRegex = () => {
+    setInputBusinessInfo("");
+    setIsPopupRegex(false); // 팝업 닫기
+  };
+  const closePopupRegex2 = () => {
+    setIsPopupRegex2(false);
+  };
+
   useEffect(() => {
     setConversation([]);
     setConversationStage(1);
@@ -147,21 +158,33 @@ const PageMeetAiExpert = () => {
     };
   }, []);
 
-  const handledExpertSelect = (index) => {
-    if (index === 0) {
-      setApproachPath(-1); // 검색을 통해 들어가는 경우
-      setButtonState(1); // 버튼 상태를 1로 설정
-    } else {
-      setApproachPath(1);
-      setInputBusinessInfo(""); // 또는 null, undefined로 초기화
+  const handledSearch = () => {
+    const regex = /^[가-힣a-zA-Z0-9\s.,'"-]*$/;
+    if (!regex.test(inputBusinessInfo)) {
+      setIsPopupRegex(true);
+      return;
+    }
+    if (inputBusinessInfo.trim() === "") {
+      setIsPopupRegex2(true);
+      return;
     }
 
+    setApproachPath(-1); // 검색을 통해 들어가는 경우
+    setButtonState(1); // 버튼 상태를 1로 설정
+
+    setSelectedExpertIndex(0);
+    navigate("/ExpertInsight");
+  };
+
+  const handledExpertSelect = (index) => {
+    setApproachPath(1);
+    setInputBusinessInfo(""); // 또는 null, undefined로 초기화
     setSelectedExpertIndex(index);
     navigate("/ExpertInsight");
   };
 
   return (
-    <div>
+    <>
       {/* <OrganismHeader /> */}
 
       <ContentsWrap>
@@ -193,7 +216,7 @@ const PageMeetAiExpert = () => {
                   ).innerText = `${currentLength}/300`;
                 }}
               ></textarea>
-              <button type="button" onClick={() => handledExpertSelect(0)}>
+              <button type="button" onClick={handledSearch}>
                 검색
               </button>
             </div>
@@ -267,7 +290,66 @@ const PageMeetAiExpert = () => {
           </ExpertSelectWrap>
         </MainContent>
       </ContentsWrap>
-    </div>
+
+      {isPopupRegex && (
+        <Popup
+          Cancel
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              closePopupRegex(); // 상태를 false로 설정
+            }
+          }}
+        >
+          <div>
+            <button
+              type="button"
+              className="closePopup"
+              onClick={closePopupRegex}
+            >
+              닫기
+            </button>
+            <span>
+              <img src={images.ExclamationMark2} alt="" />
+            </span>
+            <p>한글, 영문 외 특수문자는 입력할 수 없어요. 자음이나 모음만 입력한 경우 검색이 제한되니, 문장을 완전하게 입력해주세요.</p>
+            <div className="btnWrap">
+              <button type="button" onClick={closePopupRegex}>
+                확인
+              </button>
+            </div>
+          </div>
+        </Popup>
+      )}
+      {isPopupRegex2 && (
+        <Popup
+          Cancel
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              closePopupRegex2(); // 상태를 false로 설정
+            }
+          }}
+        >
+          <div>
+            <button
+              type="button"
+              className="closePopup"
+              onClick={closePopupRegex2}
+            >
+              닫기
+            </button>
+            <span>
+              <img src={images.ExclamationMark2} alt="" />
+            </span>
+            <p>비즈니스 분석을 위해 내용을 입력해주세요</p>
+            <div className="btnWrap">
+              <button type="button" onClick={closePopupRegex2}>
+                확인
+              </button>
+            </div>
+          </div>
+        </Popup>
+      )}
+    </>
   );
 };
 
@@ -633,5 +715,131 @@ const AccordionContent = styled.div`
 
   > div + div {
     margin-top: 30px;
+  }
+`;
+
+const Popup = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  transition: all 0.5s;
+  z-index: 9999;
+
+  .closePopup {
+    position: absolute;
+    right: 24px;
+    top: 24px;
+    width: 16px;
+    height: 16px;
+    font-size: 0;
+    padding: 11px;
+    border: 0;
+    background: none;
+
+    &:before,
+    &:after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 2px;
+      height: 100%;
+      border-radius: 10px;
+      background: ${palette.black};
+      content: "";
+    }
+
+    &:before {
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    &:after {
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
+  }
+
+  > div {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    // overflow:hidden;
+    padding: 45px 24px 24px;
+    border-radius: 10px;
+    background: ${palette.white};
+
+    p {
+      font-family: "Pretendard", "Poppins";
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin: 20px auto 24px;
+    }
+
+    .btnWrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      button {
+        flex: 1;
+        font-family: "Pretendard", "Poppins";
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: ${palette.blue};
+        padding: 12px 20px;
+        border-radius: 8px;
+        border: 1px solid ${palette.blue};
+        background: ${palette.white};
+
+        &:last-child {
+          color: ${palette.white};
+          background: ${palette.blue};
+        }
+      }
+    }
+
+    ${(props) =>
+      props.Cancel &&
+      css`
+        p {
+          strong {
+            font-weight: 500;
+            display: block;
+          }
+          span {
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: ${palette.gray500};
+            display: block;
+            margin-top: 8px;
+          }
+        }
+
+        .btnWrap {
+          padding-top: 16px;
+          border-top: 1px solid ${palette.lineGray};
+
+          button {
+            font-family: "Pretendard", "Poppins";
+            color: ${palette.gray};
+            font-weight: 600;
+            padding: 0;
+            border: 0;
+            background: none;
+
+            &:last-child {
+              color: ${palette.blue};
+              background: none;
+            }
+          }
+        }
+      `}
   }
 `;
