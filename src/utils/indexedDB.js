@@ -63,6 +63,7 @@ export const saveConversationToIndexedDB = async (
       const PUT_DATA = {
         id: conversationId,
         chat_input: conversation.inputBusinessInfo,
+        business_info: conversation.inputBusinessInfo,
         // chat_title: conversation.analysisReportData.title,
         chat_date: conversation.timestamp,
         chat_data: conversation,

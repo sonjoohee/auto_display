@@ -217,7 +217,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
       } else {
         // IndexedDB에서 기존 데이터를 가져와 적용
         const existingConversation = await getConversationByIdFromIndexedDB(
-          conversationId
+          conversationId, isLoggedIn
         );
 
         if (existingConversation && existingConversation.analysisReportData) {
