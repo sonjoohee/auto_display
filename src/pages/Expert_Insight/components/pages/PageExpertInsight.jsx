@@ -692,13 +692,16 @@ const PageExpertInsight = () => {
                 return null;
               })}
 
-              {approachPath === -1 &&
+              {/* {approachPath === -1 &&
                 inputBusinessInfo &&
                 (Object.keys(expert1ReportData).length === 0 ||
                   Object.keys(expert2ReportData).length === 0 ||
                   Object.keys(expert3ReportData).length === 0) && (
                   <OrganismBizExpertSelect />
-                )}
+                )} */}
+              {approachPath === -1 && conversationStage === 2 &&
+                <OrganismBizExpertSelect />
+              }
             </ChatWrap>
 
             {approachPath === 1 && conversationStage == 1 && <OrganismSearchBottomBar onSearch={handleSearch} />}
@@ -769,4 +772,17 @@ const ChatWrap = styled.div`
   &.scrolled:before {
     height: 180px;
   }
+`;
+const LoadingOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8); // 화면을 덮는 반투명 배경
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; // 다른 요소 위에 표시
+  pointer-events: none; // 모든 클릭 비활성화
 `;
