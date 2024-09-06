@@ -229,7 +229,7 @@ const PageExpertInsight = () => {
             // 서버에서 새로운 대화 ID 생성
             const newConversationId = await createChatOnServer();
             setConversationId(newConversationId); // 생성된 대화 ID 설정
-            console.log("newConversationId", newConversationId);
+            // console.log("newConversationId", newConversationId);
             setIsLoading(false); // 로딩 완료
             // 새로운 대화 ID로 경로 변경
             navigate(`/conversation/${newConversationId}`, { replace: true });
@@ -396,7 +396,7 @@ const PageExpertInsight = () => {
   useEffect(() => {
     if (conversationId && conversationId.length >= 2) {
       if (approachPath === -1) {
-        console.log(111111111);
+        // console.log(111111111);
         handleSearch(-1);
       } else if (approachPath === 1) {
         setInputBusinessInfo("");
@@ -413,7 +413,7 @@ const PageExpertInsight = () => {
       selectedAdditionalKeyword.length > 0 &&
       !isLoading
     ) {
-      console.log(22222222);
+      // console.log(22222222);
       handleSearch(-1);
     }
   }, [selectedAdditionalKeyword, isLoading]);
@@ -425,7 +425,7 @@ const PageExpertInsight = () => {
       approachPath &&
       !isLoading
     ) {
-      console.log(3333333333);
+      // console.log(3333333333);
       handleSearch(-1);
     }
   }, [selectedExpertIndex, isLoading]);
@@ -437,7 +437,7 @@ const PageExpertInsight = () => {
       isClickCheckReportRightAway &&
       !isLoading
     ) {
-      console.log(444444444);
+      // console.log(444444444);
       handleSearch(-1);
     }
   }, [isClickCheckReportRightAway, isLoading]);
@@ -465,7 +465,7 @@ const PageExpertInsight = () => {
     // 사용자가 입력한 경우에만 inputBusinessInfo를 업데이트
     if (conversationStage < 3 && inputValue !== -1) {
       setInputBusinessInfo(inputValue);
-      console.log(inputValue);
+      // console.log(inputValue);
       updatedConversation.push({ type: "user", message: inputValue });
     }
 
@@ -643,7 +643,7 @@ const PageExpertInsight = () => {
         <MainContent>
           <div>
             <ChatWrap className={isScrolled ? "scrolled" : ""}>
-              <MoleculeBizName date={Date.now()}/>
+              <MoleculeBizName date={Date.now()} />
               {conversation.map((item, index) => {
                 if (item.type === "user") {
                   return (

@@ -121,10 +121,11 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
           );
           let currentReportKey = `strategyReportData_EX${selectedExpertIndex}`;
 
-          console.log(
-            "🚀 ~ loadData ~ existingConversation:",
-            existingConversation
-          );
+          // console.log(
+          //   "🚀 ~ loadData ~ existingConversation:",
+          //   existingConversation
+          // );
+
           // console.log("🚀 ~ loadData ~ currentReportKey:", currentReportKey);
           if (
             existingConversation &&
@@ -197,15 +198,81 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             else if (strategyData.expert_id === 3)
               setExpert3ReportData(strategyData);
 
+            const updatedConversation_first = [...conversation];
+            // console.log(
+            //   "🚀 ~ loadData ~ updatedConversation_first:",
+            //   updatedConversation_first
+            // );
+
+            if (
+              (updatedConversation_first.length > 0 &&
+                updatedConversation_first[updatedConversation_first.length - 1]
+                  .type === "keyword") ||
+              (updatedConversation_first.length > 0 &&
+                updatedConversation_first[updatedConversation_first.length - 1]
+                  .type === "report_button")
+            ) {
+              updatedConversation_first.pop();
+            }
+
+            if (selectedExpertIndex === "1") {
+              updatedConversation_first.push(
+                {
+                  type: "user",
+                  message:
+                    "10년차 전략 디렉터와 1:1 커피챗, 지금 바로 시작하겠습니다 🙌🏻",
+                },
+                {
+                  type: "system",
+                  message: `안녕하세요, 김도원입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"`,
+                }
+              );
+            } else if (selectedExpertIndex === "2") {
+              updatedConversation_first.push(
+                {
+                  type: "user",
+                  message:
+                    "지금 바로 쓸 수 있는 브랜딩 솔루션 10초 맞춤 제안서 받기, 지금 바로 시작하겠습니다 🙌🏻",
+                },
+                {
+                  type: "system",
+                  message: `안녕하세요, 이지현입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"`,
+                }
+              );
+            } else if (selectedExpertIndex === "3") {
+              updatedConversation_first.push(
+                {
+                  type: "user",
+                  message:
+                    "고객 데이터 전문가의 맞춤 타겟 추천, 지금 바로 시작하겠습니다 🙌🏻",
+                },
+                {
+                  type: "system",
+                  message: `안녕하세요, 박서연입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊"`,
+                }
+              );
+            }
+            updatedConversation_first.push(
+              { type: `strategy_${selectedExpertIndex}` }
+              // { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊'},
+              // { type: `keyword` },
+            );
+
+            setConversation(updatedConversation_first);
+            console.log(
+              "🚀 ~ loadData ~ updatedConversation_first:",
+              updatedConversation_first
+            );
             const updatedConversation = {
               ...existingConversation,
+              conversation: updatedConversation_first,
               [currentReportKey]: strategyData,
               timestamp: Date.now(),
             };
-            // console.log(
-            //   "🚀 ~ loadData ~ existingConversation:",
-            //   existingConversation
-            // );
+            console.log(
+              "🚀 ~ loadData ~ updatedConversation:",
+              updatedConversation
+            );
             // console.log(
             //   "🚀 ~ loadData ~ updatedConversation:",
             //   updatedConversation
@@ -225,8 +292,9 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
         }
         setIsLoading(false);
 
-        const updatedConversation = [...conversation];
-        updatedConversation.push(
+        const updatedConversation_end = [...conversation];
+
+        updatedConversation_end.push(
           {
             type: "system",
             message:
@@ -234,13 +302,17 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
           },
           { type: `keyword` }
         );
+        console.log(
+          "🚀 ~ loadData ~ updatedConversation_end:",
+          updatedConversation_end
+        );
         const existingConversation2 = await getConversationByIdFromIndexedDB(
           conversationId,
           isLoggedIn
         );
         const updatedConversation2 = {
           ...existingConversation2,
-          conversation: updatedConversation,
+          conversation: updatedConversation_end,
           timestamp: Date.now(),
         };
 
@@ -248,11 +320,11 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
         //   "🚀 ~ loadData ~ existingConversation2:",
         //   existingConversation2
         // );
-        // console.log(
-        //   "🚀 ~ loadData ~ updatedConversation2:",
-        //   updatedConversation2
-        // );
-        setConversation(updatedConversation);
+        console.log(
+          "🚀 ~ loadData ~ updatedConversation2:",
+          updatedConversation2
+        );
+        setConversation(updatedConversation_end);
         const currentReportKey = `strategyReportData_EX${selectedExpertIndex}`;
         const strategyData = finalResponse;
         await saveConversationToIndexedDB(
