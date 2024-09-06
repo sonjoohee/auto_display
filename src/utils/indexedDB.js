@@ -68,7 +68,7 @@ export const saveConversationToIndexedDB = async (
         chat_date: conversation.timestamp,
         chat_data: conversation,
       };
-      console.log("🚀 ~ PUT_DATA:", PUT_DATA);
+      // console.log("🚀 ~ PUT_DATA:", PUT_DATA);
       await axios.put(`https://wishresearch.kr/panels/update_chat`, PUT_DATA, {
         headers: {
           Authorization: `Bearer ${token}`, // Bearer 토큰을 헤더에 추가
@@ -111,10 +111,10 @@ export const getConversationByIdFromIndexedDB = async (id, isLoggedIn) => {
       // console.log(response);
       // setSelectedConversation(response.data); // 선택된 대화 내용 저장
 
-      console.log(
-        "🚀 ~ getConversationByIdFromIndexedDB ~ response.data.chat_data:",
-        response.data.chat_data
-      );
+      // console.log(
+      //   "🚀 ~ getConversationByIdFromIndexedDB ~ response.data.chat_data:",
+      //   response.data.chat_data
+      // );
       return response.data.chat_data;
 
       // const response = await axios.get(
