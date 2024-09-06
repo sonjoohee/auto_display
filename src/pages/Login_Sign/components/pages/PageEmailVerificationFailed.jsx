@@ -69,6 +69,7 @@ const Message = styled.p`
 
 const StyledButton = styled.button`
   background-color: #007bff;
+  font-family: 'Pretendard', 'Poppins';
   color: white;
   border: none;
   padding: 12px 20px;

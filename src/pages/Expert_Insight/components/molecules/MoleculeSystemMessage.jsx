@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
+import panelimages from "../../../../assets/styles/PanelImages";
 
 const MoleculeSystemMessage = ({ message }) => {
   const [displayedText, setDisplayedText] = useState(""); // 현재까지 타이핑된 텍스트
@@ -45,6 +46,7 @@ const MoleculeSystemMessage = ({ message }) => {
   return (
     <>
       <SystemMessageContainer>
+        <Thumb><img src={panelimages.PanelIMG} alt="" /></Thumb>
         <Bubble>
           <TypingEffect isTyping={isTyping}>
             <p>{displayedText}</p>
@@ -56,6 +58,24 @@ const MoleculeSystemMessage = ({ message }) => {
 };
 
 export default MoleculeSystemMessage;
+
+const Thumb = styled.div`
+  position:relative;
+  width:55px;
+  height:55px;
+  border-radius:100px;
+  overflow:hidden;
+
+  img {
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    width:100%;
+    height:100%;
+    object-fit: cover;
+  }
+`;
 
 const SystemMessageContainer = styled.div`
   display: flex;
