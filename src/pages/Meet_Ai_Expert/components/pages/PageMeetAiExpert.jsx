@@ -120,7 +120,7 @@ const PageMeetAiExpert = () => {
     setMainFeaturesOfBusinessInformation([]);
     setMainCharacteristicOfBusinessInformation([]);
     setBusinessInformationTargetCustomer([]);
-    setSelectedExpertIndex(1);
+    setSelectedExpertIndex("1");
     setSections([]);
     setAdditionalReportCount(0);
     setSelectedAdditionalKeyword([]);
@@ -172,7 +172,7 @@ const PageMeetAiExpert = () => {
     setApproachPath(-1); // 검색을 통해 들어가는 경우
     setButtonState(1); // 버튼 상태를 1로 설정
 
-    setSelectedExpertIndex(0);
+    setSelectedExpertIndex("0");
     navigate("/ExpertInsight");
   };
 
@@ -247,7 +247,7 @@ const PageMeetAiExpert = () => {
               <ExpertCard
                 onClick={() => {
                   setButtonState(1);
-                  handledExpertSelect(1);
+                  handledExpertSelect("1");
                 }}
               >
                 <span>
@@ -259,7 +259,7 @@ const PageMeetAiExpert = () => {
               <ExpertCard
                 onClick={() => {
                   setButtonState(1);
-                  handledExpertSelect(2);
+                  handledExpertSelect("2");
                 }}
               >
                 <span>
@@ -271,7 +271,7 @@ const PageMeetAiExpert = () => {
               <ExpertCard
                 onClick={() => {
                   setButtonState(1);
-                  handledExpertSelect(3);
+                  handledExpertSelect("3");
                 }}
               >
                 <span>
@@ -311,7 +311,10 @@ const PageMeetAiExpert = () => {
             <span>
               <img src={images.ExclamationMark2} alt="" />
             </span>
-            <p>한글, 영문 외 특수문자는 입력할 수 없어요. 자음이나 모음만 입력한 경우 검색이 제한되니, 문장을 완전하게 입력해주세요.</p>
+            <p>
+              한글, 영문 외 특수문자는 입력할 수 없어요. 자음이나 모음만 입력한
+              경우 검색이 제한되니, 문장을 완전하게 입력해주세요.
+            </p>
             <div className="btnWrap">
               <button type="button" onClick={closePopupRegex}>
                 확인
