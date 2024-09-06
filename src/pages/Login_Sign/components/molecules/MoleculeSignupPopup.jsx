@@ -65,12 +65,12 @@ const MoleculeSignupPopup = ({ onClose, email }) => {
         </p>
 
         <div className="btnWrap">
-          <button type="button" onClick={handleResendEmail}>
+          {/* <button type="button" onClick={handleResendEmail}>
             재발송하기
-          </button>
-          <button type="button" onClick={handleGoToLogin}>
+          </button> */}
+          <a href="/" onClick={handleGoToLogin}>
             로그인 하러가기
-          </button>
+          </a>
         </div>
 
         {/* 
@@ -147,6 +147,20 @@ const PopupContent = styled.div`
     border-top: 1px solid ${palette.lineGray};
 
     button {
+      flex: 1;
+      font-family: "Pretendard", "Poppins";
+      color: ${palette.gray};
+      font-weight: 600;
+      padding: 0;
+      border: 0;
+      background: none;
+
+      &:last-child {
+        color: ${palette.blue};
+        background: none;
+      }
+    }
+    a {
       flex: 1;
       font-family: "Pretendard", "Poppins";
       color: ${palette.gray};
