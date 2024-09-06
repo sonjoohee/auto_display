@@ -28,13 +28,13 @@ const MoleculeBizName = ({ date }) => {
     const dateObj = new Date(timestamp);
     const year = dateObj.getFullYear();
 
-    if (lang === "ko") {
+    if(lang === "ko") {
       const month = String(dateObj.getMonth() + 1);
       const day = String(dateObj.getDate());
       return `${year}년 ${month}월 ${day}일`;
     } else {
-      const month = String(dateObj.getMonth() + 1).padStart(2, "0");
-      const day = String(dateObj.getDate()).padStart(2, "0");
+      const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const day = String(dateObj.getDate()).padStart(2, '0');
       return `${year}.${month}.${day}`;
     }
   };
@@ -195,7 +195,7 @@ const AutosavePopup = styled.div`
     border-color: transparent transparent ${palette.white} transparent;
     filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.2));
     content: "";
-    z-index: 0;
+    zindex: 0;
   }
 
   strong {
