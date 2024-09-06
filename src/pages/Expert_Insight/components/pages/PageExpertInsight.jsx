@@ -765,16 +765,3 @@ const ChatWrap = styled.div`
     height: 180px;
   }
 `;
-const LoadingOverlay = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.8); // 화면을 덮는 반투명 배경
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000; // 다른 요소 위에 표시
-  pointer-events: none; // 모든 클릭 비활성화
-`;
