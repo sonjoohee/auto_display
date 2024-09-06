@@ -112,6 +112,14 @@ const OrganismLeftSideBar = () => {
     iS_CLICK_CHECK_REPORT_RIGHTAWAY
   );
 
+  const [editToggleIndex, setEditToggleIndex] = useState(null); // 특정 인덱스를 저장
+  const editBoxToogle = (index) => {
+    if (editToggleIndex === index) {
+      setEditToggleIndex(null); // 이미 열려 있는 경우 닫기
+    } else {
+      setEditToggleIndex(index); // 해당 인덱스의 EditBox 열기
+    }
+  };
   useEffect(() => {
     const loadConversations = async () => {
       const allConversations = await getAllConversationsFromIndexedDB();
@@ -306,9 +314,9 @@ const OrganismLeftSideBar = () => {
   };
 
   const [isEditToogle, setIsEditToogle] = useState(true);
-  const editBoxToogle = () => {
-    setIsEditToogle(!isEditToogle);
-  };
+  // const editBoxToogle = () => {
+  //   setIsEditToogle(!isEditToogle);
+  // };
 
   const handleNewProjectClick = () => {
     navigate("/");
@@ -435,7 +443,7 @@ const OrganismLeftSideBar = () => {
                         <p onClick={() => handleConversationClick(chat.id)}>
                           {chat.business_info}
                         </p>
-                        <span onClick={editBoxToogle}>
+                        <span onClick={() => editBoxToogle(index)}>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="14"
@@ -467,7 +475,7 @@ const OrganismLeftSideBar = () => {
                           </svg>
                         </span>
 
-                        <EditBox isEditToogle={isEditToogle}>
+                        <EditBox isEditToogle={editToggleIndex === index}>
                           <button type="button">
                             <img src={images.IconDelete2} alt="" />
                             삭제
@@ -968,7 +976,6 @@ const SideBarMenu = styled.div`
     background: none;
   }
 `;
-
 const EditBox = styled.div`
   position: fixed;
   left: 0;
@@ -977,15 +984,14 @@ const EditBox = styled.div`
   gap: 20px;
   max-width: 217px;
   width: 30%;
-  max-height: ${(props) => (props.isEditToogle ? "0" : "1000px")};
-  padding: ${(props) => (props.isEditToogle ? "0" : "20px")};
+  max-height: ${(props) => (props.isEditToogle ? "1000px" : "0")};
+  padding: ${(props) => (props.isEditToogle ? "20px" : "0")};
   overflow: hidden;
   border-radius: 15px;
   background: ${palette.white};
   box-shadow: 0 4px 28px rgba(0, 0, 0, 0.05);
-  visibility: ${(props) => (props.isEditToogle ? "hidden" : "visible")};
-  opacity: ${(props) => (props.isEditToogle ? "0" : "1")};
-  // transition: max-height 0.5s ease, padding 0.5s ease;
+  visibility: ${(props) => (props.isEditToogle ? "visible" : "hidden")};
+  opacity: ${(props) => (props.isEditToogle ? "1" : "0")};
   transform: translateX(260px);
   transition: all 0.5s;
 
