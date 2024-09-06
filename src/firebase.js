@@ -1,6 +1,6 @@
 // src/firebase.js
-import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider } from 'firebase/auth';
+import { initializeApp } from "firebase/app";
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 // const firebaseConfig = {
 //   apiKey: "YOUR_API_KEY",
@@ -11,14 +11,14 @@ import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 //   appId: "YOUR_APP_ID"
 // };
 const firebaseConfig = {
-    apiKey: "AIzaSyCo8R4HThQkBG6J_kP5B5s9ZH0Z4l8yq0A",
-    authDomain: "logintest-c5f62.firebaseapp.com",
-    projectId: "logintest-c5f62",
-    storageBucket: "logintest-c5f62.appspot.com",
-    messagingSenderId: "138106302639",
-    appId: "1:138106302639:web:171493934e8934a704e45a",
-    measurementId: "G-GFZLG8YHYQ"
-  };
+  apiKey: "AIzaSyCvh6ld7bHNcDGt7UiEUopTfCOYLY87xa0",
+  authDomain: "interviewx-ai.firebaseapp.com",
+  projectId: "interviewx-ai",
+  storageBucket: "interviewx-ai.appspot.com",
+  messagingSenderId: "891213629097",
+  appId: "1:891213629097:web:7916e541a8ba3273b48bb8",
+  measurementId: "G-SN827DGF8N",
+};
 // Firebase 초기화
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
