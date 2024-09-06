@@ -49,7 +49,7 @@ const CloseButton = styled.button`
   position: absolute;
   top: -40px;
   right: 0;
-  font-family: 'Pretendard';
+  font-family: 'Pretendard', 'Poppins';
   font-size:1rem;
   color:${palette.white};
   padding:5px 26px 5px 0;

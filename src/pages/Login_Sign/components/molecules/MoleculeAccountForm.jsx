@@ -156,11 +156,11 @@ const MoleculeLoginForm = () => {
       </div>
 
       {error && <ErrorMessage>{error}</ErrorMessage>}
-
+{/* 
       <PasswordResetLink>
         <a onClick={handlePasswordReset}>비밀번호 찾기</a>
       </PasswordResetLink>
-
+ */}
       <StyledLoginButton onClick={handleLogin} disabled={!password}>변경하기</StyledLoginButton>
 
       <WithdrawalWrap>
@@ -234,6 +234,7 @@ const TogglePasswordButton = styled.button`
   cursor: pointer;
   font-size: 16px;
   color: #888;
+  font-family: 'Pretendard', 'Poppins';
 
   &:focus {
     outline: none;
@@ -264,7 +265,7 @@ const PasswordResetLink = styled.div`
 
 const StyledLoginButton = styled.button`
   width: 100%;
-  font-family: 'Pretendard';
+  font-family: 'Pretendard', 'Poppins';
   color:${palette.white};
   padding: 15px;
   border-radius: 8px;

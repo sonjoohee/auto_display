@@ -172,7 +172,7 @@ const MoleculeSignupForm = () => {
         <label htmlFor="terms">서비스 <a href="#">이용약관</a>과 <a href="#">개인정보처리방침</a>에 동의합니다.</label>
       </TermsAndConditions>
 
-      <StyledAtomButton onClick={handleSignup} disabled={isLoading || !name || !email || !password || !confirmPassword}>
+      <StyledAtomButton onClick={handleSignup} disabled={isLoading || !name || !email || !password || !confirmPassword || !termsAccepted}>
         {isLoading ? "메일을 전송 중입니다..." : "회원가입"}
       </StyledAtomButton>
 
@@ -244,6 +244,7 @@ const TogglePasswordButton = styled.button`
   right:10px;
   bottom: 0;
   transform: translateY(-50%);
+  font-family: 'Pretendard', 'Poppins';
   background: none;
   border: none;
   cursor: pointer;
@@ -287,6 +288,7 @@ const TermsAndConditions = styled.div`
 const StyledAtomButton = styled.button`
   width: 100%;
   color:${palette.white};
+  font-family: 'Pretendard', 'Poppins';
   font-size: 1rem;
   font-weight: 700;
   margin-top: 20px;
