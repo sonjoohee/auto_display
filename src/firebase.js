@@ -2,17 +2,11 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
-// const firebaseConfig = {
-//   apiKey: "YOUR_API_KEY",
-//   authDomain: "YOUR_AUTH_DOMAIN",
-//   projectId: "logintest-c5f62",
-//   storageBucket: "YOUR_STORAGE_BUCKET",
-//   messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-//   appId: "YOUR_APP_ID"
-// };
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyCvh6ld7bHNcDGt7UiEUopTfCOYLY87xa0",
-  authDomain: "interviewx-ai.firebaseapp.com",
+  authDomain: "interviewx.ai",
   projectId: "interviewx-ai",
   storageBucket: "interviewx-ai.appspot.com",
   messagingSenderId: "891213629097",
