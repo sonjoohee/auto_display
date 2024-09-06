@@ -18,6 +18,7 @@ import {
   SELECTED_ADDITIONAL_KEYWORD2,
   SELECTED_ADDITIONAL_KEYWORD3,
   EXPERT_BUTTON_STATE,
+  IS_LOADING,
 } from "../../../AtomStates";
 
 const OrganismBizExpertSelect = ({ conversationId }) => {
@@ -60,21 +61,25 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
   const [expertButtonState, setExpertButtonState] =
     useAtom(EXPERT_BUTTON_STATE); // 추가된 부분
 
-  const handledExpertSelect = (index) => {
-    setSelectedExpertIndex(index);
-    setIsClickExpertSelect(true);
-    setConversationStage(2); // stage를 2로 설정
-    setAddtionalQuestion1("");
-    setAddtionalQuestion2("");
-    setAddtionalQuestion3("");
-    setExpertButtonState(1);
+  const [isLoading, setIsLoading] = useAtom(IS_LOADING);
 
-    if (index === "1") {
-      setSelectedAdditionalKeyword1("");
-    } else if (index === "2") {
-      setSelectedAdditionalKeyword2("");
-    } else if (index === "3") {
-      setSelectedAdditionalKeyword3("");
+  const handledExpertSelect = (index) => {
+    if(!isLoading) {
+      setSelectedExpertIndex(index);
+      setIsClickExpertSelect(true);
+      setConversationStage(2); // stage를 2로 설정
+      setAddtionalQuestion1("");
+      setAddtionalQuestion2("");
+      setAddtionalQuestion3("");
+      setExpertButtonState(1);
+
+      if (index === "1") {
+        setSelectedAdditionalKeyword1("");
+      } else if (index === "2") {
+        setSelectedAdditionalKeyword2("");
+      } else if (index === "3") {
+        setSelectedAdditionalKeyword3("");
+      }
     }
   };
 
