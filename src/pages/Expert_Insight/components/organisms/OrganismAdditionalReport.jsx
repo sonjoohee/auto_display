@@ -242,11 +242,11 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
             />
           ))}
 
-          <MoleculeReportController
+          {!isLoading && <MoleculeReportController
             reportIndex={2}
             conversationId={conversationId}
             sampleData={answerData}
-          />
+          />}
         </>
       )}
     </AnalysisSection>
