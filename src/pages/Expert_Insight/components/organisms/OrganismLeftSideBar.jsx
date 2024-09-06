@@ -499,7 +499,10 @@ useEffect(() => {
                       <p onClick={() => handleReportClick(report.id)}>
                         {report.business_info}
                       </p>
-                      <span onClick={() => insightEditBoxToggle(index)}>
+                      <span 
+                            style={{ display: 'inline-block', padding: '10px', cursor: 'pointer' }} 
+                            onClick={() => insightEditBoxToggle(index)}
+                          >
                       <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="14"
@@ -576,7 +579,10 @@ useEffect(() => {
                         <p onClick={() => handleConversationClick(chat.id)}>
                           {chat.business_info}
                         </p>
-                        <span onClick={() => editBoxToogle(index)}>
+                        <span 
+                            style={{ display: 'inline-block', padding: '10px', cursor: 'pointer' }} 
+                            onClick={() => editBoxToogle(index)}
+                          >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="14"
