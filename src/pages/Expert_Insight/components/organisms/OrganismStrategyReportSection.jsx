@@ -41,7 +41,7 @@ import {
 } from "../../../AtomStates";
 
 const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
-  console.log("🚀 ~ OrganismStrategyReportSection ~ expertIndex:", expertIndex);
+  // console.log("🚀 ~ OrganismStrategyReportSection ~ expertIndex:", expertIndex);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [approachPath] = useAtom(APPROACH_PATH);
   const [conversation, setConversation] = useAtom(CONVERSATION);
@@ -101,8 +101,8 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   };
 
   const strategyReportAtom =
-    strategyReportAtomMap[expertIndex] || EXPERT3_REPORT_DATA;
-  const sampleData = sampleDataMap[expertIndex] || sampleData3;
+    strategyReportAtomMap[selectedExpertIndex] || EXPERT3_REPORT_DATA;
+  const sampleData = sampleDataMap[selectedExpertIndex] || sampleData3;
 
   const [strategyReportData, setStrategyReportData] =
     useAtom(strategyReportAtom);
@@ -119,14 +119,18 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             conversationId,
             isLoggedIn
           );
-          let currentReportKey = `strategyReportData_EX${expertIndex}`;
+          let currentReportKey = `strategyReportData_EX${selectedExpertIndex}`;
 
-          console.log("🚀 ~ loadData ~ currentReportKey:", currentReportKey);
+          console.log(
+            "🚀 ~ loadData ~ existingConversation:",
+            existingConversation
+          );
+          // console.log("🚀 ~ loadData ~ currentReportKey:", currentReportKey);
           if (
             existingConversation &&
             existingConversation[currentReportKey] &&
             existingConversation[currentReportKey].expert_id ===
-              parseInt(expertIndex, 10)
+              parseInt(selectedExpertIndex, 10)
           ) {
             const strategyData = existingConversation[currentReportKey];
             setStrategyReportData(strategyData);
@@ -134,21 +138,18 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             setSections(strategyData.tabs[selectedTab].sections);
           } else if (Object.keys(strategyReportData).length >= 0) {
             const data = {
-              expert_id: expertIndex,
+              expert_id: selectedExpertIndex,
               business_info: titleOfBusinessInfo, // DB에서 가져온 titleOfBusinessInfo 사용
               business_analysis_data: {
                 명칭: analysisReportData.title,
-                개요: {
-                  주요_목적_및_특징: analysisReportData.mainFeatures.map(
-                    (feature) => feature.기능
-                  ),
-                },
-                주요기능: analysisReportData.mainFeatures,
+                주요_목적_및_특징: analysisReportData.mainFeatures,
+                주요기능: analysisReportData.mainCharacter,
                 목표고객: analysisReportData.mainCustomer,
               },
               tabs: [],
               page_index: 1,
             };
+            // console.log("🚀 ~ loadData ~ data:", data);
 
             const response1 = await axios.post(
               "https://wishresearch.kr/panels/expert",
@@ -157,6 +158,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             );
 
             finalResponse = response1.data;
+            // console.log("🚀 ~ loadData ~ finalResponse:", finalResponse);
 
             if (finalResponse.total_page_index === 2) {
               const response2 = await axios.post(
@@ -182,7 +184,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             // console.log("Final response data:", finalResponse);
 
             const strategyData = finalResponse;
-            console.log("🚀 ~ loadData ~ strategyData:", strategyData);
+            // console.log("🚀 ~ loadData ~ strategyData:", strategyData);
 
             setStrategyReportData(strategyData);
             setTabs(strategyData.tabs);
@@ -200,13 +202,17 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               [currentReportKey]: strategyData,
               timestamp: Date.now(),
             };
+            // console.log(
+            //   "🚀 ~ loadData ~ existingConversation:",
+            //   existingConversation
+            // );
+            // console.log(
+            //   "🚀 ~ loadData ~ updatedConversation:",
+            //   updatedConversation
+            // );
+
             await saveConversationToIndexedDB(
-              {
-                id: conversationId,
-                analysisReportData,
-                [currentReportKey]: strategyData,
-                timestamp: Date.now(),
-              },
+              updatedConversation,
               isLoggedIn,
               conversationId
             );
@@ -228,17 +234,29 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
           },
           { type: `keyword` }
         );
+        const existingConversation2 = await getConversationByIdFromIndexedDB(
+          conversationId,
+          isLoggedIn
+        );
+        const updatedConversation2 = {
+          ...existingConversation2,
+          conversation: updatedConversation,
+          timestamp: Date.now(),
+        };
+
+        // console.log(
+        //   "🚀 ~ loadData ~ existingConversation2:",
+        //   existingConversation2
+        // );
+        // console.log(
+        //   "🚀 ~ loadData ~ updatedConversation2:",
+        //   updatedConversation2
+        // );
         setConversation(updatedConversation);
-        const currentReportKey = `strategyReportData_EX${expertIndex}`;
+        const currentReportKey = `strategyReportData_EX${selectedExpertIndex}`;
         const strategyData = finalResponse;
         await saveConversationToIndexedDB(
-          {
-            id: conversationId,
-            analysisReportData,
-            conversation: updatedConversation, // 여기서는 { updatedConversation }가 아니라 그대로 updatedConversation로 넘겨야 함
-            [currentReportKey]: strategyData,
-            timestamp: Date.now(),
-          },
+          updatedConversation2,
           isLoggedIn,
           conversationId
         );
