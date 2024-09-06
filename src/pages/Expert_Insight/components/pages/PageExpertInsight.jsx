@@ -26,6 +26,7 @@ import {
   CONVERSATION,
   BUTTON_STATE,
   isLoggedInAtom,
+  CONVERSATION_ID,
 } from "../../../AtomStates";
 
 import {
@@ -51,10 +52,11 @@ const PageExpertInsight = () => {
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
 
   const navigate = useNavigate();
-  const { conversationId: paramConversationId } = useParams();
-  const [conversationId, setConversationId] = useState(
-    paramConversationId || nanoid()
-  );
+  const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
+  // const { conversationId: paramConversationId } = useParams();
+  // const [conversationId, setConversationId] = useState(
+  //   paramConversationId || nanoid()
+  // );
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [inputBusinessInfo, setInputBusinessInfo] =
@@ -188,9 +190,9 @@ const PageExpertInsight = () => {
     const updatedSelectedAdditionalKeyword =
       existingData?.selectedAdditionalKeyword
         ? [
-          ...existingData.selectedAdditionalKeyword,
-          ...selectedAdditionalKeyword,
-        ]
+            ...existingData.selectedAdditionalKeyword,
+            ...selectedAdditionalKeyword,
+          ]
         : selectedAdditionalKeyword;
 
     saveConversationToIndexedDB(
@@ -215,8 +217,12 @@ const PageExpertInsight = () => {
       // 1. 로그인 여부 확인
       if (isLoggedIn) {
         // 2. 로그인 상태라면 서버에서 새로운 대화 ID를 생성하거나, 저장된 대화를 불러옴
-        if (!paramConversationId) {
-          console.log("paramConversationId219")
+        if (!conversationId) {
+          console.log(
+            "🚀 ~ 없을때 loadConversation ~ conversationId:",
+            conversationId
+          );
+          // console.log("paramConversationId219");
           try {
             // 서버에서 새로운 대화 ID 생성
             const newConversationId = await createChatOnServer();
@@ -232,9 +238,15 @@ const PageExpertInsight = () => {
           }
         } else {
           // 3. 대화 ID가 이미 존재하면 IndexedDB에서 대화 불러오기
+
+          console.log(
+            "🚀 ~ id 있을떄 loadConversation ~ conversationId:",
+            conversationId
+          );
           const savedConversation = await getConversationByIdFromIndexedDB(
             conversationId
           );
+
           if (savedConversation) {
             const analysisData = savedConversation.analysisReportData || {};
             setTitleOfBusinessInfo(analysisData.title || "");
@@ -287,8 +299,8 @@ const PageExpertInsight = () => {
         }
       } else {
         // 4. 비로그인 상태인 경우, 새로운 로컬 대화 ID 생성 또는 기존 대화 로드
-        if (!paramConversationId) {
-          console.log("paramConversationId291")
+        if (!conversationId) {
+          console.log("paramConversationId291");
           setConversationId(nanoid()); // 비로그인 시 로컬에서 새로운 ID 생성
           setIsLoading(false); // 로딩 완료
           navigate(`/conversation/${conversationId}`, { replace: true });
@@ -351,7 +363,7 @@ const PageExpertInsight = () => {
 
     loadConversation();
   }, [
-    paramConversationId,
+    // paramConversationId,
     conversationId,
     isLoggedIn,
     // conversation,
@@ -400,10 +412,10 @@ const PageExpertInsight = () => {
 
   useEffect(() => {
     if (
-      conversationId &&
-      conversationId.length >= 2 &&
-      selectedAdditionalKeyword,
-      !isLoading
+      (conversationId &&
+        conversationId.length >= 2 &&
+        selectedAdditionalKeyword,
+      !isLoading)
     ) {
       handleSearch(-1);
     }
@@ -441,7 +453,7 @@ const PageExpertInsight = () => {
 
   const handleSearch = async (inputValue) => {
     if (isLoggedIn) {
-      if (!paramConversationId) {
+      if (!conversationId) {
         try {
           // // 로그인 상태에서 새로운 대화 ID를 서버에서 생성
           // const newConversationId = await createChatOnServer();
@@ -508,10 +520,10 @@ const PageExpertInsight = () => {
       if (
         (updatedConversation.length > 0 &&
           updatedConversation[updatedConversation.length - 1].type ===
-          "keyword") ||
+            "keyword") ||
         (updatedConversation.length > 0 &&
           updatedConversation[updatedConversation.length - 1].type ===
-          "report_button")
+            "report_button")
       ) {
         updatedConversation.pop();
       }
@@ -586,7 +598,7 @@ const PageExpertInsight = () => {
             selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]
           }"를 요청드려요`,
         },
-      { type: `addition_${selectedExpertIndex}` },
+        { type: `addition_${selectedExpertIndex}` }
       );
 
       setAdditionalReportCount(additionalReportCount + 1);
@@ -620,11 +632,11 @@ const PageExpertInsight = () => {
 
   const getInitialSystemMessage = () => {
     switch (selectedExpertIndex) {
-      case '1':
+      case "1":
         return "안녕하세요! 저는 전략 전문가 김도원입니다. 😊 여러분의 아이디어를 구체화하고, 성공적인 전략을 세우는 데 도움을 드리겠습니다.\n아이디어나 비즈니스 아이템을 간단히 작성해 주세요. 분석 후, 여러분의 비즈니스에 맞는 전략 리포트를 제공하겠습니다!";
-      case '2':
+      case "2":
         return "안녕하세요! 마케팅 전문가 이지현입니다. 😄 여러분의 아이디어를 효과적으로 시장에 알릴 수 있는 전략을 함께 고민해 보아요.\n아이디어나 비즈니스 아이템을 여기에 작성해 주세요. 제가 분석하고, 효과적인 마케팅 전략 리포트를 준비해 드리겠습니다!";
-      case '3':
+      case "3":
         return "반갑습니다! 저는 고객 인사이트 전문가 박서연입니다. 😊 여러분의 비즈니스가 목표 고객에게 잘 다가갈 수 있도록 돕겠습니다.\n아이디어나 비즈니스 아이템을 작성해 주세요. 분석 후, 타겟 고객을 정의하고 세분화 방법에 대한 리포트를 제공해 드리겠습니다!";
       default:
         return "비즈니스(아이디어)를 입력해주세요.";
@@ -698,12 +710,14 @@ const PageExpertInsight = () => {
                   Object.keys(expert3ReportData).length === 0) && (
                   <OrganismBizExpertSelect />
                 )} */}
-              {approachPath === -1 && conversationStage === 2 &&
+              {approachPath === -1 && conversationStage === 2 && (
                 <OrganismBizExpertSelect />
-              }
+              )}
             </ChatWrap>
 
-            {approachPath === 1 && conversationStage == 1 && <OrganismSearchBottomBar onSearch={handleSearch} />}
+            {approachPath === 1 && conversationStage == 1 && (
+              <OrganismSearchBottomBar onSearch={handleSearch} />
+            )}
           </div>
 
           <OrganismRightSideBar />
