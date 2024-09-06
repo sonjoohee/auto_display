@@ -20,8 +20,10 @@ const firebaseConfig = {
   measurementId: "G-SN827DGF8N",
 };
 // Firebase 초기화
+firebase.initializeApp(firebaseConfig);
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
+// const provider = new GoogleAuthProvider();
+const provider = new firebase.auth.GoogleAuthProvider();
 
 export { auth, provider };
