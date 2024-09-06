@@ -749,10 +749,10 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
           </p>
           {warningMessage && <WarningMessage>{warningMessage}</WarningMessage>}{" "}
           {/* 경고 메시지 출력 */}
-          <MoleculeReportController
+          {!isLoading && <MoleculeReportController
             reportIndex={0}
             conversationId={conversationId}
-          />
+          />}
         </>
       )}
     </AnalysisSection>
