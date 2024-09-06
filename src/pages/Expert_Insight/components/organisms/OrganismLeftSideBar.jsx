@@ -508,12 +508,8 @@ const OrganismLeftSideBar = () => {
                       <p onClick={() => handleReportClick(report.id)}>
                         {report.business_info}
                       </p>
-                      <span 
-                            style={{ display: 'inline-block', padding: '10px', cursor: 'pointer' }} 
-                            onClick={() => insightEditBoxToggle(index)}
-                          >
-                      <svg
-
+                      <span onClick={() => insightEditBoxToggle(index)}>
+                        <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="14"
                           height="3"
@@ -594,10 +590,7 @@ const OrganismLeftSideBar = () => {
                         <p onClick={() => handleConversationClick(chat.id)}>
                           {chat.business_info}
                         </p>
-                        <span 
-                            style={{ display: 'inline-block', padding: '10px', cursor: 'pointer' }} 
-                            onClick={() => editBoxToogle(index)}
-                          >
+                        <span onClick={() => editBoxToogle(index)}>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="14"

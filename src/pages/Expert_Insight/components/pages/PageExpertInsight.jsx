@@ -112,6 +112,14 @@ const PageExpertInsight = () => {
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
 
+  useEffect(() => {
+    // 로그아웃 상태가 되면 페이지MeetAiExpert로 리디렉션
+    if (!isLoggedIn) {
+      alert("로그인 후 사용해 주세요"); // 경고창 추가
+      navigate('/PageMeetAiExpert');
+    }
+  }, [isLoggedIn, navigate]);
+
   // setConversation([]);
   // setConversationStage(1);
   // setInputBusinessInfo("");
