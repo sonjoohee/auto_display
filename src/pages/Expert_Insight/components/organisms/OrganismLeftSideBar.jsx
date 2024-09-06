@@ -183,50 +183,50 @@ useEffect(() => {
     loadConversations();
   }, []);
 
-  // // 대화 리스트 가져오기 (챗 리스트)
-  // useEffect(() => {
-  //   const fetchChatList = async () => {
-  //     try {
-  //       const accessToken = sessionStorage.getItem("accessToken");
-  //       const response = await axios.get(
-  //         "https://wishresearch.kr/panels/chat_list",
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${accessToken}`,
-  //           },
-  //         }
-  //       );
-  //       setChatList(response.data); // 서버에서 받은 대화 리스트 저장
+  // 대화 리스트 가져오기 (챗 리스트)
+  useEffect(() => {
+    const fetchChatList = async () => {
+      try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        const response = await axios.get(
+          "https://wishresearch.kr/panels/chat_list",
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        setChatList(response.data); // 서버에서 받은 대화 리스트 저장
         
-  //       // setChatList(response.chat_data); // 서버에서 받은 대화 리스트 저장
-  //     } catch (error) {
-  //       console.error("대화 목록 가져오기 오류:", error);
-  //     }
-  //   };
-  //   fetchChatList();
-  // }, []);
+        // setChatList(response.chat_data); // 서버에서 받은 대화 리스트 저장
+      } catch (error) {
+        console.error("대화 목록 가져오기 오류:", error);
+      }
+    };
+    fetchChatList();
+  }, []);
 
 
-  // useEffect(() => {
-  //   // 서버에서 보고서 목록을 가져오는 함수
-  //   const fetchReports = async () => {
-  //     try {
-  //       const accessToken = sessionStorage.getItem("accessToken"); // 저장된 토큰 가져오기
-  //       const response = await axios.get(
-  //         "https://wishresearch.kr/panels/insight_list",
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${accessToken}`,
-  //           },
-  //         }
-  //       );
-  //       setReports(response.data); // 보고서 리스트를 상태로 설정
-  //     } catch (error) {
-  //       console.error("보고서 목록 가져오기 오류:", error);
-  //     }
-  //   };
-  //   fetchReports();
-  // }, []);
+  useEffect(() => {
+    // 서버에서 보고서 목록을 가져오는 함수
+    const fetchReports = async () => {
+      try {
+        const accessToken = sessionStorage.getItem("accessToken"); // 저장된 토큰 가져오기
+        const response = await axios.get(
+          "https://wishresearch.kr/panels/insight_list",
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        setReports(response.data); // 보고서 리스트를 상태로 설정
+      } catch (error) {
+        console.error("보고서 목록 가져오기 오류:", error);
+      }
+    };
+    fetchReports();
+  }, []);
 
   // const handleConversationClick = (id) => {
   //   // 클릭 시 해당 대화로 이동
