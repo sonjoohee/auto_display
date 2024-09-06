@@ -436,12 +436,12 @@ const PageExpertInsight = () => {
     if (isLoggedIn) {
       if (!paramConversationId) {
         try {
-          // 로그인 상태에서 새로운 대화 ID를 서버에서 생성
-          const newConversationId = await createChatOnServer();
-          setConversationId(newConversationId); // 생성된 대화 ID 설정
-          console.log("newConversationId", newConversationId);
-          // 새로운 대화 ID로 경로 변경
-          navigate(`/conversation/${newConversationId}`, { replace: true });
+          // // 로그인 상태에서 새로운 대화 ID를 서버에서 생성
+          // const newConversationId = await createChatOnServer();
+          // setConversationId(newConversationId); // 생성된 대화 ID 설정
+          // console.log("newConversationId", newConversationId);
+          // // 새로운 대화 ID로 경로 변경
+          // navigate(`/conversation/${newConversationId}`, { replace: true });
           return; // 새로운 대화 생성 후 return
         } catch (error) {
           console.error("Failed to create conversation on server:", error);
