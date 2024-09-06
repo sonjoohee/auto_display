@@ -692,16 +692,13 @@ const PageExpertInsight = () => {
                 return null;
               })}
 
-              {/* {approachPath === -1 &&
+              {approachPath === -1 &&
                 inputBusinessInfo &&
                 (Object.keys(expert1ReportData).length === 0 ||
                   Object.keys(expert2ReportData).length === 0 ||
                   Object.keys(expert3ReportData).length === 0) && (
                   <OrganismBizExpertSelect />
-                )} */}
-              {approachPath === -1 && conversationStage === 2 &&
-                <OrganismBizExpertSelect />
-              }
+                )}
             </ChatWrap>
 
             {approachPath === 1 && conversationStage == 1 && <OrganismSearchBottomBar onSearch={handleSearch} />}
