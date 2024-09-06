@@ -112,6 +112,14 @@ const PageExpertInsight = () => {
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
 
+  useEffect(() => {
+    // 로그아웃 상태가 되면 페이지MeetAiExpert로 리디렉션
+    if (!isLoggedIn) {
+      alert("로그인 후 사용해 주세요"); // 경고창 추가
+      navigate('/PageMeetAiExpert');
+    }
+  }, [isLoggedIn, navigate]);
+
   // setConversation([]);
   // setConversationStage(1);
   // setInputBusinessInfo("");
@@ -216,6 +224,7 @@ const PageExpertInsight = () => {
       if (isLoggedIn) {
         // 2. 로그인 상태라면 서버에서 새로운 대화 ID를 생성하거나, 저장된 대화를 불러옴
         if (!paramConversationId) {
+          console.log("paramConversationId219")
           try {
             // 서버에서 새로운 대화 ID 생성
             const newConversationId = await createChatOnServer();
@@ -287,6 +296,7 @@ const PageExpertInsight = () => {
       } else {
         // 4. 비로그인 상태인 경우, 새로운 로컬 대화 ID 생성 또는 기존 대화 로드
         if (!paramConversationId) {
+          console.log("paramConversationId291")
           setConversationId(nanoid()); // 비로그인 시 로컬에서 새로운 ID 생성
           setIsLoading(false); // 로딩 완료
           navigate(`/conversation/${conversationId}`, { replace: true });
@@ -568,17 +578,17 @@ const PageExpertInsight = () => {
         setSelectedAdditionalKeyword(updatedKeywords);
       }
 
-      updatedConversation.push(
-        {
-          type: "user",
-          message: `제 프로젝트와 관련된 "${
-            selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]
-          }"를 요청드려요`,
-        },
-        { type: `addition_${selectedExpertIndex}` }
+      // updatedConversation.push(
+      //   {
+      //     type: "user",
+      //     message: `제 프로젝트와 관련된 "${
+      //       selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]
+      //     }"를 요청드려요`,
+      //   },
+      //   { type: `addition_${selectedExpertIndex}` }
         // { type: 'system', message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${selectedAdditionalKeyword[selectedAdditionalKeyword.length-1]}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻` },
         // { type: `keyword` },
-      );
+      // );
 
       setAdditionalReportCount(additionalReportCount + 1);
     }
@@ -628,7 +638,7 @@ const PageExpertInsight = () => {
   return (
     <>
       <ContentsWrap>
-        <OrganismLeftSideBar />
+        <OrganismLeftSideBar/>
 
         <MainContent>
           <div>
@@ -691,7 +701,7 @@ const PageExpertInsight = () => {
                 )}
             </ChatWrap>
 
-            <OrganismSearchBottomBar onSearch={handleSearch} />
+            {approachPath === 1 && conversationStage == 1 && <OrganismSearchBottomBar onSearch={handleSearch} />}
           </div>
 
           <OrganismRightSideBar />

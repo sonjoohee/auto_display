@@ -96,8 +96,8 @@ const MoleculeLoginForm = () => {
           // 유저 정보 (이름과 이메일)를 아톰에 저장
           setUserName(userInfo.name); // 아톰에 유저 이름 저장
           setUserEmail(userInfo.email); // 아톰에 유저 이메일 저장
-          localStorage.setItem("userName", userInfo.name);
-          localStorage.setItem("userEmail", userInfo.email);
+          sessionStorage.setItem("userName", userInfo.name);
+          sessionStorage.setItem("userEmail", userInfo.email);
           // 로그인 성공 처리
           setIsLoggedIn(true);
           setLoginSuccess(true);
