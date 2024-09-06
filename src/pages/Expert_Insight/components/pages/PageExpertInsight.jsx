@@ -116,7 +116,7 @@ const PageExpertInsight = () => {
     // 로그아웃 상태가 되면 페이지MeetAiExpert로 리디렉션
     if (!isLoggedIn) {
       alert("로그인 후 사용해 주세요"); // 경고창 추가
-      navigate('/PageMeetAiExpert');
+      navigate("/PageMeetAiExpert");
     }
   }, [isLoggedIn, navigate]);
 
@@ -145,11 +145,11 @@ const PageExpertInsight = () => {
   // 현재 선택된 전문가에 맞는 보고서 데이터를 결정
   const getStrategyReportData = () => {
     switch (selectedExpertIndex) {
-      case 1:
+      case "1":
         return expert1ReportData;
-      case 2:
+      case "2":
         return expert2ReportData;
-      case 3:
+      case "3":
         return expert3ReportData;
       default:
         return {};
@@ -158,13 +158,13 @@ const PageExpertInsight = () => {
 
   const setStrategyReportData = (data) => {
     switch (selectedExpertIndex) {
-      case 1:
+      case "1":
         setExpert1ReportData(data);
         break;
-      case 2:
+      case "2":
         setExpert2ReportData(data);
         break;
-      case 3:
+      case "3":
         setExpert3ReportData(data);
         break;
       default:
@@ -224,7 +224,7 @@ const PageExpertInsight = () => {
       if (isLoggedIn) {
         // 2. 로그인 상태라면 서버에서 새로운 대화 ID를 생성하거나, 저장된 대화를 불러옴
         if (!paramConversationId) {
-          console.log("paramConversationId219")
+          console.log("paramConversationId219");
           try {
             // 서버에서 새로운 대화 ID 생성
             const newConversationId = await createChatOnServer();
@@ -296,7 +296,7 @@ const PageExpertInsight = () => {
       } else {
         // 4. 비로그인 상태인 경우, 새로운 로컬 대화 ID 생성 또는 기존 대화 로드
         if (!paramConversationId) {
-          console.log("paramConversationId291")
+          console.log("paramConversationId291");
           setConversationId(nanoid()); // 비로그인 시 로컬에서 새로운 ID 생성
           setIsLoading(false); // 로딩 완료
           navigate(`/conversation/${conversationId}`, { replace: true });
@@ -586,8 +586,8 @@ const PageExpertInsight = () => {
       //     }"를 요청드려요`,
       //   },
       //   { type: `addition_${selectedExpertIndex}` }
-        // { type: 'system', message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${selectedAdditionalKeyword[selectedAdditionalKeyword.length-1]}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻` },
-        // { type: `keyword` },
+      // { type: 'system', message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${selectedAdditionalKeyword[selectedAdditionalKeyword.length-1]}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻` },
+      // { type: `keyword` },
       // );
 
       setAdditionalReportCount(additionalReportCount + 1);
@@ -621,11 +621,11 @@ const PageExpertInsight = () => {
 
   const getInitialSystemMessage = () => {
     switch (selectedExpertIndex) {
-      case 1:
+      case "1":
         return "안녕하세요! 저는 전략 전문가 김도원입니다. 😊 여러분의 아이디어를 구체화하고, 성공적인 전략을 세우는 데 도움을 드리겠습니다.\n아이디어나 비즈니스 아이템을 간단히 작성해 주세요. 분석 후, 여러분의 비즈니스에 맞는 전략 리포트를 제공하겠습니다!";
-      case 2:
+      case "2":
         return "안녕하세요! 마케팅 전문가 이지현입니다. 😄 여러분의 아이디어를 효과적으로 시장에 알릴 수 있는 전략을 함께 고민해 보아요.\n아이디어나 비즈니스 아이템을 여기에 작성해 주세요. 제가 분석하고, 효과적인 마케팅 전략 리포트를 준비해 드리겠습니다!";
-      case 3:
+      case "3":
         return "반갑습니다! 저는 고객 인사이트 전문가 박서연입니다. 😊 여러분의 비즈니스가 목표 고객에게 잘 다가갈 수 있도록 돕겠습니다.\n아이디어나 비즈니스 아이템을 작성해 주세요. 분석 후, 타겟 고객을 정의하고 세분화 방법에 대한 리포트를 제공해 드리겠습니다!";
       default:
         return "비즈니스(아이디어)를 입력해주세요.";
@@ -638,12 +638,12 @@ const PageExpertInsight = () => {
   return (
     <>
       <ContentsWrap>
-        <OrganismLeftSideBar/>
+        <OrganismLeftSideBar />
 
         <MainContent>
           <div>
             <ChatWrap className={isScrolled ? "scrolled" : ""}>
-              <MoleculeBizName date={Date.now()}/>
+              <MoleculeBizName date={Date.now()} />
               {conversation.map((item, index) => {
                 if (item.type === "user") {
                   return (
@@ -701,7 +701,9 @@ const PageExpertInsight = () => {
                 )}
             </ChatWrap>
 
-            {approachPath === 1 && conversationStage == 1 && <OrganismSearchBottomBar onSearch={handleSearch} />}
+            {approachPath === 1 && conversationStage == 1 && (
+              <OrganismSearchBottomBar onSearch={handleSearch} />
+            )}
           </div>
 
           <OrganismRightSideBar />
