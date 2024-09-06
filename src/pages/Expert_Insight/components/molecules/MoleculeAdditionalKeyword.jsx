@@ -63,13 +63,8 @@ const MoleculeAdditionalKeyword = () => {
 
   const updateSelectedAdditionalKeyword = (keyword) => {
     const updatedKeywords = [...selectedAdditionalKeyword];
-    console.log(
-      "🚀 ~ updateSelectedAdditionalKeyword ~ updatedKeywords:",
-      updatedKeywords
-    );
     updatedKeywords.push(keyword); // Add the keyword to the end of the array
     setSelectedAdditionalKeyword(updatedKeywords);
-
     setButtonState(1); // 버튼 클릭 시 buttonState를 1로 설정
   };
 
