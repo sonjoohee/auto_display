@@ -188,9 +188,9 @@ const PageExpertInsight = () => {
     const updatedSelectedAdditionalKeyword =
       existingData?.selectedAdditionalKeyword
         ? [
-            ...existingData.selectedAdditionalKeyword,
-            ...selectedAdditionalKeyword,
-          ]
+          ...existingData.selectedAdditionalKeyword,
+          ...selectedAdditionalKeyword,
+        ]
         : selectedAdditionalKeyword;
 
     saveConversationToIndexedDB(
@@ -402,13 +402,18 @@ const PageExpertInsight = () => {
     if (
       conversationId &&
       conversationId.length >= 2 &&
-      selectedAdditionalKeyword.length > 0 &&
+      selectedAdditionalKeyword,
       !isLoading
     ) {
-      console.log(22222222);
       handleSearch(-1);
     }
   }, [selectedAdditionalKeyword, isLoading]);
+  // useEffect(() => {
+  //   console.log(22222222)
+  //   if (selectedAdditionalKeyword) handleSearch(-1);
+  // }, [
+  //   selectedAdditionalKeyword,
+  // ]);
 
   useEffect(() => {
     if (
@@ -451,7 +456,6 @@ const PageExpertInsight = () => {
         }
       }
     }
-
     const updatedConversation = [...conversation];
 
     // 사용자가 입력한 경우에만 inputBusinessInfo를 업데이트
@@ -504,10 +508,10 @@ const PageExpertInsight = () => {
       if (
         (updatedConversation.length > 0 &&
           updatedConversation[updatedConversation.length - 1].type ===
-            "keyword") ||
+          "keyword") ||
         (updatedConversation.length > 0 &&
           updatedConversation[updatedConversation.length - 1].type ===
-            "report_button")
+          "report_button")
       ) {
         updatedConversation.pop();
       }
@@ -569,18 +573,21 @@ const PageExpertInsight = () => {
         updatedKeywords[0] = inputValue;
         setSelectedAdditionalKeyword(updatedKeywords);
       }
-
-      // updatedConversation.push(
-      //   {
-      //     type: "user",
-      //     message: `제 프로젝트와 관련된 "${
-      //       selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]
-      //     }"를 요청드려요`,
-      //   },
-      //   { type: `addition_${selectedExpertIndex}` }
-        // { type: 'system', message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${selectedAdditionalKeyword[selectedAdditionalKeyword.length-1]}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻` },
-        // { type: `keyword` },
-      // );
+      // if (!areArraysEqual(selectedAdditionalKeyword, [inputValue])) {
+      //   const updatedKeywords = [...selectedAdditionalKeyword];
+      //   updatedKeywords[0] = inputValue;
+      //   setSelectedAdditionalKeyword(updatedKeywords);
+      //   console.log("+++여기+++");
+      // }
+      updatedConversation.push(
+        {
+          type: "user",
+          message: `제 프로젝트와 관련된 "${
+            selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]
+          }"를 요청드려요`,
+        },
+      { type: `addition_${selectedExpertIndex}` },
+      );
 
       setAdditionalReportCount(additionalReportCount + 1);
     }
@@ -630,12 +637,12 @@ const PageExpertInsight = () => {
   return (
     <>
       <ContentsWrap>
-        <OrganismLeftSideBar/>
+        <OrganismLeftSideBar />
 
         <MainContent>
           <div>
             <ChatWrap className={isScrolled ? "scrolled" : ""}>
-              <MoleculeBizName date={Date.now()}/>
+              <MoleculeBizName date={Date.now()} />
               {conversation.map((item, index) => {
                 if (item.type === "user") {
                   return (
@@ -662,18 +669,18 @@ const PageExpertInsight = () => {
                   );
                 } else if (item.type.startsWith("addition_")) {
                   // console.log("🚀 ~ {conversation.map ~ item:", item, index);
-                  const expertIndex = item.type.split("_")[1];
+                  // const expertIndex = item.type.split("_")[1];
 
                   return (
                     <OrganismAdditionalReport
-                      key={`addition_${expertIndex}_${index}`}
+                      // key={`addition_${expertIndex}_${index}`}
                       conversationId={conversationId}
-                      expertIndex={expertIndex}
-                      keyword={
-                        selectedAdditionalKeyword[
-                          selectedAdditionalKeyword.length - 1
-                        ]
-                      }
+                      // expertIndex={expertIndex}
+                      // keyword={
+                      //   selectedAdditionalKeyword[
+                      //   selectedAdditionalKeyword.length - 1
+                      //   ]
+                      // }
                     />
                   );
                 } else if (item.type === "keyword") {

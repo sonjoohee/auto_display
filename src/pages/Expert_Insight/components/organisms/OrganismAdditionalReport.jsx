@@ -105,7 +105,7 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
             },
             { type: `keyword` }
           );
-          setConversation(updatedConversation2);
+          setConversation(updatedConversation1);
           await saveConversationToIndexedDB({
             ...existingConversation,
             conversation: updatedConversation1,
