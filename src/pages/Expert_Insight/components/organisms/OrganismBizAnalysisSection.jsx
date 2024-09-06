@@ -189,17 +189,18 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
 
         // 아톰이 업데이트된 후에 analysisReportData를 생성합니다.
         const analysisReportData = {
-          title: businessData["명칭"],
-          mainFeatures: Array.isArray(businessData["주요_목적_및_특징"])
+          title: businessData?.["명칭"] || "No title available", // '명칭' 속성이 없으면 기본값 설정
+          mainFeatures: Array.isArray(businessData?.["주요_목적_및_특징"])
             ? businessData["주요_목적_및_특징"]
             : [],
-          mainCharacter: Array.isArray(businessData["주요기능"])
+          mainCharacter: Array.isArray(businessData?.["주요기능"])
             ? businessData["주요기능"]
             : [],
-          mainCustomer: Array.isArray(businessData["목표고객"])
+          mainCustomer: Array.isArray(businessData?.["목표고객"])
             ? businessData["목표고객"]
             : [],
         };
+        
 
         console.log("OrganismBizAnalysisSectionconversationId")
         console.log(conversationId)
@@ -266,14 +267,14 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
       setConversation(updatedConversation2);
       
       const analysisReportData = {
-        title: businessData["명칭"],
-        mainFeatures: Array.isArray(businessData["주요_목적_및_특징"])
+        title: businessData?.["명칭"] || "No title available", // '명칭' 속성이 없으면 기본값 설정
+        mainFeatures: Array.isArray(businessData?.["주요_목적_및_특징"])
           ? businessData["주요_목적_및_특징"]
           : [],
-        mainCharacter: Array.isArray(businessData["주요기능"])
+        mainCharacter: Array.isArray(businessData?.["주요기능"])
           ? businessData["주요기능"]
           : [],
-        mainCustomer: Array.isArray(businessData["목표고객"])
+        mainCustomer: Array.isArray(businessData?.["목표고객"])
           ? businessData["목표고객"]
           : [],
       };
