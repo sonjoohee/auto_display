@@ -1,6 +1,7 @@
 [
   {
     "id": 1,
+    "images": "/images/expert_1.png",
     "name": "김도원",
     "title": "제품 전략가",
     "description": "네이버 제품 전략 총괄 디렉터",
@@ -46,6 +47,7 @@
   },
   {
     "id": 2,
+    "images": "/images/expert_2.png",
     "name": "이지현",
     "title": "마케팅 구루",
     "description": "제일기획 디지털 마케팅 본부",
@@ -91,6 +93,7 @@
   },
   {
     "id": 3,
+    "images": "/images/expert_3.png",
     "name": "박서연",
     "title": "고객 분석 전문가",
     "description": "CJ ENM 고객경험 혁신센터장",
