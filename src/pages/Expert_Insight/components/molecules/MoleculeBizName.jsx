@@ -47,14 +47,16 @@ const MoleculeBizName = ({ date }) => {
             <img src={images.Graph} alt="" />
           </span>
           <NameTitle Nodata={!inputBusinessInfo}>
-            <strong>
-              {!inputBusinessInfo
-                ? "아이템(아이디어)를 설명해주시면, 분석된 내용이 적용됩니다"
-                : !titleOfBusinessInfo
-                ? inputBusinessInfo
-                : titleOfBusinessInfo}
+            <div>
+              <strong>
+                {!inputBusinessInfo
+                  ? "아이템(아이디어)를 설명해주시면, 분석된 내용이 적용됩니다"
+                  : !titleOfBusinessInfo
+                  ? inputBusinessInfo
+                  : titleOfBusinessInfo}
+              </strong>
               {titleOfBusinessInfo && <Badge>Edited by AI</Badge>}
-            </strong>
+            </div>
             <p>{formatDate("en", date)}</p>
           </NameTitle>
         </div>
@@ -86,6 +88,8 @@ const BizNameContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  // flex-wrap:wrap;
+  gap:20px;
   padding: 16px 20px;
   margin-bottom: 47px;
   text-align: center;
@@ -120,6 +124,7 @@ const BizNameContainer = styled.div`
   > button {
     display: flex;
     align-items: center;
+    flex-shrink:0;
     gap: 8px;
     font-family: "Pretendard", "Poppins";
     font-size: 0.75rem;
@@ -137,7 +142,7 @@ const NameTitle = styled.div`
   flex-direction: column;
   gap: 3px;
 
-  > strong {
+  > div {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -148,6 +153,17 @@ const NameTitle = styled.div`
       if (props.Nodata) return palette.gray;
       else return palette.black;
     }};
+
+    strong {
+      width:100%;
+      overflow:hidden;
+      white-space:normal;
+      text-overflow:ellipsis;
+      display:-webkit-box;
+      -webkit-line-clamp:1;
+      -webkit-box-orient:vertical;
+      word-break: keep-all;
+    }
   }
 
   p {
@@ -158,6 +174,7 @@ const NameTitle = styled.div`
 `;
 
 const Badge = styled.div`
+  flex-shrink:0;
   font-size: 0.63rem;
   font-weight: 400;
   color: ${palette.blue};

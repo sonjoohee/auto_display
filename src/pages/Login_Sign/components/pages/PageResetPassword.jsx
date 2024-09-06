@@ -104,6 +104,7 @@ const ResetPasswordButton = styled.button`
   color: white;
   border: none;
   border-radius: 4px;
+  font-family: 'Pretendard', 'Poppins';
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;

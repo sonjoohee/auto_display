@@ -207,10 +207,15 @@ const StyledInput = styled.input`
   border-radius: 8px;
   border: 1px solid ${palette.lineGray};
   box-sizing: border-box;
+
+  &::placeholder {
+    font-size:0.875rem;
+  }
 `;
 
 const StyledButton = styled.button`
   width: 100%;
+  font-family: 'Pretendard', 'Poppins';
   font-size: 1rem;
   font-weight: 700;
   color: ${palette.white};

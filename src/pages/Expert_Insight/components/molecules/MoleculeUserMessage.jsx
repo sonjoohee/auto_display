@@ -52,7 +52,7 @@ const UserMessageContainer = styled.div`
   }
 
   &:after {
-    content: '';
+    // content: '';
     position: absolute;
     top: 50%;
     right: -10px;
