@@ -633,7 +633,7 @@ const PageExpertInsight = () => {
         <MainContent>
           <div>
             <ChatWrap className={isScrolled ? "scrolled" : ""}>
-              <MoleculeBizName />
+              <MoleculeBizName date={Date.now()}/>
               {conversation.map((item, index) => {
                 if (item.type === "user") {
                   return (
