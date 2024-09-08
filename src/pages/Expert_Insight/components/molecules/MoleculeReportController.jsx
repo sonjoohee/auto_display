@@ -27,6 +27,7 @@ import {
   isLoggedInAtom,
   IS_LOADING,
   REPORT_REFRESH_TRIGGER,
+
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -197,6 +198,7 @@ const MoleculeReportController = ({
     const updatedConversation = {
       ...existingConversation,
       analysisReportData,
+      expert_index: selectedExpertIndex,
       timestamp: Date.now(),
     };
 
@@ -305,6 +307,7 @@ const MoleculeReportController = ({
               ? reportData
               : existingConversation.additionalReportData,
           timestamp: Date.now(),
+          expert_index: selectedExpertIndex,
         };
 
         await saveConversationToIndexedDB(
@@ -313,6 +316,7 @@ const MoleculeReportController = ({
           conversationId
         );
         setReportRefreshTrigger((prev) => !prev);  // 트리거 상태를 반전시켜 OrganismLeftSideBar가 새로고침되도록 설정
+
       } else {
         console.error("API 응답 에러", response.status);
       }
@@ -448,6 +452,7 @@ const MoleculeReportController = ({
           mainCustomer: [],
         },
         timestamp: Date.now(),
+        expert_index: selectedExpertIndex,
       },
       isLoggedIn,
       conversationId
@@ -560,6 +565,7 @@ const MoleculeReportController = ({
       ...existingConversation,
       analysisReportData,
       timestamp: Date.now(),
+      expert_index: selectedExpertIndex,
     };
     await saveConversationToIndexedDB(updatedConversation);
     console.log("___________기초보고서_____________");

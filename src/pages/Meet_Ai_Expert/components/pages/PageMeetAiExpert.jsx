@@ -121,14 +121,14 @@ const PageMeetAiExpert = () => {
   };
   useEffect(() => {
     setConversation([]);
-    // setConversationId("");
+    setConversationId(null);
     setConversationStage(1);
     setInputBusinessInfo("");
     setTitleOfBusinessInfo("");
     setMainFeaturesOfBusinessInformation([]);
     setMainCharacteristicOfBusinessInformation([]);
     setBusinessInformationTargetCustomer([]);
-    setSelectedExpertIndex("1");
+    setSelectedExpertIndex("0");
     setSections([]);
     setAdditionalReportCount(0);
     setSelectedAdditionalKeyword([]);

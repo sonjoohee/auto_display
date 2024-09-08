@@ -15,7 +15,6 @@ import {
   APPROACH_PATH,
   IS_LOADING,
   isLoggedInAtom,
-
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -85,10 +84,11 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
 
   useEffect(() => {
     const loadData = async () => {
-      let answerData
+      let answerData;
       try {
         const existingConversation = await getConversationByIdFromIndexedDB(
-          conversationId, isLoggedIn
+          conversationId,
+          isLoggedIn
         );
 
         if (buttonState === 1) {
@@ -106,12 +106,15 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
             { type: `keyword` }
           );
           setConversation(updatedConversation1);
-          await saveConversationToIndexedDB({
-            ...existingConversation,
-            conversation: updatedConversation1,
-            timestamp: Date.now(),
-          }
-          ,isLoggedIn,conversationId
+          await saveConversationToIndexedDB(
+            {
+              ...existingConversation,
+              conversation: updatedConversation1,
+              timestamp: Date.now(),
+              expert_index: selectedExpertIndex,
+            },
+            isLoggedIn,
+            conversationId
           );
           const keyword = selectedKeywords[selectedKeywords.length - 1]; // Use the keyword based on expertIndex
 
@@ -139,24 +142,26 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
 
           // 새로운 데이터를 배열의 맨 앞에 추가합니다.
           const updatedAdditionalReportData = [
-            answerData,               // 새로 가져온 데이터
-            ...additionalReportData,  // 기존 데이터
+            answerData, // 새로 가져온 데이터
+            ...additionalReportData, // 기존 데이터
           ];
           setAdditionalReportData(updatedAdditionalReportData);
-
 
           const updatedConversation = {
             ...existingConversation,
             additionalReportData: updatedAdditionalReportData, // 전체 리스트를 저장
             timestamp: Date.now(),
           };
-          await saveConversationToIndexedDB({
-            ...existingConversation,
-            // answerData,
-            additionalReportData : updatedAdditionalReportData,
-            timestamp: Date.now(),
-          }
-          ,isLoggedIn,conversationId
+          await saveConversationToIndexedDB(
+            {
+              ...existingConversation,
+              // answerData,
+              additionalReportData: updatedAdditionalReportData,
+              timestamp: Date.now(),
+              expert_index: selectedExpertIndex,
+            },
+            isLoggedIn,
+            conversationId
           );
           setIsLoading(false);
 
@@ -171,13 +176,16 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
             { type: `keyword` }
           );
           setConversation(updatedConversation2);
-          await saveConversationToIndexedDB({
-            ...existingConversation,
-            conversation: updatedConversation2,
-            additionalReportData : updatedAdditionalReportData,
-            timestamp: Date.now(),
-          }
-          ,isLoggedIn,conversationId
+          await saveConversationToIndexedDB(
+            {
+              ...existingConversation,
+              conversation: updatedConversation2,
+              additionalReportData: updatedAdditionalReportData,
+              timestamp: Date.now(),
+              expert_index: selectedExpertIndex,
+            },
+            isLoggedIn,
+            conversationId
           );
         } else {
           // 기존 데이터가 있을 때 처리
@@ -239,11 +247,13 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
             />
           ))}
 
-          {!isLoading && <MoleculeReportController
-            reportIndex={2}
-            conversationId={conversationId}
-            sampleData={answerData}
-          />}
+          {!isLoading && (
+            <MoleculeReportController
+              reportIndex={2}
+              conversationId={conversationId}
+              sampleData={answerData}
+            />
+          )}
         </>
       )}
     </AnalysisSection>

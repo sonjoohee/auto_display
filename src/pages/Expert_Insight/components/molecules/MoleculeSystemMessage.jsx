@@ -57,7 +57,7 @@ const MoleculeSystemMessage = ({ message }) => {
             <p>{displayedText}</p>
           </TypingEffect>
         </Bubble>
-        <Time>1 min age</Time>
+        {/* <Time>1 min age</Time> */}
       </SystemMessageContainer>
     </>
   );
@@ -84,9 +84,9 @@ const Thumb = styled.div`
 `;
 
 const Time = styled.span`
-  align-self:flex-end;
-  font-size:0.63rem;
-  color:${palette.gray};
+  align-self: flex-end;
+  font-size: 0.63rem;
+  color: ${palette.gray};
 `;
 
 const SystemMessageContainer = styled.div`

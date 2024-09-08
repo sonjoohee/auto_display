@@ -245,3 +245,4 @@ export const CONVERSATION_ID = atom("");
 export const CONVERSATION = atom([]);
 export const IS_LOADING = atom(false);
 export const REPORT_REFRESH_TRIGGER = atom(false);  // 새로고침 트리거 상태 추가
+

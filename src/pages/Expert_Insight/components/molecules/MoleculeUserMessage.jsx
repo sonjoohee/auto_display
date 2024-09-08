@@ -1,23 +1,23 @@
 // C:\dev\Crowd_Insight-\src\pages\Expert_Insight\components\molecules\MoleculeUserMessage.jsx
 
-import React from 'react';
-import styled from 'styled-components';
-import { palette } from '../../../../assets/styles/Palette';
+import React from "react";
+import styled from "styled-components";
+import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeUserMessage = ({ message }) => {
-  const messageWithLineBreaks = message.split('\n').map((line, index) => 
+  const messageWithLineBreaks = message.split("\n").map((line, index) => (
     <React.Fragment key={index}>
       {line}
-      <br /> 
+      <br />
     </React.Fragment>
-  );
+  ));
 
   return (
     <UserMessageContainer>
       <div>
         <p>{messageWithLineBreaks}</p>
       </div>
-      <Time>1 min age</Time>
+      {/* <Time>1 min age</Time> */}
     </UserMessageContainer>
   );
 };
@@ -25,17 +25,17 @@ const MoleculeUserMessage = ({ message }) => {
 export default MoleculeUserMessage;
 
 const Time = styled.span`
-  align-self:flex-end;
-  font-size:0.63rem;
-  color:${palette.gray};
+  align-self: flex-end;
+  font-size: 0.63rem;
+  color: ${palette.gray};
 `;
 
 const UserMessageContainer = styled.div`
   // max-width: 70%;
-  display:flex;
-  align-items:flex-end;
-  flex-direction:row-reverse;
-  gap:18px;
+  display: flex;
+  align-items: flex-end;
+  flex-direction: row-reverse;
+  gap: 18px;
   // width: auto;
   // padding: 15px 20px;
   // background-color: #ffe0b2;
@@ -46,17 +46,17 @@ const UserMessageContainer = styled.div`
   // margin-bottom: 20px;
   // margin-left: auto;
   // margin-right: 0;
-  margin-top:40px;
+  margin-top: 40px;
   position: relative;
 
   > div {
-    font-size:0.875rem;
-    padding:14px 20px;
-    border-radius:15px;
-    background:#EBF3FE;
+    font-size: 0.875rem;
+    padding: 14px 20px;
+    border-radius: 15px;
+    background: #ebf3fe;
 
     p {
-      line-height:1.8;
+      line-height: 1.8;
     }
   }
 
@@ -68,7 +68,7 @@ const UserMessageContainer = styled.div`
     width: 0;
     height: 0;
     border: 10px solid transparent;
-    border-left-color: #EBF3FE;
+    border-left-color: #ebf3fe;
     border-right: 0;
     margin-top: -10px;
   }

@@ -30,9 +30,11 @@ import {
   ADDITIONAL_QUESTION_3,
   iS_CLICK_CHECK_REPORT_RIGHTAWAY,
   CONVERSATION,
+  CONVERSATION_ID,
   BUTTON_STATE,
   SELECTED_EXPERT_INDEX,
   REPORT_REFRESH_TRIGGER,
+
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -65,6 +67,7 @@ const OrganismLeftSideBar = () => {
   const [reportIdToDelete, setReportIdToDelete] = useState(null); // 삭제하려는 reportId 저장
   const [chatIdToDelete, setChatIdToDelete] = useState(null); // 삭제하려는 reportId 저장
 
+  const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [inputBusinessInfo, setInputBusinessInfo] =
@@ -210,7 +213,7 @@ const OrganismLeftSideBar = () => {
       }
     };
     fetchChatList();
-  }, []);
+  }, [reportRefreshTrigger]);
 
   useEffect(() => {
     // 서버에서 보고서 목록을 가져오는 함수
@@ -251,7 +254,10 @@ const OrganismLeftSideBar = () => {
 
       const chatData = response.data.chat_data;
       console.log("🚀 ~ handleConversationClick ~ chatData:", chatData);
-
+      setSelectedExpertIndex(
+        chatData.expert_index !== undefined ? chatData.expert_index : 0
+      );
+      setConversationId(chatData.id); // 대화 ID 설정
       setConversation(chatData.conversation); // 이전 대화 내역 설정
       setConversationStage(chatData.conversationStage); // 대화 단계 설정
       setInputBusinessInfo(chatData.inputBusinessInfo); // 비즈니스 정보 설정
@@ -474,6 +480,7 @@ const OrganismLeftSideBar = () => {
     setAddtionalQuestion3("");
     setInputAdditionalQuestion("");
     setIsClickCheckReportRightAway(false);
+    setConversationId(null);
   };
 
   return (
