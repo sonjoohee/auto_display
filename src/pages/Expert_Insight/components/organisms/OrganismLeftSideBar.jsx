@@ -30,6 +30,7 @@ import {
   ADDITIONAL_QUESTION_3,
   iS_CLICK_CHECK_REPORT_RIGHTAWAY,
   CONVERSATION,
+  CONVERSATION_ID,
   BUTTON_STATE,
   SELECTED_EXPERT_INDEX,
 } from "../../../AtomStates";
@@ -62,6 +63,7 @@ const OrganismLeftSideBar = () => {
   const [reportIdToDelete, setReportIdToDelete] = useState(null); // 삭제하려는 reportId 저장
   const [chatIdToDelete, setChatIdToDelete] = useState(null); // 삭제하려는 reportId 저장
 
+  const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [inputBusinessInfo, setInputBusinessInfo] =
@@ -248,7 +250,10 @@ const OrganismLeftSideBar = () => {
 
       const chatData = response.data.chat_data;
       console.log("🚀 ~ handleConversationClick ~ chatData:", chatData);
-
+      setSelectedExpertIndex(
+        chatData.expert_index !== undefined ? chatData.expert_index : 0
+      );
+      setConversationId(chatData.id); // 대화 ID 설정
       setConversation(chatData.conversation); // 이전 대화 내역 설정
       setConversationStage(chatData.conversationStage); // 대화 단계 설정
       setInputBusinessInfo(chatData.inputBusinessInfo); // 비즈니스 정보 설정
@@ -457,7 +462,7 @@ const OrganismLeftSideBar = () => {
     setMainFeaturesOfBusinessInformation([]);
     setMainCharacteristicOfBusinessInformation([]);
     setBusinessInformationTargetCustomer([]);
-    setSelectedExpertIndex(1);
+    setSelectedExpertIndex("0");
     setSections([]);
     setAdditionalReportCount(0);
     setSelectedAdditionalKeyword([]);
@@ -471,6 +476,7 @@ const OrganismLeftSideBar = () => {
     setAddtionalQuestion3("");
     setInputAdditionalQuestion("");
     setIsClickCheckReportRightAway(false);
+    setConversationId(null);
   };
 
   return (

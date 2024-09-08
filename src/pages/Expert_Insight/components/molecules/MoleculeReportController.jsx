@@ -194,6 +194,7 @@ const MoleculeReportController = ({
     const updatedConversation = {
       ...existingConversation,
       analysisReportData,
+      expert_index: selectedExpertIndex,
       timestamp: Date.now(),
     };
 
@@ -302,6 +303,7 @@ const MoleculeReportController = ({
               ? reportData
               : existingConversation.additionalReportData,
           timestamp: Date.now(),
+          expert_index: selectedExpertIndex,
         };
 
         await saveConversationToIndexedDB(
@@ -444,6 +446,7 @@ const MoleculeReportController = ({
           mainCustomer: [],
         },
         timestamp: Date.now(),
+        expert_index: selectedExpertIndex,
       },
       isLoggedIn,
       conversationId
@@ -556,6 +559,7 @@ const MoleculeReportController = ({
       ...existingConversation,
       analysisReportData,
       timestamp: Date.now(),
+      expert_index: selectedExpertIndex,
     };
     await saveConversationToIndexedDB(updatedConversation);
     console.log("___________기초보고서_____________");
