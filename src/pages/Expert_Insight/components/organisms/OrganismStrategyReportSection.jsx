@@ -201,6 +201,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               ...existingConversation,
               [currentReportKey]: strategyData,
               timestamp: Date.now(),
+              expert_index: selectedExpertIndex,
             };
             // console.log(
             //   "🚀 ~ loadData ~ existingConversation:",
@@ -240,8 +241,10 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
         );
         const updatedConversation2 = {
           ...existingConversation2,
+          expert_index: selectedExpertIndex,
           conversation: updatedConversation,
           timestamp: Date.now(),
+          expert_index: selectedExpertIndex,
         };
 
         // console.log(
@@ -317,12 +320,14 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
           </>
         )}
 
-        {!isLoading && <MoleculeReportController
-          reportIndex={1}
-          strategyReportID={strategyReportData.expert_id}
-          conversationId={conversationId}
-          sampleData={strategyReportData}
-        />}
+        {!isLoading && (
+          <MoleculeReportController
+            reportIndex={1}
+            strategyReportID={strategyReportData.expert_id}
+            conversationId={conversationId}
+            sampleData={strategyReportData}
+          />
+        )}
       </AnalysisSection>
     </>
   );

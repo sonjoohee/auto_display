@@ -184,7 +184,10 @@ const PageExpertInsight = () => {
     };
 
     // IndexedDB에서 기존 데이터를 가져옴
-    const existingData = await getConversationByIdFromIndexedDB(conversationId);
+    const existingData = await getConversationByIdFromIndexedDB(
+      conversationId,
+      isLoggedIn
+    );
 
     // 기존의 selectedAdditionalKeyword가 있으면 병합
     const updatedSelectedAdditionalKeyword =
@@ -206,6 +209,7 @@ const PageExpertInsight = () => {
         additionalReportData, // Save the entire list of additional reports
         ...existingReports,
         timestamp: Date.now(),
+        expert_index: selectedExpertIndex,
       },
       isLoggedIn,
       conversationId
@@ -244,11 +248,22 @@ const PageExpertInsight = () => {
             conversationId
           );
           const savedConversation = await getConversationByIdFromIndexedDB(
-            conversationId
+            conversationId,
+            isLoggedIn
           );
 
+          console.log(
+            "🚀 ~ loadConversation ~ savedConversation:",
+            savedConversation
+          );
           if (savedConversation) {
+            setSelectedExpertIndex(
+              savedConversation.expert_index !== undefined
+                ? savedConversation.expert_index
+                : 0
+            );
             const analysisData = savedConversation.analysisReportData || {};
+            console.log("🚀 ~ loadConversation ~ analysisData:", analysisData);
             setTitleOfBusinessInfo(analysisData.title || "");
             setMainFeaturesOfBusinessInformation(
               analysisData.mainFeatures || []
@@ -306,7 +321,8 @@ const PageExpertInsight = () => {
           navigate(`/conversation/${conversationId}`, { replace: true });
         } else {
           const savedConversation = await getConversationByIdFromIndexedDB(
-            conversationId
+            conversationId,
+            isLoggedIn
           );
           if (savedConversation) {
             const analysisData = savedConversation.analysisReportData || {};
@@ -710,7 +726,7 @@ const PageExpertInsight = () => {
                   Object.keys(expert3ReportData).length === 0) && (
                   <OrganismBizExpertSelect />
                 )} */}
-              {approachPath === -1 && conversationStage === 2 && (
+              {approachPath !== 1 && conversationStage === 2 && (
                 <OrganismBizExpertSelect />
               )}
             </ChatWrap>
