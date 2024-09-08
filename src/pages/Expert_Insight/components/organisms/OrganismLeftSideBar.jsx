@@ -215,6 +215,7 @@ const OrganismLeftSideBar = () => {
     fetchChatList();
   }, [reportRefreshTrigger]);
 
+
   useEffect(() => {
     // 서버에서 보고서 목록을 가져오는 함수
     const fetchReports = async () => {
@@ -235,6 +236,7 @@ const OrganismLeftSideBar = () => {
     };
     fetchReports();
   }, [reportRefreshTrigger]);
+
 
   // const handleConversationClick = (id) => {
   //   // 클릭 시 해당 대화로 이동
@@ -466,7 +468,7 @@ const OrganismLeftSideBar = () => {
     setMainFeaturesOfBusinessInformation([]);
     setMainCharacteristicOfBusinessInformation([]);
     setBusinessInformationTargetCustomer([]);
-    setSelectedExpertIndex(1);
+    setSelectedExpertIndex("0");
     setSections([]);
     setAdditionalReportCount(0);
     setSelectedAdditionalKeyword([]);

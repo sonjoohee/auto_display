@@ -248,7 +248,6 @@ const MoleculeReportController = ({
       business_info = reportData?.title || "Unknown Title"; 
     }
 
-
     // API에 저장 요청
     try {
       const accessToken = sessionStorage.getItem("accessToken"); // 저장된 토큰을 가져옴
@@ -262,6 +261,7 @@ const MoleculeReportController = ({
       const postData = {
         business_info: business_info,
         title: business_info,
+
         date: new Date().toLocaleDateString(),
         content: reportData,
         reportIndex: reportIndex, // 보고서 인덱스를 추가하여 저장
