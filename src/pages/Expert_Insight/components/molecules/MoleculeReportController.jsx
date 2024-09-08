@@ -26,6 +26,8 @@ import {
   CONVERSATION,
   isLoggedInAtom,
   IS_LOADING,
+  REPORT_REFRESH_TRIGGER,
+
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -84,6 +86,8 @@ const MoleculeReportController = ({
   const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 관리
   const token = sessionStorage.getItem("accessToken");
   const [savedReports, setSavedReports] = useAtom(SAVED_REPORTS);
+  const [reportRefreshTrigger, setReportRefreshTrigger] = useAtom(REPORT_REFRESH_TRIGGER);  // 리프레시 트리거 상태 구독
+
   const [bizAnalysisReportIndex, setBizAnalysisReportIndex] = useState(0);
   const [newAddContent, setNewAddContent] = useState("");
   const [isAddingNow, setIsAddingNow] = useState({
@@ -194,6 +198,7 @@ const MoleculeReportController = ({
     const updatedConversation = {
       ...existingConversation,
       analysisReportData,
+      expert_index: selectedExpertIndex,
       timestamp: Date.now(),
     };
 
@@ -222,6 +227,7 @@ const MoleculeReportController = ({
     setIsPopupSave(true); // 저장 팝업 열기
 
     let reportData;
+    let business_info;
 
     if (reportIndex === 0) {
       // 비즈니스 분석 리포트 데이터 저장 (이 부분은 기존 로직을 유지합니다)
@@ -231,11 +237,15 @@ const MoleculeReportController = ({
         mainCharacter: mainCharacteristicOfBusinessInformation,
         mainCustomer: businessInformationTargetCustomer,
       };
+      business_info = reportData.title;
     } else if (reportIndex === 1) {
       // 전략 보고서 데이터 저장 - sampleData 사용
       reportData = sampleData; // sampleData를 그대로 저장합니다
+      business_info = reportData?.tabs?.[0]?.title || "Unknown Title"; 
+      
     } else if (reportIndex === 2) {
       reportData = sampleData;
+      business_info = reportData?.title || "Unknown Title"; 
     }
 
     // API에 저장 요청
@@ -249,8 +259,9 @@ const MoleculeReportController = ({
       };
 
       const postData = {
-        business_info: reportData.title,
-        title: reportData.title,
+        business_info: business_info,
+        title: business_info,
+
         date: new Date().toLocaleDateString(),
         content: reportData,
         reportIndex: reportIndex, // 보고서 인덱스를 추가하여 저장
@@ -274,7 +285,7 @@ const MoleculeReportController = ({
         setSavedReports((prevReports) => [
           ...prevReports,
           {
-            title: reportData.title,
+            title: business_info,
             date: new Date().toLocaleDateString(),
             content: reportData,
             reportIndex: reportIndex, // reportIndex를 추가하여 저장
@@ -302,6 +313,7 @@ const MoleculeReportController = ({
               ? reportData
               : existingConversation.additionalReportData,
           timestamp: Date.now(),
+          expert_index: selectedExpertIndex,
         };
 
         await saveConversationToIndexedDB(
@@ -309,6 +321,8 @@ const MoleculeReportController = ({
           isLoggedIn,
           conversationId
         );
+        setReportRefreshTrigger((prev) => !prev);  // 트리거 상태를 반전시켜 OrganismLeftSideBar가 새로고침되도록 설정
+
       } else {
         console.error("API 응답 에러", response.status);
       }
@@ -444,6 +458,7 @@ const MoleculeReportController = ({
           mainCustomer: [],
         },
         timestamp: Date.now(),
+        expert_index: selectedExpertIndex,
       },
       isLoggedIn,
       conversationId
@@ -556,6 +571,7 @@ const MoleculeReportController = ({
       ...existingConversation,
       analysisReportData,
       timestamp: Date.now(),
+      expert_index: selectedExpertIndex,
     };
     await saveConversationToIndexedDB(updatedConversation);
     console.log("___________기초보고서_____________");

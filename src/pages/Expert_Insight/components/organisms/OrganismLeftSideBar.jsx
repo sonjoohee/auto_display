@@ -30,8 +30,11 @@ import {
   ADDITIONAL_QUESTION_3,
   iS_CLICK_CHECK_REPORT_RIGHTAWAY,
   CONVERSATION,
+  CONVERSATION_ID,
   BUTTON_STATE,
   SELECTED_EXPERT_INDEX,
+  REPORT_REFRESH_TRIGGER,
+
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -48,6 +51,8 @@ const OrganismLeftSideBar = () => {
   const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 관리
   const [isLoginPopupOpen, setLoginPopupOpen] = useState(false); // 로그인 팝업 상태 관리
   const [reports, setReports] = useState([]); // 서버에서 가져온 보고서 리스트 상태
+  const [reportRefreshTrigger, setReportRefreshTrigger] = useAtom(REPORT_REFRESH_TRIGGER);  // 리프레시 트리거 상태 구독
+
   const [chatList, setChatList] = useState([]); // 서버에서 가져온 대화 리스트
 
   const [isAccountPopupOpen, setAccountPopupOpen] = useState(false); // 계정설정 팝업
@@ -62,6 +67,7 @@ const OrganismLeftSideBar = () => {
   const [reportIdToDelete, setReportIdToDelete] = useState(null); // 삭제하려는 reportId 저장
   const [chatIdToDelete, setChatIdToDelete] = useState(null); // 삭제하려는 reportId 저장
 
+  const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [inputBusinessInfo, setInputBusinessInfo] =
@@ -207,7 +213,8 @@ const OrganismLeftSideBar = () => {
       }
     };
     fetchChatList();
-  }, []);
+  }, [reportRefreshTrigger]);
+
 
   useEffect(() => {
     // 서버에서 보고서 목록을 가져오는 함수
@@ -228,7 +235,8 @@ const OrganismLeftSideBar = () => {
       }
     };
     fetchReports();
-  }, []);
+  }, [reportRefreshTrigger]);
+
 
   // const handleConversationClick = (id) => {
   //   // 클릭 시 해당 대화로 이동
@@ -248,7 +256,10 @@ const OrganismLeftSideBar = () => {
 
       const chatData = response.data.chat_data;
       console.log("🚀 ~ handleConversationClick ~ chatData:", chatData);
-
+      setSelectedExpertIndex(
+        chatData.expert_index !== undefined ? chatData.expert_index : 0
+      );
+      setConversationId(chatData.id); // 대화 ID 설정
       setConversation(chatData.conversation); // 이전 대화 내역 설정
       setConversationStage(chatData.conversationStage); // 대화 단계 설정
       setInputBusinessInfo(chatData.inputBusinessInfo); // 비즈니스 정보 설정
@@ -457,7 +468,7 @@ const OrganismLeftSideBar = () => {
     setMainFeaturesOfBusinessInformation([]);
     setMainCharacteristicOfBusinessInformation([]);
     setBusinessInformationTargetCustomer([]);
-    setSelectedExpertIndex(1);
+    setSelectedExpertIndex("0");
     setSections([]);
     setAdditionalReportCount(0);
     setSelectedAdditionalKeyword([]);
@@ -471,6 +482,7 @@ const OrganismLeftSideBar = () => {
     setAddtionalQuestion3("");
     setInputAdditionalQuestion("");
     setIsClickCheckReportRightAway(false);
+    setConversationId(null);
   };
 
   return (

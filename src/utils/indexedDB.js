@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useAtom } from "jotai";
-import { isLoggedInAtom } from "../pages/AtomStates"; // AtomStates 파일에서 isLoggedInAtom 임포트
+import { isLoggedInAtom, SELECTED_EXPERT_INDEX } from "../pages/AtomStates"; // AtomStates 파일에서 isLoggedInAtom 임포트
 
 export const fetchDataById = async (id) => {
   try {
@@ -42,7 +42,8 @@ export const openDB = () => {
 export const saveConversationToIndexedDB = async (
   conversation,
   isLoggedIn,
-  conversationId
+  conversationId,
+  expertIndex
 ) => {
   if (isLoggedIn) {
     // 사용자 로그인 시 서버에 저장
@@ -67,6 +68,7 @@ export const saveConversationToIndexedDB = async (
         // chat_title: conversation.analysisReportData.title,
         chat_date: conversation.timestamp,
         chat_data: conversation,
+        expert_index: expertIndex,
       };
       console.log("🚀 ~ PUT_DATA:", PUT_DATA);
       await axios.put(`https://wishresearch.kr/panels/update_chat`, PUT_DATA, {
