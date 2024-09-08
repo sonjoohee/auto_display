@@ -26,6 +26,7 @@ import {
   CONVERSATION,
   isLoggedInAtom,
   IS_LOADING,
+  REPORT_REFRESH_TRIGGER,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -84,6 +85,8 @@ const MoleculeReportController = ({
   const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 관리
   const token = sessionStorage.getItem("accessToken");
   const [savedReports, setSavedReports] = useAtom(SAVED_REPORTS);
+  const [reportRefreshTrigger, setReportRefreshTrigger] = useAtom(REPORT_REFRESH_TRIGGER);  // 리프레시 트리거 상태 구독
+
   const [bizAnalysisReportIndex, setBizAnalysisReportIndex] = useState(0);
   const [newAddContent, setNewAddContent] = useState("");
   const [isAddingNow, setIsAddingNow] = useState({
@@ -309,6 +312,7 @@ const MoleculeReportController = ({
           isLoggedIn,
           conversationId
         );
+        setReportRefreshTrigger((prev) => !prev);  // 트리거 상태를 반전시켜 OrganismLeftSideBar가 새로고침되도록 설정
       } else {
         console.error("API 응답 에러", response.status);
       }
