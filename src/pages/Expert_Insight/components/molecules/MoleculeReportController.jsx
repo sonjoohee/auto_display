@@ -227,6 +227,7 @@ const MoleculeReportController = ({
     setIsPopupSave(true); // 저장 팝업 열기
 
     let reportData;
+    let business_info;
 
     if (reportIndex === 0) {
       // 비즈니스 분석 리포트 데이터 저장 (이 부분은 기존 로직을 유지합니다)
@@ -236,12 +237,17 @@ const MoleculeReportController = ({
         mainCharacter: mainCharacteristicOfBusinessInformation,
         mainCustomer: businessInformationTargetCustomer,
       };
+      business_info = reportData.title;
     } else if (reportIndex === 1) {
       // 전략 보고서 데이터 저장 - sampleData 사용
       reportData = sampleData; // sampleData를 그대로 저장합니다
+      business_info = reportData?.tabs?.[0]?.title || "Unknown Title"; 
+      
     } else if (reportIndex === 2) {
       reportData = sampleData;
+      business_info = reportData?.title || "Unknown Title"; 
     }
+
 
     // API에 저장 요청
     try {
@@ -254,8 +260,8 @@ const MoleculeReportController = ({
       };
 
       const postData = {
-        business_info: reportData.title,
-        title: reportData.title,
+        business_info: business_info,
+        title: business_info,
         date: new Date().toLocaleDateString(),
         content: reportData,
         reportIndex: reportIndex, // 보고서 인덱스를 추가하여 저장
@@ -279,7 +285,7 @@ const MoleculeReportController = ({
         setSavedReports((prevReports) => [
           ...prevReports,
           {
-            title: reportData.title,
+            title: business_info,
             date: new Date().toLocaleDateString(),
             content: reportData,
             reportIndex: reportIndex, // reportIndex를 추가하여 저장
