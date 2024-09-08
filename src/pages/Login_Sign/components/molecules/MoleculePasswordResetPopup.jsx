@@ -91,6 +91,7 @@ const CloseButton = styled.button`
   border: none;
   font-size: 20px;
   cursor: pointer;
+  font-family: 'Pretendard', 'Poppins';
 `;
 
 const Content = styled.div`
@@ -121,6 +122,7 @@ const ActionButton = styled.button`
   background: ${props => props.primary ? '#000' : '#fff'};
   color: ${props => props.primary ? '#fff' : '#000'};
   font-weight: bold;
+  font-family: 'Pretendard', 'Poppins';
   
   &:hover {
     background: ${props => props.primary ? '#333' : '#f7f7f7'};

@@ -8,6 +8,27 @@ import {
   APPROACH_PATH,
   ANALYSIS_BUTTON_STATE,
   isLoggedInAtom,
+  SAVED_REPORTS,
+  USER_NAME,
+  USER_EMAIL,
+  TITLE_OF_BUSINESS_INFORMATION,
+  MAIN_FEATURES_OF_BUSINESS_INFORMATION,
+  MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
+  BUSINESS_INFORMATION_TARGET_CUSTOMER,
+  STRATEGY_REPORT_DATA,
+  SELECTED_ADDITIONAL_KEYWORD,
+  EXPERT1_REPORT_DATA,
+  EXPERT2_REPORT_DATA,
+  EXPERT3_REPORT_DATA,
+  ADDITIONAL_REPORT_DATA, // Import the new list-based atom
+  CONVERSATION_STAGE,
+  ADDITIONAL_QUESTION_1,
+  ADDITIONAL_QUESTION_2,
+  ADDITIONAL_QUESTION_3,
+  iS_CLICK_CHECK_REPORT_RIGHTAWAY,
+  CONVERSATION,
+  BUTTON_STATE,
+  CONVERSATION_ID,
 } from "../../../AtomStates";
 
 import { Link } from "react-router-dom";
@@ -21,6 +42,7 @@ import OrganismLeftSideBar from "../../../Expert_Insight/components/organisms/Or
 const PageMeetAiExpert = () => {
   const navigate = useNavigate();
   const [buttonState, setButtonState] = useAtom(ANALYSIS_BUTTON_STATE);
+  const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
 
   const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(
     SELECTED_EXPERT_INDEX
@@ -31,6 +53,95 @@ const PageMeetAiExpert = () => {
 
   useEffect(() => {
     setSelectedExpertIndex(SELECTED_EXPERT_INDEX);
+  }, []);
+
+  const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
+  const [conversation, setConversation] = useAtom(CONVERSATION);
+  const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
+  const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
+    TITLE_OF_BUSINESS_INFORMATION
+  );
+  const [
+    mainFeaturesOfBusinessInformation,
+    setMainFeaturesOfBusinessInformation,
+  ] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
+  const [
+    mainCharacteristicOfBusinessInformation,
+    setMainCharacteristicOfBusinessInformation,
+  ] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
+  const [
+    businessInformationTargetCustomer,
+    setBusinessInformationTargetCustomer,
+  ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
+  const [sections, setSections] = useState([]);
+  const [additionalReportCount, setAdditionalReportCount] = useState(0);
+  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
+    SELECTED_ADDITIONAL_KEYWORD
+  );
+
+  const [additionalReportData, setAdditionalReportData] = useAtom(
+    ADDITIONAL_REPORT_DATA
+  ); // Use the new list-based atom
+
+  const [expert1ReportData, setExpert1ReportData] =
+    useAtom(EXPERT1_REPORT_DATA);
+  const [expert2ReportData, setExpert2ReportData] =
+    useAtom(EXPERT2_REPORT_DATA);
+  const [expert3ReportData, setExpert3ReportData] =
+    useAtom(EXPERT3_REPORT_DATA);
+
+  const [addtionalQuestion1, setAddtionalQuestion1] = useAtom(
+    ADDITIONAL_QUESTION_1
+  );
+  const [addtionalQuestion2, setAddtionalQuestion2] = useAtom(
+    ADDITIONAL_QUESTION_2
+  );
+  const [addtionalQuestion3, setAddtionalQuestion3] = useAtom(
+    ADDITIONAL_QUESTION_3
+  );
+
+  const [inputAdditionalQuestion, setInputAdditionalQuestion] = useState("");
+  const [isClickCheckReportRightAway, setIsClickCheckReportRightAway] = useAtom(
+    iS_CLICK_CHECK_REPORT_RIGHTAWAY
+  );
+
+  const [isPopupRegex, setIsPopupRegex] = useState(false);
+  const [isPopupRegex2, setIsPopupRegex2] = useState(false);
+  const [isPopupLogin, setIsPopupLogin] = useState(false); // 로그인 상태가 아닐 때 팝업을 띄우기 위한 상태
+
+  const closePopupRegex = () => {
+    setInputBusinessInfo("");
+    setIsPopupRegex(false); // 팝업 닫기
+  };
+  const closePopupRegex2 = () => {
+    setIsPopupRegex2(false);
+  };
+  const closePopupLogin = () => {
+    setIsPopupLogin(false); // 로그인 필요 팝업 닫기
+  };
+  useEffect(() => {
+    setConversation([]);
+    // setConversationId("");
+    setConversationStage(1);
+    setInputBusinessInfo("");
+    setTitleOfBusinessInfo("");
+    setMainFeaturesOfBusinessInformation([]);
+    setMainCharacteristicOfBusinessInformation([]);
+    setBusinessInformationTargetCustomer([]);
+    setSelectedExpertIndex("1");
+    setSections([]);
+    setAdditionalReportCount(0);
+    setSelectedAdditionalKeyword([]);
+    setApproachPath(0);
+    setAdditionalReportData([]);
+    setExpert1ReportData({});
+    setExpert2ReportData({});
+    setExpert3ReportData({});
+    setAddtionalQuestion1("");
+    setAddtionalQuestion2("");
+    setAddtionalQuestion3("");
+    setInputAdditionalQuestion("");
+    setIsClickCheckReportRightAway(false);
   }, []);
 
   useEffect(() => {
@@ -55,21 +166,39 @@ const PageMeetAiExpert = () => {
     };
   }, []);
 
-  const handledExpertSelect = (index) => {
-    if (index === 0) {
+  const handledSearch = () => {
+    const regex = /^[가-힣a-zA-Z0-9\s.,'"-]*$/;
+    if (!regex.test(inputBusinessInfo)) {
+      setIsPopupRegex(true);
+      return;
+    }
+    if (inputBusinessInfo.trim() === "") {
+      setIsPopupRegex2(true);
+      return;
+    }
+    if (isLoggedIn) {
       setApproachPath(-1); // 검색을 통해 들어가는 경우
       setButtonState(1); // 버튼 상태를 1로 설정
+      setSelectedExpertIndex(0);
+      navigate("/ExpertInsight");
     } else {
+      setIsPopupLogin(true); // 로그인 상태가 아니라면 로그인 팝업 띄우기
+    }
+  };
+
+  const handledExpertSelect = (index) => {
+    if (isLoggedIn) {
       setApproachPath(1);
       setInputBusinessInfo(""); // 또는 null, undefined로 초기화
+      setSelectedExpertIndex(index);
+      navigate("/ExpertInsight");
+    } else {
+      setIsPopupLogin(true); // 로그인 상태가 아니라면 로그인 팝업 띄우기
     }
-
-    setSelectedExpertIndex(index);
-    navigate("/ExpertInsight");
   };
 
   return (
-    <div>
+    <>
       {/* <OrganismHeader /> */}
 
       <ContentsWrap>
@@ -101,7 +230,7 @@ const PageMeetAiExpert = () => {
                   ).innerText = `${currentLength}/300`;
                 }}
               ></textarea>
-              <button type="button" onClick={() => handledExpertSelect(0)}>
+              <button type="button" onClick={handledSearch}>
                 검색
               </button>
             </div>
@@ -132,7 +261,7 @@ const PageMeetAiExpert = () => {
               <ExpertCard
                 onClick={() => {
                   setButtonState(1);
-                  handledExpertSelect(1);
+                  handledExpertSelect("1");
                 }}
               >
                 <span>
@@ -144,7 +273,7 @@ const PageMeetAiExpert = () => {
               <ExpertCard
                 onClick={() => {
                   setButtonState(1);
-                  handledExpertSelect(2);
+                  handledExpertSelect("2");
                 }}
               >
                 <span>
@@ -156,7 +285,7 @@ const PageMeetAiExpert = () => {
               <ExpertCard
                 onClick={() => {
                   setButtonState(1);
-                  handledExpertSelect(3);
+                  handledExpertSelect("3");
                 }}
               >
                 <span>
@@ -175,7 +304,98 @@ const PageMeetAiExpert = () => {
           </ExpertSelectWrap>
         </MainContent>
       </ContentsWrap>
-    </div>
+
+      {isPopupRegex && (
+        <Popup
+          Cancel
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              closePopupRegex(); // 상태를 false로 설정
+            }
+          }}
+        >
+          <div>
+            <button
+              type="button"
+              className="closePopup"
+              onClick={closePopupRegex}
+            >
+              닫기
+            </button>
+            <span>
+              <img src={images.ExclamationMark2} alt="" />
+            </span>
+            <p>
+              한글, 영문 외 특수문자는 입력할 수 없어요. 자음이나 모음만 입력한
+              경우 검색이 제한되니, 문장을 완전하게 입력해주세요.
+            </p>
+            <div className="btnWrap">
+              <button type="button" onClick={closePopupRegex}>
+                확인
+              </button>
+            </div>
+          </div>
+        </Popup>
+      )}
+      {isPopupRegex2 && (
+        <Popup
+          Cancel
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              closePopupRegex2(); // 상태를 false로 설정
+            }
+          }}
+        >
+          <div>
+            <button
+              type="button"
+              className="closePopup"
+              onClick={closePopupRegex2}
+            >
+              닫기
+            </button>
+            <span>
+              <img src={images.ExclamationMark2} alt="" />
+            </span>
+            <p>비즈니스 분석을 위해 내용을 입력해주세요</p>
+            <div className="btnWrap">
+              <button type="button" onClick={closePopupRegex2}>
+                확인
+              </button>
+            </div>
+          </div>
+        </Popup>
+      )}
+      {isPopupLogin && (
+        <Popup
+          Cancel
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              closePopupLogin(); // 팝업 닫기
+            }
+          }}
+        >
+          <div>
+            <button
+              type="button"
+              className="closePopup"
+              onClick={closePopupLogin}
+            >
+              닫기
+            </button>
+            <span>
+              <img src={images.ExclamationMark2} alt="" />
+            </span>
+            <p>로그인 후 사용해 주세요.</p>
+            <div className="btnWrap">
+              <button type="button" onClick={closePopupLogin}>
+                확인
+              </button>
+            </div>
+          </div>
+        </Popup>
+      )}
+    </>
   );
 };
 
@@ -256,9 +476,15 @@ const InputWrap = styled.div`
       flex-shrink: 0;
       width: 27px;
       height: 27px;
+      font-family: "Pretendard", "Poppins";
       font-size: 0;
       border: 0;
       background: url(${images.IconSearch}) center no-repeat;
+      transition: all 0.5s;
+
+      &:hover {
+        background: url(${images.IconSearchHover}) center no-repeat;
+      }
     }
   }
 
@@ -314,7 +540,7 @@ const ExpertSelectBox = styled.div`
 const ExpertCard = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
   height: 280px;
   text-align: left;
   padding: 40px;
@@ -536,5 +762,131 @@ const AccordionContent = styled.div`
 
   > div + div {
     margin-top: 30px;
+  }
+`;
+
+const Popup = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  transition: all 0.5s;
+  z-index: 9999;
+
+  .closePopup {
+    position: absolute;
+    right: 24px;
+    top: 24px;
+    width: 16px;
+    height: 16px;
+    font-size: 0;
+    padding: 11px;
+    border: 0;
+    background: none;
+
+    &:before,
+    &:after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 2px;
+      height: 100%;
+      border-radius: 10px;
+      background: ${palette.black};
+      content: "";
+    }
+
+    &:before {
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    &:after {
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
+  }
+
+  > div {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    // overflow:hidden;
+    padding: 45px 24px 24px;
+    border-radius: 10px;
+    background: ${palette.white};
+
+    p {
+      font-family: "Pretendard", "Poppins";
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin: 20px auto 24px;
+    }
+
+    .btnWrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      button {
+        flex: 1;
+        font-family: "Pretendard", "Poppins";
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: ${palette.blue};
+        padding: 12px 20px;
+        border-radius: 8px;
+        border: 1px solid ${palette.blue};
+        background: ${palette.white};
+
+        &:last-child {
+          color: ${palette.white};
+          background: ${palette.blue};
+        }
+      }
+    }
+
+    ${(props) =>
+      props.Cancel &&
+      css`
+        p {
+          strong {
+            font-weight: 500;
+            display: block;
+          }
+          span {
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: ${palette.gray500};
+            display: block;
+            margin-top: 8px;
+          }
+        }
+
+        .btnWrap {
+          padding-top: 16px;
+          border-top: 1px solid ${palette.lineGray};
+
+          button {
+            font-family: "Pretendard", "Poppins";
+            color: ${palette.gray};
+            font-weight: 600;
+            padding: 0;
+            border: 0;
+            background: none;
+
+            &:last-child {
+              color: ${palette.blue};
+              background: none;
+            }
+          }
+        }
+      `}
   }
 `;

@@ -29,7 +29,7 @@ const FooterBar = styled.div`
 `;
 
 const FooterButton = styled.button`
-  font-family: 'Pretendard';
+  font-family: 'Pretendard', 'Poppins';
   font-size:1rem;
   color:${palette.blue};
   text-decoration:underline;

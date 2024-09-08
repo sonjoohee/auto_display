@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { useAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import axios from "axios";
 import {
   TITLE_OF_BUSINESS_INFORMATION,
   IS_CLICK_EXPERT_SELECT,
@@ -43,6 +43,13 @@ const MoleculeReportController = ({
   conversationId,
   sampleData,
 }) => {
+  // console.log(
+  //   "🚀 ~ strategyReportID,  conversationId,  sampleData,:",
+  //   strategyReportID,
+  //   conversationId,
+  //   sampleData
+  // );
+  // console.log(reportIndex, strategyReportID, conversationId, sampleData);
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
     TITLE_OF_BUSINESS_INFORMATION
   );
@@ -75,7 +82,7 @@ const MoleculeReportController = ({
     setTempBusinessInformationTargetCustomer,
   ] = useAtom(TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 관리
-  const token = sessionStorage.getItem('accessToken');
+  const token = sessionStorage.getItem("accessToken");
   const [savedReports, setSavedReports] = useAtom(SAVED_REPORTS);
   const [bizAnalysisReportIndex, setBizAnalysisReportIndex] = useState(0);
   const [newAddContent, setNewAddContent] = useState("");
@@ -180,7 +187,8 @@ const MoleculeReportController = ({
     }
 
     const existingConversation = await getConversationByIdFromIndexedDB(
-      conversationId
+      conversationId,
+      isLoggedIn
     );
 
     const updatedConversation = {
@@ -201,9 +209,7 @@ const MoleculeReportController = ({
     setTempMainCharacteristicOfBusinessInformation(
       mainCharacteristicOfBusinessInformation
     );
-    setTempBusinessInformationTargetCustomer(
-      businessInformationTargetCustomer
-    );
+    setTempBusinessInformationTargetCustomer(businessInformationTargetCustomer);
   };
 
   const toogleSave = async () => {
@@ -212,11 +218,11 @@ const MoleculeReportController = ({
       setIsPopupOpen(true); // 팝업 열기
       return; // 로그인 상태가 아닐 경우 함수를 종료
     }
-  
+
     setIsPopupSave(true); // 저장 팝업 열기
-  
+
     let reportData;
-  
+
     if (reportIndex === 0) {
       // 비즈니스 분석 리포트 데이터 저장 (이 부분은 기존 로직을 유지합니다)
       reportData = {
@@ -231,35 +237,35 @@ const MoleculeReportController = ({
     } else if (reportIndex === 2) {
       reportData = sampleData;
     }
-  
+
     // API에 저장 요청
     try {
-      const accessToken = sessionStorage.getItem('accessToken'); // 저장된 토큰을 가져옴
+      const accessToken = sessionStorage.getItem("accessToken"); // 저장된 토큰을 가져옴
       const config = {
         headers: {
           Authorization: `Bearer ${accessToken}`, // 토큰을 헤더에 포함
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       };
-  
+
       const postData = {
+        business_info: reportData.title,
         title: reportData.title,
         date: new Date().toLocaleDateString(),
         content: reportData,
         reportIndex: reportIndex, // 보고서 인덱스를 추가하여 저장
       };
-  
+
       // API로 보고서 저장 요청
       const response = await axios.post(
-        'https://wishresearch.kr/panels/insight',
-        reportData.title,
-        postData,  // 요청 본문에 보낼 데이터
+        "https://wishresearch.kr/panels/insight",
+        postData, // 요청 본문에 보낼 데이터
         {
           headers: {
-            Authorization: `Bearer ${token}`,  // Bearer 토큰을 헤더에 추가
-            'Content-Type': 'application/json',  // 필요에 따라 Content-Type 설정
+            Authorization: `Bearer ${accessToken}`, // Bearer 토큰을 헤더에 추가
+            "Content-Type": "application/json", // 필요에 따라 Content-Type 설정
           },
-          withCredentials: true,  // 쿠키와 함께 자격 증명을 전달 (optional)
+          withCredentials: true, // 쿠키와 함께 자격 증명을 전달 (optional)
         }
       );
 
@@ -274,12 +280,13 @@ const MoleculeReportController = ({
             reportIndex: reportIndex, // reportIndex를 추가하여 저장
           },
         ]);
-  
+
         // 기존 대화 내역에 리포트 데이터 추가
         const existingConversation = await getConversationByIdFromIndexedDB(
-          conversationId
+          conversationId,
+          isLoggedIn
         );
-  
+
         const updatedConversation = {
           ...existingConversation,
           analysisReportData:
@@ -296,8 +303,12 @@ const MoleculeReportController = ({
               : existingConversation.additionalReportData,
           timestamp: Date.now(),
         };
-  
-        await saveConversationToIndexedDB(updatedConversation);
+
+        await saveConversationToIndexedDB(
+          updatedConversation,
+          isLoggedIn,
+          conversationId
+        );
       } else {
         console.error("API 응답 에러", response.status);
       }
@@ -305,15 +316,15 @@ const MoleculeReportController = ({
       console.error("API 요청 실패", error);
     }
   };
-  
+
   const toogleCopy = () => {
     let contentToCopy = ``;
 
     const getSelectedTabData = (selectedTab) => {
-      if (strategyReportID === 1) return expert1ReprotData.tabs[selectedTab];
-      else if (strategyReportID === 2)
+      if (strategyReportID === "1") return expert1ReprotData.tabs[selectedTab];
+      else if (strategyReportID === "2")
         return expert2ReprotData.tabs[selectedTab];
-      else if (strategyReportID === 3)
+      else if (strategyReportID === "3")
         return expert3ReprotData.tabs[selectedTab];
       else return;
     };
@@ -375,7 +386,7 @@ const MoleculeReportController = ({
             .map((customer) => `- ${customer}`)
             .join("\n")}
           `;
-      } else if (selectedExpertIndex === 1) {
+      } else if (strategyReportID === "1") {
         const extractTextContent = (data) => {
           let textContent = "";
 
@@ -420,80 +431,126 @@ const MoleculeReportController = ({
     setConversationStage(1);
     setInputBusinessInfo("");
 
-    saveConversationToIndexedDB({
-      id: conversationId,
-      conversation: [],
-      conversationStage: 1,
-      inputBusinessInfo: "",
-      analysisReportData: {
-        title: [],
-        mainFeatures: [],
-        mainCharacter: [],
-        mainCustomer: [],
+    saveConversationToIndexedDB(
+      {
+        id: conversationId,
+        conversation: [],
+        conversationStage: 1,
+        inputBusinessInfo: "",
+        analysisReportData: {
+          title: [],
+          mainFeatures: [],
+          mainCharacter: [],
+          mainCustomer: [],
+        },
+        timestamp: Date.now(),
       },
-      timestamp: Date.now(),
-    });
+      isLoggedIn,
+      conversationId
+    );
   };
 
   const axiosConfig = {
     timeout: 100000, // 100초
     headers: {
-      'Content-Type': 'application/json'  
-    },  withCredentials: true // 쿠키 포함 요청 (필요한 경우)
+      "Content-Type": "application/json",
+    },
+    withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
   };
 
   const data = {
-    "business_idea": inputBusinessInfo
-  }
-  
-// 기초 보고서 재생성
-const regenerateReport = async () => {
-  setIsLoading(true);
-  let businessData;
+    business_idea: inputBusinessInfo,
+  };
+
+  // 기초 보고서 재생성
+  const regenerateReport = async () => {
+    setIsLoading(true);
+    let businessData;
 
     // 버튼 클릭으로 API 호출
     console.log("기초보고서api호출");
-    const response = await axios.post('https://wishresearch.kr/panels/business', data, axiosConfig);
+    const response = await axios.post(
+      "https://wishresearch.kr/panels/business",
+      data,
+      axiosConfig
+    );
     businessData = response.data.business_analysis;
 
     // 데이터를 받아온 직후 아톰에 값을 설정합니다.
     if (Array.isArray(businessData["주요_목적_및_특징"])) {
-      setTempMainFeaturesOfBusinessInformation(businessData["주요_목적_및_특징"].map((item) => item));
-      setMainFeaturesOfBusinessInformation(businessData["주요_목적_및_특징"].map((item) => item));
+      setTempMainFeaturesOfBusinessInformation(
+        businessData["주요_목적_및_특징"].map((item) => item)
+      );
+      setMainFeaturesOfBusinessInformation(
+        businessData["주요_목적_및_특징"].map((item) => item)
+      );
     } else {
-      setTempMainFeaturesOfBusinessInformation(businessData["주요_목적_및_특징"] ? [businessData["주요_목적_및_특징"]] : []);
-      setMainFeaturesOfBusinessInformation(businessData["주요_목적_및_특징"] ? [businessData["주요_목적_및_특징"]] : []);
+      setTempMainFeaturesOfBusinessInformation(
+        businessData["주요_목적_및_특징"]
+          ? [businessData["주요_목적_및_특징"]]
+          : []
+      );
+      setMainFeaturesOfBusinessInformation(
+        businessData["주요_목적_및_특징"]
+          ? [businessData["주요_목적_및_특징"]]
+          : []
+      );
     }
-    
+
     if (Array.isArray(businessData["주요기능"])) {
-      setTempMainCharacteristicOfBusinessInformation(businessData["주요기능"].map((item) => item));
-      setMainCharacteristicOfBusinessInformation(businessData["주요기능"].map((item) => item));
+      setTempMainCharacteristicOfBusinessInformation(
+        businessData["주요기능"].map((item) => item)
+      );
+      setMainCharacteristicOfBusinessInformation(
+        businessData["주요기능"].map((item) => item)
+      );
     } else {
-      setTempMainCharacteristicOfBusinessInformation(businessData["주요기능"] ? [businessData["주요기능"]] : []);
-      setMainCharacteristicOfBusinessInformation(businessData["주요기능"] ? [businessData["주요기능"]] : []);
+      setTempMainCharacteristicOfBusinessInformation(
+        businessData["주요기능"] ? [businessData["주요기능"]] : []
+      );
+      setMainCharacteristicOfBusinessInformation(
+        businessData["주요기능"] ? [businessData["주요기능"]] : []
+      );
     }
-    
+
     if (Array.isArray(businessData["목표고객"])) {
-      setTempBusinessInformationTargetCustomer(businessData["목표고객"].map((item) => item));
-      setBusinessInformationTargetCustomer(businessData["목표고객"].map((item) => item));
+      setTempBusinessInformationTargetCustomer(
+        businessData["목표고객"].map((item) => item)
+      );
+      setBusinessInformationTargetCustomer(
+        businessData["목표고객"].map((item) => item)
+      );
     } else {
-      setTempBusinessInformationTargetCustomer(businessData["목표고객"] ? [businessData["목표고객"]] : []);
-      setBusinessInformationTargetCustomer(businessData["목표고객"] ? [businessData["목표고객"]] : []);
+      setTempBusinessInformationTargetCustomer(
+        businessData["목표고객"] ? [businessData["목표고객"]] : []
+      );
+      setBusinessInformationTargetCustomer(
+        businessData["목표고객"] ? [businessData["목표고객"]] : []
+      );
     }
-    
+
     // 명칭은 배열이 아니므로 기존 방식 유지
     setTitleOfBusinessInfo(businessData["명칭"]);
 
     // 아톰이 업데이트된 후에 analysisReportData를 생성합니다.
     const analysisReportData = {
       title: businessData["명칭"],
-      mainFeatures: Array.isArray(businessData["주요_목적_및_특징"]) ? businessData["주요_목적_및_특징"] : [],
-      mainCharacter: Array.isArray(businessData["주요기능"]) ? businessData["주요기능"] : [],
-      mainCustomer: Array.isArray(businessData["목표고객"]) ? businessData["목표고객"] : [],
+      mainFeatures: Array.isArray(businessData["주요_목적_및_특징"])
+        ? businessData["주요_목적_및_특징"]
+        : [],
+      mainCharacter: Array.isArray(businessData["주요기능"])
+        ? businessData["주요기능"]
+        : [],
+      mainCustomer: Array.isArray(businessData["목표고객"])
+        ? businessData["목표고객"]
+        : [],
     };
 
     // 기존 대화 내역을 유지하면서 새로운 정보를 추가
-    const existingConversation = await getConversationByIdFromIndexedDB(conversationId);
+    const existingConversation = await getConversationByIdFromIndexedDB(
+      conversationId,
+      isLoggedIn
+    );
 
     const updatedConversation = {
       ...existingConversation,
@@ -505,12 +562,10 @@ const regenerateReport = async () => {
     console.log("기초보고서2");
     console.log(analysisReportData);
     setIsLoading(false);
-}
+  };
 
-// 전문가 보고서 재생성
-const regenerateReport2 = async () => {
-  
-}
+  // 전문가 보고서 재생성
+  const regenerateReport2 = async () => {};
 
   const handleRetryIdea = () => {
     alert("정말 다시 하시겠습니까?");
@@ -547,10 +602,11 @@ const regenerateReport2 = async () => {
             <>
               {!isEditingNow ? (
                 <ButtonWrap>
-                  <button type="button" onClick={handleRetryIdea}>
+                  <div />
+                  {/* <button type="button" onClick={handleRetryIdea}>
                     <img src={images.IconWrite2} alt="" />
                     아이디어 설명 다시 하기
-                  </button>
+                  </button> */}
                   <div>
                     <button type="button" onClick={regenerateReport}>
                       <img src={images.IconRefresh} alt="" />
@@ -891,8 +947,9 @@ const Popup = styled.div`
     background: ${palette.white};
 
     p {
+      font-family: "Pretendard", "Poppins";
       font-size: 0.875rem;
-      font-weight:500;
+      font-weight: 500;
       margin: 20px auto 24px;
     }
 
@@ -903,6 +960,7 @@ const Popup = styled.div`
 
       button {
         flex: 1;
+        font-family: "Pretendard", "Poppins";
         font-size: 0.875rem;
         font-weight: 600;
         color: ${palette.blue};
@@ -928,8 +986,8 @@ const Popup = styled.div`
           }
           span {
             font-size: 0.75rem;
-            font-weight:400;
-            color:${palette.gray500};
+            font-weight: 400;
+            color: ${palette.gray500};
             display: block;
             margin-top: 8px;
           }
@@ -940,6 +998,7 @@ const Popup = styled.div`
           border-top: 1px solid ${palette.lineGray};
 
           button {
+            font-family: "Pretendard", "Poppins";
             color: ${palette.gray};
             font-weight: 600;
             padding: 0;

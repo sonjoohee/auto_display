@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import MoleculePasswordResetPopup from "../molecules/MoleculePasswordResetPopup";
-import OrganismLeftSideBar from "../../../organisms/OrganismHeader";
+import OrganismLeftSideBar from "../../../Expert_Insight/components/organisms/OrganismLeftSideBar";
 
 import { palette } from "../../../../assets/styles/Palette";
 
@@ -74,7 +74,57 @@ const RequestResetPassword = () => {
 
   return (
     <>
-      <ContentsWrap>
+      <RequestResetContainer>
+        <Header>
+          비밀번호를 잊어버리셨나요?
+          <p>가입하신 이메일 주소로 임시 비밀번호를 발급해드려요</p>
+        </Header>
+
+        <PasswordFormContainer>
+          <div>
+            <label htmlFor="name">
+              이름<span>*</span>
+            </label>
+            <StyledInput
+              type="text"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="이름을 입력해 주세요"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="email">
+              이메일<span>*</span>
+            </label>
+            <StyledInput
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="이메일 주소(아이디)를 입력해주세요"
+            />
+          </div>
+
+          <StyledButton onClick={handleRequestReset} disabled={!name || !email}>
+            비밀번호 찾기
+          </StyledButton>
+
+          {message && <Message>{message}</Message>}
+        </PasswordFormContainer>
+
+        {isPopupOpen && (
+          <MoleculePasswordResetPopup
+            onClose={handleClosePopup}
+            email={email}
+            handleResendEmail={handleResendEmail}
+            handleGoToLogin={handleGoToLogin}
+          />
+        )}
+      </RequestResetContainer>
+
+      {/* <ContentsWrap>
         <OrganismLeftSideBar />
 
         <MainContent>
@@ -83,60 +133,8 @@ const RequestResetPassword = () => {
               <div className="loader"></div>
             </LoadingOverlay>
           )}
-          <RequestResetContainer>
-            <Header>
-              비밀번호를 잊어버리셨나요?
-              <p>
-                가입하신 이메일 주소로 비밀번호를 재설정 할 수 있는 링크를
-                보내드려요{" "}
-              </p>
-            </Header>
-
-            <PasswordFormContainer>
-              <div>
-                <label htmlFor="name">
-                  이름<span>*</span>
-                </label>
-                <StyledInput
-                  type="text"
-                  id="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="이름을 입력하세요"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="email">
-                  이메일<span>*</span>
-                </label>
-                <StyledInput
-                  type="email"
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="이메일 주소를 입력하세요"
-                />
-              </div>
-
-              <StyledButton onClick={handleRequestReset}>
-                비밀번호 찾기
-              </StyledButton>
-
-              {message && <Message>{message}</Message>}
-            </PasswordFormContainer>
-
-            {isPopupOpen && (
-              <MoleculePasswordResetPopup
-                onClose={handleClosePopup}
-                email={email}
-                handleResendEmail={handleResendEmail}
-                handleGoToLogin={handleGoToLogin}
-              />
-            )}
-          </RequestResetContainer>
         </MainContent>
-      </ContentsWrap>
+      </ContentsWrap> */}
     </>
   );
 };
@@ -148,7 +146,7 @@ const RequestResetContainer = styled.div`
   position: relative;
   max-width: 450px;
   width: 100%;
-  margin: 220px auto 0;
+  // margin: 220px auto 0;
 `;
 
 const Header = styled.h2`
@@ -156,7 +154,8 @@ const Header = styled.h2`
   flex-direction: column;
   gap: 8px;
   font-size: 2rem;
-  margin: 110px auto;
+  // margin: 110px auto;
+  margin-bottom:50px;
   text-align: center;
 
   p {
@@ -208,10 +207,15 @@ const StyledInput = styled.input`
   border-radius: 8px;
   border: 1px solid ${palette.lineGray};
   box-sizing: border-box;
+
+  &::placeholder {
+    font-size:0.875rem;
+  }
 `;
 
 const StyledButton = styled.button`
   width: 100%;
+  font-family: 'Pretendard', 'Poppins';
   font-size: 1rem;
   font-weight: 700;
   color: ${palette.white};
@@ -222,6 +226,12 @@ const StyledButton = styled.button`
   background-color: ${palette.blue};
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease;
+  
+  &:disabled {
+    background: #d6d6d6;
+    pointer-events: none;
+  }
+
 `;
 
 const Message = styled.p`

@@ -1,25 +1,47 @@
 // C:\dev\Crowd_Insight-\src\pages\Expert_Insight\components\organisms\OrganismSearchBottomBar.jsx
 
 import React, { useState } from "react";
-import styled from "styled-components";
-import images from "../../../../assets/images/Search.svg"; // Search.svg 이미지 import
+import styled, { css } from "styled-components";
+import images from "../../../../assets/styles/Images"; // Search.svg 이미지 import
 import { palette } from "../../../../assets/styles/Palette";
 import { InputField } from "../../../../assets/styles/Input";
 
 const OrganismSearchBottomBar = ({ onSearch }) => {
   const [inputValue, setInputValue] = useState("");
+  const [inputFocused, setInputFocused] = useState(false);
+
+  const [isPopupRegex, setIsPopupRegex] = useState(false);
+  const [isPopupRegex2, setIsPopupRegex2] = useState(false);
+
+  const closePopupRegex = () => {
+    setIsPopupRegex(false);
+  };
+  const closePopupRegex2 = () => {
+    setIsPopupRegex2(false);
+  };
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
 
   const handleSearch = () => {
+    const regex = /^[가-힣a-zA-Z0-9\s.,'"-]*$/;
+    if (!regex.test(inputValue)) {
+      setIsPopupRegex(true);
+      return;
+    }
+    if (inputValue.trim() === "") {
+      setIsPopupRegex2(true);
+      return;
+    }
     if (onSearch) {
       onSearch(inputValue);
     }
+    setInputValue("");
   };
 
   return (
+    <>
     <BottomBar>
       {/* <SearchBar>
         <svg width="20" height="20" viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -31,7 +53,7 @@ const OrganismSearchBottomBar = ({ onSearch }) => {
         <button type="button" onClick={handleSearch}>검색</button>
       </SearchBar> */}
 
-      <SearchBar Blue>
+      <SearchBar Blue={inputFocused}>
         <svg
           width="20"
           height="20"
@@ -52,6 +74,8 @@ const OrganismSearchBottomBar = ({ onSearch }) => {
           placeholder="당신의 아이템 또는 프로젝트 아이디어를 적어 주세요 (예: 원격 근무자를 위한 생산성 관리 툴)"
           value={inputValue}
           onChange={handleInputChange}
+          onFocus={() => setInputFocused(true)}
+          onBlur={() => setInputFocused(false)}
         />
 
         <button type="button" onClick={handleSearch}>
@@ -63,6 +87,67 @@ const OrganismSearchBottomBar = ({ onSearch }) => {
         아이템이나 프로젝트와 관련 없는 질문은 정확한 답변이 어려울 수 있습니다.
       </p>
     </BottomBar>
+
+      {isPopupRegex && (
+        <Popup
+          Cancel
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              closePopupRegex(); // 상태를 false로 설정
+            }
+          }}
+        >
+          <div>
+            <button
+              type="button"
+              className="closePopup"
+              onClick={closePopupRegex}
+            >
+              닫기
+            </button>
+            <span>
+              <img src={images.ExclamationMark2} alt="" />
+            </span>
+            <p>한글, 영문 외 특수문자는 입력할 수 없어요. 자음이나 모음만 입력한 경우 검색이 제한되니, 문장을 완전하게 입력해주세요.</p>
+            <div className="btnWrap">
+              <button type="button" onClick={closePopupRegex}>
+                확인
+              </button>
+            </div>
+          </div>
+        </Popup>
+      )}
+
+      {isPopupRegex2 && (
+        <Popup
+          Cancel
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              closePopupRegex2(); // 상태를 false로 설정
+            }
+          }}
+        >
+          <div>
+            <button
+              type="button"
+              className="closePopup"
+              onClick={closePopupRegex2}
+            >
+              닫기
+            </button>
+            <span>
+              <img src={images.ExclamationMark2} alt="" />
+            </span>
+            <p>비즈니스 분석을 위해 내용을 입력해주세요</p>
+            <div className="btnWrap">
+              <button type="button" onClick={closePopupRegex2}>
+                확인
+              </button>
+            </div>
+          </div>
+        </Popup>
+      )}
+      </>
   );
 };
 
@@ -82,23 +167,38 @@ const BottomBar = styled.div`
   display: flex;
   flex-direction: column;
   flex-basis: 100% !important;
+  align-items:center;
   // margin:0 20px;
-  margin-top: 40px;
-  z-index: 1000;
+  // margin-top: 40px;
+  z-index: 998;
   flex: auto !important;
 
   > p {
     font-size: 0.75rem;
     color: ${palette.gray};
-    margin-top: 10px;
+    padding-top: 10px;
+  }
+
+  &:before {
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    height:60px;
+    background:rgb(255, 255, 255);
+    background:linear-gradient( 0deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 30% );
+    content:'';
+    z-index:-1;
   }
 `;
 
 const SearchBar = styled.div`
+  position:relative;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   gap: 10px;
+  width:100%;  
   padding: 14px 32px;
   border-radius: 50px;
   border: 2px solid
@@ -151,5 +251,130 @@ const SearchBar = styled.div`
           return `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='31' viewBox='0 0 30 31' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M29.737 2.32621C30.0624 1.50773 29.2619 0.692681 28.4499 1.01581L0.630328 12.0871C-0.175495 12.4078 -0.219121 13.5441 0.559696 13.9269L10.1873 18.6582L18.5772 12.3685L12.5576 21.0251L16.7796 30.3636C17.1428 31.167 18.281 31.1402 18.6069 30.3205L29.737 2.32621Z' fill='black'/%3E%3C/svg%3E")`;
       }};
     }
+  }
+`;
+const Popup = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  transition: all 0.5s;
+  z-index: 9999;
+
+  .closePopup {
+    position: absolute;
+    right: 24px;
+    top: 24px;
+    width: 16px;
+    height: 16px;
+    font-size: 0;
+    padding: 11px;
+    border: 0;
+    background: none;
+
+    &:before,
+    &:after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 2px;
+      height: 100%;
+      border-radius: 10px;
+      background: ${palette.black};
+      content: "";
+    }
+
+    &:before {
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    &:after {
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
+  }
+
+  > div {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    // overflow:hidden;
+    padding: 45px 24px 24px;
+    border-radius: 10px;
+    background: ${palette.white};
+
+    p {
+      font-family: "Pretendard", "Poppins";
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin: 20px auto 24px;
+    }
+
+    .btnWrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      button {
+        flex: 1;
+        font-family: "Pretendard", "Poppins";
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: ${palette.blue};
+        padding: 12px 20px;
+        border-radius: 8px;
+        border: 1px solid ${palette.blue};
+        background: ${palette.white};
+
+        &:last-child {
+          color: ${palette.white};
+          background: ${palette.blue};
+        }
+      }
+    }
+
+    ${(props) =>
+      props.Cancel &&
+      css`
+        p {
+          strong {
+            font-weight: 500;
+            display: block;
+          }
+          span {
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: ${palette.gray500};
+            display: block;
+            margin-top: 8px;
+          }
+        }
+
+        .btnWrap {
+          padding-top: 16px;
+          border-top: 1px solid ${palette.lineGray};
+
+          button {
+            font-family: "Pretendard", "Poppins";
+            color: ${palette.gray};
+            font-weight: 600;
+            padding: 0;
+            border: 0;
+            background: none;
+
+            &:last-child {
+              color: ${palette.blue};
+              background: none;
+            }
+          }
+        }
+      `}
   }
 `;

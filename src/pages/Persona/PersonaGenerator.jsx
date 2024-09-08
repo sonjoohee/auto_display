@@ -1523,6 +1523,7 @@ const PopupReport = styled.div`
   }
 
   button {
+    font-family: 'Pretendard', 'Poppins';
     margin-top: 40px;
   }
 `;

@@ -14,6 +14,8 @@ import {
   CONVERSATION,
   APPROACH_PATH,
   IS_LOADING,
+  isLoggedInAtom,
+
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -30,6 +32,8 @@ import {
 } from "../../../../assets/styles/Skeleton";
 
 const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
+  const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
+
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [approachPath] = useAtom(APPROACH_PATH);
   const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
@@ -51,7 +55,9 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
     setBusinessInformationTargetCustomer,
   ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [buttonState, setButtonState] = useAtom(ADDITION_BUTTON_STATE);
-
+  const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(
+    SELECTED_EXPERT_INDEX
+  );
   const analysisReportData = {
     title: titleOfBusinessInfo,
     mainFeatures: mainFeaturesOfBusinessInformation,
@@ -65,7 +71,7 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
   const [additionalReportData, setAdditionalReportData] = useAtom(
     ADDITIONAL_REPORT_DATA
   ); // Use the list-based atom
-  const [answerData, setAnswerData] = useState(null);
+  const [answerData, setAnswerData] = useState("");
   const axiosConfig = {
     timeout: 100000, // 100초
     headers: {
@@ -79,28 +85,42 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
 
   useEffect(() => {
     const loadData = async () => {
+      let answerData
       try {
         const existingConversation = await getConversationByIdFromIndexedDB(
-          conversationId
+          conversationId, isLoggedIn
         );
 
         if (buttonState === 1) {
           // 버튼 상태가 1일 때만 API 요청 실행
           setButtonState(0); // 버튼 상태 초기화
           setIsLoading(true);
-
+          const updatedConversation1 = [...conversation];
+          updatedConversation1.push(
+            {
+              type: "system",
+              message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${
+                selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]
+              }를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
+            },
+            { type: `keyword` }
+          );
+          setConversation(updatedConversation1);
+          await saveConversationToIndexedDB({
+            ...existingConversation,
+            conversation: updatedConversation1,
+            timestamp: Date.now(),
+          }
+          ,isLoggedIn,conversationId
+          );
           const keyword = selectedKeywords[selectedKeywords.length - 1]; // Use the keyword based on expertIndex
 
           const data = {
             business_info: titleOfBusinessInfo,
             business_analysis_data: {
               명칭: analysisReportData.title,
-              개요: {
-                주요_목적_및_특징: analysisReportData.mainFeatures.map(
-                  (feature) => feature.기능
-                ),
-              },
-              주요기능: analysisReportData.mainFeatures,
+              주요_목적_및_특징: analysisReportData.mainFeatures,
+              주요기능: analysisReportData.mainCharacter,
               목표고객: analysisReportData.mainCustomer,
             },
             question_info: keyword,
@@ -112,24 +132,32 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
             axiosConfig
           );
           console.log(response);
-          const answerData = response.data.additional_question;
+          answerData = response.data.additional_question;
           setAnswerData(answerData);
           setSections(answerData.sections);
+          console.log(answerData.title);
 
-          // 기존의 추가 리포트 데이터에 새로 가져온 데이터를 추가합니다.
+          // 새로운 데이터를 배열의 맨 앞에 추가합니다.
           const updatedAdditionalReportData = [
-            ...additionalReportData,
-            answerData,
+            answerData,               // 새로 가져온 데이터
+            ...additionalReportData,  // 기존 데이터
           ];
           setAdditionalReportData(updatedAdditionalReportData);
+
 
           const updatedConversation = {
             ...existingConversation,
             additionalReportData: updatedAdditionalReportData, // 전체 리스트를 저장
             timestamp: Date.now(),
           };
-          await saveConversationToIndexedDB(updatedConversation);
-
+          await saveConversationToIndexedDB({
+            ...existingConversation,
+            // answerData,
+            additionalReportData : updatedAdditionalReportData,
+            timestamp: Date.now(),
+          }
+          ,isLoggedIn,conversationId
+          );
           setIsLoading(false);
 
           const updatedConversation2 = [...conversation];
@@ -143,6 +171,14 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
             { type: `keyword` }
           );
           setConversation(updatedConversation2);
+          await saveConversationToIndexedDB({
+            ...existingConversation,
+            conversation: updatedConversation2,
+            additionalReportData : updatedAdditionalReportData,
+            timestamp: Date.now(),
+          }
+          ,isLoggedIn,conversationId
+          );
         } else {
           // 기존 데이터가 있을 때 처리
           if (existingConversation && additionalReportData.length > 0) {
@@ -155,6 +191,7 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
       } catch (error) {
         console.error("Error loading data:", error);
       }
+      console.log("🚀 ~ loadData ~ conversationId:", conversationId);
     };
 
     loadData();
@@ -187,17 +224,12 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
         </>
       ) : (
         <>
-          <TabHeader>
-            {tabs.map((tab, index) => (
-              <TabButton
-                key={index}
-                active={selectedTab === index}
-                onClick={() => handleTabClick(index)}
-              >
-                {tab.title}
-              </TabButton>
-            ))}
-          </TabHeader>
+          {answerData.title && (
+            <TabHeader>
+              <TabTitle>{answerData.title}</TabTitle>
+              <TabContent>{answerData.sections[0].content[0].text}</TabContent>
+            </TabHeader>
+          )}
 
           {sections.map((section, index) => (
             <Section
@@ -207,11 +239,11 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
             />
           ))}
 
-          <MoleculeReportController
+          {!isLoading && <MoleculeReportController
             reportIndex={2}
             conversationId={conversationId}
             sampleData={answerData}
-          />
+          />}
         </>
       )}
     </AnalysisSection>
@@ -311,30 +343,29 @@ const BoxWrap = styled.div`
 `;
 
 const TabHeader = styled.div`
-  display: flex;
   gap: 40px;
   margin-bottom: 20px;
 `;
 
-const TabButton = styled.button`
+const TabTitle = styled.div`
   font-family: "Pretendard";
   font-size: 1.25rem;
-  font-weight: ${(props) => (props.active ? "600" : "400")};
-  color: ${(props) => (props.active ? palette.black : palette.lightGray)};
+  font-weight: 500;
+  color: ${palette.black};
   border: none;
-  border-bottom: ${(props) =>
-    props.active ? `1px solid ${palette.black}` : "none"};
+  border-bottom: none;
   background: ${palette.white};
-  cursor: pointer;
-  transition: all 0.5s;
+  margin-bottom: 10px;
+`;
 
-  &:hover {
-    color: ${palette.black};
-  }
-
-  &:focus {
-    outline: none;
-  }
+const TabContent = styled.div`
+  font-family: "Pretendard";
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: ${palette.black};
+  border: none;
+  border-bottom: none;
+  background: ${palette.white};
 `;
 
 // DynamicGrid로 그리드 컬럼의 갯수를 서브 타이틀 갯수에 맞춰 동적으로 설정

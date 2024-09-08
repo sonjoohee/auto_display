@@ -23,6 +23,8 @@ import { Link } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
 
 import MoleculeSignupPopup from "./MoleculeSignupPopup";
+import MoleculeSignPopup from "./MoleculeSignPopup";
+import MoleculeResetPasswordPopup from "./MoleculeResetPasswordPopup";
 
 const MoleculeLoginForm = () => {
   const [email, setEmail] = useAtom(emailAtom);
@@ -94,8 +96,8 @@ const MoleculeLoginForm = () => {
           // 유저 정보 (이름과 이메일)를 아톰에 저장
           setUserName(userInfo.name); // 아톰에 유저 이름 저장
           setUserEmail(userInfo.email); // 아톰에 유저 이메일 저장
-          localStorage.setItem("userName", userInfo.name);
-          localStorage.setItem("userEmail", userInfo.email);
+          sessionStorage.setItem("userName", userInfo.name);
+          sessionStorage.setItem("userEmail", userInfo.email);
           // 로그인 성공 처리
           setIsLoggedIn(true);
           setLoginSuccess(true);
@@ -132,7 +134,26 @@ const MoleculeLoginForm = () => {
     setIsSignupPopupOpen(false);
   };
 
+
+  const [isSignPopupOpen, setIsSignPopupOpen] = useState(false); // 회원가입 팝업 상태 관리
+  const handleSignClick = () => {
+    setIsSignPopupOpen(true); // 회원가입 팝업 열기
+  };
+  const closeSignPopup = () => {
+    setIsSignPopupOpen(false); // 회원가입 팝업 닫기
+  };
+
+  const [isPasswordRestPopupOpen, setIsPasswordRestPopupOpen] = useState(false); // 비밀번호 리셋 팝업 상태 관리
+  const handlePasswordRestClick = () => {
+    setIsPasswordRestPopupOpen(true); // 비밀번호 리셋 팝업 열기
+  };
+  const closePasswordRestPopup = () => {
+    setIsPasswordRestPopupOpen(false); // 비밀번호 리셋 팝업 닫기
+  };
+
+
   return (
+    <>
     <LoginFormContainer>
       <div>
         <label htmlFor="email">
@@ -166,7 +187,8 @@ const MoleculeLoginForm = () => {
       {error && <ErrorMessage>{error}</ErrorMessage>}
 
       <PasswordResetLink>
-        <a onClick={handlePasswordReset}>비밀번호 찾기</a>
+        <a onClick={handlePasswordRestClick}>비밀번호 찾기</a>
+        {/* <a onClick={handlePasswordReset}>비밀번호 찾기</a> */}
       </PasswordResetLink>
 
       <StyledLoginButton onClick={handleLogin} disabled={!email || !password}>
@@ -175,13 +197,20 @@ const MoleculeLoginForm = () => {
 
       <JoinWrap>
         <p>InterviewX가 처음이에요</p>
-        <Link to="/signup">가입하기</Link>
+        <Link to="#" onClick={handleSignClick}>가입하기</Link>
+
+        {/* <Link to="/signup">가입하기</Link> */}
         {/* <Link to="#" onClick={handleSignupClick}>가입하기</Link> */}
         {isSignupPopupOpen && (
           <MoleculeSignupPopup onClose={handleClosePopup} />
         )}
       </JoinWrap>
+
     </LoginFormContainer>
+
+    {isSignPopupOpen && <MoleculeSignPopup onClose={closeSignPopup} />}
+    {isPasswordRestPopupOpen && <MoleculeResetPasswordPopup onClose={closePasswordRestPopup} />}
+    </>
   );
 };
 
@@ -238,6 +267,7 @@ const TogglePasswordButton = styled.button`
   border: none;
   cursor: pointer;
   font-size: 16px;
+  font-family: 'Pretendard', 'Poppins';
   color: #888;
 
   &:focus {
@@ -269,7 +299,7 @@ const PasswordResetLink = styled.div`
 
 const StyledLoginButton = styled.button`
   width: 100%;
-  font-family: "Pretendard";
+  font-family: 'Pretendard', 'Poppins';
   color: ${palette.white};
   padding: 15px;
   border-radius: 8px;

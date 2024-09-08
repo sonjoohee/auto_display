@@ -2,6 +2,7 @@
 
 import React from 'react';
 import styled from 'styled-components';
+import { palette } from '../../../../assets/styles/Palette';
 
 const MoleculeUserMessage = ({ message }) => {
   const messageWithLineBreaks = message.split('\n').map((line, index) => 
@@ -16,17 +17,25 @@ const MoleculeUserMessage = ({ message }) => {
       <div>
         <p>{messageWithLineBreaks}</p>
       </div>
+      <Time>1 min age</Time>
     </UserMessageContainer>
   );
 };
 
 export default MoleculeUserMessage;
 
+const Time = styled.span`
+  align-self:flex-end;
+  font-size:0.63rem;
+  color:${palette.gray};
+`;
+
 const UserMessageContainer = styled.div`
   // max-width: 70%;
   display:flex;
   align-items:flex-end;
   flex-direction:row-reverse;
+  gap:18px;
   // width: auto;
   // padding: 15px 20px;
   // background-color: #ffe0b2;
@@ -52,7 +61,7 @@ const UserMessageContainer = styled.div`
   }
 
   &:after {
-    content: '';
+    // content: '';
     position: absolute;
     top: 50%;
     right: -10px;

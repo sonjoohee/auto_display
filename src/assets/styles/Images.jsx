@@ -41,11 +41,13 @@ import ImgTarget from "../images/imgTarget.svg"
 import IconChatSmile from "../images/iconChatSmile.svg"
 
 import IconSearch from "../images/iconSearch.svg"
+import IconSearchHover from "../images/iconSearchHover.svg"
 
 import IconChat from "../images/iconChat.svg"
 import IconWrite from "../images/iconWrite.svg"
 import IconTarget2 from "../images/iconTarget2.svg"
 
+import ExclamationMark2 from "../images/iconExclamationMark.svg"
 import ExclamationMark from "../images/iconExclamationMark1.svg"
 import CheckMark from "../images/CheckMark.svg"
 
@@ -74,6 +76,9 @@ import AccountSetting from "../images/AccountSetting.svg"
 import AccountInfo from "../images/AccountInfo.svg"
 import AccountInquiry from "../images/AccountInquiry.svg"
 import AccountLogout from "../images/AccountLogout.svg"
+import IconMagic from "../images/iconMagic.svg"
+
+import iconMailSuccess from "../images/iconMailSuccess.svg"
 
 const images = {
   Logo,
@@ -119,11 +124,13 @@ const images = {
   IconChatSmile,
 
   IconSearch,
+  IconSearchHover,
 
   IconChat,
   IconWrite,
   IconTarget2,
 
+  ExclamationMark2,
   ExclamationMark,
   CheckMark,
 
@@ -152,6 +159,9 @@ const images = {
   AccountInfo,
   AccountInquiry,
   AccountLogout,
+
+  IconMagic,
+  iconMailSuccess,
 }
 
 export default images;

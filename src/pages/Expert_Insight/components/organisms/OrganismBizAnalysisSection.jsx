@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 import { useAtom } from "jotai";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -31,9 +31,13 @@ import {
   IS_LOADING,
   CONVERSATION,
   APPROACH_PATH,
+  isLoggedInAtom,
+
 } from "../../../AtomStates";
 
 const OrganismBizAnalysisSection = ({ conversationId }) => {
+  const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
+
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [approachPath] = useAtom(APPROACH_PATH);
 
@@ -80,6 +84,18 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   const [editingIndex, setEditingIndex] = useState({ section: "", index: -1 });
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
   const [warningMessage, setWarningMessage] = useState("");
+
+  const [isPopupOpenDelete, setIsPopupOpenDelete] = useState(false);
+  const [deleteInfo, setDeleteInfo] = useState({ section: "", index: null });
+
+  const togglePopupDelete = () => {
+      setIsPopupOpenDelete(!isPopupOpenDelete);
+  };
+  const confirmDelete = (section, index) => {
+      setDeleteInfo({ section, index });
+      togglePopupDelete();
+  };
+
   const axiosConfig = {
     timeout: 100000, // 100초
     headers: {
@@ -173,17 +189,21 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
 
         // 아톰이 업데이트된 후에 analysisReportData를 생성합니다.
         const analysisReportData = {
-          title: businessData["명칭"],
-          mainFeatures: Array.isArray(businessData["주요_목적_및_특징"])
+          title: businessData?.["명칭"] || "No title available", // '명칭' 속성이 없으면 기본값 설정
+          mainFeatures: Array.isArray(businessData?.["주요_목적_및_특징"])
             ? businessData["주요_목적_및_특징"]
             : [],
-          mainCharacter: Array.isArray(businessData["주요기능"])
+          mainCharacter: Array.isArray(businessData?.["주요기능"])
             ? businessData["주요기능"]
             : [],
-          mainCustomer: Array.isArray(businessData["목표고객"])
+          mainCustomer: Array.isArray(businessData?.["목표고객"])
             ? businessData["목표고객"]
             : [],
         };
+        
+
+        console.log("OrganismBizAnalysisSectionconversationId")
+        console.log(conversationId)
 
         // 기존 대화 내역을 유지하면서 새로운 정보를 추가
         const existingConversation = await getConversationByIdFromIndexedDB(
@@ -195,7 +215,14 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
           analysisReportData,
           timestamp: Date.now(),
         };
-        await saveConversationToIndexedDB(updatedConversation);
+        await saveConversationToIndexedDB({
+          id: conversationId,
+          inputBusinessInfo,
+          analysisReportData,
+          timestamp: Date.now(),
+        }
+        ,isLoggedIn,conversationId
+        );
         console.log("___________기초보고서_____________");
         console.log("기초보고서2");
         console.log(analysisReportData);
@@ -203,7 +230,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
       } else {
         // IndexedDB에서 기존 데이터를 가져와 적용
         const existingConversation = await getConversationByIdFromIndexedDB(
-          conversationId
+          conversationId, isLoggedIn
         );
 
         if (existingConversation && existingConversation.analysisReportData) {
@@ -225,19 +252,44 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
         }
         setIsLoading(false);
       }
-      const updatedConversation = [...conversation];
+      const updatedConversation2 = [...conversation];
       if(approachPath === 1) {
-        updatedConversation.push(
+        updatedConversation2.push(
           { type: 'system', message: '비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 지금 바로 전략 보고서를 준비해드려요.' },
           { type: 'report_button'},
         );
       }
       else {
-        updatedConversation.push(
+        updatedConversation2.push(
           { type: 'system', message: '비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 전문가들의 의견을 확인하여 아이디어를 한 단계 더 발전시켜 보세요 🔍' },
         );
       }
-      setConversation(updatedConversation);
+      setConversation(updatedConversation2);
+      
+      const analysisReportData = {
+        title: businessData?.["명칭"] || "No title available", // '명칭' 속성이 없으면 기본값 설정
+        mainFeatures: Array.isArray(businessData?.["주요_목적_및_특징"])
+          ? businessData["주요_목적_및_특징"]
+          : [],
+        mainCharacter: Array.isArray(businessData?.["주요기능"])
+          ? businessData["주요기능"]
+          : [],
+        mainCustomer: Array.isArray(businessData?.["목표고객"])
+          ? businessData["목표고객"]
+          : [],
+      };
+
+      console.log("updatedConversation2")
+      console.log(updatedConversation2)
+      await saveConversationToIndexedDB({
+        id: conversationId,
+        conversation: updatedConversation2, // 여기서는 { updatedConversation }가 아니라 그대로 updatedConversation로 넘겨야 함
+        analysisReportData,
+        inputBusinessInfo,
+        timestamp: Date.now(),
+      }
+      ,isLoggedIn,conversationId
+      );
     };
     loadAndSaveData();
   }, [
@@ -348,9 +400,9 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
     }
   };
 
-  const handleDelete = (section, index) => {
-    alert("정말 삭제하시겠습니까?");
-
+  const handleDelete = () => {
+    const { section, index } = deleteInfo;
+  
     if (section === "mainFeatures") {
       setMainFeaturesOfBusinessInformation(
         mainFeaturesOfBusinessInformation.filter((_, i) => i !== index)
@@ -364,9 +416,12 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
         businessInformationTargetCustomer.filter((_, i) => i !== index)
       );
     }
+  
+    togglePopupDelete();
   };
 
   return (
+    <>
     <AnalysisSection>
       {isLoading ? (
         <>
@@ -433,7 +488,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                             </button>
                             <button
                               onClick={() =>
-                                handleDelete("mainFeatures", index)
+                                confirmDelete("targetCustomer", index)
                               }
                             >
                               <img src={images.IconDelete2} alt="" />
@@ -533,7 +588,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                             </button>
                             <button
                               onClick={() =>
-                                handleDelete("mainCharacteristic", index)
+                                confirmDelete("targetCustomer", index)
                               }
                             >
                               <img src={images.IconDelete2} alt="" />
@@ -634,7 +689,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                             </button>
                             <button
                               onClick={() =>
-                                handleDelete("targetCustomer", index)
+                                confirmDelete("targetCustomer", index)
                               }
                             >
                               <img src={images.IconDelete2} alt="" />
@@ -694,196 +749,50 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
           </p>
           {warningMessage && <WarningMessage>{warningMessage}</WarningMessage>}{" "}
           {/* 경고 메시지 출력 */}
-          <MoleculeReportController
+          {!isLoading && <MoleculeReportController
             reportIndex={0}
             conversationId={conversationId}
-          />
+          />}
         </>
       )}
     </AnalysisSection>
-    // return (
-    //     <>
-    //     {isLoading && (
-    //       <LoadingOverlay>
-    //         <div className="loader"></div>
-    //       </LoadingOverlay>
-    //     )}
-    //     <AnalysisSection>
-    //       <h1>{titleOfBusinessInfo}</h1>
 
-    //       <BoxWrap>
-    //         <strong><img src={images.StarChack} alt="" />주요 특징</strong>
-    //         <ul>
-    //           {mainFeaturesOfBusinessInformation.map((content, index) => (
-    //             <li key={index}>
-    //               {editingIndex.section === 'mainFeatures' && editingIndex.index === index ? (
-    //                 <InputField
-    //                   type="text"
-    //                   value={newEditContent}
-    //                   onChange={(e) => setNewEditContent(e.target.value)}
-    //                 />
-    //               ) : (
-    //                 <p>{content}</p>
-    //               )}
-    //               {editingIndex.section === 'mainFeatures' && editingIndex.index === index ? (
-    //                 <>
-    //                   <BtnWrap>
-    //                     <button onClick={handleEditCancel}><img src={images.IconClose2} alt="" />취소</button>
-    //                     <button onClick={handleApplyChange}><img src={images.IconCheck2} alt="" />적용</button>
-    //                   </BtnWrap>
-    //                 </>
-    //               ) : (
-    //                 <>
-    //                   {isEditingNow && (
-    //                     <>
-    //                       <BtnWrap>
-    //                         <button onClick={() => handleEditStart('mainFeatures', index)}><img src={images.IconEdit2} alt="" />수정</button>
-    //                         <button onClick={() => handleDelete('mainFeatures', index)}><img src={images.IconDelete2} alt="" />삭제</button>
-    //                       </BtnWrap>
-    //                     </>
-    //                   )}
-    //                 </>
-    //               )}
-    //             </li>
-    //           ))}
-    //         </ul>
-    //         {isAddingNow.section === 'mainFeatures' && isAddingNow.isAdding ? (
-    //           <AddInfo>
-    //             <InputField
-    //               value={newAddContent}
-    //               onChange={(e) => { setNewAddContent(e.target.value); }}
-    //               placeholder="새로운 정보를 추가해보세요"
-    //             />
-    //             <BtnWrap>
-    //               <button onClick={() => setIsAddingNow({ section: '', isAdding: false })}><img src={images.IconClose2} alt="" />취소</button>
-    //               <button onClick={() => handleAddSave('mainFeatures')}><img src={images.IconCheck2} alt="" />저장</button>
-    //             </BtnWrap>
-    //           </AddInfo>
-    //         ) : (
-    //           isEditingNow && (
-    //             <button className="moreButton" onClick={() => setIsAddingNow({ section: 'mainFeatures', isAdding: true })}>
-    //               특징 추가하기 +
-    //             </button>
-    //           )
-    //         )}
-    //       </BoxWrap>
-
-    //       <BoxWrap>
-    //         <strong><img src={images.IconSetting} alt="" />주요 기능</strong>
-    //         <ul>
-    //           {mainCharacteristicOfBusinessInformation.map((content, index) => (
-    //             <li key={index}>
-    //               {editingIndex.section === 'mainCharacteristic' && editingIndex.index === index ? (
-    //                 <InputField
-    //                   type="text"
-    //                   value={newEditContent}
-    //                   onChange={(e) => setNewEditContent(e.target.value)}
-    //                 />
-    //               ) : (
-    //                 <p>{content}</p>
-    //               )}
-    //               {editingIndex.section === 'mainCharacteristic' && editingIndex.index === index ? (
-    //                 <>
-    //                   <BtnWrap>
-    //                     <button onClick={handleEditCancel}><img src={images.IconClose2} alt="" />취소</button>
-    //                     <button onClick={handleApplyChange}><img src={images.IconCheck2} alt="" />적용</button>
-    //                   </BtnWrap>
-    //                 </>
-    //               ) : (
-    //                 <>
-    //                   {isEditingNow && (
-    //                     <>
-    //                       <BtnWrap>
-    //                         <button onClick={() => handleEditStart('mainCharacteristic', index)}><img src={images.IconEdit2} alt="" />수정</button>
-    //                         <button onClick={() => handleDelete('mainCharacteristic', index)}><img src={images.IconDelete2} alt="" />삭제</button>
-    //                       </BtnWrap>
-    //                     </>
-    //                   )}
-    //                 </>
-    //               )}
-    //             </li>
-    //           ))}
-    //         </ul>
-    //         {isAddingNow.section === 'mainCharacteristic' && isAddingNow.isAdding ? (
-    //           <AddInfo>
-    //             <InputField
-    //               value={newAddContent}
-    //               onChange={(e) => { setNewAddContent(e.target.value); }}
-    //               placeholder="새로운 정보를 추가해보세요"
-    //             />
-    //             <button onClick={() => setIsAddingNow({ section: '', isAdding: false })}><img src={images.IconClose2} alt="" />취소</button>
-    //             <button onClick={() => handleAddSave('mainCharacteristic')}><img src={images.IconCheck2} alt="" />저장</button>
-    //           </AddInfo>
-    //         ) : (
-    //           isEditingNow && (
-    //             <button className="moreButton" onClick={() => setIsAddingNow({ section: 'mainCharacteristic', isAdding: true })}>
-    //               기능 추가하기 +
-    //             </button>
-    //           )
-    //         )}
-    //       </BoxWrap>
-
-    //       <BoxWrap>
-    //         <strong><img src={images.IconTarget} alt="" />목표 고객</strong>
-    //         <ul>
-    //           {businessInformationTargetCustomer.map((content, index) => (
-    //             <li key={index}>
-    //               {editingIndex.section === 'targetCustomer' && editingIndex.index === index ? (
-    //                 <InputField
-    //                   type="text"
-    //                   value={newEditContent}
-    //                   onChange={(e) => setNewEditContent(e.target.value)}
-    //                 />
-    //               ) : (
-    //                 <p>{content}</p>
-    //               )}
-    //               {editingIndex.section === 'targetCustomer' && editingIndex.index === index ? (
-    //                 <>
-    //                   <BtnWrap>
-    //                     <button onClick={handleEditCancel}><img src={images.IconClose2} alt="" />취소</button>
-    //                     <button onClick={handleApplyChange}><img src={images.IconCheck2} alt="" />적용</button>
-    //                   </BtnWrap>
-    //                 </>
-    //               ) : (
-    //                 <>
-    //                   {isEditingNow && (
-    //                     <>
-    //                       <BtnWrap>
-    //                         <button onClick={() => handleEditStart('targetCustomer', index)}><img src={images.IconEdit2} alt="" />수정</button>
-    //                         <button onClick={() => handleDelete('targetCustomer', index)}><img src={images.IconDelete2} alt="" />삭제</button>
-    //                       </BtnWrap>
-    //                     </>
-    //                   )}
-    //                 </>
-    //               )}
-    //             </li>
-    //           ))}
-    //         </ul>
-    //         {isAddingNow.section === 'targetCustomer' && isAddingNow.isAdding ? (
-    //           <AddInfo>
-    //             <InputField
-    //               value={newAddContent}
-    //               onChange={(e) => { setNewAddContent(e.target.value); }}
-    //               placeholder="새로운 정보를 추가해보세요"
-    //             />
-    //           <button onClick={() => setIsAddingNow({ section: '', isAdding: false })}><img src={images.IconClose2} alt="" />취소</button>
-    //           <button onClick={() => handleAddSave('targetCustomer')}><img src={images.IconCheck2} alt="" />저장</button>
-    //           </AddInfo>
-    //         ) : (
-    //           isEditingNow && (
-    //             <button className="moreButton" onClick={() => setIsAddingNow({ section: 'targetCustomer', isAdding: true })}>
-    //               목표 고객 추가하기 +
-    //             </button>
-    //           )
-    //         )}
-    //       </BoxWrap>
-
-    //       <p>입력을 바탕으로 위와 같이 이해하고 정리하였습니다. <span>제가 이해한 내용이 맞습니까? 확인해 주시기 바랍니다.</span> 정확한 정보를 바탕으로 최상의 보고서를 작성하기 위해서는 고객님의 피드백이 매우 중요합니다. 감사합니다!</p>
-
-    //       {warningMessage && <WarningMessage>{warningMessage}</WarningMessage>} {/* 경고 메시지 출력 */}
-    //       <MoleculeReportController reportIndex={0} conversationId={conversationId}  />
-    //       </AnalysisSection>
-    //     </>
+    {isPopupOpenDelete && (
+        <Popup
+          Cancel
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              togglePopupDelete();
+            }
+          }}
+        >
+          <div>
+            <button
+              type="button"
+              className="closePopup"
+              onClick={togglePopupDelete}
+            >
+              닫기
+            </button>
+            <span>
+              <img src={images.ExclamationMark} alt="" />
+            </span>
+            <p>
+              <strong>정말 삭제하시겠습니까?</strong>
+              <span>삭제된 내용은 복구 할 수 없습니다.</span>
+            </p>
+            <div className="btnWrap">
+              <button type="button" onClick={togglePopupDelete}>
+                취소
+              </button>
+              <button type="button" onClick={handleDelete}>
+                확인
+              </button>
+            </div>
+          </div>
+        </Popup>
+      )}
+    </>
   );
 };
 
@@ -1099,4 +1008,129 @@ const LoadingOverlay = styled.div`
 `;
 const Spacing = styled.div`
   margin-bottom: 40px; /* 제목과 본문 사이의 간격 */
+`;
+const Popup = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  transition: all 0.5s;
+  z-index: 9999;
+
+  .closePopup {
+    position: absolute;
+    right: 24px;
+    top: 24px;
+    width: 16px;
+    height: 16px;
+    font-size: 0;
+    padding: 11px;
+    border: 0;
+    background: none;
+
+    &:before,
+    &:after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 2px;
+      height: 100%;
+      border-radius: 10px;
+      background: ${palette.black};
+      content: "";
+    }
+
+    &:before {
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    &:after {
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
+  }
+
+  > div {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    // overflow:hidden;
+    padding: 45px 24px 24px;
+    border-radius: 10px;
+    background: ${palette.white};
+
+    p {
+      font-family: "Pretendard", "Poppins";
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin: 20px auto 24px;
+    }
+
+    .btnWrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      button {
+        flex: 1;
+        font-family: "Pretendard", "Poppins";
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: ${palette.blue};
+        padding: 12px 20px;
+        border-radius: 8px;
+        border: 1px solid ${palette.blue};
+        background: ${palette.white};
+
+        &:last-child {
+          color: ${palette.white};
+          background: ${palette.blue};
+        }
+      }
+    }
+
+    ${(props) =>
+      props.Cancel &&
+      css`
+        p {
+          strong {
+            font-weight: 500;
+            display: block;
+          }
+          span {
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: ${palette.gray500};
+            display: block;
+            margin-top: 8px;
+          }
+        }
+
+        .btnWrap {
+          padding-top: 16px;
+          border-top: 1px solid ${palette.lineGray};
+
+          button {
+            font-family: "Pretendard", "Poppins";
+            color: ${palette.gray};
+            font-weight: 600;
+            padding: 0;
+            border: 0;
+            background: none;
+
+            &:last-child {
+              color: ${palette.blue};
+              background: none;
+            }
+          }
+        }
+      `}
+  }
 `;
