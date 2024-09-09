@@ -284,15 +284,15 @@ const OrganismLeftSideBar = () => {
       ); // 목표 고객 설정
 
       // 전문가 보고서 데이터 복구
-      setExpert1ReportData(response.data.strategyReportData_EX1 || {});
-      setExpert2ReportData(response.data.strategyReportData_EX2 || {});
-      setExpert3ReportData(response.data.strategyReportData_EX3 || {});
+      setExpert1ReportData(chatData.strategyReportData_EX1 || {});
+      setExpert2ReportData(chatData.strategyReportData_EX2 || {});
+      setExpert3ReportData(chatData.strategyReportData_EX3 || {});
 
       // 필요하다면 추가 상태 업데이트
       setSelectedAdditionalKeyword(
-        response.data.selectedAdditionalKeyword || []
+        chatData.selectedAdditionalKeyword || []
       );
-      setAdditionalReportData(response.data.additionalReportData || []);
+      setAdditionalReportData(chatData.additionalReportData || []);
 
       // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
       // set어프로치패스(2)
