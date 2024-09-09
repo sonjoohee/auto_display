@@ -157,7 +157,7 @@ const OrganismLeftSideBar = () => {
     };
   }, [historyEditBoxRef]);
 
-  const editBoxToogle = (index) => {
+  const editBoxToggle = (index) => {
     if (editToggleIndex === index) {
       setEditToggleIndex(null); // 이미 열려 있는 경우 닫기
     } else {
@@ -390,6 +390,7 @@ const OrganismLeftSideBar = () => {
       // 팝업 닫기 및 삭제할 reportId 초기화
       setIsDeletePopupOpen(false);
       setReportIdToDelete(null);
+      setReportRefreshTrigger((prev) => !prev);
     } catch (error) {
       console.error("삭제 요청 오류:", error);
     }
@@ -418,6 +419,7 @@ const OrganismLeftSideBar = () => {
       // 팝업 닫기 및 삭제할 reportId 초기화
       setChatIsDeletePopupOpen(false);
       setChatIdToDelete(null);
+      setReportRefreshTrigger((prev) => !prev);
     } catch (error) {
       console.error("삭제 요청 오류:", error);
     }
@@ -459,14 +461,14 @@ const OrganismLeftSideBar = () => {
     setIsOpen(!isOpen);
   };
 
-  const [isToogle, setIsToogle] = useState(true);
+  const [isToggle, setIsToggle] = useState(true);
   const moreProfile = () => {
-    setIsToogle(!isToogle);
+    setIsToggle(!isToggle);
   };
 
-  const [isEditToogle, setIsEditToogle] = useState(true);
-  // const editBoxToogle = () => {
-  //   setIsEditToogle(!isEditToogle);
+  const [isEditToggle, setIsEditToggle] = useState(true);
+  // const editBoxToggle = () => {
+  //   setIsEditToggle(!isEditToggle);
   // };
 
   const handleNewProjectClick = () => {
@@ -573,7 +575,7 @@ const OrganismLeftSideBar = () => {
                       {insightEditToggleIndex === index && (
                         <div ref={insightEditBoxRef}>
                           <EditBox
-                            isEditToogle={insightEditToggleIndex === index}
+                            isEditToggle={insightEditToggleIndex === index}
                           >
                             <button
                               type="button"
@@ -627,7 +629,7 @@ const OrganismLeftSideBar = () => {
                             padding: "10px",
                             cursor: "pointer",
                           }}
-                          onClick={() => editBoxToogle(index)}
+                          onClick={() => editBoxToggle(index)}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -662,7 +664,7 @@ const OrganismLeftSideBar = () => {
 
                         {editToggleIndex === index && (
                           <div ref={historyEditBoxRef}>
-                            <EditBox isEditToogle={editToggleIndex === index}>
+                            <EditBox isEditToggle={editToggleIndex === index}>
                               {/* <button type="button"> */}
                               <button
                                 type="button"
@@ -707,7 +709,7 @@ const OrganismLeftSideBar = () => {
                 </button>
               </LogoutBtnWrap>
 
-              <LogoutToogle isToogle={isToogle} className="AccountInfo">
+              <LogoutToggle isToggle={isToggle} className="AccountInfo">
                 <div className="info">
                   <strong>{sessionStorage.getItem("userName")}</strong>{" "}
                   {/* 유저 이름 표시 */}
@@ -741,7 +743,7 @@ const OrganismLeftSideBar = () => {
                     </button>
                   </li>
                 </ul>
-              </LogoutToogle>
+              </LogoutToggle>
             </>
           ) : (
             <>
@@ -1229,14 +1231,14 @@ const EditBox = styled.div`
   gap: 20px;
   max-width: 217px;
   width: 30%;
-  max-height: ${(props) => (props.isEditToogle ? "1000px" : "0")};
-  padding: ${(props) => (props.isEditToogle ? "20px" : "0")};
+  max-height: ${(props) => (props.isEditToggle ? "1000px" : "0")};
+  padding: ${(props) => (props.isEditToggle ? "20px" : "0")};
   overflow: hidden;
   border-radius: 15px;
   background: ${palette.white};
   box-shadow: 0 4px 28px rgba(0, 0, 0, 0.05);
-  visibility: ${(props) => (props.isEditToogle ? "visible" : "hidden")};
-  opacity: ${(props) => (props.isEditToogle ? "1" : "0")};
+  visibility: ${(props) => (props.isEditToggle ? "visible" : "hidden")};
+  opacity: ${(props) => (props.isEditToggle ? "1" : "0")};
   transform: translateX(260px);
   transition: all 0.5s;
 
@@ -1404,7 +1406,7 @@ const AccordionContent = styled.div`
   }
 `;
 
-const ToogleMenu = styled.div`
+const ToggleMenu = styled.div`
   position: absolute;
   right: -260px;
   top: 0;
@@ -1646,20 +1648,20 @@ const LogoutBtnWrap = styled.div`
   }
 `;
 
-const LogoutToogle = styled.div`
+const LogoutToggle = styled.div`
   position: absolute;
   bottom: 0;
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-height: ${(props) => (props.isToogle ? "0" : "1000px")};
-  padding: ${(props) => (props.isToogle ? "0" : "20px")};
+  max-height: ${(props) => (props.isToggle ? "0" : "1000px")};
+  padding: ${(props) => (props.isToggle ? "0" : "20px")};
   overflow: hidden;
   border-radius: 15px;
   background: ${palette.white};
   box-shadow: 0 4px 28px rgba(0, 0, 0, 0.05);
-  visibility: ${(props) => (props.isToogle ? "hidden" : "visible")};
-  opacity: ${(props) => (props.isToogle ? "0" : "1")};
+  visibility: ${(props) => (props.isToggle ? "hidden" : "visible")};
+  opacity: ${(props) => (props.isToggle ? "0" : "1")};
   // transition: max-height 0.5s ease, padding 0.5s ease;
   transform: translateX(260px);
   transition: all 0.5s;
