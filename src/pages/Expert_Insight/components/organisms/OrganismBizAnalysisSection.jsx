@@ -227,6 +227,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
             id: conversationId,
             inputBusinessInfo,
             analysisReportData,
+            conversationStage: 2,
             timestamp: Date.now(),
             expert_index: selectedExpertIndex,
           },
