@@ -275,6 +275,8 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
           message:
             "비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 전문가들의 의견을 확인하여 아이디어를 한 단계 더 발전시켜 보세요 🔍",
         });
+      } else {
+        // 히스토리 불러오기 로직
       }
       setConversation(updatedConversation2);
 
