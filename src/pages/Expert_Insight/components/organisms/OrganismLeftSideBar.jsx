@@ -158,13 +158,32 @@ const OrganismLeftSideBar = () => {
     };
   }, [historyEditBoxRef]);
 
+
   const editBoxToggle = (index) => {
-    if (editToggleIndex === index) {
-      setEditToggleIndex(null); // 이미 열려 있는 경우 닫기
-    } else {
-      setEditToggleIndex(index); // 해당 인덱스의 EditBox 열기
+    // 현재 열려 있는 항목을 확인하고 상태를 토글합니다.
+    setEditToggleIndex(prevIndex => prevIndex === index ? null : index);
+  
+    // 메뉴 위치 조정
+    const button = document.querySelector(`#insight-toggle-${index}`);
+    const editBox = document.querySelector(`#insight-edit-box-${index}`);
+  
+    if (button && editBox) {
+      const rect = button.getBoundingClientRect();
+      editBox.style.top = `${rect.top}px`;
+      editBox.style.left = `${rect.right + 10}px`;
     }
   };
+
+
+  // const editBoxToggle = (index) => {
+  //   if (editToggleIndex === index) {
+  //     setEditToggleIndex(null); / 이미 열려 있는 경우 닫기
+  //   } else {
+  //     setEditToggleIndex(index); / 해당 인덱스의 EditBox 열기
+  //   }
+  // };
+
+
   // 삭제 버튼 클릭 시, 삭제 경고 팝업 열기
   const handleDeleteButtonClick = (reportId) => {
     setReportIdToDelete(reportId); // 삭제할 reportId 저장
@@ -495,6 +514,11 @@ const OrganismLeftSideBar = () => {
     setConversationId(null);
   };
 
+
+
+
+
+
   return (
     <>
       <Logo isOpen={isOpen}>
@@ -533,6 +557,7 @@ const OrganismLeftSideBar = () => {
                         {report.business_info}
                       </p>
                       <span
+                        id={`insight-toggle-${index}`}
                         style={{
                           display: "inline-block",
                           padding: "10px",
@@ -571,7 +596,7 @@ const OrganismLeftSideBar = () => {
                         </svg>
                       </span>
                       {insightEditToggleIndex === index && (
-                        <div ref={insightEditBoxRef}>
+                        <div id={`insight-edit-box-${index}`} className="insight-toggle" ref={insightEditBoxRef}>
                           <EditBox
                             isEditToggle={insightEditToggleIndex === index}
                           >
@@ -624,6 +649,7 @@ const OrganismLeftSideBar = () => {
                             : "기초보고서를 생성 중..."}
                         </p>
                         <span
+                          id={`insight-toggle-${index}`}
                           style={{
                             display: "inline-block",
                             padding: "10px",
@@ -663,7 +689,7 @@ const OrganismLeftSideBar = () => {
                         </span>
 
                         {editToggleIndex === index && (
-                          <div ref={historyEditBoxRef}>
+                          <div id={`insight-edit-box-${index}`} className="insight-toggle" ref={historyEditBoxRef}>
                             <EditBox isEditToggle={editToggleIndex === index}>
                               {/* <button type="button"> */}
                               <button
@@ -1230,7 +1256,8 @@ const EditBox = styled.div`
   flex-direction: column;
   gap: 20px;
   max-width: 217px;
-  width: 30%;
+  // width: 30%;
+  width:100%;
   max-height: ${(props) => (props.isEditToggle ? "1000px" : "0")};
   padding: ${(props) => (props.isEditToggle ? "20px" : "0")};
   overflow: hidden;
@@ -1239,7 +1266,7 @@ const EditBox = styled.div`
   box-shadow: 0 4px 28px rgba(0, 0, 0, 0.05);
   visibility: ${(props) => (props.isEditToggle ? "visible" : "hidden")};
   opacity: ${(props) => (props.isEditToggle ? "1" : "0")};
-  transform: translateX(260px);
+  // transform: translateX(260px);
   transition: all 0.5s;
 
   button {
@@ -1364,6 +1391,15 @@ const AccordionContent = styled.div`
     padding: 8px 0 8px 15px;
     cursor: pointer;
 
+    .insight-toggle {
+      position:fixed;
+      left:0;
+      transform:translateX(290px) translateY(-30px);
+      width:217px;
+      display:block;
+      z-index:1000;
+    }
+
     &:before {
       position: absolute;
       left: 0;
@@ -1380,6 +1416,7 @@ const AccordionContent = styled.div`
     p {
       width: 100%;
       min-height: 19px;
+      font-family: 'Pretendard', 'Poppins';
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
