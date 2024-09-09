@@ -41,7 +41,7 @@ const OrganismAdditionalReport = ({
   const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
     SELECTED_ADDITIONAL_KEYWORD
   );
-  const [isLoading, setIsLoading] = useAtom(IS_LOADING);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [
