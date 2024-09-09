@@ -557,6 +557,7 @@ const OrganismLeftSideBar = () => {
                         {report.business_info}
                       </p>
                       <span
+                        id={`insight-toggle-${index}`}
                         style={{
                           display: "inline-block",
                           padding: "10px",
@@ -595,7 +596,7 @@ const OrganismLeftSideBar = () => {
                         </svg>
                       </span>
                       {insightEditToggleIndex === index && (
-                        <div ref={insightEditBoxRef}>
+                        <div id={`insight-edit-box-${index}`} className="insight-toggle" ref={insightEditBoxRef}>
                           <EditBox
                             isEditToggle={insightEditToggleIndex === index}
                           >
