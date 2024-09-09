@@ -197,6 +197,11 @@ const OrganismLeftSideBar = () => {
     const fetchChatList = async () => {
       try {
         const accessToken = sessionStorage.getItem("accessToken");
+
+        if (!accessToken) {
+          setChatList([]);  // 로그아웃 상태에서는 대화 리스트를 빈 배열로 설정
+          return;
+        }
         const response = await axios.get(
           "https://wishresearch.kr/panels/chat_list",
           {
@@ -213,7 +218,7 @@ const OrganismLeftSideBar = () => {
       }
     };
     fetchChatList();
-  }, [reportRefreshTrigger]);
+  }, [reportRefreshTrigger, isLoggedIn]); 
 
 
   useEffect(() => {
@@ -221,6 +226,11 @@ const OrganismLeftSideBar = () => {
     const fetchReports = async () => {
       try {
         const accessToken = sessionStorage.getItem("accessToken"); // 저장된 토큰 가져오기
+
+        if (!accessToken) {
+          setReports([]);  // 로그아웃 상태에서는 대화 리스트를 빈 배열로 설정
+          return;
+        }
         const response = await axios.get(
           "https://wishresearch.kr/panels/insight_list",
           {
@@ -235,7 +245,8 @@ const OrganismLeftSideBar = () => {
       }
     };
     fetchReports();
-  }, [reportRefreshTrigger]);
+  }, [reportRefreshTrigger, isLoggedIn]); 
+
 
 
   // const handleConversationClick = (id) => {
@@ -323,10 +334,9 @@ const OrganismLeftSideBar = () => {
     sessionStorage.removeItem("userEmail");
     localStorage.removeItem("userName");
     localStorage.removeItem("userEmail");
-    setIsLoggedIn(false); // 로그아웃 상태로 전환
+    setIsLoggedIn(false);
     setUserName("");
     setUserEmail("");
-
     setIsLogoutPopup(false); // 로그아웃 팝업 닫기
     navigate("/PageMeetAiExpert"); // 페이지 이동
   };
