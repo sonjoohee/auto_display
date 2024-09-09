@@ -619,7 +619,9 @@ const OrganismLeftSideBar = () => {
                     {chatList.map((chat, index) => (
                       <li key={index}>
                         <p onClick={() => handleConversationClick(chat.id)}>
-                          {chat.business_info ? chat.business_info : "기초보고서를 생성 중..."}
+                          {chat.business_info
+                            ? chat.business_info
+                            : "기초보고서를 생성 중..."}
                         </p>
                         <span
                           style={{
