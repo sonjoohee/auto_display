@@ -38,7 +38,9 @@ import {
 
 const OrganismBizAnalysisSection = ({ conversationId }) => {
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
-  const [reportRefreshTrigger, setReportRefreshTrigger] = useAtom(REPORT_REFRESH_TRIGGER);  // 리프레시 트리거 상태 구독
+  const [reportRefreshTrigger, setReportRefreshTrigger] = useAtom(
+    REPORT_REFRESH_TRIGGER
+  ); // 리프레시 트리거 상태 구독
 
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [approachPath] = useAtom(APPROACH_PATH);
@@ -302,6 +304,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
         {
           id: conversationId,
           conversation: updatedConversation2, // 여기서는 { updatedConversation }가 아니라 그대로 updatedConversation로 넘겨야 함
+          conversationStage: 2,
           analysisReportData,
           inputBusinessInfo,
           timestamp: Date.now(),
