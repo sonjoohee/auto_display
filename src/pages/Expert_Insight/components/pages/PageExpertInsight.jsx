@@ -27,7 +27,7 @@ import {
   BUTTON_STATE,
   isLoggedInAtom,
   CONVERSATION_ID,
-  ADDITTIONAL_REPORT_COUNT,
+  ADDITIONAL_REPORT_COUNT,
 } from "../../../AtomStates";
 
 import {
@@ -81,9 +81,10 @@ const PageExpertInsight = () => {
     SELECTED_EXPERT_INDEX
   );
   const [sections, setSections] = useState([]);
-  const [additionalReportCount, setAdditionalReportCount] = useAtom(
-    ADDITTIONAL_REPORT_COUNT
-  );
+  // const [additionalReportCount, setAdditionalReportCount] = useAtom(
+  //   ADDITIONAL_REPORT_COUNT
+  // );
+  let additionalReportCount = 0;
   const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
     SELECTED_ADDITIONAL_KEYWORD
   );
@@ -621,7 +622,7 @@ const PageExpertInsight = () => {
         // { type: `addition_${selectedExpertIndex}` }
       );
 
-      setAdditionalReportCount(additionalReportCount + 1);
+      // setAdditionalReportCount(additionalReportCount + 1);
     }
 
     console.log(
@@ -666,6 +667,7 @@ const PageExpertInsight = () => {
   if (isLoading) {
     return <div>Loading...</div>;
   }
+
   return (
     <>
       <ContentsWrap>
@@ -702,10 +704,11 @@ const PageExpertInsight = () => {
                 } else if (item.type === "addition") {
                   // console.log("🚀 ~ {conversation.map ~ item:", item, index);
                   // const expertIndex = item.type.split("_")[1];
+                  const currentAdditionalReportCount = additionalReportCount++;
 
                   return (
                     <OrganismAdditionalReport
-                      // additionalReportCount={additionalReportCount - 1}
+                      additionalReportCount={currentAdditionalReportCount}
                       // key={`addition_${expertIndex}_${index}`}
                       conversationId={conversationId}
                       // expertIndex={expertIndex}
