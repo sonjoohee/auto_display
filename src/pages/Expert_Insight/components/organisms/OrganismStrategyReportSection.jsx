@@ -107,25 +107,19 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const [strategyReportData, setStrategyReportData] =
     useAtom(strategyReportAtom);
 
-  useEffect(() => {
-    const loadData = async () => {
-      let finalResponse;
-      if (buttonState === 1) {
-        // BUTTON_STATE가 1일 때만 API 호출
-        setIsLoading(true);
-        setButtonState(0); // BUTTON_STATE를 초기화
+    useEffect(() => {
+      const loadData = async () => {
+        let finalResponse;
+    
         try {
+          // 기존 데이터를 조회하는 로직을 buttonState와 상관없이 실행
           const existingConversation = await getConversationByIdFromIndexedDB(
             conversationId,
             isLoggedIn
           );
           let currentReportKey = `strategyReportData_EX${selectedExpertIndex}`;
-
-          console.log(
-            "🚀 ~ loadData ~ existingConversation:",
-            existingConversation
-          );
-          // console.log("🚀 ~ loadData ~ currentReportKey:", currentReportKey);
+    
+          // 기존 데이터가 있는 경우
           if (
             existingConversation &&
             existingConversation[currentReportKey] &&
@@ -136,7 +130,17 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             setStrategyReportData(strategyData);
             setTabs(strategyData.tabs);
             setSections(strategyData.tabs[selectedTab].sections);
-          } else if (Object.keys(strategyReportData).length >= 0) {
+          } else if (Object.keys(strategyReportData).length >= 0 && buttonState !== 1) {
+            // 기존 데이터가 없고 버튼이 눌리지 않은 경우, 새로운 데이터 요청하지 않음
+            setTabs(strategyReportData.tabs);
+            setSections(strategyReportData.tabs[selectedTab].sections);
+          }
+    
+          // buttonState === 1일 때만 API 호출
+          if (buttonState === 1) {
+            setIsLoading(true);
+            setButtonState(0); // 버튼 상태를 초기화
+    
             const data = {
               expert_id: selectedExpertIndex,
               business_info: titleOfBusinessInfo, // DB에서 가져온 titleOfBusinessInfo 사용
@@ -149,17 +153,15 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               tabs: [],
               page_index: 1,
             };
-            // console.log("🚀 ~ loadData ~ data:", data);
-
+    
             const response1 = await axios.post(
               "https://wishresearch.kr/panels/expert",
               data,
               axiosConfig
             );
-
+    
             finalResponse = response1.data;
-            // console.log("🚀 ~ loadData ~ finalResponse:", finalResponse);
-
+    
             if (finalResponse.total_page_index === 2) {
               const response2 = await axios.post(
                 "https://wishresearch.kr/panels/expert",
@@ -180,23 +182,14 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               );
               finalResponse = response3.data;
             }
-
-            // console.log("Final response data:", finalResponse);
-
+    
             const strategyData = finalResponse;
-            // console.log("🚀 ~ loadData ~ strategyData:", strategyData);
-
+    
             setStrategyReportData(strategyData);
             setTabs(strategyData.tabs);
             setSections(strategyData.tabs[selectedTab].sections);
-
-            if (strategyData.expert_id === 1)
-              setExpert1ReportData(strategyData);
-            else if (strategyData.expert_id === 2)
-              setExpert2ReportData(strategyData);
-            else if (strategyData.expert_id === 3)
-              setExpert3ReportData(strategyData);
-
+    
+            // Save data to IndexedDB
             const updatedConversation = {
               ...existingConversation,
               [currentReportKey]: strategyData,
@@ -204,29 +197,18 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               timestamp: Date.now(),
               expert_index: selectedExpertIndex,
             };
-            // console.log(
-            //   "🚀 ~ loadData ~ existingConversation:",
-            //   existingConversation
-            // );
-            // console.log(
-            //   "🚀 ~ loadData ~ updatedConversation:",
-            //   updatedConversation
-            // );
-
+    
             await saveConversationToIndexedDB(
               updatedConversation,
               isLoggedIn,
               conversationId
             );
-          } else {
-            setTabs(strategyReportData.tabs);
-            setSections(strategyReportData.tabs[selectedTab].sections);
           }
         } catch (error) {
           console.error("Error loading data:", error);
         }
         setIsLoading(false);
-
+    
         const updatedConversation = [...conversation];
         updatedConversation.push(
           {
@@ -236,6 +218,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
           },
           { type: `keyword` }
         );
+    
         const existingConversation2 = await getConversationByIdFromIndexedDB(
           conversationId,
           isLoggedIn
@@ -248,28 +231,18 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
           timestamp: Date.now(),
           expert_index: selectedExpertIndex,
         };
-
-        // console.log(
-        //   "🚀 ~ loadData ~ existingConversation2:",
-        //   existingConversation2
-        // );
-        // console.log(
-        //   "🚀 ~ loadData ~ updatedConversation2:",
-        //   updatedConversation2
-        // );
+    
         setConversation(updatedConversation);
-        const currentReportKey = `strategyReportData_EX${selectedExpertIndex}`;
-        const strategyData = finalResponse;
         await saveConversationToIndexedDB(
           updatedConversation2,
           isLoggedIn,
           conversationId
         );
-      }
-    };
-    loadData();
-  }, [buttonState, conversationId, selectedTab, expertIndex]); // buttonState 의존성 추가
-
+      };
+    
+      loadData();
+    }, [conversationId, selectedTab, expertIndex, buttonState]); // buttonState 의존성 추가
+    
   const handleTabClick = (index) => {
     setSelectedTab(index);
     if (tabs.length > 0) {
