@@ -1,9 +1,9 @@
 // src/components/organisms/OrganismFooterBar.jsx
 
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
-import { palette } from '../../../../assets/styles/Palette';
+import { palette } from "../../../../assets/styles/Palette";
 
 const OrganismFooterBar = ({ onLoginClick }) => {
   return (
@@ -18,21 +18,21 @@ export default OrganismFooterBar;
 
 // CSS-in-JS 스타일링
 const FooterBar = styled.div`
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
   width: 100%;
-  font-size:1rem;
+  font-size: 1rem;
   text-align: center;
-  margin:100px auto;
+  margin: 100px auto;
 `;
 
 const FooterButton = styled.button`
-  font-family: 'Pretendard', 'Poppins';
-  font-size:1rem;
-  color:${palette.blue};
-  text-decoration:underline;
-  border:0;
-  background:none;
+  font-family: "Pretendard", "Poppins";
+  font-size: 1rem;
+  color: ${palette.blue};
+  text-decoration: underline;
+  border: 0;
+  background: none;
 `;

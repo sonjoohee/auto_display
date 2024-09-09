@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { useAtom } from 'jotai';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { useAtom } from "jotai";
 import {
   iS_CLICK_CHECK_REPORT_RIGHTAWAY,
   EXPERT_BUTTON_STATE,
-} from '../../../AtomStates';
+} from "../../../AtomStates";
 
-import { palette } from '../../../../assets/styles/Palette';
+import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeCheckReportRightAway = () => {
-  const [isClickCheckReportRightAway, setIsClickCheckReportRightAway] = useAtom(iS_CLICK_CHECK_REPORT_RIGHTAWAY);
-  const [expertButtonState, setExpertButtonState] = useAtom(EXPERT_BUTTON_STATE);
+  const [isClickCheckReportRightAway, setIsClickCheckReportRightAway] = useAtom(
+    iS_CLICK_CHECK_REPORT_RIGHTAWAY
+  );
+  const [expertButtonState, setExpertButtonState] =
+    useAtom(EXPERT_BUTTON_STATE);
   const handleClick = () => {
     setIsClickCheckReportRightAway(true);
     setExpertButtonState(1); // 버튼 클릭 시 EXPERT_BUTTON_STATE를 1로 설정
@@ -18,9 +21,7 @@ const MoleculeCheckReportRightAway = () => {
   return (
     <>
       <ButtonWrap>
-      <button onClick={handleClick}>
-          보고서 바로 확인하기
-      </button>
+        <button onClick={handleClick}>보고서 바로 확인하기</button>
       </ButtonWrap>
     </>
   );
@@ -38,7 +39,7 @@ const ButtonWrap = styled.div`
     display: flex;
     align-items: center;
     gap: 12px;
-    font-family: 'Pretendard';
+    font-family: "Pretendard";
     font-size: 0.875rem;
     color: ${palette.darkGray};
     border: 0;
@@ -57,5 +58,4 @@ const ButtonWrap = styled.div`
     font-size: 0.75rem;
     border: none;
   }
-    
 `;

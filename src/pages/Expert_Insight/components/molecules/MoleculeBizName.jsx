@@ -28,13 +28,13 @@ const MoleculeBizName = ({ date }) => {
     const dateObj = new Date(timestamp);
     const year = dateObj.getFullYear();
 
-    if(lang === "ko") {
+    if (lang === "ko") {
       const month = String(dateObj.getMonth() + 1);
       const day = String(dateObj.getDate());
       return `${year}년 ${month}월 ${day}일`;
     } else {
-      const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-      const day = String(dateObj.getDate()).padStart(2, '0');
+      const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+      const day = String(dateObj.getDate()).padStart(2, "0");
       return `${year}.${month}.${day}`;
     }
   };
@@ -89,7 +89,7 @@ const BizNameContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   // flex-wrap:wrap;
-  gap:20px;
+  gap: 20px;
   padding: 16px 20px;
   margin-bottom: 47px;
   text-align: center;
@@ -124,7 +124,7 @@ const BizNameContainer = styled.div`
   > button {
     display: flex;
     align-items: center;
-    flex-shrink:0;
+    flex-shrink: 0;
     gap: 8px;
     font-family: "Pretendard", "Poppins";
     font-size: 0.75rem;
@@ -155,13 +155,13 @@ const NameTitle = styled.div`
     }};
 
     strong {
-      width:100%;
-      overflow:hidden;
-      white-space:normal;
-      text-overflow:ellipsis;
-      display:-webkit-box;
-      -webkit-line-clamp:1;
-      -webkit-box-orient:vertical;
+      width: 100%;
+      overflow: hidden;
+      white-space: normal;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
       word-break: keep-all;
     }
   }
@@ -174,7 +174,7 @@ const NameTitle = styled.div`
 `;
 
 const Badge = styled.div`
-  flex-shrink:0;
+  flex-shrink: 0;
   font-size: 0.63rem;
   font-weight: 400;
   color: ${palette.blue};

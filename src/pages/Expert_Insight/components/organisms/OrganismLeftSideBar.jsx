@@ -158,22 +158,20 @@ const OrganismLeftSideBar = () => {
     };
   }, [historyEditBoxRef]);
 
-
   const editBoxToggle = (index) => {
     // 현재 열려 있는 항목을 확인하고 상태를 토글합니다.
-    setEditToggleIndex(prevIndex => prevIndex === index ? null : index);
-  
+    setEditToggleIndex((prevIndex) => (prevIndex === index ? null : index));
+
     // 메뉴 위치 조정
     const button = document.querySelector(`#insight-toggle-${index}`);
     const editBox = document.querySelector(`#insight-edit-box-${index}`);
-  
+
     if (button && editBox) {
       const rect = button.getBoundingClientRect();
       editBox.style.top = `${rect.top}px`;
       editBox.style.left = `${rect.right + 10}px`;
     }
   };
-
 
   // const editBoxToggle = (index) => {
   //   if (editToggleIndex === index) {
@@ -182,7 +180,6 @@ const OrganismLeftSideBar = () => {
   //     setEditToggleIndex(index); / 해당 인덱스의 EditBox 열기
   //   }
   // };
-
 
   // 삭제 버튼 클릭 시, 삭제 경고 팝업 열기
   const handleDeleteButtonClick = (reportId) => {
@@ -308,9 +305,7 @@ const OrganismLeftSideBar = () => {
       setExpert3ReportData(chatData.strategyReportData_EX3 || {});
 
       // 필요하다면 추가 상태 업데이트
-      setSelectedAdditionalKeyword(
-        chatData.selectedAdditionalKeyword || []
-      );
+      setSelectedAdditionalKeyword(chatData.selectedAdditionalKeyword || []);
       setAdditionalReportData(chatData.additionalReportData || []);
 
       // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
@@ -514,11 +509,6 @@ const OrganismLeftSideBar = () => {
     setConversationId(null);
   };
 
-
-
-
-
-
   return (
     <>
       <Logo isOpen={isOpen}>
@@ -596,7 +586,11 @@ const OrganismLeftSideBar = () => {
                         </svg>
                       </span>
                       {insightEditToggleIndex === index && (
-                        <div id={`insight-edit-box-${index}`} className="insight-toggle" ref={insightEditBoxRef}>
+                        <div
+                          id={`insight-edit-box-${index}`}
+                          className="insight-toggle"
+                          ref={insightEditBoxRef}
+                        >
                           <EditBox
                             isEditToggle={insightEditToggleIndex === index}
                           >
@@ -689,7 +683,11 @@ const OrganismLeftSideBar = () => {
                         </span>
 
                         {editToggleIndex === index && (
-                          <div id={`insight-edit-box-${index}`} className="insight-toggle" ref={historyEditBoxRef}>
+                          <div
+                            id={`insight-edit-box-${index}`}
+                            className="insight-toggle"
+                            ref={historyEditBoxRef}
+                          >
                             <EditBox isEditToggle={editToggleIndex === index}>
                               {/* <button type="button"> */}
                               <button
@@ -1257,7 +1255,7 @@ const EditBox = styled.div`
   gap: 20px;
   max-width: 217px;
   // width: 30%;
-  width:100%;
+  width: 100%;
   max-height: ${(props) => (props.isEditToggle ? "1000px" : "0")};
   padding: ${(props) => (props.isEditToggle ? "20px" : "0")};
   overflow: hidden;
@@ -1392,12 +1390,12 @@ const AccordionContent = styled.div`
     cursor: pointer;
 
     .insight-toggle {
-      position:fixed;
-      left:0;
-      transform:translateX(290px) translateY(-30px);
-      width:217px;
-      display:block;
-      z-index:1000;
+      position: fixed;
+      left: 0;
+      transform: translateX(290px) translateY(-30px);
+      width: 217px;
+      display: block;
+      z-index: 1000;
     }
 
     &:before {
@@ -1416,7 +1414,7 @@ const AccordionContent = styled.div`
     p {
       width: 100%;
       min-height: 19px;
-      font-family: 'Pretendard', 'Poppins';
+      font-family: "Pretendard", "Poppins";
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;

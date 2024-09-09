@@ -1,49 +1,49 @@
 // src/pages/PageResetPassword.jsx
 
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
 const ResetPassword = () => {
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
-    const token = queryParams.get('token');
+    const token = queryParams.get("token");
 
     if (!token) {
-      setError('잘못된 접근입니다.');
-      navigate('/login');
+      setError("잘못된 접근입니다.");
+      navigate("/login");
     }
   }, [navigate]);
 
   const handleResetPassword = async () => {
     const queryParams = new URLSearchParams(window.location.search);
-    const token = queryParams.get('token');
+    const token = queryParams.get("token");
 
     if (newPassword !== confirmPassword) {
-      setError('비밀번호가 일치하지 않습니다.');
+      setError("비밀번호가 일치하지 않습니다.");
       return;
     }
 
     try {
-      const response = await fetch('https://wishresearch.kr/reset-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token, newPassword })
+      const response = await fetch("https://wishresearch.kr/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, newPassword }),
       });
 
       if (response.ok) {
-        navigate('/login'); // 비밀번호 변경 후 로그인 페이지로 이동
+        navigate("/login"); // 비밀번호 변경 후 로그인 페이지로 이동
       } else {
         const result = await response.json();
-        setError(result.error || '비밀번호 재설정 중 오류가 발생했습니다.');
+        setError(result.error || "비밀번호 재설정 중 오류가 발생했습니다.");
       }
     } catch (error) {
-      setError('서버와의 통신 중 오류가 발생했습니다.');
+      setError("서버와의 통신 중 오류가 발생했습니다.");
     }
   };
 
@@ -62,7 +62,9 @@ const ResetPassword = () => {
         onChange={(e) => setConfirmPassword(e.target.value)}
         placeholder="비밀번호를 다시 입력하세요"
       />
-      <ResetPasswordButton onClick={handleResetPassword}>비밀번호 재설정</ResetPasswordButton>
+      <ResetPasswordButton onClick={handleResetPassword}>
+        비밀번호 재설정
+      </ResetPasswordButton>
       {error && <ErrorMessage>{error}</ErrorMessage>}
     </ResetPasswordContainer>
   );
@@ -104,7 +106,7 @@ const ResetPasswordButton = styled.button`
   color: white;
   border: none;
   border-radius: 4px;
-  font-family: 'Pretendard', 'Poppins';
+  font-family: "Pretendard", "Poppins";
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;

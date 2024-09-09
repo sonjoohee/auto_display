@@ -1,11 +1,11 @@
 // src/components/pages/PageLogin.jsx
 
-import React from 'react';
-import styled from 'styled-components';
-import MoleculeLogin from '../molecules/MoleculeLogin';
+import React from "react";
+import styled from "styled-components";
+import MoleculeLogin from "../molecules/MoleculeLogin";
 // import OrganismFooterBar from '../organisms/OrganismFooterBar';
 // AI_Panel 페이지의 헤더 가져옴 - 나중에 전역으로 뺄 수도 있음
-import OrganismHeader from '../../../../pages/AI_Panel/components/organisms/OrganismHeader';
+import OrganismHeader from "../../../../pages/AI_Panel/components/organisms/OrganismHeader";
 
 const PageLogin = () => {
   return (

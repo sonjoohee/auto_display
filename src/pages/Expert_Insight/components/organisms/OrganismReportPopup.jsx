@@ -446,7 +446,6 @@ const Section = ({ title, content }) => {
           </div>
         ))}
 
-
       {subTitleItems.length > 0 && (
         <DynamicGrid columns={subTitleItems.length}>
           {subTitleItems.map((item, index) => (
@@ -485,8 +484,8 @@ const AnalysisSection = styled.div`
   border-radius: 15px;
   border: 1px solid ${palette.lineGray};
   max-height: 80vh; /* 최대 높이를 제한하여 스크롤이 작동하도록 설정 */
-  overflow-y: auto;  /* 스크롤 활성화 */
-  
+  overflow-y: auto; /* 스크롤 활성화 */
+
   h1 {
     font-size: 1.25rem;
     font-weight: 400;

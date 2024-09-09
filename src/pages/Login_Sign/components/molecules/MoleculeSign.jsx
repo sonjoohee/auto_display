@@ -1,15 +1,15 @@
 // src/pages/Login_Sign/components/molecules/MoleculeLogin.jsx
 
-import React, { useEffect } from 'react';
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-import { useAtom } from 'jotai';
-import MoleculeGoogleLoginForm from './MoleculeGoogleLoginForm';
-import MoleculeSignupForm from './MoleculeSignupForm';
-import MoleculeLoginForm from './MoleculeLoginForm';
-import { loginSuccessAtom } from '../../../../pages/AtomStates'; // 아톰 임포트
-import { palette } from '../../../../assets/styles/Palette';
-import images from '../../../../assets/styles/Images';
+import React, { useEffect } from "react";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import { useAtom } from "jotai";
+import MoleculeGoogleLoginForm from "./MoleculeGoogleLoginForm";
+import MoleculeSignupForm from "./MoleculeSignupForm";
+import MoleculeLoginForm from "./MoleculeLoginForm";
+import { loginSuccessAtom } from "../../../../pages/AtomStates"; // 아톰 임포트
+import { palette } from "../../../../assets/styles/Palette";
+import images from "../../../../assets/styles/Images";
 
 const MoleculeSign = ({ onClosePopup = () => {} }) => {
   const [loginSuccess, setLoginSuccess] = useAtom(loginSuccessAtom);
@@ -19,7 +19,7 @@ const MoleculeSign = ({ onClosePopup = () => {} }) => {
     if (loginSuccess) {
       // navigate('/');    // 페이지 이동
       if (onClosePopup) onClosePopup(); // 팝업 닫기
-      setLoginSuccess(null);    // 상태 초기화
+      setLoginSuccess(null); // 상태 초기화
     }
   }, [loginSuccess, navigate, setLoginSuccess]);
 
@@ -32,7 +32,9 @@ const MoleculeSign = ({ onClosePopup = () => {} }) => {
 
       <MoleculeGoogleLoginForm />
       <Separator>
-        <hr /><span>or</span><hr />
+        <hr />
+        <span>or</span>
+        <hr />
       </Separator>
       <MoleculeSignupForm />
     </LoginContainer>
@@ -44,14 +46,13 @@ export default MoleculeSign;
 // CSS-in-JS 스타일링
 const LoginContainer = styled.div`
   h1 {
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:12px;
-    font-size:2rem;
-    font-weight:400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-size: 2rem;
+    font-weight: 400;
   }
-  
 
   min-width: 400px;
   margin: 0 auto;
@@ -73,7 +74,7 @@ const Separator = styled.div`
 
   span {
     margin: 0 15px;
-    font-size:1rem;
+    font-size: 1rem;
     color: ${palette.gray};
   }
 `;
