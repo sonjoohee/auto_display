@@ -142,8 +142,8 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
 
           // 새로운 데이터를 배열의 맨 앞에 추가합니다.
           const updatedAdditionalReportData = [
-            answerData, // 새로 가져온 데이터
             ...additionalReportData, // 기존 데이터
+            answerData, // 새로 가져온 데이터
           ];
           setAdditionalReportData(updatedAdditionalReportData);
 
