@@ -134,7 +134,6 @@ const MoleculeLoginForm = () => {
     setIsSignupPopupOpen(false);
   };
 
-
   const [isSignPopupOpen, setIsSignPopupOpen] = useState(false); // 회원가입 팝업 상태 관리
   const handleSignClick = () => {
     setIsSignPopupOpen(true); // 회원가입 팝업 열기
@@ -151,65 +150,67 @@ const MoleculeLoginForm = () => {
     setIsPasswordRestPopupOpen(false); // 비밀번호 리셋 팝업 닫기
   };
 
-
   return (
     <>
-    <LoginFormContainer>
-      <div>
-        <label htmlFor="email">
-          아이디<span>*</span>
-        </label>
-        <StyledAtomInput
-          type="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="이메일 주소를 입력해주세요"
-        />
-      </div>
+      <LoginFormContainer>
+        <div>
+          <label htmlFor="email">
+            아이디<span>*</span>
+          </label>
+          <StyledAtomInput
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="이메일 주소를 입력해주세요"
+          />
+        </div>
 
-      <div>
-        <label htmlFor="password">
-          비밀번호<span>*</span>
-        </label>
-        <StyledAtomInput
-          type={showPassword ? "text" : "password"}
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="비밀번호를 입력해주세요"
-        />
-        <TogglePasswordButton onClick={togglePasswordVisibility}>
-          {showPassword ? <FaEye /> : <FaEyeSlash />}
-        </TogglePasswordButton>
-      </div>
+        <div>
+          <label htmlFor="password">
+            비밀번호<span>*</span>
+          </label>
+          <StyledAtomInput
+            type={showPassword ? "text" : "password"}
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="비밀번호를 입력해주세요"
+          />
+          <TogglePasswordButton onClick={togglePasswordVisibility}>
+            {showPassword ? <FaEye /> : <FaEyeSlash />}
+          </TogglePasswordButton>
+        </div>
 
-      {error && <ErrorMessage>{error}</ErrorMessage>}
+        {error && <ErrorMessage>{error}</ErrorMessage>}
 
-      <PasswordResetLink>
-        <a onClick={handlePasswordRestClick}>비밀번호 찾기</a>
-        {/* <a onClick={handlePasswordReset}>비밀번호 찾기</a> */}
-      </PasswordResetLink>
+        <PasswordResetLink>
+          <a onClick={handlePasswordRestClick}>비밀번호 찾기</a>
+          {/* <a onClick={handlePasswordReset}>비밀번호 찾기</a> */}
+        </PasswordResetLink>
 
-      <StyledLoginButton onClick={handleLogin} disabled={!email || !password}>
-        로그인
-      </StyledLoginButton>
+        <StyledLoginButton onClick={handleLogin} disabled={!email || !password}>
+          로그인
+        </StyledLoginButton>
 
-      <JoinWrap>
-        <p>InterviewX가 처음이에요</p>
-        <Link to="#" onClick={handleSignClick}>가입하기</Link>
+        <JoinWrap>
+          <p>InterviewX가 처음이에요</p>
+          <Link to="#" onClick={handleSignClick}>
+            가입하기
+          </Link>
 
-        {/* <Link to="/signup">가입하기</Link> */}
-        {/* <Link to="#" onClick={handleSignupClick}>가입하기</Link> */}
-        {isSignupPopupOpen && (
-          <MoleculeSignupPopup onClose={handleClosePopup} />
-        )}
-      </JoinWrap>
+          {/* <Link to="/signup">가입하기</Link> */}
+          {/* <Link to="#" onClick={handleSignupClick}>가입하기</Link> */}
+          {isSignupPopupOpen && (
+            <MoleculeSignupPopup onClose={handleClosePopup} />
+          )}
+        </JoinWrap>
+      </LoginFormContainer>
 
-    </LoginFormContainer>
-
-    {isSignPopupOpen && <MoleculeSignPopup onClose={closeSignPopup} />}
-    {isPasswordRestPopupOpen && <MoleculeResetPasswordPopup onClose={closePasswordRestPopup} />}
+      {isSignPopupOpen && <MoleculeSignPopup onClose={closeSignPopup} />}
+      {isPasswordRestPopupOpen && (
+        <MoleculeResetPasswordPopup onClose={closePasswordRestPopup} />
+      )}
     </>
   );
 };
@@ -267,7 +268,7 @@ const TogglePasswordButton = styled.button`
   border: none;
   cursor: pointer;
   font-size: 16px;
-  font-family: 'Pretendard', 'Poppins';
+  font-family: "Pretendard", "Poppins";
   color: #888;
 
   &:focus {
@@ -299,7 +300,7 @@ const PasswordResetLink = styled.div`
 
 const StyledLoginButton = styled.button`
   width: 100%;
-  font-family: 'Pretendard', 'Poppins';
+  font-family: "Pretendard", "Poppins";
   color: ${palette.white};
   padding: 15px;
   border-radius: 8px;

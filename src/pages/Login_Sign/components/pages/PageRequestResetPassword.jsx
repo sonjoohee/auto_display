@@ -155,7 +155,7 @@ const Header = styled.h2`
   gap: 8px;
   font-size: 2rem;
   // margin: 110px auto;
-  margin-bottom:50px;
+  margin-bottom: 50px;
   text-align: center;
 
   p {
@@ -209,13 +209,13 @@ const StyledInput = styled.input`
   box-sizing: border-box;
 
   &::placeholder {
-    font-size:0.875rem;
+    font-size: 0.875rem;
   }
 `;
 
 const StyledButton = styled.button`
   width: 100%;
-  font-family: 'Pretendard', 'Poppins';
+  font-family: "Pretendard", "Poppins";
   font-size: 1rem;
   font-weight: 700;
   color: ${palette.white};
@@ -226,12 +226,11 @@ const StyledButton = styled.button`
   background-color: ${palette.blue};
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease;
-  
+
   &:disabled {
     background: #d6d6d6;
     pointer-events: none;
   }
-
 `;
 
 const Message = styled.p`

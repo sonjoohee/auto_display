@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import OrganismAnswerReportSection from './OrganismAnswerReportSection';
+import React, { useState } from "react";
+import styled from "styled-components";
+import OrganismAnswerReportSection from "./OrganismAnswerReportSection";
 
 const OrganismAnswerSection = () => {
   const [selectedTopic, setSelectedTopic] = useState(null);
 
   const topics = [
-    '브랜드 관리 및 마케팅 전략',
-    '마케팅 자동화 및 최적화',
-    'SEO 및 웹 마케팅',
-    '데이터 분석 및 전략 수립',
-    '시장 및 경쟁 분석'
+    "브랜드 관리 및 마케팅 전략",
+    "마케팅 자동화 및 최적화",
+    "SEO 및 웹 마케팅",
+    "데이터 분석 및 전략 수립",
+    "시장 및 경쟁 분석",
   ];
 
   return (

@@ -42,8 +42,8 @@ const OrganismSearchBottomBar = ({ onSearch }) => {
 
   return (
     <>
-    <BottomBar>
-      {/* <SearchBar>
+      <BottomBar>
+        {/* <SearchBar>
         <svg width="20" height="20" viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path fill-rule="evenodd" clip-rule="evenodd" d="M0 24.9987C0 25.1828 0.149218 25.332 0.333286 25.332C0.3388 25.332 0.344283 25.3319 0.349731 25.3316H24.3298C24.5139 25.3316 24.6631 25.1824 24.6631 24.9983C24.6631 24.8143 24.5139 24.6651 24.3298 24.6651H0.666571L0.66657 1.00223C0.66657 0.818163 0.517353 0.668945 0.333285 0.668945C0.149217 0.668945 0 0.818163 0 1.00223V24.9983V24.9987ZM3.93314 17.1281C3.93314 16.5758 4.38086 16.1281 4.93314 16.1281H5.74395C6.29624 16.1281 6.74395 16.5758 6.74395 17.1281V21.3984H3.93314V17.1281ZM9.50121 3.1281C8.94893 3.1281 8.50121 3.57582 8.50121 4.1281V21.3984H11.312V4.1281C11.312 3.57582 10.8643 3.1281 10.312 3.1281H9.50121ZM13.0685 13.2635C13.0685 12.7112 13.5163 12.2635 14.0685 12.2635H14.8794C15.4316 12.2635 15.8793 12.7112 15.8793 13.2635V21.3986H13.0685V13.2635ZM18.6359 6.29073C18.0836 6.29073 17.6359 6.73845 17.6359 7.29073V21.3988H20.4467V7.29073C20.4467 6.73844 19.999 6.29073 19.4467 6.29073H18.6359Z" fill="black"/>
         </svg>
@@ -53,40 +53,41 @@ const OrganismSearchBottomBar = ({ onSearch }) => {
         <button type="button" onClick={handleSearch}>검색</button>
       </SearchBar> */}
 
-      <SearchBar Blue={inputFocused}>
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 25 26"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
-            d="M0 24.9987C0 25.1828 0.149218 25.332 0.333286 25.332C0.3388 25.332 0.344283 25.3319 0.349731 25.3316H24.3298C24.5139 25.3316 24.6631 25.1824 24.6631 24.9983C24.6631 24.8143 24.5139 24.6651 24.3298 24.6651H0.666571L0.66657 1.00223C0.66657 0.818163 0.517353 0.668945 0.333285 0.668945C0.149217 0.668945 0 0.818163 0 1.00223V24.9983V24.9987ZM3.93314 17.1281C3.93314 16.5758 4.38086 16.1281 4.93314 16.1281H5.74395C6.29624 16.1281 6.74395 16.5758 6.74395 17.1281V21.3984H3.93314V17.1281ZM9.50121 3.1281C8.94893 3.1281 8.50121 3.57582 8.50121 4.1281V21.3984H11.312V4.1281C11.312 3.57582 10.8643 3.1281 10.312 3.1281H9.50121ZM13.0685 13.2635C13.0685 12.7112 13.5163 12.2635 14.0685 12.2635H14.8794C15.4316 12.2635 15.8793 12.7112 15.8793 13.2635V21.3986H13.0685V13.2635ZM18.6359 6.29073C18.0836 6.29073 17.6359 6.73845 17.6359 7.29073V21.3988H20.4467V7.29073C20.4467 6.73844 19.999 6.29073 19.4467 6.29073H18.6359Z"
-            fill="black"
+        <SearchBar Blue={inputFocused}>
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 25 26"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M0 24.9987C0 25.1828 0.149218 25.332 0.333286 25.332C0.3388 25.332 0.344283 25.3319 0.349731 25.3316H24.3298C24.5139 25.3316 24.6631 25.1824 24.6631 24.9983C24.6631 24.8143 24.5139 24.6651 24.3298 24.6651H0.666571L0.66657 1.00223C0.66657 0.818163 0.517353 0.668945 0.333285 0.668945C0.149217 0.668945 0 0.818163 0 1.00223V24.9983V24.9987ZM3.93314 17.1281C3.93314 16.5758 4.38086 16.1281 4.93314 16.1281H5.74395C6.29624 16.1281 6.74395 16.5758 6.74395 17.1281V21.3984H3.93314V17.1281ZM9.50121 3.1281C8.94893 3.1281 8.50121 3.57582 8.50121 4.1281V21.3984H11.312V4.1281C11.312 3.57582 10.8643 3.1281 10.312 3.1281H9.50121ZM13.0685 13.2635C13.0685 12.7112 13.5163 12.2635 14.0685 12.2635H14.8794C15.4316 12.2635 15.8793 12.7112 15.8793 13.2635V21.3986H13.0685V13.2635ZM18.6359 6.29073C18.0836 6.29073 17.6359 6.73845 17.6359 7.29073V21.3988H20.4467V7.29073C20.4467 6.73844 19.999 6.29073 19.4467 6.29073H18.6359Z"
+              fill="black"
+            />
+          </svg>
+
+          <InputField
+            None
+            placeholder="당신의 아이템 또는 프로젝트 아이디어를 적어 주세요 (예: 원격 근무자를 위한 생산성 관리 툴)"
+            value={inputValue}
+            onChange={handleInputChange}
+            onFocus={() => setInputFocused(true)}
+            onBlur={() => setInputFocused(false)}
           />
-        </svg>
 
-        <InputField
-          None
-          placeholder="당신의 아이템 또는 프로젝트 아이디어를 적어 주세요 (예: 원격 근무자를 위한 생산성 관리 툴)"
-          value={inputValue}
-          onChange={handleInputChange}
-          onFocus={() => setInputFocused(true)}
-          onBlur={() => setInputFocused(false)}
-        />
+          <button type="button" onClick={handleSearch}>
+            검색
+          </button>
+        </SearchBar>
 
-        <button type="button" onClick={handleSearch}>
-          검색
-        </button>
-      </SearchBar>
-
-      <p>
-        아이템이나 프로젝트와 관련 없는 질문은 정확한 답변이 어려울 수 있습니다.
-      </p>
-    </BottomBar>
+        <p>
+          아이템이나 프로젝트와 관련 없는 질문은 정확한 답변이 어려울 수
+          있습니다.
+        </p>
+      </BottomBar>
 
       {isPopupRegex && (
         <Popup
@@ -108,7 +109,10 @@ const OrganismSearchBottomBar = ({ onSearch }) => {
             <span>
               <img src={images.ExclamationMark2} alt="" />
             </span>
-            <p>한글, 영문 외 특수문자는 입력할 수 없어요. 자음이나 모음만 입력한 경우 검색이 제한되니, 문장을 완전하게 입력해주세요.</p>
+            <p>
+              한글, 영문 외 특수문자는 입력할 수 없어요. 자음이나 모음만 입력한
+              경우 검색이 제한되니, 문장을 완전하게 입력해주세요.
+            </p>
             <div className="btnWrap">
               <button type="button" onClick={closePopupRegex}>
                 확인
@@ -147,7 +151,7 @@ const OrganismSearchBottomBar = ({ onSearch }) => {
           </div>
         </Popup>
       )}
-      </>
+    </>
   );
 };
 
@@ -167,7 +171,7 @@ const BottomBar = styled.div`
   display: flex;
   flex-direction: column;
   flex-basis: 100% !important;
-  align-items:center;
+  align-items: center;
   // margin:0 20px;
   // margin-top: 40px;
   z-index: 998;
@@ -180,25 +184,29 @@ const BottomBar = styled.div`
   }
 
   &:before {
-    position:absolute;
-    left:0;
-    right:0;
-    bottom:0;
-    height:60px;
-    background:rgb(255, 255, 255);
-    background:linear-gradient( 0deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 30% );
-    content:'';
-    z-index:-1;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 60px;
+    background: rgb(255, 255, 255);
+    background: linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 1) 30%
+    );
+    content: "";
+    z-index: -1;
   }
 `;
 
 const SearchBar = styled.div`
-  position:relative;
+  position: relative;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   gap: 10px;
-  width:100%;  
+  width: 100%;
   padding: 14px 32px;
   border-radius: 50px;
   border: 2px solid

@@ -1,13 +1,13 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import { FaTimesCircle } from 'react-icons/fa'; // X 아이콘 추가
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { FaTimesCircle } from "react-icons/fa"; // X 아이콘 추가
 
 const PageEmailVerificationFailed = () => {
   const navigate = useNavigate();
 
   const handleRetry = () => {
-    navigate('/signup');
+    navigate("/signup");
   };
 
   return (
@@ -69,7 +69,7 @@ const Message = styled.p`
 
 const StyledButton = styled.button`
   background-color: #007bff;
-  font-family: 'Pretendard', 'Poppins';
+  font-family: "Pretendard", "Poppins";
   color: white;
   border: none;
   padding: 12px 20px;

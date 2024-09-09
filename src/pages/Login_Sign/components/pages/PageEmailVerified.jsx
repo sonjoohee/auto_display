@@ -1,13 +1,13 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import { FaCheckCircle } from 'react-icons/fa'; // 체크 아이콘 추가
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { FaCheckCircle } from "react-icons/fa"; // 체크 아이콘 추가
 
 const PageEmailVerified = () => {
   const navigate = useNavigate();
 
   const handleLoginRedirect = () => {
-    navigate('/login');
+    navigate("/login");
   };
 
   return (
@@ -18,7 +18,9 @@ const PageEmailVerified = () => {
           이메일이 인증되었습니다.
         </Title>
         <Message>다시 로그인 해주세요.</Message>
-        <StyledButton onClick={handleLoginRedirect}>로그인 페이지로 이동</StyledButton>
+        <StyledButton onClick={handleLoginRedirect}>
+          로그인 페이지로 이동
+        </StyledButton>
       </MessageBox>
     </Container>
   );
@@ -69,7 +71,7 @@ const Message = styled.p`
 
 const StyledButton = styled.button`
   background-color: #007bff;
-  font-family: 'Pretendard', 'Poppins';
+  font-family: "Pretendard", "Poppins";
   color: white;
   border: none;
   padding: 12px 20px;

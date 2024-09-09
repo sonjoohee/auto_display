@@ -10,7 +10,7 @@
 //   color: ${(props) => props.color || "black"};
 //   cursor: pointer;
 //   transition: all 0.3s;
-  
+
 //   &:hover {
 //     background: ${(props) => props.hoverBg || "black"};
 //     color: ${(props) => props.hoverColor || "white"};

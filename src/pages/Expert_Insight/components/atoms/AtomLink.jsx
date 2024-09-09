@@ -11,7 +11,6 @@ const AtomLink = ({ to, children, className, ...props }) => (
 
 export default AtomLink;
 
-
 const StyledLink = styled(Link)`
   display: inline-block;
   width: 33px;
@@ -28,7 +27,8 @@ const StyledLink = styled(Link)`
   background-image: url(${(props) => props.bgImage || "none"});
 
   &:hover {
-    border: 1px solid ${(props) => props.hoverBorderColor || props.borderColor || "white"};
+    border: 1px solid
+      ${(props) => props.hoverBorderColor || props.borderColor || "white"};
   }
 
   &.now {

@@ -64,7 +64,7 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
 
   const handledExpertSelect = (index) => {
-    if(!isLoading) {
+    if (!isLoading) {
       setSelectedExpertIndex(index);
       setIsClickExpertSelect(true);
       setConversationStage(2); // stage를 2로 설정
