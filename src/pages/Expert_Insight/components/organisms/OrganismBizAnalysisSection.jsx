@@ -33,10 +33,12 @@ import {
   APPROACH_PATH,
   isLoggedInAtom,
   SELECTED_EXPERT_INDEX,
+  REPORT_REFRESH_TRIGGER,
 } from "../../../AtomStates";
 
 const OrganismBizAnalysisSection = ({ conversationId }) => {
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
+  const [reportRefreshTrigger, setReportRefreshTrigger] = useAtom(REPORT_REFRESH_TRIGGER);  // 리프레시 트리거 상태 구독
 
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [approachPath] = useAtom(APPROACH_PATH);
@@ -229,6 +231,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
           isLoggedIn,
           conversationId
         );
+        setReportRefreshTrigger((prev) => !prev);
         console.log("___________기초보고서_____________");
         console.log("기초보고서2");
         console.log(analysisReportData);
