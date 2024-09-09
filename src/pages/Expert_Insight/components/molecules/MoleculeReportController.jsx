@@ -241,7 +241,7 @@ const MoleculeReportController = ({
     } else if (reportIndex === 1) {
       // 전략 보고서 데이터 저장 - sampleData 사용
       reportData = sampleData; // sampleData를 그대로 저장합니다
-      business_info = reportData?.tabs?.[0]?.title || "Unknown Title"; 
+      business_info = reportData?.business_info || "Unknown Title"; 
       
     } else if (reportIndex === 2) {
       reportData = sampleData;
