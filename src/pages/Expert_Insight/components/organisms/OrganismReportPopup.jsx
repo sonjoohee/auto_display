@@ -303,7 +303,7 @@ const StrategyReportSection = ({ report }) => {
 
   return (
     <>
-      <ContentsWrap>
+      <AnalysisSection Strategy>
         <TabHeader>
           {tabs.map((tab, index) => (
             <TabButton
@@ -316,36 +316,16 @@ const StrategyReportSection = ({ report }) => {
           ))}
         </TabHeader>
 
-        {tabs[selectedTab]?.sections?.map((section, index) => (
-          <BoxWrap key={index}>
-            {section.title && (
-              <SectionTitle>
-                <img src={images.Check} alt="" />
-                {section.title}
-              </SectionTitle>
-            )}
-            {section.content &&
-              (section.content.some((item) => item.subTitle) ? (
-                <TwoColumnGrid>
-                  {section.content.map((item, idx) => (
-                    <div key={idx}>
-                      {item.subTitle && <SubTitle>{item.subTitle}</SubTitle>}
-                      <p>{item.text}</p>
-                      {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
-                    </div>
-                  ))}
-                </TwoColumnGrid>
-              ) : (
-                section.content.map((item, idx) => (
-                  <div key={idx}>
-                    <p>{item.text}</p>
-                    {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
-                  </div>
-                ))
-              ))}
-          </BoxWrap>
-        ))}
-      </ContentsWrap>
+        {Array.isArray(tabs[selectedTab]?.sections) &&
+          tabs[selectedTab]?.sections.length > 0 &&
+          tabs[selectedTab].sections.map((section, index) => (
+            <Section
+              key={index}
+              title={section.title}
+              content={section.content}
+            />
+          ))}
+      </AnalysisSection>
     </>
   );
 };
@@ -444,13 +424,11 @@ const AdditionalReportSection = ({ report }) => {
 
 // Section 컴포넌트 - 각 섹션의 제목과 콘텐츠를 표시
 const Section = ({ title, content }) => {
-  // 서브 타이틀이 있는 항목과 없는 항목을 분리
   const subTitleItems = content.filter((item) => item.subTitle);
   const nonSubTitleItems = content.filter((item) => !item.subTitle);
 
   return (
     <BoxWrap>
-      {/* 섹션의 제목이 있을 경우 표시 */}
       {title && (
         <strong>
           <img src={images.Check} alt="" />
@@ -458,23 +436,25 @@ const Section = ({ title, content }) => {
         </strong>
       )}
 
-      {/* 서브 타이틀이 없는 항목은 일반 텍스트로 표시 */}
       {nonSubTitleItems.length > 0 &&
         nonSubTitleItems.map((item, index) => (
           <div key={index}>
             <p>{item.text}</p>
-            {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
+            {item.subText1 && <SubTextBox>{item.subText1}</SubTextBox>}
+            {item.subText2 && <SubTextBox>{item.subText2}</SubTextBox>}
+            {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
           </div>
         ))}
 
-      {/* 서브 타이틀이 있는 항목들은 그리드 형태로 표시 */}
       {subTitleItems.length > 0 && (
         <DynamicGrid columns={subTitleItems.length}>
           {subTitleItems.map((item, index) => (
             <div key={index}>
               {item.subTitle && <SubTitle>{item.subTitle}</SubTitle>}
               <p>{item.text}</p>
-              {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
+              {item.subText1 && <SubTextBox>{item.subText1}</SubTextBox>}
+              {item.subText2 && <SubTextBox>{item.subText2}</SubTextBox>}
+              {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
             </div>
           ))}
         </DynamicGrid>
