@@ -243,6 +243,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
           ...existingConversation2,
           expert_index: selectedExpertIndex,
           conversation: updatedConversation,
+          conversationStage: 3,
           timestamp: Date.now(),
           expert_index: selectedExpertIndex,
         };
