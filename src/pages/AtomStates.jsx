@@ -244,3 +244,5 @@ export const iS_CLICK_CHECK_REPORT_RIGHTAWAY = atom(false);
 export const CONVERSATION_ID = atom("");
 export const CONVERSATION = atom([]);
 export const IS_LOADING = atom(false);
+export const REPORT_REFRESH_TRIGGER = atom(false);  // 새로고침 트리거 상태 추가
+

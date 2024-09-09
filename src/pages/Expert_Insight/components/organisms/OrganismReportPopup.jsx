@@ -24,7 +24,7 @@ const OrganismReportPopup = ({ report, onClose }) => {
   }
 
   {
-    reportIndex === 2 && (reportTypeText = "전문가 보고서");
+    reportIndex === 2 && (reportTypeText = "추가 보고서");
   }
 
   return ReactDOM.createPortal(
@@ -49,7 +49,7 @@ const OrganismReportPopup = ({ report, onClose }) => {
 
         {reportIndex === 1 && <StrategyReportSection report={report} />}
 
-        {reportIndex === 2 && <StrategyReportSection report={report} />}
+        {reportIndex === 2 && <AdditionalReportSection report={report} />}
 
         <CloseButton onClick={onClose}>닫기</CloseButton>
       </PopupContent>
@@ -419,4 +419,126 @@ const SubTextBox = styled.div`
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   font-size: 0.85rem;
   color: #666;
+`;
+
+const AdditionalReportSection = ({ report }) => {
+  // sections 데이터를 report에서 가져옴
+  const sections = report.content.sections || [];
+
+  return (
+    <AnalysisSection>
+      {/* 보고서의 제목과 첫 번째 섹션의 첫 번째 콘텐츠 표시 */}
+      {report.title && (
+        <TabHeader>
+          <TabTitle>{report.title}</TabTitle>
+        </TabHeader>
+      )}
+
+      {/* 각 섹션을 반복하여 표시 */}
+      {sections.map((section, index) => (
+        <Section key={index} title={section.title} content={section.content} />
+      ))}
+    </AnalysisSection>
+  );
+};
+
+// Section 컴포넌트 - 각 섹션의 제목과 콘텐츠를 표시
+const Section = ({ title, content }) => {
+  // 서브 타이틀이 있는 항목과 없는 항목을 분리
+  const subTitleItems = content.filter((item) => item.subTitle);
+  const nonSubTitleItems = content.filter((item) => !item.subTitle);
+
+  return (
+    <BoxWrap>
+      {/* 섹션의 제목이 있을 경우 표시 */}
+      {title && (
+        <strong>
+          <img src={images.Check} alt="" />
+          {title}
+        </strong>
+      )}
+
+      {/* 서브 타이틀이 없는 항목은 일반 텍스트로 표시 */}
+      {nonSubTitleItems.length > 0 &&
+        nonSubTitleItems.map((item, index) => (
+          <div key={index}>
+            <p>{item.text}</p>
+            {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
+          </div>
+        ))}
+
+      {/* 서브 타이틀이 있는 항목들은 그리드 형태로 표시 */}
+      {subTitleItems.length > 0 && (
+        <DynamicGrid columns={subTitleItems.length}>
+          {subTitleItems.map((item, index) => (
+            <div key={index}>
+              {item.subTitle && <SubTitle>{item.subTitle}</SubTitle>}
+              <p>{item.text}</p>
+              {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
+            </div>
+          ))}
+        </DynamicGrid>
+      )}
+    </BoxWrap>
+  );
+};
+const DynamicGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(${(props) => props.columns}, 1fr);
+  gap: 12px;
+  margin-top: 10px;
+
+  > div {
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid ${palette.lineGray};
+  }
+`;
+const AnalysisSection = styled.div`
+  position: relative;
+  max-width: 1135px;
+  width: 91.5%;
+  text-align: left;
+  margin-top: 25px;
+  padding: 30px;
+  border-radius: 15px;
+  border: 1px solid ${palette.lineGray};
+  max-height: 80vh; /* 최대 높이를 제한하여 스크롤이 작동하도록 설정 */
+  overflow-y: auto;  /* 스크롤 활성화 */
+  
+  h1 {
+    font-size: 1.25rem;
+    font-weight: 400;
+    margin-bottom: 20px;
+  }
+
+  > p {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin-top: 15px;
+
+    span {
+      color: ${palette.red};
+    }
+  }
+`;
+
+const TabTitle = styled.div`
+  font-family: "Pretendard";
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: ${palette.black};
+  border: none;
+  border-bottom: none;
+  background: ${palette.white};
+  margin-bottom: 10px;
+`;
+const TabContent = styled.div`
+  font-family: "Pretendard";
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: ${palette.black};
+  border: none;
+  border-bottom: none;
+  background: ${palette.white};
 `;
