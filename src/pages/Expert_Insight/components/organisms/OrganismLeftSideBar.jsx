@@ -390,6 +390,7 @@ const OrganismLeftSideBar = () => {
       // 팝업 닫기 및 삭제할 reportId 초기화
       setIsDeletePopupOpen(false);
       setReportIdToDelete(null);
+      setReportRefreshTrigger((prev) => !prev);
     } catch (error) {
       console.error("삭제 요청 오류:", error);
     }
@@ -418,6 +419,7 @@ const OrganismLeftSideBar = () => {
       // 팝업 닫기 및 삭제할 reportId 초기화
       setChatIsDeletePopupOpen(false);
       setChatIdToDelete(null);
+      setReportRefreshTrigger((prev) => !prev);
     } catch (error) {
       console.error("삭제 요청 오류:", error);
     }
