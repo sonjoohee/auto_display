@@ -30,7 +30,10 @@ import {
   SkeletonLine,
 } from "../../../../assets/styles/Skeleton";
 
-const OrganismAdditionalReport = ({ additionalReportCount, conversationId}) => {
+const OrganismAdditionalReport = ({
+  additionalReportCount,
+  conversationId,
+}) => {
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
 
   const [conversation, setConversation] = useAtom(CONVERSATION);
@@ -94,10 +97,14 @@ const OrganismAdditionalReport = ({ additionalReportCount, conversationId}) => {
         // 기존 데이터가 있을 때 처리
         if (additionalReportData[additionalReportCount]) {
           setTitle(additionalReportData[additionalReportCount]?.title || []);
-          setSections(additionalReportData[additionalReportCount]?.sections || []);
-          setPurpose(additionalReportData[additionalReportCount]?.sections[0].content[0].text);
-        }
-        else if (buttonState === 1) {
+          setSections(
+            additionalReportData[additionalReportCount]?.sections || []
+          );
+          setPurpose(
+            additionalReportData[additionalReportCount]?.sections[0].content[0]
+              .text
+          );
+        } else if (buttonState === 1) {
           // 버튼 상태가 1일 때만 API 요청 실행
           setButtonState(0); // 버튼 상태 초기화
           setIsLoading(true);
@@ -234,7 +241,7 @@ const OrganismAdditionalReport = ({ additionalReportCount, conversationId}) => {
           {title && (
             <TabHeader>
               <TabTitle>{title}</TabTitle>
-              <TabContent>{purpose}</TabContent>
+              {/* <TabContent>{purpose}</TabContent> */}
             </TabHeader>
           )}
 
