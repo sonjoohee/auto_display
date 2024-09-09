@@ -27,6 +27,7 @@ import {
   BUTTON_STATE,
   isLoggedInAtom,
   CONVERSATION_ID,
+  ADDITTIONAL_REPORT_COUNT,
 } from "../../../AtomStates";
 
 import {
@@ -80,7 +81,9 @@ const PageExpertInsight = () => {
     SELECTED_EXPERT_INDEX
   );
   const [sections, setSections] = useState([]);
-  const [additionalReportCount, setAdditionalReportCount] = useState(0);
+  const [additionalReportCount, setAdditionalReportCount] = useAtom(
+    ADDITTIONAL_REPORT_COUNT
+  );
   const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
     SELECTED_ADDITIONAL_KEYWORD
   );
@@ -614,7 +617,8 @@ const PageExpertInsight = () => {
             selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]
           }"를 요청드려요`,
         },
-        { type: `addition_${selectedExpertIndex}` }
+        { type: `addition`, addition_index: additionalReportCount }
+        // { type: `addition_${selectedExpertIndex}` }
       );
 
       setAdditionalReportCount(additionalReportCount + 1);
@@ -695,12 +699,13 @@ const PageExpertInsight = () => {
                       expertIndex={expertIndex}
                     />
                   );
-                } else if (item.type.startsWith("addition_")) {
+                } else if (item.type === "addition") {
                   // console.log("🚀 ~ {conversation.map ~ item:", item, index);
                   // const expertIndex = item.type.split("_")[1];
 
                   return (
                     <OrganismAdditionalReport
+                      // additionalReportCount={additionalReportCount - 1}
                       // key={`addition_${expertIndex}_${index}`}
                       conversationId={conversationId}
                       // expertIndex={expertIndex}
