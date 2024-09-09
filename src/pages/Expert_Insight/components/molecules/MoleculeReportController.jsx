@@ -217,7 +217,7 @@ const MoleculeReportController = ({
     setTempBusinessInformationTargetCustomer(businessInformationTargetCustomer);
   };
 
-  const toogleSave = async () => {
+  const toggleSave = async () => {
     if (!isLoggedIn) {
       // 로그인 상태가 아닐 경우 팝업을 띄움
       setIsPopupOpen(true); // 팝업 열기
@@ -261,7 +261,6 @@ const MoleculeReportController = ({
       const postData = {
         business_info: business_info,
         title: business_info,
-
         date: new Date().toLocaleDateString(),
         content: reportData,
         reportIndex: reportIndex, // 보고서 인덱스를 추가하여 저장
@@ -331,7 +330,7 @@ const MoleculeReportController = ({
     }
   };
 
-  const toogleCopy = () => {
+  const toggleCopy = () => {
     let contentToCopy = ``;
 
     const getSelectedTabData = (selectedTab) => {
@@ -604,11 +603,11 @@ const MoleculeReportController = ({
             <ButtonWrap>
               <div />
               <div>
-                <button type="button" onClick={toogleCopy}>
+                <button type="button" onClick={toggleCopy}>
                   <img src={images.IconCopy} alt="" />
                   복사하기
                 </button>
-                <button type="button" onClick={toogleSave}>
+                <button type="button" onClick={toggleSave}>
                   <img src={images.IconSave} alt="" />
                   저장하기
                 </button>
@@ -632,11 +631,11 @@ const MoleculeReportController = ({
                       <img src={images.IconEdit} alt="" />
                       수정하기
                     </button>
-                    <button type="button" onClick={toogleCopy}>
+                    <button type="button" onClick={toggleCopy}>
                       <img src={images.IconCopy} alt="" />
                       복사하기
                     </button>
-                    <button type="button" onClick={toogleSave}>
+                    <button type="button" onClick={toggleSave}>
                       <img src={images.IconSave} alt="" />
                       저장하기
                     </button>
@@ -677,11 +676,11 @@ const MoleculeReportController = ({
                   재생성하기
                 </button>
               )} */}
-              <button type="button" onClick={toogleCopy}>
+              <button type="button" onClick={toggleCopy}>
                 <img src={images.IconCopy} alt="" />
                 복사하기
               </button>
-              <button type="button" onClick={toogleSave}>
+              <button type="button" onClick={toggleSave}>
                 <img src={images.IconSave} alt="" />
                 저장하기
               </button>

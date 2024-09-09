@@ -19,9 +19,9 @@ const MoleculeBizName = ({ date }) => {
     TITLE_OF_BUSINESS_INFORMATION
   );
 
-  const [isAutoSaveToogle, setIsAutoSaveToogle] = useState(true);
-  const autoSaveToogle = () => {
-    setIsAutoSaveToogle(!isAutoSaveToogle);
+  const [isAutoSaveToggle, setIsAutoSaveToggle] = useState(true);
+  const autoSaveToggle = () => {
+    setIsAutoSaveToggle(!isAutoSaveToggle);
   };
 
   const formatDate = (lang, timestamp) => {
@@ -61,13 +61,13 @@ const MoleculeBizName = ({ date }) => {
           </NameTitle>
         </div>
         {titleOfBusinessInfo && (
-          <button type="button" onClick={autoSaveToogle}>
+          <button type="button" onClick={autoSaveToggle}>
             내가 쓴 설명 보기
             <img src={images.IconMagic} alt="" />
           </button>
         )}
 
-        <AutosavePopup isAutoSaveToogle={isAutoSaveToogle}>
+        <AutosavePopup isAutoSaveToggle={isAutoSaveToggle}>
           <div>
             <span>일시 : {formatDate("ko", date)}</span>
             <strong>{titleOfBusinessInfo}</strong>
@@ -186,19 +186,19 @@ const Badge = styled.div`
 
 const AutosavePopup = styled.div`
   position: absolute;
-  right: ${(props) => (props.isAutoSaveToogle ? "0" : "-70px")};
+  right: ${(props) => (props.isAutoSaveToggle ? "0" : "-70px")};
   top: 70px;
   max-width: 304px;
-  max-height: ${(props) => (props.isAutoSaveToogle ? "0" : "1000px")};
+  max-height: ${(props) => (props.isAutoSaveToggle ? "0" : "1000px")};
   flex-direction: column;
   gap: 20px !important;
   text-align: left;
-  padding: ${(props) => (props.isAutoSaveToogle ? "0" : "24px")};
+  padding: ${(props) => (props.isAutoSaveToggle ? "0" : "24px")};
   border-radius: 20px;
   background: ${palette.white};
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  visibility: ${(props) => (props.isAutoSaveToogle ? "hidden" : "visible")};
-  opacity: ${(props) => (props.isAutoSaveToogle ? "0" : "1")};
+  visibility: ${(props) => (props.isAutoSaveToggle ? "hidden" : "visible")};
+  opacity: ${(props) => (props.isAutoSaveToggle ? "0" : "1")};
 
   &:before {
     position: absolute;
