@@ -30,7 +30,7 @@ import {
   SkeletonLine,
 } from "../../../../assets/styles/Skeleton";
 
-const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
+const OrganismAdditionalReport = ({ additionalReportCount, conversationId}) => {
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
 
   const [conversation, setConversation] = useAtom(CONVERSATION);
@@ -65,7 +65,8 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
   };
   const [selectedTab, setSelectedTab] = useAtom(SELECTED_TAB);
   const [selectedKeywords] = useAtom(SELECTED_ADDITIONAL_KEYWORD); // Access the list of selected keywords
-  const [tabs, setTabs] = useState([]);
+  const [title, setTitle] = useState([]);
+  const [purpose, setPurpose] = useState([]);
   const [sections, setSections] = useState([]);
   const [additionalReportData, setAdditionalReportData] = useAtom(
     ADDITIONAL_REPORT_DATA
@@ -90,8 +91,13 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
           conversationId,
           isLoggedIn
         );
-
-        if (buttonState === 1) {
+        // 기존 데이터가 있을 때 처리
+        if (additionalReportData[additionalReportCount]) {
+          setTitle(additionalReportData[additionalReportCount]?.title || []);
+          setSections(additionalReportData[additionalReportCount]?.sections || []);
+          setPurpose(additionalReportData[additionalReportCount]?.sections[0].content[0].text);
+        }
+        else if (buttonState === 1) {
           // 버튼 상태가 1일 때만 API 요청 실행
           setButtonState(0); // 버튼 상태 초기화
           setIsLoading(true);
@@ -137,8 +143,9 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
           console.log(response);
           answerData = response.data.additional_question;
           setAnswerData(answerData);
+          setTitle(answerData.title);
+          setPurpose(answerData.sections[0].content[0].text);
           setSections(answerData.sections);
-          console.log(answerData.title);
 
           // 새로운 데이터를 배열의 맨 앞에 추가합니다.
           const updatedAdditionalReportData = [
@@ -187,14 +194,6 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
             isLoggedIn,
             conversationId
           );
-        } else {
-          // 기존 데이터가 있을 때 처리
-          if (existingConversation && additionalReportData.length > 0) {
-            setTabs(additionalReportData[selectedTab]?.tabs || []);
-            setSections(additionalReportData[selectedTab]?.sections || []);
-          } else {
-            // console.warn('No saved additional report data found.');
-          }
         }
       } catch (error) {
         console.error("Error loading data:", error);
@@ -205,18 +204,18 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
     loadData();
   }, [
     conversationId,
-    expertIndex,
+    // expertIndex,
     selectedTab,
     selectedKeywords,
     buttonState, // buttonState 의존성 추가
   ]);
 
-  const handleTabClick = (index) => {
-    setSelectedTab(index);
-    if (tabs.length > 0) {
-      setSections(tabs[index].sections);
-    }
-  };
+  // const handleTabClick = (index) => {
+  //   setSelectedTab(index);
+  //   if (title.length > 0) {
+  //     setSections(title[index].sections);
+  //   }
+  // };
 
   return (
     <AnalysisSection Strategy>
@@ -232,10 +231,10 @@ const OrganismAdditionalReport = ({ conversationId, expertIndex }) => {
         </>
       ) : (
         <>
-          {answerData.title && (
+          {title && (
             <TabHeader>
-              <TabTitle>{answerData.title}</TabTitle>
-              <TabContent>{answerData.sections[0].content[0].text}</TabContent>
+              <TabTitle>{title}</TabTitle>
+              <TabContent>{purpose}</TabContent>
             </TabHeader>
           )}
 

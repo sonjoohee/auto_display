@@ -133,7 +133,7 @@ const PageMeetAiExpert = () => {
     setAdditionalReportCount(0);
     setSelectedAdditionalKeyword([]);
     setApproachPath(0);
-    setAdditionalReportData([]);
+    // setAdditionalReportData([]);
     setExpert1ReportData({});
     setExpert2ReportData({});
     setExpert3ReportData({});
