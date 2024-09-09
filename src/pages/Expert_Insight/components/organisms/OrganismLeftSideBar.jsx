@@ -220,6 +220,7 @@ const OrganismLeftSideBar = () => {
     fetchChatList();
   }, [reportRefreshTrigger, isLoggedIn]); 
 
+
   useEffect(() => {
     // 서버에서 보고서 목록을 가져오는 함수
     const fetchReports = async () => {
@@ -245,6 +246,7 @@ const OrganismLeftSideBar = () => {
     };
     fetchReports();
   }, [reportRefreshTrigger, isLoggedIn]); 
+
 
 
   // const handleConversationClick = (id) => {

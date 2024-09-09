@@ -446,6 +446,7 @@ const Section = ({ title, content }) => {
           </div>
         ))}
 
+
       {subTitleItems.length > 0 && (
         <DynamicGrid columns={subTitleItems.length}>
           {subTitleItems.map((item, index) => (
