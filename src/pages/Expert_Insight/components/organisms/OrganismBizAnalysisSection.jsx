@@ -318,7 +318,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
     setTempMainFeaturesOfBusinessInformation,
     setTempMainCharacteristicOfBusinessInformation,
     setTempBusinessInformationTargetCustomer,
-    setIsLoading,
+    // setIsLoading,
   ]);
 
   //   const handleEditStart = (section, index) => {
