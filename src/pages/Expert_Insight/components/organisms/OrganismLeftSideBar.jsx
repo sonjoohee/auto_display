@@ -34,7 +34,6 @@ import {
   BUTTON_STATE,
   SELECTED_EXPERT_INDEX,
   REPORT_REFRESH_TRIGGER,
-
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -51,7 +50,9 @@ const OrganismLeftSideBar = () => {
   const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 관리
   const [isLoginPopupOpen, setLoginPopupOpen] = useState(false); // 로그인 팝업 상태 관리
   const [reports, setReports] = useState([]); // 서버에서 가져온 보고서 리스트 상태
-  const [reportRefreshTrigger, setReportRefreshTrigger] = useAtom(REPORT_REFRESH_TRIGGER);  // 리프레시 트리거 상태 구독
+  const [reportRefreshTrigger, setReportRefreshTrigger] = useAtom(
+    REPORT_REFRESH_TRIGGER
+  ); // 리프레시 트리거 상태 구독
 
   const [chatList, setChatList] = useState([]); // 서버에서 가져온 대화 리스트
 
@@ -199,7 +200,7 @@ const OrganismLeftSideBar = () => {
         const accessToken = sessionStorage.getItem("accessToken");
 
         if (!accessToken) {
-          setChatList([]);  // 로그아웃 상태에서는 대화 리스트를 빈 배열로 설정
+          setChatList([]); // 로그아웃 상태에서는 대화 리스트를 빈 배열로 설정
           return;
         }
         const response = await axios.get(
@@ -218,8 +219,7 @@ const OrganismLeftSideBar = () => {
       }
     };
     fetchChatList();
-  }, [reportRefreshTrigger, isLoggedIn]); 
-
+  }, [reportRefreshTrigger, isLoggedIn]);
 
   useEffect(() => {
     // 서버에서 보고서 목록을 가져오는 함수
@@ -228,7 +228,7 @@ const OrganismLeftSideBar = () => {
         const accessToken = sessionStorage.getItem("accessToken"); // 저장된 토큰 가져오기
 
         if (!accessToken) {
-          setReports([]);  // 로그아웃 상태에서는 대화 리스트를 빈 배열로 설정
+          setReports([]); // 로그아웃 상태에서는 대화 리스트를 빈 배열로 설정
           return;
         }
         const response = await axios.get(
@@ -245,9 +245,7 @@ const OrganismLeftSideBar = () => {
       }
     };
     fetchReports();
-  }, [reportRefreshTrigger, isLoggedIn]); 
-
-
+  }, [reportRefreshTrigger, isLoggedIn]);
 
   // const handleConversationClick = (id) => {
   //   // 클릭 시 해당 대화로 이동
@@ -721,7 +719,7 @@ const OrganismLeftSideBar = () => {
                   <li>
                     <button type="button" onClick={handleAccountClick}>
                       <img src={images.AccountSetting} alt="" />
-                      계정 설정
+                      비밀번호 변경
                     </button>
                   </li>
                   <li>
