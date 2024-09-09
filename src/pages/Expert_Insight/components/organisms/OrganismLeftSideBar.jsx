@@ -1416,6 +1416,7 @@ const AccordionContent = styled.div`
     p {
       width: 100%;
       min-height: 19px;
+      font-family: 'Pretendard', 'Poppins';
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
