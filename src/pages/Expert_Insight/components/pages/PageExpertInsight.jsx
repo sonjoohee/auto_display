@@ -505,160 +505,135 @@ const PageExpertInsight = () => {
     if (isLoggedIn) {
       if (!conversationId) {
         try {
-          // // 로그인 상태에서 새로운 대화 ID를 서버에서 생성
-          // const newConversationId = await createChatOnServer();
-          // setConversationId(newConversationId); // 생성된 대화 ID 설정
-          // console.log("newConversationId", newConversationId);
-          // // 새로운 대화 ID로 경로 변경
-          // navigate(`/conversation/${newConversationId}`, { replace: true });
-          return; // 새로운 대화 생성 후 return
+          return;
         } catch (error) {
           console.error("Failed to create conversation on server:", error);
           return;
         }
       }
     }
+  
     const updatedConversation = [...conversation];
-
+  
     // 사용자가 입력한 경우에만 inputBusinessInfo를 업데이트
     if (conversationStage < 3 && inputValue !== -1) {
       setInputBusinessInfo(inputValue);
       console.log(inputValue);
       updatedConversation.push({ type: "user", message: inputValue });
     }
-
+  
     let newConversationStage = conversationStage;
-
+  
     if (conversationStage === 1) {
       if (inputBusinessInfo || inputValue !== -1) {
-        // inputValue가 입력되었을 때도 대화 진행
-        const businessInfo = inputBusinessInfo || inputValue; // inputValue가 더 우선
+        const businessInfo = inputBusinessInfo || inputValue;
         updatedConversation.push(
           {
             type: "system",
             message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻`,
             expertIndex: selectedExpertIndex,
           },
-          { type: "analysis", businessInfo } // 입력된 비즈니스 정보를 분석
+          { type: "analysis", businessInfo }
         );
-        // if(approachPath === 1) {
-        //   updatedConversation.push(
-        //     { type: 'system', message: '비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 지금 바로 전략 보고서를 준비해드려요.' },
-        //     { type: 'report_button'},
-        //   );
-        // }
-        // else {
-        //   updatedConversation.push(
-        //     { type: 'system', message: '비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 전문가들의 의견을 확인하여 아이디어를 한 단계 더 발전시켜 보세요 🔍' },
-        //   );
-        // }
         newConversationStage = 2;
-      } else if (!inputBusinessInfo && approachPath === 1) {
-        // inputBusinessInfo가 비어 있고, 검색을 통해 접근하지 않은 경우 전문가 인덱스에 따라 메시지 추가
-        // const expertPromptMessage = getInitialSystemMessage();
-        // updatedConversation.push({
-        //   type: "system",
-        //   message: expertPromptMessage,
-        // });
       }
     } else if (conversationStage === 2 && titleOfBusinessInfo) {
-      // 임시로 비활성화, 새로고침이나 뒤로가기 막는 기능 필요함
-      // if (!selectedExpertIndex || (inputValue !== -1 && approachPath === -1)) {
-      //     alert("전문가를 선택해 주세요.");
-      //     return;
-      // }
-      // 마지막 요소가 keyword 이거나 report_button 이면 pop
-      if (
-        (updatedConversation.length > 0 &&
-          updatedConversation[updatedConversation.length - 1].type ===
-            "keyword") ||
-        (updatedConversation.length > 0 &&
-          updatedConversation[updatedConversation.length - 1].type ===
-            "report_button")
-      ) {
-        updatedConversation.pop();
+      // 기존 대화에서 이어나가는 경우 처리
+      if (approachPath === 2) {
+        newConversationStage = 2;
+        if (selectedExpertIndex === "1" || selectedExpertIndex === "2" || selectedExpertIndex === "3") {
+          updatedConversation.push(
+            { type: "report_button" }
+          );
+          newConversationStage = 2;
+          setApproachPath(0);
+          console.log("기초보고서 상태에서 대화내역으로 들어오면")
+        }
+      } else {
+        // 일반적인 경우 처리
+        if (
+          (updatedConversation.length > 0 &&
+            updatedConversation[updatedConversation.length - 1].type ===
+              "keyword") ||
+          (updatedConversation.length > 0 &&
+            updatedConversation[updatedConversation.length - 1].type ===
+              "report_button")
+        ) {
+          updatedConversation.pop();
+        }
+  
+        if (selectedExpertIndex === "1") {
+          updatedConversation.push(
+            {
+              type: "user",
+              message:
+                "10년차 전략 디렉터와 1:1 커피챗, 지금 바로 시작하겠습니다 🙌🏻",
+            },
+            {
+              type: "system",
+              message: `안녕하세요, 김도원입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊`,
+              expertIndex: selectedExpertIndex,
+            }
+          );
+        } else if (selectedExpertIndex === "2") {
+          updatedConversation.push(
+            {
+              type: "user",
+              message:
+                "지금 바로 쓸 수 있는 브랜딩 솔루션 10초 맞춤 제안서 받기, 지금 바로 시작하겠습니다 🙌🏻",
+            },
+            {
+              type: "system",
+              message: `안녕하세요, 이지현입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊`,
+              expertIndex: selectedExpertIndex,
+            }
+          );
+        } else if (selectedExpertIndex === "3") {
+          updatedConversation.push(
+            {
+              type: "user",
+              message:
+                "고객 데이터 전문가의 맞춤 타겟 추천, 지금 바로 시작하겠습니다 🙌🏻",
+            },
+            {
+              type: "system",
+              message: `안녕하세요, 박서연입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊`,
+              expertIndex: selectedExpertIndex,
+            }
+          );
+        }
+        updatedConversation.push(
+          { type: `strategy_${selectedExpertIndex}` }
+        );
+        newConversationStage = 3;
       }
-
-      if (selectedExpertIndex === "1") {
-        updatedConversation.push(
-          {
-            type: "user",
-            message:
-              "10년차 전략 디렉터와 1:1 커피챗, 지금 바로 시작하겠습니다 🙌🏻",
-          },
-          {
-            type: "system",
-            message: `안녕하세요, 김도원입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊`,
-            expertIndex: selectedExpertIndex,
-          }
-        );
-      } else if (selectedExpertIndex === "2") {
-        updatedConversation.push(
-          {
-            type: "user",
-            message:
-              "지금 바로 쓸 수 있는 브랜딩 솔루션 10초 맞춤 제안서 받기, 지금 바로 시작하겠습니다 🙌🏻",
-          },
-          {
-            type: "system",
-            message: `안녕하세요, 이지현입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊`,
-            expertIndex: selectedExpertIndex,
-          }
-        );
-      } else if (selectedExpertIndex === "3") {
-        updatedConversation.push(
-          {
-            type: "user",
-            message:
-              "고객 데이터 전문가의 맞춤 타겟 추천, 지금 바로 시작하겠습니다 🙌🏻",
-          },
-          {
-            type: "system",
-            message: `안녕하세요, 박서연입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊`,
-            expertIndex: selectedExpertIndex,
-          }
-        );
-      }
-      updatedConversation.push(
-        { type: `strategy_${selectedExpertIndex}` }
-        // { type: 'system', message: '리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊'},
-        // { type: `keyword` },
-      );
-      newConversationStage = 3;
     } else if (conversationStage === 3) {
-      updatedConversation.pop();
-
-      // 로그인 상태에 따라 활성화 또는 비활성화 해야함
-      // if (additionalReportCount >= 3) {
-      //   alert("추가 리포트는 최대 3개까지 요청 가능합니다. 더 보려면 로그인 해주세요!");
-      //   return;
-      // }
-
-      if (inputValue !== -1) {
-        const updatedKeywords = [...selectedAdditionalKeyword];
-        updatedKeywords[0] = inputValue;
-        setSelectedAdditionalKeyword(updatedKeywords);
+      if (approachPath === 2) {
+        newConversationStage = 3; // 기본적으로 대화 상태를 2로 설정
+        updatedConversation.push(
+          { type: "keyword" }
+        );
+        setApproachPath(0);
+        console.log("전략보고서 상태에서 대화내역으로 들어오면")
+      } else {
+        // 일반적인 경우 처리
+        if (inputValue !== -1) {
+          const updatedKeywords = [...selectedAdditionalKeyword];
+          updatedKeywords[0] = inputValue;
+          setSelectedAdditionalKeyword(updatedKeywords);
+        }
+    
+        updatedConversation.push(
+          {
+            type: "user",
+            message: `제 프로젝트와 관련된 "${
+              selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]
+            }"를 요청드려요`,
+          },
+          { type: `addition`, addition_index: additionalReportCount }
+        );
       }
-      // if (!areArraysEqual(selectedAdditionalKeyword, [inputValue])) {
-      //   const updatedKeywords = [...selectedAdditionalKeyword];
-      //   updatedKeywords[0] = inputValue;
-      //   setSelectedAdditionalKeyword(updatedKeywords);
-      //   console.log("+++여기+++");
-      // }
-      updatedConversation.push(
-        {
-          type: "user",
-          message: `제 프로젝트와 관련된 "${
-            selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]
-          }"를 요청드려요`,
-        },
-        { type: `addition`, addition_index: additionalReportCount }
-        // { type: `addition_${selectedExpertIndex}` }
-      );
-
-      // setAdditionalReportCount(additionalReportCount + 1);
     }
-
     console.log(
       "🚀 ~ handleSearch ~ updatedConversation:",
       updatedConversation
@@ -668,7 +643,7 @@ const PageExpertInsight = () => {
     saveConversation(updatedConversation, newConversationStage);
     setIsLoading(false); // 로딩 완료
   };
-
+  
   // 스크롤
   const [isScrolled, setIsScrolled] = useState(false);
   useEffect(() => {
@@ -759,7 +734,7 @@ const PageExpertInsight = () => {
                 return null;
               })}
 
-              {approachPath === -1 ?
+              {approachPath === -1 || approachPath === 2 ?
                 inputBusinessInfo &&
                 (Object.keys(expert1ReportData).length === 0 ||
                   Object.keys(expert2ReportData).length === 0 ||
@@ -774,6 +749,7 @@ const PageExpertInsight = () => {
                   <OrganismBizExpertSelect />
                 )
               }
+
               {/* {approachPath !== 1 && conversationStage === 2 && (
                 <OrganismBizExpertSelect />
               )} */}
