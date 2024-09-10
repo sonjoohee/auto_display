@@ -490,7 +490,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                               </button>
                               <button
                                 onClick={() =>
-                                  confirmDelete("targetCustomer", index)
+                                  confirmDelete("mainFeatures", index)
                                 }
                               >
                                 <img src={images.IconDelete2} alt="" />
@@ -594,7 +594,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                                 </button>
                                 <button
                                   onClick={() =>
-                                    confirmDelete("targetCustomer", index)
+                                    confirmDelete("mainCharacteristic", index)
                                   }
                                 >
                                   <img src={images.IconDelete2} alt="" />
