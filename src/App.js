@@ -33,6 +33,8 @@ import OrganismReportPopup from './pages/Expert_Insight/components/organisms/Org
 
 import PageCompletedMail from './pages/Login_Sign/components/pages/PageCompletedMail';
 
+import ExpertExample from './pages/Expert_Insight/components/pages/ExpertExample';
+
 function App() {
   const [, setIsLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태를 위한 아톰
   const [, setUserName] = useAtom(USER_NAME); // 유저 이름 아톰
@@ -85,6 +87,8 @@ function App() {
             <Route path="/ExpertInsight" element={<PageExpertInsight />}></Route>
 
             <Route path="/CompletedMail" element={<PageCompletedMail />}></Route>
+
+            <Route path="/ExpertExample" element={<ExpertExample />}></Route>
 
 
             {/* <Route path="/AI_Panel" element={<PageAIPanelList />} />
