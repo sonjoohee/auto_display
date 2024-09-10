@@ -108,27 +108,7 @@ const OrganismAdditionalReport = ({
           // 버튼 상태가 1일 때만 API 요청 실행
           setButtonState(0); // 버튼 상태 초기화
           setIsLoading(true);
-          // const updatedConversation1 = [...conversation];
-          // updatedConversation1.push(
-          //   {
-          //     type: "system",
-          //     message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${
-          //       selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]
-          //     }를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
-          //   },
-          //   { type: `keyword` }
-          // );
-          // setConversation(updatedConversation1);
-          // await saveConversationToIndexedDB(
-          //   {
-          //     ...existingConversation,
-          //     conversation: updatedConversation1,
-          //     timestamp: Date.now(),
-          //     expert_index: selectedExpertIndex,
-          //   },
-          //   isLoggedIn,
-          //   conversationId
-          // );
+
           const keyword = selectedKeywords[selectedKeywords.length - 1]; // Use the keyword based on expertIndex
 
           const data = {
