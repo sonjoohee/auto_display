@@ -341,87 +341,43 @@ const MoleculeReportController = ({
       else return;
     };
 
-    // 전문가 선택하고 진입 시
-    if (approachPath === 1) {
-      if (conversationStage === 2) {
-        contentToCopy = `
-        ${titleOfBusinessInfo}
-        주요 특징
-        ${mainFeaturesOfBusinessInformation
-          .map((feature) => `- ${feature}`)
-          .join("\n")}
-        주요 특성
-        ${mainCharacteristicOfBusinessInformation
-          .map((character) => `- ${character}`)
-          .join("\n")}
-        목표 고객
-        ${businessInformationTargetCustomer
-          .map((customer) => `- ${customer}`)
-          .join("\n")}
-        `;
-      } else if (conversationStage === 3) {
-        const extractTextContent = (data) => {
-          let textContent = "";
-          if (typeof data === "string") {
-            return data + "\n";
-          }
-          if (Array.isArray(data)) {
-            data.forEach((item) => {
-              textContent += extractTextContent(item);
-            });
-          } else if (typeof data === "object" && data !== null) {
-            Object.values(data).forEach((value) => {
-              textContent += extractTextContent(value);
-            });
-          }
-          return textContent;
-        };
-        const selectedTabData = getSelectedTabData(selectedTabCopy);
-        contentToCopy = extractTextContent(selectedTabData);
-      } else return;
-    }
-    // 검색창 입력하고 진입 시
-    else {
-      if (selectedExpertIndex === 0) {
-        contentToCopy = `
-          ${titleOfBusinessInfo}
-          주요 특징
-          ${mainFeaturesOfBusinessInformation
-            .map((feature) => `- ${feature}`)
-            .join("\n")}
-          주요 특성
-          ${mainCharacteristicOfBusinessInformation
-            .map((character) => `- ${character}`)
-            .join("\n")}
-          목표 고객
-          ${businessInformationTargetCustomer
-            .map((customer) => `- ${customer}`)
-            .join("\n")}
-          `;
-      } else if (strategyReportID === "1") {
-        const extractTextContent = (data) => {
-          let textContent = "";
-
-          if (typeof data === "string") {
-            return data + "\n";
-          }
-
-          if (Array.isArray(data)) {
-            data.forEach((item) => {
-              textContent += extractTextContent(item);
-            });
-          } else if (typeof data === "object" && data !== null) {
-            Object.values(data).forEach((value) => {
-              textContent += extractTextContent(value);
-            });
-          }
-
-          return textContent;
-        };
-
-        const selectedTabData = getSelectedTabData(selectedTabCopy);
-        contentToCopy = extractTextContent(selectedTabData);
-      } else return;
+    if (reportIndex === 0) {
+      contentToCopy = `
+      ${titleOfBusinessInfo}
+      주요 특징
+      ${mainFeaturesOfBusinessInformation
+        .map((feature) => `- ${feature}`)
+        .join("\n")}
+      주요 특성
+      ${mainCharacteristicOfBusinessInformation
+        .map((character) => `- ${character}`)
+        .join("\n")}
+      목표 고객
+      ${businessInformationTargetCustomer
+        .map((customer) => `- ${customer}`)
+        .join("\n")}
+      `;
+    } else if (reportIndex === 1) {
+      const extractTextContent = (data) => {
+        let textContent = "";
+        if (typeof data === "string") {
+          return data + "\n";
+        }
+        if (Array.isArray(data)) {
+          data.forEach((item) => {
+            textContent += extractTextContent(item);
+          });
+        } else if (typeof data === "object" && data !== null) {
+          Object.values(data).forEach((value) => {
+            textContent += extractTextContent(value);
+          });
+        }
+        return textContent;
+      };
+      const selectedTabData = getSelectedTabData(selectedTabCopy);
+      contentToCopy = extractTextContent(selectedTabData);
+    } else if (reportIndex === 2) {
+      // 추가 질문 복사 기능
     }
 
     navigator.clipboard
