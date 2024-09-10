@@ -759,7 +759,9 @@ const ExpertExample = () => {
               <p className="comment">베트남산 망고젤리는 데이터 기반 고객 분석, 고객 여정 맵핑, UX 리디자인을 통해 고객 경험을 향상시킬 수 있는 잠재력을 가지고 있습니다. 이러한 접근법을 통해, 베트남산 망고젤리는 경쟁사 대비 차별화된 가치를 제공할 수 있으며, 시장에서의 경쟁력을 강화할 수 있습니다. 고객 중심의 접근법을 지속적으로 적용함으로써, 베트남산 망고젤리는 장기적인 고객 충성도를 확보하고, 시장에서 지속 가능한 성장을 이룰 수 있을 것입니다.</p>
             </div>
 
-            <ButtonWrap>
+            <p className="comment2">“ 제공된 시나리오는 실제 데이터에 기반하거나 참고용 가상 시나리오일 수 있습니다. 가상 시나리오는 비즈니스 참고 용도로만 사용하시고, 중요한 비즈니스 결정은 추가적인 데0이터 검토 후에 활용해주세요.”</p>
+
+            <ButtonWrap style={{marginTop: "8px"}}>
               <button type="button">
                 <img src={images.IconRefresh} alt="" />
                 재생성하기
@@ -830,8 +832,14 @@ const ExpertHeader = styled.div`
 const ExpertContent = styled.div`
   .comment {
     font-size:0.875rem;
+    color:${palette.gray800};
     line-height:1.5;
     margin-top:12px;
+  }
+
+  .comment2 {
+    font-size:0.75rem;
+    color:${palette.lightGray};
   }
 
   ${props =>
@@ -959,7 +967,7 @@ const BgBox = styled.div`
       position:relative;
       font-size:0.875rem;
       color:${palette.darkGray};
-      line-height:1.3;
+      line-height:1.5;
       padding-left:13px;
 
       &:before {
