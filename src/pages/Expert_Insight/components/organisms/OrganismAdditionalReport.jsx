@@ -210,13 +210,17 @@ const OrganismAdditionalReport = ({
     <AnalysisSection Strategy>
       {isLoading ? (
         <>
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
+            <SkeletonTitle className="title-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+            <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
+            <SkeletonTitle className="title-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+            <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
+            <SkeletonTitle className="title-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+            <SkeletonLine className="content-placeholder" />
         </>
       ) : (
         <>

@@ -71,11 +71,11 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [buttonState, setButtonState] = useAtom(EXPERT_BUTTON_STATE); // BUTTON_STATE 사용
 
-  const [expert1ReprotData, setExpert1ReportData] =
+  const [expert1ReportData, setExpert1ReportData] =
     useAtom(EXPERT1_REPORT_DATA);
-  const [expert2ReprotData, setExpert2ReportData] =
+  const [expert2ReportData, setExpert2ReportData] =
     useAtom(EXPERT2_REPORT_DATA);
-  const [expert3ReprotData, setExpert3ReportData] =
+  const [expert3ReportData, setExpert3ReportData] =
     useAtom(EXPERT3_REPORT_DATA);
 
   const analysisReportData = {
@@ -290,10 +290,18 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             <SkeletonTitle className="title-placeholder" />
             <SkeletonLine className="content-placeholder" />
             <SkeletonLine className="content-placeholder" />
+            <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
+            <SkeletonTitle className="title-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+            <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
+            <SkeletonTitle className="title-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+            <SkeletonLine className="content-placeholder" />
           </>
         )}
 
-        {!isLoading && (
+        {Array.isArray(sections) && sections.length > 0 && (
           <MoleculeReportController
             reportIndex={1}
             strategyReportID={strategyReportData.expert_id}
