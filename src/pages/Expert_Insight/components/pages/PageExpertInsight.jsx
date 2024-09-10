@@ -543,11 +543,6 @@ const PageExpertInsight = () => {
         newConversationStage = 2;
         if (selectedExpertIndex === "1" || selectedExpertIndex === "2" || selectedExpertIndex === "3") {
           updatedConversation.push(
-            // {
-            //   type: "system",
-            //   message: `안녕하세요! ${titleOfBusinessInfo}에 대한 전략 보고서를 준비했습니다.\n추가적인 수정이 필요하면 언제든지 말씀해 주세요.`,
-            //   expertIndex: selectedExpertIndex,
-            // },
             { type: "report_button" }
           );
           newConversationStage = 2;
@@ -613,25 +608,32 @@ const PageExpertInsight = () => {
         newConversationStage = 3;
       }
     } else if (conversationStage === 3) {
-      // updatedConversation.pop();
-  
-      if (inputValue !== -1) {
-        const updatedKeywords = [...selectedAdditionalKeyword];
-        updatedKeywords[0] = inputValue;
-        setSelectedAdditionalKeyword(updatedKeywords);
+      if (approachPath === 2) {
+        newConversationStage = 3; // 기본적으로 대화 상태를 2로 설정
+        updatedConversation.push(
+          { type: "keyword" }
+        );
+        setApproachPath(0);
+        console.log("전략보고서 상태에서 대화내역으로 들어오면")
+      } else {
+        // 일반적인 경우 처리
+        if (inputValue !== -1) {
+          const updatedKeywords = [...selectedAdditionalKeyword];
+          updatedKeywords[0] = inputValue;
+          setSelectedAdditionalKeyword(updatedKeywords);
+        }
+    
+        updatedConversation.push(
+          {
+            type: "user",
+            message: `제 프로젝트와 관련된 "${
+              selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]
+            }"를 요청드려요`,
+          },
+          { type: `addition`, addition_index: additionalReportCount }
+        );
       }
-  
-      updatedConversation.push(
-        {
-          type: "user",
-          message: `제 프로젝트와 관련된 "${
-            selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]
-          }"를 요청드려요`,
-        },
-        { type: `addition`, addition_index: additionalReportCount }
-      );
     }
-  
     console.log(
       "🚀 ~ handleSearch ~ updatedConversation:",
       updatedConversation
