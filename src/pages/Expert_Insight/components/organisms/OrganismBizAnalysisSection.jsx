@@ -78,8 +78,8 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
     tempBusinessInformationTargetCustomer,
     setTempBusinessInformationTargetCustomer,
   ] = useAtom(TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [isLoading, setIsLoading] = useAtom(IS_LOADING); // useState 대신 useAtom으로 변경
-  //   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingAnalysis, setIsLoadingAnalysis] = useState(false);
+  const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [buttonState, setButtonState] = useAtom(ANALYSIS_BUTTON_STATE);
 
   const [newAddContent, setNewAddContent] = useState("");
@@ -122,6 +122,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
 
   useEffect(() => {
     console.log("기초보고서1");
+    setIsLoadingAnalysis(true);
     setIsLoading(true);
   
     const loadAndSaveData = async () => {
@@ -260,6 +261,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
           conversationId
         );
         setReportRefreshTrigger((prev) => !prev);
+        setIsLoadingAnalysis(false);
         setIsLoading(false);
   
       } else {
@@ -286,6 +288,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
         } else {
           console.warn("No saved analysis data found.");
         }
+        setIsLoadingAnalysis(false);
         setIsLoading(false);
       }
     };
@@ -422,7 +425,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   return (
     <>
       <AnalysisSection>
-        {isLoading ? (
+        {isLoadingAnalysis ? (
           <>
             <SkeletonTitle className="title-placeholder" />
             <SkeletonLine className="content-placeholder" />
@@ -755,7 +758,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               <WarningMessage>{warningMessage}</WarningMessage>
             )}{" "}
             {/* 경고 메시지 출력 */}
-            {!isLoading && (
+            {!isLoadingAnalysis && (
               <MoleculeReportController
                 reportIndex={0}
                 conversationId={conversationId}
