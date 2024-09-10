@@ -4,7 +4,6 @@ import { useAtom } from "jotai";
 import {
   ADDITIONAL_REPORT_DATA,
   SELECTED_EXPERT_INDEX,
-  SELECTED_TAB,
   SELECTED_ADDITIONAL_KEYWORD, // Import the new atom
   TITLE_OF_BUSINESS_INFORMATION,
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
@@ -42,7 +41,8 @@ const OrganismAdditionalReport = ({
   const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
     SELECTED_ADDITIONAL_KEYWORD
   );
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingAdd, setIsLoadingAdd] = useState(false);
+  const [isLoading, setIsLoading] = useAtom(IS_LOADING);
 
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [
@@ -67,7 +67,6 @@ const OrganismAdditionalReport = ({
     mainCharacter: mainCharacteristicOfBusinessInformation,
     mainCustomer: businessInformationTargetCustomer,
   };
-  const [selectedTab, setSelectedTab] = useAtom(SELECTED_TAB);
   const [selectedKeywords] = useAtom(SELECTED_ADDITIONAL_KEYWORD); // Access the list of selected keywords
   const [title, setTitle] = useState([]);
   const [purpose, setPurpose] = useState([]);
@@ -108,6 +107,7 @@ const OrganismAdditionalReport = ({
         } else if (buttonState === 1) {
           // 버튼 상태가 1일 때만 API 요청 실행
           setButtonState(0); // 버튼 상태 초기화
+          setIsLoadingAdd(true);
           setIsLoading(true);
 
           const keyword = selectedKeywords[selectedKeywords.length - 1]; // Use the keyword based on expertIndex
@@ -142,11 +142,11 @@ const OrganismAdditionalReport = ({
           ];
           setAdditionalReportData(updatedAdditionalReportData);
 
-          const updatedConversation = {
-            ...existingConversation,
-            additionalReportData: updatedAdditionalReportData, // 전체 리스트를 저장
-            timestamp: Date.now(),
-          };
+          // const updatedConversation = {
+          //   ...existingConversation,
+          //   additionalReportData: updatedAdditionalReportData, // 전체 리스트를 저장
+          //   timestamp: Date.now(),
+          // };
           await saveConversationToIndexedDB(
             {
               ...existingConversation,
@@ -158,6 +158,7 @@ const OrganismAdditionalReport = ({
             isLoggedIn,
             conversationId
           );
+          setIsLoadingAdd(false);
           setIsLoading(false);
 
           const updatedConversation2 = [...conversation];
@@ -193,22 +194,13 @@ const OrganismAdditionalReport = ({
     loadData();
   }, [
     conversationId,
-    // expertIndex,
-    selectedTab,
     selectedKeywords,
     buttonState, // buttonState 의존성 추가
   ]);
 
-  // const handleTabClick = (index) => {
-  //   setSelectedTab(index);
-  //   if (title.length > 0) {
-  //     setSections(title[index].sections);
-  //   }
-  // };
-
   return (
     <AnalysisSection Strategy>
-      {isLoading ? (
+      {isLoadingAdd ? (
         <>
             <SkeletonTitle className="title-placeholder" />
             <SkeletonLine className="content-placeholder" />
@@ -239,7 +231,7 @@ const OrganismAdditionalReport = ({
             />
           ))}
 
-          {!isLoading && (
+          {!isLoadingAdd && (
             <MoleculeReportController
               reportIndex={2}
               conversationId={conversationId}

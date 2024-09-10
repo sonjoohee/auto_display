@@ -6,7 +6,7 @@ import {
   EXPERT1_REPORT_DATA,
   EXPERT2_REPORT_DATA,
   EXPERT3_REPORT_DATA,
-  SELECTED_TAB,
+  SELECTED_TAB_COPY,
   EXPERT_BUTTON_STATE,
   CONVERSATION,
   APPROACH_PATH,
@@ -38,6 +38,7 @@ import {
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
   MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
+  IS_LOADING,
 } from "../../../AtomStates";
 
 const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
@@ -45,7 +46,8 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [approachPath] = useAtom(APPROACH_PATH);
   const [conversation, setConversation] = useAtom(CONVERSATION);
-  const [selectedTab, setSelectedTab] = useAtom(SELECTED_TAB); // 탭을 인덱스로 관리
+  const [selectedTabCopy, setSelectedTabCopy] = useAtom(SELECTED_TAB_COPY); // 복사 기능을 위한 Atom
+  const [selectedTab, setSelectedTab] = useState(0); // 선택된 보고서 탭 상태관리
   const [tabs, setTabs] = useState([]);
   const [sections, setSections] = useState([]);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
@@ -85,27 +87,8 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
     mainCustomer: businessInformationTargetCustomer,
   };
 
-  const [isLoading, setIsLoading] = useState(false);
-
-  // 전문가 인덱스에 따라 해당 Atom을 선택
-  const strategyReportAtomMap = {
-    1: EXPERT1_REPORT_DATA,
-    2: EXPERT2_REPORT_DATA,
-    3: EXPERT3_REPORT_DATA,
-  };
-
-  const sampleDataMap = {
-    1: sampleData1,
-    2: sampleData2,
-    3: sampleData3,
-  };
-
-  const strategyReportAtom =
-    strategyReportAtomMap[selectedExpertIndex] || EXPERT3_REPORT_DATA;
-  const sampleData = sampleDataMap[selectedExpertIndex] || sampleData3;
-
-  const [strategyReportData, setStrategyReportData] =
-    useAtom(strategyReportAtom);
+  const [isLoadingExpert, setIsLoadingExpert] = useState(false);
+  const [isLoading, setIsLoading] = useAtom(IS_LOADING);
 
   useEffect(() => {
     const loadData = async () => {
@@ -119,22 +102,26 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
         );
         let currentReportKey = `strategyReportData_EX${selectedExpertIndex}`;
         // 기존 데이터가 있는 경우
-        if (
-          existingConversation &&
-          existingConversation[currentReportKey] &&
-          Array.isArray(existingConversation[currentReportKey].tabs) &&
-          existingConversation[currentReportKey].tabs.length > 0
-        ) {
-          const strategyData = existingConversation[currentReportKey];
-          setStrategyReportData(strategyData);
-          setTabs(strategyData.tabs);
-          setSections(strategyData.tabs[selectedTab].sections);
+        if (expertIndex === '1' && Object.keys(expert1ReportData).length > 0) {
+          console.log("1번 전문가")
+          setTabs(expert1ReportData.tabs);
+          setSections(expert1ReportData.tabs[selectedTab].sections);
         }
-
+        else if (expertIndex === '2' && Object.keys(expert2ReportData).length > 0) {
+          console.log("2번 전문가")
+          setTabs(expert2ReportData.tabs);
+          setSections(expert2ReportData.tabs[selectedTab].sections);
+        }
+        else if (expertIndex === '3' && Object.keys(expert3ReportData).length > 0) {
+          console.log("3번 전문가")
+          setTabs(expert3ReportData.tabs);
+          setSections(expert3ReportData.tabs[selectedTab].sections);
+        }
         // buttonState === 1일 때만 API 호출
-        if (buttonState === 1) {
-          setIsLoading(true);
+        else if (buttonState === 1) {
           setButtonState(0); // 버튼 상태를 초기화
+          setIsLoadingExpert(true);
+          setIsLoading(true);
 
           const data = {
             expert_id: selectedExpertIndex,
@@ -180,27 +167,29 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
 
           const strategyData = finalResponse;
 
-          setStrategyReportData(strategyData);
+          if(expertIndex === '1') setExpert1ReportData(strategyData);
+          else if(expertIndex === '2') setExpert2ReportData(strategyData);
+          else if(expertIndex === '3') setExpert3ReportData(strategyData);
+          
           setTabs(strategyData.tabs);
           setSections(strategyData.tabs[selectedTab].sections);
 
-          // Save data to IndexedDB
-          const updatedConversation = {
+          await saveConversationToIndexedDB(
+          {
             ...existingConversation,
             [currentReportKey]: strategyData,
-            conversationStage: 3,
             timestamp: Date.now(),
             expert_index: selectedExpertIndex,
-          };
-
-          await saveConversationToIndexedDB(
-            updatedConversation,
+            // conversationStage: 3,
+          },
             isLoggedIn,
             conversationId
           );
+          setIsLoadingExpert(false);
+          setIsLoading(false);
 
-          const updatedConversation1 = [...conversation];
-          updatedConversation1.push(
+          const updatedConversation = [...conversation];
+          updatedConversation.push(
             {
               type: "system",
               message:
@@ -214,18 +203,24 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             conversationId,
             isLoggedIn
           );
-          const updatedConversation2 = {
-            ...existingConversation2,
-            expert_index: selectedExpertIndex,
-            conversation: updatedConversation1,
-            conversationStage: 3,
-            timestamp: Date.now(),
-            expert_index: selectedExpertIndex,
-          };
+          // const updatedConversation2 = {
+          //   ...existingConversation2,
+          //   expert_index: selectedExpertIndex,
+          //   conversation: updatedConversation1,
+          //   conversationStage: 3,
+          //   timestamp: Date.now(),
+          //   expert_index: selectedExpertIndex,
+          // };
 
-          setConversation(updatedConversation1);
+          setConversation(updatedConversation);
           await saveConversationToIndexedDB(
-            updatedConversation2,
+            {
+              ...existingConversation2,
+              [currentReportKey]: strategyData,
+              conversation: updatedConversation,
+              timestamp: Date.now(),
+              expert_index: selectedExpertIndex,
+            },
             isLoggedIn,
             conversationId
           );
@@ -233,7 +228,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
       } catch (error) {
         console.error("Error loading data:", error);
       }
-      setIsLoading(false);
+      
     };
 
     loadData();
@@ -241,6 +236,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
 
   const handleTabClick = (index) => {
     setSelectedTab(index);
+    setSelectedTabCopy(index);
     if (tabs.length > 0) {
       setSections(tabs[index].sections);
     }
@@ -249,21 +245,8 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   return (
     <>
       <AnalysisSection Strategy>
-        <TabHeader>
-          {tabs &&
-            tabs.length > 0 &&
-            tabs.map((tab, index) => (
-              <TabButton
-                key={index}
-                active={selectedTab === index}
-                onClick={() => handleTabClick(index)}
-              >
-                {tab.title}
-              </TabButton>
-            ))}
-        </TabHeader>
 
-        {isLoading ? (
+        {isLoadingExpert ? (
           <>
             <SkeletonTitle className="title-placeholder" />
             <SkeletonLine className="content-placeholder" />
@@ -277,36 +260,43 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             <SkeletonLine className="content-placeholder" />
             <SkeletonLine className="content-placeholder" />
           </>
-        ) : Array.isArray(sections) && sections.length > 0 ? (
-          sections.map((section, index) => (
+        ) :
+        <>
+          <TabHeader>
+            {tabs &&
+              tabs.length > 0 &&
+              tabs.map((tab, index) => (
+                <TabButton
+                  key={index}
+                  active={selectedTab === index}
+                  onClick={() => handleTabClick(index)}
+                >
+                  {tab.title}
+                </TabButton>
+            ))}
+          </TabHeader>
+           
+          {sections.map((section, index) => (
             <Section
               key={index}
               title={section.title}
               content={section.content}
             />
-          ))
-        ) : (
-          <>
-            <SkeletonTitle className="title-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
-            <SkeletonTitle className="title-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
-            <SkeletonTitle className="title-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-          </>
-        )}
+          ))}
+        </>
+        }
 
-        {Array.isArray(sections) && sections.length > 0 && (
+        {!isLoadingExpert && (
           <MoleculeReportController
             reportIndex={1}
-            strategyReportID={strategyReportData.expert_id}
+            strategyReportID={expertIndex}
             conversationId={conversationId}
-            sampleData={strategyReportData}
+            sampleData={
+              expertIndex === '1' ? expert1ReportData 
+              : expertIndex === '2' ? expert2ReportData 
+              : expertIndex === '3' ? expert3ReportData 
+              : null
+            }
           />
         )}
       </AnalysisSection>

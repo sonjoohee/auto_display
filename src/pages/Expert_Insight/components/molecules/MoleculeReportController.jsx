@@ -16,7 +16,7 @@ import {
   TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER,
   SAVED_REPORTS,
   IS_EDITING_NOW,
-  SELECTED_TAB,
+  SELECTED_TAB_COPY,
   EXPERT1_REPORT_DATA,
   EXPERT2_REPORT_DATA,
   EXPERT3_REPORT_DATA,
@@ -100,7 +100,7 @@ const MoleculeReportController = ({
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
   const [warningMessage, setWarningMessage] = useState("");
 
-  const [selectedTab, setSelectedTab] = useAtom(SELECTED_TAB);
+  const [selectedTabCopy, setSelectedTabCopy] = useAtom(SELECTED_TAB_COPY);
 
   const [expert1ReprotData, setExpert1ReportData] =
     useAtom(EXPERT1_REPORT_DATA);
@@ -332,12 +332,12 @@ const MoleculeReportController = ({
   const toggleCopy = () => {
     let contentToCopy = ``;
 
-    const getSelectedTabData = (selectedTab) => {
-      if (strategyReportID === "1") return expert1ReprotData.tabs[selectedTab];
+    const getSelectedTabData = (selectedTabCopy) => {
+      if (strategyReportID === "1") return expert1ReprotData.tabs[selectedTabCopy];
       else if (strategyReportID === "2")
-        return expert2ReprotData.tabs[selectedTab];
+        return expert2ReprotData.tabs[selectedTabCopy];
       else if (strategyReportID === "3")
-        return expert3ReprotData.tabs[selectedTab];
+        return expert3ReprotData.tabs[selectedTabCopy];
       else return;
     };
 
@@ -376,7 +376,7 @@ const MoleculeReportController = ({
           }
           return textContent;
         };
-        const selectedTabData = getSelectedTabData(selectedTab);
+        const selectedTabData = getSelectedTabData(selectedTabCopy);
         contentToCopy = extractTextContent(selectedTabData);
       } else return;
     }
@@ -419,7 +419,7 @@ const MoleculeReportController = ({
           return textContent;
         };
 
-        const selectedTabData = getSelectedTabData(selectedTab);
+        const selectedTabData = getSelectedTabData(selectedTabCopy);
         contentToCopy = extractTextContent(selectedTabData);
       } else return;
     }

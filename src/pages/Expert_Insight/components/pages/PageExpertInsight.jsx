@@ -766,7 +766,13 @@ const PageExpertInsight = () => {
                   Object.keys(expert3ReportData).length === 0) && (
                   <OrganismBizExpertSelect />
                 )
-                : ""
+                : 
+                conversationStage >= 3 &&
+                (Object.keys(expert1ReportData).length === 0 ||
+                  Object.keys(expert2ReportData).length === 0 ||
+                  Object.keys(expert3ReportData).length === 0) && (
+                  <OrganismBizExpertSelect />
+                )
               }
               {/* {approachPath !== 1 && conversationStage === 2 && (
                 <OrganismBizExpertSelect />
