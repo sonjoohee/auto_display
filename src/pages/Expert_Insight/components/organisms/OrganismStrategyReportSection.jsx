@@ -71,11 +71,11 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [buttonState, setButtonState] = useAtom(EXPERT_BUTTON_STATE); // BUTTON_STATE 사용
 
-  const [expert1ReprotData, setExpert1ReportData] =
+  const [expert1ReportData, setExpert1ReportData] =
     useAtom(EXPERT1_REPORT_DATA);
-  const [expert2ReprotData, setExpert2ReportData] =
+  const [expert2ReportData, setExpert2ReportData] =
     useAtom(EXPERT2_REPORT_DATA);
-  const [expert3ReprotData, setExpert3ReportData] =
+  const [expert3ReportData, setExpert3ReportData] =
     useAtom(EXPERT3_REPORT_DATA);
 
   const analysisReportData = {
@@ -110,165 +110,134 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   useEffect(() => {
     const loadData = async () => {
       let finalResponse;
-      if (buttonState === 1) {
-        // BUTTON_STATE가 1일 때만 API 호출
-        setIsLoading(true);
-        setButtonState(0); // BUTTON_STATE를 초기화
-        try {
-          const existingConversation = await getConversationByIdFromIndexedDB(
-            conversationId,
-            isLoggedIn
-          );
-          let currentReportKey = `strategyReportData_EX${selectedExpertIndex}`;
 
-          console.log(
-            "🚀 ~ loadData ~ existingConversation:",
-            existingConversation
-          );
-          // console.log("🚀 ~ loadData ~ currentReportKey:", currentReportKey);
-          if (
-            existingConversation &&
-            existingConversation[currentReportKey] &&
-            existingConversation[currentReportKey].expert_id ===
-              parseInt(selectedExpertIndex, 10)
-          ) {
-            const strategyData = existingConversation[currentReportKey];
-            setStrategyReportData(strategyData);
-            setTabs(strategyData.tabs);
-            setSections(strategyData.tabs[selectedTab].sections);
-          } else if (Object.keys(strategyReportData).length >= 0) {
-            const data = {
-              expert_id: selectedExpertIndex,
-              business_info: titleOfBusinessInfo, // DB에서 가져온 titleOfBusinessInfo 사용
-              business_analysis_data: {
-                명칭: analysisReportData.title,
-                주요_목적_및_특징: analysisReportData.mainFeatures,
-                주요기능: analysisReportData.mainCharacter,
-                목표고객: analysisReportData.mainCustomer,
-              },
-              tabs: [],
-              page_index: 1,
-            };
-            // console.log("🚀 ~ loadData ~ data:", data);
-
-            const response1 = await axios.post(
-              "https://wishresearch.kr/panels/expert",
-              data,
-              axiosConfig
-            );
-
-            finalResponse = response1.data;
-            // console.log("🚀 ~ loadData ~ finalResponse:", finalResponse);
-
-            if (finalResponse.total_page_index === 2) {
-              const response2 = await axios.post(
-                "https://wishresearch.kr/panels/expert",
-                finalResponse,
-                axiosConfig
-              );
-              finalResponse = response2.data;
-            } else if (finalResponse.total_page_index === 3) {
-              const response2 = await axios.post(
-                "https://wishresearch.kr/panels/expert",
-                finalResponse,
-                axiosConfig
-              );
-              const response3 = await axios.post(
-                "https://wishresearch.kr/panels/expert",
-                response2.data,
-                axiosConfig
-              );
-              finalResponse = response3.data;
-            }
-
-            // console.log("Final response data:", finalResponse);
-
-            const strategyData = finalResponse;
-            // console.log("🚀 ~ loadData ~ strategyData:", strategyData);
-
-            setStrategyReportData(strategyData);
-            setTabs(strategyData.tabs);
-            setSections(strategyData.tabs[selectedTab].sections);
-
-            if (strategyData.expert_id === 1)
-              setExpert1ReportData(strategyData);
-            else if (strategyData.expert_id === 2)
-              setExpert2ReportData(strategyData);
-            else if (strategyData.expert_id === 3)
-              setExpert3ReportData(strategyData);
-
-            const updatedConversation = {
-              ...existingConversation,
-              [currentReportKey]: strategyData,
-              conversationStage: 3,
-              timestamp: Date.now(),
-              expert_index: selectedExpertIndex,
-            };
-            // console.log(
-            //   "🚀 ~ loadData ~ existingConversation:",
-            //   existingConversation
-            // );
-            // console.log(
-            //   "🚀 ~ loadData ~ updatedConversation:",
-            //   updatedConversation
-            // );
-
-            await saveConversationToIndexedDB(
-              updatedConversation,
-              isLoggedIn,
-              conversationId
-            );
-          } else {
-            setTabs(strategyReportData.tabs);
-            setSections(strategyReportData.tabs[selectedTab].sections);
-          }
-        } catch (error) {
-          console.error("Error loading data:", error);
-        }
-        setIsLoading(false);
-
-        const updatedConversation = [...conversation];
-        updatedConversation.push(
-          {
-            type: "system",
-            message:
-              "리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊",
-          },
-          { type: `keyword` }
-        );
-        const existingConversation2 = await getConversationByIdFromIndexedDB(
+      try {
+        // 기존 데이터를 조회하는 로직을 buttonState와 상관없이 실행
+        const existingConversation = await getConversationByIdFromIndexedDB(
           conversationId,
           isLoggedIn
         );
-        const updatedConversation2 = {
-          ...existingConversation2,
-          expert_index: selectedExpertIndex,
-          conversation: updatedConversation,
-          conversationStage: 3,
-          timestamp: Date.now(),
-          expert_index: selectedExpertIndex,
-        };
+        let currentReportKey = `strategyReportData_EX${selectedExpertIndex}`;
+        // 기존 데이터가 있는 경우
+        if (
+          existingConversation &&
+          existingConversation[currentReportKey] &&
+          Array.isArray(existingConversation[currentReportKey].tabs) &&
+          existingConversation[currentReportKey].tabs.length > 0
+        ) {
+          const strategyData = existingConversation[currentReportKey];
+          setStrategyReportData(strategyData);
+          setTabs(strategyData.tabs);
+          setSections(strategyData.tabs[selectedTab].sections);
+        }
 
-        // console.log(
-        //   "🚀 ~ loadData ~ existingConversation2:",
-        //   existingConversation2
-        // );
-        // console.log(
-        //   "🚀 ~ loadData ~ updatedConversation2:",
-        //   updatedConversation2
-        // );
-        setConversation(updatedConversation);
-        const currentReportKey = `strategyReportData_EX${selectedExpertIndex}`;
-        const strategyData = finalResponse;
-        await saveConversationToIndexedDB(
-          updatedConversation2,
-          isLoggedIn,
-          conversationId
-        );
+        // buttonState === 1일 때만 API 호출
+        if (buttonState === 1) {
+          setIsLoading(true);
+          setButtonState(0); // 버튼 상태를 초기화
+
+          const data = {
+            expert_id: selectedExpertIndex,
+            business_info: titleOfBusinessInfo, // DB에서 가져온 titleOfBusinessInfo 사용
+            business_analysis_data: {
+              명칭: analysisReportData.title,
+              주요_목적_및_특징: analysisReportData.mainFeatures,
+              주요기능: analysisReportData.mainCharacter,
+              목표고객: analysisReportData.mainCustomer,
+            },
+            tabs: [],
+            page_index: 1,
+          };
+
+          const response1 = await axios.post(
+            "https://wishresearch.kr/panels/expert",
+            data,
+            axiosConfig
+          );
+
+          finalResponse = response1.data;
+
+          if (finalResponse.total_page_index === 2) {
+            const response2 = await axios.post(
+              "https://wishresearch.kr/panels/expert",
+              finalResponse,
+              axiosConfig
+            );
+            finalResponse = response2.data;
+          } else if (finalResponse.total_page_index === 3) {
+            const response2 = await axios.post(
+              "https://wishresearch.kr/panels/expert",
+              finalResponse,
+              axiosConfig
+            );
+            const response3 = await axios.post(
+              "https://wishresearch.kr/panels/expert",
+              response2.data,
+              axiosConfig
+            );
+            finalResponse = response3.data;
+          }
+
+          const strategyData = finalResponse;
+
+          setStrategyReportData(strategyData);
+          setTabs(strategyData.tabs);
+          setSections(strategyData.tabs[selectedTab].sections);
+
+          // Save data to IndexedDB
+          const updatedConversation = {
+            ...existingConversation,
+            [currentReportKey]: strategyData,
+            conversationStage: 3,
+            timestamp: Date.now(),
+            expert_index: selectedExpertIndex,
+          };
+
+          await saveConversationToIndexedDB(
+            updatedConversation,
+            isLoggedIn,
+            conversationId
+          );
+
+          const updatedConversation1 = [...conversation];
+          updatedConversation1.push(
+            {
+              type: "system",
+              message:
+                "리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊",
+              expertIndex: selectedExpertIndex,
+            },
+            { type: `keyword` }
+          );
+
+          const existingConversation2 = await getConversationByIdFromIndexedDB(
+            conversationId,
+            isLoggedIn
+          );
+          const updatedConversation2 = {
+            ...existingConversation2,
+            expert_index: selectedExpertIndex,
+            conversation: updatedConversation1,
+            conversationStage: 3,
+            timestamp: Date.now(),
+            expert_index: selectedExpertIndex,
+          };
+
+          setConversation(updatedConversation1);
+          await saveConversationToIndexedDB(
+            updatedConversation2,
+            isLoggedIn,
+            conversationId
+          );
+        }
+      } catch (error) {
+        console.error("Error loading data:", error);
       }
+      setIsLoading(false);
     };
+
     loadData();
-  }, [buttonState, conversationId, selectedTab, expertIndex]); // buttonState 의존성 추가
+  }, [conversationId, selectedTab, expertIndex, buttonState]); // buttonState 의존성 추가
 
   const handleTabClick = (index) => {
     setSelectedTab(index);
@@ -281,15 +250,17 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
     <>
       <AnalysisSection Strategy>
         <TabHeader>
-          {tabs.map((tab, index) => (
-            <TabButton
-              key={index}
-              active={selectedTab === index}
-              onClick={() => handleTabClick(index)}
-            >
-              {tab.title}
-            </TabButton>
-          ))}
+          {tabs &&
+            tabs.length > 0 &&
+            tabs.map((tab, index) => (
+              <TabButton
+                key={index}
+                active={selectedTab === index}
+                onClick={() => handleTabClick(index)}
+              >
+                {tab.title}
+              </TabButton>
+            ))}
         </TabHeader>
 
         {isLoading ? (
@@ -319,10 +290,18 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             <SkeletonTitle className="title-placeholder" />
             <SkeletonLine className="content-placeholder" />
             <SkeletonLine className="content-placeholder" />
+            <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
+            <SkeletonTitle className="title-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+            <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
+            <SkeletonTitle className="title-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+            <SkeletonLine className="content-placeholder" />
           </>
         )}
 
-        {!isLoading && (
+        {Array.isArray(sections) && sections.length > 0 && (
           <MoleculeReportController
             reportIndex={1}
             strategyReportID={strategyReportData.expert_id}

@@ -123,10 +123,10 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   useEffect(() => {
     console.log("기초보고서1");
     setIsLoading(true);
-
+  
     const loadAndSaveData = async () => {
       let businessData;
-
+  
       if (buttonState === 1) {
         setButtonState(0);
         // 버튼 클릭으로 API 호출
@@ -137,7 +137,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
           axiosConfig
         );
         businessData = response.data.business_analysis;
-
+  
         // 데이터를 받아온 직후 아톰에 값을 설정합니다.
         if (Array.isArray(businessData["주요_목적_및_특징"])) {
           setTempMainFeaturesOfBusinessInformation(
@@ -158,7 +158,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               : []
           );
         }
-
+  
         if (Array.isArray(businessData["주요기능"])) {
           setTempMainCharacteristicOfBusinessInformation(
             businessData["주요기능"].map((item) => item)
@@ -174,7 +174,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
             businessData["주요기능"] ? [businessData["주요기능"]] : []
           );
         }
-
+  
         if (Array.isArray(businessData["목표고객"])) {
           setTempBusinessInformationTargetCustomer(
             businessData["목표고객"].map((item) => item)
@@ -190,10 +190,10 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
             businessData["목표고객"] ? [businessData["목표고객"]] : []
           );
         }
-
+  
         // 명칭은 배열이 아니므로 기존 방식 유지
         setTitleOfBusinessInfo(businessData["명칭"]);
-
+  
         // 아톰이 업데이트된 후에 analysisReportData를 생성합니다.
         const analysisReportData = {
           title: businessData?.["명칭"] || "No title available", // '명칭' 속성이 없으면 기본값 설정
@@ -207,26 +207,51 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
             ? businessData["목표고객"]
             : [],
         };
-
-        console.log("OrganismBizAnalysisSectionconversationId");
-        console.log(conversationId);
-
+  
         // 기존 대화 내역을 유지하면서 새로운 정보를 추가
         const existingConversation = await getConversationByIdFromIndexedDB(
           conversationId,
           isLoggedIn
         );
-
+  
         const updatedConversation = {
           ...existingConversation,
           analysisReportData,
           timestamp: Date.now(),
         };
+  
+        // 대화 업데이트 및 저장
+        const updatedConversation2 = [...conversation];
+        if (approachPath === 1) {
+          updatedConversation2.push(
+            {
+              type: "system",
+              message:
+                "비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 지금 바로 전략 보고서를 준비해드려요.",
+              expertIndex: selectedExpertIndex,
+            },
+            { type: "report_button" }
+          );
+        } else if (approachPath === -1) {
+          updatedConversation2.push({
+            type: "system",
+            message:
+              "비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 전문가들의 의견을 확인하여 아이디어를 한 단계 더 발전시켜 보세요 🔍",
+            expertIndex: selectedExpertIndex,
+          });
+        } else {
+          // 히스토리 불러오기 로직
+        }
+  
+        setConversation(updatedConversation2);
+  
+        // **API 데이터가 있을 경우에만 저장**
         await saveConversationToIndexedDB(
           {
             id: conversationId,
-            inputBusinessInfo,
+            conversation: updatedConversation2,
             analysisReportData,
+            inputBusinessInfo,
             conversationStage: 2,
             timestamp: Date.now(),
             expert_index: selectedExpertIndex,
@@ -235,20 +260,18 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
           conversationId
         );
         setReportRefreshTrigger((prev) => !prev);
-        console.log("___________기초보고서_____________");
-        console.log("기초보고서2");
-        console.log(analysisReportData);
         setIsLoading(false);
+  
       } else {
         // IndexedDB에서 기존 데이터를 가져와 적용
         const existingConversation = await getConversationByIdFromIndexedDB(
           conversationId,
           isLoggedIn
         );
-
+  
         if (existingConversation && existingConversation.analysisReportData) {
           const storedData = existingConversation.analysisReportData;
-
+  
           // 저장된 데이터를 각 상태에 적용
           setTitleOfBusinessInfo(storedData.title);
           setTempMainFeaturesOfBusinessInformation(storedData.mainFeatures);
@@ -256,7 +279,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
             storedData.mainCharacter
           );
           setTempBusinessInformationTargetCustomer(storedData.mainCustomer);
-
+  
           setMainFeaturesOfBusinessInformation(storedData.mainFeatures);
           setMainCharacteristicOfBusinessInformation(storedData.mainCharacter);
           setBusinessInformationTargetCustomer(storedData.mainCustomer);
@@ -265,56 +288,8 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
         }
         setIsLoading(false);
       }
-      const updatedConversation2 = [...conversation];
-      if (approachPath === 1) {
-        updatedConversation2.push(
-          {
-            type: "system",
-            message:
-              "비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 지금 바로 전략 보고서를 준비해드려요.",
-          },
-          { type: "report_button" }
-        );
-      } else if (approachPath === -1) {
-        updatedConversation2.push({
-          type: "system",
-          message:
-            "비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 전문가들의 의견을 확인하여 아이디어를 한 단계 더 발전시켜 보세요 🔍",
-        });
-      } else {
-        // 히스토리 불러오기 로직
-      }
-      setConversation(updatedConversation2);
-
-      const analysisReportData = {
-        title: businessData?.["명칭"] || "No title available", // '명칭' 속성이 없으면 기본값 설정
-        mainFeatures: Array.isArray(businessData?.["주요_목적_및_특징"])
-          ? businessData["주요_목적_및_특징"]
-          : [],
-        mainCharacter: Array.isArray(businessData?.["주요기능"])
-          ? businessData["주요기능"]
-          : [],
-        mainCustomer: Array.isArray(businessData?.["목표고객"])
-          ? businessData["목표고객"]
-          : [],
-      };
-
-      console.log("updatedConversation2");
-      console.log(updatedConversation2);
-      await saveConversationToIndexedDB(
-        {
-          id: conversationId,
-          conversation: updatedConversation2, // 여기서는 { updatedConversation }가 아니라 그대로 updatedConversation로 넘겨야 함
-          conversationStage: 2,
-          analysisReportData,
-          inputBusinessInfo,
-          timestamp: Date.now(),
-          expert_index: selectedExpertIndex,
-        },
-        isLoggedIn,
-        conversationId
-      );
     };
+  
     loadAndSaveData();
   }, [
     conversationId,
@@ -325,9 +300,9 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
     setTempMainFeaturesOfBusinessInformation,
     setTempMainCharacteristicOfBusinessInformation,
     setTempBusinessInformationTargetCustomer,
-    // setIsLoading,
   ]);
-
+  
+  
   //   const handleEditStart = (section, index) => {
   //     setEditingIndex({ section, index });
   //     setIsEditingNow(true);

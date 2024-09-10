@@ -305,13 +305,25 @@ const PageExpertInsight = () => {
             // 대화 단계가 초기 상태라면 초기 시스템 메시지 설정
             if (savedConversation.conversationStage === 1) {
               const initialMessage = getInitialSystemMessage();
-              setConversation([{ type: "system", message: initialMessage }]);
+              setConversation([
+                {
+                  type: "system",
+                  message: initialMessage,
+                  expertIndex: selectedExpertIndex,
+                },
+              ]);
             }
           } else {
             // 저장된 대화가 없으면 초기 메시지 설정
             if (selectedExpertIndex) {
               const initialMessage = getInitialSystemMessage();
-              setConversation([{ type: "system", message: initialMessage }]);
+              setConversation([
+                {
+                  type: "system",
+                  message: initialMessage,
+                  expertIndex: selectedExpertIndex,
+                },
+              ]);
             }
           }
           setIsLoading(false); // 로딩 완료
@@ -367,13 +379,25 @@ const PageExpertInsight = () => {
             // 대화 단계가 초기 상태라면 초기 시스템 메시지 설정
             if (savedConversation.conversationStage === 1) {
               const initialMessage = getInitialSystemMessage();
-              setConversation([{ type: "system", message: initialMessage }]);
+              setConversation([
+                {
+                  type: "system",
+                  message: initialMessage,
+                  expertIndex: selectedExpertIndex,
+                },
+              ]);
             }
           } else {
             // 저장된 대화가 없으면 초기 메시지 설정
             if (selectedExpertIndex) {
               const initialMessage = getInitialSystemMessage();
-              setConversation([{ type: "system", message: initialMessage }]);
+              setConversation([
+                {
+                  type: "system",
+                  message: initialMessage,
+                  expertIndex: selectedExpertIndex,
+                },
+              ]);
             }
           }
           setIsLoading(false); // 로딩 완료
@@ -425,7 +449,13 @@ const PageExpertInsight = () => {
       } else if (approachPath === 1) {
         setInputBusinessInfo("");
         const initialMessage = getInitialSystemMessage();
-        setConversation([{ type: "system", message: initialMessage }]);
+        setConversation([
+          {
+            type: "system",
+            message: initialMessage,
+            expertIndex: selectedExpertIndex,
+          },
+        ]);
       }
     }
   }, [approachPath, selectedExpertIndex, isLoading]);
@@ -507,6 +537,7 @@ const PageExpertInsight = () => {
           {
             type: "system",
             message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻`,
+            expertIndex: selectedExpertIndex,
           },
           { type: "analysis", businessInfo } // 입력된 비즈니스 정보를 분석
         );
@@ -558,6 +589,7 @@ const PageExpertInsight = () => {
           {
             type: "system",
             message: `안녕하세요, 김도원입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊`,
+            expertIndex: selectedExpertIndex,
           }
         );
       } else if (selectedExpertIndex === "2") {
@@ -570,6 +602,7 @@ const PageExpertInsight = () => {
           {
             type: "system",
             message: `안녕하세요, 이지현입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊`,
+            expertIndex: selectedExpertIndex,
           }
         );
       } else if (selectedExpertIndex === "3") {
@@ -582,6 +615,7 @@ const PageExpertInsight = () => {
           {
             type: "system",
             message: `안녕하세요, 박서연입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊`,
+            expertIndex: selectedExpertIndex,
           }
         );
       }
@@ -683,9 +717,7 @@ const PageExpertInsight = () => {
                     <MoleculeUserMessage key={index} message={item.message} />
                   );
                 } else if (item.type === "system") {
-                  return (
-                    <MoleculeSystemMessage key={index} message={item.message} />
-                  );
+                  return <MoleculeSystemMessage key={index} item={item} />;
                 } else if (item.type === "analysis") {
                   return (
                     <OrganismBizAnalysisSection
@@ -727,16 +759,18 @@ const PageExpertInsight = () => {
                 return null;
               })}
 
-              {/* {approachPath === -1 &&
+              {approachPath === -1 ?
                 inputBusinessInfo &&
                 (Object.keys(expert1ReportData).length === 0 ||
                   Object.keys(expert2ReportData).length === 0 ||
                   Object.keys(expert3ReportData).length === 0) && (
                   <OrganismBizExpertSelect />
-                )} */}
-              {approachPath !== 1 && conversationStage === 2 && (
+                )
+                : ""
+              }
+              {/* {approachPath !== 1 && conversationStage === 2 && (
                 <OrganismBizExpertSelect />
-              )}
+              )} */}
             </ChatWrap>
 
             {approachPath === 1 && conversationStage == 1 && (

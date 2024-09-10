@@ -5,10 +5,17 @@ import panelimages from "../../../../assets/styles/PanelImages";
 import { useAtom } from "jotai";
 import { SELECTED_EXPERT_INDEX } from "../../../AtomStates";
 
-const MoleculeSystemMessage = ({ message }) => {
+const MoleculeSystemMessage = ({ item }) => {
+  // console.log("🚀 ~ MoleculeSystemMessage ~ item:", item);
   const [displayedText, setDisplayedText] = useState(""); // 현재까지 타이핑된 텍스트
   const [isTyping, setIsTyping] = useState(true); // 타이핑 중인지 여부
-  const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
+  // const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
+  const message = item.message;
+  const selectedExpertIndex = item.expertIndex;
+  // console.log(
+  //   "🚀 ~ MoleculeSystemMessage ~ selectedExpertIndex:",
+  //   selectedExpertIndex
+  // );
 
   useEffect(() => {
     const messageLines = message.split("\n"); // 메시지를 줄바꿈 기준으로 나눔
