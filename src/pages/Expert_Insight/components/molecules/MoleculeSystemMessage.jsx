@@ -12,10 +12,10 @@ const MoleculeSystemMessage = ({ item }) => {
   // const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const message = item.message;
   const selectedExpertIndex = item.expertIndex;
-  console.log(
-    "🚀 ~ MoleculeSystemMessage ~ selectedExpertIndex:",
-    selectedExpertIndex
-  );
+  // console.log(
+  //   "🚀 ~ MoleculeSystemMessage ~ selectedExpertIndex:",
+  //   selectedExpertIndex
+  // );
 
   useEffect(() => {
     const messageLines = message.split("\n"); // 메시지를 줄바꿈 기준으로 나눔
