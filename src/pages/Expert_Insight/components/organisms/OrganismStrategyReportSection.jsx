@@ -46,7 +46,7 @@ import {
 const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   // console.log("🚀 ~ OrganismStrategyReportSection ~ expertIndex:", expertIndex);
   const [inputBusinessInfo, setInputBusinessInfo] =
-  useAtom(INPUT_BUSINESS_INFO);
+    useAtom(INPUT_BUSINESS_INFO);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [approachPath] = useAtom(APPROACH_PATH);
   const [conversation, setConversation] = useAtom(CONVERSATION);
@@ -108,21 +108,18 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
         let currentReportKey = `strategyReportData_EX${selectedExpertIndex}`;
         // 기존 데이터가 있는 경우
         if (expertIndex === "1" && Object.keys(expert1ReportData).length > 0) {
-          console.log("1번 전문가");
           setTabs(expert1ReportData.tabs);
           setSections(expert1ReportData.tabs[selectedTab].sections);
         } else if (
           expertIndex === "2" &&
           Object.keys(expert2ReportData).length > 0
         ) {
-          console.log("2번 전문가");
           setTabs(expert2ReportData.tabs);
           setSections(expert2ReportData.tabs[selectedTab].sections);
         } else if (
           expertIndex === "3" &&
           Object.keys(expert3ReportData).length > 0
         ) {
-          console.log("3번 전문가");
           setTabs(expert3ReportData.tabs);
           setSections(expert3ReportData.tabs[selectedTab].sections);
         }

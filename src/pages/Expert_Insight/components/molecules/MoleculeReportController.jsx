@@ -126,7 +126,9 @@ const MoleculeReportController = ({
 
   const [isPopupCopy, setIsPopupCopy] = useState(false);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
-  const [additionalReportData, setAdditionalReportData] = useAtom(ADDITIONAL_REPORT_DATA);
+  const [additionalReportData, setAdditionalReportData] = useAtom(
+    ADDITIONAL_REPORT_DATA
+  );
 
   const navigate = useNavigate();
 
@@ -336,7 +338,8 @@ const MoleculeReportController = ({
     let contentToCopy = ``;
 
     const getSelectedTabData = (selectedTabCopy) => {
-      if (strategyReportID === "1") return expert1ReprotData.tabs[selectedTabCopy];
+      if (strategyReportID === "1")
+        return expert1ReprotData.tabs[selectedTabCopy];
       else if (strategyReportID === "2")
         return expert2ReprotData.tabs[selectedTabCopy];
       else if (strategyReportID === "3")
@@ -344,21 +347,19 @@ const MoleculeReportController = ({
       else return;
     };
 
-if (reportIndex === 0) {
-contentToCopy = `
+    if (reportIndex === 0) {
+      contentToCopy = `
 ${titleOfBusinessInfo}
 주요 특징
-${mainFeaturesOfBusinessInformation
-?.map((feature) => `${feature}`)
-.join("\n")}
+${mainFeaturesOfBusinessInformation?.map((feature) => `${feature}`).join("\n")}
 주요 특성
 ${mainCharacteristicOfBusinessInformation
-?.map((character) => `${character}`)
-.join("\n")}
+  ?.map((character) => `${character}`)
+  .join("\n")}
 목표 고객
 ${businessInformationTargetCustomer
-?.map((customer) => `${customer}`)
-.join("\n")}
+  ?.map((customer) => `${customer}`)
+  .join("\n")}
 `;
     } else if (reportIndex === 1) {
       const extractTextContent = (data) => {
@@ -397,7 +398,9 @@ ${businessInformationTargetCustomer
         }
         return textContent;
       };
-      contentToCopy = extractTextContent(additionalReportData[additionalReportCount]);
+      contentToCopy = extractTextContent(
+        additionalReportData[additionalReportCount]
+      );
     } else return;
 
     navigator.clipboard
@@ -457,7 +460,7 @@ ${businessInformationTargetCustomer
     let businessData;
 
     // 버튼 클릭으로 API 호출
-    console.log("기초보고서api호출");
+    // console.log("기초보고서api호출");
     const response = await axios.post(
       "https://wishresearch.kr/panels/business",
       data,
@@ -548,9 +551,9 @@ ${businessInformationTargetCustomer
       expert_index: selectedExpertIndex,
     };
     await saveConversationToIndexedDB(updatedConversation);
-    console.log("___________기초보고서_____________");
-    console.log("기초보고서2");
-    console.log(analysisReportData);
+    // console.log("___________기초보고서_____________");
+    // console.log("기초보고서2");
+    // console.log(analysisReportData);
     setIsLoading(false);
   };
 
