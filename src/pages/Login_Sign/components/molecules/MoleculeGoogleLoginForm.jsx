@@ -49,7 +49,6 @@ const MoleculeGoogleLoginForm = () => {
       sessionStorage.setItem("accessToken", serverAccessToken); // 서버 토큰 저장
       sessionStorage.setItem("userName", userName); // 서버 토큰 저장
       sessionStorage.setItem("userEmail", userEmail); // 서버 토큰 저장
-      console.log(userName, userEmail);
 
       // 로그인 성공 시 처리
       setIsLoggedIn(true); // 아톰 업데이트

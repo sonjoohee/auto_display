@@ -133,7 +133,6 @@ const OrganismAdditionalReport = ({
             data,
             axiosConfig
           );
-          console.log(response);
           answerData = response.data.additional_question;
           setAnswerData(answerData);
           setTitle(answerData?.title);
@@ -224,7 +223,7 @@ const OrganismAdditionalReport = ({
       } catch (error) {
         console.error("Error loading data:", error);
       }
-      console.log("🚀 ~ loadData ~ conversationId:", conversationId);
+      // console.log("🚀 ~ loadData ~ conversationId:", conversationId);
     };
 
     loadData();

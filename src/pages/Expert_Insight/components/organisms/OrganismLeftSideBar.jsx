@@ -280,7 +280,7 @@ const OrganismLeftSideBar = () => {
       );
 
       const chatData = response.data.chat_data;
-      console.log("🚀 ~ handleConversationClick ~ chatData:", chatData);
+      // console.log("🚀 ~ handleConversationClick ~ chatData:", chatData);
       setSelectedExpertIndex(
         chatData.expert_index !== undefined ? chatData.expert_index : 0
       );
@@ -392,7 +392,6 @@ const OrganismLeftSideBar = () => {
       );
 
       // 삭제가 성공적으로 이루어진 경우 처리할 코드
-      console.log("삭제 성공:", response.data);
 
       // 삭제 후에 상태 업데이트 (예: 삭제된 항목을 리스트에서 제거)
       setReports((prevReports) =>
@@ -421,7 +420,6 @@ const OrganismLeftSideBar = () => {
       );
 
       // 삭제가 성공적으로 이루어진 경우 처리할 코드
-      console.log("삭제 성공:", response.data);
 
       // 삭제 후에 상태 업데이트 (예: 삭제된 항목을 리스트에서 제거)
       setReports((prevReports) =>
