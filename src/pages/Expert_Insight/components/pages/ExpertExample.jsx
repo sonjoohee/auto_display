@@ -780,6 +780,45 @@ const ExpertExample = () => {
         </ExpertContent>
       </ExpertWrap>
 
+      {/* 후속질문 */}
+      <ExpertWrap>
+        <h2>홈케어 뷰티 시장, 스마트한 소비자를 사로잡는 메시지 전략</h2>
+        <p>이 보고서는 20대 후반 여성 취업준비생, 특히 경영학과를 졸업하고 직장 경험이 있지만 UI/UX 디자이너로 전향하고자 유데미 큐레이션 이벤트 페이지를 통해 부트캠프를 알아보는 잠재 고객을 대상으로 합니다. 이 보고서는 부트캠프가 속한 산업군과 관련 업계 정보를 제공하여 잠재 고객을 유인할 수 있는 매력적인 혜택 제안 아이디어를 제시하고, 이를 통해 부트캠프의 전략적 의사결정에 필요한 통찰력을 제공하는 데 목적을 두고 있습니다.</p>
+
+        <QuestionBox>
+          <div>
+            <strong>1. UI/UX 디자이너 전환, 새로운 가능성을 열다</strong>
+            <p>UI/UX 디자이너는 디지털 환경에서 사용자 경험을 디자인하는 전문가로, 최근 급격한 디지털 전환과 함께 그 중요성이 더욱 커지고 있습니다. 특히 20대 후반 여성 취업준비생의 경우, 경영학과 전공을 바탕으로 UI/UX 디자인 분야로 진출하여 새로운 가능성을 열 수 있습니다. 경영학적 지식은 UI/UX 디자인 프로세스 이해 및 전략적 디자인 의사결정에 도움이 될 수 있으며, 직장 경험은 실제 사용자 니즈와 비즈니스 요구사항을 연결하는 데 유용한 자산이 될 것입니다.</p>
+          </div>
+
+          <div>
+            <h4>2. UI/UX 디자인 부트캠프, 성공적인 전환을 위한 지름길</h4>
+            <p>UI/UX 디자인 부트캠프는 빠르게 변화하는 디지털 환경에 발맞춰 실무 중심의 교육을 제공하여 단기간에 전문성을 갖추도록 돕습니다. 특히, 20대 후반 여성 취업준비생의 경우, 직장 경험을 바탕으로 빠르게 실무에 적용할 수 있는 실무 지식과 프로젝트 경험을 쌓을 수 있습니다.</p>
+            <ul>
+              <li>실무중심 교육과 프로젝트 경험 : 부트캠프는 실제 프로젝트를 수행하며 실무 역량을 강화하고, 디자인 트렌드와 최신 기술을 빠르게 익힐 수 있도록 지원합니다. 또한, 포트폴리오 제작 및 취업 지원을 통해 성공적인 취업을 위한 발판을 마련합니다.</li>
+              <li>전문 강사진과 커뮤니티 지원 : 숙련된 UI/UX 디자이너 및 개발자로 구성된 전문 강사진은 실무 노하우를 전수하고, 멘토링을 통해 성장을 돕습니다. 또한, 동료 학습자들과의 네트워킹 기회를 제공하여 커뮤니티를 형성하고 지속적인 성장을 지원합니다.</li>
+              <li>취업 연계 및 성장 지원 : 부트캠프는 취업 연계 프로그램을 통해 우수한 기업에 취업할 수 있도록 지원하며, 졸업 후에도 지속적인 성장을 위한 네트워킹 및 커뮤니티 활동을 제공합니다.</li>
+            </ul>
+          </div>
+
+          <div>
+            <strong>3. 잠재 고객 분석 및 혜택 제안 아이디어</strong>
+            <p>UI/UX 디자인 부트캠프는 20대 후반 여성 취업준비생에게 새로운 기회를 제공합니다. 경영학과 전공과 직장 경험은 UI/UX 디자인 분야에서 큰 강점이 될 수 있으며, 부트캠프를 통해 전문성을 빠르게 습득하고 성공적인 커리어 전환을 이룰 수 있습니다.</p>
+          </div>
+
+          <ButtonWrap NoLine>
+            <button type="button">
+              <img src={images.IconCopy} alt="" />
+              복사하기
+            </button>
+            <button type="button">
+              <img src={images.IconSave} alt="" />
+              저장하기
+            </button>
+          </ButtonWrap>
+        </QuestionBox>
+
+      </ExpertWrap>
     </>
   );
 };
@@ -797,6 +836,19 @@ const ExpertWrap = styled.div`
   padding:30px;
   border-radius:15px;
   border:1px solid ${palette.lineGray};
+
+  > h2 {
+    font-size:1.25rem;
+    font-weight:400;
+    color:${palette.gray800};
+  }
+
+  > p {
+    font-size:0.875rem;
+    color:${palette.gray800};
+    line-height:1.5;
+    margin:8px auto 20px;
+  }
 `;
 
 const ExpertHeader = styled.div`
@@ -983,13 +1035,71 @@ const BgBox = styled.div`
   }
 `;
 
+const QuestionBox = styled.div`
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+  padding:20px;
+  border-radius:10px;
+  background:rgba(0,0,0,.03);
+
+  div {
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    font-size:0.875rem;
+    color:${palette.gray800};
+    line-height:1.5;
+  }
+
+  strong {
+    font-weight:700;
+  }
+
+  ul {
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+
+    li {
+      position:relative;
+      font-size:0.875rem;
+      color:${palette.gray800};
+      line-height:1.5;
+      padding-left:13px;
+      margin-left:8px;
+
+      &:before {
+        position:absolute;
+        top:8px;
+        left:0;
+        width:3px;
+        height:3px;
+        border-radius:50%;
+        background:${palette.gray800};
+        content:'';
+      }
+    }
+  }
+`;
+
 const ButtonWrap = styled.div`
   display:flex;
+  flex-direction:row !important;
   justify-content:flex-end;
   gap:20px;
-  margin-top:30px;
-  padding-top:20px;
-  border-top:1px solid ${palette.lineGray};
+  margin-top:${props => {
+    if (props.NoLine) return `0`;
+    else return `30px`;
+  }};
+  padding-top:${props => {
+    if (props.NoLine) return `0`;
+    else return `20px`;
+  }};
+  border-top:${props => {
+    if (props.NoLine) return `0`;
+    else return `1px solid ${palette.lineGray}`;
+  }};
 
   button {
     display: flex;
