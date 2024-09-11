@@ -101,10 +101,10 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
 
       try {
         // 기존 데이터를 조회하는 로직을 buttonState와 상관없이 실행
-        const existingConversation = await getConversationByIdFromIndexedDB(
-          conversationId,
-          isLoggedIn
-        );
+        // const existingConversation = await getConversationByIdFromIndexedDB(
+        //   conversationId,
+        //   isLoggedIn
+        // );
         let currentReportKey = `strategyReportData_EX${selectedExpertIndex}`;
         // 기존 데이터가 있는 경우
         if (expertIndex === "1" && Object.keys(expert1ReportData).length > 0) {
@@ -214,10 +214,10 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             { type: `keyword` }
           );
 
-          const existingConversation2 = await getConversationByIdFromIndexedDB(
-            conversationId,
-            isLoggedIn
-          );
+          // const existingConversation2 = await getConversationByIdFromIndexedDB(
+          //   conversationId,
+          //   isLoggedIn
+          // );
           // const updatedConversation2 = {
           //   ...existingConversation2,
           //   expert_index: selectedExpertIndex,
@@ -280,34 +280,34 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             <SkeletonLine className="content-placeholder" />
             <SkeletonLine className="content-placeholder" />
           </>
-        ) :
-        <>
-          <TabHeader>
-            {tabs &&
-              tabs.length > 0 &&
-              tabs?.map((tab, index) => (
-                <TabButton
-                  key={index}
-                  active={selectedTab === index}
-                  expertIndex={expertIndex}  // 전달
-                  onClick={() => handleTabClick(index)}
-                >
-                  {tab.title}
-                </TabButton>
+        ) : (
+          <>
+            <TabHeader>
+              {tabs &&
+                tabs.length > 0 &&
+                tabs?.map((tab, index) => (
+                  <TabButton
+                    key={index}
+                    active={selectedTab === index}
+                    expertIndex={expertIndex} // 전달
+                    onClick={() => handleTabClick(index)}
+                  >
+                    {tab.title}
+                  </TabButton>
+                ))}
+            </TabHeader>
+
+            {sections?.map((section, index) => (
+              <Section
+                key={index}
+                title={section.title}
+                content={section.content}
+                isLast={index === sections.length - 1}
+                expertIndex={expertIndex}
+              />
             ))}
-          </TabHeader>
-           
-          {sections?.map((section, index) => (
-            <Section
-              key={index}
-              title={section.title}
-              content={section.content}
-              isLast={index === sections.length - 1}
-              expertIndex={expertIndex}
-            />
-          ))}
-        </>
-        }
+          </>
+        )}
 
         {!isLoadingExpert && (
           <MoleculeReportController
@@ -337,10 +337,10 @@ const Section = ({ title, content, isLast, expertIndex }) => {
 
   // subText에서 ':'로 분리하여 subTitle과 text를 따로 처리
   const splitText = (text) => {
-    const [subTitle, ...rest] = text.split(':');
+    const [subTitle, ...rest] = text.split(":");
     return {
       subTitle: subTitle.trim(), // ':' 앞부분
-      text: rest.join(':').trim(), // ':' 뒷부분
+      text: rest.join(":").trim(), // ':' 뒷부분
     };
   };
 
@@ -350,8 +350,8 @@ const Section = ({ title, content, isLast, expertIndex }) => {
   // 두 섹션의 데이터를 결합하여 하나의 섹션처럼 처리 (이전 섹션들의 combinedContent 포함)
   const combinedContent = [
     ...subTitleItems.map((item) => ({
-      text: mergeSubTitleAndText(item.subTitle, item.text)
-    }))
+      text: mergeSubTitleAndText(item.subTitle, item.text),
+    })),
   ];
 
   // 전역적으로 두 섹션의 데이터를 저장할 수 있는 별도의 배열을 생성 (전역적으로 이 두 섹션의 데이터를 병합)
@@ -359,7 +359,12 @@ const Section = ({ title, content, isLast, expertIndex }) => {
 
   // 이 함수는 "주요 차별화 요소"와 "차별화 전략 제안"이 있을 때 데이터를 병합해서 한 번만 렌더링
   const renderCombinedSections = () => {
-    if (title === "주요 차별화 요소" || title === "차별화 전략 제안" || title === "경쟁 압박 대처 방안" || title === "장기적인 경쟁 우위 전략") {
+    if (
+      title === "주요 차별화 요소" ||
+      title === "차별화 전략 제안" ||
+      title === "경쟁 압박 대처 방안" ||
+      title === "장기적인 경쟁 우위 전략"
+    ) {
       // 중복 호출 방지를 위해 한 번 병합된 후 다시 병합되지 않도록 확인
       if (globalCombinedContent.length === 0) {
         globalCombinedContent.push(...combinedContent); // 데이터 병합
@@ -373,11 +378,11 @@ const Section = ({ title, content, isLast, expertIndex }) => {
             {title}
           </strong>
           <SubTextBox>
-          {globalCombinedContent.map((item, index) => (
-            <div key={index}>
-              <p>{item.text}</p>
-            </div>
-          ))}
+            {globalCombinedContent.map((item, index) => (
+              <div key={index}>
+                <p>{item.text}</p>
+              </div>
+            ))}
           </SubTextBox>
         </>
       );
@@ -390,102 +395,110 @@ const Section = ({ title, content, isLast, expertIndex }) => {
       {renderCombinedSections()}
 
       {/* title 표시 (특정 타이틀 제외) */}
-      {!isLast && title && !(title === "주요 차별화 요소" || title === "차별화 전략 제안" 
-      || title === "경쟁 압박 대처 방안" 
-      || title === "장기적인 경쟁 우위 전략") && (
-        <strong>
-          <img src={images.Check} alt="" />
-          {title}
-        </strong>
-      )}
+      {!isLast &&
+        title &&
+        !(
+          title === "주요 차별화 요소" ||
+          title === "차별화 전략 제안" ||
+          title === "경쟁 압박 대처 방안" ||
+          title === "장기적인 경쟁 우위 전략"
+        ) && (
+          <strong>
+            <img src={images.Check} alt="" />
+            {title}
+          </strong>
+        )}
 
       {/* "시장 위치 평가 및 경쟁자 분석"일 때 nonSubTitleItems 텍스트를 제목 밑에 출력 */}
-      {title === "시장 위치 평가 및 경쟁자 분석" && nonSubTitleItems.length > 0 && (
-        <>
-          {nonSubTitleItems.map((item, index) => (
-            <div key={index}>
-              {/* "시장 위치 평가 및 경쟁자 분석"에서 텍스트를 출력 */}
-              <p>{item.text}</p>
-            </div>
-          ))}
-        </>
-      )}
-
-      {/* "특징" 또는 "차별화 요소" 섹션을 처리 */}
-      {(title === "특징" || title === "차별화 요소" || title === "시장 위치 평가 및 경쟁자 분석") && subTitleItems.length > 0 && (
-        <>
-          {subTitleItems.map((item, index) => (
-            <SeparateSection key={index}>
-              <strong>
-                <span className="number">{index + 1}</span> {/* 번호 추가 */}
-                {`${title} : ${item.subTitle}`}
-              </strong>
-              <p>{item.text}</p>
-
-              {/* subText1, subText2, subText3에 대해 NumDynamicGrid 적용 */}
-              <NumDynamicGrid columns={2}>
-                {item.subText1 && (
-                  <div>
-                    <SubTitle>{splitText(item.subText1).subTitle}</SubTitle>
-                    <p>{splitText(item.subText1).text}</p>
-                  </div>
-                )}
-                {item.subText2 && (
-                  <div>
-                    <SubTitle>{splitText(item.subText2).subTitle}</SubTitle>
-                    <p>{splitText(item.subText2).text}</p>
-                  </div>
-                )}
-                {item.subText3 && (
-                  <div>
-                    <SubTitle>{splitText(item.subText3).subTitle}</SubTitle>
-                    <p>{splitText(item.subText3).text}</p>
-                  </div>
-                )}
-              </NumDynamicGrid>
-            </SeparateSection>
-          ))}
-        </>
-      )}
-
-      {/* "특징", "차별화 요소", "경쟁 분석"이 아닌 경우 기존 방식대로 처리 */}
-      {title !== "특징" 
-      && title !== "차별화 요소" 
-      && title !== "시장 위치 평가 및 경쟁자 분석" 
-      && title !== "주요 차별화 요소" 
-      && title !== "차별화 전략 제안" 
-      && title !== "경쟁사 대비 차별화 전략" 
-      && title !== "경쟁 압박 대처 방안" 
-      && title !== "장기적인 경쟁 우위 전략" 
-      && (
-        <>
-          {/* nonSubTitleItems는 일반적으로 title과 text만 표시 */}
-          {nonSubTitleItems.length > 0 &&
-            nonSubTitleItems.map((item, index) => (
+      {title === "시장 위치 평가 및 경쟁자 분석" &&
+        nonSubTitleItems.length > 0 && (
+          <>
+            {nonSubTitleItems.map((item, index) => (
               <div key={index}>
+                {/* "시장 위치 평가 및 경쟁자 분석"에서 텍스트를 출력 */}
                 <p>{item.text}</p>
-                {item.subText1 && <SubTextBox>{item.subText1}</SubTextBox>}
-                {item.subText2 && <SubTextBox>{item.subText2}</SubTextBox>}
-                {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
               </div>
             ))}
+          </>
+        )}
 
-          {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
-          {subTitleItems.length > 0 && (
-            <DynamicGrid columns={subTitleItems.length}>
-              {subTitleItems.map((item, index) => (
+      {/* "특징" 또는 "차별화 요소" 섹션을 처리 */}
+      {(title === "특징" ||
+        title === "차별화 요소" ||
+        title === "시장 위치 평가 및 경쟁자 분석") &&
+        subTitleItems.length > 0 && (
+          <>
+            {subTitleItems.map((item, index) => (
+              <SeparateSection key={index}>
+                <strong>
+                  <span className="number">{index + 1}</span> {/* 번호 추가 */}
+                  {`${title} : ${item.subTitle}`}
+                </strong>
+                <p>{item.text}</p>
+
+                {/* subText1, subText2, subText3에 대해 NumDynamicGrid 적용 */}
+                <NumDynamicGrid columns={2}>
+                  {item.subText1 && (
+                    <div>
+                      <SubTitle>{splitText(item.subText1).subTitle}</SubTitle>
+                      <p>{splitText(item.subText1).text}</p>
+                    </div>
+                  )}
+                  {item.subText2 && (
+                    <div>
+                      <SubTitle>{splitText(item.subText2).subTitle}</SubTitle>
+                      <p>{splitText(item.subText2).text}</p>
+                    </div>
+                  )}
+                  {item.subText3 && (
+                    <div>
+                      <SubTitle>{splitText(item.subText3).subTitle}</SubTitle>
+                      <p>{splitText(item.subText3).text}</p>
+                    </div>
+                  )}
+                </NumDynamicGrid>
+              </SeparateSection>
+            ))}
+          </>
+        )}
+
+      {/* "특징", "차별화 요소", "경쟁 분석"이 아닌 경우 기존 방식대로 처리 */}
+      {title !== "특징" &&
+        title !== "차별화 요소" &&
+        title !== "시장 위치 평가 및 경쟁자 분석" &&
+        title !== "주요 차별화 요소" &&
+        title !== "차별화 전략 제안" &&
+        title !== "경쟁사 대비 차별화 전략" &&
+        title !== "경쟁 압박 대처 방안" &&
+        title !== "장기적인 경쟁 우위 전략" && (
+          <>
+            {/* nonSubTitleItems는 일반적으로 title과 text만 표시 */}
+            {nonSubTitleItems.length > 0 &&
+              nonSubTitleItems.map((item, index) => (
                 <div key={index}>
-                  <SubTitle>{item.subTitle}</SubTitle>
                   <p>{item.text}</p>
                   {item.subText1 && <SubTextBox>{item.subText1}</SubTextBox>}
                   {item.subText2 && <SubTextBox>{item.subText2}</SubTextBox>}
                   {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
                 </div>
               ))}
-            </DynamicGrid>
-          )}
-        </>
-      )}
+
+            {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
+            {subTitleItems.length > 0 && (
+              <DynamicGrid columns={subTitleItems.length}>
+                {subTitleItems.map((item, index) => (
+                  <div key={index}>
+                    <SubTitle>{item.subTitle}</SubTitle>
+                    <p>{item.text}</p>
+                    {item.subText1 && <SubTextBox>{item.subText1}</SubTextBox>}
+                    {item.subText2 && <SubTextBox>{item.subText2}</SubTextBox>}
+                    {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
+                  </div>
+                ))}
+              </DynamicGrid>
+            )}
+          </>
+        )}
     </BoxWrap>
   );
 };
@@ -596,7 +609,7 @@ const SeparateSection = styled.div`
         width: 5px;
         height: 1px;
         background: ${palette.black};
-        content: '';
+        content: "";
       }
     }
   }
@@ -658,8 +671,10 @@ const AnalysisSection = styled.div`
 const BoxWrap = styled.div`
   padding: 20px;
   border-radius: 10px;
-  background: ${(props) => 
-    props.isLast ? palette.white : "rgba(0, 0, 0, 0.04)" };  /* 마지막 섹션은 흰색 배경 */
+  background: ${(props) =>
+    props.isLast
+      ? palette.white
+      : "rgba(0, 0, 0, 0.04)"}; /* 마지막 섹션은 흰색 배경 */
 
   strong {
     display: flex;
@@ -667,17 +682,21 @@ const BoxWrap = styled.div`
     gap: 8px;
     margin-bottom: 10px;
     color: ${(props) =>
-      props.expertIndex === '1' ? palette.darkGray :  // 1번 전문가일 때 글자색 파란색
-      props.expertIndex === '2' ? palette.darkGray :   // 2번 전문가일 때 글자색 빨간색
-      palette.darkGray};                             // 3번 전문가일 때 글자색 녹색
+      props.expertIndex === "1"
+        ? palette.darkGray // 1번 전문가일 때 글자색 파란색
+        : props.expertIndex === "2"
+        ? palette.darkGray // 2번 전문가일 때 글자색 빨간색
+        : palette.darkGray}; // 3번 전문가일 때 글자색 녹색
   }
 
   p {
     font-size: 0.875rem;
     color: ${(props) =>
-      props.expertIndex === '1' ? palette.darkGray :
-      props.expertIndex === '2' ? palette.darkGray :
-      palette.darkGray};
+      props.expertIndex === "1"
+        ? palette.darkGray
+        : props.expertIndex === "2"
+        ? palette.darkGray
+        : palette.darkGray};
     line-height: 1.5;
   }
 
@@ -703,11 +722,11 @@ const TabButton = styled.button`
   font-family: "Pretendard";
   font-size: 1.25rem;
   font-weight: ${(props) => (props.active ? "600" : "400")};
-  
+
   color: ${(props) =>
-    props.expertIndex === '1'
+    props.expertIndex === "1"
       ? palette.black // 1번 전문가일 때
-      : props.expertIndex === '2'
+      : props.expertIndex === "2"
       ? palette.black // 2번 전문가일 때
       : palette.black}; // 3번 전문가일 때
   border: none;
@@ -798,7 +817,10 @@ const Spacing = styled.div`
 `;
 const NumDynamicGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(${(props) => props.columns}, 1fr); /* 동적 컬럼 수 설정 */
+  grid-template-columns: repeat(
+    ${(props) => props.columns},
+    1fr
+  ); /* 동적 컬럼 수 설정 */
   gap: 10px;
   margin-top: 10px;
 
