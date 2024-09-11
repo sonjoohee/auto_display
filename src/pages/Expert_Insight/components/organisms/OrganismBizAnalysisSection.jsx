@@ -142,10 +142,10 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
         // 데이터를 받아온 직후 아톰에 값을 설정합니다.
         if (Array.isArray(businessData["주요_목적_및_특징"])) {
           setTempMainFeaturesOfBusinessInformation(
-            businessData["주요_목적_및_특징"].map((item) => item)
+            businessData["주요_목적_및_특징"]?.map((item) => item)
           );
           setMainFeaturesOfBusinessInformation(
-            businessData["주요_목적_및_특징"].map((item) => item)
+            businessData["주요_목적_및_특징"]?.map((item) => item)
           );
         } else {
           setTempMainFeaturesOfBusinessInformation(
@@ -162,10 +162,10 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   
         if (Array.isArray(businessData["주요기능"])) {
           setTempMainCharacteristicOfBusinessInformation(
-            businessData["주요기능"].map((item) => item)
+            businessData["주요기능"]?.map((item) => item)
           );
           setMainCharacteristicOfBusinessInformation(
-            businessData["주요기능"].map((item) => item)
+            businessData["주요기능"]?.map((item) => item)
           );
         } else {
           setTempMainCharacteristicOfBusinessInformation(
@@ -178,10 +178,10 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   
         if (Array.isArray(businessData["목표고객"])) {
           setTempBusinessInformationTargetCustomer(
-            businessData["목표고객"].map((item) => item)
+            businessData["목표고객"]?.map((item) => item)
           );
           setBusinessInformationTargetCustomer(
-            businessData["목표고객"].map((item) => item)
+            businessData["목표고객"]?.map((item) => item)
           );
         } else {
           setTempBusinessInformationTargetCustomer(
@@ -447,7 +447,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                 주요 특징
               </strong>
               <ul>
-                {mainFeaturesOfBusinessInformation.map((content, index) => (
+                {mainFeaturesOfBusinessInformation?.map((content, index) => (
                   <li key={index}>
                     {editingIndex.section === "mainFeatures" &&
                     editingIndex.index === index ? (
@@ -550,7 +550,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                 주요 기능
               </strong>
               <ul>
-                {mainCharacteristicOfBusinessInformation.map(
+                {mainCharacteristicOfBusinessInformation?.map(
                   (content, index) => (
                     <li key={index}>
                       {editingIndex.section === "mainCharacteristic" &&
@@ -653,7 +653,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                 목표 고객
               </strong>
               <ul>
-                {businessInformationTargetCustomer.map((content, index) => (
+                {businessInformationTargetCustomer?.map((content, index) => (
                   <li key={index}>
                     {editingIndex.section === "targetCustomer" &&
                     editingIndex.index === index ? (

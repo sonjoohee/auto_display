@@ -695,7 +695,7 @@ const PageExpertInsight = () => {
           <div>
             <ChatWrap className={isScrolled ? "scrolled" : ""}>
               <MoleculeBizName date={Date.now()} />
-              {conversation.map((item, index) => {
+              {conversation?.map((item, index) => {
                 if (item.type === "user") {
                   return (
                     <MoleculeUserMessage key={index} message={item.message} />
@@ -718,7 +718,7 @@ const PageExpertInsight = () => {
                     />
                   );
                 } else if (item.type === "addition") {
-                  // console.log("🚀 ~ {conversation.map ~ item:", item, index);
+                  // console.log("🚀 ~ {conversation?.map ~ item:", item, index);
                   // const expertIndex = item.type.split("_")[1];
                   const currentAdditionalReportCount = additionalReportCount++;
 

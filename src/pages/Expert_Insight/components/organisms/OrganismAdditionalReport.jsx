@@ -217,7 +217,7 @@ const OrganismAdditionalReport = ({
             </TabHeader>
           )}
 
-          {sections.map((section, index) => (
+          {sections?.map((section, index) => (
             <Section
               key={index}
               title={section.title}
@@ -257,7 +257,7 @@ const Section = ({ title, content }) => {
 
       {/* nonSubTitleItems는 일반적으로 title과 text만 표시 */}
       {nonSubTitleItems.length > 0 &&
-        nonSubTitleItems.map((item, index) => (
+        nonSubTitleItems?.map((item, index) => (
           <div key={index}>
             <p>{item.text}</p>
             {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
@@ -267,7 +267,7 @@ const Section = ({ title, content }) => {
       {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
       {subTitleItems.length > 0 && (
         <DynamicGrid columns={subTitleItems.length}>
-          {subTitleItems.map((item, index) => (
+          {subTitleItems?.map((item, index) => (
             <div key={index}>
               {item.subTitle && <SubTitle>{item.subTitle}</SubTitle>}
               <p>{item.text}</p>

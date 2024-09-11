@@ -541,7 +541,7 @@ const OrganismLeftSideBar = () => {
               </label>
               <AccordionContent>
                 <ul>
-                  {reports.map((report, index) => (
+                  {reports?.map((report, index) => (
                     <li key={index}>
                       <p onClick={() => handleReportClick(report.id)}>
                         {report.business_info}
@@ -635,7 +635,7 @@ const OrganismLeftSideBar = () => {
                 <div>
                   <strong>최근 작업</strong>
                   <ul>
-                    {chatList.map((chat, index) => (
+                    {chatList?.map((chat, index) => (
                       <li key={index}>
                         <p onClick={() => handleConversationClick(chat.id)}>
                           {chat.business_info

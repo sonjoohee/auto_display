@@ -253,7 +253,7 @@ const BizAnalysisSection = ({ report }) => {
             주요 특징
           </SectionTitle>
           <List>
-            {mainFeatures.map((feature, index) => (
+            {mainFeatures?.map((feature, index) => (
               <ListItem key={index}>
                 <p>{feature}</p>
               </ListItem>
@@ -266,7 +266,7 @@ const BizAnalysisSection = ({ report }) => {
             주요 기능
           </SectionTitle>
           <List>
-            {mainCharacter.map((func, index) => (
+            {mainCharacter?.map((func, index) => (
               <ListItem key={index}>
                 <p>{func}</p>
               </ListItem>
@@ -279,7 +279,7 @@ const BizAnalysisSection = ({ report }) => {
             목표 고객
           </SectionTitle>
           <List>
-            {mainCustomer.map((customer, index) => (
+            {mainCustomer?.map((customer, index) => (
               <ListItem key={index}>
                 <p>{customer}</p>
               </ListItem>
@@ -305,7 +305,7 @@ const StrategyReportSection = ({ report }) => {
     <>
       <AnalysisSection Strategy>
         <TabHeader>
-          {tabs.map((tab, index) => (
+          {tabs?.map((tab, index) => (
             <TabButton
               key={index}
               active={selectedTab === index}
@@ -318,7 +318,7 @@ const StrategyReportSection = ({ report }) => {
 
         {Array.isArray(tabs[selectedTab]?.sections) &&
           tabs[selectedTab]?.sections.length > 0 &&
-          tabs[selectedTab].sections.map((section, index) => (
+          tabs[selectedTab].sections?.map((section, index) => (
             <Section
               key={index}
               title={section.title}
@@ -415,7 +415,7 @@ const AdditionalReportSection = ({ report }) => {
       )}
 
       {/* 각 섹션을 반복하여 표시 */}
-      {sections.map((section, index) => (
+      {sections?.map((section, index) => (
         <Section key={index} title={section.title} content={section.content} />
       ))}
     </AnalysisSection>
@@ -437,7 +437,7 @@ const Section = ({ title, content }) => {
       )}
 
       {nonSubTitleItems.length > 0 &&
-        nonSubTitleItems.map((item, index) => (
+        nonSubTitleItems?.map((item, index) => (
           <div key={index}>
             <p>{item.text}</p>
             {item.subText1 && <SubTextBox>{item.subText1}</SubTextBox>}
@@ -448,7 +448,7 @@ const Section = ({ title, content }) => {
 
       {subTitleItems.length > 0 && (
         <DynamicGrid columns={subTitleItems.length}>
-          {subTitleItems.map((item, index) => (
+          {subTitleItems?.map((item, index) => (
             <div key={index}>
               {item.subTitle && <SubTitle>{item.subTitle}</SubTitle>}
               <p>{item.text}</p>
