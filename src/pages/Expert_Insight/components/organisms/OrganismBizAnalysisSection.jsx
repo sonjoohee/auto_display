@@ -122,13 +122,13 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
 
   useEffect(() => {
     console.log("기초보고서1");
-    setIsLoadingAnalysis(true);
-    setIsLoading(true);
   
     const loadAndSaveData = async () => {
       let businessData;
   
       if (buttonState === 1) {
+        setIsLoading(true);
+        setIsLoadingAnalysis(true);
         setButtonState(0);
         // 버튼 클릭으로 API 호출
         console.log("기초보고서api호출");
@@ -288,8 +288,6 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
         } else {
           console.warn("No saved analysis data found.");
         }
-        setIsLoadingAnalysis(false);
-        setIsLoading(false);
       }
     };
   

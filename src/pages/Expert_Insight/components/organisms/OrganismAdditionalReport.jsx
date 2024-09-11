@@ -69,7 +69,6 @@ const OrganismAdditionalReport = ({
   };
   const [selectedKeywords] = useAtom(SELECTED_ADDITIONAL_KEYWORD); // Access the list of selected keywords
   const [title, setTitle] = useState([]);
-  const [purpose, setPurpose] = useState([]);
   const [sections, setSections] = useState([]);
   const [additionalReportData, setAdditionalReportData] = useAtom(
     ADDITIONAL_REPORT_DATA
@@ -100,10 +99,6 @@ const OrganismAdditionalReport = ({
           setSections(
             additionalReportData[additionalReportCount]?.sections || []
           );
-          setPurpose(
-            additionalReportData[additionalReportCount]?.sections[0].content[0]
-              .text
-          );
         } else if (buttonState === 1) {
           // 버튼 상태가 1일 때만 API 요청 실행
           setButtonState(0); // 버튼 상태 초기화
@@ -131,9 +126,8 @@ const OrganismAdditionalReport = ({
           console.log(response);
           answerData = response.data.additional_question;
           setAnswerData(answerData);
-          setTitle(answerData.title);
-          setPurpose(answerData.sections[0].content[0].text);
-          setSections(answerData.sections);
+          setTitle(answerData?.title);
+          setSections(answerData?.sections);
 
           // 새로운 데이터를 배열의 맨 앞에 추가합니다.
           const updatedAdditionalReportData = [

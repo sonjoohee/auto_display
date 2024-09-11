@@ -551,10 +551,10 @@ const PageExpertInsight = () => {
       } else {
         // 일반적인 경우 처리
         if (
-          (updatedConversation.length > 0 &&
+          (updatedConversation.length > 0 && approachPath !== 2 &&
             updatedConversation[updatedConversation.length - 1].type ===
               "keyword") ||
-          (updatedConversation.length > 0 &&
+          (updatedConversation.length > 0 && approachPath !== 2 &&
             updatedConversation[updatedConversation.length - 1].type ===
               "report_button")
         ) {
@@ -616,10 +616,10 @@ const PageExpertInsight = () => {
         console.log("전략보고서 상태에서 대화내역으로 들어오면")
       } else {
         if (
-          (updatedConversation.length > 0 &&
+          (updatedConversation.length > 0 && approachPath !== 2 &&
             updatedConversation[updatedConversation.length - 1].type ===
               "keyword") ||
-          (updatedConversation.length > 0 &&
+          (updatedConversation.length > 0 && approachPath !== 2 &&
             updatedConversation[updatedConversation.length - 1].type ===
               "report_button")
         ) {
