@@ -72,7 +72,7 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
       setAddtionalQuestion2("");
       setAddtionalQuestion3("");
       setExpertButtonState(1);
-
+      setApproachPath(3);
       if (index === "1") {
         setSelectedAdditionalKeyword1("");
       } else if (index === "2") {
