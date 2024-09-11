@@ -10,6 +10,7 @@ import {
   ADDITIONAL_QUESTION_2,
   ADDITIONAL_QUESTION_3,
   ADDITION_BUTTON_STATE, // BUTTON_STATE 추가
+  APPROACH_PATH,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -32,6 +33,7 @@ const MoleculeAdditionalKeyword = () => {
   const [buttonState, setButtonState] = useAtom(ADDITION_BUTTON_STATE); // BUTTON_STATE 가져오기
 
   const [randomSelections, setRandomSelections] = useState({});
+  const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
 
   const generateRandomSelections = () => {
     const getRandomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
@@ -65,6 +67,7 @@ const MoleculeAdditionalKeyword = () => {
     const updatedKeywords = [...selectedAdditionalKeyword];
     updatedKeywords.push(keyword); // Add the keyword to the end of the array
     setSelectedAdditionalKeyword(updatedKeywords);
+    setApproachPath(3);
     setButtonState(1); // 버튼 클릭 시 buttonState를 1로 설정
   };
 
