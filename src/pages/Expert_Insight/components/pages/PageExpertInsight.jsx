@@ -762,7 +762,7 @@ const PageExpertInsight = () => {
               )} */}
             </ChatWrap>
 
-            {approachPath === 1 && conversationStage == 1 && (
+            {(approachPath === 1 || approachPath === 2) && conversationStage == 1 && (
               <OrganismSearchBottomBar onSearch={handleSearch} />
             )}
           </div>
