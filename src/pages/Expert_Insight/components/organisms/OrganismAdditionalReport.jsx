@@ -236,6 +236,7 @@ const OrganismAdditionalReport = ({
               reportIndex={2}
               conversationId={conversationId}
               sampleData={answerData}
+              additionalReportCount={additionalReportCount}
             />
           )}
         </>
