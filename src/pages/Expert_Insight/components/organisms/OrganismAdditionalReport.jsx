@@ -17,6 +17,7 @@ import {
   EXPERT1_REPORT_DATA,
   EXPERT2_REPORT_DATA,
   EXPERT3_REPORT_DATA,
+  INPUT_BUSINESS_INFO,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -38,7 +39,8 @@ const OrganismAdditionalReport = ({
   conversationId,
 }) => {
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
-
+  const [inputBusinessInfo, setInputBusinessInfo] =
+    useAtom(INPUT_BUSINESS_INFO);
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [approachPath] = useAtom(APPROACH_PATH);
   const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
