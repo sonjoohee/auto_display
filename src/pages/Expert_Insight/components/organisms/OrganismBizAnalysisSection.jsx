@@ -206,17 +206,17 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
             : [],
         };
 
-        // 기존 대화 내역을 유지하면서 새로운 정보를 추가
-        const existingConversation = await getConversationByIdFromIndexedDB(
-          conversationId,
-          isLoggedIn
-        );
+        // // 기존 대화 내역을 유지하면서 새로운 정보를 추가
+        // const existingConversation = await getConversationByIdFromIndexedDB(
+        //   conversationId,
+        //   isLoggedIn
+        // );
 
-        const updatedConversation = {
-          ...existingConversation,
-          analysisReportData,
-          timestamp: Date.now(),
-        };
+        // const updatedConversation = {
+        //   ...existingConversation,
+        //   analysisReportData,
+        //   timestamp: Date.now(),
+        // };
 
         // 대화 업데이트 및 저장
         const updatedConversation2 = [...conversation];
