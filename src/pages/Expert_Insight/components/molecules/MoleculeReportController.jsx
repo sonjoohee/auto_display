@@ -27,6 +27,7 @@ import {
   isLoggedInAtom,
   IS_LOADING,
   REPORT_REFRESH_TRIGGER,
+  ADDITIONAL_REPORT_DATA,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -43,6 +44,7 @@ const MoleculeReportController = ({
   strategyReportID,
   conversationId,
   sampleData,
+  additionalReportCount, // 추가 보고서 복사기능을 위한 인덱스
 }) => {
   // console.log(
   //   "🚀 ~ strategyReportID,  conversationId,  sampleData,:",
@@ -124,6 +126,7 @@ const MoleculeReportController = ({
 
   const [isPopupCopy, setIsPopupCopy] = useState(false);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
+  const [additionalReportData, setAdditionalReportData] = useAtom(ADDITIONAL_REPORT_DATA);
 
   const navigate = useNavigate();
 
@@ -341,22 +344,22 @@ const MoleculeReportController = ({
       else return;
     };
 
-    if (reportIndex === 0) {
-      contentToCopy = `
-      ${titleOfBusinessInfo}
-      주요 특징
-      ${mainFeaturesOfBusinessInformation
-        .map((feature) => `- ${feature}`)
-        .join("\n")}
-      주요 특성
-      ${mainCharacteristicOfBusinessInformation
-        .map((character) => `- ${character}`)
-        .join("\n")}
-      목표 고객
-      ${businessInformationTargetCustomer
-        .map((customer) => `- ${customer}`)
-        .join("\n")}
-      `;
+if (reportIndex === 0) {
+contentToCopy = `
+${titleOfBusinessInfo}
+주요 특징
+${mainFeaturesOfBusinessInformation
+.map((feature) => `${feature}`)
+.join("\n")}
+주요 특성
+${mainCharacteristicOfBusinessInformation
+.map((character) => `${character}`)
+.join("\n")}
+목표 고객
+${businessInformationTargetCustomer
+.map((customer) => `${customer}`)
+.join("\n")}
+`;
     } else if (reportIndex === 1) {
       const extractTextContent = (data) => {
         let textContent = "";
@@ -378,7 +381,24 @@ const MoleculeReportController = ({
       contentToCopy = extractTextContent(selectedTabData);
     } else if (reportIndex === 2) {
       // 추가 질문 복사 기능
-    }
+      const extractTextContent = (data) => {
+        let textContent = "";
+        if (typeof data === "string") {
+          return data + "\n";
+        }
+        if (Array.isArray(data)) {
+          data.forEach((item) => {
+            textContent += extractTextContent(item);
+          });
+        } else if (typeof data === "object" && data !== null) {
+          Object.values(data).forEach((value) => {
+            textContent += extractTextContent(value);
+          });
+        }
+        return textContent;
+      };
+      contentToCopy = extractTextContent(additionalReportData[additionalReportCount]);
+    } else return;
 
     navigator.clipboard
       .writeText(contentToCopy.trim())
