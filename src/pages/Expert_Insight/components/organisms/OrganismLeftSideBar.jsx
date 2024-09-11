@@ -310,7 +310,7 @@ const OrganismLeftSideBar = () => {
 
       // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
       // set어프로치패스(2)
-      setApproachPath(2)
+      setApproachPath(2);
       // 페이지를 대화가 이어지는 형태로 전환
       navigate(`/conversation/${conversationId}`);
     } catch (error) {

@@ -14,6 +14,9 @@ import {
   APPROACH_PATH,
   IS_LOADING,
   isLoggedInAtom,
+  EXPERT1_REPORT_DATA,
+  EXPERT2_REPORT_DATA,
+  EXPERT3_REPORT_DATA,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -43,7 +46,12 @@ const OrganismAdditionalReport = ({
   );
   const [isLoadingAdd, setIsLoadingAdd] = useState(false);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
-
+  const [expert1ReportData, setExpert1ReportData] =
+    useAtom(EXPERT1_REPORT_DATA);
+  const [expert2ReportData, setExpert2ReportData] =
+    useAtom(EXPERT2_REPORT_DATA);
+  const [expert3ReportData, setExpert3ReportData] =
+    useAtom(EXPERT3_REPORT_DATA);
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [
     mainFeaturesOfBusinessInformation,
@@ -89,10 +97,10 @@ const OrganismAdditionalReport = ({
     const loadData = async () => {
       let answerData;
       try {
-        const existingConversation = await getConversationByIdFromIndexedDB(
-          conversationId,
-          isLoggedIn
-        );
+        // const existingConversation = await getConversationByIdFromIndexedDB(
+        //   conversationId,
+        //   isLoggedIn
+        // );
         // 기존 데이터가 있을 때 처리
         if (additionalReportData[additionalReportCount]) {
           setTitle(additionalReportData[additionalReportCount]?.title || []);
@@ -143,9 +151,31 @@ const OrganismAdditionalReport = ({
           // };
           await saveConversationToIndexedDB(
             {
-              ...existingConversation,
+              //   id: "",
+              //   conversation: [],
+              //   conversationStage: 1,
+              //   expertIndex: 0,
+              //   analysisReportData: {},
+              //   inputBusinessInfo: "",
+              //   strategyReportData_EX1: {},
+              //   strategyReportData_EX2: {},
+              //   strategyReportData_EX3: {},
+              //   additionalReportData: [],
+              //   selectedAdditionalKeywords: [],
+              //   timestamp: new Date().toISOString(),
+
+              // ...existingConversation,
+              // expertIndex: 0,
+              id: conversationId,
+              analysisReportData: analysisReportData,
+              strategyReportData_EX1: expert1ReportData,
+              strategyReportData_EX2: expert2ReportData,
+              strategyReportData_EX3: expert3ReportData,
+              conversation: conversation,
+              selectedAdditionalKeywords: selectedKeywords,
               // answerData,
               additionalReportData: updatedAdditionalReportData,
+              conversationStage: 3,
               timestamp: Date.now(),
               expert_index: selectedExpertIndex,
             },
@@ -164,13 +194,21 @@ const OrganismAdditionalReport = ({
               }를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
               expertIndex: 0,
             },
-            { type: `keyword` }
+            { type: "keyword" }
           );
           setConversation(updatedConversation2);
           await saveConversationToIndexedDB(
             {
-              ...existingConversation,
+              // expertIndex: 0,
+              id: conversationId,
+              analysisReportData: analysisReportData,
+              strategyReportData_EX1: expert1ReportData,
+              strategyReportData_EX2: expert2ReportData,
+              strategyReportData_EX3: expert3ReportData,
+              // conversation: conversation,
+              selectedAdditionalKeywords: selectedKeywords,
               conversation: updatedConversation2,
+              conversationStage: 3,
               additionalReportData: updatedAdditionalReportData,
               timestamp: Date.now(),
               expert_index: selectedExpertIndex,
@@ -196,17 +234,17 @@ const OrganismAdditionalReport = ({
     <AnalysisSection Strategy>
       {isLoadingAdd ? (
         <>
-            <SkeletonTitle className="title-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
-            <SkeletonTitle className="title-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
-            <SkeletonTitle className="title-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <SkeletonLine className="content-placeholder" />
+          <SkeletonTitle className="title-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
+          <SkeletonTitle className="title-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
+          <SkeletonTitle className="title-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <SkeletonLine className="content-placeholder" />
         </>
       ) : (
         <>
