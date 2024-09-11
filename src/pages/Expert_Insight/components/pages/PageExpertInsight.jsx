@@ -541,10 +541,11 @@ const PageExpertInsight = () => {
       // 기존 대화에서 이어나가는 경우 처리
       if (approachPath === 2) {
         newConversationStage = 2;
+        setApproachPath(0);
         if (selectedExpertIndex === "1" || selectedExpertIndex === "2" || selectedExpertIndex === "3") {
-          updatedConversation.push(
-            { type: "report_button" }
-          );
+          // updatedConversation.push(
+          //   { type: "report_button" }
+          // );
           newConversationStage = 2;
           setApproachPath(0);
           console.log("기초보고서 상태에서 대화내역으로 들어오면")
@@ -610,9 +611,9 @@ const PageExpertInsight = () => {
     } else if (conversationStage === 3) {
       if (approachPath === 2) {
         newConversationStage = 3; // 기본적으로 대화 상태를 2로 설정
-        updatedConversation.push(
-          { type: "keyword" }
-        );
+        // updatedConversation.push(
+        //   { type: "keyword" }
+        // );
         setApproachPath(0);
         console.log("전략보고서 상태에서 대화내역으로 들어오면")
       } else {
