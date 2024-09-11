@@ -11,6 +11,7 @@ import {
   CONVERSATION,
   APPROACH_PATH,
   isLoggedInAtom,
+  INPUT_BUSINESS_INFO,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -39,10 +40,13 @@ import {
   MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
   IS_LOADING,
+  SELECTED_ADDITIONAL_KEYWORD,
 } from "../../../AtomStates";
 
 const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   // console.log("🚀 ~ OrganismStrategyReportSection ~ expertIndex:", expertIndex);
+  const [inputBusinessInfo, setInputBusinessInfo] =
+  useAtom(INPUT_BUSINESS_INFO);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [approachPath] = useAtom(APPROACH_PATH);
   const [conversation, setConversation] = useAtom(CONVERSATION);
@@ -51,6 +55,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const [tabs, setTabs] = useState([]);
   const [sections, setSections] = useState([]);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
+  const [selectedKeywords] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
 
   const axiosConfig = {
     timeout: 100000, // 100초
