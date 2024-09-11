@@ -616,6 +616,16 @@ const PageExpertInsight = () => {
         setApproachPath(0);
         console.log("전략보고서 상태에서 대화내역으로 들어오면")
       } else {
+        if (
+          (updatedConversation.length > 0 &&
+            updatedConversation[updatedConversation.length - 1].type ===
+              "keyword") ||
+          (updatedConversation.length > 0 &&
+            updatedConversation[updatedConversation.length - 1].type ===
+              "report_button")
+        ) {
+          updatedConversation.pop();
+        }
         // 일반적인 경우 처리
         if (inputValue !== -1) {
           const updatedKeywords = [...selectedAdditionalKeyword];
