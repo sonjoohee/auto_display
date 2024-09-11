@@ -167,7 +167,7 @@ const OrganismAdditionalReport = ({
               // ...existingConversation,
               // expertIndex: 0,
               id: conversationId,
-              business_info: titleOfBusinessInfo,
+              inputBusinessInfo: inputBusinessInfo,
               analysisReportData: analysisReportData,
               strategyReportData_EX1: expert1ReportData,
               strategyReportData_EX2: expert2ReportData,
@@ -202,7 +202,7 @@ const OrganismAdditionalReport = ({
             {
               // expertIndex: 0,
               id: conversationId,
-              business_info: titleOfBusinessInfo,
+              inputBusinessInfo: inputBusinessInfo,
               analysisReportData: analysisReportData,
               strategyReportData_EX1: expert1ReportData,
               strategyReportData_EX2: expert2ReportData,

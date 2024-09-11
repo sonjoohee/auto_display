@@ -102,18 +102,22 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
         );
         let currentReportKey = `strategyReportData_EX${selectedExpertIndex}`;
         // 기존 데이터가 있는 경우
-        if (expertIndex === '1' && Object.keys(expert1ReportData).length > 0) {
-          console.log("1번 전문가")
+        if (expertIndex === "1" && Object.keys(expert1ReportData).length > 0) {
+          console.log("1번 전문가");
           setTabs(expert1ReportData.tabs);
           setSections(expert1ReportData.tabs[selectedTab].sections);
-        }
-        else if (expertIndex === '2' && Object.keys(expert2ReportData).length > 0) {
-          console.log("2번 전문가")
+        } else if (
+          expertIndex === "2" &&
+          Object.keys(expert2ReportData).length > 0
+        ) {
+          console.log("2번 전문가");
           setTabs(expert2ReportData.tabs);
           setSections(expert2ReportData.tabs[selectedTab].sections);
-        }
-        else if (expertIndex === '3' && Object.keys(expert3ReportData).length > 0) {
-          console.log("3번 전문가")
+        } else if (
+          expertIndex === "3" &&
+          Object.keys(expert3ReportData).length > 0
+        ) {
+          console.log("3번 전문가");
           setTabs(expert3ReportData.tabs);
           setSections(expert3ReportData.tabs[selectedTab].sections);
         }
@@ -167,21 +171,27 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
 
           const strategyData = finalResponse;
 
-          if(expertIndex === '1') setExpert1ReportData(strategyData);
-          else if(expertIndex === '2') setExpert2ReportData(strategyData);
-          else if(expertIndex === '3') setExpert3ReportData(strategyData);
-          
+          if (expertIndex === "1") setExpert1ReportData(strategyData);
+          else if (expertIndex === "2") setExpert2ReportData(strategyData);
+          else if (expertIndex === "3") setExpert3ReportData(strategyData);
+
           setTabs(strategyData.tabs);
           setSections(strategyData.tabs[selectedTab].sections);
 
           await saveConversationToIndexedDB(
-          {
-            ...existingConversation,
-            [currentReportKey]: strategyData,
-            timestamp: Date.now(),
-            expert_index: selectedExpertIndex,
-            // conversationStage: 3,
-          },
+            {
+              // ...existingConversation,
+
+              id: conversationId,
+              inputBusinessInfo: inputBusinessInfo,
+              analysisReportData: analysisReportData,
+              selectedAdditionalKeywords: selectedKeywords,
+              conversation: conversation,
+              conversationStage: 3,
+              [currentReportKey]: strategyData,
+              timestamp: Date.now(),
+              expert_index: selectedExpertIndex,
+            },
             isLoggedIn,
             conversationId
           );
@@ -215,7 +225,11 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
           setConversation(updatedConversation);
           await saveConversationToIndexedDB(
             {
-              ...existingConversation2,
+              id: conversationId,
+              inputBusinessInfo: inputBusinessInfo,
+              analysisReportData: analysisReportData,
+              selectedAdditionalKeywords: selectedKeywords,
+              conversationStage: 3,
               [currentReportKey]: strategyData,
               conversation: updatedConversation,
               timestamp: Date.now(),
@@ -228,7 +242,6 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
       } catch (error) {
         console.error("Error loading data:", error);
       }
-      
     };
 
     loadData();
@@ -245,7 +258,6 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   return (
     <>
       <AnalysisSection Strategy>
-
         {isLoadingExpert ? (
           <>
             <SkeletonTitle className="title-placeholder" />
@@ -260,31 +272,31 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             <SkeletonLine className="content-placeholder" />
             <SkeletonLine className="content-placeholder" />
           </>
-        ) :
-        <>
-          <TabHeader>
-            {tabs &&
-              tabs.length > 0 &&
-              tabs?.map((tab, index) => (
-                <TabButton
-                  key={index}
-                  active={selectedTab === index}
-                  onClick={() => handleTabClick(index)}
-                >
-                  {tab.title}
-                </TabButton>
+        ) : (
+          <>
+            <TabHeader>
+              {tabs &&
+                tabs.length > 0 &&
+                tabs?.map((tab, index) => (
+                  <TabButton
+                    key={index}
+                    active={selectedTab === index}
+                    onClick={() => handleTabClick(index)}
+                  >
+                    {tab.title}
+                  </TabButton>
+                ))}
+            </TabHeader>
+
+            {sections?.map((section, index) => (
+              <Section
+                key={index}
+                title={section.title}
+                content={section.content}
+              />
             ))}
-          </TabHeader>
-           
-          {sections?.map((section, index) => (
-            <Section
-              key={index}
-              title={section.title}
-              content={section.content}
-            />
-          ))}
-        </>
-        }
+          </>
+        )}
 
         {!isLoadingExpert && (
           <MoleculeReportController
@@ -292,10 +304,13 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             strategyReportID={expertIndex}
             conversationId={conversationId}
             sampleData={
-              expertIndex === '1' ? expert1ReportData 
-              : expertIndex === '2' ? expert2ReportData 
-              : expertIndex === '3' ? expert3ReportData 
-              : null
+              expertIndex === "1"
+                ? expert1ReportData
+                : expertIndex === "2"
+                ? expert2ReportData
+                : expertIndex === "3"
+                ? expert3ReportData
+                : null
             }
           />
         )}
