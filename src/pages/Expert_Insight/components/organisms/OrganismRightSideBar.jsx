@@ -48,7 +48,7 @@ const OrganismRightSideBar = () => {
                 <strong>주요 이력</strong>
                 <div>
                   <FieldUl isOpen={isOpen}>
-                    {selectedExpert.career.map((item, index) => (
+                    {selectedExpert.career?.map((item, index) => (
                       <li key={index}>{item}</li>
                     ))}
                   </FieldUl>
@@ -59,7 +59,7 @@ const OrganismRightSideBar = () => {
                 <strong>전문분석 분야</strong>
 
                 <div>
-                  {selectedExpert.expertise.fields.map((field, index) => (
+                  {selectedExpert.expertise.fields?.map((field, index) => (
                     <React.Fragment key={index}>
                       <strong>
                         {/* <img src={images.ProfessionalValue} alt="" /> */}
@@ -67,7 +67,7 @@ const OrganismRightSideBar = () => {
                         {field.category}
                       </strong>
                       <FieldUl isOpen={isOpen}>
-                        {field.details.map((detail, i) => (
+                        {field.details?.map((detail, i) => (
                           <li key={i}>{detail}</li>
                         ))}
                       </FieldUl>

@@ -17,7 +17,7 @@ const TargetChoice = () => {
 
   const [selectPer, setSelectPer] = useAtom(SELECT_PERSONA);
 
-  // aiPersonaList["persona_list"].map((persona, index) => {
+  // aiPersonaList["persona_list"]?.map((persona, index) => {
   //   console.log("CHECK :: ", persona[`페르소나`][0]["이름"]);
   // });
   // 팝업
@@ -68,7 +68,7 @@ const TargetChoice = () => {
         </h1>
 
         <TargetWrap>
-          {aiPersonaList["persona_list"].map((persona, index) => {
+          {aiPersonaList["persona_list"]?.map((persona, index) => {
             return (
               // console.log("CHECK :: 1 ", persona[`페르소나`][0]['이름']);
               <label>

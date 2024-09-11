@@ -156,7 +156,7 @@ const Summary = () => {
         </Title>
 
         <WebzineWrap>
-          {modules.personas.map((value) => (
+          {modules.personas?.map((value) => (
             <WebzineList>
               <div className="thumb">
                 {value.gender === "F" ? (
@@ -169,7 +169,7 @@ const Summary = () => {
                 <strong>{value.title}</strong>
                 <p>{value.content}</p>
                 <HashTag>
-                  {value.tag.map((tagValue, index) => (
+                  {value.tag?.map((tagValue, index) => (
                     <Tag key={index} Green>
                       {tagValue}
                     </Tag>

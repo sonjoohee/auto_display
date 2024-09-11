@@ -24,7 +24,7 @@ const MoleculePanelItemDetail = ({ id, imgSrc, gender, age, job, address, subAdd
         // Split the productGroup string by '^' and map over the resulting array
         return (
           <ProductGroupContainer>
-            {productGroup.split('^').map((item, index) => (
+            {productGroup.split('^')?.map((item, index) => (
               <ProductGroupItem key={index}>{item}</ProductGroupItem>
             ))}
           </ProductGroupContainer>
@@ -46,7 +46,7 @@ const MoleculePanelItemDetail = ({ id, imgSrc, gender, age, job, address, subAdd
           </HeaderText>
         </Header>
         <TagsContainer>
-          {tags.split(',').filter(tags => tags.trim() !== '').map((tags, index) => (
+          {tags.split(',').filter(tags => tags.trim() !== '')?.map((tags, index) => (
             <Tag key={index}>#{tags.trim()}</Tag>
           ))}
         </TagsContainer>

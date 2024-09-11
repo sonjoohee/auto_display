@@ -349,15 +349,15 @@ contentToCopy = `
 ${titleOfBusinessInfo}
 주요 특징
 ${mainFeaturesOfBusinessInformation
-.map((feature) => `${feature}`)
+?.map((feature) => `${feature}`)
 .join("\n")}
 주요 특성
 ${mainCharacteristicOfBusinessInformation
-.map((character) => `${character}`)
+?.map((character) => `${character}`)
 .join("\n")}
 목표 고객
 ${businessInformationTargetCustomer
-.map((customer) => `${customer}`)
+?.map((customer) => `${customer}`)
 .join("\n")}
 `;
     } else if (reportIndex === 1) {
@@ -468,10 +468,10 @@ ${businessInformationTargetCustomer
     // 데이터를 받아온 직후 아톰에 값을 설정합니다.
     if (Array.isArray(businessData["주요_목적_및_특징"])) {
       setTempMainFeaturesOfBusinessInformation(
-        businessData["주요_목적_및_특징"].map((item) => item)
+        businessData["주요_목적_및_특징"]?.map((item) => item)
       );
       setMainFeaturesOfBusinessInformation(
-        businessData["주요_목적_및_특징"].map((item) => item)
+        businessData["주요_목적_및_특징"]?.map((item) => item)
       );
     } else {
       setTempMainFeaturesOfBusinessInformation(
@@ -488,10 +488,10 @@ ${businessInformationTargetCustomer
 
     if (Array.isArray(businessData["주요기능"])) {
       setTempMainCharacteristicOfBusinessInformation(
-        businessData["주요기능"].map((item) => item)
+        businessData["주요기능"]?.map((item) => item)
       );
       setMainCharacteristicOfBusinessInformation(
-        businessData["주요기능"].map((item) => item)
+        businessData["주요기능"]?.map((item) => item)
       );
     } else {
       setTempMainCharacteristicOfBusinessInformation(
@@ -504,10 +504,10 @@ ${businessInformationTargetCustomer
 
     if (Array.isArray(businessData["목표고객"])) {
       setTempBusinessInformationTargetCustomer(
-        businessData["목표고객"].map((item) => item)
+        businessData["목표고객"]?.map((item) => item)
       );
       setBusinessInformationTargetCustomer(
-        businessData["목표고객"].map((item) => item)
+        businessData["목표고객"]?.map((item) => item)
       );
     } else {
       setTempBusinessInformationTargetCustomer(

@@ -265,7 +265,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
           <TabHeader>
             {tabs &&
               tabs.length > 0 &&
-              tabs.map((tab, index) => (
+              tabs?.map((tab, index) => (
                 <TabButton
                   key={index}
                   active={selectedTab === index}
@@ -276,7 +276,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             ))}
           </TabHeader>
            
-          {sections.map((section, index) => (
+          {sections?.map((section, index) => (
             <Section
               key={index}
               title={section.title}
@@ -320,7 +320,7 @@ const Section = ({ title, content }) => {
 
       {/* nonSubTitleItems는 일반적으로 title과 text만 표시 */}
       {nonSubTitleItems.length > 0 &&
-        nonSubTitleItems.map((item, index) => (
+        nonSubTitleItems?.map((item, index) => (
           <div key={index}>
             <p>{item.text}</p>
             {item.subText1 && <SubTextBox>{item.subText1}</SubTextBox>}
@@ -332,7 +332,7 @@ const Section = ({ title, content }) => {
       {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
       {subTitleItems.length > 0 && (
         <DynamicGrid columns={subTitleItems.length}>
-          {subTitleItems.map((item, index) => (
+          {subTitleItems?.map((item, index) => (
             <div key={index}>
               {item.subTitle && <SubTitle>{item.subTitle}</SubTitle>}
               <p>{item.text}</p>

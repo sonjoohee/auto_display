@@ -71,7 +71,7 @@ const Question = () => {
   };
 
   // quest 다시정렬하기.
-  const outData = modules.question.product_question.map((dataValue) => {
+  const outData = modules.question.product_question?.map((dataValue) => {
     roof++;
     console.log(roof);
     const questionTitle = dataValue.title
@@ -270,7 +270,7 @@ const Question = () => {
             </div>
 
             <ul>
-              {outData.map((value) =>
+              {outData?.map((value) =>
                 (() => {
                   if (value.type === "페르소나") {
                     return (
@@ -297,7 +297,7 @@ const Question = () => {
               구매 특성 문항
             </div>
             <ul>
-              {outData.map((value) =>
+              {outData?.map((value) =>
                 (() => {
                   if (value.type === "구매기준") {
                     return (
