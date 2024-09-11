@@ -97,7 +97,7 @@ const MoleculePanelItemList = ({ id, imgSrc, gender, age, job, address, subAddre
             {!maxBehabioralType && <DetailHighlight>{comment}</DetailHighlight>}
           </DetailHeader>
           <PanelTags>
-            {tags.split(',').filter(tag => tag.trim() !== '').map((tag, index) => (
+            {tags.split(',').filter(tag => tag.trim() !== '')?.map((tag, index) => (
               <Tag key={index}>#{tag.trim()}</Tag>
             ))}
           </PanelTags>

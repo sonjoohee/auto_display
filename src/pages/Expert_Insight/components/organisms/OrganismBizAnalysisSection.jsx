@@ -121,31 +121,28 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   };
 
   useEffect(() => {
-    console.log("기초보고서1");
-    setIsLoadingAnalysis(true);
-    setIsLoading(true);
-  
     const loadAndSaveData = async () => {
       let businessData;
-  
+
       if (buttonState === 1) {
+        setIsLoading(true);
+        setIsLoadingAnalysis(true);
         setButtonState(0);
         // 버튼 클릭으로 API 호출
-        console.log("기초보고서api호출");
         const response = await axios.post(
           "https://wishresearch.kr/panels/business",
           data,
           axiosConfig
         );
         businessData = response.data.business_analysis;
-  
+
         // 데이터를 받아온 직후 아톰에 값을 설정합니다.
         if (Array.isArray(businessData["주요_목적_및_특징"])) {
           setTempMainFeaturesOfBusinessInformation(
-            businessData["주요_목적_및_특징"].map((item) => item)
+            businessData["주요_목적_및_특징"]?.map((item) => item)
           );
           setMainFeaturesOfBusinessInformation(
-            businessData["주요_목적_및_특징"].map((item) => item)
+            businessData["주요_목적_및_특징"]?.map((item) => item)
           );
         } else {
           setTempMainFeaturesOfBusinessInformation(
@@ -159,13 +156,13 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               : []
           );
         }
-  
+
         if (Array.isArray(businessData["주요기능"])) {
           setTempMainCharacteristicOfBusinessInformation(
-            businessData["주요기능"].map((item) => item)
+            businessData["주요기능"]?.map((item) => item)
           );
           setMainCharacteristicOfBusinessInformation(
-            businessData["주요기능"].map((item) => item)
+            businessData["주요기능"]?.map((item) => item)
           );
         } else {
           setTempMainCharacteristicOfBusinessInformation(
@@ -175,13 +172,13 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
             businessData["주요기능"] ? [businessData["주요기능"]] : []
           );
         }
-  
+
         if (Array.isArray(businessData["목표고객"])) {
           setTempBusinessInformationTargetCustomer(
-            businessData["목표고객"].map((item) => item)
+            businessData["목표고객"]?.map((item) => item)
           );
           setBusinessInformationTargetCustomer(
-            businessData["목표고객"].map((item) => item)
+            businessData["목표고객"]?.map((item) => item)
           );
         } else {
           setTempBusinessInformationTargetCustomer(
@@ -191,10 +188,10 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
             businessData["목표고객"] ? [businessData["목표고객"]] : []
           );
         }
-  
+
         // 명칭은 배열이 아니므로 기존 방식 유지
         setTitleOfBusinessInfo(businessData["명칭"]);
-  
+
         // 아톰이 업데이트된 후에 analysisReportData를 생성합니다.
         const analysisReportData = {
           title: businessData?.["명칭"] || "No title available", // '명칭' 속성이 없으면 기본값 설정
@@ -208,19 +205,19 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
             ? businessData["목표고객"]
             : [],
         };
-  
+
         // 기존 대화 내역을 유지하면서 새로운 정보를 추가
         const existingConversation = await getConversationByIdFromIndexedDB(
           conversationId,
           isLoggedIn
         );
-  
+
         const updatedConversation = {
           ...existingConversation,
           analysisReportData,
           timestamp: Date.now(),
         };
-  
+
         // 대화 업데이트 및 저장
         const updatedConversation2 = [...conversation];
         if (approachPath === 1) {
@@ -243,9 +240,9 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
         } else {
           // 히스토리 불러오기 로직
         }
-  
+
         setConversation(updatedConversation2);
-  
+
         // **API 데이터가 있을 경우에만 저장**
         await saveConversationToIndexedDB(
           {
@@ -263,17 +260,16 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
         setReportRefreshTrigger((prev) => !prev);
         setIsLoadingAnalysis(false);
         setIsLoading(false);
-  
       } else {
         // IndexedDB에서 기존 데이터를 가져와 적용
         const existingConversation = await getConversationByIdFromIndexedDB(
           conversationId,
           isLoggedIn
         );
-  
+
         if (existingConversation && existingConversation.analysisReportData) {
           const storedData = existingConversation.analysisReportData;
-  
+
           // 저장된 데이터를 각 상태에 적용
           setTitleOfBusinessInfo(storedData.title);
           setTempMainFeaturesOfBusinessInformation(storedData.mainFeatures);
@@ -281,18 +277,16 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
             storedData.mainCharacter
           );
           setTempBusinessInformationTargetCustomer(storedData.mainCustomer);
-  
+
           setMainFeaturesOfBusinessInformation(storedData.mainFeatures);
           setMainCharacteristicOfBusinessInformation(storedData.mainCharacter);
           setBusinessInformationTargetCustomer(storedData.mainCustomer);
         } else {
           console.warn("No saved analysis data found.");
         }
-        setIsLoadingAnalysis(false);
-        setIsLoading(false);
       }
     };
-  
+
     loadAndSaveData();
   }, [
     conversationId,
@@ -304,8 +298,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
     setTempMainCharacteristicOfBusinessInformation,
     setTempBusinessInformationTargetCustomer,
   ]);
-  
-  
+
   //   const handleEditStart = (section, index) => {
   //     setEditingIndex({ section, index });
   //     setIsEditingNow(true);
@@ -370,7 +363,6 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
     setEditingIndex({ section: "", index: -1 });
     setWarningMessage("");
     setNewEditContent("");
-    console.log("Updated State:", updatedArray);
   };
 
   const handleEditCancel = () => {
@@ -449,7 +441,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                 주요 특징
               </strong>
               <ul>
-                {mainFeaturesOfBusinessInformation.map((content, index) => (
+                {mainFeaturesOfBusinessInformation?.map((content, index) => (
                   <li key={index}>
                     {editingIndex.section === "mainFeatures" &&
                     editingIndex.index === index ? (
@@ -552,7 +544,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                 주요 기능
               </strong>
               <ul>
-                {mainCharacteristicOfBusinessInformation.map(
+                {mainCharacteristicOfBusinessInformation?.map(
                   (content, index) => (
                     <li key={index}>
                       {editingIndex.section === "mainCharacteristic" &&
@@ -655,7 +647,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                 목표 고객
               </strong>
               <ul>
-                {businessInformationTargetCustomer.map((content, index) => (
+                {businessInformationTargetCustomer?.map((content, index) => (
                   <li key={index}>
                     {editingIndex.section === "targetCustomer" &&
                     editingIndex.index === index ? (

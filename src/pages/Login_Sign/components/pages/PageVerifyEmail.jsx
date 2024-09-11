@@ -15,7 +15,6 @@ const VerifyEmail = () => {
       // isVerified가 false일 때만 요청
       fetch(`https://wishresearch.kr/api/user/activate/${userid}?auth=${token}`)
         .then((response) => {
-          console.log("Response status:", response.status);
           if (response.ok) {
             return response.json();
           } else {
@@ -23,7 +22,6 @@ const VerifyEmail = () => {
           }
         })
         .then((data) => {
-          console.log("Response data:", data);
           if (data.message === "이메일 인증이 완료되었습니다.") {
             setIsVerified(true); // 이메일 인증이 완료되었음을 상태로 저장
             navigate("/email-verified"); // 성공 시 이메일 인증 완료 페이지로 이동

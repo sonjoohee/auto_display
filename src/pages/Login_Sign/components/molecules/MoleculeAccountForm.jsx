@@ -65,7 +65,6 @@ const MoleculeLoginForm = () => {
 
       if (response.ok) {
         const result = await response.json();
-        console.log(result);
         const accessToken = result.access_token;
 
         // accessToken을 세션 스토리지에 저장
@@ -85,7 +84,6 @@ const MoleculeLoginForm = () => {
 
         if (userInfoResponse.ok) {
           const userInfo = await userInfoResponse.json();
-          console.log(userInfo);
 
           // 유저 정보 (이름과 이메일)를 아톰에 저장
           setUserName(userInfo.name); // 아톰에 유저 이름 저장

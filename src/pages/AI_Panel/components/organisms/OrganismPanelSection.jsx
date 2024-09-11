@@ -75,7 +75,7 @@ const OrganismPanelSection = () => {
     const handleAllSelectChange = (e) => {
       if (e.target.checked) {
         // 전체 선택 상태로 설정
-        const allPanelIds = new Set(panelList.map((panel) => panel.id));
+        const allPanelIds = new Set(panelList?.map((panel) => panel.id));
         setSelectedPanels(allPanelIds);
         setSelectedCount(panelList.length);
         setSelectedAllPanels(true);
@@ -94,7 +94,7 @@ const OrganismPanelSection = () => {
 
   useEffect(() => {
     if(selectedAllPanels) {
-      const allPanelIds = new Set(panelList.map((panel) => panel.id));
+      const allPanelIds = new Set(panelList?.map((panel) => panel.id));
       setSelectedCount(panelList.length);
       setSelectedPanels(allPanelIds);
     }
@@ -236,7 +236,7 @@ const OrganismPanelSection = () => {
         {viewPanelType ? (
           <>
             <CardViewContainer>
-              {panelList.map((panel, index) => (
+              {panelList?.map((panel, index) => (
                 <MoleculePanelItemCard
                   key={panel.id}
                   id={panel.id}
@@ -268,7 +268,7 @@ const OrganismPanelSection = () => {
           </>
         ) : (
           <ListViewContainer>
-          {panelList.map((panel, index) => (
+          {panelList?.map((panel, index) => (
             <MoleculePanelItemList
               key={panel.id}
               id={panel.id}

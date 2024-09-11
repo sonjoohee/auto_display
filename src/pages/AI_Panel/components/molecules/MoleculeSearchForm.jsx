@@ -782,7 +782,7 @@ const MoleculeSearchForm = () => {
             )
           )}
           {selectedFilters.gender.length === 1 &&
-            selectedFilters.gender.map((gender) => (
+            selectedFilters.gender?.map((gender) => (
               <FilterChip bgGray key={gender} onClick={() => handleRemoveFilter("gender", gender)}>
                 {gender === 'M' ? '남성' : '여성'}
               </FilterChip>
@@ -794,7 +794,7 @@ const MoleculeSearchForm = () => {
           }
           
           {selectedFilters.age.length > 0 && selectedFilters.age.length < 6 &&
-            selectedFilters.age.sort((a, b) => a - b).map((age) => ( // 오름차순 정렬
+            selectedFilters.age.sort((a, b) => a - b)?.map((age) => ( // 오름차순 정렬
               <FilterChip bgGray key={age} onClick={() => handleRemoveFilter("age", age)}>
                 {age === 60 ? `${age}대 이상`: `${age}대`}
               </FilterChip>
@@ -805,7 +805,7 @@ const MoleculeSearchForm = () => {
             </FilterChip>}
           
           {selectedFilters.marriage.length > 0 && selectedFilters.marriage.length < 3 &&
-            selectedFilters.marriage.map((marriage) => (
+            selectedFilters.marriage?.map((marriage) => (
               <FilterChip bgGray key={marriage} onClick={() => handleRemoveFilter("marriage", marriage)}>
                 {marriage}
               </FilterChip>
@@ -839,13 +839,13 @@ const MoleculeSearchForm = () => {
           }
 
           {selectedFilters.tag1.length === 1 &&
-            selectedFilters.tag1.map((tag1) => (
+            selectedFilters.tag1?.map((tag1) => (
               <FilterChip bgGray key={tag1} onClick={() => handleRemoveFilter("tag1", tag1)}>
                 {tag1}
               </FilterChip>
             ))}
           {selectedFilters.tag2.length === 1 &&
-            selectedFilters.tag2.map((tag2) => (
+            selectedFilters.tag2?.map((tag2) => (
               <FilterChip bgGray key={tag2} onClick={() => handleRemoveFilter("tag2", tag2)}>
                 {tag2}
               </FilterChip>
@@ -862,7 +862,7 @@ const MoleculeSearchForm = () => {
           }
 
           {selectedFilters.tag3.length > 0 && selectedFilters.tag3.length < 5 &&
-            selectedFilters.tag3.map((tag3) => (
+            selectedFilters.tag3?.map((tag3) => (
               <FilterChip bgGray key={tag3} onClick={() => handleRemoveFilter("tag3", tag3)}>
                 {tag3}
               </FilterChip>

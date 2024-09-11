@@ -226,16 +226,16 @@ const PageExpertInsight = () => {
       if (isLoggedIn) {
         // 2. 로그인 상태라면 서버에서 새로운 대화 ID를 생성하거나, 저장된 대화를 불러옴
         if (!conversationId) {
-          console.log(
-            "🚀 ~ 없을때 loadConversation ~ conversationId:",
-            conversationId
-          );
+          // console.log(
+          //   "🚀 ~ 없을때 loadConversation ~ conversationId:",
+          //   conversationId
+          // );
           // console.log("paramConversationId219");
           try {
             // 서버에서 새로운 대화 ID 생성
             const newConversationId = await createChatOnServer();
             setConversationId(newConversationId); // 생성된 대화 ID 설정
-            console.log("newConversationId", newConversationId);
+            // console.log("newConversationId", newConversationId);
             setIsLoading(false); // 로딩 완료
             // 새로운 대화 ID로 경로 변경
             navigate(`/conversation/${newConversationId}`, { replace: true });
@@ -247,19 +247,19 @@ const PageExpertInsight = () => {
         } else {
           // 3. 대화 ID가 이미 존재하면 IndexedDB에서 대화 불러오기
 
-          console.log(
-            "🚀 ~ id 있을떄 loadConversation ~ conversationId:",
-            conversationId
-          );
+          // console.log(
+          //   "🚀 ~ id 있을떄 loadConversation ~ conversationId:",
+          //   conversationId
+          // );
           const savedConversation = await getConversationByIdFromIndexedDB(
             conversationId,
             isLoggedIn
           );
 
-          console.log(
-            "🚀 ~ loadConversation ~ savedConversation:",
-            savedConversation
-          );
+          // console.log(
+          //   "🚀 ~ loadConversation ~ savedConversation:",
+          //   savedConversation
+          // );
           if (savedConversation) {
             setSelectedExpertIndex(
               savedConversation.expert_index !== undefined
@@ -267,7 +267,7 @@ const PageExpertInsight = () => {
                 : 0
             );
             const analysisData = savedConversation.analysisReportData || {};
-            console.log("🚀 ~ loadConversation ~ analysisData:", analysisData);
+            // console.log("🚀 ~ loadConversation ~ analysisData:", analysisData);
             setTitleOfBusinessInfo(analysisData.title || "");
             setMainFeaturesOfBusinessInformation(
               analysisData.mainFeatures || []
@@ -331,7 +331,6 @@ const PageExpertInsight = () => {
       } else {
         // 4. 비로그인 상태인 경우, 새로운 로컬 대화 ID 생성 또는 기존 대화 로드
         if (!conversationId) {
-          console.log("paramConversationId291");
           setConversationId(nanoid()); // 비로그인 시 로컬에서 새로운 ID 생성
           setIsLoading(false); // 로딩 완료
           navigate(`/conversation/${conversationId}`, { replace: true });
@@ -444,7 +443,6 @@ const PageExpertInsight = () => {
   useEffect(() => {
     if (conversationId && conversationId.length >= 2) {
       if (approachPath === -1) {
-        console.log(111111111);
         handleSearch(-1);
       } else if (approachPath === 1) {
         setInputBusinessInfo("");
@@ -484,7 +482,6 @@ const PageExpertInsight = () => {
       approachPath &&
       !isLoading
     ) {
-      console.log(3333333333);
       handleSearch(-1);
     }
   }, [selectedExpertIndex, isLoading]);
@@ -496,7 +493,6 @@ const PageExpertInsight = () => {
       isClickCheckReportRightAway &&
       !isLoading
     ) {
-      console.log(444444444);
       handleSearch(-1);
     }
   }, [isClickCheckReportRightAway, isLoading]);
@@ -512,18 +508,17 @@ const PageExpertInsight = () => {
         }
       }
     }
-  
+
     const updatedConversation = [...conversation];
-  
+
     // 사용자가 입력한 경우에만 inputBusinessInfo를 업데이트
     if (conversationStage < 3 && inputValue !== -1) {
       setInputBusinessInfo(inputValue);
-      console.log(inputValue);
       updatedConversation.push({ type: "user", message: inputValue });
     }
-  
+
     let newConversationStage = conversationStage;
-  
+
     if (conversationStage === 1) {
       if (inputBusinessInfo || inputValue !== -1) {
         const businessInfo = inputBusinessInfo || inputValue;
@@ -541,7 +536,11 @@ const PageExpertInsight = () => {
       // 기존 대화에서 이어나가는 경우 처리
       if (approachPath === 2) {
         newConversationStage = 2;
-        if (selectedExpertIndex === "1" || selectedExpertIndex === "2" || selectedExpertIndex === "3") {
+        if (
+          selectedExpertIndex === "1" ||
+          selectedExpertIndex === "2" ||
+          selectedExpertIndex === "3"
+        ) {
           // updatedConversation.push(
           //   { type: "report_button" }
           // );
@@ -552,15 +551,17 @@ const PageExpertInsight = () => {
         // 일반적인 경우 처리
         if (
           (updatedConversation.length > 0 &&
+            approachPath !== 2 &&
             updatedConversation[updatedConversation.length - 1].type ===
               "keyword") ||
           (updatedConversation.length > 0 &&
+            approachPath !== 2 &&
             updatedConversation[updatedConversation.length - 1].type ===
               "report_button")
         ) {
           updatedConversation.pop();
         }
-  
+
         if (selectedExpertIndex === "1") {
           updatedConversation.push(
             {
@@ -601,9 +602,7 @@ const PageExpertInsight = () => {
             }
           );
         }
-        updatedConversation.push(
-          { type: `strategy_${selectedExpertIndex}` }
-        );
+        updatedConversation.push({ type: `strategy_${selectedExpertIndex}` });
         newConversationStage = 3;
       }
     } else if (conversationStage === 3) {
@@ -613,13 +612,14 @@ const PageExpertInsight = () => {
         //   { type: "keyword" }
         // );
         // setApproachPath(3);
-        console.log("전략보고서 상태에서 대화내역으로 들어오면")
       } else {
         if (
           (updatedConversation.length > 0 &&
+            approachPath !== 2 &&
             updatedConversation[updatedConversation.length - 1].type ===
               "keyword") ||
           (updatedConversation.length > 0 &&
+            approachPath !== 2 &&
             updatedConversation[updatedConversation.length - 1].type ===
               "report_button")
         ) {
@@ -631,7 +631,7 @@ const PageExpertInsight = () => {
           updatedKeywords[0] = inputValue;
           setSelectedAdditionalKeyword(updatedKeywords);
         }
-    
+
         updatedConversation.push(
           {
             type: "user",
@@ -643,16 +643,16 @@ const PageExpertInsight = () => {
         );
       }
     }
-    console.log(
-      "🚀 ~ handleSearch ~ updatedConversation:",
-      updatedConversation
-    );
+    // console.log(
+    //   "🚀 ~ handleSearch ~ updatedConversation:",
+    //   updatedConversation
+    // );
     setConversation(updatedConversation);
     setConversationStage(newConversationStage);
     saveConversation(updatedConversation, newConversationStage);
     setIsLoading(false); // 로딩 완료
   };
-  
+
   // 스크롤
   const [isScrolled, setIsScrolled] = useState(false);
   useEffect(() => {
@@ -695,7 +695,7 @@ const PageExpertInsight = () => {
           <div>
             <ChatWrap className={isScrolled ? "scrolled" : ""}>
               <MoleculeBizName date={Date.now()} />
-              {conversation.map((item, index) => {
+              {conversation?.map((item, index) => {
                 if (item.type === "user") {
                   return (
                     <MoleculeUserMessage key={index} message={item.message} />
@@ -718,7 +718,7 @@ const PageExpertInsight = () => {
                     />
                   );
                 } else if (item.type === "addition") {
-                  // console.log("🚀 ~ {conversation.map ~ item:", item, index);
+                  // console.log("🚀 ~ {conversation?.map ~ item:", item, index);
                   // const expertIndex = item.type.split("_")[1];
                   const currentAdditionalReportCount = additionalReportCount++;
 
@@ -743,28 +743,26 @@ const PageExpertInsight = () => {
                 return null;
               })}
 
-              {approachPath === -1 || approachPath === 2 ?
-                inputBusinessInfo &&
-                (Object.keys(expert1ReportData).length === 0 ||
-                  Object.keys(expert2ReportData).length === 0 ||
-                  Object.keys(expert3ReportData).length === 0) && (
-                  <OrganismBizExpertSelect />
-                )
-                : 
-                conversationStage >= 3 &&
-                (Object.keys(expert1ReportData).length === 0 ||
-                  Object.keys(expert2ReportData).length === 0 ||
-                  Object.keys(expert3ReportData).length === 0) && (
-                  <OrganismBizExpertSelect />
-                )
-              }
+              {approachPath === -1 || approachPath === 2
+                ? inputBusinessInfo &&
+                  (Object.keys(expert1ReportData).length === 0 ||
+                    Object.keys(expert2ReportData).length === 0 ||
+                    Object.keys(expert3ReportData).length === 0) && (
+                    <OrganismBizExpertSelect />
+                  )
+                : conversationStage >= 3 &&
+                  (Object.keys(expert1ReportData).length === 0 ||
+                    Object.keys(expert2ReportData).length === 0 ||
+                    Object.keys(expert3ReportData).length === 0) && (
+                    <OrganismBizExpertSelect />
+                  )}
 
               {/* {approachPath !== 1 && conversationStage === 2 && (
                 <OrganismBizExpertSelect />
               )} */}
             </ChatWrap>
 
-            {approachPath === 1 && conversationStage == 1 && (
+            {(approachPath === 1 || approachPath === 2) && conversationStage == 1 && (
               <OrganismSearchBottomBar onSearch={handleSearch} />
             )}
           </div>

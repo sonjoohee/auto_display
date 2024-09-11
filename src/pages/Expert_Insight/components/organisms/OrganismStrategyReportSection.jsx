@@ -11,6 +11,7 @@ import {
   CONVERSATION,
   APPROACH_PATH,
   isLoggedInAtom,
+  INPUT_BUSINESS_INFO,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -39,10 +40,13 @@ import {
   MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
   IS_LOADING,
+  SELECTED_ADDITIONAL_KEYWORD,
 } from "../../../AtomStates";
 
 const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   // console.log("🚀 ~ OrganismStrategyReportSection ~ expertIndex:", expertIndex);
+  const [inputBusinessInfo, setInputBusinessInfo] =
+    useAtom(INPUT_BUSINESS_INFO);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [approachPath] = useAtom(APPROACH_PATH);
   const [conversation, setConversation] = useAtom(CONVERSATION);
@@ -51,6 +55,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const [tabs, setTabs] = useState([]);
   const [sections, setSections] = useState([]);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
+  const [selectedKeywords] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
 
   const axiosConfig = {
     timeout: 100000, // 100초
@@ -102,18 +107,19 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
         );
         let currentReportKey = `strategyReportData_EX${selectedExpertIndex}`;
         // 기존 데이터가 있는 경우
-        if (expertIndex === '1' && Object.keys(expert1ReportData).length > 0) {
-          console.log("1번 전문가")
+        if (expertIndex === "1" && Object.keys(expert1ReportData).length > 0) {
           setTabs(expert1ReportData.tabs);
           setSections(expert1ReportData.tabs[selectedTab].sections);
-        }
-        else if (expertIndex === '2' && Object.keys(expert2ReportData).length > 0) {
-          console.log("2번 전문가")
+        } else if (
+          expertIndex === "2" &&
+          Object.keys(expert2ReportData).length > 0
+        ) {
           setTabs(expert2ReportData.tabs);
           setSections(expert2ReportData.tabs[selectedTab].sections);
-        }
-        else if (expertIndex === '3' && Object.keys(expert3ReportData).length > 0) {
-          console.log("3번 전문가")
+        } else if (
+          expertIndex === "3" &&
+          Object.keys(expert3ReportData).length > 0
+        ) {
           setTabs(expert3ReportData.tabs);
           setSections(expert3ReportData.tabs[selectedTab].sections);
         }
@@ -167,21 +173,30 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
 
           const strategyData = finalResponse;
 
-          if(expertIndex === '1') setExpert1ReportData(strategyData);
-          else if(expertIndex === '2') setExpert2ReportData(strategyData);
-          else if(expertIndex === '3') setExpert3ReportData(strategyData);
-          
+          if (expertIndex === "1") setExpert1ReportData(strategyData);
+          else if (expertIndex === "2") setExpert2ReportData(strategyData);
+          else if (expertIndex === "3") setExpert3ReportData(strategyData);
+
           setTabs(strategyData.tabs);
           setSections(strategyData.tabs[selectedTab].sections);
 
           await saveConversationToIndexedDB(
-          {
-            ...existingConversation,
-            [currentReportKey]: strategyData,
-            timestamp: Date.now(),
-            expert_index: selectedExpertIndex,
-            // conversationStage: 3,
-          },
+            {
+              // ...existingConversation,
+
+              id: conversationId,
+              inputBusinessInfo: inputBusinessInfo,
+              analysisReportData: analysisReportData,
+              selectedAdditionalKeywords: selectedKeywords,
+              conversation: conversation,
+              conversationStage: 3,
+              strategyReportData_EX1: expert1ReportData,
+              strategyReportData_EX2: expert2ReportData,
+              strategyReportData_EX3: expert3ReportData,
+              [currentReportKey]: strategyData,
+              timestamp: Date.now(),
+              expert_index: selectedExpertIndex,
+            },
             isLoggedIn,
             conversationId
           );
@@ -215,7 +230,14 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
           setConversation(updatedConversation);
           await saveConversationToIndexedDB(
             {
-              ...existingConversation2,
+              id: conversationId,
+              inputBusinessInfo: inputBusinessInfo,
+              analysisReportData: analysisReportData,
+              selectedAdditionalKeywords: selectedKeywords,
+              conversationStage: 3,
+              strategyReportData_EX1: expert1ReportData,
+              strategyReportData_EX2: expert2ReportData,
+              strategyReportData_EX3: expert3ReportData,
               [currentReportKey]: strategyData,
               conversation: updatedConversation,
               timestamp: Date.now(),
@@ -228,7 +250,6 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
       } catch (error) {
         console.error("Error loading data:", error);
       }
-      
     };
 
     loadData();
@@ -245,7 +266,6 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   return (
     <>
       <AnalysisSection Strategy>
-
         {isLoadingExpert ? (
           <>
             <SkeletonTitle className="title-placeholder" />
@@ -265,7 +285,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
           <TabHeader>
             {tabs &&
               tabs.length > 0 &&
-              tabs.map((tab, index) => (
+              tabs?.map((tab, index) => (
                 <TabButton
                   key={index}
                   active={selectedTab === index}
@@ -277,7 +297,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             ))}
           </TabHeader>
            
-          {sections.map((section, index) => (
+          {sections?.map((section, index) => (
             <Section
               key={index}
               title={section.title}
@@ -295,10 +315,13 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             strategyReportID={expertIndex}
             conversationId={conversationId}
             sampleData={
-              expertIndex === '1' ? expert1ReportData 
-              : expertIndex === '2' ? expert2ReportData 
-              : expertIndex === '3' ? expert3ReportData 
-              : null
+              expertIndex === "1"
+                ? expert1ReportData
+                : expertIndex === "2"
+                ? expert2ReportData
+                : expertIndex === "3"
+                ? expert3ReportData
+                : null
             }
           />
         )}

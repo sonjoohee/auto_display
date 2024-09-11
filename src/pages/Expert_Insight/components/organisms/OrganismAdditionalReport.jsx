@@ -14,6 +14,10 @@ import {
   APPROACH_PATH,
   IS_LOADING,
   isLoggedInAtom,
+  EXPERT1_REPORT_DATA,
+  EXPERT2_REPORT_DATA,
+  EXPERT3_REPORT_DATA,
+  INPUT_BUSINESS_INFO,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -35,7 +39,8 @@ const OrganismAdditionalReport = ({
   conversationId,
 }) => {
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
-
+  const [inputBusinessInfo, setInputBusinessInfo] =
+    useAtom(INPUT_BUSINESS_INFO);
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [approachPath] = useAtom(APPROACH_PATH);
   const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
@@ -43,7 +48,12 @@ const OrganismAdditionalReport = ({
   );
   const [isLoadingAdd, setIsLoadingAdd] = useState(false);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
-
+  const [expert1ReportData, setExpert1ReportData] =
+    useAtom(EXPERT1_REPORT_DATA);
+  const [expert2ReportData, setExpert2ReportData] =
+    useAtom(EXPERT2_REPORT_DATA);
+  const [expert3ReportData, setExpert3ReportData] =
+    useAtom(EXPERT3_REPORT_DATA);
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [
     mainFeaturesOfBusinessInformation,
@@ -69,7 +79,6 @@ const OrganismAdditionalReport = ({
   };
   const [selectedKeywords] = useAtom(SELECTED_ADDITIONAL_KEYWORD); // Access the list of selected keywords
   const [title, setTitle] = useState([]);
-  const [purpose, setPurpose] = useState([]);
   const [sections, setSections] = useState([]);
   const [additionalReportData, setAdditionalReportData] = useAtom(
     ADDITIONAL_REPORT_DATA
@@ -90,19 +99,15 @@ const OrganismAdditionalReport = ({
     const loadData = async () => {
       let answerData;
       try {
-        const existingConversation = await getConversationByIdFromIndexedDB(
-          conversationId,
-          isLoggedIn
-        );
+        // const existingConversation = await getConversationByIdFromIndexedDB(
+        //   conversationId,
+        //   isLoggedIn
+        // );
         // 기존 데이터가 있을 때 처리
         if (additionalReportData[additionalReportCount]) {
           setTitle(additionalReportData[additionalReportCount]?.title || []);
           setSections(
             additionalReportData[additionalReportCount]?.sections || []
-          );
-          setPurpose(
-            additionalReportData[additionalReportCount]?.sections[0].content[0]
-              .text
           );
         } else if (buttonState === 1) {
           // 버튼 상태가 1일 때만 API 요청 실행
@@ -128,12 +133,10 @@ const OrganismAdditionalReport = ({
             data,
             axiosConfig
           );
-          console.log(response);
           answerData = response.data.additional_question;
           setAnswerData(answerData);
-          setTitle(answerData.title);
-          setPurpose(answerData.sections[0].content[0].text);
-          setSections(answerData.sections);
+          setTitle(answerData?.title);
+          setSections(answerData?.sections);
 
           // 새로운 데이터를 배열의 맨 앞에 추가합니다.
           const updatedAdditionalReportData = [
@@ -149,9 +152,32 @@ const OrganismAdditionalReport = ({
           // };
           await saveConversationToIndexedDB(
             {
-              ...existingConversation,
+              //   id: "",
+              //   conversation: [],
+              //   conversationStage: 1,
+              //   expertIndex: 0,
+              //   analysisReportData: {},
+              //   inputBusinessInfo: "",
+              //   strategyReportData_EX1: {},
+              //   strategyReportData_EX2: {},
+              //   strategyReportData_EX3: {},
+              //   additionalReportData: [],
+              //   selectedAdditionalKeywords: [],
+              //   timestamp: new Date().toISOString(),
+
+              // ...existingConversation,
+              // expertIndex: 0,
+              id: conversationId,
+              inputBusinessInfo: inputBusinessInfo,
+              analysisReportData: analysisReportData,
+              strategyReportData_EX1: expert1ReportData,
+              strategyReportData_EX2: expert2ReportData,
+              strategyReportData_EX3: expert3ReportData,
+              conversation: conversation,
+              selectedAdditionalKeywords: selectedKeywords,
               // answerData,
               additionalReportData: updatedAdditionalReportData,
+              conversationStage: 3,
               timestamp: Date.now(),
               expert_index: selectedExpertIndex,
             },
@@ -170,13 +196,22 @@ const OrganismAdditionalReport = ({
               }를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
               expertIndex: 0,
             },
-            { type: `keyword` }
+            { type: "keyword" }
           );
           setConversation(updatedConversation2);
           await saveConversationToIndexedDB(
             {
-              ...existingConversation,
+              // expertIndex: 0,
+              id: conversationId,
+              inputBusinessInfo: inputBusinessInfo,
+              analysisReportData: analysisReportData,
+              strategyReportData_EX1: expert1ReportData,
+              strategyReportData_EX2: expert2ReportData,
+              strategyReportData_EX3: expert3ReportData,
+              // conversation: conversation,
+              selectedAdditionalKeywords: selectedKeywords,
               conversation: updatedConversation2,
+              conversationStage: 3,
               additionalReportData: updatedAdditionalReportData,
               timestamp: Date.now(),
               expert_index: selectedExpertIndex,
@@ -188,7 +223,7 @@ const OrganismAdditionalReport = ({
       } catch (error) {
         console.error("Error loading data:", error);
       }
-      console.log("🚀 ~ loadData ~ conversationId:", conversationId);
+      // console.log("🚀 ~ loadData ~ conversationId:", conversationId);
     };
 
     loadData();
@@ -202,17 +237,17 @@ const OrganismAdditionalReport = ({
     <AnalysisSection Strategy>
       {isLoadingAdd ? (
         <>
-            <SkeletonTitle className="title-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
-            <SkeletonTitle className="title-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
-            <SkeletonTitle className="title-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <SkeletonLine className="content-placeholder" />
+          <SkeletonTitle className="title-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
+          <SkeletonTitle className="title-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
+          <SkeletonTitle className="title-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <SkeletonLine className="content-placeholder" />
         </>
       ) : (
         <>
@@ -223,7 +258,7 @@ const OrganismAdditionalReport = ({
             </TabHeader>
           )}
 
-          {sections.map((section, index) => (
+          {sections?.map((section, index) => (
             <Section
               key={index}
               title={section.title}
@@ -263,7 +298,7 @@ const Section = ({ title, content }) => {
 
       {/* nonSubTitleItems는 일반적으로 title과 text만 표시 */}
       {nonSubTitleItems.length > 0 &&
-        nonSubTitleItems.map((item, index) => (
+        nonSubTitleItems?.map((item, index) => (
           <div key={index}>
             <p>{item.text}</p>
             {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
@@ -273,7 +308,7 @@ const Section = ({ title, content }) => {
       {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
       {subTitleItems.length > 0 && (
         <DynamicGrid columns={subTitleItems.length}>
-          {subTitleItems.map((item, index) => (
+          {subTitleItems?.map((item, index) => (
             <div key={index}>
               {item.subTitle && <SubTitle>{item.subTitle}</SubTitle>}
               <p>{item.text}</p>
