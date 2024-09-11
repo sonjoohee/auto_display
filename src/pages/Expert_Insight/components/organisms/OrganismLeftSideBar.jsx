@@ -34,6 +34,7 @@ import {
   BUTTON_STATE,
   SELECTED_EXPERT_INDEX,
   REPORT_REFRESH_TRIGGER,
+  IS_LOADING,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -42,6 +43,7 @@ import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/Molec
 import OrganismReportPopup from "./OrganismReportPopup"; // 팝업 컴포넌트 임포트
 
 const OrganismLeftSideBar = () => {
+  const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const navigate = useNavigate();
   const [bizName] = useAtom(INPUT_BUSINESS_INFO);
   // const [savedReports] = useAtom(SAVED_REPORTS);
@@ -159,6 +161,7 @@ const OrganismLeftSideBar = () => {
   }, [historyEditBoxRef]);
 
   const editBoxToggle = (index) => {
+    if (isLoading) return;
     // 현재 열려 있는 항목을 확인하고 상태를 토글합니다.
     setEditToggleIndex((prevIndex) => (prevIndex === index ? null : index));
 
@@ -268,6 +271,8 @@ const OrganismLeftSideBar = () => {
   //   navigate(`/conversation/${id}`);
   // };
   const handleConversationClick = async (conversationId) => {
+    if (isLoading) return;
+
     try {
       const accessToken = sessionStorage.getItem("accessToken");
       const response = await axios.get(
@@ -482,6 +487,8 @@ const OrganismLeftSideBar = () => {
   // };
 
   const handleNewProjectClick = () => {
+    if (isLoading) return;
+
     navigate("/");
     setConversation([]);
     setConversationStage(1);
@@ -510,7 +517,7 @@ const OrganismLeftSideBar = () => {
   return (
     <>
       <Logo isOpen={isOpen}>
-        <a href="/" onClick={handleNewProjectClick}></a>
+        <a onClick={handleNewProjectClick}></a>
         <button type="button" onClick={toggleSidebar}>
           닫기
         </button>
@@ -1032,6 +1039,7 @@ const Logo = styled.div`
     font-size: 0;
     background: url(${images.SymbolLogo}) left center no-repeat;
     background-size: auto 100%;
+    cursor:pointer;
   }
 
   button {
