@@ -394,13 +394,14 @@ const Section = ({ title, content, isLast, expertIndex }) => {
       {/* "주요 차별화 요소"와 "차별화 전략 제안" 데이터를 결합하여 한 번만 렌더링 */}
       {renderCombinedSections()}
 
-      {/* title 표시 (특정 타이틀 제외) */}
-      {!isLast &&
+     {/* title 표시 (특정 타이틀 제외) */}
+     {!isLast &&
         title &&
         !(
           title === "주요 차별화 요소" ||
           title === "차별화 전략 제안" ||
           title === "경쟁 압박 대처 방안" ||
+          title === "시장 위치 평가 및 경쟁자 분석" ||
           title === "장기적인 경쟁 우위 전략"
         ) && (
           <strong>
@@ -409,21 +410,42 @@ const Section = ({ title, content, isLast, expertIndex }) => {
           </strong>
         )}
 
-      {/* "시장 위치 평가 및 경쟁자 분석"일 때 nonSubTitleItems 텍스트를 제목 밑에 출력 */}
-      {title === "시장 위치 평가 및 경쟁자 분석" &&
-        nonSubTitleItems.length > 0 && (
-          <>
-            {nonSubTitleItems.map((item, index) => (
-              <div key={index}>
-                {/* "시장 위치 평가 및 경쟁자 분석"에서 텍스트를 출력 */}
-                <p>{item.text}</p>
+
+    {/* "시장 위치 평가 및 경쟁자 분석"일 때 별도의 처리 */}
+    {title === "시장 위치 평가 및 경쟁자 분석" && (
+        <BgStyledSection>
+          <h4>
+            <img src={images.Check} alt="" />
+            {title}
+          </h4>
+          {nonSubTitleItems.length > 0 && (
+            <p>{nonSubTitleItems[0].text}</p>
+          )}
+
+          <div className="flexBox">
+            {subTitleItems.map((item, index) => (
+              <div className="bgWhite" key={index}>
+                <strong className="title">
+                  {/* 번호 표시를 위한 span.number */}
+                  <span className="number">{index + 1}</span>
+                  {item.subTitle}
+                </strong>
+                <ul>
+                  {item.subText1 && (
+                    <li>- 강점: {splitText(item.subText1).subTitle}</li>
+                  )}
+                  {item.subText2 && (
+                    <li>- 약점: {splitText(item.subText2).subTitle}</li>
+                  )}
+                </ul>
               </div>
             ))}
-          </>
-        )}
-
+          </div>
+        </BgStyledSection>
+      )}
+      
       {/* "특징" 또는 "차별화 요소" 섹션을 처리 */}
-      {(title === "특징" || title === "차별화 요소" || title === "시장 위치 평가 및 경쟁자 분석") && subTitleItems.length > 0 && (
+      {(title === "특징" || title === "차별화 요소") && subTitleItems.length > 0 && (
         <>
           {subTitleItems.map((item, index) => (
             <SeparateSection key={index}>
@@ -862,5 +884,77 @@ const NumDynamicGrid = styled.div`
     font-weight: 400;
     color: ${palette.darkGray};
     line-height: 1.5;
+  }
+`;
+const BgStyledSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.03);
+
+  h4 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .flexBox {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+
+    > div {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px; /* BgBox와 동일하게 설정 */
+      padding: 10px; /* BgBox와 동일하게 설정 */
+      border-radius: 10px;
+      border: 1px solid ${palette.lineGray};
+      background-color: ${palette.white}; /* 하얀 배경 */
+
+      .number {
+        width: 15px; /* 크기를 BgBox와 동일하게 맞춤 */
+        height: 15px;
+        font-size: 0.63rem;
+        color: ${palette.blue};
+        line-height: 15px;
+        text-align: center;
+        border: 1px solid ${palette.blue};
+        background-color: ${palette.white}; /* 번호 배경색 */
+      }
+
+      .title {
+        color: ${palette.black};
+        font-weight: 700;
+        margin-bottom: 8px;
+        font-size: 0.875rem;
+      }
+
+      ul {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+
+        li {
+          font-size: 0.875rem;
+          color: ${palette.darkGray};
+          line-height: 1.5;
+          padding-left: 13px;
+
+          &:before {
+            position: absolute;
+            top: 8px;
+            left: 0;
+            width: 5px;
+            height: 1px;
+            background: ${palette.black};
+            content: '';
+          }
+        }
+      }
+    }
   }
 `;
