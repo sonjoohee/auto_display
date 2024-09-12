@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useAtom } from "jotai";
 import {
-  ADDITIONAL_REPORT_DATA,
   SELECTED_EXPERT_INDEX,
-  SELECTED_ADDITIONAL_KEYWORD, // Import the new atom
   TITLE_OF_BUSINESS_INFORMATION,
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
   MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
@@ -18,7 +16,12 @@ import {
   EXPERT2_REPORT_DATA,
   EXPERT3_REPORT_DATA,
   INPUT_BUSINESS_INFO,
+  CONVERSATION_STAGE,
+  SELECTED_ADDITIONAL_KEYWORD,
+  SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
+  ADDITIONAL_REPORT_DATA,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
+  CUSTOMER_ADDITION_BUTTON_STATE,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -44,9 +47,7 @@ const OrganismCustomerAdditionalReport = ({
     useAtom(INPUT_BUSINESS_INFO);
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [approachPath] = useAtom(APPROACH_PATH);
-  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
-    SELECTED_ADDITIONAL_KEYWORD
-  );
+
   const [isLoadingAdd, setIsLoadingAdd] = useState(false);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [expert1ReportData, setExpert1ReportData] =
@@ -68,7 +69,7 @@ const OrganismCustomerAdditionalReport = ({
     businessInformationTargetCustomer,
     setBusinessInformationTargetCustomer,
   ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [buttonState, setButtonState] = useAtom(ADDITION_BUTTON_STATE);
+  const [buttonState, setButtonState] = useAtom(CUSTOMER_ADDITION_BUTTON_STATE);
   const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(
     SELECTED_EXPERT_INDEX
   );
@@ -78,15 +79,10 @@ const OrganismCustomerAdditionalReport = ({
     mainCharacter: mainCharacteristicOfBusinessInformation,
     mainCustomer: businessInformationTargetCustomer,
   };
-  const [selectedKeywords] = useAtom(SELECTED_ADDITIONAL_KEYWORD); // Access the list of selected keywords
   const [title, setTitle] = useState([]);
   const [sections, setSections] = useState([]);
-  const [additionalReportData, setAdditionalReportData] = useAtom(
-    ADDITIONAL_REPORT_DATA
-  ); // Use the list-based atom
-  const [customerAdditionalReportData, setCustomerAdditionalReportData] =
-    useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA); // Use the list-based atom
   const [answerData, setAnswerData] = useState("");
+  const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const axiosConfig = {
     timeout: 100000, // 100초
     headers: {
@@ -95,8 +91,18 @@ const OrganismCustomerAdditionalReport = ({
     withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
   };
 
-  // const additionalReportAtom = strategyReportAtomMap[expertIndex] || ADDITIONAL_REPORT_DATA1;
-  // const [additionalReportData, setAdditionalReportData] = useAtom(additionalReportAtom);
+  const [additionalReportData, setAdditionalReportData] = useAtom(
+    ADDITIONAL_REPORT_DATA
+  );
+  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
+    SELECTED_ADDITIONAL_KEYWORD
+  );
+  const [
+    selectedCustomerAdditionalKeyword,
+    setSelectedCustomerAdditionalKeyword,
+  ] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
+  const [customerAdditionalReportData, setCustomerAdditionalReportData] =
+    useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
 
   useEffect(() => {
     const loadData = async () => {
@@ -107,12 +113,14 @@ const OrganismCustomerAdditionalReport = ({
         //   isLoggedIn
         // );
         // 기존 데이터가 있을 때 처리
-        if (additionalReportData[customerAdditionalReportCount]) {
+        if (customerAdditionalReportData[customerAdditionalReportCount]) {
           setTitle(
-            additionalReportData[customerAdditionalReportCount]?.title || []
+            customerAdditionalReportData[customerAdditionalReportCount]
+              ?.title || []
           );
           setSections(
-            additionalReportData[customerAdditionalReportCount]?.sections || []
+            customerAdditionalReportData[customerAdditionalReportCount]
+              ?.sections || []
           );
         } else if (buttonState === 1) {
           // 버튼 상태가 1일 때만 API 요청 실행
@@ -120,7 +128,10 @@ const OrganismCustomerAdditionalReport = ({
           setIsLoadingAdd(true);
           setIsLoading(true);
 
-          const keyword = selectedKeywords[selectedKeywords.length - 1]; // Use the keyword based on expertIndex
+          const keyword =
+            selectedCustomerAdditionalKeyword[
+              selectedCustomerAdditionalKeyword.length - 1
+            ]; // Use the keyword based on expertIndex
 
           const data = {
             business_info: titleOfBusinessInfo,
@@ -132,6 +143,8 @@ const OrganismCustomerAdditionalReport = ({
             },
             question_info: keyword,
           };
+
+          // console.log(data);
 
           const response = await axios.post(
             "https://wishresearch.kr/panels/add_question",
@@ -145,14 +158,14 @@ const OrganismCustomerAdditionalReport = ({
 
           // 새로운 데이터를 배열의 맨 앞에 추가합니다.
           const updatedAdditionalReportData = [
-            ...additionalReportData, // 기존 데이터
+            ...customerAdditionalReportData, // 기존 데이터
             answerData, // 새로 가져온 데이터
           ];
-          setAdditionalReportData(updatedAdditionalReportData);
+          setCustomerAdditionalReportData(updatedAdditionalReportData);
 
           // const updatedConversation = {
           //   ...existingConversation,
-          //   additionalReportData: updatedAdditionalReportData, // 전체 리스트를 저장
+          //   customerAdditionalReportData: updatedAdditionalReportData, // 전체 리스트를 저장
           //   timestamp: Date.now(),
           // };
           await saveConversationToIndexedDB(
@@ -166,7 +179,7 @@ const OrganismCustomerAdditionalReport = ({
               //   strategyReportData_EX1: {},
               //   strategyReportData_EX2: {},
               //   strategyReportData_EX3: {},
-              //   additionalReportData: [],
+              //   customerAdditionalReportData: [],
               //   selectedAdditionalKeywords: [],
               //   timestamp: new Date().toISOString(),
 
@@ -179,10 +192,12 @@ const OrganismCustomerAdditionalReport = ({
               strategyReportData_EX2: expert2ReportData,
               strategyReportData_EX3: expert3ReportData,
               conversation: conversation,
-              selectedAdditionalKeywords: selectedKeywords,
-              // answerData,
-              additionalReportData: updatedAdditionalReportData,
-              conversationStage: 3,
+              selectedAdditionalKeywords: selectedAdditionalKeyword,
+              selectedCustomerAdditionalKeyword:
+                selectedCustomerAdditionalKeyword,
+              additionalReportData: additionalReportData,
+              customerAdditionalReportData: updatedAdditionalReportData,
+              conversationStage: conversationStage,
               timestamp: Date.now(),
               expert_index: selectedExpertIndex,
             },
@@ -193,31 +208,75 @@ const OrganismCustomerAdditionalReport = ({
           setIsLoading(false);
 
           const updatedConversation2 = [...conversation];
-          updatedConversation2.push(
-            {
-              type: "system",
-              message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${
-                selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]
-              }를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
-              expertIndex: 0,
-            },
-            { type: "keyword" }
-          );
+          // console.log(approachPath, conversationStage);
+          if (approachPath === 1 || approachPath === 3) {
+            if (conversationStage === 2) {
+              updatedConversation2.push(
+                {
+                  type: "system",
+                  message:
+                    "비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 지금 바로 전략 보고서를 준비해드려요.",
+                  expertIndex: selectedExpertIndex,
+                },
+                { type: "report_button" }
+              );
+            } else if (conversationStage === 3) {
+              updatedConversation2.push(
+                {
+                  type: "system",
+                  message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${
+                    selectedCustomerAdditionalKeyword[
+                      selectedCustomerAdditionalKeyword.length - 1
+                    ]
+                  }를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
+                  expertIndex: 0,
+                },
+                { type: "keyword" }
+              );
+            }
+          } else if (approachPath === -1 || approachPath === 3) {
+            if (conversationStage === 2) {
+              updatedConversation2.push({
+                type: "system",
+                message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${
+                  selectedCustomerAdditionalKeyword[
+                    selectedCustomerAdditionalKeyword.length - 1
+                  ]
+                }를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
+                expertIndex: 0,
+              });
+            } else if (conversationStage === 3) {
+              updatedConversation2.push(
+                {
+                  type: "system",
+                  message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${
+                    selectedCustomerAdditionalKeyword[
+                      selectedCustomerAdditionalKeyword.length - 1
+                    ]
+                  }를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
+                  expertIndex: 0,
+                },
+                { type: "keyword" }
+              );
+            }
+          }
+
           setConversation(updatedConversation2);
           await saveConversationToIndexedDB(
             {
-              // expertIndex: 0,
               id: conversationId,
               inputBusinessInfo: inputBusinessInfo,
               analysisReportData: analysisReportData,
               strategyReportData_EX1: expert1ReportData,
               strategyReportData_EX2: expert2ReportData,
               strategyReportData_EX3: expert3ReportData,
-              // conversation: conversation,
-              selectedAdditionalKeywords: selectedKeywords,
               conversation: updatedConversation2,
-              conversationStage: 3,
-              additionalReportData: updatedAdditionalReportData,
+              conversationStage: conversationStage,
+              selectedAdditionalKeywords: selectedAdditionalKeyword,
+              selectedCustomerAdditionalKeyword:
+                selectedCustomerAdditionalKeyword,
+              additionalReportData: additionalReportData,
+              customerAdditionalReportData: updatedAdditionalReportData,
               timestamp: Date.now(),
               expert_index: selectedExpertIndex,
             },
@@ -234,7 +293,7 @@ const OrganismCustomerAdditionalReport = ({
     loadData();
   }, [
     conversationId,
-    selectedKeywords,
+    selectedCustomerAdditionalKeyword,
     buttonState, // buttonState 의존성 추가
   ]);
 
@@ -273,7 +332,7 @@ const OrganismCustomerAdditionalReport = ({
 
           {!isLoadingAdd && (
             <MoleculeReportController
-              reportIndex={2}
+              reportIndex={3}
               conversationId={conversationId}
               sampleData={answerData}
               additionalReportCount={customerAdditionalReportCount}

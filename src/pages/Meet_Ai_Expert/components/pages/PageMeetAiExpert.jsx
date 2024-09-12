@@ -29,6 +29,8 @@ import {
   CONVERSATION,
   BUTTON_STATE,
   CONVERSATION_ID,
+  SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
+  CUSTOMER_ADDITIONAL_REPORT_DATA,
 } from "../../../AtomStates";
 
 import { Link } from "react-router-dom";
@@ -100,6 +102,13 @@ const PageMeetAiExpert = () => {
     ADDITIONAL_QUESTION_3
   );
 
+  const [
+    selectedCustomerAdditionalKeyword,
+    setSelectedCustomerAdditionalKeyword,
+  ] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
+  const [customerAdditionalReportData, setCustomerAdditionalReportData] =
+    useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
+
   const [inputAdditionalQuestion, setInputAdditionalQuestion] = useState("");
   const [isClickCheckReportRightAway, setIsClickCheckReportRightAway] = useAtom(
     iS_CLICK_CHECK_REPORT_RIGHTAWAY
@@ -134,6 +143,7 @@ const PageMeetAiExpert = () => {
     setSelectedAdditionalKeyword([]);
     setApproachPath(0);
     setAdditionalReportData([]);
+    setCustomerAdditionalReportData([]);
     setExpert1ReportData({});
     setExpert2ReportData({});
     setExpert3ReportData({});
@@ -141,6 +151,7 @@ const PageMeetAiExpert = () => {
     setAddtionalQuestion2("");
     setAddtionalQuestion3("");
     setInputAdditionalQuestion("");
+    setSelectedCustomerAdditionalKeyword([]);
     setIsClickCheckReportRightAway(false);
   }, []);
 

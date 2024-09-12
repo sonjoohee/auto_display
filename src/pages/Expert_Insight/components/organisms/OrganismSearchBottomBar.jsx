@@ -5,11 +5,19 @@ import styled, { css } from "styled-components";
 import images from "../../../../assets/styles/Images"; // Search.svg 이미지 import
 import { palette } from "../../../../assets/styles/Palette";
 import { InputField } from "../../../../assets/styles/Input";
+import { useAtom } from "jotai";
+import {
+  IS_LOADING,
+  CONVERSATION_STAGE,
+  CUSTOMER_ADDITION_BUTTON_STATE,
+} from "../../../AtomStates";
 
-const OrganismSearchBottomBar = ({ onSearch }) => {
+const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
+  const [isLoading, setIsLoading] = useAtom(IS_LOADING);
+  const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
+  const [buttonState, setButtonState] = useAtom(CUSTOMER_ADDITION_BUTTON_STATE);
+
   const [inputValue, setInputValue] = useState("");
-  const [inputFocused, setInputFocused] = useState(false);
-
   const [isPopupRegex, setIsPopupRegex] = useState(false);
   const [isPopupRegex2, setIsPopupRegex2] = useState(false);
 
@@ -25,6 +33,8 @@ const OrganismSearchBottomBar = ({ onSearch }) => {
   };
 
   const handleSearch = () => {
+    if (isLoading) return;
+
     const regex = /^[가-힣a-zA-Z0-9\s.,'"-]*$/;
     if (!regex.test(inputValue)) {
       setIsPopupRegex(true);
@@ -34,6 +44,7 @@ const OrganismSearchBottomBar = ({ onSearch }) => {
       setIsPopupRegex2(true);
       return;
     }
+
     if (onSearch) {
       onSearch(inputValue);
     }
@@ -53,7 +64,7 @@ const OrganismSearchBottomBar = ({ onSearch }) => {
         <button type="button" onClick={handleSearch}>검색</button>
       </SearchBar> */}
 
-        <SearchBar Blue={inputFocused}>
+        <SearchBar isBlue={isBlue}>
           <svg
             width="20"
             height="20"
@@ -71,14 +82,23 @@ const OrganismSearchBottomBar = ({ onSearch }) => {
 
           <InputField
             None
-            placeholder="당신의 아이템 또는 프로젝트 아이디어를 적어 주세요 (예: 원격 근무자를 위한 생산성 관리 툴)"
+            isBlue
+            placeholder={
+              isBlue
+                ? "더 알고 싶은 내용이 있으신가요? 추가 질문으로 더 많은 인사이트를 얻어보세요"
+                : "당신의 아이템 또는 프로젝트 아이디어를 적어 주세요 (예: 원격 근무자를 위한 생산성 관리 툴)"
+            }
             value={inputValue}
             onChange={handleInputChange}
-            onFocus={() => setInputFocused(true)}
-            onBlur={() => setInputFocused(false)}
           />
 
-          <button type="button" onClick={handleSearch}>
+          <button
+            type="button"
+            onClick={() => {
+              setButtonState(1);
+              handleSearch();
+            }}
+          >
             검색
           </button>
         </SearchBar>
@@ -211,18 +231,18 @@ const SearchBar = styled.div`
   border-radius: 50px;
   border: 2px solid
     ${(props) => {
-      if (props.Blue) return `${palette.blue}`;
+      if (props.isBlue) return `${palette.blue}`;
       else return `${palette.black}`;
     }};
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
   background: ${(props) => {
-    if (props.Blue) return `#F5F9FF`;
+    if (props.isBlue) return `#F5F9FF`;
     else return `#F6F6F6`;
   }};
 
   svg path {
     fill: ${(props) => {
-      if (props.Blue) return `${palette.blue}`;
+      if (props.isBlue) return `${palette.blue}`;
       else return `${palette.black}`;
     }};
   }
@@ -243,7 +263,7 @@ const SearchBar = styled.div`
     margin-left: auto;
     border: 0;
     background: ${(props) => {
-      if (props.Blue)
+      if (props.isBlue)
         return `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='31' height='31' viewBox='0 0 31 31' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M1.88734 14.3697C0.259917 13.7575 0.567134 11.3198 2.35637 10.6482L28.5477 0.817949C30.0984 0.235928 31.4234 1.55184 30.8519 3.1065L21.2006 29.3643C20.5413 31.158 18.1056 31.4819 17.4823 29.8587L13.1637 18.6115L1.88734 14.3697ZM15.5225 17.8009L19.3606 27.7966L28.3608 3.31043L3.93658 12.4774L13.9582 16.2472L21.6131 8.53997C22.0023 8.14812 22.6354 8.14596 23.0273 8.53515L23.1726 8.67946C23.5644 9.06865 23.5666 9.70181 23.1774 10.0937L15.5225 17.8009Z' fill='%230453F4'/%3E%3C/svg%3E")`;
       else
         return `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='31' height='31' viewBox='0 0 31 31' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M1.88734 14.3697C0.259917 13.7575 0.567134 11.3198 2.35637 10.6482L28.5477 0.817949C30.0984 0.235928 31.4234 1.55184 30.8519 3.1065L21.2006 29.3643C20.5413 31.158 18.1056 31.4819 17.4823 29.8587L13.1637 18.6115L1.88734 14.3697ZM15.5225 17.8009L19.3606 27.7966L28.3608 3.31043L3.93658 12.4774L13.9582 16.2472L21.6131 8.53997C22.0023 8.14812 22.6354 8.14596 23.0273 8.53515L23.1726 8.67946C23.5644 9.06865 23.5666 9.70181 23.1774 10.0937L15.5225 17.8009Z' fill='black'/%3E%3C/svg%3E")`;
@@ -253,7 +273,7 @@ const SearchBar = styled.div`
 
     &:hover {
       background: ${(props) => {
-        if (props.Blue)
+        if (props.isBlue)
           return `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='31' viewBox='0 0 30 31' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M29.737 2.32621C30.0624 1.50773 29.2619 0.692681 28.4499 1.01581L0.630328 12.0871C-0.175495 12.4078 -0.219121 13.5441 0.559696 13.9269L10.1873 18.6582L18.5772 12.3685L12.5576 21.0251L16.7796 30.3636C17.1428 31.167 18.281 31.1402 18.6069 30.3205L29.737 2.32621Z' fill='%230453F4'/%3E%3C/svg%3E")`;
         else
           return `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='31' viewBox='0 0 30 31' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M29.737 2.32621C30.0624 1.50773 29.2619 0.692681 28.4499 1.01581L0.630328 12.0871C-0.175495 12.4078 -0.219121 13.5441 0.559696 13.9269L10.1873 18.6582L18.5772 12.3685L12.5576 21.0251L16.7796 30.3636C17.1428 31.167 18.281 31.1402 18.6069 30.3205L29.737 2.32621Z' fill='black'/%3E%3C/svg%3E")`;
