@@ -491,12 +491,13 @@ const PageExpertInsight = () => {
     if (
       (conversationId &&
         conversationId.length >= 2 &&
-        selectedAdditionalKeyword,
-      !isLoading)
+        selectedAdditionalKeyword &&
+        !isLoading &&
+        approachPath !== 2)
     ) {
       handleSearch(-1);
     }
-  }, [selectedAdditionalKeyword, isLoading]);
+  }, [selectedAdditionalKeyword]);
   // useEffect(() => {
   //   console.log(22222222)
   //   if (selectedAdditionalKeyword) handleSearch(-1);
@@ -513,7 +514,7 @@ const PageExpertInsight = () => {
     ) {
       handleSearch(-1);
     }
-  }, [selectedExpertIndex, isLoading]);
+  }, [selectedExpertIndex]);
 
   useEffect(() => {
     if (
@@ -524,7 +525,7 @@ const PageExpertInsight = () => {
     ) {
       handleSearch(-1);
     }
-  }, [isClickCheckReportRightAway, isLoading]);
+  }, [isClickCheckReportRightAway]);
 
   const handleSearch = async (inputValue) => {
     if (isLoggedIn) {
@@ -564,11 +565,9 @@ const PageExpertInsight = () => {
     } else if (conversationStage > 1 && inputValue !== -1) {
       if (
         (updatedConversation.length > 0 &&
-          approachPath !== 2 &&
           updatedConversation[updatedConversation.length - 1].type ===
             "keyword") ||
         (updatedConversation.length > 0 &&
-          approachPath !== 2 &&
           updatedConversation[updatedConversation.length - 1].type ===
             "report_button")
       ) {
@@ -592,28 +591,26 @@ const PageExpertInsight = () => {
       );
     } else if (conversationStage === 2 && titleOfBusinessInfo) {
       // 기존 대화에서 이어나가는 경우 처리
-      if (approachPath === 2) {
-        newConversationStage = 2;
-        if (
-          selectedExpertIndex === "1" ||
-          selectedExpertIndex === "2" ||
-          selectedExpertIndex === "3"
-        ) {
-          // updatedConversation.push(
-          //   { type: "report_button" }
-          // );
-          // newConversationStage = 2;
-          setApproachPath(3);
-        }
-      } else {
+      // if (approachPath === 2) {
+      //   newConversationStage = 2;
+      //   if (
+      //     selectedExpertIndex === "1" ||
+      //     selectedExpertIndex === "2" ||
+      //     selectedExpertIndex === "3"
+      //   ) {
+      //     // updatedConversation.push(
+      //     //   { type: "report_button" }
+      //     // );
+      //     // newConversationStage = 2;
+      //     setApproachPath(3);
+      //   }
+      // } else {
         // 일반적인 경우 처리
         if (
           (updatedConversation.length > 0 &&
-            approachPath !== 2 &&
             updatedConversation[updatedConversation.length - 1].type ===
               "keyword") ||
           (updatedConversation.length > 0 &&
-            approachPath !== 2 &&
             updatedConversation[updatedConversation.length - 1].type ===
               "report_button")
         ) {
@@ -662,22 +659,20 @@ const PageExpertInsight = () => {
         }
         updatedConversation.push({ type: `strategy_${selectedExpertIndex}` });
         newConversationStage = 3;
-      }
+      // }
     } else if (conversationStage === 3) {
-      if (approachPath === 2) {
-        newConversationStage = 3;
-        // updatedConversation.push(
-        //   { type: "keyword" }
-        // );
-        // setApproachPath(3);
-      } else {
+      // if (approachPath === 2) {
+      //   newConversationStage = 3;
+      //   // updatedConversation.push(
+      //   //   { type: "keyword" }
+      //   // );
+      //   // setApproachPath(3);
+      // } else {
         if (
           (updatedConversation.length > 0 &&
-            approachPath !== 2 &&
             updatedConversation[updatedConversation.length - 1].type ===
               "keyword") ||
           (updatedConversation.length > 0 &&
-            approachPath !== 2 &&
             updatedConversation[updatedConversation.length - 1].type ===
               "report_button")
         ) {
@@ -694,7 +689,7 @@ const PageExpertInsight = () => {
           { type: `addition`, addition_index: additionalReportCount }
         );
       }
-    }
+    // }
     // console.log(
     //   "🚀 ~ handleSearch ~ updatedConversation:",
     //   updatedConversation
