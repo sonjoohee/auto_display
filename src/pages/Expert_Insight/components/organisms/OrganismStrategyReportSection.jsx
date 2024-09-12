@@ -400,6 +400,7 @@ const Section = ({ title, content, isLast, expertIndex }) => {
         !(
           title === "주요 차별화 요소" ||
           title === "차별화 전략 제안" ||
+          title === "제안 사항" ||
           title === "경쟁 압박 대처 방안" ||
           title === "시장 위치 평가 및 경쟁자 분석" ||
           title === "장기적인 경쟁 우위 전략"
@@ -410,6 +411,22 @@ const Section = ({ title, content, isLast, expertIndex }) => {
           </strong>
         )}
 
+{title === "제안 사항" && (
+        <>
+          <strong>
+            <img src={images.Check} alt="" />
+            {title}
+          </strong>
+          {/* subTitle : text 형태로 넘버링 추가하여 출력 */}
+          {content.map((item, index) => (
+            <div key={index} style={{ marginBottom: '10px' }}> {/* 각 요소에 마진 추가 */}
+              <p>
+                {index + 1}. {item.subTitle} : {item.text}
+              </p>
+            </div>
+          ))}
+        </>
+      )}
 
     {/* "시장 위치 평가 및 경쟁자 분석"일 때 별도의 처리 */}
     {title === "시장 위치 평가 및 경쟁자 분석" && (
@@ -484,6 +501,7 @@ const Section = ({ title, content, isLast, expertIndex }) => {
       {/* "특징", "차별화 요소", "경쟁 분석"이 아닌 경우 기존 방식대로 처리 */}
       {title !== "특징" &&
         title !== "차별화 요소" &&
+        title !== "제안 사항" &&
         title !== "시장 위치 평가 및 경쟁자 분석" &&
         title !== "주요 차별화 요소" &&
         title !== "차별화 전략 제안" &&
