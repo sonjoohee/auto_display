@@ -48,6 +48,7 @@ import OrganismBizExpertSelect from "../organisms/OrganismBizExpertSelect";
 import MoleculeAdditionalKeyword from "../molecules/MoleculeAdditionalKeyword";
 import OrganismAdditionalReport from "../organisms/OrganismAdditionalReport";
 import MoleculeCheckReportRightAway from "../molecules/MoleculeCheckReportRightAway";
+import OrganismCustomerAdditionalReport from "../organisms/OrganismCustomerAdditionalReport";
 
 const PageExpertInsight = () => {
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
@@ -85,6 +86,7 @@ const PageExpertInsight = () => {
   //   ADDITIONAL_REPORT_COUNT
   // );
   let additionalReportCount = 0;
+  let customerAdditionalReportCount = 0;
   const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
     SELECTED_ADDITIONAL_KEYWORD
   );
@@ -735,6 +737,27 @@ const PageExpertInsight = () => {
                       // }
                     />
                   );
+                } else if (item.type === "customerAddition") {
+                  // console.log("🚀 ~ {conversation?.map ~ item:", item, index);
+                  // const expertIndex = item.type.split("_")[1];
+                  const currentCustomerAdditionalReportCount =
+                    customerAdditionalReportCount++;
+
+                  return (
+                    <OrganismCustomerAdditionalReport
+                      customerAdditionalReportCount={
+                        currentCustomerAdditionalReportCount
+                      }
+                      // key={`addition_${expertIndex}_${index}`}
+                      conversationId={conversationId}
+                      // expertIndex={expertIndex}
+                      // keyword={
+                      //   selectedAdditionalKeyword[
+                      //   selectedAdditionalKeyword.length - 1
+                      //   ]
+                      // }
+                    />
+                  );
                 } else if (item.type === "keyword") {
                   return <MoleculeAdditionalKeyword />;
                 } else if (item.type === "report_button") {
@@ -762,9 +785,10 @@ const PageExpertInsight = () => {
               )} */}
             </ChatWrap>
 
-            {(approachPath === 1 || approachPath === 2) && conversationStage == 1 && (
-              <OrganismSearchBottomBar onSearch={handleSearch} />
-            )}
+            {(approachPath === 1 || approachPath === 2) &&
+              conversationStage == 1 && (
+                <OrganismSearchBottomBar onSearch={handleSearch} />
+              )}
           </div>
 
           <OrganismRightSideBar />
