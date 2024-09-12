@@ -418,7 +418,7 @@ const Section = ({ title, content, isLast, expertIndex }) => {
             <SeparateSection key={index}>
               <strong>
                 <span className="number">{index + 1}</span> {/* 번호 추가 */}
-                {`${title} : ${item.subTitle}`}
+                <strong_title>{`${title} : ${item.subTitle}`}</strong_title> {/* 이 부분만 bold 처리 */}
               </strong>
               <p>{item.text}</p>
 
@@ -526,6 +526,15 @@ const SeparateSection = styled.div`
     margin-bottom: 10px;
     font-size: 0.875rem;
     font-weight: 400;
+    color: ${palette.darkGray};
+  }
+
+  strong_title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    font-weight: 700;
     color: ${palette.darkGray};
   }
 
