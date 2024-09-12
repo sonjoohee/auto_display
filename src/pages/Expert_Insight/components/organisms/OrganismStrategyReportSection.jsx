@@ -334,7 +334,8 @@ const Section = ({ title, content, isLast, expertIndex }) => {
   // 서브 타이틀이 있는 항목과 없는 항목을 분리
   const subTitleItems = content.filter((item) => item.subTitle);
   const nonSubTitleItems = content.filter((item) => !item.subTitle);
-
+  const summaryItem = content.find((item) => item.title === "총평");
+  const subItems = content.filter((item) => item.subTitle);
   // subText에서 ':'로 분리하여 subTitle과 text를 따로 처리
   const splitText = (text) => {
     const [subTitle, ...rest] = text.split(":");
@@ -402,6 +403,10 @@ const Section = ({ title, content, isLast, expertIndex }) => {
           title === "차별화 전략 제안" ||
           title === "제안 사항" ||
           title === "경쟁 압박 대처 방안" ||
+          title === "브랜드 전략분석" ||
+          title === "브랜드 아이덴티티" ||
+          title === "소비자 인식 관리 방안" ||
+          title === "브랜드 신뢰도 구축 방안" ||
           title === "시장 위치 평가 및 경쟁자 분석" ||
           title === "장기적인 경쟁 우위 전략"
         ) && (
@@ -411,7 +416,7 @@ const Section = ({ title, content, isLast, expertIndex }) => {
           </strong>
         )}
 
-{title === "제안 사항" && (
+    {title === "제안 사항" && (
         <>
           <strong>
             <img src={images.Check} alt="" />
@@ -427,6 +432,99 @@ const Section = ({ title, content, isLast, expertIndex }) => {
           ))}
         </>
       )}
+
+  {title === "브랜드 전략분석" && (
+        <>
+          {/* 제목과 총평 출력 */}
+          <strong>
+            <img src={images.Check} alt="" />
+            {title}
+          </strong>
+
+          {summaryItem && (
+            <p style={{ marginBottom: '15px' }}>{summaryItem.text}</p> // 총평 텍스트를 제목 밑에 표시
+          )}
+
+          {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
+          <div style={{ backgroundColor: 'white', padding: '15px', borderRadius: '10px' }}>
+            {subItems.map((item, index) => (
+              <div key={index} style={{ marginBottom: '10px' }}> {/* 각 항목 간 마진 추가 */}
+                <p>
+                  - {item.subTitle} : {item.text}
+                </p>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {title === "브랜드 아이덴티티" && (
+        <>
+          {/* 제목과 총평 출력 */}
+          <strong>
+            <img src={images.Check} alt="" />
+            {title}
+          </strong>
+
+          {summaryItem && (
+            <p style={{ marginBottom: '15px' }}>{summaryItem.text}</p> // 총평 텍스트를 제목 밑에 표시
+          )}
+
+          {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
+          <div style={{ backgroundColor: 'white', padding: '15px', borderRadius: '10px' }}>
+            {subItems.map((item, index) => (
+              <div key={index} style={{ marginBottom: '10px' }}> {/* 각 항목 간 마진 추가 */}
+                <p>
+                  - {item.subTitle} : {item.text}
+                </p>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {title === "브랜드 신뢰도 구축 방안" && (
+        <>
+          {/* 제목 출력 */}
+          <strong>
+            <img src={images.Check} alt="" />
+            {title}
+          </strong>
+
+          {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
+          <div style={{ padding: '15px', borderRadius: '10px' }}>
+            {subItems.map((item, index) => (
+              <div key={index} style={{ marginBottom: '10px' }}> {/* 각 항목 간 마진 추가 */}
+                <p>
+                  - {item.subTitle} : {item.text}
+                </p>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {title === "소비자 인식 관리 방안" && (
+              <>
+                {/* 제목 출력 */}
+                <strong>
+                  <img src={images.Check} alt="" />
+                  {title}
+                </strong>
+
+                {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
+                <div style={{ padding: '15px', borderRadius: '10px' }}>
+                  {subItems.map((item, index) => (
+                    <div key={index} style={{ marginBottom: '10px' }}> {/* 각 항목 간 마진 추가 */}
+                      <p>
+                        - {item.subTitle} : {item.text}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+
 
     {/* "시장 위치 평가 및 경쟁자 분석"일 때 별도의 처리 */}
     {title === "시장 위치 평가 및 경쟁자 분석" && (
@@ -504,6 +602,10 @@ const Section = ({ title, content, isLast, expertIndex }) => {
         title !== "제안 사항" &&
         title !== "시장 위치 평가 및 경쟁자 분석" &&
         title !== "주요 차별화 요소" &&
+        title !== "브랜드 전략분석" &&
+        title !== "브랜드 아이덴티티" &&
+        title !== "브랜드 신뢰도 구축 방안" &&
+        title !== "소비자 인식 관리 방안" &&
         title !== "차별화 전략 제안" &&
         title !== "경쟁사 대비 차별화 전략" &&
         title !== "경쟁 압박 대처 방안" &&
