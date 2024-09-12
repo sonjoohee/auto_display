@@ -407,6 +407,8 @@ const Section = ({ title, content, isLast, expertIndex }) => {
           title === "브랜드 아이덴티티" ||
           title === "소비자 인식 관리 방안" ||
           title === "브랜드 신뢰도 구축 방안" ||
+          title === "경쟁사 분석 및 차별화 전략" ||
+
           title === "시장 위치 평가 및 경쟁자 분석" ||
           title === "장기적인 경쟁 우위 전략"
         ) && (
@@ -482,6 +484,36 @@ const Section = ({ title, content, isLast, expertIndex }) => {
           </div>
         </>
       )}
+      
+      {title === "경쟁사 분석 및 차별화 전략" && (
+        <>
+          {/* 제목과 총평 출력 */}
+          <strong>
+            <img src={images.Check} alt="" />
+            {title}
+          </strong>
+
+          {/* 총평 항목 필터링 */}
+          {content
+              .filter((item) => item.title === "경쟁사 분석 및 차별화 전략 설명")
+              .map((summaryItem, index) => (
+                <p key={index} style={{ marginBottom: '15px' }}>
+                  {summaryItem.text} {/* 총평 텍스트를 제목 밑에 표시 */}
+                </p>
+              ))}
+
+          {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
+          <div style={{ backgroundColor: 'white', padding: '15px', borderRadius: '10px' }}>
+            {subItems.map((item, index) => (
+              <div key={index} style={{ marginBottom: '10px' }}> {/* 각 항목 간 마진 추가 */}
+                <p>
+                  - {item.subTitle} : {item.text}
+                </p>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
 
       {title === "브랜드 신뢰도 구축 방안" && (
         <>
@@ -491,7 +523,7 @@ const Section = ({ title, content, isLast, expertIndex }) => {
             {title}
           </strong>
 
-          {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
+          {/* subTitle : text 형태로 기본 박스 안에 출력 */}
           <div style={{ padding: '15px', borderRadius: '10px' }}>
             {subItems.map((item, index) => (
               <div key={index} style={{ marginBottom: '10px' }}> {/* 각 항목 간 마진 추가 */}
@@ -512,7 +544,7 @@ const Section = ({ title, content, isLast, expertIndex }) => {
                   {title}
                 </strong>
 
-                {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
+                {/* subTitle : text 형태로 기본 박스 안에 출력 */}
                 <div style={{ padding: '15px', borderRadius: '10px' }}>
                   {subItems.map((item, index) => (
                     <div key={index} style={{ marginBottom: '10px' }}> {/* 각 항목 간 마진 추가 */}
@@ -607,6 +639,8 @@ const Section = ({ title, content, isLast, expertIndex }) => {
         title !== "브랜드 신뢰도 구축 방안" &&
         title !== "소비자 인식 관리 방안" &&
         title !== "차별화 전략 제안" &&
+        title !== "경쟁사 분석 및 차별화 전략" &&
+
         title !== "경쟁사 대비 차별화 전략" &&
         title !== "경쟁 압박 대처 방안" &&
         title !== "장기적인 경쟁 우위 전략" && (
@@ -823,6 +857,10 @@ const BoxWrap = styled.div`
     props.isLast
       ? palette.white
       : "rgba(0, 0, 0, 0.04)"}; /* 마지막 섹션은 흰색 배경 */
+
+  + div {
+    margin-top: 12px;
+  }
 
   strong {
     display: flex;
