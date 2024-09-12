@@ -29,6 +29,8 @@ import {
   CONVERSATION_ID,
   ADDITIONAL_REPORT_COUNT,
   SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
+  CUSTOMER_ADDITION_BUTTON_STATE,
+  CUSTOMER_ADDITIONAL_REPORT_DATA,
 } from "../../../AtomStates";
 
 import {
@@ -91,9 +93,15 @@ const PageExpertInsight = () => {
   const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
     SELECTED_ADDITIONAL_KEYWORD
   );
-  const [selectedCustomerAdditionalKeyword, setSelectedCustomerAdditionalKeyword] = useAtom(
-    SELECTED_CUSTOMER_ADDITIONAL_KEYWORD
-  );
+
+  const [
+    selectedCustomerAdditionalKeyword,
+    setSelectedCustomerAdditionalKeyword,
+  ] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
+
+  const [customerAdditionalReportData, setCustomerAdditionalReportData] =
+    useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
+
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
 
   const [additionalReportData, setAdditionalReportData] = useAtom(
@@ -207,7 +215,13 @@ const PageExpertInsight = () => {
             ...selectedAdditionalKeyword,
           ]
         : selectedAdditionalKeyword;
-
+    const updatedSelectedCustomerAdditionalKeyword =
+      existingData?.selectedCustumoerdditionalKeyword
+        ? [
+            ...existingData.selectedCustumoerdditionalKeyword,
+            ...selectedCustomerAdditionalKeyword,
+          ]
+        : selectedCustomerAdditionalKeyword;
     saveConversationToIndexedDB(
       {
         id: conversationId,
@@ -217,6 +231,9 @@ const PageExpertInsight = () => {
         analysisReportData,
         selectedAdditionalKeyword: updatedSelectedAdditionalKeyword,
         additionalReportData, // Save the entire list of additional reports
+        customerAdditionalReportCount,
+        selectedCustomerAdditionalKeyword:
+          updatedSelectedCustomerAdditionalKeyword,
         ...existingReports,
         timestamp: Date.now(),
         expert_index: selectedExpertIndex,
@@ -306,6 +323,12 @@ const PageExpertInsight = () => {
             );
             setSelectedAdditionalKeyword(
               savedConversation.selectedAdditionalKeyword || []
+            );
+            setSelectedCustomerAdditionalKeyword(
+              savedConversation.selectedCustomerAdditionalKeyword || []
+            );
+            setCustomerAdditionalReportData(
+              savedConversation.customerAdditionalReportData || []
             );
 
             // 대화 단계가 초기 상태라면 초기 시스템 메시지 설정
@@ -539,32 +562,34 @@ const PageExpertInsight = () => {
         newConversationStage = 2;
       }
     } else if (conversationStage > 1 && inputValue !== -1) {
-        if (
-          (updatedConversation.length > 0 &&
-            approachPath !== 2 &&
-            updatedConversation[updatedConversation.length - 1].type ===
-              "keyword") ||
-          (updatedConversation.length > 0 &&
-            approachPath !== 2 &&
-            updatedConversation[updatedConversation.length - 1].type ===
-              "report_button")
-        ) {
-          updatedConversation.pop();
+      if (
+        (updatedConversation.length > 0 &&
+          approachPath !== 2 &&
+          updatedConversation[updatedConversation.length - 1].type ===
+            "keyword") ||
+        (updatedConversation.length > 0 &&
+          approachPath !== 2 &&
+          updatedConversation[updatedConversation.length - 1].type ===
+            "report_button")
+      ) {
+        updatedConversation.pop();
+      }
+
+      // 임시로 키워드 설정
+      const updatedKeywords = [...selectedCustomerAdditionalKeyword];
+      updatedKeywords.push("우리 산업의 강점과 약점 파악하기");
+      setSelectedCustomerAdditionalKeyword(updatedKeywords);
+
+      updatedConversation.push(
+        {
+          type: "user",
+          message: inputValue,
+        },
+        {
+          type: `customerAddition`,
+          addition_index: customerAdditionalReportCount,
         }
-
-        // 임시로 키워드 설정
-        const updatedKeywords = [...selectedCustomerAdditionalKeyword];
-        updatedKeywords.push("우리 산업의 강점과 약점 파악하기");
-        setSelectedCustomerAdditionalKeyword(updatedKeywords);
-
-        updatedConversation.push(
-          {
-            type: "user",
-            message: inputValue,
-          },
-          { type: `customerAddition`, addition_index: customerAdditionalReportCount }
-        )
-        
+      );
     } else if (conversationStage === 2 && titleOfBusinessInfo) {
       // 기존 대화에서 이어나가는 경우 처리
       if (approachPath === 2) {
@@ -810,12 +835,11 @@ const PageExpertInsight = () => {
               )} */}
             </ChatWrap>
 
-            {conversationStage === 1 ?
-              <OrganismSearchBottomBar onSearch={handleSearch} isBlue={false}/> 
-            : 
-              <OrganismSearchBottomBar onSearch={handleSearch} isBlue={true}/>
-            }
-
+            {conversationStage === 1 ? (
+              <OrganismSearchBottomBar onSearch={handleSearch} isBlue={false} />
+            ) : (
+              <OrganismSearchBottomBar onSearch={handleSearch} isBlue={true} />
+            )}
           </div>
 
           <OrganismRightSideBar />

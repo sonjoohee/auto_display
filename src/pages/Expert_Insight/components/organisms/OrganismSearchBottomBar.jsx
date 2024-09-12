@@ -9,13 +9,13 @@ import { useAtom } from "jotai";
 import {
   IS_LOADING,
   CONVERSATION_STAGE,
-  BUTTON_STATE,
+  CUSTOMER_ADDITION_BUTTON_STATE,
 } from "../../../AtomStates";
 
 const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
-  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
+  const [buttonState, setButtonState] = useAtom(CUSTOMER_ADDITION_BUTTON_STATE);
 
   const [inputValue, setInputValue] = useState("");
   const [isPopupRegex, setIsPopupRegex] = useState(false);
@@ -33,7 +33,7 @@ const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
   };
 
   const handleSearch = () => {
-    if(isLoading) return;
+    if (isLoading) return;
 
     const regex = /^[가-힣a-zA-Z0-9\s.,'"-]*$/;
     if (!regex.test(inputValue)) {
@@ -82,17 +82,23 @@ const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
 
           <InputField
             None
-            isBlue 
+            isBlue
             placeholder={
-              isBlue 
-                ? "더 알고 싶은 내용이 있으신가요? 추가 질문으로 더 많은 인사이트를 얻어보세요" 
+              isBlue
+                ? "더 알고 싶은 내용이 있으신가요? 추가 질문으로 더 많은 인사이트를 얻어보세요"
                 : "당신의 아이템 또는 프로젝트 아이디어를 적어 주세요 (예: 원격 근무자를 위한 생산성 관리 툴)"
             }
             value={inputValue}
             onChange={handleInputChange}
           />
 
-          <button type="button" onClick={() => {setButtonState(1); handleSearch();}}>
+          <button
+            type="button"
+            onClick={() => {
+              setButtonState(1);
+              handleSearch();
+            }}
+          >
             검색
           </button>
         </SearchBar>

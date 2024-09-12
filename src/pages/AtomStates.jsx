@@ -240,6 +240,7 @@ export const BUTTON_STATE = atom(0);
 export const ANALYSIS_BUTTON_STATE = atom(0);
 export const EXPERT_BUTTON_STATE = atom(0);
 export const ADDITION_BUTTON_STATE = atom(0);
+export const CUSTOMER_ADDITION_BUTTON_STATE = atom(0);
 
 export const iS_CLICK_CHECK_REPORT_RIGHTAWAY = atom(false);
 
