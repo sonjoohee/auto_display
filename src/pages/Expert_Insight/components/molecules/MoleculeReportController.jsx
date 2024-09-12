@@ -251,7 +251,7 @@ const MoleculeReportController = ({
     } else if (reportIndex === 2) {
       reportData = sampleData;
       business_info = reportData?.title || "Unknown Title";
-    }
+    } else return;
 
     // API에 저장 요청
     try {

@@ -18,6 +18,8 @@ import {
   EXPERT2_REPORT_DATA,
   EXPERT3_REPORT_DATA,
   INPUT_BUSINESS_INFO,
+  SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
+  CUSTOMER_ADDITIONAL_REPORT_DATA,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -91,6 +93,9 @@ const OrganismAdditionalReport = ({
     },
     withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
   };
+
+  const [selectedCustomerAdditionalKeyword, setSelectedCustomerAdditionalKeyword] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
+  const [customerAdditionalReportData, setCustomerAdditionalReportData] = useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
 
   // const additionalReportAtom = strategyReportAtomMap[expertIndex] || ADDITIONAL_REPORT_DATA1;
   // const [additionalReportData, setAdditionalReportData] = useAtom(additionalReportAtom);
@@ -175,8 +180,9 @@ const OrganismAdditionalReport = ({
               strategyReportData_EX3: expert3ReportData,
               conversation: conversation,
               selectedAdditionalKeywords: selectedKeywords,
-              // answerData,
+              selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
               additionalReportData: updatedAdditionalReportData,
+              customerAdditionalReportData: customerAdditionalReportData,
               conversationStage: 3,
               timestamp: Date.now(),
               expert_index: selectedExpertIndex,
@@ -208,7 +214,8 @@ const OrganismAdditionalReport = ({
               strategyReportData_EX1: expert1ReportData,
               strategyReportData_EX2: expert2ReportData,
               strategyReportData_EX3: expert3ReportData,
-              // conversation: conversation,
+              selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
+              customerAdditionalReportData: customerAdditionalReportData,
               selectedAdditionalKeywords: selectedKeywords,
               conversation: updatedConversation2,
               conversationStage: 3,
