@@ -34,6 +34,7 @@ import {
   BUTTON_STATE,
   SELECTED_EXPERT_INDEX,
   REPORT_REFRESH_TRIGGER,
+  IS_LOADING,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -42,6 +43,7 @@ import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/Molec
 import OrganismReportPopup from "./OrganismReportPopup"; // 팝업 컴포넌트 임포트
 
 const OrganismLeftSideBar = () => {
+  const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const navigate = useNavigate();
   const [bizName] = useAtom(INPUT_BUSINESS_INFO);
   // const [savedReports] = useAtom(SAVED_REPORTS);
@@ -159,6 +161,7 @@ const OrganismLeftSideBar = () => {
   }, [historyEditBoxRef]);
 
   const editBoxToggle = (index) => {
+    if (isLoading) return;
     // 현재 열려 있는 항목을 확인하고 상태를 토글합니다.
     setEditToggleIndex((prevIndex) => (prevIndex === index ? null : index));
 
@@ -268,6 +271,8 @@ const OrganismLeftSideBar = () => {
   //   navigate(`/conversation/${id}`);
   // };
   const handleConversationClick = async (conversationId) => {
+    if (isLoading) return;
+
     try {
       const accessToken = sessionStorage.getItem("accessToken");
       const response = await axios.get(
@@ -280,7 +285,7 @@ const OrganismLeftSideBar = () => {
       );
 
       const chatData = response.data.chat_data;
-      console.log("🚀 ~ handleConversationClick ~ chatData:", chatData);
+      // console.log("🚀 ~ handleConversationClick ~ chatData:", chatData);
       setSelectedExpertIndex(
         chatData.expert_index !== undefined ? chatData.expert_index : 0
       );
@@ -310,7 +315,7 @@ const OrganismLeftSideBar = () => {
 
       // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
       // set어프로치패스(2)
-      setApproachPath(2)
+      setApproachPath(2);
       // 페이지를 대화가 이어지는 형태로 전환
       navigate(`/conversation/${conversationId}`);
     } catch (error) {
@@ -392,7 +397,6 @@ const OrganismLeftSideBar = () => {
       );
 
       // 삭제가 성공적으로 이루어진 경우 처리할 코드
-      console.log("삭제 성공:", response.data);
 
       // 삭제 후에 상태 업데이트 (예: 삭제된 항목을 리스트에서 제거)
       setReports((prevReports) =>
@@ -421,7 +425,6 @@ const OrganismLeftSideBar = () => {
       );
 
       // 삭제가 성공적으로 이루어진 경우 처리할 코드
-      console.log("삭제 성공:", response.data);
 
       // 삭제 후에 상태 업데이트 (예: 삭제된 항목을 리스트에서 제거)
       setReports((prevReports) =>
@@ -484,6 +487,8 @@ const OrganismLeftSideBar = () => {
   // };
 
   const handleNewProjectClick = () => {
+    if (isLoading) return;
+
     navigate("/");
     setConversation([]);
     setConversationStage(1);
@@ -512,7 +517,7 @@ const OrganismLeftSideBar = () => {
   return (
     <>
       <Logo isOpen={isOpen}>
-        <a href="/" onClick={handleNewProjectClick}></a>
+        <a onClick={handleNewProjectClick}></a>
         <button type="button" onClick={toggleSidebar}>
           닫기
         </button>
@@ -541,7 +546,7 @@ const OrganismLeftSideBar = () => {
               </label>
               <AccordionContent>
                 <ul>
-                  {reports.map((report, index) => (
+                  {reports?.map((report, index) => (
                     <li key={index}>
                       <p onClick={() => handleReportClick(report.id)}>
                         {report.business_info}
@@ -635,7 +640,7 @@ const OrganismLeftSideBar = () => {
                 <div>
                   <strong>최근 작업</strong>
                   <ul>
-                    {chatList.map((chat, index) => (
+                    {chatList?.map((chat, index) => (
                       <li key={index}>
                         <p onClick={() => handleConversationClick(chat.id)}>
                           {chat.business_info
@@ -1034,6 +1039,7 @@ const Logo = styled.div`
     font-size: 0;
     background: url(${images.SymbolLogo}) left center no-repeat;
     background-size: auto 100%;
+    cursor:pointer;
   }
 
   button {

@@ -117,7 +117,7 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
           {maxBehabioralType && maxUtilizationTime>=60 && maxUtilizationTime%60!==0 && <><strong>{maxBehabioralType}에 {Math.floor(maxUtilizationTime/60)}시간 {maxUtilizationTime%60}분이상 활용하고 있어요</strong><br/><br/></>}
           {!maxBehabioralType && <strong>{comment}</strong>}
           <span>
-            {tags.split(',').filter(tags => tags.trim() !== '').map((tags, index) => (
+            {tags.split(',').filter(tags => tags.trim() !== '')?.map((tags, index) => (
               <div key={index}>#{tags.trim()}</div>
             ))}
           </span>

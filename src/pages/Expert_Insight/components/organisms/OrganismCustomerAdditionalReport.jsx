@@ -18,6 +18,7 @@ import {
   EXPERT2_REPORT_DATA,
   EXPERT3_REPORT_DATA,
   INPUT_BUSINESS_INFO,
+  CUSTOMER_ADDITIONAL_REPORT_DATA,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -34,8 +35,8 @@ import {
 } from "../../../../assets/styles/Skeleton";
 import e from "cors";
 
-const OrganismAdditionalReport = ({
-  additionalReportCount,
+const OrganismCustomerAdditionalReport = ({
+  customerAdditionalReportCount,
   conversationId,
 }) => {
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
@@ -83,6 +84,8 @@ const OrganismAdditionalReport = ({
   const [additionalReportData, setAdditionalReportData] = useAtom(
     ADDITIONAL_REPORT_DATA
   ); // Use the list-based atom
+  const [customerAdditionalReportData, setCustomerAdditionalReportData] =
+    useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA); // Use the list-based atom
   const [answerData, setAnswerData] = useState("");
   const axiosConfig = {
     timeout: 100000, // 100초
@@ -104,10 +107,12 @@ const OrganismAdditionalReport = ({
         //   isLoggedIn
         // );
         // 기존 데이터가 있을 때 처리
-        if (additionalReportData[additionalReportCount]) {
-          setTitle(additionalReportData[additionalReportCount]?.title || []);
+        if (additionalReportData[customerAdditionalReportCount]) {
+          setTitle(
+            additionalReportData[customerAdditionalReportCount]?.title || []
+          );
           setSections(
-            additionalReportData[additionalReportCount]?.sections || []
+            additionalReportData[customerAdditionalReportCount]?.sections || []
           );
         } else if (buttonState === 1) {
           // 버튼 상태가 1일 때만 API 요청 실행
@@ -271,7 +276,7 @@ const OrganismAdditionalReport = ({
               reportIndex={2}
               conversationId={conversationId}
               sampleData={answerData}
-              additionalReportCount={additionalReportCount}
+              additionalReportCount={customerAdditionalReportCount}
             />
           )}
         </>
@@ -282,79 +287,46 @@ const OrganismAdditionalReport = ({
 
 // ... (아래 부분은 동일)
 
+const Section = ({ title, content }) => {
+  // 서브 타이틀이 있는 항목과 없는 항목을 분리
+  const subTitleItems = content.filter((item) => item.subTitle);
+  const nonSubTitleItems = content.filter((item) => !item.subTitle);
 
-  const Section = ({ title, content }) => {
-    // 서브 타이틀이 있는 항목과 없는 항목을 분리
-    const subTitleItems = content.filter((item) => item.subTitle);
-    const nonSubTitleItems = content.filter((item) => !item.subTitle);
+  return (
+    <BoxWrap>
+      {title && (
+        <strong>
+          <img src={images.Check} alt="" />
+          {title}
+        </strong>
+      )}
 
-    // subText에서 ':'로 분리하여 subTitle과 text를 따로 처리
-    const splitText = (text) => {
-      const [subTitle, ...rest] = text.split(":");
-      return {
-        subTitle: subTitle.trim(), // ':' 앞부분
-        text: rest.join(":").trim(), // ':' 뒷부분
-      };
-    };
+      {/* nonSubTitleItems는 일반적으로 title과 text만 표시 */}
+      {nonSubTitleItems.length > 0 &&
+        nonSubTitleItems?.map((item, index) => (
+          <div key={index}>
+            <p>{item.text}</p>
+            {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
+          </div>
+        ))}
 
-    return (
-      <BoxWrap isPurpose={title === "목적"}> {/* 타이틀이 "목적"인지 확인 */}
-        {title && title !== "목적" && (
-          <strong>
-            <img src={images.Check} alt="" />
-            {title}
-          </strong>
-        )}
-  
-        {/* nonSubTitleItems는 일반적으로 title과 text만 표시 */}
-        {nonSubTitleItems.length > 0 &&
-          nonSubTitleItems?.map((item, index) => (
+      {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
+      {subTitleItems.length > 0 && (
+        <DynamicGrid columns={subTitleItems.length}>
+          {subTitleItems?.map((item, index) => (
             <div key={index}>
+              {item.subTitle && <SubTitle>{item.subTitle}</SubTitle>}
               <p>{item.text}</p>
               {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
             </div>
           ))}
-  
-        {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
-        <>
-          {subTitleItems.map((item, index) => (
-            <SeparateSection key={index}>
-              <strong>
-                <span className="number">{index + 1}</span> {/* 번호 추가 */}
-                <strong_title>{`${item.subTitle}`}</strong_title> {/* 이 부분만 bold 처리 */}
-              </strong>
-              <p>{item.text}</p>
+        </DynamicGrid>
+      )}
+    </BoxWrap>
+  );
+};
 
-                {/* subText1, subText2, subText3에 대해 NumDynamicGrid 적용 */}
-                <NumDynamicGrid columns={2}>
-                  {item.subText1 && (
-                    <div>
-                      <SubTitle>{splitText(item.subText1).subTitle}</SubTitle>
-                      <p>{splitText(item.subText1).text}</p>
-                    </div>
-                  )}
-                  {item.subText2 && (
-                    <div>
-                      <SubTitle>{splitText(item.subText2).subTitle}</SubTitle>
-                      <p>{splitText(item.subText2).text}</p>
-                    </div>
-                  )}
-                  {item.subText3 && (
-                    <div>
-                      <SubTitle>{splitText(item.subText3).subTitle}</SubTitle>
-                      <p>{splitText(item.subText3).text}</p>
-                    </div>
-                  )}
-                </NumDynamicGrid>
-              </SeparateSection>
-            ))}
-          </>
-      </BoxWrap>
-    );
-  };
-  
-
-export default OrganismAdditionalReport;
+export default OrganismCustomerAdditionalReport;
 
 const AnalysisSection = styled.div`
   position: relative;
@@ -386,7 +358,7 @@ const AnalysisSection = styled.div`
 const BoxWrap = styled.div`
   padding: 20px;
   border-radius: 10px;
-  background: ${(props) => (props.isPurpose ? palette.white : "rgba(0, 0, 0, 0.04)")}; /* 흰 배경 적용 */
+  background: rgba(0, 0, 0, 0.04);
 
   + div {
     margin-top: 12px;
@@ -404,7 +376,6 @@ const BoxWrap = styled.div`
     margin-bottom: 10px;
   }
 `;
-
 
 const TabHeader = styled.div`
   gap: 40px;
@@ -502,166 +473,4 @@ const LoadingOverlay = styled.div`
 
 const Spacing = styled.div`
   margin-bottom: 40px; /* 제목과 본문 사이의 간격 */
-`;
-const NumDynamicGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(
-    ${(props) => props.columns},
-    1fr
-  ); /* 동적 컬럼 수 설정 */
-  gap: 10px;
-  margin-top: 10px;
-
-  div {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid ${palette.lineGray};
-    position: relative; /* 번호 표시를 위한 상대적 위치 */
-
-    /* 각 div 내에서 번호를 표시하는 span.number */
-    span.number {
-      width: 20px;
-      height: 20px;
-      font-size: 0.75rem;
-      color: ${palette.blue};
-      line-height: 20px;
-      text-align: center;
-      border: 1px solid ${palette.blue};
-      position: absolute;
-      top: -10px;
-      left: -10px;
-      background-color: ${palette.white}; /* 번호 배경색 */
-      border-radius: 50%;
-    }
-  }
-
-  p {
-    margin: 0;
-    font-size: 0.875rem;
-    font-weight: 400;
-    color: ${palette.darkGray};
-    line-height: 1.5;
-  }
-`;
-const SeparateSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.03);
-
-  + div {
-    margin-top: 12px;
-  }
-
-  h4 {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 10px;
-  }
-
-  span.number {
-    width: 15px;
-    height: 15px;
-    font-size: 0.63rem;
-    color: ${palette.blue};
-    line-height: 15px;
-    text-align: center;
-    border: 1px solid ${palette.blue};
-  }
-
-  strong {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 10px;
-    font-size: 0.875rem;
-    font-weight: 400;
-    color: ${palette.darkGray};
-  }
-
-  strong_title {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.875rem;
-    font-weight: 700;
-    color: ${palette.darkGray};
-  }
-
-  p {
-    font-size: 0.875rem;
-    font-weight: 400;
-    color: ${palette.darkGray};
-    line-height: 1.5;
-  }
-
-  .flexBox {
-    display: flex;
-    gap: 12px;
-    margin-top: 12px;
-
-    > div {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      width: 100%;
-      padding: 10px;
-      border-radius: 10px;
-      border: 1px solid ${palette.lineGray};
-
-      p {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-      }
-    }
-
-    .bgWhite {
-      margin-top: 0 !important;
-    }
-  }
-
-  .bgWhite {
-    padding: 15px !important;
-    margin-top: 12px;
-    border-radius: 10px;
-    border: 1px solid ${palette.white} !important;
-    background: ${palette.white};
-
-    .title {
-      color: ${palette.black};
-      font-weight: 700;
-    }
-  }
-
-  ul {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-
-    li {
-      position: relative;
-      font-size: 0.875rem;
-      color: ${palette.darkGray};
-      line-height: 1.5;
-      padding-left: 13px;
-
-      &:before {
-        position: absolute;
-        top: 8px;
-        left: 0;
-        width: 5px;
-        height: 1px;
-        background: ${palette.black};
-        content: "";
-      }
-    }
-  }
 `;

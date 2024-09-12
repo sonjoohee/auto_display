@@ -60,7 +60,7 @@ const Project = () => {
           <Title H1>{nowWork.Title}</Title>
 
           <TabGroup>
-            {nowModule.Module.map((module_name, index) => (
+            {nowModule.Module?.map((module_name, index) => (
               <p key={index} className={module_name === module ? "on" : ""}>
                 <span
                   onClick={() => {

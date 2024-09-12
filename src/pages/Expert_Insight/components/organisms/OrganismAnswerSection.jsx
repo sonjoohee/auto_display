@@ -17,7 +17,7 @@ const OrganismAnswerSection = () => {
     <AnswerSectionContainer>
       <h2>관심 있는 주제를 선택해주세요:</h2>
       <TopicList>
-        {topics.map((topic, index) => (
+        {topics?.map((topic, index) => (
           <TopicItem key={index} onClick={() => setSelectedTopic(topic)}>
             {topic}
           </TopicItem>

@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeUserMessage = ({ message }) => {
-  const messageWithLineBreaks = message.split("\n").map((line, index) => (
+  const messageWithLineBreaks = message.split("\n")?.map((line, index) => (
     <React.Fragment key={index}>
       {line}
       <br />

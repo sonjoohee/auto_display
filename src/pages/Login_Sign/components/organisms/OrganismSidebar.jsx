@@ -6,7 +6,7 @@ import styles from '../../assets/styles/organisms_css/OrganismSidebar.module.css
 const OrganismSidebar = ({ items }) => (
   <aside className={styles.sidebar}>
     <ul>
-      {items.map((item, index) => (
+      {items?.map((item, index) => (
         <li key={index}>
           <Link to={item.link}>{item.name}</Link>
         </li>

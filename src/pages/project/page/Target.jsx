@@ -76,7 +76,7 @@ const Target = () => {
         </dt>
         <dd>
           <HashTag>
-            {modules.Output.map((value) => (
+            {modules.Output?.map((value) => (
               <Tag Red>{value}</Tag>
             ))}
           </HashTag>
@@ -86,7 +86,7 @@ const Target = () => {
       <Hr />
 
       <AvatarWrap>
-        {modules.Personas.map((value) => (
+        {modules.Personas?.map((value) => (
           <AvatarList
             onClick={() => {
               set_clickPersona(value.Order);
@@ -177,7 +177,7 @@ const Target = () => {
           <Title H3>이용 상황 및 맥락 분석</Title>
 
           <BgBoxWrap Flex>
-            {modules.Personas[clickPersona].Usage_Context.map((value) => (
+            {modules.Personas[clickPersona].Usage_Context?.map((value) => (
               <BgBox>
                 <strong>{value.title}</strong>
                 <p>{value.content}</p>
@@ -199,7 +199,7 @@ const Target = () => {
             </div>
             <BgBox>
               <ul>
-                {modules.Personas[clickPersona].Persona_Analysis.map(
+                {modules.Personas[clickPersona].Persona_Analysis?.map(
                   (value, index) => (
                     <li>
                       <strong>
@@ -218,8 +218,8 @@ const Target = () => {
           <Title H3>제품관련 문제 및 불편함 정도</Title>
 
           <HashTag style={{ marginBottom: "20px" }}>
-            {modules.Personas[clickPersona].Product_Issue.map((issue) =>
-              issue.Tag.map((tag) => (
+            {modules.Personas[clickPersona].Product_Issue?.map((issue) =>
+              issue.Tag?.map((tag) => (
                 <Tag Red key={tag}>
                   #{tag}
                 </Tag>
@@ -227,8 +227,8 @@ const Target = () => {
             )}
           </HashTag>
 
-          {modules.Personas[clickPersona].Product_Issue.map((value) =>
-            value.Issue.map((issue) => (
+          {modules.Personas[clickPersona].Product_Issue?.map((value) =>
+            value.Issue?.map((issue) => (
               <InfoList>
                 <p for="check1">{issue.content}</p>
               </InfoList>
@@ -248,7 +248,7 @@ const Target = () => {
               />
             </BorderBox>
             <div>
-              {modules.Personas[clickPersona].Purchase.map((value) =>
+              {modules.Personas[clickPersona].Purchase?.map((value) =>
                 value.Opinion_State === "긍정" ? (
                   <Emotion Positive>
                     <strong>{value.Opinion_Title}</strong>
@@ -269,9 +269,9 @@ const Target = () => {
           <Title H3>제품/서비스 차별화 요소 분석</Title>
 
           <HashTag style={{ marginBottom: "20px" }}>
-            {modules.Personas[clickPersona].Product_Differentiator.map(
+            {modules.Personas[clickPersona].Product_Differentiator?.map(
               (issue) =>
-                issue.Tag.map((tag) => (
+                issue.Tag?.map((tag) => (
                   <Tag Red key={tag}>
                     #{tag}
                   </Tag>
@@ -279,8 +279,8 @@ const Target = () => {
             )}
           </HashTag>
 
-          {modules.Personas[clickPersona].Product_Differentiator.map((value) =>
-            value.Differentiator.map((issue) => (
+          {modules.Personas[clickPersona].Product_Differentiator?.map((value) =>
+            value.Differentiator?.map((issue) => (
               <InfoList>
                 <p for="check1">{issue.content}</p>
               </InfoList>
@@ -292,7 +292,7 @@ const Target = () => {
           <Title H3>제품에 대한 정보 수집 방법 </Title>
 
           <BgBoxWrap Flex>
-            {modules.Personas[clickPersona].Info_Collection.map((value) => (
+            {modules.Personas[clickPersona].Info_Collection?.map((value) => (
               <BgBox>
                 <strong>{value.title}</strong>
                 <p>{value.content}</p>
