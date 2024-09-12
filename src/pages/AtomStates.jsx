@@ -132,6 +132,7 @@ export const ADDITIONAL_REPORT_DATA2 = atom({});
 export const ADDITIONAL_REPORT_DATA3 = atom({});
 
 export const ADDITIONAL_REPORT_DATA = atom([]);
+export const CUSTOMER_ADDITIONAL_REPORT_DATA = atom([]);
 
 /* -1: 검색으로 시작하기, 1: AI 전문가 선택해서 시작하기*/
 export const APPROACH_PATH = atom(0);
@@ -244,6 +245,6 @@ export const iS_CLICK_CHECK_REPORT_RIGHTAWAY = atom(false);
 export const CONVERSATION_ID = atom("");
 export const CONVERSATION = atom([]);
 export const IS_LOADING = atom(false);
-export const REPORT_REFRESH_TRIGGER = atom(false);  // 새로고침 트리거 상태 추가
+export const REPORT_REFRESH_TRIGGER = atom(false); // 새로고침 트리거 상태 추가
 
 export const ADDITIONAL_REPORT_COUNT = atom(-1);
