@@ -410,8 +410,10 @@ const Section = ({ title, content, isLast, expertIndex }) => {
           title === "경쟁사 분석 및 차별화 전략" ||
           title === "고객 니즈 및 세분화 분석" ||
           title === "고객 여정 맵핑" ||
+          title === "고객 여정 맵핑 터치포인트 단계 최적화 방안" ||
           title === "시장 위치 평가 및 경쟁자 분석" ||
           title === "장기적인 경쟁 우위 전략"
+
         ) && (
           <strong>
             <img src={images.Check} alt="" />
@@ -650,6 +652,30 @@ const Section = ({ title, content, isLast, expertIndex }) => {
           </div>
         </BgStyledSection>
       )}
+
+
+{title === "고객 여정 맵핑 터치포인트 단계 최적화 방안" && (
+  <BgStyledSection>
+    <h4>
+      <img src={images.Check} alt="" />
+      {title}
+    </h4>
+
+    <div className="flexBox">
+      {content.map((item, index) => (
+        <div className="bgWhite" key={index}>
+          <strong className="title">
+            {/* 번호 표시를 위한 span.number */}
+            <span className="number">{index + 1}</span>
+            {item.subTitle}
+          </strong>
+          <p>{item.text}</p> {/* text 필드에서 데이터 출력 */}
+        </div>
+      ))}
+    </div>
+  </BgStyledSection>
+)}
+
       
       {/* "특징" 또는 "차별화 요소" 섹션을 처리 */}
       {(title === "특징" || title === "차별화 요소") && subTitleItems.length > 0 && (
@@ -687,7 +713,6 @@ const Section = ({ title, content, isLast, expertIndex }) => {
             ))}
           </>
         )}
-
       {/* "특징", "차별화 요소", "경쟁 분석"이 아닌 경우 기존 방식대로 처리 */}
       {title !== "특징" &&
         title !== "차별화 요소" &&
@@ -702,6 +727,7 @@ const Section = ({ title, content, isLast, expertIndex }) => {
         title !== "경쟁사 분석 및 차별화 전략" &&
         title !== "고객 니즈 및 세분화 분석" &&
         title !== "고객 여정 맵핑" &&
+        title !== "고객 여정 맵핑 터치포인트 단계 최적화 방안" &&
         title !== "경쟁사 대비 차별화 전략" &&
         title !== "경쟁 압박 대처 방안" &&
         title !== "장기적인 경쟁 우위 전략" && (
