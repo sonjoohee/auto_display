@@ -423,18 +423,15 @@ const Section = ({ title, content, isLast, expertIndex }) => {
         )}
 
       {/* "특징" 또는 "차별화 요소" 섹션을 처리 */}
-      {(title === "특징" ||
-        title === "차별화 요소" ||
-        title === "시장 위치 평가 및 경쟁자 분석") &&
-        subTitleItems.length > 0 && (
-          <>
-            {subTitleItems.map((item, index) => (
-              <SeparateSection key={index}>
-                <strong>
-                  <span className="number">{index + 1}</span> {/* 번호 추가 */}
-                  {`${title} : ${item.subTitle}`}
-                </strong>
-                <p>{item.text}</p>
+      {(title === "특징" || title === "차별화 요소" || title === "시장 위치 평가 및 경쟁자 분석") && subTitleItems.length > 0 && (
+        <>
+          {subTitleItems.map((item, index) => (
+            <SeparateSection key={index}>
+              <strong>
+                <span className="number">{index + 1}</span> {/* 번호 추가 */}
+                <strong_title>{`${title} : ${item.subTitle}`}</strong_title> {/* 이 부분만 bold 처리 */}
+              </strong>
+              <p>{item.text}</p>
 
                 {/* subText1, subText2, subText3에 대해 NumDynamicGrid 적용 */}
                 <NumDynamicGrid columns={2}>
@@ -539,6 +536,15 @@ const SeparateSection = styled.div`
     margin-bottom: 10px;
     font-size: 0.875rem;
     font-weight: 400;
+    color: ${palette.darkGray};
+  }
+
+  strong_title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    font-weight: 700;
     color: ${palette.darkGray};
   }
 
