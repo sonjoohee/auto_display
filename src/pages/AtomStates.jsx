@@ -138,6 +138,7 @@ export const CUSTOMER_ADDITIONAL_REPORT_DATA = atom([]);
 export const APPROACH_PATH = atom(0);
 
 export const SELECTED_ADDITIONAL_KEYWORD = atom([]);
+export const SELECTED_CUSTOMER_ADDITIONAL_KEYWORD = atom([]);
 
 export const SELECTED_ADDITIONAL_KEYWORD1 = atom("");
 export const SELECTED_ADDITIONAL_KEYWORD2 = atom("");

@@ -28,6 +28,7 @@ import {
   isLoggedInAtom,
   CONVERSATION_ID,
   ADDITIONAL_REPORT_COUNT,
+  SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
 } from "../../../AtomStates";
 
 import {
@@ -89,6 +90,9 @@ const PageExpertInsight = () => {
   let customerAdditionalReportCount = 0;
   const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
     SELECTED_ADDITIONAL_KEYWORD
+  );
+  const [selectedCustomerAdditionalKeyword, setSelectedCustomerAdditionalKeyword] = useAtom(
+    SELECTED_CUSTOMER_ADDITIONAL_KEYWORD
   );
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
 
@@ -514,7 +518,7 @@ const PageExpertInsight = () => {
     const updatedConversation = [...conversation];
 
     // 사용자가 입력한 경우에만 inputBusinessInfo를 업데이트
-    if (conversationStage < 3 && inputValue !== -1) {
+    if (conversationStage === 1 && inputValue !== -1) {
       setInputBusinessInfo(inputValue);
       updatedConversation.push({ type: "user", message: inputValue });
     }
@@ -534,6 +538,33 @@ const PageExpertInsight = () => {
         );
         newConversationStage = 2;
       }
+    } else if (conversationStage > 1 && inputValue !== -1) {
+        if (
+          (updatedConversation.length > 0 &&
+            approachPath !== 2 &&
+            updatedConversation[updatedConversation.length - 1].type ===
+              "keyword") ||
+          (updatedConversation.length > 0 &&
+            approachPath !== 2 &&
+            updatedConversation[updatedConversation.length - 1].type ===
+              "report_button")
+        ) {
+          updatedConversation.pop();
+        }
+
+        // 임시로 키워드 설정
+        const updatedKeywords = [...selectedCustomerAdditionalKeyword];
+        updatedKeywords.push("우리 산업의 강점과 약점 파악하기");
+        setSelectedCustomerAdditionalKeyword(updatedKeywords);
+
+        updatedConversation.push(
+          {
+            type: "user",
+            message: inputValue,
+          },
+          { type: `customerAddition`, addition_index: customerAdditionalReportCount }
+        )
+        
     } else if (conversationStage === 2 && titleOfBusinessInfo) {
       // 기존 대화에서 이어나가는 경우 처리
       if (approachPath === 2) {
@@ -609,7 +640,7 @@ const PageExpertInsight = () => {
       }
     } else if (conversationStage === 3) {
       if (approachPath === 2) {
-        newConversationStage = 3; // 기본적으로 대화 상태를 2로 설정
+        newConversationStage = 3;
         // updatedConversation.push(
         //   { type: "keyword" }
         // );
@@ -626,12 +657,6 @@ const PageExpertInsight = () => {
               "report_button")
         ) {
           updatedConversation.pop();
-        }
-        // 일반적인 경우 처리
-        if (inputValue !== -1) {
-          const updatedKeywords = [...selectedAdditionalKeyword];
-          updatedKeywords[0] = inputValue;
-          setSelectedAdditionalKeyword(updatedKeywords);
         }
 
         updatedConversation.push(
@@ -785,10 +810,12 @@ const PageExpertInsight = () => {
               )} */}
             </ChatWrap>
 
-            {(approachPath === 1 || approachPath === 2) &&
-              conversationStage == 1 && (
-                <OrganismSearchBottomBar onSearch={handleSearch} />
-              )}
+            {conversationStage === 1 ?
+              <OrganismSearchBottomBar onSearch={handleSearch} isBlue={false}/> 
+            : 
+              <OrganismSearchBottomBar onSearch={handleSearch} isBlue={true}/>
+            }
+
           </div>
 
           <OrganismRightSideBar />

@@ -41,6 +41,9 @@ import {
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
   IS_LOADING,
   SELECTED_ADDITIONAL_KEYWORD,
+  SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
+  ADDITIONAL_REPORT_DATA,
+  CUSTOMER_ADDITIONAL_REPORT_DATA,
 } from "../../../AtomStates";
 
 const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
@@ -94,6 +97,11 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
 
   const [isLoadingExpert, setIsLoadingExpert] = useState(false);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
+
+  const [additionalReportData, setAdditionalReportData] = useAtom(ADDITIONAL_REPORT_DATA);
+  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
+  const [selectedCustomerAdditionalKeyword, setSelectedCustomerAdditionalKeyword] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
+  const [customerAdditionalReportData, setCustomerAdditionalReportData] = useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
 
   useEffect(() => {
     const loadData = async () => {
@@ -187,7 +195,10 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               id: conversationId,
               inputBusinessInfo: inputBusinessInfo,
               analysisReportData: analysisReportData,
-              selectedAdditionalKeywords: selectedKeywords,
+              selectedAdditionalKeywords: selectedAdditionalKeyword,
+              selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
+              additionalReportData: additionalReportData,
+              customerAdditionalReportData: customerAdditionalReportData,
               conversation: conversation,
               conversationStage: 3,
               strategyReportData_EX1: expert1ReportData,
@@ -240,6 +251,10 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               strategyReportData_EX3: expert3ReportData,
               [currentReportKey]: strategyData,
               conversation: updatedConversation,
+              selectedAdditionalKeywords: selectedAdditionalKeyword,
+              selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
+              additionalReportData: additionalReportData,
+              customerAdditionalReportData: customerAdditionalReportData,
               timestamp: Date.now(),
               expert_index: selectedExpertIndex,
             },
