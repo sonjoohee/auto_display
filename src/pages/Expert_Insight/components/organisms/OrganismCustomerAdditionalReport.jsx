@@ -208,8 +208,10 @@ const OrganismCustomerAdditionalReport = ({
           setIsLoading(false);
 
           const updatedConversation2 = [...conversation];
-          // console.log(approachPath, conversationStage);
-          if (approachPath === 1 || approachPath === 3) {
+          console.log(approachPath, conversationStage);
+          // if (approachPath === 1 || approachPath === 3) {
+          if (approachPath !== -1) {
+            console.log("🚀 ~ loadData ~ approachPath:", approachPath);
             if (conversationStage === 2) {
               updatedConversation2.push(
                 {
@@ -234,7 +236,9 @@ const OrganismCustomerAdditionalReport = ({
                 { type: "keyword" }
               );
             }
-          } else if (approachPath === -1 || approachPath === 3) {
+            // } else if (approachPath === -1 || approachPath === 3) {
+          } else if (approachPath !== 1) {
+            console.log("🚀 ~ loadData ~ approachPath:", approachPath);
             if (conversationStage === 2) {
               updatedConversation2.push({
                 type: "system",
