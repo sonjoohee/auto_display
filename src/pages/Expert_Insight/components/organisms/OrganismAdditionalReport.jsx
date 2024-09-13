@@ -584,9 +584,9 @@ const NumDynamicGrid = styled.div`
 const SeparateSection = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 5px 20px; /* 위아래 5px, 좌우 20px */
+  padding: 0px 20px; /* 위아래 5px, 좌우 20px */
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.03);
+  background: rgba(0, 0, 0, 0.00);
 
   h4 {
     display: flex;
