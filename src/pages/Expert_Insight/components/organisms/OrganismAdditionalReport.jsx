@@ -289,6 +289,7 @@ const OrganismAdditionalReport = ({
               key={index}
               title={section.title}
               content={section.content}
+              index={index - 1}
             />
           ))}
 
@@ -308,7 +309,7 @@ const OrganismAdditionalReport = ({
 
 // ... (아래 부분은 동일)
 
-const Section = ({ title, content }) => {
+const Section = ({ title, content, index }) => {
   // 서브 타이틀이 있는 항목과 없는 항목을 분리
   const subTitleItems = content.filter((item) => item.subTitle);
   const nonSubTitleItems = content.filter((item) => !item.subTitle);
@@ -327,11 +328,12 @@ const Section = ({ title, content }) => {
       {" "}
       {/* 타이틀이 "목적"인지 확인 */}
       {title && title !== "목적" && (
-        <strong>
-          <img src={images.Check} alt="" />
-          {title}
-        </strong>
+      <strong>
+        {/* 번호 표시 */}
+        {index + 1}. {title}
+      </strong>
       )}
+
       {/* nonSubTitleItems는 일반적으로 title과 text만 표시 */}
       {nonSubTitleItems.length > 0 &&
         nonSubTitleItems?.map((item, index) => (
@@ -345,33 +347,22 @@ const Section = ({ title, content }) => {
         {subTitleItems.map((item, index) => (
           <SeparateSection key={index}>
             <strong>
-              <span className="number">{index + 1}</span> {/* 번호 추가 */}
-              <strong_title>{`${item.subTitle}`}</strong_title>{" "}
-              {/* 이 부분만 bold 처리 */}
+              {/* <strong_title>{`${item.subTitle}`}</strong_title> */} {/* 차후 추가할수도 있음*/}
             </strong>
-            <p>{item.text}</p>
+            <p>{item.subTitle} : {item.text}</p>
 
-            {/* subText1, subText2, subText3에 대해 NumDynamicGrid 적용 */}
-            <NumDynamicGrid columns={2}>
+            {/* subText1, subText2, subText3를 한 줄씩 표시 */}
+            <div>
               {item.subText1 && (
-                <div>
-                  <SubTitle>{splitText(item.subText1).subTitle}</SubTitle>
-                  <p>{splitText(item.subText1).text}</p>
-                </div>
+                <p>{item.subTitle}: {splitText(item.subText1).text}</p>
               )}
               {item.subText2 && (
-                <div>
-                  <SubTitle>{splitText(item.subText2).subTitle}</SubTitle>
-                  <p>{splitText(item.subText2).text}</p>
-                </div>
+                <p>{item.subTitle}: {splitText(item.subText2).text}</p>
               )}
               {item.subText3 && (
-                <div>
-                  <SubTitle>{splitText(item.subText3).subTitle}</SubTitle>
-                  <p>{splitText(item.subText3).text}</p>
-                </div>
+                <p>{item.subTitle}: {splitText(item.subText3).text}</p>
               )}
-            </NumDynamicGrid>
+            </div>
           </SeparateSection>
         ))}
       </>
@@ -412,11 +403,7 @@ const BoxWrap = styled.div`
   padding: 20px;
   border-radius: 10px;
   background: ${(props) =>
-    props.isPurpose ? palette.white : "rgba(0, 0, 0, 0.04)"}; /* 흰 배경 적용 */
-
-  + div {
-    margin-top: 12px;
-  }
+    props.isPurpose ? palette.white : "rgba(0,0,0,.03)"}; /* 흰 배경 적용 */
 
   strong {
     display: flex;
@@ -528,14 +515,39 @@ const LoadingOverlay = styled.div`
 const Spacing = styled.div`
   margin-bottom: 40px; /* 제목과 본문 사이의 간격 */
 `;
+
+
 const NumDynamicGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(
-    ${(props) => props.columns},
-    1fr
-  ); /* 동적 컬럼 수 설정 */
+  grid-template-columns: repeat(${(props) => props.columns}, 1fr);
   gap: 10px;
   margin-top: 10px;
+
+  ul {
+    list-style: none; /* 기본 리스트 스타일 제거 */
+    padding: 0;
+    margin: 0;
+
+    li {
+      position: relative;
+      font-size: 0.875rem;
+      color: ${palette.gray800};
+      line-height: 1.5;
+      padding-left: 13px;
+      margin-left: 8px;
+
+      &:before {
+        position: absolute;
+        top: 8px;
+        left: 0;
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: ${palette.gray800};
+        content: '';
+      }
+    }
+  }
 
   div {
     flex: 1;
@@ -544,23 +556,6 @@ const NumDynamicGrid = styled.div`
     padding: 12px;
     border-radius: 10px;
     border: 1px solid ${palette.lineGray};
-    position: relative; /* 번호 표시를 위한 상대적 위치 */
-
-    /* 각 div 내에서 번호를 표시하는 span.number */
-    span.number {
-      width: 20px;
-      height: 20px;
-      font-size: 0.75rem;
-      color: ${palette.blue};
-      line-height: 20px;
-      text-align: center;
-      border: 1px solid ${palette.blue};
-      position: absolute;
-      top: -10px;
-      left: -10px;
-      background-color: ${palette.white}; /* 번호 배경색 */
-      border-radius: 50%;
-    }
   }
 
   p {
@@ -571,32 +566,21 @@ const NumDynamicGrid = styled.div`
     line-height: 1.5;
   }
 `;
+
+
 const SeparateSection = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 5px 20px; /* 위아래 5px, 좌우 20px */
   border-radius: 10px;
   background: rgba(0, 0, 0, 0.03);
 
-  + div {
-    margin-top: 12px;
-  }
 
   h4 {
     display: flex;
     align-items: center;
     gap: 8px;
     margin-bottom: 10px;
-  }
-
-  span.number {
-    width: 15px;
-    height: 15px;
-    font-size: 0.63rem;
-    color: ${palette.blue};
-    line-height: 15px;
-    text-align: center;
-    border: 1px solid ${palette.blue};
   }
 
   strong {
@@ -619,10 +603,24 @@ const SeparateSection = styled.div`
   }
 
   p {
+    position: relative;
     font-size: 0.875rem;
     font-weight: 400;
     color: ${palette.darkGray};
     line-height: 1.5;
+    padding-left: 13px;
+    margin-left: 8px;
+
+    &:before {
+      position: absolute;
+      top: 8px;
+      left: 0;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: ${palette.gray800};
+      content: '';
+    }
   }
 
   .flexBox {
@@ -682,10 +680,11 @@ const SeparateSection = styled.div`
         position: absolute;
         top: 8px;
         left: 0;
-        width: 5px;
-        height: 1px;
-        background: ${palette.black};
-        content: "";
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: ${palette.gray800};
+        content: '';
       }
     }
   }
