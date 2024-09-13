@@ -1051,8 +1051,9 @@ const TabButton = styled.button`
   font-weight: 400;
 
   color: ${(props) =>
-    props.active ? palette.black : 
-    props.expertIndex === "1"
+    props.active 
+      ? palette.black
+      : props.expertIndex === "1"
       ? `rgba(0,0,0,.2)` // 1번 전문가일 때
       : props.expertIndex === "2"
       ? `rgba(0,0,0,.2)` // 2번 전문가일 때
