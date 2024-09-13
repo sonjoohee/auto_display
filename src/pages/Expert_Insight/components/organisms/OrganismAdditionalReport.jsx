@@ -155,25 +155,25 @@ const OrganismAdditionalReport = ({
           //   additionalReportData
           // );
           // 새로운 데이터를 배열의 맨 앞에 추가합니다.
-          let updatedAdditionalReportData = [
-            ...(Array.isArray(additionalReportData)
-              ? additionalReportData
-              : [additionalReportData]),
-            answerData,
-          ];
-          if (Array.isArray(updatedAdditionalReportData)) {
-            console.log("🚀 ~ 배열로 재생성:", updatedAdditionalReportData);
-            updatedAdditionalReportData = [];
+          // let updatedAdditionalReportData = [
+          //   ...(Array.isArray(additionalReportData)
+          //     ? additionalReportData
+          //     : [additionalReportData]),
+          //   answerData,
+          // ];
+          let updatedAdditionalReportData = [];
+
+          if (additionalReportCount === 0) {
+            updatedAdditionalReportData.push(answerData);
+          } else if (Array.isArray(additionalReportData)) {
+            console.log("🚀 ~ 배열로 재생성:", additionalReportData);
+            updatedAdditionalReportData.push(additionalReportData);
+            updatedAdditionalReportData.push(answerData);
+          } else {
+            updatedAdditionalReportData = additionalReportData;
             updatedAdditionalReportData.push(answerData);
           }
 
-          updatedAdditionalReportData = Array.isArray(
-            updatedAdditionalReportData
-          )
-            ? updatedAdditionalReportData
-            : [updatedAdditionalReportData];
-          // let updatedAdditionalReportData = additionalReportData; // 새로 가져온 데이터
-          // updatedAdditionalReportData.push(answerData);
           console.log(
             "🚀 ~ loadData ~ updatedAdditionalReportData:",
             updatedAdditionalReportData

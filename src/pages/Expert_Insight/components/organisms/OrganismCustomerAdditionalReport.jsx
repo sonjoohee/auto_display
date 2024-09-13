@@ -191,24 +191,32 @@ const OrganismCustomerAdditionalReport = ({
 
           // 새로운 데이터를 배열의 맨 앞에 추가합니다.
 
-          let updatedAdditionalReportData = [
-            ...(Array.isArray(customerAdditionalReportData)
-              ? customerAdditionalReportData
-              : [customerAdditionalReportData]),
-            answerData,
-          ];
+          // let updatedAdditionalReportData = [
+          //   ...(Array.isArray(customerAdditionalReportData)
+          //     ? customerAdditionalReportData
+          //     : [customerAdditionalReportData]),
+          //   answerData,
+          // ];
 
-          if (Array.isArray(updatedAdditionalReportData)) {
-            console.log("🚀 ~ 배열로 재생성:", updatedAdditionalReportData);
-            updatedAdditionalReportData = [];
+          let updatedAdditionalReportData = [];
+
+          // if (Array.isArray(updatedAdditionalReportData)) {
+          //   console.log("🚀 ~ 배열로 재생성:", updatedAdditionalReportData);
+          //   updatedAdditionalReportData = [];
+          //   updatedAdditionalReportData.push(customerAdditionalReportData);
+          //   updatedAdditionalReportData.push(answerData);
+          // }
+          if (customerAdditionalReportCount === 0) {
+            updatedAdditionalReportData.push(answerData);
+          } else if (Array.isArray(customerAdditionalReportData)) {
+            console.log("🚀 ~ 배열로 재생성:", customerAdditionalReportData);
+            updatedAdditionalReportData.push(customerAdditionalReportData);
+            updatedAdditionalReportData.push(answerData);
+          } else {
+            updatedAdditionalReportData = customerAdditionalReportData;
             updatedAdditionalReportData.push(answerData);
           }
 
-          updatedAdditionalReportData = Array.isArray(
-            updatedAdditionalReportData
-          )
-            ? updatedAdditionalReportData
-            : [updatedAdditionalReportData];
           // let updatedAdditionalReportData = customerAdditionalReportData; // 기존 데이터
           // updatedAdditionalReportData.push(answerData); // 새로 가져온 데이터
 
