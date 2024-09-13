@@ -164,24 +164,24 @@ const OrganismAdditionalReport = ({
           let updatedAdditionalReportData = [];
 
           if (additionalReportCount === 0) {
-            console.log(
-              "🚀 ~ 첫저장 ~ additionalReportCount:",
-              additionalReportCount
-            );
+            // console.log(
+            //   "🚀 ~ 첫저장 ~ additionalReportCount:",
+            //   additionalReportCount
+            // );
             updatedAdditionalReportData.push(answerData);
           } else {
-            console.log(
-              "🚀 ~ 저장 ~ updatedAdditionalReportData:",
-              additionalReportData
-            );
+            // console.log(
+            //   "🚀 ~ 저장 ~ updatedAdditionalReportData:",
+            //   additionalReportData
+            // );
             updatedAdditionalReportData = additionalReportData;
             updatedAdditionalReportData.push(answerData);
           }
 
-          console.log(
-            "🚀 ~ loadData ~ updatedAdditionalReportData:",
-            updatedAdditionalReportData
-          );
+          // console.log(
+          //   "🚀 ~ loadData ~ updatedAdditionalReportData:",
+          //   updatedAdditionalReportData
+          // );
           setAdditionalReportData(updatedAdditionalReportData);
 
           // const updatedConversation = {

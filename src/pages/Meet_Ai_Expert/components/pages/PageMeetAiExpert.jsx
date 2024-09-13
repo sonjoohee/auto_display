@@ -3,6 +3,9 @@ import styled, { css } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
 import {
+  passwordAtom,
+  newPasswordAtom,
+  rePasswordAtom,
   SELECTED_EXPERT_INDEX,
   INPUT_BUSINESS_INFO,
   APPROACH_PATH,
@@ -46,6 +49,9 @@ const PageMeetAiExpert = () => {
   const [buttonState, setButtonState] = useAtom(ANALYSIS_BUTTON_STATE);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
 
+  const [password, setPassword] = useAtom(passwordAtom);
+  const [newPassword, setNewPassword] = useAtom(newPasswordAtom);
+  const [rePassword, setRePassword] = useAtom(rePasswordAtom);
   const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(
     SELECTED_EXPERT_INDEX
   );
@@ -153,6 +159,9 @@ const PageMeetAiExpert = () => {
     setInputAdditionalQuestion("");
     setSelectedCustomerAdditionalKeyword([]);
     setIsClickCheckReportRightAway(false);
+    setPassword("");
+    setNewPassword("");
+    setRePassword("");
   }, []);
 
   useEffect(() => {
