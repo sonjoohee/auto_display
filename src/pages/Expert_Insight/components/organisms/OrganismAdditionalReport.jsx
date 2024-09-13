@@ -108,10 +108,7 @@ const OrganismAdditionalReport = ({
   useEffect(() => {
     const loadData = async () => {
       let answerData;
-      console.log(
-        "🚀 ~ loadData ~ additionalReportData:",
-        additionalReportData
-      );
+
       try {
         // const existingConversation = await getConversationByIdFromIndexedDB(
         //   conversationId,
@@ -119,10 +116,6 @@ const OrganismAdditionalReport = ({
         // );
         // 기존 데이터가 있을 때 처리
         if (additionalReportData[additionalReportCount]) {
-          console.log(
-            "🚀 ~ loadData ~ additionalReportData:",
-            additionalReportData
-          );
           setAnswerData(additionalReportData[additionalReportCount]);
           setTitle(additionalReportData[additionalReportCount]?.title || []);
           setSections(
@@ -157,17 +150,22 @@ const OrganismAdditionalReport = ({
           setTitle(answerData?.title);
           setSections(answerData?.sections);
 
-          console.log(
-            "🚀 ~ loadData ~ additionalReportData:",
-            additionalReportData
-          );
+          // console.log(
+          //   "🚀 ~ loadData ~ additionalReportData:",
+          //   additionalReportData
+          // );
           // 새로운 데이터를 배열의 맨 앞에 추가합니다.
-          const updatedAdditionalReportData = [
+          let updatedAdditionalReportData = [
             ...(Array.isArray(additionalReportData)
               ? additionalReportData
               : [additionalReportData]),
             answerData,
           ];
+          updatedAdditionalReportData = Array.isArray(
+            updatedAdditionalReportData
+          )
+            ? updatedAdditionalReportData
+            : [updatedAdditionalReportData];
           // let updatedAdditionalReportData = additionalReportData; // 새로 가져온 데이터
           // updatedAdditionalReportData.push(answerData);
           console.log(

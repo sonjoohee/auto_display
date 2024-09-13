@@ -161,7 +161,7 @@ const OrganismCustomerAdditionalReport = ({
           );
 
           answerData = response.data.additional_question;
-          console.log("🚀 ~ loadData ~ answerData:", answerData);
+          // console.log("🚀 ~ loadData ~ answerData:", answerData);
           // if (response.data.keyword.result_state == 1) {
           //   answerData = response.data.additional_question;
           // } else if (response.data.keyword.result_state == 0) {
@@ -179,12 +179,18 @@ const OrganismCustomerAdditionalReport = ({
 
           // 새로운 데이터를 배열의 맨 앞에 추가합니다.
 
-          const updatedAdditionalReportData = [
+          let updatedAdditionalReportData = [
             ...(Array.isArray(customerAdditionalReportData)
               ? customerAdditionalReportData
               : [customerAdditionalReportData]),
             answerData,
           ];
+
+          updatedAdditionalReportData = Array.isArray(
+            updatedAdditionalReportData
+          )
+            ? updatedAdditionalReportData
+            : [updatedAdditionalReportData];
           // let updatedAdditionalReportData = customerAdditionalReportData; // 기존 데이터
           // updatedAdditionalReportData.push(answerData); // 새로 가져온 데이터
 
