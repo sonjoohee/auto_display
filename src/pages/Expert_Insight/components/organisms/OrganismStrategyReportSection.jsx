@@ -429,8 +429,7 @@ const Section = ({ title, content, isLast, expertIndex ,selectedTab}) => {
 
             {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
             {subTitleItems.length > 0 && (
-              <DynamicGrid columns={subTitleItems.length}>
-                {subTitleItems.map((item, index) => (
+                subTitleItems.map((item, index) => (
                   <SubTextBox key={index}>
                     <SubTitle>{item.subTitle}</SubTitle>
                     <p>{item.text}</p>
@@ -438,8 +437,7 @@ const Section = ({ title, content, isLast, expertIndex ,selectedTab}) => {
                     {item.subText2 && <SubTextBox>{item.subText2}</SubTextBox>}
                     {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
                   </SubTextBox>
-                ))}
-               </DynamicGrid>
+                ))
                 )}
             </>
       ) : (
