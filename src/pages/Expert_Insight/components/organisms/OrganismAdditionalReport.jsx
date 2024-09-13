@@ -164,12 +164,16 @@ const OrganismAdditionalReport = ({
           let updatedAdditionalReportData = [];
 
           if (additionalReportCount === 0) {
-            updatedAdditionalReportData.push(answerData);
-          } else if (Array.isArray(additionalReportData)) {
-            console.log("🚀 ~ 배열로 재생성:", additionalReportData);
-            updatedAdditionalReportData.push(additionalReportData);
+            console.log(
+              "🚀 ~ 첫저장 ~ additionalReportCount:",
+              additionalReportCount
+            );
             updatedAdditionalReportData.push(answerData);
           } else {
+            console.log(
+              "🚀 ~ 저장 ~ updatedAdditionalReportData:",
+              additionalReportData
+            );
             updatedAdditionalReportData = additionalReportData;
             updatedAdditionalReportData.push(answerData);
           }

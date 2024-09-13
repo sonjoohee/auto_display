@@ -208,10 +208,6 @@ const OrganismCustomerAdditionalReport = ({
           // }
           if (customerAdditionalReportCount === 0) {
             updatedAdditionalReportData.push(answerData);
-          } else if (Array.isArray(customerAdditionalReportData)) {
-            console.log("🚀 ~ 배열로 재생성:", customerAdditionalReportData);
-            updatedAdditionalReportData.push(customerAdditionalReportData);
-            updatedAdditionalReportData.push(answerData);
           } else {
             updatedAdditionalReportData = customerAdditionalReportData;
             updatedAdditionalReportData.push(answerData);
