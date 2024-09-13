@@ -261,11 +261,7 @@ const OrganismCustomerAdditionalReport = ({
               updatedConversation2.push(
                 {
                   type: "system",
-                  message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${
-                    selectedCustomerAdditionalKeyword[
-                      selectedCustomerAdditionalKeyword.length - 1
-                    ]
-                  }를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
+                  message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${response.data.keyword.result}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
                   expertIndex: 0,
                 },
                 { type: "keyword" }
@@ -276,22 +272,14 @@ const OrganismCustomerAdditionalReport = ({
             if (conversationStage === 2) {
               updatedConversation2.push({
                 type: "system",
-                message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${
-                  selectedCustomerAdditionalKeyword[
-                    selectedCustomerAdditionalKeyword.length - 1
-                  ]
-                }를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
+                message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${response.data.keyword.result}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
                 expertIndex: 0,
               });
             } else if (conversationStage === 3) {
               updatedConversation2.push(
                 {
                   type: "system",
-                  message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${
-                    selectedCustomerAdditionalKeyword[
-                      selectedCustomerAdditionalKeyword.length - 1
-                    ]
-                  }를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
+                  message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${response.data.keyword.result}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
                   expertIndex: 0,
                 },
                 { type: "keyword" }
