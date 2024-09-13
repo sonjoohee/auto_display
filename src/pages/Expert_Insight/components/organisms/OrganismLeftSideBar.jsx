@@ -8,6 +8,9 @@ import { useAtom } from "jotai";
 import axios from "axios";
 
 import {
+  passwordAtom,
+  newPasswordAtom,
+  rePasswordAtom,
   INPUT_BUSINESS_INFO,
   SAVED_REPORTS,
   isLoggedInAtom,
@@ -45,6 +48,9 @@ import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/Molec
 import OrganismReportPopup from "./OrganismReportPopup"; // 팝업 컴포넌트 임포트
 
 const OrganismLeftSideBar = () => {
+  const [password, setPassword] = useAtom(passwordAtom);
+  const [newPassword, setNewPassword] = useAtom(newPasswordAtom);
+  const [rePassword, setRePassword] = useAtom(rePasswordAtom);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const navigate = useNavigate();
   const [bizName] = useAtom(INPUT_BUSINESS_INFO);
@@ -528,6 +534,9 @@ const OrganismLeftSideBar = () => {
     setInputAdditionalQuestion("");
     setIsClickCheckReportRightAway(false);
     setConversationId(null);
+    setPassword("");
+    setNewPassword("");
+    setRePassword("");
   };
 
   return (
