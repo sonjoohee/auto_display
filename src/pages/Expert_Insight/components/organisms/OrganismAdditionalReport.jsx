@@ -161,6 +161,12 @@ const OrganismAdditionalReport = ({
               : [additionalReportData]),
             answerData,
           ];
+          if (Array.isArray(updatedAdditionalReportData)) {
+            console.log("🚀 ~ 배열로 재생성:", updatedAdditionalReportData);
+            updatedAdditionalReportData = [];
+            updatedAdditionalReportData.push(answerData);
+          }
+
           updatedAdditionalReportData = Array.isArray(
             updatedAdditionalReportData
           )
