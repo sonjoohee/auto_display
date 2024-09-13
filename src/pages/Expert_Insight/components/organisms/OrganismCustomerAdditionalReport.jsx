@@ -107,7 +107,7 @@ const OrganismCustomerAdditionalReport = ({
   const [customerAdditionalReportData, setCustomerAdditionalReportData] =
     useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
 
-    const [advise, setAdvise] = useState(""); // 새로운 advise 상태 추가
+  const [advise, setAdvise] = useState(""); // 새로운 advise 상태 추가
 
   useEffect(() => {
     const loadData = async () => {
@@ -117,7 +117,6 @@ const OrganismCustomerAdditionalReport = ({
         //   conversationId,
         //   isLoggedIn
         // );
-
 
         setAnswerData(
           customerAdditionalReportData[customerAdditionalReportCount]
@@ -132,8 +131,12 @@ const OrganismCustomerAdditionalReport = ({
             customerAdditionalReportData[customerAdditionalReportCount]
               ?.sections || []
           );
-          if (customerAdditionalReportData[customerAdditionalReportCount].advise) {
-            setAdvise(customerAdditionalReportData[customerAdditionalReportCount].advise); // advise가 있을 경우 상태에 저장
+          if (
+            customerAdditionalReportData[customerAdditionalReportCount].advise
+          ) {
+            setAdvise(
+              customerAdditionalReportData[customerAdditionalReportCount].advise
+            ); // advise가 있을 경우 상태에 저장
           }
         } else if (buttonState === 1) {
           // 버튼 상태가 1일 때만 API 요청 실행
@@ -252,78 +255,79 @@ const OrganismCustomerAdditionalReport = ({
           const updatedConversation2 = [...conversation];
           // console.log(approachPath, conversationStage);
           // if (approachPath === 1 || approachPath === 3) {
-            if (approachPath !== -1) {
-              if (conversationStage === 2) {
-                if (answerData.advise) {
-                  // advise 상태일 경우
-                  updatedConversation2.push({
-                    type: "system",
-                    message: "사실, 저는 비즈니스 전문가이기 때문에 더 이상 구체적인 도움을 드리기 어려워요. 하지만 귀하가 비즈니스 관련 고민을 공유해주신다면, 저는 귀하께 더욱 도움을 줄 수 있어요!",
-                    expertIndex: 0,
-                  });
-                } else {
-                  // 일반적인 결과일 경우
-                  updatedConversation2.push(
-                    {
-                      type: "system",
-                      message:
-                        "비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 지금 바로 전략 보고서를 준비해드려요.",
-                      expertIndex: selectedExpertIndex,
-                    },
-                    { type: "report_button" }
-                  );
-                }
-              } else if (conversationStage === 3) {
-                if (answerData.advise) {
-                  // advise 상태일 경우
-                  updatedConversation2.push(
-                    {
-                      type: "system",
-                      message: "사실, 저는 비즈니스 전문가이기 때문에 더 이상 구체적인 도움을 드리기 어려워요. 하지만 귀하가 비즈니스 관련 고민을 공유해주신다면, 저는 귀하께 더욱 도움을 줄 수 있어요!",
-                      expertIndex: 0,
-                    }
-                  );
-                } else {
-                  // 일반적인 keyword result일 경우
-                  updatedConversation2.push(
-                    {
-                      type: "system",
-                      message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${response.data.keyword.result}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
-                      expertIndex: 0,
-                    },
-                    { type: "keyword" }
-                  );
-                }
-              }
-            } else if (approachPath !== 1) {
-              if (conversationStage === 2) {
+          if (approachPath !== -1) {
+            if (conversationStage === 2) {
+              if (answerData.advise) {
+                // advise 상태일 경우
                 updatedConversation2.push({
                   type: "system",
-                  message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${response.data.keyword.result}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
+                  message:
+                    "사실, 저는 비즈니스 전문가이기 때문에 더 이상 구체적인 도움을 드리기 어려워요. 하지만 귀하가 비즈니스 관련 고민을 공유해주신다면, 저는 귀하께 더욱 도움을 줄 수 있어요!",
                   expertIndex: 0,
                 });
-              } else if (conversationStage === 3) {
-                if (answerData.advise) {
-                  // advise 상태일 경우
-                  updatedConversation2.push({
+              } else {
+                // 일반적인 결과일 경우
+                updatedConversation2.push(
+                  {
                     type: "system",
-                    message: "사실, 저는 비즈니스 전문가이기 때문에 더 이상 구체적인 도움을 드리기 어려워요. 하지만 귀하가 비즈니스 관련 고민을 공유해주신다면, 저는 귀하께 더욱 도움을 줄 수 있어요!",
+                    message:
+                      "비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 지금 바로 전략 보고서를 준비해드려요.",
+                    expertIndex: selectedExpertIndex,
+                  },
+                  { type: "report_button" }
+                );
+              }
+            } else if (conversationStage === 3) {
+              if (answerData.advise) {
+                // advise 상태일 경우
+                updatedConversation2.push({
+                  type: "system",
+                  message:
+                    "사실, 저는 비즈니스 전문가이기 때문에 더 이상 구체적인 도움을 드리기 어려워요. 하지만 귀하가 비즈니스 관련 고민을 공유해주신다면, 저는 귀하께 더욱 도움을 줄 수 있어요!",
+                  expertIndex: 0,
+                });
+              } else {
+                // 일반적인 keyword result일 경우
+                updatedConversation2.push(
+                  {
+                    type: "system",
+                    message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${response.data.keyword.result}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
                     expertIndex: 0,
-                  });
-                } else {
-                  // 일반적인 keyword result일 경우
-                  updatedConversation2.push(
-                    {
-                      type: "system",
-                      message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${response.data.keyword.result}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
-                      expertIndex: 0,
-                    },
-                    { type: "keyword" }
-                  );
-                }
+                  },
+                  { type: "keyword" }
+                );
               }
             }
-                        
+          } else if (approachPath !== 1) {
+            if (conversationStage === 2) {
+              updatedConversation2.push({
+                type: "system",
+                message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${response.data.keyword.result}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
+                expertIndex: 0,
+              });
+            } else if (conversationStage === 3) {
+              if (answerData.advise) {
+                // advise 상태일 경우
+                updatedConversation2.push({
+                  type: "system",
+                  message:
+                    "사실, 저는 비즈니스 전문가이기 때문에 더 이상 구체적인 도움을 드리기 어려워요. 하지만 귀하가 비즈니스 관련 고민을 공유해주신다면, 저는 귀하께 더욱 도움을 줄 수 있어요!",
+                  expertIndex: 0,
+                });
+              } else {
+                // 일반적인 keyword result일 경우
+                updatedConversation2.push(
+                  {
+                    type: "system",
+                    message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${response.data.keyword.result}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
+                    expertIndex: 0,
+                  },
+                  { type: "keyword" }
+                );
+              }
+            }
+          }
+
           setConversation(updatedConversation2);
           await saveConversationToIndexedDB(
             {
@@ -386,7 +390,6 @@ const OrganismCustomerAdditionalReport = ({
           {title && (
             <TabHeader>
               <TabTitle>{title}</TabTitle>
-              {/* <TabContent>{purpose}</TabContent> */}
             </TabHeader>
           )}
 
@@ -395,6 +398,7 @@ const OrganismCustomerAdditionalReport = ({
               key={index}
               title={section.title}
               content={section.content}
+              index={index - 1}
             />
           ))}
 
@@ -414,20 +418,30 @@ const OrganismCustomerAdditionalReport = ({
 
 // ... (아래 부분은 동일)
 
-const Section = ({ title, content }) => {
+const Section = ({ title, content, index }) => {
   // 서브 타이틀이 있는 항목과 없는 항목을 분리
   const subTitleItems = content.filter((item) => item.subTitle);
   const nonSubTitleItems = content.filter((item) => !item.subTitle);
 
+  // subText에서 ':'로 분리하여 subTitle과 text를 따로 처리
+  const splitText = (text) => {
+    const [subTitle, ...rest] = text.split(":");
+    return {
+      subTitle: subTitle.trim(), // ':' 앞부분
+      text: rest.join(":").trim(), // ':' 뒷부분
+    };
+  };
+
   return (
-    <BoxWrap>
-      {title && (
+    <BoxWrap isPurpose={title === "목적"}>
+      {" "}
+      {/* 타이틀이 "목적"인지 확인 */}
+      {title && title !== "목적" && (
         <strong>
-          <img src={images.Check} alt="" />
-          {title}
+          {/* 번호 표시 */}
+          {index + 1}. {title}
         </strong>
       )}
-
       {/* nonSubTitleItems는 일반적으로 title과 text만 표시 */}
       {nonSubTitleItems.length > 0 &&
         nonSubTitleItems?.map((item, index) => (
@@ -436,19 +450,39 @@ const Section = ({ title, content }) => {
             {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
           </div>
         ))}
-
       {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
-      {subTitleItems.length > 0 && (
-        <DynamicGrid columns={subTitleItems.length}>
-          {subTitleItems?.map((item, index) => (
-            <div key={index}>
-              {item.subTitle && <SubTitle>{item.subTitle}</SubTitle>}
-              <p>{item.text}</p>
-              {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
+      <>
+        {subTitleItems.map((item, index) => (
+          <SeparateSection key={index}>
+            <strong>
+              {/* <strong_title>{`${item.subTitle}`}</strong_title> */}{" "}
+              {/* 차후 추가할수도 있음*/}
+            </strong>
+            <p>
+              {item.subTitle} : {item.text}
+            </p>
+
+            {/* subText1, subText2, subText3를 한 줄씩 표시 */}
+            <div>
+              {item.subText1 && (
+                <p>
+                  {item.subTitle}: {splitText(item.subText1).text}
+                </p>
+              )}
+              {item.subText2 && (
+                <p>
+                  {item.subTitle}: {splitText(item.subText2).text}
+                </p>
+              )}
+              {item.subText3 && (
+                <p>
+                  {item.subTitle}: {splitText(item.subText3).text}
+                </p>
+              )}
             </div>
-          ))}
-        </DynamicGrid>
-      )}
+          </SeparateSection>
+        ))}
+      </>
     </BoxWrap>
   );
 };
@@ -485,11 +519,8 @@ const AnalysisSection = styled.div`
 const BoxWrap = styled.div`
   padding: 20px;
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.04);
-
-  + div {
-    margin-top: 12px;
-  }
+  background: ${(props) =>
+    props.isPurpose ? palette.white : "rgba(0,0,0,.03)"}; /* 흰 배경 적용 */
 
   strong {
     display: flex;
@@ -601,6 +632,178 @@ const LoadingOverlay = styled.div`
 const Spacing = styled.div`
   margin-bottom: 40px; /* 제목과 본문 사이의 간격 */
 `;
+
+const NumDynamicGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(${(props) => props.columns}, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+
+  ul {
+    list-style: none; /* 기본 리스트 스타일 제거 */
+    padding: 0;
+    margin: 0;
+
+    li {
+      position: relative;
+      font-size: 0.875rem;
+      color: ${palette.gray800};
+      line-height: 1.5;
+      padding-left: 13px;
+      margin-left: 8px;
+
+      &:before {
+        position: absolute;
+        top: 8px;
+        left: 0;
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: ${palette.gray800};
+        content: "";
+      }
+    }
+  }
+
+  div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid ${palette.lineGray};
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: ${palette.darkGray};
+    line-height: 1.5;
+  }
+`;
+
+const SeparateSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 0px 20px; /* 위아래 5px, 좌우 20px */
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0);
+
+  h4 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  strong {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: ${palette.darkGray};
+  }
+
+  strong_title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: ${palette.darkGray};
+  }
+
+  p {
+    position: relative;
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: ${palette.darkGray};
+    line-height: 1.5;
+    padding-left: 13px;
+    margin-left: 8px;
+
+    &:before {
+      position: absolute;
+      top: 8px;
+      left: 0;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: ${palette.gray800};
+      content: "";
+    }
+  }
+
+  .flexBox {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+
+    > div {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid ${palette.lineGray};
+
+      p {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+      }
+    }
+
+    .bgWhite {
+      margin-top: 0 !important;
+    }
+  }
+
+  .bgWhite {
+    padding: 15px !important;
+    margin-top: 12px;
+    border-radius: 10px;
+    border: 1px solid ${palette.white} !important;
+    background: ${palette.white};
+
+    .title {
+      color: ${palette.black};
+      font-weight: 700;
+    }
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    li {
+      position: relative;
+      font-size: 0.875rem;
+      color: ${palette.darkGray};
+      line-height: 1.5;
+      padding-left: 13px;
+
+      &:before {
+        position: absolute;
+        top: 8px;
+        left: 0;
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: ${palette.gray800};
+        content: "";
+      }
+    }
+  }
+`;
+
 const AdviseBox = styled.div`
   background: ${palette.lightGray};
   padding: 20px;

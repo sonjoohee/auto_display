@@ -586,7 +586,7 @@ const SeparateSection = styled.div`
   flex-direction: column;
   padding: 0px 20px; /* 위아래 5px, 좌우 20px */
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.00);
+  background: rgba(0, 0, 0, 0);
 
   h4 {
     display: flex;
