@@ -156,11 +156,19 @@ const OrganismCustomerAdditionalReport = ({
             axiosConfig
           );
 
-          if (response.data.keyword.result_state == 1) {
-            answerData = response.data.additional_question;
-          } else if (response.data.keyword.result_state == 0) {
-            answerData = response.data.advise;
-          }
+          answerData = response.data.additional_question;
+          console.log("🚀 ~ loadData ~ answerData:", answerData);
+          // if (response.data.keyword.result_state == 1) {
+          //   answerData = response.data.additional_question;
+          // } else if (response.data.keyword.result_state == 0) {
+          //   answerData = response.data.advise;
+          // }
+
+          // 임시로 키워드 설정
+          const updatedKeywords = [...selectedCustomerAdditionalKeyword];
+          updatedKeywords.push(response.data.keyword.result);
+          setSelectedCustomerAdditionalKeyword(updatedKeywords);
+
           setAnswerData(answerData);
           setTitle(answerData?.title);
           setSections(answerData?.sections);
