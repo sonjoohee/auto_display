@@ -170,6 +170,10 @@ const OrganismCustomerAdditionalReport = ({
             ...customerAdditionalReportData, // 기존 데이터
             answerData, // 새로 가져온 데이터
           ];
+
+          // let updatedAdditionalReportData = customerAdditionalReportData; // 기존 데이터
+          // updatedAdditionalReportData.push(answerData); // 새로 가져온 데이터
+
           setCustomerAdditionalReportData(updatedAdditionalReportData);
 
           // const updatedConversation = {
