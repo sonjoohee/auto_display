@@ -27,6 +27,10 @@ const OrganismReportPopup = ({ report, onClose }) => {
     reportIndex === 2 && (reportTypeText = "추가 보고서");
   }
 
+  {
+    reportIndex === 3 && (reportTypeText = "사용자 질문 보고서");
+  }
+
   return ReactDOM.createPortal(
     <PopupOverlay onClick={onClose}>
       <PopupContent onClick={(e) => e.stopPropagation()}>
@@ -50,6 +54,8 @@ const OrganismReportPopup = ({ report, onClose }) => {
         {reportIndex === 1 && <StrategyReportSection report={report} />}
 
         {reportIndex === 2 && <AdditionalReportSection report={report} />}
+
+        {reportIndex === 3 && <AdditionalReportSection report={report} />}
 
         <CloseButton onClick={onClose}>닫기</CloseButton>
       </PopupContent>
