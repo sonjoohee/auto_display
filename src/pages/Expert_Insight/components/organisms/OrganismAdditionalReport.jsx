@@ -40,7 +40,7 @@ const OrganismAdditionalReport = ({
   additionalReportCount,
   conversationId,
 }) => {
-  console.log("🚀 ~ additionalReportCount:", additionalReportCount);
+  // console.log("🚀 ~ additionalReportCount:", additionalReportCount);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
   const [inputBusinessInfo, setInputBusinessInfo] =
     useAtom(INPUT_BUSINESS_INFO);
@@ -123,7 +123,7 @@ const OrganismAdditionalReport = ({
             "🚀 ~ loadData ~ additionalReportData:",
             additionalReportData
           );
-
+          setAnswerData(additionalReportData[additionalReportCount]);
           setTitle(additionalReportData[additionalReportCount]?.title || []);
           setSections(
             additionalReportData[additionalReportCount]?.sections || []
@@ -163,15 +163,17 @@ const OrganismAdditionalReport = ({
           );
           // 새로운 데이터를 배열의 맨 앞에 추가합니다.
           const updatedAdditionalReportData = [
-            ...additionalReportData, // 기존 데이터
-            answerData, // 새로 가져온 데이터
+            ...(Array.isArray(additionalReportData)
+              ? additionalReportData
+              : [additionalReportData]),
+            answerData,
           ];
           // let updatedAdditionalReportData = additionalReportData; // 새로 가져온 데이터
           // updatedAdditionalReportData.push(answerData);
-          // console.log(
-          //   "🚀 ~ loadData ~ updatedAdditionalReportData:",
-          //   updatedAdditionalReportData
-          // );
+          console.log(
+            "🚀 ~ loadData ~ updatedAdditionalReportData:",
+            updatedAdditionalReportData
+          );
           setAdditionalReportData(updatedAdditionalReportData);
 
           // const updatedConversation = {
