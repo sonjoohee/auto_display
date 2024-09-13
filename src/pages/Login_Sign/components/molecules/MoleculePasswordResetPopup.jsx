@@ -14,7 +14,7 @@ const MoleculePasswordResetPopup = ({ onClose, email }) => {
   const handleResendEmail = async () => {
     try {
       const response = await fetch(
-        "https://wishresearch.kr/resend-password-reset-email",
+        "https://wishresearch.kr/api/user/passwordMail/",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -35,8 +35,8 @@ const MoleculePasswordResetPopup = ({ onClose, email }) => {
   };
 
   const handleGoToLogin = () => {
-    navigate("/login");
-    console.log("로그인 페이지로 이동");
+    navigate("/");
+    console.log("메인 페이지로 이동");
   };
 
   return (
@@ -54,7 +54,7 @@ const MoleculePasswordResetPopup = ({ onClose, email }) => {
           </Description>
           <ButtonGroup>
             <ActionButton onClick={handleGoToLogin}>
-              로그인 화면 바로가기
+              메인 화면 바로가기
             </ActionButton>
             <ActionButton onClick={handleResendEmail} primary>
               메일 재발송

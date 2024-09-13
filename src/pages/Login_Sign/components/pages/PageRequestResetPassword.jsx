@@ -18,7 +18,7 @@ const RequestResetPassword = () => {
     try {
       // https://wishresearch.kr/request-reset-password
       const response = await fetch(
-        "https://wishresearch.kr/request-reset-password",
+        "https://wishresearch.kr/api/user/passwordMail/",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -48,7 +48,7 @@ const RequestResetPassword = () => {
   const handleResendEmail = async () => {
     try {
       const response = await fetch(
-        "https://wishresearch.kr/resend-password-reset-email",
+        "https://wishresearch.kr/api/user/passwordMail/",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

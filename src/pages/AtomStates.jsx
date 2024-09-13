@@ -4,6 +4,8 @@ import { atom } from "jotai";
 // 로그인 상태
 export const emailAtom = atom("");
 export const passwordAtom = atom("");
+export const newPasswordAtom = atom("");
+export const rePasswordAtom = atom("");
 export const isLoggedInAtom = atom(false);
 export const loginSuccessAtom = atom(null);
 
@@ -138,6 +140,7 @@ export const CUSTOMER_ADDITIONAL_REPORT_DATA = atom([]);
 export const APPROACH_PATH = atom(0);
 
 export const SELECTED_ADDITIONAL_KEYWORD = atom([]);
+export const SELECTED_CUSTOMER_ADDITIONAL_KEYWORD = atom([]);
 
 export const SELECTED_ADDITIONAL_KEYWORD1 = atom("");
 export const SELECTED_ADDITIONAL_KEYWORD2 = atom("");
@@ -239,6 +242,8 @@ export const BUTTON_STATE = atom(0);
 export const ANALYSIS_BUTTON_STATE = atom(0);
 export const EXPERT_BUTTON_STATE = atom(0);
 export const ADDITION_BUTTON_STATE = atom(0);
+export const CUSTOMER_ADDITION_BUTTON_STATE = atom(0);
+export const CUSTOMER_ADDITION_QUESTION_INPUT = atom("");
 
 export const iS_CLICK_CHECK_REPORT_RIGHTAWAY = atom(false);
 

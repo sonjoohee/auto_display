@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useAtom } from "jotai";
 import {
-  ADDITIONAL_REPORT_DATA,
   SELECTED_EXPERT_INDEX,
-  SELECTED_ADDITIONAL_KEYWORD, // Import the new atom
   TITLE_OF_BUSINESS_INFORMATION,
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
   MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
@@ -18,7 +16,13 @@ import {
   EXPERT2_REPORT_DATA,
   EXPERT3_REPORT_DATA,
   INPUT_BUSINESS_INFO,
+  CONVERSATION_STAGE,
+  SELECTED_ADDITIONAL_KEYWORD,
+  SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
+  ADDITIONAL_REPORT_DATA,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
+  CUSTOMER_ADDITION_BUTTON_STATE,
+  CUSTOMER_ADDITION_QUESTION_INPUT,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -44,8 +48,8 @@ const OrganismCustomerAdditionalReport = ({
     useAtom(INPUT_BUSINESS_INFO);
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [approachPath] = useAtom(APPROACH_PATH);
-  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
-    SELECTED_ADDITIONAL_KEYWORD
+  const [questionInput, setQuestionInput] = useAtom(
+    CUSTOMER_ADDITION_QUESTION_INPUT
   );
   const [isLoadingAdd, setIsLoadingAdd] = useState(false);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
@@ -68,7 +72,7 @@ const OrganismCustomerAdditionalReport = ({
     businessInformationTargetCustomer,
     setBusinessInformationTargetCustomer,
   ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [buttonState, setButtonState] = useAtom(ADDITION_BUTTON_STATE);
+  const [buttonState, setButtonState] = useAtom(CUSTOMER_ADDITION_BUTTON_STATE);
   const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(
     SELECTED_EXPERT_INDEX
   );
@@ -78,15 +82,10 @@ const OrganismCustomerAdditionalReport = ({
     mainCharacter: mainCharacteristicOfBusinessInformation,
     mainCustomer: businessInformationTargetCustomer,
   };
-  const [selectedKeywords] = useAtom(SELECTED_ADDITIONAL_KEYWORD); // Access the list of selected keywords
   const [title, setTitle] = useState([]);
   const [sections, setSections] = useState([]);
-  const [additionalReportData, setAdditionalReportData] = useAtom(
-    ADDITIONAL_REPORT_DATA
-  ); // Use the list-based atom
-  const [customerAdditionalReportData, setCustomerAdditionalReportData] =
-    useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA); // Use the list-based atom
   const [answerData, setAnswerData] = useState("");
+  const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const axiosConfig = {
     timeout: 100000, // 100초
     headers: {
@@ -95,8 +94,20 @@ const OrganismCustomerAdditionalReport = ({
     withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
   };
 
-  // const additionalReportAtom = strategyReportAtomMap[expertIndex] || ADDITIONAL_REPORT_DATA1;
-  // const [additionalReportData, setAdditionalReportData] = useAtom(additionalReportAtom);
+  const [additionalReportData, setAdditionalReportData] = useAtom(
+    ADDITIONAL_REPORT_DATA
+  );
+  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
+    SELECTED_ADDITIONAL_KEYWORD
+  );
+  const [
+    selectedCustomerAdditionalKeyword,
+    setSelectedCustomerAdditionalKeyword,
+  ] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
+  const [customerAdditionalReportData, setCustomerAdditionalReportData] =
+    useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
+
+  const [advise, setAdvise] = useState(""); // 새로운 advise 상태 추가
 
   useEffect(() => {
     const loadData = async () => {
@@ -106,21 +117,37 @@ const OrganismCustomerAdditionalReport = ({
         //   conversationId,
         //   isLoggedIn
         // );
+
+        setAnswerData(
+          customerAdditionalReportData[customerAdditionalReportCount]
+        );
         // 기존 데이터가 있을 때 처리
-        if (additionalReportData[customerAdditionalReportCount]) {
+        if (customerAdditionalReportData[customerAdditionalReportCount]) {
           setTitle(
-            additionalReportData[customerAdditionalReportCount]?.title || []
+            customerAdditionalReportData[customerAdditionalReportCount]
+              ?.title || []
           );
           setSections(
-            additionalReportData[customerAdditionalReportCount]?.sections || []
+            customerAdditionalReportData[customerAdditionalReportCount]
+              ?.sections || []
           );
+          if (
+            customerAdditionalReportData[customerAdditionalReportCount].advise
+          ) {
+            setAdvise(
+              customerAdditionalReportData[customerAdditionalReportCount].advise
+            ); // advise가 있을 경우 상태에 저장
+          }
         } else if (buttonState === 1) {
           // 버튼 상태가 1일 때만 API 요청 실행
           setButtonState(0); // 버튼 상태 초기화
           setIsLoadingAdd(true);
           setIsLoading(true);
 
-          const keyword = selectedKeywords[selectedKeywords.length - 1]; // Use the keyword based on expertIndex
+          // const keyword =
+          //   selectedCustomerAdditionalKeyword[
+          //     selectedCustomerAdditionalKeyword.length - 1
+          //   ]; // Use the keyword based on expertIndex
 
           const data = {
             business_info: titleOfBusinessInfo,
@@ -130,29 +157,70 @@ const OrganismCustomerAdditionalReport = ({
               주요기능: analysisReportData.mainCharacter,
               목표고객: analysisReportData.mainCustomer,
             },
-            question_info: keyword,
+            question_info: questionInput,
           };
+          console.log("🚀 ~ loadData ~ data:", data);
+
+          // console.log(data);
 
           const response = await axios.post(
-            "https://wishresearch.kr/panels/add_question",
+            "https://wishresearch.kr/panels/customer_add_question",
             data,
             axiosConfig
           );
+
           answerData = response.data.additional_question;
+
+          if (answerData.advise) {
+            setAdvise(answerData.advise);
+          }
+          // if (response.data.keyword.result_state == 1) {
+          //   answerData = response.data.additional_question;
+          // } else if (response.data.keyword.result_state == 0) {
+          //   answerData = response.data.advise;
+          // }
+
+          // 임시로 키워드 설정
+          const updatedKeywords = [...selectedCustomerAdditionalKeyword];
+          updatedKeywords.push(response.data.keyword.result);
+          setSelectedCustomerAdditionalKeyword(updatedKeywords);
+
           setAnswerData(answerData);
           setTitle(answerData?.title);
           setSections(answerData?.sections);
 
           // 새로운 데이터를 배열의 맨 앞에 추가합니다.
-          const updatedAdditionalReportData = [
-            ...additionalReportData, // 기존 데이터
-            answerData, // 새로 가져온 데이터
-          ];
-          setAdditionalReportData(updatedAdditionalReportData);
+
+          // let updatedAdditionalReportData = [
+          //   ...(Array.isArray(customerAdditionalReportData)
+          //     ? customerAdditionalReportData
+          //     : [customerAdditionalReportData]),
+          //   answerData,
+          // ];
+
+          let updatedAdditionalReportData = [];
+
+          // if (Array.isArray(updatedAdditionalReportData)) {
+          //   console.log("🚀 ~ 배열로 재생성:", updatedAdditionalReportData);
+          //   updatedAdditionalReportData = [];
+          //   updatedAdditionalReportData.push(customerAdditionalReportData);
+          //   updatedAdditionalReportData.push(answerData);
+          // }
+          if (customerAdditionalReportCount === 0) {
+            updatedAdditionalReportData.push(answerData);
+          } else {
+            updatedAdditionalReportData = customerAdditionalReportData;
+            updatedAdditionalReportData.push(answerData);
+          }
+
+          // let updatedAdditionalReportData = customerAdditionalReportData; // 기존 데이터
+          // updatedAdditionalReportData.push(answerData); // 새로 가져온 데이터
+
+          setCustomerAdditionalReportData(updatedAdditionalReportData);
 
           // const updatedConversation = {
           //   ...existingConversation,
-          //   additionalReportData: updatedAdditionalReportData, // 전체 리스트를 저장
+          //   customerAdditionalReportData: updatedAdditionalReportData, // 전체 리스트를 저장
           //   timestamp: Date.now(),
           // };
           await saveConversationToIndexedDB(
@@ -166,7 +234,7 @@ const OrganismCustomerAdditionalReport = ({
               //   strategyReportData_EX1: {},
               //   strategyReportData_EX2: {},
               //   strategyReportData_EX3: {},
-              //   additionalReportData: [],
+              //   customerAdditionalReportData: [],
               //   selectedAdditionalKeywords: [],
               //   timestamp: new Date().toISOString(),
 
@@ -179,10 +247,12 @@ const OrganismCustomerAdditionalReport = ({
               strategyReportData_EX2: expert2ReportData,
               strategyReportData_EX3: expert3ReportData,
               conversation: conversation,
-              selectedAdditionalKeywords: selectedKeywords,
-              // answerData,
-              additionalReportData: updatedAdditionalReportData,
-              conversationStage: 3,
+              selectedAdditionalKeywords: selectedAdditionalKeyword,
+              selectedCustomerAdditionalKeyword:
+                selectedCustomerAdditionalKeyword,
+              additionalReportData: additionalReportData,
+              customerAdditionalReportData: updatedAdditionalReportData,
+              conversationStage: conversationStage,
               timestamp: Date.now(),
               expert_index: selectedExpertIndex,
             },
@@ -193,31 +263,97 @@ const OrganismCustomerAdditionalReport = ({
           setIsLoading(false);
 
           const updatedConversation2 = [...conversation];
-          updatedConversation2.push(
-            {
-              type: "system",
-              message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${
-                selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]
-              }를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
-              expertIndex: 0,
-            },
-            { type: "keyword" }
-          );
+          // console.log(approachPath, conversationStage);
+          // if (approachPath === 1 || approachPath === 3) {
+          if (approachPath !== -1) {
+            if (conversationStage === 2) {
+              if (answerData.advise) {
+                // advise 상태일 경우
+                updatedConversation2.push({
+                  type: "system",
+                  message:
+                    "사실, 저는 비즈니스 전문가이기 때문에 더 이상 구체적인 도움을 드리기 어려워요. 하지만 귀하가 비즈니스 관련 고민을 공유해주신다면, 저는 귀하께 더욱 도움을 줄 수 있어요!",
+                  expertIndex: 0,
+                });
+              } else {
+                // 일반적인 결과일 경우
+                updatedConversation2.push(
+                  {
+                    type: "system",
+                    message:
+                      "비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 지금 바로 전략 보고서를 준비해드려요.",
+                    expertIndex: selectedExpertIndex,
+                  },
+                  { type: "report_button" }
+                );
+              }
+            } else if (conversationStage === 3) {
+              if (answerData.advise) {
+                // advise 상태일 경우
+                updatedConversation2.push({
+                  type: "system",
+                  message:
+                    "사실, 저는 비즈니스 전문가이기 때문에 더 이상 구체적인 도움을 드리기 어려워요. 하지만 귀하가 비즈니스 관련 고민을 공유해주신다면, 저는 귀하께 더욱 도움을 줄 수 있어요!",
+                  expertIndex: 0,
+                });
+              } else {
+                // 일반적인 keyword result일 경우
+                updatedConversation2.push(
+                  {
+                    type: "system",
+                    message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${response.data.keyword.result}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
+                    expertIndex: 0,
+                  },
+                  { type: "keyword" }
+                );
+              }
+            }
+          } else if (approachPath !== 1) {
+            if (conversationStage === 2) {
+              updatedConversation2.push({
+                type: "system",
+                message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${response.data.keyword.result}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
+                expertIndex: 0,
+              });
+            } else if (conversationStage === 3) {
+              if (answerData.advise) {
+                // advise 상태일 경우
+                updatedConversation2.push({
+                  type: "system",
+                  message:
+                    "사실, 저는 비즈니스 전문가이기 때문에 더 이상 구체적인 도움을 드리기 어려워요. 하지만 귀하가 비즈니스 관련 고민을 공유해주신다면, 저는 귀하께 더욱 도움을 줄 수 있어요!",
+                  expertIndex: 0,
+                });
+              } else {
+                // 일반적인 keyword result일 경우
+                updatedConversation2.push(
+                  {
+                    type: "system",
+                    message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${response.data.keyword.result}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
+                    expertIndex: 0,
+                  },
+                  { type: "keyword" }
+                );
+              }
+            }
+          }
+
           setConversation(updatedConversation2);
           await saveConversationToIndexedDB(
             {
-              // expertIndex: 0,
               id: conversationId,
               inputBusinessInfo: inputBusinessInfo,
               analysisReportData: analysisReportData,
               strategyReportData_EX1: expert1ReportData,
               strategyReportData_EX2: expert2ReportData,
               strategyReportData_EX3: expert3ReportData,
-              // conversation: conversation,
-              selectedAdditionalKeywords: selectedKeywords,
               conversation: updatedConversation2,
-              conversationStage: 3,
-              additionalReportData: updatedAdditionalReportData,
+              conversationStage: conversationStage,
+              selectedAdditionalKeywords: selectedAdditionalKeyword,
+              selectedCustomerAdditionalKeyword:
+                selectedCustomerAdditionalKeyword,
+              additionalReportData: additionalReportData,
+              customerAdditionalReportData: updatedAdditionalReportData,
               timestamp: Date.now(),
               expert_index: selectedExpertIndex,
             },
@@ -234,7 +370,7 @@ const OrganismCustomerAdditionalReport = ({
     loadData();
   }, [
     conversationId,
-    selectedKeywords,
+    selectedCustomerAdditionalKeyword,
     buttonState, // buttonState 의존성 추가
   ]);
 
@@ -256,10 +392,14 @@ const OrganismCustomerAdditionalReport = ({
         </>
       ) : (
         <>
+          {advise && (
+            <AdviseBox>
+              <p>{advise}</p> {/* advise가 있을 때 표시 */}
+            </AdviseBox>
+          )}
           {title && (
             <TabHeader>
               <TabTitle>{title}</TabTitle>
-              {/* <TabContent>{purpose}</TabContent> */}
             </TabHeader>
           )}
 
@@ -268,12 +408,13 @@ const OrganismCustomerAdditionalReport = ({
               key={index}
               title={section.title}
               content={section.content}
+              index={index - 1}
             />
           ))}
 
           {!isLoadingAdd && (
             <MoleculeReportController
-              reportIndex={2}
+              reportIndex={3}
               conversationId={conversationId}
               sampleData={answerData}
               additionalReportCount={customerAdditionalReportCount}
@@ -287,20 +428,30 @@ const OrganismCustomerAdditionalReport = ({
 
 // ... (아래 부분은 동일)
 
-const Section = ({ title, content }) => {
+const Section = ({ title, content, index }) => {
   // 서브 타이틀이 있는 항목과 없는 항목을 분리
   const subTitleItems = content.filter((item) => item.subTitle);
   const nonSubTitleItems = content.filter((item) => !item.subTitle);
 
+  // subText에서 ':'로 분리하여 subTitle과 text를 따로 처리
+  const splitText = (text) => {
+    const [subTitle, ...rest] = text.split(":");
+    return {
+      subTitle: subTitle.trim(), // ':' 앞부분
+      text: rest.join(":").trim(), // ':' 뒷부분
+    };
+  };
+
   return (
-    <BoxWrap>
-      {title && (
+    <BoxWrap isPurpose={title === "목적"}>
+      {" "}
+      {/* 타이틀이 "목적"인지 확인 */}
+      {title && title !== "목적" && (
         <strong>
-          <img src={images.Check} alt="" />
-          {title}
+          {/* 번호 표시 */}
+          {index + 1}. {title}
         </strong>
       )}
-
       {/* nonSubTitleItems는 일반적으로 title과 text만 표시 */}
       {nonSubTitleItems.length > 0 &&
         nonSubTitleItems?.map((item, index) => (
@@ -309,19 +460,39 @@ const Section = ({ title, content }) => {
             {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
           </div>
         ))}
-
       {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
-      {subTitleItems.length > 0 && (
-        <DynamicGrid columns={subTitleItems.length}>
-          {subTitleItems?.map((item, index) => (
-            <div key={index}>
-              {item.subTitle && <SubTitle>{item.subTitle}</SubTitle>}
-              <p>{item.text}</p>
-              {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
+      <>
+        {subTitleItems.map((item, index) => (
+          <SeparateSection key={index}>
+            <strong>
+              {/* <strong_title>{`${item.subTitle}`}</strong_title> */}{" "}
+              {/* 차후 추가할수도 있음*/}
+            </strong>
+            <p>
+              {item.subTitle} : {item.text}
+            </p>
+
+            {/* subText1, subText2, subText3를 한 줄씩 표시 */}
+            <div>
+              {item.subText1 && (
+                <p>
+                  {item.subTitle}: {splitText(item.subText1).text}
+                </p>
+              )}
+              {item.subText2 && (
+                <p>
+                  {item.subTitle}: {splitText(item.subText2).text}
+                </p>
+              )}
+              {item.subText3 && (
+                <p>
+                  {item.subTitle}: {splitText(item.subText3).text}
+                </p>
+              )}
             </div>
-          ))}
-        </DynamicGrid>
-      )}
+          </SeparateSection>
+        ))}
+      </>
     </BoxWrap>
   );
 };
@@ -358,11 +529,8 @@ const AnalysisSection = styled.div`
 const BoxWrap = styled.div`
   padding: 20px;
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.04);
-
-  + div {
-    margin-top: 12px;
-  }
+  background: ${(props) =>
+    props.isPurpose ? palette.white : "rgba(0,0,0,.03)"}; /* 흰 배경 적용 */
 
   strong {
     display: flex;
@@ -473,4 +641,188 @@ const LoadingOverlay = styled.div`
 
 const Spacing = styled.div`
   margin-bottom: 40px; /* 제목과 본문 사이의 간격 */
+`;
+
+const NumDynamicGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(${(props) => props.columns}, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+
+  ul {
+    list-style: none; /* 기본 리스트 스타일 제거 */
+    padding: 0;
+    margin: 0;
+
+    li {
+      position: relative;
+      font-size: 0.875rem;
+      color: ${palette.gray800};
+      line-height: 1.5;
+      padding-left: 13px;
+      margin-left: 8px;
+
+      &:before {
+        position: absolute;
+        top: 8px;
+        left: 0;
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: ${palette.gray800};
+        content: "";
+      }
+    }
+  }
+
+  div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid ${palette.lineGray};
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: ${palette.darkGray};
+    line-height: 1.5;
+  }
+`;
+
+const SeparateSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 0px 20px; /* 위아래 5px, 좌우 20px */
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0);
+
+  h4 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  strong {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: ${palette.darkGray};
+  }
+
+  strong_title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: ${palette.darkGray};
+  }
+
+  p {
+    position: relative;
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: ${palette.darkGray};
+    line-height: 1.5;
+    padding-left: 13px;
+    margin-left: 8px;
+
+    &:before {
+      position: absolute;
+      top: 8px;
+      left: 0;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: ${palette.gray800};
+      content: "";
+    }
+  }
+
+  .flexBox {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+
+    > div {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid ${palette.lineGray};
+
+      p {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+      }
+    }
+
+    .bgWhite {
+      margin-top: 0 !important;
+    }
+  }
+
+  .bgWhite {
+    padding: 15px !important;
+    margin-top: 12px;
+    border-radius: 10px;
+    border: 1px solid ${palette.white} !important;
+    background: ${palette.white};
+
+    .title {
+      color: ${palette.black};
+      font-weight: 700;
+    }
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    li {
+      position: relative;
+      font-size: 0.875rem;
+      color: ${palette.darkGray};
+      line-height: 1.5;
+      padding-left: 13px;
+
+      &:before {
+        position: absolute;
+        top: 8px;
+        left: 0;
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: ${palette.gray800};
+        content: "";
+      }
+    }
+  }
+`;
+
+const AdviseBox = styled.div`
+  background: ${palette.lightGray};
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+
+  p {
+    font-size: 0.875rem;
+    color: ${palette.darkGray};
+    line-height: 1.5;
+  }
 `;

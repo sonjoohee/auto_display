@@ -8,6 +8,9 @@ import { useAtom } from "jotai";
 import axios from "axios";
 
 import {
+  passwordAtom,
+  newPasswordAtom,
+  rePasswordAtom,
   INPUT_BUSINESS_INFO,
   SAVED_REPORTS,
   isLoggedInAtom,
@@ -35,6 +38,8 @@ import {
   SELECTED_EXPERT_INDEX,
   REPORT_REFRESH_TRIGGER,
   IS_LOADING,
+  SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
+  CUSTOMER_ADDITIONAL_REPORT_DATA,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -43,6 +48,9 @@ import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/Molec
 import OrganismReportPopup from "./OrganismReportPopup"; // 팝업 컴포넌트 임포트
 
 const OrganismLeftSideBar = () => {
+  const [password, setPassword] = useAtom(passwordAtom);
+  const [newPassword, setNewPassword] = useAtom(newPasswordAtom);
+  const [rePassword, setRePassword] = useAtom(rePasswordAtom);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const navigate = useNavigate();
   const [bizName] = useAtom(INPUT_BUSINESS_INFO);
@@ -121,6 +129,12 @@ const OrganismLeftSideBar = () => {
     ADDITIONAL_QUESTION_3
   );
 
+  const [
+    selectedCustomerAdditionalKeyword,
+    setSelectedCustomerAdditionalKeyword,
+  ] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
+  const [customerAdditionalReportData, setCustomerAdditionalReportData] =
+    useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
   const [inputAdditionalQuestion, setInputAdditionalQuestion] = useState("");
   const [isClickCheckReportRightAway, setIsClickCheckReportRightAway] = useAtom(
     iS_CLICK_CHECK_REPORT_RIGHTAWAY
@@ -312,6 +326,12 @@ const OrganismLeftSideBar = () => {
       // 필요하다면 추가 상태 업데이트
       setSelectedAdditionalKeyword(chatData.selectedAdditionalKeyword || []);
       setAdditionalReportData(chatData.additionalReportData || []);
+      setCustomerAdditionalReportData(
+        chatData.customerAdditionalReportData || []
+      );
+      setSelectedCustomerAdditionalKeyword(
+        chatData.selectedCustomerAdditionalKeyword || []
+      );
 
       // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
       // set어프로치패스(2)
@@ -503,6 +523,8 @@ const OrganismLeftSideBar = () => {
     setSelectedAdditionalKeyword([]);
     setApproachPath(0);
     setAdditionalReportData([]);
+    setCustomerAdditionalReportData([]);
+    setSelectedCustomerAdditionalKeyword([]);
     setExpert1ReportData({});
     setExpert2ReportData({});
     setExpert3ReportData({});
@@ -512,6 +534,9 @@ const OrganismLeftSideBar = () => {
     setInputAdditionalQuestion("");
     setIsClickCheckReportRightAway(false);
     setConversationId(null);
+    setPassword("");
+    setNewPassword("");
+    setRePassword("");
   };
 
   return (
@@ -1039,7 +1064,7 @@ const Logo = styled.div`
     font-size: 0;
     background: url(${images.SymbolLogo}) left center no-repeat;
     background-size: auto 100%;
-    cursor:pointer;
+    cursor: pointer;
   }
 
   button {

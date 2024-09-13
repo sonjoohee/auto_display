@@ -5,11 +5,14 @@ import styled from "styled-components";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import AtomButton from "../atoms/AtomButton";
 import { isValidEmail } from "../atoms/AtomValidation";
+import axios from "axios";
 import {
   emailAtom,
   passwordAtom,
   currentUserAtom,
   errorAtom,
+  newPasswordAtom,
+  rePasswordAtom,
 } from "../../../AtomStates";
 import {
   isLoggedInAtom,
@@ -20,9 +23,11 @@ import {
 import { Link } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
 
-const MoleculeLoginForm = () => {
+const MoleculeAccountForm = () => {
   const [email, setEmail] = useAtom(emailAtom);
   const [password, setPassword] = useAtom(passwordAtom);
+  const [newPassword, setNewPassword] = useAtom(newPasswordAtom);
+  const [rePassword, setRePassword] = useAtom(rePasswordAtom);
   const [error, setError] = useAtom(errorAtom);
   const [, setCurrentUser] = useAtom(currentUserAtom);
   const [showPassword, setShowPassword] = useState(false);
@@ -36,79 +41,55 @@ const MoleculeLoginForm = () => {
     setError("");
   }, [setError]);
 
-  const validateForm = () => {
-    if (!email || !password) {
+  const validateCheckPasswordForm = () => {
+    if (!newPassword || !password || !rePassword) {
       setError("모든 필드를 입력해주세요.");
       return false;
     }
-    if (!isValidEmail(email)) {
-      setError("유효한 이메일 주소를 입력해주세요.");
+    if (newPassword == password) {
+      setError("기존 비밀번호와 다른 비밀번호를 입력해주세요.");
+      return false;
+    }
+    if (newPassword != rePassword) {
+      setError("동일한 비밀번호를 입력해주세요.");
       return false;
     }
     return true;
   };
 
-  const handleLogin = async () => {
+  const handleChangPassword = async () => {
     setError("");
-    if (!validateForm()) return;
+    if (!validateCheckPasswordForm()) return;
 
     try {
-      // 로그인 요청
-      const response = await fetch(
-        "https://wishresearch.kr/api/user/login/normal/",
+      const accessToken = sessionStorage.getItem("accessToken"); // 저장된 토큰을 가져옴
+
+      // 유저 정보를 요청하기 위해 accessToken을 사용
+      await axios.put(
+        "https://wishresearch.kr/api/user/passUpdate/",
         {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
+          password: newPassword,
+          current_password: password,
+        },
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`, // 토큰을 Authorization 헤더에 추가
+            "Content-Type": "application/json",
+          },
         }
       );
-
-      if (response.ok) {
-        const result = await response.json();
-        const accessToken = result.access_token;
-
-        // accessToken을 세션 스토리지에 저장
-        sessionStorage.setItem("accessToken", accessToken);
-
-        // 유저 정보를 요청하기 위해 accessToken을 사용
-        const userInfoResponse = await fetch(
-          "https://wishresearch.kr/api/user/userInfo/",
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${accessToken}`, // 토큰을 Authorization 헤더에 추가
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (userInfoResponse.ok) {
-          const userInfo = await userInfoResponse.json();
-
-          // 유저 정보 (이름과 이메일)를 아톰에 저장
-          setUserName(userInfo.name); // 아톰에 유저 이름 저장
-          setUserEmail(userInfo.email); // 아톰에 유저 이메일 저장
-
-          // 로그인 성공 처리
-          setIsLoggedIn(true);
-          setLoginSuccess(true);
-          navigate("/");
-        } else {
-          setError("유저 정보를 불러오는 중 오류가 발생했습니다.");
-        }
-      } else {
-        // 서버에서 받은 에러 메시지 처리
-        const result = await response.json();
-        setError(result.message || "로그인 중 오류가 발생했습니다."); // 서버 메시지 표시
-      }
+      setError("비밀번호가 변경 되었습니다.");
+      navigate("/");
     } catch (error) {
-      setError("로그인 중 오류가 발생했습니다.");
+      setError("비밀번호 변경 중 오류가 발생했습니다.");
     }
   };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
   const handlePasswordReset = (event) => {
     // event.preventDefault(); // 기본 동작 방지
     navigate("/request-reset-password");
@@ -132,11 +113,15 @@ const MoleculeLoginForm = () => {
           기존 비밀번호<span>*</span>
         </label>
         <StyledAtomInput
-          type="password"
+          type={showPassword ? "text" : "password"}
           id="nowPassword"
           value={password}
+          onChange={(e) => setPassword(e.target.value)}
           placeholder="기존 비밀번호를 입력해주세요"
         />
+        <TogglePasswordButton onClick={togglePasswordVisibility}>
+          {showPassword ? <FaEye /> : <FaEyeSlash />}
+        </TogglePasswordButton>
       </div>
 
       <div>
@@ -147,8 +132,8 @@ const MoleculeLoginForm = () => {
           <StyledAtomInput
             type={showPassword ? "text" : "password"}
             id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
             placeholder="비밀번호를 입력해주세요"
           />
           <TogglePasswordButton onClick={togglePasswordVisibility}>
@@ -160,8 +145,8 @@ const MoleculeLoginForm = () => {
           <StyledAtomInput
             type={showPassword ? "text" : "password"}
             id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={rePassword}
+            onChange={(e) => setRePassword(e.target.value)}
             placeholder="비밀번호 확인을 입력해주세요"
           />
           <TogglePasswordButton onClick={togglePasswordVisibility}>
@@ -172,14 +157,14 @@ const MoleculeLoginForm = () => {
         <p>영문/숫자/특수문자 2가지 이상 혼합. 8~16자</p>
         <p> </p>
       </div>
-
       {error && <ErrorMessage>{error}</ErrorMessage>}
+      <div>{error && <p> </p>}</div>
       {/* 
       <PasswordResetLink>
         <a onClick={handlePasswordReset}>비밀번호 찾기</a>
       </PasswordResetLink>
  */}
-      <StyledLoginButton onClick={handleLogin} disabled={!password}>
+      <StyledLoginButton onClick={handleChangPassword} disabled={!password}>
         변경하기
       </StyledLoginButton>
       {/* 
@@ -190,7 +175,7 @@ const MoleculeLoginForm = () => {
   );
 };
 
-export default MoleculeLoginForm;
+export default MoleculeAccountForm;
 
 // CSS-in-JS 스타일링
 const AccountFormContainer = styled.div`
@@ -264,7 +249,8 @@ const TogglePasswordButton = styled.button`
 const ErrorMessage = styled.p`
   font-size: 0.75rem;
   color: ${palette.red};
-  margin-top: 20px;
+  /* margin-top: 10px; */
+  margin-bottom: 10px;
   text-align: center;
 `;
 

@@ -805,19 +805,7 @@ const ExpertExample = () => {
             <strong>3. 잠재 고객 분석 및 혜택 제안 아이디어</strong>
             <p>UI/UX 디자인 부트캠프는 20대 후반 여성 취업준비생에게 새로운 기회를 제공합니다. 경영학과 전공과 직장 경험은 UI/UX 디자인 분야에서 큰 강점이 될 수 있으며, 부트캠프를 통해 전문성을 빠르게 습득하고 성공적인 커리어 전환을 이룰 수 있습니다.</p>
           </div>
-
-          <ButtonWrap NoLine>
-            <button type="button">
-              <img src={images.IconCopy} alt="" />
-              복사하기
-            </button>
-            <button type="button">
-              <img src={images.IconSave} alt="" />
-              저장하기
-            </button>
-          </ButtonWrap>
         </QuestionBox>
-
       </ExpertWrap>
     </>
   );
