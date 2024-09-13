@@ -88,8 +88,7 @@ const PageExpertInsight = () => {
   // const [additionalReportCount, setAdditionalReportCount] = useAtom(
   //   ADDITIONAL_REPORT_COUNT
   // );
-  let additionalReportCount = 0;
-  let customerAdditionalReportCount = 0;
+
   const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
     SELECTED_ADDITIONAL_KEYWORD
   );
@@ -131,6 +130,9 @@ const PageExpertInsight = () => {
   );
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
+
+  let additionalReportCount = 0;
+  let customerAdditionalReportCount = 0;
 
   // setConversation([]);
   // setConversationStage(1);
@@ -489,11 +491,11 @@ const PageExpertInsight = () => {
 
   useEffect(() => {
     if (
-      (conversationId &&
-        conversationId.length >= 2 &&
-        selectedAdditionalKeyword &&
-        !isLoading &&
-        approachPath !== 2)
+      conversationId &&
+      conversationId.length >= 2 &&
+      selectedAdditionalKeyword &&
+      !isLoading &&
+      approachPath !== 2
     ) {
       handleSearch(-1);
     }
@@ -605,60 +607,60 @@ const PageExpertInsight = () => {
       //     setApproachPath(3);
       //   }
       // } else {
-        // 일반적인 경우 처리
-        if (
-          (updatedConversation.length > 0 &&
-            updatedConversation[updatedConversation.length - 1].type ===
-              "keyword") ||
-          (updatedConversation.length > 0 &&
-            updatedConversation[updatedConversation.length - 1].type ===
-              "report_button")
-        ) {
-          updatedConversation.pop();
-        }
+      // 일반적인 경우 처리
+      if (
+        (updatedConversation.length > 0 &&
+          updatedConversation[updatedConversation.length - 1].type ===
+            "keyword") ||
+        (updatedConversation.length > 0 &&
+          updatedConversation[updatedConversation.length - 1].type ===
+            "report_button")
+      ) {
+        updatedConversation.pop();
+      }
 
-        if (selectedExpertIndex === "1") {
-          updatedConversation.push(
-            {
-              type: "user",
-              message:
-                "10년차 전략 디렉터와 1:1 커피챗, 지금 바로 시작하겠습니다 🙌🏻",
-            },
-            {
-              type: "system",
-              message: `안녕하세요, 김도원입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊`,
-              expertIndex: selectedExpertIndex,
-            }
-          );
-        } else if (selectedExpertIndex === "2") {
-          updatedConversation.push(
-            {
-              type: "user",
-              message:
-                "지금 바로 쓸 수 있는 브랜딩 솔루션 10초 맞춤 제안서 받기, 지금 바로 시작하겠습니다 🙌🏻",
-            },
-            {
-              type: "system",
-              message: `안녕하세요, 이지현입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊`,
-              expertIndex: selectedExpertIndex,
-            }
-          );
-        } else if (selectedExpertIndex === "3") {
-          updatedConversation.push(
-            {
-              type: "user",
-              message:
-                "고객 데이터 전문가의 맞춤 타겟 추천, 지금 바로 시작하겠습니다 🙌🏻",
-            },
-            {
-              type: "system",
-              message: `안녕하세요, 박서연입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊`,
-              expertIndex: selectedExpertIndex,
-            }
-          );
-        }
-        updatedConversation.push({ type: `strategy_${selectedExpertIndex}` });
-        newConversationStage = 3;
+      if (selectedExpertIndex === "1") {
+        updatedConversation.push(
+          {
+            type: "user",
+            message:
+              "10년차 전략 디렉터와 1:1 커피챗, 지금 바로 시작하겠습니다 🙌🏻",
+          },
+          {
+            type: "system",
+            message: `안녕하세요, 김도원입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊`,
+            expertIndex: selectedExpertIndex,
+          }
+        );
+      } else if (selectedExpertIndex === "2") {
+        updatedConversation.push(
+          {
+            type: "user",
+            message:
+              "지금 바로 쓸 수 있는 브랜딩 솔루션 10초 맞춤 제안서 받기, 지금 바로 시작하겠습니다 🙌🏻",
+          },
+          {
+            type: "system",
+            message: `안녕하세요, 이지현입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊`,
+            expertIndex: selectedExpertIndex,
+          }
+        );
+      } else if (selectedExpertIndex === "3") {
+        updatedConversation.push(
+          {
+            type: "user",
+            message:
+              "고객 데이터 전문가의 맞춤 타겟 추천, 지금 바로 시작하겠습니다 🙌🏻",
+          },
+          {
+            type: "system",
+            message: `안녕하세요, 박서연입니다! ${titleOfBusinessInfo}을 구체화하는 데 도움이 될 전략 보고서를 준비했습니다.\n함께 전략을 다듬어 보시죠! 📊`,
+            expertIndex: selectedExpertIndex,
+          }
+        );
+      }
+      updatedConversation.push({ type: `strategy_${selectedExpertIndex}` });
+      newConversationStage = 3;
       // }
     } else if (conversationStage === 3) {
       // if (approachPath === 2) {
@@ -668,27 +670,27 @@ const PageExpertInsight = () => {
       //   // );
       //   // setApproachPath(3);
       // } else {
-        if (
-          (updatedConversation.length > 0 &&
-            updatedConversation[updatedConversation.length - 1].type ===
-              "keyword") ||
-          (updatedConversation.length > 0 &&
-            updatedConversation[updatedConversation.length - 1].type ===
-              "report_button")
-        ) {
-          updatedConversation.pop();
-        }
-
-        updatedConversation.push(
-          {
-            type: "user",
-            message: `제 프로젝트와 관련된 "${
-              selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]
-            }"를 요청드려요`,
-          },
-          { type: `addition`, addition_index: additionalReportCount }
-        );
+      if (
+        (updatedConversation.length > 0 &&
+          updatedConversation[updatedConversation.length - 1].type ===
+            "keyword") ||
+        (updatedConversation.length > 0 &&
+          updatedConversation[updatedConversation.length - 1].type ===
+            "report_button")
+      ) {
+        updatedConversation.pop();
       }
+
+      updatedConversation.push(
+        {
+          type: "user",
+          message: `제 프로젝트와 관련된 "${
+            selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]
+          }"를 요청드려요`,
+        },
+        { type: `addition`, addition_index: additionalReportCount }
+      );
+    }
     // }
     // console.log(
     //   "🚀 ~ handleSearch ~ updatedConversation:",

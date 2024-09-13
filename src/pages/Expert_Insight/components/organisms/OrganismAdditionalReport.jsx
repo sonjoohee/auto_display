@@ -94,8 +94,12 @@ const OrganismAdditionalReport = ({
     withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
   };
 
-  const [selectedCustomerAdditionalKeyword, setSelectedCustomerAdditionalKeyword] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
-  const [customerAdditionalReportData, setCustomerAdditionalReportData] = useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
+  const [
+    selectedCustomerAdditionalKeyword,
+    setSelectedCustomerAdditionalKeyword,
+  ] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
+  const [customerAdditionalReportData, setCustomerAdditionalReportData] =
+    useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
 
   // const additionalReportAtom = strategyReportAtomMap[expertIndex] || ADDITIONAL_REPORT_DATA1;
   // const [additionalReportData, setAdditionalReportData] = useAtom(additionalReportAtom);
@@ -103,6 +107,10 @@ const OrganismAdditionalReport = ({
   useEffect(() => {
     const loadData = async () => {
       let answerData;
+      // console.log(
+      //   "🚀 ~ loadData ~ additionalReportData:",
+      //   additionalReportData
+      // );
       try {
         // const existingConversation = await getConversationByIdFromIndexedDB(
         //   conversationId,
@@ -110,6 +118,11 @@ const OrganismAdditionalReport = ({
         // );
         // 기존 데이터가 있을 때 처리
         if (additionalReportData[additionalReportCount]) {
+          // console.log(
+          //   "🚀 ~ loadData ~ additionalReportData:",
+          //   additionalReportData
+          // );
+
           setTitle(additionalReportData[additionalReportCount]?.title || []);
           setSections(
             additionalReportData[additionalReportCount]?.sections || []
@@ -148,6 +161,10 @@ const OrganismAdditionalReport = ({
             ...additionalReportData, // 기존 데이터
             answerData, // 새로 가져온 데이터
           ];
+          // console.log(
+          //   "🚀 ~ loadData ~ updatedAdditionalReportData:",
+          //   updatedAdditionalReportData
+          // );
           setAdditionalReportData(updatedAdditionalReportData);
 
           // const updatedConversation = {
@@ -180,7 +197,8 @@ const OrganismAdditionalReport = ({
               strategyReportData_EX3: expert3ReportData,
               conversation: conversation,
               selectedAdditionalKeywords: selectedKeywords,
-              selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
+              selectedCustomerAdditionalKeyword:
+                selectedCustomerAdditionalKeyword,
               additionalReportData: updatedAdditionalReportData,
               customerAdditionalReportData: customerAdditionalReportData,
               conversationStage: 3,
@@ -214,7 +232,8 @@ const OrganismAdditionalReport = ({
               strategyReportData_EX1: expert1ReportData,
               strategyReportData_EX2: expert2ReportData,
               strategyReportData_EX3: expert3ReportData,
-              selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
+              selectedCustomerAdditionalKeyword:
+                selectedCustomerAdditionalKeyword,
               customerAdditionalReportData: customerAdditionalReportData,
               selectedAdditionalKeywords: selectedKeywords,
               conversation: updatedConversation2,
@@ -289,77 +308,76 @@ const OrganismAdditionalReport = ({
 
 // ... (아래 부분은 동일)
 
+const Section = ({ title, content }) => {
+  // 서브 타이틀이 있는 항목과 없는 항목을 분리
+  const subTitleItems = content.filter((item) => item.subTitle);
+  const nonSubTitleItems = content.filter((item) => !item.subTitle);
 
-  const Section = ({ title, content }) => {
-    // 서브 타이틀이 있는 항목과 없는 항목을 분리
-    const subTitleItems = content.filter((item) => item.subTitle);
-    const nonSubTitleItems = content.filter((item) => !item.subTitle);
-
-    // subText에서 ':'로 분리하여 subTitle과 text를 따로 처리
-    const splitText = (text) => {
-      const [subTitle, ...rest] = text.split(":");
-      return {
-        subTitle: subTitle.trim(), // ':' 앞부분
-        text: rest.join(":").trim(), // ':' 뒷부분
-      };
+  // subText에서 ':'로 분리하여 subTitle과 text를 따로 처리
+  const splitText = (text) => {
+    const [subTitle, ...rest] = text.split(":");
+    return {
+      subTitle: subTitle.trim(), // ':' 앞부분
+      text: rest.join(":").trim(), // ':' 뒷부분
     };
-
-    return (
-      <BoxWrap isPurpose={title === "목적"}> {/* 타이틀이 "목적"인지 확인 */}
-        {title && title !== "목적" && (
-          <strong>
-            <img src={images.Check} alt="" />
-            {title}
-          </strong>
-        )}
-  
-        {/* nonSubTitleItems는 일반적으로 title과 text만 표시 */}
-        {nonSubTitleItems.length > 0 &&
-          nonSubTitleItems?.map((item, index) => (
-            <div key={index}>
-              <p>{item.text}</p>
-              {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
-            </div>
-          ))}
-  
-        {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
-        <>
-          {subTitleItems.map((item, index) => (
-            <SeparateSection key={index}>
-              <strong>
-                <span className="number">{index + 1}</span> {/* 번호 추가 */}
-                <strong_title>{`${item.subTitle}`}</strong_title> {/* 이 부분만 bold 처리 */}
-              </strong>
-              <p>{item.text}</p>
-
-                {/* subText1, subText2, subText3에 대해 NumDynamicGrid 적용 */}
-                <NumDynamicGrid columns={2}>
-                  {item.subText1 && (
-                    <div>
-                      <SubTitle>{splitText(item.subText1).subTitle}</SubTitle>
-                      <p>{splitText(item.subText1).text}</p>
-                    </div>
-                  )}
-                  {item.subText2 && (
-                    <div>
-                      <SubTitle>{splitText(item.subText2).subTitle}</SubTitle>
-                      <p>{splitText(item.subText2).text}</p>
-                    </div>
-                  )}
-                  {item.subText3 && (
-                    <div>
-                      <SubTitle>{splitText(item.subText3).subTitle}</SubTitle>
-                      <p>{splitText(item.subText3).text}</p>
-                    </div>
-                  )}
-                </NumDynamicGrid>
-              </SeparateSection>
-            ))}
-          </>
-      </BoxWrap>
-    );
   };
-  
+
+  return (
+    <BoxWrap isPurpose={title === "목적"}>
+      {" "}
+      {/* 타이틀이 "목적"인지 확인 */}
+      {title && title !== "목적" && (
+        <strong>
+          <img src={images.Check} alt="" />
+          {title}
+        </strong>
+      )}
+      {/* nonSubTitleItems는 일반적으로 title과 text만 표시 */}
+      {nonSubTitleItems.length > 0 &&
+        nonSubTitleItems?.map((item, index) => (
+          <div key={index}>
+            <p>{item.text}</p>
+            {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
+          </div>
+        ))}
+      {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
+      <>
+        {subTitleItems.map((item, index) => (
+          <SeparateSection key={index}>
+            <strong>
+              <span className="number">{index + 1}</span> {/* 번호 추가 */}
+              <strong_title>{`${item.subTitle}`}</strong_title>{" "}
+              {/* 이 부분만 bold 처리 */}
+            </strong>
+            <p>{item.text}</p>
+
+            {/* subText1, subText2, subText3에 대해 NumDynamicGrid 적용 */}
+            <NumDynamicGrid columns={2}>
+              {item.subText1 && (
+                <div>
+                  <SubTitle>{splitText(item.subText1).subTitle}</SubTitle>
+                  <p>{splitText(item.subText1).text}</p>
+                </div>
+              )}
+              {item.subText2 && (
+                <div>
+                  <SubTitle>{splitText(item.subText2).subTitle}</SubTitle>
+                  <p>{splitText(item.subText2).text}</p>
+                </div>
+              )}
+              {item.subText3 && (
+                <div>
+                  <SubTitle>{splitText(item.subText3).subTitle}</SubTitle>
+                  <p>{splitText(item.subText3).text}</p>
+                </div>
+              )}
+            </NumDynamicGrid>
+          </SeparateSection>
+        ))}
+      </>
+    </BoxWrap>
+  );
+};
 
 export default OrganismAdditionalReport;
 
@@ -393,7 +411,8 @@ const AnalysisSection = styled.div`
 const BoxWrap = styled.div`
   padding: 20px;
   border-radius: 10px;
-  background: ${(props) => (props.isPurpose ? palette.white : "rgba(0, 0, 0, 0.04)")}; /* 흰 배경 적용 */
+  background: ${(props) =>
+    props.isPurpose ? palette.white : "rgba(0, 0, 0, 0.04)"}; /* 흰 배경 적용 */
 
   + div {
     margin-top: 12px;
@@ -411,7 +430,6 @@ const BoxWrap = styled.div`
     margin-bottom: 10px;
   }
 `;
-
 
 const TabHeader = styled.div`
   gap: 40px;
