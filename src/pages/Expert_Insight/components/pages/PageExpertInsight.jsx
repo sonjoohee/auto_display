@@ -772,10 +772,10 @@ const PageExpertInsight = () => {
                   // console.log("🚀 ~ {conversation?.map ~ item:", item, index);
                   // const expertIndex = item.type.split("_")[1];
                   const currentAdditionalReportCount = additionalReportCount++;
-                  console.log(
-                    "🚀 ~ currentAdditionalReportCount:",
-                    currentAdditionalReportCount
-                  );
+                  // console.log(
+                  //   "🚀 ~ currentAdditionalReportCount:",
+                  //   currentAdditionalReportCount
+                  // );
 
                   return (
                     <OrganismAdditionalReport
