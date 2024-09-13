@@ -118,6 +118,7 @@ const OrganismCustomerAdditionalReport = ({
         //   isLoggedIn
         // );
 
+
         setAnswerData(
           customerAdditionalReportData[customerAdditionalReportCount]
         );
@@ -131,17 +132,9 @@ const OrganismCustomerAdditionalReport = ({
             customerAdditionalReportData[customerAdditionalReportCount]
               ?.sections || []
           );
-      // 기존 데이터가 있을 때 처리
-      if (customerAdditionalReportData[customerAdditionalReportCount]) {
-        const reportData = customerAdditionalReportData[customerAdditionalReportCount];
-
-        setTitle(reportData?.title || []);
-        setSections(reportData?.sections || []);
-
-        // advise가 있을 경우 이를 상태에 저장
-        if (reportData.advise) {
-          setAdvise(reportData.advise); // advise가 있을 경우 상태에 저장
-        }
+          if (customerAdditionalReportData[customerAdditionalReportCount].advise) {
+            setAdvise(customerAdditionalReportData[customerAdditionalReportCount].advise); // advise가 있을 경우 상태에 저장
+          }
         } else if (buttonState === 1) {
           // 버튼 상태가 1일 때만 API 요청 실행
           setButtonState(0); // 버튼 상태 초기화
