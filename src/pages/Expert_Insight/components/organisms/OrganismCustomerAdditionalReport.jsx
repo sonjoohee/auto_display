@@ -107,6 +107,8 @@ const OrganismCustomerAdditionalReport = ({
   const [customerAdditionalReportData, setCustomerAdditionalReportData] =
     useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
 
+    const [advise, setAdvise] = useState(""); // 새로운 advise 상태 추가
+
   useEffect(() => {
     const loadData = async () => {
       let answerData;
@@ -115,16 +117,17 @@ const OrganismCustomerAdditionalReport = ({
         //   conversationId,
         //   isLoggedIn
         // );
-        // 기존 데이터가 있을 때 처리
-        if (customerAdditionalReportData[customerAdditionalReportCount]) {
-          setTitle(
-            customerAdditionalReportData[customerAdditionalReportCount]
-              ?.title || []
-          );
-          setSections(
-            customerAdditionalReportData[customerAdditionalReportCount]
-              ?.sections || []
-          );
+      // 기존 데이터가 있을 때 처리
+      if (customerAdditionalReportData[customerAdditionalReportCount]) {
+        const reportData = customerAdditionalReportData[customerAdditionalReportCount];
+
+        setTitle(reportData?.title || []);
+        setSections(reportData?.sections || []);
+
+        // advise가 있을 경우 이를 상태에 저장
+        if (reportData.advise) {
+          setAdvise(reportData.advise); // advise가 있을 경우 상태에 저장
+        }
         } else if (buttonState === 1) {
           // 버튼 상태가 1일 때만 API 요청 실행
           setButtonState(0); // 버튼 상태 초기화
@@ -157,6 +160,9 @@ const OrganismCustomerAdditionalReport = ({
           );
 
           answerData = response.data.additional_question;
+          if (answerData.advise) {
+            setAdvise(answerData.advise);
+          }
           console.log("🚀 ~ loadData ~ answerData:", answerData);
           // if (response.data.keyword.result_state == 1) {
           //   answerData = response.data.additional_question;
@@ -338,6 +344,11 @@ const OrganismCustomerAdditionalReport = ({
         </>
       ) : (
         <>
+          {advise && (
+            <AdviseBox>
+              <p>{advise}</p> {/* advise가 있을 때 표시 */}
+            </AdviseBox>
+          )}
           {title && (
             <TabHeader>
               <TabTitle>{title}</TabTitle>
@@ -555,4 +566,16 @@ const LoadingOverlay = styled.div`
 
 const Spacing = styled.div`
   margin-bottom: 40px; /* 제목과 본문 사이의 간격 */
+`;
+const AdviseBox = styled.div`
+  background: ${palette.lightGray};
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+
+  p {
+    font-size: 0.875rem;
+    color: ${palette.darkGray};
+    line-height: 1.5;
+  }
 `;
