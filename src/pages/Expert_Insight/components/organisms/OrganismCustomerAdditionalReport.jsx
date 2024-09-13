@@ -115,6 +115,10 @@ const OrganismCustomerAdditionalReport = ({
         //   conversationId,
         //   isLoggedIn
         // );
+
+        setAnswerData(
+          customerAdditionalReportData[customerAdditionalReportCount]
+        );
         // 기존 데이터가 있을 때 처리
         if (customerAdditionalReportData[customerAdditionalReportCount]) {
           setTitle(
@@ -174,11 +178,13 @@ const OrganismCustomerAdditionalReport = ({
           setSections(answerData?.sections);
 
           // 새로운 데이터를 배열의 맨 앞에 추가합니다.
-          const updatedAdditionalReportData = [
-            ...customerAdditionalReportData, // 기존 데이터
-            answerData, // 새로 가져온 데이터
-          ];
 
+          const updatedAdditionalReportData = [
+            ...(Array.isArray(customerAdditionalReportData)
+              ? customerAdditionalReportData
+              : [customerAdditionalReportData]),
+            answerData,
+          ];
           // let updatedAdditionalReportData = customerAdditionalReportData; // 기존 데이터
           // updatedAdditionalReportData.push(answerData); // 새로 가져온 데이터
 
