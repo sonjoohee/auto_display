@@ -22,6 +22,7 @@ import {
   ADDITIONAL_REPORT_DATA,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
   CUSTOMER_ADDITION_BUTTON_STATE,
+  CUSTOMER_ADDITION_QUESTION_INPUT,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -47,7 +48,9 @@ const OrganismCustomerAdditionalReport = ({
     useAtom(INPUT_BUSINESS_INFO);
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [approachPath] = useAtom(APPROACH_PATH);
-
+  const [questionInput, setQuestionInput] = useAtom(
+    CUSTOMER_ADDITION_QUESTION_INPUT
+  );
   const [isLoadingAdd, setIsLoadingAdd] = useState(false);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [expert1ReportData, setExpert1ReportData] =
@@ -128,10 +131,10 @@ const OrganismCustomerAdditionalReport = ({
           setIsLoadingAdd(true);
           setIsLoading(true);
 
-          const keyword =
-            selectedCustomerAdditionalKeyword[
-              selectedCustomerAdditionalKeyword.length - 1
-            ]; // Use the keyword based on expertIndex
+          // const keyword =
+          //   selectedCustomerAdditionalKeyword[
+          //     selectedCustomerAdditionalKeyword.length - 1
+          //   ]; // Use the keyword based on expertIndex
 
           const data = {
             business_info: titleOfBusinessInfo,
@@ -141,17 +144,23 @@ const OrganismCustomerAdditionalReport = ({
               주요기능: analysisReportData.mainCharacter,
               목표고객: analysisReportData.mainCustomer,
             },
-            question_info: keyword,
+            question_info: questionInput,
           };
+          console.log("🚀 ~ loadData ~ data:", data);
 
           // console.log(data);
 
           const response = await axios.post(
-            "https://wishresearch.kr/panels/add_question",
+            "https://wishresearch.kr/panels/customer_add_question",
             data,
             axiosConfig
           );
-          answerData = response.data.additional_question;
+
+          if (response.data.keyword.result_state == 1) {
+            answerData = response.data.additional_question;
+          } else if (response.data.keyword.result_state == 0) {
+            answerData = response.data.advise;
+          }
           setAnswerData(answerData);
           setTitle(answerData?.title);
           setSections(answerData?.sections);
@@ -208,10 +217,9 @@ const OrganismCustomerAdditionalReport = ({
           setIsLoading(false);
 
           const updatedConversation2 = [...conversation];
-          console.log(approachPath, conversationStage);
+          // console.log(approachPath, conversationStage);
           // if (approachPath === 1 || approachPath === 3) {
           if (approachPath !== -1) {
-            console.log("🚀 ~ loadData ~ approachPath:", approachPath);
             if (conversationStage === 2) {
               updatedConversation2.push(
                 {
@@ -238,7 +246,6 @@ const OrganismCustomerAdditionalReport = ({
             }
             // } else if (approachPath === -1 || approachPath === 3) {
           } else if (approachPath !== 1) {
-            console.log("🚀 ~ loadData ~ approachPath:", approachPath);
             if (conversationStage === 2) {
               updatedConversation2.push({
                 type: "system",

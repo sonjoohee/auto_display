@@ -10,12 +10,16 @@ import {
   IS_LOADING,
   CONVERSATION_STAGE,
   CUSTOMER_ADDITION_BUTTON_STATE,
+  CUSTOMER_ADDITION_QUESTION_INPUT,
 } from "../../../AtomStates";
 
 const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [buttonState, setButtonState] = useAtom(CUSTOMER_ADDITION_BUTTON_STATE);
+  const [questionInput, setQuestionInput] = useAtom(
+    CUSTOMER_ADDITION_QUESTION_INPUT
+  );
 
   const [inputValue, setInputValue] = useState("");
   const [isPopupRegex, setIsPopupRegex] = useState(false);
@@ -47,6 +51,7 @@ const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
 
     if (onSearch) {
       onSearch(inputValue);
+      setQuestionInput(inputValue);
     }
     setInputValue("");
   };
@@ -96,6 +101,7 @@ const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
             type="button"
             onClick={() => {
               setButtonState(1);
+              setQuestionInput(inputValue);
               handleSearch();
             }}
           >
