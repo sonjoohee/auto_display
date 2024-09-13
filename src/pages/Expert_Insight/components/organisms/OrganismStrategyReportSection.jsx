@@ -319,6 +319,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
                 content={section.content}
                 isLast={index === sections.length - 1}
                 expertIndex={expertIndex}
+                selectedTab={selectedTab}
               />
             ))}
           </>
@@ -345,7 +346,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   );
 };
 
-const Section = ({ title, content, isLast, expertIndex }) => {
+const Section = ({ title, content, isLast, expertIndex ,selectedTab}) => {
   // 서브 타이틀이 있는 항목과 없는 항목을 분리
   const subTitleItems = content.filter((item) => item.subTitle);
   const nonSubTitleItems = content.filter((item) => !item.subTitle);
@@ -406,10 +407,41 @@ const Section = ({ title, content, isLast, expertIndex }) => {
   };
 
   return (
-    <BoxWrap expertIndex={expertIndex} isLast={isLast}>
+    <BoxWrap expertIndex={expertIndex} isLast={isLast} selectedTab={selectedTab}>
       {/* "주요 차별화 요소"와 "차별화 전략 제안" 데이터를 결합하여 한 번만 렌더링 */}
       {renderCombinedSections()}
+    {/* 3번 전문가의 2번째 탭을 위한 조건 */}
+    {expertIndex === "3" && selectedTab === 1 ? (
+            <>
+            <strong>
+            <img src={images.Check} alt="" />
+            {title}
+          </strong>
+            {nonSubTitleItems.length > 0 &&
+              nonSubTitleItems.map((item, index) => (
+                <div key={index}>
+                  <p>{item.text}</p>
+                  {item.subText1 && <SubTextBox>{item.subText1}</SubTextBox>}
+                  {item.subText2 && <SubTextBox>{item.subText2}</SubTextBox>}
+                  {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
+                </div>
+              ))}
 
+            {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
+            {subTitleItems.length > 0 && (
+                subTitleItems.map((item, index) => (
+                  <SubTextBox key={index}>
+                    <SubTitle>{item.subTitle}</SubTitle>
+                    <p>{item.text}</p>
+                    {item.subText1 && <SubTextBox>{item.subText1}</SubTextBox>}
+                    {item.subText2 && <SubTextBox>{item.subText2}</SubTextBox>}
+                    {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
+                  </SubTextBox>
+                ))
+                )}
+            </>
+      ) : (
+        <>
      {/* title 표시 (특정 타이틀 제외) */}
      {!isLast &&
         title &&
@@ -770,10 +802,12 @@ const Section = ({ title, content, isLast, expertIndex }) => {
                     {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
                   </div>
                 ))}
-              </DynamicGrid>
+               </DynamicGrid>
+                )}
+              </>
             )}
-          </>
-        )}
+        </>
+      )}
     </BoxWrap>
   );
 };
