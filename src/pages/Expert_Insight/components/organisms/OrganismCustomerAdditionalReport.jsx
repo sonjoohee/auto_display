@@ -107,6 +107,8 @@ const OrganismCustomerAdditionalReport = ({
   const [customerAdditionalReportData, setCustomerAdditionalReportData] =
     useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
 
+    const [advise, setAdvise] = useState(""); // 새로운 advise 상태 추가
+
   useEffect(() => {
     const loadData = async () => {
       let answerData;
@@ -115,6 +117,7 @@ const OrganismCustomerAdditionalReport = ({
         //   conversationId,
         //   isLoggedIn
         // );
+
 
         setAnswerData(
           customerAdditionalReportData[customerAdditionalReportCount]
@@ -129,6 +132,9 @@ const OrganismCustomerAdditionalReport = ({
             customerAdditionalReportData[customerAdditionalReportCount]
               ?.sections || []
           );
+          if (customerAdditionalReportData[customerAdditionalReportCount].advise) {
+            setAdvise(customerAdditionalReportData[customerAdditionalReportCount].advise); // advise가 있을 경우 상태에 저장
+          }
         } else if (buttonState === 1) {
           // 버튼 상태가 1일 때만 API 요청 실행
           setButtonState(0); // 버튼 상태 초기화
@@ -161,7 +167,10 @@ const OrganismCustomerAdditionalReport = ({
           );
 
           answerData = response.data.additional_question;
-          // console.log("🚀 ~ loadData ~ answerData:", answerData);
+
+          if (answerData.advise) {
+            setAdvise(answerData.advise);
+          }
           // if (response.data.keyword.result_state == 1) {
           //   answerData = response.data.additional_question;
           // } else if (response.data.keyword.result_state == 0) {
@@ -243,47 +252,78 @@ const OrganismCustomerAdditionalReport = ({
           const updatedConversation2 = [...conversation];
           // console.log(approachPath, conversationStage);
           // if (approachPath === 1 || approachPath === 3) {
-          if (approachPath !== -1) {
-            if (conversationStage === 2) {
-              updatedConversation2.push(
-                {
-                  type: "system",
-                  message:
-                    "비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 지금 바로 전략 보고서를 준비해드려요.",
-                  expertIndex: selectedExpertIndex,
-                },
-                { type: "report_button" }
-              );
-            } else if (conversationStage === 3) {
-              updatedConversation2.push(
-                {
+            if (approachPath !== -1) {
+              if (conversationStage === 2) {
+                if (answerData.advise) {
+                  // advise 상태일 경우
+                  updatedConversation2.push({
+                    type: "system",
+                    message: "사실, 저는 비즈니스 전문가이기 때문에 더 이상 구체적인 도움을 드리기 어려워요. 하지만 귀하가 비즈니스 관련 고민을 공유해주신다면, 저는 귀하께 더욱 도움을 줄 수 있어요!",
+                    expertIndex: 0,
+                  });
+                } else {
+                  // 일반적인 결과일 경우
+                  updatedConversation2.push(
+                    {
+                      type: "system",
+                      message:
+                        "비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 지금 바로 전략 보고서를 준비해드려요.",
+                      expertIndex: selectedExpertIndex,
+                    },
+                    { type: "report_button" }
+                  );
+                }
+              } else if (conversationStage === 3) {
+                if (answerData.advise) {
+                  // advise 상태일 경우
+                  updatedConversation2.push(
+                    {
+                      type: "system",
+                      message: "사실, 저는 비즈니스 전문가이기 때문에 더 이상 구체적인 도움을 드리기 어려워요. 하지만 귀하가 비즈니스 관련 고민을 공유해주신다면, 저는 귀하께 더욱 도움을 줄 수 있어요!",
+                      expertIndex: 0,
+                    }
+                  );
+                } else {
+                  // 일반적인 keyword result일 경우
+                  updatedConversation2.push(
+                    {
+                      type: "system",
+                      message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${response.data.keyword.result}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
+                      expertIndex: 0,
+                    },
+                    { type: "keyword" }
+                  );
+                }
+              }
+            } else if (approachPath !== 1) {
+              if (conversationStage === 2) {
+                updatedConversation2.push({
                   type: "system",
                   message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${response.data.keyword.result}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
                   expertIndex: 0,
-                },
-                { type: "keyword" }
-              );
+                });
+              } else if (conversationStage === 3) {
+                if (answerData.advise) {
+                  // advise 상태일 경우
+                  updatedConversation2.push({
+                    type: "system",
+                    message: "사실, 저는 비즈니스 전문가이기 때문에 더 이상 구체적인 도움을 드리기 어려워요. 하지만 귀하가 비즈니스 관련 고민을 공유해주신다면, 저는 귀하께 더욱 도움을 줄 수 있어요!",
+                    expertIndex: 0,
+                  });
+                } else {
+                  // 일반적인 keyword result일 경우
+                  updatedConversation2.push(
+                    {
+                      type: "system",
+                      message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${response.data.keyword.result}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
+                      expertIndex: 0,
+                    },
+                    { type: "keyword" }
+                  );
+                }
+              }
             }
-            // } else if (approachPath === -1 || approachPath === 3) {
-          } else if (approachPath !== 1) {
-            if (conversationStage === 2) {
-              updatedConversation2.push({
-                type: "system",
-                message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${response.data.keyword.result}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
-                expertIndex: 0,
-              });
-            } else if (conversationStage === 3) {
-              updatedConversation2.push(
-                {
-                  type: "system",
-                  message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${response.data.keyword.result}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
-                  expertIndex: 0,
-                },
-                { type: "keyword" }
-              );
-            }
-          }
-
+                        
           setConversation(updatedConversation2);
           await saveConversationToIndexedDB(
             {
@@ -338,6 +378,11 @@ const OrganismCustomerAdditionalReport = ({
         </>
       ) : (
         <>
+          {advise && (
+            <AdviseBox>
+              <p>{advise}</p> {/* advise가 있을 때 표시 */}
+            </AdviseBox>
+          )}
           {title && (
             <TabHeader>
               <TabTitle>{title}</TabTitle>
@@ -555,4 +600,16 @@ const LoadingOverlay = styled.div`
 
 const Spacing = styled.div`
   margin-bottom: 40px; /* 제목과 본문 사이의 간격 */
+`;
+const AdviseBox = styled.div`
+  background: ${palette.lightGray};
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+
+  p {
+    font-size: 0.875rem;
+    color: ${palette.darkGray};
+    line-height: 1.5;
+  }
 `;
