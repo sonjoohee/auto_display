@@ -40,6 +40,7 @@ const OrganismAdditionalReport = ({
   additionalReportCount,
   conversationId,
 }) => {
+  console.log("🚀 ~ additionalReportCount:", additionalReportCount);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
   const [inputBusinessInfo, setInputBusinessInfo] =
     useAtom(INPUT_BUSINESS_INFO);
@@ -107,10 +108,10 @@ const OrganismAdditionalReport = ({
   useEffect(() => {
     const loadData = async () => {
       let answerData;
-      // console.log(
-      //   "🚀 ~ loadData ~ additionalReportData:",
-      //   additionalReportData
-      // );
+      console.log(
+        "🚀 ~ loadData ~ additionalReportData:",
+        additionalReportData
+      );
       try {
         // const existingConversation = await getConversationByIdFromIndexedDB(
         //   conversationId,
@@ -118,10 +119,10 @@ const OrganismAdditionalReport = ({
         // );
         // 기존 데이터가 있을 때 처리
         if (additionalReportData[additionalReportCount]) {
-          // console.log(
-          //   "🚀 ~ loadData ~ additionalReportData:",
-          //   additionalReportData
-          // );
+          console.log(
+            "🚀 ~ loadData ~ additionalReportData:",
+            additionalReportData
+          );
 
           setTitle(additionalReportData[additionalReportCount]?.title || []);
           setSections(
@@ -156,11 +157,17 @@ const OrganismAdditionalReport = ({
           setTitle(answerData?.title);
           setSections(answerData?.sections);
 
+          console.log(
+            "🚀 ~ loadData ~ additionalReportData:",
+            additionalReportData
+          );
           // 새로운 데이터를 배열의 맨 앞에 추가합니다.
           const updatedAdditionalReportData = [
             ...additionalReportData, // 기존 데이터
             answerData, // 새로 가져온 데이터
           ];
+          // let updatedAdditionalReportData = additionalReportData; // 새로 가져온 데이터
+          // updatedAdditionalReportData.push(answerData);
           // console.log(
           //   "🚀 ~ loadData ~ updatedAdditionalReportData:",
           //   updatedAdditionalReportData
@@ -328,12 +335,11 @@ const Section = ({ title, content, index }) => {
       {" "}
       {/* 타이틀이 "목적"인지 확인 */}
       {title && title !== "목적" && (
-      <strong>
-        {/* 번호 표시 */}
-        {index + 1}. {title}
-      </strong>
+        <strong>
+          {/* 번호 표시 */}
+          {index + 1}. {title}
+        </strong>
       )}
-
       {/* nonSubTitleItems는 일반적으로 title과 text만 표시 */}
       {nonSubTitleItems.length > 0 &&
         nonSubTitleItems?.map((item, index) => (
@@ -347,20 +353,29 @@ const Section = ({ title, content, index }) => {
         {subTitleItems.map((item, index) => (
           <SeparateSection key={index}>
             <strong>
-              {/* <strong_title>{`${item.subTitle}`}</strong_title> */} {/* 차후 추가할수도 있음*/}
+              {/* <strong_title>{`${item.subTitle}`}</strong_title> */}{" "}
+              {/* 차후 추가할수도 있음*/}
             </strong>
-            <p>{item.subTitle} : {item.text}</p>
+            <p>
+              {item.subTitle} : {item.text}
+            </p>
 
             {/* subText1, subText2, subText3를 한 줄씩 표시 */}
             <div>
               {item.subText1 && (
-                <p>{item.subTitle}: {splitText(item.subText1).text}</p>
+                <p>
+                  {item.subTitle}: {splitText(item.subText1).text}
+                </p>
               )}
               {item.subText2 && (
-                <p>{item.subTitle}: {splitText(item.subText2).text}</p>
+                <p>
+                  {item.subTitle}: {splitText(item.subText2).text}
+                </p>
               )}
               {item.subText3 && (
-                <p>{item.subTitle}: {splitText(item.subText3).text}</p>
+                <p>
+                  {item.subTitle}: {splitText(item.subText3).text}
+                </p>
               )}
             </div>
           </SeparateSection>
@@ -516,7 +531,6 @@ const Spacing = styled.div`
   margin-bottom: 40px; /* 제목과 본문 사이의 간격 */
 `;
 
-
 const NumDynamicGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(${(props) => props.columns}, 1fr);
@@ -544,7 +558,7 @@ const NumDynamicGrid = styled.div`
         height: 3px;
         border-radius: 50%;
         background: ${palette.gray800};
-        content: '';
+        content: "";
       }
     }
   }
@@ -567,14 +581,12 @@ const NumDynamicGrid = styled.div`
   }
 `;
 
-
 const SeparateSection = styled.div`
   display: flex;
   flex-direction: column;
   padding: 5px 20px; /* 위아래 5px, 좌우 20px */
   border-radius: 10px;
   background: rgba(0, 0, 0, 0.03);
-
 
   h4 {
     display: flex;
@@ -619,7 +631,7 @@ const SeparateSection = styled.div`
       height: 3px;
       border-radius: 50%;
       background: ${palette.gray800};
-      content: '';
+      content: "";
     }
   }
 
@@ -684,7 +696,7 @@ const SeparateSection = styled.div`
         height: 3px;
         border-radius: 50%;
         background: ${palette.gray800};
-        content: '';
+        content: "";
       }
     }
   }

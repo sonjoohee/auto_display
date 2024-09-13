@@ -233,7 +233,9 @@ const PageExpertInsight = () => {
         analysisReportData,
         selectedAdditionalKeyword: updatedSelectedAdditionalKeyword,
         additionalReportData, // Save the entire list of additional reports
+        additionalReportCount,
         customerAdditionalReportCount,
+        customerAdditionalReportData,
         selectedCustomerAdditionalKeyword:
           updatedSelectedCustomerAdditionalKeyword,
         ...existingReports,
@@ -577,9 +579,9 @@ const PageExpertInsight = () => {
       }
 
       // 임시로 키워드 설정
-      const updatedKeywords = [...selectedCustomerAdditionalKeyword];
-      updatedKeywords.push("우리 산업의 강점과 약점 파악하기");
-      setSelectedCustomerAdditionalKeyword(updatedKeywords);
+      // const updatedKeywords = [...selectedCustomerAdditionalKeyword];
+      // updatedKeywords.push("우리 산업의 강점과 약점 파악하기");
+      // setSelectedCustomerAdditionalKeyword(updatedKeywords);
 
       updatedConversation.push(
         {
@@ -770,6 +772,10 @@ const PageExpertInsight = () => {
                   // console.log("🚀 ~ {conversation?.map ~ item:", item, index);
                   // const expertIndex = item.type.split("_")[1];
                   const currentAdditionalReportCount = additionalReportCount++;
+                  console.log(
+                    "🚀 ~ currentAdditionalReportCount:",
+                    currentAdditionalReportCount
+                  );
 
                   return (
                     <OrganismAdditionalReport
