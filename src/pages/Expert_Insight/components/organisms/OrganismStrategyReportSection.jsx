@@ -816,9 +816,10 @@ export default OrganismStrategyReportSection;
 const SeparateSection = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 20px;
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.03);
+  margin-top: 12px;
+  // padding: 20px;
+  // border-radius: 10px;
+  // background: rgba(0, 0, 0, 0.03);
 
   + div {
     margin-top: 12px;
@@ -992,7 +993,11 @@ const BoxWrap = styled.div`
   background: ${(props) =>
     props.isLast
       ? palette.white
-      : "rgba(0, 0, 0, 0.04)"}; /* 마지막 섹션은 흰색 배경 */
+      : "rgba(0, 0, 0, 0.03)"}; /* 마지막 섹션은 흰색 배경 */
+
+  + div {
+    margin-top:12px;
+  }
 
   + div {
     margin-top: 12px;
@@ -1041,16 +1046,18 @@ const TabHeader = styled.div`
 // color: ${(props) => (props.active ? palette.black : palette.lightGray)};
 
 const TabButton = styled.button`
-  font-family: "Pretendard";
+  font-family: "Pretendard", "Poppins";
   font-size: 1.25rem;
-  font-weight: ${(props) => (props.active ? "600" : "400")};
+  font-weight: 400;
 
   color: ${(props) =>
-    props.expertIndex === "1"
-      ? palette.black // 1번 전문가일 때
+    props.active 
+      ? palette.black
+      : props.expertIndex === "1"
+      ? `rgba(0,0,0,.2)` // 1번 전문가일 때
       : props.expertIndex === "2"
-      ? palette.black // 2번 전문가일 때
-      : palette.black}; // 3번 전문가일 때
+      ? `rgba(0,0,0,.2)` // 2번 전문가일 때
+      : `rgba(0,0,0,.2)`}; // 3번 전문가일 때
   border: none;
   border-bottom: ${(props) =>
     props.active ? `1px solid ${palette.black}` : "none"};
@@ -1078,6 +1085,7 @@ const DynamicGrid = styled.div`
     flex: 1;
     display: flex;
     flex-direction: column;
+    gap:4px;
     padding: 12px;
     border-radius: 10px;
     border: 1px solid ${palette.lineGray};
@@ -1085,14 +1093,20 @@ const DynamicGrid = styled.div`
 
   p {
     margin: 0;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    display:-webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
   }
 `;
 
 const SubTitle = styled.strong`
   font-size: 0.875rem;
   font-weight: 500;
-  color: ${palette.gray};
+  color: ${palette.lightGray} !important;
   text-align: left;
+  margin-bottom:0 !important;
 `;
 
 const SubTextBox = styled.div`

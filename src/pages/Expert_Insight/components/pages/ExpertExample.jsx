@@ -886,7 +886,7 @@ const ExpertContent = styled.div`
     props.Strategy &&
     css`
       .ScrollWrap {
-        height:980px;
+        height:840px;
         overflow-y:auto;
       }
     `

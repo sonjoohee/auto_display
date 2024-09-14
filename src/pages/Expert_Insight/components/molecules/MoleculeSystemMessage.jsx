@@ -82,7 +82,7 @@ const Thumb = styled.div`
   img {
     position: absolute;
     top: 50%;
-    left: 50%;
+    left: 49%;
     transform: translate(-50%, -50%);
     width: 100%;
     height: 100%;

@@ -425,22 +425,30 @@ const AnalysisSection = styled.div`
 `;
 
 const BoxWrap = styled.div`
-  padding: 20px;
-  border-radius: 10px;
-  background: ${(props) =>
-    props.isPurpose ? palette.white : "rgba(0,0,0,.03)"}; /* 흰 배경 적용 */
+  // padding: 20px;
+  // border-radius: 10px;
+  // background: ${(props) => (props.isPurpose ? palette.white : "rgba(0, 0, 0, 0.04)")}; /* 흰 배경 적용 */
+
+  font-size:0.875rem;
+  color:${palette.gray800};
+  line-height:1.5;
+  margin:8px auto 20px;
+
+  + div {
+    margin-top: 12px;
+  }
 
   strong {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 4px;
   }
 
-  p {
-    font-size: 0.875rem;
-    margin-bottom: 10px;
-  }
+  // p {
+  //   font-size: 0.875rem;
+  //   margin-bottom: 10px;
+  // }
 `;
 
 const TabHeader = styled.div`
@@ -449,14 +457,10 @@ const TabHeader = styled.div`
 `;
 
 const TabTitle = styled.div`
-  font-family: "Pretendard";
+  font-family: "Pretendard", "Poppins";
   font-size: 1.25rem;
-  font-weight: 500;
-  color: ${palette.black};
-  border: none;
-  border-bottom: none;
-  background: ${palette.white};
-  margin-bottom: 10px;
+  font-weight: 400;
+  color: ${palette.gray800};
 `;
 
 const TabContent = styled.div`
@@ -605,11 +609,21 @@ const SeparateSection = styled.div`
     margin-bottom: 10px;
   }
 
+  span.number {
+    width: 15px;
+    height: 15px;
+    font-size: 0.63rem;
+    color: ${palette.blue};
+    line-height: 15px;
+    text-align: center;
+    border: 1px solid ${palette.blue};
+  }
+
   strong {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 4px;
     font-size: 0.875rem;
     font-weight: 400;
     color: ${palette.darkGray};
