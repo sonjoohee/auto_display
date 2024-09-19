@@ -141,8 +141,25 @@ const OrganismLeftSideBar = () => {
   );
   const insightEditBoxRef = useRef(null);
   const historyEditBoxRef = useRef(null);
-
+  const toggleRef = useRef(null); 
+  
   const [editToggleIndex, setEditToggleIndex] = useState(null); // 특정 인덱스를 저장
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (toggleRef.current && !toggleRef.current.contains(event.target)) {
+        // 클릭한 곳이 요소 내부가 아니면 토글을 닫음
+        setIsToggle(true);
+      }
+    };
+    // 마운트될 때 클릭 리스너 추가
+    document.addEventListener("mousedown", handleClickOutside);
+    
+    // 언마운트될 때 클릭 리스너 제거
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -763,8 +780,8 @@ const OrganismLeftSideBar = () => {
                 </button>
               </LogoutBtnWrap>
 
-              <LogoutToggle isToggle={isToggle} className="AccountInfo">
-                <div className="info">
+              <LogoutToggle ref={toggleRef} isToggle={isToggle} className="AccountInfo">
+              <div className="info">
                   <strong>{sessionStorage.getItem("userName")}</strong>{" "}
                   {/* 유저 이름 표시 */}
                   <p>{sessionStorage.getItem("userEmail")}</p>{" "}
