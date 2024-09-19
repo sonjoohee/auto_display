@@ -182,7 +182,6 @@ const MoleculeLoginForm = () => {
             </TogglePasswordButton>
           </div>
   
-          {error && <ErrorMessage>{error}</ErrorMessage>}
   
           <PasswordResetLink>
             <a onClick={handlePasswordRestClick}>비밀번호 찾기</a>
@@ -194,7 +193,9 @@ const MoleculeLoginForm = () => {
           >
             로그인
           </StyledLoginButton>
-  
+          
+          {error && <ErrorMessage>{error}</ErrorMessage>}
+
           <JoinWrap>
             <p>InterviewX가 처음이에요</p>
             <Link to="#" onClick={handleSignClick}>
