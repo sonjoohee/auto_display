@@ -35,8 +35,8 @@ const OrganismReportPopup = ({ report, onClose }) => {
     <PopupOverlay onClick={onClose}>
       <PopupContent onClick={(e) => e.stopPropagation()}>
         <div className="popup-title">
-          <h1>{report.title}</h1>
-          <p>
+          <popup-h1>{report.title}</popup-h1>
+          <popup-p>
             <span>
               <img src={images.IconList} alt="" />
               {reportTypeText}
@@ -46,7 +46,7 @@ const OrganismReportPopup = ({ report, onClose }) => {
               <img src={images.IconSaveDate} alt="" />
               저장 : {report.date}
             </span>
-          </p>
+          </popup-p>
         </div>
 
         {reportIndex === 0 && <BizAnalysisSection report={report} />}
@@ -104,12 +104,12 @@ const PopupContent = styled.div`
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   }
 
-  h1 {
+  popup-h1 {
     font-size: 1.25rem;
     font-weight: 600;
   }
 
-  p {
+  popup-p {
     font-size: 0.75rem;
     color: ${palette.gray};
     display: flex;
