@@ -686,12 +686,16 @@ const Section = ({ title, content, isLast, expertIndex ,selectedTab}) => {
                   <span className="number">{index + 1}</span>
                   {item.subTitle}
                 </strong>
-                <ul>
+                    <ul>
                   {item.subText1 && (
-                    <li>- 강점: {splitText(item.subText1).subTitle}</li>
+                    <li>
+                      - {item.subText1.startsWith("강점:") ? item.subText1 : `강점: ${item.subText1}`}
+                    </li>
                   )}
                   {item.subText2 && (
-                    <li>- 약점: {splitText(item.subText2).subTitle}</li>
+                    <li>
+                      - {item.subText2.startsWith("약점:") ? item.subText2 : `약점: ${item.subText2}`}
+                    </li>
                   )}
                 </ul>
               </div>
