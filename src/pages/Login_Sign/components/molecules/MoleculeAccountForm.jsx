@@ -20,6 +20,7 @@ import {
   USER_NAME,
   USER_EMAIL,
 } from "../../../../pages/AtomStates"; // 아톰 임포트
+import { isValidPassword } from "../atoms/AtomValidation"; // isValidPassword 가져오기
 import { Link } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
 
@@ -52,6 +53,13 @@ const MoleculeAccountForm = () => {
     }
     if (newPassword != rePassword) {
       setError("동일한 비밀번호를 입력해주세요.");
+      return false;
+    }
+    // 비밀번호 유효성 검사 추가
+    if (!isValidPassword(newPassword)) {
+      setError(
+        "비밀번호는 8-16자 길이여야 하며, 문자, 숫자, 특수문자 중 최소 두 가지를 포함해야 합니다."
+      );
       return false;
     }
     return true;
