@@ -98,10 +98,18 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const [isLoadingExpert, setIsLoadingExpert] = useState(false);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
 
-  const [additionalReportData, setAdditionalReportData] = useAtom(ADDITIONAL_REPORT_DATA);
-  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
-  const [selectedCustomerAdditionalKeyword, setSelectedCustomerAdditionalKeyword] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
-  const [customerAdditionalReportData, setCustomerAdditionalReportData] = useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
+  const [additionalReportData, setAdditionalReportData] = useAtom(
+    ADDITIONAL_REPORT_DATA
+  );
+  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
+    SELECTED_ADDITIONAL_KEYWORD
+  );
+  const [
+    selectedCustomerAdditionalKeyword,
+    setSelectedCustomerAdditionalKeyword,
+  ] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
+  const [customerAdditionalReportData, setCustomerAdditionalReportData] =
+    useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
 
   useEffect(() => {
     const loadData = async () => {
@@ -150,32 +158,77 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             page_index: 1,
           };
 
-          const response1 = await axios.post(
+          let response1 = await axios.post(
             "https://wishresearch.kr/panels/expert",
             data,
             axiosConfig
           );
 
+          while (true) {
+            if (!response1.data["tabs"][0].hasOwnProperty("title")) {
+              response1 = await axios.post(
+                "https://wishresearch.kr/panels/expert",
+                data,
+                axiosConfig
+              );
+            } else {
+              break;
+            }
+          }
+
           finalResponse = response1.data;
 
           if (finalResponse.total_page_index === 2) {
-            const response2 = await axios.post(
+            let response2 = await axios.post(
               "https://wishresearch.kr/panels/expert",
               finalResponse,
               axiosConfig
             );
+            while (true) {
+              if (!response2.data["tabs"][1].hasOwnProperty("title")) {
+                response2 = await axios.post(
+                  "https://wishresearch.kr/panels/expert",
+                  finalResponse,
+                  axiosConfig
+                );
+              } else {
+                break;
+              }
+            }
             finalResponse = response2.data;
           } else if (finalResponse.total_page_index === 3) {
-            const response2 = await axios.post(
+            let response2 = await axios.post(
               "https://wishresearch.kr/panels/expert",
               finalResponse,
               axiosConfig
             );
-            const response3 = await axios.post(
+            while (true) {
+              if (!response2.data["tabs"][1].hasOwnProperty("title")) {
+                response2 = await axios.post(
+                  "https://wishresearch.kr/panels/expert",
+                  finalResponse,
+                  axiosConfig
+                );
+              } else {
+                break;
+              }
+            }
+            let response3 = await axios.post(
               "https://wishresearch.kr/panels/expert",
               response2.data,
               axiosConfig
             );
+            while (true) {
+              if (!response3.data["tabs"][2].hasOwnProperty("title")) {
+                response3 = await axios.post(
+                  "https://wishresearch.kr/panels/expert",
+                  response2.data,
+                  axiosConfig
+                );
+              } else {
+                break;
+              }
+            }
             finalResponse = response3.data;
           }
 
@@ -196,7 +249,8 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               inputBusinessInfo: inputBusinessInfo,
               analysisReportData: analysisReportData,
               selectedAdditionalKeywords: selectedAdditionalKeyword,
-              selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
+              selectedCustomerAdditionalKeyword:
+                selectedCustomerAdditionalKeyword,
               additionalReportData: additionalReportData,
               customerAdditionalReportData: customerAdditionalReportData,
               conversation: conversation,
@@ -252,7 +306,8 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               [currentReportKey]: strategyData,
               conversation: updatedConversation,
               selectedAdditionalKeywords: selectedAdditionalKeyword,
-              selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
+              selectedCustomerAdditionalKeyword:
+                selectedCustomerAdditionalKeyword,
               additionalReportData: additionalReportData,
               customerAdditionalReportData: customerAdditionalReportData,
               timestamp: Date.now(),
@@ -346,7 +401,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   );
 };
 
-const Section = ({ title, content, isLast, expertIndex ,selectedTab}) => {
+const Section = ({ title, content, isLast, expertIndex, selectedTab }) => {
   // 서브 타이틀이 있는 항목과 없는 항목을 분리
   const subTitleItems = content.filter((item) => item.subTitle);
   const nonSubTitleItems = content.filter((item) => !item.subTitle);
@@ -407,406 +462,478 @@ const Section = ({ title, content, isLast, expertIndex ,selectedTab}) => {
   };
 
   return (
-    <BoxWrap expertIndex={expertIndex} isLast={isLast} selectedTab={selectedTab}>
+    <BoxWrap
+      expertIndex={expertIndex}
+      isLast={isLast}
+      selectedTab={selectedTab}
+    >
       {/* "주요 차별화 요소"와 "차별화 전략 제안" 데이터를 결합하여 한 번만 렌더링 */}
       {renderCombinedSections()}
-    {/* 3번 전문가의 2번째 탭을 위한 조건 */}
-    {expertIndex === "3" && selectedTab === 1 ? (
-            <>
-            <strong>
+      {/* 3번 전문가의 2번째 탭을 위한 조건 */}
+      {expertIndex === "3" && selectedTab === 1 ? (
+        <>
+          <strong>
             <img src={images.Check} alt="" />
             {title}
           </strong>
-            {nonSubTitleItems.length > 0 &&
-              nonSubTitleItems.map((item, index) => (
-                <div key={index}>
-                  <p>{item.text}</p>
-                  {item.subText1 && <SubTextBox>{item.subText1}</SubTextBox>}
-                  {item.subText2 && <SubTextBox>{item.subText2}</SubTextBox>}
-                  {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
-                </div>
-              ))}
+          {nonSubTitleItems.length > 0 &&
+            nonSubTitleItems.map((item, index) => (
+              <div key={index}>
+                <p>{item.text}</p>
+                {item.subText1 && <SubTextBox>{item.subText1}</SubTextBox>}
+                {item.subText2 && <SubTextBox>{item.subText2}</SubTextBox>}
+                {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
+              </div>
+            ))}
 
-            {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
-            {subTitleItems.length > 0 && (
-                subTitleItems.map((item, index) => (
-                  <SubTextBox key={index}>
-                    <SubTitle>{item.subTitle}</SubTitle>
-                    <p>{item.text}</p>
-                    {item.subText1 && <SubTextBox>{item.subText1}</SubTextBox>}
-                    {item.subText2 && <SubTextBox>{item.subText2}</SubTextBox>}
-                    {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
-                  </SubTextBox>
-                ))
-                )}
-            </>
+          {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
+          {subTitleItems.length > 0 &&
+            subTitleItems.map((item, index) => (
+              <SubTextBox key={index}>
+                <SubTitle>{item.subTitle}</SubTitle>
+                <p>{item.text}</p>
+                {item.subText1 && <SubTextBox>{item.subText1}</SubTextBox>}
+                {item.subText2 && <SubTextBox>{item.subText2}</SubTextBox>}
+                {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
+              </SubTextBox>
+            ))}
+        </>
       ) : (
         <>
-     {/* title 표시 (특정 타이틀 제외) */}
-     {!isLast &&
-        title &&
-        !(
-          title === "주요 차별화 요소" ||
-          title === "차별화 전략 제안" ||
-          title === "제안 사항" ||
-          title === "경쟁 압박 대처 방안" ||
-          title === "브랜드 전략분석" ||
-          title === "브랜드 아이덴티티" ||
-          title === "소비자 인식 관리 방안" ||
-          title === "브랜드 신뢰도 구축 방안" ||
-          title === "경쟁사 분석 및 차별화 전략" ||
-          title === "고객 니즈 및 세분화 분석" ||
-          title === "고객 여정 맵핑" ||
-          title === "고객 여정 맵핑 터치포인트 단계 최적화 방안" ||
-          title === "시장 위치 평가 및 경쟁자 분석" ||
-          title === "장기적인 경쟁 우위 전략"
-
-        ) && (
-          <strong>
-            <img src={images.Check} alt="" />
-            {title}
-          </strong>
-        )}
-
-    {title === "제안 사항" && (
-        <>
-          <strong>
-            <img src={images.Check} alt="" />
-            {title}
-          </strong>
-          {/* subTitle : text 형태로 넘버링 추가하여 출력 */}
-          {content.map((item, index) => (
-            <div key={index} style={{ marginBottom: '10px' }}> {/* 각 요소에 마진 추가 */}
-              <p>
-                {index + 1}. {item.subTitle} : {item.text}
-              </p>
-            </div>
-          ))}
-        </>
-      )}
-
-  {title === "브랜드 전략분석" && (
-        <>
-          {/* 제목과 총평 출력 */}
-          <strong>
-            <img src={images.Check} alt="" />
-            {title}
-          </strong>
-
-          {summaryItem && (
-            <p style={{ marginBottom: '15px' }}>{summaryItem.text}</p> // 총평 텍스트를 제목 밑에 표시
-          )}
-
-          {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
-          <div style={{ backgroundColor: 'white', padding: '15px', borderRadius: '10px' }}>
-            {subItems.map((item, index) => (
-              <div key={index} style={{ marginBottom: '10px' }}> {/* 각 항목 간 마진 추가 */}
-                <p>
-                  - {item.subTitle} : {item.text}
-                </p>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
-
-      {title === "브랜드 아이덴티티" && (
-        <>
-          {/* 제목과 총평 출력 */}
-          <strong>
-            <img src={images.Check} alt="" />
-            {title}
-          </strong>
-
-          {summaryItem && (
-            <p style={{ marginBottom: '15px' }}>{summaryItem.text}</p> // 총평 텍스트를 제목 밑에 표시
-          )}
-
-          {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
-          <div style={{ backgroundColor: 'white', padding: '15px', borderRadius: '10px' }}>
-            {subItems.map((item, index) => (
-              <div key={index} style={{ marginBottom: '10px' }}> {/* 각 항목 간 마진 추가 */}
-                <p>
-                  - {item.subTitle} : {item.text}
-                </p>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
-      
-      {title === "경쟁사 분석 및 차별화 전략" && (
-        <>
-          {/* 제목과 총평 출력 */}
-          <strong>
-            <img src={images.Check} alt="" />
-            {title}
-          </strong>
-
-          {/* 총평 항목 필터링 */}
-          {content
-              .filter((item) => item.title === "경쟁사 분석 및 차별화 전략 설명")
-              .map((summaryItem, index) => (
-                <p key={index} style={{ marginBottom: '15px' }}>
-                  {summaryItem.text} {/* 총평 텍스트를 제목 밑에 표시 */}
-                </p>
-              ))}
-
-          {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
-          <div style={{ backgroundColor: 'white', padding: '15px', borderRadius: '10px' }}>
-            {subItems.map((item, index) => (
-              <div key={index} style={{ marginBottom: '10px' }}> {/* 각 항목 간 마진 추가 */}
-                <p>
-                  - {item.subTitle} : {item.text}
-                </p>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
-
-    {title === "고객 니즈 및 세분화 분석" && (
-            <>
-              {/* 제목과 총평 출력 */}
+          {/* title 표시 (특정 타이틀 제외) */}
+          {!isLast &&
+            title &&
+            !(
+              title === "주요 차별화 요소" ||
+              title === "차별화 전략 제안" ||
+              title === "제안 사항" ||
+              title === "경쟁 압박 대처 방안" ||
+              title === "브랜드 전략분석" ||
+              title === "브랜드 아이덴티티" ||
+              title === "소비자 인식 관리 방안" ||
+              title === "브랜드 신뢰도 구축 방안" ||
+              title === "경쟁사 분석 및 차별화 전략" ||
+              title === "고객 니즈 및 세분화 분석" ||
+              title === "고객 여정 맵핑" ||
+              title === "고객 여정 맵핑 터치포인트 단계 최적화 방안" ||
+              title === "시장 위치 평가 및 경쟁자 분석" ||
+              title === "장기적인 경쟁 우위 전략"
+            ) && (
               <strong>
                 <img src={images.Check} alt="" />
                 {title}
               </strong>
-
-              {/* 총평 항목 필터링 */}
-              {content
-                  .filter((item) => item.title === "고객 니즈 분석")
-                  .map((summaryItem, index) => (
-                    <p key={index} style={{ marginBottom: '15px' }}>
-                      {summaryItem.text} {/* 총평 텍스트를 제목 밑에 표시 */}
-                    </p>
-                  ))}
-
-              {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
-              <div style={{ backgroundColor: 'white', padding: '15px', borderRadius: '10px' }}>
-                {subItems.map((item, index) => (
-                  <div key={index} style={{ marginBottom: '10px' }}> {/* 각 항목 간 마진 추가 */}
-                    <p>
-                      - {item.subTitle} : {item.text}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-    {title === "고객 여정 맵핑" && (
-            <>
-              {/* 제목과 총평 출력 */}
-              <strong>
-                <img src={images.Check} alt="" />
-                {title}
-              </strong>
-
-              {/* 총평 항목 필터링 */}
-              {content
-                  .filter((item) => item.title === "고객 여정 맵핑")
-                  .map((summaryItem, index) => (
-                    <p key={index} style={{ marginBottom: '15px' }}>
-                      {summaryItem.text} {/* 총평 텍스트를 제목 밑에 표시 */}
-                    </p>
-                  ))}
-
-              {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
-              <div style={{ backgroundColor: 'white', padding: '15px', borderRadius: '10px' }}>
-                {subItems.map((item, index) => (
-                  <div key={index} style={{ marginBottom: '10px' }}> {/* 각 항목 간 마진 추가 */}
-                    <p>
-                      - {item.subTitle} : {item.text}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-          
-      {title === "브랜드 신뢰도 구축 방안" && (
-        <>
-          {/* 제목 출력 */}
-          <strong>
-            <img src={images.Check} alt="" />
-            {title}
-          </strong>
-
-          {/* subTitle : text 형태로 기본 박스 안에 출력 */}
-          <div style={{ padding: '15px', borderRadius: '10px' }}>
-            {subItems.map((item, index) => (
-              <div key={index} style={{ marginBottom: '10px' }}> {/* 각 항목 간 마진 추가 */}
-                <p>
-                  - {item.subTitle} : {item.text}
-                </p>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
-
-      {title === "소비자 인식 관리 방안" && (
-              <>
-                {/* 제목 출력 */}
-                <strong>
-                  <img src={images.Check} alt="" />
-                  {title}
-                </strong>
-
-                {/* subTitle : text 형태로 기본 박스 안에 출력 */}
-                <div style={{ padding: '15px', borderRadius: '10px' }}>
-                  {subItems.map((item, index) => (
-                    <div key={index} style={{ marginBottom: '10px' }}> {/* 각 항목 간 마진 추가 */}
-                      <p>
-                        - {item.subTitle} : {item.text}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </>
             )}
 
-
-    {/* "시장 위치 평가 및 경쟁자 분석"일 때 별도의 처리 */}
-    {title === "시장 위치 평가 및 경쟁자 분석" && (
-        <BgStyledSection>
-          <h4>
-            <img src={images.Check} alt="" />
-            {title}
-          </h4>
-          {nonSubTitleItems.length > 0 && (
-            <p>{nonSubTitleItems[0].text}</p>
-          )}
-
-          <div className="flexBox">
-            {subTitleItems.map((item, index) => (
-              <div className="bgWhite" key={index}>
-                <strong className="title">
-                  {/* 번호 표시를 위한 span.number */}
-                  <span className="number">{index + 1}</span>
-                  {item.subTitle}
-                </strong>
-                    <ul>
-                  {item.subText1 && (
-                    <li>
-                      - {item.subText1.startsWith("강점:") ? item.subText1 : `강점: ${item.subText1}`}
-                    </li>
-                  )}
-                  {item.subText2 && (
-                    <li>
-                      - {item.subText2.startsWith("약점:") ? item.subText2 : `약점: ${item.subText2}`}
-                    </li>
-                  )}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </BgStyledSection>
-      )}
-
-
-{title === "고객 여정 맵핑 터치포인트 단계 최적화 방안" && (
-  <BgStyledSection>
-    <h4>
-      <img src={images.Check} alt="" />
-      {title}
-    </h4>
-
-    <div className="flexBox">
-      {content.map((item, index) => (
-        <div className="bgWhite" key={index}>
-          <strong className="title">
-            {/* 번호 표시를 위한 span.number */}
-            <span className="number">{index + 1}</span>
-            {item.subTitle}
-          </strong>
-          <p>{item.text}</p> {/* text 필드에서 데이터 출력 */}
-        </div>
-      ))}
-    </div>
-  </BgStyledSection>
-)}
-
-      
-      {/* "특징" 또는 "차별화 요소" 섹션을 처리 */}
-      {(title === "특징" || title === "차별화 요소") && subTitleItems.length > 0 && (
-        <>
-          {subTitleItems.map((item, index) => (
-            <SeparateSection key={index}>
+          {title === "제안 사항" && (
+            <>
               <strong>
-                <span className="number">{index + 1}</span> {/* 번호 추가 */}
-                <strong_title>{`${title} : ${item.subTitle}`}</strong_title> {/* 이 부분만 bold 처리 */}
+                <img src={images.Check} alt="" />
+                {title}
               </strong>
-              <p>{item.text}</p>
-
-                {/* subText1, subText2, subText3에 대해 NumDynamicGrid 적용 */}
-                <NumDynamicGrid columns={2}>
-                  {item.subText1 && (
-                    <div>
-                      <SubTitle>{splitText(item.subText1).subTitle}</SubTitle>
-                      <p>{splitText(item.subText1).text}</p>
-                    </div>
-                  )}
-                  {item.subText2 && (
-                    <div>
-                      <SubTitle>{splitText(item.subText2).subTitle}</SubTitle>
-                      <p>{splitText(item.subText2).text}</p>
-                    </div>
-                  )}
-                  {item.subText3 && (
-                    <div>
-                      <SubTitle>{splitText(item.subText3).subTitle}</SubTitle>
-                      <p>{splitText(item.subText3).text}</p>
-                    </div>
-                  )}
-                </NumDynamicGrid>
-              </SeparateSection>
-            ))}
-          </>
-        )}
-      {/* "특징", "차별화 요소", "경쟁 분석"이 아닌 경우 기존 방식대로 처리 */}
-      {title !== "특징" &&
-        title !== "차별화 요소" &&
-        title !== "제안 사항" &&
-        title !== "시장 위치 평가 및 경쟁자 분석" &&
-        title !== "주요 차별화 요소" &&
-        title !== "브랜드 전략분석" &&
-        title !== "브랜드 아이덴티티" &&
-        title !== "브랜드 신뢰도 구축 방안" &&
-        title !== "소비자 인식 관리 방안" &&
-        title !== "차별화 전략 제안" &&
-        title !== "경쟁사 분석 및 차별화 전략" &&
-        title !== "고객 니즈 및 세분화 분석" &&
-        title !== "고객 여정 맵핑" &&
-        title !== "고객 여정 맵핑 터치포인트 단계 최적화 방안" &&
-        title !== "경쟁사 대비 차별화 전략" &&
-        title !== "경쟁 압박 대처 방안" &&
-        title !== "장기적인 경쟁 우위 전략" && (
-          <>
-            {/* nonSubTitleItems는 일반적으로 title과 text만 표시 */}
-            {nonSubTitleItems.length > 0 &&
-              nonSubTitleItems.map((item, index) => (
-                <div key={index}>
-                  <p>{item.text}</p>
-                  {item.subText1 && <SubTextBox>{item.subText1}</SubTextBox>}
-                  {item.subText2 && <SubTextBox>{item.subText2}</SubTextBox>}
-                  {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
+              {/* subTitle : text 형태로 넘버링 추가하여 출력 */}
+              {content.map((item, index) => (
+                <div key={index} style={{ marginBottom: "10px" }}>
+                  {" "}
+                  {/* 각 요소에 마진 추가 */}
+                  <p>
+                    {index + 1}. {item.subTitle} : {item.text}
+                  </p>
                 </div>
               ))}
+            </>
+          )}
 
-            {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
-            {subTitleItems.length > 0 && (
-              <DynamicGrid columns={subTitleItems.length}>
-                {subTitleItems.map((item, index) => (
-                  <div key={index}>
-                    <SubTitle>{item.subTitle}</SubTitle>
-                    <p>{item.text}</p>
-                    {item.subText1 && <SubTextBox>{item.subText1}</SubTextBox>}
-                    {item.subText2 && <SubTextBox>{item.subText2}</SubTextBox>}
-                    {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
+          {title === "브랜드 전략분석" && (
+            <>
+              {/* 제목과 총평 출력 */}
+              <strong>
+                <img src={images.Check} alt="" />
+                {title}
+              </strong>
+
+              {summaryItem && (
+                <p style={{ marginBottom: "15px" }}>{summaryItem.text}</p> // 총평 텍스트를 제목 밑에 표시
+              )}
+
+              {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
+              <div
+                style={{
+                  backgroundColor: "white",
+                  padding: "15px",
+                  borderRadius: "10px",
+                }}
+              >
+                {subItems.map((item, index) => (
+                  <div key={index} style={{ marginBottom: "10px" }}>
+                    {" "}
+                    {/* 각 항목 간 마진 추가 */}
+                    <p>
+                      - {item.subTitle} : {item.text}
+                    </p>
                   </div>
                 ))}
-               </DynamicGrid>
+              </div>
+            </>
+          )}
+
+          {title === "브랜드 아이덴티티" && (
+            <>
+              {/* 제목과 총평 출력 */}
+              <strong>
+                <img src={images.Check} alt="" />
+                {title}
+              </strong>
+
+              {summaryItem && (
+                <p style={{ marginBottom: "15px" }}>{summaryItem.text}</p> // 총평 텍스트를 제목 밑에 표시
+              )}
+
+              {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
+              <div
+                style={{
+                  backgroundColor: "white",
+                  padding: "15px",
+                  borderRadius: "10px",
+                }}
+              >
+                {subItems.map((item, index) => (
+                  <div key={index} style={{ marginBottom: "10px" }}>
+                    {" "}
+                    {/* 각 항목 간 마진 추가 */}
+                    <p>
+                      - {item.subTitle} : {item.text}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          {title === "경쟁사 분석 및 차별화 전략" && (
+            <>
+              {/* 제목과 총평 출력 */}
+              <strong>
+                <img src={images.Check} alt="" />
+                {title}
+              </strong>
+
+              {/* 총평 항목 필터링 */}
+              {content
+                .filter(
+                  (item) => item.title === "경쟁사 분석 및 차별화 전략 설명"
+                )
+                .map((summaryItem, index) => (
+                  <p key={index} style={{ marginBottom: "15px" }}>
+                    {summaryItem.text} {/* 총평 텍스트를 제목 밑에 표시 */}
+                  </p>
+                ))}
+
+              {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
+              <div
+                style={{
+                  backgroundColor: "white",
+                  padding: "15px",
+                  borderRadius: "10px",
+                }}
+              >
+                {subItems.map((item, index) => (
+                  <div key={index} style={{ marginBottom: "10px" }}>
+                    {" "}
+                    {/* 각 항목 간 마진 추가 */}
+                    <p>
+                      - {item.subTitle} : {item.text}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          {title === "고객 니즈 및 세분화 분석" && (
+            <>
+              {/* 제목과 총평 출력 */}
+              <strong>
+                <img src={images.Check} alt="" />
+                {title}
+              </strong>
+
+              {/* 총평 항목 필터링 */}
+              {content
+                .filter((item) => item.title === "고객 니즈 분석")
+                .map((summaryItem, index) => (
+                  <p key={index} style={{ marginBottom: "15px" }}>
+                    {summaryItem.text} {/* 총평 텍스트를 제목 밑에 표시 */}
+                  </p>
+                ))}
+
+              {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
+              <div
+                style={{
+                  backgroundColor: "white",
+                  padding: "15px",
+                  borderRadius: "10px",
+                }}
+              >
+                {subItems.map((item, index) => (
+                  <div key={index} style={{ marginBottom: "10px" }}>
+                    {" "}
+                    {/* 각 항목 간 마진 추가 */}
+                    <p>
+                      - {item.subTitle} : {item.text}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+          {title === "고객 여정 맵핑" && (
+            <>
+              {/* 제목과 총평 출력 */}
+              <strong>
+                <img src={images.Check} alt="" />
+                {title}
+              </strong>
+
+              {/* 총평 항목 필터링 */}
+              {content
+                .filter((item) => item.title === "고객 여정 맵핑")
+                .map((summaryItem, index) => (
+                  <p key={index} style={{ marginBottom: "15px" }}>
+                    {summaryItem.text} {/* 총평 텍스트를 제목 밑에 표시 */}
+                  </p>
+                ))}
+
+              {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
+              <div
+                style={{
+                  backgroundColor: "white",
+                  padding: "15px",
+                  borderRadius: "10px",
+                }}
+              >
+                {subItems.map((item, index) => (
+                  <div key={index} style={{ marginBottom: "10px" }}>
+                    {" "}
+                    {/* 각 항목 간 마진 추가 */}
+                    <p>
+                      - {item.subTitle} : {item.text}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          {title === "브랜드 신뢰도 구축 방안" && (
+            <>
+              {/* 제목 출력 */}
+              <strong>
+                <img src={images.Check} alt="" />
+                {title}
+              </strong>
+
+              {/* subTitle : text 형태로 기본 박스 안에 출력 */}
+              <div style={{ padding: "15px", borderRadius: "10px" }}>
+                {subItems.map((item, index) => (
+                  <div key={index} style={{ marginBottom: "10px" }}>
+                    {" "}
+                    {/* 각 항목 간 마진 추가 */}
+                    <p>
+                      - {item.subTitle} : {item.text}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          {title === "소비자 인식 관리 방안" && (
+            <>
+              {/* 제목 출력 */}
+              <strong>
+                <img src={images.Check} alt="" />
+                {title}
+              </strong>
+
+              {/* subTitle : text 형태로 기본 박스 안에 출력 */}
+              <div style={{ padding: "15px", borderRadius: "10px" }}>
+                {subItems.map((item, index) => (
+                  <div key={index} style={{ marginBottom: "10px" }}>
+                    {" "}
+                    {/* 각 항목 간 마진 추가 */}
+                    <p>
+                      - {item.subTitle} : {item.text}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          {/* "시장 위치 평가 및 경쟁자 분석"일 때 별도의 처리 */}
+          {title === "시장 위치 평가 및 경쟁자 분석" && (
+            <BgStyledSection>
+              <h4>
+                <img src={images.Check} alt="" />
+                {title}
+              </h4>
+              {nonSubTitleItems.length > 0 && <p>{nonSubTitleItems[0].text}</p>}
+
+              <div className="flexBox">
+                {subTitleItems.map((item, index) => (
+                  <div className="bgWhite" key={index}>
+                    <strong className="title">
+                      {/* 번호 표시를 위한 span.number */}
+                      <span className="number">{index + 1}</span>
+                      {item.subTitle}
+                    </strong>
+                    <ul>
+                      {item.subText1 && (
+                        <li>
+                          -{" "}
+                          {item.subText1.startsWith("강점:")
+                            ? item.subText1
+                            : `강점: ${item.subText1}`}
+                        </li>
+                      )}
+                      {item.subText2 && (
+                        <li>
+                          -{" "}
+                          {item.subText2.startsWith("약점:")
+                            ? item.subText2
+                            : `약점: ${item.subText2}`}
+                        </li>
+                      )}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </BgStyledSection>
+          )}
+
+          {title === "고객 여정 맵핑 터치포인트 단계 최적화 방안" && (
+            <BgStyledSection>
+              <h4>
+                <img src={images.Check} alt="" />
+                {title}
+              </h4>
+
+              <div className="flexBox">
+                {content.map((item, index) => (
+                  <div className="bgWhite" key={index}>
+                    <strong className="title">
+                      {/* 번호 표시를 위한 span.number */}
+                      <span className="number">{index + 1}</span>
+                      {item.subTitle}
+                    </strong>
+                    <p>{item.text}</p> {/* text 필드에서 데이터 출력 */}
+                  </div>
+                ))}
+              </div>
+            </BgStyledSection>
+          )}
+
+          {/* "특징" 또는 "차별화 요소" 섹션을 처리 */}
+          {(title === "특징" || title === "차별화 요소") &&
+            subTitleItems.length > 0 && (
+              <>
+                {subTitleItems.map((item, index) => (
+                  <SeparateSection key={index}>
+                    <strong>
+                      <span className="number">{index + 1}</span>{" "}
+                      {/* 번호 추가 */}
+                      <strong_title>{`${title} : ${item.subTitle}`}</strong_title>{" "}
+                      {/* 이 부분만 bold 처리 */}
+                    </strong>
+                    <p>{item.text}</p>
+
+                    {/* subText1, subText2, subText3에 대해 NumDynamicGrid 적용 */}
+                    <NumDynamicGrid columns={2}>
+                      {item.subText1 && (
+                        <div>
+                          <SubTitle>
+                            {splitText(item.subText1).subTitle}
+                          </SubTitle>
+                          <p>{splitText(item.subText1).text}</p>
+                        </div>
+                      )}
+                      {item.subText2 && (
+                        <div>
+                          <SubTitle>
+                            {splitText(item.subText2).subTitle}
+                          </SubTitle>
+                          <p>{splitText(item.subText2).text}</p>
+                        </div>
+                      )}
+                      {item.subText3 && (
+                        <div>
+                          <SubTitle>
+                            {splitText(item.subText3).subTitle}
+                          </SubTitle>
+                          <p>{splitText(item.subText3).text}</p>
+                        </div>
+                      )}
+                    </NumDynamicGrid>
+                  </SeparateSection>
+                ))}
+              </>
+            )}
+          {/* "특징", "차별화 요소", "경쟁 분석"이 아닌 경우 기존 방식대로 처리 */}
+          {title !== "특징" &&
+            title !== "차별화 요소" &&
+            title !== "제안 사항" &&
+            title !== "시장 위치 평가 및 경쟁자 분석" &&
+            title !== "주요 차별화 요소" &&
+            title !== "브랜드 전략분석" &&
+            title !== "브랜드 아이덴티티" &&
+            title !== "브랜드 신뢰도 구축 방안" &&
+            title !== "소비자 인식 관리 방안" &&
+            title !== "차별화 전략 제안" &&
+            title !== "경쟁사 분석 및 차별화 전략" &&
+            title !== "고객 니즈 및 세분화 분석" &&
+            title !== "고객 여정 맵핑" &&
+            title !== "고객 여정 맵핑 터치포인트 단계 최적화 방안" &&
+            title !== "경쟁사 대비 차별화 전략" &&
+            title !== "경쟁 압박 대처 방안" &&
+            title !== "장기적인 경쟁 우위 전략" && (
+              <>
+                {/* nonSubTitleItems는 일반적으로 title과 text만 표시 */}
+                {nonSubTitleItems.length > 0 &&
+                  nonSubTitleItems.map((item, index) => (
+                    <div key={index}>
+                      <p>{item.text}</p>
+                      {item.subText1 && (
+                        <SubTextBox>{item.subText1}</SubTextBox>
+                      )}
+                      {item.subText2 && (
+                        <SubTextBox>{item.subText2}</SubTextBox>
+                      )}
+                      {item.subText3 && (
+                        <SubTextBox>{item.subText3}</SubTextBox>
+                      )}
+                    </div>
+                  ))}
+
+                {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
+                {subTitleItems.length > 0 && (
+                  <DynamicGrid columns={subTitleItems.length}>
+                    {subTitleItems.map((item, index) => (
+                      <div key={index}>
+                        <SubTitle>{item.subTitle}</SubTitle>
+                        <p>{item.text}</p>
+                        {item.subText1 && (
+                          <SubTextBox>{item.subText1}</SubTextBox>
+                        )}
+                        {item.subText2 && (
+                          <SubTextBox>{item.subText2}</SubTextBox>
+                        )}
+                        {item.subText3 && (
+                          <SubTextBox>{item.subText3}</SubTextBox>
+                        )}
+                      </div>
+                    ))}
+                  </DynamicGrid>
                 )}
               </>
             )}
@@ -1000,7 +1127,7 @@ const BoxWrap = styled.div`
       : "rgba(0, 0, 0, 0.03)"}; /* 마지막 섹션은 흰색 배경 */
 
   + div {
-    margin-top:12px;
+    margin-top: 12px;
   }
 
   + div {
@@ -1055,7 +1182,7 @@ const TabButton = styled.button`
   font-weight: 400;
 
   color: ${(props) =>
-    props.active 
+    props.active
       ? palette.black
       : props.expertIndex === "1"
       ? `rgba(0,0,0,.2)` // 1번 전문가일 때
@@ -1089,7 +1216,7 @@ const DynamicGrid = styled.div`
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap:4px;
+    gap: 4px;
     padding: 12px;
     border-radius: 10px;
     border: 1px solid ${palette.lineGray};
@@ -1097,9 +1224,9 @@ const DynamicGrid = styled.div`
 
   p {
     margin: 0;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    display:-webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
   }
@@ -1110,7 +1237,7 @@ const SubTitle = styled.strong`
   font-weight: 500;
   color: ${palette.lightGray} !important;
   text-align: left;
-  margin-bottom:0 !important;
+  margin-bottom: 0 !important;
 `;
 
 const SubTextBox = styled.div`
@@ -1263,7 +1390,7 @@ const BgStyledSection = styled.div`
             width: 5px;
             height: 1px;
             background: ${palette.black};
-            content: '';
+            content: "";
           }
         }
       }
