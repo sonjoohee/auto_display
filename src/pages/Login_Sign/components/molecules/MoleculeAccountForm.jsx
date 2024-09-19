@@ -39,6 +39,7 @@ const MoleculeAccountForm = ({ onOpenPopup  = () => {} }) => {  // onOpenPopup  
   const [, setUserName] = useAtom(USER_NAME); // 유저 이름 아톰
   const [, setUserEmail] = useAtom(USER_EMAIL); // 유저 이메일 아톰
   const [isPopupOpen, setIsPopupOpen] = useState(false); // 팝업 상태 관리
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setError("");
@@ -73,7 +74,7 @@ const MoleculeAccountForm = ({ onOpenPopup  = () => {} }) => {  // onOpenPopup  
 
     try {
       const accessToken = sessionStorage.getItem("accessToken"); // 저장된 토큰을 가져옴
-
+      setIsLoading(true);
       // 유저 정보를 요청하기 위해 accessToken을 사용
       await axios.put(
         "https://wishresearch.kr/api/user/passUpdate/",
@@ -98,7 +99,7 @@ const MoleculeAccountForm = ({ onOpenPopup  = () => {} }) => {  // onOpenPopup  
       setRePassword("");
       onOpenPopup ();
       navigate("/");
-
+      setIsLoading(false);
     } catch (error) {
       const serverErrorMessage = error.response?.data?.message || "비밀번호 변경 중 오류가 발생했습니다.";
     
@@ -106,6 +107,7 @@ const MoleculeAccountForm = ({ onOpenPopup  = () => {} }) => {  // onOpenPopup  
       setPassword(""); 
       setNewPassword("");
       setRePassword("");
+      setIsLoading(false);
     }
   };
 
@@ -187,8 +189,8 @@ return (
         <a onClick={handlePasswordReset}>비밀번호 찾기</a>
       </PasswordResetLink>
  */}
-      <StyledLoginButton onClick={handleChangPassword} disabled={!password}>
-        변경하기
+      <StyledLoginButton onClick={handleChangPassword} disabled={isLoading || !password}>
+      {isLoading ? "비밀번호를 변경 중 입니다..." : "변경하기"}
       </StyledLoginButton>
       {/* 
       <WithdrawalWrap>
