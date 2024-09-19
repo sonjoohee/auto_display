@@ -774,9 +774,9 @@ const OrganismLeftSideBar = () => {
                   {/* 유저 이메일 표시 */}
                 </div>
 
-                <button type="button" className="more" onClick={moreProfile}>
-                  {/* <img src={images.AccountSetting} alt="" /> */}
-                  <span>{sessionStorage.getItem("userName")}</span>
+                <button className="more" onClick={moreProfile}>
+                  <img src={images.AccountSetting} alt="" />
+                  {/* <span>{sessionStorage.getItem("userName")}</span> */}
                 </button>
               </LogoutBtnWrap>
 
@@ -1225,8 +1225,10 @@ const SideBar = styled.div`
         transform: translateX(257px);
 
         .more {
-          width: 40px;
-          height: 40px;
+          // width: 40px;
+          // height: 40px;
+          width: 37px;
+          height: 37px;
           font-size: 0;
           // background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M5.86737 1.23877C5.86737 1.51491 5.64351 1.73877 5.36737 1.73877L3.26709 1.73877C2.43866 1.73877 1.76709 2.41034 1.76709 3.23877L1.76709 10.6754C1.76709 11.5038 2.43866 12.1754 3.26709 12.1754H5.36737C5.64351 12.1754 5.86737 12.3993 5.86737 12.6754C5.86737 12.9516 5.64351 13.1754 5.36737 13.1754H3.26709C1.88638 13.1754 0.76709 12.0561 0.76709 10.6754V3.23877C0.76709 1.85806 1.88638 0.73877 3.26709 0.73877H5.36737C5.64351 0.73877 5.86737 0.962627 5.86737 1.23877ZM13.2332 6.95753C13.2332 7.23367 13.0093 7.45753 12.7332 7.45753L5.76741 7.45753L8.38732 10.0774C8.58258 10.2727 8.58258 10.5893 8.38732 10.7845C8.19206 10.9798 7.87548 10.9798 7.68022 10.7846L4.92287 8.0272C4.33848 7.44282 4.33688 6.49584 4.91928 5.90948L7.67902 3.13097C7.87362 2.93504 8.1902 2.93397 8.38612 3.12857C8.58205 3.32317 8.58312 3.63975 8.38852 3.83567L5.78438 6.45753L12.7332 6.45753C13.0093 6.45753 13.2332 6.68139 13.2332 6.95753Z' fill='black' fill-opacity='0.6'/%3E%3C/svg%3E")
           //   center no-repeat;
