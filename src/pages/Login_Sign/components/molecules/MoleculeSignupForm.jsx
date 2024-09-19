@@ -232,7 +232,7 @@ const InputWrap = styled.div`
 const StyledAtomInput = styled.input`
   width: 100%;
   font-family: 'Pretendard', 'Poppins';
-  font-size:1rem;
+  font-size: 0.75rem; /* 12px로 변경 */
   padding: 12px 16px;
   border-radius:8px;
   border: 1px solid ${palette.lineGray};
