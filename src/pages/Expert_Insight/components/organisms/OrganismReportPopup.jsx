@@ -425,11 +425,84 @@ const AdditionalReportSection = ({ report }) => {
         </TabHeader>
       )}
 
-      {/* 각 섹션을 반복하여 표시 */}
       {sections?.map((section, index) => (
-        <Section key={index} title={section.title} content={section.content} />
-      ))}
+                  <AdditionalSection
+                    key={index}
+                    title={section.title}
+                    content={section.content}
+                    index={index - 1}
+                  />
+                ))}
     </AnalysisSection>
+  );
+};
+
+const AdditionalSection = ({ title, content, index }) => {
+  // 서브 타이틀이 있는 항목과 없는 항목을 분리
+  const subTitleItems = content.filter((item) => item.subTitle);
+  const nonSubTitleItems = content.filter((item) => !item.subTitle);
+
+  // subText에서 ':'로 분리하여 subTitle과 text를 따로 처리
+  const splitText = (text) => {
+    const [subTitle, ...rest] = text.split(":");
+    return {
+      subTitle: subTitle.trim(), // ':' 앞부분
+      text: rest.join(":").trim(), // ':' 뒷부분
+    };
+  };
+
+  return (
+    <AdditionalBoxWrap isPurpose={title === "목적"}>
+      {" "}
+      {/* 타이틀이 "목적"인지 확인 */}
+      {title && title !== "목적" && (
+        <strong>
+          {/* 번호 표시 */}
+          {index + 1}. {title}
+        </strong>
+      )}
+      {/* nonSubTitleItems는 일반적으로 title과 text만 표시 */}
+      {nonSubTitleItems.length > 0 &&
+        nonSubTitleItems?.map((item, index) => (
+          <div key={index}>
+            <p>{item.text}</p>
+            {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
+          </div>
+        ))}
+      {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
+      <>
+        {subTitleItems.map((item, index) => (
+          <AdditionalSeparateSection key={index}>
+            <strong>
+              {/* <strong_title>{`${item.subTitle}`}</strong_title> */}{" "}
+              {/* 차후 추가할수도 있음*/}
+            </strong>
+            <p>
+              {item.subTitle} : {item.text}
+            </p>
+
+            {/* subText1, subText2, subText3를 한 줄씩 표시 */}
+            <div>
+              {item.subText1 && (
+                <p>
+                  {item.subTitle}: {splitText(item.subText1).text}
+                </p>
+              )}
+              {item.subText2 && (
+                <p>
+                  {item.subTitle}: {splitText(item.subText2).text}
+                </p>
+              )}
+              {item.subText3 && (
+                <p>
+                  {item.subTitle}: {splitText(item.subText3).text}
+                </p>
+              )}
+            </div>
+          </AdditionalSeparateSection>
+        ))}
+      </>
+    </AdditionalBoxWrap>
   );
 };
 
@@ -1036,6 +1109,136 @@ const BgStyledSection = styled.div`
     }
   }
 `;
+const AdditionalSeparateSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 0px 20px; /* 위아래 5px, 좌우 20px */
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0);
+
+  h4 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  span.number {
+    width: 15px;
+    height: 15px;
+    font-size: 0.63rem;
+    color: ${palette.blue};
+    line-height: 15px;
+    text-align: center;
+    border: 1px solid ${palette.blue};
+  }
+
+  strong {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: ${palette.darkGray};
+  }
+
+  strong_title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: ${palette.darkGray};
+  }
+
+  p {
+    position: relative;
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: ${palette.darkGray};
+    line-height: 1.5;
+    padding-left: 13px;
+    margin-left: 8px;
+
+    &:before {
+      position: absolute;
+      top: 8px;
+      left: 0;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: ${palette.gray800};
+      content: "";
+    }
+  }
+
+  .flexBox {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+
+    > div {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid ${palette.lineGray};
+
+      p {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+      }
+    }
+
+    .bgWhite {
+      margin-top: 0 !important;
+    }
+  }
+
+  .bgWhite {
+    padding: 15px !important;
+    margin-top: 12px;
+    border-radius: 10px;
+    border: 1px solid ${palette.white} !important;
+    background: ${palette.white};
+
+    .title {
+      color: ${palette.black};
+      font-weight: 700;
+    }
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    li {
+      position: relative;
+      font-size: 0.875rem;
+      color: ${palette.darkGray};
+      line-height: 1.5;
+      padding-left: 13px;
+
+      &:before {
+        position: absolute;
+        top: 8px;
+        left: 0;
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: ${palette.gray800};
+        content: "";
+      }
+    }
+  }
+`;
 
 const SeparateSection = styled.div`
   display: flex;
@@ -1199,4 +1402,31 @@ const NumDynamicGrid = styled.div`
     color: ${palette.darkGray};
     line-height: 1.5;
   }
+`;
+
+const AdditionalBoxWrap = styled.div`
+  // padding: 20px;
+  // border-radius: 10px;
+  // background: ${(props) => (props.isPurpose ? palette.white : "rgba(0, 0, 0, 0.04)")}; /* 흰 배경 적용 */
+
+  font-size:0.875rem;
+  color:${palette.gray800};
+  line-height:1.5;
+  margin:8px auto 20px;
+
+  + div {
+    margin-top: 12px;
+  }
+
+  strong {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+
+  // p {
+  //   font-size: 0.875rem;
+  //   margin-bottom: 10px;
+  // }
 `;
