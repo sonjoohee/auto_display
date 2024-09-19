@@ -60,7 +60,7 @@ const MoleculeSignupPopup = ({ onClose, email }) => {
           <span>
             인증 메일은 입력하신 이메일 주소로 발송되엇습니다
             <br />
-            메일을 받지 못하셨다면 스팸함을 확인하거나, 메일 재발송을 해주세요
+            메일을 받지 못하셨다면 스팸함을 확인해주세요.
           </span>
         </p>
 
@@ -151,6 +151,7 @@ const PopupContent = styled.div`
       font-family: "Pretendard", "Poppins";
       color: ${palette.gray};
       font-weight: 600;
+      font-size: 0.75rem;
       padding: 0;
       border: 0;
       background: none;
@@ -165,6 +166,7 @@ const PopupContent = styled.div`
       font-family: "Pretendard", "Poppins";
       color: ${palette.gray};
       font-weight: 600;
+      font-size: 0.75rem;
       padding: 0;
       border: 0;
       background: none;

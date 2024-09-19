@@ -591,106 +591,11 @@ const OrganismLeftSideBar = () => {
               </label>
               <AccordionContent>
                 <ul>
-                  {reports?.map((report, index) => (
-                    <li key={index}>
-                      <p onClick={() => handleReportClick(report.id)}>
-                        {report.business_info}
-                      </p>
-                      <span
-                        id={`insight-toggle-${index}`}
-                        style={{
-                          display: "inline-block",
-                          padding: "10px",
-                          cursor: "pointer",
-                        }}
-                        onClick={() => insightEditBoxToggle(index)}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="3"
-                          viewBox="0 0 14 3"
-                          fill="none"
-                        >
-                          <circle
-                            cx="2.0067"
-                            cy="1.51283"
-                            r="1.49694"
-                            transform="rotate(-90 2.0067 1.51283)"
-                            fill="#A0A0A0"
-                          />
-                          <circle
-                            cx="7.00084"
-                            cy="1.51283"
-                            r="1.49694"
-                            transform="rotate(-90 7.00084 1.51283)"
-                            fill="#A0A0A0"
-                          />
-                          <circle
-                            cx="11.993"
-                            cy="1.51283"
-                            r="1.49694"
-                            transform="rotate(-90 11.993 1.51283)"
-                            fill="#A0A0A0"
-                          />
-                        </svg>
-                      </span>
-                      {insightEditToggleIndex === index && (
-                        <div
-                          id={`insight-edit-box-${index}`}
-                          className="insight-toggle"
-                          ref={insightEditBoxRef}
-                        >
-                          <EditBox
-                            isEditToggle={insightEditToggleIndex === index}
-                          >
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteButtonClick(report.id)}
-                            >
-                              <img src={images.IconDelete2} alt="" />
-                              삭제
-                            </button>
-                            <button type="button">
-                              <img src={images.IconEdit2} alt="" />
-                              이름 변경
-                            </button>
-                          </EditBox>
-                        </div>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </AccordionContent>
-            </AccordionItem>
-
-            {selectedReport && (
-              <OrganismReportPopup
-                report={selectedReport}
-                onClose={closePopup}
-              />
-            )}
-
-            <AccordionItem>
-              <input
-                type="checkbox"
-                id="section2"
-                className="accordion-toggle"
-              />
-              <label htmlFor="section2" className="accordion-label">
-                <img src={images.Clock} alt="" />
-                프로젝트 히스토리
-              </label>
-              <AccordionContent className="scrollbar">
-                <div>
-                  <strong>최근 작업</strong>
-                  <ul>
-                    {chatList?.map((chat, index) => (
+                  {reports && reports.length > 0 ? (
+                    reports.map((report, index) => (
                       <li key={index}>
-                        <p onClick={() => handleConversationClick(chat.id)}>
-                          {chat.business_info
-                            ? chat.business_info
-                            : "기초보고서를 생성 중..."}
+                        <p onClick={() => handleReportClick(report.id)}>
+                          {report.business_info}
                         </p>
                         <span
                           id={`insight-toggle-${index}`}
@@ -699,7 +604,7 @@ const OrganismLeftSideBar = () => {
                             padding: "10px",
                             cursor: "pointer",
                           }}
-                          onClick={() => editBoxToggle(index)}
+                          onClick={() => insightEditBoxToggle(index)}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -731,20 +636,16 @@ const OrganismLeftSideBar = () => {
                             />
                           </svg>
                         </span>
-
-                        {editToggleIndex === index && (
+                        {insightEditToggleIndex === index && (
                           <div
                             id={`insight-edit-box-${index}`}
                             className="insight-toggle"
-                            ref={historyEditBoxRef}
+                            ref={insightEditBoxRef}
                           >
-                            <EditBox isEditToggle={editToggleIndex === index}>
-                              {/* <button type="button"> */}
+                            <EditBox isEditToggle={insightEditToggleIndex === index}>
                               <button
                                 type="button"
-                                onClick={() =>
-                                  handleChatDeleteButtonClick(chat.id)
-                                }
+                                onClick={() => handleDeleteButtonClick(report.id)}
                               >
                                 <img src={images.IconDelete2} alt="" />
                                 삭제
@@ -757,10 +658,119 @@ const OrganismLeftSideBar = () => {
                           </div>
                         )}
                       </li>
-                    ))}
-                  </ul>
-                </div>
+                    ))
+                  ) : (
+                    <li>
+                      <p>최근 저장한 보고서가 없습니다</p>
+                    </li>
+                  )}
+                </ul>
               </AccordionContent>
+            </AccordionItem>
+
+            {selectedReport && (
+              <OrganismReportPopup
+                report={selectedReport}
+                onClose={closePopup}
+              />
+            )}
+
+            <AccordionItem>
+              <input
+                type="checkbox"
+                id="section2"
+                className="accordion-toggle"
+              />
+              <label htmlFor="section2" className="accordion-label">
+                <img src={images.Clock} alt="" />
+                프로젝트 히스토리
+              </label>
+              <AccordionContent className="scrollbar">
+                  <div>
+                    <strong>최근 작업</strong>
+                    <ul>
+                      {chatList && chatList.length > 0 ? (
+                        chatList.map((chat, index) => (
+                          <li key={index}>
+                            <p onClick={() => handleConversationClick(chat.id)}>
+                              {chat.business_info
+                                ? chat.business_info
+                                : "기초보고서를 생성 중..."}
+                            </p>
+                            <span
+                              id={`insight-toggle-${index}`}
+                              style={{
+                                display: "inline-block",
+                                padding: "10px",
+                                cursor: "pointer",
+                              }}
+                              onClick={() => editBoxToggle(index)}
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="14"
+                                height="3"
+                                viewBox="0 0 14 3"
+                                fill="none"
+                              >
+                                <circle
+                                  cx="2.0067"
+                                  cy="1.51283"
+                                  r="1.49694"
+                                  transform="rotate(-90 2.0067 1.51283)"
+                                  fill="#A0A0A0"
+                                />
+                                <circle
+                                  cx="7.00084"
+                                  cy="1.51283"
+                                  r="1.49694"
+                                  transform="rotate(-90 7.00084 1.51283)"
+                                  fill="#A0A0A0"
+                                />
+                                <circle
+                                  cx="11.993"
+                                  cy="1.51283"
+                                  r="1.49694"
+                                  transform="rotate(-90 11.993 1.51283)"
+                                  fill="#A0A0A0"
+                                />
+                              </svg>
+                            </span>
+
+                            {editToggleIndex === index && (
+                              <div
+                                id={`insight-edit-box-${index}`}
+                                className="insight-toggle"
+                                ref={historyEditBoxRef}
+                              >
+                                <EditBox isEditToggle={editToggleIndex === index}>
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      handleChatDeleteButtonClick(chat.id)
+                                    }
+                                  >
+                                    <img src={images.IconDelete2} alt="" />
+                                    삭제
+                                  </button>
+                                  <button type="button">
+                                    <img src={images.IconEdit2} alt="" />
+                                    이름 변경
+                                  </button>
+                                </EditBox>
+                              </div>
+                            )}
+                          </li>
+                        ))
+                      ) : (
+                        <li>
+                          <p>최근 작업 내역이 없습니다</p>
+                        </li>
+                      )}
+                    </ul>
+                  </div>
+                </AccordionContent>
+
             </AccordionItem>
           </AccordionMenu>
         </SideBarMenu>
