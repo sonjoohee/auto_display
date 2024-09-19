@@ -34,6 +34,7 @@ import {
   isLoggedInAtom,
   SELECTED_EXPERT_INDEX,
   REPORT_REFRESH_TRIGGER,
+  IS_LOADING_ANALYSIS,
 } from "../../../AtomStates";
 
 const OrganismBizAnalysisSection = ({ conversationId }) => {
@@ -78,7 +79,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
     tempBusinessInformationTargetCustomer,
     setTempBusinessInformationTargetCustomer,
   ] = useAtom(TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [isLoadingAnalysis, setIsLoadingAnalysis] = useState(false);
+  const [isLoadingAnalysis, setIsLoadingAnalysis] = useAtom(IS_LOADING_ANALYSIS);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [buttonState, setButtonState] = useAtom(ANALYSIS_BUTTON_STATE);
 
