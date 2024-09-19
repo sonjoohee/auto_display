@@ -5,6 +5,7 @@ import {
   iS_CLICK_CHECK_REPORT_RIGHTAWAY,
   EXPERT_BUTTON_STATE,
   IS_LOADING,
+  APPROACH_PATH,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -16,11 +17,13 @@ const MoleculeCheckReportRightAway = () => {
   const [expertButtonState, setExpertButtonState] =
     useAtom(EXPERT_BUTTON_STATE);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
+  const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
 
   const handleClick = () => {
     if (isLoading) return;
     setIsClickCheckReportRightAway(true);
     setExpertButtonState(1); // 버튼 클릭 시 EXPERT_BUTTON_STATE를 1로 설정
+    setApproachPath(3);
   };
   return (
     <>
