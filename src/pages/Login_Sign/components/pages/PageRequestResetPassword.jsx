@@ -107,8 +107,11 @@ const RequestResetPassword = () => {
             />
           </div>
 
-          <StyledButton onClick={handleRequestReset} disabled={!name || !email}>
-            비밀번호 찾기
+          <StyledButton
+              onClick={handleRequestReset}
+              disabled={isLoading || !name || !email}
+            >
+              {isLoading ? "임시 비밀번호 발급을 준비 중 입니다..." : "비밀번호 찾기"}
           </StyledButton>
 
           {message && <Message>{message}</Message>}
