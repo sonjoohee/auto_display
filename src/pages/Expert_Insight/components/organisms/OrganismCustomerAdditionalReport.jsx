@@ -374,6 +374,10 @@ const OrganismCustomerAdditionalReport = ({
     buttonState, // buttonState 의존성 추가
   ]);
 
+  if (advise) {
+    return null;
+  }
+
   return (
     <AnalysisSection Strategy>
       {isLoadingAdd ? (
@@ -392,11 +396,6 @@ const OrganismCustomerAdditionalReport = ({
         </>
       ) : (
         <>
-          {advise && (
-            <AdviseBox>
-              <p>{advise}</p> {/* advise가 있을 때 표시 */}
-            </AdviseBox>
-          )}
           {title && (
             <TabHeader>
               <TabTitle>{title}</TabTitle>
