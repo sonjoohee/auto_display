@@ -87,10 +87,21 @@ const MoleculeAccountForm = () => {
           },
         }
       );
-      setError("비밀번호가 변경 되었습니다.");
+      setError("비밀번호가 변경되었습니다.");
+    
+      // 비밀번호 변경 성공 시, 입력된 비밀번호 정보 초기화
+      setPassword(""); 
+      setNewPassword("");
+      setRePassword("");
+
       navigate("/");
     } catch (error) {
       setError("비밀번호 변경 중 오류가 발생했습니다.");
+      
+      // 비밀번호 변경 실패 시에도 비밀번호 정보 초기화
+      setPassword(""); 
+      setNewPassword("");
+      setRePassword("");
     }
   };
 

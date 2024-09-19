@@ -1,21 +1,42 @@
 import React from "react";
 import styled from "styled-components";
 import MoleculeAccount from "./MoleculeAccount";
+import { useAtom } from "jotai";
 import { palette } from "../../../../assets/styles/Palette";
+import {
+  passwordAtom,
+  newPasswordAtom,
+  rePasswordAtom,
+} from "../../../../pages/AtomStates";
 
 const MoleculeAccountPopup = ({ onClose = () => {} }) => {
-  // 기본값으로 빈 함수 설정
+  const [, setPassword] = useAtom(passwordAtom);
+  const [, setNewPassword] = useAtom(newPasswordAtom);
+  const [, setRePassword] = useAtom(rePasswordAtom);
+
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
+      resetPasswordState();
       onClose();
     }
+  };
+
+  const resetPasswordState = () => {
+    setPassword("");
+    setNewPassword("");
+    setRePassword("");
+  };
+
+  const handleClose = () => {
+    resetPasswordState(); // 팝업 닫을 때 상태 초기화
+    onClose(); // 팝업 닫기 함수 호출
   };
 
   return (
     <AccountPopupOverlay onClick={handleOverlayClick}>
       <PopupContent>
-        <CloseButton onClick={onClose}>닫기</CloseButton>
-        <MoleculeAccount onClosePopup={onClose} /> {/* 함수 전달 */}
+        <CloseButton onClick={handleClose}>닫기</CloseButton>
+        <MoleculeAccount onClosePopup={handleClose} /> {/* 함수 전달 */}
       </PopupContent>
     </AccountPopupOverlay>
   );
