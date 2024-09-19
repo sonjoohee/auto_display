@@ -526,25 +526,50 @@ const AnalysisSection = styled.div`
   }
 `;
 
+// const BoxWrap = styled.div`
+//   padding: 20px;
+//   border-radius: 10px;
+//   background: ${(props) =>
+//     props.isPurpose ? palette.white : "rgba(0,0,0,.03)"}; /* 흰 배경 적용 */
+
+//   strong {
+//     display: flex;
+//     align-items: center;
+//     gap: 8px;
+//     margin-bottom: 10px;
+//   }
+
+//   p {
+//     font-size: 0.875rem;
+//     margin-bottom: 10px;
+//   }
+// `;
 const BoxWrap = styled.div`
-  padding: 20px;
-  border-radius: 10px;
-  background: ${(props) =>
-    props.isPurpose ? palette.white : "rgba(0,0,0,.03)"}; /* 흰 배경 적용 */
+  // padding: 20px;
+  // border-radius: 10px;
+  // background: ${(props) => (props.isPurpose ? palette.white : "rgba(0, 0, 0, 0.04)")}; /* 흰 배경 적용 */
+
+  font-size:0.875rem;
+  color:${palette.gray800};
+  line-height:1.5;
+  margin:8px auto 20px;
+
+  + div {
+    margin-top: 12px;
+  }
 
   strong {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 4px;
   }
 
-  p {
-    font-size: 0.875rem;
-    margin-bottom: 10px;
-  }
+  // p {
+  //   font-size: 0.875rem;
+  //   margin-bottom: 10px;
+  // }
 `;
-
 const TabHeader = styled.div`
   gap: 40px;
   margin-bottom: 20px;
