@@ -28,6 +28,9 @@ import {
   IS_LOADING,
   REPORT_REFRESH_TRIGGER,
   ADDITIONAL_REPORT_DATA,
+  IS_LOADING_ANALYSIS,
+  SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
+  CUSTOMER_ADDITIONAL_REPORT_DATA,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -126,9 +129,12 @@ const MoleculeReportController = ({
 
   const [isPopupCopy, setIsPopupCopy] = useState(false);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
+  const [isLoadingAnalysis, setIsLoadingAnalysis] = useAtom(IS_LOADING_ANALYSIS);
   const [additionalReportData, setAdditionalReportData] = useAtom(
     ADDITIONAL_REPORT_DATA
   );
+  const [selectedCustomerAdditionalKeyword, setSelectedCustomerAdditionalKeyword] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
+  const [customerAdditionalReportData, setCustomerAdditionalReportData] = useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
 
   const navigate = useNavigate();
 
@@ -462,8 +468,10 @@ ${businessInformationTargetCustomer
 
   // 기초 보고서 재생성
   const regenerateReport = async () => {
-    setIsLoading(true);
     let businessData;
+
+    setIsLoading(true);
+    setIsLoadingAnalysis(true);
 
     // 버튼 클릭으로 API 호출
     // console.log("기초보고서api호출");
@@ -545,21 +553,37 @@ ${businessInformationTargetCustomer
     };
 
     // 기존 대화 내역을 유지하면서 새로운 정보를 추가
-    const existingConversation = await getConversationByIdFromIndexedDB(
-      conversationId,
-      isLoggedIn
+    // const existingConversation = await getConversationByIdFromIndexedDB(
+    //   conversationId,
+    //   isLoggedIn
+    // );
+
+    // const updatedConversation = {
+    //   ...existingConversation,
+    //   analysisReportData,
+    //   timestamp: Date.now(),
+    //   expert_index: selectedExpertIndex,
+    // };
+    // await saveConversationToIndexedDB(updatedConversation);
+
+    await saveConversationToIndexedDB(
+      {
+        id: conversationId,
+        conversation: conversation,
+        analysisReportData,
+        inputBusinessInfo,
+        conversationStage: 2,
+        timestamp: Date.now(),
+        expert_index: selectedExpertIndex,
+        selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
+        customerAdditionalReportData: customerAdditionalReportData,
+      },
+      isLoggedIn,
+      conversationId
     );
 
-    const updatedConversation = {
-      ...existingConversation,
-      analysisReportData,
-      timestamp: Date.now(),
-      expert_index: selectedExpertIndex,
-    };
-    await saveConversationToIndexedDB(updatedConversation);
-    // console.log("___________기초보고서_____________");
-    // console.log("기초보고서2");
-    // console.log(analysisReportData);
+    setReportRefreshTrigger((prev) => !prev);
+    setIsLoadingAnalysis(false);
     setIsLoading(false);
   };
 
