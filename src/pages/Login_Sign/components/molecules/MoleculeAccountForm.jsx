@@ -100,8 +100,9 @@ const MoleculeAccountForm = ({ onOpenPopup  = () => {} }) => {  // onOpenPopup  
       navigate("/");
 
     } catch (error) {
-      setError("비밀번호 변경 중 오류가 발생했습니다.");
-      // 비밀번호 변경 실패 시에도 비밀번호 정보 초기화
+      const serverErrorMessage = error.response?.data?.message || "비밀번호 변경 중 오류가 발생했습니다.";
+    
+      setError(serverErrorMessage);
       setPassword(""); 
       setNewPassword("");
       setRePassword("");
