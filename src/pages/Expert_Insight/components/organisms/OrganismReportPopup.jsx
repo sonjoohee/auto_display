@@ -34,7 +34,7 @@ const OrganismReportPopup = ({ report, onClose }) => {
   return ReactDOM.createPortal(
     <PopupOverlay onClick={onClose}>
       <PopupContent onClick={(e) => e.stopPropagation()}>
-        <div className="title">
+        <div className="popup-title">
           <h1>{report.title}</h1>
           <p>
             <span>
@@ -93,7 +93,7 @@ const PopupContent = styled.div`
   background: ${palette.white};
   z-index: 10001;
 
-  .title {
+  .popup-title {
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -198,50 +198,51 @@ const CloseButton = styled.button`
 const BoxWrap = styled.div`
   padding: 20px;
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.04);
+  background: ${(props) =>
+    props.isLast
+      ? palette.white
+      : "rgba(0, 0, 0, 0.03)"}; /* 마지막 섹션은 흰색 배경 */
+
+  + div {
+    margin-top:12px;
+  }
+
+  + div {
+    margin-top: 12px;
+  }
 
   strong {
     display: flex;
     align-items: center;
     gap: 8px;
     margin-bottom: 10px;
-  }
-
-  li {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    padding-left: 10px;
-
-    + li {
-      margin-top: 5px;
-    }
-  }
-
-  button {
-    flex-shrink: 0;
-    font-family: "Pretendard";
-    font-size: 0.75rem;
-    color: ${palette.gray};
-    padding: 5px 10px;
-    border-radius: 5px;
-    border: 1px solid ${palette.lineGray};
-    background: ${palette.white};
-
-    &.add {
-      color: ${palette.white};
-      border: 1px solid ${palette.black};
-      background: ${palette.black};
-    }
+    color: ${(props) =>
+      props.expertIndex === "1"
+        ? palette.darkGray // 1번 전문가일 때 글자색 파란색
+        : props.expertIndex === "2"
+        ? palette.darkGray // 2번 전문가일 때 글자색 빨간색
+        : palette.darkGray}; // 3번 전문가일 때 글자색 녹색
   }
 
   p {
     font-size: 0.875rem;
-    color: ${palette.darkGray};
+    color: ${(props) =>
+      props.expertIndex === "1"
+        ? palette.darkGray
+        : props.expertIndex === "2"
+        ? palette.darkGray
+        : palette.darkGray};
     line-height: 1.5;
   }
+
+  /* 마지막 섹션일 경우 title을 숨기고, 내부 텍스트만 보이도록 */
+  ${(props) =>
+    props.isLast &&
+    `
+    strong {
+      display: none;
+    }
+  `}
 `;
 
 const BizAnalysisSection = ({ report }) => {
@@ -299,9 +300,10 @@ const BizAnalysisSection = ({ report }) => {
 
 const StrategyReportSection = ({ report }) => {
   const [selectedTab, setSelectedTab] = useState(0);
-
+  const expertIndex = report.content.expert_id;
   // 탭 제목과 섹션 데이터를 report에서 가져옵니다.
   const tabs = report.content.tabs || [];
+  const sections = tabs[selectedTab]?.sections || [];
 
   const handleTabClick = (index) => {
     setSelectedTab(index);
@@ -311,26 +313,30 @@ const StrategyReportSection = ({ report }) => {
     <>
       <AnalysisSection Strategy>
         <TabHeader>
-          {tabs?.map((tab, index) => (
-            <TabButton
-              key={index}
-              active={selectedTab === index}
-              onClick={() => handleTabClick(index)}
-            >
-              {tab.title}
-            </TabButton>
-          ))}
+          {tabs &&
+            tabs.length > 0 &&
+            tabs?.map((tab, index) => (
+              <TabButton
+                key={index}
+                active={selectedTab === index}
+                expertIndex={expertIndex} // 전달
+                onClick={() => handleTabClick(index)}
+              >
+                {tab.title}
+              </TabButton>
+            ))}
         </TabHeader>
 
-        {Array.isArray(tabs[selectedTab]?.sections) &&
-          tabs[selectedTab]?.sections.length > 0 &&
-          tabs[selectedTab].sections?.map((section, index) => (
-            <Section
-              key={index}
-              title={section.title}
-              content={section.content}
-            />
-          ))}
+        {sections?.map((section, index) => (
+          <Section
+            key={index}
+            title={section.title}
+            content={section.content}
+            isLast={index === sections.length - 1}
+            expertIndex={expertIndex}
+            selectedTab={selectedTab}
+          />
+        ))}
       </AnalysisSection>
     </>
   );
@@ -355,7 +361,6 @@ const ContentsWrap = styled.div`
 
 const TabHeader = styled.div`
   display: flex;
-  align-items: center;
   gap: 40px;
   margin-bottom: 20px;
 `;
@@ -429,45 +434,476 @@ const AdditionalReportSection = ({ report }) => {
 };
 
 // Section 컴포넌트 - 각 섹션의 제목과 콘텐츠를 표시
-const Section = ({ title, content }) => {
+const Section = ({ title, content, isLast, expertIndex ,selectedTab}) => {
+  // 서브 타이틀이 있는 항목과 없는 항목을 분리
   const subTitleItems = content.filter((item) => item.subTitle);
   const nonSubTitleItems = content.filter((item) => !item.subTitle);
+  const summaryItem = content.find((item) => item.title === "총평");
+  const subItems = content.filter((item) => item.subTitle);
+  // subText에서 ':'로 분리하여 subTitle과 text를 따로 처리
+  const splitText = (text) => {
+    const [subTitle, ...rest] = text.split(":");
+    return {
+      subTitle: subTitle.trim(), // ':' 앞부분
+      text: rest.join(":").trim(), // ':' 뒷부분
+    };
+  };
+
+  // 기존 subTitle과 text를 합쳐 새로운 text 생성
+  const mergeSubTitleAndText = (subTitle, text) => `${subTitle} : ${text}`;
+
+  // 두 섹션의 데이터를 결합하여 하나의 섹션처럼 처리 (이전 섹션들의 combinedContent 포함)
+  const combinedContent = [
+    ...subTitleItems.map((item) => ({
+      text: mergeSubTitleAndText(item.subTitle, item.text),
+    })),
+  ];
+
+  // 전역적으로 두 섹션의 데이터를 저장할 수 있는 별도의 배열을 생성 (전역적으로 이 두 섹션의 데이터를 병합)
+  const globalCombinedContent = [];
+
+  // 이 함수는 "주요 차별화 요소"와 "차별화 전략 제안"이 있을 때 데이터를 병합해서 한 번만 렌더링
+  const renderCombinedSections = () => {
+    if (
+      title === "주요 차별화 요소" ||
+      title === "차별화 전략 제안" ||
+      title === "경쟁 압박 대처 방안" ||
+      title === "장기적인 경쟁 우위 전략"
+    ) {
+      // 중복 호출 방지를 위해 한 번 병합된 후 다시 병합되지 않도록 확인
+      if (globalCombinedContent.length === 0) {
+        globalCombinedContent.push(...combinedContent); // 데이터 병합
+      }
+
+      return (
+        <>
+          <strong>
+            <img src={images.Check} alt="" /> {/* 체크 이미지 추가 */}
+            {/* 경쟁사 대비 차별화 전략 */}
+            {title}
+          </strong>
+          <SubTextBox>
+            {globalCombinedContent.map((item, index) => (
+              <div key={index}>
+                <p>{item.text}</p>
+              </div>
+            ))}
+          </SubTextBox>
+        </>
+      );
+    }
+  };
 
   return (
-    <BoxWrap>
-      {title && (
-        <strong>
-          <img src={images.Check} alt="" />
-          {title}
-        </strong>
-      )}
+    <BoxWrap expertIndex={expertIndex} isLast={isLast} selectedTab={selectedTab}>
+      {/* "주요 차별화 요소"와 "차별화 전략 제안" 데이터를 결합하여 한 번만 렌더링 */}
+      {renderCombinedSections()}
+    {/* 3번 전문가의 2번째 탭을 위한 조건 */}
+    {expertIndex === "3" && selectedTab === 1 ? (
+            <>
+            <strong>
+            <img src={images.Check} alt="" />
+            {title}
+          </strong>
+            {nonSubTitleItems.length > 0 &&
+              nonSubTitleItems.map((item, index) => (
+                <div key={index}>
+                  <p>{item.text}</p>
+                  {item.subText1 && <SubTextBox>{item.subText1}</SubTextBox>}
+                  {item.subText2 && <SubTextBox>{item.subText2}</SubTextBox>}
+                  {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
+                </div>
+              ))}
 
-      {nonSubTitleItems.length > 0 &&
-        nonSubTitleItems?.map((item, index) => (
-          <div key={index}>
-            <p>{item.text}</p>
-            {item.subText1 && <SubTextBox>{item.subText1}</SubTextBox>}
-            {item.subText2 && <SubTextBox>{item.subText2}</SubTextBox>}
-            {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
-          </div>
-        ))}
+            {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
+            {subTitleItems.length > 0 && (
+                subTitleItems.map((item, index) => (
+                  <SubTextBox key={index}>
+                    <SubTitle>{item.subTitle}</SubTitle>
+                    <p>{item.text}</p>
+                    {item.subText1 && <SubTextBox>{item.subText1}</SubTextBox>}
+                    {item.subText2 && <SubTextBox>{item.subText2}</SubTextBox>}
+                    {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
+                  </SubTextBox>
+                ))
+                )}
+            </>
+      ) : (
+        <>
+     {/* title 표시 (특정 타이틀 제외) */}
+     {!isLast &&
+        title &&
+        !(
+          title === "주요 차별화 요소" ||
+          title === "차별화 전략 제안" ||
+          title === "제안 사항" ||
+          title === "경쟁 압박 대처 방안" ||
+          title === "브랜드 전략분석" ||
+          title === "브랜드 아이덴티티" ||
+          title === "소비자 인식 관리 방안" ||
+          title === "브랜드 신뢰도 구축 방안" ||
+          title === "경쟁사 분석 및 차별화 전략" ||
+          title === "고객 니즈 및 세분화 분석" ||
+          title === "고객 여정 맵핑" ||
+          title === "고객 여정 맵핑 터치포인트 단계 최적화 방안" ||
+          title === "시장 위치 평가 및 경쟁자 분석" ||
+          title === "장기적인 경쟁 우위 전략"
 
-      {subTitleItems.length > 0 && (
-        <DynamicGrid columns={subTitleItems.length}>
-          {subTitleItems?.map((item, index) => (
-            <div key={index}>
-              {item.subTitle && <SubTitle>{item.subTitle}</SubTitle>}
-              <p>{item.text}</p>
-              {item.subText1 && <SubTextBox>{item.subText1}</SubTextBox>}
-              {item.subText2 && <SubTextBox>{item.subText2}</SubTextBox>}
-              {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
+        ) && (
+          <strong>
+            <img src={images.Check} alt="" />
+            {title}
+          </strong>
+        )}
+
+    {title === "제안 사항" && (
+        <>
+          <strong>
+            <img src={images.Check} alt="" />
+            {title}
+          </strong>
+          {/* subTitle : text 형태로 넘버링 추가하여 출력 */}
+          {content.map((item, index) => (
+            <div key={index} style={{ marginBottom: '10px' }}> {/* 각 요소에 마진 추가 */}
+              <p>
+                {index + 1}. {item.subTitle} : {item.text}
+              </p>
             </div>
           ))}
-        </DynamicGrid>
+        </>
+      )}
+
+  {title === "브랜드 전략분석" && (
+        <>
+          {/* 제목과 총평 출력 */}
+          <strong>
+            <img src={images.Check} alt="" />
+            {title}
+          </strong>
+
+          {summaryItem && (
+            <p style={{ marginBottom: '15px' }}>{summaryItem.text}</p> // 총평 텍스트를 제목 밑에 표시
+          )}
+
+          {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
+          <div style={{ backgroundColor: 'white', padding: '15px', borderRadius: '10px' }}>
+            {subItems.map((item, index) => (
+              <div key={index} style={{ marginBottom: '10px' }}> {/* 각 항목 간 마진 추가 */}
+                <p>
+                  - {item.subTitle} : {item.text}
+                </p>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {title === "브랜드 아이덴티티" && (
+        <>
+          {/* 제목과 총평 출력 */}
+          <strong>
+            <img src={images.Check} alt="" />
+            {title}
+          </strong>
+
+          {summaryItem && (
+            <p style={{ marginBottom: '15px' }}>{summaryItem.text}</p> // 총평 텍스트를 제목 밑에 표시
+          )}
+
+          {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
+          <div style={{ backgroundColor: 'white', padding: '15px', borderRadius: '10px' }}>
+            {subItems.map((item, index) => (
+              <div key={index} style={{ marginBottom: '10px' }}> {/* 각 항목 간 마진 추가 */}
+                <p>
+                  - {item.subTitle} : {item.text}
+                </p>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+      
+      {title === "경쟁사 분석 및 차별화 전략" && (
+        <>
+          {/* 제목과 총평 출력 */}
+          <strong>
+            <img src={images.Check} alt="" />
+            {title}
+          </strong>
+
+          {/* 총평 항목 필터링 */}
+          {content
+              .filter((item) => item.title === "경쟁사 분석 및 차별화 전략 설명")
+              .map((summaryItem, index) => (
+                <p key={index} style={{ marginBottom: '15px' }}>
+                  {summaryItem.text} {/* 총평 텍스트를 제목 밑에 표시 */}
+                </p>
+              ))}
+
+          {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
+          <div style={{ backgroundColor: 'white', padding: '15px', borderRadius: '10px' }}>
+            {subItems.map((item, index) => (
+              <div key={index} style={{ marginBottom: '10px' }}> {/* 각 항목 간 마진 추가 */}
+                <p>
+                  - {item.subTitle} : {item.text}
+                </p>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+    {title === "고객 니즈 및 세분화 분석" && (
+            <>
+              {/* 제목과 총평 출력 */}
+              <strong>
+                <img src={images.Check} alt="" />
+                {title}
+              </strong>
+
+              {/* 총평 항목 필터링 */}
+              {content
+                  .filter((item) => item.title === "고객 니즈 분석")
+                  .map((summaryItem, index) => (
+                    <p key={index} style={{ marginBottom: '15px' }}>
+                      {summaryItem.text} {/* 총평 텍스트를 제목 밑에 표시 */}
+                    </p>
+                  ))}
+
+              {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
+              <div style={{ backgroundColor: 'white', padding: '15px', borderRadius: '10px' }}>
+                {subItems.map((item, index) => (
+                  <div key={index} style={{ marginBottom: '10px' }}> {/* 각 항목 간 마진 추가 */}
+                    <p>
+                      - {item.subTitle} : {item.text}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+    {title === "고객 여정 맵핑" && (
+            <>
+              {/* 제목과 총평 출력 */}
+              <strong>
+                <img src={images.Check} alt="" />
+                {title}
+              </strong>
+
+              {/* 총평 항목 필터링 */}
+              {content
+                  .filter((item) => item.title === "고객 여정 맵핑")
+                  .map((summaryItem, index) => (
+                    <p key={index} style={{ marginBottom: '15px' }}>
+                      {summaryItem.text} {/* 총평 텍스트를 제목 밑에 표시 */}
+                    </p>
+                  ))}
+
+              {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
+              <div style={{ backgroundColor: 'white', padding: '15px', borderRadius: '10px' }}>
+                {subItems.map((item, index) => (
+                  <div key={index} style={{ marginBottom: '10px' }}> {/* 각 항목 간 마진 추가 */}
+                    <p>
+                      - {item.subTitle} : {item.text}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+          
+      {title === "브랜드 신뢰도 구축 방안" && (
+        <>
+          {/* 제목 출력 */}
+          <strong>
+            <img src={images.Check} alt="" />
+            {title}
+          </strong>
+
+          {/* subTitle : text 형태로 기본 박스 안에 출력 */}
+          <div style={{ padding: '15px', borderRadius: '10px' }}>
+            {subItems.map((item, index) => (
+              <div key={index} style={{ marginBottom: '10px' }}> {/* 각 항목 간 마진 추가 */}
+                <p>
+                  - {item.subTitle} : {item.text}
+                </p>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {title === "소비자 인식 관리 방안" && (
+              <>
+                {/* 제목 출력 */}
+                <strong>
+                  <img src={images.Check} alt="" />
+                  {title}
+                </strong>
+
+                {/* subTitle : text 형태로 기본 박스 안에 출력 */}
+                <div style={{ padding: '15px', borderRadius: '10px' }}>
+                  {subItems.map((item, index) => (
+                    <div key={index} style={{ marginBottom: '10px' }}> {/* 각 항목 간 마진 추가 */}
+                      <p>
+                        - {item.subTitle} : {item.text}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+
+
+    {/* "시장 위치 평가 및 경쟁자 분석"일 때 별도의 처리 */}
+    {title === "시장 위치 평가 및 경쟁자 분석" && (
+        <BgStyledSection>
+          <h4>
+            <img src={images.Check} alt="" />
+            {title}
+          </h4>
+          {nonSubTitleItems.length > 0 && (
+            <p>{nonSubTitleItems[0].text}</p>
+          )}
+
+          <div className="flexBox">
+            {subTitleItems.map((item, index) => (
+              <div className="bgWhite" key={index}>
+                <strong className="title">
+                  {/* 번호 표시를 위한 span.number */}
+                  <span className="number">{index + 1}</span>
+                  {item.subTitle}
+                </strong>
+                    <ul>
+                  {item.subText1 && (
+                    <li>
+                      - {item.subText1.startsWith("강점:") ? item.subText1 : `강점: ${item.subText1}`}
+                    </li>
+                  )}
+                  {item.subText2 && (
+                    <li>
+                      - {item.subText2.startsWith("약점:") ? item.subText2 : `약점: ${item.subText2}`}
+                    </li>
+                  )}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </BgStyledSection>
+      )}
+
+
+{title === "고객 여정 맵핑 터치포인트 단계 최적화 방안" && (
+  <BgStyledSection>
+    <h4>
+      <img src={images.Check} alt="" />
+      {title}
+    </h4>
+
+    <div className="flexBox">
+      {content.map((item, index) => (
+        <div className="bgWhite" key={index}>
+          <strong className="title">
+            {/* 번호 표시를 위한 span.number */}
+            <span className="number">{index + 1}</span>
+            {item.subTitle}
+          </strong>
+          <p>{item.text}</p> {/* text 필드에서 데이터 출력 */}
+        </div>
+      ))}
+    </div>
+  </BgStyledSection>
+)}
+
+      
+      {/* "특징" 또는 "차별화 요소" 섹션을 처리 */}
+      {(title === "특징" || title === "차별화 요소") && subTitleItems.length > 0 && (
+        <>
+          {subTitleItems.map((item, index) => (
+            <SeparateSection key={index}>
+              <strong>
+                <span className="number">{index + 1}</span> {/* 번호 추가 */}
+                <strong_title>{`${title} : ${item.subTitle}`}</strong_title> {/* 이 부분만 bold 처리 */}
+              </strong>
+              <p>{item.text}</p>
+
+                {/* subText1, subText2, subText3에 대해 NumDynamicGrid 적용 */}
+                <NumDynamicGrid columns={2}>
+                  {item.subText1 && (
+                    <div>
+                      <SubTitle>{splitText(item.subText1).subTitle}</SubTitle>
+                      <p>{splitText(item.subText1).text}</p>
+                    </div>
+                  )}
+                  {item.subText2 && (
+                    <div>
+                      <SubTitle>{splitText(item.subText2).subTitle}</SubTitle>
+                      <p>{splitText(item.subText2).text}</p>
+                    </div>
+                  )}
+                  {item.subText3 && (
+                    <div>
+                      <SubTitle>{splitText(item.subText3).subTitle}</SubTitle>
+                      <p>{splitText(item.subText3).text}</p>
+                    </div>
+                  )}
+                </NumDynamicGrid>
+              </SeparateSection>
+            ))}
+          </>
+        )}
+      {/* "특징", "차별화 요소", "경쟁 분석"이 아닌 경우 기존 방식대로 처리 */}
+      {title !== "특징" &&
+        title !== "차별화 요소" &&
+        title !== "제안 사항" &&
+        title !== "시장 위치 평가 및 경쟁자 분석" &&
+        title !== "주요 차별화 요소" &&
+        title !== "브랜드 전략분석" &&
+        title !== "브랜드 아이덴티티" &&
+        title !== "브랜드 신뢰도 구축 방안" &&
+        title !== "소비자 인식 관리 방안" &&
+        title !== "차별화 전략 제안" &&
+        title !== "경쟁사 분석 및 차별화 전략" &&
+        title !== "고객 니즈 및 세분화 분석" &&
+        title !== "고객 여정 맵핑" &&
+        title !== "고객 여정 맵핑 터치포인트 단계 최적화 방안" &&
+        title !== "경쟁사 대비 차별화 전략" &&
+        title !== "경쟁 압박 대처 방안" &&
+        title !== "장기적인 경쟁 우위 전략" && (
+          <>
+            {/* nonSubTitleItems는 일반적으로 title과 text만 표시 */}
+            {nonSubTitleItems.length > 0 &&
+              nonSubTitleItems.map((item, index) => (
+                <div key={index}>
+                  <p>{item.text}</p>
+                  {item.subText1 && <SubTextBox>{item.subText1}</SubTextBox>}
+                  {item.subText2 && <SubTextBox>{item.subText2}</SubTextBox>}
+                  {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
+                </div>
+              ))}
+
+            {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
+            {subTitleItems.length > 0 && (
+              <DynamicGrid columns={subTitleItems.length}>
+                {subTitleItems.map((item, index) => (
+                  <div key={index}>
+                    <SubTitle>{item.subTitle}</SubTitle>
+                    <p>{item.text}</p>
+                    {item.subText1 && <SubTextBox>{item.subText1}</SubTextBox>}
+                    {item.subText2 && <SubTextBox>{item.subText2}</SubTextBox>}
+                    {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
+                  </div>
+                ))}
+               </DynamicGrid>
+                )}
+              </>
+            )}
+        </>
       )}
     </BoxWrap>
   );
 };
+
 const DynamicGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(${(props) => props.columns}, 1fr);
@@ -527,4 +963,240 @@ const TabContent = styled.div`
   border: none;
   border-bottom: none;
   background: ${palette.white};
+`;
+const BgStyledSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.03);
+
+  h4 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .flexBox {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+
+    > div {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px; /* BgBox와 동일하게 설정 */
+      padding: 10px; /* BgBox와 동일하게 설정 */
+      border-radius: 10px;
+      border: 1px solid ${palette.lineGray};
+      background-color: ${palette.white}; /* 하얀 배경 */
+
+      .number {
+        width: 15px; /* 크기를 BgBox와 동일하게 맞춤 */
+        height: 15px;
+        font-size: 0.63rem;
+        color: ${palette.blue};
+        line-height: 15px;
+        text-align: center;
+        border: 1px solid ${palette.blue};
+        background-color: ${palette.white}; /* 번호 배경색 */
+      }
+
+      .title {
+        color: ${palette.black};
+        font-weight: 700;
+        margin-bottom: 8px;
+        font-size: 0.875rem;
+      }
+
+      ul {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+
+        li {
+          font-size: 0.875rem;
+          color: ${palette.darkGray};
+          line-height: 1.5;
+          padding-left: 13px;
+
+          &:before {
+            position: absolute;
+            top: 8px;
+            left: 0;
+            width: 5px;
+            height: 1px;
+            background: ${palette.black};
+            content: '';
+          }
+        }
+      }
+    }
+  }
+`;
+
+const SeparateSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 12px;
+  // padding: 20px;
+  // border-radius: 10px;
+  // background: rgba(0, 0, 0, 0.03);
+
+  + div {
+    margin-top: 12px;
+  }
+
+  h4 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  span.number {
+    width: 15px;
+    height: 15px;
+    font-size: 0.63rem;
+    color: ${palette.blue};
+    line-height: 15px;
+    text-align: center;
+    border: 1px solid ${palette.blue};
+  }
+
+  strong {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: ${palette.darkGray};
+  }
+
+  strong_title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: ${palette.darkGray};
+  }
+
+  p {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: ${palette.darkGray};
+    line-height: 1.5;
+  }
+
+  .flexBox {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+
+    > div {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid ${palette.lineGray};
+
+      p {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+      }
+    }
+
+    .bgWhite {
+      margin-top: 0 !important;
+    }
+  }
+
+  .bgWhite {
+    padding: 15px !important;
+    margin-top: 12px;
+    border-radius: 10px;
+    border: 1px solid ${palette.white} !important;
+    background: ${palette.white};
+
+    .title {
+      color: ${palette.black};
+      font-weight: 700;
+    }
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    li {
+      position: relative;
+      font-size: 0.875rem;
+      color: ${palette.darkGray};
+      line-height: 1.5;
+      padding-left: 13px;
+
+      &:before {
+        position: absolute;
+        top: 8px;
+        left: 0;
+        width: 5px;
+        height: 1px;
+        background: ${palette.black};
+        content: "";
+      }
+    }
+  }
+`;
+const NumDynamicGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(
+    ${(props) => props.columns},
+    1fr
+  ); /* 동적 컬럼 수 설정 */
+  gap: 10px;
+  margin-top: 10px;
+
+  div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid ${palette.lineGray};
+    position: relative; /* 번호 표시를 위한 상대적 위치 */
+
+    /* 각 div 내에서 번호를 표시하는 span.number */
+    span.number {
+      width: 20px;
+      height: 20px;
+      font-size: 0.75rem;
+      color: ${palette.blue};
+      line-height: 20px;
+      text-align: center;
+      border: 1px solid ${palette.blue};
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      background-color: ${palette.white}; /* 번호 배경색 */
+      border-radius: 50%;
+    }
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: ${palette.darkGray};
+    line-height: 1.5;
+  }
 `;
