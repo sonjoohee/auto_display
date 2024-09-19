@@ -34,6 +34,7 @@ import {
   CONVERSATION_ID,
   SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
+  SELECTED_EXPERT_LIST,
 } from "../../../AtomStates";
 
 import { Link } from "react-router-dom";
@@ -46,6 +47,7 @@ import OrganismLeftSideBar from "../../../Expert_Insight/components/organisms/Or
 
 const PageMeetAiExpert = () => {
   const navigate = useNavigate();
+  const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
   const [buttonState, setButtonState] = useAtom(ANALYSIS_BUTTON_STATE);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
 
@@ -162,6 +164,7 @@ const PageMeetAiExpert = () => {
     setPassword("");
     setNewPassword("");
     setRePassword("");
+    setSelectedExpertList([]);
   }, []);
 
   useEffect(() => {

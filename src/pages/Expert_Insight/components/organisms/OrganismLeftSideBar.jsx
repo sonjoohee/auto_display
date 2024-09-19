@@ -40,6 +40,7 @@ import {
   IS_LOADING,
   SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
+  SELECTED_EXPERT_LIST,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -48,6 +49,7 @@ import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/Molec
 import OrganismReportPopup from "./OrganismReportPopup"; // 팝업 컴포넌트 임포트
 
 const OrganismLeftSideBar = () => {
+  const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
   const [password, setPassword] = useAtom(passwordAtom);
   const [newPassword, setNewPassword] = useAtom(newPasswordAtom);
   const [rePassword, setRePassword] = useAtom(rePasswordAtom);
@@ -537,6 +539,7 @@ const OrganismLeftSideBar = () => {
     setPassword("");
     setNewPassword("");
     setRePassword("");
+    setSelectedExpertList([]);
   };
 
   return (

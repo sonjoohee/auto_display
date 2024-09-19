@@ -31,6 +31,7 @@ import {
   SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
   CUSTOMER_ADDITION_BUTTON_STATE,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
+  SELECTED_EXPERT_LIST,
 } from "../../../AtomStates";
 
 import {
@@ -130,6 +131,8 @@ const PageExpertInsight = () => {
   );
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
+
+  const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
 
   let additionalReportCount = 0;
   let customerAdditionalReportCount = 0;
@@ -621,6 +624,14 @@ const PageExpertInsight = () => {
         updatedConversation.pop();
       }
 
+      // 전문가 선택영역 표시 관련, 선택된 전문가 인덱스 추가
+      setSelectedExpertList((prevList) => {
+        if (prevList.includes(selectedExpertIndex)) {
+          return prevList;
+        }
+        return [...prevList, selectedExpertIndex];
+      });
+
       if (selectedExpertIndex === "1") {
         updatedConversation.push(
           {
@@ -819,23 +830,28 @@ const PageExpertInsight = () => {
                 return null;
               })}
 
-              {approachPath === -1 || approachPath === 2
-                ? inputBusinessInfo &&
-                  (Object.keys(expert1ReportData).length === 0 ||
-                    Object.keys(expert2ReportData).length === 0 ||
-                    Object.keys(expert3ReportData).length === 0) && (
-                    <OrganismBizExpertSelect />
-                  )
-                : conversationStage >= 3 &&
-                  (Object.keys(expert1ReportData).length === 0 ||
-                    Object.keys(expert2ReportData).length === 0 ||
-                    Object.keys(expert3ReportData).length === 0) && (
-                    <OrganismBizExpertSelect />
-                  )}
-
-              {/* {approachPath !== 1 && conversationStage === 2 && (
+              {/* 검색해서 시작 */}
+              {(approachPath === -1 || approachPath === 3) && 
+                titleOfBusinessInfo &&
                 <OrganismBizExpertSelect />
-              )} */}
+              }
+
+              {/* 전문가 선택하고 시작 */}
+              {approachPath === 1 &&
+                (Object.keys(expert1ReportData).length !== 0 ||
+                  Object.keys(expert2ReportData).length !== 0 ||
+                  Object.keys(expert3ReportData).length !== 0) &&
+                    <OrganismBizExpertSelect />
+              }
+
+              {/* 히스토리로 진입 시 */}
+              {approachPath === 2 && 
+                titleOfBusinessInfo &&
+                conversation.length > 0 &&
+                conversation[conversation.length - 1].type !== "report_button" && 
+                  <OrganismBizExpertSelect />
+              }
+
             </ChatWrap>
 
             {conversationStage === 1 ? (
