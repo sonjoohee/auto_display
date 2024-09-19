@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import AtomButton from "../atoms/AtomButton";
 import { isValidEmail } from "../atoms/AtomValidation";
@@ -24,7 +24,8 @@ import { isValidPassword } from "../atoms/AtomValidation"; // isValidPassword �
 import { Link } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
 
-const MoleculeAccountForm = () => {
+
+const MoleculeAccountForm = ({ onOpenPopup  = () => {} }) => {  // onOpenPopup  함수 받기
   const [email, setEmail] = useAtom(emailAtom);
   const [password, setPassword] = useAtom(passwordAtom);
   const [newPassword, setNewPassword] = useAtom(newPasswordAtom);
@@ -37,6 +38,7 @@ const MoleculeAccountForm = () => {
   const [, setLoginSuccess] = useAtom(loginSuccessAtom);
   const [, setUserName] = useAtom(USER_NAME); // 유저 이름 아톰
   const [, setUserEmail] = useAtom(USER_EMAIL); // 유저 이메일 아톰
+  const [isPopupOpen, setIsPopupOpen] = useState(false); // 팝업 상태 관리
 
   useEffect(() => {
     setError("");
@@ -87,10 +89,22 @@ const MoleculeAccountForm = () => {
           },
         }
       );
-      setError("비밀번호가 변경 되었습니다.");
+      setError("비밀번호가 변경되었습니다.");
+      setIsPopupOpen(true); // 팝업 열기
+
+      // 비밀번호 변경 성공 시, 입력된 비밀번호 정보 초기화
+      setPassword(""); 
+      setNewPassword("");
+      setRePassword("");
+      onOpenPopup ();
       navigate("/");
+
     } catch (error) {
       setError("비밀번호 변경 중 오류가 발생했습니다.");
+      // 비밀번호 변경 실패 시에도 비밀번호 정보 초기화
+      setPassword(""); 
+      setNewPassword("");
+      setRePassword("");
     }
   };
 
@@ -114,25 +128,25 @@ const MoleculeAccountForm = () => {
     setIsSignupPopupOpen(false);
   };
 
-  return (
-    <AccountFormContainer>
-      <div>
-        <label htmlFor="nowPassword">
-          기존 비밀번호<span>*</span>
-        </label>
-        <StyledAtomInput
-          type={showPassword ? "text" : "password"}
-          id="nowPassword"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="기존 비밀번호를 입력해주세요"
-        />
-        <TogglePasswordButton onClick={togglePasswordVisibility}>
-          {showPassword ? <FaEye /> : <FaEyeSlash />}
-        </TogglePasswordButton>
-      </div>
+return (
+  <AccountFormContainer>
+    <div>
+      <label htmlFor="nowPassword">
+        기존 비밀번호<span>*</span>
+      </label>
+      <StyledAtomInput
+        type={showPassword ? "text" : "password"}
+        id="nowPassword"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="기존 비밀번호를 입력해주세요"
+      />
+      <TogglePasswordButton onClick={togglePasswordVisibility}>
+        {showPassword ? <FaEye /> : <FaEyeSlash />}
+      </TogglePasswordButton>
+    </div>
 
-      <div>
+    <div>
         <label htmlFor="password">
           비밀번호<span>*</span>
         </label>
@@ -182,6 +196,7 @@ const MoleculeAccountForm = () => {
     </AccountFormContainer>
   );
 };
+
 
 export default MoleculeAccountForm;
 

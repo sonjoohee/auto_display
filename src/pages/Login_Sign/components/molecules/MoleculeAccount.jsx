@@ -7,14 +7,13 @@ import { loginSuccessAtom } from "../../../../pages/AtomStates"; // 아톰 임�
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 
-const MoleculeAccount = ({ onClosePopup = () => {} }) => {
+const MoleculeAccount = ({ onOpenPopup = () => {} }) => {
   const [loginSuccess, setLoginSuccess] = useAtom(loginSuccessAtom);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (loginSuccess) {
-      // navigate('/');    // 페이지 이동
-      if (onClosePopup) onClosePopup(); // 팝업 닫기
+      if (onOpenPopup) onOpenPopup(); // 비밀번호 변경 성공 시 팝업 열기
       setLoginSuccess(null); // 상태 초기화
     }
   }, [loginSuccess, navigate, setLoginSuccess]);
@@ -26,12 +25,13 @@ const MoleculeAccount = ({ onClosePopup = () => {} }) => {
         <p>회원정보는 비밀번호 변경이 가능해요</p>
       </h1>
 
-      <MoleculeAccountForm />
+      <MoleculeAccountForm onOpenPopup={onOpenPopup} /> {/* 팝업 열기 함수 전달 */}
     </AccountContainer>
   );
 };
 
 export default MoleculeAccount;
+
 
 // CSS-in-JS 스타일링
 const AccountContainer = styled.div`
