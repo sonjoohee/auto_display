@@ -349,6 +349,23 @@ const MoleculeReportController = ({
   const toggleCopy = () => {
     let contentToCopy = ``;
 
+    const extractTextContent = (data) => {
+      let textContent = "";
+      if (typeof data === "string") {
+        return data + "\n";
+      }
+      if (Array.isArray(data)) {
+        data.forEach((item) => {
+          textContent += extractTextContent(item);
+        });
+      } else if (typeof data === "object" && data !== null) {
+        Object.values(data).forEach((value) => {
+          textContent += extractTextContent(value);
+        });
+      }
+      return textContent;
+    };
+
     const getSelectedTabData = (selectedTabCopy) => {
       if (strategyReportID === "1")
         return expert1ReprotData.tabs[selectedTabCopy];
@@ -374,46 +391,16 @@ ${businessInformationTargetCustomer
   .join("\n")}
 `;
     } else if (reportIndex === 1) {
-      const extractTextContent = (data) => {
-        let textContent = "";
-        if (typeof data === "string") {
-          return data + "\n";
-        }
-        if (Array.isArray(data)) {
-          data.forEach((item) => {
-            textContent += extractTextContent(item);
-          });
-        } else if (typeof data === "object" && data !== null) {
-          Object.values(data).forEach((value) => {
-            textContent += extractTextContent(value);
-          });
-        }
-        return textContent;
-      };
+      // 전문가 보고서 복사 기능
       const selectedTabData = getSelectedTabData(selectedTabCopy);
       contentToCopy = extractTextContent(selectedTabData);
     } else if (reportIndex === 2) {
       // 추가 질문 복사 기능
-      const extractTextContent = (data) => {
-        let textContent = "";
-        if (typeof data === "string") {
-          return data + "\n";
-        }
-        if (Array.isArray(data)) {
-          data.forEach((item) => {
-            textContent += extractTextContent(item);
-          });
-        } else if (typeof data === "object" && data !== null) {
-          Object.values(data).forEach((value) => {
-            textContent += extractTextContent(value);
-          });
-        }
-        return textContent;
-      };
-      contentToCopy = extractTextContent(
-        additionalReportData[additionalReportCount]
-      );
-    } else return;
+      contentToCopy = extractTextContent(additionalReportData[additionalReportCount]);
+    } else if (reportIndex === 3) {
+      contentToCopy = extractTextContent(customerAdditionalReportData[additionalReportCount]);
+    }
+    else return;
 
     navigator.clipboard
       .writeText(contentToCopy.trim())
