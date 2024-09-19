@@ -151,6 +151,7 @@ const PopupContent = styled.div`
       font-family: "Pretendard", "Poppins";
       color: ${palette.gray};
       font-weight: 600;
+      font-size: 0.75rem;
       padding: 0;
       border: 0;
       background: none;
@@ -165,6 +166,7 @@ const PopupContent = styled.div`
       font-family: "Pretendard", "Poppins";
       color: ${palette.gray};
       font-weight: 600;
+      font-size: 0.75rem;
       padding: 0;
       border: 0;
       background: none;
