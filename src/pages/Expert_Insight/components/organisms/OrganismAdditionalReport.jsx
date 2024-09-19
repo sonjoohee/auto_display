@@ -20,6 +20,7 @@ import {
   INPUT_BUSINESS_INFO,
   SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
+  SELECTED_EXPERT_LIST,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -41,6 +42,7 @@ const OrganismAdditionalReport = ({
   conversationId,
 }) => {
   // console.log("🚀 ~ additionalReportCount:", additionalReportCount);
+  const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
   const [inputBusinessInfo, setInputBusinessInfo] =
     useAtom(INPUT_BUSINESS_INFO);
@@ -229,14 +231,26 @@ const OrganismAdditionalReport = ({
           setIsLoading(false);
 
           const updatedConversation2 = [...conversation];
+
+          if(selectedExpertList.length === 3) {
+            updatedConversation2.push(
+              {
+                type: "system",
+                message: `"${titleOfBusinessInfo}"과 관련된 "${selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊`,
+                expertIndex: 0,
+              }
+            );
+          }
+          else {
+            updatedConversation2.push(
+              {
+                type: "system",
+                message: `"${titleOfBusinessInfo}"과 관련된 "${selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분야별 전문가의 의견도 확인해보세요`,
+                expertIndex: 0,
+              }
+            );
+          }
           updatedConversation2.push(
-            {
-              type: "system",
-              message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${
-                selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]
-              }를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
-              expertIndex: 0,
-            },
             { type: "keyword" }
           );
           setConversation(updatedConversation2);

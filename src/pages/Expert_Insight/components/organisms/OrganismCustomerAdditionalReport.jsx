@@ -23,6 +23,7 @@ import {
   CUSTOMER_ADDITIONAL_REPORT_DATA,
   CUSTOMER_ADDITION_BUTTON_STATE,
   CUSTOMER_ADDITION_QUESTION_INPUT,
+  SELECTED_EXPERT_LIST,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -43,6 +44,7 @@ const OrganismCustomerAdditionalReport = ({
   customerAdditionalReportCount,
   conversationId,
 }) => {
+  const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
   const [inputBusinessInfo, setInputBusinessInfo] =
     useAtom(INPUT_BUSINESS_INFO);
@@ -168,6 +170,8 @@ const OrganismCustomerAdditionalReport = ({
             data,
             axiosConfig
           );
+
+          console.log("🚀 response:", response);
 
           answerData = response.data.additional_question;
 
@@ -297,13 +301,27 @@ const OrganismCustomerAdditionalReport = ({
                   expertIndex: 0,
                 });
               } else {
-                // 일반적인 keyword result일 경우
+                  if(selectedExpertList.length === 3) {
+                    updatedConversation2.push(
+                      {
+                        type: "system",
+                        message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.keyword.result}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분야별 전문가의 의견도 확인해보세요`,
+                        expertIndex: 0,
+                      },
+                      { type: "keyword" }
+                    );
+                  }
+                  else {
+                    updatedConversation2.push(
+                      {
+                        type: "system",
+                        message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.keyword.result}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊`,
+                        expertIndex: 0,
+                      },
+                      { type: "keyword" }
+                    );
+                  }
                 updatedConversation2.push(
-                  {
-                    type: "system",
-                    message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${response.data.keyword.result}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
-                    expertIndex: 0,
-                  },
                   { type: "keyword" }
                 );
               }
@@ -312,7 +330,7 @@ const OrganismCustomerAdditionalReport = ({
             if (conversationStage === 2) {
               updatedConversation2.push({
                 type: "system",
-                message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${response.data.keyword.result}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
+                message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.keyword.result}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분야별 전문가의 의견도 확인해보세요`,
                 expertIndex: 0,
               });
             } else if (conversationStage === 3) {
@@ -325,13 +343,27 @@ const OrganismCustomerAdditionalReport = ({
                   expertIndex: 0,
                 });
               } else {
-                // 일반적인 keyword result일 경우
+                  if(selectedExpertList.length === 3) {
+                    updatedConversation2.push(
+                      {
+                        type: "system",
+                        message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.keyword.result}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분야별 전문가의 의견도 확인해보세요`,
+                        expertIndex: 0,
+                      },
+                      { type: "keyword" }
+                    );
+                  }
+                  else {
+                    updatedConversation2.push(
+                      {
+                        type: "system",
+                        message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.keyword.result}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊`,
+                        expertIndex: 0,
+                      },
+                      { type: "keyword" }
+                    );
+                  }
                 updatedConversation2.push(
-                  {
-                    type: "system",
-                    message: `"${titleOfBusinessInfo}"과 관련된 시장에서의 BDG 메트릭스를 기반으로 ${response.data.keyword.result}를 찾아드렸어요\n추가적인 질문이 있으시면, 언제든지 물어보세요💡 다른 분야 전문가의 의견도 프로젝트에 도움이 될거에요👇🏻`,
-                    expertIndex: 0,
-                  },
                   { type: "keyword" }
                 );
               }
