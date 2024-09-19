@@ -830,11 +830,26 @@ const PageExpertInsight = () => {
                 return null;
               })}
 
-              {approachPath === -1 || approachPath === 2
-                ? inputBusinessInfo &&
+              {/* 검색해서 시작 */}
+              {(approachPath === -1 || approachPath === 3) && 
+                titleOfBusinessInfo &&
+                <OrganismBizExpertSelect />
+              }
+
+              {/* 전문가 선택하고 시작 */}
+              {approachPath === 1 &&
+                (Object.keys(expert1ReportData).length !== 0 ||
+                  Object.keys(expert2ReportData).length !== 0 ||
+                  Object.keys(expert3ReportData).length !== 0) &&
                     <OrganismBizExpertSelect />
-                : conversationStage >= 3 &&
-                    <OrganismBizExpertSelect />
+              }
+
+              {/* 히스토리로 진입 시 */}
+              {approachPath === 2 && 
+                titleOfBusinessInfo &&
+                conversation.length > 0 &&
+                conversation[conversation.length - 1].type !== "report_button" && 
+                  <OrganismBizExpertSelect />
               }
 
             </ChatWrap>
