@@ -150,69 +150,73 @@ const MoleculeLoginForm = () => {
 
   return (
     <>
-      <LoginFormContainer>
-        <div>
-          <label htmlFor="email">
-            아이디<span>*</span>
-          </label>
-          <StyledAtomInput
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="이메일 주소를 입력해주세요"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="password">
-            비밀번호<span>*</span>
-          </label>
-          <StyledAtomInput
-            type={showPassword ? "text" : "password"}
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="비밀번호를 입력해주세요"
-          />
-          <TogglePasswordButton onClick={togglePasswordVisibility}>
-            {showPassword ? <FaEye /> : <FaEyeSlash />}
-          </TogglePasswordButton>
-        </div>
-
-        {error && <ErrorMessage>{error}</ErrorMessage>}
-
-        <PasswordResetLink>
-          <a onClick={handlePasswordRestClick}>비밀번호 찾기</a>
-          {/* <a onClick={handlePasswordReset}>비밀번호 찾기</a> */}
-        </PasswordResetLink>
-
-        <StyledLoginButton onClick={handleLogin} disabled={!email || !password}>
-          로그인
-        </StyledLoginButton>
-
-        <JoinWrap>
-          <p>InterviewX가 처음이에요</p>
-          <Link to="#" onClick={handleSignClick}>
-            가입하기
-          </Link>
-
-          {/* <Link to="/signup">가입하기</Link> */}
-          {/* <Link to="#" onClick={handleSignupClick}>가입하기</Link> */}
-          {isSignupPopupOpen && (
-            <MoleculeSignupPopup onClose={handleClosePopup} />
-          )}
-        </JoinWrap>
-      </LoginFormContainer>
-
+      {/* 팝업이 열리면 로그인 폼은 숨기고 팝업만 표시 */}
+      {isSignPopupOpen || isPasswordRestPopupOpen ? null : (
+        <LoginFormContainer>
+          <div>
+            <label htmlFor="email">
+              아이디<span>*</span>
+            </label>
+            <StyledAtomInput
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="이메일 주소를 입력해주세요"
+            />
+          </div>
+  
+          <div>
+            <label htmlFor="password">
+              비밀번호<span>*</span>
+            </label>
+            <StyledAtomInput
+              type={showPassword ? "text" : "password"}
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="비밀번호를 입력해주세요"
+            />
+            <TogglePasswordButton onClick={togglePasswordVisibility}>
+              {showPassword ? <FaEye /> : <FaEyeSlash />}
+            </TogglePasswordButton>
+          </div>
+  
+          {error && <ErrorMessage>{error}</ErrorMessage>}
+  
+          <PasswordResetLink>
+            <a onClick={handlePasswordRestClick}>비밀번호 찾기</a>
+          </PasswordResetLink>
+  
+          <StyledLoginButton
+            onClick={handleLogin}
+            disabled={!email || !password}
+          >
+            로그인
+          </StyledLoginButton>
+  
+          <JoinWrap>
+            <p>InterviewX가 처음이에요</p>
+            <Link to="#" onClick={handleSignClick}>
+              가입하기
+            </Link>
+            {isSignupPopupOpen && (
+              <MoleculeSignupPopup onClose={handleClosePopup} />
+            )}
+          </JoinWrap>
+        </LoginFormContainer>
+      )}
+  
+      {/* 회원가입 팝업 */}
       {isSignPopupOpen && <MoleculeSignPopup onClose={closeSignPopup} />}
+  
+      {/* 비밀번호 재설정 팝업 */}
       {isPasswordRestPopupOpen && (
         <MoleculeResetPasswordPopup onClose={closePasswordRestPopup} />
       )}
     </>
   );
-};
-
+};  
 export default MoleculeLoginForm;
 
 // CSS-in-JS 스타일링
