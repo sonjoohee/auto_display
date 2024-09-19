@@ -19,6 +19,7 @@ import {
   SELECTED_ADDITIONAL_KEYWORD3,
   EXPERT_BUTTON_STATE,
   IS_LOADING,
+  SELECTED_EXPERT_LIST,
 } from "../../../AtomStates";
 
 const OrganismBizExpertSelect = ({ conversationId }) => {
@@ -63,6 +64,8 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
 
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
 
+  const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
+
   const handledExpertSelect = (index) => {
     if (!isLoading) {
       setSelectedExpertIndex(index);
@@ -84,39 +87,48 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
   };
 
   return (
-    <BizExpertSelectContainer>
-      <h1>아래 분야별 전문가와 대화를 통해 아이디어를 발전시켜보세요.</h1>
-      <SelectOptions>
-        {Object.keys(expert1ReportData).length === 0 && (
-          <div>
-            <img src={images.ImgChat} alt="" />
-            <p>10년차 전략 디렉터와 1:1 커피챗하기</p>
-            <button type="button" onClick={() => handledExpertSelect("1")}>
-              시작하기
-            </button>
-          </div>
-        )}
-        {Object.keys(expert2ReportData).length === 0 && (
-          <div>
-            <img src={images.ImgWrite} alt="" />
-            <p>브랜드 전문가의 10초 맞춤 제안서 받기</p>
-            <button type="button" onClick={() => handledExpertSelect("2")}>
-              시작하기
-            </button>
-          </div>
-        )}
-        {Object.keys(expert3ReportData).length === 0 && (
-          <div>
-            <img src={images.ImgTarget} alt="" />
-            <p>지금 바로 만나 타겟 고객 확인하기</p>
-            <button type="button" onClick={() => handledExpertSelect("3")}>
-              시작하기
-            </button>
-          </div>
-        )}
-      </SelectOptions>
-    </BizExpertSelectContainer>
-  );
+    <>
+      {/* 모든 전문가가 선택되었거나, 모든 보고서가 생성되었으면 영역 표시 안함
+          selectedExpertList는 DB에 저장되고 있지 않기 떄문에 expertReportData 조건이 필요함 */}
+      {((selectedExpertList.includes("1") || Object.keys(expert1ReportData).length !== 0) &&
+        (selectedExpertList.includes("2") || Object.keys(expert2ReportData).length !== 0) &&
+        (selectedExpertList.includes("3") || Object.keys(expert3ReportData).length !== 0)) ? null : (
+  
+        <BizExpertSelectContainer>
+          <h1>아래 분야별 전문가와 대화를 통해 아이디어를 발전시켜보세요.</h1>
+          <SelectOptions>
+            {(selectedExpertList.includes("1") || Object.keys(expert1ReportData).length !== 0) ? null : (
+              <div>
+                <img src={images.ImgChat} alt="" />
+                <p>10년차 전략 디렉터와 1:1 커피챗하기</p>
+                <button type="button" onClick={() => handledExpertSelect("1")}>
+                  시작하기
+                </button>
+              </div>
+            )}
+            {(selectedExpertList.includes("2") || Object.keys(expert2ReportData).length !== 0) ? null : (
+              <div>
+                <img src={images.ImgWrite} alt="" />
+                <p>브랜드 전문가의 10초 맞춤 제안서 받기</p>
+                <button type="button" onClick={() => handledExpertSelect("2")}>
+                  시작하기
+                </button>
+              </div>
+            )}
+            {(selectedExpertList.includes("3") || Object.keys(expert3ReportData).length !== 0) ? null : (
+              <div>
+                <img src={images.ImgTarget} alt="" />
+                <p>지금 바로 만나 타겟 고객 확인하기</p>
+                <button type="button" onClick={() => handledExpertSelect("3")}>
+                  시작하기
+                </button>
+              </div>
+            )}
+          </SelectOptions>
+        </BizExpertSelectContainer>
+      )}
+    </>
+  );  
 };
 
 export default OrganismBizExpertSelect;
