@@ -747,20 +747,20 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
                       {item.subTitle}
                     </strong>
                     <ul>
-                      {item.text && (
+                      {item.subText1 && (
                         <li>
                           -{" "}
-                          {item.text.startsWith("강점:")
-                            ? item.text
-                            : `강점: ${item.text}`}
+                          {item.subText1.startsWith("강점:")
+                            ? item.subText1
+                            : `강점: ${item.subText1}`}
                         </li>
                       )}
-                      {item.subtext && (
+                      {item.subText2 && (
                         <li>
                           -{" "}
-                          {item.subtext.startsWith("약점:")
-                            ? item.subtext
-                            : `약점: ${item.subtext}`}
+                          {item.subText2.startsWith("약점:")
+                            ? item.subText2
+                            : `약점: ${item.subText2}`}
                         </li>
                       )}
                     </ul>
