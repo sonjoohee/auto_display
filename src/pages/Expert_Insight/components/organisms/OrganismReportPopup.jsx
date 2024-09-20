@@ -4,6 +4,7 @@ import { palette } from "../../../../assets/styles/Palette";
 import ReactDOM from "react-dom";
 
 import images from "../../../../assets/styles/Images";
+import panelimages from "../../../../assets/styles/PanelImages";
 
 const OrganismReportPopup = ({ report, onClose }) => {
   if (!report) return null;
@@ -35,18 +36,29 @@ const OrganismReportPopup = ({ report, onClose }) => {
     <PopupOverlay onClick={onClose}>
       <PopupContent onClick={(e) => e.stopPropagation()}>
         <div className="popup-title">
-          <popup-h1>{report.title}</popup-h1>
-          <popup-p>
-            <span>
-              <img src={images.IconList} alt="" />
-              {reportTypeText}
-            </span>
-            {/* <span>생성 : {report.date}</span> */}
-            <span>
-              <img src={images.IconSaveDate} alt="" />
-              저장 : {report.date}
-            </span>
-          </popup-p>
+          <div className="title">
+            <popup-h1>{report.title}</popup-h1>
+            <popup-p>
+              <span>
+                <img src={images.IconList} alt="" />
+                {reportTypeText}
+              </span>
+              {/* <span>생성 : {report.date}</span> */}
+              <span>
+                <img src={images.IconSaveDate} alt="" />
+                저장 : {report.date}
+              </span>
+            </popup-p>
+          </div>
+          <div className="expert">
+            <div className="thumb">
+              <img src={panelimages.expert_1} alt="" />
+            </div>
+            <div className="cont">
+              <strong>제품 전략가</strong>
+              <span>김도원</span>
+            </div>
+          </div>
         </div>
 
         {reportIndex === 0 && <BizAnalysisSection report={report} />}
@@ -95,13 +107,62 @@ const PopupContent = styled.div`
 
   .popup-title {
     display: flex;
-    flex-direction: column;
+    // flex-direction: column;
+    justify-content:space-between;
     gap: 12px;
     padding: 16px 20px;
     border-radius: 15px;
     border: 1px solid ${palette.lineGray};
     background: ${palette.white};
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+
+    .title {
+      display:flex;
+      flex-direction: column;
+      gap:12px;
+    }
+
+    .expert {
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:8px;
+      background:#F6F6F6;
+
+      .thumb {
+        position:relative;
+        width:32px;
+        height:32px;
+        border-radius:100%;
+        overflow:hidden;
+
+        img {
+          position:absolute;
+          top:50%;
+          left:50%;
+          transform:translate(-50%, -50%);
+          width:100%;
+          height:100%;
+          object-fit:cover;
+        }
+      }
+
+      .cont {
+        display:flex;
+        flex-direction: column;
+        gap:4px;
+        font-size:0.75rem;
+
+        strong {
+          font-weight:400;
+        }
+
+        span {
+          color:${palette.gray500};
+        }
+      }
+    }
   }
 
   popup-h1 {
@@ -366,7 +427,7 @@ const TabHeader = styled.div`
 `;
 
 const TabButton = styled.button`
-  font-family: "Pretendard";
+  font-family: "Pretendard","Poppins";
   font-size: 1.25rem;
   font-weight: ${(props) => (props.active ? "500" : "400")};
   color: ${(props) => (props.active ? `${palette.black}` : "rgba(0,0,0,.2)")};
@@ -967,7 +1028,7 @@ const Section = ({ title, content, isLast, expertIndex ,selectedTab}) => {
                     {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
                   </div>
                 ))}
-               </DynamicGrid>
+              </DynamicGrid>
                 )}
               </>
             )}
@@ -992,9 +1053,9 @@ const DynamicGrid = styled.div`
 const AnalysisSection = styled.div`
   position: relative;
   max-width: 1135px;
-  width: 91.5%;
+  // width: 91.5%;
   text-align: left;
-  margin-top: 25px;
+  // margin-top: 25px;
   padding: 30px;
   border-radius: 15px;
   border: 1px solid ${palette.lineGray};
