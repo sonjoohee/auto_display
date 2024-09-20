@@ -1053,11 +1053,8 @@ const DynamicGrid = styled.div`
 const AnalysisSection = styled.div`
   position: relative;
   max-width: 1135px;
-<<<<<<< HEAD
-  // width: 91.5%;
-=======
+
   width: 100%;
->>>>>>> 2ce0c5ea0f607f7cd6b31d1b3df7309a61213c5e
   text-align: left;
   // margin-top: 25px;
   padding: 30px;
