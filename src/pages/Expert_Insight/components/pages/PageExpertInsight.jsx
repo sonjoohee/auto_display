@@ -32,6 +32,7 @@ import {
   CUSTOMER_ADDITION_BUTTON_STATE,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
   SELECTED_EXPERT_LIST,
+  IS_LOADING,
 } from "../../../AtomStates";
 
 import {
@@ -55,7 +56,8 @@ import MoleculeCheckReportRightAway from "../molecules/MoleculeCheckReportRightA
 import OrganismCustomerAdditionalReport from "../organisms/OrganismCustomerAdditionalReport";
 
 const PageExpertInsight = () => {
-  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
+  const [isLoadingPage, setIsLoadingPage] = useState(true); // 로딩 상태 추가
+  const [isLoading, setIsLoading] = useAtom(IS_LOADING);
 
   const navigate = useNavigate();
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
@@ -266,11 +268,11 @@ const PageExpertInsight = () => {
             const newConversationId = await createChatOnServer();
             setConversationId(newConversationId); // 생성된 대화 ID 설정
             // console.log("newConversationId", newConversationId);
-            setIsLoading(false); // 로딩 완료
+            setIsLoadingPage(false); // 로딩 완료
             // 새로운 대화 ID로 경로 변경
             navigate(`/conversation/${newConversationId}`, { replace: true });
           } catch (error) {
-            setIsLoading(false); // 로딩 완료
+            setIsLoadingPage(false); // 로딩 완료
             console.error("Failed to create conversation on server:", error);
             navigate(`/conversation/${conversationId}`, { replace: true });
           }
@@ -362,13 +364,13 @@ const PageExpertInsight = () => {
               ]);
             }
           }
-          setIsLoading(false); // 로딩 완료
+          setIsLoadingPage(false); // 로딩 완료
         }
       } else {
         // 4. 비로그인 상태인 경우, 새로운 로컬 대화 ID 생성 또는 기존 대화 로드
         if (!conversationId) {
           setConversationId(nanoid()); // 비로그인 시 로컬에서 새로운 ID 생성
-          setIsLoading(false); // 로딩 완료
+          setIsLoadingPage(false); // 로딩 완료
           navigate(`/conversation/${conversationId}`, { replace: true });
         } else {
           const savedConversation = await getConversationByIdFromIndexedDB(
@@ -435,7 +437,7 @@ const PageExpertInsight = () => {
               ]);
             }
           }
-          setIsLoading(false); // 로딩 완료
+          setIsLoadingPage(false); // 로딩 완료
         }
       }
     };
@@ -492,14 +494,14 @@ const PageExpertInsight = () => {
         ]);
       }
     }
-  }, [approachPath, selectedExpertIndex, isLoading]);
+  }, [approachPath, selectedExpertIndex, isLoadingPage]);
 
   useEffect(() => {
     if (
       conversationId &&
       conversationId.length >= 2 &&
       selectedAdditionalKeyword &&
-      !isLoading &&
+      !isLoadingPage &&
       approachPath !== 2
     ) {
       handleSearch(-1);
@@ -517,7 +519,7 @@ const PageExpertInsight = () => {
       conversationId &&
       conversationId.length >= 2 &&
       approachPath &&
-      !isLoading
+      !isLoadingPage
     ) {
       handleSearch(-1);
     }
@@ -528,7 +530,7 @@ const PageExpertInsight = () => {
       conversationId &&
       conversationId.length >= 2 &&
       isClickCheckReportRightAway &&
-      !isLoading
+      !isLoadingPage
     ) {
       handleSearch(-1);
     }
@@ -757,7 +759,7 @@ const PageExpertInsight = () => {
     setConversation(updatedConversation);
     setConversationStage(newConversationStage);
     saveConversation(updatedConversation, newConversationStage);
-    setIsLoading(false); // 로딩 완료
+    setIsLoadingPage(false); // 로딩 완료
   };
 
   // 스크롤
@@ -789,7 +791,7 @@ const PageExpertInsight = () => {
     }
   };
 
-  if (isLoading) {
+  if (isLoadingPage) {
     return <div>Loading...</div>;
   }
 
@@ -878,6 +880,7 @@ const PageExpertInsight = () => {
               {/* 검색해서 시작 */}
               {(approachPath === -1 || approachPath === 3) && 
                 titleOfBusinessInfo &&
+                // !isLoading &&
                 <OrganismBizExpertSelect />
               }
 
@@ -886,6 +889,7 @@ const PageExpertInsight = () => {
                 (Object.keys(expert1ReportData).length !== 0 ||
                   Object.keys(expert2ReportData).length !== 0 ||
                   Object.keys(expert3ReportData).length !== 0) &&
+                  // !isLoading &&
                     <OrganismBizExpertSelect />
               }
 
@@ -893,7 +897,8 @@ const PageExpertInsight = () => {
               {approachPath === 2 && 
                 titleOfBusinessInfo &&
                 conversation.length > 0 &&
-                conversation[conversation.length - 1].type !== "report_button" && 
+                conversation[conversation.length - 1].type !== "report_button" &&
+                !isLoading && 
                   <OrganismBizExpertSelect />
               }
 
