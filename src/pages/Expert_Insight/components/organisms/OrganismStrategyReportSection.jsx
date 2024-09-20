@@ -418,49 +418,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
   };
 
   // 기존 subTitle과 text를 합쳐 새로운 text 생성
-  const mergeSubTitleAndText = (subTitle, text) => `${subTitle} : ${text}`;
 
-  // 두 섹션의 데이터를 결합하여 하나의 섹션처럼 처리 (이전 섹션들의 combinedContent 포함)
-  const combinedContent = [
-    ...subTitleItems.map((item) => ({
-      text: mergeSubTitleAndText(item.subTitle, item.text),
-    })),
-  ];
-
-  // 전역적으로 두 섹션의 데이터를 저장할 수 있는 별도의 배열을 생성 (전역적으로 이 두 섹션의 데이터를 병합)
-  const globalCombinedContent = [];
-
-  // 이 함수는 "주요 차별화 요소"와 "차별화 전략 제안"이 있을 때 데이터를 병합해서 한 번만 렌더링
-  const renderCombinedSections = () => {
-    if (
-      title === "주요 차별화 요소" ||
-      title === "차별화 전략 제안" ||
-      title === "경쟁 압박 대처 방안" ||
-      title === "장기적인 경쟁 우위 전략"
-    ) {
-      // 중복 호출 방지를 위해 한 번 병합된 후 다시 병합되지 않도록 확인
-      if (globalCombinedContent.length === 0) {
-        globalCombinedContent.push(...combinedContent); // 데이터 병합
-      }
-
-      return (
-        <>
-          <strong>
-            <img src={images.Check} alt="" /> {/* 체크 이미지 추가 */}
-            {/* 경쟁사 대비 차별화 전략 */}
-            {title}
-          </strong>
-          <SubTextBox>
-            {globalCombinedContent.map((item, index) => (
-              <div key={index}>
-                <p>{item.text}</p>
-              </div>
-            ))}
-          </SubTextBox>
-        </>
-      );
-    }
-  };
 
   return (
     <BoxWrap
@@ -469,7 +427,6 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
       selectedTab={selectedTab}
     >
       {/* "주요 차별화 요소"와 "차별화 전략 제안" 데이터를 결합하여 한 번만 렌더링 */}
-      {renderCombinedSections()}
       {/* 3번 전문가의 2번째 탭을 위한 조건 */}
       {expertIndex === "3" && selectedTab === 1 ? (
         <>

@@ -331,6 +331,7 @@ const StrategyReportSection = ({ report }) => {
           <Section
             key={index}
             title={section.title}
+            title_text={section.text}
             content={section.content}
             isLast={index === sections.length - 1}
             expertIndex={expertIndex}
@@ -507,7 +508,7 @@ const AdditionalSection = ({ title, content, index }) => {
 };
 
 // Section 컴포넌트 - 각 섹션의 제목과 콘텐츠를 표시
-const Section = ({ title, content, isLast, expertIndex ,selectedTab}) => {
+const Section = ({ title, title_text, content, isLast, expertIndex ,selectedTab}) => {
   // 서브 타이틀이 있는 항목과 없는 항목을 분리
   const subTitleItems = content.filter((item) => item.subTitle);
   const nonSubTitleItems = content.filter((item) => !item.subTitle);
@@ -848,16 +849,22 @@ const Section = ({ title, content, isLast, expertIndex ,selectedTab}) => {
                   {item.subTitle}
                 </strong>
                     <ul>
-                  {item.subText1 && (
-                    <li>
-                      - {item.subText1.startsWith("강점:") ? item.subText1 : `강점: ${item.subText1}`}
-                    </li>
-                  )}
-                  {item.subText2 && (
-                    <li>
-                      - {item.subText2.startsWith("약점:") ? item.subText2 : `약점: ${item.subText2}`}
-                    </li>
-                  )}
+                    {item.text && (
+                        <li>
+                          -{" "}
+                          {item.text.startsWith("강점:")
+                            ? item.text
+                            : `강점: ${item.text}`}
+                        </li>
+                      )}
+                      {item.subtext && (
+                        <li>
+                          -{" "}
+                          {item.subtext.startsWith("약점:")
+                            ? item.subtext
+                            : `약점: ${item.subtext}`}
+                        </li>
+                      )}
                 </ul>
               </div>
             ))}
@@ -865,6 +872,29 @@ const Section = ({ title, content, isLast, expertIndex ,selectedTab}) => {
         </BgStyledSection>
       )}
 
+{(title === "경쟁사 대비 차별화 전략" || 
+          title === "시장 내 경쟁 우위 확보 방안" || 
+          title === "주요 타겟층 특징" || 
+          title === "콘텐츠 및 마케팅 전략") && (
+            <>
+             {title_text && <p>{title_text}</p>}
+            <DoubleGrid columns={2}> {/* 2개의 컬럼을 생성하여 가로로 나열 */}
+              {content.map((section, sectionIndex) => (
+                <SectionWrapper key={sectionIndex}> {/* 각 섹션을 감싸는 div */}
+                  {/* section.title 출력 */}
+                  <SubTitle>{section.title}</SubTitle>
+
+                  {/* subContent를 하나의 DynamicGrid 안에서 출력 */}
+                  {section.subContent.map((item, itemIndex) => (
+                    <div key={itemIndex}>
+                      <p>{item.subTitle} : {item.text}</p>
+                    </div>
+                  ))}
+                </SectionWrapper>
+              ))}
+            </DoubleGrid>
+            </>
+          )}
 
 {title === "고객 여정 맵핑 터치포인트 단계 최적화 방안" && (
   <BgStyledSection>
@@ -1429,4 +1459,40 @@ const AdditionalBoxWrap = styled.div`
   //   font-size: 0.875rem;
   //   margin-bottom: 10px;
   // }
+`;
+
+const DoubleGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(${(props) => props.columns}, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+  padding: 12px; /* 가장 큰 div에 padding 적용 */
+  border-radius: 10px;
+
+  div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    /* 각 개별 div에서는 border를 제거 */
+  }
+
+p {
+  margin: 0;
+  /* 텍스트가 생략되지 않도록 아래 스타일을 제거 */
+  overflow: visible; /* 숨기지 않도록 */
+  text-overflow: unset; /* 생략하지 않음 */
+  display: block; /* 줄바꿈을 정상적으로 처리 */
+}
+
+`;
+const SectionWrapper = styled.div`
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid ${palette.lineGray}; /* 각 section에만 border 적용 */
+  margin-bottom: 10px; /* 섹션 간 간격 추가 */
+  
+  div {
+    margin-bottom: 8px; /* subContent 간의 간격 */
+  }
 `;
