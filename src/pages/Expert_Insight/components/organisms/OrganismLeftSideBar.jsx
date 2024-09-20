@@ -590,82 +590,83 @@ const OrganismLeftSideBar = () => {
                 인사이트 보관함
               </label>
               <AccordionContent>
-                <ul>
-                  {reports && reports.length > 0 ? (
-                    reports.map((report, index) => (
-                      <li key={index}>
-                        <p onClick={() => handleReportClick(report.id)}>
-                          {report.business_info}
-                        </p>
-                        <span
-                          id={`insight-toggle-${index}`}
-                          style={{
-                            display: "inline-block",
-                            padding: "10px",
-                            cursor: "pointer",
-                          }}
-                          onClick={() => insightEditBoxToggle(index)}
+                  <ul>
+                    {reports && reports.length > 0 ? (
+                      reports.map((report, index) => (
+                        <li
+                          key={index}
+                          data-expert-index={report.reportIndex} // data-expert-index 속성 추가
                         >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="14"
-                            height="3"
-                            viewBox="0 0 14 3"
-                            fill="none"
+                          <p onClick={() => handleReportClick(report.id)}>
+                            {report.business_info}
+                          </p>
+                          <span
+                            id={`insight-toggle-${index}`}
+                            style={{
+                              display: "inline-block",
+                              padding: "10px",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => insightEditBoxToggle(index)}
                           >
-                            <circle
-                              cx="2.0067"
-                              cy="1.51283"
-                              r="1.49694"
-                              transform="rotate(-90 2.0067 1.51283)"
-                              fill="#A0A0A0"
-                            />
-                            <circle
-                              cx="7.00084"
-                              cy="1.51283"
-                              r="1.49694"
-                              transform="rotate(-90 7.00084 1.51283)"
-                              fill="#A0A0A0"
-                            />
-                            <circle
-                              cx="11.993"
-                              cy="1.51283"
-                              r="1.49694"
-                              transform="rotate(-90 11.993 1.51283)"
-                              fill="#A0A0A0"
-                            />
-                          </svg>
-                        </span>
-                        {insightEditToggleIndex === index && (
-                          <div
-                            id={`insight-edit-box-${index}`}
-                            className="insight-toggle"
-                            ref={insightEditBoxRef}
-                          >
-                            <EditBox isEditToggle={insightEditToggleIndex === index}>
-                              <button
-                                type="button"
-                                onClick={() => handleDeleteButtonClick(report.id)}
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="14"
+                              height="3"
+                              viewBox="0 0 14 3"
+                              fill={getColor(report.reportIndex)}
                               >
-                                <img src={images.IconDelete2} alt="" />
-                                삭제
-                              </button>
-                              <button type="button">
-                                <img src={images.IconEdit2} alt="" />
-                                이름 변경
-                              </button>
-                            </EditBox>
-                          </div>
-                        )}
+                              <circle
+                                cx="2.0067"
+                                cy="1.51283"
+                                r="1.49694"
+                                transform="rotate(-90 2.0067 1.51283)"
+                              />
+                              <circle
+                                cx="7.00084"
+                                cy="1.51283"
+                                r="1.49694"
+                                transform="rotate(-90 7.00084 1.51283)"
+                              />
+                              <circle
+                                cx="11.993"
+                                cy="1.51283"
+                                r="1.49694"
+                                transform="rotate(-90 11.993 1.51283)"
+                              />
+                            </svg>
+                          </span>
+                          {insightEditToggleIndex === index && (
+                            <div
+                              id={`insight-edit-box-${index}`}
+                              className="insight-toggle"
+                              ref={insightEditBoxRef}
+                            >
+                              <EditBox isEditToggle={insightEditToggleIndex === index}>
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteButtonClick(report.id)}
+                                >
+                                  <img src={images.IconDelete2} alt="" />
+                                  삭제
+                                </button>
+                                <button type="button">
+                                  <img src={images.IconEdit2} alt="" />
+                                  이름 변경
+                                </button>
+                              </EditBox>
+                            </div>
+                          )}
+                        </li>
+                      ))
+                    ) : (
+                      <li>
+                        <p>최근 저장한 보고서가 없습니다</p>
                       </li>
-                    ))
-                  ) : (
-                    <li>
-                      <p>최근 저장한 보고서가 없습니다</p>
-                    </li>
-                  )}
-                </ul>
-              </AccordionContent>
+                    )}
+                  </ul>
+                </AccordionContent>
+
             </AccordionItem>
 
             {selectedReport && (
@@ -1474,6 +1475,22 @@ const AccordionContent = styled.div`
       transition: all 0.5s;
     }
 
+    &[data-expert-index="0"]:before {
+      background: #ff0000; /* 전문가 0: 빨간색 */
+    }
+
+    &[data-expert-index="1"]:before {
+      background: #00ff00; /* 전문가 1: 초록색 */
+    }
+
+    &[data-expert-index="2"]:before {
+      background: #800080; /* 전문가 2: 보라색 */
+    }
+
+    &[data-expert-index="3"]:before {
+      background: #ffa500; /* 전문가 3: 주황색 */
+    }
+
     p {
       width: 100%;
       min-height: 19px;
@@ -1807,3 +1824,19 @@ const LogoutToggle = styled.div`
     }
   }
 `;
+
+const getColor = (expertIndex) => {
+  switch (expertIndex) {
+    case 0:
+      return "#FF0000"; // 전문가 0: 빨간색
+    case 1:
+      return "#00FF00"; // 전문가 1: 초록색
+    case 2:
+      return "#800080"; // 전문가 2: 보라색
+    case 3:
+      return "#FFA500"; // 전문가 3: 주황색
+    default:
+      return palette.lightGray; // 기본 색상
+  }
+};
+
