@@ -897,13 +897,13 @@ const OrganismLeftSideBar = () => {
             <span>
               <img src={images.ExclamationMark} alt="" />
             </span>
-            <p>정말 이 대화를 삭제하시겠습니까?</p>
+            <p>정말 삭제하시겠습니까?</p>
             <div className="btnWrap">
-              <button type="button" onClick={handleDeleteHistoryConfirm}>
-                확인
-              </button>
               <button type="button" onClick={handleDeleteCancel}>
                 취소
+              </button>
+              <button type="button" onClick={handleDeleteHistoryConfirm}>
+                확인
               </button>
             </div>
           </div>
