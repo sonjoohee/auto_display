@@ -791,8 +791,14 @@ const OrganismLeftSideBar = () => {
                 </div>
 
                 <button className="more" onClick={moreProfile}>
-                  <img src={images.AccountSetting} alt="" />
+                  {/* <img src={images.AccountSetting} alt="" /> */}
                   {/* <span>{sessionStorage.getItem("userName")}</span> */}
+                  <span>
+                    {(() => {
+                      const userName = sessionStorage.getItem("userName");
+                      return userName && userName.length > 1 ? `${userName.slice(0, 1)}` : userName;
+                    })()}
+                  </span>
                 </button>
               </LogoutBtnWrap>
 
@@ -916,7 +922,10 @@ const OrganismLeftSideBar = () => {
             <span>
               <img src={images.ExclamationMark} alt="" />
             </span>
-            <p>정말 로그아웃하시겠습니까?</p>
+            <p>
+              <strong>정말 로그아웃하시겠습니까?</strong>
+              <span>로그아웃하시면 모든 계정 세션이 종료됩니다.</span>
+            </p>
             <div className="btnWrap">
               <button type="button" onClick={handleLogoutConfirm}>
                 확인
@@ -989,11 +998,24 @@ const Popup = styled.div`
     background: ${palette.white};
 
     p {
+      font-family: "Pretendard", "Poppins";
       font-size: 0.875rem;
       font-weight: 500;
       margin: 20px auto 24px;
-    }
+      strong {
+        font-weight: 500;
+        display: block;
+      }
 
+      span {
+        font-size: 0.75rem !important;
+        font-weight: 400;
+        color: #8c8c8c;
+        display: block;
+        margin-top: 8px;
+      }
+    }
+    
     .btnWrap {
       display: flex;
       align-items: center;
@@ -1001,6 +1023,7 @@ const Popup = styled.div`
 
       button {
         flex: 1;
+        font-family: 'Pretendard', 'Poppins';
         font-size: 0.875rem;
         font-weight: 600;
         color: ${palette.blue};
@@ -1451,7 +1474,7 @@ const AccordionContent = styled.div`
     font-size: 0.875rem;
     color: ${palette.gray};
     text-align: left;
-    padding: 8px 0 8px 15px;
+    padding: 0 0 0 22px;
     cursor: pointer;
 
     .insight-toggle {
@@ -1471,7 +1494,7 @@ const AccordionContent = styled.div`
       width: 10px;
       height: 10px;
       border-radius: 2px;
-      background: ${palette.lightGray};
+      background: #CECECE;
       content: "";
       transition: all 0.5s;
     }
