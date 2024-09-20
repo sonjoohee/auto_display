@@ -266,14 +266,15 @@ const LoginFormContainer = styled.div`
 const StyledAtomInput = styled.input`
   width: 100%;
   font-family: "Pretendard", "Poppins";
-  font-size: 1rem;
+  // font-size: 1rem;
+  font-size:0.75rem;
   padding: 12px 16px;
   border-radius: 8px;
   border: 1px solid ${palette.lineGray};
   box-sizing: border-box;
 
   &::placeholder {
-    font-size: 0.875rem;
+    font-size: 0.75rem;
   }
 `;
 

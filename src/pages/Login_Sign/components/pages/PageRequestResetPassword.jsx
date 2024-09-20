@@ -206,7 +206,8 @@ const PasswordFormContainer = styled.div`
 const StyledInput = styled.input`
   width: 100%;
   font-family: "Pretendard", "Poppins";
-  font-size: 1rem;
+  // font-size: 1rem;
+  font-size: 0.75rem;
   padding: 12px 16px;
   border-radius: 8px;
   border: 1px solid ${palette.lineGray};

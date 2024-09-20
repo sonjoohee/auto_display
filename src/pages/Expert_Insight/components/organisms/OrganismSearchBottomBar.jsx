@@ -90,7 +90,8 @@ const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
             isBlue
             placeholder={
               isBlue
-                ? "더 알고 싶은 내용이 있으신가요? 추가 질문으로 더 많은 인사이트를 얻어보세요"
+                // ? "더 알고 싶은 내용이 있으신가요? 추가 질문으로 더 많은 인사이트를 얻어보세요"
+                ? "당신의 아이템 또는 프로젝트 아이디어를 적어 주세요 (예: 원격 근무자를 위한 생산성 관리 툴)"
                 : "당신의 아이템 또는 프로젝트 아이디어를 적어 주세요 (예: 원격 근무자를 위한 생산성 관리 툴)"
             }
             value={inputValue}
@@ -110,8 +111,7 @@ const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
         </SearchBar>
 
         <p>
-          아이템이나 프로젝트와 관련 없는 질문은 정확한 답변이 어려울 수
-          있습니다.
+          아이템이나 프로젝트와 관련 없는 질문은 정확한 답변이 어려울 수 있습니다.
         </p>
       </BottomBar>
 
@@ -213,14 +213,14 @@ const BottomBar = styled.div`
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: -20px;
     height: 60px;
-    background: rgb(255, 255, 255);
-    background: linear-gradient(
-      0deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 1) 30%
-    );
+    background: ${palette.white};
+    // background: linear-gradient(
+    //   0deg,
+    //   rgba(255, 255, 255, 0) 0%,
+    //   rgba(255, 255, 255, 1) 30%
+    // );
     content: "";
     z-index: -1;
   }
