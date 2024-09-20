@@ -271,8 +271,6 @@ const OrganismLeftSideBar = () => {
 
         setChatList(sortedChatList);
 
-        console.log("히스토리", sortedChatList);
-
       } catch (error) {
         console.error("대화 목록 가져오기 오류:", error);
       }

@@ -130,12 +130,29 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
         setIsLoadingAnalysis(true);
         setButtonState(0);
         // 버튼 클릭으로 API 호출
-        const response = await axios.post(
+        let response = await axios.post(
           "https://wishresearch.kr/panels/business",
           data,
           axiosConfig
         );
         businessData = response.data.business_analysis;
+
+        while(!businessData.hasOwnProperty("명칭") ||
+              !businessData.hasOwnProperty("주요_목적_및_특징") ||
+              !businessData.hasOwnProperty("주요기능") ||
+              !businessData.hasOwnProperty("목표고객") ||
+              !businessData["명칭"] ||
+              !businessData["주요_목적_및_특징"].length ||
+              !businessData["주요기능"].length ||
+              !businessData["목표고객"].length) {
+
+              response = await axios.post(
+                "https://wishresearch.kr/panels/business",
+                data,
+                axiosConfig
+              );
+              businessData = response.data.business_analysis;
+        }
 
         // 데이터를 받아온 직후 아톰에 값을 설정합니다.
         if (Array.isArray(businessData["주요_목적_및_특징"])) {
