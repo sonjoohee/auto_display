@@ -79,7 +79,7 @@ const MoleculeSignupForm = () => {
         setStatus('inactive');
       } else {
         const result = await response.json();
-        setError(result.error || '회원가입 중 오류가 발생했습니다.');
+        setError(result.email || '회원가입 중 오류가 발생했습니다.');
       }
     } catch (error) {
       setError('서버와의 통신 중 오류가 발생했습니다.');

@@ -1,11 +1,11 @@
-// MoleculeLoginPopupManager.jsx
-
-import React, { useState } from "react";
+import React from "react";
+import { useAtom } from 'jotai';
+import { IS_LOGIN_POPUP_OPEN } from '../../../AtomStates'; // 경로는 프로젝트 구조에 맞게 수정
 import MoleculeLoginPopup from "./MoleculeLoginPopup";
 import { useNavigate } from "react-router-dom";
 
 const MoleculeLoginPopupManager = ({ children }) => {
-  const [isLoginPopupOpen, setLoginPopupOpen] = useState(false);
+  const [isLoginPopupOpen, setLoginPopupOpen] = useAtom(IS_LOGIN_POPUP_OPEN);
   const navigate = useNavigate();
 
   const handleLoginClick = () => {
@@ -17,7 +17,6 @@ const MoleculeLoginPopupManager = ({ children }) => {
   };
 
   const handleLoginSuccess = () => {
-    // 팝업을 통한 로그인일 경우 팝업 닫기
     setLoginPopupOpen(false);
     navigate("/");
   };

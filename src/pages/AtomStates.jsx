@@ -256,3 +256,8 @@ export const REPORT_REFRESH_TRIGGER = atom(false); // 새로고침 트리거 상
 export const ADDITIONAL_REPORT_COUNT = atom(-1);
 
 export const SELECTED_EXPERT_LIST = atom([]); // 전문가 선택영역 표시 관련, 선택된 전문가 인덱스 관리
+
+// 팝업 관련 atom 추가
+export const IS_LOGIN_POPUP_OPEN = atom(false);
+export const IS_SIGNUP_POPUP_OPEN = atom(false);
+export const IS_PASSWORD_RESET_POPUP_OPEN = atom(false);
