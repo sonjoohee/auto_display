@@ -393,6 +393,7 @@ const OrganismLeftSideBar = () => {
     sessionStorage.removeItem("accessToken"); // 세션 스토리지에서 토큰 삭제
     sessionStorage.removeItem("userName");
     sessionStorage.removeItem("userEmail");
+    sessionStorage.removeItem("isSocialLogin");
     localStorage.removeItem("userName");
     localStorage.removeItem("userEmail");
     setIsLoggedIn(false);
