@@ -41,6 +41,7 @@ import {
   SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
   SELECTED_EXPERT_LIST,
+  IS_SOCIAL_LOGGED_IN,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -70,6 +71,7 @@ const OrganismLeftSideBar = () => {
 
   const [isAccountPopupOpen, setAccountPopupOpen] = useState(false); // 계정설정 팝업
   const [selectedConversation, setSelectedConversation] = useState(null); // 선택한 대화 내용 저장
+  const [isSocialLoggedIn] = useAtom(IS_SOCIAL_LOGGED_IN); // 소셜 로그인 상태 읽기
 
   const [isLogoutPopup, setIsLogoutPopup] = useState(false); // 로그아웃 팝업 상태 관리
   const [userName, setUserName] = useAtom(USER_NAME); // 아톰에서 유저 이름 불러오기
@@ -795,40 +797,39 @@ const OrganismLeftSideBar = () => {
               </LogoutBtnWrap>
 
               <LogoutToggle ref={toggleRef} isToggle={isToggle} className="AccountInfo">
-              <div className="info">
-                  <strong>{sessionStorage.getItem("userName")}</strong>{" "}
-                  {/* 유저 이름 표시 */}
-                  <p>{sessionStorage.getItem("userEmail")}</p>{" "}
-                  {/* 유저 이메일 표시 */}
-                </div>
+                  <div className="info">
+                    <strong>{sessionStorage.getItem("userName")}</strong>{" "}
+                    {/* 유저 이름 표시 */}
+                    <p>{sessionStorage.getItem("userEmail")}</p>{" "}
+                    {/* 유저 이메일 표시 */}
+                  </div>
 
-                <ul>
-                  <li>
-                    <button type="button" onClick={handleAccountClick}>
-                      <img src={images.AccountSetting} alt="" />
-                      비밀번호 변경
-                    </button>
-                  </li>
-                  <li>
-                    <button type="button">
-                      <img src={images.AccountInfo} alt="" />
-                      정책 및 약관 정보
-                    </button>
-                  </li>
-                  {/* <li>
-                    <button type="button">
-                      <img src={images.AccountInquiry} alt="" />
-                      문의사항
-                    </button>
-                  </li> */}
-                  <li>
-                    <button type="button" onClick={handleLogoutClick}>
-                      <img src={images.AccountLogout} alt="" />
-                      로그아웃
-                    </button>
-                  </li>
-                </ul>
-              </LogoutToggle>
+                  <ul>
+                    {/* 소셜 로그인 상태가 아닐 때만 비밀번호 변경 버튼을 표시 */}
+                    {!isSocialLoggedIn && (
+                      <li>
+                        <button type="button" onClick={handleAccountClick}>
+                          <img src={images.AccountSetting} alt="" />
+                          비밀번호 변경
+                        </button>
+                      </li>
+                    )}
+
+                    <li>
+                      <button type="button">
+                        <img src={images.AccountInfo} alt="" />
+                        정책 및 약관 정보
+                      </button>
+                    </li>
+
+                    <li>
+                      <button type="button" onClick={handleLogoutClick}>
+                        <img src={images.AccountLogout} alt="" />
+                        로그아웃
+                      </button>
+                    </li>
+                  </ul>
+                </LogoutToggle>
             </>
           ) : (
             <>

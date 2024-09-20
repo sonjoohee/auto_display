@@ -13,6 +13,7 @@ import {
   loginSuccessAtom,
   USER_NAME,
   USER_EMAIL,
+  IS_SOCIAL_LOGGED_IN,
 } from "../../../../pages/AtomStates"; // 아톰 임포트
 
 import firebase from "firebase/app";
@@ -25,6 +26,7 @@ const MoleculeGoogleLoginForm = () => {
   const [, setLoginSuccess] = useAtom(loginSuccessAtom);
   const [, setUserName] = useAtom(USER_NAME); // 유저 이름 아톰
   const [, setUserEmail] = useAtom(USER_EMAIL); // 유저 이메일 아톰
+  const [, setIsSocialLoggedIn] = useAtom(IS_SOCIAL_LOGGED_IN); // 소셜 로그인 아톰
 
   const handleGoogleLogin = async () => {
     try {
@@ -49,11 +51,13 @@ const MoleculeGoogleLoginForm = () => {
       sessionStorage.setItem("accessToken", serverAccessToken); // 서버 토큰 저장
       sessionStorage.setItem("userName", userName); // 서버 토큰 저장
       sessionStorage.setItem("userEmail", userEmail); // 서버 토큰 저장
+      sessionStorage.setItem("isSocialLogin", "true"); // 소셜 로그인 여부 저장
 
       // 로그인 성공 시 처리
       setIsLoggedIn(true); // 아톰 업데이트
       setUserName(userName); // 유저 이름 업데이트
       setUserEmail(userEmail); // 유저 이메일 업데이트
+      setIsSocialLoggedIn(true); // 소셜 로그인 상태를 true로 업데이트
       setLoginSuccess(true);
     } catch (error) {
       console.error(error);
