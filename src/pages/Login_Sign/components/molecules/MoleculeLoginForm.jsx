@@ -8,8 +8,12 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import AtomButton from "../atoms/AtomButton";
 import { isValidEmail } from "../atoms/AtomValidation";
 import {
+  nameAtom,
   emailAtom,
+  signupEmailAtom,
   passwordAtom,
+  signupPasswordAtom,
+  confirmPasswordAtom,
   currentUserAtom,
   errorAtom,
 } from "../../../AtomStates";
@@ -27,8 +31,12 @@ import MoleculeSignPopup from "./MoleculeSignPopup";
 import MoleculeResetPasswordPopup from "./MoleculeResetPasswordPopup";
 
 const MoleculeLoginForm = () => {
+  const [name, setName] = useAtom(nameAtom);
   const [email, setEmail] = useAtom(emailAtom);
+  const [, setSignupEmail] = useAtom(signupEmailAtom);
   const [password, setPassword] = useAtom(passwordAtom);
+  const [, setSignupPassword] = useAtom(signupPasswordAtom);
+  const [confirmPassword, setConfirmPassword] = useAtom(confirmPasswordAtom);
   const [error, setError] = useAtom(errorAtom);
   const [, setCurrentUser] = useAtom(currentUserAtom);
   const [showPassword, setShowPassword] = useState(false);
@@ -138,6 +146,13 @@ const MoleculeLoginForm = () => {
   };
   const closeSignPopup = () => {
     setIsSignPopupOpen(false); // 회원가입 팝업 닫기
+    setError("");
+    setName('');
+    setEmail('');
+    setSignupEmail('');
+    setPassword('');
+    setSignupPassword('');
+    setConfirmPassword('');
   };
 
   const [isPasswordRestPopupOpen, setIsPasswordRestPopupOpen] = useState(false); // 비밀번호 리셋 팝업 상태 관리
