@@ -1,34 +1,34 @@
 import React, { useState } from "react";
+import { useAtom } from 'jotai';
+import { IS_PASSWORD_RESET_POPUP_OPEN ,IS_LOGIN_POPUP_OPEN} from '../../../AtomStates'; // 경로는 프로젝트 구조에 맞게 수정
 import styled from "styled-components";
 import MoleculePasswordResetPopup from "../molecules/MoleculePasswordResetPopup";
-import OrganismLeftSideBar from "../../../Expert_Insight/components/organisms/OrganismLeftSideBar";
-
 import { palette } from "../../../../assets/styles/Palette";
 
 const RequestResetPassword = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isPopupOpen, setIsPopupOpen] = useAtom(IS_PASSWORD_RESET_POPUP_OPEN);
+  const [, setIsLoginPopupOpen] = useAtom(IS_LOGIN_POPUP_OPEN); // 로그인 팝업의 setter만 필요하므로 현재 값은 생략
 
   const handleRequestReset = async () => {
-    setIsLoading(true); // 검색 시작 시 로딩 상태 활성화
+    setIsLoading(true);
 
     try {
-      // https://wishresearch.kr/request-reset-password
       const response = await fetch(
         "https://wishresearch.kr/api/user/passwordMail/",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email }), // 이름과 이메일을 함께 전송
+          body: JSON.stringify({ name, email }),
         }
       );
 
       if (response.ok) {
         setMessage("비밀번호 재설정 링크가 이메일로 전송되었습니다.");
-        setIsPopupOpen(true); // 팝업을 열도록 상태 설정
+        setIsPopupOpen(true); // 팝업 열기
       } else {
         const result = await response.json();
         setMessage(
@@ -37,14 +37,16 @@ const RequestResetPassword = () => {
       }
     } catch (error) {
       setMessage("서버와의 통신 중 오류가 발생했습니다.");
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false); // 검색 완료 시 로딩 상태 비활성화
   };
 
   const handleClosePopup = () => {
-    setIsPopupOpen(false); // 팝업을 닫는 상태 설정
+    setIsPopupOpen(false);       // 현재 팝업 닫기
+    setIsLoginPopupOpen(false);  // 다른 팝업도 닫기
   };
-  // https://wishresearch.kr/resend-password-reset-email
+
   const handleResendEmail = async () => {
     try {
       const response = await fetch(
@@ -69,7 +71,9 @@ const RequestResetPassword = () => {
   };
 
   const handleGoToLogin = () => {
-    window.location.href = "/login"; // 로그인 페이지로 이동
+    setIsPopupOpen(false);       // 현재 팝업 닫기
+    setIsLoginPopupOpen(false);  // 다른 팝업도 닫기
+    window.location.href = "/";  // 메인 페이지로 이동
   };
 
   return (
@@ -108,10 +112,12 @@ const RequestResetPassword = () => {
           </div>
 
           <StyledButton
-              onClick={handleRequestReset}
-              disabled={isLoading || !name || !email}
-            >
-              {isLoading ? "임시 비밀번호 발급을 준비 중 입니다..." : "비밀번호 찾기"}
+            onClick={handleRequestReset}
+            disabled={isLoading || !name || !email}
+          >
+            {isLoading
+              ? "임시 비밀번호 발급을 준비 중 입니다..."
+              : "비밀번호 찾기"}
           </StyledButton>
 
           {message && <Message>{message}</Message>}
@@ -127,22 +133,17 @@ const RequestResetPassword = () => {
         )}
       </RequestResetContainer>
 
-      {/* <ContentsWrap>
-        <OrganismLeftSideBar />
-
-        <MainContent>
-          {isLoading && (
-            <LoadingOverlay>
-              <div className="loader"></div>
-            </LoadingOverlay>
-          )}
-        </MainContent>
-      </ContentsWrap> */}
+      {isLoading && (
+        <LoadingOverlay>
+          <div className="loader"></div>
+        </LoadingOverlay>
+      )}
     </>
   );
 };
 
 export default RequestResetPassword;
+
 
 // CSS-in-JS 스타일링
 const RequestResetContainer = styled.div`

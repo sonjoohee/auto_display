@@ -7,8 +7,18 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import AtomInput from '../atoms/AtomInput';
 import AtomButton from '../atoms/AtomButton';
 import { isValidEmail, isValidPassword } from '../atoms/AtomValidation';
-import { nameAtom, signupEmailAtom, signupPasswordAtom, confirmPasswordAtom, roleAtom, statusAtom, errorAtom } from '../../../AtomStates';
+import {
+  nameAtom,
+  signupEmailAtom,
+  signupPasswordAtom,
+  confirmPasswordAtom,
+  roleAtom,
+  statusAtom,
+  errorAtom
+} from '../../../AtomStates';
 import MoleculeSignupPopup from './MoleculeSignupPopup'; // 팝업 컴포넌트 임포트
+
+import { IS_LOGIN_POPUP_OPEN, IS_SIGNUP_POPUP_OPEN } from '../../../AtomStates'; // 팝업 상태 atom 임포트
 
 import { palette } from '../../../../assets/styles/Palette';
 
@@ -26,6 +36,10 @@ const MoleculeSignupForm = () => {
   const [isSignupSuccessful, setSignupSuccessful] = useState(false); // 회원가입 성공 상태
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태
   const navigate = useNavigate();
+
+  // 팝업 상태 atom의 setter 가져오기
+  const [, setIsLoginPopupOpen] = useAtom(IS_LOGIN_POPUP_OPEN);
+  const [, setIsSignupPopupOpen] = useAtom(IS_SIGNUP_POPUP_OPEN);
 
   useEffect(() => {
     setError('');
@@ -61,7 +75,6 @@ const MoleculeSignupForm = () => {
     if (!validateForm()) return;
 
     setIsLoading(true); // 로딩 상태 시작
-// https://wishresearch.kr/api/user/signup/
 
     try {
       const response = await fetch('https://wishresearch.kr/api/user/signup/', {
@@ -79,7 +92,7 @@ const MoleculeSignupForm = () => {
         setStatus('inactive');
       } else {
         const result = await response.json();
-        setError(result.error || '회원가입 중 오류가 발생했습니다.');
+        setError(result.email || '회원가입 중 오류가 발생했습니다.');
       }
     } catch (error) {
       setError('서버와의 통신 중 오류가 발생했습니다.');
@@ -98,97 +111,99 @@ const MoleculeSignupForm = () => {
 
   const closePopup = () => {
     setSignupSuccessful(false);
-    navigate('/login');
+    setIsLoginPopupOpen(false);
+    setIsSignupPopupOpen(false);
+    setError('')
+    setName('');
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+    navigate('/');
   };
 
   return (
     <>
-    {isLoading && (
-      <LoadingOverlay>
-        <div className="loader"></div>
-      </LoadingOverlay>
-    )}
-    <SignupFormContainer>
-      <div>
-        <label htmlFor="name">이름<span>*</span></label>
-        <StyledAtomInput
-          id="name"
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="이름을 입력해주세요"
-        />
-      </div>
-
-      <div>
-        <label htmlFor="email">이메일<span>*</span></label>
-        <StyledAtomInput
-          id="email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="이메일 주소를 입력해주세요"
-        />
-      </div>
-
-      <div>
-        <label htmlFor="password">비밀번호<span>*</span></label>
-        <InputWrap>
+      {isLoading && (
+        <LoadingOverlay>
+          <div className="loader"></div>
+        </LoadingOverlay>
+      )}
+      <SignupFormContainer>
+        <div>
+          <label htmlFor="name">이름<span>*</span></label>
           <StyledAtomInput
-            type={showPassword ? "text" : "password"}
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="비밀번호를 입력해주세요"
+            id="name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="이름을 입력해주세요"
           />
-          <TogglePasswordButton onClick={togglePasswordVisibility}>
-            {showPassword ? <FaEye /> : <FaEyeSlash />}
-          </TogglePasswordButton>
-        </InputWrap>
-        <InputWrap>
+        </div>
+
+        <div>
+          <label htmlFor="email">이메일<span>*</span></label>
           <StyledAtomInput
-            type={showConfirmPassword ? "text" : "password"}
-            id="confirmPassword"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="비밀번호 확인을 입력해주세요"
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="이메일 주소를 입력해주세요"
           />
-          <TogglePasswordButton onClick={toggleConfirmPasswordVisibility}>
-            {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
-          </TogglePasswordButton>
-        </InputWrap>
-        <p>영문/숫자/특수문자 2가지 이상 혼합. 8~16자</p>
-      </div>
+        </div>
 
-      {error && <ErrorMessage>{error}</ErrorMessage>}
+        <div>
+          <label htmlFor="password">비밀번호<span>*</span></label>
+          <InputWrap>
+            <StyledAtomInput
+              type={showPassword ? "text" : "password"}
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="비밀번호를 입력해주세요"
+            />
+            <TogglePasswordButton onClick={togglePasswordVisibility}>
+              {showPassword ? <FaEye /> : <FaEyeSlash />}
+            </TogglePasswordButton>
+          </InputWrap>
+          <InputWrap>
+            <StyledAtomInput
+              type={showConfirmPassword ? "text" : "password"}
+              id="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="비밀번호 확인을 입력해주세요"
+            />
+            <TogglePasswordButton onClick={toggleConfirmPasswordVisibility}>
+              {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
+            </TogglePasswordButton>
+          </InputWrap>
+          <p>영문/숫자/특수문자 2가지 이상 혼합. 8~16자</p>
+        </div>
 
-      <TermsAndConditions>
-        <input
-          type="checkbox"
-          id="terms"
-          checked={termsAccepted}
-          onChange={(e) => setTermsAccepted(e.target.checked)}
-        />
-        <label htmlFor="terms">서비스 <a href="#">이용약관</a>과 <a href="#">개인정보처리방침</a>에 동의합니다.</label>
-      </TermsAndConditions>
+        {error && <ErrorMessage>{error}</ErrorMessage>}
 
-      <StyledAtomButton onClick={handleSignup} disabled={isLoading || !name || !email || !password || !confirmPassword || !termsAccepted}>
-        {isLoading ? "메일을 전송 중입니다..." : "회원가입"}
-      </StyledAtomButton>
+        <TermsAndConditions>
+          <input
+            type="checkbox"
+            id="terms"
+            checked={termsAccepted}
+            onChange={(e) => setTermsAccepted(e.target.checked)}
+          />
+          <label htmlFor="terms">서비스 <a href="#">이용약관</a>과 <a href="#">개인정보처리방침</a>에 동의합니다.</label>
+        </TermsAndConditions>
 
-      {/* <Footer>
-        이미 가입하셨나요? <a href="/login">로그인하기</a>
-      </Footer> */}
-
-    </SignupFormContainer>
-    {isSignupSuccessful && (
-        <MoleculeSignupPopup 
-          onClose={closePopup} 
+        <StyledAtomButton onClick={handleSignup} disabled={isLoading || !name || !email || !password || !confirmPassword || !termsAccepted}>
+          {isLoading ? "메일을 전송 중입니다..." : "회원가입"}
+        </StyledAtomButton>
+      </SignupFormContainer>
+      {isSignupSuccessful && (
+        <MoleculeSignupPopup
+          onClose={closePopup}
           email={email}
         />
       )}
     </>
-    );
+  );
 };
 
 export default MoleculeSignupForm;

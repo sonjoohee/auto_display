@@ -4,41 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 
-const MoleculePasswordResetPopup = ({ onClose, email }) => {
-  const navigate = useNavigate();
+const MoleculePasswordResetPopup = ({ onClose, email,handleResendEmail, handleGoToLogin}) => {
 
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
     }
-  };
-
-  const handleResendEmail = async () => {
-    try {
-      const response = await fetch(
-        "https://wishresearch.kr/api/user/passwordMail/",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email }),
-        }
-      );
-
-      if (response.ok) {
-        alert("비밀번호 재설정 이메일이 재발송되었습니다.");
-      } else {
-        const result = await response.json();
-        alert(result.error || "이메일 재발송 중 오류가 발생했습니다.");
-      }
-    } catch (error) {
-      console.error("이메일 재발송 요청 중 오류 발생:", error);
-      alert("서버와의 통신 중 오류가 발생했습니다.");
-    }
-  };
-
-  const handleGoToLogin = () => {
-    navigate("/");
-    console.log("메인 페이지로 이동");
   };
 
   return (
