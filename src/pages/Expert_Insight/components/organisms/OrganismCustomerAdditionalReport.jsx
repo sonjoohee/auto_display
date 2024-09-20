@@ -339,11 +339,21 @@ const OrganismCustomerAdditionalReport = ({
             }
           } else if (approachPath !== 1) {
             if (conversationStage === 2) {
-              updatedConversation2.push({
-                type: "system",
-                message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.keyword.result}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분야별 전문가의 의견도 확인해보세요`,
-                expertIndex: 0,
-              });
+              if (answerData.advise) {
+                // advise 상태일 경우
+                updatedConversation2.push({
+                  type: "system",
+                  message:
+                    "사실, 저는 비즈니스 전문가이기 때문에 더 이상 구체적인 도움을 드리기 어려워요. 하지만 귀하가 비즈니스 관련 고민을 공유해주신다면, 저는 귀하께 더욱 도움을 줄 수 있어요!",
+                  expertIndex: 0,
+                });
+              } else {
+                updatedConversation2.push({
+                  type: "system",
+                  message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.keyword.result}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분야별 전문가의 의견도 확인해보세요`,
+                  expertIndex: 0,
+                });
+              }
             } else if (conversationStage === 3) {
               if (answerData.advise) {
                 // advise 상태일 경우
