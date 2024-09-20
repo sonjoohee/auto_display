@@ -169,27 +169,28 @@ const OrganismCustomerAdditionalReport = ({
           );
           answerData = response.data.additional_question;
 
-          while(!answerData.hasOwnProperty("title")
-                //  || !answerData.sections[0].hasOwnProperty("title") ||
-                // !answerData.sections[1].hasOwnProperty("title") ||
-                // !answerData.sections[2].hasOwnProperty("title") ||
-                // !answerData.sections[3].hasOwnProperty("title") ||
-                // !answerData.sections[0].content.length ||
-                // !answerData.sections[1].content.length ||
-                // !answerData.sections[2].content.length ||
-                // !answerData.sections[3].content.length
-              ) {
-            response = await axios.post(
-              "https://wishresearch.kr/panels/customer_add_question",
-              data,
-              axiosConfig
-            );
-            answerData = response.data.additional_question;
-          }
-
           if (answerData.advise) {
             setAdvise(answerData.advise);
+          } else {
+            while(!answerData.hasOwnProperty("title")
+                  //  || !answerData.sections[0].hasOwnProperty("title") ||
+                  // !answerData.sections[1].hasOwnProperty("title") ||
+                  // !answerData.sections[2].hasOwnProperty("title") ||
+                  // !answerData.sections[3].hasOwnProperty("title") ||
+                  // !answerData.sections[0].content.length ||
+                  // !answerData.sections[1].content.length ||
+                  // !answerData.sections[2].content.length ||
+                  // !answerData.sections[3].content.length
+                ) {
+              response = await axios.post(
+                "https://wishresearch.kr/panels/customer_add_question",
+                data,
+                axiosConfig
+              );
+              answerData = response.data.additional_question;
+            }
           }
+
           // if (response.data.keyword.result_state == 1) {
           //   answerData = response.data.additional_question;
           // } else if (response.data.keyword.result_state == 0) {
