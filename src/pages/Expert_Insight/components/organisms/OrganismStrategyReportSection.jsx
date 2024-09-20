@@ -445,8 +445,7 @@ const Section = ({ title, content, isLast, expertIndex, selectedTab }) => {
       return (
         <>
           <strong>
-            <img src={images.Check} alt="" /> {/* 체크 이미지 추가 */}
-            {/* 경쟁사 대비 차별화 전략 */}
+            <img src={images.Check} alt="" />
             {title}
           </strong>
           <SubTextBox>
@@ -455,7 +454,7 @@ const Section = ({ title, content, isLast, expertIndex, selectedTab }) => {
                 <p>{item.text}</p>
               </div>
             ))}
-          </SubTextBox>
+          </SubTextBox> 
         </>
       );
     }
@@ -565,11 +564,12 @@ const Section = ({ title, content, isLast, expertIndex, selectedTab }) => {
                 }}
               >
                 {subItems.map((item, index) => (
-                  <div key={index} style={{ marginBottom: "10px" }}>
+                  // <div key={index} style={{ marginBottom: "10px" }}>
+                  <div key={index}>
                     {" "}
                     {/* 각 항목 간 마진 추가 */}
-                    <p>
-                      - {item.subTitle} : {item.text}
+                    <p className="dashList">
+                      {item.subTitle} : {item.text}
                     </p>
                   </div>
                 ))}
@@ -601,8 +601,8 @@ const Section = ({ title, content, isLast, expertIndex, selectedTab }) => {
                   <div key={index} style={{ marginBottom: "10px" }}>
                     {" "}
                     {/* 각 항목 간 마진 추가 */}
-                    <p>
-                      - {item.subTitle} : {item.text}
+                    <p className="dashList">
+                      {item.subTitle} : {item.text}
                     </p>
                   </div>
                 ))}
@@ -638,11 +638,12 @@ const Section = ({ title, content, isLast, expertIndex, selectedTab }) => {
                 }}
               >
                 {subItems.map((item, index) => (
-                  <div key={index} style={{ marginBottom: "10px" }}>
+                  // <div key={index} style={{ marginBottom: "10px" }}>
+                  <div key={index}>
                     {" "}
                     {/* 각 항목 간 마진 추가 */}
-                    <p>
-                      - {item.subTitle} : {item.text}
+                    <p className="dashList">
+                      {item.subTitle} : {item.text}
                     </p>
                   </div>
                 ))}
@@ -687,6 +688,7 @@ const Section = ({ title, content, isLast, expertIndex, selectedTab }) => {
               </div>
             </>
           )}
+
           {title === "고객 여정 맵핑" && (
             <>
               {/* 제목과 총평 출력 */}
@@ -734,13 +736,14 @@ const Section = ({ title, content, isLast, expertIndex, selectedTab }) => {
               </strong>
 
               {/* subTitle : text 형태로 기본 박스 안에 출력 */}
-              <div style={{ padding: "15px", borderRadius: "10px" }}>
+              {/* <div style={{ padding: "15px", borderRadius: "10px" }}> */}
+              <div>
                 {subItems.map((item, index) => (
-                  <div key={index} style={{ marginBottom: "10px" }}>
+                  <div key={index} style={{ marginTop: "10px" }}>
                     {" "}
                     {/* 각 항목 간 마진 추가 */}
-                    <p>
-                      - {item.subTitle} : {item.text}
+                    <p className="dashList">
+                      {item.subTitle} : {item.text}
                     </p>
                   </div>
                 ))}
@@ -757,13 +760,14 @@ const Section = ({ title, content, isLast, expertIndex, selectedTab }) => {
               </strong>
 
               {/* subTitle : text 형태로 기본 박스 안에 출력 */}
-              <div style={{ padding: "15px", borderRadius: "10px" }}>
+              {/* <div style={{ padding: "15px", borderRadius: "10px" }}> */}
+              <div>
                 {subItems.map((item, index) => (
-                  <div key={index} style={{ marginBottom: "10px" }}>
+                  <div key={index} style={{ marginTop: "10px" }}>
                     {" "}
                     {/* 각 항목 간 마진 추가 */}
-                    <p>
-                      - {item.subTitle} : {item.text}
+                    <p className="dashList">
+                      {item.subTitle} : {item.text}
                     </p>
                   </div>
                 ))}
@@ -773,13 +777,14 @@ const Section = ({ title, content, isLast, expertIndex, selectedTab }) => {
 
           {/* "시장 위치 평가 및 경쟁자 분석"일 때 별도의 처리 */}
           {title === "시장 위치 평가 및 경쟁자 분석" && (
-            <BgStyledSection>
-              <h4>
+            <>
+              <strong>
                 <img src={images.Check} alt="" />
                 {title}
-              </h4>
+              </strong>
               {nonSubTitleItems.length > 0 && <p>{nonSubTitleItems[0].text}</p>}
 
+              <BgStyledSection>
               <div className="flexBox">
                 {subTitleItems.map((item, index) => (
                   <div className="bgWhite" key={index}>
@@ -791,7 +796,6 @@ const Section = ({ title, content, isLast, expertIndex, selectedTab }) => {
                     <ul>
                       {item.subText1 && (
                         <li>
-                          -{" "}
                           {item.subText1.startsWith("강점:")
                             ? item.subText1
                             : `강점: ${item.subText1}`}
@@ -799,7 +803,6 @@ const Section = ({ title, content, isLast, expertIndex, selectedTab }) => {
                       )}
                       {item.subText2 && (
                         <li>
-                          -{" "}
                           {item.subText2.startsWith("약점:")
                             ? item.subText2
                             : `약점: ${item.subText2}`}
@@ -809,7 +812,8 @@ const Section = ({ title, content, isLast, expertIndex, selectedTab }) => {
                   </div>
                 ))}
               </div>
-            </BgStyledSection>
+              </BgStyledSection>
+            </>
           )}
 
           {title === "고객 여정 맵핑 터치포인트 단계 최적화 방안" && (
@@ -916,7 +920,7 @@ const Section = ({ title, content, isLast, expertIndex, selectedTab }) => {
                   ))}
 
                 {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
-                {subTitleItems.length > 0 && (
+                {/* {subTitleItems.length > 0 && (
                   <DynamicGrid columns={subTitleItems.length}>
                     {subTitleItems.map((item, index) => (
                       <div key={index}>
@@ -933,6 +937,27 @@ const Section = ({ title, content, isLast, expertIndex, selectedTab }) => {
                         )}
                       </div>
                     ))}
+                  </DynamicGrid>
+                )} */}
+
+                {subTitleItems.length > 0 && (
+                  <DynamicGrid columns={subTitleItems.length}>
+                    <div>
+                    {subTitleItems.map((item, index) => (
+                      <>
+                        <p key={index} className="dashList">{item.subTitle} : {item.text}</p>
+                        {item.subText1 && (
+                          <SubTextBox>{item.subText1}</SubTextBox>
+                        )}
+                        {item.subText2 && (
+                          <SubTextBox>{item.subText2}</SubTextBox>
+                        )}
+                        {item.subText3 && (
+                          <SubTextBox>{item.subText3}</SubTextBox>
+                        )}
+                      </>
+                    ))}
+                    </div>
                   </DynamicGrid>
                 )}
               </>
@@ -1114,6 +1139,21 @@ const AnalysisSection = styled.div`
 
     span {
       color: ${palette.red};
+    }
+  }
+
+  p.dashList {
+    position:relative;
+    padding-left:12px;
+    
+    &:before {
+      position:absolute;
+      top:11px;
+      left:0;
+      width:5px;
+      height:1px;
+      background:${palette.darkGray};
+      content:'';
     }
   }
 `;
@@ -1328,9 +1368,9 @@ const NumDynamicGrid = styled.div`
 const BgStyledSection = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 20px;
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0);
+  // padding: 20px;
+  // border-radius: 10px;
+  // background: rgba(0, 0, 0, 0.03);
 
   h4 {
     display: flex;
@@ -1368,7 +1408,8 @@ const BgStyledSection = styled.div`
       .title {
         color: ${palette.black};
         font-weight: 700;
-        margin-bottom: 8px;
+        // margin-bottom: 8px;
+        margin-bottom:0;
         font-size: 0.875rem;
       }
 
@@ -1378,6 +1419,7 @@ const BgStyledSection = styled.div`
         gap: 5px;
 
         li {
+          position:relative;
           font-size: 0.875rem;
           color: ${palette.darkGray};
           line-height: 1.5;
@@ -1385,7 +1427,7 @@ const BgStyledSection = styled.div`
 
           &:before {
             position: absolute;
-            top: 8px;
+            top: 11px;
             left: 0;
             width: 5px;
             height: 1px;
@@ -1394,6 +1436,12 @@ const BgStyledSection = styled.div`
           }
         }
       }
+    }
+
+    .bgWhite {
+      padding:16px;
+      border:0;
+      gap:10px;
     }
   }
 `;

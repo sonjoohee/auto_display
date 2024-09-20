@@ -791,8 +791,14 @@ const OrganismLeftSideBar = () => {
                 </div>
 
                 <button className="more" onClick={moreProfile}>
-                  <img src={images.AccountSetting} alt="" />
+                  {/* <img src={images.AccountSetting} alt="" /> */}
                   {/* <span>{sessionStorage.getItem("userName")}</span> */}
+                  <span>
+                    {(() => {
+                      const userName = sessionStorage.getItem("userName");
+                      return userName && userName.length > 1 ? `${userName.slice(0, 1)}` : userName;
+                    })()}
+                  </span>
                 </button>
               </LogoutBtnWrap>
 
@@ -1001,6 +1007,7 @@ const Popup = styled.div`
 
       button {
         flex: 1;
+        font-family: "Pretendard", "Poppins";
         font-size: 0.875rem;
         font-weight: 600;
         color: ${palette.blue};
@@ -1451,7 +1458,8 @@ const AccordionContent = styled.div`
     font-size: 0.875rem;
     color: ${palette.gray};
     text-align: left;
-    padding: 8px 0 8px 15px;
+    // padding: 8px 0 8px 15px;
+    padding: 0 0 0 22px;
     cursor: pointer;
 
     .insight-toggle {
@@ -1471,7 +1479,8 @@ const AccordionContent = styled.div`
       width: 10px;
       height: 10px;
       border-radius: 2px;
-      background: ${palette.lightGray};
+      // background: ${palette.lightGray};
+      background:#cecece;
       content: "";
       transition: all 0.5s;
     }
