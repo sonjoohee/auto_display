@@ -10,7 +10,9 @@ import { isValidEmail } from "../atoms/AtomValidation";
 import {
   nameAtom,
   emailAtom,
+  signupEmailAtom,
   passwordAtom,
+  signupPasswordAtom,
   confirmPasswordAtom,
   currentUserAtom,
   errorAtom,
@@ -31,7 +33,9 @@ import MoleculeResetPasswordPopup from "./MoleculeResetPasswordPopup";
 const MoleculeLoginForm = () => {
   const [name, setName] = useAtom(nameAtom);
   const [email, setEmail] = useAtom(emailAtom);
+  const [, setSignupEmail] = useAtom(signupEmailAtom);
   const [password, setPassword] = useAtom(passwordAtom);
+  const [, setSignupPassword] = useAtom(signupPasswordAtom);
   const [confirmPassword, setConfirmPassword] = useAtom(confirmPasswordAtom);
   const [error, setError] = useAtom(errorAtom);
   const [, setCurrentUser] = useAtom(currentUserAtom);
@@ -145,7 +149,9 @@ const MoleculeLoginForm = () => {
     setError("");
     setName('');
     setEmail('');
+    setSignupEmail('');
     setPassword('');
+    setSignupPassword('');
     setConfirmPassword('');
   };
 
