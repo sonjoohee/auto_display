@@ -114,6 +114,10 @@ const MoleculeSignupForm = () => {
     setIsLoginPopupOpen(false);
     setIsSignupPopupOpen(false);
     setError('')
+    setName('');
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
     navigate('/');
   };
 
