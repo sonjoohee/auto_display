@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { palette } from "../../../../assets/styles/Palette";
+import images from "../../../../assets/styles/Images";
 
 const MoleculePasswordResetPopup = ({ onClose, email,handleResendEmail, handleGoToLogin}) => {
 
@@ -14,6 +16,29 @@ const MoleculePasswordResetPopup = ({ onClose, email,handleResendEmail, handleGo
     <PasswordResetPopupOverlay onClick={handleOverlayClick}>
       <PopupContent>
         <CloseButton onClick={onClose}>X</CloseButton>
+
+        <span>
+          <img src={images.CheckMark} alt="" />
+        </span>
+
+        <p>
+          <strong>임시 비밀번호가 발송되었습니다.</strong>
+          <span>
+            이메일을 확인하여 임시 비밀번호로 로그인해주세요<br />
+            메일을 받지 못하셨다면 스팸함을 확인하거나 메일 재발송을 해주세요
+          </span>
+        </p>
+
+        <div className="btnWrap">
+          <button type="button" onClick={handleResendEmail}>
+            재발송하기
+          </button>
+          <button type="button" onClick={handleGoToLogin}>
+            로그인 바로가기
+          </button>
+        </div>
+
+        {/* 
         <Content>
           <Title>비밀번호 재설정 요청이 완료되었습니다.</Title>
           <Description>
@@ -32,6 +57,7 @@ const MoleculePasswordResetPopup = ({ onClose, email,handleResendEmail, handleGo
             </ActionButton>
           </ButtonGroup>
         </Content>
+         */}
       </PopupContent>
     </PasswordResetPopupOverlay>
   );
@@ -54,13 +80,71 @@ const PasswordResetPopupOverlay = styled.div`
 `;
 
 const PopupContent = styled.div`
-  background: white;
-  padding: 40px;
-  border-radius: 10px;
-  position: relative;
-  width: 500px;
-  max-width: 90%;
-  text-align: center;
+position: fixed;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+display: flex;
+flex-direction: column;
+width: 100%;
+max-width: 400px;
+text-align: center;
+padding: 45px 24px 24px;
+border-radius: 10px;
+background: ${palette.white};
+
+p {
+  font-family: "Pretendard", "Poppins";
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin: 20px auto 24px;
+  strong {
+    font-weight: 500;
+    display: block;
+  }
+  span {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: #8c8c8c;
+    display: block;
+    margin-top: 8px;
+  }
+}
+.btnWrap {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-top: 16px;
+  border-top: 1px solid ${palette.lineGray};
+  button {
+    flex: 1;
+    font-family: "Pretendard", "Poppins";
+    color: ${palette.gray};
+    font-weight: 600;
+    font-size: 0.875rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    &:last-child {
+      color: ${palette.blue};
+      background: none;
+    }
+  }
+  a {
+    flex: 1;
+    font-family: "Pretendard", "Poppins";
+    color: ${palette.gray};
+    font-weight: 600;
+    font-size: 0.75rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    &:last-child {
+      color: ${palette.blue};
+      background: none;
+    }
+  }
+}
 `;
 
 const CloseButton = styled.button`

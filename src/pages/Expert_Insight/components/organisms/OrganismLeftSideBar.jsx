@@ -265,9 +265,14 @@ const OrganismLeftSideBar = () => {
             },
           }
         );
-        setChatList(response.data); // 서버에서 받은 대화 리스트 저장
+        const sortedChatList = response.data
+          .filter((chat) => chat.business_info !== null) // business_info가 null이면(기초보고서 생성 전) 히스토리에 남기지 않음
+          .sort((a, b) => b.timestamp - a.timestamp); // 최근 날짜 순으로 정렬
 
-        // setChatList(response.chat_data); // 서버에서 받은 대화 리스트 저장
+        setChatList(sortedChatList);
+
+        console.log("히스토리", sortedChatList);
+
       } catch (error) {
         console.error("대화 목록 가져오기 오류:", error);
       }
@@ -660,15 +665,12 @@ const OrganismLeftSideBar = () => {
                             </div>
                           )}
                         </li>
-                      ))
-                    ) : (
-                      <li>
-                        <p>최근 저장한 보고서가 없습니다</p>
-                      </li>
-                    )}
-                  </ul>
-                </AccordionContent>
-
+                    ))
+                  ) : (
+                    <p>저장한 보고서가 없습니다</p>
+                  )}
+                </ul>
+              </AccordionContent>
             </AccordionItem>
 
             {selectedReport && (
@@ -689,91 +691,252 @@ const OrganismLeftSideBar = () => {
                 프로젝트 히스토리
               </label>
               <AccordionContent className="scrollbar">
+                {chatList && chatList.length > 0 ?               
                   <div>
-                    <strong>최근 작업</strong>
-                    <ul>
-                      {chatList && chatList.length > 0 ? (
-                        chatList.map((chat, index) => (
-                          <li key={index}>
-                            <p onClick={() => handleConversationClick(chat.id)}>
-                              {chat.business_info
-                                ? chat.business_info
-                                : "기초보고서를 생성 중..."}
-                            </p>
-                            <span
-                              id={`insight-toggle-${index}`}
-                              style={{
-                                display: "inline-block",
-                                padding: "10px",
-                                cursor: "pointer",
-                              }}
-                              onClick={() => editBoxToggle(index)}
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="14"
-                                height="3"
-                                viewBox="0 0 14 3"
-                                fill="none"
-                              >
-                                <circle
-                                  cx="2.0067"
-                                  cy="1.51283"
-                                  r="1.49694"
-                                  transform="rotate(-90 2.0067 1.51283)"
-                                  fill="#A0A0A0"
-                                />
-                                <circle
-                                  cx="7.00084"
-                                  cy="1.51283"
-                                  r="1.49694"
-                                  transform="rotate(-90 7.00084 1.51283)"
-                                  fill="#A0A0A0"
-                                />
-                                <circle
-                                  cx="11.993"
-                                  cy="1.51283"
-                                  r="1.49694"
-                                  transform="rotate(-90 11.993 1.51283)"
-                                  fill="#A0A0A0"
-                                />
-                              </svg>
-                            </span>
-
-                            {editToggleIndex === index && (
-                              <div
-                                id={`insight-edit-box-${index}`}
-                                className="insight-toggle"
-                                ref={historyEditBoxRef}
-                              >
-                                <EditBox isEditToggle={editToggleIndex === index}>
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      handleChatDeleteButtonClick(chat.id)
-                                    }
+                    {chatList.some(chat => Date.now() - chat.timestamp <= 604800000) && (
+                      <>
+                        <strong>최근 대화</strong>
+                        <ul>
+                          {chatList
+                            .filter(chat => Date.now() - chat.timestamp <= 604800000)
+                            .map((chat) => (
+                              <li key={chat.num}>
+                                <p onClick={() => handleConversationClick(chat.id)}>
+                                  {chat.business_info}
+                                </p>
+                                <span
+                                  id={`insight-toggle-${chat.num}`}
+                                  style={{
+                                    display: "inline-block",
+                                    padding: "10px",
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() => editBoxToggle(chat.num)}
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="14"
+                                    height="3"
+                                    viewBox="0 0 14 3"
+                                    fill="none"
                                   >
-                                    <img src={images.IconDelete2} alt="" />
-                                    삭제
-                                  </button>
-                                  <button type="button">
-                                    <img src={images.IconEdit2} alt="" />
-                                    이름 변경
-                                  </button>
-                                </EditBox>
-                              </div>
-                            )}
-                          </li>
-                        ))
-                      ) : (
-                        <li>
-                          <p>최근 작업 내역이 없습니다</p>
-                        </li>
-                      )}
-                    </ul>
+                                    <circle
+                                      cx="2.0067"
+                                      cy="1.51283"
+                                      r="1.49694"
+                                      transform="rotate(-90 2.0067 1.51283)"
+                                      fill="#A0A0A0"
+                                    />
+                                    <circle
+                                      cx="7.00084"
+                                      cy="1.51283"
+                                      r="1.49694"
+                                      transform="rotate(-90 7.00084 1.51283)"
+                                      fill="#A0A0A0"
+                                    />
+                                    <circle
+                                      cx="11.993"
+                                      cy="1.51283"
+                                      r="1.49694"
+                                      transform="rotate(-90 11.993 1.51283)"
+                                      fill="#A0A0A0"
+                                    />
+                                  </svg>
+                                </span>
+                                
+                                {editToggleIndex === chat.num && (
+                                  <div
+                                    id={`insight-edit-box-${chat.num}`}
+                                    className="insight-toggle"
+                                    ref={historyEditBoxRef}
+                                  >
+                                    <EditBox isEditToggle={editToggleIndex === chat.num}>
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          handleChatDeleteButtonClick(chat.id)
+                                        }
+                                      >
+                                        <img src={images.IconDelete2} alt="" />
+                                        삭제
+                                      </button>
+                                      <button type="button">
+                                        <img src={images.IconEdit2} alt="" />
+                                        이름 변경
+                                      </button>
+                                    </EditBox>
+                                  </div>
+                                )}
+                              </li>
+                            ))}
+                        </ul>
+                      </>
+                    )}
+                    {chatList.some(chat => (Date.now() - chat.timestamp) > 604800000 && (Date.now() - chat.timestamp <= 2592000000)) && (
+                      <>            
+                      <strong>지난 7일</strong>
+                        <ul>
+                          {chatList
+                            .filter(chat => Date.now() - chat.timestamp > 604800000 && Date.now() - chat.timestamp <= 2592000000)
+                            .map((chat) => (
+                              <li key={chat.num}>
+                                <p onClick={() => handleConversationClick(chat.id)}>
+                                  {chat.business_info}
+                                </p>
+                                <span
+                                  id={`insight-toggle-${chat.num}`}
+                                  style={{
+                                    display: "inline-block",
+                                    padding: "10px",
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() => editBoxToggle(chat.num)}
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="14"
+                                    height="3"
+                                    viewBox="0 0 14 3"
+                                    fill="none"
+                                  >
+                                    <circle
+                                      cx="2.0067"
+                                      cy="1.51283"
+                                      r="1.49694"
+                                      transform="rotate(-90 2.0067 1.51283)"
+                                      fill="#A0A0A0"
+                                    />
+                                    <circle
+                                      cx="7.00084"
+                                      cy="1.51283"
+                                      r="1.49694"
+                                      transform="rotate(-90 7.00084 1.51283)"
+                                      fill="#A0A0A0"
+                                    />
+                                    <circle
+                                      cx="11.993"
+                                      cy="1.51283"
+                                      r="1.49694"
+                                      transform="rotate(-90 11.993 1.51283)"
+                                      fill="#A0A0A0"
+                                    />
+                                  </svg>
+                                </span>
+                                
+                                {editToggleIndex === chat.num && (
+                                  <div
+                                    id={`insight-edit-box-${chat.num}`}
+                                    className="insight-toggle"
+                                    ref={historyEditBoxRef}
+                                  >
+                                    <EditBox isEditToggle={editToggleIndex === chat.num}>
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          handleChatDeleteButtonClick(chat.id)
+                                        }
+                                      >
+                                        <img src={images.IconDelete2} alt="" />
+                                        삭제
+                                      </button>
+                                      <button type="button">
+                                        <img src={images.IconEdit2} alt="" />
+                                        이름 변경
+                                      </button>
+                                    </EditBox>
+                                  </div>
+                                )}
+                              </li>
+                            ))}
+                        </ul>
+                      </>
+                    )}
+                    {chatList.some(chat => Date.now() - chat.timestamp > 2592000000) && (
+                      <>            
+                      <strong>지난 30일</strong>
+                        <ul>
+                          {chatList
+                            .filter(chat => Date.now() - chat.timestamp > 2592000000)
+                            .map((chat) => (
+                              <li key={chat.num}>
+                                <p onClick={() => handleConversationClick(chat.id)}>
+                                  {chat.business_info}
+                                </p>
+                                <span
+                                  id={`insight-toggle-${chat.num}`}
+                                  style={{
+                                    display: "inline-block",
+                                    padding: "10px",
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() => editBoxToggle(chat.num)}
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="14"
+                                    height="3"
+                                    viewBox="0 0 14 3"
+                                    fill="none"
+                                  >
+                                    <circle
+                                      cx="2.0067"
+                                      cy="1.51283"
+                                      r="1.49694"
+                                      transform="rotate(-90 2.0067 1.51283)"
+                                      fill="#A0A0A0"
+                                    />
+                                    <circle
+                                      cx="7.00084"
+                                      cy="1.51283"
+                                      r="1.49694"
+                                      transform="rotate(-90 7.00084 1.51283)"
+                                      fill="#A0A0A0"
+                                    />
+                                    <circle
+                                      cx="11.993"
+                                      cy="1.51283"
+                                      r="1.49694"
+                                      transform="rotate(-90 11.993 1.51283)"
+                                      fill="#A0A0A0"
+                                    />
+                                  </svg>
+                                </span>
+                                
+                                {editToggleIndex === chat.num && (
+                                  <div
+                                    id={`insight-edit-box-${chat.num}`}
+                                    className="insight-toggle"
+                                    ref={historyEditBoxRef}
+                                  >
+                                    <EditBox isEditToggle={editToggleIndex === chat.num}>
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          handleChatDeleteButtonClick(chat.id)
+                                        }
+                                      >
+                                        <img src={images.IconDelete2} alt="" />
+                                        삭제
+                                      </button>
+                                      <button type="button">
+                                        <img src={images.IconEdit2} alt="" />
+                                        이름 변경
+                                      </button>
+                                    </EditBox>
+                                  </div>
+                                )}
+                              </li>
+                            ))}
+                        </ul>
+                      </>
+                    )}
                   </div>
-                </AccordionContent>
-
+                  :
+                  <ul> 
+                    <p>최근 대화 내역이 없습니다</p>
+                  </ul>
+                }
+              </AccordionContent>
             </AccordionItem>
           </AccordionMenu>
         </SideBarMenu>
@@ -791,8 +954,14 @@ const OrganismLeftSideBar = () => {
                 </div>
 
                 <button className="more" onClick={moreProfile}>
-                  <img src={images.AccountSetting} alt="" />
+                  {/* <img src={images.AccountSetting} alt="" /> */}
                   {/* <span>{sessionStorage.getItem("userName")}</span> */}
+                  <span>
+                    {(() => {
+                      const userName = sessionStorage.getItem("userName");
+                      return userName && userName.length > 1 ? `${userName.slice(0, 1)}` : userName;
+                    })()}
+                  </span>
                 </button>
               </LogoutBtnWrap>
 
@@ -891,13 +1060,13 @@ const OrganismLeftSideBar = () => {
             <span>
               <img src={images.ExclamationMark} alt="" />
             </span>
-            <p>정말 이 대화를 삭제하시겠습니까?</p>
+            <p>정말 삭제하시겠습니까?</p>
             <div className="btnWrap">
-              <button type="button" onClick={handleDeleteHistoryConfirm}>
-                확인
-              </button>
               <button type="button" onClick={handleDeleteCancel}>
                 취소
+              </button>
+              <button type="button" onClick={handleDeleteHistoryConfirm}>
+                확인
               </button>
             </div>
           </div>
@@ -916,7 +1085,10 @@ const OrganismLeftSideBar = () => {
             <span>
               <img src={images.ExclamationMark} alt="" />
             </span>
-            <p>정말 로그아웃하시겠습니까?</p>
+            <p>
+              <strong>정말 로그아웃하시겠습니까?</strong>
+              <span>로그아웃하시면 모든 계정 세션이 종료됩니다.</span>
+            </p>
             <div className="btnWrap">
               <button type="button" onClick={handleLogoutConfirm}>
                 확인
@@ -989,11 +1161,24 @@ const Popup = styled.div`
     background: ${palette.white};
 
     p {
+      font-family: "Pretendard", "Poppins";
       font-size: 0.875rem;
       font-weight: 500;
       margin: 20px auto 24px;
-    }
+      strong {
+        font-weight: 500;
+        display: block;
+      }
 
+      span {
+        font-size: 0.75rem !important;
+        font-weight: 400;
+        color: #8c8c8c;
+        display: block;
+        margin-top: 8px;
+      }
+    }
+    
     .btnWrap {
       display: flex;
       align-items: center;
@@ -1001,6 +1186,7 @@ const Popup = styled.div`
 
       button {
         flex: 1;
+        font-family: 'Pretendard', 'Poppins';
         font-size: 0.875rem;
         font-weight: 600;
         color: ${palette.blue};
@@ -1431,6 +1617,7 @@ const AccordionContent = styled.div`
     color: ${palette.gray};
     text-align: left;
     display: block;
+    margin-top: 20px;
   }
 
   ul {
@@ -1440,6 +1627,25 @@ const AccordionContent = styled.div`
     margin: 0 12px;
     // margin-top:10px;
   }
+
+  p {
+    width: 100%;
+    min-height: 19px;
+    font-family: "Pretendard", "Poppins";
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    color: ${palette.darkGray};
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    font-family: "Pretendard";
+    font-size: 0.875rem;
+    text-align: left;
+    padding: 8px 0 8px 15px;
+  }    
 
   li {
     position: relative;
@@ -1451,7 +1657,7 @@ const AccordionContent = styled.div`
     font-size: 0.875rem;
     color: ${palette.gray};
     text-align: left;
-    padding: 8px 0 8px 15px;
+    padding: 0 0 0 22px;
     cursor: pointer;
 
     .insight-toggle {
@@ -1471,7 +1677,7 @@ const AccordionContent = styled.div`
       width: 10px;
       height: 10px;
       border-radius: 2px;
-      background: ${palette.lightGray};
+      background: #CECECE;
       content: "";
       transition: all 0.5s;
     }
