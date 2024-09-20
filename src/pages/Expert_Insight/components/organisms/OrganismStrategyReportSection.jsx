@@ -371,6 +371,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               <Section
                 key={index}
                 title={section.title}
+                title_text={section.text}
                 content={section.content}
                 isLast={index === sections.length - 1}
                 expertIndex={expertIndex}
@@ -401,7 +402,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   );
 };
 
-const Section = ({ title, content, isLast, expertIndex, selectedTab }) => {
+const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }) => {
   // 서브 타이틀이 있는 항목과 없는 항목을 분리
   const subTitleItems = content.filter((item) => item.subTitle);
   const nonSubTitleItems = content.filter((item) => !item.subTitle);
@@ -417,49 +418,7 @@ const Section = ({ title, content, isLast, expertIndex, selectedTab }) => {
   };
 
   // 기존 subTitle과 text를 합쳐 새로운 text 생성
-  const mergeSubTitleAndText = (subTitle, text) => `${subTitle} : ${text}`;
 
-  // 두 섹션의 데이터를 결합하여 하나의 섹션처럼 처리 (이전 섹션들의 combinedContent 포함)
-  const combinedContent = [
-    ...subTitleItems.map((item) => ({
-      text: mergeSubTitleAndText(item.subTitle, item.text),
-    })),
-  ];
-
-  // 전역적으로 두 섹션의 데이터를 저장할 수 있는 별도의 배열을 생성 (전역적으로 이 두 섹션의 데이터를 병합)
-  const globalCombinedContent = [];
-
-  // 이 함수는 "주요 차별화 요소"와 "차별화 전략 제안"이 있을 때 데이터를 병합해서 한 번만 렌더링
-  const renderCombinedSections = () => {
-    if (
-      title === "주요 차별화 요소" ||
-      title === "차별화 전략 제안" ||
-      title === "경쟁 압박 대처 방안" ||
-      title === "장기적인 경쟁 우위 전략"
-    ) {
-      // 중복 호출 방지를 위해 한 번 병합된 후 다시 병합되지 않도록 확인
-      if (globalCombinedContent.length === 0) {
-        globalCombinedContent.push(...combinedContent); // 데이터 병합
-      }
-
-      return (
-        <>
-          <strong>
-            <img src={images.Check} alt="" /> {/* 체크 이미지 추가 */}
-            {/* 경쟁사 대비 차별화 전략 */}
-            {title}
-          </strong>
-          <SubTextBox>
-            {globalCombinedContent.map((item, index) => (
-              <div key={index}>
-                <p>{item.text}</p>
-              </div>
-            ))}
-          </SubTextBox>
-        </>
-      );
-    }
-  };
 
   return (
     <BoxWrap
@@ -468,7 +427,6 @@ const Section = ({ title, content, isLast, expertIndex, selectedTab }) => {
       selectedTab={selectedTab}
     >
       {/* "주요 차별화 요소"와 "차별화 전략 제안" 데이터를 결합하여 한 번만 렌더링 */}
-      {renderCombinedSections()}
       {/* 3번 전문가의 2번째 탭을 위한 조건 */}
       {expertIndex === "3" && selectedTab === 1 ? (
         <>
@@ -490,8 +448,8 @@ const Section = ({ title, content, isLast, expertIndex, selectedTab }) => {
           {subTitleItems.length > 0 &&
             subTitleItems.map((item, index) => (
               <SubTextBox key={index}>
-                <SubTitle>{item.subTitle}</SubTitle>
-                <p>{item.text}</p>
+                <SubTitle>- {item.subTitle}</SubTitle>
+                <p>- {item.text}</p>
                 {item.subText1 && <SubTextBox>{item.subText1}</SubTextBox>}
                 {item.subText2 && <SubTextBox>{item.subText2}</SubTextBox>}
                 {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
@@ -789,20 +747,20 @@ const Section = ({ title, content, isLast, expertIndex, selectedTab }) => {
                       {item.subTitle}
                     </strong>
                     <ul>
-                      {item.subText1 && (
+                      {item.text && (
                         <li>
                           -{" "}
-                          {item.subText1.startsWith("강점:")
-                            ? item.subText1
-                            : `강점: ${item.subText1}`}
+                          {item.text.startsWith("강점:")
+                            ? item.text
+                            : `강점: ${item.text}`}
                         </li>
                       )}
-                      {item.subText2 && (
+                      {item.subtext && (
                         <li>
                           -{" "}
-                          {item.subText2.startsWith("약점:")
-                            ? item.subText2
-                            : `약점: ${item.subText2}`}
+                          {item.subtext.startsWith("약점:")
+                            ? item.subtext
+                            : `약점: ${item.subtext}`}
                         </li>
                       )}
                     </ul>
@@ -832,6 +790,30 @@ const Section = ({ title, content, isLast, expertIndex, selectedTab }) => {
                 ))}
               </div>
             </BgStyledSection>
+          )}
+
+        {(title === "경쟁사 대비 차별화 전략" || 
+          title === "시장 내 경쟁 우위 확보 방안" || 
+          title === "주요 타겟층 특징" || 
+          title === "콘텐츠 및 마케팅 전략") && (
+            <>
+             {title_text && <p>{title_text}</p>}
+            <DoubleGrid columns={2}> {/* 2개의 컬럼을 생성하여 가로로 나열 */}
+              {content.map((section, sectionIndex) => (
+                <SectionWrapper key={sectionIndex}> {/* 각 섹션을 감싸는 div */}
+                  {/* section.title 출력 */}
+                  <SubTitle>{section.title}</SubTitle>
+
+                  {/* subContent를 하나의 DynamicGrid 안에서 출력 */}
+                  {section.subContent.map((item, itemIndex) => (
+                    <div key={itemIndex}>
+                      <p>{item.subTitle} : {item.text}</p>
+                    </div>
+                  ))}
+                </SectionWrapper>
+              ))}
+            </DoubleGrid>
+            </>
           )}
 
           {/* "특징" 또는 "차별화 요소" 섹션을 처리 */}
@@ -1395,5 +1377,40 @@ const BgStyledSection = styled.div`
         }
       }
     }
+  }
+`;
+const DoubleGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(${(props) => props.columns}, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+  padding: 12px; /* 가장 큰 div에 padding 적용 */
+  border-radius: 10px;
+
+  div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    /* 각 개별 div에서는 border를 제거 */
+  }
+
+p {
+  margin: 0;
+  /* 텍스트가 생략되지 않도록 아래 스타일을 제거 */
+  overflow: visible; /* 숨기지 않도록 */
+  text-overflow: unset; /* 생략하지 않음 */
+  display: block; /* 줄바꿈을 정상적으로 처리 */
+}
+
+`;
+const SectionWrapper = styled.div`
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid ${palette.lineGray}; /* 각 section에만 border 적용 */
+  margin-bottom: 10px; /* 섹션 간 간격 추가 */
+  
+  div {
+    margin-bottom: 8px; /* subContent 간의 간격 */
   }
 `;
