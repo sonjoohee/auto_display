@@ -992,7 +992,7 @@ const DynamicGrid = styled.div`
 const AnalysisSection = styled.div`
   position: relative;
   max-width: 1135px;
-  width: 91.5%;
+  width: 100%;
   text-align: left;
   margin-top: 25px;
   padding: 30px;
@@ -1042,7 +1042,7 @@ const BgStyledSection = styled.div`
   flex-direction: column;
   padding: 20px;
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.03);
+  background: rgba(0, 0, 0, 0);
 
   h4 {
     display: flex;
@@ -1399,7 +1399,7 @@ const NumDynamicGrid = styled.div`
     margin: 0;
     font-size: 0.875rem;
     font-weight: 400;
-    color: ${palette.darkGray};
+    color: ${palette.black};
     line-height: 1.5;
   }
 `;

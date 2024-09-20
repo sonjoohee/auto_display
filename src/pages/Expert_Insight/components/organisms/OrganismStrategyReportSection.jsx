@@ -1330,7 +1330,7 @@ const BgStyledSection = styled.div`
   flex-direction: column;
   padding: 20px;
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.03);
+  background: rgba(0, 0, 0, 0);
 
   h4 {
     display: flex;
