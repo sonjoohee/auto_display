@@ -138,6 +138,7 @@ const MoleculeLoginForm = () => {
   };
   const closeSignPopup = () => {
     setIsSignPopupOpen(false); // 회원가입 팝업 닫기
+    setError("");
   };
 
   const [isPasswordRestPopupOpen, setIsPasswordRestPopupOpen] = useState(false); // 비밀번호 리셋 팝업 상태 관리
