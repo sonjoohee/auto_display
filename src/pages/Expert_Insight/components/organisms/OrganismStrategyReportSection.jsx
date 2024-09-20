@@ -822,6 +822,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
               <>
                 {subTitleItems.map((item, index) => (
                   <SeparateSection key={index}>
+                    <SectionWrapper_2>
                     <strong>
                       <span className="number">{index + 1}</span>{" "}
                       {/* 번호 추가 */}
@@ -857,6 +858,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
                         </div>
                       )}
                     </NumDynamicGrid>
+                    </SectionWrapper_2>
                   </SeparateSection>
                 ))}
               </>
@@ -1331,7 +1333,7 @@ const BgStyledSection = styled.div`
       display: flex;
       flex-direction: column;
       gap: 4px; /* BgBox와 동일하게 설정 */
-      padding: 10px; /* BgBox와 동일하게 설정 */
+      padding: 12px; /* BgBox와 동일하게 설정 */
       border-radius: 10px;
       border: 1px solid ${palette.lineGray};
       background-color: ${palette.white}; /* 하얀 배경 */
@@ -1413,4 +1415,9 @@ const SectionWrapper = styled.div`
   div {
     margin-bottom: 8px; /* subContent 간의 간격 */
   }
+`;
+const SectionWrapper_2 = styled.div`
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid ${palette.lineGray}; /* 각 section에만 border 적용 */
 `;
