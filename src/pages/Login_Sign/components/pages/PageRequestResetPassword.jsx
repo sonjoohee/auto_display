@@ -127,17 +127,11 @@ const RequestResetPassword = () => {
         )}
       </RequestResetContainer>
 
-      {/* <ContentsWrap>
-        <OrganismLeftSideBar />
-
-        <MainContent>
           {isLoading && (
             <LoadingOverlay>
               <div className="loader"></div>
             </LoadingOverlay>
           )}
-        </MainContent>
-      </ContentsWrap> */}
     </>
   );
 };
