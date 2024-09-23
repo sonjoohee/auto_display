@@ -148,6 +148,11 @@ const OrganismLeftSideBar = () => {
   const toggleRef = useRef(null); 
   
   const [editToggleIndex, setEditToggleIndex] = useState(null); // 특정 인덱스를 저장
+  const [editBoxPosition, setEditBoxPosition] = useState({ top: 0, left: 0 });
+  const accordionContentRef = useRef(null);
+  const [insightEditBoxPosition, setInsightEditBoxPosition] = useState({ top: 0, left: 0 });
+  const insightAccordionContentRef = useRef(null);
+
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -195,29 +200,56 @@ const OrganismLeftSideBar = () => {
     };
   }, [historyEditBoxRef]);
 
-  const editBoxToggle = (index) => {
-    if (isLoading) return;
-    // 현재 열려 있는 항목을 확인하고 상태를 토글합니다.
-    setEditToggleIndex((prevIndex) => (prevIndex === index ? null : index));
 
-    // 메뉴 위치 조정
-    const button = document.querySelector(`#insight-toggle-${index}`);
-    const editBox = document.querySelector(`#insight-edit-box-${index}`);
-
-    if (button && editBox) {
-      const rect = button.getBoundingClientRect();
-      editBox.style.top = `${rect.top}px`;
-      editBox.style.left = `${rect.right + 10}px`;
+  const editBoxToggle = (index, event, category) => {
+    console.log('editBoxPosition:', editBoxPosition);
+    if (editToggleIndex === index) {
+      // 이미 열려 있으면 아무 동작 안 함
+      return;
+    }
+  
+    setEditToggleIndex(index);
+  
+    if (event && accordionContentRef.current) {
+      const container = accordionContentRef.current;
+      const clickedElement = event.currentTarget;
+  
+      const top = clickedElement.offsetTop - container.scrollTop;
+      let left = clickedElement.offsetLeft + clickedElement.offsetWidth + 10;
+  
+      // category에 따라 이동
+      if (category === 'recent') {
+        left -= 40; // 최근 대화면 40px 왼쪽 이동
+      } else if (category === '7days') {
+        left -= 190; // 지난 7일이면 190px 왼쪽 이동
+      } else if (category === '30days') {
+        left -= 340; // 지난 30일이면 340px 왼쪽 이동
+      }
+  
+      setEditBoxPosition({ top, left });
     }
   };
 
-  // const editBoxToggle = (index) => {
-  //   if (editToggleIndex === index) {
-  //     setEditToggleIndex(null); / 이미 열려 있는 경우 닫기
-  //   } else {
-  //     setEditToggleIndex(index); / 해당 인덱스의 EditBox 열기
-  //   }
-  // };
+useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (editToggleIndex !== null) {
+      const editBoxElement = document.getElementById(`edit-box-${editToggleIndex}`);
+      const toggleElement = document.getElementById(`insight-toggle-${editToggleIndex}`);
+      if (
+        editBoxElement &&
+        !editBoxElement.contains(event.target) &&
+        toggleElement &&
+        !toggleElement.contains(event.target)
+      ) {
+        setEditToggleIndex(null);
+      }
+    }
+  };
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, [editToggleIndex]);
 
   // 삭제 버튼 클릭 시, 삭제 경고 팝업 열기
   const handleDeleteButtonClick = (reportId) => {
@@ -231,14 +263,23 @@ const OrganismLeftSideBar = () => {
   const [insightEditToggleIndex, setInsightEditToggleIndex] = useState(null);
 
   // 인사이트 보관함용 EditBox 열기/닫기 함수
-  const insightEditBoxToggle = (index) => {
-    if (insightEditToggleIndex === index) {
-      setInsightEditToggleIndex(null); // 이미 열려 있는 경우 닫기
-    } else {
-      setInsightEditToggleIndex(index); // 해당 인덱스의 EditBox 열기
+  const insightEditBoxToggle = (index, event) => {
+    if (isLoading) return;
+  
+    setInsightEditToggleIndex((prevIndex) => (prevIndex === index ? null : index));
+  
+    if (event && insightAccordionContentRef.current) {
+      const container = insightAccordionContentRef.current;
+      const clickedElement = event.currentTarget;
+  
+      // Calculate the position considering the scroll
+      const top = clickedElement.offsetTop - container.scrollTop;
+      const left = clickedElement.offsetLeft + clickedElement.offsetWidth -30;
+  
+      setInsightEditBoxPosition({ top, left });
     }
   };
-
+  
   useEffect(() => {
     const loadConversations = async () => {
       const allConversations = await getAllConversationsFromIndexedDB();
@@ -595,7 +636,7 @@ const OrganismLeftSideBar = () => {
                 <img src={images.Folder} alt="" />
                 인사이트 보관함
               </label>
-              <AccordionContent>
+              <AccordionContent  className="scrollbar" ref={insightAccordionContentRef}>
                   <ul>
                     {reports && reports.length > 0 ? (
                       reports.map((report, index) => (
@@ -606,6 +647,7 @@ const OrganismLeftSideBar = () => {
                           <p onClick={() => handleReportClick(report.id)}>
                             {report.business_info}
                           </p>
+                          <div style={{ position: 'relative', display: 'inline-block' }}>
                           <span
                             id={`insight-toggle-${index}`}
                             style={{
@@ -613,7 +655,7 @@ const OrganismLeftSideBar = () => {
                               padding: "10px",
                               cursor: "pointer",
                             }}
-                            onClick={() => insightEditBoxToggle(index)}
+                            onClick={(event) => insightEditBoxToggle(index, event)} // event 전달
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -648,7 +690,15 @@ const OrganismLeftSideBar = () => {
                               className="insight-toggle"
                               ref={insightEditBoxRef}
                             >
-                              <EditBox isEditToggle={insightEditToggleIndex === index}>
+                              <EditBox
+                                id={`insight-edit-box-${editToggleIndex}`}
+                                isEditToggle={true}
+                                style={{
+                                  top: `${insightEditBoxPosition.top}px`,
+                                  left: `${insightEditBoxPosition.left}px`,
+                                }}
+                                ref={insightEditBoxRef}
+                              >
                                 <button
                                   type="button"
                                   onClick={() => handleDeleteButtonClick(report.id)}
@@ -663,6 +713,7 @@ const OrganismLeftSideBar = () => {
                               </EditBox>
                             </div>
                           )}
+                          </div>
                         </li>
                     ))
                   ) : (
@@ -689,7 +740,7 @@ const OrganismLeftSideBar = () => {
                 <img src={images.Clock} alt="" />
                 프로젝트 히스토리
               </label>
-              <AccordionContent className="scrollbar">
+              <AccordionContent className="scrollbar" ref={accordionContentRef}>
                 {chatList && chatList.length > 0 ?               
                   <div>
                     {chatList.some(chat => Date.now() - chat.timestamp <= 604800000) && (
@@ -703,6 +754,7 @@ const OrganismLeftSideBar = () => {
                                 <p onClick={() => handleConversationClick(chat.id)}>
                                   {chat.business_info}
                                 </p>
+                                <div style={{ position: 'relative', display: 'inline-block' }}>
                                 <span
                                   id={`insight-toggle-${chat.num}`}
                                   style={{
@@ -710,7 +762,7 @@ const OrganismLeftSideBar = () => {
                                     padding: "10px",
                                     cursor: "pointer",
                                   }}
-                                  onClick={() => editBoxToggle(chat.num)}
+                                  onClick={(event) => editBoxToggle(chat.num, event, 'recent')}
                                 >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -749,7 +801,14 @@ const OrganismLeftSideBar = () => {
                                     className="insight-toggle"
                                     ref={historyEditBoxRef}
                                   >
-                                    <EditBox isEditToggle={editToggleIndex === chat.num}>
+                                   <EditBox
+                                      id={`insight-edit-box-${chat.num}`}
+                                      isEditToggle={editToggleIndex === chat.num}
+                                      style={{
+                                        top: `${editBoxPosition.top}px`,
+                                        left: `${editBoxPosition.left}px`,
+                                      }}
+                                    >
                                       <button
                                         type="button"
                                         onClick={() =>
@@ -766,6 +825,7 @@ const OrganismLeftSideBar = () => {
                                     </EditBox>
                                   </div>
                                 )}
+                                </div>
                               </li>
                             ))}
                         </ul>
@@ -789,7 +849,7 @@ const OrganismLeftSideBar = () => {
                                     padding: "10px",
                                     cursor: "pointer",
                                   }}
-                                  onClick={() => editBoxToggle(chat.num)}
+                                  onClick={(event) => editBoxToggle(chat.num, event, '7days')}
                                 >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -828,7 +888,14 @@ const OrganismLeftSideBar = () => {
                                     className="insight-toggle"
                                     ref={historyEditBoxRef}
                                   >
-                                    <EditBox isEditToggle={editToggleIndex === chat.num}>
+                               <EditBox
+                                  id={`insight-edit-box-${chat.num}`}
+                                  isEditToggle={editToggleIndex === chat.num}
+                                  style={{
+                                    top: `${editBoxPosition.top}px`,
+                                    left: `${editBoxPosition.left}px`,
+                                  }}
+                                >
                                       <button
                                         type="button"
                                         onClick={() =>
@@ -868,7 +935,7 @@ const OrganismLeftSideBar = () => {
                                     padding: "10px",
                                     cursor: "pointer",
                                   }}
-                                  onClick={() => editBoxToggle(chat.num)}
+                                  onClick={(event) => editBoxToggle(chat.num, event, '30days')}
                                 >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -907,7 +974,14 @@ const OrganismLeftSideBar = () => {
                                     className="insight-toggle"
                                     ref={historyEditBoxRef}
                                   >
-                                    <EditBox isEditToggle={editToggleIndex === chat.num}>
+                          <EditBox
+                              id={`insight-edit-box-${chat.num}`}
+                              isEditToggle={editToggleIndex === chat.num}
+                              style={{
+                                top: `${editBoxPosition.top}px`,
+                                left: `${editBoxPosition.left}px`,
+                              }}
+                            >
                                       <button
                                         type="button"
                                         onClick={() =>
@@ -1497,25 +1571,22 @@ const SideBarMenu = styled.div`
     background: none;
   }
 `;
+
 const EditBox = styled.div`
-  position: fixed;
-  left: 0;
+  position: absolute;
   display: flex;
   flex-direction: column;
   gap: 20px;
   max-width: 217px;
-  // width: 30%;
   width: 100%;
-  max-height: ${(props) => (props.isEditToggle ? "1000px" : "0")};
-  padding: ${(props) => (props.isEditToggle ? "20px" : "0")};
-  overflow: hidden;
+  padding: 20px;
   border-radius: 15px;
   background: ${palette.white};
   box-shadow: 0 4px 28px rgba(0, 0, 0, 0.05);
-  visibility: ${(props) => (props.isEditToggle ? "visible" : "hidden")};
-  opacity: ${(props) => (props.isEditToggle ? "1" : "0")};
-  // transform: translateX(260px);
+  z-index: 1000;
   transition: all 0.5s;
+  visibility: ${(props) => (props.isEditToggle ? 'visible' : 'hidden')};
+  opacity: ${(props) => (props.isEditToggle ? '1' : '0')};
 
   button {
     display: flex;
@@ -1598,6 +1669,7 @@ const AccordionItem = styled.div`
 
 const AccordionContent = styled.div`
   max-height: 0;
+  position: relative;
   overflow: hidden;
   padding: 0;
   transition: max-height 0.5s ease, padding 0.5s ease;
