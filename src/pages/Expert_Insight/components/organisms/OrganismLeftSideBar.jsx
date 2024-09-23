@@ -42,6 +42,8 @@ import {
   CUSTOMER_ADDITIONAL_REPORT_DATA,
   SELECTED_EXPERT_LIST,
   IS_SOCIAL_LOGGED_IN,
+  SAVED_TIMESTAMP,
+  IS_EDITING_NOW,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -148,6 +150,10 @@ const OrganismLeftSideBar = () => {
   const toggleRef = useRef(null); 
   
   const [editToggleIndex, setEditToggleIndex] = useState(null); // 특정 인덱스를 저장
+
+  const [savedTimestamp, setSavedTimestamp] = useAtom(SAVED_TIMESTAMP);
+
+  const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
   const [editBoxPosition, setEditBoxPosition] = useState({ top: 0, left: 0 });
   const accordionContentRef = useRef(null);
   const [insightEditBoxPosition, setInsightEditBoxPosition] = useState({ top: 0, left: 0 });
@@ -365,6 +371,7 @@ useEffect(() => {
 
       const chatData = response.data.chat_data;
       // console.log("🚀 ~ handleConversationClick ~ chatData:", chatData);
+      setSavedTimestamp(chatData.timestamp); // 대화 날짜 설정
       setSelectedExpertIndex(
         chatData.expert_index !== undefined ? chatData.expert_index : 0
       );
@@ -401,6 +408,9 @@ useEffect(() => {
       // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
       // set어프로치패스(2)
       setApproachPath(2);
+
+      setIsEditingNow(false);
+      
       // 페이지를 대화가 이어지는 형태로 전환
       navigate(`/conversation/${conversationId}`);
     } catch (error) {
@@ -604,6 +614,7 @@ useEffect(() => {
     setNewPassword("");
     setRePassword("");
     setSelectedExpertList([]);
+    setIsEditingNow(false);
   };
 
   return (
@@ -662,25 +673,28 @@ useEffect(() => {
                               width="14"
                               height="3"
                               viewBox="0 0 14 3"
-                              fill={getColor(report.reportIndex)}
+                              // fill={getColor(report.reportIndex)}
                               >
                               <circle
                                 cx="2.0067"
                                 cy="1.51283"
                                 r="1.49694"
                                 transform="rotate(-90 2.0067 1.51283)"
+                                fill="#A0A0A0"
                               />
                               <circle
                                 cx="7.00084"
                                 cy="1.51283"
                                 r="1.49694"
                                 transform="rotate(-90 7.00084 1.51283)"
+                                fill="#A0A0A0"
                               />
                               <circle
                                 cx="11.993"
                                 cy="1.51283"
                                 r="1.49694"
                                 transform="rotate(-90 11.993 1.51283)"
+                                fill="#A0A0A0"
                               />
                             </svg>
                           </span>
@@ -750,19 +764,19 @@ useEffect(() => {
                           {chatList
                             .filter(chat => Date.now() - chat.timestamp <= 604800000)
                             .map((chat) => (
-                              <li key={chat.num}>
+                              <li key={chat.id}>
                                 <p onClick={() => handleConversationClick(chat.id)}>
                                   {chat.business_info}
                                 </p>
                                 <div style={{ position: 'relative', display: 'inline-block' }}>
                                 <span
-                                  id={`insight-toggle-${chat.num}`}
+                                  id={`insight-toggle-${chat.id}`}
                                   style={{
                                     display: "inline-block",
                                     padding: "10px",
                                     cursor: "pointer",
                                   }}
-                                  onClick={(event) => editBoxToggle(chat.num, event, 'recent')}
+                                  onClick={(event) => editBoxToggle(chat.id, event, 'recent')}
                                 >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -795,15 +809,15 @@ useEffect(() => {
                                   </svg>
                                 </span>
                                 
-                                {editToggleIndex === chat.num && (
+                                {editToggleIndex === chat.id && (
                                   <div
-                                    id={`insight-edit-box-${chat.num}`}
+                                    id={`insight-edit-box-${chat.id}`}
                                     className="insight-toggle"
                                     ref={historyEditBoxRef}
                                   >
                                    <EditBox
-                                      id={`insight-edit-box-${chat.num}`}
-                                      isEditToggle={editToggleIndex === chat.num}
+                                      id={`insight-edit-box-${chat.id}`}
+                                      isEditToggle={editToggleIndex === chat.id}
                                       style={{
                                         top: `${editBoxPosition.top}px`,
                                         left: `${editBoxPosition.left}px`,
@@ -838,18 +852,18 @@ useEffect(() => {
                           {chatList
                             .filter(chat => Date.now() - chat.timestamp > 604800000 && Date.now() - chat.timestamp <= 2592000000)
                             .map((chat) => (
-                              <li key={chat.num}>
+                              <li key={chat.id}>
                                 <p onClick={() => handleConversationClick(chat.id)}>
                                   {chat.business_info}
                                 </p>
                                 <span
-                                  id={`insight-toggle-${chat.num}`}
+                                  id={`insight-toggle-${chat.id}`}
                                   style={{
                                     display: "inline-block",
                                     padding: "10px",
                                     cursor: "pointer",
                                   }}
-                                  onClick={(event) => editBoxToggle(chat.num, event, '7days')}
+                                  onClick={(event) => editBoxToggle(chat.id, event, '7days')}
                                 >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -882,15 +896,15 @@ useEffect(() => {
                                   </svg>
                                 </span>
                                 
-                                {editToggleIndex === chat.num && (
+                                {editToggleIndex === chat.id && (
                                   <div
-                                    id={`insight-edit-box-${chat.num}`}
+                                    id={`insight-edit-box-${chat.id}`}
                                     className="insight-toggle"
                                     ref={historyEditBoxRef}
                                   >
                                <EditBox
-                                  id={`insight-edit-box-${chat.num}`}
-                                  isEditToggle={editToggleIndex === chat.num}
+                                  id={`insight-edit-box-${chat.id}`}
+                                  isEditToggle={editToggleIndex === chat.id}
                                   style={{
                                     top: `${editBoxPosition.top}px`,
                                     left: `${editBoxPosition.left}px`,
@@ -924,18 +938,18 @@ useEffect(() => {
                           {chatList
                             .filter(chat => Date.now() - chat.timestamp > 2592000000)
                             .map((chat) => (
-                              <li key={chat.num}>
+                              <li key={chat.id}>
                                 <p onClick={() => handleConversationClick(chat.id)}>
                                   {chat.business_info}
                                 </p>
                                 <span
-                                  id={`insight-toggle-${chat.num}`}
+                                  id={`insight-toggle-${chat.id}`}
                                   style={{
                                     display: "inline-block",
                                     padding: "10px",
                                     cursor: "pointer",
                                   }}
-                                  onClick={(event) => editBoxToggle(chat.num, event, '30days')}
+                                  onClick={(event) => editBoxToggle(chat.id, event, '30days')}
                                 >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -968,15 +982,15 @@ useEffect(() => {
                                   </svg>
                                 </span>
                                 
-                                {editToggleIndex === chat.num && (
+                                {editToggleIndex === chat.id && (
                                   <div
-                                    id={`insight-edit-box-${chat.num}`}
+                                    id={`insight-edit-box-${chat.id}`}
                                     className="insight-toggle"
                                     ref={historyEditBoxRef}
                                   >
                           <EditBox
-                              id={`insight-edit-box-${chat.num}`}
-                              isEditToggle={editToggleIndex === chat.num}
+                              id={`insight-edit-box-${chat.id}`}
+                              isEditToggle={editToggleIndex === chat.id}
                               style={{
                                 top: `${editBoxPosition.top}px`,
                                 left: `${editBoxPosition.left}px`,
@@ -1110,11 +1124,11 @@ useEffect(() => {
             </span>
             <p>정말 이 보고서를 삭제하시겠습니까?</p>
             <div className="btnWrap">
-              <button type="button" onClick={handleDeleteInsightConfirm}>
-                확인
-              </button>
               <button type="button" onClick={handleDeleteCancel}>
                 취소
+              </button>
+              <button type="button" onClick={handleDeleteInsightConfirm}>
+                확인
               </button>
             </div>
           </div>
@@ -1715,7 +1729,7 @@ const AccordionContent = styled.div`
     font-family: "Pretendard";
     font-size: 0.875rem;
     text-align: left;
-    padding: 8px 0 8px 15px;
+    padding: 8px 0;
   }    
 
   li {
@@ -1753,20 +1767,24 @@ const AccordionContent = styled.div`
       transition: all 0.5s;
     }
 
+    /* 전문가 0: 빨간색 */
     &[data-expert-index="0"]:before {
-      background: #ff0000; /* 전문가 0: 빨간색 */
+      // background: #ff0000; 
     }
 
+    /* 전문가 1: 초록색 */
     &[data-expert-index="1"]:before {
-      background: #00ff00; /* 전문가 1: 초록색 */
+      // background: #00ff00; 
     }
 
+    /* 전문가 2: 보라색 */
     &[data-expert-index="2"]:before {
-      background: #800080; /* 전문가 2: 보라색 */
+      // background: #800080; 
     }
 
+    /* 전문가 3: 주황색 */
     &[data-expert-index="3"]:before {
-      background: #ffa500; /* 전문가 3: 주황색 */
+      // background: #ffa500; 
     }
 
     p {

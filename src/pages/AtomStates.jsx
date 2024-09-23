@@ -123,7 +123,9 @@ export const SAVED_CONVERSATIONS = atom({});
 
 export const IS_CLICK_EXPERT_SELECT = atom(false);
 
-export const SELECTED_TAB_COPY = atom(0);
+export const SELECTED_TAB_COPY_1 = atom(0);
+export const SELECTED_TAB_COPY_2 = atom(0);
+export const SELECTED_TAB_COPY_3 = atom(0);
 
 export const STRATEGY_REPORT_DATA = atom({});
 export const EXPERT1_REPORT_DATA = atom({});
@@ -264,3 +266,5 @@ export const IS_PASSWORD_RESET_POPUP_OPEN = atom(false);
 
 // 소셜 로그인 상태 관리 아톰 추가
 export const IS_SOCIAL_LOGGED_IN = atom(false); // 소셜 로그인 여부를 나타내는 아톰
+
+export const SAVED_TIMESTAMP = atom(0); // 지난 프로젝트의 타임스탬프

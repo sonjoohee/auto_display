@@ -4,6 +4,7 @@ import { palette } from "../../../../assets/styles/Palette";
 import ReactDOM from "react-dom";
 
 import images from "../../../../assets/styles/Images";
+import panelimages from "../../../../assets/styles/PanelImages";
 
 const OrganismReportPopup = ({ report, onClose }) => {
   if (!report) return null;
@@ -35,18 +36,48 @@ const OrganismReportPopup = ({ report, onClose }) => {
     <PopupOverlay onClick={onClose}>
       <PopupContent onClick={(e) => e.stopPropagation()}>
         <div className="popup-title">
-          <popup-h1>{report.title}</popup-h1>
-          <popup-p>
-            <span>
-              <img src={images.IconList} alt="" />
-              {reportTypeText}
-            </span>
-            {/* <span>생성 : {report.date}</span> */}
-            <span>
-              <img src={images.IconSaveDate} alt="" />
-              저장 : {report.date}
-            </span>
-          </popup-p>
+          <popupTitle>
+            <popup-h1>{report.title}</popup-h1>
+            <popup-p>
+              <span>
+                <img src={images.IconList} alt="" />
+                {reportTypeText}
+              </span>
+              {/* <span>생성 : {report.date}</span> */}
+              <span>
+                <img src={images.IconSaveDate} alt="" />
+                저장 : {report.date}
+              </span>
+            </popup-p>
+          </popupTitle>
+
+          <ExpertThumb>
+            <div className="thumb">
+            {
+              report.content.expert_id === "1" 
+                ? <img src={panelimages.expert_1} alt="" /> 
+                : report.content.expert_id === "2" 
+                  ? <img src={panelimages.expert_2} alt="" /> 
+                  : <img src={panelimages.expert_3} alt="" />
+            }
+            </div>
+            {
+              report.content.expert_id === "1" 
+                ? <div className="cont">
+                    <strong>제품 전략가</strong>
+                    <p>김도원</p>
+                  </div> 
+                : report.content.expert_id === "2" 
+                  ? <div className="cont">
+                      <strong>마케팅 구루</strong>
+                      <p>이지현</p>
+                    </div>
+                  : <div className="cont">
+                      <strong>고객 분석 전문가</strong>
+                      <p>박서연</p>
+                    </div>
+            }
+          </ExpertThumb>
         </div>
 
         {reportIndex === 0 && <BizAnalysisSection report={report} />}
@@ -95,13 +126,20 @@ const PopupContent = styled.div`
 
   .popup-title {
     display: flex;
-    flex-direction: column;
+    // flex-direction: column;
     gap: 12px;
+    justify-content:space-between;
     padding: 16px 20px;
     border-radius: 15px;
     border: 1px solid ${palette.lineGray};
     background: ${palette.white};
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  }
+
+  popupTitle {
+    display:flex;
+    flex-direction: column;
+    gap:12px;
   }
 
   popup-h1 {
@@ -120,6 +158,48 @@ const PopupContent = styled.div`
       display: flex;
       align-items: center;
       gap: 6px;
+    }
+  }
+`;
+
+const ExpertThumb = styled.div`
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  border-radius:8px;
+  background:rgba(0,0,0,.03);
+
+  .thumb {
+    position:relative;
+    width:32px;
+    height:32px;
+    border-radius:100%;
+    overflow:hidden;
+
+    img {
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%, -50%);
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+  }
+
+  .cont {
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    font-size:0.75rem;
+
+    strong {
+      font-weight:400;
+    }
+
+    p {
+      color:${palette.lightGray};
     }
   }
 `;
@@ -158,6 +238,11 @@ const ListItem = styled.li`
     font-size: 0.875rem;
     color: ${palette.darkGray};
     line-height: 1.5;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    display:-webkit-box;
+    -webkit-line-clamp:3;
+    -webkit-box-orient:vertical;
   }
 `;
 
@@ -207,10 +292,6 @@ const BoxWrap = styled.div`
     margin-top:12px;
   }
 
-  + div {
-    margin-top: 12px;
-  }
-
   strong {
     display: flex;
     align-items: center;
@@ -233,6 +314,21 @@ const BoxWrap = styled.div`
         ? palette.darkGray
         : palette.darkGray};
     line-height: 1.5;
+  }
+
+  .dashedLine {
+    position:relative;
+    padding-left:12px;
+
+    &:before {
+      position:absolute;
+      left:0;
+      top:10px;
+      width:5px;
+      height:1px;
+      background:${palette.darkGray};
+      content:'';
+    }
   }
 
   /* 마지막 섹션일 경우 title을 숨기고, 내부 텍스트만 보이도록 */
@@ -347,7 +443,7 @@ const StrategyReportSection = ({ report }) => {
 const ContentsWrap = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  // gap: 12px;
   padding: 28px;
   border-radius: 15px;
   border: 1px solid ${palette.lineGray};
@@ -397,10 +493,11 @@ const TwoColumnGrid = styled.div`
   }
 `;
 
-const SubTitle = styled.div`
+const SubTitle = styled.strong`
   font-size: 0.875rem;
-  color: ${palette.gray};
-  margin-bottom: 5px;
+  font-weight:400;
+  color: ${palette.lightGray} !important;
+  margin-bottom: 10px;
 `;
 
 const SubTextBox = styled.div`
@@ -572,13 +669,14 @@ const Section = ({ title, title_text, content, isLast, expertIndex ,selectedTab}
     <BoxWrap expertIndex={expertIndex} isLast={isLast} selectedTab={selectedTab}>
       {/* "주요 차별화 요소"와 "차별화 전략 제안" 데이터를 결합하여 한 번만 렌더링 */}
       {renderCombinedSections()}
-    {/* 3번 전문가의 2번째 탭을 위한 조건 */}
-    {expertIndex === "3" && selectedTab === 1 ? (
+          {/* 3번 전문가의 2번째 탭을 위한 조건 */}
+          {expertIndex === "3" && selectedTab === 1 ? (
             <>
             <strong>
-            <img src={images.Check} alt="" />
-            {title}
-          </strong>
+              <img src={images.Check} alt="" />
+              {title}
+            </strong>
+
             {nonSubTitleItems.length > 0 &&
               nonSubTitleItems.map((item, index) => (
                 <div key={index}>
@@ -592,20 +690,20 @@ const Section = ({ title, title_text, content, isLast, expertIndex ,selectedTab}
             {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
             {subTitleItems.length > 0 && (
                 subTitleItems.map((item, index) => (
-                  <SubTextBox key={index}>
+                  <div style={{ backgroundColor: 'white', padding: '15px', marginTop: '15px', borderRadius: '10px' }} key={index}>
                     <SubTitle>{item.subTitle}</SubTitle>
                     <p>{item.text}</p>
                     {item.subText1 && <SubTextBox>{item.subText1}</SubTextBox>}
                     {item.subText2 && <SubTextBox>{item.subText2}</SubTextBox>}
                     {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
-                  </SubTextBox>
+                  </div>
                 ))
                 )}
             </>
       ) : (
         <>
      {/* title 표시 (특정 타이틀 제외) */}
-     {!isLast &&
+    {!isLast &&
         title &&
         !(
           title === "주요 차별화 요소" ||
@@ -630,7 +728,7 @@ const Section = ({ title, title_text, content, isLast, expertIndex ,selectedTab}
           </strong>
         )}
 
-    {title === "제안 사항" && (
+      {title === "제안 사항" && (
         <>
           <strong>
             <img src={images.Check} alt="" />
@@ -638,7 +736,7 @@ const Section = ({ title, title_text, content, isLast, expertIndex ,selectedTab}
           </strong>
           {/* subTitle : text 형태로 넘버링 추가하여 출력 */}
           {content.map((item, index) => (
-            <div key={index} style={{ marginBottom: '10px' }}> {/* 각 요소에 마진 추가 */}
+            <div key={index} style={{ marginTop: '3px' }}> {/* 각 요소에 마진 추가 */}
               <p>
                 {index + 1}. {item.subTitle} : {item.text}
               </p>
@@ -647,7 +745,7 @@ const Section = ({ title, title_text, content, isLast, expertIndex ,selectedTab}
         </>
       )}
 
-  {title === "브랜드 전략분석" && (
+      {title === "브랜드 전략분석" && (
         <>
           {/* 제목과 총평 출력 */}
           <strong>
@@ -662,9 +760,9 @@ const Section = ({ title, title_text, content, isLast, expertIndex ,selectedTab}
           {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
           <div style={{ backgroundColor: 'white', padding: '15px', borderRadius: '10px' }}>
             {subItems.map((item, index) => (
-              <div key={index} style={{ marginBottom: '10px' }}> {/* 각 항목 간 마진 추가 */}
-                <p>
-                  - {item.subTitle} : {item.text}
+              <div key={index} style={{ marginTop: '3px' }}> {/* 각 항목 간 마진 추가 */}
+                <p className="dashedLine">
+                  {item.subTitle} : {item.text}
                 </p>
               </div>
             ))}
@@ -687,9 +785,9 @@ const Section = ({ title, title_text, content, isLast, expertIndex ,selectedTab}
           {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
           <div style={{ backgroundColor: 'white', padding: '15px', borderRadius: '10px' }}>
             {subItems.map((item, index) => (
-              <div key={index} style={{ marginBottom: '10px' }}> {/* 각 항목 간 마진 추가 */}
-                <p>
-                  - {item.subTitle} : {item.text}
+              <div key={index} style={{ marginTop: '3px' }}> {/* 각 항목 간 마진 추가 */}
+                <p className="dashedLine">
+                  {item.subTitle} : {item.text}
                 </p>
               </div>
             ))}
@@ -717,9 +815,9 @@ const Section = ({ title, title_text, content, isLast, expertIndex ,selectedTab}
           {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
           <div style={{ backgroundColor: 'white', padding: '15px', borderRadius: '10px' }}>
             {subItems.map((item, index) => (
-              <div key={index} style={{ marginBottom: '10px' }}> {/* 각 항목 간 마진 추가 */}
-                <p>
-                  - {item.subTitle} : {item.text}
+              <div key={index} style={{ marginTop: '3px' }}> {/* 각 항목 간 마진 추가 */}
+                <p className="dashedLine">
+                  {item.subTitle} : {item.text}
                 </p>
               </div>
             ))}
@@ -727,64 +825,65 @@ const Section = ({ title, title_text, content, isLast, expertIndex ,selectedTab}
         </>
       )}
 
-    {title === "고객 니즈 및 세분화 분석" && (
-            <>
-              {/* 제목과 총평 출력 */}
-              <strong>
-                <img src={images.Check} alt="" />
-                {title}
-              </strong>
+      {title === "고객 니즈 및 세분화 분석" && (
+        <>
+          {/* 제목과 총평 출력 */}
+          <strong>
+            <img src={images.Check} alt="" />
+            {title}
+          </strong>
 
-              {/* 총평 항목 필터링 */}
-              {content
-                  .filter((item) => item.title === "고객 니즈 분석")
-                  .map((summaryItem, index) => (
-                    <p key={index} style={{ marginBottom: '15px' }}>
-                      {summaryItem.text} {/* 총평 텍스트를 제목 밑에 표시 */}
-                    </p>
-                  ))}
+          {/* 총평 항목 필터링 */}
+          {content
+              .filter((item) => item.title === "고객 니즈 분석")
+              .map((summaryItem, index) => (
+                <p key={index} style={{ marginBottom: '15px' }}>
+                  {summaryItem.text} {/* 총평 텍스트를 제목 밑에 표시 */}
+                </p>
+              ))}
 
-              {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
-              <div style={{ backgroundColor: 'white', padding: '15px', borderRadius: '10px' }}>
-                {subItems.map((item, index) => (
-                  <div key={index} style={{ marginBottom: '10px' }}> {/* 각 항목 간 마진 추가 */}
-                    <p>
-                      - {item.subTitle} : {item.text}
-                    </p>
-                  </div>
-                ))}
+          {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
+          <div style={{ backgroundColor: 'white', padding: '15px', borderRadius: '10px' }}>
+            {subItems.map((item, index) => (
+              <div key={index} style={{ marginTop: '3px' }}> {/* 각 항목 간 마진 추가 */}
+                <p className="dashedLine">
+                  {item.subTitle} : {item.text}
+                </p>
               </div>
-            </>
-          )}
-    {title === "고객 여정 맵핑" && (
-            <>
-              {/* 제목과 총평 출력 */}
-              <strong>
-                <img src={images.Check} alt="" />
-                {title}
-              </strong>
+            ))}
+          </div>
+        </>
+      )}
 
-              {/* 총평 항목 필터링 */}
-              {content
-                  .filter((item) => item.title === "고객 여정 맵핑")
-                  .map((summaryItem, index) => (
-                    <p key={index} style={{ marginBottom: '15px' }}>
-                      {summaryItem.text} {/* 총평 텍스트를 제목 밑에 표시 */}
-                    </p>
-                  ))}
+      {title === "고객 여정 맵핑" && (
+        <>
+          {/* 제목과 총평 출력 */}
+          <strong>
+            <img src={images.Check} alt="" />
+            {title}
+          </strong>
 
-              {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
-              <div style={{ backgroundColor: 'white', padding: '15px', borderRadius: '10px' }}>
-                {subItems.map((item, index) => (
-                  <div key={index} style={{ marginBottom: '10px' }}> {/* 각 항목 간 마진 추가 */}
-                    <p>
-                      - {item.subTitle} : {item.text}
-                    </p>
-                  </div>
-                ))}
+          {/* 총평 항목 필터링 */}
+          {content
+              .filter((item) => item.title === "고객 여정 맵핑")
+              .map((summaryItem, index) => (
+                <p key={index} style={{ marginBottom: '15px' }}>
+                  {summaryItem.text} {/* 총평 텍스트를 제목 밑에 표시 */}
+                </p>
+              ))}
+
+          {/* subTitle : text 형태로 하얀 박스 안에 출력 */}
+          <div style={{ backgroundColor: 'white', padding: '15px', borderRadius: '10px' }}>
+            {subItems.map((item, index) => (
+              <div key={index} style={{ marginTop: '3px' }}> {/* 각 항목 간 마진 추가 */}
+                <p className="dashedLine">
+                  {item.subTitle} : {item.text}
+                </p>
               </div>
-            </>
-          )}
+            ))}
+          </div>
+        </>
+      )}
           
       {title === "브랜드 신뢰도 구축 방안" && (
         <>
@@ -795,11 +894,12 @@ const Section = ({ title, title_text, content, isLast, expertIndex ,selectedTab}
           </strong>
 
           {/* subTitle : text 형태로 기본 박스 안에 출력 */}
-          <div style={{ padding: '15px', borderRadius: '10px' }}>
+          {/* <div style={{ padding: '15px', borderRadius: '10px' }}> */}
+          <div>
             {subItems.map((item, index) => (
-              <div key={index} style={{ marginBottom: '10px' }}> {/* 각 항목 간 마진 추가 */}
-                <p>
-                  - {item.subTitle} : {item.text}
+              <div key={index} style={{ marginTop: '3px' }}> {/* 각 항목 간 마진 추가 */}
+                <p className="dashedLine">
+                  {item.subTitle} : {item.text}
                 </p>
               </div>
             ))}
@@ -808,38 +908,41 @@ const Section = ({ title, title_text, content, isLast, expertIndex ,selectedTab}
       )}
 
       {title === "소비자 인식 관리 방안" && (
-              <>
-                {/* 제목 출력 */}
-                <strong>
-                  <img src={images.Check} alt="" />
-                  {title}
-                </strong>
-
-                {/* subTitle : text 형태로 기본 박스 안에 출력 */}
-                <div style={{ padding: '15px', borderRadius: '10px' }}>
-                  {subItems.map((item, index) => (
-                    <div key={index} style={{ marginBottom: '10px' }}> {/* 각 항목 간 마진 추가 */}
-                      <p>
-                        - {item.subTitle} : {item.text}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </>
-            )}
-
-
-    {/* "시장 위치 평가 및 경쟁자 분석"일 때 별도의 처리 */}
-    {title === "시장 위치 평가 및 경쟁자 분석" && (
-        <BgStyledSection>
-          <h4>
+        <>
+          {/* 제목 출력 */}
+          <strong>
             <img src={images.Check} alt="" />
             {title}
-          </h4>
-          {nonSubTitleItems.length > 0 && (
-            <p>{nonSubTitleItems[0].text}</p>
-          )}
+          </strong>
 
+          {/* subTitle : text 형태로 기본 박스 안에 출력 */}
+          {/* <div style={{ padding: '15px', borderRadius: '10px' }}> */}
+          <div>
+            {subItems.map((item, index) => (
+              <div key={index} style={{ marginTop: '3px' }}> {/* 각 항목 간 마진 추가 */}
+                <p className="dashedLine">
+                  {item.subTitle} : {item.text}
+                </p>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+
+      {/* "시장 위치 평가 및 경쟁자 분석"일 때 별도의 처리 */}
+      {title === "시장 위치 평가 및 경쟁자 분석" && (
+        <>
+        <strong>
+          <img src={images.Check} alt="" />
+          {title}
+        </strong>
+
+        {nonSubTitleItems.length > 0 && (
+          <p>{nonSubTitleItems[0].text}</p>
+        )}
+
+        <BgStyledSection>
           <div className="flexBox">
             {subTitleItems.map((item, index) => (
               <div className="bgWhite" key={index}>
@@ -850,16 +953,14 @@ const Section = ({ title, title_text, content, isLast, expertIndex ,selectedTab}
                 </strong>
                     <ul>
                     {item.subText1 && (
-                        <li>
-                          -{" "}
+                        <li className="dashedLine">
                           {item.subText1.startsWith("강점:")
                             ? item.subText1
                             : `강점: ${item.subText1}`}
                         </li>
                       )}
                       {item.subText2 && (
-                        <li>
-                          -{" "}
+                        <li className="dashedLine">
                           {item.subText2.startsWith("약점:")
                             ? item.subText2
                             : `약점: ${item.subText2}`}
@@ -870,61 +971,60 @@ const Section = ({ title, title_text, content, isLast, expertIndex ,selectedTab}
             ))}
           </div>
         </BgStyledSection>
+        </>
       )}
 
-{(title === "경쟁사 대비 차별화 전략" || 
-          title === "시장 내 경쟁 우위 확보 방안" || 
-          title === "주요 타겟층 특징" || 
-          title === "콘텐츠 및 마케팅 전략") && (
-            <>
-             {title_text && <p>{title_text}</p>}
-            <DoubleGrid columns={2}> {/* 2개의 컬럼을 생성하여 가로로 나열 */}
-              {content.map((section, sectionIndex) => (
-                <SectionWrapper key={sectionIndex}> {/* 각 섹션을 감싸는 div */}
-                  {/* section.title 출력 */}
-                  <SubTitle>{section.title}</SubTitle>
+      {(title === "경쟁사 대비 차별화 전략" || 
+        title === "시장 내 경쟁 우위 확보 방안" || 
+        title === "주요 타겟층 특징" || 
+        title === "콘텐츠 및 마케팅 전략") && (
+          <>
+          {title_text && <p>{title_text}</p>}
+          <DoubleGrid columns={2} style={{ padding: '0' }}> {/* 2개의 컬럼을 생성하여 가로로 나열 */}
+            {content.map((section, sectionIndex) => (
+              <SectionWrapper key={sectionIndex}> {/* 각 섹션을 감싸는 div */}
+                {/* section.title 출력 */}
+                <SubTitle>{section.title}</SubTitle>
 
-                  {/* subContent를 하나의 DynamicGrid 안에서 출력 */}
-                  {section.subContent.map((item, itemIndex) => (
-                    <div key={itemIndex}>
-                      <p>{item.subTitle} : {item.text}</p>
-                    </div>
-                  ))}
-                </SectionWrapper>
-              ))}
-            </DoubleGrid>
-            </>
-          )}
+                {/* subContent를 하나의 DynamicGrid 안에서 출력 */}
+                {section.subContent.map((item, itemIndex) => (
+                  <div key={itemIndex} style={{ marginBottom: '0' }}>
+                    <p className="dashedLine">{item.subTitle} : {item.text}</p>
+                  </div>
+                ))}
+              </SectionWrapper>
+            ))}
+          </DoubleGrid>
+          </>
+      )}
 
-{title === "고객 여정 맵핑 터치포인트 단계 최적화 방안" && (
-  <BgStyledSection>
-    <h4>
-      <img src={images.Check} alt="" />
-      {title}
-    </h4>
+      {title === "고객 여정 맵핑 터치포인트 단계 최적화 방안" && (
+        <BgStyledSection>
+          <h4>
+            <img src={images.Check} alt="" />
+            {title}
+          </h4>
 
-    <div className="flexBox">
-      {content.map((item, index) => (
-        <div className="bgWhite" key={index}>
-          <strong className="title">
-            {/* 번호 표시를 위한 span.number */}
-            <span className="number">{index + 1}</span>
-            {item.subTitle}
-          </strong>
-          <p>{item.text}</p> {/* text 필드에서 데이터 출력 */}
-        </div>
-      ))}
-    </div>
-  </BgStyledSection>
-)}
+          <div className="flexBox">
+            {content.map((item, index) => (
+              <div className="bgWhite" key={index}>
+                <strong className="title">
+                  {/* 번호 표시를 위한 span.number */}
+                  <span className="number">{index + 1}</span>
+                  {item.subTitle}
+                </strong>
+                <p>{item.text}</p> {/* text 필드에서 데이터 출력 */}
+              </div>
+            ))}
+          </div>
+        </BgStyledSection>
+      )}
 
-      
       {/* "특징" 또는 "차별화 요소" 섹션을 처리 */}
       {(title === "특징" || title === "차별화 요소") && subTitleItems.length > 0 && (
         <>
           {subTitleItems.map((item, index) => (
             <SeparateSection key={index}>
-              <SectionWrapper_2>
               <strong>
                 <span className="number">{index + 1}</span> {/* 번호 추가 */}
                 <strong_title>{`${title} : ${item.subTitle}`}</strong_title> {/* 이 부분만 bold 처리 */}
@@ -952,11 +1052,11 @@ const Section = ({ title, title_text, content, isLast, expertIndex ,selectedTab}
                     </div>
                   )}
                 </NumDynamicGrid>
-                </SectionWrapper_2>
               </SeparateSection>
             ))}
           </>
-        )}
+      )}
+
       {/* "특징", "차별화 요소", "경쟁 분석"이 아닌 경우 기존 방식대로 처리 */}
       {title !== "특징" &&
         title !== "차별화 요소" &&
@@ -999,7 +1099,7 @@ const Section = ({ title, title_text, content, isLast, expertIndex ,selectedTab}
                     {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
                   </div>
                 ))}
-               </DynamicGrid>
+              </DynamicGrid>
                 )}
               </>
             )}
@@ -1019,6 +1119,14 @@ const DynamicGrid = styled.div`
     padding: 12px;
     border-radius: 10px;
     border: 1px solid ${palette.lineGray};
+  }
+
+  p {
+    overflow:hidden;
+    text-overflow:ellipsis;
+    display:-webkit-box;
+    -webkit-line-clamp:3;
+    -webkit-box-orient:vertical;
   }
 `;
 const AnalysisSection = styled.div`
@@ -1072,7 +1180,7 @@ const TabContent = styled.div`
 const BgStyledSection = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  // padding: 20px;
   border-radius: 10px;
   background: rgba(0, 0, 0, 0);
 
@@ -1138,6 +1246,18 @@ const BgStyledSection = styled.div`
           }
         }
       }
+    }
+  }
+  
+  .bgWhite {
+    border:0 !important;
+
+    p {
+      overflow:hidden;
+      text-overflow:ellipsis;
+      display:-webkit-box;
+      -webkit-line-clamp:3;
+      -webkit-box-orient:vertical;
     }
   }
 `;
@@ -1305,7 +1425,7 @@ const SeparateSection = styled.div`
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 0;
     font-size: 0.875rem;
     font-weight: 400;
     color: ${palette.darkGray};
@@ -1431,8 +1551,13 @@ const NumDynamicGrid = styled.div`
     margin: 0;
     font-size: 0.875rem;
     font-weight: 400;
-    color: ${palette.black};
+    color: ${palette.darkGray};
     line-height: 1.5;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    display:-webkit-box;
+    -webkit-line-clamp:3;
+    -webkit-box-orient:vertical;
   }
 `;
 
@@ -1475,7 +1600,7 @@ const DoubleGrid = styled.div`
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    // gap: 4px;
     /* 각 개별 div에서는 border를 제거 */
   }
 
