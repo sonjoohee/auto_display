@@ -94,11 +94,18 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   const [warningMessage, setWarningMessage] = useState("");
 
   const [isPopupOpenDelete, setIsPopupOpenDelete] = useState(false);
+  const [isPopupEmpty, setIsPopupEmpty] = useState(false);
+
   const [deleteInfo, setDeleteInfo] = useState({ section: "", index: null });
 
   const togglePopupDelete = () => {
     setIsPopupOpenDelete(!isPopupOpenDelete);
   };
+  
+  const closePopupEmpty = () => {
+    setIsPopupEmpty(false);
+  };
+
   const confirmDelete = (section, index) => {
     setDeleteInfo({ section, index });
     togglePopupDelete();
@@ -352,7 +359,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
 
   const handleApplyChange = () => {
     if (newEditContent.trim() === "") {
-      alert("내용을 입력해주세요."); // 비어있는 내용에 대한 경고 메시지
+      setIsPopupEmpty(true); // 비어있는 내용에 대한 경고 메시지
       return;
     }
 
@@ -646,6 +653,10 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                     <img src={images.IconCheck2} alt="" />
                     저장
                   </button>
+                  {/* <button onClick={() => handleAddSave("mainCharacteristic")}>
+                    <img src={images.IconSetting} alt="" />
+                    생성
+                  </button> */}
                 </AddInfo>
               ) : (
                 isEditingNow && (
@@ -747,6 +758,10 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                     <img src={images.IconCheck2} alt="" />
                     저장
                   </button>
+                  {/* <button onClick={() => handleAddSave("targetCustomer")}>
+                    <img src={images.IconSetting} alt="" />
+                    생성
+                  </button> */}
                 </AddInfo>
               ) : (
                 isEditingNow && (
@@ -811,6 +826,38 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                 취소
               </button>
               <button type="button" onClick={handleDelete}>
+                확인
+              </button>
+            </div>
+          </div>
+        </Popup>
+      )}
+
+      {isPopupEmpty && (
+        <Popup
+          Cancel
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              closePopupEmpty(); // 상태를 false로 설정
+            }
+          }}
+        >
+          <div>
+            <button
+              type="button"
+              className="closePopup"
+              onClick={closePopupEmpty}
+            >
+              닫기
+            </button>
+            <span>
+              <img src={images.ExclamationMark2} alt="" />
+            </span>
+            <p>
+              내용을 입력해주세요.
+            </p>
+            <div className="btnWrap">
+              <button type="button" onClick={closePopupEmpty}>
                 확인
               </button>
             </div>
