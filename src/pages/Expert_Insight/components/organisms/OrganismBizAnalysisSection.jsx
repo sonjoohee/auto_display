@@ -233,6 +233,9 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
             : [],
         };
 
+        setIsLoadingAnalysis(false);
+        setIsLoading(false);
+
         // // 기존 대화 내역을 유지하면서 새로운 정보를 추가
         // const existingConversation = await getConversationByIdFromIndexedDB(
         //   conversationId,
@@ -285,8 +288,6 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
           conversationId
         );
         setReportRefreshTrigger((prev) => !prev);
-        setIsLoadingAnalysis(false);
-        setIsLoading(false);
       } else {
         // IndexedDB에서 기존 데이터를 가져와 적용
         const existingConversation = await getConversationByIdFromIndexedDB(
