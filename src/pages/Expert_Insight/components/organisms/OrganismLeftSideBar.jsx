@@ -220,16 +220,19 @@ const OrganismLeftSideBar = () => {
       const container = accordionContentRef.current;
       const clickedElement = event.currentTarget;
   
-      const top = clickedElement.offsetTop - container.scrollTop;
+      let top = clickedElement.offsetTop - container.scrollTop;
       let left = clickedElement.offsetLeft + clickedElement.offsetWidth + 10;
   
       // category에 따라 이동
       if (category === 'recent') {
         left -= 40; // 최근 대화면 40px 왼쪽 이동
+        top -= 10;
       } else if (category === '7days') {
         left -= 190; // 지난 7일이면 190px 왼쪽 이동
+        top += 10; // 10px 아래로 이동
       } else if (category === '30days') {
         left -= 340; // 지난 30일이면 340px 왼쪽 이동
+        top += 30; // 20px 아래로 이동
       }
   
       setEditBoxPosition({ top, left });
@@ -279,7 +282,7 @@ useEffect(() => {
       const clickedElement = event.currentTarget;
   
       // Calculate the position considering the scroll
-      const top = clickedElement.offsetTop - container.scrollTop;
+      const top = clickedElement.offsetTop - container.scrollTop -10;
       const left = clickedElement.offsetLeft + clickedElement.offsetWidth -30;
   
       setInsightEditBoxPosition({ top, left });
