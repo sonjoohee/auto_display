@@ -613,10 +613,6 @@ const PageExpertInsight = () => {
           if (conversationStage === 1) {
             if ((!answerData.advise) && (inputBusinessInfo && inputBusinessInfo.trim() !== "" || inputValue !== -1)) {
               const businessInfo = inputBusinessInfo || inputValue;
-              console.log(answerData.advise);
-              console.log(inputBusinessInfo);
-              console.log(inputValue);
-
               updatedConversation.push(
                 {
                   type: "system",
