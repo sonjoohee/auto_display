@@ -25,7 +25,10 @@ const MoleculeBizName = ({ date }) => {
   };
 
   const formatDate = (lang, timestamp) => {
-    const dateObj = new Date(timestamp);
+    let dateObj;
+    if(!timestamp) dateObj = new Date(Date.now()); // 새 프로젝트 시작
+    else dateObj = new Date(timestamp); // 지난 프로젝트 열기
+    
     const year = dateObj.getFullYear();
 
     if (lang === "ko") {

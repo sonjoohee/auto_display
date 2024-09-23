@@ -33,6 +33,7 @@ import {
   CUSTOMER_ADDITIONAL_REPORT_DATA,
   SELECTED_EXPERT_LIST,
   IS_LOADING,
+  SAVED_TIMESTAMP,
 } from "../../../AtomStates";
 
 import {
@@ -135,6 +136,8 @@ const PageExpertInsight = () => {
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
 
   const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
+  
+  const [savedTimestamp, setSavedTimestamp] = useAtom(SAVED_TIMESTAMP);
 
   let additionalReportCount = 0;
   let customerAdditionalReportCount = 0;
@@ -803,7 +806,7 @@ const PageExpertInsight = () => {
         <MainContent>
           <div>
             <ChatWrap className={isScrolled ? "scrolled" : ""}>
-              <MoleculeBizName date={Date.now()} />
+              <MoleculeBizName date={savedTimestamp} />
               {conversation?.map((item, index) => {
                 if (item.type === "user") {
                   return (

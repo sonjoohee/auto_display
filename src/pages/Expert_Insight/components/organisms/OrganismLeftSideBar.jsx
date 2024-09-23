@@ -42,6 +42,7 @@ import {
   CUSTOMER_ADDITIONAL_REPORT_DATA,
   SELECTED_EXPERT_LIST,
   IS_SOCIAL_LOGGED_IN,
+  SAVED_TIMESTAMP,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -148,6 +149,8 @@ const OrganismLeftSideBar = () => {
   const toggleRef = useRef(null); 
   
   const [editToggleIndex, setEditToggleIndex] = useState(null); // 특정 인덱스를 저장
+
+  const [savedTimestamp, setSavedTimestamp] = useAtom(SAVED_TIMESTAMP);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -324,6 +327,7 @@ const OrganismLeftSideBar = () => {
 
       const chatData = response.data.chat_data;
       // console.log("🚀 ~ handleConversationClick ~ chatData:", chatData);
+      setSavedTimestamp(chatData.timestamp); // 대화 날짜 설정
       setSelectedExpertIndex(
         chatData.expert_index !== undefined ? chatData.expert_index : 0
       );
@@ -699,18 +703,18 @@ const OrganismLeftSideBar = () => {
                           {chatList
                             .filter(chat => Date.now() - chat.timestamp <= 604800000)
                             .map((chat) => (
-                              <li key={chat.num}>
+                              <li key={chat.id}>
                                 <p onClick={() => handleConversationClick(chat.id)}>
                                   {chat.business_info}
                                 </p>
                                 <span
-                                  id={`insight-toggle-${chat.num}`}
+                                  id={`insight-toggle-${chat.id}`}
                                   style={{
                                     display: "inline-block",
                                     padding: "10px",
                                     cursor: "pointer",
                                   }}
-                                  onClick={() => editBoxToggle(chat.num)}
+                                  onClick={() => editBoxToggle(chat.id)}
                                 >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -743,13 +747,13 @@ const OrganismLeftSideBar = () => {
                                   </svg>
                                 </span>
                                 
-                                {editToggleIndex === chat.num && (
+                                {editToggleIndex === chat.id && (
                                   <div
-                                    id={`insight-edit-box-${chat.num}`}
+                                    id={`insight-edit-box-${chat.id}`}
                                     className="insight-toggle"
                                     ref={historyEditBoxRef}
                                   >
-                                    <EditBox isEditToggle={editToggleIndex === chat.num}>
+                                    <EditBox isEditToggle={editToggleIndex === chat.id}>
                                       <button
                                         type="button"
                                         onClick={() =>
@@ -778,18 +782,18 @@ const OrganismLeftSideBar = () => {
                           {chatList
                             .filter(chat => Date.now() - chat.timestamp > 604800000 && Date.now() - chat.timestamp <= 2592000000)
                             .map((chat) => (
-                              <li key={chat.num}>
+                              <li key={chat.id}>
                                 <p onClick={() => handleConversationClick(chat.id)}>
                                   {chat.business_info}
                                 </p>
                                 <span
-                                  id={`insight-toggle-${chat.num}`}
+                                  id={`insight-toggle-${chat.id}`}
                                   style={{
                                     display: "inline-block",
                                     padding: "10px",
                                     cursor: "pointer",
                                   }}
-                                  onClick={() => editBoxToggle(chat.num)}
+                                  onClick={() => editBoxToggle(chat.id)}
                                 >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -822,13 +826,13 @@ const OrganismLeftSideBar = () => {
                                   </svg>
                                 </span>
                                 
-                                {editToggleIndex === chat.num && (
+                                {editToggleIndex === chat.id && (
                                   <div
-                                    id={`insight-edit-box-${chat.num}`}
+                                    id={`insight-edit-box-${chat.id}`}
                                     className="insight-toggle"
                                     ref={historyEditBoxRef}
                                   >
-                                    <EditBox isEditToggle={editToggleIndex === chat.num}>
+                                    <EditBox isEditToggle={editToggleIndex === chat.id}>
                                       <button
                                         type="button"
                                         onClick={() =>
@@ -857,18 +861,18 @@ const OrganismLeftSideBar = () => {
                           {chatList
                             .filter(chat => Date.now() - chat.timestamp > 2592000000)
                             .map((chat) => (
-                              <li key={chat.num}>
+                              <li key={chat.id}>
                                 <p onClick={() => handleConversationClick(chat.id)}>
                                   {chat.business_info}
                                 </p>
                                 <span
-                                  id={`insight-toggle-${chat.num}`}
+                                  id={`insight-toggle-${chat.id}`}
                                   style={{
                                     display: "inline-block",
                                     padding: "10px",
                                     cursor: "pointer",
                                   }}
-                                  onClick={() => editBoxToggle(chat.num)}
+                                  onClick={() => editBoxToggle(chat.id)}
                                 >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -901,13 +905,13 @@ const OrganismLeftSideBar = () => {
                                   </svg>
                                 </span>
                                 
-                                {editToggleIndex === chat.num && (
+                                {editToggleIndex === chat.id && (
                                   <div
-                                    id={`insight-edit-box-${chat.num}`}
+                                    id={`insight-edit-box-${chat.id}`}
                                     className="insight-toggle"
                                     ref={historyEditBoxRef}
                                   >
-                                    <EditBox isEditToggle={editToggleIndex === chat.num}>
+                                    <EditBox isEditToggle={editToggleIndex === chat.id}>
                                       <button
                                         type="button"
                                         onClick={() =>
