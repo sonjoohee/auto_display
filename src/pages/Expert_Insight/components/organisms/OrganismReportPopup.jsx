@@ -53,12 +53,30 @@ const OrganismReportPopup = ({ report, onClose }) => {
 
           <ExpertThumb>
             <div className="thumb">
-              <img src={panelimages.expert_1} alt="" />
+            {
+              report.content.expert_id === "1" 
+                ? <img src={panelimages.expert_1} alt="" /> 
+                : report.content.expert_id === "2" 
+                  ? <img src={panelimages.expert_2} alt="" /> 
+                  : <img src={panelimages.expert_3} alt="" />
+            }
             </div>
-            <div className="cont">
-              <strong>제품 전략가</strong>
-              <p>김도원</p>
-            </div>
+            {
+              report.content.expert_id === "1" 
+                ? <div className="cont">
+                    <strong>제품 전략가</strong>
+                    <p>김도원</p>
+                  </div> 
+                : report.content.expert_id === "2" 
+                  ? <div className="cont">
+                      <strong>마케팅 구루</strong>
+                      <p>이지현</p>
+                    </div>
+                  : <div className="cont">
+                      <strong>고객 분석 전문가</strong>
+                      <p>박서연</p>
+                    </div>
+            }
           </ExpertThumb>
         </div>
 
