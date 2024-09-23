@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { useAtom } from "jotai";
 import {
   passwordAtom,
@@ -128,6 +129,7 @@ const PageMeetAiExpert = () => {
   const [isPopupLogin, setIsPopupLogin] = useState(false); // 로그인 상태가 아닐 때 팝업을 띄우기 위한 상태
 
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
+  const [advise, setAdvise] = useState(""); // 새로운 advise 상태 추가
 
   const closePopupRegex = () => {
     setInputBusinessInfo("");
@@ -193,8 +195,10 @@ const PageMeetAiExpert = () => {
     };
   }, []);
 
-  const handledSearch = () => {
+  const handledSearch = async () => {
     const regex = /^[가-힣a-zA-Z0-9\s.,'"-]*$/;
+  
+    // 입력 값에 대한 정규식 및 빈 값 체크
     if (!regex.test(inputBusinessInfo)) {
       setIsPopupRegex(true);
       return;
@@ -203,15 +207,67 @@ const PageMeetAiExpert = () => {
       setIsPopupRegex2(true);
       return;
     }
+  
+    // 로그인 상태인지 확인 후 처리
     if (isLoggedIn) {
-      setApproachPath(-1); // 검색을 통해 들어가는 경우
-      setButtonState(1); // 버튼 상태를 1로 설정
-      setSelectedExpertIndex(0);
-      navigate("/ExpertInsight");
+      try {
+        const data = {
+          business_info: inputBusinessInfo,
+        };
+        const axiosConfig = {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
+          },
+        };
+        const sampledata = {
+          business_info: "원격 근무자를 위한 생산성 관리 툴", // 비즈니스 아이템 명칭 변경
+          business_analysis_data: {
+            명칭: "RemoteWorkPro", // 툴 이름 예시
+            주요_목적_및_특징: [
+              "RemoteWorkPro는 원격 근무자들의 생산성을 극대화하기 위한 올인원 관리 툴입니다. 이 툴은 작업 시간 추적, 일정 관리, 프로젝트 협업 도구 등을 통합하여 하나의 플랫폼에서 원활하게 업무를 처리할 수 있도록 도와줍니다. 사용자는 실시간으로 자신의 작업 진행 상황을 모니터링하고, 팀원들과의 효율적인 소통과 협업을 통해 업무 효율성을 높일 수 있습니다."
+            ],
+            주요기능: [
+              "작업 시간 추적 기능을 통해 근무 시간을 정확히 기록하고, 시간당 생산성 데이터를 실시간으로 제공하여 업무 관리가 용이합니다.",
+              "프로젝트 관리 기능으로 팀원들과의 협업이 원활해지며, 모든 진행 상황을 한눈에 확인할 수 있는 대시보드 기능을 갖추고 있습니다.",
+              "화상 회의 및 실시간 채팅 기능을 통해 팀원 간의 소통을 원활하게 하고, 일정 관리 및 알림 시스템을 통해 중요한 일정을 놓치지 않도록 도와줍니다."
+            ],
+            목표고객: [
+              "원격 근무 환경에서 효율적인 업무 관리를 원하는 중소기업 및 스타트업: RemoteWorkPro는 다양한 프로젝트와 팀원을 관리해야 하는 중소기업에게 필수적인 기능을 제공하여, 업무 흐름을 개선하고 효율성을 극대화합니다.",
+              "프리랜서 및 1인 사업자: RemoteWorkPro는 시간 관리가 중요한 프리랜서 및 1인 사업자들에게 자신의 작업 시간을 기록하고 관리하는 데 유용하며, 일정과 프로젝트를 효과적으로 관리할 수 있도록 도와줍니다.",
+              "대규모 팀을 운영하는 IT 및 서비스 업종의 기업: RemoteWorkPro는 대규모 팀의 협업과 의사소통을 지원하는 강력한 도구로, 팀원들이 분산된 환경에서도 일관되게 업무를 진행할 수 있도록 합니다."
+            ]
+          },
+          question_info: inputBusinessInfo // 기존 입력 데이터 유지
+        };
+        
+        // 서버로 질문 요청 보내기
+        let response = await axios.post(
+          "https://wishresearch.kr/panels/customer_add_question",
+          sampledata,
+          axiosConfig
+        );
+  
+        const answerData = response.data.additional_question;
+  
+        // answerData.advise가 있을 경우에만 동작 진행
+        if (!answerData.advise) {
+          setAdvise(answerData.advise); // advise 데이터 설정
+          setApproachPath(-1); // 검색을 통해 들어가는 경우
+          setButtonState(1); // 버튼 상태를 1로 설정
+          setSelectedExpertIndex(0);
+          navigate("/ExpertInsight");
+        } else {
+          // advise가 없을 경우 경고 팝업 띄우기
+          // setIsPopupInvalidBusiness(true); // 경고창 상태 true로 설정
+        }
+      } catch (error) {
+        console.error("에러 발생:", error);
+      }
     } else {
       setIsPopupLogin(true); // 로그인 상태가 아니라면 로그인 팝업 띄우기
     }
   };
+  
 
   const handledExpertSelect = (index) => {
     if (isLoggedIn) {
