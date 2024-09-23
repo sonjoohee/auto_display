@@ -1153,22 +1153,20 @@ const BoxWrap = styled.div`
         : palette.darkGray}; // 3번 전문가일 때 글자색 녹색
   }
 
-  p {
-    font-size: 0.875rem;
-    color: ${(props) =>
-      props.expertIndex === "1"
-        ? palette.darkGray
-        : props.expertIndex === "2"
-        ? palette.darkGray
-        : palette.darkGray};
-    line-height: 1.5;
-    word-wrap: break-word;
-    display: -webkit-box;
-    -webkit-line-clamp: 3 ;
-    -webkit-box-orient: vertical;
-    overflow: visible;
-    text-overflow: ellipsis;
-  }
+p {
+  font-size: 0.875rem;
+  color: ${(props) =>
+    props.expertIndex === "1"
+      ? palette.darkGray
+      : props.expertIndex === "2"
+      ? palette.darkGray
+      : palette.darkGray};
+  line-height: 1.5;
+  word-wrap: break-word; /* 단어가 긴 경우 자동 줄바꿈 */
+  overflow: visible; /* 내용이 넘치면 자동으로 박스가 확장됨 */
+  height: auto; /* 박스의 높이가 내용에 맞춰 자동으로 조정 */
+}
+
 
   .dashedLine {
     position:relative;
