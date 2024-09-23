@@ -43,6 +43,7 @@ import {
   SELECTED_EXPERT_LIST,
   IS_SOCIAL_LOGGED_IN,
   SAVED_TIMESTAMP,
+  IS_EDITING_NOW,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -151,6 +152,8 @@ const OrganismLeftSideBar = () => {
   const [editToggleIndex, setEditToggleIndex] = useState(null); // 특정 인덱스를 저장
 
   const [savedTimestamp, setSavedTimestamp] = useAtom(SAVED_TIMESTAMP);
+
+  const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -364,6 +367,9 @@ const OrganismLeftSideBar = () => {
       // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
       // set어프로치패스(2)
       setApproachPath(2);
+
+      setIsEditingNow(false);
+      
       // 페이지를 대화가 이어지는 형태로 전환
       navigate(`/conversation/${conversationId}`);
     } catch (error) {
@@ -567,6 +573,7 @@ const OrganismLeftSideBar = () => {
     setNewPassword("");
     setRePassword("");
     setSelectedExpertList([]);
+    setIsEditingNow(false);
   };
 
   return (

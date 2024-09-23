@@ -227,6 +227,22 @@ const MoleculeReportController = ({
       mainCharacteristicOfBusinessInformation
     );
     setTempBusinessInformationTargetCustomer(businessInformationTargetCustomer);
+
+    saveConversationToIndexedDB(
+      {
+        id: conversationId,
+        conversation: conversation,
+        analysisReportData,
+        inputBusinessInfo,
+        conversationStage: 2,
+        timestamp: Date.now(),
+        expert_index: selectedExpertIndex,
+        selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
+        customerAdditionalReportData: customerAdditionalReportData,
+      },
+      isLoggedIn,
+      conversationId
+    );
   };
 
   const toggleSave = async () => {
