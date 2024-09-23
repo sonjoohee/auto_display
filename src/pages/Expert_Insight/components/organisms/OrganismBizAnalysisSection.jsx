@@ -538,6 +538,10 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                       <img src={images.IconCheck2} alt="" />
                       저장
                     </button>
+                    {/* <button onClick={() => handleAddSave("mainFeatures")}>
+                      <img src={images.IconSetting} alt="" />
+                      생성
+                    </button> */}
                   </BtnWrap>
                 </AddInfo>
               ) : (

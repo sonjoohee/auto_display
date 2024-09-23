@@ -44,6 +44,7 @@ import {
   SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
   ADDITIONAL_REPORT_DATA,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
+  IS_EDITING_NOW,
 } from "../../../AtomStates";
 
 const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
@@ -110,6 +111,8 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   ] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
   const [customerAdditionalReportData, setCustomerAdditionalReportData] =
     useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
+  
+  const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
 
   useEffect(() => {
     const loadData = async () => {
@@ -144,6 +147,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
           setButtonState(0); // 버튼 상태를 초기화
           setIsLoadingExpert(true);
           setIsLoading(true);
+          setIsEditingNow(false); // 수정 상태 초기화
 
           const data = {
             expert_id: selectedExpertIndex,

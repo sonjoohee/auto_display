@@ -35,6 +35,7 @@ import {
   SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
   SELECTED_EXPERT_LIST,
+  IS_EDITING_NOW,
 } from "../../../AtomStates";
 
 import { Link } from "react-router-dom";
@@ -126,6 +127,8 @@ const PageMeetAiExpert = () => {
   const [isPopupRegex2, setIsPopupRegex2] = useState(false);
   const [isPopupLogin, setIsPopupLogin] = useState(false); // 로그인 상태가 아닐 때 팝업을 띄우기 위한 상태
 
+  const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
+
   const closePopupRegex = () => {
     setInputBusinessInfo("");
     setIsPopupRegex(false); // 팝업 닫기
@@ -165,6 +168,7 @@ const PageMeetAiExpert = () => {
     setNewPassword("");
     setRePassword("");
     setSelectedExpertList([]);
+    setIsEditingNow(false);
   }, []);
 
   useEffect(() => {
