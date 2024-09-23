@@ -90,8 +90,7 @@ const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
             isBlue
             placeholder={
               isBlue
-                // ? "더 알고 싶은 내용이 있으신가요? 추가 질문으로 더 많은 인사이트를 얻어보세요"
-                ? "당신의 아이템 또는 프로젝트 아이디어를 적어 주세요 (예: 원격 근무자를 위한 생산성 관리 툴)"
+                ? "더 알고 싶은 내용이 있으신가요? 추가 질문으로 더 많은 인사이트를 얻어보세요 "
                 : "당신의 아이템 또는 프로젝트 아이디어를 적어 주세요 (예: 원격 근무자를 위한 생산성 관리 툴)"
             }
             value={inputValue}
@@ -235,16 +234,28 @@ const SearchBar = styled.div`
   width: 100%;
   padding: 14px 32px;
   border-radius: 50px;
-  border: 2px solid
-    ${(props) => {
-      if (props.isBlue) return `${palette.blue}`;
-      else return `${palette.black}`;
-    }};
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  border: 
+  ${(props) => {
+    if (props.isBlue) return `1px solid ${palette.lineGray}`;
+    else return `2px solid ${palette.black}`;
+  }};
+  box-shadow: 
+  ${(props) => {
+    if (props.isBlue) return `none`;
+    else return `0 4px 15px rgba(0, 0, 0, 0.15)`;
+  }};
   background: ${(props) => {
     if (props.isBlue) return `#F5F9FF`;
     else return `#F6F6F6`;
   }};
+
+  svg {
+    display: 
+    ${(props) => {
+      if (props.isBlue) return `none`;
+      else return `inline-block`;
+    }};
+  }
 
   svg path {
     fill: ${(props) => {
@@ -256,9 +267,15 @@ const SearchBar = styled.div`
   input {
     font-family: "Pretendard", "Poppins";
     color: ${palette.black};
-
+  
     &:placeholder {
       font-size: 1rem;
+
+      color: 
+      ${(props) => {
+        if (props.isBlue) return `${palette.gray}`;
+        else return `${palette.lightGray}`;
+      }};
     }
   }
 

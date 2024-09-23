@@ -631,25 +631,28 @@ const OrganismLeftSideBar = () => {
                               width="14"
                               height="3"
                               viewBox="0 0 14 3"
-                              fill={getColor(report.reportIndex)}
+                              // fill={getColor(report.reportIndex)}
                               >
                               <circle
                                 cx="2.0067"
                                 cy="1.51283"
                                 r="1.49694"
                                 transform="rotate(-90 2.0067 1.51283)"
+                                fill="#A0A0A0"
                               />
                               <circle
                                 cx="7.00084"
                                 cy="1.51283"
                                 r="1.49694"
                                 transform="rotate(-90 7.00084 1.51283)"
+                                fill="#A0A0A0"
                               />
                               <circle
                                 cx="11.993"
                                 cy="1.51283"
                                 r="1.49694"
                                 transform="rotate(-90 11.993 1.51283)"
+                                fill="#A0A0A0"
                               />
                             </svg>
                           </span>
@@ -1047,11 +1050,11 @@ const OrganismLeftSideBar = () => {
             </span>
             <p>정말 이 보고서를 삭제하시겠습니까?</p>
             <div className="btnWrap">
-              <button type="button" onClick={handleDeleteInsightConfirm}>
-                확인
-              </button>
               <button type="button" onClick={handleDeleteCancel}>
                 취소
+              </button>
+              <button type="button" onClick={handleDeleteInsightConfirm}>
+                확인
               </button>
             </div>
           </div>
@@ -1654,7 +1657,7 @@ const AccordionContent = styled.div`
     font-family: "Pretendard";
     font-size: 0.875rem;
     text-align: left;
-    padding: 8px 0 8px 15px;
+    padding: 8px 0;
   }    
 
   li {
@@ -1692,20 +1695,24 @@ const AccordionContent = styled.div`
       transition: all 0.5s;
     }
 
+    /* 전문가 0: 빨간색 */
     &[data-expert-index="0"]:before {
-      background: #ff0000; /* 전문가 0: 빨간색 */
+      // background: #ff0000; 
     }
 
+    /* 전문가 1: 초록색 */
     &[data-expert-index="1"]:before {
-      background: #00ff00; /* 전문가 1: 초록색 */
+      // background: #00ff00; 
     }
 
+    /* 전문가 2: 보라색 */
     &[data-expert-index="2"]:before {
-      background: #800080; /* 전문가 2: 보라색 */
+      // background: #800080; 
     }
 
+    /* 전문가 3: 주황색 */
     &[data-expert-index="3"]:before {
-      background: #ffa500; /* 전문가 3: 주황색 */
+      // background: #ffa500; 
     }
 
     p {
