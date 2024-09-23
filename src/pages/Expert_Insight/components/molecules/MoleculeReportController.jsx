@@ -16,7 +16,9 @@ import {
   TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER,
   SAVED_REPORTS,
   IS_EDITING_NOW,
-  SELECTED_TAB_COPY,
+  SELECTED_TAB_COPY_1,
+  SELECTED_TAB_COPY_2,
+  SELECTED_TAB_COPY_3,
   EXPERT1_REPORT_DATA,
   EXPERT2_REPORT_DATA,
   EXPERT3_REPORT_DATA,
@@ -105,7 +107,9 @@ const MoleculeReportController = ({
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
   const [warningMessage, setWarningMessage] = useState("");
 
-  const [selectedTabCopy, setSelectedTabCopy] = useAtom(SELECTED_TAB_COPY);
+  const [selectedTabCopy1, setSelectedTabCopy1] = useAtom(SELECTED_TAB_COPY_1);
+  const [selectedTabCopy2, setSelectedTabCopy2] = useAtom(SELECTED_TAB_COPY_2);
+  const [selectedTabCopy3, setSelectedTabCopy3] = useAtom(SELECTED_TAB_COPY_3);
 
   const [expert1ReprotData, setExpert1ReportData] =
     useAtom(EXPERT1_REPORT_DATA);
@@ -382,13 +386,13 @@ const MoleculeReportController = ({
       return textContent;
     };
 
-    const getSelectedTabData = (selectedTabCopy) => {
+    const getSelectedTabData = () => {
       if (strategyReportID === "1")
-        return expert1ReprotData.tabs[selectedTabCopy];
+        return expert1ReprotData.tabs[selectedTabCopy1];
       else if (strategyReportID === "2")
-        return expert2ReprotData.tabs[selectedTabCopy];
+        return expert2ReprotData.tabs[selectedTabCopy2];
       else if (strategyReportID === "3")
-        return expert3ReprotData.tabs[selectedTabCopy];
+        return expert3ReprotData.tabs[selectedTabCopy3];
       else return;
     };
 
@@ -408,7 +412,7 @@ ${businessInformationTargetCustomer
 `;
     } else if (reportIndex === 1) {
       // 전문가 보고서 복사 기능
-      const selectedTabData = getSelectedTabData(selectedTabCopy);
+      const selectedTabData = getSelectedTabData();
       contentToCopy = extractTextContent(selectedTabData);
     } else if (reportIndex === 2) {
       // 추가 질문 복사 기능
