@@ -127,6 +127,7 @@ const PageMeetAiExpert = () => {
   const [isPopupRegex, setIsPopupRegex] = useState(false);
   const [isPopupRegex2, setIsPopupRegex2] = useState(false);
   const [isPopupLogin, setIsPopupLogin] = useState(false); // 로그인 상태가 아닐 때 팝업을 띄우기 위한 상태
+  const [isPopupInvalidBusiness, setIsPopupInvalidBusiness] = useState(false);
 
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
   const [advise, setAdvise] = useState(""); // 새로운 advise 상태 추가
@@ -140,6 +141,9 @@ const PageMeetAiExpert = () => {
   };
   const closePopupLogin = () => {
     setIsPopupLogin(false); // 로그인 필요 팝업 닫기
+  };
+  const closePopupInvalidBusiness = () => {
+    setIsPopupInvalidBusiness(false); // 팝업 닫기
   };
   useEffect(() => {
     setConversation([]);
@@ -239,26 +243,28 @@ const PageMeetAiExpert = () => {
           },
           question_info: inputBusinessInfo // 기존 입력 데이터 유지
         };
-        
-        // 서버로 질문 요청 보내기
-        let response = await axios.post(
-          "https://wishresearch.kr/panels/customer_add_question",
-          sampledata,
-          axiosConfig
-        );
   
-        const answerData = response.data.additional_question;
+        // 서버로 질문 요청 보내기 (주석처리)
+        // let response = await axios.post(
+        //   "https://wishresearch.kr/panels/customer_add_question",
+        //   sampledata,
+        //   axiosConfig
+        // );
+  
+        // const answerData = response.data.additional_question;
+  
+        // 임시 데이터로 성공 처리
+        const answerData = { answer: "Sample answer from AI" };
   
         // answerData.advise가 있을 경우에만 동작 진행
         if (!answerData.advise) {
-          setAdvise(answerData.advise); // advise 데이터 설정
           setApproachPath(-1); // 검색을 통해 들어가는 경우
           setButtonState(1); // 버튼 상태를 1로 설정
           setSelectedExpertIndex(0);
           navigate("/ExpertInsight");
         } else {
-          // advise가 없을 경우 경고 팝업 띄우기
-          // setIsPopupInvalidBusiness(true); // 경고창 상태 true로 설정
+          setAdvise(answerData.advise); // advise 데이터 설정
+          setIsPopupInvalidBusiness(true); // 경고 팝업 띄우기
         }
       } catch (error) {
         console.error("에러 발생:", error);
@@ -267,6 +273,7 @@ const PageMeetAiExpert = () => {
       setIsPopupLogin(true); // 로그인 상태가 아니라면 로그인 팝업 띄우기
     }
   };
+  
   
 
   const handledExpertSelect = (index) => {
@@ -478,6 +485,38 @@ const PageMeetAiExpert = () => {
           </div>
         </Popup>
       )}
+          {isPopupInvalidBusiness && (
+      <Popup
+        Cancel
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            closePopupInvalidBusiness(); // 상태를 false로 설정
+          }
+        }}
+      >
+        <div>
+          <button
+            type="button"
+            className="closePopup"
+            onClick={closePopupInvalidBusiness}
+          >
+            닫기
+          </button>
+          <span>
+            <img src={images.ExclamationMark2} alt="" />
+          </span>
+          <p>
+            올바른 비즈니스 정보를 입력해주세요. 입력한 정보로 검색이 제한될 수
+            있습니다.
+          </p>
+          <div className="btnWrap">
+            <button type="button" onClick={closePopupInvalidBusiness}>
+              확인
+            </button>
+          </div>
+        </div>
+      </Popup>
+    )}
     </>
   );
 };
