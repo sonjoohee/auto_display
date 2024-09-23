@@ -1024,7 +1024,7 @@ const SeparateSection = styled.div`
       border: 1px solid ${palette.lineGray};
 
       p {
-        overflow: hidden;
+        overflow: visible;
         text-overflow: ellipsis;
         display: -webkit-box;
         -webkit-line-clamp: 3;
@@ -1166,7 +1166,7 @@ const BoxWrap = styled.div`
     display: -webkit-box;
     -webkit-line-clamp: 3 ;
     -webkit-box-orient: vertical;
-    overflow: hidden;
+    overflow: visible;
     text-overflow: ellipsis;
   }
 
@@ -1251,7 +1251,7 @@ const DynamicGrid = styled.div`
 
   p {
     margin: 0;
-    overflow: hidden;
+    overflow: visible;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 3;
@@ -1354,7 +1354,7 @@ const NumDynamicGrid = styled.div`
     display: -webkit-box;
     -webkit-line-clamp: 3 ;
     -webkit-box-orient: vertical;
-    overflow: hidden;
+    overflow: visible;
     text-overflow: ellipsis;
   }
 `;
