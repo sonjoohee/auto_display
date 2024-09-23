@@ -50,7 +50,8 @@ const OrganismReportPopup = ({ report, onClose }) => {
               </span>
             </popup-p>
           </popupTitle>
-
+          
+        {reportIndex === 1 &&          
           <ExpertThumb>
             <div className="thumb">
             {
@@ -78,6 +79,7 @@ const OrganismReportPopup = ({ report, onClose }) => {
                     </div>
             }
           </ExpertThumb>
+        }
         </div>
 
         {reportIndex === 0 && <BizAnalysisSection report={report} />}
