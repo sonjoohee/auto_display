@@ -245,16 +245,16 @@ const PageMeetAiExpert = () => {
         };
   
         // 서버로 질문 요청 보내기 (주석처리)
-        // let response = await axios.post(
-        //   "https://wishresearch.kr/panels/customer_add_question",
-        //   sampledata,
-        //   axiosConfig
-        // );
+        let response = await axios.post(
+          "https://wishresearch.kr/panels/customer_add_question",
+          sampledata,
+          axiosConfig
+        );
   
-        // const answerData = response.data.additional_question;
+        const answerData = response.data.additional_question;
   
         // 임시 데이터로 성공 처리
-        const answerData = { answer: "Sample answer from AI" };
+        // const answerData = { answer: "Sample answer from AI" };
   
         // answerData.advise가 있을 경우에만 동작 진행
         if (!answerData.advise) {

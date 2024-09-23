@@ -592,7 +592,6 @@ const PageExpertInsight = () => {
         setAdvise("");
 
         // 서버에 요청 보내기 부분을 주석 처리
-        /*
         let response = await axios.post(
           "https://wishresearch.kr/panels/customer_add_question",
           sampledata,
@@ -600,10 +599,9 @@ const PageExpertInsight = () => {
         );
 
         let answerData = response.data.additional_question;
-        */
         
         // API 응답 데이터 대신 하드코딩된 값으로 설정
-        let answerData = { advise: null }; // 가정: advise가 없는 경우
+        // let answerData = { advise: null }; // 가정: advise가 없는 경우
 
         // answerData.advise가 없을 때만 실행
         if (!answerData.advise) {
@@ -634,8 +632,22 @@ const PageExpertInsight = () => {
     }
 
 
+      if (conversationStage === 1 && approachPath === -1) {
+        if ((inputBusinessInfo && inputBusinessInfo.trim() !== "" || inputValue !== -1)) {
+          const businessInfo = inputBusinessInfo || inputValue;
+          updatedConversation.push(
+            {
+              type: "system",
+              message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻`,
+              expertIndex: selectedExpertIndex,
+            },
+            { type: "analysis", businessInfo }
+          );
+          newConversationStage = 2;
+        }
+      } 
 
-    if (conversationStage > 1 && inputValue !== -1) {
+      if (conversationStage > 1 && inputValue !== -1) {
           if (
             (updatedConversation.length > 0 &&
               updatedConversation[updatedConversation.length - 1].type ===
