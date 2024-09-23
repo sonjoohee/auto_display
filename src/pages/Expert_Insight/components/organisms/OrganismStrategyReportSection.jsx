@@ -448,8 +448,8 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
           {subTitleItems.length > 0 &&
             subTitleItems.map((item, index) => (
               <SubTextBox key={index}>
-                <SubTitle>- {item.subTitle}</SubTitle>
-                <p>- {item.text}</p>
+                <SubTitle style={{ marginBottom: "5px" }}>{item.subTitle}</SubTitle>
+                <p className="dashedLine">{item.text}</p>
                 {item.subText1 && <SubTextBox>{item.subText1}</SubTextBox>}
                 {item.subText2 && <SubTextBox>{item.subText2}</SubTextBox>}
                 {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
@@ -477,10 +477,12 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
               title === "시장 위치 평가 및 경쟁자 분석" ||
               title === "장기적인 경쟁 우위 전략"
             ) && (
+              <>
               <strong>
                 <img src={images.Check} alt="" />
                 {title}
               </strong>
+              </>
             )}
 
           {title === "제안 사항" && (
@@ -491,7 +493,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
               </strong>
               {/* subTitle : text 형태로 넘버링 추가하여 출력 */}
               {content.map((item, index) => (
-                <div key={index} style={{ marginBottom: "10px" }}>
+                <div key={index} style={{ marginTop: "3px" }}>
                   {" "}
                   {/* 각 요소에 마진 추가 */}
                   <p>
@@ -523,11 +525,11 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
                 }}
               >
                 {subItems.map((item, index) => (
-                  <div key={index} style={{ marginBottom: "10px" }}>
+                  <div key={index} style={{ marginTop: "3px" }}>
                     {" "}
                     {/* 각 항목 간 마진 추가 */}
-                    <p>
-                      - {item.subTitle} : {item.text}
+                    <p className="dashedLine">
+                      {item.subTitle} : {item.text}
                     </p>
                   </div>
                 ))}
@@ -556,11 +558,11 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
                 }}
               >
                 {subItems.map((item, index) => (
-                  <div key={index} style={{ marginBottom: "10px" }}>
+                  <div key={index} style={{ marginTop: "3px" }}>
                     {" "}
                     {/* 각 항목 간 마진 추가 */}
-                    <p>
-                      - {item.subTitle} : {item.text}
+                    <p className="dashedLine">
+                      {item.subTitle} : {item.text}
                     </p>
                   </div>
                 ))}
@@ -596,11 +598,11 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
                 }}
               >
                 {subItems.map((item, index) => (
-                  <div key={index} style={{ marginBottom: "10px" }}>
+                  <div key={index} style={{ marginTop: "3px" }}>
                     {" "}
                     {/* 각 항목 간 마진 추가 */}
-                    <p>
-                      - {item.subTitle} : {item.text}
+                    <p className="dashedLine">
+                      {item.subTitle} : {item.text}
                     </p>
                   </div>
                 ))}
@@ -634,17 +636,18 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
                 }}
               >
                 {subItems.map((item, index) => (
-                  <div key={index} style={{ marginBottom: "10px" }}>
+                  <div key={index} style={{ marginTop: "3px" }}>
                     {" "}
                     {/* 각 항목 간 마진 추가 */}
-                    <p>
-                      - {item.subTitle} : {item.text}
+                    <p className="dashedLine">
+                      {item.subTitle} : {item.text}
                     </p>
                   </div>
                 ))}
               </div>
             </>
           )}
+          
           {title === "고객 여정 맵핑" && (
             <>
               {/* 제목과 총평 출력 */}
@@ -671,11 +674,11 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
                 }}
               >
                 {subItems.map((item, index) => (
-                  <div key={index} style={{ marginBottom: "10px" }}>
+                  <div key={index} style={{ marginTop: "3px" }}>
                     {" "}
                     {/* 각 항목 간 마진 추가 */}
-                    <p>
-                      - {item.subTitle} : {item.text}
+                    <p className="dashedLine">
+                      {item.subTitle} : {item.text}
                     </p>
                   </div>
                 ))}
@@ -692,13 +695,14 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
               </strong>
 
               {/* subTitle : text 형태로 기본 박스 안에 출력 */}
-              <div style={{ padding: "15px", borderRadius: "10px" }}>
+              {/* <div style={{ padding: "15px", borderRadius: "10px" }}> */}
+              <div>
                 {subItems.map((item, index) => (
-                  <div key={index} style={{ marginBottom: "10px" }}>
+                  <div key={index} style={{ marginTop: "3px" }}>
                     {" "}
                     {/* 각 항목 간 마진 추가 */}
-                    <p>
-                      - {item.subTitle} : {item.text}
+                    <p className="dashedLine">
+                      {item.subTitle} : {item.text}
                     </p>
                   </div>
                 ))}
@@ -715,13 +719,14 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
               </strong>
 
               {/* subTitle : text 형태로 기본 박스 안에 출력 */}
-              <div style={{ padding: "15px", borderRadius: "10px" }}>
+              {/* <div style={{ padding: "15px", borderRadius: "10px" }}> */}
+              <div>
                 {subItems.map((item, index) => (
-                  <div key={index} style={{ marginBottom: "10px" }}>
+                  <div key={index} style={{ marginTop: "3px" }}>
                     {" "}
                     {/* 각 항목 간 마진 추가 */}
-                    <p>
-                      - {item.subTitle} : {item.text}
+                    <p className="dashedLine">
+                      {item.subTitle} : {item.text}
                     </p>
                   </div>
                 ))}
@@ -731,13 +736,14 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
 
           {/* "시장 위치 평가 및 경쟁자 분석"일 때 별도의 처리 */}
           {title === "시장 위치 평가 및 경쟁자 분석" && (
-            <BgStyledSection>
-              <h4>
-                <img src={images.Check} alt="" />
-                {title}
-              </h4>
-              {nonSubTitleItems.length > 0 && <p>{nonSubTitleItems[0].text}</p>}
+            <>
+            <strong>
+              <img src={images.Check} alt="" />
+              {title}
+            </strong>
+            {nonSubTitleItems.length > 0 && <p>{nonSubTitleItems[0].text}</p>}
 
+            <BgStyledSection>
               <div className="flexBox">
                 {subTitleItems.map((item, index) => (
                   <div className="bgWhite" key={index}>
@@ -748,16 +754,14 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
                     </strong>
                     <ul>
                       {item.subText1 && (
-                        <li>
-                          -{" "}
+                        <li className="dashedLine">
                           {item.subText1.startsWith("강점:")
                             ? item.subText1
                             : `강점: ${item.subText1}`}
                         </li>
                       )}
                       {item.subText2 && (
-                        <li>
-                          -{" "}
+                        <li className="dashedLine">
                           {item.subText2.startsWith("약점:")
                             ? item.subText2
                             : `약점: ${item.subText2}`}
@@ -768,6 +772,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
                 ))}
               </div>
             </BgStyledSection>
+            </>
           )}
 
           {title === "고객 여정 맵핑 터치포인트 단계 최적화 방안" && (
@@ -797,8 +802,9 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
           title === "주요 타겟층 특징" || 
           title === "콘텐츠 및 마케팅 전략") && (
             <>
-             {title_text && <p>{title_text}</p>}
-            <DoubleGrid columns={2}> {/* 2개의 컬럼을 생성하여 가로로 나열 */}
+            {title_text && <p>{title_text}</p>}
+            
+            <DoubleGrid columns={2} style={{ padding: "0" }}> {/* 2개의 컬럼을 생성하여 가로로 나열 */}
               {content.map((section, sectionIndex) => (
                 <SectionWrapper key={sectionIndex}> {/* 각 섹션을 감싸는 div */}
                   {/* section.title 출력 */}
@@ -806,8 +812,8 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
 
                   {/* subContent를 하나의 DynamicGrid 안에서 출력 */}
                   {section.subContent.map((item, itemIndex) => (
-                    <div key={itemIndex}>
-                      <p>{item.subTitle} : {item.text}</p>
+                    <div key={itemIndex} style={{ marginBottom:"0" }}>
+                      <p className="dashedLine">{item.subTitle} : {item.text}</p>
                     </div>
                   ))}
                 </SectionWrapper>
@@ -821,6 +827,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
             subTitleItems.length > 0 && (
               <>
                 {subTitleItems.map((item, index) => (
+                  <>
                   <SeparateSection key={index}>
                     <SectionWrapper_2>
                     <strong>
@@ -860,6 +867,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
                     </NumDynamicGrid>
                     </SectionWrapper_2>
                   </SeparateSection>
+                  </>
                 ))}
               </>
             )}
@@ -883,8 +891,10 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
             title !== "장기적인 경쟁 우위 전략" && (
               <>
                 {/* nonSubTitleItems는 일반적으로 title과 text만 표시 */}
+
                 {nonSubTitleItems.length > 0 &&
                   nonSubTitleItems.map((item, index) => (
+                    <>
                     <div key={index}>
                       <p>{item.text}</p>
                       {item.subText1 && (
@@ -897,10 +907,12 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
                         <SubTextBox>{item.subText3}</SubTextBox>
                       )}
                     </div>
+                    </>
                   ))}
 
                 {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
                 {subTitleItems.length > 0 && (
+                  <>
                   <DynamicGrid columns={subTitleItems.length}>
                     {subTitleItems.map((item, index) => (
                       <div key={index}>
@@ -918,6 +930,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
                       </div>
                     ))}
                   </DynamicGrid>
+                  </>
                 )}
               </>
             )}
@@ -931,7 +944,7 @@ export default OrganismStrategyReportSection;
 const SeparateSection = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 12px;
+  // margin-top: 12px;
   // padding: 20px;
   // border-radius: 10px;
   // background: rgba(0, 0, 0, 0.03);
@@ -1114,10 +1127,6 @@ const BoxWrap = styled.div`
     margin-top: 12px;
   }
 
-  + div {
-    margin-top: 12px;
-  }
-
   strong {
     display: flex;
     align-items: center;
@@ -1140,6 +1149,27 @@ const BoxWrap = styled.div`
         ? palette.darkGray
         : palette.darkGray};
     line-height: 1.5;
+    word-wrap: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 3 ;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .dashedLine {
+    position:relative;
+    padding-left:12px;
+
+    &:before {
+      position:absolute;
+      left:0;
+      top:10px;
+      width:5px;
+      height:1px;
+      background:${palette.darkGray};
+      content:'';
+    }
   }
 
   /* 마지막 섹션일 경우 title을 숨기고, 내부 텍스트만 보이도록 */
@@ -1221,7 +1251,7 @@ const SubTitle = styled.strong`
   font-weight: 500;
   color: ${palette.lightGray} !important;
   text-align: left;
-  margin-bottom: 0 !important;
+  margin-bottom: 0;
 `;
 
 const SubTextBox = styled.div`
@@ -1307,14 +1337,20 @@ const NumDynamicGrid = styled.div`
     font-weight: 400;
     color: ${palette.darkGray};
     line-height: 1.5;
+    word-wrap: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 3 ;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 `;
 const BgStyledSection = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 20px;
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0);
+  // padding: 20px;
+  // border-radius: 10px;
+  // background: rgba(0, 0, 0, 0);
 
   h4 {
     display: flex;
@@ -1379,6 +1415,10 @@ const BgStyledSection = styled.div`
         }
       }
     }
+
+    .bgWhite {
+      border: 0;
+    }
   }
 `;
 const DoubleGrid = styled.div`
@@ -1417,7 +1457,7 @@ const SectionWrapper = styled.div`
   }
 `;
 const SectionWrapper_2 = styled.div`
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid ${palette.lineGray}; /* 각 section에만 border 적용 */
+  // padding: 12px;
+  // border-radius: 10px;
+  // border: 1px solid ${palette.lineGray};
 `;
