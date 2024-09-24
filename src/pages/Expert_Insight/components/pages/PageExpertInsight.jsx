@@ -592,16 +592,16 @@ const PageExpertInsight = () => {
         setAdvise("");
 
         // 서버에 요청 보내기 부분을 주석 처리
-        let response = await axios.post(
-          "https://wishresearch.kr/panels/customer_add_question",
-          sampledata,
-          axiosConfig
-        );
+        // let response = await axios.post(
+        //   "https://wishresearch.kr/panels/customer_add_question",
+        //   sampledata,
+        //   axiosConfig
+        // );
 
-        let answerData = response.data.additional_question;
+        // let answerData = response.data.additional_question;
         
         // API 응답 데이터 대신 하드코딩된 값으로 설정
-        // let answerData = { advise: null }; // 가정: advise가 없는 경우
+        let answerData = { advise: null }; // 가정: advise가 없는 경우
 
         // answerData.advise가 없을 때만 실행
         if (!answerData.advise) {
