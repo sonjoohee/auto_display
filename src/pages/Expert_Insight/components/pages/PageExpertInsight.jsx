@@ -523,7 +523,7 @@ const PageExpertInsight = () => {
     if (
       conversationId &&
       conversationId.length >= 2 &&
-      approachPath &&
+      approachPath !== 2 &&
       !isLoadingPage
     ) {
       handleSearch(-1);
