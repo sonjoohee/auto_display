@@ -1342,8 +1342,8 @@ const AdditionalSeparateSection = styled.div`
       border: 1px solid ${palette.lineGray};
 
       p {
-        overflow: hidden;
-        text-overflow: ellipsis;
+        overflow: visible;
+        // text-overflow: ellipsis;
         display: -webkit-box;
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
@@ -1464,8 +1464,8 @@ const SeparateSection = styled.div`
       border: 1px solid ${palette.lineGray};
 
       p {
-        overflow: hidden;
-        text-overflow: ellipsis;
+        overflow: visible;
+        // text-overflow: ellipsis;
         display: -webkit-box;
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
