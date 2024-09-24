@@ -1862,30 +1862,51 @@ const AccordionContent = styled.div`
       transform: translateY(-50%);
       width: 10px;
       height: 10px;
+      font-family: "Pretendard", "Poppins";
+      font-size:0.63rem;
+      font-weight:700;
+      color:${palette.darkGray};
+      text-align:center;
       border-radius: 2px;
       background: #CECECE;
       content: "";
       transition: all 0.5s;
     }
 
-    /* 전문가 0: 빨간색 */
+    /* 비즈니스 */
     &[data-expert-index="0"]:before {
+      width:15px;
+      height:15px;
+      line-height:15px;
       // background: #ff0000; 
+      content:'B';
     }
 
-    /* 전문가 1: 초록색 */
+    /* 전문가 */
     &[data-expert-index="1"]:before {
+      width:15px;
+      height:15px;
+      line-height:15px;
       // background: #00ff00; 
+      content:'E';
     }
 
-    /* 전문가 2: 보라색 */
+    /* 추가질문 */
     &[data-expert-index="2"]:before {
-      // background: #800080; 
+      width:15px;
+      height:15px;
+      line-height:15px;
+      // background: #800080;
+      content:'A';
     }
 
-    /* 전문가 3: 주황색 */
+    /* 사용자 추가질문 */
     &[data-expert-index="3"]:before {
+      width:15px;
+      height:15px;
+      line-height:15px;
       // background: #ffa500; 
+      content:'C';
     }
 
     p {
@@ -1896,6 +1917,7 @@ const AccordionContent = styled.div`
       white-space: nowrap;
       overflow: hidden;
       color: ${palette.darkGray};
+      display:inline-block;
     }
 
     span {
@@ -1908,6 +1930,7 @@ const AccordionContent = styled.div`
 
     &:hover {
       &:before {
+        color:${palette.white};
         background: ${palette.blue};
       }
 
