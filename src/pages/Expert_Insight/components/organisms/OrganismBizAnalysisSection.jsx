@@ -135,6 +135,8 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   useEffect(() => {
     const loadAndSaveData = async () => {
       let businessData;
+      let attempts = 0;
+      const maxAttempts = 5;
 
       if (buttonState === 1) {
         setIsLoading(true);
@@ -148,24 +150,28 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
         );
         businessData = response.data.business_analysis;
 
-        /* 잘못된 입력이 들어왔을때 다시 입력받는 기능 필요 */ 
+        // 필요한 데이터가 없을 경우 재시도, 최대 5번
+        while (
+          (!businessData.hasOwnProperty("명칭") ||
+            !businessData.hasOwnProperty("주요_목적_및_특징") ||
+            !businessData.hasOwnProperty("주요기능") ||
+            !businessData.hasOwnProperty("목표고객") ||
+            !businessData["명칭"] ||
+            !businessData["주요_목적_및_특징"].length ||
+            !businessData["주요기능"].length ||
+            !businessData["목표고객"].length) &&
+          attempts < maxAttempts
+        ) {
+          attempts += 1;
+          console.log(`Attempt ${attempts} to fetch business data`);
 
-        // while(!businessData.hasOwnProperty("명칭") ||
-        //       !businessData.hasOwnProperty("주요_목적_및_특징") ||
-        //       !businessData.hasOwnProperty("주요기능") ||
-        //       !businessData.hasOwnProperty("목표고객") ||
-        //       !businessData["명칭"] ||
-        //       !businessData["주요_목적_및_특징"].length ||
-        //       !businessData["주요기능"].length ||
-        //       !businessData["목표고객"].length) {
-
-        //       response = await axios.post(
-        //         "https://wishresearch.kr/panels/business",
-        //         data,
-        //         axiosConfig
-        //       );
-        //       businessData = response.data.business_analysis;
-        // }
+          response = await axios.post(
+            "https://wishresearch.kr/panels/business",
+            data,
+            axiosConfig
+          );
+          businessData = response.data.business_analysis;
+        }
 
         // 데이터를 받아온 직후 아톰에 값을 설정합니다.
         if (Array.isArray(businessData["주요_목적_및_특징"])) {
