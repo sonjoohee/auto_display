@@ -1917,6 +1917,7 @@ const AccordionContent = styled.div`
       white-space: nowrap;
       overflow: hidden;
       color: ${palette.darkGray};
+      display:inline-block;
     }
 
     span {
