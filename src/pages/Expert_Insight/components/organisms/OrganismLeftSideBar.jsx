@@ -44,6 +44,10 @@ import {
   IS_SOCIAL_LOGGED_IN,
   SAVED_TIMESTAMP,
   IS_EDITING_NOW,
+  ANALYSIS_BUTTON_STATE,
+  EXPERT_BUTTON_STATE,
+  ADDITION_BUTTON_STATE,
+  CUSTOMER_ADDITION_BUTTON_STATE,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -159,6 +163,10 @@ const OrganismLeftSideBar = () => {
   const [insightEditBoxPosition, setInsightEditBoxPosition] = useState({ top: 0, left: 0 });
   const insightAccordionContentRef = useRef(null);
 
+  const [analysisButtonState, setAnalysisButtonState] = useAtom(ANALYSIS_BUTTON_STATE);
+  const [expertButtonState, setExpertButtonState] = useAtom(EXPERT_BUTTON_STATE);
+  const [additionButtonState, setAdditionButtonState] = useAtom(ADDITION_BUTTON_STATE);
+  const [customerAdditionButtonState, setCustomerAdditionButtonState] = useAtom(CUSTOMER_ADDITION_BUTTON_STATE);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -413,6 +421,11 @@ useEffect(() => {
       setApproachPath(2);
 
       setIsEditingNow(false);
+
+      setAnalysisButtonState(0);
+      setExpertButtonState(0);
+      setAdditionButtonState(0);
+      setCustomerAdditionButtonState(0);
       
       // 페이지를 대화가 이어지는 형태로 전환
       navigate(`/conversation/${conversationId}`);
