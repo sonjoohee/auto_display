@@ -283,12 +283,20 @@ const CloseButton = styled.button`
 `;
 
 const BoxWrap = styled.div`
-  padding: 20px;
+  padding: ${(props) =>
+    (props.title === "특징" || props.title === "차별화 요소")
+      ? "0"
+      : props.isLast
+      ? "0"
+      : "20px"};
+
   border-radius: 10px;
   background: ${(props) =>
-    props.isLast
+    (props.title === "특징" || props.title === "차별화 요소")
       ? palette.white
-      : "rgba(0, 0, 0, 0.03)"}; /* 마지막 섹션은 흰색 배경 */
+      : props.isLast
+      ? palette.white
+      : "rgba(0, 0, 0, 0.03)"};
 
   + div {
     margin-top:12px;
@@ -526,14 +534,14 @@ const AdditionalReportSection = ({ report }) => {
       )}
 
       {sections?.map((section, index) => (
-                  <AdditionalSection
-                    key={index}
-                    title={section.title}
-                    content={section.content}
-                    index={index - 1}
-                  />
-                ))}
-    </AnalysisSection>
+        <AdditionalSection
+          key={index}
+          title={section.title}
+          content={section.content}
+          index={index - 1}
+        />
+        ))}
+        </AnalysisSection>
   );
 };
 
@@ -552,7 +560,7 @@ const AdditionalSection = ({ title, content, index }) => {
   };
 
   return (
-    <AdditionalBoxWrap isPurpose={title === "목적"}>
+    <AdditionalBoxWrap title={title} isPurpose={title === "목적"}>
       {" "}
       {/* 타이틀이 "목적"인지 확인 */}
       {title && title !== "목적" && (
@@ -565,7 +573,7 @@ const AdditionalSection = ({ title, content, index }) => {
       {nonSubTitleItems.length > 0 &&
         nonSubTitleItems?.map((item, index) => (
           <div key={index}>
-            <p>{item.text}</p>
+            <p style={{marginBottom: "10px"}}>{item.text}</p>
             {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
           </div>
         ))}
@@ -668,7 +676,7 @@ const Section = ({ title, title_text, content, isLast, expertIndex ,selectedTab}
   };
 
   return (
-    <BoxWrap expertIndex={expertIndex} isLast={isLast} selectedTab={selectedTab}>
+    <BoxWrap expertIndex={expertIndex} isLast={isLast} selectedTab={selectedTab} title={title}>
       {/* "주요 차별화 요소"와 "차별화 전략 제안" 데이터를 결합하여 한 번만 렌더링 */}
       {renderCombinedSections()}
           {/* 3번 전문가의 2번째 탭을 위한 조건 */}
@@ -1124,11 +1132,14 @@ const DynamicGrid = styled.div`
   }
 
   p {
+    height:64px;
     overflow:hidden;
     text-overflow:ellipsis;
     display: flex;
     // -webkit-line-clamp:3;
     // -webkit-box-orient:vertical;
+    overflow-y:auto;
+    scrollbar-width:thin;
   }
 `;
 const AnalysisSection = styled.div`
@@ -1136,7 +1147,7 @@ const AnalysisSection = styled.div`
   max-width: 1135px;
   width: 100%;
   text-align: left;
-  margin-top: 25px;
+  // margin-top: 25px;
   padding: 30px;
   border-radius: 15px;
   border: 1px solid ${palette.lineGray};
@@ -1255,18 +1266,21 @@ const BgStyledSection = styled.div`
     border:0 !important;
 
     p {
+      height:64px;
       overflow:hidden;
       text-overflow:ellipsis;
       display: flex;
       // -webkit-line-clamp:3;
       // -webkit-box-orient:vertical;
+      overflow-y:auto;
+      scrollbar-width:thin;
     }
   }
 `;
 const AdditionalSeparateSection = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 0px 20px; /* 위아래 5px, 좌우 20px */
+  padding: 0; /* 위아래 5px, 좌우 20px */
   border-radius: 10px;
   background: rgba(0, 0, 0, 0);
 
@@ -1342,11 +1356,14 @@ const AdditionalSeparateSection = styled.div`
       border: 1px solid ${palette.lineGray};
 
       p {
+        height:64px;
         overflow: visible;
         // text-overflow: ellipsis;
         display: flex;
         // -webkit-line-clamp: 3;
         // -webkit-box-orient: vertical;
+        overflow-y:auto;
+        scrollbar-width:thin;
       }
     }
 
@@ -1398,9 +1415,9 @@ const SeparateSection = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 12px;
-  // padding: 20px;
-  // border-radius: 10px;
-  // background: rgba(0, 0, 0, 0.03);
+  padding: 20px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.03);
 
   + div {
     margin-top: 12px;
@@ -1464,11 +1481,14 @@ const SeparateSection = styled.div`
       border: 1px solid ${palette.lineGray};
 
       p {
+        height:64px;
         overflow: visible;
         // text-overflow: ellipsis;
         display: flex;
         // -webkit-line-clamp: 3;
         // -webkit-box-orient: vertical;
+        overflow-y:auto;
+        scrollbar-width:thin;
       }
     }
 
@@ -1549,7 +1569,12 @@ const NumDynamicGrid = styled.div`
     }
   }
 
+  strong {
+    margin-bottom:10px;
+  }
+
   p {
+    height:64px;
     margin: 0;
     font-size: 0.875rem;
     font-weight: 400;
@@ -1560,6 +1585,8 @@ const NumDynamicGrid = styled.div`
     display: flex;
     // -webkit-line-clamp:3;
     // -webkit-box-orient:vertical;
+    overflow-y:auto;
+    scrollbar-width:thin;
   }
 `;
 
@@ -1567,11 +1594,23 @@ const AdditionalBoxWrap = styled.div`
   // padding: 20px;
   // border-radius: 10px;
   // background: ${(props) => (props.isPurpose ? palette.white : "rgba(0, 0, 0, 0.04)")}; /* 흰 배경 적용 */
+  padding: ${(props) => (props.isPurpose ? "0" : "20px")};
+  background: ${(props) => (props.isPurpose ? palette.white : "rgba(0, 0, 0, 0.04)")}; /* 흰 배경 적용 */
 
   font-size:0.875rem;
   color:${palette.gray800};
   line-height:1.5;
-  margin:8px auto 20px;
+  // margin:8px auto 20px;
+
+  &:nth-child(3) {
+    border-radius:10px 10px 0 0;
+  }
+  &:last-child {
+    border-radius:0 0 10px 10px;
+  }
+  &:nth-child(n+3) {
+    margin-top:0;
+  }
 
   + div {
     margin-top: 12px;
