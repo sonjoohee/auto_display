@@ -200,8 +200,15 @@ const PageMeetAiExpert = () => {
   }, []);
 
   const handledSearch = async () => {
-    const regex = /^[가-힣a-zA-Z0-9\s.,'"-]*$/;
-  
+    const regex = /^[가-힣a-zA-Z0-9\s.,'"?!()\-]*$/;
+    const specialChars = /^[.,'"?!()\-]+$/;
+    
+    // 단독으로 특수 문자만 사용된 경우
+    if (specialChars.test(inputBusinessInfo.trim())) {
+      setIsPopupRegex(true);
+      return;
+    }
+    
     // 입력 값에 대한 정규식 및 빈 값 체크
     if (!regex.test(inputBusinessInfo)) {
       setIsPopupRegex(true);
