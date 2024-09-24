@@ -1258,12 +1258,15 @@ const DynamicGrid = styled.div`
   }
 
   p {
+    height:64px;
     margin: 0;
-    overflow: hidden;
+    // overflow: hidden;
     // text-overflow: ellipsis;
     display: flex;
     // -webkit-line-clamp: 3;
     // -webkit-box-orient: vertical;
+    overflow-y:auto;
+    scrollbar-width:thin;
   }
 `;
 
@@ -1353,6 +1356,7 @@ const NumDynamicGrid = styled.div`
   }
 
   p {
+    height:64px;
     margin: 0;
     font-size: 0.875rem;
     font-weight: 400;
@@ -1360,10 +1364,12 @@ const NumDynamicGrid = styled.div`
     line-height: 1.5;
     word-wrap: break-word;
     display: -webkit-box;
-    -webkit-line-clamp: 3 ;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    // -webkit-line-clamp: 3 ;
+    // -webkit-box-orient: vertical;
+    // overflow: hidden;
     // text-overflow: ellipsis;
+    overflow-y:auto;
+    scrollbar-width:thin;
   }
 `;
 const BgStyledSection = styled.div`
