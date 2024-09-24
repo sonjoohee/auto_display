@@ -1027,9 +1027,9 @@ const SeparateSection = styled.div`
       p {
         overflow: visible;
         // text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
+        display: flex;
+        // -webkit-line-clamp: 3;
+        // -webkit-box-orient: vertical;
       }
     }
 
@@ -1261,9 +1261,9 @@ const DynamicGrid = styled.div`
     margin: 0;
     overflow: hidden;
     // text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
+    display: flex;
+    // -webkit-line-clamp: 3;
+    // -webkit-box-orient: vertical;
   }
 `;
 
