@@ -88,7 +88,7 @@ const OrganismAdditionalReport = ({
   const [additionalReportData, setAdditionalReportData] = useAtom(
     ADDITIONAL_REPORT_DATA
   ); // Use the list-based atom
-  const [answerData, setAnswerData] = useState("");
+  const [answerDataState, setAnswerDataState] = useState([]);
   const axiosConfig = {
     timeout: 100000, // 100초
     headers: {
@@ -118,7 +118,7 @@ const OrganismAdditionalReport = ({
         // );
         // 기존 데이터가 있을 때 처리
         if (additionalReportData[additionalReportCount]) {
-          setAnswerData(additionalReportData[additionalReportCount]);
+          setAnswerDataState(additionalReportData[additionalReportCount]);
           setTitle(additionalReportData[additionalReportCount]?.title || []);
           setSections(
             additionalReportData[additionalReportCount]?.sections || []
@@ -167,7 +167,7 @@ const OrganismAdditionalReport = ({
             answerData = response.data.additional_question;
           }
 
-          setAnswerData(answerData);
+          setAnswerDataState(answerData);
           setTitle(answerData?.title);
           setSections(answerData?.sections);
 
@@ -347,7 +347,7 @@ const OrganismAdditionalReport = ({
             <MoleculeReportController
               reportIndex={2}
               conversationId={conversationId}
-              sampleData={answerData}
+              sampleData={answerDataState}
               additionalReportCount={additionalReportCount}
             />
           )}
