@@ -1025,7 +1025,7 @@ const SeparateSection = styled.div`
 
       p {
         overflow: visible;
-        text-overflow: ellipsis;
+        // text-overflow: ellipsis;
         display: -webkit-box;
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
@@ -1250,7 +1250,7 @@ const DynamicGrid = styled.div`
   p {
     margin: 0;
     overflow: visible;
-    text-overflow: ellipsis;
+    // text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
@@ -1353,7 +1353,7 @@ const NumDynamicGrid = styled.div`
     -webkit-line-clamp: 3 ;
     -webkit-box-orient: vertical;
     overflow: visible;
-    text-overflow: ellipsis;
+    // text-overflow: ellipsis;
   }
 `;
 const BgStyledSection = styled.div`
