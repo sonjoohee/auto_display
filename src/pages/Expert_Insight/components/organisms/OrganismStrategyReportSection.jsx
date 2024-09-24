@@ -1363,7 +1363,7 @@ const NumDynamicGrid = styled.div`
     color: ${palette.darkGray};
     line-height: 1.5;
     word-wrap: break-word;
-    display: -webkit-box;
+    display: flex;
     // -webkit-line-clamp: 3 ;
     // -webkit-box-orient: vertical;
     // overflow: hidden;
