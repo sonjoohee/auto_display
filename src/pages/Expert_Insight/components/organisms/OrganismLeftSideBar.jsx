@@ -644,8 +644,9 @@ useEffect(() => {
   };
 
   const [isToggle, setIsToggle] = useState(true);
-  const moreProfile = () => {
-    setIsToggle(!isToggle);
+  const moreProfile = (event) => {
+    event.stopPropagation(); // 내부 클릭 이벤트가 외부로 전파되지 않도록 방지
+    setIsToggle((prev) => !prev); // 팝업 열기/닫기
   };
 
   const [isEditToggle, setIsEditToggle] = useState(true);
@@ -1107,7 +1108,7 @@ useEffect(() => {
                   {/* 유저 이메일 표시 */}
                 </div>
 
-                <button className="more" onClick={moreProfile}>
+                <button className="more" onMouseDown={moreProfile}>
                   {/* <img src={images.AccountSetting} alt="" /> */}
                   {/* <span>{sessionStorage.getItem("userName")}</span> */}
                   <span>
