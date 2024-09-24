@@ -1026,9 +1026,9 @@ const SeparateSection = styled.div`
       p {
         overflow: visible;
         // text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
+        display: flex;
+        // -webkit-line-clamp: 3;
+        // -webkit-box-orient: vertical;
       }
     }
 
@@ -1251,9 +1251,9 @@ const DynamicGrid = styled.div`
     margin: 0;
     overflow: visible;
     // text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
+    display: flex;
+    // -webkit-line-clamp: 3;
+    // -webkit-box-orient: vertical;
   }
 `;
 
@@ -1349,9 +1349,9 @@ const NumDynamicGrid = styled.div`
     color: ${palette.darkGray};
     line-height: 1.5;
     word-wrap: break-word;
-    display: -webkit-box;
-    -webkit-line-clamp: 3 ;
-    -webkit-box-orient: vertical;
+    display: flex;
+    // -webkit-line-clamp: 3 ;
+    // -webkit-box-orient: vertical;
     overflow: visible;
     // text-overflow: ellipsis;
   }

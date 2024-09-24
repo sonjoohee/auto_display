@@ -242,9 +242,9 @@ const ListItem = styled.li`
     line-height: 1.5;
     overflow:hidden;
     text-overflow:ellipsis;
-    display:-webkit-box;
-    -webkit-line-clamp:3;
-    -webkit-box-orient:vertical;
+    display: flex;
+    // -webkit-line-clamp:3;
+    // -webkit-box-orient:vertical;
   }
 `;
 
@@ -1126,9 +1126,9 @@ const DynamicGrid = styled.div`
   p {
     overflow:hidden;
     text-overflow:ellipsis;
-    display:-webkit-box;
-    -webkit-line-clamp:3;
-    -webkit-box-orient:vertical;
+    display: flex;
+    // -webkit-line-clamp:3;
+    // -webkit-box-orient:vertical;
   }
 `;
 const AnalysisSection = styled.div`
@@ -1257,9 +1257,9 @@ const BgStyledSection = styled.div`
     p {
       overflow:hidden;
       text-overflow:ellipsis;
-      display:-webkit-box;
-      -webkit-line-clamp:3;
-      -webkit-box-orient:vertical;
+      display: flex;
+      // -webkit-line-clamp:3;
+      // -webkit-box-orient:vertical;
     }
   }
 `;
@@ -1344,9 +1344,9 @@ const AdditionalSeparateSection = styled.div`
       p {
         overflow: visible;
         // text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
+        display: flex;
+        // -webkit-line-clamp: 3;
+        // -webkit-box-orient: vertical;
       }
     }
 
@@ -1466,9 +1466,9 @@ const SeparateSection = styled.div`
       p {
         overflow: visible;
         // text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
+        display: flex;
+        // -webkit-line-clamp: 3;
+        // -webkit-box-orient: vertical;
       }
     }
 
@@ -1557,9 +1557,9 @@ const NumDynamicGrid = styled.div`
     line-height: 1.5;
     overflow:hidden;
     text-overflow:ellipsis;
-    display:-webkit-box;
-    -webkit-line-clamp:3;
-    -webkit-box-orient:vertical;
+    display: flex;
+    // -webkit-line-clamp:3;
+    // -webkit-box-orient:vertical;
   }
 `;
 
