@@ -625,10 +625,10 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                         <img src={images.IconCheck2} alt="" />
                         저장
                       </button>
-                      <button onClick={() => generateAddtionalContent("mainFeatures")}>
+                      {/* <button onClick={() => generateAddtionalContent("mainFeatures")}>
                         <img src={images.IconSetting} alt="" />
                         생성
-                      </button>
+                      </button> */}
                     </BtnWrap>
                   </AddInfo>
                 ) : (
@@ -742,10 +742,10 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                         <img src={images.IconCheck2} alt="" />
                         저장
                       </button>
-                      <button onClick={() => generateAddtionalContent("mainCharacteristic")}>
+                      {/* <button onClick={() => generateAddtionalContent("mainCharacteristic")}>
                         <img src={images.IconSetting} alt="" />
                         생성
-                      </button>
+                      </button> */}
                     </BtnWrap>
                   </AddInfo>
                 ) : (
@@ -857,10 +857,10 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                         <img src={images.IconCheck2} alt="" />
                         저장
                       </button>
-                      <button onClick={() => generateAddtionalContent("targetCustomer")}>
+                      {/* <button onClick={() => generateAddtionalContent("targetCustomer")}>
                         <img src={images.IconSetting} alt="" />
                         생성
-                      </button>
+                      </button> */}
                     </BtnWrap>
                   </AddInfo>
                 ) : (
