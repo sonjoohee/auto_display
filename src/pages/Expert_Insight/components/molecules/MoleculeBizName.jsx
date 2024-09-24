@@ -1,5 +1,5 @@
 // C:\dev\Crowd_Insight-\src\pages\Expert_Insight\components\molecules\MoleculeBizName.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -12,23 +12,25 @@ import {
 } from "../../../AtomStates";
 
 const MoleculeBizName = ({ date }) => {
-  const [inputBusinessInfo, setInputBusinessInfo] =
-    useAtom(INPUT_BUSINESS_INFO);
+  const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
     TITLE_OF_BUSINESS_INFORMATION
   );
 
-  const [isAutoSaveToggle, setIsAutoSaveToggle] = useState(true);
-  const autoSaveToggle = () => {
-    setIsAutoSaveToggle(!isAutoSaveToggle);
+  const [isAutoSaveToggle, setIsAutoSaveToggle] = useState(false); // 팝업이 처음에는 닫힌 상태
+  const popupRef = useRef(null); // 팝업을 감지하기 위한 ref
+
+  const autoSaveToggle = (event) => {
+    event.stopPropagation(); // 내부 클릭 이벤트가 외부로 전파되지 않도록 방지
+    setIsAutoSaveToggle((prev) => !prev); // 팝업 열기/닫기
   };
 
   const formatDate = (lang, timestamp) => {
     let dateObj;
-    if(!timestamp) dateObj = new Date(Date.now()); // 새 프로젝트 시작
+    if (!timestamp) dateObj = new Date(Date.now()); // 새 프로젝트 시작
     else dateObj = new Date(timestamp); // 지난 프로젝트 열기
-    
+
     const year = dateObj.getFullYear();
 
     if (lang === "ko") {
@@ -41,6 +43,23 @@ const MoleculeBizName = ({ date }) => {
       return `${year}.${month}.${day}`;
     }
   };
+
+  // 팝업 외부 클릭 시 닫히도록 처리하는 useEffect
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (popupRef.current && !popupRef.current.contains(event.target)) {
+        setIsAutoSaveToggle(false); // 외부 클릭 시 팝업 닫기
+      }
+    };
+
+    if (isAutoSaveToggle) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isAutoSaveToggle]);
 
   return (
     <>
@@ -64,19 +83,21 @@ const MoleculeBizName = ({ date }) => {
           </NameTitle>
         </div>
         {titleOfBusinessInfo && (
-          <button type="button" onClick={autoSaveToggle}>
+          <button type="button" onMouseDown={autoSaveToggle}>
             내가 쓴 설명 보기
             <img src={images.IconMagic} alt="" />
           </button>
         )}
 
-        <AutosavePopup isAutoSaveToggle={isAutoSaveToggle}>
-          <div>
-            <span>일시 : {formatDate("ko", date)}</span>
-            <strong>{titleOfBusinessInfo}</strong>
-            <p>{inputBusinessInfo}</p>
-          </div>
-        </AutosavePopup>
+        {isAutoSaveToggle && (
+          <AutosavePopup ref={popupRef}>
+            <div>
+              <span>일시 : {formatDate("ko", date)}</span>
+              <strong>{titleOfBusinessInfo}</strong>
+              <p>{inputBusinessInfo}</p>
+            </div>
+          </AutosavePopup>
+        )}
       </BizNameContainer>
     </>
   );
