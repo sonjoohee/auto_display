@@ -168,6 +168,61 @@ const OrganismLeftSideBar = () => {
   const [additionButtonState, setAdditionButtonState] = useAtom(ADDITION_BUTTON_STATE);
   const [customerAdditionButtonState, setCustomerAdditionButtonState] = useAtom(CUSTOMER_ADDITION_BUTTON_STATE);
 
+  const [isSection1Open, setIsSection1Open] = useState(false); // 인사이트 보관함 열림/닫힘 상태
+  const [isSection2Open, setIsSection2Open] = useState(false); // 프로젝트 히스토리 열림/닫힘 상태
+  const historyAccordionContentRef = useRef(null);
+  const sideBarRef = useRef(null);
+ // 사이드바의 최대 높이 설정
+ const maxSidebarHeight = 600; // 예시로 700px 설정
+
+ const ITEM_HEIGHT = 50;
+
+ // 첫 번째 아코디언(보고서)와 두 번째 아코디언(대화 내역)의 높이를 계산하는 함수
+ const calculateAccordionHeight = () => {
+   const reportHeight = reports.length * ITEM_HEIGHT; // 보고서 높이
+   const chatHeight = chatList.length * ITEM_HEIGHT; // 대화 내역 높이
+ 
+   return { reportHeight, chatHeight };
+ };
+ 
+ const exceedsSidebarHeight = () => {
+   const { reportHeight, chatHeight } = calculateAccordionHeight();
+ 
+   // 두 아코디언이 열렸을 때의 총 높이 계산
+   const totalHeight = reportHeight + chatHeight; // 조건 없이 둘 다 더함
+   console.log("Total Height:", totalHeight);
+ 
+   return totalHeight > maxSidebarHeight; // maxSidebarHeight와 비교하여 넘는지 확인
+ };
+
+ // 첫 번째 아코디언 토글 함수
+ const toggleSection1 = () => {
+   setIsSection1Open((prev) => {
+     const willOpen = !prev;
+
+     // 열릴 때 사이드바 높이를 초과하면 두 번째 아코디언을 닫음
+     if (willOpen && exceedsSidebarHeight()) {
+       setIsSection2Open(false);
+     }
+
+     return willOpen;
+   });
+ };
+
+ // 두 번째 아코디언 토글 함수
+ const toggleSection2 = () => {
+   setIsSection2Open((prev) => {
+     const willOpen = !prev;
+
+     // 열릴 때 사이드바 높이를 초과하면 첫 번째 아코디언을 닫음
+     if (willOpen && exceedsSidebarHeight()) {
+       setIsSection1Open(false);
+     }
+
+     return willOpen;
+   });
+ };
+  
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (toggleRef.current && !toggleRef.current.contains(event.target)) {
@@ -653,17 +708,15 @@ useEffect(() => {
           </button>
 
           <AccordionMenu>
-            <AccordionItem>
-              <input
-                type="checkbox"
-                id="section1"
-                className="accordion-toggle"
-              />
-              <label htmlFor="section1" className="accordion-label">
-                <img src={images.Folder} alt="" />
+            <AccordionItem> 
+            <label 
+                className={`accordion-label ${isSection1Open ? 'open' : ''}`} 
+                onClick={toggleSection1}
+              >
+                    <img src={images.Folder} alt="" />
                 인사이트 보관함
               </label>
-              <AccordionContent  className="scrollbar" ref={insightAccordionContentRef}>
+              <AccordionContent className="scrollbar" ref={insightAccordionContentRef} style={{ maxHeight: isSection1Open ? "calc(100vh - 26rem)" : "0" }}>
                   <ul>
                     {reports && reports.length > 0 ? (
                       reports.map((report, index) => (
@@ -761,16 +814,14 @@ useEffect(() => {
             )}
 
             <AccordionItem>
-              <input
-                type="checkbox"
-                id="section2"
-                className="accordion-toggle"
-              />
-              <label htmlFor="section2" className="accordion-label">
+            <label 
+    className={`accordion-label ${isSection2Open ? 'open' : ''}`} 
+    onClick={toggleSection2}
+  >
                 <img src={images.Clock} alt="" />
                 프로젝트 히스토리
               </label>
-              <AccordionContent className="scrollbar" ref={accordionContentRef}>
+              <AccordionContent className="scrollbar" ref={accordionContentRef} style={{ maxHeight: isSection2Open ? "calc(100vh - 26rem)" : "0" }}>
                 {chatList && chatList.length > 0 ?               
                   <div>
                     {chatList.some(chat => Date.now() - chat.timestamp <= 604800000) && (
@@ -1635,36 +1686,69 @@ const AccordionMenu = styled.div`
 `;
 
 const AccordionItem = styled.div`
+  max-height: unset; /* 아코디언 컨텐츠가 사이드바 높이에 따라 자연스럽게 표시 */
+  overflow-y: hidden; /* 개별 아코디언 컨텐츠는 넘치는 부분을 숨김 */
   .accordion-toggle {
     display: none;
   }
 
-  .accordion-label {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    font-family: "Pretendard";
-    font-size: 1rem;
-    font-weight: 500;
-    padding: 12px 0;
-    border: 0;
-    background: none;
-    cursor: pointer;
+.accordion-label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: "Pretendard";
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 12px 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
 
-    &:after {
-      position: absolute;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%) rotate(45deg);
-      width: 8px;
-      height: 8px;
-      border-right: 2px solid ${palette.black};
-      border-bottom: 2px solid ${palette.black};
-      transition: all 0.5s;
-      content: "";
-    }
+  &:after {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid ${palette.black};
+    border-bottom: 2px solid ${palette.black};
+    transition: all 0.5s;
+    content: "";
   }
+}
+
+.accordion-label.open:after {
+  transform: translateY(-50%) rotate(-135deg); /* 아이콘 회전 */
+}
+
+.accordion-toggle + .accordion-label + .scrollbar {
+  max-height: 0;
+  overflow-y: hidden;
+  transition: max-height 0.5s ease, padding 0.5s ease;
+}
+
+.accordion-label.open + .scrollbar {
+  max-height: calc(100vh - 26rem);
+  overflow-y: auto;
+}
+
+.scrollbar {
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: ${palette.lineGray};
+    border-radius: 10px;
+  }
+}
 
   .accordion-toggle:checked + .accordion-label:after {
     transform: translateY(-50%) rotate(-135deg);
