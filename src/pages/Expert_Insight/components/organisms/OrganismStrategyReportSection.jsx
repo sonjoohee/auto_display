@@ -438,6 +438,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
       expertIndex={expertIndex}
       isLast={isLast}
       selectedTab={selectedTab}
+      title={title}
     >
       {/* "주요 차별화 요소"와 "차별화 전략 제안" 데이터를 결합하여 한 번만 렌더링 */}
       {/* 3번 전문가의 2번째 탭을 위한 조건 */}
@@ -957,10 +958,10 @@ export default OrganismStrategyReportSection;
 const SeparateSection = styled.div`
   display: flex;
   flex-direction: column;
-  // margin-top: 12px;
-  // padding: 20px;
-  // border-radius: 10px;
-  // background: rgba(0, 0, 0, 0.03);
+  margin-top: 12px;
+  padding: 20px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.03);
 
   + div {
     margin-top: 12px;
@@ -1129,12 +1130,20 @@ const AnalysisSection = styled.div`
 `;
 
 const BoxWrap = styled.div`
-  padding: 20px;
+  padding: ${(props) =>
+    (props.title === "특징" || props.title === "차별화 요소")
+      ? "0"
+      : props.isLast
+      ? "0"
+      : "20px"};
+
   border-radius: 10px;
   background: ${(props) =>
-    props.isLast
+    (props.title === "특징" || props.title === "차별화 요소")
       ? palette.white
-      : "rgba(0, 0, 0, 0.03)"}; /* 마지막 섹션은 흰색 배경 */
+      : props.isLast
+      ? palette.white
+      : "rgba(0, 0, 0, 0.03)"};
 
   + div {
     margin-top: 12px;
@@ -1175,11 +1184,12 @@ p {
     &:before {
       position:absolute;
       left:0;
-      top:10px;
-      width:5px;
-      height:1px;
-      background:${palette.darkGray};
-      content:'';
+      // top:10px;
+      top:0;
+      // width:5px;
+      // height:1px;
+      // background:${palette.darkGray};
+      content:'-';
     }
   }
 
@@ -1249,7 +1259,7 @@ const DynamicGrid = styled.div`
 
   p {
     margin: 0;
-    overflow: visible;
+    overflow: hidden;
     // text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 3;
@@ -1352,7 +1362,7 @@ const NumDynamicGrid = styled.div`
     display: -webkit-box;
     -webkit-line-clamp: 3 ;
     -webkit-box-orient: vertical;
-    overflow: visible;
+    overflow: hidden;
     // text-overflow: ellipsis;
   }
 `;
