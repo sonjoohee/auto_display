@@ -200,27 +200,28 @@ const PageMeetAiExpert = () => {
   }, []);
 
   const handledSearch = async () => {
-    const regex = /^[가-힣a-zA-Z0-9\s.,'"?!()\-]*$/;
-    const specialChars = /^[.,'"?!()\-]+$/;
     
-    // 단독으로 특수 문자만 사용된 경우
-    if (specialChars.test(inputBusinessInfo.trim())) {
-      setIsPopupRegex(true);
-      return;
-    }
-    
-    // 입력 값에 대한 정규식 및 빈 값 체크
-    if (!regex.test(inputBusinessInfo)) {
-      setIsPopupRegex(true);
-      return;
-    }
-    if (inputBusinessInfo.trim() === "") {
-      setIsPopupRegex2(true);
-      return;
-    }
-  
     // 로그인 상태인지 확인 후 처리
     if (isLoggedIn) {
+      const regex = /^[가-힣a-zA-Z0-9\s.,'"?!()\-]*$/;
+      const specialChars = /^[.,'"?!()\-]+$/;
+      
+      // 단독으로 특수 문자만 사용된 경우
+      if (specialChars.test(inputBusinessInfo.trim())) {
+        setIsPopupRegex(true);
+        return;
+      }
+      
+      // 입력 값에 대한 정규식 및 빈 값 체크
+      if (!regex.test(inputBusinessInfo)) {
+        setIsPopupRegex(true);
+        return;
+      }
+      if (inputBusinessInfo.trim() === "") {
+        setIsPopupRegex2(true);
+        return;
+      }
+
       try {
         const data = {
           business_info: inputBusinessInfo,

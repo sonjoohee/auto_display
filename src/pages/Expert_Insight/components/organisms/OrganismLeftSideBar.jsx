@@ -522,7 +522,7 @@ useEffect(() => {
     setUserName("");
     setUserEmail("");
     setIsLogoutPopup(false); // 로그아웃 팝업 닫기
-    navigate("/PageMeetAiExpert"); // 페이지 이동
+    navigate("/"); // 페이지 이동
   };
 
   const handleCloseLogoutPopup = () => {
