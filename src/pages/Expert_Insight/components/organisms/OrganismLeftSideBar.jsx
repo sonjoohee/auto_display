@@ -173,21 +173,26 @@ const OrganismLeftSideBar = () => {
   const historyAccordionContentRef = useRef(null);
   const sideBarRef = useRef(null);
  // 사이드바의 최대 높이 설정
- const maxSidebarHeight = 700; // 예시로 700px 설정
+ const maxSidebarHeight = 600; // 예시로 700px 설정
 
- // 사이드바 범위를 넘는지 여부를 계산하는 함수
+ const ITEM_HEIGHT = 50;
+
+ // 첫 번째 아코디언(보고서)와 두 번째 아코디언(대화 내역)의 높이를 계산하는 함수
+ const calculateAccordionHeight = () => {
+   const reportHeight = reports.length * ITEM_HEIGHT; // 보고서 높이
+   const chatHeight = chatList.length * ITEM_HEIGHT; // 대화 내역 높이
+ 
+   return { reportHeight, chatHeight };
+ };
+ 
  const exceedsSidebarHeight = () => {
-   const insightHeight = insightAccordionContentRef.current
-     ? insightAccordionContentRef.current.scrollHeight
-     : 0;
-   const historyHeight = historyAccordionContentRef.current
-     ? historyAccordionContentRef.current.scrollHeight
-     : 0;
-
-   // 두 아코디언이 동시에 열렸을 때의 총 높이
-   const totalHeight = (isSection1Open ? insightHeight : 0) + (isSection2Open ? historyHeight : 0);
-
-   return totalHeight > maxSidebarHeight;
+   const { reportHeight, chatHeight } = calculateAccordionHeight();
+ 
+   // 두 아코디언이 열렸을 때의 총 높이 계산
+   const totalHeight = reportHeight + chatHeight; // 조건 없이 둘 다 더함
+   console.log("Total Height:", totalHeight);
+ 
+   return totalHeight > maxSidebarHeight; // maxSidebarHeight와 비교하여 넘는지 확인
  };
 
  // 첫 번째 아코디언 토글 함수
