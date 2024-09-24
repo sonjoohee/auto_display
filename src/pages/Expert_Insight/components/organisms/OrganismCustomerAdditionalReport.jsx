@@ -493,7 +493,7 @@ const Section = ({ title, content, index }) => {
   };
 
   return (
-    <BoxWrap isPurpose={title === "목적"}>
+    <BoxWrap title={title} isPurpose={title === "목적"}>
       {" "}
       {/* 타이틀이 "목적"인지 확인 */}
       {title && title !== "목적" && (
@@ -598,11 +598,23 @@ const BoxWrap = styled.div`
   // padding: 20px;
   // border-radius: 10px;
   // background: ${(props) => (props.isPurpose ? palette.white : "rgba(0, 0, 0, 0.04)")}; /* 흰 배경 적용 */
+  padding: ${(props) => (props.isPurpose ? "0" : "20px")};
+  background: ${(props) => (props.isPurpose ? palette.white : "rgba(0, 0, 0, 0.04)")}; /* 흰 배경 적용 */
 
   font-size:0.875rem;
   color:${palette.gray800};
   line-height:1.5;
-  margin:8px auto 20px;
+  // margin:8px auto 20px;
+
+  &:nth-child(3) {
+    border-radius:10px 10px 0 0;
+  }
+  &:last-child {
+    border-radius:0 0 10px 10px;
+  }
+  &:nth-child(n+3) {
+    margin-top:0;
+  }
 
   + div {
     margin-top: 12px;
@@ -771,7 +783,7 @@ const NumDynamicGrid = styled.div`
 const SeparateSection = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 0px 20px; /* 위아래 5px, 좌우 20px */
+  padding: 0; /* 위아래 5px, 좌우 20px */
   border-radius: 10px;
   background: rgba(0, 0, 0, 0);
 
