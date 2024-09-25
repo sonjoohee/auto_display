@@ -854,28 +854,28 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
 
                     {/* subText1, subText2, subText3에 대해 NumDynamicGrid 적용 */}
                     <NumDynamicGrid columns={2}>
-                      {item.subText1 && (
+                      {item.subContent[0] && (
                         <div>
                           <SubTitle>
-                            {splitText(item.subText1).subTitle}
+                            {item.subContent[0].subTitle}
                           </SubTitle>
-                          <p>{splitText(item.subText1).text}</p>
+                          <p>{item.subContent[0].text}</p>
                         </div>
                       )}
-                      {item.subText2 && (
+                      {item.subContent[1] && (
                         <div>
                           <SubTitle>
-                            {splitText(item.subText2).subTitle}
+                            {item.subContent[1].subTitle}
                           </SubTitle>
-                          <p>{splitText(item.subText2).text}</p>
+                          <p>{item.subContent[1].text}</p>
                         </div>
                       )}
-                      {item.subText3 && (
+                      {item.subContent[2] && (
                         <div>
                           <SubTitle>
-                            {splitText(item.subText3).subTitle}
+                            {item.subContent[2].subTitle}
                           </SubTitle>
-                          <p>{splitText(item.subText3).text}</p>
+                          <p>{item.subContent[2].text}</p>
                         </div>
                       )}
                     </NumDynamicGrid>
@@ -885,6 +885,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
                 ))}
               </>
             )}
+
           {/* "특징", "차별화 요소", "경쟁 분석"이 아닌 경우 기존 방식대로 처리 */}
           {title !== "특징" &&
             title !== "차별화 요소" &&
@@ -1363,7 +1364,7 @@ const NumDynamicGrid = styled.div`
     color: ${palette.darkGray};
     line-height: 1.5;
     word-wrap: break-word;
-    display: -webkit-box;
+    display: flex;
     // -webkit-line-clamp: 3 ;
     // -webkit-box-orient: vertical;
     // overflow: hidden;
