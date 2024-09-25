@@ -379,7 +379,7 @@ useEffect(() => {
           }
         );
         const sortedChatList = response.data
-          .filter((chat) => chat.business_info !== null) // business_info가 null이면(기초보고서 생성 전) 히스토리에 남기지 않음
+          .filter((chat) => chat.business_info !== null && chat.business_info !== "") // business_info가 비었으면(기초보고서 생성 전) 히스토리에 남기지 않음
           .sort((a, b) => b.timestamp - a.timestamp); // 최근 날짜 순으로 정렬
 
         setChatList(sortedChatList);
