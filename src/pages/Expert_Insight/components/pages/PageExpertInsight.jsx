@@ -144,27 +144,20 @@ const PageExpertInsight = () => {
   let additionalReportCount = 0;
   let customerAdditionalReportCount = 0;
 
-  // setConversation([]);
-  // setConversationStage(1);
-  // setInputBusinessInfo("");
-  // setTitleOfBusinessInfo("");
-  // setMainFeaturesOfBusinessInformation([]);
-  // setMainCharacteristicOfBusinessInformation([]);
-  // setBusinessInformationTargetCustomer([]);
-  // setSelectedExpertIndex(1);
-  // setSections([]);
-  // setAdditionalReportCount(0);
-  // setSelectedAdditionalKeyword([]);
-  // setApproachPath(0);
-  // setAdditionalReportData([]);
-  // setExpert1ReportData({});
-  // setExpert2ReportData({});
-  // setExpert3ReportData({});
-  // setAddtionalQuestion1("");
-  // setAddtionalQuestion2("");
-  // setAddtionalQuestion3("");
-  // setInputAdditionalQuestion("");
-  // setIsClickCheckReportRightAway(false);
+  // // 시스템 점검 여부 체크
+  // useEffect(() => {
+  //   const checkSystemMaintenance = async () => {
+  //     try {
+  //       const response = await axios.post('https://wishresearch.kr/');
+  //       if (response.data) {
+  //         alert('현재 시스템 점검 중입니다.');
+  //       }
+  //     } catch (error) {
+  //       console.error('시스템 점검 여부 확인 중 오류 발생:', error);
+  //     }
+  //   };
+  //   checkSystemMaintenance();
+  // }, []);
 
   // 현재 선택된 전문가에 맞는 보고서 데이터를 결정
   const getStrategyReportData = () => {
