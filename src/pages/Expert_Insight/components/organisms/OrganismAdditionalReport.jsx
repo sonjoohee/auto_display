@@ -42,7 +42,8 @@ const OrganismAdditionalReport = ({
   conversationId,
 }) => {
   // console.log("🚀 ~ additionalReportCount:", additionalReportCount);
-  const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
+  const [selectedExpertList, setSelectedExpertList] =
+    useAtom(SELECTED_EXPERT_LIST);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
   const [inputBusinessInfo, setInputBusinessInfo] =
     useAtom(INPUT_BUSINESS_INFO);
@@ -149,16 +150,17 @@ const OrganismAdditionalReport = ({
           );
           answerData = response.data.additional_question;
 
-          while(!answerData.hasOwnProperty("title")
-                //  || !answerData.sections[0].hasOwnProperty("title") ||
-                // !answerData.sections[1].hasOwnProperty("title") ||
-                // !answerData.sections[2].hasOwnProperty("title") ||
-                // !answerData.sections[3].hasOwnProperty("title") ||
-                // !answerData.sections[0].content.length ||
-                // !answerData.sections[1].content.length ||
-                // !answerData.sections[2].content.length ||
-                // !answerData.sections[3].content.length
-              ) {
+          while (
+            !answerData.hasOwnProperty("title")
+            //  || !answerData.sections[0].hasOwnProperty("title") ||
+            // !answerData.sections[1].hasOwnProperty("title") ||
+            // !answerData.sections[2].hasOwnProperty("title") ||
+            // !answerData.sections[3].hasOwnProperty("title") ||
+            // !answerData.sections[0].content.length ||
+            // !answerData.sections[1].content.length ||
+            // !answerData.sections[2].content.length ||
+            // !answerData.sections[3].content.length
+          ) {
             response = await axios.post(
               "https://wishresearch.kr/panels/add_question",
               data,
@@ -184,7 +186,10 @@ const OrganismAdditionalReport = ({
           // ];
           let updatedAdditionalReportData = [];
 
-          if (additionalReportCount === 0) {
+          if (
+            additionalReportCount === 0 ||
+            additionalReportData.length === 0
+          ) {
             // console.log(
             //   "🚀 ~ 첫저장 ~ additionalReportCount:",
             //   additionalReportCount
@@ -251,27 +256,24 @@ const OrganismAdditionalReport = ({
 
           const updatedConversation2 = [...conversation];
 
-          if(selectedExpertList.length === 3) {
-            updatedConversation2.push(
-              {
-                type: "system",
-                message: `"${titleOfBusinessInfo}"과 관련된 "${selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊`,
-                expertIndex: 0,
-              }
-            );
+          if (selectedExpertList.length === 3) {
+            updatedConversation2.push({
+              type: "system",
+              message: `"${titleOfBusinessInfo}"과 관련된 "${
+                selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]
+              }" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊`,
+              expertIndex: 0,
+            });
+          } else {
+            updatedConversation2.push({
+              type: "system",
+              message: `"${titleOfBusinessInfo}"과 관련된 "${
+                selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]
+              }" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분야별 전문가의 의견도 확인해보세요`,
+              expertIndex: 0,
+            });
           }
-          else {
-            updatedConversation2.push(
-              {
-                type: "system",
-                message: `"${titleOfBusinessInfo}"과 관련된 "${selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분야별 전문가의 의견도 확인해보세요`,
-                expertIndex: 0,
-              }
-            );
-          }
-          updatedConversation2.push(
-            { type: "keyword" }
-          );
+          updatedConversation2.push({ type: "keyword" });
           setConversation(updatedConversation2);
           await saveConversationToIndexedDB(
             {
@@ -335,14 +337,14 @@ const OrganismAdditionalReport = ({
           )}
 
           <div>
-          {sections?.map((section, index) => (
-            <Section
-              key={index}
-              title={section.title}
-              content={section.content}
-              index={index - 1}
-            />
-          ))}
+            {sections?.map((section, index) => (
+              <Section
+                key={index}
+                title={section.title}
+                content={section.content}
+                index={index - 1}
+              />
+            ))}
           </div>
 
           {!isLoadingAdd && (
@@ -377,59 +379,59 @@ const Section = ({ title, content, index }) => {
 
   return (
     <>
-    <BoxWrap title={title} isPurpose={title === "목적"}>
-      {" "}
-      {/* 타이틀이 "목적"인지 확인 */}
-      {title && title !== "목적" && (
-        <strong>
-          {/* 번호 표시 */}
-          {index + 1}. {title}
-        </strong>
-      )}
-      {/* nonSubTitleItems는 일반적으로 title과 text만 표시 */}
-      {nonSubTitleItems.length > 0 &&
-        nonSubTitleItems?.map((item, index) => (
-          <>
-          <div key={index}>
-            <p>{item.text}</p>
-            {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
-          </div>
-          </>
-        ))}
-      {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
-      <>
-        {subTitleItems.map((item, index) => (
-          <SeparateSection key={index}>
-            <strong>
-              {/* <strong_title>{`${item.subTitle}`}</strong_title> */}{" "}
-              {/* 차후 추가할수도 있음*/}
-            </strong>
-            <p>
-              {item.subTitle} : {item.text}
-            </p>
+      <BoxWrap title={title} isPurpose={title === "목적"}>
+        {" "}
+        {/* 타이틀이 "목적"인지 확인 */}
+        {title && title !== "목적" && (
+          <strong>
+            {/* 번호 표시 */}
+            {index + 1}. {title}
+          </strong>
+        )}
+        {/* nonSubTitleItems는 일반적으로 title과 text만 표시 */}
+        {nonSubTitleItems.length > 0 &&
+          nonSubTitleItems?.map((item, index) => (
+            <>
+              <div key={index}>
+                <p>{item.text}</p>
+                {item.subtext && <SubTextBox>{item.subtext}</SubTextBox>}
+              </div>
+            </>
+          ))}
+        {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
+        <>
+          {subTitleItems.map((item, index) => (
+            <SeparateSection key={index}>
+              <strong>
+                {/* <strong_title>{`${item.subTitle}`}</strong_title> */}{" "}
+                {/* 차후 추가할수도 있음*/}
+              </strong>
+              <p>
+                {item.subTitle} : {item.text}
+              </p>
 
-            {/* subText1, subText2, subText3를 한 줄씩 표시 */}
-            <div>
-              {item.subText1 && (
-                <p>
-                  {item.subTitle}: {splitText(item.subText1).text}
-                </p>
-              )}
-              {item.subText2 && (
-                <p>
-                  {item.subTitle}: {splitText(item.subText2).text}
-                </p>
-              )}
-              {item.subText3 && (
-                <p>
-                  {item.subTitle}: {splitText(item.subText3).text}
-                </p>
-              )}
-            </div>
-          </SeparateSection>
-        ))}
-      </>
-    </BoxWrap>
+              {/* subText1, subText2, subText3를 한 줄씩 표시 */}
+              <div>
+                {item.subText1 && (
+                  <p>
+                    {item.subTitle}: {splitText(item.subText1).text}
+                  </p>
+                )}
+                {item.subText2 && (
+                  <p>
+                    {item.subTitle}: {splitText(item.subText2).text}
+                  </p>
+                )}
+                {item.subText3 && (
+                  <p>
+                    {item.subTitle}: {splitText(item.subText3).text}
+                  </p>
+                )}
+              </div>
+            </SeparateSection>
+          ))}
+        </>
+      </BoxWrap>
     </>
   );
 };
@@ -467,21 +469,22 @@ const BoxWrap = styled.div`
   // padding: 20px;
   // border-radius: 10px;
   padding: ${(props) => (props.isPurpose ? "0" : "20px")};
-  background: ${(props) => (props.isPurpose ? palette.white : "rgba(0, 0, 0, 0.04)")}; /* 흰 배경 적용 */
+  background: ${(props) =>
+    props.isPurpose ? palette.white : "rgba(0, 0, 0, 0.04)"}; /* 흰 배경 적용 */
 
-  font-size:0.875rem;
-  color:${palette.gray800};
-  line-height:1.5;
+  font-size: 0.875rem;
+  color: ${palette.gray800};
+  line-height: 1.5;
   // margin:8px auto 20px;
 
   &:nth-child(2) {
-    border-radius:10px 10px 0 0;
+    border-radius: 10px 10px 0 0;
   }
   &:last-child {
-    border-radius:0 0 10px 10px;
+    border-radius: 0 0 10px 10px;
   }
-  &:nth-child(n+3) {
-    margin-top:0;
+  &:nth-child(n + 3) {
+    margin-top: 0;
   }
 
   + div {
