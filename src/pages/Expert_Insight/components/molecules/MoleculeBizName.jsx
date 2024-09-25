@@ -8,12 +8,10 @@ import { useAtom } from "jotai";
 import {
   INPUT_BUSINESS_INFO,
   TITLE_OF_BUSINESS_INFORMATION,
-  APPROACH_PATH,
 } from "../../../AtomStates";
 
 const MoleculeBizName = ({ date }) => {
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
-  const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
     TITLE_OF_BUSINESS_INFORMATION
   );

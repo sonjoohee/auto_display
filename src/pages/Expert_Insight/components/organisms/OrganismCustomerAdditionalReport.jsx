@@ -116,10 +116,6 @@ const OrganismCustomerAdditionalReport = ({
     const loadData = async () => {
       let answerData;
       try {
-        // const existingConversation = await getConversationByIdFromIndexedDB(
-        //   conversationId,
-        //   isLoggedIn
-        // );
 
         setAnswerData(
           customerAdditionalReportData[customerAdditionalReportCount]
@@ -147,11 +143,6 @@ const OrganismCustomerAdditionalReport = ({
           setIsLoadingAdd(true);
           setIsLoading(true);
 
-          // const keyword =
-          //   selectedCustomerAdditionalKeyword[
-          //     selectedCustomerAdditionalKeyword.length - 1
-          //   ]; // Use the keyword based on expertIndex
-
           const data = {
             business_info: titleOfBusinessInfo,
             business_analysis_data: {
@@ -175,14 +166,6 @@ const OrganismCustomerAdditionalReport = ({
           } else {
             while (
               !answerData.hasOwnProperty("title")
-              //  || !answerData.sections[0].hasOwnProperty("title") ||
-              // !answerData.sections[1].hasOwnProperty("title") ||
-              // !answerData.sections[2].hasOwnProperty("title") ||
-              // !answerData.sections[3].hasOwnProperty("title") ||
-              // !answerData.sections[0].content.length ||
-              // !answerData.sections[1].content.length ||
-              // !answerData.sections[2].content.length ||
-              // !answerData.sections[3].content.length
             ) {
               response = await axios.post(
                 "https://wishresearch.kr/panels/customer_add_question",
@@ -193,12 +176,6 @@ const OrganismCustomerAdditionalReport = ({
             }
           }
 
-          // if (response.data.keyword.result_state == 1) {
-          //   answerData = response.data.additional_question;
-          // } else if (response.data.keyword.result_state == 0) {
-          //   answerData = response.data.advise;
-          // }
-
           // 임시로 키워드 설정
           const updatedKeywords = [...selectedCustomerAdditionalKeyword];
           updatedKeywords.push(response.data.keyword.result);
@@ -208,23 +185,8 @@ const OrganismCustomerAdditionalReport = ({
           setTitle(answerData?.title);
           setSections(answerData?.sections);
 
-          // 새로운 데이터를 배열의 맨 앞에 추가합니다.
-
-          // let updatedAdditionalReportData = [
-          //   ...(Array.isArray(customerAdditionalReportData)
-          //     ? customerAdditionalReportData
-          //     : [customerAdditionalReportData]),
-          //   answerData,
-          // ];
-
           let updatedAdditionalReportData = [];
 
-          // if (Array.isArray(updatedAdditionalReportData)) {
-          //   console.log("🚀 ~ 배열로 재생성:", updatedAdditionalReportData);
-          //   updatedAdditionalReportData = [];
-          //   updatedAdditionalReportData.push(customerAdditionalReportData);
-          //   updatedAdditionalReportData.push(answerData);
-          // }
           if (
             customerAdditionalReportCount === 0 ||
             additionalReportData.length === 0
@@ -235,33 +197,10 @@ const OrganismCustomerAdditionalReport = ({
             updatedAdditionalReportData.push(answerData);
           }
 
-          // let updatedAdditionalReportData = customerAdditionalReportData; // 기존 데이터
-          // updatedAdditionalReportData.push(answerData); // 새로 가져온 데이터
-
           setCustomerAdditionalReportData(updatedAdditionalReportData);
 
-          // const updatedConversation = {
-          //   ...existingConversation,
-          //   customerAdditionalReportData: updatedAdditionalReportData, // 전체 리스트를 저장
-          //   timestamp: Date.now(),
-          // };
           await saveConversationToIndexedDB(
             {
-              //   id: "",
-              //   conversation: [],
-              //   conversationStage: 1,
-              //   expertIndex: 0,
-              //   analysisReportData: {},
-              //   inputBusinessInfo: "",
-              //   strategyReportData_EX1: {},
-              //   strategyReportData_EX2: {},
-              //   strategyReportData_EX3: {},
-              //   customerAdditionalReportData: [],
-              //   selectedAdditionalKeywords: [],
-              //   timestamp: new Date().toISOString(),
-
-              // ...existingConversation,
-              // expertIndex: 0,
               id: conversationId,
               inputBusinessInfo: inputBusinessInfo,
               analysisReportData: analysisReportData,
@@ -285,8 +224,7 @@ const OrganismCustomerAdditionalReport = ({
           setIsLoading(false);
 
           const updatedConversation2 = [...conversation];
-          // console.log(approachPath, conversationStage);
-          // if (approachPath === 1 || approachPath === 3) {
+
           if (approachPath !== -1) {
             if (conversationStage === 2) {
               if (answerData.advise) {
@@ -405,7 +343,6 @@ const OrganismCustomerAdditionalReport = ({
       } catch (error) {
         console.error("Error loading data:", error);
       }
-      // console.log("🚀 ~ loadData ~ conversationId:", conversationId);
     };
 
     loadData();
@@ -566,24 +503,6 @@ const AnalysisSection = styled.div`
   }
 `;
 
-// const BoxWrap = styled.div`
-//   padding: 20px;
-//   border-radius: 10px;
-//   background: ${(props) =>
-//     props.isPurpose ? palette.white : "rgba(0,0,0,.03)"}; /* 흰 배경 적용 */
-
-//   strong {
-//     display: flex;
-//     align-items: center;
-//     gap: 8px;
-//     margin-bottom: 10px;
-//   }
-
-//   p {
-//     font-size: 0.875rem;
-//     margin-bottom: 10px;
-//   }
-// `;
 const BoxWrap = styled.div`
   // padding: 20px;
   // border-radius: 10px;
@@ -640,44 +559,6 @@ const TabTitle = styled.div`
   margin-bottom: 10px;
 `;
 
-const TabContent = styled.div`
-  font-family: "Pretendard";
-  font-size: 0.875rem;
-  line-height: 1.5;
-  color: ${palette.black};
-  border: none;
-  border-bottom: none;
-  background: ${palette.white};
-`;
-
-// DynamicGrid로 그리드 컬럼의 갯수를 서브 타이틀 갯수에 맞춰 동적으로 설정
-const DynamicGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(${(props) => props.columns}, 1fr);
-  gap: 10px;
-  margin-top: 10px;
-
-  div {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid ${palette.lineGray};
-  }
-
-  p {
-    margin: 0;
-  }
-`;
-
-const SubTitle = styled.strong`
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: ${palette.gray};
-  text-align: left;
-`;
-
 const SubTextBox = styled.div`
   background: ${palette.white};
   padding: 16px;
@@ -720,56 +601,6 @@ const LoadingOverlay = styled.div`
 
 const Spacing = styled.div`
   margin-bottom: 40px; /* 제목과 본문 사이의 간격 */
-`;
-
-const NumDynamicGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(${(props) => props.columns}, 1fr);
-  gap: 10px;
-  margin-top: 10px;
-
-  ul {
-    list-style: none; /* 기본 리스트 스타일 제거 */
-    padding: 0;
-    margin: 0;
-
-    li {
-      position: relative;
-      font-size: 0.875rem;
-      color: ${palette.gray800};
-      line-height: 1.5;
-      padding-left: 13px;
-      margin-left: 8px;
-
-      &:before {
-        position: absolute;
-        top: 8px;
-        left: 0;
-        width: 3px;
-        height: 3px;
-        border-radius: 50%;
-        background: ${palette.gray800};
-        content: "";
-      }
-    }
-  }
-
-  div {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid ${palette.lineGray};
-  }
-
-  p {
-    margin: 0;
-    font-size: 0.875rem;
-    font-weight: 400;
-    color: ${palette.darkGray};
-    line-height: 1.5;
-  }
 `;
 
 const SeparateSection = styled.div`
@@ -890,18 +721,5 @@ const SeparateSection = styled.div`
         content: "";
       }
     }
-  }
-`;
-
-const AdviseBox = styled.div`
-  background: ${palette.lightGray};
-  padding: 20px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-
-  p {
-    font-size: 0.875rem;
-    color: ${palette.darkGray};
-    line-height: 1.5;
   }
 `;

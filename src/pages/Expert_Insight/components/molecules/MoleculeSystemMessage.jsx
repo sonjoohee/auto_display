@@ -6,16 +6,11 @@ import { useAtom } from "jotai";
 import { SELECTED_EXPERT_INDEX } from "../../../AtomStates";
 
 const MoleculeSystemMessage = ({ item }) => {
-  // console.log("🚀 ~ MoleculeSystemMessage ~ item:", item);
   const [displayedText, setDisplayedText] = useState(""); // 현재까지 타이핑된 텍스트
   const [isTyping, setIsTyping] = useState(true); // 타이핑 중인지 여부
-  // const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const message = item.message;
   const selectedExpertIndex = item.expertIndex;
-  // console.log(
-  //   "🚀 ~ MoleculeSystemMessage ~ selectedExpertIndex:",
-  //   selectedExpertIndex
-  // );
+
 
   useEffect(() => {
     const messageLines = message.split("\n"); // 메시지를 줄바꿈 기준으로 나눔
@@ -90,12 +85,6 @@ const Thumb = styled.div`
   }
 `;
 
-const Time = styled.span`
-  align-self: flex-end;
-  font-size: 0.63rem;
-  color: ${palette.gray};
-`;
-
 const SystemMessageContainer = styled.div`
   display: flex;
   // align-items: flex-end;
@@ -134,10 +123,4 @@ const TypingEffect = styled.div`
       border-color: ${palette.lightGray};
     }
   }
-`;
-
-const p = styled.p`
-  line-height: 1.8;
-  text-align: left;
-  white-space: pre-wrap; /* 줄바꿈과 공백 유지 */
 `;
