@@ -5,12 +5,10 @@ import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import { InputField } from "../../../../assets/styles/Input";
 import {
-  SkeletonH1,
   SkeletonTitle,
   SkeletonLine,
 } from "../../../../assets/styles/Skeleton";
 import MoleculeReportController from "../molecules/MoleculeReportController";
-import businessTemplate from "./sample_analyse.json"; // JSON 파일 불러오기
 import {
   saveConversationToIndexedDB,
   getConversationByIdFromIndexedDB,
@@ -283,18 +281,6 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
           setIsLoadingAnalysis(false);
           setIsLoading(false);
 
-          // // 기존 대화 내역을 유지하면서 새로운 정보를 추가
-          // const existingConversation = await getConversationByIdFromIndexedDB(
-          //   conversationId,
-          //   isLoggedIn
-          // );
-
-          // const updatedConversation = {
-          //   ...existingConversation,
-          //   analysisReportData,
-          //   timestamp: Date.now(),
-          // };
-
           // 대화 업데이트 및 저장
           const updatedConversation2 = [...conversation];
           if (approachPath === 1) {
@@ -476,69 +462,6 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
     }
 
     togglePopupDelete();
-  };
-
-  const generateAddtionalContent = async (section) => {
-
-    if (newAddContent.trim() === "") {
-      setIsPopupEmpty(true);
-      return;
-    }
-
-    try {
-      setIsLoading(true);
-      if (section === "mainFeatures") setIsLoadingAdd1(true);
-      else if (section === "mainCharacteristic") setIsLoadingAdd2(true);
-      else if (section === "targetCustomer") setIsLoadingAdd3(true);
-
-      const data = {
-        // new_add_content: newAddContent, // api 연결 시 추가
-        expert_id: "1",
-        business_info: titleOfBusinessInfo,
-        business_analysis_data: {
-          명칭: analysisReportData.title,
-          주요_목적_및_특징: analysisReportData.mainFeatures,
-          주요기능: analysisReportData.mainCharacter,
-          목표고객: analysisReportData.mainCustomer,
-        },
-        tabs: [],
-        page_index: 1,
-      };
-
-      // 임시로 전문가보고서 api 사용
-      const response = await axios.post(
-        "https://wishresearch.kr/panels/expert",
-        data,
-        axiosConfig
-      );
-
-      // 응답받은 데이터가 들어가는지 확인
-      if (section === "mainFeatures") {
-        setMainFeaturesOfBusinessInformation([
-          ...mainFeaturesOfBusinessInformation,
-          response.data.tabs[0].sections[0].content[0].text,
-        ]);
-      } else if (section === "mainCharacteristic") {
-        setMainCharacteristicOfBusinessInformation([
-          ...mainCharacteristicOfBusinessInformation,
-          response.data.tabs[0].sections[0].content[0].text,
-        ]);
-      } else if (section === "targetCustomer") {
-        setBusinessInformationTargetCustomer([
-          ...businessInformationTargetCustomer,
-          response.data.tabs[0].sections[0].content[0].text,
-        ]);
-      }
-      setNewAddContent("");
-      setIsAddingNow({ section: "", isAdding: false });
-      setIsLoading(false);
-      setIsLoadingAdd1(false);
-      setIsLoadingAdd2(false);
-      setIsLoadingAdd3(false);
-
-    } catch (error) {
-      console.error("Error loading data:", error);
-    }
   };
 
   return (
@@ -1006,28 +929,6 @@ const blinkAnimation = keyframes`
   100% { opacity: 1; }
 `;
 
-const TitlePlaceholder = styled.div`
-  width: 60%;
-  height: 30px;
-  background-color: ${palette.lineGray};
-  border-radius: 4px;
-  animation: ${blinkAnimation} 1.5s ease-in-out infinite;
-  margin-bottom: 20px;
-`;
-
-const ContentPlaceholder = styled.div`
-  width: 100%;
-  height: 20px;
-  background-color: ${palette.lineGray};
-  border-radius: 4px;
-  animation: ${blinkAnimation} 1.5s ease-in-out infinite;
-  margin-bottom: 10px;
-
-  &:last-child {
-    margin-bottom: 30px;
-  }
-`;
-
 const AnalysisSection = styled.div`
   position: relative;
   max-width: 1135px;
@@ -1178,36 +1079,6 @@ const WarningMessage = styled.div`
   text-align: center;
 `;
 
-const LoadingOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-
-  .loader {
-    border: 12px solid #f3f3f3; /* Light grey */
-    border-top: 12px solid #3498db; /* Blue */
-    border-radius: 50%;
-    width: 80px;
-    height: 80px;
-    animation: spin 2s linear infinite;
-  }
-
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-`;
 const Spacing = styled.div`
   margin-bottom: 40px; /* 제목과 본문 사이의 간격 */
 `;

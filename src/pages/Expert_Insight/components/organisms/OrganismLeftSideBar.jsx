@@ -12,7 +12,6 @@ import {
   newPasswordAtom,
   rePasswordAtom,
   INPUT_BUSINESS_INFO,
-  SAVED_REPORTS,
   isLoggedInAtom,
   USER_NAME,
   USER_EMAIL,
@@ -21,7 +20,6 @@ import {
   MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
   APPROACH_PATH,
-  STRATEGY_REPORT_DATA,
   SELECTED_ADDITIONAL_KEYWORD,
   EXPERT1_REPORT_DATA,
   EXPERT2_REPORT_DATA,
@@ -34,7 +32,6 @@ import {
   iS_CLICK_CHECK_REPORT_RIGHTAWAY,
   CONVERSATION,
   CONVERSATION_ID,
-  BUTTON_STATE,
   SELECTED_EXPERT_INDEX,
   REPORT_REFRESH_TRIGGER,
   IS_LOADING,
@@ -76,7 +73,6 @@ const OrganismLeftSideBar = () => {
   const [chatList, setChatList] = useState([]); // 서버에서 가져온 대화 리스트
 
   const [isAccountPopupOpen, setAccountPopupOpen] = useState(false); // 계정설정 팝업
-  const [selectedConversation, setSelectedConversation] = useState(null); // 선택한 대화 내용 저장
   const [isSocialLoggedIn] = useAtom(IS_SOCIAL_LOGGED_IN); // 소셜 로그인 상태 읽기
 
   const [isLogoutPopup, setIsLogoutPopup] = useState(false); // 로그아웃 팝업 상태 관리
@@ -170,8 +166,7 @@ const OrganismLeftSideBar = () => {
 
   const [isSection1Open, setIsSection1Open] = useState(false); // 인사이트 보관함 열림/닫힘 상태
   const [isSection2Open, setIsSection2Open] = useState(false); // 프로젝트 히스토리 열림/닫힘 상태
-  const historyAccordionContentRef = useRef(null);
-  const sideBarRef = useRef(null);
+
  // 사이드바의 최대 높이 설정
  const maxSidebarHeight = 600; // 예시로 700px 설정
 
@@ -649,11 +644,6 @@ useEffect(() => {
     setIsToggle((prev) => !prev); // 팝업 열기/닫기
   };
 
-  const [isEditToggle, setIsEditToggle] = useState(true);
-  // const editBoxToggle = () => {
-  //   setIsEditToggle(!isEditToggle);
-  // };
-
   const handleNewProjectClick = () => {
     if (isLoading) return;
 
@@ -1110,7 +1100,6 @@ useEffect(() => {
 
                 <button className="more" onMouseDown={moreProfile}>
                   {/* <img src={images.AccountSetting} alt="" /> */}
-                  {/* <span>{sessionStorage.getItem("userName")}</span> */}
                   <span>
                     {(() => {
                       const userName = sessionStorage.getItem("userName");
@@ -1390,28 +1379,6 @@ const Popup = styled.div`
           }
         }
       `}
-  }
-`;
-
-const AuthButtons = styled.div`
-  margin-top: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 20px;
-
-  button {
-    padding: 10px;
-    border-radius: 5px;
-    border: none;
-    background-color: ${palette.blue};
-    color: ${palette.white};
-    cursor: pointer;
-    font-size: 1rem;
-
-    &:hover {
-      background-color: ${palette.darkBlue};
-    }
   }
 `;
 
@@ -1941,171 +1908,6 @@ const AccordionContent = styled.div`
   }
 `;
 
-const ToggleMenu = styled.div`
-  position: absolute;
-  right: -260px;
-  top: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  min-width: 217px;
-  padding: 20px;
-  border-radius: 15px;
-  border: 1px solid ${palette.lineGray};
-  background: ${palette.white};
-  box-shadow: 0 4px 28px rgba(0, 0, 0, 0.05);
-
-  button {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: "Pretendard";
-    font-size: 0.875rem;
-    color: ${palette.gray};
-    border: 0;
-    background: none;
-  }
-`;
-
-const AIProfileWrap = styled.div`
-  padding: 30px;
-  border-radius: 20px;
-  border: 1px solid ${palette.lineGray};
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  background: ${palette.white};
-
-  + div {
-    margin-top: 28px;
-  }
-
-  a {
-    position: relative;
-    font-size: 0.875rem;
-    text-decoration: underline;
-    padding-right: 16px;
-    margin-top: 20px;
-
-    &:after {
-      position: absolute;
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%) rotate(45deg);
-      width: 8px;
-      height: 8px;
-      border-top: 2px solid ${palette.black};
-      border-right: 2px solid ${palette.black};
-      content: "";
-    }
-  }
-`;
-
-const AIProfile = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 25px;
-  border-radius: 12px;
-  border: 1px solid ${palette.lineGray};
-  background: rgba(0, 0, 0, 0.04);
-
-  .thumb {
-    position: relative;
-    width: 160px;
-    height: 160px;
-    margin: 0 auto;
-    border-radius: 50%;
-    overflow: hidden;
-
-    img {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
-
-  .name {
-    margin-top: 30px;
-
-    strong {
-      font-size: 1.25rem;
-      font-weight: 700;
-    }
-
-    p {
-      color: ${palette.gray};
-      margin-top: 15px;
-    }
-  }
-
-  .field {
-    display: flex;
-    flex-direction: column;
-    margin: 25px auto 0;
-
-    strong {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-weight: 400;
-      color: ${palette.blue};
-      margin-bottom: 12px;
-    }
-
-    p {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-    }
-
-    span {
-      font-size: 0.875rem;
-      padding: 8px 16px;
-      border-radius: 25px;
-      border: 1px solid ${palette.lineGray};
-      background: ${palette.white};
-    }
-  }
-`;
-
-const IdeaWrap = styled.div`
-  text-align: left;
-  padding: 30px;
-  border-radius: 20px;
-  border: 1px solid ${palette.lineGray};
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-
-  strong {
-    display: block;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid ${palette.lineGray};
-  }
-
-  div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-
-    a {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      width: 100%;
-      font-size: 0.81rem;
-      color: ${palette.gray};
-    }
-
-    svg {
-      flex-shrink: 0;
-    }
-  }
-`;
-
 const LoginButtonWrap = styled.div`
   position: relative;
   display: flex;
@@ -2244,19 +2046,3 @@ const LogoutToggle = styled.div`
     }
   }
 `;
-
-const getColor = (expertIndex) => {
-  switch (expertIndex) {
-    case 0:
-      return "#FF0000"; // 전문가 0: 빨간색
-    case 1:
-      return "#00FF00"; // 전문가 1: 초록색
-    case 2:
-      return "#800080"; // 전문가 2: 보라색
-    case 3:
-      return "#FFA500"; // 전문가 3: 주황색
-    default:
-      return palette.lightGray; // 기본 색상
-  }
-};
-

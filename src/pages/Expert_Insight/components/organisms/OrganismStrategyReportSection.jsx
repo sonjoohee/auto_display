@@ -23,9 +23,6 @@ import {
 } from "../../../../assets/styles/Skeleton";
 
 import MoleculeReportController from "../molecules/MoleculeReportController";
-import sampleData1 from "./sample1.json";
-import sampleData2 from "./sample2.json";
-import sampleData3 from "./sample3.json";
 import {
   saveConversationToIndexedDB,
   getConversationByIdFromIndexedDB,
@@ -33,10 +30,6 @@ import {
 import axios from "axios";
 
 import {
-  emailAtom,
-  passwordAtom,
-  currentUserAtom,
-  errorAtom,
   TITLE_OF_BUSINESS_INFORMATION,
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
   MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
@@ -70,7 +63,6 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
     headers: { "Content-Type": "application/json" },
     withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
   };
-  const [email, setEmail] = useAtom(emailAtom);
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [
     mainFeaturesOfBusinessInformation,
@@ -286,19 +278,6 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             },
             { type: `keyword` }
           );
-
-          // const existingConversation2 = await getConversationByIdFromIndexedDB(
-          //   conversationId,
-          //   isLoggedIn
-          // );
-          // const updatedConversation2 = {
-          //   ...existingConversation2,
-          //   expert_index: selectedExpertIndex,
-          //   conversation: updatedConversation1,
-          //   conversationStage: 3,
-          //   timestamp: Date.now(),
-          //   expert_index: selectedExpertIndex,
-          // };
 
           setConversation(updatedConversation);
           await saveConversationToIndexedDB(
@@ -1094,26 +1073,6 @@ const blinkAnimation = keyframes`
   100% { opacity: 1; }
 `;
 
-const TitlePlaceholder = styled.div`
-  width: 60%;
-  height: 30px;
-  background-color: ${palette.lineGray};
-  border-radius: 4px;
-  animation: ${blinkAnimation} 1.5s ease-in-out infinite;
-  margin-bottom: 20px;
-`;
-const ContentPlaceholder = styled.div`
-  width: 100%;
-  height: 20px;
-  background-color: ${palette.lineGray};
-  border-radius: 4px;
-  animation: ${blinkAnimation} 1.5s ease-in-out infinite;
-  margin-bottom: 10px;
-
-  &:last-child {
-    margin-bottom: 30px;
-  }
-`;
 const AnalysisSection = styled.div`
   position: relative;
   max-width: 1135px;
@@ -1299,36 +1258,7 @@ const SubTextBox = styled.div`
   color: ${palette.gray};
   border: 0 !important;
 `;
-const LoadingOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
 
-  .loader {
-    border: 12px solid #f3f3f3; /* Light grey */
-    border-top: 12px solid #3498db; /* Blue */
-    border-radius: 50%;
-    width: 80px;
-    height: 80px;
-    animation: spin 2s linear infinite;
-  }
-
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-`;
 const Spacing = styled.div`
   margin-bottom: 40px; /* 제목과 본문 사이의 간격 */
 `;

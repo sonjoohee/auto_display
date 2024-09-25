@@ -41,7 +41,6 @@ import {
   saveConversationToIndexedDB,
   getConversationByIdFromIndexedDB,
 } from "../../../../utils/indexedDB";
-// import businessTemplate from '../organisms/sample_analyse.json'; // JSON 파일 불러오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
 
 const MoleculeReportController = ({
@@ -51,13 +50,6 @@ const MoleculeReportController = ({
   sampleData,
   additionalReportCount, // 추가 보고서 복사기능을 위한 인덱스
 }) => {
-  // console.log(
-  //   "🚀 ~ strategyReportID,  conversationId,  sampleData,:",
-  //   strategyReportID,
-  //   conversationId,
-  //   sampleData
-  // );
-  // console.log(reportIndex, strategyReportID, conversationId, sampleData);
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
     TITLE_OF_BUSINESS_INFORMATION
   );
@@ -180,19 +172,6 @@ const MoleculeReportController = ({
     togglePopupCancel();
   };
 
-  // useEffect(() => {
-  //   // JSON 데이터를 아톰 상태로 설정
-  //   // setTitleOfBusinessInfo(businessTemplate["명칭"]);
-  //   // setMainFeaturesOfBusinessInformation(businessTemplate["주요기능"]);
-  //   // setMainCharacteristicOfBusinessInformation(businessTemplate["주요기능"]);
-  //   // setBusinessInformationTargetCustomer(businessTemplate["목표고객"]);
-
-  //   // Temp 상태에도 초기 데이터를 설정
-  //   // setTempMainFeaturesOfBusinessInformation(businessTemplate["주요기능"]);
-  //   // setTempMainCharacteristicOfBusinessInformation(businessTemplate["주요기능"]);
-  //   // setTempBusinessInformationTargetCustomer(businessTemplate["목표고객"]);
-  // }, [setTitleOfBusinessInfo, setMainFeaturesOfBusinessInformation, setMainCharacteristicOfBusinessInformation, setBusinessInformationTargetCustomer]);
-
   const analysisReportData = {
     title: titleOfBusinessInfo,
     mainFeatures: mainFeaturesOfBusinessInformation,
@@ -276,24 +255,15 @@ const MoleculeReportController = ({
       business_info = reportData?.business_info || "Unknown Title";
     } else if (reportIndex === 2) {
       reportData = sampleData;
-      // console.log("🚀 ~ toggleSave ~ reportData:", reportData);
       business_info = reportData?.title || "Unknown Title";
     } else if (reportIndex === 3) {
       reportData = sampleData;
-      // console.log("🚀 ~ toggleSave ~ sampleData:", sampleData);
-      // console.log("🚀 ~ toggleSave ~ reportData:", reportData);
       business_info = reportData?.title || "Unknown Title";
     } else return;
 
     // API에 저장 요청
     try {
       const accessToken = sessionStorage.getItem("accessToken"); // 저장된 토큰을 가져옴
-      const config = {
-        headers: {
-          Authorization: `Bearer ${accessToken}`, // 토큰을 헤더에 포함
-          "Content-Type": "application/json",
-        },
-      };
 
       const postData = {
         business_info: business_info,
@@ -481,7 +451,6 @@ ${businessInformationTargetCustomer
     setIsLoadingAnalysis(true);
 
     // 버튼 클릭으로 API 호출
-    // console.log("기초보고서api호출");
     const response = await axios.post(
       "https://wishresearch.kr/panels/business",
       data,
@@ -559,20 +528,6 @@ ${businessInformationTargetCustomer
         : [],
     };
 
-    // 기존 대화 내역을 유지하면서 새로운 정보를 추가
-    // const existingConversation = await getConversationByIdFromIndexedDB(
-    //   conversationId,
-    //   isLoggedIn
-    // );
-
-    // const updatedConversation = {
-    //   ...existingConversation,
-    //   analysisReportData,
-    //   timestamp: Date.now(),
-    //   expert_index: selectedExpertIndex,
-    // };
-    // await saveConversationToIndexedDB(updatedConversation);
-
     await saveConversationToIndexedDB(
       {
         id: conversationId,
@@ -592,22 +547,6 @@ ${businessInformationTargetCustomer
     setReportRefreshTrigger((prev) => !prev);
     setIsLoadingAnalysis(false);
     setIsLoading(false);
-  };
-
-  // 전문가 보고서 재생성
-  const regenerateReport2 = async () => {};
-
-  const handleRetryIdea = () => {
-    alert("정말 다시 하시겠습니까?");
-
-    resetConversationState();
-
-    setConversation([
-      {
-        type: "system",
-        message: "아래 검색창에 아이템(아이디어)를 설명해주세요!",
-      },
-    ]);
   };
 
   return (
