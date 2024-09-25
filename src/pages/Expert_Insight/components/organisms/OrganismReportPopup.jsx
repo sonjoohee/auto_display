@@ -490,19 +490,6 @@ const TabButton = styled.button`
   }
 `;
 
-const TwoColumnGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 10px;
-
-  > div {
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid ${palette.lineGray};
-  }
-`;
-
 const SubTitle = styled.strong`
   font-size: 0.875rem;
   font-weight:400;
@@ -1202,15 +1189,7 @@ const TabTitle = styled.div`
   background: ${palette.white};
   margin-bottom: 10px;
 `;
-const TabContent = styled.div`
-  font-family: "Pretendard";
-  font-size: 0.875rem;
-  line-height: 1.5;
-  color: ${palette.black};
-  border: none;
-  border-bottom: none;
-  background: ${palette.white};
-`;
+
 const BgStyledSection = styled.div`
   display: flex;
   flex-direction: column;
@@ -1684,10 +1663,4 @@ const SectionWrapper = styled.div`
   div {
     margin-bottom: 8px; /* subContent 간의 간격 */
   }
-`;
-
-const SectionWrapper_2 = styled.div`
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid ${palette.lineGray}; /* 각 section에만 border 적용 */
 `;

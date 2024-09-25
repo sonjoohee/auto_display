@@ -384,38 +384,3 @@ const FieldUl = styled.ul`
     }
   }
 `;
-
-const IdeaWrap = styled.div`
-  text-align: left;
-  padding: 30px;
-  border-radius: 20px;
-  border: 1px solid ${palette.lineGray};
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-
-  strong {
-    display: block;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid ${palette.lineGray};
-  }
-
-  div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-
-    a {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      width: 100%;
-      font-size: 0.81rem;
-      color: ${palette.gray};
-    }
-
-    svg {
-      flex-shrink: 0;
-    }
-  }
-`;

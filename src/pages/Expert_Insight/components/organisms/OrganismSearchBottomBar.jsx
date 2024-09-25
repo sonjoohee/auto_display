@@ -8,14 +8,12 @@ import { InputField } from "../../../../assets/styles/Input";
 import { useAtom } from "jotai";
 import {
   IS_LOADING,
-  CONVERSATION_STAGE,
   CUSTOMER_ADDITION_BUTTON_STATE,
   CUSTOMER_ADDITION_QUESTION_INPUT,
 } from "../../../AtomStates";
 
 const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
-  const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [buttonState, setButtonState] = useAtom(CUSTOMER_ADDITION_BUTTON_STATE);
   const [questionInput, setQuestionInput] = useAtom(
     CUSTOMER_ADDITION_QUESTION_INPUT
@@ -68,16 +66,6 @@ const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
   return (
     <>
       <BottomBar>
-        {/* <SearchBar>
-        <svg width="20" height="20" viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M0 24.9987C0 25.1828 0.149218 25.332 0.333286 25.332C0.3388 25.332 0.344283 25.3319 0.349731 25.3316H24.3298C24.5139 25.3316 24.6631 25.1824 24.6631 24.9983C24.6631 24.8143 24.5139 24.6651 24.3298 24.6651H0.666571L0.66657 1.00223C0.66657 0.818163 0.517353 0.668945 0.333285 0.668945C0.149217 0.668945 0 0.818163 0 1.00223V24.9983V24.9987ZM3.93314 17.1281C3.93314 16.5758 4.38086 16.1281 4.93314 16.1281H5.74395C6.29624 16.1281 6.74395 16.5758 6.74395 17.1281V21.3984H3.93314V17.1281ZM9.50121 3.1281C8.94893 3.1281 8.50121 3.57582 8.50121 4.1281V21.3984H11.312V4.1281C11.312 3.57582 10.8643 3.1281 10.312 3.1281H9.50121ZM13.0685 13.2635C13.0685 12.7112 13.5163 12.2635 14.0685 12.2635H14.8794C15.4316 12.2635 15.8793 12.7112 15.8793 13.2635V21.3986H13.0685V13.2635ZM18.6359 6.29073C18.0836 6.29073 17.6359 6.73845 17.6359 7.29073V21.3988H20.4467V7.29073C20.4467 6.73844 19.999 6.29073 19.4467 6.29073H18.6359Z" fill="black"/>
-        </svg>
-
-        <InputField None placeholder="당신의 아이템 또는 프로젝트 아이디어를 적어 주세요 (예: 원격 근무자를 위한 생산성 관리 툴)" value={inputValue} onChange={handleInputChange} />
-
-        <button type="button" onClick={handleSearch}>검색</button>
-      </SearchBar> */}
-
         <SearchBar isBlue={isBlue}>
           <svg
             width="20"

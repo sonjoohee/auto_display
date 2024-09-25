@@ -70,7 +70,7 @@ function App() {
     }
   }, [setIsLoggedIn, setUserName, setUserEmail]);
 
-  // 1분마다 서버 상태 체크
+  // 10분마다 서버 상태 체크
   useEffect(() => {
     const token = sessionStorage.getItem("accessToken");
 
@@ -98,10 +98,10 @@ function App() {
     // 처음 실행
     checkServerStatus();
 
-    // 1분마다 실행
+    // 10분마다 실행
     const intervalId = setInterval(() => {
       checkServerStatus();
-    }, 600000); // 60초마다 서버 상태 확인
+    }, 600000); // 600초마다 서버 상태 확인
 
     return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 정리
   }, []);
@@ -140,6 +140,8 @@ function App() {
             <Route path="/CompletedMail" element={<PageCompletedMail />}></Route>
 
             <Route path="/ExpertExample" element={<ExpertExample />}></Route>
+            <Route path="/PageAIPanelList" element={<PageAIPanelList />}></Route>
+
 
 
             {/* <Route path="/AI_Panel" element={<PageAIPanelList />} />

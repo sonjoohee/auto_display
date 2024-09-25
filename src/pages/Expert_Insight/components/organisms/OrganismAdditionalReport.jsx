@@ -11,7 +11,6 @@ import {
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
   ADDITION_BUTTON_STATE,
   CONVERSATION,
-  APPROACH_PATH,
   IS_LOADING,
   isLoggedInAtom,
   EXPERT1_REPORT_DATA,
@@ -23,7 +22,6 @@ import {
   SELECTED_EXPERT_LIST,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
-import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
 import {
   saveConversationToIndexedDB,
@@ -31,11 +29,9 @@ import {
 } from "../../../../utils/indexedDB";
 import axios from "axios";
 import {
-  SkeletonH1,
   SkeletonTitle,
   SkeletonLine,
 } from "../../../../assets/styles/Skeleton";
-import e from "cors";
 
 const OrganismAdditionalReport = ({
   additionalReportCount,
@@ -48,7 +44,6 @@ const OrganismAdditionalReport = ({
   const [inputBusinessInfo, setInputBusinessInfo] =
     useAtom(INPUT_BUSINESS_INFO);
   const [conversation, setConversation] = useAtom(CONVERSATION);
-  const [approachPath] = useAtom(APPROACH_PATH);
   const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
     SELECTED_ADDITIONAL_KEYWORD
   );
@@ -105,18 +100,11 @@ const OrganismAdditionalReport = ({
   const [customerAdditionalReportData, setCustomerAdditionalReportData] =
     useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
 
-  // const additionalReportAtom = strategyReportAtomMap[expertIndex] || ADDITIONAL_REPORT_DATA1;
-  // const [additionalReportData, setAdditionalReportData] = useAtom(additionalReportAtom);
-
   useEffect(() => {
     const loadData = async () => {
       let answerData;
 
       try {
-        // const existingConversation = await getConversationByIdFromIndexedDB(
-        //   conversationId,
-        //   isLoggedIn
-        // );
         // 기존 데이터가 있을 때 처리
         if (additionalReportData[additionalReportCount]) {
           setAnswerDataState(additionalReportData[additionalReportCount]);
@@ -152,14 +140,6 @@ const OrganismAdditionalReport = ({
 
           while (
             !answerData.hasOwnProperty("title")
-            //  || !answerData.sections[0].hasOwnProperty("title") ||
-            // !answerData.sections[1].hasOwnProperty("title") ||
-            // !answerData.sections[2].hasOwnProperty("title") ||
-            // !answerData.sections[3].hasOwnProperty("title") ||
-            // !answerData.sections[0].content.length ||
-            // !answerData.sections[1].content.length ||
-            // !answerData.sections[2].content.length ||
-            // !answerData.sections[3].content.length
           ) {
             response = await axios.post(
               "https://wishresearch.kr/panels/add_question",
@@ -173,65 +153,20 @@ const OrganismAdditionalReport = ({
           setTitle(answerData?.title);
           setSections(answerData?.sections);
 
-          // console.log(
-          //   "🚀 ~ loadData ~ additionalReportData:",
-          //   additionalReportData
-          // );
-          // 새로운 데이터를 배열의 맨 앞에 추가합니다.
-          // let updatedAdditionalReportData = [
-          //   ...(Array.isArray(additionalReportData)
-          //     ? additionalReportData
-          //     : [additionalReportData]),
-          //   answerData,
-          // ];
           let updatedAdditionalReportData = [];
 
           if (
             additionalReportCount === 0 ||
             additionalReportData.length === 0
           ) {
-            // console.log(
-            //   "🚀 ~ 첫저장 ~ additionalReportCount:",
-            //   additionalReportCount
-            // );
             updatedAdditionalReportData.push(answerData);
           } else {
-            // console.log(
-            //   "🚀 ~ 저장 ~ updatedAdditionalReportData:",
-            //   additionalReportData
-            // );
             updatedAdditionalReportData = additionalReportData;
             updatedAdditionalReportData.push(answerData);
           }
-
-          // console.log(
-          //   "🚀 ~ loadData ~ updatedAdditionalReportData:",
-          //   updatedAdditionalReportData
-          // );
           setAdditionalReportData(updatedAdditionalReportData);
-
-          // const updatedConversation = {
-          //   ...existingConversation,
-          //   additionalReportData: updatedAdditionalReportData, // 전체 리스트를 저장
-          //   timestamp: Date.now(),
-          // };
           await saveConversationToIndexedDB(
             {
-              //   id: "",
-              //   conversation: [],
-              //   conversationStage: 1,
-              //   expertIndex: 0,
-              //   analysisReportData: {},
-              //   inputBusinessInfo: "",
-              //   strategyReportData_EX1: {},
-              //   strategyReportData_EX2: {},
-              //   strategyReportData_EX3: {},
-              //   additionalReportData: [],
-              //   selectedAdditionalKeywords: [],
-              //   timestamp: new Date().toISOString(),
-
-              // ...existingConversation,
-              // expertIndex: 0,
               id: conversationId,
               inputBusinessInfo: inputBusinessInfo,
               analysisReportData: analysisReportData,
@@ -301,7 +236,6 @@ const OrganismAdditionalReport = ({
       } catch (error) {
         console.error("Error loading data:", error);
       }
-      // console.log("🚀 ~ loadData ~ conversationId:", conversationId);
     };
 
     loadData();
@@ -516,43 +450,6 @@ const TabTitle = styled.div`
   color: ${palette.gray800};
 `;
 
-const TabContent = styled.div`
-  font-family: "Pretendard";
-  font-size: 0.875rem;
-  line-height: 1.5;
-  color: ${palette.black};
-  border: none;
-  border-bottom: none;
-  background: ${palette.white};
-`;
-
-// DynamicGrid로 그리드 컬럼의 갯수를 서브 타이틀 갯수에 맞춰 동적으로 설정
-const DynamicGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(${(props) => props.columns}, 1fr);
-  gap: 10px;
-  margin-top: 10px;
-
-  div {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid ${palette.lineGray};
-  }
-
-  p {
-    margin: 0;
-  }
-`;
-
-const SubTitle = styled.strong`
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: ${palette.gray};
-  text-align: left;
-`;
 
 const SubTextBox = styled.div`
   background: ${palette.white};
@@ -563,89 +460,9 @@ const SubTextBox = styled.div`
   color: ${palette.gray};
   border: 0 !important;
 `;
-const LoadingOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-
-  .loader {
-    border: 12px solid #f3f3f3; /* Light grey */
-    border-top: 12px solid #3498db; /* Blue */
-    border-radius: 50%;
-    width: 80px;
-    height: 80px;
-    animation: spin 2s linear infinite;
-  }
-
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-`;
 
 const Spacing = styled.div`
   margin-bottom: 40px; /* 제목과 본문 사이의 간격 */
-`;
-
-const NumDynamicGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(${(props) => props.columns}, 1fr);
-  gap: 10px;
-  margin-top: 10px;
-
-  ul {
-    list-style: none; /* 기본 리스트 스타일 제거 */
-    padding: 0;
-    margin: 0;
-
-    li {
-      position: relative;
-      font-size: 0.875rem;
-      color: ${palette.gray800};
-      line-height: 1.5;
-      padding-left: 13px;
-      margin-left: 8px;
-
-      &:before {
-        position: absolute;
-        top: 8px;
-        left: 0;
-        width: 3px;
-        height: 3px;
-        border-radius: 50%;
-        background: ${palette.gray800};
-        content: "";
-      }
-    }
-  }
-
-  div {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid ${palette.lineGray};
-  }
-
-  p {
-    margin: 0;
-    font-size: 0.875rem;
-    font-weight: 400;
-    color: ${palette.darkGray};
-    line-height: 1.5;
-  }
 `;
 
 const SeparateSection = styled.div`
