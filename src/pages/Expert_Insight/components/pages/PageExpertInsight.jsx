@@ -144,21 +144,6 @@ const PageExpertInsight = () => {
   let additionalReportCount = 0;
   let customerAdditionalReportCount = 0;
 
-  // // 시스템 점검 여부 체크
-  // useEffect(() => {
-  //   const checkSystemMaintenance = async () => {
-  //     try {
-  //       const response = await axios.post('https://wishresearch.kr/');
-  //       if (response.data) {
-  //         alert('현재 시스템 점검 중입니다.');
-  //       }
-  //     } catch (error) {
-  //       console.error('시스템 점검 여부 확인 중 오류 발생:', error);
-  //     }
-  //   };
-  //   checkSystemMaintenance();
-  // }, []);
-
   // 현재 선택된 전문가에 맞는 보고서 데이터를 결정
   const getStrategyReportData = () => {
     switch (selectedExpertIndex) {
@@ -547,110 +532,39 @@ const PageExpertInsight = () => {
     }
 
     const updatedConversation = [...conversation];
-    let newConversationStage = conversationStage;
+
     // 사용자가 입력한 경우에만 inputBusinessInfo를 업데이트
     if (conversationStage === 1 && inputValue !== -1) {
-      try {
-        const data = {
-          business_info: inputValue, // inputBusinessInfo와 동일한 값으로 가정
-        };
-
-        const axiosConfig = {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
-          },
-        };
-
-        const sampledata = {
-          business_info: "원격 근무자를 위한 생산성 관리 툴", // 비즈니스 아이템 명칭 변경
-          business_analysis_data: {
-            명칭: "RemoteWorkPro", // 툴 이름 예시
-            주요_목적_및_특징: [
-              "RemoteWorkPro는 원격 근무자들의 생산성을 극대화하기 위한 올인원 관리 툴입니다. 이 툴은 작업 시간 추적, 일정 관리, 프로젝트 협업 도구 등을 통합하여 하나의 플랫폼에서 원활하게 업무를 처리할 수 있도록 도와줍니다. 사용자는 실시간으로 자신의 작업 진행 상황을 모니터링하고, 팀원들과의 효율적인 소통과 협업을 통해 업무 효율성을 높일 수 있습니다."
-            ],
-            주요기능: [
-              "작업 시간 추적 기능을 통해 근무 시간을 정확히 기록하고, 시간당 생산성 데이터를 실시간으로 제공하여 업무 관리가 용이합니다.",
-              "프로젝트 관리 기능으로 팀원들과의 협업이 원활해지며, 모든 진행 상황을 한눈에 확인할 수 있는 대시보드 기능을 갖추고 있습니다.",
-              "화상 회의 및 실시간 채팅 기능을 통해 팀원 간의 소통을 원활하게 하고, 일정 관리 및 알림 시스템을 통해 중요한 일정을 놓치지 않도록 도와줍니다."
-            ],
-            목표고객: [
-              "원격 근무 환경에서 효율적인 업무 관리를 원하는 중소기업 및 스타트업: RemoteWorkPro는 다양한 프로젝트와 팀원을 관리해야 하는 중소기업에게 필수적인 기능을 제공하여, 업무 흐름을 개선하고 효율성을 극대화합니다.",
-              "프리랜서 및 1인 사업자: RemoteWorkPro는 시간 관리가 중요한 프리랜서 및 1인 사업자들에게 자신의 작업 시간을 기록하고 관리하는 데 유용하며, 일정과 프로젝트를 효과적으로 관리할 수 있도록 도와줍니다.",
-              "대규모 팀을 운영하는 IT 및 서비스 업종의 기업: RemoteWorkPro는 대규모 팀의 협업과 의사소통을 지원하는 강력한 도구로, 팀원들이 분산된 환경에서도 일관되게 업무를 진행할 수 있도록 합니다."
-            ]
-          },
-          question_info: inputValue // 기존 입력 데이터 유지
-        };
-
-        setAdvise("");
-
-        // 서버에 요청 보내기 부분을 주석 처리
-        // let response = await axios.post(
-        //   "https://wishresearch.kr/panels/customer_add_question",
-        //   sampledata,
-        //   axiosConfig
-        // );
-
-        // let answerData = response.data.additional_question;
-        
-        // API 응답 데이터 대신 하드코딩된 값으로 설정
-        let answerData = { advise: null }; // 가정: advise가 없는 경우
-
-        // answerData.advise가 없을 때만 실행
-        if (!answerData.advise) {
-          setInputBusinessInfo(inputValue); // inputValue를 inputBusinessInfo에 설정
-          updatedConversation.push({ type: "user", message: inputValue }); // 대화 업데이트
-
-          if (conversationStage === 1) {
-            if ((!answerData.advise) && (inputBusinessInfo && inputBusinessInfo.trim() !== "" || inputValue !== -1)) {
-              const businessInfo = inputBusinessInfo || inputValue;
-              updatedConversation.push(
-                {
-                  type: "system",
-                  message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻`,
-                  expertIndex: selectedExpertIndex,
-                },
-                { type: "analysis", businessInfo }
-              );
-              newConversationStage = 2;
-            }
-          } 
-        } else {
-          updatedConversation.push({ type: "system", message: answerData.advise + "\n다시 한번 아이디어나 비즈니스 아이템을 간단히 작성해 주세요.", expertIndex: selectedExpertIndex }); // 대화 업데이트
-          setConversationStage(1);
-        }
-      } catch (error) {
-        console.error("에러 발생:", error);
-      }
+      setInputBusinessInfo(inputValue);
+      updatedConversation.push({ type: "user", message: inputValue });
     }
 
+    let newConversationStage = conversationStage;
 
-      if (conversationStage === 1 && approachPath === -1) {
-        if ((inputBusinessInfo && inputBusinessInfo.trim() !== "" || inputValue !== -1)) {
-          const businessInfo = inputBusinessInfo || inputValue;
-          updatedConversation.push(
-            {
-              type: "system",
-              message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻`,
-              expertIndex: selectedExpertIndex,
-            },
-            { type: "analysis", businessInfo }
-          );
-          newConversationStage = 2;
-        }
-      } 
-
-      if (conversationStage > 1 && inputValue !== -1) {
-          if (
-            (updatedConversation.length > 0 &&
-              updatedConversation[updatedConversation.length - 1].type ===
-                "keyword") ||
-            (updatedConversation.length > 0 &&
-              updatedConversation[updatedConversation.length - 1].type ===
-                "report_button")
-          ) {
-            updatedConversation.pop();
-          }
+    if (conversationStage === 1) {
+      if (inputBusinessInfo || inputValue !== -1) {
+        const businessInfo = inputBusinessInfo || inputValue;
+        updatedConversation.push(
+          {
+            type: "system",
+            message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻`,
+            expertIndex: selectedExpertIndex,
+          },
+          { type: "analysis", businessInfo }
+        );
+        newConversationStage = 2;
+      }
+    } else if (conversationStage > 1 && inputValue !== -1) {
+      if (
+        (updatedConversation.length > 0 &&
+          updatedConversation[updatedConversation.length - 1].type ===
+            "keyword") ||
+        (updatedConversation.length > 0 &&
+          updatedConversation[updatedConversation.length - 1].type ===
+            "report_button")
+      ) {
+        updatedConversation.pop();
+      }
 
       // 임시로 키워드 설정
       // const updatedKeywords = [...selectedCustomerAdditionalKeyword];
@@ -668,22 +582,6 @@ const PageExpertInsight = () => {
         }
       );
     } else if (conversationStage === 2 && titleOfBusinessInfo) {
-      // 기존 대화에서 이어나가는 경우 처리
-      // if (approachPath === 2) {
-      //   newConversationStage = 2;
-      //   if (
-      //     selectedExpertIndex === "1" ||
-      //     selectedExpertIndex === "2" ||
-      //     selectedExpertIndex === "3"
-      //   ) {
-      //     // updatedConversation.push(
-      //     //   { type: "report_button" }
-      //     // );
-      //     // newConversationStage = 2;
-      //     setApproachPath(3);
-      //   }
-      // } else {
-      // 일반적인 경우 처리
       if (
         (updatedConversation.length > 0 &&
           updatedConversation[updatedConversation.length - 1].type ===
@@ -790,15 +688,7 @@ const PageExpertInsight = () => {
       }
       updatedConversation.push({ type: `strategy_${selectedExpertIndex}` });
       newConversationStage = 3;
-      // }
     } else if (conversationStage === 3) {
-      // if (approachPath === 2) {
-      //   newConversationStage = 3;
-      //   // updatedConversation.push(
-      //   //   { type: "keyword" }
-      //   // );
-      //   // setApproachPath(3);
-      // } else {
       if (
         (updatedConversation.length > 0 &&
           updatedConversation[updatedConversation.length - 1].type ===
@@ -820,11 +710,6 @@ const PageExpertInsight = () => {
         { type: `addition`, addition_index: additionalReportCount }
       );
     }
-    // }
-    // console.log(
-    //   "🚀 ~ handleSearch ~ updatedConversation:",
-    //   updatedConversation
-    // );
     setConversation(updatedConversation);
     setConversationStage(newConversationStage);
     saveConversation(updatedConversation, newConversationStage);
