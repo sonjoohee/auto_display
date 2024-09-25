@@ -136,7 +136,6 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
 
   useEffect(() => {
     const loadAndSaveData = async () => {
-      console.log("여기 오나?")
       let businessData;
       let attempts = 0;
       const maxAttempts = 5;
@@ -375,21 +374,6 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
     setTempMainCharacteristicOfBusinessInformation,
     setTempBusinessInformationTargetCustomer,
   ]);
-
-  //   const handleEditStart = (section, index) => {
-  //     setEditingIndex({ section, index });
-  //     setIsEditingNow(true);
-  //     if (section === 'mainFeatures') {
-  //       setNewEditContent(tempMainFeaturesOfBusinessInformation[index]);
-  //     } else if (section === 'mainCharacteristic') {
-  //       setNewEditContent(tempMainCharacteristicOfBusinessInformation[index]);
-  //     } else if (section === 'targetCustomer') {
-  //       setNewEditContent(tempBusinessInformationTargetCustomer[index]);
-
-  //       setTempMainFeaturesOfBusinessInformation(mainFeaturesOfBusinessInformation);
-  //     setTempMainCharacteristicOfBusinessInformation(mainCharacteristicOfBusinessInformation);
-  //     setTempBusinessInformationTargetCustomer(businessInformationTargetCustomer);
-  //   },[])
 
   const handleEditStart = (section, index) => {
     setEditingIndex({ section, index });

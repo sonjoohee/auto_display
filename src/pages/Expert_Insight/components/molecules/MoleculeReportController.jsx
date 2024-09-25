@@ -276,12 +276,12 @@ const MoleculeReportController = ({
       business_info = reportData?.business_info || "Unknown Title";
     } else if (reportIndex === 2) {
       reportData = sampleData;
-      console.log("🚀 ~ toggleSave ~ reportData:", reportData);
+      // console.log("🚀 ~ toggleSave ~ reportData:", reportData);
       business_info = reportData?.title || "Unknown Title";
     } else if (reportIndex === 3) {
       reportData = sampleData;
-      console.log("🚀 ~ toggleSave ~ sampleData:", sampleData);
-      console.log("🚀 ~ toggleSave ~ reportData:", reportData);
+      // console.log("🚀 ~ toggleSave ~ sampleData:", sampleData);
+      // console.log("🚀 ~ toggleSave ~ reportData:", reportData);
       business_info = reportData?.title || "Unknown Title";
     } else return;
 
