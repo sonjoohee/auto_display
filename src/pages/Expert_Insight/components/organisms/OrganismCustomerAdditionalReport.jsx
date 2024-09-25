@@ -44,7 +44,8 @@ const OrganismCustomerAdditionalReport = ({
   customerAdditionalReportCount,
   conversationId,
 }) => {
-  const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
+  const [selectedExpertList, setSelectedExpertList] =
+    useAtom(SELECTED_EXPERT_LIST);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
   const [inputBusinessInfo, setInputBusinessInfo] =
     useAtom(INPUT_BUSINESS_INFO);
@@ -172,16 +173,17 @@ const OrganismCustomerAdditionalReport = ({
           if (answerData.advise) {
             setAdvise(answerData.advise);
           } else {
-            while(!answerData.hasOwnProperty("title")
-                  //  || !answerData.sections[0].hasOwnProperty("title") ||
-                  // !answerData.sections[1].hasOwnProperty("title") ||
-                  // !answerData.sections[2].hasOwnProperty("title") ||
-                  // !answerData.sections[3].hasOwnProperty("title") ||
-                  // !answerData.sections[0].content.length ||
-                  // !answerData.sections[1].content.length ||
-                  // !answerData.sections[2].content.length ||
-                  // !answerData.sections[3].content.length
-                ) {
+            while (
+              !answerData.hasOwnProperty("title")
+              //  || !answerData.sections[0].hasOwnProperty("title") ||
+              // !answerData.sections[1].hasOwnProperty("title") ||
+              // !answerData.sections[2].hasOwnProperty("title") ||
+              // !answerData.sections[3].hasOwnProperty("title") ||
+              // !answerData.sections[0].content.length ||
+              // !answerData.sections[1].content.length ||
+              // !answerData.sections[2].content.length ||
+              // !answerData.sections[3].content.length
+            ) {
               response = await axios.post(
                 "https://wishresearch.kr/panels/customer_add_question",
                 data,
@@ -223,7 +225,10 @@ const OrganismCustomerAdditionalReport = ({
           //   updatedAdditionalReportData.push(customerAdditionalReportData);
           //   updatedAdditionalReportData.push(answerData);
           // }
-          if (customerAdditionalReportCount === 0) {
+          if (
+            customerAdditionalReportCount === 0 ||
+            additionalReportData.length === 0
+          ) {
             updatedAdditionalReportData.push(answerData);
           } else {
             updatedAdditionalReportData = customerAdditionalReportData;
@@ -297,8 +302,7 @@ const OrganismCustomerAdditionalReport = ({
                 updatedConversation2.push(
                   {
                     type: "system",
-                    message:
-                      `"${titleOfBusinessInfo}"과 관련된 "${response.data.keyword.result}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분석 결과에 만족하신다면, 지금 바로 전략 보고서를 준비해드려요.`,
+                    message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.keyword.result}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분석 결과에 만족하신다면, 지금 바로 전략 보고서를 준비해드려요.`,
                     expertIndex: selectedExpertIndex,
                   },
                   { type: "report_button" }
@@ -314,27 +318,20 @@ const OrganismCustomerAdditionalReport = ({
                   expertIndex: 0,
                 });
               } else {
-                  if(selectedExpertList.length === 3) {
-                    updatedConversation2.push(
-                      {
-                        type: "system",
-                        message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.keyword.result}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊`,
-                        expertIndex: 0,
-                      }
-                    );
-                  }
-                  else {
-                    updatedConversation2.push(
-                      {
-                        type: "system",
-                        message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.keyword.result}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분야별 전문가의 의견도 확인해보세요`,
-                        expertIndex: 0,
-                      }
-                    );
-                  }
-                updatedConversation2.push(
-                  { type: "keyword" }
-                );
+                if (selectedExpertList.length === 3) {
+                  updatedConversation2.push({
+                    type: "system",
+                    message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.keyword.result}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊`,
+                    expertIndex: 0,
+                  });
+                } else {
+                  updatedConversation2.push({
+                    type: "system",
+                    message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.keyword.result}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분야별 전문가의 의견도 확인해보세요`,
+                    expertIndex: 0,
+                  });
+                }
+                updatedConversation2.push({ type: "keyword" });
               }
             }
           } else if (approachPath !== 1) {
@@ -364,27 +361,20 @@ const OrganismCustomerAdditionalReport = ({
                   expertIndex: 0,
                 });
               } else {
-                  if(selectedExpertList.length === 3) {
-                    updatedConversation2.push(
-                      {
-                        type: "system",
-                        message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.keyword.result}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊`,
-                        expertIndex: 0,
-                      }
-                    );
-                  }
-                  else {
-                    updatedConversation2.push(
-                      {
-                        type: "system",
-                        message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.keyword.result}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분야별 전문가의 의견도 확인해보세요`,
-                        expertIndex: 0,
-                      }
-                    );
-                  }
-                updatedConversation2.push(
-                  { type: "keyword" }
-                );
+                if (selectedExpertList.length === 3) {
+                  updatedConversation2.push({
+                    type: "system",
+                    message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.keyword.result}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊`,
+                    expertIndex: 0,
+                  });
+                } else {
+                  updatedConversation2.push({
+                    type: "system",
+                    message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.keyword.result}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분야별 전문가의 의견도 확인해보세요`,
+                    expertIndex: 0,
+                  });
+                }
+                updatedConversation2.push({ type: "keyword" });
               }
             }
           }
@@ -597,23 +587,25 @@ const AnalysisSection = styled.div`
 const BoxWrap = styled.div`
   // padding: 20px;
   // border-radius: 10px;
-  // background: ${(props) => (props.isPurpose ? palette.white : "rgba(0, 0, 0, 0.04)")}; /* 흰 배경 적용 */
+  // background: ${(props) =>
+    props.isPurpose ? palette.white : "rgba(0, 0, 0, 0.04)"}; /* 흰 배경 적용 */
   padding: ${(props) => (props.isPurpose ? "0" : "20px")};
-  background: ${(props) => (props.isPurpose ? palette.white : "rgba(0, 0, 0, 0.04)")}; /* 흰 배경 적용 */
+  background: ${(props) =>
+    props.isPurpose ? palette.white : "rgba(0, 0, 0, 0.04)"}; /* 흰 배경 적용 */
 
-  font-size:0.875rem;
-  color:${palette.gray800};
-  line-height:1.5;
+  font-size: 0.875rem;
+  color: ${palette.gray800};
+  line-height: 1.5;
   // margin:8px auto 20px;
 
   &:nth-child(3) {
-    border-radius:10px 10px 0 0;
+    border-radius: 10px 10px 0 0;
   }
   &:last-child {
-    border-radius:0 0 10px 10px;
+    border-radius: 0 0 10px 10px;
   }
-  &:nth-child(n+3) {
-    margin-top:0;
+  &:nth-child(n + 3) {
+    margin-top: 0;
   }
 
   + div {
