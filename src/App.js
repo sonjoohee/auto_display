@@ -1,11 +1,12 @@
 // App.js
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from "react";
 import './App.css';
 import GlobalStyles from "./assets/GlobalStyle";
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useAtom , } from 'jotai';
 import { isLoggedInAtom,USER_NAME, USER_EMAIL ,IS_SOCIAL_LOGGED_IN } from './pages/AtomStates'; // 로그인 상태 아톰 임포트
+import axios from "axios";
 
 import PageLogin from './pages/Login_Sign/components/pages/PageLogin';
 import PageSignup from './pages/Login_Sign/components/pages/PageSignup';
@@ -40,6 +41,7 @@ function App() {
   const [, setUserName] = useAtom(USER_NAME); // 유저 이름 아톰
   const [, setUserEmail] = useAtom(USER_EMAIL); // 유저 이메일 아톰
   const [, setIsSocialLoggedIn] = useAtom(IS_SOCIAL_LOGGED_IN); // 소셜 로그인 상태 아톰
+  const [isServerDown, setIsServerDown] = useState(false); // 서버 상태 관리
 
   // 애플리케이션이 로드될 때 로그인 상태 확인
   useEffect(() => {
@@ -68,11 +70,53 @@ function App() {
     }
   }, [setIsLoggedIn, setUserName, setUserEmail]);
 
+  // 1분마다 서버 상태 체크
+  useEffect(() => {
+    const token = sessionStorage.getItem("accessToken");
+
+    const checkServerStatus = async () => {
+      try {
+        const response = await axios.get(
+          `https://wishresearch.kr/api/db/back_server`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        // 서버가 정상일 경우
+        if (response.status === 200) {
+          setIsServerDown(false);
+        }
+      } catch (error) {
+        // 서버가 응답하지 않거나 에러 발생 시 서버 다운 처리
+        setIsServerDown(true);
+      }
+    };
+
+    // 처음 실행
+    checkServerStatus();
+
+    // 1분마다 실행
+    const intervalId = setInterval(() => {
+      checkServerStatus();
+    }, 600000); // 60초마다 서버 상태 확인
+
+    return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 정리
+  }, []);
 
   return (
     <div className="App">
       {/* 스타일 컴퍼넌트 적용 */}
       <GlobalStyles />
+
+      {/* 서버 점검 중 경고창 */}
+      {isServerDown && (
+        <div className="server-down-alert">
+          <p>서버가 점검 중입니다. 잠시 후 다시 시도해 주세요.</p>
+        </div>
+      )}
 
       {/* PayPalScriptProvider로 PayPal SDK를 감싸기 */}
       <PayPalScriptProvider options={{ "client-id": "AZ8YnURNB0jk4DtQea_FPZ7Zq-MfLHCU05aWjD51tpCJKHEGhoW6VwBvWGFqo-iMRpf0Qe05DVupI6Nb" }}>

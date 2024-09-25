@@ -452,9 +452,6 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
             nonSubTitleItems.map((item, index) => (
               <div key={index}>
                 <p>{item.text}</p>
-                {item.subText1 && <SubTextBox>{item.subText1}</SubTextBox>}
-                {item.subText2 && <SubTextBox>{item.subText2}</SubTextBox>}
-                {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
               </div>
             ))}
 
@@ -464,9 +461,6 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
               <SubTextBox key={index}>
                 <SubTitle style={{ marginBottom: "5px" }}>{item.subTitle}</SubTitle>
                 <p className="dashedLine">{item.text}</p>
-                {item.subText1 && <SubTextBox>{item.subText1}</SubTextBox>}
-                {item.subText2 && <SubTextBox>{item.subText2}</SubTextBox>}
-                {item.subText3 && <SubTextBox>{item.subText3}</SubTextBox>}
               </SubTextBox>
             ))}
         </>
