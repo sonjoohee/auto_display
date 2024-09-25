@@ -302,7 +302,7 @@ const OrganismCustomerAdditionalReport = ({
                 updatedConversation2.push(
                   {
                     type: "system",
-                    message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.keyword.result}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분석 결과에 만족하신다면, 지금 바로 전략 보고서를 준비해드려요.`,
+                    message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.additional_question.title}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분석 결과에 만족하신다면, 지금 바로 전략 보고서를 준비해드려요.`,
                     expertIndex: selectedExpertIndex,
                   },
                   { type: "report_button" }
@@ -321,13 +321,13 @@ const OrganismCustomerAdditionalReport = ({
                 if (selectedExpertList.length === 3) {
                   updatedConversation2.push({
                     type: "system",
-                    message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.keyword.result}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊`,
+                    message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.additional_question.title}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊`,
                     expertIndex: 0,
                   });
                 } else {
                   updatedConversation2.push({
                     type: "system",
-                    message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.keyword.result}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분야별 전문가의 의견도 확인해보세요`,
+                    message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.additional_question.title}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분야별 전문가의 의견도 확인해보세요`,
                     expertIndex: 0,
                   });
                 }
@@ -347,7 +347,7 @@ const OrganismCustomerAdditionalReport = ({
               } else {
                 updatedConversation2.push({
                   type: "system",
-                  message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.keyword.result}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분야별 전문가의 의견도 확인해보세요`,
+                  message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.additional_question.title}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분야별 전문가의 의견도 확인해보세요`,
                   expertIndex: 0,
                 });
               }
@@ -364,13 +364,13 @@ const OrganismCustomerAdditionalReport = ({
                 if (selectedExpertList.length === 3) {
                   updatedConversation2.push({
                     type: "system",
-                    message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.keyword.result}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊`,
+                    message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.additional_question.title}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊`,
                     expertIndex: 0,
                   });
                 } else {
                   updatedConversation2.push({
                     type: "system",
-                    message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.keyword.result}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분야별 전문가의 의견도 확인해보세요`,
+                    message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.additional_question.title}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분야별 전문가의 의견도 확인해보세요`,
                     expertIndex: 0,
                   });
                 }
