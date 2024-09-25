@@ -597,6 +597,9 @@ useEffect(() => {
       setChatIsDeletePopupOpen(false);
       setChatIdToDelete(null);
       setReportRefreshTrigger((prev) => !prev);
+      if (chatIdToDelete === conversationId) {
+        navigate("/"); // / 경로로 이동
+      }
     } catch (error) {
       console.error("삭제 요청 오류:", error);
     }
