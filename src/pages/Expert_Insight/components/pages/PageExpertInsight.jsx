@@ -144,36 +144,6 @@ const PageExpertInsight = () => {
   let additionalReportCount = 0;
   let customerAdditionalReportCount = 0;
 
-  // 현재 선택된 전문가에 맞는 보고서 데이터를 결정
-  const getStrategyReportData = () => {
-    switch (selectedExpertIndex) {
-      case 1:
-        return expert1ReportData;
-      case 2:
-        return expert2ReportData;
-      case 3:
-        return expert3ReportData;
-      default:
-        return {};
-    }
-  };
-
-  const setStrategyReportData = (data) => {
-    switch (selectedExpertIndex) {
-      case 1:
-        setExpert1ReportData(data);
-        break;
-      case 2:
-        setExpert2ReportData(data);
-        break;
-      case 3:
-        setExpert3ReportData(data);
-        break;
-      default:
-        break;
-    }
-  };
-
   const analysisReportData = {
     title: titleOfBusinessInfo,
     mainFeatures: mainFeaturesOfBusinessInformation,
@@ -565,11 +535,6 @@ const PageExpertInsight = () => {
       ) {
         updatedConversation.pop();
       }
-
-      // 임시로 키워드 설정
-      // const updatedKeywords = [...selectedCustomerAdditionalKeyword];
-      // updatedKeywords.push("우리 산업의 강점과 약점 파악하기");
-      // setSelectedCustomerAdditionalKeyword(updatedKeywords);
 
       updatedConversation.push(
         {

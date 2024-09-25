@@ -146,21 +146,6 @@ const PageMeetAiExpert = () => {
     setIsPopupInvalidBusiness(false); // 팝업 닫기
   };
 
-  // // 시스템 점검 여부 체크
-  // useEffect(() => {
-  //   const checkSystemMaintenance = async () => {
-  //     try {
-  //       const response = await axios.post('https://wishresearch.kr/');
-  //       if (response.data) {
-  //         alert('현재 시스템 점검 중입니다.');
-  //       }
-  //     } catch (error) {
-  //       console.error('시스템 점검 여부 확인 중 오류 발생:', error);
-  //     }
-  //   };
-  //   checkSystemMaintenance();
-  // }, []);
-
   useEffect(() => {
     setConversation([]);
     setConversationId(null);

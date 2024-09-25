@@ -190,7 +190,7 @@ const OrganismLeftSideBar = () => {
  
    // 두 아코디언이 열렸을 때의 총 높이 계산
    const totalHeight = reportHeight + chatHeight; // 조건 없이 둘 다 더함
-   console.log("Total Height:", totalHeight);
+  //  console.log("Total Height:", totalHeight);
  
    return totalHeight > maxSidebarHeight; // maxSidebarHeight와 비교하여 넘는지 확인
  };
@@ -271,7 +271,7 @@ const OrganismLeftSideBar = () => {
 
 
   const editBoxToggle = (index, event, category) => {
-    console.log('editBoxPosition:', editBoxPosition);
+    // console.log('editBoxPosition:', editBoxPosition);
     if (editToggleIndex === index) {
       // 이미 열려 있으면 아무 동작 안 함
       return;

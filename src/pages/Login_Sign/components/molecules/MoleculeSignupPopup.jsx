@@ -44,7 +44,7 @@ const MoleculeSignupPopup = ({ onClose, email }) => {
   const handleGoToLogin = () => {
     navigate("/");
     setEmail(""); // 이메일 상태를 초기화합니다.
-    console.log("로그인 페이지로 이동");
+    // console.log("로그인 페이지로 이동");
   };
 
   return (
