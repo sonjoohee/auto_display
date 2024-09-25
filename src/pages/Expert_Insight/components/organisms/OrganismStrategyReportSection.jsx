@@ -838,12 +838,11 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
 
           {/* "특징" 또는 "차별화 요소" 섹션을 처리 */}
           {(title === "특징" || title === "차별화 요소") &&
-            subTitleItems.length > 0 && (
-              <>
-                {subTitleItems.map((item, index) => (
-                  <>
-                  <SeparateSection key={index}>
-                    <SectionWrapper_2>
+          subTitleItems.length > 0 && (
+            <>
+              {subTitleItems.map((item, index) => (
+                <SeparateSection key={index}>
+                  <SectionWrapper_2>
                     <strong>
                       <span className="number">{index + 1}</span>{" "}
                       {/* 번호 추가 */}
@@ -852,39 +851,57 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
                     </strong>
                     <p>{item.text}</p>
 
-                    {/* subText1, subText2, subText3에 대해 NumDynamicGrid 적용 */}
-                    <NumDynamicGrid columns={2}>
-                      {item.subContent[0] && (
-                        <div>
-                          <SubTitle>
-                            {item.subContent[0].subTitle}
-                          </SubTitle>
-                          <p>{item.subContent[0].text}</p>
-                        </div>
-                      )}
-                      {item.subContent[1] && (
-                        <div>
-                          <SubTitle>
-                            {item.subContent[1].subTitle}
-                          </SubTitle>
-                          <p>{item.subContent[1].text}</p>
-                        </div>
-                      )}
-                      {item.subContent[2] && (
-                        <div>
-                          <SubTitle>
-                            {item.subContent[2].subTitle}
-                          </SubTitle>
-                          <p>{item.subContent[2].text}</p>
-                        </div>
-                      )}
-                    </NumDynamicGrid>
-                    </SectionWrapper_2>
-                  </SeparateSection>
-                  </>
-                ))}
-              </>
-            )}
+                    {/* subContent가 존재하는 경우 */}
+                    {item.subContent && item.subContent.length > 0 ? (
+                      <NumDynamicGrid columns={2}>
+                        {item.subContent[0] && (
+                          <div>
+                            <SubTitle>{item.subContent[0].subTitle}</SubTitle>
+                            <p>{item.subContent[0].text}</p>
+                          </div>
+                        )}
+                        {item.subContent[1] && (
+                          <div>
+                            <SubTitle>{item.subContent[1].subTitle}</SubTitle>
+                            <p>{item.subContent[1].text}</p>
+                          </div>
+                        )}
+                        {item.subContent[2] && (
+                          <div>
+                            <SubTitle>{item.subContent[2].subTitle}</SubTitle>
+                            <p>{item.subContent[2].text}</p>
+                          </div>
+                        )}
+                      </NumDynamicGrid>
+                    ) : (
+                      // subContent가 없을 경우 아래 섹션 적용
+                      <NumDynamicGrid columns={2}>
+                        {item.subText1 && (
+                          <div>
+                            <SubTitle>{splitText(item.subText1).subTitle}</SubTitle>
+                            <p>{splitText(item.subText1).text}</p>
+                          </div>
+                        )}
+                        {item.subText2 && (
+                          <div>
+                            <SubTitle>{splitText(item.subText2).subTitle}</SubTitle>
+                            <p>{splitText(item.subText2).text}</p>
+                          </div>
+                        )}
+                        {item.subText3 && (
+                          <div>
+                            <SubTitle>{splitText(item.subText3).subTitle}</SubTitle>
+                            <p>{splitText(item.subText3).text}</p>
+                          </div>
+                        )}
+                      </NumDynamicGrid>
+                    )}
+                  </SectionWrapper_2>
+                </SeparateSection>
+              ))}
+            </>
+          )}
+
 
           {/* "특징", "차별화 요소", "경쟁 분석"이 아닌 경우 기존 방식대로 처리 */}
           {title !== "특징" &&
