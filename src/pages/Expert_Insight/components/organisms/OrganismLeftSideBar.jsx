@@ -174,6 +174,95 @@ const OrganismLeftSideBar = () => {
   const [isSection1Open, setIsSection1Open] = useState(false); // 인사이트 보관함 열림/닫힘 상태
   const [isSection2Open, setIsSection2Open] = useState(false); // 프로젝트 히스토리 열림/닫힘 상태
 
+  // State variables for report name change
+  const [isReportChangePopupOpen, setIsReportChangePopupOpen] = useState(false);
+  const [reportIdToChangeName, setReportIdToChangeName] = useState(null);
+  const [newReportName, setNewReportName] = useState("");
+
+  // State variables for chat name change
+  const [isChatChangePopupOpen, setIsChatChangePopupOpen] = useState(false);
+  const [chatIdToChangeName, setChatIdToChangeName] = useState(null);
+  const [newChatName, setNewChatName] = useState("");
+
+  const handleChangeReportNameButtonClick = (reportId) => {
+    setReportIdToChangeName(reportId);
+    setIsReportChangePopupOpen(true);
+  };
+  
+  const handleChangeChatNameButtonClick = (chatId) => {
+    setChatIdToChangeName(chatId);
+    setIsChatChangePopupOpen(true);
+  };
+
+const handleChangeInsightConfirm = async () => {
+  try {
+    const accessToken = sessionStorage.getItem("accessToken");
+    const PUT_DATA = {
+      id: reportIdToChangeName,
+      view_name: newReportName,
+    };
+    await axios.put(
+      `https://wishresearch.kr/panels/update_insight`,
+      PUT_DATA,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+    // Refresh the report list after successful update
+    setReportRefreshTrigger((prev) => !prev);
+    // Close the pop-up and reset state
+    setIsReportChangePopupOpen(false);
+    setReportIdToChangeName(null);
+    setNewReportName("");
+  } catch (error) {
+    console.error("Error updating report name on server:", error);
+  }
+};
+
+  
+  const handleChangeChatConfirm = async () => {
+    try {
+      const accessToken = sessionStorage.getItem("accessToken");
+      const PUT_DATA = {
+        id: chatIdToChangeName,
+        view_name: newChatName,
+      };
+      await axios.put(
+        `https://wishresearch.kr/panels/update_chat`,
+        PUT_DATA,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`, // Use the stored access token
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      // Refresh the chat list after successful update
+      setChatRefreshTrigger((prev) => !prev);
+      // Close the pop-up and reset state
+      setIsChatChangePopupOpen(false);
+      setChatIdToChangeName(null);
+      setNewChatName("");
+    } catch (error) {
+      console.error("Error updating conversation on server:", error);
+    }
+  };
+  
+
+  const handleChangeCancel = () => {
+    setIsReportChangePopupOpen(false);
+    setIsChatChangePopupOpen(false);
+    setReportIdToChangeName(null);
+    setChatIdToChangeName(null);
+    setNewReportName("");
+    setNewChatName("");
+  };
+  
  // 사이드바의 최대 높이 설정
  const maxSidebarHeight = 600; // 예시로 700px 설정
 
@@ -330,6 +419,7 @@ useEffect(() => {
     setReportIdToDelete(reportId); // 삭제할 reportId 저장
     setIsDeletePopupOpen(true); // 팝업 열기
   };
+
   const handleChatDeleteButtonClick = (ChatId) => {
     setChatIdToDelete(ChatId); // 삭제할 reportId 저장
     setChatIsDeletePopupOpen(true); // 팝업 열기
@@ -419,10 +509,6 @@ useEffect(() => {
     fetchReports();
   }, [reportRefreshTrigger, isLoggedIn]);
 
-  // const handleConversationClick = (id) => {
-  //   // 클릭 시 해당 대화로 이동
-  //   navigate(`/conversation/${id}`);
-  // };
   const handleConversationClick = async (conversationId) => {
     if (isLoading) return;
 
@@ -726,7 +812,7 @@ useEffect(() => {
                           data-expert-index={report.reportIndex} // data-expert-index 속성 추가
                         >
                           <p onClick={() => handleReportClick(report.id)}>
-                            {report.business_info}
+                          {report.view_name || report.business_info}
                           </p>
                           <div style={{ position: 'relative', display: 'inline-block' }}>
                             <span
@@ -790,7 +876,10 @@ useEffect(() => {
                                     <img src={images.IconDelete2} alt="" />
                                     삭제
                                   </button>
-                                  <button type="button">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleChangeReportNameButtonClick(report.id)}
+                                  >
                                     <img src={images.IconEdit2} alt="" />
                                     이름 변경
                                   </button>
@@ -834,7 +923,7 @@ useEffect(() => {
                             .map((chat) => (
                               <li key={chat.id}>
                                 <p onClick={() => handleConversationClick(chat.id)}>
-                                  {chat.business_info}
+                                  {chat.view_name || chat.business_info}
                                 </p>
                                 <div style={{ position: 'relative', display: 'inline-block' }}>
                                 <span
@@ -900,7 +989,12 @@ useEffect(() => {
                                         <img src={images.IconDelete2} alt="" />
                                         삭제
                                       </button>
-                                      <button type="button">
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          handleChangeChatNameButtonClick(chat.id)
+                                        }
+                                      >
                                         <img src={images.IconEdit2} alt="" />
                                         이름 변경
                                       </button>
@@ -922,7 +1016,7 @@ useEffect(() => {
                             .map((chat) => (
                               <li key={chat.id}>
                                 <p onClick={() => handleConversationClick(chat.id)}>
-                                  {chat.business_info}
+                                  {chat.view_name || chat.business_info}
                                 </p>
                                 <span
                                   id={`insight-toggle-${chat.id}`}
@@ -987,7 +1081,12 @@ useEffect(() => {
                                         <img src={images.IconDelete2} alt="" />
                                         삭제
                                       </button>
-                                      <button type="button">
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          handleChangeChatNameButtonClick(chat.id)
+                                        }
+                                      >
                                         <img src={images.IconEdit2} alt="" />
                                         이름 변경
                                       </button>
@@ -1008,7 +1107,7 @@ useEffect(() => {
                             .map((chat) => (
                               <li key={chat.id}>
                                 <p onClick={() => handleConversationClick(chat.id)}>
-                                  {chat.business_info}
+                                  {chat.view_name || chat.business_info}
                                 </p>
                                 <span
                                   id={`insight-toggle-${chat.id}`}
@@ -1073,7 +1172,12 @@ useEffect(() => {
                                         <img src={images.IconDelete2} alt="" />
                                         삭제
                                       </button>
-                                      <button type="button">
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          handleChangeChatNameButtonClick(chat.id)
+                                        }
+                                      >
                                         <img src={images.IconEdit2} alt="" />
                                         이름 변경
                                       </button>
@@ -1251,12 +1355,191 @@ useEffect(() => {
           </div>
         </Popup>
       )}
+      {/* Report Name Change Popup */}
+      {isReportChangePopupOpen && (
+      <ChangeNamePopup onClick={handleChangeCancel}>
+        <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+          <button
+            type="button"
+            className="closePopup"
+            onClick={handleChangeCancel}
+          >
+            닫기
+          </button>
+          <span>
+            <img src={images.ExclamationMark} alt="" />
+          </span>
+          <p>새로운 보고서 이름을 입력하세요</p>
+          <input
+            type="text"
+            value={newReportName}
+            onChange={(e) => setNewReportName(e.target.value)}
+          />
+          <div className="btnWrap">
+            <button type="button" onClick={handleChangeCancel}>
+              취소
+            </button>
+            <button type="button" onClick={handleChangeInsightConfirm}>
+              확인
+            </button>
+          </div>
+        </div>
+      </ChangeNamePopup>
+    )}
+    {isChatChangePopupOpen && (
+      <ChangeNamePopup onClick={handleChangeCancel}>
+        <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+          <button
+            type="button"
+            className="closePopup"
+            onClick={handleChangeCancel}
+          >
+            닫기
+          </button>
+          <span>
+            <img src={images.ExclamationMark} alt="" />
+          </span>
+          <p>새로운 프로젝트 이름을 입력하세요</p>
+          <input
+            type="text"
+            value={newChatName}
+            onChange={(e) => setNewChatName(e.target.value)}
+          />
+          <div className="btnWrap">
+            <button type="button" onClick={handleChangeCancel}>
+              취소
+            </button>
+            <button type="button" onClick={handleChangeChatConfirm}>
+              확인
+            </button>
+          </div>
+        </div>
+      </ChangeNamePopup>
+    )}
     </>
   );
 };
 
 export default OrganismLeftSideBar;
+const ChangeNamePopup = styled.div`
+  /* Overlay styles */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  transition: all 0.5s;
+  z-index: 9999;
 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Content area */
+  .popup-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    padding: 45px 24px 24px;
+    border-radius: 10px;
+    background: ${palette.white};
+
+    .closePopup {
+      position: absolute;
+      right: 24px;
+      top: 24px;
+      width: 16px;
+      height: 16px;
+      font-size: 0;
+      padding: 11px;
+      border: 0;
+      background: none;
+
+      &:before,
+      &:after {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 2px;
+        height: 100%;
+        border-radius: 10px;
+        background: ${palette.black};
+        content: "";
+      }
+
+      &:before {
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
+
+      &:after {
+        transform: translate(-50%, -50%) rotate(-45deg);
+      }
+    }
+
+    span {
+      display: block;
+      margin: 0 auto 20px;
+
+      img {
+        /* Adjust image styles if needed */
+      }
+    }
+
+    p {
+      font-family: "Pretendard", "Poppins";
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin: 20px auto 24px;
+      strong {
+        font-weight: 500;
+        display: block;
+      }
+
+      span {
+        font-size: 0.75rem !important;
+        font-weight: 400;
+        color: #8c8c8c;
+        display: block;
+        margin-top: 8px;
+      }
+    }
+
+    input {
+      margin-bottom: 24px;
+      padding: 12px;
+      border: 1px solid ${palette.lineGray};
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .btnWrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      button {
+        flex: 1;
+        font-family: 'Pretendard', 'Poppins';
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: ${palette.blue};
+        padding: 12px 20px;
+        border-radius: 12px;
+        border: 1px solid ${palette.blue};
+        background: ${palette.white};
+
+        &:last-child {
+          color: ${palette.white};
+          background: ${palette.blue};
+        }
+      }
+    }
+  }
+`;
 const Popup = styled.div`
   position: fixed;
   top: 0;
