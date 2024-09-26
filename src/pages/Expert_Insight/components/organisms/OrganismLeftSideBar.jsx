@@ -823,6 +823,7 @@ useEffect(() => {
                                 cursor: "pointer",
                               }}
                               onClick={(event) => insightEditBoxToggle(index, event)} // event 전달
+                              className="toggle-icon"
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -934,6 +935,7 @@ useEffect(() => {
                                     cursor: "pointer",
                                   }}
                                   onClick={(event) => editBoxToggle(chat.id, event, 'recent')}
+                                  className="toggle-icon"
                                 >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -1026,6 +1028,7 @@ useEffect(() => {
                                     cursor: "pointer",
                                   }}
                                   onClick={(event) => editBoxToggle(chat.id, event, '7days')}
+                                  className="toggle-icon"
                                 >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -1064,14 +1067,14 @@ useEffect(() => {
                                     className="insight-toggle"
                                     ref={historyEditBoxRef}
                                   >
-                               <EditBox
-                                  id={`insight-edit-box-${chat.id}`}
-                                  isEditToggle={editToggleIndex === chat.id}
-                                  style={{
-                                    top: `${editBoxPosition.top}px`,
-                                    left: `${editBoxPosition.left}px`,
-                                  }}
-                                >
+                                    <EditBox
+                                        id={`insight-edit-box-${chat.id}`}
+                                        isEditToggle={editToggleIndex === chat.id}
+                                        style={{
+                                          top: `${editBoxPosition.top}px`,
+                                          left: `${editBoxPosition.left}px`,
+                                        }}
+                                      >
                                       <button
                                         type="button"
                                         onClick={() =>
@@ -1117,6 +1120,7 @@ useEffect(() => {
                                     cursor: "pointer",
                                   }}
                                   onClick={(event) => editBoxToggle(chat.id, event, '30days')}
+                                  className="toggle-icon"
                                 >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -1155,14 +1159,14 @@ useEffect(() => {
                                     className="insight-toggle"
                                     ref={historyEditBoxRef}
                                   >
-                          <EditBox
-                              id={`insight-edit-box-${chat.id}`}
-                              isEditToggle={editToggleIndex === chat.id}
-                              style={{
-                                top: `${editBoxPosition.top}px`,
-                                left: `${editBoxPosition.left}px`,
-                              }}
-                            >
+                                    <EditBox
+                                        id={`insight-edit-box-${chat.id}`}
+                                        isEditToggle={editToggleIndex === chat.id}
+                                        style={{
+                                          top: `${editBoxPosition.top}px`,
+                                          left: `${editBoxPosition.left}px`,
+                                        }}
+                                      >
                                       <button
                                         type="button"
                                         onClick={() =>
@@ -2073,12 +2077,13 @@ const AccordionContent = styled.div`
     margin: 0 12px;
     // margin-top:10px;
 
-    div {
-      opacity:0;
-    }
+      .toggle-icon {
+        opacity: 0;
+      }
 
-    li:hover div {
-      opacity:1;
+      li:hover .toggle-icon {
+        opacity: 1;
+      }
     }
   }
 
