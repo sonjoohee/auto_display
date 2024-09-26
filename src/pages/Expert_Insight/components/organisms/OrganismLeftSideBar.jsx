@@ -824,6 +824,7 @@ useEffect(() => {
                                 cursor: "pointer",
                               }}
                               onClick={(event) => insightEditBoxToggle(index, event)} // event 전달
+                              className="toggle"
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -1028,6 +1029,7 @@ useEffect(() => {
                                     cursor: "pointer",
                                   }}
                                   onClick={(event) => editBoxToggle(chat.id, event, '7days')}
+                                  className="toggle"
                                 >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -1119,6 +1121,7 @@ useEffect(() => {
                                     cursor: "pointer",
                                   }}
                                   onClick={(event) => editBoxToggle(chat.id, event, '30days')}
+                                  className="toggle"
                                 >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
