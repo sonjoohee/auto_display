@@ -198,28 +198,27 @@ const OrganismCustomerAdditionalReport = ({
           }
 
           setCustomerAdditionalReportData(updatedAdditionalReportData);
-
-          await saveConversationToIndexedDB(
-            {
-              id: conversationId,
-              inputBusinessInfo: inputBusinessInfo,
-              analysisReportData: analysisReportData,
-              strategyReportData_EX1: expert1ReportData,
-              strategyReportData_EX2: expert2ReportData,
-              strategyReportData_EX3: expert3ReportData,
-              conversation: conversation,
-              selectedAdditionalKeywords: selectedAdditionalKeyword,
-              selectedCustomerAdditionalKeyword:
-                selectedCustomerAdditionalKeyword,
-              additionalReportData: additionalReportData,
-              customerAdditionalReportData: updatedAdditionalReportData,
-              conversationStage: conversationStage,
-              timestamp: Date.now(),
-              expert_index: selectedExpertIndex,
-            },
-            isLoggedIn,
-            conversationId
-          );
+          // await saveConversationToIndexedDB(
+          //   {
+          //     id: conversationId,
+          //     inputBusinessInfo: inputBusinessInfo,
+          //     analysisReportData: analysisReportData,
+          //     strategyReportData_EX1: expert1ReportData,
+          //     strategyReportData_EX2: expert2ReportData,
+          //     strategyReportData_EX3: expert3ReportData,
+          //     conversation: conversation,
+          //     selectedAdditionalKeywords: selectedAdditionalKeyword,
+          //     selectedCustomerAdditionalKeyword:
+          //       selectedCustomerAdditionalKeyword,
+          //     additionalReportData: additionalReportData,
+          //     customerAdditionalReportData: updatedAdditionalReportData,
+          //     conversationStage: conversationStage,
+          //     timestamp: Date.now(),
+          //     expert_index: selectedExpertIndex,
+          //   },
+          //   isLoggedIn,
+          //   conversationId
+          // );
           setIsLoadingAdd(false);
           setIsLoading(false);
 
