@@ -773,6 +773,8 @@ useEffect(() => {
     setRePassword("");
     setSelectedExpertList([]);
     setIsEditingNow(false);
+    setIsSection1Open(false);
+    setIsSection2Open(false);
   };
 
   return (
