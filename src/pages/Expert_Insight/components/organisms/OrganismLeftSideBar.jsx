@@ -2110,6 +2110,7 @@ const AccordionContent = styled.div`
     font-size: 0.875rem;
     text-align: left;
     padding: 8px 0;
+    user-select: none; /* 드래그 방지 */
   }    
 
   li {
@@ -2124,7 +2125,7 @@ const AccordionContent = styled.div`
     text-align: left;
     padding: 0 0 0 22px;
     cursor: pointer;
-
+    user-select: none; /* 드래그 방지 */
     .insight-toggle {
       position: fixed;
       left: 0;
