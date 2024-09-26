@@ -729,74 +729,74 @@ useEffect(() => {
                             {report.business_info}
                           </p>
                           <div style={{ position: 'relative', display: 'inline-block' }}>
-                          <span
-                            id={`insight-toggle-${index}`}
-                            style={{
-                              display: "inline-block",
-                              padding: "10px",
-                              cursor: "pointer",
-                            }}
-                            onClick={(event) => insightEditBoxToggle(index, event)} // event 전달
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="14"
-                              height="3"
-                              viewBox="0 0 14 3"
-                              // fill={getColor(report.reportIndex)}
-                              >
-                              <circle
-                                cx="2.0067"
-                                cy="1.51283"
-                                r="1.49694"
-                                transform="rotate(-90 2.0067 1.51283)"
-                                fill="#A0A0A0"
-                              />
-                              <circle
-                                cx="7.00084"
-                                cy="1.51283"
-                                r="1.49694"
-                                transform="rotate(-90 7.00084 1.51283)"
-                                fill="#A0A0A0"
-                              />
-                              <circle
-                                cx="11.993"
-                                cy="1.51283"
-                                r="1.49694"
-                                transform="rotate(-90 11.993 1.51283)"
-                                fill="#A0A0A0"
-                              />
-                            </svg>
-                          </span>
-                          {insightEditToggleIndex === index && (
-                            <div
-                              id={`insight-edit-box-${index}`}
-                              className="insight-toggle"
-                              ref={insightEditBoxRef}
+                            <span
+                              id={`insight-toggle-${index}`}
+                              style={{
+                                display: "inline-block",
+                                padding: "10px",
+                                cursor: "pointer",
+                              }}
+                              onClick={(event) => insightEditBoxToggle(index, event)} // event 전달
                             >
-                              <EditBox
-                                id={`insight-edit-box-${editToggleIndex}`}
-                                isEditToggle={true}
-                                style={{
-                                  top: `${insightEditBoxPosition.top}px`,
-                                  left: `${insightEditBoxPosition.left}px`,
-                                }}
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="14"
+                                height="3"
+                                viewBox="0 0 14 3"
+                                // fill={getColor(report.reportIndex)}
+                                >
+                                <circle
+                                  cx="2.0067"
+                                  cy="1.51283"
+                                  r="1.49694"
+                                  transform="rotate(-90 2.0067 1.51283)"
+                                  fill="#A0A0A0"
+                                />
+                                <circle
+                                  cx="7.00084"
+                                  cy="1.51283"
+                                  r="1.49694"
+                                  transform="rotate(-90 7.00084 1.51283)"
+                                  fill="#A0A0A0"
+                                />
+                                <circle
+                                  cx="11.993"
+                                  cy="1.51283"
+                                  r="1.49694"
+                                  transform="rotate(-90 11.993 1.51283)"
+                                  fill="#A0A0A0"
+                                />
+                              </svg>
+                            </span>
+                            {insightEditToggleIndex === index && (
+                              <div
+                                id={`insight-edit-box-${index}`}
+                                className="insight-toggle"
                                 ref={insightEditBoxRef}
                               >
-                                <button
-                                  type="button"
-                                  onClick={() => handleDeleteButtonClick(report.id)}
+                                <EditBox
+                                  id={`insight-edit-box-${editToggleIndex}`}
+                                  isEditToggle={true}
+                                  style={{
+                                    top: `${insightEditBoxPosition.top}px`,
+                                    left: `${insightEditBoxPosition.left}px`,
+                                  }}
+                                  ref={insightEditBoxRef}
                                 >
-                                  <img src={images.IconDelete2} alt="" />
-                                  삭제
-                                </button>
-                                <button type="button">
-                                  <img src={images.IconEdit2} alt="" />
-                                  이름 변경
-                                </button>
-                              </EditBox>
-                            </div>
-                          )}
+                                  <button
+                                    type="button"
+                                    onClick={() => handleDeleteButtonClick(report.id)}
+                                  >
+                                    <img src={images.IconDelete2} alt="" />
+                                    삭제
+                                  </button>
+                                  <button type="button">
+                                    <img src={images.IconEdit2} alt="" />
+                                    이름 변경
+                                  </button>
+                                </EditBox>
+                              </div>
+                            )}
                           </div>
                         </li>
                     ))
@@ -1789,6 +1789,14 @@ const AccordionContent = styled.div`
     gap: 4px;
     margin: 0 12px;
     // margin-top:10px;
+
+    div {
+      opacity:0;
+    }
+
+    li:hover div {
+      opacity:1;
+    }
   }
 
   p {
