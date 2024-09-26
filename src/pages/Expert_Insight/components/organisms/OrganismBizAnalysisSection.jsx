@@ -463,6 +463,69 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
     togglePopupDelete();
   };
 
+  const generateAddtionalContent = async (section) => {
+
+    if (newAddContent.trim() === "") {
+      setIsPopupEmpty(true);
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      if (section === "mainFeatures") setIsLoadingAdd1(true);
+      else if (section === "mainCharacteristic") setIsLoadingAdd2(true);
+      else if (section === "targetCustomer") setIsLoadingAdd3(true);
+
+      const data = {
+        // new_add_content: newAddContent, // api 연결 시 추가
+        expert_id: "1",
+        business_info: titleOfBusinessInfo,
+        business_analysis_data: {
+          명칭: analysisReportData.title,
+          주요_목적_및_특징: analysisReportData.mainFeatures,
+          주요기능: analysisReportData.mainCharacter,
+          목표고객: analysisReportData.mainCustomer,
+        },
+        tabs: [],
+        page_index: 1,
+      };
+
+      // 임시로 전문가보고서 api 사용
+      const response = await axios.post(
+        "https://wishresearch.kr/panels/expert",
+        data,
+        axiosConfig
+      );
+
+      // 응답받은 데이터가 들어가는지 확인
+      if (section === "mainFeatures") {
+        setMainFeaturesOfBusinessInformation([
+          ...mainFeaturesOfBusinessInformation,
+          response.data.tabs[0].sections[0].content[0].text,
+        ]);
+      } else if (section === "mainCharacteristic") {
+        setMainCharacteristicOfBusinessInformation([
+          ...mainCharacteristicOfBusinessInformation,
+          response.data.tabs[0].sections[0].content[0].text,
+        ]);
+      } else if (section === "targetCustomer") {
+        setBusinessInformationTargetCustomer([
+          ...businessInformationTargetCustomer,
+          response.data.tabs[0].sections[0].content[0].text,
+        ]);
+      }
+      setNewAddContent("");
+      setIsAddingNow({ section: "", isAdding: false });
+      setIsLoading(false);
+      setIsLoadingAdd1(false);
+      setIsLoadingAdd2(false);
+      setIsLoadingAdd3(false);
+
+    } catch (error) {
+      console.error("Error loading data:", error);
+    }
+  };
+
   return (
     <>
       <AnalysisSection>
@@ -576,10 +639,10 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                         <img src={images.IconCheck2} alt="" />
                         저장
                       </button>
-                      {/* <button onClick={() => generateAddtionalContent("mainFeatures")}>
+                      <button onClick={() => generateAddtionalContent("mainFeatures")}>
                         <img src={images.IconSetting} alt="" />
                         생성
-                      </button> */}
+                      </button>
                     </BtnWrap>
                   </AddInfo>
                 ) : (
@@ -693,10 +756,10 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                         <img src={images.IconCheck2} alt="" />
                         저장
                       </button>
-                      {/* <button onClick={() => generateAddtionalContent("mainCharacteristic")}>
+                      <button onClick={() => generateAddtionalContent("mainCharacteristic")}>
                         <img src={images.IconSetting} alt="" />
                         생성
-                      </button> */}
+                      </button>
                     </BtnWrap>
                   </AddInfo>
                 ) : (
@@ -808,10 +871,10 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                         <img src={images.IconCheck2} alt="" />
                         저장
                       </button>
-                      {/* <button onClick={() => generateAddtionalContent("targetCustomer")}>
+                      <button onClick={() => generateAddtionalContent("targetCustomer")}>
                         <img src={images.IconSetting} alt="" />
                         생성
-                      </button> */}
+                      </button>
                     </BtnWrap>
                   </AddInfo>
                 ) : (
