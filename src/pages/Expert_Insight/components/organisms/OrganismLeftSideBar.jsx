@@ -810,7 +810,8 @@ useEffect(() => {
                         <li
                           key={index}
                           data-expert-index={report.reportIndex} // data-expert-index 속성 추가
-                        >
+                          className={`toggle ${insightEditToggleIndex === index ? 'active' : ''}`} // Active 상태 추가
+                          >
                           <p onClick={() => handleReportClick(report.id)}>
                           {report.view_name || report.business_info}
                           </p>
@@ -861,7 +862,7 @@ useEffect(() => {
                                 ref={insightEditBoxRef}
                               >
                                 <EditBox
-                                  id={`insight-edit-box-${editToggleIndex}`}
+                                  id={`insight-edit-box-${insightEditToggleIndex}`}
                                   isEditToggle={true}
                                   style={{
                                     top: `${insightEditBoxPosition.top}px`,
@@ -921,7 +922,7 @@ useEffect(() => {
                           {chatList
                             .filter(chat => Date.now() - chat.timestamp <= 604800000)
                             .map((chat) => (
-                              <li key={chat.id}>
+                              <li key={chat.id} className={`toggle ${editToggleIndex === chat.id ? 'active' : ''}`}>
                                 <p onClick={() => handleConversationClick(chat.id)}>
                                   {chat.view_name || chat.business_info}
                                 </p>
@@ -934,6 +935,7 @@ useEffect(() => {
                                     cursor: "pointer",
                                   }}
                                   onClick={(event) => editBoxToggle(chat.id, event, 'recent')}
+                                  className="toggle"
                                 >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -1014,7 +1016,7 @@ useEffect(() => {
                           {chatList
                             .filter(chat => Date.now() - chat.timestamp > 604800000 && Date.now() - chat.timestamp <= 2592000000)
                             .map((chat) => (
-                              <li key={chat.id}>
+                              <li key={chat.id} className={`toggle ${editToggleIndex === chat.id ? 'active' : ''}`}>
                                 <p onClick={() => handleConversationClick(chat.id)}>
                                   {chat.view_name || chat.business_info}
                                 </p>
@@ -1105,7 +1107,7 @@ useEffect(() => {
                           {chatList
                             .filter(chat => Date.now() - chat.timestamp > 2592000000)
                             .map((chat) => (
-                              <li key={chat.id}>
+                              <li key={chat.id} className={`toggle ${editToggleIndex === chat.id ? 'active' : ''}`}>
                                 <p onClick={() => handleConversationClick(chat.id)}>
                                   {chat.view_name || chat.business_info}
                                 </p>
@@ -2066,21 +2068,24 @@ const AccordionContent = styled.div`
     margin-top: 20px;
   }
 
-  ul {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    margin: 0 12px;
-    // margin-top:10px;
-
-    div {
-      opacity:0;
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin: 0 12px;
+      // margin-top: 10px;
     }
 
-    li:hover div {
-      opacity:1;
+    li:hover span.toggle,
+    li.active span.toggle {
+      opacity: 1;
     }
-  }
+
+
+    span.toggle {
+      opacity: 0;
+    }
+
 
   p {
     width: 100%;
@@ -2196,11 +2201,13 @@ const AccordionContent = styled.div`
       align-items: center;
     }
 
-    &:hover {
+    &:hover,
+    &.active {
       &:before {
-        color:${palette.white};
+        color: ${palette.white};
         background: ${palette.blue};
       }
+    }
 
       span {
         display: flex;
