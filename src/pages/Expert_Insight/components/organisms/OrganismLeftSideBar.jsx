@@ -45,6 +45,7 @@ import {
   EXPERT_BUTTON_STATE,
   ADDITION_BUTTON_STATE,
   CUSTOMER_ADDITION_BUTTON_STATE,
+  IS_EXPERT_INSIGHT_ACCESSIBLE,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -60,6 +61,8 @@ const OrganismLeftSideBar = () => {
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const navigate = useNavigate();
   const [bizName] = useAtom(INPUT_BUSINESS_INFO);
+  const [isExpertInsightAccessible, setIsExpertInsightAccessible] = useAtom(IS_EXPERT_INSIGHT_ACCESSIBLE);
+
   // const [savedReports] = useAtom(SAVED_REPORTS);
   const [selectedReport, setSelectedReport] = useState(null); // 선택된 보고서 상태 관리
   const [conversations, setConversations] = useState([]); // 저장된 대화 상태 관리
@@ -476,7 +479,7 @@ useEffect(() => {
       setExpertButtonState(0);
       setAdditionButtonState(0);
       setCustomerAdditionButtonState(0);
-      
+      setIsExpertInsightAccessible(true); // 접근 가능 상태로 설정
       // 페이지를 대화가 이어지는 형태로 전환
       navigate(`/conversation/${conversationId}`);
     } catch (error) {

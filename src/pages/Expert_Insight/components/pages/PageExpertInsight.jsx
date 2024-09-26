@@ -35,6 +35,7 @@ import {
   SELECTED_EXPERT_LIST,
   IS_LOADING,
   SAVED_TIMESTAMP,
+  IS_EXPERT_INSIGHT_ACCESSIBLE,
 } from "../../../AtomStates";
 
 import {
@@ -63,6 +64,8 @@ const PageExpertInsight = () => {
 
   const navigate = useNavigate();
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
+  const [isExpertInsightAccessible, setIsExpertInsightAccessible] = useAtom(IS_EXPERT_INSIGHT_ACCESSIBLE);
+
   // const { conversationId: paramConversationId } = useParams();
   // const [conversationId, setConversationId] = useState(
   //   paramConversationId || nanoid()
@@ -204,6 +207,18 @@ const PageExpertInsight = () => {
       conversationId
     );
   };
+
+  useEffect(() => {
+    // 접근 가능 여부를 확인하여 차단 로직 수행
+    if (!isExpertInsightAccessible) {
+      navigate('/'); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
+    }
+
+    // 페이지를 나갈 때 접근 가능 여부 초기화
+    return () => {
+      setIsExpertInsightAccessible(false); // 페이지 떠날 때 접근 불가로 설정
+    };
+  }, [navigate, setIsExpertInsightAccessible]);
 
   useEffect(() => {
     const loadConversation = async () => {

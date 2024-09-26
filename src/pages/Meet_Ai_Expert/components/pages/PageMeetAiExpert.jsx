@@ -37,6 +37,7 @@ import {
   CUSTOMER_ADDITIONAL_REPORT_DATA,
   SELECTED_EXPERT_LIST,
   IS_EDITING_NOW,
+  IS_EXPERT_INSIGHT_ACCESSIBLE,
 } from "../../../AtomStates";
 
 import { Link } from "react-router-dom";
@@ -52,6 +53,7 @@ const PageMeetAiExpert = () => {
   const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
   const [buttonState, setButtonState] = useAtom(ANALYSIS_BUTTON_STATE);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
+  const [isExpertInsightAccessible, setIsExpertInsightAccessible] = useAtom(IS_EXPERT_INSIGHT_ACCESSIBLE);
 
   const [password, setPassword] = useAtom(passwordAtom);
   const [newPassword, setNewPassword] = useAtom(newPasswordAtom);
@@ -270,6 +272,7 @@ const PageMeetAiExpert = () => {
           setApproachPath(-1); // 검색을 통해 들어가는 경우
           setButtonState(1); // 버튼 상태를 1로 설정
           setSelectedExpertIndex(0);
+          setIsExpertInsightAccessible(true); 
           navigate("/ExpertInsight");
         } else {
           setAdvise(answerData.advise); // advise 데이터 설정
@@ -290,6 +293,7 @@ const PageMeetAiExpert = () => {
       setApproachPath(1);
       setInputBusinessInfo(""); // 또는 null, undefined로 초기화
       setSelectedExpertIndex(index);
+      setIsExpertInsightAccessible(true); 
       navigate("/ExpertInsight");
     } else {
       setIsPopupLogin(true); // 로그인 상태가 아니라면 로그인 팝업 띄우기

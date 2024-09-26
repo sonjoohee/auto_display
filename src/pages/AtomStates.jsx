@@ -268,3 +268,5 @@ export const IS_PASSWORD_RESET_POPUP_OPEN = atom(false);
 export const IS_SOCIAL_LOGGED_IN = atom(false); // 소셜 로그인 여부를 나타내는 아톰
 
 export const SAVED_TIMESTAMP = atom(0); // 지난 프로젝트의 타임스탬프
+
+export const IS_EXPERT_INSIGHT_ACCESSIBLE = atom(false);// Expert Insight 접근 가능 여부를 나타내는 아톰
