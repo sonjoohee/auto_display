@@ -334,7 +334,8 @@ const handleChangeInsightConfirm = async () => {
     const handleClickOutside = (event) => {
       if (
         insightEditBoxRef.current &&
-        !insightEditBoxRef.current.contains(event.target)
+        !insightEditBoxRef.current.contains(event.target) &&
+        !event.target.closest('.toggle')
       ) {
         setInsightEditToggleIndex(null);
       }
@@ -349,7 +350,8 @@ const handleChangeInsightConfirm = async () => {
     const handleClickOutside = (event) => {
       if (
         historyEditBoxRef.current &&
-        !historyEditBoxRef.current.contains(event.target)
+        !historyEditBoxRef.current.contains(event.target) &&
+        !event.target.closest('.toggle')
       ) {
         setEditToggleIndex(null); // setInsightEditToggleIndex가 아닌 히스토리용 상태를 업데이트
       }
@@ -364,10 +366,9 @@ const handleChangeInsightConfirm = async () => {
   const editBoxToggle = (index, event, category) => {
     // console.log('editBoxPosition:', editBoxPosition);
     if (editToggleIndex === index) {
-      // 이미 열려 있으면 아무 동작 안 함
+      setEditToggleIndex(null);
       return;
     }
-  
     setEditToggleIndex(index);
   
     if (event && accordionContentRef.current) {
