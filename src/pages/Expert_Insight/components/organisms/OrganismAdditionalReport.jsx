@@ -165,27 +165,28 @@ const OrganismAdditionalReport = ({
             updatedAdditionalReportData.push(answerData);
           }
           setAdditionalReportData(updatedAdditionalReportData);
-          await saveConversationToIndexedDB(
-            {
-              id: conversationId,
-              inputBusinessInfo: inputBusinessInfo,
-              analysisReportData: analysisReportData,
-              strategyReportData_EX1: expert1ReportData,
-              strategyReportData_EX2: expert2ReportData,
-              strategyReportData_EX3: expert3ReportData,
-              conversation: conversation,
-              selectedAdditionalKeywords: selectedKeywords,
-              selectedCustomerAdditionalKeyword:
-                selectedCustomerAdditionalKeyword,
-              additionalReportData: updatedAdditionalReportData,
-              customerAdditionalReportData: customerAdditionalReportData,
-              conversationStage: 3,
-              timestamp: Date.now(),
-              expert_index: selectedExpertIndex,
-            },
-            isLoggedIn,
-            conversationId
-          );
+          // console.log("additionreport-채팅저장")
+          // await saveConversationToIndexedDB(
+          //   {
+          //     id: conversationId,
+          //     inputBusinessInfo: inputBusinessInfo,
+          //     analysisReportData: analysisReportData,
+          //     strategyReportData_EX1: expert1ReportData,
+          //     strategyReportData_EX2: expert2ReportData,
+          //     strategyReportData_EX3: expert3ReportData,
+          //     conversation: conversation,
+          //     selectedAdditionalKeywords: selectedKeywords,
+          //     selectedCustomerAdditionalKeyword:
+          //       selectedCustomerAdditionalKeyword,
+          //     additionalReportData: updatedAdditionalReportData,
+          //     customerAdditionalReportData: customerAdditionalReportData,
+          //     conversationStage: 3,
+          //     timestamp: Date.now(),
+          //     expert_index: selectedExpertIndex,
+          //   },
+          //   isLoggedIn,
+          //   conversationId
+          // );
           setIsLoadingAdd(false);
           setIsLoading(false);
 

@@ -240,31 +240,30 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
 
           setTabs(strategyData.tabs);
           setSections(strategyData.tabs[selectedTab].sections);
+          // await saveConversationToIndexedDB(
+          //   {
+          //     // ...existingConversation,
 
-          await saveConversationToIndexedDB(
-            {
-              // ...existingConversation,
-
-              id: conversationId,
-              inputBusinessInfo: inputBusinessInfo,
-              analysisReportData: analysisReportData,
-              selectedAdditionalKeywords: selectedAdditionalKeyword,
-              selectedCustomerAdditionalKeyword:
-                selectedCustomerAdditionalKeyword,
-              additionalReportData: additionalReportData,
-              customerAdditionalReportData: customerAdditionalReportData,
-              conversation: conversation,
-              conversationStage: 3,
-              strategyReportData_EX1: expert1ReportData,
-              strategyReportData_EX2: expert2ReportData,
-              strategyReportData_EX3: expert3ReportData,
-              [currentReportKey]: strategyData,
-              timestamp: Date.now(),
-              expert_index: selectedExpertIndex,
-            },
-            isLoggedIn,
-            conversationId
-          );
+          //     id: conversationId,
+          //     inputBusinessInfo: inputBusinessInfo,
+          //     analysisReportData: analysisReportData,
+          //     selectedAdditionalKeywords: selectedAdditionalKeyword,
+          //     selectedCustomerAdditionalKeyword:
+          //       selectedCustomerAdditionalKeyword,
+          //     additionalReportData: additionalReportData,
+          //     customerAdditionalReportData: customerAdditionalReportData,
+          //     conversation: conversation,
+          //     conversationStage: 3,
+          //     strategyReportData_EX1: expert1ReportData,
+          //     strategyReportData_EX2: expert2ReportData,
+          //     strategyReportData_EX3: expert3ReportData,
+          //     [currentReportKey]: strategyData,
+          //     timestamp: Date.now(),
+          //     expert_index: selectedExpertIndex,
+          //   },
+          //   isLoggedIn,
+          //   conversationId
+          // );
           setIsLoadingExpert(false);
           setIsLoading(false);
 
