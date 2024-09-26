@@ -204,7 +204,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
             isLoggedIn,
             conversationId
           );
-          setReportRefreshTrigger((prev) => !prev);
+          // setReportRefreshTrigger((prev) => !prev);
         } else {      
           setButtonState(0);
 
@@ -320,7 +320,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
             isLoggedIn,
             conversationId
           );
-          setReportRefreshTrigger((prev) => !prev);
+          // setReportRefreshTrigger((prev) => !prev);
         }
       } else {
         // IndexedDB에서 기존 데이터를 가져와 적용
