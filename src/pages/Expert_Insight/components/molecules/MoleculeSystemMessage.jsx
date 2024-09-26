@@ -69,8 +69,8 @@ export default MoleculeSystemMessage;
 
 const Thumb = styled.div`
   position: relative;
-  width: 55px;
-  height: 55px;
+  width: 32px;
+  height: 32px;
   border-radius: 100px;
   overflow: hidden;
 
