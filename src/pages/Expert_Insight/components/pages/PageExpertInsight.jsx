@@ -870,6 +870,7 @@ const MainContent = styled.div`
   width: calc(100% - 40px);
   // padding-bottom: 150px;
   margin: 0 auto;
+  // justify-content:center;
 
   > div {
     flex: 1;
@@ -877,6 +878,7 @@ const MainContent = styled.div`
 
   > div:first-child {
     max-width: 1240px;
+    // max-width:800px;
     width: 100%;
     margin: 0 20px;
     padding-bottom: 60px;
