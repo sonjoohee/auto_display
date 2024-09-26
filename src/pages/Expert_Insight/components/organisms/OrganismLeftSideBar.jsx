@@ -1011,7 +1011,7 @@ useEffect(() => {
                     )}
                     {chatList.some(chat => (Date.now() - chat.timestamp) > 604800000 && (Date.now() - chat.timestamp <= 2592000000)) && (
                       <>            
-                      <strong>지난 7일</strong>
+                      <strong>지난 7일 대화</strong>
                         <ul>
                           {chatList
                             .filter(chat => Date.now() - chat.timestamp > 604800000 && Date.now() - chat.timestamp <= 2592000000)
@@ -1102,7 +1102,7 @@ useEffect(() => {
                     )}
                     {chatList.some(chat => Date.now() - chat.timestamp > 2592000000) && (
                       <>            
-                      <strong>지난 30일</strong>
+                      <strong>지난 30일 대화</strong>
                         <ul>
                           {chatList
                             .filter(chat => Date.now() - chat.timestamp > 2592000000)
