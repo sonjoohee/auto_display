@@ -269,10 +269,10 @@ const PageMeetAiExpert = () => {
   
         // answerData.advise가 있을 경우에만 동작 진행
         if (!answerData.advise) {
+          setIsExpertInsightAccessible(true); 
           setApproachPath(-1); // 검색을 통해 들어가는 경우
           setButtonState(1); // 버튼 상태를 1로 설정
           setSelectedExpertIndex(0);
-          setIsExpertInsightAccessible(true); 
           navigate("/ExpertInsight");
         } else {
           setAdvise(answerData.advise); // advise 데이터 설정
@@ -290,10 +290,10 @@ const PageMeetAiExpert = () => {
 
   const handledExpertSelect = (index) => {
     if (isLoggedIn) {
+      setIsExpertInsightAccessible(true); 
       setApproachPath(1);
       setInputBusinessInfo(""); // 또는 null, undefined로 초기화
       setSelectedExpertIndex(index);
-      setIsExpertInsightAccessible(true); 
       navigate("/ExpertInsight");
     } else {
       setIsPopupLogin(true); // 로그인 상태가 아니라면 로그인 팝업 띄우기
