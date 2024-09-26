@@ -77,7 +77,7 @@ const Thumb = styled.div`
   img {
     position: absolute;
     top: 50%;
-    left: 49%;
+    left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
     height: 100%;
@@ -88,7 +88,8 @@ const Thumb = styled.div`
 const SystemMessageContainer = styled.div`
   display: flex;
   // align-items: flex-end;
-  align-items: center;
+  // align-items: center;
+  align-items: flex-start;
   flex-direction: ${(props) => (props.Myself ? "row-reverse" : "row")};
   gap: 18px;
   margin-top: 40px;
