@@ -218,7 +218,7 @@ const PageExpertInsight = () => {
     return () => {
       setIsExpertInsightAccessible(false); // 페이지 떠날 때 접근 불가로 설정
     };
-  }, [navigate, setIsExpertInsightAccessible]);
+  }, [navigate]);
 
   useEffect(() => {
     const loadConversation = async () => {

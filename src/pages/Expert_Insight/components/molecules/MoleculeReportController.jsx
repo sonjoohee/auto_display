@@ -29,6 +29,7 @@ import {
   isLoggedInAtom,
   IS_LOADING,
   REPORT_REFRESH_TRIGGER,
+  CHAT_REFRESH_TRIGGER,
   ADDITIONAL_REPORT_DATA,
   IS_LOADING_ANALYSIS,
   SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
@@ -87,7 +88,10 @@ const MoleculeReportController = ({
   const [reportRefreshTrigger, setReportRefreshTrigger] = useAtom(
     REPORT_REFRESH_TRIGGER
   ); // 리프레시 트리거 상태 구독
-
+  const [chatRefreshTrigger, setChatRefreshTrigger] = useAtom(
+    CHAT_REFRESH_TRIGGER
+  ); // 리프레시 트리거 상태 구독
+  
   const [bizAnalysisReportIndex, setBizAnalysisReportIndex] = useState(0);
   const [newAddContent, setNewAddContent] = useState("");
   const [isAddingNow, setIsAddingNow] = useState({
@@ -543,8 +547,8 @@ ${businessInformationTargetCustomer
       isLoggedIn,
       conversationId
     );
-
-    setReportRefreshTrigger((prev) => !prev);
+    setChatRefreshTrigger((prev) => !prev);
+    // setReportRefreshTrigger((prev) => !prev);
     setIsLoadingAnalysis(false);
     setIsLoading(false);
   };

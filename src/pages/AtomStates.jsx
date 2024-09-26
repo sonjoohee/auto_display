@@ -254,6 +254,7 @@ export const CONVERSATION = atom([]);
 export const IS_LOADING = atom(false);
 export const IS_LOADING_ANALYSIS = atom(false);
 export const REPORT_REFRESH_TRIGGER = atom(false); // 새로고침 트리거 상태 추가
+export const CHAT_REFRESH_TRIGGER = atom(false); // 새로고침 트리거 상태 추가
 
 export const ADDITIONAL_REPORT_COUNT = atom(-1);
 

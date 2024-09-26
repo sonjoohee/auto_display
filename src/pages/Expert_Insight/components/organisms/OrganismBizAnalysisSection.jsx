@@ -204,7 +204,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
             isLoggedIn,
             conversationId
           );
-          setReportRefreshTrigger((prev) => !prev);
+          // setReportRefreshTrigger((prev) => !prev);
         } else {      
           setButtonState(0);
 

@@ -34,6 +34,7 @@ import {
   CONVERSATION_ID,
   SELECTED_EXPERT_INDEX,
   REPORT_REFRESH_TRIGGER,
+  CHAT_REFRESH_TRIGGER,
   IS_LOADING,
   SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
@@ -71,6 +72,9 @@ const OrganismLeftSideBar = () => {
   const [reports, setReports] = useState([]); // 서버에서 가져온 보고서 리스트 상태
   const [reportRefreshTrigger, setReportRefreshTrigger] = useAtom(
     REPORT_REFRESH_TRIGGER
+  ); // 리프레시 트리거 상태 구독
+  const [chatRefreshTrigger, setChatRefreshTrigger] = useAtom(
+    CHAT_REFRESH_TRIGGER
   ); // 리프레시 트리거 상태 구독
 
   const [chatList, setChatList] = useState([]); // 서버에서 가져온 대화 리스트
@@ -387,7 +391,7 @@ useEffect(() => {
       }
     };
     fetchChatList();
-  }, [reportRefreshTrigger, isLoggedIn]);
+  }, [chatRefreshTrigger, isLoggedIn]);
 
   useEffect(() => {
     // 서버에서 보고서 목록을 가져오는 함수
@@ -599,7 +603,7 @@ useEffect(() => {
       // 팝업 닫기 및 삭제할 reportId 초기화
       setChatIsDeletePopupOpen(false);
       setChatIdToDelete(null);
-      setReportRefreshTrigger((prev) => !prev);
+      setChatRefreshTrigger((prev) => !prev);
       if (chatIdToDelete === conversationId) {
         navigate("/"); // / 경로로 이동
       }
