@@ -54,7 +54,7 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
     }
     const newSelected = !isSelected;
     setSelected(newSelected);
-    // onSelect(newSelected, id); 전문가 4번 테스트를 위한 임시 주석처리임
+    onSelect(newSelected, id); 
   };
 
   const handleDetailsClick = (e) => {
@@ -66,7 +66,7 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
     e.stopPropagation();
     const newSelected = !isSelected;
     setSelected(newSelected);
-    // onSelect(newSelected, id); 전문가 4번 테스트를 위한 임시 주석처리임
+    onSelect(newSelected, id); 
   };
 
   // 선택상태 초기화
