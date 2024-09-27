@@ -148,6 +148,7 @@ const PageExpertInsight = () => {
         additionalReportCount,
         customerAdditionalReportCount,
         customerAdditionalReportData,
+        strategyReportData: strategyReportData,
         selectedCustomerAdditionalKeyword: updatedSelectedCustomerAdditionalKeyword,
         ...existingReports,
         timestamp: Date.now(),

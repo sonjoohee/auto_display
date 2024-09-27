@@ -215,7 +215,11 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             ...prevData,
             [expertIndex]: strategyData,
           }));
-
+          // 바로 저장할 데이터
+          const updatedStrategyReportData = {
+            ...strategyReportData,
+            [expertIndex]: strategyData, // 새로운 데이터를 추가한 객체를 바로 생성
+          };
           setTabs(strategyData.tabs);
           setSections(strategyData.tabs[selectedTab].sections);
 
@@ -241,7 +245,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               analysisReportData: analysisReportData,
               selectedAdditionalKeywords: selectedKeywords,
               conversationStage: 3,
-              strategyReportData: strategyReportData, // Save the entire strategyReportData
+              strategyReportData: updatedStrategyReportData, // Save the entire strategyReportData
               conversation: updatedConversation,
               selectedAdditionalKeywords: selectedAdditionalKeyword,
               selectedCustomerAdditionalKeyword:
