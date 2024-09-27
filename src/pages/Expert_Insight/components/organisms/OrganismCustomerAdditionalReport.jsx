@@ -216,7 +216,7 @@ const OrganismCustomerAdditionalReport = ({
                     message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.additional_question.title}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분석 결과에 만족하신다면, 지금 바로 전략 보고서를 준비해드려요.`,
                     expertIndex: selectedExpertIndex,
                   },
-                  { type: "report_button" }
+                  { type: "reportButton" }
                 );
               }
             } else if (conversationStage === 3) {

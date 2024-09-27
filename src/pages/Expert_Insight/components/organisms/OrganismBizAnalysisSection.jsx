@@ -283,15 +283,27 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
           // 대화 업데이트 및 저장
           const updatedConversation2 = [...conversation];
           if (approachPath === 1) {
-            updatedConversation2.push(
-              {
-                type: "system",
-                message:
-                  "비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 지금 바로 전략 보고서를 준비해드려요.",
-                expertIndex: selectedExpertIndex,
-              },
-              { type: "report_button" }
-            );
+            if (selectedExpertIndex==="1" || selectedExpertIndex==="2" || selectedExpertIndex==="3") {
+              updatedConversation2.push(
+                {
+                  type: "system",
+                  message:
+                    "비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 지금 바로 전략 보고서를 준비해드려요.",
+                  expertIndex: selectedExpertIndex,
+                },
+                { type: "reportButton" }
+              );
+            } else {
+              updatedConversation2.push(
+                {
+                  type: "system",
+                  message:
+                    "비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 지금 바로 PoC 계획을 시작할게요.",
+                  expertIndex: selectedExpertIndex,
+                },
+                { type: "pocButton" }
+              );
+            }
           } else if (approachPath === -1) {
             updatedConversation2.push({
               type: "system",

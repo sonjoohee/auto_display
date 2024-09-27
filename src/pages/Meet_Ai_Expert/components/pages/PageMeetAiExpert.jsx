@@ -383,12 +383,12 @@ const PageMeetAiExpert = () => {
                 <p>4번 전문가 회색 글씨</p>
                 <strong>4번 전문가 굵은 글씨</strong>
               </ExpertCard>
-              <ExpertCard More>
+              {/* <ExpertCard More>
                 <div>
-                  {/* <span>More</span> */}
+                  <span>More</span>
                   <p>Coming Soon</p>
                 </div>
-              </ExpertCard>
+              </ExpertCard> */}
             </ExpertSelectBox>
           </ExpertSelectWrap>
         </MainContent>
