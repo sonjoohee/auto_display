@@ -21,9 +21,6 @@ import {
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
   STRATEGY_REPORT_DATA,
   SELECTED_ADDITIONAL_KEYWORD,
-  EXPERT1_REPORT_DATA,
-  EXPERT2_REPORT_DATA,
-  EXPERT3_REPORT_DATA,
   ADDITIONAL_REPORT_DATA, // Import the new list-based atom
   CONVERSATION_STAGE,
   ADDITIONAL_QUESTION_1,
@@ -97,12 +94,7 @@ const PageMeetAiExpert = () => {
     ADDITIONAL_REPORT_DATA
   ); // Use the new list-based atom
 
-  const [expert1ReportData, setExpert1ReportData] =
-    useAtom(EXPERT1_REPORT_DATA);
-  const [expert2ReportData, setExpert2ReportData] =
-    useAtom(EXPERT2_REPORT_DATA);
-  const [expert3ReportData, setExpert3ReportData] =
-    useAtom(EXPERT3_REPORT_DATA);
+  const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA);
 
   const [addtionalQuestion1, setAddtionalQuestion1] = useAtom(
     ADDITIONAL_QUESTION_1
@@ -164,9 +156,7 @@ const PageMeetAiExpert = () => {
     setApproachPath(0);
     setAdditionalReportData([]);
     setCustomerAdditionalReportData([]);
-    setExpert1ReportData({});
-    setExpert2ReportData({});
-    setExpert3ReportData({});
+    setStrategyReportData({});
     setAddtionalQuestion1("");
     setAddtionalQuestion2("");
     setAddtionalQuestion3("");

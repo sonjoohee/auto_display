@@ -12,9 +12,8 @@ import {
   APPROACH_PATH,
   IS_LOADING,
   isLoggedInAtom,
-  EXPERT1_REPORT_DATA,
-  EXPERT2_REPORT_DATA,
-  EXPERT3_REPORT_DATA,
+  STRATEGY_REPORT_DATA,
+
   INPUT_BUSINESS_INFO,
   CONVERSATION_STAGE,
   SELECTED_ADDITIONAL_KEYWORD,
@@ -56,12 +55,8 @@ const OrganismCustomerAdditionalReport = ({
   );
   const [isLoadingAdd, setIsLoadingAdd] = useState(false);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
-  const [expert1ReportData, setExpert1ReportData] =
-    useAtom(EXPERT1_REPORT_DATA);
-  const [expert2ReportData, setExpert2ReportData] =
-    useAtom(EXPERT2_REPORT_DATA);
-  const [expert3ReportData, setExpert3ReportData] =
-    useAtom(EXPERT3_REPORT_DATA);
+  const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA);
+
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [
     mainFeaturesOfBusinessInformation,
@@ -322,9 +317,7 @@ const OrganismCustomerAdditionalReport = ({
               id: conversationId,
               inputBusinessInfo: inputBusinessInfo,
               analysisReportData: analysisReportData,
-              strategyReportData_EX1: expert1ReportData,
-              strategyReportData_EX2: expert2ReportData,
-              strategyReportData_EX3: expert3ReportData,
+              strategyReportData: strategyReportData,
               conversation: updatedConversation2,
               conversationStage: conversationStage,
               selectedAdditionalKeywords: selectedAdditionalKeyword,
