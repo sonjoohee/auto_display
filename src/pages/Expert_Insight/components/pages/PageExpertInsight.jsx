@@ -640,10 +640,6 @@ if (isLoadingPage) {
                   return <MoleculeSystemMessage key={index} item={item} />;
                 } else if (item.type === "analysis") {
                   return <OrganismBizAnalysisSection conversationId={conversationId} />;
-                } else if (item.type === "pocOption") {
-                  // return <OrganismBizAnalysisSection conversationId={conversationId} />;
-                } else if (item.type === "pocPersona") {
-                  return <MoleculePersonaSelect conversationId={conversationId}/>;
                 } else if (item.type.startsWith("strategy_")) {
                   const expertIndex = item.type.split("_")[1];
                   return (
@@ -662,7 +658,6 @@ if (isLoadingPage) {
                         conversationId={conversationId}
                         expertIndex={expertIndex}
                       />
-                      <MoleculePersonaSelect conversationId={conversationId}/>
                     </>
                   );
                 } else if (item.type === "addition") {
@@ -689,6 +684,8 @@ if (isLoadingPage) {
                   return <MoleculeCheckPocRightAway />;
                 } else if (item.type === "pocOption") {
                   return <MoleculeCheckPocOption />;
+                } else if (item.type === "pocPersona") {
+                  return <MoleculePersonaSelect conversationId={conversationId}/>;
                 }
                 return null;
               })}

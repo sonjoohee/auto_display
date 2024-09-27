@@ -6,13 +6,55 @@ import images from '../../../../assets/styles/Images';
 import MoleculePanelItemDetail from '../../../AI_Panel/components/molecules/MoleculePanelItemDetail'; // Adjusted import path
 import { useAtom } from 'jotai';
 import {
+  CONVERSATION,
+  SELECTED_EXPERT_INDEX,
+  INPUT_BUSINESS_INFO,
+  TITLE_OF_BUSINESS_INFORMATION,
+  MAIN_FEATURES_OF_BUSINESS_INFORMATION,
+  MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
+  BUSINESS_INFORMATION_TARGET_CUSTOMER,
+  ANALYSIS_REPORT_DATA,
+  STRATEGY_REPORT_DATA,
+  CONVERSATION_STAGE,
+  SELECTED_ADDITIONAL_KEYWORD,
+  SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
+  ADDITIONAL_REPORT_DATA,
+  CUSTOMER_ADDITIONAL_REPORT_DATA,
+  isLoggedInAtom,
+  APPROACH_PATH,
   SELECTED_PANELS,
+  iS_CLICK_CHECK_POC_RIGHTAWAY,
+  EXPERT_BUTTON_STATE,
 } from "../../../AtomStates";
+import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
 import timeCode from '../../assets/time-code.json';
 
-const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, comment, tags, onSelect, lifeStyle, consumption, productGroup, 
-  target_1, target_2, target_3, target_4, target_5, value_1, value_2, value_3, value_4, value_5,}) => {
-  
+const MoleculePanelItem = ({
+  id,
+  imgSrc,
+  gender,
+  age,
+  job,
+  address,
+  subAddress,
+  comment,
+  tags,
+  onSelect,
+  lifeStyle,
+  consumption,
+  productGroup,
+  target_1,
+  target_2,
+  target_3,
+  target_4,
+  target_5,
+  value_1,
+  value_2,
+  value_3,
+  value_4,
+  value_5,
+  conversationId, // Added conversationId as a prop
+}) => {
   const [selectedPanels, setSelectedPanels] = useAtom(SELECTED_PANELS);
 
   const [maxBehabioralType, setMaxBehabioralType] = useState("");
@@ -20,11 +62,37 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
 
   const [isSelected, setSelected] = useState(false);
   const [isDetailsVisible, setDetailsVisible] = useState(false);
-  
+
+  // Import necessary atoms
+  const [conversation, setConversation] = useAtom(CONVERSATION);
+  const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
+  const [inputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
+  const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
+  const [mainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
+  const [mainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
+  const [businessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
+  const [strategyReportData] = useAtom(STRATEGY_REPORT_DATA);
+  const [conversationStage] = useAtom(CONVERSATION_STAGE);
+  const [selectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
+  const [selectedCustomerAdditionalKeyword] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
+  const [additionalReportData] = useAtom(ADDITIONAL_REPORT_DATA);
+  const [customerAdditionalReportData] = useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
+  const [isLoggedIn] = useAtom(isLoggedInAtom);
+  const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
+  const [isClickCheckPocRightAway, setIsClickCheckPocRightAway] = useAtom(iS_CLICK_CHECK_POC_RIGHTAWAY);
+  const [buttonState, setButtonState] = useAtom(EXPERT_BUTTON_STATE); // BUTTON_STATE 사용
+
+  const analysisReportData = {
+    title: titleOfBusinessInfo,
+    mainFeatures: mainFeaturesOfBusinessInformation,
+    mainCharacter: mainCharacteristicOfBusinessInformation,
+    mainCustomer: businessInformationTargetCustomer,
+  };
+
   useEffect(() => {
     setMaxBehabioralType("");
     setMaxUtilizationTime(0);
-  },[])
+  }, []);
 
   // Logic to find the maximum utilization time
   useEffect(() => {
@@ -85,6 +153,46 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
   const imgGender = gender === "M" ? "m" : "w";
   imgTarget = imgAge + "s_" + imgGender + "_" + imgSrc + ".jpg";
 
+  // Handle button click to update conversation
+  const handleButtonClick = async () => {
+    // Update the conversation
+    const updatedConversation = [...conversation];
+    updatedConversation.push(
+      {
+        type: "system",
+        message: "선택한 타겟 유저를 바탕으로 PoC 보고서를 작성하겠습니다.",
+        expertIndex: selectedExpertIndex,
+      },
+      {
+        type: `poc_${selectedExpertIndex}`,
+      }
+    );
+    setConversation(updatedConversation);
+
+    setApproachPath(3);
+    setIsClickCheckPocRightAway(true);
+
+    await saveConversationToIndexedDB(
+      {
+        id: conversationId,
+        inputBusinessInfo: inputBusinessInfo,
+        analysisReportData: analysisReportData,
+        strategyReportData: strategyReportData,
+        conversation: updatedConversation,
+        conversationStage: conversationStage,
+        selectedAdditionalKeywords: selectedAdditionalKeyword,
+        selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
+        additionalReportData: additionalReportData,
+        customerAdditionalReportData: customerAdditionalReportData,
+        timestamp: Date.now(),
+        expert_index: selectedExpertIndex,
+      },
+      isLoggedIn,
+      conversationId
+    );
+    setButtonState(1); 
+  };
+
   return (
     <>
       <PanelItem className={isSelected ? 'selected' : ''} onClick={handlePanelClick}>
@@ -137,7 +245,7 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
       )}
       {isSelected && (
         <ButtonWrap>
-          <button>
+          <button onClick={handleButtonClick}>
             제가 원하는 타겟 유저는 {gender === "M" ? "남성" : "여성"} {age}세 {job}입니다
             타겟 유저 선택 완료
           </button>
@@ -147,11 +255,11 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
   );
 };
 
-
-
-// ... other styled components ...
+// Styled Components (unchanged)
+// ... your existing styled-components ...
 
 export default MoleculePanelItem;
+
 const ButtonWrap = styled.div`
   display: flex;
   align-items: center;
