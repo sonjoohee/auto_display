@@ -19,9 +19,7 @@ import {
   SELECTED_TAB_COPY_1,
   SELECTED_TAB_COPY_2,
   SELECTED_TAB_COPY_3,
-  EXPERT1_REPORT_DATA,
-  EXPERT2_REPORT_DATA,
-  EXPERT3_REPORT_DATA,
+  STRATEGY_REPORT_DATA,
   APPROACH_PATH,
   CONVERSATION_STAGE,
   SELECTED_ADDITIONAL_KEYWORD,
@@ -107,12 +105,6 @@ const MoleculeReportController = ({
   const [selectedTabCopy2, setSelectedTabCopy2] = useAtom(SELECTED_TAB_COPY_2);
   const [selectedTabCopy3, setSelectedTabCopy3] = useAtom(SELECTED_TAB_COPY_3);
 
-  const [expert1ReprotData, setExpert1ReportData] =
-    useAtom(EXPERT1_REPORT_DATA);
-  const [expert2ReprotData, setExpert2ReportData] =
-    useAtom(EXPERT2_REPORT_DATA);
-  const [expert3ReprotData, setExpert3ReportData] =
-    useAtom(EXPERT3_REPORT_DATA);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isPopupOpenCancel, setIsPopupOpenCancel] = useState(false);
   const [clickState, setClickState] = useState(false);
@@ -175,7 +167,8 @@ const MoleculeReportController = ({
     setIsAddingNow({ section: "", isAdding: false });
     togglePopupCancel();
   };
-
+  const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA);
+  const [selectedTabCopyByExpert, setSelectedTabCopyByExpert] = useState({});
   const analysisReportData = {
     title: titleOfBusinessInfo,
     mainFeatures: mainFeaturesOfBusinessInformation,
@@ -361,13 +354,11 @@ const MoleculeReportController = ({
     };
 
     const getSelectedTabData = () => {
-      if (strategyReportID === "1")
-        return expert1ReprotData.tabs[selectedTabCopy1];
-      else if (strategyReportID === "2")
-        return expert2ReprotData.tabs[selectedTabCopy2];
-      else if (strategyReportID === "3")
-        return expert3ReprotData.tabs[selectedTabCopy3];
-      else return;
+      const reportData = strategyReportData[strategyReportID];
+      if (!reportData) return null;
+    
+      const selectedTabCopy = selectedTabCopyByExpert[strategyReportID] || 0;
+      return reportData.tabs[selectedTabCopy];
     };
 
     if (reportIndex === 0) {

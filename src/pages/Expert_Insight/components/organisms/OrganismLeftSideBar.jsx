@@ -21,9 +21,7 @@ import {
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
   APPROACH_PATH,
   SELECTED_ADDITIONAL_KEYWORD,
-  EXPERT1_REPORT_DATA,
-  EXPERT2_REPORT_DATA,
-  EXPERT3_REPORT_DATA,
+  STRATEGY_REPORT_DATA,
   ADDITIONAL_REPORT_DATA, // Import the new list-based atom
   CONVERSATION_STAGE,
   ADDITIONAL_QUESTION_1,
@@ -125,12 +123,8 @@ const OrganismLeftSideBar = () => {
     ADDITIONAL_REPORT_DATA
   ); // Use the new list-based atom
 
-  const [expert1ReportData, setExpert1ReportData] =
-    useAtom(EXPERT1_REPORT_DATA);
-  const [expert2ReportData, setExpert2ReportData] =
-    useAtom(EXPERT2_REPORT_DATA);
-  const [expert3ReportData, setExpert3ReportData] =
-    useAtom(EXPERT3_REPORT_DATA);
+  const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA);
+
 
   const [addtionalQuestion1, setAddtionalQuestion1] = useAtom(
     ADDITIONAL_QUESTION_1
@@ -546,9 +540,8 @@ useEffect(() => {
       ); // 목표 고객 설정
 
       // 전문가 보고서 데이터 복구
-      setExpert1ReportData(chatData.strategyReportData_EX1 || {});
-      setExpert2ReportData(chatData.strategyReportData_EX2 || {});
-      setExpert3ReportData(chatData.strategyReportData_EX3 || {});
+      setStrategyReportData(chatData.strategyReportData || {});
+
 
       // 필요하다면 추가 상태 업데이트
       setSelectedAdditionalKeyword(chatData.selectedAdditionalKeyword || []);
@@ -760,9 +753,7 @@ useEffect(() => {
     setAdditionalReportData([]);
     setCustomerAdditionalReportData([]);
     setSelectedCustomerAdditionalKeyword([]);
-    setExpert1ReportData({});
-    setExpert2ReportData({});
-    setExpert3ReportData({});
+    setStrategyReportData({});
     setAddtionalQuestion1("");
     setAddtionalQuestion2("");
     setAddtionalQuestion3("");

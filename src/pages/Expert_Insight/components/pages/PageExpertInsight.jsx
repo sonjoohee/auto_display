@@ -15,9 +15,6 @@ import {
   APPROACH_PATH,
   STRATEGY_REPORT_DATA,
   SELECTED_ADDITIONAL_KEYWORD,
-  EXPERT1_REPORT_DATA,
-  EXPERT2_REPORT_DATA,
-  EXPERT3_REPORT_DATA,
   ADDITIONAL_REPORT_DATA, // Import the new list-based atom
   CONVERSATION_STAGE,
   ADDITIONAL_QUESTION_1,
@@ -66,17 +63,10 @@ const PageExpertInsight = () => {
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [isExpertInsightAccessible, setIsExpertInsightAccessible] = useAtom(IS_EXPERT_INSIGHT_ACCESSIBLE);
 
-  // const { conversationId: paramConversationId } = useParams();
-  // const [conversationId, setConversationId] = useState(
-  //   paramConversationId || nanoid()
-  // );
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
-  const [inputBusinessInfo, setInputBusinessInfo] =
-    useAtom(INPUT_BUSINESS_INFO);
-  const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
-    TITLE_OF_BUSINESS_INFORMATION
-  );
+  const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
+  const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [
     mainFeaturesOfBusinessInformation,
     setMainFeaturesOfBusinessInformation,
@@ -89,53 +79,30 @@ const PageExpertInsight = () => {
     businessInformationTargetCustomer,
     setBusinessInformationTargetCustomer,
   ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(
-    SELECTED_EXPERT_INDEX
-  );
+  const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [sections, setSections] = useState([]);
-  // const [additionalReportCount, setAdditionalReportCount] = useAtom(
-  //   ADDITIONAL_REPORT_COUNT
-  // );
 
-  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
-    SELECTED_ADDITIONAL_KEYWORD
-  );
+  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
 
   const [
     selectedCustomerAdditionalKeyword,
     setSelectedCustomerAdditionalKeyword,
   ] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
 
-  const [customerAdditionalReportData, setCustomerAdditionalReportData] =
-    useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
+  const [customerAdditionalReportData, setCustomerAdditionalReportData] = useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
 
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
 
-  const [additionalReportData, setAdditionalReportData] = useAtom(
-    ADDITIONAL_REPORT_DATA
-  ); // Use the new list-based atom
+  const [additionalReportData, setAdditionalReportData] = useAtom(ADDITIONAL_REPORT_DATA); // Use the new list-based atom
 
-  const [expert1ReportData, setExpert1ReportData] =
-    useAtom(EXPERT1_REPORT_DATA);
-  const [expert2ReportData, setExpert2ReportData] =
-    useAtom(EXPERT2_REPORT_DATA);
-  const [expert3ReportData, setExpert3ReportData] =
-    useAtom(EXPERT3_REPORT_DATA);
+  const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA); // 변경된 부분
 
-  const [addtionalQuestion1, setAddtionalQuestion1] = useAtom(
-    ADDITIONAL_QUESTION_1
-  );
-  const [addtionalQuestion2, setAddtionalQuestion2] = useAtom(
-    ADDITIONAL_QUESTION_2
-  );
-  const [addtionalQuestion3, setAddtionalQuestion3] = useAtom(
-    ADDITIONAL_QUESTION_3
-  );
+  const [addtionalQuestion1, setAddtionalQuestion1] = useAtom(ADDITIONAL_QUESTION_1);
+  const [addtionalQuestion2, setAddtionalQuestion2] = useAtom(ADDITIONAL_QUESTION_2);
+  const [addtionalQuestion3, setAddtionalQuestion3] = useAtom(ADDITIONAL_QUESTION_3);
 
   const [inputAdditionalQuestion, setInputAdditionalQuestion] = useState("");
-  const [isClickCheckReportRightAway, setIsClickCheckReportRightAway] = useAtom(
-    iS_CLICK_CHECK_REPORT_RIGHTAWAY
-  );
+  const [isClickCheckReportRightAway, setIsClickCheckReportRightAway] = useAtom(iS_CLICK_CHECK_REPORT_RIGHTAWAY);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
   const [advise, setAdvise] = useState(""); // 새로운 advise 상태 추가
@@ -154,37 +121,21 @@ const PageExpertInsight = () => {
     mainCustomer: businessInformationTargetCustomer,
   };
 
-  const saveConversation = async (
-    updatedConversation,
-    newConversationStage
-  ) => {
+  const saveConversation = async (updatedConversation, newConversationStage) => {
     const existingReports = {
-      strategyReportData_EX1: expert1ReportData,
-      strategyReportData_EX2: expert2ReportData,
-      strategyReportData_EX3: expert3ReportData,
+      strategyReportData: strategyReportData, // 변경된 부분
     };
 
     // IndexedDB에서 기존 데이터를 가져옴
-    const existingData = await getConversationByIdFromIndexedDB(
-      conversationId,
-      isLoggedIn
-    );
+    const existingData = await getConversationByIdFromIndexedDB(conversationId, isLoggedIn);
 
     // 기존의 selectedAdditionalKeyword가 있으면 병합
-    const updatedSelectedAdditionalKeyword =
-      existingData?.selectedAdditionalKeyword
-        ? [
-            ...existingData.selectedAdditionalKeyword,
-            ...selectedAdditionalKeyword,
-          ]
-        : selectedAdditionalKeyword;
-    const updatedSelectedCustomerAdditionalKeyword =
-      existingData?.selectedCustumoerdditionalKeyword
-        ? [
-            ...existingData.selectedCustumoerdditionalKeyword,
-            ...selectedCustomerAdditionalKeyword,
-          ]
-        : selectedCustomerAdditionalKeyword;
+    const updatedSelectedAdditionalKeyword = existingData?.selectedAdditionalKeyword
+      ? [...existingData.selectedAdditionalKeyword, ...selectedAdditionalKeyword]
+      : selectedAdditionalKeyword;
+    const updatedSelectedCustomerAdditionalKeyword = existingData?.selectedCustumoerdditionalKeyword
+      ? [...existingData.selectedCustumoerdditionalKeyword, ...selectedCustomerAdditionalKeyword]
+      : selectedCustomerAdditionalKeyword;
     saveConversationToIndexedDB(
       {
         id: conversationId,
@@ -197,8 +148,7 @@ const PageExpertInsight = () => {
         additionalReportCount,
         customerAdditionalReportCount,
         customerAdditionalReportData,
-        selectedCustomerAdditionalKeyword:
-          updatedSelectedCustomerAdditionalKeyword,
+        selectedCustomerAdditionalKeyword: updatedSelectedCustomerAdditionalKeyword,
         ...existingReports,
         timestamp: Date.now(),
         expert_index: selectedExpertIndex,
@@ -226,16 +176,10 @@ const PageExpertInsight = () => {
       if (isLoggedIn) {
         // 2. 로그인 상태라면 서버에서 새로운 대화 ID를 생성하거나, 저장된 대화를 불러옴
         if (!conversationId) {
-          // console.log(
-          //   "🚀 ~ 없을때 loadConversation ~ conversationId:",
-          //   conversationId
-          // );
-          // console.log("paramConversationId219");
           try {
             // 서버에서 새로운 대화 ID 생성
             const newConversationId = await createChatOnServer();
             setConversationId(newConversationId); // 생성된 대화 ID 설정
-            // console.log("newConversationId", newConversationId);
             setIsExpertInsightAccessible(true); 
             setIsLoadingPage(false); // 로딩 완료
             // 새로운 대화 ID로 경로 변경
@@ -248,38 +192,15 @@ const PageExpertInsight = () => {
           }
         } else {
           // 3. 대화 ID가 이미 존재하면 IndexedDB에서 대화 불러오기
+          const savedConversation = await getConversationByIdFromIndexedDB(conversationId, isLoggedIn);
 
-          // console.log(
-          //   "🚀 ~ id 있을떄 loadConversation ~ conversationId:",
-          //   conversationId
-          // );
-          const savedConversation = await getConversationByIdFromIndexedDB(
-            conversationId,
-            isLoggedIn
-          );
-
-          // console.log(
-          //   "🚀 ~ loadConversation ~ savedConversation:",
-          //   savedConversation
-          // );
           if (savedConversation) {
-            setSelectedExpertIndex(
-              savedConversation.expert_index !== undefined
-                ? savedConversation.expert_index
-                : 0
-            );
+            setSelectedExpertIndex(savedConversation.expert_index !== undefined ? savedConversation.expert_index : 0);
             const analysisData = savedConversation.analysisReportData || {};
-            // console.log("🚀 ~ loadConversation ~ analysisData:", analysisData);
             setTitleOfBusinessInfo(analysisData.title || "");
-            setMainFeaturesOfBusinessInformation(
-              analysisData.mainFeatures || []
-            );
-            setMainCharacteristicOfBusinessInformation(
-              analysisData.mainCharacter || []
-            );
-            setBusinessInformationTargetCustomer(
-              analysisData.mainCustomer || []
-            );
+            setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
+            setMainCharacteristicOfBusinessInformation(analysisData.mainCharacter || []);
+            setBusinessInformationTargetCustomer(analysisData.mainCustomer || []);
 
             // 복구된 데이터를 로컬 상태로 설정
             setConversation(savedConversation.conversation);
@@ -287,28 +208,12 @@ const PageExpertInsight = () => {
             setInputBusinessInfo(savedConversation.inputBusinessInfo);
 
             // 전략 보고서 데이터 복구
-            setExpert1ReportData(
-              savedConversation.strategyReportData_EX1 || {}
-            );
-            setExpert2ReportData(
-              savedConversation.strategyReportData_EX2 || {}
-            );
-            setExpert3ReportData(
-              savedConversation.strategyReportData_EX3 || {}
-            );
+            setStrategyReportData(savedConversation.strategyReportData || {}); // 변경된 부분
 
-            setAdditionalReportData(
-              savedConversation.additionalReportData || []
-            );
-            setSelectedAdditionalKeyword(
-              savedConversation.selectedAdditionalKeyword || []
-            );
-            setSelectedCustomerAdditionalKeyword(
-              savedConversation.selectedCustomerAdditionalKeyword || []
-            );
-            setCustomerAdditionalReportData(
-              savedConversation.customerAdditionalReportData || []
-            );
+            setAdditionalReportData(savedConversation.additionalReportData || []);
+            setSelectedAdditionalKeyword(savedConversation.selectedAdditionalKeyword || []);
+            setSelectedCustomerAdditionalKeyword(savedConversation.selectedCustomerAdditionalKeyword || []);
+            setCustomerAdditionalReportData(savedConversation.customerAdditionalReportData || []);
 
             // 대화 단계가 초기 상태라면 초기 시스템 메시지 설정
             if (savedConversation.conversationStage === 1) {
@@ -344,22 +249,13 @@ const PageExpertInsight = () => {
           setIsExpertInsightAccessible(true); 
           navigate(`/conversation/${conversationId}`, { replace: true });
         } else {
-          const savedConversation = await getConversationByIdFromIndexedDB(
-            conversationId,
-            isLoggedIn
-          );
+          const savedConversation = await getConversationByIdFromIndexedDB(conversationId, isLoggedIn);
           if (savedConversation) {
             const analysisData = savedConversation.analysisReportData || {};
             setTitleOfBusinessInfo(analysisData.title || "");
-            setMainFeaturesOfBusinessInformation(
-              analysisData.mainFeatures || []
-            );
-            setMainCharacteristicOfBusinessInformation(
-              analysisData.mainCharacter || []
-            );
-            setBusinessInformationTargetCustomer(
-              analysisData.mainCustomer || []
-            );
+            setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
+            setMainCharacteristicOfBusinessInformation(analysisData.mainCharacter || []);
+            setBusinessInformationTargetCustomer(analysisData.mainCustomer || []);
 
             // 복구된 데이터를 로컬 상태로 설정
             setConversation(savedConversation.conversation);
@@ -367,22 +263,10 @@ const PageExpertInsight = () => {
             setInputBusinessInfo(savedConversation.inputBusinessInfo);
 
             // 전략 보고서 데이터 복구
-            setExpert1ReportData(
-              savedConversation.strategyReportData_EX1 || {}
-            );
-            setExpert2ReportData(
-              savedConversation.strategyReportData_EX2 || {}
-            );
-            setExpert3ReportData(
-              savedConversation.strategyReportData_EX3 || {}
-            );
+            setStrategyReportData(savedConversation.strategyReportData || {}); // 변경된 부분
 
-            setAdditionalReportData(
-              savedConversation.additionalReportData || []
-            );
-            setSelectedAdditionalKeyword(
-              savedConversation.selectedAdditionalKeyword || []
-            );
+            setAdditionalReportData(savedConversation.additionalReportData || []);
+            setSelectedAdditionalKeyword(savedConversation.selectedAdditionalKeyword || []);
 
             // 대화 단계가 초기 상태라면 초기 시스템 메시지 설정
             if (savedConversation.conversationStage === 1) {
@@ -414,323 +298,294 @@ const PageExpertInsight = () => {
     };
 
     loadConversation();
-  }, [
-    // paramConversationId,
-    conversationId,
-    isLoggedIn,
-    // conversation,
-    navigate,
-    // selectedExpertIndex,
-    // setExpert1ReportData,
-    // setExpert2ReportData,
-    // setExpert3ReportData,
-    // setAdditionalReportData,
-    // setSelectedAdditionalKeyword,
-    // setConversation,
-    // setConversationStage,
-  ]);
+  }, [conversationId, isLoggedIn, navigate]);
 
-  // useEffect(() => {
-  //   const loadConversationOther = async () => {
-  //     const savedConversation = await getConversationByIdFromIndexedDB(conversationId);
-  //     if (savedConversation) {
-  //       const analysisData = savedConversation.analysisReportData || {};
-  //         setTitleOfBusinessInfo(analysisData.title || "");
-  //         setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
-  //         setMainCharacteristicOfBusinessInformation(analysisData.mainCharacter || []);
-  //         setBusinessInformationTargetCustomer(analysisData.mainCustomer || []);
-  //     }
-  //   }
-  //   loadConversationOther();
-  // }, [
-  //   navigate,
-  //   conversation,
-  //   setConversation,
-  // ]);
+  // ... 나머지 코드 (변경 없음)
 
-  // 검색을 통해 들어왔으면 handleSearch 실행
-  useEffect(() => {
-    if (conversationId && conversationId.length >= 2) {
-      if (approachPath === -1) {
-        handleSearch(-1);
-      } else if (approachPath === 1) {
-        setInputBusinessInfo("");
-        const initialMessage = getInitialSystemMessage();
-        setConversation([
-          {
-            type: "system",
-            message: initialMessage,
-            expertIndex: selectedExpertIndex,
-          },
-        ]);
+  // 전문가 선택 표시 조건 수정
+ // 검색을 통해 들어왔으면 handleSearch 실행
+ useEffect(() => {
+  if (conversationId && conversationId.length >= 2) {
+    if (approachPath === -1) {
+      handleSearch(-1);
+    } else if (approachPath === 1) {
+      setInputBusinessInfo("");
+      const initialMessage = getInitialSystemMessage();
+      setConversation([
+        {
+          type: "system",
+          message: initialMessage,
+          expertIndex: selectedExpertIndex,
+        },
+      ]);
+    }
+  }
+}, [approachPath, selectedExpertIndex, isLoadingPage]);
+
+useEffect(() => {
+  if (
+    conversationId &&
+    conversationId.length >= 2 &&
+    selectedAdditionalKeyword &&
+    !isLoadingPage &&
+    approachPath !== 2
+  ) {
+    handleSearch(-1);
+  }
+}, [selectedAdditionalKeyword]);
+// useEffect(() => {
+//   console.log(22222222)
+//   if (selectedAdditionalKeyword) handleSearch(-1);
+// }, [
+//   selectedAdditionalKeyword,
+// ]);
+
+useEffect(() => {
+  if (
+    conversationId &&
+    conversationId.length >= 2 &&
+    approachPath !== 2 &&
+    !isLoadingPage
+  ) {
+    handleSearch(-1);
+  }
+}, [selectedExpertIndex]);
+
+useEffect(() => {
+  if (
+    conversationId &&
+    conversationId.length >= 2 &&
+    isClickCheckReportRightAway &&
+    !isLoadingPage
+  ) {
+    handleSearch(-1);
+  }
+}, [isClickCheckReportRightAway]);
+
+const handleSearch = async (inputValue) => {
+  if (isLoggedIn) {
+    if (!conversationId) {
+      try {
+        return;
+      } catch (error) {
+        console.error("Failed to create conversation on server:", error);
+        return;
       }
     }
-  }, [approachPath, selectedExpertIndex, isLoadingPage]);
+  }
 
-  useEffect(() => {
-    if (
-      conversationId &&
-      conversationId.length >= 2 &&
-      selectedAdditionalKeyword &&
-      !isLoadingPage &&
-      approachPath !== 2
-    ) {
-      handleSearch(-1);
+  const updatedConversation = [...conversation];
+
+  // 사용자가 입력한 경우에만 inputBusinessInfo를 업데이트
+  if (conversationStage === 1 && inputValue !== -1) {
+    setInputBusinessInfo(inputValue);
+    updatedConversation.push({ type: "user", message: inputValue });
+  }
+
+  let newConversationStage = conversationStage;
+
+  if (conversationStage === 1) {
+    if (inputBusinessInfo || inputValue !== -1) {
+      const businessInfo = inputBusinessInfo || inputValue;
+      updatedConversation.push(
+        {
+          type: "system",
+          message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻`,
+          expertIndex: selectedExpertIndex,
+        },
+        { type: "analysis", businessInfo }
+      );
+      newConversationStage = 2;
     }
-  }, [selectedAdditionalKeyword]);
-  // useEffect(() => {
-  //   console.log(22222222)
-  //   if (selectedAdditionalKeyword) handleSearch(-1);
-  // }, [
-  //   selectedAdditionalKeyword,
-  // ]);
-
-  useEffect(() => {
+  } else if (conversationStage > 1 && inputValue !== -1) {
     if (
-      conversationId &&
-      conversationId.length >= 2 &&
-      approachPath !== 2 &&
-      !isLoadingPage
+      (updatedConversation.length > 0 &&
+        updatedConversation[updatedConversation.length - 1].type ===
+          "keyword") ||
+      (updatedConversation.length > 0 &&
+        updatedConversation[updatedConversation.length - 1].type ===
+          "report_button")
     ) {
-      handleSearch(-1);
+      updatedConversation.pop();
     }
-  }, [selectedExpertIndex]);
 
-  useEffect(() => {
-    if (
-      conversationId &&
-      conversationId.length >= 2 &&
-      isClickCheckReportRightAway &&
-      !isLoadingPage
-    ) {
-      handleSearch(-1);
-    }
-  }, [isClickCheckReportRightAway]);
-
-  const handleSearch = async (inputValue) => {
-    if (isLoggedIn) {
-      if (!conversationId) {
-        try {
-          return;
-        } catch (error) {
-          console.error("Failed to create conversation on server:", error);
-          return;
-        }
+    updatedConversation.push(
+      {
+        type: "user",
+        message: inputValue,
+      },
+      {
+        type: `customerAddition`,
+        addition_index: customerAdditionalReportCount,
       }
+    );
+  } else if (conversationStage === 2 && titleOfBusinessInfo) {
+    if (
+      (updatedConversation.length > 0 &&
+        updatedConversation[updatedConversation.length - 1].type ===
+          "keyword") ||
+      (updatedConversation.length > 0 &&
+        updatedConversation[updatedConversation.length - 1].type ===
+          "report_button")
+    ) {
+      updatedConversation.pop();
     }
 
-    const updatedConversation = [...conversation];
+    // 전문가 선택영역 표시 관련, 선택된 전문가 인덱스 추가
+    setSelectedExpertList((prevList) => {
+      if (prevList.includes(selectedExpertIndex)) {
+        return prevList;
+      }
+      return [...prevList, selectedExpertIndex];
+    });
 
-    // 사용자가 입력한 경우에만 inputBusinessInfo를 업데이트
-    if (conversationStage === 1 && inputValue !== -1) {
-      setInputBusinessInfo(inputValue);
-      updatedConversation.push({ type: "user", message: inputValue });
-    }
-
-    let newConversationStage = conversationStage;
-
-    if (conversationStage === 1) {
-      if (inputBusinessInfo || inputValue !== -1) {
-        const businessInfo = inputBusinessInfo || inputValue;
+    // 보고서 바로보기 버튼 눌렀을 때
+    if(isClickCheckReportRightAway) {
+      if (selectedExpertIndex === "1") {
         updatedConversation.push(
           {
-            type: "system",
-            message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻`,
-            expertIndex: selectedExpertIndex,
+            type: "user",
+            message:
+              "보고서를 확인하고 싶습니다. 분석 결과를 기반으로 멋진 전략 부탁드립니다. 🙌🏻",
           },
-          { type: "analysis", businessInfo }
+          {
+            type: "system",
+            message: `${titleOfBusinessInfo}를 성장 시킬 맞춤형 전략 보고서를 준비했습니다. 이 전략을 통해 성과를 극대화 할 수 있기를 바랍니다`,
+            expertIndex: selectedExpertIndex,
+          }
         );
-        newConversationStage = 2;
-      }
-    } else if (conversationStage > 1 && inputValue !== -1) {
-      if (
-        (updatedConversation.length > 0 &&
-          updatedConversation[updatedConversation.length - 1].type ===
-            "keyword") ||
-        (updatedConversation.length > 0 &&
-          updatedConversation[updatedConversation.length - 1].type ===
-            "report_button")
-      ) {
-        updatedConversation.pop();
-      }
-
-      updatedConversation.push(
-        {
-          type: "user",
-          message: inputValue,
-        },
-        {
-          type: `customerAddition`,
-          addition_index: customerAdditionalReportCount,
-        }
-      );
-    } else if (conversationStage === 2 && titleOfBusinessInfo) {
-      if (
-        (updatedConversation.length > 0 &&
-          updatedConversation[updatedConversation.length - 1].type ===
-            "keyword") ||
-        (updatedConversation.length > 0 &&
-          updatedConversation[updatedConversation.length - 1].type ===
-            "report_button")
-      ) {
-        updatedConversation.pop();
-      }
-
-      // 전문가 선택영역 표시 관련, 선택된 전문가 인덱스 추가
-      setSelectedExpertList((prevList) => {
-        if (prevList.includes(selectedExpertIndex)) {
-          return prevList;
-        }
-        return [...prevList, selectedExpertIndex];
-      });
-
-      // 보고서 바로보기 버튼 눌렀을 때
-      if(isClickCheckReportRightAway) {
-        if (selectedExpertIndex === "1") {
-          updatedConversation.push(
-            {
-              type: "user",
-              message:
-                "보고서를 확인하고 싶습니다. 분석 결과를 기반으로 멋진 전략 부탁드립니다. 🙌🏻",
-            },
-            {
-              type: "system",
-              message: `${titleOfBusinessInfo}를 성장 시킬 맞춤형 전략 보고서를 준비했습니다. 이 전략을 통해 성과를 극대화 할 수 있기를 바랍니다`,
-              expertIndex: selectedExpertIndex,
-            }
-          );
-        } else if (selectedExpertIndex === "2") {
-          updatedConversation.push(
-            {
-              type: "user",
-              message:
-                "보고서를 확인하고 싶습니다. 어떤 마케팅 방법이 있을지 궁금해요. 🙌🏻",
-            },
-            {
-              type: "system",
-              message: `${titleOfBusinessInfo}의 마케팅 기회를 극대화 할 보고서를 준비했습니다. 이 전략을 통해 고객과의 연결을 강화할 수 있길 바래요`,
-              expertIndex: selectedExpertIndex,
-            }
-          );
-        } else if (selectedExpertIndex === "3") {
-          updatedConversation.push(
-            {
-              type: "user",
-              message:
-                "보고서를 확인하고 싶습니다. 제가 보지 못한 고객 인사이트는 무엇이 있을까요. 🙌🏻",
-            },
-            {
-              type: "system",
-              message: `${titleOfBusinessInfo}의 고객의 요구와 니즈를 반영하여 전략을 제안드립니다. 이 보고서로 고객 이해도를 높여 더 효과적인 전략을 수립해 보세요`,
-              expertIndex: selectedExpertIndex,
-            }
-          );
-        }        
-      }
-      else {
-        if (selectedExpertIndex === "1") {
-          updatedConversation.push(
-            {
-              type: "user",
-              message:
-                "10년차 전략 디렉터와 1:1 커피챗, 지금 바로 시작하겠습니다 🙌🏻",
-            },
-            {
-              type: "system",
-              message: "안녕하세요! 저는 전략 전문가 김도원입니다. 😊 여러분의 아이디어를 구체화하고, 성공적인 전략을 세우는 데 도움을 드리겠습니다.\n아이디어나 비즈니스 아이템을 간단히 작성해 주세요. 분석 후, 여러분의 비즈니스에 맞는 전략 리포트를 제공하겠습니다!",
-              expertIndex: selectedExpertIndex,
-            }
-          );
-        } else if (selectedExpertIndex === "2") {
-          updatedConversation.push(
-            {
-              type: "user",
-              message:
-                "마케팅 전문가님의 맞춤 브랜딩 제안서를 요청드려요. 멋진 마케팅 방법을 기대합니다.💡",
-            },
-            {
-              type: "system",
-              message: "안녕하세요! 마케팅 전문가 이지현입니다. 😄 여러분의 아이디어를 효과적으로 시장에 알릴 수 있는 전략을 함께 고민해 보아요.\n아이디어나 비즈니스 아이템을 여기에 작성해 주세요. 제가 분석하고, 효과적인 마케팅 전략 리포트를 준비해 드리겠습니다!",
-              expertIndex: selectedExpertIndex,
-            }
-          );
-        } else if (selectedExpertIndex === "3") {
-          updatedConversation.push(
-            {
-              type: "user",
-              message:
-                "고객 인사이트를 파악하는 것이 시작이라고 생각합니다.✨ 전문가님의 분석과 제안 내용이 큰 도움이 될 것 같습니다.",
-            },
-            {
-              type: "system",
-              message: "반갑습니다! 저는 고객 인사이트 전문가 박서연입니다. 😊 여러분의 비즈니스가 목표 고객에게 잘 다가갈 수 있도록 돕겠습니다.\n아이디어나 비즈니스 아이템을 작성해 주세요. 분석 후, 타겟 고객을 정의하고 세분화 방법에 대한 리포트를 제공해 드리겠습니다!",
-              expertIndex: selectedExpertIndex,
-            }
-          );
-        }        
-      }
-      updatedConversation.push({ type: `strategy_${selectedExpertIndex}` });
-      newConversationStage = 3;
-    } else if (conversationStage === 3) {
-      if (
-        (updatedConversation.length > 0 &&
-          updatedConversation[updatedConversation.length - 1].type ===
-            "keyword") ||
-        (updatedConversation.length > 0 &&
-          updatedConversation[updatedConversation.length - 1].type ===
-            "report_button")
-      ) {
-        updatedConversation.pop();
-      }
-
-      updatedConversation.push(
-        {
-          type: "user",
-          message: `제 프로젝트와 관련된 "${
-            selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]
-          }"를 요청드려요`,
-        },
-        { type: `addition`, addition_index: additionalReportCount }
-      );
+      } else if (selectedExpertIndex === "2") {
+        updatedConversation.push(
+          {
+            type: "user",
+            message:
+              "보고서를 확인하고 싶습니다. 어떤 마케팅 방법이 있을지 궁금해요. 🙌🏻",
+          },
+          {
+            type: "system",
+            message: `${titleOfBusinessInfo}의 마케팅 기회를 극대화 할 보고서를 준비했습니다. 이 전략을 통해 고객과의 연결을 강화할 수 있길 바래요`,
+            expertIndex: selectedExpertIndex,
+          }
+        );
+      } else if (selectedExpertIndex === "3") {
+        updatedConversation.push(
+          {
+            type: "user",
+            message:
+              "보고서를 확인하고 싶습니다. 제가 보지 못한 고객 인사이트는 무엇이 있을까요. 🙌🏻",
+          },
+          {
+            type: "system",
+            message: `${titleOfBusinessInfo}의 고객의 요구와 니즈를 반영하여 전략을 제안드립니다. 이 보고서로 고객 이해도를 높여 더 효과적인 전략을 수립해 보세요`,
+            expertIndex: selectedExpertIndex,
+          }
+        );
+      }        
     }
-    setConversation(updatedConversation);
-    setConversationStage(newConversationStage);
-    saveConversation(updatedConversation, newConversationStage);
-    setIsLoadingPage(false); // 로딩 완료
-  };
-
-  // 스크롤
-  const [isScrolled, setIsScrolled] = useState(false);
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 160) {
-        setIsScrolled(true); // 스크롤이 내려가면 상태를 true로 변경
-      } else {
-        setIsScrolled(false); // 스크롤이 최상단에 있을 때 상태를 false로 변경
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll); // 메모리 누수 방지
-    };
-  }, []);
-
-  const getInitialSystemMessage = () => {
-    switch (selectedExpertIndex) {
-      case "1":
-        return "안녕하세요! 저는 전략 전문가 김도원입니다. 😊 여러분의 아이디어를 구체화하고, 성공적인 전략을 세우는 데 도움을 드리겠습니다.\n아이디어나 비즈니스 아이템을 간단히 작성해 주세요. 분석 후, 여러분의 비즈니스에 맞는 전략 리포트를 제공하겠습니다!";
-      case "2":
-        return "안녕하세요! 마케팅 전문가 이지현입니다. 😄 여러분의 아이디어를 효과적으로 시장에 알릴 수 있는 전략을 함께 고민해 보아요.\n아이디어나 비즈니스 아이템을 여기에 작성해 주세요. 제가 분석하고, 효과적인 마케팅 전략 리포트를 준비해 드리겠습니다!";
-      case "3":
-        return "반갑습니다! 저는 고객 인사이트 전문가 박서연입니다. 😊 여러분의 비즈니스가 목표 고객에게 잘 다가갈 수 있도록 돕겠습니다.\n아이디어나 비즈니스 아이템을 작성해 주세요. 분석 후, 타겟 고객을 정의하고 세분화 방법에 대한 리포트를 제공해 드리겠습니다!";
-      default:
-        return "비즈니스(아이디어)를 입력해주세요.";
+    else {
+      if (selectedExpertIndex === "1") {
+        updatedConversation.push(
+          {
+            type: "user",
+            message:
+              "10년차 전략 디렉터와 1:1 커피챗, 지금 바로 시작하겠습니다 🙌🏻",
+          },
+          {
+            type: "system",
+            message: "안녕하세요! 저는 전략 전문가 김도원입니다. 😊 여러분의 아이디어를 구체화하고, 성공적인 전략을 세우는 데 도움을 드리겠습니다.\n아이디어나 비즈니스 아이템을 간단히 작성해 주세요. 분석 후, 여러분의 비즈니스에 맞는 전략 리포트를 제공하겠습니다!",
+            expertIndex: selectedExpertIndex,
+          }
+        );
+      } else if (selectedExpertIndex === "2") {
+        updatedConversation.push(
+          {
+            type: "user",
+            message:
+              "마케팅 전문가님의 맞춤 브랜딩 제안서를 요청드려요. 멋진 마케팅 방법을 기대합니다.💡",
+          },
+          {
+            type: "system",
+            message: "안녕하세요! 마케팅 전문가 이지현입니다. 😄 여러분의 아이디어를 효과적으로 시장에 알릴 수 있는 전략을 함께 고민해 보아요.\n아이디어나 비즈니스 아이템을 여기에 작성해 주세요. 제가 분석하고, 효과적인 마케팅 전략 리포트를 준비해 드리겠습니다!",
+            expertIndex: selectedExpertIndex,
+          }
+        );
+      } else if (selectedExpertIndex === "3") {
+        updatedConversation.push(
+          {
+            type: "user",
+            message:
+              "고객 인사이트를 파악하는 것이 시작이라고 생각합니다.✨ 전문가님의 분석과 제안 내용이 큰 도움이 될 것 같습니다.",
+          },
+          {
+            type: "system",
+            message: "반갑습니다! 저는 고객 인사이트 전문가 박서연입니다. 😊 여러분의 비즈니스가 목표 고객에게 잘 다가갈 수 있도록 돕겠습니다.\n아이디어나 비즈니스 아이템을 작성해 주세요. 분석 후, 타겟 고객을 정의하고 세분화 방법에 대한 리포트를 제공해 드리겠습니다!",
+            expertIndex: selectedExpertIndex,
+          }
+        );
+      }        
     }
-  };
+    updatedConversation.push({ type: `strategy_${selectedExpertIndex}` });
+    newConversationStage = 3;
+  } else if (conversationStage === 3) {
+    if (
+      (updatedConversation.length > 0 &&
+        updatedConversation[updatedConversation.length - 1].type ===
+          "keyword") ||
+      (updatedConversation.length > 0 &&
+        updatedConversation[updatedConversation.length - 1].type ===
+          "report_button")
+    ) {
+      updatedConversation.pop();
+    }
 
-  if (isLoadingPage) {
-    return <div>Loading...</div>;
+    updatedConversation.push(
+      {
+        type: "user",
+        message: `제 프로젝트와 관련된 "${
+          selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]
+        }"를 요청드려요`,
+      },
+      { type: `addition`, addition_index: additionalReportCount }
+    );
   }
+  setConversation(updatedConversation);
+  setConversationStage(newConversationStage);
+  saveConversation(updatedConversation, newConversationStage);
+  setIsLoadingPage(false); // 로딩 완료
+};
+
+// 스크롤
+const [isScrolled, setIsScrolled] = useState(false);
+useEffect(() => {
+  const handleScroll = () => {
+    if (window.scrollY > 160) {
+      setIsScrolled(true); // 스크롤이 내려가면 상태를 true로 변경
+    } else {
+      setIsScrolled(false); // 스크롤이 최상단에 있을 때 상태를 false로 변경
+    }
+  };
+  window.addEventListener("scroll", handleScroll);
+  return () => {
+    window.removeEventListener("scroll", handleScroll); // 메모리 누수 방지
+  };
+}, []);
+
+const getInitialSystemMessage = () => {
+  switch (selectedExpertIndex) {
+    case "1":
+      return "안녕하세요! 저는 전략 전문가 김도원입니다. 😊 여러분의 아이디어를 구체화하고, 성공적인 전략을 세우는 데 도움을 드리겠습니다.\n아이디어나 비즈니스 아이템을 간단히 작성해 주세요. 분석 후, 여러분의 비즈니스에 맞는 전략 리포트를 제공하겠습니다!";
+    case "2":
+      return "안녕하세요! 마케팅 전문가 이지현입니다. 😄 여러분의 아이디어를 효과적으로 시장에 알릴 수 있는 전략을 함께 고민해 보아요.\n아이디어나 비즈니스 아이템을 여기에 작성해 주세요. 제가 분석하고, 효과적인 마케팅 전략 리포트를 준비해 드리겠습니다!";
+    case "3":
+      return "반갑습니다! 저는 고객 인사이트 전문가 박서연입니다. 😊 여러분의 비즈니스가 목표 고객에게 잘 다가갈 수 있도록 돕겠습니다.\n아이디어나 비즈니스 아이템을 작성해 주세요. 분석 후, 타겟 고객을 정의하고 세분화 방법에 대한 리포트를 제공해 드리겠습니다!";
+    default:
+      return "비즈니스(아이디어)를 입력해주세요.";
+  }
+};
+
+if (isLoadingPage) {
+  return <div>Loading...</div>;
+}
 
   return (
     <>
@@ -743,17 +598,11 @@ const PageExpertInsight = () => {
               <MoleculeBizName date={savedTimestamp} />
               {conversation?.map((item, index) => {
                 if (item.type === "user") {
-                  return (
-                    <MoleculeUserMessage key={index} message={item.message} />
-                  );
+                  return <MoleculeUserMessage key={index} message={item.message} />;
                 } else if (item.type === "system") {
                   return <MoleculeSystemMessage key={index} item={item} />;
                 } else if (item.type === "analysis") {
-                  return (
-                    <OrganismBizAnalysisSection
-                      conversationId={conversationId}
-                    />
-                  );
+                  return <OrganismBizAnalysisSection conversationId={conversationId} />;
                 } else if (item.type.startsWith("strategy_")) {
                   const expertIndex = item.type.split("_")[1];
                   return (
@@ -764,46 +613,19 @@ const PageExpertInsight = () => {
                     />
                   );
                 } else if (item.type === "addition") {
-                  // console.log("🚀 ~ {conversation?.map ~ item:", item, index);
-                  // const expertIndex = item.type.split("_")[1];
                   const currentAdditionalReportCount = additionalReportCount++;
-                  // console.log(
-                  //   "🚀 ~ currentAdditionalReportCount:",
-                  //   currentAdditionalReportCount
-                  // );
-
                   return (
                     <OrganismAdditionalReport
                       additionalReportCount={currentAdditionalReportCount}
-                      // key={`addition_${expertIndex}_${index}`}
                       conversationId={conversationId}
-                      // expertIndex={expertIndex}
-                      // keyword={
-                      //   selectedAdditionalKeyword[
-                      //   selectedAdditionalKeyword.length - 1
-                      //   ]
-                      // }
                     />
                   );
                 } else if (item.type === "customerAddition") {
-                  // console.log("🚀 ~ {conversation?.map ~ item:", item, index);
-                  // const expertIndex = item.type.split("_")[1];
-                  const currentCustomerAdditionalReportCount =
-                    customerAdditionalReportCount++;
-
+                  const currentCustomerAdditionalReportCount = customerAdditionalReportCount++;
                   return (
                     <OrganismCustomerAdditionalReport
-                      customerAdditionalReportCount={
-                        currentCustomerAdditionalReportCount
-                      }
-                      // key={`addition_${expertIndex}_${index}`}
+                      customerAdditionalReportCount={currentCustomerAdditionalReportCount}
                       conversationId={conversationId}
-                      // expertIndex={expertIndex}
-                      // keyword={
-                      //   selectedAdditionalKeyword[
-                      //   selectedAdditionalKeyword.length - 1
-                      //   ]
-                      // }
                     />
                   );
                 } else if (item.type === "keyword") {
@@ -817,17 +639,14 @@ const PageExpertInsight = () => {
               {/* 검색해서 시작 */}
               {(approachPath === -1 || approachPath === 3) && 
                 titleOfBusinessInfo &&
-                // !isLoading &&
                 <OrganismBizExpertSelect />
               }
 
               {/* 전문가 선택하고 시작 */}
               {approachPath === 1 &&
-                (Object.keys(expert1ReportData).length !== 0 ||
-                  Object.keys(expert2ReportData).length !== 0 ||
-                  Object.keys(expert3ReportData).length !== 0) &&
-                  // !isLoading &&
-                    <OrganismBizExpertSelect />
+                Object.keys(strategyReportData).length !== 0 && // 수정된 부분
+                !isLoading &&
+                  <OrganismBizExpertSelect />
               }
 
               {/* 히스토리로 진입 시 */}

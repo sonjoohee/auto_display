@@ -3,9 +3,7 @@ import styled, { keyframes } from "styled-components";
 import { useAtom } from "jotai";
 import {
   SELECTED_EXPERT_INDEX,
-  EXPERT1_REPORT_DATA,
-  EXPERT2_REPORT_DATA,
-  EXPERT3_REPORT_DATA,
+  STRATEGY_REPORT_DATA, // Updated import
   SELECTED_TAB_COPY_1,
   SELECTED_TAB_COPY_2,
   SELECTED_TAB_COPY_3,
@@ -43,13 +41,11 @@ import {
 } from "../../../AtomStates";
 
 const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
-  // console.log("🚀 ~ OrganismStrategyReportSection ~ expertIndex:", expertIndex);
-  const [inputBusinessInfo, setInputBusinessInfo] =
-    useAtom(INPUT_BUSINESS_INFO);
+  const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [approachPath] = useAtom(APPROACH_PATH);
   const [conversation, setConversation] = useAtom(CONVERSATION);
-  const [selectedTabCopy1, setSelectedTabCopy1] = useAtom(SELECTED_TAB_COPY_1); // 복사 기능을 위한 Atom
+  const [selectedTabCopy1, setSelectedTabCopy1] = useAtom(SELECTED_TAB_COPY_1);
   const [selectedTabCopy2, setSelectedTabCopy2] = useAtom(SELECTED_TAB_COPY_2);
   const [selectedTabCopy3, setSelectedTabCopy3] = useAtom(SELECTED_TAB_COPY_3);
   const [selectedTab, setSelectedTab] = useState(0); // 선택된 보고서 탭 상태관리
@@ -78,12 +74,8 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [buttonState, setButtonState] = useAtom(EXPERT_BUTTON_STATE); // BUTTON_STATE 사용
 
-  const [expert1ReportData, setExpert1ReportData] =
-    useAtom(EXPERT1_REPORT_DATA);
-  const [expert2ReportData, setExpert2ReportData] =
-    useAtom(EXPERT2_REPORT_DATA);
-  const [expert3ReportData, setExpert3ReportData] =
-    useAtom(EXPERT3_REPORT_DATA);
+  // Use the single strategyReportData atom
+  const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA);
 
   const analysisReportData = {
     title: titleOfBusinessInfo,
@@ -115,28 +107,12 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
       let finalResponse;
 
       try {
-        // 기존 데이터를 조회하는 로직을 buttonState와 상관없이 실행
-        // const existingConversation = await getConversationByIdFromIndexedDB(
-        //   conversationId,
-        //   isLoggedIn
-        // );
-        let currentReportKey = `strategyReportData_EX${selectedExpertIndex}`;
-        // 기존 데이터가 있는 경우
-        if (expertIndex === "1" && Object.keys(expert1ReportData).length > 0) {
-          setTabs(expert1ReportData.tabs);
-          setSections(expert1ReportData.tabs[selectedTab].sections);
-        } else if (
-          expertIndex === "2" &&
-          Object.keys(expert2ReportData).length > 0
-        ) {
-          setTabs(expert2ReportData.tabs);
-          setSections(expert2ReportData.tabs[selectedTab].sections);
-        } else if (
-          expertIndex === "3" &&
-          Object.keys(expert3ReportData).length > 0
-        ) {
-          setTabs(expert3ReportData.tabs);
-          setSections(expert3ReportData.tabs[selectedTab].sections);
+        const currentExpertData = strategyReportData[expertIndex];
+
+        // Existing data handling
+        if (currentExpertData && Object.keys(currentExpertData).length > 0) {
+          setTabs(currentExpertData.tabs);
+          setSections(currentExpertData.tabs[selectedTab].sections);
         }
         // buttonState === 1일 때만 API 호출
         else if (buttonState === 1) {
@@ -234,36 +210,19 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
 
           const strategyData = finalResponse;
 
-          if (expertIndex === "1") setExpert1ReportData(strategyData);
-          else if (expertIndex === "2") setExpert2ReportData(strategyData);
-          else if (expertIndex === "3") setExpert3ReportData(strategyData);
-
+          // Update the strategyReportData atom
+          setStrategyReportData((prevData) => ({
+            ...prevData,
+            [expertIndex]: strategyData,
+          }));
+          // 바로 저장할 데이터
+          const updatedStrategyReportData = {
+            ...strategyReportData,
+            [expertIndex]: strategyData, // 새로운 데이터를 추가한 객체를 바로 생성
+          };
           setTabs(strategyData.tabs);
           setSections(strategyData.tabs[selectedTab].sections);
-          // await saveConversationToIndexedDB(
-          //   {
-          //     // ...existingConversation,
 
-          //     id: conversationId,
-          //     inputBusinessInfo: inputBusinessInfo,
-          //     analysisReportData: analysisReportData,
-          //     selectedAdditionalKeywords: selectedAdditionalKeyword,
-          //     selectedCustomerAdditionalKeyword:
-          //       selectedCustomerAdditionalKeyword,
-          //     additionalReportData: additionalReportData,
-          //     customerAdditionalReportData: customerAdditionalReportData,
-          //     conversation: conversation,
-          //     conversationStage: 3,
-          //     strategyReportData_EX1: expert1ReportData,
-          //     strategyReportData_EX2: expert2ReportData,
-          //     strategyReportData_EX3: expert3ReportData,
-          //     [currentReportKey]: strategyData,
-          //     timestamp: Date.now(),
-          //     expert_index: selectedExpertIndex,
-          //   },
-          //   isLoggedIn,
-          //   conversationId
-          // );
           setIsLoadingExpert(false);
           setIsLoading(false);
 
@@ -286,10 +245,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               analysisReportData: analysisReportData,
               selectedAdditionalKeywords: selectedKeywords,
               conversationStage: 3,
-              strategyReportData_EX1: expert1ReportData,
-              strategyReportData_EX2: expert2ReportData,
-              strategyReportData_EX3: expert3ReportData,
-              [currentReportKey]: strategyData,
+              strategyReportData: updatedStrategyReportData, // Save the entire strategyReportData
               conversation: updatedConversation,
               selectedAdditionalKeywords: selectedAdditionalKeyword,
               selectedCustomerAdditionalKeyword:
@@ -346,7 +302,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             <TabHeader>
               {tabs &&
                 tabs.length > 0 &&
-                tabs?.map((tab, index) => (
+                tabs.map((tab, index) => (
                   <TabButton
                     key={index}
                     active={selectedTab === index}
@@ -357,7 +313,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
                   </TabButton>
                 ))}
             </TabHeader>
-
+  
             {sections?.map((section, index) => (
               <Section
                 key={index}
@@ -371,21 +327,13 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             ))}
           </>
         )}
-
+  
         {!isLoadingExpert && (
           <MoleculeReportController
             reportIndex={1}
             strategyReportID={expertIndex}
             conversationId={conversationId}
-            sampleData={
-              expertIndex === "1"
-                ? expert1ReportData
-                : expertIndex === "2"
-                ? expert2ReportData
-                : expertIndex === "3"
-                ? expert3ReportData
-                : null
-            }
+            sampleData={strategyReportData[expertIndex]}
           />
         )}
       </AnalysisSection>

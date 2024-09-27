@@ -304,7 +304,6 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
           }
 
           setConversation(updatedConversation2);
-          console.log("비즈니스 리포트-채팅저장2")
           // **API 데이터가 있을 경우에만 저장**
           await saveConversationToIndexedDB(
             {
