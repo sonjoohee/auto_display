@@ -17,9 +17,6 @@ import {
   SELECTED_ADDITIONAL_KEYWORD,
   ADDITIONAL_REPORT_DATA, // Import the new list-based atom
   CONVERSATION_STAGE,
-  ADDITIONAL_QUESTION_1,
-  ADDITIONAL_QUESTION_2,
-  ADDITIONAL_QUESTION_3,
   iS_CLICK_CHECK_REPORT_RIGHTAWAY,
   CONVERSATION,
   BUTTON_STATE,
@@ -96,10 +93,6 @@ const PageExpertInsight = () => {
   const [additionalReportData, setAdditionalReportData] = useAtom(ADDITIONAL_REPORT_DATA); // Use the new list-based atom
 
   const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA); // 변경된 부분
-
-  const [addtionalQuestion1, setAddtionalQuestion1] = useAtom(ADDITIONAL_QUESTION_1);
-  const [addtionalQuestion2, setAddtionalQuestion2] = useAtom(ADDITIONAL_QUESTION_2);
-  const [addtionalQuestion3, setAddtionalQuestion3] = useAtom(ADDITIONAL_QUESTION_3);
 
   const [inputAdditionalQuestion, setInputAdditionalQuestion] = useState("");
   const [isClickCheckReportRightAway, setIsClickCheckReportRightAway] = useAtom(iS_CLICK_CHECK_REPORT_RIGHTAWAY);

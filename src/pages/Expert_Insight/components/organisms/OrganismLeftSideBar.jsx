@@ -24,9 +24,6 @@ import {
   STRATEGY_REPORT_DATA,
   ADDITIONAL_REPORT_DATA, // Import the new list-based atom
   CONVERSATION_STAGE,
-  ADDITIONAL_QUESTION_1,
-  ADDITIONAL_QUESTION_2,
-  ADDITIONAL_QUESTION_3,
   iS_CLICK_CHECK_REPORT_RIGHTAWAY,
   CONVERSATION,
   CONVERSATION_ID,
@@ -124,17 +121,6 @@ const OrganismLeftSideBar = () => {
   ); // Use the new list-based atom
 
   const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA);
-
-
-  const [addtionalQuestion1, setAddtionalQuestion1] = useAtom(
-    ADDITIONAL_QUESTION_1
-  );
-  const [addtionalQuestion2, setAddtionalQuestion2] = useAtom(
-    ADDITIONAL_QUESTION_2
-  );
-  const [addtionalQuestion3, setAddtionalQuestion3] = useAtom(
-    ADDITIONAL_QUESTION_3
-  );
 
   const [
     selectedCustomerAdditionalKeyword,
@@ -754,9 +740,6 @@ useEffect(() => {
     setCustomerAdditionalReportData([]);
     setSelectedCustomerAdditionalKeyword([]);
     setStrategyReportData({});
-    setAddtionalQuestion1("");
-    setAddtionalQuestion2("");
-    setAddtionalQuestion3("");
     setInputAdditionalQuestion("");
     setIsClickCheckReportRightAway(false);
     setConversationId(null);
