@@ -133,5 +133,50 @@
         }
       ]
     }
+  },
+  {
+    "id": "4",
+    "name": "4번 전문가 이름",
+    "title": "제품 전략가",
+    "description": "네이버 제품 전략 총괄 디렉터",
+    "career": [
+      "삼성전자 갤럭시 시리즈 기획",
+      "카카오 신규 서비스 개발 총괄",
+      "네이버 제품 전략 총괄",
+      "MIT슬론 경영대학원 MBA",
+      "서울대학교 경영학과 졸업"
+    ],
+    "expertise": {
+      "title": "전문분석 분야",
+      "fields": [
+        {
+          "images": "/images/icon/ProfessionalValue.svg",
+          "category": "핵심 가치 제안 분석",
+          "details": [
+            "문제 해결과 니즈 파악",
+            "핵심 이점 식별",
+            "독특한 가치 제안 도출"
+          ]
+        },
+        {
+          "images": "/images/icon/ProfessionalRoadmap.svg",
+          "category": "제품 개발 로드맵 구상",
+          "details": [
+            "최소 기능 제품 정의",
+            "장기적 제품 비전 검토",
+            "기술적 확장성 계획"
+          ]
+        },
+        {
+          "images": "/images/icon/ProfessionalPositioning.svg",
+          "category": "제품 포지셔닝 전략",
+          "details": [
+            "시장 내 제품/서비스 포지셔닝",
+            "차별화 요소(USP) 식별",
+            "브랜드와 제품 일관성 검토"
+          ]
+        }
+      ]
+    }
   }
 ]

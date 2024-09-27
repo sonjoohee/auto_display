@@ -204,18 +204,3 @@ export const createChatOnServer = async () => {
     throw error;
   }
 };
-
-// chat_data: {
-//   id: "",
-//   conversation: [],
-//   conversationStage: 1,
-//   expertIndex: 0,
-//   analysisReportData: {},
-//   inputBusinessInfo: "",
-//   strategyReportData_EX1: {},
-//   strategyReportData_EX2: {},
-//   strategyReportData_EX3: {},
-//   additionalReportData: [],
-//   selectedAdditionalKeywords: [],
-//   timestamp: new Date().toISOString(),
-// },
