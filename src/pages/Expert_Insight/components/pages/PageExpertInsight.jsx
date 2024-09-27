@@ -45,6 +45,7 @@ import OrganismLeftSideBar from "../organisms/OrganismLeftSideBar";
 import OrganismRightSideBar from "../organisms/OrganismRightSideBar";
 import OrganismBizAnalysisSection from "../organisms/OrganismBizAnalysisSection";
 import OrganismStrategyReportSection from "../organisms/OrganismStrategyReportSection";
+import OrganismPocReportSection from "../organisms/OrganismPocReportSection";
 import OrganismSearchBottomBar from "../organisms/OrganismSearchBottomBar";
 import MoleculeBizName from "../molecules/MoleculeBizName";
 import MoleculeSystemMessage from "../molecules/MoleculeSystemMessage";
@@ -419,7 +420,7 @@ const handleSearch = async (inputValue) => {
         addition_index: customerAdditionalReportCount,
       }
     );
-  } else if (conversationStage === 2 && titleOfBusinessInfo) {
+  }else if (conversationStage === 2 && titleOfBusinessInfo) {
     if (
       (updatedConversation.length > 0 &&
         updatedConversation[updatedConversation.length - 1].type ===
@@ -440,7 +441,7 @@ const handleSearch = async (inputValue) => {
     });
 
     // 보고서 바로보기 버튼 눌렀을 때
-    if(isClickCheckReportRightAway) {
+    if (isClickCheckReportRightAway) {
       if (selectedExpertIndex === "1") {
         updatedConversation.push(
           {
@@ -480,9 +481,21 @@ const handleSearch = async (inputValue) => {
             expertIndex: selectedExpertIndex,
           }
         );
-      }        
-    }
-    else {
+      } else if (selectedExpertIndex === "4") {
+        updatedConversation.push(
+          {
+            type: "user",
+            message:
+              "보고서를 확인하고 싶습니다. 새로운 PoC 아이디어가 필요합니다. 🙌🏻",
+          },
+          {
+            type: "system",
+            message: `${titleOfBusinessInfo}를 위한 PoC 보고서를 준비했습니다. 이 보고서를 통해 새로운 아이디어를 발견할 수 있기를 바랍니다`,
+            expertIndex: selectedExpertIndex,
+          }
+        );
+      }
+    } else {
       if (selectedExpertIndex === "1") {
         updatedConversation.push(
           {
@@ -492,7 +505,8 @@ const handleSearch = async (inputValue) => {
           },
           {
             type: "system",
-            message: "안녕하세요! 저는 전략 전문가 김도원입니다. 😊 여러분의 아이디어를 구체화하고, 성공적인 전략을 세우는 데 도움을 드리겠습니다.\n아이디어나 비즈니스 아이템을 간단히 작성해 주세요. 분석 후, 여러분의 비즈니스에 맞는 전략 리포트를 제공하겠습니다!",
+            message:
+              "안녕하세요! 저는 전략 전문가 김도원입니다. 😊 여러분의 아이디어를 구체화하고, 성공적인 전략을 세우는 데 도움을 드리겠습니다.\n아이디어나 비즈니스 아이템을 간단히 작성해 주세요. 분석 후, 여러분의 비즈니스에 맞는 전략 리포트를 제공하겠습니다!",
             expertIndex: selectedExpertIndex,
           }
         );
@@ -505,7 +519,8 @@ const handleSearch = async (inputValue) => {
           },
           {
             type: "system",
-            message: "안녕하세요! 마케팅 전문가 이지현입니다. 😄 여러분의 아이디어를 효과적으로 시장에 알릴 수 있는 전략을 함께 고민해 보아요.\n아이디어나 비즈니스 아이템을 여기에 작성해 주세요. 제가 분석하고, 효과적인 마케팅 전략 리포트를 준비해 드리겠습니다!",
+            message:
+              "안녕하세요! 마케팅 전문가 이지현입니다. 😄 여러분의 아이디어를 효과적으로 시장에 알릴 수 있는 전략을 함께 고민해 보아요.\n아이디어나 비즈니스 아이템을 여기에 작성해 주세요. 제가 분석하고, 효과적인 마케팅 전략 리포트를 준비해 드리겠습니다!",
             expertIndex: selectedExpertIndex,
           }
         );
@@ -518,15 +533,38 @@ const handleSearch = async (inputValue) => {
           },
           {
             type: "system",
-            message: "반갑습니다! 저는 고객 인사이트 전문가 박서연입니다. 😊 여러분의 비즈니스가 목표 고객에게 잘 다가갈 수 있도록 돕겠습니다.\n아이디어나 비즈니스 아이템을 작성해 주세요. 분석 후, 타겟 고객을 정의하고 세분화 방법에 대한 리포트를 제공해 드리겠습니다!",
+            message:
+              "반갑습니다! 저는 고객 인사이트 전문가 박서연입니다. 😊 여러분의 비즈니스가 목표 고객에게 잘 다가갈 수 있도록 돕겠습니다.\n아이디어나 비즈니스 아이템을 작성해 주세요. 분석 후, 타겟 고객을 정의하고 세분화 방법에 대한 리포트를 제공해 드리겠습니다!",
             expertIndex: selectedExpertIndex,
           }
         );
-      }        
+      } else if (selectedExpertIndex === "4") {
+        updatedConversation.push(
+          {
+            type: "user",
+            message:
+              "새로운 PoC 전문가와의 상담을 시작하겠습니다. 새로운 아이디어를 기대합니다.✨",
+          },
+          {
+            type: "system",
+            message:
+              "안녕하세요! PoC 전문가 이민재입니다. 😊 여러분의 아이디어를 현실화하는 데 도움을 드리겠습니다.\n아이디어나 비즈니스 아이템을 작성해 주세요. 분석 후, 효과적인 PoC 전략 리포트를 제공해 드리겠습니다!",
+            expertIndex: selectedExpertIndex,
+          }
+        );
+      }
     }
-    updatedConversation.push({ type: `strategy_${selectedExpertIndex}` });
+
+    // selectedExpertIndex에 따라 적절한 타입을 업데이트
+    if (selectedExpertIndex === "4") {
+      updatedConversation.push({ type: `poc_${selectedExpertIndex}` });
+    } else {
+      updatedConversation.push({ type: `strategy_${selectedExpertIndex}` });
+    }
+
     newConversationStage = 3;
-  } else if (conversationStage === 3) {
+  }
+ else if (conversationStage === 3) {
     if (
       (updatedConversation.length > 0 &&
         updatedConversation[updatedConversation.length - 1].type ===
@@ -608,6 +646,15 @@ if (isLoadingPage) {
                   return (
                     <OrganismStrategyReportSection
                       key={`strategy_${expertIndex}_${index}`}
+                      conversationId={conversationId}
+                      expertIndex={expertIndex}
+                    />
+                  );
+                } else if (item.type.startsWith("poc_")) {
+                  const expertIndex = item.type.split("_")[1];
+                  return (
+                    <OrganismPocReportSection
+                      key={`poc_${expertIndex}_${index}`}
                       conversationId={conversationId}
                       expertIndex={expertIndex}
                     />
