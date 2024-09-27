@@ -1,9 +1,9 @@
 // MoleculePanelItem.jsx
 import React, { useEffect, useState } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
-import MoleculePanelItemDetail from './MoleculePanelItemDetail';
+import MoleculePanelItemDetail from '../../../AI_Panel/components/molecules/MoleculePanelItemDetail'; // Adjusted import path
 import { useAtom } from 'jotai';
 import {
   SELECTED_PANELS,
@@ -26,7 +26,7 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
     setMaxUtilizationTime(0);
   },[])
 
-  // 행동타입 검색을 했을 때 최대 시간량 데이터를 찾는 로직
+  // Logic to find the maximum utilization time
   useEffect(() => {
     if (target_1) {
       const maxTime = Math.max(value_1, value_2, value_3, value_4, value_5);
@@ -46,15 +46,15 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
       }
       setMaxBehabioralType(timeCode[maxType]);
     }
-  }, [target_1, value_1, value_2, value_3, value_4, value_5, setMaxUtilizationTime, setMaxBehabioralType]);
-  
+  }, [target_1, value_1, value_2, value_3, value_4, value_5]);
+
   const handlePanelClick = (e) => {
     if (e.target.tagName === 'BUTTON') {
       return;
     }
     const newSelected = !isSelected;
     setSelected(newSelected);
-    // onSelect(newSelected, id); 전문가 4번 테스트를 위한 임시 주석처리임
+    // onSelect(newSelected, id); // Uncomment if needed
   };
 
   const handleDetailsClick = (e) => {
@@ -66,10 +66,10 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
     e.stopPropagation();
     const newSelected = !isSelected;
     setSelected(newSelected);
-    // onSelect(newSelected, id); 전문가 4번 테스트를 위한 임시 주석처리임
+    // onSelect(newSelected, id); // Uncomment if needed
   };
 
-  // 선택상태 초기화
+  // Initialize selection state
   useEffect(() => {
     setSelected(selectedPanels.has(id)); 
   }, [selectedPanels, id]);
@@ -78,24 +78,21 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
     setDetailsVisible(false);
   };
 
-  // 패널 이미지 선택
+  // Panel image selection logic
   let imgTarget = "";
   let imgAge = age >= 70 ? 60 : Math.floor(parseInt(age) / 10) * 10;
   if(imgAge === 10) imgAge = 20;
-  const imgGender = gender == "M" ? "m" : "w";
+  const imgGender = gender === "M" ? "m" : "w";
   imgTarget = imgAge + "s_" + imgGender + "_" + imgSrc + ".jpg";
 
   return (
     <>
       <PanelItem className={isSelected ? 'selected' : ''} onClick={handlePanelClick}>
-
         <Image src={`../../../../images/panel/${imgGender}/${imgTarget}`} alt=""/>
-        
         <span className="panelChk">패널체크</span>
         <Overlay className="overlay">
           <InfoButton onClick={handleDetailsClick}><img src={images.IconView} alt="" />패널정보 상세보기</InfoButton>
           <InfoButton onClick={handleSelectButtonClick}>
-            {/* {isSelected ? '✅ 패널 선택됨' : '패널 선택하기'} */}
             {isSelected ? (
               <>
                 <img src={images.IconClose} alt="" />
@@ -111,18 +108,18 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
         </Overlay>
         <PanelDetails>
           <p>{gender === "M" ? "남성" : "여성"}({age}세) | {job}</p>
-          
           {maxBehabioralType && maxUtilizationTime<60 && <><strong>{maxBehabioralType}에 {maxUtilizationTime}분이상 활용하고 있어요</strong><br/><br/></>}
           {maxBehabioralType && maxUtilizationTime%60===0 && <><strong>{maxBehabioralType}에 {maxUtilizationTime/60}시간이상 활용하고 있어요</strong><br/><br/></>}
           {maxBehabioralType && maxUtilizationTime>=60 && maxUtilizationTime%60!==0 && <><strong>{maxBehabioralType}에 {Math.floor(maxUtilizationTime/60)}시간 {maxUtilizationTime%60}분이상 활용하고 있어요</strong><br/><br/></>}
           {!maxBehabioralType && <strong>{comment}</strong>}
           <span>
-            {tags.split(',').filter(tags => tags.trim() !== '')?.map((tags, index) => (
-              <div key={index}>#{tags.trim()}</div>
+            {tags.split(',').filter(tag => tag.trim() !== '')?.map((tag, index) => (
+              <div key={index}>#{tag.trim()}</div>
             ))}
           </span>
         </PanelDetails>
       </PanelItem>
+
       {isDetailsVisible && (
         <MoleculePanelItemDetail
           gender={gender}
@@ -138,10 +135,58 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
           toggleSelection={handleSelectButtonClick}
         />
       )}
+      {isSelected && (
+        <ButtonWrap>
+          <button>
+            제가 원하는 타겟 유저는 {gender === "M" ? "남성" : "여성"} {age}세 {job}입니다
+            타겟 유저 선택 완료
+          </button>
+        </ButtonWrap>
+      )}
     </>
   );
 };
 
+
+
+// ... other styled components ...
+
+export default MoleculePanelItem;
+const ButtonWrap = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+  padding-bottom: 15px;
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: "Pretendard", "Poppins";
+    font-size: 0.875rem;
+    color: ${palette.darkGray};
+    border: 0;
+    background: none;
+    margin-right: 10px;
+  }
+
+  > button {
+    padding: 8px 16px;
+    border-radius: 40px;
+    border: 1px solid ${palette.lineGray};
+  }
+
+  button.other {
+    color: ${palette.lightGray};
+    font-size: 0.75rem;
+    border: none;
+    gap: 4px;
+
+    img {
+      height: 19px;
+    }
+  }
+`;
 const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -284,4 +329,3 @@ const PanelDetails = styled.div`
   }
 `;
 
-export default MoleculePanelItem;

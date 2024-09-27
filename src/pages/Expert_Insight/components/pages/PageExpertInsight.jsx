@@ -55,6 +55,8 @@ import MoleculeAdditionalKeyword from "../molecules/MoleculeAdditionalKeyword";
 import OrganismAdditionalReport from "../organisms/OrganismAdditionalReport";
 import MoleculeCheckReportRightAway from "../molecules/MoleculeCheckReportRightAway";
 import OrganismCustomerAdditionalReport from "../organisms/OrganismCustomerAdditionalReport";
+import MoleculePersonaSelect from "../molecules/MoleculePersonaSelect";
+
 
 const PageExpertInsight = () => {
   const [isLoadingPage, setIsLoadingPage] = useState(true); // 로딩 상태 추가
@@ -641,6 +643,10 @@ if (isLoadingPage) {
                   return <MoleculeSystemMessage key={index} item={item} />;
                 } else if (item.type === "analysis") {
                   return <OrganismBizAnalysisSection conversationId={conversationId} />;
+                } else if (item.type === "pocOption") {
+                  // return <OrganismBizAnalysisSection conversationId={conversationId} />;
+                } else if (item.type === "pocPersona") {
+                  return <MoleculePersonaSelect conversationId={conversationId}/>;
                 } else if (item.type.startsWith("strategy_")) {
                   const expertIndex = item.type.split("_")[1];
                   return (
@@ -653,11 +659,14 @@ if (isLoadingPage) {
                 } else if (item.type.startsWith("poc_")) {
                   const expertIndex = item.type.split("_")[1];
                   return (
-                    <OrganismPocReportSection
-                      key={`poc_${expertIndex}_${index}`}
-                      conversationId={conversationId}
-                      expertIndex={expertIndex}
-                    />
+                    <>
+                      <OrganismPocReportSection
+                        key={`poc_${expertIndex}_${index}`}
+                        conversationId={conversationId}
+                        expertIndex={expertIndex}
+                      />
+                      <MoleculePersonaSelect conversationId={conversationId}/>
+                    </>
                   );
                 } else if (item.type === "addition") {
                   const currentAdditionalReportCount = additionalReportCount++;
