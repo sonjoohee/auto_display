@@ -105,7 +105,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   useEffect(() => {
     const loadData = async () => {
       let finalResponse;
-
+        
       try {
         const currentExpertData = strategyReportData[expertIndex];
 

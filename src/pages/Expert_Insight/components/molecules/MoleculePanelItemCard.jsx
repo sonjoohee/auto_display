@@ -1,18 +1,60 @@
 // MoleculePanelItem.jsx
 import React, { useEffect, useState } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
-import MoleculePanelItemDetail from './MoleculePanelItemDetail';
+import MoleculePanelItemDetail from '../../../AI_Panel/components/molecules/MoleculePanelItemDetail'; // Adjusted import path
 import { useAtom } from 'jotai';
 import {
+  CONVERSATION,
+  SELECTED_EXPERT_INDEX,
+  INPUT_BUSINESS_INFO,
+  TITLE_OF_BUSINESS_INFORMATION,
+  MAIN_FEATURES_OF_BUSINESS_INFORMATION,
+  MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
+  BUSINESS_INFORMATION_TARGET_CUSTOMER,
+  ANALYSIS_REPORT_DATA,
+  STRATEGY_REPORT_DATA,
+  CONVERSATION_STAGE,
+  SELECTED_ADDITIONAL_KEYWORD,
+  SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
+  ADDITIONAL_REPORT_DATA,
+  CUSTOMER_ADDITIONAL_REPORT_DATA,
+  isLoggedInAtom,
+  APPROACH_PATH,
   SELECTED_PANELS,
+  iS_CLICK_CHECK_POC_RIGHTAWAY,
+  EXPERT_BUTTON_STATE,
 } from "../../../AtomStates";
+import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
 import timeCode from '../../assets/time-code.json';
 
-const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, comment, tags, onSelect, lifeStyle, consumption, productGroup, 
-  target_1, target_2, target_3, target_4, target_5, value_1, value_2, value_3, value_4, value_5,}) => {
-  
+const MoleculePanelItem = ({
+  id,
+  imgSrc,
+  gender,
+  age,
+  job,
+  address,
+  subAddress,
+  comment,
+  tags,
+  onSelect,
+  lifeStyle,
+  consumption,
+  productGroup,
+  target_1,
+  target_2,
+  target_3,
+  target_4,
+  target_5,
+  value_1,
+  value_2,
+  value_3,
+  value_4,
+  value_5,
+  conversationId, // Added conversationId as a prop
+}) => {
   const [selectedPanels, setSelectedPanels] = useAtom(SELECTED_PANELS);
 
   const [maxBehabioralType, setMaxBehabioralType] = useState("");
@@ -20,13 +62,39 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
 
   const [isSelected, setSelected] = useState(false);
   const [isDetailsVisible, setDetailsVisible] = useState(false);
-  
+
+  // Import necessary atoms
+  const [conversation, setConversation] = useAtom(CONVERSATION);
+  const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
+  const [inputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
+  const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
+  const [mainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
+  const [mainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
+  const [businessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
+  const [strategyReportData] = useAtom(STRATEGY_REPORT_DATA);
+  const [conversationStage] = useAtom(CONVERSATION_STAGE);
+  const [selectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
+  const [selectedCustomerAdditionalKeyword] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
+  const [additionalReportData] = useAtom(ADDITIONAL_REPORT_DATA);
+  const [customerAdditionalReportData] = useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
+  const [isLoggedIn] = useAtom(isLoggedInAtom);
+  const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
+  const [isClickCheckPocRightAway, setIsClickCheckPocRightAway] = useAtom(iS_CLICK_CHECK_POC_RIGHTAWAY);
+  const [buttonState, setButtonState] = useAtom(EXPERT_BUTTON_STATE); // BUTTON_STATE 사용
+
+  const analysisReportData = {
+    title: titleOfBusinessInfo,
+    mainFeatures: mainFeaturesOfBusinessInformation,
+    mainCharacter: mainCharacteristicOfBusinessInformation,
+    mainCustomer: businessInformationTargetCustomer,
+  };
+
   useEffect(() => {
     setMaxBehabioralType("");
     setMaxUtilizationTime(0);
-  },[])
+  }, []);
 
-  // 행동타입 검색을 했을 때 최대 시간량 데이터를 찾는 로직
+  // Logic to find the maximum utilization time
   useEffect(() => {
     if (target_1) {
       const maxTime = Math.max(value_1, value_2, value_3, value_4, value_5);
@@ -46,15 +114,15 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
       }
       setMaxBehabioralType(timeCode[maxType]);
     }
-  }, [target_1, value_1, value_2, value_3, value_4, value_5, setMaxUtilizationTime, setMaxBehabioralType]);
-  
+  }, [target_1, value_1, value_2, value_3, value_4, value_5]);
+
   const handlePanelClick = (e) => {
     if (e.target.tagName === 'BUTTON') {
       return;
     }
     const newSelected = !isSelected;
     setSelected(newSelected);
-    onSelect(newSelected, id); 
+    // onSelect(newSelected, id); // Uncomment if needed
   };
 
   const handleDetailsClick = (e) => {
@@ -66,10 +134,10 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
     e.stopPropagation();
     const newSelected = !isSelected;
     setSelected(newSelected);
-    onSelect(newSelected, id); 
+    // onSelect(newSelected, id); // Uncomment if needed
   };
 
-  // 선택상태 초기화
+  // Initialize selection state
   useEffect(() => {
     setSelected(selectedPanels.has(id)); 
   }, [selectedPanels, id]);
@@ -78,24 +146,61 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
     setDetailsVisible(false);
   };
 
-  // 패널 이미지 선택
+  // Panel image selection logic
   let imgTarget = "";
   let imgAge = age >= 70 ? 60 : Math.floor(parseInt(age) / 10) * 10;
   if(imgAge === 10) imgAge = 20;
-  const imgGender = gender == "M" ? "m" : "w";
+  const imgGender = gender === "M" ? "m" : "w";
   imgTarget = imgAge + "s_" + imgGender + "_" + imgSrc + ".jpg";
+
+  // Handle button click to update conversation
+  const handleButtonClick = async () => {
+    // Update the conversation
+    const updatedConversation = [...conversation];
+    updatedConversation.push(
+      {
+        type: "system",
+        message: "선택한 타겟 유저를 바탕으로 PoC 보고서를 작성하겠습니다.",
+        expertIndex: selectedExpertIndex,
+      },
+      {
+        type: `poc_${selectedExpertIndex}`,
+      }
+    );
+    setConversation(updatedConversation);
+
+    setApproachPath(3);
+    setIsClickCheckPocRightAway(true);
+
+    await saveConversationToIndexedDB(
+      {
+        id: conversationId,
+        inputBusinessInfo: inputBusinessInfo,
+        analysisReportData: analysisReportData,
+        strategyReportData: strategyReportData,
+        conversation: updatedConversation,
+        conversationStage: conversationStage,
+        selectedAdditionalKeywords: selectedAdditionalKeyword,
+        selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
+        additionalReportData: additionalReportData,
+        customerAdditionalReportData: customerAdditionalReportData,
+        timestamp: Date.now(),
+        expert_index: selectedExpertIndex,
+      },
+      isLoggedIn,
+      conversationId
+    );
+    setButtonState(1); 
+  };
 
   return (
     <>
       <PanelItem className={isSelected ? 'selected' : ''} onClick={handlePanelClick}>
-
         <Image src={`../../../../images/panel/${imgGender}/${imgTarget}`} alt=""/>
-        
         <span className="panelChk">패널체크</span>
         <Overlay className="overlay">
           <InfoButton onClick={handleDetailsClick}><img src={images.IconView} alt="" />패널정보 상세보기</InfoButton>
           <InfoButton onClick={handleSelectButtonClick}>
-            {/* {isSelected ? '✅ 패널 선택됨' : '패널 선택하기'} */}
             {isSelected ? (
               <>
                 <img src={images.IconClose} alt="" />
@@ -111,18 +216,18 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
         </Overlay>
         <PanelDetails>
           <p>{gender === "M" ? "남성" : "여성"}({age}세) | {job}</p>
-          
           {maxBehabioralType && maxUtilizationTime<60 && <><strong>{maxBehabioralType}에 {maxUtilizationTime}분이상 활용하고 있어요</strong><br/><br/></>}
           {maxBehabioralType && maxUtilizationTime%60===0 && <><strong>{maxBehabioralType}에 {maxUtilizationTime/60}시간이상 활용하고 있어요</strong><br/><br/></>}
           {maxBehabioralType && maxUtilizationTime>=60 && maxUtilizationTime%60!==0 && <><strong>{maxBehabioralType}에 {Math.floor(maxUtilizationTime/60)}시간 {maxUtilizationTime%60}분이상 활용하고 있어요</strong><br/><br/></>}
           {!maxBehabioralType && <strong>{comment}</strong>}
           <span>
-            {tags.split(',').filter(tags => tags.trim() !== '')?.map((tags, index) => (
-              <div key={index}>#{tags.trim()}</div>
+            {tags.split(',').filter(tag => tag.trim() !== '')?.map((tag, index) => (
+              <div key={index}>#{tag.trim()}</div>
             ))}
           </span>
         </PanelDetails>
       </PanelItem>
+
       {isDetailsVisible && (
         <MoleculePanelItemDetail
           gender={gender}
@@ -138,10 +243,58 @@ const MoleculePanelItem = ({ id, imgSrc, gender, age, job, address, subAddress, 
           toggleSelection={handleSelectButtonClick}
         />
       )}
+      {isSelected && (
+        <ButtonWrap>
+          <button onClick={handleButtonClick}>
+            제가 원하는 타겟 유저는 {gender === "M" ? "남성" : "여성"} {age}세 {job}입니다
+            타겟 유저 선택 완료
+          </button>
+        </ButtonWrap>
+      )}
     </>
   );
 };
 
+// Styled Components (unchanged)
+// ... your existing styled-components ...
+
+export default MoleculePanelItem;
+
+const ButtonWrap = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+  padding-bottom: 15px;
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: "Pretendard", "Poppins";
+    font-size: 0.875rem;
+    color: ${palette.darkGray};
+    border: 0;
+    background: none;
+    margin-right: 10px;
+  }
+
+  > button {
+    padding: 8px 16px;
+    border-radius: 40px;
+    border: 1px solid ${palette.lineGray};
+  }
+
+  button.other {
+    color: ${palette.lightGray};
+    font-size: 0.75rem;
+    border: none;
+    gap: 4px;
+
+    img {
+      height: 19px;
+    }
+  }
+`;
 const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -284,4 +437,3 @@ const PanelDetails = styled.div`
   }
 `;
 
-export default MoleculePanelItem;

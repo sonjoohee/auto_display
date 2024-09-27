@@ -54,6 +54,8 @@ import MoleculeCheckReportRightAway from "../molecules/MoleculeCheckReportRightA
 import MoleculeCheckPocRightAway from "../molecules/MoleculeCheckPocRightAway";
 import MoleculeCheckPocOption from "../molecules/MoleculeCheckPocOption";
 import OrganismCustomerAdditionalReport from "../organisms/OrganismCustomerAdditionalReport";
+import MoleculePersonaSelect from "../molecules/MoleculePersonaSelect";
+
 
 const PageExpertInsight = () => {
   const [isLoadingPage, setIsLoadingPage] = useState(true); // 로딩 상태 추가
@@ -650,11 +652,13 @@ if (isLoadingPage) {
                 } else if (item.type.startsWith("poc_")) {
                   const expertIndex = item.type.split("_")[1];
                   return (
-                    <OrganismPocReportSection
-                      key={`poc_${expertIndex}_${index}`}
-                      conversationId={conversationId}
-                      expertIndex={expertIndex}
-                    />
+                    <>
+                      <OrganismPocReportSection
+                        key={`poc_${expertIndex}_${index}`}
+                        conversationId={conversationId}
+                        expertIndex={expertIndex}
+                      />
+                    </>
                   );
                 } else if (item.type === "addition") {
                   const currentAdditionalReportCount = additionalReportCount++;
@@ -680,6 +684,8 @@ if (isLoadingPage) {
                   return <MoleculeCheckPocRightAway />;
                 } else if (item.type === "pocOption") {
                   return <MoleculeCheckPocOption />;
+                } else if (item.type === "pocPersona") {
+                  return <MoleculePersonaSelect conversationId={conversationId}/>;
                 }
                 return null;
               })}
