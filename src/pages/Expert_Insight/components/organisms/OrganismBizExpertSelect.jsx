@@ -11,16 +11,11 @@ import {
   EXPERT1_REPORT_DATA,
   EXPERT2_REPORT_DATA,
   EXPERT3_REPORT_DATA,
-  ADDITIONAL_QUESTION_1,
-  ADDITIONAL_QUESTION_2,
-  ADDITIONAL_QUESTION_3,
-  SELECTED_ADDITIONAL_KEYWORD1,
-  SELECTED_ADDITIONAL_KEYWORD2,
-  SELECTED_ADDITIONAL_KEYWORD3,
   EXPERT_BUTTON_STATE,
   IS_LOADING,
   SELECTED_EXPERT_LIST,
   iS_CLICK_CHECK_REPORT_RIGHTAWAY,
+  STRATEGY_REPORT_DATA,
 } from "../../../AtomStates";
 
 const OrganismBizExpertSelect = ({ conversationId }) => {
@@ -33,32 +28,15 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
 
-  const [expert1ReportData, setExpert1ReportData] =
-    useAtom(EXPERT1_REPORT_DATA);
-  const [expert2ReportData, setExpert2ReportData] =
-    useAtom(EXPERT2_REPORT_DATA);
-  const [expert3ReportData, setExpert3ReportData] =
-    useAtom(EXPERT3_REPORT_DATA);
+  const [strategyReportData, setStrategyReportData] =
+  useAtom(STRATEGY_REPORT_DATA);
 
-  const [addtionalQuestion1, setAddtionalQuestion1] = useAtom(
-    ADDITIONAL_QUESTION_1
-  );
-  const [addtionalQuestion2, setAddtionalQuestion2] = useAtom(
-    ADDITIONAL_QUESTION_2
-  );
-  const [addtionalQuestion3, setAddtionalQuestion3] = useAtom(
-    ADDITIONAL_QUESTION_3
-  );
-
-  const [selectedAdditionalKeyword1, setSelectedAdditionalKeyword1] = useAtom(
-    SELECTED_ADDITIONAL_KEYWORD1
-  );
-  const [selectedAdditionalKeyword2, setSelectedAdditionalKeyword2] = useAtom(
-    SELECTED_ADDITIONAL_KEYWORD2
-  );
-  const [selectedAdditionalKeyword3, setSelectedAdditionalKeyword3] = useAtom(
-    SELECTED_ADDITIONAL_KEYWORD3
-  );
+  // const [expert1ReportData, setExpert1ReportData] =
+  //   useAtom(EXPERT1_REPORT_DATA);
+  // const [expert2ReportData, setExpert2ReportData] =
+  //   useAtom(EXPERT2_REPORT_DATA);
+  // const [expert3ReportData, setExpert3ReportData] =
+  //   useAtom(EXPERT3_REPORT_DATA);
 
   const [expertButtonState, setExpertButtonState] =
     useAtom(EXPERT_BUTTON_STATE); // 추가된 부분
@@ -77,18 +55,8 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
       setSelectedExpertIndex(index);
       setIsClickExpertSelect(true);
       setConversationStage(2); // stage를 2로 설정
-      setAddtionalQuestion1("");
-      setAddtionalQuestion2("");
-      setAddtionalQuestion3("");
       setExpertButtonState(1);
       setApproachPath(3);
-      if (index === "1") {
-        setSelectedAdditionalKeyword1("");
-      } else if (index === "2") {
-        setSelectedAdditionalKeyword2("");
-      } else if (index === "3") {
-        setSelectedAdditionalKeyword3("");
-      }
     }
   };
 
@@ -96,14 +64,14 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
     <>
       {/* 모든 전문가가 선택되었거나, 모든 보고서가 생성되었으면 영역 표시 안함
           selectedExpertList는 DB에 저장되고 있지 않기 떄문에 expertReportData 조건이 필요함 */}
-      {((selectedExpertList.includes("1") || Object.keys(expert1ReportData).length !== 0) &&
-        (selectedExpertList.includes("2") || Object.keys(expert2ReportData).length !== 0) &&
-        (selectedExpertList.includes("3") || Object.keys(expert3ReportData).length !== 0)) ? null : (
+      {((selectedExpertList.includes("1") || strategyReportData.hasOwnProperty(1)) &&
+        (selectedExpertList.includes("2") || strategyReportData.hasOwnProperty(2)) &&
+        (selectedExpertList.includes("3") || strategyReportData.hasOwnProperty(3))) ? null : (
   
         <BizExpertSelectContainer>
           <h1>아래 분야별 전문가와 대화를 통해 아이디어를 발전시켜보세요.</h1>
           <SelectOptions>
-            {(selectedExpertList.includes("1") || Object.keys(expert1ReportData).length !== 0) ? null : (
+            {(selectedExpertList.includes("1") || strategyReportData.hasOwnProperty(1)) ? null : (
               <div>
                 <img src={images.ImgChat} alt="" />
                 <p>10년차 전략 디렉터와 1:1 커피챗하기</p>
@@ -112,7 +80,7 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
                 </button>
               </div>
             )}
-            {(selectedExpertList.includes("2") || Object.keys(expert2ReportData).length !== 0) ? null : (
+            {(selectedExpertList.includes("2") || strategyReportData.hasOwnProperty(2)) ? null : (
               <div>
                 <img src={images.ImgWrite} alt="" />
                 <p>브랜드 전문가의 10초 맞춤 제안서 받기</p>
@@ -121,7 +89,7 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
                 </button>
               </div>
             )}
-            {(selectedExpertList.includes("3") || Object.keys(expert3ReportData).length !== 0) ? null : (
+            {(selectedExpertList.includes("3") || strategyReportData.hasOwnProperty(3)) ? null : (
               <div>
                 <img src={images.ImgTarget} alt="" />
                 <p>지금 바로 만나 타겟 고객 확인하기</p>
