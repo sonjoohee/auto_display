@@ -79,7 +79,7 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
       {
         type: "system",
         message:
-          "선택한 진행 단계를 바탕으로 타겟 유저를 제공하겠습니다.",
+          "PoC 설계를 위한 귀중한 정보 감사합니다. 마지막으로 타겟 유저에 대한 정보를 알려주세요.\n더욱 상세한 PoC 설계가 가능합니다. ",
         expertIndex: selectedExpertIndex,
       },
       {

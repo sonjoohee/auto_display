@@ -72,7 +72,7 @@ const MoleculePanelItem = ({
   const [mainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
   const [businessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [strategyReportData] = useAtom(STRATEGY_REPORT_DATA);
-  const [conversationStage] = useAtom(CONVERSATION_STAGE);
+  const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [selectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
   const [selectedCustomerAdditionalKeyword] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
   const [additionalReportData] = useAtom(ADDITIONAL_REPORT_DATA);
@@ -168,7 +168,7 @@ const MoleculePanelItem = ({
       }
     );
     setConversation(updatedConversation);
-
+    setConversationStage(2)
     setApproachPath(3);
     setIsClickCheckPocRightAway(true);
 
@@ -179,7 +179,7 @@ const MoleculePanelItem = ({
         analysisReportData: analysisReportData,
         strategyReportData: strategyReportData,
         conversation: updatedConversation,
-        conversationStage: conversationStage,
+        conversationStage: 2,
         selectedAdditionalKeywords: selectedAdditionalKeyword,
         selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
         additionalReportData: additionalReportData,
