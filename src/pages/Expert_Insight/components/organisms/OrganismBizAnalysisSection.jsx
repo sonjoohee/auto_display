@@ -790,7 +790,8 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                 )
               )}
             </BoxWrap>
-            <BoxWrap>
+            {            
+            selectedExpertIndex !== "4" && <BoxWrap>
               <strong>
                 <img src={images.IconTarget} alt="" />
                 목표 고객
@@ -905,6 +906,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                 )
               )}
             </BoxWrap>
+            }
             <p>
               입력된 내용을 바탕으로 위와 같이 이해하고 정리하였습니다.
               확인부탁드립니다.
