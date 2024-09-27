@@ -387,6 +387,18 @@ const PageMeetAiExpert = () => {
                 <p>고객 데이터 전문가의 맞춤 타겟 추천</p>
                 <strong>당장 만나야할 고객은?</strong>
               </ExpertCard>
+              <ExpertCard
+                onClick={() => {
+                  setButtonState(1);
+                  handledExpertSelect("4");
+                }}
+              >
+                <span>
+                  <img src={images.IconChat} alt="" />
+                </span>
+                <p>4번 전문가 회색 글씨</p>
+                <strong>4번 전문가 굵은 글씨</strong>
+              </ExpertCard>
               <ExpertCard More>
                 <div>
                   {/* <span>More</span> */}
