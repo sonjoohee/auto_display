@@ -60,3 +60,7 @@ npm install react-icons
 npm install @paypal/react-paypal-js
 
 npm install crypto-js
+
+** pdf 관련 설치파일
+npm i jspdf
+npm i html2canvas

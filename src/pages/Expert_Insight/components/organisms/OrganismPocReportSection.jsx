@@ -27,6 +27,9 @@ import {
 } from "../../../../utils/indexedDB";
 import axios from "axios";
 
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+
 import {
   TITLE_OF_BUSINESS_INFORMATION,
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
@@ -103,7 +106,39 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
     useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
   
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
+  const handleDownload = () => {
+    const input = document.getElementById("print-content");
+    html2canvas(input, {
+      scale: 2, // 해상도 향상을 위해 scale을 2로 설정
+    })
+      .then((canvas) => {
+        const imgData = canvas.toDataURL("image/png");
+        const imgWidth = 210; // A4 기준 너비(mm)
+        const pageHeight = imgWidth * 1.414; // A4 기준 높이(mm)
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        let heightLeft = imgHeight;
+        const margin = 0;
+        const doc = new jsPDF("p", "mm", "a4");
+        let position = 0;
 
+        // 첫 페이지 추가
+        doc.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+
+        // 추가 페이지 처리
+        while (heightLeft > 0) {
+          position = heightLeft - imgHeight;
+          doc.addPage();
+          doc.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+        }
+
+        doc.save("report.pdf");
+      })
+      .catch((error) => {
+        console.error("Error generating PDF:", error);
+      });
+  };
   useEffect(() => {
     const loadData = async () => {
       let finalResponse;
@@ -286,50 +321,58 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   return (
     <>
       <AnalysisSection Strategy>
-        {isLoadingExpert ? (
-          <>
-            <SkeletonTitle className="title-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
-            <SkeletonTitle className="title-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
-            <SkeletonTitle className="title-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-          </>
-        ) : (
-          <>
-            <TabHeader>
-              {tabs &&
-                tabs.length > 0 &&
-                tabs.map((tab, index) => (
-                  <TabButton
-                    key={index}
-                    active={selectedTab === index}
-                    expertIndex={expertIndex} // 전달
-                    onClick={() => handleTabClick(index, expertIndex)}
-                  >
-                    {tab.title}
-                  </TabButton>
-                ))}
-            </TabHeader>
-  
-            {sections?.map((section, index) => (
-              <Section
-                key={index}
-                title={section.title}
-                title_text={section.text}
-                content={section.content}
-                isLast={index === sections.length - 1}
-                expertIndex={expertIndex}
-                selectedTab={selectedTab}
-              />
-            ))}
-          </>
-        )}
+        {/* 다운로드 버튼 추가 */}
+        <DownloadButton onClick={handleDownload}>
+          보고서 다운로드
+        </DownloadButton>
+
+        {/* PDF로 변환할 콘텐츠를 감싸는 div에 id 추가 */}
+        <div id="print-content">
+          {isLoadingExpert ? (
+            <>
+              <SkeletonTitle className="title-placeholder" />
+              <SkeletonLine className="content-placeholder" />
+              <SkeletonLine className="content-placeholder" />
+              <Spacing />
+              <SkeletonTitle className="title-placeholder" />
+              <SkeletonLine className="content-placeholder" />
+              <SkeletonLine className="content-placeholder" />
+              <Spacing />
+              <SkeletonTitle className="title-placeholder" />
+              <SkeletonLine className="content-placeholder" />
+              <SkeletonLine className="content-placeholder" />
+            </>
+          ) : (
+            <>
+              <TabHeader>
+                {tabs &&
+                  tabs.length > 0 &&
+                  tabs.map((tab, index) => (
+                    <TabButton
+                      key={index}
+                      active={selectedTab === index}
+                      expertIndex={expertIndex}
+                      onClick={() => handleTabClick(index, expertIndex)}
+                    >
+                      {tab.title}
+                    </TabButton>
+                  ))}
+              </TabHeader>
+
+              {sections?.map((section, index) => (
+                <Section
+                  key={index}
+                  title={section.title}
+                  title_text={section.text}
+                  content={section.content}
+                  isLast={index === sections.length - 1}
+                  expertIndex={expertIndex}
+                  selectedTab={selectedTab}
+                />
+              ))}
+            </>
+          )}
+        </div>
 
         {!isLoadingExpert && (
           <MoleculeReportController
@@ -1379,3 +1422,18 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
     // border-radius: 10px;
     // border: 1px solid ${palette.lineGray};
   `;
+  const DownloadButton = styled.button`
+  display: inline-block;
+  padding: 10px 20px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: ${palette.gray}; /* 예시로 primary 색상 사용 */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  &:hover {
+    background-color: ${palette.blue}; /* 호버 시 색상 변경 */
+  }
+`;
