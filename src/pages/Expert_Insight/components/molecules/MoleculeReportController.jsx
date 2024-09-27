@@ -550,7 +550,7 @@ ${businessInformationTargetCustomer
     <>
       {reportIndex === 0 ? (
         <>
-          {conversationStage > 2 || isClickCheckPocRightAway ? (
+          {conversationStage > 2 ? (
             <ButtonWrap>
               <div />
               <div>

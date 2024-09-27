@@ -6,12 +6,103 @@ import MoleculePanelItemCard from "../molecules/MoleculePanelItemCard";
 // import MoleculePanelItemList from "../molecules/MoleculePanelItemList";
 import { palette } from "../../../../assets/styles/Palette";
 import axios from "axios";
+import { useAtom } from "jotai";
+import {
+  iS_CLICK_CHECK_POC_RIGHTAWAY,
+  EXPERT_BUTTON_STATE,
+  IS_LOADING,
+  APPROACH_PATH,
+  CONVERSATION,
+  CONVERSATION_ID,
+  SELECTED_EXPERT_INDEX,
+  TITLE_OF_BUSINESS_INFORMATION,
+  MAIN_FEATURES_OF_BUSINESS_INFORMATION,
+  MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
+  BUSINESS_INFORMATION_TARGET_CUSTOMER,
+  ADDITION_BUTTON_STATE,
+  isLoggedInAtom,
+  STRATEGY_REPORT_DATA,
+  INPUT_BUSINESS_INFO,
+  CONVERSATION_STAGE,
+  SELECTED_ADDITIONAL_KEYWORD,
+  SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
+  ADDITIONAL_REPORT_DATA,
+  CUSTOMER_ADDITIONAL_REPORT_DATA,
+  CUSTOMER_ADDITION_BUTTON_STATE,
+  CUSTOMER_ADDITION_QUESTION_INPUT,
+  SELECTED_EXPERT_LIST,
+} from "../../../AtomStates";
 
-const OrganismPanelSection = () => {
+import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
+
+const OrganismPanelSection = ({ conversationId }) => {
   const [panelList, setPanelList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isPanelNull, setIsPanelNull] = useState(false);
   const [viewPanelType, setViewPanelType] = useState(true); // true for card view, false for list view
+  const [conversation, setConversation] = useAtom(CONVERSATION);
+  const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
+  const [inputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
+  const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
+  const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation,] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
+  const [mainCharacteristicOfBusinessInformation, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
+  const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
+  const [buttonState, setButtonState] = useAtom(EXPERT_BUTTON_STATE);
+  const analysisReportData = {
+    title: titleOfBusinessInfo,
+    mainFeatures: mainFeaturesOfBusinessInformation,
+    mainCharacter: mainCharacteristicOfBusinessInformation,
+    mainCustomer: businessInformationTargetCustomer,
+  };
+  const [strategyReportData] = useAtom(STRATEGY_REPORT_DATA);
+  const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
+  const [selectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
+  const [selectedCustomerAdditionalKeyword] = useAtom(
+    SELECTED_CUSTOMER_ADDITIONAL_KEYWORD
+  );
+  const [additionalReportData] = useAtom(ADDITIONAL_REPORT_DATA);
+  const [customerAdditionalReportData] = useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
+  const [isLoggedIn] = useAtom(isLoggedInAtom);
+  const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
+  const [isClickCheckPocRightAway, setIsClickCheckPocRightAway] = useAtom(iS_CLICK_CHECK_POC_RIGHTAWAY);
+
+  const handleButtonClick = async () => {
+    // Update the conversation
+    const updatedConversation = [...conversation];
+    updatedConversation.push(
+      {
+        type: "system",
+        message: "선택한 타겟 유저를 바탕으로 PoC 보고서를 작성하겠습니다.",
+        expertIndex: selectedExpertIndex,
+      },
+      {
+        type: `poc_${selectedExpertIndex}`,
+      }
+    );
+    setConversation(updatedConversation);
+    setConversationStage(3)
+    setApproachPath(3);
+
+    await saveConversationToIndexedDB(
+      {
+        id: conversationId,
+        inputBusinessInfo: inputBusinessInfo,
+        analysisReportData: analysisReportData,
+        strategyReportData: strategyReportData,
+        conversation: updatedConversation,
+        conversationStage: 3,
+        selectedAdditionalKeywords: selectedAdditionalKeyword,
+        selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
+        additionalReportData: additionalReportData,
+        customerAdditionalReportData: customerAdditionalReportData,
+        timestamp: Date.now(),
+        expert_index: selectedExpertIndex,
+      },
+      isLoggedIn,
+      conversationId
+    );
+    setButtonState(1); 
+  };
 
   useEffect(() => {
     const fetchInitialPanelList = async () => {
@@ -76,6 +167,7 @@ const OrganismPanelSection = () => {
               />
             ))}
           </CardViewContainer>
+          <button onClick={handleButtonClick}>확인</button>
       </PanelWrap>
     </>
   );

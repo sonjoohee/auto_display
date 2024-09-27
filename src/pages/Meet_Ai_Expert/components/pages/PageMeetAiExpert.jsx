@@ -32,6 +32,7 @@ import {
   SELECTED_EXPERT_LIST,
   IS_EDITING_NOW,
   IS_EXPERT_INSIGHT_ACCESSIBLE,
+  iS_CLICK_CHECK_POC_RIGHTAWAY,
 } from "../../../AtomStates";
 
 import { Link } from "react-router-dom";
@@ -104,6 +105,9 @@ const PageMeetAiExpert = () => {
   const [isClickCheckReportRightAway, setIsClickCheckReportRightAway] = useAtom(
     iS_CLICK_CHECK_REPORT_RIGHTAWAY
   );
+  const [isClickCheckPocRightAway, setIsClickCheckPocRightAway] = useAtom(
+    iS_CLICK_CHECK_POC_RIGHTAWAY
+  );
 
   const [isPopupRegex, setIsPopupRegex] = useState(false);
   const [isPopupRegex2, setIsPopupRegex2] = useState(false);
@@ -147,6 +151,7 @@ const PageMeetAiExpert = () => {
     setInputAdditionalQuestion("");
     setSelectedCustomerAdditionalKeyword([]);
     setIsClickCheckReportRightAway(false);
+    setIsClickCheckPocRightAway(false);
     setPassword("");
     setNewPassword("");
     setRePassword("");
