@@ -42,6 +42,7 @@ import {
   ADDITION_BUTTON_STATE,
   CUSTOMER_ADDITION_BUTTON_STATE,
   IS_EXPERT_INSIGHT_ACCESSIBLE,
+  iS_CLICK_CHECK_POC_RIGHTAWAY,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -131,6 +132,9 @@ const OrganismLeftSideBar = () => {
   const [inputAdditionalQuestion, setInputAdditionalQuestion] = useState("");
   const [isClickCheckReportRightAway, setIsClickCheckReportRightAway] = useAtom(
     iS_CLICK_CHECK_REPORT_RIGHTAWAY
+  );
+  const [isClickCheckPocRightAway, setIsClickCheckPocRightAway] = useAtom(
+    iS_CLICK_CHECK_POC_RIGHTAWAY
   );
   const insightEditBoxRef = useRef(null);
   const historyEditBoxRef = useRef(null);
@@ -742,6 +746,7 @@ useEffect(() => {
     setStrategyReportData({});
     setInputAdditionalQuestion("");
     setIsClickCheckReportRightAway(false);
+    setIsClickCheckPocRightAway(false);
     setConversationId(null);
     setPassword("");
     setNewPassword("");

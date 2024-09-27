@@ -622,7 +622,6 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               {isLoadingAdd1 ? (
                 <>
                   <SkeletonLine className="content-placeholder" />
-                  <SkeletonLine className="content-placeholder" />
                 </>
               ) : (
                 isAddingNow.section === "mainFeatures" &&
@@ -739,7 +738,6 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               {isLoadingAdd2 ? (
                 <>
                   <SkeletonLine className="content-placeholder" />
-                  <SkeletonLine className="content-placeholder" />
                 </>
               ) : (
                 isAddingNow.section === "mainCharacteristic" &&
@@ -854,7 +852,6 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               </ul>
               {isLoadingAdd3 ? (
                 <>
-                  <SkeletonLine className="content-placeholder" />
                   <SkeletonLine className="content-placeholder" />
                 </>
               ) : (
