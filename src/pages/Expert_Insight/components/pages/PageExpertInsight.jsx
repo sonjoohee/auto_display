@@ -683,7 +683,7 @@ if (isLoadingPage) {
                 } else if (item.type === "pocButton") {
                   return <MoleculeCheckPocRightAway />;
                 } else if (item.type === "pocOption") {
-                  return <MoleculeCheckPocOption />;
+                  return <MoleculeCheckPocOption conversationId={conversationId}/>;
                 } else if (item.type === "pocPersona") {
                   return <MoleculePersonaSelect conversationId={conversationId}/>;
                 }

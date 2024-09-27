@@ -81,7 +81,7 @@ const MoleculeCheckReportRightAway = () => {
       }
     );
     setConversation(updatedConversation);
-    setConversationStage(2);
+    setConversationStage(3);
     setApproachPath(3);
     setIsClickCheckPocRightAway(true);
 
@@ -92,7 +92,7 @@ const MoleculeCheckReportRightAway = () => {
         analysisReportData: analysisReportData,
         strategyReportData: strategyReportData,
         conversation: updatedConversation,
-        conversationStage: 2,
+        conversationStage: 3,
         selectedAdditionalKeywords: selectedAdditionalKeyword,
         selectedCustomerAdditionalKeyword:
         selectedCustomerAdditionalKeyword,

@@ -49,7 +49,7 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
     mainCustomer: businessInformationTargetCustomer,
   };
   const [strategyReportData] = useAtom(STRATEGY_REPORT_DATA);
-  const [conversationStage] = useAtom(CONVERSATION_STAGE);
+  const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [selectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
   const [selectedCustomerAdditionalKeyword] = useAtom(
     SELECTED_CUSTOMER_ADDITIONAL_KEYWORD
@@ -70,12 +70,19 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
     { label: "완전 제품 준비 단계", value: "완전 제품 준비 단계" },
   ];
 
-  const handleOptionClick = async (optionValue) => {
+  const handleOptionClick = (optionValue) => {
     setSelectedOption(optionValue);
+  };
 
+  const handleConfirm = async () => {
     // Update the conversation
     const updatedConversation = [...conversation];
     updatedConversation.push(
+      {
+        type: "user",
+        message:
+          `PoC 검증은 “아이디어 검증”을 위해 진행하고자 합니다. 현재 저희 서비스는 아이디어 단계로 초기 스타트업 입니다.`,
+      },
       {
         type: "system",
         message:
@@ -89,7 +96,7 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
     setConversation(updatedConversation);
 
     setApproachPath(3);
-    setIsClickCheckPocRightAway(true);
+    setConversationStage(3);
 
     await saveConversationToIndexedDB(
       {
@@ -98,7 +105,7 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
         analysisReportData: analysisReportData,
         strategyReportData: strategyReportData,
         conversation: updatedConversation,
-        conversationStage: conversationStage,
+        conversationStage: 3,
         selectedAdditionalKeywords: selectedAdditionalKeyword,
         selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
         additionalReportData: additionalReportData,
@@ -124,6 +131,11 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
             {option.label}
           </Option>
         ))}
+          <Option
+            onClick={() => handleConfirm()}
+          >
+            확인
+          </Option>
       </OptionContainer>
     </Wrap>
   );

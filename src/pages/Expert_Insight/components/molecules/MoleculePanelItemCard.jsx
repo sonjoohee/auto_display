@@ -153,46 +153,6 @@ const MoleculePanelItem = ({
   const imgGender = gender === "M" ? "m" : "w";
   imgTarget = imgAge + "s_" + imgGender + "_" + imgSrc + ".jpg";
 
-  // Handle button click to update conversation
-  const handleButtonClick = async () => {
-    // Update the conversation
-    const updatedConversation = [...conversation];
-    updatedConversation.push(
-      {
-        type: "system",
-        message: "선택한 타겟 유저를 바탕으로 PoC 보고서를 작성하겠습니다.",
-        expertIndex: selectedExpertIndex,
-      },
-      {
-        type: `poc_${selectedExpertIndex}`,
-      }
-    );
-    setConversation(updatedConversation);
-    setConversationStage(2)
-    setApproachPath(3);
-    setIsClickCheckPocRightAway(true);
-
-    await saveConversationToIndexedDB(
-      {
-        id: conversationId,
-        inputBusinessInfo: inputBusinessInfo,
-        analysisReportData: analysisReportData,
-        strategyReportData: strategyReportData,
-        conversation: updatedConversation,
-        conversationStage: 2,
-        selectedAdditionalKeywords: selectedAdditionalKeyword,
-        selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
-        additionalReportData: additionalReportData,
-        customerAdditionalReportData: customerAdditionalReportData,
-        timestamp: Date.now(),
-        expert_index: selectedExpertIndex,
-      },
-      isLoggedIn,
-      conversationId
-    );
-    setButtonState(1); 
-  };
-
   return (
     <>
       <PanelItem className={isSelected ? 'selected' : ''} onClick={handlePanelClick}>
@@ -242,14 +202,6 @@ const MoleculePanelItem = ({
           tags={tags}
           toggleSelection={handleSelectButtonClick}
         />
-      )}
-      {isSelected && (
-        <ButtonWrap>
-          <button onClick={handleButtonClick}>
-            제가 원하는 타겟 유저는 {gender === "M" ? "남성" : "여성"} {age}세 {job}입니다
-            타겟 유저 선택 완료
-          </button>
-        </ButtonWrap>
       )}
     </>
   );
