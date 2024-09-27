@@ -38,6 +38,7 @@ import {
   ADDITIONAL_REPORT_DATA,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
   IS_EDITING_NOW,
+  CONVERSATION_STAGE,
 } from "../../../AtomStates";
 
 const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
@@ -53,6 +54,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const [sections, setSections] = useState([]);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
   const [selectedKeywords] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
+  const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
 
   const axiosConfig = {
     timeout: 100000, // 100초
@@ -238,6 +240,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
           );
 
           setConversation(updatedConversation);
+          setConversationStage(3);
           await saveConversationToIndexedDB(
             {
               id: conversationId,
