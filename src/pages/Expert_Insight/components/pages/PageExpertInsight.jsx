@@ -51,6 +51,8 @@ import OrganismBizExpertSelect from "../organisms/OrganismBizExpertSelect";
 import MoleculeAdditionalKeyword from "../molecules/MoleculeAdditionalKeyword";
 import OrganismAdditionalReport from "../organisms/OrganismAdditionalReport";
 import MoleculeCheckReportRightAway from "../molecules/MoleculeCheckReportRightAway";
+import MoleculeCheckPocRightAway from "../molecules/MoleculeCheckPocRightAway";
+import MoleculeCheckPocOption from "../molecules/MoleculeCheckPocOption";
 import OrganismCustomerAdditionalReport from "../organisms/OrganismCustomerAdditionalReport";
 
 const PageExpertInsight = () => {
@@ -398,7 +400,7 @@ const handleSearch = async (inputValue) => {
           "keyword") ||
       (updatedConversation.length > 0 &&
         updatedConversation[updatedConversation.length - 1].type ===
-          "report_button")
+          "reportButton")
     ) {
       updatedConversation.pop();
     }
@@ -420,7 +422,7 @@ const handleSearch = async (inputValue) => {
           "keyword") ||
       (updatedConversation.length > 0 &&
         updatedConversation[updatedConversation.length - 1].type ===
-          "report_button")
+          "reportButton")
     ) {
       updatedConversation.pop();
     }
@@ -564,7 +566,7 @@ const handleSearch = async (inputValue) => {
           "keyword") ||
       (updatedConversation.length > 0 &&
         updatedConversation[updatedConversation.length - 1].type ===
-          "report_button")
+          "reportButton")
     ) {
       updatedConversation.pop();
     }
@@ -609,6 +611,8 @@ const getInitialSystemMessage = () => {
       return "안녕하세요! 마케팅 전문가 이지현입니다. 😄 여러분의 아이디어를 효과적으로 시장에 알릴 수 있는 전략을 함께 고민해 보아요.\n아이디어나 비즈니스 아이템을 여기에 작성해 주세요. 제가 분석하고, 효과적인 마케팅 전략 리포트를 준비해 드리겠습니다!";
     case "3":
       return "반갑습니다! 저는 고객 인사이트 전문가 박서연입니다. 😊 여러분의 비즈니스가 목표 고객에게 잘 다가갈 수 있도록 돕겠습니다.\n아이디어나 비즈니스 아이템을 작성해 주세요. 분석 후, 타겟 고객을 정의하고 세분화 방법에 대한 리포트를 제공해 드리겠습니다!";
+    case "4":
+      return "안녕하세요. 저는 PoC 설계 전문가 입니다. PoC 설계를 위해 아이템에 대한 설명을 해주세요 📝"
     default:
       return "비즈니스(아이디어)를 입력해주세요.";
   }
@@ -670,8 +674,12 @@ if (isLoadingPage) {
                   );
                 } else if (item.type === "keyword") {
                   return <MoleculeAdditionalKeyword />;
-                } else if (item.type === "report_button") {
+                } else if (item.type === "reportButton") {
                   return <MoleculeCheckReportRightAway />;
+                } else if (item.type === "pocButton") {
+                  return <MoleculeCheckPocRightAway />;
+                } else if (item.type === "pocOption") {
+                  return <MoleculeCheckPocOption />;
                 }
                 return null;
               })}
@@ -693,7 +701,7 @@ if (isLoadingPage) {
               {approachPath === 2 && 
                 titleOfBusinessInfo &&
                 conversation.length > 0 &&
-                conversation[conversation.length - 1].type !== "report_button" &&
+                conversation[conversation.length - 1].type !== "reportButton" &&
                 !isLoading && 
                   <OrganismBizExpertSelect />
               }

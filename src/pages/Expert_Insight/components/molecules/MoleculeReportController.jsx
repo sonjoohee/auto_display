@@ -32,6 +32,7 @@ import {
   IS_LOADING_ANALYSIS,
   SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
+  iS_CLICK_CHECK_POC_RIGHTAWAY,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -127,6 +128,7 @@ const MoleculeReportController = ({
   );
   const [selectedCustomerAdditionalKeyword, setSelectedCustomerAdditionalKeyword] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
   const [customerAdditionalReportData, setCustomerAdditionalReportData] = useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
+  const [isClickCheckPocRightAway, setIsClickCheckPocRightAway] = useAtom(iS_CLICK_CHECK_POC_RIGHTAWAY);
 
   const navigate = useNavigate();
 
@@ -548,7 +550,7 @@ ${businessInformationTargetCustomer
     <>
       {reportIndex === 0 ? (
         <>
-          {conversationStage > 2 ? (
+          {conversationStage > 2 || isClickCheckPocRightAway ? (
             <ButtonWrap>
               <div />
               <div>

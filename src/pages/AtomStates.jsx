@@ -244,6 +244,7 @@ export const CUSTOMER_ADDITION_BUTTON_STATE = atom(0);
 export const CUSTOMER_ADDITION_QUESTION_INPUT = atom("");
 
 export const iS_CLICK_CHECK_REPORT_RIGHTAWAY = atom(false);
+export const iS_CLICK_CHECK_POC_RIGHTAWAY = atom(false);
 
 export const CONVERSATION_ID = atom("");
 export const CONVERSATION = atom([]);
