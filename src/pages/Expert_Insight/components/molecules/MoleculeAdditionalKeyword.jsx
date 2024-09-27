@@ -6,9 +6,6 @@ import {
   SELECTED_EXPERT_INDEX,
   SELECTED_ADDITIONAL_KEYWORD,
   QUESTION_LIST,
-  ADDITIONAL_QUESTION_1,
-  ADDITIONAL_QUESTION_2,
-  ADDITIONAL_QUESTION_3,
   ADDITION_BUTTON_STATE, // BUTTON_STATE 추가
   APPROACH_PATH,
 } from "../../../AtomStates";
@@ -19,15 +16,6 @@ const MoleculeAdditionalKeyword = () => {
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
     SELECTED_ADDITIONAL_KEYWORD
-  );
-  const [addtionalQuestion1, setAddtionalQuestion1] = useAtom(
-    ADDITIONAL_QUESTION_1
-  );
-  const [addtionalQuestion2, setAddtionalQuestion2] = useAtom(
-    ADDITIONAL_QUESTION_2
-  );
-  const [addtionalQuestion3, setAddtionalQuestion3] = useAtom(
-    ADDITIONAL_QUESTION_3
   );
   const [questionList] = useAtom(QUESTION_LIST);
   const [buttonState, setButtonState] = useAtom(ADDITION_BUTTON_STATE); // BUTTON_STATE 가져오기
@@ -57,10 +45,6 @@ const MoleculeAdditionalKeyword = () => {
   const handleOtherInsightClick = () => {
     const newSelections = generateRandomSelections();
     setRandomSelections(newSelections);
-
-    setAddtionalQuestion1(newSelections.방법론관련);
-    setAddtionalQuestion2(newSelections.사례제시);
-    setAddtionalQuestion3(newSelections.아이디어제공);
   };
 
   const updateSelectedAdditionalKeyword = (keyword) => {
