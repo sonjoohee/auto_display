@@ -33,6 +33,7 @@ import {
   IS_EDITING_NOW,
   IS_EXPERT_INSIGHT_ACCESSIBLE,
   iS_CLICK_CHECK_POC_RIGHTAWAY,
+  SELECTED_POC_OPTIONS,
 } from "../../../AtomStates";
 
 import { Link } from "react-router-dom";
@@ -45,6 +46,7 @@ import OrganismLeftSideBar from "../../../Expert_Insight/components/organisms/Or
 
 const PageMeetAiExpert = () => {
   const navigate = useNavigate();
+  const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
   const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
   const [buttonState, setButtonState] = useAtom(ANALYSIS_BUTTON_STATE);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
@@ -157,6 +159,7 @@ const PageMeetAiExpert = () => {
     setRePassword("");
     setSelectedExpertList([]);
     setIsEditingNow(false);
+    setSelectedPocOptions([]);
   }, []);
 
   useEffect(() => {

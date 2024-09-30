@@ -12,6 +12,7 @@ import {
   APPROACH_PATH,
   isLoggedInAtom,
   INPUT_BUSINESS_INFO,
+  SELECTED_POC_OPTIONS
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -42,6 +43,7 @@ import {
 } from "../../../AtomStates";
 
 const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
+  const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [approachPath] = useAtom(APPROACH_PATH);
@@ -257,6 +259,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               customerAdditionalReportData: customerAdditionalReportData,
               timestamp: Date.now(),
               expert_index: selectedExpertIndex,
+              selectedPocOptions: selectedPocOptions,
             },
             isLoggedIn,
             conversationId

@@ -25,6 +25,7 @@ import {
   CUSTOMER_ADDITION_BUTTON_STATE,
   CUSTOMER_ADDITION_QUESTION_INPUT,
   SELECTED_EXPERT_LIST,
+  SELECTED_POC_OPTIONS,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -56,6 +57,7 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
   const [isLoggedIn] = useAtom(isLoggedInAtom);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
 
+  const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
   const [selectedOption1, setSelectedOption1] = useState("");
   const [selectedOption2, setSelectedOption2] = useState("");
   const [tabs, setTabs] = useState(0);
@@ -116,6 +118,7 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
       alert("항목을 선택해주세요.")
       return;
     }
+    setSelectedPocOptions([selectedOption1, selectedOption2]);
     setTabs(2);
     setApproachPath(3);
     setConversationStage(3);
@@ -153,6 +156,7 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
         customerAdditionalReportData: customerAdditionalReportData,
         timestamp: Date.now(),
         expert_index: selectedExpertIndex,
+        selectedPocOptions: [selectedOption1, selectedOption2],
       },
       isLoggedIn,
       conversationId
@@ -200,7 +204,7 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
 
   return (
     <Wrap>
-      {tabs === 0 ? (
+      {tabs === 0 && !selectedPocOptions.length ? (
         <>
         <Question>Q. 현재 PoC를 진행 단계는 무엇인가요?</Question>
         <OptionContainer>
@@ -215,7 +219,7 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
           ))}
         </OptionContainer>
         </>
-      ) : tabs === 1 ? (
+      ) : tabs === 1 && !selectedPocOptions.length ? (
         <>
         <Question>Q. PoC를 통해서 얻고 싶은 내용은 무엇인가요?</Question>
         <OptionContainer>
@@ -234,7 +238,7 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
         <Question>완료</Question>
       )}
 
-      {tabs !== 2 ? 
+      {tabs !== 2 && !selectedPocOptions.length ? 
         <OptionContainer>
           {tabs === 0 ?
             <Option></Option>

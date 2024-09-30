@@ -30,6 +30,7 @@ import {
   IS_LOADING,
   SAVED_TIMESTAMP,
   IS_EXPERT_INSIGHT_ACCESSIBLE,
+  SELECTED_POC_OPTIONS,
 } from "../../../AtomStates";
 
 import {
@@ -109,6 +110,8 @@ const PageExpertInsight = () => {
   
   const [savedTimestamp, setSavedTimestamp] = useAtom(SAVED_TIMESTAMP);
 
+  const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
+
   let additionalReportCount = 0;
   let customerAdditionalReportCount = 0;
 
@@ -150,6 +153,7 @@ const PageExpertInsight = () => {
         ...existingReports,
         timestamp: Date.now(),
         expert_index: selectedExpertIndex,
+        selectedPocOptions: selectedPocOptions,
       },
       isLoggedIn,
       conversationId
@@ -212,6 +216,8 @@ const PageExpertInsight = () => {
             setSelectedAdditionalKeyword(savedConversation.selectedAdditionalKeyword || []);
             setSelectedCustomerAdditionalKeyword(savedConversation.selectedCustomerAdditionalKeyword || []);
             setCustomerAdditionalReportData(savedConversation.customerAdditionalReportData || []);
+
+            setSelectedPocOptions(savedConversation.selectedPocOptions || []);
 
             // 대화 단계가 초기 상태라면 초기 시스템 메시지 설정
             if (savedConversation.conversationStage === 1) {
