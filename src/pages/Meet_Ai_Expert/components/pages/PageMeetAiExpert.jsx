@@ -388,8 +388,8 @@ const PageMeetAiExpert = () => {
                 <span>
                   <img src={images.IconChat} alt="" />
                 </span>
-                <p>4번 전문가 회색 글씨</p>
-                <strong>4번 전문가 굵은 글씨</strong>
+                <p></p>
+                <strong>Poc 전문가(테스트)</strong>
               </ExpertCard>
               {/* <ExpertCard More>
                 <div>
