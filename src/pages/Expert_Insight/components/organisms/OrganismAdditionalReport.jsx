@@ -18,6 +18,7 @@ import {
   SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
   SELECTED_EXPERT_LIST,
+  SELECTED_POC_OPTIONS
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import MoleculeReportController from "../molecules/MoleculeReportController";
@@ -35,7 +36,7 @@ const OrganismAdditionalReport = ({
   additionalReportCount,
   conversationId,
 }) => {
-  // console.log("🚀 ~ additionalReportCount:", additionalReportCount);
+  const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
   const [selectedExpertList, setSelectedExpertList] =
     useAtom(SELECTED_EXPERT_LIST);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
@@ -199,6 +200,7 @@ const OrganismAdditionalReport = ({
               additionalReportData: updatedAdditionalReportData,
               timestamp: Date.now(),
               expert_index: selectedExpertIndex,
+              selectedPocOptions: selectedPocOptions,
             },
             isLoggedIn,
             conversationId

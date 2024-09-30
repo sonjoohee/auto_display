@@ -33,6 +33,7 @@ import {
   SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
   iS_CLICK_CHECK_POC_RIGHTAWAY,
+  SELECTED_POC_OPTIONS,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -50,6 +51,7 @@ const MoleculeReportController = ({
   sampleData,
   additionalReportCount, // 추가 보고서 복사기능을 위한 인덱스
 }) => {
+  const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
     TITLE_OF_BUSINESS_INFORMATION
   );
@@ -221,6 +223,7 @@ const MoleculeReportController = ({
         expert_index: selectedExpertIndex,
         selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
         customerAdditionalReportData: customerAdditionalReportData,
+        selectedPocOptions: selectedPocOptions,
       },
       isLoggedIn,
       conversationId
@@ -399,34 +402,34 @@ ${businessInformationTargetCustomer
       });
   };
 
-  const resetConversationState = () => {
-    setTitleOfBusinessInfo([]);
-    setMainFeaturesOfBusinessInformation([]);
-    setMainCharacteristicOfBusinessInformation([]);
-    setBusinessInformationTargetCustomer([]);
-    setConversation([]);
-    setConversationStage(1);
-    setInputBusinessInfo("");
+  // const resetConversationState = () => {
+  //   setTitleOfBusinessInfo([]);
+  //   setMainFeaturesOfBusinessInformation([]);
+  //   setMainCharacteristicOfBusinessInformation([]);
+  //   setBusinessInformationTargetCustomer([]);
+  //   setConversation([]);
+  //   setConversationStage(1);
+  //   setInputBusinessInfo("");
 
-    saveConversationToIndexedDB(
-      {
-        id: conversationId,
-        conversation: [],
-        conversationStage: 1,
-        inputBusinessInfo: "",
-        analysisReportData: {
-          title: [],
-          mainFeatures: [],
-          mainCharacter: [],
-          mainCustomer: [],
-        },
-        timestamp: Date.now(),
-        expert_index: selectedExpertIndex,
-      },
-      isLoggedIn,
-      conversationId
-    );
-  };
+  //   saveConversationToIndexedDB(
+  //     {
+  //       id: conversationId,
+  //       conversation: [],
+  //       conversationStage: 1,
+  //       inputBusinessInfo: "",
+  //       analysisReportData: {
+  //         title: [],
+  //         mainFeatures: [],
+  //         mainCharacter: [],
+  //         mainCustomer: [],
+  //       },
+  //       timestamp: Date.now(),
+  //       expert_index: selectedExpertIndex,
+  //     },
+  //     isLoggedIn,
+  //     conversationId
+  //   );
+  // };
 
   const axiosConfig = {
     timeout: 100000, // 100초
@@ -536,6 +539,7 @@ ${businessInformationTargetCustomer
         expert_index: selectedExpertIndex,
         selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
         customerAdditionalReportData: customerAdditionalReportData,
+        selectedPocOptions: selectedPocOptions,
       },
       isLoggedIn,
       conversationId

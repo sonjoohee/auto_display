@@ -23,6 +23,7 @@ import {
   CUSTOMER_ADDITION_BUTTON_STATE,
   CUSTOMER_ADDITION_QUESTION_INPUT,
   SELECTED_EXPERT_LIST,
+  SELECTED_POC_OPTIONS
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -43,6 +44,7 @@ const OrganismCustomerAdditionalReport = ({
   customerAdditionalReportCount,
   conversationId,
 }) => {
+  const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
   const [selectedExpertList, setSelectedExpertList] =
     useAtom(SELECTED_EXPERT_LIST);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
@@ -306,6 +308,7 @@ const OrganismCustomerAdditionalReport = ({
               customerAdditionalReportData: updatedAdditionalReportData,
               timestamp: Date.now(),
               expert_index: selectedExpertIndex,
+              selectedPocOptions: selectedPocOptions,
             },
             isLoggedIn,
             conversationId

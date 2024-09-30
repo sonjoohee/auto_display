@@ -31,11 +31,13 @@ import {
   CUSTOMER_ADDITION_BUTTON_STATE,
   CUSTOMER_ADDITION_QUESTION_INPUT,
   SELECTED_EXPERT_LIST,
+  SELECTED_POC_OPTIONS,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
 
 const OrganismPanelSection = ({ conversationId }) => {
+  const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
   const [panelList, setPanelList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isPanelNull, setIsPanelNull] = useState(false);
@@ -97,6 +99,7 @@ const OrganismPanelSection = ({ conversationId }) => {
         customerAdditionalReportData: customerAdditionalReportData,
         timestamp: Date.now(),
         expert_index: selectedExpertIndex,
+        selectedPocOptions: selectedPocOptions,
       },
       isLoggedIn,
       conversationId
