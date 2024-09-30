@@ -18,7 +18,8 @@ import {
   SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
   SELECTED_EXPERT_LIST,
-  SELECTED_POC_OPTIONS
+  SELECTED_POC_OPTIONS,
+  SELCTED_POC_TARGET,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import MoleculeReportController from "../molecules/MoleculeReportController";
@@ -36,6 +37,7 @@ const OrganismAdditionalReport = ({
   additionalReportCount,
   conversationId,
 }) => {
+  const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
   const [selectedExpertList, setSelectedExpertList] =
     useAtom(SELECTED_EXPERT_LIST);
@@ -201,6 +203,7 @@ const OrganismAdditionalReport = ({
               timestamp: Date.now(),
               expert_index: selectedExpertIndex,
               selectedPocOptions: selectedPocOptions,
+              selectedPocTarget: selectedPocTarget,
             },
             isLoggedIn,
             conversationId
