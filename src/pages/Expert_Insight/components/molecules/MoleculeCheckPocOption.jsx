@@ -127,13 +127,11 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
     updatedConversation.push(
       {
         type: "user",
-        message:
-          `PoC 검증은 “${selectedOption1}”을 위해 진행하고자 합니다.\n현재 저희 서비스는 아이디어 단계로 초기 스타트업 입니다.`,
+        message: `PoC 검증은 “${selectedOption1}”을 위해 진행하고자 합니다.\n현재 저희 서비스는 아이디어 단계로 초기 스타트업 입니다.`,
       },
       {
         type: "system",
-        message:
-          "PoC 설계를 위한 귀중한 정보 감사합니다. 마지막으로 타겟 유저에 대한 정보를 알려주세요.\n더욱 상세한 PoC 설계가 가능합니다. ",
+        message: "PoC 설계를 위한 귀중한 정보 감사합니다. 마지막으로 타겟 유저에 대한 정보를 알려주세요.\n더욱 상세한 PoC 설계가 가능합니다. ",
         expertIndex: selectedExpertIndex,
       },
       {
@@ -204,7 +202,7 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
 
   return (
     <Wrap>
-      {tabs === 0 && !selectedPocOptions.length ? (
+      {tabs === 0 && selectedPocOptions.length === 0 ? (
         <>
         <Question>Q. 현재 PoC를 진행 단계는 무엇인가요?</Question>
         <OptionContainer>
@@ -219,7 +217,7 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
           ))}
         </OptionContainer>
         </>
-      ) : tabs === 1 && !selectedPocOptions.length ? (
+      ) : tabs === 1 && selectedPocOptions.length === 0 ? (
         <>
         <Question>Q. PoC를 통해서 얻고 싶은 내용은 무엇인가요?</Question>
         <OptionContainer>
@@ -238,7 +236,7 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
         <Question>완료</Question>
       )}
 
-      {tabs !== 2 && !selectedPocOptions.length ? 
+      {tabs !== 2 && selectedPocOptions.length === 0 ? 
         <OptionContainer>
           {tabs === 0 ?
             <Option></Option>

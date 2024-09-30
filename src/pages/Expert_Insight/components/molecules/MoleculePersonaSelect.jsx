@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-// import MoleculePanelItemCard from "../../../AI_Panel/components/molecules/MoleculePanelItemCard";
-// import MoleculePanelItemList from "../../../AI_Panel/components/molecules/MoleculePanelItemList";
-import MoleculePanelItemCard from "../molecules/MoleculePanelItemCard";
-// import MoleculePanelItemList from "../molecules/MoleculePanelItemList";
 import { palette } from "../../../../assets/styles/Palette";
 import axios from "axios";
 import { useAtom } from "jotai";
@@ -32,16 +28,13 @@ import {
   CUSTOMER_ADDITION_QUESTION_INPUT,
   SELECTED_EXPERT_LIST,
   SELECTED_POC_OPTIONS,
+  SELCTED_POC_TARGET,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
 
-const OrganismPanelSection = ({ conversationId }) => {
+const MoleculePersonaSelect = ({ conversationId }) => {
   const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
-  const [panelList, setPanelList] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isPanelNull, setIsPanelNull] = useState(false);
-  const [viewPanelType, setViewPanelType] = useState(true); // true for card view, false for list view
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [inputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
@@ -66,15 +59,36 @@ const OrganismPanelSection = ({ conversationId }) => {
   const [customerAdditionalReportData] = useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
   const [isLoggedIn] = useAtom(isLoggedInAtom);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
-  const [isClickCheckPocRightAway, setIsClickCheckPocRightAway] = useAtom(iS_CLICK_CHECK_POC_RIGHTAWAY);
+  const [selectedPocTargetState, setSelectedPocTargetState] = useState({}); // 현재 선택한 상태를 저장
+  const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET); // 확인 버튼을 눌렀을 때만 저장 -> 히스토리 저장
 
-  const handleButtonClick = async () => {
-    // Update the conversation
+  const options = [
+    { title: "퇴직자, 취미 활동가(직원)", text: "웰에이징 플랫폼을 통해 자신의 경험을 다른 사람과 공유하고, 새로운 취미와 활동을 탐색하며 건강하고 보람찬 노년을 보낸는 것 (목표)" },
+    { title: "중소기업 CEO, 고위 관리직", text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함" },
+    { title: "중소기업 CEO, 고위 관리직", text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함" },
+    { title: "중소기업 CEO, 고위 관리직", text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함" },
+    { title: "아직 타겟 고객이 확실하지 않아요", text: "" },
+  ];
+
+  const handleConfirm = async () => {
+    if (Object.keys(selectedPocTargetState).length === 0) {
+      alert("항목을 선택해주세요")
+      return;
+    }
+    setConversationStage(3)
+    setApproachPath(3);
+    setSelectedPocTarget(selectedPocTargetState);
+
     const updatedConversation = [...conversation];
     updatedConversation.push(
       {
+        type: "user",
+        message: `제가 타겟하고 있는 타겟은 "${selectedPocTargetState.title}" 입니다.`,
+        expertIndex: selectedExpertIndex,
+      },
+      {
         type: "system",
-        message: "선택한 타겟 유저를 바탕으로 PoC 보고서를 작성하겠습니다.",
+        message: "소중한 정보 감사합니다. Poc를 설계해보겠습니다.",
         expertIndex: selectedExpertIndex,
       },
       {
@@ -82,8 +96,6 @@ const OrganismPanelSection = ({ conversationId }) => {
       }
     );
     setConversation(updatedConversation);
-    setConversationStage(3)
-    setApproachPath(3);
 
     await saveConversationToIndexedDB(
       {
@@ -100,6 +112,7 @@ const OrganismPanelSection = ({ conversationId }) => {
         timestamp: Date.now(),
         expert_index: selectedExpertIndex,
         selectedPocOptions: selectedPocOptions,
+        selectedPocTarget: selectedPocTargetState,
       },
       isLoggedIn,
       conversationId
@@ -107,133 +120,75 @@ const OrganismPanelSection = ({ conversationId }) => {
     setButtonState(1); 
   };
 
-  useEffect(() => {
-    const fetchInitialPanelList = async () => {
-      setIsPanelNull(true);
-      setIsLoading(true);
-      try {
-        const response = await axios.get(
-            `${process.env.REACT_APP_SERVER_URL}/panels/list?page=1&size=20&searchBehabioralType=&searchUtilizationTime=&searchGender=&searchAge=&searchTag=&searchMarriage=&searchChildM=&searchChildF=`
-          );
-        setPanelList(response.data.results);
-        console.log("Fetched panel list:", response.data.results);
-      } catch (error) {
-        console.error("Error fetching panel list:", error);
-      } finally {
-        setIsPanelNull(false);
-        setIsLoading(false);
-      }
-    };
-
-    fetchInitialPanelList();
-  }, []);
-
-  if (!Array.isArray(panelList) || panelList.length === 0) {
-    if (isPanelNull) return <NoData>패널 데이터를 불러오고 있습니다.</NoData>;
-    else return <NoData>패널 데이터가 없습니다.</NoData>;
-  }
-
   return (
-    <>
-      {isLoading && (
-        <LoadingOverlay>
-          <div className="loader"></div>
-        </LoadingOverlay>
-      )}
-      <PanelWrap>
-          <CardViewContainer>
-            {panelList.map((panel, index) => (
-              <MoleculePanelItemCard
-                key={panel.id}
-                id={panel.id}
-                gender={panel.gender}
-                age={panel.age}
-                job={panel.job}
-                address={panel.address}
-                subAddress={panel.subAddress}
-                imgSrc={(index % 10) + 1} // Images from 1 to 10
-                tags={panel.tag}
-                comment={panel.comment}
-                lifeStyle={panel.lifeStyle}
-                consumption={panel.consumptionPropensity}
-                productGroup={panel.productGroup}
-                target_1={panel.target_1}
-                target_2={panel.target_2}
-                target_3={panel.target_3}
-                target_4={panel.target_4}
-                target_5={panel.target_5}
-                value_1={panel.value_1}
-                value_2={panel.value_2}
-                value_3={panel.value_3}
-                value_4={panel.value_4}
-                value_5={panel.value_5}
-              />
-            ))}
-          </CardViewContainer>
-          <button onClick={handleButtonClick}>확인</button>
-      </PanelWrap>
-    </>
+    <Wrapper>
+      {Object.keys(selectedPocTarget).length === 0 ?
+      <>
+      <Question>Q. 생각하고 계시는 비즈니스의 타겟 고객은 누구입니까?</Question>
+      <OptionsContainer>
+        {options.map((option) => (
+          <Option key={option.title} onClick={() => setSelectedPocTargetState({"title": option.title, "text": option.text})}>
+            <input type="radio" id={option} name="target" />
+            <Label htmlFor={option}>{option.title}</Label>
+            <p>{option.text}</p>
+          </Option>
+        ))}
+      </OptionsContainer>
+      <Button onClick={handleConfirm}>확인</Button>
+      </>
+      :
+      <>
+      <Question>완료</Question>
+      </>
+      }
+
+    </Wrapper>
   );
 };
 
-export default OrganismPanelSection;
+export default MoleculePersonaSelect;
 
-const NoData = styled.p`
-  min-height: 700px;
-  text-align: center;
-  padding-top: 50px;
+const Wrapper = styled.div`
+  padding: 20px;
+  border-radius: 10px;
+  width: 60%;
+  margin: auto;
 `;
 
-const PanelWrap = styled.section`
-  .sortBooth {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 32px;
-  }
+const Question = styled.h2`
+  font-size: 20px;
+  margin-bottom: 20px;
 `;
 
-const CardViewContainer = styled.ul`
+const OptionsContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
-  margin-bottom: 10px;
-`;
-
-const ListViewContainer = styled.ul`
-  display: flex;
-  flex-direction: column;
   gap: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 `;
 
-const LoadingOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+const Option = styled.div`
+  flex: 1 1 calc(50% - 20px);
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 9999;
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  cursor: pointer;
 
-  .loader {
-    border: 12px solid #f3f3f3; /* Light grey */
-    border-top: 12px solid ${palette.blue}; /* Blue */
-    border-radius: 50%;
-    width: 80px;
-    height: 80px;
-    animation: spin 2s linear infinite;
+  input {
+    margin-right: 10px;
   }
+`;
 
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
+const Label = styled.label`
+  font-size: 16px;
+`;
+
+const Button = styled.button`
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
 `;
