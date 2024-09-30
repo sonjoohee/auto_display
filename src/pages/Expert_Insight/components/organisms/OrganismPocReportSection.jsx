@@ -12,7 +12,8 @@ import {
   APPROACH_PATH,
   isLoggedInAtom,
   INPUT_BUSINESS_INFO,
-  SELECTED_POC_OPTIONS
+  SELECTED_POC_OPTIONS,
+  SELCTED_POC_TARGET,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -66,6 +67,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [loading, setLoading] = useState(false);
   const [downloadStatus, setDownloadStatus] = useState(""); // 상태 메시지를 관리
+  const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET); // 확인 버튼을 눌렀을 때만 저장 -> 히스토리 저장
 
   const axiosConfig = {
     timeout: 100000, // 100초
@@ -287,9 +289,9 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               주요기능: analysisReportData.mainCharacter,
               목표고객: analysisReportData.mainCustomer,
             },
-            goal : "프로토타입 개발 단계",
-            standpoint : "초기 사용자 피드백 수집",
-            target : "캠핑을 좋아하는 MZ 세대",
+            goal : selectedPocOptions[0],
+            standpoint : selectedPocOptions[1],
+            target : selectedPocTarget.title,
             tabs: [],
             page_index: 1,
           };
@@ -415,7 +417,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               timestamp: Date.now(),
               expert_index: selectedExpertIndex,
               selectedPocOptions: selectedPocOptions,
-              selectedPocTarget: selectedPocTarget,
+              selectedPocTarget: selectedPocTarget
             },
             isLoggedIn,
             conversationId

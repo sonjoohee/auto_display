@@ -66,12 +66,12 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
   const [options2, setOptions2] = useState([]);
 
   const options1 = [
-    { label: "아이디어 검증 단계", value: "아이디어 검증" },
-    { label: "기술 검증 단계", value: "기술 검증" },
-    { label: "프로토타입 개발 단계", value: "프로토타입 개발" },
-    { label: "기능 테스트 단계", value: "기능 테스트" },
-    { label: "사용자 적합성 검증 단계", value: "사용자 적합성 검증" },
-    { label: "완전 제품 준비 단계", value: "완전 제품 준비" },
+    { label: "아이디어 검증 단계", value: "아이디어 검증 단계" },
+    { label: "기술 가능성 검증 단계", value: "기술 가능성 검증 단계" },
+    { label: "프로토타입 개발 단계", value: "프로토타입 개발 단계" },
+    { label: "기능 테스트 및 개선 단계", value: "기능 테스트 및 개선 단계" },
+    { label: "사용자 적합성 테스트 단계", value: "사용자 적합성 테스트 단계" },
+    { label: "출시 준비 단계", value: "출시 준비 단계" },
   ];
   const options2_1 = [
     { label: "타겟 고객 그룹과 시장 세분화", value: "타겟 고객 그룹과 시장 세분화" },
@@ -179,22 +179,22 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
       }
       
       switch (selectedOption1) {
-        case "아이디어 검증":
+        case "아이디어 검증 단계":
           setOptions2(options2_1);
           break;
-        case "기술 검증":
+        case "기술 가능성 검증 단계":
           setOptions2(options2_2);
           break;
-        case "프로토타입 개발":
+        case "프로토타입 개발 단계":
           setOptions2(options2_3);
           break;
-        case "기능 테스트":
+        case "기능 테스트 및 개선 단계":
           setOptions2(options2_4);
           break;
-        case "사용자 적합성 검증":
+        case "사용자 적합성 테스트 단계":
           setOptions2(options2_5);
           break;
-        case "완전 제품 준비":
+        case "출시 준비 단계":
           setOptions2(options2_6);
           break;
         default:
