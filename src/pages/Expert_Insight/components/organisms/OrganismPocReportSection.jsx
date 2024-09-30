@@ -47,6 +47,8 @@ import {
   IS_EDITING_NOW,
   CONVERSATION_STAGE,
 } from "../../../AtomStates";
+import { NotoSansKRFont } from './NotoSansKR-Regular.js'; 
+import fontData from './encoded-20240930083135.txt'; // base64로 인코딩된 폰트
 
 const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
@@ -379,7 +381,37 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
     const subItems = content.filter((item) => item.subTitle);
     const [loading, setLoading] = useState(false);
     const [downloadStatus, setDownloadStatus] = useState(""); // 상태 메시지를 관리
+    const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
+    const axiosConfig = {
+      timeout: 100000, // 100초
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
+    };
+    const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
+    const [
+      mainFeaturesOfBusinessInformation,
+      setMainFeaturesOfBusinessInformation,
+    ] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
+    const [
+      mainCharacteristicOfBusinessInformation,
+      setMainCharacteristicOfBusinessInformation,
+    ] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
+    const [
+      businessInformationTargetCustomer,
+      setBusinessInformationTargetCustomer,
+    ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
+    const [buttonState, setButtonState] = useAtom(EXPERT_BUTTON_STATE); // BUTTON_STATE 사용
+    // Use the single strategyReportData atom
+    const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA);
+    const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
+    const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET); // 확인 버튼을 눌렀을 때만 저장 -> 히스토리 저장
 
+    const analysisReportData = {
+      title: titleOfBusinessInfo,
+      mainFeatures: mainFeaturesOfBusinessInformation,
+      mainCharacter: mainCharacteristicOfBusinessInformation,
+      mainCustomer: businessInformationTargetCustomer,
+    };
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedFormat, setSelectedFormat] = useState('PDF');
     const [selectedLanguage, setSelectedLanguage] = useState('Korean');
@@ -413,63 +445,113 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
       }
     };
   
-    const handleDownload = (language, index) => {
-      setTimeout(() => {
-        const input = document.getElementById('print-content');
-        html2canvas(input, {
-          scale: 2, // 해상도 향상을 위해 scale을 2로 설정
-        })
-          .then((canvas) => {
-            const imgData = canvas.toDataURL('image/png');
-            const imgWidth = 210; // A4 기준 너비(mm)
-            const pageHeight = imgWidth * 1.414; // A4 기준 높이(mm)
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            let heightLeft = imgHeight;
-            const margin = 0;
-            const doc = new jsPDF('p', 'mm', 'a4');
-            let position = 0;
-  
-            // 첫 페이지 추가
-            doc.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-  
-            // 추가 페이지 처리
-            while (heightLeft > 0) {
-              position = heightLeft - imgHeight;
-              doc.addPage();
-              doc.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
-              heightLeft -= pageHeight;
-            }
-  
-            doc.save(`report_${index}.pdf`);
-  
-            // 다운로드 완료 후 상태 업데이트
-            setDownloadStatus('다운로드 완료');
-  
-            // 2초 후 상태 리셋
-            setTimeout(() => {
-              setLoading(false);
-              setDownloadStatus('');
-              setIsModalOpen(null); // 모달 닫기
-            }, 2000);
-          })
-          .catch((error) => {
-            console.error('Error generating PDF:', error);
-            setDownloadStatus('다운로드 실패');
-            setTimeout(() => {
-              setLoading(false);
-              setDownloadStatus('');
-            }, 2000);
-          });
-      }, 0); // 브라우저가 상태 업데이트를 처리할 시간을 줌
+    const handleDownload = async (language, index) => {
+      setLoading(true); // 로딩 상태 시작
+      setDownloadStatus('다운로드 중입니다...');
+    
+      // `strategyReportData`에서 필요한 정보를 직접 가져옴
+      const currentExpertData = strategyReportData[expertIndex];
+    
+      if (!currentExpertData) {
+        setLoading(false);
+        setDownloadStatus('데이터를 찾을 수 없습니다.');
+        return;
+      }
+    
+      // 요청에 필요한 데이터 준비
+      const data = {
+        expert_id: selectedExpertIndex,
+        business_info: titleOfBusinessInfo, // DB에서 가져온 titleOfBusinessInfo 사용
+        business_analysis_data: {
+          명칭: analysisReportData.title,
+          주요_목적_및_특징: analysisReportData.mainFeatures,
+          주요기능: analysisReportData.mainCharacter,
+          목표고객: analysisReportData.mainCustomer,
+        },
+        goal: selectedPocOptions[0],
+        standpoint: selectedPocOptions[1],
+        target: selectedPocTarget.title,
+        poc_data: extractSpecificContent(strategyReportData, expertIndex, index), // strategyReportData에서 추출
+        tabs: currentExpertData.tabs, // strategyReportData에서 직접 가져옴
+        page_index: 1,
+      };
+    
+      try {
+        // API 요청 보내기
+        const response = await axios.post(
+          'https://wishresearch.kr/panels/expert/poc_report',
+          data
+        );
+    
+        // 응답으로부터 보고서 내용 가져오기
+        const reportContent = response.data.poc_report; // 실제 응답 구조에 따라 수정 필요
+    
+        // Markdown 스타일 제거 (정규식 사용)
+        const cleanedContent = reportContent
+          .replace(/#/g, '') // 제목 표시 '#' 제거
+          .replace(/\*\*/g, '') // 굵은 글씨 '**' 제거
+          .replace(/\*/g, '') // 이탤릭체 '*' 제거
+          .replace(/-\s/g, '• '); // 리스트 '-'를 '•'로 변환
+    
+        // PDF 생성
+        const doc = new jsPDF();
+    
+        // 한국어 폰트를 등록
+        doc.addFileToVFS('NotoSansKR-Regular.ttf', fontData);
+        doc.addFont('NotoSansKR-Regular.ttf', 'NotoSansKR', 'normal');
+        doc.setFont('NotoSansKR'); // 폰트 설정
+    
+        // 제목 추가
+        doc.setFontSize(18);
+        doc.text('리포트 제목: ' + titleOfBusinessInfo, 10, 10);
+    
+        // 내용 추가
+        doc.setFontSize(12);
+        let yOffset = 20; // 첫 번째 줄 아래부터 시작
+        const lineHeight = 10; // 줄 간격
+    
+        // 줄바꿈을 고려하여 내용 추가
+        cleanedContent.split('\n').forEach((line, index) => {
+          if (yOffset > 280) {
+            // 페이지 한계에 도달하면 새로운 페이지 추가
+            doc.addPage();
+            yOffset = 20; // 새 페이지에서 다시 위에서부터 시작
+          }
+          doc.text(line, 10, yOffset);
+          yOffset += lineHeight; // 다음 줄로 이동
+        });
+    
+        // PDF 다운로드
+        doc.save(`report_${index}.pdf`);
+    
+        // 다운로드 완료 후 상태 업데이트
+        setDownloadStatus('다운로드 완료');
+    
+        // 2초 후 상태 리셋
+        setTimeout(() => {
+          setLoading(false);
+          setDownloadStatus('');
+          setIsModalOpen(null); // 모달 닫기
+        }, 2000);
+      } catch (error) {
+        console.error('Error fetching report:', error);
+        setLoading(false);
+        setDownloadStatus('다운로드 실패');
+        setTimeout(() => {
+          setDownloadStatus('');
+        }, 2000);
+      }
     };
+    
   
-    function extractSpecificContent(tabs, contentIndex) {
+    function extractSpecificContent(strategyReportData, expertIndex, contentIndex) {
       let specificContent = null;
     
+      const currentExpertData = strategyReportData[expertIndex];
+      
       // 첫 번째 tab의 첫 번째 section에서 특정 인덱스의 content 항목을 가져옴
-      if (tabs.length > 0 && tabs[0].sections.length > 0) {
-        const contentItem = tabs[0].sections[0].content[contentIndex];
+      if (currentExpertData && currentExpertData.tabs.length > 0 && currentExpertData.tabs[0].sections.length > 0) {
+        const contentItem = currentExpertData.tabs[0].sections[0].content[contentIndex];
     
         if (contentItem) {
           specificContent = {
@@ -485,28 +567,38 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
     
       return specificContent;
     }
+    
   
-  const handleDownloadDocx = async (language) => {
-    setLoading(true); // 로딩 상태 시작
-    setDownloadStatus('다운로드 중입니다...');
-  
-    // 요청에 필요한 데이터 준비
-    const data = {
-      expert_id: selectedExpertIndex,
-      business_info: titleOfBusinessInfo, // DB에서 가져온 titleOfBusinessInfo 사용
-      business_analysis_data: {
-        명칭: analysisReportData.title,
-        주요_목적_및_특징: analysisReportData.mainFeatures,
-        주요기능: analysisReportData.mainCharacter,
-        목표고객: analysisReportData.mainCustomer,
-      },
-      goal: selectedPocOptions[0],
-      standpoint: selectedPocOptions[1],
-      target: selectedPocTarget.title,
-      poc_data: extractSpecificContent(tabs, 0),
-      tabs: [],
-      page_index: 1,
-    };
+    const handleDownloadDocx = async (language, index) => {
+      setLoading(true); // 로딩 상태 시작
+      setDownloadStatus('다운로드 중입니다...');
+    
+      // `strategyReportData`에서 필요한 정보를 직접 가져옴
+      const currentExpertData = strategyReportData[expertIndex];
+    
+      if (!currentExpertData) {
+        setLoading(false);
+        setDownloadStatus('데이터를 찾을 수 없습니다.');
+        return;
+      }
+    
+      // 요청에 필요한 데이터 준비
+      const data = {
+        expert_id: selectedExpertIndex,
+        business_info: titleOfBusinessInfo, // DB에서 가져온 titleOfBusinessInfo 사용
+        business_analysis_data: {
+          명칭: analysisReportData.title,
+          주요_목적_및_특징: analysisReportData.mainFeatures,
+          주요기능: analysisReportData.mainCharacter,
+          목표고객: analysisReportData.mainCustomer,
+        },
+        goal: selectedPocOptions[0],
+        standpoint: selectedPocOptions[1],
+        target: selectedPocTarget.title,
+        poc_data: extractSpecificContent(strategyReportData, expertIndex, index), // strategyReportData에서 추출
+        tabs: currentExpertData.tabs, // strategyReportData에서 직접 가져옴
+        page_index: 1,
+      };
   
     try {
       // API 요청 보내기
