@@ -61,6 +61,37 @@ const MoleculePersonaSelect = ({ conversationId }) => {
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
   const [selectedPocTargetState, setSelectedPocTargetState] = useState({}); // 현재 선택한 상태를 저장
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET); // 확인 버튼을 눌렀을 때만 저장 -> 히스토리 저장
+  const [isLoading, setIsLoading] = useAtom(IS_LOADING);
+  const [isLoadingTarget, setIsLoadingTarget] = useState(false);
+
+  const axiosConfig = {
+    timeout: 100000, // 100초
+    headers: {
+      "Content-Type": "application/json",
+    },
+    withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
+  };
+  
+  // useEffect(() => {
+  //   const fetchPersonaSelect = async () => {
+      
+  //     setIsLoading(true);
+  //     setIsLoadingTarget(true);
+
+  //     const response = await axios.post(
+  //       "https://wishresearch.kr/",
+  //       selectedPocOptions,
+  //       axiosConfig
+  //     );
+      
+  //     setSelectedPocTarget(response.data);
+
+  //     setIsLoading(false);
+  //     setIsLoadingTarget(false);
+  //   };
+
+  //   fetchPersonaSelect();
+  // }, []);
 
   const options = [
     { title: "퇴직자, 취미 활동가(직원)", text: "웰에이징 플랫폼을 통해 자신의 경험을 다른 사람과 공유하고, 새로운 취미와 활동을 탐색하며 건강하고 보람찬 노년을 보낸는 것 (목표)" },
