@@ -703,13 +703,15 @@ if (isLoadingPage) {
               {/* 검색해서 시작 */}
               {(approachPath === -1 || approachPath === 3) && 
                 titleOfBusinessInfo &&
+                strategyReportData.hasOwnProperty("4") &&
                 <OrganismBizExpertSelect />
               }
 
               {/* 전문가 선택하고 시작 */}
               {approachPath === 1 &&
-                Object.keys(strategyReportData).length !== 0 && // 수정된 부분
+                Object.keys(strategyReportData).length !== 0 &&
                 !isLoading &&
+                strategyReportData.hasOwnProperty("4") && 
                   <OrganismBizExpertSelect />
               }
 
@@ -718,7 +720,8 @@ if (isLoadingPage) {
                 titleOfBusinessInfo &&
                 conversation.length > 0 &&
                 conversation[conversation.length - 1].type !== "reportButton" &&
-                !isLoading && 
+                !isLoading &&
+                strategyReportData.hasOwnProperty("4") &&  
                   <OrganismBizExpertSelect />
               }
 
@@ -727,7 +730,7 @@ if (isLoadingPage) {
             {conversationStage === 1 ? (
               <OrganismSearchBottomBar onSearch={handleSearch} isBlue={false} />
             ) : (
-              <OrganismSearchBottomBar onSearch={handleSearch} isBlue={true} />
+              strategyReportData.hasOwnProperty("4") && <OrganismSearchBottomBar onSearch={handleSearch} isBlue={true} /> // 4번 전문가 보고서 생성 시 활성화
             )}
           </div>
 
