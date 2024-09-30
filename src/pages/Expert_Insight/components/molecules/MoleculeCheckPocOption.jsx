@@ -133,7 +133,7 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
     updatedConversation.push(
       {
         type: "user",
-        message: `PoC 검증은 “${selectedOption1}”을 위해 진행하고자 합니다.\n현재 저희 서비스는 아이디어 단계로 초기 스타트업 입니다.`,
+        message: `*${selectedOption1}*의 *${selectedOption2}*을 위해 PoC 검증을 진행하려고 합니다`,
       },
       {
         type: "system",

@@ -94,7 +94,8 @@ const MoleculePersonaSelect = ({ conversationId }) => {
   // }, []);
 
   const options = [
-    { title: "퇴직자, 취미 활동가(직원)", text: "웰에이징 플랫폼을 통해 자신의 경험을 다른 사람과 공유하고, 새로운 취미와 활동을 탐색하며 건강하고 보람찬 노년을 보낸는 것 (목표)" },
+    { title: "퇴직자, 취미 활동가", text: "웰에이징 플랫폼을 통해 자신의 경험을 다른 사람과 공유하고, 새로운 취미와 활동을 탐색하며 건강하고 보람찬 노년을 보낸는 것" },
+    { title: "중소기업 CEO, 고위 관리직", text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함" },
     { title: "중소기업 CEO, 고위 관리직", text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함" },
     { title: "중소기업 CEO, 고위 관리직", text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함" },
     { title: "중소기업 CEO, 고위 관리직", text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함" },
@@ -116,7 +117,7 @@ const MoleculePersonaSelect = ({ conversationId }) => {
     updatedConversation.push(
       {
         type: "user",
-        message: `제가 타겟하고 있는 타겟은 "${selectedPocTargetState.title}" 입니다.`,
+        message: `비즈니스 타겟은 *${selectedPocTargetState.title}* 입니다.`,
         expertIndex: selectedExpertIndex,
       },
       {
