@@ -31,6 +31,7 @@ import {
   SAVED_TIMESTAMP,
   IS_EXPERT_INSIGHT_ACCESSIBLE,
   SELECTED_POC_OPTIONS,
+  SELCTED_POC_TARGET,
 } from "../../../AtomStates";
 
 import {
@@ -59,6 +60,7 @@ import MoleculePersonaSelect from "../molecules/MoleculePersonaSelect";
 
 
 const PageExpertInsight = () => {
+  const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [isLoadingPage, setIsLoadingPage] = useState(true); // 로딩 상태 추가
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
 
@@ -154,6 +156,7 @@ const PageExpertInsight = () => {
         timestamp: Date.now(),
         expert_index: selectedExpertIndex,
         selectedPocOptions: selectedPocOptions,
+        selectedPocTarget: selectedPocTarget,
       },
       isLoggedIn,
       conversationId
@@ -218,6 +221,7 @@ const PageExpertInsight = () => {
             setCustomerAdditionalReportData(savedConversation.customerAdditionalReportData || []);
 
             setSelectedPocOptions(savedConversation.selectedPocOptions || []);
+            setSelectedPocTarget(savedConversation.selectedPocTarget || {});
 
             // 대화 단계가 초기 상태라면 초기 시스템 메시지 설정
             if (savedConversation.conversationStage === 1) {
