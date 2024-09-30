@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled, { keyframes } from "styled-components";
 import { useAtom } from "jotai";
 import {
@@ -67,6 +67,10 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const [downloadStatus, setDownloadStatus] = useState(""); // 상태 메시지를 관리
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET); // 확인 버튼을 눌렀을 때만 저장 -> 히스토리 저장
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedFormat, setSelectedFormat] = useState('PDF');
+  const [selectedLanguage, setSelectedLanguage] = useState('Korean');
+
   const axiosConfig = {
     timeout: 100000, // 100초
     headers: { "Content-Type": "application/json" },
@@ -115,148 +119,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
 
-  const handleDownload = () => {
-    setLoading(true); // 로딩 상태 시작
-    setDownloadStatus("다운로드 중입니다...");
-    
-    setTimeout(() => {
-      const input = document.getElementById("print-content");
-      html2canvas(input, {
-        scale: 2, // 해상도 향상을 위해 scale을 2로 설정
-      })
-        .then((canvas) => {
-          const imgData = canvas.toDataURL("image/png");
-          const imgWidth = 210; // A4 기준 너비(mm)
-          const pageHeight = imgWidth * 1.414; // A4 기준 높이(mm)
-          const imgHeight = (canvas.height * imgWidth) / canvas.width;
-          let heightLeft = imgHeight;
-          const margin = 0;
-          const doc = new jsPDF("p", "mm", "a4");
-          let position = 0;
   
-          // 첫 페이지 추가
-          doc.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight);
-          heightLeft -= pageHeight;
-  
-          // 추가 페이지 처리
-          while (heightLeft > 0) {
-            position = heightLeft - imgHeight;
-            doc.addPage();
-            doc.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-          }
-  
-          doc.save("report.pdf");
-  
-          // 다운로드 완료 후 상태 업데이트
-          setDownloadStatus("다운로드 완료");
-  
-          // 2초 후 상태 리셋
-          setTimeout(() => {
-            setLoading(false);
-            setDownloadStatus("");
-          }, 2000);
-        })
-        .catch((error) => {
-          console.error("Error generating PDF:", error);
-          setDownloadStatus("다운로드 실패");
-          setTimeout(() => {
-            setLoading(false);
-            setDownloadStatus("");
-          }, 2000);
-        });
-    }, 0); // 브라우저가 상태 업데이트를 처리할 시간을 줌
-  };
-  
-
-  const handleDownloadDocx = () => {
-    setLoading(true); // 로딩 상태 시작
-    setDownloadStatus("다운로드 중입니다...");
-
-    let contentToCopy = "";
-
-    // 데이터를 추출하는 함수
-    const extractTextContent = (data) => {
-      let textContent = "";
-      if (typeof data === "string") {
-        return data + "\n";
-      }
-      if (Array.isArray(data)) {
-        data.forEach((item) => {
-          textContent += extractTextContent(item);
-        });
-      } else if (typeof data === "object" && data !== null) {
-        Object.values(data).forEach((value) => {
-          textContent += extractTextContent(value);
-        });
-      }
-      return textContent;
-    };
-
-    // 보고서 데이터 추출
-    const getSelectedTabData = () => {
-      const reportData = strategyReportData[expertIndex];
-      if (!reportData) return null;
-
-      const selectedTabCopy = selectedTab || 0; // 선택된 탭이 없으면 기본값으로 0 사용
-      return reportData.tabs[selectedTabCopy];
-    };
-
-    // 보고서 복사 기능 적용
-    const selectedTabData = getSelectedTabData();
-    contentToCopy = extractTextContent(selectedTabData);
-
-    // 줄바꿈 기준으로 텍스트 분리
-    const contentParagraphs = contentToCopy.split("\n").map((line) => {
-      return new Paragraph({
-        children: [
-          new TextRun({
-            text: line,
-          }),
-        ],
-      });
-    });
-
-    // 문서 생성을 위한 docx Document 객체 생성
-    const doc = new Document({
-      sections: [
-        {
-          children: [
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: "리포트 제목: " + titleOfBusinessInfo,
-                  bold: true,
-                }),
-              ],
-            }),
-            ...contentParagraphs, // 분리된 각 줄을 Paragraph로 추가
-          ],
-        },
-      ],
-    });
-
-    // docx 파일 패킹 및 다운로드
-    Packer.toBlob(doc).then((blob) => {
-      saveAs(blob, "report.docx");
-
-      // 다운로드 완료 후 상태 업데이트
-      setDownloadStatus("다운로드 완료");
-
-      // 2초 후 상태 리셋
-      setTimeout(() => {
-        setLoading(false);
-        setDownloadStatus("");
-      }, 2000);
-    }).catch((error) => {
-      console.error("Error generating DOCX:", error);
-      setLoading(false);
-      setDownloadStatus("다운로드 실패");
-      setTimeout(() => {
-        setDownloadStatus("");
-      }, 2000);
-    });
-  };
 
   useEffect(() => {
     const loadData = async () => {
@@ -444,84 +307,84 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
 
   return (
     <>
-    <AnalysisSection Strategy>
-      {/* 다운로드 버튼을 isLoadingExpert가 false일 때만 표시 */}
-      {!isLoadingExpert && (
-        <>
-          <DownloadButton onClick={handleDownload} disabled={loading}>
-            {loading ? downloadStatus : "보고서 다운로드 (PDF)"}
-          </DownloadButton>
-          <DownloadButton onClick={handleDownloadDocx} disabled={loading}>
-            {loading ? downloadStatus : "보고서 다운로드 (Word)"}
-          </DownloadButton>
-        </>
-      )}
-        {/* PDF로 변환할 콘텐츠를 감싸는 div에 id 추가 */}
-        <div id="print-content">
-          {isLoadingExpert ? (
-            <>
-              <SkeletonTitle className="title-placeholder" />
-              <SkeletonLine className="content-placeholder" />
-              <SkeletonLine className="content-placeholder" />
-              <Spacing />
-              <SkeletonTitle className="title-placeholder" />
-              <SkeletonLine className="content-placeholder" />
-              <SkeletonLine className="content-placeholder" />
-              <Spacing />
-              <SkeletonTitle className="title-placeholder" />
-              <SkeletonLine className="content-placeholder" />
-              <SkeletonLine className="content-placeholder" />
-            </>
-          ) : (
-            <>
-              <TabHeader>
-                {tabs &&
-                  tabs.length > 0 &&
-                  tabs.map((tab, index) => (
-                    <TabButton
-                      key={index}
-                      active={selectedTab === index}
-                      expertIndex={expertIndex}
-                      onClick={() => handleTabClick(index, expertIndex)}
-                    >
-                      {tab.title}
-                    </TabButton>
-                  ))}
-              </TabHeader>
+        <AnalysisSection Strategy>
+      {/* PDF로 변환할 콘텐츠를 감싸는 div에 id 추가 */}
+      <div id="print-content">
+        {isLoadingExpert ? (
+          <>
+            <SkeletonTitle className="title-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+            <Spacing />
+            <SkeletonTitle className="title-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+            <Spacing />
+            <SkeletonTitle className="title-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+          </>
+        ) : (
+          <>
+            <TabHeader>
+              {tabs &&
+                tabs.length > 0 &&
+                tabs.map((tab, index) => (
+                  <TabButton
+                    key={index}
+                    active={selectedTab === index}
+                    expertIndex={expertIndex}
+                    onClick={() => handleTabClick(index, expertIndex)}
+                  >
+                    {tab.title}
+                  </TabButton>
+                ))}
+            </TabHeader>
 
-              {sections?.map((section, index) => (
+            {sections?.map((section, index) => (
+              <div key={index}>
                 <Section
-                  key={index}
                   title={section.title}
                   title_text={section.text}
                   content={section.content}
                   isLast={index === sections.length - 1}
                   expertIndex={expertIndex}
                   selectedTab={selectedTab}
+                  index={index}
                 />
-              ))}
-            </>
-          )}
-        </div>
-
-        {!isLoadingExpert && (
-          <MoleculeReportController
-            reportIndex={1}
-            strategyReportID={expertIndex}
-            conversationId={conversationId}
-            sampleData={strategyReportData[expertIndex]}
-          />
+              </div>
+            ))}
+          </>
         )}
-      </AnalysisSection>
+      </div>
+
+      {!isLoadingExpert && (
+        <MoleculeReportController
+          reportIndex={1}
+          strategyReportID={expertIndex}
+          conversationId={conversationId}
+          sampleData={strategyReportData[expertIndex]}
+        />
+      )}
+    </AnalysisSection>
     </>
   );
 };
-const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }) => {
+
+const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,index }) => {
     // 서브 타이틀이 있는 항목과 없는 항목을 분리
     const subTitleItems = content.filter((item) => item.subTitle);
     const nonSubTitleItems = content.filter((item) => !item.subTitle);
     const summaryItem = content.find((item) => item.title === "총평");
     const subItems = content.filter((item) => item.subTitle);
+    const [loading, setLoading] = useState(false);
+    const [downloadStatus, setDownloadStatus] = useState(""); // 상태 메시지를 관리
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedFormat, setSelectedFormat] = useState('PDF');
+    const [selectedLanguage, setSelectedLanguage] = useState('Korean');
+    const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
+    const downloadButtonRef = useRef(null);
     // subText에서 ':'로 분리하여 subTitle과 text를 따로 처리
     const splitText = (text) => {
       const [subTitle, ...rest] = text.split(":");
@@ -530,6 +393,222 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
         text: rest.join(":").trim(), // ':' 뒷부분
       };
     };
+
+    const handleOpenModal = (index) => {
+      setIsModalOpen(index); // 클릭된 섹션의 인덱스를 저장하여 모달을 엶
+    };
+  
+    const handleCloseModal = () => {
+      setIsModalOpen(null); // 모달 닫기
+    };
+    
+    const handleDownloadClick = (index) => {
+      setLoading(true);
+      setDownloadStatus('다운로드 중입니다...');
+  
+      if (selectedFormat === 'PDF') {
+        handleDownload(selectedLanguage, index);
+      } else if (selectedFormat === 'Word') {
+        handleDownloadDocx(selectedLanguage, index);
+      }
+    };
+  
+    const handleDownload = (language, index) => {
+      setTimeout(() => {
+        const input = document.getElementById('print-content');
+        html2canvas(input, {
+          scale: 2, // 해상도 향상을 위해 scale을 2로 설정
+        })
+          .then((canvas) => {
+            const imgData = canvas.toDataURL('image/png');
+            const imgWidth = 210; // A4 기준 너비(mm)
+            const pageHeight = imgWidth * 1.414; // A4 기준 높이(mm)
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            let heightLeft = imgHeight;
+            const margin = 0;
+            const doc = new jsPDF('p', 'mm', 'a4');
+            let position = 0;
+  
+            // 첫 페이지 추가
+            doc.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+  
+            // 추가 페이지 처리
+            while (heightLeft > 0) {
+              position = heightLeft - imgHeight;
+              doc.addPage();
+              doc.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+              heightLeft -= pageHeight;
+            }
+  
+            doc.save(`report_${index}.pdf`);
+  
+            // 다운로드 완료 후 상태 업데이트
+            setDownloadStatus('다운로드 완료');
+  
+            // 2초 후 상태 리셋
+            setTimeout(() => {
+              setLoading(false);
+              setDownloadStatus('');
+              setIsModalOpen(null); // 모달 닫기
+            }, 2000);
+          })
+          .catch((error) => {
+            console.error('Error generating PDF:', error);
+            setDownloadStatus('다운로드 실패');
+            setTimeout(() => {
+              setLoading(false);
+              setDownloadStatus('');
+            }, 2000);
+          });
+      }, 0); // 브라우저가 상태 업데이트를 처리할 시간을 줌
+    };
+  
+    function extractSpecificContent(tabs, contentIndex) {
+      let specificContent = null;
+    
+      // 첫 번째 tab의 첫 번째 section에서 특정 인덱스의 content 항목을 가져옴
+      if (tabs.length > 0 && tabs[0].sections.length > 0) {
+        const contentItem = tabs[0].sections[0].content[contentIndex];
+    
+        if (contentItem) {
+          specificContent = {
+            title: contentItem.title,
+            text: contentItem.text,
+            subContent: contentItem.subContent.map((subItem) => ({
+              subTitle: subItem.subTitle,
+              text: subItem.text,
+            })),
+          };
+        }
+      }
+    
+      return specificContent;
+    }
+  
+  const handleDownloadDocx = async (language) => {
+    setLoading(true); // 로딩 상태 시작
+    setDownloadStatus('다운로드 중입니다...');
+  
+    // 요청에 필요한 데이터 준비
+    const data = {
+      expert_id: selectedExpertIndex,
+      business_info: titleOfBusinessInfo, // DB에서 가져온 titleOfBusinessInfo 사용
+      business_analysis_data: {
+        명칭: analysisReportData.title,
+        주요_목적_및_특징: analysisReportData.mainFeatures,
+        주요기능: analysisReportData.mainCharacter,
+        목표고객: analysisReportData.mainCustomer,
+      },
+      goal: selectedPocOptions[0],
+      standpoint: selectedPocOptions[1],
+      target: selectedPocTarget.title,
+      poc_data: extractSpecificContent(tabs, 0),
+      tabs: [],
+      page_index: 1,
+    };
+  
+    try {
+      // API 요청 보내기
+      const response = await axios.post(
+        'https://wishresearch.kr/panels/expert/poc_report',
+        data
+      );
+  
+      // 응답으로부터 보고서 내용 가져오기
+      const reportContent = response.data; // 실제 응답 구조에 따라 수정 필요
+  
+      // 보고서 내용을 docx 파일로 변환
+      let contentToCopy = '';
+  
+      // reportContent가 문자열인 경우
+      if (typeof reportContent === 'string') {
+        contentToCopy = reportContent;
+      } else {
+        // reportContent가 객체인 경우 텍스트 추출
+        contentToCopy = extractTextContent(reportContent);
+      }
+  
+      // 줄바꿈 기준으로 텍스트 분리
+      const contentParagraphs = contentToCopy.split('\n').map((line) => {
+        return new Paragraph({
+          children: [
+            new TextRun({
+              text: line,
+            }),
+          ],
+        });
+      });
+  
+      // 문서 생성을 위한 docx Document 객체 생성
+      const doc = new Document({
+        sections: [
+          {
+            children: [
+              new Paragraph({
+                children: [
+                  new TextRun({
+                    text: '리포트 제목: ' + titleOfBusinessInfo,
+                    bold: true,
+                  }),
+                ],
+              }),
+              ...contentParagraphs, // 분리된 각 줄을 Paragraph로 추가
+            ],
+          },
+        ],
+      });
+  
+      // docx 파일 패킹 및 다운로드
+      Packer.toBlob(doc)
+        .then((blob) => {
+          saveAs(blob, 'report.docx');
+  
+          // 다운로드 완료 후 상태 업데이트
+          setDownloadStatus('다운로드 완료');
+  
+          // 2초 후 상태 리셋
+          setTimeout(() => {
+            setLoading(false);
+            setDownloadStatus('');
+            setIsModalOpen(false);
+          }, 2000);
+        })
+        .catch((error) => {
+          console.error('Error generating DOCX:', error);
+          setLoading(false);
+          setDownloadStatus('다운로드 실패');
+          setTimeout(() => {
+            setDownloadStatus('');
+          }, 2000);
+        });
+    } catch (error) {
+      console.error('Error fetching report:', error);
+      setLoading(false);
+      setDownloadStatus('다운로드 실패');
+      setTimeout(() => {
+        setDownloadStatus('');
+      }, 2000);
+    }
+  };
+  
+  // 데이터를 추출하는 함수 (필요 시 수정)
+  const extractTextContent = (data) => {
+    let textContent = '';
+    if (typeof data === 'string') {
+      return data + '\n';
+    }
+    if (Array.isArray(data)) {
+      data.forEach((item) => {
+        textContent += extractTextContent(item);
+      });
+    } else if (typeof data === 'object' && data !== null) {
+      Object.values(data).forEach((value) => {
+        textContent += extractTextContent(value);
+      });
+    }
+    return textContent;
+  };
   
     // 기존 subTitle과 text를 합쳐 새로운 text 생성
   
@@ -540,42 +619,94 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
         isLast={isLast}
         selectedTab={selectedTab}
         title={title}
+        index={index}
       >
        {/* 4번 전문가 */}
        {expertIndex === "4" ? (
-        <>
-          {/* content 배열이 존재하는 경우 */}
-          {content && content.length > 0 &&
-            content.map((item, index) => (
-              <SeparateSection key={index}>
-                  {/* 항목 번호 및 제목 */}
-                  <strong_title>
-                    <span className="number">{index + 1}</span>{" "}
-                    <strong_title>{`${title} : ${item.title}`}</strong_title>{" "}
-                  </strong_title>
-                  {/* 항목 내용 */}
-                  <p style={{ marginTop: "15px", marginBottom: "15px" }}>{item.text}</p>
+  <>
+    {/* content 배열이 존재하는 경우 */}
+    {content &&
+      content.length > 0 &&
+      content.map((item, index) => (
+        <SeparateSection key={index} id={`print-content-${index}`}>
+          {/* 항목 번호 및 제목 */}
+          <strong_title>
+            <span className="number">{index + 1}</span>{" "}
+            <strong_title>{`${title} : ${item.title}`}</strong_title>{" "}
+          </strong_title>
+          {/* 항목 내용 */}
+          <p style={{ marginTop: "15px", marginBottom: "15px" }}>
+            {item.text}
+          </p>
 
-                  {/* subContent가 존재하는 경우 */}
-                  {item.subContent && item.subContent.length > 0 && (
-                    <div
-                      style={{
-                        backgroundColor: "white",
-                        padding: "15px",
-                        borderRadius: "10px",
-                      }}
-                    >
-                      {item.subContent.map((subItem, subIndex) => (
-                        <div key={subIndex} style={{ marginTop: "3px" }}>
-                          <p key={subIndex}>
-                            {subIndex + 1}. {subItem.subTitle} : {subItem.text}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-              </SeparateSection>
-            ))}
+          {/* subContent가 존재하는 경우 */}
+          {item.subContent && item.subContent.length > 0 && (
+            <div
+              style={{
+                backgroundColor: "white",
+                padding: "15px",
+                borderRadius: "10px",
+              }}
+            >
+              {item.subContent.map((subItem, subIndex) => (
+                <div key={subIndex} style={{ marginTop: "3px" }}>
+                  <p key={subIndex}>
+                    {subIndex + 1}. {subItem.subTitle} : {subItem.text}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* 다운로드 버튼과 모달을 content의 각 항목마다 추가 */}
+          <DownloadButton
+            onClick={() => handleOpenModal(index)}
+            disabled={loading}
+          >
+            {loading ? downloadStatus : "보고서 다운로드"}
+          </DownloadButton>
+          {/* 모달도 각 Section과 관련되어 렌더링 */}
+          {isModalOpen === index && (
+            <div className="modal">
+              <div className="modal-content">
+                <h3>다운로드 설정</h3>
+                <div>
+                  <label>포맷 선택:</label>
+                  <select
+                    value={selectedFormat}
+                    onChange={(e) => setSelectedFormat(e.target.value)}
+                  >
+                    <option value="PDF">PDF</option>
+                    <option value="Word">Word</option>
+                  </select>
+                </div>
+                <div>
+                  <label>언어 선택:</label>
+                  <select
+                    value={selectedLanguage}
+                    onChange={(e) => setSelectedLanguage(e.target.value)}
+                  >
+                    <option value="Korean">한국어</option>
+                    <option value="English">영어</option>
+                    {/* 필요에 따라 다른 언어 추가 */}
+                  </select>
+                </div>
+                <div>
+                  <button
+                    onClick={() => handleDownloadClick(index)}
+                    disabled={loading}
+                  >
+                    {loading ? downloadStatus : "다운로드"}
+                  </button>
+                  <button onClick={handleCloseModal} disabled={loading}>
+                    취소
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </SeparateSection>
+      ))}
         </>
         ) : expertIndex === "3" && selectedTab === 1 ? (
           <>
@@ -1592,11 +1723,13 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
   font-size: 16px;
   font-weight: bold;
   color: #ffffff;
-  background-color: ${palette.gray}; /* 예시로 primary 색상 사용 */
+  background-color: ${palette.gray}; 
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  position: relative; /* 수정 */
+  z-index: 1000; /* 적절한 z-index 값 */
   &:hover {
-    background-color: ${palette.blue}; /* 호버 시 색상 변경 */
+    background-color: ${palette.blue}; 
   }
 `;
