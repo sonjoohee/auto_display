@@ -602,7 +602,7 @@ const AdditionalSection = ({ title, content, index }) => {
 };
 
 // Section 컴포넌트 - 각 섹션의 제목과 콘텐츠를 표시
-const Section = ({ title, title_text, content, isLast, expertIndex ,selectedTab}) => {
+const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }) => {
   // 서브 타이틀이 있는 항목과 없는 항목을 분리
   const subTitleItems = content.filter((item) => item.subTitle);
   const nonSubTitleItems = content.filter((item) => !item.subTitle);
@@ -618,56 +618,52 @@ const Section = ({ title, title_text, content, isLast, expertIndex ,selectedTab}
   };
 
   // 기존 subTitle과 text를 합쳐 새로운 text 생성
-  const mergeSubTitleAndText = (subTitle, text) => `${subTitle} : ${text}`;
 
-  // 두 섹션의 데이터를 결합하여 하나의 섹션처럼 처리 (이전 섹션들의 combinedContent 포함)
-  const combinedContent = [
-    ...subTitleItems.map((item) => ({
-      text: mergeSubTitleAndText(item.subTitle, item.text),
-    })),
-  ];
-
-  // 전역적으로 두 섹션의 데이터를 저장할 수 있는 별도의 배열을 생성 (전역적으로 이 두 섹션의 데이터를 병합)
-  const globalCombinedContent = [];
-
-  // 이 함수는 "주요 차별화 요소"와 "차별화 전략 제안"이 있을 때 데이터를 병합해서 한 번만 렌더링
-  const renderCombinedSections = () => {
-    if (
-      title === "주요 차별화 요소" ||
-      title === "차별화 전략 제안" ||
-      title === "경쟁 압박 대처 방안" ||
-      title === "장기적인 경쟁 우위 전략"
-    ) {
-      // 중복 호출 방지를 위해 한 번 병합된 후 다시 병합되지 않도록 확인
-      if (globalCombinedContent.length === 0) {
-        globalCombinedContent.push(...combinedContent); // 데이터 병합
-      }
-
-      return (
-        <>
-          <strong>
-            <img src={images.Check} alt="" /> {/* 체크 이미지 추가 */}
-            {/* 경쟁사 대비 차별화 전략 */}
-            {title}
-          </strong>
-          <SubTextBox>
-            {globalCombinedContent.map((item, index) => (
-              <div key={index}>
-                <p>{item.text}</p>
-              </div>
-            ))}
-          </SubTextBox>
-        </>
-      );
-    }
-  };
 
   return (
-    <BoxWrap expertIndex={expertIndex} isLast={isLast} selectedTab={selectedTab} title={title}>
-      {/* "주요 차별화 요소"와 "차별화 전략 제안" 데이터를 결합하여 한 번만 렌더링 */}
-      {renderCombinedSections()}
-          {/* 3번 전문가의 2번째 탭을 위한 조건 */}
-          {expertIndex === "3" && selectedTab === 1 ? (
+    <BoxWrap
+      expertIndex={expertIndex}
+      isLast={isLast}
+      selectedTab={selectedTab}
+      title={title}
+    >
+     {/* 4번 전문가 */}
+     {expertIndex === "4" ? (
+      <>
+        {/* content 배열이 존재하는 경우 */}
+        {content && content.length > 0 &&
+          content.map((item, index) => (
+            <SeparateSection key={index}>
+                {/* 항목 번호 및 제목 */}
+                <strong_title>
+                  <span className="number">{index + 1}</span>{" "}
+                  <strong_title>{`${title} : ${item.title}`}</strong_title>{" "}
+                </strong_title>
+                {/* 항목 내용 */}
+                <p style={{ marginTop: "15px", marginBottom: "15px" }}>{item.text}</p>
+
+                {/* subContent가 존재하는 경우 */}
+                {item.subContent && item.subContent.length > 0 && (
+                  <div
+                    style={{
+                      backgroundColor: "white",
+                      padding: "15px",
+                      borderRadius: "10px",
+                    }}
+                  >
+                    {item.subContent.map((subItem, subIndex) => (
+                      <div key={subIndex} style={{ marginTop: "3px" }}>
+                        <p key={subIndex}>
+                          {subIndex + 1}. {subItem.subTitle} : {subItem.text}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+            </SeparateSection>
+          ))}
+      </>
+      ) : expertIndex === "3" && selectedTab === 1 ? (
             <>
             <strong>
               <img src={images.Check} alt="" />
