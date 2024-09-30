@@ -700,37 +700,66 @@ if (isLoadingPage) {
                 return null;
               })}
 
-              {/* 검색해서 시작 */}
-              {(approachPath === -1 || approachPath === 3) && 
-                titleOfBusinessInfo &&
-                strategyReportData.hasOwnProperty("4") &&
-                <OrganismBizExpertSelect />
-              }
-
-              {/* 전문가 선택하고 시작 */}
-              {approachPath === 1 &&
-                Object.keys(strategyReportData).length !== 0 &&
-                !isLoading &&
-                strategyReportData.hasOwnProperty("4") && 
+              {selectedExpertIndex !== "4" ?
+                <>
+                {/* 검색해서 시작 */}
+                {(approachPath === -1 || approachPath === 3) && 
+                  titleOfBusinessInfo &&
                   <OrganismBizExpertSelect />
-              }
+                }
 
-              {/* 히스토리로 진입 시 */}
-              {approachPath === 2 && 
-                titleOfBusinessInfo &&
-                conversation.length > 0 &&
-                conversation[conversation.length - 1].type !== "reportButton" &&
-                !isLoading &&
-                strategyReportData.hasOwnProperty("4") &&  
+                {/* 전문가 선택하고 시작 */}
+                {approachPath === 1 &&
+                  Object.keys(strategyReportData).length !== 0 &&
+                  !isLoading &&
+                    <OrganismBizExpertSelect />
+                }
+
+                {/* 히스토리로 진입 시 */}
+                {approachPath === 2 && 
+                  titleOfBusinessInfo &&
+                  conversation.length > 0 &&
+                  conversation[conversation.length - 1].type !== "reportButton" &&
+                  !isLoading &&
+                    <OrganismBizExpertSelect />
+                }
+                </>
+              :
+                <>
+                {/* 검색해서 시작 */}
+                {(approachPath === -1 || approachPath === 3) && 
+                  titleOfBusinessInfo &&
+                  strategyReportData.hasOwnProperty("4") && 
                   <OrganismBizExpertSelect />
-              }
+                }
 
+                {/* 4번 전문가 선택하고 시작 */}
+                {approachPath === 1 &&
+                  !isLoading &&
+                  strategyReportData.hasOwnProperty("4") && 
+                    <OrganismBizExpertSelect />
+                }
+
+                {/* 4번 전문가 히스토리로 진입 시 */}
+                {approachPath === 2 && 
+                  titleOfBusinessInfo &&
+                  conversation.length > 0 &&
+                  !isLoading &&
+                  strategyReportData.hasOwnProperty("4") &&  
+                    <OrganismBizExpertSelect />
+                }
+              </>
+              }
+              
             </ChatWrap>
 
             {conversationStage === 1 ? (
               <OrganismSearchBottomBar onSearch={handleSearch} isBlue={false} />
             ) : (
-              strategyReportData.hasOwnProperty("4") && <OrganismSearchBottomBar onSearch={handleSearch} isBlue={true} /> // 4번 전문가 보고서 생성 시 활성화
+              selectedExpertIndex === "4" ? 
+                strategyReportData.hasOwnProperty("4") && <OrganismSearchBottomBar onSearch={handleSearch} isBlue={true} /> // 4번 전문가 보고서 생성 시 활성화 
+                : 
+                <OrganismSearchBottomBar onSearch={handleSearch} isBlue={true} />
             )}
           </div>
 
