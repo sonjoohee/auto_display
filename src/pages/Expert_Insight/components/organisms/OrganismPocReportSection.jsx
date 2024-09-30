@@ -277,7 +277,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
 
           // 여기서 expert_id를 임시로 "3"으로 설정합니다.
           const data = {
-            expert_id: "3", // 임시값으로 3 사용
+            expert_id: selectedExpertIndex,
             business_info: titleOfBusinessInfo, // DB에서 가져온 titleOfBusinessInfo 사용
             business_analysis_data: {
               명칭: analysisReportData.title,
@@ -285,6 +285,9 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               주요기능: analysisReportData.mainCharacter,
               목표고객: analysisReportData.mainCustomer,
             },
+            goal : "프로토타입 개발 단계",
+            standpoint : "초기 사용자 피드백 수집",
+            target : "캠핑을 좋아하는 MZ 세대",
             tabs: [],
             page_index: 1,
           };
@@ -535,9 +538,43 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
         selectedTab={selectedTab}
         title={title}
       >
-        {/* "주요 차별화 요소"와 "차별화 전략 제안" 데이터를 결합하여 한 번만 렌더링 */}
-        {/* 3번 전문가의 2번째 탭을 위한 조건 */}
-        {expertIndex === "3" && selectedTab === 1 ? (
+       {/* 4번 전문가 */}
+       {expertIndex === "4" ? (
+        <>
+          {/* content 배열이 존재하는 경우 */}
+          {content && content.length > 0 &&
+            content.map((item, index) => (
+              <SeparateSection key={index}>
+                  {/* 항목 번호 및 제목 */}
+                  <strong_title>
+                    <span className="number">{index + 1}</span>{" "}
+                    <strong_title>{`${title} : ${item.title}`}</strong_title>{" "}
+                  </strong_title>
+                  {/* 항목 내용 */}
+                  <p style={{ marginTop: "15px", marginBottom: "15px" }}>{item.text}</p>
+
+                  {/* subContent가 존재하는 경우 */}
+                  {item.subContent && item.subContent.length > 0 && (
+                    <div
+                      style={{
+                        backgroundColor: "white",
+                        padding: "15px",
+                        borderRadius: "10px",
+                      }}
+                    >
+                      {item.subContent.map((subItem, subIndex) => (
+                        <div key={subIndex} style={{ marginTop: "3px" }}>
+                          <p key={subIndex}>
+                            {subIndex + 1}. {subItem.subTitle} : {subItem.text}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+              </SeparateSection>
+            ))}
+        </>
+        ) : expertIndex === "3" && selectedTab === 1 ? (
           <>
             <strong>
               <img src={images.Check} alt="" />
@@ -549,7 +586,6 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
                   <p>{item.text}</p>
                 </div>
               ))}
-  
             {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
             {subTitleItems.length > 0 &&
               subTitleItems.map((item, index) => (
