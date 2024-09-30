@@ -1,21 +1,34 @@
-// C:\dev\Crowd_Insight-\src\pages\Expert_Insight\components\molecules\MoleculeUserMessage.jsx
-
 import React from "react";
 import styled from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeUserMessage = ({ message }) => {
-  const messageWithLineBreaks = message.split("\n")?.map((line, index) => (
-    <React.Fragment key={index}>
-      {line}
-      <br />
-    </React.Fragment>
-  ));
+  const formatMessage = (msg) => {
+    const regex = /\*(.*?)\*/g; // *로 감싸진 부분 찾기
+
+    return msg.split("\n").map((line, index) => (
+      <React.Fragment key={index}>
+        {line.split(regex).map((part, i) => {
+          if (i % 2 === 1) {
+            // *로 감싸진 부분일 때
+            const updatedPart = part.includes(",") ? part.replace(/,/g, " 및") : part; // 쉼표를 "및"으로 치환
+            return (
+              <strong key={i}>
+                <u>{updatedPart}</u>
+              </strong> // 밑줄 및 강조
+            );
+          }
+          return part;
+        })}
+        <br />
+      </React.Fragment>
+    ));
+  };
 
   return (
     <UserMessageContainer>
       <div>
-        <p>{messageWithLineBreaks}</p>
+        <p>{formatMessage(message)}</p>
       </div>
       {/* <Time>1 min age</Time> */}
     </UserMessageContainer>

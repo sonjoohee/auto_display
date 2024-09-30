@@ -483,27 +483,30 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
 
     try {
       setIsLoading(true);
-      if (section === "mainFeatures") setIsLoadingAdd1(true);
-      else if (section === "mainCharacteristic") setIsLoadingAdd2(true);
-      else if (section === "targetCustomer") setIsLoadingAdd3(true);
 
       const data = {
-        // new_add_content: newAddContent, // api 연결 시 추가
-        expert_id: "1",
-        business_info: titleOfBusinessInfo,
         business_analysis_data: {
-          명칭: analysisReportData.title,
-          주요_목적_및_특징: analysisReportData.mainFeatures,
-          주요기능: analysisReportData.mainCharacter,
-          목표고객: analysisReportData.mainCustomer,
+          business_analysis: {
+            명칭: analysisReportData.title,
+            주요_목적_및_특징: analysisReportData.mainFeatures,
+            주요기능: analysisReportData.mainCharacter,
+          }
         },
-        tabs: [],
-        page_index: 1,
+        business_analysis_data_part: "",
+        keyword: newAddContent
       };
+
+      if (section === "mainFeatures") {
+        setIsLoadingAdd1(true);
+        data.business_analysis_data_part = "1";
+      } else if (section === "mainCharacteristic") {
+        setIsLoadingAdd2(true);
+        data.business_analysis_data_part = "2";
+      }
 
       // 임시로 전문가보고서 api 사용
       const response = await axios.post(
-        "https://wishresearch.kr/panels/expert",
+        "https://wishresearch.kr/panels/business_analysis_modify",
         data,
         axiosConfig
       );
@@ -512,17 +515,12 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
       if (section === "mainFeatures") {
         setMainFeaturesOfBusinessInformation([
           ...mainFeaturesOfBusinessInformation,
-          response.data.tabs[0].sections[0].content[0].text,
+          response.data.generate_data.추가_주요_목적_및_특징,
         ]);
       } else if (section === "mainCharacteristic") {
         setMainCharacteristicOfBusinessInformation([
           ...mainCharacteristicOfBusinessInformation,
-          response.data.tabs[0].sections[0].content[0].text,
-        ]);
-      } else if (section === "targetCustomer") {
-        setBusinessInformationTargetCustomer([
-          ...businessInformationTargetCustomer,
-          response.data.tabs[0].sections[0].content[0].text,
+          response.data.generate_data.추가_주요기능,
         ]);
       }
       setNewAddContent("");
@@ -530,7 +528,6 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
       setIsLoading(false);
       setIsLoadingAdd1(false);
       setIsLoadingAdd2(false);
-      setIsLoadingAdd3(false);
 
     } catch (error) {
       console.error("Error loading data:", error);
@@ -880,10 +877,10 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                         <img src={images.IconCheck2} alt="" />
                         저장
                       </button>
-                      <button onClick={() => generateAddtionalContent("targetCustomer")}>
+                      {/* <button onClick={() => generateAddtionalContent("targetCustomer")}>
                         <img src={images.IconSetting} alt="" />
                         생성
-                      </button>
+                      </button> */}
                     </BtnWrap>
                   </AddInfo>
                 ) : (
