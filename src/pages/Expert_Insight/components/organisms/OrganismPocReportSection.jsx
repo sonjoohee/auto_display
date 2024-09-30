@@ -60,6 +60,8 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
   const [selectedKeywords] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
+  const [loading, setLoading] = useState(false);
+  const [downloadStatus, setDownloadStatus] = useState(""); // 상태 메시지를 관리
 
   const axiosConfig = {
     timeout: 100000, // 100초
@@ -108,43 +110,67 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
     useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
   
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
+
   const handleDownload = () => {
-    const input = document.getElementById("print-content");
-    html2canvas(input, {
-      scale: 2, // 해상도 향상을 위해 scale을 2로 설정
-    })
-      .then((canvas) => {
-        const imgData = canvas.toDataURL("image/png");
-        const imgWidth = 210; // A4 기준 너비(mm)
-        const pageHeight = imgWidth * 1.414; // A4 기준 높이(mm)
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        let heightLeft = imgHeight;
-        const margin = 0;
-        const doc = new jsPDF("p", "mm", "a4");
-        let position = 0;
-
-        // 첫 페이지 추가
-        doc.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-
-        // 추가 페이지 처리
-        while (heightLeft > 0) {
-          position = heightLeft - imgHeight;
-          doc.addPage();
+    setLoading(true); // 로딩 상태 시작
+    setDownloadStatus("다운로드 중입니다...");
+    
+    setTimeout(() => {
+      const input = document.getElementById("print-content");
+      html2canvas(input, {
+        scale: 2, // 해상도 향상을 위해 scale을 2로 설정
+      })
+        .then((canvas) => {
+          const imgData = canvas.toDataURL("image/png");
+          const imgWidth = 210; // A4 기준 너비(mm)
+          const pageHeight = imgWidth * 1.414; // A4 기준 높이(mm)
+          const imgHeight = (canvas.height * imgWidth) / canvas.width;
+          let heightLeft = imgHeight;
+          const margin = 0;
+          const doc = new jsPDF("p", "mm", "a4");
+          let position = 0;
+  
+          // 첫 페이지 추가
           doc.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight);
           heightLeft -= pageHeight;
-        }
-
-        doc.save("report.pdf");
-      })
-      .catch((error) => {
-        console.error("Error generating PDF:", error);
-      });
+  
+          // 추가 페이지 처리
+          while (heightLeft > 0) {
+            position = heightLeft - imgHeight;
+            doc.addPage();
+            doc.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+          }
+  
+          doc.save("report.pdf");
+  
+          // 다운로드 완료 후 상태 업데이트
+          setDownloadStatus("다운로드 완료");
+  
+          // 2초 후 상태 리셋
+          setTimeout(() => {
+            setLoading(false);
+            setDownloadStatus("");
+          }, 2000);
+        })
+        .catch((error) => {
+          console.error("Error generating PDF:", error);
+          setDownloadStatus("다운로드 실패");
+          setTimeout(() => {
+            setLoading(false);
+            setDownloadStatus("");
+          }, 2000);
+        });
+    }, 0); // 브라우저가 상태 업데이트를 처리할 시간을 줌
   };
+  
 
   const handleDownloadDocx = () => {
+    setLoading(true); // 로딩 상태 시작
+    setDownloadStatus("다운로드 중입니다...");
+
     let contentToCopy = "";
-  
+
     // 데이터를 추출하는 함수
     const extractTextContent = (data) => {
       let textContent = "";
@@ -162,20 +188,20 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
       }
       return textContent;
     };
-  
+
     // 보고서 데이터 추출
     const getSelectedTabData = () => {
       const reportData = strategyReportData[expertIndex];
       if (!reportData) return null;
-  
+
       const selectedTabCopy = selectedTab || 0; // 선택된 탭이 없으면 기본값으로 0 사용
       return reportData.tabs[selectedTabCopy];
     };
-  
+
     // 보고서 복사 기능 적용
     const selectedTabData = getSelectedTabData();
     contentToCopy = extractTextContent(selectedTabData);
-  
+
     // 줄바꿈 기준으로 텍스트 분리
     const contentParagraphs = contentToCopy.split("\n").map((line) => {
       return new Paragraph({
@@ -186,7 +212,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
         ],
       });
     });
-  
+
     // 문서 생성을 위한 docx Document 객체 생성
     const doc = new Document({
       sections: [
@@ -205,13 +231,28 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
         },
       ],
     });
-  
+
     // docx 파일 패킹 및 다운로드
     Packer.toBlob(doc).then((blob) => {
       saveAs(blob, "report.docx");
+
+      // 다운로드 완료 후 상태 업데이트
+      setDownloadStatus("다운로드 완료");
+
+      // 2초 후 상태 리셋
+      setTimeout(() => {
+        setLoading(false);
+        setDownloadStatus("");
+      }, 2000);
+    }).catch((error) => {
+      console.error("Error generating DOCX:", error);
+      setLoading(false);
+      setDownloadStatus("다운로드 실패");
+      setTimeout(() => {
+        setDownloadStatus("");
+      }, 2000);
     });
   };
-
 
   useEffect(() => {
     const loadData = async () => {
@@ -398,11 +439,11 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
       {/* 다운로드 버튼을 isLoadingExpert가 false일 때만 표시 */}
       {!isLoadingExpert && (
         <>
-          <DownloadButton onClick={handleDownload}>
-            보고서 다운로드 (PDF)
+          <DownloadButton onClick={handleDownload} disabled={loading}>
+            {loading ? downloadStatus : "보고서 다운로드 (PDF)"}
           </DownloadButton>
-          <DownloadButton onClick={handleDownloadDocx}>
-            보고서 다운로드 (Word)
+          <DownloadButton onClick={handleDownloadDocx} disabled={loading}>
+            {loading ? downloadStatus : "보고서 다운로드 (Word)"}
           </DownloadButton>
         </>
       )}
