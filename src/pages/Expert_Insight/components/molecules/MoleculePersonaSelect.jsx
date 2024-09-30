@@ -71,6 +71,8 @@ const MoleculePersonaSelect = ({ conversationId }) => {
   ];
 
   const handleConfirm = async () => {
+    if (Object.keys(selectedPocTarget).length) return;
+
     if (Object.keys(selectedPocTargetState).length === 0) {
       alert("항목을 선택해주세요")
       return;

@@ -106,6 +106,8 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
   ];
 
   const handleOptionClick = (index, optionValue) => {
+    if (selectedPocOptions.length) return;
+
     if (index === 1) {
       setSelectedOption1(optionValue);
     }
@@ -116,6 +118,8 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
   };
 
   const handleConfirm = async () => {
+    if (selectedPocOptions.length) return;
+    
     if(!selectedOption1 || !selectedOption2) {
       alert("항목을 선택해주세요.")
       return;
