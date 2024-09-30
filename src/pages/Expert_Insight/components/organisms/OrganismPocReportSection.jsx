@@ -29,6 +29,8 @@ import axios from "axios";
 
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import { Document, Packer, Paragraph, TextRun } from "docx"; // docx 라이브러리 임포트
+import { saveAs } from "file-saver"; // file-saver를 사용하여 파일 저장
 
 import {
   TITLE_OF_BUSINESS_INFORMATION,
@@ -139,6 +141,78 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
         console.error("Error generating PDF:", error);
       });
   };
+
+  const handleDownloadDocx = () => {
+    let contentToCopy = "";
+  
+    // 데이터를 추출하는 함수
+    const extractTextContent = (data) => {
+      let textContent = "";
+      if (typeof data === "string") {
+        return data + "\n";
+      }
+      if (Array.isArray(data)) {
+        data.forEach((item) => {
+          textContent += extractTextContent(item);
+        });
+      } else if (typeof data === "object" && data !== null) {
+        Object.values(data).forEach((value) => {
+          textContent += extractTextContent(value);
+        });
+      }
+      return textContent;
+    };
+  
+    // 보고서 데이터 추출
+    const getSelectedTabData = () => {
+      const reportData = strategyReportData[expertIndex];
+      if (!reportData) return null;
+  
+      const selectedTabCopy = selectedTab || 0; // 선택된 탭이 없으면 기본값으로 0 사용
+      return reportData.tabs[selectedTabCopy];
+    };
+  
+    // 보고서 복사 기능 적용
+    const selectedTabData = getSelectedTabData();
+    contentToCopy = extractTextContent(selectedTabData);
+  
+    // 줄바꿈 기준으로 텍스트 분리
+    const contentParagraphs = contentToCopy.split("\n").map((line) => {
+      return new Paragraph({
+        children: [
+          new TextRun({
+            text: line,
+          }),
+        ],
+      });
+    });
+  
+    // 문서 생성을 위한 docx Document 객체 생성
+    const doc = new Document({
+      sections: [
+        {
+          children: [
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "리포트 제목: " + titleOfBusinessInfo,
+                  bold: true,
+                }),
+              ],
+            }),
+            ...contentParagraphs, // 분리된 각 줄을 Paragraph로 추가
+          ],
+        },
+      ],
+    });
+  
+    // docx 파일 패킹 및 다운로드
+    Packer.toBlob(doc).then((blob) => {
+      saveAs(blob, "report.docx");
+    });
+  };
+
+
   useEffect(() => {
     const loadData = async () => {
       let finalResponse;
@@ -320,12 +394,18 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
 
   return (
     <>
-      <AnalysisSection Strategy>
-        {/* 다운로드 버튼 추가 */}
-        <DownloadButton onClick={handleDownload}>
-          보고서 다운로드
-        </DownloadButton>
-
+    <AnalysisSection Strategy>
+      {/* 다운로드 버튼을 isLoadingExpert가 false일 때만 표시 */}
+      {!isLoadingExpert && (
+        <>
+          <DownloadButton onClick={handleDownload}>
+            보고서 다운로드 (PDF)
+          </DownloadButton>
+          <DownloadButton onClick={handleDownloadDocx}>
+            보고서 다운로드 (Word)
+          </DownloadButton>
+        </>
+      )}
         {/* PDF로 변환할 콘텐츠를 감싸는 div에 id 추가 */}
         <div id="print-content">
           {isLoadingExpert ? (
