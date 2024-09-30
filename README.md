@@ -64,3 +64,7 @@ npm install crypto-js
 ** pdf 관련 설치파일
 npm i jspdf
 npm i html2canvas
+
+** word 관련 설치파일
+npm install file-saver
+npm install docx
