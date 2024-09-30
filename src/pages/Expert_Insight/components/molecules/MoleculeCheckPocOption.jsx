@@ -26,12 +26,14 @@ import {
   CUSTOMER_ADDITION_QUESTION_INPUT,
   SELECTED_EXPERT_LIST,
   SELECTED_POC_OPTIONS,
+  SELCTED_POC_TARGET,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeCheckPocOption = ({ conversationId }) => {
+  const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [inputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
@@ -104,6 +106,8 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
   ];
 
   const handleOptionClick = (index, optionValue) => {
+    if (selectedPocOptions.length) return;
+
     if (index === 1) {
       setSelectedOption1(optionValue);
     }
@@ -114,6 +118,8 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
   };
 
   const handleConfirm = async () => {
+    if (selectedPocOptions.length) return;
+    
     if(!selectedOption1 || !selectedOption2) {
       alert("항목을 선택해주세요.")
       return;
@@ -155,6 +161,7 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
         timestamp: Date.now(),
         expert_index: selectedExpertIndex,
         selectedPocOptions: [selectedOption1, selectedOption2],
+        selectedPocTarget: selectedPocTarget,
       },
       isLoggedIn,
       conversationId

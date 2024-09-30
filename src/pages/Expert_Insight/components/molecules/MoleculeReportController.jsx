@@ -34,6 +34,7 @@ import {
   CUSTOMER_ADDITIONAL_REPORT_DATA,
   iS_CLICK_CHECK_POC_RIGHTAWAY,
   SELECTED_POC_OPTIONS,
+  SELCTED_POC_TARGET,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -51,6 +52,7 @@ const MoleculeReportController = ({
   sampleData,
   additionalReportCount, // 추가 보고서 복사기능을 위한 인덱스
 }) => {
+  const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
     TITLE_OF_BUSINESS_INFORMATION
@@ -224,6 +226,7 @@ const MoleculeReportController = ({
         selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
         customerAdditionalReportData: customerAdditionalReportData,
         selectedPocOptions: selectedPocOptions,
+        selectedPocTarget: selectedPocTarget,
       },
       isLoggedIn,
       conversationId
@@ -540,6 +543,7 @@ ${businessInformationTargetCustomer
         selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
         customerAdditionalReportData: customerAdditionalReportData,
         selectedPocOptions: selectedPocOptions,
+        selectedPocTarget: selectedPocTarget,
       },
       isLoggedIn,
       conversationId

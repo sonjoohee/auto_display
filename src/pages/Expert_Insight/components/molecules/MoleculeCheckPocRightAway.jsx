@@ -25,6 +25,7 @@ import {
   CUSTOMER_ADDITION_BUTTON_STATE,
   CUSTOMER_ADDITION_QUESTION_INPUT,
   SELECTED_EXPERT_LIST,
+  SELCTED_POC_TARGET,
 } from "../../../AtomStates";
 
 import {
@@ -34,6 +35,7 @@ import {
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeCheckReportRightAway = () => {
+  const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
   const [isLoggedIn] = useAtom(isLoggedInAtom);
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
@@ -100,6 +102,7 @@ const MoleculeCheckReportRightAway = () => {
         customerAdditionalReportData: customerAdditionalReportData,
         timestamp: Date.now(),
         expert_index: selectedExpertIndex,
+        selectedPocTarget: selectedPocTarget,
       },
       isLoggedIn,
       conversationId
