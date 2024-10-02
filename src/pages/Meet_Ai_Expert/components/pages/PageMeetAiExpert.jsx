@@ -32,9 +32,9 @@ import {
   SELECTED_EXPERT_LIST,
   IS_EDITING_NOW,
   IS_EXPERT_INSIGHT_ACCESSIBLE,
-  iS_CLICK_CHECK_POC_RIGHTAWAY,
   SELECTED_POC_OPTIONS,
   SELCTED_POC_TARGET,
+  RECOMMENDED_TARGET_DATA,
 } from "../../../AtomStates";
 
 import { Link } from "react-router-dom";
@@ -47,6 +47,7 @@ import OrganismLeftSideBar from "../../../Expert_Insight/components/organisms/Or
 
 const PageMeetAiExpert = () => {
   const navigate = useNavigate();
+  const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
   const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
@@ -109,9 +110,6 @@ const PageMeetAiExpert = () => {
   const [isClickCheckReportRightAway, setIsClickCheckReportRightAway] = useAtom(
     iS_CLICK_CHECK_REPORT_RIGHTAWAY
   );
-  const [isClickCheckPocRightAway, setIsClickCheckPocRightAway] = useAtom(
-    iS_CLICK_CHECK_POC_RIGHTAWAY
-  );
 
   const [isPopupRegex, setIsPopupRegex] = useState(false);
   const [isPopupRegex2, setIsPopupRegex2] = useState(false);
@@ -155,7 +153,6 @@ const PageMeetAiExpert = () => {
     setInputAdditionalQuestion("");
     setSelectedCustomerAdditionalKeyword([]);
     setIsClickCheckReportRightAway(false);
-    setIsClickCheckPocRightAway(false);
     setPassword("");
     setNewPassword("");
     setRePassword("");
@@ -163,6 +160,7 @@ const PageMeetAiExpert = () => {
     setIsEditingNow(false);
     setSelectedPocOptions([]);
     setSelectedPocTarget({});
+    setRecommendedTargetData({});
   }, []);
 
   useEffect(() => {

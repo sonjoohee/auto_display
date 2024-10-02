@@ -20,6 +20,7 @@ import {
   SELECTED_EXPERT_LIST,
   SELECTED_POC_OPTIONS,
   SELCTED_POC_TARGET,
+  RECOMMENDED_TARGET_DATA
   POC_DETAIL_REPORT_ATOM,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
@@ -38,6 +39,7 @@ const OrganismAdditionalReport = ({
   additionalReportCount,
   conversationId,
 }) => {
+  const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
   const [selectedExpertList, setSelectedExpertList] =
@@ -205,6 +207,7 @@ const OrganismAdditionalReport = ({
               expert_index: selectedExpertIndex,
               selectedPocOptions: selectedPocOptions,
               selectedPocTarget: selectedPocTarget,
+              recommendedTargetData: recommendedTargetData,
               pocDetailReportData : pocDetailReportData
             },
             isLoggedIn,

@@ -32,7 +32,6 @@ import {
   IS_LOADING_ANALYSIS,
   SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
-  iS_CLICK_CHECK_POC_RIGHTAWAY,
   SELECTED_POC_OPTIONS,
   SELCTED_POC_TARGET,
 } from "../../../AtomStates";
@@ -132,7 +131,6 @@ const MoleculeReportController = ({
   );
   const [selectedCustomerAdditionalKeyword, setSelectedCustomerAdditionalKeyword] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
   const [customerAdditionalReportData, setCustomerAdditionalReportData] = useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
-  const [isClickCheckPocRightAway, setIsClickCheckPocRightAway] = useAtom(iS_CLICK_CHECK_POC_RIGHTAWAY);
 
   const navigate = useNavigate();
 

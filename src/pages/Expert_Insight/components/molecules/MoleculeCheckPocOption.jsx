@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useAtom } from "jotai";
 import {
-  iS_CLICK_CHECK_POC_RIGHTAWAY,
   EXPERT_BUTTON_STATE,
   IS_LOADING,
   APPROACH_PATH,

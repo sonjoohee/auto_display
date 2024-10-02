@@ -25,6 +25,7 @@ import {
   CUSTOMER_ADDITION_QUESTION_INPUT,
   SELECTED_EXPERT_LIST,
   SELCTED_POC_TARGET,
+  TARGET_BUTTON_STATE,
 } from "../../../AtomStates";
 
 import {
@@ -33,7 +34,7 @@ import {
 
 import { palette } from "../../../../assets/styles/Palette";
 
-const MoleculeCheckReportRightAway = () => {
+const MoleculeRecommendedTargetButton = () => {
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
   const [isLoggedIn] = useAtom(isLoggedInAtom);
@@ -63,30 +64,27 @@ const MoleculeCheckReportRightAway = () => {
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
+  const [targetButtonState, setTargetButtonState] = useAtom(TARGET_BUTTON_STATE);
 
   const handleClick = async () => {
     if (isLoading) return;
     const updatedConversation = [...conversation];
 
     if (updatedConversation.length > 0 &&
-      updatedConversation[updatedConversation.length - 1].type === "pocPlanButton"
+        updatedConversation[updatedConversation.length - 1].type === "pocTargetButton"
     ) {
       updatedConversation.pop();
     }
 
     updatedConversation.push(
       {
-        type: "system",
-        message: "아래 항목에서 적합한 내용을 선택해주시면, 보다 구체적인 PoC 계획을 세울 수 있을 것 같습니다",
-        expertIndex: selectedExpertIndex,
-      },
-      {
-        type: `pocOption`,
+        type: `pocTarget_${selectedExpertIndex}`,
       }
     );
     setConversation(updatedConversation);
     setConversationStage(3);
     setApproachPath(3);
+    setTargetButtonState(1);
 
     await saveConversationToIndexedDB(
       {
@@ -112,13 +110,13 @@ const MoleculeCheckReportRightAway = () => {
   return (
     <>
       <ButtonWrap>
-        <button onClick={handleClick}>PoC 계획 세우기</button>
+        <button onClick={handleClick}>타겟 추천 받기</button>
       </ButtonWrap>
     </>
   );
 };
 
-export default MoleculeCheckReportRightAway;
+export default MoleculeRecommendedTargetButton;
 
 const ButtonWrap = styled.div`
   display: flex;

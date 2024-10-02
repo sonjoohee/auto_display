@@ -7,7 +7,7 @@ import {
   SELECTED_TAB_COPY_1,
   SELECTED_TAB_COPY_2,
   SELECTED_TAB_COPY_3,
-  EXPERT_BUTTON_STATE,
+  TARGET_BUTTON_STATE,
   CONVERSATION,
   APPROACH_PATH,
   isLoggedInAtom,
@@ -46,12 +46,12 @@ import {
   CUSTOMER_ADDITIONAL_REPORT_DATA,
   IS_EDITING_NOW,
   CONVERSATION_STAGE,
-  POC_DETAIL_REPORT_ATOM,
+  RECOMMENDED_TARGET_DATA,
 } from "../../../AtomStates";
 import { NotoSansKRFont } from './NotoSansKR-Regular.js'; 
 import fontData from './encoded-20240930083135.txt'; // base64로 인코딩된 폰트
 
-const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
+const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
   const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
@@ -92,7 +92,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
     businessInformationTargetCustomer,
     setBusinessInformationTargetCustomer,
   ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [buttonState, setButtonState] = useAtom(EXPERT_BUTTON_STATE); // BUTTON_STATE 사용
+  const [buttonState, setButtonState] = useAtom(TARGET_BUTTON_STATE); // BUTTON_STATE 사용
 
   // Use the single strategyReportData atom
   const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA);
@@ -104,7 +104,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
     mainCustomer: businessInformationTargetCustomer,
   };
 
-  const [isLoadingExpert, setIsLoadingExpert] = useState(false);
+  const [isLoadingTarget, setIsLoadingTarget] = useState(false);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
 
   const [additionalReportData, setAdditionalReportData] = useAtom(
@@ -122,6 +122,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
 
+  const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
   
 
   useEffect(() => {
@@ -129,24 +130,21 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
       let finalResponse;
         
       try {
-        const currentExpertData = strategyReportData[expertIndex];
-
         // Existing data handling
-        if (currentExpertData && Object.keys(currentExpertData).length > 0) {
-          setTabs(currentExpertData.tabs);
-          setSections(currentExpertData.tabs[selectedTab].sections);
+        if (recommendedTargetData && Object.keys(recommendedTargetData).length > 0) {
+          setTabs(recommendedTargetData.tabs);
+          setSections(recommendedTargetData.tabs[selectedTab].sections);
         }
         // buttonState === 1일 때만 API 호출
         else if (buttonState === 1) {
           setButtonState(0); // 버튼 상태를 초기화
-          setIsLoadingExpert(true);
+          setIsLoadingTarget(true);
           setIsLoading(true);
           setIsEditingNow(false); // 수정 상태 초기화
 
-          // 여기서 expert_id를 임시로 "3"으로 설정합니다.
           const data = {
             expert_id: selectedExpertIndex,
-            business_info: titleOfBusinessInfo, // DB에서 가져온 titleOfBusinessInfo 사용
+            business_info: titleOfBusinessInfo,
             business_analysis_data: {
               명칭: analysisReportData.title,
               주요_목적_및_특징: analysisReportData.mainFeatures,
@@ -234,22 +232,14 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             finalResponse = response3.data;
           }
 
-          const strategyData = finalResponse;
+          const targetData = finalResponse;
 
-          // Update the strategyReportData atom
-          setStrategyReportData((prevData) => ({
-            ...prevData,
-            [expertIndex]: strategyData,
-          }));
-          // 바로 저장할 데이터
-          const updatedStrategyReportData = {
-            ...strategyReportData,
-            [expertIndex]: strategyData, // 새로운 데이터를 추가한 객체를 바로 생성
-          };
-          setTabs(strategyData.tabs);
-          setSections(strategyData.tabs[selectedTab].sections);
+          setRecommendedTargetData(targetData);
 
-          setIsLoadingExpert(false);
+          setTabs(targetData.tabs);
+          setSections(targetData.tabs[selectedTab].sections);
+
+          setIsLoadingTarget(false);
           setIsLoading(false);
 
           const updatedConversation = [...conversation];
@@ -257,16 +247,10 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             {
               type: "system",
               message:
-                "PoC 설계 보고서의 핵심 내용을 정리했습니다. 목표에 맞는 'PoC 수행 계획서'를 다운로드해보세요!",
+                "리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊",
               expertIndex: selectedExpertIndex,
             },
-            {
-              type: "system",
-              message:
-                "PoC 실행 목적에 적합한 타겟과 예상 인사이트를 확인하고 싶다면, '타겟 추천 받기' 버튼을 눌러보세요.",
-              expertIndex: selectedExpertIndex,
-            },
-            { type: `pocTargetButton` }
+            { type: `keyword` }
           );
           setConversationStage(3);
           setConversation(updatedConversation);
@@ -275,19 +259,20 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               id: conversationId,
               inputBusinessInfo: inputBusinessInfo,
               analysisReportData: analysisReportData,
+              strategyReportData: strategyReportData,
               selectedAdditionalKeywords: selectedKeywords,
               conversationStage: 3,
-              strategyReportData: updatedStrategyReportData, // Save the entire strategyReportData
               conversation: updatedConversation,
               selectedAdditionalKeywords: selectedAdditionalKeyword,
               selectedCustomerAdditionalKeyword:
-                selectedCustomerAdditionalKeyword,
+              selectedCustomerAdditionalKeyword,
               additionalReportData: additionalReportData,
               customerAdditionalReportData: customerAdditionalReportData,
               timestamp: Date.now(),
               expert_index: selectedExpertIndex,
               selectedPocOptions: selectedPocOptions,
               selectedPocTarget: selectedPocTarget,
+              recommendedTargetData: targetData,
             },
             isLoggedIn,
             conversationId
@@ -299,27 +284,14 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
     };
 
     loadData();
-  }, [conversationId, selectedTab, expertIndex, buttonState]); // buttonState 의존성 추가
-
-  const handleTabClick = (index, expertIndex) => {
-    setSelectedTab(index);
-
-    if(expertIndex === "1") setSelectedTabCopy1(index);
-    else if(expertIndex === "2") setSelectedTabCopy2(index);
-    else if(expertIndex === "3") setSelectedTabCopy3(index);
-    else;
-
-    if (tabs.length > 0) {
-      setSections(tabs[index].sections);
-    }
-  };
+  }, [conversationId, expertIndex, buttonState]); // buttonState 의존성 추가
 
   return (
     <>
         <AnalysisSection Strategy>
       {/* PDF로 변환할 콘텐츠를 감싸는 div에 id 추가 */}
       <div id="print-content">
-        {isLoadingExpert ? (
+        {isLoadingTarget ? (
           <>
             <SkeletonTitle className="title-placeholder" />
             <SkeletonLine className="content-placeholder" />
@@ -343,7 +315,6 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
                     key={index}
                     active={selectedTab === index}
                     expertIndex={expertIndex}
-                    onClick={() => handleTabClick(index, expertIndex)}
                   >
                     {tab.title}
                   </TabButton>
@@ -359,7 +330,6 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
                   isLast={index === sections.length - 1}
                   expertIndex={expertIndex}
                   selectedTab={selectedTab}
-                  conversationId={conversationId}
                   index={index}
                 />
               </div>
@@ -368,12 +338,12 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
         )}
       </div>
 
-      {!isLoadingExpert && (
+      {!isLoadingTarget && (
         <MoleculeReportController
           reportIndex={1}
           strategyReportID={expertIndex}
           conversationId={conversationId}
-          sampleData={strategyReportData[expertIndex]}
+          sampleData={recommendedTargetData}
         />
       )}
     </AnalysisSection>
@@ -381,37 +351,14 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   );
 };
 
-const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,index,conversationId }) => {
+const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,index }) => {
     // 서브 타이틀이 있는 항목과 없는 항목을 분리
-    const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_ATOM);
     const subTitleItems = content.filter((item) => item.subTitle);
     const nonSubTitleItems = content.filter((item) => !item.subTitle);
     const summaryItem = content.find((item) => item.title === "총평");
     const subItems = content.filter((item) => item.subTitle);
     const [loading, setLoading] = useState(false);
     const [downloadStatus, setDownloadStatus] = useState(""); // 상태 메시지를 관리
-    const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
-    const [approachPath] = useAtom(APPROACH_PATH);
-    const [conversation, setConversation] = useAtom(CONVERSATION);
-    const [selectedTabCopy1, setSelectedTabCopy1] = useAtom(SELECTED_TAB_COPY_1);
-    const [selectedTabCopy2, setSelectedTabCopy2] = useAtom(SELECTED_TAB_COPY_2);
-    const [selectedTabCopy3, setSelectedTabCopy3] = useAtom(SELECTED_TAB_COPY_3);
-    const [tabs, setTabs] = useState([]);
-    const [sections, setSections] = useState([]);
-    const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
-    const [selectedKeywords] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
-    const [additionalReportData, setAdditionalReportData] = useAtom(
-      ADDITIONAL_REPORT_DATA
-    );
-    const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
-      SELECTED_ADDITIONAL_KEYWORD
-    );
-    const [
-      selectedCustomerAdditionalKeyword,
-      setSelectedCustomerAdditionalKeyword,
-    ] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
-    const [customerAdditionalReportData, setCustomerAdditionalReportData] =
-      useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
     const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
     const axiosConfig = {
       timeout: 100000, // 100초
@@ -431,12 +378,10 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
       businessInformationTargetCustomer,
       setBusinessInformationTargetCustomer,
     ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-    const [buttonState, setButtonState] = useAtom(EXPERT_BUTTON_STATE); // BUTTON_STATE 사용
     // Use the single strategyReportData atom
     const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA);
     const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
     const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET); // 확인 버튼을 눌렀을 때만 저장 -> 히스토리 저장
-
 
     const analysisReportData = {
       title: titleOfBusinessInfo,
@@ -476,97 +421,16 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
         handleDownloadDocx(selectedLanguage, index);
       }
     };
-    
-    const generatePDF = async (cleanedContent, index) => {
-      try {
-        // PDF에 넣기 위해 콘텐츠를 임시로 보여주는 div를 찾거나 생성합니다.
-        const contentDiv = document.getElementById(`print-content-${index}`);
-        if (!contentDiv) {
-          console.error('contentDiv 요소를 찾을 수 없습니다.');
-          setLoading(false);
-          return;
-        }
-        
-        contentDiv.innerHTML = cleanedContent;
-        contentDiv.style.display = 'block';  // 요소를 보이게 설정
-        document.body.appendChild(contentDiv); // 임시로 body에 추가하여 화면에 렌더링
-        
-        // 캔버스로 변환
-        const canvas = await html2canvas(contentDiv, {
-          scale: 2, // 해상도 향상을 위해 스케일을 2배로 설정
-          useCORS: true, // CORS 허용 이미지 처리
-        });
-        
-        // 이미지 데이터를 가져옴
-        const imgData = canvas.toDataURL('image/png');
-        
-        // jsPDF를 사용하여 PDF 생성
-        const doc = new jsPDF();
-        const imgWidth = 210; // A4 너비(mm)
-        const pageHeight = 297; // A4 높이(mm)
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        let heightLeft = imgHeight;
-        let position = 0;
-        
-        // 첫 페이지에 이미지 추가
-        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-        
-        // 추가 페이지가 필요한 경우 처리
-        while (heightLeft > 0) {
-          position = heightLeft - imgHeight;
-          doc.addPage();
-          doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-          heightLeft -= pageHeight;
-        }
-        
-        // PDF 다운로드
-        doc.save(`report_${index}.pdf`);
-        console.log('PDF 생성 및 다운로드 완료');
-        
-        // 다운로드 상태 업데이트
-        setDownloadStatus('다운로드 완료');
-    
-        // 여기서 finally 역할을 수행
-        contentDiv.style.display = 'none';  // 요소를 다시 숨김
-        setLoading(false);  // 로딩 상태 해제
-        
-        // 2초 후 다운로드 상태 메시지 제거
-        setTimeout(() => {
-          setDownloadStatus('');
-        }, 2000);
-        
-      } catch (error) {
-        console.error('PDF 생성 오류:', error);
-        setLoading(false);
-        setDownloadStatus('다운로드 실패');
-        
-        // 2초 후 다운로드 실패 메시지 제거
-        setTimeout(() => {
-          setDownloadStatus('');
-        }, 2000);
-      }
-    };
-    
+  
     const handleDownload = async (language, index) => {
       setLoading(true); // 로딩 상태 시작
       setDownloadStatus('다운로드 중입니다...');
-      const existingReport = pocDetailReportData[`${expertIndex}-${index}`];
     
-      const currentExpertData = strategyReportData[expertIndex];
+      const recommendedTargetData = strategyReportData[expertIndex];
     
-      if (!currentExpertData) {
+      if (!recommendedTargetData) {
         setLoading(false);
         setDownloadStatus('데이터를 찾을 수 없습니다.');
-        return;
-      }
-    
-      if (existingReport) {
-        // 저장된 데이터를 사용하여 PDF 생성
-        const cleanedContent = existingReport;
-        setTimeout(() => {
-          generatePDF(cleanedContent, index); // PDF 생성 함수 호출을 약간 지연
-        }, 0);
         return;
       }
     
@@ -583,8 +447,8 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
         goal: selectedPocOptions[0],
         standpoint: selectedPocOptions[1],
         target: selectedPocTarget.title,
-        poc_data: extractSpecificContent(strategyReportData, expertIndex, index),
-        tabs: currentExpertData.tabs,
+        poc_data: extractSpecificContent(strategyReportData, expertIndex, index), 
+        tabs: recommendedTargetData.tabs, 
         page_index: 1,
       };
     
@@ -606,36 +470,52 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
           .replace(/-\s/g, '• ') // 리스트 '-'를 '•'로 변환
           .replace(/\n/g, '<br/>'); // 줄바꿈을 <br>로 변환
     
-        // Atom에 보고서 내용을 저장
-        setpocDetailReportData((prevReport) => ({
-          ...prevReport,
-          [`${expertIndex}-${index}`]: cleanedContent,
-        }));
+        // 보이지 않던 content를 일시적으로 보이게
+        const contentDiv = document.getElementById(`print-content-${index}`);
+        contentDiv.innerHTML = cleanedContent;
+        contentDiv.style.display = 'block';  // 요소를 보이게 설정
     
-        // 저장 후 indexedDB에도 저장
-        await saveConversationToIndexedDB({
-          id: conversationId,
-          inputBusinessInfo: inputBusinessInfo,
-          analysisReportData: analysisReportData,
-          selectedAdditionalKeywords: selectedKeywords,
-          conversationStage: 3,
-          strategyReportData: strategyReportData, // Save the entire strategyReportData
-          conversation: conversation,
-          selectedAdditionalKeywords: selectedAdditionalKeyword,
-          selectedCustomerAdditionalKeyword:
-            selectedCustomerAdditionalKeyword,
-          additionalReportData: additionalReportData,
-          customerAdditionalReportData: customerAdditionalReportData,
-          timestamp: Date.now(),
-          expert_index: selectedExpertIndex,
-          selectedPocOptions: selectedPocOptions,
-          selectedPocTarget: selectedPocTarget,
-          pocDetailReportData: { ...pocDetailReportData, [`${expertIndex}-${index}`]: cleanedContent },
-        }, isLoggedIn, conversationId);
+        // 잠시 후 캡처 후 다시 숨기기
+        setTimeout(async () => {
+          try {
+            const canvas = await html2canvas(contentDiv, {
+              scale: 2,
+              useCORS: true,
+            });
     
-        // PDF 생성 함수 호출
-        generatePDF(cleanedContent, index);
+            const imgData = canvas.toDataURL('image/png');
     
+            const doc = new jsPDF();
+            const imgWidth = 210; // A4 너비(mm)
+            const pageHeight = 297; // A4 높이(mm)
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            let heightLeft = imgHeight;
+            let position = 0;
+    
+            doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+    
+            while (heightLeft > 0) {
+              position = heightLeft - imgHeight;
+              doc.addPage();
+              doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+              heightLeft -= pageHeight;
+            }
+    
+            doc.save(`report_${index}.pdf`);
+            setDownloadStatus('다운로드 완료');
+          } catch (error) {
+            console.error('Error capturing content:', error);
+            setDownloadStatus('다운로드 실패');
+          } finally {
+            // 요소를 다시 숨김
+            contentDiv.style.display = 'none';
+            setLoading(false);
+            setTimeout(() => {
+              setDownloadStatus('');
+            }, 2000);
+          }
+        }, 0);
       } catch (error) {
         console.error('Error fetching report:', error);
         setLoading(false);
@@ -646,14 +526,15 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
       }
     };
     
+    
     function extractSpecificContent(strategyReportData, expertIndex, contentIndex) {
       let specificContent = null;
     
-      const currentExpertData = strategyReportData[expertIndex];
+      const recommendedTargetData = strategyReportData[expertIndex];
       
       // 첫 번째 tab의 첫 번째 section에서 특정 인덱스의 content 항목을 가져옴
-      if (currentExpertData && currentExpertData.tabs.length > 0 && currentExpertData.tabs[0].sections.length > 0) {
-        const contentItem = currentExpertData.tabs[0].sections[0].content[contentIndex];
+      if (recommendedTargetData && recommendedTargetData.tabs.length > 0 && recommendedTargetData.tabs[0].sections.length > 0) {
+        const contentItem = recommendedTargetData.tabs[0].sections[0].content[contentIndex];
     
         if (contentItem) {
           specificContent = {
@@ -676,20 +557,11 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
       setDownloadStatus('다운로드 중입니다...');
     
       // `strategyReportData`에서 필요한 정보를 직접 가져옴
-      const currentExpertData = strategyReportData[expertIndex];
-      
-      if (!currentExpertData) {
+      const recommendedTargetData = strategyReportData[expertIndex];
+    
+      if (!recommendedTargetData) {
         setLoading(false);
         setDownloadStatus('데이터를 찾을 수 없습니다.');
-        return;
-      }
-    
-      // 기존에 저장된 보고서가 있는지 확인
-      const existingReport = pocDetailReportData[`${expertIndex}-${index}`];
-    
-      // 이미 저장된 데이터가 있는 경우 해당 데이터를 사용
-      if (existingReport) {
-        generateDocx(existingReport, index); // DOCX 생성 함수 호출
         return;
       }
     
@@ -707,135 +579,93 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
         standpoint: selectedPocOptions[1],
         target: selectedPocTarget.title,
         poc_data: extractSpecificContent(strategyReportData, expertIndex, index), // strategyReportData에서 추출
-        tabs: currentExpertData.tabs, // strategyReportData에서 직접 가져옴
+        tabs: recommendedTargetData.tabs, // strategyReportData에서 직접 가져옴
         page_index: 1,
       };
-    
-      try {
-        // API 요청 보내기
-        const response = await axios.post(
-          'https://wishresearch.kr/panels/expert/poc_report',
-          data
-        );
-    
-        // 응답으로부터 보고서 내용 가져오기
-        const reportContent = response.data.poc_report; // 실제 응답 구조에 맞춰 수정 필요
-
-        // Markdown 스타일 제거 (정규식 사용)
-        const cleanedContent = reportContent
-          .replace(/##/g, '') // 제목 표시 '##' 제거
-          .replace(/\*\*/g, '') // 굵은 글씨 '**' 제거
-          .replace(/\*/g, '') // 이탤릭체 '*' 제거
-          .replace(/-\s/g, '• ') // 리스트 '-'를 '•'로 변환
-          .replace(/\n/g, '<br/>'); // 줄바꿈을 <br>로 변환
-        
-        // Atom에 보고서 내용을 저장
-        setpocDetailReportData((prevReport) => ({
-          ...prevReport,
-          [`${expertIndex}-${index}`]: cleanedContent,
-        }));
-    
-        // 저장 후 DOCX 생성 함수 호출
-        generateDocx(reportContent, index);
-    
-        // 저장 후 indexedDB에도 저장
-        await saveConversationToIndexedDB({
-          id: conversationId,
-          inputBusinessInfo: inputBusinessInfo,
-          analysisReportData: analysisReportData,
-          selectedAdditionalKeywords: selectedKeywords,
-          conversationStage: 3,
-          strategyReportData: strategyReportData, // Save the entire strategyReportData
-          conversation: conversation,
-          selectedAdditionalKeywords: selectedAdditionalKeyword,
-          selectedCustomerAdditionalKeyword:
-            selectedCustomerAdditionalKeyword,
-          additionalReportData: additionalReportData,
-          customerAdditionalReportData: customerAdditionalReportData,
-          timestamp: Date.now(),
-          expert_index: selectedExpertIndex,
-          selectedPocOptions: selectedPocOptions,
-          selectedPocTarget: selectedPocTarget,
-          pocDetailReportData: { ...pocDetailReportData, [`${expertIndex}-${index}`]: reportContent },
-        }, isLoggedIn, conversationId);
-    
-      } catch (error) {
-        console.error('Error fetching report:', error);
-        setLoading(false);
-        setDownloadStatus('다운로드 실패');
-        setTimeout(() => {
-          setDownloadStatus('');
-        }, 2000);
+  
+    try {
+      // API 요청 보내기
+      const response = await axios.post(
+        'https://wishresearch.kr/panels/expert/poc_report',
+        data
+      );
+  
+      // 응답으로부터 보고서 내용 가져오기
+      const reportContent = response.data; // 실제 응답 구조에 따라 수정 필요
+  
+      // 보고서 내용을 docx 파일로 변환
+      let contentToCopy = '';
+  
+      // reportContent가 문자열인 경우
+      if (typeof reportContent === 'string') {
+        contentToCopy = reportContent;
+      } else {
+        // reportContent가 객체인 경우 텍스트 추출
+        contentToCopy = extractTextContent(reportContent);
       }
-    };
-    
-    // DOCX 파일을 생성하는 함수
-    const generateDocx = (content, index) => {
-      try {
-        // Word 문서용 전처리
-        const cleanedContent = content
-          .replace(/##/g, '') // 제목 표시 '##' 제거
-          .replace(/\*\*/g, '') // 굵은 글씨 '**' 제거
-          .replace(/\*/g, '') // 이탤릭체 '*' 제거
-          .replace(/-\s/g, '• ') // 리스트 '-'를 '•'로 변환
-          .replace(/<br\/>/g, '\n'); // <br/>을 줄바꿈으로 변환
-    
-        // 줄바꿈 기준으로 텍스트 분리
-        const contentParagraphs = cleanedContent.split('\n').map((line) => {
-          return new Paragraph({
-            children: [
-              new TextRun({
-                text: line,
-              }),
-            ],
-          });
-        });
-    
-        // 문서 생성을 위한 docx Document 객체 생성
-        const doc = new Document({
-          sections: [
-            {
-              children: [
-                new Paragraph({
-                  children: [
-                    new TextRun({
-                      text: '리포트 제목: ' + titleOfBusinessInfo,
-                      bold: true,
-                    }),
-                  ],
-                }),
-                ...contentParagraphs, // 분리된 각 줄을 Paragraph로 추가
-              ],
-            },
+  
+      // 줄바꿈 기준으로 텍스트 분리
+      const contentParagraphs = contentToCopy.split('\n').map((line) => {
+        return new Paragraph({
+          children: [
+            new TextRun({
+              text: line,
+            }),
           ],
         });
-    
-        // docx 파일 패킹 및 다운로드
-        Packer.toBlob(doc)
-          .then((blob) => {
-            saveAs(blob, `report_${index}.docx`);
-            setDownloadStatus('다운로드 완료');
-    
-            // 2초 후 상태 리셋
-            setTimeout(() => {
-              setLoading(false);
-              setDownloadStatus('');
-            }, 2000);
-          })
-          .catch((error) => {
-            console.error('Error generating DOCX:', error);
+      });
+  
+      // 문서 생성을 위한 docx Document 객체 생성
+      const doc = new Document({
+        sections: [
+          {
+            children: [
+              new Paragraph({
+                children: [
+                  new TextRun({
+                    text: '리포트 제목: ' + titleOfBusinessInfo,
+                    bold: true,
+                  }),
+                ],
+              }),
+              ...contentParagraphs, // 분리된 각 줄을 Paragraph로 추가
+            ],
+          },
+        ],
+      });
+  
+      // docx 파일 패킹 및 다운로드
+      Packer.toBlob(doc)
+        .then((blob) => {
+          saveAs(blob, 'report.docx');
+  
+          // 다운로드 완료 후 상태 업데이트
+          setDownloadStatus('다운로드 완료');
+  
+          // 2초 후 상태 리셋
+          setTimeout(() => {
             setLoading(false);
-            setDownloadStatus('다운로드 실패');
-            setTimeout(() => {
-              setDownloadStatus('');
-            }, 2000);
-          });
-      } catch (error) {
-        console.error('Error generating DOCX:', error);
-      }
-    };
-    
-    
+            setDownloadStatus('');
+            setIsModalOpen(false);
+          }, 2000);
+        })
+        .catch((error) => {
+          console.error('Error generating DOCX:', error);
+          setLoading(false);
+          setDownloadStatus('다운로드 실패');
+          setTimeout(() => {
+            setDownloadStatus('');
+          }, 2000);
+        });
+    } catch (error) {
+      console.error('Error fetching report:', error);
+      setLoading(false);
+      setDownloadStatus('다운로드 실패');
+      setTimeout(() => {
+        setDownloadStatus('');
+      }, 2000);
+    }
+  };
   
   // 데이터를 추출하는 함수 (필요 시 수정)
   const extractTextContent = (data) => {
@@ -1479,7 +1309,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
     );
   };
   
-  export default OrganismStrategyReportSection;
+  export default OrganismRecommendedTargetReport;
   const SeparateSection = styled.div`
     display: flex;
     flex-direction: column;

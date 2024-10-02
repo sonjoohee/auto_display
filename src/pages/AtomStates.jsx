@@ -241,10 +241,11 @@ export const ANALYSIS_BUTTON_STATE = atom(0);
 export const EXPERT_BUTTON_STATE = atom(0);
 export const ADDITION_BUTTON_STATE = atom(0);
 export const CUSTOMER_ADDITION_BUTTON_STATE = atom(0);
+export const TARGET_BUTTON_STATE = atom(0);
+
 export const CUSTOMER_ADDITION_QUESTION_INPUT = atom("");
 
 export const iS_CLICK_CHECK_REPORT_RIGHTAWAY = atom(false);
-export const iS_CLICK_CHECK_POC_RIGHTAWAY = atom(false);
 
 export const CONVERSATION_ID = atom("");
 export const CONVERSATION = atom([]);
@@ -271,5 +272,7 @@ export const IS_EXPERT_INSIGHT_ACCESSIBLE = atom(false);// Expert Insight 접근
 
 export const SELECTED_POC_OPTIONS = atom([]);
 export const SELCTED_POC_TARGET = atom({});
+
+export const RECOMMENDED_TARGET_DATA = atom({});
 
 export const POC_DETAIL_REPORT_ATOM = atom({});

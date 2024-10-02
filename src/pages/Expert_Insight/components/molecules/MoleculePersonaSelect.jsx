@@ -4,7 +4,6 @@ import { palette } from "../../../../assets/styles/Palette";
 import axios from "axios";
 import { useAtom } from "jotai";
 import {
-  iS_CLICK_CHECK_POC_RIGHTAWAY,
   EXPERT_BUTTON_STATE,
   IS_LOADING,
   APPROACH_PATH,
