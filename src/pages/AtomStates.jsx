@@ -271,3 +271,5 @@ export const IS_EXPERT_INSIGHT_ACCESSIBLE = atom(false);// Expert Insight 접근
 
 export const SELECTED_POC_OPTIONS = atom([]);
 export const SELCTED_POC_TARGET = atom({});
+
+export const POC_DETAIL_REPORT_ATOM = atom({});
