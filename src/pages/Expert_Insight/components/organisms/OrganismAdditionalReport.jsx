@@ -20,7 +20,7 @@ import {
   SELECTED_EXPERT_LIST,
   SELECTED_POC_OPTIONS,
   SELCTED_POC_TARGET,
-  RECOMMENDED_TARGET_DATA
+  RECOMMENDED_TARGET_DATA,
   POC_DETAIL_REPORT_ATOM,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
