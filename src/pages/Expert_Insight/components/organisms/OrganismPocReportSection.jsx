@@ -449,7 +449,6 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
       setLoading(true); // 로딩 상태 시작
       setDownloadStatus('다운로드 중입니다...');
     
-      // `strategyReportData`에서 필요한 정보를 직접 가져옴
       const currentExpertData = strategyReportData[expertIndex];
     
       if (!currentExpertData) {
@@ -461,7 +460,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
       // 요청에 필요한 데이터 준비
       const data = {
         expert_id: selectedExpertIndex,
-        business_info: titleOfBusinessInfo, // DB에서 가져온 titleOfBusinessInfo 사용
+        business_info: titleOfBusinessInfo,
         business_analysis_data: {
           명칭: analysisReportData.title,
           주요_목적_및_특징: analysisReportData.mainFeatures,
@@ -471,8 +470,8 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
         goal: selectedPocOptions[0],
         standpoint: selectedPocOptions[1],
         target: selectedPocTarget.title,
-        poc_data: extractSpecificContent(strategyReportData, expertIndex, index), // strategyReportData에서 추출
-        tabs: currentExpertData.tabs, // strategyReportData에서 직접 가져옴
+        poc_data: extractSpecificContent(strategyReportData, expertIndex, index), 
+        tabs: currentExpertData.tabs, 
         page_index: 1,
       };
     
@@ -484,55 +483,62 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
         );
     
         // 응답으로부터 보고서 내용 가져오기
-        const reportContent = response.data.poc_report; // 실제 응답 구조에 따라 수정 필요
+        const reportContent = response.data.poc_report;
     
         // Markdown 스타일 제거 (정규식 사용)
         const cleanedContent = reportContent
-          .replace(/#/g, '') // 제목 표시 '#' 제거
+          .replace(/##/g, '') // 제목 표시 '##' 제거
           .replace(/\*\*/g, '') // 굵은 글씨 '**' 제거
           .replace(/\*/g, '') // 이탤릭체 '*' 제거
-          .replace(/-\s/g, '• '); // 리스트 '-'를 '•'로 변환
+          .replace(/-\s/g, '• ') // 리스트 '-'를 '•'로 변환
+          .replace(/\n/g, '<br/>'); // 줄바꿈을 <br>로 변환
     
-        // PDF 생성
-        const doc = new jsPDF();
+        // 보이지 않던 content를 일시적으로 보이게
+        const contentDiv = document.getElementById(`print-content-${index}`);
+        contentDiv.innerHTML = cleanedContent;
+        contentDiv.style.display = 'block';  // 요소를 보이게 설정
     
-        // 한국어 폰트를 등록
-        doc.addFileToVFS('NotoSansKR-Regular.ttf', fontData);
-        doc.addFont('NotoSansKR-Regular.ttf', 'NotoSansKR', 'normal');
-        doc.setFont('NotoSansKR'); // 폰트 설정
+        // 잠시 후 캡처 후 다시 숨기기
+        setTimeout(async () => {
+          try {
+            const canvas = await html2canvas(contentDiv, {
+              scale: 2,
+              useCORS: true,
+            });
     
-        // 제목 추가
-        doc.setFontSize(18);
-        doc.text('리포트 제목: ' + titleOfBusinessInfo, 10, 10);
+            const imgData = canvas.toDataURL('image/png');
     
-        // 내용 추가
-        doc.setFontSize(12);
-        let yOffset = 20; // 첫 번째 줄 아래부터 시작
-        const lineHeight = 10; // 줄 간격
+            const doc = new jsPDF();
+            const imgWidth = 210; // A4 너비(mm)
+            const pageHeight = 297; // A4 높이(mm)
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            let heightLeft = imgHeight;
+            let position = 0;
     
-        // 줄바꿈을 고려하여 내용 추가
-        cleanedContent.split('\n').forEach((line, index) => {
-          if (yOffset > 280) {
-            // 페이지 한계에 도달하면 새로운 페이지 추가
-            doc.addPage();
-            yOffset = 20; // 새 페이지에서 다시 위에서부터 시작
+            doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+    
+            while (heightLeft > 0) {
+              position = heightLeft - imgHeight;
+              doc.addPage();
+              doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+              heightLeft -= pageHeight;
+            }
+    
+            doc.save(`report_${index}.pdf`);
+            setDownloadStatus('다운로드 완료');
+          } catch (error) {
+            console.error('Error capturing content:', error);
+            setDownloadStatus('다운로드 실패');
+          } finally {
+            // 요소를 다시 숨김
+            contentDiv.style.display = 'none';
+            setLoading(false);
+            setTimeout(() => {
+              setDownloadStatus('');
+            }, 2000);
           }
-          doc.text(line, 10, yOffset);
-          yOffset += lineHeight; // 다음 줄로 이동
-        });
-    
-        // PDF 다운로드
-        doc.save(`report_${index}.pdf`);
-    
-        // 다운로드 완료 후 상태 업데이트
-        setDownloadStatus('다운로드 완료');
-    
-        // 2초 후 상태 리셋
-        setTimeout(() => {
-          setLoading(false);
-          setDownloadStatus('');
-          setIsModalOpen(null); // 모달 닫기
-        }, 2000);
+        }, 0);
       } catch (error) {
         console.error('Error fetching report:', error);
         setLoading(false);
@@ -543,7 +549,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
       }
     };
     
-  
+    
     function extractSpecificContent(strategyReportData, expertIndex, contentIndex) {
       let specificContent = null;
     
@@ -713,42 +719,45 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
         title={title}
         index={index}
       >
+          {/* 보이지 않도록 설정된 캡처 대상 영역 */}
+    
        {/* 4번 전문가 */}
        {expertIndex === "4" ? (
-  <>
-    {/* content 배열이 존재하는 경우 */}
-    {content &&
-      content.length > 0 &&
-      content.map((item, index) => (
-        <SeparateSection key={index} id={`print-content-${index}`}>
-          {/* 항목 번호 및 제목 */}
-          <strong_title>
-            <span className="number">{index + 1}</span>{" "}
-            <strong_title>{`${title} : ${item.title}`}</strong_title>{" "}
-          </strong_title>
-          {/* 항목 내용 */}
-          <p style={{ marginTop: "15px", marginBottom: "15px" }}>
-            {item.text}
-          </p>
+        <>
+          {/* content 배열이 존재하는 경우 */}
+          {content &&
+            content.length > 0 &&
+            content.map((item, index) => (
+              <SeparateSection key={index}>
+                {/* 항목 번호 및 제목 */}
+                <strong_title>
+                  <span className="number">{index + 1}</span>{" "}
+                  <strong_title>{`${title} : ${item.title}`}</strong_title>{" "}
+                </strong_title>
+                {/* 항목 내용 */}
+                <p style={{ marginTop: "15px", marginBottom: "15px" }}>
+                <div id={`print-content-${index}`} style={{ position: 'absolute', bottom: '-10000px' }} />
+                  {item.text}
+                </p>
 
-          {/* subContent가 존재하는 경우 */}
-          {item.subContent && item.subContent.length > 0 && (
-            <div
-              style={{
-                backgroundColor: "white",
-                padding: "15px",
-                borderRadius: "10px",
-              }}
-            >
-              {item.subContent.map((subItem, subIndex) => (
-                <div key={subIndex} style={{ marginTop: "3px" }}>
-                  <p key={subIndex}>
-                    {subIndex + 1}. {subItem.subTitle} : {subItem.text}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
+                {/* subContent가 존재하는 경우 */}
+                {item.subContent && item.subContent.length > 0 && (
+                  <div
+                    style={{
+                      backgroundColor: "white",
+                      padding: "15px",
+                      borderRadius: "10px",
+                    }}
+                  >
+                    {item.subContent.map((subItem, subIndex) => (
+                      <div key={subIndex} style={{ marginTop: "3px" }}>
+                        <p key={subIndex}>
+                          {subIndex + 1}. {subItem.subTitle} : {subItem.text}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
 
           {/* 다운로드 버튼과 모달을 content의 각 항목마다 추가 */}
           <DownloadButton
