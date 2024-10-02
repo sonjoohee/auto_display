@@ -42,9 +42,9 @@ import {
   ADDITION_BUTTON_STATE,
   CUSTOMER_ADDITION_BUTTON_STATE,
   IS_EXPERT_INSIGHT_ACCESSIBLE,
-  iS_CLICK_CHECK_POC_RIGHTAWAY,
   SELECTED_POC_OPTIONS,
   SELCTED_POC_TARGET,
+  RECOMMENDED_TARGET_DATA,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -53,6 +53,7 @@ import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/Molec
 import OrganismReportPopup from "./OrganismReportPopup"; // 팝업 컴포넌트 임포트
 
 const OrganismLeftSideBar = () => {
+  const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
   const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
@@ -136,9 +137,6 @@ const OrganismLeftSideBar = () => {
   const [inputAdditionalQuestion, setInputAdditionalQuestion] = useState("");
   const [isClickCheckReportRightAway, setIsClickCheckReportRightAway] = useAtom(
     iS_CLICK_CHECK_REPORT_RIGHTAWAY
-  );
-  const [isClickCheckPocRightAway, setIsClickCheckPocRightAway] = useAtom(
-    iS_CLICK_CHECK_POC_RIGHTAWAY
   );
   const insightEditBoxRef = useRef(null);
   const historyEditBoxRef = useRef(null);
@@ -549,6 +547,7 @@ useEffect(() => {
 
       setSelectedPocOptions(chatData.selectedPocOptions || []);
       setSelectedPocTarget(chatData.selectedPocTarget || {});
+      setRecommendedTargetData(chatData.recommendedTargetData || {});
 
       // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
       // set어프로치패스(2)
@@ -753,7 +752,6 @@ useEffect(() => {
     setStrategyReportData({});
     setInputAdditionalQuestion("");
     setIsClickCheckReportRightAway(false);
-    setIsClickCheckPocRightAway(false);
     setConversationId(null);
     setPassword("");
     setNewPassword("");
@@ -764,6 +762,7 @@ useEffect(() => {
     setIsSection2Open(false);
     setSelectedPocOptions([]);
     setSelectedPocTarget({});
+    setRecommendedTargetData({});
   };
 
   return (

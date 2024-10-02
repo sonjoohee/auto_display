@@ -301,7 +301,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                     "비즈니스 분석이 완료되었습니다. 추가 사항이 있으시면 ‘수정하기’ 버튼을 통해 수정해 주세요.\n분석 결과에 만족하신다면, 지금 바로 PoC 계획을 시작할게요.",
                   expertIndex: selectedExpertIndex,
                 },
-                { type: "pocButton" }
+                { type: "pocPlanButton" }
               );
             }
           } else if (approachPath === -1) {

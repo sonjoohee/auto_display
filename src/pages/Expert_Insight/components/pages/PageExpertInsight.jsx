@@ -32,6 +32,7 @@ import {
   IS_EXPERT_INSIGHT_ACCESSIBLE,
   SELECTED_POC_OPTIONS,
   SELCTED_POC_TARGET,
+  RECOMMENDED_TARGET_DATA,
 } from "../../../AtomStates";
 
 import {
@@ -57,7 +58,8 @@ import MoleculeCheckPocRightAway from "../molecules/MoleculeCheckPocRightAway";
 import MoleculeCheckPocOption from "../molecules/MoleculeCheckPocOption";
 import OrganismCustomerAdditionalReport from "../organisms/OrganismCustomerAdditionalReport";
 import MoleculePersonaSelect from "../molecules/MoleculePersonaSelect";
-
+import MoleculeRecommendedTargetButton from "../molecules/MoleculeRecommendedTargetButton";
+import OrganismRecommendedTargetReport from "../organisms/OrganismRecommendedTargetReport";
 
 const PageExpertInsight = () => {
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
@@ -113,6 +115,7 @@ const PageExpertInsight = () => {
   const [savedTimestamp, setSavedTimestamp] = useAtom(SAVED_TIMESTAMP);
 
   const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
+  const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
 
   let additionalReportCount = 0;
   let customerAdditionalReportCount = 0;
@@ -157,6 +160,7 @@ const PageExpertInsight = () => {
         expert_index: selectedExpertIndex,
         selectedPocOptions: selectedPocOptions,
         selectedPocTarget: selectedPocTarget,
+        recommendedTargetData: recommendedTargetData,
       },
       isLoggedIn,
       conversationId
@@ -222,6 +226,7 @@ const PageExpertInsight = () => {
 
             setSelectedPocOptions(savedConversation.selectedPocOptions || []);
             setSelectedPocTarget(savedConversation.selectedPocTarget || {});
+            setRecommendedTargetData(savedConversation.recommendedTargetData || {});
 
             // 대화 단계가 초기 상태라면 초기 시스템 메시지 설정
             if (savedConversation.conversationStage === 1) {
@@ -412,7 +417,10 @@ const handleSearch = async (inputValue) => {
           "keyword") ||
       (updatedConversation.length > 0 &&
         updatedConversation[updatedConversation.length - 1].type ===
-          "reportButton")
+          "reportButton") ||
+      (updatedConversation.length > 0 &&
+        updatedConversation[updatedConversation.length - 1].type ===
+          "pocTargetButton")
     ) {
       updatedConversation.pop();
     }
@@ -434,7 +442,10 @@ const handleSearch = async (inputValue) => {
           "keyword") ||
       (updatedConversation.length > 0 &&
         updatedConversation[updatedConversation.length - 1].type ===
-          "reportButton")
+          "reportButton") ||
+      (updatedConversation.length > 0 &&
+        updatedConversation[updatedConversation.length - 1].type ===
+          "pocTargetButton")
     ) {
       updatedConversation.pop();
     }
@@ -578,7 +589,10 @@ const handleSearch = async (inputValue) => {
           "keyword") ||
       (updatedConversation.length > 0 &&
         updatedConversation[updatedConversation.length - 1].type ===
-          "reportButton")
+          "reportButton") ||
+      (updatedConversation.length > 0 &&
+        updatedConversation[updatedConversation.length - 1].type ===
+          "pocTargetButton")
     ) {
       updatedConversation.pop();
     }
@@ -670,6 +684,17 @@ if (isLoadingPage) {
                       />
                     </>
                   );
+                } else if (item.type.startsWith("pocTarget_")) {
+                    const expertIndex = item.type.split("_")[1];
+                    return (
+                      <>
+                        <OrganismRecommendedTargetReport
+                          key={`pocTarget_${expertIndex}_${index}`}
+                          conversationId={conversationId}
+                          expertIndex={expertIndex}
+                        />
+                      </>
+                    );
                 } else if (item.type === "addition") {
                   const currentAdditionalReportCount = additionalReportCount++;
                   return (
@@ -690,8 +715,10 @@ if (isLoadingPage) {
                   return <MoleculeAdditionalKeyword />;
                 } else if (item.type === "reportButton") {
                   return <MoleculeCheckReportRightAway />;
-                } else if (item.type === "pocButton") {
+                } else if (item.type === "pocPlanButton") {
                   return <MoleculeCheckPocRightAway />;
+                } else if (item.type === "pocTargetButton") {
+                  return <MoleculeRecommendedTargetButton />;
                 } else if (item.type === "pocOption") {
                   return <MoleculeCheckPocOption conversationId={conversationId}/>;
                 } else if (item.type === "pocPersona") {
@@ -729,14 +756,14 @@ if (isLoadingPage) {
                 {/* 검색해서 시작 */}
                 {(approachPath === -1 || approachPath === 3) && 
                   titleOfBusinessInfo &&
-                  strategyReportData.hasOwnProperty("4") && 
+                  Object.keys(recommendedTargetData).length !== 0 && 
                   <OrganismBizExpertSelect />
                 }
 
                 {/* 4번 전문가 선택하고 시작 */}
                 {approachPath === 1 &&
                   !isLoading &&
-                  strategyReportData.hasOwnProperty("4") && 
+                  Object.keys(recommendedTargetData).length !== 0 && 
                     <OrganismBizExpertSelect />
                 }
 
@@ -745,7 +772,7 @@ if (isLoadingPage) {
                   titleOfBusinessInfo &&
                   conversation.length > 0 &&
                   !isLoading &&
-                  strategyReportData.hasOwnProperty("4") &&  
+                  Object.keys(recommendedTargetData).length !== 0 &&  
                     <OrganismBizExpertSelect />
                 }
               </>
@@ -757,7 +784,7 @@ if (isLoadingPage) {
               <OrganismSearchBottomBar onSearch={handleSearch} isBlue={false} />
             ) : (
               selectedExpertIndex === "4" ? 
-                strategyReportData.hasOwnProperty("4") && <OrganismSearchBottomBar onSearch={handleSearch} isBlue={true} /> // 4번 전문가 보고서 생성 시 활성화 
+                Object.keys(recommendedTargetData).length !== 0 && <OrganismSearchBottomBar onSearch={handleSearch} isBlue={true} /> // 4번 전문가 보고서 생성 시 활성화 
                 : 
                 <OrganismSearchBottomBar onSearch={handleSearch} isBlue={true} />
             )}

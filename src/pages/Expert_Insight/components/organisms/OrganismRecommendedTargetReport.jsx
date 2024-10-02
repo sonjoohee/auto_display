@@ -7,7 +7,7 @@ import {
   SELECTED_TAB_COPY_1,
   SELECTED_TAB_COPY_2,
   SELECTED_TAB_COPY_3,
-  EXPERT_BUTTON_STATE,
+  TARGET_BUTTON_STATE,
   CONVERSATION,
   APPROACH_PATH,
   isLoggedInAtom,
@@ -46,11 +46,12 @@ import {
   CUSTOMER_ADDITIONAL_REPORT_DATA,
   IS_EDITING_NOW,
   CONVERSATION_STAGE,
+  RECOMMENDED_TARGET_DATA,
 } from "../../../AtomStates";
 import { NotoSansKRFont } from './NotoSansKR-Regular.js'; 
 import fontData from './encoded-20240930083135.txt'; // base64로 인코딩된 폰트
 
-const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
+const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
   const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
@@ -91,7 +92,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
     businessInformationTargetCustomer,
     setBusinessInformationTargetCustomer,
   ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [buttonState, setButtonState] = useAtom(EXPERT_BUTTON_STATE); // BUTTON_STATE 사용
+  const [buttonState, setButtonState] = useAtom(TARGET_BUTTON_STATE); // BUTTON_STATE 사용
 
   // Use the single strategyReportData atom
   const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA);
@@ -103,7 +104,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
     mainCustomer: businessInformationTargetCustomer,
   };
 
-  const [isLoadingExpert, setIsLoadingExpert] = useState(false);
+  const [isLoadingTarget, setIsLoadingTarget] = useState(false);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
 
   const [additionalReportData, setAdditionalReportData] = useAtom(
@@ -121,6 +122,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
 
+  const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
   
 
   useEffect(() => {
@@ -128,24 +130,21 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
       let finalResponse;
         
       try {
-        const currentExpertData = strategyReportData[expertIndex];
-
         // Existing data handling
-        if (currentExpertData && Object.keys(currentExpertData).length > 0) {
-          setTabs(currentExpertData.tabs);
-          setSections(currentExpertData.tabs[selectedTab].sections);
+        if (recommendedTargetData && Object.keys(recommendedTargetData).length > 0) {
+          setTabs(recommendedTargetData.tabs);
+          setSections(recommendedTargetData.tabs[selectedTab].sections);
         }
         // buttonState === 1일 때만 API 호출
         else if (buttonState === 1) {
           setButtonState(0); // 버튼 상태를 초기화
-          setIsLoadingExpert(true);
+          setIsLoadingTarget(true);
           setIsLoading(true);
           setIsEditingNow(false); // 수정 상태 초기화
 
-          // 여기서 expert_id를 임시로 "3"으로 설정합니다.
           const data = {
             expert_id: selectedExpertIndex,
-            business_info: titleOfBusinessInfo, // DB에서 가져온 titleOfBusinessInfo 사용
+            business_info: titleOfBusinessInfo,
             business_analysis_data: {
               명칭: analysisReportData.title,
               주요_목적_및_특징: analysisReportData.mainFeatures,
@@ -233,22 +232,14 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             finalResponse = response3.data;
           }
 
-          const strategyData = finalResponse;
+          const targetData = finalResponse;
 
-          // Update the strategyReportData atom
-          setStrategyReportData((prevData) => ({
-            ...prevData,
-            [expertIndex]: strategyData,
-          }));
-          // 바로 저장할 데이터
-          const updatedStrategyReportData = {
-            ...strategyReportData,
-            [expertIndex]: strategyData, // 새로운 데이터를 추가한 객체를 바로 생성
-          };
-          setTabs(strategyData.tabs);
-          setSections(strategyData.tabs[selectedTab].sections);
+          setRecommendedTargetData(targetData);
 
-          setIsLoadingExpert(false);
+          setTabs(targetData.tabs);
+          setSections(targetData.tabs[selectedTab].sections);
+
+          setIsLoadingTarget(false);
           setIsLoading(false);
 
           const updatedConversation = [...conversation];
@@ -256,16 +247,10 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             {
               type: "system",
               message:
-                "PoC 설계 보고서의 핵심 내용을 정리했습니다. 목표에 맞는 'PoC 수행 계획서'를 다운로드해보세요!",
+                "리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊",
               expertIndex: selectedExpertIndex,
             },
-            {
-              type: "system",
-              message:
-                "PoC 실행 목적에 적합한 타겟과 예상 인사이트를 확인하고 싶다면, '타겟 추천 받기' 버튼을 눌러보세요.",
-              expertIndex: selectedExpertIndex,
-            },
-            { type: `pocTargetButton` }
+            { type: `keyword` }
           );
           setConversationStage(3);
           setConversation(updatedConversation);
@@ -274,19 +259,20 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               id: conversationId,
               inputBusinessInfo: inputBusinessInfo,
               analysisReportData: analysisReportData,
+              strategyReportData: strategyReportData,
               selectedAdditionalKeywords: selectedKeywords,
               conversationStage: 3,
-              strategyReportData: updatedStrategyReportData, // Save the entire strategyReportData
               conversation: updatedConversation,
               selectedAdditionalKeywords: selectedAdditionalKeyword,
               selectedCustomerAdditionalKeyword:
-                selectedCustomerAdditionalKeyword,
+              selectedCustomerAdditionalKeyword,
               additionalReportData: additionalReportData,
               customerAdditionalReportData: customerAdditionalReportData,
               timestamp: Date.now(),
               expert_index: selectedExpertIndex,
               selectedPocOptions: selectedPocOptions,
-              selectedPocTarget: selectedPocTarget
+              selectedPocTarget: selectedPocTarget,
+              recommendedTargetData: targetData,
             },
             isLoggedIn,
             conversationId
@@ -298,27 +284,14 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
     };
 
     loadData();
-  }, [conversationId, selectedTab, expertIndex, buttonState]); // buttonState 의존성 추가
-
-  const handleTabClick = (index, expertIndex) => {
-    setSelectedTab(index);
-
-    if(expertIndex === "1") setSelectedTabCopy1(index);
-    else if(expertIndex === "2") setSelectedTabCopy2(index);
-    else if(expertIndex === "3") setSelectedTabCopy3(index);
-    else;
-
-    if (tabs.length > 0) {
-      setSections(tabs[index].sections);
-    }
-  };
+  }, [conversationId, expertIndex, buttonState]); // buttonState 의존성 추가
 
   return (
     <>
         <AnalysisSection Strategy>
       {/* PDF로 변환할 콘텐츠를 감싸는 div에 id 추가 */}
       <div id="print-content">
-        {isLoadingExpert ? (
+        {isLoadingTarget ? (
           <>
             <SkeletonTitle className="title-placeholder" />
             <SkeletonLine className="content-placeholder" />
@@ -342,7 +315,6 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
                     key={index}
                     active={selectedTab === index}
                     expertIndex={expertIndex}
-                    onClick={() => handleTabClick(index, expertIndex)}
                   >
                     {tab.title}
                   </TabButton>
@@ -366,12 +338,12 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
         )}
       </div>
 
-      {!isLoadingExpert && (
+      {!isLoadingTarget && (
         <MoleculeReportController
           reportIndex={1}
           strategyReportID={expertIndex}
           conversationId={conversationId}
-          sampleData={strategyReportData[expertIndex]}
+          sampleData={recommendedTargetData}
         />
       )}
     </AnalysisSection>
@@ -406,7 +378,6 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
       businessInformationTargetCustomer,
       setBusinessInformationTargetCustomer,
     ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-    const [buttonState, setButtonState] = useAtom(EXPERT_BUTTON_STATE); // BUTTON_STATE 사용
     // Use the single strategyReportData atom
     const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA);
     const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
@@ -455,9 +426,9 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
       setLoading(true); // 로딩 상태 시작
       setDownloadStatus('다운로드 중입니다...');
     
-      const currentExpertData = strategyReportData[expertIndex];
+      const recommendedTargetData = strategyReportData[expertIndex];
     
-      if (!currentExpertData) {
+      if (!recommendedTargetData) {
         setLoading(false);
         setDownloadStatus('데이터를 찾을 수 없습니다.');
         return;
@@ -477,7 +448,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
         standpoint: selectedPocOptions[1],
         target: selectedPocTarget.title,
         poc_data: extractSpecificContent(strategyReportData, expertIndex, index), 
-        tabs: currentExpertData.tabs, 
+        tabs: recommendedTargetData.tabs, 
         page_index: 1,
       };
     
@@ -559,11 +530,11 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
     function extractSpecificContent(strategyReportData, expertIndex, contentIndex) {
       let specificContent = null;
     
-      const currentExpertData = strategyReportData[expertIndex];
+      const recommendedTargetData = strategyReportData[expertIndex];
       
       // 첫 번째 tab의 첫 번째 section에서 특정 인덱스의 content 항목을 가져옴
-      if (currentExpertData && currentExpertData.tabs.length > 0 && currentExpertData.tabs[0].sections.length > 0) {
-        const contentItem = currentExpertData.tabs[0].sections[0].content[contentIndex];
+      if (recommendedTargetData && recommendedTargetData.tabs.length > 0 && recommendedTargetData.tabs[0].sections.length > 0) {
+        const contentItem = recommendedTargetData.tabs[0].sections[0].content[contentIndex];
     
         if (contentItem) {
           specificContent = {
@@ -586,9 +557,9 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
       setDownloadStatus('다운로드 중입니다...');
     
       // `strategyReportData`에서 필요한 정보를 직접 가져옴
-      const currentExpertData = strategyReportData[expertIndex];
+      const recommendedTargetData = strategyReportData[expertIndex];
     
-      if (!currentExpertData) {
+      if (!recommendedTargetData) {
         setLoading(false);
         setDownloadStatus('데이터를 찾을 수 없습니다.');
         return;
@@ -608,7 +579,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
         standpoint: selectedPocOptions[1],
         target: selectedPocTarget.title,
         poc_data: extractSpecificContent(strategyReportData, expertIndex, index), // strategyReportData에서 추출
-        tabs: currentExpertData.tabs, // strategyReportData에서 직접 가져옴
+        tabs: recommendedTargetData.tabs, // strategyReportData에서 직접 가져옴
         page_index: 1,
       };
   
@@ -1338,7 +1309,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
     );
   };
   
-  export default OrganismStrategyReportSection;
+  export default OrganismRecommendedTargetReport;
   const SeparateSection = styled.div`
     display: flex;
     flex-direction: column;
