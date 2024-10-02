@@ -281,7 +281,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               timestamp: Date.now(),
               expert_index: selectedExpertIndex,
               selectedPocOptions: selectedPocOptions,
-              selectedPocTarget: selectedPocTarget
+              selectedPocTarget: selectedPocTarget,
             },
             isLoggedIn,
             conversationId
@@ -377,7 +377,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
 
 const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,index,conversationId }) => {
     // 서브 타이틀이 있는 항목과 없는 항목을 분리
-    const [pocDetailReport, setPocDetailReport] = useAtom(POC_DETAIL_REPORT_ATOM);
+    const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_ATOM);
     const subTitleItems = content.filter((item) => item.subTitle);
     const nonSubTitleItems = content.filter((item) => !item.subTitle);
     const summaryItem = content.find((item) => item.title === "총평");
@@ -545,7 +545,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
     const handleDownload = async (language, index) => {
       setLoading(true); // 로딩 상태 시작
       setDownloadStatus('다운로드 중입니다...');
-      const existingReport = pocDetailReport[`${expertIndex}-${index}`];
+      const existingReport = pocDetailReportData[`${expertIndex}-${index}`];
     
       const currentExpertData = strategyReportData[expertIndex];
     
@@ -558,7 +558,6 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
       if (existingReport) {
         // 저장된 데이터를 사용하여 PDF 생성
         const cleanedContent = existingReport;
-        console.log(cleanedContent)
         generatePDF(cleanedContent, index); // PDF 생성 함수 호출
         return;
       }
@@ -600,7 +599,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
           .replace(/\n/g, '<br/>'); // 줄바꿈을 <br>로 변환
     
         // Atom에 보고서 내용을 저장
-        setPocDetailReport((prevReport) => ({
+        setpocDetailReportData((prevReport) => ({
           ...prevReport,
           [`${expertIndex}-${index}`]: cleanedContent,
         }));
@@ -623,7 +622,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
           expert_index: selectedExpertIndex,
           selectedPocOptions: selectedPocOptions,
           selectedPocTarget: selectedPocTarget,
-          pocDetailReport: { ...pocDetailReport, [`${expertIndex}-${index}`]: cleanedContent },
+          pocDetailReportData: { ...pocDetailReportData, [`${expertIndex}-${index}`]: cleanedContent },
         }, isLoggedIn, conversationId);
     
         // PDF 생성 함수 호출
@@ -678,7 +677,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
       }
     
       // 기존에 저장된 보고서가 있는지 확인
-      const existingReport = pocDetailReport[`${expertIndex}-${index}`];
+      const existingReport = pocDetailReportData[`${expertIndex}-${index}`];
     
       // 이미 저장된 데이터가 있는 경우 해당 데이터를 사용
       if (existingReport) {
@@ -723,7 +722,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
           .replace(/\n/g, '<br/>'); // 줄바꿈을 <br>로 변환
         
         // Atom에 보고서 내용을 저장
-        setPocDetailReport((prevReport) => ({
+        setpocDetailReportData((prevReport) => ({
           ...prevReport,
           [`${expertIndex}-${index}`]: cleanedContent,
         }));
@@ -749,7 +748,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
           expert_index: selectedExpertIndex,
           selectedPocOptions: selectedPocOptions,
           selectedPocTarget: selectedPocTarget,
-          pocDetailReport: { ...pocDetailReport, [`${expertIndex}-${index}`]: reportContent },
+          pocDetailReportData: { ...pocDetailReportData, [`${expertIndex}-${index}`]: reportContent },
         }, isLoggedIn, conversationId);
     
       } catch (error) {
