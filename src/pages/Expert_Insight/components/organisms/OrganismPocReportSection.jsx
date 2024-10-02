@@ -494,8 +494,8 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
         // 클릭된 요소의 위치와 크기 정보 가져오기
         let top = clickedElement.offsetTop +30;
         let left = clickedElement.offsetLeft + clickedElement.offsetWidth - 100;
-        console.log(top)
-        console.log(left)
+        // console.log(top)
+        // console.log(left)
 
         // 새로운 위치를 설정
         setPopupPosition({ top, left });
@@ -563,7 +563,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
         
         // PDF 다운로드
         doc.save(`${fileName}.pdf`);
-        console.log('PDF 생성 및 다운로드 완료');
+        // console.log('PDF 생성 및 다운로드 완료');
         
         // 다운로드 상태 업데이트
         setDownloadStatus('다운로드 완료');
