@@ -895,6 +895,12 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
                 <strong_title>
                   <span className="number">{index + 1}</span>{" "}
                   <strong_title>{`${title} : ${item.title}`}</strong_title>{" "}
+                  <DownloadButton
+                    onClick={() => handleOpenModal(index)}
+                    disabled={loading}
+                  >
+                    {loading ? downloadStatus : "보고서 다운로드"}
+                  </DownloadButton>
                 </strong_title>
                 {/* 항목 내용 */}
                 <p style={{ marginTop: "15px", marginBottom: "15px" }}>
@@ -921,13 +927,6 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
                   </div>
                 )}
 
-          {/* 다운로드 버튼과 모달을 content의 각 항목마다 추가 */}
-          <DownloadButton
-            onClick={() => handleOpenModal(index)}
-            disabled={loading}
-          >
-            {loading ? downloadStatus : "보고서 다운로드"}
-          </DownloadButton>
           {/* 모달도 각 Section과 관련되어 렌더링 */}
           {isModalOpen === index && (
             <div className="modal">
