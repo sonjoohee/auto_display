@@ -475,7 +475,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
       }
     };
     
-    const generatePDF = async (cleanedContent, index) => {
+    const generatePDF = async (cleanedContent, index, fileName) => {
       try {
         // PDF에 넣기 위해 콘텐츠를 임시로 보여주는 div를 찾거나 생성합니다.
         const contentDiv = document.getElementById(`print-content-${index}`);
@@ -519,7 +519,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
         }
         
         // PDF 다운로드
-        doc.save(`report_${index}.pdf`);
+        doc.save(`${fileName}.pdf`);
         console.log('PDF 생성 및 다운로드 완료');
         
         // 다운로드 상태 업데이트
@@ -558,12 +558,25 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
         setDownloadStatus('데이터를 찾을 수 없습니다.');
         return;
       }
+
+      let fileName = `PoC 수행 계획서`; // 기본 파일 이름
+
+      // 목표 행위 텍스트를 파일 이름으로 설정
+      const content = currentExpertData.tabs[0].sections[0].content[index];
+      if (content && content.subContent) {
+        content.subContent.forEach((subItem) => {
+          if (subItem.subTitle === "목표 행위") {
+            fileName = `${subItem.text} - PoC 수행 계획서`; // "목표 행위" 텍스트를 파일 이름으로 사용
+          }
+        });
+      }
     
+
       if (existingReport) {
         // 저장된 데이터를 사용하여 PDF 생성
         const cleanedContent = existingReport;
         setTimeout(() => {
-          generatePDF(cleanedContent, index); // PDF 생성 함수 호출을 약간 지연
+          generatePDF(cleanedContent, index, fileName); // PDF 생성 함수 호출을 약간 지연
         }, 0);
         return;
       }
@@ -632,7 +645,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
         }, isLoggedIn, conversationId);
     
         // PDF 생성 함수 호출
-        generatePDF(cleanedContent, index);
+        generatePDF(cleanedContent, index, fileName);
     
       } catch (error) {
         console.error('Error fetching report:', error);
@@ -684,10 +697,22 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
     
       // 기존에 저장된 보고서가 있는지 확인
       const existingReport = pocDetailReportData[`${expertIndex}-${index}`];
-    
+
+      let fileName = `PoC 수행 계획서`; // 기본 파일 이름
+
+      // 목표 행위 텍스트를 파일 이름으로 설정
+      const content = currentExpertData.tabs[0].sections[0].content[index];
+      if (content && content.subContent) {
+        content.subContent.forEach((subItem) => {
+          if (subItem.subTitle === "목표 행위") {
+            fileName = `${subItem.text} - PoC 수행 계획서`; // "목표 행위" 텍스트를 파일 이름으로 사용
+          }
+        });
+      }
+
       // 이미 저장된 데이터가 있는 경우 해당 데이터를 사용
       if (existingReport) {
-        generateDocx(existingReport, index); // DOCX 생성 함수 호출
+        generateDocx(existingReport, index, fileName); // DOCX 생성 함수 호출
         return;
       }
     
@@ -734,7 +759,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
         }));
     
         // 저장 후 DOCX 생성 함수 호출
-        generateDocx(reportContent, index);
+        generateDocx(reportContent, index, fileName);
     
         // 저장 후 indexedDB에도 저장
         await saveConversationToIndexedDB({
@@ -768,7 +793,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
     };
     
     // DOCX 파일을 생성하는 함수
-    const generateDocx = (content, index) => {
+    const generateDocx = (content, index, fileName) => {
       try {
         // Word 문서용 전처리
         const cleanedContent = content
@@ -794,14 +819,6 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
           sections: [
             {
               children: [
-                new Paragraph({
-                  children: [
-                    new TextRun({
-                      text: '리포트 제목: ' + titleOfBusinessInfo,
-                      bold: true,
-                    }),
-                  ],
-                }),
                 ...contentParagraphs, // 분리된 각 줄을 Paragraph로 추가
               ],
             },
@@ -811,7 +828,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
         // docx 파일 패킹 및 다운로드
         Packer.toBlob(doc)
           .then((blob) => {
-            saveAs(blob, `report_${index}.docx`);
+            saveAs(blob, `${fileName}.docx`);
             setDownloadStatus('다운로드 완료');
     
             // 2초 후 상태 리셋
