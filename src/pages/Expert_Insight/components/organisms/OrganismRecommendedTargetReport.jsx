@@ -47,9 +47,11 @@ import {
   IS_EDITING_NOW,
   CONVERSATION_STAGE,
   RECOMMENDED_TARGET_DATA,
+  POC_DETAIL_REPORT_ATOM,
 } from "../../../AtomStates";
 
 const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
+  const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_ATOM);
   const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
@@ -271,6 +273,7 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
               selectedPocOptions: selectedPocOptions,
               selectedPocTarget: selectedPocTarget,
               recommendedTargetData: targetData,
+              pocDetailReportData : pocDetailReportData
             },
             isLoggedIn,
             conversationId

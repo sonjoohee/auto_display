@@ -26,6 +26,7 @@ import {
   SELECTED_EXPERT_LIST,
   SELCTED_POC_TARGET,
   TARGET_BUTTON_STATE,
+  POC_DETAIL_REPORT_ATOM,
 } from "../../../AtomStates";
 
 import {
@@ -35,6 +36,7 @@ import {
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeRecommendedTargetButton = () => {
+  const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_ATOM);
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
   const [isLoggedIn] = useAtom(isLoggedInAtom);
@@ -102,6 +104,7 @@ const MoleculeRecommendedTargetButton = () => {
         timestamp: Date.now(),
         expert_index: selectedExpertIndex,
         selectedPocTarget: selectedPocTarget,
+        pocDetailReportData : pocDetailReportData,
       },
       isLoggedIn,
       conversationId
