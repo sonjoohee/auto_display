@@ -794,14 +794,6 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
           sections: [
             {
               children: [
-                new Paragraph({
-                  children: [
-                    new TextRun({
-                      text: '리포트 제목: ' + titleOfBusinessInfo,
-                      bold: true,
-                    }),
-                  ],
-                }),
                 ...contentParagraphs, // 분리된 각 줄을 Paragraph로 추가
               ],
             },
