@@ -558,7 +558,9 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
       if (existingReport) {
         // 저장된 데이터를 사용하여 PDF 생성
         const cleanedContent = existingReport;
-        generatePDF(cleanedContent, index); // PDF 생성 함수 호출
+        setTimeout(() => {
+          generatePDF(cleanedContent, index); // PDF 생성 함수 호출을 약간 지연
+        }, 0);
         return;
       }
     
