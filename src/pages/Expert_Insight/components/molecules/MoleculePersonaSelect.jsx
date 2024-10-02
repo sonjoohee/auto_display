@@ -30,15 +30,25 @@ import {
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
 
 const MoleculePersonaSelect = ({ conversationId }) => {
-  const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
+  const [selectedPocOptions, setSelectedPocOptions] =
+    useAtom(SELECTED_POC_OPTIONS);
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [inputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
-  const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation,] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
-  const [mainCharacteristicOfBusinessInformation, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
-  const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [buttonState, setButtonState] = useAtom(TARGET_SELECT_BUTTON_STATE);
+  const [
+    mainFeaturesOfBusinessInformation,
+    setMainFeaturesOfBusinessInformation,
+  ] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
+  const [
+    mainCharacteristicOfBusinessInformation,
+    setMainCharacteristicOfBusinessInformation,
+  ] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
+  const [
+    businessInformationTargetCustomer,
+    setBusinessInformationTargetCustomer,
+  ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
+  const [buttonState, setButtonState] = useAtom(EXPERT_BUTTON_STATE);
   const analysisReportData = {
     title: titleOfBusinessInfo,
     mainFeatures: mainFeaturesOfBusinessInformation,
@@ -52,20 +62,37 @@ const MoleculePersonaSelect = ({ conversationId }) => {
     SELECTED_CUSTOMER_ADDITIONAL_KEYWORD
   );
   const [additionalReportData] = useAtom(ADDITIONAL_REPORT_DATA);
-  const [customerAdditionalReportData] = useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
+  const [customerAdditionalReportData] = useAtom(
+    CUSTOMER_ADDITIONAL_REPORT_DATA
+  );
   const [isLoggedIn] = useAtom(isLoggedInAtom);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
   const [selectedPocTargetState, setSelectedPocTargetState] = useState({}); // 현재 선택한 상태를 저장
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET); // 확인 버튼을 눌렀을 때만 저장 -> 히스토리 저장
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [isLoadingTarget, setIsLoadingTarget] = useState(false);
-  
+
   const [options, setOptions] = useState([
-    { title: "퇴직자, 취미 활동가", text: "웰에이징 플랫폼을 통해 자신의 경험을 다른 사람과 공유하고, 새로운 취미와 활동을 탐색하며 건강하고 보람찬 노년을 보낸는 것" },
-    { title: "중소기업 CEO, 고위 관리직", text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함" },
-    { title: "중소기업 CEO, 고위 관리직", text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함" },
-    { title: "중소기업 CEO, 고위 관리직", text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함" },
-    { title: "중소기업 CEO, 고위 관리직", text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함" },
+    {
+      title: "퇴직자, 취미 활동가",
+      text: "웰에이징 플랫폼을 통해 자신의 경험을 다른 사람과 공유하고, 새로운 취미와 활동을 탐색하며 건강하고 보람찬 노년을 보낸는 것",
+    },
+    {
+      title: "중소기업 CEO, 고위 관리직",
+      text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함",
+    },
+    {
+      title: "중소기업 CEO, 고위 관리직",
+      text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함",
+    },
+    {
+      title: "중소기업 CEO, 고위 관리직",
+      text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함",
+    },
+    {
+      title: "중소기업 CEO, 고위 관리직",
+      text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함",
+    },
     { title: "아직 타겟 고객이 확실하지 않아요", text: "" },
   ]);
 
@@ -76,7 +103,7 @@ const MoleculePersonaSelect = ({ conversationId }) => {
     },
     withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
   };
-  
+
   // useEffect(() => {
   //   const fetchPersonaSelect = async () => {
 
@@ -106,7 +133,7 @@ const MoleculePersonaSelect = ({ conversationId }) => {
   //         data,
   //         axiosConfig
   //       );
-        
+
   //       setOptions(response.data);
 
   //       setIsLoading(false);
@@ -122,10 +149,10 @@ const MoleculePersonaSelect = ({ conversationId }) => {
     if (Object.keys(selectedPocTarget).length) return;
 
     if (Object.keys(selectedPocTargetState).length === 0) {
-      alert("항목을 선택해주세요")
+      alert("항목을 선택해주세요");
       return;
     }
-    setConversationStage(3)
+    setConversationStage(3);
     setApproachPath(3);
     setSelectedPocTarget(selectedPocTargetState);
 
@@ -167,31 +194,40 @@ const MoleculePersonaSelect = ({ conversationId }) => {
       isLoggedIn,
       conversationId
     );
-    setButtonState(1); 
+    setButtonState(1);
   };
 
   return (
     <Wrapper>
-      {Object.keys(selectedPocTarget).length === 0 ?
-      <>
-      <Question>Q. 생각하고 계시는 비즈니스의 타겟 고객은 누구입니까?</Question>
-      <OptionsContainer>
-        {options.map((option) => (
-          <Option key={option.title} onClick={() => setSelectedPocTargetState({"title": option.title, "text": option.text})}>
-            <input type="radio" id={option} name="target" />
-            <Label htmlFor={option}>{option.title}</Label>
-            <p>{option.text}</p>
-          </Option>
-        ))}
-      </OptionsContainer>
-      <Button onClick={handleConfirm}>확인</Button>
-      </>
-      :
-      <>
-      <Question>완료</Question>
-      </>
-      }
-
+      {Object.keys(selectedPocTarget).length === 0 ? (
+        <>
+          <Question>
+            Q. 생각하고 계시는 비즈니스의 타겟 고객은 누구입니까?
+          </Question>
+          <OptionsContainer>
+            {options.map((option) => (
+              <Option
+                key={option.title}
+                onClick={() =>
+                  setSelectedPocTargetState({
+                    title: option.title,
+                    text: option.text,
+                  })
+                }
+              >
+                <input type="radio" id={option} name="target" />
+                <Label htmlFor={option}>{option.title}</Label>
+                <p>{option.text}</p>
+              </Option>
+            ))}
+          </OptionsContainer>
+          <Button onClick={handleConfirm}>확인</Button>
+        </>
+      ) : (
+        <>
+          <Question>완료</Question>
+        </>
+      )}
     </Wrapper>
   );
 };
