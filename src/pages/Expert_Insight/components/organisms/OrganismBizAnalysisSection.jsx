@@ -34,6 +34,7 @@ import {
   REPORT_REFRESH_TRIGGER,
   IS_LOADING_ANALYSIS,
   CONVERSATION_STAGE,
+  CHAT_REFRESH_TRIGGER,
 } from "../../../AtomStates";
 
 const OrganismBizAnalysisSection = ({ conversationId }) => {
@@ -101,7 +102,9 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
 
   const [deleteInfo, setDeleteInfo] = useState({ section: "", index: null });
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
-
+  const [chatRefreshTrigger, setChatRefreshTrigger] = useAtom(
+    CHAT_REFRESH_TRIGGER
+  );
   const togglePopupDelete = () => {
     setIsPopupOpenDelete(!isPopupOpenDelete);
   };
@@ -148,7 +151,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
           axiosConfig
         );
         businessData = response.data.business_analysis;
-
+        setChatRefreshTrigger((prev) => !prev);
         // 필요한 데이터가 없을 경우 재시도, 최대 5번
         while (
           (!businessData.hasOwnProperty("명칭") ||
@@ -187,7 +190,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               "입력하신 정보로는 분석이 어렵습니다. 아래 검색창에 다시 한번 입력해주세요.",
             expertIndex: selectedExpertIndex,
           });
-  
+          
           setConversation(updatedConversation);
           setConversationStage(1);
           // **API 데이터가 있을 경우에만 저장**

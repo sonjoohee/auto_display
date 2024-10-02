@@ -274,3 +274,5 @@ export const SELECTED_POC_OPTIONS = atom([]);
 export const SELCTED_POC_TARGET = atom({});
 
 export const RECOMMENDED_TARGET_DATA = atom({});
+
+export const POC_DETAIL_REPORT_ATOM = atom({});

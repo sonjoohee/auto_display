@@ -21,6 +21,7 @@ import {
   SELECTED_POC_OPTIONS,
   SELCTED_POC_TARGET,
   RECOMMENDED_TARGET_DATA
+  POC_DETAIL_REPORT_ATOM,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import MoleculeReportController from "../molecules/MoleculeReportController";
@@ -98,7 +99,7 @@ const OrganismAdditionalReport = ({
   ] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
   const [customerAdditionalReportData, setCustomerAdditionalReportData] =
     useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
-
+  const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_ATOM);
   useEffect(() => {
     const loadData = async () => {
       let answerData;
@@ -207,6 +208,7 @@ const OrganismAdditionalReport = ({
               selectedPocOptions: selectedPocOptions,
               selectedPocTarget: selectedPocTarget,
               recommendedTargetData: recommendedTargetData,
+              pocDetailReportData : pocDetailReportData
             },
             isLoggedIn,
             conversationId
