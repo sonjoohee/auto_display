@@ -445,8 +445,29 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedFormat, setSelectedFormat] = useState('PDF');
     const [selectedLanguage, setSelectedLanguage] = useState('Korean');
-    const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
-    const downloadButtonRef = useRef(null);
+    const popupRef = useRef(null); // 팝업 요소를 참조하는 useRef 생성
+
+    useEffect(() => {
+      const handleClickOutside = (event) => {
+          if (popupRef.current && !popupRef.current.contains(event.target)) {
+              setIsModalOpen(null); // 외부 클릭 시 모달 닫기
+          }
+      };
+
+      if (isModalOpen !== null) {
+          document.addEventListener("mousedown", handleClickOutside);
+      }
+
+      return () => {
+          document.removeEventListener("mousedown", handleClickOutside);
+      };
+  }, [isModalOpen]);
+
+    const [isAutoSaveToggle, setIsAutoSaveToggle] = useState(false); // 팝업이 처음에는 닫힌 상태
+    const toggleAutoSavePopup = () => {
+      setIsAutoSaveToggle(!isAutoSaveToggle); // 현재 상태를 반전시킴
+    };
+    
     // subText에서 ':'로 분리하여 subTitle과 text를 따로 처리
     const splitText = (text) => {
       const [subTitle, ...rest] = text.split(":");
@@ -850,7 +871,22 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
       }
     };
     
-    
+      // 팝업 외부 클릭 시 닫히도록 처리하는 useEffect
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (popupRef.current && !popupRef.current.contains(event.target)) {
+        setIsAutoSaveToggle(false); // 외부 클릭 시 팝업 닫기
+      }
+    };
+
+    if (isAutoSaveToggle) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isAutoSaveToggle]);
   
   // 데이터를 추출하는 함수 (필요 시 수정)
   const extractTextContent = (data) => {
@@ -926,49 +962,44 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
                     ))}
                   </div>
                 )}
-
-          {/* 모달도 각 Section과 관련되어 렌더링 */}
-          {isModalOpen === index && (
-            <div className="modal">
-              <div className="modal-content">
-                <h3>다운로드 설정</h3>
-                <div>
-                  <label>포맷 선택:</label>
-                  <select
-                    value={selectedFormat}
-                    onChange={(e) => setSelectedFormat(e.target.value)}
-                  >
-                    <option value="PDF">PDF</option>
-                    <option value="Word">Word</option>
-                  </select>
-                </div>
-                <div>
-                  <label>언어 선택:</label>
-                  <select
-                    value={selectedLanguage}
-                    onChange={(e) => setSelectedLanguage(e.target.value)}
-                  >
-                    <option value="Korean">한국어</option>
-                    <option value="English">영어</option>
-                    {/* 필요에 따라 다른 언어 추가 */}
-                  </select>
-                </div>
-                <div>
-                  <button
-                    onClick={() => handleDownloadClick(index)}
-                    disabled={loading}
-                  >
-                    {loading ? downloadStatus : "다운로드"}
-                  </button>
-                  <button onClick={handleCloseModal} disabled={loading}>
-                    취소
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-        </SeparateSection>
-      ))}
+            {/* 모달도 각 Section과 관련되어 렌더링 */}
+            {isModalOpen === index && (
+                  <DownloadPopup ref={popupRef} isAutoSaveToggle={false}>
+                      <div>
+                          <h3>다운로드 설정</h3>
+                          <div>
+                              <label>포맷 선택:</label>
+                              <select
+                                  value={selectedFormat}
+                                  onChange={(e) => setSelectedFormat(e.target.value)}
+                              >
+                                  <option value="PDF">PDF</option>
+                                  <option value="Word">Word</option>
+                              </select>
+                          </div>
+                          <div>
+                              <label>언어 선택:</label>
+                              <select
+                                  value={selectedLanguage}
+                                  onChange={(e) => setSelectedLanguage(e.target.value)}
+                              >
+                                  <option value="Korean">한국어</option>
+                                  <option value="English">영어</option>
+                              </select>
+                          </div>
+                          <div>
+                              <button onClick={() => handleDownloadClick(index)} disabled={loading}>
+                                  {loading ? downloadStatus : "다운로드"}
+                              </button>
+                              <button onClick={handleCloseModal} disabled={loading}>
+                                  취소
+                              </button>
+                          </div>
+                      </div>
+                  </DownloadPopup>
+                )}
+            </SeparateSection>
+          ))}
         </>
         ) : expertIndex === "3" && selectedTab === 1 ? (
           <>
@@ -1979,7 +2010,8 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
     // border: 1px solid ${palette.lineGray};
   `;
   const DownloadButton = styled.button`
-  display: inline-block;
+  position: absolute; /* 절대 위치 */
+  right: 0; /* 오른쪽 끝으로 배치 */
   padding: 10px 20px;
   margin-bottom: 20px;
   font-size: 16px;
@@ -1989,9 +2021,72 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  position: relative; /* 수정 */
-  z-index: 1000; /* 적절한 z-index 값 */
+  z-index: 1000;
   &:hover {
     background-color: ${palette.blue}; 
+  }
+`;
+const DownloadPopup = styled.div`
+  position: absolute;
+  right: ${(props) => (props.isAutoSaveToggle ? "0" : "-70px")};
+  top: 120px;
+  max-width: 304px;
+  max-height: ${(props) => (props.isAutoSaveToggle ? "0" : "1000px")};
+  flex-direction: column;
+  gap: 20px !important;
+  text-align: left;
+  padding: ${(props) => (props.isAutoSaveToggle ? "0" : "24px")};
+  border-radius: 20px;
+  background: ${palette.white};
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  visibility: ${(props) => (props.isAutoSaveToggle ? "hidden" : "visible")};
+  opacity: ${(props) => (props.isAutoSaveToggle ? "0" : "1")};
+
+  &:before {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0px 20px 12px 20px;
+    border-color: transparent transparent ${palette.white} transparent;
+    filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.2));
+    content: "";
+    z-index: 0;
+  }
+
+  h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: ${palette.gray};
+    margin-bottom: 20px;
+  }
+
+  label {
+    font-size: 0.875rem;
+    color: ${palette.gray};
+  }
+
+  select {
+    margin-left: 10px;
+    padding: 5px;
+    border-radius: 5px;
+  }
+
+  button {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: ${palette.blue};
+    color: white;
+    border: none;
+    cursor: pointer;
+
+    &:disabled {
+      background-color: ${palette.gray};
+      cursor: not-allowed;
+    }
   }
 `;
