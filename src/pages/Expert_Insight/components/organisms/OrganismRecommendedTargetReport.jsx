@@ -48,8 +48,6 @@ import {
   CONVERSATION_STAGE,
   RECOMMENDED_TARGET_DATA,
 } from "../../../AtomStates";
-import { NotoSansKRFont } from './NotoSansKR-Regular.js'; 
-import fontData from './encoded-20240930083135.txt'; // base64로 인코딩된 폰트
 
 const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
   const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
