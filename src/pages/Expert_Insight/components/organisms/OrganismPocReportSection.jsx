@@ -477,13 +477,35 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
       };
     };
 
-    const handleOpenModal = (index) => {
-      setIsModalOpen(index); // 클릭된 섹션의 인덱스를 저장하여 모달을 엶
-    };
+    const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 }); // 팝업 위치 상태
+    const buttonRef = useRef(null); // 버튼 위치를 참조할 ref 생성
   
+    const handleOpenModal = (index, event, category) => {
+      if (isModalOpen === index) {
+        setIsModalOpen(null); // 모달을 다시 클릭하면 닫기
+        return;
+      }
+    
+      setIsModalOpen(index); // 클릭한 버튼의 index로 모달 열기
+    
+
+        const clickedElement = event.currentTarget;
+        
+        // 클릭된 요소의 위치와 크기 정보 가져오기
+        let top = clickedElement.offsetTop +30;
+        let left = clickedElement.offsetLeft + clickedElement.offsetWidth - 100;
+        console.log(top)
+        console.log(left)
+
+        // 새로운 위치를 설정
+        setPopupPosition({ top, left });
+      
+    };
+    
     const handleCloseModal = () => {
       setIsModalOpen(null); // 모달 닫기
     };
+    
     
     const handleDownloadClick = (index) => {
       setLoading(true);
@@ -932,7 +954,8 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
                   <span className="number">{index + 1}</span>{" "}
                   <strong_title>{`${title} : ${item.title}`}</strong_title>{" "}
                   <DownloadButton
-                    onClick={() => handleOpenModal(index)}
+                  ref={buttonRef}
+                    onClick={(event) => handleOpenModal(index, event)}
                     disabled={loading}
                   >
                     {loading ? downloadStatus : "보고서 다운로드"}
@@ -964,7 +987,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
                 )}
             {/* 모달도 각 Section과 관련되어 렌더링 */}
             {isModalOpen === index && (
-                  <DownloadPopup ref={popupRef} isAutoSaveToggle={false}>
+                  <DownloadPopup ref={popupRef} isAutoSaveToggle={false} style={{ top: popupPosition.top, left: popupPosition.left }}>
                       <div>
                           <h3>다운로드 설정</h3>
                           <div>
@@ -2031,16 +2054,15 @@ const DownloadPopup = styled.div`
   right: ${(props) => (props.isAutoSaveToggle ? "0" : "-70px")};
   top: 120px;
   max-width: 304px;
-  max-height: ${(props) => (props.isAutoSaveToggle ? "0" : "1000px")};
-  flex-direction: column;
-  gap: 20px !important;
-  text-align: left;
+  max-height: 400px; /* 팝업의 최대 높이를 적절히 설정 */
+  overflow-y: auto; /* 내용이 많을 경우 스크롤 가능하게 설정 */
   padding: ${(props) => (props.isAutoSaveToggle ? "0" : "24px")};
   border-radius: 20px;
   background: ${palette.white};
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   visibility: ${(props) => (props.isAutoSaveToggle ? "hidden" : "visible")};
   opacity: ${(props) => (props.isAutoSaveToggle ? "0" : "1")};
+  transition: opacity 0.3s ease, visibility 0.3s ease; /* 트랜지션 추가 */
 
   &:before {
     position: absolute;
