@@ -14,7 +14,6 @@ import {
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
   MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
-  ADDITION_BUTTON_STATE,
   isLoggedInAtom,
   STRATEGY_REPORT_DATA,
   INPUT_BUSINESS_INFO,
@@ -23,9 +22,7 @@ import {
   SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
   ADDITIONAL_REPORT_DATA,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
-  CUSTOMER_ADDITION_BUTTON_STATE,
-  CUSTOMER_ADDITION_QUESTION_INPUT,
-  SELECTED_EXPERT_LIST,
+  TARGET_SELECT_BUTTON_STATE,
   SELECTED_POC_OPTIONS,
   SELCTED_POC_TARGET,
 } from "../../../AtomStates";
@@ -41,7 +38,7 @@ const MoleculePersonaSelect = ({ conversationId }) => {
   const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation,] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
   const [mainCharacteristicOfBusinessInformation, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
   const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [buttonState, setButtonState] = useAtom(EXPERT_BUTTON_STATE);
+  const [buttonState, setButtonState] = useAtom(TARGET_SELECT_BUTTON_STATE);
   const analysisReportData = {
     title: titleOfBusinessInfo,
     mainFeatures: mainFeaturesOfBusinessInformation,
@@ -62,6 +59,15 @@ const MoleculePersonaSelect = ({ conversationId }) => {
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET); // 확인 버튼을 눌렀을 때만 저장 -> 히스토리 저장
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [isLoadingTarget, setIsLoadingTarget] = useState(false);
+  
+  const [options, setOptions] = useState([
+    { title: "퇴직자, 취미 활동가", text: "웰에이징 플랫폼을 통해 자신의 경험을 다른 사람과 공유하고, 새로운 취미와 활동을 탐색하며 건강하고 보람찬 노년을 보낸는 것" },
+    { title: "중소기업 CEO, 고위 관리직", text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함" },
+    { title: "중소기업 CEO, 고위 관리직", text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함" },
+    { title: "중소기업 CEO, 고위 관리직", text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함" },
+    { title: "중소기업 CEO, 고위 관리직", text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함" },
+    { title: "아직 타겟 고객이 확실하지 않아요", text: "" },
+  ]);
 
   const axiosConfig = {
     timeout: 100000, // 100초
@@ -73,33 +79,44 @@ const MoleculePersonaSelect = ({ conversationId }) => {
   
   // useEffect(() => {
   //   const fetchPersonaSelect = async () => {
-      
-  //     setIsLoading(true);
-  //     setIsLoadingTarget(true);
 
-  //     const response = await axios.post(
-  //       "https://wishresearch.kr/",
-  //       selectedPocOptions,
-  //       axiosConfig
-  //     );
-      
-  //     setSelectedPocTarget(response.data);
+  //     if(buttonState) {
+  //       setIsLoading(true);
+  //       setIsLoadingTarget(true);
+  //       setButtonState(0);
 
-  //     setIsLoading(false);
-  //     setIsLoadingTarget(false);
+  //       const data = {
+  //         expert_id: selectedExpertIndex,
+  //         business_info: titleOfBusinessInfo,
+  //         business_analysis_data: {
+  //           명칭: analysisReportData.title,
+  //           주요_목적_및_특징: analysisReportData.mainFeatures,
+  //           주요기능: analysisReportData.mainCharacter,
+  //           목표고객: analysisReportData.mainCustomer,
+  //         },
+  //         goal : selectedPocOptions[0],
+  //         standpoint : selectedPocOptions[1],
+  //         target : selectedPocTarget.title,
+  //         tabs: [],
+  //         page_index: 1,
+  //       };
+
+  //       const response = await axios.post(
+  //         "https://wishresearch.kr/",
+  //         data,
+  //         axiosConfig
+  //       );
+        
+  //       setOptions(response.data);
+
+  //       setIsLoading(false);
+  //       setIsLoadingTarget(false);
+  //     }
+
   //   };
 
   //   fetchPersonaSelect();
-  // }, []);
-
-  const options = [
-    { title: "퇴직자, 취미 활동가", text: "웰에이징 플랫폼을 통해 자신의 경험을 다른 사람과 공유하고, 새로운 취미와 활동을 탐색하며 건강하고 보람찬 노년을 보낸는 것" },
-    { title: "중소기업 CEO, 고위 관리직", text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함" },
-    { title: "중소기업 CEO, 고위 관리직", text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함" },
-    { title: "중소기업 CEO, 고위 관리직", text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함" },
-    { title: "중소기업 CEO, 고위 관리직", text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함" },
-    { title: "아직 타겟 고객이 확실하지 않아요", text: "" },
-  ];
+  // }, [buttonState]);
 
   const handleConfirm = async () => {
     if (Object.keys(selectedPocTarget).length) return;
