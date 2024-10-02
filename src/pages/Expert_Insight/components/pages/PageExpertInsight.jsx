@@ -32,6 +32,7 @@ import {
   IS_EXPERT_INSIGHT_ACCESSIBLE,
   SELECTED_POC_OPTIONS,
   SELCTED_POC_TARGET,
+  POC_DETAIL_REPORT_ATOM,
 } from "../../../AtomStates";
 
 import {
@@ -113,7 +114,7 @@ const PageExpertInsight = () => {
   const [savedTimestamp, setSavedTimestamp] = useAtom(SAVED_TIMESTAMP);
 
   const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
-
+  const [pocDetailReport, setPocDetailReport] = useAtom(POC_DETAIL_REPORT_ATOM);
   let additionalReportCount = 0;
   let customerAdditionalReportCount = 0;
 
@@ -214,7 +215,6 @@ const PageExpertInsight = () => {
 
             // 전략 보고서 데이터 복구
             setStrategyReportData(savedConversation.strategyReportData || {}); // 변경된 부분
-
             setAdditionalReportData(savedConversation.additionalReportData || []);
             setSelectedAdditionalKeyword(savedConversation.selectedAdditionalKeyword || []);
             setSelectedCustomerAdditionalKeyword(savedConversation.selectedCustomerAdditionalKeyword || []);
@@ -222,7 +222,7 @@ const PageExpertInsight = () => {
 
             setSelectedPocOptions(savedConversation.selectedPocOptions || []);
             setSelectedPocTarget(savedConversation.selectedPocTarget || {});
-
+            setPocDetailReport(savedConversation.pocDetailReport || {});
             // 대화 단계가 초기 상태라면 초기 시스템 메시지 설정
             if (savedConversation.conversationStage === 1) {
               const initialMessage = getInitialSystemMessage();
