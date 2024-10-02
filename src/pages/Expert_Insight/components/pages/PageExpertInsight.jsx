@@ -114,7 +114,7 @@ const PageExpertInsight = () => {
   const [savedTimestamp, setSavedTimestamp] = useAtom(SAVED_TIMESTAMP);
 
   const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
-  const [pocDetailReport, setPocDetailReport] = useAtom(POC_DETAIL_REPORT_ATOM);
+  const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_ATOM);
   let additionalReportCount = 0;
   let customerAdditionalReportCount = 0;
 
@@ -222,7 +222,7 @@ const PageExpertInsight = () => {
 
             setSelectedPocOptions(savedConversation.selectedPocOptions || []);
             setSelectedPocTarget(savedConversation.selectedPocTarget || {});
-            setPocDetailReport(savedConversation.pocDetailReport || {});
+            setpocDetailReportData(savedConversation.pocDetailReportData || {});
             // 대화 단계가 초기 상태라면 초기 시스템 메시지 설정
             if (savedConversation.conversationStage === 1) {
               const initialMessage = getInitialSystemMessage();

@@ -12,7 +12,8 @@ import {
   APPROACH_PATH,
   isLoggedInAtom,
   INPUT_BUSINESS_INFO,
-  SELECTED_POC_OPTIONS
+  SELECTED_POC_OPTIONS,
+  POC_DETAIL_REPORT_ATOM,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -59,6 +60,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
   const [selectedKeywords] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
+  const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_ATOM);
 
   const axiosConfig = {
     timeout: 100000, // 100초
@@ -263,6 +265,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               expert_index: selectedExpertIndex,
               selectedPocOptions: selectedPocOptions,
               selectedPocTarget: selectedPocTarget,
+              pocDetailReportData: pocDetailReportData
             },
             isLoggedIn,
             conversationId

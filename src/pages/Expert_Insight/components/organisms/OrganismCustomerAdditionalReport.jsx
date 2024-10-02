@@ -13,7 +13,7 @@ import {
   IS_LOADING,
   isLoggedInAtom,
   STRATEGY_REPORT_DATA,
-
+  POC_DETAIL_REPORT_ATOM,
   INPUT_BUSINESS_INFO,
   CONVERSATION_STAGE,
   SELECTED_ADDITIONAL_KEYWORD,
@@ -110,7 +110,7 @@ const OrganismCustomerAdditionalReport = ({
     useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
 
   const [advise, setAdvise] = useState(""); // 새로운 advise 상태 추가
-
+  const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_ATOM);
   useEffect(() => {
     const loadData = async () => {
       let answerData;
@@ -312,6 +312,7 @@ const OrganismCustomerAdditionalReport = ({
               expert_index: selectedExpertIndex,
               selectedPocOptions: selectedPocOptions,
               selectedPocTarget: selectedPocTarget,
+              pocDetailReportData : pocDetailReportData
             },
             isLoggedIn,
             conversationId
