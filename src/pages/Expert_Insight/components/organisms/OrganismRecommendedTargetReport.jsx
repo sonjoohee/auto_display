@@ -339,7 +339,7 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
 
       {!isLoadingTarget && (
         <MoleculeReportController
-          reportIndex={1}
+          reportIndex={4}
           strategyReportID={expertIndex}
           conversationId={conversationId}
           sampleData={recommendedTargetData}

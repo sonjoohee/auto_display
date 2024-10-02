@@ -21,7 +21,7 @@ const OrganismReportPopup = ({ report, onClose }) => {
   }
 
   {
-    reportIndex === 1 && (reportTypeText = "전문가 보고서");
+    (reportIndex === 1 || reportIndex === 4) && (reportTypeText = "전문가 보고서");
   }
 
   {
@@ -51,7 +51,7 @@ const OrganismReportPopup = ({ report, onClose }) => {
             </popup-p>
           </popupTitle>
           
-        {reportIndex === 1 &&          
+        {(reportIndex === 1 || reportIndex === 4) &&          
           <ExpertThumb>
             <div className="thumb">
             {
@@ -59,7 +59,9 @@ const OrganismReportPopup = ({ report, onClose }) => {
                 ? <img src={panelimages.expert_1} alt="" /> 
                 : report.content.expert_id === "2" 
                   ? <img src={panelimages.expert_2} alt="" /> 
-                  : <img src={panelimages.expert_3} alt="" />
+                  : report.content.expert_id === "3" 
+                    ? <img src={panelimages.expert_3} alt="" />
+                    : <img src={panelimages.expert_3} alt="" />
             }
             </div>
             {
@@ -73,9 +75,15 @@ const OrganismReportPopup = ({ report, onClose }) => {
                       <strong>마케팅 구루</strong>
                       <p>이지현</p>
                     </div>
-                  : <div className="cont">
+                  : report.content.expert_id === "3" 
+                  ? <div className="cont">
                       <strong>고객 분석 전문가</strong>
                       <p>박서연</p>
+                    </div>
+                  :
+                  <div className="cont">
+                      <strong>PoC 설계 전문가</strong>
+                      <p>OOO</p>
                     </div>
             }
           </ExpertThumb>
@@ -84,7 +92,7 @@ const OrganismReportPopup = ({ report, onClose }) => {
 
         {reportIndex === 0 && <BizAnalysisSection report={report} />}
 
-        {reportIndex === 1 && <StrategyReportSection report={report} />}
+        {(reportIndex === 1 || reportIndex === 4) && <StrategyReportSection report={report} />}
 
         {reportIndex === 2 && <AdditionalReportSection report={report} />}
 
@@ -428,7 +436,7 @@ const StrategyReportSection = ({ report }) => {
                 expertIndex={expertIndex} // 전달
                 onClick={() => handleTabClick(index)}
               >
-                {tab.title}
+                {expertIndex === "4" ? "PoC 목적별 추천 타겟 및 예상 인사이트" : tab.title}
               </TabButton>
             ))}
         </TabHeader>
