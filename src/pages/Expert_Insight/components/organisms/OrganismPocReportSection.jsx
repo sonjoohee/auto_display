@@ -64,13 +64,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
   const [selectedKeywords] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
-  const [loading, setLoading] = useState(false);
-  const [downloadStatus, setDownloadStatus] = useState(""); // 상태 메시지를 관리
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET); // 확인 버튼을 눌렀을 때만 저장 -> 히스토리 저장
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedFormat, setSelectedFormat] = useState('PDF');
-  const [selectedLanguage, setSelectedLanguage] = useState('Korean');
 
   const axiosConfig = {
     timeout: 100000, // 100초
@@ -389,13 +383,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
     const [loading, setLoading] = useState(false);
     const [downloadStatus, setDownloadStatus] = useState(""); // 상태 메시지를 관리
     const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
-    const [approachPath] = useAtom(APPROACH_PATH);
     const [conversation, setConversation] = useAtom(CONVERSATION);
-    const [selectedTabCopy1, setSelectedTabCopy1] = useAtom(SELECTED_TAB_COPY_1);
-    const [selectedTabCopy2, setSelectedTabCopy2] = useAtom(SELECTED_TAB_COPY_2);
-    const [selectedTabCopy3, setSelectedTabCopy3] = useAtom(SELECTED_TAB_COPY_3);
-    const [tabs, setTabs] = useState([]);
-    const [sections, setSections] = useState([]);
     const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
     const [selectedKeywords] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
     const [additionalReportData, setAdditionalReportData] = useAtom(
@@ -411,11 +399,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
     const [customerAdditionalReportData, setCustomerAdditionalReportData] =
       useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
     const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
-    const axiosConfig = {
-      timeout: 100000, // 100초
-      headers: { "Content-Type": "application/json" },
-      withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
-    };
+
     const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
     const [
       mainFeaturesOfBusinessInformation,
@@ -429,7 +413,6 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
       businessInformationTargetCustomer,
       setBusinessInformationTargetCustomer,
     ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-    const [buttonState, setButtonState] = useAtom(EXPERT_BUTTON_STATE); // BUTTON_STATE 사용
     // Use the single strategyReportData atom
     const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA);
     const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
@@ -464,9 +447,6 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
   }, [isModalOpen]);
 
     const [isAutoSaveToggle, setIsAutoSaveToggle] = useState(false); // 팝업이 처음에는 닫힌 상태
-    const toggleAutoSavePopup = () => {
-      setIsAutoSaveToggle(!isAutoSaveToggle); // 현재 상태를 반전시킴
-    };
     
     // subText에서 ':'로 분리하여 subTitle과 text를 따로 처리
     const splitText = (text) => {
@@ -488,18 +468,14 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
     
       setIsModalOpen(index); // 클릭한 버튼의 index로 모달 열기
     
-
-        const clickedElement = event.currentTarget;
+      const clickedElement = event.currentTarget;
         
-        // 클릭된 요소의 위치와 크기 정보 가져오기
-        let top = clickedElement.offsetTop +30;
-        let left = clickedElement.offsetLeft + clickedElement.offsetWidth - 100;
-        console.log(top)
-        console.log(left)
+      // 클릭된 요소의 위치와 크기 정보 가져오기
+      let top = clickedElement.offsetTop +30;
+      let left = clickedElement.offsetLeft + clickedElement.offsetWidth - 100;
 
-        // 새로운 위치를 설정
-        setPopupPosition({ top, left });
-      
+      // 새로운 위치를 설정
+      setPopupPosition({ top, left });
     };
     
     const handleCloseModal = () => {
@@ -927,9 +903,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
     }
     return textContent;
   };
-  
-    // 기존 subTitle과 text를 합쳐 새로운 text 생성
-  
+    
   
     return (
       <BoxWrap
@@ -939,8 +913,6 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
         title={title}
         index={index}
       >
-          {/* 보이지 않도록 설정된 캡처 대상 영역 */}
-    
        {/* 4번 전문가 */}
        {expertIndex === "4" ? (
         <>
@@ -963,7 +935,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
                 </strong_title>
                 {/* 항목 내용 */}
                 <p style={{ marginTop: "15px", marginBottom: "15px" }}>
-                <div id={`print-content-${index}`} style={{ position: 'absolute', bottom: '-10000px' }} />
+                <div id={`print-content-${index}`} style={{ position: 'absolute', bottom: '-10000px' }} />{/* 보이지 않도록 설정된 캡처 대상 영역 */}
                   {item.text}
                 </p>
 
