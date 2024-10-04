@@ -50,7 +50,9 @@ const MoleculeReportController = ({
   strategyReportID,
   conversationId,
   sampleData,
+  report,
   additionalReportCount, // 추가 보고서 복사기능을 위한 인덱스
+  showCopyOnly = false,
 }) => {
   const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
@@ -357,10 +359,10 @@ const MoleculeReportController = ({
   };
 
   const toggleCopy = () => {
-    let contentToCopy = ``;
-
+    let contentToCopy = '';
+  
     const extractTextContent = (data) => {
-      let textContent = "";
+      let textContent = '';
       if (typeof data === "string") {
         return data + "\n";
       }
@@ -375,7 +377,7 @@ const MoleculeReportController = ({
       }
       return textContent;
     };
-
+  
     const getSelectedTabData = () => {
       const reportData = strategyReportData[strategyReportID];
       if (!reportData) return null;
@@ -383,53 +385,128 @@ const MoleculeReportController = ({
       const selectedTabCopy = selectedTabCopyByExpert[strategyReportID] || 0;
       return reportData.tabs[selectedTabCopy];
     };
+  
+    const findGoalActionText = (index) => {
+      const currentExpertData = strategyReportData[selectedExpertIndex];
+      if (currentExpertData && currentExpertData.tabs[0] && currentExpertData.tabs[0].sections[0]) {
+        const content = currentExpertData.tabs[0].sections[0].content[index];
+        if (content && content.subContent) {
+          for (let subItem of content.subContent) {
+            if (subItem.subTitle === "목표 행위") {
+              return subItem.text;
+            }
+          }
+        }
+      }
+      return "목표 행위"; // 기본값
+    };
+  
+    if (report && report.content) {
+      switch (reportIndex) {
+        case 0: // 비즈니스 분석 리포트
+          contentToCopy = `
+  ${report.content.title}
+  
+  주요 특징
+  ${report.content.mainFeatures.join('\n')}
+  
+  주요 특성
+  ${report.content.mainCharacter.join('\n')}
+  
+  목표 고객
+  ${report.content.mainCustomer.join('\n')}
+          `.trim();
+          break;
+          case 1: // 전략 보고서
+          if (report.content.tabs) {
+            const selectedTabData = report.content.tabs[selectedTabCopy1 || 0];
+            contentToCopy = extractTextContent(selectedTabData);
+          } else {
+            contentToCopy = JSON.stringify(report.content, null, 2);
+          }
+          break;
+        case 2: // 추가 질문
+          if (Array.isArray(report.content)) {
+            contentToCopy = report.content.map((item, index) => 
+              `질문 ${index + 1}: ${item.question}\n답변: ${item.answer}`
+            ).join('\n\n');
+          } else {
+            contentToCopy = JSON.stringify(report.content, null, 2);
+          }
+          break;
+        case 3: // 고객 추가 질문
+          if (Array.isArray(report.content)) {
+            contentToCopy = report.content.map((item, index) => 
+              `질문 ${index + 1}: ${item.question}\n답변: ${item.answer}`
+            ).join('\n\n');
+          } else {
+            contentToCopy = JSON.stringify(report.content, null, 2);
+          }
+          break;
+          case 4: // PoC 목적별 추천 타겟 및 예상 인사이트
+          if (report.content.poc_persona) {
+            contentToCopy = "PoC 목적별 추천 타겟 및 예상 인사이트\n\n";
+            Object.entries(report.content.poc_persona).forEach(([key, value], index) => {
+              const goalActionText = findGoalActionText(index);
+              contentToCopy += `${index + 1}. ${goalActionText}\n`;
+              contentToCopy += `   1. 추천 가상 페르소나 : ${value[0]["추천 가상 페르소나"]}\n`;
+              contentToCopy += `   2. 이유 및 예상 인사이트 : ${value[1]["이유 및 예상 인사이트"]}\n\n`;
+            });
+          } else {
+            contentToCopy = JSON.stringify(report.content, null, 2);
+          }
+          break;
 
-    if (reportIndex === 0) {
-      contentToCopy = `
-${titleOfBusinessInfo}
-주요 특징
-${mainFeaturesOfBusinessInformation?.map((feature) => `${feature}`).join("\n")}
-주요 특성
-${mainCharacteristicOfBusinessInformation
-  ?.map((character) => `${character}`)
-  .join("\n")}
-목표 고객
-${businessInformationTargetCustomer
-  ?.map((customer) => `${customer}`)
-  .join("\n")}
-`;
-    } else if (reportIndex === 1) {
-      // 전문가 보고서 복사 기능
-      const selectedTabData = getSelectedTabData();
-      contentToCopy = extractTextContent(selectedTabData);
-    } else if (reportIndex === 2) {
-      // 추가 질문 복사 기능
-      contentToCopy = extractTextContent(additionalReportData[additionalReportCount]);
-    } else if (reportIndex === 3) {
-      contentToCopy = extractTextContent(customerAdditionalReportData[additionalReportCount]);
-    } else if (reportIndex === 4) {
-      if (recommendedTargetData && recommendedTargetData.poc_persona) {
-        contentToCopy = "PoC 목적별 추천 타겟 및 예상 인사이트\n";
-        Object.entries(recommendedTargetData.poc_persona).forEach(([key, value], index) => {
-          const goalActionText = findGoalActionText(index);
-          contentToCopy += `${index + 1}. ${goalActionText}\n`;
-          contentToCopy += `1. 추천 가상 페르소나 : ${value[0]["추천 가상 페르소나"]}\n`;
-          contentToCopy += `2. 이유 및 예상 인사이트 : ${value[1]["이유 및 예상 인사이트"]}\n`;
-        });
+        default:
+          contentToCopy = JSON.stringify(report, null, 2);
+          
+      }
+    } else {
+      if (reportIndex === 0) {
+        contentToCopy = `
+  ${titleOfBusinessInfo}
+  주요 특징
+  ${mainFeaturesOfBusinessInformation?.map((feature) => `${feature}`).join("\n")}
+  주요 특성
+  ${mainCharacteristicOfBusinessInformation
+    ?.map((character) => `${character}`)
+    .join("\n")}
+  목표 고객
+  ${businessInformationTargetCustomer
+    ?.map((customer) => `${customer}`)
+    .join("\n")}
+  `;
+      } else if (reportIndex === 1) {
+        // 전문가 보고서 복사 기능
+        const selectedTabData = getSelectedTabData();
+        contentToCopy = extractTextContent(selectedTabData);
+      } else if (reportIndex === 2) {
+        // 추가 질문 복사 기능
+        contentToCopy = extractTextContent(additionalReportData[additionalReportCount]);
+      } else if (reportIndex === 3) {
+        contentToCopy = extractTextContent(customerAdditionalReportData[additionalReportCount]);
+      } else if (reportIndex === 4) {
+        if (recommendedTargetData && recommendedTargetData.poc_persona) {
+          contentToCopy = "PoC 목적별 추천 타겟 및 예상 인사이트\n";
+          Object.entries(recommendedTargetData.poc_persona).forEach(([key, value], index) => {
+            const goalActionText = findGoalActionText(index);
+            contentToCopy += `${index + 1}. ${goalActionText}\n`;
+            contentToCopy += `1. 추천 가상 페르소나 : ${value[0]["추천 가상 페르소나"]}\n`;
+            contentToCopy += `2. 이유 및 예상 인사이트 : ${value[1]["이유 및 예상 인사이트"]}\n`;
+          });
+        }
       }
     }
-    else return;
-
+  
     navigator.clipboard
       .writeText(contentToCopy.trim())
       .then(() => {
         setIsPopupCopy(true); // 복사 팝업 열기
       })
       .catch((error) => {
-        console.error("복사 실패?", error);
+        console.error("복사 실패", error);
       });
   };
-
   // const resetConversationState = () => {
   //   setTitleOfBusinessInfo([]);
   //   setMainFeaturesOfBusinessInformation([]);
