@@ -36,7 +36,7 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
   const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation,] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
   const [mainCharacteristicOfBusinessInformation, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
   const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [buttonState, setButtonState] = useAtom(TARGET_SELECT_BUTTON_STATE);
+  const [targetSelectButtonState, setTargetSelectButtonState] = useAtom(TARGET_SELECT_BUTTON_STATE);
   const analysisReportData = {
     title: titleOfBusinessInfo,
     mainFeatures: mainFeaturesOfBusinessInformation,
@@ -123,7 +123,7 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
     setTabs(2);
     setApproachPath(3);
     setConversationStage(3);
-    setButtonState(1);
+    setTargetSelectButtonState(1);
 
     const updatedConversation = [...conversation];
     updatedConversation.push(

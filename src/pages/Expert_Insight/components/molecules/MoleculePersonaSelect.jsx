@@ -25,9 +25,15 @@ import {
   TARGET_SELECT_BUTTON_STATE,
   SELECTED_POC_OPTIONS,
   SELCTED_POC_TARGET,
+  POC_PERSONA_LIST,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
+
+import {
+  SkeletonTitle,
+  SkeletonLine,
+} from "../../../../assets/styles/Skeleton";
 
 const MoleculePersonaSelect = ({ conversationId }) => {
   const [selectedPocOptions, setSelectedPocOptions] =
@@ -48,7 +54,8 @@ const MoleculePersonaSelect = ({ conversationId }) => {
     businessInformationTargetCustomer,
     setBusinessInformationTargetCustomer,
   ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [buttonState, setButtonState] = useAtom(EXPERT_BUTTON_STATE);
+  const [expertButtonState, setExpertButtonState] = useAtom(EXPERT_BUTTON_STATE);
+  const [targetSelectButtonState, setTargetSelectButtonState] = useAtom(TARGET_SELECT_BUTTON_STATE);
   const analysisReportData = {
     title: titleOfBusinessInfo,
     mainFeatures: mainFeaturesOfBusinessInformation,
@@ -71,31 +78,8 @@ const MoleculePersonaSelect = ({ conversationId }) => {
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET); // 확인 버튼을 눌렀을 때만 저장 -> 히스토리 저장
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [isLoadingTarget, setIsLoadingTarget] = useState(false);
-
-  const [options, setOptions] = useState([
-    {
-      title: "퇴직자, 취미 활동가",
-      text: "웰에이징 플랫폼을 통해 자신의 경험을 다른 사람과 공유하고, 새로운 취미와 활동을 탐색하며 건강하고 보람찬 노년을 보낸는 것",
-    },
-    {
-      title: "중소기업 CEO, 고위 관리직",
-      text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함",
-    },
-    {
-      title: "중소기업 CEO, 고위 관리직",
-      text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함",
-    },
-    {
-      title: "중소기업 CEO, 고위 관리직",
-      text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함",
-    },
-    {
-      title: "중소기업 CEO, 고위 관리직",
-      text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함",
-    },
-    { title: "아직 타겟 고객이 확실하지 않아요", text: "" },
-  ]);
-
+  const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
+  
   const axiosConfig = {
     timeout: 100000, // 100초
     headers: {
@@ -104,46 +88,70 @@ const MoleculePersonaSelect = ({ conversationId }) => {
     withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
   };
 
-  // useEffect(() => {
-  //   const fetchPersonaSelect = async () => {
+  useEffect(() => {
+    const fetchPersonaSelect = async () => {
 
-  //     if(buttonState) {
-  //       setIsLoading(true);
-  //       setIsLoadingTarget(true);
-  //       setButtonState(0);
+      if(targetSelectButtonState) {
+        setIsLoading(true);
+        setIsLoadingTarget(true);
+        setTargetSelectButtonState(0);
 
-  //       const data = {
-  //         expert_id: selectedExpertIndex,
-  //         business_info: titleOfBusinessInfo,
-  //         business_analysis_data: {
-  //           명칭: analysisReportData.title,
-  //           주요_목적_및_특징: analysisReportData.mainFeatures,
-  //           주요기능: analysisReportData.mainCharacter,
-  //           목표고객: analysisReportData.mainCustomer,
-  //         },
-  //         goal : selectedPocOptions[0],
-  //         standpoint : selectedPocOptions[1],
-  //         target : selectedPocTarget.title,
-  //         tabs: [],
-  //         page_index: 1,
-  //       };
+        const data = {
+          product_info: titleOfBusinessInfo,
+          goal : selectedPocOptions[0],
+          standpoint : selectedPocOptions[1],
+        };
 
-  //       const response = await axios.post(
-  //         "https://wishresearch.kr/",
-  //         data,
-  //         axiosConfig
-  //       );
+        let response = await axios.post(
+          "https://wishresearch.kr/panels/persona_list",
+          data,
+          axiosConfig
+        );
+        let updatedPersonaList = response.data.persona_list;
 
-  //       setOptions(response.data);
+        while (
+          !Array.isArray(updatedPersonaList) ||
+          updatedPersonaList.length === 0 ||
+          !updatedPersonaList[0].hasOwnProperty("persona_1")
+        ) {
+          response = await axios.post(
+            "https://wishresearch.kr/panels/persona_list",
+            data,
+            axiosConfig
+          );
+          updatedPersonaList = response.data.additional_question;
+        }
 
-  //       setIsLoading(false);
-  //       setIsLoadingTarget(false);
-  //     }
+        setPocPersonaList(updatedPersonaList);
 
-  //   };
+        await saveConversationToIndexedDB(
+          {
+            id: conversationId,
+            inputBusinessInfo: inputBusinessInfo,
+            analysisReportData: analysisReportData,
+            strategyReportData: strategyReportData,
+            conversation: conversation,
+            conversationStage: 3,
+            selectedAdditionalKeywords: selectedAdditionalKeyword,
+            selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
+            additionalReportData: additionalReportData,
+            customerAdditionalReportData: customerAdditionalReportData,
+            timestamp: Date.now(),
+            expert_index: selectedExpertIndex,
+            selectedPocOptions: selectedPocOptions,
+            pocPersonaList: updatedPersonaList,
+          },
+          isLoggedIn,
+          conversationId
+        );
 
-  //   fetchPersonaSelect();
-  // }, [buttonState]);
+        setIsLoading(false);
+        setIsLoadingTarget(false);
+      }
+    };
+
+    fetchPersonaSelect();
+  }, [targetSelectButtonState]);
 
   const handleConfirm = async () => {
     if (Object.keys(selectedPocTarget).length) return;
@@ -160,7 +168,7 @@ const MoleculePersonaSelect = ({ conversationId }) => {
     updatedConversation.push(
       {
         type: "user",
-        message: `비즈니스 타겟은 *${selectedPocTargetState.title}* 입니다.`,
+        message: `비즈니스 타겟은 *${selectedPocTargetState.job}* 입니다.`,
         expertIndex: selectedExpertIndex,
       },
       {
@@ -189,35 +197,46 @@ const MoleculePersonaSelect = ({ conversationId }) => {
         timestamp: Date.now(),
         expert_index: selectedExpertIndex,
         selectedPocOptions: selectedPocOptions,
+        pocPersonaList: pocPersonaList,
         selectedPocTarget: selectedPocTargetState,
       },
       isLoggedIn,
       conversationId
     );
-    setButtonState(1);
+    setExpertButtonState(1);
   };
 
   return (
     <Wrapper>
+      {isLoadingTarget ?
+      <>
+        <SkeletonTitle className="title-placeholder" />
+        <SkeletonLine className="content-placeholder" />
+        <SkeletonLine className="content-placeholder" />
+        <SkeletonLine className="content-placeholder" />
+        <SkeletonLine className="content-placeholder" />
+      </>
+      :
+      <>
       {Object.keys(selectedPocTarget).length === 0 ? (
         <>
           <Question>
             Q. 생각하고 계시는 비즈니스의 타겟 고객은 누구입니까?
           </Question>
           <OptionsContainer>
-            {options.map((option) => (
+            {pocPersonaList.map((persona, index) => (
               <Option
-                key={option.title}
+                key={index}
                 onClick={() =>
                   setSelectedPocTargetState({
-                    title: option.title,
-                    text: option.text,
+                    job: persona[`persona_${index + 1}`][1]["job"],
+                    target: persona[`persona_${index + 1}`][4]["target"],
                   })
                 }
               >
-                <input type="radio" id={option} name="target" />
-                <Label htmlFor={option}>{option.title}</Label>
-                <p>{option.text}</p>
+                <input type="radio" id={persona} name="target" />
+                <Label htmlFor={persona}>{persona[`persona_${index + 1}`][1]["job"]}</Label>
+                <p>{persona[`persona_${index + 1}`][4]["target"]}</p>
               </Option>
             ))}
           </OptionsContainer>
@@ -228,6 +247,8 @@ const MoleculePersonaSelect = ({ conversationId }) => {
           <Question>완료</Question>
         </>
       )}
+    </>
+    }
     </Wrapper>
   );
 };

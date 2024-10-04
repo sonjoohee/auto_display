@@ -14,7 +14,7 @@ import {
 
 const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
-  const [buttonState, setButtonState] = useAtom(CUSTOMER_ADDITION_BUTTON_STATE);
+  const [customerAdditionButtonState, setCustomerAdditionButtonState] = useAtom(CUSTOMER_ADDITION_BUTTON_STATE);
   const [questionInput, setQuestionInput] = useAtom(
     CUSTOMER_ADDITION_QUESTION_INPUT
   );
@@ -97,7 +97,7 @@ const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
           <button
             type="button"
             onClick={() => {
-              setButtonState(1);
+              setCustomerAdditionButtonState(1);
               setQuestionInput(inputValue);
               handleSearch();
             }}

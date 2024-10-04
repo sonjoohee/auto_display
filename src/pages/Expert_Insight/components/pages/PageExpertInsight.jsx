@@ -34,6 +34,7 @@ import {
   SELCTED_POC_TARGET,
   RECOMMENDED_TARGET_DATA,
   POC_DETAIL_REPORT_ATOM,
+  POC_PERSONA_LIST,
 } from "../../../AtomStates";
 
 import {
@@ -63,6 +64,7 @@ import MoleculeRecommendedTargetButton from "../molecules/MoleculeRecommendedTar
 import OrganismRecommendedTargetReport from "../organisms/OrganismRecommendedTargetReport";
 
 const PageExpertInsight = () => {
+  const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [isLoadingPage, setIsLoadingPage] = useState(true); // 로딩 상태 추가
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
@@ -162,6 +164,7 @@ const PageExpertInsight = () => {
         timestamp: Date.now(),
         expert_index: selectedExpertIndex,
         selectedPocOptions: selectedPocOptions,
+        pocPersonaList: pocPersonaList,
         selectedPocTarget: selectedPocTarget,
         recommendedTargetData: recommendedTargetData,
         pocDetailReportData : pocDetailReportData,
@@ -231,7 +234,8 @@ const PageExpertInsight = () => {
             setSelectedPocTarget(savedConversation.selectedPocTarget || {});
             setRecommendedTargetData(savedConversation.recommendedTargetData || {});
             setpocDetailReportData(savedConversation.pocDetailReportData || {});
-
+            setPocPersonaList(savedConversation.pocPersonaList || []);
+            
             // 대화 단계가 초기 상태라면 초기 시스템 메시지 설정
             if (savedConversation.conversationStage === 1) {
               const initialMessage = getInitialSystemMessage();
