@@ -156,10 +156,11 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
             target : selectedPocTarget.title,
             tabs: [],
             page_index: 1,
+            poc_report : strategyReportData[selectedExpertIndex]
           };
 
           let response1 = await axios.post(
-            "https://wishresearch.kr/panels/expert",
+            "https://wishresearch.kr/panels/expert/poc_persona",
             data,
             axiosConfig
           );
@@ -167,7 +168,7 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
           while (true) {
             if (!response1.data["tabs"][0].hasOwnProperty("title")) {
               response1 = await axios.post(
-                "https://wishresearch.kr/panels/expert",
+                "https://wishresearch.kr/panels/expert/poc_persona",
                 data,
                 axiosConfig
               );
@@ -180,14 +181,14 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
 
           if (finalResponse.total_page_index === 2) {
             let response2 = await axios.post(
-              "https://wishresearch.kr/panels/expert",
+              "https://wishresearch.kr/panels/expert/poc_persona",
               finalResponse,
               axiosConfig
             );
             while (true) {
               if (!response2.data["tabs"][1].hasOwnProperty("title")) {
                 response2 = await axios.post(
-                  "https://wishresearch.kr/panels/expert",
+                  "https://wishresearch.kr/panels/expert/poc_persona",
                   finalResponse,
                   axiosConfig
                 );
@@ -198,14 +199,14 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
             finalResponse = response2.data;
           } else if (finalResponse.total_page_index === 3) {
             let response2 = await axios.post(
-              "https://wishresearch.kr/panels/expert",
+              "https://wishresearch.kr/panels/expert/poc_persona",
               finalResponse,
               axiosConfig
             );
             while (true) {
               if (!response2.data["tabs"][1].hasOwnProperty("title")) {
                 response2 = await axios.post(
-                  "https://wishresearch.kr/panels/expert",
+                  "https://wishresearch.kr/panels/expert/poc_persona",
                   finalResponse,
                   axiosConfig
                 );
@@ -214,14 +215,14 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
               }
             }
             let response3 = await axios.post(
-              "https://wishresearch.kr/panels/expert",
+              "https://wishresearch.kr/panels/expert/poc_persona",
               response2.data,
               axiosConfig
             );
             while (true) {
               if (!response3.data["tabs"][2].hasOwnProperty("title")) {
                 response3 = await axios.post(
-                  "https://wishresearch.kr/panels/expert",
+                  "https://wishresearch.kr/panels/expert/poc_persona",
                   response2.data,
                   axiosConfig
                 );
