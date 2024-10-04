@@ -442,7 +442,7 @@ const StrategyReportSection = ({ report }) => {
                 expertIndex={expertIndex} // 전달
                 onClick={() => handleTabClick(index)}
               >
-                {expertIndex === "4" ? "PoC 목적별 추천 타겟 및 예상 인사이트" : tab.title}
+                {tab.title}
               </TabButton>
             ))}
         </TabHeader>
