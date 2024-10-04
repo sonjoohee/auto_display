@@ -726,29 +726,40 @@ const MoleculeReportController = ({
             </>
           )}
         </>
-      ) : (
-        <>
-          <ButtonWrap>
-            <div />
-            <div>
-              {/* {selectedAdditionalKeyword.length === 0 && (
-                <button type="button" onClick={regenerateReport}>
-                  <img src={images.IconRefresh} alt="" />
-                  재생성하기
-                </button>
-              )} */}
+     ) : (
+      <>
+        <ButtonWrap>
+          <div />
+          <div>
+            {report ? (
+              // report 값이 있는 경우 복사하기 버튼만 표시
               <button type="button" onClick={toggleCopy}>
                 <img src={images.IconCopy} alt="" />
                 복사하기
               </button>
-              <button type="button" onClick={toggleSave}>
-                <img src={images.IconSave} alt="" />
-                저장하기
-              </button>
-            </div>
-          </ButtonWrap>
-        </>
-      )}
+            ) : (
+              // report 값이 없는 경우 기존 버튼들 표시
+              <>
+                {/* {selectedAdditionalKeyword.length === 0 && (
+                  <button type="button" onClick={regenerateReport}>
+                    <img src={images.IconRefresh} alt="" />
+                    재생성하기
+                  </button>
+                )} */}
+                <button type="button" onClick={toggleCopy}>
+                  <img src={images.IconCopy} alt="" />
+                  복사하기
+                </button>
+                <button type="button" onClick={toggleSave}>
+                  <img src={images.IconSave} alt="" />
+                  저장하기
+                </button>
+              </>
+            )}
+          </div>
+        </ButtonWrap>
+      </>
+    )}
 
       {isPopupOpen && (
         <Popup
