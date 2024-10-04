@@ -85,7 +85,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   const [isLoadingAdd2, setIsLoadingAdd2] = useState(false);
   const [isLoadingAdd3, setIsLoadingAdd3] = useState(false);
 
-  const [buttonState, setButtonState] = useAtom(ANALYSIS_BUTTON_STATE);
+  const [analysisButtonState, setAnalysisButtonState] = useAtom(ANALYSIS_BUTTON_STATE);
 
   const [newAddContent, setNewAddContent] = useState("");
   const [isAddingNow, setIsAddingNow] = useState({
@@ -141,7 +141,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
       let attempts = 0;
       const maxAttempts = 5;
 
-      if (buttonState === 1) {
+      if (analysisButtonState === 1) {
         setIsLoading(true);
         setIsLoadingAnalysis(true);
         // 버튼 클릭으로 API 호출
@@ -208,7 +208,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
           );
           // setReportRefreshTrigger((prev) => !prev);
         } else {      
-          setButtonState(0);
+          setAnalysisButtonState(0);
 
           // 데이터를 받아온 직후 아톰에 값을 설정합니다.
           if (Array.isArray(businessData["주요_목적_및_특징"])) {

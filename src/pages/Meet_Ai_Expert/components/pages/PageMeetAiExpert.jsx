@@ -36,6 +36,7 @@ import {
   SELCTED_POC_TARGET,
   RECOMMENDED_TARGET_DATA,
   POC_DETAIL_REPORT_ATOM,
+  POC_PERSONA_LIST,
 } from "../../../AtomStates";
 
 import { Link } from "react-router-dom";
@@ -46,13 +47,16 @@ import images from "../../../../assets/styles/Images";
 import OrganismHeader from "../../../organisms/OrganismHeader";
 import OrganismLeftSideBar from "../../../Expert_Insight/components/organisms/OrganismLeftSideBar";
 
+const [buttonState, setButtonState] = useState(0);
+
 const PageMeetAiExpert = () => {
   const navigate = useNavigate();
+  const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
   const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
-  const [buttonState, setButtonState] = useAtom(ANALYSIS_BUTTON_STATE);
+  const [analysisButtonState, setAnalysisButtonState] = useAtom(ANALYSIS_BUTTON_STATE);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
   const [isExpertInsightAccessible, setIsExpertInsightAccessible] = useAtom(IS_EXPERT_INSIGHT_ACCESSIBLE);
 
@@ -165,6 +169,7 @@ const PageMeetAiExpert = () => {
     setSelectedPocTarget({});
     setRecommendedTargetData({});
     setpocDetailReportData({});
+    setPocPersonaList([]);
   }, []);
 
   useEffect(() => {
@@ -258,7 +263,7 @@ const PageMeetAiExpert = () => {
         if (!answerData.advise) {
           setIsExpertInsightAccessible(true); 
           setApproachPath(-1); // 검색을 통해 들어가는 경우
-          setButtonState(1); // 버튼 상태를 1로 설정
+          setAnalysisButtonState(1); // 버튼 상태를 1로 설정
           setSelectedExpertIndex(0);
           navigate("/ExpertInsight");
         } else {
@@ -351,7 +356,7 @@ const PageMeetAiExpert = () => {
             <ExpertSelectBox>
               <ExpertCard
                 onClick={() => {
-                  setButtonState(1);
+                  setAnalysisButtonState(1);
                   handledExpertSelect("1");
                 }}
               >
@@ -363,7 +368,7 @@ const PageMeetAiExpert = () => {
               </ExpertCard>
               <ExpertCard
                 onClick={() => {
-                  setButtonState(1);
+                  setAnalysisButtonState(1);
                   handledExpertSelect("2");
                 }}
               >
@@ -375,7 +380,7 @@ const PageMeetAiExpert = () => {
               </ExpertCard>
               <ExpertCard
                 onClick={() => {
-                  setButtonState(1);
+                  setAnalysisButtonState(1);
                   handledExpertSelect("3");
                 }}
               >
@@ -387,7 +392,7 @@ const PageMeetAiExpert = () => {
               </ExpertCard>
               <ExpertCard
                 onClick={() => {
-                  setButtonState(1);
+                  setAnalysisButtonState(1);
                   handledExpertSelect("4");
                 }}
               >

@@ -22,6 +22,7 @@ import {
   SELCTED_POC_TARGET,
   RECOMMENDED_TARGET_DATA,
   POC_DETAIL_REPORT_ATOM,
+  POC_PERSONA_LIST
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import MoleculeReportController from "../molecules/MoleculeReportController";
@@ -39,6 +40,7 @@ const OrganismAdditionalReport = ({
   additionalReportCount,
   conversationId,
 }) => {
+  const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
@@ -68,7 +70,7 @@ const OrganismAdditionalReport = ({
     businessInformationTargetCustomer,
     setBusinessInformationTargetCustomer,
   ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [buttonState, setButtonState] = useAtom(ADDITION_BUTTON_STATE);
+  const [additionButtonState, setAdditionButtonState] = useAtom(ADDITION_BUTTON_STATE);
   const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(
     SELECTED_EXPERT_INDEX
   );
@@ -112,9 +114,9 @@ const OrganismAdditionalReport = ({
           setSections(
             additionalReportData[additionalReportCount]?.sections || []
           );
-        } else if (buttonState === 1) {
+        } else if (additionButtonState === 1) {
           // 버튼 상태가 1일 때만 API 요청 실행
-          setButtonState(0); // 버튼 상태 초기화
+          setAdditionButtonState(0); // 버튼 상태 초기화
           setIsLoadingAdd(true);
           setIsLoading(true);
 
@@ -206,6 +208,7 @@ const OrganismAdditionalReport = ({
               timestamp: Date.now(),
               expert_index: selectedExpertIndex,
               selectedPocOptions: selectedPocOptions,
+              pocPersonaList: pocPersonaList,
               selectedPocTarget: selectedPocTarget,
               recommendedTargetData: recommendedTargetData,
               pocDetailReportData : pocDetailReportData
@@ -223,7 +226,7 @@ const OrganismAdditionalReport = ({
   }, [
     conversationId,
     selectedKeywords,
-    buttonState, // buttonState 의존성 추가
+    additionButtonState, // buttonState 의존성 추가
   ]);
 
   return (

@@ -18,7 +18,7 @@ const MoleculeAdditionalKeyword = () => {
     SELECTED_ADDITIONAL_KEYWORD
   );
   const [questionList] = useAtom(QUESTION_LIST);
-  const [buttonState, setButtonState] = useAtom(ADDITION_BUTTON_STATE); // BUTTON_STATE 가져오기
+  const [additionButtonState, setAdditionButtonState] = useAtom(ADDITION_BUTTON_STATE); // BUTTON_STATE 가져오기
 
   const [randomSelections, setRandomSelections] = useState({});
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
@@ -52,7 +52,7 @@ const MoleculeAdditionalKeyword = () => {
     updatedKeywords.push(keyword); // Add the keyword to the end of the array
     setSelectedAdditionalKeyword(updatedKeywords);
     setApproachPath(3);
-    setButtonState(1); // 버튼 클릭 시 buttonState를 1로 설정
+    setAdditionButtonState(1); // 버튼 클릭 시 buttonState를 1로 설정
   };
 
   useEffect(() => {

@@ -47,9 +47,11 @@ import {
   IS_EDITING_NOW,
   CONVERSATION_STAGE,
   POC_DETAIL_REPORT_ATOM,
+  POC_PERSONA_LIST
 } from "../../../AtomStates";
 
 const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
+  const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [selectedPocOptions, setSelectedPocOptions] =
     useAtom(SELECTED_POC_OPTIONS);
   const [inputBusinessInfo, setInputBusinessInfo] =
@@ -92,7 +94,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
     businessInformationTargetCustomer,
     setBusinessInformationTargetCustomer,
   ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [buttonState, setButtonState] = useAtom(EXPERT_BUTTON_STATE); // BUTTON_STATE 사용
+  const [expertButtonState, setExpertButtonState] = useAtom(EXPERT_BUTTON_STATE); // BUTTON_STATE 사용
 
   // Use the single strategyReportData atom
   const [strategyReportData, setStrategyReportData] =
@@ -136,9 +138,8 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
           setSections(currentExpertData.tabs[selectedTab].sections);
         }
         // buttonState === 1일 때만 API 호출
-        else if (buttonState === 1) {
-          console.log("buttonState === 1");
-          setButtonState(0); // 버튼 상태를 초기화
+        else if (expertButtonState === 1) {
+          setExpertButtonState(0); // 버튼 상태를 초기화
           setIsLoadingExpert(true);
           setIsLoading(true);
           setIsEditingNow(false); // 수정 상태 초기화
@@ -155,7 +156,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             },
             goal: selectedPocOptions[0],
             standpoint: selectedPocOptions[1],
-            target: selectedPocTarget.title,
+            target: selectedPocTarget.job,
             tabs: [],
             page_index: 1,
           };
@@ -287,6 +288,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               timestamp: Date.now(),
               expert_index: selectedExpertIndex,
               selectedPocOptions: selectedPocOptions,
+              pocPersonaList: pocPersonaList,
               selectedPocTarget: selectedPocTarget,
             },
             isLoggedIn,
@@ -299,7 +301,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
     };
 
     loadData();
-  }, [conversationId, selectedTab, expertIndex, buttonState]); // buttonState 의존성 추가
+  }, [conversationId, selectedTab, expertIndex, expertButtonState]); // buttonState 의존성 추가
 
   const handleTabClick = (index, expertIndex) => {
     setSelectedTab(index);
@@ -392,6 +394,7 @@ const Section = ({
   index,
   conversationId,
 }) => {
+  const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   // 서브 타이틀이 있는 항목과 없는 항목을 분리
   const [pocDetailReportData, setpocDetailReportData] = useAtom(
     POC_DETAIL_REPORT_ATOM
@@ -444,7 +447,6 @@ const Section = ({
     businessInformationTargetCustomer,
     setBusinessInformationTargetCustomer,
   ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [buttonState, setButtonState] = useAtom(EXPERT_BUTTON_STATE); // BUTTON_STATE 사용
   // Use the single strategyReportData atom
   const [strategyReportData, setStrategyReportData] =
     useAtom(STRATEGY_REPORT_DATA);
@@ -647,7 +649,7 @@ const Section = ({
       },
       goal: selectedPocOptions[0],
       standpoint: selectedPocOptions[1],
-      target: selectedPocTarget.title,
+      target: selectedPocTarget.job,
       poc_data: extractSpecificContent(strategyReportData, expertIndex, index),
       tabs: currentExpertData.tabs,
       page_index: 1,
@@ -694,6 +696,7 @@ const Section = ({
           timestamp: Date.now(),
           expert_index: selectedExpertIndex,
           selectedPocOptions: selectedPocOptions,
+          pocPersonaList: pocPersonaList,
           selectedPocTarget: selectedPocTarget,
           pocDetailReportData: {
             ...pocDetailReportData,
@@ -795,7 +798,7 @@ const Section = ({
       },
       goal: selectedPocOptions[0],
       standpoint: selectedPocOptions[1],
-      target: selectedPocTarget.title,
+      target: selectedPocTarget.job,
       poc_data: extractSpecificContent(strategyReportData, expertIndex, index), // strategyReportData에서 추출
       tabs: currentExpertData.tabs, // strategyReportData에서 직접 가져옴
       page_index: 1,
@@ -845,6 +848,7 @@ const Section = ({
           timestamp: Date.now(),
           expert_index: selectedExpertIndex,
           selectedPocOptions: selectedPocOptions,
+          pocPersonaList: pocPersonaList,
           selectedPocTarget: selectedPocTarget,
           pocDetailReportData: {
             ...pocDetailReportData,

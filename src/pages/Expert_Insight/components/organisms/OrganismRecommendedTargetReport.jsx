@@ -43,9 +43,11 @@ import {
   CONVERSATION_STAGE,
   RECOMMENDED_TARGET_DATA,
   POC_DETAIL_REPORT_ATOM,
+  POC_PERSONA_LIST,
 } from "../../../AtomStates";
 
 const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
+  const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_ATOM);
   const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
@@ -84,7 +86,7 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
     businessInformationTargetCustomer,
     setBusinessInformationTargetCustomer,
   ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [buttonState, setButtonState] = useAtom(TARGET_REPORT_BUTTON_STATE); // BUTTON_STATE 사용
+  const [targetReportButtonState, setTargetReportButtonState] = useAtom(TARGET_REPORT_BUTTON_STATE); // BUTTON_STATE 사용
 
   // Use the single strategyReportData atom
   const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA);
@@ -159,8 +161,8 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
           // setSections(recommendedTargetData.tabs[selectedTab].sections);
         }
         // buttonState === 1일 때만 API 호출
-        else if (buttonState === 1) {
-          setButtonState(0); // 버튼 상태를 초기화
+        else if (targetReportButtonState === 1) {
+          setTargetReportButtonState(0); // 버튼 상태를 초기화
           setIsLoadingTarget(true);
           setIsLoading(true);
           setIsEditingNow(false); // 수정 상태 초기화
@@ -174,7 +176,7 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
               목표고객: analysisReportData.mainCustomer,
             },
             goal : selectedPocOptions[0],
-            target : selectedPocTarget.title,
+            target : selectedPocTarget.job,
             poc_report : strategyReportData[selectedExpertIndex]
           };
 
@@ -183,6 +185,18 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
             data,
             axiosConfig
           );
+
+          while (true) {
+            if (!response1.data || Object.keys(response1.data).length === 0 || !response1.data.persona_1) {
+              response1 = await axios.post(
+                "https://wishresearch.kr/panels/expert/poc_persona",
+                data,
+                axiosConfig
+              );
+            } else {
+              break;
+            }
+          }
 
           finalResponse = response1.data;
 
@@ -222,6 +236,7 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
               timestamp: Date.now(),
               expert_index: selectedExpertIndex,
               selectedPocOptions: selectedPocOptions,
+              pocPersonaList: pocPersonaList,
               selectedPocTarget: selectedPocTarget,
               recommendedTargetData: targetData,
               pocDetailReportData : pocDetailReportData
@@ -236,7 +251,7 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
     };
 
     loadData();
-  }, [conversationId, expertIndex, buttonState]); // buttonState 의존성 추가
+  }, [conversationId, expertIndex, targetReportButtonState]); // buttonState 의존성 추가
 
   return (
     <>
