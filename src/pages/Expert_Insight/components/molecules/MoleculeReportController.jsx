@@ -823,9 +823,9 @@ const ButtonWrap = styled.div`
   justify-content: space-between;
   align-items: center;
   gap: 16px;
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid ${palette.lineGray};
+  margin-top: 20px !important;
+  // padding-top: 20px;
+  // border-top: 1px solid ${palette.lineGray};
 
   button {
     display: flex;

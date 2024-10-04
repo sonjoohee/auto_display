@@ -342,10 +342,11 @@ const PageMeetAiExpert = () => {
           </InputWrap> */}
 
           <ExpertSelectWrap>
+            {/* 
             <h2>
               <img src={images.Chat} alt="" />
               AI 전문가 선택해서 시작하기
-            </h2>
+            </h2> 
 
             <ExpertSelectBox>
               <ExpertCard
@@ -396,13 +397,78 @@ const PageMeetAiExpert = () => {
                 <p></p>
                 <strong>Poc 전문가(테스트)</strong>
               </ExpertCard>
-              {/* <ExpertCard More>
+              <ExpertCard More>
                 <div>
                   <span>More</span>
                   <p>Coming Soon</p>
                 </div>
-              </ExpertCard> */}
+              </ExpertCard>
             </ExpertSelectBox>
+            */}
+
+            <ExpertSelectBox>
+              <ExpertCard PoC
+                onClick={() => {
+                  setButtonState(1);
+                  handledExpertSelect("4");
+                }}
+              >
+                <strong>PoC 설계 전문가</strong>
+                <p>아이템 및 PoC 목적에 따른 가설 검증 방법 제시</p>
+                <span>
+                  <img src={images.ImgPoC} alt="" />
+                </span>
+              </ExpertCard>
+
+              <ExpertCard Marketing
+                onClick={() => {
+                  setButtonState(1);
+                  handledExpertSelect("2");
+                }}
+              >
+                <strong>마케팅 전략가</strong>
+                <p>마케팅 방향성과 실행 방안 제시</p>
+                <span>
+                  <img src={images.ImgMarketing} alt="" />
+                </span>
+              </ExpertCard>
+
+              <ExpertCard Client
+                onClick={() => {
+                  setButtonState(1);
+                  handledExpertSelect("3");
+                }}
+              >
+                <strong>고객 세분화 전문가</strong>
+                <p>고객 세분화와 맞춤 전략 제시</p>
+                <span>
+                  <img src={images.ImgClient} alt="" />
+                </span>
+              </ExpertCard>
+
+              <ExpertCard Strategy
+                onClick={() => {
+                  setButtonState(1);
+                  handledExpertSelect("1");
+                }}
+              >
+                <strong>전략 컨설턴트</strong>
+                <p>차별화 전략과 리스트 분석 제시</p>
+                <span>
+                  <img src={images.ImgStrategy} alt="" />
+                </span>
+              </ExpertCard>
+
+              <ExpertCard Coming>
+                <div>
+                  <span>
+                    <img src={images.ImgComing} alt="" />
+                  </span>
+                  <p>coming soon</p>
+                </div>
+              </ExpertCard>
+            </ExpertSelectBox>
+
           </ExpertSelectWrap>
         </MainContent>
       </ContentsWrap>
@@ -667,7 +733,7 @@ const ExpertSelectBox = styled.div`
   // margin-bottom:30px;
 
   > div {
-    flex: 1 1 20%;
+    flex: 1 1 18%;
   }
 `;
 
@@ -675,19 +741,27 @@ const ExpertCard = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-  height: 280px;
+  height: 215px;
   text-align: left;
-  padding: 40px;
+  padding: 26px 20px;
   border-radius: 16px;
   border: ${(props) => {
     if (props.select) return `1px solid ${palette.blue}`;
     else if (props.More) return `none`;
-    else return `1px solid ${palette.lineGray}`;
+    else if (props.PoC) return `1px solid #E2E7EA`;
+    else if (props.Marketing) return `1px solid #F0EDE6`;
+    else if (props.Client) return `1px solid #E2E7EA`;
+    else if (props.Strategy) return `1px solid #E2E7EA`;
+    else return `1px solid ${palette.gray100}`;
   }};
   background: ${(props) => {
     if (props.select) return palette.blue;
     else if (props.More) return `rgba(0,0,0,.03)`;
-    else return palette.white;
+    else if (props.PoC) return `#E2E7EA`;
+    else if (props.Marketing) return `#F0EDE6`;
+    else if (props.Client) return `#E2E7EA`;
+    else if (props.Strategy) return `#E2E7EA`;
+    else return palette.gray100;
   }};
   box-shadow: ${(props) => {
     if (props.select) return `0 4px 30px rgba(0, 0, 0, 0.1)`;
@@ -705,11 +779,13 @@ const ExpertCard = styled.div`
 
   span {
     position: relative;
-    width: 64px;
-    height: 64px;
-    border-radius: 100px;
-    border: 1px solid ${palette.lineGray};
-    background: ${palette.white};
+    width: 70px;
+    height: 70px;
+    margin:0 auto;
+    margin-top:auto;
+    // border-radius: 100px;
+    // border: 1px solid ${palette.lineGray};
+    // background: ${palette.white};
 
     img {
       position: absolute;
@@ -722,8 +798,7 @@ const ExpertCard = styled.div`
   p {
     font-size: 0.75rem;
     font-weight: 400;
-    color: ${(props) => (props.select ? palette.white : palette.lightGray)};
-    margin-top: auto;
+    color: ${(props) => (props.select ? palette.white : palette.gray500)};
   }
 
   strong {
@@ -796,7 +871,29 @@ const ExpertCard = styled.div`
           color: ${palette.gray};
         }
       }
-    `}
+    `
+  }
+
+  ${(props) =>
+    props.Coming &&
+    css`
+      align-items:center;
+
+      div {
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        gap:10px;
+        margin:auto;
+      }
+
+      span {
+        position: relative;
+        font-size: 0;
+        border: 0;
+      }
+    `
+  }
 `;
 
 const FAQSection = styled.div`

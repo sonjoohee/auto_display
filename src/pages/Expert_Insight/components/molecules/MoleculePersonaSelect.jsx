@@ -71,7 +71,8 @@ const MoleculePersonaSelect = ({ conversationId }) => {
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET); // 확인 버튼을 눌렀을 때만 저장 -> 히스토리 저장
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [isLoadingTarget, setIsLoadingTarget] = useState(false);
-
+  const [selectedOption, setSelectedOption] = useState(null);
+  
   const [options, setOptions] = useState([
     {
       title: "퇴직자, 취미 활동가",

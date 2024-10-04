@@ -1677,7 +1677,7 @@ const Logo = styled.div`
   position: fixed;
   top: 72px;
   left: 60px;
-  width: 250px;
+  width: ${(props) => (props.isOpen ? "250px" : "80px")};
   display: flex;
   // justify-content:space-between;
   justify-content: ${(props) =>
@@ -1751,7 +1751,7 @@ const SideBar = styled.div`
   top: 40px;
   display: flex;
   flex-direction: column;
-  max-width: 257px;
+  max-width: ${(props) => (props.bgNone ? "100px" : "257px")};
   width: 100%;
   height: calc(100vh - 80px);
   padding: 96px 20px 30px;
