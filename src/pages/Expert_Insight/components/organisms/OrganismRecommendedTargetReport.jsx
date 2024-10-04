@@ -186,6 +186,18 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
             axiosConfig
           );
 
+          while (true) {
+            if (!response1.data || Object.keys(response1.data).length === 0 || !response1.data.persona_1) {
+              response1 = await axios.post(
+                "https://wishresearch.kr/panels/expert/poc_persona",
+                data,
+                axiosConfig
+              );
+            } else {
+              break;
+            }
+          }
+
           finalResponse = response1.data;
 
           const targetData = finalResponse;
