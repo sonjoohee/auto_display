@@ -48,9 +48,11 @@ import {
   CONVERSATION_STAGE,
   RECOMMENDED_TARGET_DATA,
   POC_DETAIL_REPORT_ATOM,
+  POC_PERSONA_LIST,
 } from "../../../AtomStates";
 
 const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
+  const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_ATOM);
   const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
@@ -153,7 +155,7 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
             },
             goal : selectedPocOptions[0],
             standpoint : selectedPocOptions[1],
-            target : selectedPocTarget.title,
+            target : selectedPocTarget.job,
             tabs: [],
             page_index: 1,
           };
@@ -271,6 +273,7 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
               timestamp: Date.now(),
               expert_index: selectedExpertIndex,
               selectedPocOptions: selectedPocOptions,
+              pocPersonaList: pocPersonaList,
               selectedPocTarget: selectedPocTarget,
               recommendedTargetData: targetData,
               pocDetailReportData : pocDetailReportData

@@ -27,6 +27,7 @@ import {
   SELCTED_POC_TARGET,
   TARGET_REPORT_BUTTON_STATE,
   POC_DETAIL_REPORT_ATOM,
+  POC_PERSONA_LIST
 } from "../../../AtomStates";
 
 import {
@@ -36,6 +37,7 @@ import {
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeRecommendedTargetButton = () => {
+  const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_ATOM);
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
@@ -102,6 +104,7 @@ const MoleculeRecommendedTargetButton = () => {
         customerAdditionalReportData: customerAdditionalReportData,
         timestamp: Date.now(),
         expert_index: selectedExpertIndex,
+        pocPersonaList: pocPersonaList,
         selectedPocTarget: selectedPocTarget,
         pocDetailReportData : pocDetailReportData,
       },

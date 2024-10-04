@@ -26,6 +26,7 @@ import {
   SELECTED_POC_OPTIONS,
   SELCTED_POC_TARGET,
   RECOMMENDED_TARGET_DATA,
+  POC_PERSONA_LIST
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -46,6 +47,7 @@ const OrganismCustomerAdditionalReport = ({
   customerAdditionalReportCount,
   conversationId,
 }) => {
+  const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
@@ -313,6 +315,7 @@ const OrganismCustomerAdditionalReport = ({
               timestamp: Date.now(),
               expert_index: selectedExpertIndex,
               selectedPocOptions: selectedPocOptions,
+              pocPersonaList: pocPersonaList,
               selectedPocTarget: selectedPocTarget,
               recommendedTargetData: recommendedTargetData,
               pocDetailReportData : pocDetailReportData

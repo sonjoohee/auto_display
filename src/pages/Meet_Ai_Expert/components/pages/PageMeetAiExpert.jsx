@@ -36,6 +36,7 @@ import {
   SELCTED_POC_TARGET,
   RECOMMENDED_TARGET_DATA,
   POC_DETAIL_REPORT_ATOM,
+  POC_PERSONA_LIST,
 } from "../../../AtomStates";
 
 import { Link } from "react-router-dom";
@@ -48,6 +49,7 @@ import OrganismLeftSideBar from "../../../Expert_Insight/components/organisms/Or
 
 const PageMeetAiExpert = () => {
   const navigate = useNavigate();
+  const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
@@ -165,6 +167,7 @@ const PageMeetAiExpert = () => {
     setSelectedPocTarget({});
     setRecommendedTargetData({});
     setpocDetailReportData({});
+    setPocPersonaList([]);
   }, []);
 
   useEffect(() => {
