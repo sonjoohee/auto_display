@@ -47,8 +47,6 @@ import images from "../../../../assets/styles/Images";
 import OrganismHeader from "../../../organisms/OrganismHeader";
 import OrganismLeftSideBar from "../../../Expert_Insight/components/organisms/OrganismLeftSideBar";
 
-const [buttonState, setButtonState] = useState(0);
-
 const PageMeetAiExpert = () => {
   const navigate = useNavigate();
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
@@ -414,7 +412,7 @@ const PageMeetAiExpert = () => {
             <ExpertSelectBox>
               <ExpertCard PoC
                 onClick={() => {
-                  setButtonState(1);
+                  setAnalysisButtonState(1);
                   handledExpertSelect("4");
                 }}
               >
@@ -427,7 +425,7 @@ const PageMeetAiExpert = () => {
 
               <ExpertCard Marketing
                 onClick={() => {
-                  setButtonState(1);
+                  setAnalysisButtonState(1);
                   handledExpertSelect("2");
                 }}
               >
@@ -440,7 +438,7 @@ const PageMeetAiExpert = () => {
 
               <ExpertCard Client
                 onClick={() => {
-                  setButtonState(1);
+                  setAnalysisButtonState(1);
                   handledExpertSelect("3");
                 }}
               >
@@ -453,7 +451,7 @@ const PageMeetAiExpert = () => {
 
               <ExpertCard Strategy
                 onClick={() => {
-                  setButtonState(1);
+                  setAnalysisButtonState(1);
                   handledExpertSelect("1");
                 }}
               >
