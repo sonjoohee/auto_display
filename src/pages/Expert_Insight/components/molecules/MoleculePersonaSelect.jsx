@@ -82,7 +82,16 @@ const MoleculePersonaSelect = ({ conversationId }) => {
 
   const [selectedOption, setSelectedOption] = useState(null);
 
+  useEffect(() => {
+    if(Object.keys(selectedPocTarget).length) {
+      setSelectedPocTargetState(selectedPocTarget);
+      setSelectedOption(selectedPocTarget.job);
+    }
+  }, []);
+
   const handleOptionClick = (index) => {
+    if (Object.keys(selectedPocTarget).length) return;
+
     // 선택된 옵션을 상태로 저장
     const selectedPersona = pocPersonaList[index];
     setSelectedOption(selectedPersona[`persona_${index + 1}`][1]["job"]); // 선택된 job을 상태로 저장
@@ -94,7 +103,6 @@ const MoleculePersonaSelect = ({ conversationId }) => {
     });
   };
 
-  
   const axiosConfig = {
     timeout: 100000, // 100초
     headers: {
@@ -242,34 +250,28 @@ const MoleculePersonaSelect = ({ conversationId }) => {
       </>
       :
       <>
-      {Object.keys(selectedPocTarget).length === 0 ? (
-        <>
-          <Question>
-            Q. 생각하고 계시는 비즈니스의 타겟 고객은 누구입니까?
-          </Question>
-          <OptionsContainer>
-            {pocPersonaList.map((persona, index) => (
-              <Option
-              key={index}
-              onClick={() => handleOptionClick(index)}
-              selected={selectedOption === persona[`persona_${index + 1}`][1]["job"]}
-              >
-                <Label 
-                selected={selectedOption === persona[`persona_${index + 1}`][1]["job"]} 
-                htmlFor={persona}>{persona[`persona_${index + 1}`][1]["job"]}
-                </Label>
-                <p>{persona[`persona_${index + 1}`][4]["target"]}</p>
-              </Option>
-            ))}
-          </OptionsContainer>
-          <Button selectedOption={selectedOption} onClick={handleConfirm}>확인</Button>
-        </>
-      ) : (
-        <>
-          <Question>완료</Question>
-        </>
-      )}
-    </>
+        <Question>
+          Q. 생각하고 계시는 비즈니스의 타겟 고객은 누구입니까?
+        </Question>
+        <OptionsContainer>
+          {pocPersonaList.map((persona, index) => (
+            <Option
+            key={index}
+            onClick={() => handleOptionClick(index)}
+            selected={selectedOption === persona[`persona_${index + 1}`][1]["job"]}
+            selectedPocTarget={selectedPocTarget}
+            >
+              <Label
+              selectedPocTarget={selectedPocTarget} 
+              selected={selectedOption === persona[`persona_${index + 1}`][1]["job"]} 
+              htmlFor={persona}>{persona[`persona_${index + 1}`][1]["job"]}
+              </Label>
+              <p>{persona[`persona_${index + 1}`][4]["target"]}</p>
+            </Option>
+          ))}
+        </OptionsContainer>
+        <Button selectedOption={selectedOption} selectedPocTarget={selectedPocTarget} onClick={handleConfirm}>확인</Button>
+      </>
     }
     </Wrapper>
   );
@@ -312,7 +314,7 @@ const Option = styled.div`
   border-radius: 8px;
   cursor: pointer;
   background-color: ${(props) => (props.selected ? "rgba(4,83,244,0.05)" : palette.white)};
-  border: 1px solid ${(props) => (props.selected ? palette.blue : palette.lineGray)};
+  border: 1px solid ${(props) => (props.selected ? (Object.keys(props.selectedPocTarget).length ? palette.gray800 : palette.blue) : palette.lineGray)};
   transition:all .5s;
 
   p {
@@ -320,9 +322,10 @@ const Option = styled.div`
     line-height:1.3;
   }
 
-  // input {
-  //   margin-right: 10px;
-  // }
+  &:hover {
+    border-color: ${(props) =>
+      Object.keys(props.selectedPocTarget).length ? palette.gray800 : palette.blue};
+  }
 `;
 
 const Label = styled.label`
@@ -331,7 +334,7 @@ const Label = styled.label`
   gap:8px;
   align-items:flex-start;
   width:100%;
-  color: ${(props) => (props.selected ? palette.blue : palette.gray800)};
+  color: ${(props) => (props.selected ? (Object.keys(props.selectedPocTarget).length ? palette.gray800 : palette.blue) : palette.gray800)};
   cursor:pointer;
 
   &:before {
@@ -339,8 +342,8 @@ const Label = styled.label`
     height:20px;
     flex-shrink:0;
     border-radius:50%;
-    border:1px solid ${(props) => (props.selected ? palette.blue : palette.lineGray)};
-    background-color: ${(props) => (props.selected ? palette.blue : palette.white)};
+    border:1px solid ${(props) => (props.selected ? (Object.keys(props.selectedPocTarget).length ? palette.gray800 : palette.blue) : palette.lineGray)};
+    background-color: ${(props) => (props.selected ? (Object.keys(props.selectedPocTarget).length ? palette.gray800 : palette.blue) : palette.white)};
     transition:all .5s;
     content:'';
   }
@@ -372,6 +375,6 @@ const Button = styled.button`
   margin-left:auto;
   border-radius:8px;
   border:0;
-  background: ${(props) => (!props.selectedOption ? palette.lineGray : palette.blue)};
+  background: ${(props) => (!props.selectedOption ? palette.lineGray : (Object.keys(props.selectedPocTarget).length ? palette.gray800 : palette.blue))};
   transition:all .5s;
 `;
