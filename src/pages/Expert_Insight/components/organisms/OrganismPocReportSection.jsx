@@ -1021,7 +1021,7 @@ const Section = ({
                   >
                     {item.subContent.map((subItem, subIndex) => (
                       <div key={subIndex} style={{ marginTop: "3px" }}>
-                        <p key={subIndex}>
+                        <p style={{ textIndent: '-1em', paddingLeft: '1em', marginBottom: '5px' }} key={subIndex}>
                           {subIndex + 1}. {subItem.subTitle} : {subItem.text}
                         </p>
                       </div>
