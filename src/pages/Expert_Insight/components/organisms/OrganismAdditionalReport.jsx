@@ -68,7 +68,7 @@ const OrganismAdditionalReport = ({
     businessInformationTargetCustomer,
     setBusinessInformationTargetCustomer,
   ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [buttonState, setButtonState] = useAtom(ADDITION_BUTTON_STATE);
+  const [additionButtonState, setAdditionButtonState] = useAtom(ADDITION_BUTTON_STATE);
   const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(
     SELECTED_EXPERT_INDEX
   );
@@ -112,9 +112,9 @@ const OrganismAdditionalReport = ({
           setSections(
             additionalReportData[additionalReportCount]?.sections || []
           );
-        } else if (buttonState === 1) {
+        } else if (additionButtonState === 1) {
           // 버튼 상태가 1일 때만 API 요청 실행
-          setButtonState(0); // 버튼 상태 초기화
+          setAdditionButtonState(0); // 버튼 상태 초기화
           setIsLoadingAdd(true);
           setIsLoading(true);
 
@@ -223,7 +223,7 @@ const OrganismAdditionalReport = ({
   }, [
     conversationId,
     selectedKeywords,
-    buttonState, // buttonState 의존성 추가
+    additionButtonState, // buttonState 의존성 추가
   ]);
 
   return (

@@ -48,7 +48,8 @@ const MoleculePersonaSelect = ({ conversationId }) => {
     businessInformationTargetCustomer,
     setBusinessInformationTargetCustomer,
   ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [buttonState, setButtonState] = useAtom(EXPERT_BUTTON_STATE);
+  const [expertButtonState, setExpertButtonState] = useAtom(EXPERT_BUTTON_STATE);
+  const [targetSelectButtonState, setTargetSelectButtonState] = useAtom(TARGET_SELECT_BUTTON_STATE);
   const analysisReportData = {
     title: titleOfBusinessInfo,
     mainFeatures: mainFeaturesOfBusinessInformation,
@@ -110,7 +111,7 @@ const MoleculePersonaSelect = ({ conversationId }) => {
   //     if(buttonState) {
   //       setIsLoading(true);
   //       setIsLoadingTarget(true);
-  //       setButtonState(0);
+  //       setTargetSelectButtonState(0);
 
   //       const data = {
   //         expert_id: selectedExpertIndex,
@@ -194,7 +195,7 @@ const MoleculePersonaSelect = ({ conversationId }) => {
       isLoggedIn,
       conversationId
     );
-    setButtonState(1);
+    setExpertButtonState(1);
   };
 
   return (

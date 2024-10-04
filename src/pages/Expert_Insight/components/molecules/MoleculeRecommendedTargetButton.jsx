@@ -65,7 +65,7 @@ const MoleculeRecommendedTargetButton = () => {
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
-  const [buttonState, setButtonState] = useAtom(TARGET_REPORT_BUTTON_STATE);
+  const [targetReportButtonState, setTargetReportButtonState] = useAtom(TARGET_REPORT_BUTTON_STATE);
 
   const handleClick = async () => {
     if (isLoading) return;
@@ -85,7 +85,7 @@ const MoleculeRecommendedTargetButton = () => {
     setConversation(updatedConversation);
     setConversationStage(3);
     setApproachPath(3);
-    setButtonState(1);
+    setTargetReportButtonState(1);
 
     await saveConversationToIndexedDB(
       {
