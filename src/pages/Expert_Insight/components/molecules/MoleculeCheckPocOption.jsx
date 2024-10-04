@@ -69,7 +69,7 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
     { label: "출시 준비 단계", value: "출시 준비 단계" },
   ];
   const options2_1 = [
-    { label: "타겟 고객 그룹과 시장 세분화", value: "타겟 고객 그룹과 시장 세분화" },
+    { label: "타겟팅 및 세분화", value: "타겟팅 및 세분화" },
     { label: "해결하고자 하는 문제 여부 확인", value: "해결하고자 하는 문제 여부 확인" },
     { label: "시장 기회 및 크기 분석", value: "시장 기회 및 크기 분석" },
   ];
@@ -86,7 +86,7 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
   const options2_4 = [
     { label: "사용자 요구와의 일치 여부 확인", value: "사용자 요구와의 일치 여부 확인" },
     { label: "성능 및 안정성 평가", value: "성능 및 안정성 평가" },
-    { label: "사용지 피드백 수렴", value: "사용지 피드백 수렴" },
+    { label: "사용자 피드백 개선", value: "사용자 피드백 개선" },
   ];
   const options2_5 = [
     { label: "시장의 긍정적 반응 여부 확인", value: "시장의 긍정적 반응 여부 확인" },
@@ -96,8 +96,8 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
   const options2_6 = [
     { label: "기술 안정성 확보", value: "기술 안정성 확보" },
     { label: "보안 및 시스템 확장 가능성 검토", value: "보안 및 시스템 확장 가능성 검토" },
-    { label: "최종 사용자 경험 최적화 확인", value: "최종 사용자 경험 최적화 확인" },
-    { label: "배포 및 운영 준비 완료", value: "배포 및 운영 준비 완료" },
+    { label: "최종 사용자 경험 최적화", value: "최종 사용자 경험 최적화" },
+    { label: "배포 및 운영 준비", value: "배포 및 운영 준비" },
   ];
 
   const handleOptionClick = (index, optionValue) => {
