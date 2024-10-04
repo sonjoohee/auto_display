@@ -7,7 +7,7 @@ import {
   SELECTED_TAB_COPY_1,
   SELECTED_TAB_COPY_2,
   SELECTED_TAB_COPY_3,
-  TARGET_BUTTON_STATE,
+  TARGET_REPORT_BUTTON_STATE,
   CONVERSATION,
   APPROACH_PATH,
   isLoggedInAtom,
@@ -92,7 +92,7 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
     businessInformationTargetCustomer,
     setBusinessInformationTargetCustomer,
   ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [buttonState, setButtonState] = useAtom(TARGET_BUTTON_STATE); // BUTTON_STATE 사용
+  const [buttonState, setButtonState] = useAtom(TARGET_REPORT_BUTTON_STATE); // BUTTON_STATE 사용
 
   // Use the single strategyReportData atom
   const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA);

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useAtom } from "jotai";
 import {
-  EXPERT_BUTTON_STATE,
   IS_LOADING,
   APPROACH_PATH,
   CONVERSATION,
@@ -12,7 +11,6 @@ import {
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
   MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
-  ADDITION_BUTTON_STATE,
   isLoggedInAtom,
   STRATEGY_REPORT_DATA,
   INPUT_BUSINESS_INFO,
@@ -21,9 +19,7 @@ import {
   SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
   ADDITIONAL_REPORT_DATA,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
-  CUSTOMER_ADDITION_BUTTON_STATE,
-  CUSTOMER_ADDITION_QUESTION_INPUT,
-  SELECTED_EXPERT_LIST,
+  TARGET_SELECT_BUTTON_STATE,
   SELECTED_POC_OPTIONS,
   SELCTED_POC_TARGET,
 } from "../../../AtomStates";
@@ -40,7 +36,7 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
   const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation,] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
   const [mainCharacteristicOfBusinessInformation, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
   const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [buttonState, setButtonState] = useAtom(CUSTOMER_ADDITION_BUTTON_STATE);
+  const [buttonState, setButtonState] = useAtom(TARGET_SELECT_BUTTON_STATE);
   const analysisReportData = {
     title: titleOfBusinessInfo,
     mainFeatures: mainFeaturesOfBusinessInformation,
@@ -127,6 +123,7 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
     setTabs(2);
     setApproachPath(3);
     setConversationStage(3);
+    setButtonState(1);
 
     const updatedConversation = [...conversation];
     updatedConversation.push(

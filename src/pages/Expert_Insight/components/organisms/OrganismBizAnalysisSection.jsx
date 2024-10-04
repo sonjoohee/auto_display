@@ -165,7 +165,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
           attempts < maxAttempts
         ) {
           attempts += 1;
-          console.log(`Attempt ${attempts} to fetch business data`);
+          // console.log(`Attempt ${attempts} to fetch business data`);
 
           response = await axios.post(
             "https://wishresearch.kr/panels/business",
