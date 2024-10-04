@@ -2185,7 +2185,7 @@ const AccordionContent = styled.div`
       height:15px;
       line-height:15px;
       // background: #00ff00; 
-      content:'E';
+      content:'T';
     }
 
     p {
