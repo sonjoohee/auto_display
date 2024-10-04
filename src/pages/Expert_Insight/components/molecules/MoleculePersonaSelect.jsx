@@ -265,7 +265,7 @@ const MoleculePersonaSelect = ({ conversationId }) => {
               </Option>
             ))}
           </OptionsContainer>
-          <Button onClick={handleConfirm}>확인</Button>
+          <Button selectedOption={selectedOption} onClick={handleConfirm}>확인</Button>
         </>
       ) : (
         <>
