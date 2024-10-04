@@ -33,7 +33,7 @@ const OrganismReportPopup = ({ report, onClose }) => {
   }
 
   {
-    reportIndex === 4 && (reportTypeText = "타겟 추천 보고서");
+    reportIndex === 4 && (reportTypeText = "추천 타겟 및 예상 인사이트");
   }
 
   return ReactDOM.createPortal(

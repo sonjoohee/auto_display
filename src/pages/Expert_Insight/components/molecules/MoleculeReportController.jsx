@@ -341,6 +341,21 @@ const MoleculeReportController = ({
     }
   };
 
+  const findGoalActionText = (index) => {
+    const currentExpertData = strategyReportData[selectedExpertIndex];
+    if (currentExpertData && currentExpertData.tabs[0] && currentExpertData.tabs[0].sections[0]) {
+      const content = currentExpertData.tabs[0].sections[0].content[index];
+      if (content && content.subContent) {
+        for (let subItem of content.subContent) {
+          if (subItem.subTitle === "목표 행위") {
+            return subItem.text;
+          }
+        }
+      }
+    }
+    return "목표 행위"; // 기본값
+  };
+
   const toggleCopy = () => {
     let contentToCopy = ``;
 
@@ -393,7 +408,15 @@ ${businessInformationTargetCustomer
     } else if (reportIndex === 3) {
       contentToCopy = extractTextContent(customerAdditionalReportData[additionalReportCount]);
     } else if (reportIndex === 4) {
-      contentToCopy = extractTextContent(recommendedTargetData);
+      if (recommendedTargetData && recommendedTargetData.poc_persona) {
+        contentToCopy = "PoC 목적별 추천 타겟 및 예상 인사이트\n";
+        Object.entries(recommendedTargetData.poc_persona).forEach(([key, value], index) => {
+          const goalActionText = findGoalActionText(index);
+          contentToCopy += `${index + 1}. ${goalActionText}\n`;
+          contentToCopy += `1. 추천 가상 페르소나 : ${value[0]["추천 가상 페르소나"]}\n`;
+          contentToCopy += `2. 이유 및 예상 인사이트 : ${value[1]["이유 및 예상 인사이트"]}\n`;
+        });
+      }
     }
     else return;
 

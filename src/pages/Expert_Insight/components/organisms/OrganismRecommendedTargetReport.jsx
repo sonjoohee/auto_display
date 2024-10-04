@@ -186,16 +186,26 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
             axiosConfig
           );
 
-          while (true) {
-            if (!response1.data || Object.keys(response1.data).length === 0 || !response1.data.persona_1) {
-              response1 = await axios.post(
-                "https://wishresearch.kr/panels/expert/poc_persona",
-                data,
-                axiosConfig
-              );
-            } else {
-              break;
-            }
+          let retryCount = 0;
+          const maxRetries = 10;
+          
+          while (retryCount < maxRetries && (!response1.data || Object.keys(response1.data).length === 0)) {
+            console.log(`Retry attempt ${retryCount + 1}: Response is empty, retrying...`);
+            
+            response1 = await axios.post(
+              "https://wishresearch.kr/panels/expert/poc_persona",
+              data,
+              axiosConfig
+            );
+            
+            retryCount++;
+            await new Promise(resolve => setTimeout(resolve, 1000)); // 1초 대기
+          }
+          
+          if (retryCount === maxRetries) {
+            console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+            // 에러 처리 로직 추가
+            throw new Error("Maximum retry attempts reached. Empty response persists.");
           }
 
           finalResponse = response1.data;
