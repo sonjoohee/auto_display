@@ -40,6 +40,12 @@ import ImgWrite from "../images/imgWrite.svg"
 import ImgTarget from "../images/imgTarget.svg"
 import IconChatSmile from "../images/iconChatSmile.svg"
 
+import ImgPoC from "../images/imgPoC.svg"
+import ImgMarketing from "../images/imgMarketing.svg"
+import ImgClient from "../images/imgClient.svg"
+import ImgStrategy from "../images/imgStrategy.svg"
+import ImgComing from "../images/imgComing.svg"
+
 import IconSearch from "../images/iconSearch.svg"
 import IconSearchHover from "../images/iconSearchHover.svg"
 
@@ -79,6 +85,11 @@ import AccountLogout from "../images/AccountLogout.svg"
 import IconMagic from "../images/iconMagic.svg"
 
 import iconMailSuccess from "../images/iconMailSuccess.svg"
+
+import ImgPDF from "../images/ImgPDF.svg"
+import ImgWord from "../images/ImgWord.svg"
+import ImgKOR from "../images/ImgKOR.svg"
+import ImgENG from "../images/ImgENG.svg"
 
 const images = {
   Logo,
@@ -123,6 +134,12 @@ const images = {
   ImgTarget,
   IconChatSmile,
 
+  ImgPoC,
+  ImgMarketing,
+  ImgClient,
+  ImgStrategy,
+  ImgComing,
+
   IconSearch,
   IconSearchHover,
 
@@ -162,6 +179,11 @@ const images = {
 
   IconMagic,
   iconMailSuccess,
+
+  ImgPDF,
+  ImgWord,
+  ImgKOR,
+  ImgENG,
 }
 
 export default images;

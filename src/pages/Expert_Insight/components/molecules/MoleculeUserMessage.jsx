@@ -13,9 +13,9 @@ const MoleculeUserMessage = ({ message }) => {
             // *로 감싸진 부분일 때
             const updatedPart = part.includes(",") ? part.replace(/,/g, " 및") : part; // 쉼표를 "및"으로 치환
             return (
-              <strong key={i}>
+              <span key={i}>
                 <u>{updatedPart}</u>
-              </strong> // 밑줄 및 강조
+              </span> // 밑줄 및 강조
             );
           }
           return part;
@@ -66,9 +66,12 @@ const UserMessageContainer = styled.div`
     font-size: 0.875rem;
     padding: 14px 20px;
     border-radius: 15px;
-    background: #ebf3fe;
+    // background: #ebf3fe;
+    background:${palette.chatBlue};
 
     p {
+      color:${palette.white};
+      text-align:left;
       line-height: 1.8;
     }
   }

@@ -101,7 +101,7 @@ const Bubble = styled.div`
   border-radius: 15px;
   border: 1px solid ${(props) => (props.Myself ? "rgba(4,83,244,.05)" : "0")};
   background: ${(props) =>
-    props.Myself ? "rgba(4,83,244,.05)" : "rgba(0,0,0,.05)"};
+    props.Myself ? "rgba(4,83,244,.05)" : palette.chatGray};
   max-width: 80%; /* 말풍선 크기를 제한하여 텍스트가 넘어가지 않도록 함 */
 `;
 

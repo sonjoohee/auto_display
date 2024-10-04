@@ -75,7 +75,7 @@ const MoleculeSignupPopup = ({ onClose, email }) => {
 
         {/* 
         <Content>
-          <Title>이메일 인증 후 회원가입이 완료됩니다.</Title>
+          <Title>이메일 인증 후 이 완료됩니다.</Title>
           <Description>
             인증 메일은 <strong>{email}</strong>으로 발송했습니다. 메일에 기재된 링크를 클릭하여 인증을 완료해 주세요.<br />
             메일을 받지 못한 경우, 스팸편지함 확인 또는 아래 버튼을 클릭하여 재전송 해주세요.

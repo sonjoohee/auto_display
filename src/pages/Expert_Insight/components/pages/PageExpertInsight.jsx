@@ -827,7 +827,8 @@ const MainContent = styled.div`
   }
 
   > div:first-child {
-    max-width: 1240px;
+    max-width:1030px;
+    // max-width: 1240px;
     // max-width:800px;
     width: 100%;
     margin: 0 20px;

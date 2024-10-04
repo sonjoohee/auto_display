@@ -79,6 +79,21 @@ const MoleculePersonaSelect = ({ conversationId }) => {
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [isLoadingTarget, setIsLoadingTarget] = useState(false);
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
+
+  const [selectedOption, setSelectedOption] = useState(null);
+
+  const handleOptionClick = (index) => {
+    // 선택된 옵션을 상태로 저장
+    const selectedPersona = pocPersonaList[index];
+    setSelectedOption(selectedPersona[`persona_${index + 1}`][1]["job"]); // 선택된 job을 상태로 저장
+    
+    // 선택된 persona의 job과 target 값을 상태에 저장
+    setSelectedPocTargetState({
+      job: selectedPersona[`persona_${index + 1}`][1]["job"],
+      target: selectedPersona[`persona_${index + 1}`][4]["target"],
+    });
+  };
+
   
   const axiosConfig = {
     timeout: 100000, // 100초
@@ -236,12 +251,13 @@ const MoleculePersonaSelect = ({ conversationId }) => {
             {pocPersonaList.map((persona, index) => (
               <Option
                 key={index}
-                onClick={() =>
-                  setSelectedPocTargetState({
-                    job: persona[`persona_${index + 1}`][1]["job"],
-                    target: persona[`persona_${index + 1}`][4]["target"],
-                  })
-                }
+                // onClick={() =>
+                //   setSelectedPocTargetState({
+                //     job: persona[`persona_${index + 1}`][1]["job"],
+                //     target: persona[`persona_${index + 1}`][4]["target"],
+                //   })
+                // }
+                onClick={() => handleOptionClick(index)}
               >
                 <input type="radio" id={persona} name="target" />
                 <Label htmlFor={persona}>{persona[`persona_${index + 1}`][1]["job"]}</Label>
@@ -265,46 +281,100 @@ const MoleculePersonaSelect = ({ conversationId }) => {
 export default MoleculePersonaSelect;
 
 const Wrapper = styled.div`
-  padding: 20px;
-  border-radius: 10px;
-  width: 60%;
-  margin: auto;
+  max-width:968px;
+  width:100%;
+  padding: 40px;
+  margin:24px 0 0 44px;
+  border-radius:15px;
+  border:1px solid ${palette.lineGray};
 `;
 
 const Question = styled.h2`
-  font-size: 20px;
+  font-size: 0.88rem;
+  font-weight:700;
+  text-align:left;
   margin-bottom: 20px;
 `;
 
 const OptionsContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 12px;
 `;
 
 const Option = styled.div`
-  flex: 1 1 calc(50% - 20px);
-  display: flex;
-  align-items: center;
-  padding: 15px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
+  position:relative;
+  display:flex;
+  gap:12px;
+  align-items:center;
+  flex-direction:column;
+  flex:1 1 30%;
+  font-size:0.88rem;
+  text-align:left;
+  padding: 20px;
+  border-radius: 8px;
   cursor: pointer;
+  background-color: ${(props) => (props.selected ? "rgba(4,83,244,0.05)" : palette.white)};
+  border: 1px solid ${(props) => (props.selected ? palette.blue : palette.lineGray)};
+  transition:all .5s;
 
-  input {
-    margin-right: 10px;
+  p {
+    color: ${(props) => (props.selected ? palette.gray800 : palette.gray500)};
+    line-height:1.3;
   }
+
+  // input {
+  //   margin-right: 10px;
+  // }
 `;
 
 const Label = styled.label`
-  font-size: 16px;
+  position:relative;
+  display:flex;
+  gap:8px;
+  align-items:flex-start;
+  width:100%;
+  color: ${(props) => (props.selected ? palette.blue : palette.gray800)};
+  cursor:pointer;
+
+  &:before {
+    width:20px;
+    height:20px;
+    flex-shrink:0;
+    border-radius:50%;
+    border:1px solid ${(props) => (props.selected ? palette.blue : palette.lineGray)};
+    background-color: ${(props) => (props.selected ? palette.blue : palette.white)};
+    transition:all .5s;
+    content:'';
+  }
+
+  &:after {
+    position:absolute;
+    left:0;
+    top:0;
+    width:20px;
+    height:20px;
+    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='8' viewBox='0 0 10 8' fill='none'%3E%3Cpath d='M9 0.914062L3.4 6.91406L1 4.51406' stroke='white' stroke-width='1.33333' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center no-repeat;
+    content:'';
+  }
+`;
+
+const ButtonWrap = styled.div`
+  margin-top:32px;
+  display:flex;
+  justify-content:end;
+  align-items:center;
 `;
 
 const Button = styled.button`
-  padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 5px;
-  cursor: pointer;
-  border: none;
+  min-width:100px;
+  font-size:0.88rem;
+  color:${palette.white};
+  line-height:22px;
+  padding:8px 20px;
+  margin-left:auto;
+  border-radius:8px;
+  border:0;
+  background: ${(props) => (!props.selectedOption ? palette.lineGray : palette.blue)};
+  transition:all .5s;
 `;

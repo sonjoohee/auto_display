@@ -341,14 +341,15 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
                 {tabs &&
                   tabs.length > 0 &&
                   tabs.map((tab, index) => (
-                    <TabButton
+                    <h1
                       key={index}
                       active={selectedTab === index}
                       expertIndex={expertIndex}
                       onClick={() => handleTabClick(index, expertIndex)}
+                      style={{marginBottom: "0"}}
                     >
                       {tab.title}
-                    </TabButton>
+                    </h1>
                   ))}
               </TabHeader>
 
@@ -960,6 +961,14 @@ const Section = ({
     return textContent;
   };
 
+  const handleFormatChange = (format) => {
+    setSelectedFormat(format);
+  };
+
+  const handleLanguageChange = (language) => {
+    setSelectedLanguage(language);  // 선택된 언어 상태를 설정
+  };
+
   // 기존 subTitle과 text를 합쳐 새로운 text 생성
 
   return (
@@ -989,8 +998,8 @@ const Section = ({
                     onClick={(event) => handleOpenModal(index, event)}
                     disabled={loading}
                   >
-                    {loading ? downloadStatus : "보고서 다운로드"}
-                  </DownloadButton>
+                    {loading ? downloadStatus : "다운로드"}
+                  </DownloadButton> 
                 </strong_title>
                 {/* 항목 내용 */}
                 <p style={{ marginTop: "15px", marginBottom: "15px" }}>
@@ -1027,27 +1036,65 @@ const Section = ({
                     style={{ top: popupPosition.top, left: popupPosition.left }}
                   >
                     <div>
-                      <h3>다운로드 설정</h3>
-                      <div>
-                        <label>포맷 선택:</label>
+                      <h3>PoC 수행 계획서 다운로드</h3>
+                      <SelectBoxWrap>
+                        <label>포맷 선택 (택1)</label>
+                        {/*
                         <select
                           value={selectedFormat}
                           onChange={(e) => setSelectedFormat(e.target.value)}
                         >
                           <option value="PDF">PDF</option>
                           <option value="Word">Word</option>
-                        </select>
-                      </div>
-                      <div>
-                        <label>언어 선택:</label>
+                        </select> 
+                        */}
+                        <SelectBox>
+                          <div
+                            className={`${selectedFormat === "PDF" ? "selected" : ""}`}
+                            onClick={() => handleFormatChange("PDF")}
+                          >
+                            <img src={images.ImgPDF} alt="" />
+                            PDF
+                          </div>
+                          <div
+                            className={`${selectedFormat === "Word" ? "selected" : ""}`}
+                            onClick={() => handleFormatChange("Word")}
+                          >
+                            <img src={images.ImgWord} alt="" />
+                            Word
+                          </div>
+                        </SelectBox>
+                      </SelectBoxWrap>
+                      <SelectBoxWrap>
+                        <label>언어 선택 (택1)</label>
+
+                        <SelectBox>
+                          <div
+                            className={`${selectedLanguage === "한글" ? "selected" : ""}`}
+                            onClick={() => handleLanguageChange("한글")}
+                          >
+                            <img src={images.ImgKOR} alt="" />
+                            한글
+                          </div>
+                          <div
+                            className={`${selectedLanguage === "영문" ? "selected" : ""}`}
+                            onClick={() => handleLanguageChange("영문")}
+                          >
+                            <img src={images.ImgENG} alt="" />
+                            영문
+                          </div>
+                        </SelectBox>
+
+                        {/* 
                         <select
                           value={selectedLanguage}
                           onChange={(e) => setSelectedLanguage(e.target.value)}
                         >
                           <option value="Korean">한국어</option>
                           <option value="English">영어</option>
-                        </select>
-                      </div>
+                        </select> 
+                        */}
+                      </SelectBoxWrap>
                       <div>
                         <button
                           onClick={() => handleDownloadClick(index)}
@@ -1055,9 +1102,9 @@ const Section = ({
                         >
                           {loading ? downloadStatus : "다운로드"}
                         </button>
-                        <button onClick={handleCloseModal} disabled={loading}>
+                        {/* <button onClick={handleCloseModal} disabled={loading}>
                           취소
-                        </button>
+                        </button> */}
                       </div>
                     </div>
                   </DownloadPopup>
@@ -1602,6 +1649,7 @@ const Section = ({
 
 export default OrganismStrategyReportSection;
 const SeparateSection = styled.div`
+  position:relative;
   display: flex;
   flex-direction: column;
   margin-top: 12px;
@@ -1829,6 +1877,7 @@ const BoxWrap = styled.div`
 `;
 
 const TabHeader = styled.div`
+  position:relative;
   display: flex;
   gap: 40px;
   margin-bottom: 20px;
@@ -2085,35 +2134,55 @@ const SectionWrapper_2 = styled.div`
 `;
 const DownloadButton = styled.button`
   position: absolute; /* 절대 위치 */
-  right: 0; /* 오른쪽 끝으로 배치 */
-  padding: 10px 20px;
-  margin-bottom: 20px;
-  font-size: 16px;
-  font-weight: bold;
-  color: #ffffff;
-  background-color: ${palette.gray};
+  top:14px;
+  right: 20px; /* 오른쪽 끝으로 배치 */
+  display:flex;
+  align-items:center;
+  gap:4px;
+  font-family:Pretendard, Poppins;
+  font-size:0.75rem;
+  font-weight:500;
+  color:${palette.gray500};
+  padding: 8px 0;
   border: none;
-  border-radius: 4px;
+  background:none;
   cursor: pointer;
-  z-index: 1000;
+  z-index: 9;
+  transition:all .5s;
+
+  &:after {
+    width:16px;
+    height:16px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 17 17' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M8.9668 1.91406C5.08247 1.91406 1.93359 5.06293 1.93359 8.94727C1.93359 12.8316 5.08247 15.9805 8.9668 15.9805C12.8511 15.9805 16 12.8316 16 8.94727C16 5.06293 12.8511 1.91406 8.9668 1.91406ZM0.933594 8.94727C0.933594 4.51065 4.53018 0.914062 8.9668 0.914062C13.4034 0.914062 17 4.51065 17 8.94727C17 13.3839 13.4034 16.9805 8.9668 16.9805C4.53018 16.9805 0.933594 13.3839 0.933594 8.94727Z' fill='%238c8c8c'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M6.51499 9.30487C6.32573 9.49131 6.32573 9.79807 6.51499 9.98451L8.6359 12.0738C8.81967 12.2548 9.1139 12.2548 9.29767 12.0738L11.4186 9.98451C11.6078 9.79807 11.6078 9.49131 11.4186 9.30487C11.2348 9.12384 10.9406 9.12384 10.7568 9.30487L9.43962 10.6024V6.15919C9.43962 5.88712 9.2187 5.68359 8.96679 5.68359C8.71487 5.68359 8.49395 5.88712 8.49395 6.15919V10.6024L7.17677 9.30487C6.99299 9.12384 6.69877 9.12384 6.51499 9.30487Z' fill='%238c8c8c'/%3E%3C/svg%3E");
+    background-size:cover;
+    transition:all .5s;
+    content:'';
+  }
+
   &:hover {
-    background-color: ${palette.blue};
+    color:${palette.blue};
+
+    &:after {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 17 17' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M8.9668 1.91406C5.08247 1.91406 1.93359 5.06293 1.93359 8.94727C1.93359 12.8316 5.08247 15.9805 8.9668 15.9805C12.8511 15.9805 16 12.8316 16 8.94727C16 5.06293 12.8511 1.91406 8.9668 1.91406ZM0.933594 8.94727C0.933594 4.51065 4.53018 0.914062 8.9668 0.914062C13.4034 0.914062 17 4.51065 17 8.94727C17 13.3839 13.4034 16.9805 8.9668 16.9805C4.53018 16.9805 0.933594 13.3839 0.933594 8.94727Z' fill='%230453F4'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M6.51499 9.30487C6.32573 9.49131 6.32573 9.79807 6.51499 9.98451L8.6359 12.0738C8.81967 12.2548 9.1139 12.2548 9.29767 12.0738L11.4186 9.98451C11.6078 9.79807 11.6078 9.49131 11.4186 9.30487C11.2348 9.12384 10.9406 9.12384 10.7568 9.30487L9.43962 10.6024V6.15919C9.43962 5.88712 9.2187 5.68359 8.96679 5.68359C8.71487 5.68359 8.49395 5.88712 8.49395 6.15919V10.6024L7.17677 9.30487C6.99299 9.12384 6.69877 9.12384 6.51499 9.30487Z' fill='%230453F4'/%3E%3C/svg%3E");
+    }
   }
 `;
 const DownloadPopup = styled.div`
   position: absolute;
   right: ${(props) => (props.isAutoSaveToggle ? "0" : "-70px")};
   top: 120px;
-  max-width: 304px;
+  max-width: 288px;
+  width:100%;
   max-height: 400px; /* 팝업의 최대 높이를 적절히 설정 */
   overflow-y: auto; /* 내용이 많을 경우 스크롤 가능하게 설정 */
-  padding: ${(props) => (props.isAutoSaveToggle ? "0" : "24px")};
-  border-radius: 20px;
+  padding: ${(props) => (props.isAutoSaveToggle ? "0" : "24px 20px 20px")};
+  border-radius: 15px;
   background: ${palette.white};
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 28px rgba(0, 0, 0, 0.05);
   visibility: ${(props) => (props.isAutoSaveToggle ? "hidden" : "visible")};
   opacity: ${(props) => (props.isAutoSaveToggle ? "0" : "1")};
   transition: opacity 0.3s ease, visibility 0.3s ease; /* 트랜지션 추가 */
+  z-index:99;
 
   &:before {
     position: absolute;
@@ -2126,15 +2195,20 @@ const DownloadPopup = styled.div`
     border-width: 0px 20px 12px 20px;
     border-color: transparent transparent ${palette.white} transparent;
     filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.2));
-    content: "";
+    // content: "";
     z-index: 0;
   }
 
+  > div {
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+
   h3 {
-    font-size: 1rem;
-    font-weight: 700;
-    color: ${palette.gray};
-    margin-bottom: 20px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: ${palette.gray800};
   }
 
   label {
@@ -2149,17 +2223,61 @@ const DownloadPopup = styled.div`
   }
 
   button {
-    margin-top: 20px;
-    padding: 10px;
-    border-radius: 5px;
-    background-color: ${palette.blue};
-    color: white;
+    width:100%;
+    font-family:Pretendard, Poppins;
+    font-size:0.88rem;
+    color:${palette.white};
+    margin-top: 16px;
+    padding: 15px 0;
+    border-radius: 8px;
     border: none;
+    background-color: ${palette.blue};
     cursor: pointer;
 
     &:disabled {
-      background-color: ${palette.gray};
+      background-color: ${palette.lineGray};
       cursor: not-allowed;
     }
   }
 `;
+
+const SelectBoxWrap = styled.div`
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+`;
+
+const SelectBox = styled.div`
+  display:flex;
+  flex-direction:row;
+  gap:8px;
+
+  div {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:4px;
+    min-width:120px;
+    font-size:0.75rem;
+    text-align:center;
+    color:${palette.gray700};
+    padding:13px 0;
+    border-radius:10px;
+    border:1px solid ${palette.gray100};
+    cursor:pointer;
+    transition:all .5s;
+
+    img {
+      width:40px;
+      height:40px;
+    }
+
+    &.selected {
+      font-weight:700;
+      color:${palette.gray800};
+      border:1px solid ${palette.blue};
+      background:rgba(4,83,244,.05);
+    }
+  }
+`;
+

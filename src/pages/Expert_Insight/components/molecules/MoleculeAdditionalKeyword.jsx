@@ -107,6 +107,7 @@ const ButtonWrap = styled.div`
     font-family: "Pretendard", "Poppins";
     font-size: 0.875rem;
     color: ${palette.darkGray};
+    text-align:left;
     border: 0;
     background: none;
     margin-right: 10px;

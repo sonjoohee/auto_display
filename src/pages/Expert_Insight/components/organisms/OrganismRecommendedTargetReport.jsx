@@ -285,9 +285,9 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
         ) : (
           <>
           <TabHeader>
-            <TabButton active={true} expertIndex={expertIndex}>
+            <h1 active={true} expertIndex={expertIndex} style={{marginBottom:"0"}}>
               PoC 목적별 추천 타겟 및 예상 인사이트
-            </TabButton>
+            </h1>
           </TabHeader>
 
           {recommendedTargetData && recommendedTargetData.poc_persona && (

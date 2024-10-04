@@ -474,6 +474,7 @@ const ContentsWrap = styled.div`
   overflow-y: auto;
 
   h1 {
+    font-family:Pretendard, Poppins;
     font-size: 1.25rem;
     font-weight: 400;
     margin-bottom: 8px;
@@ -487,7 +488,7 @@ const TabHeader = styled.div`
 `;
 
 const TabButton = styled.button`
-  font-family: "Pretendard";
+  font-family:Pretendard, Poppins;
   font-size: 1.25rem;
   font-weight: ${(props) => (props.active ? "500" : "400")};
   color: ${(props) => (props.active ? `${palette.black}` : "rgba(0,0,0,.2)")};
@@ -1678,9 +1679,9 @@ const RecommendedTargetReportSection = ({ report }) => {
   return (
     <AnalysisSection>
       <TabHeader>
-        <TabButton active={true}>
+        <h1 active={true} style={{marginBottom:"0"}}>
           PoC 목적별 추천 타겟 및 예상 인사이트
-        </TabButton>
+        </h1>
       </TabHeader>
 
       {report && report.content && report.content.poc_persona && (

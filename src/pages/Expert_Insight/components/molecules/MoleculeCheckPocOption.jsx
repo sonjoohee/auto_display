@@ -207,6 +207,10 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
     <Wrap>
       {tabs === 0 && selectedPocOptions.length === 0 ? (
         <>
+        <Progress>
+          <div className="bar num2"></div>
+        </Progress>
+
         <Question>Q. 현재 PoC를 진행 단계는 무엇인가요?</Question>
         <OptionContainer>
           {options1.map((option1) => (
@@ -222,6 +226,11 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
         </>
       ) : tabs === 1 && selectedPocOptions.length === 0 ? (
         <>
+        <Progress>
+          <div className="bar"></div>
+        </Progress>
+
+
         <Question>Q. PoC를 통해서 얻고 싶은 내용은 무엇인가요?</Question>
         <OptionContainer>
           {options2.map((option2) => (
@@ -236,28 +245,44 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
         </OptionContainer>
         </>
       ) : (
-        <Question>완료</Question>
+        <OptionContainer>완료</OptionContainer>
       )}
 
       {tabs !== 2 && selectedPocOptions.length === 0 ? 
-        <OptionContainer>
+        <ButtonWrap selectedOption1={selectedOption1} selectedOption2={selectedOption2}>
           {tabs === 0 ?
-            <Option></Option>
+            <></>
             :
-            <Option onClick={() => hadleTurnTab("prev")}>
+            <div className="prev" onClick={() => hadleTurnTab("prev")}>
               이전
-            </Option>
+            </div>
           }
           {tabs === 0 ?
-            <Option onClick={() => hadleTurnTab("next")}>
+            <div 
+              className="next"
+              disabled={!selectedOption1 || !selectedOption2}
+              // onClick={() => hadleTurnTab("next")}
+              onClick={() => {
+                if (!selectedOption1) return;
+                hadleTurnTab("next");
+              }}
+            >
               다음
-            </Option>
+            </div>
             :
-            <Option onClick={() => handleConfirm()}>
+            <div 
+              className="finish" 
+              disabled={!selectedOption1 || !selectedOption2}
+              // onClick={() => handleConfirm()}
+              onClick={() => {
+                if (!selectedOption1 || !selectedOption2) return; // 선택이 안됐을 경우 동작 막기
+                handleConfirm();
+              }}
+            >
               완료
-            </Option>
+            </div>
           }        
-        </OptionContainer>
+        </ButtonWrap>
         : null
       } 
     </Wrap>
@@ -267,32 +292,123 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
 export default MoleculeCheckPocOption;
 
 const Wrap = styled.div`
-  padding: 20px;
+  max-width:570px;
+  width:100%;
+  padding: 40px;
+  margin:24px 0 0 44px;
+  border-radius:15px;
+  border:1px solid ${palette.lineGray};
+`;
+
+const Progress = styled.div`
+  width:100%;
+  height:3px;
+  margin-bottom:30px;
+  border-radius:10px;
+  background:#ECEFF3;
+
+  .bar {
+    width:100%;
+    height:3px;
+    border-radius:10px;
+    background:${palette.blue};
+    transition:all .5s;
+  }
+
+  .bar.num2 {
+    width:50%;
+  }
+
+  .bar.num3 {
+    width:33%;
+  }
 `;
 
 const Question = styled.div`
-  font-size: 1rem;
-  margin-bottom: 10px;
+  font-size: 0.88rem;
+  font-weight:700;
+  text-align:left;
+  margin-bottom: 20px;
 `;
 
 const OptionContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  justify-content:space-between;
+  gap: 8px 0;
 `;
 
 const Option = styled.div`
-  flex: 1 1 calc(33.33% - 10px);
-  padding: 10px;
-  border: 1px solid ${palette.lineGray};
+  position:relative;
+  display:flex;
+  gap:8px;
+  align-items:center;
+  // flex: 1 1 40%;
+  width:49%;
+  font-size:0.88rem;
+  color: ${(props) => (props.selected ? palette.blue : palette.gray800)};
+  padding: 9px 12px;
   border-radius: 8px;
-  text-align: center;
   cursor: pointer;
-  background-color: ${(props) => (props.selected ? palette.black : palette.white)};
-  color: ${(props) => (props.selected ? palette.white : palette.black)};
-  border-color: ${(props) => (props.selected ? palette.black : palette.lineGray)};
+  background-color: ${(props) => (props.selected ? "rgba(4,83,244,0.05)" : palette.white)};
+  border: 1px solid ${(props) => (props.selected ? palette.blue : palette.lineGray)};
+  transition:all .5s;
+
+  &:before {
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    border:1px solid ${(props) => (props.selected ? palette.blue : palette.lineGray)};
+    background-color: ${(props) => (props.selected ? palette.blue : palette.white)};
+    transition:all .5s;
+    content:'';
+  }
+
+  &:after {
+    position:absolute;
+    left:12px;
+    top:8px;
+    width:20px;
+    height:20px;
+    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='8' viewBox='0 0 10 8' fill='none'%3E%3Cpath d='M9 0.914062L3.4 6.91406L1 4.51406' stroke='white' stroke-width='1.33333' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center no-repeat;
+    content:'';
+  }
 
   &:hover {
-    border-color: ${palette.black};
+    border-color: ${palette.blue};
+  }
+`;
+
+const ButtonWrap = styled.div`
+  margin-top:40px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  .prev {
+    font-size:0.88rem;
+    color:${palette.gray500};
+    cursor:pointer;
+  }
+
+  .next, .finish {
+    min-width:100px;
+    font-size:0.88rem;
+    color:${palette.white};
+    line-height:22px;
+    padding:8px 20px;
+    margin-left:auto;
+    border-radius:8px;
+    transition:all .5s;
+  }
+
+  .next {
+    background: ${(props) => (!props.selectedOption1 ? palette.lineGray : palette.blue)};
+    cursor: ${(props) => (!props.selectedOption1 ? "default" : "pointer")};
+  }
+
+  .finish {
+    background: ${(props) => (!props.selectedOption1 || !props.selectedOption2 ? palette.lineGray : palette.blue)};
+    cursor: ${(props) => (!props.selectedOption1 || !props.selectedOption2 ? "default" : "pointer")};
   }
 `;
