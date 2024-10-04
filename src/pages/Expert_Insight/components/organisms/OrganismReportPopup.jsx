@@ -21,7 +21,7 @@ const OrganismReportPopup = ({ report, onClose }) => {
   }
 
   {
-    (reportIndex === 1 || reportIndex === 4) && (reportTypeText = "전문가 보고서");
+    reportIndex === 1  && (reportTypeText = "전문가 보고서");
   }
 
   {
@@ -30,6 +30,10 @@ const OrganismReportPopup = ({ report, onClose }) => {
 
   {
     reportIndex === 3 && (reportTypeText = "사용자 질문 보고서");
+  }
+
+  {
+    reportIndex === 4 && (reportTypeText = "타겟 추천 보고서");
   }
 
   return ReactDOM.createPortal(
@@ -92,11 +96,13 @@ const OrganismReportPopup = ({ report, onClose }) => {
 
         {reportIndex === 0 && <BizAnalysisSection report={report} />}
 
-        {(reportIndex === 1 || reportIndex === 4) && <StrategyReportSection report={report} />}
+        {reportIndex === 1 && <StrategyReportSection report={report} />}
 
         {reportIndex === 2 && <AdditionalReportSection report={report} />}
 
         {reportIndex === 3 && <AdditionalReportSection report={report} />}
+
+        {reportIndex === 4 && <RecommendedTargetReportSection report={report} />}
 
         <CloseButton onClick={onClose}>닫기</CloseButton>
       </PopupContent>
@@ -1668,3 +1674,40 @@ const SectionWrapper = styled.div`
     margin-bottom: 8px; /* subContent 간의 간격 */
   }
 `;
+const RecommendedTargetReportSection = ({ report }) => {
+  return (
+    <AnalysisSection>
+      <TabHeader>
+        <TabButton active={true}>
+          PoC 목적별 추천 타겟 및 예상 인사이트
+        </TabButton>
+      </TabHeader>
+
+      {report && report.content && report.content.poc_persona && (
+        <>
+          {report.content.poc_persona.map((item, index) => {
+            const persona = item[0]["추천 가상 페르소나"];
+            const insight = item[1]["이유 및 예상 인사이트"];
+            const goalActionText = item.goalActionText;
+            return (
+              <SeparateSection key={index}>
+                <strong>
+                  <span className="number">{index + 1}</span>
+                  <strong_title>{goalActionText}</strong_title>
+                </strong>
+                <div className="bgWhite">
+                  <p style={{ textIndent: '-1em', paddingLeft: '1em', marginBottom: '5px' }}>
+                    1. 추천 가상 페르소나 : {persona}
+                  </p>
+                  <p style={{ textIndent: '-1em', paddingLeft: '1em', marginTop: '5px' }}>
+                    2. 이유 및 예상 인사이트 : {insight}
+                  </p>
+                </div>
+              </SeparateSection>
+            );
+          })}
+        </>
+      )}
+    </AnalysisSection>
+  );
+};
