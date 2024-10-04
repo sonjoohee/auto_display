@@ -139,7 +139,7 @@ const MoleculePersonaSelect = ({ conversationId }) => {
           );
           retryCount++;
           await new Promise(resolve => setTimeout(resolve, 1000)); // 1초 대기
-          updatedPersonaList = response.data.additional_question;
+          updatedPersonaList = response.data.persona_list;
         }
         if (retryCount === maxRetries) {
           console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
