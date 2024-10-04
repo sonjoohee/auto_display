@@ -5,6 +5,7 @@ import ReactDOM from "react-dom";
 
 import images from "../../../../assets/styles/Images";
 import panelimages from "../../../../assets/styles/PanelImages";
+import MoleculeReportController from "../molecules/MoleculeReportController";
 
 const OrganismReportPopup = ({ report, onClose }) => {
   if (!report) return null;
@@ -413,6 +414,11 @@ const BizAnalysisSection = ({ report }) => {
             ))}
           </List>
         </BoxWrap>
+        <MoleculeReportController
+            reportIndex={0}
+            showCopyOnly={true}
+            report = {report}
+          />
       </ContentsWrap>
     </>
   );
@@ -458,6 +464,11 @@ const StrategyReportSection = ({ report }) => {
             selectedTab={selectedTab}
           />
         ))}
+          <MoleculeReportController
+            reportIndex={1}
+            showCopyOnly={true}
+            report = {report}
+          />
       </AnalysisSection>
     </>
   );
@@ -543,6 +554,11 @@ const AdditionalReportSection = ({ report }) => {
           index={index - 1}
         />
         ))}
+          <MoleculeReportController
+            reportIndex={2}
+            showCopyOnly={true}
+            report = {report}
+          />
         </AnalysisSection>
   );
 };
@@ -1704,11 +1720,17 @@ const RecommendedTargetReportSection = ({ report }) => {
                     2. 이유 및 예상 인사이트 : {insight}
                   </p>
                 </div>
+
               </SeparateSection>
             );
           })}
         </>
       )}
+      <MoleculeReportController
+      reportIndex={4}
+      showCopyOnly={true}
+      report = {report}
+      />
     </AnalysisSection>
   );
 };
