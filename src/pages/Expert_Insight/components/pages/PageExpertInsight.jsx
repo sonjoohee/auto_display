@@ -164,6 +164,7 @@ const PageExpertInsight = () => {
         selectedPocOptions: selectedPocOptions,
         selectedPocTarget: selectedPocTarget,
         recommendedTargetData: recommendedTargetData,
+        pocDetailReportData : pocDetailReportData,
       },
       isLoggedIn,
       conversationId

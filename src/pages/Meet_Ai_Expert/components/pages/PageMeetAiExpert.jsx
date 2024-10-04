@@ -35,6 +35,7 @@ import {
   SELECTED_POC_OPTIONS,
   SELCTED_POC_TARGET,
   RECOMMENDED_TARGET_DATA,
+  POC_DETAIL_REPORT_ATOM,
 } from "../../../AtomStates";
 
 import { Link } from "react-router-dom";
@@ -119,6 +120,8 @@ const PageMeetAiExpert = () => {
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
   const [advise, setAdvise] = useState(""); // 새로운 advise 상태 추가
 
+  const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_ATOM);
+
   const closePopupRegex = () => {
     setInputBusinessInfo("");
     setIsPopupRegex(false); // 팝업 닫기
@@ -161,6 +164,7 @@ const PageMeetAiExpert = () => {
     setSelectedPocOptions([]);
     setSelectedPocTarget({});
     setRecommendedTargetData({});
+    setpocDetailReportData({});
   }, []);
 
   useEffect(() => {

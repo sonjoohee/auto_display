@@ -34,6 +34,7 @@ import {
   CUSTOMER_ADDITIONAL_REPORT_DATA,
   SELECTED_POC_OPTIONS,
   SELCTED_POC_TARGET,
+  RECOMMENDED_TARGET_DATA,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -51,6 +52,7 @@ const MoleculeReportController = ({
   sampleData,
   additionalReportCount, // 추가 보고서 복사기능을 위한 인덱스
 }) => {
+  const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
@@ -256,13 +258,13 @@ const MoleculeReportController = ({
       // 전략 보고서 데이터 저장 - sampleData 사용
       reportData = sampleData; // sampleData를 그대로 저장합니다
       business_info = reportData?.business_info || "Unknown Title";
-    } else if (reportIndex === 2) {
+    } else if (reportIndex === 4) {
+      reportData = sampleData; // sampleData를 그대로 저장합니다
+      business_info = titleOfBusinessInfo || "Unknown Title";
+    }else {
       reportData = sampleData;
       business_info = reportData?.title || "Unknown Title";
-    } else if (reportIndex === 3) {
-      reportData = sampleData;
-      business_info = reportData?.title || "Unknown Title";
-    } else return;
+    }
 
     // API에 저장 요청
     try {
@@ -301,35 +303,35 @@ const MoleculeReportController = ({
           },
         ]);
 
-        // 기존 대화 내역에 리포트 데이터 추가
-        const existingConversation = await getConversationByIdFromIndexedDB(
-          conversationId,
-          isLoggedIn
-        );
+        // // 기존 대화 내역에 리포트 데이터 추가
+        // const existingConversation = await getConversationByIdFromIndexedDB(
+        //   conversationId,
+        //   isLoggedIn
+        // );
 
-        const updatedConversation = {
-          ...existingConversation,
-          analysisReportData:
-            reportIndex === 0
-              ? reportData
-              : existingConversation.analysisReportData,
-          strategyReportData:
-            reportIndex === 1
-              ? reportData
-              : existingConversation.strategyReportData,
-          additionalReportData:
-            reportIndex === 2
-              ? reportData
-              : existingConversation.additionalReportData,
-          timestamp: Date.now(),
-          expert_index: selectedExpertIndex,
-        };
+        // const updatedConversation = {
+        //   ...existingConversation,
+        //   analysisReportData:
+        //     reportIndex === 0
+        //       ? reportData
+        //       : existingConversation.analysisReportData,
+        //   strategyReportData:
+        //     reportIndex === 1
+        //       ? reportData
+        //       : existingConversation.strategyReportData,
+        //   additionalReportData:
+        //     reportIndex === 2
+        //       ? reportData
+        //       : existingConversation.additionalReportData,
+        //   timestamp: Date.now(),
+        //   expert_index: selectedExpertIndex,
+        // };
 
-        await saveConversationToIndexedDB(
-          updatedConversation,
-          isLoggedIn,
-          conversationId
-        );
+        // await saveConversationToIndexedDB(
+        //   updatedConversation,
+        //   isLoggedIn,
+        //   conversationId
+        // );
         setReportRefreshTrigger((prev) => !prev); // 트리거 상태를 반전시켜 OrganismLeftSideBar가 새로고침되도록 설정
       } else {
         console.error("API 응답 에러", response.status);
@@ -390,6 +392,8 @@ ${businessInformationTargetCustomer
       contentToCopy = extractTextContent(additionalReportData[additionalReportCount]);
     } else if (reportIndex === 3) {
       contentToCopy = extractTextContent(customerAdditionalReportData[additionalReportCount]);
+    } else if (reportIndex === 4) {
+      contentToCopy = extractTextContent(recommendedTargetData);
     }
     else return;
 

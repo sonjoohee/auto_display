@@ -25,7 +25,8 @@ import {
   CUSTOMER_ADDITION_QUESTION_INPUT,
   SELECTED_EXPERT_LIST,
   SELCTED_POC_TARGET,
-  TARGET_BUTTON_STATE,
+  TARGET_REPORT_BUTTON_STATE,
+  POC_DETAIL_REPORT_ATOM,
 } from "../../../AtomStates";
 
 import {
@@ -35,6 +36,7 @@ import {
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeRecommendedTargetButton = () => {
+  const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_ATOM);
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
   const [isLoggedIn] = useAtom(isLoggedInAtom);
@@ -47,7 +49,6 @@ const MoleculeRecommendedTargetButton = () => {
   const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation,] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
   const [mainCharacteristicOfBusinessInformation, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
   const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [buttonState, setButtonState] = useAtom(CUSTOMER_ADDITION_BUTTON_STATE);
   const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const analysisReportData = {
     title: titleOfBusinessInfo,
@@ -64,7 +65,7 @@ const MoleculeRecommendedTargetButton = () => {
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
-  const [targetButtonState, setTargetButtonState] = useAtom(TARGET_BUTTON_STATE);
+  const [buttonState, setButtonState] = useAtom(TARGET_REPORT_BUTTON_STATE);
 
   const handleClick = async () => {
     if (isLoading) return;
@@ -84,7 +85,7 @@ const MoleculeRecommendedTargetButton = () => {
     setConversation(updatedConversation);
     setConversationStage(3);
     setApproachPath(3);
-    setTargetButtonState(1);
+    setButtonState(1);
 
     await saveConversationToIndexedDB(
       {
@@ -102,6 +103,7 @@ const MoleculeRecommendedTargetButton = () => {
         timestamp: Date.now(),
         expert_index: selectedExpertIndex,
         selectedPocTarget: selectedPocTarget,
+        pocDetailReportData : pocDetailReportData,
       },
       isLoggedIn,
       conversationId

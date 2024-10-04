@@ -21,7 +21,7 @@ const OrganismReportPopup = ({ report, onClose }) => {
   }
 
   {
-    reportIndex === 1 && (reportTypeText = "전문가 보고서");
+    reportIndex === 1  && (reportTypeText = "전문가 보고서");
   }
 
   {
@@ -30,6 +30,10 @@ const OrganismReportPopup = ({ report, onClose }) => {
 
   {
     reportIndex === 3 && (reportTypeText = "사용자 질문 보고서");
+  }
+
+  {
+    reportIndex === 4 && (reportTypeText = "타겟 추천 보고서");
   }
 
   return ReactDOM.createPortal(
@@ -51,7 +55,7 @@ const OrganismReportPopup = ({ report, onClose }) => {
             </popup-p>
           </popupTitle>
           
-        {reportIndex === 1 &&          
+        {(reportIndex === 1 || reportIndex === 4) &&          
           <ExpertThumb>
             <div className="thumb">
             {
@@ -59,7 +63,9 @@ const OrganismReportPopup = ({ report, onClose }) => {
                 ? <img src={panelimages.expert_1} alt="" /> 
                 : report.content.expert_id === "2" 
                   ? <img src={panelimages.expert_2} alt="" /> 
-                  : <img src={panelimages.expert_3} alt="" />
+                  : report.content.expert_id === "3" 
+                    ? <img src={panelimages.expert_3} alt="" />
+                    : <img src={panelimages.expert_3} alt="" />
             }
             </div>
             {
@@ -73,9 +79,15 @@ const OrganismReportPopup = ({ report, onClose }) => {
                       <strong>마케팅 구루</strong>
                       <p>이지현</p>
                     </div>
-                  : <div className="cont">
+                  : report.content.expert_id === "3" 
+                  ? <div className="cont">
                       <strong>고객 분석 전문가</strong>
                       <p>박서연</p>
+                    </div>
+                  :
+                  <div className="cont">
+                      <strong>PoC 설계 전문가</strong>
+                      <p>OOO</p>
                     </div>
             }
           </ExpertThumb>
@@ -89,6 +101,8 @@ const OrganismReportPopup = ({ report, onClose }) => {
         {reportIndex === 2 && <AdditionalReportSection report={report} />}
 
         {reportIndex === 3 && <AdditionalReportSection report={report} />}
+
+        {reportIndex === 4 && <RecommendedTargetReportSection report={report} />}
 
         <CloseButton onClick={onClose}>닫기</CloseButton>
       </PopupContent>
@@ -428,7 +442,7 @@ const StrategyReportSection = ({ report }) => {
                 expertIndex={expertIndex} // 전달
                 onClick={() => handleTabClick(index)}
               >
-                {tab.title}
+                {expertIndex === "4" ? "PoC 목적별 추천 타겟 및 예상 인사이트" : tab.title}
               </TabButton>
             ))}
         </TabHeader>
@@ -1660,3 +1674,40 @@ const SectionWrapper = styled.div`
     margin-bottom: 8px; /* subContent 간의 간격 */
   }
 `;
+const RecommendedTargetReportSection = ({ report }) => {
+  return (
+    <AnalysisSection>
+      <TabHeader>
+        <TabButton active={true}>
+          PoC 목적별 추천 타겟 및 예상 인사이트
+        </TabButton>
+      </TabHeader>
+
+      {report && report.content && report.content.poc_persona && (
+        <>
+          {report.content.poc_persona.map((item, index) => {
+            const persona = item[0]["추천 가상 페르소나"];
+            const insight = item[1]["이유 및 예상 인사이트"];
+            const goalActionText = item.goalActionText;
+            return (
+              <SeparateSection key={index}>
+                <strong>
+                  <span className="number">{index + 1}</span>
+                  <strong_title>{goalActionText}</strong_title>
+                </strong>
+                <div className="bgWhite">
+                  <p style={{ textIndent: '-1em', paddingLeft: '1em', marginBottom: '5px' }}>
+                    1. 추천 가상 페르소나 : {persona}
+                  </p>
+                  <p style={{ textIndent: '-1em', paddingLeft: '1em', marginTop: '5px' }}>
+                    2. 이유 및 예상 인사이트 : {insight}
+                  </p>
+                </div>
+              </SeparateSection>
+            );
+          })}
+        </>
+      )}
+    </AnalysisSection>
+  );
+};

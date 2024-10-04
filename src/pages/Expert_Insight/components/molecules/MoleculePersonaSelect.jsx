@@ -14,7 +14,6 @@ import {
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
   MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
-  ADDITION_BUTTON_STATE,
   isLoggedInAtom,
   STRATEGY_REPORT_DATA,
   INPUT_BUSINESS_INFO,
@@ -23,9 +22,7 @@ import {
   SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
   ADDITIONAL_REPORT_DATA,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
-  CUSTOMER_ADDITION_BUTTON_STATE,
-  CUSTOMER_ADDITION_QUESTION_INPUT,
-  SELECTED_EXPERT_LIST,
+  TARGET_SELECT_BUTTON_STATE,
   SELECTED_POC_OPTIONS,
   SELCTED_POC_TARGET,
 } from "../../../AtomStates";
@@ -33,14 +30,24 @@ import {
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
 
 const MoleculePersonaSelect = ({ conversationId }) => {
-  const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
+  const [selectedPocOptions, setSelectedPocOptions] =
+    useAtom(SELECTED_POC_OPTIONS);
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [inputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
-  const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation,] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
-  const [mainCharacteristicOfBusinessInformation, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
-  const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
+  const [
+    mainFeaturesOfBusinessInformation,
+    setMainFeaturesOfBusinessInformation,
+  ] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
+  const [
+    mainCharacteristicOfBusinessInformation,
+    setMainCharacteristicOfBusinessInformation,
+  ] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
+  const [
+    businessInformationTargetCustomer,
+    setBusinessInformationTargetCustomer,
+  ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [buttonState, setButtonState] = useAtom(EXPERT_BUTTON_STATE);
   const analysisReportData = {
     title: titleOfBusinessInfo,
@@ -55,19 +62,45 @@ const MoleculePersonaSelect = ({ conversationId }) => {
     SELECTED_CUSTOMER_ADDITIONAL_KEYWORD
   );
   const [additionalReportData] = useAtom(ADDITIONAL_REPORT_DATA);
-  const [customerAdditionalReportData] = useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
+  const [customerAdditionalReportData] = useAtom(
+    CUSTOMER_ADDITIONAL_REPORT_DATA
+  );
   const [isLoggedIn] = useAtom(isLoggedInAtom);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
   const [selectedPocTargetState, setSelectedPocTargetState] = useState({}); // 현재 선택한 상태를 저장
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET); // 확인 버튼을 눌렀을 때만 저장 -> 히스토리 저장
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [isLoadingTarget, setIsLoadingTarget] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(null);
+
+  const [options, setOptions] = useState([
+    {
+      title: "퇴직자, 취미 활동가",
+      text: "웰에이징 플랫폼을 통해 자신의 경험을 다른 사람과 공유하고, 새로운 취미와 활동을 탐색하며 건강하고 보람찬 노년을 보낸는 것",
+    },
+    {
+      title: "중소기업 CEO, 고위 관리직",
+      text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함",
+    },
+    {
+      title: "중소기업 CEO, 고위 관리직",
+      text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함",
+    },
+    {
+      title: "중소기업 CEO, 고위 관리직",
+      text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함",
+    },
+    {
+      title: "중소기업 CEO, 고위 관리직",
+      text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함",
+    },
+    { title: "아직 타겟 고객이 확실하지 않아요", text: "" },
+  ]);
 
   const handleOptionClick = (option) => {
     setSelectedOption(option.title); // 선택된 옵션을 상태로 저장
     setSelectedPocTargetState({ title: option.title, text: option.text });
   };
+
 
   const axiosConfig = {
     timeout: 100000, // 100초
@@ -76,45 +109,56 @@ const MoleculePersonaSelect = ({ conversationId }) => {
     },
     withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
   };
-  
+
   // useEffect(() => {
   //   const fetchPersonaSelect = async () => {
-      
-  //     setIsLoading(true);
-  //     setIsLoadingTarget(true);
 
-  //     const response = await axios.post(
-  //       "https://wishresearch.kr/",
-  //       selectedPocOptions,
-  //       axiosConfig
-  //     );
-      
-  //     setSelectedPocTarget(response.data);
+  //     if(buttonState) {
+  //       setIsLoading(true);
+  //       setIsLoadingTarget(true);
+  //       setButtonState(0);
 
-  //     setIsLoading(false);
-  //     setIsLoadingTarget(false);
+  //       const data = {
+  //         expert_id: selectedExpertIndex,
+  //         business_info: titleOfBusinessInfo,
+  //         business_analysis_data: {
+  //           명칭: analysisReportData.title,
+  //           주요_목적_및_특징: analysisReportData.mainFeatures,
+  //           주요기능: analysisReportData.mainCharacter,
+  //           목표고객: analysisReportData.mainCustomer,
+  //         },
+  //         goal : selectedPocOptions[0],
+  //         standpoint : selectedPocOptions[1],
+  //         target : selectedPocTarget.title,
+  //         tabs: [],
+  //         page_index: 1,
+  //       };
+
+  //       const response = await axios.post(
+  //         "https://wishresearch.kr/",
+  //         data,
+  //         axiosConfig
+  //       );
+
+  //       setOptions(response.data);
+
+  //       setIsLoading(false);
+  //       setIsLoadingTarget(false);
+  //     }
+
   //   };
 
   //   fetchPersonaSelect();
-  // }, []);
-
-  const options = [
-    { title: "퇴직자, 취미 활동가", text: "웰에이징 플랫폼을 통해 자신의 경험을 다른 사람과 공유하고, 새로운 취미와 활동을 탐색하며 건강하고 보람찬 노년을 보낸는 것" },
-    { title: "중소기업 CEO, 고위 관리직", text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함" },
-    { title: "중소기업 CEO, 고위 관리직", text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함" },
-    { title: "중소기업 CEO, 고위 관리직", text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함" },
-    { title: "중소기업 CEO, 고위 관리직", text: "플랫폼을 통해 웰에이징 관련 정보와 활동을 적극적으로 탐색하며, 동료들과 경험을 나누고 스스로의 건강과 행복을 유지하고자 함" },
-    { title: "아직 타겟 고객이 확실하지 않아요", text: "" },
-  ];
+  // }, [buttonState]);
 
   const handleConfirm = async () => {
     if (Object.keys(selectedPocTarget).length) return;
 
     if (Object.keys(selectedPocTargetState).length === 0) {
-      alert("항목을 선택해주세요")
+      alert("항목을 선택해주세요");
       return;
     }
-    setConversationStage(3)
+    setConversationStage(3);
     setApproachPath(3);
     setSelectedPocTarget(selectedPocTargetState);
 
@@ -156,7 +200,7 @@ const MoleculePersonaSelect = ({ conversationId }) => {
       isLoggedIn,
       conversationId
     );
-    setButtonState(1); 
+    setButtonState(1);
   };
 
   return (
