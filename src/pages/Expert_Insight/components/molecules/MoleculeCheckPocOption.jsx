@@ -58,6 +58,7 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
   const [selectedOption1, setSelectedOption1] = useState("");
   const [selectedOption2, setSelectedOption2] = useState("");
   const [tabs, setTabs] = useState(0);
+
   const [options2, setOptions2] = useState([]);
 
   const options1 = [
@@ -100,11 +101,47 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
     { label: "배포 및 운영 준비", value: "배포 및 운영 준비" },
   ];
 
+  useEffect(() => {
+    if (selectedPocOptions.length === 0) {
+      setTabs(0);
+    } else {
+      setTabs(1);
+
+      setSelectedOption1(selectedPocOptions[0]);
+      setSelectedOption2(selectedPocOptions[1]);
+
+      switch (selectedPocOptions[0]) {
+        case "아이디어 검증 단계":
+          setOptions2(options2_1);
+          break;
+        case "기술 가능성 검증 단계":
+          setOptions2(options2_2);
+          break;
+        case "프로토타입 개발 단계":
+          setOptions2(options2_3);
+          break;
+        case "기능 테스트 및 개선 단계":
+          setOptions2(options2_4);
+          break;
+        case "사용자 적합성 테스트 단계":
+          setOptions2(options2_5);
+          break;
+        case "출시 준비 단계":
+          setOptions2(options2_6);
+          break;
+        default:
+          setOptions2([]);
+          break;
+      }
+    }
+  }, []);
+
   const handleOptionClick = (index, optionValue) => {
     if (selectedPocOptions.length) return;
 
     if (index === 1) {
       setSelectedOption1(optionValue);
+      setSelectedOption2("");
     }
     else if (index === 2) {
       setSelectedOption2(optionValue);
@@ -115,10 +152,6 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
   const handleConfirm = async () => {
     if (selectedPocOptions.length) return;
     
-    if(!selectedOption1 || !selectedOption2) {
-      alert("항목을 선택해주세요.")
-      return;
-    }
     setSelectedPocOptions([selectedOption1, selectedOption2]);
     setTabs(2);
     setApproachPath(3);
@@ -169,12 +202,7 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
       setTabs((prevTabs) => prevTabs - 1)
     }
     else if (dir === "next") {
-      if(!selectedOption1) {
-        alert("항목을 선택해주세요.")
-        return;
-      }
-      
-      switch (selectedOption1) {
+      switch (selectedOption1 || selectedPocOptions[0]) {
         case "아이디어 검증 단계":
           setOptions2(options2_1);
           break;
@@ -205,51 +233,49 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
 
   return (
     <Wrap>
-      {tabs === 0 && selectedPocOptions.length === 0 ? (
+      {tabs === 0 ? (
         <>
-        <Progress>
+        <Progress selectedPocOptions={selectedPocOptions}>
           <div className="bar num2"></div>
         </Progress>
 
-        <Question>Q. 현재 PoC를 진행 단계는 무엇인가요?</Question>
+        <Question>Q1. PoC 단계는 무엇인가요?</Question>
         <OptionContainer>
           {options1.map((option1) => (
             <Option
               key={option1.value}
-              selected={selectedOption1 === option1.value}
+              selected={selectedOption1 === option1.value || selectedPocOptions[0] === option1.value}
               onClick={() => handleOptionClick(1, option1.value)}
+              selectedPocOptions={selectedPocOptions}
             >
               {option1.label}
             </Option>
           ))}
         </OptionContainer>
         </>
-      ) : tabs === 1 && selectedPocOptions.length === 0 ? (
+      ) :
         <>
-        <Progress>
+        <Progress selectedPocOptions={selectedPocOptions}>
           <div className="bar"></div>
         </Progress>
 
-
-        <Question>Q. PoC를 통해서 얻고 싶은 내용은 무엇인가요?</Question>
+        <Question>Q2. PoC를 통해서 얻고 싶은 내용은 무엇인가요?</Question>
         <OptionContainer>
           {options2.map((option2) => (
             <Option
               key={option2.value}
               selected={selectedOption2 === option2.value}
               onClick={() => handleOptionClick(2, option2.value)}
+              selectedPocOptions={selectedPocOptions}
             >
               {option2.label}
             </Option>
           ))}
         </OptionContainer>
         </>
-      ) : (
-        <OptionContainer>완료</OptionContainer>
-      )}
+        }
 
-      {tabs !== 2 && selectedPocOptions.length === 0 ? 
-        <ButtonWrap selectedOption1={selectedOption1} selectedOption2={selectedOption2}>
+        <ButtonWrap selectedOption1={selectedOption1} selectedOption2={selectedOption2} selectedPocOptions={selectedPocOptions}>
           {tabs === 0 ?
             <></>
             :
@@ -261,7 +287,6 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
             <div 
               className="next"
               disabled={!selectedOption1 || !selectedOption2}
-              // onClick={() => hadleTurnTab("next")}
               onClick={() => {
                 if (!selectedOption1) return;
                 hadleTurnTab("next");
@@ -273,7 +298,6 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
             <div 
               className="finish" 
               disabled={!selectedOption1 || !selectedOption2}
-              // onClick={() => handleConfirm()}
               onClick={() => {
                 if (!selectedOption1 || !selectedOption2) return; // 선택이 안됐을 경우 동작 막기
                 handleConfirm();
@@ -283,8 +307,6 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
             </div>
           }        
         </ButtonWrap>
-        : null
-      } 
     </Wrap>
   );
 };
@@ -311,7 +333,10 @@ const Progress = styled.div`
     width:100%;
     height:3px;
     border-radius:10px;
-    background:${palette.blue};
+    background:${(props) =>
+      props.selectedPocOptions.length !== 0
+        ? palette.gray800
+        : palette.blue};
     transition:all .5s;
   }
 
@@ -346,20 +371,47 @@ const Option = styled.div`
   // flex: 1 1 40%;
   width:49%;
   font-size:0.88rem;
-  color: ${(props) => (props.selected ? palette.blue : palette.gray800)};
+  color: ${(props) =>
+    props.selected
+      ? props.selectedPocOptions.length === 0
+        ? palette.blue
+        : palette.black
+      : palette.gray800};
   padding: 9px 12px;
   border-radius: 8px;
   cursor: pointer;
-  background-color: ${(props) => (props.selected ? "rgba(4,83,244,0.05)" : palette.white)};
-  border: 1px solid ${(props) => (props.selected ? palette.blue : palette.lineGray)};
+  background-color: ${(props) =>
+    props.selected
+      ? props.selectedPocOptions.length === 0
+        ? "rgba(4,83,244,0.05)"
+        : "rgba(0,0,0,0.05)"
+      : palette.white};
+  border: 1px solid
+    ${(props) =>
+      props.selected
+        ? props.selectedPocOptions.length === 0
+          ? palette.blue
+          : palette.black
+        : palette.lineGray};
   transition:all .5s;
 
   &:before {
     width:20px;
     height:20px;
     border-radius:50%;
-    border:1px solid ${(props) => (props.selected ? palette.blue : palette.lineGray)};
-    background-color: ${(props) => (props.selected ? palette.blue : palette.white)};
+    border: 1px solid
+      ${(props) =>
+        props.selected
+          ? props.selectedPocOptions.length === 0
+            ? palette.blue
+            : palette.gray800
+          : palette.lineGray};
+    background-color: ${(props) =>
+      props.selected
+        ? props.selectedPocOptions.length === 0
+          ? palette.blue
+          : palette.gray800
+        : palette.white};
     transition:all .5s;
     content:'';
   }
@@ -375,7 +427,8 @@ const Option = styled.div`
   }
 
   &:hover {
-    border-color: ${palette.blue};
+    border-color: ${(props) =>
+      props.selectedPocOptions.length === 0 ? palette.blue : palette.gray800};
   }
 `;
 
@@ -403,12 +456,22 @@ const ButtonWrap = styled.div`
   }
 
   .next {
-    background: ${(props) => (!props.selectedOption1 ? palette.lineGray : palette.blue)};
+    background: ${(props) =>
+      props.selectedPocOptions.length !== 0
+        ? palette.gray800
+        : !props.selectedOption1
+        ? palette.lineGray
+        : palette.blue};
     cursor: ${(props) => (!props.selectedOption1 ? "default" : "pointer")};
   }
 
   .finish {
-    background: ${(props) => (!props.selectedOption1 || !props.selectedOption2 ? palette.lineGray : palette.blue)};
-    cursor: ${(props) => (!props.selectedOption1 || !props.selectedOption2 ? "default" : "pointer")};
+    background: ${(props) =>
+      props.selectedPocOptions.length !== 0
+        ? palette.gray800
+        : !props.selectedOption1 || !props.selectedOption2
+        ? palette.lineGray
+        : palette.blue};
+   cursor: ${(props) => (!props.selectedOption1 || !props.selectedOption2 ? "default" : "pointer")};
   }
 `;
