@@ -48,8 +48,9 @@ import {
   CONVERSATION_STAGE,
   POC_DETAIL_REPORT_ATOM,
 } from "../../../AtomStates";
-import { NotoSansKRFont } from './NotoSansKR-Regular.js'; 
-import fontData from './encoded-20240930083135.txt'; // base64로 인코딩된 폰트
+// import { NotoSansKRFont } from './NotoSansKR-Regular.js'; 
+// base64로 인코딩된 폰트
+// import fontData from './encoded-20240930083135.txt';
 
 const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
@@ -868,8 +869,8 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab,i
       >
           {/* 보이지 않도록 설정된 캡처 대상 영역 */}
     
-       {/* 4번 전문가 */}
-       {expertIndex === "4" ? (
+      {/* 4번 전문가 */}
+      {expertIndex === "4" ? (
         <>
           {/* content 배열이 존재하는 경우 */}
           {content &&

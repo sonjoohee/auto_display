@@ -62,6 +62,12 @@ const MoleculePersonaSelect = ({ conversationId }) => {
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET); // 확인 버튼을 눌렀을 때만 저장 -> 히스토리 저장
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [isLoadingTarget, setIsLoadingTarget] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(null);
+
+  const handleOptionClick = (option) => {
+    setSelectedOption(option.title); // 선택된 옵션을 상태로 저장
+    setSelectedPocTargetState({ title: option.title, text: option.text });
+  };
 
   const axiosConfig = {
     timeout: 100000, // 100초
@@ -157,21 +163,33 @@ const MoleculePersonaSelect = ({ conversationId }) => {
     <Wrapper>
       {Object.keys(selectedPocTarget).length === 0 ?
       <>
-      <Question>Q. 생각하고 계시는 비즈니스의 타겟 고객은 누구입니까?</Question>
-      <OptionsContainer>
-        {options.map((option) => (
-          <Option key={option.title} onClick={() => setSelectedPocTargetState({"title": option.title, "text": option.text})}>
-            <input type="radio" id={option} name="target" />
-            <Label htmlFor={option}>{option.title}</Label>
-            <p>{option.text}</p>
-          </Option>
-        ))}
-      </OptionsContainer>
-      <Button onClick={handleConfirm}>확인</Button>
+        <Question>Q. 생각하고 계시는 비즈니스의 타겟 고객은 누구입니까?</Question>
+        <OptionsContainer>
+          {options.map((option) => (
+            <Option 
+              key={option.title} 
+              selected={selectedOption === option.title}
+              // onClick={() => setSelectedPocTargetState({"title": option.title, "text": option.text})}
+              onClick={() => handleOptionClick(option)}
+            >
+              {/* <input type="radio" id={option} name="target" /> */}
+              <Label 
+                htmlFor={option}
+                selected={selectedOption === option.title}
+              >
+                {option.title}
+              </Label>
+              <p>{option.text}</p>
+            </Option>
+          ))}
+        </OptionsContainer>
+        <ButtonWrap>
+          <Button selectedOption={selectedOption} onClick={handleConfirm}>확인</Button>
+        </ButtonWrap>
       </>
       :
       <>
-      <Question>완료</Question>
+      <OptionsContainer>완료</OptionsContainer>
       </>
       }
 
@@ -182,46 +200,100 @@ const MoleculePersonaSelect = ({ conversationId }) => {
 export default MoleculePersonaSelect;
 
 const Wrapper = styled.div`
-  padding: 20px;
-  border-radius: 10px;
-  width: 60%;
-  margin: auto;
+  max-width:968px;
+  width:100%;
+  padding: 40px;
+  margin:24px 0 0 44px;
+  border-radius:15px;
+  border:1px solid ${palette.lineGray};
 `;
 
 const Question = styled.h2`
-  font-size: 20px;
+  font-size: 0.88rem;
+  font-weight:700;
+  text-align:left;
   margin-bottom: 20px;
 `;
 
 const OptionsContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 12px;
 `;
 
 const Option = styled.div`
-  flex: 1 1 calc(50% - 20px);
-  display: flex;
-  align-items: center;
-  padding: 15px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
+  position:relative;
+  display:flex;
+  gap:12px;
+  align-items:center;
+  flex-direction:column;
+  flex:1 1 30%;
+  font-size:0.88rem;
+  text-align:left;
+  padding: 20px;
+  border-radius: 8px;
   cursor: pointer;
+  background-color: ${(props) => (props.selected ? "rgba(4,83,244,0.05)" : palette.white)};
+  border: 1px solid ${(props) => (props.selected ? palette.blue : palette.lineGray)};
+  transition:all .5s;
 
-  input {
-    margin-right: 10px;
+  p {
+    color: ${(props) => (props.selected ? palette.gray800 : palette.gray500)};
+    line-height:1.3;
   }
+
+  // input {
+  //   margin-right: 10px;
+  // }
 `;
 
 const Label = styled.label`
-  font-size: 16px;
+  position:relative;
+  display:flex;
+  gap:8px;
+  align-items:flex-start;
+  width:100%;
+  color: ${(props) => (props.selected ? palette.blue : palette.gray800)};
+  cursor:pointer;
+
+  &:before {
+    width:20px;
+    height:20px;
+    flex-shrink:0;
+    border-radius:50%;
+    border:1px solid ${(props) => (props.selected ? palette.blue : palette.lineGray)};
+    background-color: ${(props) => (props.selected ? palette.blue : palette.white)};
+    transition:all .5s;
+    content:'';
+  }
+
+  &:after {
+    position:absolute;
+    left:0;
+    top:0;
+    width:20px;
+    height:20px;
+    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='8' viewBox='0 0 10 8' fill='none'%3E%3Cpath d='M9 0.914062L3.4 6.91406L1 4.51406' stroke='white' stroke-width='1.33333' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center no-repeat;
+    content:'';
+  }
+`;
+
+const ButtonWrap = styled.div`
+  margin-top:32px;
+  display:flex;
+  justify-content:end;
+  align-items:center;
 `;
 
 const Button = styled.button`
-  padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 5px;
-  cursor: pointer;
-  border: none;
+  min-width:100px;
+  font-size:0.88rem;
+  color:${palette.white};
+  line-height:22px;
+  padding:8px 20px;
+  margin-left:auto;
+  border-radius:8px;
+  border:0;
+  background: ${(props) => (!props.selectedOption ? palette.lineGray : palette.blue)};
+  transition:all .5s;
 `;
