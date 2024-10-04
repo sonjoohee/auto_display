@@ -109,19 +109,28 @@ const MoleculePersonaSelect = ({ conversationId }) => {
         );
         let updatedPersonaList = response.data.persona_list;
 
-        while (
+        let retryCount = 0;
+        const maxRetries = 10;
+
+        while ((retryCount < maxRetries &&
           !Array.isArray(updatedPersonaList) ||
           updatedPersonaList.length === 0 ||
           !updatedPersonaList[0].hasOwnProperty("persona_1")
-        ) {
+        )) {
           response = await axios.post(
             "https://wishresearch.kr/panels/persona_list",
             data,
             axiosConfig
           );
+          retryCount++;
+          await new Promise(resolve => setTimeout(resolve, 1000)); // 1초 대기
           updatedPersonaList = response.data.additional_question;
         }
-
+        if (retryCount === maxRetries) {
+          console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+          // 에러 처리 로직 추가
+          throw new Error("Maximum retry attempts reached. Empty response persists.");
+        }
         setPocPersonaList(updatedPersonaList);
 
         await saveConversationToIndexedDB(
