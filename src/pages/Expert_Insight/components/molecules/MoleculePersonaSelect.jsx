@@ -250,17 +250,14 @@ const MoleculePersonaSelect = ({ conversationId }) => {
           <OptionsContainer>
             {pocPersonaList.map((persona, index) => (
               <Option
-                key={index}
-                // onClick={() =>
-                //   setSelectedPocTargetState({
-                //     job: persona[`persona_${index + 1}`][1]["job"],
-                //     target: persona[`persona_${index + 1}`][4]["target"],
-                //   })
-                // }
-                onClick={() => handleOptionClick(index)}
+              key={index}
+              onClick={() => handleOptionClick(index)}
+              selected={selectedOption === persona[`persona_${index + 1}`][1]["job"]}
               >
-                <input type="radio" id={persona} name="target" />
-                <Label htmlFor={persona}>{persona[`persona_${index + 1}`][1]["job"]}</Label>
+                <Label 
+                selected={selectedOption === persona[`persona_${index + 1}`][1]["job"]} 
+                htmlFor={persona}>{persona[`persona_${index + 1}`][1]["job"]}
+                </Label>
                 <p>{persona[`persona_${index + 1}`][4]["target"]}</p>
               </Option>
             ))}
