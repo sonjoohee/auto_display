@@ -29,11 +29,6 @@ import {
 } from "../../../../utils/indexedDB";
 import axios from "axios";
 
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
-import { Document, Packer, Paragraph, TextRun } from "docx"; // docx 라이브러리 임포트
-import { saveAs } from "file-saver"; // file-saver를 사용하여 파일 저장
-
 import {
   TITLE_OF_BUSINESS_INFORMATION,
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
@@ -70,9 +65,6 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
   const [downloadStatus, setDownloadStatus] = useState(""); // 상태 메시지를 관리
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET); // 확인 버튼을 눌렀을 때만 저장 -> 히스토리 저장
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedFormat, setSelectedFormat] = useState('PDF');
-  const [selectedLanguage, setSelectedLanguage] = useState('Korean');
 
   const axiosConfig = {
     timeout: 100000, // 100초
@@ -138,6 +130,24 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
     }
     return "목표 행위"; // 기본값
   };
+
+  const addGoalActionToRecommendedTargetData = (data) => {
+    if (data && data.poc_persona) {
+      return {
+        ...data,
+        poc_persona: Object.entries(data.poc_persona).map(([key, value], index) => {
+          const goalActionText = findGoalActionText(index);
+          return {
+            ...value,
+            goalActionText: goalActionText
+          };
+        })
+      };
+    }
+    return data;
+  };
+  const modifiedRecommendedTargetData = addGoalActionToRecommendedTargetData(recommendedTargetData);
+
   useEffect(() => {
     const loadData = async () => {
       let finalResponse;
@@ -145,8 +155,8 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
       try {
         // Existing data handling
         if (recommendedTargetData && Object.keys(recommendedTargetData).length > 0) {
-          setTabs(recommendedTargetData.tabs);
-          setSections(recommendedTargetData.tabs[selectedTab].sections);
+          // setTabs(recommendedTargetData.tabs);
+          // setSections(recommendedTargetData.tabs[selectedTab].sections);
         }
         // buttonState === 1일 때만 API 호출
         else if (buttonState === 1) {
@@ -286,7 +296,7 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
           reportIndex={4}
           strategyReportID={expertIndex}
           conversationId={conversationId}
-          sampleData={recommendedTargetData}
+          sampleData={modifiedRecommendedTargetData}
         />
       )}
     </AnalysisSection>

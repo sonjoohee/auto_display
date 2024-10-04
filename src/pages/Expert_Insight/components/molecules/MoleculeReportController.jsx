@@ -254,11 +254,14 @@ const MoleculeReportController = ({
         mainCustomer: businessInformationTargetCustomer,
       };
       business_info = reportData.title;
-    } else if (reportIndex === 1 || reportIndex === 4) {
+    } else if (reportIndex === 1) {
       // 전략 보고서 데이터 저장 - sampleData 사용
       reportData = sampleData; // sampleData를 그대로 저장합니다
       business_info = reportData?.business_info || "Unknown Title";
-    } else {
+    } else if (reportIndex === 4) {
+      reportData = sampleData; // sampleData를 그대로 저장합니다
+      business_info = titleOfBusinessInfo || "Unknown Title";
+    }else {
       reportData = sampleData;
       business_info = reportData?.title || "Unknown Title";
     }
