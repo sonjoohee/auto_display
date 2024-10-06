@@ -676,32 +676,34 @@ const MoleculeReportController = ({
             </ButtonWrap>
           ) : (
             <>
-              {!isEditingNow ? (
-                <ButtonWrap>
-                  <div />
-                  {/* <button type="button" onClick={handleRetryIdea}>
-                    <img src={images.IconWrite2} alt="" />
-                    아이디어 설명 다시 하기
-                  </button> */}
-                  <div>
-                    <button type="button" onClick={regenerateReport}>
-                      <img src={images.IconRefresh} alt="" />
-                      재생성하기
-                    </button>
-                    <button type="button" onClick={() => setIsEditingNow(true)}>
-                      <img src={images.IconEdit} alt="" />
-                      수정하기
-                    </button>
-                    <button type="button" onClick={toggleCopy}>
-                      <img src={images.IconCopy} alt="" />
-                      복사하기
-                    </button>
+            {!isEditingNow ? (
+              <ButtonWrap>
+                <div />
+                <div>
+                  {!report && (
+                    <>
+                      <button type="button" onClick={regenerateReport}>
+                        <img src={images.IconRefresh} alt="" />
+                        재생성하기
+                      </button>
+                      <button type="button" onClick={() => setIsEditingNow(true)}>
+                        <img src={images.IconEdit} alt="" />
+                        수정하기
+                      </button>
+                    </>
+                  )}
+                  <button type="button" onClick={toggleCopy}>
+                    <img src={images.IconCopy} alt="" />
+                    복사하기
+                  </button>
+                  {!report && (
                     <button type="button" onClick={toggleSave}>
                       <img src={images.IconSave} alt="" />
                       저장하기
                     </button>
-                  </div>
-                </ButtonWrap>
+                  )}
+                </div>
+              </ButtonWrap>
               ) : (
                 <ButtonWrap>
                   <div />
