@@ -45,7 +45,8 @@ import {
   IS_EDITING_NOW,
   CONVERSATION_STAGE,
   POC_DETAIL_REPORT_ATOM,
-  POC_PERSONA_LIST
+  POC_PERSONA_LIST,
+  RECOMMENDED_TARGET_DATA,
 } from "../../../AtomStates";
 
 const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
@@ -67,6 +68,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const [downloadStatus, setDownloadStatus] = useState(""); // 상태 메시지를 관리
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET); // 확인 버튼을 눌렀을 때만 저장 -> 히스토리 저장
   const [selectedTabCopy, setSelectedTabCopy] = useAtom(SELECTED_TAB_COPY);
+  const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
 
   const axiosConfig = {
     timeout: 100000, // 100초
@@ -282,6 +284,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               selectedPocOptions: selectedPocOptions,
               pocPersonaList: pocPersonaList,
               selectedPocTarget: selectedPocTarget,
+              recommendedTargetData: recommendedTargetData,
             },
             isLoggedIn,
             conversationId
@@ -449,6 +452,7 @@ const Section = ({
   const [selectedFormat, setSelectedFormat] = useState("PDF");
   const [selectedLanguage, setSelectedLanguage] = useState("한글");
   const popupRef = useRef(null); // 팝업 요소를 참조하는 useRef 생성
+  const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -688,6 +692,7 @@ const Section = ({
           selectedPocOptions: selectedPocOptions,
           pocPersonaList: pocPersonaList,
           selectedPocTarget: selectedPocTarget,
+          recommendedTargetData: recommendedTargetData,
           pocDetailReportData: {
             ...pocDetailReportData,
             [`${expertIndex}-${index}`]: cleanedContent,
@@ -840,6 +845,7 @@ const Section = ({
           selectedPocOptions: selectedPocOptions,
           pocPersonaList: pocPersonaList,
           selectedPocTarget: selectedPocTarget,
+          recommendedTargetData: recommendedTargetData,
           pocDetailReportData: {
             ...pocDetailReportData,
             [`${expertIndex}-${index}`]: reportContent,
