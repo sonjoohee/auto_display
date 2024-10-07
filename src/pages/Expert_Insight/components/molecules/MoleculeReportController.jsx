@@ -249,7 +249,7 @@ const MoleculeReportController = ({
         title: titleOfBusinessInfo,
         mainFeatures: mainFeaturesOfBusinessInformation,
         mainCharacter: mainCharacteristicOfBusinessInformation,
-        mainCustomer: businessInformationTargetCustomer,
+        mainCustomer: selectedExpertIndex !== "4" ? businessInformationTargetCustomer : [],
       };
       business_info = reportData.title;
     } else if (reportIndex === 1) {
@@ -405,18 +405,20 @@ const MoleculeReportController = ({
     if (report && report.content) {
       switch (reportIndex) {
         case 0: // 비즈니스 분석 리포트
-          contentToCopy = `
-  ${report.content.title}
-  
-  주요 특징
-  ${report.content.mainFeatures.join('\n')}
-  
-  주요 특성
-  ${report.content.mainCharacter.join('\n')}
-  
-  목표 고객
-  ${report.content.mainCustomer.join('\n')}
-          `.trim();
+// contentToCopy = `
+// ${report.content.title}
+// 주요 특징
+// ${report.content.mainFeatures.join('\n')}
+// 주요 기능
+// ${report.content.mainCharacter.join('\n')}
+// 목표 고객
+// ${report.content.mainCustomer.join('\n')}`.trim();
+contentToCopy = `
+${report.content.title}
+주요 특징
+${report.content.mainFeatures.join('\n')}
+주요 기능
+${report.content.mainCharacter.join('\n')}`.trim();
           break;
           case 1: // 전략 보고서
           if (report.content.tabs) {
@@ -465,19 +467,26 @@ const MoleculeReportController = ({
       }
     } else {
       if (reportIndex === 0) {
-        contentToCopy = `
-  ${titleOfBusinessInfo}
-  주요 특징
-  ${mainFeaturesOfBusinessInformation?.map((feature) => `${feature}`).join("\n")}
-  주요 특성
-  ${mainCharacteristicOfBusinessInformation
-    ?.map((character) => `${character}`)
-    .join("\n")}
-  목표 고객
-  ${businessInformationTargetCustomer
-    ?.map((customer) => `${customer}`)
-    .join("\n")}
-  `;
+// contentToCopy = `
+// ${titleOfBusinessInfo}
+// 주요 특징
+// ${mainFeaturesOfBusinessInformation?.map((feature) => `${feature}`).join("\n")}
+// 주요 기능
+// ${mainCharacteristicOfBusinessInformation
+//   ?.map((character) => `${character}`)
+//   .join("\n")}
+// 목표 고객
+// ${businessInformationTargetCustomer
+//   ?.map((customer) => `${customer}`)
+//   .join("\n")}`;
+contentToCopy = `
+${titleOfBusinessInfo}
+주요 특징
+${mainFeaturesOfBusinessInformation?.map((feature) => `${feature}`).join("\n")}
+주요 기능
+${mainCharacteristicOfBusinessInformation
+  ?.map((character) => `${character}`)
+  .join("\n")}`;
       } else if (reportIndex === 1) {
         // 전략 보고서 복사 기능
         const expertIndex = report?.content?.expert_id || strategyReportID;
@@ -678,10 +687,12 @@ const MoleculeReportController = ({
                   <img src={images.IconCopy} alt="" />
                   복사하기
                 </button>
-                <button type="button" onClick={toggleSave}>
-                  <img src={images.IconSave} alt="" />
-                  저장하기
-                </button>
+                {!report &&              
+                  <button type="button" onClick={toggleSave}>
+                    <img src={images.IconSave} alt="" />
+                    저장하기
+                  </button>
+                }
               </div>
             </ButtonWrap>
           ) : (

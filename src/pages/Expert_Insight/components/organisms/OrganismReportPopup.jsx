@@ -403,19 +403,21 @@ const BizAnalysisSection = ({ report }) => {
             ))}
           </List>
         </BoxWrap>
-        <BoxWrap>
-          <SectionTitle>
-            <img src={images.IconTarget} alt="" />
-            목표 고객
-          </SectionTitle>
-          <List>
-            {mainCustomer?.map((customer, index) => (
-              <ListItem key={index}>
-                <p>{customer}</p>
-              </ListItem>
-            ))}
-          </List>
-        </BoxWrap>
+        {mainCustomer.length !== 0 &&
+          <BoxWrap>
+            <SectionTitle>
+              <img src={images.IconTarget} alt="" />
+              목표 고객
+            </SectionTitle>
+            <List>
+              {mainCustomer?.map((customer, index) => (
+                <ListItem key={index}>
+                  <p>{customer}</p>
+                </ListItem>
+              ))}
+            </List>
+          </BoxWrap>
+        }
         <MoleculeReportController
             reportIndex={0}
             showCopyOnly={true}
