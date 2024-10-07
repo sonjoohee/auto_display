@@ -915,6 +915,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
             {!isLoadingAnalysis && (
               <MoleculeReportController
                 reportIndex={0}
+                strategyReportID={selectedExpertIndex}
                 conversationId={conversationId}
               />
             )}
