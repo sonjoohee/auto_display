@@ -452,7 +452,6 @@ ${report.content.mainCharacter.join('\n')}`.trim();
             ).join('\n\n');
           } else {
             contentToCopy = JSON.stringify(report.content, null, 2);
-            console.log(contentToCopy);
           }
           break;
           case 4: // PoC 목적별 추천 타겟 및 예상 인사이트
