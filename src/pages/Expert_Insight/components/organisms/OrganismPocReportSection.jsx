@@ -1678,6 +1678,8 @@ const SeparateSection = styled.div`
     font-size: 0.875rem;
     font-weight: 700;
     color: ${palette.darkGray};
+    word-break: break-word; // 긴 제목이 줄바꿈되도록 설정
+    max-width: calc(100% - 120px); // 버튼 영역을 고려한 최대 너비 설정
   }
 
   p {
