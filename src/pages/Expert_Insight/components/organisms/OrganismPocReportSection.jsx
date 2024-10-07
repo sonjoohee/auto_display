@@ -460,22 +460,26 @@ const Section = ({
     mainCharacter: mainCharacteristicOfBusinessInformation,
     mainCustomer: businessInformationTargetCustomer,
   };
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(null);
   const [selectedFormat, setSelectedFormat] = useState("PDF");
   const [selectedLanguage, setSelectedLanguage] = useState("Korean");
   const popupRef = useRef(null); // 팝업 요소를 참조하는 useRef 생성
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (popupRef.current && !popupRef.current.contains(event.target)) {
-        setIsModalOpen(null); // 외부 클릭 시 모달 닫기
+      if (
+        isModalOpen !== null &&
+        popupRef.current &&
+        !popupRef.current.contains(event.target) &&
+        !event.target.closest('.download-button')
+      ) {
+        console.log(isModalOpen);
+        setIsModalOpen(null);
       }
     };
-
-    if (isModalOpen !== null) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
+  
+    document.addEventListener("mousedown", handleClickOutside);
+  
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -498,7 +502,7 @@ const Section = ({
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 }); // 팝업 위치 상태
   const buttonRef = useRef(null); // 버튼 위치를 참조할 ref 생성
 
-  const handleOpenModal = (index, event, category) => {
+  const handleOpenModal = (index, event) => {
     if (isModalOpen === index) {
       setIsModalOpen(null); // 모달을 다시 클릭하면 닫기
       return;
@@ -516,10 +520,6 @@ const Section = ({
 
     // 새로운 위치를 설정
     setPopupPosition({ top, left });
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(null); // 모달 닫기
   };
 
   const handleDownloadClick = (index) => {
@@ -994,6 +994,7 @@ const Section = ({
                   <span className="number">{index + 1}</span>{" "}
                   <strong_title>{`${title} : ${item.title}`}</strong_title>{" "}
                   <DownloadButton
+                    className={'download-button'}
                     ref={buttonRef}
                     onClick={(event) => handleOpenModal(index, event)}
                     disabled={loading}
