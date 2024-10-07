@@ -16,9 +16,7 @@ import {
   TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER,
   SAVED_REPORTS,
   IS_EDITING_NOW,
-  SELECTED_TAB_COPY_1,
-  SELECTED_TAB_COPY_2,
-  SELECTED_TAB_COPY_3,
+  SELECTED_TAB_COPY,
   STRATEGY_REPORT_DATA,
   APPROACH_PATH,
   CONVERSATION_STAGE,
@@ -109,9 +107,7 @@ const MoleculeReportController = ({
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
   const [warningMessage, setWarningMessage] = useState("");
 
-  const [selectedTabCopy1, setSelectedTabCopy1] = useAtom(SELECTED_TAB_COPY_1);
-  const [selectedTabCopy2, setSelectedTabCopy2] = useAtom(SELECTED_TAB_COPY_2);
-  const [selectedTabCopy3, setSelectedTabCopy3] = useAtom(SELECTED_TAB_COPY_3);
+  const [selectedTabCopy, setSelectedTabCopy] = useAtom(SELECTED_TAB_COPY);
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isPopupOpenCancel, setIsPopupOpenCancel] = useState(false);
@@ -377,13 +373,18 @@ const MoleculeReportController = ({
       }
       return textContent;
     };
+
+    const getSelectedTabIndex = () => {
+      const expertIndex = report?.content?.expert_id || strategyReportID;
+      return selectedTabCopy[expertIndex] || 0; // 기본값
+    };
   
     const getSelectedTabData = () => {
       const reportData = strategyReportData[strategyReportID];
       if (!reportData) return null;
-    
-      const selectedTabCopy = selectedTabCopyByExpert[strategyReportID] || 0;
-      return reportData.tabs[selectedTabCopy];
+  
+      const selectedTabIndex = getSelectedTabIndex();
+      return reportData.tabs[selectedTabIndex];
     };
   
     const findGoalActionText = (index) => {
@@ -419,7 +420,8 @@ const MoleculeReportController = ({
           break;
           case 1: // 전략 보고서
           if (report.content.tabs) {
-            const selectedTabData = report.content.tabs[selectedTabCopy1 || 0];
+            const selectedTabIndex = getSelectedTabIndex();
+            const selectedTabData = report.content.tabs[selectedTabIndex];
             contentToCopy = extractTextContent(selectedTabData);
           } else {
             contentToCopy = JSON.stringify(report.content, null, 2);
@@ -477,9 +479,17 @@ const MoleculeReportController = ({
     .join("\n")}
   `;
       } else if (reportIndex === 1) {
-        // 전문가 보고서 복사 기능
-        const selectedTabData = getSelectedTabData();
-        contentToCopy = extractTextContent(selectedTabData);
+        // 전략 보고서 복사 기능
+        const expertIndex = report?.content?.expert_id || strategyReportID;
+        const selectedTabIndex = selectedTabCopy[expertIndex] || 0;
+        const reportData = strategyReportData[expertIndex];
+        
+        if (reportData && reportData.tabs && reportData.tabs[selectedTabIndex]) {
+          const selectedTabData = reportData.tabs[selectedTabIndex];
+          contentToCopy = extractTextContent(selectedTabData);
+        } else {
+          contentToCopy = "전략 보고서 데이터를 찾을 수 없습니다.";
+        }
       } else if (reportIndex === 2) {
         // 추가 질문 복사 기능
         contentToCopy = extractTextContent(additionalReportData[additionalReportCount]);
