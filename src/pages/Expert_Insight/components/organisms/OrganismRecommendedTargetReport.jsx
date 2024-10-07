@@ -189,7 +189,7 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
           let retryCount = 0;
           const maxRetries = 10;
           
-          while (retryCount < maxRetries && (!response1.data || Object.keys(response1.data).length === 0)) {
+          while (retryCount < maxRetries && (!response1.data || Object.keys(response1.data).length === 0 || !response1.data["poc_persona"])) {
             console.log(`Retry attempt ${retryCount + 1}: Response is empty, retrying...`);
             
             response1 = await axios.post(
