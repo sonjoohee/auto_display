@@ -556,22 +556,26 @@ const Section = ({
 
       // jsPDF를 사용하여 PDF 생성
       const doc = new jsPDF();
-      const imgWidth = 210; // A4 너비(mm)
+      const pageWidth = 210; // A4 너비(mm)
       const pageHeight = 297; // A4 높이(mm)
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
+      const margin = 10; // 마진 설정 (mm)
+      
+      const contentWidth = pageWidth - (2 * margin); // 마진을 제외한 콘텐츠 영역 너비
+      const contentHeight = (canvas.height * contentWidth) / canvas.width;
+      
+      let heightLeft = contentHeight;
       let position = 0;
-
+  
       // 첫 페이지에 이미지 추가
-      doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-
+      doc.addImage(imgData, "PNG", margin, margin, contentWidth, contentHeight);
+      heightLeft -= (pageHeight - (2 * margin));
+  
       // 추가 페이지가 필요한 경우 처리
       while (heightLeft > 0) {
-        position = heightLeft - imgHeight;
+        position = heightLeft - contentHeight;
         doc.addPage();
-        doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
+        doc.addImage(imgData, "PNG", margin, margin + position, contentWidth, contentHeight);
+        heightLeft -= (pageHeight - (2 * margin));
       }
 
       // PDF 다운로드
