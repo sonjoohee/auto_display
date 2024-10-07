@@ -452,6 +452,7 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
     width: 91.5%;
     text-align: left;
     margin-top: 25px;
+    margin-left:50px;
     padding: 30px;
     border-radius: 15px;
     border: 1px solid ${palette.lineGray};
