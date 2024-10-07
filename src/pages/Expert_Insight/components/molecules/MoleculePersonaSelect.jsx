@@ -313,7 +313,12 @@ const Option = styled.div`
   padding: 20px;
   border-radius: 8px;
   cursor: pointer;
-  background-color: ${(props) => (props.selected ? "rgba(4,83,244,0.05)" : palette.white)};
+  background-color: ${(props) =>
+    props.selected
+      ? props.selectedPocTarget.length === 0
+        ? "rgba(4,83,244,0.05)"
+        : "rgba(0,0,0,0.05)"
+      : palette.white};
   border: 1px solid ${(props) => (props.selected ? (Object.keys(props.selectedPocTarget).length ? palette.gray800 : palette.blue) : palette.lineGray)};
   transition:all .5s;
 
