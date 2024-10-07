@@ -293,7 +293,10 @@ const MoleculePersonaSelect = ({ conversationId }) => {
             <p></p>
           </Option>          
         </OptionsContainer>
-        <Button selectedOption={selectedOption} selectedPocTarget={selectedPocTarget} onClick={handleConfirm}>확인</Button>
+
+        <ButtonWrap>
+          <Button selectedOption={selectedOption} selectedPocTarget={selectedPocTarget} onClick={handleConfirm}>확인</Button>
+        </ButtonWrap>
       </>
     }
     </Wrapper>
@@ -304,9 +307,9 @@ export default MoleculePersonaSelect;
 
 const Wrapper = styled.div`
   max-width:968px;
-  width:100%;
+  width:91.5%;
   padding: 40px;
-  margin:24px 0 0 44px;
+  margin:24px 0 0 50px;
   border-radius:15px;
   border:1px solid ${palette.lineGray};
 `;
@@ -352,7 +355,10 @@ const Option = styled.div`
 
   &:hover {
     border-color: ${(props) =>
-      Object.keys(props.selectedPocTarget).length ? palette.gray800 : palette.blue};
+      Object.keys(props.selectedPocTarget).length 
+        // ? palette.gray800 
+        ? "none" 
+        : palette.blue};
   }
 `;
 
@@ -396,6 +402,7 @@ const ButtonWrap = styled.div`
 
 const Button = styled.button`
   min-width:100px;
+  font-family: Pretendard, Poppins;
   font-size:0.88rem;
   color:${palette.white};
   line-height:22px;
