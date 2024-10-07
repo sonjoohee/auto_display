@@ -299,8 +299,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   }, [conversationId, selectedTab, expertIndex, expertButtonState]); // buttonState 의존성 추가
 
   const handleTabClick = (index, expertIndex) => {   
-    setSelectedTab(index);
-    console.log(index);
+   setSelectedTab(index);
    setSelectedTabCopy(prevState => ({
      ...prevState,
      [expertIndex]: index

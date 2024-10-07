@@ -283,12 +283,11 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
 
   const handleTabClick = (index, expertIndex) => {   
     setSelectedTab(index);
-    console.log(index);
-   setSelectedTabCopy(prevState => ({
-     ...prevState,
-     [expertIndex]: index
-   }));
- };
+    setSelectedTabCopy(prevState => ({
+      ...prevState,
+      [expertIndex]: index
+    }));
+  };
 
   return (
     <>

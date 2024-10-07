@@ -192,7 +192,7 @@ const OrganismCustomerAdditionalReport = ({
 
           if (
             customerAdditionalReportCount === 0 ||
-            additionalReportData.length === 0
+            customerAdditionalReportData.length === 0
           ) {
             updatedAdditionalReportData.push(answerData);
           } else {
@@ -344,7 +344,7 @@ const OrganismCustomerAdditionalReport = ({
     }
   }, [customerAdditionalReportData, customerAdditionalReportCount]);
 
-  if (!currentReport || currentReport.advise) {
+  if (currentReport && currentReport.advise) {
     return null;
   }
 

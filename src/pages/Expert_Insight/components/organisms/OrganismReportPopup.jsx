@@ -437,8 +437,7 @@ const StrategyReportSection = ({ report }) => {
   const [selectedTabCopy, setSelectedTabCopy] = useAtom(SELECTED_TAB_COPY);
 
   const handleTabClick = (index) => {   
-     setSelectedTab(index);
-     console.log(index);
+    setSelectedTab(index);
     const expertId = report.content.expert_id;
     setSelectedTabCopy(prevState => ({
       ...prevState,
