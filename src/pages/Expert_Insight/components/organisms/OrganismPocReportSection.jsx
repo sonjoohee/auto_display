@@ -72,10 +72,6 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const [downloadStatus, setDownloadStatus] = useState(""); // 상태 메시지를 관리
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET); // 확인 버튼을 눌렀을 때만 저장 -> 히스토리 저장
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedFormat, setSelectedFormat] = useState("PDF");
-  const [selectedLanguage, setSelectedLanguage] = useState("Korean");
-
   const axiosConfig = {
     timeout: 100000, // 100초
     headers: { "Content-Type": "application/json" },
@@ -462,7 +458,7 @@ const Section = ({
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFormat, setSelectedFormat] = useState("PDF");
-  const [selectedLanguage, setSelectedLanguage] = useState("Korean");
+  const [selectedLanguage, setSelectedLanguage] = useState("");
   const popupRef = useRef(null); // 팝업 요소를 참조하는 useRef 생성
 
   useEffect(() => {
@@ -523,6 +519,11 @@ const Section = ({
   };
 
   const handleDownloadClick = (index) => {
+    if (!selectedLanguage) {
+      alert("언어를 선택해주세요");
+      return;
+    }
+
     setLoading(true);
     setDownloadStatus("다운로드 중입니다...");
 
@@ -1029,7 +1030,7 @@ const Section = ({
                   </div>
                 )}
                 {/* 모달도 각 Section과 관련되어 렌더링 */}
-                {isModalOpen === index && (
+               {isModalOpen === index && (
                   <DownloadPopup
                     ref={popupRef}
                     isAutoSaveToggle={false}
@@ -1039,15 +1040,6 @@ const Section = ({
                       <h3>PoC 수행 계획서 다운로드</h3>
                       <SelectBoxWrap>
                         <label>포맷 선택 (택1)</label>
-                        {/*
-                        <select
-                          value={selectedFormat}
-                          onChange={(e) => setSelectedFormat(e.target.value)}
-                        >
-                          <option value="PDF">PDF</option>
-                          <option value="Word">Word</option>
-                        </select> 
-                        */}
                         <SelectBox>
                           <div
                             className={`${selectedFormat === "PDF" ? "selected" : ""}`}
@@ -1067,7 +1059,6 @@ const Section = ({
                       </SelectBoxWrap>
                       <SelectBoxWrap>
                         <label>언어 선택 (택1)</label>
-
                         <SelectBox>
                           <div
                             className={`${selectedLanguage === "한글" ? "selected" : ""}`}
@@ -1084,27 +1075,14 @@ const Section = ({
                             영문
                           </div>
                         </SelectBox>
-
-                        {/* 
-                        <select
-                          value={selectedLanguage}
-                          onChange={(e) => setSelectedLanguage(e.target.value)}
-                        >
-                          <option value="Korean">한국어</option>
-                          <option value="English">영어</option>
-                        </select> 
-                        */}
                       </SelectBoxWrap>
                       <div>
                         <button
                           onClick={() => handleDownloadClick(index)}
-                          disabled={loading}
+                          disabled={loading || !selectedLanguage}
                         >
-                          {loading ? downloadStatus : "다운로드"}
+                          {loading ? downloadStatus : selectedLanguage ? "다운로드" : "언어를 선택해주세요"}
                         </button>
-                        {/* <button onClick={handleCloseModal} disabled={loading}>
-                          취소
-                        </button> */}
                       </div>
                     </div>
                   </DownloadPopup>
