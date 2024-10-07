@@ -205,7 +205,7 @@ const MoleculePersonaSelect = ({ conversationId }) => {
       },
       {
         type: "system",
-        message: "소중한 정보 감사합니다. Poc를 설계해보겠습니다.",
+        message: "소중한 정보 감사합니다. PoC를 설계해보겠습니다.",
         expertIndex: selectedExpertIndex,
       },
       {
