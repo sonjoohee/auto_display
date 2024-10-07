@@ -344,7 +344,7 @@ const OrganismCustomerAdditionalReport = ({
     }
   }, [customerAdditionalReportData, customerAdditionalReportCount]);
 
-  if (currentReport && currentReport.advise) {
+  if (answerData && answerData.advise) {
     return null;
   }
 
