@@ -458,7 +458,7 @@ const Section = ({
   };
   const [isModalOpen, setIsModalOpen] = useState(null);
   const [selectedFormat, setSelectedFormat] = useState("PDF");
-  const [selectedLanguage, setSelectedLanguage] = useState("");
+  const [selectedLanguage, setSelectedLanguage] = useState("한글");
   const popupRef = useRef(null); // 팝업 요소를 참조하는 useRef 생성
 
   useEffect(() => {
