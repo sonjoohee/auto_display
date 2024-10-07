@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import ReactDOM from "react-dom";
+import { useAtom } from "jotai";
 
 import images from "../../../../assets/styles/Images";
 import panelimages from "../../../../assets/styles/PanelImages";
 import MoleculeReportController from "../molecules/MoleculeReportController";
+import { SELECTED_TAB_COPY } from "../../../AtomStates";
 
 const OrganismReportPopup = ({ report, onClose }) => {
   if (!report) return null;
@@ -430,9 +432,16 @@ const StrategyReportSection = ({ report }) => {
   // 탭 제목과 섹션 데이터를 report에서 가져옵니다.
   const tabs = report.content.tabs || [];
   const sections = tabs[selectedTab]?.sections || [];
+  const [selectedTabCopy, setSelectedTabCopy] = useAtom(SELECTED_TAB_COPY);
 
-  const handleTabClick = (index) => {
-    setSelectedTab(index);
+  const handleTabClick = (index) => {   
+     setSelectedTab(index);
+     console.log(index);
+    const expertId = report.content.expert_id;
+    setSelectedTabCopy(prevState => ({
+      ...prevState,
+      [expertId]: index
+    }));
   };
 
   return (

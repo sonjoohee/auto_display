@@ -4,9 +4,6 @@ import { useAtom } from "jotai";
 import {
   SELECTED_EXPERT_INDEX,
   STRATEGY_REPORT_DATA,
-  SELECTED_TAB_COPY_1,
-  SELECTED_TAB_COPY_2,
-  SELECTED_TAB_COPY_3,
   TARGET_REPORT_BUTTON_STATE,
   CONVERSATION,
   APPROACH_PATH,
@@ -54,9 +51,6 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [approachPath] = useAtom(APPROACH_PATH);
   const [conversation, setConversation] = useAtom(CONVERSATION);
-  const [selectedTabCopy1, setSelectedTabCopy1] = useAtom(SELECTED_TAB_COPY_1);
-  const [selectedTabCopy2, setSelectedTabCopy2] = useAtom(SELECTED_TAB_COPY_2);
-  const [selectedTabCopy3, setSelectedTabCopy3] = useAtom(SELECTED_TAB_COPY_3);
   const [selectedTab, setSelectedTab] = useState(0); // 선택된 보고서 탭 상태관리
   const [tabs, setTabs] = useState([]);
   const [sections, setSections] = useState([]);

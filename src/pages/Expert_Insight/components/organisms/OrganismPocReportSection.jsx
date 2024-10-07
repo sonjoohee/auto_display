@@ -4,9 +4,7 @@ import { useAtom } from "jotai";
 import {
   SELECTED_EXPERT_INDEX,
   STRATEGY_REPORT_DATA,
-  SELECTED_TAB_COPY_1,
-  SELECTED_TAB_COPY_2,
-  SELECTED_TAB_COPY_3,
+  SELECTED_TAB_COPY,
   EXPERT_BUTTON_STATE,
   CONVERSATION,
   APPROACH_PATH,
@@ -59,9 +57,6 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [approachPath] = useAtom(APPROACH_PATH);
   const [conversation, setConversation] = useAtom(CONVERSATION);
-  const [selectedTabCopy1, setSelectedTabCopy1] = useAtom(SELECTED_TAB_COPY_1);
-  const [selectedTabCopy2, setSelectedTabCopy2] = useAtom(SELECTED_TAB_COPY_2);
-  const [selectedTabCopy3, setSelectedTabCopy3] = useAtom(SELECTED_TAB_COPY_3);
   const [selectedTab, setSelectedTab] = useState(0); // 선택된 보고서 탭 상태관리
   const [tabs, setTabs] = useState([]);
   const [sections, setSections] = useState([]);
@@ -71,6 +66,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const [loading, setLoading] = useState(false);
   const [downloadStatus, setDownloadStatus] = useState(""); // 상태 메시지를 관리
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET); // 확인 버튼을 눌렀을 때만 저장 -> 히스토리 저장
+  const [selectedTabCopy, setSelectedTabCopy] = useAtom(SELECTED_TAB_COPY);
 
   const axiosConfig = {
     timeout: 100000, // 100초
@@ -299,18 +295,14 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
     loadData();
   }, [conversationId, selectedTab, expertIndex, expertButtonState]); // buttonState 의존성 추가
 
-  const handleTabClick = (index, expertIndex) => {
+  const handleTabClick = (index) => {   
     setSelectedTab(index);
-
-    if (expertIndex === "1") setSelectedTabCopy1(index);
-    else if (expertIndex === "2") setSelectedTabCopy2(index);
-    else if (expertIndex === "3") setSelectedTabCopy3(index);
-    else;
-
-    if (tabs.length > 0) {
-      setSections(tabs[index].sections);
-    }
-  };
+    console.log(index);
+   setSelectedTabCopy(prevState => ({
+     ...prevState,
+     [selectedExpertIndex]: index
+   }));
+ };
 
   return (
     <>
@@ -405,9 +397,6 @@ const Section = ({
     useAtom(INPUT_BUSINESS_INFO);
   const [approachPath] = useAtom(APPROACH_PATH);
   const [conversation, setConversation] = useAtom(CONVERSATION);
-  const [selectedTabCopy1, setSelectedTabCopy1] = useAtom(SELECTED_TAB_COPY_1);
-  const [selectedTabCopy2, setSelectedTabCopy2] = useAtom(SELECTED_TAB_COPY_2);
-  const [selectedTabCopy3, setSelectedTabCopy3] = useAtom(SELECTED_TAB_COPY_3);
   const [tabs, setTabs] = useState([]);
   const [sections, setSections] = useState([]);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
