@@ -164,7 +164,11 @@ const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
             <span>
               <img src={images.ExclamationMark2} alt="" />
             </span>
-            <p>비즈니스 분석을 위해 내용을 입력해주세요</p>
+            {isBlue ? 
+              <p>내용을 입력해주세요</p> 
+              : 
+              <p>비즈니스 분석을 위해 내용을 입력해주세요</p>
+            }
             <div className="btnWrap">
               <button type="button" onClick={closePopupRegex2}>
                 확인
