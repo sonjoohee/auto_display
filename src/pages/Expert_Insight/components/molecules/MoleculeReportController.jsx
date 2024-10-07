@@ -429,11 +429,18 @@ ${report.content.mainCharacter.join('\n')}`.trim();
             contentToCopy = JSON.stringify(report.content, null, 2);
           }
           break;
-        case 2: // 추가 질문
-          if (Array.isArray(report.content)) {
-            contentToCopy = report.content.map((item, index) => 
-              `질문 ${index + 1}: ${item.question}\n답변: ${item.answer}`
-            ).join('\n\n');
+          case 2: // 추가 질문
+          if (report.content && report.content.title && report.content.sections) {
+            contentToCopy = `${report.content.title}\n\n`;
+            report.content.sections.forEach(section => {
+              contentToCopy += `${section.title}\n`;
+              section.content.forEach(item => {
+                if (item.subTitle) {
+                  contentToCopy += `${item.subTitle}\n`;
+                }
+                contentToCopy += `${item.text}\n\n`;
+              });
+            });
           } else {
             contentToCopy = JSON.stringify(report.content, null, 2);
           }
@@ -445,6 +452,7 @@ ${report.content.mainCharacter.join('\n')}`.trim();
             ).join('\n\n');
           } else {
             contentToCopy = JSON.stringify(report.content, null, 2);
+            console.log(contentToCopy);
           }
           break;
           case 4: // PoC 목적별 추천 타겟 및 예상 인사이트
