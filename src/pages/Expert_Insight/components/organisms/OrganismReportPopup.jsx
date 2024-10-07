@@ -103,8 +103,8 @@ const OrganismReportPopup = ({ report, onClose }) => {
 
         {reportIndex === 2 && <AdditionalReportSection report={report} />}
 
-        {reportIndex === 3 && <AdditionalReportSection report={report} />}
-
+        {reportIndex === 3 && <AdditionalReportSection report={report} />} 
+        {/* reportindex의 경우 사용하는 css가 동일하여 2로 같게 처리하였음 */}
         {reportIndex === 4 && <RecommendedTargetReportSection report={report} />}
 
         <CloseButton onClick={onClose}>닫기</CloseButton>

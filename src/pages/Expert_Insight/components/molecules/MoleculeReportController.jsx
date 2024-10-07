@@ -430,6 +430,7 @@ ${report.content.mainCharacter.join('\n')}`.trim();
           }
           break;
           case 2: // 추가 질문
+          {/* reportindex의 경우 사용하는 css가 동일하여 2로 같게 처리하였음 */}
           if (report.content && report.content.title && report.content.sections) {
             contentToCopy = `${report.content.title}\n\n`;
             report.content.sections.forEach(section => {
@@ -445,15 +446,15 @@ ${report.content.mainCharacter.join('\n')}`.trim();
             contentToCopy = JSON.stringify(report.content, null, 2);
           }
           break;
-        case 3: // 고객 추가 질문
-          if (Array.isArray(report.content)) {
-            contentToCopy = report.content.map((item, index) => 
-              `질문 ${index + 1}: ${item.question}\n답변: ${item.answer}`
-            ).join('\n\n');
-          } else {
-            contentToCopy = JSON.stringify(report.content, null, 2);
-          }
-          break;
+        // case 3: // 고객 추가 질문
+        //   if (Array.isArray(report.content)) {
+        //     contentToCopy = report.content.map((item, index) => 
+        //       `질문 ${index + 1}: ${item.question}\n답변: ${item.answer}`
+        //     ).join('\n\n');
+        //   } else {
+        //     contentToCopy = JSON.stringify(report.content, null, 2);
+        //   }
+        //   break;
           case 4: // PoC 목적별 추천 타겟 및 예상 인사이트
           if (report.content.poc_persona) {
             contentToCopy = "PoC 목적별 추천 타겟 및 예상 인사이트\n\n";
