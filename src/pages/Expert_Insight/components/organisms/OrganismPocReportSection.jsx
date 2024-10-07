@@ -447,7 +447,7 @@ const Section = ({
     mainCharacter: mainCharacteristicOfBusinessInformation,
     mainCustomer: businessInformationTargetCustomer,
   };
-  const [isModalOpen, setIsModalOpen] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState({});
   const [selectedFormat, setSelectedFormat] = useState("PDF");
   const [selectedLanguage, setSelectedLanguage] = useState("한글");
   const popupRef = useRef(null); // 팝업 요소를 참조하는 useRef 생성
@@ -456,13 +456,11 @@ const Section = ({
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
-        isModalOpen !== null &&
         popupRef.current &&
         !popupRef.current.contains(event.target) &&
         !event.target.closest('.download-button')
       ) {
-        console.log(isModalOpen);
-        setIsModalOpen(null);
+        setIsModalOpen({});
       }
     };
   
@@ -491,12 +489,12 @@ const Section = ({
   const buttonRef = useRef(null); // 버튼 위치를 참조할 ref 생성
 
   const handleOpenModal = (index, event) => {
-    if (isModalOpen === index) {
-      setIsModalOpen(null); // 모달을 다시 클릭하면 닫기
+    if (isModalOpen[index]) {
+      setIsModalOpen({}); // 모달을 다시 클릭하면 닫기
       return;
     }
 
-    setIsModalOpen(index); // 클릭한 버튼의 index로 모달 열기
+    setIsModalOpen(prev => ({ ...prev, [index]: true }));
 
     const clickedElement = event.currentTarget;
 
@@ -989,10 +987,11 @@ const Section = ({
                   <span className="number">{index + 1}</span>{" "}
                   <strong_title>{`${title} : ${item.title}`}</strong_title>{" "}
                   <DownloadButton
-                    className={'download-button'}
+                    className={`download-button`}
                     ref={buttonRef}
                     onClick={(event) => handleOpenModal(index, event)}
                     disabled={loading}
+                    isModalOpen={isModalOpen[index]}
                   >
                     {loading ? downloadStatus : "다운로드"}
                   </DownloadButton> 
@@ -1025,7 +1024,7 @@ const Section = ({
                   </div>
                 )}
                 {/* 모달도 각 Section과 관련되어 렌더링 */}
-               {isModalOpen === index && (
+               {isModalOpen[index] && (
                   <DownloadPopup
                     ref={popupRef}
                     isAutoSaveToggle={false}
@@ -2116,7 +2115,7 @@ const DownloadButton = styled.button`
   font-family:Pretendard, Poppins;
   font-size:0.75rem;
   font-weight:500;
-  color:${palette.gray500};
+  color: ${props => props.isModalOpen ? palette.blue : palette.gray500};
   padding: 8px 0;
   border: none;
   background:none;

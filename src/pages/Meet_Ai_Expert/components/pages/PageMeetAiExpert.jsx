@@ -750,7 +750,7 @@ const ExpertCard = styled.div`
   border-radius: 16px;
   border: ${(props) => {
     if (props.select) return `1px solid ${palette.blue}`;
-    else if (props.More) return `none`;
+    else if (props.Coming) return `none`;
     else if (props.PoC) return `1px solid #E2E7EA`;
     else if (props.Marketing) return `1px solid #F0EDE6`;
     else if (props.Client) return `1px solid #E2E7EA`;
@@ -759,7 +759,7 @@ const ExpertCard = styled.div`
   }};
   background: ${(props) => {
     if (props.select) return palette.blue;
-    else if (props.More) return `rgba(0,0,0,.03)`;
+    else if (props.Coming) return `rgba(0,0,0,.03)`;
     else if (props.PoC) return `#E2E7EA`;
     else if (props.Marketing) return `#F0EDE6`;
     else if (props.Client) return `#E2E7EA`;
@@ -771,11 +771,11 @@ const ExpertCard = styled.div`
     else return `none`;
   }};
   cursor: ${(props) => {
-    if (props.More) return `auto`;
+    if (props.Coming) return `auto`;
     else return `pointer`;
   }};
   pointer-events: ${(props) => {
-    if (props.More) return `auto`;
+    if (props.Coming) return `auto`;
     else return `auto`;
   }};
   transition: all 0.5s;
@@ -894,6 +894,16 @@ const ExpertCard = styled.div`
         position: relative;
         font-size: 0;
         border: 0;
+      }
+
+      &:hover {
+        border: none;
+        background: rgba(0, 0, 0, 0.03);
+
+        p,
+        strong {
+          color: ${palette.gray};
+        }
       }
     `
   }
