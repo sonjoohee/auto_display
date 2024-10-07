@@ -68,7 +68,7 @@ const OrganismReportPopup = ({ report, onClose }) => {
                   ? <img src={panelimages.expert_2} alt="" /> 
                   : report.content.expert_id === "3" 
                     ? <img src={panelimages.expert_3} alt="" />
-                    : <img src={panelimages.expert_3} alt="" />
+                    : <img src={panelimages.expert_4} alt="" />
             }
             </div>
             {
