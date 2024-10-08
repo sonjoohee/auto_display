@@ -253,6 +253,8 @@ const MoleculePersonaSelect = ({ conversationId }) => {
         <SkeletonTitle className="title-placeholder" />
         <SkeletonLine className="content-placeholder" />
         <SkeletonLine className="content-placeholder" />
+        <Spacing />
+        <SkeletonTitle className="title-placeholder" />
         <SkeletonLine className="content-placeholder" />
         <SkeletonLine className="content-placeholder" />
       </>
@@ -412,4 +414,8 @@ const Button = styled.button`
   border:0;
   background: ${(props) => (!props.selectedOption ? palette.lineGray : (Object.keys(props.selectedPocTarget).length ? palette.gray800 : palette.blue))};
   transition:all .5s;
+`;
+
+const Spacing = styled.div`
+  margin-bottom: 40px;
 `;
