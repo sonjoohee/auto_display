@@ -339,21 +339,6 @@ const MoleculeReportController = ({
     }
   };
 
-  const findGoalActionText = (index) => {
-    const currentExpertData = strategyReportData[selectedExpertIndex];
-    if (currentExpertData && currentExpertData.tabs[0] && currentExpertData.tabs[0].sections[0]) {
-      const content = currentExpertData.tabs[0].sections[0].content[index];
-      if (content && content.subContent) {
-        for (let subItem of content.subContent) {
-          if (subItem.subTitle === "목표 행위") {
-            return subItem.text;
-          }
-        }
-      }
-    }
-    return "목표 행위"; // 기본값
-  };
-
   const toggleCopy = () => {
     let contentToCopy = '';
   
@@ -379,21 +364,13 @@ const MoleculeReportController = ({
       return selectedTabCopy[expertIndex] || 0; // 기본값
     };
   
-    const getSelectedTabData = () => {
-      const reportData = strategyReportData[strategyReportID];
-      if (!reportData) return null;
-  
-      const selectedTabIndex = getSelectedTabIndex();
-      return reportData.tabs[selectedTabIndex];
-    };
-  
     const findGoalActionText = (index) => {
       const currentExpertData = strategyReportData[selectedExpertIndex];
       if (currentExpertData && currentExpertData.tabs[0] && currentExpertData.tabs[0].sections[0]) {
         const content = currentExpertData.tabs[0].sections[0].content[index];
         if (content && content.subContent) {
           for (let subItem of content.subContent) {
-            if (subItem.subTitle === "목표 행위") {
+            if (subItem.subTitle.trim() === "목표 행위") { // 앞뒤 공백 허용
               return subItem.text;
             }
           }
@@ -423,11 +400,11 @@ const MoleculeReportController = ({
 // ${report.content.mainCustomer.join('\n')}`.trim();
 // }
 contentToCopy = `
-${report.content.title}
+${report.content.title}\n
 주요 특징
-${report.content.mainFeatures.join('\n')}
+${report.content.mainFeatures.map(feature => `- ${feature}`).join('\n')}\n
 주요 기능
-${report.content.mainCharacter.join('\n')}`.trim();
+${report.content.mainCharacter.map(character => `- ${character}`).join('\n')}`.trim();
           break;
           case 1: // 전략 보고서
           if (report.content.tabs) {
@@ -441,14 +418,14 @@ ${report.content.mainCharacter.join('\n')}`.trim();
           case 2: // 추가 질문
           {/* reportindex의 경우 사용하는 css가 동일하여 2로 같게 처리하였음 */}
           if (report.content && report.content.title && report.content.sections) {
-            contentToCopy = `${report.content.title}\n\n`;
+            contentToCopy = `${report.content.title}\n`;
             report.content.sections.forEach(section => {
               contentToCopy += `${section.title}\n`;
               section.content.forEach(item => {
                 if (item.subTitle) {
                   contentToCopy += `${item.subTitle}\n`;
                 }
-                contentToCopy += `${item.text}\n\n`;
+                contentToCopy += `${item.text}\n`;
               });
             });
           } else {
@@ -469,7 +446,7 @@ ${report.content.mainCharacter.join('\n')}`.trim();
             contentToCopy = "PoC 목적별 추천 타겟 및 예상 인사이트\n\n";
             Object.entries(report.content.poc_persona).forEach(([key, value], index) => {
               const goalActionText = value.goalActionText || findGoalActionText(index);
-              contentToCopy += `${index + 1}. ${goalActionText}\n`;
+              contentToCopy += `${goalActionText}\n`;
               contentToCopy += `1. 추천 가상 페르소나 : ${value[0]["추천 가상 페르소나"]}\n`;
               contentToCopy += `2. 이유 및 예상 인사이트 : ${value[1]["이유 및 예상 인사이트"]}\n\n`;
             });
@@ -508,12 +485,12 @@ ${report.content.mainCharacter.join('\n')}`.trim();
 //   .join("\n")}`;
 // }
 contentToCopy = `
-${titleOfBusinessInfo}
+${titleOfBusinessInfo}\n
 주요 특징
-${mainFeaturesOfBusinessInformation?.map((feature) => `${feature}`).join("\n")}
+${mainFeaturesOfBusinessInformation?.map((feature) => `- ${feature}`).join("\n")}\n
 주요 기능
 ${mainCharacteristicOfBusinessInformation
-  ?.map((character) => `${character}`)
+  ?.map((character) => `- ${character}`)
   .join("\n")}`;
       } else if (reportIndex === 1) {
         // 전략 보고서 복사 기능
@@ -537,7 +514,7 @@ ${mainCharacteristicOfBusinessInformation
           contentToCopy = "PoC 목적별 추천 타겟 및 예상 인사이트\n\n";
           Object.entries(recommendedTargetData.poc_persona).forEach(([key, value], index) => {
             const goalActionText = findGoalActionText(index);
-            contentToCopy += `${index + 1}. ${goalActionText}\n`;
+            contentToCopy += `${goalActionText}\n`;
             contentToCopy += `1. 추천 가상 페르소나 : ${value[0]["추천 가상 페르소나"]}\n`;
             contentToCopy += `2. 이유 및 예상 인사이트 : ${value[1]["이유 및 예상 인사이트"]}\n\n`;
           });
