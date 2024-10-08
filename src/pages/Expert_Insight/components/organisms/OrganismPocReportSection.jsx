@@ -533,63 +533,74 @@ const Section = ({
 
   const generatePDF = async (cleanedContent, index, fileName) => {
     try {
-      // PDF에 넣기 위해 콘텐츠를 임시로 보여주는 div를 찾거나 생성합니다.
       const contentDiv = document.getElementById(`print-content-${index}`);
       if (!contentDiv) {
         console.error("contentDiv 요소를 찾을 수 없습니다.");
         setLoading(false);
         return;
       }
-
+  
       contentDiv.innerHTML = cleanedContent;
-      contentDiv.style.display = "block"; // 요소를 보이게 설정
-      document.body.appendChild(contentDiv); // 임시로 body에 추가하여 화면에 렌더링
-
-      // 캔버스로 변환
+      contentDiv.style.fontSize = '20px'; 
+      contentDiv.style.display = "block";
+      document.body.appendChild(contentDiv);
+  
       const canvas = await html2canvas(contentDiv, {
-        scale: 2, // 해상도 향상을 위해 스케일을 2배로 설정
-        useCORS: true, // CORS 허용 이미지 처리
+        scale: 2,
+        useCORS: true,
       });
-
-      // 이미지 데이터를 가져옴
+  
       const imgData = canvas.toDataURL("image/png");
-
-      // jsPDF를 사용하여 PDF 생성
+  
       const doc = new jsPDF();
-      const pageWidth = 210; // A4 너비(mm)
-      const pageHeight = 297; // A4 높이(mm)
-      const margin = 10; // 마진 설정 (mm)
+      const pageWidth = 210;
+      const pageHeight = 297;
+      const margin = 10;
       
-      const contentWidth = pageWidth - (2 * margin); // 마진을 제외한 콘텐츠 영역 너비
+      const contentWidth = pageWidth - (2 * margin);
       const contentHeight = (canvas.height * contentWidth) / canvas.width;
       
       let heightLeft = contentHeight;
       let position = 0;
+      let pageCount = 0;
   
-      // 첫 페이지에 이미지 추가
-      doc.addImage(imgData, "PNG", margin, margin, contentWidth, contentHeight);
-      heightLeft -= (pageHeight - (2 * margin));
-  
-      // 추가 페이지가 필요한 경우 처리
       while (heightLeft > 0) {
-        position = heightLeft - contentHeight;
-        doc.addPage();
-        doc.addImage(imgData, "PNG", margin, margin + position, contentWidth, contentHeight);
-        heightLeft -= (pageHeight - (2 * margin));
+        if (pageCount > 0) {
+          doc.addPage();
+        }
+  
+        const currentHeight = Math.min(pageHeight - (2 * margin), heightLeft);
+        const sy = position / contentHeight * canvas.height;
+        const sHeight = currentHeight / contentWidth * canvas.width;
+  
+        doc.addImage(
+          imgData, 
+          "PNG", 
+          margin, 
+          margin, 
+          contentWidth, 
+          currentHeight,
+          null,
+          'FAST',
+          0,
+          sy,
+          canvas.width,
+          sHeight
+        );
+  
+        heightLeft -= currentHeight;
+        position += currentHeight;
+        pageCount++;
       }
-
-      // PDF 다운로드
+  
       doc.save(`${fileName}.pdf`);
-      // console.log('PDF 생성 및 다운로드 완료');
-
-      // 다운로드 상태 업데이트
+      console.log('PDF 생성 및 다운로드 완료');
+  
       setDownloadStatus("다운로드 완료");
-
-      // 여기서 finally 역할을 수행
-      contentDiv.style.display = "none"; // 요소를 다시 숨김
-      setLoading(false); // 로딩 상태 해제
-
-      // 2초 후 다운로드 상태 메시지 제거
+  
+      contentDiv.style.display = "none";
+      setLoading(false);
+  
       setTimeout(() => {
         setDownloadStatus("");
       }, 2000);
@@ -597,8 +608,7 @@ const Section = ({
       console.error("PDF 생성 오류:", error);
       setLoading(false);
       setDownloadStatus("다운로드 실패");
-
-      // 2초 후 다운로드 실패 메시지 제거
+  
       setTimeout(() => {
         setDownloadStatus("");
       }, 2000);
