@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import axios from "axios";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import panelimages from "../../../../assets/styles/PanelImages";
@@ -9,18 +10,55 @@ import expertsData from "./experts_info.json";
 
 const OrganismRightSideBar = () => {
   const [isOpen, setIsOpen] = useState(true);
+  // const [experts, setExperts] = useState([]);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
+  const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
+
+  // useEffect(() => {
+  //   const fetchExperts = async () => {
+  //     try {
+  //       const accessToken = sessionStorage.getItem("accessToken");
+  //       const response = await axios.get(
+  //         "https://wishresearch.kr/expert/list",
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${accessToken}`,
+  //             "Content-Type": "application/json",
+  //           },
+  //           timeout: 100000, // 100초
+  //           withCredentials: true, // 쿠키 포함 요청
+  //         }
+  //       );
+  //       setExperts(response.data);
+  //       setLoading(false);
+  //     } catch (err) {
+  //       console.error("Error fetching experts:", err);
+  //       setError("Failed to fetch experts data");
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchExperts();
+  // }, []);
+
   const moreProfile = () => {
     setIsOpen(!isOpen);
   };
 
-  const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
+  // 선택된 전문가 정보
+  // const selectedExpert = experts.find(
+  //   (expert) => expert.id === selectedExpertIndex
+  // );
 
   // 선택된 전문가 정보
   const selectedExpert = expertsData.find(
     (expert) => expert.id === selectedExpertIndex
   );
+  // if (loading) return <div>Loading...</div>;
+  // if (error) return <div>Error: {error}</div>;
+  if (!selectedExpert) return null;
 
-  if (!selectedExpert) return null; // 선택된 전문가가 없을 경우 아무것도 표시하지 않음
 
   return (
     <>
