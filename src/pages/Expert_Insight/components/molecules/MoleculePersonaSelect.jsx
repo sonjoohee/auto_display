@@ -35,6 +35,8 @@ import {
   SkeletonLine,
 } from "../../../../assets/styles/Skeleton";
 
+import images from "../../../../assets/styles/Images";
+
 const MoleculePersonaSelect = ({ conversationId }) => {
   const [selectedPocOptions, setSelectedPocOptions] =
     useAtom(SELECTED_POC_OPTIONS);
@@ -285,14 +287,10 @@ const MoleculePersonaSelect = ({ conversationId }) => {
             onClick={() => handleOptionClick(5)}
             selected={selectedOption === "아직 타겟 고객이 확실하지 않아요"}
             selectedPocTarget={selectedPocTarget}
+            isTargetUnknown
           >
-            <Label
-              selectedPocTarget={selectedPocTarget} 
-              selected={selectedOption === "아직 타겟 고객이 확실하지 않아요"} 
-              htmlFor="아직 타겟 고객이 확실하지 않아요">
-                아직 타겟 고객이 확실하지 않아요
-            </Label>
-            <p></p>
+            <img src={images.iconQuestionMark} alt="" />
+            아직 타겟 고객이 확실하지 않아요
           </Option>          
         </OptionsContainer>
 
@@ -334,10 +332,12 @@ const Option = styled.div`
   display:flex;
   gap:12px;
   align-items:center;
+  color: ${palette.gray800};
+  justify-content: ${(props) => (props.isTargetUnknown ? "center" : "")};
   flex-direction:column;
   flex:1 1 30%;
   font-size:0.88rem;
-  text-align:left;
+  text-align: ${(props) => (props.isTargetUnknown ? "center" : "left")};
   padding: 20px;
   border-radius: 8px;
   cursor: pointer;
@@ -353,6 +353,10 @@ const Option = styled.div`
   p {
     color: ${(props) => (props.selected ? palette.gray800 : palette.gray500)};
     line-height:1.3;
+  }
+  
+  img {
+    margin-bottom: 10px;
   }
 
   &:hover {
