@@ -86,7 +86,6 @@ function App() {
           }
         );
         setExpertDetail(response.data);
-        console.log(response.data);
       } catch (err) {
         console.error("Error fetching experts:", err);
       }
