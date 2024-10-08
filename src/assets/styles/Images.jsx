@@ -31,6 +31,7 @@ import IconTarget from "../images/iconTarget.svg"
 
 import IconWrite2 from "../images/iconWrite2.svg"
 import IconRefresh from "../images/iconRefresh.svg"
+import IconRefresh2 from "../images/iconRefresh2.svg"
 import IconEdit from "../images/iconEdit.svg"
 import IconCopy from "../images/iconCopy.svg"
 import IconSave from "../images/iconSave.svg"
@@ -125,6 +126,7 @@ const images = {
 
   IconWrite2,
   IconRefresh,
+  IconRefresh2,
   IconEdit,
   IconCopy,
   IconSave,

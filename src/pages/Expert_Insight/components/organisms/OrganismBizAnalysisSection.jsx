@@ -621,7 +621,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               </ul>
               {isLoadingAdd1 ? (
                 <>
-                  <SkeletonLine className="content-placeholder" />
+                  <SkeletonLine className="content-placeholder white" />
                 </>
               ) : (
                 isAddingNow.section === "mainFeatures" &&
@@ -650,7 +650,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                         저장
                       </button>
                       <button onClick={() => generateAddtionalContent("mainFeatures")}>
-                        <img src={images.IconSetting} alt="" />
+                        <img src={images.IconRefresh2} alt="" />
                         생성
                       </button>
                     </BtnWrap>
@@ -737,7 +737,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               </ul>
               {isLoadingAdd2 ? (
                 <>
-                  <SkeletonLine className="content-placeholder" />
+                  <SkeletonLine className="content-placeholder white" />
                 </>
               ) : (
                 isAddingNow.section === "mainCharacteristic" &&
@@ -766,7 +766,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                         저장
                       </button>
                       <button onClick={() => generateAddtionalContent("mainCharacteristic")}>
-                        <img src={images.IconSetting} alt="" />
+                        <img src={images.IconRefresh2} alt="" />
                         생성
                       </button>
                     </BtnWrap>
