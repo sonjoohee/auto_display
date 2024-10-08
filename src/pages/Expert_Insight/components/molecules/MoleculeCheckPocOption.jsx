@@ -153,7 +153,6 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
     if (selectedPocOptions.length) return;
     
     setSelectedPocOptions([selectedOption1, selectedOption2]);
-    setTabs(2);
     setApproachPath(3);
     setConversationStage(3);
     setTargetSelectButtonState(1);
