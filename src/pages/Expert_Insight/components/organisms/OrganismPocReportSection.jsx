@@ -531,123 +531,113 @@ const Section = ({
 
   const generatePDF = async (cleanedContent, index, fileName) => {
     try {
-      const contentDiv = document.getElementById(`print-content-${index}`);
-      if (!contentDiv) {
-        console.error("contentDiv 요소를 찾을 수 없습니다.");
-        setLoading(false);
-        return;
-      }
+      // <br> 태그를 줄바꿈 문자로 대체
+      const textContent = cleanedContent.replace(/<br\s*\/?>/gi, '\n');
   
-      contentDiv.innerHTML = cleanedContent;
-      contentDiv.style.fontSize = '40px'; 
-      contentDiv.style.display = "block";
-      document.body.appendChild(contentDiv);
+      // 오프스크린 캔버스 생성
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
   
-      const pageWidth = 210; // A4 width in mm
-      const pageHeight = 297; // A4 height in mm
-      const margin = 10; // Margin in mm
+      // DPI 설정 (해상도를 높이기 위해 150 DPI로 설정)
+      const dpi = 150;
   
-      // Calculate the maximum content height that fits on one PDF page
-      const pdf = new jsPDF();
-      const contentWidth = pageWidth - 2 * margin;
-      const pageHeightPx =
-        (pdf.internal.pageSize.getHeight() + 8 * margin) * (96 / 25.4); // Convert mm to px (assuming 96 DPI)
-      const pageCanvasHeight = pageHeightPx; // Maximum height of content per page in px
+      // A4 크기(mm)를 픽셀로 변환
+      const mmToInch = 1 / 25.4;
+      const pageWidthInch = 210 * mmToInch;
+      const pageHeightInch = 297 * mmToInch;
   
-      // Function to get the cumulative height of an element
-      const getElementHeight = (element) => {
-        const style = window.getComputedStyle(element);
-        const marginTop = parseFloat(style.marginTop) || 0;
-        const marginBottom = parseFloat(style.marginBottom) || 0;
-        return element.offsetHeight + marginTop + marginBottom;
+      canvas.width = pageWidthInch * dpi;
+      canvas.height = pageHeightInch * dpi;
+  
+      // 폰트 및 텍스트 스타일 설정 (글자 크기를 약간 작게)
+      ctx.font = '20px Arial';
+      ctx.fillStyle = 'black';
+      ctx.textBaseline = 'top';
+  
+      // 줄 간격 및 여백 설정
+      const lineHeight = 30; // 줄 간격을 글자 크기에 맞게 조정
+      const marginLeft = 20 * (dpi / 72); // 여백을 해상도에 맞게 조정
+      const marginTop = 20 * (dpi / 72);
+      const maxTextWidth = canvas.width - marginLeft * 2;
+      const maxTextHeight = canvas.height - marginTop * 2;
+  
+      // 텍스트를 캔버스 너비에 맞게 줄로 분할하는 함수
+      const getLines = (ctx, text, maxWidth) => {
+        const paragraphs = text.split('\n');
+        const lines = [];
+  
+        for (let p = 0; p < paragraphs.length; p++) {
+          const words = paragraphs[p].split(' ');
+          let line = '';
+  
+          for (let n = 0; n < words.length; n++) {
+            const testLine = line + words[n] + ' ';
+            const metrics = ctx.measureText(testLine);
+            const testWidth = metrics.width;
+  
+            if (testWidth > maxWidth && n > 0) {
+              lines.push(line.trim());
+              line = words[n] + ' ';
+            } else {
+              line = testLine;
+            }
+          }
+          lines.push(line.trim());
+        }
+  
+        return lines;
       };
   
-      // Split the content into page-sized chunks without cutting text
-      const pageContents = [];
-      let currentPageContent = [];
-      let currentPageHeight = 0;
+      // 콘텐츠를 줄로 분할
+      const lines = getLines(ctx, textContent, maxTextWidth);
   
-      const childNodes = Array.from(contentDiv.childNodes);
+      // 페이지당 표시 가능한 줄 수 계산
+      const linesPerPage = Math.floor(maxTextHeight / lineHeight);
   
-      for (let node of childNodes) {
-        // Create a temporary wrapper to measure the node's height
-        const tempWrapper = document.createElement('div');
-        tempWrapper.style.visibility = 'hidden';
-        tempWrapper.style.position = 'absolute';
-        tempWrapper.style.width = contentDiv.offsetWidth + 'px';
-        tempWrapper.appendChild(node.cloneNode(true));
-        document.body.appendChild(tempWrapper);
+      // 줄을 페이지별로 분할
+      const totalPages = Math.ceil(lines.length / linesPerPage);
   
-        const nodeHeight = getElementHeight(tempWrapper);
+      // jsPDF 인스턴스 생성 (해상도를 높이기 위해 PDF의 단위를 'pt'로 설정)
+      const pdf = new jsPDF({
+        unit: 'pt', // 포인트 단위 사용
+        format: [canvas.width * (72 / dpi), canvas.height * (72 / dpi)], // 페이지 크기 설정
+      });
   
-        document.body.removeChild(tempWrapper);
-  
-        if (currentPageHeight + nodeHeight > pageCanvasHeight) {
-          // Start a new page
-          pageContents.push(currentPageContent);
-          currentPageContent = [node];
-          currentPageHeight = nodeHeight;
-        } else {
-          // Add to current page
-          currentPageContent.push(node);
-          currentPageHeight += nodeHeight;
-        }
-      }
-  
-      // Add the last page content
-      if (currentPageContent.length > 0) {
-        pageContents.push(currentPageContent);
-      }
-  
-      // Create PDF
-      const doc = new jsPDF();
-  
-      for (let i = 0; i < pageContents.length; i++) {
-        if (i > 0) {
-          doc.addPage();
+      for (let pageNum = 0; pageNum < totalPages; pageNum++) {
+        if (pageNum > 0) {
+          pdf.addPage();
         }
   
-        // Create a new div for the current page content
-        const pageDiv = document.createElement('div');
-        pageDiv.style.width = contentDiv.style.width;
-        pageDiv.style.fontSize = contentDiv.style.fontSize;
-        pageDiv.style.lineHeight = contentDiv.style.lineHeight;
+        // 새로운 페이지를 위해 캔버스 지우기
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
   
-        // Append nodes to the pageDiv
-        pageContents[i].forEach((node) => {
-          pageDiv.appendChild(node.cloneNode(true));
+        // 현재 페이지의 줄 가져오기
+        const startLine = pageNum * linesPerPage;
+        const endLine = startLine + linesPerPage;
+        const pageLines = lines.slice(startLine, endLine);
+  
+        // 각 줄을 캔버스에 그리기
+        pageLines.forEach((line, i) => {
+          ctx.fillText(line, marginLeft, marginTop + i * lineHeight);
         });
   
-        document.body.appendChild(pageDiv);
-  
-        // Render the pageDiv to canvas
-        const canvas = await html2canvas(pageDiv, {
-          scale: 2,
-          useCORS: true,
-        });
-  
+        // 캔버스를 이미지로 변환
         const imgData = canvas.toDataURL('image/png');
   
-        const pdfWidth = pageWidth - 2 * margin;
-        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-  
-        doc.addImage(
+        // 이미지를 PDF에 추가
+        pdf.addImage(
           imgData,
           'PNG',
-          margin,
-          margin,
-          pdfWidth,
-          pdfHeight
+          0,
+          0,
+          pdf.internal.pageSize.getWidth(),
+          pdf.internal.pageSize.getHeight()
         );
-  
-        document.body.removeChild(pageDiv);
       }
   
-      doc.save(`${fileName}.pdf`);
+      pdf.save(`${fileName}.pdf`);
   
       setDownloadStatus("다운로드 완료");
-  
-      contentDiv.style.display = "none";
       setLoading(false);
   
       setTimeout(() => {
@@ -663,6 +653,28 @@ const Section = ({
       }, 2000);
     }
   };
+  
+  
+  
+  // 텍스트를 여러 줄로 나누는 헬퍼 함수
+  function getLines(ctx, text, maxWidth) {
+    const words = text.split(" ");
+    const lines = [];
+    let currentLine = words[0];
+  
+    for (let i = 1; i < words.length; i++) {
+      const word = words[i];
+      const width = ctx.measureText(currentLine + " " + word).width;
+      if (width < maxWidth) {
+        currentLine += " " + word;
+      } else {
+        lines.push(currentLine);
+        currentLine = word;
+      }
+    }
+    lines.push(currentLine);
+    return lines;
+  }
   
 
   const handleDownload = async (language, index) => {
@@ -1069,10 +1081,6 @@ const Section = ({
                 </strong_title>
                 {/* 항목 내용 */}
                 <p style={{ marginTop: "15px", marginBottom: "15px" }}>
-                  <div
-                    id={`print-content-${index}`}
-                    style={{ position: "absolute", left: '-10000px',bottom: "-10000px" }}
-                  />
                   {item.text}
                 </p>
 
