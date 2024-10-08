@@ -574,7 +574,7 @@ const handleSearch = async (inputValue) => {
           {
             type: "system",
             message:
-              "안녕하세요! PoC 전문가 이민재입니다. 😊 여러분의 아이디어를 현실화하는 데 도움을 드리겠습니다.\n아이디어나 비즈니스 아이템을 작성해 주세요. 분석 후, 효과적인 PoC 전략 리포트를 제공해 드리겠습니다!",
+              "안녕하세요! PoC 전문가 장석훈입니다. 😊 여러분의 아이디어를 현실화하는 데 도움을 드리겠습니다.\n아이디어나 비즈니스 아이템을 작성해 주세요. 분석 후, 효과적인 PoC 전략 리포트를 제공해 드리겠습니다!",
             expertIndex: selectedExpertIndex,
           }
         );
@@ -583,7 +583,7 @@ const handleSearch = async (inputValue) => {
 
     // selectedExpertIndex에 따라 적절한 타입을 업데이트
     if (selectedExpertIndex === "4") {
-      updatedConversation.push({ type: `poc_${selectedExpertIndex}` });
+      updatedConversation.push({ type: "pocOption" });
     } else {
       updatedConversation.push({ type: `strategy_${selectedExpertIndex}` });
     }
