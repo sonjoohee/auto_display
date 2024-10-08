@@ -541,56 +541,108 @@ const Section = ({
       }
   
       contentDiv.innerHTML = cleanedContent;
-      contentDiv.style.fontSize = '20px'; 
+      contentDiv.style.fontSize = '40px'; 
       contentDiv.style.display = "block";
       document.body.appendChild(contentDiv);
   
-      const canvas = await html2canvas(contentDiv, {
-        scale: 2,
-        useCORS: true,
-      });
+      const pageWidth = 210; // A4 width in mm
+      const pageHeight = 297; // A4 height in mm
+      const margin = 10; // Margin in mm
   
-      const imgData = canvas.toDataURL("image/png");
+      // Calculate the maximum content height that fits on one PDF page
+      const pdf = new jsPDF();
+      const contentWidth = pageWidth - 2 * margin;
+      const pageHeightPx =
+        (pdf.internal.pageSize.getHeight() + 8 * margin) * (96 / 25.4); // Convert mm to px (assuming 96 DPI)
+      const pageCanvasHeight = pageHeightPx; // Maximum height of content per page in px
   
+      // Function to get the cumulative height of an element
+      const getElementHeight = (element) => {
+        const style = window.getComputedStyle(element);
+        const marginTop = parseFloat(style.marginTop) || 0;
+        const marginBottom = parseFloat(style.marginBottom) || 0;
+        return element.offsetHeight + marginTop + marginBottom;
+      };
+  
+      // Split the content into page-sized chunks without cutting text
+      const pageContents = [];
+      let currentPageContent = [];
+      let currentPageHeight = 0;
+  
+      const childNodes = Array.from(contentDiv.childNodes);
+  
+      for (let node of childNodes) {
+        // Create a temporary wrapper to measure the node's height
+        const tempWrapper = document.createElement('div');
+        tempWrapper.style.visibility = 'hidden';
+        tempWrapper.style.position = 'absolute';
+        tempWrapper.style.width = contentDiv.offsetWidth + 'px';
+        tempWrapper.appendChild(node.cloneNode(true));
+        document.body.appendChild(tempWrapper);
+  
+        const nodeHeight = getElementHeight(tempWrapper);
+  
+        document.body.removeChild(tempWrapper);
+  
+        if (currentPageHeight + nodeHeight > pageCanvasHeight) {
+          // Start a new page
+          pageContents.push(currentPageContent);
+          currentPageContent = [node];
+          currentPageHeight = nodeHeight;
+        } else {
+          // Add to current page
+          currentPageContent.push(node);
+          currentPageHeight += nodeHeight;
+        }
+      }
+  
+      // Add the last page content
+      if (currentPageContent.length > 0) {
+        pageContents.push(currentPageContent);
+      }
+  
+      // Create PDF
       const doc = new jsPDF();
-      const pageWidth = 210;
-      const pageHeight = 297;
-      const margin = 10;
-      
-      const contentWidth = pageWidth - (2 * margin);
-      const contentHeight = (canvas.height * contentWidth) / canvas.width;
-      
-      let heightLeft = contentHeight;
-      let position = 0;
-      let pageCount = 0;
   
-      while (heightLeft > 0) {
-        if (pageCount > 0) {
+      for (let i = 0; i < pageContents.length; i++) {
+        if (i > 0) {
           doc.addPage();
         }
   
-        const currentHeight = Math.min(pageHeight - (2 * margin), heightLeft);
-        const sy = position / contentHeight * canvas.height;
-        const sHeight = currentHeight / contentWidth * canvas.width;
+        // Create a new div for the current page content
+        const pageDiv = document.createElement('div');
+        pageDiv.style.width = contentDiv.style.width;
+        pageDiv.style.fontSize = contentDiv.style.fontSize;
+        pageDiv.style.lineHeight = contentDiv.style.lineHeight;
+  
+        // Append nodes to the pageDiv
+        pageContents[i].forEach((node) => {
+          pageDiv.appendChild(node.cloneNode(true));
+        });
+  
+        document.body.appendChild(pageDiv);
+  
+        // Render the pageDiv to canvas
+        const canvas = await html2canvas(pageDiv, {
+          scale: 2,
+          useCORS: true,
+        });
+  
+        const imgData = canvas.toDataURL('image/png');
+  
+        const pdfWidth = pageWidth - 2 * margin;
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
   
         doc.addImage(
-          imgData, 
-          "PNG", 
-          margin, 
-          margin, 
-          contentWidth, 
-          currentHeight,
-          null,
-          'FAST',
-          0,
-          sy,
-          canvas.width,
-          sHeight
+          imgData,
+          'PNG',
+          margin,
+          margin,
+          pdfWidth,
+          pdfHeight
         );
   
-        heightLeft -= currentHeight;
-        position += currentHeight;
-        pageCount++;
+        document.body.removeChild(pageDiv);
       }
   
       doc.save(`${fileName}.pdf`);
@@ -614,6 +666,7 @@ const Section = ({
       }, 2000);
     }
   };
+  
 
   const handleDownload = async (language, index) => {
     setLoading(true); // 로딩 상태 시작
@@ -1689,7 +1742,7 @@ const SeparateSection = styled.div`
     font-weight: 700;
     color: ${palette.darkGray};
     word-break: break-word; // 긴 제목이 줄바꿈되도록 설정
-    max-width: calc(100% - 50px); // 버튼 영역을 고려한 최대 너비 설정
+    max-width: calc(100% - 90px); // 버튼 영역을 고려한 최대 너비 설정
   }
 
   p {
