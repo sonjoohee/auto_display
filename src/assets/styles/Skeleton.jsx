@@ -67,6 +67,12 @@ export const SkeletonLine = styled.div`
   background-image: linear-gradient(to right, #F4F4F4 0%, #FCFCFC 20%, #F4F4F4 40%, #F4F4F4 100%);
   background-repeat: no-repeat;
 
+  &.white {
+    background: #FFFFFF;
+    background-image: -webkit-linear-gradient(to right, #FFFFFF 0%, #F4F4F4 20%, #FFFFFF 40%, #FFFFFF 100%);
+    background-image: linear-gradient(to right, #FFFFFF 0%, #F4F4F4 20%, #FFFFFF 40%, #FFFFFF 100%);
+  }
+
   @keyframes shimmer {
     0% {
       background-position: -100%;
