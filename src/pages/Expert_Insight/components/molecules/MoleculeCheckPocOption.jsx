@@ -134,7 +134,7 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
           break;
       }
     }
-  }, []);
+  }, [selectedPocOptions]);
 
   const handleOptionClick = (index, optionValue) => {
     if (selectedPocOptions.length) return;
