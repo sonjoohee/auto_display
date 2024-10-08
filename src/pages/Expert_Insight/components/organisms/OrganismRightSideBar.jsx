@@ -5,24 +5,31 @@ import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import panelimages from "../../../../assets/styles/PanelImages";
 import { useAtom } from "jotai";
-import { SELECTED_EXPERT_INDEX } from "../../../AtomStates";
+import { SELECTED_EXPERT_INDEX, EXPERT_DETAIL_DATA } from "../../../AtomStates";
 import expertsData from "./experts_info.json";
 
 const OrganismRightSideBar = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
+  const [expertDetailData] = useAtom(EXPERT_DETAIL_DATA);
 
   const moreProfile = () => {
     setIsOpen(!isOpen);
   };
 
-  // 선택된 전문가 정보
+  // 고정 데이터 활용
   const selectedExpert = expertsData.find(
     (expert) => expert.id === selectedExpertIndex
   );
   if (!selectedExpert) return null;
 
+  // API 데이터 활용
+  // const selectedExpert = expertDetailData.results?.find(
+  //   (expert) => expert.expertIndex === selectedExpertIndex
+  // );
+  // if (!selectedExpert) return null;
 
+  // 고정 데이터 활용
   return (
     <>
       <SideBar Right>
@@ -90,6 +97,67 @@ const OrganismRightSideBar = () => {
   );
 };
 
+// API 데이터 활용
+// return (
+//   <>
+//     <SideBar Right>
+//       <AIProfileWrap>
+//         <div>
+//           <AIProfile>
+//             <div className="profileInfo">
+//               <div className="thumb">
+//                 <img
+//                   src={panelimages[`expert_${selectedExpertIndex}`]}
+//                   alt=""
+//                 />
+//               </div>
+//               <div className="name">
+//                 <strong>{selectedExpert.job}</strong>
+//                 <ul>
+//                   <li>이름 : Expert {selectedExpert.expertIndex}</li>
+//                   <li>주요경력 : {selectedExpert.mainHistory}</li>
+//                 </ul>
+//               </div>
+//             </div>
+
+//             <FieldWrap isOpen={isOpen}>
+//               <strong>주요 이력</strong>
+//               <div>
+//                 <FieldUl isOpen={isOpen}>
+//                   <li>{selectedExpert.mainHistory}</li>
+//                 </FieldUl>
+//               </div>
+//             </FieldWrap>
+
+//             <div className="field">
+//               <strong>전문분석 분야</strong>
+
+//               <div>
+//                 <React.Fragment>
+//                   <strong>
+//                     {selectedExpert.job}
+//                   </strong>
+//                   <FieldUl isOpen={isOpen}>
+//                     <li>{selectedExpert.coreValue}</li>
+//                     <li>{selectedExpert.developmentRoadmap}</li>
+//                     <li>{selectedExpert.productPositioning}</li>
+//                   </FieldUl>
+//                 </React.Fragment>
+//               </div>
+//             </div>
+//           </AIProfile>
+
+//           <button type="button" onClick={moreProfile}>
+//             {isOpen ? "상세 정보 확인하기" : "접기"}
+//           </button>
+
+//           <p isOpen={isOpen}>본 전문가는 가상으로 제작된 인물입니다.</p>
+//         </div>
+//       </AIProfileWrap>
+//     </SideBar>
+//   </>
+// );
+// };
 export default OrganismRightSideBar;
 
 // 기존 styled-components 스타일링 코드 (생략)
