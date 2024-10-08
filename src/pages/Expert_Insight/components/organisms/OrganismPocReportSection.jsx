@@ -1071,7 +1071,7 @@ const Section = ({
                 <p style={{ marginTop: "15px", marginBottom: "15px" }}>
                   <div
                     id={`print-content-${index}`}
-                    style={{ position: "absolute", bottom: "-10000px" }}
+                    style={{ position: "absolute", left: '-10000px',bottom: "-10000px" }}
                   />
                   {item.text}
                 </p>
