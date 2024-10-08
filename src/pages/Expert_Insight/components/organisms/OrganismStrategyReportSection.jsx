@@ -315,10 +315,10 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
                   <TabButton
                     key={index}
                     active={selectedTab === index}
-                    expertIndex={expertIndex} // 전달
+                    expertIndex={expertIndex}
                     onClick={() => handleTabClick(index, expertIndex)}
                   >
-                    {tab.title}
+                    {expertIndex === "3" && index === 1 ? "고객 경험 최적화 방법 제시" : tab.title}
                   </TabButton>
                 ))}
             </TabHeader>
