@@ -57,6 +57,7 @@ import IconTarget2 from "../images/iconTarget2.svg"
 import ExclamationMark2 from "../images/iconExclamationMark.svg"
 import ExclamationMark from "../images/iconExclamationMark1.svg"
 import CheckMark from "../images/CheckMark.svg"
+import iconQuestionMark from "../images/iconQuestionMark.svg"
 
 import ProfessionalValue from "../images/ProfessionalValue.svg"
 import ProfessionalRoadmap from "../images/ProfessionalRoadmap.svg"
@@ -91,6 +92,8 @@ import ImgPDF from "../images/ImgPDF.svg"
 import ImgWord from "../images/ImgWord.svg"
 import ImgKOR from "../images/ImgKOR.svg"
 import ImgENG from "../images/ImgENG.svg"
+
+
 
 const images = {
   Logo,
@@ -152,6 +155,7 @@ const images = {
   ExclamationMark2,
   ExclamationMark,
   CheckMark,
+  iconQuestionMark,
 
   ProfessionalValue,
   ProfessionalRoadmap,
