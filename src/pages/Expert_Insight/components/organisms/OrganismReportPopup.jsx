@@ -403,7 +403,7 @@ const BizAnalysisSection = ({ report }) => {
             ))}
           </List>
         </BoxWrap>
-        {mainCustomer.length !== 0 &&
+        {/* {mainCustomer.length !== 0 &&
           <BoxWrap>
             <SectionTitle>
               <img src={images.IconTarget} alt="" />
@@ -417,7 +417,7 @@ const BizAnalysisSection = ({ report }) => {
               ))}
             </List>
           </BoxWrap>
-        }
+        } */}
         <MoleculeReportController
             reportIndex={0}
             showCopyOnly={true}

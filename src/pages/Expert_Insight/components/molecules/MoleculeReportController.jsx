@@ -405,23 +405,29 @@ const MoleculeReportController = ({
     if (report && report.content) {
       switch (reportIndex) {
         case 0: // 비즈니스 분석 리포트
-if (strategyReportID === "4" || report.content.mainCustomer.length === 0) {
-  contentToCopy = `
+// if (strategyReportID === "4" || report.content.mainCustomer.length === 0) {
+// contentToCopy = `
+// ${report.content.title}
+// 주요 특징
+// ${report.content.mainFeatures.join('\n')}
+// 주요 기능
+// ${report.content.mainCharacter.join('\n')}`.trim();
+// } else {
+// contentToCopy = `
+// ${report.content.title}
+// 주요 특징
+// ${report.content.mainFeatures.join('\n')}
+// 주요 기능
+// ${report.content.mainCharacter.join('\n')}
+// 목표 고객
+// ${report.content.mainCustomer.join('\n')}`.trim();
+// }
+contentToCopy = `
 ${report.content.title}
 주요 특징
 ${report.content.mainFeatures.join('\n')}
 주요 기능
 ${report.content.mainCharacter.join('\n')}`.trim();
-} else {
-  contentToCopy = `
-${report.content.title}
-주요 특징
-${report.content.mainFeatures.join('\n')}
-주요 기능
-${report.content.mainCharacter.join('\n')}
-목표 고객
-${report.content.mainCustomer.join('\n')}`.trim();
-}
           break;
           case 1: // 전략 보고서
           if (report.content.tabs) {
@@ -478,7 +484,29 @@ ${report.content.mainCustomer.join('\n')}`.trim();
       }
     } else {
       if (reportIndex === 0) {
-        if (strategyReportID === "4") {
+// if (strategyReportID === "4") {
+// contentToCopy = `
+// ${titleOfBusinessInfo}
+// 주요 특징
+// ${mainFeaturesOfBusinessInformation?.map((feature) => `${feature}`).join("\n")}
+// 주요 기능
+// ${mainCharacteristicOfBusinessInformation
+//   ?.map((character) => `${character}`)
+//   .join("\n")}`;
+// } else {
+//   contentToCopy = `
+// ${titleOfBusinessInfo}
+// 주요 특징
+// ${mainFeaturesOfBusinessInformation?.map((feature) => `${feature}`).join("\n")}
+// 주요 기능
+// ${mainCharacteristicOfBusinessInformation
+//   ?.map((character) => `${character}`)
+//   .join("\n")}
+// 목표 고객
+// ${businessInformationTargetCustomer
+//   ?.map((customer) => `${customer}`)
+//   .join("\n")}`;
+// }
 contentToCopy = `
 ${titleOfBusinessInfo}
 주요 특징
@@ -487,20 +515,6 @@ ${mainFeaturesOfBusinessInformation?.map((feature) => `${feature}`).join("\n")}
 ${mainCharacteristicOfBusinessInformation
   ?.map((character) => `${character}`)
   .join("\n")}`;
-} else {
-  contentToCopy = `
-${titleOfBusinessInfo}
-주요 특징
-${mainFeaturesOfBusinessInformation?.map((feature) => `${feature}`).join("\n")}
-주요 기능
-${mainCharacteristicOfBusinessInformation
-  ?.map((character) => `${character}`)
-  .join("\n")}
-목표 고객
-${businessInformationTargetCustomer
-  ?.map((customer) => `${customer}`)
-  .join("\n")}`;
-}
       } else if (reportIndex === 1) {
         // 전략 보고서 복사 기능
         const expertIndex = report?.content?.expert_id || strategyReportID;
