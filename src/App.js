@@ -70,29 +70,29 @@ function App() {
     }
   }, [setIsLoggedIn, setUserName, setUserEmail]);
 
-  useEffect(() => {
-    const fetchExperts = async () => {
-      try {
-        const accessToken = sessionStorage.getItem("accessToken");
-        const response = await axios.get(
-          "https://wishresearch.kr/expert/list",
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              "Content-Type": "application/json",
-            },
-            timeout: 100000, // 100 seconds
-            withCredentials: true,
-          }
-        );
-        setExpertDetail(response.data);
-      } catch (err) {
-        console.error("Error fetching experts:", err);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchExperts = async () => {
+  //     try {
+  //       const accessToken = sessionStorage.getItem("accessToken");
+  //       const response = await axios.get(
+  //         "https://wishresearch.kr/expert/list",
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${accessToken}`,
+  //             "Content-Type": "application/json",
+  //           },
+  //           timeout: 100000, // 100 seconds
+  //           withCredentials: true,
+  //         }
+  //       );
+  //       setExpertDetail(response.data);
+  //     } catch (err) {
+  //       console.error("Error fetching experts:", err);
+  //     }
+  //   };
 
-    fetchExperts();
-  }, []); 
+  //   fetchExperts();
+  // }, []); 
 
   // 10분마다 서버 상태 체크
   useEffect(() => {
