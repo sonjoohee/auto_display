@@ -534,12 +534,12 @@ ${mainCharacteristicOfBusinessInformation
         contentToCopy = extractTextContent(customerAdditionalReportData[additionalReportCount]);
       } else if (reportIndex === 4) {
         if (recommendedTargetData && recommendedTargetData.poc_persona) {
-          contentToCopy = "PoC 목적별 추천 타겟 및 예상 인사이트\n";
+          contentToCopy = "PoC 목적별 추천 타겟 및 예상 인사이트\n\n";
           Object.entries(recommendedTargetData.poc_persona).forEach(([key, value], index) => {
             const goalActionText = findGoalActionText(index);
             contentToCopy += `${index + 1}. ${goalActionText}\n`;
             contentToCopy += `1. 추천 가상 페르소나 : ${value[0]["추천 가상 페르소나"]}\n`;
-            contentToCopy += `2. 이유 및 예상 인사이트 : ${value[1]["이유 및 예상 인사이트"]}\n`;
+            contentToCopy += `2. 이유 및 예상 인사이트 : ${value[1]["이유 및 예상 인사이트"]}\n\n`;
           });
         }
       }
