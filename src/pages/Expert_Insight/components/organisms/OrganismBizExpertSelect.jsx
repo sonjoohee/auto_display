@@ -98,6 +98,16 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
                 </button>
               </div>
             )}
+            {/* 4번 전문가 */}
+            {/* {(selectedExpertList.includes("4") || strategyReportData.hasOwnProperty(4)) ? null : (
+              <div>
+                <img src={images.ImgTarget} alt="" />
+                <p>PoC 설계 전문가와 1:1 커피챗하기</p>
+                <button type="button" onClick={() => handledExpertSelect("4")}>
+                  시작하기
+                </button>
+              </div>
+            )} */}
           </SelectOptions>
         </BizExpertSelectContainer>
       )}
