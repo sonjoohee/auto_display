@@ -5,7 +5,7 @@ import GlobalStyles from "./assets/GlobalStyle";
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useAtom , } from 'jotai';
-import { isLoggedInAtom,USER_NAME, USER_EMAIL ,IS_SOCIAL_LOGGED_IN } from './pages/AtomStates'; // 로그인 상태 아톰 임포트
+import { isLoggedInAtom,USER_NAME, USER_EMAIL ,IS_SOCIAL_LOGGED_IN, EXPERT_DETAIL_DATA } from './pages/AtomStates'; // 로그인 상태 아톰 임포트
 import axios from "axios";
 
 import PageLogin from './pages/Login_Sign/components/pages/PageLogin';
@@ -42,7 +42,7 @@ function App() {
   const [, setUserEmail] = useAtom(USER_EMAIL); // 유저 이메일 아톰
   const [, setIsSocialLoggedIn] = useAtom(IS_SOCIAL_LOGGED_IN); // 소셜 로그인 상태 아톰
   const [isServerDown, setIsServerDown] = useState(false); // 서버 상태 관리
-
+  const [, setExpertDetail] = useAtom(EXPERT_DETAIL_DATA);
   // 애플리케이션이 로드될 때 로그인 상태 확인
   useEffect(() => {
     const token = sessionStorage.getItem('accessToken'); // sessionStorage에서 토큰 확인
@@ -69,6 +69,30 @@ function App() {
       setIsSocialLoggedIn(false); // 일반 로그인 상태로 설정
     }
   }, [setIsLoggedIn, setUserName, setUserEmail]);
+
+  useEffect(() => {
+    const fetchExperts = async () => {
+      try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        const response = await axios.get(
+          "https://wishresearch.kr/expert/list",
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+            timeout: 100000, // 100 seconds
+            withCredentials: true,
+          }
+        );
+        setExpertDetail(response.data);
+      } catch (err) {
+        console.error("Error fetching experts:", err);
+      }
+    };
+
+    fetchExperts();
+  }, []); 
 
   // 10분마다 서버 상태 체크
   useEffect(() => {
