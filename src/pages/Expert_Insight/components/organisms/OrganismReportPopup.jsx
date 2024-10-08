@@ -90,7 +90,7 @@ const OrganismReportPopup = ({ report, onClose }) => {
                   :
                   <div className="cont">
                       <strong>PoC 설계 전문가</strong>
-                      <p>OOO</p>
+                      <p>장석훈</p>
                     </div>
             }
           </ExpertThumb>
@@ -403,7 +403,7 @@ const BizAnalysisSection = ({ report }) => {
             ))}
           </List>
         </BoxWrap>
-        {mainCustomer.length !== 0 &&
+        {/* {mainCustomer.length !== 0 &&
           <BoxWrap>
             <SectionTitle>
               <img src={images.IconTarget} alt="" />
@@ -417,7 +417,7 @@ const BizAnalysisSection = ({ report }) => {
               ))}
             </List>
           </BoxWrap>
-        }
+        } */}
         <MoleculeReportController
             reportIndex={0}
             showCopyOnly={true}

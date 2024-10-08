@@ -789,120 +789,120 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               )}
             </BoxWrap>
             {            
-            selectedExpertIndex !== "4" && <BoxWrap>
-              <strong>
-                <img src={images.IconTarget} alt="" />
-                목표 고객
-              </strong>
-              <ul>
-                {businessInformationTargetCustomer?.map((content, index) => (
-                  <li key={index}>
-                    {editingIndex.section === "targetCustomer" &&
-                    editingIndex.index === index ? (
-                      <InputField
-                        type="text"
-                        value={newEditContent}
-                        onChange={(e) => setNewEditContent(e.target.value)}
-                      />
-                    ) : (
-                      <p>{content}</p>
-                    )}
-                    {editingIndex.section === "targetCustomer" &&
-                    editingIndex.index === index ? (
-                      <>
-                        <BtnWrap>
-                          <button onClick={handleEditCancel}>
-                            <img src={images.IconClose2} alt="" />
-                            취소
-                          </button>
-                          <button onClick={handleApplyChange}>
-                            <img src={images.IconCheck2} alt="" />
-                            적용
-                          </button>
-                        </BtnWrap>
-                      </>
-                    ) : (
-                      <>
-                        {isEditingNow && (
-                          <>
-                            <BtnWrap>
-                              <button
-                                onClick={() =>
-                                  handleEditStart("targetCustomer", index)
-                                }
-                              >
-                                <img src={images.IconEdit2} alt="" />
-                                수정
-                              </button>
-                              <button
-                                onClick={() =>
-                                  confirmDelete("targetCustomer", index)
-                                }
-                              >
-                                <img src={images.IconDelete2} alt="" />
-                                삭제
-                              </button>
-                            </BtnWrap>
-                          </>
-                        )}
-                      </>
-                    )}
-                  </li>
-                ))}
-              </ul>
-              {isLoadingAdd3 ? (
-                <>
-                  <SkeletonLine className="content-placeholder" />
-                </>
-              ) : (
-                isAddingNow.section === "targetCustomer" &&
-                isAddingNow.isAdding &&
-                isEditingNow ? (
-                  <AddInfo>
-                    <InputField
-                      value={newAddContent}
-                      onChange={(e) => {
-                        setNewAddContent(e.target.value);
-                      }}
-                      placeholder="새로운 정보를 추가해보세요"
-                    />
-                    <BtnWrap>
-                      <button
-                        onClick={() => {
-                          setIsAddingNow({ section: "", isAdding: false });
-                          setNewAddContent("");
-                        }}
-                      >
-                        <img src={images.IconClose2} alt="" />
-                        취소
-                      </button>
-                      <button onClick={() => handleAddSave("targetCustomer")}>
-                        <img src={images.IconCheck2} alt="" />
-                        저장
-                      </button>
-                      {/* <button onClick={() => generateAddtionalContent("targetCustomer")}>
-                        <img src={images.IconSetting} alt="" />
-                        생성
-                      </button> */}
-                    </BtnWrap>
-                  </AddInfo>
-                ) : (
-                  isEditingNow && (
-                    <button
-                      className="moreButton"
-                      onClick={() =>
-                        setIsAddingNow({
-                          section: "targetCustomer",
-                          isAdding: true,
-                        })
-                      }
-                    >
-                      목표 고객 추가하기 +
-                    </button>
-                  )
-                )
-              )}
-            </BoxWrap>
+            // selectedExpertIndex !== "4" && <BoxWrap>
+            //   <strong>
+            //     <img src={images.IconTarget} alt="" />
+            //     목표 고객
+            //   </strong>
+            //   <ul>
+            //     {businessInformationTargetCustomer?.map((content, index) => (
+            //       <li key={index}>
+            //         {editingIndex.section === "targetCustomer" &&
+            //         editingIndex.index === index ? (
+            //           <InputField
+            //             type="text"
+            //             value={newEditContent}
+            //             onChange={(e) => setNewEditContent(e.target.value)}
+            //           />
+            //         ) : (
+            //           <p>{content}</p>
+            //         )}
+            //         {editingIndex.section === "targetCustomer" &&
+            //         editingIndex.index === index ? (
+            //           <>
+            //             <BtnWrap>
+            //               <button onClick={handleEditCancel}>
+            //                 <img src={images.IconClose2} alt="" />
+            //                 취소
+            //               </button>
+            //               <button onClick={handleApplyChange}>
+            //                 <img src={images.IconCheck2} alt="" />
+            //                 적용
+            //               </button>
+            //             </BtnWrap>
+            //           </>
+            //         ) : (
+            //           <>
+            //             {isEditingNow && (
+            //               <>
+            //                 <BtnWrap>
+            //                   <button
+            //                     onClick={() =>
+            //                       handleEditStart("targetCustomer", index)
+            //                     }
+            //                   >
+            //                     <img src={images.IconEdit2} alt="" />
+            //                     수정
+            //                   </button>
+            //                   <button
+            //                     onClick={() =>
+            //                       confirmDelete("targetCustomer", index)
+            //                     }
+            //                   >
+            //                     <img src={images.IconDelete2} alt="" />
+            //                     삭제
+            //                   </button>
+            //                 </BtnWrap>
+            //               </>
+            //             )}
+            //           </>
+            //         )}
+            //       </li>
+            //     ))}
+            //   </ul>
+            //   {isLoadingAdd3 ? (
+            //     <>
+            //       <SkeletonLine className="content-placeholder" />
+            //     </>
+            //   ) : (
+            //     isAddingNow.section === "targetCustomer" &&
+            //     isAddingNow.isAdding &&
+            //     isEditingNow ? (
+            //       <AddInfo>
+            //         <InputField
+            //           value={newAddContent}
+            //           onChange={(e) => {
+            //             setNewAddContent(e.target.value);
+            //           }}
+            //           placeholder="새로운 정보를 추가해보세요"
+            //         />
+            //         <BtnWrap>
+            //           <button
+            //             onClick={() => {
+            //               setIsAddingNow({ section: "", isAdding: false });
+            //               setNewAddContent("");
+            //             }}
+            //           >
+            //             <img src={images.IconClose2} alt="" />
+            //             취소
+            //           </button>
+            //           <button onClick={() => handleAddSave("targetCustomer")}>
+            //             <img src={images.IconCheck2} alt="" />
+            //             저장
+            //           </button>
+            //           {/* <button onClick={() => generateAddtionalContent("targetCustomer")}>
+            //             <img src={images.IconSetting} alt="" />
+            //             생성
+            //           </button> */}
+            //         </BtnWrap>
+            //       </AddInfo>
+            //     ) : (
+            //       isEditingNow && (
+            //         <button
+            //           className="moreButton"
+            //           onClick={() =>
+            //             setIsAddingNow({
+            //               section: "targetCustomer",
+            //               isAdding: true,
+            //             })
+            //           }
+            //         >
+            //           목표 고객 추가하기 +
+            //         </button>
+            //       )
+            //     )
+            //   )}
+            // </BoxWrap>
             }
             <p>
               입력된 내용을 바탕으로 위와 같이 이해하고 정리하였습니다.
