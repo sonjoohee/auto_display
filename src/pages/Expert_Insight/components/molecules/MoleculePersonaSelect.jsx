@@ -86,7 +86,6 @@ const MoleculePersonaSelect = ({ conversationId }) => {
     if(Object.keys(selectedPocTarget).length) {
       setSelectedPocTargetState(selectedPocTarget);
       setSelectedOption(selectedPocTarget.job);
-      console.log(selectedPocTarget.job);
     }
   }, [selectedPocTarget]);
 
