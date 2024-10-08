@@ -90,7 +90,7 @@ const OrganismReportPopup = ({ report, onClose }) => {
                   :
                   <div className="cont">
                       <strong>PoC 설계 전문가</strong>
-                      <p>OOO</p>
+                      <p>장석훈</p>
                     </div>
             }
           </ExpertThumb>
