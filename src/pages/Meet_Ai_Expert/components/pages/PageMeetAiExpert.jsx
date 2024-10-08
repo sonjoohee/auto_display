@@ -37,6 +37,7 @@ import {
   RECOMMENDED_TARGET_DATA,
   POC_DETAIL_REPORT_ATOM,
   POC_PERSONA_LIST,
+  EXPERT_DETAIL_DATA,
 } from "../../../AtomStates";
 
 import { Link } from "react-router-dom";
@@ -57,7 +58,7 @@ const PageMeetAiExpert = () => {
   const [analysisButtonState, setAnalysisButtonState] = useAtom(ANALYSIS_BUTTON_STATE);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
   const [isExpertInsightAccessible, setIsExpertInsightAccessible] = useAtom(IS_EXPERT_INSIGHT_ACCESSIBLE);
-
+  const [expertData] = useAtom(EXPERT_DETAIL_DATA);
   const [password, setPassword] = useAtom(passwordAtom);
   const [newPassword, setNewPassword] = useAtom(newPasswordAtom);
   const [rePassword, setRePassword] = useAtom(rePasswordAtom);
@@ -276,7 +277,20 @@ const PageMeetAiExpert = () => {
     }
   };
   
-  
+  const getExpertImage = (expertIndex) => {
+    switch(expertIndex) {
+      case "1":
+        return images.ImgStrategy;
+      case "2":
+        return images.ImgMarketing;
+      case "3":
+        return images.ImgClient;
+      case "4":
+        return images.ImgPoC;
+      default:
+        return images.ImgPoC; // 기본 이미지
+    }
+  };
 
   const handledExpertSelect = (index) => {
     if (isLoggedIn) {
@@ -345,70 +359,7 @@ const PageMeetAiExpert = () => {
           </InputWrap> */}
 
           <ExpertSelectWrap>
-            {/* 
-            <h2>
-              <img src={images.Chat} alt="" />
-              AI 전문가 선택해서 시작하기
-            </h2> 
-
-            <ExpertSelectBox>
-              <ExpertCard
-                onClick={() => {
-                  setAnalysisButtonState(1);
-                  handledExpertSelect("1");
-                }}
-              >
-                <span>
-                  <img src={images.IconChat} alt="" />
-                </span>
-                <p>가볍게 시작하는 내 비즈니스 전략 팁</p>
-                <strong>전략 디렉터와 1:1 커피챗</strong>
-              </ExpertCard>
-              <ExpertCard
-                onClick={() => {
-                  setAnalysisButtonState(1);
-                  handledExpertSelect("2");
-                }}
-              >
-                <span>
-                  <img src={images.IconWrite} alt="" />
-                </span>
-                <p>지금 바로 쓸 수 있는 브랜딩 솔루션</p>
-                <strong>10초 맞춤 제안서 받기</strong>
-              </ExpertCard>
-              <ExpertCard
-                onClick={() => {
-                  setAnalysisButtonState(1);
-                  handledExpertSelect("3");
-                }}
-              >
-                <span>
-                  <img src={images.IconTarget2} alt="" />
-                </span>
-                <p>고객 데이터 전문가의 맞춤 타겟 추천</p>
-                <strong>당장 만나야할 고객은?</strong>
-              </ExpertCard>
-              <ExpertCard
-                onClick={() => {
-                  setAnalysisButtonState(1);
-                  handledExpertSelect("4");
-                }}
-              >
-                <span>
-                  <img src={images.IconChat} alt="" />
-                </span>
-                <p></p>
-                <strong>Poc 전문가(테스트)</strong>
-              </ExpertCard>
-              <ExpertCard More>
-                <div>
-                  <span>More</span>
-                  <p>Coming Soon</p>
-                </div>
-              </ExpertCard>
-            </ExpertSelectBox>
-            */}
-
+            {/* 고정 데이터 활용 */}
             <ExpertSelectBox>
               <ExpertCard PoC
                 onClick={() => {
@@ -471,8 +422,39 @@ const PageMeetAiExpert = () => {
                 </div>
               </ExpertCard>
             </ExpertSelectBox>
-
           </ExpertSelectWrap>
+            {/* API 데이터 활용 */}
+            {/* <ExpertSelectBox>
+              {expertData.results && expertData.results.map((expert) => (
+                <ExpertCard
+                  key={expert.id}
+                  PoC={expert.expertIndex === "4"}
+                  Marketing={expert.expertIndex === "2"}
+                  Client={expert.expertIndex === "3"}
+                  Strategy={expert.expertIndex === "1"}
+                  onClick={() => {
+                    setAnalysisButtonState(1);
+                    handledExpertSelect(expert.expertIndex);
+                  }}
+                >
+                  <strong>{expert.job}</strong>
+                  <p>{expert.coreValue}</p>
+                  <span>
+                  <img src={getExpertImage(expert.expertIndex)} alt="" />
+                  </span>
+                </ExpertCard>
+              ))}
+
+              <ExpertCard Coming>
+                <div>
+                  <span>
+                    <img src={images.ImgComing} alt="" />
+                  </span>
+                  <p>coming soon</p>
+                </div>
+              </ExpertCard>
+            </ExpertSelectBox>
+          </ExpertSelectWrap> */}
         </MainContent>
       </ContentsWrap>
 
