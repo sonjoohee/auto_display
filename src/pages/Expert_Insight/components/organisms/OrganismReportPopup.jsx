@@ -750,7 +750,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
      {expertIndex === "4" ? (
       <>
         {/* content 배열이 존재하는 경우 */}
-        <p style={{ marginTop: "15px", marginBottom: "15px" }}>{"임시 텍스트"}</p>
+        <p style={{ marginTop: "15px", marginBottom: "15px" }}>{title_text || "임시 텍스트"}</p>
         {content && content.length > 0 &&
           content.map((item, index) => (
             <SeparateSection key={index}>
