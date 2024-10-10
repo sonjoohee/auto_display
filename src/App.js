@@ -5,7 +5,7 @@ import GlobalStyles from "./assets/GlobalStyle";
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useAtom , } from 'jotai';
-import { isLoggedInAtom,USER_NAME, USER_EMAIL ,IS_SOCIAL_LOGGED_IN, EXPERT_DETAIL_DATA } from './pages/AtomStates'; // 로그인 상태 아톰 임포트
+import { isLoggedInAtom,USER_NAME, USER_EMAIL ,IS_SOCIAL_LOGGED_IN, EXPERT_DETAIL_DATA, IS_MOBILE } from './pages/AtomStates'; // 로그인 상태 아톰 임포트
 import axios from "axios";
 
 import PageLogin from './pages/Login_Sign/components/pages/PageLogin';
@@ -43,6 +43,24 @@ function App() {
   const [, setIsSocialLoggedIn] = useAtom(IS_SOCIAL_LOGGED_IN); // 소셜 로그인 상태 아톰
   const [isServerDown, setIsServerDown] = useState(false); // 서버 상태 관리
   const [, setExpertDetail] = useAtom(EXPERT_DETAIL_DATA);
+      // 화면 크기를 체크하는 useEffect
+  const [, setIsMobile] = useAtom(IS_MOBILE);
+  useEffect(() => {
+    const handleResize = () => {
+      // 뷰포트 너비가 768px 이하일 경우 모바일로 간주
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    // 페이지 로드 시 및 창 크기 변경 시 화면 크기 체크
+    window.addEventListener("resize", handleResize);
+    handleResize(); // 초기 로드 시에도 체크
+
+    // 컴포넌트가 언마운트 될 때 이벤트 리스너 제거
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   // 애플리케이션이 로드될 때 로그인 상태 확인
   useEffect(() => {
     const token = sessionStorage.getItem('accessToken'); // sessionStorage에서 토큰 확인

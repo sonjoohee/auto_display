@@ -47,6 +47,7 @@ import {
   RECOMMENDED_TARGET_DATA,
   POC_DETAIL_REPORT_ATOM,
   POC_PERSONA_LIST,
+  IS_MOBILE,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -55,6 +56,7 @@ import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/Molec
 import OrganismReportPopup from "./OrganismReportPopup"; // 팝업 컴포넌트 임포트
 
 const OrganismLeftSideBar = () => {
+  const [isMobile] = useAtom(IS_MOBILE);
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_ATOM);
   const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
@@ -728,6 +730,10 @@ useEffect(() => {
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
+  // 컴포넌트가 마운트될 때 모바일 상태에 따라 초기 상태 설정
+  useEffect(() => {
+    setIsOpen(!isMobile);
+  }, [isMobile, setIsOpen]);
 
   const [isToggle, setIsToggle] = useState(true);
   const moreProfile = (event) => {
@@ -781,7 +787,7 @@ useEffect(() => {
         </button>
       </Logo>
 
-      <SideBar isOpen={isOpen} bgNone={!isOpen}>
+      <SideBar isOpen={isOpen} bgNone={!isOpen} isMobile={isMobile}>
         <SideBarMenu>
           <button
             type="button"
@@ -1751,23 +1757,29 @@ const Logo = styled.div`
 `;
 
 const SideBar = styled.div`
-  position: sticky;
-  top: 40px;
+  position: ${props => props.isMobile ? 'fixed' : 'sticky'};
+  top: ${props => props.isMobile ? '0' : '40px'};
+  left: ${props => props.isMobile ? '0' : 'auto'};
   display: flex;
   flex-direction: column;
-  max-width: ${(props) => (props.bgNone ? "100px" : "257px")};
+  max-width: ${props => props.isMobile ? '100%' : (props.bgNone ? "100px" : "257px")};
   width: 100%;
-  height: calc(100vh - 80px);
-  padding: 96px 20px 30px;
-  margin: ${(props) => (props.bgNone ? "40px 0 0 0" : "40px 0 0 40px")};
-  // margin: 40px 0 0 40px;
-  border-radius: 15px;
-  border: 1px solid ${palette.lineGray};
-  background: ${(props) => (props.bgNone ? "none" : "rgba(0,0,0,.02)")};
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  height: ${props => props.isMobile ? '80%' : 'calc(100vh - 80px)'};
+  padding: ${props => props.isMobile ? '120px 20px 30px' : '96px 20px 30px'};
+  margin: ${props => props.isMobile ? '0' : (props.bgNone ? "40px 0 0 0" : "40px 0 0 40px")};
+  border-radius: ${props => props.isMobile ? '0' : '15px'};
+  border: ${props => props.isMobile ? 'none' : `1px solid ${palette.lineGray}`};
+  background: ${props => props.isMobile ? palette.white : (props.bgNone ? "none" : "rgba(0,0,0,.02)")};
+  box-shadow: ${props => props.isMobile ? 'none' : '0 4px 10px rgba(0, 0, 0, 0.05)'};
   transition: all 0.5s;
-  transform: ${(props) => (props.bgNone ? "translateX(-257px)" : "0")};
-  z-index: 999;
+  transform: ${props => {
+    if (props.isMobile) {
+      return props.isOpen ? 'translateY(0)' : 'translateY(-100%)';
+    }
+    return props.bgNone ? "translateX(-257px)" : "0";
+  }};
+  z-index: ${props => props.isMobile ? '999' : '999'};
+  overflow-y: auto;
 
   h3 {
     font-size: 1rem;
