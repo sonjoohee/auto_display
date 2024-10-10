@@ -338,7 +338,8 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
                       onClick={() => handleTabClick(index, expertIndex)}
                       style={{marginBottom: "0"}}
                     >
-                      {tab.title}
+                      {/* {tab.title} */}
+                      {`${titleOfBusinessInfo} : PoC 설계 요약 보고서`}
                     </h1>
                   ))}
               </TabHeader>
@@ -1061,6 +1062,7 @@ const Section = ({
       {expertIndex === "4" ? (
         <>
           {/* content 배열이 존재하는 경우 */}
+          <p style={{ marginTop: "15px", marginBottom: "15px" }}>{"임시 텍스트"}</p>
           {content &&
             content.length > 0 &&
             content.map((item, index) => (
@@ -1068,7 +1070,7 @@ const Section = ({
                 {/* 항목 번호 및 제목 */}
                 <strong_title>
                   <span className="number">{index + 1}</span>{" "}
-                  <strong_title>{`${title} : ${item.title}`}</strong_title>{" "}
+                  <strong_title>{`목표 : ${item.title}`}</strong_title>{" "}
                   <DownloadButton
                     className={`download-button`}
                     ref={buttonRef}
@@ -1080,9 +1082,9 @@ const Section = ({
                   </DownloadButton> 
                 </strong_title>
                 {/* 항목 내용 */}
-                <p style={{ marginTop: "15px", marginBottom: "15px" }}>
+                {/* <p style={{ marginTop: "15px", marginBottom: "15px" }}>
                   {item.text}
-                </p>
+                </p> */}
 
                 {/* subContent가 존재하는 경우 */}
                 {item.subContent && item.subContent.length > 0 && (

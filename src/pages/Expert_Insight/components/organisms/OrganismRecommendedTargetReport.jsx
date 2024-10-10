@@ -292,11 +292,11 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
                         <SeparateSection key={index}>
                           <strong>
                             <span className="number">{index + 1}</span>
-                            <strong_title>{goalActionText}</strong_title>
+                            <strong_title>{`목표 : ${goalActionText}`}</strong_title>
                           </strong>
                           <div className="bgWhite">
                           <p style={{ textIndent: '-1em', paddingLeft: '1em', marginBottom: '5px' }}>
-                              1. 추천 가상 페르소나 : {value[0]["추천 가상 페르소나"]}
+                              1. 추천 페르소나 : {value[0]["추천 가상 페르소나"]}
                             </p>
                             <p style={{ textIndent: '-1em', paddingLeft: '1em', marginTop: '5px' }}>
                               2. 이유 및 예상 인사이트 : {value[1]["이유 및 예상 인사이트"]}
