@@ -539,7 +539,7 @@ const Section = ({
       const ctx = canvas.getContext('2d');
   
       // DPI 설정 (해상도를 높이기 위해 150 DPI로 설정)
-      const dpi = 150;
+      const dpi = 300;
   
       // A4 크기(mm)를 픽셀로 변환
       const mmToInch = 1 / 25.4;
@@ -550,14 +550,14 @@ const Section = ({
       canvas.height = pageHeightInch * dpi;
   
       // 폰트 및 텍스트 스타일 설정 (글자 크기를 약간 작게)
-      ctx.font = '20px Arial';
+      ctx.font = '40px Arial';
       ctx.fillStyle = 'black';
       ctx.textBaseline = 'top';
   
       // 줄 간격 및 여백 설정
-      const lineHeight = 30; // 줄 간격을 글자 크기에 맞게 조정
-      const marginLeft = 20 * (dpi / 72); // 여백을 해상도에 맞게 조정
-      const marginTop = 20 * (dpi / 72);
+      const lineHeight = 60; // 줄 간격을 글자 크기에 맞게 조정
+      const marginLeft = 40 * (dpi / 72); // 여백을 해상도에 맞게 조정
+      const marginTop = 40 * (dpi / 72);
       const maxTextWidth = canvas.width - marginLeft * 2;
       const maxTextHeight = canvas.height - marginTop * 2;
   
