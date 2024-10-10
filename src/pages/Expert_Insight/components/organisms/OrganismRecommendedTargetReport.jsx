@@ -117,7 +117,7 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
     if (currentExpertData && currentExpertData.tabs[0] && currentExpertData.tabs[0].sections[0]) {
       const content = currentExpertData.tabs[0].sections[0].content[index];
       if (content && content.title) {
-        return `${content.title}`;
+        return `목표 :${content.title}`;
       }
     }
     return "목표 : 설정되지 않음"; // 기본값
@@ -288,7 +288,7 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
                         <SeparateSection key={index}>
                           <strong>
                             <span className="number">{index + 1}</span>
-                            <strong_title>{`목표 : ${goalActionText}`}</strong_title>
+                            <strong_title>{`${goalActionText}`}</strong_title>
                           </strong>
                           <div className="bgWhite">
                           <p style={{ textIndent: '-1em', paddingLeft: '1em', marginBottom: '5px' }}>
