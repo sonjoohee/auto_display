@@ -532,7 +532,11 @@ const StrategyReportSection = ({ report }) => {
                 expertIndex={expertIndex} // 전달
                 onClick={() => handleTabClick(index)}
               >
-                {tab.title}
+                {/* {tab.title} */}
+                {expertIndex === "4" 
+                  ? `${report.content.business_info} : PoC 설계 요약 보고서`
+                  : tab.title
+                }
               </TabButton>
             ))}
         </TabHeader>

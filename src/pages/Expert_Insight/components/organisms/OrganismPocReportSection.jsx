@@ -338,7 +338,8 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
                       onClick={() => handleTabClick(index, expertIndex)}
                       style={{marginBottom: "0"}}
                     >
-                      {tab.title}
+                      {/* {tab.title} */}
+                      {`${titleOfBusinessInfo} : PoC 설계 요약 보고서`}
                     </h1>
                   ))}
               </TabHeader>
