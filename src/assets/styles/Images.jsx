@@ -91,8 +91,12 @@ import iconMailSuccess from "../images/iconMailSuccess.svg"
 
 import ImgPDF from "../images/ImgPDF.svg"
 import ImgWord from "../images/ImgWord.svg"
+import ImgPDF2 from "../images/ImgPDF2.svg"
+import ImgWord2 from "../images/ImgWord2.svg"
 import ImgKOR from "../images/ImgKOR.svg"
 import ImgENG from "../images/ImgENG.svg"
+import ImgKOR2 from "../images/ImgKOR2.svg"
+import ImgENG2 from "../images/ImgENG2.svg"
 
 
 
@@ -190,8 +194,12 @@ const images = {
 
   ImgPDF,
   ImgWord,
+  ImgPDF2,
+  ImgWord2,
   ImgKOR,
   ImgENG,
+  ImgKOR2,
+  ImgENG2,
 }
 
 export default images;
