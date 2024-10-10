@@ -427,7 +427,7 @@ const Option = styled.div`
 
   &:hover {
     border-color: ${(props) =>
-      props.selectedPocOptions.length === 0 ? palette.blue : palette.gray800};
+      props.selectedPocOptions.length === 0 ? palette.blue : "none"};
   }
 `;
 
