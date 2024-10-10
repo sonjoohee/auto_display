@@ -447,7 +447,7 @@ ${report.content.mainCharacter.map(character => `- ${character}`).join('\n')}`.t
             Object.entries(report.content.poc_persona).forEach(([key, value], index) => {
               const goalActionText = value.goalActionText || findGoalActionText(index);
               contentToCopy += `${goalActionText}\n`;
-              contentToCopy += `1. 추천 가상 페르소나 : ${value[0]["추천 가상 페르소나"]}\n`;
+              contentToCopy += `1. 추천 페르소나 : ${value[0]["추천 가상 페르소나"]}\n`;
               contentToCopy += `2. 이유 및 예상 인사이트 : ${value[1]["이유 및 예상 인사이트"]}\n\n`;
             });
           } else {
@@ -515,7 +515,7 @@ ${mainCharacteristicOfBusinessInformation
           Object.entries(recommendedTargetData.poc_persona).forEach(([key, value], index) => {
             const goalActionText = findGoalActionText(index);
             contentToCopy += `${goalActionText}\n`;
-            contentToCopy += `1. 추천 가상 페르소나 : ${value[0]["추천 가상 페르소나"]}\n`;
+            contentToCopy += `1. 추천 페르소나 : ${value[0]["추천 가상 페르소나"]}\n`;
             contentToCopy += `2. 이유 및 예상 인사이트 : ${value[1]["이유 및 예상 인사이트"]}\n\n`;
           });
         }

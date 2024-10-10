@@ -750,16 +750,17 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
      {expertIndex === "4" ? (
       <>
         {/* content 배열이 존재하는 경우 */}
+        <p style={{ marginTop: "15px", marginBottom: "15px" }}>{"임시 텍스트"}</p>
         {content && content.length > 0 &&
           content.map((item, index) => (
             <SeparateSection key={index}>
                 {/* 항목 번호 및 제목 */}
                 <strong_title>
                   <span className="number">{index + 1}</span>{" "}
-                  <strong_title>{`${title} : ${item.title}`}</strong_title>{" "}
+                  <strong_title>{`목표 : ${item.title}`}</strong_title>{" "}
                 </strong_title>
                 {/* 항목 내용 */}
-                <p style={{ marginTop: "15px", marginBottom: "15px" }}>{item.text}</p>
+                {/* <p style={{ marginTop: "15px", marginBottom: "15px" }}>{item.text}</p> */}
 
                 {/* subContent가 존재하는 경우 */}
                 {item.subContent && item.subContent.length > 0 && (
@@ -1798,11 +1799,11 @@ const RecommendedTargetReportSection = ({ report }) => {
               <SeparateSection key={index}>
                 <strong>
                   <span className="number">{index + 1}</span>
-                  <strong_title>{goalActionText}</strong_title>
+                  <strong_title>{`목표 : ${goalActionText}`}</strong_title>
                 </strong>
                 <div className="bgWhite">
                   <p style={{ textIndent: '-1em', paddingLeft: '1em', marginBottom: '5px' }}>
-                    1. 추천 가상 페르소나 : {persona}
+                    1. 추천 페르소나 : {persona}
                   </p>
                   <p style={{ textIndent: '-1em', paddingLeft: '1em', marginTop: '5px' }}>
                     2. 이유 및 예상 인사이트 : {insight}
