@@ -289,7 +289,7 @@ const MoleculePersonaSelect = ({ conversationId }) => {
             selectedPocTarget={selectedPocTarget}
             isTargetUnknown
           >
-            <img src={images.iconQuestionMark} alt="" />
+            <img src={selectedOption !== "아직 타겟 고객이 확실하지 않아요" || Object.keys(selectedPocTarget).length ? images.iconQuestionMark : images.iconQuestionMark2} alt="" />
             아직 타겟 고객이 확실하지 않아요
           </Option>          
         </OptionsContainer>
@@ -356,7 +356,12 @@ const Option = styled.div`
   }
   
   img {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
+    background-color: ${(props) => (!props.selected || Object.keys(props.selectedPocTarget).length ? "rgba(246, 246, 246, 1)" : "rgba(255, 255, 255, 1)")};
+    border-radius: 50%;
+    padding: 10px;
+    width: 34px;
+    height: 34px;
   }
 
   &:hover {
