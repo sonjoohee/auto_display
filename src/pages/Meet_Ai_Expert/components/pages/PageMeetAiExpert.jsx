@@ -38,6 +38,7 @@ import {
   POC_DETAIL_REPORT_ATOM,
   POC_PERSONA_LIST,
   EXPERT_DETAIL_DATA,
+  IS_MOBILE,
 } from "../../../AtomStates";
 
 import { Link } from "react-router-dom";
@@ -49,6 +50,7 @@ import OrganismHeader from "../../../organisms/OrganismHeader";
 import OrganismLeftSideBar from "../../../Expert_Insight/components/organisms/OrganismLeftSideBar";
 
 const PageMeetAiExpert = () => {
+  const [isMobile, setIsMobile] = useAtom(IS_MOBILE);
   const navigate = useNavigate();
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
@@ -308,10 +310,9 @@ const PageMeetAiExpert = () => {
     <>
       {/* <OrganismHeader /> */}
 
-      <ContentsWrap>
+      <ContentsWrap isMobile={isMobile}>
         <OrganismLeftSideBar />
-
-        <MainContent>
+        <MainContent isMobile={isMobile}>
           <Title>
             Meet AI Expert
             <p>
@@ -319,7 +320,7 @@ const PageMeetAiExpert = () => {
             </p>
           </Title>
 
-          <InputWrap>
+          <InputWrap isMobile={isMobile}>
             <div className="inputWrap">
               <textarea
                 placeholder="당신의 아이템 또는 프로젝트 아이디어를 적어 주세요 (예: 원격 근무자를 위한 생산성 관리 툴)"
@@ -358,9 +359,9 @@ const PageMeetAiExpert = () => {
             </div>
           </InputWrap> */}
 
-          <ExpertSelectWrap>
+          <ExpertSelectWrap isMobile={isMobile}>
             {/* 고정 데이터 활용 */}
-            <ExpertSelectBox>
+            <ExpertSelectBox isMobile={isMobile}>
               <ExpertCard PoC
                 onClick={() => {
                   setAnalysisButtonState(1);
@@ -592,18 +593,19 @@ const MainContent = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  // height:100%;
   justify-content: center;
+  padding: ${props => props.isMobile ? '0' : '0 20px'};
 `;
 
 const ContentsWrap = styled.div`
   position: relative;
-  width: calc(100% - 40px);
+  width: ${props => props.isMobile ? '100%' : 'calc(100% - 40px)'};
   display: flex;
-  gap: 40px;
-  flex-direction: row;
-  // height:100dvh;
+  flex-direction: ${props => props.isMobile ? 'column' : 'row'};
+  gap: ${props => props.isMobile ? '20px' : '40px'};
+  padding: ${props => props.isMobile ? '20px' : '0'};
 `;
+
 
 const Title = styled.h1`
   display: flex;
@@ -611,21 +613,21 @@ const Title = styled.h1`
   align-items: center;
   gap: 8px;
   // font-size:3.13rem;
-  font-size: 2rem;
+  font-size: ${props => props.isMobile ? '1.5rem' : '2rem'};
   font-weight: 600;
   // margin:0 auto 55px;
-  margin: 120px auto 55px;
+  margin: ${props => props.isMobile ? '40px auto 30px' : '120px auto 55px'};
 
   p {
     // font-size:1.25rem;
-    font-size: 0.875rem;
+    font-size: ${props => props.isMobile ? '0.75rem' : '0.875rem'};
     font-weight: 400;
   }
 `;
 
 const InputWrap = styled.div`
   // max-width:1000px;
-  max-width: 820px;
+  max-width: ${props => props.isMobile ? '100%' : '820px'};
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -641,7 +643,7 @@ const InputWrap = styled.div`
     justify-content: space-between;
     gap: 20px;
     // padding:28px 38px;
-    padding: 28px;
+    padding: ${props => props.isMobile ? '20px' : '28px'};
 
     textarea {
       width: 100%;
@@ -688,7 +690,7 @@ const ExpertSelectWrap = styled.div`
   position: relative;
   max-width: 1240px;
   width: 100%;
-  margin: 120px auto 100px;
+  margin: ${props => props.isMobile ? '60px auto 50px' : '120px auto 100px'};
 
   h2 {
     display: flex;
@@ -713,12 +715,13 @@ const ExpertSelectWrap = styled.div`
 const ExpertSelectBox = styled.div`
   display: flex;
   flex-wrap: wrap;
+  flex-direction: ${props => props.isMobile ? 'column' : 'row'};
   justify-content: space-between;
-  gap: 20px;
+  gap: ${props => props.isMobile ? '15px' : '20px'};
   // margin-bottom:30px;
 
   > div {
-    flex: 1 1 18%;
+     flex: ${props => props.isMobile ? '1 1 auto' : '1 1 18%'};
   }
 `;
 
@@ -726,9 +729,9 @@ const ExpertCard = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-  height: 215px;
+  height: ${props => props.isMobile ? 'auto' : '215px'};
   text-align: left;
-  padding: 26px 20px;
+  padding: ${props => props.isMobile ? '20px 15px' : '26px 20px'};
   border-radius: 16px;
   border: ${(props) => {
     if (props.select) return `1px solid ${palette.blue}`;
