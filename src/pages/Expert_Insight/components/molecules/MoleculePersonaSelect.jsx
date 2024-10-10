@@ -147,7 +147,7 @@ const MoleculePersonaSelect = ({ conversationId }) => {
 
         while ((retryCount < maxRetries &&
           !Array.isArray(updatedPersonaList) ||
-          updatedPersonaList.length === 0 ||
+          updatedPersonaList.length !== 5 ||
           !updatedPersonaList[0].hasOwnProperty("persona_1")
         )) {
           response = await axios.post(
