@@ -131,6 +131,11 @@ const MoleculePersonaSelect = ({ conversationId }) => {
 
         const data = {
           product_info: titleOfBusinessInfo,
+          product_analysis_info: {
+            명칭: titleOfBusinessInfo,
+            주요_목적_및_특징: mainFeaturesOfBusinessInformation,
+            주요기능: mainCharacteristicOfBusinessInformation,
+          },
           goal : selectedPocOptions[0],
           standpoint : selectedPocOptions[1],
         };
@@ -270,7 +275,7 @@ const MoleculePersonaSelect = ({ conversationId }) => {
             <Option
               key={index}
               onClick={() => handleOptionClick(index)}
-              selected={selectedOption === persona[`persona_${index + 1}`][1]["job"]}
+              selected={selectedPocTargetState.job === persona[`persona_${index + 1}`][1]["job"]}
               selectedPocTarget={selectedPocTarget}
             >
               <Label
