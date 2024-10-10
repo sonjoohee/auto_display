@@ -128,7 +128,7 @@ const MoleculePersonaSelect = ({ conversationId }) => {
 
         const data = {
           product_info: titleOfBusinessInfo,
-          product_analysis_info: {
+          product_analysis_report: {
             명칭: titleOfBusinessInfo,
             주요_목적_및_특징: mainFeaturesOfBusinessInformation,
             주요기능: mainCharacteristicOfBusinessInformation,
