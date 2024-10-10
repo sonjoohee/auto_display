@@ -790,6 +790,7 @@ const ExpertCard = styled.div`
   }
 
   strong {
+    font-family: "Pretendard", "Poppins";
     font-size: 1rem;
     font-weight: 700;
     color: ${(props) => (props.select ? palette.white : palette.darkGray)};
