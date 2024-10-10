@@ -1118,14 +1118,14 @@ const Section = ({
                             className={`${selectedFormat === "PDF" ? "selected" : ""}`}
                             onClick={() => handleFormatChange("PDF")}
                           >
-                            {selectedFormat === "PDF" ? <img src={images.ImgPDF2} alt="" /> : <img src={images.ImgPDF} alt="" />}
+                            <img src={images.ImgPDF} alt="" />
                             PDF
                           </div>
                           <div
                             className={`${selectedFormat === "Word" ? "selected" : ""}`}
                             onClick={() => handleFormatChange("Word")}
                           >
-                            {selectedFormat === "Word" ? <img src={images.ImgWord2} alt="" /> : <img src={images.ImgWord} alt="" />}
+                            <img src={images.ImgWord} alt="" />
                             Word
                           </div>
                         </SelectBox>
@@ -1137,14 +1137,14 @@ const Section = ({
                             className={`${selectedLanguage === "한글" ? "selected" : ""}`}
                             onClick={() => handleLanguageChange("한글")}
                           >
-                            {selectedLanguage === "한글" ? <img src={images.ImgKOR2} alt="" /> : <img src={images.ImgKOR} alt="" />}
+                            <img src={images.ImgKOR} alt="" />
                             한글
                           </div>
                           <div
                             className={`${selectedLanguage === "영문" ? "selected" : ""}`}
                             onClick={() => handleLanguageChange("영문")}
                           >
-                            {selectedLanguage === "영문" ? <img src={images.ImgENG2} alt="" /> : <img src={images.ImgENG} alt="" />}
+                            <img src={images.ImgENG} alt="" />
                             영문
                           </div>
                         </SelectBox>
