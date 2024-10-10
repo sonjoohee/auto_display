@@ -68,7 +68,9 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
   const [downloadStatus, setDownloadStatus] = useState(""); // 상태 메시지를 관리
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET); // 확인 버튼을 눌렀을 때만 저장 -> 히스토리 저장
   const [selectedTabCopy, setSelectedTabCopy] = useAtom(SELECTED_TAB_COPY);
-  const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
+  const [recommendedTargetData, setRecommendedTargetData] = useAtom(
+    RECOMMENDED_TARGET_DATA
+  );
 
   const axiosConfig = {
     timeout: 100000, // 100초
@@ -88,7 +90,8 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
     businessInformationTargetCustomer,
     setBusinessInformationTargetCustomer,
   ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [expertButtonState, setExpertButtonState] = useAtom(EXPERT_BUTTON_STATE); // BUTTON_STATE 사용
+  const [expertButtonState, setExpertButtonState] =
+    useAtom(EXPERT_BUTTON_STATE); // BUTTON_STATE 사용
 
   // Use the single strategyReportData atom
   const [strategyReportData, setStrategyReportData] =
@@ -298,13 +301,13 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
     loadData();
   }, [conversationId, selectedTab, expertIndex, expertButtonState]); // buttonState 의존성 추가
 
-  const handleTabClick = (index, expertIndex) => {   
-   setSelectedTab(index);
-   setSelectedTabCopy(prevState => ({
-     ...prevState,
-     [expertIndex]: index
-   }));
- };
+  const handleTabClick = (index, expertIndex) => {
+    setSelectedTab(index);
+    setSelectedTabCopy((prevState) => ({
+      ...prevState,
+      [expertIndex]: index,
+    }));
+  };
 
   return (
     <>
@@ -336,7 +339,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
                       active={selectedTab === index}
                       expertIndex={expertIndex}
                       onClick={() => handleTabClick(index, expertIndex)}
-                      style={{marginBottom: "0"}}
+                      style={{ marginBottom: "0" }}
                     >
                       {/* {tab.title} */}
                       {`${titleOfBusinessInfo} : PoC 설계 요약 보고서`}
@@ -452,21 +455,23 @@ const Section = ({
   const [selectedFormat, setSelectedFormat] = useState("PDF");
   const [selectedLanguage, setSelectedLanguage] = useState("한글");
   const popupRef = useRef(null); // 팝업 요소를 참조하는 useRef 생성
-  const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
+  const [recommendedTargetData, setRecommendedTargetData] = useAtom(
+    RECOMMENDED_TARGET_DATA
+  );
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
         popupRef.current &&
         !popupRef.current.contains(event.target) &&
-        !event.target.closest('.download-button')
+        !event.target.closest(".download-button")
       ) {
         setIsModalOpen({});
       }
     };
-  
+
     document.addEventListener("mousedown", handleClickOutside);
-  
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -495,7 +500,7 @@ const Section = ({
       return;
     }
 
-    setIsModalOpen(prev => {
+    setIsModalOpen((prev) => {
       const newState = Object.keys(prev).reduce((acc, key) => {
         acc[key] = false;
         return acc;
@@ -533,114 +538,114 @@ const Section = ({
   const generatePDF = async (cleanedContent, index, fileName) => {
     try {
       // <br> 태그를 줄바꿈 문자로 대체
-      const textContent = cleanedContent.replace(/<br\s*\/?>/gi, '\n');
-  
+      const textContent = cleanedContent.replace(/<br\s*\/?>/gi, "\n");
+
       // 오프스크린 캔버스 생성
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-  
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
       // DPI 설정 (해상도를 높이기 위해 300 DPI로 설정)
       const dpi = 300;
-  
+
       // A4 크기(mm)를 픽셀로 변환
       const mmToInch = 1 / 25.4;
       const pageWidthInch = 210 * mmToInch;
       const pageHeightInch = 297 * mmToInch;
-  
+
       canvas.width = pageWidthInch * dpi;
       canvas.height = pageHeightInch * dpi;
-  
+
       // 폰트 및 텍스트 스타일 설정 (글자 크기를 약간 작게)
-      ctx.font = '40px Arial';
-      ctx.fillStyle = 'black';
-      ctx.textBaseline = 'top';
-  
+      ctx.font = "40px Arial";
+      ctx.fillStyle = "black";
+      ctx.textBaseline = "top";
+
       // 줄 간격 및 여백 설정
       const lineHeight = 60; // 줄 간격을 글자 크기에 맞게 조정
       const marginLeft = 40 * (dpi / 72); // 여백을 해상도에 맞게 조정
       const marginTop = 40 * (dpi / 72);
       const maxTextWidth = canvas.width - marginLeft * 2;
       const maxTextHeight = canvas.height - marginTop * 2;
-  
+
       // 텍스트를 캔버스 너비에 맞게 줄로 분할하는 함수
       const getLines = (ctx, text, maxWidth) => {
-        const paragraphs = text.split('\n');
+        const paragraphs = text.split("\n");
         const lines = [];
-  
+
         for (let p = 0; p < paragraphs.length; p++) {
-          const words = paragraphs[p].split(' ');
-          let line = '';
-  
+          const words = paragraphs[p].split(" ");
+          let line = "";
+
           for (let n = 0; n < words.length; n++) {
-            const testLine = line + words[n] + ' ';
+            const testLine = line + words[n] + " ";
             const metrics = ctx.measureText(testLine);
             const testWidth = metrics.width;
-  
+
             if (testWidth > maxWidth && n > 0) {
               lines.push(line.trim());
-              line = words[n] + ' ';
+              line = words[n] + " ";
             } else {
               line = testLine;
             }
           }
           lines.push(line.trim());
         }
-  
+
         return lines;
       };
-  
+
       // 콘텐츠를 줄로 분할
       const lines = getLines(ctx, textContent, maxTextWidth);
-  
+
       // 페이지당 표시 가능한 줄 수 계산
       const linesPerPage = Math.floor(maxTextHeight / lineHeight);
-  
+
       // 줄을 페이지별로 분할
       const totalPages = Math.ceil(lines.length / linesPerPage);
-  
+
       // jsPDF 인스턴스 생성 (해상도를 높이기 위해 PDF의 단위를 'pt'로 설정)
       const pdf = new jsPDF({
-        unit: 'pt', // 포인트 단위 사용
+        unit: "pt", // 포인트 단위 사용
         format: [canvas.width * (72 / dpi), canvas.height * (72 / dpi)], // 페이지 크기 설정
       });
-  
+
       for (let pageNum = 0; pageNum < totalPages; pageNum++) {
         if (pageNum > 0) {
           pdf.addPage();
         }
-  
+
         // 새로운 페이지를 위해 캔버스 지우기
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
+
         // 현재 페이지의 줄 가져오기
         const startLine = pageNum * linesPerPage;
         const endLine = startLine + linesPerPage;
         const pageLines = lines.slice(startLine, endLine);
-  
+
         // 각 줄을 캔버스에 그리기
         pageLines.forEach((line, i) => {
           ctx.fillText(line, marginLeft, marginTop + i * lineHeight);
         });
-  
+
         // 캔버스를 이미지로 변환
-        const imgData = canvas.toDataURL('image/png');
-  
+        const imgData = canvas.toDataURL("image/png");
+
         // 이미지를 PDF에 추가
         pdf.addImage(
           imgData,
-          'PNG',
+          "PNG",
           0,
           0,
           pdf.internal.pageSize.getWidth(),
           pdf.internal.pageSize.getHeight()
         );
       }
-  
+
       pdf.save(`${fileName}.pdf`);
-  
+
       setDownloadStatus("다운로드 완료");
       setLoading(false);
-  
+
       setTimeout(() => {
         setDownloadStatus("");
       }, 2000);
@@ -648,21 +653,19 @@ const Section = ({
       console.error("PDF 생성 오류:", error);
       setLoading(false);
       setDownloadStatus("다운로드 실패");
-  
+
       setTimeout(() => {
         setDownloadStatus("");
       }, 2000);
     }
   };
-  
-  
-  
+
   // 텍스트를 여러 줄로 나누는 헬퍼 함수
   function getLines(ctx, text, maxWidth) {
     const words = text.split(" ");
     const lines = [];
     let currentLine = words[0];
-  
+
     for (let i = 1; i < words.length; i++) {
       const word = words[i];
       const width = ctx.measureText(currentLine + " " + word).width;
@@ -676,7 +679,6 @@ const Section = ({
     lines.push(currentLine);
     return lines;
   }
-  
 
   const handleDownload = async (language, index) => {
     setLoading(true); // 로딩 상태 시작
@@ -1043,7 +1045,7 @@ const Section = ({
   };
 
   const handleLanguageChange = (language) => {
-    setSelectedLanguage(language);  // 선택된 언어 상태를 설정
+    setSelectedLanguage(language); // 선택된 언어 상태를 설정
   };
 
   // 기존 subTitle과 text를 합쳐 새로운 text 생성
@@ -1062,15 +1064,17 @@ const Section = ({
       {expertIndex === "4" ? (
         <>
           {/* content 배열이 존재하는 경우 */}
-          <p style={{ marginTop: "15px", marginBottom: "15px" }}>{"임시 텍스트"}</p>
+          <p style={{ marginTop: "15px", marginBottom: "15px" }}>
+            {title_text || ""}
+          </p>
           {content &&
             content.length > 0 &&
             content.map((item, index) => (
               <SeparateSection key={index}>
                 {/* 항목 번호 및 제목 */}
-                <strong_title>
+                <strong_title style={{ marginBottom: "15px" }}>
                   <span className="number">{index + 1}</span>{" "}
-                  <strong_title>{`목표 : ${item.title}`}</strong_title>{" "}
+                  <strong_title>{`목표 : ${item.text}`}</strong_title>{" "}
                   <DownloadButton
                     className={`download-button`}
                     ref={buttonRef}
@@ -1079,7 +1083,7 @@ const Section = ({
                     isModalOpen={isModalOpen[index]}
                   >
                     {loading ? downloadStatus : "다운로드"}
-                  </DownloadButton> 
+                  </DownloadButton>
                 </strong_title>
                 {/* 항목 내용 */}
                 {/* <p style={{ marginTop: "15px", marginBottom: "15px" }}>
@@ -1097,7 +1101,14 @@ const Section = ({
                   >
                     {item.subContent.map((subItem, subIndex) => (
                       <div key={subIndex} style={{ marginTop: "3px" }}>
-                        <p style={{ textIndent: '-1em', paddingLeft: '1em', marginBottom: '5px' }} key={subIndex}>
+                        <p
+                          style={{
+                            textIndent: "-1em",
+                            paddingLeft: "1em",
+                            marginBottom: "5px",
+                          }}
+                          key={subIndex}
+                        >
                           {subIndex + 1}. {subItem.subTitle} : {subItem.text}
                         </p>
                       </div>
@@ -1105,7 +1116,7 @@ const Section = ({
                   </div>
                 )}
                 {/* 모달도 각 Section과 관련되어 렌더링 */}
-               {isModalOpen[index] && (
+                {isModalOpen[index] && (
                   <DownloadPopup
                     ref={popupRef}
                     isAutoSaveToggle={false}
@@ -1117,17 +1128,29 @@ const Section = ({
                         <label>포맷 선택 (택1)</label>
                         <SelectBox>
                           <div
-                            className={`${selectedFormat === "PDF" ? "selected" : ""}`}
+                            className={`${
+                              selectedFormat === "PDF" ? "selected" : ""
+                            }`}
                             onClick={() => handleFormatChange("PDF")}
                           >
-                            {selectedFormat === "PDF" ? <img src={images.ImgPDF2} alt="" /> : <img src={images.ImgPDF} alt="" />}
+                            {selectedFormat === "PDF" ? (
+                              <img src={images.ImgPDF2} alt="" />
+                            ) : (
+                              <img src={images.ImgPDF} alt="" />
+                            )}
                             PDF
                           </div>
                           <div
-                            className={`${selectedFormat === "Word" ? "selected" : ""}`}
+                            className={`${
+                              selectedFormat === "Word" ? "selected" : ""
+                            }`}
                             onClick={() => handleFormatChange("Word")}
                           >
-                            {selectedFormat === "Word" ? <img src={images.ImgWord2} alt="" /> : <img src={images.ImgWord} alt="" />}
+                            {selectedFormat === "Word" ? (
+                              <img src={images.ImgWord2} alt="" />
+                            ) : (
+                              <img src={images.ImgWord} alt="" />
+                            )}
                             Word
                           </div>
                         </SelectBox>
@@ -1136,17 +1159,29 @@ const Section = ({
                         <label>언어 선택 (택1)</label>
                         <SelectBox>
                           <div
-                            className={`${selectedLanguage === "한글" ? "selected" : ""}`}
+                            className={`${
+                              selectedLanguage === "한글" ? "selected" : ""
+                            }`}
                             onClick={() => handleLanguageChange("한글")}
                           >
-                            {selectedLanguage === "한글" ? <img src={images.ImgKOR2} alt="" /> : <img src={images.ImgKOR} alt="" />}
+                            {selectedLanguage === "한글" ? (
+                              <img src={images.ImgKOR2} alt="" />
+                            ) : (
+                              <img src={images.ImgKOR} alt="" />
+                            )}
                             한글
                           </div>
                           <div
-                            className={`${selectedLanguage === "영문" ? "selected" : ""}`}
+                            className={`${
+                              selectedLanguage === "영문" ? "selected" : ""
+                            }`}
                             onClick={() => handleLanguageChange("영문")}
                           >
-                            {selectedLanguage === "영문" ? <img src={images.ImgENG2} alt="" /> : <img src={images.ImgENG} alt="" />}
+                            {selectedLanguage === "영문" ? (
+                              <img src={images.ImgENG2} alt="" />
+                            ) : (
+                              <img src={images.ImgENG} alt="" />
+                            )}
                             영문
                           </div>
                         </SelectBox>
@@ -1156,7 +1191,11 @@ const Section = ({
                           onClick={() => handleDownloadClick(index)}
                           disabled={loading || !selectedLanguage}
                         >
-                          {loading ? downloadStatus : selectedLanguage ? "다운로드" : "언어를 선택해주세요"}
+                          {loading
+                            ? downloadStatus
+                            : selectedLanguage
+                            ? "다운로드"
+                            : "언어를 선택해주세요"}
                         </button>
                       </div>
                     </div>
@@ -1702,7 +1741,7 @@ const Section = ({
 
 export default OrganismStrategyReportSection;
 const SeparateSection = styled.div`
-  position:relative;
+  position: relative;
   display: flex;
   flex-direction: column;
   margin-top: 12px;
@@ -1837,7 +1876,7 @@ const AnalysisSection = styled.div`
   width: 91.5%;
   text-align: left;
   margin-top: 25px;
-  margin-left:50px;
+  margin-left: 50px;
   padding: 30px;
   border-radius: 15px;
   border: 1px solid ${palette.lineGray};
@@ -1933,7 +1972,7 @@ const BoxWrap = styled.div`
 `;
 
 const TabHeader = styled.div`
-  position:relative;
+  position: relative;
   display: flex;
   gap: 40px;
   margin-bottom: 20px;
@@ -2190,35 +2229,36 @@ const SectionWrapper_2 = styled.div`
 `;
 const DownloadButton = styled.button`
   position: absolute; /* 절대 위치 */
-  top:14px;
+  top: 14px;
   right: 20px; /* 오른쪽 끝으로 배치 */
-  display:flex;
-  align-items:center;
-  gap:4px;
-  font-family:Pretendard, Poppins;
-  font-size:0.75rem;
-  font-weight:500;
-  color: ${props => props.isModalOpen ? palette.blue : palette.gray500};
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: Pretendard, Poppins;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: ${(props) => (props.isModalOpen ? palette.blue : palette.gray500)};
   padding: 8px 0;
   border: none;
-  background:none;
+  background: none;
   cursor: pointer;
   z-index: 9;
-  transition:all .5s;
+  transition: all 0.5s;
 
   &:after {
-    width:16px;
-    height:16px;
-    ${props => props.isModalOpen ? 
-      `background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 17 17' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M8.9668 1.91406C5.08247 1.91406 1.93359 5.06293 1.93359 8.94727C1.93359 12.8316 5.08247 15.9805 8.9668 15.9805C12.8511 15.9805 16 12.8316 16 8.94727C16 5.06293 12.8511 1.91406 8.9668 1.91406ZM0.933594 8.94727C0.933594 4.51065 4.53018 0.914062 8.9668 0.914062C13.4034 0.914062 17 4.51065 17 8.94727C17 13.3839 13.4034 16.9805 8.9668 16.9805C4.53018 16.9805 0.933594 13.3839 0.933594 8.94727Z' fill='%230453F4'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M6.51499 9.30487C6.32573 9.49131 6.32573 9.79807 6.51499 9.98451L8.6359 12.0738C8.81967 12.2548 9.1139 12.2548 9.29767 12.0738L11.4186 9.98451C11.6078 9.79807 11.6078 9.49131 11.4186 9.30487C11.2348 9.12384 10.9406 9.12384 10.7568 9.30487L9.43962 10.6024V6.15919C9.43962 5.88712 9.2187 5.68359 8.96679 5.68359C8.71487 5.68359 8.49395 5.88712 8.49395 6.15919V10.6024L7.17677 9.30487C6.99299 9.12384 6.69877 9.12384 6.51499 9.30487Z' fill='%230453F4'/%3E%3C/svg%3E");` 
-      : `background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 17 17' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M8.9668 1.91406C5.08247 1.91406 1.93359 5.06293 1.93359 8.94727C1.93359 12.8316 5.08247 15.9805 8.9668 15.9805C12.8511 15.9805 16 12.8316 16 8.94727C16 5.06293 12.8511 1.91406 8.9668 1.91406ZM0.933594 8.94727C0.933594 4.51065 4.53018 0.914062 8.9668 0.914062C13.4034 0.914062 17 4.51065 17 8.94727C17 13.3839 13.4034 16.9805 8.9668 16.9805C4.53018 16.9805 0.933594 13.3839 0.933594 8.94727Z' fill='%238c8c8c'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M6.51499 9.30487C6.32573 9.49131 6.32573 9.79807 6.51499 9.98451L8.6359 12.0738C8.81967 12.2548 9.1139 12.2548 9.29767 12.0738L11.4186 9.98451C11.6078 9.79807 11.6078 9.49131 11.4186 9.30487C11.2348 9.12384 10.9406 9.12384 10.7568 9.30487L9.43962 10.6024V6.15919C9.43962 5.88712 9.2187 5.68359 8.96679 5.68359C8.71487 5.68359 8.49395 5.88712 8.49395 6.15919V10.6024L7.17677 9.30487C6.99299 9.12384 6.69877 9.12384 6.51499 9.30487Z' fill='%238c8c8c'/%3E%3C/svg%3E");`}
+    width: 16px;
+    height: 16px;
+    ${(props) =>
+      props.isModalOpen
+        ? `background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 17 17' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M8.9668 1.91406C5.08247 1.91406 1.93359 5.06293 1.93359 8.94727C1.93359 12.8316 5.08247 15.9805 8.9668 15.9805C12.8511 15.9805 16 12.8316 16 8.94727C16 5.06293 12.8511 1.91406 8.9668 1.91406ZM0.933594 8.94727C0.933594 4.51065 4.53018 0.914062 8.9668 0.914062C13.4034 0.914062 17 4.51065 17 8.94727C17 13.3839 13.4034 16.9805 8.9668 16.9805C4.53018 16.9805 0.933594 13.3839 0.933594 8.94727Z' fill='%230453F4'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M6.51499 9.30487C6.32573 9.49131 6.32573 9.79807 6.51499 9.98451L8.6359 12.0738C8.81967 12.2548 9.1139 12.2548 9.29767 12.0738L11.4186 9.98451C11.6078 9.79807 11.6078 9.49131 11.4186 9.30487C11.2348 9.12384 10.9406 9.12384 10.7568 9.30487L9.43962 10.6024V6.15919C9.43962 5.88712 9.2187 5.68359 8.96679 5.68359C8.71487 5.68359 8.49395 5.88712 8.49395 6.15919V10.6024L7.17677 9.30487C6.99299 9.12384 6.69877 9.12384 6.51499 9.30487Z' fill='%230453F4'/%3E%3C/svg%3E");`
+        : `background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 17 17' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M8.9668 1.91406C5.08247 1.91406 1.93359 5.06293 1.93359 8.94727C1.93359 12.8316 5.08247 15.9805 8.9668 15.9805C12.8511 15.9805 16 12.8316 16 8.94727C16 5.06293 12.8511 1.91406 8.9668 1.91406ZM0.933594 8.94727C0.933594 4.51065 4.53018 0.914062 8.9668 0.914062C13.4034 0.914062 17 4.51065 17 8.94727C17 13.3839 13.4034 16.9805 8.9668 16.9805C4.53018 16.9805 0.933594 13.3839 0.933594 8.94727Z' fill='%238c8c8c'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M6.51499 9.30487C6.32573 9.49131 6.32573 9.79807 6.51499 9.98451L8.6359 12.0738C8.81967 12.2548 9.1139 12.2548 9.29767 12.0738L11.4186 9.98451C11.6078 9.79807 11.6078 9.49131 11.4186 9.30487C11.2348 9.12384 10.9406 9.12384 10.7568 9.30487L9.43962 10.6024V6.15919C9.43962 5.88712 9.2187 5.68359 8.96679 5.68359C8.71487 5.68359 8.49395 5.88712 8.49395 6.15919V10.6024L7.17677 9.30487C6.99299 9.12384 6.69877 9.12384 6.51499 9.30487Z' fill='%238c8c8c'/%3E%3C/svg%3E");`}
     background-size:cover;
-    transition:all .5s;
-    content:'';
+    transition: all 0.5s;
+    content: "";
   }
 
   &:hover {
-    color:${palette.blue};
+    color: ${palette.blue};
 
     &:after {
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 17 17' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M8.9668 1.91406C5.08247 1.91406 1.93359 5.06293 1.93359 8.94727C1.93359 12.8316 5.08247 15.9805 8.9668 15.9805C12.8511 15.9805 16 12.8316 16 8.94727C16 5.06293 12.8511 1.91406 8.9668 1.91406ZM0.933594 8.94727C0.933594 4.51065 4.53018 0.914062 8.9668 0.914062C13.4034 0.914062 17 4.51065 17 8.94727C17 13.3839 13.4034 16.9805 8.9668 16.9805C4.53018 16.9805 0.933594 13.3839 0.933594 8.94727Z' fill='%230453F4'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M6.51499 9.30487C6.32573 9.49131 6.32573 9.79807 6.51499 9.98451L8.6359 12.0738C8.81967 12.2548 9.1139 12.2548 9.29767 12.0738L11.4186 9.98451C11.6078 9.79807 11.6078 9.49131 11.4186 9.30487C11.2348 9.12384 10.9406 9.12384 10.7568 9.30487L9.43962 10.6024V6.15919C9.43962 5.88712 9.2187 5.68359 8.96679 5.68359C8.71487 5.68359 8.49395 5.88712 8.49395 6.15919V10.6024L7.17677 9.30487C6.99299 9.12384 6.69877 9.12384 6.51499 9.30487Z' fill='%230453F4'/%3E%3C/svg%3E");
@@ -2230,7 +2270,7 @@ const DownloadPopup = styled.div`
   right: ${(props) => (props.isAutoSaveToggle ? "0" : "-70px")};
   top: 120px;
   max-width: 288px;
-  width:100%;
+  width: 100%;
   max-height: 400px; /* 팝업의 최대 높이를 적절히 설정 */
   overflow-y: auto; /* 내용이 많을 경우 스크롤 가능하게 설정 */
   padding: ${(props) => (props.isAutoSaveToggle ? "0" : "24px 20px 20px")};
@@ -2240,7 +2280,7 @@ const DownloadPopup = styled.div`
   visibility: ${(props) => (props.isAutoSaveToggle ? "hidden" : "visible")};
   opacity: ${(props) => (props.isAutoSaveToggle ? "0" : "1")};
   transition: opacity 0.3s ease, visibility 0.3s ease; /* 트랜지션 추가 */
-  z-index:99;
+  z-index: 99;
 
   &:before {
     position: absolute;
@@ -2258,9 +2298,9 @@ const DownloadPopup = styled.div`
   }
 
   > div {
-    display:flex;
-    flex-direction:column;
-    gap:16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
   }
 
   h3 {
@@ -2281,10 +2321,10 @@ const DownloadPopup = styled.div`
   }
 
   button {
-    width:100%;
-    font-family:Pretendard, Poppins;
-    font-size:0.88rem;
-    color:${palette.white};
+    width: 100%;
+    font-family: Pretendard, Poppins;
+    font-size: 0.88rem;
+    color: ${palette.white};
     margin-top: 16px;
     padding: 15px 0;
     border-radius: 8px;
@@ -2300,42 +2340,41 @@ const DownloadPopup = styled.div`
 `;
 
 const SelectBoxWrap = styled.div`
-  display:flex;
-  flex-direction:column;
-  gap:8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 `;
 
 const SelectBox = styled.div`
-  display:flex;
-  flex-direction:row;
-  gap:8px;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
 
   div {
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:4px;
-    min-width:120px;
-    font-size:0.75rem;
-    text-align:center;
-    color:${palette.gray700};
-    padding:13px 0;
-    border-radius:10px;
-    border:1px solid ${palette.gray100};
-    cursor:pointer;
-    transition:all .5s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    min-width: 120px;
+    font-size: 0.75rem;
+    text-align: center;
+    color: ${palette.gray700};
+    padding: 13px 0;
+    border-radius: 10px;
+    border: 1px solid ${palette.gray100};
+    cursor: pointer;
+    transition: all 0.5s;
 
     img {
-      width:40px;
-      height:40px;
+      width: 40px;
+      height: 40px;
     }
 
     &.selected {
-      font-weight:700;
-      color:${palette.gray800};
-      border:1px solid ${palette.blue};
-      background:rgba(4,83,244,.05);
+      font-weight: 700;
+      color: ${palette.gray800};
+      border: 1px solid ${palette.blue};
+      background: rgba(4, 83, 244, 0.05);
     }
   }
 `;
-
