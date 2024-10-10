@@ -904,10 +904,6 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
             //   )}
             // </BoxWrap>
             }
-            <p>
-              입력된 내용을 바탕으로 위와 같이 이해하고 정리하였습니다.
-              확인부탁드립니다.
-            </p>
             {warningMessage && (
               <WarningMessage>{warningMessage}</WarningMessage>
             )}{" "}
