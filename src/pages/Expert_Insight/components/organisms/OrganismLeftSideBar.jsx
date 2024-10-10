@@ -1779,7 +1779,6 @@ const SideBar = styled.div`
     return props.bgNone ? "translateX(-257px)" : "0";
   }};
   z-index: ${props => props.isMobile ? '999' : '999'};
-  overflow-y: auto;
 
   h3 {
     font-size: 1rem;
