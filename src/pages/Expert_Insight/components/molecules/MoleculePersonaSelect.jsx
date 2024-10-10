@@ -201,12 +201,8 @@ const MoleculePersonaSelect = ({ conversationId }) => {
   }, [targetSelectButtonState]);
 
   const handleConfirm = async () => {
-    if (Object.keys(selectedPocTarget).length) return;
+    if (Object.keys(selectedPocTarget).length || Object.keys(selectedPocTargetState).length === 0) return;
 
-    if (Object.keys(selectedPocTargetState).length === 0) {
-      alert("항목을 선택해주세요");
-      return;
-    }
     setConversationStage(3);
     setApproachPath(3);
     setSelectedPocTarget(selectedPocTargetState);
