@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import ReactDOM from "react-dom";
 import { useAtom } from "jotai";
+import * as THREE from 'three';
 
 import images from "../../../../assets/styles/Images";
 import panelimages from "../../../../assets/styles/PanelImages";
@@ -10,6 +11,78 @@ import MoleculeReportController from "../molecules/MoleculeReportController";
 import { SELECTED_TAB_COPY } from "../../../AtomStates";
 
 const OrganismReportPopup = ({ report, onClose }) => {
+  // const canvasRef = useRef(null);
+
+  // useEffect(() => {
+  //   if (canvasRef.current) {
+  //     // Scene and camera setup
+  //     const scene = new THREE.Scene();
+  //     const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+  //     const renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current });
+  //     renderer.setSize(400, 400);
+
+  //     // Create shoe body (upper part of the shoe)
+  //     const upperGeometry = new THREE.BoxGeometry(1, 0.5, 2); // Shoe body shape
+  //     const upperMaterial = new THREE.MeshBasicMaterial({ color: 0x999999 });
+  //     const shoeUpper = new THREE.Mesh(upperGeometry, upperMaterial);
+  //     scene.add(shoeUpper);
+
+  //     // Add mesh for breathability (simulate a mesh-like texture)
+  //     const meshGeometry = new THREE.BoxGeometry(1.1, 0.1, 1.8);
+  //     const meshMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true });
+  //     const meshPart = new THREE.Mesh(meshGeometry, meshMaterial);
+  //     meshPart.position.set(0, 0.25, 0);
+  //     scene.add(meshPart);
+
+  //     // Create shoe sole (bottom part for grip and support)
+  //     const soleGeometry = new THREE.BoxGeometry(1.2, 0.2, 2.1);
+  //     const soleMaterial = new THREE.MeshBasicMaterial({ color: 0x333333 });
+  //     const shoeSole = new THREE.Mesh(soleGeometry, soleMaterial);
+  //     shoeSole.position.set(0, -0.35, 0);
+  //     scene.add(shoeSole);
+
+  //     // Add grip patterns (simple cylinders to simulate tread)
+  //     const gripGeometry = new THREE.CylinderGeometry(0.1, 0.1, 0.05, 32);
+  //     const gripMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+  //     for (let i = -0.5; i <= 0.5; i += 0.25) {
+  //       for (let j = -1; j <= 1; j += 0.5) {
+  //         const grip = new THREE.Mesh(gripGeometry, gripMaterial);
+  //         grip.position.set(i, -0.45, j);
+  //         grip.rotation.x = Math.PI / 2;
+  //         scene.add(grip);
+  //       }
+  //     }
+
+  //     // Set camera position
+  //     camera.position.z = 5;
+
+  //     // Movement logic for the shoe (simulating a walking or running motion)
+  //     let soleBendDirection = 1;
+  //     const animate = () => {
+  //       requestAnimationFrame(animate);
+
+  //       // Rotate the entire shoe slightly for a realistic 3D view
+  //       shoeUpper.rotation.y += 0.01;
+
+  //       // Bending the sole slightly to simulate movement
+  //       shoeSole.rotation.x += soleBendDirection * 0.005;
+  //       if (shoeSole.rotation.x > 0.1 || shoeSole.rotation.x < -0.1) {
+  //         soleBendDirection *= -1; // Reverse the direction for a back-and-forth bending effect
+  //       }
+
+  //       // Render the scene
+  //       renderer.render(scene, camera);
+  //     };
+
+  //     animate();
+
+  //     // Clean up the renderer when the component is unmounted
+  //     return () => {
+  //       renderer.dispose();
+  //     };
+  //   }
+  // }, []);
+
   if (!report) return null;
 
   const reportIndex =
@@ -106,6 +179,7 @@ const OrganismReportPopup = ({ report, onClose }) => {
         {reportIndex === 3 && <AdditionalReportSection report={report} />} 
         {/* reportindex의 경우 사용하는 css가 동일하여 2로 같게 처리하였음 */}
         {reportIndex === 4 && <RecommendedTargetReportSection report={report} />}
+        {/* <canvas ref={canvasRef} style={{ width: '200px', height: '200px', margin: '20px auto' }} /> */}
 
         <CloseButton onClick={onClose}>닫기</CloseButton>
       </PopupContent>
