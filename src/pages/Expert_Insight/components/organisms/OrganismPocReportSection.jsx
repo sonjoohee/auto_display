@@ -1062,13 +1062,13 @@ const Section = ({
       {expertIndex === "4" ? (
         <>
           {/* content 배열이 존재하는 경우 */}
-          <p style={{ marginTop: "15px", marginBottom: "15px" }}>{title_text || "임시 텍스트"}</p>
+          <p style={{ marginTop: "15px", marginBottom: "15px" }}>{title_text || ""}</p>
           {content &&
             content.length > 0 &&
             content.map((item, index) => (
               <SeparateSection key={index}>
                 {/* 항목 번호 및 제목 */}
-                <strong_title>
+                <strong_title style={{marginBottom: "15px"}}>
                   <span className="number">{index + 1}</span>{" "}
                   <strong_title>{`목표 : ${item.title}`}</strong_title>{" "}
                   <DownloadButton
