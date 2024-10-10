@@ -238,7 +238,7 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
           <div className="bar num2"></div>
         </Progress>
 
-        <Question>Q1. PoC 단계를 알려주세요</Question>
+        <Question>Q1. PoC 단계를 알려주세요 (택 1)</Question>
         <OptionContainer>
           {options1.map((option1) => (
             <Option
@@ -258,7 +258,7 @@ const MoleculeCheckPocOption = ({ conversationId }) => {
           <div className="bar"></div>
         </Progress>
 
-        <Question>Q2. PoC를 통해서 확인하고 싶은 내용은 무엇인가요?</Question>
+        <Question>Q2. PoC를 통해서 확인하고 싶은 내용은 무엇인가요? (택 1)</Question>
         <OptionContainer>
           {options2.map((option2) => (
             <Option
