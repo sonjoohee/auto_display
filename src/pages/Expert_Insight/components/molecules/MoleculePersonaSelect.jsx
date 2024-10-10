@@ -82,12 +82,9 @@ const MoleculePersonaSelect = ({ conversationId }) => {
   const [isLoadingTarget, setIsLoadingTarget] = useState(false);
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
 
-  const [selectedOption, setSelectedOption] = useState(null);
-
   useEffect(() => {
     if(Object.keys(selectedPocTarget).length) {
       setSelectedPocTargetState(selectedPocTarget);
-      setSelectedOption(selectedPocTarget.job);
     }
   }, [selectedPocTarget]);
 
@@ -95,20 +92,20 @@ const MoleculePersonaSelect = ({ conversationId }) => {
     if (Object.keys(selectedPocTarget).length) return;
     
     if (index === 5) {
-      setSelectedOption("아직 타겟 고객이 확실하지 않아요");
       setSelectedPocTargetState({
         job: "아직 타겟 고객이 확실하지 않아요",
         target: "아직 타겟 고객이 확실하지 않아요",
+        index: 5,
       });
     } else {
       // 선택된 옵션을 상태로 저장
       const selectedPersona = pocPersonaList[index];
-      setSelectedOption(selectedPersona[`persona_${index + 1}`][1]["job"]); // 선택된 job을 상태로 저장
       
       // 선택된 persona의 job과 target 값을 상태에 저장
       setSelectedPocTargetState({
         job: selectedPersona[`persona_${index + 1}`][1]["job"],
         target: selectedPersona[`persona_${index + 1}`][4]["target"],
+        index: index,
       });
     }
   };
@@ -271,12 +268,12 @@ const MoleculePersonaSelect = ({ conversationId }) => {
             <Option
               key={index}
               onClick={() => handleOptionClick(index)}
-              selected={selectedPocTargetState.job === persona[`persona_${index + 1}`][1]["job"]}
+              selected={selectedPocTargetState.index === index}
               selectedPocTarget={selectedPocTarget}
             >
               <Label
                 selectedPocTarget={selectedPocTarget} 
-                selected={selectedOption === persona[`persona_${index + 1}`][1]["job"]} 
+                selected={selectedPocTargetState.index === index} 
                 htmlFor={persona}>
                   {persona[`persona_${index + 1}`][1]["job"]}
               </Label>
@@ -286,17 +283,17 @@ const MoleculePersonaSelect = ({ conversationId }) => {
           <Option
             key={5}
             onClick={() => handleOptionClick(5)}
-            selected={selectedOption === "아직 타겟 고객이 확실하지 않아요"}
+            selected={selectedPocTargetState.job === "아직 타겟 고객이 확실하지 않아요"}
             selectedPocTarget={selectedPocTarget}
             isTargetUnknown
           >
-            <img src={selectedOption !== "아직 타겟 고객이 확실하지 않아요" || Object.keys(selectedPocTarget).length ? images.iconQuestionMark : images.iconQuestionMark2} alt="" />
+            <img src={selectedPocTargetState.job !== "아직 타겟 고객이 확실하지 않아요" || Object.keys(selectedPocTarget).length ? images.iconQuestionMark : images.iconQuestionMark2} alt="" />
             아직 타겟 고객이 확실하지 않아요
           </Option>          
         </OptionsContainer>
 
         <ButtonWrap>
-          <Button selectedOption={selectedOption} selectedPocTarget={selectedPocTarget} onClick={handleConfirm}>확인</Button>
+          <Button selectedPocTargetState={selectedPocTargetState} selectedPocTarget={selectedPocTarget} onClick={handleConfirm}>확인</Button>
         </ButtonWrap>
       </>
     }
@@ -422,7 +419,7 @@ const Button = styled.button`
   margin-left:auto;
   border-radius:8px;
   border:0;
-  background: ${(props) => (!props.selectedOption ? palette.lineGray : (Object.keys(props.selectedPocTarget).length ? palette.gray800 : palette.blue))};
+  background: ${(props) => (!props.selectedPocTargetState.job ? palette.lineGray : (Object.keys(props.selectedPocTarget).length ? palette.gray800 : palette.blue))};
   transition:all .5s;
 `;
 
