@@ -215,7 +215,7 @@ const MoleculePersonaSelect = ({ conversationId }) => {
     updatedConversation.push(
       {
         type: "user",
-        message: `비즈니스 타겟은 *${selectedPocTargetState.job}* 입니다.`,
+        message: selectedPocTargetState.job === "아직 타겟 고객이 확실하지 않아요" ? "아직 비즈니스 타겟 고객을 확실하게 설정하지 못했어요" : `비즈니스 타겟은 *${selectedPocTargetState.job}* 입니다.`,
         expertIndex: selectedExpertIndex,
       },
       {

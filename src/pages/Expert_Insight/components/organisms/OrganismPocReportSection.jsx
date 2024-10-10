@@ -258,7 +258,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
             {
               type: "system",
               message:
-                "PoC 실행 목적에 적합한 타겟과 예상 인사이트를 확인하고 싶다면, '타겟 추천 받기' 버튼을 눌러보세요.",
+                "PoC 실행을 위해 먼저 인사이트를 분석할 수 있는 추천 타겟과 예상 인사이트를 확인하세요. 그리고, 상세한 실행 계획서를 통해 PoC를 진행해보세요 💡",
               expertIndex: selectedExpertIndex,
             },
             { type: `pocTargetButton` }
