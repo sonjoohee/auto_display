@@ -538,7 +538,7 @@ const Section = ({
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
   
-      // DPI 설정 (해상도를 높이기 위해 150 DPI로 설정)
+      // DPI 설정 (해상도를 높이기 위해 300 DPI로 설정)
       const dpi = 300;
   
       // A4 크기(mm)를 픽셀로 변환
