@@ -264,22 +264,29 @@ const MoleculePersonaSelect = ({ conversationId }) => {
           Q. 생각하고 계시는 비즈니스의 타겟 고객은 누구입니까?
         </Question>
         <OptionsContainer>
-          {pocPersonaList.map((persona, index) => (
-            <Option
-              key={index}
-              onClick={() => handleOptionClick(index)}
-              selected={selectedPocTargetState.index === index}
-              selectedPocTarget={selectedPocTarget}
-            >
-              <Label
-                selectedPocTarget={selectedPocTarget} 
-                selected={selectedPocTargetState.index === index} 
-                htmlFor={persona}>
-                  {persona[`persona_${index + 1}`][1]["job"]}
-              </Label>
-              <p>{persona[`persona_${index + 1}`][4]["target"]}</p>
-            </Option>
-          ))}
+            {pocPersonaList.map((personaObj, index) => {
+              const personaKey = `persona_${index + 1}`;
+              const personaData = personaObj[personaKey];
+              const jobObj = personaData.find(item => 'job' in item);
+              const targetObj = personaData.find(item => 'target' in item);
+
+              return (
+                <Option
+                  key={index}
+                  onClick={() => handleOptionClick(index)}
+                  selected={selectedPocTargetState.index === index}
+                  selectedPocTarget={selectedPocTarget}
+                >
+                  <Label
+                    selectedPocTarget={selectedPocTarget} 
+                    selected={selectedPocTargetState.index === index} 
+                    htmlFor={personaKey}>
+                      {jobObj?.job || "직업 정보 없음"}
+                  </Label>
+                  <p>{targetObj?.target || "타겟 정보 없음"}</p>
+                </Option>
+              );
+            })}
           <Option
             key={5}
             onClick={() => handleOptionClick(5)}
