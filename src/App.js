@@ -21,6 +21,8 @@ import PagePayTest from './pages/Purchase_Credit/components/pages/PagePayTest';
 import PageAIPanelList from './pages/AI_Panel/components/pages/PageAIPanelList';
 import BusinessTool from './pages/Business_Tool';
 import PageMeetAiExpert from './pages/Meet_Ai_Expert/components/pages/PageMeetAiExpert';
+import LandingPage from './pages/Meet_Ai_Expert/components/pages/LandingPage';
+
 import PageExpertInsight from "./pages/Expert_Insight/components/pages/PageExpertInsight";
 
 // Biz
@@ -184,7 +186,7 @@ function App() {
             <Route path="/ExpertExample" element={<ExpertExample />}></Route>
             <Route path="/PageAIPanelList" element={<PageAIPanelList />}></Route>
 
-
+            <Route path="/LandingPage" element={<LandingPage />}></Route>
 
             {/* <Route path="/AI_Panel" element={<PageAIPanelList />} />
             <Route path="/QuickReport" element={<BusinessTool />} /> */}
