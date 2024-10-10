@@ -116,15 +116,11 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
     const currentExpertData = strategyReportData[selectedExpertIndex];
     if (currentExpertData && currentExpertData.tabs[0] && currentExpertData.tabs[0].sections[0]) {
       const content = currentExpertData.tabs[0].sections[0].content[index];
-      if (content && content.subContent) {
-        for (let subItem of content.subContent) {
-          if (subItem.subTitle === "목표 행위") {
-            return subItem.text;
-          }
-        }
+      if (content && content.title) {
+        return `${content.title}`;
       }
     }
-    return "목표 행위"; // 기본값
+    return "목표 : 설정되지 않음"; // 기본값
   };
 
   const addGoalActionToRecommendedTargetData = (data) => {
