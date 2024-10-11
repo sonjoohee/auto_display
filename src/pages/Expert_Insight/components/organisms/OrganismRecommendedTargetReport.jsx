@@ -128,8 +128,8 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
       currentExpertData.tabs[0].sections[0]
     ) {
       const content = currentExpertData.tabs[0].sections[0].content[index];
-      if (content && content.text) {
-        return `목표 :${content.text}`;
+      if (content && content.title) {
+        return `목표 : ${content.title}`;
       }
     }
     return "목표 : 설정되지 않음"; // 기본값
