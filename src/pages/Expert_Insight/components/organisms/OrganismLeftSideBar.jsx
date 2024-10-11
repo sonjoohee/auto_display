@@ -1375,7 +1375,7 @@ useEffect(() => {
             닫기
           </button>
           <span>
-            <img src={images.ExclamationMark} alt="" />
+            <img src={images.ExclamationMark2} alt="" />
           </span>
           <p>새로운 보고서 이름을 입력하세요</p>
           <input
@@ -1405,7 +1405,7 @@ useEffect(() => {
             닫기
           </button>
           <span>
-            <img src={images.ExclamationMark} alt="" />
+            <img src={images.ExclamationMark2} alt="" />
           </span>
           <p>새로운 프로젝트 이름을 입력하세요</p>
           <input

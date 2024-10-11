@@ -66,7 +66,8 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
           selectedExpertList는 DB에 저장되고 있지 않기 떄문에 expertReportData 조건이 필요함 */}
       {((selectedExpertList.includes("1") || strategyReportData.hasOwnProperty(1)) &&
         (selectedExpertList.includes("2") || strategyReportData.hasOwnProperty(2)) &&
-        (selectedExpertList.includes("3") || strategyReportData.hasOwnProperty(3))) ? null : (
+        (selectedExpertList.includes("3") || strategyReportData.hasOwnProperty(3)) &&
+        (selectedExpertList.includes("4") || strategyReportData.hasOwnProperty(4))) ? null : (
   
         <BizExpertSelectContainer>
           <h1>아래 분야별 전문가와 대화를 통해 아이디어를 발전시켜보세요.</h1>
@@ -98,16 +99,15 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
                 </button>
               </div>
             )}
-            {/* 4번 전문가 */}
-            {/* {(selectedExpertList.includes("4") || strategyReportData.hasOwnProperty(4)) ? null : (
+            {(selectedExpertList.includes("4") || strategyReportData.hasOwnProperty(4)) ? null : (
               <div>
-                <img src={images.ImgTarget} alt="" />
-                <p>PoC 설계 전문가와 1:1 커피챗하기</p>
+                <img src={images.ImgPoC2} alt="" />
+                <p>PoC 설계 전문가에게 맞춤형 PoC 전략 기획서 받기</p>
                 <button type="button" onClick={() => handledExpertSelect("4")}>
                   시작하기
                 </button>
               </div>
-            )} */}
+            )}
           </SelectOptions>
         </BizExpertSelectContainer>
       )}
@@ -133,8 +133,8 @@ const BizExpertSelectContainer = styled.div`
 `;
 
 const SelectOptions = styled.div`
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); // 행당 항목 2개
   gap: 12px;
 
   > div {
@@ -154,8 +154,6 @@ const SelectOptions = styled.div`
       font-family: "Pretendard";
       font-size: 0.75rem;
       color: ${palette.gray};
-      // width:22px;
-      // height:22px;
       margin-left: auto;
       padding: 8px 16px;
       border-radius: 10px;
@@ -171,7 +169,6 @@ const SelectOptions = styled.div`
         height: 7px;
         border-top: 1px solid ${palette.gray};
         border-right: 1px solid ${palette.gray};
-        // content:'';
       }
     }
   }
