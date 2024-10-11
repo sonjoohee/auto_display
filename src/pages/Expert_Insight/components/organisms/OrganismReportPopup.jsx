@@ -1893,7 +1893,7 @@ const RecommendedTargetReportSection = ({ report }) => {
               <SeparateSection key={index}>
                 <strong>
                   <span className="number">{index + 1}</span>
-                  <strong_title>{`목표 : ${goalActionText}`}</strong_title>
+                  <strong_title>{`${goalActionText}`}</strong_title>
                 </strong>
                 <div className="bgWhite">
                   <p

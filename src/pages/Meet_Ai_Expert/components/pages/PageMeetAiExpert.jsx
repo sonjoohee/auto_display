@@ -48,6 +48,8 @@ import images from "../../../../assets/styles/Images";
 
 import OrganismHeader from "../../../organisms/OrganismHeader";
 import OrganismLeftSideBar from "../../../Expert_Insight/components/organisms/OrganismLeftSideBar";
+import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
+import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/MoleculeAccountPopup"; // 계정설정 팝업 컴포넌트 임포트
 
 const PageMeetAiExpert = () => {
   const [isMobile, setIsMobile] = useAtom(IS_MOBILE);
@@ -130,6 +132,8 @@ const PageMeetAiExpert = () => {
   const [isPopupRegex2, setIsPopupRegex2] = useState(false);
   const [isPopupLogin, setIsPopupLogin] = useState(false); // 로그인 상태가 아닐 때 팝업을 띄우기 위한 상태
   const [isPopupInvalidBusiness, setIsPopupInvalidBusiness] = useState(false);
+  const [isAccountPopupOpen, setAccountPopupOpen] = useState(false); // 계정설정 팝업
+  const [isLoginPopupOpen, setLoginPopupOpen] = useState(false); // 로그인 팝업 상태 관리
 
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
   const [advise, setAdvise] = useState(""); // 새로운 advise 상태 추가
@@ -147,9 +151,16 @@ const PageMeetAiExpert = () => {
   };
   const closePopupLogin = () => {
     setIsPopupLogin(false); // 로그인 필요 팝업 닫기
+    setLoginPopupOpen(true);
   };
   const closePopupInvalidBusiness = () => {
     setIsPopupInvalidBusiness(false); // 팝업 닫기
+  };
+  const closeAccountPopup = () => {
+    setAccountPopupOpen(false); // 계정설정 팝업 닫기
+  };
+  const closeLoginPopup = () => {
+    setLoginPopupOpen(false); // 로그인 팝업 닫기
   };
 
   useEffect(() => {
@@ -458,6 +469,11 @@ const PageMeetAiExpert = () => {
               </ExpertCard>
             </ExpertSelectBox>
           </ExpertSelectWrap> */}
+          {isLoginPopupOpen && <MoleculeLoginPopup onClose={closeLoginPopup} />}
+
+          {isAccountPopupOpen && (
+            <MoleculeAccountPopup onClose={closeAccountPopup} />
+          )}
         </MainContent>
       </ContentsWrap>
 
