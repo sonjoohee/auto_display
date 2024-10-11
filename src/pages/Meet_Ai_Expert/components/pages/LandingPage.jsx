@@ -1,16 +1,26 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
+import { useAtom } from 'jotai';
 import styled from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import Landingimages from "../../../../assets/styles/Landingimages"
+import { INPUT_BUSINESS_INFO } from '../../../AtomStates';
 
 const LandingPage = () => {
+  const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [textarea, setTextarea] = useState('');
+  const navigate = useNavigate();
   const handleTextChange = (e) => {
-    setTextarea(e.target.value);
+    // setTextarea(e.target.value);
+    setInputBusinessInfo(e.target.value);
   };
-
+  const handleSubmit = () => {
+    // Navigate to PageMeetAiExpert and pass the inputBusinessInfo as state
+    navigate('/PageMeetAiExpert', { state: { inputBusinessInfo: inputBusinessInfo } });
+  };
+  
   return (
     <LandingPageWrapper>
       <Header>
@@ -29,12 +39,12 @@ const LandingPage = () => {
             <textarea 
               rows="2"
               placeholder="여기에 입력해 주세요..."
-              value={textarea}
+              value={inputBusinessInfo}
               onChange={handleTextChange}
             />
-            <span><img src={images.IconLightning} alt="" />예시: 헬흐케어 웨버러블 기기 데이터 분석 서비스　|　다기능 여행용 스마트 가방 </span>
+            <span><img src={images.IconLightning} alt="" />예시: 헬스케어 웨어러블 기기 데이터 분석 서비스　|　다기능 여행용 스마트 가방 </span>
           </div>
-          <InputButton isActive={textarea.length > 0}><i>🔍</i>내 비즈니스 진단받기</InputButton>
+          <InputButton onClick={handleSubmit} isActive={inputBusinessInfo.length > 0}><i>🔍</i>내 비즈니스 진단받기</InputButton>
         </InputSection>
       </HeroSection>
 
