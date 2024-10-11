@@ -14,7 +14,9 @@ import {
 
 const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
-  const [customerAdditionButtonState, setCustomerAdditionButtonState] = useAtom(CUSTOMER_ADDITION_BUTTON_STATE);
+  const [customerAdditionButtonState, setCustomerAdditionButtonState] = useAtom(
+    CUSTOMER_ADDITION_BUTTON_STATE
+  );
   const [questionInput, setQuestionInput] = useAtom(
     CUSTOMER_ADDITION_QUESTION_INPUT
   );
@@ -34,12 +36,21 @@ const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
     setInputValue(e.target.value);
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // 폼 제출 방지
+      setCustomerAdditionButtonState(1);
+      setQuestionInput(inputValue);
+      handleSearch();
+    }
+  };
+
   const handleSearch = () => {
     if (isLoading) return;
 
     const regex = /^[가-힣a-zA-Z0-9\s.,'"?!()\-]*$/;
     const specialChars = /^[.,'"?!()\-]+$/;
-    
+
     // 단독으로 특수 문자만 사용된 경우
     if (specialChars.test(inputValue.trim())) {
       setIsPopupRegex(true);
@@ -92,6 +103,7 @@ const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
             }
             value={inputValue}
             onChange={handleInputChange}
+            onKeyPress={handleKeyPress} // 여기에 키 입력 이벤트 핸들러 추가
           />
 
           <button
@@ -107,7 +119,8 @@ const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
         </SearchBar>
 
         <p>
-          아이템이나 프로젝트와 관련 없는 질문은 정확한 답변이 어려울 수 있습니다.
+          아이템이나 프로젝트와 관련 없는 질문은 정확한 답변이 어려울 수
+          있습니다.
         </p>
       </BottomBar>
 
@@ -164,11 +177,11 @@ const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
             <span>
               <img src={images.ExclamationMark2} alt="" />
             </span>
-            {isBlue ? 
-              <p>내용을 입력해주세요</p> 
-              : 
+            {isBlue ? (
+              <p>내용을 입력해주세요</p>
+            ) : (
               <p>비즈니스 분석을 위해 내용을 입력해주세요</p>
-            }
+            )}
             <div className="btnWrap">
               <button type="button" onClick={closePopupRegex2}>
                 확인
@@ -235,13 +248,11 @@ const SearchBar = styled.div`
   width: 100%;
   padding: 14px 32px;
   border-radius: 50px;
-  border: 
-  ${(props) => {
+  border: ${(props) => {
     if (props.isBlue) return `1px solid ${palette.lineGray}`;
     else return `2px solid ${palette.black}`;
   }};
-  box-shadow: 
-  ${(props) => {
+  box-shadow: ${(props) => {
     if (props.isBlue) return `none`;
     else return `0 4px 15px rgba(0, 0, 0, 0.15)`;
   }};
@@ -251,8 +262,7 @@ const SearchBar = styled.div`
   }};
 
   svg {
-    display: 
-    ${(props) => {
+    display: ${(props) => {
       if (props.isBlue) return `none`;
       else return `inline-block`;
     }};
@@ -268,12 +278,11 @@ const SearchBar = styled.div`
   input {
     font-family: "Pretendard", "Poppins";
     color: ${palette.black};
-  
+
     &:placeholder {
       font-size: 1rem;
 
-      color: 
-      ${(props) => {
+      color: ${(props) => {
         if (props.isBlue) return `${palette.gray}`;
         else return `${palette.lightGray}`;
       }};
