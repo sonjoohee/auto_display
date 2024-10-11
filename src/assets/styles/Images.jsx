@@ -46,6 +46,10 @@ import ImgPoC2 from "../images/imgPoC2.svg"
 import ImgMarketing from "../images/imgMarketing.svg"
 import ImgClient from "../images/imgClient.svg"
 import ImgStrategy from "../images/imgStrategy.svg"
+import ImgIdea from "../images/imgIdea.svg"
+import ImgHacker from "../images/imgHacker.svg"
+import ImgBM from "../images/imgBM.svg"
+import ImgPrice from "../images/imgPrice.svg"
 import ImgComing from "../images/imgComing.svg"
 
 import IconSearch from "../images/iconSearch.svg"
@@ -152,6 +156,10 @@ const images = {
   ImgMarketing,
   ImgClient,
   ImgStrategy,
+  ImgIdea,
+  ImgHacker,
+  ImgBM,
+  ImgPrice,
   ImgComing,
 
   IconSearch,
