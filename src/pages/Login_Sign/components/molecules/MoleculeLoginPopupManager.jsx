@@ -18,7 +18,7 @@ const MoleculeLoginPopupManager = ({ children }) => {
 
   const handleLoginSuccess = () => {
     setLoginPopupOpen(false);
-    navigate("/");
+    navigate("/MeetAiExpert");
   };
 
   return (

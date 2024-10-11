@@ -176,9 +176,9 @@ function App() {
             <Route path="/request-reset-password" element={<PageRequestResetPassword />} />
             <Route path="/PagePayTest" element={<PagePayTest />} />
 
-            <Route path="/" element={<PageMeetAiExpert />} />
-            <Route path="*" element={<PageMeetAiExpert />} />
-            <Route path="/PageMeetAiExpert" element={<PageMeetAiExpert />} />
+            <Route path="/" element={<LandingPage />} />
+            <Route path="*" element={<LandingPage />} />
+            <Route path="/MeetAiExpert" element={<PageMeetAiExpert />} />
             <Route path="/ExpertInsight" element={<PageExpertInsight />}></Route>
 
             <Route path="/CompletedMail" element={<PageCompletedMail />}></Route>
@@ -186,7 +186,7 @@ function App() {
             <Route path="/ExpertExample" element={<ExpertExample />}></Route>
             <Route path="/PageAIPanelList" element={<PageAIPanelList />}></Route>
 
-            <Route path="/LandingPage" element={<LandingPage />}></Route>
+            <Route path="/Landing" element={<LandingPage />}></Route>
 
             {/* <Route path="/AI_Panel" element={<PageAIPanelList />} />
             <Route path="/QuickReport" element={<BusinessTool />} /> */}
