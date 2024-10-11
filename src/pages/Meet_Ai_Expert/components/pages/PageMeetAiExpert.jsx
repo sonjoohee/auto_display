@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from 'react-router-dom';
 import styled, { css } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -53,6 +54,7 @@ import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/Molec
 
 const PageMeetAiExpert = () => {
   const [isMobile, setIsMobile] = useAtom(IS_MOBILE);
+  const location = useLocation();
   const navigate = useNavigate();
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [recommendedTargetData, setRecommendedTargetData] = useAtom(
@@ -164,10 +166,26 @@ const PageMeetAiExpert = () => {
   };
 
   useEffect(() => {
+    let savedInputBusinessInfo = "";
+    // If there's inputBusinessInfo in the location state, save it
+    if (location.state && location.state.inputBusinessInfo) {
+      savedInputBusinessInfo = location.state.inputBusinessInfo;
+      // Remove the inputBusinessInfo from location.state
+      const newState = { ...location.state };
+      delete newState.inputBusinessInfo;
+      window.history.replaceState(newState, '');
+
+      // 비로그인 상태에서 들어온 경우 로그인 팝업 띄우기
+      if (!isLoggedIn) {
+        setLoginPopupOpen(true);
+      }
+    }
+  
+
+    // Reset all states except inputBusinessInfo
     setConversation([]);
     setConversationId(null);
     setConversationStage(1);
-    setInputBusinessInfo("");
     setTitleOfBusinessInfo("");
     setMainFeaturesOfBusinessInformation([]);
     setMainCharacteristicOfBusinessInformation([]);
@@ -193,7 +211,8 @@ const PageMeetAiExpert = () => {
     setRecommendedTargetData({});
     setpocDetailReportData({});
     setPocPersonaList([]);
-  }, []);
+    setInputBusinessInfo(savedInputBusinessInfo);
+  }, [location]);
 
   useEffect(() => {
     const checkboxes = document.querySelectorAll(".accordion-toggle");
@@ -332,6 +351,7 @@ const PageMeetAiExpert = () => {
             <div className="inputWrap">
               <textarea
                 placeholder="당신의 아이템 또는 프로젝트 아이디어를 적어 주세요 (예: 원격 근무자를 위한 생산성 관리 툴)"
+                value={inputBusinessInfo}
                 onInput={(e) => {
                   // 입력값을 최대 300자로 제한
                   if (e.target.value.length > 300) {

@@ -778,10 +778,46 @@ useEffect(() => {
     setPocPersonaList([]);
   };
 
+  const handleLogoClick = () => {
+    if (isLoading) return;
+
+    navigate("/LandingPage");
+    setConversation([]);
+    setConversationStage(1);
+    setInputBusinessInfo("");
+    setTitleOfBusinessInfo("");
+    setMainFeaturesOfBusinessInformation([]);
+    setMainCharacteristicOfBusinessInformation([]);
+    setBusinessInformationTargetCustomer([]);
+    setSelectedExpertIndex("0");
+    setSections([]);
+    setAdditionalReportCount(0);
+    setSelectedAdditionalKeyword([]);
+    setApproachPath(0);
+    setAdditionalReportData([]);
+    setCustomerAdditionalReportData([]);
+    setSelectedCustomerAdditionalKeyword([]);
+    setStrategyReportData({});
+    setInputAdditionalQuestion("");
+    setIsClickCheckReportRightAway(false);
+    setConversationId(null);
+    setPassword("");
+    setNewPassword("");
+    setRePassword("");
+    setSelectedExpertList([]);
+    setIsEditingNow(false);
+    setIsSection1Open(false);
+    setIsSection2Open(false);
+    setSelectedPocOptions([]);
+    setSelectedPocTarget({});
+    setRecommendedTargetData({});
+    setpocDetailReportData({});
+    setPocPersonaList([]);
+  };
   return (
     <>
       <Logo isOpen={isOpen}>
-        <a onClick={handleNewProjectClick}></a>
+        <a onClick={handleLogoClick}></a>
         <button type="button" onClick={toggleSidebar}>
           닫기
         </button>
