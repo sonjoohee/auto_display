@@ -22,7 +22,6 @@ import {
   ADDITIONAL_REPORT_DATA,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
   CUSTOMER_ADDITION_BUTTON_STATE,
-  CUSTOMER_ADDITION_QUESTION_INPUT,
   SELECTED_EXPERT_LIST,
   SELCTED_POC_TARGET,
   TARGET_REPORT_BUTTON_STATE,
@@ -43,7 +42,6 @@ const MoleculeRecommendedTargetButton = () => {
   const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
   const [isLoggedIn] = useAtom(isLoggedInAtom);
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
-  const [questionInput, setQuestionInput] = useAtom(CUSTOMER_ADDITION_QUESTION_INPUT);
   const [isLoadingAdd, setIsLoadingAdd] = useState(false);
   const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA);
 

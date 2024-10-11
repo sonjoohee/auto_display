@@ -17,7 +17,7 @@ const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
   const [customerAdditionButtonState, setCustomerAdditionButtonState] = useAtom(
     CUSTOMER_ADDITION_BUTTON_STATE
   );
-  const [questionInput, setQuestionInput] = useAtom(
+  const [customerAdditionQuestionInput, setCustomerAdditionQuestionInput] = useAtom(
     CUSTOMER_ADDITION_QUESTION_INPUT
   );
 
@@ -39,8 +39,6 @@ const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       e.preventDefault(); // 폼 제출 방지
-      setCustomerAdditionButtonState(1);
-      setQuestionInput(inputValue);
       handleSearch();
     }
   };
@@ -67,10 +65,14 @@ const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
       return;
     }
 
+    if (isBlue) {
+      setCustomerAdditionButtonState(1);
+    }
     if (onSearch) {
       onSearch(inputValue);
-      setQuestionInput(inputValue);
+      setCustomerAdditionQuestionInput(inputValue);
     }
+
     setInputValue("");
   };
 
@@ -103,16 +105,12 @@ const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
             }
             value={inputValue}
             onChange={handleInputChange}
-            onKeyPress={handleKeyPress} // 여기에 키 입력 이벤트 핸들러 추가
+            onKeyDown={handleKeyPress} // 여기에 키 입력 이벤트 핸들러 추가
           />
 
           <button
             type="button"
-            onClick={() => {
-              setCustomerAdditionButtonState(1);
-              setQuestionInput(inputValue);
-              handleSearch();
-            }}
+            onClick={() => handleSearch()}
           >
             검색
           </button>

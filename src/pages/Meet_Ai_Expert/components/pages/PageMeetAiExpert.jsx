@@ -345,7 +345,7 @@ const PageMeetAiExpert = () => {
                     "letterCount"
                   ).innerText = `${currentLength}/300`;
                 }}
-                onKeyPress={handleKeyPress} // 키 입력 이벤트 핸들러 추가
+                onKeyDown={handleKeyPress} // 키 입력 이벤트 핸들러 추가
               ></textarea>
               <button type="button" onClick={handledSearch}>
                 검색
