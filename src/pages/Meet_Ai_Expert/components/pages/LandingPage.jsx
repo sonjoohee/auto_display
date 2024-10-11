@@ -381,7 +381,7 @@ const InputButton = styled.button`
   background: ${(props) => (
     props.isActive 
     ? palette.blue 
-    : palette.white)};
+    : 'rgba(0, 0, 0, 0.03)')};  // 수정된 부분
   cursor:${(props) => (
     props.isActive 
     ? `pointer` 
