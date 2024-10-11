@@ -1,0 +1,67 @@
+import Img01 from "../images/Landing/img01.png";
+import Img02 from "../images/Landing/img02.png";
+import Img03 from "../images/Landing/img03.png";
+import Img04 from "../images/Landing/img04.png";
+import Img05 from "../images/Landing/img05.png";
+import Img06 from "../images/Landing/img06.png";
+import Img07 from "../images/Landing/img07.png";
+import Img08 from "../images/Landing/img08.png";
+import Img09 from "../images/Landing/img09.png";
+import Img10 from "../images/Landing/img10.png";
+import Img11 from "../images/Landing/img11.png";
+
+import AIPersona01 from "../images/Landing/AIPersona01.png";
+import AIPersona02 from "../images/Landing/AIPersona02.png";
+import AIPersona03 from "../images/Landing/AIPersona03.png";
+
+import Iconfield01 from "../images/Landing/Iconfield01.svg";
+import Iconfield02 from "../images/Landing/Iconfield02.svg";
+import Iconfield03 from "../images/Landing/Iconfield03.svg";
+import Iconfield04 from "../images/Landing/Iconfield04.svg";
+import Iconfield05 from "../images/Landing/Iconfield05.svg";
+import Iconfield06 from "../images/Landing/Iconfield06.svg";
+import Iconfield07 from "../images/Landing/Iconfield07.svg";
+import Iconfield08 from "../images/Landing/Iconfield08.svg";
+import Iconfield09 from "../images/Landing/Iconfield09.svg";
+
+import ImgAIModerator from "../images/Landing/imgAIModerator.png";
+import ImgAIExpert from "../images/Landing/imgAIExpert.png";
+
+import ImgProposal01 from "../images/Landing/imgProposal01.png";
+import ImgProposal02 from "../images/Landing/imgProposal02.png";
+
+const Landingimages = {
+  Img01,
+  Img02,
+  Img03,
+  Img04,
+  Img05,
+  Img06,
+  Img07,
+  Img08,
+  Img09,
+  Img10,
+  Img11,
+
+  AIPersona01,
+  AIPersona02,
+  AIPersona03,
+
+  Iconfield01,
+  Iconfield02,
+  Iconfield03,
+  Iconfield04,
+  Iconfield05,
+  Iconfield06,
+  Iconfield07,
+  Iconfield08,
+  Iconfield09,
+
+  ImgAIModerator,
+  ImgAIExpert,
+
+  ImgProposal01,
+  ImgProposal02,
+}
+
+export default Landingimages;
