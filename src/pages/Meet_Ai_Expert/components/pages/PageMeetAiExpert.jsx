@@ -136,6 +136,7 @@ const PageMeetAiExpert = () => {
   const [isPopupInvalidBusiness, setIsPopupInvalidBusiness] = useState(false);
   const [isAccountPopupOpen, setAccountPopupOpen] = useState(false); // 계정설정 팝업
   const [isLoginPopupOpen, setLoginPopupOpen] = useState(false); // 로그인 팝업 상태 관리
+  const [isComingSoon, setIsComingSoon] = useState(false);
 
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
   const [advise, setAdvise] = useState(""); // 새로운 advise 상태 추가
@@ -163,6 +164,9 @@ const PageMeetAiExpert = () => {
   };
   const closeLoginPopup = () => {
     setLoginPopupOpen(false); // 로그인 팝업 닫기
+  };
+  const closeComingSoonPopup = () => {
+    setIsComingSoon(false);
   };
 
   useEffect(() => {
@@ -406,6 +410,20 @@ const PageMeetAiExpert = () => {
               </ExpertCard>
 
               <ExpertCard
+                Strategy
+                onClick={() => {
+                  setAnalysisButtonState(1);
+                  handledExpertSelect("1");
+                }}
+              >
+                <strong>전략 컨설턴트</strong>
+                <p>차별화 전략과 리스트 분석 제시</p>
+                <span>
+                  <img src={images.ImgStrategy} alt="" />
+                </span>
+              </ExpertCard>
+
+              <ExpertCard
                 Marketing
                 onClick={() => {
                   setAnalysisButtonState(1);
@@ -434,16 +452,54 @@ const PageMeetAiExpert = () => {
               </ExpertCard>
 
               <ExpertCard
-                Strategy
+                Idea
                 onClick={() => {
-                  setAnalysisButtonState(1);
-                  handledExpertSelect("1");
+                  setIsComingSoon(true);
                 }}
               >
-                <strong>전략 컨설턴트</strong>
-                <p>차별화 전략과 리스트 분석 제시</p>
+                <strong>아이디어 디벨로퍼</strong>
+                <p>다양한 아이디어 발굴과 최적의 사업 아이디어 도출</p>
                 <span>
-                  <img src={images.ImgStrategy} alt="" />
+                  <img src={images.ImgIdea} alt="" />
+                </span>
+              </ExpertCard>
+
+              <ExpertCard
+                Hacker
+                onClick={() => {
+                  setIsComingSoon(true);
+                }}
+              >
+                <strong>그로스 해커</strong>
+                <p>고객 퍼널을 분석하여, 마케팅 퍼널별 전략 제시</p>
+                <span>
+                  <img src={images.ImgHacker} alt="" />
+                </span>
+              </ExpertCard>
+
+              <ExpertCard
+                BM
+                onClick={() => {
+                  setIsComingSoon(true);
+                }}
+              >
+                <strong>BM 전문가</strong>
+                <p>비즈니스 모델 설계 및 최적화</p>
+                <span>
+                  <img src={images.ImgBM} alt="" />
+                </span>
+              </ExpertCard>
+
+              <ExpertCard
+                Price
+                onClick={() => {
+                  setIsComingSoon(true);
+                }}
+              >
+                <strong>가격 분석 전문가</strong>
+                <p>시장 데이터를 기반으로 최적의 가격 전략 제시 (제품 한정)</p>
+                <span>
+                  <img src={images.ImgPrice} alt="" />
                 </span>
               </ExpertCard>
 
@@ -455,6 +511,16 @@ const PageMeetAiExpert = () => {
                   <p>coming soon</p>
                 </div>
               </ExpertCard>
+
+              <ExpertCard Empty>
+                <div>
+                  <span>
+                    <img src="" alt="" />
+                  </span>
+                  <p></p>
+                </div>
+              </ExpertCard>
+
             </ExpertSelectBox>
           </ExpertSelectWrap>
           {/* API 데이터 활용 */}
@@ -619,6 +685,35 @@ const PageMeetAiExpert = () => {
           </div>
         </Popup>
       )}
+      {isComingSoon && (
+        <Popup
+          Cancel
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              closeComingSoonPopup();
+            }
+          }}
+        >
+          <div>
+            <button
+              type="button"
+              className="closePopup"
+              onClick={closeComingSoonPopup}
+            >
+              닫기
+            </button>
+            <span>
+              <img src={images.ExclamationMark2} alt="" />
+            </span>
+            <p>전문가가 곧 공개됩니다<br />조금만 기다려 주세요!</p>
+            <div className="btnWrap">
+              <button type="button" onClick={closeComingSoonPopup}>
+                확인
+              </button>
+            </div>
+          </div>
+        </Popup>
+      )}
     </>
   );
 };
@@ -725,7 +820,7 @@ const InputWrap = styled.div`
 
 const ExpertSelectWrap = styled.div`
   position: relative;
-  max-width: 1240px;
+  max-width: 1040px;
   width: 100%;
   margin: ${(props) =>
     props.isMobile ? "60px auto 50px" : "120px auto 100px"};
@@ -755,7 +850,7 @@ const ExpertSelectBox = styled.div`
   flex-wrap: wrap;
   flex-direction: ${(props) => (props.isMobile ? "column" : "row")};
   justify-content: space-between;
-  gap: ${(props) => (props.isMobile ? "15px" : "20px")};
+  gap: ${(props) => (props.isMobile ? "10px" : "15px")};
   // margin-bottom:30px;
 
   > div {
@@ -764,6 +859,7 @@ const ExpertSelectBox = styled.div`
 `;
 
 const ExpertCard = styled.div`
+  visibility: ${(props) => (props.Empty ? "hidden" : "visible")};
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -777,7 +873,11 @@ const ExpertCard = styled.div`
     else if (props.PoC) return `1px solid #E2E7EA`;
     else if (props.Marketing) return `1px solid #F0EDE6`;
     else if (props.Client) return `1px solid #E2E7EA`;
-    else if (props.Strategy) return `1px solid #E2E7EA`;
+    else if (props.Strategy) return `1px solid #E0E5DF`;
+    else if (props.Idea) return `1px solid #DAE1F1`;
+    else if (props.Hacker) return `1px solid #EDE9DE`;
+    else if (props.BM) return `1px solid #EEE7E7`;
+    else if (props.Price) return `1px solid #E8E2EA`;
     else return `1px solid ${palette.gray100}`;
   }};
   background: ${(props) => {
@@ -786,7 +886,11 @@ const ExpertCard = styled.div`
     else if (props.PoC) return `#E2E7EA`;
     else if (props.Marketing) return `#F0EDE6`;
     else if (props.Client) return `#E2E7EA`;
-    else if (props.Strategy) return `#E2E7EA`;
+    else if (props.Strategy) return `#E0E5DF`;
+    else if (props.Idea) return `#DAE1F1`;
+    else if (props.Hacker) return `#EDE9DE`;
+    else if (props.BM) return `#EEE7E7`;
+    else if (props.Price) return `#E8E2EA`;
     else return palette.gray100;
   }};
   box-shadow: ${(props) => {
@@ -1093,6 +1197,7 @@ const Popup = styled.div`
       font-size: 0.875rem;
       font-weight: 500;
       margin: 20px auto 24px;
+      line-height: 1.5;
     }
 
     .btnWrap {
