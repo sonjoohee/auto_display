@@ -55,13 +55,21 @@ const PageMeetAiExpert = () => {
   const [isMobile, setIsMobile] = useAtom(IS_MOBILE);
   const navigate = useNavigate();
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
-  const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
+  const [recommendedTargetData, setRecommendedTargetData] = useAtom(
+    RECOMMENDED_TARGET_DATA
+  );
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
-  const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
-  const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
-  const [analysisButtonState, setAnalysisButtonState] = useAtom(ANALYSIS_BUTTON_STATE);
+  const [selectedPocOptions, setSelectedPocOptions] =
+    useAtom(SELECTED_POC_OPTIONS);
+  const [selectedExpertList, setSelectedExpertList] =
+    useAtom(SELECTED_EXPERT_LIST);
+  const [analysisButtonState, setAnalysisButtonState] = useAtom(
+    ANALYSIS_BUTTON_STATE
+  );
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
-  const [isExpertInsightAccessible, setIsExpertInsightAccessible] = useAtom(IS_EXPERT_INSIGHT_ACCESSIBLE);
+  const [isExpertInsightAccessible, setIsExpertInsightAccessible] = useAtom(
+    IS_EXPERT_INSIGHT_ACCESSIBLE
+  );
   const [expertData] = useAtom(EXPERT_DETAIL_DATA);
   const [password, setPassword] = useAtom(passwordAtom);
   const [newPassword, setNewPassword] = useAtom(newPasswordAtom);
@@ -105,7 +113,8 @@ const PageMeetAiExpert = () => {
     ADDITIONAL_REPORT_DATA
   ); // Use the new list-based atom
 
-  const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA);
+  const [strategyReportData, setStrategyReportData] =
+    useAtom(STRATEGY_REPORT_DATA);
 
   const [
     selectedCustomerAdditionalKeyword,
@@ -129,7 +138,9 @@ const PageMeetAiExpert = () => {
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
   const [advise, setAdvise] = useState(""); // 새로운 advise 상태 추가
 
-  const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_ATOM);
+  const [pocDetailReportData, setpocDetailReportData] = useAtom(
+    POC_DETAIL_REPORT_ATOM
+  );
 
   const closePopupRegex = () => {
     setInputBusinessInfo("");
@@ -206,19 +217,25 @@ const PageMeetAiExpert = () => {
     };
   }, []);
 
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault(); // 기본 엔터 동작 방지
+      handledSearch(); // 검색 함수 호출
+    }
+  };
+
   const handledSearch = async () => {
-    
     // 로그인 상태인지 확인 후 처리
     if (isLoggedIn) {
       const regex = /^[가-힣a-zA-Z0-9\s.,'"?!()\-]*$/;
       const specialChars = /^[.,'"?!()\-]+$/;
-      
+
       // 단독으로 특수 문자만 사용된 경우
       if (specialChars.test(inputBusinessInfo.trim())) {
         setIsPopupRegex(true);
         return;
       }
-      
+
       // 입력 값에 대한 정규식 및 빈 값 체크
       if (!regex.test(inputBusinessInfo)) {
         setIsPopupRegex(true);
@@ -238,42 +255,22 @@ const PageMeetAiExpert = () => {
             Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
           },
         };
-        const sampledata = {
-          business_info: "원격 근무자를 위한 생산성 관리 툴", // 비즈니스 아이템 명칭 변경
-          business_analysis_data: {
-            명칭: "RemoteWorkPro", // 툴 이름 예시
-            주요_목적_및_특징: [
-              "RemoteWorkPro는 원격 근무자들의 생산성을 극대화하기 위한 올인원 관리 툴입니다. 이 툴은 작업 시간 추적, 일정 관리, 프로젝트 협업 도구 등을 통합하여 하나의 플랫폼에서 원활하게 업무를 처리할 수 있도록 도와줍니다. 사용자는 실시간으로 자신의 작업 진행 상황을 모니터링하고, 팀원들과의 효율적인 소통과 협업을 통해 업무 효율성을 높일 수 있습니다."
-            ],
-            주요기능: [
-              "작업 시간 추적 기능을 통해 근무 시간을 정확히 기록하고, 시간당 생산성 데이터를 실시간으로 제공하여 업무 관리가 용이합니다.",
-              "프로젝트 관리 기능으로 팀원들과의 협업이 원활해지며, 모든 진행 상황을 한눈에 확인할 수 있는 대시보드 기능을 갖추고 있습니다.",
-              "화상 회의 및 실시간 채팅 기능을 통해 팀원 간의 소통을 원활하게 하고, 일정 관리 및 알림 시스템을 통해 중요한 일정을 놓치지 않도록 도와줍니다."
-            ],
-            목표고객: [
-              "원격 근무 환경에서 효율적인 업무 관리를 원하는 중소기업 및 스타트업: RemoteWorkPro는 다양한 프로젝트와 팀원을 관리해야 하는 중소기업에게 필수적인 기능을 제공하여, 업무 흐름을 개선하고 효율성을 극대화합니다.",
-              "프리랜서 및 1인 사업자: RemoteWorkPro는 시간 관리가 중요한 프리랜서 및 1인 사업자들에게 자신의 작업 시간을 기록하고 관리하는 데 유용하며, 일정과 프로젝트를 효과적으로 관리할 수 있도록 도와줍니다.",
-              "대규모 팀을 운영하는 IT 및 서비스 업종의 기업: RemoteWorkPro는 대규모 팀의 협업과 의사소통을 지원하는 강력한 도구로, 팀원들이 분산된 환경에서도 일관되게 업무를 진행할 수 있도록 합니다."
-            ]
-          },
-          question_info: inputBusinessInfo // 기존 입력 데이터 유지
-        };
-  
+
         // 서버로 질문 요청 보내기 (주석처리)
         // let response = await axios.post(
         //   "https://wishresearch.kr/panels/customer_add_question",
         //   sampledata,
         //   axiosConfig
         // );
-  
+
         // const answerData = response.data.additional_question;
-  
+
         // 임시 데이터로 성공 처리
         const answerData = { answer: "Sample answer from AI" };
-  
+
         // answerData.advise가 있을 경우에만 동작 진행
         if (!answerData.advise) {
-          setIsExpertInsightAccessible(true); 
+          setIsExpertInsightAccessible(true);
           setApproachPath(-1); // 검색을 통해 들어가는 경우
           setAnalysisButtonState(1); // 버튼 상태를 1로 설정
           setSelectedExpertIndex(0);
@@ -289,9 +286,9 @@ const PageMeetAiExpert = () => {
       setIsPopupLogin(true); // 로그인 상태가 아니라면 로그인 팝업 띄우기
     }
   };
-  
+
   const getExpertImage = (expertIndex) => {
-    switch(expertIndex) {
+    switch (expertIndex) {
       case "1":
         return images.ImgStrategy;
       case "2":
@@ -307,7 +304,7 @@ const PageMeetAiExpert = () => {
 
   const handledExpertSelect = (index) => {
     if (isLoggedIn) {
-      setIsExpertInsightAccessible(true); 
+      setIsExpertInsightAccessible(true);
       setApproachPath(1);
       setInputBusinessInfo(""); // 또는 null, undefined로 초기화
       setSelectedExpertIndex(index);
@@ -348,6 +345,7 @@ const PageMeetAiExpert = () => {
                     "letterCount"
                   ).innerText = `${currentLength}/300`;
                 }}
+                onKeyPress={handleKeyPress} // 키 입력 이벤트 핸들러 추가
               ></textarea>
               <button type="button" onClick={handledSearch}>
                 검색
@@ -373,7 +371,8 @@ const PageMeetAiExpert = () => {
           <ExpertSelectWrap isMobile={isMobile}>
             {/* 고정 데이터 활용 */}
             <ExpertSelectBox isMobile={isMobile}>
-              <ExpertCard PoC
+              <ExpertCard
+                PoC
                 onClick={() => {
                   setAnalysisButtonState(1);
                   handledExpertSelect("4");
@@ -386,7 +385,8 @@ const PageMeetAiExpert = () => {
                 </span>
               </ExpertCard>
 
-              <ExpertCard Marketing
+              <ExpertCard
+                Marketing
                 onClick={() => {
                   setAnalysisButtonState(1);
                   handledExpertSelect("2");
@@ -399,7 +399,8 @@ const PageMeetAiExpert = () => {
                 </span>
               </ExpertCard>
 
-              <ExpertCard Client
+              <ExpertCard
+                Client
                 onClick={() => {
                   setAnalysisButtonState(1);
                   handledExpertSelect("3");
@@ -412,7 +413,8 @@ const PageMeetAiExpert = () => {
                 </span>
               </ExpertCard>
 
-              <ExpertCard Strategy
+              <ExpertCard
+                Strategy
                 onClick={() => {
                   setAnalysisButtonState(1);
                   handledExpertSelect("1");
@@ -435,8 +437,8 @@ const PageMeetAiExpert = () => {
               </ExpertCard>
             </ExpertSelectBox>
           </ExpertSelectWrap>
-            {/* API 데이터 활용 */}
-            {/* <ExpertSelectBox>
+          {/* API 데이터 활용 */}
+          {/* <ExpertSelectBox>
               {expertData.results && expertData.results.map((expert) => (
                 <ExpertCard
                   key={expert.id}
@@ -565,38 +567,38 @@ const PageMeetAiExpert = () => {
           </div>
         </Popup>
       )}
-          {isPopupInvalidBusiness && (
-      <Popup
-        Cancel
-        onClick={(e) => {
-          if (e.target === e.currentTarget) {
-            closePopupInvalidBusiness(); // 상태를 false로 설정
-          }
-        }}
-      >
-        <div>
-          <button
-            type="button"
-            className="closePopup"
-            onClick={closePopupInvalidBusiness}
-          >
-            닫기
-          </button>
-          <span>
-            <img src={images.ExclamationMark2} alt="" />
-          </span>
-          <p>
-            올바른 비즈니스 정보를 입력해주세요. 입력한 정보로 검색이 제한될 수
-            있습니다.
-          </p>
-          <div className="btnWrap">
-            <button type="button" onClick={closePopupInvalidBusiness}>
-              확인
+      {isPopupInvalidBusiness && (
+        <Popup
+          Cancel
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              closePopupInvalidBusiness(); // 상태를 false로 설정
+            }
+          }}
+        >
+          <div>
+            <button
+              type="button"
+              className="closePopup"
+              onClick={closePopupInvalidBusiness}
+            >
+              닫기
             </button>
+            <span>
+              <img src={images.ExclamationMark2} alt="" />
+            </span>
+            <p>
+              올바른 비즈니스 정보를 입력해주세요. 입력한 정보로 검색이 제한될
+              수 있습니다.
+            </p>
+            <div className="btnWrap">
+              <button type="button" onClick={closePopupInvalidBusiness}>
+                확인
+              </button>
+            </div>
           </div>
-        </div>
-      </Popup>
-    )}
+        </Popup>
+      )}
     </>
   );
 };
@@ -610,18 +612,17 @@ const MainContent = styled.div`
   flex-direction: column;
   width: 100%;
   justify-content: center;
-  padding: ${props => props.isMobile ? '0' : '0 20px'};
+  padding: ${(props) => (props.isMobile ? "0" : "0 20px")};
 `;
 
 const ContentsWrap = styled.div`
   position: relative;
-  width: ${props => props.isMobile ? '100%' : 'calc(100% - 40px)'};
+  width: ${(props) => (props.isMobile ? "100%" : "calc(100% - 40px)")};
   display: flex;
-  flex-direction: ${props => props.isMobile ? 'column' : 'row'};
-  gap: ${props => props.isMobile ? '20px' : '40px'};
-  padding: ${props => props.isMobile ? '20px' : '0'};
+  flex-direction: ${(props) => (props.isMobile ? "column" : "row")};
+  gap: ${(props) => (props.isMobile ? "20px" : "40px")};
+  padding: ${(props) => (props.isMobile ? "20px" : "0")};
 `;
-
 
 const Title = styled.h1`
   display: flex;
@@ -629,21 +630,21 @@ const Title = styled.h1`
   align-items: center;
   gap: 8px;
   // font-size:3.13rem;
-  font-size: ${props => props.isMobile ? '1.5rem' : '2rem'};
+  font-size: ${(props) => (props.isMobile ? "1.5rem" : "2rem")};
   font-weight: 600;
   // margin:0 auto 55px;
-  margin: ${props => props.isMobile ? '40px auto 30px' : '120px auto 55px'};
+  margin: ${(props) => (props.isMobile ? "40px auto 30px" : "120px auto 55px")};
 
   p {
     // font-size:1.25rem;
-    font-size: ${props => props.isMobile ? '0.75rem' : '0.875rem'};
+    font-size: ${(props) => (props.isMobile ? "0.75rem" : "0.875rem")};
     font-weight: 400;
   }
 `;
 
 const InputWrap = styled.div`
   // max-width:1000px;
-  max-width: ${props => props.isMobile ? '100%' : '820px'};
+  max-width: ${(props) => (props.isMobile ? "100%" : "820px")};
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -659,7 +660,7 @@ const InputWrap = styled.div`
     justify-content: space-between;
     gap: 20px;
     // padding:28px 38px;
-    padding: ${props => props.isMobile ? '20px' : '28px'};
+    padding: ${(props) => (props.isMobile ? "20px" : "28px")};
 
     textarea {
       width: 100%;
@@ -706,7 +707,8 @@ const ExpertSelectWrap = styled.div`
   position: relative;
   max-width: 1240px;
   width: 100%;
-  margin: ${props => props.isMobile ? '60px auto 50px' : '120px auto 100px'};
+  margin: ${(props) =>
+    props.isMobile ? "60px auto 50px" : "120px auto 100px"};
 
   h2 {
     display: flex;
@@ -731,13 +733,13 @@ const ExpertSelectWrap = styled.div`
 const ExpertSelectBox = styled.div`
   display: flex;
   flex-wrap: wrap;
-  flex-direction: ${props => props.isMobile ? 'column' : 'row'};
+  flex-direction: ${(props) => (props.isMobile ? "column" : "row")};
   justify-content: space-between;
-  gap: ${props => props.isMobile ? '15px' : '20px'};
+  gap: ${(props) => (props.isMobile ? "15px" : "20px")};
   // margin-bottom:30px;
 
   > div {
-     flex: ${props => props.isMobile ? '1 1 auto' : '1 1 18%'};
+    flex: ${(props) => (props.isMobile ? "1 1 auto" : "1 1 18%")};
   }
 `;
 
@@ -745,9 +747,9 @@ const ExpertCard = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-  height: ${props => props.isMobile ? 'auto' : '215px'};
+  height: ${(props) => (props.isMobile ? "auto" : "215px")};
   text-align: left;
-  padding: ${props => props.isMobile ? '20px 15px' : '26px 20px'};
+  padding: ${(props) => (props.isMobile ? "20px 15px" : "26px 20px")};
   border-radius: 16px;
   border: ${(props) => {
     if (props.select) return `1px solid ${palette.blue}`;
@@ -785,8 +787,8 @@ const ExpertCard = styled.div`
     position: relative;
     width: 70px;
     height: 70px;
-    margin:0 auto;
-    margin-top:auto;
+    margin: 0 auto;
+    margin-top: auto;
     // border-radius: 100px;
     // border: 1px solid ${palette.lineGray};
     // background: ${palette.white};
@@ -875,20 +877,19 @@ const ExpertCard = styled.div`
           color: ${palette.gray};
         }
       }
-    `
-  }
+    `}
 
   ${(props) =>
     props.Coming &&
     css`
-      align-items:center;
+      align-items: center;
 
       div {
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        gap:10px;
-        margin:auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        margin: auto;
       }
 
       span {
@@ -906,8 +907,7 @@ const ExpertCard = styled.div`
           color: ${palette.gray};
         }
       }
-    `
-  }
+    `}
 `;
 
 const FAQSection = styled.div`
