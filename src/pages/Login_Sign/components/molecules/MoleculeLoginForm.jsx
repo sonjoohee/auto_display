@@ -163,6 +163,13 @@ const MoleculeLoginForm = () => {
     setIsPasswordRestPopupOpen(false); // 비밀번호 리셋 팝업 닫기
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleLogin();
+    }
+  };
+
   return (
     <>
       {/* 팝업이 열리면 로그인 폼은 숨기고 팝업만 표시 */}
@@ -191,6 +198,7 @@ const MoleculeLoginForm = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="비밀번호를 입력해주세요"
+              onKeyDown={handleKeyPress}
             />
             <TogglePasswordButton onClick={togglePasswordVisibility}>
               {showPassword ? <FaEye /> : <FaEyeSlash />}
