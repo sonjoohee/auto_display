@@ -42,6 +42,7 @@ import ImgTarget from "../images/imgTarget.svg"
 import IconChatSmile from "../images/iconChatSmile.svg"
 
 import ImgPoC from "../images/imgPoC.svg"
+import ImgPoC2 from "../images/imgPoC2.svg"
 import ImgMarketing from "../images/imgMarketing.svg"
 import ImgClient from "../images/imgClient.svg"
 import ImgStrategy from "../images/imgStrategy.svg"
@@ -147,6 +148,7 @@ const images = {
   IconChatSmile,
 
   ImgPoC,
+  ImgPoC2,
   ImgMarketing,
   ImgClient,
   ImgStrategy,
