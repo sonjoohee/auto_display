@@ -1167,7 +1167,7 @@ const Section = ({
                           <div
                             className={`${
                               selectedLanguage === "영문" ? "selected" : ""
-                            }`}
+                            } disabled`}
                             onClick={() => handleLanguageChange("영문")}
                           >
                             {selectedLanguage === "영문" ? (
@@ -1175,7 +1175,7 @@ const Section = ({
                             ) : (
                               <img src={images.ImgENG} alt="" />
                             )}
-                            영문
+                            영문(준비 중)
                           </div>
                         </SelectBox>
                       </SelectBoxWrap>
@@ -2369,5 +2369,18 @@ const SelectBox = styled.div`
       border: 1px solid ${palette.blue};
       background: rgba(4, 83, 244, 0.05);
     }
+  }
+  .disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .disabled img {
+    filter: grayscale(100%);
+  }
+
+  .disabled span {
+    color: ${palette.gray300};
   }
 `;
