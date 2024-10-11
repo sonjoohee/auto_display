@@ -201,12 +201,19 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
           while (
             retryCount < maxRetries &&
             (!response1.data ||
+              typeof data !== 'object' ||
               Object.keys(response1.data).length === 0 ||
-              !response1.data["poc_persona"])
+              !response1.data["poc_persona"]) ||
+              !response1.data.poc_persona.persona_1 ||
+              !response1.data.poc_persona.persona_2 ||
+              !response1.data.poc_persona.persona_3 ||
+              !response1.data.poc_persona.persona_1[0]["추천 가상 페르소나"] ||
+              !response1.data.poc_persona.persona_1[1]["이유 및 예상 인사이트"] ||
+              !response1.data.poc_persona.persona_2[0]["추천 가상 페르소나"] ||
+              !response1.data.poc_persona.persona_2[1]["이유 및 예상 인사이트"] ||
+              !response1.data.poc_persona.persona_3[0]["추천 가상 페르소나"] ||
+              !response1.data.poc_persona.persona_3[1]["이유 및 예상 인사이트"]
           ) {
-            console.log(
-              `Retry attempt ${retryCount + 1}: Response is empty, retrying...`
-            );
 
             response1 = await axios.post(
               "https://wishresearch.kr/panels/expert/poc_persona",
