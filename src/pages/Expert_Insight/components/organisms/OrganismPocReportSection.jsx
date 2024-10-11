@@ -1095,10 +1095,10 @@ const Section = ({
                       borderRadius: "10px",
                     }}
                   >
-                    {item.subContent.map((subItem, subIndex) => (
+                    {['기대하는 유저 행동', '목표 행위', '검증 방법', '핵심 검증 지표', '검증 방법 실행에 필요한 기능', '기술적 구현 수준'].map((title, subIndex) => (
                       <div key={subIndex} style={{ marginTop: "3px" }}>
-                        <p style={{ textIndent: '-1em', paddingLeft: '1em', marginBottom: '5px' }} key={subIndex}>
-                          {subIndex + 1}. {subItem.subTitle} : {subItem.text}
+                        <p style={{ textIndent: '-1em', paddingLeft: '1em', marginBottom: '5px' }}>
+                          {subIndex + 1}. {title} : {item.subContent[subIndex]?.text || ''}
                         </p>
                       </div>
                     ))}
