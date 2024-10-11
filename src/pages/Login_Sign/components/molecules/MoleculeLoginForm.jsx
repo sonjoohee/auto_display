@@ -107,7 +107,7 @@ const MoleculeLoginForm = () => {
           // 로그인 성공 처리
           setIsLoggedIn(true);
           setLoginSuccess(true);
-          navigate("/");
+          navigate("/MeetAiExpert");
         } else {
           setError("유저 정보를 불러오는 중 오류가 발생했습니다.");
         }

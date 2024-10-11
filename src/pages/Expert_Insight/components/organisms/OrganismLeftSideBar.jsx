@@ -607,7 +607,7 @@ useEffect(() => {
     setUserName("");
     setUserEmail("");
     setIsLogoutPopup(false); // 로그아웃 팝업 닫기
-    navigate("/"); // 페이지 이동
+    navigate("/MeetAiExpert"); // 페이지 이동
   };
 
   const handleCloseLogoutPopup = () => {
@@ -688,7 +688,7 @@ useEffect(() => {
       setChatIdToDelete(null);
       setChatRefreshTrigger((prev) => !prev);
       if (chatIdToDelete === conversationId) {
-        navigate("/"); // / 경로로 이동
+        navigate("/MeetAiExpert"); // / 경로로 이동
       }
     } catch (error) {
       console.error("삭제 요청 오류:", error);
@@ -744,7 +744,7 @@ useEffect(() => {
   const handleNewProjectClick = () => {
     if (isLoading) return;
 
-    navigate("/");
+    navigate("/MeetAiExpert");
     setConversation([]);
     setConversationStage(1);
     setInputBusinessInfo("");
@@ -781,7 +781,7 @@ useEffect(() => {
   const handleLogoClick = () => {
     if (isLoading) return;
 
-    navigate("/LandingPage");
+    navigate("/Landing");
     setConversation([]);
     setConversationStage(1);
     setInputBusinessInfo("");
@@ -1411,7 +1411,7 @@ useEffect(() => {
             닫기
           </button>
           <span>
-            <img src={images.ExclamationMark} alt="" />
+            <img src={images.ExclamationMark2} alt="" />
           </span>
           <p>새로운 보고서 이름을 입력하세요</p>
           <input
@@ -1441,7 +1441,7 @@ useEffect(() => {
             닫기
           </button>
           <span>
-            <img src={images.ExclamationMark} alt="" />
+            <img src={images.ExclamationMark2} alt="" />
           </span>
           <p>새로운 프로젝트 이름을 입력하세요</p>
           <input

@@ -42,7 +42,7 @@ const MoleculeSignupPopup = ({ onClose, email }) => {
   };
 
   const handleGoToLogin = () => {
-    navigate("/");
+    navigate("/MeetAiExpert");
     setEmail(""); // 이메일 상태를 초기화합니다.
     // console.log("로그인 페이지로 이동");
   };
@@ -68,7 +68,7 @@ const MoleculeSignupPopup = ({ onClose, email }) => {
           {/* <button type="button" onClick={handleResendEmail}>
             재발송하기
           </button> */}
-          <a href="/" onClick={handleGoToLogin}>
+          <a href="/MeetAiExpert" onClick={handleGoToLogin}>
             로그인 하러가기
           </a>
         </div>

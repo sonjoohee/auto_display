@@ -37,7 +37,7 @@ const ResetPassword = () => {
       });
 
       if (response.ok) {
-        navigate("/"); // 비밀번호 변경 후 로그인 페이지로 이동
+        navigate("/MeetAiExpert"); // 비밀번호 변경 후 로그인 페이지로 이동
       } else {
         const result = await response.json();
         setError(result.error || "비밀번호 재설정 중 오류가 발생했습니다.");
