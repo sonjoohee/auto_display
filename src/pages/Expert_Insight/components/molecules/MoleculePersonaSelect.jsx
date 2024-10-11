@@ -313,7 +313,7 @@ export default MoleculePersonaSelect;
 const Wrapper = styled.div`
   max-width:968px;
   width:91.5%;
-  padding: 40px;
+  padding: 32px 40px;
   margin:24px 0 0 50px;
   border-radius:15px;
   border:1px solid ${palette.lineGray};
@@ -410,7 +410,6 @@ const Label = styled.label`
 `;
 
 const ButtonWrap = styled.div`
-  margin-top:32px;
   display:flex;
   justify-content:end;
   align-items:center;
@@ -424,10 +423,21 @@ const Button = styled.button`
   line-height:22px;
   padding:8px 20px;
   margin-left:auto;
+  margin-top: ${(props) => (
+    props.selectedPocTarget && Object.keys(props.selectedPocTarget).length ? '0' : '32px'
+  )};
   border-radius:8px;
   border:0;
-  background: ${(props) => (!props.selectedPocTargetState.job ? palette.lineGray : (Object.keys(props.selectedPocTarget).length ? palette.gray800 : palette.blue))};
+  background: ${(props) => (
+    !props.selectedPocTargetState.job 
+    ? palette.lineGray 
+    : (Object.keys(props.selectedPocTarget).length 
+    ? palette.gray800 
+    : palette.blue))};
   transition:all .5s;
+
+  display: ${(props) => (
+    Object.keys(props.selectedPocTarget).length ? 'none' : 'block')};
 `;
 
 const Spacing = styled.div`

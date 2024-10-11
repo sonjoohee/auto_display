@@ -98,6 +98,7 @@ import ImgENG from "../images/ImgENG.svg"
 import ImgKOR2 from "../images/ImgKOR2.svg"
 import ImgENG2 from "../images/ImgENG2.svg"
 
+import IconLightning from "../images/IconLightning.svg"
 
 
 const images = {
@@ -200,6 +201,8 @@ const images = {
   ImgENG,
   ImgKOR2,
   ImgENG2,
+
+  IconLightning,
 }
 
 export default images;

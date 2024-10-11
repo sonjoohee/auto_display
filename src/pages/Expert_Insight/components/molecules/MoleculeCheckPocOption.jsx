@@ -315,7 +315,10 @@ export default MoleculeCheckPocOption;
 const Wrap = styled.div`
   max-width:570px;
   width:100%;
-  padding: 40px;
+  min-height:325px;
+  display:flex;
+  flex-direction:column;
+  padding: 32px 40px;
   margin:24px 0 0 44px;
   border-radius:15px;
   border:1px solid ${palette.lineGray};
@@ -376,7 +379,7 @@ const Option = styled.div`
         ? palette.blue
         : palette.black
       : palette.gray800};
-  padding: 9px 12px;
+  padding: 8px 12px;
   border-radius: 8px;
   cursor: pointer;
   background-color: ${(props) =>
@@ -432,7 +435,8 @@ const Option = styled.div`
 `;
 
 const ButtonWrap = styled.div`
-  margin-top:40px;
+  // margin-top:40px;
+  margin-top:auto;
   display:flex;
   justify-content:space-between;
   align-items:center;
@@ -444,33 +448,46 @@ const ButtonWrap = styled.div`
   }
 
   .next, .finish {
-    min-width:100px;
+    // min-width:100px;
     font-size:0.88rem;
-    color:${palette.white};
-    line-height:22px;
-    padding:8px 20px;
+    // color:${palette.white};
+    // line-height:22px;
+    // padding:8px 20px;
     margin-left:auto;
     border-radius:8px;
+    background:none;
     transition:all .5s;
   }
 
   .next {
+    color: ${(props) =>
+      props.selectedPocOptions.length !== 0
+        ? palette.black
+        : !props.selectedOption1
+        ? palette.gray500
+        : palette.chatBlue};
     background: ${(props) =>
       props.selectedPocOptions.length !== 0
-        ? palette.gray800
+        ? palette.white
         : !props.selectedOption1
-        ? palette.lineGray
-        : palette.blue};
+        ? palette.white
+        : palette.white};
     cursor: ${(props) => (!props.selectedOption1 ? "default" : "pointer")};
   }
 
   .finish {
+    color: ${(props) =>
+      props.selectedPocOptions.length !== 0
+        ? palette.black
+        : !props.selectedOption1 || !props.selectedOption2
+        ? palette.gray500
+        : palette.chatBlue};
     background: ${(props) =>
       props.selectedPocOptions.length !== 0
-        ? palette.gray800
+        ? palette.white
         : !props.selectedOption1 || !props.selectedOption2
-        ? palette.lineGray
-        : palette.blue};
-   cursor: ${(props) => (!props.selectedOption1 || !props.selectedOption2 ? "default" : "pointer")};
+        ? palette.white
+        : palette.white};
+    cursor: ${(props) => (!props.selectedOption1 || !props.selectedOption2 ? "default" : "pointer")};
   }
 `;
