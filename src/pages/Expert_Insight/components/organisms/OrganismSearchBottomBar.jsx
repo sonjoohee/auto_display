@@ -67,10 +67,10 @@ const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
 
     if (isBlue) {
       setCustomerAdditionButtonState(1);
+      setCustomerAdditionQuestionInput(inputValue);
     }
     if (onSearch) {
       onSearch(inputValue);
-      setCustomerAdditionQuestionInput(inputValue);
     }
 
     setInputValue("");
