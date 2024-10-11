@@ -86,6 +86,7 @@ import AccountInfo from "../images/AccountInfo.svg"
 import AccountInquiry from "../images/AccountInquiry.svg"
 import AccountLogout from "../images/AccountLogout.svg"
 import IconMagic from "../images/iconMagic.svg"
+import IconMagic2 from "../images/iconMagic2.svg"
 
 import iconMailSuccess from "../images/iconMailSuccess.svg"
 
@@ -191,6 +192,7 @@ const images = {
   AccountLogout,
 
   IconMagic,
+  IconMagic2,
   iconMailSuccess,
 
   ImgPDF,
