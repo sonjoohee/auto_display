@@ -73,7 +73,7 @@ const RequestResetPassword = () => {
   const handleGoToLogin = () => {
     setIsPopupOpen(false);       // 현재 팝업 닫기
     setIsLoginPopupOpen(false);  // 다른 팝업도 닫기
-    window.location.href = "/";  // 메인 페이지로 이동
+    window.location.href = "/MeetAiExpert";  // 메인 페이지로 이동
   };
 
   return (

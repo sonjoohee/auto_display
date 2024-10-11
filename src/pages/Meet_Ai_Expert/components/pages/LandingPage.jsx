@@ -10,15 +10,22 @@ import { INPUT_BUSINESS_INFO } from '../../../AtomStates';
 
 const LandingPage = () => {
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
-  const [textarea, setTextarea] = useState('');
   const navigate = useNavigate();
+
   const handleTextChange = (e) => {
-    // setTextarea(e.target.value);
     setInputBusinessInfo(e.target.value);
   };
+
   const handleSubmit = () => {
-    // Navigate to PageMeetAiExpert and pass the inputBusinessInfo as state
-    navigate('/PageMeetAiExpert', { state: { inputBusinessInfo: inputBusinessInfo } });
+    // Navigate to MeetAiExpert and pass the inputBusinessInfo as state
+    navigate('/MeetAiExpert', { state: { inputBusinessInfo: inputBusinessInfo } });
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit();
+    }
   };
   
   return (
@@ -41,6 +48,7 @@ const LandingPage = () => {
               placeholder="여기에 입력해 주세요..."
               value={inputBusinessInfo}
               onChange={handleTextChange}
+              onKeyDown={handleKeyPress}
             />
             <span><img src={images.IconLightning} alt="" />예시: 헬스케어 웨어러블 기기 데이터 분석 서비스　|　다기능 여행용 스마트 가방 </span>
           </div>
