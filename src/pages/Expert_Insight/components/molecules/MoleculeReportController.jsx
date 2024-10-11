@@ -369,7 +369,7 @@ const MoleculeReportController = ({
       if (currentExpertData && currentExpertData.tabs[0] && currentExpertData.tabs[0].sections[0]) {
         const content = currentExpertData.tabs[0].sections[0].content[index];
         if (content && content.title) {
-          return `목표 : ${content.title}`;
+          return `목표 : ${content.text}`;
         }
       }
       return "목표 : 설정되지 않음"; // 기본값
@@ -406,7 +406,39 @@ ${report.content.mainCharacter.map(character => `- ${character}`).join('\n')}`.t
           if (report.content.tabs) {
             const selectedTabIndex = getSelectedTabIndex();
             const selectedTabData = report.content.tabs[selectedTabIndex];
-            contentToCopy = extractTextContent(selectedTabData);
+            let rawContent = extractTextContent(selectedTabData);
+            
+            // 전문가 인덱스가 4일 때만 특별 처리
+            if (report.content.expert_id === "4") {
+              // 줄 단위로 분리
+              let lines = rawContent.split('\n');
+              
+              // 수정된 내용을 저장할 배열
+              let modifiedLines = [];
+              
+              // 가설 검증 문장의 위치 (예: 5, 15, 25번째 줄)
+              const hypothesisLines = [4, 16, 30];
+              
+              for (let i = 0; i < lines.length; i++) {
+                // 가설 검증 문장 줄이면 건너뛰기
+                if (hypothesisLines.includes(i + 1)) {
+                  continue;
+                }
+                
+                // 가설 검증 문장 다음 줄에 "목표 : " 추가
+                if (hypothesisLines.includes(i)) {
+                  modifiedLines.push(`목표 : ${lines[i].trim()}`);
+                } else {
+                  modifiedLines.push(lines[i].trim());
+                }
+              }
+              
+              // 수정된 내용을 다시 문자열로 합치기
+              contentToCopy = modifiedLines.join('\n');
+            } else {
+              contentToCopy = rawContent;
+            }
+            
           } else {
             contentToCopy = JSON.stringify(report.content, null, 2);
           }
@@ -496,7 +528,37 @@ ${mainCharacteristicOfBusinessInformation
         
         if (reportData && reportData.tabs && reportData.tabs[selectedTabIndex]) {
           const selectedTabData = reportData.tabs[selectedTabIndex];
-          contentToCopy = extractTextContent(selectedTabData);
+          let rawContent = extractTextContent(selectedTabData);
+          // 전문가 인덱스가 4일 때만 특별 처리
+          if (expertIndex === "4") {
+            // 줄 단위로 분리
+            let lines = rawContent.split('\n');
+            // 수정된 내용을 저장할 배열
+            let modifiedLines = [];
+            
+            // 가설 검증 문장의 위치 (예: 5, 15, 25번째 줄)
+            const hypothesisLines = [4, 16, 30];
+            
+            for (let i = 0; i < lines.length; i++) {
+              // 가설 검증 문장 줄이면 건너뛰기
+              if (hypothesisLines.includes(i + 1)) {
+                continue;
+              }
+              
+              // 가설 검증 문장 다음 줄에 "목표 : " 추가
+              if (hypothesisLines.includes(i)) {
+                modifiedLines.push(`목표 : ${lines[i].trim()}`);
+              } else {
+                modifiedLines.push(lines[i].trim());
+              }
+            }
+            
+            // 수정된 내용을 다시 문자열로 합치기
+            contentToCopy = modifiedLines.join('\n');
+          } else {
+            contentToCopy = rawContent;
+          }
+        
         } else {
           contentToCopy = "전략 보고서 데이터를 찾을 수 없습니다.";
         }
