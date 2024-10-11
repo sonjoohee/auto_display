@@ -196,13 +196,13 @@ const PageExpertInsight = () => {
             // 서버에서 새로운 대화 ID 생성
             const newConversationId = await createChatOnServer();
             setConversationId(newConversationId); // 생성된 대화 ID 설정
-            setIsExpertInsightAccessible(true); 
+            // setIsExpertInsightAccessible(true); 
             setIsLoadingPage(false); // 로딩 완료
             // 새로운 대화 ID로 경로 변경
             navigate(`/conversation/${newConversationId}`, { replace: true });
           } catch (error) {
             setIsLoadingPage(false); // 로딩 완료
-            setIsExpertInsightAccessible(true); 
+            // setIsExpertInsightAccessible(true); 
             console.error("Failed to create conversation on server:", error);
             navigate(`/conversation/${conversationId}`, { replace: true });
           }
@@ -267,7 +267,7 @@ const PageExpertInsight = () => {
         if (!conversationId) {
           setConversationId(nanoid()); // 비로그인 시 로컬에서 새로운 ID 생성
           setIsLoadingPage(false); // 로딩 완료
-          setIsExpertInsightAccessible(true); 
+          // setIsExpertInsightAccessible(true); 
           navigate(`/conversation/${conversationId}`, { replace: true });
         } else {
           const savedConversation = await getConversationByIdFromIndexedDB(conversationId, isLoggedIn);

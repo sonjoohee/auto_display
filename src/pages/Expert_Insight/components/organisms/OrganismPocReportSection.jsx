@@ -1099,17 +1099,10 @@ const Section = ({
                       borderRadius: "10px",
                     }}
                   >
-                    {item.subContent.map((subItem, subIndex) => (
+                    {['기대하는 유저 행동', '목표 행위', '검증 방법', '핵심 검증 지표', '검증 방법 실행에 필요한 기능', '기술적 구현 수준'].map((title, subIndex) => (
                       <div key={subIndex} style={{ marginTop: "3px" }}>
-                        <p
-                          style={{
-                            textIndent: "-1em",
-                            paddingLeft: "1em",
-                            marginBottom: "5px",
-                          }}
-                          key={subIndex}
-                        >
-                          {subIndex + 1}. {subItem.subTitle} : {subItem.text}
+                        <p style={{ textIndent: '-1em', paddingLeft: '1em', marginBottom: '5px' }}>
+                          {subIndex + 1}. {title} : {item.subContent[subIndex]?.text || ''}
                         </p>
                       </div>
                     ))}
@@ -1174,7 +1167,7 @@ const Section = ({
                           <div
                             className={`${
                               selectedLanguage === "영문" ? "selected" : ""
-                            }`}
+                            } disabled`}
                             onClick={() => handleLanguageChange("영문")}
                           >
                             {selectedLanguage === "영문" ? (
@@ -1182,7 +1175,7 @@ const Section = ({
                             ) : (
                               <img src={images.ImgENG} alt="" />
                             )}
-                            영문
+                            영문(준비 중)
                           </div>
                         </SelectBox>
                       </SelectBoxWrap>
@@ -2376,5 +2369,18 @@ const SelectBox = styled.div`
       border: 1px solid ${palette.blue};
       background: rgba(4, 83, 244, 0.05);
     }
+  }
+  .disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .disabled img {
+    filter: grayscale(100%);
+  }
+
+  .disabled span {
+    color: ${palette.gray300};
   }
 `;
