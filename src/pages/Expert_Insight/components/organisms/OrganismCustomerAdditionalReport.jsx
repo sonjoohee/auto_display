@@ -58,7 +58,7 @@ const OrganismCustomerAdditionalReport = ({
     useAtom(INPUT_BUSINESS_INFO);
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [approachPath] = useAtom(APPROACH_PATH);
-  const [questionInput, setQuestionInput] = useAtom(
+  const [customerAdditionQuestionInput, setCustomerAdditionQuestionInput] = useAtom(
     CUSTOMER_ADDITION_QUESTION_INPUT
   );
   const [isLoadingAdd, setIsLoadingAdd] = useState(false);
@@ -154,7 +154,7 @@ const OrganismCustomerAdditionalReport = ({
               주요기능: analysisReportData.mainCharacter,
               목표고객: analysisReportData.mainCustomer,
             },
-            question_info: questionInput,
+            question_info: customerAdditionQuestionInput,
           };
 
           let response = await axios.post(
