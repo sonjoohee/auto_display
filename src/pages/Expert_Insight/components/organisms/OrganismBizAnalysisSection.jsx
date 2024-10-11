@@ -105,6 +105,8 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
   const [chatRefreshTrigger, setChatRefreshTrigger] = useAtom(
     CHAT_REFRESH_TRIGGER
   );
+  const [progress, setProgress] = useState(0);
+
   const togglePopupDelete = () => {
     setIsPopupOpenDelete(!isPopupOpenDelete);
   };
@@ -620,9 +622,12 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                 ))}
               </ul>
               {isLoadingAdd1 ? (
-                <>
-                  <SkeletonLine className="content-placeholder white" />
-                </>
+                <ProgressWrap>
+                  <ProgressBarContainer>
+                    <Progress progress={progress} />
+                  </ProgressBarContainer>
+                  <p>잠시만 기다려 주세요 ...</p>
+                </ProgressWrap>
               ) : (
                 isAddingNow.section === "mainFeatures" &&
                 isAddingNow.isAdding &&
@@ -650,7 +655,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                         저장
                       </button>
                       <button onClick={() => generateAddtionalContent("mainFeatures")}>
-                        <img src={images.IconRefresh2} alt="" />
+                        <img src={images.IconMagic2} alt="" />
                         생성
                       </button>
                     </BtnWrap>
@@ -736,9 +741,12 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                 )}
               </ul>
               {isLoadingAdd2 ? (
-                <>
-                  <SkeletonLine className="content-placeholder white" />
-                </>
+                <ProgressWrap>
+                  <ProgressBarContainer>
+                    <Progress progress={progress} />
+                  </ProgressBarContainer>
+                  <p>잠시만 기다려 주세요 ...</p>
+                </ProgressWrap>
               ) : (
                 isAddingNow.section === "mainCharacteristic" &&
                 isAddingNow.isAdding &&
@@ -766,7 +774,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
                         저장
                       </button>
                       <button onClick={() => generateAddtionalContent("mainCharacteristic")}>
-                        <img src={images.IconRefresh2} alt="" />
+                        <img src={images.IconMagic2} alt="" />
                         생성
                       </button>
                     </BtnWrap>
@@ -1275,5 +1283,42 @@ const Popup = styled.div`
           }
         }
       `}
+  }
+`;
+
+const fillAnimation = keyframes`
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+`;
+
+const ProgressBarContainer = styled.div`
+  width: 100%;
+  background-color: ${palette.gray100};
+  border-radius: 5px;
+  overflow: hidden;
+  margin-top: 20px;
+  position: relative;
+`;
+
+const Progress = styled.div`
+  width: ${({ progress }) => progress}%;
+  height: 8px;
+  background-color: ${palette.gray500};
+  animation: ${fillAnimation} 1.5s ease-in-out forwards;
+  border-radius: 5px;
+`;
+
+const ProgressWrap = styled.div`
+  position: relative;
+  text-align: center;
+  p {
+    font-family: "Pretendard";
+    font-size: 0.75rem;
+    margin-top: 8px;
+    color: ${palette.gray500};
   }
 `;
