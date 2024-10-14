@@ -24,7 +24,6 @@ import {
   STRATEGY_REPORT_DATA,
   ADDITIONAL_REPORT_DATA, // Import the new list-based atom
   CONVERSATION_STAGE,
-  iS_CLICK_CHECK_REPORT_RIGHTAWAY,
   CONVERSATION,
   CONVERSATION_ID,
   SELECTED_EXPERT_INDEX,
@@ -141,9 +140,6 @@ const OrganismLeftSideBar = () => {
   const [customerAdditionalReportData, setCustomerAdditionalReportData] =
     useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
   const [inputAdditionalQuestion, setInputAdditionalQuestion] = useState("");
-  const [isClickCheckReportRightAway, setIsClickCheckReportRightAway] = useAtom(
-    iS_CLICK_CHECK_REPORT_RIGHTAWAY
-  );
   const insightEditBoxRef = useRef(null);
   const historyEditBoxRef = useRef(null);
   const toggleRef = useRef(null); 
@@ -762,7 +758,6 @@ useEffect(() => {
     setSelectedCustomerAdditionalKeyword([]);
     setStrategyReportData({});
     setInputAdditionalQuestion("");
-    setIsClickCheckReportRightAway(false);
     setConversationId(null);
     setPassword("");
     setNewPassword("");
@@ -799,7 +794,6 @@ useEffect(() => {
     setSelectedCustomerAdditionalKeyword([]);
     setStrategyReportData({});
     setInputAdditionalQuestion("");
-    setIsClickCheckReportRightAway(false);
     setConversationId(null);
     setPassword("");
     setNewPassword("");

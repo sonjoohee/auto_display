@@ -14,7 +14,6 @@ import {
   EXPERT_BUTTON_STATE,
   IS_LOADING,
   SELECTED_EXPERT_LIST,
-  iS_CLICK_CHECK_REPORT_RIGHTAWAY,
   STRATEGY_REPORT_DATA,
 } from "../../../AtomStates";
 
@@ -45,13 +44,8 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
 
   const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
 
-  const [isClickCheckReportRightAway, setIsClickCheckReportRightAway] = useAtom(
-    iS_CLICK_CHECK_REPORT_RIGHTAWAY
-  );
-
   const handledExpertSelect = (index) => {
     if (!isLoading) {
-      setIsClickCheckReportRightAway(false);
       setSelectedExpertIndex(index);
       setIsClickExpertSelect(true);
       setConversationStage(2); // stage를 2로 설정

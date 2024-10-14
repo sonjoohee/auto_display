@@ -17,7 +17,6 @@ import {
   SELECTED_ADDITIONAL_KEYWORD,
   ADDITIONAL_REPORT_DATA, // Import the new list-based atom
   CONVERSATION_STAGE,
-  iS_CLICK_CHECK_REPORT_RIGHTAWAY,
   CONVERSATION,
   BUTTON_STATE,
   isLoggedInAtom,
@@ -108,7 +107,6 @@ const PageExpertInsight = () => {
   const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA); // 변경된 부분
 
   const [inputAdditionalQuestion, setInputAdditionalQuestion] = useState("");
-  const [isClickCheckReportRightAway, setIsClickCheckReportRightAway] = useAtom(iS_CLICK_CHECK_REPORT_RIGHTAWAY);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
   const [advise, setAdvise] = useState(""); // 새로운 advise 상태 추가
@@ -357,12 +355,6 @@ useEffect(() => {
     handleSearch(-1);
   }
 }, [selectedAdditionalKeyword]);
-// useEffect(() => {
-//   console.log(22222222)
-//   if (selectedAdditionalKeyword) handleSearch(-1);
-// }, [
-//   selectedAdditionalKeyword,
-// ]);
 
 useEffect(() => {
   if (
@@ -374,17 +366,6 @@ useEffect(() => {
     handleSearch(-1);
   }
 }, [selectedExpertIndex]);
-
-useEffect(() => {
-  if (
-    conversationId &&
-    conversationId.length >= 2 &&
-    isClickCheckReportRightAway &&
-    !isLoadingPage
-  ) {
-    handleSearch(-1);
-  }
-}, [isClickCheckReportRightAway]);
 
 const handleSearch = async (inputValue) => {
   if (isLoggedIn) {
@@ -469,127 +450,66 @@ const handleSearch = async (inputValue) => {
       return [...prevList, selectedExpertIndex];
     });
 
-    // 보고서 바로보기 버튼 눌렀을 때
-    if (isClickCheckReportRightAway) {
-      if (selectedExpertIndex === "1") {
-        updatedConversation.push(
-          {
-            type: "user",
-            message:
-              "보고서를 확인하고 싶습니다. 분석 결과를 기반으로 멋진 전략 부탁드립니다. 🙌🏻",
-          },
-          {
-            type: "system",
-            message: `${titleOfBusinessInfo}를 성장 시킬 맞춤형 전략 보고서를 준비했습니다. 이 전략을 통해 성과를 극대화 할 수 있기를 바랍니다`,
-            expertIndex: selectedExpertIndex,
-          }
-        );
-      } else if (selectedExpertIndex === "2") {
-        updatedConversation.push(
-          {
-            type: "user",
-            message:
-              "보고서를 확인하고 싶습니다. 어떤 마케팅 방법이 있을지 궁금해요. 🙌🏻",
-          },
-          {
-            type: "system",
-            message: `${titleOfBusinessInfo}의 마케팅 기회를 극대화 할 보고서를 준비했습니다. 이 전략을 통해 고객과의 연결을 강화할 수 있길 바래요`,
-            expertIndex: selectedExpertIndex,
-          }
-        );
-      } else if (selectedExpertIndex === "3") {
-        updatedConversation.push(
-          {
-            type: "user",
-            message:
-              "보고서를 확인하고 싶습니다. 제가 보지 못한 고객 인사이트는 무엇이 있을까요. 🙌🏻",
-          },
-          {
-            type: "system",
-            message: `${titleOfBusinessInfo}의 고객의 요구와 니즈를 반영하여 전략을 제안드립니다. 이 보고서로 고객 이해도를 높여 더 효과적인 전략을 수립해 보세요`,
-            expertIndex: selectedExpertIndex,
-          }
-        );
-      } else if (selectedExpertIndex === "4") {
-        updatedConversation.push(
-          {
-            type: "user",
-            message:
-              "보고서를 확인하고 싶습니다. 새로운 PoC 아이디어가 필요합니다. 🙌🏻",
-          },
-          {
-            type: "system",
-            message: `${titleOfBusinessInfo}를 위한 PoC 보고서를 준비했습니다. 이 보고서를 통해 새로운 아이디어를 발견할 수 있기를 바랍니다`,
-            expertIndex: selectedExpertIndex,
-          }
-        );
-      }
-    } else {
-      if (selectedExpertIndex === "1") {
-        updatedConversation.push(
-          {
-            type: "user",
-            message:
-              "10년차 전략 디렉터와 1:1 커피챗, 지금 바로 시작하겠습니다 🙌🏻",
-          },
-          {
-            type: "system",
-            message:
-              "안녕하세요! 저는 전략 전문가 김도원입니다. 😊 여러분의 아이디어를 구체화하고, 성공적인 전략을 세우는 데 도움을 드리겠습니다.\n아이디어나 비즈니스 아이템을 간단히 작성해 주세요. 분석 후, 여러분의 비즈니스에 맞는 전략 리포트를 제공하겠습니다!",
-            expertIndex: selectedExpertIndex,
-          }
-        );
-      } else if (selectedExpertIndex === "2") {
-        updatedConversation.push(
-          {
-            type: "user",
-            message:
-              "마케팅 전문가님의 맞춤 브랜딩 제안서를 요청드려요. 멋진 마케팅 방법을 기대합니다.💡",
-          },
-          {
-            type: "system",
-            message:
-              "안녕하세요! 마케팅 전문가 이지현입니다. 😄 여러분의 아이디어를 효과적으로 시장에 알릴 수 있는 전략을 함께 고민해 보아요.\n아이디어나 비즈니스 아이템을 여기에 작성해 주세요. 제가 분석하고, 효과적인 마케팅 전략 리포트를 준비해 드리겠습니다!",
-            expertIndex: selectedExpertIndex,
-          }
-        );
-      } else if (selectedExpertIndex === "3") {
-        updatedConversation.push(
-          {
-            type: "user",
-            message:
-              "고객 인사이트를 파악하는 것이 시작이라고 생각합니다.✨ 전문가님의 분석과 제안 내용이 큰 도움이 될 것 같습니다.",
-          },
-          {
-            type: "system",
-            message:
-              "반갑습니다! 저는 고객 인사이트 전문가 박서연입니다. 😊 여러분의 비즈니스가 목표 고객에게 잘 다가갈 수 있도록 돕겠습니다.\n아이디어나 비즈니스 아이템을 작성해 주세요. 분석 후, 타겟 고객을 정의하고 세분화 방법에 대한 리포트를 제공해 드리겠습니다!",
-            expertIndex: selectedExpertIndex,
-          }
-        );
-      } else if (selectedExpertIndex === "4") {
-        updatedConversation.push(
-          {
-            type: "user",
-            message:
-              "제 사업을 위한 적절한 PoC 전략과 검증 가설을 도출해 주세요 🎯",
-          },
-          {
-            type: "system",
-            message:
-              "안녕하세요! 저는 PoC 설계 전문가 장석훈입니다. 😊 여러분의 사업 목표에 맞춘 가설 설정과 PoC 전략을 설계하고, 성공적인 검증 과정을 지원해드립니다. 맞춤형 PoC 설계를 위해 몇가지 질문에 응답 부탁드립니다!",
-            expertIndex: selectedExpertIndex,
-          }
-        );
-      }
+    if (selectedExpertIndex === "1") {
+      updatedConversation.push(
+        {
+          type: "user",
+          message:
+            "10년차 전략 디렉터와 1:1 커피챗, 지금 바로 시작하겠습니다 🙌🏻",
+        },
+        {
+          type: "system",
+          message:
+            "안녕하세요! 저는 전략 전문가 김도원입니다. 😊 여러분의 아이디어를 구체화하고, 성공적인 전략을 세우는 데 도움을 드리겠습니다.\n아이디어나 비즈니스 아이템을 간단히 작성해 주세요. 분석 후, 여러분의 비즈니스에 맞는 전략 리포트를 제공하겠습니다!",
+          expertIndex: selectedExpertIndex,
+        }
+      );
+    } else if (selectedExpertIndex === "2") {
+      updatedConversation.push(
+        {
+          type: "user",
+          message:
+            "마케팅 전문가님의 맞춤 브랜딩 제안서를 요청드려요. 멋진 마케팅 방법을 기대합니다.💡",
+        },
+        {
+          type: "system",
+          message:
+            "안녕하세요! 마케팅 전문가 이지현입니다. 😄 여러분의 아이디어를 효과적으로 시장에 알릴 수 있는 전략을 함께 고민해 보아요.\n아이디어나 비즈니스 아이템을 여기에 작성해 주세요. 제가 분석하고, 효과적인 마케팅 전략 리포트를 준비해 드리겠습니다!",
+          expertIndex: selectedExpertIndex,
+        }
+      );
+    } else if (selectedExpertIndex === "3") {
+      updatedConversation.push(
+        {
+          type: "user",
+          message:
+            "고객 인사이트를 파악하는 것이 시작이라고 생각합니다.✨ 전문가님의 분석과 제안 내용이 큰 도움이 될 것 같습니다.",
+        },
+        {
+          type: "system",
+          message:
+            "반갑습니다! 저는 고객 인사이트 전문가 박서연입니다. 😊 여러분의 비즈니스가 목표 고객에게 잘 다가갈 수 있도록 돕겠습니다.\n아이디어나 비즈니스 아이템을 작성해 주세요. 분석 후, 타겟 고객을 정의하고 세분화 방법에 대한 리포트를 제공해 드리겠습니다!",
+          expertIndex: selectedExpertIndex,
+        }
+      );
+    } else if (selectedExpertIndex === "4") {
+      updatedConversation.push(
+        {
+          type: "user",
+          message:
+            "제 사업을 위한 적절한 PoC 전략과 검증 가설을 도출해 주세요 🎯",
+        },
+        {
+          type: "system",
+          message:
+            "안녕하세요! 저는 PoC 설계 전문가 장석훈입니다. 😊 여러분의 사업 목표에 맞춘 가설 설정과 PoC 전략을 설계하고, 성공적인 검증 과정을 지원해드립니다. 맞춤형 PoC 설계를 위해 몇가지 질문에 응답 부탁드립니다!",
+          expertIndex: selectedExpertIndex,
+        }
+      );
     }
 
     // selectedExpertIndex에 따라 적절한 타입을 업데이트
-    if (selectedExpertIndex === "4") {
-      updatedConversation.push({ type: "pocOption" });
-    } else {
-      updatedConversation.push({ type: `strategy_${selectedExpertIndex}` });
-    }
+    updatedConversation.push({ type: `strategy_${selectedExpertIndex}` });
 
     newConversationStage = 3;
   }
