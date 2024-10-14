@@ -283,3 +283,5 @@ export const POC_DETAIL_REPORT_ATOM = atom({});
 export const POC_PERSONA_LIST = atom([]);
 export const EXPERT_DETAIL_DATA = atom([]);
 export const IS_MOBILE = atom(false);
+
+export const USER_CREDIT = atom(0);

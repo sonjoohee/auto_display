@@ -1,17 +1,37 @@
 import React, { useState } from 'react';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
+import { USER_CREDIT } from '../../../AtomStates';
+import { useAtom } from 'jotai';
 
 const PagePayTest = () => {
   const [message, setMessage] = useState('');
-
+    //userCredit은 서버에서 받아온 값을 저장하는 용도로 사용, setUserCredit은 나중엔 서버측에서 관리하니 사용하지 않을 예정
+  const [userCredit, setUserCredit] = useAtom(USER_CREDIT); 
+  //userCredit은 차후 api 호출로 서버에서 받아오는 값으로 변경
+  //나중엔 서버에 크레딧 추가 요청 보내고 받아오는 값으로 변경
   const handleApprove = (data, actions, amount) => {
     return actions.order.capture().then(function(details) {
-      setMessage(`${amount} 결제가 완료되었습니다.`);
+      setUserCredit(prevCredit => {
+        const newCredit = prevCredit + amount;
+        setMessage(`${amount} 결제가 완료되었습니다. 현재 크레딧: ${newCredit}`);
+        return newCredit;
+      });
     }).catch(error => {
       setMessage(`결제 실패: ${error.message}`);
     });
   };
 
+  //보고서Api 호출하는 곳에서 호출하면 됨
+  //나중엔 서버에 크레딧 차감 요청 보내고 받아오는 값으로 변경
+  const handleSpendCredit = () => {
+    if (userCredit >= 10) {
+      setUserCredit(prevCredit => prevCredit - 10);
+      setMessage(`10 크레딧을 사용했습니다. 남은 크레딧: ${userCredit - 10}`);
+    } else {
+      setMessage('크레딧이 부족합니다.');
+    }
+  };
+  
   const createOrder = (amount) => {
     return (data, actions) => {
       return actions.order.create({
@@ -25,6 +45,17 @@ const PagePayTest = () => {
   };
 
   return (
+    <div style={{ display: 'flex' }}>
+    <div style={{
+      width: '200px',
+      minHeight: '100vh',
+      backgroundColor: '#f0f0f0',
+      padding: '20px',
+      boxShadow: '2px 0 5px rgba(0,0,0,0.1)'
+    }}>
+      <h3>현재 크레딧</h3>
+      <p style={{ fontSize: '24px', fontWeight: 'bold' }}>{userCredit}</p>
+    </div>
     <div style={{ textAlign: 'center', padding: '20px' }}>
       <h2>PayPal 결제 테스트</h2>
       <h2>Visa: 4111 1111 1111 1111</h2>
@@ -59,7 +90,14 @@ const PagePayTest = () => {
           />
         </div>
       </div>
+      <div>
+        <h3>크레딧 사용</h3>
+        <button onClick={handleSpendCredit} style={{ padding: '10px 20px', fontSize: '16px', marginTop: '10px' }}>
+          10 크레딧 사용
+        </button>
+      </div>
       {message && <div style={{ marginTop: '20px', fontSize: '18px' }}>{message}</div>}
+    </div>
     </div>
   );
 };
