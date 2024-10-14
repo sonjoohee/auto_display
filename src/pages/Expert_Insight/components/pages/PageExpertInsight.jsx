@@ -194,7 +194,7 @@ const PageExpertInsight = () => {
         if (!conversationId && isExpertInsightAccessible) {
           try {
             // 서버에서 새로운 대화 ID 생성
-            console.log("서버에서 새로운 대화 ID 생성");
+            // console.log("서버에서 새로운 대화 ID 생성");
             const newConversationId = await createChatOnServer();
             setConversationId(newConversationId); // 생성된 대화 ID 설정
             setIsExpertInsightAccessible(true); 
@@ -212,7 +212,7 @@ const PageExpertInsight = () => {
           const savedConversation = await getConversationByIdFromIndexedDB(conversationId, isLoggedIn);
 
           if (savedConversation) {
-            setSelectedExpertIndex(savedConversation.expert_index !== undefined ? savedConversation.expert_index : 0);
+            setSelectedExpertIndex(savedConversation.expert_index !== undefined ? savedConversation.expert_index : "0");
             const analysisData = savedConversation.analysisReportData || {};
             setTitleOfBusinessInfo(analysisData.title || "");
             setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
@@ -236,99 +236,68 @@ const PageExpertInsight = () => {
             setRecommendedTargetData(savedConversation.recommendedTargetData || {});
             setpocDetailReportData(savedConversation.pocDetailReportData || {});
             setPocPersonaList(savedConversation.pocPersonaList || []);
-            
-            // 대화 단계가 초기 상태라면 초기 시스템 메시지 설정
-            if (savedConversation.conversationStage === 1) {
-              const initialMessage = getInitialSystemMessage();
-              setConversation([
-                {
-                  type: "system",
-                  message: initialMessage,
-                  expertIndex: selectedExpertIndex,
-                },
-              ]);
-            }
-          } else {
-            // 저장된 대화가 없으면 초기 메시지 설정
-            if (selectedExpertIndex) {
-              const initialMessage = getInitialSystemMessage();
-              setConversation([
-                {
-                  type: "system",
-                  message: initialMessage,
-                  expertIndex: selectedExpertIndex,
-                },
-              ]);
-            }
           }
+          
           setIsLoadingPage(false); // 로딩 완료
         }
       } else {
         // 4. 비로그인 상태인 경우, 새로운 로컬 대화 ID 생성 또는 기존 대화 로드
-        if (!conversationId) {
-          setConversationId(nanoid()); // 비로그인 시 로컬에서 새로운 ID 생성
-          setIsLoadingPage(false); // 로딩 완료
-          setIsExpertInsightAccessible(true); 
-          navigate(`/conversation/${conversationId}`, { replace: true });
-        } else {
-          const savedConversation = await getConversationByIdFromIndexedDB(conversationId, isLoggedIn);
-          if (savedConversation) {
-            const analysisData = savedConversation.analysisReportData || {};
-            setTitleOfBusinessInfo(analysisData.title || "");
-            setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
-            setMainCharacteristicOfBusinessInformation(analysisData.mainCharacter || []);
-            setBusinessInformationTargetCustomer(analysisData.mainCustomer || []);
+        // if (!conversationId) {
+        //   setConversationId(nanoid()); // 비로그인 시 로컬에서 새로운 ID 생성
+        //   setIsLoadingPage(false); // 로딩 완료
+        //   setIsExpertInsightAccessible(true); 
+        //   navigate(`/conversation/${conversationId}`, { replace: true });
+        // } else {
+        //   const savedConversation = await getConversationByIdFromIndexedDB(conversationId, isLoggedIn);
+        //   if (savedConversation) {
+        //     const analysisData = savedConversation.analysisReportData || {};
+        //     setTitleOfBusinessInfo(analysisData.title || "");
+        //     setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
+        //     setMainCharacteristicOfBusinessInformation(analysisData.mainCharacter || []);
+        //     setBusinessInformationTargetCustomer(analysisData.mainCustomer || []);
 
-            // 복구된 데이터를 로컬 상태로 설정
-            setConversation(savedConversation.conversation);
-            setConversationStage(savedConversation.conversationStage);
-            setInputBusinessInfo(savedConversation.inputBusinessInfo);
+        //     // 복구된 데이터를 로컬 상태로 설정
+        //     setConversation(savedConversation.conversation);
+        //     setConversationStage(savedConversation.conversationStage);
+        //     setInputBusinessInfo(savedConversation.inputBusinessInfo);
 
-            // 전략 보고서 데이터 복구
-            setStrategyReportData(savedConversation.strategyReportData || {}); // 변경된 부분
+        //     // 전략 보고서 데이터 복구
+        //     setStrategyReportData(savedConversation.strategyReportData || {}); // 변경된 부분
 
-            setAdditionalReportData(savedConversation.additionalReportData || []);
-            setSelectedAdditionalKeyword(savedConversation.selectedAdditionalKeyword || []);
+        //     setAdditionalReportData(savedConversation.additionalReportData || []);
+        //     setSelectedAdditionalKeyword(savedConversation.selectedAdditionalKeyword || []);
 
-            // 대화 단계가 초기 상태라면 초기 시스템 메시지 설정
-            if (savedConversation.conversationStage === 1) {
-              const initialMessage = getInitialSystemMessage();
-              setConversation([
-                {
-                  type: "system",
-                  message: initialMessage,
-                  expertIndex: selectedExpertIndex,
-                },
-              ]);
-            }
-          } else {
-            // 저장된 대화가 없으면 초기 메시지 설정
-            if (selectedExpertIndex) {
-              const initialMessage = getInitialSystemMessage();
-              setConversation([
-                {
-                  type: "system",
-                  message: initialMessage,
-                  expertIndex: selectedExpertIndex,
-                },
-              ]);
-            }
-          }
-          setIsLoadingPage(false); // 로딩 완료
-        }
+        //     // 대화 단계가 초기 상태라면 초기 시스템 메시지 설정
+        //     if (savedConversation.conversationStage === 1) {
+        //       const initialMessage = getInitialSystemMessage();
+        //       setConversation([
+        //         {
+        //           type: "system",
+        //           message: initialMessage,
+        //           expertIndex: selectedExpertIndex,
+        //         },
+        //       ]);
+        //     }
+        //   } else {
+        //     // 저장된 대화가 없으면 초기 메시지 설정
+        //     if (selectedExpertIndex) {
+        //       const initialMessage = getInitialSystemMessage();
+        //       setConversation([
+        //         {
+        //           type: "system",
+        //           message: initialMessage,
+        //           expertIndex: selectedExpertIndex,
+        //         },
+        //       ]);
+        //     }
+        //   }
+        //   setIsLoadingPage(false); // 로딩 완료
+        // }
       }
     };
 
     loadConversation();
   }, [conversationId, isLoggedIn, navigate]);
-
- useEffect(() => {
-  if (conversationId && conversationId.length >= 2) {
-    if (approachPath === -1) {
-      handleSearch(-1);
-    }
-  }
-}, [approachPath, selectedExpertIndex, isLoadingPage]);
 
 useEffect(() => {
   if (
@@ -364,20 +333,7 @@ const handleSearch = async (inputValue) => {
 
   let newConversationStage = conversationStage;
 
-  if (conversationStage === 1) {
-    if (inputBusinessInfo || inputValue !== -1) {
-      const businessInfo = inputBusinessInfo || inputValue;
-      updatedConversation.push(
-        {
-          type: "system",
-          message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻`,
-          expertIndex: selectedExpertIndex,
-        },
-        { type: "analysis", businessInfo }
-      );
-      newConversationStage = 2;
-    }
-  } else if (conversationStage > 1 && inputValue !== -1) {
+  if (conversationStage > 1 && inputValue !== -1) {
     if (
       (updatedConversation.length > 0 &&
         updatedConversation[updatedConversation.length - 1].type ===
@@ -449,21 +405,6 @@ useEffect(() => {
     window.removeEventListener("scroll", handleScroll); // 메모리 누수 방지
   };
 }, []);
-
-const getInitialSystemMessage = () => {
-  switch (selectedExpertIndex) {
-    case "1":
-      return "안녕하세요! 저는 전략 전문가 김도원입니다. 😊 여러분의 아이디어를 구체화하고, 성공적인 전략을 세우는 데 도움을 드리겠습니다.\n아이디어나 비즈니스 아이템을 간단히 작성해 주세요. 분석 후, 여러분의 비즈니스에 맞는 전략 리포트를 제공하겠습니다!";
-    case "2":
-      return "안녕하세요! 마케팅 전문가 이지현입니다. 😄 여러분의 아이디어를 효과적으로 시장에 알릴 수 있는 전략을 함께 고민해 보아요.\n아이디어나 비즈니스 아이템을 여기에 작성해 주세요. 제가 분석하고, 효과적인 마케팅 전략 리포트를 준비해 드리겠습니다!";
-    case "3":
-      return "반갑습니다! 저는 고객 인사이트 전문가 박서연입니다. 😊 여러분의 비즈니스가 목표 고객에게 잘 다가갈 수 있도록 돕겠습니다.\n아이디어나 비즈니스 아이템을 작성해 주세요. 분석 후, 타겟 고객을 정의하고 세분화 방법에 대한 리포트를 제공해 드리겠습니다!";
-    case "4":
-      return "안녕하세요! 저는 PoC 설계 전문가 장석훈입니다. 😊 여러분의 사업 목표에 맞춘 가설 설정과 PoC 전략을 설계하고, 성공적인 검증 과정을 지원해드립니다. 맞춤형 PoC 설계를 위해 몇가지 질문에 응답 부탁드립니다!"
-    default:
-      return "비즈니스(아이디어)를 입력해주세요.";
-  }
-};
 
 if (isLoadingPage) {
   return <div>Loading...</div>;

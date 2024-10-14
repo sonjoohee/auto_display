@@ -516,7 +516,7 @@ useEffect(() => {
       // console.log("🚀 ~ handleConversationClick ~ chatData:", chatData);
       setSavedTimestamp(chatData.timestamp); // 대화 날짜 설정
       setSelectedExpertIndex(
-        chatData.expert_index !== undefined ? chatData.expert_index : 0
+        chatData.expert_index !== undefined ? chatData.expert_index : "0"
       );
       setConversationId(chatData.id); // 대화 ID 설정
       setConversation(chatData.conversation); // 이전 대화 내역 설정
