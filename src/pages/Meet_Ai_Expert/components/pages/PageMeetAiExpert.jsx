@@ -346,6 +346,7 @@ const PageMeetAiExpert = () => {
         },
       ]);
 
+      setAnalysisButtonState(1);
       setIsExpertInsightAccessible(true);
       setApproachPath(1);
       setInputBusinessInfo(""); // 또는 null, undefined로 초기화
@@ -415,7 +416,6 @@ const PageMeetAiExpert = () => {
               <ExpertCard
                 PoC
                 onClick={() => {
-                  setAnalysisButtonState(1);
                   handledExpertSelect("4");
                 }}
               >
@@ -429,7 +429,6 @@ const PageMeetAiExpert = () => {
               <ExpertCard
                 Strategy
                 onClick={() => {
-                  setAnalysisButtonState(1);
                   handledExpertSelect("1");
                 }}
               >
@@ -443,7 +442,6 @@ const PageMeetAiExpert = () => {
               <ExpertCard
                 Marketing
                 onClick={() => {
-                  setAnalysisButtonState(1);
                   handledExpertSelect("2");
                 }}
               >
@@ -457,7 +455,6 @@ const PageMeetAiExpert = () => {
               <ExpertCard
                 Client
                 onClick={() => {
-                  setAnalysisButtonState(1);
                   handledExpertSelect("3");
                 }}
               >

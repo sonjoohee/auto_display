@@ -8,11 +8,13 @@ import {
   QUESTION_LIST,
   ADDITION_BUTTON_STATE, // BUTTON_STATE 추가
   APPROACH_PATH,
+  CONVERSATION,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 
 const MoleculeAdditionalKeyword = () => {
+  const [conversation, setConversation] = useAtom(CONVERSATION);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
     SELECTED_ADDITIONAL_KEYWORD
@@ -48,9 +50,32 @@ const MoleculeAdditionalKeyword = () => {
   };
 
   const updateSelectedAdditionalKeyword = (keyword) => {
+    const updatedConversation = [...conversation];
+
     const updatedKeywords = [...selectedAdditionalKeyword];
-    updatedKeywords.push(keyword); // Add the keyword to the end of the array
+    updatedKeywords.push(keyword);
     setSelectedAdditionalKeyword(updatedKeywords);
+
+    if (
+      (updatedConversation.length > 0 &&
+        updatedConversation[updatedConversation.length - 1].type ===
+          "keyword") ||
+      (updatedConversation.length > 0 &&
+        updatedConversation[updatedConversation.length - 1].type ===
+          "reportButton")
+    ) {
+      updatedConversation.pop();
+    }
+
+    updatedConversation.push(
+      {
+        type: "user",
+        message: `제 프로젝트와 관련된 "${keyword}"를 요청드려요`,
+      },
+      { type: `addition` }
+    );
+
+    setConversation(updatedConversation);
     setApproachPath(3);
     setAdditionButtonState(1); // 버튼 클릭 시 buttonState를 1로 설정
   };
