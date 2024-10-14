@@ -21,6 +21,11 @@ const PagePayTest = () => {
     });
   };
 
+  const addCredit = () => {
+    setUserCredit(prevCredit => prevCredit + 100);
+    setMessage(`100 크레딧을 추가했습니다. 현재 크레딧: ${userCredit + 100}`);
+  };
+  
   //보고서Api 호출하는 곳에서 호출하면 됨
   //나중엔 서버에 크레딧 차감 요청 보내고 받아오는 값으로 변경
   const handleSpendCredit = () => {
@@ -98,6 +103,7 @@ const PagePayTest = () => {
       </div>
       {message && <div style={{ marginTop: '20px', fontSize: '18px' }}>{message}</div>}
     </div>
+    <button onClick={addCredit}>100 크레딧 추가</button>
     </div>
   );
 };
