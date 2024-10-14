@@ -100,7 +100,7 @@ const LandingPage = () => {
         {/* AI 페르소나 관련 컨텐츠 */}
 
         <AIPersona>
-          <ChatAIPersona style={{maxWidth:"770px", marginRight:"90px"}}>
+          <ChatAIPersona style={{maxWidth:"670px", marginRight:"90px"}}>
             <div className="cont">
               <strong>
                 <span>헬스케어 스타트업</span>
@@ -112,7 +112,7 @@ const LandingPage = () => {
               <img src={Landingimages.AIPersona01} alt="" />
             </div>
           </ChatAIPersona>
-          <ChatAIPersona style={{maxWidth:"540px", margin:"180px 0 65px auto"}}>
+          <ChatAIPersona style={{maxWidth:"440px", margin:"110px 0 65px auto"}}>
             <div className="cont">
               <strong>
                 <span>Ed Tech 스타트업</span>
@@ -124,7 +124,7 @@ const LandingPage = () => {
               <img src={Landingimages.AIPersona02} alt="" />
             </div>
           </ChatAIPersona>
-          <ChatAIPersona style={{maxWidth:"685px", marginRight:"110px"}}>
+          <ChatAIPersona style={{maxWidth:"585px", marginRight:"110px"}}>
             <div className="cont">
               <strong>
                 <span>E-Commerce 스타트업</span>
@@ -144,35 +144,35 @@ const LandingPage = () => {
           <AIInsightUl>
             <li>
               <span><img src={Landingimages.Iconfield01} alt="" /></span>
-              <p>트렌드 애널리스트</p>
+              <p>트렌드<br />애널리스트</p>
             </li>
             <li>
               <span><img src={Landingimages.Iconfield02} alt="" /></span>
-              <p>PoC설계 전문가</p>
+              <p>PoC설계<br />전문가</p>
             </li>
             <li>
               <span><img src={Landingimages.Iconfield03} alt="" /></span>
-              <p>니치 마켓 리서처</p>
+              <p>니치 마켓<br />리서처</p>
             </li>
             <li>
               <span><img src={Landingimages.Iconfield04} alt="" /></span>
-              <p>VOC 분석가</p>
+              <p>VOC<br />분석가</p>
             </li>
             <li>
               <span><img src={Landingimages.Iconfield05} alt="" /></span>
-              <p>경쟁사 리서처</p>
+              <p>경쟁사<br />리서처</p>
             </li>
             <li>
               <span><img src={Landingimages.Iconfield06} alt="" /></span>
-              <p>제품 개발 컨설턴트</p>
+              <p>제품 개발<br />컨설턴트</p>
             </li>
             <li>
               <span><img src={Landingimages.Iconfield07} alt="" /></span>
-              <p>고객 평가 리서처</p>
+              <p>고객 평가<br />리서처</p>
             </li>
             <li>
               <span><img src={Landingimages.Iconfield08} alt="" /></span>
-              <p>고객 매니지먼트</p>
+              <p>고객<br />매니지먼트</p>
             </li>
             <li>
               <span><img src={Landingimages.Iconfield09} alt="" /></span>
@@ -294,7 +294,7 @@ const HeroSection = styled.section`
   display:flex;
   flex-direction:column;
   justify-content:center;
-  height:100vh;
+  height:80vh;
   text-align: center;
   padding: 100px 0;
 `;
@@ -302,15 +302,14 @@ const HeroSection = styled.section`
 const Title = styled.h1`
   display:flex;
   flex-direction:column;
-  gap:30px;
-  font-size: 4rem;
+  gap:12px;
+  font-size: 2rem;
   font-weight: 700;
   line-height:1.1;
-  letter-spacing:-1px;
   margin-bottom:124px;
 
   p {
-    font-size:1.5rem;
+    font-size:0.875rem;
     font-weight:400;
     color:${palette.gray800};
   }
@@ -320,7 +319,7 @@ const InputSection = styled.div`
   display:flex;
   flex-direction:column;
   gap:48px;
-  max-width: 1236px;
+  max-width: 820px;
   width:100%;
   margin:0 auto;
 
@@ -336,16 +335,16 @@ const InputSection = styled.div`
     display:flex;
     align-itesm:center;
     gap:5px;
-    font-size:1.5rem;
+    font-size:1rem;
     color:${palette.gray800};
     text-align:left;
-    padding-bottom:24px;
-    margin-bottom:24px;
+    padding-bottom:18px;
+    margin-bottom:18px;
     border-bottom:1px dashed ${palette.black};
 
     i {
       font-family:'Segoe UI Emoji';
-      font-size:1.38rem;
+      font-size:0.88rem;
       font-style:normal;
     }
   }
@@ -354,14 +353,14 @@ const InputSection = styled.div`
     display:flex;
     align-items:center;
     gap:8px;
-    font-size:1.31rem;
+    font-size:0.88rem;
     color:${palette.gray300};
     margin-top:5px;
   }
 
   textarea {
     font-family: 'Pretendard', 'Poppins';
-    font-size:1.5rem;
+    font-size:1rem;
     border:0;
     rows:2;
     resize:none;
@@ -379,15 +378,15 @@ const InputButton = styled.button`
   gap:4px;
   max-width:none;
   width:auto;
-  font-size:1.25rem;
+  font-size:1rem;
   color:${(props) => (
     props.isActive 
     ? palette.white 
     : palette.gray500)};
   letter-spacing:-1px;
   margin:0 auto;
-  padding:12px 32px;
-  border-radius:15px;
+  padding:15px 25px;
+  border-radius:8px;
   border:0;
   background: ${(props) => (
     props.isActive 
@@ -404,7 +403,7 @@ const InputButton = styled.button`
     transition:all .5s;
 
   i {
-    font-size:1.88rem;
+    font-size:1rem;
     font-style:normal;
   }
 `;
@@ -444,13 +443,14 @@ const ImageGrid = styled.div`
 
 const AIPersonaSection = styled.section`
   position:relative;
-  max-width:1523px;
-  margin: 230px auto 240px;
-  padding:210px 0 215px;
+  max-width:1500px;
+  margin: 200px auto 200px;
+  padding:210px 0 50px;
   overflow:hidden;
 
   h2 {
-    margin-left:8vw;
+    max-width:1040px;
+    margin:0 auto;
   }
 `;
 
@@ -462,8 +462,9 @@ const AIPersona = styled.div`
   flex-direction:column;
   justify-content:space-between;
   align-items:center;
-  width:1500px;
-  margin-top:-435px;
+  max-width:1040px;
+  width:100%;
+  margin:-355px auto 0;
 `;
 
 const ChatAIPersona = styled.div`
@@ -473,7 +474,7 @@ const ChatAIPersona = styled.div`
   .cont {
     display:flex;
     flex-direction:column;
-    gap:20px;
+    gap:15px;
     text-align:left;
     padding:32px 40px 32px 64px;
     border-radius:30px;
@@ -502,8 +503,8 @@ const ChatAIPersona = styled.div`
     }
 
     p {
-      font-size:1.25rem;
-      color:${palette.gray800};
+      font-size:1rem;
+      color:${palette.gray700};
       line-height:1.3;
     }
   }
@@ -525,14 +526,13 @@ const SectionTitle = styled.h2`
   display:flex;
   flex-direction:column;
   gap:32px;
-  font-size: 3.13rem;
+  font-size: 2rem;
   font-weight: 600;
   line-height:1.1;
-  letter-spacing:-1px;
   text-align:left;
 
   p {
-    font-size:1.5rem;
+    font-size:1rem;
     font-weight:400;
     color:${palette.gray800};
     line-height:1.3;
@@ -540,15 +540,20 @@ const SectionTitle = styled.h2`
 `;
 
 const AIInsightSection = styled.section`
-  padding: 280px 0;
+  padding: 200px 0;
   background:#F3F7FA;
 
   > div {
     display:flex;
     justify-content:space-between;
     align-items:center;
-    max-width:1052px;
+    gap:220px;
+    max-width:1020px;
     margin:0 auto;
+  }
+
+  h2 {
+    margin-right:17px;
   }
 `;
 
@@ -556,8 +561,8 @@ const AIInsightUl = styled.ul`
   display:flex;
   flex-wrap:wrap;
   gap:16px;
-  max-width:390px;
-  padding:20px;
+  max-width:410px;
+  // padding:20px;
 
   li {
     flex:1 1 30%;
@@ -576,25 +581,25 @@ const AIInsightUl = styled.ul`
 
   p {
     font-size:0.75rem;
-    letter-spacing:-1.8px;
+    // letter-spacing:-1.8px;
   }
 `;
 
 const AIModeratorSection = styled.section`
   position:relative;
-  max-width:1110px;
+  max-width:1040px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  margin: 280px auto;
+  margin: 200px auto;
 `;
 
 const AIExpertSection = styled.section`
-  padding:250px 0;
+  padding:200px 0;
   background:#F3F7FA;
 
   > div {
-    max-width:1070px;
+    max-width:1040px;
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -603,14 +608,14 @@ const AIExpertSection = styled.section`
 `;
 
 const ProposalSection = styled.section`
-  max-width:1230px;
+  max-width:1100px;
   display:flex;
   flex-direction:column;
   gap:42px;
-  margin:240px auto 260px;
+  margin:200px auto;
 
   h3 {
-    font-size:2rem;
+    font-size:1.75rem;
     text-align:left;
     letter-spacing:-1px;
   }
@@ -637,20 +642,20 @@ const ProposalButton = styled.div`
   p {
     display:flex;
     flex-direction:column;
-    gap:33px;
+    gap:20px;
     font-size:1rem;
     color:${palette.gray500};
     text-align:left;
   }
 
   strong {
-    font-size:1.75rem;
+    font-size:1.5rem;
     color:${palette.black};
   }
 `;
 
 const Footer = styled.footer`
-  padding: 64px 0 96px;
+  padding: 60px 0;
   background: #EFEFEF;
 
   > div {
@@ -660,6 +665,10 @@ const Footer = styled.footer`
     color:rgba(0,0,0,.6);
     text-align:left;
     margin:0 auto;
+
+    > p {
+      font-size:0.75rem;
+    }
   }
 
   address {
@@ -667,8 +676,8 @@ const Footer = styled.footer`
     display:flex;
     flex-direction:column;
     gap:16px;
-    font-size:0.94rem;
+    font-size:0.88rem;
     line-height:1.5;
-    margin-bottom:64px;
+    margin-bottom:50px;
   }
 `;
