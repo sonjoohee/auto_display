@@ -70,7 +70,6 @@ const OrganismLeftSideBar = () => {
   const [bizName] = useAtom(INPUT_BUSINESS_INFO);
   const [isExpertInsightAccessible, setIsExpertInsightAccessible] = useAtom(IS_EXPERT_INSIGHT_ACCESSIBLE);
 
-  // const [savedReports] = useAtom(SAVED_REPORTS);
   const [selectedReport, setSelectedReport] = useState(null); // 선택된 보고서 상태 관리
   const [conversations, setConversations] = useState([]); // 저장된 대화 상태 관리
   const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 관리

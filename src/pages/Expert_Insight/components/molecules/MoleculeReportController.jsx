@@ -13,7 +13,6 @@ import {
   TEMP_MAIN_FEATURES_OF_BUSINESS_INFORMATION,
   TEMP_MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
   TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER,
-  SAVED_REPORTS,
   IS_EDITING_NOW,
   SELECTED_TAB_COPY,
   STRATEGY_REPORT_DATA,
@@ -86,7 +85,6 @@ const MoleculeReportController = ({
   ] = useAtom(TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 관리
   const token = sessionStorage.getItem("accessToken");
-  const [savedReports, setSavedReports] = useAtom(SAVED_REPORTS);
   const [reportRefreshTrigger, setReportRefreshTrigger] = useAtom(
     REPORT_REFRESH_TRIGGER
   ); // 리프레시 트리거 상태 구독
@@ -288,16 +286,16 @@ const MoleculeReportController = ({
       );
 
       if (response.status === 200) {
-        // 성공적으로 저장된 경우 savedReports 아톰 업데이트
-        setSavedReports((prevReports) => [
-          ...prevReports,
-          {
-            title: business_info,
-            date: new Date().toLocaleDateString(),
-            content: reportData,
-            reportIndex: reportIndex, // reportIndex를 추가하여 저장
-          },
-        ]);
+        // // 성공적으로 저장된 경우 savedReports 아톰 업데이트
+        // setSavedReports((prevReports) => [
+        //   ...prevReports,
+        //   {
+        //     title: business_info,
+        //     date: new Date().toLocaleDateString(),
+        //     content: reportData,
+        //     reportIndex: reportIndex, // reportIndex를 추가하여 저장
+        //   },
+        // ]);
 
         // // 기존 대화 내역에 리포트 데이터 추가
         // const existingConversation = await getConversationByIdFromIndexedDB(

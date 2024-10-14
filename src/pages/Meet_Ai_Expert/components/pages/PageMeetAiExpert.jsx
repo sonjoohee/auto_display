@@ -13,19 +13,15 @@ import {
   APPROACH_PATH,
   ANALYSIS_BUTTON_STATE,
   isLoggedInAtom,
-  SAVED_REPORTS,
-  USER_NAME,
-  USER_EMAIL,
   TITLE_OF_BUSINESS_INFORMATION,
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
   MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
   STRATEGY_REPORT_DATA,
   SELECTED_ADDITIONAL_KEYWORD,
-  ADDITIONAL_REPORT_DATA, // Import the new list-based atom
+  ADDITIONAL_REPORT_DATA,
   CONVERSATION_STAGE,
   CONVERSATION,
-  BUTTON_STATE,
   CONVERSATION_ID,
   SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
@@ -41,12 +37,9 @@ import {
   IS_MOBILE,
 } from "../../../AtomStates";
 
-import { Link } from "react-router-dom";
-
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 
-import OrganismHeader from "../../../organisms/OrganismHeader";
 import OrganismLeftSideBar from "../../../Expert_Insight/components/organisms/OrganismLeftSideBar";
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
 import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/MoleculeAccountPopup"; // 계정설정 팝업 컴포넌트 임포트
@@ -137,7 +130,6 @@ const PageMeetAiExpert = () => {
   const [isComingSoon, setIsComingSoon] = useState(false);
 
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
-  const [advise, setAdvise] = useState(""); // 새로운 advise 상태 추가
 
   const [pocDetailReportData, setpocDetailReportData] = useAtom(
     POC_DETAIL_REPORT_ATOM

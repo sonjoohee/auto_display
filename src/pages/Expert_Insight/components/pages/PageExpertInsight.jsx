@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { nanoid } from "nanoid";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
-import axios from "axios";
 import { useAtom } from "jotai";
 import {
   SELECTED_EXPERT_INDEX,
@@ -18,11 +16,9 @@ import {
   ADDITIONAL_REPORT_DATA, // Import the new list-based atom
   CONVERSATION_STAGE,
   CONVERSATION,
-  BUTTON_STATE,
   isLoggedInAtom,
   CONVERSATION_ID,
   SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
-  CUSTOMER_ADDITION_BUTTON_STATE,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
   SELECTED_EXPERT_LIST,
   IS_LOADING,
@@ -35,10 +31,7 @@ import {
   POC_PERSONA_LIST,
 } from "../../../AtomStates";
 
-import {
-  saveConversationToIndexedDB,
-  getConversationByIdFromIndexedDB,
-} from "../../../../utils/indexedDB";
+import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import { createChatOnServer } from "../../../../utils/indexedDB"; // 서버와 대화 ID 생성 함수
 
 import OrganismLeftSideBar from "../organisms/OrganismLeftSideBar";
@@ -105,8 +98,6 @@ const PageExpertInsight = () => {
 
   const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA); // 변경된 부분
 
-  const [inputAdditionalQuestion, setInputAdditionalQuestion] = useState("");
-  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
   const [advise, setAdvise] = useState(""); // 새로운 advise 상태 추가
 
@@ -121,13 +112,6 @@ const PageExpertInsight = () => {
   
   let additionalReportCount = 0;
   let customerAdditionalReportCount = 0;
-
-  const analysisReportData = {
-    title: titleOfBusinessInfo,
-    mainFeatures: mainFeaturesOfBusinessInformation,
-    mainCharacter: mainCharacteristicOfBusinessInformation,
-    mainCustomer: businessInformationTargetCustomer,
-  };
 
   useEffect(() => {
     // 접근 가능 여부를 확인하여 차단 로직 수행
