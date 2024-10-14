@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   TITLE_OF_BUSINESS_INFORMATION,
-  IS_CLICK_EXPERT_SELECT,
   SELECTED_EXPERT_INDEX,
   INPUT_BUSINESS_INFO,
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
@@ -58,7 +57,6 @@ const MoleculeReportController = ({
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
     TITLE_OF_BUSINESS_INFORMATION
   );
-  const [isClickExpertSelect] = useAtom(IS_CLICK_EXPERT_SELECT);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [inputBusinessInfo, setInputBusinessInfo] =
     useAtom(INPUT_BUSINESS_INFO);
