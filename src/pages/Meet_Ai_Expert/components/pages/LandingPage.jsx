@@ -378,6 +378,7 @@ const InputButton = styled.button`
   gap:4px;
   max-width:none;
   width:auto;
+  font-family: 'Pretendard', 'Poppins';
   font-size:1rem;
   color:${(props) => (
     props.isActive 
