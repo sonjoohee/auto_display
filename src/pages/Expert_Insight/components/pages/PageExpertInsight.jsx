@@ -21,7 +21,6 @@ import {
   BUTTON_STATE,
   isLoggedInAtom,
   CONVERSATION_ID,
-  ADDITIONAL_REPORT_COUNT,
   SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
   CUSTOMER_ADDITION_BUTTON_STATE,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
@@ -130,61 +129,19 @@ const PageExpertInsight = () => {
     mainCustomer: businessInformationTargetCustomer,
   };
 
-  const saveConversation = async (updatedConversation, newConversationStage) => {
-    const existingReports = {
-      strategyReportData: strategyReportData, // 변경된 부분
+  useEffect(() => {
+    // 접근 가능 여부를 확인하여 차단 로직 수행
+    if (!isExpertInsightAccessible) {
+      navigate('/MeetAiExpert'); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
+      console.log("메인 페이지로 리다이렉트");
+    }
+
+    // 페이지를 나갈 때 접근 가능 여부 초기화
+    return () => {
+      setIsExpertInsightAccessible(false); // 페이지 떠날 때 접근 불가로 설정
+      console.log("접근 불가로 설정");
     };
-
-    // IndexedDB에서 기존 데이터를 가져옴
-    const existingData = await getConversationByIdFromIndexedDB(conversationId, isLoggedIn);
-
-    // 기존의 selectedAdditionalKeyword가 있으면 병합
-    const updatedSelectedAdditionalKeyword = existingData?.selectedAdditionalKeyword
-      ? [...existingData.selectedAdditionalKeyword, ...selectedAdditionalKeyword]
-      : selectedAdditionalKeyword;
-    const updatedSelectedCustomerAdditionalKeyword = existingData?.selectedCustumoerdditionalKeyword
-      ? [...existingData.selectedCustumoerdditionalKeyword, ...selectedCustomerAdditionalKeyword]
-      : selectedCustomerAdditionalKeyword;
-    saveConversationToIndexedDB(
-      {
-        id: conversationId,
-        conversation: updatedConversation,
-        conversationStage: newConversationStage,
-        inputBusinessInfo,
-        analysisReportData,
-        selectedAdditionalKeyword: updatedSelectedAdditionalKeyword,
-        additionalReportData, // Save the entire list of additional reports
-        additionalReportCount,
-        customerAdditionalReportCount,
-        customerAdditionalReportData,
-        selectedCustomerAdditionalKeyword: updatedSelectedCustomerAdditionalKeyword,
-        ...existingReports,
-        timestamp: Date.now(),
-        expert_index: selectedExpertIndex,
-        selectedPocOptions: selectedPocOptions,
-        pocPersonaList: pocPersonaList,
-        selectedPocTarget: selectedPocTarget,
-        recommendedTargetData: recommendedTargetData,
-        pocDetailReportData : pocDetailReportData,
-      },
-      isLoggedIn,
-      conversationId
-    );
-  };
-
-  // useEffect(() => {
-  //   // 접근 가능 여부를 확인하여 차단 로직 수행
-  //   if (!isExpertInsightAccessible) {
-  //     navigate('/MeetAiExpert'); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
-  //     console.log("메인 페이지로 리다이렉트");
-  //   }
-
-  //   // 페이지를 나갈 때 접근 가능 여부 초기화
-  //   return () => {
-  //     setIsExpertInsightAccessible(false); // 페이지 떠날 때 접근 불가로 설정
-  //     console.log("접근 불가로 설정");
-  //   };
-  // }, [navigate]);
+  }, [navigate]);
 
   useEffect(() => {
     const loadConversation = async () => {
@@ -298,110 +255,6 @@ const PageExpertInsight = () => {
 
     loadConversation();
   }, [conversationId, isLoggedIn, navigate]);
-
-useEffect(() => {
-  if (
-    conversationId &&
-    conversationId.length >= 2 &&
-    selectedAdditionalKeyword &&
-    !isLoadingPage &&
-    approachPath !== 2
-  ) {
-    handleSearch(-1);
-  }
-}, [selectedAdditionalKeyword]);
-
-const handleSearch = async (inputValue) => {
-  if (isLoggedIn) {
-    if (!conversationId) {
-      try {
-        return;
-      } catch (error) {
-        console.error("Failed to create conversation on server:", error);
-        return;
-      }
-    }
-  }
-
-  const updatedConversation = [...conversation];
-
-  // 사용자가 입력한 경우에만 inputBusinessInfo를 업데이트
-  if (conversationStage === 1 && inputValue !== -1) {
-    setInputBusinessInfo(inputValue);
-    updatedConversation.push({ type: "user", message: inputValue });
-  }
-
-  let newConversationStage = conversationStage;
-
-  if (conversationStage === 1) {
-    if (inputBusinessInfo || inputValue !== -1) {
-      const businessInfo = inputBusinessInfo || inputValue;
-      updatedConversation.push(
-        {
-          type: "system",
-          message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻`,
-          expertIndex: selectedExpertIndex,
-        },
-        { type: "analysis", businessInfo }
-      );
-      newConversationStage = 2;
-    }
-  } else if (conversationStage > 1 && inputValue !== -1) {
-    if (
-      (updatedConversation.length > 0 &&
-        updatedConversation[updatedConversation.length - 1].type ===
-          "keyword") ||
-      (updatedConversation.length > 0 &&
-        updatedConversation[updatedConversation.length - 1].type ===
-          "reportButton") ||
-      (updatedConversation.length > 0 &&
-        updatedConversation[updatedConversation.length - 1].type ===
-          "pocTargetButton")
-    ) {
-      updatedConversation.pop();
-    }
-
-    updatedConversation.push(
-      {
-        type: "user",
-        message: inputValue,
-      },
-      {
-        type: `customerAddition`,
-        addition_index: customerAdditionalReportCount,
-      }
-    );
-  } else if (conversationStage === 3) {
-      if (
-        (updatedConversation.length > 0 &&
-          updatedConversation[updatedConversation.length - 1].type ===
-            "keyword") ||
-        (updatedConversation.length > 0 &&
-          updatedConversation[updatedConversation.length - 1].type ===
-            "reportButton") ||
-        (updatedConversation.length > 0 &&
-          updatedConversation[updatedConversation.length - 1].type ===
-            "pocTargetButton")
-      ) {
-        updatedConversation.pop();
-      }
-
-      updatedConversation.push(
-        {
-          type: "user",
-          message: `제 프로젝트와 관련된 "${
-            selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]
-          }"를 요청드려요`,
-        },
-        { type: `addition`, addition_index: additionalReportCount }
-      );
-  }
-  
-  setConversation(updatedConversation);
-  setConversationStage(newConversationStage);
-  saveConversation(updatedConversation, newConversationStage);
-  setIsLoadingPage(false); // 로딩 완료
-};
 
 // 스크롤
 const [isScrolled, setIsScrolled] = useState(false);
@@ -556,12 +409,12 @@ if (isLoadingPage) {
             </ChatWrap>
 
             {conversationStage === 1 ? (
-              <OrganismSearchBottomBar onSearch={handleSearch} isBlue={false} />
+              <OrganismSearchBottomBar isBlue={false} />
             ) : (
               selectedExpertIndex === "4" ? 
-                Object.keys(recommendedTargetData).length !== 0 && <OrganismSearchBottomBar onSearch={handleSearch} isBlue={true} /> // 4번 전문가 보고서 생성 시 활성화 
+                Object.keys(recommendedTargetData).length !== 0 && <OrganismSearchBottomBar isBlue={true} /> // 4번 전문가 보고서 생성 시 활성화 
                 : 
-                <OrganismSearchBottomBar onSearch={handleSearch} isBlue={true} />
+                <OrganismSearchBottomBar isBlue={true} />
             )}
           </div>
 
