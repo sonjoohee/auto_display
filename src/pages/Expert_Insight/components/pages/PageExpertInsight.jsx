@@ -174,35 +174,38 @@ const PageExpertInsight = () => {
     );
   };
 
-  // useEffect(() => {
-  //   // 접근 가능 여부를 확인하여 차단 로직 수행
-  //   if (!isExpertInsightAccessible) {
-  //     navigate('/'); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
-  //   }
+  useEffect(() => {
+    // 접근 가능 여부를 확인하여 차단 로직 수행
+    if (!isExpertInsightAccessible) {
+      navigate('/MeetAiExpert'); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
+      console.log("메인 페이지로 리다이렉트");
+    }
 
-  //   // 페이지를 나갈 때 접근 가능 여부 초기화
-  //   return () => {
-  //     setIsExpertInsightAccessible(false); // 페이지 떠날 때 접근 불가로 설정
-  //   };
-  // }, [navigate]);
+    // 페이지를 나갈 때 접근 가능 여부 초기화
+    return () => {
+      setIsExpertInsightAccessible(false); // 페이지 떠날 때 접근 불가로 설정
+      console.log("접근 불가로 설정");
+    };
+  }, [navigate]);
 
   useEffect(() => {
     const loadConversation = async () => {
       // 1. 로그인 여부 확인
       if (isLoggedIn) {
         // 2. 로그인 상태라면 서버에서 새로운 대화 ID를 생성하거나, 저장된 대화를 불러옴
-        if (!conversationId) {
+        if (!conversationId && isExpertInsightAccessible) {
           try {
             // 서버에서 새로운 대화 ID 생성
+            console.log("서버에서 새로운 대화 ID 생성");
             const newConversationId = await createChatOnServer();
             setConversationId(newConversationId); // 생성된 대화 ID 설정
-            // setIsExpertInsightAccessible(true); 
+            setIsExpertInsightAccessible(true); 
             setIsLoadingPage(false); // 로딩 완료
             // 새로운 대화 ID로 경로 변경
             navigate(`/conversation/${newConversationId}`, { replace: true });
           } catch (error) {
             setIsLoadingPage(false); // 로딩 완료
-            // setIsExpertInsightAccessible(true); 
+            setIsExpertInsightAccessible(true); 
             console.error("Failed to create conversation on server:", error);
             navigate(`/conversation/${conversationId}`, { replace: true });
           }
@@ -267,7 +270,7 @@ const PageExpertInsight = () => {
         if (!conversationId) {
           setConversationId(nanoid()); // 비로그인 시 로컬에서 새로운 ID 생성
           setIsLoadingPage(false); // 로딩 완료
-          // setIsExpertInsightAccessible(true); 
+          setIsExpertInsightAccessible(true); 
           navigate(`/conversation/${conversationId}`, { replace: true });
         } else {
           const savedConversation = await getConversationByIdFromIndexedDB(conversationId, isLoggedIn);
