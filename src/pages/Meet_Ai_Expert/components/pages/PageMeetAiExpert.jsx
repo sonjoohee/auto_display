@@ -51,6 +51,8 @@ import OrganismLeftSideBar from "../../../Expert_Insight/components/organisms/Or
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
 import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/MoleculeAccountPopup"; // 계정설정 팝업 컴포넌트 임포트
 
+import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
+
 const PageMeetAiExpert = () => {
   const [isMobile, setIsMobile] = useAtom(IS_MOBILE);
   const location = useLocation();
@@ -264,61 +266,57 @@ const PageMeetAiExpert = () => {
         return;
       }
 
-      try {
-        const data = {
-          business_info: inputBusinessInfo,
-        };
-        const axiosConfig = {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
-          },
-        };
+      const updatedConversation = [...conversation];
 
-        // 서버로 질문 요청 보내기 (주석처리)
-        // let response = await axios.post(
-        //   "https://wishresearch.kr/panels/customer_add_question",
-        //   sampledata,
-        //   axiosConfig
-        // );
+      updatedConversation.push(
+        {
+          type: "system",
+          message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻`,
+          expertIndex: 0,
+        },
+        { type: "analysis" }
+      );
 
-        // const answerData = response.data.additional_question;
+      await saveConversationToIndexedDB(
+        {
+          id: conversationId,
+          conversation: updatedConversation,
+          inputBusinessInfo,
+          conversationStage: 2,
+          timestamp: Date.now(),
+        },
+        isLoggedIn,
+        conversationId
+      );
 
-        // 임시 데이터로 성공 처리
-        const answerData = { answer: "Sample answer from AI" };
+      setConversation(updatedConversation);
+      setConversationStage(2);
+      setIsExpertInsightAccessible(true);
+      setApproachPath(-1); // 검색을 통해 들어가는 경우
+      setAnalysisButtonState(1); // 버튼 상태를 1로 설정
+      setSelectedExpertIndex("0");
+      navigate("/ExpertInsight");
 
-        // answerData.advise가 있을 경우에만 동작 진행
-        if (!answerData.advise) {
-          setIsExpertInsightAccessible(true);
-          setApproachPath(-1); // 검색을 통해 들어가는 경우
-          setAnalysisButtonState(1); // 버튼 상태를 1로 설정
-          setSelectedExpertIndex(0);
-          navigate("/ExpertInsight");
-        } else {
-          setAdvise(answerData.advise); // advise 데이터 설정
-          setIsPopupInvalidBusiness(true); // 경고 팝업 띄우기
-        }
-      } catch (error) {
-        console.error("에러 발생:", error);
-      }
     } else {
       setIsPopupLogin(true); // 로그인 상태가 아니라면 로그인 팝업 띄우기
     }
   };
 
-  const getExpertImage = (expertIndex) => {
-    switch (expertIndex) {
-      case "1":
-        return images.ImgStrategy;
-      case "2":
-        return images.ImgMarketing;
-      case "3":
-        return images.ImgClient;
-      case "4":
-        return images.ImgPoC;
-      default:
-        return images.ImgPoC; // 기본 이미지
-    }
-  };
+  /* API 데이터 활용 */
+  // const getExpertImage = (expertIndex) => {
+  //   switch (expertIndex) {
+  //     case "1":
+  //       return images.ImgStrategy;
+  //     case "2":
+  //       return images.ImgMarketing;
+  //     case "3":
+  //       return images.ImgClient;
+  //     case "4":
+  //       return images.ImgPoC;
+  //     default:
+  //       return images.ImgPoC; // 기본 이미지
+  //   }
+  // };
 
   const getInitialSystemMessage = (index) => {
     switch (index) {
@@ -360,8 +358,6 @@ const PageMeetAiExpert = () => {
 
   return (
     <>
-      {/* <OrganismHeader /> */}
-
       <ContentsWrap isMobile={isMobile}>
         <OrganismLeftSideBar />
         <MainContent isMobile={isMobile}>
@@ -1056,106 +1052,6 @@ const ExpertCard = styled.div`
         }
       }
     `}
-`;
-
-const FAQSection = styled.div`
-  width: 100%;
-  max-width: 1210px;
-  text-align: left;
-
-  h2 {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 1rem;
-    font-weight: 400;
-    color: ${palette.gray};
-    margin-bottom: 22px;
-
-    select {
-      font-family: "Pretendard";
-      font-size: 1rem;
-      padding: 10px 12px;
-      border-radius: 30px;
-      border: 1px solid ${palette.lineGray};
-    }
-  }
-`;
-
-const AccordionMenu = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
-
-const AccordionItem = styled.div`
-  .accordion-toggle {
-    display: none;
-  }
-
-  .accordion-label {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    font-size: 1.13rem;
-    font-weight: 400;
-    color: ${palette.gray};
-    padding: 14px 24px;
-    border-radius: 10px;
-    border: 1px solid ${palette.lineGray};
-    background: none;
-    cursor: pointer;
-
-    &:after {
-      position: absolute;
-      right: 26px;
-      top: 48%;
-      transform: translateY(-50%) rotate(45deg);
-      width: 8px;
-      height: 8px;
-      border-right: 1px solid ${palette.black};
-      border-bottom: 1px solid ${palette.black};
-      transition: all 0.5s;
-      content: "";
-    }
-
-    &:before {
-      position: absolute;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 22px;
-      height: 22px;
-      border-radius: 50px;
-      background: rgba(0, 0, 0, 0.05);
-      content: "";
-    }
-  }
-
-  .accordion-toggle:checked + .accordion-label:after {
-    transform: translateY(-20%) rotate(-135deg);
-  }
-
-  .accordion-toggle:checked + .accordion-label + div {
-    max-height: 1000px;
-    margin-top: 20px;
-    padding: 0 16px;
-  }
-`;
-
-const AccordionContent = styled.div`
-  max-height: 0;
-  font-size: 1.13rem;
-  color: ${palette.gray};
-  overflow: hidden;
-  padding: 0 16px;
-  transition: max-height 0.5s ease, padding 0.5s ease;
-
-  > div + div {
-    margin-top: 30px;
-  }
 `;
 
 const Popup = styled.div`
