@@ -471,7 +471,7 @@ const PageMeetAiExpert = () => {
                 }}
               >
                 <strong>그로스 해커</strong>
-                <p>고객 퍼널을 분석하여, 마케팅 퍼널별 전략 제시</p>
+                <p>고객 퍼널을 분석하여, 마케팅<br/>퍼널별 전략 제시</p>
                 <span>
                   <img src={images.ImgHacker} alt="" />
                 </span>
@@ -937,6 +937,8 @@ const ExpertCard = styled.div`
     font-weight: 700;
     color: ${(props) => (props.select ? palette.white : palette.darkGray)};
     letter-spacing: -1px;
+    line-height: 1.2rem;
+    min-height: 1.2rem;
   }
 
   &:hover {
