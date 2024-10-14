@@ -121,8 +121,6 @@ export const IS_EDITING_NOW = atom(false);
 
 export const SAVED_CONVERSATIONS = atom({});
 
-export const IS_CLICK_EXPERT_SELECT = atom(false);
-
 export const SELECTED_TAB_COPY_1 = atom(0);
 export const SELECTED_TAB_COPY_2 = atom(0);
 export const SELECTED_TAB_COPY_3 = atom(0);
