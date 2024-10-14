@@ -333,7 +333,20 @@ const handleSearch = async (inputValue) => {
 
   let newConversationStage = conversationStage;
 
-  if (conversationStage > 1 && inputValue !== -1) {
+  if (conversationStage === 1) {
+    if (inputBusinessInfo || inputValue !== -1) {
+      const businessInfo = inputBusinessInfo || inputValue;
+      updatedConversation.push(
+        {
+          type: "system",
+          message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻`,
+          expertIndex: selectedExpertIndex,
+        },
+        { type: "analysis", businessInfo }
+      );
+      newConversationStage = 2;
+    }
+  } else if (conversationStage > 1 && inputValue !== -1) {
     if (
       (updatedConversation.length > 0 &&
         updatedConversation[updatedConversation.length - 1].type ===
