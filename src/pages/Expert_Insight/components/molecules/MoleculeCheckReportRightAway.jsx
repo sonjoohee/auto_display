@@ -8,9 +8,9 @@ import {
   CONVERSATION,
   CONVERSATION_ID,
   INPUT_BUSINESS_INFO,
-  ANALYSIS_REPORT_DATA,
   STRATEGY_REPORT_DATA,
   SELECTED_EXPERT_INDEX,
+  SELECTED_EXPERT_LIST,
   SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
   isLoggedInAtom,
@@ -28,6 +28,7 @@ import {
 } from "../../../../utils/indexedDB";
 
 const MoleculeCheckReportRightAway = () => {
+  const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
@@ -108,6 +109,14 @@ const MoleculeCheckReportRightAway = () => {
     }
 
     updatedConversation.push({ type: `strategy_${selectedExpertIndex}` });
+
+    // 전문가 선택영역 표시 관련, 선택된 전문가 인덱스 추가
+    setSelectedExpertList((prevList) => {
+      if (prevList.includes(selectedExpertIndex)) {
+        return prevList;
+      }
+      return [...prevList, selectedExpertIndex];
+    });
 
     setConversation(updatedConversation);
     setConversationStage(3);

@@ -172,19 +172,19 @@ const PageExpertInsight = () => {
     );
   };
 
-  useEffect(() => {
-    // 접근 가능 여부를 확인하여 차단 로직 수행
-    if (!isExpertInsightAccessible) {
-      navigate('/MeetAiExpert'); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
-      console.log("메인 페이지로 리다이렉트");
-    }
+  // useEffect(() => {
+  //   // 접근 가능 여부를 확인하여 차단 로직 수행
+  //   if (!isExpertInsightAccessible) {
+  //     navigate('/MeetAiExpert'); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
+  //     console.log("메인 페이지로 리다이렉트");
+  //   }
 
-    // 페이지를 나갈 때 접근 가능 여부 초기화
-    return () => {
-      setIsExpertInsightAccessible(false); // 페이지 떠날 때 접근 불가로 설정
-      console.log("접근 불가로 설정");
-    };
-  }, [navigate]);
+  //   // 페이지를 나갈 때 접근 가능 여부 초기화
+  //   return () => {
+  //     setIsExpertInsightAccessible(false); // 페이지 떠날 때 접근 불가로 설정
+  //     console.log("접근 불가로 설정");
+  //   };
+  // }, [navigate]);
 
   useEffect(() => {
     const loadConversation = async () => {
@@ -322,24 +322,10 @@ const PageExpertInsight = () => {
     loadConversation();
   }, [conversationId, isLoggedIn, navigate]);
 
-  // ... 나머지 코드 (변경 없음)
-
-  // 전문가 선택 표시 조건 수정
- // 검색을 통해 들어왔으면 handleSearch 실행
  useEffect(() => {
   if (conversationId && conversationId.length >= 2) {
     if (approachPath === -1) {
       handleSearch(-1);
-    } else if (approachPath === 1) {
-      setInputBusinessInfo("");
-      const initialMessage = getInitialSystemMessage();
-      setConversation([
-        {
-          type: "system",
-          message: initialMessage,
-          expertIndex: selectedExpertIndex,
-        },
-      ]);
     }
   }
 }, [approachPath, selectedExpertIndex, isLoadingPage]);
@@ -355,17 +341,6 @@ useEffect(() => {
     handleSearch(-1);
   }
 }, [selectedAdditionalKeyword]);
-
-useEffect(() => {
-  if (
-    conversationId &&
-    conversationId.length >= 2 &&
-    approachPath !== 2 &&
-    !isLoadingPage
-  ) {
-    handleSearch(-1);
-  }
-}, [selectedExpertIndex]);
 
 const handleSearch = async (inputValue) => {
   if (isLoggedIn) {
@@ -427,117 +402,32 @@ const handleSearch = async (inputValue) => {
         addition_index: customerAdditionalReportCount,
       }
     );
-  }else if (conversationStage === 2 && titleOfBusinessInfo) {
-    if (
-      (updatedConversation.length > 0 &&
-        updatedConversation[updatedConversation.length - 1].type ===
-          "keyword") ||
-      (updatedConversation.length > 0 &&
-        updatedConversation[updatedConversation.length - 1].type ===
-          "reportButton") ||
-      (updatedConversation.length > 0 &&
-        updatedConversation[updatedConversation.length - 1].type ===
-          "pocTargetButton")
-    ) {
-      updatedConversation.pop();
-    }
-
-    // 전문가 선택영역 표시 관련, 선택된 전문가 인덱스 추가
-    setSelectedExpertList((prevList) => {
-      if (prevList.includes(selectedExpertIndex)) {
-        return prevList;
+  } else if (conversationStage === 3) {
+      if (
+        (updatedConversation.length > 0 &&
+          updatedConversation[updatedConversation.length - 1].type ===
+            "keyword") ||
+        (updatedConversation.length > 0 &&
+          updatedConversation[updatedConversation.length - 1].type ===
+            "reportButton") ||
+        (updatedConversation.length > 0 &&
+          updatedConversation[updatedConversation.length - 1].type ===
+            "pocTargetButton")
+      ) {
+        updatedConversation.pop();
       }
-      return [...prevList, selectedExpertIndex];
-    });
 
-    if (selectedExpertIndex === "1") {
       updatedConversation.push(
         {
           type: "user",
-          message:
-            "10년차 전략 디렉터와 1:1 커피챗, 지금 바로 시작하겠습니다 🙌🏻",
+          message: `제 프로젝트와 관련된 "${
+            selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]
+          }"를 요청드려요`,
         },
-        {
-          type: "system",
-          message:
-            "안녕하세요! 저는 전략 전문가 김도원입니다. 😊 여러분의 아이디어를 구체화하고, 성공적인 전략을 세우는 데 도움을 드리겠습니다.\n아이디어나 비즈니스 아이템을 간단히 작성해 주세요. 분석 후, 여러분의 비즈니스에 맞는 전략 리포트를 제공하겠습니다!",
-          expertIndex: selectedExpertIndex,
-        }
+        { type: `addition`, addition_index: additionalReportCount }
       );
-    } else if (selectedExpertIndex === "2") {
-      updatedConversation.push(
-        {
-          type: "user",
-          message:
-            "마케팅 전문가님의 맞춤 브랜딩 제안서를 요청드려요. 멋진 마케팅 방법을 기대합니다.💡",
-        },
-        {
-          type: "system",
-          message:
-            "안녕하세요! 마케팅 전문가 이지현입니다. 😄 여러분의 아이디어를 효과적으로 시장에 알릴 수 있는 전략을 함께 고민해 보아요.\n아이디어나 비즈니스 아이템을 여기에 작성해 주세요. 제가 분석하고, 효과적인 마케팅 전략 리포트를 준비해 드리겠습니다!",
-          expertIndex: selectedExpertIndex,
-        }
-      );
-    } else if (selectedExpertIndex === "3") {
-      updatedConversation.push(
-        {
-          type: "user",
-          message:
-            "고객 인사이트를 파악하는 것이 시작이라고 생각합니다.✨ 전문가님의 분석과 제안 내용이 큰 도움이 될 것 같습니다.",
-        },
-        {
-          type: "system",
-          message:
-            "반갑습니다! 저는 고객 인사이트 전문가 박서연입니다. 😊 여러분의 비즈니스가 목표 고객에게 잘 다가갈 수 있도록 돕겠습니다.\n아이디어나 비즈니스 아이템을 작성해 주세요. 분석 후, 타겟 고객을 정의하고 세분화 방법에 대한 리포트를 제공해 드리겠습니다!",
-          expertIndex: selectedExpertIndex,
-        }
-      );
-    } else if (selectedExpertIndex === "4") {
-      updatedConversation.push(
-        {
-          type: "user",
-          message:
-            "제 사업을 위한 적절한 PoC 전략과 검증 가설을 도출해 주세요 🎯",
-        },
-        {
-          type: "system",
-          message:
-            "안녕하세요! 저는 PoC 설계 전문가 장석훈입니다. 😊 여러분의 사업 목표에 맞춘 가설 설정과 PoC 전략을 설계하고, 성공적인 검증 과정을 지원해드립니다. 맞춤형 PoC 설계를 위해 몇가지 질문에 응답 부탁드립니다!",
-          expertIndex: selectedExpertIndex,
-        }
-      );
-    }
-
-    // selectedExpertIndex에 따라 적절한 타입을 업데이트
-    updatedConversation.push({ type: `strategy_${selectedExpertIndex}` });
-
-    newConversationStage = 3;
   }
- else if (conversationStage === 3) {
-    if (
-      (updatedConversation.length > 0 &&
-        updatedConversation[updatedConversation.length - 1].type ===
-          "keyword") ||
-      (updatedConversation.length > 0 &&
-        updatedConversation[updatedConversation.length - 1].type ===
-          "reportButton") ||
-      (updatedConversation.length > 0 &&
-        updatedConversation[updatedConversation.length - 1].type ===
-          "pocTargetButton")
-    ) {
-      updatedConversation.pop();
-    }
-
-    updatedConversation.push(
-      {
-        type: "user",
-        message: `제 프로젝트와 관련된 "${
-          selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]
-        }"를 요청드려요`,
-      },
-      { type: `addition`, addition_index: additionalReportCount }
-    );
-  }
+  
   setConversation(updatedConversation);
   setConversationStage(newConversationStage);
   saveConversation(updatedConversation, newConversationStage);
