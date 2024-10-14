@@ -38,7 +38,7 @@ const LandingPage = () => {
   return (
     <LandingPageWrapper>
       <Header>
-        <Logo src={images.Logo} alt="Logo" onClick={handleLogoClick} style={{ cursor: 'pointer' }} />
+        <Logo src={images.SymbolLogo} alt="Logo" onClick={handleLogoClick} style={{ cursor: 'pointer' }} />
       </Header>
 
       <HeroSection>
