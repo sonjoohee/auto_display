@@ -24,7 +24,6 @@ import {
   SELECTED_ADDITIONAL_KEYWORD,
   ADDITIONAL_REPORT_DATA, // Import the new list-based atom
   CONVERSATION_STAGE,
-  iS_CLICK_CHECK_REPORT_RIGHTAWAY,
   CONVERSATION,
   BUTTON_STATE,
   CONVERSATION_ID,
@@ -126,9 +125,6 @@ const PageMeetAiExpert = () => {
     useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
 
   const [inputAdditionalQuestion, setInputAdditionalQuestion] = useState("");
-  const [isClickCheckReportRightAway, setIsClickCheckReportRightAway] = useAtom(
-    iS_CLICK_CHECK_REPORT_RIGHTAWAY
-  );
 
   const [isPopupRegex, setIsPopupRegex] = useState(false);
   const [isPopupRegex2, setIsPopupRegex2] = useState(false);
@@ -204,7 +200,6 @@ const PageMeetAiExpert = () => {
     setStrategyReportData({});
     setInputAdditionalQuestion("");
     setSelectedCustomerAdditionalKeyword([]);
-    setIsClickCheckReportRightAway(false);
     setPassword("");
     setNewPassword("");
     setRePassword("");
