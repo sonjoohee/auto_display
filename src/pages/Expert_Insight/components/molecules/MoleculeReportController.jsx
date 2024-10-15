@@ -31,6 +31,12 @@ import {
   SELECTED_POC_OPTIONS,
   SELCTED_POC_TARGET,
   RECOMMENDED_TARGET_DATA,
+  IDEA_FEATURE_DATA_TEMP,
+  IDEA_REQUIREMENT_DATA_TEMP,
+  IDEA_FEATURE_DATA,
+  IDEA_REQUIREMENT_DATA,
+  POC_DETAIL_REPORT_ATOM,
+  POC_PERSONA_LIST,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -94,10 +100,6 @@ const MoleculeReportController = ({
   
   const [bizAnalysisReportIndex, setBizAnalysisReportIndex] = useState(0);
   const [newAddContent, setNewAddContent] = useState("");
-  const [isAddingNow, setIsAddingNow] = useState({
-    section: "",
-    isAdding: false,
-  });
   const [newEditContent, setNewEditContent] = useState("");
   const [editingIndex, setEditingIndex] = useState({ section: "", index: -1 });
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
@@ -107,7 +109,6 @@ const MoleculeReportController = ({
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isPopupOpenCancel, setIsPopupOpenCancel] = useState(false);
-  const [clickState, setClickState] = useState(false);
 
   const [isPopupSave, setIsPopupSave] = useState(false);
 
@@ -127,6 +128,12 @@ const MoleculeReportController = ({
   );
   const [selectedCustomerAdditionalKeyword, setSelectedCustomerAdditionalKeyword] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
   const [customerAdditionalReportData, setCustomerAdditionalReportData] = useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
+  const [ideaFeatureDataTemp, setIdeaFeatureDataTemp] = useAtom(IDEA_FEATURE_DATA_TEMP);
+  const [ideaRequirementDataTemp, setIdeaRequirementDataTemp] = useAtom(IDEA_REQUIREMENT_DATA_TEMP);
+  const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
+  const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
+  const [pocDetailReportData, setPocDetailReportData] = useAtom(POC_DETAIL_REPORT_ATOM);
+  const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
 
   const navigate = useNavigate();
 
@@ -140,9 +147,7 @@ const MoleculeReportController = ({
     setLoginPopupOpen(false); // 로그인 팝업 닫기
   };
   const togglePopup = () => {
-    if (clickState == false) {
-      setIsPopupOpen(!isPopupOpen);
-    }
+    setIsPopupOpen(!isPopupOpen);
   };
   const closePopupCopy = () => {
     setIsPopupCopy(false); // 팝업 닫기
@@ -152,19 +157,22 @@ const MoleculeReportController = ({
   };
 
   const togglePopupCancel = () => {
-    if (clickState == false) {
-      setIsPopupOpenCancel(!isPopupOpenCancel);
-      setIsAddingNow({ section: "", isAdding: false });
-    }
+    setIsPopupOpenCancel(!isPopupOpenCancel);
   };
-  const handleEditCancel = () => {
-    setMainFeaturesOfBusinessInformation(tempMainFeaturesOfBusinessInformation);
-    setMainCharacteristicOfBusinessInformation(
+  const handleEditCancel = (reportIndex) => {
+    if(reportIndex === 5) {
+      // 두개 구분해야됨
+      setIdeaFeatureData(ideaFeatureDataTemp);
+      // setIdeaRequirementData(ideaRequirementDataTemp);
+    }
+    else {
+      setMainFeaturesOfBusinessInformation(tempMainFeaturesOfBusinessInformation);
+      setMainCharacteristicOfBusinessInformation(
       tempMainCharacteristicOfBusinessInformation
-    );
-    setBusinessInformationTargetCustomer(tempMusinessInformationTargetCustomer);
+      );
+      setBusinessInformationTargetCustomer(tempMusinessInformationTargetCustomer);
+    }
     setIsEditingNow(false);
-    setIsAddingNow({ section: "", isAdding: false });
     togglePopupCancel();
   };
   const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA);
@@ -176,55 +184,64 @@ const MoleculeReportController = ({
     mainCustomer: businessInformationTargetCustomer,
   };
 
-  const handleEditSave = async () => {
-    if (editingIndex.section !== "" && editingIndex.index !== -1) {
-      setWarningMessage("변경 사항을 적용해주세요.");
-      return;
+  const handleEditConfirm = async (reportIndex) => {
+    setIsEditingNow(false);
+
+    if(reportIndex === 5) {
+      setIdeaFeatureDataTemp(ideaFeatureData);
+      setIdeaRequirementDataTemp(ideaRequirementData);
+
+      await saveConversationToIndexedDB(
+        {
+          id: conversationId,
+          inputBusinessInfo: inputBusinessInfo,
+          analysisReportData: analysisReportData,
+          strategyReportData: strategyReportData,
+          conversation: conversation,
+          conversationStage: conversationStage,
+          selectedAdditionalKeywords: selectedAdditionalKeyword,
+          selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
+          additionalReportData: additionalReportData,
+          customerAdditionalReportData: customerAdditionalReportData,
+          timestamp: Date.now(),
+          expert_index: selectedExpertIndex,
+          selectedPocOptions: selectedPocOptions,
+          pocPersonaList: pocPersonaList,
+          selectedPocTarget: selectedPocTarget,
+          recommendedTargetData: recommendedTargetData,
+          pocDetailReportData : pocDetailReportData,
+          ideaFeatureData : ideaFeatureData,
+          ideaRequirementData : ideaRequirementData,
+        },
+        isLoggedIn,
+        conversationId
+      );
+    } 
+    else {
+      setTempMainFeaturesOfBusinessInformation(mainFeaturesOfBusinessInformation);
+      setTempMainCharacteristicOfBusinessInformation(
+        mainCharacteristicOfBusinessInformation
+      );
+      setTempBusinessInformationTargetCustomer(businessInformationTargetCustomer);
+  
+      await saveConversationToIndexedDB(
+        {
+          id: conversationId,
+          conversation: conversation,
+          analysisReportData,
+          inputBusinessInfo,
+          conversationStage: 2,
+          timestamp: Date.now(),
+          expert_index: selectedExpertIndex,
+          selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
+          customerAdditionalReportData: customerAdditionalReportData,
+          selectedPocOptions: selectedPocOptions,
+          selectedPocTarget: selectedPocTarget,
+        },
+        isLoggedIn,
+        conversationId
+      );
     }
-
-    const existingConversation = await getConversationByIdFromIndexedDB(
-      conversationId,
-      isLoggedIn
-    );
-
-    const updatedConversation = {
-      ...existingConversation,
-      analysisReportData,
-      expert_index: selectedExpertIndex,
-      timestamp: Date.now(),
-    };
-
-    await saveConversationToIndexedDB(updatedConversation);
-    setIsEditingNow(false);
-  };
-
-  const handleEditConfirm = () => {
-    handleEditSave();
-    setIsEditingNow(false);
-
-    setTempMainFeaturesOfBusinessInformation(mainFeaturesOfBusinessInformation);
-    setTempMainCharacteristicOfBusinessInformation(
-      mainCharacteristicOfBusinessInformation
-    );
-    setTempBusinessInformationTargetCustomer(businessInformationTargetCustomer);
-
-    saveConversationToIndexedDB(
-      {
-        id: conversationId,
-        conversation: conversation,
-        analysisReportData,
-        inputBusinessInfo,
-        conversationStage: 2,
-        timestamp: Date.now(),
-        expert_index: selectedExpertIndex,
-        selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
-        customerAdditionalReportData: customerAdditionalReportData,
-        selectedPocOptions: selectedPocOptions,
-        selectedPocTarget: selectedPocTarget,
-      },
-      isLoggedIn,
-      conversationId
-    );
   };
 
   const toggleSave = async () => {
@@ -374,23 +391,6 @@ const MoleculeReportController = ({
     if (report && report.content) {
       switch (reportIndex) {
         case 0: // 비즈니스 분석 리포트
-// if (strategyReportID === "4" || report.content.mainCustomer.length === 0) {
-// contentToCopy = `
-// ${report.content.title}
-// 주요 특징
-// ${report.content.mainFeatures.join('\n')}
-// 주요 기능
-// ${report.content.mainCharacter.join('\n')}`.trim();
-// } else {
-// contentToCopy = `
-// ${report.content.title}
-// 주요 특징
-// ${report.content.mainFeatures.join('\n')}
-// 주요 기능
-// ${report.content.mainCharacter.join('\n')}
-// 목표 고객
-// ${report.content.mainCustomer.join('\n')}`.trim();
-// }
 contentToCopy = `
 ${report.content.title}\n
 주요 특징
@@ -456,15 +456,6 @@ ${report.content.mainCharacter.map(character => `- ${character}`).join('\n')}`.t
             contentToCopy = JSON.stringify(report.content, null, 2);
           }
           break;
-        // case 3: // 고객 추가 질문
-        //   if (Array.isArray(report.content)) {
-        //     contentToCopy = report.content.map((item, index) => 
-        //       `질문 ${index + 1}: ${item.question}\n답변: ${item.answer}`
-        //     ).join('\n\n');
-        //   } else {
-        //     contentToCopy = JSON.stringify(report.content, null, 2);
-        //   }
-        //   break;
           case 4: // PoC 목적별 추천 타겟 및 예상 인사이트
           if (report.content.poc_persona) {
             contentToCopy = "PoC 목적별 추천 타겟 및 예상 인사이트\n\n";
@@ -485,29 +476,6 @@ ${report.content.mainCharacter.map(character => `- ${character}`).join('\n')}`.t
       }
     } else {
       if (reportIndex === 0) {
-// if (strategyReportID === "4") {
-// contentToCopy = `
-// ${titleOfBusinessInfo}
-// 주요 특징
-// ${mainFeaturesOfBusinessInformation?.map((feature) => `${feature}`).join("\n")}
-// 주요 기능
-// ${mainCharacteristicOfBusinessInformation
-//   ?.map((character) => `${character}`)
-//   .join("\n")}`;
-// } else {
-//   contentToCopy = `
-// ${titleOfBusinessInfo}
-// 주요 특징
-// ${mainFeaturesOfBusinessInformation?.map((feature) => `${feature}`).join("\n")}
-// 주요 기능
-// ${mainCharacteristicOfBusinessInformation
-//   ?.map((character) => `${character}`)
-//   .join("\n")}
-// 목표 고객
-// ${businessInformationTargetCustomer
-//   ?.map((customer) => `${customer}`)
-//   .join("\n")}`;
-// }
 contentToCopy = `
 ${titleOfBusinessInfo}\n
 주요 특징
@@ -734,147 +702,43 @@ ${mainCharacteristicOfBusinessInformation
     setIsLoading(false);
   };
 
-  return (
+  if(reportIndex === 5) {
+    return (
     <>
-      {reportIndex === 0 ? (
-        <>
-          {conversationStage > 2 ? (
-            <ButtonWrap>
-              <div />
-              <div>
-                <button type="button" onClick={toggleCopy}>
-                  <img src={images.IconCopy} alt="" />
-                  복사하기
-                </button>
-                {!report &&              
-                  <button type="button" onClick={toggleSave}>
-                    <img src={images.IconSave} alt="" />
-                    저장하기
-                  </button>
-                }
-              </div>
-            </ButtonWrap>
-          ) : (
-            <>
-            {!isEditingNow ? (
-              <ButtonWrap>
-                <div />
-                <div>
-                  {!report && (
-                    <>
-                      <button type="button" onClick={regenerateReport}>
-                        <img src={images.IconRefresh} alt="" />
-                        재생성하기
-                      </button>
-                      <button type="button" onClick={() => setIsEditingNow(true)}>
-                        <img src={images.IconEdit} alt="" />
-                        수정하기
-                      </button>
-                    </>
-                  )}
-                  <button type="button" onClick={toggleCopy}>
-                    <img src={images.IconCopy} alt="" />
-                    복사하기
-                  </button>
-                  {!report && (
-                    <button type="button" onClick={toggleSave}>
-                      <img src={images.IconSave} alt="" />
-                      저장하기
-                    </button>
-                  )}
-                </div>
-              </ButtonWrap>
-              ) : (
-                <ButtonWrap>
-                  <div />
-                  <div>
-                    <button
-                      type="button"
-                      className="lineBtn"
-                      onClick={togglePopupCancel}
-                    >
-                      취소하기
-                    </button>
-                    <button
-                      type="button"
-                      className="lineBtn"
-                      onClick={() => handleEditConfirm()}
-                    >
-                      수정 완료하기
-                    </button>
-                  </div>
-                </ButtonWrap>
-              )}
-            </>
+    {!isEditingNow ? (
+      <ButtonWrap>
+        <div />
+        <div>
+          {!report && (
+            <button type="button" onClick={() => setIsEditingNow(true)}>
+              <img src={images.IconEdit} alt="" />
+              수정하기
+            </button>
           )}
-        </>
-     ) : (
-      <>
+        </div>
+      </ButtonWrap>
+      ) : (
         <ButtonWrap>
           <div />
           <div>
-            {report ? (
-              // report 값이 있는 경우 복사하기 버튼만 표시
-              <button type="button" onClick={toggleCopy}>
-                <img src={images.IconCopy} alt="" />
-                복사하기
-              </button>
-            ) : (
-              // report 값이 없는 경우 기존 버튼들 표시
-              <>
-                {/* {selectedAdditionalKeyword.length === 0 && (
-                  <button type="button" onClick={regenerateReport}>
-                    <img src={images.IconRefresh} alt="" />
-                    재생성하기
-                  </button>
-                )} */}
-                <button type="button" onClick={toggleCopy}>
-                  <img src={images.IconCopy} alt="" />
-                  복사하기
-                </button>
-                <button type="button" onClick={toggleSave}>
-                  <img src={images.IconSave} alt="" />
-                  저장하기
-                </button>
-              </>
-            )}
+            <button
+              type="button"
+              className="lineBtn"
+              onClick={togglePopupCancel}
+            >
+              취소하기
+            </button>
+            <button
+              type="button"
+              className="lineBtn"
+              onClick={() => handleEditConfirm(reportIndex)}
+            >
+              수정 완료하기
+            </button>
           </div>
         </ButtonWrap>
-      </>
-    )}
-
-      {isPopupOpen && (
-        <Popup
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              togglePopup();
-            }
-          }}
-        >
-          <div>
-            <button type="button" className="closePopup" onClick={togglePopup}>
-              닫기
-            </button>
-            <span>
-              <img src={images.CheckMark} alt="" />
-            </span>
-            <p>
-              해당 기능을 사용하시려면 로그인이 필요해요
-              <br />
-              로그인 하시겠습니까?
-            </p>
-            <div className="btnWrap">
-              <button type="button" onClick={handleSignupClick}>
-                회원가입
-              </button>
-              <button type="button" onClick={handleLoginClick}>
-                로그인
-              </button>
-            </div>
-          </div>
-        </Popup>
       )}
-
+    
       {isPopupOpenCancel && (
         <Popup
           Cancel
@@ -903,110 +767,292 @@ ${mainCharacteristicOfBusinessInformation
               <button type="button" onClick={togglePopupCancel}>
                 아니오
               </button>
-              <button type="button" onClick={handleEditCancel}>
+              <button type="button" onClick={() => handleEditCancel(reportIndex)}>
                 네, 취소할게요
               </button>
             </div>
           </div>
         </Popup>
       )}
-      {isPopupCopy && (
-        <Popup
-          Cancel
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              closePopupCopy();
-            }
-          }}
-        >
-          <div>
-            <button
-              type="button"
-              className="closePopup"
-              onClick={closePopupCopy}
-            >
-              닫기
-            </button>
-            <span>
-              <img src={images.CheckMark} alt="" />
-            </span>
-            <p>복사가 완료되었습니다</p>
-            <div className="btnWrap">
-              <button type="button" onClick={closePopupCopy}>
-                확인
-              </button>
-            </div>
-          </div>
-        </Popup>
-      )}
-
-      {isPopupSave && (
-        <Popup
-          Cancel
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              closePopupSave(); // 상태를 false로 설정
-            }
-          }}
-        >
-          <div>
-            <button
-              type="button"
-              className="closePopup"
-              onClick={closePopupSave}
-            >
-              닫기
-            </button>
-            <span>
-              <img src={images.CheckMark} alt="" />
-            </span>
-            <p>
-              저장되었습니다.
-              <br />
-              인사이트 보관함을 확인해주세요
-            </p>
-            <div className="btnWrap">
-              <button type="button" onClick={closePopupSave}>
-                확인
-              </button>
-            </div>
-          </div>
-        </Popup>
-      )}
-
-      {isPopupCopy && (
-        <Popup
-          Cancel
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              closePopupCopy(); // 상태를 false로 설정
-            }
-          }}
-        >
-          <div>
-            <button
-              type="button"
-              className="closePopup"
-              onClick={closePopupCopy}
-            >
-              닫기
-            </button>
-            <span>
-              <img src={images.CheckMark} alt="" />
-            </span>
-            <p>복사가 완료되었습니다</p>
-            <div className="btnWrap">
-              <button type="button" onClick={closePopupCopy}>
-                확인
-              </button>
-            </div>
-          </div>
-        </Popup>
-      )}
-
-      {isLoginPopupOpen && <MoleculeLoginPopup onClose={closeLoginPopup} />}
     </>
-  );
+  )
+  }
+
+  else {
+    return (
+      <>
+        {reportIndex === 0 ? (
+          <>
+            {conversationStage > 2 ? (
+              <ButtonWrap>
+                <div />
+                <div>
+                  <button type="button" onClick={toggleCopy}>
+                    <img src={images.IconCopy} alt="" />
+                    복사하기
+                  </button>
+                  {!report &&              
+                    <button type="button" onClick={toggleSave}>
+                      <img src={images.IconSave} alt="" />
+                      저장하기
+                    </button>
+                  }
+                </div>
+              </ButtonWrap>
+            ) : (
+              <>
+              {!isEditingNow ? (
+                <ButtonWrap>
+                  <div />
+                  <div>
+                    {!report && (
+                      <>
+                        <button type="button" onClick={regenerateReport}>
+                          <img src={images.IconRefresh} alt="" />
+                          재생성하기
+                        </button>
+                        <button type="button" onClick={() => setIsEditingNow(true)}>
+                          <img src={images.IconEdit} alt="" />
+                          수정하기
+                        </button>
+                      </>
+                    )}
+                    <button type="button" onClick={toggleCopy}>
+                      <img src={images.IconCopy} alt="" />
+                      복사하기
+                    </button>
+                    {!report && (
+                      <button type="button" onClick={toggleSave}>
+                        <img src={images.IconSave} alt="" />
+                        저장하기
+                      </button>
+                    )}
+                  </div>
+                </ButtonWrap>
+                ) : (
+                  <ButtonWrap>
+                    <div />
+                    <div>
+                      <button
+                        type="button"
+                        className="lineBtn"
+                        onClick={togglePopupCancel}
+                      >
+                        취소하기
+                      </button>
+                      <button
+                        type="button"
+                        className="lineBtn"
+                        onClick={() => handleEditConfirm()}
+                      >
+                        수정 완료하기
+                      </button>
+                    </div>
+                  </ButtonWrap>
+                )}
+              </>
+            )}
+          </>
+       ) : (
+        <>
+          <ButtonWrap>
+            <div />
+            <div>
+              {report ? (
+                // report 값이 있는 경우 복사하기 버튼만 표시
+                <button type="button" onClick={toggleCopy}>
+                  <img src={images.IconCopy} alt="" />
+                  복사하기
+                </button>
+              ) : (
+                // report 값이 없는 경우 기존 버튼들 표시
+                <>
+                  {/* {selectedAdditionalKeyword.length === 0 && (
+                    <button type="button" onClick={regenerateReport}>
+                      <img src={images.IconRefresh} alt="" />
+                      재생성하기
+                    </button>
+                  )} */}
+                  <button type="button" onClick={toggleCopy}>
+                    <img src={images.IconCopy} alt="" />
+                    복사하기
+                  </button>
+                  <button type="button" onClick={toggleSave}>
+                    <img src={images.IconSave} alt="" />
+                    저장하기
+                  </button>
+                </>
+              )}
+            </div>
+          </ButtonWrap>
+        </>
+      )}
+  
+        {isPopupOpen && (
+          <Popup
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                togglePopup();
+              }
+            }}
+          >
+            <div>
+              <button type="button" className="closePopup" onClick={togglePopup}>
+                닫기
+              </button>
+              <span>
+                <img src={images.CheckMark} alt="" />
+              </span>
+              <p>
+                해당 기능을 사용하시려면 로그인이 필요해요
+                <br />
+                로그인 하시겠습니까?
+              </p>
+              <div className="btnWrap">
+                <button type="button" onClick={handleSignupClick}>
+                  회원가입
+                </button>
+                <button type="button" onClick={handleLoginClick}>
+                  로그인
+                </button>
+              </div>
+            </div>
+          </Popup>
+        )}
+  
+        {isPopupOpenCancel && (
+          <Popup
+            Cancel
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                togglePopupCancel();
+              }
+            }}
+          >
+            <div>
+              <button
+                type="button"
+                className="closePopup"
+                onClick={togglePopupCancel}
+              >
+                닫기
+              </button>
+              <span>
+                <img src={images.ExclamationMark} alt="" />
+              </span>
+              <p>
+                <strong>정말 취소하시겠습니까?</strong>
+                <span>취소 시 수정하신 내용은 저장되지 않습니다</span>
+              </p>
+              <div className="btnWrap">
+                <button type="button" onClick={togglePopupCancel}>
+                  아니오
+                </button>
+                <button type="button" onClick={handleEditCancel}>
+                  네, 취소할게요
+                </button>
+              </div>
+            </div>
+          </Popup>
+        )}
+        {isPopupCopy && (
+          <Popup
+            Cancel
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                closePopupCopy();
+              }
+            }}
+          >
+            <div>
+              <button
+                type="button"
+                className="closePopup"
+                onClick={closePopupCopy}
+              >
+                닫기
+              </button>
+              <span>
+                <img src={images.CheckMark} alt="" />
+              </span>
+              <p>복사가 완료되었습니다</p>
+              <div className="btnWrap">
+                <button type="button" onClick={closePopupCopy}>
+                  확인
+                </button>
+              </div>
+            </div>
+          </Popup>
+        )}
+  
+        {isPopupSave && (
+          <Popup
+            Cancel
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                closePopupSave(); // 상태를 false로 설정
+              }
+            }}
+          >
+            <div>
+              <button
+                type="button"
+                className="closePopup"
+                onClick={closePopupSave}
+              >
+                닫기
+              </button>
+              <span>
+                <img src={images.CheckMark} alt="" />
+              </span>
+              <p>
+                저장되었습니다.
+                <br />
+                인사이트 보관함을 확인해주세요
+              </p>
+              <div className="btnWrap">
+                <button type="button" onClick={closePopupSave}>
+                  확인
+                </button>
+              </div>
+            </div>
+          </Popup>
+        )}
+  
+        {isPopupCopy && (
+          <Popup
+            Cancel
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                closePopupCopy(); // 상태를 false로 설정
+              }
+            }}
+          >
+            <div>
+              <button
+                type="button"
+                className="closePopup"
+                onClick={closePopupCopy}
+              >
+                닫기
+              </button>
+              <span>
+                <img src={images.CheckMark} alt="" />
+              </span>
+              <p>복사가 완료되었습니다</p>
+              <div className="btnWrap">
+                <button type="button" onClick={closePopupCopy}>
+                  확인
+                </button>
+              </div>
+            </div>
+          </Popup>
+        )}
+  
+        {isLoginPopupOpen && <MoleculeLoginPopup onClose={closeLoginPopup} />}
+      </>
+    );
+  }
 };
 
 export default MoleculeReportController;
