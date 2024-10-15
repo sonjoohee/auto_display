@@ -72,7 +72,7 @@ const MoleculeIdeaStartButton = () => {
     const updatedConversation = [...conversation];
 
     if (updatedConversation.length > 0 &&
-        updatedConversation[updatedConversation.length - 1].type === "startIdeaButton"
+        updatedConversation[updatedConversation.length - 1].type === "ideaStartButton"
     ) {
       updatedConversation.pop();
     }
