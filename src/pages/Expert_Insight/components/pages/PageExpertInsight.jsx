@@ -13,7 +13,7 @@ import {
   APPROACH_PATH,
   STRATEGY_REPORT_DATA,
   SELECTED_ADDITIONAL_KEYWORD,
-  ADDITIONAL_REPORT_DATA, // Import the new list-based atom
+  ADDITIONAL_REPORT_DATA,
   CONVERSATION_STAGE,
   CONVERSATION,
   isLoggedInAtom,
@@ -53,6 +53,14 @@ import OrganismCustomerAdditionalReport from "../organisms/OrganismCustomerAddit
 import MoleculePersonaSelect from "../molecules/MoleculePersonaSelect";
 import MoleculeRecommendedTargetButton from "../molecules/MoleculeRecommendedTargetButton";
 import OrganismRecommendedTargetReport from "../organisms/OrganismRecommendedTargetReport";
+import MoleculeIdeaStartButton from "../molecules/MoleculeIdeaStartButton";
+import MoleculeIdeaCustomerButton from "../molecules/MoleculeIdeaCustomerButton";
+import MoleculeIdeaGenerateButton from "../molecules/MoleculeIdeaGenerateButton";
+import MoleculeIdeaPriorityButton from "../molecules/MoleculeIdeaPriorityButton";
+import OrganismIdeaFeature from "../organisms/OrganismIdeaFeature";
+import OrganismIdeaCustomer from "../organisms/OrganismIdeaCustomer";
+import OrganismIdeaList from "../organisms/OrganismIdeaList";
+import OrganismIdeaPriority from "../organisms/OrganismIdeaPriority";
 
 const PageExpertInsight = () => {
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
@@ -113,19 +121,19 @@ const PageExpertInsight = () => {
   let additionalReportCount = 0;
   let customerAdditionalReportCount = 0;
 
-  useEffect(() => {
-    // 접근 가능 여부를 확인하여 차단 로직 수행
-    if (!isExpertInsightAccessible) {
-      navigate('/MeetAiExpert'); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
-      console.log("메인 페이지로 리다이렉트");
-    }
+  // useEffect(() => {
+  //   // 접근 가능 여부를 확인하여 차단 로직 수행
+  //   if (!isExpertInsightAccessible) {
+  //     navigate('/MeetAiExpert'); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
+  //     console.log("메인 페이지로 리다이렉트");
+  //   }
 
-    // 페이지를 나갈 때 접근 가능 여부 초기화
-    return () => {
-      setIsExpertInsightAccessible(false); // 페이지 떠날 때 접근 불가로 설정
-      console.log("접근 불가로 설정");
-    };
-  }, [navigate]);
+  //   // 페이지를 나갈 때 접근 가능 여부 초기화
+  //   return () => {
+  //     setIsExpertInsightAccessible(false); // 페이지 떠날 때 접근 불가로 설정
+  //     console.log("접근 불가로 설정");
+  //   };
+  // }, [navigate]);
 
   useEffect(() => {
     const loadConversation = async () => {
@@ -285,7 +293,30 @@ if (isLoadingPage) {
                       expertIndex={expertIndex}
                     />
                   );
-                } else if (item.type.startsWith("poc_")) {
+                } else if (item.type === "addition") {
+                  const currentAdditionalReportCount = additionalReportCount++;
+                  return (
+                    <OrganismAdditionalReport
+                      additionalReportCount={currentAdditionalReportCount}
+                      conversationId={conversationId}
+                    />
+                  );
+                } else if (item.type === "customerAddition") {
+                  const currentCustomerAdditionalReportCount = customerAdditionalReportCount++;
+                  return (
+                    <OrganismCustomerAdditionalReport
+                      customerAdditionalReportCount={currentCustomerAdditionalReportCount}
+                      conversationId={conversationId}
+                    />
+                  );
+                } else if (item.type === "keyword") {
+                  return <MoleculeAdditionalKeyword />;
+                } else if (item.type === "reportButton") {
+                  return <MoleculeCheckReportRightAway />;
+                } 
+                
+                /* PoC */
+                else if (item.type.startsWith("poc_")) {
                   const expertIndex = item.type.split("_")[1];
                   return (
                     <>
@@ -307,26 +338,6 @@ if (isLoadingPage) {
                         />
                       </>
                     );
-                } else if (item.type === "addition") {
-                  const currentAdditionalReportCount = additionalReportCount++;
-                  return (
-                    <OrganismAdditionalReport
-                      additionalReportCount={currentAdditionalReportCount}
-                      conversationId={conversationId}
-                    />
-                  );
-                } else if (item.type === "customerAddition") {
-                  const currentCustomerAdditionalReportCount = customerAdditionalReportCount++;
-                  return (
-                    <OrganismCustomerAdditionalReport
-                      customerAdditionalReportCount={currentCustomerAdditionalReportCount}
-                      conversationId={conversationId}
-                    />
-                  );
-                } else if (item.type === "keyword") {
-                  return <MoleculeAdditionalKeyword />;
-                } else if (item.type === "reportButton") {
-                  return <MoleculeCheckReportRightAway />;
                 } else if (item.type === "pocPlanButton") {
                   return <MoleculeCheckPocRightAway />;
                 } else if (item.type === "pocTargetButton") {
@@ -336,6 +347,26 @@ if (isLoadingPage) {
                 } else if (item.type === "pocPersona") {
                   return <MoleculePersonaSelect conversationId={conversationId}/>;
                 }
+                
+                /* 아이디어 디벨로퍼 */
+                else if (item.type === "ideaStartButton") {
+                  return <MoleculeIdeaStartButton />;
+                } else if (item.type === "ideaCustomerButton") {
+                  return <MoleculeIdeaCustomerButton />;
+                } else if (item.type === "ideaGenerateButton") {
+                  return <MoleculeIdeaGenerateButton />;
+                } else if (item.type === "ideaPriorityButton") {
+                  return <MoleculeIdeaPriorityButton />;
+                } else if (item.type === "ideaFeature") {
+                  return <OrganismIdeaFeature />;
+                } else if (item.type === "ideaCustomer") {
+                  return <OrganismIdeaCustomer />;
+                } else if (item.type === "ideaList") {
+                  return <OrganismIdeaList />;
+                } else if (item.type === "ideaPriority") {
+                  return <OrganismIdeaPriority />;
+                }
+                
                 return null;
               })}
 
