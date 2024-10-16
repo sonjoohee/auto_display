@@ -34,6 +34,10 @@ import {
   IDEA_REQUIREMENT_DATA,
   IDEA_FEATURE_DATA_TEMP,
   IDEA_REQUIREMENT_DATA_TEMP,
+  ADDING_IDEA_FEATURE,
+  ADD_CONTENT_IDEA_FEATURE,
+  ACTIVE_IDEA_FEATURE_INDEX,
+  EDITED_IDEA_FEATURE_TITLE,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -46,7 +50,8 @@ import {
 
 import images from "../../../../assets/styles/Images";
 
-const OrganismIdeaFeature = ({ conversationId }) => {
+const OrganismIdeaFeature = () => {
+  const [conversationId] = useAtom(CONVERSATION_ID);
   const [selectedPocOptions, setSelectedPocOptions] =
     useAtom(SELECTED_POC_OPTIONS);
   const [conversation, setConversation] = useAtom(CONVERSATION);
@@ -100,49 +105,61 @@ const OrganismIdeaFeature = ({ conversationId }) => {
   const [ideaRequirementDataTemp, setIdeaRequirementDataTemp] = useAtom(IDEA_REQUIREMENT_DATA_TEMP);
 
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
-  const [isAddingNow, setIsAddingNow] = useState(false);
-  const [newAddContent, setNewAddContent] = useState("");
-  const [activeFeatureIndex, setActiveFeatureIndex] = useState(null);
-  const [editedTitle, setEditedTitle] = useState("");
+  const [addingIdeaFeature, setAddingIdeaFeature] = useAtom(ADDING_IDEA_FEATURE);
+  const [addContentIdeaFeature, setAddContentIdeaFeature] = useAtom(ADD_CONTENT_IDEA_FEATURE);
+  const [activeIdeaFeatureIndex, setActiveIdeaFeatureIndex] = useAtom(ACTIVE_IDEA_FEATURE_INDEX);
+  const [editedIdeaFeatureTitle, setEditedIdeaFeatureTitle] = useAtom(EDITED_IDEA_FEATURE_TITLE);
   const [deleteIndex, setDeleteIndex] = useState(null);
   const [isPopupOpenDelete, setIsPopupOpenDelete] = useState(false);
+
+  useEffect(() => {
+    setEditedIdeaFeatureTitle(ideaFeatureData[0].title);
+  }, []);
 
   const togglePopupDelete = () => {
     setIsPopupOpenDelete(!isPopupOpenDelete);
   };
 
+  const hadleAddFeature = () => {
+    setAddingIdeaFeature(true);
+    setActiveIdeaFeatureIndex(null);
+    setEditedIdeaFeatureTitle("");
+  };
+
   const handleAddSave = () => {
-    if (newAddContent.trim() === "") {
-      setIsAddingNow(false);
+    if (addContentIdeaFeature.trim() === "") {
+      setAddingIdeaFeature(false);
       return;
     }
 
     setIdeaFeatureData([
       ...ideaFeatureData,
       {
-        title: newAddContent,
-        text: newAddContent,
+        title: addContentIdeaFeature,
+        text: addContentIdeaFeature,
       },
     ]);
 
-    setNewAddContent("");
-    setIsAddingNow(false);
+    setAddContentIdeaFeature("");
+    setAddingIdeaFeature(false);
   };
 
   const handleFeatureClick = (index, title) => {
-    if (activeFeatureIndex === index) {
-      setActiveFeatureIndex(null);
+    if (activeIdeaFeatureIndex === index) {
+      setActiveIdeaFeatureIndex(null);
     } else {
-      setActiveFeatureIndex(index);
-      setEditedTitle(title);
+      setActiveIdeaFeatureIndex(index);
+      setEditedIdeaFeatureTitle(title);
+      setAddingIdeaFeature(false);
+      // setAddContentIdeaFeature("");
     }
   };
 
   const handleTitleChange = (index) => {
     const updatedFeatures = [...ideaFeatureData];
-    updatedFeatures[index].title = editedTitle;
+    updatedFeatures[index].title = editedIdeaFeatureTitle;
     setIdeaFeatureData(updatedFeatures);
-    setActiveFeatureIndex(null);
+    setActiveIdeaFeatureIndex(null);
   };
 
   const confirmDelete = (index) => {
@@ -151,6 +168,8 @@ const OrganismIdeaFeature = ({ conversationId }) => {
   };
 
   const handleDelete = () => {
+    setActiveIdeaFeatureIndex(null);
+    setEditedIdeaFeatureTitle("");
 
     setIdeaFeatureData(
       ideaFeatureData.filter((_, i) => i !== deleteIndex)
@@ -159,64 +178,71 @@ const OrganismIdeaFeature = ({ conversationId }) => {
     togglePopupDelete();
   };
 
-  const generateAddtionalContent = async (section) => {
+  const generateAddtionalContent = async (index) => {
 
-    // if (newAddContent.trim() === "") {
-    //   // setIsPopupEmpty(true);
-    //   return;
-    // }
+    if(index === null) {
+      if (addContentIdeaFeature.trim() === "") {
+        // setIsPopupEmpty(true);
+        return;
+      }
+    } else {
+      if (editedIdeaFeatureTitle.trim() === "") {
+         // setIsPopupEmpty(true);
+        return;
+      }
+    }
 
-    // try {
-    //   setIsLoading(true);
+    try {
+      setIsLoading(true);
 
-    //   const data = {
-    //     business_analysis_data: {
-    //       business_analysis: {
-    //         명칭: analysisReportData.title,
-    //         주요_목적_및_특징: analysisReportData.mainFeatures,
-    //         주요기능: analysisReportData.mainCharacter,
-    //       }
-    //     },
-    //     business_analysis_data_part: "",
-    //     keyword: newAddContent
-    //   };
+      const data = {
+        business_analysis_data: {
+          business_analysis: {
+            명칭: analysisReportData.title,
+            주요_목적_및_특징: analysisReportData.mainFeatures,
+            주요기능: analysisReportData.mainCharacter,
+          }
+        },
+        business_analysis_data_part: "1",
+        keyword: addContentIdeaFeature
+      };
 
-    //   if (section === "mainFeatures") {
-    //     // setIsLoadingAdd1(true);
-    //     data.business_analysis_data_part = "1";
-    //   } else if (section === "mainCharacteristic") {
-    //     // setIsLoadingAdd2(true);
-    //     data.business_analysis_data_part = "2";
-    //   }
+      // 임시로 전문가보고서 api 사용
+      const response = await axios.post(
+        "https://wishresearch.kr/panels/business_analysis_modify",
+        data,
+        axiosConfig
+      );
 
-    //   // 임시로 전문가보고서 api 사용
-    //   const response = await axios.post(
-    //     "https://wishresearch.kr/panels/business_analysis_modify",
-    //     data,
-    //     axiosConfig
-    //   );
+      // 응답받은 데이터가 들어가는지 확인
+      if(index === null) {
+        setIdeaFeatureData([
+          ...ideaFeatureData,
+          {
+            title: response.data.generate_data.추가_주요_목적_및_특징,
+            text: response.data.generate_data.추가_주요_목적_및_특징, 
+          },
+        ]);
+      } else {
+        const updatedFeatures = [...ideaFeatureData];
 
-    //   // 응답받은 데이터가 들어가는지 확인
-    //   if (section === "mainFeatures") {
-    //     setMainFeaturesOfBusinessInformation([
-    //       ...mainFeaturesOfBusinessInformation,
-    //       response.data.generate_data.추가_주요_목적_및_특징,
-    //     ]);
-    //   } else if (section === "mainCharacteristic") {
-    //     setMainCharacteristicOfBusinessInformation([
-    //       ...mainCharacteristicOfBusinessInformation,
-    //       response.data.generate_data.추가_주요기능,
-    //     ]);
-    //   }
-    //   setNewAddContent("");
-    //   setIsAddingNow({ section: "", isAdding: false });
-    //   setIsLoading(false);
-    //   // setIsLoadingAdd1(false);
-    //   // setIsLoadingAdd2(false);
+        updatedFeatures[index] = {
+          title: response.data.generate_data.추가_주요_목적_및_특징,
+          text: response.data.generate_data.추가_주요_목적_및_특징, 
+        };
 
-    // } catch (error) {
-    //   console.error("Error loading data:", error);
-    // }
+        setIdeaFeatureData(updatedFeatures);
+      }
+
+      setActiveIdeaFeatureIndex(null);
+      setEditedIdeaFeatureTitle("");
+      setAddContentIdeaFeature("");
+      setAddingIdeaFeature(false);
+      setIsLoading(false);
+
+    } catch (error) {
+      console.error("Error loading data:", error);
+    }
   };
 
   const axiosConfig = {
@@ -260,6 +286,7 @@ const OrganismIdeaFeature = ({ conversationId }) => {
         // setIdeaRequirementList(updatedFeatureRequirementList.requirement);
         // setIdeaFeatureDataTemp(updatedFeatureRequirementList.feature);
         // setIdeaRequirementDataTemp(updatedFeatureRequirementList.requirement);
+        // setEditedIdeaFeatureTitle(updatedFeatureRequirementList.feature[0].title);
 
         // let retryCount = 0;
         // const maxRetries = 10;
@@ -384,10 +411,10 @@ const OrganismIdeaFeature = ({ conversationId }) => {
           최대 10개까지 입력이 가능합니다
           {ideaFeatureData.map((feature, index) => (
             <div key={index}>
-              {activeFeatureIndex === index ? (
+              {activeIdeaFeatureIndex === index ? (
                 <input
-                  value={editedTitle}
-                  onChange={(e) => setEditedTitle(e.target.value)}
+                  value={editedIdeaFeatureTitle}
+                  onChange={(e) => setEditedIdeaFeatureTitle(e.target.value)}
                   autoFocus
                 />
               ) : (
@@ -395,9 +422,9 @@ const OrganismIdeaFeature = ({ conversationId }) => {
                   {feature.title}
                 </div>
               )}
-              {activeFeatureIndex === index && (
+              {activeIdeaFeatureIndex === index && (
                 <>
-                  <button onClick={() => generateAddtionalContent()}>
+                  <button onClick={() => generateAddtionalContent(index)}>
                     <img src={images.IconMagic} alt="" />
                   </button>
                   <button onClick={() => handleTitleChange(index)}>
@@ -412,11 +439,11 @@ const OrganismIdeaFeature = ({ conversationId }) => {
           ))}
           {ideaFeatureData.length < 10 && 
             <>
-            {isAddingNow ? (
+            {addingIdeaFeature ? (
               <div>
                 <input
-                  value={newAddContent}
-                  onChange={(e) => setNewAddContent(e.target.value)}
+                  value={addContentIdeaFeature}
+                  onChange={(e) => setAddContentIdeaFeature(e.target.value)}
                   placeholder="새로운 기능 및 특성을 추가해보세요"
                   autoFocus
                 />
@@ -427,8 +454,8 @@ const OrganismIdeaFeature = ({ conversationId }) => {
                     <img src={images.IconEdit2} alt="" />
                   </button>
                   <button onClick={() => {
-                      setIsAddingNow(false);
-                      setNewAddContent("");
+                      setAddingIdeaFeature(false);
+                      setAddContentIdeaFeature("");
                     }}
                   >
                     <img src={images.IconDelete2} alt="" />
@@ -436,7 +463,7 @@ const OrganismIdeaFeature = ({ conversationId }) => {
               </div>
             ) : (
                 <button
-                  onClick={() => setIsAddingNow(true)}
+                  onClick={() => hadleAddFeature()}
                 >
                   + 추가하기
                 </button>

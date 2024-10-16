@@ -366,6 +366,11 @@ export const IDEA_REQUIREMENT_DATA_TEMP = atom([
   }
 ]);
 
+export const ADDING_IDEA_FEATURE = atom(false);
+export const ACTIVE_IDEA_FEATURE_INDEX = atom(0);
+export const ADD_CONTENT_IDEA_FEATURE = atom("");
+export const EDITED_IDEA_FEATURE_TITLE = atom("");
+
 export const CUSTOMER_ADDITION_QUESTION_INPUT = atom("");
 
 export const CONVERSATION_ID = atom("");

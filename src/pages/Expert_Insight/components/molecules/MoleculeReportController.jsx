@@ -37,6 +37,10 @@ import {
   IDEA_REQUIREMENT_DATA,
   POC_DETAIL_REPORT_ATOM,
   POC_PERSONA_LIST,
+  ADDING_IDEA_FEATURE,
+  ADD_CONTENT_IDEA_FEATURE,
+  ACTIVE_IDEA_FEATURE_INDEX,
+  EDITED_IDEA_FEATURE_TITLE,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -135,6 +139,11 @@ const MoleculeReportController = ({
   const [pocDetailReportData, setPocDetailReportData] = useAtom(POC_DETAIL_REPORT_ATOM);
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
 
+  const [addingIdeaFeature, setAddingIdeaFeature] = useAtom(ADDING_IDEA_FEATURE);
+  const [addContentIdeaFeature, setAddContentIdeaFeature] = useAtom(ADD_CONTENT_IDEA_FEATURE);
+  const [activeIdeaFeatureIndex, setActiveIdeaFeatureIndex] = useAtom(ACTIVE_IDEA_FEATURE_INDEX);
+  const [editedIdeaFeatureTitle, setEditedIdeaFeatureTitle] = useAtom(EDITED_IDEA_FEATURE_TITLE);
+
   const navigate = useNavigate();
 
   const handleSignupClick = () => {
@@ -161,9 +170,16 @@ const MoleculeReportController = ({
   };
   const handleEditCancel = (reportIndex) => {
     if(reportIndex === 5) {
+      console.log("ideaFeatureDataTemp", ideaFeatureDataTemp);
+      console.log("ideaFeatureData", ideaFeatureData);
       // 두개 구분해야됨
       setIdeaFeatureData(ideaFeatureDataTemp);
       // setIdeaRequirementData(ideaRequirementDataTemp);
+      
+      setAddingIdeaFeature(false);
+      setAddContentIdeaFeature("");
+      setActiveIdeaFeatureIndex(0);
+      setEditedIdeaFeatureTitle("");
     }
     else {
       setMainFeaturesOfBusinessInformation(tempMainFeaturesOfBusinessInformation);
@@ -190,6 +206,11 @@ const MoleculeReportController = ({
     if(reportIndex === 5) {
       setIdeaFeatureDataTemp(ideaFeatureData);
       setIdeaRequirementDataTemp(ideaRequirementData);
+
+      setAddingIdeaFeature(false);
+      setAddContentIdeaFeature("");
+      setActiveIdeaFeatureIndex(0);
+      setEditedIdeaFeatureTitle("");
 
       await saveConversationToIndexedDB(
         {
@@ -702,6 +723,11 @@ ${mainCharacteristicOfBusinessInformation
     setIsLoading(false);
   };
 
+  const handleEditStart = () => {
+    setIsEditingNow(true); 
+    setEditedIdeaFeatureTitle(ideaFeatureData[0].title);
+  };
+
   if(reportIndex === 5) {
     return (
     <>
@@ -710,7 +736,7 @@ ${mainCharacteristicOfBusinessInformation
         <div />
         <div>
           {!report && (
-            <button type="button" onClick={() => setIsEditingNow(true)}>
+            <button type="button" onClick={() => handleEditStart()}>
               <img src={images.IconEdit} alt="" />
               수정하기
             </button>
@@ -843,7 +869,7 @@ ${mainCharacteristicOfBusinessInformation
                       <button
                         type="button"
                         className="lineBtn"
-                        onClick={() => handleEditConfirm()}
+                        onClick={() => handleEditConfirm(reportIndex)}
                       >
                         수정 완료하기
                       </button>
@@ -948,7 +974,7 @@ ${mainCharacteristicOfBusinessInformation
                 <button type="button" onClick={togglePopupCancel}>
                   아니오
                 </button>
-                <button type="button" onClick={handleEditCancel}>
+                <button type="button" onClick={() => handleEditCancel(reportIndex)}>
                   네, 취소할게요
                 </button>
               </div>
