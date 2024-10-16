@@ -410,7 +410,7 @@ const OrganismIdeaFeature = () => {
                   placeholder="새로운 기능 및 특성을 추가해보세요"
                   autoFocus
                 />
-                  <button onClick={() => generateAddtionalContent()}>
+                  <button onClick={() => generateAddtionalContent(null)}>
                     <img src={images.IconMagic} alt="" />
                   </button>
                   <button onClick={() => handleAddSave()}>
