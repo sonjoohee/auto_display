@@ -35,7 +35,7 @@ import {
   IDEA_REQUIREMENT_DATA_TEMP,
   IDEA_FEATURE_DATA,
   IDEA_REQUIREMENT_DATA,
-  POC_DETAIL_REPORT_ATOM,
+  POC_DETAIL_REPORT_DATA,
   POC_PERSONA_LIST,
   ADDING_IDEA_FEATURE,
   ADD_CONTENT_IDEA_FEATURE,
@@ -143,7 +143,7 @@ const MoleculeReportController = ({
   const [ideaRequirementDataTemp, setIdeaRequirementDataTemp] = useAtom(IDEA_REQUIREMENT_DATA_TEMP);
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
   const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
-  const [pocDetailReportData, setPocDetailReportData] = useAtom(POC_DETAIL_REPORT_ATOM);
+  const [pocDetailReportData, setPocDetailReportData] = useAtom(POC_DETAIL_REPORT_DATA);
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
 
   const [addingIdeaFeature, setAddingIdeaFeature] = useAtom(ADDING_IDEA_FEATURE);

@@ -26,6 +26,11 @@ import {
   SELECTED_POC_OPTIONS,
   SELCTED_POC_TARGET,
   POC_PERSONA_LIST,
+  IDEA_LIST_BUTTON_STATE,
+  IDEA_FEATURE_DATA,
+  IDEA_REQUIREMENT_DATA,
+  POC_DETAIL_REPORT_DATA,
+  RECOMMENDED_TARGET_DATA,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -38,6 +43,10 @@ import {
 import images from "../../../../assets/styles/Images";
 
 const OrganismIdeaList = ({ conversationId }) => {
+  const [ideaFeatureData] = useAtom(IDEA_FEATURE_DATA);
+  const [ideaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
+  const [pocDetailReportData] = useAtom(POC_DETAIL_REPORT_DATA);
+  const [recommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
   const [selectedPocOptions, setSelectedPocOptions] =
     useAtom(SELECTED_POC_OPTIONS);
   const [conversation, setConversation] = useAtom(CONVERSATION);
@@ -76,10 +85,10 @@ const OrganismIdeaList = ({ conversationId }) => {
   );
   const [isLoggedIn] = useAtom(isLoggedInAtom);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
-  const [selectedPocTargetState, setSelectedPocTargetState] = useState({}); // 현재 선택한 상태를 저장
-  const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET); // 확인 버튼을 눌렀을 때만 저장 -> 히스토리 저장
+  const [ideaListButtonState, setIdeaListButtonState] = useAtom(IDEA_LIST_BUTTON_STATE);
+  const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
-  const [isLoadingTarget, setIsLoadingTarget] = useState(false);
+  const [isLoadingIdeaList, setIsLoadingIdeaList] = useState(false);
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
 
   const [isPopupOpenCancel, setIsPopupOpenCancel] = useState(false);
@@ -87,6 +96,112 @@ const OrganismIdeaList = ({ conversationId }) => {
   const togglePopupCancel = () => {
     setIsPopupOpenCancel(!isPopupOpenCancel);
   };
+  
+  useEffect(() => {
+    const fetchIdeaList = async () => {
+
+      if(ideaListButtonState) {
+        setIsLoading(true);
+        setIsLoadingIdeaList(true);
+        setIdeaListButtonState(0);
+
+      //   const data = {
+      //     expert_id: "1",
+      //     business_info: titleOfBusinessInfo,
+      //     business_analysis_data: {
+      //       명칭: titleOfBusinessInfo,
+      //       주요_목적_및_특징: mainFeaturesOfBusinessInformation,
+      //       주요기능: mainCharacteristicOfBusinessInformation,
+      //       목표고객: businessInformationTargetCustomer,
+      //     },
+      //     tabs: [],
+      //     page_index: 1
+      // };
+
+      //   let response = await axios.post(
+      //     "https://1900-58-72-4-187.ngrok-free.app/ix_generate_idea_feature_list",
+      //     data,
+      //     axiosConfig
+      //   );
+
+      //   let updatedFeatureRequirementList = response.data.feature_requirements_list;
+
+        // setIdeaFeatureRequirementList(updatedFeatureRequirementList.feature);
+        // setIdeaRequirementList(updatedFeatureRequirementList.requirement);
+        // setIdeaFeatureDataTemp(updatedFeatureRequirementList.feature);
+        // setIdeaRequirementDataTemp(updatedFeatureRequirementList.requirement);
+        // setEditedIdeaFeatureTitle(updatedFeatureRequirementList.feature[0].title);
+
+        // let retryCount = 0;
+        // const maxRetries = 10;
+
+        // while ((retryCount < maxRetries &&
+        //   !Array.isArray(updatedPersonaList) ||
+        //   updatedPersonaList.length !== 5 ||
+        //   !updatedPersonaList[0].hasOwnProperty("persona_1")
+        // )) {
+        //   response = await axios.post(
+        //     "https://wishresearch.kr/panels/persona_list",
+        //     data,
+        //     axiosConfig
+        //   );
+        //   retryCount++;
+
+        //   updatedPersonaList = response.data.persona_list;
+        // }
+        // if (retryCount === maxRetries) {
+        //   console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+        //   // 에러 처리 로직 추가
+        //   throw new Error("Maximum retry attempts reached. Empty response persists.");
+        // }
+
+        setIsLoading(false);
+        setIsLoadingIdeaList(false);
+
+        const updatedConversation = [...conversation];
+
+        updatedConversation.push(
+          {
+            type: "system",
+            message: "이렇게 많은 아이디어 중 어떤 것을 먼저 진행할지 고민되시죠?\n우선순위를 확인해드릴게요. 아래 3가지 방법 중 하나를 선택해주세요 ",
+            expertIndex: selectedExpertIndex,
+          },
+          {
+            type: 'ideaPriorityButton',
+          },
+        );
+        setConversation(updatedConversation);
+
+        await saveConversationToIndexedDB(
+          {
+            id: conversationId,
+            inputBusinessInfo: inputBusinessInfo,
+            analysisReportData: analysisReportData,
+            strategyReportData: strategyReportData,
+            conversation: updatedConversation,
+            conversationStage: conversationStage,
+            selectedAdditionalKeywords: selectedAdditionalKeyword,
+            selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
+            additionalReportData: additionalReportData,
+            customerAdditionalReportData: customerAdditionalReportData,
+            timestamp: Date.now(),
+            expert_index: selectedExpertIndex,
+            selectedPocOptions: selectedPocOptions,
+            pocPersonaList: pocPersonaList,
+            selectedPocTarget: selectedPocTarget,
+            recommendedTargetData: recommendedTargetData,
+            pocDetailReportData : pocDetailReportData,
+            ideaFeatureData : ideaFeatureData,
+            ideaRequirementData : ideaRequirementData,
+          },
+          isLoggedIn,
+          conversationId
+        );
+      }
+    };
+
+    fetchIdeaList();
+  }, [ideaListButtonState]);
 
   return (
     <Wrap>

@@ -27,7 +27,7 @@ import {
   SELECTED_POC_OPTIONS,
   SELCTED_POC_TARGET,
   RECOMMENDED_TARGET_DATA,
-  POC_DETAIL_REPORT_ATOM,
+  POC_DETAIL_REPORT_DATA,
   POC_PERSONA_LIST,
 } from "../../../AtomStates";
 
@@ -116,7 +116,7 @@ const PageExpertInsight = () => {
   const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
   const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
 
-  const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_ATOM);
+  const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_DATA);
   
   let additionalReportCount = 0;
   let customerAdditionalReportCount = 0;

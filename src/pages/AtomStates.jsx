@@ -191,6 +191,9 @@ export const CUSTOMER_ADDITION_BUTTON_STATE = atom(0);
 export const TARGET_REPORT_BUTTON_STATE = atom(0);
 export const TARGET_SELECT_BUTTON_STATE = atom(0);
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/* 아이디어 디벨로퍼 */
+
 export const IDEA_FEATURE_BUTTON_STATE = atom(0);
 export const IDEA_CUSTOMER_BUTTON_STATE = atom(0);
 export const IDEA_PRIORITY_BUTTON_STATE = atom(0);
@@ -380,6 +383,8 @@ export const ACTIVE_IDEA_CUSTOMER_INDEX = atom(0);
 export const ADD_CONTENT_IDEA_CUSTOMER = atom("");
 export const EDITED_IDEA_CUSTOMER_TITLE = atom("");
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export const CUSTOMER_ADDITION_QUESTION_INPUT = atom("");
 
 export const CONVERSATION_ID = atom("");
@@ -408,7 +413,7 @@ export const SELCTED_POC_TARGET = atom({});
 
 export const RECOMMENDED_TARGET_DATA = atom({});
 
-export const POC_DETAIL_REPORT_ATOM = atom({});
+export const POC_DETAIL_REPORT_DATA = atom({});
 
 export const POC_PERSONA_LIST = atom([]);
 export const EXPERT_DETAIL_DATA = atom([]);

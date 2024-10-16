@@ -25,7 +25,7 @@ import {
   SELECTED_EXPERT_LIST,
   SELCTED_POC_TARGET,
   TARGET_REPORT_BUTTON_STATE,
-  POC_DETAIL_REPORT_ATOM,
+  POC_DETAIL_REPORT_DATA,
   POC_PERSONA_LIST,
   IDEA_FEATURE_BUTTON_STATE,
 } from "../../../AtomStates";
@@ -38,7 +38,7 @@ import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeIdeaStartButton = () => {
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
-  const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_ATOM);
+  const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_DATA);
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
   const [isLoggedIn] = useAtom(isLoggedInAtom);

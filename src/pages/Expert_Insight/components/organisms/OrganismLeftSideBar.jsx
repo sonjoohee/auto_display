@@ -44,7 +44,7 @@ import {
   SELECTED_POC_OPTIONS,
   SELCTED_POC_TARGET,
   RECOMMENDED_TARGET_DATA,
-  POC_DETAIL_REPORT_ATOM,
+  POC_DETAIL_REPORT_DATA,
   POC_PERSONA_LIST,
   IS_MOBILE,
 } from "../../../AtomStates";
@@ -57,7 +57,7 @@ import OrganismReportPopup from "./OrganismReportPopup"; // 팝업 컴포넌트 
 const OrganismLeftSideBar = () => {
   const [isMobile] = useAtom(IS_MOBILE);
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
-  const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_ATOM);
+  const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_DATA);
   const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);

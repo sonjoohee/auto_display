@@ -27,7 +27,7 @@ import {
   SELCTED_POC_TARGET,
   POC_PERSONA_LIST,
   IDEA_FEATURE_BUTTON_STATE,
-  POC_DETAIL_REPORT_ATOM,
+  POC_DETAIL_REPORT_DATA,
   RECOMMENDED_TARGET_DATA,
   IS_EDITING_IDEA_FEATURE,
   IDEA_FEATURE_DATA,
@@ -96,7 +96,7 @@ const OrganismIdeaFeature = () => {
   const [isLoadingIdeaFeature, setIsLoadingIdeaFeature] = useState(false);
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
-  const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_ATOM);
+  const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_DATA);
 
   const [ideaFeatureButtonState, setIdeaFeatureButtonState] = useAtom(IDEA_FEATURE_BUTTON_STATE);
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
