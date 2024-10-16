@@ -29,6 +29,11 @@ import {
   RECOMMENDED_TARGET_DATA,
   POC_DETAIL_REPORT_DATA,
   POC_PERSONA_LIST,
+  IDEA_FEATURE_DATA,
+  IDEA_REQUIREMENT_DATA,
+  IDEA_LIST,
+  IDEA_GROUP,
+  IDEA_PRIORITY,
 } from "../../../AtomStates";
 
 import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
@@ -117,6 +122,12 @@ const PageExpertInsight = () => {
   const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
 
   const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_DATA);
+
+  const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
+  const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
+  const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
+  const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
+  const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
   
   let additionalReportCount = 0;
   let customerAdditionalReportCount = 0;
@@ -185,6 +196,11 @@ const PageExpertInsight = () => {
             setRecommendedTargetData(savedConversation.recommendedTargetData || {});
             setpocDetailReportData(savedConversation.pocDetailReportData || {});
             setPocPersonaList(savedConversation.pocPersonaList || []);
+            // setIdeaFeatureData(savedConversation.ideaFeatureData || []);
+            // setIdeaRequirementData(savedConversation.ideaRequirementData || []);
+            // setIdeaList(savedConversation.ideaList || []);
+            // setIdeaGroup(savedConversation.ideaGroup || {});
+            // setIdeaPriority(savedConversation.ideaPriority || []);
           }
           
           setIsLoadingPage(false); // 로딩 완료
