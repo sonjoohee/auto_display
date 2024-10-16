@@ -40,6 +40,7 @@ import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
 import {
   SkeletonTitle,
   SkeletonLine,
+  Spacing,
 } from "../../../../assets/styles/Skeleton";
 
 import images from "../../../../assets/styles/Images";
@@ -194,8 +195,20 @@ const OrganismIdeaList = ({ conversationId }) => {
 
   return (
     <Wrap>
-      <h1>{titleOfBusinessInfo}를 위한 아이디어 리스트</h1>
-      <p>총 {countIdea(ideaList)}개의 아이디어를 도출하였으며, 유사한 아이디어들을 묶어 {ideaGroup.group_data.length}개의 그룹으로 나눌 수 있었습니다.</p>
+      {isLoadingIdeaList ? (
+        <>
+          <SkeletonTitle className="title-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <Spacing />
+          <SkeletonTitle className="title-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+        </>
+      ) : (
+        <>
+          <h1>{titleOfBusinessInfo}를 위한 아이디어 리스트</h1>
+          <p>총 {countIdea(ideaList)}개의 아이디어를 도출하였으며, 유사한 아이디어들을 묶어 {ideaGroup.group_data.length}개의 그룹으로 나눌 수 있었습니다.</p>
 
       <IdeaList>
         {ideaGroup.group_data.map((item) => (
@@ -206,8 +219,10 @@ const OrganismIdeaList = ({ conversationId }) => {
               <p>{item.core_content}</p>
               </div>
             </li>
-          ))}
-        </IdeaList>
+            ))}
+          </IdeaList>
+        </>
+      )}
 
       <DownloadButton>
         <p>
