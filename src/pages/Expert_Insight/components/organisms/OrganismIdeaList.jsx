@@ -31,6 +31,8 @@ import {
   IDEA_REQUIREMENT_DATA,
   POC_DETAIL_REPORT_DATA,
   RECOMMENDED_TARGET_DATA,
+  IDEA_LIST,
+  IDEA_GROUP,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -93,6 +95,9 @@ const OrganismIdeaList = ({ conversationId }) => {
 
   const [isPopupOpenCancel, setIsPopupOpenCancel] = useState(false);
 
+  const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
+  const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
+
   const togglePopupCancel = () => {
     setIsPopupOpenCancel(!isPopupOpenCancel);
   };
@@ -124,36 +129,8 @@ const OrganismIdeaList = ({ conversationId }) => {
       //     axiosConfig
       //   );
 
-      //   let updatedFeatureRequirementList = response.data.feature_requirements_list;
-
-        // setIdeaFeatureRequirementList(updatedFeatureRequirementList.feature);
-        // setIdeaRequirementList(updatedFeatureRequirementList.requirement);
-        // setIdeaFeatureDataTemp(updatedFeatureRequirementList.feature);
-        // setIdeaRequirementDataTemp(updatedFeatureRequirementList.requirement);
-        // setEditedIdeaFeatureTitle(updatedFeatureRequirementList.feature[0].title);
-
-        // let retryCount = 0;
-        // const maxRetries = 10;
-
-        // while ((retryCount < maxRetries &&
-        //   !Array.isArray(updatedPersonaList) ||
-        //   updatedPersonaList.length !== 5 ||
-        //   !updatedPersonaList[0].hasOwnProperty("persona_1")
-        // )) {
-        //   response = await axios.post(
-        //     "https://wishresearch.kr/panels/persona_list",
-        //     data,
-        //     axiosConfig
-        //   );
-        //   retryCount++;
-
-        //   updatedPersonaList = response.data.persona_list;
-        // }
-        // if (retryCount === maxRetries) {
-        //   console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
-        //   // 에러 처리 로직 추가
-        //   throw new Error("Maximum retry attempts reached. Empty response persists.");
-        // }
+        // setIdeaList(response.data.dev_report);
+        // setIdeaGroup(response.data.dev_cluster);
 
         setIsLoading(false);
         setIsLoadingIdeaList(false);
@@ -193,6 +170,8 @@ const OrganismIdeaList = ({ conversationId }) => {
             pocDetailReportData : pocDetailReportData,
             ideaFeatureData : ideaFeatureData,
             ideaRequirementData : ideaRequirementData,
+            ideaList : ideaList,
+            ideaGroup : ideaGroup,
           },
           isLoggedIn,
           conversationId
@@ -203,62 +182,32 @@ const OrganismIdeaList = ({ conversationId }) => {
     fetchIdeaList();
   }, [ideaListButtonState]);
 
+  const countIdea = (ideaList) => {
+    let nameCount = 0;
+    ideaList.forEach(item => {
+      item.report.ideas.forEach(idea => {
+        nameCount += idea.ideas.length;
+      });
+    });
+    return nameCount;
+  }
+
   return (
     <Wrap>
-      <h1>알뜰 배달 서비스를 위한 아이디어 리스트</h1>
-      <p>총 300개의 아이디어를 도출하였으며, 유사한 아이디어들을 묶어 7개의 그룹으로 나눌 수 있었습니다.</p>
+      <h1>{titleOfBusinessInfo}를 위한 아이디어 리스트</h1>
+      <p>총 {countIdea(ideaList)}개의 아이디어를 도출하였으며, 유사한 아이디어들을 묶어 {ideaGroup.group_data.length}개의 그룹으로 나눌 수 있었습니다.</p>
 
       <IdeaList>
-        <li>
-          <span>1</span>
-          <div>
-            <strong>다국어 지원 및 글로벌 접근성 강화 (속한 아이디어 개수: 10건)</strong>
-            <p>글로벌 팬들을 위한 다국어 지원과 접근성을 강화하는 기능들로 구성된 아이디어들입니다. 글로벌 팬들을 대상으로 서비스 제공 시, 언어 장벽을 제거하고 글로벌 결제, </p>
-          </div>
-        </li>
-        <li>
-          <span>2</span>
-          <div>
-            <strong>좌석 선택 및 관리 시스템 개선 (10건)</strong>
-            <p>좌석 선택과 관리 시스템의 시각적 경험을 개선하여, 팬들이 좌석 선택 과정에서 더 많은 정보를 얻고 자신 있게 선택할 수 있도록 지원하는 아이디어들 입니다. (2줄 고정)</p>
-          </div>
-        </li>
-        <li>
-          <span>3</span>
-          <div>
-            <strong>맞춤형 알림 및 사용자 경험 강화 (8건)</strong>
-            <p>팬들에게 맞춤형 알림과 사용자 경험을 최적화하여, 개인화된 서비스를 제공하는 것이 목표입니다. 아티스트 관련 소식이나 티켓 구매 정보 등을 맞춤형으로 제공해 팬들의 </p>
-          </div>
-        </li>
-        <li>
-          <span>4</span>
-          <div>
-            <strong>맞춤형 알림 및 사용자 경험 강화 (8건)</strong>
-            <p>팬들에게 맞춤형 알림과 사용자 경험을 최적화하여, 개인화된 서비스를 제공하는 것이 목표입니다. 아티스트 관련 소식이나 티켓 구매 정보 등을 맞춤형으로 제공해 팬들의 </p>
-          </div>
-        </li>
-        <li>
-          <span>5</span>
-          <div>
-            <strong>맞춤형 알림 및 사용자 경험 강화 (8건)</strong>
-            <p>팬들에게 맞춤형 알림과 사용자 경험을 최적화하여, 개인화된 서비스를 제공하는 것이 목표입니다. 아티스트 관련 소식이나 티켓 구매 정보 등을 맞춤형으로 제공해 팬들의</p>
-          </div>
-        </li>
-        <li>
-          <span>6</span>
-          <div>
-            <strong>맞춤형 알림 및 사용자 경험 강화 (8건)</strong>
-            <p>팬들에게 맞춤형 알림과 사용자 경험을 최적화하여, 개인화된 서비스를 제공하는 것이 목표입니다. 아티스트 관련 소식이나 티켓 구매 정보 등을 맞춤형으로 제공해 팬들의</p>
-          </div>
-        </li>
-        <li>
-          <span>7</span>
-          <div>
-            <strong>맞춤형 알림 및 사용자 경험 강화 (8건)</strong>
-            <p>팬들에게 맞춤형 알림과 사용자 경험을 최적화하여, 개인화된 서비스를 제공하는 것이 목표입니다. 아티스트 관련 소식이나 티켓 구매 정보 등을 맞춤형으로 제공해 팬들의 </p>
-          </div>
-        </li>
-      </IdeaList>
+        {ideaGroup.group_data.map((item) => (
+          <li key={item.group}>
+            <span>{item.group}</span>
+            <div>
+              <strong>{item.title} ({item.required_departments.length}건)</strong>
+              <p>{item.core_content}</p>
+              </div>
+            </li>
+          ))}
+        </IdeaList>
 
       <DownloadButton>
         <p>

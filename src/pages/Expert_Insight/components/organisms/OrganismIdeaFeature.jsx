@@ -361,7 +361,7 @@ const OrganismIdeaFeature = () => {
 
   return (
     <Wrap>
-        <h1>알뜰 배달 서비스의 기능 및 특성</h1>
+        <h1>{titleOfBusinessInfo}의 기능 및 특성</h1>
 
         {isEditingIdeaFeature ?
         <>
@@ -473,7 +473,7 @@ const OrganismIdeaFeature = () => {
         </>
         :
         <>
-          <p>총 10개의 주요 기능을 도출하였습니다</p>
+          <p>총 {ideaFeatureData.length}개의 주요 기능을 도출하였습니다</p>
           <IdeaList>
           {ideaFeatureData.map((feature, index) => (
             <div key={index}>

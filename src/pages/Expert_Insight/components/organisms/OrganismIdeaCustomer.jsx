@@ -307,7 +307,7 @@ const OrganismIdeaCustomer = () => {
 
   return (
     <Wrap>
-        <h1>알뜰 배달 서비스의 고객 요구 사항</h1>
+        <h1>{titleOfBusinessInfo}의 고객 요구 사항</h1>
 
         {isEditingIdeaCustomer ?
         <>
@@ -419,7 +419,7 @@ const OrganismIdeaCustomer = () => {
         </>
         :
         <>
-          <p>총 10개의 고객 요구 사항을 도출하였습니다</p>
+          <p>총 {ideaRequirementData.length}개의 고객 요구 사항을 도출하였습니다</p>
           <IdeaList>
           {ideaRequirementData.map((requirement, index) => (
             <div key={index}>
