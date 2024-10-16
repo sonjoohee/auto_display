@@ -315,7 +315,7 @@ const OrganismIdeaCustomer = () => {
           <IdeaList>
           {ideaRequirementData.map((requirement, index) => (
             <IdeaListDiv None
-              key={index}
+              key={index} 
               isActive={activeIdeaCustomerIndex === index}
             >
               {activeIdeaCustomerIndex === index ? (
@@ -347,14 +347,16 @@ const OrganismIdeaCustomer = () => {
           {ideaRequirementData.length < 10 && 
             <>
             {addingIdeaCustomer ? (
-              <div>
+              <IdeaListDiv None
+                isActive={addingIdeaCustomer}
+              >
                 <input
                   value={addContentIdeaCustomer}
                   onChange={(e) => setAddContentIdeaCustomer(e.target.value)}
                   placeholder="새로운 고객 요구 사항을 추가해보세요"
                   autoFocus
                 />
-                  <button onClick={() => generateAddtionalContent()}>
+                  <button onClick={() => generateAddtionalContent(null)}>
                     <img src={images.IconMagic} alt="" />
                   </button>
                   <button onClick={() => handleAddSave()}>
@@ -367,7 +369,7 @@ const OrganismIdeaCustomer = () => {
                   >
                     <img src={images.IconDelete2} alt="" />
                   </button>
-              </div>
+                </IdeaListDiv>
             ) : (
                 <button
                   onClick={() => hadleAddCustomer()}
@@ -420,10 +422,10 @@ const OrganismIdeaCustomer = () => {
           <p>총 10개의 고객 요구 사항을 도출하였습니다</p>
           <IdeaList>
           {ideaRequirementData.map((requirement, index) => (
-              <div None key={index}>
-                <span>{index + 1}</span>
-                {requirement.title}
-              </div>
+            <div key={index}>
+              <span>{index + 1}</span>
+              {requirement.title}
+            </div>
           ))}
           </IdeaList>
         </>
@@ -483,14 +485,12 @@ const IdeaList = styled.div`
     min-height:35px;
     font-size:0.88rem;
     color:${palette.gray700};
-    text-align:left;
     padding:4px 6px;
     border-radius:12px;
     background:${palette.chatGray};  
   }
 
   span {
-    flex-shrink:0;
     width:27px;
     height:27px;
     line-height:26px;
