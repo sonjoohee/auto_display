@@ -26,6 +26,11 @@ import {
   SELECTED_POC_OPTIONS,
   SELCTED_POC_TARGET,
   POC_PERSONA_LIST,
+  IDEA_FEATURE_DATA,
+  IDEA_REQUIREMENT_DATA,
+  IDEA_LIST,
+  IDEA_GROUP,
+  IDEA_PRIORITY,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -38,6 +43,11 @@ import {
 import images from "../../../../assets/styles/Images";
 
 const MoleculePersonaSelect = ({ conversationId }) => {
+  const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
+  const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
+  const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
+  const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
+  const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
   const [selectedPocOptions, setSelectedPocOptions] =
     useAtom(SELECTED_POC_OPTIONS);
   const [conversation, setConversation] = useAtom(CONVERSATION);
@@ -184,6 +194,11 @@ const MoleculePersonaSelect = ({ conversationId }) => {
             expert_index: selectedExpertIndex,
             selectedPocOptions: selectedPocOptions,
             pocPersonaList: updatedPersonaList,
+            ideaFeatureData : ideaFeatureData,
+            ideaRequirementData : ideaRequirementData,
+            ideaList : ideaList,
+            ideaGroup : ideaGroup,
+            ideaPriority : ideaPriority,
           },
           isLoggedIn,
           conversationId
@@ -239,6 +254,11 @@ const MoleculePersonaSelect = ({ conversationId }) => {
         selectedPocOptions: selectedPocOptions,
         pocPersonaList: pocPersonaList,
         selectedPocTarget: selectedPocTargetState,
+        ideaFeatureData : ideaFeatureData,
+        ideaRequirementData : ideaRequirementData,
+        ideaList : ideaList,
+        ideaGroup : ideaGroup,
+        ideaPriority : ideaPriority,
       },
       isLoggedIn,
       conversationId

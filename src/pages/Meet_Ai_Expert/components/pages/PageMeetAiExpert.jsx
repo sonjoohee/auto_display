@@ -35,6 +35,21 @@ import {
   POC_PERSONA_LIST,
   EXPERT_DETAIL_DATA,
   IS_MOBILE,
+  IDEA_FEATURE_DATA,
+  IDEA_REQUIREMENT_DATA,
+  IDEA_LIST,
+  IDEA_GROUP,
+  IDEA_PRIORITY,
+  IS_EDITING_IDEA_FEATURE,
+  IS_EDITING_IDEA_CUSTOMER,
+  ADDING_IDEA_FEATURE,
+  ACTIVE_IDEA_FEATURE_INDEX,
+  ADD_CONTENT_IDEA_FEATURE,
+  EDITED_IDEA_FEATURE_TITLE,
+  ADDING_IDEA_CUSTOMER,
+  ACTIVE_IDEA_CUSTOMER_INDEX,
+  ADD_CONTENT_IDEA_CUSTOMER,
+  EDITED_IDEA_CUSTOMER_TITLE,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -47,6 +62,21 @@ import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/Molec
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
 
 const PageMeetAiExpert = () => {
+  const [isEditingIdeaFeature, setIsEditingIdeaFeature] = useAtom(IS_EDITING_IDEA_FEATURE);
+  const [isEditingIdeaCustomer, setIsEditingIdeaCustomer] = useAtom(IS_EDITING_IDEA_CUSTOMER);
+  const [addingIdeaFeature, setAddingIdeaFeature] = useAtom(ADDING_IDEA_FEATURE);
+  const [activeIdeaFeatureIndex, setActiveIdeaFeatureIndex] = useAtom(ACTIVE_IDEA_FEATURE_INDEX);
+  const [addContentIdeaFeature, setAddContentIdeaFeature] = useAtom(ADD_CONTENT_IDEA_FEATURE);
+  const [editedIdeaFeatureTitle, setEditedIdeaFeatureTitle] = useAtom(EDITED_IDEA_FEATURE_TITLE);
+  const [addingIdeaCustomer, setAddingIdeaCustomer] = useAtom(ADDING_IDEA_CUSTOMER);
+  const [activeIdeaCustomerIndex, setActiveIdeaCustomerIndex] = useAtom(ACTIVE_IDEA_CUSTOMER_INDEX);
+  const [addContentIdeaCustomer, setAddContentIdeaCustomer] = useAtom(ADD_CONTENT_IDEA_CUSTOMER);
+  const [editedIdeaCustomerTitle, setEditedIdeaCustomerTitle] = useAtom(EDITED_IDEA_CUSTOMER_TITLE);
+  const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
+  const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
+  const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
+  const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
+  const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
   const [isMobile, setIsMobile] = useAtom(IS_MOBILE);
   const location = useLocation();
   const navigate = useNavigate();
@@ -205,6 +235,22 @@ const PageMeetAiExpert = () => {
     setpocDetailReportData({});
     setPocPersonaList([]);
     setInputBusinessInfo(savedInputBusinessInfo);
+
+    setIsEditingIdeaFeature(false);
+    setIsEditingIdeaCustomer(false);
+    setAddingIdeaFeature(false);
+    setActiveIdeaFeatureIndex(0);
+    setAddContentIdeaFeature("");
+    setEditedIdeaFeatureTitle("");
+    setAddingIdeaCustomer(false);
+    setActiveIdeaCustomerIndex(0);
+    setAddContentIdeaCustomer("");
+    setEditedIdeaCustomerTitle("");
+    // setIdeaFeatureData([]);
+    // setIdeaRequirementData([]);
+    // setIdeaList([]);
+    // setIdeaGroup({});
+    // setIdeaPriority([]);
   }, [location]);
 
   useEffect(() => {

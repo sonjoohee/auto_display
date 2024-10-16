@@ -47,6 +47,9 @@ import {
   EDITED_IDEA_CUSTOMER_TITLE,
   IS_EDITING_IDEA_FEATURE,
   IS_EDITING_IDEA_CUSTOMER,
+  IDEA_LIST,
+  IDEA_GROUP,
+  IDEA_PRIORITY,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -67,6 +70,9 @@ const MoleculeReportController = ({
   additionalReportCount, // 추가 보고서 복사기능을 위한 인덱스
   showCopyOnly = false,
 }) => {
+  const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
+  const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
+  const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
   const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
@@ -261,6 +267,9 @@ const MoleculeReportController = ({
           pocDetailReportData : pocDetailReportData,
           ideaFeatureData : ideaFeatureData,
           ideaRequirementData : ideaRequirementData,
+          ideaList : ideaList,
+          ideaGroup : ideaGroup,
+          ideaPriority : ideaPriority,
         },
         isLoggedIn,
         conversationId
