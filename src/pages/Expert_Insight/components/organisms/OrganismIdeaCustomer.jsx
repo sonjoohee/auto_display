@@ -306,14 +306,18 @@ const OrganismIdeaCustomer = () => {
   }, [ideaCustomerButtonState]);
 
   return (
-    <div>
+    <Wrap>
         <h1>알뜰 배달 서비스의 고객 요구 사항</h1>
 
         {isEditingIdeaCustomer ?
         <>
-          최대 10개까지 입력이 가능합니다
+          <p>최대 10개까지 입력이 가능합니다</p>
+          <IdeaList>
           {ideaRequirementData.map((requirement, index) => (
-            <div key={index}>
+            <IdeaListDiv None
+              key={index}
+              isActive={activeIdeaCustomerIndex === index}
+            >
               {activeIdeaCustomerIndex === index ? (
                 <input
                   value={editedIdeaCustomerTitle}
@@ -338,7 +342,7 @@ const OrganismIdeaCustomer = () => {
                   </button>
                 </>
               )}
-            </div>
+            </IdeaListDiv>
           ))}
           {ideaRequirementData.length < 10 && 
             <>
@@ -374,6 +378,7 @@ const OrganismIdeaCustomer = () => {
           }
           </>
           }
+          </IdeaList>
           {isPopupOpenDelete && (
             <Popup
               Cancel
@@ -412,10 +417,15 @@ const OrganismIdeaCustomer = () => {
         </>
         :
         <>
-          총 10개의 고객 요구 사항을 도출하였습니다 
+          <p>총 10개의 고객 요구 사항을 도출하였습니다</p>
+          <IdeaList>
           {ideaRequirementData.map((requirement, index) => (
-            <div key={index}>{requirement.title}</div>
+              <div None key={index}>
+                <span>{index + 1}</span>
+                {requirement.title}
+              </div>
           ))}
+          </IdeaList>
         </>
         }
 
@@ -426,11 +436,114 @@ const OrganismIdeaCustomer = () => {
             conversationId={conversationId}
           />
         )}
-    </div>
+    </Wrap>
   );
 };
 
 export default OrganismIdeaCustomer;
+
+const Wrap = styled.div`
+  max-width:657px;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  padding: 20px;
+  margin:24px 0 0 44px;
+  border-radius:15px;
+  border:1px solid ${palette.lineGray};
+
+  h1 {
+    font-size:1rem;
+    font-weight:700;
+    text-align:left;
+    padding-bottom:8px;
+    margin-bottom:16px;
+    border-bottom:1px solid ${palette.lineGray};
+  }
+
+  p {
+    font-size:0.88rem;
+    color:${palette.gray500};
+    text-align:left;
+  }
+`;
+
+const IdeaList = styled.div`
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  gap:4px;
+  margin-top:16px;
+
+  > div {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    width:49.5%;
+    min-height:35px;
+    font-size:0.88rem;
+    color:${palette.gray700};
+    text-align:left;
+    padding:4px 6px;
+    border-radius:12px;
+    background:${palette.chatGray};  
+  }
+
+  span {
+    flex-shrink:0;
+    width:27px;
+    height:27px;
+    line-height:26px;
+    text-align:center;
+    border-radius:100%;
+    border:1px solid ${palette.lineGray};
+    background:${palette.white};
+  }
+
+  > button {
+    display:flex;
+    align-items:center;
+    width:49.5%;
+    font-family: Pretendard, Poppins;
+    font-size:0.88rem;
+    color:${palette.gray500};
+    padding:4px 16px;
+    border-radius:12px;
+    border:1px solid ${palette.lineGray};
+    background:${palette.gray50};
+  }
+`;
+
+const IdeaListDiv = styled.div`
+  gap:5px !important;
+  padding:4px 10px 4px 16px !important;
+  border: ${props => (
+    props.isActive 
+    ? '2px solid blue' 
+    : `1px solid ${palette.lineGray}`
+  )}; 
+  background:${palette.white} !important;
+  
+  > * {
+    flex:1 1 auto;
+    text-align:left;
+  }
+
+  input {
+    width:inherit;
+    font-family: Pretendard, Poppins;
+    border:0;
+    outline:none;
+  }
+
+  button {
+    max-width:21px;
+    height:21px;
+    text-align:center;
+    border:0;
+    background:none;
+  }
+`;
 
 const Popup = styled.div`
   position: fixed;
