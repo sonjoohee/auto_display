@@ -46,6 +46,7 @@ import MoleculeReportController from "../molecules/MoleculeReportController";
 import {
   SkeletonTitle,
   SkeletonLine,
+  Spacing,
 } from "../../../../assets/styles/Skeleton";
 
 import images from "../../../../assets/styles/Images";
@@ -361,6 +362,18 @@ const OrganismIdeaFeature = () => {
 
   return (
     <Wrap>
+      {isLoadingIdeaFeature ? (
+        <>
+          <SkeletonTitle className="title-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <Spacing />
+          <SkeletonTitle className="title-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+        </>
+      ) : (
+        <>
         <h1>{titleOfBusinessInfo}의 기능 및 특성</h1>
 
         {isEditingIdeaFeature ?
@@ -492,6 +505,8 @@ const OrganismIdeaFeature = () => {
             conversationId={conversationId}
           />
         )}
+        </>
+      )}
     </Wrap>
   );
 };

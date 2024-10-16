@@ -41,6 +41,7 @@ import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
 import {
   SkeletonTitle,
   SkeletonLine,
+  Spacing,
 } from "../../../../assets/styles/Skeleton";
 
 import images from "../../../../assets/styles/Images";
@@ -170,7 +171,19 @@ const OrganismIdeaPriority = ({ conversationId }) => {
 
   return (
     <Wrap>
-      <h1>페르소나별 아이디어 우선순위 선별</h1>
+      {isLoadingIdeaPriority ? (
+        <>
+          <SkeletonTitle className="title-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <Spacing />
+          <SkeletonTitle className="title-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+        </>
+      ) : (
+        <>
+          <h1>페르소나별 아이디어 우선순위 선별</h1>
 
       {ideaPriority.map((persona, index) => (
         <SeparateSection key={index}>
@@ -188,13 +201,15 @@ const OrganismIdeaPriority = ({ conversationId }) => {
               ))}
             </ol>
           </div>
-        </SeparateSection>
-      ))}
+          </SeparateSection>
+        ))}
       
       <MoleculeReportController
         reportIndex={3}
-        conversationId={conversationId}
-      />
+          conversationId={conversationId}
+        />
+      </>
+      )}
 
     </Wrap>
   );
