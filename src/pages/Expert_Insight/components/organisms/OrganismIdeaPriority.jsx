@@ -26,6 +26,14 @@ import {
   SELECTED_POC_OPTIONS,
   SELCTED_POC_TARGET,
   POC_PERSONA_LIST,
+  IDEA_PRIORITY_BUTTON_STATE,
+  IDEA_LIST,
+  IDEA_GROUP,
+  RECOMMENDED_TARGET_DATA,
+  POC_DETAIL_REPORT_DATA,
+  IDEA_FEATURE_DATA,
+  IDEA_REQUIREMENT_DATA,
+  IDEA_PRIORITY,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -77,45 +85,111 @@ const OrganismIdeaPriority = ({ conversationId }) => {
   );
   const [isLoggedIn] = useAtom(isLoggedInAtom);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
-  const [selectedPocTargetState, setSelectedPocTargetState] = useState({}); // 현재 선택한 상태를 저장
-  const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET); // 확인 버튼을 눌렀을 때만 저장 -> 히스토리 저장
+
+  const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [isLoadingTarget, setIsLoadingTarget] = useState(false);
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
+  const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
+  const [pocDetailReportData, setPocDetailReportData] = useAtom(POC_DETAIL_REPORT_DATA);
+
+  const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
+  const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
+
+  const [ideaPriorityButtonState, setIdeaPriorityButtonState] = useAtom(IDEA_PRIORITY_BUTTON_STATE);
+  const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
+  const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
+  const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
+  const [isLoadingIdeaPriority, setIsLoadingIdeaPriority] = useState(false);
+
+  useEffect(() => {
+    const fetchIdeaList = async () => {
+
+      if(ideaPriorityButtonState) {
+        setIsLoading(true);
+        setIsLoadingIdeaPriority(true);
+        setIdeaPriorityButtonState(0);
+
+      //   const data = {
+      //     expert_id: "1",
+      //     business_info: titleOfBusinessInfo,
+      //     business_analysis_data: {
+      //       명칭: titleOfBusinessInfo,
+      //       주요_목적_및_특징: mainFeaturesOfBusinessInformation,
+      //       주요기능: mainCharacteristicOfBusinessInformation,
+      //       목표고객: businessInformationTargetCustomer,
+      //     },
+      //     tabs: [],
+      //     page_index: 1
+      // };
+
+      //   let response = await axios.post(
+      //     "https://1900-58-72-4-187.ngrok-free.app/ix_generate_idea_feature_list",
+      //     data,
+      //     axiosConfig
+      //   );
+
+      // setIdeaPriority(response.data.dev_persona_recommand_report);
+
+        setIsLoading(false);
+        setIsLoadingIdeaPriority(false);
+
+        await saveConversationToIndexedDB(
+          {
+            id: conversationId,
+            inputBusinessInfo: inputBusinessInfo,
+            analysisReportData: analysisReportData,
+            strategyReportData: strategyReportData,
+            conversation: conversation,
+            conversationStage: conversationStage,
+            selectedAdditionalKeywords: selectedAdditionalKeyword,
+            selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
+            additionalReportData: additionalReportData,
+            customerAdditionalReportData: customerAdditionalReportData,
+            timestamp: Date.now(),
+            expert_index: selectedExpertIndex,
+            selectedPocOptions: selectedPocOptions,
+            pocPersonaList: pocPersonaList,
+            selectedPocTarget: selectedPocTarget,
+            recommendedTargetData: recommendedTargetData,
+            pocDetailReportData : pocDetailReportData,
+            ideaFeatureData : ideaFeatureData,
+            ideaRequirementData : ideaRequirementData,
+            ideaList : ideaList,
+            ideaGroup : ideaGroup,
+            ideaPriority : ideaPriority,
+          },
+          isLoggedIn,
+          conversationId
+        );
+      }
+    };
+
+    fetchIdeaList();
+  }, [ideaPriorityButtonState]);
 
   return (
     <Wrap>
       <h1>페르소나별 아이디어 우선순위 선별</h1>
 
-      <SeparateSection>
-        <h3>
-          <span className="number">1</span>
-          페르소나 : 글로벌 K-pop 팬 (다국적 팬)
-        </h3>
-        <p>다양한 언어를 구사하며, 여러 나라의 팬들과 소통하는 것을 좋아함. 콘서트 정보를 쉽게 접하고, 자국어로 예매와 결제가 가능한 시스템을 선호. 언어 장벽 없이 콘서트 예매 과정을 원활하게 진행하는 것을 중요하게 생각함.</p>
-        <div>
-          <ol className="list-decimal">
-            <li>아이디어명 : 글로벌 팬은 여러 언어를 지원하는 플랫폼을 필요로 하며, 이를 통해 쉽게 정보에 접근하고 예매를 진행할 수 있음</li>
-            <li>아이디어명 : 글로벌 팬들이 자주 겪는 문제는 결제 과정에서의 불편함이므로, 다국어 지원 결제 시스템은 매우 중요한 기능임.</li>
-            <li>아이디어명 : 좌석 배치도와 같은 중요한 정보가 다국어로 제공되면, 팬들은 공연장 내 좌석을 명확히 이해하고 선택할 수 있음.</li>
-          </ol>
-        </div>
-      </SeparateSection>
-
-      <SeparateSection>
-        <h3>
-          <span className="number">2</span>
-          페르소나 : 글로벌 K-pop 팬 (다국적 팬)
-        </h3>
-        <p>다양한 언어를 구사하며, 여러 나라의 팬들과 소통하는 것을 좋아함. 콘서트 정보를 쉽게 접하고, 자국어로 예매와 결제가 가능한 시스템을 선호. 언어 장벽 없이 콘서트 예매 과정을 원활하게 진행하는 것을 중요하게 생각함.</p>
-        <div>
-          <ol className="list-decimal">
-            <li>아이디어명 : 글로벌 팬은 여러 언어를 지원하는 플랫폼을 필요로 하며, 이를 통해 쉽게 정보에 접근하고 예매를 진행할 수 있음</li>
-            <li>아이디어명 : 글로벌 팬들이 자주 겪는 문제는 결제 과정에서의 불편함이므로, 다국어 지원 결제 시스템은 매우 중요한 기능임.</li>
-            <li>아이디어명 : 좌석 배치도와 같은 중요한 정보가 다국어로 제공되면, 팬들은 공연장 내 좌석을 명확히 이해하고 선택할 수 있음.</li>
-          </ol>
-        </div>
-      </SeparateSection>
+      {ideaPriority.map((persona, index) => (
+        <SeparateSection key={index}>
+          <h3>
+            <span className="number">{index + 1}</span>
+            페르소나 : {persona.title}
+          </h3>
+          <p>{persona.content[0].text}</p>
+          <div>
+            <ol className="list-decimal">
+              {persona.content.map((contentItem, index) => (
+                contentItem.subTitle && (
+                  <li key={index}>{contentItem.subTitle} : {contentItem.text}</li>
+                )
+              ))}
+            </ol>
+          </div>
+        </SeparateSection>
+      ))}
       
       <MoleculeReportController
         reportIndex={3}
