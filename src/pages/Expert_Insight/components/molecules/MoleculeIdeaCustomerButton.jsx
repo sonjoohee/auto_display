@@ -26,7 +26,10 @@ import {
   SELCTED_POC_TARGET,
   TARGET_REPORT_BUTTON_STATE,
   POC_DETAIL_REPORT_ATOM,
-  POC_PERSONA_LIST
+  POC_PERSONA_LIST,
+  IDEA_CUSTOMER_BUTTON_STATE,
+  IDEA_FEATURE_DATA,
+  IDEA_REQUIREMENT_DATA,
 } from "../../../AtomStates";
 
 import {
@@ -65,14 +68,16 @@ const MoleculeIdeaCustomerButton = () => {
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
-  const [targetReportButtonState, setTargetReportButtonState] = useAtom(TARGET_REPORT_BUTTON_STATE);
+  const [ideaCustomerButtonState, setIdeaCustomerButtonState] = useAtom(IDEA_CUSTOMER_BUTTON_STATE);
+  const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
+  const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
 
   const handleClick = async () => {
     if (isLoading) return;
     const updatedConversation = [...conversation];
 
     if (updatedConversation.length > 0 &&
-        updatedConversation[updatedConversation.length - 1].type === "startIdeaButton"
+        updatedConversation[updatedConversation.length - 1].type === "ideaCustomerButton"
     ) {
       updatedConversation.pop();
     }
@@ -90,15 +95,9 @@ const MoleculeIdeaCustomerButton = () => {
       {
         type: 'ideaCustomer',
       },
-      {
-        type: "system",
-        message: "고객 요구사항을 확인하셨다면, 이제 주요 기능 및 특성과 고객 요구 사항을 기반으로 다양한 아이디어를 발상하는 단계입니다. 제가 최대한 많은 아이디어를 도출해볼게요 🙌🏻",
-        expertIndex: selectedExpertIndex,
-      },
-      {
-        type: 'idea',
-      },
     );
+
+    setIdeaCustomerButtonState(1);
     setConversation(updatedConversation);
     setConversationStage(3);
     setApproachPath(3);
@@ -121,6 +120,8 @@ const MoleculeIdeaCustomerButton = () => {
         pocPersonaList: pocPersonaList,
         selectedPocTarget: selectedPocTarget,
         pocDetailReportData : pocDetailReportData,
+        ideaFeatureData : ideaFeatureData,
+        ideaRequirementData : ideaRequirementData,
       },
       isLoggedIn,
       conversationId
