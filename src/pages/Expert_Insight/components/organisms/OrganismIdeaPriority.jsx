@@ -118,7 +118,7 @@ const OrganismIdeaPriority = ({ conversationId }) => {
       </SeparateSection>
       
       <MoleculeReportController
-        reportIndex={5}
+        reportIndex={3}
         conversationId={conversationId}
       />
 

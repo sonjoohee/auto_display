@@ -39,14 +39,14 @@ import {
   IS_EDITING_NOW,
   CONVERSATION_STAGE,
   RECOMMENDED_TARGET_DATA,
-  POC_DETAIL_REPORT_ATOM,
+  POC_DETAIL_REPORT_DATA,
   POC_PERSONA_LIST,
 } from "../../../AtomStates";
 
 const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [pocDetailReportData, setpocDetailReportData] = useAtom(
-    POC_DETAIL_REPORT_ATOM
+    POC_DETAIL_REPORT_DATA
   );
   const [selectedPocOptions, setSelectedPocOptions] =
     useAtom(SELECTED_POC_OPTIONS);

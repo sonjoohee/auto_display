@@ -21,7 +21,7 @@ import {
   MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
   isLoggedInAtom,
-  POC_DETAIL_REPORT_ATOM,
+  POC_DETAIL_REPORT_DATA,
   INPUT_BUSINESS_INFO,
   SELECTED_ADDITIONAL_KEYWORD,
   SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
@@ -35,7 +35,7 @@ import {
 
 const OrganismBizExpertSelect = ({ conversationId }) => {
   const [isLoggedIn] = useAtom(isLoggedInAtom);
-  const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_ATOM);
+  const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_DATA);
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);

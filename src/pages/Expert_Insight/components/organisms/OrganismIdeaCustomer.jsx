@@ -27,7 +27,7 @@ import {
   SELCTED_POC_TARGET,
   POC_PERSONA_LIST,
   IDEA_CUSTOMER_BUTTON_STATE,
-  POC_DETAIL_REPORT_ATOM,
+  POC_DETAIL_REPORT_DATA,
   RECOMMENDED_TARGET_DATA,
   IS_EDITING_IDEA_CUSTOMER,
   IDEA_FEATURE_DATA,
@@ -96,7 +96,7 @@ const OrganismIdeaCustomer = () => {
   const [isLoadingIdeaCustomer, setIsLoadingIdeaCustomer] = useState(false);
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
-  const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_ATOM);
+  const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_DATA);
 
   const [ideaCustomerButtonState, setIdeaCustomerButtonState] = useAtom(IDEA_CUSTOMER_BUTTON_STATE);
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
@@ -265,7 +265,7 @@ const OrganismIdeaCustomer = () => {
         updatedConversation.push(
           {
             type: "system",
-            message: "고객 요구사항을 확인하셨다면, 이제 주요 기능 및 특성과 고객 요구 사항을 기반으로 다양한 아이디어를 발상하는 단계입니다. 제가 최대한 많은 아이디어를 도출해볼게요 🙌🏻",
+            message: "고객 요구사항을 확인하셨다면, 이제 주요 기능 및 특성과 고객 요구 사항을 기반으로 다양한 아이디어를 발상하는 단계입니다.\n제가 최대한 많은 아이디어를 도출해볼게요 🙌🏻",
             expertIndex: selectedExpertIndex,
           },
           {

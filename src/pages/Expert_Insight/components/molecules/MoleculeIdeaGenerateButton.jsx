@@ -25,9 +25,9 @@ import {
   SELECTED_EXPERT_LIST,
   SELCTED_POC_TARGET,
   TARGET_REPORT_BUTTON_STATE,
-  POC_DETAIL_REPORT_ATOM,
+  POC_DETAIL_REPORT_DATA,
   POC_PERSONA_LIST,
-  IDEA_GENERATE_BUTTON_STATE,
+  IDEA_LIST_BUTTON_STATE,
   IDEA_FEATURE_DATA,
   IDEA_REQUIREMENT_DATA,
 } from "../../../AtomStates";
@@ -40,7 +40,7 @@ import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeIdeaGenerateButton = () => {
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
-  const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_ATOM);
+  const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_DATA);
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
   const [isLoggedIn] = useAtom(isLoggedInAtom);
@@ -68,7 +68,7 @@ const MoleculeIdeaGenerateButton = () => {
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
-  const [ideaGenerateButtonState, setIdeaGenerateButtonState] = useAtom(IDEA_GENERATE_BUTTON_STATE);
+  const [ideaListButtonState, setIdeaListButtonState] = useAtom(IDEA_LIST_BUTTON_STATE);
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
   const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
 
@@ -95,19 +95,8 @@ const MoleculeIdeaGenerateButton = () => {
       {
         type: 'ideaList',
       },
-      {
-        type: "system",
-        message: "이렇게 많은 아이디어 중 어떤 것을 먼저 진행할지 고민되시죠?\n우선순위를 확인해드릴게요. 아래 3가지 방법 중 하나를 선택해주세요 ",
-        expertIndex: selectedExpertIndex,
-      },
-      {
-        type: 'ideaPriorityButton',
-      },
-      {
-        type: 'ideaPriority',
-      },
     );
-    setIdeaGenerateButtonState(1);
+    setIdeaListButtonState(1);
     setConversation(updatedConversation);
     setConversationStage(3);
     setApproachPath(3);

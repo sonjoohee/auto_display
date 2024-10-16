@@ -31,7 +31,7 @@ import {
   SELECTED_POC_OPTIONS,
   SELCTED_POC_TARGET,
   RECOMMENDED_TARGET_DATA,
-  POC_DETAIL_REPORT_ATOM,
+  POC_DETAIL_REPORT_DATA,
   POC_PERSONA_LIST,
   EXPERT_DETAIL_DATA,
   IS_MOBILE,
@@ -132,7 +132,7 @@ const PageMeetAiExpert = () => {
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
 
   const [pocDetailReportData, setpocDetailReportData] = useAtom(
-    POC_DETAIL_REPORT_ATOM
+    POC_DETAIL_REPORT_DATA
   );
 
   const closePopupRegex = () => {

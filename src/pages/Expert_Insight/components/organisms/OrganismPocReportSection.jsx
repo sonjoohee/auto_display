@@ -44,7 +44,7 @@ import {
   CUSTOMER_ADDITIONAL_REPORT_DATA,
   IS_EDITING_NOW,
   CONVERSATION_STAGE,
-  POC_DETAIL_REPORT_ATOM,
+  POC_DETAIL_REPORT_DATA,
   POC_PERSONA_LIST,
   RECOMMENDED_TARGET_DATA,
 } from "../../../AtomStates";
@@ -391,7 +391,7 @@ const Section = ({
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   // 서브 타이틀이 있는 항목과 없는 항목을 분리
   const [pocDetailReportData, setpocDetailReportData] = useAtom(
-    POC_DETAIL_REPORT_ATOM
+    POC_DETAIL_REPORT_DATA
   );
   const subTitleItems = content.filter((item) => item.subTitle);
   const nonSubTitleItems = content.filter((item) => !item.subTitle);
