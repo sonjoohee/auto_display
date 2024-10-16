@@ -195,6 +195,7 @@ export const IDEA_FEATURE_BUTTON_STATE = atom(0);
 export const IDEA_CUSTOMER_BUTTON_STATE = atom(0);
 export const IDEA_PRIORITY_BUTTON_STATE = atom(0);
 export const IDEA_LIST_BUTTON_STATE = atom(0);
+export const IDEA_GENERATE_BUTTON_STATE = atom(0);
 
 export const IDEA_FEATURE_DATA = atom([
   {
@@ -366,10 +367,18 @@ export const IDEA_REQUIREMENT_DATA_TEMP = atom([
   }
 ]);
 
+export const IS_EDITING_IDEA_FEATURE = atom(false);
+export const IS_EDITING_IDEA_CUSTOMER = atom(false);
+
 export const ADDING_IDEA_FEATURE = atom(false);
 export const ACTIVE_IDEA_FEATURE_INDEX = atom(0);
 export const ADD_CONTENT_IDEA_FEATURE = atom("");
 export const EDITED_IDEA_FEATURE_TITLE = atom("");
+
+export const ADDING_IDEA_CUSTOMER = atom(false);
+export const ACTIVE_IDEA_CUSTOMER_INDEX = atom(0);
+export const ADD_CONTENT_IDEA_CUSTOMER = atom("");
+export const EDITED_IDEA_CUSTOMER_TITLE = atom("");
 
 export const CUSTOMER_ADDITION_QUESTION_INPUT = atom("");
 

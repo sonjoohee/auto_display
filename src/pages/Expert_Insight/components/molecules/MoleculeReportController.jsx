@@ -41,6 +41,12 @@ import {
   ADD_CONTENT_IDEA_FEATURE,
   ACTIVE_IDEA_FEATURE_INDEX,
   EDITED_IDEA_FEATURE_TITLE,
+  ADDING_IDEA_CUSTOMER,
+  ADD_CONTENT_IDEA_CUSTOMER,
+  ACTIVE_IDEA_CUSTOMER_INDEX,
+  EDITED_IDEA_CUSTOMER_TITLE,
+  IS_EDITING_IDEA_FEATURE,
+  IS_EDITING_IDEA_CUSTOMER,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -53,6 +59,7 @@ import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/Molecul
 
 const MoleculeReportController = ({
   reportIndex,
+  ideaFeatureRequirement,
   strategyReportID,
   conversationId,
   sampleData,
@@ -143,6 +150,12 @@ const MoleculeReportController = ({
   const [addContentIdeaFeature, setAddContentIdeaFeature] = useAtom(ADD_CONTENT_IDEA_FEATURE);
   const [activeIdeaFeatureIndex, setActiveIdeaFeatureIndex] = useAtom(ACTIVE_IDEA_FEATURE_INDEX);
   const [editedIdeaFeatureTitle, setEditedIdeaFeatureTitle] = useAtom(EDITED_IDEA_FEATURE_TITLE);
+  const [addingIdeaCustomer, setAddingIdeaCustomer] = useAtom(ADDING_IDEA_CUSTOMER);
+  const [addContentIdeaCustomer, setAddContentIdeaCustomer] = useAtom(ADD_CONTENT_IDEA_CUSTOMER);
+  const [activeIdeaCustomerIndex, setActiveIdeaCustomerIndex] = useAtom(ACTIVE_IDEA_CUSTOMER_INDEX);
+  const [editedIdeaCustomerTitle, setEditedIdeaCustomerTitle] = useAtom(EDITED_IDEA_CUSTOMER_TITLE);
+  const [isEditingIdeaFeature, setIsEditingIdeaFeature] = useAtom(IS_EDITING_IDEA_FEATURE);
+  const [isEditingIdeaCustomer, setIsEditingIdeaCustomer] = useAtom(IS_EDITING_IDEA_CUSTOMER);
 
   const navigate = useNavigate();
 
@@ -170,16 +183,22 @@ const MoleculeReportController = ({
   };
   const handleEditCancel = (reportIndex) => {
     if(reportIndex === 5) {
-      console.log("ideaFeatureDataTemp", ideaFeatureDataTemp);
-      console.log("ideaFeatureData", ideaFeatureData);
-      // 두개 구분해야됨
-      setIdeaFeatureData(ideaFeatureDataTemp);
-      // setIdeaRequirementData(ideaRequirementDataTemp);
-      
-      setAddingIdeaFeature(false);
-      setAddContentIdeaFeature("");
-      setActiveIdeaFeatureIndex(0);
-      setEditedIdeaFeatureTitle("");
+      if(ideaFeatureRequirement === "feature") {
+        setIdeaFeatureData(ideaFeatureDataTemp);
+        setAddingIdeaFeature(false);
+        setAddContentIdeaFeature("");
+        setActiveIdeaFeatureIndex(0);
+        setEditedIdeaFeatureTitle("");
+        setIsEditingIdeaFeature(false);
+      }
+      else if(ideaFeatureRequirement === "customer") {
+        setIdeaRequirementData(ideaRequirementDataTemp);
+        setAddingIdeaCustomer(false);
+        setAddContentIdeaCustomer("");
+        setActiveIdeaCustomerIndex(0);
+        setEditedIdeaCustomerTitle("");
+        setIsEditingIdeaCustomer(false);
+      }
     }
     else {
       setMainFeaturesOfBusinessInformation(tempMainFeaturesOfBusinessInformation);
@@ -187,8 +206,9 @@ const MoleculeReportController = ({
       tempMainCharacteristicOfBusinessInformation
       );
       setBusinessInformationTargetCustomer(tempMusinessInformationTargetCustomer);
+      setIsEditingNow(false);
     }
-    setIsEditingNow(false);
+    
     togglePopupCancel();
   };
   const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA);
@@ -201,16 +221,24 @@ const MoleculeReportController = ({
   };
 
   const handleEditConfirm = async (reportIndex) => {
-    setIsEditingNow(false);
 
     if(reportIndex === 5) {
-      setIdeaFeatureDataTemp(ideaFeatureData);
-      setIdeaRequirementDataTemp(ideaRequirementData);
-
-      setAddingIdeaFeature(false);
-      setAddContentIdeaFeature("");
-      setActiveIdeaFeatureIndex(0);
-      setEditedIdeaFeatureTitle("");
+      if(ideaFeatureRequirement === "feature") {  
+        setIsEditingIdeaFeature(false);
+        setIdeaFeatureDataTemp(ideaFeatureData);
+        setAddingIdeaFeature(false);
+        setAddContentIdeaFeature("");
+        setActiveIdeaFeatureIndex(0);
+        setEditedIdeaFeatureTitle("");  
+      }
+      else if(ideaFeatureRequirement === "customer") {
+        setIsEditingIdeaCustomer(false);
+        setIdeaRequirementDataTemp(ideaRequirementData);
+        setAddingIdeaCustomer(false);
+        setAddContentIdeaCustomer("");
+        setActiveIdeaCustomerIndex(0);
+        setEditedIdeaCustomerTitle("");
+      }
 
       await saveConversationToIndexedDB(
         {
@@ -239,6 +267,8 @@ const MoleculeReportController = ({
       );
     } 
     else {
+      setIsEditingNow(false);
+
       setTempMainFeaturesOfBusinessInformation(mainFeaturesOfBusinessInformation);
       setTempMainCharacteristicOfBusinessInformation(
         mainCharacteristicOfBusinessInformation
@@ -723,85 +753,83 @@ ${mainCharacteristicOfBusinessInformation
     setIsLoading(false);
   };
 
-  const handleEditStart = () => {
-    setIsEditingNow(true); 
-    setEditedIdeaFeatureTitle(ideaFeatureData[0].title);
+  const handleEditStart = (ideaFeatureRequirement) => {
+    if(ideaFeatureRequirement === "feature") {
+      setIsEditingIdeaFeature(true);
+      setEditedIdeaFeatureTitle(ideaFeatureData[0].title);
+    }
+    else if(ideaFeatureRequirement === "customer") {
+      setIsEditingIdeaCustomer(true);
+      setEditedIdeaCustomerTitle(ideaRequirementData[0].title);
+    }
+    else {
+      setIsEditingNow(true); 
+    }
+    
   };
 
-  if(reportIndex === 5) {
+  if (reportIndex === 5) {
     return (
-    <>
-    {!isEditingNow ? (
-      <ButtonWrap>
-        <div />
-        <div>
-          {!report && (
-            <button type="button" onClick={() => handleEditStart()}>
-              <img src={images.IconEdit} alt="" />
-              수정하기
-            </button>
-          )}
-        </div>
-      </ButtonWrap>
-      ) : (
-        <ButtonWrap>
-          <div />
-          <div>
-            <button
-              type="button"
-              className="lineBtn"
-              onClick={togglePopupCancel}
-            >
-              취소하기
-            </button>
-            <button
-              type="button"
-              className="lineBtn"
-              onClick={() => handleEditConfirm(reportIndex)}
-            >
-              수정 완료하기
-            </button>
-          </div>
-        </ButtonWrap>
-      )}
-    
-      {isPopupOpenCancel && (
-        <Popup
-          Cancel
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              togglePopupCancel();
-            }
-          }}
-        >
-          <div>
-            <button
-              type="button"
-              className="closePopup"
-              onClick={togglePopupCancel}
-            >
-              닫기
-            </button>
-            <span>
-              <img src={images.ExclamationMark} alt="" />
-            </span>
-            <p>
-              <strong>정말 취소하시겠습니까?</strong>
-              <span>취소 시 수정하신 내용은 저장되지 않습니다</span>
-            </p>
-            <div className="btnWrap">
-              <button type="button" onClick={togglePopupCancel}>
-                아니오
+      <>
+        {!(ideaFeatureRequirement === "feature" ? isEditingIdeaFeature : isEditingIdeaCustomer) ? (
+          <ButtonWrap>
+            <div />
+            <div>
+              {!report && (
+                <button type="button" onClick={() => handleEditStart(ideaFeatureRequirement)}>
+                  <img src={images.IconEdit} alt="" />
+                  수정하기
+                </button>
+              )}
+            </div>
+          </ButtonWrap>
+        ) : (
+          <ButtonWrap>
+            <div />
+            <div>
+              <button type="button" className="lineBtn" onClick={togglePopupCancel}>
+                취소하기
               </button>
-              <button type="button" onClick={() => handleEditCancel(reportIndex)}>
-                네, 취소할게요
+              <button type="button" className="lineBtn" onClick={() => handleEditConfirm(reportIndex)}>
+                수정 완료하기
               </button>
             </div>
-          </div>
-        </Popup>
-      )}
-    </>
-  )
+          </ButtonWrap>
+        )}
+
+        {isPopupOpenCancel && (
+          <Popup
+            Cancel
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                togglePopupCancel();
+              }
+            }}
+          >
+            <div>
+              <button type="button" className="closePopup" onClick={togglePopupCancel}>
+                닫기
+              </button>
+              <span>
+                <img src={images.ExclamationMark} alt="" />
+              </span>
+              <p>
+                <strong>정말 취소하시겠습니까?</strong>
+                <span>취소 시 수정하신 내용은 저장되지 않습니다</span>
+              </p>
+              <div className="btnWrap">
+                <button type="button" onClick={togglePopupCancel}>
+                  아니오
+                </button>
+                <button type="button" onClick={() => handleEditCancel(reportIndex)}>
+                  네, 취소할게요
+                </button>
+              </div>
+            </div>
+          </Popup>
+        )}
+      </>
+    );
   }
 
   else {

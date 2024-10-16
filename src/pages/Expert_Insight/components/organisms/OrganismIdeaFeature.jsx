@@ -29,7 +29,7 @@ import {
   IDEA_FEATURE_BUTTON_STATE,
   POC_DETAIL_REPORT_ATOM,
   RECOMMENDED_TARGET_DATA,
-  IS_EDITING_NOW,
+  IS_EDITING_IDEA_FEATURE,
   IDEA_FEATURE_DATA,
   IDEA_REQUIREMENT_DATA,
   IDEA_FEATURE_DATA_TEMP,
@@ -104,7 +104,7 @@ const OrganismIdeaFeature = () => {
   const [ideaFeatureDataTemp, setIdeaFeatureDataTemp] = useAtom(IDEA_FEATURE_DATA_TEMP);
   const [ideaRequirementDataTemp, setIdeaRequirementDataTemp] = useAtom(IDEA_REQUIREMENT_DATA_TEMP);
 
-  const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
+  const [isEditingIdeaFeature, setIsEditingIdeaFeature] = useAtom(IS_EDITING_IDEA_FEATURE);
   const [addingIdeaFeature, setAddingIdeaFeature] = useAtom(ADDING_IDEA_FEATURE);
   const [addContentIdeaFeature, setAddContentIdeaFeature] = useAtom(ADD_CONTENT_IDEA_FEATURE);
   const [activeIdeaFeatureIndex, setActiveIdeaFeatureIndex] = useAtom(ACTIVE_IDEA_FEATURE_INDEX);
@@ -325,49 +325,6 @@ const OrganismIdeaFeature = () => {
           {
             type: 'ideaCustomerButton',
           },
-          {
-            type: "user",
-            message: "고객 니즈를 도출해주세요",
-          },
-          {
-            type: "system",
-            message: "해당 아이템과 관련된 고객 요구 사항을 살펴보았습니다.",
-            expertIndex: selectedExpertIndex,
-          },
-          {
-            type: 'ideaCustomer',
-          },
-          {
-            type: "system",
-            message: "고객 요구사항을 확인하셨다면, 이제 주요 기능 및 특성과 고객 요구 사항을 기반으로 다양한 아이디어를 발상하는 단계입니다. 제가 최대한 많은 아이디어를 도출해볼게요 🙌🏻",
-            expertIndex: selectedExpertIndex,
-          },
-          {
-            type: 'ideaGenerateButton',
-          },
-          {
-            type: "user",
-            message: "다양한 관점의 아이디어들이 기대됩니다. ",
-          },
-          {
-            type: "system",
-            message: "주요 구매 요소와 고객 요구 사항을 기반으로, (도출된 아이디어 수 : 100개)의 사업 아이디어를 도출했습니다.\n주요 아이디어를 먼저 살펴보고, 상세한 아이디어 목록은 파일을 다운로드하거나 Miro와 연계하여  확인해보세요 📝",
-            expertIndex: selectedExpertIndex,
-          },
-          {
-            type: 'ideaList',
-          },
-          {
-            type: "system",
-            message: "이렇게 많은 아이디어 중 어떤 것을 먼저 진행할지 고민되시죠?\n우선순위를 확인해드릴게요. 아래 3가지 방법 중 하나를 선택해주세요 ",
-            expertIndex: selectedExpertIndex,
-          },
-          {
-            type: 'ideaPriorityButton',
-          },
-          {
-            type: 'ideaPriority',
-          },
         );
         setConversation(updatedConversation);
 
@@ -406,7 +363,7 @@ const OrganismIdeaFeature = () => {
     <Wrap>
         <h1>알뜰 배달 서비스의 기능 및 특성</h1>
 
-        {isEditingNow ?
+        {isEditingIdeaFeature ?
         <>
           <p>최대 10개까지 입력이 가능합니다</p>
           <IdeaList>
@@ -531,6 +488,7 @@ const OrganismIdeaFeature = () => {
         {!isLoadingIdeaFeature && (
           <MoleculeReportController
             reportIndex={5}
+            ideaFeatureRequirement={"feature"}
             conversationId={conversationId}
           />
         )}
