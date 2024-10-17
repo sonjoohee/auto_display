@@ -113,10 +113,6 @@ const OrganismIdeaCustomer = () => {
   const [deleteIndex, setDeleteIndex] = useState(null);
   const [isPopupOpenDelete, setIsPopupOpenDelete] = useState(false);
 
-  useEffect(() => {
-    setEditedIdeaCustomerTitle(ideaRequirementData[0].title);
-  }, []);
-
   const togglePopupDelete = () => {
     setIsPopupOpenDelete(!isPopupOpenDelete);
   };
@@ -152,12 +148,11 @@ const OrganismIdeaCustomer = () => {
       setActiveIdeaCustomerIndex(index);
       setEditedIdeaCustomerTitle(title);
       setAddingIdeaCustomer(false);
-      // setAddContentIdeaCustomer("");
     }
   };
 
   const handleTitleChange = (index) => {
-    const updatedFeatures = [...ideaRequirementData];
+    const updatedFeatures = JSON.parse(JSON.stringify(ideaRequirementData)); // 깊은 복사
     updatedFeatures[index].title = editedIdeaCustomerTitle;
     setIdeaRequirementData(updatedFeatures);
     setActiveIdeaCustomerIndex(null);

@@ -50,6 +50,8 @@ import {
   ACTIVE_IDEA_CUSTOMER_INDEX,
   ADD_CONTENT_IDEA_CUSTOMER,
   EDITED_IDEA_CUSTOMER_TITLE,
+  IDEA_FEATURE_DATA_TEMP,
+  IDEA_REQUIREMENT_DATA_TEMP,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -74,6 +76,8 @@ const PageMeetAiExpert = () => {
   const [editedIdeaCustomerTitle, setEditedIdeaCustomerTitle] = useAtom(EDITED_IDEA_CUSTOMER_TITLE);
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
   const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
+  const [ideaFeatureDataTemp, setIdeaFeatureDataTemp] = useAtom(IDEA_FEATURE_DATA_TEMP);
+  const [ideaRequirementDataTemp, setIdeaRequirementDataTemp] = useAtom(IDEA_REQUIREMENT_DATA_TEMP);
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
@@ -246,8 +250,10 @@ const PageMeetAiExpert = () => {
     setActiveIdeaCustomerIndex(0);
     setAddContentIdeaCustomer("");
     setEditedIdeaCustomerTitle("");
-    // setIdeaFeatureData([]);
-    // setIdeaRequirementData([]);
+    setIdeaFeatureData([]);
+    setIdeaRequirementData([]);
+    setIdeaFeatureDataTemp([]);
+    setIdeaRequirementDataTemp([]);
     // setIdeaList([]);
     // setIdeaGroup({});
     // setIdeaPriority([]);

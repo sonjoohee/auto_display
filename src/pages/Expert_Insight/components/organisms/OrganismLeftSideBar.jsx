@@ -62,6 +62,8 @@ import {
   ACTIVE_IDEA_CUSTOMER_INDEX,
   ADD_CONTENT_IDEA_CUSTOMER,
   EDITED_IDEA_CUSTOMER_TITLE,
+  IDEA_FEATURE_DATA_TEMP,
+  IDEA_REQUIREMENT_DATA_TEMP,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -89,6 +91,8 @@ const OrganismLeftSideBar = () => {
   const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
   const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
+  const [ideaFeatureDataTemp, setIdeaFeatureDataTemp] = useAtom(IDEA_FEATURE_DATA_TEMP);
+  const [ideaRequirementDataTemp, setIdeaRequirementDataTemp] = useAtom(IDEA_REQUIREMENT_DATA_TEMP);
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
@@ -593,8 +597,10 @@ useEffect(() => {
       setAddContentIdeaCustomer("");
       setEditedIdeaCustomerTitle("");
 
-      // setIdeaFeatureData(chatData.ideaFeatureData || []);
-      // setIdeaRequirementData(chatData.ideaRequirementData || []);
+      setIdeaFeatureData(chatData.ideaFeatureData || []);
+      setIdeaRequirementData(chatData.ideaRequirementData || []);
+      setIdeaFeatureDataTemp(chatData.ideaFeatureData || []);
+      setIdeaRequirementDataTemp(chatData.ideaRequirementData || []);
       // setIdeaList(chatData.ideaList || []);
       // setIdeaGroup(chatData.ideaGroup || {});
       // setIdeaPriority(chatData.ideaPriority || []);
@@ -829,8 +835,10 @@ useEffect(() => {
     setActiveIdeaCustomerIndex(0);
     setAddContentIdeaCustomer("");
     setEditedIdeaCustomerTitle("");
-    // setIdeaFeatureData([]);
-    // setIdeaRequirementData([]);
+    setIdeaFeatureData([]);
+    setIdeaRequirementData([]);
+    setIdeaFeatureDataTemp([]);
+    setIdeaRequirementDataTemp([]);
     // setIdeaList([]);
     // setIdeaGroup({});
     // setIdeaPriority([]);
@@ -881,8 +889,10 @@ useEffect(() => {
     setActiveIdeaCustomerIndex(0);
     setAddContentIdeaCustomer("");
     setEditedIdeaCustomerTitle("");
-    // setIdeaFeatureData([]);
-    // setIdeaRequirementData([]);
+    setIdeaFeatureData([]);
+    setIdeaRequirementData([]);
+    setIdeaFeatureDataTemp([]);
+    setIdeaRequirementDataTemp([]);
     // setIdeaList([]);
     // setIdeaGroup({});
     // setIdeaPriority([]);
