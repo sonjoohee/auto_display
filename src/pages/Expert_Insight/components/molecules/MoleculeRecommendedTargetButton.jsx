@@ -32,6 +32,7 @@ import {
   IDEA_LIST,
   IDEA_GROUP,
   IDEA_PRIORITY,
+  BUTTON_STATE,
 } from "../../../AtomStates";
 
 import {
@@ -76,7 +77,7 @@ const MoleculeRecommendedTargetButton = () => {
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
   const [targetReportButtonState, setTargetReportButtonState] = useAtom(TARGET_REPORT_BUTTON_STATE);
-
+  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const handleClick = async () => {
     if (isLoading) return;
     const updatedConversation = [...conversation];
@@ -120,6 +121,7 @@ const MoleculeRecommendedTargetButton = () => {
         ideaList : ideaList,
         ideaGroup : ideaGroup,
         ideaPriority : ideaPriority,
+        buttonState : buttonState,
       },
       isLoggedIn,
       conversationId

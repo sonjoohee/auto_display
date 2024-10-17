@@ -34,6 +34,7 @@ import {
   RECOMMENDED_TARGET_DATA,
   IDEA_LIST,
   IDEA_GROUP,
+  BUTTON_STATE,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -46,7 +47,9 @@ import {
 
 import images from "../../../../assets/styles/Images";
 
-const OrganismIdeaList = ({ conversationId }) => {
+const OrganismIdeaList = () => {
+  const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
+  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [ideaFeatureData] = useAtom(IDEA_FEATURE_DATA);
   const [ideaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
   const [pocDetailReportData] = useAtom(POC_DETAIL_REPORT_DATA);
@@ -95,14 +98,22 @@ const OrganismIdeaList = ({ conversationId }) => {
   const [isLoadingIdeaList, setIsLoadingIdeaList] = useState(false);
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
 
-  const [isPopupOpenCancel, setIsPopupOpenCancel] = useState(false);
+  const [isPopupOpenDownload, setIsPopupOpenDownload] = useState(false);
 
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
 
-  const togglePopupCancel = () => {
-    setIsPopupOpenCancel(!isPopupOpenCancel);
+  const togglePopupDownload = () => {
+    setIsPopupOpenDownload(!isPopupOpenDownload);
   };
+  
+  const axiosConfig = {
+    timeout: 100000, // 100초
+    headers: {
+      "Content-Type": "application/json",
+    },
+    withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
+
   const handleDownload = () => {
     // 데이터 준비
     const requirements = [...new Set(ideaList.map(item => item.report.customer_requirement))];
@@ -163,25 +174,38 @@ const OrganismIdeaList = ({ conversationId }) => {
         setIsLoadingIdeaList(true);
         setIdeaListButtonState(0);
 
-      //   const data = {
-      //     expert_id: "1",
-      //     business_info: titleOfBusinessInfo,
-      //     business_analysis_data: {
-      //       명칭: titleOfBusinessInfo,
-      //       주요_목적_및_특징: mainFeaturesOfBusinessInformation,
-      //       주요기능: mainCharacteristicOfBusinessInformation,
-      //       목표고객: businessInformationTargetCustomer,
-      //     },
-      //     tabs: [],
-      //     page_index: 1
-      // };
+        // let response;
+        // let finalResponse = {
+        //   "dev_report": []
+        // }
 
-      //   let response = await axios.post(
-      //     "https://1900-58-72-4-187.ngrok-free.app/ix_generate_idea_feature_list",
-      //     data,
-      //     axiosConfig
-      //   );
+        // for (let i = 0; i < ideaRequirementData.length; i++) {
+        //   const data = {
+        //     expert_id: "1",
+        //     business_info: titleOfBusinessInfo,
+        //     business_analysis_data: {
+        //       명칭: titleOfBusinessInfo,
+        //       주요_목적_및_특징: mainFeaturesOfBusinessInformation,
+        //       주요기능: mainCharacteristicOfBusinessInformation,
+        //       목표고객: businessInformationTargetCustomer,
+        //     },
+        //     tabs: [],
+        //     page_index: 1,
+        //     feature_requirements_list: {
+        //       feature: ideaFeatureData,
+        //       requirements: [ideaRequirementData[i]],
+        //     }
+        //   };
+  
+        //   response = await axios.post(
+        //     "https://wishresearch.kr/panels/idea_dev",
+        //     data,
+        //     axiosConfig
+        //   );
 
+        //   finalResponse.dev_report.push(...response.data.dev_report);
+        // }
+        
         // setIdeaList(response.data.dev_report);
         // setIdeaGroup(response.data.dev_cluster);
 
@@ -225,6 +249,7 @@ const OrganismIdeaList = ({ conversationId }) => {
             ideaRequirementData : ideaRequirementData,
             ideaList : ideaList,
             ideaGroup : ideaGroup,
+            buttonState : buttonState,
           },
           isLoggedIn,
           conversationId
@@ -262,50 +287,45 @@ const OrganismIdeaList = ({ conversationId }) => {
           <h1>{titleOfBusinessInfo}를 위한 아이디어 리스트</h1>
           <p>총 {countIdea(ideaList)}개의 아이디어를 도출하였으며, 유사한 아이디어들을 묶어 {ideaGroup.group_data.length}개의 그룹으로 나눌 수 있었습니다.</p>
 
-      <IdeaList>
-        {ideaGroup.group_data.map((item) => (
-          <li key={item.group}>
-            <span>{item.group}</span>
-            <div>
-              <strong>{item.title} ({item.required_departments.length}건)</strong>
-              <p>{item.core_content}</p>
+        <IdeaList>
+          {ideaGroup.group_data.map((item) => (
+            <li key={item.group}>
+              <span>{item.group}</span>
+              <div>
+                <strong>{item.title} ({item.required_departments.length}건)</strong>
+                <p>{item.core_content}</p>
+                </div>
+              </li>
+              ))}
+        </IdeaList>
+        <DownloadButton onClick={handleDownload}>
+          <p>
+            <img src={images.IconEdit3} alt="" />
+            자료 (2건)
+          </p>
+          <div>
+            <button onClick={togglePopupDownload}>
+              <img src={images.IconDownload2} alt="" />
+              <div>
+                <strong>전체 아이디어 다운로드</strong>
+                <span>1.8 MB · Download</span>
               </div>
-            </li>
-            ))}
-          </IdeaList>
-        </>
-      )}
+            </button>
+            <button>
+              <img src={images.IconDownloadMiro} alt="" />
+              <div>
+                <strong>Miro에서 협업하기</strong>
+                <span>외부페이지 이동 · www.miro.com</span>
+              </div>
+            </button>
+          </div>
+        </DownloadButton>
 
-      <DownloadButton onClick={handleDownload}>
-        <p>
-          <img src={images.IconEdit3} alt="" />
-          자료 (2건)
-        </p>
-        <div>
-          <button>
-            <img src={images.IconDownload2} alt="" />
-            <div>
-              <strong>아이디어 다운로드</strong>
-              <span>1.8 MB · Download</span>
-            </div>
-          </button>
-          <button
-            onClick={togglePopupCancel}
-          >
-            <img src={images.IconDownloadMiro} alt="" />
-            <div>
-              <strong>Miro에서 협업하기</strong>
-              <span>외부페이지 이동 · www.miro.com</span>
-            </div>
-          </button>
-        </div>
-      </DownloadButton>
-
-      {isPopupOpenCancel && (
+        {isPopupOpenDownload && (
         <DownloadPopup
           onClick={(e) => {
             if (e.target === e.currentTarget) {
-              togglePopupCancel();
+              togglePopupDownload();
             }
           }}
         >
@@ -353,7 +373,8 @@ const OrganismIdeaList = ({ conversationId }) => {
           </div>
         </DownloadPopup>
       )}
-
+      </>
+      )}
     </Wrap>
   );
 };
@@ -470,6 +491,7 @@ const DownloadButton = styled.div`
     border-radius:6px;
     border:1px solid ${palette.lineGray};
     background:${palette.white};
+    font-family: 'Pretendard';
 
     div {
       display:flex;
@@ -494,8 +516,8 @@ const DownloadButton = styled.div`
 
 const DownloadPopup = styled.div`
   position: absolute;
-  right: ${(props) => (props.isAutoSaveToggle ? "0" : "-70px")};
-  top: 120px;
+  // right: ${(props) => (props.isAutoSaveToggle ? "0" : "-70px")};
+  // top: 120px;
   max-width: 288px;
   width: 100%;
   max-height: 400px; /* 팝업의 최대 높이를 적절히 설정 */

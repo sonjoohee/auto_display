@@ -19,6 +19,7 @@ import {
   MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
   CONVERSATION_STAGE,
+  BUTTON_STATE,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -28,6 +29,7 @@ import {
 } from "../../../../utils/indexedDB";
 
 const MoleculeCheckReportRightAway = () => {
+  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
@@ -134,6 +136,7 @@ const MoleculeCheckReportRightAway = () => {
         customerAdditionalReportData: customerAdditionalReportData,
         timestamp: Date.now(),
         expert_index: selectedExpertIndex,
+        buttonState : buttonState,
       },
       isLoggedIn,
       conversationId

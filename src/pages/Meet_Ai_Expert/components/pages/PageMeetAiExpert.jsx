@@ -52,6 +52,7 @@ import {
   EDITED_IDEA_CUSTOMER_TITLE,
   IDEA_FEATURE_DATA_TEMP,
   IDEA_REQUIREMENT_DATA_TEMP,
+  BUTTON_STATE,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -64,6 +65,7 @@ import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/Molec
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
 
 const PageMeetAiExpert = () => {
+  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [isEditingIdeaFeature, setIsEditingIdeaFeature] = useAtom(IS_EDITING_IDEA_FEATURE);
   const [isEditingIdeaCustomer, setIsEditingIdeaCustomer] = useAtom(IS_EDITING_IDEA_CUSTOMER);
   const [addingIdeaFeature, setAddingIdeaFeature] = useAtom(ADDING_IDEA_FEATURE);
@@ -257,6 +259,7 @@ const PageMeetAiExpert = () => {
     // setIdeaList([]);
     // setIdeaGroup({});
     // setIdeaPriority([]);
+    setButtonState({});
   }, [location]);
 
   useEffect(() => {
@@ -328,6 +331,7 @@ const PageMeetAiExpert = () => {
           inputBusinessInfo,
           conversationStage: 2,
           timestamp: Date.now(),
+          buttonState : buttonState,
         },
         isLoggedIn,
         conversationId

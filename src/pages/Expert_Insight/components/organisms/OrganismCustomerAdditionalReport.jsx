@@ -32,6 +32,7 @@ import {
   IDEA_LIST,
   IDEA_GROUP,
   IDEA_PRIORITY,
+  BUTTON_STATE,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -52,6 +53,7 @@ const OrganismCustomerAdditionalReport = ({
   customerAdditionalReportCount,
   conversationId,
 }) => {
+  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
   const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
@@ -334,6 +336,7 @@ const OrganismCustomerAdditionalReport = ({
               ideaList : ideaList,
               ideaGroup : ideaGroup,
               ideaPriority : ideaPriority,
+              buttonState : buttonState,
             },
             isLoggedIn,
             conversationId

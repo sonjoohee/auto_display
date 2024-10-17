@@ -64,6 +64,7 @@ import {
   EDITED_IDEA_CUSTOMER_TITLE,
   IDEA_FEATURE_DATA_TEMP,
   IDEA_REQUIREMENT_DATA_TEMP,
+  BUTTON_STATE,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -72,6 +73,7 @@ import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/Molec
 import OrganismReportPopup from "./OrganismReportPopup"; // 팝업 컴포넌트 임포트
 
 const OrganismLeftSideBar = () => {
+  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [isEditingIdeaFeature, setIsEditingIdeaFeature] = useAtom(IS_EDITING_IDEA_FEATURE);
   const [isEditingIdeaCustomer, setIsEditingIdeaCustomer] = useAtom(IS_EDITING_IDEA_CUSTOMER);
   const [addingIdeaFeature, setAddingIdeaFeature] = useAtom(ADDING_IDEA_FEATURE);
@@ -601,9 +603,12 @@ useEffect(() => {
       setIdeaRequirementData(chatData.ideaRequirementData || []);
       setIdeaFeatureDataTemp(chatData.ideaFeatureData || []);
       setIdeaRequirementDataTemp(chatData.ideaRequirementData || []);
+      
       // setIdeaList(chatData.ideaList || []);
       // setIdeaGroup(chatData.ideaGroup || {});
       // setIdeaPriority(chatData.ideaPriority || []);
+
+      setButtonState(chatData.buttonState || {});
 
       // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
       // set어프로치패스(2)
@@ -842,6 +847,7 @@ useEffect(() => {
     // setIdeaList([]);
     // setIdeaGroup({});
     // setIdeaPriority([]);
+    setButtonState({});
   };
 
   const handleLogoClick = () => {
@@ -896,6 +902,8 @@ useEffect(() => {
     // setIdeaList([]);
     // setIdeaGroup({});
     // setIdeaPriority([]);
+
+    setButtonState({});
   };
   return (
     <>

@@ -28,6 +28,7 @@ import {
   POC_DETAIL_REPORT_DATA,
   POC_PERSONA_LIST,
   IDEA_FEATURE_BUTTON_STATE,
+  BUTTON_STATE,
 } from "../../../AtomStates";
 
 import {
@@ -37,6 +38,7 @@ import {
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeIdeaStartButton = () => {
+  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_DATA);
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
@@ -116,6 +118,7 @@ const MoleculeIdeaStartButton = () => {
         pocPersonaList: pocPersonaList,
         selectedPocTarget: selectedPocTarget,
         pocDetailReportData : pocDetailReportData,
+        buttonState : buttonState,
       },
       isLoggedIn,
       conversationId

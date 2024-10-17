@@ -32,6 +32,7 @@ import {
   IDEA_LIST,
   IDEA_GROUP,
   IDEA_PRIORITY,
+  BUTTON_STATE,
 } from "../../../AtomStates";
 
 import {
@@ -39,6 +40,7 @@ import {
 } from "../../../../utils/indexedDB";
 
 const OrganismBizExpertSelect = ({ conversationId }) => {
+  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [isLoggedIn] = useAtom(isLoggedInAtom);
   const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_DATA);
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
@@ -201,6 +203,7 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
           ideaList : ideaList,
           ideaGroup : ideaGroup,
           ideaPriority : ideaPriority,
+          buttonState : buttonState,
         },
         isLoggedIn,
         conversationId

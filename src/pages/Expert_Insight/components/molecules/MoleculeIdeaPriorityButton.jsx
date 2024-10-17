@@ -32,6 +32,7 @@ import {
   IDEA_LIST,
   IDEA_GROUP,
   IDEA_PRIORITY,
+  BUTTON_STATE,
 } from "../../../AtomStates";
 
 import {
@@ -41,6 +42,7 @@ import {
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeIdeaPriorityButton = () => {
+  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
@@ -120,6 +122,7 @@ const MoleculeIdeaPriorityButton = () => {
         ideaRequirementData : ideaRequirementData,
         ideaList : ideaList,
         ideaGroup : ideaGroup,
+        buttonState : buttonState,
       },
       isLoggedIn,
       conversationId
