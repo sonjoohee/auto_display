@@ -395,7 +395,7 @@ if (isLoadingPage) {
                 return null;
               })}
 
-              {selectedExpertIndex !== "4" ?
+              {selectedExpertIndex === "0" || selectedExpertIndex === "1" || selectedExpertIndex === "2" || selectedExpertIndex === "3" ?
                 <>
                 {/* 검색해서 시작 */}
                 {(approachPath === -1 || approachPath === 3) && 
@@ -420,14 +420,8 @@ if (isLoadingPage) {
                 }
                 </>
               :
+              selectedExpertIndex === "4" ?
                 <>
-                {/* 검색해서 시작 */}
-                {(approachPath === -1 || approachPath === 3) && 
-                  titleOfBusinessInfo &&
-                  Object.keys(recommendedTargetData).length !== 0 && 
-                  <OrganismBizExpertSelect />
-                }
-
                 {/* 4번 전문가 선택하고 시작 */}
                 {approachPath === 1 &&
                   !isLoading &&
@@ -444,6 +438,27 @@ if (isLoadingPage) {
                     <OrganismBizExpertSelect />
                 }
               </>
+              :
+              selectedExpertIndex === "5" ?
+                <>
+                {/* 5번 전문가 선택하고 시작 */}
+                {approachPath === 1 &&
+                  !isLoading &&
+                  ideaPriority.length !== 0 && 
+                    <OrganismBizExpertSelect />
+                }
+  
+                {/* 5번 전문가 히스토리로 진입 시 */}
+                {approachPath === 2 && 
+                  titleOfBusinessInfo &&
+                  conversation.length > 0 &&
+                  !isLoading &&
+                  ideaPriority.length !== 0 &&  
+                    <OrganismBizExpertSelect />
+                }
+                </>
+              :
+              null
               }
               
             </ChatWrap>
@@ -452,7 +467,10 @@ if (isLoadingPage) {
               <OrganismSearchBottomBar isBlue={false} />
             ) : (
               selectedExpertIndex === "4" ? 
-                Object.keys(recommendedTargetData).length !== 0 && <OrganismSearchBottomBar isBlue={true} /> // 4번 전문가 보고서 생성 시 활성화 
+                Object.keys(recommendedTargetData).length !== 0 && <OrganismSearchBottomBar isBlue={true} /> // 4번 전문가 끝났을 때 활성화
+                : 
+                selectedExpertIndex === "5" ? 
+                  ideaPriority.length !== 0 && <OrganismSearchBottomBar isBlue={true} /> // 5번 전문가 끝났을 때 활성화
                 : 
                 <OrganismSearchBottomBar isBlue={true} />
             )}

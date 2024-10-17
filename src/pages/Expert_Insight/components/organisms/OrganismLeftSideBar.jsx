@@ -2330,6 +2330,15 @@ const AccordionContent = styled.div`
       content:'E';
     }
 
+    /* 아이디어 우선순위 */
+    &[data-expert-index="5"]:before {
+      width:15px;
+      height:15px;
+      line-height:15px;
+      // background: #00ff00; 
+      content:'E';
+    }
+
     p {
       width: 100%;
       min-height: 19px;

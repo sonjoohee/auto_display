@@ -69,7 +69,6 @@ const MoleculeReportController = ({
   sampleData,
   report,
   additionalReportCount, // 추가 보고서 복사기능을 위한 인덱스
-  showCopyOnly = false,
 }) => {
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
@@ -333,10 +332,10 @@ const MoleculeReportController = ({
       // 전략 보고서 데이터 저장 - sampleData 사용
       reportData = sampleData; // sampleData를 그대로 저장합니다
       business_info = reportData?.business_info || "Unknown Title";
-    } else if (reportIndex === 4) {
+    } else if (reportIndex === 4 || reportIndex === 5) {
       reportData = sampleData; // sampleData를 그대로 저장합니다
       business_info = titleOfBusinessInfo || "Unknown Title";
-    }else {
+    } else {
       reportData = sampleData;
       business_info = reportData?.title || "Unknown Title";
     }
@@ -534,6 +533,10 @@ ${report.content.mainCharacter.map(character => `- ${character}`).join('\n')}`.t
           }
           break;
 
+          case 5: // 아이디어 우선순위
+          contentToCopy = extractTextContent(report.content);
+          break;
+
         default:
           contentToCopy = JSON.stringify(report, null, 2);
           
@@ -606,12 +609,17 @@ ${mainCharacteristicOfBusinessInformation
           });
         }
       }
+      else if (reportIndex === 5) {
+        console.log(ideaPriority);
+        contentToCopy = extractTextContent(ideaPriority);
+      }
     }
   
     navigator.clipboard
       .writeText(contentToCopy.trim())
       .then(() => {
         setIsPopupCopy(true); // 복사 팝업 열기
+        console.log("팝업 왜 안뜨냐구");
       })
       .catch((error) => {
         console.error("복사 실패", error);
@@ -782,8 +790,52 @@ ${mainCharacteristicOfBusinessInformation
     
   };
 
-  if (reportIndex === 5) {
-    if (ideaFeatureRequirement === "feature" && buttonState.IdeaCustomer !== 1) {
+  if ((reportIndex === 5 && !sampleData) || report) {
+    if (report) {
+      return (
+        <>
+          <ButtonWrap>
+            <div />
+            <div>
+              <button type="button" onClick={toggleCopy}>
+                <img src={images.IconCopy} alt="" />
+                복사하기
+              </button>
+            </div>
+          </ButtonWrap>
+          {isPopupCopy && (
+          <Popup
+            Cancel
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                closePopupCopy();
+              }
+            }}
+          >
+            <div>
+              <button
+                type="button"
+                className="closePopup"
+                onClick={closePopupCopy}
+              >
+                닫기
+              </button>
+              <span>
+                <img src={images.CheckMark} alt="" />
+              </span>
+              <p>복사가 완료되었습니다</p>
+              <div className="btnWrap">
+                <button type="button" onClick={closePopupCopy}>
+                  확인
+                </button>
+              </div>
+            </div>
+          </Popup>
+        )}
+        </>
+      )
+    }
+    else if (ideaFeatureRequirement === "feature" && buttonState.IdeaCustomer !== 1) {
       return (
         <>
           {!isEditingIdeaFeature ? (
@@ -1083,35 +1135,6 @@ ${mainCharacteristicOfBusinessInformation
                 </button>
                 <button type="button" onClick={() => handleEditCancel(reportIndex)}>
                   네, 취소할게요
-                </button>
-              </div>
-            </div>
-          </Popup>
-        )}
-        {isPopupCopy && (
-          <Popup
-            Cancel
-            onClick={(e) => {
-              if (e.target === e.currentTarget) {
-                closePopupCopy();
-              }
-            }}
-          >
-            <div>
-              <button
-                type="button"
-                className="closePopup"
-                onClick={closePopupCopy}
-              >
-                닫기
-              </button>
-              <span>
-                <img src={images.CheckMark} alt="" />
-              </span>
-              <p>복사가 완료되었습니다</p>
-              <div className="btnWrap">
-                <button type="button" onClick={closePopupCopy}>
-                  확인
                 </button>
               </div>
             </div>
