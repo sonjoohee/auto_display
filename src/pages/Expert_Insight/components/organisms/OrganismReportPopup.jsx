@@ -112,6 +112,10 @@ const OrganismReportPopup = ({ report, onClose }) => {
     reportIndex === 4 && (reportTypeText = "추천 타겟 및 예상 인사이트");
   }
 
+  {
+    reportIndex === 5 && (reportTypeText = "페르소나별 아이디어 우선순위 선별 ");
+  }
+
   return ReactDOM.createPortal(
     <PopupOverlay onClick={onClose}>
       <PopupContent onClick={(e) => e.stopPropagation()}>
@@ -131,7 +135,7 @@ const OrganismReportPopup = ({ report, onClose }) => {
             </popup-p>
           </popupTitle>
 
-          {(reportIndex === 1 || reportIndex === 4) && (
+          {(reportIndex === 1 || reportIndex === 4 || reportIndex === 5) && (
             <ExpertThumb>
               <div className="thumb">
                 {report.content.expert_id === "1" ? (
@@ -140,6 +144,10 @@ const OrganismReportPopup = ({ report, onClose }) => {
                   <img src={panelimages.expert_2} alt="" />
                 ) : report.content.expert_id === "3" ? (
                   <img src={panelimages.expert_3} alt="" />
+                ) : report.content.expert_id === "4" ? (
+                  <img src={panelimages.expert_4} alt="" />
+                ) : reportIndex === 5 ? (
+                  <img src={panelimages.expert_4} alt="" />
                 ) : (
                   <img src={panelimages.expert_4} alt="" />
                 )}
@@ -159,12 +167,17 @@ const OrganismReportPopup = ({ report, onClose }) => {
                   <strong>고객 분석 전문가</strong>
                   <p>박서연</p>
                 </div>
-              ) : (
+              ) : report.content.expert_id === "4" ? (
                 <div className="cont">
                   <strong>PoC 설계 전문가</strong>
                   <p>장석훈</p>
                 </div>
-              )}
+              ) : reportIndex === 5 ? (
+                <div className="cont">
+                  <strong>아이디어 디벨로퍼</strong>
+                  <p>OOO</p>
+                </div>
+              ) : null}
             </ExpertThumb>
           )}
         </div>
@@ -177,10 +190,9 @@ const OrganismReportPopup = ({ report, onClose }) => {
 
         {reportIndex === 3 && <AdditionalReportSection report={report} />}
         {/* reportindex의 경우 사용하는 css가 동일하여 2로 같게 처리하였음 */}
-        {reportIndex === 4 && (
-          <RecommendedTargetReportSection report={report} />
-        )}
-        {/* <canvas ref={canvasRef} style={{ width: '200px', height: '200px', margin: '20px auto' }} /> */}
+        {reportIndex === 4 && <RecommendedTargetReportSection report={report} />}
+
+        {reportIndex === 5 && <IdeaPriorityReportSection report={report} />}
 
         <CloseButton onClick={onClose}>닫기</CloseButton>
       </PopupContent>
@@ -495,7 +507,6 @@ const BizAnalysisSection = ({ report }) => {
         } */}
         <MoleculeReportController
           reportIndex={0}
-          showCopyOnly={true}
           report={report}
         />
       </ContentsWrap>
@@ -554,7 +565,6 @@ const StrategyReportSection = ({ report }) => {
         ))}
         <MoleculeReportController
           reportIndex={1}
-          showCopyOnly={true}
           report={report}
         />
       </AnalysisSection>
@@ -644,7 +654,6 @@ const AdditionalReportSection = ({ report }) => {
       ))}
       <MoleculeReportController
         reportIndex={2}
-        showCopyOnly={true}
         report={report}
       />
     </AnalysisSection>
@@ -1922,9 +1931,111 @@ const RecommendedTargetReportSection = ({ report }) => {
       )}
       <MoleculeReportController
         reportIndex={4}
-        showCopyOnly={true}
         report={report}
       />
     </AnalysisSection>
   );
 };
+
+const IdeaPriorityReportSection = ({ report }) => {
+  return (
+  <Wrap>
+  <h1>페르소나별 아이디어 우선순위 선별</h1>
+
+  {report.content.map((persona, index) => (
+    <SeparateSection2 key={index}>
+      <h3>
+        <span className="number">{index + 1}</span>
+      페르소나 : {persona.title}
+    </h3>
+    <p>{persona.content[0].text}</p>
+    <div>
+      <ol className="list-decimal">
+        {persona.content.map((contentItem, index) => (
+          contentItem.subTitle && (
+            <li key={index}>{contentItem.subTitle} : {contentItem.text}</li>
+          )
+        ))}
+      </ol>
+    </div>
+    </SeparateSection2>
+  ))}
+
+  <MoleculeReportController
+    reportIndex={5}
+    report={report}
+  />
+  </Wrap>
+  )
+}
+
+const Wrap = styled.div`
+  max-width:986px;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  padding: 28px;
+  margin:24px 0 0 44px;
+  border-radius:15px;
+  border:1px solid ${palette.lineGray};
+  overflow-y: auto;
+
+  h1 {
+    font-size:1.25rem;
+    font-weight:400;
+    text-align:left;
+    margin-bottom:20px;
+  }
+`;
+
+const SeparateSection2 = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap:12px;
+  margin-top: 12px;
+  padding: 20px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.03);
+
+  h3 {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-size:1rem;
+    font-weight:700;
+
+    span {
+      width: 15px;
+      height: 15px;
+      font-size: 0.63rem;
+      color: ${palette.chatBlue};
+      line-height: 15px;
+      text-align: center;
+      border: 1px solid ${palette.chatBlue};
+    }
+  }
+
+  p {
+    font-size:0.88rem;
+    font-weight:300;
+    color:${palette.gray700};
+    text-align:left;
+  }
+
+  div {
+    padding:16px;
+    border-radius:10px;
+    background:${palette.white};
+  }
+
+  .list-decimal li {
+    list-style-type:decimal;
+    list-style-position:inside;
+    font-size:0.88rem;
+    font-weight:300;
+    color:${palette.gray800};
+    line-height:1.5;
+    text-align:left;
+  }
+`;
