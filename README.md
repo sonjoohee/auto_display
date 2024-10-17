@@ -70,3 +70,5 @@ npm install file-saver
 npm install docx
 
 npm install three
+
+npm install xlsx
