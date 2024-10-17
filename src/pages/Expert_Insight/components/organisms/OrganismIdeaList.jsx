@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import axios from "axios";
+import { Document, Packer, Paragraph, TextRun } from "docx"; // docx 라이브러리 임포트
 import * as XLSX from 'xlsx';
+import { saveAs } from "file-saver"; // file-saver를 사용하여 파일 저장
 import { useAtom } from "jotai";
 import {
   EXPERT_BUTTON_STATE,
@@ -48,6 +50,7 @@ import {
 import images from "../../../../assets/styles/Images";
 
 const OrganismIdeaList = () => {
+  const [isModalOpen, setIsModalOpen] = useState({});
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [ideaFeatureData] = useAtom(IDEA_FEATURE_DATA);
@@ -97,8 +100,10 @@ const OrganismIdeaList = () => {
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [isLoadingIdeaList, setIsLoadingIdeaList] = useState(false);
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
-
+  const [selectedFormat, setSelectedFormat] = useState("Excel");
+  const [selectedLanguage, setSelectedLanguage] = useState("한글");
   const [isPopupOpenDownload, setIsPopupOpenDownload] = useState(false);
+  const popupRef = useRef(null); // 팝업 요소를 참조하는 useRef 생성
 
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
@@ -114,8 +119,34 @@ const OrganismIdeaList = () => {
     },
     withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
   }
+  const handleFormatChange = (format) => {
+    setSelectedFormat(format);
+  };
+
+  const handleLanguageChange = (language) => {
+    setSelectedLanguage(language); // 선택된 언어 상태를 설정
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target) &&
+        !event.target.closest(".download-button")
+      ) {
+        setIsPopupOpenDownload(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isModalOpen]);
 
   const handleDownload = () => {
+    if (selectedFormat === 'Excel') {
     // 데이터 준비
     const requirements = [...new Set(ideaList.map(item => item.report.customer_requirement))];
     const features = [...new Set(ideaList.flatMap(item => item.report.ideas.map(idea => idea.feature)))];
@@ -165,8 +196,50 @@ const OrganismIdeaList = () => {
 
     // 엑셀 파일 생성 및 다운로드
     XLSX.writeFile(wb, "idea_matrix.xlsx");
+  } else if (selectedFormat === 'Word') {
+    // Word 문서 생성 로직
+    const doc = new Document({
+      sections: [{
+        properties: {},
+        children: [
+          new Paragraph({
+            children: [new TextRun("아이디어 목록")],
+          }),
+          // 요구사항과 특징에 따라 아이디어 구조화
+          ...ideaList.flatMap(item => [
+            new Paragraph({
+              children: [new TextRun(`요구사항: ${item.report.customer_requirement}`)],
+            }),
+            ...item.report.ideas.flatMap(ideaGroup => [
+              new Paragraph({
+                children: [new TextRun(`특징: ${ideaGroup.feature}`)],
+              }),
+              ...ideaGroup.ideas.map(idea => 
+                new Paragraph({
+                  children: [
+                    new TextRun(`${idea.name}: `),
+                    new TextRun({
+                      text: idea.description,
+                    })
+                  ],
+                  bullet: {
+                    level: 0
+                  }
+                })
+              ),
+              new Paragraph({}) // 빈 줄 추가
+            ])
+          ])
+        ]
+      }]
+    });
+  
+    // Word 문서 생성 및 다운로드
+    Packer.toBlob(doc).then(blob => {
+      saveAs(blob, "idea_list.docx");
+    });
   };
-
+}
   useEffect(() => {
     const fetchIdeaList = async () => {
 
@@ -299,7 +372,7 @@ const OrganismIdeaList = () => {
               </li>
               ))}
         </IdeaList>
-        <DownloadButton onClick={handleDownload}>
+        <DownloadButton>
           <p>
             <img src={images.IconEdit3} alt="" />
             자료 (2건)
@@ -324,6 +397,7 @@ const OrganismIdeaList = () => {
 
         {isPopupOpenDownload && (
         <DownloadPopup
+          ref={popupRef}
           onClick={(e) => {
             if (e.target === e.currentTarget) {
               togglePopupDownload();
@@ -333,41 +407,69 @@ const OrganismIdeaList = () => {
           <div>
             <h3>PoC 수행 계획서 다운로드</h3>
             <SelectBoxWrap>
-              <label>포맷 선택 (택1)</label>
-              <SelectBox>
-                <div
-                  className="PDF"
-                >
-                  <img src={images.ImgPDF} alt="" />
-                  PDF
-                </div>
-                <div
-                  className="Word"
-                >
-                  <img src={images.ImgWord} alt="" />
-                  Word
-                </div>
-              </SelectBox>
-            </SelectBoxWrap>
-            <SelectBoxWrap>
-              <label>언어 선택 (택1)</label>
-              <SelectBox>
-                <div
-                  className="한글 selected"
-                >
-                  <img src={images.ImgKOR} alt="" />
-                  한글
-                </div>
-                <div
-                  className="영문 selected"
-                >
-                  <img src={images.ImgENG} alt="" />
-                  영문(준비 중)
-                </div>
-              </SelectBox>
-            </SelectBoxWrap>
+                <label>포맷 선택 (택1)</label>
+                <SelectBox>
+                  <div
+                    className={`${
+                      selectedFormat === "Excel" ? "selected" : ""
+                    }`}
+                    onClick={() => handleFormatChange("Excel")}
+                  >
+                    {selectedFormat === "Excel" ? (
+                      <img src={images.ImgPDF2} alt="" /> //여기 이미지만 엑셀이미지로 바꾸면됨
+                    ) : (
+                      <img src={images.ImgPDF} alt="" /> //여기 이미지만 엑셀이미지로 바꾸면됨
+                    )}
+                    Excel
+                  </div>
+                  <div
+                    className={`${
+                      selectedFormat === "Word" ? "selected" : ""
+                    }`}
+                    onClick={() => handleFormatChange("Word")}
+                  >
+                    {selectedFormat === "Word" ? (
+                      <img src={images.ImgWord2} alt="" />
+                    ) : (
+                      <img src={images.ImgWord} alt="" />
+                    )}
+                    Word
+                  </div>
+                </SelectBox>
+              </SelectBoxWrap>
+              <SelectBoxWrap>
+                <label>언어 선택 (택1)</label>
+                <SelectBox>
+                  <div
+                    className={`${
+                      selectedLanguage === "한글" ? "selected" : ""
+                    }`}
+                    onClick={() => handleLanguageChange("한글")}
+                  >
+                    {selectedLanguage === "한글" ? (
+                      <img src={images.ImgKOR2} alt="" />
+                    ) : (
+                      <img src={images.ImgKOR} alt="" />
+                    )}
+                    한글
+                  </div>
+                  <div
+                    className={`${
+                      selectedLanguage === "영문" ? "selected" : ""
+                    } disabled`}
+                    onClick={() => handleLanguageChange("영문")}
+                  >
+                    {selectedLanguage === "영문" ? (
+                      <img src={images.ImgENG2} alt="" />
+                    ) : (
+                      <img src={images.ImgENG} alt="" />
+                    )}
+                    영문(준비 중)
+                  </div>
+                </SelectBox>
+              </SelectBoxWrap>
             <div>
-              <button>
+              <button onClick={handleDownload}>
                 다운로드
               </button>
             </div>
