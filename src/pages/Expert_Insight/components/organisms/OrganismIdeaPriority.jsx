@@ -34,6 +34,7 @@ import {
   IDEA_FEATURE_DATA,
   IDEA_REQUIREMENT_DATA,
   IDEA_PRIORITY,
+  BUTTON_STATE,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -48,6 +49,7 @@ import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
 
 const OrganismIdeaPriority = ({ conversationId }) => {
+  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [selectedPocOptions, setSelectedPocOptions] =
     useAtom(SELECTED_POC_OPTIONS);
   const [conversation, setConversation] = useAtom(CONVERSATION);
@@ -159,6 +161,7 @@ const OrganismIdeaPriority = ({ conversationId }) => {
             ideaList : ideaList,
             ideaGroup : ideaGroup,
             ideaPriority : ideaPriority,
+            buttonState : buttonState,
           },
           isLoggedIn,
           conversationId

@@ -4,6 +4,7 @@ import { palette } from "../../../../assets/styles/Palette";
 import axios from "axios";
 import { useAtom } from "jotai";
 import {
+  BUTTON_STATE,
   EXPERT_BUTTON_STATE,
   IS_LOADING,
   APPROACH_PATH,
@@ -43,6 +44,7 @@ import {
 import images from "../../../../assets/styles/Images";
 
 const MoleculePersonaSelect = ({ conversationId }) => {
+  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
   const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
@@ -199,6 +201,7 @@ const MoleculePersonaSelect = ({ conversationId }) => {
             ideaList : ideaList,
             ideaGroup : ideaGroup,
             ideaPriority : ideaPriority,
+            buttonState : buttonState,
           },
           isLoggedIn,
           conversationId
@@ -259,6 +262,7 @@ const MoleculePersonaSelect = ({ conversationId }) => {
         ideaList : ideaList,
         ideaGroup : ideaGroup,
         ideaPriority : ideaPriority,
+        buttonState : buttonState,
       },
       isLoggedIn,
       conversationId

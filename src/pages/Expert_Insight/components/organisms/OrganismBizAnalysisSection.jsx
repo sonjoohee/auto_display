@@ -35,9 +35,11 @@ import {
   IS_LOADING_ANALYSIS,
   CONVERSATION_STAGE,
   CHAT_REFRESH_TRIGGER,
+  BUTTON_STATE,
 } from "../../../AtomStates";
 
 const OrganismBizAnalysisSection = ({ conversationId }) => {
+  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
   const [reportRefreshTrigger, setReportRefreshTrigger] = useAtom(
     REPORT_REFRESH_TRIGGER
@@ -204,6 +206,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               conversationStage: 1,
               timestamp: Date.now(),
               expert_index: selectedExpertIndex,
+              buttonState : buttonState,
             },
             isLoggedIn,
             conversationId
@@ -341,6 +344,7 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               conversationStage: 2,
               timestamp: Date.now(),
               expert_index: selectedExpertIndex,
+              buttonState : buttonState,
             },
             isLoggedIn,
             conversationId

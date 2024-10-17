@@ -12,6 +12,7 @@ import {
   INPUT_BUSINESS_INFO,
   SELECTED_POC_OPTIONS,
   POC_DETAIL_REPORT_DATA,
+  BUTTON_STATE,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -50,6 +51,7 @@ import {
 } from "../../../AtomStates";
 
 const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
+  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
   const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
@@ -171,6 +173,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
           }
 
           finalResponse = response1.data;
+          console.log(finalResponse);
 
           if (finalResponse.total_page_index === 2) {
             let response2 = await axios.post(
@@ -190,6 +193,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               }
             }
             finalResponse = response2.data;
+            console.log(finalResponse);
           } else if (finalResponse.total_page_index === 3) {
             let response2 = await axios.post(
               "https://wishresearch.kr/panels/expert",
@@ -224,6 +228,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               }
             }
             finalResponse = response3.data;
+            console.log(finalResponse);
           }
 
           const strategyData = finalResponse;
@@ -283,6 +288,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               ideaList : ideaList,
               ideaGroup : ideaGroup,
               ideaPriority : ideaPriority,
+              buttonState : buttonState,
             },
             isLoggedIn,
             conversationId

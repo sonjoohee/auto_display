@@ -36,6 +36,7 @@ import {
   IDEA_PRIORITY,
   IDEA_FEATURE_DATA_TEMP,
   IDEA_REQUIREMENT_DATA_TEMP,
+  BUTTON_STATE,
 } from "../../../AtomStates";
 
 import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
@@ -70,6 +71,7 @@ import OrganismIdeaList from "../organisms/OrganismIdeaList";
 import OrganismIdeaPriority from "../organisms/OrganismIdeaPriority";
 
 const PageExpertInsight = () => {
+  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [isLoadingPage, setIsLoadingPage] = useState(true); // 로딩 상태 추가
@@ -207,6 +209,7 @@ const PageExpertInsight = () => {
             // setIdeaList(savedConversation.ideaList || []);
             // setIdeaGroup(savedConversation.ideaGroup || {});
             // setIdeaPriority(savedConversation.ideaPriority || []);
+            setButtonState(savedConversation.buttonState || {});
           }
           
           setIsLoadingPage(false); // 로딩 완료

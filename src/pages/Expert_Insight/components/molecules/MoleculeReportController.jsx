@@ -50,6 +50,7 @@ import {
   IDEA_LIST,
   IDEA_GROUP,
   IDEA_PRIORITY,
+  BUTTON_STATE,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -70,6 +71,7 @@ const MoleculeReportController = ({
   additionalReportCount, // 추가 보고서 복사기능을 위한 인덱스
   showCopyOnly = false,
 }) => {
+  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
@@ -270,6 +272,7 @@ const MoleculeReportController = ({
           ideaList : ideaList,
           ideaGroup : ideaGroup,
           ideaPriority : ideaPriority,
+          buttonState : buttonState,
         },
         isLoggedIn,
         conversationId
@@ -297,6 +300,7 @@ const MoleculeReportController = ({
           customerAdditionalReportData: customerAdditionalReportData,
           selectedPocOptions: selectedPocOptions,
           selectedPocTarget: selectedPocTarget,
+          buttonState : buttonState,
         },
         isLoggedIn,
         conversationId
@@ -752,6 +756,7 @@ ${mainCharacteristicOfBusinessInformation
         customerAdditionalReportData: customerAdditionalReportData,
         selectedPocOptions: selectedPocOptions,
         selectedPocTarget: selectedPocTarget,
+        buttonState : buttonState,
       },
       isLoggedIn,
       conversationId
@@ -778,67 +783,132 @@ ${mainCharacteristicOfBusinessInformation
   };
 
   if (reportIndex === 5) {
-    return (
-      <>
-        {!(ideaFeatureRequirement === "feature" ? isEditingIdeaFeature : isEditingIdeaCustomer) ? (
-          <ButtonWrap>
-            <div />
-            <div>
-              {!report && (
-                <button type="button" onClick={() => handleEditStart(ideaFeatureRequirement)}>
-                  <img src={images.IconEdit} alt="" />
-                  수정하기
+    if (ideaFeatureRequirement === "feature" && buttonState.IdeaCustomer !== 1) {
+      return (
+        <>
+          {!isEditingIdeaFeature ? (
+            <ButtonWrap>
+              <div />
+              <div>
+                {!report && (
+                  <button type="button" onClick={() => handleEditStart(ideaFeatureRequirement)}>
+                    <img src={images.IconEdit} alt="" />
+                    수정하기
+                  </button>
+                )}
+              </div>
+            </ButtonWrap>
+          ) : (
+            <ButtonWrap>
+              <div />
+              <div>
+                <button type="button" className="lineBtn" onClick={togglePopupCancel}>
+                  취소하기
                 </button>
-              )}
-            </div>
-          </ButtonWrap>
-        ) : (
-          <ButtonWrap>
-            <div />
-            <div>
-              <button type="button" className="lineBtn" onClick={togglePopupCancel}>
-                취소하기
-              </button>
-              <button type="button" className="lineBtn" onClick={() => handleEditConfirm(reportIndex)}>
-                수정 완료하기
-              </button>
-            </div>
-          </ButtonWrap>
-        )}
-
-        {isPopupOpenCancel && (
-          <Popup
-            Cancel
-            onClick={(e) => {
-              if (e.target === e.currentTarget) {
-                togglePopupCancel();
-              }
-            }}
-          >
-            <div>
-              <button type="button" className="closePopup" onClick={togglePopupCancel}>
-                닫기
-              </button>
-              <span>
-                <img src={images.ExclamationMark} alt="" />
-              </span>
-              <p>
-                <strong>정말 취소하시겠습니까?</strong>
-                <span>취소 시 수정하신 내용은 저장되지 않습니다</span>
-              </p>
-              <div className="btnWrap">
-                <button type="button" onClick={togglePopupCancel}>
-                  아니오
-                </button>
-                <button type="button" onClick={() => handleEditCancel(reportIndex)}>
-                  네, 취소할게요
+                <button type="button" className="lineBtn" onClick={() => handleEditConfirm(reportIndex)}>
+                  수정 완료하기
                 </button>
               </div>
-            </div>
-          </Popup>
-        )}
-      </>
-    );
+            </ButtonWrap>
+          )}
+          
+          {isPopupOpenCancel && (
+            <Popup
+              Cancel
+              onClick={(e) => {
+                if (e.target === e.currentTarget) {
+                  togglePopupCancel();
+                }
+              }}
+            >
+              <div>
+                <button type="button" className="closePopup" onClick={togglePopupCancel}>
+                  닫기
+                </button>
+                <span>
+                  <img src={images.ExclamationMark} alt="" />
+                </span>
+                <p>
+                  <strong>정말 취소하시겠습니까?</strong>
+                  <span>취소 시 수정하신 내용은 저장되지 않습니다</span>
+                </p>
+                <div className="btnWrap">
+                  <button type="button" onClick={togglePopupCancel}>
+                    아니오
+                  </button>
+                  <button type="button" onClick={() => handleEditCancel(reportIndex)}>
+                    네, 취소할게요
+                  </button>
+                </div>
+              </div>
+            </Popup>
+          )}
+        </>
+      );
+    }
+    else if (ideaFeatureRequirement === "customer" && buttonState.IdeaGenerate !== 1) {
+      return (
+        <>
+          {!isEditingIdeaCustomer ? (
+            <ButtonWrap>
+              <div />
+              <div>
+                {!report && (
+                  <button type="button" onClick={() => handleEditStart(ideaFeatureRequirement)}>
+                    <img src={images.IconEdit} alt="" />
+                    수정하기
+                  </button>
+                )}
+              </div>
+            </ButtonWrap>
+          ) : (
+            <ButtonWrap>
+              <div />
+              <div>
+                <button type="button" className="lineBtn" onClick={togglePopupCancel}>
+                  취소하기
+                </button>
+                <button type="button" className="lineBtn" onClick={() => handleEditConfirm(reportIndex)}>
+                  수정 완료하기
+                </button>
+              </div>
+            </ButtonWrap>
+          )}
+
+          {isPopupOpenCancel && (
+            <Popup
+              Cancel
+              onClick={(e) => {
+                if (e.target === e.currentTarget) {
+                  togglePopupCancel();
+                }
+              }}
+            >
+              <div>
+                <button type="button" className="closePopup" onClick={togglePopupCancel}>
+                  닫기
+                </button>
+                <span>
+                  <img src={images.ExclamationMark} alt="" />
+                </span>
+                <p>
+                  <strong>정말 취소하시겠습니까?</strong>
+                  <span>취소 시 수정하신 내용은 저장되지 않습니다</span>
+                </p>
+                <div className="btnWrap">
+                  <button type="button" onClick={togglePopupCancel}>
+                    아니오
+                  </button>
+                  <button type="button" onClick={() => handleEditCancel(reportIndex)}>
+                    네, 취소할게요
+                  </button>
+                </div>
+              </div>
+            </Popup>
+          )}
+        </>
+      );
+    }
   }
 
   else {

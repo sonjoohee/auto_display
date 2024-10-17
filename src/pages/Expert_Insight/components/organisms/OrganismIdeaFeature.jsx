@@ -38,6 +38,7 @@ import {
   ADD_CONTENT_IDEA_FEATURE,
   ACTIVE_IDEA_FEATURE_INDEX,
   EDITED_IDEA_FEATURE_TITLE,
+  BUTTON_STATE,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -52,6 +53,7 @@ import {
 import images from "../../../../assets/styles/Images";
 
 const OrganismIdeaFeature = () => {
+  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [conversationId] = useAtom(CONVERSATION_ID);
   const [selectedPocOptions, setSelectedPocOptions] =
     useAtom(SELECTED_POC_OPTIONS);
@@ -354,6 +356,7 @@ const OrganismIdeaFeature = () => {
             pocDetailReportData : pocDetailReportData,
             ideaFeatureData : updatedFeatureRequirementList.feature,
             ideaRequirementData : updatedFeatureRequirementList.requirements,
+            buttonState : buttonState,
           },
           isLoggedIn,
           conversationId

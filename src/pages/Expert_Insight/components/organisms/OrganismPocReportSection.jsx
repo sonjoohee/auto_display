@@ -52,9 +52,11 @@ import {
   POC_DETAIL_REPORT_DATA,
   POC_PERSONA_LIST,
   RECOMMENDED_TARGET_DATA,
+  BUTTON_STATE,
 } from "../../../AtomStates";
 
-const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
+const OrganismPocReportSection = ({ conversationId, expertIndex }) => {
+  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
   const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
@@ -303,6 +305,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               ideaList : ideaList,
               ideaGroup : ideaGroup,
               ideaPriority : ideaPriority,
+              buttonState : buttonState,
             },
             isLoggedIn,
             conversationId
@@ -403,6 +406,7 @@ const Section = ({
   index,
   conversationId,
 }) => {
+  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
   const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
@@ -805,6 +809,7 @@ const Section = ({
           ideaList : ideaList,
           ideaGroup : ideaGroup,
           ideaPriority : ideaPriority,
+          buttonState : buttonState,
         },
         isLoggedIn,
         conversationId
@@ -963,6 +968,7 @@ const Section = ({
           ideaList : ideaList,
           ideaGroup : ideaGroup,
           ideaPriority : ideaPriority,
+          buttonState : buttonState,
         },
         isLoggedIn,
         conversationId
@@ -1762,7 +1768,7 @@ const Section = ({
   );
 };
 
-export default OrganismStrategyReportSection;
+export default OrganismPocReportSection;
 const SeparateSection = styled.div`
   position: relative;
   display: flex;
