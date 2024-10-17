@@ -44,9 +44,26 @@ import {
   SELECTED_POC_OPTIONS,
   SELCTED_POC_TARGET,
   RECOMMENDED_TARGET_DATA,
-  POC_DETAIL_REPORT_ATOM,
+  POC_DETAIL_REPORT_DATA,
   POC_PERSONA_LIST,
   IS_MOBILE,
+  IDEA_FEATURE_DATA,
+  IDEA_REQUIREMENT_DATA,
+  IDEA_LIST,
+  IDEA_GROUP,
+  IDEA_PRIORITY,
+  IS_EDITING_IDEA_FEATURE,
+  IS_EDITING_IDEA_CUSTOMER,
+  ADDING_IDEA_FEATURE,
+  ACTIVE_IDEA_FEATURE_INDEX,
+  ADD_CONTENT_IDEA_FEATURE,
+  EDITED_IDEA_FEATURE_TITLE,
+  ADDING_IDEA_CUSTOMER,
+  ACTIVE_IDEA_CUSTOMER_INDEX,
+  ADD_CONTENT_IDEA_CUSTOMER,
+  EDITED_IDEA_CUSTOMER_TITLE,
+  IDEA_FEATURE_DATA_TEMP,
+  IDEA_REQUIREMENT_DATA_TEMP,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -55,13 +72,30 @@ import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/Molec
 import OrganismReportPopup from "./OrganismReportPopup"; // 팝업 컴포넌트 임포트
 
 const OrganismLeftSideBar = () => {
+  const [isEditingIdeaFeature, setIsEditingIdeaFeature] = useAtom(IS_EDITING_IDEA_FEATURE);
+  const [isEditingIdeaCustomer, setIsEditingIdeaCustomer] = useAtom(IS_EDITING_IDEA_CUSTOMER);
+  const [addingIdeaFeature, setAddingIdeaFeature] = useAtom(ADDING_IDEA_FEATURE);
+  const [activeIdeaFeatureIndex, setActiveIdeaFeatureIndex] = useAtom(ACTIVE_IDEA_FEATURE_INDEX);
+  const [addContentIdeaFeature, setAddContentIdeaFeature] = useAtom(ADD_CONTENT_IDEA_FEATURE);
+  const [editedIdeaFeatureTitle, setEditedIdeaFeatureTitle] = useAtom(EDITED_IDEA_FEATURE_TITLE);
+  const [addingIdeaCustomer, setAddingIdeaCustomer] = useAtom(ADDING_IDEA_CUSTOMER);
+  const [activeIdeaCustomerIndex, setActiveIdeaCustomerIndex] = useAtom(ACTIVE_IDEA_CUSTOMER_INDEX);
+  const [addContentIdeaCustomer, setAddContentIdeaCustomer] = useAtom(ADD_CONTENT_IDEA_CUSTOMER);
+  const [editedIdeaCustomerTitle, setEditedIdeaCustomerTitle] = useAtom(EDITED_IDEA_CUSTOMER_TITLE);
   const [isMobile] = useAtom(IS_MOBILE);
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
-  const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_ATOM);
+  const [pocDetailReportData, setPocDetailReportData] = useAtom(POC_DETAIL_REPORT_DATA);
   const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
   const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
+  const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
+  const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
+  const [ideaFeatureDataTemp, setIdeaFeatureDataTemp] = useAtom(IDEA_FEATURE_DATA_TEMP);
+  const [ideaRequirementDataTemp, setIdeaRequirementDataTemp] = useAtom(IDEA_REQUIREMENT_DATA_TEMP);
+  const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
+  const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
+  const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
   const [password, setPassword] = useAtom(passwordAtom);
   const [newPassword, setNewPassword] = useAtom(newPasswordAtom);
   const [rePassword, setRePassword] = useAtom(rePasswordAtom);
@@ -70,7 +104,6 @@ const OrganismLeftSideBar = () => {
   const [bizName] = useAtom(INPUT_BUSINESS_INFO);
   const [isExpertInsightAccessible, setIsExpertInsightAccessible] = useAtom(IS_EXPERT_INSIGHT_ACCESSIBLE);
 
-  // const [savedReports] = useAtom(SAVED_REPORTS);
   const [selectedReport, setSelectedReport] = useState(null); // 선택된 보고서 상태 관리
   const [conversations, setConversations] = useState([]); // 저장된 대화 상태 관리
   const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 관리
@@ -551,7 +584,27 @@ useEffect(() => {
       setSelectedPocTarget(chatData.selectedPocTarget || {});
       setRecommendedTargetData(chatData.recommendedTargetData || {});
       setPocPersonaList(chatData.pocPersonaList || []);
-      
+      setPocDetailReportData(chatData.pocDetailReportData || {});
+
+      setIsEditingIdeaFeature(false);
+      setIsEditingIdeaCustomer(false);
+      setAddingIdeaFeature(false);
+      setActiveIdeaFeatureIndex(0);
+      setAddContentIdeaFeature("");
+      setEditedIdeaFeatureTitle("");
+      setAddingIdeaCustomer(false);
+      setActiveIdeaCustomerIndex(0);
+      setAddContentIdeaCustomer("");
+      setEditedIdeaCustomerTitle("");
+
+      setIdeaFeatureData(chatData.ideaFeatureData || []);
+      setIdeaRequirementData(chatData.ideaRequirementData || []);
+      setIdeaFeatureDataTemp(chatData.ideaFeatureData || []);
+      setIdeaRequirementDataTemp(chatData.ideaRequirementData || []);
+      // setIdeaList(chatData.ideaList || []);
+      // setIdeaGroup(chatData.ideaGroup || {});
+      // setIdeaPriority(chatData.ideaPriority || []);
+
       // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
       // set어프로치패스(2)
       setApproachPath(2);
@@ -769,8 +822,26 @@ useEffect(() => {
     setSelectedPocOptions([]);
     setSelectedPocTarget({});
     setRecommendedTargetData({});
-    setpocDetailReportData({});
+    setPocDetailReportData({});
     setPocPersonaList([]);
+
+    setIsEditingIdeaFeature(false);
+    setIsEditingIdeaCustomer(false);
+    setAddingIdeaFeature(false);
+    setActiveIdeaFeatureIndex(0);
+    setAddContentIdeaFeature("");
+    setEditedIdeaFeatureTitle("");
+    setAddingIdeaCustomer(false);
+    setActiveIdeaCustomerIndex(0);
+    setAddContentIdeaCustomer("");
+    setEditedIdeaCustomerTitle("");
+    setIdeaFeatureData([]);
+    setIdeaRequirementData([]);
+    setIdeaFeatureDataTemp([]);
+    setIdeaRequirementDataTemp([]);
+    // setIdeaList([]);
+    // setIdeaGroup({});
+    // setIdeaPriority([]);
   };
 
   const handleLogoClick = () => {
@@ -805,8 +876,26 @@ useEffect(() => {
     setSelectedPocOptions([]);
     setSelectedPocTarget({});
     setRecommendedTargetData({});
-    setpocDetailReportData({});
+    setPocDetailReportData({});
     setPocPersonaList([]);
+    
+    setIsEditingIdeaFeature(false);
+    setIsEditingIdeaCustomer(false);
+    setAddingIdeaFeature(false);
+    setActiveIdeaFeatureIndex(0);
+    setAddContentIdeaFeature("");
+    setEditedIdeaFeatureTitle("");
+    setAddingIdeaCustomer(false);
+    setActiveIdeaCustomerIndex(0);
+    setAddContentIdeaCustomer("");
+    setEditedIdeaCustomerTitle("");
+    setIdeaFeatureData([]);
+    setIdeaRequirementData([]);
+    setIdeaFeatureDataTemp([]);
+    setIdeaRequirementDataTemp([]);
+    // setIdeaList([]);
+    // setIdeaGroup({});
+    // setIdeaPriority([]);
   };
   return (
     <>

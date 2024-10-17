@@ -24,11 +24,12 @@ import {
   CUSTOMER_ADDITION_BUTTON_STATE,
   SELECTED_EXPERT_LIST,
   SELCTED_POC_TARGET,
+  TARGET_REPORT_BUTTON_STATE,
+  POC_DETAIL_REPORT_DATA,
+  POC_PERSONA_LIST,
+  IDEA_CUSTOMER_BUTTON_STATE,
   IDEA_FEATURE_DATA,
   IDEA_REQUIREMENT_DATA,
-  IDEA_LIST,
-  IDEA_GROUP,
-  IDEA_PRIORITY,
 } from "../../../AtomStates";
 
 import {
@@ -37,12 +38,9 @@ import {
 
 import { palette } from "../../../../assets/styles/Palette";
 
-const MoleculeCheckReportRightAway = () => {
-  const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
-  const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
-  const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
-  const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
-  const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
+const MoleculeIdeaCustomerButton = () => {
+  const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
+  const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_DATA);
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
   const [isLoggedIn] = useAtom(isLoggedInAtom);
@@ -70,27 +68,36 @@ const MoleculeCheckReportRightAway = () => {
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
+  const [ideaCustomerButtonState, setIdeaCustomerButtonState] = useAtom(IDEA_CUSTOMER_BUTTON_STATE);
+  const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
+  const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
 
   const handleClick = async () => {
     if (isLoading) return;
     const updatedConversation = [...conversation];
 
     if (updatedConversation.length > 0 &&
-      updatedConversation[updatedConversation.length - 1].type === "pocPlanButton"
+        updatedConversation[updatedConversation.length - 1].type === "ideaCustomerButton"
     ) {
       updatedConversation.pop();
     }
 
     updatedConversation.push(
       {
+        type: "user",
+        message: "고객 니즈를 도출해주세요",
+      },
+      {
         type: "system",
-        message: "아래 항목에서 적합한 내용을 선택해주시면, 보다 구체적인 PoC 계획을 세울 수 있을 것 같습니다",
+        message: "해당 아이템과 관련된 고객 요구 사항을 살펴보았습니다.",
         expertIndex: selectedExpertIndex,
       },
       {
-        type: `pocOption`,
-      }
+        type: 'ideaCustomer',
+      },
     );
+
+    setIdeaCustomerButtonState(1);
     setConversation(updatedConversation);
     setConversationStage(3);
     setApproachPath(3);
@@ -110,12 +117,11 @@ const MoleculeCheckReportRightAway = () => {
         customerAdditionalReportData: customerAdditionalReportData,
         timestamp: Date.now(),
         expert_index: selectedExpertIndex,
+        pocPersonaList: pocPersonaList,
         selectedPocTarget: selectedPocTarget,
+        pocDetailReportData : pocDetailReportData,
         ideaFeatureData : ideaFeatureData,
         ideaRequirementData : ideaRequirementData,
-        ideaList : ideaList,
-        ideaGroup : ideaGroup,
-        ideaPriority : ideaPriority,
       },
       isLoggedIn,
       conversationId
@@ -124,13 +130,13 @@ const MoleculeCheckReportRightAway = () => {
   return (
     <>
       <ButtonWrap>
-        <button onClick={handleClick}>PoC 계획 세우기</button>
+        <button onClick={handleClick}>고객 요구사항 확인하기</button>
       </ButtonWrap>
     </>
   );
 };
 
-export default MoleculeCheckReportRightAway;
+export default MoleculeIdeaCustomerButton;
 
 const ButtonWrap = styled.div`
   display: flex;
@@ -142,7 +148,7 @@ const ButtonWrap = styled.div`
     display: flex;
     align-items: center;
     gap: 12px;
-    font-family: 'Pretendard', 'Poppins';
+    font-family: "Pretendard";
     font-size: 0.875rem;
     color: ${palette.darkGray};
     border: 0;

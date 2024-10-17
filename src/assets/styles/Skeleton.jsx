@@ -82,3 +82,7 @@ export const SkeletonLine = styled.div`
     }
   }
 `;
+
+export const Spacing = styled.div`
+  margin-bottom: 40px; /* 제목과 본문 사이의 간격 */
+`;

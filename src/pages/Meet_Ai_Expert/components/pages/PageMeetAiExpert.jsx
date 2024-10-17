@@ -13,19 +13,15 @@ import {
   APPROACH_PATH,
   ANALYSIS_BUTTON_STATE,
   isLoggedInAtom,
-  SAVED_REPORTS,
-  USER_NAME,
-  USER_EMAIL,
   TITLE_OF_BUSINESS_INFORMATION,
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
   MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
   STRATEGY_REPORT_DATA,
   SELECTED_ADDITIONAL_KEYWORD,
-  ADDITIONAL_REPORT_DATA, // Import the new list-based atom
+  ADDITIONAL_REPORT_DATA,
   CONVERSATION_STAGE,
   CONVERSATION,
-  BUTTON_STATE,
   CONVERSATION_ID,
   SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
@@ -35,18 +31,32 @@ import {
   SELECTED_POC_OPTIONS,
   SELCTED_POC_TARGET,
   RECOMMENDED_TARGET_DATA,
-  POC_DETAIL_REPORT_ATOM,
+  POC_DETAIL_REPORT_DATA,
   POC_PERSONA_LIST,
   EXPERT_DETAIL_DATA,
   IS_MOBILE,
+  IDEA_FEATURE_DATA,
+  IDEA_REQUIREMENT_DATA,
+  IDEA_LIST,
+  IDEA_GROUP,
+  IDEA_PRIORITY,
+  IS_EDITING_IDEA_FEATURE,
+  IS_EDITING_IDEA_CUSTOMER,
+  ADDING_IDEA_FEATURE,
+  ACTIVE_IDEA_FEATURE_INDEX,
+  ADD_CONTENT_IDEA_FEATURE,
+  EDITED_IDEA_FEATURE_TITLE,
+  ADDING_IDEA_CUSTOMER,
+  ACTIVE_IDEA_CUSTOMER_INDEX,
+  ADD_CONTENT_IDEA_CUSTOMER,
+  EDITED_IDEA_CUSTOMER_TITLE,
+  IDEA_FEATURE_DATA_TEMP,
+  IDEA_REQUIREMENT_DATA_TEMP,
 } from "../../../AtomStates";
-
-import { Link } from "react-router-dom";
 
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 
-import OrganismHeader from "../../../organisms/OrganismHeader";
 import OrganismLeftSideBar from "../../../Expert_Insight/components/organisms/OrganismLeftSideBar";
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
 import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/MoleculeAccountPopup"; // 계정설정 팝업 컴포넌트 임포트
@@ -54,6 +64,23 @@ import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/Molec
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
 
 const PageMeetAiExpert = () => {
+  const [isEditingIdeaFeature, setIsEditingIdeaFeature] = useAtom(IS_EDITING_IDEA_FEATURE);
+  const [isEditingIdeaCustomer, setIsEditingIdeaCustomer] = useAtom(IS_EDITING_IDEA_CUSTOMER);
+  const [addingIdeaFeature, setAddingIdeaFeature] = useAtom(ADDING_IDEA_FEATURE);
+  const [activeIdeaFeatureIndex, setActiveIdeaFeatureIndex] = useAtom(ACTIVE_IDEA_FEATURE_INDEX);
+  const [addContentIdeaFeature, setAddContentIdeaFeature] = useAtom(ADD_CONTENT_IDEA_FEATURE);
+  const [editedIdeaFeatureTitle, setEditedIdeaFeatureTitle] = useAtom(EDITED_IDEA_FEATURE_TITLE);
+  const [addingIdeaCustomer, setAddingIdeaCustomer] = useAtom(ADDING_IDEA_CUSTOMER);
+  const [activeIdeaCustomerIndex, setActiveIdeaCustomerIndex] = useAtom(ACTIVE_IDEA_CUSTOMER_INDEX);
+  const [addContentIdeaCustomer, setAddContentIdeaCustomer] = useAtom(ADD_CONTENT_IDEA_CUSTOMER);
+  const [editedIdeaCustomerTitle, setEditedIdeaCustomerTitle] = useAtom(EDITED_IDEA_CUSTOMER_TITLE);
+  const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
+  const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
+  const [ideaFeatureDataTemp, setIdeaFeatureDataTemp] = useAtom(IDEA_FEATURE_DATA_TEMP);
+  const [ideaRequirementDataTemp, setIdeaRequirementDataTemp] = useAtom(IDEA_REQUIREMENT_DATA_TEMP);
+  const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
+  const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
+  const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
   const [isMobile, setIsMobile] = useAtom(IS_MOBILE);
   const location = useLocation();
   const navigate = useNavigate();
@@ -137,10 +164,9 @@ const PageMeetAiExpert = () => {
   const [isComingSoon, setIsComingSoon] = useState(false);
 
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
-  const [advise, setAdvise] = useState(""); // 새로운 advise 상태 추가
 
   const [pocDetailReportData, setpocDetailReportData] = useAtom(
-    POC_DETAIL_REPORT_ATOM
+    POC_DETAIL_REPORT_DATA
   );
 
   const closePopupRegex = () => {
@@ -213,6 +239,24 @@ const PageMeetAiExpert = () => {
     setpocDetailReportData({});
     setPocPersonaList([]);
     setInputBusinessInfo(savedInputBusinessInfo);
+
+    setIsEditingIdeaFeature(false);
+    setIsEditingIdeaCustomer(false);
+    setAddingIdeaFeature(false);
+    setActiveIdeaFeatureIndex(0);
+    setAddContentIdeaFeature("");
+    setEditedIdeaFeatureTitle("");
+    setAddingIdeaCustomer(false);
+    setActiveIdeaCustomerIndex(0);
+    setAddContentIdeaCustomer("");
+    setEditedIdeaCustomerTitle("");
+    setIdeaFeatureData([]);
+    setIdeaRequirementData([]);
+    setIdeaFeatureDataTemp([]);
+    setIdeaRequirementDataTemp([]);
+    // setIdeaList([]);
+    // setIdeaGroup({});
+    // setIdeaPriority([]);
   }, [location]);
 
   useEffect(() => {
@@ -328,6 +372,8 @@ const PageMeetAiExpert = () => {
         return "반갑습니다! 저는 고객 인사이트 전문가 박서연입니다. 😊 여러분의 비즈니스가 목표 고객에게 잘 다가갈 수 있도록 돕겠습니다.\n아이디어나 비즈니스 아이템을 작성해 주세요. 분석 후, 타겟 고객을 정의하고 세분화 방법에 대한 리포트를 제공해 드리겠습니다!";
       case "4":
         return "안녕하세요! 저는 PoC 설계 전문가 장석훈입니다. 😊 여러분의 사업 목표에 맞춘 가설 설정과 PoC 전략을 설계하고, 성공적인 검증 과정을 지원해드립니다. 맞춤형 PoC 설계를 위해 몇가지 질문에 응답 부탁드립니다!"
+      case "5":
+        return "안녕하세요. 저는 아이디어 디벨로퍼 OOO 입니다.\n혼자 아이디어를 고민하다보면, 한정된 생각에 갇히기 쉽습니다. 제가 다각도로 사업 아이디어 발산을 돕고 우선순위 높은 아이디어를\n선별해드려요. 아이템에 대한 설명을 해주세요 📝"
       default:
         return "비즈니스(아이디어)를 입력해주세요.";
     }
@@ -346,6 +392,7 @@ const PageMeetAiExpert = () => {
         },
       ]);
 
+      setAnalysisButtonState(1);
       setIsExpertInsightAccessible(true);
       setApproachPath(1);
       setInputBusinessInfo(""); // 또는 null, undefined로 초기화
@@ -415,7 +462,6 @@ const PageMeetAiExpert = () => {
               <ExpertCard
                 PoC
                 onClick={() => {
-                  setAnalysisButtonState(1);
                   handledExpertSelect("4");
                 }}
               >
@@ -429,7 +475,6 @@ const PageMeetAiExpert = () => {
               <ExpertCard
                 Strategy
                 onClick={() => {
-                  setAnalysisButtonState(1);
                   handledExpertSelect("1");
                 }}
               >
@@ -443,7 +488,6 @@ const PageMeetAiExpert = () => {
               <ExpertCard
                 Marketing
                 onClick={() => {
-                  setAnalysisButtonState(1);
                   handledExpertSelect("2");
                 }}
               >
@@ -457,7 +501,6 @@ const PageMeetAiExpert = () => {
               <ExpertCard
                 Client
                 onClick={() => {
-                  setAnalysisButtonState(1);
                   handledExpertSelect("3");
                 }}
               >
@@ -471,7 +514,7 @@ const PageMeetAiExpert = () => {
               <ExpertCard
                 Idea
                 onClick={() => {
-                  setIsComingSoon(true);
+                  handledExpertSelect("5");
                 }}
               >
                 <strong>아이디어 디벨로퍼</strong>

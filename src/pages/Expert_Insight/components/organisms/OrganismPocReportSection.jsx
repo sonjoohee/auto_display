@@ -12,6 +12,11 @@ import {
   INPUT_BUSINESS_INFO,
   SELECTED_POC_OPTIONS,
   SELCTED_POC_TARGET,
+  IDEA_FEATURE_DATA,
+  IDEA_REQUIREMENT_DATA,
+  IDEA_LIST,
+  IDEA_GROUP,
+  IDEA_PRIORITY,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -44,12 +49,17 @@ import {
   CUSTOMER_ADDITIONAL_REPORT_DATA,
   IS_EDITING_NOW,
   CONVERSATION_STAGE,
-  POC_DETAIL_REPORT_ATOM,
+  POC_DETAIL_REPORT_DATA,
   POC_PERSONA_LIST,
   RECOMMENDED_TARGET_DATA,
 } from "../../../AtomStates";
 
 const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
+  const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
+  const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
+  const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
+  const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
+  const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [selectedPocOptions, setSelectedPocOptions] =
     useAtom(SELECTED_POC_OPTIONS);
@@ -288,6 +298,11 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               pocPersonaList: pocPersonaList,
               selectedPocTarget: selectedPocTarget,
               recommendedTargetData: recommendedTargetData,
+              ideaFeatureData : ideaFeatureData,
+              ideaRequirementData : ideaRequirementData,
+              ideaList : ideaList,
+              ideaGroup : ideaGroup,
+              ideaPriority : ideaPriority,
             },
             isLoggedIn,
             conversationId
@@ -388,10 +403,15 @@ const Section = ({
   index,
   conversationId,
 }) => {
+  const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
+  const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
+  const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
+  const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
+  const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   // 서브 타이틀이 있는 항목과 없는 항목을 분리
   const [pocDetailReportData, setpocDetailReportData] = useAtom(
-    POC_DETAIL_REPORT_ATOM
+    POC_DETAIL_REPORT_DATA
   );
   const subTitleItems = content.filter((item) => item.subTitle);
   const nonSubTitleItems = content.filter((item) => !item.subTitle);
@@ -780,6 +800,11 @@ const Section = ({
             ...pocDetailReportData,
             [`${expertIndex}-${index}`]: cleanedContent,
           },
+          ideaFeatureData : ideaFeatureData,
+          ideaRequirementData : ideaRequirementData,
+          ideaList : ideaList,
+          ideaGroup : ideaGroup,
+          ideaPriority : ideaPriority,
         },
         isLoggedIn,
         conversationId
@@ -933,6 +958,11 @@ const Section = ({
             ...pocDetailReportData,
             [`${expertIndex}-${index}`]: reportContent,
           },
+          ideaFeatureData : ideaFeatureData,
+          ideaRequirementData : ideaRequirementData,
+          ideaList : ideaList,
+          ideaGroup : ideaGroup,
+          ideaPriority : ideaPriority,
         },
         isLoggedIn,
         conversationId

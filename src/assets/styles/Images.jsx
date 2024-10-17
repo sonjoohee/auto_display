@@ -13,6 +13,8 @@ import Interview from "../images/Interview.svg";
 import Report from "../images/Report.svg";
 
 import IconDownload from "../images/iconDownload.svg";
+import IconDownload2 from "../images/iconDownload2.svg";
+import IconDownloadMiro from "../images/iconDownloadMiro.svg";
 
 import BtnFirst from "../images/btnFirst.svg";
 import BtnPrev from "../images/btnPrev.svg";
@@ -106,6 +108,8 @@ import ImgENG2 from "../images/ImgENG2.svg"
 
 import IconLightning from "../images/IconLightning.svg"
 
+import IconEdit3 from "../images/iconEdit3.svg"
+
 
 const images = {
   Logo,
@@ -123,6 +127,8 @@ const images = {
   Report,
 
   IconDownload,
+  IconDownload2,
+  IconDownloadMiro,
 
   BtnFirst,
   BtnPrev,
@@ -215,6 +221,8 @@ const images = {
   ImgENG2,
 
   IconLightning,
+
+  IconEdit3,
 }
 
 export default images;

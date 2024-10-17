@@ -1,5 +1,3 @@
-// C:\dev\Crowd_Insight-\src\pages\Expert_Insight\components\organisms\OrganismSearchBottomBar.jsx
-
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import images from "../../../../assets/styles/Images"; // Search.svg 이미지 import
@@ -10,9 +8,23 @@ import {
   IS_LOADING,
   CUSTOMER_ADDITION_BUTTON_STATE,
   CUSTOMER_ADDITION_QUESTION_INPUT,
+  CONVERSATION_STAGE,
+  CONVERSATION,
+  INPUT_BUSINESS_INFO,
+  SELECTED_ADDITIONAL_KEYWORD,
+  SELECTED_EXPERT_INDEX,
+  isLoggedInAtom,
+  CONVERSATION_ID,
 } from "../../../AtomStates";
 
-const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
+const OrganismSearchBottomBar = ({ isBlue }) => {
+  const [isLoggedIn] = useAtom(isLoggedInAtom);
+  const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
+  const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
+  const [conversation, setConversation] = useAtom(CONVERSATION);
+  const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
+  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
+  const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [customerAdditionButtonState, setCustomerAdditionButtonState] = useAtom(
     CUSTOMER_ADDITION_BUTTON_STATE
@@ -39,11 +51,21 @@ const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       e.preventDefault(); // 폼 제출 방지
-      handleSearch();
+      handleSearch(inputValue);
     }
   };
 
-  const handleSearch = () => {
+  const handleSearch = async (inputValue) => {
+    if (isLoggedIn) {
+      if (!conversationId) {
+        try {
+          return;
+        } catch (error) {
+          console.error("Failed to create conversation on server:", error);
+          return;
+        }
+      }
+    }
     if (isLoading) return;
 
     const regex = /^[가-힣a-zA-Z0-9\s.,'"?!()\-]*$/;
@@ -65,15 +87,54 @@ const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
       return;
     }
 
-    if (isBlue) {
-      setCustomerAdditionButtonState(1);
-      setCustomerAdditionQuestionInput(inputValue);
-    }
-    if (onSearch) {
-      onSearch(inputValue);
+    setInputValue("");
+  
+    const updatedConversation = [...conversation];
+  
+    if (conversationStage === 1) {
+      setInputBusinessInfo(inputValue);
+
+      updatedConversation.push(
+        { type: "user", message: inputValue },
+        {
+          type: "system",
+          message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻`,
+          expertIndex: selectedExpertIndex,
+        },
+        { type: "analysis" }
+      );
+
+      setConversationStage(2);
     }
 
-    setInputValue("");
+    else {
+      if (
+        (updatedConversation.length > 0 &&
+          updatedConversation[updatedConversation.length - 1].type ===
+            "keyword") ||
+        (updatedConversation.length > 0 &&
+          updatedConversation[updatedConversation.length - 1].type ===
+            "reportButton") ||
+        (updatedConversation.length > 0 &&
+          updatedConversation[updatedConversation.length - 1].type ===
+            "pocTargetButton")
+      ) {
+        updatedConversation.pop();
+      }
+  
+      updatedConversation.push(
+        {
+          type: "user",
+          message: inputValue,
+        },
+        {
+          type: `customerAddition`
+        }
+      );
+    }
+    setCustomerAdditionButtonState(1);
+    setCustomerAdditionQuestionInput(inputValue);
+    setConversation(updatedConversation);
   };
 
   return (
@@ -110,7 +171,7 @@ const OrganismSearchBottomBar = ({ onSearch, isBlue }) => {
 
           <button
             type="button"
-            onClick={() => handleSearch()}
+            onClick={() => handleSearch(inputValue)}
           >
             검색
           </button>

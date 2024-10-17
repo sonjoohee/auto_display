@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { nanoid } from "nanoid";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
-import axios from "axios";
 import { useAtom } from "jotai";
 import {
   SELECTED_EXPERT_INDEX,
@@ -15,15 +13,12 @@ import {
   APPROACH_PATH,
   STRATEGY_REPORT_DATA,
   SELECTED_ADDITIONAL_KEYWORD,
-  ADDITIONAL_REPORT_DATA, // Import the new list-based atom
+  ADDITIONAL_REPORT_DATA,
   CONVERSATION_STAGE,
   CONVERSATION,
-  BUTTON_STATE,
   isLoggedInAtom,
   CONVERSATION_ID,
-  ADDITIONAL_REPORT_COUNT,
   SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
-  CUSTOMER_ADDITION_BUTTON_STATE,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
   SELECTED_EXPERT_LIST,
   IS_LOADING,
@@ -32,14 +27,18 @@ import {
   SELECTED_POC_OPTIONS,
   SELCTED_POC_TARGET,
   RECOMMENDED_TARGET_DATA,
-  POC_DETAIL_REPORT_ATOM,
+  POC_DETAIL_REPORT_DATA,
   POC_PERSONA_LIST,
+  IDEA_FEATURE_DATA,
+  IDEA_REQUIREMENT_DATA,
+  IDEA_LIST,
+  IDEA_GROUP,
+  IDEA_PRIORITY,
+  IDEA_FEATURE_DATA_TEMP,
+  IDEA_REQUIREMENT_DATA_TEMP,
 } from "../../../AtomStates";
 
-import {
-  saveConversationToIndexedDB,
-  getConversationByIdFromIndexedDB,
-} from "../../../../utils/indexedDB";
+import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import { createChatOnServer } from "../../../../utils/indexedDB"; // 서버와 대화 ID 생성 함수
 
 import OrganismLeftSideBar from "../organisms/OrganismLeftSideBar";
@@ -61,6 +60,14 @@ import OrganismCustomerAdditionalReport from "../organisms/OrganismCustomerAddit
 import MoleculePersonaSelect from "../molecules/MoleculePersonaSelect";
 import MoleculeRecommendedTargetButton from "../molecules/MoleculeRecommendedTargetButton";
 import OrganismRecommendedTargetReport from "../organisms/OrganismRecommendedTargetReport";
+import MoleculeIdeaStartButton from "../molecules/MoleculeIdeaStartButton";
+import MoleculeIdeaCustomerButton from "../molecules/MoleculeIdeaCustomerButton";
+import MoleculeIdeaGenerateButton from "../molecules/MoleculeIdeaGenerateButton";
+import MoleculeIdeaPriorityButton from "../molecules/MoleculeIdeaPriorityButton";
+import OrganismIdeaFeature from "../organisms/OrganismIdeaFeature";
+import OrganismIdeaCustomer from "../organisms/OrganismIdeaCustomer";
+import OrganismIdeaList from "../organisms/OrganismIdeaList";
+import OrganismIdeaPriority from "../organisms/OrganismIdeaPriority";
 
 const PageExpertInsight = () => {
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
@@ -106,8 +113,6 @@ const PageExpertInsight = () => {
 
   const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA); // 변경된 부분
 
-  const [inputAdditionalQuestion, setInputAdditionalQuestion] = useState("");
-  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
   const [advise, setAdvise] = useState(""); // 새로운 advise 상태 추가
 
@@ -118,59 +123,18 @@ const PageExpertInsight = () => {
   const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
   const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
 
-  const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_ATOM);
+  const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_DATA);
+
+  const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
+  const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
+  const [ideaFeatureDataTemp, setIdeaFeatureDataTemp] = useAtom(IDEA_FEATURE_DATA_TEMP);
+  const [ideaRequirementDataTemp, setIdeaRequirementDataTemp] = useAtom(IDEA_REQUIREMENT_DATA_TEMP);
+  const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
+  const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
+  const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
   
   let additionalReportCount = 0;
   let customerAdditionalReportCount = 0;
-
-  const analysisReportData = {
-    title: titleOfBusinessInfo,
-    mainFeatures: mainFeaturesOfBusinessInformation,
-    mainCharacter: mainCharacteristicOfBusinessInformation,
-    mainCustomer: businessInformationTargetCustomer,
-  };
-
-  const saveConversation = async (updatedConversation, newConversationStage) => {
-    const existingReports = {
-      strategyReportData: strategyReportData, // 변경된 부분
-    };
-
-    // IndexedDB에서 기존 데이터를 가져옴
-    const existingData = await getConversationByIdFromIndexedDB(conversationId, isLoggedIn);
-
-    // 기존의 selectedAdditionalKeyword가 있으면 병합
-    const updatedSelectedAdditionalKeyword = existingData?.selectedAdditionalKeyword
-      ? [...existingData.selectedAdditionalKeyword, ...selectedAdditionalKeyword]
-      : selectedAdditionalKeyword;
-    const updatedSelectedCustomerAdditionalKeyword = existingData?.selectedCustumoerdditionalKeyword
-      ? [...existingData.selectedCustumoerdditionalKeyword, ...selectedCustomerAdditionalKeyword]
-      : selectedCustomerAdditionalKeyword;
-    saveConversationToIndexedDB(
-      {
-        id: conversationId,
-        conversation: updatedConversation,
-        conversationStage: newConversationStage,
-        inputBusinessInfo,
-        analysisReportData,
-        selectedAdditionalKeyword: updatedSelectedAdditionalKeyword,
-        additionalReportData, // Save the entire list of additional reports
-        additionalReportCount,
-        customerAdditionalReportCount,
-        customerAdditionalReportData,
-        selectedCustomerAdditionalKeyword: updatedSelectedCustomerAdditionalKeyword,
-        ...existingReports,
-        timestamp: Date.now(),
-        expert_index: selectedExpertIndex,
-        selectedPocOptions: selectedPocOptions,
-        pocPersonaList: pocPersonaList,
-        selectedPocTarget: selectedPocTarget,
-        recommendedTargetData: recommendedTargetData,
-        pocDetailReportData : pocDetailReportData,
-      },
-      isLoggedIn,
-      conversationId
-    );
-  };
 
   // useEffect(() => {
   //   // 접근 가능 여부를 확인하여 차단 로직 수행
@@ -236,6 +200,13 @@ const PageExpertInsight = () => {
             setRecommendedTargetData(savedConversation.recommendedTargetData || {});
             setpocDetailReportData(savedConversation.pocDetailReportData || {});
             setPocPersonaList(savedConversation.pocPersonaList || []);
+            setIdeaFeatureData(savedConversation.ideaFeatureData || []);
+            setIdeaRequirementData(savedConversation.ideaRequirementData || []);
+            setIdeaFeatureDataTemp(savedConversation.ideaFeatureData || []);
+            setIdeaRequirementDataTemp(savedConversation.ideaRequirementData || []);
+            // setIdeaList(savedConversation.ideaList || []);
+            // setIdeaGroup(savedConversation.ideaGroup || {});
+            // setIdeaPriority(savedConversation.ideaPriority || []);
           }
           
           setIsLoadingPage(false); // 로딩 완료
@@ -299,110 +270,6 @@ const PageExpertInsight = () => {
     loadConversation();
   }, [conversationId, isLoggedIn, navigate]);
 
-useEffect(() => {
-  if (
-    conversationId &&
-    conversationId.length >= 2 &&
-    selectedAdditionalKeyword &&
-    !isLoadingPage &&
-    approachPath !== 2
-  ) {
-    handleSearch(-1);
-  }
-}, [selectedAdditionalKeyword]);
-
-const handleSearch = async (inputValue) => {
-  if (isLoggedIn) {
-    if (!conversationId) {
-      try {
-        return;
-      } catch (error) {
-        console.error("Failed to create conversation on server:", error);
-        return;
-      }
-    }
-  }
-
-  const updatedConversation = [...conversation];
-
-  // 사용자가 입력한 경우에만 inputBusinessInfo를 업데이트
-  if (conversationStage === 1 && inputValue !== -1) {
-    setInputBusinessInfo(inputValue);
-    updatedConversation.push({ type: "user", message: inputValue });
-  }
-
-  let newConversationStage = conversationStage;
-
-  if (conversationStage === 1) {
-    if (inputBusinessInfo || inputValue !== -1) {
-      const businessInfo = inputBusinessInfo || inputValue;
-      updatedConversation.push(
-        {
-          type: "system",
-          message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻`,
-          expertIndex: selectedExpertIndex,
-        },
-        { type: "analysis", businessInfo }
-      );
-      newConversationStage = 2;
-    }
-  } else if (conversationStage > 1 && inputValue !== -1) {
-    if (
-      (updatedConversation.length > 0 &&
-        updatedConversation[updatedConversation.length - 1].type ===
-          "keyword") ||
-      (updatedConversation.length > 0 &&
-        updatedConversation[updatedConversation.length - 1].type ===
-          "reportButton") ||
-      (updatedConversation.length > 0 &&
-        updatedConversation[updatedConversation.length - 1].type ===
-          "pocTargetButton")
-    ) {
-      updatedConversation.pop();
-    }
-
-    updatedConversation.push(
-      {
-        type: "user",
-        message: inputValue,
-      },
-      {
-        type: `customerAddition`,
-        addition_index: customerAdditionalReportCount,
-      }
-    );
-  } else if (conversationStage === 3) {
-      if (
-        (updatedConversation.length > 0 &&
-          updatedConversation[updatedConversation.length - 1].type ===
-            "keyword") ||
-        (updatedConversation.length > 0 &&
-          updatedConversation[updatedConversation.length - 1].type ===
-            "reportButton") ||
-        (updatedConversation.length > 0 &&
-          updatedConversation[updatedConversation.length - 1].type ===
-            "pocTargetButton")
-      ) {
-        updatedConversation.pop();
-      }
-
-      updatedConversation.push(
-        {
-          type: "user",
-          message: `제 프로젝트와 관련된 "${
-            selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]
-          }"를 요청드려요`,
-        },
-        { type: `addition`, addition_index: additionalReportCount }
-      );
-  }
-  
-  setConversation(updatedConversation);
-  setConversationStage(newConversationStage);
-  saveConversation(updatedConversation, newConversationStage);
-  setIsLoadingPage(false); // 로딩 완료
-};
-
 // 스크롤
 const [isScrolled, setIsScrolled] = useState(false);
 useEffect(() => {
@@ -448,7 +315,30 @@ if (isLoadingPage) {
                       expertIndex={expertIndex}
                     />
                   );
-                } else if (item.type.startsWith("poc_")) {
+                } else if (item.type === "addition") {
+                  const currentAdditionalReportCount = additionalReportCount++;
+                  return (
+                    <OrganismAdditionalReport
+                      additionalReportCount={currentAdditionalReportCount}
+                      conversationId={conversationId}
+                    />
+                  );
+                } else if (item.type === "customerAddition") {
+                  const currentCustomerAdditionalReportCount = customerAdditionalReportCount++;
+                  return (
+                    <OrganismCustomerAdditionalReport
+                      customerAdditionalReportCount={currentCustomerAdditionalReportCount}
+                      conversationId={conversationId}
+                    />
+                  );
+                } else if (item.type === "keyword") {
+                  return <MoleculeAdditionalKeyword />;
+                } else if (item.type === "reportButton") {
+                  return <MoleculeCheckReportRightAway />;
+                } 
+                
+                /* PoC */
+                else if (item.type.startsWith("poc_")) {
                   const expertIndex = item.type.split("_")[1];
                   return (
                     <>
@@ -470,26 +360,6 @@ if (isLoadingPage) {
                         />
                       </>
                     );
-                } else if (item.type === "addition") {
-                  const currentAdditionalReportCount = additionalReportCount++;
-                  return (
-                    <OrganismAdditionalReport
-                      additionalReportCount={currentAdditionalReportCount}
-                      conversationId={conversationId}
-                    />
-                  );
-                } else if (item.type === "customerAddition") {
-                  const currentCustomerAdditionalReportCount = customerAdditionalReportCount++;
-                  return (
-                    <OrganismCustomerAdditionalReport
-                      customerAdditionalReportCount={currentCustomerAdditionalReportCount}
-                      conversationId={conversationId}
-                    />
-                  );
-                } else if (item.type === "keyword") {
-                  return <MoleculeAdditionalKeyword />;
-                } else if (item.type === "reportButton") {
-                  return <MoleculeCheckReportRightAway />;
                 } else if (item.type === "pocPlanButton") {
                   return <MoleculeCheckPocRightAway />;
                 } else if (item.type === "pocTargetButton") {
@@ -499,6 +369,26 @@ if (isLoadingPage) {
                 } else if (item.type === "pocPersona") {
                   return <MoleculePersonaSelect conversationId={conversationId}/>;
                 }
+                
+                /* 아이디어 디벨로퍼 */
+                else if (item.type === "ideaStartButton") {
+                  return <MoleculeIdeaStartButton />;
+                } else if (item.type === "ideaCustomerButton") {
+                  return <MoleculeIdeaCustomerButton />;
+                } else if (item.type === "ideaGenerateButton") {
+                  return <MoleculeIdeaGenerateButton />;
+                } else if (item.type === "ideaPriorityButton") {
+                  return <MoleculeIdeaPriorityButton />;
+                } else if (item.type === "ideaFeature") {
+                  return <OrganismIdeaFeature />;
+                } else if (item.type === "ideaCustomer") {
+                  return <OrganismIdeaCustomer />;
+                } else if (item.type === "ideaList") {
+                  return <OrganismIdeaList />;
+                } else if (item.type === "ideaPriority") {
+                  return <OrganismIdeaPriority />;
+                }
+                
                 return null;
               })}
 
@@ -556,12 +446,12 @@ if (isLoadingPage) {
             </ChatWrap>
 
             {conversationStage === 1 ? (
-              <OrganismSearchBottomBar onSearch={handleSearch} isBlue={false} />
+              <OrganismSearchBottomBar isBlue={false} />
             ) : (
               selectedExpertIndex === "4" ? 
-                Object.keys(recommendedTargetData).length !== 0 && <OrganismSearchBottomBar onSearch={handleSearch} isBlue={true} /> // 4번 전문가 보고서 생성 시 활성화 
+                Object.keys(recommendedTargetData).length !== 0 && <OrganismSearchBottomBar isBlue={true} /> // 4번 전문가 보고서 생성 시 활성화 
                 : 
-                <OrganismSearchBottomBar onSearch={handleSearch} isBlue={true} />
+                <OrganismSearchBottomBar isBlue={true} />
             )}
           </div>
 
