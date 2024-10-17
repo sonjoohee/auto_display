@@ -34,6 +34,8 @@ import {
   IDEA_LIST,
   IDEA_GROUP,
   IDEA_PRIORITY,
+  IDEA_FEATURE_DATA_TEMP,
+  IDEA_REQUIREMENT_DATA_TEMP,
 } from "../../../AtomStates";
 
 import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
@@ -125,6 +127,8 @@ const PageExpertInsight = () => {
 
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
   const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
+  const [ideaFeatureDataTemp, setIdeaFeatureDataTemp] = useAtom(IDEA_FEATURE_DATA_TEMP);
+  const [ideaRequirementDataTemp, setIdeaRequirementDataTemp] = useAtom(IDEA_REQUIREMENT_DATA_TEMP);
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
@@ -196,8 +200,10 @@ const PageExpertInsight = () => {
             setRecommendedTargetData(savedConversation.recommendedTargetData || {});
             setpocDetailReportData(savedConversation.pocDetailReportData || {});
             setPocPersonaList(savedConversation.pocPersonaList || []);
-            // setIdeaFeatureData(savedConversation.ideaFeatureData || []);
-            // setIdeaRequirementData(savedConversation.ideaRequirementData || []);
+            setIdeaFeatureData(savedConversation.ideaFeatureData || []);
+            setIdeaRequirementData(savedConversation.ideaRequirementData || []);
+            setIdeaFeatureDataTemp(savedConversation.ideaFeatureData || []);
+            setIdeaRequirementDataTemp(savedConversation.ideaRequirementData || []);
             // setIdeaList(savedConversation.ideaList || []);
             // setIdeaGroup(savedConversation.ideaGroup || {});
             // setIdeaPriority(savedConversation.ideaPriority || []);

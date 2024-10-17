@@ -113,10 +113,6 @@ const OrganismIdeaFeature = () => {
   const [deleteIndex, setDeleteIndex] = useState(null);
   const [isPopupOpenDelete, setIsPopupOpenDelete] = useState(false);
 
-  useEffect(() => {
-    setEditedIdeaFeatureTitle(ideaFeatureData[0].title);
-  }, []);
-
   const togglePopupDelete = () => {
     setIsPopupOpenDelete(!isPopupOpenDelete);
   };
@@ -152,12 +148,11 @@ const OrganismIdeaFeature = () => {
       setActiveIdeaFeatureIndex(index);
       setEditedIdeaFeatureTitle(title);
       setAddingIdeaFeature(false);
-      // setAddContentIdeaFeature("");
     }
   };
 
   const handleTitleChange = (index) => {
-    const updatedFeatures = [...ideaFeatureData];
+    const updatedFeatures = JSON.parse(JSON.stringify(ideaFeatureData)); // 깊은 복사
     updatedFeatures[index].title = editedIdeaFeatureTitle;
     setIdeaFeatureData(updatedFeatures);
     setActiveIdeaFeatureIndex(null);
@@ -262,55 +257,64 @@ const OrganismIdeaFeature = () => {
         setIsLoadingIdeaFeature(true);
         setIdeaFeatureButtonState(0);
 
-      //   const data = {
-      //     expert_id: "1",
-      //     business_info: titleOfBusinessInfo,
-      //     business_analysis_data: {
-      //       명칭: titleOfBusinessInfo,
-      //       주요_목적_및_특징: mainFeaturesOfBusinessInformation,
-      //       주요기능: mainCharacteristicOfBusinessInformation,
-      //       목표고객: businessInformationTargetCustomer,
-      //     },
-      //     tabs: [],
-      //     page_index: 1
-      // };
+        const data = {
+          expert_id: "1",
+          business_info: titleOfBusinessInfo,
+          business_analysis_data: {
+            명칭: titleOfBusinessInfo,
+            주요_목적_및_특징: mainFeaturesOfBusinessInformation,
+            주요기능: mainCharacteristicOfBusinessInformation,
+            목표고객: businessInformationTargetCustomer,
+          },
+          tabs: [],
+          page_index: 1
+      };
 
-      //   let response = await axios.post(
-      //     "https://1900-58-72-4-187.ngrok-free.app/ix_generate_idea_feature_list",
-      //     data,
-      //     axiosConfig
-      //   );
+        let response = await axios.post(
+          "https://wishresearch.kr/panels/idea_feature_list",
+          data,
+          axiosConfig
+        );
 
-      //   let updatedFeatureRequirementList = response.data.feature_requirements_list;
+        let retryCount = 0;
+        const maxRetries = 10;
 
-        // setIdeaFeatureRequirementList(updatedFeatureRequirementList.feature);
-        // setIdeaRequirementList(updatedFeatureRequirementList.requirement);
-        // setIdeaFeatureDataTemp(updatedFeatureRequirementList.feature);
-        // setIdeaRequirementDataTemp(updatedFeatureRequirementList.requirement);
-        // setEditedIdeaFeatureTitle(updatedFeatureRequirementList.feature[0].title);
+        while (retryCount < maxRetries && (
+          !response || !response.data || typeof response.data !== "object" ||
+          !response.data.hasOwnProperty("feature_requirements_list") ||
+          !response.data.feature_requirements_list.hasOwnProperty("feature") ||
+          !response.data.feature_requirements_list.hasOwnProperty("requirements")) ||
+          !Array.isArray(response.data.feature_requirements_list.feature) ||
+          response.data.feature_requirements_list.feature.some(item => 
+            !item.hasOwnProperty("title") || 
+            !item.hasOwnProperty("text")
+          ) ||
+          !Array.isArray(response.data.feature_requirements_list.requirements) ||
+          response.data.feature_requirements_list.requirements.some(item => 
+            !item.hasOwnProperty("title") || 
+            !item.hasOwnProperty("text")
+          )
+        ) {
+          response = await axios.post(
+            "https://wishresearch.kr/panels/idea_feature_list",
+            data,
+            axiosConfig
+          );
+          retryCount++;
+        }
+        if (retryCount === maxRetries) {
+          console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+          // 에러 처리 로직 추가
+          throw new Error("Maximum retry attempts reached. Empty response persists.");
+        }
 
-        // let retryCount = 0;
-        // const maxRetries = 10;
+        let updatedFeatureRequirementList = response.data.feature_requirements_list;
 
-        // while ((retryCount < maxRetries &&
-        //   !Array.isArray(updatedPersonaList) ||
-        //   updatedPersonaList.length !== 5 ||
-        //   !updatedPersonaList[0].hasOwnProperty("persona_1")
-        // )) {
-        //   response = await axios.post(
-        //     "https://wishresearch.kr/panels/persona_list",
-        //     data,
-        //     axiosConfig
-        //   );
-        //   retryCount++;
-
-        //   updatedPersonaList = response.data.persona_list;
-        // }
-        // if (retryCount === maxRetries) {
-        //   console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
-        //   // 에러 처리 로직 추가
-        //   throw new Error("Maximum retry attempts reached. Empty response persists.");
-        // }
+        setIdeaFeatureData(updatedFeatureRequirementList.feature);
+        setIdeaRequirementData(updatedFeatureRequirementList.requirements);
+        setIdeaFeatureDataTemp(updatedFeatureRequirementList.feature);
+        setIdeaRequirementDataTemp(updatedFeatureRequirementList.requirements);
+        setEditedIdeaFeatureTitle(updatedFeatureRequirementList.feature[0].title);
 
         setIsLoading(false);
         setIsLoadingIdeaFeature(false);
@@ -348,8 +352,8 @@ const OrganismIdeaFeature = () => {
             selectedPocTarget: selectedPocTarget,
             recommendedTargetData: recommendedTargetData,
             pocDetailReportData : pocDetailReportData,
-            ideaFeatureData : ideaFeatureData,
-            ideaRequirementData : ideaRequirementData,
+            ideaFeatureData : updatedFeatureRequirementList.feature,
+            ideaRequirementData : updatedFeatureRequirementList.requirements,
           },
           isLoggedIn,
           conversationId
