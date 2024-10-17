@@ -113,6 +113,7 @@ const OrganismIdeaList = () => {
       "Content-Type": "application/json",
     },
     withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
+  }
 
   const handleDownload = () => {
     // 데이터 준비
