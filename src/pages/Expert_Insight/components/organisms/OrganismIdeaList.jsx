@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import axios from "axios";
+import * as XLSX from 'xlsx';
 import { useAtom } from "jotai";
 import {
   EXPERT_BUTTON_STATE,
@@ -102,7 +103,58 @@ const OrganismIdeaList = ({ conversationId }) => {
   const togglePopupCancel = () => {
     setIsPopupOpenCancel(!isPopupOpenCancel);
   };
-  
+  const handleDownload = () => {
+    // 데이터 준비
+    const requirements = [...new Set(ideaList.map(item => item.report.customer_requirement))];
+    const features = [...new Set(ideaList.flatMap(item => item.report.ideas.map(idea => idea.feature)))];
+    
+    // 2D 배열 생성 (엑셀 시트 데이터)
+    const data = [
+      ['', ...features], // 첫 번째 행: 빈 셀 + Feature 목록
+      ...requirements.map(req => [req]) // 각 행의 첫 번째 열: Customer Requirement
+    ];
+
+    // 데이터 채우기
+    requirements.forEach((req, reqIndex) => {
+      features.forEach((feat, featIndex) => {
+        const ideas = ideaList
+          .find(item => item.report.customer_requirement === req)?.report.ideas
+          .find(idea => idea.feature === feat)?.ideas || [];
+        
+        const cellContent = ideas.map(idea => `${idea.name}: ${idea.description}`).join('\n\n');
+        data[reqIndex + 1][featIndex + 1] = cellContent;
+      });
+    });
+
+    // 워크북 생성
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(data);
+
+    // 셀 스타일 설정
+    const range = XLSX.utils.decode_range(ws['!ref']);
+    for (let R = range.s.r; R <= range.e.r; ++R) {
+      for (let C = range.s.c; C <= range.e.c; ++C) {
+        const cell_address = {c:C, r:R};
+        const cell_ref = XLSX.utils.encode_cell(cell_address);
+        if (!ws[cell_ref]) continue;
+        ws[cell_ref].s = {
+          alignment: {wrapText: true, vertical: 'top'},
+          font: {name: 'Arial', sz: 11}
+        };
+      }
+    }
+
+    // 열 너비 설정
+    const colWidths = [30, ...features.map(() => 30)];
+    ws['!cols'] = colWidths.map(wch => ({wch}));
+
+    // 워크시트를 워크북에 추가
+    XLSX.utils.book_append_sheet(wb, ws, "Ideas");
+
+    // 엑셀 파일 생성 및 다운로드
+    XLSX.writeFile(wb, "idea_matrix.xlsx");
+  };
+
   useEffect(() => {
     const fetchIdeaList = async () => {
 
@@ -224,7 +276,7 @@ const OrganismIdeaList = ({ conversationId }) => {
         </>
       )}
 
-      <DownloadButton>
+      <DownloadButton onClick={handleDownload}>
         <p>
           <img src={images.IconEdit3} alt="" />
           자료 (2건)
