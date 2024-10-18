@@ -308,13 +308,12 @@ if (isLoadingPage) {
                 } else if (item.type === "system") {
                   return <MoleculeSystemMessage key={index} item={item} />;
                 } else if (item.type === "analysis") {
-                  return <OrganismBizAnalysisSection conversationId={conversationId} />;
+                  return <OrganismBizAnalysisSection />;
                 } else if (item.type.startsWith("strategy_")) {
                   const expertIndex = item.type.split("_")[1];
                   return (
                     <OrganismStrategyReportSection
                       key={`strategy_${expertIndex}_${index}`}
-                      conversationId={conversationId}
                       expertIndex={expertIndex}
                     />
                   );
@@ -323,7 +322,6 @@ if (isLoadingPage) {
                   return (
                     <OrganismAdditionalReport
                       additionalReportCount={currentAdditionalReportCount}
-                      conversationId={conversationId}
                     />
                   );
                 } else if (item.type === "customerAddition") {
@@ -331,7 +329,6 @@ if (isLoadingPage) {
                   return (
                     <OrganismCustomerAdditionalReport
                       customerAdditionalReportCount={currentCustomerAdditionalReportCount}
-                      conversationId={conversationId}
                     />
                   );
                 } else if (item.type === "keyword") {
@@ -347,7 +344,6 @@ if (isLoadingPage) {
                     <>
                       <OrganismPocReportSection
                         key={`poc_${expertIndex}_${index}`}
-                        conversationId={conversationId}
                         expertIndex={expertIndex}
                       />
                     </>
@@ -358,7 +354,6 @@ if (isLoadingPage) {
                       <>
                         <OrganismRecommendedTargetReport
                           key={`pocTarget_${expertIndex}_${index}`}
-                          conversationId={conversationId}
                           expertIndex={expertIndex}
                         />
                       </>
@@ -368,9 +363,9 @@ if (isLoadingPage) {
                 } else if (item.type === "pocTargetButton") {
                   return <MoleculeRecommendedTargetButton />;
                 } else if (item.type === "pocOption") {
-                  return <MoleculeCheckPocOption conversationId={conversationId}/>;
+                  return <MoleculeCheckPocOption />;
                 } else if (item.type === "pocPersona") {
-                  return <MoleculePersonaSelect conversationId={conversationId}/>;
+                  return <MoleculePersonaSelect />;
                 }
                 
                 /* 아이디어 디벨로퍼 */
@@ -387,7 +382,7 @@ if (isLoadingPage) {
                 } else if (item.type === "ideaCustomer") {
                   return <OrganismIdeaCustomer />;
                 } else if (item.type === "ideaList") {
-                  return <OrganismIdeaList conversationId={conversationId}/>;
+                  return <OrganismIdeaList />;
                 } else if (item.type === "ideaPriority") {
                   return <OrganismIdeaPriority />;
                 }

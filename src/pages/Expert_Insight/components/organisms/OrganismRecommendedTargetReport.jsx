@@ -47,9 +47,11 @@ import {
   IDEA_LIST,
   IDEA_GROUP,
   IDEA_PRIORITY,
+  CONVERSATION_ID,
 } from "../../../AtomStates";
 
-const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
+const OrganismRecommendedTargetReport = ({ expertIndex }) => {
+  const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
   const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
@@ -385,7 +387,6 @@ const OrganismRecommendedTargetReport = ({ conversationId, expertIndex }) => {
           <MoleculeReportController
             reportIndex={4}
             strategyReportID={expertIndex}
-            conversationId={conversationId}
             sampleData={modifiedRecommendedTargetData}
           />
         )}

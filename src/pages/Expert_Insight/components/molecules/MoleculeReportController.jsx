@@ -51,6 +51,7 @@ import {
   IDEA_GROUP,
   IDEA_PRIORITY,
   BUTTON_STATE,
+  CONVERSATION_ID,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -65,11 +66,11 @@ const MoleculeReportController = ({
   reportIndex,
   ideaFeatureRequirement,
   strategyReportID,
-  conversationId,
   sampleData,
   report,
   additionalReportCount, // 추가 보고서 복사기능을 위한 인덱스
 }) => {
+  const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);

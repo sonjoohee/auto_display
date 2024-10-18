@@ -53,9 +53,11 @@ import {
   POC_PERSONA_LIST,
   RECOMMENDED_TARGET_DATA,
   BUTTON_STATE,
+  CONVERSATION_ID,
 } from "../../../AtomStates";
 
-const OrganismPocReportSection = ({ conversationId, expertIndex }) => {
+const OrganismPocReportSection = ({ expertIndex }) => {
+  const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
   const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
@@ -387,7 +389,6 @@ const OrganismPocReportSection = ({ conversationId, expertIndex }) => {
           <MoleculeReportController
             reportIndex={1}
             strategyReportID={expertIndex}
-            conversationId={conversationId}
             sampleData={strategyReportData[expertIndex]}
           />
         )}

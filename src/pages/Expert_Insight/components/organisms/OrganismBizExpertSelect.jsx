@@ -34,13 +34,15 @@ import {
   IDEA_PRIORITY,
   BUTTON_STATE,
   IDEA_FEATURE_BUTTON_STATE,
+  CONVERSATION_ID,
 } from "../../../AtomStates";
 
 import {
   saveConversationToIndexedDB,
 } from "../../../../utils/indexedDB";
 
-const OrganismBizExpertSelect = ({ conversationId }) => {
+const OrganismBizExpertSelect = () => {
+  const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [isLoggedIn] = useAtom(isLoggedInAtom);
   const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_DATA);

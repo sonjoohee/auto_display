@@ -33,6 +33,7 @@ import {
   IDEA_GROUP,
   IDEA_PRIORITY,
   BUTTON_STATE,
+  CONVERSATION_ID,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -50,9 +51,9 @@ import {
 import e from "cors";
 
 const OrganismCustomerAdditionalReport = ({
-  customerAdditionalReportCount,
-  conversationId,
+  customerAdditionalReportCount
 }) => {
+  const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
   const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
@@ -402,7 +403,6 @@ const OrganismCustomerAdditionalReport = ({
           {!isLoadingAdd && (
             <MoleculeReportController
               reportIndex={3}
-              conversationId={conversationId}
               sampleData={answerData}
               additionalReportCount={customerAdditionalReportCount}
             />
