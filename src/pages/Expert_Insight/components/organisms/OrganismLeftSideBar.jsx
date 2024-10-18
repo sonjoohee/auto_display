@@ -604,9 +604,9 @@ useEffect(() => {
       setIdeaFeatureDataTemp(chatData.ideaFeatureData || []);
       setIdeaRequirementDataTemp(chatData.ideaRequirementData || []);
       
-      // setIdeaList(chatData.ideaList || []);
-      // setIdeaGroup(chatData.ideaGroup || {});
-      // setIdeaPriority(chatData.ideaPriority || []);
+      setIdeaList(chatData.ideaList || []);
+      setIdeaGroup(chatData.ideaGroup || {});
+      setIdeaPriority(chatData.ideaPriority || []);
 
       setButtonState(chatData.buttonState || {});
 
@@ -844,9 +844,9 @@ useEffect(() => {
     setIdeaRequirementData([]);
     setIdeaFeatureDataTemp([]);
     setIdeaRequirementDataTemp([]);
-    // setIdeaList([]);
-    // setIdeaGroup({});
-    // setIdeaPriority([]);
+    setIdeaList([]);
+    setIdeaGroup({});
+    setIdeaPriority([]);
     setButtonState({});
   };
 
@@ -899,9 +899,9 @@ useEffect(() => {
     setIdeaRequirementData([]);
     setIdeaFeatureDataTemp([]);
     setIdeaRequirementDataTemp([]);
-    // setIdeaList([]);
-    // setIdeaGroup({});
-    // setIdeaPriority([]);
+    setIdeaList([]);
+    setIdeaGroup({});
+    setIdeaPriority([]);
 
     setButtonState({});
   };

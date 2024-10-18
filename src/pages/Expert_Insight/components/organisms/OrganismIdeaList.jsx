@@ -37,6 +37,7 @@ import {
   IDEA_LIST,
   IDEA_GROUP,
   BUTTON_STATE,
+  IDEA_MIRO
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -50,6 +51,7 @@ import {
 import images from "../../../../assets/styles/Images";
 
 const OrganismIdeaList = () => {
+  const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
   const [isModalOpen, setIsModalOpen] = useState({});
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
@@ -99,6 +101,7 @@ const OrganismIdeaList = () => {
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [isLoadingIdeaList, setIsLoadingIdeaList] = useState(false);
+  const [isLoadingIdeaMiro, setIsLoadingIdeaMiro] = useState(false);
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [selectedFormat, setSelectedFormat] = useState("Excel");
   const [selectedLanguage, setSelectedLanguage] = useState("한글");
@@ -241,6 +244,67 @@ const OrganismIdeaList = () => {
   };
 }
 
+const handleMiro = async () => {
+  try {
+    setIsLoadingIdeaMiro(true);
+    
+    const data = {
+      expert_id: "1",
+      business_info: titleOfBusinessInfo,
+      business_analysis_data: {
+        명칭: titleOfBusinessInfo,
+        주요_목적_및_특징: mainFeaturesOfBusinessInformation,
+        주요기능: mainCharacteristicOfBusinessInformation,
+        목표고객: businessInformationTargetCustomer,
+      },
+      dev_report: ideaList,
+      dev_cluster_report: ideaGroup,
+    };
+
+    const response = await axios.post(
+      "https://wishresearch.kr/panels/idea_miro",
+      data,
+      axiosConfig
+    );
+
+    setIdeaMiro(response.dev_miro_report.miro_data);
+    
+    await saveConversationToIndexedDB(
+      {
+        id: conversationId,
+        inputBusinessInfo: inputBusinessInfo,
+        analysisReportData: analysisReportData,
+        strategyReportData: strategyReportData,
+        conversation: conversation,
+        conversationStage: conversationStage,
+        selectedAdditionalKeywords: selectedAdditionalKeyword,
+        selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
+        additionalReportData: additionalReportData,
+        customerAdditionalReportData: customerAdditionalReportData,
+        timestamp: Date.now(),
+        expert_index: selectedExpertIndex,
+        selectedPocOptions: selectedPocOptions,
+        pocPersonaList: pocPersonaList,
+        selectedPocTarget: selectedPocTarget,
+        recommendedTargetData: recommendedTargetData,
+        pocDetailReportData : pocDetailReportData,
+        ideaFeatureData : ideaFeatureData,
+        ideaRequirementData : ideaRequirementData,
+        ideaList : ideaList,
+        ideaGroup : ideaGroup,
+        buttonState : buttonState,
+        ideaMiro : ideaMiro,
+      },
+      isLoggedIn,
+      conversationId
+    );
+  } catch (error) {
+    console.error("Error loading Idea List:", error);
+  } finally {
+    setIsLoadingIdeaMiro(false);
+  }
+}
+
 useEffect(() => {
   const fetchIdeaList = async () => {
     try {
@@ -378,8 +442,8 @@ useEffect(() => {
             pocDetailReportData : pocDetailReportData,
             ideaFeatureData : ideaFeatureData,
             ideaRequirementData : ideaRequirementData,
-            ideaList : ideaList,
-            ideaGroup : ideaGroup,
+            ideaList : finalResponseIdea.dev_report,
+            ideaGroup : responseGroup.data.dev_cluster_report,
             buttonState : buttonState,
           },
           isLoggedIn,
@@ -408,14 +472,18 @@ useEffect(() => {
     <Wrap>
       {isLoadingIdeaList || ideaListButtonState ? (
         <>
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <Spacing />
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-        </>
+        <SkeletonTitle className="title-placeholder" />
+        <SkeletonLine className="content-placeholder" />
+        <SkeletonLine className="content-placeholder" />
+        <Spacing />
+        <SkeletonTitle className="title-placeholder" />
+        <SkeletonLine className="content-placeholder" />
+        <SkeletonLine className="content-placeholder" />
+        <Spacing />
+        <SkeletonTitle className="title-placeholder" />
+        <SkeletonLine className="content-placeholder" />
+        <SkeletonLine className="content-placeholder" />
+      </>
       ) : (
         <>
           <h1>{titleOfBusinessInfo}를 위한 아이디어 리스트</h1>
@@ -438,17 +506,17 @@ useEffect(() => {
             자료 (2건)
           </p>
           <div>
-            <button onClick={togglePopupDownload}>
+            <button className={'download-button'} onClick={togglePopupDownload}>
               <img src={images.IconDownload2} alt="" />
               <div>
                 <strong>전체 아이디어 다운로드</strong>
                 <span>1.8 MB · Download</span>
               </div>
             </button>
-            <button>
+            <button onClick={handleMiro}>
               <img src={images.IconDownloadMiro} alt="" />
               <div>
-                <strong>Miro에서 협업하기</strong>
+                <strong>{isLoadingIdeaMiro ? "데이터 전송 중..." : "Miro에서 협업하기"}</strong>
                 <span>외부페이지 이동 · www.miro.com</span>
               </div>
             </button>
@@ -680,7 +748,7 @@ const DownloadButton = styled.div`
 const DownloadPopup = styled.div`
   position: absolute;
   // right: ${(props) => (props.isAutoSaveToggle ? "0" : "-70px")};
-  // top: 120px;
+  top: 3100px;
   max-width: 288px;
   width: 100%;
   max-height: 400px; /* 팝업의 최대 높이를 적절히 설정 */

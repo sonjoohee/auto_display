@@ -206,9 +206,9 @@ const PageExpertInsight = () => {
             setIdeaRequirementData(savedConversation.ideaRequirementData || []);
             setIdeaFeatureDataTemp(savedConversation.ideaFeatureData || []);
             setIdeaRequirementDataTemp(savedConversation.ideaRequirementData || []);
-            // setIdeaList(savedConversation.ideaList || []);
-            // setIdeaGroup(savedConversation.ideaGroup || {});
-            // setIdeaPriority(savedConversation.ideaPriority || []);
+            setIdeaList(savedConversation.ideaList || []);
+            setIdeaGroup(savedConversation.ideaGroup || {});
+            setIdeaPriority(savedConversation.ideaPriority || []);
             setButtonState(savedConversation.buttonState || {});
           }
           
@@ -387,7 +387,7 @@ if (isLoadingPage) {
                 } else if (item.type === "ideaCustomer") {
                   return <OrganismIdeaCustomer />;
                 } else if (item.type === "ideaList") {
-                  return <OrganismIdeaList />;
+                  return <OrganismIdeaList conversationId={conversationId}/>;
                 } else if (item.type === "ideaPriority") {
                   return <OrganismIdeaPriority />;
                 }
