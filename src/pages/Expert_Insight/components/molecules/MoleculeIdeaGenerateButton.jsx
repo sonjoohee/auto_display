@@ -102,6 +102,10 @@ const MoleculeIdeaGenerateButton = () => {
     setConversation(updatedConversation);
     setConversationStage(3);
     setApproachPath(3);
+    setButtonState({
+      ...buttonState,
+      IdeaGenerate: 1
+    });
 
     await saveConversationToIndexedDB(
       {

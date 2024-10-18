@@ -103,6 +103,10 @@ const MoleculeIdeaCustomerButton = () => {
     setConversation(updatedConversation);
     setConversationStage(3);
     setApproachPath(3);
+    setButtonState({
+      ...buttonState,
+      IdeaCustomer: 1
+    });
 
     await saveConversationToIndexedDB(
       {
