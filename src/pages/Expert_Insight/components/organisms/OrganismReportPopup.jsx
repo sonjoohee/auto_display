@@ -147,9 +147,9 @@ const OrganismReportPopup = ({ report, onClose }) => {
                 ) : report.content.expert_id === "4" ? (
                   <img src={panelimages.expert_4} alt="" />
                 ) : reportIndex === 5 ? (
-                  <img src={panelimages.expert_4} alt="" />
+                  <img src={panelimages.expert_5} alt="" />
                 ) : (
-                  <img src={panelimages.expert_4} alt="" />
+                  <img src={panelimages.expert_5} alt="" />
                 )}
               </div>
               {report.content.expert_id === "1" ? (
@@ -175,7 +175,7 @@ const OrganismReportPopup = ({ report, onClose }) => {
               ) : reportIndex === 5 ? (
                 <div className="cont">
                   <strong>아이디어 디벨로퍼</strong>
-                  <p>OOO</p>
+                  <p>윤재민</p>
                 </div>
               ) : null}
             </ExpertThumb>

@@ -156,6 +156,7 @@ const OrganismIdeaFeature = () => {
   const handleTitleChange = (index) => {
     const updatedFeatures = JSON.parse(JSON.stringify(ideaFeatureData)); // 깊은 복사
     updatedFeatures[index].title = editedIdeaFeatureTitle;
+    updatedFeatures[index].text = editedIdeaFeatureTitle;
     setIdeaFeatureData(updatedFeatures);
     setActiveIdeaFeatureIndex(null);
   };
@@ -408,9 +409,9 @@ const OrganismIdeaFeature = () => {
               )}
               {activeIdeaFeatureIndex === index && (
                 <>
-                  <button onClick={() => generateAddtionalContent(index)}>
+                  {/* <button onClick={() => generateAddtionalContent(index)}>
                     <img src={images.IconMagic} alt="" />
-                  </button>
+                  </button> */}
                   <button onClick={() => handleTitleChange(index)}>
                     <img src={images.IconEdit2} alt="" />
                   </button>
@@ -433,9 +434,9 @@ const OrganismIdeaFeature = () => {
                   placeholder="새로운 기능 및 특성을 추가해보세요"
                   autoFocus
                 />
-                  <button onClick={() => generateAddtionalContent(null)}>
+                  {/* <button onClick={() => generateAddtionalContent(null)}>
                     <img src={images.IconMagic} alt="" />
-                  </button>
+                  </button> */}
                   <button onClick={() => handleAddSave()}>
                     <img src={images.IconEdit2} alt="" />
                   </button>
@@ -512,7 +513,6 @@ const OrganismIdeaFeature = () => {
           <MoleculeReportController
             reportIndex={5}
             ideaFeatureRequirement={"feature"}
-            conversationId={conversationId}
           />
         )}
         </>

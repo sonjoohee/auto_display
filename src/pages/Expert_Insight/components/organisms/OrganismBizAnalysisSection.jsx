@@ -36,9 +36,11 @@ import {
   CONVERSATION_STAGE,
   CHAT_REFRESH_TRIGGER,
   BUTTON_STATE,
+  CONVERSATION_ID,
 } from "../../../AtomStates";
 
-const OrganismBizAnalysisSection = ({ conversationId }) => {
+const OrganismBizAnalysisSection = () => {
+  const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
   const [reportRefreshTrigger, setReportRefreshTrigger] = useAtom(
@@ -934,7 +936,6 @@ const OrganismBizAnalysisSection = ({ conversationId }) => {
               <MoleculeReportController
                 reportIndex={0}
                 strategyReportID={selectedExpertIndex}
-                conversationId={conversationId}
               />
             )}
           </>
