@@ -619,7 +619,6 @@ ${mainCharacteristicOfBusinessInformation
       .writeText(contentToCopy.trim())
       .then(() => {
         setIsPopupCopy(true); // 복사 팝업 열기
-        console.log("팝업 왜 안뜨냐구");
       })
       .catch((error) => {
         console.error("복사 실패", error);

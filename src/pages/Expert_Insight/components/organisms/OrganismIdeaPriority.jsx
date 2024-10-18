@@ -48,7 +48,8 @@ import {
 import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
 
-const OrganismIdeaPriority = ({ conversationId }) => {
+const OrganismIdeaPriority = () => {
+  const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [selectedPocOptions, setSelectedPocOptions] =
     useAtom(SELECTED_POC_OPTIONS);
@@ -105,6 +106,14 @@ const OrganismIdeaPriority = ({ conversationId }) => {
   const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
   const [isLoadingIdeaPriority, setIsLoadingIdeaPriority] = useState(false);
 
+  const axiosConfig = {
+    timeout: 100000, // 100초
+    headers: {
+      "Content-Type": "application/json",
+    },
+    withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
+  };
+
   useEffect(() => {
     const fetchIdeaList = async () => {
 
@@ -113,29 +122,72 @@ const OrganismIdeaPriority = ({ conversationId }) => {
         setIsLoadingIdeaPriority(true);
         setIdeaPriorityButtonState(0);
 
-      //   const data = {
-      //     expert_id: "1",
-      //     business_info: titleOfBusinessInfo,
-      //     business_analysis_data: {
-      //       명칭: titleOfBusinessInfo,
-      //       주요_목적_및_특징: mainFeaturesOfBusinessInformation,
-      //       주요기능: mainCharacteristicOfBusinessInformation,
-      //       목표고객: businessInformationTargetCustomer,
-      //     },
-      //     tabs: [],
-      //     page_index: 1
-      // };
+        const data = {
+          expert_id: "1",
+          business_info: titleOfBusinessInfo,
+          business_analysis_data: {
+            명칭: titleOfBusinessInfo,
+            주요_목적_및_특징: mainFeaturesOfBusinessInformation,
+            주요기능: mainCharacteristicOfBusinessInformation,
+            목표고객: businessInformationTargetCustomer,
+          },
+          dev_report: ideaList,
+        };
 
-      //   let response = await axios.post(
-      //     "https://1900-58-72-4-187.ngrok-free.app/ix_generate_idea_feature_list",
-      //     data,
-      //     axiosConfig
-      //   );
+        let response = await axios.post(
+          "https://wishresearch.kr/panels/idea_priority",
+          data,
+          axiosConfig
+        );
 
-      // setIdeaPriority(response.data.dev_persona_recommand_report);
+        let retryCount = 0;
+        const maxRetries = 10;
+
+        while (retryCount < maxRetries && (
+          !response || !response.data || typeof response.data !== "object" ||
+          !response.data.hasOwnProperty("dev_persona_recommand_report") ||
+          !Array.isArray(response.data.dev_persona_recommand_report) ||
+          response.data.dev_persona_recommand_report.some(item => 
+            !item.hasOwnProperty("title") || 
+            !item.hasOwnProperty("content") ||
+            !item.content[0].hasOwnProperty("title") ||
+            !item.content[0].hasOwnProperty("text") ||
+            item.content.slice(1).some(subItem => 
+              !subItem.hasOwnProperty("subTitle") ||
+              !subItem.hasOwnProperty("text")
+            )
+          )
+        )) {
+          response = await axios.post(
+            "https://wishresearch.kr/panels/idea_priority",
+            data,
+            axiosConfig
+          );
+          retryCount++;
+        }
+        if (retryCount === maxRetries) {
+          console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+          // 에러 처리 로직 추가
+          throw new Error("Maximum retry attempts reached. Empty response persists.");
+        }
+
+        setIdeaPriority(response.data.dev_persona_recommand_report);
 
         setIsLoading(false);
         setIsLoadingIdeaPriority(false);
+
+        const updatedConversation = [...conversation];
+        updatedConversation.push(
+          {
+            type: "system",
+            message:
+              "리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊",
+            expertIndex: selectedExpertIndex,
+          },
+          { type: `keyword` }
+        );
+        setConversationStage(3);
+        setConversation(updatedConversation);
 
         await saveConversationToIndexedDB(
           {
@@ -143,7 +195,7 @@ const OrganismIdeaPriority = ({ conversationId }) => {
             inputBusinessInfo: inputBusinessInfo,
             analysisReportData: analysisReportData,
             strategyReportData: strategyReportData,
-            conversation: conversation,
+            conversation: updatedConversation,
             conversationStage: conversationStage,
             selectedAdditionalKeywords: selectedAdditionalKeyword,
             selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
@@ -160,7 +212,7 @@ const OrganismIdeaPriority = ({ conversationId }) => {
             ideaRequirementData : ideaRequirementData,
             ideaList : ideaList,
             ideaGroup : ideaGroup,
-            ideaPriority : ideaPriority,
+            ideaPriority : response.data.dev_persona_recommand_report,
             buttonState : buttonState,
           },
           isLoggedIn,
@@ -176,6 +228,10 @@ const OrganismIdeaPriority = ({ conversationId }) => {
     <Wrap>
       {isLoadingIdeaPriority ? (
         <>
+          <SkeletonTitle className="title-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <Spacing />
           <SkeletonTitle className="title-placeholder" />
           <SkeletonLine className="content-placeholder" />
           <SkeletonLine className="content-placeholder" />
