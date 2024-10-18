@@ -319,7 +319,7 @@ useEffect(() => {
 
         let responseGroup;
         let retryCount = 0;
-        const maxRetries = 10;
+        let maxRetries = 10;
 
         for (let i = 0; i < ideaRequirementData.length; i++) {
           const data = {
@@ -345,9 +345,44 @@ useEffect(() => {
             axiosConfig
           );
 
+          while (retryCount < maxRetries && 
+            (!responseIdea || !responseIdea.data || typeof responseIdea.data !== "object" ||
+            !responseIdea.data.hasOwnProperty("dev_report") || !Array.isArray(responseIdea.data.dev_report) ||
+            responseIdea.data.dev_report.some(item =>
+              !item.hasOwnProperty("requirement") ||
+              !item.hasOwnProperty("report") ||
+              typeof item.report !== "object" ||
+              !item.report.hasOwnProperty("customer_requirement") ||
+              !item.report.hasOwnProperty("ideas") ||
+              !Array.isArray(item.report.ideas) ||
+              item.report.ideas.some(idea => 
+                !idea.hasOwnProperty("feature") ||
+                !Array.isArray(idea.ideas) ||
+                idea.ideas.some(subIdea => 
+                  !subIdea.hasOwnProperty("name") ||
+                  !subIdea.hasOwnProperty("description")
+                )
+              )
+            ))) {
+            responseIdea = await axios.post(
+              "https://wishresearch.kr/panels/idea_dev",
+              data,
+              axiosConfig
+            );
+            retryCount++;
+          }
+          if (retryCount === maxRetries) {
+            console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+            // 에러 처리 로직 추가
+            throw new Error("Maximum retry attempts reached. Empty responseIdea persists.");
+          }
+
           finalResponseIdea.dev_report.push(...responseIdea.data.dev_report);
         }
         setIdeaList(finalResponseIdea.dev_report);
+
+        retryCount = 0;
+        maxRetries = 10;
 
         const data2 = {
           expert_id: "1",

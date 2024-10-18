@@ -110,6 +110,11 @@ import IconLightning from "../images/IconLightning.svg"
 
 import IconEdit3 from "../images/iconEdit3.svg"
 
+import IconExpert1 from "../images/iconExpert1.png"
+import IconExpert2 from "../images/iconExpert2.png"
+import IconExpert3 from "../images/iconExpert3.png"
+import IconExpert4 from "../images/iconExpert4.png"
+import IconExpert5 from "../images/iconExpert5.png"
 
 const images = {
   Logo,
@@ -223,6 +228,12 @@ const images = {
   IconLightning,
 
   IconEdit3,
+
+  IconExpert1,
+  IconExpert2,
+  IconExpert3,
+  IconExpert4,
+  IconExpert5,
 }
 
 export default images;

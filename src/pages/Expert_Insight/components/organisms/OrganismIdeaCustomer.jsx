@@ -156,6 +156,7 @@ const OrganismIdeaCustomer = () => {
   const handleTitleChange = (index) => {
     const updatedFeatures = JSON.parse(JSON.stringify(ideaRequirementData)); // 깊은 복사
     updatedFeatures[index].title = editedIdeaCustomerTitle;
+    updatedFeatures[index].text = editedIdeaCustomerTitle;
     setIdeaRequirementData(updatedFeatures);
     setActiveIdeaCustomerIndex(null);
   };
@@ -329,9 +330,9 @@ const OrganismIdeaCustomer = () => {
               )}
               {activeIdeaCustomerIndex === index && (
                 <>
-                  <button onClick={() => generateAddtionalContent(index)}>
+                  {/* <button onClick={() => generateAddtionalContent(index)}>
                     <img src={images.IconMagic} alt="" />
-                  </button>
+                  </button> */}
                   <button onClick={() => handleTitleChange(index)}>
                     <img src={images.IconEdit2} alt="" />
                   </button>
@@ -354,9 +355,9 @@ const OrganismIdeaCustomer = () => {
                   placeholder="새로운 고객 요구 사항을 추가해보세요"
                   autoFocus
                 />
-                  <button onClick={() => generateAddtionalContent(null)}>
+                  {/* <button onClick={() => generateAddtionalContent(null)}>
                     <img src={images.IconMagic} alt="" />
-                  </button>
+                  </button> */}
                   <button onClick={() => handleAddSave()}>
                     <img src={images.IconEdit2} alt="" />
                   </button>
