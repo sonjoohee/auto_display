@@ -610,7 +610,6 @@ ${mainCharacteristicOfBusinessInformation
         }
       }
       else if (reportIndex === 5) {
-        console.log(ideaPriority);
         contentToCopy = extractTextContent(ideaPriority);
       }
     }
@@ -834,7 +833,7 @@ ${mainCharacteristicOfBusinessInformation
         </>
       )
     }
-    else if (ideaFeatureRequirement === "feature" && buttonState.IdeaCustomer !== 1) {
+    else if (ideaFeatureRequirement === "feature" && buttonState.IdeaCustomer !== 1 && ideaList.length === 0) {
       return (
         <>
           {!isEditingIdeaFeature ? (
@@ -897,7 +896,7 @@ ${mainCharacteristicOfBusinessInformation
         </>
       );
     }
-    else if (ideaFeatureRequirement === "customer" && buttonState.IdeaGenerate !== 1) {
+    else if (ideaFeatureRequirement === "customer" && buttonState.IdeaGenerate !== 1 && ideaList.length === 0) {
       return (
         <>
           {!isEditingIdeaCustomer ? (

@@ -173,7 +173,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
           }
 
           finalResponse = response1.data;
-          console.log(finalResponse);
+          // console.log(finalResponse);
 
           if (finalResponse.total_page_index === 2) {
             let response2 = await axios.post(
@@ -193,7 +193,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               }
             }
             finalResponse = response2.data;
-            console.log(finalResponse);
+            // console.log(finalResponse);
           } else if (finalResponse.total_page_index === 3) {
             let response2 = await axios.post(
               "https://wishresearch.kr/panels/expert",
@@ -228,7 +228,7 @@ const OrganismStrategyReportSection = ({ conversationId, expertIndex }) => {
               }
             }
             finalResponse = response3.data;
-            console.log(finalResponse);
+            // console.log(finalResponse);
           }
 
           const strategyData = finalResponse;

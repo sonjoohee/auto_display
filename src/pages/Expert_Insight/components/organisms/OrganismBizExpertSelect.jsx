@@ -33,6 +33,7 @@ import {
   IDEA_GROUP,
   IDEA_PRIORITY,
   BUTTON_STATE,
+  IDEA_FEATURE_BUTTON_STATE,
 } from "../../../AtomStates";
 
 import {
@@ -90,6 +91,8 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
   const [expertButtonState, setExpertButtonState] =
     useAtom(EXPERT_BUTTON_STATE);
 
+  const [ideaFeatureButtonState, setIdeaFeatureButtonState] = useAtom(IDEA_FEATURE_BUTTON_STATE);
+
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
 
   const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
@@ -115,6 +118,8 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
       });
   
       if (index === "1") {
+        setExpertButtonState(1);
+
         updatedConversation.push(
           {
             type: "user",
@@ -126,9 +131,12 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
             message:
               "안녕하세요! 저는 전략 전문가 김도원입니다. 😊 여러분의 아이디어를 구체화하고, 성공적인 전략을 세우는 데 도움을 드리겠습니다.\n아이디어나 비즈니스 아이템을 간단히 작성해 주세요. 분석 후, 여러분의 비즈니스에 맞는 전략 리포트를 제공하겠습니다!",
             expertIndex: index,
-          }
+          },
+          { type: `strategy_${index}` }
         );
       } else if (index === "2") {
+        setExpertButtonState(1);
+
         updatedConversation.push(
           {
             type: "user",
@@ -140,9 +148,12 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
             message:
               "안녕하세요! 마케팅 전문가 이지현입니다. 😄 여러분의 아이디어를 효과적으로 시장에 알릴 수 있는 전략을 함께 고민해 보아요.\n아이디어나 비즈니스 아이템을 여기에 작성해 주세요. 제가 분석하고, 효과적인 마케팅 전략 리포트를 준비해 드리겠습니다!",
             expertIndex: index,
-          }
+          },
+          { type: `strategy_${index}` }
         );
       } else if (index === "3") {
+        setExpertButtonState(1);
+
         updatedConversation.push(
           {
             type: "user",
@@ -154,9 +165,12 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
             message:
               "반갑습니다! 저는 고객 인사이트 전문가 박서연입니다. 😊 여러분의 비즈니스가 목표 고객에게 잘 다가갈 수 있도록 돕겠습니다.\n아이디어나 비즈니스 아이템을 작성해 주세요. 분석 후, 타겟 고객을 정의하고 세분화 방법에 대한 리포트를 제공해 드리겠습니다!",
             expertIndex: index,
-          }
+          },
+          { type: `strategy_${index}` }
         );
       } else if (index === "4") {
+        setExpertButtonState(1);
+
         updatedConversation.push(
           {
             type: "user",
@@ -168,15 +182,26 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
             message:
               "안녕하세요! 저는 PoC 설계 전문가 장석훈입니다. 😊 여러분의 사업 목표에 맞춘 가설 설정과 PoC 전략을 설계하고, 성공적인 검증 과정을 지원해드립니다. 맞춤형 PoC 설계를 위해 몇가지 질문에 응답 부탁드립니다!",
             expertIndex: index,
-          }
+          },
+          { type: "pocOption" }
         );
-      }
-  
-      // selectedExpertIndex에 따라 적절한 타입을 업데이트
-      if (index === "4") {
-        updatedConversation.push({ type: "pocOption" });
-      } else {
-        updatedConversation.push({ type: `strategy_${index}` });
+      } else if (index === "5") {
+        setIdeaFeatureButtonState(1);
+
+        updatedConversation.push(
+          {
+            type: "user",
+            message:
+              "체계적인 방법으로 많은 아이디어 발상 부탁드립니다 💡",
+          },
+          {
+            type: "system",
+            message:
+              "안녕하세요. 저는 아이디어 디벨로퍼 윤재민입니다.\n혼자 아이디어를 고민하다보면, 한정된 생각에 갇히기 쉽습니다. 제가 다각도로 사업 아이디어 발산을 돕고 우선순위 높은 아이디어를\n선별해드려요. 아이템에 대한 설명을 해주세요 📝",
+            expertIndex: index,
+          },
+          { type: `ideaFeature` }
+        );
       }
 
       await saveConversationToIndexedDB(
@@ -212,7 +237,6 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
       setConversation(updatedConversation);
       setConversationStage(3);
       setSelectedExpertIndex(index);
-      setExpertButtonState(1);
       setApproachPath(3);
     }
   };
@@ -224,15 +248,16 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
       {((selectedExpertList.includes("1") || strategyReportData.hasOwnProperty(1)) &&
         (selectedExpertList.includes("2") || strategyReportData.hasOwnProperty(2)) &&
         (selectedExpertList.includes("3") || strategyReportData.hasOwnProperty(3)) &&
-        (selectedExpertList.includes("4") || strategyReportData.hasOwnProperty(4))) ? null : (
+        (selectedExpertList.includes("4") || strategyReportData.hasOwnProperty(4)) &&
+        (selectedExpertList.includes("4") || strategyReportData.hasOwnProperty(5))) ? null : (
   
         <BizExpertSelectContainer>
           <h1>아래 분야별 전문가와 대화를 통해 아이디어를 발전시켜보세요.</h1>
           <SelectOptions>
             {(selectedExpertList.includes("1") || strategyReportData.hasOwnProperty(1)) ? null : (
               <div>
-                <img src={images.ImgChat} alt="" />
-                <p>10년차 전략 디렉터와 1:1 커피챗하기</p>
+                <img src={images.IconExpert1} alt="" />
+                <p>전략 컨설턴트에게 최적화 전략 상담 받기</p>
                 <button type="button" onClick={() => handledExpertSelect("1")}>
                   시작하기
                 </button>
@@ -240,8 +265,8 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
             )}
             {(selectedExpertList.includes("2") || strategyReportData.hasOwnProperty(2)) ? null : (
               <div>
-                <img src={images.ImgWrite} alt="" />
-                <p>브랜드 전문가의 10초 맞춤 제안서 받기</p>
+                <img src={images.IconExpert2} alt="" />
+                <p>마케팅 전문가에게 마케팅 전략 상담 받기</p>
                 <button type="button" onClick={() => handledExpertSelect("2")}>
                   시작하기
                 </button>
@@ -249,8 +274,8 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
             )}
             {(selectedExpertList.includes("3") || strategyReportData.hasOwnProperty(3)) ? null : (
               <div>
-                <img src={images.ImgTarget} alt="" />
-                <p>지금 바로 만나 타겟 고객 확인하기</p>
+                <img src={images.IconExpert3} alt="" />
+                <p>고객 세분화 전문가에게 타겟 고객 제안 받기</p>
                 <button type="button" onClick={() => handledExpertSelect("3")}>
                   시작하기
                 </button>
@@ -258,9 +283,18 @@ const OrganismBizExpertSelect = ({ conversationId }) => {
             )}
             {(selectedExpertList.includes("4") || strategyReportData.hasOwnProperty(4)) ? null : (
               <div>
-                <img src={images.ImgPoC2} alt="" />
+                <img src={images.IconExpert4} alt="" />
                 <p>PoC 설계 전문가에게 맞춤형 PoC 전략 기획서 받기</p>
                 <button type="button" onClick={() => handledExpertSelect("4")}>
+                  시작하기
+                </button>
+              </div>
+            )}
+            {(selectedExpertList.includes("5") || strategyReportData.hasOwnProperty(5)) ? null : (
+              <div>
+                <img src={images.IconExpert5} alt="" />
+                <p>구조화된 방법으로 다양한 아이디어 제안 받기</p>
+                <button type="button" onClick={() => handledExpertSelect("5")}>
                   시작하기
                 </button>
               </div>
