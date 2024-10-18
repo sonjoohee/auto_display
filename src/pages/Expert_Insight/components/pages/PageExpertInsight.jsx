@@ -422,37 +422,15 @@ if (isLoadingPage) {
               :
               selectedExpertIndex === "4" ?
                 <>
-                {/* 4번 전문가 선택하고 시작 */}
-                {approachPath === 1 &&
-                  !isLoading &&
+                {
                   Object.keys(recommendedTargetData).length !== 0 && 
                     <OrganismBizExpertSelect />
                 }
-
-                {/* 4번 전문가 히스토리로 진입 시 */}
-                {approachPath === 2 && 
-                  titleOfBusinessInfo &&
-                  conversation.length > 0 &&
-                  !isLoading &&
-                  Object.keys(recommendedTargetData).length !== 0 &&  
-                    <OrganismBizExpertSelect />
-                }
-              </>
+                </>
               :
               selectedExpertIndex === "5" ?
                 <>
-                {/* 5번 전문가 선택하고 시작 */}
-                {approachPath === 1 &&
-                  !isLoading &&
-                  ideaPriority.length !== 0 && 
-                    <OrganismBizExpertSelect />
-                }
-  
-                {/* 5번 전문가 히스토리로 진입 시 */}
-                {approachPath === 2 && 
-                  titleOfBusinessInfo &&
-                  conversation.length > 0 &&
-                  !isLoading &&
+                {
                   ideaPriority.length !== 0 &&  
                     <OrganismBizExpertSelect />
                 }

@@ -240,51 +240,108 @@ const OrganismIdeaList = () => {
     });
   };
 }
-  useEffect(() => {
-    const fetchIdeaList = async () => {
 
+useEffect(() => {
+  const fetchIdeaList = async () => {
+    try {
       if(ideaListButtonState) {
         setIsLoading(true);
         setIsLoadingIdeaList(true);
-        setIdeaListButtonState(0);
 
-        // let response;
-        // let finalResponse = {
-        //   "dev_report": []
-        // }
+        let responseIdea;
+        let finalResponseIdea = {
+          "dev_report": []
+        }
 
-        // for (let i = 0; i < ideaRequirementData.length; i++) {
-        //   const data = {
-        //     expert_id: "1",
-        //     business_info: titleOfBusinessInfo,
-        //     business_analysis_data: {
-        //       명칭: titleOfBusinessInfo,
-        //       주요_목적_및_특징: mainFeaturesOfBusinessInformation,
-        //       주요기능: mainCharacteristicOfBusinessInformation,
-        //       목표고객: businessInformationTargetCustomer,
-        //     },
-        //     tabs: [],
-        //     page_index: 1,
-        //     feature_requirements_list: {
-        //       feature: ideaFeatureData,
-        //       requirements: [ideaRequirementData[i]],
-        //     }
-        //   };
+        let responseGroup;
+        let retryCount = 0;
+        const maxRetries = 10;
+
+        for (let i = 0; i < ideaRequirementData.length; i++) {
+          const data = {
+            expert_id: "1",
+            business_info: titleOfBusinessInfo,
+            business_analysis_data: {
+              명칭: titleOfBusinessInfo,
+              주요_목적_및_특징: mainFeaturesOfBusinessInformation,
+              주요기능: mainCharacteristicOfBusinessInformation,
+              목표고객: businessInformationTargetCustomer,
+            },
+            tabs: [],
+            page_index: 1,
+            feature_requirements_list: {
+              feature: ideaFeatureData,
+              requirements: [ideaRequirementData[i]],
+            }
+          };
   
-        //   response = await axios.post(
-        //     "https://wishresearch.kr/panels/idea_dev",
-        //     data,
-        //     axiosConfig
-        //   );
+          responseIdea = await axios.post(
+            "https://wishresearch.kr/panels/idea_dev",
+            data,
+            axiosConfig
+          );
 
-        //   finalResponse.dev_report.push(...response.data.dev_report);
-        // }
-        
-        // setIdeaList(response.data.dev_report);
-        // setIdeaGroup(response.data.dev_cluster);
+          finalResponseIdea.dev_report.push(...responseIdea.data.dev_report);
+        }
+        setIdeaList(finalResponseIdea.dev_report);
+
+        const data2 = {
+          expert_id: "1",
+          business_info: titleOfBusinessInfo,
+          business_analysis_data: {
+            명칭: titleOfBusinessInfo,
+            주요_목적_및_특징: mainFeaturesOfBusinessInformation,
+            주요기능: mainCharacteristicOfBusinessInformation,
+            목표고객: businessInformationTargetCustomer,
+          },
+          dev_report: finalResponseIdea.dev_report
+        };
+
+        responseGroup = await axios.post(
+          "https://wishresearch.kr/panels/idea_group",
+          data2,
+          axiosConfig
+        );
+
+        while (retryCount < maxRetries && (
+          !responseGroup || !responseGroup.data || typeof responseGroup.data !== "object" ||
+          !responseGroup.data.hasOwnProperty("dev_cluster_report") ||
+          !responseGroup.data.dev_cluster_report.hasOwnProperty("group_data") ||
+          !responseGroup.data.dev_cluster_report.hasOwnProperty("priority_evaluation") ||
+          !Array.isArray(responseGroup.data.dev_cluster_report.group_data) ||
+          responseGroup.data.dev_cluster_report.group_data.some(item => 
+            !item.hasOwnProperty("group") || 
+            !item.hasOwnProperty("title") ||
+            !item.hasOwnProperty("core_content") || 
+            !item.hasOwnProperty("key_features") ||
+            !item.hasOwnProperty("total_idea_count") || 
+            !item.hasOwnProperty("required_departments")
+          ) ||
+          !Array.isArray(responseGroup.data.dev_cluster_report.priority_evaluation) ||
+          responseGroup.data.dev_cluster_report.priority_evaluation.some(item => 
+            !item.hasOwnProperty("group") || 
+            !item.hasOwnProperty("criteria") ||
+            !item.hasOwnProperty("total_score")
+          )
+        )) {
+          responseGroup = await axios.post(
+            "https://wishresearch.kr/panels/idea_group",
+            data2,
+            axiosConfig
+          );
+          retryCount++;
+        }
+        if (retryCount === maxRetries) {
+          console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+          // 에러 처리 로직 추가
+          throw new Error("Maximum retry attempts reached. Empty responseGroup persists.");
+        }
+
+        setIdeaGroup(responseGroup.data.dev_cluster_report);
 
         setIsLoading(false);
         setIsLoadingIdeaList(false);
+        setIdeaListButtonState(0);
 
         const updatedConversation = [...conversation];
 
@@ -329,10 +386,13 @@ const OrganismIdeaList = () => {
           conversationId
         );
       }
-    };
+    } catch (error) {
+      console.error("Error loading Idea List:", error);
+    }
+  };
 
-    fetchIdeaList();
-  }, [ideaListButtonState]);
+  fetchIdeaList();
+}, [ideaListButtonState]); // useEffect의 끝
 
   const countIdea = (ideaList) => {
     let nameCount = 0;
@@ -346,7 +406,7 @@ const OrganismIdeaList = () => {
 
   return (
     <Wrap>
-      {isLoadingIdeaList ? (
+      {isLoadingIdeaList || ideaListButtonState ? (
         <>
           <SkeletonTitle className="title-placeholder" />
           <SkeletonLine className="content-placeholder" />
@@ -366,7 +426,7 @@ const OrganismIdeaList = () => {
             <li key={item.group}>
               <span>{item.group}</span>
               <div>
-                <strong>{item.title} ({item.required_departments.length}건)</strong>
+                <strong>{item.title} ({item.total_idea_count}건)</strong>
                 <p>{item.core_content}</p>
                 </div>
               </li>
