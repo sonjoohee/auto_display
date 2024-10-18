@@ -29,6 +29,7 @@ import {
   IDEA_GROUP,
   IDEA_PRIORITY,
   BUTTON_STATE,
+  CONVERSATION_ID,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import MoleculeReportController from "../molecules/MoleculeReportController";
@@ -43,9 +44,9 @@ import {
 } from "../../../../assets/styles/Skeleton";
 
 const OrganismAdditionalReport = ({
-  additionalReportCount,
-  conversationId,
+  additionalReportCount
 }) => { 
+  const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
   const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
@@ -286,7 +287,6 @@ const OrganismAdditionalReport = ({
           {!isLoadingAdd && (
             <MoleculeReportController
               reportIndex={2}
-              conversationId={conversationId}
               sampleData={answerDataState}
               additionalReportCount={additionalReportCount}
             />

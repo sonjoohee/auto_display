@@ -513,7 +513,6 @@ const OrganismIdeaFeature = () => {
           <MoleculeReportController
             reportIndex={5}
             ideaFeatureRequirement={"feature"}
-            conversationId={conversationId}
           />
         )}
         </>

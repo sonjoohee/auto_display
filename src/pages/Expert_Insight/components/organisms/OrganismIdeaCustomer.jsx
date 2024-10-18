@@ -434,7 +434,6 @@ const OrganismIdeaCustomer = () => {
           <MoleculeReportController
             reportIndex={5}
             ideaFeatureRequirement={"customer"}
-            conversationId={conversationId}
           />
         )}
     </Wrap>
