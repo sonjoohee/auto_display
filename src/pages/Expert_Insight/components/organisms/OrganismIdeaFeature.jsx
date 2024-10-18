@@ -253,114 +253,117 @@ const OrganismIdeaFeature = () => {
 
   useEffect(() => {
     const fetchIdeaFeature = async () => {
+      try {
+        if(ideaFeatureButtonState) {
+          setIsLoading(true);
+          setIsLoadingIdeaFeature(true);
+          setIdeaFeatureButtonState(0);
 
-      if(ideaFeatureButtonState) {
-        setIsLoading(true);
-        setIsLoadingIdeaFeature(true);
-        setIdeaFeatureButtonState(0);
+          const data = {
+            expert_id: "1",
+            business_info: titleOfBusinessInfo,
+            business_analysis_data: {
+              명칭: titleOfBusinessInfo,
+              주요_목적_및_특징: mainFeaturesOfBusinessInformation,
+              주요기능: mainCharacteristicOfBusinessInformation,
+              목표고객: businessInformationTargetCustomer,
+            },
+            tabs: [],
+            page_index: 1
+        };
 
-        const data = {
-          expert_id: "1",
-          business_info: titleOfBusinessInfo,
-          business_analysis_data: {
-            명칭: titleOfBusinessInfo,
-            주요_목적_및_특징: mainFeaturesOfBusinessInformation,
-            주요기능: mainCharacteristicOfBusinessInformation,
-            목표고객: businessInformationTargetCustomer,
-          },
-          tabs: [],
-          page_index: 1
-      };
-
-        let response = await axios.post(
-          "https://wishresearch.kr/panels/idea_feature_list",
-          data,
-          axiosConfig
-        );
-
-        let retryCount = 0;
-        const maxRetries = 10;
-
-        while (retryCount < maxRetries && (
-          !response || !response.data || typeof response.data !== "object" ||
-          !response.data.hasOwnProperty("feature_requirements_list") ||
-          !response.data.feature_requirements_list.hasOwnProperty("feature") ||
-          !response.data.feature_requirements_list.hasOwnProperty("requirements")) ||
-          !Array.isArray(response.data.feature_requirements_list.feature) ||
-          response.data.feature_requirements_list.feature.some(item => 
-            !item.hasOwnProperty("title") || 
-            !item.hasOwnProperty("text")
-          ) ||
-          !Array.isArray(response.data.feature_requirements_list.requirements) ||
-          response.data.feature_requirements_list.requirements.some(item => 
-            !item.hasOwnProperty("title") || 
-            !item.hasOwnProperty("text")
-          )
-        ) {
-          response = await axios.post(
+          let response = await axios.post(
             "https://wishresearch.kr/panels/idea_feature_list",
             data,
             axiosConfig
           );
-          retryCount++;
+
+          let retryCount = 0;
+          const maxRetries = 10;
+
+          while (retryCount < maxRetries && (
+            !response || !response.data || typeof response.data !== "object" ||
+            !response.data.hasOwnProperty("feature_requirements_list") ||
+            !response.data.feature_requirements_list.hasOwnProperty("feature") ||
+            !response.data.feature_requirements_list.hasOwnProperty("requirements")) ||
+            !Array.isArray(response.data.feature_requirements_list.feature) ||
+            response.data.feature_requirements_list.feature.some(item => 
+              !item.hasOwnProperty("title") || 
+              !item.hasOwnProperty("text")
+            ) ||
+            !Array.isArray(response.data.feature_requirements_list.requirements) ||
+            response.data.feature_requirements_list.requirements.some(item => 
+              !item.hasOwnProperty("title") || 
+              !item.hasOwnProperty("text")
+            )
+          ) {
+            response = await axios.post(
+              "https://wishresearch.kr/panels/idea_feature_list",
+              data,
+              axiosConfig
+            );
+            retryCount++;
+          }
+          if (retryCount === maxRetries) {
+            console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+            // 에러 처리 로직 추가
+            throw new Error("Maximum retry attempts reached. Empty response persists.");
+          }
+
+          let updatedFeatureRequirementList = response.data.feature_requirements_list;
+
+          setIdeaFeatureData(updatedFeatureRequirementList.feature);
+          setIdeaRequirementData(updatedFeatureRequirementList.requirements);
+          setIdeaFeatureDataTemp(updatedFeatureRequirementList.feature);
+          setIdeaRequirementDataTemp(updatedFeatureRequirementList.requirements);
+          setEditedIdeaFeatureTitle(updatedFeatureRequirementList.feature[0].title);
+
+          setIsLoading(false);
+          setIsLoadingIdeaFeature(false);
+
+          const updatedConversation = [...conversation];
+
+          updatedConversation.push(
+            {
+              type: "system",
+              message: "주요 기능 및 특성을 확인하셨다면, 고객의 요구사항을 확인해보겠습니다.",
+              expertIndex: selectedExpertIndex,
+            },
+            {
+              type: 'ideaCustomerButton',
+            },
+          );
+          setConversation(updatedConversation);
+
+          await saveConversationToIndexedDB(
+            {
+              id: conversationId,
+              inputBusinessInfo: inputBusinessInfo,
+              analysisReportData: analysisReportData,
+              strategyReportData: strategyReportData,
+              conversation: updatedConversation,
+              conversationStage: conversationStage,
+              selectedAdditionalKeywords: selectedAdditionalKeyword,
+              selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
+              additionalReportData: additionalReportData,
+              customerAdditionalReportData: customerAdditionalReportData,
+              timestamp: Date.now(),
+              expert_index: selectedExpertIndex,
+              selectedPocOptions: selectedPocOptions,
+              pocPersonaList: pocPersonaList,
+              selectedPocTarget: selectedPocTarget,
+              recommendedTargetData: recommendedTargetData,
+              pocDetailReportData : pocDetailReportData,
+              ideaFeatureData : updatedFeatureRequirementList.feature,
+              ideaRequirementData : updatedFeatureRequirementList.requirements,
+              buttonState : buttonState,
+            },
+            isLoggedIn,
+            conversationId
+          );
         }
-        if (retryCount === maxRetries) {
-          console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
-          // 에러 처리 로직 추가
-          throw new Error("Maximum retry attempts reached. Empty response persists.");
-        }
-
-        let updatedFeatureRequirementList = response.data.feature_requirements_list;
-
-        setIdeaFeatureData(updatedFeatureRequirementList.feature);
-        setIdeaRequirementData(updatedFeatureRequirementList.requirements);
-        setIdeaFeatureDataTemp(updatedFeatureRequirementList.feature);
-        setIdeaRequirementDataTemp(updatedFeatureRequirementList.requirements);
-        setEditedIdeaFeatureTitle(updatedFeatureRequirementList.feature[0].title);
-
-        setIsLoading(false);
-        setIsLoadingIdeaFeature(false);
-
-        const updatedConversation = [...conversation];
-
-        updatedConversation.push(
-          {
-            type: "system",
-            message: "주요 기능 및 특성을 확인하셨다면, 고객의 요구사항을 확인해보겠습니다.",
-            expertIndex: selectedExpertIndex,
-          },
-          {
-            type: 'ideaCustomerButton',
-          },
-        );
-        setConversation(updatedConversation);
-
-        await saveConversationToIndexedDB(
-          {
-            id: conversationId,
-            inputBusinessInfo: inputBusinessInfo,
-            analysisReportData: analysisReportData,
-            strategyReportData: strategyReportData,
-            conversation: updatedConversation,
-            conversationStage: conversationStage,
-            selectedAdditionalKeywords: selectedAdditionalKeyword,
-            selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
-            additionalReportData: additionalReportData,
-            customerAdditionalReportData: customerAdditionalReportData,
-            timestamp: Date.now(),
-            expert_index: selectedExpertIndex,
-            selectedPocOptions: selectedPocOptions,
-            pocPersonaList: pocPersonaList,
-            selectedPocTarget: selectedPocTarget,
-            recommendedTargetData: recommendedTargetData,
-            pocDetailReportData : pocDetailReportData,
-            ideaFeatureData : updatedFeatureRequirementList.feature,
-            ideaRequirementData : updatedFeatureRequirementList.requirements,
-            buttonState : buttonState,
-          },
-          isLoggedIn,
-          conversationId
-        );
+      } catch (error) {
+        console.error("Error loading Idea Feature:", error);
       }
     };
 

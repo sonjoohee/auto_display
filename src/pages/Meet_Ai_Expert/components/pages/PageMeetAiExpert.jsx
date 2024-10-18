@@ -256,9 +256,9 @@ const PageMeetAiExpert = () => {
     setIdeaRequirementData([]);
     setIdeaFeatureDataTemp([]);
     setIdeaRequirementDataTemp([]);
-    // setIdeaList([]);
-    // setIdeaGroup({});
-    // setIdeaPriority([]);
+    setIdeaList([]);
+    setIdeaGroup({});
+    setIdeaPriority([]);
     setButtonState({});
   }, [location]);
 

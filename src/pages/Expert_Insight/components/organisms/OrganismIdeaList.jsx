@@ -37,6 +37,7 @@ import {
   IDEA_LIST,
   IDEA_GROUP,
   BUTTON_STATE,
+  IDEA_MIRO
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -50,6 +51,7 @@ import {
 import images from "../../../../assets/styles/Images";
 
 const OrganismIdeaList = () => {
+  const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
   const [isModalOpen, setIsModalOpen] = useState({});
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
@@ -99,6 +101,7 @@ const OrganismIdeaList = () => {
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [isLoadingIdeaList, setIsLoadingIdeaList] = useState(false);
+  const [isLoadingIdeaMiro, setIsLoadingIdeaMiro] = useState(false);
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [selectedFormat, setSelectedFormat] = useState("Excel");
   const [selectedLanguage, setSelectedLanguage] = useState("한글");
@@ -240,51 +243,169 @@ const OrganismIdeaList = () => {
     });
   };
 }
-  useEffect(() => {
-    const fetchIdeaList = async () => {
 
+const handleMiro = async () => {
+  try {
+    setIsLoadingIdeaMiro(true);
+    
+    const data = {
+      expert_id: "1",
+      business_info: titleOfBusinessInfo,
+      business_analysis_data: {
+        명칭: titleOfBusinessInfo,
+        주요_목적_및_특징: mainFeaturesOfBusinessInformation,
+        주요기능: mainCharacteristicOfBusinessInformation,
+        목표고객: businessInformationTargetCustomer,
+      },
+      dev_report: ideaList,
+      dev_cluster_report: ideaGroup,
+    };
+
+    const response = await axios.post(
+      "https://wishresearch.kr/panels/idea_miro",
+      data,
+      axiosConfig
+    );
+
+    setIdeaMiro(response.dev_miro_report.miro_data);
+    
+    await saveConversationToIndexedDB(
+      {
+        id: conversationId,
+        inputBusinessInfo: inputBusinessInfo,
+        analysisReportData: analysisReportData,
+        strategyReportData: strategyReportData,
+        conversation: conversation,
+        conversationStage: conversationStage,
+        selectedAdditionalKeywords: selectedAdditionalKeyword,
+        selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
+        additionalReportData: additionalReportData,
+        customerAdditionalReportData: customerAdditionalReportData,
+        timestamp: Date.now(),
+        expert_index: selectedExpertIndex,
+        selectedPocOptions: selectedPocOptions,
+        pocPersonaList: pocPersonaList,
+        selectedPocTarget: selectedPocTarget,
+        recommendedTargetData: recommendedTargetData,
+        pocDetailReportData : pocDetailReportData,
+        ideaFeatureData : ideaFeatureData,
+        ideaRequirementData : ideaRequirementData,
+        ideaList : ideaList,
+        ideaGroup : ideaGroup,
+        buttonState : buttonState,
+        ideaMiro : ideaMiro,
+      },
+      isLoggedIn,
+      conversationId
+    );
+  } catch (error) {
+    console.error("Error loading Idea List:", error);
+  } finally {
+    setIsLoadingIdeaMiro(false);
+  }
+}
+
+useEffect(() => {
+  const fetchIdeaList = async () => {
+    try {
       if(ideaListButtonState) {
         setIsLoading(true);
         setIsLoadingIdeaList(true);
-        setIdeaListButtonState(0);
 
-        // let response;
-        // let finalResponse = {
-        //   "dev_report": []
-        // }
+        let responseIdea;
+        let finalResponseIdea = {
+          "dev_report": []
+        }
 
-        // for (let i = 0; i < ideaRequirementData.length; i++) {
-        //   const data = {
-        //     expert_id: "1",
-        //     business_info: titleOfBusinessInfo,
-        //     business_analysis_data: {
-        //       명칭: titleOfBusinessInfo,
-        //       주요_목적_및_특징: mainFeaturesOfBusinessInformation,
-        //       주요기능: mainCharacteristicOfBusinessInformation,
-        //       목표고객: businessInformationTargetCustomer,
-        //     },
-        //     tabs: [],
-        //     page_index: 1,
-        //     feature_requirements_list: {
-        //       feature: ideaFeatureData,
-        //       requirements: [ideaRequirementData[i]],
-        //     }
-        //   };
+        let responseGroup;
+        let retryCount = 0;
+        const maxRetries = 10;
+
+        for (let i = 0; i < ideaRequirementData.length; i++) {
+          const data = {
+            expert_id: "1",
+            business_info: titleOfBusinessInfo,
+            business_analysis_data: {
+              명칭: titleOfBusinessInfo,
+              주요_목적_및_특징: mainFeaturesOfBusinessInformation,
+              주요기능: mainCharacteristicOfBusinessInformation,
+              목표고객: businessInformationTargetCustomer,
+            },
+            tabs: [],
+            page_index: 1,
+            feature_requirements_list: {
+              feature: ideaFeatureData,
+              requirements: [ideaRequirementData[i]],
+            }
+          };
   
-        //   response = await axios.post(
-        //     "https://wishresearch.kr/panels/idea_dev",
-        //     data,
-        //     axiosConfig
-        //   );
+          responseIdea = await axios.post(
+            "https://wishresearch.kr/panels/idea_dev",
+            data,
+            axiosConfig
+          );
 
-        //   finalResponse.dev_report.push(...response.data.dev_report);
-        // }
-        
-        // setIdeaList(response.data.dev_report);
-        // setIdeaGroup(response.data.dev_cluster);
+          finalResponseIdea.dev_report.push(...responseIdea.data.dev_report);
+        }
+        setIdeaList(finalResponseIdea.dev_report);
+
+        const data2 = {
+          expert_id: "1",
+          business_info: titleOfBusinessInfo,
+          business_analysis_data: {
+            명칭: titleOfBusinessInfo,
+            주요_목적_및_특징: mainFeaturesOfBusinessInformation,
+            주요기능: mainCharacteristicOfBusinessInformation,
+            목표고객: businessInformationTargetCustomer,
+          },
+          dev_report: finalResponseIdea.dev_report
+        };
+
+        responseGroup = await axios.post(
+          "https://wishresearch.kr/panels/idea_group",
+          data2,
+          axiosConfig
+        );
+
+        while (retryCount < maxRetries && (
+          !responseGroup || !responseGroup.data || typeof responseGroup.data !== "object" ||
+          !responseGroup.data.hasOwnProperty("dev_cluster_report") ||
+          !responseGroup.data.dev_cluster_report.hasOwnProperty("group_data") ||
+          !responseGroup.data.dev_cluster_report.hasOwnProperty("priority_evaluation") ||
+          !Array.isArray(responseGroup.data.dev_cluster_report.group_data) ||
+          responseGroup.data.dev_cluster_report.group_data.some(item => 
+            !item.hasOwnProperty("group") || 
+            !item.hasOwnProperty("title") ||
+            !item.hasOwnProperty("core_content") || 
+            !item.hasOwnProperty("key_features") ||
+            !item.hasOwnProperty("total_idea_count") || 
+            !item.hasOwnProperty("required_departments")
+          ) ||
+          !Array.isArray(responseGroup.data.dev_cluster_report.priority_evaluation) ||
+          responseGroup.data.dev_cluster_report.priority_evaluation.some(item => 
+            !item.hasOwnProperty("group") || 
+            !item.hasOwnProperty("criteria") ||
+            !item.hasOwnProperty("total_score")
+          )
+        )) {
+          responseGroup = await axios.post(
+            "https://wishresearch.kr/panels/idea_group",
+            data2,
+            axiosConfig
+          );
+          retryCount++;
+        }
+        if (retryCount === maxRetries) {
+          console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+          // 에러 처리 로직 추가
+          throw new Error("Maximum retry attempts reached. Empty responseGroup persists.");
+        }
+
+        setIdeaGroup(responseGroup.data.dev_cluster_report);
 
         setIsLoading(false);
         setIsLoadingIdeaList(false);
+        setIdeaListButtonState(0);
 
         const updatedConversation = [...conversation];
 
@@ -321,18 +442,21 @@ const OrganismIdeaList = () => {
             pocDetailReportData : pocDetailReportData,
             ideaFeatureData : ideaFeatureData,
             ideaRequirementData : ideaRequirementData,
-            ideaList : ideaList,
-            ideaGroup : ideaGroup,
+            ideaList : finalResponseIdea.dev_report,
+            ideaGroup : responseGroup.data.dev_cluster_report,
             buttonState : buttonState,
           },
           isLoggedIn,
           conversationId
         );
       }
-    };
+    } catch (error) {
+      console.error("Error loading Idea List:", error);
+    }
+  };
 
-    fetchIdeaList();
-  }, [ideaListButtonState]);
+  fetchIdeaList();
+}, [ideaListButtonState]); // useEffect의 끝
 
   const countIdea = (ideaList) => {
     let nameCount = 0;
@@ -346,16 +470,20 @@ const OrganismIdeaList = () => {
 
   return (
     <Wrap>
-      {isLoadingIdeaList ? (
+      {isLoadingIdeaList || ideaListButtonState ? (
         <>
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <Spacing />
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-        </>
+        <SkeletonTitle className="title-placeholder" />
+        <SkeletonLine className="content-placeholder" />
+        <SkeletonLine className="content-placeholder" />
+        <Spacing />
+        <SkeletonTitle className="title-placeholder" />
+        <SkeletonLine className="content-placeholder" />
+        <SkeletonLine className="content-placeholder" />
+        <Spacing />
+        <SkeletonTitle className="title-placeholder" />
+        <SkeletonLine className="content-placeholder" />
+        <SkeletonLine className="content-placeholder" />
+      </>
       ) : (
         <>
           <h1>{titleOfBusinessInfo}를 위한 아이디어 리스트</h1>
@@ -366,7 +494,7 @@ const OrganismIdeaList = () => {
             <li key={item.group}>
               <span>{item.group}</span>
               <div>
-                <strong>{item.title} ({item.required_departments.length}건)</strong>
+                <strong>{item.title} ({item.total_idea_count}건)</strong>
                 <p>{item.core_content}</p>
                 </div>
               </li>
@@ -378,17 +506,17 @@ const OrganismIdeaList = () => {
             자료 (2건)
           </p>
           <div>
-            <button onClick={togglePopupDownload}>
+            <button className={'download-button'} onClick={togglePopupDownload}>
               <img src={images.IconDownload2} alt="" />
               <div>
                 <strong>전체 아이디어 다운로드</strong>
                 <span>1.8 MB · Download</span>
               </div>
             </button>
-            <button>
+            <button onClick={handleMiro}>
               <img src={images.IconDownloadMiro} alt="" />
               <div>
-                <strong>Miro에서 협업하기</strong>
+                <strong>{isLoadingIdeaMiro ? "데이터 전송 중..." : "Miro에서 협업하기"}</strong>
                 <span>외부페이지 이동 · www.miro.com</span>
               </div>
             </button>
@@ -620,7 +748,7 @@ const DownloadButton = styled.div`
 const DownloadPopup = styled.div`
   position: absolute;
   // right: ${(props) => (props.isAutoSaveToggle ? "0" : "-70px")};
-  // top: 120px;
+  top: 3100px;
   max-width: 288px;
   width: 100%;
   max-height: 400px; /* 팝업의 최대 높이를 적절히 설정 */
