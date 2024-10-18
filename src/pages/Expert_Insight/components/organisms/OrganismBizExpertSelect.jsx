@@ -251,7 +251,7 @@ const OrganismBizExpertSelect = () => {
         (selectedExpertList.includes("2") || strategyReportData.hasOwnProperty(2)) &&
         (selectedExpertList.includes("3") || strategyReportData.hasOwnProperty(3)) &&
         (selectedExpertList.includes("4") || strategyReportData.hasOwnProperty(4)) &&
-        (selectedExpertList.includes("4") || strategyReportData.hasOwnProperty(5))) ? null : (
+        (selectedExpertList.includes("5") || ideaFeatureData.length !== 0)) ? null : (
   
         <BizExpertSelectContainer>
           <h1>아래 분야별 전문가와 대화를 통해 아이디어를 발전시켜보세요.</h1>
@@ -292,7 +292,7 @@ const OrganismBizExpertSelect = () => {
                 </button>
               </div>
             )}
-            {(selectedExpertList.includes("5") || strategyReportData.hasOwnProperty(5)) ? null : (
+            {(selectedExpertList.includes("5") || ideaFeatureData.length !== 0) ? null : (
               <div>
                 <img src={images.IconExpert5} alt="" />
                 <p>구조화된 방법으로 다양한 아이디어 제안 받기</p>
