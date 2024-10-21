@@ -37,6 +37,7 @@ import OrganismReportPopup from './pages/Expert_Insight/components/organisms/Org
 import PageCompletedMail from './pages/Login_Sign/components/pages/PageCompletedMail';
 
 import MarketingKPI from "./pages/Expert_Insight/components/pages/MarketingKPI";
+import PriceAnalysis from "./pages/Expert_Insight/components/pages/PriceAnalysis";
 import ExpertExample from './pages/Expert_Insight/components/pages/ExpertExample';
 
 function App() {
@@ -185,6 +186,7 @@ function App() {
             <Route path="/CompletedMail" element={<PageCompletedMail />}></Route>
 
             <Route path="/MarketingKPI" element={<MarketingKPI />}></Route>
+            <Route path="/PriceAnalysis" element={<PriceAnalysis />}></Route>
             <Route path="/ExpertExample" element={<ExpertExample />}></Route>
 
             <Route path="/PageAIPanelList" element={<PageAIPanelList />}></Route>
