@@ -72,3 +72,4 @@ npm install docx
 npm install three
 
 npm install xlsx
+npm install d3
