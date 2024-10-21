@@ -1152,6 +1152,7 @@ const Section = ({
                     isAutoSaveToggle={false}
                     style={{ top: popupPosition.top, left: popupPosition.left }}
                   >
+                    <span className="close" onClick={(event) => handleOpenModal(index, event)}></span>
                     <div>
                       <h3>PoC 수행 계획서 다운로드</h3>
                       <SelectBoxWrap>
@@ -2325,6 +2326,31 @@ const DownloadPopup = styled.div`
     filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.2));
     // content: "";
     z-index: 0;
+  }
+
+  .close {
+    position:absolute;
+    right:20px;
+    top:20px;
+    width:12px;
+    height:12px;
+    cursor:pointer;
+
+    &:before, &:after {
+      position:absolute;
+      top:50%;
+      left:50%;
+      width:2px;
+      height:100%;
+      background:${palette.gray500};
+      content:'';
+    }
+    &:before {
+      transform:translate(-50%, -50%) rotate(45deg);
+    }
+    &:after {
+      transform:translate(-50%, -50%) rotate(-45deg);
+    }
   }
 
   > div {

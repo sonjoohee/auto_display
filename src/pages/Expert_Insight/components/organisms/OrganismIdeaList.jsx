@@ -567,8 +567,9 @@ useEffect(() => {
             }
           }}
         >
+          <span className="close" onClick={togglePopupDownload}></span>
           <div>
-            <h3>PoC 수행 계획서 다운로드</h3>
+            <h3>아이디어 리스트 다운로드</h3>
             <SelectBoxWrap>
                 <label>포맷 선택 (택1)</label>
                 <SelectBox>
@@ -579,9 +580,9 @@ useEffect(() => {
                     onClick={() => handleFormatChange("Excel")}
                   >
                     {selectedFormat === "Excel" ? (
-                      <img src={images.ImgPDF2} alt="" /> //여기 이미지만 엑셀이미지로 바꾸면됨
+                      <img src={images.ImgExcel2} alt="" /> //여기 이미지만 엑셀이미지로 바꾸면됨
                     ) : (
-                      <img src={images.ImgPDF} alt="" /> //여기 이미지만 엑셀이미지로 바꾸면됨
+                      <img src={images.ImgExcel} alt="" /> //여기 이미지만 엑셀이미지로 바꾸면됨
                     )}
                     Excel
                   </div>
@@ -648,6 +649,7 @@ useEffect(() => {
 export default OrganismIdeaList;
 
 const Wrap = styled.div`
+  position:relative;
   max-width:756px;
   width:100%;
   display:flex;
@@ -783,7 +785,8 @@ const DownloadButton = styled.div`
 const DownloadPopup = styled.div`
   position: absolute;
   // right: ${(props) => (props.isAutoSaveToggle ? "0" : "-70px")};
-  top: 3100px;
+  // top: 3100px;
+  bottom:20px;
   max-width: 288px;
   width: 100%;
   max-height: 400px; /* 팝업의 최대 높이를 적절히 설정 */
@@ -796,6 +799,31 @@ const DownloadPopup = styled.div`
   opacity: ${(props) => (props.isAutoSaveToggle ? "0" : "1")};
   transition: opacity 0.3s ease, visibility 0.3s ease; /* 트랜지션 추가 */
   z-index: 99;
+
+  .close {
+    position:absolute;
+    right:20px;
+    top:20px;
+    width:12px;
+    height:12px;
+    cursor:pointer;
+
+    &:before, &:after {
+      position:absolute;
+      top:50%;
+      left:50%;
+      width:2px;
+      height:100%;
+      background:${palette.gray500};
+      content:'';
+    }
+    &:before {
+      transform:translate(-50%, -50%) rotate(45deg);
+    }
+    &:after {
+      transform:translate(-50%, -50%) rotate(-45deg);
+    }
+  }
 
   &:before {
     position: absolute;
@@ -816,6 +844,7 @@ const DownloadPopup = styled.div`
     display: flex;
     flex-direction: column;
     gap: 16px;
+    text-align:left;
   }
 
   h3 {

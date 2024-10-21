@@ -101,6 +101,9 @@ import ImgPDF from "../images/ImgPDF.svg"
 import ImgWord from "../images/ImgWord.svg"
 import ImgPDF2 from "../images/ImgPDF2.svg"
 import ImgWord2 from "../images/ImgWord2.svg"
+import ImgExcel from "../images/ImgExcel.svg"
+import ImgExcel2 from "../images/ImgExcel2.svg"
+
 import ImgKOR from "../images/ImgKOR.svg"
 import ImgENG from "../images/ImgENG.svg"
 import ImgKOR2 from "../images/ImgKOR2.svg"
@@ -220,6 +223,8 @@ const images = {
   ImgWord,
   ImgPDF2,
   ImgWord2,
+  ImgExcel,
+  ImgExcel2,
   ImgKOR,
   ImgENG,
   ImgKOR2,
