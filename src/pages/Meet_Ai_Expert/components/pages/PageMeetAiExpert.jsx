@@ -522,7 +522,7 @@ const PageMeetAiExpert = () => {
                 }}
               >
                 <strong>아이디어 디벨로퍼</strong>
-                <p>다양한 아이디어 발굴과 최적의 사업 아이디어 도출</p>
+                <p>구조화된 아이디어 발상과<br />체계적인 우선순위 도출 </p>
                 <span>
                   <img src={images.ImgIdea} alt="" />
                 </span>
@@ -535,9 +535,35 @@ const PageMeetAiExpert = () => {
                 }}
               >
                 <strong>그로스 해커</strong>
-                <p>고객 퍼널을 분석하여, 마케팅<br/>퍼널별 전략 제시</p>
+                <p>고객 여정을 분석하여, 마케팅<br />퍼널별 전략 제시</p>
                 <span>
                   <img src={images.ImgHacker} alt="" />
+                </span>
+              </ExpertCard>
+
+              <ExpertCard
+                Price
+                onClick={() => {
+                  setIsComingSoon(true);
+                }}
+              >
+                <strong>가격 분석 전문가</strong>
+                <p>시장 데이터를 기반으로 최적의<br />가격 전략 제시 (제품 한정)</p>
+                <span>
+                  <img src={images.ImgPrice} alt="" />
+                </span>
+              </ExpertCard>
+
+              <ExpertCard
+                Price
+                onClick={() => {
+                  setIsComingSoon(true);
+                }}
+              >
+                <strong>Biz 사례 분석 리서처</strong>
+                <p>관련 아이템의 성공 및 실패 사례<br />조사 및 분석 제시</p>
+                <span>
+                  <img src={images.ImgPrice} alt="" />
                 </span>
               </ExpertCard>
 
@@ -551,19 +577,6 @@ const PageMeetAiExpert = () => {
                 <p>비즈니스 모델 설계 및 최적화</p>
                 <span>
                   <img src={images.ImgBM} alt="" />
-                </span>
-              </ExpertCard>
-
-              <ExpertCard
-                Price
-                onClick={() => {
-                  setIsComingSoon(true);
-                }}
-              >
-                <strong>가격 분석 전문가</strong>
-                <p>시장 데이터를 기반으로 최적의 가격 전략 제시 (제품 한정)</p>
-                <span>
-                  <img src={images.ImgPrice} alt="" />
                 </span>
               </ExpertCard>
 
