@@ -57,6 +57,7 @@ import OrganismAdditionalReport from "../organisms/OrganismAdditionalReport";
 import MoleculeCheckReportRightAway from "../molecules/MoleculeCheckReportRightAway";
 import MoleculeCheckPocRightAway from "../molecules/MoleculeCheckPocRightAway";
 import MoleculeCheckPocOption from "../molecules/MoleculeCheckPocOption";
+import MoleculeCheckGrowthHackerOption from "../molecules/MoleculeCheckGrowthHackerOption";
 import OrganismCustomerAdditionalReport from "../organisms/OrganismCustomerAdditionalReport";
 import MoleculePersonaSelect from "../molecules/MoleculePersonaSelect";
 import MoleculeRecommendedTargetButton from "../molecules/MoleculeRecommendedTargetButton";
@@ -364,6 +365,7 @@ if (isLoadingPage) {
                   return <MoleculeRecommendedTargetButton />;
                 } else if (item.type === "pocOption") {
                   return <MoleculeCheckPocOption />;
+                  //return <MoleculeCheckGrowthHackerOption />; // 임시 테스트용
                 } else if (item.type === "pocPersona") {
                   return <MoleculePersonaSelect />;
                 }
