@@ -531,7 +531,7 @@ const PageMeetAiExpert = () => {
               <ExpertCard
                 Hacker
                 onClick={() => {
-                  setIsComingSoon(true);
+                  handledExpertSelect("6");
                 }}
               >
                 <strong>그로스 해커</strong>

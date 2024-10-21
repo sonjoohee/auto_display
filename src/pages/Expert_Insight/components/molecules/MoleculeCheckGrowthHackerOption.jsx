@@ -26,6 +26,8 @@ import {
   IDEA_LIST,
   IDEA_GROUP,
   IDEA_PRIORITY,
+  GROWTH_HACKER_BUTTON_STATE,
+  KPI_QUESTION_LIST,
   BUTTON_STATE,
 } from "../../../AtomStates";
 
@@ -57,15 +59,17 @@ const MoleculeCheckGrowthHackerOption = () => {
   const [customerAdditionalReportData] = useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
   const [isLoggedIn] = useAtom(isLoggedInAtom);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
+  
+  const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
 
-  const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
   const [selectedOption1, setSelectedOption1] = useState("");
   const [selectedOption2, setSelectedOption2] = useState("");
   const [selectedOption3, setSelectedOption3] = useState("");
   const [selectedOption4, setSelectedOption4] = useState("");
   const [selectedOption5, setSelectedOption5] = useState("");
   const [selectedOption6, setSelectedOption6] = useState("");
-  
+  const [growthHackerButtonState, setGrowthHackerButtonState] = useAtom(GROWTH_HACKER_BUTTON_STATE);
+
   const [tabs, setTabs] = useState(0);
 
   const options1 = [
@@ -113,7 +117,7 @@ const MoleculeCheckGrowthHackerOption = () => {
   
 
   const handleOptionClick = (index, optionValue) => {
-    if (selectedPocOptions.length) return;
+    if (KpiQuestionList.length) return;
   
     switch (index) {
       case 1:
@@ -141,26 +145,26 @@ const MoleculeCheckGrowthHackerOption = () => {
   
 
   const handleConfirm = async () => {
-    if (selectedPocOptions.length) return;
+    if (KpiQuestionList.length) return;
 
-    setSelectedPocOptions([selectedOption1, selectedOption2]);
+    setKpiQuestionList([selectedOption1, selectedOption2, selectedOption3, selectedOption4, selectedOption5, selectedOption6]);
     setApproachPath(3);
     setConversationStage(3);
-    setTargetSelectButtonState(1);
+    setGrowthHackerButtonState(1);
 
     const updatedConversation = [...conversation];
     updatedConversation.push(
       {
         type: "user",
-        message: `*${selectedOption1}*의 *${selectedOption2}*을 위해 PoC 검증을 진행하려고 합니다`,
+        message: `함께 사업 아이디어를 확장해가고 싶습니다.`,
       },
       {
         type: "system",
-        message: "PoC 설계를 위한 귀중한 정보 감사합니다. 마지막으로 타겟 유저에 대한 정보를 알려주세요.\n더욱 상세한 PoC 설계가 가능합니다. ",
+        message: "응답 내용을 확인한 결과, 현재 아이템의 마케팅 퍼널 현황을 진단할 수 있었습니다.\n아래 각 진단 결과와 개선 방안을 확인해보세요.",
         expertIndex: selectedExpertIndex,
       },
       {
-        type: `pocPersona`,
+        type: `growthHackerReport`,
       }
     );
     setConversation(updatedConversation);
@@ -184,7 +188,7 @@ const MoleculeCheckGrowthHackerOption = () => {
         customerAdditionalReportData,
         timestamp: Date.now(),
         expert_index: selectedExpertIndex,
-        selectedPocOptions: [selectedOption1, selectedOption2],
+        KpiQuestionList: [selectedOption1, selectedOption2, selectedOption3, selectedOption4, selectedOption5, selectedOption6],
         selectedPocTarget,
         ideaFeatureData,
         ideaRequirementData,
@@ -315,7 +319,7 @@ const MoleculeCheckGrowthHackerOption = () => {
         selectedOption4={selectedOption4}
         selectedOption5={selectedOption5}
         selectedOption6={selectedOption6}
-        selectedPocOptions={selectedPocOptions}
+        KpiQuestionList={KpiQuestionList}
       >
         {tabs === 0 ? null : (
           <div className="prev" onClick={() => hadleTurnTab("prev")}>
@@ -401,7 +405,7 @@ const Progress = styled.div`
     height:3px;
     border-radius:10px;
     background:${(props) =>
-      props.selectedPocOptions?.length !== 0
+      props.KpiQuestionList?.length !== 0
         ? palette.gray800
         : palette.blue};
     transition:all .5s;
@@ -440,7 +444,7 @@ const Option = styled.div`
   font-size:0.88rem;
   color: ${(props) =>
     props.selected
-      ? props.selectedPocOptions?.length === 0
+      ? props.KpiQuestionList?.length === 0
         ? palette.blue
         : palette.black
       : palette.gray800};
@@ -449,14 +453,14 @@ const Option = styled.div`
   cursor: pointer;
   background-color: ${(props) =>
     props.selected
-      ? props.selectedPocOptions?.length === 0
+      ? props.KpiQuestionList?.length === 0
         ? "rgba(4,83,244,0.05)"
         : "rgba(0,0,0,0.05)"
       : palette.white};
   border: 1px solid
     ${(props) =>
       props.selected
-        ? props.selectedPocOptions?.length === 0
+        ? props.KpiQuestionList?.length === 0
           ? palette.blue
           : palette.black
         : palette.lineGray};
@@ -469,13 +473,13 @@ const Option = styled.div`
     border: 1px solid
       ${(props) =>
         props.selected
-          ? props.selectedPocOptions?.length === 0
+          ? props.KpiQuestionList?.length === 0
             ? palette.blue
             : palette.gray800
           : palette.lineGray};
     background-color: ${(props) =>
       props.selected
-      ? props.selectedPocOptions?.length === 0
+      ? props.KpiQuestionList?.length === 0
       ? palette.blue
           : palette.gray800
         : palette.white};
@@ -495,7 +499,7 @@ const Option = styled.div`
 
   &:hover {
     border-color: ${(props) =>
-      props.selectedPocOptions?.length === 0 ? palette.blue : "none"};
+      props.KpiQuestionList?.length === 0 ? palette.blue : "none"};
   }
 `;
 
@@ -526,13 +530,13 @@ const ButtonWrap = styled.div`
 
   .next {
     color: ${(props) =>
-      props.selectedPocOptions.length !== 0
+      props.KpiQuestionList.length !== 0
         ? palette.black
         : !props.selectedOption1
         ? palette.gray500
         : palette.chatBlue};
     background: ${(props) =>
-      props.selectedPocOptions.length !== 0
+      props.KpiQuestionList.length !== 0
         ? palette.white
         : !props.selectedOption1
         ? palette.white
@@ -542,13 +546,13 @@ const ButtonWrap = styled.div`
 
   .finish {
     color: ${(props) =>
-      props.selectedPocOptions.length !== 0
+      props.KpiQuestionList.length !== 0
         ? palette.black
         : !props.selectedOption1 || !props.selectedOption2
         ? palette.gray500
         : palette.chatBlue};
     background: ${(props) =>
-      props.selectedPocOptions.length !== 0
+      props.KpiQuestionList.length !== 0
         ? palette.white
         : !props.selectedOption1 || !props.selectedOption2
         ? palette.white
