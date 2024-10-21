@@ -36,6 +36,7 @@ import {
   IDEA_PRIORITY,
   IDEA_FEATURE_DATA_TEMP,
   IDEA_REQUIREMENT_DATA_TEMP,
+  GROWTH_HACKER_REPORT_DATA,
   BUTTON_STATE,
 } from "../../../AtomStates";
 
@@ -70,6 +71,10 @@ import OrganismIdeaFeature from "../organisms/OrganismIdeaFeature";
 import OrganismIdeaCustomer from "../organisms/OrganismIdeaCustomer";
 import OrganismIdeaList from "../organisms/OrganismIdeaList";
 import OrganismIdeaPriority from "../organisms/OrganismIdeaPriority";
+import MoleculeGrowthHackerStartButton from "../molecules/MoleculeGrowthHackerStartButton";
+import OrganismGrowthHackerReport from "../organisms/OrganismGrowthHackerReport";
+
+
 
 const PageExpertInsight = () => {
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
@@ -135,7 +140,8 @@ const PageExpertInsight = () => {
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
-  
+  const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA || []);
+
   let additionalReportCount = 0;
   let customerAdditionalReportCount = 0;
 
@@ -210,6 +216,7 @@ const PageExpertInsight = () => {
             setIdeaList(savedConversation.ideaList || []);
             setIdeaGroup(savedConversation.ideaGroup || {});
             setIdeaPriority(savedConversation.ideaPriority || []);
+            setGrowthHackerReportData(savedConversation.growthHackerReportData || []);
             setButtonState(savedConversation.buttonState || {});
           }
           
@@ -388,7 +395,15 @@ if (isLoadingPage) {
                 } else if (item.type === "ideaPriority") {
                   return <OrganismIdeaPriority />;
                 }
-                
+
+                /* 그로스 해커 */
+                else if (item.type === "growthHackerStartButton") {
+                  return <MoleculeGrowthHackerStartButton />;
+                } else if (item.type === "growthHackerOption") {
+                  return <MoleculeCheckGrowthHackerOption />;
+                } else if (item.type === "growthHackerReport") {
+                  return <OrganismGrowthHackerReport />;
+                } 
                 return null;
               })}
 
