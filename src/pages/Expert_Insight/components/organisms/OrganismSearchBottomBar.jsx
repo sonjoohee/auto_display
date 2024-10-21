@@ -140,6 +140,12 @@ const OrganismSearchBottomBar = ({ isBlue }) => {
   return (
     <>
       <BottomBar>
+        <TagList>
+          <button>#성공적인 기술 혁신사례</button>
+          <button>#소비자 만족도가 높았던 성공 사례</button>
+          <button>#시장 진입 실패 사례</button>
+        </TagList>
+
         <SearchBar isBlue={isBlue}>
           <svg
             width="20"
@@ -295,6 +301,25 @@ const BottomBar = styled.div`
     // );
     content: "";
     z-index: -1;
+  }
+`;
+
+const TagList = styled.div`
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:12px;
+  margin-bottom:12px;
+
+  > button {
+    font-family: 'Pretendard', 'Poppins';
+    font-size:1rem;
+    color:${palette.gray700};
+    padding:12px 16px;
+    border-radius:50px;
+    border:0;
+    box-shadow:1px 1px 4px rgba(0,0,0,.08);
+    background:${palette.white};
   }
 `;
 
