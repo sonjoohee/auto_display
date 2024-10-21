@@ -685,6 +685,7 @@ const Popup = styled.div`
       font-family: "Pretendard", "Poppins";
       font-size: 0.875rem;
       font-weight: 500;
+      text-align:center;
       margin: 20px auto 24px;
     }
 
