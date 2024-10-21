@@ -502,6 +502,7 @@ const IdeaList = styled.div`
     display:flex;
     align-items:center;
     width:49.5%;
+    min-height:35px;
     font-family: Pretendard, Poppins;
     font-size:0.88rem;
     color:${palette.gray500};
