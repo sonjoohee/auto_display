@@ -447,7 +447,7 @@ useEffect(() => {
         updatedConversation.push(
           {
             type: "system",
-            message: "이렇게 많은 아이디어 중 어떤 것을 먼저 진행할지 고민되시죠?\n우선순위를 확인해드릴게요. 아래 3가지 방법 중 하나를 선택해주세요 ",
+            message: "많은 아이디어 중에서 무엇을 우선적으로 실행할지 결정할 수 있도록, 우선순위를 확인해드리겠습니다.",
             expertIndex: selectedExpertIndex,
           },
           {
