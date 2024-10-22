@@ -132,7 +132,7 @@ const MoleculeIdeaPriorityButton = () => {
     <>
       <ButtonWrap>
         <button onClick={handleClick}>페르소나별 우선순위 선정하기</button>
-        <button disabled className="disabled" onClick={handleClick}>데이터 기반 우선순위 선정하기 (준비중)</button>
+        {/* <button disabled className="disabled" onClick={handleClick}>데이터 기반 우선순위 선정하기 (준비중)</button> */}
       </ButtonWrap>
     </>
   );
