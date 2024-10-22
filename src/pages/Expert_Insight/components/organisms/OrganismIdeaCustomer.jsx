@@ -502,6 +502,7 @@ const IdeaList = styled.div`
     display:flex;
     align-items:center;
     width:49.5%;
+    min-height:35px;
     font-family: Pretendard, Poppins;
     font-size:0.88rem;
     color:${palette.gray500};
@@ -604,6 +605,7 @@ const Popup = styled.div`
       font-family: "Pretendard", "Poppins";
       font-size: 0.875rem;
       font-weight: 500;
+      text-align:center;
       margin: 20px auto 24px;
     }
 
