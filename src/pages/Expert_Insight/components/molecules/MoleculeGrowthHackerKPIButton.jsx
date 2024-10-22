@@ -110,6 +110,10 @@ const MoleculeGrowthHackerKPIButton = () => {
     setConversation(updatedConversation);
     setConversationStage(3);
     setApproachPath(3);
+    setButtonState({
+      ...buttonState,
+      growthHackerKPI : 1,
+    });
 
     await saveConversationToIndexedDB(
       {
@@ -133,7 +137,10 @@ const MoleculeGrowthHackerKPIButton = () => {
         ideaRequirementData : ideaRequirementData,
         ideaList : ideaList,
         ideaGroup : ideaGroup,
-        buttonState : buttonState,
+        buttonState : {
+          ...buttonState,
+          growthHackerKPI : 1,
+        },
         ideaMiro : ideaMiro,
         growthHackerReportData : growthHackerReportData,
         KpiQuestionList : KpiQuestionList,
