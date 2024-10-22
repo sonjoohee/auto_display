@@ -140,11 +140,13 @@ const OrganismSearchBottomBar = ({ isBlue }) => {
   return (
     <>
       <BottomBar>
+      {(selectedExpertIndex === "8" || selectedExpertIndex === "9") && isBlue && (
         <TagList>
           <button>#성공적인 기술 혁신사례</button>
           <button>#소비자 만족도가 높았던 성공 사례</button>
           <button>#시장 진입 실패 사례</button>
-        </TagList>
+          </TagList>
+      )}
 
         <SearchBar isBlue={isBlue}>
           <svg
