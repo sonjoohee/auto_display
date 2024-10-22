@@ -2362,6 +2362,15 @@ const AccordionContent = styled.div`
       content:'E';
     }
 
+    /* 마케팅 분석과 개선 솔루션 제안 */
+    &[data-expert-index="6"]:before {
+      width:15px;
+      height:15px;
+      line-height:15px;
+      // background: #00ff00; 
+      content:'E';
+    }
+
     p {
       width: 100%;
       min-height: 19px;

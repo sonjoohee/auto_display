@@ -50,6 +50,7 @@ import ImgClient from "../images/imgClient.svg"
 import ImgStrategy from "../images/imgStrategy.svg"
 import ImgIdea from "../images/imgIdea.svg"
 import ImgHacker from "../images/imgHacker.svg"
+import ImgBiz from "../images/imgBiz.svg"
 import ImgBM from "../images/imgBM.svg"
 import ImgPrice from "../images/imgPrice.svg"
 import ImgComing from "../images/imgComing.svg"
@@ -118,6 +119,11 @@ import IconExpert2 from "../images/iconExpert2.png"
 import IconExpert3 from "../images/iconExpert3.png"
 import IconExpert4 from "../images/iconExpert4.png"
 import IconExpert5 from "../images/iconExpert5.png"
+import IconExpert6 from "../images/iconExpert6.png"
+import IconExpert7 from "../images/iconExpert7.png"
+import IconExpert8 from "../images/iconExpert8.png"
+import IconExpert9 from "../images/iconExpert9.png"
+import IconExpert10 from "../images/iconExpert10.png"
 
 const images = {
   Logo,
@@ -172,6 +178,7 @@ const images = {
   ImgStrategy,
   ImgIdea,
   ImgHacker,
+  ImgBiz,
   ImgBM,
   ImgPrice,
   ImgComing,
@@ -239,6 +246,11 @@ const images = {
   IconExpert3,
   IconExpert4,
   IconExpert5,
+  IconExpert6,
+  IconExpert7,
+  IconExpert8,
+  IconExpert9,
+  IconExpert10,
 }
 
 export default images;

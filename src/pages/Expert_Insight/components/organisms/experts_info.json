@@ -192,7 +192,7 @@
       "서울대학교 산업공학과"
     ],
     "expertise": {
-      "title": "창의적 아이디어 발굴",
+      "title": "전문분석 분야",
       "fields": [
         {
           "images": "/images/icon/ProfessionalIdea.svg",
@@ -219,6 +219,272 @@
             "사용자 피드백 기반 개선", 
             "UX 중심의 전략 최적화",
             "데이터 기반 성과 개선"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "6",
+    "name": "김세준",
+    "title": "그로스 해커",
+    "description": "삼성전자 글로벌 마케팅 전략 수립",
+    "career": [
+      "LG생활건강 마케팅 전략 본부장",
+      "IBM 디지털 마케팅 전략 기획",
+      "삼성전자 글로벌 마케팅 수립",
+      "KAIST MBA",
+      "연세대학교 경영학과"
+    ],
+    "expertise": {
+      "title": "전문분석 분야",
+      "fields": [
+        {
+          "images": "/images/icon/ProfessionalIdea.svg",
+          "category": "마케팅 KPI 설계 및 성과 분석",
+          "details": [
+            "맞춤형 KPI 설정",
+            "성과 지표 모니터링 및 분석",
+            "지속적 성과 개선 전략"
+          ]
+        },
+        {
+          "images": "/images/icon/ProfessionalIdea2.svg",
+          "category": "디지털 마케팅 전략",
+          "details": [
+            "AARRR 모델 기반 최적화 전략",
+            "디지털 채널별 퍼포먼스 분석",
+            "마케팅 단계별 전략 실행"
+          ]
+        },
+        {
+          "images": "/images/icon/ProfessionalUX2.svg",
+          "category": "고객 유지 및 활성화 전략",
+          "details": [
+            "데이터 기반 맞춤형 전략 개발",
+            "LTV 증대를 위한 전략 설계",
+            "고객 이탈 및 활성화 방안 설계"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "7",
+    "name": "한준혁",
+    "title": "가격 분석 전문가",
+    "description": "아마존 가격 전략 분석 및 최적화",
+    "career": [
+      "아마존 가격 전략 수석 분석가",
+      "LG전자 신제품 가격 전략 제시",
+      "삼성전자 글로벌 마케팅",
+      "서울대학교 경제학과"
+    ],
+    "expertise": {
+      "title": "전문분석 분야",
+      "fields": [
+        {
+          "images": "/images/icon/ProfessionalIdea.svg",
+          "category": "가격 전략 설계 및 평가",
+          "details": [
+            "시장 데이터 기반 최적의 설계",
+            "글로벌 기준 가격 경쟁력 평가",
+            "시장 진입 전략 개발"
+          ]
+        },
+        {
+          "images": "/images/icon/ProfessionalIdea2.svg",
+          "category": "가격 크롤링 및 데이터 분석",
+          "details": [
+            "실시간 시장 가격 동향 분석",
+            "데이터 기반 가격 포지셔닝",
+            "전략적 인사이트 도출"
+          ]
+        },
+        {
+          "images": "/images/icon/ProfessionalUX2.svg",
+          "category": "가격 수용성 예측 및 최적화",
+          "details": [
+            "가격 민감도 분석 및 수용성 예측",
+            "시장 대응 전략 제안",
+            "단위 표준화 및 기준 가격 설계"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "8",
+    "name": "한준혁",
+    "title": "가격 분석 전문가",
+    "description": "아마존 가격 전략 분석 및 최적화",
+    "career": [
+      "아마존 가격 전략 수석 분석가",
+      "LG전자 신제품 가격 전략 제시",
+      "삼성전자 글로벌 마케팅",
+      "서울대학교 경제학과"
+    ],
+    "expertise": {
+      "title": "전문분석 분야",
+      "fields": [
+        {
+          "images": "/images/icon/ProfessionalIdea.svg",
+          "category": "가격 전략 설계 및 평가",
+          "details": [
+            "시장 데이터 기반 최적의 설계",
+            "글로벌 기준 가격 경쟁력 평가",
+            "시장 진입 전략 개발"
+          ]
+        },
+        {
+          "images": "/images/icon/ProfessionalIdea2.svg",
+          "category": "가격 크롤링 및 데이터 분석",
+          "details": [
+            "실시간 시장 가격 동향 분석",
+            "데이터 기반 가격 포지셔닝",
+            "전략적 인사이트 도출"
+          ]
+        },
+        {
+          "images": "/images/icon/ProfessionalUX2.svg",
+          "category": "가격 수용성 예측 및 최적화",
+          "details": [
+            "가격 민감도 분석 및 수용성 예측",
+            "시장 대응 전략 제안",
+            "단위 표준화 및 기준 가격 설계"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "9",
+    "name": "김소윤",
+    "title": "BM 전문가",
+    "description": "삼성SDS IT 컨설팅 모델 전략 설계",
+    "career": [
+      "삼성SDS IT 모델 전략 수립",
+      "SK플래닛 비즈니스 모델 혁신",
+      "네이버 커넥트 스타트업 멘토링",
+      "고려대학교 경영학과"
+    ],
+    "expertise": {
+      "title": "전문분석 분야",
+      "fields": [
+        {
+          "images": "/images/icon/ProfessionalIdea.svg",
+          "category": "비즈니스 모델 전략 수립",
+          "details": [
+            "모델 진단과 개선 전략",
+            "신수익 모델 제안",
+            "문제 정의 및 해결 도출"
+          ]
+        },
+        {
+          "images": "/images/icon/ProfessionalIdea2.svg",
+          "category": "창업 및 스타트업 전략 수립",
+          "details": [
+            "성장 로드맵 설계",
+            "투자 피칭 전략",
+            "민첩한 모델 개발"
+          ]
+        },
+        {
+          "images": "/images/icon/ProfessionalUX2.svg",
+          "category": "고객 세분화 및 가치 최적화",
+          "details": [
+            "정밀 고객 세분화",
+            "맞춤형 가치 제안",
+            "피드백 기반 개선"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "10",
+    "name": "김현우",
+    "title": "조사 설계 전문가",
+    "description": "Nielsen Korea 조사 설계 및 분석 리드",
+    "career": [
+      "Nielsen Korea 조사 설계 리드",
+      "삼성리서치 데이터 분석 담당",
+      "LG CNS 조사 솔루션 기획",
+      "고려대학교 경영학과"
+    ],
+    "expertise": {
+      "title": "전문분석 분야",
+      "fields": [
+        {
+          "images": "/images/icon/ProfessionalIdea.svg",
+          "category": "조사 설계 및 방법론 개발",
+          "details": [
+            "최적 조사 방법 설계",
+            "다양한 조사 기법 활용",
+            "실무 프로젝트 수행"
+          ]
+        },
+        {
+          "images": "/images/icon/ProfessionalIdea2.svg",
+          "category": "데이터 기반 분석 및 전략 도출",
+          "details": [
+            "소비자 행동 분석",
+            "정량/정성 데이터 활용",
+            "실행 가능한 전략 수립"
+          ]
+        },
+        {
+          "images": "/images/icon/ProfessionalUX2.svg",
+          "category": "문제 해결 및 커뮤니케이션",
+          "details": [
+            "조사 문제 해결 방안",
+            "결과 명확히 전달",
+            "이해 관계자 협업"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "6",
+    "name": "김세준",
+    "title": "그로스 해커",
+    "description": "삼성전자 글로벌 마케팅 전략 수립",
+    "career": [
+      "LG생활건강 마케팅 전략 본부장",
+      "IBM 디지털 마케팅 전략 기획",
+      "삼성전자 글로벌 마케팅 수립",
+      "KAIST MBA",
+      "연세대학교 경영학과"
+    ],
+    "expertise": {
+      "title": "전문분석 분야",
+      "fields": [
+        {
+          "images": "/images/icon/ProfessionalIdea.svg",
+          "category": "마케팅 KPI 설계 및 성과 분석",
+          "details": [
+            "맞춤형 KPI 설정",
+            "성과 지표 모니터링 및 분석",
+            "지속적 성과 개선 전략"
+          ]
+        },
+        {
+          "images": "/images/icon/ProfessionalIdea2.svg",
+          "category": "디지털 마케팅 전략",
+          "details": [
+            "AARRR 모델 기반 최적화 전략",
+            "디지털 채널별 퍼포먼스 분석",
+            "마케팅 단계별 전략 실행"
+          ]
+        },
+        {
+          "images": "/images/icon/ProfessionalUX2.svg",
+          "category": "고객 유지 및 활성화 전략",
+          "details": [
+            "데이터 기반 맞춤형 전략 개발",
+            "LTV 증대를 위한 전략 설계",
+            "고객 이탈 및 활성화 방안 설계"
           ]
         }
       ]

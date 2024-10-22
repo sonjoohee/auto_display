@@ -257,7 +257,7 @@ const OrganismGrowthHackerReport = () => {
       ) : (
         <>
           <h1>마케팅 분석과 개선 솔루션 제안</h1>
-          <p>{growthHackerReportData[0].content[1].text} {growthHackerReportData[0].content[0].text}</p>
+          <p>{growthHackerReportData[0].content[0].text} {growthHackerReportData[0].content[1].text}</p>
           {growthHackerReportData[1].content.map((report, index) => (
             <SeparateSection key={index}>
               <h3>
@@ -279,7 +279,7 @@ const OrganismGrowthHackerReport = () => {
         }
 
       <MoleculeReportController
-        reportIndex={5}
+        reportIndex={6}
         sampleData={growthHackerReportData}
         />
       </>

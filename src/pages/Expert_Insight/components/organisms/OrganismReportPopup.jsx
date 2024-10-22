@@ -95,25 +95,35 @@ const OrganismReportPopup = ({ report, onClose }) => {
   {
     reportIndex === 0 && (reportTypeText = "비즈니스 분석");
   }
-
   {
     reportIndex === 1 && (reportTypeText = "전문가 보고서");
   }
-
   {
     reportIndex === 2 && (reportTypeText = "추가 보고서");
   }
-
   {
     reportIndex === 3 && (reportTypeText = "사용자 질문 보고서");
   }
-
   {
     reportIndex === 4 && (reportTypeText = "추천 타겟 및 예상 인사이트");
   }
-
   {
-    reportIndex === 5 && (reportTypeText = "페르소나별 아이디어 우선순위 선별 ");
+    reportIndex === 5 && (reportTypeText = "페르소나별 아이디어 우선순위 선별");
+  }
+  {
+    reportIndex === 6 && (reportTypeText = "마케팅 분석과 개선 솔루션 제안");
+  }
+  // {
+  //   reportIndex === 7 && (reportTypeText = "가격 분석");
+  // }
+  {
+    reportIndex === 8 && (reportTypeText = "성공적인 기술 혁신 사례 조사 보고서 ");
+  }
+  {
+    reportIndex === 9 && (reportTypeText = "비즈니스 모델 캔버스");
+  }
+  {
+    reportIndex === 10 && (reportTypeText = "맞춤형 조사 설계 보고서");
   }
 
   return ReactDOM.createPortal(
@@ -135,7 +145,7 @@ const OrganismReportPopup = ({ report, onClose }) => {
             </popup-p>
           </popupTitle>
 
-          {(reportIndex === 1 || reportIndex === 4 || reportIndex === 5) && (
+          {(reportIndex === 1 || reportIndex === 4 || reportIndex === 5 || reportIndex === 6) && (
             <ExpertThumb>
               <div className="thumb">
                 {report.content.expert_id === "1" ? (
@@ -148,8 +158,16 @@ const OrganismReportPopup = ({ report, onClose }) => {
                   <img src={panelimages.expert_4} alt="" />
                 ) : reportIndex === 5 ? (
                   <img src={panelimages.expert_5} alt="" />
+                ) : reportIndex === 6 ? (
+                  <img src={panelimages.expert_6} alt="" />
+                ) : reportIndex === 7 ?   (
+                  <img src={panelimages.expert_7} alt="" />
+                ) : reportIndex === 8 ? (
+                  <img src={panelimages.expert_8} alt="" />
+                ) : reportIndex === 9 ? (
+                  <img src={panelimages.expert_9} alt="" />
                 ) : (
-                  <img src={panelimages.expert_5} alt="" />
+                  <img src={panelimages.expert_10} alt="" />
                 )}
               </div>
               {report.content.expert_id === "1" ? (
@@ -177,6 +195,31 @@ const OrganismReportPopup = ({ report, onClose }) => {
                   <strong>아이디어 디벨로퍼</strong>
                   <p>윤재민</p>
                 </div>
+              ) : reportIndex === 6 ? (
+                <div className="cont">
+                  <strong>그로스 해커</strong>
+                  <p>김세준</p>
+                </div>
+              ) : reportIndex === 7 ? (
+                <div className="cont">
+                  <strong>가격 분석 전문가</strong>
+                  <p>한준혁</p>
+                </div>
+              ) : reportIndex === 8 ? (
+                <div className="cont">
+                  <strong>사례 분석 전문가</strong>
+                  <p>한준혁</p>
+                </div>
+              ) : reportIndex === 9 ? (
+                <div className="cont">
+                  <strong>BM 전문가</strong>
+                  <p>김소윤</p>
+                </div>
+              ) : reportIndex === 10 ? (
+                <div className="cont">
+                  <strong>조사 설계 전문가</strong>
+                  <p>김현우</p>
+                </div>
               ) : null}
             </ExpertThumb>
           )}
@@ -193,6 +236,8 @@ const OrganismReportPopup = ({ report, onClose }) => {
         {reportIndex === 4 && <RecommendedTargetReportSection report={report} />}
 
         {reportIndex === 5 && <IdeaPriorityReportSection report={report} />}
+
+        {reportIndex === 6 && <GrowthHackerReportSection report={report} />}
 
         <CloseButton onClick={onClose}>닫기</CloseButton>
       </PopupContent>
@@ -1986,6 +2031,14 @@ const Wrap = styled.div`
     text-align:left;
     margin-bottom:20px;
   }
+
+  p {
+    font-size:0.88rem;
+    font-weight:300;
+    color:${palette.black};
+    text-align:left;
+    margin-bottom:10px;
+  }
 `;
 
 const SeparateSection2 = styled.div`
@@ -2031,6 +2084,90 @@ const SeparateSection2 = styled.div`
 
   .list-decimal li {
     list-style-type:decimal;
+    list-style-position:inside;
+    font-size:0.88rem;
+    font-weight:300;
+    color:${palette.gray800};
+    line-height:1.5;
+    text-align:left;
+  }
+`;
+
+const GrowthHackerReportSection = ({ report }) => {
+  return (
+    <Wrap>
+      <h1>마케팅 분석과 개선 솔루션 제안</h1>
+      <p>{report.content[0].content[0].text} {report.content[0].content[1].text}</p>
+      {report.content[1].content.map((item, index) => (
+        <SeparateSection3 key={index}>
+          <h3>
+            <span className="number">{index + 1}</span>
+            {item.title}
+          </h3>
+          <p>{item.text}</p>
+          <div>
+          <ol className="list-disc">
+            {item.subcontent.map((subItem, subIndex) => (
+              <li key={subIndex}>
+                {subItem.subTitle} : {subItem.text}
+              </li>
+            ))}
+          </ol>
+          </div>
+        </SeparateSection3>
+      ))
+      }
+      <MoleculeReportController
+        reportIndex={6}
+        report={report}
+      />
+    </Wrap>
+  );
+};
+
+const SeparateSection3 = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap:12px;
+  margin-top: 12px;
+  padding: 20px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.03);
+
+  h3 {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-size:1rem;
+    font-weight:700;
+
+    span {
+      width: 15px;
+      height: 15px;
+      font-size: 0.63rem;
+      color: ${palette.chatBlue};
+      line-height: 15px;
+      text-align: center;
+      border: 1px solid ${palette.chatBlue};
+    }
+  }
+
+  p {
+    font-size:0.88rem;
+    font-weight:300;
+    color:${palette.gray800};
+    text-align:left;
+  }
+
+  div {
+    padding:16px;
+    border-radius:10px;
+    background:${palette.white};
+  }
+
+  .list-disc li {
+    list-style-type:disc;
     list-style-position:inside;
     font-size:0.88rem;
     font-weight:300;
