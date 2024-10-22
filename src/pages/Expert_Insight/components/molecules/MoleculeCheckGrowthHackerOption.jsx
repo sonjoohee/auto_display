@@ -221,6 +221,7 @@ const MoleculeCheckGrowthHackerOption = () => {
                 key={option1.value}
                 selected={selectedOption1 === option1.value}
                 onClick={() => handleOptionClick(1, option1.value)}
+                KpiQuestionList={KpiQuestionList}
               >
                 {option1.label}
               </Option>
@@ -237,6 +238,7 @@ const MoleculeCheckGrowthHackerOption = () => {
                 key={option2.value}
                 selected={selectedOption2 === option2.value}
                 onClick={() => handleOptionClick(2, option2.value)}
+                KpiQuestionList={KpiQuestionList}
               >
                 {option2.label}
               </Option>
@@ -254,6 +256,7 @@ const MoleculeCheckGrowthHackerOption = () => {
                 key={option3.value}
                 selected={selectedOption3 === option3.value}
                 onClick={() => handleOptionClick(3, option3.value)}
+                KpiQuestionList={KpiQuestionList}
               >
                 {option3.label}
               </Option>
@@ -270,6 +273,7 @@ const MoleculeCheckGrowthHackerOption = () => {
                 key={option4.value}
                 selected={selectedOption4 === option4.value}
                 onClick={() => handleOptionClick(4, option4.value)}
+                KpiQuestionList={KpiQuestionList}
               >
                 {option4.label}
               </Option>
@@ -287,6 +291,7 @@ const MoleculeCheckGrowthHackerOption = () => {
                 key={option5.value}
                 selected={selectedOption5 === option5.value}
                 onClick={() => handleOptionClick(5, option5.value)}
+                KpiQuestionList={KpiQuestionList}
               >
                 {option5.label}
               </Option>
@@ -304,6 +309,7 @@ const MoleculeCheckGrowthHackerOption = () => {
                 key={option6.value}
                 selected={selectedOption6 === option6.value}
                 onClick={() => handleOptionClick(6, option6.value)}
+                KpiQuestionList={KpiQuestionList}
               >
                 {option6.label}
               </Option>
