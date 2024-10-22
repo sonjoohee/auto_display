@@ -38,6 +38,8 @@ import {
   IDEA_REQUIREMENT_DATA_TEMP,
   GROWTH_HACKER_REPORT_DATA,
   BUTTON_STATE,
+  GROWTH_HACKER_DETAIL_REPORT_DATA,
+  KPI_QUESTION_LIST,
 } from "../../../AtomStates";
 
 import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
@@ -73,7 +75,8 @@ import OrganismIdeaList from "../organisms/OrganismIdeaList";
 import OrganismIdeaPriority from "../organisms/OrganismIdeaPriority";
 import MoleculeGrowthHackerStartButton from "../molecules/MoleculeGrowthHackerStartButton";
 import OrganismGrowthHackerReport from "../organisms/OrganismGrowthHackerReport";
-
+import MoleculeGrowthHackerKPIButton from "../molecules/MoleculeGrowthHackerKPIButton";
+import OrganismGrowthHackerKPI from "../organisms/OrganismGrowthHackerKPI";
 
 
 const PageExpertInsight = () => {
@@ -140,7 +143,9 @@ const PageExpertInsight = () => {
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
-  const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA || []);
+  const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
+  const [growthHackerDetailReportData, setGrowthHackerDetailReportData] = useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
+  const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
 
   let additionalReportCount = 0;
   let customerAdditionalReportCount = 0;
@@ -216,8 +221,11 @@ const PageExpertInsight = () => {
             setIdeaList(savedConversation.ideaList || []);
             setIdeaGroup(savedConversation.ideaGroup || {});
             setIdeaPriority(savedConversation.ideaPriority || []);
-            setGrowthHackerReportData(savedConversation.growthHackerReportData || []);
             setButtonState(savedConversation.buttonState || {});
+
+            setGrowthHackerReportData(savedConversation.growthHackerReportData || []);
+            setGrowthHackerDetailReportData(savedConversation.growthHackerDetailReportData || {});
+            setKpiQuestionList(savedConversation.KpiQuestionList || []);
           }
           
           setIsLoadingPage(false); // 로딩 완료
@@ -403,6 +411,10 @@ if (isLoadingPage) {
                   return <MoleculeCheckGrowthHackerOption />;
                 } else if (item.type === "growthHackerReport") {
                   return <OrganismGrowthHackerReport />;
+                } else if (item.type === "growthHackerKPIButton") {
+                  return <MoleculeGrowthHackerKPIButton />;
+                } else if (item.type === "growthHackerKPI") {
+                  return <OrganismGrowthHackerKPI />;
                 } 
                 return null;
               })}

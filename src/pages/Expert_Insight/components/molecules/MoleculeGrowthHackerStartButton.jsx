@@ -29,6 +29,11 @@ import {
   POC_PERSONA_LIST,
   GROWTH_HACKER_BUTTON_STATE,
   BUTTON_STATE,
+  IDEA_MIRO,
+  IDEA_FEATURE_DATA,
+  IDEA_REQUIREMENT_DATA,
+  IDEA_LIST,
+  IDEA_GROUP,
 } from "../../../AtomStates";
 
 import {
@@ -38,6 +43,11 @@ import {
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeGrowthHackerStartButton = () => {
+  const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
+  const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
+  const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
+  const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
+  const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_DATA);
@@ -108,6 +118,11 @@ const MoleculeGrowthHackerStartButton = () => {
         selectedPocTarget: selectedPocTarget,
         pocDetailReportData : pocDetailReportData,
         buttonState : buttonState,
+        ideaFeatureData : ideaFeatureData,
+        ideaRequirementData : ideaRequirementData,
+        ideaList : ideaList,
+        ideaGroup : ideaGroup,
+        ideaMiro : ideaMiro,
       },
       isLoggedIn,
       conversationId

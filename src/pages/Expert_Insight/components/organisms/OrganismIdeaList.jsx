@@ -37,7 +37,10 @@ import {
   IDEA_LIST,
   IDEA_GROUP,
   BUTTON_STATE,
-  IDEA_MIRO
+  IDEA_MIRO,
+  GROWTH_HACKER_REPORT_DATA,
+  GROWTH_HACKER_DETAIL_REPORT_DATA,
+  KPI_QUESTION_LIST,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -51,6 +54,9 @@ import {
 import images from "../../../../assets/styles/Images";
 
 const OrganismIdeaList = () => {
+  const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
+  const [growthHackerDetailReportData, setGrowthHackerDetailReportData] = useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
+  const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
   const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
   const [isModalOpen, setIsModalOpen] = useState({});
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
@@ -294,6 +300,9 @@ const handleMiro = async () => {
         ideaGroup : ideaGroup,
         buttonState : buttonState,
         ideaMiro : ideaMiro,
+        growthHackerReportData : growthHackerReportData,
+        growthHackerDetailReportData : growthHackerDetailReportData,
+        KpiQuestionList : KpiQuestionList,
       },
       isLoggedIn,
       conversationId
@@ -480,6 +489,9 @@ useEffect(() => {
             ideaList : finalResponseIdea.dev_report,
             ideaGroup : responseGroup.data.dev_cluster_report,
             buttonState : buttonState,
+            growthHackerReportData : growthHackerReportData,
+            growthHackerDetailReportData : growthHackerDetailReportData,
+            KpiQuestionList : KpiQuestionList,
           },
           isLoggedIn,
           conversationId

@@ -31,6 +31,10 @@ import {
   IDEA_FEATURE_DATA,
   IDEA_REQUIREMENT_DATA,
   BUTTON_STATE,
+  IDEA_MIRO,
+  GROWTH_HACKER_REPORT_DATA,
+  GROWTH_HACKER_DETAIL_REPORT_DATA,
+  KPI_QUESTION_LIST,
 } from "../../../AtomStates";
 
 import {
@@ -40,6 +44,10 @@ import {
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeIdeaCustomerButton = () => {
+  const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
+  const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
+  const [growthHackerDetailReportData, setGrowthHackerDetailReportData] = useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
+  const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_DATA);
@@ -131,7 +139,10 @@ const MoleculeIdeaCustomerButton = () => {
         buttonState : {
           ...buttonState,
           IdeaCustomer : 1
-        }
+        },
+        growthHackerReportData : growthHackerReportData,
+        growthHackerDetailReportData : growthHackerDetailReportData,
+        KpiQuestionList : KpiQuestionList,
       },
       isLoggedIn,
       conversationId

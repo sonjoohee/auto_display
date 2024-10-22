@@ -49,9 +49,17 @@ import {
   IDEA_GROUP,
   IDEA_PRIORITY,
   CONVERSATION_ID,
+  IDEA_MIRO,
+  GROWTH_HACKER_REPORT_DATA,
+  GROWTH_HACKER_DETAIL_REPORT_DATA,
+  KPI_QUESTION_LIST,
 } from "../../../AtomStates";
 
 const OrganismStrategyReportSection = ({ expertIndex }) => {
+  const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
+  const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
+  const [growthHackerDetailReportData, setGrowthHackerDetailReportData] = useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
+  const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
@@ -291,6 +299,9 @@ const OrganismStrategyReportSection = ({ expertIndex }) => {
               ideaGroup : ideaGroup,
               ideaPriority : ideaPriority,
               buttonState : buttonState,
+              growthHackerReportData : growthHackerReportData,
+              growthHackerDetailReportData : growthHackerDetailReportData,
+              KpiQuestionList : KpiQuestionList,
             },
             isLoggedIn,
             conversationId
