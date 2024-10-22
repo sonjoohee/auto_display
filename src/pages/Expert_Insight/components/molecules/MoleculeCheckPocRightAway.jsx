@@ -33,6 +33,7 @@ import {
   GROWTH_HACKER_REPORT_DATA,
   GROWTH_HACKER_DETAIL_REPORT_DATA,
   KPI_QUESTION_LIST,
+  BUTTON_STATE,
 } from "../../../AtomStates";
 
 import {
@@ -41,7 +42,8 @@ import {
 
 import { palette } from "../../../../assets/styles/Palette";
 
-const MoleculeCheckReportRightAway = () => {
+const MoleculeCheckPocRightAway = () => {
+  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
   const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
   const [growthHackerDetailReportData, setGrowthHackerDetailReportData] = useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
@@ -127,6 +129,7 @@ const MoleculeCheckReportRightAway = () => {
         growthHackerReportData : growthHackerReportData,
         growthHackerDetailReportData : growthHackerDetailReportData,
         KpiQuestionList : KpiQuestionList,
+        buttonState : buttonState,
       },
       isLoggedIn,
       conversationId
@@ -141,7 +144,7 @@ const MoleculeCheckReportRightAway = () => {
   );
 };
 
-export default MoleculeCheckReportRightAway;
+export default MoleculeCheckPocRightAway;
 
 const ButtonWrap = styled.div`
   display: flex;

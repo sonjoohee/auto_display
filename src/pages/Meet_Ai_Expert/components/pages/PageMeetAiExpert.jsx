@@ -569,7 +569,7 @@ const PageMeetAiExpert = () => {
               </ExpertCard>
 
               <ExpertCard
-                Price
+                Biz
                 onClick={() => {
                   setIsComingSoon(true);
                 }}
@@ -577,7 +577,7 @@ const PageMeetAiExpert = () => {
                 <strong>Biz 사례 분석 리서처</strong>
                 <p>관련 아이템의 성공 및 실패 사례<br />조사 및 분석 제시</p>
                 <span>
-                  <img src={images.ImgPrice} alt="" />
+                  <img src={images.ImgBiz} alt="" />
                 </span>
               </ExpertCard>
 
@@ -967,6 +967,7 @@ const ExpertCard = styled.div`
     else if (props.Strategy) return `1px solid #E0E5DF`;
     else if (props.Idea) return `1px solid #DAE1F1`;
     else if (props.Hacker) return `1px solid #EDE9DE`;
+    else if (props.Biz) return `1px solid #CCDAE0`;
     else if (props.BM) return `1px solid #EEE7E7`;
     else if (props.Price) return `1px solid #E8E2EA`;
     else return `1px solid ${palette.gray100}`;
@@ -980,6 +981,7 @@ const ExpertCard = styled.div`
     else if (props.Strategy) return `#E0E5DF`;
     else if (props.Idea) return `#DAE1F1`;
     else if (props.Hacker) return `#EDE9DE`;
+    else if (props.Biz) return `#CCDAE0`;
     else if (props.BM) return `#EEE7E7`;
     else if (props.Price) return `#E8E2EA`;
     else return palette.gray100;

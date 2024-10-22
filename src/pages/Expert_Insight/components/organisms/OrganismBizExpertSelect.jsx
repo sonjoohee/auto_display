@@ -179,8 +179,6 @@ const OrganismBizExpertSelect = () => {
           { type: `strategy_${index}` }
         );
       } else if (index === "4") {
-        setExpertButtonState(1);
-
         updatedConversation.push(
           {
             type: "user",
@@ -211,6 +209,21 @@ const OrganismBizExpertSelect = () => {
             expertIndex: index,
           },
           { type: `ideaFeature` }
+        );
+      } else if (index === "6") {
+        updatedConversation.push(
+          {
+            type: "user",
+            message:
+              "함께 사업 아이디어를 확장해가고 싶습니다 💡",
+          },
+          {
+            type: "system",
+            message:
+              "안녕하세요. 저는 그로스 해커 김세준입니다. 고객 퍼널에 맞는 전략을 수립하는 것은 비즈니스 성장에 중요한 요소입니다. 제가 퍼널을 분석하고 각 단계에서 성장을 가속화할 전략을 제시해드릴게요. 아이템에 대한 설명을 해주세요 📝",
+            expertIndex: index,
+          },
+          { type: `growthHackerOption` }
         );
       }
 
@@ -312,6 +325,51 @@ const OrganismBizExpertSelect = () => {
                 </button>
               </div>
             )}
+            {(selectedExpertList.includes("6") || KpiQuestionList.length !== 0) ? null : (
+              <div>
+                <img src={images.IconExpert6} alt="" />
+                <p>그로스 해커에게 KPI 전략 받기</p>
+                <button type="button" onClick={() => handledExpertSelect("6")}>
+                  시작하기
+                </button>
+              </div>
+            )}
+            {/* {(selectedExpertList.includes("7") || KpiQuestionList.length !== 0) ? null : (
+              <div>
+                <img src={images.IconExpert7} alt="" />
+                <p>그로스 해커에게 KPI 전략 받기</p>
+                <button type="button" onClick={() => handledExpertSelect("7")}>
+                  시작하기
+                </button>
+              </div>
+            )}
+            {(selectedExpertList.includes("8") || KpiQuestionList.length !== 0) ? null : (
+              <div>
+                <img src={images.IconExpert8} alt="" />
+                <p>그로스 해커에게 KPI 전략 받기</p>
+                <button type="button" onClick={() => handledExpertSelect("8")}>
+                  시작하기
+                </button>
+              </div>
+            )}
+            {(selectedExpertList.includes("9") || KpiQuestionList.length !== 0) ? null : (
+              <div>
+                <img src={images.IconExpert9} alt="" />
+                <p>그로스 해커에게 KPI 전략 받기</p>
+                <button type="button" onClick={() => handledExpertSelect("9")}>
+                  시작하기
+                </button>
+              </div>
+            )}
+            {(selectedExpertList.includes("10") || KpiQuestionList.length !== 0) ? null : (
+              <div>
+                <img src={images.IconExpert10} alt="" />
+                <p>그로스 해커에게 KPI 전략 받기</p>
+                <button type="button" onClick={() => handledExpertSelect("10")}>
+                  시작하기
+                </button>
+              </div>
+            )} */}
           </SelectOptions>
         </BizExpertSelectContainer>
       )}

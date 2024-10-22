@@ -460,6 +460,14 @@ if (isLoadingPage) {
                 }
                 </>
               :
+              selectedExpertIndex === "6" ?
+                <>
+                {
+                  buttonState.growthHackerKPI === 1 &&
+                    <OrganismBizExpertSelect />
+                }
+                </>
+              :
               null
               }
               
@@ -473,6 +481,9 @@ if (isLoadingPage) {
                 : 
                 selectedExpertIndex === "5" ? 
                   ideaPriority.length !== 0 && <OrganismSearchBottomBar isBlue={true} /> // 5번 전문가 끝났을 때 활성화
+                : 
+                selectedExpertIndex === "6" ?
+                  buttonState.growthHackerKPI === 1 && <OrganismSearchBottomBar isBlue={true} /> // 6번 전문가 끝났을 때 활성화
                 : 
                 <OrganismSearchBottomBar isBlue={true} />
             )}
