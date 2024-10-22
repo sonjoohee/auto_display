@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useAtom } from "jotai";
 import {
@@ -71,6 +71,21 @@ const MoleculeCheckGrowthHackerOption = () => {
   const [growthHackerButtonState, setGrowthHackerButtonState] = useAtom(GROWTH_HACKER_BUTTON_STATE);
 
   const [tabs, setTabs] = useState(0);
+
+  useEffect(() => {
+    if (KpiQuestionList.length === 0) {
+      setTabs(0);
+    } else {
+      setTabs(5);
+
+      setSelectedOption1(KpiQuestionList[0]);
+      setSelectedOption2(KpiQuestionList[1]);
+      setSelectedOption3(KpiQuestionList[2]);
+      setSelectedOption4(KpiQuestionList[3]);
+      setSelectedOption5(KpiQuestionList[4]);
+      setSelectedOption6(KpiQuestionList[5]);
+    }
+  }, [KpiQuestionList]);
 
   const options1 = [
     { label: "아이디어 단계", value: "아이디어 단계" },

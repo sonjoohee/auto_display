@@ -38,6 +38,7 @@ import {
   BUTTON_STATE,
   GROWTH_HACKER_BUTTON_STATE,
   GROWTH_HACKER_REPORT_DATA,
+  IDEA_MIRO,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -52,6 +53,7 @@ import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
 
 const OrganismGrowthHackerReport = () => {
+  const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [selectedPocOptions, setSelectedPocOptions] =
@@ -95,7 +97,6 @@ const OrganismGrowthHackerReport = () => {
 
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
-  const [isLoadingTarget, setIsLoadingTarget] = useState(false);
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
   const [pocDetailReportData, setPocDetailReportData] = useAtom(POC_DETAIL_REPORT_DATA);
@@ -106,9 +107,9 @@ const OrganismGrowthHackerReport = () => {
   const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
-  const [isLoadingIdeaPriority, setIsLoadingIdeaPriority] = useState(false);
+  const [isLoadingGrowthHacker, setIsLoadingGrowthHacker] = useState(false);
   const [growthHackerButtonState, setGrowthHackerButtonState] = useAtom(GROWTH_HACKER_BUTTON_STATE);
-  const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA || []);
+  const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
 
   const axiosConfig = {
     timeout: 100000, // 100초
@@ -123,7 +124,7 @@ const OrganismGrowthHackerReport = () => {
 
       if(growthHackerButtonState) {
         setIsLoading(true);
-        setIsLoadingIdeaPriority(true);
+        setIsLoadingGrowthHacker(true);
         setGrowthHackerButtonState(0);
 
         const data = {
@@ -151,10 +152,13 @@ const OrganismGrowthHackerReport = () => {
           !response || 
           !response.data || 
           typeof response.data !== "object" ||
-          !response.data.hasOwnProperty("growth_hacker_persona_recommand_report") || 
-          !Array.isArray(response.data.growth_hacker_persona_recommand_report) ||
-          !response.data.growth_hacker_persona_recommand_report[0].hasOwnProperty("text") ||
-          response.data.growth_hacker_persona_recommand_report[1].content.some(item => 
+          !response.data.hasOwnProperty("growth_hacker_report") || 
+          !Array.isArray(response.data.growth_hacker_report) ||
+          !response.data.growth_hacker_report[0].hasOwnProperty("content") ||
+          !Array.isArray(response.data.growth_hacker_report[0].content) ||
+          !response.data.growth_hacker_report[0].content[0].hasOwnProperty("text") ||
+          !response.data.growth_hacker_report[0].content[1].hasOwnProperty("text") ||
+          response.data.growth_hacker_report[1].content.some(item => 
             !item.hasOwnProperty("title") || 
             !item.hasOwnProperty("text") || 
             !item.hasOwnProperty("subcontent") || 
@@ -179,20 +183,20 @@ const OrganismGrowthHackerReport = () => {
           throw new Error("Maximum retry attempts reached. Empty response persists.");
         }
 
-        setGrowthHackerReportData(response.data.growth_hacker_persona_recommand_report);
+        setGrowthHackerReportData(response.data.growth_hacker_report);
 
         setIsLoading(false);
-        setIsLoadingIdeaPriority(false);
+        setIsLoadingGrowthHacker(false);
 
         const updatedConversation = [...conversation];
         updatedConversation.push(
           {
             type: "system",
             message:
-              "리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊",
+              "현황 진단 결과를 바탕으로 고객 여정의 각 단계에서 집중해야할 부분과 최적의 KPI 전략을 제안해드립니다.",
             expertIndex: selectedExpertIndex,
           },
-          { type: `keyword` }
+          { type: `growthHackerKPIButton` }
         );
         setConversationStage(3);
         setConversation(updatedConversation);
@@ -221,7 +225,8 @@ const OrganismGrowthHackerReport = () => {
             KpiQuestionList : KpiQuestionList,
             ideaGroup : ideaGroup,
             ideaPriority : ideaPriority,
-            growthHackerReportData : response.data.growth_hacker_persona_recommand_report,
+            ideaMiro : ideaMiro,
+            growthHackerReportData : response.data.growth_hacker_report,
             buttonState : buttonState,
           },
           isLoggedIn,
@@ -235,7 +240,7 @@ const OrganismGrowthHackerReport = () => {
 
   return (
     <Wrap>
-      {isLoadingIdeaPriority || growthHackerButtonState ? (
+      {isLoadingGrowthHacker || growthHackerButtonState ? (
         <>
           <SkeletonTitle className="title-placeholder" />
           <SkeletonLine className="content-placeholder" />
@@ -252,7 +257,7 @@ const OrganismGrowthHackerReport = () => {
       ) : (
         <>
           <h1>마케팅 분석과 개선 솔루션 제안</h1>
-          <p>{growthHackerReportData[0].text}</p>
+          <p>{growthHackerReportData[0].content[1].text} {growthHackerReportData[0].content[0].text}</p>
           {growthHackerReportData[1].content.map((report, index) => (
             <SeparateSection key={index}>
               <h3>

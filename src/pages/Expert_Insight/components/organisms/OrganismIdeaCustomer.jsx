@@ -39,6 +39,10 @@ import {
   ACTIVE_IDEA_CUSTOMER_INDEX,
   EDITED_IDEA_CUSTOMER_TITLE,
   BUTTON_STATE,
+  IDEA_MIRO,
+  GROWTH_HACKER_REPORT_DATA,
+  GROWTH_HACKER_DETAIL_REPORT_DATA,
+  KPI_QUESTION_LIST,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -52,6 +56,10 @@ import {
 import images from "../../../../assets/styles/Images";
 
 const OrganismIdeaCustomer = () => {
+  const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
+  const [growthHackerDetailReportData, setGrowthHackerDetailReportData] = useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
+  const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
+  const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [conversationId] = useAtom(CONVERSATION_ID);
   const [selectedPocOptions, setSelectedPocOptions] =
@@ -294,6 +302,9 @@ const OrganismIdeaCustomer = () => {
             ideaFeatureData : ideaFeatureData,
             ideaRequirementData : ideaRequirementData,
             buttonState : buttonState,
+            growthHackerReportData : growthHackerReportData,
+            growthHackerDetailReportData : growthHackerDetailReportData,
+            KpiQuestionList : KpiQuestionList,
           },
           isLoggedIn,
           conversationId

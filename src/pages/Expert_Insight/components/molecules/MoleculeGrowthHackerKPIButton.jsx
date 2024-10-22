@@ -27,14 +27,16 @@ import {
   TARGET_REPORT_BUTTON_STATE,
   POC_DETAIL_REPORT_DATA,
   POC_PERSONA_LIST,
-  IDEA_LIST_BUTTON_STATE,
+  GROWTH_HACKER_BUTTON_STATE,
+  GROWTH_HACKER_KPI_BUTTON_STATE,
+  BUTTON_STATE,
+  GROWTH_HACKER_REPORT_DATA,
+  KPI_QUESTION_LIST,
+  IDEA_MIRO,
   IDEA_FEATURE_DATA,
   IDEA_REQUIREMENT_DATA,
-  BUTTON_STATE,
-  IDEA_MIRO,
-  GROWTH_HACKER_REPORT_DATA,
-  GROWTH_HACKER_DETAIL_REPORT_DATA,
-  KPI_QUESTION_LIST,
+  IDEA_LIST,
+  IDEA_GROUP,
 } from "../../../AtomStates";
 
 import {
@@ -43,10 +45,12 @@ import {
 
 import { palette } from "../../../../assets/styles/Palette";
 
-const MoleculeIdeaGenerateButton = () => {
+const MoleculeGrowthHackerKPIButton = () => {
   const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
-  const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
-  const [growthHackerDetailReportData, setGrowthHackerDetailReportData] = useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
+  const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
+  const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
+  const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
+  const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
@@ -78,16 +82,14 @@ const MoleculeIdeaGenerateButton = () => {
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
-  const [ideaListButtonState, setIdeaListButtonState] = useAtom(IDEA_LIST_BUTTON_STATE);
-  const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
-  const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
-
+  const [growthHackerKPIButtonState, setGrowthHackerKPIButtonState] = useAtom(GROWTH_HACKER_KPI_BUTTON_STATE);
+  const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
   const handleClick = async () => {
     if (isLoading) return;
     const updatedConversation = [...conversation];
 
     if (updatedConversation.length > 0 &&
-        updatedConversation[updatedConversation.length - 1].type === "ideaGenerateButton"
+        updatedConversation[updatedConversation.length - 1].type === "growthHackerKPIButton"
     ) {
       updatedConversation.pop();
     }
@@ -95,25 +97,19 @@ const MoleculeIdeaGenerateButton = () => {
     updatedConversation.push(
       {
         type: "user",
-        message: "다양한 관점의 아이디어들이 기대됩니다. ",
-      },
-      {
-        type: "system",
-        message: "주요 구매 요소와 고객 요구 사항을 기반으로 구조화된 아이디어 도출을 진행합니다.\n상세한 아이디어는 다운로드 받아 확인하시면 됩니다. Miro에는 선별된 25개의 아이디어가 있으니 팀원들과 우선순위 워크숍을 진행해보세요. 👍🏻",
+        message:
+          "현재 제 아이템에 맞는 최적의 KPI를 추천해 주시면 좋겠습니다",
         expertIndex: selectedExpertIndex,
       },
       {
-        type: 'ideaList',
+        type: 'growthHackerKPI',
       },
     );
-    setIdeaListButtonState(1);
+
+    setGrowthHackerKPIButtonState(1);
     setConversation(updatedConversation);
     setConversationStage(3);
     setApproachPath(3);
-    setButtonState({
-      ...buttonState,
-      IdeaGenerate: 1
-    });
 
     await saveConversationToIndexedDB(
       {
@@ -135,12 +131,11 @@ const MoleculeIdeaGenerateButton = () => {
         pocDetailReportData : pocDetailReportData,
         ideaFeatureData : ideaFeatureData,
         ideaRequirementData : ideaRequirementData,
-        buttonState : {
-          ...buttonState,
-          IdeaGenerate : 1
-        },
+        ideaList : ideaList,
+        ideaGroup : ideaGroup,
+        buttonState : buttonState,
+        ideaMiro : ideaMiro,
         growthHackerReportData : growthHackerReportData,
-        growthHackerDetailReportData : growthHackerDetailReportData,
         KpiQuestionList : KpiQuestionList,
       },
       isLoggedIn,
@@ -150,19 +145,18 @@ const MoleculeIdeaGenerateButton = () => {
   return (
     <>
       <ButtonWrap>
-        <button onClick={handleClick}>아이디어 생성하기</button>
+        <button onClick={handleClick}>최적의 KPI 전략 제안 받기</button>
       </ButtonWrap>
     </>
   );
 };
 
-export default MoleculeIdeaGenerateButton;
+export default MoleculeGrowthHackerKPIButton;
 
 const ButtonWrap = styled.div`
   display: flex;
   align-items: center;
   margin-top: 15px;
-  margin-left:45px;
   padding-bottom: 15px;
 
   button {

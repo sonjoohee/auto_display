@@ -54,9 +54,17 @@ import {
   RECOMMENDED_TARGET_DATA,
   BUTTON_STATE,
   CONVERSATION_ID,
+  GROWTH_HACKER_REPORT_DATA,
+  GROWTH_HACKER_DETAIL_REPORT_DATA,
+  KPI_QUESTION_LIST,
+  IDEA_MIRO,
 } from "../../../AtomStates";
 
 const OrganismPocReportSection = ({ expertIndex }) => {
+  const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
+  const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
+  const [growthHackerDetailReportData, setGrowthHackerDetailReportData] = useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
+  const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
@@ -308,6 +316,9 @@ const OrganismPocReportSection = ({ expertIndex }) => {
               ideaGroup : ideaGroup,
               ideaPriority : ideaPriority,
               buttonState : buttonState,
+              growthHackerReportData : growthHackerReportData,
+              growthHackerDetailReportData : growthHackerDetailReportData,
+              KpiQuestionList : KpiQuestionList,
             },
             isLoggedIn,
             conversationId
@@ -407,6 +418,10 @@ const Section = ({
   index,
   conversationId,
 }) => {
+  const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
+  const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
+  const [growthHackerDetailReportData, setGrowthHackerDetailReportData] = useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
+  const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
   const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
@@ -811,6 +826,9 @@ const Section = ({
           ideaGroup : ideaGroup,
           ideaPriority : ideaPriority,
           buttonState : buttonState,
+          growthHackerReportData : growthHackerReportData,
+          growthHackerDetailReportData : growthHackerDetailReportData,
+          KpiQuestionList : KpiQuestionList,
         },
         isLoggedIn,
         conversationId
@@ -970,6 +988,9 @@ const Section = ({
           ideaGroup : ideaGroup,
           ideaPriority : ideaPriority,
           buttonState : buttonState,
+          growthHackerReportData : growthHackerReportData,
+          growthHackerDetailReportData : growthHackerDetailReportData,
+          KpiQuestionList : KpiQuestionList,
         },
         isLoggedIn,
         conversationId

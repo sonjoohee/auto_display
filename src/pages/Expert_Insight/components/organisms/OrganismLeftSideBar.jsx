@@ -65,6 +65,10 @@ import {
   IDEA_FEATURE_DATA_TEMP,
   IDEA_REQUIREMENT_DATA_TEMP,
   BUTTON_STATE,
+  IDEA_MIRO,
+  GROWTH_HACKER_REPORT_DATA,
+  GROWTH_HACKER_DETAIL_REPORT_DATA,
+  KPI_QUESTION_LIST,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -73,6 +77,10 @@ import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/Molec
 import OrganismReportPopup from "./OrganismReportPopup"; // 팝업 컴포넌트 임포트
 
 const OrganismLeftSideBar = () => {
+  const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
+  const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
+  const [growthHackerDetailReportData, setGrowthHackerDetailReportData] = useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
+  const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [isEditingIdeaFeature, setIsEditingIdeaFeature] = useAtom(IS_EDITING_IDEA_FEATURE);
   const [isEditingIdeaCustomer, setIsEditingIdeaCustomer] = useAtom(IS_EDITING_IDEA_CUSTOMER);
@@ -607,8 +615,13 @@ useEffect(() => {
       setIdeaList(chatData.ideaList || []);
       setIdeaGroup(chatData.ideaGroup || {});
       setIdeaPriority(chatData.ideaPriority || []);
+      setIdeaMiro(chatData.ideaMiro || []);
 
       setButtonState(chatData.buttonState || {});
+
+      setGrowthHackerReportData(chatData.growthHackerReportData || []);
+      setGrowthHackerDetailReportData(chatData.growthHackerDetailReportData || {});
+      setKpiQuestionList(chatData.KpiQuestionList || []);
 
       // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
       // set어프로치패스(2)
@@ -848,6 +861,11 @@ useEffect(() => {
     setIdeaGroup({});
     setIdeaPriority([]);
     setButtonState({});
+
+    setIdeaMiro([]);
+    setGrowthHackerReportData([]);
+    setGrowthHackerDetailReportData({});
+    setKpiQuestionList([]);
   };
 
   const handleLogoClick = () => {
@@ -904,6 +922,11 @@ useEffect(() => {
     setIdeaPriority([]);
 
     setButtonState({});
+
+    setIdeaMiro([]);
+    setGrowthHackerReportData([]);
+    setGrowthHackerDetailReportData({});
+    setKpiQuestionList([]);
   };
   return (
     <>

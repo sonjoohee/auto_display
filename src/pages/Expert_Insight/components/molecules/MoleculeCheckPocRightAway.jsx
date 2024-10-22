@@ -29,6 +29,10 @@ import {
   IDEA_LIST,
   IDEA_GROUP,
   IDEA_PRIORITY,
+  IDEA_MIRO,
+  GROWTH_HACKER_REPORT_DATA,
+  GROWTH_HACKER_DETAIL_REPORT_DATA,
+  KPI_QUESTION_LIST,
 } from "../../../AtomStates";
 
 import {
@@ -38,6 +42,10 @@ import {
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeCheckReportRightAway = () => {
+  const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
+  const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
+  const [growthHackerDetailReportData, setGrowthHackerDetailReportData] = useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
+  const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
   const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
@@ -116,6 +124,9 @@ const MoleculeCheckReportRightAway = () => {
         ideaList : ideaList,
         ideaGroup : ideaGroup,
         ideaPriority : ideaPriority,
+        growthHackerReportData : growthHackerReportData,
+        growthHackerDetailReportData : growthHackerDetailReportData,
+        KpiQuestionList : KpiQuestionList,
       },
       isLoggedIn,
       conversationId
