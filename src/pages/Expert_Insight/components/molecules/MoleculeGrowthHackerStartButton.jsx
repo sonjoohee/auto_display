@@ -68,7 +68,6 @@ const MoleculeGrowthHackerStartButton = () => {
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
-  const [ideaFeatureButtonState, setIdeaFeatureButtonState] = useAtom(GROWTH_HACKER_BUTTON_STATE);
 
   const handleClick = async () => {
     if (isLoading) return;
@@ -82,16 +81,10 @@ const MoleculeGrowthHackerStartButton = () => {
 
     updatedConversation.push(
       {
-        type: "system",
-        message: "옵션을 선택해주세요.(임시 텍스트)",
-        expertIndex: selectedExpertIndex,
-      },
-      {
         type: 'growthHackerOption',
       },
     );
 
-    setIdeaFeatureButtonState(1);
     setConversation(updatedConversation);
     setConversationStage(3);
     setApproachPath(3);

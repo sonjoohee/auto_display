@@ -147,29 +147,24 @@ const OrganismGrowthHackerReport = () => {
         let retryCount = 0;
         const maxRetries = 10;
 
-        // while (retryCount < maxRetries && (
-        //   !response || 
-        //   !response.data || 
-        //   typeof response.data !== "object" ||
-        //   !response.data.hasOwnProperty("growth_hacker_persona_recommand_report") || 
-        //   !Array.isArray(response.data.growth_hacker_persona_recommand_report) || 
-        //   response.data.growth_hacker_persona_recommand_report.some(item => 
-        //     !item.hasOwnProperty("title") || 
-        //     !item.hasOwnProperty("text") || 
-        //     !item.hasOwnProperty("content") || 
-        //     !Array.isArray(item.content) || 
-        //     item.content.some(contentItem => 
-        //       !contentItem.hasOwnProperty("title") || 
-        //       !contentItem.hasOwnProperty("text") || 
-        //       !contentItem.hasOwnProperty("subcontent") || 
-        //       !Array.isArray(contentItem.subcontent) || 
-        //       contentItem.subcontent.some(subItem => 
-        //         !subItem.hasOwnProperty("subTitle") || 
-        //         !subItem.hasOwnProperty("text")
-        //       )
-        //     )
-        //   )
-        // )) 
+        while (retryCount < maxRetries && (
+          !response || 
+          !response.data || 
+          typeof response.data !== "object" ||
+          !response.data.hasOwnProperty("growth_hacker_persona_recommand_report") || 
+          !Array.isArray(response.data.growth_hacker_persona_recommand_report) ||
+          !response.data.growth_hacker_persona_recommand_report[0].hasOwnProperty("text") ||
+          response.data.growth_hacker_persona_recommand_report[1].content.some(item => 
+            !item.hasOwnProperty("title") || 
+            !item.hasOwnProperty("text") || 
+            !item.hasOwnProperty("subcontent") || 
+            !Array.isArray(item.subcontent) || 
+            item.subcontent.some(contentItem => 
+              !contentItem.hasOwnProperty("subTitle") || 
+              !contentItem.hasOwnProperty("text")
+            )
+          )
+        )) 
         {
           response = await axios.post(
             "https://wishresearch.kr/panels/growth_hacker",
@@ -240,7 +235,7 @@ const OrganismGrowthHackerReport = () => {
 
   return (
     <Wrap>
-      {isLoadingIdeaPriority ? (
+      {isLoadingIdeaPriority || growthHackerButtonState ? (
         <>
           <SkeletonTitle className="title-placeholder" />
           <SkeletonLine className="content-placeholder" />
@@ -257,28 +252,26 @@ const OrganismGrowthHackerReport = () => {
       ) : (
         <>
           <h1>마케팅 분석과 개선 솔루션 제안</h1>
-          {growthHackerReportData && Array.isArray(growthHackerReportData) && growthHackerReportData.length > 0 && (
-          growthHackerReportData.map((report, index) => (
+          <p>{growthHackerReportData[0].text}</p>
+          {growthHackerReportData[1].content.map((report, index) => (
             <SeparateSection key={index}>
               <h3>
                 <span className="number">{index + 1}</span>
-                {report.content[0].title}
+                {report.title}
               </h3>
               <p>{report.text}</p>
               <div>
-              <ol className="list-decimal">
-                {report.content && Array.isArray(report.content) && report.content.map((contentItem, contentIndex) => (
-                  contentItem.subcontent && Array.isArray(contentItem.subcontent) && contentItem.subcontent.map((subItem, subIndex) => (
-                    <li key={subIndex}>
-                      {subItem.subTitle} : {subItem.text}
-                    </li>
-                  ))
+              <ol className="list-disc">
+                {report.subcontent.map((subItem, subIndex) => (
+                  <li key={subIndex}>
+                    {subItem.subTitle} : {subItem.text}
+                  </li>
                 ))}
               </ol>
               </div>
             </SeparateSection>
           ))
-        )}
+        }
 
       <MoleculeReportController
         reportIndex={5}
@@ -308,6 +301,14 @@ const Wrap = styled.div`
     font-weight:400;
     text-align:left;
     margin-bottom:20px;
+  }
+
+  p {
+    font-size:0.88rem;
+    font-weight:300;
+    color:${palette.black};
+    text-align:left;
+    margin-bottom:10px;
   }
 `;
 
@@ -342,7 +343,7 @@ const SeparateSection = styled.div`
   p {
     font-size:0.88rem;
     font-weight:300;
-    color:${palette.gray700};
+    color:${palette.gray800};
     text-align:left;
   }
 
@@ -352,8 +353,8 @@ const SeparateSection = styled.div`
     background:${palette.white};
   }
 
-  .list-decimal li {
-    list-style-type:decimal;
+  .list-disc li {
+    list-style-type:disc;
     list-style-position:inside;
     font-size:0.88rem;
     font-weight:300;
