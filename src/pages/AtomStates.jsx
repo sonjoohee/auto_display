@@ -234,6 +234,13 @@ export const GROWTH_HACKER_REPORT_DATA = atom([]);
 export const GROWTH_HACKER_DETAIL_REPORT_DATA = atom({});
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/* 가격 분석 전문가 */
+
+export const PRICE_START_BUTTON_STATE = atom(0);
+export const PRICE_PRODUCT_NUM = atom(0);
+export const PRICE_SCRAP_DATA = atom({});
+export const PRICE_REPORT_DATA = atom({});
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* 설문조사 전문가 */
 
 export const SURVEY_OPTION_BUTTON_STATE = atom(0);
@@ -244,6 +251,7 @@ export const SURVEY_GUIDELINE_REPORT_DATA = atom([]);
 export const SURVEY_GUIDELINE_DETAIL_REPORT_DATA = atom({});
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export const CUSTOMER_ADDITION_QUESTION_INPUT = atom("");
 
 export const CONVERSATION_ID = atom("");
