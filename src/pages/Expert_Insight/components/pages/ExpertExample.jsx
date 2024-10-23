@@ -918,7 +918,7 @@ const BgBox = styled.div`
   flex-direction:column;
   padding:20px;
   border-radius:10px;
-  background:rgba(0, 0, 0, 0.03);
+  background: ${palette.chatGray};
 
   + div {
     margin-top:12px;

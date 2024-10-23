@@ -504,9 +504,9 @@ const AnalysisSection = styled.div`
   text-align: left;
   margin-top: 25px;
   margin-left:50px;
-  padding: 30px;
+  padding: 28px;
   border-radius: 15px;
-  border: 1px solid ${palette.lineGray};
+  border: 1px solid ${palette.outlineGray};
 
   h1 {
     font-size: 1.25rem;
