@@ -237,9 +237,13 @@ export const GROWTH_HACKER_DETAIL_REPORT_DATA = atom({});
 /* 가격 분석 전문가 */
 
 export const PRICE_START_BUTTON_STATE = atom(0);
-export const PRICE_PRODUCT_NUM = atom(0);
+export const PRICE_PRODUCT = atom([]);
 export const PRICE_SCRAP_DATA = atom({});
 export const PRICE_REPORT_DATA = atom({});
+export const PRICE_CONTINUE_BUTTON_STATE = atom(0);
+export const PRICE_PRODUCT_SEGMENTATION = atom([]);
+export const PRICE_SELECTED_PRODUCT_SEGMENTATION = atom([]);
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* 설문조사 전문가 */
 

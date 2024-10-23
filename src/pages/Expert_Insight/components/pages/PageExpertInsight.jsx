@@ -40,6 +40,11 @@ import {
   BUTTON_STATE,
   GROWTH_HACKER_DETAIL_REPORT_DATA,
   KPI_QUESTION_LIST,
+  PRICE_SCRAP_DATA,
+  PRICE_REPORT_DATA,
+  PRICE_PRODUCT,
+  PRICE_SELECTED_PRODUCT_SEGMENTATION,
+  PRICE_PRODUCT_SEGMENTATION,
 } from "../../../AtomStates";
 
 import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
@@ -80,8 +85,15 @@ import OrganismGrowthHackerKPI from "../organisms/OrganismGrowthHackerKPI";
 import MoleculePriceStartButton from "../molecules/MoleculePriceStartButton";
 import MoleculePriceOption from "../molecules/MoleculePriceOption";
 import OrganismPriceReport from "../organisms/OrganismPriceReport";
+import MoleculePriceContinueButton from "../molecules/MoleculePriceContinueButton";
+import MoleculePriceProductSegmentation from "../molecules/MoleculePriceProductSegmentation";
 
 const PageExpertInsight = () => {
+  const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
+  const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
+  const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
+  const [priceSelectedProductSegmentation, setPriceSelectedProductSegmentation] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
+  const [priceProductSegmentation, setPriceProductSegmentation] = useAtom(PRICE_PRODUCT_SEGMENTATION);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
@@ -228,6 +240,12 @@ const PageExpertInsight = () => {
             setGrowthHackerReportData(savedConversation.growthHackerReportData || []);
             setGrowthHackerDetailReportData(savedConversation.growthHackerDetailReportData || {});
             setKpiQuestionList(savedConversation.KpiQuestionList || []);
+
+            setPriceScrapData(savedConversation.priceScrapData || {});
+            setPriceReportData(savedConversation.priceReportData || {});
+            setPriceProduct(savedConversation.priceProduct || []);
+            setPriceSelectedProductSegmentation(savedConversation.priceSelectedProductSegmentation || []);
+            setPriceProductSegmentation(savedConversation.priceProductSegmentation || []);
           }
           
           setIsLoadingPage(false); // 로딩 완료
@@ -419,13 +437,19 @@ if (isLoadingPage) {
                   return <OrganismGrowthHackerKPI />;
                 } 
 
+                /* 가격 분석 전문가 */
                 else if (item.type === "priceStartButton") {
                   return <MoleculePriceStartButton />;
                 } else if (item.type === "priceOption") {
                   return <MoleculePriceOption />;
                 } else if (item.type === "priceReport") {
                   return <OrganismPriceReport />;
+                } else if (item.type === "priceContinueButton") {
+                  return <MoleculePriceContinueButton />;
+                } else if (item.type === "priceProductSegmentation") {
+                  return <MoleculePriceProductSegmentation />;
                 }
+
                 return null;
               })}
 
@@ -478,6 +502,14 @@ if (isLoadingPage) {
                 }
                 </>
               :
+              selectedExpertIndex === "7" ?
+                <>
+                {
+                  buttonState.priceEnough === 1 &&
+                    <OrganismBizExpertSelect />
+                }
+                </>
+              :
               null
               }
               
@@ -495,6 +527,9 @@ if (isLoadingPage) {
                 selectedExpertIndex === "6" ?
                   buttonState.growthHackerKPI === 1 && <OrganismSearchBottomBar isBlue={true} /> // 6번 전문가 끝났을 때 활성화
                 : 
+                selectedExpertIndex === "7" ?
+                  buttonState.priceEnough === 1 && <OrganismSearchBottomBar isBlue={true} /> // 7번 전문가 끝났을 때 활성화
+                :
                 <OrganismSearchBottomBar isBlue={true} />
             )}
           </div>
