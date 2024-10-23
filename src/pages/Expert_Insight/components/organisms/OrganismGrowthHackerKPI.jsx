@@ -475,7 +475,7 @@ const OrganismGrowthHackerKPI = () => {
                   transition: 'left 0.3s ease',
                 }}
               >
-                <img src={images.IconCheck} alt="" />
+                <img src={images.IconCheck3} alt="" />
                 <span>{labels[currentStep]}</span>
               </div>
             </div>
@@ -601,9 +601,9 @@ const Wrap = styled.div`
   display:flex;
   flex-direction:column;
   padding:20px;
-  margin:24px 0 0 44px;
+  margin:24px 0 0 50px;
   border-radius:15px;
-  border:1px solid ${palette.lineGray};
+  border:1px solid ${palette.outlineGray};
 
   h1 {
     position:relative;
@@ -836,7 +836,7 @@ const Progress = styled.div`
     cursor: pointer;
     pointer-events: none;
     display:flex;
-    align-itmes:center;
+    align-items:center;
     justify-content: center;
 
     span {
@@ -864,6 +864,11 @@ const Progress = styled.div`
         border-color: ${palette.chatBlue} transparent transparent transparent;
         content:'';
       }
+    }
+
+    img {
+      width:6px;
+      height:5px;
     }
   }
 `;

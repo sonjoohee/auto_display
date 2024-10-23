@@ -336,7 +336,7 @@ const OrganismIdeaCustomer = () => {
 
         {isEditingIdeaCustomer ?
         <>
-          <p>최대 10개까지 입력이 가능합니다</p>
+          <p>최소 5개 ~ 최대 10개까지 입력이 가능합니다</p>
           <IdeaList>
           {ideaRequirementData.map((requirement, index) => (
             <IdeaListDiv None
@@ -474,7 +474,7 @@ const Wrap = styled.div`
   display:flex;
   flex-direction:column;
   padding: 20px;
-  margin:24px 0 0 44px;
+  margin:24px 0 0 50px;
   border-radius:15px;
   border:1px solid ${palette.lineGray};
 

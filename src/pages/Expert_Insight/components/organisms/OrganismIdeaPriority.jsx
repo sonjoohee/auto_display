@@ -308,7 +308,7 @@ const Wrap = styled.div`
   display:flex;
   flex-direction:column;
   padding: 28px;
-  margin:24px 0 0 44px;
+  margin:24px 0 0 50px;
   border-radius:15px;
   border:1px solid ${palette.lineGray};
 
@@ -328,7 +328,7 @@ const SeparateSection = styled.div`
   margin-top: 12px;
   padding: 20px;
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.03);
+  background: ${palette.chatGray};
 
   h3 {
     display:flex;

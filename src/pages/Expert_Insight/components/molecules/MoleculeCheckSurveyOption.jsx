@@ -20,31 +20,22 @@ import {
   CUSTOMER_ADDITIONAL_REPORT_DATA,
   TARGET_SELECT_BUTTON_STATE,
   SELECTED_POC_OPTIONS,
+  KPI_QUESTION_LIST,
   SELCTED_POC_TARGET,
   IDEA_FEATURE_DATA,
   IDEA_REQUIREMENT_DATA,
   IDEA_LIST,
   IDEA_GROUP,
   IDEA_PRIORITY,
-  GROWTH_HACKER_BUTTON_STATE,
-  KPI_QUESTION_LIST,
+  SURVEY_OPTION_BUTTON_STATE,
+  SURVEY_QUESTION_LIST,
   BUTTON_STATE,
-  PRICE_SCRAP_DATA,
-  PRICE_REPORT_DATA,
-  PRICE_PRODUCT,
-  PRICE_SELECTED_PRODUCT_SEGMENTATION,
-  PRICE_PRODUCT_SEGMENTATION,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
 import { palette } from "../../../../assets/styles/Palette";
 
-const MoleculeCheckGrowthHackerOption = () => {
-  const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
-  const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
-  const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
-  const [priceSelectedProductSegmentation, setPriceSelectedProductSegmentation] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
-  const [priceProductSegmentation, setPriceProductSegmentation] = useAtom(PRICE_PRODUCT_SEGMENTATION);
+const MoleculeCheckSurveyOption = () => {
   const [conversationId] = useAtom(CONVERSATION_ID);
   const [buttonState] = useAtom(BUTTON_STATE);
   const [ideaFeatureData] = useAtom(IDEA_FEATURE_DATA);
@@ -69,80 +60,66 @@ const MoleculeCheckGrowthHackerOption = () => {
   const [customerAdditionalReportData] = useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
   const [isLoggedIn] = useAtom(isLoggedInAtom);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
-  
   const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
 
+  const [SurveyQuestionList, setSurveyQuestionList] = useAtom(SURVEY_QUESTION_LIST);
   const [selectedOption1, setSelectedOption1] = useState("");
   const [selectedOption2, setSelectedOption2] = useState("");
   const [selectedOption3, setSelectedOption3] = useState("");
   const [selectedOption4, setSelectedOption4] = useState("");
-  const [selectedOption5, setSelectedOption5] = useState("");
-  const [selectedOption6, setSelectedOption6] = useState("");
-  const [growthHackerButtonState, setGrowthHackerButtonState] = useAtom(GROWTH_HACKER_BUTTON_STATE);
+
+  const [surveyOptionButtonState, setSurveyOptionButtonState] = useAtom(SURVEY_OPTION_BUTTON_STATE);
 
   const [tabs, setTabs] = useState(0);
 
   useEffect(() => {
-    if (KpiQuestionList.length === 0) {
+    if (SurveyQuestionList.length === 0) {
       setTabs(0);
     } else {
-      setTabs(5);
+      setTabs(3);
 
-      setSelectedOption1(KpiQuestionList[0]);
-      setSelectedOption2(KpiQuestionList[1]);
-      setSelectedOption3(KpiQuestionList[2]);
-      setSelectedOption4(KpiQuestionList[3]);
-      setSelectedOption5(KpiQuestionList[4]);
-      setSelectedOption6(KpiQuestionList[5]);
+      setSelectedOption1(SurveyQuestionList[0]);
+      setSelectedOption2(SurveyQuestionList[1]);
+      setSelectedOption3(SurveyQuestionList[2]);
+      setSelectedOption4(SurveyQuestionList[3]);
     }
-  }, [KpiQuestionList]);
+  }, [SurveyQuestionList]);
+
 
   const options1 = [
-    { label: "아이디어 단계", value: "아이디어 단계" },
-    { label: "프로토타입 단계", value: "프로토타입 단계" },
-    { label: "베타 테스트 단계", value: "베타 테스트 단계" },
-    { label: "출시 후 단계", value: "출시 후 단계" },
-    { label: "기타", value: "기타" },
+    { label: "매우 짧음(1주 이내)", value: "매우 짧음(1주 이내)" },
+    { label: "짧음(1~2주)", value: "짧음(1~2주)" },
+    { label: "보통(2주~1개월)", value: "보통(2주~1개월)" },
+    { label: "긺(1개월~2개월)", value: "긺(1개월~2개월)" },
+    { label: "매우 긺", value: "매우 긺" },
   ];
-
+  
   const options2 = [
-    { label: "아직 구현되지 않음", value: "아직 구현되지 않음" },
-    { label: "일부 기능만 구현됨", value: "일부 기능만 구현됨" },
-    { label: "대부분 기능이 구현됨", value: "대부분 기능이 구현됨" },
-    { label: "모든 기능이 완전히 구현됨", value: "모든 기능이 완전히 구현됨" },
+    { label: "매우 부족함", value: "매우 부족함" },
+    { label: "부족함", value: "부족함" },
+    { label: "보통", value: "보통" },
+    { label: "충분함", value: "충분함" },
+    { label: "매우 충분함", value: "매우 충분함" }
   ];
-
+  
   const options3 = [
-    { label: "가격", value: "가격" },
-    { label: "성능/기능", value: "성능/기능" },
-    { label: "사용자 경험(UX)", value: "사용자 경험(UX)" },
-    { label: "고객 지원", value: "고객 지원" },
-    { label: "기타", value: "기타" },
+    { label: "매우 적음(소규모)", value: "매우 적음(소규모)" },
+    { label: "적음(중소규모)", value: "적음(중소규모)" },
+    { label: "보통(중간규모)", value: "보통(중간규모)" },
+    { label: "많음(중대규모)", value: "많음(중대규모)" },
+    { label: "매우 많음(대규모)", value: "매우 많음(대규모)" },
   ];
   
   const options4 = [
-    { label: "안정적", value: "안정적" },
-    { label: "불안정함", value: "불안정함" },
-    { label: "아직 수익을 창출하지 않음", value: "아직 수익을 창출하지 않음" },
-  ];
-  
-  const options5 = [
-    { label: "아직 사용자 확보 전", value: "아직 사용자 확보 전" },
-    { label: "감소하고 있음", value: "감소하고 있음" },
-    { label: "정체중", value: "정체중" },
-    { label: "점차 증가하고 있음", value: "점차 증가하고 있음" },
-    { label: "빠르게 증가하고 있음", value: "빠르게 증가하고 있음" },
-  ];
-  
-  const options6 = [
-    { label: "B2B (기업 대상)", value: "B2B (기업 대상)" },
-    { label: "B2C (개인 고객 대상)", value: "B2C (개인 고객 대상)" },
-    { label: "기타 (직접 입력)", value: "기타 (직접 입력)" },
+    { label: "객관적인 수치나 통계 자료", value: "객관적인 수치나 통계 자료" },
+    { label: "사람들의 의견 및 경험 설명 자료", value: "사람들의 의견 및 경험 설명 자료" },
+    { label: "수치 자료와 설명 혼합 자료", value: "수치 자료와 설명 혼합 자료" },
+    { label: "데이터 형태는 상관없음", value: "데이터 형태는 상관없음" }
   ];
   
 
   const handleOptionClick = (index, optionValue) => {
-    if (KpiQuestionList.length) return;
+    if (SurveyQuestionList.length) return;
   
     switch (index) {
       case 1:
@@ -157,12 +134,6 @@ const MoleculeCheckGrowthHackerOption = () => {
       case 4:
         setSelectedOption4(optionValue);
         break;
-      case 5:
-        setSelectedOption5(optionValue);
-        break;
-      case 6:
-        setSelectedOption6(optionValue);
-        break;
       default:
         break;
     }
@@ -170,12 +141,12 @@ const MoleculeCheckGrowthHackerOption = () => {
   
 
   const handleConfirm = async () => {
-    if (KpiQuestionList.length) return;
+    if (SurveyQuestionList.length) return;
 
-    setKpiQuestionList([selectedOption1, selectedOption2, selectedOption3, selectedOption4, selectedOption5, selectedOption6]);
+    setSurveyQuestionList([selectedOption1, selectedOption2, selectedOption3, selectedOption4]);
     setApproachPath(3);
     setConversationStage(3);
-    setGrowthHackerButtonState(1);
+    setSurveyOptionButtonState(1);
 
     const updatedConversation = [...conversation];
     updatedConversation.push(
@@ -189,7 +160,7 @@ const MoleculeCheckGrowthHackerOption = () => {
         expertIndex: selectedExpertIndex,
       },
       {
-        type: `growthHackerReport`,
+        type: `surveyOptionReport`,
       }
     );
     setConversation(updatedConversation);
@@ -213,7 +184,8 @@ const MoleculeCheckGrowthHackerOption = () => {
         customerAdditionalReportData,
         timestamp: Date.now(),
         expert_index: selectedExpertIndex,
-        KpiQuestionList: [selectedOption1, selectedOption2, selectedOption3, selectedOption4, selectedOption5, selectedOption6],
+        KpiQuestionList : KpiQuestionList,
+        SurveyQuestionList: [selectedOption1, selectedOption2, selectedOption3, selectedOption4],
         selectedPocTarget: selectedPocTarget,
         ideaFeatureData: ideaFeatureData,
         ideaRequirementData: ideaRequirementData,
@@ -221,11 +193,6 @@ const MoleculeCheckGrowthHackerOption = () => {
         ideaGroup: ideaGroup,
         ideaPriority: ideaPriority,
         buttonState: buttonState,
-        priceScrapData : priceScrapData,
-        priceReportData : priceReportData,
-        priceProduct : priceProduct,
-        priceSelectedProductSegmentation : priceSelectedProductSegmentation,
-        priceProductSegmentation : priceProductSegmentation,
       },
       isLoggedIn,
       conversationId
@@ -244,18 +211,14 @@ const MoleculeCheckGrowthHackerOption = () => {
     <Wrap>
       {tabs === 0 && (
         <>
-          <Progress KpiQuestionList={KpiQuestionList}>
-            <div className="bar stap1"></div>
-          </Progress>
-
-          <Question>Q1. 현재 제품/서비스는 어느 단계에 있습니까?</Question>
+          <Question>Q1. 조사를 완료해야 하는 기간은 어느 정도인가요?</Question>
           <OptionContainer>
             {options1.map((option1) => (
               <Option
                 key={option1.value}
                 selected={selectedOption1 === option1.value}
                 onClick={() => handleOptionClick(1, option1.value)}
-                KpiQuestionList={KpiQuestionList}
+                SurveyQuestionList={SurveyQuestionList}
               >
                 {option1.label}
               </Option>
@@ -265,18 +228,14 @@ const MoleculeCheckGrowthHackerOption = () => {
       )}
       {tabs === 1 && (
         <>
-          <Progress KpiQuestionList={KpiQuestionList}>
-            <div className="bar stap2"></div>
-          </Progress>
-
-          <Question>Q2. 현재 기능들이 얼마나 잘 구현되어 있습니까?</Question>
+          <Question>Q2. 조사를 위한 예산을 어느 정도로 고려하고 있나요?</Question>
           <OptionContainer>
             {options2.map((option2) => (
               <Option
                 key={option2.value}
                 selected={selectedOption2 === option2.value}
                 onClick={() => handleOptionClick(2, option2.value)}
-                KpiQuestionList={KpiQuestionList}
+                SurveyQuestionList={SurveyQuestionList}
               >
                 {option2.label}
               </Option>
@@ -287,18 +246,14 @@ const MoleculeCheckGrowthHackerOption = () => {
       {/* 각 탭별로 동일한 방식으로 설정 */}
       {tabs === 2 && (
         <>
-          <Progress KpiQuestionList={KpiQuestionList}>
-            <div className="bar stap3"></div>
-          </Progress>
-
-          <Question>Q3. 경쟁사 대비 귀사의 아이템이 제공하는 가장 큰 차별점은 무엇인가요?</Question>
+          <Question>Q3. 조사에 참여할 계획인 대상자 수는 어느정도로 생각하십니까?</Question>
           <OptionContainer>
             {options3.map((option3) => (
               <Option
                 key={option3.value}
                 selected={selectedOption3 === option3.value}
                 onClick={() => handleOptionClick(3, option3.value)}
-                KpiQuestionList={KpiQuestionList}
+                SurveyQuestionList={SurveyQuestionList}
               >
                 {option3.label}
               </Option>
@@ -308,18 +263,14 @@ const MoleculeCheckGrowthHackerOption = () => {
       )}
       {tabs === 3 && (
         <>
-          <Progress KpiQuestionList={KpiQuestionList}>
-            <div className="bar stap4"></div>
-          </Progress>
-
-          <Question>Q4. 현재 귀사의 수익구조는 어떠한가요?</Question>
+          <Question>Q4. 어떤 형태의 데이터가 필요하신가요?</Question>
           <OptionContainer>
             {options4.map((option4) => (
               <Option
                 key={option4.value}
                 selected={selectedOption4 === option4.value}
                 onClick={() => handleOptionClick(4, option4.value)}
-                KpiQuestionList={KpiQuestionList}
+                SurveyQuestionList={SurveyQuestionList}
               >
                 {option4.label}
               </Option>
@@ -328,58 +279,13 @@ const MoleculeCheckGrowthHackerOption = () => {
         </>
       )}
 
-      {tabs === 4 && (
-        <>
-          <Progress KpiQuestionList={KpiQuestionList}>
-            <div className="bar stap5"></div>
-          </Progress>
 
-          <Question>Q5. 제품/서비스의 사용자 수는 어떠한가요?</Question>
-          <OptionContainer>
-            {options5.map((option5) => (
-              <Option
-                key={option5.value}
-                selected={selectedOption5 === option5.value}
-                onClick={() => handleOptionClick(5, option5.value)}
-                KpiQuestionList={KpiQuestionList}
-              >
-                {option5.label}
-              </Option>
-            ))}
-          </OptionContainer>
-        </>
-      )}
-
-      {tabs === 5 && (
-        <>
-          <Progress KpiQuestionList={KpiQuestionList}>
-            <div className="bar"></div>
-          </Progress>
-
-          <Question>Q6. 주요 고객층은 누구입니까?</Question>
-          <OptionContainer>
-            {options6.map((option6) => (
-              <Option
-                key={option6.value}
-                selected={selectedOption6 === option6.value}
-                onClick={() => handleOptionClick(6, option6.value)}
-                KpiQuestionList={KpiQuestionList}
-              >
-                {option6.label}
-              </Option>
-            ))}
-          </OptionContainer>
-        </>
-      )}
-
-      <ButtonWrap
+<ButtonWrap
         selectedOption1={selectedOption1}
         selectedOption2={selectedOption2}
         selectedOption3={selectedOption3}
         selectedOption4={selectedOption4}
-        selectedOption5={selectedOption5}
-        selectedOption6={selectedOption6}
-        KpiQuestionList={KpiQuestionList}
+        SurveyQuestionList={SurveyQuestionList}
       >
         {tabs === 0 ? null : (
           <div className="prev" onClick={() => hadleTurnTab("prev")}>
@@ -387,21 +293,12 @@ const MoleculeCheckGrowthHackerOption = () => {
           </div>
         )}
 
-        {/* 각 탭에 대한 조건을 추가 */}
-        {tabs === 5 ? (
+        {tabs === 3 ? (
           <div
             className="finish"
-            disabled={!selectedOption1 || !selectedOption2 || !selectedOption3 || !selectedOption4 || !selectedOption5 || !selectedOption6}
+            disabled={!selectedOption1 || !selectedOption2 || !selectedOption3 || !selectedOption4}
             onClick={() => {
-              if (
-                !selectedOption1 ||
-                !selectedOption2 ||
-                !selectedOption3 ||
-                !selectedOption4 ||
-                !selectedOption5 ||
-                !selectedOption6
-              )
-                return;
+              if (!selectedOption1 || !selectedOption2 || !selectedOption3 || !selectedOption4) return;
               handleConfirm();
             }}
           >
@@ -413,17 +310,13 @@ const MoleculeCheckGrowthHackerOption = () => {
             disabled={
               (tabs === 0 && !selectedOption1) ||
               (tabs === 1 && !selectedOption2) ||
-              (tabs === 2 && !selectedOption3) ||
-              (tabs === 3 && !selectedOption4) ||
-              (tabs === 4 && !selectedOption5)
+              (tabs === 2 && !selectedOption3) 
             }
             onClick={() => {
               if (
                 (tabs === 0 && !selectedOption1) ||
                 (tabs === 1 && !selectedOption2) ||
-                (tabs === 2 && !selectedOption3) ||
-                (tabs === 3 && !selectedOption4) ||
-                (tabs === 4 && !selectedOption5)
+                (tabs === 2 && !selectedOption3) 
               )
                 return;
               hadleTurnTab("next");
@@ -438,7 +331,7 @@ const MoleculeCheckGrowthHackerOption = () => {
   );
 };
 
-export default MoleculeCheckGrowthHackerOption;
+export default MoleculeCheckSurveyOption;
 
 
 const Wrap = styled.div`
@@ -448,9 +341,9 @@ const Wrap = styled.div`
   display:flex;
   flex-direction:column;
   padding: 32px 40px;
-  margin:24px 0 0 50px;
+  margin:24px 0 0 44px;
   border-radius:15px;
-  border:1px solid ${palette.outlineGray};
+  border:1px solid ${palette.lineGray};
 `;
 
 const Progress = styled.div`
@@ -465,30 +358,10 @@ const Progress = styled.div`
     height:3px;
     border-radius:10px;
     background:${(props) =>
-      props.KpiQuestionList?.length !== 0
+      props.SurveyQuestionList?.length !== 0
         ? palette.gray800
         : palette.blue};
     transition:all .5s;
-  }
-
-  .bar.stap1 {
-    width:16.66%
-  }
-
-  .bar.stap2 {
-    width:33.33%
-  }
-
-  .bar.stap3 {
-    width:50%
-  }
-
-  .bar.stap4 {
-    width:66.64%
-  }
-
-  .bar.stap5 {
-    width:83%
   }
 
   .bar.num2 {
@@ -524,7 +397,7 @@ const Option = styled.div`
   font-size:0.88rem;
   color: ${(props) =>
     props.selected
-      ? props.KpiQuestionList?.length === 0
+      ? props.SurveyQuestionList?.length === 0
         ? palette.blue
         : palette.black
       : palette.gray800};
@@ -533,14 +406,14 @@ const Option = styled.div`
   cursor: pointer;
   background-color: ${(props) =>
     props.selected
-      ? props.KpiQuestionList?.length === 0
+      ? props.SurveyQuestionList?.length === 0
         ? "rgba(4,83,244,0.05)"
         : "rgba(0,0,0,0.05)"
       : palette.white};
   border: 1px solid
     ${(props) =>
       props.selected
-        ? props.KpiQuestionList?.length === 0
+        ? props.SurveyQuestionList?.length === 0
           ? palette.blue
           : palette.black
         : palette.lineGray};
@@ -553,13 +426,13 @@ const Option = styled.div`
     border: 1px solid
       ${(props) =>
         props.selected
-          ? props.KpiQuestionList?.length === 0
+          ? props.SurveyQuestionList?.length === 0
             ? palette.blue
             : palette.gray800
           : palette.lineGray};
     background-color: ${(props) =>
       props.selected
-      ? props.KpiQuestionList?.length === 0
+      ? props.SurveyQuestionList?.length === 0
       ? palette.blue
           : palette.gray800
         : palette.white};
@@ -579,7 +452,7 @@ const Option = styled.div`
 
   &:hover {
     border-color: ${(props) =>
-      props.KpiQuestionList?.length === 0 ? palette.blue : "none"};
+      props.SurveyQuestionList?.length === 0 ? palette.blue : "none"};
   }
 `;
 
@@ -610,13 +483,13 @@ const ButtonWrap = styled.div`
 
   .next {
     color: ${(props) =>
-      props.KpiQuestionList.length !== 0
+      props.SurveyQuestionList.length !== 0
         ? palette.black
         : !props.selectedOption1
         ? palette.gray500
         : palette.chatBlue};
     background: ${(props) =>
-      props.KpiQuestionList.length !== 0
+      props.SurveyQuestionList.length !== 0
         ? palette.white
         : !props.selectedOption1
         ? palette.white
@@ -626,13 +499,13 @@ const ButtonWrap = styled.div`
 
   .finish {
     color: ${(props) =>
-      props.KpiQuestionList.length !== 0
+      props.SurveyQuestionList.length !== 0
         ? palette.black
         : !props.selectedOption1 || !props.selectedOption2
         ? palette.gray500
         : palette.chatBlue};
     background: ${(props) =>
-      props.KpiQuestionList.length !== 0
+      props.SurveyQuestionList.length !== 0
         ? palette.white
         : !props.selectedOption1 || !props.selectedOption2
         ? palette.white

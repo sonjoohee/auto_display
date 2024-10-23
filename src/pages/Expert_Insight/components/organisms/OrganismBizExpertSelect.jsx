@@ -437,7 +437,7 @@ const SelectOptions = styled.div`
     gap: 12px;
     padding: 14px 20px;
     border-radius: 10px;
-    border: 1px solid ${palette.lineGray};
+    border: 1px solid ${palette.outlineGray};
 
     p {
       color: ${palette.gray};
@@ -451,7 +451,7 @@ const SelectOptions = styled.div`
       margin-left: auto;
       padding: 8px 16px;
       border-radius: 10px;
-      border: 1px solid ${palette.lineGray};
+      border: 1px solid ${palette.outlineGray};
       background: ${palette.white};
 
       &:before {

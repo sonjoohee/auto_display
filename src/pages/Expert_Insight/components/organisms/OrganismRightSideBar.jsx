@@ -172,7 +172,8 @@ const SideBar = styled.div`
   height: calc(100vh - 200px);
   // height:calc(100vh - 12rem);
   margin-left: ${(props) => {
-    if (props.Right) return `0`;
+    // if (props.Right) return `0`;
+    if (props.Right) return `20px`;
     else return `-300px`;
   }};
   margin-right: 0;
