@@ -319,7 +319,7 @@ const ExpertThumb = styled.div`
   gap: 8px;
   padding: 8px 12px;
   border-radius: 8px;
-  background: rgba(0, 0, 0, 0.03);
+  background: ${palette.chatGray};
 
   .thumb {
     position: relative;
@@ -1423,9 +1423,9 @@ const AnalysisSection = styled.div`
   width: 100%;
   text-align: left;
   // margin-top: 25px;
-  padding: 30px;
+  padding: 28px;
   border-radius: 15px;
-  border: 1px solid ${palette.lineGray};
+  border: 1px solid ${palette.outlineGray};
   max-height: 80vh; /* 최대 높이를 제한하여 스크롤이 작동하도록 설정 */
   overflow-y: auto; /* 스크롤 활성화 */
 
@@ -1684,7 +1684,7 @@ const SeparateSection = styled.div`
   margin-top: 12px;
   padding: 20px;
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.03);
+  background: ${palette.chatGray};
 
   + div {
     margin-top: 12px;
@@ -2020,7 +2020,7 @@ const Wrap = styled.div`
   display:flex;
   flex-direction:column;
   padding: 28px;
-  margin:24px 0 0 44px;
+  margin:24px 0 0 50px;
   border-radius:15px;
   border:1px solid ${palette.lineGray};
   overflow-y: auto;
@@ -2049,7 +2049,7 @@ const SeparateSection2 = styled.div`
   margin-top: 12px;
   padding: 20px;
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.03);
+  background: ${palette.chatGray};
 
   h3 {
     display:flex;
@@ -2133,7 +2133,7 @@ const SeparateSection3 = styled.div`
   margin-top: 12px;
   padding: 20px;
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.03);
+  background: ${palette.chatGray};
 
   h3 {
     display:flex;

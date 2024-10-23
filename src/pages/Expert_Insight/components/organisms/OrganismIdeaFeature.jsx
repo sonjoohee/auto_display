@@ -540,7 +540,7 @@ const Wrap = styled.div`
   display:flex;
   flex-direction:column;
   padding: 20px;
-  margin:24px 0 0 44px;
+  margin:24px 0 0 50px;
   border-radius:15px;
   border:1px solid ${palette.lineGray};
 

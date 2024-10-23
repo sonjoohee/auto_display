@@ -85,6 +85,7 @@ import IconEdit2 from "../images/iconEdit2.svg"
 import IconDelete2 from "../images/iconDelete2.svg"
 import IconClose2 from "../images/iconClose2.svg"
 import IconCheck2 from "../images/iconCheck2.svg"
+import IconCheck3 from "../images/IconCheck3.svg"
 
 import IconList from "../images/iconList.svg"
 import IconSaveDate from "../images/iconSaveDate.svg"
@@ -213,6 +214,7 @@ const images = {
   IconDelete2,
   IconClose2,
   IconCheck2,
+  IconCheck3,
 
   IconList,
   IconSaveDate,

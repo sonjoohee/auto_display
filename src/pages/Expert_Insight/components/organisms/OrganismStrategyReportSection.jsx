@@ -941,7 +941,7 @@ const SeparateSection = styled.div`
   margin-top: 12px;
   padding: 20px;
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.03);
+  background: ${palette.chatGray};
 
   + div {
     margin-top: 12px;
@@ -1069,9 +1069,9 @@ const AnalysisSection = styled.div`
   text-align: left;
   margin-top: 25px;
   margin-left:50px;
-  padding: 30px;
+  padding: 28px;
   border-radius: 15px;
-  border: 1px solid ${palette.lineGray};
+  border: 1px solid ${palette.outlineGray};
 
   h1 {
     font-size: 1.25rem;

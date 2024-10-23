@@ -1919,8 +1919,8 @@ const SideBar = styled.div`
   margin: ${props => props.isMobile ? '0' : (props.bgNone ? "40px 0 0 0" : "40px 0 0 40px")};
   border-radius: ${props => props.isMobile ? '0' : '15px'};
   border: ${props => props.isMobile ? 'none' : `1px solid ${palette.lineGray}`};
-  background: ${props => props.isMobile ? palette.white : (props.bgNone ? "none" : "rgba(0,0,0,.02)")};
-  box-shadow: ${props => props.isMobile ? 'none' : '0 4px 10px rgba(0, 0, 0, 0.05)'};
+  background: ${props => props.isMobile ? palette.white : (props.bgNone ? "none" : `${palette.chatGray}`)};
+  box-shadow: ${props => props.isMobile ? 'none' : `'0 4px 10px rgba(0, 0, 0, 0.05)'`};
   transition: all 0.5s;
   transform: ${props => {
     if (props.isMobile) {
