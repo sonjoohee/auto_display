@@ -318,7 +318,7 @@ const OrganismBizAnalysisSection = () => {
                 {
                   type: "system",
                   message:
-                    "분석한 아이템의 특징과 기능이 잘 분석되었나요? 추가하고 싶은 내용이 있으시면 “수정하기” 버튼을 통해 수정해주세요\n수정사항이 없으시다면, 구조화된 아이디어 발상을 진행하겠습니다. ",
+                    "분석한 아이템의 특징과 기능이 잘 분석되었나요? 추가하고 싶은 내용이 있으시면 “수정하기” 버튼을 통해 수정해주세요\n수정사항이 없으시다면, 구조화된 아이디어 발상을 진행하겠습니다.",
                   expertIndex: selectedExpertIndex,
                 },
                 { type: "ideaStartButton" }
@@ -328,10 +328,20 @@ const OrganismBizAnalysisSection = () => {
                 {
                   type: "system",
                   message:
-                    "분석한 아이템의 특징과 기능이 잘 분석되었나요? 추가하고 싶은 내용이 있으시면 “수정하기” 버튼을 통해 수정해주세요\n수정사항이 없으시다면, 지금 바로 퍼널 분석을 진행하겠습니다. ",
+                    "분석한 아이템의 특징과 기능이 잘 분석되었나요? 추가하고 싶은 내용이 있으시면 “수정하기” 버튼을 통해 수정해주세요\n수정사항이 없으시다면, 지금 바로 퍼널 분석을 진행하겠습니다.",
                   expertIndex: selectedExpertIndex,
                 },
                 { type: "growthHackerStartButton" }
+              );
+            } else if (selectedExpertIndex==="7") {
+              updatedConversation2.push(
+                {
+                  type: "system",
+                  message:
+                    "분석한 아이템의 특징과 기능이 잘 분석되었나요? 추가하고 싶은 내용이 있으시면 “수정하기” 버튼을 통해 수정해주세요\n분석 결과에 만족하신다면, 지금 시장 가격 분석을 진행하겠습니다.",
+                  expertIndex: selectedExpertIndex,
+                },
+                { type: "priceStartButton" }
               );
             }
           } else if (approachPath === -1) {

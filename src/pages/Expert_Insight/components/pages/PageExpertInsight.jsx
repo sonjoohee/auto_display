@@ -77,7 +77,9 @@ import MoleculeGrowthHackerStartButton from "../molecules/MoleculeGrowthHackerSt
 import OrganismGrowthHackerReport from "../organisms/OrganismGrowthHackerReport";
 import MoleculeGrowthHackerKPIButton from "../molecules/MoleculeGrowthHackerKPIButton";
 import OrganismGrowthHackerKPI from "../organisms/OrganismGrowthHackerKPI";
-
+import MoleculePriceStartButton from "../molecules/MoleculePriceStartButton";
+import MoleculePriceOption from "../molecules/MoleculePriceOption";
+import OrganismPriceReport from "../organisms/OrganismPriceReport";
 
 const PageExpertInsight = () => {
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
@@ -416,6 +418,14 @@ if (isLoadingPage) {
                 } else if (item.type === "growthHackerKPI") {
                   return <OrganismGrowthHackerKPI />;
                 } 
+
+                else if (item.type === "priceStartButton") {
+                  return <MoleculePriceStartButton />;
+                } else if (item.type === "priceOption") {
+                  return <MoleculePriceOption />;
+                } else if (item.type === "priceReport") {
+                  return <OrganismPriceReport />;
+                }
                 return null;
               })}
 

@@ -69,6 +69,8 @@ import {
   GROWTH_HACKER_REPORT_DATA,
   GROWTH_HACKER_DETAIL_REPORT_DATA,
   KPI_QUESTION_LIST,
+  PRICE_REPORT_DATA,
+  PRICE_SCRAP_DATA,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -201,6 +203,8 @@ const OrganismLeftSideBar = () => {
   const [expertButtonState, setExpertButtonState] = useAtom(EXPERT_BUTTON_STATE);
   const [additionButtonState, setAdditionButtonState] = useAtom(ADDITION_BUTTON_STATE);
   const [customerAdditionButtonState, setCustomerAdditionButtonState] = useAtom(CUSTOMER_ADDITION_BUTTON_STATE);
+  const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
+  const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
 
   const [isSection1Open, setIsSection1Open] = useState(false); // 인사이트 보관함 열림/닫힘 상태
   const [isSection2Open, setIsSection2Open] = useState(false); // 프로젝트 히스토리 열림/닫힘 상태
@@ -623,6 +627,9 @@ useEffect(() => {
       setGrowthHackerDetailReportData(chatData.growthHackerDetailReportData || {});
       setKpiQuestionList(chatData.KpiQuestionList || []);
 
+      setPriceReportData(chatData.priceReportData || {});
+      setPriceScrapData(chatData.priceScrapData || {});
+
       // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
       // set어프로치패스(2)
       setApproachPath(2);
@@ -866,6 +873,9 @@ useEffect(() => {
     setGrowthHackerReportData([]);
     setGrowthHackerDetailReportData({});
     setKpiQuestionList([]);
+
+    setPriceReportData({});
+    setPriceScrapData({});
   };
 
   const handleLogoClick = () => {
@@ -927,6 +937,9 @@ useEffect(() => {
     setGrowthHackerReportData([]);
     setGrowthHackerDetailReportData({});
     setKpiQuestionList([]);
+
+    setPriceReportData({});
+    setPriceScrapData({});
   };
   return (
     <>
