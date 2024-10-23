@@ -20,6 +20,7 @@ import {
   CUSTOMER_ADDITIONAL_REPORT_DATA,
   TARGET_SELECT_BUTTON_STATE,
   SELECTED_POC_OPTIONS,
+  KPI_QUESTION_LIST,
   SELCTED_POC_TARGET,
   IDEA_FEATURE_DATA,
   IDEA_REQUIREMENT_DATA,
@@ -59,7 +60,8 @@ const MoleculeCheckSurveyOption = () => {
   const [customerAdditionalReportData] = useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
   const [isLoggedIn] = useAtom(isLoggedInAtom);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
-  
+  const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
+
   const [SurveyQuestionList, setSurveyQuestionList] = useAtom(SURVEY_QUESTION_LIST);
   const [selectedOption1, setSelectedOption1] = useState("");
   const [selectedOption2, setSelectedOption2] = useState("");
@@ -182,6 +184,7 @@ const MoleculeCheckSurveyOption = () => {
         customerAdditionalReportData,
         timestamp: Date.now(),
         expert_index: selectedExpertIndex,
+        KpiQuestionList : KpiQuestionList,
         SurveyQuestionList: [selectedOption1, selectedOption2, selectedOption3, selectedOption4],
         selectedPocTarget: selectedPocTarget,
         ideaFeatureData: ideaFeatureData,
