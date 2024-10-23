@@ -246,6 +246,7 @@ export const PRICE_REPORT_DATA = atom({});
 export const SURVEY_OPTION_BUTTON_STATE = atom(0);
 export const SURVEY_GUIDELINE_BUTTON_STATE = atom(0);
 export const SURVEY_GOAL_SUGGESTION_BUTTON_STATE = atom(0);
+export const SURVEY_GOAL_FIXED = atom([]);
 export const SURVEY_QUESTION_LIST = atom([]);
 export const SURVEY_GUIDELINE_REPORT_DATA = atom([]);
 export const SURVEY_GUIDELINE_DETAIL_REPORT_DATA = atom({});
