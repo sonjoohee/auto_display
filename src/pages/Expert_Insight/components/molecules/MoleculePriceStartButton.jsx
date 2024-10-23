@@ -32,7 +32,7 @@ import {
   IDEA_LIST,
   IDEA_GROUP,
   PRICE_START_BUTTON_STATE,
-  PRICE_PRODUCT_NUM,
+  PRICE_PRODUCT,
 } from "../../../AtomStates";
 
 import {
@@ -80,7 +80,8 @@ const MoleculePriceStartButton = () => {
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
   const [priceStartButtonState, setPriceStartButtonState] = useAtom(PRICE_START_BUTTON_STATE);
   const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
-  const [priceProductNum, setPriceProductNum] = useAtom(PRICE_PRODUCT_NUM);
+  const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
+  
   const handleClick = async () => {
     if (isLoading) return;
     const updatedConversation = [...conversation];
@@ -148,8 +149,8 @@ const MoleculePriceStartButton = () => {
     //   throw new Error("Maximum retry attempts reached. Empty response persists.");
     // }
     
-    const productNum = 1;
-    setPriceProductNum(productNum);
+    const product = ["기능성 화장품"];
+    setPriceProduct(product);
 
     updatedConversation.push(
       {
@@ -160,7 +161,7 @@ const MoleculePriceStartButton = () => {
       },
     );
 
-    if(productNum === 1) {
+    if(product.length === 1) {
       setPriceStartButtonState(1);
 
       updatedConversation.push(
@@ -218,6 +219,7 @@ const MoleculePriceStartButton = () => {
         ideaMiro : ideaMiro,
         growthHackerReportData : growthHackerReportData,
         KpiQuestionList : KpiQuestionList,
+        priceProduct : priceProduct,
       },
       isLoggedIn,
       conversationId
@@ -239,6 +241,7 @@ const ButtonWrap = styled.div`
   align-items: center;
   margin-top: 15px;
   padding-bottom: 15px;
+  margin-left:45px;
 
   button {
     display: flex;

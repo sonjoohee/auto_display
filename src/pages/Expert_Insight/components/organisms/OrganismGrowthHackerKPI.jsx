@@ -40,6 +40,11 @@ import {
   SELECTED_POC_OPTIONS,
   RECOMMENDED_TARGET_DATA,
   IDEA_MIRO,
+  PRICE_SCRAP_DATA,
+  PRICE_REPORT_DATA,
+  PRICE_PRODUCT,
+  PRICE_SELECTED_PRODUCT_SEGMENTATION,
+  PRICE_PRODUCT_SEGMENTATION,
 } from "../../../../pages/AtomStates";
 
 import { useAtom } from "jotai";
@@ -49,6 +54,11 @@ import {
 } from "../../../../utils/indexedDB";
 
 const OrganismGrowthHackerKPI = () => {
+  const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
+  const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
+  const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
+  const [priceSelectedProductSegmentation, setPriceSelectedProductSegmentation] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
+  const [priceProductSegmentation, setPriceProductSegmentation] = useAtom(PRICE_PRODUCT_SEGMENTATION);
   const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
   const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
   const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
@@ -178,6 +188,11 @@ const OrganismGrowthHackerKPI = () => {
             buttonState : buttonState,
             growthHackerReportData : growthHackerReportData,
             KpiQuestionList : KpiQuestionList,
+            priceScrapData : priceScrapData,
+            priceReportData : priceReportData,
+            priceProduct : priceProduct,
+            priceSelectedProductSegmentation : priceSelectedProductSegmentation,
+            priceProductSegmentation : priceProductSegmentation,
           },
           isLoggedIn,
           conversationId
@@ -296,6 +311,11 @@ const OrganismGrowthHackerKPI = () => {
           growthHackerReportData : growthHackerReportData,
           growthHackerDetailReportData : cleanedContent,
           KpiQuestionList : KpiQuestionList,
+          priceScrapData : priceScrapData,
+          priceReportData : priceReportData,
+          priceProduct : priceProduct,
+          priceSelectedProductSegmentation : priceSelectedProductSegmentation,
+          priceProductSegmentation : priceProductSegmentation,
         },
         isLoggedIn,
         conversationId

@@ -34,6 +34,11 @@ import {
   GROWTH_HACKER_DETAIL_REPORT_DATA,
   KPI_QUESTION_LIST,
   BUTTON_STATE,
+  PRICE_SCRAP_DATA,
+  PRICE_REPORT_DATA,
+  PRICE_PRODUCT,
+  PRICE_SELECTED_PRODUCT_SEGMENTATION,
+  PRICE_PRODUCT_SEGMENTATION,
 } from "../../../AtomStates";
 
 import {
@@ -43,6 +48,11 @@ import {
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeCheckPocRightAway = () => {
+  const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
+  const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
+  const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
+  const [priceSelectedProductSegmentation, setPriceSelectedProductSegmentation] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
+  const [priceProductSegmentation, setPriceProductSegmentation] = useAtom(PRICE_PRODUCT_SEGMENTATION);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
   const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
@@ -130,6 +140,11 @@ const MoleculeCheckPocRightAway = () => {
         growthHackerDetailReportData : growthHackerDetailReportData,
         KpiQuestionList : KpiQuestionList,
         buttonState : buttonState,
+        priceScrapData : priceScrapData,
+        priceReportData : priceReportData,
+        priceProduct : priceProduct,
+        priceSelectedProductSegmentation : priceSelectedProductSegmentation,
+        priceProductSegmentation : priceProductSegmentation,
       },
       isLoggedIn,
       conversationId

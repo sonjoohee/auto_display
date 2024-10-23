@@ -29,12 +29,22 @@ import {
   GROWTH_HACKER_BUTTON_STATE,
   KPI_QUESTION_LIST,
   BUTTON_STATE,
+  PRICE_SCRAP_DATA,
+  PRICE_REPORT_DATA,
+  PRICE_PRODUCT,
+  PRICE_SELECTED_PRODUCT_SEGMENTATION,
+  PRICE_PRODUCT_SEGMENTATION,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeCheckGrowthHackerOption = () => {
+  const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
+  const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
+  const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
+  const [priceSelectedProductSegmentation, setPriceSelectedProductSegmentation] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
+  const [priceProductSegmentation, setPriceProductSegmentation] = useAtom(PRICE_PRODUCT_SEGMENTATION);
   const [conversationId] = useAtom(CONVERSATION_ID);
   const [buttonState] = useAtom(BUTTON_STATE);
   const [ideaFeatureData] = useAtom(IDEA_FEATURE_DATA);
@@ -211,6 +221,11 @@ const MoleculeCheckGrowthHackerOption = () => {
         ideaGroup: ideaGroup,
         ideaPriority: ideaPriority,
         buttonState: buttonState,
+        priceScrapData : priceScrapData,
+        priceReportData : priceReportData,
+        priceProduct : priceProduct,
+        priceSelectedProductSegmentation : priceSelectedProductSegmentation,
+        priceProductSegmentation : priceProductSegmentation,
       },
       isLoggedIn,
       conversationId

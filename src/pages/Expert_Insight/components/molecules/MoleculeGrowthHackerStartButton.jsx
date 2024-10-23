@@ -34,6 +34,11 @@ import {
   IDEA_REQUIREMENT_DATA,
   IDEA_LIST,
   IDEA_GROUP,
+  PRICE_SCRAP_DATA,
+  PRICE_REPORT_DATA,
+  PRICE_PRODUCT,
+  PRICE_SELECTED_PRODUCT_SEGMENTATION,
+  PRICE_PRODUCT_SEGMENTATION,
 } from "../../../AtomStates";
 
 import {
@@ -43,6 +48,11 @@ import {
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeGrowthHackerStartButton = () => {
+  const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
+  const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
+  const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
+  const [priceSelectedProductSegmentation, setPriceSelectedProductSegmentation] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
+  const [priceProductSegmentation, setPriceProductSegmentation] = useAtom(PRICE_PRODUCT_SEGMENTATION);
   const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
   const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
@@ -123,6 +133,11 @@ const MoleculeGrowthHackerStartButton = () => {
         ideaList : ideaList,
         ideaGroup : ideaGroup,
         ideaMiro : ideaMiro,
+        priceScrapData : priceScrapData,
+        priceReportData : priceReportData,
+        priceProduct : priceProduct,
+        priceSelectedProductSegmentation : priceSelectedProductSegmentation,
+        priceProductSegmentation : priceProductSegmentation,
       },
       isLoggedIn,
       conversationId

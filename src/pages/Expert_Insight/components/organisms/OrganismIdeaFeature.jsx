@@ -43,6 +43,11 @@ import {
   GROWTH_HACKER_REPORT_DATA,
   GROWTH_HACKER_DETAIL_REPORT_DATA,
   KPI_QUESTION_LIST,
+  PRICE_SCRAP_DATA,
+  PRICE_REPORT_DATA,
+  PRICE_PRODUCT,
+  PRICE_SELECTED_PRODUCT_SEGMENTATION,
+  PRICE_PRODUCT_SEGMENTATION,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -57,6 +62,11 @@ import {
 import images from "../../../../assets/styles/Images";
 
 const OrganismIdeaFeature = () => {
+  const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
+  const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
+  const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
+  const [priceSelectedProductSegmentation, setPriceSelectedProductSegmentation] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
+  const [priceProductSegmentation, setPriceProductSegmentation] = useAtom(PRICE_PRODUCT_SEGMENTATION);
   const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
   const [growthHackerDetailReportData, setGrowthHackerDetailReportData] = useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
   const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
@@ -369,6 +379,11 @@ const OrganismIdeaFeature = () => {
               growthHackerReportData : growthHackerReportData,
               growthHackerDetailReportData : growthHackerDetailReportData,
               KpiQuestionList : KpiQuestionList,
+              priceScrapData : priceScrapData,
+              priceReportData : priceReportData,
+              priceProduct : priceProduct,
+              priceSelectedProductSegmentation : priceSelectedProductSegmentation,
+              priceProductSegmentation : priceProductSegmentation,
             },
             isLoggedIn,
             conversationId

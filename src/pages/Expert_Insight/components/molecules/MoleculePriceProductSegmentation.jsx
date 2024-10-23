@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useAtom } from "jotai";
 import {
-  EXPERT_BUTTON_STATE,
   IS_LOADING,
   APPROACH_PATH,
   CONVERSATION,
@@ -12,7 +11,6 @@ import {
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
   MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
-  ADDITION_BUTTON_STATE,
   isLoggedInAtom,
   STRATEGY_REPORT_DATA,
   INPUT_BUSINESS_INFO,
@@ -21,14 +19,10 @@ import {
   SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
   ADDITIONAL_REPORT_DATA,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
-  CUSTOMER_ADDITION_BUTTON_STATE,
   SELECTED_EXPERT_LIST,
   SELCTED_POC_TARGET,
-  TARGET_REPORT_BUTTON_STATE,
   POC_DETAIL_REPORT_DATA,
   POC_PERSONA_LIST,
-  GROWTH_HACKER_BUTTON_STATE,
-  GROWTH_HACKER_KPI_BUTTON_STATE,
   BUTTON_STATE,
   GROWTH_HACKER_REPORT_DATA,
   KPI_QUESTION_LIST,
@@ -37,11 +31,13 @@ import {
   IDEA_REQUIREMENT_DATA,
   IDEA_LIST,
   IDEA_GROUP,
-  PRICE_SCRAP_DATA,
+  PRICE_CONTINUE_BUTTON_STATE,
   PRICE_REPORT_DATA,
+  PRICE_SCRAP_DATA,
   PRICE_PRODUCT,
-  PRICE_SELECTED_PRODUCT_SEGMENTATION,
   PRICE_PRODUCT_SEGMENTATION,
+  PRICE_START_BUTTON_STATE,
+  PRICE_SELECTED_PRODUCT_SEGMENTATION,
 } from "../../../AtomStates";
 
 import {
@@ -50,12 +46,8 @@ import {
 
 import { palette } from "../../../../assets/styles/Palette";
 
-const MoleculeGrowthHackerKPIButton = () => {
-  const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
-  const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
-  const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
+const MoleculePriceContinueButton = () => {
   const [priceSelectedProductSegmentation, setPriceSelectedProductSegmentation] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
-  const [priceProductSegmentation, setPriceProductSegmentation] = useAtom(PRICE_PRODUCT_SEGMENTATION);
   const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
   const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
@@ -92,38 +84,148 @@ const MoleculeGrowthHackerKPIButton = () => {
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
-  const [growthHackerKPIButtonState, setGrowthHackerKPIButtonState] = useAtom(GROWTH_HACKER_KPI_BUTTON_STATE);
+  const [priceContinueButtonState, setPriceContinueButtonState] = useAtom(PRICE_CONTINUE_BUTTON_STATE);
   const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
-  const handleClick = async () => {
+  const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
+  const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
+  const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
+  const [priceProductSegmentation, setPriceProductSegmentation] = useAtom(PRICE_PRODUCT_SEGMENTATION);
+  const [isLoadingPrice, setIsLoadingPrice] = useState(false);
+  const [priceStartButtonState, setPriceStartButtonState] = useAtom(PRICE_START_BUTTON_STATE);
+
+  useEffect(() => {
+    const fetchPriceProductSegmentation = async () => {
+      if(priceContinueButtonState === 1) {
+        /* 제품 개수를 확인하는 API */
+        // setIsLoading(true);
+        // setIsLoadingPrice(true);
+        // const data = {
+        //   expert_id: "7",
+        //   business_info: titleOfBusinessInfo,
+        //   business_analysis_data: {
+        //     명칭: titleOfBusinessInfo,
+        //     주요_목적_및_특징: mainFeaturesOfBusinessInformation,
+        //     주요기능: mainCharacteristicOfBusinessInformation,
+        //     목표고객: businessInformationTargetCustomer,
+        //   }
+        // };
+
+        // let response = await axios.post(
+        //   "https://wishresearch.kr/panels/growth_hacker",
+        //   data,
+        //   axiosConfig
+        // );
+
+        // let retryCount = 0;
+        // const maxRetries = 10;
+
+        // while (retryCount < maxRetries && (
+        //   !response || 
+        //   !response.data || 
+        //   typeof response.data !== "object" ||
+        //   !response.data.hasOwnProperty("growth_hacker_report") || 
+        //   !Array.isArray(response.data.growth_hacker_report) ||
+        //   !response.data.growth_hacker_report[0].hasOwnProperty("content") ||
+        //   !Array.isArray(response.data.growth_hacker_report[0].content) ||
+        //   !response.data.growth_hacker_report[0].content[0].hasOwnProperty("text") ||
+        //   !response.data.growth_hacker_report[0].content[1].hasOwnProperty("text") ||
+        //   response.data.growth_hacker_report[1].content.some(item => 
+        //     !item.hasOwnProperty("title") || 
+        //     !item.hasOwnProperty("text") || 
+        //     !item.hasOwnProperty("subcontent") || 
+        //     !Array.isArray(item.subcontent) || 
+        //     item.subcontent.some(contentItem => 
+        //       !contentItem.hasOwnProperty("subTitle") || 
+        //       !contentItem.hasOwnProperty("text")
+        //     )
+        //   )
+        // )) 
+        // {
+        //   response = await axios.post(
+        //     "https://wishresearch.kr/panels/growth_hacker",
+        //     data,
+        //     axiosConfig
+        //   );
+        //   retryCount++;
+        // }
+        // if (retryCount === maxRetries) {
+        //   console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+        //   // 에러 처리 로직 추가
+        //   throw new Error("Maximum retry attempts reached. Empty response persists.");
+        // }
+        // setIsLoadingPrice(false);
+        // setIsLoading(false);
+      setPriceContinueButtonState(0);
+      setPriceProductSegmentation(["클랜징 디바이스", "리프팅 및 탄력 디바이스", "LED 마스크 디바이스", "모공 관리 디바이스"]);
+
+      setConversationStage(3);
+      setApproachPath(3);
+
+      await saveConversationToIndexedDB(
+        {
+          id: conversationId,
+          inputBusinessInfo: inputBusinessInfo,
+          analysisReportData: analysisReportData,
+          strategyReportData: strategyReportData,
+          conversation: conversation,
+          conversationStage: 3,
+          selectedAdditionalKeywords: selectedAdditionalKeyword,
+          selectedCustomerAdditionalKeyword:
+          selectedCustomerAdditionalKeyword,
+          additionalReportData: additionalReportData,
+          customerAdditionalReportData: customerAdditionalReportData,
+          timestamp: Date.now(),
+          expert_index: selectedExpertIndex,
+          pocPersonaList: pocPersonaList,
+          selectedPocTarget: selectedPocTarget,
+          pocDetailReportData : pocDetailReportData,
+          ideaFeatureData : ideaFeatureData,
+          ideaRequirementData : ideaRequirementData,
+          ideaList : ideaList,
+          ideaGroup : ideaGroup,
+          buttonState : buttonState,
+          ideaMiro : ideaMiro,
+          growthHackerReportData : growthHackerReportData,
+          KpiQuestionList : KpiQuestionList,
+          priceProduct : priceProduct,
+          priceProductSegmentation : priceProductSegmentation,
+          priceSelectedProductSegmentation : priceSelectedProductSegmentation,
+          priceScrapData : priceScrapData,
+          priceReportData : priceReportData,
+        },
+        isLoggedIn,
+        conversationId
+      );
+    }
+  }
+    fetchPriceProductSegmentation();
+  }, [priceContinueButtonState]);
+
+  const handleClick = async (index) => {
     if (isLoading) return;
     const updatedConversation = [...conversation];
 
     if (updatedConversation.length > 0 &&
-        updatedConversation[updatedConversation.length - 1].type === "growthHackerKPIButton"
+        updatedConversation[updatedConversation.length - 1].type === "priceProductSegmentation"
     ) {
       updatedConversation.pop();
     }
+
+    setPriceSelectedProductSegmentation([...priceSelectedProductSegmentation, priceProductSegmentation[index]]);
+    setPriceStartButtonState(1);
 
     updatedConversation.push(
       {
         type: "user",
         message:
-          "현재 제 아이템에 맞는 최적의 KPI를 추천해 주시면 좋겠습니다",
-        expertIndex: selectedExpertIndex,
+          `${priceProductSegmentation[index]}의 가격 분석을 진행하겠습니다`,
       },
-      {
-        type: 'growthHackerKPI',
-      },
+      { type: `priceReport` }
     );
 
-    setGrowthHackerKPIButtonState(1);
     setConversation(updatedConversation);
     setConversationStage(3);
     setApproachPath(3);
-    setButtonState({
-      ...buttonState,
-      growthHackerKPI : 1,
-    });
 
     await saveConversationToIndexedDB(
       {
@@ -147,17 +249,17 @@ const MoleculeGrowthHackerKPIButton = () => {
         ideaRequirementData : ideaRequirementData,
         ideaList : ideaList,
         ideaGroup : ideaGroup,
-        buttonState : {
-          ...buttonState,
-          growthHackerKPI : 1,
-        },
+        buttonState : buttonState,
         ideaMiro : ideaMiro,
         growthHackerReportData : growthHackerReportData,
         KpiQuestionList : KpiQuestionList,
         priceScrapData : priceScrapData,
         priceReportData : priceReportData,
         priceProduct : priceProduct,
-        priceSelectedProductSegmentation : priceSelectedProductSegmentation,
+        priceSelectedProductSegmentation : [
+          ...priceSelectedProductSegmentation,
+          priceProductSegmentation[index],
+        ],
         priceProductSegmentation : priceProductSegmentation,
       },
       isLoggedIn,
@@ -167,19 +269,26 @@ const MoleculeGrowthHackerKPIButton = () => {
   return (
     <>
       <ButtonWrap>
-        <button onClick={handleClick}>최적의 KPI 전략 제안 받기</button>
+        <>
+          {priceProductSegmentation.map((product, index) => (
+            <button key={index} onClick={() => handleClick(index)}>
+              {product}
+            </button>
+          ))}
+        </>
       </ButtonWrap>
     </>
   );
 };
 
-export default MoleculeGrowthHackerKPIButton;
+export default MoleculePriceContinueButton;
 
 const ButtonWrap = styled.div`
   display: flex;
   align-items: center;
   margin-top: 15px;
   padding-bottom: 15px;
+  margin-left:45px;
 
   button {
     display: flex;

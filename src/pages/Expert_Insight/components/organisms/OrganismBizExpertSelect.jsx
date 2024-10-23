@@ -39,6 +39,11 @@ import {
   GROWTH_HACKER_REPORT_DATA,
   GROWTH_HACKER_DETAIL_REPORT_DATA,
   KPI_QUESTION_LIST,
+  PRICE_SCRAP_DATA,
+  PRICE_REPORT_DATA,
+  PRICE_PRODUCT,
+  PRICE_SELECTED_PRODUCT_SEGMENTATION,
+  PRICE_PRODUCT_SEGMENTATION,
 } from "../../../AtomStates";
 
 import {
@@ -46,6 +51,11 @@ import {
 } from "../../../../utils/indexedDB";
 
 const OrganismBizExpertSelect = () => {
+  const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
+  const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
+  const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
+  const [priceSelectedProductSegmentation, setPriceSelectedProductSegmentation] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
+  const [priceProductSegmentation, setPriceProductSegmentation] = useAtom(PRICE_PRODUCT_SEGMENTATION);
   const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
   const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
   const [growthHackerDetailReportData, setGrowthHackerDetailReportData] = useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
@@ -225,6 +235,21 @@ const OrganismBizExpertSelect = () => {
           },
           { type: `growthHackerOption` }
         );
+      } else if (index === "7") {
+        updatedConversation.push(
+          {
+            type: "user",
+            message:
+              "시장 가격 분석하기를 진행하겠습니다 🙌🏻",
+          },
+          {
+            type: "system",
+            message:
+              "안녕하세요! 저는 가격 분석 전문가 한준혁입니다. 다양한 데이터 소스를 활용해 시장의 가격 변동을 분석하고, 적정 가격을 도출해드립니다.\n경쟁사 동향과 시장 트렌드를 파악해 최적의 가격 전략을 세울 수 있도록 도와드려요. 분석이 필요한 제품이나 서비스에 대해 알려주세요 📝\n📌 현재는 제품만 분석이 가능합니다",
+            expertIndex: index,
+          },
+          { type: `priceStartButton` }
+        );
       }
 
       await saveConversationToIndexedDB(
@@ -255,6 +280,11 @@ const OrganismBizExpertSelect = () => {
           growthHackerReportData : growthHackerReportData,
           growthHackerDetailReportData : growthHackerDetailReportData,
           KpiQuestionList : KpiQuestionList,
+          priceScrapData : priceScrapData,
+          priceReportData : priceReportData,
+          priceProduct : priceProduct,
+          priceSelectedProductSegmentation : priceSelectedProductSegmentation,
+          priceProductSegmentation : priceProductSegmentation,
         },
         isLoggedIn,
         conversationId
@@ -275,7 +305,9 @@ const OrganismBizExpertSelect = () => {
         (selectedExpertList.includes("2") || strategyReportData.hasOwnProperty(2)) &&
         (selectedExpertList.includes("3") || strategyReportData.hasOwnProperty(3)) &&
         (selectedExpertList.includes("4") || strategyReportData.hasOwnProperty(4)) &&
-        (selectedExpertList.includes("5") || ideaFeatureData.length !== 0)) ? null : (
+        (selectedExpertList.includes("5") || ideaFeatureData.length !== 0)) &&
+        (selectedExpertList.includes("6") || KpiQuestionList.length !== 0) &&
+        (selectedExpertList.includes("7") || priceProduct.length !== 0) ? null : (
   
         <BizExpertSelectContainer>
           <h1>아래 분야별 전문가와 대화를 통해 아이디어를 발전시켜보세요.</h1>
@@ -334,16 +366,16 @@ const OrganismBizExpertSelect = () => {
                 </button>
               </div>
             )}
-            {/* {(selectedExpertList.includes("7") || KpiQuestionList.length !== 0) ? null : (
+            {(selectedExpertList.includes("7") || priceProduct.length !== 0) ? null : (
               <div>
                 <img src={images.IconExpert7} alt="" />
-                <p>그로스 해커에게 KPI 전략 받기</p>
+                <p>가격 분석 전문가에게 가격 분석 리포트 받기</p>
                 <button type="button" onClick={() => handledExpertSelect("7")}>
                   시작하기
                 </button>
               </div>
             )}
-            {(selectedExpertList.includes("8") || KpiQuestionList.length !== 0) ? null : (
+            {/* {(selectedExpertList.includes("8") || KpiQuestionList.length !== 0) ? null : (
               <div>
                 <img src={images.IconExpert8} alt="" />
                 <p>그로스 해커에게 KPI 전략 받기</p>

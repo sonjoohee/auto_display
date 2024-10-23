@@ -43,7 +43,9 @@ import {
   PRICE_START_BUTTON_STATE,
   PRICE_SCRAP_DATA,
   PRICE_REPORT_DATA,
-  PRICE_PRODUCT_NUM,
+  PRICE_PRODUCT,
+  PRICE_PRODUCT_SEGMENTATION,
+  PRICE_SELECTED_PRODUCT_SEGMENTATION,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -58,7 +60,6 @@ import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
 
 const OrganismPriceReport = () => {
-  const [priceProductNum, setPriceProductNum] = useAtom(PRICE_PRODUCT_NUM);
   const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
   const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
@@ -118,6 +119,9 @@ const OrganismPriceReport = () => {
   const [priceStartButtonState, setPriceStartButtonState] = useAtom(PRICE_START_BUTTON_STATE);
   const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
   const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
+  const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
+  const [priceProductSegmentation, setPriceProductSegmentation] = useAtom(PRICE_PRODUCT_SEGMENTATION);
+  const [priceSelectedProductSegmentation, setPriceSelectedProductSegmentation] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
 
   const axiosConfig = {
     timeout: 100000, // 100초
@@ -259,13 +263,13 @@ const OrganismPriceReport = () => {
 
         const updatedConversation = [...conversation];
 
-        if(priceProductNum === 1) {
+        if(priceProduct.length === 1) {
           updatedConversation.push(
             {
-            type: "system",
-            message:
-              `시장 가격 분석이 완료되었습니다.\n${titleOfBusinessInfo}를 더욱 세분화해 가격 분석을 이어가시겠습니까? `,
-            expertIndex: selectedExpertIndex,
+              type: "system",
+              message:
+                `시장 가격 분석이 완료되었습니다.\n${titleOfBusinessInfo}를 더욱 세분화해 가격 분석을 이어가시겠습니까? `,
+              expertIndex: selectedExpertIndex,
             },
             { type: `priceContinueButton` }
           );
@@ -312,6 +316,9 @@ const OrganismPriceReport = () => {
             buttonState : buttonState,
             priceScrapData : priceScrap,
             priceReportData : priceReport,
+            priceProduct : priceProduct,
+            priceProductSegmentation : priceProductSegmentation,
+            priceSelectedProductSegmentation : priceSelectedProductSegmentation,
           },
           isLoggedIn,
           conversationId

@@ -39,6 +39,11 @@ import {
   GROWTH_HACKER_BUTTON_STATE,
   GROWTH_HACKER_REPORT_DATA,
   IDEA_MIRO,
+  PRICE_SCRAP_DATA,
+  PRICE_REPORT_DATA,
+  PRICE_PRODUCT,
+  PRICE_SELECTED_PRODUCT_SEGMENTATION,
+  PRICE_PRODUCT_SEGMENTATION,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -53,6 +58,11 @@ import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
 
 const OrganismGrowthHackerReport = () => {
+  const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
+  const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
+  const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
+  const [priceSelectedProductSegmentation, setPriceSelectedProductSegmentation] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
+  const [priceProductSegmentation, setPriceProductSegmentation] = useAtom(PRICE_PRODUCT_SEGMENTATION);
   const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
@@ -228,6 +238,11 @@ const OrganismGrowthHackerReport = () => {
             ideaMiro : ideaMiro,
             growthHackerReportData : response.data.growth_hacker_report,
             buttonState : buttonState,
+            priceScrapData : priceScrapData,
+            priceReportData : priceReportData,
+            priceProduct : priceProduct,
+            priceSelectedProductSegmentation : priceSelectedProductSegmentation,
+            priceProductSegmentation : priceProductSegmentation,
           },
           isLoggedIn,
           conversationId
