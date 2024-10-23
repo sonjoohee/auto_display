@@ -33,6 +33,11 @@ import {
   IDEA_GROUP,
   IDEA_PRIORITY,
   BUTTON_STATE,
+  PRICE_SCRAP_DATA,
+  PRICE_REPORT_DATA,
+  PRICE_PRODUCT,
+  PRICE_SELECTED_PRODUCT_SEGMENTATION,
+  PRICE_PRODUCT_SEGMENTATION,
 } from "../../../AtomStates";
 
 import {
@@ -42,6 +47,11 @@ import {
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeIdeaPriorityButton = () => {
+  const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
+  const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
+  const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
+  const [priceSelectedProductSegmentation, setPriceSelectedProductSegmentation] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
+  const [priceProductSegmentation, setPriceProductSegmentation] = useAtom(PRICE_PRODUCT_SEGMENTATION);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
@@ -123,6 +133,11 @@ const MoleculeIdeaPriorityButton = () => {
         ideaList : ideaList,
         ideaGroup : ideaGroup,
         buttonState : buttonState,
+        priceScrapData : priceScrapData,
+        priceReportData : priceReportData,
+        priceProduct : priceProduct,
+        priceSelectedProductSegmentation : priceSelectedProductSegmentation,
+        priceProductSegmentation : priceProductSegmentation,
       },
       isLoggedIn,
       conversationId

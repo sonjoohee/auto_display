@@ -57,6 +57,11 @@ import {
   GROWTH_HACKER_REPORT_DATA,
   GROWTH_HACKER_DETAIL_REPORT_DATA,
   KPI_QUESTION_LIST,
+  PRICE_SCRAP_DATA,
+  PRICE_REPORT_DATA,
+  PRICE_PRODUCT,
+  PRICE_SELECTED_PRODUCT_SEGMENTATION,
+  PRICE_PRODUCT_SEGMENTATION,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -69,6 +74,11 @@ import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/Molec
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
 
 const PageMeetAiExpert = () => {
+  const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
+  const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
+  const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
+  const [priceSelectedProductSegmentation, setPriceSelectedProductSegmentation] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
+  const [priceProductSegmentation, setPriceProductSegmentation] = useAtom(PRICE_PRODUCT_SEGMENTATION);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [isEditingIdeaFeature, setIsEditingIdeaFeature] = useAtom(IS_EDITING_IDEA_FEATURE);
   const [isEditingIdeaCustomer, setIsEditingIdeaCustomer] = useAtom(IS_EDITING_IDEA_CUSTOMER);
@@ -272,6 +282,11 @@ const PageMeetAiExpert = () => {
     setGrowthHackerReportData([]);
     setGrowthHackerDetailReportData({});
     setKpiQuestionList([]);
+    setPriceScrapData([]);
+    setPriceReportData([]);
+    setPriceProduct([]);
+    setPriceSelectedProductSegmentation([]);
+    setPriceProductSegmentation([]);
   }, [location]);
 
   useEffect(() => {
