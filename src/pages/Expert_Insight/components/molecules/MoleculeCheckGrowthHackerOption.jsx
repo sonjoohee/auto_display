@@ -229,6 +229,10 @@ const MoleculeCheckGrowthHackerOption = () => {
     <Wrap>
       {tabs === 0 && (
         <>
+          <Progress KpiQuestionList={KpiQuestionList}>
+            <div className="bar stap1"></div>
+          </Progress>
+
           <Question>Q1. 현재 제품/서비스는 어느 단계에 있습니까?</Question>
           <OptionContainer>
             {options1.map((option1) => (
@@ -246,6 +250,10 @@ const MoleculeCheckGrowthHackerOption = () => {
       )}
       {tabs === 1 && (
         <>
+          <Progress KpiQuestionList={KpiQuestionList}>
+            <div className="bar stap2"></div>
+          </Progress>
+
           <Question>Q2. 현재 기능들이 얼마나 잘 구현되어 있습니까?</Question>
           <OptionContainer>
             {options2.map((option2) => (
@@ -264,6 +272,10 @@ const MoleculeCheckGrowthHackerOption = () => {
       {/* 각 탭별로 동일한 방식으로 설정 */}
       {tabs === 2 && (
         <>
+          <Progress KpiQuestionList={KpiQuestionList}>
+            <div className="bar stap3"></div>
+          </Progress>
+
           <Question>Q3. 경쟁사 대비 귀사의 아이템이 제공하는 가장 큰 차별점은 무엇인가요?</Question>
           <OptionContainer>
             {options3.map((option3) => (
@@ -281,6 +293,10 @@ const MoleculeCheckGrowthHackerOption = () => {
       )}
       {tabs === 3 && (
         <>
+          <Progress KpiQuestionList={KpiQuestionList}>
+            <div className="bar stap4"></div>
+          </Progress>
+
           <Question>Q4. 현재 귀사의 수익구조는 어떠한가요?</Question>
           <OptionContainer>
             {options4.map((option4) => (
@@ -299,6 +315,10 @@ const MoleculeCheckGrowthHackerOption = () => {
 
       {tabs === 4 && (
         <>
+          <Progress KpiQuestionList={KpiQuestionList}>
+            <div className="bar stap5"></div>
+          </Progress>
+
           <Question>Q5. 제품/서비스의 사용자 수는 어떠한가요?</Question>
           <OptionContainer>
             {options5.map((option5) => (
@@ -317,6 +337,10 @@ const MoleculeCheckGrowthHackerOption = () => {
 
       {tabs === 5 && (
         <>
+          <Progress KpiQuestionList={KpiQuestionList}>
+            <div className="bar"></div>
+          </Progress>
+
           <Question>Q6. 주요 고객층은 누구입니까?</Question>
           <OptionContainer>
             {options6.map((option6) => (
@@ -409,9 +433,9 @@ const Wrap = styled.div`
   display:flex;
   flex-direction:column;
   padding: 32px 40px;
-  margin:24px 0 0 44px;
+  margin:24px 0 0 50px;
   border-radius:15px;
-  border:1px solid ${palette.lineGray};
+  border:1px solid ${palette.outlineGray};
 `;
 
 const Progress = styled.div`
@@ -430,6 +454,26 @@ const Progress = styled.div`
         ? palette.gray800
         : palette.blue};
     transition:all .5s;
+  }
+
+  .bar.stap1 {
+    width:16.66%
+  }
+
+  .bar.stap2 {
+    width:33.33%
+  }
+
+  .bar.stap3 {
+    width:50%
+  }
+
+  .bar.stap4 {
+    width:66.64%
+  }
+
+  .bar.stap5 {
+    width:83%
   }
 
   .bar.num2 {
