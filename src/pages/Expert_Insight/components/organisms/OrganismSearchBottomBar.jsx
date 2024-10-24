@@ -19,6 +19,8 @@ import {
   CASE_QUESTION_INPUT,
   CASE_HASH_TAG,
   SURVEY_USER_GOAL_INPUT,
+  SURVEY_GOAL_SUGGESTION_BUTTON_STATE,
+  APPROACH_PATH,
 } from "../../../AtomStates";
 
 const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
@@ -41,6 +43,8 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
   const [isPopupRegex, setIsPopupRegex] = useState(false);
   const [isPopupRegex2, setIsPopupRegex2] = useState(false);
   const [surveyUserGoalInput, setSurveyUserGoalInput] = useAtom(SURVEY_USER_GOAL_INPUT);
+  const [surveyGoalSuggestionButtonState, setSurveyGoalSuggestionButtonState] = useAtom(SURVEY_GOAL_SUGGESTION_BUTTON_STATE);
+  const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
 
   const closePopupRegex = () => {
     setIsPopupRegex(false);
