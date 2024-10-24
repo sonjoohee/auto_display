@@ -249,6 +249,7 @@ export const PRICE_SELECTED_PRODUCT_SEGMENTATION = atom([]);
 
 export const BM_OPTION_BUTTON_STATE = atom(0);
 export const BM_USER_GOAL_INPUT = atom("");
+export const BM_QUESTION_LIST = atom([]);
 
 export const BM_MODEL_SUGGESTION_REPORT_DATA = atom([]);
 

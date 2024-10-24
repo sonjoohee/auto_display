@@ -27,17 +27,18 @@ import {
   IDEA_LIST,
   IDEA_GROUP,
   IDEA_PRIORITY,
-  SURVEY_OPTION_BUTTON_STATE,
+  BM_OPTION_BUTTON_STATE,
   SURVEY_QUESTION_LIST,
   BUTTON_STATE,
   CASE_HASH_TAG,
   CASE_REPORT_DATA,
+  BM_QUESTION_LIST,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
 import { palette } from "../../../../assets/styles/Palette";
 
-const MoleculeCheckSurveyOption = () => {
+const MoleculeCheckBmOption = () => {
   const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
   const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
   const [conversationId] = useAtom(CONVERSATION_ID);
@@ -66,64 +67,64 @@ const MoleculeCheckSurveyOption = () => {
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
   const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
 
-  const [surveyQuestionList, setsurveyQuestionList] = useAtom(SURVEY_QUESTION_LIST);
+  const [bmQuestionList, setbmQuestionList] = useAtom(BM_QUESTION_LIST);
   const [selectedOption1, setSelectedOption1] = useState("");
   const [selectedOption2, setSelectedOption2] = useState("");
   const [selectedOption3, setSelectedOption3] = useState("");
   const [selectedOption4, setSelectedOption4] = useState("");
+  const [selectedOption5, setSelectedOption5] = useState("");
 
-  const [surveyOptionButtonState, setSurveyOptionButtonState] = useAtom(SURVEY_OPTION_BUTTON_STATE);
+  const [bmOptionButtonState, setBmOptionButtonState] = useAtom(BM_OPTION_BUTTON_STATE);
 
   const [tabs, setTabs] = useState(0);
 
   useEffect(() => {
-    if (surveyQuestionList.length === 0) {
+    if (bmQuestionList.length === 0) {
       setTabs(0);
     } else {
-      setTabs(3);
+      setTabs(4);
 
-      setSelectedOption1(surveyQuestionList[0]);
-      setSelectedOption2(surveyQuestionList[1]);
-      setSelectedOption3(surveyQuestionList[2]);
-      setSelectedOption4(surveyQuestionList[3]);
+      setSelectedOption1(bmQuestionList[0]);
+      setSelectedOption2(bmQuestionList[1]);
+      setSelectedOption3(bmQuestionList[2]);
+      setSelectedOption4(bmQuestionList[3]);
+      setSelectedOption5(bmQuestionList[4]);
     }
-  }, [surveyQuestionList]);
+  }, [bmQuestionList]);
 
 
   const options1 = [
-    { label: "매우 짧음(1주 이내)", value: "매우 짧음(1주 이내)" },
-    { label: "짧음(1~2주)", value: "짧음(1~2주)" },
-    { label: "보통(2주~1개월)", value: "보통(2주~1개월)" },
-    { label: "긺(1개월~2개월)", value: "긺(1개월~2개월)" },
-    { label: "매우 긺", value: "매우 긺" },
+    { label: "아이디어 단계", value: "아이디어 단계" },
+    { label: "프로토타입 단계", value: "프로토타입 단계" },
+    { label: "베타 테스트/초기 시장 진입 단계", value: "베타 테스트/초기 시장 진입 단계" },
+    { label: "제품 출시 후 안정화 단계", value: "제품 출시 후 안정화 단계" },
+    { label: "성숙한 비즈니스 단계", value: "성숙한 비즈니스 단계" }
   ];
   
   const options2 = [
-    { label: "매우 부족함", value: "매우 부족함" },
-    { label: "부족함", value: "부족함" },
-    { label: "보통", value: "보통" },
-    { label: "충분함", value: "충분함" },
-    { label: "매우 충분함", value: "매우 충분함" }
+    { label: "제품 시장 적합성 검증", value: "제품 시장 적합성 검증" },
+    { label: "초기 고객 확보", value: "초기 고객 확보" },
+    { label: "BM 전체 분석 및 최적화", value: "BM 전체 분석 및 최적화" },
+    { label: "수익 모델 다각화", value: "수익 모델 다각화" }
   ];
   
   const options3 = [
-    { label: "매우 적음(소규모)", value: "매우 적음(소규모)" },
-    { label: "적음(중소규모)", value: "적음(중소규모)" },
-    { label: "보통(중간규모)", value: "보통(중간규모)" },
-    { label: "많음(중대규모)", value: "많음(중대규모)" },
-    { label: "매우 많음(대규모)", value: "매우 많음(대규모)" },
+    { label: "문제 정의가 필요함", value: "문제 정의가 필요함" },
+    { label: "이미 명확하게 정의되어, 해결책을 구체화 중", value: "이미 명확하게 정의되어, 해결책을 구체화 중" }
   ];
   
   const options4 = [
-    { label: "객관적인 수치나 통계 자료", value: "객관적인 수치나 통계 자료" },
-    { label: "사람들의 의견 및 경험 설명 자료", value: "사람들의 의견 및 경험 설명 자료" },
-    { label: "수치 자료와 설명 혼합 자료", value: "수치 자료와 설명 혼합 자료" },
-    { label: "데이터 형태는 상관없음", value: "데이터 형태는 상관없음" }
+    { label: "핵심 문제 해결과 고객 피드백", value: "핵심 문제 해결과 고객 피드백" },
+    { label: "전체 비즈니스 운영 최적화와 성장 전략", value: "전체 비즈니스 운영 최적화와 성장 전략" }
   ];
   
-
+  const options5 = [
+    { label: "아직 비즈니스 요소들이 복잡하지 않음", value: "아직 비즈니스 요소들이 복잡하지 않음" },
+    { label: "다양한 파트너십, 비용 구조, 자원관리가 복잡함", value: "다양한 파트너십, 비용 구조, 자원관리가 복잡함" }
+  ];
+  
   const handleOptionClick = (index, optionValue) => {
-    if (surveyQuestionList.length) return;
+    if (bmQuestionList.length) return;
   
     switch (index) {
       case 1:
@@ -138,6 +139,9 @@ const MoleculeCheckSurveyOption = () => {
       case 4:
         setSelectedOption4(optionValue);
         break;
+      case 5:
+        setSelectedOption5(optionValue);
+        break;
       default:
         break;
     }
@@ -145,12 +149,12 @@ const MoleculeCheckSurveyOption = () => {
   
 
   const handleConfirm = async () => {
-    if (surveyQuestionList.length) return;
+    if (bmQuestionList.length) return;
 
-    setsurveyQuestionList([selectedOption1, selectedOption2, selectedOption3, selectedOption4]);
+    setbmQuestionList([selectedOption1, selectedOption2, selectedOption3, selectedOption4, selectedOption5]);
     setApproachPath(3);
     setConversationStage(3);
-    setSurveyOptionButtonState(1);
+    setBmOptionButtonState(1);
 
     const updatedConversation = [...conversation];
     updatedConversation.push(
@@ -189,7 +193,7 @@ const MoleculeCheckSurveyOption = () => {
         timestamp: Date.now(),
         expert_index: selectedExpertIndex,
         KpiQuestionList : KpiQuestionList,
-        surveyQuestionList: [selectedOption1, selectedOption2, selectedOption3, selectedOption4],
+        bmQuestionList: [selectedOption1, selectedOption2, selectedOption3, selectedOption4],
         selectedPocTarget: selectedPocTarget,
         ideaFeatureData: ideaFeatureData,
         ideaRequirementData: ideaRequirementData,
@@ -217,14 +221,14 @@ const MoleculeCheckSurveyOption = () => {
     <Wrap>
       {tabs === 0 && (
         <>
-          <Question>Q1. 조사를 완료해야 하는 기간은 어느 정도인가요?</Question>
+          <Question>Q1. 현재 스타트업의 단계는 무엇입니까?</Question>
           <OptionContainer>
             {options1.map((option1) => (
               <Option
                 key={option1.value}
                 selected={selectedOption1 === option1.value}
                 onClick={() => handleOptionClick(1, option1.value)}
-                surveyQuestionList={surveyQuestionList}
+                bmQuestionList={bmQuestionList}
               >
                 {option1.label}
               </Option>
@@ -234,14 +238,14 @@ const MoleculeCheckSurveyOption = () => {
       )}
       {tabs === 1 && (
         <>
-          <Question>Q2. 조사를 위한 예산을 어느 정도로 고려하고 있나요?</Question>
+          <Question>Q2. 현재 가장 중요한 목표는 무엇입니까?</Question>
           <OptionContainer>
             {options2.map((option2) => (
               <Option
                 key={option2.value}
                 selected={selectedOption2 === option2.value}
                 onClick={() => handleOptionClick(2, option2.value)}
-                surveyQuestionList={surveyQuestionList}
+                bmQuestionList={bmQuestionList}
               >
                 {option2.label}
               </Option>
@@ -252,14 +256,14 @@ const MoleculeCheckSurveyOption = () => {
       {/* 각 탭별로 동일한 방식으로 설정 */}
       {tabs === 2 && (
         <>
-          <Question>Q3. 조사에 참여할 계획인 대상자 수는 어느정도로 생각하십니까?</Question>
+          <Question>Q3. 고객의 문제는 명확하게 정의되었습니까?</Question>
           <OptionContainer>
             {options3.map((option3) => (
               <Option
                 key={option3.value}
                 selected={selectedOption3 === option3.value}
                 onClick={() => handleOptionClick(3, option3.value)}
-                surveyQuestionList={surveyQuestionList}
+                bmQuestionList={bmQuestionList}
               >
                 {option3.label}
               </Option>
@@ -269,14 +273,14 @@ const MoleculeCheckSurveyOption = () => {
       )}
       {tabs === 3 && (
         <>
-          <Question>Q4. 어떤 형태의 데이터가 필요하신가요?</Question>
+          <Question>Q4. 현재 비즈니스의 핵심 초점은 무엇입니까?</Question>
           <OptionContainer>
             {options4.map((option4) => (
               <Option
                 key={option4.value}
                 selected={selectedOption4 === option4.value}
                 onClick={() => handleOptionClick(4, option4.value)}
-                surveyQuestionList={surveyQuestionList}
+                bmQuestionList={bmQuestionList}
               >
                 {option4.label}
               </Option>
@@ -284,14 +288,31 @@ const MoleculeCheckSurveyOption = () => {
           </OptionContainer>
         </>
       )}
-
+      {tabs === 4 && (
+              <>
+                <Question>Q5. 파트너십, 자원, 비용 구조 등 비즈니스의 요소들이 복잡한가요?</Question>
+                <OptionContainer>
+                  {options5.map((option5) => (
+                    <Option
+                      key={option5.value}
+                      selected={selectedOption5 === option5.value}
+                      onClick={() => handleOptionClick(5, option5.value)}
+                      bmQuestionList={bmQuestionList}
+                    >
+                      {option5.label}
+                    </Option>
+                  ))}
+                </OptionContainer>
+              </>
+            )}
 
 <ButtonWrap
         selectedOption1={selectedOption1}
         selectedOption2={selectedOption2}
         selectedOption3={selectedOption3}
         selectedOption4={selectedOption4}
-        surveyQuestionList={surveyQuestionList}
+        selectedOption5={selectedOption5}
+        bmQuestionList={bmQuestionList}
       >
         {tabs === 0 ? null : (
           <div className="prev" onClick={() => hadleTurnTab("prev")}>
@@ -299,12 +320,12 @@ const MoleculeCheckSurveyOption = () => {
           </div>
         )}
 
-        {tabs === 3 ? (
+{tabs === 4 ? ( // 탭이 4로 변경됨
           <div
             className="finish"
-            disabled={!selectedOption1 || !selectedOption2 || !selectedOption3 || !selectedOption4}
+            disabled={!selectedOption1 || !selectedOption2 || !selectedOption3 || !selectedOption4 || !selectedOption5}
             onClick={() => {
-              if (!selectedOption1 || !selectedOption2 || !selectedOption3 || !selectedOption4) return;
+              if (!selectedOption1 || !selectedOption2 || !selectedOption3 || !selectedOption4 || !selectedOption5) return;
               handleConfirm();
             }}
           >
@@ -316,13 +337,15 @@ const MoleculeCheckSurveyOption = () => {
             disabled={
               (tabs === 0 && !selectedOption1) ||
               (tabs === 1 && !selectedOption2) ||
-              (tabs === 2 && !selectedOption3) 
+              (tabs === 2 && !selectedOption3) ||
+              (tabs === 3 && !selectedOption4)
             }
             onClick={() => {
               if (
                 (tabs === 0 && !selectedOption1) ||
                 (tabs === 1 && !selectedOption2) ||
-                (tabs === 2 && !selectedOption3) 
+                (tabs === 2 && !selectedOption3) ||
+                (tabs === 3 && !selectedOption4)
               )
                 return;
               hadleTurnTab("next");
@@ -332,12 +355,11 @@ const MoleculeCheckSurveyOption = () => {
           </div>
         )}
       </ButtonWrap>
-
     </Wrap>
   );
 };
 
-export default MoleculeCheckSurveyOption;
+export default MoleculeCheckBmOption;
 
 
 const Wrap = styled.div`
@@ -364,7 +386,7 @@ const Progress = styled.div`
     height:3px;
     border-radius:10px;
     background:${(props) =>
-      props.surveyQuestionList?.length !== 0
+      props.bmQuestionList?.length !== 0
         ? palette.gray800
         : palette.blue};
     transition:all .5s;
@@ -403,7 +425,7 @@ const Option = styled.div`
   font-size:0.88rem;
   color: ${(props) =>
     props.selected
-      ? props.surveyQuestionList?.length === 0
+      ? props.bmQuestionList?.length === 0
         ? palette.blue
         : palette.black
       : palette.gray800};
@@ -412,14 +434,14 @@ const Option = styled.div`
   cursor: pointer;
   background-color: ${(props) =>
     props.selected
-      ? props.surveyQuestionList?.length === 0
+      ? props.bmQuestionList?.length === 0
         ? "rgba(4,83,244,0.05)"
         : "rgba(0,0,0,0.05)"
       : palette.white};
   border: 1px solid
     ${(props) =>
       props.selected
-        ? props.surveyQuestionList?.length === 0
+        ? props.bmQuestionList?.length === 0
           ? palette.blue
           : palette.black
         : palette.lineGray};
@@ -432,13 +454,13 @@ const Option = styled.div`
     border: 1px solid
       ${(props) =>
         props.selected
-          ? props.surveyQuestionList?.length === 0
+          ? props.bmQuestionList?.length === 0
             ? palette.blue
             : palette.gray800
           : palette.lineGray};
     background-color: ${(props) =>
       props.selected
-      ? props.surveyQuestionList?.length === 0
+      ? props.bmQuestionList?.length === 0
       ? palette.blue
           : palette.gray800
         : palette.white};
@@ -458,7 +480,7 @@ const Option = styled.div`
 
   &:hover {
     border-color: ${(props) =>
-      props.surveyQuestionList?.length === 0 ? palette.blue : "none"};
+      props.bmQuestionList?.length === 0 ? palette.blue : "none"};
   }
 `;
 
@@ -489,13 +511,13 @@ const ButtonWrap = styled.div`
 
   .next {
     color: ${(props) =>
-      props.surveyQuestionList.length !== 0
+      props.bmQuestionList.length !== 0
         ? palette.black
         : !props.selectedOption1
         ? palette.gray500
         : palette.chatBlue};
     background: ${(props) =>
-      props.surveyQuestionList.length !== 0
+      props.bmQuestionList.length !== 0
         ? palette.white
         : !props.selectedOption1
         ? palette.white
@@ -505,13 +527,13 @@ const ButtonWrap = styled.div`
 
   .finish {
     color: ${(props) =>
-      props.surveyQuestionList.length !== 0
+      props.bmQuestionList.length !== 0
         ? palette.black
         : !props.selectedOption1 || !props.selectedOption2
         ? palette.gray500
         : palette.chatBlue};
     background: ${(props) =>
-      props.surveyQuestionList.length !== 0
+      props.bmQuestionList.length !== 0
         ? palette.white
         : !props.selectedOption1 || !props.selectedOption2
         ? palette.white
