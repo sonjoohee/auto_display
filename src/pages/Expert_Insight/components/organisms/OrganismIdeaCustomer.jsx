@@ -180,6 +180,8 @@ const OrganismIdeaCustomer = () => {
   };
 
   const confirmDelete = (index) => {
+    if(ideaRequirementData.length <= 5) return;
+
     setDeleteIndex(index);
     togglePopupDelete();
   };
