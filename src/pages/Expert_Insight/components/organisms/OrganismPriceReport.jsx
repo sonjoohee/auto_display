@@ -46,6 +46,8 @@ import {
   PRICE_PRODUCT,
   PRICE_PRODUCT_SEGMENTATION,
   PRICE_SELECTED_PRODUCT_SEGMENTATION,
+  CASE_HASH_TAG,
+  CASE_REPORT_DATA,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -60,6 +62,8 @@ import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
 
 const OrganismPriceReport = () => {
+  const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
+  const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
   const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
   const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
@@ -319,6 +323,8 @@ const OrganismPriceReport = () => {
             priceProduct : priceProduct,
             priceProductSegmentation : priceProductSegmentation,
             priceSelectedProductSegmentation : priceSelectedProductSegmentation,
+            caseHashTag : caseHashTag,
+            caseReportData : caseReportData,
           },
           isLoggedIn,
           conversationId

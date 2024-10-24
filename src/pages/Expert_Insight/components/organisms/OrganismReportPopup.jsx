@@ -117,7 +117,7 @@ const OrganismReportPopup = ({ report, onClose }) => {
   //   reportIndex === 7 && (reportTypeText = "가격 분석");
   // }
   {
-    reportIndex === 8 && (reportTypeText = "성공적인 기술 혁신 사례 조사 보고서 ");
+    reportIndex === 8 && (reportTypeText = "사례 조사 보고서");
   }
   {
     reportIndex === 9 && (reportTypeText = "비즈니스 모델 캔버스");
@@ -145,7 +145,7 @@ const OrganismReportPopup = ({ report, onClose }) => {
             </popup-p>
           </popupTitle>
 
-          {(reportIndex === 1 || reportIndex === 4 || reportIndex === 5 || reportIndex === 6) && (
+          {(reportIndex === 1 || reportIndex === 4 || reportIndex === 5 || reportIndex === 6 || reportIndex === 8) && (
             <ExpertThumb>
               <div className="thumb">
                 {report.content.expert_id === "1" ? (
@@ -208,7 +208,7 @@ const OrganismReportPopup = ({ report, onClose }) => {
               ) : reportIndex === 8 ? (
                 <div className="cont">
                   <strong>사례 분석 전문가</strong>
-                  <p>한준혁</p>
+                  <p>이민호</p>
                 </div>
               ) : reportIndex === 9 ? (
                 <div className="cont">
@@ -238,6 +238,8 @@ const OrganismReportPopup = ({ report, onClose }) => {
         {reportIndex === 5 && <IdeaPriorityReportSection report={report} />}
 
         {reportIndex === 6 && <GrowthHackerReportSection report={report} />}
+
+        {reportIndex === 8 && <CaseReportSection report={report} />}
 
         <CloseButton onClick={onClose}>닫기</CloseButton>
       </PopupContent>
@@ -2174,5 +2176,70 @@ const SeparateSection3 = styled.div`
     color:${palette.gray800};
     line-height:1.5;
     text-align:left;
+  }
+`;
+
+const CaseReportSection = ({ report }) => {
+  return (
+    <Wrap2>
+          <h1>성공적인 기술 혁신 사례 조사 보고서</h1>
+          <p>{report.content[0].text}</p>
+          {report.content[1].content.map((report, index) => (
+            <SeparateSection2 key={index}>
+              <h3>
+                <span className="number">{index + 1}</span>
+                {report.title}
+              </h3>
+              <p>{report.text}</p>
+              <div>
+              <ol className="list-decimal">
+                {report.subcontent.map((subItem, subIndex) => (
+                  <li key={subIndex}>
+                    {subItem.subTitle} : {subItem.text}
+                  </li>
+                ))}
+              </ol>
+              </div>
+            </SeparateSection2>
+          ))
+        }
+        <p className="conclusion">{report.content[2].text}</p>
+
+        <MoleculeReportController
+          reportIndex={8}
+          report={report}
+          />
+    </Wrap2>
+  );
+};
+
+const Wrap2 = styled.div`
+  max-width:986px;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  padding: 28px;
+  margin:24px 0 0 50px;
+  border-radius:15px;
+  border:1px solid ${palette.lineGray};
+  overflow-y: auto;
+
+  h1 {
+    font-size:1.25rem;
+    font-weight:400;
+    text-align:left;
+    margin-bottom:20px;
+  }
+
+  p {
+    font-size:0.88rem;
+    font-weight:300;
+    color:${palette.black};
+    text-align:left;
+    margin-bottom:10px;
+  }
+
+  .conclusion {
+    margin-top: 20px;
   }
 `;

@@ -34,6 +34,8 @@ import {
   IDEA_REQUIREMENT_DATA,
   IDEA_LIST,
   IDEA_GROUP,
+  CASE_HASH_TAG,
+  CASE_REPORT_DATA,
 } from "../../../AtomStates";
 
 import {
@@ -43,6 +45,8 @@ import {
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeSurveyStartButton = () => {
+  const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
+  const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
   const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
   const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
@@ -135,6 +139,8 @@ const MoleculeSurveyStartButton = () => {
         ideaList : ideaList,
         ideaGroup : ideaGroup,
         ideaMiro : ideaMiro,
+        caseHashTag : caseHashTag,
+        caseReportData : caseReportData,
       },
       isLoggedIn,
       conversationId

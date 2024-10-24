@@ -33,6 +33,8 @@ import {
   IDEA_GROUP,
   PRICE_START_BUTTON_STATE,
   PRICE_PRODUCT,
+  CASE_HASH_TAG,
+  CASE_REPORT_DATA,
 } from "../../../AtomStates";
 
 import {
@@ -42,6 +44,8 @@ import {
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculePriceStartButton = () => {
+  const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
+  const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
   const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
   const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
@@ -220,6 +224,8 @@ const MoleculePriceStartButton = () => {
         growthHackerReportData : growthHackerReportData,
         KpiQuestionList : KpiQuestionList,
         priceProduct : priceProduct,
+        caseHashTag : caseHashTag,
+        caseReportData : caseReportData,
       },
       isLoggedIn,
       conversationId

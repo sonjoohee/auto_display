@@ -341,7 +341,7 @@ const OrganismCaseReport = ({ caseReportCount }) => {
             </SeparateSection>
           ))
         }
-        <p>{caseReportData[caseReportCount][2].text}</p>
+        <p className="conclusion">{caseReportData[caseReportCount][2].text}</p>
 
         <MoleculeReportController
           reportIndex={8}
@@ -379,6 +379,10 @@ const Wrap = styled.div`
     color:${palette.black};
     text-align:left;
     margin-bottom:10px;
+  }
+
+  .conclusion {
+    margin-top: 20px;
   }
 `;
 

@@ -39,6 +39,7 @@ import {
   PRICE_PRODUCT_SEGMENTATION,
   CASE_HASH_TAG,
   CASE_REPORT_DATA,
+  IS_LOADING_CASE_HASHTAG,
 } from "../../../AtomStates";
 
 import {
@@ -95,6 +96,7 @@ const MoleculeCaseContinueButton = () => {
   const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
   const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
   const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
+  const [isLoadingCaseHashTag, setIsLoadingCaseHashTag] = useAtom(IS_LOADING_CASE_HASHTAG);
 
   const axiosConfig = {
     timeout: 100000, // 100초
@@ -106,6 +108,8 @@ const MoleculeCaseContinueButton = () => {
 
   const handleClick = async (type) => {
     if (isLoading) return;
+
+    setIsLoadingCaseHashTag(true);
 
     const updatedConversation = [...conversation];
 
@@ -312,6 +316,8 @@ const MoleculeCaseContinueButton = () => {
           priceProduct : priceProduct,
           priceSelectedProductSegmentation : priceSelectedProductSegmentation,
           priceProductSegmentation : priceProductSegmentation,
+          caseHashTag : caseHashTag,
+          caseReportData : caseReportData,
         },
         isLoggedIn,
         conversationId
@@ -320,6 +326,7 @@ const MoleculeCaseContinueButton = () => {
 
     setConversationStage(3);
     setApproachPath(3);
+    setIsLoadingCaseHashTag(false);
   };
   return (
     <>

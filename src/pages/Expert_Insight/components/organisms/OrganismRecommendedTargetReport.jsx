@@ -57,6 +57,8 @@ import {
   PRICE_PRODUCT,
   PRICE_SELECTED_PRODUCT_SEGMENTATION,
   PRICE_PRODUCT_SEGMENTATION,
+  CASE_HASH_TAG,
+  CASE_REPORT_DATA,
 } from "../../../AtomStates";
 
 const OrganismRecommendedTargetReport = ({ expertIndex }) => {
@@ -69,6 +71,8 @@ const OrganismRecommendedTargetReport = ({ expertIndex }) => {
   const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
   const [growthHackerDetailReportData, setGrowthHackerDetailReportData] = useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
   const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
+  const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
+  const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
@@ -323,6 +327,8 @@ const OrganismRecommendedTargetReport = ({ expertIndex }) => {
               priceProduct : priceProduct,
               priceSelectedProductSegmentation : priceSelectedProductSegmentation,
               priceProductSegmentation : priceProductSegmentation,
+              caseHashTag : caseHashTag,
+              caseReportData : caseReportData,
             },
             isLoggedIn,
             conversationId
