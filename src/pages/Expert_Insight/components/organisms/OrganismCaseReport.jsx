@@ -181,25 +181,25 @@ const OrganismCaseReport = ({ caseReportCount }) => {
               !response || 
               !response.data || 
               typeof response.data !== "object" ||
-              !response.data.hasOwnProperty("case_analysis_report") || 
-              !Array.isArray(response.data.case_analysis_report) ||
-              !response.data.case_analysis_report[0].hasOwnProperty("title") ||
-              !response.data.case_analysis_report[0].hasOwnProperty("text") ||
-              !response.data.case_analysis_report[1].hasOwnProperty("title") ||
-              !response.data.case_analysis_report[1].hasOwnProperty("content") ||
-              !Array.isArray(response.data.case_analysis_report[1].content) ||
-              response.data.case_analysis_report[1].content.some(item => 
-                !item.hasOwnProperty("title") || 
-                !item.hasOwnProperty("text") || 
-                !item.hasOwnProperty("subcontent") || 
-                !Array.isArray(item.subcontent) || 
-                item.subcontent.some(contentItem => 
-                  !contentItem.hasOwnProperty("subTitle") || 
-                  !contentItem.hasOwnProperty("text")
-                )
-              ) ||
-              !response.data.case_analysis_report[2].hasOwnProperty("title") ||
-              !response.data.case_analysis_report[2].hasOwnProperty("text")
+              // !response.data.hasOwnProperty("case_analysis_report") || 
+              !Array.isArray(response.data.case_analysis_report)
+              // !response.data.case_analysis_report[0].hasOwnProperty("title") ||
+              // !response.data.case_analysis_report[0].hasOwnProperty("text") ||
+              // !response.data.case_analysis_report[1].hasOwnProperty("title") ||
+              // !response.data.case_analysis_report[1].hasOwnProperty("content") ||
+              // !Array.isArray(response.data.case_analysis_report[1].content) ||
+              // response.data.case_analysis_report[1].content.some(item => 
+              //   !item.hasOwnProperty("title") || 
+              //   !item.hasOwnProperty("text") || 
+              //   !item.hasOwnProperty("subcontent") || 
+              //   !Array.isArray(item.subcontent) || 
+              //   item.subcontent.some(contentItem => 
+              //     !contentItem.hasOwnProperty("subTitle") || 
+              //     !contentItem.hasOwnProperty("text")
+              //   )
+              // ) ||
+              // !response.data.case_analysis_report[2].hasOwnProperty("title") ||
+              // !response.data.case_analysis_report[2].hasOwnProperty("text")
             )) 
             {
               response = await axios.post(
