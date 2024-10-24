@@ -155,7 +155,10 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
             "reportButton") ||
         (updatedConversation.length > 0 &&
           updatedConversation[updatedConversation.length - 1].type ===
-            "pocTargetButton")
+            "pocTargetButton") ||
+        (updatedConversation.length > 0 &&
+          updatedConversation[updatedConversation.length - 1].type ===
+            "caseContinueButton")
       ) {
         updatedConversation.pop();
       }
@@ -195,16 +198,66 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
     setConversation(updatedConversation);
   };
 
+  const handleHashTagClick = async (inputValue) => {
+    if (isLoggedIn) {
+      if (!conversationId) {
+        try {
+          return;
+        } catch (error) {
+          console.error("Failed to create conversation on server:", error);
+          return;
+        }
+      }
+    }
+
+    if (isLoading) return;
+  
+    const updatedConversation = [...conversation];
+  
+    if (isHashTag && selectedExpertIndex === "8") {
+      updatedConversation.push(
+        { type: "user", message: `${inputValue}을 찾아주세요` },
+        {
+          type: "system",
+          message: `"${inputValue}"에 대한 사례를 조사합니다.`,
+          expertIndex: selectedExpertIndex,
+        },
+        { type: "caseReport" }
+      );
+      setCaseReportButtonState(1);
+      setCaseQuestionInput(inputValue);
+    }
+    // else if (isHashTag && selectedExpertIndex === "9") {
+    //   updatedConversation.push(
+    //     { type: "user", message: `비즈니스 목표는 ${inputValue}입니다.` },
+    //     { type: "bmModelSuggestion" }
+    //   );
+    //   setBmLeanAdsButtonState(1);
+    //   setBmBmAdsButtonState(1);
+    //   setBmUserGoalInput(inputValue);
+    // }
+    // else if (isHashTag && selectedExpertIndex === "10") {
+    //   updatedConversation.push(
+    //     { type: "user", message: `설문조사의 목적은 ${inputValue}입니다.` },
+    //     { type: "surveyGoalSuggestion" }
+    //   );
+    //   setSurveyGoalSuggestionButtonState(1);
+    //   setSurveyUserGoalInput(inputValue);
+    // }
+
+    setConversation(updatedConversation);
+  };
+
   return (
     <>
       <BottomBar>
       {isBlue && isHashTag && (
         <TagList>
         {selectedExpertIndex === "8" && caseHashTag.slice(0, 3).map((tag, index) => (
-          <button key={index}># {tag.title}</button> // 최대 3개까지 표시
+          <button key={index} onClick={() => handleHashTagClick(tag.title)}># {tag.title}</button> // 최대 3개까지 표시
         ))}
         {/* {selectedExpertIndex === "9" && caseHashTag.slice(0, 3).map((tag, index) => (
-          <button key={index}># {tag.title}</button>
+          <button key={index} onClick={() => handleHashTagClick(tag.title)}># {tag.title}</button>
         ))} */}
         </TagList>
       )}

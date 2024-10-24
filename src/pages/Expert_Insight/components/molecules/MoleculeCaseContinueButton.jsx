@@ -37,11 +37,15 @@ import {
   PRICE_PRODUCT,
   PRICE_SELECTED_PRODUCT_SEGMENTATION,
   PRICE_PRODUCT_SEGMENTATION,
+  CASE_HASH_TAG,
+  CASE_REPORT_DATA,
 } from "../../../AtomStates";
 
 import {
   saveConversationToIndexedDB,
 } from "../../../../utils/indexedDB";
+
+import axios from "axios";
 
 import { palette } from "../../../../assets/styles/Palette";
 
@@ -89,37 +93,46 @@ const MoleculeCaseContinueButton = () => {
   const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
   const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
   const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
+  const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
+  const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
 
-  const handleClick = async (type, index) => {
+  const axiosConfig = {
+    timeout: 100000, // 100초
+    headers: {
+      "Content-Type": "application/json",
+    },
+    withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
+  };
+
+  const handleClick = async (type) => {
     if (isLoading) return;
+
     const updatedConversation = [...conversation];
 
     if (updatedConversation.length > 0 &&
-        updatedConversation[updatedConversation.length - 1].type === "priceContinueButton"
+        updatedConversation[updatedConversation.length - 1].type === "caseContinueButton"
     ) {
       updatedConversation.pop();
     }
 
     if(type === "more") {
-      setPriceContinueButtonState(1);
-
       updatedConversation.push(
         {
           type: "user",
           message:
-            `${titleOfBusinessInfo} 시장 가격 분석을 진행해주세요`,
-        },
-        {
-          type: "system",
-          message:
-            `총 4가지 제품군으로 세분화된 ${titleOfBusinessInfo}의 가격 분석을 진행할 수 있습니다.\n원하는 제품군을 선택해 주세요.`,
+            `"${titleOfBusinessInfo}"의 어떤 사례를 찾아드릴까요?\n아래 채팅창에 원하시는 내용을 입력해주세요.`,
           expertIndex: selectedExpertIndex,
         },
-        { type: `priceProductSegmentation` },
       );
-
+  
       setConversation(updatedConversation);
-
+      setConversationStage(3);
+      setApproachPath(3);
+      setButtonState({
+        ...buttonState,
+        caseStart : 1,
+      });
+  
       await saveConversationToIndexedDB(
         {
           id: conversationId,
@@ -142,7 +155,10 @@ const MoleculeCaseContinueButton = () => {
           ideaRequirementData : ideaRequirementData,
           ideaList : ideaList,
           ideaGroup : ideaGroup,
-          buttonState : buttonState,
+          buttonState : {
+            ...buttonState,
+            caseStart : 1,
+          },
           ideaMiro : ideaMiro,
           growthHackerReportData : growthHackerReportData,
           KpiQuestionList : KpiQuestionList,
@@ -151,6 +167,97 @@ const MoleculeCaseContinueButton = () => {
           priceProduct : priceProduct,
           priceSelectedProductSegmentation : priceSelectedProductSegmentation,
           priceProductSegmentation : priceProductSegmentation,
+          caseHashTag : caseHashTag,
+          caseReportData : caseReportData,
+        },
+        isLoggedIn,
+        conversationId
+      );
+  
+      const data = {
+        expert_id: "8",
+        business_info: titleOfBusinessInfo,
+        business_analysis_data: {
+          명칭: titleOfBusinessInfo,
+          주요_목적_및_특징: mainFeaturesOfBusinessInformation,
+          주요기능: mainCharacteristicOfBusinessInformation,
+          목표고객: businessInformationTargetCustomer,
+        }
+      };
+  
+      let response = axios.post(
+        "https://wishresearch.kr/panels/case_recommand_list",
+        data,
+        axiosConfig
+      );
+  
+      let retryCount = 0;
+      const maxRetries = 10;
+  
+      while (retryCount < maxRetries && (
+        !response || 
+        !response.data || 
+        typeof response.data !== "object" ||
+        !response.data.hasOwnProperty("case_recommand_list") || 
+        !Array.isArray(response.data.case_recommand_list) ||
+        response.data.case_recommand_list.some(item => 
+          !item.hasOwnProperty("title") || 
+          !item.hasOwnProperty("text")
+        )
+      )) 
+      {
+        response = await axios.post(
+          "https://wishresearch.kr/panels/case_recommand_list",
+          data,
+          axiosConfig
+        );
+        retryCount++;
+      }
+      if (retryCount === maxRetries) {
+        console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+        // 에러 처리 로직 추가
+        throw new Error("Maximum retry attempts reached. Empty response persists.");
+      }
+  
+      const caseRecommandList = response.data.case_recommand_list;
+      setCaseHashTag(caseRecommandList);
+  
+      await saveConversationToIndexedDB(
+        {
+          id: conversationId,
+          inputBusinessInfo: inputBusinessInfo,
+          analysisReportData: analysisReportData,
+          strategyReportData: strategyReportData,
+          conversation: updatedConversation,
+          conversationStage: 3,
+          selectedAdditionalKeywords: selectedAdditionalKeyword,
+          selectedCustomerAdditionalKeyword:
+          selectedCustomerAdditionalKeyword,
+          additionalReportData: additionalReportData,
+          customerAdditionalReportData: customerAdditionalReportData,
+          timestamp: Date.now(),
+          expert_index: selectedExpertIndex,
+          pocPersonaList: pocPersonaList,
+          selectedPocTarget: selectedPocTarget,
+          pocDetailReportData : pocDetailReportData,
+          ideaFeatureData : ideaFeatureData,
+          ideaRequirementData : ideaRequirementData,
+          ideaList : ideaList,
+          ideaGroup : ideaGroup,
+          buttonState : {
+            ...buttonState,
+            caseStart : 1,
+          },
+          ideaMiro : ideaMiro,
+          growthHackerReportData : growthHackerReportData,
+          KpiQuestionList : KpiQuestionList,
+          priceScrapData : priceScrapData,
+          priceReportData : priceReportData,
+          priceProduct : priceProduct,
+          priceSelectedProductSegmentation : priceSelectedProductSegmentation,
+          priceProductSegmentation : priceProductSegmentation,
+          caseHashTag : caseRecommandList,
+          caseReportData : caseReportData,
         },
         isLoggedIn,
         conversationId
@@ -167,7 +274,7 @@ const MoleculeCaseContinueButton = () => {
       );
       setButtonState({
         ...buttonState,
-        priceEnough: 1,
+        caseEnough: 1,
       });
       setConversation(updatedConversation);
 
@@ -195,7 +302,7 @@ const MoleculeCaseContinueButton = () => {
           ideaGroup : ideaGroup,
           buttonState : {
             ...buttonState,
-            priceEnough: 1,
+            caseEnough: 1,
           },
           ideaMiro : ideaMiro,
           growthHackerReportData : growthHackerReportData,
@@ -217,21 +324,8 @@ const MoleculeCaseContinueButton = () => {
   return (
     <>
       <ButtonWrap>
-        {priceProduct.length === 1 ? (
-          <>
-            <button className="none">"{titleOfBusinessInfo}"을 더 세분화하여 분석할래요 (준비중)</button>
-            <button onClick={() => handleClick("enough")}>이정도면 충분해요</button>
-          </>
-        ) : (
-          <>
-            {priceProduct.map((product, index) => (
-              <button key={index} onClick={() => handleClick("more", index)}>
-                "{product}"의 시장 가격을 분석할래요
-              </button>
-            ))}
-            <button onClick={() => handleClick("enough")}>이정도면 충분해요</button>
-          </>
-        )}
+          <button onClick={() => handleClick("more")}>추가 사례를 조사하겠습니다</button>
+          <button onClick={() => handleClick("enough")}>이정도면 충분합니다</button>
       </ButtonWrap>
     </>
   );
