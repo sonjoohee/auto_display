@@ -21,6 +21,7 @@ import {
   SURVEY_USER_GOAL_INPUT,
   SURVEY_GOAL_SUGGESTION_BUTTON_STATE,
   APPROACH_PATH,
+  IS_LOADING_CASE_HASHTAG,
 } from "../../../AtomStates";
 
 const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
@@ -45,6 +46,7 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
   const [surveyUserGoalInput, setSurveyUserGoalInput] = useAtom(SURVEY_USER_GOAL_INPUT);
   const [surveyGoalSuggestionButtonState, setSurveyGoalSuggestionButtonState] = useAtom(SURVEY_GOAL_SUGGESTION_BUTTON_STATE);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
+  const [isLoadingCaseHashTag, setIsLoadingCaseHashTag] = useAtom(IS_LOADING_CASE_HASHTAG);
 
   const closePopupRegex = () => {
     setIsPopupRegex(false);
@@ -251,7 +253,7 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
   return (
     <>
       <BottomBar>
-      {isBlue && isHashTag && (
+      {isBlue && isHashTag && !isLoadingCaseHashTag && (
         <TagList>
         {selectedExpertIndex === "8" && caseHashTag.slice(0, 3).map((tag, index) => (
           <button key={index} onClick={() => handleHashTagClick(tag.title)}># {tag.title}</button> // 최대 3개까지 표시
