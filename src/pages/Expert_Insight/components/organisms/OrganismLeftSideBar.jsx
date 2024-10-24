@@ -2412,6 +2412,15 @@ const AccordionContent = styled.div`
       content:'E';
     }
 
+    /* 사례 분석 */
+    &[data-expert-index="8"]:before {
+      width:15px;
+      height:15px;
+      line-height:15px;
+      // background: #00ff00; 
+      content:'E';
+    }
+
     p {
       width: 100%;
       min-height: 19px;

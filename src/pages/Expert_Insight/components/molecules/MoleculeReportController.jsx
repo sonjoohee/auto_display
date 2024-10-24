@@ -365,7 +365,7 @@ const MoleculeReportController = ({
       // 전략 보고서 데이터 저장 - sampleData 사용
       reportData = sampleData; // sampleData를 그대로 저장합니다
       business_info = reportData?.business_info || "Unknown Title";
-    } else if (reportIndex === 4 || reportIndex === 5 || reportIndex === 6) {
+    } else if (reportIndex === 4 || reportIndex === 5 || reportIndex === 6 || reportIndex === 8) {
       reportData = sampleData; // sampleData를 그대로 저장합니다
       business_info = titleOfBusinessInfo || "Unknown Title";
     } else {
@@ -574,6 +574,10 @@ ${report.content.mainCharacter.map(character => `- ${character}`).join('\n')}`.t
           contentToCopy = "마케팅 분석과 개선 솔루션 제안\n" + extractTextContent(report.content);
           break;
 
+          case 8: // 사례 분석
+          contentToCopy = extractTextContent(report.content);
+          break;
+
         default:
           contentToCopy = JSON.stringify(report, null, 2);
           
@@ -651,6 +655,9 @@ ${mainCharacteristicOfBusinessInformation
       }
       else if (reportIndex === 6) {
         contentToCopy = "마케팅 분석과 개선 솔루션 제안\n" + extractTextContent(growthHackerReportData);
+      }
+      else if (reportIndex === 8) {
+        contentToCopy = extractTextContent(sampleData);
       }
     }
   
