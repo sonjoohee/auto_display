@@ -45,6 +45,8 @@ import {
   SURVEY_USER_GOAL_INPUT,
   SURVEY_GOAL_FIXED,
   SURVEY_GOAL_SUGGESTION_BUTTON_STATE,
+  CASE_HASH_TAG,
+  CASE_REPORT_DATA,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -57,6 +59,8 @@ import {
 import images from "../../../../assets/styles/Images";
 
 const MoleculeSurveyGoalSuggestion = () => {
+  const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
+  const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
   const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
   const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
   const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
@@ -227,6 +231,8 @@ const MoleculeSurveyGoalSuggestion = () => {
             priceProduct : priceProduct,
             priceSelectedProductSegmentation : priceSelectedProductSegmentation,
             priceProductSegmentation : priceProductSegmentation,
+            caseHashTag : caseHashTag,
+            caseReportData : caseReportData,
           },
           isLoggedIn,
           conversationId
@@ -291,6 +297,8 @@ const MoleculeSurveyGoalSuggestion = () => {
         priceProduct : priceProduct,
         priceSelectedProductSegmentation : priceSelectedProductSegmentation,
         priceProductSegmentation : priceProductSegmentation,
+        caseHashTag : caseHashTag,
+        caseReportData : caseReportData,
       },
       isLoggedIn,
       conversationId

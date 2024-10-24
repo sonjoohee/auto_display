@@ -30,12 +30,16 @@ import {
   SURVEY_OPTION_BUTTON_STATE,
   SURVEY_QUESTION_LIST,
   BUTTON_STATE,
+  CASE_HASH_TAG,
+  CASE_REPORT_DATA,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeCheckSurveyOption = () => {
+  const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
+  const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
   const [conversationId] = useAtom(CONVERSATION_ID);
   const [buttonState] = useAtom(BUTTON_STATE);
   const [ideaFeatureData] = useAtom(IDEA_FEATURE_DATA);
@@ -193,6 +197,8 @@ const MoleculeCheckSurveyOption = () => {
         ideaGroup: ideaGroup,
         ideaPriority: ideaPriority,
         buttonState: buttonState,
+        caseHashTag : caseHashTag,
+        caseReportData : caseReportData,
       },
       isLoggedIn,
       conversationId

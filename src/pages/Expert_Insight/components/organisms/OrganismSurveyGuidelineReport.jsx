@@ -40,6 +40,8 @@ import {
   SURVEY_GUIDELINE_REPORT_DATA,
   SURVEY_GOAL_FIXED,
   IDEA_MIRO,
+  CASE_HASH_TAG,
+  CASE_REPORT_DATA,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -54,6 +56,8 @@ import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
 
 const OrganismSurveyGuidelineReport = () => {
+  const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
+  const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
   const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
@@ -231,6 +235,8 @@ const OrganismSurveyGuidelineReport = () => {
             ideaMiro : ideaMiro,
             surveyGuidelineReportData : response.data.growth_hacker_report,
             buttonState : buttonState,
+            caseHashTag : caseHashTag,
+            caseReportData : caseReportData,
           },
           isLoggedIn,
           conversationId

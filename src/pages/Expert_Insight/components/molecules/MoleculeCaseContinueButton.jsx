@@ -312,6 +312,8 @@ const MoleculeCaseContinueButton = () => {
           priceProduct : priceProduct,
           priceSelectedProductSegmentation : priceSelectedProductSegmentation,
           priceProductSegmentation : priceProductSegmentation,
+          caseHashTag : caseHashTag,
+          caseReportData : caseReportData,
         },
         isLoggedIn,
         conversationId

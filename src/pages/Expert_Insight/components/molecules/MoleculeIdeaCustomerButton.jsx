@@ -40,6 +40,8 @@ import {
   PRICE_PRODUCT,
   PRICE_SELECTED_PRODUCT_SEGMENTATION,
   PRICE_PRODUCT_SEGMENTATION,
+  CASE_HASH_TAG,
+  CASE_REPORT_DATA,
 } from "../../../AtomStates";
 
 import {
@@ -49,6 +51,8 @@ import {
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeIdeaCustomerButton = () => {
+  const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
+  const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
   const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
   const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
   const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
@@ -158,6 +162,8 @@ const MoleculeIdeaCustomerButton = () => {
         priceProduct : priceProduct,
         priceSelectedProductSegmentation : priceSelectedProductSegmentation,
         priceProductSegmentation : priceProductSegmentation,
+        caseHashTag : caseHashTag,
+        caseReportData : caseReportData,
       },
       isLoggedIn,
       conversationId
