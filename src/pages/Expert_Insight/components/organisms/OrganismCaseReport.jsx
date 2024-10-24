@@ -121,7 +121,7 @@ const OrganismCaseReport = ({ caseReportCount }) => {
   const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
-  const [isLoadingCaseReport, setIsLoadingCaseReport] = useState(false);
+  const [isLoadingCaseReport, setIsLoadingCaseReport] = useState(true);
   const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
   
   const [caseReportButtonState, setCaseReportButtonState] = useAtom(CASE_REPORT_BUTTON_STATE);
@@ -165,9 +165,7 @@ const OrganismCaseReport = ({ caseReportCount }) => {
             axiosConfig
           );
 
-          if (!(typeof response.data.case_analysis_report === "object" 
-            && response.data.case_analysis_report.hasOwnProperty("unrelated_input_text"))) {
-
+          if (typeof response.data.case_analysis_report !== "object") {
             localButtonState = (({ caseStart, ...rest }) => rest)(buttonState);
             setButtonState(prevState => {
               const { caseStart, ...rest } = prevState;
@@ -304,7 +302,7 @@ const OrganismCaseReport = ({ caseReportCount }) => {
 
   return (
     <Wrap>
-      {isLoadingCaseReport || caseReportButtonState ? (
+      {isLoadingCaseReport ? (
         <>
           <SkeletonTitle className="title-placeholder" />
           <SkeletonLine className="content-placeholder" />
@@ -321,8 +319,8 @@ const OrganismCaseReport = ({ caseReportCount }) => {
       ) : (
         <>
           <h1>성공적인 기술 혁신 사례 조사 보고서</h1>
-          <p>{caseReportData[caseReportCount][0].text}</p>
-          {caseReportData[caseReportCount][1].content.map((report, index) => (
+          <p>{caseReportData[caseReportCount]?.[0]?.text}</p>
+          {caseReportData[caseReportCount]?.[1]?.content.map((report, index) => (
             <SeparateSection key={index}>
               <h3>
                 <span className="number">{index + 1}</span>
@@ -341,7 +339,7 @@ const OrganismCaseReport = ({ caseReportCount }) => {
             </SeparateSection>
           ))
         }
-        <p className="conclusion">{caseReportData[caseReportCount][2].text}</p>
+        <p className="conclusion">{caseReportData[caseReportCount]?.[2]?.text}</p>
 
         <MoleculeReportController
           reportIndex={8}
