@@ -450,6 +450,30 @@ if (isLoadingPage) {
                   return <MoleculePriceProductSegmentation />;
                 }
 
+                /* BM 전문가 */
+                // else if (item.type === "bmStartButton") {
+                //   return <MoleculeBmStartButton />;
+                // } else if (item.type === "bmOption") {
+                //   return <MoleculeCheckBmOption />;
+                // } else if (item.type === "bmModelSuggestion") {
+                //   return <MoleculeBmModelSuggestion />;
+
+                // } else if (item.type === "bmLeanAutoReport") {
+                //   return <OrganismBmLeanAutoReport />;
+                // } else if (item.type === "bmBmAutoReport") {
+                //   return <OrganismBmBmAutoReport />;
+
+                // } else if (item.type === "bmLeanAdsReport") {
+                //   return <OrganismBmLeanAdsReport />;
+                // } else if (item.type === "bmLeanAdsReport") {
+                //   return <OrganismBmBmAdsReport />;
+
+                // } else if (item.type === "bmLeanCustomReport") {
+                //   return <OrganismBmLeanCustomRReport />;
+                // } else if (item.type === "bmBmCustomReport") {
+                //   return <OrganismBmBmCustomRReport />;
+                // }
+
                 /* 설문조사 전문가 */
                 // else if (item.type === "surveyStartButton") {
                 //   return <MoleculeSurveyStartButton />;
