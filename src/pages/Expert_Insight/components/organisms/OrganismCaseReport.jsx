@@ -121,7 +121,7 @@ const OrganismCaseReport = ({ caseReportCount }) => {
   const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
-  const [isLoadingCaseReport, setIsLoadingCaseReport] = useState(true);
+  const [isLoadingCaseReport, setIsLoadingCaseReport] = useState(false);
   const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
   
   const [caseReportButtonState, setCaseReportButtonState] = useAtom(CASE_REPORT_BUTTON_STATE);
@@ -137,14 +137,14 @@ const OrganismCaseReport = ({ caseReportCount }) => {
     withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
   };
 
-  let localButtonState = buttonState;
+  let localButtonState = {};
 
   useEffect(() => {
     const fetchCaseReport = async () => {
       try {
        if(caseReportButtonState) {
-          setIsLoading(true);
           setIsLoadingCaseReport(true);
+          setIsLoading(true);
           setCaseReportButtonState(0);
 
           const data = {
@@ -166,10 +166,12 @@ const OrganismCaseReport = ({ caseReportCount }) => {
           );
 
           if (typeof response.data.case_analysis_report !== "object") {
-            localButtonState = (({ caseStart, ...rest }) => rest)(buttonState);
+            localButtonState = { ...buttonState };
+            delete localButtonState.caseStart;
             setButtonState(prevState => {
-              const { caseStart, ...rest } = prevState;
-              return rest; // caseStart가 제거된 상태 반환
+              const newState = { ...prevState };
+              delete newState.caseStart; // caseStart를 제거
+              return newState;
             });
             
             let retryCount = 0;
@@ -218,8 +220,8 @@ const OrganismCaseReport = ({ caseReportCount }) => {
 
           setCaseReportData([...caseReportData, caseReport]);
 
-          setIsLoading(false);
           setIsLoadingCaseReport(false);
+          setIsLoading(false);
 
           const updatedConversation = [...conversation];
 
