@@ -571,6 +571,22 @@ if (isLoadingPage) {
                 }
                 </>
               :
+              selectedExpertIndex === "9" ?
+                <>
+                {
+                  buttonState.default === 1 &&
+                    <OrganismBizExpertSelect />
+                }
+                </>
+              :
+              selectedExpertIndex === "10" ?
+                <>
+                {
+                  buttonState.default === 1 &&
+                    <OrganismBizExpertSelect />
+                }
+                </>
+              :
               null
               }
               
@@ -596,6 +612,16 @@ if (isLoadingPage) {
                   :
                   buttonState.caseStart === 1 && <OrganismSearchBottomBar isBlue={true} isHashTag={true}/> // 사례 조사 시작했을 때 활성화
                 :
+                  selectedExpertIndex === "9" ?
+                  buttonState.default === 1 ? <OrganismSearchBottomBar isBlue={true} />
+                  :
+                  buttonState.bmGoalInputStart === 1 && <OrganismSearchBottomBar isBlue={true} isHashTag={true}/> // 비즈니스 목적 입력 시 활성화
+                :
+                selectedExpertIndex === "10" ?
+                buttonState.default === 1 ? <OrganismSearchBottomBar isBlue={true} />
+                :
+                buttonState.surveyGoalInputStart === 1 && <OrganismSearchBottomBar isBlue={true} isHashTag={true}/> // 설문조사 목적 입력 시 활성화
+              :
                 <OrganismSearchBottomBar isBlue={true} />
             )}
           </div>

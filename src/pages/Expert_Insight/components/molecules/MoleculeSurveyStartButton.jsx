@@ -107,7 +107,10 @@ const MoleculeSurveyStartButton = () => {
     setConversation(updatedConversation);
     setConversationStage(3);
     setApproachPath(3);
-
+    setButtonState({
+      ...buttonState,
+      surveyGoalInputStart : 1,
+    });
     await saveConversationToIndexedDB(
       {
         id: conversationId,

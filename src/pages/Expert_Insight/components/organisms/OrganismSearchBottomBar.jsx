@@ -125,9 +125,20 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
     }
     // else if (isHashTag && selectedExpertIndex === "9") {
     //   updatedConversation.push(
-    //     { type: "user", message: `${inputValue}을 찾아주세요` },
-    //     { type: "caseReport" }
+    //     { type: "user", message: `비즈니스 목표는 ${inputValue}입니다.` },
+    //     { type: "bmModelSuggestion" }
     //   );
+    //   setBmLeanAdsButtonState(1);
+    //   setBmBmAdsButtonState(1);
+    //   setBmUserGoalInput(inputValue);
+    // }
+    // else if (isHashTag && selectedExpertIndex === "10") {
+    //   updatedConversation.push(
+    //     { type: "user", message: `설문조사의 목적은 ${inputValue}입니다.` },
+    //     { type: "surveyGoalSuggestion" }
+    //   );
+    //   setSurveyGoalSuggestionButtonState(1);
+    //   setSurveyUserGoalInput(inputValue);
     // }
     else {
       if (
@@ -142,25 +153,26 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
             "pocTargetButton")
       ) {
         updatedConversation.pop();
-      } else if (updatedConversation.length > 0 &&
-        updatedConversation[updatedConversation.length - 1].type === 'getUserSurveyGoal') {
-        updatedConversation.pop(); // 마지막 메시지를 제거하고 새로운 흐름을 추가
-        setSurveyUserGoalInput(inputValue); // 사용자가 입력한 값을 user_goal_input에 저장
-  
-        updatedConversation.push(
-          {
-            type: "user",
-            message: inputValue,
-          },
-          {
-            type: "surveyGoalSuggestion",
-          }
-        );
-        
-        setSurveyGoalSuggestionButtonState(1);
-        setConversationStage(3);
-        setApproachPath(3);
       }
+      //  else if (updatedConversation.length > 0 &&
+      //   updatedConversation[updatedConversation.length - 1].type === 'getUserSurveyGoal') {
+      //   updatedConversation.pop(); // 마지막 메시지를 제거하고 새로운 흐름을 추가
+      //   setSurveyUserGoalInput(inputValue); // 사용자가 입력한 값을 user_goal_input에 저장
+  
+      //   updatedConversation.push(
+      //     {
+      //       type: "user",
+      //       message: inputValue,
+      //     },
+      //     {
+      //       type: "surveyGoalSuggestion",
+      //     }
+      //   );
+        
+      //   setSurveyGoalSuggestionButtonState(1);
+      //   setConversationStage(3);
+      //   setApproachPath(3);
+      // }
   
       updatedConversation.push(
         {
@@ -216,7 +228,9 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
                 ? selectedExpertIndex === "8" 
                   ? "어떤 사례를 찾고 계신가요? 구체적으로 입력해주세요"
                   : selectedExpertIndex === "9" 
-                  ? "어떤 사례를 찾고 계신가요? 구체적으로 입력해주세요"
+                  ? "비즈니스의 목표가 무엇인가요? 구체적으로 입력해주세요"
+                  : selectedExpertIndex === "10" 
+                  ? "설문조사의 목적이 무엇인가요? 구체적으로 입력해주세요"
                   : ""
                 : isBlue
                 ? "더 알고 싶은 내용이 있으신가요? 추가 질문으로 더 많은 인사이트를 얻어보세요 "
