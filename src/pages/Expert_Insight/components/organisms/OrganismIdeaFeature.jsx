@@ -180,6 +180,8 @@ const OrganismIdeaFeature = () => {
   };
 
   const confirmDelete = (index) => {
+    if(ideaFeatureData.length <= 5) return;
+    
     setDeleteIndex(index);
     togglePopupDelete();
   };
@@ -415,7 +417,7 @@ const OrganismIdeaFeature = () => {
 
         {isEditingIdeaFeature ?
         <>
-          <p>최대 10개까지 입력이 가능합니다</p>
+          <p>최소 5개 ~ 최대 10개까지 입력이 가능합니다</p>
           <IdeaList>
           {ideaFeatureData.map((feature, index) => (
             <IdeaListDiv None
