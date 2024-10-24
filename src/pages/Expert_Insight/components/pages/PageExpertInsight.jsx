@@ -468,6 +468,41 @@ if (isLoadingPage) {
                   );
                 }
 
+                /* BM 전문가 */
+                // else if (item.type === "bmStartButton") {
+                //   return <MoleculeBmStartButton />;
+                // } else if (item.type === "bmOption") {
+                //   return <MoleculeCheckBmOption />;
+                // } else if (item.type === "bmModelSuggestion") {
+                //   return <MoleculeBmModelSuggestion />;
+
+                // } else if (item.type === "bmLeanAutoReport") {
+                //   return <OrganismBmLeanAutoReport />;
+                // } else if (item.type === "bmBmAutoReport") {
+                //   return <OrganismBmBmAutoReport />;
+
+                // } else if (item.type === "bmLeanAdsReport") {
+                //   return <OrganismBmLeanAdsReport />;
+                // } else if (item.type === "bmLeanAdsReport") {
+                //   return <OrganismBmBmAdsReport />;
+
+                // } else if (item.type === "bmLeanCustomReport") {
+                //   return <OrganismBmLeanCustomRReport />;
+                // } else if (item.type === "bmBmCustomReport") {
+                //   return <OrganismBmBmCustomRReport />;
+                // }
+
+                /* 설문조사 전문가 */
+                // else if (item.type === "surveyStartButton") {
+                //   return <MoleculeSurveyStartButton />;
+                // } else if (item.type === "surveyGoalSuggestion") {
+                //   return <MoleculeSurveyGoalSuggestion />;
+                // } else if (item.type === "surveyOption") {
+                //   return <MoleculeCheckSurveyOption />;
+                // } else if (item.type === "surveyGuidelineReport") {
+                //   return <OrganismSurveyGuidelineReport />;
+                // }
+
                 return null;
               })}
 
@@ -536,6 +571,22 @@ if (isLoadingPage) {
                 }
                 </>
               :
+              selectedExpertIndex === "9" ?
+                <>
+                {
+                  buttonState.default === 1 &&
+                    <OrganismBizExpertSelect />
+                }
+                </>
+              :
+              selectedExpertIndex === "10" ?
+                <>
+                {
+                  buttonState.default === 1 &&
+                    <OrganismBizExpertSelect />
+                }
+                </>
+              :
               null
               }
               
@@ -561,6 +612,16 @@ if (isLoadingPage) {
                   :
                   buttonState.caseStart === 1 && <OrganismSearchBottomBar isBlue={true} isHashTag={true}/> // 사례 조사 시작했을 때 활성화
                 :
+                  selectedExpertIndex === "9" ?
+                  buttonState.default === 1 ? <OrganismSearchBottomBar isBlue={true} />
+                  :
+                  buttonState.bmGoalInputStart === 1 && <OrganismSearchBottomBar isBlue={true} isHashTag={true}/> // 비즈니스 목적 입력 시 활성화
+                :
+                selectedExpertIndex === "10" ?
+                buttonState.default === 1 ? <OrganismSearchBottomBar isBlue={true} />
+                :
+                buttonState.surveyGoalInputStart === 1 && <OrganismSearchBottomBar isBlue={true} isHashTag={true}/> // 설문조사 목적 입력 시 활성화
+              :
                 <OrganismSearchBottomBar isBlue={true} />
             )}
           </div>

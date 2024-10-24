@@ -160,7 +160,7 @@ const MoleculeCheckSurveyOption = () => {
         expertIndex: selectedExpertIndex,
       },
       {
-        type: `surveyOptionReport`,
+        type: `surveyGuidelineReport`,
       }
     );
     setConversation(updatedConversation);
