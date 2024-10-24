@@ -87,6 +87,9 @@ import MoleculePriceOption from "../molecules/MoleculePriceOption";
 import OrganismPriceReport from "../organisms/OrganismPriceReport";
 import MoleculePriceContinueButton from "../molecules/MoleculePriceContinueButton";
 import MoleculePriceProductSegmentation from "../molecules/MoleculePriceProductSegmentation";
+import MoleculeCaseStartButton from "../molecules/MoleculeCaseStartButton";
+import MoleculeCaseContinueButton from "../molecules/MoleculeCaseContinueButton";
+import OrganismCaseReport from "../organisms/OrganismCaseReport";
 
 const PageExpertInsight = () => {
   const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
@@ -163,6 +166,7 @@ const PageExpertInsight = () => {
 
   let additionalReportCount = 0;
   let customerAdditionalReportCount = 0;
+  let caseReportCount = 0;
 
   // useEffect(() => {
   //   // 접근 가능 여부를 확인하여 차단 로직 수행
@@ -450,6 +454,20 @@ if (isLoadingPage) {
                   return <MoleculePriceProductSegmentation />;
                 }
 
+                /* 사례 분석 전문가 */
+                else if (item.type === "caseStartButton") {
+                  return <MoleculeCaseStartButton />;
+                } else if (item.type === "caseContinueButton") {
+                  return <MoleculeCaseContinueButton />;
+                } else if (item.type === "caseReport") {
+                  const currentCaseReportCount = caseReportCount++;
+                  return (
+                    <OrganismCaseReport
+                      caseReportCount={currentCaseReportCount}
+                    />
+                  );
+                }
+
                 /* BM 전문가 */
                 // else if (item.type === "bmStartButton") {
                 //   return <MoleculeBmStartButton />;
@@ -545,6 +563,14 @@ if (isLoadingPage) {
                 }
                 </>
               :
+              selectedExpertIndex === "8" ?
+                <>
+                {
+                  buttonState.caseEnough === 1 &&
+                    <OrganismBizExpertSelect />
+                }
+                </>
+              :
               null
               }
               
@@ -564,6 +590,11 @@ if (isLoadingPage) {
                 : 
                 selectedExpertIndex === "7" ?
                   buttonState.priceEnough === 1 && <OrganismSearchBottomBar isBlue={true} /> // 7번 전문가 끝났을 때 활성화
+                :
+                selectedExpertIndex === "8" ?
+                  buttonState.caseEnough === 1 ? <OrganismSearchBottomBar isBlue={true} /> // 사례 조사 끝났을 때 활성화
+                  :
+                  buttonState.caseStart === 1 && <OrganismSearchBottomBar isBlue={true} isHashTag={true}/> // 사례 조사 시작했을 때 활성화
                 :
                 <OrganismSearchBottomBar isBlue={true} />
             )}
