@@ -262,7 +262,7 @@ export const SURVEY_GUIDELINE_DETAIL_REPORT_DATA = atom({});
 
 export const CASE_REPORT_BUTTON_STATE = atom(0);
 export const CASE_QUESTION_INPUT = atom("");
-export const CASE_REPORT_REPORT_DATA = atom([]);
+export const CASE_REPORT_DATA = atom([]);
 export const CASE_HASH_TAG = atom([]);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

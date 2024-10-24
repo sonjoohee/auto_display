@@ -62,6 +62,8 @@ import {
   PRICE_PRODUCT,
   PRICE_SELECTED_PRODUCT_SEGMENTATION,
   PRICE_PRODUCT_SEGMENTATION,
+  CASE_REPORT_DATA,
+  CASE_HASH_TAG,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -74,6 +76,8 @@ import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/Molec
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
 
 const PageMeetAiExpert = () => {
+  const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
+  const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
   const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
   const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
   const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
@@ -287,6 +291,8 @@ const PageMeetAiExpert = () => {
     setPriceProduct([]);
     setPriceSelectedProductSegmentation([]);
     setPriceProductSegmentation([]);
+    setCaseReportData([]);
+    setCaseHashTag([]);
   }, [location]);
 
   useEffect(() => {

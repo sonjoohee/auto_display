@@ -44,6 +44,10 @@ import {
   PRICE_PRODUCT,
   PRICE_SELECTED_PRODUCT_SEGMENTATION,
   PRICE_PRODUCT_SEGMENTATION,
+  CASE_REPORT_BUTTON_STATE,
+  CASE_REPORT_DATA,
+  CASE_QUESTION_INPUT,
+  CASE_HASH_TAG,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -117,9 +121,13 @@ const OrganismCaseReport = ({ caseReportCount }) => {
   const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
-  const [isLoadingGrowthHacker, setIsLoadingGrowthHacker] = useState(false);
-  const [growthHackerButtonState, setGrowthHackerButtonState] = useAtom(GROWTH_HACKER_BUTTON_STATE);
+  const [isLoadingCaseReport, setIsLoadingCaseReport] = useState(false);
   const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
+  
+  const [caseReportButtonState, setCaseReportButtonState] = useAtom(CASE_REPORT_BUTTON_STATE);
+  const [caseQuestionInput, setCaseQuestionInput] = useAtom(CASE_QUESTION_INPUT);
+  const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
+  const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
 
   const axiosConfig = {
     timeout: 100000, // 100초
@@ -129,133 +137,174 @@ const OrganismCaseReport = ({ caseReportCount }) => {
     withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
   };
 
+  let localButtonState = buttonState;
+
   useEffect(() => {
-    const fetchIdeaList = async () => {
+    const fetchCaseReport = async () => {
+      try {
+       if(caseReportButtonState) {
+          setIsLoading(true);
+          setIsLoadingCaseReport(true);
+          setCaseReportButtonState(0);
 
-      if(growthHackerButtonState) {
-        setIsLoading(true);
-        setIsLoadingGrowthHacker(true);
-        setGrowthHackerButtonState(0);
+          const data = {
+            expert_id: "8",
+            business_info: titleOfBusinessInfo,
+            business_analysis_data: {
+              명칭: titleOfBusinessInfo,
+              주요_목적_및_특징: mainFeaturesOfBusinessInformation,
+              주요기능: mainCharacteristicOfBusinessInformation,
+              목표고객: businessInformationTargetCustomer,
+            },
+            case_user_input: caseQuestionInput,
+          };
 
-        const data = {
-          expert_id: "6",
-          business_info: titleOfBusinessInfo,
-          business_analysis_data: {
-            명칭: titleOfBusinessInfo,
-            주요_목적_및_특징: mainFeaturesOfBusinessInformation,
-            주요기능: mainCharacteristicOfBusinessInformation,
-            목표고객: businessInformationTargetCustomer,
-          },
-          kpi_question_list: KpiQuestionList,
-        };
-
-        let response = await axios.post(
-          "https://wishresearch.kr/panels/growth_hacker",
-          data,
-          axiosConfig
-        );
-
-        let retryCount = 0;
-        const maxRetries = 10;
-
-        while (retryCount < maxRetries && (
-          !response || 
-          !response.data || 
-          typeof response.data !== "object" ||
-          !response.data.hasOwnProperty("growth_hacker_report") || 
-          !Array.isArray(response.data.growth_hacker_report) ||
-          !response.data.growth_hacker_report[0].hasOwnProperty("content") ||
-          !Array.isArray(response.data.growth_hacker_report[0].content) ||
-          !response.data.growth_hacker_report[0].content[0].hasOwnProperty("text") ||
-          !response.data.growth_hacker_report[0].content[1].hasOwnProperty("text") ||
-          response.data.growth_hacker_report[1].content.some(item => 
-            !item.hasOwnProperty("title") || 
-            !item.hasOwnProperty("text") || 
-            !item.hasOwnProperty("subcontent") || 
-            !Array.isArray(item.subcontent) || 
-            item.subcontent.some(contentItem => 
-              !contentItem.hasOwnProperty("subTitle") || 
-              !contentItem.hasOwnProperty("text")
-            )
-          )
-        )) 
-        {
-          response = await axios.post(
-            "https://wishresearch.kr/panels/growth_hacker",
+          let response = await axios.post(
+            "https://wishresearch.kr/panels/case_analysis_report",
             data,
             axiosConfig
           );
-          retryCount++;
+
+          if (!(typeof response.data.case_analysis_report === "object" 
+            && response.data.case_analysis_report.hasOwnProperty("unrelated_input_text"))) {
+
+            localButtonState = (({ caseStart, ...rest }) => rest)(buttonState);
+            setButtonState(prevState => {
+              const { caseStart, ...rest } = prevState;
+              return rest; // caseStart가 제거된 상태 반환
+            });
+            
+            let retryCount = 0;
+            const maxRetries = 10;
+
+            while (retryCount < maxRetries && (
+              !response || 
+              !response.data || 
+              typeof response.data !== "object" ||
+              !response.data.hasOwnProperty("case_analysis_report") || 
+              !Array.isArray(response.data.case_analysis_report) ||
+              !response.data.case_analysis_report[0].hasOwnProperty("title") ||
+              !response.data.case_analysis_report[0].hasOwnProperty("text") ||
+              !response.data.case_analysis_report[1].hasOwnProperty("title") ||
+              !response.data.case_analysis_report[1].hasOwnProperty("content") ||
+              !Array.isArray(response.data.case_analysis_report[1].content) ||
+              response.data.case_analysis_report[1].content.some(item => 
+                !item.hasOwnProperty("title") || 
+                !item.hasOwnProperty("text") || 
+                !item.hasOwnProperty("subcontent") || 
+                !Array.isArray(item.subcontent) || 
+                item.subcontent.some(contentItem => 
+                  !contentItem.hasOwnProperty("subTitle") || 
+                  !contentItem.hasOwnProperty("text")
+                )
+              ) ||
+              !response.data.case_analysis_report[2].hasOwnProperty("title") ||
+              !response.data.case_analysis_report[2].hasOwnProperty("text")
+            )) 
+            {
+              response = await axios.post(
+                "https://wishresearch.kr/panels/case_analysis_report",
+                data,
+                axiosConfig
+              );
+              retryCount++;
+            }
+            if (retryCount === maxRetries) {
+              console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+              // 에러 처리 로직 추가
+              throw new Error("Maximum retry attempts reached. Empty response persists.");
+            }
+          }
+
+          const caseReport = response.data.case_analysis_report;
+
+          setCaseReportData([...caseReportData, caseReport]);
+
+          setIsLoading(false);
+          setIsLoadingCaseReport(false);
+
+          const updatedConversation = [...conversation];
+
+          if(typeof caseReport === "object" && caseReport.hasOwnProperty("unrelated_input_text")) {
+            updatedConversation.push(
+              {
+                type: "system",
+                message:
+                  `${response.data.case_analysis_report.unrelated_input_text}`,
+                expertIndex: selectedExpertIndex,
+              }
+            );
+          } else {
+            updatedConversation.push(
+              {
+                type: "system",
+                message:
+                  "사례 조사 분석이 완료되었습니다. 추가적으로 필요한 비즈니스 사례가 있으신가요?",
+                expertIndex: selectedExpertIndex,
+              },
+              { type: `caseContinueButton` }
+            );
+          }
+          setConversationStage(3);
+          setConversation(updatedConversation);
+
+          await saveConversationToIndexedDB(
+            {
+              id: conversationId,
+              inputBusinessInfo: inputBusinessInfo,
+              analysisReportData: analysisReportData,
+              strategyReportData: strategyReportData,
+              conversation: updatedConversation,
+              conversationStage: conversationStage,
+              selectedAdditionalKeywords: selectedAdditionalKeyword,
+              selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
+              additionalReportData: additionalReportData,
+              customerAdditionalReportData: customerAdditionalReportData,
+              timestamp: Date.now(),
+              expert_index: selectedExpertIndex,
+              selectedPocOptions: selectedPocOptions,
+              pocPersonaList: pocPersonaList,
+              selectedPocTarget: selectedPocTarget,
+              recommendedTargetData: recommendedTargetData,
+              pocDetailReportData : pocDetailReportData,
+              ideaFeatureData : ideaFeatureData,
+              ideaRequirementData : ideaRequirementData,
+              KpiQuestionList : KpiQuestionList,
+              ideaGroup : ideaGroup,
+              ideaPriority : ideaPriority,
+              ideaMiro : ideaMiro,
+              growthHackerReportData : growthHackerReportData,
+              buttonState : localButtonState,
+              priceScrapData : priceScrapData,
+              priceReportData : priceReportData,
+              priceProduct : priceProduct,
+              priceSelectedProductSegmentation : priceSelectedProductSegmentation,
+              priceProductSegmentation : priceProductSegmentation,
+              caseHashTag : caseHashTag,
+              caseReportData : [
+                ...caseReportData,
+                caseReport,
+              ],
+            },
+            isLoggedIn,
+            conversationId
+          );
         }
-        if (retryCount === maxRetries) {
-          console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
-          // 에러 처리 로직 추가
-          throw new Error("Maximum retry attempts reached. Empty response persists.");
-        }
-
-        setGrowthHackerReportData(response.data.growth_hacker_report);
-
-        setIsLoading(false);
-        setIsLoadingGrowthHacker(false);
-
-        const updatedConversation = [...conversation];
-        updatedConversation.push(
-          {
-            type: "system",
-            message:
-              "현황 진단 결과를 바탕으로 고객 여정의 각 단계에서 집중해야할 부분과 최적의 KPI 전략을 제안해드립니다.",
-            expertIndex: selectedExpertIndex,
-          },
-          { type: `growthHackerKPIButton` }
-        );
-        setConversationStage(3);
-        setConversation(updatedConversation);
-
-        await saveConversationToIndexedDB(
-          {
-            id: conversationId,
-            inputBusinessInfo: inputBusinessInfo,
-            analysisReportData: analysisReportData,
-            strategyReportData: strategyReportData,
-            conversation: updatedConversation,
-            conversationStage: conversationStage,
-            selectedAdditionalKeywords: selectedAdditionalKeyword,
-            selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
-            additionalReportData: additionalReportData,
-            customerAdditionalReportData: customerAdditionalReportData,
-            timestamp: Date.now(),
-            expert_index: selectedExpertIndex,
-            selectedPocOptions: selectedPocOptions,
-            pocPersonaList: pocPersonaList,
-            selectedPocTarget: selectedPocTarget,
-            recommendedTargetData: recommendedTargetData,
-            pocDetailReportData : pocDetailReportData,
-            ideaFeatureData : ideaFeatureData,
-            ideaRequirementData : ideaRequirementData,
-            KpiQuestionList : KpiQuestionList,
-            ideaGroup : ideaGroup,
-            ideaPriority : ideaPriority,
-            ideaMiro : ideaMiro,
-            growthHackerReportData : response.data.growth_hacker_report,
-            buttonState : buttonState,
-            priceScrapData : priceScrapData,
-            priceReportData : priceReportData,
-            priceProduct : priceProduct,
-            priceSelectedProductSegmentation : priceSelectedProductSegmentation,
-            priceProductSegmentation : priceProductSegmentation,
-          },
-          isLoggedIn,
-          conversationId
-        );
+      } catch (error) {
+        console.error("Error fetching case report:", error);
       }
     };
 
-    fetchIdeaList();
-  }, [growthHackerButtonState]);
+    fetchCaseReport();
+  }, [caseReportButtonState]);
+
+  if (typeof caseReportData[caseReportCount] === "object" && caseReportData[caseReportCount].hasOwnProperty("unrelated_input_text")) {
+    return null;
+  }
 
   return (
     <Wrap>
-      {isLoadingGrowthHacker || growthHackerButtonState ? (
+      {isLoadingCaseReport || caseReportButtonState ? (
         <>
           <SkeletonTitle className="title-placeholder" />
           <SkeletonLine className="content-placeholder" />
@@ -271,9 +320,9 @@ const OrganismCaseReport = ({ caseReportCount }) => {
         </>
       ) : (
         <>
-          <h1>마케팅 분석과 개선 솔루션 제안</h1>
-          <p>{growthHackerReportData[0].content[0].text} {growthHackerReportData[0].content[1].text}</p>
-          {growthHackerReportData[1].content.map((report, index) => (
+          <h1>성공적인 기술 혁신 사례 조사 보고서</h1>
+          <p>{caseReportData[caseReportCount][0].text}</p>
+          {caseReportData[caseReportCount][1].content.map((report, index) => (
             <SeparateSection key={index}>
               <h3>
                 <span className="number">{index + 1}</span>
@@ -281,7 +330,7 @@ const OrganismCaseReport = ({ caseReportCount }) => {
               </h3>
               <p>{report.text}</p>
               <div>
-              <ol className="list-disc">
+              <ol className="list-decimal">
                 {report.subcontent.map((subItem, subIndex) => (
                   <li key={subIndex}>
                     {subItem.subTitle} : {subItem.text}
@@ -292,12 +341,13 @@ const OrganismCaseReport = ({ caseReportCount }) => {
             </SeparateSection>
           ))
         }
+        <p>{caseReportData[caseReportCount][2].text}</p>
 
-      <MoleculeReportController
-        reportIndex={6}
-        sampleData={growthHackerReportData}
-        />
-      </>
+        <MoleculeReportController
+          reportIndex={8}
+          sampleData={caseReportData[caseReportCount]}
+          />
+        </>
       )}
 
     </Wrap>
@@ -373,8 +423,8 @@ const SeparateSection = styled.div`
     background:${palette.white};
   }
 
-  .list-disc li {
-    list-style-type:disc;
+  .list-decimal li {
+    list-style-type:decimal;
     list-style-position:inside;
     font-size:0.88rem;
     font-weight:300;

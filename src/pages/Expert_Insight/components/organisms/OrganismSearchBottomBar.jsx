@@ -118,6 +118,11 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
     else if (isHashTag && selectedExpertIndex === "8") {
       updatedConversation.push(
         { type: "user", message: `${inputValue}을 찾아주세요` },
+        {
+          type: "system",
+          message: `"${inputValue}"에 대한 사례를 조사합니다.`,
+          expertIndex: selectedExpertIndex,
+        },
         { type: "caseReport" }
       );
       setCaseReportButtonState(1);
