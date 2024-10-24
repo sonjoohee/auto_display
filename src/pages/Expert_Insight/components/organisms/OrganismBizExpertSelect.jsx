@@ -254,6 +254,21 @@ const OrganismBizExpertSelect = () => {
           },
           { type: `priceStartButton` }
         );
+      } else if (index === "8") {
+        updatedConversation.push(
+          {
+            type: "user",
+            message:
+              "사례 분석을 진행하겠습니다 🙌🏻",
+          },
+          {
+            type: "system",
+            message:
+              "안녕하세요! 저는 사례 분석 전문가 이민호입니다. 최신 데이터와 글로벌 사례등을 분석해 비즈니스에 도움을 드립니다.\n정확한 사례 분석을 위해 비즈니스 정보를 입력해 주세요 🔎",
+            expertIndex: index,
+          },
+          { type: `caseStartButton` }
+        );
       }
 
       await saveConversationToIndexedDB(
@@ -313,7 +328,8 @@ const OrganismBizExpertSelect = () => {
         (selectedExpertList.includes("4") || strategyReportData.hasOwnProperty(4)) &&
         (selectedExpertList.includes("5") || ideaFeatureData.length !== 0)) &&
         (selectedExpertList.includes("6") || KpiQuestionList.length !== 0) &&
-        (selectedExpertList.includes("7") || priceProduct.length !== 0) ? null : (
+        (selectedExpertList.includes("7") || priceProduct.length !== 0) &&
+        (selectedExpertList.includes("8") || caseReportData.length !== 0) ? null : (
   
         <BizExpertSelectContainer>
           <h1>아래 분야별 전문가와 대화를 통해 아이디어를 발전시켜보세요.</h1>
@@ -381,16 +397,16 @@ const OrganismBizExpertSelect = () => {
                 </button>
               </div>
             )}
-            {/* {(selectedExpertList.includes("8") || KpiQuestionList.length !== 0) ? null : (
+            {(selectedExpertList.includes("8") || caseReportData.length !== 0) ? null : (
               <div>
                 <img src={images.IconExpert8} alt="" />
-                <p>그로스 해커에게 KPI 전략 받기</p>
+                <p>Biz 사례 분석 리서처에게 사례 분석 받기</p>
                 <button type="button" onClick={() => handledExpertSelect("8")}>
                   시작하기
                 </button>
               </div>
             )}
-            {(selectedExpertList.includes("9") || KpiQuestionList.length !== 0) ? null : (
+            {/* {(selectedExpertList.includes("9") || KpiQuestionList.length !== 0) ? null : (
               <div>
                 <img src={images.IconExpert9} alt="" />
                 <p>그로스 해커에게 KPI 전략 받기</p>

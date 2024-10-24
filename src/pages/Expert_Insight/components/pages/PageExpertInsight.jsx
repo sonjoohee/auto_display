@@ -618,7 +618,7 @@ if (isLoadingPage) {
                 selectedExpertIndex === "8" ?
                   buttonState.caseEnough === 1 ? <OrganismSearchBottomBar isBlue={true} /> // 사례 조사 끝났을 때 활성화
                   :
-                  buttonState.caseStart === 1 && <OrganismSearchBottomBar isBlue={true} isHashTag={true}/> // 사례 조사 시작했을 때 활성화
+                  buttonState.caseStart === 1 && !isLoading && <OrganismSearchBottomBar isBlue={true} isHashTag={true}/> // 사례 조사 시작했을 때 활성화
                 :
                   selectedExpertIndex === "9" ?
                   buttonState.default === 1 ? <OrganismSearchBottomBar isBlue={true} />
