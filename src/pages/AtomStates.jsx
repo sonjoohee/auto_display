@@ -258,6 +258,9 @@ export const BM_LEAN_AUTO_REPORT_DATA = atom([]);
 export const BM_BM_ADS_REPORT_DATA = atom([]);
 export const BM_LEAN_ADS_REPORT_DATA = atom([]);
 
+export const SELECTED_BM_LEAN_PROBLEM = atom("");
+export const SELECTED_BM_BM_TARGET = atom("");
+
 export const BM_BM_CUSTOM_REPORT_DATA = atom([]);
 export const BM_LEAN_CUSTOM_REPORT_DATA = atom([]);
 
