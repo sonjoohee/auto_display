@@ -15,9 +15,12 @@ import {
   SELECTED_EXPERT_INDEX,
   isLoggedInAtom,
   CONVERSATION_ID,
+  CASE_REPORT_BUTTON_STATE,
+  CASE_QUESTION_INPUT,
+  CASE_HASH_TAG,
 } from "../../../AtomStates";
 
-const OrganismSearchBottomBar = ({ isBlue }) => {
+const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
   const [isLoggedIn] = useAtom(isLoggedInAtom);
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
@@ -26,12 +29,12 @@ const OrganismSearchBottomBar = ({ isBlue }) => {
   const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
   const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
-  const [customerAdditionButtonState, setCustomerAdditionButtonState] = useAtom(
-    CUSTOMER_ADDITION_BUTTON_STATE
-  );
-  const [customerAdditionQuestionInput, setCustomerAdditionQuestionInput] = useAtom(
-    CUSTOMER_ADDITION_QUESTION_INPUT
-  );
+  const [customerAdditionButtonState, setCustomerAdditionButtonState] = useAtom(CUSTOMER_ADDITION_BUTTON_STATE);
+  const [customerAdditionQuestionInput, setCustomerAdditionQuestionInput] = useAtom(CUSTOMER_ADDITION_QUESTION_INPUT);
+  
+  const [caseReportButtonState, setCaseReportButtonState] = useAtom(CASE_REPORT_BUTTON_STATE);
+  const [caseQuestionInput, setCaseQuestionInput] = useAtom(CASE_QUESTION_INPUT);
+  const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
 
   const [inputValue, setInputValue] = useState("");
   const [isPopupRegex, setIsPopupRegex] = useState(false);
@@ -106,7 +109,20 @@ const OrganismSearchBottomBar = ({ isBlue }) => {
 
       setConversationStage(2);
     }
-
+    else if (isHashTag && selectedExpertIndex === "8") {
+      updatedConversation.push(
+        { type: "user", message: `${inputValue}을 찾아주세요` },
+        { type: "caseReport" }
+      );
+      setCaseReportButtonState(1);
+      setCaseQuestionInput(inputValue);
+    }
+    // else if (isHashTag && selectedExpertIndex === "9") {
+    //   updatedConversation.push(
+    //     { type: "user", message: `${inputValue}을 찾아주세요` },
+    //     { type: "caseReport" }
+    //   );
+    // }
     else {
       if (
         (updatedConversation.length > 0 &&
@@ -131,21 +147,25 @@ const OrganismSearchBottomBar = ({ isBlue }) => {
           type: `customerAddition`
         }
       );
+
+      setCustomerAdditionButtonState(1);
+      setCustomerAdditionQuestionInput(inputValue);
     }
-    setCustomerAdditionButtonState(1);
-    setCustomerAdditionQuestionInput(inputValue);
     setConversation(updatedConversation);
   };
 
   return (
     <>
       <BottomBar>
-      {(selectedExpertIndex === "8" || selectedExpertIndex === "9") && isBlue && (
+      {isBlue && isHashTag && (
         <TagList>
-          <button>#성공적인 기술 혁신사례</button>
-          <button>#소비자 만족도가 높았던 성공 사례</button>
-          <button>#시장 진입 실패 사례</button>
-          </TagList>
+        {selectedExpertIndex === "8" && caseHashTag.slice(0, 3).map((tag, index) => (
+          <button key={index}># {tag.title}</button> // 최대 3개까지 표시
+        ))}
+        {/* {selectedExpertIndex === "9" && caseHashTag.slice(0, 3).map((tag, index) => (
+          <button key={index}># {tag.title}</button>
+        ))} */}
+        </TagList>
       )}
 
         <SearchBar isBlue={isBlue}>
@@ -168,7 +188,13 @@ const OrganismSearchBottomBar = ({ isBlue }) => {
             None
             isBlue
             placeholder={
-              isBlue
+              isBlue && isHashTag
+                ? selectedExpertIndex === "8" 
+                  ? "어떤 사례를 찾고 계신가요? 구체적으로 입력해주세요"
+                  : selectedExpertIndex === "9" 
+                  ? "어떤 사례를 찾고 계신가요? 구체적으로 입력해주세요"
+                  : ""
+                : isBlue
                 ? "더 알고 싶은 내용이 있으신가요? 추가 질문으로 더 많은 인사이트를 얻어보세요 "
                 : "당신의 아이템 또는 프로젝트 아이디어를 적어 주세요 (예: 원격 근무자를 위한 생산성 관리 툴)"
             }
@@ -322,6 +348,7 @@ const TagList = styled.div`
     border:0;
     box-shadow:1px 1px 4px rgba(0,0,0,.08);
     background:${palette.white};
+    font-size: 0.875rem;
   }
 `;
 
