@@ -588,7 +588,7 @@ const PageMeetAiExpert = () => {
               <ExpertCard
                 Biz
                 onClick={() => {
-                  setIsComingSoon(true);
+                  handledExpertSelect("8");
                 }}
               >
                 <strong>Biz 사례 분석 리서처</strong>
