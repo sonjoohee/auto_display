@@ -74,6 +74,8 @@ import {
   PRICE_PRODUCT,
   PRICE_SELECTED_PRODUCT_SEGMENTATION,
   PRICE_PRODUCT_SEGMENTATION,
+  CASE_REPORT_DATA,
+  CASE_HASH_TAG,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -82,6 +84,8 @@ import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/Molec
 import OrganismReportPopup from "./OrganismReportPopup"; // 팝업 컴포넌트 임포트
 
 const OrganismLeftSideBar = () => {
+  const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
+  const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
   const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
   const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
   const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
@@ -639,6 +643,9 @@ useEffect(() => {
       setPriceSelectedProductSegmentation(chatData.priceSelectedProductSegmentation || []);
       setPriceProductSegmentation(chatData.priceProductSegmentation || []);
 
+      setCaseReportData(chatData.caseReportData || []);
+      setCaseHashTag(chatData.caseHashTag || []);
+
       // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
       // set어프로치패스(2)
       setApproachPath(2);
@@ -888,6 +895,9 @@ useEffect(() => {
     setPriceProduct([]);
     setPriceSelectedProductSegmentation([]);
     setPriceProductSegmentation([]);
+
+    setCaseReportData([]);
+    setCaseHashTag([]);
   };
 
   const handleLogoClick = () => {
@@ -955,6 +965,9 @@ useEffect(() => {
     setPriceProduct([]);
     setPriceSelectedProductSegmentation([]);
     setPriceProductSegmentation([]);
+
+    setCaseReportData([]);
+    setCaseHashTag([]);
   };
   return (
     <>

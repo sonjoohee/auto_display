@@ -381,13 +381,13 @@ const OrganismCustomerAdditionalReport = ({
     customerAdditionButtonState, // buttonState 의존성 추가
   ]);
 
-  const [currentReport, setCurrentReport] = useState(null);
+  // const [currentReport, setCurrentReport] = useState(null);
 
-  useEffect(() => {
-    if (customerAdditionalReportData && customerAdditionalReportData[customerAdditionalReportCount]) {
-      setCurrentReport(customerAdditionalReportData[customerAdditionalReportCount]);
-    }
-  }, [customerAdditionalReportData, customerAdditionalReportCount]);
+  // useEffect(() => {
+  //   if (customerAdditionalReportData && customerAdditionalReportData[customerAdditionalReportCount]) {
+  //     setCurrentReport(customerAdditionalReportData[customerAdditionalReportCount]);
+  //   }
+  // }, [customerAdditionalReportData, customerAdditionalReportCount]);
 
   if (answerData && answerData.advise) {
     return null;

@@ -45,6 +45,8 @@ import {
   PRICE_PRODUCT,
   PRICE_SELECTED_PRODUCT_SEGMENTATION,
   PRICE_PRODUCT_SEGMENTATION,
+  CASE_REPORT_DATA,
+  CASE_HASH_TAG,
 } from "../../../AtomStates";
 
 import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
@@ -164,6 +166,9 @@ const PageExpertInsight = () => {
   const [growthHackerDetailReportData, setGrowthHackerDetailReportData] = useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
   const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
 
+  const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
+  const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
+
   let additionalReportCount = 0;
   let customerAdditionalReportCount = 0;
   let caseReportCount = 0;
@@ -250,6 +255,9 @@ const PageExpertInsight = () => {
             setPriceProduct(savedConversation.priceProduct || []);
             setPriceSelectedProductSegmentation(savedConversation.priceSelectedProductSegmentation || []);
             setPriceProductSegmentation(savedConversation.priceProductSegmentation || []);
+
+            setCaseReportData(savedConversation.caseReportData || []);
+            setCaseHashTag(savedConversation.caseHashTag || []);
           }
           
           setIsLoadingPage(false); // 로딩 완료
