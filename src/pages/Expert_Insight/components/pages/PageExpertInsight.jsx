@@ -450,6 +450,17 @@ if (isLoadingPage) {
                   return <MoleculePriceProductSegmentation />;
                 }
 
+                /* 설문조사 전문가 */
+                // else if (item.type === "surveyStartButton") {
+                //   return <MoleculeSurveyStartButton />;
+                // } else if (item.type === "surveyGoalSuggestion") {
+                //   return <MoleculeSurveyGoalSuggestion />;
+                // } else if (item.type === "surveyOption") {
+                //   return <MoleculeCheckSurveyOption />;
+                // } else if (item.type === "surveyGuidelineReport") {
+                //   return <OrganismSurveyGuidelineReport />;
+                // }
+
                 return null;
               })}
 
