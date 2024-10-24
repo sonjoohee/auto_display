@@ -152,11 +152,11 @@ const MoleculeCheckSurveyOption = () => {
     updatedConversation.push(
       {
         type: "user",
-        message: `함께 사업 아이디어를 확장해가고 싶습니다.`,
+        message: `네 괜찮습니다. 이대로 진행해주세요`,
       },
       {
         type: "system",
-        message: "응답 내용을 확인한 결과, 현재 아이템의 마케팅 퍼널 현황을 진단할 수 있었습니다.\n아래 각 진단 결과와 개선 방안을 확인해보세요.",
+        message: "좋습니다. 이 목적에 맞춰 설문조사 문항을 설계해드리겠습니다.",
         expertIndex: selectedExpertIndex,
       },
       {
