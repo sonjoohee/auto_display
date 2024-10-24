@@ -91,7 +91,16 @@ const MoleculeSurveyStartButton = () => {
 
     updatedConversation.push(
       {
-        type: 'surveyOption',
+        type: "user",
+        message: "설문조사를 설계 해주세요.",
+      },
+      {
+        type: "system",
+        message: "설문조사를 위해 어떤 내용을 확인하고 싶으신가요? \n아래 채팅창에 설문조사의 목적을 입력해주세요",
+        expertIndex: selectedExpertIndex,
+      },
+      {
+        type: 'getUserSurveyGoal',
       },
     );
 

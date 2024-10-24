@@ -15,6 +15,7 @@ import {
   SELECTED_EXPERT_INDEX,
   isLoggedInAtom,
   CONVERSATION_ID,
+  SURVEY_USER_GOAL_INPUT,
 } from "../../../AtomStates";
 
 const OrganismSearchBottomBar = ({ isBlue }) => {
@@ -36,6 +37,7 @@ const OrganismSearchBottomBar = ({ isBlue }) => {
   const [inputValue, setInputValue] = useState("");
   const [isPopupRegex, setIsPopupRegex] = useState(false);
   const [isPopupRegex2, setIsPopupRegex2] = useState(false);
+  const [surveyUserGoalInput, setSurveyUserGoalInput] = useAtom(SURVEY_USER_GOAL_INPUT);
 
   const closePopupRegex = () => {
     setIsPopupRegex(false);
@@ -120,6 +122,24 @@ const OrganismSearchBottomBar = ({ isBlue }) => {
             "pocTargetButton")
       ) {
         updatedConversation.pop();
+      } else if (updatedConversation.length > 0 &&
+        updatedConversation[updatedConversation.length - 1].type === 'getUserSurveyGoal') {
+        updatedConversation.pop(); // 마지막 메시지를 제거하고 새로운 흐름을 추가
+        setSurveyUserGoalInput(inputValue); // 사용자가 입력한 값을 user_goal_input에 저장
+  
+        updatedConversation.push(
+          {
+            type: "user",
+            message: inputValue,
+          },
+          {
+            type: "surveyGoalSuggestion",
+          }
+        );
+        
+        setSurveyGoalSuggestionButtonState(1);
+        setConversationStage(3);
+        setApproachPath(3);
       }
   
       updatedConversation.push(
