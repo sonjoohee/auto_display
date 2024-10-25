@@ -269,7 +269,7 @@ const ButtonWrap = styled.div`
   > button {
     padding: 8px 16px;
     border-radius: 40px;
-    border: 1px solid ${palette.lineGray};
+    border: 1px solid ${palette.outlineGray};
   }
 
   button.none {

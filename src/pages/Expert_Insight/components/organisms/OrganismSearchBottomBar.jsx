@@ -396,7 +396,7 @@ export default OrganismSearchBottomBar;
 
 const BottomBar = styled.div`
   position: sticky;
-  bottom: 20px;
+  bottom: 40px;
   left: 0;
   // left: 50%;
   // transform: translateX(-50%);
@@ -422,7 +422,7 @@ const BottomBar = styled.div`
     position: absolute;
     left: 0;
     right: 0;
-    bottom: -20px;
+    bottom: 0;
     height: 60px;
     background: ${palette.white};
     // background: linear-gradient(

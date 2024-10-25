@@ -7,7 +7,8 @@ export const palette = {
 
   chatGray: "#F7F8FA",
   lineGray: "#ddd",
-  outlineGray: "#E6E6E6",
+  // outlineGray: "#E6E6E6",
+  outlineGray: "#E0E4EB",
   lightGray: "#aaa",
   gray: "#7a7a7a",
   darkGray: "#3D3D3D",
