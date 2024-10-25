@@ -513,7 +513,7 @@ const OrganismPriceReport = () => {
                   <ul>
                     {priceReportData.price_analysis.price_data[`${type}_price_products`].map((product, idx) => (
                       <li key={idx}>
-                        <span>{idx + 1}</span>
+                        {/* <span>{idx + 1}</span> */}
                         <p>{product.name}</p>
                         <strong>{product.price}</strong>
                       </li>
@@ -722,6 +722,10 @@ const AnalysisWrap = styled.div`
     flex-direction:column;
     gap:8px;
     text-align:left;
+
+    + div {
+      margin-top:12px;
+    }
   }
 
   span {
@@ -741,15 +745,22 @@ const AnalysisWrap = styled.div`
     display:flex;
     flex-direction:column;
     gap:4px;
-    padding:8px 20px 8px 6px;
+    // padding:8px 20px 8px 6px;
+    padding:20px;
     border-radius:12px;
     background:${palette.chatGray};
   }
 
   li {
     display:flex;
-    align-items:center;
-    gap:12px;
+    // align-items:center;
+    // gap:58px;
+    justify-content:space-between;
+
+    p {
+      max-width:320px;
+      width:100%;
+    }
 
     span {
       display:flex;
@@ -769,6 +780,13 @@ const AnalysisWrap = styled.div`
       color:${palette.gray800};
       text-align:right;
       margin-left:auto;
+      flex-shrink:0;
+    }
+
+    + li {
+      padding-top:12px;
+      margin-top:12px;
+      border-top:1px solid ${palette.outlineGray};
     }
   }
 `;
