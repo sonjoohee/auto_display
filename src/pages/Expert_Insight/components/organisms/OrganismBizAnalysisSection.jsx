@@ -1076,7 +1076,7 @@ const blinkAnimation = keyframes`
 const AnalysisSection = styled.div`
   position: relative;
   max-width: 1135px;
-  width: 91.5%;
+  // width: 91.5%;
   text-align: left;
   margin-top: 25px;
   margin-left:50px;

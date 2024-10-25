@@ -356,11 +356,11 @@ export default MoleculeSurveyGoalSuggestion;
 
 const Wrapper = styled.div`
   max-width:968px;
-  width:91.5%;
+  // width:91.5%;
   padding: 32px 40px;
   margin:24px 0 0 50px;
   border-radius:15px;
-  border:1px solid ${palette.lineGray};
+  border:1px solid ${palette.outlineGray};
 `;
 
 const Question = styled.h2`

@@ -362,13 +362,13 @@ export default OrganismBmLeanAdsReport;
 
 const Wrap = styled.div`
   max-width:986px;
-  width:100%;
+  // width:100%;
   display:flex;
   flex-direction:column;
   padding: 28px;
   margin:24px 0 0 50px;
   border-radius:15px;
-  border:1px solid ${palette.lineGray};
+  border:1px solid ${palette.outlineGray};
 
   h1 {
     font-size:1.25rem;

@@ -448,6 +448,7 @@ const SeparateSection = styled.div`
   }
 
   span.number {
+    flex-shrink:0;
     width: 15px;
     height: 15px;
     font-size: 0.63rem;
@@ -552,7 +553,7 @@ const SeparateSection = styled.div`
 const AnalysisSection = styled.div`
   position: relative;
   max-width: 1135px;
-  width: 91.5%;
+  // width: 91.5%;
   text-align: left;
   margin-top: 25px;
   margin-left: 50px;

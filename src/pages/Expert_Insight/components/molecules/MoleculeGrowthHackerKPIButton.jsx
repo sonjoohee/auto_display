@@ -192,7 +192,7 @@ const ButtonWrap = styled.div`
     display: flex;
     align-items: center;
     gap: 12px;
-    font-family: "Pretendard";
+    font-family: 'Pretendard', 'Poppins';
     font-size: 0.875rem;
     color: ${palette.darkGray};
     border: 0;
