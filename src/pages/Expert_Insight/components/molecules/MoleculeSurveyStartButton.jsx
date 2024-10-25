@@ -102,10 +102,7 @@ const MoleculeSurveyStartButton = () => {
         type: "system",
         message: "설문조사를 위해 어떤 내용을 확인하고 싶으신가요? \n아래 채팅창에 설문조사의 목적을 입력해주세요",
         expertIndex: selectedExpertIndex,
-      },
-      {
-        type: 'getUserSurveyGoal',
-      },
+      }
     );
 
     setConversation(updatedConversation);
@@ -133,7 +130,10 @@ const MoleculeSurveyStartButton = () => {
         pocPersonaList: pocPersonaList,
         selectedPocTarget: selectedPocTarget,
         pocDetailReportData : pocDetailReportData,
-        buttonState : buttonState,
+        buttonState : {
+          ...buttonState,
+          surveyGoalInputStart : 1,
+        },
         ideaFeatureData : ideaFeatureData,
         ideaRequirementData : ideaRequirementData,
         ideaList : ideaList,

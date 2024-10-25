@@ -417,6 +417,10 @@ const PageMeetAiExpert = () => {
         return "안녕하세요! 저는 가격 분석 전문가 한준혁입니다. 다양한 데이터 소스를 활용해 시장의 가격 변동을 분석하고, 적정 가격을 도출해드립니다.\n경쟁사 동향과 시장 트렌드를 파악해 최적의 가격 전략을 세울 수 있도록 도와드려요. 분석이 필요한 제품이나 서비스에 대해 알려주세요 📝\n📌 현재는 제품만 분석이 가능합니다"
       case "8":
         return "안녕하세요! 저는 사례 분석 전문가 이민호입니다. 최신 데이터와 글로벌 사례등을 분석해 비즈니스에 도움을 드립니다.\n정확한 사례 분석을 위해 비즈니스 정보를 입력해 주세요 🔎"
+      // case "9":
+      //   return "비즈니스(아이디어)를 입력해주세요."
+      case "10":
+        return "안녕하세요! 저는 Business Model 수립 전문가 김현우입니다.\n사업 아이템의 비즈니스 모델 분석과 비즈니스 모델의 각 구성 요소에 따른 최적의 전략을 제시해 드립니다.\n각 구성요소별로 어떤 상호작용과 비즈니스 모델의 변화를 쉽게 확인 하실 수 있어요.\n먼저 분석이 필요한 제품이나 서비스에 대해서 알려주세요 📝  "
       default:
         return "비즈니스(아이디어)를 입력해주세요.";
     }
@@ -623,23 +627,36 @@ const PageMeetAiExpert = () => {
                 </span>
               </ExpertCard>
 
-              <ExpertCard Coming>
+              <ExpertCard
+                Survey
+                onClick={() => {
+                  handledExpertSelect("10");
+                }}
+              >
+                <strong>조사 설계 전문가</strong>
+                <p>고객의 의견 수집을 위한 조사 설계</p>
+                <span>
+                  <img src={images.ImgSurvey} alt="" />
+                </span>
+              </ExpertCard>
+
+              {/* <ExpertCard Coming>
                 <div>
                   <span>
                     <img src={images.ImgComing} alt="" />
                   </span>
                   <p>coming soon</p>
                 </div>
-              </ExpertCard>
+              </ExpertCard> */}
 
-              <ExpertCard Empty>
+              {/* <ExpertCard Empty>
                 <div>
                   <span>
                     <img src="" alt="" />
                   </span>
                   <p></p>
                 </div>
-              </ExpertCard>
+              </ExpertCard> */}
 
             </ExpertSelectBox>
           </ExpertSelectWrap>
@@ -1016,6 +1033,7 @@ const ExpertCard = styled.div`
     else if (props.Biz) return `1px solid #CCDAE0`;
     else if (props.BM) return `1px solid #EEE7E7`;
     else if (props.Price) return `1px solid #E8E2EA`;
+    else if (props.Survey) return `1px solid #E7E9EE`;
     else return `1px solid ${palette.gray100}`;
   }};
   background: ${(props) => {
@@ -1030,6 +1048,7 @@ const ExpertCard = styled.div`
     else if (props.Biz) return `#CCDAE0`;
     else if (props.BM) return `#EEE7E7`;
     else if (props.Price) return `#E8E2EA`;
+    else if (props.Survey) return `#E7E9EE`;
     else return palette.gray100;
   }};
   box-shadow: ${(props) => {
