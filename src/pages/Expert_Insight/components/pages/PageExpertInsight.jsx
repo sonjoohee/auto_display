@@ -183,7 +183,6 @@ const PageExpertInsight = () => {
   //   // 페이지를 나갈 때 접근 가능 여부 초기화
   //   return () => {
   //     setIsExpertInsightAccessible(false); // 페이지 떠날 때 접근 불가로 설정
-  //     console.log("접근 불가로 설정");
   //   };
   // }, [navigate]);
 
@@ -620,9 +619,9 @@ if (isLoadingPage) {
                 selectedExpertIndex === "8" ?
                   buttonState.caseEnough === 1 ? <OrganismSearchBottomBar isBlue={true} /> // 사례 조사 끝났을 때 활성화
                   :
-                  buttonState.caseStart === 1 && !isLoading && <OrganismSearchBottomBar isBlue={true} isHashTag={true}/> // 사례 조사 시작했을 때 활성화
+                  buttonState.caseStart === 1 && !isLoading && conversation[conversation.length - 1].type !== "caseContinueButton" && <OrganismSearchBottomBar isBlue={true} isHashTag={true}/> // 사례 조사 시작했을 때 활성화
                 :
-                  selectedExpertIndex === "9" ?
+                selectedExpertIndex === "9" ?
                   buttonState.default === 1 ? <OrganismSearchBottomBar isBlue={true} />
                   :
                   buttonState.bmGoalInputStart === 1 && <OrganismSearchBottomBar isBlue={true} isHashTag={true}/> // 비즈니스 목적 입력 시 활성화

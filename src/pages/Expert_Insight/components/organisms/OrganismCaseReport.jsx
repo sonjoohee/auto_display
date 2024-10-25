@@ -121,7 +121,7 @@ const OrganismCaseReport = ({ caseReportCount }) => {
   const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
-  const [isLoadingCaseReport, setIsLoadingCaseReport] = useState(true);
+  const [isLoadingCaseReport, setIsLoadingCaseReport] = useState(false);
   const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
   
   const [caseReportButtonState, setCaseReportButtonState] = useAtom(CASE_REPORT_BUTTON_STATE);
@@ -137,14 +137,14 @@ const OrganismCaseReport = ({ caseReportCount }) => {
     withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
   };
 
-  let localButtonState = buttonState;
+  let localButtonState = {};
 
   useEffect(() => {
     const fetchCaseReport = async () => {
       try {
        if(caseReportButtonState) {
-          setIsLoading(true);
           setIsLoadingCaseReport(true);
+          setIsLoading(true);
           setCaseReportButtonState(0);
 
           const data = {
@@ -166,10 +166,12 @@ const OrganismCaseReport = ({ caseReportCount }) => {
           );
 
           if (typeof response.data.case_analysis_report !== "object") {
-            localButtonState = (({ caseStart, ...rest }) => rest)(buttonState);
+            localButtonState = { ...buttonState };
+            delete localButtonState.caseStart;
             setButtonState(prevState => {
-              const { caseStart, ...rest } = prevState;
-              return rest; // caseStart가 제거된 상태 반환
+              const newState = { ...prevState };
+              delete newState.caseStart; // caseStart를 제거
+              return newState;
             });
             
             let retryCount = 0;
@@ -179,25 +181,25 @@ const OrganismCaseReport = ({ caseReportCount }) => {
               !response || 
               !response.data || 
               typeof response.data !== "object" ||
-              !response.data.hasOwnProperty("case_analysis_report") || 
-              !Array.isArray(response.data.case_analysis_report) ||
-              !response.data.case_analysis_report[0].hasOwnProperty("title") ||
-              !response.data.case_analysis_report[0].hasOwnProperty("text") ||
-              !response.data.case_analysis_report[1].hasOwnProperty("title") ||
-              !response.data.case_analysis_report[1].hasOwnProperty("content") ||
-              !Array.isArray(response.data.case_analysis_report[1].content) ||
-              response.data.case_analysis_report[1].content.some(item => 
-                !item.hasOwnProperty("title") || 
-                !item.hasOwnProperty("text") || 
-                !item.hasOwnProperty("subcontent") || 
-                !Array.isArray(item.subcontent) || 
-                item.subcontent.some(contentItem => 
-                  !contentItem.hasOwnProperty("subTitle") || 
-                  !contentItem.hasOwnProperty("text")
-                )
-              ) ||
-              !response.data.case_analysis_report[2].hasOwnProperty("title") ||
-              !response.data.case_analysis_report[2].hasOwnProperty("text")
+              // !response.data.hasOwnProperty("case_analysis_report") || 
+              !Array.isArray(response.data.case_analysis_report)
+              // !response.data.case_analysis_report[0].hasOwnProperty("title") ||
+              // !response.data.case_analysis_report[0].hasOwnProperty("text") ||
+              // !response.data.case_analysis_report[1].hasOwnProperty("title") ||
+              // !response.data.case_analysis_report[1].hasOwnProperty("content") ||
+              // !Array.isArray(response.data.case_analysis_report[1].content) ||
+              // response.data.case_analysis_report[1].content.some(item => 
+              //   !item.hasOwnProperty("title") || 
+              //   !item.hasOwnProperty("text") || 
+              //   !item.hasOwnProperty("subcontent") || 
+              //   !Array.isArray(item.subcontent) || 
+              //   item.subcontent.some(contentItem => 
+              //     !contentItem.hasOwnProperty("subTitle") || 
+              //     !contentItem.hasOwnProperty("text")
+              //   )
+              // ) ||
+              // !response.data.case_analysis_report[2].hasOwnProperty("title") ||
+              // !response.data.case_analysis_report[2].hasOwnProperty("text")
             )) 
             {
               response = await axios.post(
@@ -218,8 +220,8 @@ const OrganismCaseReport = ({ caseReportCount }) => {
 
           setCaseReportData([...caseReportData, caseReport]);
 
-          setIsLoading(false);
           setIsLoadingCaseReport(false);
+          setIsLoading(false);
 
           const updatedConversation = [...conversation];
 
@@ -229,6 +231,15 @@ const OrganismCaseReport = ({ caseReportCount }) => {
                 type: "system",
                 message:
                   `${response.data.case_analysis_report.unrelated_input_text}`,
+                expertIndex: selectedExpertIndex,
+              }
+            );
+          } else if(typeof caseReport === "object" && caseReport.hasOwnProperty("case_not_found_text")) {
+            updatedConversation.push(
+              {
+                type: "system",
+                message:
+                  `${response.data.case_analysis_report.case_not_found_text}`,
                 expertIndex: selectedExpertIndex,
               }
             );
@@ -296,7 +307,7 @@ const OrganismCaseReport = ({ caseReportCount }) => {
     fetchCaseReport();
   }, [caseReportButtonState]);
 
-  if (typeof caseReportData[caseReportCount] === "object" && caseReportData[caseReportCount].hasOwnProperty("unrelated_input_text")) {
+  if (typeof caseReportData[caseReportCount] === "object" && (caseReportData[caseReportCount].hasOwnProperty("unrelated_input_text") || caseReportData[caseReportCount].hasOwnProperty("case_not_found_text"))) {
     return null;
   }
 
@@ -318,7 +329,7 @@ const OrganismCaseReport = ({ caseReportCount }) => {
         </>
       ) : (
         <>
-          <h1>성공적인 기술 혁신 사례 조사 보고서</h1>
+          <h1>{caseReportData[caseReportCount]?.[0]?.report_title}</h1>
           <p>{caseReportData[caseReportCount]?.[0]?.text}</p>
           {caseReportData[caseReportCount]?.[1]?.content.map((report, index) => (
             <SeparateSection key={index}>
