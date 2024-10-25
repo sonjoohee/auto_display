@@ -110,7 +110,7 @@ const BMExpert = () => {
               </section>
             </CanvasList>
 
-            <CanvasList Num2>
+            <CanvasList Num2> 6 7 
               <section>
                 <strong>
                   핵심 활동
@@ -152,7 +152,7 @@ const BMExpert = () => {
               </section>
             </CanvasList>
 
-            <CanvasList Num2>
+            <CanvasList Num2> 
               <section>
                 <strong>
                   고객관계
@@ -309,7 +309,7 @@ const BMExpert = () => {
         </CanvasWrap>
       </Wrap>
 
-      {/* 모델 캔버스 */}
+      {/* 린 캔버스 */}
       <BoxWrap>
         <h1>홈케어 뷰티 디바이스와 기능성 화장품의 비즈니스 모델 캔버스 - 기본형</h1>
         <p>따릉이는 서울 시민과 방문자에게 저렴하고 편리한 공공 자전거 대여 서비스를 제공합니다. 모바일 앱을 통해 쉽고 빠르게 자전거를 대여하고, 서울 전역의 다양한 대여소에서 자유롭게 반납할 수 있습니다. 따릉이는 교통 혼잡을 피하고 환경 보호를 실천하면서 건강도 증진시킬 수 있는 스마트한 교통 수단입니다. 정기적인 자전거 유지보수와 안전 점검으로 신뢰성을 높이고, 대여비와 구독 모델을 통해 합리적인 비용으로 지속 가능한 서비스를 운영하고 있습니다.</p>
