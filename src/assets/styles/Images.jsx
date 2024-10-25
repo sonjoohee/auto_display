@@ -53,6 +53,7 @@ import ImgHacker from "../images/imgHacker.svg"
 import ImgBiz from "../images/imgBiz.svg"
 import ImgBM from "../images/imgBM.svg"
 import ImgPrice from "../images/imgPrice.svg"
+import ImgSurvey from "../images/imgSurvey.svg"
 import ImgComing from "../images/imgComing.svg"
 
 import IconSearch from "../images/iconSearch.svg"
@@ -182,6 +183,7 @@ const images = {
   ImgBiz,
   ImgBM,
   ImgPrice,
+  ImgSurvey,
   ImgComing,
 
   IconSearch,

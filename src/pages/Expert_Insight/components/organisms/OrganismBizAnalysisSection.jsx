@@ -353,7 +353,27 @@ const OrganismBizAnalysisSection = () => {
                 },
                 { type: "caseStartButton" }
               );
-            }
+            } else if (selectedExpertIndex==="9") {
+              updatedConversation2.push(
+                {
+                  type: "system",
+                  message:
+                    "분석한 아이템의 특징과 기능이 잘 분석되었나요? 추가하고 싶은 내용이 있으시면 “수정하기” 버튼을 통해 수정해주세요\n분석 결과에 만족하신다면, 먼저 현재 비즈니스에 대한 진단을 진행하겠습니다.",
+                  expertIndex: selectedExpertIndex,
+                },
+                { type: "bmStartButton" }
+              );
+            } else if (selectedExpertIndex==="10") {
+              updatedConversation2.push(
+                {
+                  type: "system",
+                  message:
+                    "분석된 아이템의 특징과 기능이 적절한가요? 수정이 필요하면 ‘수정하기’ 버튼을 사용하여 변경이 가능합니다.\n이상이 없으면 설문조사 설계를 진행하겠습니다.",
+                  expertIndex: selectedExpertIndex,
+                },
+                { type: "surveyStartButton" }
+              );
+            } 
           } else if (approachPath === -1) {
             updatedConversation2.push({
               type: "system",

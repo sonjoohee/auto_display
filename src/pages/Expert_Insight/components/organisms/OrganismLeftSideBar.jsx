@@ -76,6 +76,10 @@ import {
   PRICE_PRODUCT_SEGMENTATION,
   CASE_REPORT_DATA,
   CASE_HASH_TAG,
+  SURVEY_GOAL_SUGGESTION_LIST,
+  SURVEY_GOAL_FIXED,
+  SURVEY_QUESTION_LIST,
+  SURVEY_GUIDELINE_REPORT_DATA,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -84,6 +88,10 @@ import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/Molec
 import OrganismReportPopup from "./OrganismReportPopup"; // 팝업 컴포넌트 임포트
 
 const OrganismLeftSideBar = () => {
+  const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
+  const [surveyGoalFixed, setSurveyGoalFixed] = useAtom(SURVEY_GOAL_FIXED);
+  const [surveyQuestionList, setSurveyQuestionList] = useAtom(SURVEY_QUESTION_LIST);
+  const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(SURVEY_GUIDELINE_REPORT_DATA);
   const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
   const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
   const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
@@ -645,6 +653,11 @@ useEffect(() => {
 
       setCaseReportData(chatData.caseReportData || []);
       setCaseHashTag(chatData.caseHashTag || []);
+
+      setSurveyGoalSuggestionList(chatData.surveyGoalSuggestionList || []);
+      setSurveyGoalFixed(chatData.surveyGoalFixed || []);
+      setSurveyQuestionList(chatData.surveyQuestionList || []);
+      setSurveyGuidelineReportData(chatData.surveyGuidelineReportData || {});
 
       // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
       // set어프로치패스(2)

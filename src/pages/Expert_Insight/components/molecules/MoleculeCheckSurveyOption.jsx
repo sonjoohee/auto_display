@@ -27,11 +27,13 @@ import {
   IDEA_LIST,
   IDEA_GROUP,
   IDEA_PRIORITY,
-  SURVEY_OPTION_BUTTON_STATE,
   SURVEY_QUESTION_LIST,
   BUTTON_STATE,
   CASE_HASH_TAG,
   CASE_REPORT_DATA,
+  SURVEY_GUIDELINE_BUTTON_STATE,
+  SURVEY_GOAL_SUGGESTION_LIST,
+  SURVEY_GOAL_FIXED,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -66,13 +68,15 @@ const MoleculeCheckSurveyOption = () => {
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
   const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
 
+  const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
+  const [surveyGoalFixed, setSurveyGoalFixed] = useAtom(SURVEY_GOAL_FIXED);
   const [surveyQuestionList, setsurveyQuestionList] = useAtom(SURVEY_QUESTION_LIST);
   const [selectedOption1, setSelectedOption1] = useState("");
   const [selectedOption2, setSelectedOption2] = useState("");
   const [selectedOption3, setSelectedOption3] = useState("");
   const [selectedOption4, setSelectedOption4] = useState("");
 
-  const [surveyOptionButtonState, setSurveyOptionButtonState] = useAtom(SURVEY_OPTION_BUTTON_STATE);
+  const [surveyGuidelineButtonState, setSurveyGuidelineButtonState] = useAtom(SURVEY_GUIDELINE_BUTTON_STATE);
 
   const [tabs, setTabs] = useState(0);
 
@@ -150,7 +154,7 @@ const MoleculeCheckSurveyOption = () => {
     setsurveyQuestionList([selectedOption1, selectedOption2, selectedOption3, selectedOption4]);
     setApproachPath(3);
     setConversationStage(3);
-    setSurveyOptionButtonState(1);
+    setSurveyGuidelineButtonState(1);
 
     const updatedConversation = [...conversation];
     updatedConversation.push(
@@ -189,6 +193,8 @@ const MoleculeCheckSurveyOption = () => {
         timestamp: Date.now(),
         expert_index: selectedExpertIndex,
         KpiQuestionList : KpiQuestionList,
+        surveyGoalSuggestionList: surveyGoalSuggestionList,
+        surveyGoalFixed: surveyGoalFixed,
         surveyQuestionList: [selectedOption1, selectedOption2, selectedOption3, selectedOption4],
         selectedPocTarget: selectedPocTarget,
         ideaFeatureData: ideaFeatureData,
@@ -217,6 +223,9 @@ const MoleculeCheckSurveyOption = () => {
     <Wrap>
       {tabs === 0 && (
         <>
+          <Progress surveyQuestionList={surveyQuestionList}>
+            <div className="bar stap1"></div>
+          </Progress>
           <Question>Q1. 조사를 완료해야 하는 기간은 어느 정도인가요?</Question>
           <OptionContainer>
             {options1.map((option1) => (
@@ -234,6 +243,9 @@ const MoleculeCheckSurveyOption = () => {
       )}
       {tabs === 1 && (
         <>
+          <Progress surveyQuestionList={surveyQuestionList}>
+            <div className="bar stap2"></div>
+          </Progress>
           <Question>Q2. 조사를 위한 예산을 어느 정도로 고려하고 있나요?</Question>
           <OptionContainer>
             {options2.map((option2) => (
@@ -252,6 +264,9 @@ const MoleculeCheckSurveyOption = () => {
       {/* 각 탭별로 동일한 방식으로 설정 */}
       {tabs === 2 && (
         <>
+          <Progress surveyQuestionList={surveyQuestionList}>
+            <div className="bar stap3"></div>
+          </Progress>
           <Question>Q3. 조사에 참여할 계획인 대상자 수는 어느정도로 생각하십니까?</Question>
           <OptionContainer>
             {options3.map((option3) => (
@@ -269,6 +284,9 @@ const MoleculeCheckSurveyOption = () => {
       )}
       {tabs === 3 && (
         <>
+          <Progress surveyQuestionList={surveyQuestionList}>
+            <div className="bar"></div>
+          </Progress>
           <Question>Q4. 어떤 형태의 데이터가 필요하신가요?</Question>
           <OptionContainer>
             {options4.map((option4) => (
@@ -286,7 +304,7 @@ const MoleculeCheckSurveyOption = () => {
       )}
 
 
-<ButtonWrap
+      <ButtonWrap
         selectedOption1={selectedOption1}
         selectedOption2={selectedOption2}
         selectedOption3={selectedOption3}
@@ -370,12 +388,16 @@ const Progress = styled.div`
     transition:all .5s;
   }
 
-  .bar.num2 {
+  .bar.stap1 {
+    width:25%;
+  }
+
+  .bar.stap2 {
     width:50%;
   }
 
-  .bar.num3 {
-    width:33%;
+  .bar.stap3 {
+    width:75%;
   }
 `;
 

@@ -92,6 +92,10 @@ import MoleculePriceProductSegmentation from "../molecules/MoleculePriceProductS
 import MoleculeCaseStartButton from "../molecules/MoleculeCaseStartButton";
 import MoleculeCaseContinueButton from "../molecules/MoleculeCaseContinueButton";
 import OrganismCaseReport from "../organisms/OrganismCaseReport";
+import MoleculeSurveyStartButton from "../molecules/MoleculeSurveyStartButton";
+import MoleculeSurveyGoalSuggestion from "../molecules/MoleculeSurveyGoalSuggestion";
+import MoleculeCheckSurveyOption from "../molecules/MoleculeCheckSurveyOption";
+import OrganismSurveyGuidelineReport from "../organisms/OrganismSurveyGuidelineReport";
 
 const PageExpertInsight = () => {
   const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
@@ -502,15 +506,15 @@ if (isLoadingPage) {
                 // }
 
                 /* 설문조사 전문가 */
-                // else if (item.type === "surveyStartButton") {
-                //   return <MoleculeSurveyStartButton />;
-                // } else if (item.type === "surveyGoalSuggestion") {
-                //   return <MoleculeSurveyGoalSuggestion />;
-                // } else if (item.type === "surveyOption") {
-                //   return <MoleculeCheckSurveyOption />;
-                // } else if (item.type === "surveyGuidelineReport") {
-                //   return <OrganismSurveyGuidelineReport />;
-                // }
+                else if (item.type === "surveyStartButton") {
+                  return <MoleculeSurveyStartButton />;
+                } else if (item.type === "surveyGoalSuggestion") {
+                  return <MoleculeSurveyGoalSuggestion />;
+                } else if (item.type === "surveyOption") {
+                  return <MoleculeCheckSurveyOption />;
+                } else if (item.type === "surveyGuidelineReport") {
+                  return <OrganismSurveyGuidelineReport />;
+                }
 
                 return null;
               })}
@@ -627,9 +631,9 @@ if (isLoadingPage) {
                   buttonState.bmGoalInputStart === 1 && <OrganismSearchBottomBar isBlue={true} isHashTag={true}/> // 비즈니스 목적 입력 시 활성화
                 :
                 selectedExpertIndex === "10" ?
-                buttonState.default === 1 ? <OrganismSearchBottomBar isBlue={true} />
-                :
-                buttonState.surveyGoalInputStart === 1 && <OrganismSearchBottomBar isBlue={true} isHashTag={true}/> // 설문조사 목적 입력 시 활성화
+                  buttonState.surveyEnd === 1 ? <OrganismSearchBottomBar isBlue={true} /> // 설문조사 끝났을 때 활성화
+                  :
+                  buttonState.surveyGoalInputStart === 1 && <OrganismSearchBottomBar isBlue={true} isHashTag={true}/> // 설문조사 목적 입력 시 활성화
               :
                 <OrganismSearchBottomBar isBlue={true} />
             )}
