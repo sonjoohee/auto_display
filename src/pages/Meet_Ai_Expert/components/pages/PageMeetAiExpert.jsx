@@ -609,7 +609,7 @@ const PageMeetAiExpert = () => {
               <ExpertCard
                 BM
                 onClick={() => {
-                  setIsComingSoon(true);
+                  handledExpertSelect("9");
                 }}
               >
                 <strong>BM 전문가</strong>

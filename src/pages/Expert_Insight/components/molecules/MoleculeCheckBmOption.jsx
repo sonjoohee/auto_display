@@ -33,6 +33,7 @@ import {
   CASE_HASH_TAG,
   CASE_REPORT_DATA,
   BM_QUESTION_LIST,
+  BM_MODEL_SUGGESTION_BUTTON_STATE,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -66,6 +67,7 @@ const MoleculeCheckBmOption = () => {
   const [isLoggedIn] = useAtom(isLoggedInAtom);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
   const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
+  const [modelSuggestionButtonState, setModelSuggestionButtonState] = useAtom(BM_MODEL_SUGGESTION_BUTTON_STATE);
 
   const [bmQuestionList, setbmQuestionList] = useAtom(BM_QUESTION_LIST);
   const [selectedOption1, setSelectedOption1] = useState("");
@@ -154,7 +156,7 @@ const MoleculeCheckBmOption = () => {
     setbmQuestionList([selectedOption1, selectedOption2, selectedOption3, selectedOption4, selectedOption5]);
     setApproachPath(3);
     setConversationStage(3);
-    setBmOptionButtonState(1);
+    setModelSuggestionButtonState(1);
 
     const updatedConversation = [...conversation];
     updatedConversation.push(
@@ -164,11 +166,11 @@ const MoleculeCheckBmOption = () => {
       },
       {
         type: "system",
-        message: "좋습니다. 이 목적에 맞춰 설문조사 문항을 설계해드리겠습니다.",
+        message: "응답하신 내용을 분석하여 린캔버스 vs 비즈니스 모델 캔버스 매칭 분석을 진행하겠습니다.",
         expertIndex: selectedExpertIndex,
       },
       {
-        type: `surveyGuidelineReport`,
+        type: `bmModelSuggestion`,
       }
     );
     setConversation(updatedConversation);
