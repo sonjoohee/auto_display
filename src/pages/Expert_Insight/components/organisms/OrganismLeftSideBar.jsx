@@ -80,6 +80,7 @@ import {
   SURVEY_GOAL_FIXED,
   SURVEY_QUESTION_LIST,
   SURVEY_GUIDELINE_REPORT_DATA,
+  SURVEY_GUIDELINE_DETAIL_REPORT_DATA,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -88,6 +89,7 @@ import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/Molec
 import OrganismReportPopup from "./OrganismReportPopup"; // 팝업 컴포넌트 임포트
 
 const OrganismLeftSideBar = () => {
+  const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
   const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
   const [surveyGoalFixed, setSurveyGoalFixed] = useAtom(SURVEY_GOAL_FIXED);
   const [surveyQuestionList, setSurveyQuestionList] = useAtom(SURVEY_QUESTION_LIST);
@@ -659,6 +661,12 @@ useEffect(() => {
       setSurveyQuestionList(chatData.surveyQuestionList || []);
       setSurveyGuidelineReportData(chatData.surveyGuidelineReportData || {});
 
+      setSurveyGuidelineDetailReportData(chatData.surveyGuidelineDetailReportData || {});
+      setSurveyGuidelineReportData(chatData.surveyGuidelineReportData || {});
+      setSurveyGoalSuggestionList(chatData.surveyGoalSuggestionList || []);
+      setSurveyGoalFixed(chatData.surveyGoalFixed || []);
+      setSurveyQuestionList(chatData.surveyQuestionList || []);
+
       // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
       // set어프로치패스(2)
       setApproachPath(2);
@@ -911,6 +919,12 @@ useEffect(() => {
 
     setCaseReportData([]);
     setCaseHashTag([]);
+
+    setSurveyGuidelineDetailReportData({});
+    setSurveyGuidelineReportData({});
+    setSurveyGoalSuggestionList([]);
+    setSurveyGoalFixed([]);
+    setSurveyQuestionList([]);
   };
 
   const handleLogoClick = () => {
@@ -982,6 +996,12 @@ useEffect(() => {
 
     setCaseReportData([]);
     setCaseHashTag([]);
+    
+    setSurveyGuidelineDetailReportData({});
+    setSurveyGuidelineReportData({});
+    setSurveyGoalSuggestionList([]);
+    setSurveyGoalFixed([]);
+    setSurveyQuestionList([]);
   };
   return (
     <>

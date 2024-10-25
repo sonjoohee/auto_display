@@ -51,6 +51,11 @@ import {
   BM_QUESTION_LIST,
   BM_LEAN_ADS_REPORT_BUTTON_STATE,
   BM_LEAN_ADS_REPORT_DATA,
+  SURVEY_GUIDELINE_REPORT_DATA,
+  SURVEY_GUIDELINE_DETAIL_REPORT_DATA,
+  SURVEY_GOAL_SUGGESTION_LIST,
+  SURVEY_GOAL_FIXED,
+  SURVEY_QUESTION_LIST,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -65,6 +70,11 @@ import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
 
 const OrganismBmLeanAdsReport = () => {
+  const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(SURVEY_GUIDELINE_REPORT_DATA);
+  const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
+  const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
+  const [surveyGoalFixed, setSurveyGoalFixed] = useAtom(SURVEY_GOAL_FIXED);
+  const [surveyQuestionList, setSurveyQuestionList] = useAtom(SURVEY_QUESTION_LIST);
   const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
   const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
   const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
@@ -257,6 +267,12 @@ const OrganismBmLeanAdsReport = () => {
             caseHashTag : caseHashTag,
             caseReportData : caseReportData,
             bmLeanAutoReportData : bmLeanAutoReportData,
+
+            surveyGuidelineReportData : surveyGuidelineReportData,
+            surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
+            surveyGoalSuggestionList: surveyGoalSuggestionList,
+            surveyGoalFixed: surveyGoalFixed,
+            surveyQuestionList: surveyQuestionList,
           },
           isLoggedIn,
           conversationId
