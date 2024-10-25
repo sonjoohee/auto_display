@@ -567,7 +567,7 @@ const OrganismSurveyGuidelineReport = () => {
             surveyGoalSuggestionList: surveyGoalSuggestionList,
             surveyGoalFixed: surveyGoalFixed,
             surveyQuestionList: surveyQuestionList,
-            surveyGuidelineReportData : response.data.survey_guideline_report,
+            surveyGuidelineReportData : response.data.survey_guideline_report[0],
           },
           isLoggedIn,
           conversationId
@@ -940,10 +940,10 @@ const OrganismSurveyGuidelineReport = () => {
                 )}
             </SeparateSection>
 
-      <MoleculeReportController
+      {/* <MoleculeReportController
         reportIndex={10}
         sampleData={surveyGuidelineReportData}
-        />
+        /> */}
       </>
       )}
 
