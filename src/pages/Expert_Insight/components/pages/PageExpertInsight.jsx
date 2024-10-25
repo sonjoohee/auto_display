@@ -206,7 +206,6 @@ const PageExpertInsight = () => {
   //   // 접근 가능 여부를 확인하여 차단 로직 수행
   //   if (!isExpertInsightAccessible) {
   //     navigate('/MeetAiExpert'); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
-  //     console.log("메인 페이지로 리다이렉트");
   //   }
 
   //   // 페이지를 나갈 때 접근 가능 여부 초기화
