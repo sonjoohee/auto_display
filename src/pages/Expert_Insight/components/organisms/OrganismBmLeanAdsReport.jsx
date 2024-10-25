@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useAtom } from "jotai";
+import { palette } from "../../../../assets/styles/Palette";
 import axios from "axios";
-import {
-  SkeletonTitle,
-  SkeletonLine,
-} from "../../../../assets/styles/Skeleton";
+import { useAtom } from "jotai";
 import {
   EXPERT_BUTTON_STATE,
   IS_LOADING,
@@ -49,18 +46,25 @@ import {
   PRICE_PRODUCT_SEGMENTATION,
   CASE_HASH_TAG,
   CASE_REPORT_DATA,
-  BM_MODEL_SUGGESTION_BUTTON_STATE,
+  BM_LEAN_AUTO_REPORT_DATA,
+  BM_LEAN_AUTO_REPORT_BUTTON_STATE,
   BM_QUESTION_LIST,
-  BM_MODEL_SUGGESTION_REPORT_DATA,
+  BM_LEAN_ADS_REPORT_BUTTON_STATE,
+  BM_LEAN_ADS_REPORT_DATA,
 } from "../../../AtomStates";
 
+import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
+
 import {
-  saveConversationToIndexedDB,
-} from "../../../../utils/indexedDB";
+  SkeletonTitle,
+  SkeletonLine,
+  Spacing,
+} from "../../../../assets/styles/Skeleton";
 
-import { palette } from "../../../../assets/styles/Palette";
+import images from "../../../../assets/styles/Images";
+import MoleculeReportController from "../molecules/MoleculeReportController";
 
-const MoleculeBmModelSuggestion = () => {
+const OrganismBmLeanAdsReport = () => {
   const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
   const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
   const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
@@ -93,6 +97,7 @@ const MoleculeBmModelSuggestion = () => {
     setBusinessInformationTargetCustomer,
   ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [expertButtonState, setExpertButtonState] = useAtom(EXPERT_BUTTON_STATE);
+  const [targetSelectButtonState, setTargetSelectButtonState] = useAtom(TARGET_SELECT_BUTTON_STATE);
   const analysisReportData = {
     title: titleOfBusinessInfo,
     mainFeatures: mainFeaturesOfBusinessInformation,
@@ -121,14 +126,16 @@ const MoleculeBmModelSuggestion = () => {
 
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
   const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
+  const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
 
-  const [modelSuggestionButtonState, setModelSuggestionButtonState] = useAtom(BM_MODEL_SUGGESTION_BUTTON_STATE);
+  const [bmLeanAdsButtonState, setBmLeanAdsButtonState] = useAtom(BM_LEAN_ADS_REPORT_BUTTON_STATE);
+  const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
+
+  
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
-  const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
-  const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
-
-  const [isLoadingBmModelSuggestionReport, setIsLoadingBmModelSuggestionReport] = useState(false);
+  const [isLoadingIdeaPriority, setIsLoadingIdeaPriority] = useState(false);
+  const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
   const [bmQuestionList, setbmQuestionList] = useAtom(BM_QUESTION_LIST);
 
   
@@ -141,12 +148,12 @@ const MoleculeBmModelSuggestion = () => {
   };
 
   useEffect(() => {
-    const fetchModelSuggestion = async () => {
+    const fetchBmLeanAdsReport = async () => {
 
-      if(modelSuggestionButtonState) {
+      if(bmLeanAdsButtonState) {
         setIsLoading(true);
-        setIsLoadingBmModelSuggestionReport(true);
-        setModelSuggestionButtonState(0);
+        setIsLoadingIdeaPriority(true);
+        setBmLeanAdsButtonState(0);
 
         const data = {
           expert_id: "1",
@@ -161,7 +168,7 @@ const MoleculeBmModelSuggestion = () => {
         };
 
         let response = await axios.post(
-          "https://wishresearch.kr/panels/bm_stage_report",
+          "https://wishresearch.kr/panels/lean_ads_report",
           data,
           axiosConfig
         );
@@ -171,14 +178,21 @@ const MoleculeBmModelSuggestion = () => {
 
         while (retryCount < maxRetries && (
           !response || !response.data || typeof response.data !== "object" ||
-          !Array.isArray(response.data.bm_check_stage_report) ||
-          response.data.bm_check_stage_report.some(item =>
-            !item.hasOwnProperty("title") || 
-            !item.hasOwnProperty("content")
+          !response.data.hasOwnProperty("bm_lean_ads_report") ||
+          !Array.isArray(response.data.bm_lean_ads_report) ||
+          response.data.bm_lean_ads_report.some(keywordSection => 
+            !Array.isArray(keywordSection.keywords) || 
+            keywordSection.keywords.some(keyword => 
+              !keyword.hasOwnProperty("title") || 
+              !keyword.hasOwnProperty("description") || 
+              !Array.isArray(keyword.examples) || 
+              !Array.isArray(keyword.related_blocks) || 
+              !keyword.hasOwnProperty("action")
+            )
           )
         )) {
           response = await axios.post(
-            "https://wishresearch.kr/panels/bm_stage_report",
+            "https://wishresearch.kr/panels/lean_ads_report",
             data,
             axiosConfig
           );
@@ -190,20 +204,19 @@ const MoleculeBmModelSuggestion = () => {
           throw new Error("Maximum retry attempts reached. Empty response persists.");
         }
 
-        setBmModelSuggestionReportData(response.data.bm_check_stage_report);
+        setBmLeanAdsReportData(response.data.bm_lean_ads_report);
+        console.log(response.data.bm_lean_ads_report)
 
-        setIsLoading(false);
-        setIsLoadingBmModelSuggestionReport(false);
 
         const updatedConversation = [...conversation];
         updatedConversation.push(
           {
             type: "system",
             message:
-              "이제 작성하고 싶으신 캔버스를 작성할 차례입니다.\n설명을 참고하여 비즈니스에 도움이 될 수있는 캔버스를 선택해주세요.",
+              "목표로 하는 문제(Problem)를 골라주시면, 해당 문제에 특화된 린 캔버스를 작성하겠습니다.",
             expertIndex: selectedExpertIndex,
           },
-          { type: `bmSelectModelButton` }
+          // { type: `bmLeanAdsReport`}
         );
         setConversationStage(3);
         setConversation(updatedConversation);
@@ -243,54 +256,109 @@ const MoleculeBmModelSuggestion = () => {
             priceProductSegmentation : priceProductSegmentation,
             caseHashTag : caseHashTag,
             caseReportData : caseReportData,
-            bmModelSuggestionReportData : response.data.bm_check_stage_report,
+            bmLeanAutoReportData : bmLeanAutoReportData,
           },
           isLoggedIn,
           conversationId
         );
+        setIsLoading(false);
+        setIsLoadingIdeaPriority(false);
       }
     };
 
-    fetchModelSuggestion();
-  }, [modelSuggestionButtonState]);
+    fetchBmLeanAdsReport();
+  }, [bmLeanAdsButtonState]);
+
+
   return (
     <Wrap>
-    {isLoadingBmModelSuggestionReport ? (
-      <>
-        <SkeletonTitle className="title-placeholder" />
-        <SkeletonLine className="content-placeholder" />
-        <SkeletonLine className="content-placeholder" />
-        <Spacing />
-        <SkeletonTitle className="title-placeholder" />
-        <SkeletonLine className="content-placeholder" />
-        <SkeletonLine className="content-placeholder" />
-        <Spacing />
-        <SkeletonTitle className="title-placeholder" />
-        <SkeletonLine className="content-placeholder" />
-        <SkeletonLine className="content-placeholder" />
+      {isLoadingIdeaPriority ? (
+        <>
+          <SkeletonTitle className="title-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <Spacing />
+          <SkeletonTitle className="title-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <Spacing />
+          <SkeletonTitle className="title-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+        </>
+      ) : (
+        <>
+          <h1>제시된 문제(Problem) 중에서 하나를 골라주세요.</h1>
+          {bmLeanAdsReportData && bmLeanAdsReportData.length > 0 ? (
+  bmLeanAdsReportData.map((section, sectionIndex) => (
+    <SeparateSection key={sectionIndex}>
+      <h3>
+        <span className="number">{sectionIndex + 1}</span>
+        섹션 : {section.section || "섹션 없음"}
+      </h3>
+      {section.keywords && section.keywords.length > 0 ? (
+        section.keywords.map((keywordItem, keywordIndex) => (
+          <div key={keywordIndex}>
+            <h4>{keywordItem.title || "제목 없음"}</h4>
+            <p>{keywordItem.description || "설명 없음"}</p>
+
+            <div>
+              <h4>예시</h4>
+              <ul>
+                {keywordItem.examples && keywordItem.examples.length > 0 ? (
+                  keywordItem.examples.map((example, exampleIndex) => (
+                    <li key={exampleIndex}>{example}</li>
+                  ))
+                ) : (
+                  <li>예시 없음</li>
+                )}
+              </ul>
+            </div>
+
+            <div>
+              <h4>관련 블록</h4>
+              {keywordItem.related_blocks && keywordItem.related_blocks.length > 0 ? (
+                keywordItem.related_blocks.map((block, blockIndex) => (
+                  <div key={blockIndex}>
+                    <h5>{block.title || "제목 없음"}</h5>
+                    <p>{block.description || "설명 없음"}</p>
+                  </div>
+                ))
+              ) : (
+                <p>관련 블록 없음</p>
+              )}
+            </div>
+
+            <div>
+              <h4>Action</h4>
+              <p>{keywordItem.action || "액션 없음"}</p>
+            </div>
+          </div>
+        ))
+      ) : (
+        <p>키워드가 없습니다.</p>
+      )}
+    </SeparateSection>
+  ))
+) : (
+  <p>데이터가 없습니다.</p>
+)}
+
+
+
+
+      <MoleculeReportController
+        reportIndex={5}
+        sampleData={bmLeanAdsReportData}
+        />
       </>
-    ) : (
-      <>
-        <h1>린 캔버스 vs 비즈니스 모델 캔버스 매칭 분석</h1>
+      )}
 
-        {bmModelSuggestionReportData.map((suggestion, index) => (
-          <SeparateSection key={index}>
-            <h3>
-              <span className="number">{index + 1}</span>
-              {suggestion.title}
-            </h3>
-            <p>{suggestion.content}</p>
-          </SeparateSection>
-        ))}
-
-    </>
-    )}
-
-  </Wrap>
+    </Wrap>
   );
 };
 
-export default MoleculeBmModelSuggestion;
+export default OrganismBmLeanAdsReport;
 
 const Wrap = styled.div`
   max-width:986px;
@@ -360,7 +428,4 @@ const SeparateSection = styled.div`
     line-height:1.5;
     text-align:left;
   }
-`;
-const Spacing = styled.div`
-  margin-bottom: 40px;
 `;

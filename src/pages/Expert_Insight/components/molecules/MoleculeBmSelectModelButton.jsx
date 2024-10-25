@@ -47,6 +47,8 @@ import {
   BM_MODEL_SUGGESTION_BUTTON_STATE,
   BM_QUESTION_LIST,
   BM_MODEL_SUGGESTION_REPORT_DATA,
+  BM_LEAN_AUTO_REPORT_BUTTON_STATE,
+  BM_BM_AUTO_REPORT_BUTTON_STATE
 } from "../../../AtomStates";
 
 import {
@@ -120,6 +122,8 @@ const MoleculeBmSelectModelButton = () => {
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
+  const [bmLeanAutoButtonState, setBmLeanAutoButtonState] = useAtom(BM_LEAN_AUTO_REPORT_BUTTON_STATE);
+  const [bmBmAutoButtonState, setBmBmAutoButtonState] = useAtom(BM_BM_AUTO_REPORT_BUTTON_STATE);
 
 
   const handleBMClick = async () => {
@@ -137,7 +141,7 @@ const MoleculeBmSelectModelButton = () => {
         type: 'bmBmAutoReport',
       }
     );
-
+    setBmBmAutoButtonState(1);
     setConversation(updatedConversation);
     setConversationStage(3);
     setApproachPath(3);
@@ -189,7 +193,7 @@ const MoleculeBmSelectModelButton = () => {
         type: 'bmLeanAutoReport',
       }
     );
-
+    setBmLeanAutoButtonState(1);
     setConversation(updatedConversation);
     setConversationStage(3);
     setApproachPath(3);
