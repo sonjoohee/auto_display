@@ -122,7 +122,7 @@ const MoleculeCaseContinueButton = () => {
     if(type === "more") {
       updatedConversation.push(
         {
-          type: "user",
+          type: "system",
           message:
             `"${titleOfBusinessInfo}"의 어떤 사례를 찾아드릴까요?\n아래 채팅창에 원하시는 내용을 입력해주세요.`,
           expertIndex: selectedExpertIndex,
