@@ -439,7 +439,7 @@ const BoxWrap = styled.div`
   // border-radius: 10px;
   padding: ${(props) => (props.isPurpose ? "0" : "20px")};
   background: ${(props) =>
-    props.isPurpose ? palette.white : "rgba(0, 0, 0, 0.04)"}; /* 흰 배경 적용 */
+    props.isPurpose ? palette.white : palette.chatGray}; /* 흰 배경 적용 */
 
   font-size: 0.875rem;
   color: ${palette.gray800};

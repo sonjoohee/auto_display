@@ -1125,7 +1125,7 @@ const BoxWrap = styled.div`
       ? palette.white
       : props.isLast
       ? palette.white
-      : "rgba(0, 0, 0, 0.03)"};
+      : palette.chatGray};
 
   + div {
     margin-top: 12px;
