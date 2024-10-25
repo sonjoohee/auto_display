@@ -47,6 +47,11 @@ import {
   PRICE_PRODUCT_SEGMENTATION,
   CASE_REPORT_DATA,
   CASE_HASH_TAG,
+  SURVEY_GUIDELINE_DETAIL_REPORT_DATA,
+  SURVEY_GUIDELINE_REPORT_DATA,
+  SURVEY_GOAL_SUGGESTION_LIST,
+  SURVEY_GOAL_FIXED,
+  SURVEY_QUESTION_LIST,
 } from "../../../AtomStates";
 
 import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
@@ -112,6 +117,12 @@ import OrganismBmLeanAdsReport from "../organisms/OrganismBmLeanAdsReport";
 
 
 const PageExpertInsight = () => {
+  const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
+  const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(SURVEY_GUIDELINE_REPORT_DATA);
+  const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
+  const [surveyGoalFixed, setSurveyGoalFixed] = useAtom(SURVEY_GOAL_FIXED);
+  const [surveyQuestionList, setSurveyQuestionList] = useAtom(SURVEY_QUESTION_LIST);
+
   const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
   const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
   const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
@@ -275,6 +286,12 @@ const PageExpertInsight = () => {
 
             setCaseReportData(savedConversation.caseReportData || []);
             setCaseHashTag(savedConversation.caseHashTag || []);
+
+            setSurveyGuidelineDetailReportData(savedConversation.surveyGuidelineDetailReportData || {});
+            setSurveyGuidelineReportData(savedConversation.surveyGuidelineReportData || {});
+            setSurveyGoalSuggestionList(savedConversation.surveyGoalSuggestionList || []);
+            setSurveyGoalFixed(savedConversation.surveyGoalFixed || []);
+            setSurveyQuestionList(savedConversation.surveyQuestionList || []);
           }
           
           setIsLoadingPage(false); // 로딩 완료
@@ -614,7 +631,7 @@ if (isLoadingPage) {
               selectedExpertIndex === "10" ?
                 <>
                 {
-                  buttonState.default === 1 &&
+                  buttonState.surveyEnd === 1 &&
                     <OrganismBizExpertSelect />
                 }
                 </>
