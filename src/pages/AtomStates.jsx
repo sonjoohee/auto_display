@@ -252,6 +252,7 @@ export const BM_USER_GOAL_INPUT = atom("");
 export const BM_QUESTION_LIST = atom([]);
 
 export const BM_MODEL_SUGGESTION_REPORT_DATA = atom([]);
+export const BM_MODEL_SUGGESTION_BUTTON_STATE = atom(0);
 
 export const BM_BM_AUTO_REPORT_DATA = atom([]);
 export const BM_LEAN_AUTO_REPORT_DATA = atom([]);
