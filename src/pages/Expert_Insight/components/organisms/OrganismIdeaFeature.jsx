@@ -565,7 +565,7 @@ const Wrap = styled.div`
   padding: 20px;
   margin:24px 0 0 50px;
   border-radius:15px;
-  border:1px solid ${palette.lineGray};
+  border:1px solid ${palette.outlineGray};
 
   h1 {
     font-size:1rem;
