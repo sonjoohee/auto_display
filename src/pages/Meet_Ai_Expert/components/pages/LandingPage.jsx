@@ -35,10 +35,15 @@ const LandingPage = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  const handleButtonExpert = () => {
+    navigate('/MeetAiExpert');
+  };
+
   return (
     <LandingPageWrapper>
       <Header>
         <Logo src={images.SymbolLogo} alt="Logo" onClick={handleLogoClick} style={{ cursor: 'pointer' }} />
+        <button onClick={handleButtonExpert}>서비스 바로가기</button>
       </Header>
 
       <HeroSection>
@@ -284,10 +289,23 @@ const LandingPageWrapper = styled.div`
 const Header = styled.header`
   position:fixed;
   top:0;
+  width:100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding:36px 65px;
+  padding:36px 40px 36px 65px;
+
+  > button {
+    font-family: 'Poppins', 'Pretendard';
+    font-size:1rem;
+    font-weight:400;
+    letter-spacing:-0.3px;
+    padding:8px 12px;
+    border-radius:10px;
+    border:0;
+    background:${palette.gray100};
+    box-shadow:1px 1px 0 rgba(0,0,0,.1);
+  }
 `;
 
 const Logo = styled.img`

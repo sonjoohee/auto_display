@@ -97,6 +97,20 @@ import MoleculeSurveyGoalSuggestion from "../molecules/MoleculeSurveyGoalSuggest
 import MoleculeCheckSurveyOption from "../molecules/MoleculeCheckSurveyOption";
 import OrganismSurveyGuidelineReport from "../organisms/OrganismSurveyGuidelineReport";
 
+import MoleculeBmStartButton from "../molecules/MoleculeBmStartButton";
+import MoleculeCheckBmOption from "../molecules/MoleculeCheckBmOption";
+import MoleculeBmModelSuggestion from "../molecules/MoleculeBmModelSuggestion";
+import MoleculeBmSelectModelButton from "../molecules/MoleculeBmSelectModelButton";
+import MoleculeBmBmAdsContinueButton from "../molecules/MoleculeBmBmAdsContinueButton";
+import MoleculeBmLeanAdsContinueButton from "../molecules/MoleculeBmLeanAdsContinueButton";
+
+
+
+import OrganismBmLeanAutoReport from "../organisms/OrganismBmLeanAutoReport";
+import OrganismBmLeanAdsReport from "../organisms/OrganismBmLeanAdsReport";
+
+
+
 const PageExpertInsight = () => {
   const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
   const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
@@ -480,22 +494,27 @@ if (isLoadingPage) {
                 }
 
                 /* BM 전문가 */
-                // else if (item.type === "bmStartButton") {
-                //   return <MoleculeBmStartButton />;
-                // } else if (item.type === "bmOption") {
-                //   return <MoleculeCheckBmOption />;
-                // } else if (item.type === "bmModelSuggestion") {
-                //   return <MoleculeBmModelSuggestion />;
-                // } else if (item.type === "bmSelectModelButton") {
-                //   return <MoleculeBmSelectModelButton />;
+                else if (item.type === "bmStartButton") {
+                  return <MoleculeBmStartButton />;
+                } else if (item.type === "bmOption") {
+                  return <MoleculeCheckBmOption />;
+                } else if (item.type === "bmModelSuggestion") {
+                  return <MoleculeBmModelSuggestion />;
+                } else if (item.type === "bmSelectModelButton") {
+                  return <MoleculeBmSelectModelButton />;
 
-                // } else if (item.type === "bmLeanAutoReport") {
-                //   return <OrganismBmLeanAutoReport />;
+                } else if (item.type === "bmBmAdsContinueButton") {
+                  return <MoleculeBmBmAdsContinueButton />;
+                } else if (item.type === "bmLeanAdsContinueButton") {
+                  return <MoleculeBmLeanAdsContinueButton />;
                 // } else if (item.type === "bmBmAutoReport") {
                 //   return <OrganismBmBmAutoReport />;
 
-                // } else if (item.type === "bmLeanAdsReport") {
-                //   return <OrganismBmLeanAdsReport />;
+               } else if (item.type === "bmLeanAutoReport") {
+                return <OrganismBmLeanAutoReport />;
+
+                } else if (item.type === "bmLeanAdsReport") {
+                  return <OrganismBmLeanAdsReport />;}
                 // } else if (item.type === "bmBmAdsReport") {
                 //   return <OrganismBmBmAdsReport />;
 

@@ -450,6 +450,10 @@ const PageMeetAiExpert = () => {
     }
   };
 
+  const handleButtonLending = () => {
+    navigate('/Lending');
+  };
+
   return (
     <>
       <ContentsWrap isMobile={isMobile}>
@@ -613,7 +617,7 @@ const PageMeetAiExpert = () => {
               <ExpertCard
                 BM
                 onClick={() => {
-                  setIsComingSoon(true);
+                  handledExpertSelect("9");
                 }}
               >
                 <strong>BM 전문가</strong>
@@ -694,6 +698,8 @@ const PageMeetAiExpert = () => {
             <MoleculeAccountPopup onClose={closeAccountPopup} />
           )}
         </MainContent>
+
+        <button onClick={handleButtonLending}>서비스 소개</button>
       </ContentsWrap>
 
       {isPopupRegex && (
@@ -870,6 +876,21 @@ const ContentsWrap = styled.div`
   flex-direction: ${(props) => (props.isMobile ? "column" : "row")};
   gap: ${(props) => (props.isMobile ? "20px" : "40px")};
   padding: ${(props) => (props.isMobile ? "20px" : "0")};
+
+  > button {
+    position:absolute;
+    top:30px;
+    right:0;
+    font-family: 'Poppins', 'Pretendard';
+    font-size:1rem;
+    font-weight:400;
+    letter-spacing:-0.3px;
+    padding:8px 12px;
+    border-radius:10px;
+    border:0;
+    background:${palette.gray100};
+    box-shadow:1px 1px 0 rgba(0,0,0,.1);
+  }
 `;
 
 const Title = styled.h1`
