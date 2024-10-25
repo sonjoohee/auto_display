@@ -2183,8 +2183,8 @@ const CaseReportSection = ({ report }) => {
   return (
     <Wrap2>
           <h1>성공적인 기술 혁신 사례 조사 보고서</h1>
-          <p>{report.content[0].text}</p>
-          {report.content[1].content.map((report, index) => (
+          <p>{report.content?.[0]?.text}</p>
+          {report.content?.[1]?.content?.map((report, index) => (
             <SeparateSection2 key={index}>
               <h3>
                 <span className="number">{index + 1}</span>
@@ -2193,7 +2193,7 @@ const CaseReportSection = ({ report }) => {
               <p>{report.text}</p>
               <div>
               <ol className="list-decimal">
-                {report.subcontent.map((subItem, subIndex) => (
+                {report.subcontent?.map((subItem, subIndex) => (
                   <li key={subIndex}>
                     {subItem.subTitle} : {subItem.text}
                   </li>
@@ -2203,7 +2203,7 @@ const CaseReportSection = ({ report }) => {
             </SeparateSection2>
           ))
         }
-        <p className="conclusion">{report.content[2].text}</p>
+        <p className="conclusion">{report.content?.[2]?.text}</p>
 
         <MoleculeReportController
           reportIndex={8}
