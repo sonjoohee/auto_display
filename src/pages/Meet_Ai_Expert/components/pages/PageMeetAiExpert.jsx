@@ -631,7 +631,7 @@ const PageMeetAiExpert = () => {
                   <p>coming soon</p>
                 </div>
               </ExpertCard>
-
+              {/* 
               <ExpertCard Empty>
                 <div>
                   <span>
@@ -640,6 +640,7 @@ const PageMeetAiExpert = () => {
                   <p></p>
                 </div>
               </ExpertCard>
+              */}
 
             </ExpertSelectBox>
           </ExpertSelectWrap>
