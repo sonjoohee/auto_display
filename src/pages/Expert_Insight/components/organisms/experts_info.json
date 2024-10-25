@@ -240,7 +240,7 @@
       "title": "전문분석 분야",
       "fields": [
         {
-          "images": "/images/icon/ProfessionalIdea.svg",
+          "images": "/images/icon/MarketingKPI.svg",
           "category": "마케팅 KPI 설계 및 성과 분석",
           "details": [
             "맞춤형 KPI 설정",
@@ -249,7 +249,7 @@
           ]
         },
         {
-          "images": "/images/icon/ProfessionalIdea2.svg",
+          "images": "/images/icon/ProfessionalDigital.svg",
           "category": "디지털 마케팅 전략",
           "details": [
             "AARRR 모델 기반 최적화 전략",
@@ -258,7 +258,7 @@
           ]
         },
         {
-          "images": "/images/icon/ProfessionalUX2.svg",
+          "images": "/images/icon/AttractingCustomer.svg",
           "category": "고객 유지 및 활성화 전략",
           "details": [
             "데이터 기반 맞춤형 전략 개발",
@@ -284,7 +284,7 @@
       "title": "전문분석 분야",
       "fields": [
         {
-          "images": "/images/icon/ProfessionalIdea.svg",
+          "images": "/images/icon/PriceStrategy.svg",
           "category": "가격 전략 설계 및 평가",
           "details": [
             "시장 데이터 기반 최적의 설계",
@@ -293,7 +293,7 @@
           ]
         },
         {
-          "images": "/images/icon/ProfessionalIdea2.svg",
+          "images": "/images/icon/PriceCrawling.svg",
           "category": "가격 크롤링 및 데이터 분석",
           "details": [
             "실시간 시장 가격 동향 분석",
@@ -302,7 +302,7 @@
           ]
         },
         {
-          "images": "/images/icon/ProfessionalUX2.svg",
+          "images": "/images/icon/PriceOptimization.svg",
           "category": "가격 수용성 예측 및 최적화",
           "details": [
             "가격 민감도 분석 및 수용성 예측",
@@ -328,7 +328,7 @@
       "title": "전문분석 분야",
       "fields": [
         {
-          "images": "/images/icon/ProfessionalIdea.svg",
+          "images": "/images/icon/CaseAnalysis.svg",
           "category": "사례 분석 및 전략 제시",
           "details": [
             "실무적 인사이트 구체적 제시",
@@ -337,7 +337,7 @@
           ]
         },
         {
-          "images": "/images/icon/ProfessionalIdea2.svg",
+          "images": "/images/icon/ModelInnovation.svg",
           "category": "모델 혁신 및 실행 방안",
           "details": [
             "실패 요인 방지 및 개선 전략",
@@ -346,7 +346,7 @@
           ]
         },
         {
-          "images": "/images/icon/ProfessionalUX2.svg",
+          "images": "/images/icon/BenchmarkingTrend.svg",
           "category": "벤치마킹 및 트렌드 분석",
           "details": [
             "글로벌 트렌드 연구 및 적용",
@@ -372,7 +372,7 @@
       "title": "전문분석 분야",
       "fields": [
         {
-          "images": "/images/icon/ProfessionalIdea.svg",
+          "images": "/images/icon/BusinessModel.svg",
           "category": "비즈니스 모델 전략 수립",
           "details": [
             "모델 진단과 개선 전략",
@@ -381,7 +381,7 @@
           ]
         },
         {
-          "images": "/images/icon/ProfessionalIdea2.svg",
+          "images": "/images/icon/StartupStrategy.svg",
           "category": "창업 및 스타트업 전략 수립",
           "details": [
             "성장 로드맵 설계",
@@ -390,7 +390,7 @@
           ]
         },
         {
-          "images": "/images/icon/ProfessionalUX2.svg",
+          "images": "/images/icon/CustomerSegmentation.svg",
           "category": "고객 세분화 및 가치 최적화",
           "details": [
             "정밀 고객 세분화",
@@ -416,7 +416,7 @@
       "title": "전문분석 분야",
       "fields": [
         {
-          "images": "/images/icon/ProfessionalIdea.svg",
+          "images": "/images/icon/InvestigationDesign.svg",
           "category": "조사 설계 및 방법론 개발",
           "details": [
             "최적 조사 방법 설계",
@@ -425,7 +425,7 @@
           ]
         },
         {
-          "images": "/images/icon/ProfessionalIdea2.svg",
+          "images": "/images/icon/DataAnalysis.svg",
           "category": "데이터 기반 분석 및 전략 도출",
           "details": [
             "소비자 행동 분석",
@@ -434,7 +434,7 @@
           ]
         },
         {
-          "images": "/images/icon/ProfessionalUX2.svg",
+          "images": "/images/icon/Communication.svg",
           "category": "문제 해결 및 커뮤니케이션",
           "details": [
             "조사 문제 해결 방안",
