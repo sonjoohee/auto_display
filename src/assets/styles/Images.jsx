@@ -126,6 +126,24 @@ import IconExpert8 from "../images/iconExpert8.png"
 import IconExpert9 from "../images/iconExpert9.png"
 import IconExpert10 from "../images/iconExpert10.png"
 
+import ImgCanvasBusiness from "../images/imgCanvasBusiness.svg"
+import ImgCanvasLean from "../images/imgCanvasLean.svg"
+
+import IconCanvas01 from "../images/iconCanvas01.svg"
+import IconCanvas02 from "../images/iconCanvas02.svg"
+import IconCanvas03 from "../images/iconCanvas03.svg"
+import IconCanvas04 from "../images/iconCanvas04.svg"
+import IconCanvas05 from "../images/iconCanvas05.svg"
+import IconCanvas06 from "../images/iconCanvas06.svg"
+import IconCanvas07 from "../images/iconCanvas07.svg"
+import IconCanvas08 from "../images/iconCanvas08.svg"
+import IconCanvas09 from "../images/iconCanvas09.svg"
+import IconCanvas10 from "../images/iconCanvas10.svg"
+import IconCanvas11 from "../images/iconCanvas11.svg"
+import IconCanvas12 from "../images/iconCanvas12.svg"
+import IconCanvas13 from "../images/iconCanvas13.svg"
+
+
 const images = {
   Logo,
   SymbolLogo,
@@ -253,6 +271,23 @@ const images = {
   IconExpert8,
   IconExpert9,
   IconExpert10,
+
+  ImgCanvasBusiness,
+  ImgCanvasLean,
+
+  IconCanvas01,
+  IconCanvas02,
+  IconCanvas03,
+  IconCanvas04,
+  IconCanvas05,
+  IconCanvas06,
+  IconCanvas07,
+  IconCanvas08,
+  IconCanvas09,
+  IconCanvas10,
+  IconCanvas11,
+  IconCanvas12,
+  IconCanvas13,
 }
 
 export default images;
