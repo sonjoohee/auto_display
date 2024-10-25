@@ -138,7 +138,9 @@ const OrganismBmLeanAdsReport = () => {
   const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
   const [bmQuestionList, setbmQuestionList] = useAtom(BM_QUESTION_LIST);
 
-  
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
   const axiosConfig = {
     timeout: 100000, // 100초
     headers: {
@@ -269,7 +271,22 @@ const OrganismBmLeanAdsReport = () => {
     fetchBmLeanAdsReport();
   }, [bmLeanAdsButtonState]);
 
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지를 상태로 관리
+  const examplesPerPage = 5; // 페이지당 표시할 예시 개수
 
+  // 전체 예시를 하나의 배열로 모으기
+  const allExamples = bmLeanAdsReportData.reduce((acc, section) => {
+    section.keywords.forEach((keywordItem) => {
+      if (keywordItem.examples) acc.push(...keywordItem.examples);
+    });
+    return acc;
+  }, []);
+  
+  // 현재 페이지에 표시할 예시 목록 계산
+  const paginatedExamples = (examples) => {
+    const startIndex = (currentPage - 1) * examplesPerPage;
+    return examples.slice(startIndex, startIndex + examplesPerPage);
+  };
   return (
     <Wrap>
       {isLoadingIdeaPriority ? (
@@ -289,75 +306,40 @@ const OrganismBmLeanAdsReport = () => {
       ) : (
         <>
           <h1>제시된 문제(Problem) 중에서 하나를 골라주세요.</h1>
-          {bmLeanAdsReportData && bmLeanAdsReportData.length > 0 ? (
-  bmLeanAdsReportData.map((section, sectionIndex) => (
-    <SeparateSection key={sectionIndex}>
-      <h3>
-        <span className="number">{sectionIndex + 1}</span>
-        섹션 : {section.section || "섹션 없음"}
-      </h3>
-      {section.keywords && section.keywords.length > 0 ? (
-        section.keywords.map((keywordItem, keywordIndex) => (
-          <div key={keywordIndex}>
-            <h4>{keywordItem.title || "제목 없음"}</h4>
-            <p>{keywordItem.description || "설명 없음"}</p>
-
-            <div>
-              <h4>예시</h4>
-              <ul>
-                {keywordItem.examples && keywordItem.examples.length > 0 ? (
-                  keywordItem.examples.map((example, exampleIndex) => (
-                    <li key={exampleIndex}>{example}</li>
-                  ))
-                ) : (
-                  <li>예시 없음</li>
-                )}
-              </ul>
-            </div>
-
-            <div>
-              <h4>관련 블록</h4>
-              {keywordItem.related_blocks && keywordItem.related_blocks.length > 0 ? (
-                keywordItem.related_blocks.map((block, blockIndex) => (
-                  <div key={blockIndex}>
-                    <h5>{block.title || "제목 없음"}</h5>
-                    <p>{block.description || "설명 없음"}</p>
-                  </div>
+          <OptionContainer>
+            <ul>
+              {allExamples.length > 0 ? (
+                paginatedExamples(allExamples).map((example, exampleIndex) => (
+                  <Option key={exampleIndex}>{example}</Option>
                 ))
               ) : (
-                <p>관련 블록 없음</p>
+                <li>예시 없음</li>
               )}
-            </div>
+            </ul>
+          </OptionContainer>
 
-            <div>
-              <h4>Action</h4>
-              <p>{keywordItem.action || "액션 없음"}</p>
-            </div>
-          </div>
-        ))
-      ) : (
-        <p>키워드가 없습니다.</p>
+          {/* 총 1개의 페이지네이션 */}
+          {allExamples.length > examplesPerPage && (
+            <Pagination>
+              {Array.from({
+                length: Math.ceil(allExamples.length / examplesPerPage),
+              }).map((_, pageIndex) => (
+                <li key={pageIndex}>
+                  <a
+                    onClick={() => handlePageChange(pageIndex + 1)}
+                    className={currentPage === pageIndex + 1 ? 'active' : ''}
+                  >
+                    {pageIndex + 1}
+                  </a>
+                </li>
+              ))}
+            </Pagination>
+          )}
+        </>
       )}
-    </SeparateSection>
-  ))
-) : (
-  <p>데이터가 없습니다.</p>
-)}
-
-
-
-
-      <MoleculeReportController
-        reportIndex={5}
-        sampleData={bmLeanAdsReportData}
-        />
-      </>
-      )}
-
     </Wrap>
   );
 };
-
 export default OrganismBmLeanAdsReport;
 
 const Wrap = styled.div`
@@ -378,54 +360,87 @@ const Wrap = styled.div`
   }
 `;
 
-const SeparateSection = styled.div`
-  position: relative;
+const Question = styled.div`
+  font-size: 0.88rem;
+  font-weight:700;
+  text-align:left;
+  margin-bottom: 20px;
+`;
+
+const OptionContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  gap:12px;
-  margin-top: 12px;
-  padding: 20px;
-  border-radius: 10px;
-  background: ${palette.chatGray};
+  flex-wrap: wrap;
+  flex-direction:column;
+  justify-content:space-between;
+  gap: 8px;
+  margin-bottom:18px;
+`;
 
-  h3 {
-    display:flex;
-    align-items:center;
-    gap:12px;
-    font-size:1rem;
-    font-weight:700;
+const Option = styled.div`
+  position:relative;
+  display:flex;
+  gap:8px;
+  align-items:center;
+  // flex: 1 1 40%;
+  font-size:0.88rem;
+  color: ${palette.gray800};
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: ${palette.white};
+  border: 1px solid ${palette.lineGray};
+  transition:all .5s;
 
-    span {
-      width: 15px;
-      height: 15px;
-      font-size: 0.63rem;
-      color: ${palette.chatBlue};
-      line-height: 15px;
-      text-align: center;
-      border: 1px solid ${palette.chatBlue};
+  &:before {
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    border: 1px solid ${palette.lineGray};
+    background-color: ${palette.white};
+    transition:all .5s;
+    content:'';
+  }
+
+  &:after {
+    position:absolute;
+    left:12px;
+    top:8px;
+    width:20px;
+    height:20px;
+    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='8' viewBox='0 0 10 8' fill='none'%3E%3Cpath d='M9 0.914062L3.4 6.91406L1 4.51406' stroke='white' stroke-width='1.33333' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center no-repeat;
+    content:'';
+  }
+
+  &:hover {
+    border-color: none;
+  }
+`;
+
+const Pagination = styled.ul`
+  display:flex;
+  align-items:center;
+
+  li + li:before {
+    display:inline-block;
+    width:1px;
+    height:8px;
+    background:${palette.gray300};
+    content:'';
+  }
+
+  a {
+    font-size:0.88rem;
+    color:${palette.gray300};
+    padding:0 10px;
+    transition:all .5s;
+
+    &:hover {
+      color:${palette.gray700};
     }
-  }
 
-  p {
-    font-size:0.88rem;
-    font-weight:300;
-    color:${palette.gray700};
-    text-align:left;
-  }
-
-  div {
-    padding:16px;
-    border-radius:10px;
-    background:${palette.white};
-  }
-
-  .list-decimal li {
-    list-style-type:decimal;
-    list-style-position:inside;
-    font-size:0.88rem;
-    font-weight:300;
-    color:${palette.gray800};
-    line-height:1.5;
-    text-align:left;
+    &.active {
+      font-weight:500;
+      color:${palette.chatBlue};
+    }
   }
 `;
