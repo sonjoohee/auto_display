@@ -41,6 +41,11 @@ import {
   PRICE_PRODUCT_SEGMENTATION,
   CASE_HASH_TAG,
   CASE_REPORT_DATA,
+  SURVEY_GUIDELINE_REPORT_DATA,
+  SURVEY_GUIDELINE_DETAIL_REPORT_DATA,
+  SURVEY_GOAL_SUGGESTION_LIST,
+  SURVEY_GOAL_FIXED,
+  SURVEY_QUESTION_LIST,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import MoleculeReportController from "../molecules/MoleculeReportController";
@@ -57,6 +62,11 @@ import {
 const OrganismAdditionalReport = ({
   additionalReportCount
 }) => { 
+  const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(SURVEY_GUIDELINE_REPORT_DATA);
+  const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
+  const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
+  const [surveyGoalFixed, setSurveyGoalFixed] = useAtom(SURVEY_GOAL_FIXED);
+  const [surveyQuestionList, setSurveyQuestionList] = useAtom(SURVEY_QUESTION_LIST);
   const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
   const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
   const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
@@ -263,6 +273,12 @@ const OrganismAdditionalReport = ({
               priceProductSegmentation : priceProductSegmentation,
               caseHashTag : caseHashTag,
               caseReportData : caseReportData,
+
+              surveyGuidelineReportData : surveyGuidelineReportData,
+              surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
+              surveyGoalSuggestionList: surveyGoalSuggestionList,
+              surveyGoalFixed: surveyGoalFixed,
+              surveyQuestionList: surveyQuestionList,
             },
             isLoggedIn,
             conversationId

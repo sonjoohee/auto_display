@@ -41,6 +41,11 @@ import {
   CASE_REPORT_DATA,
   IS_LOADING_CASE_HASHTAG,
   BM_BM_ADS_REPORT_BUTTON_STATE,
+  SURVEY_GUIDELINE_REPORT_DATA,
+  SURVEY_GUIDELINE_DETAIL_REPORT_DATA,
+  SURVEY_GOAL_SUGGESTION_LIST,
+  SURVEY_GOAL_FIXED,
+  SURVEY_QUESTION_LIST,
 } from "../../../AtomStates";
 
 import {
@@ -52,6 +57,11 @@ import axios from "axios";
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeBmBmAdsContinueButton = () => {
+  const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(SURVEY_GUIDELINE_REPORT_DATA);
+  const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
+  const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
+  const [surveyGoalFixed, setSurveyGoalFixed] = useAtom(SURVEY_GOAL_FIXED);
+  const [surveyQuestionList, setSurveyQuestionList] = useAtom(SURVEY_QUESTION_LIST);
   const [priceProductSegmentation, setPriceProductSegmentation] = useAtom(PRICE_PRODUCT_SEGMENTATION);
   const [priceSelectedProductSegmentation, setPriceSelectedProductSegmentation] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
   const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
@@ -159,6 +169,12 @@ const MoleculeBmBmAdsContinueButton = () => {
           priceProductSegmentation : priceProductSegmentation,
           caseHashTag : caseHashTag,
           caseReportData : caseReportData,
+
+          surveyGuidelineReportData : surveyGuidelineReportData,
+          surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
+          surveyGoalSuggestionList: surveyGoalSuggestionList,
+          surveyGoalFixed: surveyGoalFixed,
+          surveyQuestionList: surveyQuestionList,
         },
         isLoggedIn,
         conversationId
@@ -211,6 +227,12 @@ const MoleculeBmBmAdsContinueButton = () => {
           priceProductSegmentation : priceProductSegmentation,
           caseHashTag : caseHashTag,
           caseReportData : caseReportData,
+
+          surveyGuidelineReportData : surveyGuidelineReportData,
+          surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
+          surveyGoalSuggestionList: surveyGoalSuggestionList,
+          surveyGoalFixed: surveyGoalFixed,
+          surveyQuestionList: surveyQuestionList,
         },
         isLoggedIn,
         conversationId

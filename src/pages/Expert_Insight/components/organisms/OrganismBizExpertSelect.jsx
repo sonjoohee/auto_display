@@ -46,6 +46,11 @@ import {
   PRICE_PRODUCT_SEGMENTATION,
   CASE_HASH_TAG,
   CASE_REPORT_DATA,
+  SURVEY_GUIDELINE_REPORT_DATA,
+  SURVEY_GUIDELINE_DETAIL_REPORT_DATA,
+  SURVEY_GOAL_SUGGESTION_LIST,
+  SURVEY_GOAL_FIXED,
+  SURVEY_QUESTION_LIST,
 } from "../../../AtomStates";
 
 import {
@@ -53,6 +58,11 @@ import {
 } from "../../../../utils/indexedDB";
 
 const OrganismBizExpertSelect = () => {
+  const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(SURVEY_GUIDELINE_REPORT_DATA);
+  const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
+  const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
+  const [surveyGoalFixed, setSurveyGoalFixed] = useAtom(SURVEY_GOAL_FIXED);
+  const [surveyQuestionList, setSurveyQuestionList] = useAtom(SURVEY_QUESTION_LIST);
   const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
   const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
   const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
@@ -269,6 +279,36 @@ const OrganismBizExpertSelect = () => {
           },
           { type: `caseStartButton` }
         );
+      } else if (index === "9") {
+        updatedConversation.push(
+          {
+            type: "user",
+            message:
+              "비즈니스 모델을 진단하겠습니다. 🙌🏻",
+          },
+          {
+            type: "system",
+            message:
+              "안녕하세요! 저는 Business Model 수립 전문가 김소윤입니다.\n사업 아이템의 비즈니스 모델 분석과 비즈니스 모델의 각 구성 요소에 따른 최적의 전략을 제시해 드립니다.\n각 구성요소별로 어떤 상호작용과 비즈니스 모델의 변화를 쉽게 확인 하실 수 있어요.\n먼저 분석이 필요한 제품이나 서비스에 대해서 알려주세요 📝",
+            expertIndex: index,
+          },
+          { type: `bmStartButton` }
+        );
+      } else if (index === "10") {
+        updatedConversation.push(
+          {
+            type: "user",
+            message:
+              "설문조사 설계를 진행하겠습니다 🙌🏻",
+          },
+          {
+            type: "system",
+            message:
+              "안녕하세요! 저는 조사 설계 전문가 김현우입니다.\n사업 아이템의 비즈니스 모델 분석과 비즈니스 모델의 각 구성 요소에 따른 최적의 전략을 제시해 드립니다.\n각 구성요소별로 어떤 상호작용과 비즈니스 모델의 변화를 쉽게 확인 하실 수 있어요.\n먼저 분석이 필요한 제품이나 서비스에 대해서 알려주세요 📝",
+            expertIndex: index,
+          },
+          { type: `surveyStartButton` }
+        );
       }
 
       await saveConversationToIndexedDB(
@@ -306,6 +346,12 @@ const OrganismBizExpertSelect = () => {
           priceProductSegmentation : priceProductSegmentation,
           caseHashTag : caseHashTag,
           caseReportData : caseReportData,
+
+          surveyGuidelineReportData : surveyGuidelineReportData,
+          surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
+          surveyGoalSuggestionList: surveyGoalSuggestionList,
+          surveyGoalFixed: surveyGoalFixed,
+          surveyQuestionList: surveyQuestionList,
         },
         isLoggedIn,
         conversationId
@@ -414,16 +460,16 @@ const OrganismBizExpertSelect = () => {
                   시작하기
                 </button>
               </div>
-            )}
-            {(selectedExpertList.includes("10") || KpiQuestionList.length !== 0) ? null : (
+            )} */}
+            {(selectedExpertList.includes("10") || surveyGoalSuggestionList.length !== 0) ? null : (
               <div>
                 <img src={images.IconExpert10} alt="" />
-                <p>그로스 해커에게 KPI 전략 받기</p>
+                <p>설문조사 전문가에게 설계 받기</p>
                 <button type="button" onClick={() => handledExpertSelect("10")}>
                   시작하기
                 </button>
               </div>
-            )} */}
+            )}
           </SelectOptions>
         </BizExpertSelectContainer>
       )}
