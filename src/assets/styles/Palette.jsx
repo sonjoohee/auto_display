@@ -9,6 +9,7 @@ export const palette = {
   lineGray: "#ddd",
   // outlineGray: "#E6E6E6",
   outlineGray: "#E0E4EB",
+  buttonLineGray: "#B3B3B3",
   lightGray: "#aaa",
   gray: "#7a7a7a",
   darkGray: "#3D3D3D",

@@ -697,7 +697,8 @@ const MainContent = styled.div`
   width: calc(100% - 40px);
   // padding-bottom: 150px;
   // margin: 0 auto;
-  margin:0 40px;
+  margin:0 auto;
+  padding:0 40px;
   // justify-content:center;
 
   > div {

@@ -2075,6 +2075,7 @@ const SeparateSection2 = styled.div`
     font-size:0.88rem;
     font-weight:300;
     color:${palette.gray700};
+    line-height:1.4;
     text-align:left;
   }
 
