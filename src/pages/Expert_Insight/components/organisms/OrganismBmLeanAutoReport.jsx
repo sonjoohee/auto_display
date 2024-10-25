@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import axios from "axios";
 import { useAtom } from "jotai";
@@ -265,7 +265,7 @@ const OrganismBmLeanAutoReport = () => {
   }, [bmLeanAutoButtonState]);
 
   return (
-    <Wrap>
+    <BoxWrap>
       {isLoadingIdeaPriority ? (
         <>
           <SkeletonTitle className="title-placeholder" />
@@ -283,109 +283,360 @@ const OrganismBmLeanAutoReport = () => {
       ) : (
         <>
           <h1>린 캔버스 보고서</h1>
-
-          {bmLeanAutoReportData?.map((section, index) => (
-            <SeparateSection key={index}>
-              <h3>
-                <span className="number">{index + 1}</span>
-                섹션: {section?.section}
-              </h3>
-              {section?.content?.map((contentItem, contentIndex) => (
-                <div key={contentIndex}>
-                  <h4>{contentItem?.title}</h4>
-                  <p>{contentItem?.description}</p>
-                  <div>
-                    <ol className="list-decimal">
+          <p>인테리어 공유 커머스의 비즈니스 모델 캔버스 - 기본형</p>
+  
+          <ModelCanvasWrap>
+          <CanvasSection>
+            {/* 1번째 항목 */}
+            <CanvasList>
+              <section>
+                <strong>
+                  {bmLeanAutoReportData[0]?.section}
+                  <span>
+                    <img src={images.IconCanvas01} alt="" />
+                  </span>
+                </strong>
+                {bmLeanAutoReportData[0]?.content?.map((contentItem, contentIndex) => (
+                  <div key={contentIndex}>
+                    <p>{contentItem?.description}</p>
+                    <ul>
                       {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
                         <li key={keywordIndex}>{keywordItem}</li>
                       ))}
-                    </ol>
+                    </ul>
                   </div>
+                ))}
+              </section>
+            </CanvasList>
+
+            {/* 6번째와 7번째 항목을 묶은 CanvasList Num2 */}
+            <CanvasList Num2>
+              {bmLeanAutoReportData?.slice(5, 7).map((section, index) => (
+                <section key={index + 5}>
+                  <strong>
+                    {section?.section}
+                    <span>
+                      <img src={images[`IconCanvas0${5 + index + 1}`]} alt="" />
+                    </span>
+                  </strong>
+                  {section?.content?.map((contentItem, contentIndex) => (
+                    <div key={contentIndex}>
+                      <p>{contentItem?.description}</p>
+                      <ul>
+                        {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
+                          <li key={keywordIndex}>{keywordItem}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </section>
+              ))}
+            </CanvasList>
+
+            {/* 2번째 항목 */}
+            <CanvasList>
+              <section>
+                <strong>
+                  {bmLeanAutoReportData[1]?.section}
+                  <span>
+                    <img src={images.IconCanvas02} alt="" />
+                  </span>
+                </strong>
+                {bmLeanAutoReportData[1]?.content?.map((contentItem, contentIndex) => (
+                  <div key={contentIndex}>
+                    <p>{contentItem?.description}</p>
+                    <ul>
+                      {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
+                        <li key={keywordIndex}>{keywordItem}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </section>
+            </CanvasList>
+
+            {/* 3번째와 4번째 항목을 묶은 CanvasList Num2 */}
+            <CanvasList Num2>
+              {bmLeanAutoReportData?.slice(2, 4).map((section, index) => (
+                <section key={index + 2}>
+                  <strong>
+                    {section?.section}
+                    <span>
+                      <img src={images[`IconCanvas0${2 + index + 1}`]} alt="" />
+                    </span>
+                  </strong>
+                  {section?.content?.map((contentItem, contentIndex) => (
+                    <div key={contentIndex}>
+                      <p>{contentItem?.description}</p>
+                      <ul>
+                        {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
+                          <li key={keywordIndex}>{keywordItem}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </section>
+              ))}
+            </CanvasList>
+
+            {/* 5번째 항목 */}
+            <CanvasList>
+              <section>
+                <strong>
+                  {bmLeanAutoReportData[4]?.section}
+                  <span>
+                    <img src={images.IconCanvas05} alt="" />
+                  </span>
+                </strong>
+                {bmLeanAutoReportData[4]?.content?.map((contentItem, contentIndex) => (
+                  <div key={contentIndex}>
+                    <p>{contentItem?.description}</p>
+                    <ul>
+                      {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
+                        <li key={keywordIndex}>{keywordItem}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </section>
+            </CanvasList>
+          </CanvasSection>
+
+          <CanvasSection>
+          {/* 8번째 항목 */}
+          <CanvasList>
+            <section>
+              <strong>
+                {bmLeanAutoReportData[7]?.section}
+                <span>
+                  <img src={images.IconCanvas08} alt="" />
+                </span>
+              </strong>
+              {bmLeanAutoReportData[7]?.content?.map((contentItem, contentIndex) => (
+                <div key={contentIndex}>
+                  <p>{contentItem?.description}</p>
+                  <ul>
+                    {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
+                      <li key={keywordIndex}>{keywordItem}</li>
+                    ))}
+                  </ul>
                 </div>
               ))}
-            </SeparateSection>
-          ))}
+            </section>
+          </CanvasList>
 
-
-      <MoleculeReportController
-        reportIndex={5}
-        sampleData={bmLeanAutoReportData}
-        />
-      </>
+          {/* 9번째 항목 */}
+          <CanvasList>
+            <section>
+              <strong>
+                {bmLeanAutoReportData[8]?.section}
+                <span>
+                  <img src={images.IconCanvas09} alt="" />
+                </span>
+              </strong>
+              {bmLeanAutoReportData[8]?.content?.map((contentItem, contentIndex) => (
+                <div key={contentIndex}>
+                  <p>{contentItem?.description}</p>
+                  <ul>
+                    {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
+                      <li key={keywordIndex}>{keywordItem}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </section>
+          </CanvasList>
+        </CanvasSection>
+            <ButtonWrap>
+              <div />
+              <div>
+                <button type="button">
+                  <img src={images.IconCopy} alt="" />
+                  복사하기
+                </button>
+                <button type="button">
+                  <img src={images.IconSave} alt="" />
+                  저장하기
+                </button>
+              </div>
+            </ButtonWrap>
+          </ModelCanvasWrap>
+        </>
       )}
-
-    </Wrap>
+    </BoxWrap>
   );
 };
 
-export default OrganismBmLeanAutoReport;
 
-const Wrap = styled.div`
-  max-width:986px;
+export default OrganismBmLeanAutoReport;
+const BoxWrap = styled.div`
+  max-width:988px;
   width:100%;
   display:flex;
   flex-direction:column;
-  padding: 28px;
+  text-align:left;
+  padding:20px;
   margin:24px 0 0 50px;
   border-radius:15px;
-  border:1px solid ${palette.lineGray};
+  border:1px solid ${palette.outlineGray};
 
   h1 {
     font-size:1.25rem;
     font-weight:400;
-    text-align:left;
-    margin-bottom:20px;
-  }
-`;
-
-const SeparateSection = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap:12px;
-  margin-top: 12px;
-  padding: 20px;
-  border-radius: 10px;
-  background: ${palette.chatGray};
-
-  h3 {
-    display:flex;
-    align-items:center;
-    gap:12px;
-    font-size:1rem;
-    font-weight:700;
-
-    span {
-      width: 15px;
-      height: 15px;
-      font-size: 0.63rem;
-      color: ${palette.chatBlue};
-      line-height: 15px;
-      text-align: center;
-      border: 1px solid ${palette.chatBlue};
-    }
+    margin-bottom:8px;
   }
 
   p {
     font-size:0.88rem;
-    font-weight:300;
-    color:${palette.gray700};
-    text-align:left;
+    line-height:1.3;
+  }
+`;
+
+const ModelCanvasWrap = styled.div`
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  margin:24px auto;
+`;
+
+const CanvasSection = styled.div`
+  display:flex;
+  gap:12px;
+`;
+
+const CanvasList = styled.div`
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:12px;
+  flex:1 1 19%;
+  max-height:400px;
+
+  ${props =>
+    props.Num2 &&
+    css`
+      section {
+        height:50% !important;
+      }
+    `
+  }
+
+  section {
+    height:100%;
+    padding:16px;
+    border-radius:15px;
+    background:${palette.chatGray};
+    overflow:hidden;
+  }
+
+  strong {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    min-height:26px;
+    font-size:0.88rem;
+    font-weight:500;
+    color:${palette.gray800};
+    margin-bottom:16px;
+    
+    span {
+      width:26px;
+      height:26px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:100%;
+      background:${palette.white};
+    }
   }
 
   div {
-    padding:16px;
-    border-radius:10px;
-    background:${palette.white};
+    height:calc(100% - 40px);
+    overflow-y:auto;
+    scrollbar-width:thin;
   }
 
-  .list-decimal li {
-    list-style-type:decimal;
-    list-style-position:inside;
-    font-size:0.88rem;
-    font-weight:300;
+  p {
+    font-size:0.75rem;
     color:${palette.gray800};
-    line-height:1.5;
-    text-align:left;
+    line-height:1.3;
+
+    span {
+      display:block;
+      font-size:0.63rem;
+      margin-top:4px;
+    }
   }
+
+  ul {
+    margin-top:12px;
+
+    li {
+      position:relative;
+      font-size:0.75rem;
+      line-height:1.3;
+      padding-left:18px;
+
+      + li {
+        margin-top:5px;
+      }
+
+      &:before {
+        position:absolute;
+        left:8px;
+        top:7px;
+        width:2px;
+        height:2px;
+        border-radius:10px;
+        background:${palette.gray800};
+        content:'';
+      }
+    }
+  }
+`;
+const ButtonWrap = styled.div`
+display: flex;
+justify-content: space-between;
+align-items: center;
+gap: 16px;
+// padding-top: 20px;
+// border-top: 1px solid ${palette.lineGray};
+
+button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: "Pretendard";
+  font-size: 0.75rem;
+  color: ${palette.gray};
+  padding: 4px 8px;
+  border-radius: 5px;
+  border: 0;
+  background: none;
+  transition: all 0.5s;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.03);
+  }
+}
+
+.lineBtn {
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1px solid ${palette.lineGray};
+}
+
+> button {
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1px solid ${palette.lineGray};
+}
+
+> div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
 `;
