@@ -482,6 +482,8 @@ if (isLoadingPage) {
                 //   return <MoleculeCheckBmOption />;
                 // } else if (item.type === "bmModelSuggestion") {
                 //   return <MoleculeBmModelSuggestion />;
+                // } else if (item.type === "bmSelectModelButton") {
+                //   return <MoleculeBmSelectModelButton />;
 
                 // } else if (item.type === "bmLeanAutoReport") {
                 //   return <OrganismBmLeanAutoReport />;
@@ -490,7 +492,7 @@ if (isLoadingPage) {
 
                 // } else if (item.type === "bmLeanAdsReport") {
                 //   return <OrganismBmLeanAdsReport />;
-                // } else if (item.type === "bmLeanAdsReport") {
+                // } else if (item.type === "bmBmAdsReport") {
                 //   return <OrganismBmBmAdsReport />;
 
                 // } else if (item.type === "bmLeanCustomReport") {
