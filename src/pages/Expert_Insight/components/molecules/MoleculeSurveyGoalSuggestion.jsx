@@ -117,7 +117,7 @@ const MoleculeSurveyGoalSuggestion = () => {
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
   const [surveyGoalFixedState, setSurveyGoalFixedState] = useState({}); // 현재 선택한 상태를 저장
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
-  const [isLoadingTarget, setIsLoadingTarget] = useState(false);
+  const [isLoadingSurvey, setIsLoadingSurvey] = useState(false);
   const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
   const [surveyUserGoalInput, setSurveyUserGoalInput] = useAtom(SURVEY_USER_GOAL_INPUT);
   const [surveyGoalFixed, setSurveyGoalFixed] = useAtom(SURVEY_GOAL_FIXED);
@@ -132,16 +132,11 @@ const MoleculeSurveyGoalSuggestion = () => {
   const handleOptionClick = (index) => {
     if (Object.keys(surveyGoalFixed).length) return;
 
-      // 선택된 옵션을 상태로 저장
-      const selectedPersona = surveyGoalSuggestionList[index];
-      
-      // 선택된 persona의 job과 target 값을 상태에 저장
       setSurveyGoalFixedState({
-        job: selectedPersona[`persona_${index + 1}`][1]["job"],
-        target: selectedPersona[`persona_${index + 1}`][4]["target"],
+        title: surveyGoalSuggestionList[index].title,
+        description: surveyGoalSuggestionList[index].description,
         index: index,
       });
-    
   };
 
   const axiosConfig = {
@@ -157,12 +152,13 @@ const MoleculeSurveyGoalSuggestion = () => {
 
       if(surveyGoalSuggestionButtonState) {
         setIsLoading(true);
-        setIsLoadingTarget(true);
-        setTargetSelectButtonState(0);
+        setIsLoadingSurvey(true);
+        setSurveyGoalSuggestionButtonState(0);
 
         const data = {
-          product_info: titleOfBusinessInfo,
-          product_analysis_report: {
+          expert_id: "10",
+          business_info: titleOfBusinessInfo,
+          business_analysis_data: {
             명칭: titleOfBusinessInfo,
             주요_목적_및_특징: mainFeaturesOfBusinessInformation,
             주요기능: mainCharacteristicOfBusinessInformation,
@@ -181,9 +177,13 @@ const MoleculeSurveyGoalSuggestion = () => {
         const maxRetries = 10;
 
         while ((retryCount < maxRetries &&
-          !Array.isArray(updatedGoalList) ||
-          updatedGoalList.length !== 5 ||
-          !updatedGoalList[0].hasOwnProperty("persona_1")
+          !response || !response.data || typeof response.data !== "object" ||
+          !response.data.hasOwnProperty("survey_goal_suggestion_report") ||
+          !Array.isArray(response.data.survey_goal_suggestion_report) ||
+          response.data.survey_goal_suggestion_report.some(item =>
+            !item.hasOwnProperty("title") || 
+            !item.hasOwnProperty("description")
+          )
         )) {
           response = await axios.post(
             "https://wishresearch.kr/panels/survey_goal_suggestion",
@@ -199,7 +199,12 @@ const MoleculeSurveyGoalSuggestion = () => {
           // 에러 처리 로직 추가
           throw new Error("Maximum retry attempts reached. Empty response persists.");
         }
+        
         setSurveyGoalSuggestionList(updatedGoalList);
+
+        let newButtonState = { ...buttonState };
+        delete newButtonState.surveyGoalInputStart;
+        setButtonState(newButtonState);
 
         await saveConversationToIndexedDB(
           {
@@ -222,7 +227,7 @@ const MoleculeSurveyGoalSuggestion = () => {
             ideaList : ideaList,
             ideaGroup : ideaGroup,
             ideaPriority : ideaPriority,
-            buttonState : buttonState,
+            buttonState : newButtonState,
             growthHackerReportData : growthHackerReportData,
             growthHackerDetailReportData : growthHackerDetailReportData,
             KpiQuestionList : KpiQuestionList,
@@ -239,7 +244,7 @@ const MoleculeSurveyGoalSuggestion = () => {
         );
 
         setIsLoading(false);
-        setIsLoadingTarget(false);
+        setIsLoadingSurvey(false);
       }
     };
 
@@ -257,7 +262,7 @@ const MoleculeSurveyGoalSuggestion = () => {
     updatedConversation.push(
       {
         type: "system",
-        message: `입력하신 내용을 기반으로 다음과 같은 설문조사 목적을 제안드립니다. *${surveyGoalFixedState.job}* 을 목적으로 합니다.`,
+        message: `입력하신 내용을 기반으로 다음과 같은 설문조사 목적을 제안드립니다.\n"${surveyGoalFixedState.title}"을 목적으로 합니다.`,
         expertIndex: selectedExpertIndex,
       },
       {
@@ -308,7 +313,7 @@ const MoleculeSurveyGoalSuggestion = () => {
 
   return (
     <Wrapper>
-      {isLoadingTarget ?
+      {isLoadingSurvey ?
       <>
         <SkeletonTitle className="title-placeholder" />
         <SkeletonLine className="content-placeholder" />
@@ -320,9 +325,6 @@ const MoleculeSurveyGoalSuggestion = () => {
       </>
       :
       <>
-        <Question>
-          방향성을 선택해주세요.
-        </Question>
         <OptionsContainer>
           {surveyGoalSuggestionList.map((goal, index) => (
             <Option
@@ -335,9 +337,8 @@ const MoleculeSurveyGoalSuggestion = () => {
                 surveyGoalFixed={surveyGoalFixed}
                 selected={surveyGoalFixedState.index === index}
               >
-                {goal.title || "제목 없음"} {/* goal 객체에서 title을 출력 */}
+                {goal.title}
               </Label>
-              <p>{goal.description || "설명 없음"}</p> {/* goal 객체에서 description을 출력 */}
             </Option>
           ))}
         </OptionsContainer>
@@ -355,39 +356,40 @@ const MoleculeSurveyGoalSuggestion = () => {
 export default MoleculeSurveyGoalSuggestion;
 
 const Wrapper = styled.div`
+<<<<<<< HEAD
   max-width:968px;
   // width:91.5%;
   padding: 32px 40px;
+=======
+  max-width:540px;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+  padding:20px;
+>>>>>>> 178bb9e3dc59daed51a1ed69428aa888de5d9f2b
   margin:24px 0 0 50px;
   border-radius:15px;
   border:1px solid ${palette.outlineGray};
 `;
 
-const Question = styled.h2`
-  font-size: 0.88rem;
-  font-weight:700;
-  text-align:left;
-  margin-bottom: 20px;
-`;
-
 const OptionsContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+  display:flex;
+  flex-direction:column;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  gap:8px;
 `;
 
 const Option = styled.div`
   position:relative;
   display:flex;
-  gap:12px;
+  gap:8px;
   align-items:center;
   color: ${palette.gray800};
-  justify-content: ${(props) => (props.isTargetUnknown ? "center" : "")};
-  flex-direction:column;
-  flex:1 1 30%;
   font-size:0.88rem;
-  text-align: ${(props) => (props.isTargetUnknown ? "center" : "left")};
-  padding: 20px;
+  text-align: left;
+  padding: 10px;
   border-radius: 8px;
   cursor: pointer;
   background-color: ${(props) =>
@@ -416,7 +418,6 @@ const Option = styled.div`
   &:hover {
     border-color: ${(props) =>
       Object.keys(props.surveyGoalFixed).length 
-        // ? palette.gray800 
         ? "none" 
         : palette.blue};
   }
@@ -460,24 +461,15 @@ const ButtonWrap = styled.div`
 `;
 
 const Button = styled.button`
-  min-width:100px;
   font-family: Pretendard, Poppins;
   font-size:0.88rem;
-  color:${palette.white};
+  color: ${(props) => (props.surveyGoalFixedState && Object.keys(props.surveyGoalFixedState).length ? palette.chatBlue : palette.black)};
   line-height:22px;
   padding:8px 20px;
   margin-left:auto;
-  margin-top: ${(props) => (
-    props.surveyGoalFixed && Object.keys(props.surveyGoalFixed).length ? '0' : '32px'
-  )};
   border-radius:8px;
   border:0;
-  background: ${(props) => (
-    !props.surveyGoalFixedState.job 
-    ? palette.lineGray 
-    : (Object.keys(props.surveyGoalFixed).length 
-    ? palette.gray800 
-    : palette.blue))};
+  background:${palette.white};
   transition:all .5s;
 
   display: ${(props) => (

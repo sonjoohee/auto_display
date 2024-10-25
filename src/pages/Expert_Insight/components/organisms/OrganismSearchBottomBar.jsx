@@ -139,14 +139,19 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
     //   setBmBmAdsButtonState(1);
     //   setBmUserGoalInput(inputValue);
     // }
-    // else if (isHashTag && selectedExpertIndex === "10") {
-    //   updatedConversation.push(
-    //     { type: "user", message: `설문조사의 목적은 ${inputValue}입니다.` },
-    //     { type: "surveyGoalSuggestion" }
-    //   );
-    //   setSurveyGoalSuggestionButtonState(1);
-    //   setSurveyUserGoalInput(inputValue);
-    // }
+    else if (isHashTag && selectedExpertIndex === "10" ) {
+      updatedConversation.push(
+        { type: "user", message: `${inputValue}` },
+        {
+          type: "system",
+          message: `입력해주신 비즈니스 목표에 따른 캔버스의 정교화 방향성을 도출하였습니다.\n원하시는 방향을 선택하시고, 어떤 요소들이 변화되었는지 확인해보세요`,
+          expertIndex: selectedExpertIndex,
+        },
+        { type: "surveyGoalSuggestion" }
+      );
+      setSurveyGoalSuggestionButtonState(1);
+      setSurveyUserGoalInput(inputValue);
+    }
     else {
       if (
         (updatedConversation.length > 0 &&
@@ -289,12 +294,12 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
                   ? "어떤 사례를 찾고 계신가요? 구체적으로 입력해주세요"
                   : selectedExpertIndex === "9" 
                   ? "비즈니스의 목표가 무엇인가요? 구체적으로 입력해주세요"
-                  : selectedExpertIndex === "10" 
-                  ? "설문조사의 목적이 무엇인가요? 구체적으로 입력해주세요"
-                  : ""
+                  : selectedExpertIndex === "10"
+                    ? "설문조사의 목적이 무엇인가요? 구체적으로 입력해주세요"
+                    : ""
                 : isBlue
-                ? "더 알고 싶은 내용이 있으신가요? 추가 질문으로 더 많은 인사이트를 얻어보세요 "
-                : "당신의 아이템 또는 프로젝트 아이디어를 적어 주세요 (예: 원격 근무자를 위한 생산성 관리 툴)"
+                  ? "더 알고 싶은 내용이 있으신가요? 추가 질문으로 더 많은 인사이트를 얻어보세요"
+                  : "당신의 아이템 또는 프로젝트 아이디어를 적어 주세요 (예: 원격 근무자를 위한 생산성 관리 툴)"
             }
             value={inputValue}
             onChange={handleInputChange}
