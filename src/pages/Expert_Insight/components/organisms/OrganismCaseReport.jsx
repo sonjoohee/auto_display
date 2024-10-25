@@ -234,6 +234,15 @@ const OrganismCaseReport = ({ caseReportCount }) => {
                 expertIndex: selectedExpertIndex,
               }
             );
+          } else if(typeof caseReport === "object" && caseReport.hasOwnProperty("case_not_found_text")) {
+            updatedConversation.push(
+              {
+                type: "system",
+                message:
+                  `${response.data.case_analysis_report.case_not_found_text}`,
+                expertIndex: selectedExpertIndex,
+              }
+            );
           } else {
             updatedConversation.push(
               {
@@ -298,7 +307,7 @@ const OrganismCaseReport = ({ caseReportCount }) => {
     fetchCaseReport();
   }, [caseReportButtonState]);
 
-  if (typeof caseReportData[caseReportCount] === "object" && caseReportData[caseReportCount].hasOwnProperty("unrelated_input_text")) {
+  if (typeof caseReportData[caseReportCount] === "object" && (caseReportData[caseReportCount].hasOwnProperty("unrelated_input_text") || caseReportData[caseReportCount].hasOwnProperty("case_not_found_text"))) {
     return null;
   }
 
@@ -320,7 +329,7 @@ const OrganismCaseReport = ({ caseReportCount }) => {
         </>
       ) : (
         <>
-          <h1>성공적인 기술 혁신 사례 조사 보고서</h1>
+          <h1>{caseReportData[caseReportCount]?.[0]?.report_title}</h1>
           <p>{caseReportData[caseReportCount]?.[0]?.text}</p>
           {caseReportData[caseReportCount]?.[1]?.content.map((report, index) => (
             <SeparateSection key={index}>

@@ -183,7 +183,6 @@ const PageExpertInsight = () => {
   //   // 페이지를 나갈 때 접근 가능 여부 초기화
   //   return () => {
   //     setIsExpertInsightAccessible(false); // 페이지 떠날 때 접근 불가로 설정
-  //     console.log("접근 불가로 설정");
   //   };
   // }, [navigate]);
 
