@@ -903,7 +903,8 @@ useEffect(() => {
   const handleLogoClick = () => {
     if (isLoading) return;
 
-    navigate("/Landing");
+    // navigate("/Landing");
+    navigate("/MeetAiExpert");
     setConversation([]);
     setConversationStage(1);
     setInputBusinessInfo("");
