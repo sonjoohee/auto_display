@@ -18,9 +18,9 @@ export const SkeletonH1 = styled.h1`
   margin-bottom: 20px;
   // animation: shimmer 1.5s infinite linear;
   animation: ${loadingAnimation} 3s infinite linear;
-  background: #F4F4F4;
-  background-image: -webkit-linear-gradient(to right, #F4F4F4 0%, #FCFCFC 20%, #F4F4F4 40%, #F4F4F4 100%);
-  background-image: linear-gradient(to right, #F4F4F4 0%, #FCFCFC 20%, #F4F4F4 40%, #F4F4F4 100%);
+  background: #F9FAFB;
+  background-image: -webkit-linear-gradient(to right, #F9FAFB 0%, #F2F4F7 20%, #FCFCFC 40%, #F9FAFB 100%);
+  background-image: linear-gradient(to right, #F9FAFB 0%, #F2F4F7 20%, #FCFCFC 40%, #F9FAFB 100%);
   background-repeat: no-repeat;
 
   @keyframes shimmer {
@@ -40,9 +40,9 @@ export const SkeletonTitle = styled.div`
   margin-bottom: 10px;
   // animation: shimmer 1.5s infinite linear;
   animation: ${loadingAnimation} 3s infinite linear;
-  background: #F4F4F4;
-  background-image: -webkit-linear-gradient(to right, #F4F4F4 0%, #FCFCFC 20%, #F4F4F4 40%, #F4F4F4 100%);
-  background-image: linear-gradient(to right, #F4F4F4 0%, #FCFCFC 20%, #F4F4F4 40%, #F4F4F4 100%);
+  background: #F9FAFB;
+  background-image: -webkit-linear-gradient(to right, #F9FAFB 0%, #F2F4F7 20%, #FCFCFC 40%, #F9FAFB 100%);
+  background-image: linear-gradient(to right, #F9FAFB 0%, #F2F4F7 20%, #FCFCFC 40%, #F9FAFB 100%);
   background-repeat: no-repeat;
 
   @keyframes shimmer {
@@ -62,15 +62,15 @@ export const SkeletonLine = styled.div`
   margin-top: 8px;
   // animation: shimmer 1.5s infinite linear;
   animation: ${loadingAnimation} 3s infinite linear;
-  background: #F4F4F4;
-  background-image: -webkit-linear-gradient(to right, #F4F4F4 0%, #FCFCFC 20%, #F4F4F4 40%, #F4F4F4 100%);
-  background-image: linear-gradient(to right, #F4F4F4 0%, #FCFCFC 20%, #F4F4F4 40%, #F4F4F4 100%);
+  background: #F9FAFB;
+  background-image: -webkit-linear-gradient(to right, #F9FAFB 0%, #F2F4F7 20%, #FCFCFC 40%, #F9FAFB 100%);
+  background-image: linear-gradient(to right, #F9FAFB 0%, #F2F4F7 20%, #FCFCFC 40%, #F9FAFB 100%);
   background-repeat: no-repeat;
 
   &.white {
     background: #FFFFFF;
-    background-image: -webkit-linear-gradient(to right, #FFFFFF 0%, #F4F4F4 20%, #FFFFFF 40%, #FFFFFF 100%);
-    background-image: linear-gradient(to right, #FFFFFF 0%, #F4F4F4 20%, #FFFFFF 40%, #FFFFFF 100%);
+    background-image: -webkit-linear-gradient(to right, #FFFFFF 0%, #FAFBFC 20%, #FFFFFF 40%, #FFFFFF 100%);
+    background-image: linear-gradient(to right, #FFFFFF 0%, #FAFBFC 20%, #FFFFFF 40%, #FFFFFF 100%);
   }
 
   @keyframes shimmer {

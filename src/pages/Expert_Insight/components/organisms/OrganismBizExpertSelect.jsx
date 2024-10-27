@@ -513,6 +513,7 @@ const SelectOptions = styled.div`
 
     button {
       position: relative;
+      flex-shrink:0;
       font-family: "Pretendard";
       font-size: 0.75rem;
       color: ${palette.gray};

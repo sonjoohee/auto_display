@@ -447,7 +447,7 @@ const BoxWrap = styled.div`
       ? palette.white
       : props.isLast
       ? palette.white
-      : "rgba(0, 0, 0, 0.03)"};
+      : palette.chatGray};
 
   + div {
     margin-top: 12px;
@@ -1862,7 +1862,7 @@ const NumDynamicGrid = styled.div`
 const AdditionalBoxWrap = styled.div`
   padding: ${(props) => (props.isPurpose ? "0" : "20px")};
   background: ${(props) =>
-    props.isPurpose ? palette.white : "rgba(0, 0, 0, 0.04)"}; /* 흰 배경 적용 */
+    props.isPurpose ? palette.white : palette.chatGray}; /* 흰 배경 적용 */
 
   font-size: 0.875rem;
   color: ${palette.gray800};
@@ -2075,6 +2075,7 @@ const SeparateSection2 = styled.div`
     font-size:0.88rem;
     font-weight:300;
     color:${palette.gray700};
+    line-height:1.4;
     text-align:left;
   }
 

@@ -208,7 +208,7 @@ const ButtonWrap = styled.div`
     display: flex;
     align-items: center;
     gap: 12px;
-    font-family: "Pretendard";
+    font-family: 'Pretendard', 'Poppins';
     font-size: 0.875rem;
     color: ${palette.darkGray};
     border: 0;
@@ -219,7 +219,7 @@ const ButtonWrap = styled.div`
   > button {
     padding: 8px 16px;
     border-radius: 40px;
-    border: 1px solid ${palette.lineGray};
+    border: 1px solid ${palette.buttonLineGray};
   }
 
   button.other {

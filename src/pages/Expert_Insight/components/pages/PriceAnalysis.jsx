@@ -797,14 +797,14 @@ export default PriceAnalysis;
 
 const Wrap = styled.div`
   max-width:540px;
-  width:100%;
+  // width:100%;
   display:flex;
   flex-direction:column;
   gap:20px;
   padding:20px;
   margin:24px 0 0 50px;
   border-radius:15px;
-  border:1px solid ${palette.lineGray};
+  border:1px solid ${palette.outlineGray};
 
   h1 {
     position:relative;

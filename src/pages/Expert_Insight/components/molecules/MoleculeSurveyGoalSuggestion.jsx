@@ -356,15 +356,21 @@ const MoleculeSurveyGoalSuggestion = () => {
 export default MoleculeSurveyGoalSuggestion;
 
 const Wrapper = styled.div`
+<<<<<<< HEAD
+  max-width:968px;
+  // width:91.5%;
+  padding: 32px 40px;
+=======
   max-width:540px;
   width:100%;
   display:flex;
   flex-direction:column;
   gap:20px;
   padding:20px;
+>>>>>>> 178bb9e3dc59daed51a1ed69428aa888de5d9f2b
   margin:24px 0 0 50px;
   border-radius:15px;
-  border:1px solid ${palette.lineGray};
+  border:1px solid ${palette.outlineGray};
 `;
 
 const OptionsContainer = styled.div`

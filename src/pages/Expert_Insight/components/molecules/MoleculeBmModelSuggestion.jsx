@@ -386,7 +386,7 @@ const Spacing = styled.div`
 `;
 const Wrap = styled.div`
   max-width:540px;
-  width:100%;
+  // width:100%;
   display:flex;
   flex-direction:column;
   padding:20px;

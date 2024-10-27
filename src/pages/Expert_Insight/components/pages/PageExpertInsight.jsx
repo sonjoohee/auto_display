@@ -696,7 +696,8 @@ const MainContent = styled.div`
   width: calc(100% - 40px);
   // padding-bottom: 150px;
   // margin: 0 auto;
-  margin:0 40px;
+  margin:0 auto;
+  padding:0 40px;
   // justify-content:center;
 
   > div {
@@ -708,9 +709,10 @@ const MainContent = styled.div`
     // max-width: 1240px;
     // max-width:800px;
     width: 100%;
+    height: calc(100% - 60px);
     // margin: 0 20px;
     margin:0 auto;
-    padding-bottom: 60px;
+    // padding-bottom: 60px;
   }
 `;
 
@@ -721,7 +723,9 @@ const ContentsWrap = styled.div`
 
 const ChatWrap = styled.div`
   position: relative;
-  height: calc(100% - 55px);
+  // height: calc(100% - 55px);
+  min-height:90%;
+  padding-bottom:60px;
 
   &:before {
     position: sticky;

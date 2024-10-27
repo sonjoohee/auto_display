@@ -187,7 +187,7 @@ const ButtonWrap = styled.div`
   display: flex;
   align-items: center;
   margin-top: 15px;
-  margin-left:45px;
+  margin-left:50px;
   padding-bottom: 15px;
 
   button {
@@ -205,7 +205,7 @@ const ButtonWrap = styled.div`
   > button {
     padding: 8px 16px;
     border-radius: 40px;
-    border: 1px solid ${palette.lineGray};
+    border: 1px solid ${palette.buttonLineGray};
   }
 
   button.other {
