@@ -219,10 +219,10 @@ const OrganismBmBmAutoReport = () => {
           {
             type: "system",
             message:
-              "기본 린 캔버스 작성이 완료되었습니다.\n이제부터는 비즈니스 목표에 따라 비즈니스 모델을 다양하게 구분해보겠습니다.",
+              "기본 비즈니스 모델 캔버스 작성이 완료되었습니다.\n이제부터는 비즈니스 목표에 따라 비즈니스 모델을 다양하게 구분해보겠습니다.",
             expertIndex: selectedExpertIndex,
           },
-          { type: `bmLeanAdsContinueButton`}
+          { type: `bmBmAdsContinueButton`}
         );
         setConversationStage(3);
         setConversation(updatedConversation);
