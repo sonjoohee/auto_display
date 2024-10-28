@@ -205,7 +205,7 @@ const MoleculeCheckBmOption = () => {
     await saveConversationToIndexedDB(
       {
         id: conversationId,
-        inputBusinessInfo,
+        inputBusinessInfo: inputBusinessInfo,
         analysisReportData: {
           title: titleOfBusinessInfo,
           mainFeatures: mainFeaturesOfBusinessInformation,
