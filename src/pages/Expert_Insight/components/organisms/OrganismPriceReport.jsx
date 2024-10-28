@@ -77,19 +77,40 @@ import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
 
 const OrganismPriceReport = () => {
-  const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
+  const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(
+    BM_MODEL_SUGGESTION_REPORT_DATA
+  );
   const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
   const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
-  const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
-  const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
-  const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
-  const [selectedProblemOptions, setSelectedProblemOptions] = useAtom(SELECTED_PROBLEM_OPTIONS);
-  const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
-  const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
-  const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
-  const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(SURVEY_GUIDELINE_REPORT_DATA);
-  const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
-  const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
+  const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(
+    BM_BM_AUTO_REPORT_DATA
+  );
+  const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(
+    BM_LEAN_AUTO_REPORT_DATA
+  );
+  const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(
+    BM_BM_ADS_REPORT_DATA
+  );
+  const [selectedProblemOptions, setSelectedProblemOptions] = useAtom(
+    SELECTED_PROBLEM_OPTIONS
+  );
+  const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(
+    BM_LEAN_ADS_REPORT_DATA
+  );
+  const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(
+    BM_BM_CUSTOM_REPORT_DATA
+  );
+  const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(
+    BM_LEAN_CUSTOM_REPORT_DATA
+  );
+  const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(
+    SURVEY_GUIDELINE_REPORT_DATA
+  );
+  const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] =
+    useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
+  const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(
+    SURVEY_GOAL_SUGGESTION_LIST
+  );
   const [surveyGoalFixed, setSurveyGoalFixed] = useAtom(SURVEY_GOAL_FIXED);
   const [surveyQuestionList, setSurveyQuestionList] =
     useAtom(SURVEY_QUESTION_LIST);
@@ -374,34 +395,34 @@ const OrganismPriceReport = () => {
             pocPersonaList: pocPersonaList,
             selectedPocTarget: selectedPocTarget,
             recommendedTargetData: recommendedTargetData,
-            pocDetailReportData : pocDetailReportData,
-            ideaFeatureData : ideaFeatureData,
-            ideaRequirementData : ideaRequirementData,
-            KpiQuestionList : KpiQuestionList,
-            ideaGroup : ideaGroup,
-            ideaPriority : ideaPriority,
-            ideaMiro : ideaMiro,
-            growthHackerReportData : growthHackerReportData,
-            buttonState : buttonState,
-            priceScrapData : priceScrap,
-            priceReportData : priceReport,
-            priceProduct : priceProduct,
-            priceProductSegmentation : priceProductSegmentation,
-            priceSelectedProductSegmentation : priceSelectedProductSegmentation,
-            caseHashTag : caseHashTag,
-            caseReportData : caseReportData,
-            bmOrLean : BM_OR_LEAN,
-            bmQuestionList : bmQuestionList,
-            bmModelSuggestionReportData : bmModelSuggestionReportData,
-            bmBmAutoReportData : bmBmAutoReportData,
-            bmLeanAutoReportData : bmLeanAutoReportData,
-            bmBmAdsReportData : bmBmAdsReportData,
-            bmSelectedProblemOptions : selectedProblemOptions,
-            bmLeanAdsReportData : bmLeanAdsReportData,
-            bmBmCustomReportData : bmBmCustomReportData,
-            bmLeanCustomReportData : bmLeanCustomReportData,
-            surveyGuidelineReportData : surveyGuidelineReportData,
-            surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
+            pocDetailReportData: pocDetailReportData,
+            ideaFeatureData: ideaFeatureData,
+            ideaRequirementData: ideaRequirementData,
+            KpiQuestionList: KpiQuestionList,
+            ideaGroup: ideaGroup,
+            ideaPriority: ideaPriority,
+            ideaMiro: ideaMiro,
+            growthHackerReportData: growthHackerReportData,
+            buttonState: buttonState,
+            priceScrapData: priceScrap,
+            priceReportData: priceReport,
+            priceProduct: priceProduct,
+            priceProductSegmentation: priceProductSegmentation,
+            priceSelectedProductSegmentation: priceSelectedProductSegmentation,
+            caseHashTag: caseHashTag,
+            caseReportData: caseReportData,
+            bmOrLean: BM_OR_LEAN,
+            bmQuestionList: bmQuestionList,
+            bmModelSuggestionReportData: bmModelSuggestionReportData,
+            bmBmAutoReportData: bmBmAutoReportData,
+            bmLeanAutoReportData: bmLeanAutoReportData,
+            bmBmAdsReportData: bmBmAdsReportData,
+            bmSelectedProblemOptions: selectedProblemOptions,
+            bmLeanAdsReportData: bmLeanAdsReportData,
+            bmBmCustomReportData: bmBmCustomReportData,
+            bmLeanCustomReportData: bmLeanCustomReportData,
+            surveyGuidelineReportData: surveyGuidelineReportData,
+            surveyGuidelineDetailReportData: surveyGuidelineDetailReportData,
             surveyGoalSuggestionList: surveyGoalSuggestionList,
             surveyGoalFixed: surveyGoalFixed,
             surveyQuestionList: surveyQuestionList,
@@ -495,8 +516,6 @@ const OrganismPriceReport = () => {
       return Math.floor(number / 50000) * 50000;
     }
   };
-  let consumer_price_min = 100000;
-  let consumer_price_max = 300000;
   // useEffect 코드 수정
   useEffect(() => {
     if (productPrices.length > 0) {
@@ -575,51 +594,78 @@ const OrganismPriceReport = () => {
         .style("stroke", "#F6F6F6")
         .style("stroke-width", "2px");
 
-        
-        // 툴팁 추가
-        const tooltip = d3.select(".App").append("div")
-          .attr("class", "tooltip")
-          .style("position", "absolute")
-          .style("padding", "8px")
-          .style("background", "rgba(0, 0, 0, 0.7)")
-          .style("color", "white")
-          .style("font-size", "0.75rem")
-          .style("border-radius", "4px")
-          .style("pointer-events", "none")
-          .style("opacity", 0);
+      // 툴팁 추가
+      const tooltip = d3
+        .select(".App")
+        .append("div")
+        .attr("class", "tooltip")
+        .style("position", "absolute")
+        .style("padding", "8px")
+        .style("background", "rgba(0, 0, 0, 0.7)")
+        .style("color", "white")
+        .style("font-size", "0.75rem")
+        .style("border-radius", "4px")
+        .style("pointer-events", "none")
+        .style("opacity", 0);
+
+      // 각 구간의 정보 생성
+      const barData = Array(10)
+        .fill(0)
+        .map((_, i) => {
+          const rangeStart = minPrice + i * step;
+          const rangeEnd = minPrice + (i + 1) * step;
+          return {
+            rangeStart,
+            rangeEnd,
+            count: rangeCounts[i],
+            // 천 단위 구분된 문자열 추가
+            formattedStart: rangeStart.toLocaleString("ko-KR"),
+            formattedEnd: rangeEnd.toLocaleString("ko-KR"),
+          };
+        });
 
       // 바차트 그리기
-      const barWidth = (width - margin.left - margin.right) / 10;
       svg
         .selectAll(".bar")
-        .data(rangeCounts)
+        .data(barData)
         .enter()
         .append("rect")
         .attr("class", "bar")
-        .attr("x", (d, i) => margin.left + i * barWidth)
-        .attr("y", (d) => y(d))
-        .attr("width", Math.max(0, barWidth - 2))
-        .attr("height", (d) => Math.max(0, height - margin.bottom - y(d)))
+        .attr(
+          "x",
+          (d, i) =>
+            margin.left + i * ((width - margin.left - margin.right) / 10)
+        )
+        .attr("y", (d) => y(d.count))
+        .attr(
+          "width",
+          Math.max(1, (width - margin.left - margin.right) / 10 - 2)
+        )
+        .attr("height", (d) => Math.max(0, height - margin.bottom - y(d.count)))
         .style("fill", "#E0E4EB")
 
-      // 마우스 오버 이벤트 추가
-      .on('mouseover', (event, d) => {
-        tooltip.transition().duration(200).style("opacity", .9);
-        tooltip.html(`Range: ${d.x0} ~ ${d.x1}<br/>Count: ${d.length}`)
-          .style("left", (event.pageX + 5) + "px")
-          .style("top", (event.pageY - 28) + "px");
-      })
-      
-      // 마우스 이동 시 툴팁 위치 업데이트
-      .on('mousemove', (event) => {
-        tooltip.style("left", (event.pageX + 5) + "px")
-        .style("top", (event.pageY - 28) + "px");
-      })
-      
-      // 마우스 아웃 시 툴팁 숨기기
-      .on('mouseout', () => {
-        tooltip.transition().duration(500).style("opacity", 0);
-      });
+        // 마우스 오버 이벤트 추가
+        .on("mouseover", (event, d) => {
+          tooltip.transition().duration(200).style("opacity", 0.9);
+          tooltip
+            .html(
+              `범위: ${d.formattedStart}원 ~ ${d.formattedEnd}원<br/>제품수: ${d.count}`
+            )
+            .style("left", event.pageX + 5 + "px")
+            .style("top", event.pageY - 28 + "px");
+        })
+
+        // 마우스 이동 시 툴팁 위치 업데이트
+        .on("mousemove", (event) => {
+          tooltip
+            .style("left", event.pageX + 5 + "px")
+            .style("top", event.pageY - 28 + "px");
+        })
+
+        // 마우스 아웃 시 툴팁 숨기기
+        .on("mouseout", () => {
+          tooltip.transition().duration(500).style("opacity", 0);
+        });
 
       // 선택된 범위 표시
       // svg
@@ -919,8 +965,8 @@ const ButtonWrap = styled.div`
 
 const ChartWrap = styled.div`
   svg {
-    max-width:500px;
-    width:100%;
+    max-width: 500px;
+    width: 100%;
   }
 
   .tick {
@@ -938,32 +984,30 @@ const ChartWrap = styled.div`
     margin-top: 8px;
   }
 `;
-// ChartWrap 스타일 컴포넌트 수정
-// const ChartWrap = styled.div`
-//   width: 100%;
-//   height: 150px;
-//   position: relative;
 
-//   svg {
-//     width: 100%;
-//     height: 100%;
-//   }
+// Tooltip 스타일 컴포넌트 추가
+const TooltipBox = styled.div`
+  position: absolute;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  border-radius: 4px;
+  font-size: 12px;
+  pointer-events: none;
+  transform: translate(-50%, -100%);
+  z-index: 100;
 
-//   .tick {
-//     display: none;
-//   }
-
-//   .handle {
-//     box-shadow: 2px 2px 8px rgba(34, 111, 255, 0.5);
-//   }
-
-//   p {
-//     font-size: 0.75rem;
-//     font-weight: 400;
-//     color: ${palette.gray500};
-//     margin-top: 8px;
-//   }
-// `;
+  &:after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px 5px 0;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.8) transparent transparent;
+  }
+`;
 
 const PriceWrap = styled.div`
   display: flex;
