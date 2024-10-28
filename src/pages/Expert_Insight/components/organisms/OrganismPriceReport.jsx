@@ -598,6 +598,7 @@ const OrganismPriceReport = () => {
       const tooltip = d3
         .select(".App")
         .append("div")
+        .attr("id", "tooltip")
         .attr("class", "tooltip")
         .style("position", "absolute")
         .style("padding", "8px")
@@ -696,7 +697,22 @@ const OrganismPriceReport = () => {
         .attr("cx", (d) => x(d))
         .attr("cy", height - margin.bottom)
         .attr("r", 8)
-        .style("fill", palette.chatBlue);
+        .style("fill", palette.chatBlue)
+        .on("mouseenter", (event, d, i) => {
+          d3.select("#tooltip")
+            .style("opacity", 1)
+            .html(i === 0 ? `Start Position: ${d.startPosition}` : `End Position: ${d.endPosition}`)  // 각 동그라미에 맞는 텍스트
+            .style("left", `${event.pageX + 10}px`)
+            .style("top", `${event.pageY - 20}px`);
+        })
+        .on("mousemove", (event) => {
+          d3.select("#tooltip")
+            .style("left", `${event.pageX + 10}px`)
+            .style("top", `${event.pageY - 20}px`);
+        })
+        .on("mouseleave", () => {
+          d3.select("#tooltip").style("opacity", 0);
+        });
 
       // 핸들 값 표시 (선택사항)
       // svg
