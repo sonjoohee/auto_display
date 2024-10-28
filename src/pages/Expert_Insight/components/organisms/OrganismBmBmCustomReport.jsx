@@ -48,8 +48,8 @@ import {
   PRICE_PRODUCT_SEGMENTATION,
   CASE_HASH_TAG,
   CASE_REPORT_DATA,
-  BM_LEAN_AUTO_REPORT_DATA,
-  BM_LEAN_CUSTOM_REPORT_BUTTON_STATE,
+  BM_BM_AUTO_REPORT_DATA,
+  BM_BM_CUSTOM_REPORT_BUTTON_STATE,
   BM_QUESTION_LIST,
   SURVEY_GUIDELINE_REPORT_DATA,
   SURVEY_GUIDELINE_DETAIL_REPORT_DATA,
@@ -57,7 +57,7 @@ import {
   SURVEY_GOAL_FIXED,
   SURVEY_QUESTION_LIST,
   SELECTED_PROBLEM_OPTIONS,
-  BM_LEAN_CUSTOM_REPORT_DATA,
+  BM_BM_CUSTOM_REPORT_DATA,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -71,7 +71,7 @@ import {
 import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
 
-const OrganismBmLeanCustomReport = () => {
+const OrganismBmBmCustomReport = () => {
   const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(SURVEY_GUIDELINE_REPORT_DATA);
   const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
   const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
@@ -128,7 +128,6 @@ const OrganismBmLeanCustomReport = () => {
   );
   const [isLoggedIn] = useAtom(isLoggedInAtom);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
-  const [selectedKeywords, setSelectedKeywords] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
 
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
@@ -141,17 +140,18 @@ const OrganismBmLeanCustomReport = () => {
   const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
   const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
 
-  const [bmLeanCustomButtonState, setBmLeanCustomButtonState] = useAtom(BM_LEAN_CUSTOM_REPORT_BUTTON_STATE);
+  const [bmBmCustomButtonState, setBmBmCustomButtonState] = useAtom(BM_BM_CUSTOM_REPORT_BUTTON_STATE);
 
   
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [isLoadingIdeaPriority, setIsLoadingIdeaPriority] = useState(false);
-  const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
-  const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
+  const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
+  const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
   const [bmQuestionList, setbmQuestionList] = useAtom(BM_QUESTION_LIST);
   const [selectedProblemOptions, setSelectedProblemOptions] = useAtom(SELECTED_PROBLEM_OPTIONS); // 문제 선택 아톰
 
+  
   const [isModalOpen, setIsModalOpen] = useState({});
   const [selectedFormat, setSelectedFormat] = useState("Word");
   const [selectedLanguage, setSelectedLanguage] = useState("한글");
@@ -166,14 +166,14 @@ const OrganismBmLeanCustomReport = () => {
     },
     withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
   };
-  
   const togglePopupDownload = () => {
     setIsPopupOpenDownload(!isPopupOpenDownload);
   };
   const handleLanguageChange = (language) => {
     setSelectedLanguage(language); // 선택된 언어 상태를 설정
   };
-useEffect(() => {
+
+  useEffect(() => {
     const handleClickOutside = (event) => {
       if (
         popupRef.current &&
@@ -193,18 +193,18 @@ useEffect(() => {
   const handleDownloadDocx = async () => {
     setLoadingDownload(true); // 로딩 상태 시작
 
-    let fileName = `Lean Canvas`; // 기본 파일 이름
+    let fileName = `BM Canvas`; // 기본 파일 이름
 
     // 이미 저장된 데이터가 있는 경우 해당 데이터를 사용
-    if (Object.keys(bmLeanCustomReportData).length !== 0) {
-      generateDocx(bmLeanCustomReportData, fileName); // DOCX 생성 함수 호출
+    if (Object.keys(bmBmCustomReportData).length !== 0) {
+      generateDocx(bmBmCustomReportData, fileName); // DOCX 생성 함수 호출
       return;
     }
 
 
     try {
       // Markdown 스타일 제거 (정규식 사용)
-      const cleanedContent = bmLeanCustomReportData
+      const cleanedContent = bmBmCustomReportData
         .replace(/##/g, "") // 제목 표시 '##' 제거
         .replace(/\*\*/g, "") // 굵은 글씨 '**' 제거
         .replace(/\*/g, "") // 이탤릭체 '*' 제거
@@ -220,7 +220,6 @@ useEffect(() => {
           id: conversationId,
           inputBusinessInfo: inputBusinessInfo,
           analysisReportData: analysisReportData,
-          selectedAdditionalKeywords: selectedKeywords,
           conversationStage: 3,
           strategyReportData: strategyReportData,
           conversation: conversation,
@@ -347,16 +346,14 @@ useEffect(() => {
       console.error("Error generating DOCX:", error);
     }
   };
-  
-  
-  
-  useEffect(() => {
-    const fetchBmLeanCustomReport = async () => {
 
-      if(bmLeanCustomButtonState) {
+  useEffect(() => {
+    const fetchBmBmCustomReport = async () => {
+
+      if(bmBmCustomButtonState) {
         setIsLoading(true);
         setIsLoadingIdeaPriority(true);
-        setBmLeanCustomButtonState(0);
+        setBmBmCustomButtonState(0);
 
         const data = {
           expert_id: "1",
@@ -367,12 +364,12 @@ useEffect(() => {
             주요기능: mainCharacteristicOfBusinessInformation,
             목표고객: businessInformationTargetCustomer,
           },
-          bm_lean_auto_report: bmLeanAutoReportData,
-          selected_bm_lean_problem : selectedProblemOptions
+          bm_bm_auto_report: bmBmAutoReportData,
+          selected_bm_bm_target: selectedProblemOptions
         };
 
         let response = await axios.post(
-          "https://wishresearch.kr/panels/lean_custom_report",
+          "https://wishresearch.kr/panels/bm_custom_report",
           data,
           axiosConfig
         );
@@ -382,9 +379,9 @@ useEffect(() => {
 
         // while (retryCount < maxRetries && (
         //   !response || !response.data || typeof response.data !== "object" ||
-        //   !response.data.hasOwnProperty("bm_lean_custom_report") ||
-        //   !Array.isArray(response.data.bm_lean_custom_report) ||
-        //   response.data.bm_lean_custom_report.some(section => 
+        //   !response.data.hasOwnProperty("bm_bm_custom_report") ||
+        //   !Array.isArray(response.data.bm_bm_custom_report) ||
+        //   response.data.bm_bm_custom_report.some(section => 
         //     !section.hasOwnProperty("section") || 
         //     !Array.isArray(section.content) || 
         //     section.content.some(contentItem => 
@@ -396,7 +393,7 @@ useEffect(() => {
         // )) 
         {
           response = await axios.post(
-            "https://wishresearch.kr/panels/lean_custom_report",
+            "https://wishresearch.kr/panels/bm_custom_report",
             data,
             axiosConfig
           );
@@ -408,7 +405,7 @@ useEffect(() => {
           throw new Error("Maximum retry attempts reached. Empty response persists.");
         }
 
-        setBmLeanCustomReportData(response.data.bm_lean_custom_report);
+        setBmBmCustomReportData(response.data.bm_bm_custom_report);
 
         setIsLoading(false);
         setIsLoadingIdeaPriority(false);
@@ -460,8 +457,8 @@ useEffect(() => {
             priceProductSegmentation : priceProductSegmentation,
             caseHashTag : caseHashTag,
             caseReportData : caseReportData,
-            bmLeanAutoReportData : bmLeanAutoReportData,
-            bmLeanCustomReportData : response.data.bm_lean_custom_report,
+            bmBmAutoReportData : bmBmAutoReportData,
+            bmBmCustomReportData : response.data.bm_bm_custom_report,
             surveyGuidelineReportData : surveyGuidelineReportData,
             surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
             surveyGoalSuggestionList: surveyGoalSuggestionList,
@@ -474,8 +471,8 @@ useEffect(() => {
       }
     };
 
-    fetchBmLeanCustomReport();
-  }, [bmLeanCustomButtonState]);
+    fetchBmBmCustomReport();
+  }, [bmBmCustomButtonState]);
 
   return (
     <BoxWrap>
@@ -504,12 +501,12 @@ useEffect(() => {
             <CanvasList>
               <section>
                 <strong>
-                  {bmLeanCustomReportData[0]?.section}
+                  {bmBmCustomReportData[0]?.section}
                   <span>
                     <img src={images.IconCanvas01} alt="" />
                   </span>
                 </strong>
-                {bmLeanCustomReportData[0]?.content?.map((contentItem, contentIndex) => (
+                {bmBmCustomReportData[0]?.content?.map((contentItem, contentIndex) => (
                   <div key={contentIndex}>
                     {contentIndex === 0 && <p>{contentItem?.description}</p>}
                     <ul>
@@ -524,7 +521,7 @@ useEffect(() => {
 
             {/* 6번째와 7번째 항목을 묶은 CanvasList Num2 */}
             <CanvasList Num2>
-              {bmLeanCustomReportData?.slice?.(5, 7)?.map((section, index) => (
+              {bmBmCustomReportData?.slice(5, 7).map((section, index) => (
                 <section key={index + 5}>
                   <strong>
                     {section?.section}
@@ -550,12 +547,12 @@ useEffect(() => {
             <CanvasList>
               <section>
                 <strong>
-                  {bmLeanCustomReportData[1]?.section}
+                  {bmBmCustomReportData[1]?.section}
                   <span>
                     <img src={images.IconCanvas02} alt="" />
                   </span>
                 </strong>
-                {bmLeanCustomReportData[1]?.content?.map((contentItem, contentIndex) => (
+                {bmBmCustomReportData[1]?.content?.map((contentItem, contentIndex) => (
                   <div key={contentIndex}>
                     {contentIndex === 0 && <p>{contentItem?.description}</p>}
                     <ul>
@@ -570,7 +567,7 @@ useEffect(() => {
 
             {/* 3번째와 4번째 항목을 묶은 CanvasList Num2 */}
             <CanvasList Num2>
-              {bmLeanCustomReportData?.slice?.(2, 4).map((section, index) => (
+              {bmBmCustomReportData?.slice(2, 4).map((section, index) => (
                 <section key={index + 2}>
                   <strong>
                     {section?.section}
@@ -596,12 +593,12 @@ useEffect(() => {
             <CanvasList>
               <section>
                 <strong>
-                  {bmLeanCustomReportData[4]?.section}
+                  {bmBmCustomReportData[4]?.section}
                   <span>
                     <img src={images.IconCanvas05} alt="" />
                   </span>
                 </strong>
-                {bmLeanCustomReportData[4]?.content?.map((contentItem, contentIndex) => (
+                {bmBmCustomReportData[4]?.content?.map((contentItem, contentIndex) => (
                   <div key={contentIndex}>
                     {contentIndex === 0 && <p>{contentItem?.description}</p>}
                     <ul>
@@ -620,12 +617,12 @@ useEffect(() => {
           <CanvasList>
             <section>
               <strong>
-                {bmLeanCustomReportData[7]?.section}
+                {bmBmCustomReportData[7]?.section}
                 <span>
                   <img src={images.IconCanvas08} alt="" />
                 </span>
               </strong>
-              {bmLeanCustomReportData[7]?.content?.map((contentItem, contentIndex) => (
+              {bmBmCustomReportData[7]?.content?.map((contentItem, contentIndex) => (
                 <div key={contentIndex}>
                   {contentIndex === 0 && <p>{contentItem?.description}</p>}
                   <ul>
@@ -642,12 +639,12 @@ useEffect(() => {
           <CanvasList>
             <section>
               <strong>
-                {bmLeanCustomReportData[8]?.section}
+                {bmBmCustomReportData[8]?.section}
                 <span>
                   <img src={images.IconCanvas09} alt="" />
                 </span>
               </strong>
-              {bmLeanCustomReportData[8]?.content?.map((contentItem, contentIndex) => (
+              {bmBmCustomReportData[8]?.content?.map((contentItem, contentIndex) => (
                 <div key={contentIndex}>
                   {contentIndex === 0 && <p>{contentItem?.description}</p>}
                   <ul>
@@ -784,7 +781,7 @@ useEffect(() => {
 };
 
 
-export default OrganismBmLeanCustomReport;
+export default OrganismBmBmCustomReport;
 const BoxWrap = styled.div`
   max-width:988px;
   width:100%;

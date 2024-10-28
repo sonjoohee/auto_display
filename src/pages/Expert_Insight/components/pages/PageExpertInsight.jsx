@@ -108,12 +108,14 @@ import MoleculeBmModelSuggestion from "../molecules/MoleculeBmModelSuggestion";
 import MoleculeBmSelectModelButton from "../molecules/MoleculeBmSelectModelButton";
 import MoleculeBmBmAdsContinueButton from "../molecules/MoleculeBmBmAdsContinueButton";
 import MoleculeBmLeanAdsContinueButton from "../molecules/MoleculeBmLeanAdsContinueButton";
-import MoleculeBmLeanCustomContinueButton from "../molecules/MoleculeBmLeanCustomContinueButton";
+import MoleculeBmCustomContinueButton from "../molecules/MoleculeBmCustomContinueButton";
 
 import OrganismBmLeanAutoReport from "../organisms/OrganismBmLeanAutoReport";
 import OrganismBmLeanAdsReport from "../organisms/OrganismBmLeanAdsReport";
 import OrganismBmLeanCustomReport from "../organisms/OrganismBmLeanCustomReport";
 import OrganismBmBmAutoReport from "../organisms/OrganismBmBmAutoReport";
+import OrganismBmBmAdsReport from "../organisms/OrganismBmBmAdsReport";
+import OrganismBmBmCustomReport from "../organisms/OrganismBmBmCustomReport";
 
 const PageExpertInsight = () => {
   const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
@@ -530,16 +532,15 @@ if (isLoadingPage) {
 
                 } else if (item.type === "bmLeanAdsReport") {
                   return <OrganismBmLeanAdsReport />;
-                // } else if (item.type === "bmBmAdsReport") {
-                //   return <OrganismBmBmAdsReport />;
+                } else if (item.type === "bmBmAdsReport") {
+                  return <OrganismBmBmAdsReport />;
 
                 } else if (item.type === "bmLeanCustomReport") {
                   return <OrganismBmLeanCustomReport />;
-                // } else if (item.type === "bmBmCustomReport") {
-                //   return <OrganismBmBmCustomReport />;
-                // }
-                } else if (item.type === "bmLeanCustomContinueButton") {
-                  return <MoleculeBmLeanCustomContinueButton />;}
+                } else if (item.type === "bmBmCustomReport") {
+                  return <OrganismBmBmCustomReport />;
+                } else if (item.type === "bmCustomContinueButton") {
+                  return <MoleculeBmCustomContinueButton />;}
 
                 /* 설문조사 전문가 */
                 else if (item.type === "surveyStartButton") {

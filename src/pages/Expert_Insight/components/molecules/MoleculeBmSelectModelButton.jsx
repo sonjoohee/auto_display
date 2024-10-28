@@ -54,6 +54,7 @@ import {
   SURVEY_GOAL_SUGGESTION_LIST,
   SURVEY_GOAL_FIXED,
   SURVEY_QUESTION_LIST,
+  BM_OR_LEAN,
 } from "../../../AtomStates";
 
 import {
@@ -134,6 +135,7 @@ const MoleculeBmSelectModelButton = () => {
   const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
   const [bmLeanAutoButtonState, setBmLeanAutoButtonState] = useAtom(BM_LEAN_AUTO_REPORT_BUTTON_STATE);
   const [bmBmAutoButtonState, setBmBmAutoButtonState] = useAtom(BM_BM_AUTO_REPORT_BUTTON_STATE);
+  const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
 
 
   const handleBMClick = async () => {
@@ -148,6 +150,10 @@ const MoleculeBmSelectModelButton = () => {
 
     updatedConversation.push(
       {
+        type: 'user', 
+        message: '비즈니스 모델 캔버스를 작성해주세요'
+      },
+      {
         type: 'bmBmAutoReport',
       }
     );
@@ -155,6 +161,7 @@ const MoleculeBmSelectModelButton = () => {
     setConversation(updatedConversation);
     setConversationStage(3);
     setApproachPath(3);
+    setBmOrLean("Bm");
 
     await saveConversationToIndexedDB(
       {
@@ -205,6 +212,10 @@ const MoleculeBmSelectModelButton = () => {
     }
 
     updatedConversation.push(
+      { 
+        type: 'user', 
+        message: '린 캔버스를 작성해주세요'
+      },
       {
         type: 'bmLeanAutoReport',
       }
@@ -213,6 +224,7 @@ const MoleculeBmSelectModelButton = () => {
     setConversation(updatedConversation);
     setConversationStage(3);
     setApproachPath(3);
+    setBmOrLean("Lean");
 
     await saveConversationToIndexedDB(
       {
@@ -240,12 +252,12 @@ const MoleculeBmSelectModelButton = () => {
         ideaMiro : ideaMiro,
         caseHashTag : caseHashTag,
         caseReportData : caseReportData,
-
         surveyGuidelineReportData : surveyGuidelineReportData,
         surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
         surveyGoalSuggestionList: surveyGoalSuggestionList,
         surveyGoalFixed: surveyGoalFixed,
         surveyQuestionList: surveyQuestionList,
+        bmOrLean : bmOrLean,
       },
       isLoggedIn,
       conversationId

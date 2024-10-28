@@ -46,6 +46,7 @@ import {
   SURVEY_GOAL_SUGGESTION_LIST,
   SURVEY_GOAL_FIXED,
   SURVEY_QUESTION_LIST,
+  BM_OR_LEAN,
 } from "../../../AtomStates";
 
 import {
@@ -56,7 +57,7 @@ import axios from "axios";
 
 import { palette } from "../../../../assets/styles/Palette";
 
-const MoleculeBmLeanCustomContinueButton = () => {
+const MoleculeBmCustomContinueButton = () => {
   const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(SURVEY_GUIDELINE_REPORT_DATA);
   const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
   const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
@@ -109,6 +110,7 @@ const MoleculeBmLeanCustomContinueButton = () => {
   const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
   const [isLoadingCaseHashTag, setIsLoadingCaseHashTag] = useAtom(IS_LOADING_CASE_HASHTAG);
   const [bmLeanAdsButtonState, setBmLeanAdsButtonState] = useAtom(BM_LEAN_ADS_REPORT_BUTTON_STATE);
+  const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
 
 
   const handleClick = async (type) => {
@@ -119,7 +121,7 @@ const MoleculeBmLeanCustomContinueButton = () => {
     const updatedConversation = [...conversation];
 
     if (updatedConversation.length > 0 &&
-        updatedConversation[updatedConversation.length - 1].type === "BmAdsContinueButton"
+        updatedConversation[updatedConversation.length - 1].type === "bmCustomContinueButton"
     ) {
       updatedConversation.pop();
     }
@@ -129,10 +131,10 @@ const MoleculeBmLeanCustomContinueButton = () => {
           {
             type: "system",
             message:
-              "원하시는 방향을 선택하시고, 어떤 요소들이 변화되었는지 확인해보세요.",
+              "입력해주신 비즈니스 목표에 따른 캔버스의 정교화 방향성을 4가지 도출하였습니다.\n원하시는 방향을 선택하시고, 어떤 요소들이 변화되었는지 확인해보세요.",
             expertIndex: selectedExpertIndex,
           },
-          { type: `bmLeanAdsReport` }
+          { type: `bm${bmOrLean}AdsReport` }
         );
         setBmLeanAdsButtonState(1);
         setConversationStage(3);
@@ -247,14 +249,14 @@ const MoleculeBmLeanCustomContinueButton = () => {
   return (
     <>
       <ButtonWrap>
-          <button onClick={() => handleClick("more")}>다른 방향성 선택하기</button>
+          {/* <button onClick={() => handleClick("more")}>다른 방향성 선택하기</button> */}
           <button onClick={() => handleClick("enough")}>이정도면 충분합니다</button>
       </ButtonWrap>
     </>
   );
 };
 
-export default MoleculeBmLeanCustomContinueButton;
+export default MoleculeBmCustomContinueButton;
 
 const ButtonWrap = styled.div`
   display: flex;
