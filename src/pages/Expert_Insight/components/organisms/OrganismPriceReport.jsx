@@ -427,100 +427,6 @@ const OrganismPriceReport = () => {
     }
   }, [priceScrapData, priceReportData]);
 
-  // useEffect(() => {
-  //   if (productPrices.length > 0 && bins.length > 0) {
-  //     console.log("🚀 ~ useEffect ~ productPrices:", productPrices);
-  //     const svg = d3.select(sliderRef.current);
-  //     const height = 150;
-  //     const margin = { left: 40, right: 40, top: 20, bottom: 20 };
-
-  //     // x 축 스케일 설정
-  //     const x = d3
-  //       .scaleLinear()
-  //       .domain([0, d3.max(productPrices)])
-  //       .range([margin.left, width - margin.right])
-  //       .clamp(true);
-
-  //     // bins 배열의 각 항목에서 d.length 값으로 최대값 설정
-  //     const y = d3
-  //       .scaleLinear()
-  //       .domain([0, d3.max(bins, (d) => d.length)]) // 각 구간의 제품 개수를 기반으로 Y축 도메인 설정
-  //       .range([height - margin.bottom, margin.top]);
-
-  //     svg.selectAll("*").remove();
-  //     svg.attr("width", width).attr("height", height);
-
-  //     const xAxis = d3.axisBottom(x).ticks(10);
-  //     const xAxisGroup = svg
-  //       .append("g")
-  //       .attr("class", "x-axis")
-  //       .attr("transform", `translate(0, ${height - margin.bottom})`)
-  //       .call(xAxis);
-
-  //     xAxisGroup
-  //       .selectAll("path")
-  //       .style("stroke", "#E0E4EB")
-  //       .style("stroke-width", "5px");
-
-  //     xAxisGroup
-  //       .selectAll("line")
-  //       .style("stroke", "#E0E4EB")
-  //       .style("stroke-width", "5px");
-
-  //     // 선택된 범위에 대한 파란색 선 추가
-  //     svg
-  //       .append("rect")
-  //       .attr("x", x(range[0]))
-  //       .attr("y", height - margin.bottom + 0)
-  //       .attr("width", x(range[1]) - x(range[0]))
-  //       .attr("height", "5px")
-  //       .style("fill", palette.chatBlue);
-
-  //     // 바차트 그리기: 각 가격 구간에 속하는 제품 개수로 바 높이 설정
-  //     const barWidth = (width - margin.left - margin.right) / bins.length;
-  //     svg
-  //       .selectAll(".bar")
-  //       .data(bins)
-  //       .enter()
-  //       .append("rect")
-  //       .attr("class", "bar")
-  //       .attr("x", (d, i) => margin.left + i * barWidth)
-  //       .attr("y", (d) => y(d.length)) // 바 차트의 높이는 데이터의 개수로 설정
-  //       .attr("width", barWidth)
-  //       .attr("height", (d) => height - margin.bottom - y(d.length))
-  //       .style("fill", "#E0E4EB")
-  //       // X축 값과 range 값 비교: 스케일링된 값을 비교하지 않고 실제 데이터 값(d.x0, d.x1)과 비교
-  //       .style("display", (d) =>
-  //         d.x0 >= range[0] && d.x1 <= range[1] ? "block" : "none"
-  //       );
-
-  //     svg
-  //       .selectAll(".handle")
-  //       .data(range)
-  //       .enter()
-  //       .append("circle")
-  //       .attr("class", "handle")
-  //       .attr("cx", (d) => x(d))
-  //       .attr("cy", height - margin.bottom + 2)
-  //       .attr("r", 8)
-  //       .attr("data-index", (d, i) => i)
-  //       .style("fill", palette.chatBlue);
-
-  //     // // 드래그 핸들 아래에 가격 표시 추가 (소수점 제거 및 텍스트 레이어 조정)
-  //     // svg.selectAll('.handle-label')
-  //     //   .data(range)
-  //     //   .enter().append('text')
-  //     //   .attr('class', 'handle-label')
-  //     //   .attr('x', d => x(d))
-  //     //   .attr('y', height - margin.bottom +20)  // 텍스트를 약간 아래로
-  //     //   .attr('text-anchor', 'middle')
-  //     //   .style('fill', 'black')
-  //     //   .style('pointer-events', 'none')  // 마우스 이벤트가 텍스트에 영향을 주지 않도록 함
-  //     //   .style('position', 'relative')    // CSS에서 position을 설정하여 z-index 적용
-  //     //   .text(d => `₩${d3.format(",.0f")(d)}`);
-  //   }
-  // }, [range, productPrices, bins]);
-
   // 만단위/5만단위 올림 함수 추가
   const roundToNearestUnit = (number) => {
     const numStr = Math.abs(number).toString();
@@ -550,7 +456,8 @@ const OrganismPriceReport = () => {
       return Math.floor(number / 50000) * 50000;
     }
   };
-
+  let consumer_price_min = 100000;
+  let consumer_price_max = 300000;
   // useEffect 코드 수정
   useEffect(() => {
     if (productPrices.length > 0) {
@@ -606,8 +513,8 @@ const OrganismPriceReport = () => {
         .attr("transform", `translate(0, ${height - margin.bottom})`)
         .call(xAxis)
         .selectAll("path, line")
-        .style("stroke", "#E0E4EB")
-        .style("stroke-width", "5px");
+        .style("stroke", "#F6F6F6")
+        .style("stroke-width", "2px");
 
       // 바차트 그리기
       const barWidth = (width - margin.left - margin.right) / 10;
@@ -657,7 +564,6 @@ const OrganismPriceReport = () => {
       });
     }
   }, [productPrices, range, width]);
-
 
   return (
     <>
