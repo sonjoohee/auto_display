@@ -886,8 +886,11 @@ const ButtonWrap = styled.div`
 `;
 
 const ChartWrap = styled.div`
-  width: 100%; // 부모 요소의 너비에 맞춤
-  height: 200px;
+  svg {
+    max-width:500px;
+    width:100%;
+  }
+
   .tick {
     display: none;
   }
