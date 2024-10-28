@@ -109,14 +109,10 @@ import MoleculeBmSelectModelButton from "../molecules/MoleculeBmSelectModelButto
 import MoleculeBmBmAdsContinueButton from "../molecules/MoleculeBmBmAdsContinueButton";
 import MoleculeBmLeanAdsContinueButton from "../molecules/MoleculeBmLeanAdsContinueButton";
 
-
-
 import OrganismBmLeanAutoReport from "../organisms/OrganismBmLeanAutoReport";
 import OrganismBmLeanAdsReport from "../organisms/OrganismBmLeanAdsReport";
 import OrganismBmLeanCustomReport from "../organisms/OrganismBmLeanCustomReport";
-
-
-
+import OrganismBmBmAutoReport from "../organisms/OrganismBmBmAutoReport";
 
 const PageExpertInsight = () => {
   const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
@@ -525,11 +521,11 @@ if (isLoadingPage) {
                   return <MoleculeBmBmAdsContinueButton />;
                 } else if (item.type === "bmLeanAdsContinueButton") {
                   return <MoleculeBmLeanAdsContinueButton />;
-                // } else if (item.type === "bmBmAutoReport") {
-                //   return <OrganismBmBmAutoReport />;
 
-               } else if (item.type === "bmLeanAutoReport") {
-                return <OrganismBmLeanAutoReport />;
+                } else if (item.type === "bmBmAutoReport") {
+                  return <OrganismBmBmAutoReport />;
+                } else if (item.type === "bmLeanAutoReport") {
+                  return <OrganismBmLeanAutoReport />;
 
                 } else if (item.type === "bmLeanAdsReport") {
                   return <OrganismBmLeanAdsReport />;
