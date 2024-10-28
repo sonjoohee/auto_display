@@ -47,6 +47,15 @@ import {
   SURVEY_GOAL_FIXED,
   SURVEY_QUESTION_LIST,
   BM_OR_LEAN,
+  BM_BM_AUTO_REPORT_DATA,
+  BM_LEAN_AUTO_REPORT_DATA,
+  BM_BM_ADS_REPORT_DATA,
+  SELECTED_PROBLEM_OPTIONS,
+  BM_LEAN_ADS_REPORT_DATA,
+  BM_BM_CUSTOM_REPORT_DATA,
+  BM_LEAN_CUSTOM_REPORT_DATA,
+  BM_MODEL_SUGGESTION_REPORT_DATA,
+  BM_QUESTION_LIST,
 } from "../../../AtomStates";
 
 import {
@@ -58,6 +67,8 @@ import axios from "axios";
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeBmCustomContinueButton = () => {
+  const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
+  const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
   const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(SURVEY_GUIDELINE_REPORT_DATA);
   const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
   const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
@@ -111,6 +122,13 @@ const MoleculeBmCustomContinueButton = () => {
   const [isLoadingCaseHashTag, setIsLoadingCaseHashTag] = useAtom(IS_LOADING_CASE_HASHTAG);
   const [bmLeanAdsButtonState, setBmLeanAdsButtonState] = useAtom(BM_LEAN_ADS_REPORT_BUTTON_STATE);
   const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
+  const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
+  const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
+  const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
+  const [selectedProblemOptions, setSelectedProblemOptions] = useAtom(SELECTED_PROBLEM_OPTIONS);
+  const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
+  const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
+  const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
 
 
   const handleClick = async (type) => {
@@ -172,12 +190,22 @@ const MoleculeBmCustomContinueButton = () => {
           priceProductSegmentation : priceProductSegmentation,
           caseHashTag : caseHashTag,
           caseReportData : caseReportData,
-
+          buttonState : buttonState,
           surveyGuidelineReportData : surveyGuidelineReportData,
           surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
           surveyGoalSuggestionList: surveyGoalSuggestionList,
           surveyGoalFixed: surveyGoalFixed,
           surveyQuestionList: surveyQuestionList,
+          bmOrLean : BM_OR_LEAN,
+          bmQuestionList : bmQuestionList,
+          bmModelSuggestionReportData : bmModelSuggestionReportData,
+          bmBmAutoReportData : bmBmAutoReportData,
+          bmLeanAutoReportData : bmLeanAutoReportData,
+          bmBmAdsReportData : bmBmAdsReportData,
+          bmSelectedProblemOptions : selectedProblemOptions,
+          bmLeanAdsReportData : bmLeanAdsReportData,
+          bmBmCustomReportData : bmBmCustomReportData,
+          bmLeanCustomReportData : bmLeanCustomReportData,
         },
         isLoggedIn,
         conversationId
@@ -194,7 +222,7 @@ const MoleculeBmCustomContinueButton = () => {
       );
       setButtonState({
         ...buttonState,
-        caseEnough: 1,
+        bmEnough: 1,
       });
       setConversation(updatedConversation);
 
@@ -230,12 +258,25 @@ const MoleculeBmCustomContinueButton = () => {
           priceProductSegmentation : priceProductSegmentation,
           caseHashTag : caseHashTag,
           caseReportData : caseReportData,
-
+          buttonState : {
+            ...buttonState,
+            bmEnough: 1,
+          },
           surveyGuidelineReportData : surveyGuidelineReportData,
           surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
           surveyGoalSuggestionList: surveyGoalSuggestionList,
           surveyGoalFixed: surveyGoalFixed,
           surveyQuestionList: surveyQuestionList,
+          bmOrLean : BM_OR_LEAN,
+          bmQuestionList : bmQuestionList,
+          bmModelSuggestionReportData : bmModelSuggestionReportData,
+          bmBmAutoReportData : bmBmAutoReportData,
+          bmLeanAutoReportData : bmLeanAutoReportData,
+          bmBmAdsReportData : bmBmAdsReportData,
+          bmSelectedProblemOptions : selectedProblemOptions,
+          bmLeanAdsReportData : bmLeanAdsReportData,
+          bmBmCustomReportData : bmBmCustomReportData,
+          bmLeanCustomReportData : bmLeanCustomReportData,
         },
         isLoggedIn,
         conversationId

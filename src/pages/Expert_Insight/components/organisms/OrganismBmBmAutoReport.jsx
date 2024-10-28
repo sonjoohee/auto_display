@@ -54,6 +54,14 @@ import {
   SURVEY_GOAL_SUGGESTION_LIST,
   SURVEY_GOAL_FIXED,
   SURVEY_QUESTION_LIST,
+  SELECTED_PROBLEM_OPTIONS,
+  BM_OR_LEAN,
+  BM_LEAN_AUTO_REPORT_DATA,
+  BM_BM_ADS_REPORT_DATA,
+  BM_LEAN_ADS_REPORT_DATA,
+  BM_BM_CUSTOM_REPORT_DATA,
+  BM_LEAN_CUSTOM_REPORT_DATA,
+  BM_MODEL_SUGGESTION_REPORT_DATA,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -68,6 +76,8 @@ import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
 
 const OrganismBmBmAutoReport = () => {
+  const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
+  const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
   const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(SURVEY_GUIDELINE_REPORT_DATA);
   const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
   const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
@@ -141,8 +151,14 @@ const OrganismBmBmAutoReport = () => {
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [isLoadingIdeaPriority, setIsLoadingIdeaPriority] = useState(false);
+  const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
   const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
-  const [bmQuestionList, setbmQuestionList] = useAtom(BM_QUESTION_LIST);
+  const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
+  const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
+  const [selectedProblemOptions, setSelectedProblemOptions] = useAtom(SELECTED_PROBLEM_OPTIONS);
+  const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
+  const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
+  const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
 
   
   const axiosConfig = {
@@ -263,7 +279,15 @@ const OrganismBmBmAutoReport = () => {
             caseHashTag : caseHashTag,
             caseReportData : caseReportData,
             bmBmAutoReportData : response.data.bm_bm_auto_report,
-
+            bmOrLean : BM_OR_LEAN,
+            bmQuestionList : bmQuestionList,
+            bmModelSuggestionReportData : bmModelSuggestionReportData,
+            bmLeanAutoReportData : bmLeanAutoReportData,
+            bmBmAdsReportData : bmBmAdsReportData,
+            bmSelectedProblemOptions : selectedProblemOptions,
+            bmLeanAdsReportData : bmLeanAdsReportData,
+            bmBmCustomReportData : bmBmCustomReportData,
+            bmLeanCustomReportData : bmLeanCustomReportData,
             surveyGuidelineReportData : surveyGuidelineReportData,
             surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
             surveyGoalSuggestionList: surveyGoalSuggestionList,

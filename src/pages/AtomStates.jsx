@@ -250,7 +250,7 @@ export const PRICE_SELECTED_PRODUCT_SEGMENTATION = atom([]);
 export const BM_OR_LEAN = atom("");
 
 export const BM_OPTION_BUTTON_STATE = atom(0);
-export const BM_USER_GOAL_INPUT = atom("");
+// export const BM_USER_GOAL_INPUT = atom("");
 export const BM_QUESTION_LIST = atom([]);
 
 export const BM_MODEL_SUGGESTION_REPORT_DATA = atom([]);
@@ -270,8 +270,8 @@ export const SELECTED_PROBLEM_OPTIONS = atom("");
 export const BM_LEAN_ADS_REPORT_DATA = atom([]);
 export const BM_LEAN_ADS_REPORT_BUTTON_STATE = atom(0);
 
-export const SELECTED_BM_LEAN_PROBLEM = atom("");
-export const SELECTED_BM_BM_TARGET = atom("");
+// export const SELECTED_BM_LEAN_PROBLEM = atom("");
+// export const SELECTED_BM_BM_TARGET = atom("");
 
 export const BM_BM_CUSTOM_REPORT_DATA = atom([]);
 export const BM_BM_CUSTOM_REPORT_BUTTON_STATE = atom(0);
