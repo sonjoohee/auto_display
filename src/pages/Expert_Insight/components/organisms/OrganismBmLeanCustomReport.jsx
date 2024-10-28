@@ -511,7 +511,7 @@ useEffect(() => {
                 </strong>
                 {bmLeanCustomReportData[0]?.content?.map((contentItem, contentIndex) => (
                   <div key={contentIndex}>
-                    <p>{contentItem?.description}</p>
+                    {contentIndex === 0 && <p>{contentItem?.description}</p>}
                     <ul>
                       {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
                         <li key={keywordIndex}>{keywordItem}</li>
@@ -534,7 +534,7 @@ useEffect(() => {
                   </strong>
                   {section?.content?.map((contentItem, contentIndex) => (
                     <div key={contentIndex}>
-                      <p>{contentItem?.description}</p>
+                      {contentIndex === 0 && <p>{contentItem?.description}</p>}
                       <ul>
                         {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
                           <li key={keywordIndex}>{keywordItem}</li>
@@ -557,7 +557,7 @@ useEffect(() => {
                 </strong>
                 {bmLeanCustomReportData[1]?.content?.map((contentItem, contentIndex) => (
                   <div key={contentIndex}>
-                    <p>{contentItem?.description}</p>
+                    {contentIndex === 0 && <p>{contentItem?.description}</p>}
                     <ul>
                       {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
                         <li key={keywordIndex}>{keywordItem}</li>
@@ -580,7 +580,7 @@ useEffect(() => {
                   </strong>
                   {section?.content?.map((contentItem, contentIndex) => (
                     <div key={contentIndex}>
-                      <p>{contentItem?.description}</p>
+                      {contentIndex === 0 && <p>{contentItem?.description}</p>}
                       <ul>
                         {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
                           <li key={keywordIndex}>{keywordItem}</li>
@@ -603,7 +603,7 @@ useEffect(() => {
                 </strong>
                 {bmLeanCustomReportData[4]?.content?.map((contentItem, contentIndex) => (
                   <div key={contentIndex}>
-                    <p>{contentItem?.description}</p>
+                    {contentIndex === 0 && <p>{contentItem?.description}</p>}
                     <ul>
                       {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
                         <li key={keywordIndex}>{keywordItem}</li>
@@ -627,7 +627,7 @@ useEffect(() => {
               </strong>
               {bmLeanCustomReportData[7]?.content?.map((contentItem, contentIndex) => (
                 <div key={contentIndex}>
-                  <p>{contentItem?.description}</p>
+                  {contentIndex === 0 && <p>{contentItem?.description}</p>}
                   <ul>
                     {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
                       <li key={keywordIndex}>{keywordItem}</li>
@@ -649,7 +649,7 @@ useEffect(() => {
               </strong>
               {bmLeanCustomReportData[8]?.content?.map((contentItem, contentIndex) => (
                 <div key={contentIndex}>
-                  <p>{contentItem?.description}</p>
+                  {contentIndex === 0 && <p>{contentItem?.description}</p>}
                   <ul>
                     {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
                       <li key={keywordIndex}>{keywordItem}</li>
