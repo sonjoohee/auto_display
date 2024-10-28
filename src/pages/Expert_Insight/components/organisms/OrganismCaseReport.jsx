@@ -152,7 +152,7 @@ const OrganismCaseReport = ({ caseReportCount }) => {
   useEffect(() => {
     const fetchCaseReport = async () => {
       try {
-       if(caseReportButtonState) {
+       if(approachPath !== 2) {
           setIsLoadingCaseReport(true);
           setIsLoading(true);
           setCaseReportButtonState(0);
@@ -321,7 +321,7 @@ const OrganismCaseReport = ({ caseReportCount }) => {
     };
 
     fetchCaseReport();
-  }, [caseReportButtonState]);
+  }, []);
 
   if (typeof caseReportData[caseReportCount] === "object" && (caseReportData[caseReportCount].hasOwnProperty("unrelated_input_text") || caseReportData[caseReportCount].hasOwnProperty("case_not_found_text"))) {
     return null;
