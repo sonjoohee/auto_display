@@ -143,14 +143,20 @@ const OrganismBmBmAdsReport = () => {
   const [bmBmAdsButtonState, setBmBmAdsButtonState] = useAtom(BM_BM_ADS_REPORT_BUTTON_STATE);
   const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
 
-  
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [isLoadingIdeaPriority, setIsLoadingIdeaPriority] = useState(false);
   const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
   const [bmQuestionList, setbmQuestionList] = useAtom(BM_QUESTION_LIST);
   const [selectedProblemOptions, setSelectedProblemOptions] = useAtom(SELECTED_PROBLEM_OPTIONS); // 문제 선택 아톰
+  const [problemOptions, setProblemOptions] = useState("");
   const [bmBmCustomButtonState, setBmBmCustomButtonState] = useAtom(BM_BM_CUSTOM_REPORT_BUTTON_STATE);
+
+  useEffect(() => {
+    if(selectedProblemOptions) {
+      setProblemOptions(selectedProblemOptions);
+    }
+  }, [selectedProblemOptions]);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -309,13 +315,13 @@ const OrganismBmBmAdsReport = () => {
   };
 
   const handleExampleClick = (example) => {
-    setSelectedProblemOptions(example); // 클릭된 example을 selectedProblemOptions에 저장
+    setProblemOptions(example); // 클릭된 example을 selectedProblemOptions에 저장
   };
 
   const handleConfirm = async () => {
-    if (selectedPocOptions.length) return;
+    if (!problemOptions) return;
     
-    setSelectedProblemOptions(selectedProblemOptions);
+    setSelectedProblemOptions(problemOptions);
     setApproachPath(3);
     setConversationStage(3);
     setBmBmCustomButtonState(1);
@@ -324,7 +330,7 @@ const OrganismBmBmAdsReport = () => {
     updatedConversation.push(
       {
         type: "user",
-        message: `*${selectedProblemOptions}*에 대한 비즈니스 모델 캔버스를 작성해주세요`,
+        message: `*${problemOptions}*에 대한 비즈니스 모델 캔버스를 작성해주세요`,
       },
       {
         type: `bmBmCustomReport`,
@@ -368,6 +374,8 @@ const OrganismBmBmAdsReport = () => {
           surveyGoalSuggestionList: surveyGoalSuggestionList,
           surveyGoalFixed: surveyGoalFixed,
           surveyQuestionList: surveyQuestionList,
+
+          bmSelectedProblemOptions: problemOptions,
         },
         isLoggedIn,
         conversationId
@@ -399,9 +407,15 @@ const OrganismBmBmAdsReport = () => {
                   <Option
                     key={exampleIndex}
                     onClick={() => handleExampleClick(example)} // 클릭 시 handleExampleClick 호출
-                    className={selectedProblemOptions === example ? 'selected' : ''}
+                    selected={problemOptions === example}
+                    selectedProblemOptions={selectedProblemOptions}
                   >
-                  {example}
+                   <Label
+                      selectedProblemOptions={selectedProblemOptions}
+                      selected={problemOptions === example}
+                    >
+                      {example}
+                    </Label>
                   </Option>
                 ))
               ) : (
@@ -428,17 +442,16 @@ const OrganismBmBmAdsReport = () => {
             </Pagination>
           )}
 
-        <ButtonWrap selectedPocOptions={selectedProblemOptions}>
-            <div 
-              className="finish" 
-              disabled={!selectedProblemOptions} // 선택이 안됐을 경우 버튼 비활성화
+        <ButtonWrap>
+            <Button 
+              selectedProblemOptions={selectedProblemOptions} problemOptions={problemOptions}
+              disabled={!problemOptions} // 선택이 안됐을 경우 버튼 비활성화
               onClick={() => {
-                if (!selectedProblemOptions) return; // 선택이 안됐을 경우 동작 막기
                 handleConfirm();
               }}
             >
               완료
-            </div>
+            </Button>
           </ButtonWrap>
         </>
       )}
@@ -448,37 +461,33 @@ const OrganismBmBmAdsReport = () => {
 export default OrganismBmBmAdsReport;
 
 const Wrap = styled.div`
-  max-width:986px;
-  // width:100%;
+  max-width:540px;
+  width:100%;
   display:flex;
   flex-direction:column;
-  padding: 28px;
+  gap:20px;
+  padding:20px;
   margin:24px 0 0 50px;
   border-radius:15px;
   border:1px solid ${palette.outlineGray};
 
   h1 {
-    font-size:1.25rem;
-    font-weight:400;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-size:1rem;
+    font-weight:700;
     text-align:left;
-    margin-bottom:20px;
   }
 `;
 
-const Question = styled.div`
-  font-size: 0.88rem;
-  font-weight:700;
-  text-align:left;
-  margin-bottom: 20px;
-`;
-
 const OptionContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
+  display:flex;
   flex-direction:column;
+  flex-wrap:wrap;
   justify-content:space-between;
-  gap: 8px;
-  margin-bottom:18px;
+  gap:8px;
 `;
 
 const Option = styled.div`
@@ -486,38 +495,71 @@ const Option = styled.div`
   display:flex;
   gap:8px;
   align-items:center;
-  // flex: 1 1 40%;
-  font-size:0.88rem;
   color: ${palette.gray800};
-  padding: 8px 12px;
+  font-size:0.88rem;
+  text-align: left;
+  padding: 10px;
   border-radius: 8px;
   cursor: pointer;
-  background-color: ${palette.white};
-  border: 1px solid ${palette.lineGray};
+  background-color: ${(props) =>
+    props.selected
+      ? props.selectedProblemOptions
+        ? "rgba(0,0,0,0.05)"
+        : "rgba(4,83,244,0.05)"
+      : palette.white};
+  border: 1px solid ${(props) => (props.selected ? (props.selectedProblemOptions ? palette.gray800 : palette.blue) : palette.lineGray)};
   transition:all .5s;
+
+  p {
+    color: ${(props) => (props.selected ? palette.gray800 : palette.gray500)};
+    line-height:1.3;
+  }
+  
+  img {
+    margin-bottom: 5px;
+    background-color: ${(props) => (!props.selected || props.selectedProblemOptions ? "rgba(246, 246, 246, 1)" : "rgba(255, 255, 255, 1)")};
+    border-radius: 50%;
+    padding: 10px;
+    width: 34px;
+    height: 34px;
+  }
+
+  &:hover {
+    border-color: ${(props) =>
+      props.selectedProblemOptions
+        ? "none" 
+        : palette.blue};
+  }
+`;
+
+const Label = styled.label`
+  position:relative;
+  display:flex;
+  gap:8px;
+  align-items:flex-start;
+  width:100%;
+  color: ${(props) => (props.selected ? (props.selectedProblemOptions ? palette.gray800 : palette.blue) : palette.gray800)};
+  cursor:pointer;
 
   &:before {
     width:20px;
     height:20px;
+    flex-shrink:0;
     border-radius:50%;
-    border: 1px solid ${palette.lineGray};
-    background-color: ${palette.white};
+    border:1px solid ${(props) => (props.selected ? (props.selectedProblemOptions ? palette.gray800 : palette.blue) : palette.lineGray)};
+    background-color: ${(props) => (props.selected ? (props.selectedProblemOptions ? palette.gray800 : palette.blue) : palette.white)};
     transition:all .5s;
     content:'';
   }
 
   &:after {
     position:absolute;
-    left:12px;
-    top:8px;
+    left:0;
+    top:0;
     width:20px;
     height:20px;
     background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='8' viewBox='0 0 10 8' fill='none'%3E%3Cpath d='M9 0.914062L3.4 6.91406L1 4.51406' stroke='white' stroke-width='1.33333' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center no-repeat;
     content:'';
-  }
-
-  &:hover {
-    border-color: none;
   }
 `;
 
@@ -538,7 +580,8 @@ const Pagination = styled.ul`
     color:${palette.gray300};
     padding:0 10px;
     transition:all .5s;
-
+    cursor: pointer;
+    
     &:hover {
       color:${palette.gray700};
     }
@@ -551,59 +594,23 @@ const Pagination = styled.ul`
 `;
 
 const ButtonWrap = styled.div`
-  // margin-top:40px;
-  margin-top:auto;
   display:flex;
-  justify-content:space-between;
+  justify-content:end;
   align-items:center;
+`;
 
-  .prev {
-    font-size:0.88rem;
-    color:${palette.gray500};
-    cursor:pointer;
-  }
+const Button = styled.button`
+  font-family: Pretendard, Poppins;
+  font-size:0.88rem;
+  color: ${(props) => (props.problemOptions ? palette.chatBlue : palette.black)};
+  line-height:22px;
+  padding:8px 20px;
+  margin-left:auto;
+  border-radius:8px;
+  border:0;
+  background:${palette.white};
+  transition:all .5s;
 
-  .next, .finish {
-    // min-width:100px;
-    font-size:0.88rem;
-    // color:${palette.white};
-    // line-height:22px;
-    // padding:8px 20px;
-    margin-left:auto;
-    border-radius:8px;
-    background:none;
-    transition:all .5s;
-  }
-
-  .next {
-    color: ${(props) =>
-      props.selectedPocOptions.length !== 0
-        ? palette.black
-        : !props.selectedOption1
-        ? palette.gray500
-        : palette.chatBlue};
-    background: ${(props) =>
-      props.selectedPocOptions.length !== 0
-        ? palette.white
-        : !props.selectedOption1
-        ? palette.white
-        : palette.white};
-    cursor: ${(props) => (!props.selectedOption1 ? "default" : "pointer")};
-  }
-
-  .finish {
-    color: ${(props) =>
-      props.selectedPocOptions.length !== 0
-        ? palette.black
-        : !props.selectedOption1 || !props.selectedOption2
-        ? palette.gray500
-        : palette.chatBlue};
-    background: ${(props) =>
-      props.selectedPocOptions.length !== 0
-        ? palette.white
-        : !props.selectedOption1 || !props.selectedOption2
-        ? palette.white
-        : palette.white};
-    cursor: ${(props) => (!props.selectedOption1 || !props.selectedOption2 ? "default" : "pointer")};
-  }
+  display: ${(props) => (
+    props.selectedProblemOptions ? 'none' : 'block')};
 `;

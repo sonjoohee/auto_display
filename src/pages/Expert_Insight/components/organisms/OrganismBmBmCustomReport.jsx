@@ -365,7 +365,7 @@ const OrganismBmBmCustomReport = () => {
             목표고객: businessInformationTargetCustomer,
           },
           bm_bm_auto_report: bmBmAutoReportData,
-          selected_bm_bm_target : selectedProblemOptions
+          selected_bm_bm_target: selectedProblemOptions
         };
 
         let response = await axios.post(
