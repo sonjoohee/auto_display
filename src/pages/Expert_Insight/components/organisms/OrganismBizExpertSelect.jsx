@@ -404,7 +404,9 @@ const OrganismBizExpertSelect = () => {
         (selectedExpertList.includes("5") || ideaFeatureData.length !== 0)) &&
         (selectedExpertList.includes("6") || KpiQuestionList.length !== 0) &&
         (selectedExpertList.includes("7") || priceProduct.length !== 0) &&
-        (selectedExpertList.includes("8") || caseReportData.length !== 0) ? null : (
+        (selectedExpertList.includes("8") || caseReportData.length !== 0) &&
+        (selectedExpertList.includes("9") || bmOrLean) &&
+        (selectedExpertList.includes("10") || surveyGoalSuggestionList.length !== 0) ? null : (
   
         <BizExpertSelectContainer>
           <h1>아래 분야별 전문가와 대화를 통해 아이디어를 발전시켜보세요.</h1>
@@ -481,15 +483,15 @@ const OrganismBizExpertSelect = () => {
                 </button>
               </div>
             )}
-            {/* {(selectedExpertList.includes("9") || KpiQuestionList.length !== 0) ? null : (
+            {(selectedExpertList.includes("9") || bmOrLean) ? null : (
               <div>
                 <img src={images.IconExpert9} alt="" />
-                <p>그로스 해커에게 KPI 전략 받기</p>
+                <p>비즈니스 모델 진단 전문가에게 모델 진단 받기</p>
                 <button type="button" onClick={() => handledExpertSelect("9")}>
                   시작하기
                 </button>
               </div>
-            )} */}
+            )}
             {(selectedExpertList.includes("10") || surveyGoalSuggestionList.length !== 0) ? null : (
               <div>
                 <img src={images.IconExpert10} alt="" />
