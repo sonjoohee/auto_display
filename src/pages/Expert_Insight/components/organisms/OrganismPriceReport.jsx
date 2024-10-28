@@ -899,6 +899,11 @@ const ButtonWrap = styled.div`
 `;
 
 const ChartWrap = styled.div`
+  svg {
+    max-width:500px;
+    width:100%;
+  }
+
   .tick {
     display: none;
   }
