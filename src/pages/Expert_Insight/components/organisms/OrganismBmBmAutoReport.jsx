@@ -46,8 +46,8 @@ import {
   PRICE_PRODUCT_SEGMENTATION,
   CASE_HASH_TAG,
   CASE_REPORT_DATA,
-  BM_LEAN_AUTO_REPORT_DATA,
-  BM_LEAN_AUTO_REPORT_BUTTON_STATE,
+  BM_BM_AUTO_REPORT_DATA,
+  BM_BM_AUTO_REPORT_BUTTON_STATE,
   BM_QUESTION_LIST,
   SURVEY_GUIDELINE_REPORT_DATA,
   SURVEY_GUIDELINE_DETAIL_REPORT_DATA,
@@ -67,7 +67,7 @@ import {
 import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
 
-const OrganismBmLeanAutoReport = () => {
+const OrganismBmBmAutoReport = () => {
   const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(SURVEY_GUIDELINE_REPORT_DATA);
   const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
   const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
@@ -136,13 +136,12 @@ const OrganismBmLeanAutoReport = () => {
   const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
   const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
 
-  const [bmLeanAutoButtonState, setBmLeanAutoButtonState] = useAtom(BM_LEAN_AUTO_REPORT_BUTTON_STATE);
+  const [bmBmAutoButtonState, setBmBmAutoButtonState] = useAtom(BM_BM_AUTO_REPORT_BUTTON_STATE);
 
-  
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [isLoadingIdeaPriority, setIsLoadingIdeaPriority] = useState(false);
-  const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
+  const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
   const [bmQuestionList, setbmQuestionList] = useAtom(BM_QUESTION_LIST);
 
   
@@ -155,12 +154,12 @@ const OrganismBmLeanAutoReport = () => {
   };
 
   useEffect(() => {
-    const fetchBmLeanAutoReport = async () => {
+    const fetchBmBmAutoReport = async () => {
 
-      if(bmLeanAutoButtonState) {
+      if(bmBmAutoButtonState) {
         setIsLoading(true);
         setIsLoadingIdeaPriority(true);
-        setBmLeanAutoButtonState(0);
+        setBmBmAutoButtonState(0);
 
         const data = {
           expert_id: "1",
@@ -175,7 +174,7 @@ const OrganismBmLeanAutoReport = () => {
         };
 
         let response = await axios.post(
-          "https://wishresearch.kr/panels/lean_auto_report",
+          "https://wishresearch.kr/panels/bm_auto_report",
           data,
           axiosConfig
         );
@@ -185,9 +184,9 @@ const OrganismBmLeanAutoReport = () => {
 
         while (retryCount < maxRetries && (
           !response || !response.data || typeof response.data !== "object" ||
-          !response.data.hasOwnProperty("bm_lean_auto_report") ||
-          !Array.isArray(response.data.bm_lean_auto_report) ||
-          response.data.bm_lean_auto_report.some(section => 
+          !response.data.hasOwnProperty("bm_bm_auto_report") ||
+          !Array.isArray(response.data.bm_bm_auto_report) ||
+          response.data.bm_bm_auto_report.some(section => 
             !section.hasOwnProperty("section") || 
             !Array.isArray(section.content) || 
             section.content.some(contentItem => 
@@ -198,7 +197,7 @@ const OrganismBmLeanAutoReport = () => {
           )
         )) {
           response = await axios.post(
-            "https://wishresearch.kr/panels/lean_auto_report",
+            "https://wishresearch.kr/panels/bm_auto_report",
             data,
             axiosConfig
           );
@@ -210,7 +209,7 @@ const OrganismBmLeanAutoReport = () => {
           throw new Error("Maximum retry attempts reached. Empty response persists.");
         }
 
-        setBmLeanAutoReportData(response.data.bm_lean_auto_report);
+        setBmBmAutoReportData(response.data.bm_bm_auto_report);
 
         setIsLoading(false);
         setIsLoadingIdeaPriority(false);
@@ -263,7 +262,7 @@ const OrganismBmLeanAutoReport = () => {
             priceProductSegmentation : priceProductSegmentation,
             caseHashTag : caseHashTag,
             caseReportData : caseReportData,
-            bmLeanAutoReportData : response.data.bm_lean_auto_report,
+            bmBmAutoReportData : response.data.bm_bm_auto_report,
 
             surveyGuidelineReportData : surveyGuidelineReportData,
             surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
@@ -277,12 +276,12 @@ const OrganismBmLeanAutoReport = () => {
       }
     };
 
-    fetchBmLeanAutoReport();
-  }, [bmLeanAutoButtonState]);
+    fetchBmBmAutoReport();
+  }, [bmBmAutoButtonState]);
 
   return (
     <BoxWrap>
-      {isLoadingIdeaPriority || bmLeanAutoButtonState ? (
+      {isLoadingIdeaPriority || bmBmAutoButtonState ? (
         <>
           <SkeletonTitle className="title-placeholder" />
           <SkeletonLine className="content-placeholder" />
@@ -298,7 +297,7 @@ const OrganismBmLeanAutoReport = () => {
         </>
       ) : (
         <>
-          <h1>{titleOfBusinessInfo}의 린 캔버스 - 기본형</h1>
+          <h1>{titleOfBusinessInfo}의 비즈니스 모델 캔버스 - 기본형</h1>
           <p>{mainFeaturesOfBusinessInformation[0]}</p>
   
           <ModelCanvasWrap>
@@ -307,12 +306,12 @@ const OrganismBmLeanAutoReport = () => {
             <CanvasList>
               <section>
                 <strong>
-                  문제
+                  핵심 파트너십
                   <span>
-                    <img src={images.IconCanvas10} alt="" />
+                    <img src={images.IconCanvas01} alt="" />
                   </span>
                 </strong>
-                {bmLeanAutoReportData[0]?.content?.map((contentItem, contentIndex) => (
+                {bmBmAutoReportData[7]?.content?.map((contentItem, contentIndex) => (
                   <div key={contentIndex}>
                     <p>{contentItem?.description}</p>
                     <ul>
@@ -327,15 +326,12 @@ const OrganismBmLeanAutoReport = () => {
 
             {/* 6번째와 7번째 항목을 묶은 CanvasList Num2 */}
             <CanvasList Num2>
-              {[
-                bmLeanAutoReportData?.[3],
-                bmLeanAutoReportData?.[8]
-              ].map((section, index) => (
-                <section>
+              {[...bmBmAutoReportData?.slice(5, 7)].reverse().map((section, index) => (
+                <section key={index + 5}>
                   <strong>
-                    {index === 0 ? "솔루션" : "핵심 지표"}
+                    {index === 0 ? "핵심 활동" : "핵심 자원"}
                     <span>
-                      <img src={images[`IconCanvas${index === 0 ? 11 : 12}`]} alt="" />
+                      <img src={images[`IconCanvas0${index + 2}`]} alt="" />
                     </span>
                   </strong>
                   {section?.content?.map((contentItem, contentIndex) => (
@@ -361,7 +357,7 @@ const OrganismBmLeanAutoReport = () => {
                     <img src={images.IconCanvas04} alt="" />
                   </span>
                 </strong>
-                {bmLeanAutoReportData[2]?.content?.map((contentItem, contentIndex) => (
+                {bmBmAutoReportData[1]?.content?.map((contentItem, contentIndex) => (
                   <div key={contentIndex}>
                     <p>{contentItem?.description}</p>
                     <ul>
@@ -376,12 +372,12 @@ const OrganismBmLeanAutoReport = () => {
 
             {/* 3번째와 4번째 항목을 묶은 CanvasList Num2 */}
             <CanvasList Num2>
-              {bmLeanAutoReportData?.slice(4, 6).map((section, index) => (
+              {[...bmBmAutoReportData?.slice(2, 4)].reverse().map((section, index) => (
                 <section key={index + 2}>
                   <strong>
-                    {index === 0 ? "경쟁우위" : "채널"}
+                    {index === 0 ? "고객관계" : "채널"}
                     <span>
-                      <img src={images[`IconCanvas${index === 0 ? 13 : '06'}`]} alt="" />
+                      <img src={images[`IconCanvas0${index + 5}`]} alt="" />
                     </span>
                   </strong>
                   {section?.content?.map((contentItem, contentIndex) => (
@@ -407,7 +403,7 @@ const OrganismBmLeanAutoReport = () => {
                     <img src={images.IconCanvas07} alt="" />
                   </span>
                 </strong>
-                {bmLeanAutoReportData[1]?.content?.map((contentItem, contentIndex) => (
+                {bmBmAutoReportData[0]?.content?.map((contentItem, contentIndex) => (
                   <div key={contentIndex}>
                     <p>{contentItem?.description}</p>
                     <ul>
@@ -431,7 +427,7 @@ const OrganismBmLeanAutoReport = () => {
                   <img src={images.IconCanvas08} alt="" />
                 </span>
               </strong>
-              {bmLeanAutoReportData[7]?.content?.map((contentItem, contentIndex) => (
+              {bmBmAutoReportData[8]?.content?.map((contentItem, contentIndex) => (
                 <div key={contentIndex}>
                   <p>{contentItem?.description}</p>
                   <ul>
@@ -453,7 +449,7 @@ const OrganismBmLeanAutoReport = () => {
                   <img src={images.IconCanvas09} alt="" />
                 </span>
               </strong>
-              {bmLeanAutoReportData[6]?.content?.map((contentItem, contentIndex) => (
+              {bmBmAutoReportData[4]?.content?.map((contentItem, contentIndex) => (
                 <div key={contentIndex}>
                   <p>{contentItem?.description}</p>
                   <ul>
@@ -464,13 +460,13 @@ const OrganismBmLeanAutoReport = () => {
                 </div>
               ))}
             </section>
-          </CanvasList>
-        </CanvasSection>
-        </ModelCanvasWrap>
-        {/* <MoleculeReportController
-          reportIndex={9}
-          sampleData={bmLeanAutoReportData}
-        /> */}
+            </CanvasList>
+          </CanvasSection>
+          </ModelCanvasWrap>
+          {/* <MoleculeReportController
+            reportIndex={9}
+            sampleData={bmBmAutoReportData}
+          /> */}
         </>
       )}
     </BoxWrap>
@@ -478,7 +474,7 @@ const OrganismBmLeanAutoReport = () => {
 };
 
 
-export default OrganismBmLeanAutoReport;
+export default OrganismBmBmAutoReport;
 const BoxWrap = styled.div`
   max-width:988px;
   width:100%;
