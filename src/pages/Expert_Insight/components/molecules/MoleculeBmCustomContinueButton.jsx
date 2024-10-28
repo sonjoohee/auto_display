@@ -121,7 +121,7 @@ const MoleculeBmCustomContinueButton = () => {
     const updatedConversation = [...conversation];
 
     if (updatedConversation.length > 0 &&
-        updatedConversation[updatedConversation.length - 1].type === "BmAdsContinueButton"
+        updatedConversation[updatedConversation.length - 1].type === "bmCustomContinueButton"
     ) {
       updatedConversation.pop();
     }
