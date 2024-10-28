@@ -390,7 +390,19 @@ const OrganismPriceReport = () => {
         const svg = d3.select(sliderRef.current);
         const height = 150;
         const margin = { left: 40, right: 40, top: 20, bottom: 20 };
-    
+        
+        // 툴팁 추가
+        const tooltip = d3.select(".App").append("div")
+          .attr("class", "tooltip")
+          .style("position", "absolute")
+          .style("padding", "8px")
+          .style("background", "rgba(0, 0, 0, 0.7)")
+          .style("font-size", ".75rem")
+          .style("color", "white")
+          .style("border-radius", "4px")
+          .style("pointer-events", "none")
+          .style("opacity", 0);
+
         // x 축 스케일 설정
         const x = d3.scaleLinear()
           .domain([0, d3.max(productPrices)])
@@ -418,7 +430,27 @@ const OrganismPriceReport = () => {
         xAxisGroup.selectAll('line')
           .style('stroke', '#E0E4EB')
           .style('stroke-width', '5px');
-    
+
+        // X축 레이블 추가
+        svg.append("text")
+        .attr("class", "x-axis-label")
+        .attr("x", width - margin.right)
+        .attr("y", height - 5)
+        .attr("text-anchor", "end")
+        .style("fill", "#666666")
+        .style("font-size", "0.75rem")
+        .text("가격 범위 (₩)");
+
+        svg.append("text")
+        .attr("class", "y-axis-label")
+        .attr("x", -margin.left + 10)
+        .attr("y", margin.top)
+        .attr("transform", "rotate(-90)")
+        .attr("text-anchor", "end")
+        .style("fill", "#666666")
+        .style("font-size", "0.75rem")
+        .text("제품 개수");
+
         // 선택된 범위에 대한 파란색 선 추가
         svg.append('rect')
           .attr('x', x(range[0]))
@@ -426,21 +458,40 @@ const OrganismPriceReport = () => {
           .attr('width', x(range[1]) - x(range[0]))
           .attr('height', '5px')
           .style('fill', palette.chatBlue);
-    
+
         // 바차트 그리기: 각 가격 구간에 속하는 제품 개수로 바 높이 설정
         const barWidth = (width - margin.left - margin.right) / bins.length;
         svg.selectAll('.bar')
-        .data(bins)
-        .enter().append('rect')
-        .attr('class', 'bar')
-        .attr('x', (d, i) => margin.left + i * barWidth)
-        .attr('y', d => y(d.length)) // 바 차트의 높이는 데이터의 개수로 설정
-        .attr('width', barWidth)
-        .attr('height', d => height - margin.bottom - y(d.length))
-        .style('fill', '#E0E4EB')
-        // X축 값과 range 값 비교: 스케일링된 값을 비교하지 않고 실제 데이터 값(d.x0, d.x1)과 비교
-        .style('display', d => (d.x0 >= range[0] && d.x1 <= range[1]) ? 'block' : 'none');
+          .data(bins)
+          .enter().append('rect')
+          .attr('class', 'bar')
+          .attr('x', (d, i) => margin.left + i * barWidth)
+          .attr('y', d => y(d.length)) // 바 차트의 높이는 데이터의 개수로 설정
+          .attr('width', barWidth)
+          .attr('height', d => height - margin.bottom - y(d.length))
+          .style('fill', '#E0E4EB')
+          // X축 값과 range 값 비교: 스케일링된 값을 비교하지 않고 실제 데이터 값(d.x0, d.x1)과 비교
+          .style('display', d => (d.x0 >= range[0] && d.x1 <= range[1]) ? 'block' : 'none')
       
+          // 마우스 오버 이벤트 추가
+          .on('mouseover', (event, d) => {
+            tooltip.transition().duration(200).style("opacity", .9);
+            tooltip.html(`Range: ${d.x0} ~ ${d.x1}<br/>Count: ${d.length}`)
+              .style("left", (event.pageX + 5) + "px")
+              .style("top", (event.pageY - 28) + "px");
+          })
+          
+          // 마우스 이동 시 툴팁 위치 업데이트
+          .on('mousemove', (event) => {
+            tooltip.style("left", (event.pageX + 5) + "px")
+                  .style("top", (event.pageY - 28) + "px");
+          })
+          
+          // 마우스 아웃 시 툴팁 숨기기
+          .on('mouseout', () => {
+            tooltip.transition().duration(500).style("opacity", 0);
+          });
+
         svg.selectAll('.handle')
           .data(range)
           .enter().append('circle')
