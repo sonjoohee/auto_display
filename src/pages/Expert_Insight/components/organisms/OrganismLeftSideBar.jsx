@@ -687,7 +687,7 @@ useEffect(() => {
       setSurveyGoalFixed(chatData.surveyGoalFixed || []);
       setSurveyQuestionList(chatData.surveyQuestionList || []);
 
-      setBmModelSuggestionReportData(chatData.bmModelSuggestionReportData || {});
+      setBmModelSuggestionReportData(chatData.bmModelSuggestionReportData || []);
       setBmQuestionList(chatData.bmQuestionList || []);
       setSelectedProblemOptions(chatData.bmSelectedProblemOptions || "");
       setBmOrLean(chatData.bmOrLean || "");
@@ -957,7 +957,7 @@ useEffect(() => {
     setSurveyGoalFixed([]);
     setSurveyQuestionList([]);
 
-    setBmModelSuggestionReportData({});
+    setBmModelSuggestionReportData([]);
     setBmQuestionList([]);
     setSelectedProblemOptions("");
     setBmOrLean("");
@@ -1045,7 +1045,7 @@ useEffect(() => {
     setSurveyGoalFixed([]);
     setSurveyQuestionList([]);
 
-    setBmModelSuggestionReportData({});
+    setBmModelSuggestionReportData([]);
     setBmQuestionList([]);
     setSelectedProblemOptions("");
     setBmOrLean("");

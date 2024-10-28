@@ -313,7 +313,7 @@ const PageExpertInsight = () => {
             setSurveyGoalFixed(savedConversation.surveyGoalFixed || []);
             setSurveyQuestionList(savedConversation.surveyQuestionList || []);
 
-            setBmModelSuggestionReportData(savedConversation.bmModelSuggestionReportData || {});
+            setBmModelSuggestionReportData(savedConversation.bmModelSuggestionReportData || []);
             setBmQuestionList(savedConversation.bmQuestionList || []);
             setSelectedProblemOptions(savedConversation.bmSelectedProblemOptions || "");
             setBmOrLean(savedConversation.bmOrLean || "");
