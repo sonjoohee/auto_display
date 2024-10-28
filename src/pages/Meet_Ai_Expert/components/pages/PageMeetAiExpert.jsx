@@ -632,8 +632,8 @@ const PageMeetAiExpert = () => {
               <ExpertCard
                 BM
                 onClick={() => {
-                  // handledExpertSelect("9");
-                  setIsComingSoon(true);
+                  handledExpertSelect("9");
+                  // setIsComingSoon(true);
                 }}
               >
                 <strong>BM 전문가</strong>
