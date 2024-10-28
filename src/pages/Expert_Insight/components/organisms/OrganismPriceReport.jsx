@@ -569,7 +569,6 @@ const OrganismPriceReport = () => {
       if (range[0] === 0 && range[1] === 0) {
         setRange([minPrice, maxPrice]);
       }
-
       // 구간 간격 계산
       const step = (maxPrice - minPrice) / 10;
 
@@ -658,6 +657,7 @@ const OrganismPriceReport = () => {
       });
     }
   }, [productPrices, range, width]);
+
 
   return (
     <>

@@ -150,6 +150,10 @@ const MoleculeBmSelectModelButton = () => {
 
     updatedConversation.push(
       {
+        type: 'user', 
+        message: '비즈니스 모델 캔버스를 작성해주세요'
+      },
+      {
         type: 'bmBmAutoReport',
       }
     );
@@ -208,6 +212,10 @@ const MoleculeBmSelectModelButton = () => {
     }
 
     updatedConversation.push(
+      { 
+        type: 'user', 
+        message: '린 캔버스를 작성해주세요'
+      },
       {
         type: 'bmLeanAutoReport',
       }

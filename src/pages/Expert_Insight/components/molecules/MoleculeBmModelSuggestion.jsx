@@ -219,7 +219,7 @@ const MoleculeBmModelSuggestion = () => {
               "이제 작성하고 싶으신 캔버스를 작성할 차례입니다.\n설명을 참고하여 비즈니스에 도움이 될 수있는 캔버스를 선택해주세요.",
             expertIndex: selectedExpertIndex,
           },
-          { type: `bmSelectModelButton` }
+          { type: `bmSelectModelButton` },
         );
         setConversationStage(3);
         setConversation(updatedConversation);
