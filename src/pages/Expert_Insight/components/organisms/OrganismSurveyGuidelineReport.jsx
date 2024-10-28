@@ -52,6 +52,16 @@ import {
   PRICE_SELECTED_PRODUCT_SEGMENTATION, // 추가
   PRICE_PRODUCT_SEGMENTATION, // 추가
   SURVEY_GUIDELINE_DETAIL_REPORT_DATA,
+  BM_OR_LEAN,
+  BM_BM_AUTO_REPORT_DATA,
+  BM_LEAN_AUTO_REPORT_DATA,
+  BM_BM_ADS_REPORT_DATA,
+  SELECTED_PROBLEM_OPTIONS,
+  BM_LEAN_ADS_REPORT_DATA,
+  BM_BM_CUSTOM_REPORT_DATA,
+  BM_LEAN_CUSTOM_REPORT_DATA,
+  BM_MODEL_SUGGESTION_REPORT_DATA,
+  BM_QUESTION_LIST,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -70,6 +80,16 @@ import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
 
 const OrganismSurveyGuidelineReport = () => {
+  const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
+  const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
+  const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
+  const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
+  const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
+  const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
+  const [selectedProblemOptions, setSelectedProblemOptions] = useAtom(SELECTED_PROBLEM_OPTIONS);
+  const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
+  const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
+  const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
   const [selectedKeywords, setSelectedKeywords] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
   const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
@@ -325,6 +345,16 @@ const OrganismSurveyGuidelineReport = () => {
           surveyGoalSuggestionList: surveyGoalSuggestionList,
           surveyGoalFixed: surveyGoalFixed,
           surveyQuestionList: surveyQuestionList,
+          bmOrLean : BM_OR_LEAN,
+          bmQuestionList : bmQuestionList,
+          bmModelSuggestionReportData : bmModelSuggestionReportData,
+          bmBmAutoReportData : bmBmAutoReportData,
+          bmLeanAutoReportData : bmLeanAutoReportData,
+          bmBmAdsReportData : bmBmAdsReportData,
+          bmSelectedProblemOptions : selectedProblemOptions,
+          bmLeanAdsReportData : bmLeanAdsReportData,
+          bmBmCustomReportData : bmBmCustomReportData,
+          bmLeanCustomReportData : bmLeanCustomReportData,
         },
         isLoggedIn,
         conversationId
@@ -568,6 +598,16 @@ const OrganismSurveyGuidelineReport = () => {
             surveyGoalFixed: surveyGoalFixed,
             surveyQuestionList: surveyQuestionList,
             surveyGuidelineReportData : response.data.survey_guideline_report[0],
+            bmOrLean : BM_OR_LEAN,
+            bmQuestionList : bmQuestionList,
+            bmModelSuggestionReportData : bmModelSuggestionReportData,
+            bmBmAutoReportData : bmBmAutoReportData,
+            bmLeanAutoReportData : bmLeanAutoReportData,
+            bmBmAdsReportData : bmBmAdsReportData,
+            bmSelectedProblemOptions : selectedProblemOptions,
+            bmLeanAdsReportData : bmLeanAdsReportData,
+            bmBmCustomReportData : bmBmCustomReportData,
+            bmLeanCustomReportData : bmLeanCustomReportData,
           },
           isLoggedIn,
           conversationId
@@ -678,7 +718,7 @@ const OrganismSurveyGuidelineReport = () => {
                             ) : (
                               <img src={images.ImgKOR} alt="" />
                             )}
-                            한글
+                            한국어
                           </div>
                           <div
                             className={`${
@@ -792,7 +832,7 @@ const OrganismSurveyGuidelineReport = () => {
                             ) : (
                               <img src={images.ImgKOR} alt="" />
                             )}
-                            한글
+                            한국어
                           </div>
                           <div
                             className={`${
@@ -906,7 +946,7 @@ const OrganismSurveyGuidelineReport = () => {
                             ) : (
                               <img src={images.ImgKOR} alt="" />
                             )}
-                            한글
+                            한국어
                           </div>
                           <div
                             className={`${

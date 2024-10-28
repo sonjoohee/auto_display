@@ -52,6 +52,16 @@ import {
   SURVEY_GOAL_SUGGESTION_LIST,
   SURVEY_GOAL_FIXED,
   SURVEY_QUESTION_LIST,
+  SELECTED_PROBLEM_OPTIONS,
+  BM_OR_LEAN,
+  BM_BM_AUTO_REPORT_DATA,
+  BM_BM_ADS_REPORT_DATA,
+  BM_BM_CUSTOM_REPORT_DATA,
+  BM_LEAN_AUTO_REPORT_DATA,
+  BM_LEAN_ADS_REPORT_DATA,
+  BM_LEAN_CUSTOM_REPORT_DATA,
+  BM_MODEL_SUGGESTION_REPORT_DATA,
+  BM_QUESTION_LIST,
 } from "../../../AtomStates";
 
 import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
@@ -118,6 +128,16 @@ import OrganismBmBmAdsReport from "../organisms/OrganismBmBmAdsReport";
 import OrganismBmBmCustomReport from "../organisms/OrganismBmBmCustomReport";
 
 const PageExpertInsight = () => {
+  const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
+  const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
+  const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
+  const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
+  const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
+  const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
+  const [selectedProblemOptions, setSelectedProblemOptions] = useAtom(SELECTED_PROBLEM_OPTIONS);
+  const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
+  const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
+  const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
   const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
   const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(SURVEY_GUIDELINE_REPORT_DATA);
   const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
@@ -292,6 +312,17 @@ const PageExpertInsight = () => {
             setSurveyGoalSuggestionList(savedConversation.surveyGoalSuggestionList || []);
             setSurveyGoalFixed(savedConversation.surveyGoalFixed || []);
             setSurveyQuestionList(savedConversation.surveyQuestionList || []);
+
+            setBmModelSuggestionReportData(savedConversation.bmModelSuggestionReportData || {});
+            setBmQuestionList(savedConversation.bmQuestionList || []);
+            setSelectedProblemOptions(savedConversation.bmSelectedProblemOptions || "");
+            setBmOrLean(savedConversation.bmOrLean || "");
+            setBmBmAutoReportData(savedConversation.bmBmAutoReportData || []);
+            setBmLeanAutoReportData(savedConversation.bmLeanAutoReportData || []);
+            setBmBmAdsReportData(savedConversation.bmBmAdsReportData || []);
+            setBmLeanAdsReportData(savedConversation.bmLeanAdsReportData || []);
+            setBmBmCustomReportData(savedConversation.bmBmCustomReportData || []);
+            setBmLeanCustomReportData(savedConversation.bmLeanCustomReportData || []);
           }
           
           setIsLoadingPage(false); // 로딩 완료
@@ -624,7 +655,7 @@ if (isLoadingPage) {
               selectedExpertIndex === "9" ?
                 <>
                 {
-                  buttonState.default === 1 &&
+                  buttonState.bmEnough === 1 &&
                     <OrganismBizExpertSelect />
                 }
                 </>
@@ -663,9 +694,7 @@ if (isLoadingPage) {
                   buttonState.caseStart === 1 && !isLoading && conversation[conversation.length - 1].type !== "caseContinueButton" && <OrganismSearchBottomBar isBlue={true} isHashTag={true}/> // 사례 조사 시작했을 때 활성화
                 :
                 selectedExpertIndex === "9" ?
-                  buttonState.default === 1 ? <OrganismSearchBottomBar isBlue={true} />
-                  :
-                  buttonState.bmGoalInputStart === 1 && <OrganismSearchBottomBar isBlue={true} isHashTag={true}/> // 비즈니스 목적 입력 시 활성화
+                  buttonState.bmEnough === 1 && <OrganismSearchBottomBar isBlue={true} />
                 :
                 selectedExpertIndex === "10" ?
                   buttonState.surveyEnd === 1 ? <OrganismSearchBottomBar isBlue={true} /> // 설문조사 끝났을 때 활성화

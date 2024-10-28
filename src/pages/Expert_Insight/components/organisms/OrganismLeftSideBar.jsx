@@ -81,6 +81,16 @@ import {
   SURVEY_QUESTION_LIST,
   SURVEY_GUIDELINE_REPORT_DATA,
   SURVEY_GUIDELINE_DETAIL_REPORT_DATA,
+  BM_MODEL_SUGGESTION_REPORT_DATA,
+  BM_QUESTION_LIST,
+  SELECTED_PROBLEM_OPTIONS,
+  BM_OR_LEAN,
+  BM_BM_AUTO_REPORT_DATA,
+  BM_LEAN_AUTO_REPORT_DATA,
+  BM_BM_ADS_REPORT_DATA,
+  BM_LEAN_ADS_REPORT_DATA,
+  BM_BM_CUSTOM_REPORT_DATA,
+  BM_LEAN_CUSTOM_REPORT_DATA,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -89,6 +99,16 @@ import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/Molec
 import OrganismReportPopup from "./OrganismReportPopup"; // 팝업 컴포넌트 임포트
 
 const OrganismLeftSideBar = () => {
+  const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
+  const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
+  const [selectedProblemOptions, setSelectedProblemOptions] = useAtom(SELECTED_PROBLEM_OPTIONS);
+  const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
+  const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
+  const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
+  const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
+  const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
+  const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
+  const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
   const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
   const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
   const [surveyGoalFixed, setSurveyGoalFixed] = useAtom(SURVEY_GOAL_FIXED);
@@ -667,6 +687,17 @@ useEffect(() => {
       setSurveyGoalFixed(chatData.surveyGoalFixed || []);
       setSurveyQuestionList(chatData.surveyQuestionList || []);
 
+      setBmModelSuggestionReportData(chatData.bmModelSuggestionReportData || {});
+      setBmQuestionList(chatData.bmQuestionList || []);
+      setSelectedProblemOptions(chatData.bmSelectedProblemOptions || "");
+      setBmOrLean(chatData.bmOrLean || "");
+      setBmBmAutoReportData(chatData.bmBmAutoReportData || []);
+      setBmLeanAutoReportData(chatData.bmLeanAutoReportData || []);
+      setBmBmAdsReportData(chatData.bmBmAdsReportData || []);
+      setBmLeanAdsReportData(chatData.bmLeanAdsReportData || []);
+      setBmBmCustomReportData(chatData.bmBmCustomReportData || []);
+      setBmLeanCustomReportData(chatData.bmLeanCustomReportData || []);
+
       // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
       // set어프로치패스(2)
       setApproachPath(2);
@@ -925,6 +956,17 @@ useEffect(() => {
     setSurveyGoalSuggestionList([]);
     setSurveyGoalFixed([]);
     setSurveyQuestionList([]);
+
+    setBmModelSuggestionReportData({});
+    setBmQuestionList([]);
+    setSelectedProblemOptions("");
+    setBmOrLean("");
+    setBmBmAutoReportData([]);
+    setBmLeanAutoReportData([]);
+    setBmBmAdsReportData([]);
+    setBmLeanAdsReportData([]);
+    setBmBmCustomReportData([]);
+    setBmLeanCustomReportData([]);
   };
 
   const handleLogoClick = () => {
@@ -1002,6 +1044,17 @@ useEffect(() => {
     setSurveyGoalSuggestionList([]);
     setSurveyGoalFixed([]);
     setSurveyQuestionList([]);
+
+    setBmModelSuggestionReportData({});
+    setBmQuestionList([]);
+    setSelectedProblemOptions("");
+    setBmOrLean("");
+    setBmBmAutoReportData([]);
+    setBmLeanAutoReportData([]);
+    setBmBmAdsReportData([]);
+    setBmLeanAdsReportData([]);
+    setBmBmCustomReportData([]);
+    setBmLeanCustomReportData([]);
   };
   return (
     <>

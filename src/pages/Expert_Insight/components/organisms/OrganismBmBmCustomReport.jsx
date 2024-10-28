@@ -58,6 +58,12 @@ import {
   SURVEY_QUESTION_LIST,
   SELECTED_PROBLEM_OPTIONS,
   BM_BM_CUSTOM_REPORT_DATA,
+  BM_OR_LEAN,
+  BM_LEAN_AUTO_REPORT_DATA,
+  BM_BM_ADS_REPORT_DATA,
+  BM_LEAN_ADS_REPORT_DATA,
+  BM_LEAN_CUSTOM_REPORT_DATA,
+  BM_MODEL_SUGGESTION_REPORT_DATA,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -72,6 +78,12 @@ import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
 
 const OrganismBmBmCustomReport = () => {
+  const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
+  const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
+  const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
+  const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
+  const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
+  const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
   const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(SURVEY_GUIDELINE_REPORT_DATA);
   const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
   const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
@@ -257,6 +269,16 @@ const OrganismBmBmCustomReport = () => {
           surveyGoalSuggestionList: surveyGoalSuggestionList,
           surveyGoalFixed: surveyGoalFixed,
           surveyQuestionList: surveyQuestionList,
+          bmOrLean : BM_OR_LEAN,
+          bmQuestionList : bmQuestionList,
+          bmModelSuggestionReportData : bmModelSuggestionReportData,
+          bmBmAutoReportData : bmBmAutoReportData,
+          bmLeanAutoReportData : bmLeanAutoReportData,
+          bmBmAdsReportData : bmBmAdsReportData,
+          bmSelectedProblemOptions : selectedProblemOptions,
+          bmLeanAdsReportData : bmLeanAdsReportData,
+          bmBmCustomReportData : bmBmCustomReportData,
+          bmLeanCustomReportData : bmLeanCustomReportData,
         },
         isLoggedIn,
         conversationId
@@ -411,16 +433,29 @@ const OrganismBmBmCustomReport = () => {
         setIsLoadingIdeaPriority(false);
 
         const updatedConversation = [...conversation];
+        // updatedConversation.push(
+        //   {
+        //     type: "system",
+        //     message: `"${selectedProblemOptions}"에 대한 린 캔버스 작성이 완료되었습니다.\n다른 방향성에 따른 변경된 비즈니스 모델을 확인하려면, 아래 버튼을 클릭해주세요`,
+        //     expertIndex: selectedExpertIndex,
+        //   },
+        //   { type: `bmCustomContinueButton`}
+        // );
         updatedConversation.push(
           {
             type: "system",
-            message: `*${selectedProblemOptions}*에 대한 린 캔버스 작성이 완료되었습니다.\n다른 방향성에 따른 변경된 비즈니스 모델을 확인하려면, 아래 버튼을 클릭해주세요`,
+            message:
+              "리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊",
             expertIndex: selectedExpertIndex,
           },
-          { type: `bmCustomContinueButton`}
+          { type: `keyword` }
         );
         setConversationStage(3);
         setConversation(updatedConversation);
+        setButtonState({
+          ...buttonState,
+          bmEnough: 1,
+        });
 
         await saveConversationToIndexedDB(
           {
@@ -446,7 +481,7 @@ const OrganismBmBmCustomReport = () => {
             ideaList : ideaList,
             ideaGroup : ideaGroup,
             ideaPriority : ideaPriority,
-            buttonState : buttonState,
+            buttonState : {...buttonState, bmEnough: 1},
             growthHackerReportData : growthHackerReportData,
             growthHackerDetailReportData : growthHackerDetailReportData,
             KpiQuestionList : KpiQuestionList,
@@ -464,6 +499,15 @@ const OrganismBmBmCustomReport = () => {
             surveyGoalSuggestionList: surveyGoalSuggestionList,
             surveyGoalFixed: surveyGoalFixed,
             surveyQuestionList: surveyQuestionList,
+            bmOrLean : BM_OR_LEAN,
+            bmQuestionList : bmQuestionList,
+            bmModelSuggestionReportData : bmModelSuggestionReportData,
+            bmBmAutoReportData : bmBmAutoReportData,
+            bmLeanAutoReportData : bmLeanAutoReportData,
+            bmBmAdsReportData : bmBmAdsReportData,
+            bmSelectedProblemOptions : selectedProblemOptions,
+            bmLeanAdsReportData : bmLeanAdsReportData,
+            bmLeanCustomReportData : bmLeanCustomReportData,
           },
           isLoggedIn,
           conversationId
@@ -492,8 +536,8 @@ const OrganismBmBmCustomReport = () => {
         </>
       ) : (
         <>
-          <h1>린 캔버스 보고서</h1>
-          <p>{titleOfBusinessInfo}의 비즈니스 모델 캔버스 - {selectedProblemOptions}</p>
+          <h1>{titleOfBusinessInfo}의 비즈니스 모델 캔버스 - {selectedProblemOptions}</h1>
+          <p>{mainFeaturesOfBusinessInformation[0]}</p>
   
           <ModelCanvasWrap>
           <CanvasSection>
@@ -501,12 +545,12 @@ const OrganismBmBmCustomReport = () => {
             <CanvasList>
               <section>
                 <strong>
-                  {bmBmCustomReportData[0]?.section}
+                  핵심 파트너십
                   <span>
                     <img src={images.IconCanvas01} alt="" />
                   </span>
                 </strong>
-                {bmBmCustomReportData[0]?.content?.map((contentItem, contentIndex) => (
+                {bmBmCustomReportData[7]?.content?.map((contentItem, contentIndex) => (
                   <div key={contentIndex}>
                     {contentIndex === 0 && <p>{contentItem?.description}</p>}
                     <ul>
@@ -521,12 +565,12 @@ const OrganismBmBmCustomReport = () => {
 
             {/* 6번째와 7번째 항목을 묶은 CanvasList Num2 */}
             <CanvasList Num2>
-              {bmBmCustomReportData?.slice(5, 7).map((section, index) => (
+              {[...bmBmCustomReportData?.slice(5, 7)].reverse().map((section, index) => (
                 <section key={index + 5}>
                   <strong>
-                    {section?.section}
+                    {index === 0 ? "핵심 활동" : "핵심 자원"}
                     <span>
-                      <img src={images[`IconCanvas0${5 + index + 1}`]} alt="" />
+                      <img src={images[`IconCanvas0${index + 2}`]} alt="" />
                     </span>
                   </strong>
                   {section?.content?.map((contentItem, contentIndex) => (
@@ -547,9 +591,9 @@ const OrganismBmBmCustomReport = () => {
             <CanvasList>
               <section>
                 <strong>
-                  {bmBmCustomReportData[1]?.section}
+                  가치 제안
                   <span>
-                    <img src={images.IconCanvas02} alt="" />
+                    <img src={images.IconCanvas04} alt="" />
                   </span>
                 </strong>
                 {bmBmCustomReportData[1]?.content?.map((contentItem, contentIndex) => (
@@ -567,12 +611,12 @@ const OrganismBmBmCustomReport = () => {
 
             {/* 3번째와 4번째 항목을 묶은 CanvasList Num2 */}
             <CanvasList Num2>
-              {bmBmCustomReportData?.slice(2, 4).map((section, index) => (
+              {[...bmBmCustomReportData?.slice(2, 4)].reverse().map((section, index) => (
                 <section key={index + 2}>
                   <strong>
-                    {section?.section}
+                    {index === 0 ? "고객관계" : "채널"}
                     <span>
-                      <img src={images[`IconCanvas0${2 + index + 1}`]} alt="" />
+                      <img src={images[`IconCanvas0${index + 5}`]} alt="" />
                     </span>
                   </strong>
                   {section?.content?.map((contentItem, contentIndex) => (
@@ -593,12 +637,12 @@ const OrganismBmBmCustomReport = () => {
             <CanvasList>
               <section>
                 <strong>
-                  {bmBmCustomReportData[4]?.section}
+                  고객 세그먼트
                   <span>
-                    <img src={images.IconCanvas05} alt="" />
+                    <img src={images.IconCanvas07} alt="" />
                   </span>
                 </strong>
-                {bmBmCustomReportData[4]?.content?.map((contentItem, contentIndex) => (
+                {bmBmCustomReportData[0]?.content?.map((contentItem, contentIndex) => (
                   <div key={contentIndex}>
                     {contentIndex === 0 && <p>{contentItem?.description}</p>}
                     <ul>
@@ -617,12 +661,12 @@ const OrganismBmBmCustomReport = () => {
           <CanvasList>
             <section>
               <strong>
-                {bmBmCustomReportData[7]?.section}
+                비용
                 <span>
                   <img src={images.IconCanvas08} alt="" />
                 </span>
               </strong>
-              {bmBmCustomReportData[7]?.content?.map((contentItem, contentIndex) => (
+              {bmBmCustomReportData[8]?.content?.map((contentItem, contentIndex) => (
                 <div key={contentIndex}>
                   {contentIndex === 0 && <p>{contentItem?.description}</p>}
                   <ul>
@@ -639,12 +683,12 @@ const OrganismBmBmCustomReport = () => {
           <CanvasList>
             <section>
               <strong>
-                {bmBmCustomReportData[8]?.section}
+                수익
                 <span>
                   <img src={images.IconCanvas09} alt="" />
                 </span>
               </strong>
-              {bmBmCustomReportData[8]?.content?.map((contentItem, contentIndex) => (
+              {bmBmCustomReportData[4]?.content?.map((contentItem, contentIndex) => (
                 <div key={contentIndex}>
                   {contentIndex === 0 && <p>{contentItem?.description}</p>}
                   <ul>
@@ -673,7 +717,7 @@ const OrganismBmBmCustomReport = () => {
               </button>
             </div>
           </DownloadButton>
-            <ButtonWrap>
+            {/* <ButtonWrap>
               <div />
               <div>
                 <button type="button">
@@ -685,7 +729,7 @@ const OrganismBmBmCustomReport = () => {
                   저장하기
                 </button>
               </div>
-            </ButtonWrap>
+            </ButtonWrap> */}
             </ButtonSectionWrap>
           </ModelCanvasWrap>
         </>
@@ -746,7 +790,7 @@ const OrganismBmBmCustomReport = () => {
                     ) : (
                       <img src={images.ImgKOR} alt="" />
                     )}
-                    한글
+                    한국어
                   </div>
                   <div
                     className={`${
