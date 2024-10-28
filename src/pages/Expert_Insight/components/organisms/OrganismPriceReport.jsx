@@ -575,6 +575,19 @@ const OrganismPriceReport = () => {
         .style("stroke", "#F6F6F6")
         .style("stroke-width", "2px");
 
+        
+        // 툴팁 추가
+        const tooltip = d3.select(".App").append("div")
+          .attr("class", "tooltip")
+          .style("position", "absolute")
+          .style("padding", "8px")
+          .style("background", "rgba(0, 0, 0, 0.7)")
+          .style("color", "white")
+          .style("font-size", "0.75rem")
+          .style("border-radius", "4px")
+          .style("pointer-events", "none")
+          .style("opacity", 0);
+
       // 바차트 그리기
       const barWidth = (width - margin.left - margin.right) / 10;
       svg
@@ -587,7 +600,26 @@ const OrganismPriceReport = () => {
         .attr("y", (d) => y(d))
         .attr("width", Math.max(0, barWidth - 2))
         .attr("height", (d) => Math.max(0, height - margin.bottom - y(d)))
-        .style("fill", "#E0E4EB");
+        .style("fill", "#E0E4EB")
+
+      // 마우스 오버 이벤트 추가
+      .on('mouseover', (event, d) => {
+        tooltip.transition().duration(200).style("opacity", .9);
+        tooltip.html(`Range: ${d.x0} ~ ${d.x1}<br/>Count: ${d.length}`)
+          .style("left", (event.pageX + 5) + "px")
+          .style("top", (event.pageY - 28) + "px");
+      })
+      
+      // 마우스 이동 시 툴팁 위치 업데이트
+      .on('mousemove', (event) => {
+        tooltip.style("left", (event.pageX + 5) + "px")
+        .style("top", (event.pageY - 28) + "px");
+      })
+      
+      // 마우스 아웃 시 툴팁 숨기기
+      .on('mouseout', () => {
+        tooltip.transition().duration(500).style("opacity", 0);
+      });
 
       // 선택된 범위 표시
       // svg
