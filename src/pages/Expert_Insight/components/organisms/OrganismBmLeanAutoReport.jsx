@@ -54,6 +54,14 @@ import {
   SURVEY_GOAL_SUGGESTION_LIST,
   SURVEY_GOAL_FIXED,
   SURVEY_QUESTION_LIST,
+  BM_MODEL_SUGGESTION_REPORT_DATA,
+  BM_BM_AUTO_REPORT_DATA,
+  BM_BM_ADS_REPORT_DATA,
+  BM_LEAN_ADS_REPORT_DATA,
+  BM_BM_CUSTOM_REPORT_DATA,
+  BM_LEAN_CUSTOM_REPORT_DATA,
+  BM_OR_LEAN,
+  BM_SELECTED_PROBLEM_OPTIONS,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -137,14 +145,20 @@ const OrganismBmLeanAutoReport = () => {
   const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
 
   const [bmLeanAutoButtonState, setBmLeanAutoButtonState] = useAtom(BM_LEAN_AUTO_REPORT_BUTTON_STATE);
-
+  const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
+  const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
+  const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
+  const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
+  const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
+  const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
+  const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
   
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [isLoadingIdeaPriority, setIsLoadingIdeaPriority] = useState(false);
   const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
   const [bmQuestionList, setbmQuestionList] = useAtom(BM_QUESTION_LIST);
-
+  const [bmSelectedProblemOptions, setBmSelectedProblemOptions] = useAtom(BM_SELECTED_PROBLEM_OPTIONS);
   
   const axiosConfig = {
     timeout: 100000, // 100초
@@ -264,7 +278,16 @@ const OrganismBmLeanAutoReport = () => {
             caseHashTag : caseHashTag,
             caseReportData : caseReportData,
             bmLeanAutoReportData : response.data.bm_lean_auto_report,
-
+            bmSelectedProblemOptions: bmSelectedProblemOptions,
+            bmOrLean : bmOrLean,
+            bmQuestionList : bmQuestionList,
+            bmModelSuggestionReportData : bmModelSuggestionReportData,
+            bmBmAutoReportData : bmBmAutoReportData,
+            bmBmAdsReportData : bmBmAdsReportData,
+            bmSelectedProblemOptions : bmSelectedProblemOptions,
+            bmLeanAdsReportData : bmLeanAdsReportData,
+            bmBmCustomReportData : bmBmCustomReportData,
+            bmLeanCustomReportData : bmLeanCustomReportData,
             surveyGuidelineReportData : surveyGuidelineReportData,
             surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
             surveyGoalSuggestionList: surveyGoalSuggestionList,
