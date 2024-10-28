@@ -176,6 +176,8 @@ const OrganismPriceReport = () => {
     setPriceSelectedProductSegmentation,
   ] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
 
+  const [handleRange, setHandleRange] = useState([0, 0]);
+
   const axiosConfig = {
     timeout: 100000, // 100초
     headers: {
@@ -425,6 +427,19 @@ const OrganismPriceReport = () => {
   //   return () => window.removeEventListener("resize", handleResize);
   // }, []);
 
+  // useEffect(() => {
+  //   // consumer_price_min과 consumer_price_max가 있을 때 handleRange 초기화
+  //   if (
+  //     priceReportData?.consumer_price_min &&
+  //     priceReportData?.consumer_price_max
+  //   ) {
+  //     setHandleRange([
+  //       priceReportData.consumer_price_min,
+  //       priceReportData.consumer_price_max,
+  //     ]);
+  //   }
+  // }, [priceReportData]);
+
   // 그래프 데이터 불러오기
   useEffect(() => {
     if (
@@ -513,11 +528,31 @@ const OrganismPriceReport = () => {
       // SVG 초기화
       svg.selectAll("*").remove();
 
+      // consumer_price_min과 consumer_price_max 가져오기
+      const consumerPriceMin = parseInt(
+        priceReportData.price_range_analysis.consumer_price_range
+          .consumer_price_min
+      );
+      const consumerPriceMax = parseInt(
+        priceReportData.price_range_analysis.consumer_price_range
+          .consumer_price_max
+      );
+      // 고정된 핸들 범위 설정
+      const fixedHandleRange = [consumerPriceMin, consumerPriceMax];
+
+      // 해당 값이 속한 구간 인덱스 찾기
+      const startIndex = Math.floor((fixedHandleRange[0] - minPrice) / step);
+      const endIndex = Math.floor((fixedHandleRange[1] - minPrice) / step);
+
+      // 구간의 중앙점 계산
+      const startPosition = minPrice + startIndex * step + step / 2;
+      const endPosition = minPrice + endIndex * step + step / 2;
       // x축 스케일 설정
       const x = d3
         .scaleLinear()
         .domain([minPrice, maxPrice])
-        .range([margin.left, width - margin.right]);
+        .range([margin.left, width - margin.right])
+        .clamp(true);
 
       // y축 스케일 설정
       const y = d3
@@ -555,27 +590,49 @@ const OrganismPriceReport = () => {
         .style("fill", "#E0E4EB");
 
       // 선택된 범위 표시
+      // svg
+      //   .append("rect")
+      //   .attr("class", "range-indicator")
+      //   .attr("x", x(range[0]))
+      //   .attr("y", height - margin.bottom)
+      //   .attr("width", x(range[1]) - x(range[0]))
+      //   .attr("height", 5)
+      //   .style("fill", palette.chatBlue);
+      const rangeIndicatorHeight = 5;
       svg
         .append("rect")
         .attr("class", "range-indicator")
-        .attr("x", x(range[0]))
-        .attr("y", height - margin.bottom)
-        .attr("width", x(range[1]) - x(range[0]))
-        .attr("height", 5)
+        .attr("x", x(startPosition))
+        .attr("y", height - margin.bottom - rangeIndicatorHeight / 2)
+        .attr("width", x(endPosition) - x(startPosition))
+        .attr("height", rangeIndicatorHeight)
         .style("fill", palette.chatBlue);
 
       // 핸들 그리기
       svg
         .selectAll(".handle")
-        .data(range)
+        .data([startPosition, endPosition])
         .enter()
         .append("circle")
         .attr("class", "handle")
         .attr("cx", (d) => x(d))
-        .attr("cy", height - margin.bottom + 2)
+        .attr("cy", height - margin.bottom)
         .attr("r", 8)
-        .style("fill", palette.chatBlue)
-        .style("cursor", "pointer");
+        .style("fill", palette.chatBlue);
+
+      // 핸들 값 표시 (선택사항)
+      // svg
+      //   .selectAll(".handle-label")
+      //   .data(handleRange)
+      //   .enter()
+      //   .append("text")
+      //   .attr("class", "handle-label")
+      //   .attr("x", (d) => x(d))
+      //   .attr("y", height - margin.bottom + 25)
+      //   .attr("text-anchor", "middle")
+      //   .style("font-size", "12px")
+      //   .style("fill", palette.gray800)
+      //   .text((d) => `${(d / 10000).toFixed(0)}만원`);
 
       // 디버깅을 위한 로그
       console.log("Chart Data:", {
@@ -829,6 +886,8 @@ const ButtonWrap = styled.div`
 `;
 
 const ChartWrap = styled.div`
+  width: 100%; // 부모 요소의 너비에 맞춤
+  height: 200px;
   .tick {
     display: none;
   }
