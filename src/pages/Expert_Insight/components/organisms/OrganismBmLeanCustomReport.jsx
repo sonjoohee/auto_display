@@ -414,16 +414,29 @@ useEffect(() => {
         setIsLoadingIdeaPriority(false);
 
         const updatedConversation = [...conversation];
+        // updatedConversation.push(
+        //   {
+        //     type: "system",
+        //     message: `"${selectedProblemOptions}"에 대한 린 캔버스 작성이 완료되었습니다.\n다른 방향성에 따른 변경된 비즈니스 모델을 확인하려면, 아래 버튼을 클릭해주세요`,
+        //     expertIndex: selectedExpertIndex,
+        //   },
+        //   { type: `bmCustomContinueButton`}
+        // );
         updatedConversation.push(
           {
             type: "system",
-            message: `*${selectedProblemOptions}*에 대한 린 캔버스 작성이 완료되었습니다.\n다른 방향성에 따른 변경된 비즈니스 모델을 확인하려면, 아래 버튼을 클릭해주세요`,
+            message:
+              "리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊",
             expertIndex: selectedExpertIndex,
           },
-          { type: `bmCustomContinueButton`}
+          { type: `keyword` }
         );
         setConversationStage(3);
         setConversation(updatedConversation);
+        setButtonState({
+          ...buttonState,
+          bmEnough: 1,
+        });
 
         await saveConversationToIndexedDB(
           {
@@ -449,7 +462,7 @@ useEffect(() => {
             ideaList : ideaList,
             ideaGroup : ideaGroup,
             ideaPriority : ideaPriority,
-            buttonState : buttonState,
+            buttonState : {...buttonState, bmEnough: 1},
             growthHackerReportData : growthHackerReportData,
             growthHackerDetailReportData : growthHackerDetailReportData,
             KpiQuestionList : KpiQuestionList,
@@ -495,8 +508,8 @@ useEffect(() => {
         </>
       ) : (
         <>
-          <h1>린 캔버스 보고서</h1>
-          <p>{titleOfBusinessInfo}의 비즈니스 모델 캔버스 - {selectedProblemOptions}</p>
+          <h1>{titleOfBusinessInfo}의 비즈니스 모델 캔버스 - {selectedProblemOptions}</h1>
+          <p>{mainFeaturesOfBusinessInformation[0]}</p>
   
           <ModelCanvasWrap>
           <CanvasSection>
@@ -504,9 +517,9 @@ useEffect(() => {
             <CanvasList>
               <section>
                 <strong>
-                  {bmLeanCustomReportData[0]?.section}
+                  문제
                   <span>
-                    <img src={images.IconCanvas01} alt="" />
+                    <img src={images.IconCanvas10} alt="" />
                   </span>
                 </strong>
                 {bmLeanCustomReportData[0]?.content?.map((contentItem, contentIndex) => (
@@ -524,12 +537,15 @@ useEffect(() => {
 
             {/* 6번째와 7번째 항목을 묶은 CanvasList Num2 */}
             <CanvasList Num2>
-              {bmLeanCustomReportData?.slice?.(5, 7)?.map((section, index) => (
+              {[
+                bmLeanCustomReportData?.[3],
+                bmLeanCustomReportData?.[8]
+              ].map((section, index) => (
                 <section key={index + 5}>
                   <strong>
-                    {section?.section}
+                    {index === 0 ? "솔루션" : "핵심 지표"}
                     <span>
-                      <img src={images[`IconCanvas0${5 + index + 1}`]} alt="" />
+                      <img src={images[`IconCanvas${index === 0 ? 11 : 12}`]} alt="" />
                     </span>
                   </strong>
                   {section?.content?.map((contentItem, contentIndex) => (
@@ -550,12 +566,12 @@ useEffect(() => {
             <CanvasList>
               <section>
                 <strong>
-                  {bmLeanCustomReportData[1]?.section}
+                  가치 제안
                   <span>
-                    <img src={images.IconCanvas02} alt="" />
+                    <img src={images.IconCanvas04} alt="" />
                   </span>
                 </strong>
-                {bmLeanCustomReportData[1]?.content?.map((contentItem, contentIndex) => (
+                {bmLeanCustomReportData[2]?.content?.map((contentItem, contentIndex) => (
                   <div key={contentIndex}>
                     {contentIndex === 0 && <p>{contentItem?.description}</p>}
                     <ul>
@@ -570,12 +586,12 @@ useEffect(() => {
 
             {/* 3번째와 4번째 항목을 묶은 CanvasList Num2 */}
             <CanvasList Num2>
-              {bmLeanCustomReportData?.slice?.(2, 4).map((section, index) => (
+              {bmLeanCustomReportData?.slice?.(4, 6).map((section, index) => (
                 <section key={index + 2}>
                   <strong>
-                    {section?.section}
+                    {index === 0 ? "경쟁우위" : "채널"}
                     <span>
-                      <img src={images[`IconCanvas0${2 + index + 1}`]} alt="" />
+                      <img src={images[`IconCanvas${index === 0 ? 13 : '06'}`]} alt="" />
                     </span>
                   </strong>
                   {section?.content?.map((contentItem, contentIndex) => (
@@ -596,12 +612,12 @@ useEffect(() => {
             <CanvasList>
               <section>
                 <strong>
-                  {bmLeanCustomReportData[4]?.section}
+                  고객 세그먼트
                   <span>
-                    <img src={images.IconCanvas05} alt="" />
+                    <img src={images.IconCanvas07} alt="" />
                   </span>
                 </strong>
-                {bmLeanCustomReportData[4]?.content?.map((contentItem, contentIndex) => (
+                {bmLeanCustomReportData[1]?.content?.map((contentItem, contentIndex) => (
                   <div key={contentIndex}>
                     {contentIndex === 0 && <p>{contentItem?.description}</p>}
                     <ul>
@@ -620,7 +636,7 @@ useEffect(() => {
           <CanvasList>
             <section>
               <strong>
-                {bmLeanCustomReportData[7]?.section}
+                비용
                 <span>
                   <img src={images.IconCanvas08} alt="" />
                 </span>
@@ -642,12 +658,12 @@ useEffect(() => {
           <CanvasList>
             <section>
               <strong>
-                {bmLeanCustomReportData[8]?.section}
+                수익
                 <span>
                   <img src={images.IconCanvas09} alt="" />
                 </span>
               </strong>
-              {bmLeanCustomReportData[8]?.content?.map((contentItem, contentIndex) => (
+              {bmLeanCustomReportData[6]?.content?.map((contentItem, contentIndex) => (
                 <div key={contentIndex}>
                   {contentIndex === 0 && <p>{contentItem?.description}</p>}
                   <ul>
@@ -676,7 +692,7 @@ useEffect(() => {
               </button>
             </div>
           </DownloadButton>
-            <ButtonWrap>
+            {/* <ButtonWrap>
               <div />
               <div>
                 <button type="button">
@@ -688,7 +704,7 @@ useEffect(() => {
                   저장하기
                 </button>
               </div>
-            </ButtonWrap>
+            </ButtonWrap> */}
             </ButtonSectionWrap>
           </ModelCanvasWrap>
         </>

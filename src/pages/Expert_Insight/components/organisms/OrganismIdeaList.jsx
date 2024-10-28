@@ -53,6 +53,16 @@ import {
   SURVEY_GOAL_SUGGESTION_LIST,
   SURVEY_GOAL_FIXED,
   SURVEY_QUESTION_LIST,
+  BM_OR_LEAN,
+  BM_BM_AUTO_REPORT_DATA,
+  BM_LEAN_AUTO_REPORT_DATA,
+  BM_BM_ADS_REPORT_DATA,
+  SELECTED_PROBLEM_OPTIONS,
+  BM_LEAN_ADS_REPORT_DATA,
+  BM_BM_CUSTOM_REPORT_DATA,
+  BM_LEAN_CUSTOM_REPORT_DATA,
+  BM_MODEL_SUGGESTION_REPORT_DATA,
+  BM_QUESTION_LIST,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -66,6 +76,16 @@ import {
 import images from "../../../../assets/styles/Images";
 
 const OrganismIdeaList = () => {
+  const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
+  const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
+  const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
+  const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
+  const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
+  const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
+  const [selectedProblemOptions, setSelectedProblemOptions] = useAtom(SELECTED_PROBLEM_OPTIONS);
+  const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
+  const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
+  const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
   const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(SURVEY_GUIDELINE_REPORT_DATA);
   const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
   const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
@@ -334,7 +354,16 @@ const handleMiro = async () => {
         priceProductSegmentation : priceProductSegmentation,
         caseHashTag : caseHashTag,
         caseReportData : caseReportData,
-
+        bmOrLean : BM_OR_LEAN,
+        bmQuestionList : bmQuestionList,
+        bmModelSuggestionReportData : bmModelSuggestionReportData,
+        bmBmAutoReportData : bmBmAutoReportData,
+        bmLeanAutoReportData : bmLeanAutoReportData,
+        bmBmAdsReportData : bmBmAdsReportData,
+        bmSelectedProblemOptions : selectedProblemOptions,
+        bmLeanAdsReportData : bmLeanAdsReportData,
+        bmBmCustomReportData : bmBmCustomReportData,
+        bmLeanCustomReportData : bmLeanCustomReportData,
         surveyGuidelineReportData : surveyGuidelineReportData,
         surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
         surveyGoalSuggestionList: surveyGoalSuggestionList,
@@ -536,7 +565,16 @@ useEffect(() => {
             priceProductSegmentation : priceProductSegmentation,
             caseHashTag : caseHashTag,
             caseReportData : caseReportData,
-
+            bmOrLean : BM_OR_LEAN,
+            bmQuestionList : bmQuestionList,
+            bmModelSuggestionReportData : bmModelSuggestionReportData,
+            bmBmAutoReportData : bmBmAutoReportData,
+            bmLeanAutoReportData : bmLeanAutoReportData,
+            bmBmAdsReportData : bmBmAdsReportData,
+            bmSelectedProblemOptions : selectedProblemOptions,
+            bmLeanAdsReportData : bmLeanAdsReportData,
+            bmBmCustomReportData : bmBmCustomReportData,
+            bmLeanCustomReportData : bmLeanCustomReportData,
             surveyGuidelineReportData : surveyGuidelineReportData,
             surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
             surveyGoalSuggestionList: surveyGoalSuggestionList,

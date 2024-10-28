@@ -47,6 +47,16 @@ import {
   SURVEY_GOAL_SUGGESTION_BUTTON_STATE,
   CASE_HASH_TAG,
   CASE_REPORT_DATA,
+  BM_OR_LEAN,
+  BM_BM_AUTO_REPORT_DATA,
+  BM_LEAN_AUTO_REPORT_DATA,
+  BM_BM_ADS_REPORT_DATA,
+  SELECTED_PROBLEM_OPTIONS,
+  BM_LEAN_ADS_REPORT_DATA,
+  BM_BM_CUSTOM_REPORT_DATA,
+  BM_LEAN_CUSTOM_REPORT_DATA,
+  BM_MODEL_SUGGESTION_REPORT_DATA,
+  BM_QUESTION_LIST,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -59,6 +69,16 @@ import {
 import images from "../../../../assets/styles/Images";
 
 const MoleculeSurveyGoalSuggestion = () => {
+  const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
+  const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
+  const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
+  const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
+  const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
+  const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
+  const [selectedProblemOptions, setSelectedProblemOptions] = useAtom(SELECTED_PROBLEM_OPTIONS);
+  const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
+  const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
+  const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
   const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
   const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
   const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
@@ -238,6 +258,16 @@ const MoleculeSurveyGoalSuggestion = () => {
             priceProductSegmentation : priceProductSegmentation,
             caseHashTag : caseHashTag,
             caseReportData : caseReportData,
+            bmOrLean : BM_OR_LEAN,
+            bmQuestionList : bmQuestionList,
+            bmModelSuggestionReportData : bmModelSuggestionReportData,
+            bmBmAutoReportData : bmBmAutoReportData,
+            bmLeanAutoReportData : bmLeanAutoReportData,
+            bmBmAdsReportData : bmBmAdsReportData,
+            bmSelectedProblemOptions : selectedProblemOptions,
+            bmLeanAdsReportData : bmLeanAdsReportData,
+            bmBmCustomReportData : bmBmCustomReportData,
+            bmLeanCustomReportData : bmLeanCustomReportData,
           },
           isLoggedIn,
           conversationId
@@ -304,6 +334,16 @@ const MoleculeSurveyGoalSuggestion = () => {
         priceProductSegmentation : priceProductSegmentation,
         caseHashTag : caseHashTag,
         caseReportData : caseReportData,
+        bmOrLean : BM_OR_LEAN,
+        bmQuestionList : bmQuestionList,
+        bmModelSuggestionReportData : bmModelSuggestionReportData,
+        bmBmAutoReportData : bmBmAutoReportData,
+        bmLeanAutoReportData : bmLeanAutoReportData,
+        bmBmAdsReportData : bmBmAdsReportData,
+        bmSelectedProblemOptions : selectedProblemOptions,
+        bmLeanAdsReportData : bmLeanAdsReportData,
+        bmBmCustomReportData : bmBmCustomReportData,
+        bmLeanCustomReportData : bmLeanCustomReportData,
       },
       isLoggedIn,
       conversationId

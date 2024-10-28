@@ -58,6 +58,12 @@ import {
   SURVEY_QUESTION_LIST,
   SELECTED_PROBLEM_OPTIONS,
   BM_BM_CUSTOM_REPORT_BUTTON_STATE,
+  BM_OR_LEAN,
+  BM_LEAN_AUTO_REPORT_DATA,
+  BM_LEAN_ADS_REPORT_DATA,
+  BM_LEAN_CUSTOM_REPORT_DATA,
+  BM_MODEL_SUGGESTION_REPORT_DATA,
+  BM_BM_CUSTOM_REPORT_DATA,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -72,6 +78,12 @@ import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
 
 const OrganismBmBmAdsReport = () => {
+  const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
+  const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
+  const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
+  const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
+  const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
+  const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
   const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(SURVEY_GUIDELINE_REPORT_DATA);
   const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
   const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
@@ -227,8 +239,6 @@ const OrganismBmBmAdsReport = () => {
         }
 
         setBmBmAdsReportData(response.data.bm_bm_ads_report);
-        console.log(response.data.bm_bm_ads_report)
-
 
         const updatedConversation = [...conversation];
         // updatedConversation.push(
@@ -278,8 +288,16 @@ const OrganismBmBmAdsReport = () => {
             priceProductSegmentation : priceProductSegmentation,
             caseHashTag : caseHashTag,
             caseReportData : caseReportData,
+            bmOrLean : BM_OR_LEAN,
+            bmQuestionList : bmQuestionList,
+            bmModelSuggestionReportData : bmModelSuggestionReportData,
             bmBmAutoReportData : bmBmAutoReportData,
-
+            bmLeanAutoReportData : bmLeanAutoReportData,
+            bmBmAdsReportData : response.data.bm_bm_ads_report,
+            bmSelectedProblemOptions : selectedProblemOptions,
+            bmLeanAdsReportData : bmLeanAdsReportData,
+            bmBmCustomReportData : bmBmCustomReportData,
+            bmLeanCustomReportData : bmLeanCustomReportData,
             surveyGuidelineReportData : surveyGuidelineReportData,
             surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
             surveyGoalSuggestionList: surveyGoalSuggestionList,
@@ -315,6 +333,8 @@ const OrganismBmBmAdsReport = () => {
   };
 
   const handleExampleClick = (example) => {
+    if (selectedProblemOptions) return;
+
     setProblemOptions(example); // 클릭된 example을 selectedProblemOptions에 저장
   };
 
@@ -375,7 +395,16 @@ const OrganismBmBmAdsReport = () => {
           surveyGoalFixed: surveyGoalFixed,
           surveyQuestionList: surveyQuestionList,
 
-          bmSelectedProblemOptions: problemOptions,
+          bmOrLean : BM_OR_LEAN,
+          bmQuestionList : bmQuestionList,
+          bmModelSuggestionReportData : bmModelSuggestionReportData,
+          bmBmAutoReportData : bmBmAutoReportData,
+          bmLeanAutoReportData : bmLeanAutoReportData,
+          bmBmAdsReportData : bmBmAdsReportData,
+          bmSelectedProblemOptions : selectedProblemOptions,
+          bmLeanAdsReportData : bmLeanAdsReportData,
+          bmBmCustomReportData : bmBmCustomReportData,
+          bmLeanCustomReportData : bmLeanCustomReportData,
         },
         isLoggedIn,
         conversationId
@@ -399,7 +428,7 @@ const OrganismBmBmAdsReport = () => {
         </>
       ) : (
         <>
-          <h1>제시된 문제(Problem) 중에서 하나를 골라주세요.</h1>
+          <h1>제시된 고객 세그먼트(Customer Segment) 중에서 하나를 골라주세요.</h1>
           <OptionContainer>
             <ul>
               {allExamples.length > 0 ? (

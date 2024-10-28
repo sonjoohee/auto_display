@@ -58,6 +58,7 @@ import {
   SURVEY_QUESTION_LIST,
   SELECTED_PROBLEM_OPTIONS,
   BM_LEAN_CUSTOM_REPORT_BUTTON_STATE,
+  BM_MODEL_SUGGESTION_REPORT_DATA,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -72,6 +73,7 @@ import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
 
 const OrganismBmLeanAdsReport = () => {
+  const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
   const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(SURVEY_GUIDELINE_REPORT_DATA);
   const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
   const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
@@ -316,6 +318,8 @@ const OrganismBmLeanAdsReport = () => {
   };
 
   const handleExampleClick = (example) => {
+    if (selectedProblemOptions) return;
+    
     setProblemOptions(example); // 클릭된 example을 selectedProblemOptions에 저장
   };
 
