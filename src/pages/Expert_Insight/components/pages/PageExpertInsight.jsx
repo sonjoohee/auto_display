@@ -113,6 +113,8 @@ import MoleculeBmLeanAdsContinueButton from "../molecules/MoleculeBmLeanAdsConti
 
 import OrganismBmLeanAutoReport from "../organisms/OrganismBmLeanAutoReport";
 import OrganismBmLeanAdsReport from "../organisms/OrganismBmLeanAdsReport";
+import OrganismBmLeanCustomReport from "../organisms/OrganismBmLeanCustomReport";
+
 
 
 
@@ -530,14 +532,14 @@ if (isLoadingPage) {
                 return <OrganismBmLeanAutoReport />;
 
                 } else if (item.type === "bmLeanAdsReport") {
-                  return <OrganismBmLeanAdsReport />;}
+                  return <OrganismBmLeanAdsReport />;
                 // } else if (item.type === "bmBmAdsReport") {
                 //   return <OrganismBmBmAdsReport />;
 
-                // } else if (item.type === "bmLeanCustomReport") {
-                //   return <OrganismBmLeanCustomRReport />;
+                } else if (item.type === "bmLeanCustomReport") {
+                  return <OrganismBmLeanCustomReport />;}
                 // } else if (item.type === "bmBmCustomReport") {
-                //   return <OrganismBmBmCustomRReport />;
+                //   return <OrganismBmBmCustomReport />;
                 // }
 
                 /* 설문조사 전문가 */

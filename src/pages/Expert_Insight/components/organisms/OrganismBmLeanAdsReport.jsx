@@ -56,6 +56,8 @@ import {
   SURVEY_GOAL_SUGGESTION_LIST,
   SURVEY_GOAL_FIXED,
   SURVEY_QUESTION_LIST,
+  SELECTED_PROBLEM_OPTIONS,
+  BM_LEAN_CUSTOM_REPORT_BUTTON_STATE,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -147,6 +149,8 @@ const OrganismBmLeanAdsReport = () => {
   const [isLoadingIdeaPriority, setIsLoadingIdeaPriority] = useState(false);
   const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
   const [bmQuestionList, setbmQuestionList] = useAtom(BM_QUESTION_LIST);
+  const [selectedProblemOptions, setSelectedProblemOptions] = useAtom(SELECTED_PROBLEM_OPTIONS); // 문제 선택 아톰
+  const [bmLeanCustomButtonState, setBmLeanCustomButtonState] = useAtom(BM_LEAN_CUSTOM_REPORT_BUTTON_STATE);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -303,6 +307,72 @@ const OrganismBmLeanAdsReport = () => {
     const startIndex = (currentPage - 1) * examplesPerPage;
     return examples.slice(startIndex, startIndex + examplesPerPage);
   };
+
+  const handleExampleClick = (example) => {
+    setSelectedProblemOptions(example); // 클릭된 example을 selectedProblemOptions에 저장
+  };
+
+  const handleConfirm = async () => {
+    if (selectedPocOptions.length) return;
+    
+    setSelectedProblemOptions(selectedProblemOptions);
+    setApproachPath(3);
+    setConversationStage(3);
+    setBmLeanCustomButtonState(1);
+
+    const updatedConversation = [...conversation];
+    updatedConversation.push(
+      {
+        type: "user",
+        message: `*${selectedProblemOptions}*에 대한 비즈니스 모델 캔버스를 작성해주세요`,
+      },
+      {
+        type: `bmLeanCustomReport`,
+      }
+    );
+    setConversation(updatedConversation);
+      await saveConversationToIndexedDB(
+        {
+          id: conversationId,
+          inputBusinessInfo: inputBusinessInfo,
+          analysisReportData: analysisReportData,
+          strategyReportData: strategyReportData,
+          conversation: updatedConversation,
+          conversationStage: 3,
+          selectedAdditionalKeywords: selectedAdditionalKeyword,
+          selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
+          additionalReportData: additionalReportData,
+          customerAdditionalReportData: customerAdditionalReportData,
+          timestamp: Date.now(),
+          expert_index: selectedExpertIndex,
+          selectedPocTarget: selectedPocTarget,
+          ideaFeatureData : ideaFeatureData,
+          ideaRequirementData : ideaRequirementData,
+          ideaList : ideaList,
+          ideaGroup : ideaGroup,
+          ideaPriority : ideaPriority,
+          buttonState : buttonState,
+          growthHackerReportData : growthHackerReportData,
+          growthHackerDetailReportData : growthHackerDetailReportData,
+          KpiQuestionList : KpiQuestionList,
+          priceScrapData : priceScrapData,
+          priceReportData : priceReportData,
+          priceProduct : priceProduct,
+          priceSelectedProductSegmentation : priceSelectedProductSegmentation,
+          priceProductSegmentation : priceProductSegmentation,
+          caseHashTag : caseHashTag,
+          caseReportData : caseReportData,
+
+          surveyGuidelineReportData : surveyGuidelineReportData,
+          surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
+          surveyGoalSuggestionList: surveyGoalSuggestionList,
+          surveyGoalFixed: surveyGoalFixed,
+          surveyQuestionList: surveyQuestionList,
+        },
+        isLoggedIn,
+        conversationId
+      );
+    };
   return (
     <Wrap>
       {isLoadingIdeaPriority ? (
@@ -326,7 +396,13 @@ const OrganismBmLeanAdsReport = () => {
             <ul>
               {allExamples.length > 0 ? (
                 paginatedExamples(allExamples).map((example, exampleIndex) => (
-                  <Option key={exampleIndex}>{example}</Option>
+                  <Option
+                    key={exampleIndex}
+                    onClick={() => handleExampleClick(example)} // 클릭 시 handleExampleClick 호출
+                    className={selectedProblemOptions === example ? 'selected' : ''}
+                  >
+                  {example}
+                  </Option>
                 ))
               ) : (
                 <li>예시 없음</li>
@@ -351,6 +427,19 @@ const OrganismBmLeanAdsReport = () => {
               ))}
             </Pagination>
           )}
+
+        <ButtonWrap selectedPocOptions={selectedProblemOptions}>
+            <div 
+              className="finish" 
+              disabled={!selectedProblemOptions} // 선택이 안됐을 경우 버튼 비활성화
+              onClick={() => {
+                if (!selectedProblemOptions) return; // 선택이 안됐을 경우 동작 막기
+                handleConfirm();
+              }}
+            >
+              완료
+            </div>
+          </ButtonWrap>
         </>
       )}
     </Wrap>
@@ -458,5 +547,63 @@ const Pagination = styled.ul`
       font-weight:500;
       color:${palette.chatBlue};
     }
+  }
+`;
+
+const ButtonWrap = styled.div`
+  // margin-top:40px;
+  margin-top:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  .prev {
+    font-size:0.88rem;
+    color:${palette.gray500};
+    cursor:pointer;
+  }
+
+  .next, .finish {
+    // min-width:100px;
+    font-size:0.88rem;
+    // color:${palette.white};
+    // line-height:22px;
+    // padding:8px 20px;
+    margin-left:auto;
+    border-radius:8px;
+    background:none;
+    transition:all .5s;
+  }
+
+  .next {
+    color: ${(props) =>
+      props.selectedPocOptions.length !== 0
+        ? palette.black
+        : !props.selectedOption1
+        ? palette.gray500
+        : palette.chatBlue};
+    background: ${(props) =>
+      props.selectedPocOptions.length !== 0
+        ? palette.white
+        : !props.selectedOption1
+        ? palette.white
+        : palette.white};
+    cursor: ${(props) => (!props.selectedOption1 ? "default" : "pointer")};
+  }
+
+  .finish {
+    color: ${(props) =>
+      props.selectedPocOptions.length !== 0
+        ? palette.black
+        : !props.selectedOption1 || !props.selectedOption2
+        ? palette.gray500
+        : palette.chatBlue};
+    background: ${(props) =>
+      props.selectedPocOptions.length !== 0
+        ? palette.white
+        : !props.selectedOption1 || !props.selectedOption2
+        ? palette.white
+        : palette.white};
+    cursor: ${(props) => (!props.selectedOption1 || !props.selectedOption2 ? "default" : "pointer")};
   }
 `;

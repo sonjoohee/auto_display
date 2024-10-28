@@ -353,7 +353,8 @@ const MoleculeBmModelSuggestion = () => {
             <span>아이템의 단계 및 상황을 검토한 결과</span>
             {suggestion.title}
           </h4>
-
+          
+          {/* 여기에 report_title이 Lean 이면 Lean, BM이면 BM 문구 및 이미지 나오게 */}
           <ImageBox>
             <img src={images.ImgCanvasLean} alt="" />
             <p>Lean Canvas</p>

@@ -263,6 +263,8 @@ export const BM_LEAN_AUTO_REPORT_BUTTON_STATE = atom(0);
 export const BM_BM_ADS_REPORT_DATA = atom([]);
 export const BM_BM_ADS_REPORT_BUTTON_STATE = atom(0);
 
+
+export const SELECTED_PROBLEM_OPTIONS = atom([]);
 export const BM_LEAN_ADS_REPORT_DATA = atom([]);
 export const BM_LEAN_ADS_REPORT_BUTTON_STATE = atom(0);
 

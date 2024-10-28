@@ -475,12 +475,7 @@ const BMExpert = () => {
 
           <div>
             <button type="button">
-              <img src={images.IconCopy} alt="" />
-              복사하기
-            </button>
-            <button type="button">
-              <img src={images.IconSave} alt="" />
-              저장하기
+              확인
             </button>
           </div>
         </ButtonWrap>
