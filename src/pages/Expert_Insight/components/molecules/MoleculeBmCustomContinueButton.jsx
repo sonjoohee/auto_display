@@ -249,7 +249,7 @@ const MoleculeBmCustomContinueButton = () => {
   return (
     <>
       <ButtonWrap>
-          <button onClick={() => handleClick("more")}>다른 방향성 선택하기</button>
+          {/* <button onClick={() => handleClick("more")}>다른 방향성 선택하기</button> */}
           <button onClick={() => handleClick("enough")}>이정도면 충분합니다</button>
       </ButtonWrap>
     </>

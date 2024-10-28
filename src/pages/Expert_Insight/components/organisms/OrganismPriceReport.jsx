@@ -497,17 +497,30 @@ const OrganismPriceReport = () => {
             <PriceWrap>
               <div>
                 <span>최소 가격</span>
-                <input type="text" value={`₩${parseInt(priceReportData.price_analysis.price_data.lowest_price.replace("원", "").replace(",", "")).toLocaleString()}원`} readOnly></input>
+                <input 
+                  type="text" 
+                  value={`₩${parseInt(priceReportData.price_analysis.price_data.lowest_price.replace(/원/g, "").replace(/,/g, "")).toLocaleString()}원`} 
+                  readOnly
+                />
               </div>
               <div>
                 <span>최대 가격</span>
-                <input type="text" value={`₩${parseInt(priceReportData.price_analysis.price_data.highest_price.replace("원", "").replace(",", "")).toLocaleString()}원`} readOnly></input>
+                <input 
+                  type="text" 
+                  value={`₩${parseInt(priceReportData.price_analysis.price_data.highest_price.replace(/원/g, "").replace(/,/g, "")).toLocaleString()}원`} 
+                  readOnly
+                />
               </div>
               <div>
                 <span>평균가</span>
-                <input type="text" value={`₩${parseInt(priceReportData.price_analysis.price_data.average_price.replace("원", "").replace(",", "")).toLocaleString()}원`} readOnly></input>
+                <input 
+                  type="text" 
+                  value={`₩${parseInt(priceReportData.price_analysis.price_data.average_price.replace(/원/g, "").replace(/,/g, "")).toLocaleString()}원`} 
+                  readOnly
+                />
               </div>
-              </PriceWrap>
+            </PriceWrap>
+
   
             <p>{priceReportData.price_analysis.summary.unit_setting}</p>
           </ChartWrap>
