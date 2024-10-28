@@ -46,18 +46,18 @@ import {
   PRICE_PRODUCT_SEGMENTATION,
   CASE_HASH_TAG,
   CASE_REPORT_DATA,
-  BM_LEAN_AUTO_REPORT_DATA,
-  BM_LEAN_AUTO_REPORT_BUTTON_STATE,
+  BM_BM_AUTO_REPORT_DATA,
+  BM_BM_AUTO_REPORT_BUTTON_STATE,
   BM_QUESTION_LIST,
-  BM_LEAN_ADS_REPORT_BUTTON_STATE,
-  BM_LEAN_ADS_REPORT_DATA,
+  BM_BM_ADS_REPORT_BUTTON_STATE,
+  BM_BM_ADS_REPORT_DATA,
   SURVEY_GUIDELINE_REPORT_DATA,
   SURVEY_GUIDELINE_DETAIL_REPORT_DATA,
   SURVEY_GOAL_SUGGESTION_LIST,
   SURVEY_GOAL_FIXED,
   SURVEY_QUESTION_LIST,
   SELECTED_PROBLEM_OPTIONS,
-  BM_LEAN_CUSTOM_REPORT_BUTTON_STATE,
+  BM_BM_CUSTOM_REPORT_BUTTON_STATE,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -71,7 +71,7 @@ import {
 import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
 
-const OrganismBmLeanAdsReport = () => {
+const OrganismBmBmAdsReport = () => {
   const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(SURVEY_GUIDELINE_REPORT_DATA);
   const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
   const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
@@ -140,17 +140,17 @@ const OrganismBmLeanAdsReport = () => {
   const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
   const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
 
-  const [bmLeanAdsButtonState, setBmLeanAdsButtonState] = useAtom(BM_LEAN_ADS_REPORT_BUTTON_STATE);
-  const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
+  const [bmBmAdsButtonState, setBmBmAdsButtonState] = useAtom(BM_BM_ADS_REPORT_BUTTON_STATE);
+  const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
 
   
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [isLoadingIdeaPriority, setIsLoadingIdeaPriority] = useState(false);
-  const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
+  const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
   const [bmQuestionList, setbmQuestionList] = useAtom(BM_QUESTION_LIST);
   const [selectedProblemOptions, setSelectedProblemOptions] = useAtom(SELECTED_PROBLEM_OPTIONS); // 문제 선택 아톰
-  const [bmLeanCustomButtonState, setBmLeanCustomButtonState] = useAtom(BM_LEAN_CUSTOM_REPORT_BUTTON_STATE);
+  const [bmBmCustomButtonState, setBmBmCustomButtonState] = useAtom(BM_BM_CUSTOM_REPORT_BUTTON_STATE);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -164,12 +164,12 @@ const OrganismBmLeanAdsReport = () => {
   };
 
   useEffect(() => {
-    const fetchBmLeanAdsReport = async () => {
+    const fetchBmBmAdsReport = async () => {
 
-      if(bmLeanAdsButtonState) {
+      if(bmBmAdsButtonState) {
         setIsLoading(true);
         setIsLoadingIdeaPriority(true);
-        setBmLeanAdsButtonState(0);
+        setBmBmAdsButtonState(0);
 
         const data = {
           expert_id: "1",
@@ -184,7 +184,7 @@ const OrganismBmLeanAdsReport = () => {
         };
 
         let response = await axios.post(
-          "https://wishresearch.kr/panels/lean_ads_report",
+          "https://wishresearch.kr/panels/bm_ads_report",
           data,
           axiosConfig
         );
@@ -194,9 +194,9 @@ const OrganismBmLeanAdsReport = () => {
 
         while (retryCount < maxRetries && (
           !response || !response.data || typeof response.data !== "object" ||
-          !response.data.hasOwnProperty("bm_lean_ads_report") ||
-          !Array.isArray(response.data.bm_lean_ads_report) ||
-          response.data.bm_lean_ads_report.some(keywordSection => 
+          !response.data.hasOwnProperty("bm_bm_ads_report") ||
+          !Array.isArray(response.data.bm_bm_ads_report) ||
+          response.data.bm_bm_ads_report.some(keywordSection => 
             !Array.isArray(keywordSection.keywords) || 
             keywordSection.keywords.some(keyword => 
               !keyword.hasOwnProperty("title") || 
@@ -208,7 +208,7 @@ const OrganismBmLeanAdsReport = () => {
           )
         )) {
           response = await axios.post(
-            "https://wishresearch.kr/panels/lean_ads_report",
+            "https://wishresearch.kr/panels/bm_ads_report",
             data,
             axiosConfig
           );
@@ -220,20 +220,20 @@ const OrganismBmLeanAdsReport = () => {
           throw new Error("Maximum retry attempts reached. Empty response persists.");
         }
 
-        setBmLeanAdsReportData(response.data.bm_lean_ads_report);
-        console.log(response.data.bm_lean_ads_report)
+        setBmBmAdsReportData(response.data.bm_bm_ads_report);
+        console.log(response.data.bm_bm_ads_report)
 
 
         const updatedConversation = [...conversation];
-        updatedConversation.push(
-          // {
-          //   type: "system",
-          //   message:
-          //     "목표로 하는 문제(Problem)를 골라주시면, 해당 문제에 특화된 린 캔버스를 작성하겠습니다.",
-          //   expertIndex: selectedExpertIndex,
-          // },
-          // { type: `bmLeanAdsReport`}
-        );
+        // updatedConversation.push(
+        //   {
+        //     type: "system",
+        //     message:
+        //       "목표로 하는 문제(Problem)를 골라주시면, 해당 문제에 특화된 린 캔버스를 작성하겠습니다.",
+        //     expertIndex: selectedExpertIndex,
+        //   },
+        //   // { type: `bmBmAdsReport`}
+        // );
         setConversationStage(3);
         setConversation(updatedConversation);
 
@@ -272,7 +272,7 @@ const OrganismBmLeanAdsReport = () => {
             priceProductSegmentation : priceProductSegmentation,
             caseHashTag : caseHashTag,
             caseReportData : caseReportData,
-            bmLeanAutoReportData : bmLeanAutoReportData,
+            bmBmAutoReportData : bmBmAutoReportData,
 
             surveyGuidelineReportData : surveyGuidelineReportData,
             surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
@@ -288,14 +288,14 @@ const OrganismBmLeanAdsReport = () => {
       }
     };
 
-    fetchBmLeanAdsReport();
-  }, [bmLeanAdsButtonState]);
+    fetchBmBmAdsReport();
+  }, [bmBmAdsButtonState]);
 
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지를 상태로 관리
   const examplesPerPage = 5; // 페이지당 표시할 예시 개수
 
   // 전체 예시를 하나의 배열로 모으기
-  const allExamples = bmLeanAdsReportData.reduce((acc, section) => {
+  const allExamples = bmBmAdsReportData.reduce((acc, section) => {
     section.keywords.forEach((keywordItem) => {
       if (keywordItem.examples) acc.push(...keywordItem.examples);
     });
@@ -318,7 +318,7 @@ const OrganismBmLeanAdsReport = () => {
     setSelectedProblemOptions(selectedProblemOptions);
     setApproachPath(3);
     setConversationStage(3);
-    setBmLeanCustomButtonState(1);
+    setBmBmCustomButtonState(1);
 
     const updatedConversation = [...conversation];
     updatedConversation.push(
@@ -327,7 +327,7 @@ const OrganismBmLeanAdsReport = () => {
         message: `*${selectedProblemOptions}*에 대한 비즈니스 모델 캔버스를 작성해주세요`,
       },
       {
-        type: `bmLeanCustomReport`,
+        type: `bmBmCustomReport`,
       }
     );
     setConversation(updatedConversation);
@@ -445,7 +445,7 @@ const OrganismBmLeanAdsReport = () => {
     </Wrap>
   );
 };
-export default OrganismBmLeanAdsReport;
+export default OrganismBmBmAdsReport;
 
 const Wrap = styled.div`
   max-width:986px;

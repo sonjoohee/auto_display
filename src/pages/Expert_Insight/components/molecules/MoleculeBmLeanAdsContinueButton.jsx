@@ -119,7 +119,7 @@ const MoleculeBmLeanAdsContinueButton = () => {
     const updatedConversation = [...conversation];
 
     if (updatedConversation.length > 0 &&
-        updatedConversation[updatedConversation.length - 1].type === "BmAdsContinueButton"
+        updatedConversation[updatedConversation.length - 1].type === "bmLeanAdsContinueButton"
     ) {
       updatedConversation.pop();
     }
@@ -129,7 +129,7 @@ const MoleculeBmLeanAdsContinueButton = () => {
           {
             type: "system",
             message:
-              "리포트 내용을 보시고 추가로 궁금한 점이 있나요? 아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊",
+              "입력해주신 비즈니스 목표에 따른 캔버스의 정교화 방향성을 4가지 도출하였습니다.\n원하시는 방향을 선택하시고, 어떤 요소들이 변화되었는지 확인해보세요",
             expertIndex: selectedExpertIndex,
           },
           { type: `bmLeanAdsReport` }
