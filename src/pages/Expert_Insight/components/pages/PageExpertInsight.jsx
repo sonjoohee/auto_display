@@ -108,13 +108,12 @@ import MoleculeBmModelSuggestion from "../molecules/MoleculeBmModelSuggestion";
 import MoleculeBmSelectModelButton from "../molecules/MoleculeBmSelectModelButton";
 import MoleculeBmBmAdsContinueButton from "../molecules/MoleculeBmBmAdsContinueButton";
 import MoleculeBmLeanAdsContinueButton from "../molecules/MoleculeBmLeanAdsContinueButton";
-
+import MoleculeBmLeanCustomContinueButton from "../molecules/MoleculeBmLeanCustomContinueButton";
 
 
 import OrganismBmLeanAutoReport from "../organisms/OrganismBmLeanAutoReport";
 import OrganismBmLeanAdsReport from "../organisms/OrganismBmLeanAdsReport";
 import OrganismBmLeanCustomReport from "../organisms/OrganismBmLeanCustomReport";
-
 
 
 
@@ -537,10 +536,12 @@ if (isLoadingPage) {
                 //   return <OrganismBmBmAdsReport />;
 
                 } else if (item.type === "bmLeanCustomReport") {
-                  return <OrganismBmLeanCustomReport />;}
+                  return <OrganismBmLeanCustomReport />;
                 // } else if (item.type === "bmBmCustomReport") {
                 //   return <OrganismBmBmCustomReport />;
                 // }
+                } else if (item.type === "bmLeanCustomContinueButton") {
+                  return <MoleculeBmLeanCustomContinueButton />;}
 
                 /* 설문조사 전문가 */
                 else if (item.type === "surveyStartButton") {

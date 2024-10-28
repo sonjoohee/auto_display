@@ -228,7 +228,7 @@ const OrganismBmLeanCustomReport = () => {
             message: `*${selectedProblemOptions}*에 대한 린 캔버스 작성이 완료되었습니다.\n이제부터는 비즈니스 목표에 따라 비즈니스 모델을 다양하게 구분해보겠습니다.`,
             expertIndex: selectedExpertIndex,
           },
-          { type: `bmLeanAdsContinueButton`}
+          { type: `bmLeanCustomContinueButton`}
         );
         setConversationStage(3);
         setConversation(updatedConversation);
