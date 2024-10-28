@@ -678,7 +678,7 @@ const OrganismSurveyGuidelineReport = () => {
                             ) : (
                               <img src={images.ImgKOR} alt="" />
                             )}
-                            한글
+                            한국어
                           </div>
                           <div
                             className={`${
@@ -792,7 +792,7 @@ const OrganismSurveyGuidelineReport = () => {
                             ) : (
                               <img src={images.ImgKOR} alt="" />
                             )}
-                            한글
+                            한국어
                           </div>
                           <div
                             className={`${
@@ -906,7 +906,7 @@ const OrganismSurveyGuidelineReport = () => {
                             ) : (
                               <img src={images.ImgKOR} alt="" />
                             )}
-                            한글
+                            한국어
                           </div>
                           <div
                             className={`${
