@@ -118,7 +118,7 @@ export const getConversationByIdFromIndexedDB = async (id, isLoggedIn) => {
       //   response.data.chat_data
       // );
 
-      return response.data.chat_data;
+      return response.data;
 
       // const response = await axios.get(
       //   `https://wishresearch.kr/panels/chat_list`
