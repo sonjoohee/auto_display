@@ -2555,7 +2555,8 @@ const LoginButtonWrap = styled.div`
     padding: 12px 16px;
     border-radius: 10px;
     border: 1px solid ${palette.lineGray};
-    background: ${palette.white};
+    // background: ${palette.white};
+    background:transparent;
   }
 
   div {
