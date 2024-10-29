@@ -707,6 +707,10 @@ const OrganismPriceReport = () => {
       //   height,
       //   step,
       // });
+
+      return () => {
+        tooltip.remove();
+      }; // 컴포넌트가 언마운트될 때 툴팁 제거
     }
   }, [productPrices, range, width]);
 
