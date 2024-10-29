@@ -78,6 +78,8 @@ import {
   BM_LEAN_CUSTOM_REPORT_DATA,
   BM_MODEL_SUGGESTION_REPORT_DATA,
   BM_QUESTION_LIST,
+  IS_ADDING_NOW,
+  SET_NEW_ADD_CONTENT,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -170,7 +172,6 @@ const MoleculeReportController = ({
   ); // 리프레시 트리거 상태 구독
   
   const [bizAnalysisReportIndex, setBizAnalysisReportIndex] = useState(0);
-  const [newAddContent, setNewAddContent] = useState("");
   const [newEditContent, setNewEditContent] = useState("");
   const [editingIndex, setEditingIndex] = useState({ section: "", index: -1 });
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
@@ -216,6 +217,8 @@ const MoleculeReportController = ({
   const [editedIdeaCustomerTitle, setEditedIdeaCustomerTitle] = useAtom(EDITED_IDEA_CUSTOMER_TITLE);
   const [isEditingIdeaFeature, setIsEditingIdeaFeature] = useAtom(IS_EDITING_IDEA_FEATURE);
   const [isEditingIdeaCustomer, setIsEditingIdeaCustomer] = useAtom(IS_EDITING_IDEA_CUSTOMER);
+  const [isAddingNow, setIsAddingNow] = useAtom(IS_ADDING_NOW);
+  const [newAddContent, setNewAddContent] = useAtom(SET_NEW_ADD_CONTENT);
 
   const navigate = useNavigate();
 
@@ -267,6 +270,8 @@ const MoleculeReportController = ({
       );
       setBusinessInformationTargetCustomer(tempMusinessInformationTargetCustomer);
       setIsEditingNow(false);
+      setIsAddingNow({ section: "", isAdding: false });
+      setNewAddContent("");
     }
     
     togglePopupCancel();
@@ -357,6 +362,8 @@ const MoleculeReportController = ({
     } 
     else {
       setIsEditingNow(false);
+      setIsAddingNow({ section: "", isAdding: false });
+      setNewAddContent("");
 
       setTempMainFeaturesOfBusinessInformation(mainFeaturesOfBusinessInformation);
       setTempMainCharacteristicOfBusinessInformation(

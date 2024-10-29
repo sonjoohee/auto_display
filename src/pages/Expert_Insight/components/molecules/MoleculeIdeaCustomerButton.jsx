@@ -57,6 +57,7 @@ import {
   BM_LEAN_CUSTOM_REPORT_DATA,
   BM_MODEL_SUGGESTION_REPORT_DATA,
   BM_QUESTION_LIST,
+  IS_EDITING_IDEA_FEATURE,
 } from "../../../AtomStates";
 
 import {
@@ -125,7 +126,8 @@ const MoleculeIdeaCustomerButton = () => {
   const [ideaCustomerButtonState, setIdeaCustomerButtonState] = useAtom(IDEA_CUSTOMER_BUTTON_STATE);
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
   const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
-
+  const [isEditingIdeaFeature, setIsEditingIdeaFeature] = useAtom(IS_EDITING_IDEA_FEATURE);
+  
   const handleClick = async () => {
     if (isLoading) return;
     const updatedConversation = [...conversation];
@@ -151,6 +153,7 @@ const MoleculeIdeaCustomerButton = () => {
       },
     );
 
+    setIsEditingIdeaFeature(false);
     setIdeaCustomerButtonState(1);
     setConversation(updatedConversation);
     setConversationStage(3);

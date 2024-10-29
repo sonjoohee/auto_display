@@ -50,6 +50,7 @@ import {
   BM_LEAN_CUSTOM_REPORT_DATA,
   BM_MODEL_SUGGESTION_REPORT_DATA,
   BM_QUESTION_LIST,
+  IS_EDITING_NOW,
 } from "../../../AtomStates";
 
 import {
@@ -115,6 +116,7 @@ const MoleculePriceStartButton = () => {
   const [priceStartButtonState, setPriceStartButtonState] = useAtom(PRICE_START_BUTTON_STATE);
   const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
   const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
+  const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
   
   const handleClick = async () => {
     if (isLoading) return;
@@ -223,6 +225,7 @@ const MoleculePriceStartButton = () => {
       );
     }
 
+    setIsEditingNow(false);
     setConversation(updatedConversation);
     setConversationStage(3);
     setApproachPath(3);

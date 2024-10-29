@@ -339,3 +339,10 @@ export const IS_MOBILE = atom(false);
 export const USER_CREDIT = atom(0);
 
 export const BUTTON_STATE = atom({}); // 버튼 클릭 여부 확인 -> 버튼 클릭 시 MoleculeReportController 비활성화
+
+export const IS_ADDING_NOW = atom({
+  section: "",
+  isAdding: false,
+});
+
+export const SET_NEW_ADD_CONTENT = atom("");
