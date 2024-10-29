@@ -351,7 +351,7 @@ const OrganismBmLeanAdsReport = () => {
     updatedConversation.push(
       {
         type: "user",
-        message: `*${problemOptions}*에 대한 비즈니스 모델 캔버스를 작성해주세요`,
+        message: `*${problemOptions}*에 대한 린 캔버스를 작성해주세요`,
       },
       {
         type: `bmLeanCustomReport`,
