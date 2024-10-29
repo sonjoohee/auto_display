@@ -2622,6 +2622,7 @@ const LogoutBtnWrap = styled.div`
 
 const LogoutToggle = styled.div`
   position: absolute;
+  min-width:217px;
   bottom: 0;
   display: flex;
   flex-direction: column;
