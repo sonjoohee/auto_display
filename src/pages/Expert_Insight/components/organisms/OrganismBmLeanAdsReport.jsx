@@ -56,9 +56,14 @@ import {
   SURVEY_GOAL_SUGGESTION_LIST,
   SURVEY_GOAL_FIXED,
   SURVEY_QUESTION_LIST,
-  SELECTED_PROBLEM_OPTIONS,
+  BM_SELECTED_PROBLEM_OPTIONS,
   BM_LEAN_CUSTOM_REPORT_BUTTON_STATE,
   BM_MODEL_SUGGESTION_REPORT_DATA,
+  BM_BM_CUSTOM_REPORT_DATA,
+  BM_LEAN_CUSTOM_REPORT_DATA,
+  BM_OR_LEAN,
+  BM_BM_AUTO_REPORT_DATA,
+  BM_BM_ADS_REPORT_DATA,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -73,6 +78,7 @@ import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
 
 const OrganismBmLeanAdsReport = () => {
+  const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
   const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(SURVEY_GUIDELINE_REPORT_DATA);
   const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
@@ -151,15 +157,19 @@ const OrganismBmLeanAdsReport = () => {
   const [isLoadingIdeaPriority, setIsLoadingIdeaPriority] = useState(false);
   const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
   const [bmQuestionList, setbmQuestionList] = useAtom(BM_QUESTION_LIST);
-  const [selectedProblemOptions, setSelectedProblemOptions] = useAtom(SELECTED_PROBLEM_OPTIONS); // 문제 선택 아톰
+  const [bmSelectedProblemOptions, setBmSelectedProblemOptions] = useAtom(BM_SELECTED_PROBLEM_OPTIONS); // 문제 선택 아톰
   const [problemOptions, setProblemOptions] = useState("");
   const [bmLeanCustomButtonState, setBmLeanCustomButtonState] = useAtom(BM_LEAN_CUSTOM_REPORT_BUTTON_STATE);
+  const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
+  const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
+  const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
+  const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
 
   useEffect(() => {
-    if(selectedProblemOptions) {
-      setProblemOptions(selectedProblemOptions);
+    if(bmSelectedProblemOptions) {
+      setProblemOptions(bmSelectedProblemOptions);
     }
-  }, [selectedProblemOptions]);
+  }, [bmSelectedProblemOptions]);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -230,8 +240,6 @@ const OrganismBmLeanAdsReport = () => {
         }
 
         setBmLeanAdsReportData(response.data.bm_lean_ads_report);
-        console.log(response.data.bm_lean_ads_report)
-
 
         const updatedConversation = [...conversation];
         updatedConversation.push(
@@ -281,8 +289,16 @@ const OrganismBmLeanAdsReport = () => {
             priceProductSegmentation : priceProductSegmentation,
             caseHashTag : caseHashTag,
             caseReportData : caseReportData,
+            bmOrLean : bmOrLean,
+            bmQuestionList : bmQuestionList,
+            bmModelSuggestionReportData : bmModelSuggestionReportData,
+            bmBmAutoReportData : bmBmAutoReportData,
             bmLeanAutoReportData : bmLeanAutoReportData,
-
+            bmBmAdsReportData : bmBmAdsReportData,
+            bmSelectedProblemOptions : bmSelectedProblemOptions,
+            bmLeanAdsReportData : response.data.bm_lean_ads_report,
+            bmBmCustomReportData : bmBmCustomReportData,
+            bmLeanCustomReportData : bmLeanCustomReportData,
             surveyGuidelineReportData : surveyGuidelineReportData,
             surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
             surveyGoalSuggestionList: surveyGoalSuggestionList,
@@ -318,15 +334,15 @@ const OrganismBmLeanAdsReport = () => {
   };
 
   const handleExampleClick = (example) => {
-    if (selectedProblemOptions) return;
+    if (bmSelectedProblemOptions) return;
     
-    setProblemOptions(example); // 클릭된 example을 selectedProblemOptions에 저장
+    setProblemOptions(example); // 클릭된 example을 bmSelectedProblemOptions에 저장
   };
 
   const handleConfirm = async () => {
     if (!problemOptions) return;
     
-    setSelectedProblemOptions(problemOptions);
+    setBmSelectedProblemOptions(problemOptions);
     setApproachPath(3);
     setConversationStage(3);
     setBmLeanCustomButtonState(1);
@@ -335,7 +351,7 @@ const OrganismBmLeanAdsReport = () => {
     updatedConversation.push(
       {
         type: "user",
-        message: `*${problemOptions}*에 대한 비즈니스 모델 캔버스를 작성해주세요`,
+        message: `*${problemOptions}*에 대한 린 캔버스를 작성해주세요`,
       },
       {
         type: `bmLeanCustomReport`,
@@ -381,6 +397,16 @@ const OrganismBmLeanAdsReport = () => {
           surveyQuestionList: surveyQuestionList,
 
           bmSelectedProblemOptions: problemOptions,
+          bmOrLean : bmOrLean,
+          bmQuestionList : bmQuestionList,
+          bmModelSuggestionReportData : bmModelSuggestionReportData,
+          bmBmAutoReportData : bmBmAutoReportData,
+          bmLeanAutoReportData : bmLeanAutoReportData,
+          bmBmAdsReportData : bmBmAdsReportData,
+          bmSelectedProblemOptions : problemOptions,
+          bmLeanAdsReportData : bmLeanAdsReportData,
+          bmBmCustomReportData : bmBmCustomReportData,
+          bmLeanCustomReportData : bmLeanCustomReportData,
         },
         isLoggedIn,
         conversationId
@@ -413,10 +439,10 @@ const OrganismBmLeanAdsReport = () => {
                     key={exampleIndex}
                     onClick={() => handleExampleClick(example)} // 클릭 시 handleExampleClick 호출
                     selected={problemOptions === example}
-                    selectedProblemOptions={selectedProblemOptions}
+                    bmSelectedProblemOptions={bmSelectedProblemOptions}
                   >
                    <Label
-                      selectedProblemOptions={selectedProblemOptions}
+                      bmSelectedProblemOptions={bmSelectedProblemOptions}
                       selected={problemOptions === example}
                     >
                       {example}
@@ -449,7 +475,7 @@ const OrganismBmLeanAdsReport = () => {
 
           <ButtonWrap>
             <Button 
-              selectedProblemOptions={selectedProblemOptions} problemOptions={problemOptions}
+              bmSelectedProblemOptions={bmSelectedProblemOptions} problemOptions={problemOptions}
               disabled={!problemOptions} // 선택이 안됐을 경우 버튼 비활성화
               onClick={() => {
                 handleConfirm();
@@ -508,11 +534,11 @@ const Option = styled.div`
   cursor: pointer;
   background-color: ${(props) =>
     props.selected
-      ? props.selectedProblemOptions
+      ? props.bmSelectedProblemOptions
         ? "rgba(0,0,0,0.05)"
         : "rgba(4,83,244,0.05)"
       : palette.white};
-  border: 1px solid ${(props) => (props.selected ? (props.selectedProblemOptions ? palette.gray800 : palette.blue) : palette.lineGray)};
+  border: 1px solid ${(props) => (props.selected ? (props.bmSelectedProblemOptions ? palette.gray800 : palette.blue) : palette.lineGray)};
   transition:all .5s;
 
   p {
@@ -522,7 +548,7 @@ const Option = styled.div`
   
   img {
     margin-bottom: 5px;
-    background-color: ${(props) => (!props.selected || props.selectedProblemOptions ? "rgba(246, 246, 246, 1)" : "rgba(255, 255, 255, 1)")};
+    background-color: ${(props) => (!props.selected || props.bmSelectedProblemOptions ? "rgba(246, 246, 246, 1)" : "rgba(255, 255, 255, 1)")};
     border-radius: 50%;
     padding: 10px;
     width: 34px;
@@ -531,7 +557,7 @@ const Option = styled.div`
 
   &:hover {
     border-color: ${(props) =>
-      props.selectedProblemOptions
+      props.bmSelectedProblemOptions
         ? "none" 
         : palette.blue};
   }
@@ -543,7 +569,7 @@ const Label = styled.label`
   gap:8px;
   align-items:flex-start;
   width:100%;
-  color: ${(props) => (props.selected ? (props.selectedProblemOptions ? palette.gray800 : palette.blue) : palette.gray800)};
+  color: ${(props) => (props.selected ? (props.bmSelectedProblemOptions ? palette.gray800 : palette.blue) : palette.gray800)};
   cursor:pointer;
 
   &:before {
@@ -551,8 +577,8 @@ const Label = styled.label`
     height:20px;
     flex-shrink:0;
     border-radius:50%;
-    border:1px solid ${(props) => (props.selected ? (props.selectedProblemOptions ? palette.gray800 : palette.blue) : palette.lineGray)};
-    background-color: ${(props) => (props.selected ? (props.selectedProblemOptions ? palette.gray800 : palette.blue) : palette.white)};
+    border:1px solid ${(props) => (props.selected ? (props.bmSelectedProblemOptions ? palette.gray800 : palette.blue) : palette.lineGray)};
+    background-color: ${(props) => (props.selected ? (props.bmSelectedProblemOptions ? palette.gray800 : palette.blue) : palette.white)};
     transition:all .5s;
     content:'';
   }
@@ -617,5 +643,5 @@ const Button = styled.button`
   transition:all .5s;
 
   display: ${(props) => (
-    props.selectedProblemOptions ? 'none' : 'block')};
+    props.bmSelectedProblemOptions ? 'none' : 'block')};
 `;

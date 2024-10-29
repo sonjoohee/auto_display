@@ -52,7 +52,7 @@ import {
   SURVEY_GOAL_SUGGESTION_LIST,
   SURVEY_GOAL_FIXED,
   SURVEY_QUESTION_LIST,
-  SELECTED_PROBLEM_OPTIONS,
+  BM_SELECTED_PROBLEM_OPTIONS,
   BM_OR_LEAN,
   BM_BM_AUTO_REPORT_DATA,
   BM_BM_ADS_REPORT_DATA,
@@ -134,7 +134,7 @@ const PageExpertInsight = () => {
   const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
   const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
   const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
-  const [selectedProblemOptions, setSelectedProblemOptions] = useAtom(SELECTED_PROBLEM_OPTIONS);
+  const [bmSelectedProblemOptions, setBmSelectedProblemOptions] = useAtom(BM_SELECTED_PROBLEM_OPTIONS);
   const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
   const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
   const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
@@ -315,7 +315,7 @@ const PageExpertInsight = () => {
 
             setBmModelSuggestionReportData(savedConversation.bmModelSuggestionReportData || []);
             setBmQuestionList(savedConversation.bmQuestionList || []);
-            setSelectedProblemOptions(savedConversation.bmSelectedProblemOptions || "");
+            setBmSelectedProblemOptions(savedConversation.bmSelectedProblemOptions || "");
             setBmOrLean(savedConversation.bmOrLean || "");
             setBmBmAutoReportData(savedConversation.bmBmAutoReportData || []);
             setBmLeanAutoReportData(savedConversation.bmLeanAutoReportData || []);

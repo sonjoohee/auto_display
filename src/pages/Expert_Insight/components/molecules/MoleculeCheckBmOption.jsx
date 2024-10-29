@@ -42,7 +42,7 @@ import {
   BM_BM_AUTO_REPORT_DATA,
   BM_LEAN_AUTO_REPORT_DATA,
   BM_BM_ADS_REPORT_DATA,
-  SELECTED_PROBLEM_OPTIONS,
+  BM_SELECTED_PROBLEM_OPTIONS,
   BM_LEAN_ADS_REPORT_DATA,
   BM_BM_CUSTOM_REPORT_DATA,
   BM_LEAN_CUSTOM_REPORT_DATA,
@@ -58,7 +58,7 @@ const MoleculeCheckBmOption = () => {
   const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
   const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
   const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
-  const [selectedProblemOptions, setSelectedProblemOptions] = useAtom(SELECTED_PROBLEM_OPTIONS);
+  const [bmSelectedProblemOptions, setBmSelectedProblemOptions] = useAtom(BM_SELECTED_PROBLEM_OPTIONS);
   const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
   const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
   const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
@@ -232,13 +232,13 @@ const MoleculeCheckBmOption = () => {
         buttonState: buttonState,
         caseHashTag : caseHashTag,
         caseReportData : caseReportData,
-        bmOrLean : BM_OR_LEAN,
+        bmOrLean : bmOrLean,
         bmQuestionList : bmQuestionList,
         bmModelSuggestionReportData : bmModelSuggestionReportData,
         bmBmAutoReportData : bmBmAutoReportData,
         bmLeanAutoReportData : bmLeanAutoReportData,
         bmBmAdsReportData : bmBmAdsReportData,
-        bmSelectedProblemOptions : selectedProblemOptions,
+        bmSelectedProblemOptions : bmSelectedProblemOptions,
         bmLeanAdsReportData : bmLeanAdsReportData,
         bmBmCustomReportData : bmBmCustomReportData,
         bmLeanCustomReportData : bmLeanCustomReportData,
@@ -257,6 +257,13 @@ const MoleculeCheckBmOption = () => {
     if (dir === "prev") {
       setTabs((prevTabs) => prevTabs - 1);
     } else if (dir === "next") {
+      if (
+        (tabs === 0 && !selectedOption1) ||
+        (tabs === 1 && !selectedOption2) ||
+        (tabs === 2 && !selectedOption3) ||
+        (tabs === 3 && !selectedOption4)
+      )
+        return;
       setTabs((prevTabs) => prevTabs + 1);
     }
   };
@@ -265,6 +272,9 @@ const MoleculeCheckBmOption = () => {
     <Wrap>
       {tabs === 0 && (
         <>
+          <Progress bmQuestionList={bmQuestionList}>
+            <div className="bar num1"></div>
+          </Progress>
           <Question>Q1. 현재 스타트업의 단계는 무엇입니까?</Question>
           <OptionContainer>
             {options1.map((option1) => (
@@ -282,6 +292,9 @@ const MoleculeCheckBmOption = () => {
       )}
       {tabs === 1 && (
         <>
+          <Progress bmQuestionList={bmQuestionList}>
+            <div className="bar num2"></div>
+          </Progress>
           <Question>Q2. 현재 가장 중요한 목표는 무엇입니까?</Question>
           <OptionContainer>
             {options2.map((option2) => (
@@ -300,6 +313,9 @@ const MoleculeCheckBmOption = () => {
       {/* 각 탭별로 동일한 방식으로 설정 */}
       {tabs === 2 && (
         <>
+          <Progress bmQuestionList={bmQuestionList}>
+            <div className="bar num3"></div>
+          </Progress>
           <Question>Q3. 고객의 문제는 명확하게 정의되었습니까?</Question>
           <OptionContainer>
             {options3.map((option3) => (
@@ -317,6 +333,9 @@ const MoleculeCheckBmOption = () => {
       )}
       {tabs === 3 && (
         <>
+          <Progress bmQuestionList={bmQuestionList}>
+            <div className="bar num4"></div>
+          </Progress>
           <Question>Q4. 현재 비즈니스의 핵심 초점은 무엇입니까?</Question>
           <OptionContainer>
             {options4.map((option4) => (
@@ -333,30 +352,34 @@ const MoleculeCheckBmOption = () => {
         </>
       )}
       {tabs === 4 && (
-              <>
-                <Question>Q5. 파트너십, 자원, 비용 구조 등 비즈니스의 요소들이 복잡한가요?</Question>
-                <OptionContainer>
-                  {options5.map((option5) => (
-                    <Option
-                      key={option5.value}
-                      selected={selectedOption5 === option5.value}
-                      onClick={() => handleOptionClick(5, option5.value)}
-                      bmQuestionList={bmQuestionList}
-                    >
-                      {option5.label}
-                    </Option>
-                  ))}
-                </OptionContainer>
-              </>
-            )}
+        <>
+          <Progress bmQuestionList={bmQuestionList}>
+            <div className="bar"></div>
+          </Progress>
+          <Question>Q5. 파트너십, 자원, 비용 구조 등 비즈니스의 요소들이 복잡한가요?</Question>
+          <OptionContainer>
+            {options5.map((option5) => (
+              <Option
+                key={option5.value}
+                selected={selectedOption5 === option5.value}
+                onClick={() => handleOptionClick(5, option5.value)}
+                bmQuestionList={bmQuestionList}
+              >
+                {option5.label}
+              </Option>
+            ))}
+          </OptionContainer>
+        </>
+      )}
 
-<ButtonWrap
+      <ButtonWrap
         selectedOption1={selectedOption1}
         selectedOption2={selectedOption2}
         selectedOption3={selectedOption3}
         selectedOption4={selectedOption4}
         selectedOption5={selectedOption5}
         bmQuestionList={bmQuestionList}
+        tabs={tabs}
       >
         {tabs === 0 ? null : (
           <div className="prev" onClick={() => hadleTurnTab("prev")}>
@@ -364,7 +387,7 @@ const MoleculeCheckBmOption = () => {
           </div>
         )}
 
-{tabs === 4 ? ( // 탭이 4로 변경됨
+        {tabs === 4 ? ( // 탭이 4로 변경됨
           <div
             className="finish"
             disabled={!selectedOption1 || !selectedOption2 || !selectedOption3 || !selectedOption4 || !selectedOption5}
@@ -385,13 +408,6 @@ const MoleculeCheckBmOption = () => {
               (tabs === 3 && !selectedOption4)
             }
             onClick={() => {
-              if (
-                (tabs === 0 && !selectedOption1) ||
-                (tabs === 1 && !selectedOption2) ||
-                (tabs === 2 && !selectedOption3) ||
-                (tabs === 3 && !selectedOption4)
-              )
-                return;
               hadleTurnTab("next");
             }}
           >
@@ -436,12 +452,20 @@ const Progress = styled.div`
     transition:all .5s;
   }
 
+  .bar.num1 {
+    width: 20%;
+  }
+
   .bar.num2 {
-    width:50%;
+    width: 40%;
   }
 
   .bar.num3 {
-    width:33%;
+    width: 60%;
+  }
+
+  .bar.num4 {
+    width: 80%;
   }
 `;
 
@@ -557,31 +581,31 @@ const ButtonWrap = styled.div`
     color: ${(props) =>
       props.bmQuestionList.length !== 0
         ? palette.black
-        : !props.selectedOption1
-        ? palette.gray500
-        : palette.chatBlue};
-    background: ${(props) =>
-      props.bmQuestionList.length !== 0
-        ? palette.white
-        : !props.selectedOption1
-        ? palette.white
-        : palette.white};
-    cursor: ${(props) => (!props.selectedOption1 ? "default" : "pointer")};
+        : props.tabs === 0 && props.selectedOption1 
+        || props.tabs === 1 && props.selectedOption2 
+        || props.tabs === 2 && props.selectedOption3 
+        || props.tabs === 3 && props.selectedOption4
+        || props.tabs === 4 && props.selectedOption5
+        ? palette.chatBlue
+        : palette.gray500};
+    background: ${palette.white};
+    cursor: ${(props) => ( 
+      props.tabs === 0 && props.selectedOption1 
+      || props.tabs === 1 && props.selectedOption2 
+      || props.tabs === 2 && props.selectedOption3 
+      || props.tabs === 3 && props.selectedOption4 
+      || props.tabs === 4 && props.selectedOption5 
+      ? "pointer" : "default")};
   }
 
   .finish {
     color: ${(props) =>
       props.bmQuestionList.length !== 0
         ? palette.black
-        : !props.selectedOption1 || !props.selectedOption2
+        : !props.selectedOption1 || !props.selectedOption2 || !props.selectedOption3 || !props.selectedOption4 || !props.selectedOption5
         ? palette.gray500
         : palette.chatBlue};
-    background: ${(props) =>
-      props.bmQuestionList.length !== 0
-        ? palette.white
-        : !props.selectedOption1 || !props.selectedOption2
-        ? palette.white
-        : palette.white};
-    cursor: ${(props) => (!props.selectedOption1 || !props.selectedOption2 ? "default" : "pointer")};
+    background: ${palette.white}
+    cursor: ${(props) => (!props.selectedOption1 || !props.selectedOption2 || !props.selectedOption3 || !props.selectedOption4 || !props.selectedOption5 ? "default" : "pointer")};
   }
 `;

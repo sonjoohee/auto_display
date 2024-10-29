@@ -63,7 +63,7 @@ import {
   BM_BM_AUTO_REPORT_DATA,
   BM_LEAN_AUTO_REPORT_DATA,
   BM_BM_ADS_REPORT_DATA,
-  SELECTED_PROBLEM_OPTIONS,
+  BM_SELECTED_PROBLEM_OPTIONS,
   BM_LEAN_ADS_REPORT_DATA,
   BM_BM_CUSTOM_REPORT_DATA,
   BM_LEAN_CUSTOM_REPORT_DATA,
@@ -81,7 +81,7 @@ const MoleculeBmModelSuggestion = () => {
   const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
   const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
   const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
-  const [selectedProblemOptions, setSelectedProblemOptions] = useAtom(SELECTED_PROBLEM_OPTIONS);
+  const [bmSelectedProblemOptions, setBmSelectedProblemOptions] = useAtom(BM_SELECTED_PROBLEM_OPTIONS);
   const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
   const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
   const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
@@ -206,7 +206,9 @@ const MoleculeBmModelSuggestion = () => {
           !Array.isArray(response.data.bm_check_stage_report) ||
           response.data.bm_check_stage_report.some(item =>
             !item.hasOwnProperty("title") || 
-            !item.hasOwnProperty("content")
+            !item.hasOwnProperty("content") ||
+            !item.hasOwnProperty("model") ||
+            !(item.model === "BM" || item.model === "Lean")
           )
         )) {
           response = await axios.post(
@@ -276,12 +278,12 @@ const MoleculeBmModelSuggestion = () => {
             caseHashTag : caseHashTag,
             caseReportData : caseReportData,
             bmModelSuggestionReportData : response.data.bm_check_stage_report,
-            bmOrLean : BM_OR_LEAN,
+            bmOrLean : bmOrLean,
             bmQuestionList : bmQuestionList,
             bmBmAutoReportData : bmBmAutoReportData,
             bmLeanAutoReportData : bmLeanAutoReportData,
             bmBmAdsReportData : bmBmAdsReportData,
-            bmSelectedProblemOptions : selectedProblemOptions,
+            bmSelectedProblemOptions : bmSelectedProblemOptions,
             bmLeanAdsReportData : bmLeanAdsReportData,
             bmBmCustomReportData : bmBmCustomReportData,
             bmLeanCustomReportData : bmLeanCustomReportData,
@@ -377,12 +379,17 @@ const MoleculeBmModelSuggestion = () => {
             <span>아이템의 단계 및 상황을 검토한 결과</span>
             {suggestion.title}
           </h4>
-          
-          {/* 여기에 report_title이 Lean 이면 Lean, BM이면 BM 문구 및 이미지 나오게 */}
-          <ImageBox>
-            <img src={images.ImgCanvasLean} alt="" />
-            <p>Lean Canvas</p>
-          </ImageBox>
+          {suggestion.model === "BM" ?
+            <ImageBox>
+              <img src={images.ImgCanvasBusiness} alt="" />
+              <p>Business Model Canvas</p>
+            </ImageBox>
+          :
+            <ImageBox>
+              <img src={images.ImgCanvasLean} alt="" />
+              <p>Lean Canvas</p>
+            </ImageBox>
+          }
 
           <Content>
             <span>매칭 분석 내용</span>

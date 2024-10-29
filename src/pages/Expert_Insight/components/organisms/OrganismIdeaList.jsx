@@ -57,7 +57,7 @@ import {
   BM_BM_AUTO_REPORT_DATA,
   BM_LEAN_AUTO_REPORT_DATA,
   BM_BM_ADS_REPORT_DATA,
-  SELECTED_PROBLEM_OPTIONS,
+  BM_SELECTED_PROBLEM_OPTIONS,
   BM_LEAN_ADS_REPORT_DATA,
   BM_BM_CUSTOM_REPORT_DATA,
   BM_LEAN_CUSTOM_REPORT_DATA,
@@ -82,7 +82,7 @@ const OrganismIdeaList = () => {
   const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
   const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
   const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
-  const [selectedProblemOptions, setSelectedProblemOptions] = useAtom(SELECTED_PROBLEM_OPTIONS);
+  const [bmSelectedProblemOptions, setBmSelectedProblemOptions] = useAtom(BM_SELECTED_PROBLEM_OPTIONS);
   const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
   const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
   const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
@@ -166,7 +166,7 @@ const OrganismIdeaList = () => {
   };
   
   const axiosConfig = {
-    timeout: 100000, // 100초
+    timeout: 100000000, // 100초
     headers: {
       "Content-Type": "application/json",
     },
@@ -354,13 +354,13 @@ const handleMiro = async () => {
         priceProductSegmentation : priceProductSegmentation,
         caseHashTag : caseHashTag,
         caseReportData : caseReportData,
-        bmOrLean : BM_OR_LEAN,
+        bmOrLean : bmOrLean,
         bmQuestionList : bmQuestionList,
         bmModelSuggestionReportData : bmModelSuggestionReportData,
         bmBmAutoReportData : bmBmAutoReportData,
         bmLeanAutoReportData : bmLeanAutoReportData,
         bmBmAdsReportData : bmBmAdsReportData,
-        bmSelectedProblemOptions : selectedProblemOptions,
+        bmSelectedProblemOptions : bmSelectedProblemOptions,
         bmLeanAdsReportData : bmLeanAdsReportData,
         bmBmCustomReportData : bmBmCustomReportData,
         bmLeanCustomReportData : bmLeanCustomReportData,
@@ -565,13 +565,13 @@ useEffect(() => {
             priceProductSegmentation : priceProductSegmentation,
             caseHashTag : caseHashTag,
             caseReportData : caseReportData,
-            bmOrLean : BM_OR_LEAN,
+            bmOrLean : bmOrLean,
             bmQuestionList : bmQuestionList,
             bmModelSuggestionReportData : bmModelSuggestionReportData,
             bmBmAutoReportData : bmBmAutoReportData,
             bmLeanAutoReportData : bmLeanAutoReportData,
             bmBmAdsReportData : bmBmAdsReportData,
-            bmSelectedProblemOptions : selectedProblemOptions,
+            bmSelectedProblemOptions : bmSelectedProblemOptions,
             bmLeanAdsReportData : bmLeanAdsReportData,
             bmBmCustomReportData : bmBmCustomReportData,
             bmLeanCustomReportData : bmLeanCustomReportData,
@@ -648,11 +648,12 @@ useEffect(() => {
                 <span>1.8 MB · Download</span>
               </div>
             </button>
-            <button onClick={handleMiro}>
+            <button className="miro-button" disabled onClick={handleMiro}>
               <img src={images.IconDownloadMiro} alt="" />
               <div>
                 <strong>{isLoadingIdeaMiro ? "데이터 전송 중..." : "Miro에서 협업하기"}</strong>
-                <span>외부페이지 이동 · www.miro.com</span>
+                {/* <span>외부페이지 이동 · www.miro.com</span> */}
+                <span>준비 중</span>
               </div>
             </button>
           </div>
@@ -879,6 +880,10 @@ const DownloadButton = styled.div`
       font-size:0.5rem;
       color:${palette.gray500};
     }
+  }
+
+  .miro-button {
+    cursor: default;
   }
 `;
 

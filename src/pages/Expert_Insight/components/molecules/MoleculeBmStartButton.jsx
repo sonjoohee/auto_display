@@ -45,7 +45,7 @@ import {
   BM_BM_AUTO_REPORT_DATA,
   BM_LEAN_AUTO_REPORT_DATA,
   BM_BM_ADS_REPORT_DATA,
-  SELECTED_PROBLEM_OPTIONS,
+  BM_SELECTED_PROBLEM_OPTIONS,
   BM_LEAN_ADS_REPORT_DATA,
   BM_BM_CUSTOM_REPORT_DATA,
   BM_LEAN_CUSTOM_REPORT_DATA,
@@ -66,7 +66,7 @@ const MoleculeBmStartButton = () => {
   const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
   const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
   const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
-  const [bmSelectedProblemOptions, setBmSelectedProblemOptions] = useAtom(SELECTED_PROBLEM_OPTIONS);
+  const [bmSelectedProblemOptions, setbmSelectedProblemOptions] = useAtom(BM_SELECTED_PROBLEM_OPTIONS);
   const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
   const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
   const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
@@ -195,6 +195,7 @@ const ButtonWrap = styled.div`
   align-items: center;
   margin-top: 15px;
   padding-bottom: 15px;
+  margin-left:50px;
 
   button {
     display: flex;

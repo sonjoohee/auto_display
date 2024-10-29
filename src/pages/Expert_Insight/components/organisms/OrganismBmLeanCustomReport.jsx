@@ -56,8 +56,14 @@ import {
   SURVEY_GOAL_SUGGESTION_LIST,
   SURVEY_GOAL_FIXED,
   SURVEY_QUESTION_LIST,
-  SELECTED_PROBLEM_OPTIONS,
+  BM_SELECTED_PROBLEM_OPTIONS,
   BM_LEAN_CUSTOM_REPORT_DATA,
+  BM_OR_LEAN,
+  BM_MODEL_SUGGESTION_REPORT_DATA,
+  BM_BM_AUTO_REPORT_DATA,
+  BM_BM_ADS_REPORT_DATA,
+  BM_LEAN_ADS_REPORT_DATA,
+  BM_BM_CUSTOM_REPORT_DATA,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -150,7 +156,13 @@ const OrganismBmLeanCustomReport = () => {
   const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
   const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
   const [bmQuestionList, setbmQuestionList] = useAtom(BM_QUESTION_LIST);
-  const [selectedProblemOptions, setSelectedProblemOptions] = useAtom(SELECTED_PROBLEM_OPTIONS); // 문제 선택 아톰
+  const [bmSelectedProblemOptions, setBmSelectedProblemOptions] = useAtom(BM_SELECTED_PROBLEM_OPTIONS); // 문제 선택 아톰
+  const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
+  const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
+  const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
+  const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
+  const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
+  const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
 
   const [isModalOpen, setIsModalOpen] = useState({});
   const [selectedFormat, setSelectedFormat] = useState("Word");
@@ -252,7 +264,17 @@ useEffect(() => {
           priceProductSegmentation : priceProductSegmentation,
           caseHashTag : caseHashTag,
           caseReportData : caseReportData,
-
+          bmLeanAutoReportData : bmLeanAutoReportData,
+          bmSelectedProblemOptions: bmSelectedProblemOptions,
+          bmOrLean : bmOrLean,
+          bmQuestionList : bmQuestionList,
+          bmModelSuggestionReportData : bmModelSuggestionReportData,
+          bmBmAutoReportData : bmBmAutoReportData,
+          bmBmAdsReportData : bmBmAdsReportData,
+          bmSelectedProblemOptions : bmSelectedProblemOptions,
+          bmLeanAdsReportData : bmLeanAdsReportData,
+          bmBmCustomReportData : bmBmCustomReportData,
+          bmLeanCustomReportData : bmLeanCustomReportData,
           surveyGuidelineReportData : surveyGuidelineReportData,
           surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
           surveyGoalSuggestionList: surveyGoalSuggestionList,
@@ -368,7 +390,7 @@ useEffect(() => {
             목표고객: businessInformationTargetCustomer,
           },
           bm_lean_auto_report: bmLeanAutoReportData,
-          selected_bm_lean_problem : selectedProblemOptions
+          selected_bm_lean_problem : bmSelectedProblemOptions
         };
 
         let response = await axios.post(
@@ -380,20 +402,20 @@ useEffect(() => {
         let retryCount = 0;
         const maxRetries = 10;
 
-        // while (retryCount < maxRetries && (
-        //   !response || !response.data || typeof response.data !== "object" ||
-        //   !response.data.hasOwnProperty("bm_lean_custom_report") ||
-        //   !Array.isArray(response.data.bm_lean_custom_report) ||
-        //   response.data.bm_lean_custom_report.some(section => 
-        //     !section.hasOwnProperty("section") || 
-        //     !Array.isArray(section.content) || 
-        //     section.content.some(contentItem => 
-        //       !contentItem.hasOwnProperty("title") || 
-        //       !contentItem.hasOwnProperty("description") || 
-        //       !Array.isArray(contentItem.keyword)
-        //     )
-        //   )
-        // )) 
+        while (retryCount < maxRetries && (
+          !response || !response.data || typeof response.data !== "object" ||
+          !response.data.hasOwnProperty("bm_lean_custom_report") ||
+          !Array.isArray(response.data.bm_lean_custom_report) ||
+          response.data.bm_lean_custom_report.some(section => 
+            !section.hasOwnProperty("section") || 
+            !section.hasOwnProperty("content") || 
+            !Array.isArray(section.content) || 
+            section.content.some(contentItem => 
+              !contentItem.hasOwnProperty("title") || 
+              !contentItem.hasOwnProperty("description")
+            )
+          )
+        )) 
         {
           response = await axios.post(
             "https://wishresearch.kr/panels/lean_custom_report",
@@ -417,7 +439,7 @@ useEffect(() => {
         // updatedConversation.push(
         //   {
         //     type: "system",
-        //     message: `"${selectedProblemOptions}"에 대한 린 캔버스 작성이 완료되었습니다.\n다른 방향성에 따른 변경된 비즈니스 모델을 확인하려면, 아래 버튼을 클릭해주세요`,
+        //     message: `"${bmSelectedProblemOptions}"에 대한 린 캔버스 작성이 완료되었습니다.\n다른 방향성에 따른 변경된 비즈니스 모델을 확인하려면, 아래 버튼을 클릭해주세요`,
         //     expertIndex: selectedExpertIndex,
         //   },
         //   { type: `bmCustomContinueButton`}
@@ -474,6 +496,14 @@ useEffect(() => {
             caseHashTag : caseHashTag,
             caseReportData : caseReportData,
             bmLeanAutoReportData : bmLeanAutoReportData,
+            bmSelectedProblemOptions: bmSelectedProblemOptions,
+            bmOrLean : bmOrLean,
+            bmQuestionList : bmQuestionList,
+            bmModelSuggestionReportData : bmModelSuggestionReportData,
+            bmBmAutoReportData : bmBmAutoReportData,
+            bmBmAdsReportData : bmBmAdsReportData,
+            bmLeanAdsReportData : bmLeanAdsReportData,
+            bmBmCustomReportData : bmBmCustomReportData,
             bmLeanCustomReportData : response.data.bm_lean_custom_report,
             surveyGuidelineReportData : surveyGuidelineReportData,
             surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
@@ -508,7 +538,7 @@ useEffect(() => {
         </>
       ) : (
         <>
-          <h1>{titleOfBusinessInfo}의 비즈니스 모델 캔버스 - {selectedProblemOptions}</h1>
+          <h1>{titleOfBusinessInfo}의 린 캔버스 - {bmSelectedProblemOptions}</h1>
           <p>{mainFeaturesOfBusinessInformation[0]}</p>
   
           <ModelCanvasWrap>
@@ -686,7 +716,7 @@ useEffect(() => {
               <button>
                 <img src={images.IconDownload2} alt="" />
                 <div>
-                  <strong>마케팅 전략 다운로드</strong>
+                  <strong>비즈니스 분석 자료</strong>
                   <span>1.8 MB · Download</span>
                 </div>
               </button>
@@ -720,7 +750,7 @@ useEffect(() => {
         >
           <span className="close" onClick={togglePopupDownload}></span>
           <div>
-            <h3>마케팅 전략 다운로드</h3>
+            <h3>비즈니스 분석 자료 다운로드</h3>
             <SelectBoxWrap>
                 <label>포맷 선택 (택1)</label>
                 <SelectBox>

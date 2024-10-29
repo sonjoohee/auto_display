@@ -51,7 +51,7 @@ import {
   SURVEY_GOAL_SUGGESTION_LIST,
   SURVEY_GOAL_FIXED,
   SURVEY_QUESTION_LIST,
-  SELECTED_PROBLEM_OPTIONS,
+  BM_SELECTED_PROBLEM_OPTIONS,
   BM_BM_AUTO_REPORT_DATA,
   BM_BM_ADS_REPORT_DATA,
   BM_BM_CUSTOM_REPORT_DATA,
@@ -74,7 +74,7 @@ const OrganismBizExpertSelect = () => {
   const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
   const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
   const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
-  const [selectedProblemOptions, setSelectedProblemOptions] = useAtom(SELECTED_PROBLEM_OPTIONS);
+  const [bmSelectedProblemOptions, setBmSelectedProblemOptions] = useAtom(BM_SELECTED_PROBLEM_OPTIONS);
   const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
   const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
   const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
@@ -366,13 +366,13 @@ const OrganismBizExpertSelect = () => {
           priceProductSegmentation : priceProductSegmentation,
           caseHashTag : caseHashTag,
           caseReportData : caseReportData,
-          bmOrLean : BM_OR_LEAN,
+          bmOrLean : bmOrLean,
           bmQuestionList : bmQuestionList,
           bmModelSuggestionReportData : bmModelSuggestionReportData,
           bmBmAutoReportData : bmBmAutoReportData,
           bmLeanAutoReportData : bmLeanAutoReportData,
           bmBmAdsReportData : bmBmAdsReportData,
-          bmSelectedProblemOptions : selectedProblemOptions,
+          bmSelectedProblemOptions : bmSelectedProblemOptions,
           bmLeanAdsReportData : bmLeanAdsReportData,
           bmBmCustomReportData : bmBmCustomReportData,
           bmLeanCustomReportData : bmLeanCustomReportData,
@@ -397,11 +397,11 @@ const OrganismBizExpertSelect = () => {
     <>
       {/* 모든 전문가가 선택되었거나, 모든 보고서가 생성되었으면 영역 표시 안함
           selectedExpertList는 DB에 저장되고 있지 않기 떄문에 expertReportData 조건이 필요함 */}
-      {((selectedExpertList.includes("1") || strategyReportData.hasOwnProperty(1)) &&
+      {(selectedExpertList.includes("1") || strategyReportData.hasOwnProperty(1)) &&
         (selectedExpertList.includes("2") || strategyReportData.hasOwnProperty(2)) &&
         (selectedExpertList.includes("3") || strategyReportData.hasOwnProperty(3)) &&
         (selectedExpertList.includes("4") || strategyReportData.hasOwnProperty(4)) &&
-        (selectedExpertList.includes("5") || ideaFeatureData.length !== 0)) &&
+        (selectedExpertList.includes("5") || ideaFeatureData.length !== 0) &&
         (selectedExpertList.includes("6") || KpiQuestionList.length !== 0) &&
         (selectedExpertList.includes("7") || priceProduct.length !== 0) &&
         (selectedExpertList.includes("8") || caseReportData.length !== 0) &&
@@ -486,7 +486,7 @@ const OrganismBizExpertSelect = () => {
             {(selectedExpertList.includes("9") || bmOrLean) ? null : (
               <div>
                 <img src={images.IconExpert9} alt="" />
-                <p>비즈니스 모델 진단 전문가에게 모델 진단 받기</p>
+                <p>BM 전문가에게 비즈니스 모델 설계 받기</p>
                 <button type="button" onClick={() => handledExpertSelect("9")}>
                   시작하기
                 </button>
@@ -495,7 +495,7 @@ const OrganismBizExpertSelect = () => {
             {(selectedExpertList.includes("10") || surveyGoalSuggestionList.length !== 0) ? null : (
               <div>
                 <img src={images.IconExpert10} alt="" />
-                <p>설문조사 전문가에게 설계 받기</p>
+                <p>조사 설계 전문가에게 조사 설계 받기</p>
                 <button type="button" onClick={() => handledExpertSelect("10")}>
                   시작하기
                 </button>

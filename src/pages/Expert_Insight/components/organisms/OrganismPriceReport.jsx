@@ -57,7 +57,7 @@ import {
   BM_BM_AUTO_REPORT_DATA,
   BM_LEAN_AUTO_REPORT_DATA,
   BM_BM_ADS_REPORT_DATA,
-  SELECTED_PROBLEM_OPTIONS,
+  BM_SELECTED_PROBLEM_OPTIONS,
   BM_LEAN_ADS_REPORT_DATA,
   BM_BM_CUSTOM_REPORT_DATA,
   BM_LEAN_CUSTOM_REPORT_DATA,
@@ -91,8 +91,8 @@ const OrganismPriceReport = () => {
   const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(
     BM_BM_ADS_REPORT_DATA
   );
-  const [selectedProblemOptions, setSelectedProblemOptions] = useAtom(
-    SELECTED_PROBLEM_OPTIONS
+  const [bmSelectedProblemOptions, setBmSelectedProblemOptions] = useAtom(
+    BM_SELECTED_PROBLEM_OPTIONS
   );
   const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(
     BM_LEAN_ADS_REPORT_DATA
@@ -411,13 +411,13 @@ const OrganismPriceReport = () => {
             priceSelectedProductSegmentation: priceSelectedProductSegmentation,
             caseHashTag: caseHashTag,
             caseReportData: caseReportData,
-            bmOrLean: BM_OR_LEAN,
+            bmOrLean: bmOrLean,
             bmQuestionList: bmQuestionList,
             bmModelSuggestionReportData: bmModelSuggestionReportData,
             bmBmAutoReportData: bmBmAutoReportData,
             bmLeanAutoReportData: bmLeanAutoReportData,
             bmBmAdsReportData: bmBmAdsReportData,
-            bmSelectedProblemOptions: selectedProblemOptions,
+            bmSelectedProblemOptions: bmSelectedProblemOptions,
             bmLeanAdsReportData: bmLeanAdsReportData,
             bmBmCustomReportData: bmBmCustomReportData,
             bmLeanCustomReportData: bmLeanCustomReportData,
@@ -643,40 +643,20 @@ const OrganismPriceReport = () => {
           Math.max(1, (width - margin.left - margin.right) / 10 - 2)
         )
         .attr("height", (d) => Math.max(0, height - margin.bottom - y(d.count)))
-        .style("fill", "#E0E4EB")
-
-        // 마우스 오버 이벤트 추가
+        // style("fill", "#E0E4EB") 제거 (CSS로 처리)
         .on("mouseover", (event, d) => {
           tooltip.transition().duration(200).style("opacity", 0.9);
           tooltip
             .html(
-              `범위: ${d.formattedStart}원 ~ ${d.formattedEnd}원<br/>제품수: ${d.count}`
+              `범위: ${d.formattedStart}원 ~ ${d.formattedEnd}원<br/>제품수: ${d.count}개`
             )
             .style("left", event.pageX + 5 + "px")
             .style("top", event.pageY - 28 + "px");
         })
-
-        // 마우스 이동 시 툴팁 위치 업데이트
-        .on("mousemove", (event) => {
-          tooltip
-            .style("left", event.pageX + 5 + "px")
-            .style("top", event.pageY - 28 + "px");
-        })
-
-        // 마우스 아웃 시 툴팁 숨기기
-        .on("mouseout", () => {
-          tooltip.transition().duration(500).style("opacity", 0);
+        .on("mouseout", (event, d) => {
+          tooltip.transition().duration(200).style("opacity", 0);
         });
 
-      // 선택된 범위 표시
-      // svg
-      //   .append("rect")
-      //   .attr("class", "range-indicator")
-      //   .attr("x", x(range[0]))
-      //   .attr("y", height - margin.bottom)
-      //   .attr("width", x(range[1]) - x(range[0]))
-      //   .attr("height", 5)
-      //   .style("fill", palette.chatBlue);
       const rangeIndicatorHeight = 5;
       svg
         .append("rect")
@@ -690,7 +670,7 @@ const OrganismPriceReport = () => {
       // 핸들 그리기
       svg
         .selectAll(".handle")
-        .data([startPosition, endPosition])
+        .data([startPosition, endPosition]) // consumerPriceMin, consumerPriceMax 대신 중앙점 사용
         .enter()
         .append("circle")
         .attr("class", "handle")
@@ -698,45 +678,39 @@ const OrganismPriceReport = () => {
         .attr("cy", height - margin.bottom)
         .attr("r", 8)
         .style("fill", palette.chatBlue)
-        .on("mouseenter", (event, d, i) => {
-          d3.select("#tooltip")
+        .on("mouseenter", (event, d) => {
+          tooltip
             .style("opacity", 1)
-            .html(i === 0 ? `Start Position: ${d.startPosition}` : `End Position: ${d.endPosition}`)  // 각 동그라미에 맞는 텍스트
+            .html(
+              `소비자 가격 수용 예측범위: ${consumerPriceMin.toLocaleString(
+                "ko-KR"
+              )}원 ~ ${consumerPriceMax.toLocaleString("ko-KR")}원`
+            )
             .style("left", `${event.pageX + 10}px`)
             .style("top", `${event.pageY - 20}px`);
         })
         .on("mousemove", (event) => {
-          d3.select("#tooltip")
+          tooltip
             .style("left", `${event.pageX + 10}px`)
             .style("top", `${event.pageY - 20}px`);
         })
         .on("mouseleave", () => {
-          d3.select("#tooltip").style("opacity", 0);
+          tooltip.style("opacity", 0);
         });
 
-      // 핸들 값 표시 (선택사항)
-      // svg
-      //   .selectAll(".handle-label")
-      //   .data(handleRange)
-      //   .enter()
-      //   .append("text")
-      //   .attr("class", "handle-label")
-      //   .attr("x", (d) => x(d))
-      //   .attr("y", height - margin.bottom + 25)
-      //   .attr("text-anchor", "middle")
-      //   .style("font-size", "12px")
-      //   .style("fill", palette.gray800)
-      //   .text((d) => `${(d / 10000).toFixed(0)}만원`);
-
       // 디버깅을 위한 로그
-      console.log("Chart Data:", {
-        minPrice,
-        maxPrice,
-        rangeCounts,
-        width,
-        height,
-        step,
-      });
+      // console.log("Chart Data:", {
+      //   minPrice,
+      //   maxPrice,
+      //   rangeCounts,
+      //   width,
+      //   height,
+      //   step,
+      // });
+
+      return () => {
+        tooltip.remove();
+      }; // 컴포넌트가 언마운트될 때 툴팁 제거
     }
   }, [productPrices, range, width]);
 
@@ -993,35 +967,21 @@ const ChartWrap = styled.div`
     box-shadow: 2px 2px 8px rgba(34, 111, 255, 0.5);
   }
 
+  .bar {
+    fill: #e0e4eb;
+    transition: fill 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+      fill: #c5cad3; // 더 진한 회색으로 변경
+    }
+  }
+
   p {
     font-size: 0.75rem;
     font-weight: 400;
     color: ${palette.gray500};
     margin-top: 8px;
-  }
-`;
-
-// Tooltip 스타일 컴포넌트 추가
-const TooltipBox = styled.div`
-  position: absolute;
-  padding: 8px 12px;
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  border-radius: 4px;
-  font-size: 12px;
-  pointer-events: none;
-  transform: translate(-50%, -100%);
-  z-index: 100;
-
-  &:after {
-    content: "";
-    position: absolute;
-    bottom: -5px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 5px 5px 0;
-    border-style: solid;
-    border-color: rgba(0, 0, 0, 0.8) transparent transparent;
   }
 `;
 
