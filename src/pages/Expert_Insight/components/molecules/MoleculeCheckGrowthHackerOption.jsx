@@ -287,6 +287,14 @@ const MoleculeCheckGrowthHackerOption = () => {
     if (dir === "prev") {
       setTabs((prevTabs) => prevTabs - 1);
     } else if (dir === "next") {
+      if (
+        (tabs === 0 && !selectedOption1) ||
+        (tabs === 1 && !selectedOption2) ||
+        (tabs === 2 && !selectedOption3) ||
+        (tabs === 3 && !selectedOption4) ||
+        (tabs === 4 && !selectedOption5)
+      )
+        return;
       setTabs((prevTabs) => prevTabs + 1);
     }
   };
@@ -431,6 +439,7 @@ const MoleculeCheckGrowthHackerOption = () => {
         selectedOption5={selectedOption5}
         selectedOption6={selectedOption6}
         KpiQuestionList={KpiQuestionList}
+        tabs={tabs}
       >
         {tabs === 0 ? null : (
           <div className="prev" onClick={() => hadleTurnTab("prev")}>
@@ -469,14 +478,6 @@ const MoleculeCheckGrowthHackerOption = () => {
               (tabs === 4 && !selectedOption5)
             }
             onClick={() => {
-              if (
-                (tabs === 0 && !selectedOption1) ||
-                (tabs === 1 && !selectedOption2) ||
-                (tabs === 2 && !selectedOption3) ||
-                (tabs === 3 && !selectedOption4) ||
-                (tabs === 4 && !selectedOption5)
-              )
-                return;
               hadleTurnTab("next");
             }}
           >
@@ -663,31 +664,33 @@ const ButtonWrap = styled.div`
     color: ${(props) =>
       props.KpiQuestionList.length !== 0
         ? palette.black
-        : !props.selectedOption1
-        ? palette.gray500
-        : palette.chatBlue};
-    background: ${(props) =>
-      props.KpiQuestionList.length !== 0
-        ? palette.white
-        : !props.selectedOption1
-        ? palette.white
-        : palette.white};
-    cursor: ${(props) => (!props.selectedOption1 ? "default" : "pointer")};
+        : props.tabs === 0 && props.selectedOption1
+        || props.tabs === 1 && props.selectedOption2
+        || props.tabs === 2 && props.selectedOption3
+        || props.tabs === 3 && props.selectedOption4
+        || props.tabs === 4 && props.selectedOption5
+        || props.tabs === 5 && props.selectedOption6
+        ? palette.chatBlue
+        : palette.gray500};
+    background: ${palette.white};
+    cursor: ${(props) => (
+      props.tabs === 0 && props.selectedOption1 
+      || props.tabs === 1 && props.selectedOption2 
+      || props.tabs === 2 && props.selectedOption3 
+      || props.tabs === 3 && props.selectedOption4 
+      || props.tabs === 4 && props.selectedOption5 
+      || props.tabs === 5 && props.selectedOption6 
+      ? "pointer" : "default")};
   }
 
   .finish {
     color: ${(props) =>
       props.KpiQuestionList.length !== 0
         ? palette.black
-        : !props.selectedOption1 || !props.selectedOption2
+        : !props.selectedOption1 || !props.selectedOption2 || !props.selectedOption3 || !props.selectedOption4 || !props.selectedOption5 || !props.selectedOption6
         ? palette.gray500
         : palette.chatBlue};
-    background: ${(props) =>
-      props.KpiQuestionList.length !== 0
-        ? palette.white
-        : !props.selectedOption1 || !props.selectedOption2
-        ? palette.white
-        : palette.white};
-    cursor: ${(props) => (!props.selectedOption1 || !props.selectedOption2 ? "default" : "pointer")};
+    background: ${palette.white};
+    cursor: ${(props) => (props.selectedOption1 && props.selectedOption2 && props.selectedOption3 && props.selectedOption4 && props.selectedOption5 && props.selectedOption6 ? "pointer" : "default")};
   }
 `;

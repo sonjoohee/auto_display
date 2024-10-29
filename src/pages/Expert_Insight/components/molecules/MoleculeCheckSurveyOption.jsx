@@ -340,6 +340,7 @@ const MoleculeCheckSurveyOption = () => {
         selectedOption3={selectedOption3}
         selectedOption4={selectedOption4}
         surveyQuestionList={surveyQuestionList}
+        tabs={tabs}
       >
         {tabs === 0 ? null : (
           <div className="prev" onClick={() => hadleTurnTab("prev")}>
@@ -543,31 +544,31 @@ const ButtonWrap = styled.div`
     color: ${(props) =>
       props.surveyQuestionList.length !== 0
         ? palette.black
-        : !props.selectedOption1
-        ? palette.gray500
-        : palette.chatBlue};
-    background: ${(props) =>
-      props.surveyQuestionList.length !== 0
-        ? palette.white
-        : !props.selectedOption1
-        ? palette.white
-        : palette.white};
-    cursor: ${(props) => (!props.selectedOption1 ? "default" : "pointer")};
+        : props.tabs === 0 && props.selectedOption1
+        || props.tabs === 1 && props.selectedOption2
+        || props.tabs === 2 && props.selectedOption3
+        || props.tabs === 3 && props.selectedOption4
+        ? palette.chatBlue
+        : palette.gray500};
+    background: ${palette.white};
+    cursor: ${(props) => (
+      props.tabs === 0 && props.selectedOption1 ||
+      props.tabs === 1 && props.selectedOption2 ||
+      props.tabs === 2 && props.selectedOption3 ||
+      props.tabs === 3 && props.selectedOption4
+      ? "pointer" : "default")};
   }
 
   .finish {
     color: ${(props) =>
       props.surveyQuestionList.length !== 0
         ? palette.black
-        : !props.selectedOption1 || !props.selectedOption2
+        : !props.selectedOption1 || !props.selectedOption2 || !props.selectedOption3 || !props.selectedOption4
         ? palette.gray500
         : palette.chatBlue};
-    background: ${(props) =>
-      props.surveyQuestionList.length !== 0
-        ? palette.white
-        : !props.selectedOption1 || !props.selectedOption2
-        ? palette.white
-        : palette.white};
-    cursor: ${(props) => (!props.selectedOption1 || !props.selectedOption2 ? "default" : "pointer")};
+    background: ${palette.white};
+    cursor: ${(props) => (
+      props.selectedOption1 && props.selectedOption2 && props.selectedOption3 && props.selectedOption4
+      ? "pointer" : "default")};
   }
 `;
