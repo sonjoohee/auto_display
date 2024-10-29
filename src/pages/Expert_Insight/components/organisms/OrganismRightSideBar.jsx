@@ -292,7 +292,8 @@ const AIProfileWrap = styled.div`
 
   p {
     font-size: 0.63rem;
-    color: ${palette.gray};
+    // color: ${palette.gray};
+    color:${palette.buttonLineGray};
     margin-top: 8px;
   }
 `;
@@ -337,14 +338,16 @@ const AIProfile = styled.div`
 
     strong {
       font-size: 1rem;
-      font-weight: 700;
+      font-weight: 600;
+      color:${palette.gray800};
     }
 
     li {
       display: flex;
       align-items: center;
       font-size: 0.75rem;
-      color: ${palette.darkGray};
+      // color: ${palette.darkGray};
+      color:${palette.gray700};
 
       + li {
         margin-top: 5px;
@@ -371,6 +374,7 @@ const AIProfile = styled.div`
       gap: 5px;
       font-size: 1rem;
       font-weight: 400;
+      color:${palette.gray800};
       margin-bottom: 15px;
     }
 
@@ -387,7 +391,8 @@ const AIProfile = styled.div`
         width: 100%;
         font-size: 0.875rem;
         font-weight: 300;
-        color: ${palette.darkGray};
+        color:${palette.gray700};
+        // color: ${palette.darkGray};
         // padding:8px 16px;
         // border-radius:25px;
         // border:1px solid ${palette.lineGray};
@@ -439,7 +444,8 @@ const FieldUl = styled.ul`
     font-size: 0.75rem;
     line-height: 1.5;
     text-align: left;
-    color: ${palette.darkGray};
+    // color: ${palette.darkGray};
+    color:${palette.gray700};
     padding-left: 20px;
 
     &:before {

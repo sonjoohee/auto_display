@@ -190,7 +190,8 @@ const NameTitle = styled.div`
 
   p {
     font-size: 0.75rem;
-    color: ${palette.gray};
+    // color: ${palette.gray};
+    color:${palette.gray500};
     text-align: left;
   }
 `;

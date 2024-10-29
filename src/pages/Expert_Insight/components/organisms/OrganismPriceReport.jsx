@@ -1052,9 +1052,9 @@ const AnalysisWrap = styled.div`
 
   p {
     font-size: 0.88rem;
-    font-weight: 400;
+    font-weight: 300;
     color: ${palette.gray800};
-    line-height: 1.3;
+    line-height: 1.5;
   }
 
   ul {
