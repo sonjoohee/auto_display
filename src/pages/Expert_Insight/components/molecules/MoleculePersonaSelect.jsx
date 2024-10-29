@@ -472,7 +472,7 @@ const Option = styled.div`
   text-align: ${(props) => (props.isTargetUnknown ? "center" : "left")};
   padding: 20px;
   border-radius: 8px;
-  cursor: pointer;
+  cursor: ${(props) => (Object.keys(props.selectedPocTarget).length ? "default" : "pointer")};
   background-color: ${(props) =>
     props.selected
       ? Object.keys(props.selectedPocTarget).length
@@ -512,7 +512,7 @@ const Label = styled.label`
   align-items:flex-start;
   width:100%;
   color: ${(props) => (props.selected ? (Object.keys(props.selectedPocTarget).length ? palette.gray800 : palette.blue) : palette.gray800)};
-  cursor:pointer;
+  cursor: ${(props) => (Object.keys(props.selectedPocTarget).length ? "default" : "pointer")};
 
   &:before {
     width:20px;
