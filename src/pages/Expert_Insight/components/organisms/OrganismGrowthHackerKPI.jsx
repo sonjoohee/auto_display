@@ -664,6 +664,7 @@ const OrganismGrowthHackerKPI = () => {
 export default OrganismGrowthHackerKPI;
 
 const Wrap = styled.div`
+  position:relative;
   max-width:540px;
   // width:100%;
   display:flex;
@@ -1012,8 +1013,7 @@ const DownloadButton = styled.div`
 
 const DownloadPopup = styled.div`
   position: absolute;
-  right: ${(props) => (props.isAutoSaveToggle ? "0" : "130px")};
-  bottom:215px;
+  bottom:20px;
   max-width: 288px;
   width: 100%;
   max-height: 400px; /* 팝업의 최대 높이를 적절히 설정 */
