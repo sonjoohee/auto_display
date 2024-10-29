@@ -265,6 +265,9 @@ const MoleculeCheckBmOption = () => {
     <Wrap>
       {tabs === 0 && (
         <>
+          <Progress bmQuestionList={bmQuestionList}>
+            <div className="bar num1"></div>
+          </Progress>
           <Question>Q1. 현재 스타트업의 단계는 무엇입니까?</Question>
           <OptionContainer>
             {options1.map((option1) => (
@@ -282,6 +285,9 @@ const MoleculeCheckBmOption = () => {
       )}
       {tabs === 1 && (
         <>
+          <Progress bmQuestionList={bmQuestionList}>
+            <div className="bar num2"></div>
+          </Progress>
           <Question>Q2. 현재 가장 중요한 목표는 무엇입니까?</Question>
           <OptionContainer>
             {options2.map((option2) => (
@@ -300,6 +306,9 @@ const MoleculeCheckBmOption = () => {
       {/* 각 탭별로 동일한 방식으로 설정 */}
       {tabs === 2 && (
         <>
+          <Progress bmQuestionList={bmQuestionList}>
+            <div className="bar num3"></div>
+          </Progress>
           <Question>Q3. 고객의 문제는 명확하게 정의되었습니까?</Question>
           <OptionContainer>
             {options3.map((option3) => (
@@ -317,6 +326,9 @@ const MoleculeCheckBmOption = () => {
       )}
       {tabs === 3 && (
         <>
+          <Progress bmQuestionList={bmQuestionList}>
+            <div className="bar num4"></div>
+          </Progress>
           <Question>Q4. 현재 비즈니스의 핵심 초점은 무엇입니까?</Question>
           <OptionContainer>
             {options4.map((option4) => (
@@ -333,22 +345,25 @@ const MoleculeCheckBmOption = () => {
         </>
       )}
       {tabs === 4 && (
-              <>
-                <Question>Q5. 파트너십, 자원, 비용 구조 등 비즈니스의 요소들이 복잡한가요?</Question>
-                <OptionContainer>
-                  {options5.map((option5) => (
-                    <Option
-                      key={option5.value}
-                      selected={selectedOption5 === option5.value}
-                      onClick={() => handleOptionClick(5, option5.value)}
-                      bmQuestionList={bmQuestionList}
-                    >
-                      {option5.label}
-                    </Option>
-                  ))}
-                </OptionContainer>
-              </>
-            )}
+        <>
+          <Progress bmQuestionList={bmQuestionList}>
+            <div className="bar"></div>
+          </Progress>
+          <Question>Q5. 파트너십, 자원, 비용 구조 등 비즈니스의 요소들이 복잡한가요?</Question>
+          <OptionContainer>
+            {options5.map((option5) => (
+              <Option
+                key={option5.value}
+                selected={selectedOption5 === option5.value}
+                onClick={() => handleOptionClick(5, option5.value)}
+                bmQuestionList={bmQuestionList}
+              >
+                {option5.label}
+              </Option>
+            ))}
+          </OptionContainer>
+        </>
+      )}
 
 <ButtonWrap
         selectedOption1={selectedOption1}
@@ -436,12 +451,20 @@ const Progress = styled.div`
     transition:all .5s;
   }
 
+  .bar.num1 {
+    width: 20%;
+  }
+
   .bar.num2 {
-    width:50%;
+    width: 40%;
   }
 
   .bar.num3 {
-    width:33%;
+    width: 60%;
+  }
+
+  .bar.num4 {
+    width: 80%;
   }
 `;
 
