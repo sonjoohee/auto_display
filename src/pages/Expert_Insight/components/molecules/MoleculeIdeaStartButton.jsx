@@ -55,6 +55,7 @@ import {
   BM_LEAN_CUSTOM_REPORT_DATA,
   BM_MODEL_SUGGESTION_REPORT_DATA,
   BM_QUESTION_LIST,
+  IS_EDITING_NOW,
 } from "../../../AtomStates";
 
 import {
@@ -121,6 +122,7 @@ const MoleculeIdeaStartButton = () => {
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
   const [ideaFeatureButtonState, setIdeaFeatureButtonState] = useAtom(IDEA_FEATURE_BUTTON_STATE);
+  const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
 
   const handleClick = async () => {
     if (isLoading) return;
@@ -147,6 +149,7 @@ const MoleculeIdeaStartButton = () => {
       },
     );
 
+    setIsEditingNow(false);
     setIdeaFeatureButtonState(1);
     setConversation(updatedConversation);
     setConversationStage(3);
