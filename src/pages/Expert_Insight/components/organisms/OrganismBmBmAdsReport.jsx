@@ -453,35 +453,37 @@ const OrganismBmBmAdsReport = () => {
             </ul>
           </OptionContainer>
 
-          {/* 총 1개의 페이지네이션 */}
-          {allExamples.length > examplesPerPage && (
-            <Pagination>
-              {Array.from({
-                length: Math.ceil(allExamples.length / examplesPerPage),
-              }).map((_, pageIndex) => (
-                <li key={pageIndex}>
-                  <a
-                    onClick={() => handlePageChange(pageIndex + 1)}
-                    className={currentPage === pageIndex + 1 ? 'active' : ''}
-                  >
-                    {pageIndex + 1}
-                  </a>
-                </li>
-              ))}
-            </Pagination>
-          )}
+          <PaginationWrap>
+            {/* 총 1개의 페이지네이션 */}
+            {allExamples.length > examplesPerPage && (
+              <Pagination>
+                {Array.from({
+                  length: Math.ceil(allExamples.length / examplesPerPage),
+                }).map((_, pageIndex) => (
+                  <li key={pageIndex}>
+                    <a
+                      onClick={() => handlePageChange(pageIndex + 1)}
+                      className={currentPage === pageIndex + 1 ? 'active' : ''}
+                    >
+                      {pageIndex + 1}
+                    </a>
+                  </li>
+                ))}
+              </Pagination>
+            )}
 
-        <ButtonWrap>
-            <Button 
-              bmSelectedProblemOptions={bmSelectedProblemOptions} problemOptions={problemOptions}
-              disabled={!problemOptions} // 선택이 안됐을 경우 버튼 비활성화
-              onClick={() => {
-                handleConfirm();
-              }}
-            >
-              완료
-            </Button>
-          </ButtonWrap>
+            <ButtonWrap>
+              <Button 
+                bmSelectedProblemOptions={bmSelectedProblemOptions} problemOptions={problemOptions}
+                disabled={!problemOptions} // 선택이 안됐을 경우 버튼 비활성화
+                onClick={() => {
+                  handleConfirm();
+                }}
+              >
+                완료
+              </Button>
+            </ButtonWrap>
+          </PaginationWrap>
         </>
       )}
     </Wrap>
@@ -598,6 +600,12 @@ const Label = styled.label`
   }
 `;
 
+const PaginationWrap = styled.div`
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+`;
+
 const Pagination = styled.ul`
   display:flex;
   align-items:center;
@@ -637,6 +645,7 @@ const ButtonWrap = styled.div`
 const Button = styled.button`
   font-family: Pretendard, Poppins;
   font-size:0.88rem;
+  font-weight:400;
   color: ${(props) => (props.problemOptions ? palette.chatBlue : palette.black)};
   line-height:22px;
   padding:8px 20px;
