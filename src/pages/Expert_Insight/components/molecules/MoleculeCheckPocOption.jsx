@@ -584,6 +584,9 @@ const ButtonWrap = styled.div`
         : !props.selectedOption1 || !props.selectedOption2
         ? palette.white
         : palette.white};
-    cursor: ${(props) => (!props.selectedOption1 || !props.selectedOption2 ? "default" : "pointer")};
+    cursor: ${(props) => props.selectedPocOptions.length !== 0 
+        ? "default" 
+        : !props.selectedOption1 || !props.selectedOption2 
+        ? "default" : "pointer"};
   }
 `;

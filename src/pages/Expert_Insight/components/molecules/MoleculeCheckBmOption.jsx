@@ -607,6 +607,15 @@ const ButtonWrap = styled.div`
         ? palette.gray500
         : palette.chatBlue};
     background: ${palette.white};
-    cursor: ${(props) => (props.selectedOption1 && props.selectedOption2 && props.selectedOption3 && props.selectedOption4 && props.selectedOption5 ? "pointer" : "default")};
+    cursor: ${(props) =>
+      props.bmQuestionList.length !== 0
+        ? "default"
+        : props.selectedOption1 &&
+          props.selectedOption2 &&
+          props.selectedOption3 &&
+          props.selectedOption4 &&
+          props.selectedOption5
+        ? "pointer"
+        : "default"};
   }
 `;
