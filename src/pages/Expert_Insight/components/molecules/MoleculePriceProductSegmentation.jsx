@@ -356,7 +356,7 @@ const ButtonWrap = styled.div`
   align-items: center;
   margin-top: 15px;
   padding-bottom: 15px;
-  margin-left:45px;
+  margin-left:50px;
 
   button {
     display: flex;

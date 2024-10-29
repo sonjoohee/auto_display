@@ -711,7 +711,7 @@ const OrganismBmBmCustomReport = () => {
               <button>
                 <img src={images.IconDownload2} alt="" />
                 <div>
-                  <strong>마케팅 전략 다운로드</strong>
+                  <strong>비즈니스 분석 자료</strong>
                   <span>1.8 MB · Download</span>
                 </div>
               </button>
@@ -745,7 +745,7 @@ const OrganismBmBmCustomReport = () => {
         >
           <span className="close" onClick={togglePopupDownload}></span>
           <div>
-            <h3>마케팅 전략 다운로드</h3>
+            <h3>비즈니스 분석 자료 다운로드</h3>
             <SelectBoxWrap>
                 <label>포맷 선택 (택1)</label>
                 <SelectBox>
