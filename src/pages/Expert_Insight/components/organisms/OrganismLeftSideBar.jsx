@@ -696,7 +696,7 @@ useEffect(() => {
 
       setBmModelSuggestionReportData(chatData.bmModelSuggestionReportData || []);
       setBmQuestionList(chatData.bmQuestionList || []);
-      setBmSelectedProblemOptions(chatData.bmSelectedProblemOptions || "");
+      setBmSelectedProblemOptions(chatData.bmSelectedProblemOptions || {});
       setBmOrLean(chatData.bmOrLean || "");
       setBmBmAutoReportData(chatData.bmBmAutoReportData || []);
       setBmLeanAutoReportData(chatData.bmLeanAutoReportData || []);
@@ -966,7 +966,7 @@ useEffect(() => {
 
     setBmModelSuggestionReportData([]);
     setBmQuestionList([]);
-    setBmSelectedProblemOptions("");
+    setBmSelectedProblemOptions({});
     setBmOrLean("");
     setBmBmAutoReportData([]);
     setBmLeanAutoReportData([]);
@@ -1054,7 +1054,7 @@ useEffect(() => {
 
     setBmModelSuggestionReportData([]);
     setBmQuestionList([]);
-    setBmSelectedProblemOptions("");
+    setBmSelectedProblemOptions({});
     setBmOrLean("");
     setBmBmAutoReportData([]);
     setBmLeanAutoReportData([]);

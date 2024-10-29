@@ -315,7 +315,7 @@ const PageExpertInsight = () => {
 
             setBmModelSuggestionReportData(savedConversation.bmModelSuggestionReportData || []);
             setBmQuestionList(savedConversation.bmQuestionList || []);
-            setBmSelectedProblemOptions(savedConversation.bmSelectedProblemOptions || "");
+            setBmSelectedProblemOptions(savedConversation.bmSelectedProblemOptions || {});
             setBmOrLean(savedConversation.bmOrLean || "");
             setBmBmAutoReportData(savedConversation.bmBmAutoReportData || []);
             setBmLeanAutoReportData(savedConversation.bmLeanAutoReportData || []);

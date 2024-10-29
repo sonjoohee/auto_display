@@ -164,15 +164,19 @@ const OrganismBmBmAdsReport = () => {
   const [problemOptions, setProblemOptions] = useState("");
   const [bmBmCustomButtonState, setBmBmCustomButtonState] = useAtom(BM_BM_CUSTOM_REPORT_BUTTON_STATE);
 
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지를 상태로 관리
+
   useEffect(() => {
-    if(bmSelectedProblemOptions) {
-      setProblemOptions(bmSelectedProblemOptions);
+    if(Object.keys(bmSelectedProblemOptions).length > 0) {
+      setProblemOptions(bmSelectedProblemOptions.problemOptions);
+      setCurrentPage(bmSelectedProblemOptions.currentPage);
     }
   }, [bmSelectedProblemOptions]);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+
   const axiosConfig = {
     timeout: 100000, // 100초
     headers: {
@@ -315,7 +319,6 @@ const OrganismBmBmAdsReport = () => {
     fetchBmBmAdsReport();
   }, [bmBmAdsButtonState]);
 
-  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지를 상태로 관리
   const examplesPerPage = 5; // 페이지당 표시할 예시 개수
 
   // 전체 예시를 하나의 배열로 모으기
@@ -333,7 +336,7 @@ const OrganismBmBmAdsReport = () => {
   };
 
   const handleExampleClick = (example) => {
-    if (bmSelectedProblemOptions) return;
+    if (Object.keys(bmSelectedProblemOptions).length > 0) return;
 
     setProblemOptions(example); // 클릭된 example을 bmSelectedProblemOptions에 저장
   };
@@ -341,7 +344,10 @@ const OrganismBmBmAdsReport = () => {
   const handleConfirm = async () => {
     if (!problemOptions) return;
     
-    setBmSelectedProblemOptions(problemOptions);
+    setBmSelectedProblemOptions({
+      problemOptions: problemOptions,
+      currentPage: currentPage,
+    });
     setApproachPath(3);
     setConversationStage(3);
     setBmBmCustomButtonState(1);
@@ -401,7 +407,10 @@ const OrganismBmBmAdsReport = () => {
           bmBmAutoReportData : bmBmAutoReportData,
           bmLeanAutoReportData : bmLeanAutoReportData,
           bmBmAdsReportData : bmBmAdsReportData,
-          bmSelectedProblemOptions : problemOptions,
+          bmSelectedProblemOptions : {
+            problemOptions: problemOptions,
+            currentPage: currentPage,
+          },
           bmLeanAdsReportData : bmLeanAdsReportData,
           bmBmCustomReportData : bmBmCustomReportData,
           bmLeanCustomReportData : bmLeanCustomReportData,
@@ -437,10 +446,10 @@ const OrganismBmBmAdsReport = () => {
                     key={exampleIndex}
                     onClick={() => handleExampleClick(example)} // 클릭 시 handleExampleClick 호출
                     selected={problemOptions === example}
-                    bmSelectedProblemOptions={bmSelectedProblemOptions}
+                    bmSelectedProblemOptions={bmSelectedProblemOptions.problemOptions}
                   >
                     <Label
-                      bmSelectedProblemOptions={bmSelectedProblemOptions}
+                      bmSelectedProblemOptions={bmSelectedProblemOptions.problemOptions}
                       selected={problemOptions === example}
                     >
                       {example}
@@ -456,7 +465,7 @@ const OrganismBmBmAdsReport = () => {
           <PaginationWrap>
             {/* 총 1개의 페이지네이션 */}
             {allExamples.length > examplesPerPage && (
-              <Pagination>
+              <Pagination bmSelectedProblemOptions={bmSelectedProblemOptions.problemOptions}>
                 {Array.from({
                   length: Math.ceil(allExamples.length / examplesPerPage),
                 }).map((_, pageIndex) => (
@@ -474,7 +483,7 @@ const OrganismBmBmAdsReport = () => {
 
             <ButtonWrap>
               <Button 
-                bmSelectedProblemOptions={bmSelectedProblemOptions} problemOptions={problemOptions}
+                bmSelectedProblemOptions={bmSelectedProblemOptions.problemOptions} problemOptions={problemOptions}
                 disabled={!problemOptions} // 선택이 안됐을 경우 버튼 비활성화
                 onClick={() => {
                   handleConfirm();
@@ -631,7 +640,7 @@ const Pagination = styled.ul`
 
     &.active {
       font-weight:500;
-      color:${palette.chatBlue};
+      color:${(props) => props.bmSelectedProblemOptions ? palette.gray800 : palette.chatBlue};
     }
   }
 `;
