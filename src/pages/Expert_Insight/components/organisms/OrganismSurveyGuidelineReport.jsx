@@ -1027,7 +1027,7 @@ const SeparateSection = styled.div`
   margin-top: 12px;
   padding: 20px;
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.03);
+  background: ${palette.chatGray};
 
   content {
     padding:16px;
