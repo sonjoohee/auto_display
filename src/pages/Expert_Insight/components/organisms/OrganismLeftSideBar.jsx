@@ -259,6 +259,11 @@ const OrganismLeftSideBar = () => {
   const [chatIdToChangeName, setChatIdToChangeName] = useState(null);
   const [newChatName, setNewChatName] = useState("");
 
+  // useEffect(() => {
+  //   setIsSection1Open(false);
+  //   setIsSection2Open(false);
+  // }, [isLoggedIn]);
+
   const handleChangeReportNameButtonClick = (reportId) => {
     setReportIdToChangeName(reportId);
     setIsReportChangePopupOpen(true);
@@ -370,6 +375,7 @@ const handleChangeInsightConfirm = async () => {
      if (willOpen && exceedsSidebarHeight()) {
        setIsSection2Open(false);
      }
+     setIsSection2Open(false);
 
      return willOpen;
    });
@@ -384,6 +390,7 @@ const handleChangeInsightConfirm = async () => {
      if (willOpen && exceedsSidebarHeight()) {
        setIsSection1Open(false);
      }
+     setIsSection1Open(false);
 
      return willOpen;
    });
