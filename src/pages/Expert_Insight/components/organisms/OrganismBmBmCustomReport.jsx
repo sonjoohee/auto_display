@@ -56,7 +56,7 @@ import {
   SURVEY_GOAL_SUGGESTION_LIST,
   SURVEY_GOAL_FIXED,
   SURVEY_QUESTION_LIST,
-  SELECTED_PROBLEM_OPTIONS,
+  BM_SELECTED_PROBLEM_OPTIONS,
   BM_BM_CUSTOM_REPORT_DATA,
   BM_OR_LEAN,
   BM_LEAN_AUTO_REPORT_DATA,
@@ -161,7 +161,7 @@ const OrganismBmBmCustomReport = () => {
   const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
   const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
   const [bmQuestionList, setbmQuestionList] = useAtom(BM_QUESTION_LIST);
-  const [selectedProblemOptions, setSelectedProblemOptions] = useAtom(SELECTED_PROBLEM_OPTIONS); // 문제 선택 아톰
+  const [bmSelectedProblemOptions, setBmSelectedProblemOptions] = useAtom(BM_SELECTED_PROBLEM_OPTIONS); // 문제 선택 아톰
 
   
   const [isModalOpen, setIsModalOpen] = useState({});
@@ -269,13 +269,13 @@ const OrganismBmBmCustomReport = () => {
           surveyGoalSuggestionList: surveyGoalSuggestionList,
           surveyGoalFixed: surveyGoalFixed,
           surveyQuestionList: surveyQuestionList,
-          bmOrLean : BM_OR_LEAN,
+          bmOrLean : bmOrLean,
           bmQuestionList : bmQuestionList,
           bmModelSuggestionReportData : bmModelSuggestionReportData,
           bmBmAutoReportData : bmBmAutoReportData,
           bmLeanAutoReportData : bmLeanAutoReportData,
           bmBmAdsReportData : bmBmAdsReportData,
-          bmSelectedProblemOptions : selectedProblemOptions,
+          bmSelectedProblemOptions : bmSelectedProblemOptions,
           bmLeanAdsReportData : bmLeanAdsReportData,
           bmBmCustomReportData : bmBmCustomReportData,
           bmLeanCustomReportData : bmLeanCustomReportData,
@@ -387,7 +387,7 @@ const OrganismBmBmCustomReport = () => {
             목표고객: businessInformationTargetCustomer,
           },
           bm_bm_auto_report: bmBmAutoReportData,
-          selected_bm_bm_target: selectedProblemOptions
+          selected_bm_bm_target: bmSelectedProblemOptions
         };
 
         let response = await axios.post(
@@ -396,8 +396,8 @@ const OrganismBmBmCustomReport = () => {
           axiosConfig
         );
 
-        let retryCount = 0;
-        const maxRetries = 10;
+        // let retryCount = 0;
+        // const maxRetries = 10;
 
         // while (retryCount < maxRetries && (
         //   !response || !response.data || typeof response.data !== "object" ||
@@ -413,19 +413,19 @@ const OrganismBmBmCustomReport = () => {
         //     )
         //   )
         // )) 
-        {
-          response = await axios.post(
-            "https://wishresearch.kr/panels/bm_custom_report",
-            data,
-            axiosConfig
-          );
-          retryCount++;
-        }
-        if (retryCount === maxRetries) {
-          console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
-          // 에러 처리 로직 추가
-          throw new Error("Maximum retry attempts reached. Empty response persists.");
-        }
+        // {
+        //   response = await axios.post(
+        //     "https://wishresearch.kr/panels/bm_custom_report",
+        //     data,
+        //     axiosConfig
+        //   );
+        //   retryCount++;
+        // }
+        // if (retryCount === maxRetries) {
+        //   console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+        //   // 에러 처리 로직 추가
+        //   throw new Error("Maximum retry attempts reached. Empty response persists.");
+        // }
 
         setBmBmCustomReportData(response.data.bm_bm_custom_report);
 
@@ -436,7 +436,7 @@ const OrganismBmBmCustomReport = () => {
         // updatedConversation.push(
         //   {
         //     type: "system",
-        //     message: `"${selectedProblemOptions}"에 대한 린 캔버스 작성이 완료되었습니다.\n다른 방향성에 따른 변경된 비즈니스 모델을 확인하려면, 아래 버튼을 클릭해주세요`,
+        //     message: `"${bmSelectedProblemOptions}"에 대한 린 캔버스 작성이 완료되었습니다.\n다른 방향성에 따른 변경된 비즈니스 모델을 확인하려면, 아래 버튼을 클릭해주세요`,
         //     expertIndex: selectedExpertIndex,
         //   },
         //   { type: `bmCustomContinueButton`}
@@ -499,13 +499,13 @@ const OrganismBmBmCustomReport = () => {
             surveyGoalSuggestionList: surveyGoalSuggestionList,
             surveyGoalFixed: surveyGoalFixed,
             surveyQuestionList: surveyQuestionList,
-            bmOrLean : BM_OR_LEAN,
+            bmOrLean : bmOrLean,
             bmQuestionList : bmQuestionList,
             bmModelSuggestionReportData : bmModelSuggestionReportData,
             bmBmAutoReportData : bmBmAutoReportData,
             bmLeanAutoReportData : bmLeanAutoReportData,
             bmBmAdsReportData : bmBmAdsReportData,
-            bmSelectedProblemOptions : selectedProblemOptions,
+            bmSelectedProblemOptions : bmSelectedProblemOptions,
             bmLeanAdsReportData : bmLeanAdsReportData,
             bmLeanCustomReportData : bmLeanCustomReportData,
           },
@@ -536,7 +536,7 @@ const OrganismBmBmCustomReport = () => {
         </>
       ) : (
         <>
-          <h1>{titleOfBusinessInfo}의 비즈니스 모델 캔버스 - {selectedProblemOptions}</h1>
+          <h1>{titleOfBusinessInfo}의 비즈니스 모델 캔버스 - {bmSelectedProblemOptions}</h1>
           <p>{mainFeaturesOfBusinessInformation[0]}</p>
   
           <ModelCanvasWrap>

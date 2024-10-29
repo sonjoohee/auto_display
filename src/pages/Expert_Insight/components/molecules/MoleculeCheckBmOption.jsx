@@ -42,7 +42,7 @@ import {
   BM_BM_AUTO_REPORT_DATA,
   BM_LEAN_AUTO_REPORT_DATA,
   BM_BM_ADS_REPORT_DATA,
-  SELECTED_PROBLEM_OPTIONS,
+  BM_SELECTED_PROBLEM_OPTIONS,
   BM_LEAN_ADS_REPORT_DATA,
   BM_BM_CUSTOM_REPORT_DATA,
   BM_LEAN_CUSTOM_REPORT_DATA,
@@ -58,7 +58,7 @@ const MoleculeCheckBmOption = () => {
   const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
   const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
   const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
-  const [selectedProblemOptions, setSelectedProblemOptions] = useAtom(SELECTED_PROBLEM_OPTIONS);
+  const [bmSelectedProblemOptions, setBmSelectedProblemOptions] = useAtom(BM_SELECTED_PROBLEM_OPTIONS);
   const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
   const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
   const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
@@ -232,13 +232,13 @@ const MoleculeCheckBmOption = () => {
         buttonState: buttonState,
         caseHashTag : caseHashTag,
         caseReportData : caseReportData,
-        bmOrLean : BM_OR_LEAN,
+        bmOrLean : bmOrLean,
         bmQuestionList : bmQuestionList,
         bmModelSuggestionReportData : bmModelSuggestionReportData,
         bmBmAutoReportData : bmBmAutoReportData,
         bmLeanAutoReportData : bmLeanAutoReportData,
         bmBmAdsReportData : bmBmAdsReportData,
-        bmSelectedProblemOptions : selectedProblemOptions,
+        bmSelectedProblemOptions : bmSelectedProblemOptions,
         bmLeanAdsReportData : bmLeanAdsReportData,
         bmBmCustomReportData : bmBmCustomReportData,
         bmLeanCustomReportData : bmLeanCustomReportData,

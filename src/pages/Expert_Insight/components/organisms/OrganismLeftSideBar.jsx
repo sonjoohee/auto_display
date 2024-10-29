@@ -83,7 +83,7 @@ import {
   SURVEY_GUIDELINE_DETAIL_REPORT_DATA,
   BM_MODEL_SUGGESTION_REPORT_DATA,
   BM_QUESTION_LIST,
-  SELECTED_PROBLEM_OPTIONS,
+  BM_SELECTED_PROBLEM_OPTIONS,
   BM_OR_LEAN,
   BM_BM_AUTO_REPORT_DATA,
   BM_LEAN_AUTO_REPORT_DATA,
@@ -101,7 +101,7 @@ import OrganismReportPopup from "./OrganismReportPopup"; // 팝업 컴포넌트 
 const OrganismLeftSideBar = () => {
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
   const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
-  const [selectedProblemOptions, setSelectedProblemOptions] = useAtom(SELECTED_PROBLEM_OPTIONS);
+  const [bmSelectedProblemOptions, setBmSelectedProblemOptions] = useAtom(BM_SELECTED_PROBLEM_OPTIONS);
   const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
   const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
   const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
@@ -689,7 +689,7 @@ useEffect(() => {
 
       setBmModelSuggestionReportData(chatData.bmModelSuggestionReportData || []);
       setBmQuestionList(chatData.bmQuestionList || []);
-      setSelectedProblemOptions(chatData.bmSelectedProblemOptions || "");
+      setBmSelectedProblemOptions(chatData.bmSelectedProblemOptions || "");
       setBmOrLean(chatData.bmOrLean || "");
       setBmBmAutoReportData(chatData.bmBmAutoReportData || []);
       setBmLeanAutoReportData(chatData.bmLeanAutoReportData || []);
@@ -959,7 +959,7 @@ useEffect(() => {
 
     setBmModelSuggestionReportData([]);
     setBmQuestionList([]);
-    setSelectedProblemOptions("");
+    setBmSelectedProblemOptions("");
     setBmOrLean("");
     setBmBmAutoReportData([]);
     setBmLeanAutoReportData([]);
@@ -1047,7 +1047,7 @@ useEffect(() => {
 
     setBmModelSuggestionReportData([]);
     setBmQuestionList([]);
-    setSelectedProblemOptions("");
+    setBmSelectedProblemOptions("");
     setBmOrLean("");
     setBmBmAutoReportData([]);
     setBmLeanAutoReportData([]);

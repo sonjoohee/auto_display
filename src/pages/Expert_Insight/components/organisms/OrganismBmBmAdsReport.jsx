@@ -56,7 +56,7 @@ import {
   SURVEY_GOAL_SUGGESTION_LIST,
   SURVEY_GOAL_FIXED,
   SURVEY_QUESTION_LIST,
-  SELECTED_PROBLEM_OPTIONS,
+  BM_SELECTED_PROBLEM_OPTIONS,
   BM_BM_CUSTOM_REPORT_BUTTON_STATE,
   BM_OR_LEAN,
   BM_LEAN_AUTO_REPORT_DATA,
@@ -160,15 +160,15 @@ const OrganismBmBmAdsReport = () => {
   const [isLoadingIdeaPriority, setIsLoadingIdeaPriority] = useState(false);
   const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
   const [bmQuestionList, setbmQuestionList] = useAtom(BM_QUESTION_LIST);
-  const [selectedProblemOptions, setSelectedProblemOptions] = useAtom(SELECTED_PROBLEM_OPTIONS); // 문제 선택 아톰
+  const [bmSelectedProblemOptions, setBmSelectedProblemOptions] = useAtom(BM_SELECTED_PROBLEM_OPTIONS); // 문제 선택 아톰
   const [problemOptions, setProblemOptions] = useState("");
   const [bmBmCustomButtonState, setBmBmCustomButtonState] = useAtom(BM_BM_CUSTOM_REPORT_BUTTON_STATE);
 
   useEffect(() => {
-    if(selectedProblemOptions) {
-      setProblemOptions(selectedProblemOptions);
+    if(bmSelectedProblemOptions) {
+      setProblemOptions(bmSelectedProblemOptions);
     }
-  }, [selectedProblemOptions]);
+  }, [bmSelectedProblemOptions]);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -288,13 +288,13 @@ const OrganismBmBmAdsReport = () => {
             priceProductSegmentation : priceProductSegmentation,
             caseHashTag : caseHashTag,
             caseReportData : caseReportData,
-            bmOrLean : BM_OR_LEAN,
+            bmOrLean : bmOrLean,
             bmQuestionList : bmQuestionList,
             bmModelSuggestionReportData : bmModelSuggestionReportData,
             bmBmAutoReportData : bmBmAutoReportData,
             bmLeanAutoReportData : bmLeanAutoReportData,
             bmBmAdsReportData : response.data.bm_bm_ads_report,
-            bmSelectedProblemOptions : selectedProblemOptions,
+            bmSelectedProblemOptions : bmSelectedProblemOptions,
             bmLeanAdsReportData : bmLeanAdsReportData,
             bmBmCustomReportData : bmBmCustomReportData,
             bmLeanCustomReportData : bmLeanCustomReportData,
@@ -333,15 +333,15 @@ const OrganismBmBmAdsReport = () => {
   };
 
   const handleExampleClick = (example) => {
-    if (selectedProblemOptions) return;
+    if (bmSelectedProblemOptions) return;
 
-    setProblemOptions(example); // 클릭된 example을 selectedProblemOptions에 저장
+    setProblemOptions(example); // 클릭된 example을 bmSelectedProblemOptions에 저장
   };
 
   const handleConfirm = async () => {
     if (!problemOptions) return;
     
-    setSelectedProblemOptions(problemOptions);
+    setBmSelectedProblemOptions(problemOptions);
     setApproachPath(3);
     setConversationStage(3);
     setBmBmCustomButtonState(1);
@@ -395,13 +395,13 @@ const OrganismBmBmAdsReport = () => {
           surveyGoalFixed: surveyGoalFixed,
           surveyQuestionList: surveyQuestionList,
 
-          bmOrLean : BM_OR_LEAN,
+          bmOrLean : bmOrLean,
           bmQuestionList : bmQuestionList,
           bmModelSuggestionReportData : bmModelSuggestionReportData,
           bmBmAutoReportData : bmBmAutoReportData,
           bmLeanAutoReportData : bmLeanAutoReportData,
           bmBmAdsReportData : bmBmAdsReportData,
-          bmSelectedProblemOptions : selectedProblemOptions,
+          bmSelectedProblemOptions : problemOptions,
           bmLeanAdsReportData : bmLeanAdsReportData,
           bmBmCustomReportData : bmBmCustomReportData,
           bmLeanCustomReportData : bmLeanCustomReportData,
@@ -437,10 +437,10 @@ const OrganismBmBmAdsReport = () => {
                     key={exampleIndex}
                     onClick={() => handleExampleClick(example)} // 클릭 시 handleExampleClick 호출
                     selected={problemOptions === example}
-                    selectedProblemOptions={selectedProblemOptions}
+                    bmSelectedProblemOptions={bmSelectedProblemOptions}
                   >
                    <Label
-                      selectedProblemOptions={selectedProblemOptions}
+                      bmSelectedProblemOptions={bmSelectedProblemOptions}
                       selected={problemOptions === example}
                     >
                       {example}
@@ -473,7 +473,7 @@ const OrganismBmBmAdsReport = () => {
 
         <ButtonWrap>
             <Button 
-              selectedProblemOptions={selectedProblemOptions} problemOptions={problemOptions}
+              bmSelectedProblemOptions={bmSelectedProblemOptions} problemOptions={problemOptions}
               disabled={!problemOptions} // 선택이 안됐을 경우 버튼 비활성화
               onClick={() => {
                 handleConfirm();
@@ -532,11 +532,11 @@ const Option = styled.div`
   cursor: pointer;
   background-color: ${(props) =>
     props.selected
-      ? props.selectedProblemOptions
+      ? props.bmSelectedProblemOptions
         ? "rgba(0,0,0,0.05)"
         : "rgba(4,83,244,0.05)"
       : palette.white};
-  border: 1px solid ${(props) => (props.selected ? (props.selectedProblemOptions ? palette.gray800 : palette.blue) : palette.lineGray)};
+  border: 1px solid ${(props) => (props.selected ? (props.bmSelectedProblemOptions ? palette.gray800 : palette.blue) : palette.lineGray)};
   transition:all .5s;
 
   p {
@@ -546,7 +546,7 @@ const Option = styled.div`
   
   img {
     margin-bottom: 5px;
-    background-color: ${(props) => (!props.selected || props.selectedProblemOptions ? "rgba(246, 246, 246, 1)" : "rgba(255, 255, 255, 1)")};
+    background-color: ${(props) => (!props.selected || props.bmSelectedProblemOptions ? "rgba(246, 246, 246, 1)" : "rgba(255, 255, 255, 1)")};
     border-radius: 50%;
     padding: 10px;
     width: 34px;
@@ -555,7 +555,7 @@ const Option = styled.div`
 
   &:hover {
     border-color: ${(props) =>
-      props.selectedProblemOptions
+      props.bmSelectedProblemOptions
         ? "none" 
         : palette.blue};
   }
@@ -567,7 +567,7 @@ const Label = styled.label`
   gap:8px;
   align-items:flex-start;
   width:100%;
-  color: ${(props) => (props.selected ? (props.selectedProblemOptions ? palette.gray800 : palette.blue) : palette.gray800)};
+  color: ${(props) => (props.selected ? (props.bmSelectedProblemOptions ? palette.gray800 : palette.blue) : palette.gray800)};
   cursor:pointer;
 
   &:before {
@@ -575,8 +575,8 @@ const Label = styled.label`
     height:20px;
     flex-shrink:0;
     border-radius:50%;
-    border:1px solid ${(props) => (props.selected ? (props.selectedProblemOptions ? palette.gray800 : palette.blue) : palette.lineGray)};
-    background-color: ${(props) => (props.selected ? (props.selectedProblemOptions ? palette.gray800 : palette.blue) : palette.white)};
+    border:1px solid ${(props) => (props.selected ? (props.bmSelectedProblemOptions ? palette.gray800 : palette.blue) : palette.lineGray)};
+    background-color: ${(props) => (props.selected ? (props.bmSelectedProblemOptions ? palette.gray800 : palette.blue) : palette.white)};
     transition:all .5s;
     content:'';
   }
@@ -641,5 +641,5 @@ const Button = styled.button`
   transition:all .5s;
 
   display: ${(props) => (
-    props.selectedProblemOptions ? 'none' : 'block')};
+    props.bmSelectedProblemOptions ? 'none' : 'block')};
 `;

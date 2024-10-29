@@ -71,7 +71,7 @@ import {
   SURVEY_QUESTION_LIST,
   BM_MODEL_SUGGESTION_REPORT_DATA,
   BM_QUESTION_LIST,
-  SELECTED_PROBLEM_OPTIONS,
+  BM_SELECTED_PROBLEM_OPTIONS,
   BM_OR_LEAN,
   BM_BM_AUTO_REPORT_DATA,
   BM_LEAN_AUTO_REPORT_DATA,
@@ -93,7 +93,7 @@ import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
 const PageMeetAiExpert = () => {
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
   const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
-  const [selectedProblemOptions, setSelectedProblemOptions] = useAtom(SELECTED_PROBLEM_OPTIONS);
+  const [bmSelectedProblemOptions, setBmSelectedProblemOptions] = useAtom(BM_SELECTED_PROBLEM_OPTIONS);
   const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
   const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
   const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
@@ -331,7 +331,7 @@ const PageMeetAiExpert = () => {
 
     setBmModelSuggestionReportData([]);
     setBmQuestionList([]);
-    setSelectedProblemOptions("");
+    setBmSelectedProblemOptions("");
     setBmOrLean("");
     setBmBmAutoReportData([]);
     setBmLeanAutoReportData([]);
