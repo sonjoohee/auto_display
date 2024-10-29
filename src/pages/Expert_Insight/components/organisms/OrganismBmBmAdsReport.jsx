@@ -439,7 +439,7 @@ const OrganismBmBmAdsReport = () => {
                     selected={problemOptions === example}
                     bmSelectedProblemOptions={bmSelectedProblemOptions}
                   >
-                   <Label
+                    <Label
                       bmSelectedProblemOptions={bmSelectedProblemOptions}
                       selected={problemOptions === example}
                     >
@@ -505,7 +505,8 @@ const Wrap = styled.div`
     display:flex;
     align-items:center;
     justify-content:space-between;
-    font-size:1rem;
+    // font-size:1rem;
+    font-size:0.88rem;
     font-weight:700;
     text-align:left;
   }
@@ -519,7 +520,7 @@ const OptionContainer = styled.div`
   gap:8px;
 `;
 
-const Option = styled.div`
+const Option = styled.li`
   position:relative;
   display:flex;
   gap:8px;
@@ -538,6 +539,10 @@ const Option = styled.div`
       : palette.white};
   border: 1px solid ${(props) => (props.selected ? (props.bmSelectedProblemOptions ? palette.gray800 : palette.blue) : palette.lineGray)};
   transition:all .5s;
+
+  + li {
+    margin-top:8px;
+  }
 
   p {
     color: ${(props) => (props.selected ? palette.gray800 : palette.gray500)};
@@ -565,7 +570,8 @@ const Label = styled.label`
   position:relative;
   display:flex;
   gap:8px;
-  align-items:flex-start;
+  // align-items:flex-start;
+  align-items:center;
   width:100%;
   color: ${(props) => (props.selected ? (props.bmSelectedProblemOptions ? palette.gray800 : palette.blue) : palette.gray800)};
   cursor:pointer;
