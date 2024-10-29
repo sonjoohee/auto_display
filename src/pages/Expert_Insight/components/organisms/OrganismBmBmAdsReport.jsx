@@ -439,7 +439,7 @@ const OrganismBmBmAdsReport = () => {
                     selected={problemOptions === example}
                     bmSelectedProblemOptions={bmSelectedProblemOptions}
                   >
-                   <Label
+                    <Label
                       bmSelectedProblemOptions={bmSelectedProblemOptions}
                       selected={problemOptions === example}
                     >
@@ -453,35 +453,37 @@ const OrganismBmBmAdsReport = () => {
             </ul>
           </OptionContainer>
 
-          {/* 총 1개의 페이지네이션 */}
-          {allExamples.length > examplesPerPage && (
-            <Pagination>
-              {Array.from({
-                length: Math.ceil(allExamples.length / examplesPerPage),
-              }).map((_, pageIndex) => (
-                <li key={pageIndex}>
-                  <a
-                    onClick={() => handlePageChange(pageIndex + 1)}
-                    className={currentPage === pageIndex + 1 ? 'active' : ''}
-                  >
-                    {pageIndex + 1}
-                  </a>
-                </li>
-              ))}
-            </Pagination>
-          )}
+          <PaginationWrap>
+            {/* 총 1개의 페이지네이션 */}
+            {allExamples.length > examplesPerPage && (
+              <Pagination>
+                {Array.from({
+                  length: Math.ceil(allExamples.length / examplesPerPage),
+                }).map((_, pageIndex) => (
+                  <li key={pageIndex}>
+                    <a
+                      onClick={() => handlePageChange(pageIndex + 1)}
+                      className={currentPage === pageIndex + 1 ? 'active' : ''}
+                    >
+                      {pageIndex + 1}
+                    </a>
+                  </li>
+                ))}
+              </Pagination>
+            )}
 
-        <ButtonWrap>
-            <Button 
-              bmSelectedProblemOptions={bmSelectedProblemOptions} problemOptions={problemOptions}
-              disabled={!problemOptions} // 선택이 안됐을 경우 버튼 비활성화
-              onClick={() => {
-                handleConfirm();
-              }}
-            >
-              완료
-            </Button>
-          </ButtonWrap>
+            <ButtonWrap>
+              <Button 
+                bmSelectedProblemOptions={bmSelectedProblemOptions} problemOptions={problemOptions}
+                disabled={!problemOptions} // 선택이 안됐을 경우 버튼 비활성화
+                onClick={() => {
+                  handleConfirm();
+                }}
+              >
+                완료
+              </Button>
+            </ButtonWrap>
+          </PaginationWrap>
         </>
       )}
     </Wrap>
@@ -505,7 +507,8 @@ const Wrap = styled.div`
     display:flex;
     align-items:center;
     justify-content:space-between;
-    font-size:1rem;
+    // font-size:1rem;
+    font-size:0.88rem;
     font-weight:700;
     text-align:left;
   }
@@ -519,7 +522,7 @@ const OptionContainer = styled.div`
   gap:8px;
 `;
 
-const Option = styled.div`
+const Option = styled.li`
   position:relative;
   display:flex;
   gap:8px;
@@ -538,6 +541,10 @@ const Option = styled.div`
       : palette.white};
   border: 1px solid ${(props) => (props.selected ? (props.bmSelectedProblemOptions ? palette.gray800 : palette.blue) : palette.lineGray)};
   transition:all .5s;
+
+  + li {
+    margin-top:8px;
+  }
 
   p {
     color: ${(props) => (props.selected ? palette.gray800 : palette.gray500)};
@@ -565,7 +572,8 @@ const Label = styled.label`
   position:relative;
   display:flex;
   gap:8px;
-  align-items:flex-start;
+  // align-items:flex-start;
+  align-items:center;
   width:100%;
   color: ${(props) => (props.selected ? (props.bmSelectedProblemOptions ? palette.gray800 : palette.blue) : palette.gray800)};
   cursor:pointer;
@@ -590,6 +598,12 @@ const Label = styled.label`
     background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='8' viewBox='0 0 10 8' fill='none'%3E%3Cpath d='M9 0.914062L3.4 6.91406L1 4.51406' stroke='white' stroke-width='1.33333' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center no-repeat;
     content:'';
   }
+`;
+
+const PaginationWrap = styled.div`
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
 `;
 
 const Pagination = styled.ul`
@@ -631,6 +645,7 @@ const ButtonWrap = styled.div`
 const Button = styled.button`
   font-family: Pretendard, Poppins;
   font-size:0.88rem;
+  font-weight:400;
   color: ${(props) => (props.problemOptions ? palette.chatBlue : palette.black)};
   line-height:22px;
   padding:8px 20px;

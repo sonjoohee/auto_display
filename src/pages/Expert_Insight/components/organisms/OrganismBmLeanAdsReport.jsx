@@ -441,7 +441,7 @@ const OrganismBmLeanAdsReport = () => {
                     selected={problemOptions === example}
                     bmSelectedProblemOptions={bmSelectedProblemOptions}
                   >
-                   <Label
+                    <Label
                       bmSelectedProblemOptions={bmSelectedProblemOptions}
                       selected={problemOptions === example}
                     >
@@ -455,35 +455,37 @@ const OrganismBmLeanAdsReport = () => {
             </ul>
           </OptionContainer>
 
-          {/* 총 1개의 페이지네이션 */}
-          {allExamples.length > examplesPerPage && (
-            <Pagination>
-              {Array.from({
-                length: Math.ceil(allExamples.length / examplesPerPage),
-              }).map((_, pageIndex) => (
-                <li key={pageIndex}>
-                  <a
-                    onClick={() => handlePageChange(pageIndex + 1)}
-                    className={currentPage === pageIndex + 1 ? 'active' : ''}
-                  >
-                    {pageIndex + 1}
-                  </a>
-                </li>
-              ))}
-            </Pagination>
-          )}
+          <PaginationWrap>
+            {/* 총 1개의 페이지네이션 */}
+            {allExamples.length > examplesPerPage && (
+              <Pagination>
+                {Array.from({
+                  length: Math.ceil(allExamples.length / examplesPerPage),
+                }).map((_, pageIndex) => (
+                  <li key={pageIndex}>
+                    <a
+                      onClick={() => handlePageChange(pageIndex + 1)}
+                      className={currentPage === pageIndex + 1 ? 'active' : ''}
+                    >
+                      {pageIndex + 1}
+                    </a>
+                  </li>
+                ))}
+              </Pagination>
+            )}
 
-          <ButtonWrap>
-            <Button 
-              bmSelectedProblemOptions={bmSelectedProblemOptions} problemOptions={problemOptions}
-              disabled={!problemOptions} // 선택이 안됐을 경우 버튼 비활성화
-              onClick={() => {
-                handleConfirm();
-              }}
-            >
-              완료
-            </Button>
-          </ButtonWrap>
+            <ButtonWrap>
+              <Button 
+                bmSelectedProblemOptions={bmSelectedProblemOptions} problemOptions={problemOptions}
+                disabled={!problemOptions} // 선택이 안됐을 경우 버튼 비활성화
+                onClick={() => {
+                  handleConfirm();
+                }}
+              >
+                완료
+              </Button>
+            </ButtonWrap>
+          </PaginationWrap>
         </>
       )}
     </Wrap>
@@ -521,7 +523,7 @@ const OptionContainer = styled.div`
   gap:8px;
 `;
 
-const Option = styled.div`
+const Option = styled.li`
   position:relative;
   display:flex;
   gap:8px;
@@ -540,6 +542,10 @@ const Option = styled.div`
       : palette.white};
   border: 1px solid ${(props) => (props.selected ? (props.bmSelectedProblemOptions ? palette.gray800 : palette.blue) : palette.lineGray)};
   transition:all .5s;
+
+  + li {
+    margin-top:8px;
+  }
 
   p {
     color: ${(props) => (props.selected ? palette.gray800 : palette.gray500)};
@@ -594,6 +600,12 @@ const Label = styled.label`
   }
 `;
 
+const PaginationWrap = styled.div`
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+`;
+
 const Pagination = styled.ul`
   display:flex;
   align-items:center;
@@ -633,9 +645,10 @@ const ButtonWrap = styled.div`
 const Button = styled.button`
   font-family: Pretendard, Poppins;
   font-size:0.88rem;
+  font-weight:400;
   color: ${(props) => (props.problemOptions ? palette.chatBlue : palette.black)};
   line-height:22px;
-  padding:8px 20px;
+  padding:8px 0 8px 20px;
   margin-left:auto;
   border-radius:8px;
   border:0;

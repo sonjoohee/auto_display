@@ -2555,7 +2555,8 @@ const LoginButtonWrap = styled.div`
     padding: 12px 16px;
     border-radius: 10px;
     border: 1px solid ${palette.lineGray};
-    background: ${palette.white};
+    // background: ${palette.white};
+    background:transparent;
   }
 
   div {
@@ -2621,6 +2622,7 @@ const LogoutBtnWrap = styled.div`
 
 const LogoutToggle = styled.div`
   position: absolute;
+  min-width:217px;
   bottom: 0;
   display: flex;
   flex-direction: column;

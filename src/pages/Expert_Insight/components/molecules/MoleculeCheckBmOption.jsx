@@ -518,6 +518,7 @@ const Option = styled.div`
   &:before {
     width:20px;
     height:20px;
+    flex-shrink:0;
     border-radius:50%;
     border: 1px solid
       ${(props) =>
@@ -539,7 +540,7 @@ const Option = styled.div`
   &:after {
     position:absolute;
     left:12px;
-    top:8px;
+    // top:8px;
     width:20px;
     height:20px;
     background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='8' viewBox='0 0 10 8' fill='none'%3E%3Cpath d='M9 0.914062L3.4 6.91406L1 4.51406' stroke='white' stroke-width='1.33333' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center no-repeat;
