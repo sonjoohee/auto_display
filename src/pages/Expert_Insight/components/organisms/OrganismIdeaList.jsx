@@ -166,7 +166,7 @@ const OrganismIdeaList = () => {
   };
   
   const axiosConfig = {
-    timeout: 100000, // 100초
+    timeout: 100000000, // 100초
     headers: {
       "Content-Type": "application/json",
     },
@@ -648,11 +648,12 @@ useEffect(() => {
                 <span>1.8 MB · Download</span>
               </div>
             </button>
-            <button onClick={handleMiro}>
+            <button className="miro-button" disabled onClick={handleMiro}>
               <img src={images.IconDownloadMiro} alt="" />
               <div>
                 <strong>{isLoadingIdeaMiro ? "데이터 전송 중..." : "Miro에서 협업하기"}</strong>
-                <span>외부페이지 이동 · www.miro.com</span>
+                {/* <span>외부페이지 이동 · www.miro.com</span> */}
+                <span>준비 중</span>
               </div>
             </button>
           </div>
@@ -879,6 +880,10 @@ const DownloadButton = styled.div`
       font-size:0.5rem;
       color:${palette.gray500};
     }
+  }
+
+  .miro-button {
+    cursor: default;
   }
 `;
 
