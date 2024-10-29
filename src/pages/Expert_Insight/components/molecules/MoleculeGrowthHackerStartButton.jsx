@@ -209,7 +209,7 @@ const ButtonWrap = styled.div`
   display: flex;
   align-items: center;
   margin-top: 15px;
-  margin-left:45px;
+  margin-left:50px;
   padding-bottom: 15px;
 
   button {
