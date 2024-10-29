@@ -526,7 +526,7 @@ const ModelCanvasWrap = styled.div`
   display:flex;
   flex-direction:column;
   gap:12px;
-  margin:24px auto;
+  margin:24px auto 0;
 `;
 
 const CanvasSection = styled.div`

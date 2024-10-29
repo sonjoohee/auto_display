@@ -828,7 +828,7 @@ const OrganismBmBmCustomReport = () => {
 export default OrganismBmBmCustomReport;
 const BoxWrap = styled.div`
   max-width:988px;
-  width:100%;
+  // width:100%;
   display:flex;
   flex-direction:column;
   text-align:left;
@@ -853,7 +853,7 @@ const ModelCanvasWrap = styled.div`
   display:flex;
   flex-direction:column;
   gap:12px;
-  margin:24px auto;
+  margin:24px auto 0;
 `;
 
 const CanvasSection = styled.div`
