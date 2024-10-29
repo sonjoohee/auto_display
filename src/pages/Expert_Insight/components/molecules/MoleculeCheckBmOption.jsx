@@ -257,6 +257,13 @@ const MoleculeCheckBmOption = () => {
     if (dir === "prev") {
       setTabs((prevTabs) => prevTabs - 1);
     } else if (dir === "next") {
+      if (
+        (tabs === 0 && !selectedOption1) ||
+        (tabs === 1 && !selectedOption2) ||
+        (tabs === 2 && !selectedOption3) ||
+        (tabs === 3 && !selectedOption4)
+      )
+        return;
       setTabs((prevTabs) => prevTabs + 1);
     }
   };
@@ -365,13 +372,14 @@ const MoleculeCheckBmOption = () => {
         </>
       )}
 
-<ButtonWrap
+      <ButtonWrap
         selectedOption1={selectedOption1}
         selectedOption2={selectedOption2}
         selectedOption3={selectedOption3}
         selectedOption4={selectedOption4}
         selectedOption5={selectedOption5}
         bmQuestionList={bmQuestionList}
+        tabs={tabs}
       >
         {tabs === 0 ? null : (
           <div className="prev" onClick={() => hadleTurnTab("prev")}>
@@ -379,7 +387,7 @@ const MoleculeCheckBmOption = () => {
           </div>
         )}
 
-{tabs === 4 ? ( // 탭이 4로 변경됨
+        {tabs === 4 ? ( // 탭이 4로 변경됨
           <div
             className="finish"
             disabled={!selectedOption1 || !selectedOption2 || !selectedOption3 || !selectedOption4 || !selectedOption5}
@@ -400,13 +408,6 @@ const MoleculeCheckBmOption = () => {
               (tabs === 3 && !selectedOption4)
             }
             onClick={() => {
-              if (
-                (tabs === 0 && !selectedOption1) ||
-                (tabs === 1 && !selectedOption2) ||
-                (tabs === 2 && !selectedOption3) ||
-                (tabs === 3 && !selectedOption4)
-              )
-                return;
               hadleTurnTab("next");
             }}
           >
@@ -580,31 +581,31 @@ const ButtonWrap = styled.div`
     color: ${(props) =>
       props.bmQuestionList.length !== 0
         ? palette.black
-        : !props.selectedOption1
-        ? palette.gray500
-        : palette.chatBlue};
-    background: ${(props) =>
-      props.bmQuestionList.length !== 0
-        ? palette.white
-        : !props.selectedOption1
-        ? palette.white
-        : palette.white};
-    cursor: ${(props) => (!props.selectedOption1 ? "default" : "pointer")};
+        : props.tabs === 0 && props.selectedOption1 
+        || props.tabs === 1 && props.selectedOption2 
+        || props.tabs === 2 && props.selectedOption3 
+        || props.tabs === 3 && props.selectedOption4
+        || props.tabs === 4 && props.selectedOption5
+        ? palette.chatBlue
+        : palette.gray500};
+    background: ${palette.white};
+    cursor: ${(props) => ( 
+      props.tabs === 0 && props.selectedOption1 
+      || props.tabs === 1 && props.selectedOption2 
+      || props.tabs === 2 && props.selectedOption3 
+      || props.tabs === 3 && props.selectedOption4 
+      || props.tabs === 4 && props.selectedOption5 
+      ? "pointer" : "default")};
   }
 
   .finish {
     color: ${(props) =>
       props.bmQuestionList.length !== 0
         ? palette.black
-        : !props.selectedOption1 || !props.selectedOption2
+        : !props.selectedOption1 || !props.selectedOption2 || !props.selectedOption3 || !props.selectedOption4 || !props.selectedOption5
         ? palette.gray500
         : palette.chatBlue};
-    background: ${(props) =>
-      props.bmQuestionList.length !== 0
-        ? palette.white
-        : !props.selectedOption1 || !props.selectedOption2
-        ? palette.white
-        : palette.white};
-    cursor: ${(props) => (!props.selectedOption1 || !props.selectedOption2 ? "default" : "pointer")};
+    background: ${palette.white}
+    cursor: ${(props) => (!props.selectedOption1 || !props.selectedOption2 || !props.selectedOption3 || !props.selectedOption4 || !props.selectedOption5 ? "default" : "pointer")};
   }
 `;
