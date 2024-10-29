@@ -501,7 +501,7 @@ const OrganismBmBmAutoReport = () => {
 export default OrganismBmBmAutoReport;
 const BoxWrap = styled.div`
   max-width:988px;
-  width:100%;
+  // width:100%;
   display:flex;
   flex-direction:column;
   text-align:left;
