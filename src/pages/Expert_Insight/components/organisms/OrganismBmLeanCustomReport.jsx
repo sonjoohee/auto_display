@@ -495,7 +495,7 @@ useEffect(() => {
             priceProductSegmentation : priceProductSegmentation,
             caseHashTag : caseHashTag,
             caseReportData : caseReportData,
-            bmLeanAutoReportData : response.data.bm_lean_auto_report,
+            bmLeanAutoReportData : bmLeanAutoReportData,
             bmSelectedProblemOptions: bmSelectedProblemOptions,
             bmOrLean : bmOrLean,
             bmQuestionList : bmQuestionList,
@@ -538,7 +538,7 @@ useEffect(() => {
         </>
       ) : (
         <>
-          <h1>{titleOfBusinessInfo}의 비즈니스 모델 캔버스 - {bmSelectedProblemOptions}</h1>
+          <h1>{titleOfBusinessInfo}의 린 캔버스 - {bmSelectedProblemOptions}</h1>
           <p>{mainFeaturesOfBusinessInformation[0]}</p>
   
           <ModelCanvasWrap>
