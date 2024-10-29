@@ -206,7 +206,9 @@ const MoleculeBmModelSuggestion = () => {
           !Array.isArray(response.data.bm_check_stage_report) ||
           response.data.bm_check_stage_report.some(item =>
             !item.hasOwnProperty("title") || 
-            !item.hasOwnProperty("content")
+            !item.hasOwnProperty("content") ||
+            !item.hasOwnProperty("model") ||
+            !(item.model === "BM" || item.model === "Lean")
           )
         )) {
           response = await axios.post(
