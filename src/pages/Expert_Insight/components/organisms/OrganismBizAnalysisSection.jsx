@@ -37,6 +37,8 @@ import {
   CHAT_REFRESH_TRIGGER,
   BUTTON_STATE,
   CONVERSATION_ID,
+  IS_ADDING_NOW,
+  SET_NEW_ADD_CONTENT,
 } from "../../../AtomStates";
 
 const OrganismBizAnalysisSection = () => {
@@ -91,11 +93,8 @@ const OrganismBizAnalysisSection = () => {
 
   const [analysisButtonState, setAnalysisButtonState] = useAtom(ANALYSIS_BUTTON_STATE);
 
-  const [newAddContent, setNewAddContent] = useState("");
-  const [isAddingNow, setIsAddingNow] = useState({
-    section: "",
-    isAdding: false,
-  });
+  const [newAddContent, setNewAddContent] = useAtom(SET_NEW_ADD_CONTENT);
+  const [isAddingNow, setIsAddingNow] = useAtom(IS_ADDING_NOW);
   const [newEditContent, setNewEditContent] = useState("");
   const [editingIndex, setEditingIndex] = useState({ section: "", index: -1 });
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);

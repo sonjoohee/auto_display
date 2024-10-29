@@ -20,6 +20,7 @@ import {
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
   CONVERSATION_STAGE,
   BUTTON_STATE,
+  IS_EDITING_NOW,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -29,6 +30,7 @@ import {
 } from "../../../../utils/indexedDB";
 
 const MoleculeCheckReportRightAway = () => {
+  const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
   const [conversation, setConversation] = useAtom(CONVERSATION);
@@ -120,6 +122,7 @@ const MoleculeCheckReportRightAway = () => {
       return [...prevList, selectedExpertIndex];
     });
 
+    setIsEditingNow(false);
     setConversation(updatedConversation);
     setConversationStage(3);
     setExpertButtonState(1); // 버튼 클릭 시 EXPERT_BUTTON_STATE를 1로 설정

@@ -53,6 +53,7 @@ import {
   BM_LEAN_CUSTOM_REPORT_DATA,
   BM_MODEL_SUGGESTION_REPORT_DATA,
   BM_QUESTION_LIST,
+  IS_EDITING_NOW,
 } from "../../../AtomStates";
 
 import {
@@ -123,7 +124,8 @@ const MoleculeCaseStartButton = () => {
   const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
   const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
   const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
-  
+  const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
+
   const axiosConfig = {
     timeout: 100000, // 100초
     headers: {
@@ -152,6 +154,7 @@ const MoleculeCaseStartButton = () => {
       },
     );
 
+    setIsEditingNow(false);
     setConversation(updatedConversation);
     setConversationStage(3);
     setApproachPath(3);
