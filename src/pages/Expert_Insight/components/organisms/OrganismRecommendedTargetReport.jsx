@@ -187,7 +187,7 @@ const OrganismRecommendedTargetReport = ({ expertIndex }) => {
   );
   // 목표 행위 텍스트를 찾는 함수
   const findGoalActionText = (index) => {
-    const currentExpertData = strategyReportData[selectedExpertIndex];
+    const currentExpertData = strategyReportData[4];
     if (
       currentExpertData &&
       currentExpertData.tabs[0] &&
