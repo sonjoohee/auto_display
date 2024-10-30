@@ -980,10 +980,10 @@ const OrganismSurveyGuidelineReport = () => {
                 )}
             </SeparateSection>
 
-      {/* <MoleculeReportController
+      <MoleculeReportController
         reportIndex={10}
         sampleData={surveyGuidelineReportData}
-        /> */}
+        />
       </>
       )}
 

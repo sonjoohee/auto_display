@@ -2515,6 +2515,14 @@ const AccordionContent = styled.div`
       content:'E';
     }
 
+    /* 조사 설계 */
+    &[data-expert-index="10"]:before {
+      width:15px;
+      height:15px;
+      line-height:15px;
+      content:'E';
+    }
+
     p {
       width: 100%;
       min-height: 19px;

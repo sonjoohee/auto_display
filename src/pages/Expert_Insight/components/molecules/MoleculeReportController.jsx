@@ -417,7 +417,7 @@ const MoleculeReportController = ({
       // 전략 보고서 데이터 저장 - sampleData 사용
       reportData = sampleData; // sampleData를 그대로 저장합니다
       business_info = reportData?.business_info || "Unknown Title";
-    } else if (reportIndex === 4 || reportIndex === 5 || reportIndex === 6 || reportIndex === 8) {
+    } else if (reportIndex === 4 || reportIndex === 5 || reportIndex === 6 || reportIndex === 8 || reportIndex === 10) {
       reportData = sampleData; // sampleData를 그대로 저장합니다
       business_info = titleOfBusinessInfo || "Unknown Title";
     } else {
@@ -630,6 +630,22 @@ ${report.content.mainCharacter.map(character => `- ${character}`).join('\n')}`.t
           contentToCopy = extractTextContent(report.content);
           break;
 
+          case 10: // 조사 설계
+          contentToCopy = "맞춤형 조사 설계 보고서\n\n";
+          contentToCopy += `${report.content.method_1.title}\n`;
+          contentToCopy += `조사 목표: ${report.content.method_1.survey_goal}\n`;
+          contentToCopy += `대상 및 채널: ${report.content.method_1.survey_target.target_person}, ${report.content.method_1.channels_and_collection_methods.channels}\n`;
+          contentToCopy += `데이터 수집 및 분석: ${report.content.method_1.channels_and_collection_methods.collection_methods}\n\n`;
+          contentToCopy += `${report.content.method_2.title}\n`;
+          contentToCopy += `조사 목표: ${report.content.method_2.survey_goal}\n`;
+          contentToCopy += `대상 및 채널: ${report.content.method_2.survey_target.target_person}, ${report.content.method_2.channels_and_collection_methods.channels}\n`;
+          contentToCopy += `데이터 수집 및 분석: ${report.content.method_2.channels_and_collection_methods.collection_methods}\n\n`;
+          contentToCopy += `${report.content.method_3.title}\n`;
+          contentToCopy += `조사 목표: ${report.content.method_3.survey_goal}\n`;
+          contentToCopy += `대상 및 채널: ${report.content.method_3.survey_target.target_person}, ${report.content.method_3.channels_and_collection_methods.channels}\n`;
+          contentToCopy += `데이터 수집 및 분석: ${report.content.method_3.channels_and_collection_methods.collection_methods}\n\n`;
+          break;
+
         default:
           contentToCopy = JSON.stringify(report, null, 2);
           
@@ -710,6 +726,21 @@ ${mainCharacteristicOfBusinessInformation
       }
       else if (reportIndex === 8) {
         contentToCopy = extractTextContent(sampleData);
+      }
+      else if (reportIndex === 10) {
+        contentToCopy = "맞춤형 조사 설계 보고서\n\n";
+        contentToCopy += `${surveyGuidelineReportData.method_1.title}\n`;
+        contentToCopy += `조사 목표: ${surveyGuidelineReportData.method_1.survey_goal}\n`;
+        contentToCopy += `대상 및 채널: ${surveyGuidelineReportData.method_1.survey_target.target_person}, ${surveyGuidelineReportData.method_1.channels_and_collection_methods.channels}\n`;
+        contentToCopy += `데이터 수집 및 분석: ${surveyGuidelineReportData.method_1.channels_and_collection_methods.collection_methods}\n\n`;
+        contentToCopy += `${surveyGuidelineReportData.method_2.title}\n`;
+        contentToCopy += `조사 목표: ${surveyGuidelineReportData.method_2.survey_goal}\n`;
+        contentToCopy += `대상 및 채널: ${surveyGuidelineReportData.method_2.survey_target.target_person}, ${surveyGuidelineReportData.method_2.channels_and_collection_methods.channels}\n`;
+        contentToCopy += `데이터 수집 및 분석: ${surveyGuidelineReportData.method_2.channels_and_collection_methods.collection_methods}\n\n`;
+        contentToCopy += `${surveyGuidelineReportData.method_3.title}\n`;
+        contentToCopy += `조사 목표: ${surveyGuidelineReportData.method_3.survey_goal}\n`;
+        contentToCopy += `대상 및 채널: ${surveyGuidelineReportData.method_3.survey_target.target_person}, ${surveyGuidelineReportData.method_3.channels_and_collection_methods.channels}\n`;
+        contentToCopy += `데이터 수집 및 분석: ${surveyGuidelineReportData.method_3.channels_and_collection_methods.collection_methods}\n\n`;
       }
     }
   
