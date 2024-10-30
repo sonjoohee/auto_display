@@ -663,7 +663,7 @@ const ButtonWrap = styled.div`
   .next {
     color: ${(props) =>
       props.KpiQuestionList.length !== 0
-        ? palette.black
+        ? palette.gray500
         : props.tabs === 0 && props.selectedOption1
         || props.tabs === 1 && props.selectedOption2
         || props.tabs === 2 && props.selectedOption3
@@ -686,7 +686,7 @@ const ButtonWrap = styled.div`
   .finish {
     color: ${(props) =>
       props.KpiQuestionList.length !== 0
-        ? palette.black
+        ? palette.gray500
         : !props.selectedOption1 || !props.selectedOption2 || !props.selectedOption3 || !props.selectedOption4 || !props.selectedOption5 || !props.selectedOption6
         ? palette.gray500
         : palette.chatBlue};

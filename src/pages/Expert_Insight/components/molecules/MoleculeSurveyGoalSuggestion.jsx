@@ -497,7 +497,7 @@ const ButtonWrap = styled.div`
 const Button = styled.button`
   font-family: Pretendard, Poppins;
   font-size:0.88rem;
-  color: ${(props) => (props.surveyGoalFixedState && Object.keys(props.surveyGoalFixedState).length ? palette.chatBlue : palette.black)};
+  color: ${(props) => (props.surveyGoalFixedState && Object.keys(props.surveyGoalFixedState).length ? palette.chatBlue : palette.gray500)};
   line-height:22px;
   padding:8px 20px;
   margin-left:auto;

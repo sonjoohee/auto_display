@@ -390,7 +390,7 @@ useEffect(() => {
             목표고객: businessInformationTargetCustomer,
           },
           bm_lean_auto_report: bmLeanAutoReportData,
-          selected_bm_lean_problem : bmSelectedProblemOptions
+          selected_bm_lean_problem : bmSelectedProblemOptions.problemOptions
         };
 
         let response = await axios.post(
@@ -538,7 +538,7 @@ useEffect(() => {
         </>
       ) : (
         <>
-          <h1>{titleOfBusinessInfo}의 린 캔버스 - {bmSelectedProblemOptions}</h1>
+          <h1>{titleOfBusinessInfo}의 린 캔버스 - {bmSelectedProblemOptions.problemOptions}</h1>
           <p>{mainFeaturesOfBusinessInformation[0]}</p>
   
           <ModelCanvasWrap>

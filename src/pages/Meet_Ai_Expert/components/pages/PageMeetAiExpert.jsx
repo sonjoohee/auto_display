@@ -331,7 +331,7 @@ const PageMeetAiExpert = () => {
 
     setBmModelSuggestionReportData([]);
     setBmQuestionList([]);
-    setBmSelectedProblemOptions("");
+    setBmSelectedProblemOptions({});
     setBmOrLean("");
     setBmBmAutoReportData([]);
     setBmLeanAutoReportData([]);

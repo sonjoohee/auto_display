@@ -165,15 +165,19 @@ const OrganismBmLeanAdsReport = () => {
   const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
   const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
 
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지를 상태로 관리
+
   useEffect(() => {
-    if(bmSelectedProblemOptions) {
-      setProblemOptions(bmSelectedProblemOptions);
+    if(Object.keys(bmSelectedProblemOptions).length > 0) {
+      setProblemOptions(bmSelectedProblemOptions.problemOptions);
+      setCurrentPage(bmSelectedProblemOptions.currentPage);
     }
   }, [bmSelectedProblemOptions]);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+
   const axiosConfig = {
     timeout: 100000, // 100초
     headers: {
@@ -316,7 +320,6 @@ const OrganismBmLeanAdsReport = () => {
     fetchBmLeanAdsReport();
   }, [bmLeanAdsButtonState]);
 
-  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지를 상태로 관리
   const examplesPerPage = 5; // 페이지당 표시할 예시 개수
 
   // 전체 예시를 하나의 배열로 모으기
@@ -334,7 +337,7 @@ const OrganismBmLeanAdsReport = () => {
   };
 
   const handleExampleClick = (example) => {
-    if (bmSelectedProblemOptions) return;
+    if (Object.keys(bmSelectedProblemOptions).length > 0) return;
     
     setProblemOptions(example); // 클릭된 example을 bmSelectedProblemOptions에 저장
   };
@@ -342,7 +345,10 @@ const OrganismBmLeanAdsReport = () => {
   const handleConfirm = async () => {
     if (!problemOptions) return;
     
-    setBmSelectedProblemOptions(problemOptions);
+    setBmSelectedProblemOptions({
+      problemOptions: problemOptions,
+      currentPage: currentPage,
+    });
     setApproachPath(3);
     setConversationStage(3);
     setBmLeanCustomButtonState(1);
@@ -395,15 +401,16 @@ const OrganismBmLeanAdsReport = () => {
           surveyGoalSuggestionList: surveyGoalSuggestionList,
           surveyGoalFixed: surveyGoalFixed,
           surveyQuestionList: surveyQuestionList,
-
-          bmSelectedProblemOptions: problemOptions,
           bmOrLean : bmOrLean,
           bmQuestionList : bmQuestionList,
           bmModelSuggestionReportData : bmModelSuggestionReportData,
           bmBmAutoReportData : bmBmAutoReportData,
           bmLeanAutoReportData : bmLeanAutoReportData,
           bmBmAdsReportData : bmBmAdsReportData,
-          bmSelectedProblemOptions : problemOptions,
+          bmSelectedProblemOptions : {
+            problemOptions: problemOptions,
+            currentPage: currentPage,
+          },
           bmLeanAdsReportData : bmLeanAdsReportData,
           bmBmCustomReportData : bmBmCustomReportData,
           bmLeanCustomReportData : bmLeanCustomReportData,
@@ -439,10 +446,10 @@ const OrganismBmLeanAdsReport = () => {
                     key={exampleIndex}
                     onClick={() => handleExampleClick(example)} // 클릭 시 handleExampleClick 호출
                     selected={problemOptions === example}
-                    bmSelectedProblemOptions={bmSelectedProblemOptions}
+                    bmSelectedProblemOptions={bmSelectedProblemOptions.problemOptions}
                   >
                     <Label
-                      bmSelectedProblemOptions={bmSelectedProblemOptions}
+                      bmSelectedProblemOptions={bmSelectedProblemOptions.problemOptions}
                       selected={problemOptions === example}
                     >
                       {example}
@@ -458,7 +465,7 @@ const OrganismBmLeanAdsReport = () => {
           <PaginationWrap>
             {/* 총 1개의 페이지네이션 */}
             {allExamples.length > examplesPerPage && (
-              <Pagination>
+              <Pagination bmSelectedProblemOptions={bmSelectedProblemOptions.problemOptions}>
                 {Array.from({
                   length: Math.ceil(allExamples.length / examplesPerPage),
                 }).map((_, pageIndex) => (
@@ -476,7 +483,7 @@ const OrganismBmLeanAdsReport = () => {
 
             <ButtonWrap>
               <Button 
-                bmSelectedProblemOptions={bmSelectedProblemOptions} problemOptions={problemOptions}
+                bmSelectedProblemOptions={bmSelectedProblemOptions.problemOptions} problemOptions={problemOptions}
                 disabled={!problemOptions} // 선택이 안됐을 경우 버튼 비활성화
                 onClick={() => {
                   handleConfirm();
@@ -631,7 +638,7 @@ const Pagination = styled.ul`
 
     &.active {
       font-weight:500;
-      color:${palette.chatBlue};
+      color:${(props) => props.bmSelectedProblemOptions ? palette.gray800 : palette.chatBlue};
     }
   }
 `;
@@ -646,7 +653,7 @@ const Button = styled.button`
   font-family: Pretendard, Poppins;
   font-size:0.88rem;
   font-weight:400;
-  color: ${(props) => (props.problemOptions ? palette.chatBlue : palette.black)};
+  color: ${(props) => (props.problemOptions ? palette.chatBlue : palette.gray500)};
   line-height:22px;
   padding:8px 0 8px 20px;
   margin-left:auto;
@@ -654,7 +661,8 @@ const Button = styled.button`
   border:0;
   background:${palette.white};
   transition:all .5s;
-
+  cursor: ${(props) => (
+    props.problemOptions ? 'pointer' : 'default')};
   display: ${(props) => (
     props.bmSelectedProblemOptions ? 'none' : 'block')};
 `;

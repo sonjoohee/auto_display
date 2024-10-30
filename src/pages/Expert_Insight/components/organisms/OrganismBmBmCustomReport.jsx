@@ -387,7 +387,7 @@ const OrganismBmBmCustomReport = () => {
             목표고객: businessInformationTargetCustomer,
           },
           bm_bm_auto_report: bmBmAutoReportData,
-          selected_bm_bm_target: bmSelectedProblemOptions
+          selected_bm_bm_target: bmSelectedProblemOptions.problemOptions
         };
 
         let response = await axios.post(
@@ -536,7 +536,7 @@ const OrganismBmBmCustomReport = () => {
         </>
       ) : (
         <>
-          <h1>{titleOfBusinessInfo}의 비즈니스 모델 캔버스 - {bmSelectedProblemOptions}</h1>
+          <h1>{titleOfBusinessInfo}의 비즈니스 모델 캔버스 - {bmSelectedProblemOptions.problemOptions}</h1>
           <p>{mainFeaturesOfBusinessInformation[0]}</p>
   
           <ModelCanvasWrap>

@@ -231,7 +231,23 @@ const OrganismPocReportSection = ({ expertIndex }) => {
           );
 
           while (true) {
-            if (!response1.data["tabs"][0].hasOwnProperty("title")) {
+            if (!response1.data["tabs"][0].hasOwnProperty("title") ||
+                !response1.data["tabs"][0].hasOwnProperty("sections") ||
+                !Array.isArray(response1.data["tabs"][0].sections) ||
+                !response1.data["tabs"][0].sections[0].hasOwnProperty("title") ||
+                !response1.data["tabs"][0].sections[0].hasOwnProperty("text") ||
+                !response1.data["tabs"][0].sections[0].hasOwnProperty("content") ||
+                response1.data["tabs"][0].sections[0].content.some(content => 
+                  !content.hasOwnProperty("title") ||
+                  !content.hasOwnProperty("text") ||
+                  !content.hasOwnProperty("subContent") ||
+                  !Array.isArray(content.subContent) ||
+                  content.subContent.some(subContent => 
+                    !subContent.hasOwnProperty("subTitle") ||
+                    !subContent.hasOwnProperty("text")
+                  )
+                )
+            ) {
               response1 = await axios.post(
                 "https://wishresearch.kr/panels/expert",
                 data,
@@ -244,59 +260,59 @@ const OrganismPocReportSection = ({ expertIndex }) => {
 
           finalResponse = response1.data;
 
-          if (finalResponse.total_page_index === 2) {
-            let response2 = await axios.post(
-              "https://wishresearch.kr/panels/expert",
-              finalResponse,
-              axiosConfig
-            );
-            while (true) {
-              if (!response2.data["tabs"][1].hasOwnProperty("title")) {
-                response2 = await axios.post(
-                  "https://wishresearch.kr/panels/expert",
-                  finalResponse,
-                  axiosConfig
-                );
-              } else {
-                break;
-              }
-            }
-            finalResponse = response2.data;
-          } else if (finalResponse.total_page_index === 3) {
-            let response2 = await axios.post(
-              "https://wishresearch.kr/panels/expert",
-              finalResponse,
-              axiosConfig
-            );
-            while (true) {
-              if (!response2.data["tabs"][1].hasOwnProperty("title")) {
-                response2 = await axios.post(
-                  "https://wishresearch.kr/panels/expert",
-                  finalResponse,
-                  axiosConfig
-                );
-              } else {
-                break;
-              }
-            }
-            let response3 = await axios.post(
-              "https://wishresearch.kr/panels/expert",
-              response2.data,
-              axiosConfig
-            );
-            while (true) {
-              if (!response3.data["tabs"][2].hasOwnProperty("title")) {
-                response3 = await axios.post(
-                  "https://wishresearch.kr/panels/expert",
-                  response2.data,
-                  axiosConfig
-                );
-              } else {
-                break;
-              }
-            }
-            finalResponse = response3.data;
-          }
+          // if (finalResponse.total_page_index === 2) {
+          //   let response2 = await axios.post(
+          //     "https://wishresearch.kr/panels/expert",
+          //     finalResponse,
+          //     axiosConfig
+          //   );
+          //   while (true) {
+          //     if (!response2.data["tabs"][1].hasOwnProperty("title")) {
+          //       response2 = await axios.post(
+          //         "https://wishresearch.kr/panels/expert",
+          //         finalResponse,
+          //         axiosConfig
+          //       );
+          //     } else {
+          //       break;
+          //     }
+          //   }
+          //   finalResponse = response2.data;
+          // } else if (finalResponse.total_page_index === 3) {
+          //   let response2 = await axios.post(
+          //     "https://wishresearch.kr/panels/expert",
+          //     finalResponse,
+          //     axiosConfig
+          //   );
+          //   while (true) {
+          //     if (!response2.data["tabs"][1].hasOwnProperty("title")) {
+          //       response2 = await axios.post(
+          //         "https://wishresearch.kr/panels/expert",
+          //         finalResponse,
+          //         axiosConfig
+          //       );
+          //     } else {
+          //       break;
+          //     }
+          //   }
+          //   let response3 = await axios.post(
+          //     "https://wishresearch.kr/panels/expert",
+          //     response2.data,
+          //     axiosConfig
+          //   );
+          //   while (true) {
+          //     if (!response3.data["tabs"][2].hasOwnProperty("title")) {
+          //       response3 = await axios.post(
+          //         "https://wishresearch.kr/panels/expert",
+          //         response2.data,
+          //         axiosConfig
+          //       );
+          //     } else {
+          //       break;
+          //     }
+          //   }
+          //   finalResponse = response3.data;
+          // }
 
           const strategyData = finalResponse;
 
