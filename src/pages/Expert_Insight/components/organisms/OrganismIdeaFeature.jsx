@@ -315,7 +315,7 @@ const OrganismIdeaFeature = () => {
           setIdeaFeatureButtonState(0);
 
           const data = {
-            expert_id: "1",
+            expert_id: "5",
             business_info: titleOfBusinessInfo,
             business_analysis_data: {
               명칭: titleOfBusinessInfo,

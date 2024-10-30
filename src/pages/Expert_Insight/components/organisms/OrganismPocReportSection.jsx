@@ -209,7 +209,7 @@ const OrganismPocReportSection = ({ expertIndex }) => {
 
           // 여기서 expert_id를 임시로 "3"으로 설정합니다.
           const data = {
-            expert_id: selectedExpertIndex,
+            expert_id: "4",
             business_info: titleOfBusinessInfo, // DB에서 가져온 titleOfBusinessInfo 사용
             business_analysis_data: {
               명칭: analysisReportData.title,
@@ -860,7 +860,7 @@ const Section = ({
 
     // 요청에 필요한 데이터 준비
     const data = {
-      expert_id: selectedExpertIndex,
+      expert_id: "4",
       business_info: titleOfBusinessInfo,
       business_analysis_data: {
         명칭: analysisReportData.title,
@@ -1041,7 +1041,7 @@ const Section = ({
 
     // 요청에 필요한 데이터 준비
     const data = {
-      expert_id: selectedExpertIndex,
+      expert_id: "4",
       business_info: titleOfBusinessInfo, // DB에서 가져온 titleOfBusinessInfo 사용
       business_analysis_data: {
         명칭: analysisReportData.title,

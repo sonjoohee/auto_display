@@ -310,7 +310,7 @@ const handleMiro = async () => {
     setIsLoadingIdeaMiro(true);
     
     const data = {
-      expert_id: "1",
+      expert_id: "5",
       business_info: titleOfBusinessInfo,
       business_analysis_data: {
         명칭: titleOfBusinessInfo,
@@ -409,7 +409,7 @@ useEffect(() => {
 
         for (let i = 0; i < ideaRequirementData.length; i++) {
           const data = {
-            expert_id: "1",
+            expert_id: "5",
             business_info: titleOfBusinessInfo,
             business_analysis_data: {
               명칭: titleOfBusinessInfo,
@@ -471,7 +471,7 @@ useEffect(() => {
         maxRetries = 10;
 
         const data2 = {
-          expert_id: "1",
+          expert_id: "5",
           business_info: titleOfBusinessInfo,
           business_analysis_data: {
             명칭: titleOfBusinessInfo,
