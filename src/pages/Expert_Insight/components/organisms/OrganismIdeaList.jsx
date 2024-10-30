@@ -161,6 +161,8 @@ const OrganismIdeaList = () => {
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
 
+  const [loadingDownload, setLoadingDownload] = useState(false);
+
   const togglePopupDownload = () => {
     setIsPopupOpenDownload(!isPopupOpenDownload);
   };
@@ -199,7 +201,9 @@ const OrganismIdeaList = () => {
   }, [isModalOpen]);
 
   const handleDownload = () => {
+    setLoadingDownload(true);
     if (selectedFormat === 'Excel') {
+
     // 데이터 준비
     const requirements = [...new Set(ideaList.map(item => item.report.customer_requirement))];
     const features = [...new Set(ideaList.flatMap(item => item.report.ideas.map(idea => idea.feature)))];
@@ -249,6 +253,10 @@ const OrganismIdeaList = () => {
 
     // 엑셀 파일 생성 및 다운로드
     XLSX.writeFile(wb, "idea_matrix.xlsx");
+
+    setTimeout(() => {
+      setLoadingDownload(false);
+    }, 2000);
   } else if (selectedFormat === 'Word') {
     // Word 문서 생성 로직
     const doc = new Document({
@@ -290,6 +298,9 @@ const OrganismIdeaList = () => {
     // Word 문서 생성 및 다운로드
     Packer.toBlob(doc).then(blob => {
       saveAs(blob, "idea_list.docx");
+      setTimeout(() => {
+        setLoadingDownload(false);
+      }, 2000);
     });
   };
 }
@@ -299,7 +310,7 @@ const handleMiro = async () => {
     setIsLoadingIdeaMiro(true);
     
     const data = {
-      expert_id: "1",
+      expert_id: "5",
       business_info: titleOfBusinessInfo,
       business_analysis_data: {
         명칭: titleOfBusinessInfo,
@@ -398,7 +409,7 @@ useEffect(() => {
 
         for (let i = 0; i < ideaRequirementData.length; i++) {
           const data = {
-            expert_id: "1",
+            expert_id: "5",
             business_info: titleOfBusinessInfo,
             business_analysis_data: {
               명칭: titleOfBusinessInfo,
@@ -460,7 +471,7 @@ useEffect(() => {
         maxRetries = 10;
 
         const data2 = {
-          expert_id: "1",
+          expert_id: "5",
           business_info: titleOfBusinessInfo,
           business_analysis_data: {
             명칭: titleOfBusinessInfo,
@@ -734,8 +745,10 @@ useEffect(() => {
                 </SelectBox>
               </SelectBoxWrap>
             <div>
-              <button onClick={handleDownload}>
-                다운로드
+              <button onClick={handleDownload} disabled={loadingDownload}>
+                {loadingDownload
+                  ? "다운로드 중..."
+                  : "다운로드"}
               </button>
             </div>
           </div>

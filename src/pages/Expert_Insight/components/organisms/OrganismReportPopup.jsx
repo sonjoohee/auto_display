@@ -145,7 +145,7 @@ const OrganismReportPopup = ({ report, onClose }) => {
             </popup-p>
           </popupTitle>
 
-          {(reportIndex === 1 || reportIndex === 4 || reportIndex === 5 || reportIndex === 6 || reportIndex === 8) && (
+          {(reportIndex === 1 || reportIndex === 4 || reportIndex === 5 || reportIndex === 6 || reportIndex === 8 || reportIndex === 10) && (
             <ExpertThumb>
               <div className="thumb">
                 {report.content.expert_id === "1" ? (
@@ -240,6 +240,8 @@ const OrganismReportPopup = ({ report, onClose }) => {
         {reportIndex === 6 && <GrowthHackerReportSection report={report} />}
 
         {reportIndex === 8 && <CaseReportSection report={report} />}
+
+        {reportIndex === 10 && <SurveyDesignReportSection report={report} />}
 
         <CloseButton onClick={onClose}>닫기</CloseButton>
       </PopupContent>
@@ -2242,5 +2244,403 @@ const Wrap2 = styled.div`
 
   .conclusion {
     margin-top: 20px;
+  }
+`;
+
+const SurveyDesignReportSection = ({ report }) => {
+  return (
+    <Wrap>
+    <h1>맞춤형 조사 설계 보고서</h1>
+      <SeparateSection4>
+        <strong_title>
+          <span className="number">1</span>
+          {report.content.method_1.title}
+          {/* <DownloadButton
+            className={`download-button`}
+            ref={buttonRef}
+            onClick={(event) => handleOpenModal(0, event)}
+            disabled={loading}
+            isModalOpen={isModalOpen[0]}
+          >
+            {loading ? downloadStatus : "다운로드"}
+          </DownloadButton> */}
+        </strong_title>
+        <content>
+        <ol className="list-disc">
+            <li key="1">
+              조사 목표: {report.content.method_1.survey_goal}
+            </li>
+            <li key="2">
+              대상 및 채널: {report.content.method_1.survey_target.target_person}, {report.content.method_1.channels_and_collection_methods.channels}
+            </li>
+            <li key="3">
+              데이터 수집 및 분석: {report.content.method_1.channels_and_collection_methods.collection_methods}
+            </li>
+        </ol>
+        </content>
+        {/* {isModalOpen[0] && (
+            <DownloadPopup
+              ref={popupRef}
+              isAutoSaveToggle={false}
+              style={{ top: popupPosition.top, left: popupPosition.left }}
+            >
+              <span className="close" onClick={(event) => handleOpenModal(0, event)}></span>
+              <div>
+                <h3>설문조사 상세 설계 다운로드</h3>
+                <SelectBoxWrap>
+                  <label>포맷 선택 (택1)</label>
+                  <SelectBox>
+                    <div
+                      className={`${
+                        selectedFormat === "Word" ? "selected" : ""
+                      }`}
+                      onClick={() => handleFormatChange("Word")}
+                    >
+                      {selectedFormat === "Word" ? (
+                        <img src={images.ImgWord2} alt="" />
+                      ) : (
+                        <img src={images.ImgWord} alt="" />
+                      )}
+                      Word
+                  </SelectBox>
+                </SelectBoxWrap>
+                <SelectBoxWrap>
+                  <label>언어 선택 (택1)</label>
+                  <SelectBox>
+                    <div
+                      className={`${
+                        selectedLanguage === "한글" ? "selected" : ""
+                      }`}
+                      onClick={() => handleLanguageChange("한글")}
+                    >
+                      {selectedLanguage === "한글" ? (
+                        <img src={images.ImgKOR2} alt="" />
+                      ) : (
+                        <img src={images.ImgKOR} alt="" />
+                      )}
+                      한국어
+                    </div>
+                    <div
+                      className={`${
+                        selectedLanguage === "영문" ? "selected" : ""
+                      } disabled`}
+                      onClick={() => handleLanguageChange("영문")}
+                    >
+                      {selectedLanguage === "영문" ? (
+                        <img src={images.ImgENG2} alt="" />
+                      ) : (
+                        <img src={images.ImgENG} alt="" />
+                      )}
+                      영문(준비 중)
+                    </div>
+                  </SelectBox>
+                </SelectBoxWrap>
+                <div>
+                  <button
+                    onClick={() => handleDownloadClick(0)}
+                    disabled={loading || !selectedLanguage}
+                  >
+                    {loading
+                      ? downloadStatus
+                      : selectedLanguage
+                      ? "다운로드"
+                      : "언어를 선택해주세요"}
+                  </button>
+                </div>
+              </div>
+            </DownloadPopup>
+          )} */}
+      </SeparateSection4>
+      <SeparateSection4>
+      <strong_title>
+          <span className="number">2</span>
+          {report.content.method_2.title}
+          {/* <DownloadButton
+            className={`download-button`}
+            ref={buttonRef}
+            onClick={(event) => handleOpenModal(1, event)}
+            disabled={loading}
+            isModalOpen={isModalOpen[1]}
+          >
+            {loading ? downloadStatus : "다운로드"}
+          </DownloadButton> */}
+        </strong_title>
+        <content>
+        <ol className="list-disc">
+            <li key="1">
+              조사 목표: {report.content.method_2.survey_goal}
+            </li>
+            <li key="2">
+              대상 및 채널: {report.content.method_2.survey_target.target_person}, {report.content.method_2.channels_and_collection_methods.channels}
+            </li>
+            <li key="3">
+              데이터 수집 및 분석: {report.content.method_2.channels_and_collection_methods.collection_methods}
+            </li>
+        </ol>
+        </content>
+        {/* {isModalOpen[1] && (
+            <DownloadPopup
+              ref={popupRef}
+              isAutoSaveToggle={false}
+              style={{ top: popupPosition.top, left: popupPosition.left }}
+            >
+              <span className="close" onClick={(event) => handleOpenModal(1, event)}></span>
+              <div>
+                <h3>설문조사 상세 설계 다운로드</h3>
+                <SelectBoxWrap>
+                  <label>포맷 선택 (택1)</label>
+                  <SelectBox>
+                    <div
+                      className={`${
+                        selectedFormat === "Word" ? "selected" : ""
+                      }`}
+                      onClick={() => handleFormatChange("Word")}
+                    >
+                      {selectedFormat === "Word" ? (
+                        <img src={images.ImgWord2} alt="" />
+                      ) : (
+                        <img src={images.ImgWord} alt="" />
+                      )}
+                      Word
+                    </div>
+                    <div
+                      className={`${
+                        selectedFormat === "PDF" ? "selected" : ""
+                      }`}
+                      onClick={() => handleFormatChange("PDF")}
+                    >
+                      {selectedFormat === "PDF" ? (
+                        <img src={images.ImgPDF2} alt="" />
+                      ) : (
+                        <img src={images.ImgPDF} alt="" />
+                      )}
+                      PDF
+                    </div>
+                  </SelectBox>
+                </SelectBoxWrap>
+                <SelectBoxWrap>
+                  <label>언어 선택 (택1)</label>
+                  <SelectBox>
+                    <div
+                      className={`${
+                        selectedLanguage === "한글" ? "selected" : ""
+                      }`}
+                      onClick={() => handleLanguageChange("한글")}
+                    >
+                      {selectedLanguage === "한글" ? (
+                        <img src={images.ImgKOR2} alt="" />
+                      ) : (
+                        <img src={images.ImgKOR} alt="" />
+                      )}
+                      한국어
+                    </div>
+                    <div
+                      className={`${
+                        selectedLanguage === "영문" ? "selected" : ""
+                      } disabled`}
+                      onClick={() => handleLanguageChange("영문")}
+                    >
+                      {selectedLanguage === "영문" ? (
+                        <img src={images.ImgENG2} alt="" />
+                      ) : (
+                        <img src={images.ImgENG} alt="" />
+                      )}
+                      영문(준비 중)
+                    </div>
+                  </SelectBox>
+                </SelectBoxWrap>
+                <div>
+                  <button
+                    onClick={() => handleDownloadClick(1)}
+                    disabled={loading || !selectedLanguage}
+                  >
+                    {loading
+                      ? downloadStatus
+                      : selectedLanguage
+                      ? "다운로드"
+                      : "언어를 선택해주세요"}
+                  </button>
+                </div>
+              </div>
+            </DownloadPopup>
+          )} */}
+      </SeparateSection4>
+      <SeparateSection4>
+      <strong_title>
+          <span className="number">3</span>
+          {report.content.method_3.title}
+          {/* <DownloadButton
+            className={`download-button`}
+            ref={buttonRef}
+            onClick={(event) => handleOpenModal(2, event)}
+            disabled={loading}
+            isModalOpen={isModalOpen[2]}
+          >
+            {loading ? downloadStatus : "다운로드"}
+          </DownloadButton> */}
+        </strong_title>
+        <content>
+        <ol className="list-disc">
+            <li key="1">
+              조사 목표: {report.content.method_3.survey_goal}
+            </li>
+            <li key="2">
+              대상 및 채널: {report.content.method_3.survey_target.target_person}, {report.content.method_3.channels_and_collection_methods.channels}
+            </li>
+            <li key="3">
+              데이터 수집 및 분석: {report.content.method_3.channels_and_collection_methods.collection_methods}
+            </li>
+        </ol>
+        </content>
+        {/* {isModalOpen[2] && (
+            <DownloadPopup
+              ref={popupRef}
+              isAutoSaveToggle={false}
+              style={{ top: popupPosition.top, left: popupPosition.left }}
+            >
+              <span className="close" onClick={(event) => handleOpenModal(2, event)}></span>
+              <div>
+                <h3>설문조사 상세 설계 다운로드</h3>
+                <SelectBoxWrap>
+                  <label>포맷 선택 (택1)</label>
+                  <SelectBox>
+                    <div
+                      className={`${
+                        selectedFormat === "Word" ? "selected" : ""
+                      }`}
+                      onClick={() => handleFormatChange("Word")}
+                    >
+                      {selectedFormat === "Word" ? (
+                        <img src={images.ImgWord2} alt="" />
+                      ) : (
+                        <img src={images.ImgWord} alt="" />
+                      )}
+                      Word
+                    </div>
+                    <div
+                      className={`${
+                        selectedFormat === "PDF" ? "selected" : ""
+                      }`}
+                      onClick={() => handleFormatChange("PDF")}
+                    >
+                      {selectedFormat === "PDF" ? (
+                        <img src={images.ImgPDF2} alt="" />
+                      ) : (
+                        <img src={images.ImgPDF} alt="" />
+                      )}
+                      PDF
+                    </div>
+                  </SelectBox>
+                </SelectBoxWrap>
+                <SelectBoxWrap>
+                  <label>언어 선택 (택1)</label>
+                  <SelectBox>
+                    <div
+                      className={`${
+                        selectedLanguage === "한글" ? "selected" : ""
+                      }`}
+                      onClick={() => handleLanguageChange("한글")}
+                    >
+                      {selectedLanguage === "한글" ? (
+                        <img src={images.ImgKOR2} alt="" />
+                      ) : (
+                        <img src={images.ImgKOR} alt="" />
+                      )}
+                      한국어
+                    </div>
+                    <div
+                      className={`${
+                        selectedLanguage === "영문" ? "selected" : ""
+                      } disabled`}
+                      onClick={() => handleLanguageChange("영문")}
+                    >
+                      {selectedLanguage === "영문" ? (
+                        <img src={images.ImgENG2} alt="" />
+                      ) : (
+                        <img src={images.ImgENG} alt="" />
+                      )}
+                      영문(준비 중)
+                    </div>
+                  </SelectBox>
+                </SelectBoxWrap>
+                <div>
+                  <button
+                    onClick={() => handleDownloadClick(2)}
+                    disabled={loading || !selectedLanguage}
+                  >
+                    {loading
+                      ? downloadStatus
+                      : selectedLanguage
+                      ? "다운로드"
+                      : "언어를 선택해주세요"}
+                  </button>
+                </div>
+              </div>
+            </DownloadPopup>
+          )} */}
+      </SeparateSection4>
+
+      <MoleculeReportController
+        reportIndex={10}
+        report={report}
+        />
+    </Wrap>
+  )
+};
+
+const SeparateSection4 = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap:12px;
+  margin-top: 12px;
+  padding: 20px;
+  border-radius: 10px;
+  background: ${palette.chatGray};
+
+  content {
+    padding:16px;
+    border-radius:10px;
+    background:${palette.white};
+  }
+
+  strong_title {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    gap: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: ${palette.darkGray};
+    word-break: break-word; // 긴 제목이 줄바꿈되도록 설정
+    max-width: calc(100% - 90px); // 버튼 영역을 고려한 최대 너비 설정
+    padding: 0px;
+
+    span {
+      width: 15px;
+      height: 15px;
+      font-size: 0.63rem;
+      color: ${palette.chatBlue};
+      line-height: 15px;
+      text-align: center;
+      border: 1px solid ${palette.chatBlue};
+    }
+  }
+
+  p {
+    font-size:0.88rem;
+    font-weight:300;
+    color:${palette.gray800};
+    text-align:left;
+  }
+
+  .list-disc li {
+    list-style-type:disc;
+    list-style-position:inside;
+    font-size:0.88rem;
+    font-weight:300;
+    color:${palette.gray800};
+    line-height:1.5;
+    text-align:left;
   }
 `;

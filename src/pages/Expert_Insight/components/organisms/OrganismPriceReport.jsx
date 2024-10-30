@@ -227,7 +227,7 @@ const OrganismPriceReport = () => {
         setIsLoadingPrice(true);
 
         const data1 = {
-          expert_id: "6",
+          expert_id: "7",
           business_info: titleOfBusinessInfo,
           business_analysis_data: {
             명칭: titleOfBusinessInfo,
@@ -275,7 +275,7 @@ const OrganismPriceReport = () => {
         setPriceScrapData(priceScrap);
 
         const data2 = {
-          expert_id: "6",
+          expert_id: "7",
           business_info: titleOfBusinessInfo,
           business_analysis_data: {
             명칭: titleOfBusinessInfo,

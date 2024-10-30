@@ -270,7 +270,7 @@ const OrganismSurveyGuidelineReport = () => {
 
     // 요청에 필요한 데이터 준비
     const data = {
-      expert_id: selectedExpertIndex,
+      expert_id: "10",
       business_info: titleOfBusinessInfo, // DB에서 가져온 titleOfBusinessInfo 사용
       business_analysis_data: {
         명칭: analysisReportData.title,
@@ -487,7 +487,7 @@ const OrganismSurveyGuidelineReport = () => {
         setSurveyGuidelineButtonState(0);
 
         const data = {
-          expert_id: "6",
+          expert_id: "10",
           business_info: titleOfBusinessInfo,
           business_analysis_data: {
             명칭: titleOfBusinessInfo,
@@ -980,10 +980,10 @@ const OrganismSurveyGuidelineReport = () => {
                 )}
             </SeparateSection>
 
-      {/* <MoleculeReportController
+      <MoleculeReportController
         reportIndex={10}
         sampleData={surveyGuidelineReportData}
-        /> */}
+        />
       </>
       )}
 
