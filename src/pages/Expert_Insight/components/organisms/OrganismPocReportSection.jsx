@@ -242,6 +242,7 @@ const OrganismPocReportSection = ({ expertIndex }) => {
                   !content.hasOwnProperty("text") ||
                   !content.hasOwnProperty("subContent") ||
                   !Array.isArray(content.subContent) ||
+                  content.subContent.length !== 6 ||
                   content.subContent.some(subContent => 
                     !subContent.hasOwnProperty("subTitle") ||
                     !subContent.hasOwnProperty("text")

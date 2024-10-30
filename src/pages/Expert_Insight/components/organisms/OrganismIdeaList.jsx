@@ -328,7 +328,8 @@ const handleMiro = async () => {
       axiosConfig
     );
 
-    setIdeaMiro(response.dev_miro_report.miro_data);
+    setIdeaMiro(response.data);
+    const miroUrl = response.data;
     
     await saveConversationToIndexedDB(
       {
@@ -354,7 +355,7 @@ const handleMiro = async () => {
         ideaList : ideaList,
         ideaGroup : ideaGroup,
         buttonState : buttonState,
-        ideaMiro : ideaMiro,
+        ideaMiro : miroUrl,
         growthHackerReportData : growthHackerReportData,
         growthHackerDetailReportData : growthHackerDetailReportData,
         KpiQuestionList : KpiQuestionList,
@@ -384,6 +385,13 @@ const handleMiro = async () => {
       isLoggedIn,
       conversationId
     );
+
+    if (typeof miroUrl === 'string' && /^https?:\/\/.+\..+/.test(miroUrl)) {
+      window.open(miroUrl, '_blank');
+    } else {
+      console.error("유효하지 않은 URL입니다:", miroUrl);
+    }
+
   } catch (error) {
     console.error("Error loading Idea List:", error);
   } finally {
@@ -662,7 +670,7 @@ useEffect(() => {
             <button className="miro-button" disabled onClick={handleMiro}>
               <img src={images.IconDownloadMiro} alt="" />
               <div>
-                <strong>{isLoadingIdeaMiro ? "데이터 전송 중..." : "Miro에서 협업하기"}</strong>
+                <strong>{isLoadingIdeaMiro ? "잠시만 기다려 주세요..." : "Miro에서 협업하기"}</strong>
                 {/* <span>외부페이지 이동 · www.miro.com</span> */}
                 <span>준비 중</span>
               </div>
@@ -894,7 +902,7 @@ const DownloadButton = styled.div`
       color:${palette.gray500};
     }
   }
-
+    
   .miro-button {
     cursor: default;
   }
