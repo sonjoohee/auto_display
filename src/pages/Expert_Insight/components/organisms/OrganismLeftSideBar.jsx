@@ -91,6 +91,8 @@ import {
   BM_LEAN_ADS_REPORT_DATA,
   BM_BM_CUSTOM_REPORT_DATA,
   BM_LEAN_CUSTOM_REPORT_DATA,
+  NEW_ADD_CONTENT,
+  IS_ADDING_NOW,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -259,6 +261,9 @@ const OrganismLeftSideBar = () => {
   const [isChatChangePopupOpen, setIsChatChangePopupOpen] = useState(false);
   const [chatIdToChangeName, setChatIdToChangeName] = useState(null);
   const [newChatName, setNewChatName] = useState("");
+
+  const [newAddContent, setNewAddContent] = useAtom(NEW_ADD_CONTENT);
+  const [isAddingNow, setIsAddingNow] = useAtom(IS_ADDING_NOW);
 
   // useEffect(() => {
   //   setIsSection1Open(false);
@@ -519,10 +524,6 @@ useEffect(() => {
 
   // 인사이트 보관함용 EditBox 열기/닫기 함수
   const insightEditBoxToggle = (index, event) => {
-    if (isLoading) {
-      setIsExitPopupOpen(true);
-      return;
-    }
   
     setInsightEditToggleIndex((prevIndex) => (prevIndex === index ? null : index));
   
@@ -605,7 +606,6 @@ useEffect(() => {
 
   const handleConversationClick = async (conversationId) => {
     if (isLoading) {
-      setIsExitPopupOpen(true);
       return;
     }
 
@@ -730,6 +730,7 @@ useEffect(() => {
       setAdditionButtonState(0);
       setCustomerAdditionButtonState(0);
       setIsExpertInsightAccessible(true); // 접근 가능 상태로 설정
+      
       // 페이지를 대화가 이어지는 형태로 전환
       navigate(`/conversation/${conversationId}`);
     } catch (error) {
@@ -991,6 +992,10 @@ useEffect(() => {
     setBmLeanAdsReportData([]);
     setBmBmCustomReportData([]);
     setBmLeanCustomReportData([]);
+
+    setNewAddContent("");
+    setIsAddingNow(false);
+    setIsLoading(false);
   };
 
   const handleLogoClick = () => {
@@ -1082,6 +1087,10 @@ useEffect(() => {
     setBmLeanAdsReportData([]);
     setBmBmCustomReportData([]);
     setBmLeanCustomReportData([]);
+
+    setNewAddContent("");
+    setIsAddingNow(false);
+    setIsLoading(false);
   };
   return (
     <>

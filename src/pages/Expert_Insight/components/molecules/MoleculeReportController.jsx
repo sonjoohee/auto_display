@@ -79,7 +79,7 @@ import {
   BM_MODEL_SUGGESTION_REPORT_DATA,
   BM_QUESTION_LIST,
   IS_ADDING_NOW,
-  SET_NEW_ADD_CONTENT,
+  NEW_ADD_CONTENT,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -218,7 +218,7 @@ const MoleculeReportController = ({
   const [isEditingIdeaFeature, setIsEditingIdeaFeature] = useAtom(IS_EDITING_IDEA_FEATURE);
   const [isEditingIdeaCustomer, setIsEditingIdeaCustomer] = useAtom(IS_EDITING_IDEA_CUSTOMER);
   const [isAddingNow, setIsAddingNow] = useAtom(IS_ADDING_NOW);
-  const [newAddContent, setNewAddContent] = useAtom(SET_NEW_ADD_CONTENT);
+  const [newAddContent, setNewAddContent] = useAtom(NEW_ADD_CONTENT);
 
   const navigate = useNavigate();
 
