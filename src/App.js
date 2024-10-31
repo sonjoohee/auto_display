@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import './App.css';
 import GlobalStyles from "./assets/GlobalStyle";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { useAtom , } from 'jotai';
+import { useAtom } from 'jotai';
 import { isLoggedInAtom,USER_NAME, USER_EMAIL ,IS_SOCIAL_LOGGED_IN, EXPERT_DETAIL_DATA, IS_MOBILE } from './pages/AtomStates'; // 로그인 상태 아톰 임포트
 import axios from "axios";
 
@@ -48,6 +48,7 @@ function App() {
   const [, setExpertDetail] = useAtom(EXPERT_DETAIL_DATA);
       // 화면 크기를 체크하는 useEffect
   const [, setIsMobile] = useAtom(IS_MOBILE);
+
   useEffect(() => {
     const handleResize = () => {
       // 뷰포트 너비가 768px 이하일 경우 모바일로 간주
@@ -137,6 +138,18 @@ function App() {
       } catch (error) {
         // 서버가 응답하지 않거나 에러 발생 시 서버 다운 처리
         setIsServerDown(true);
+        
+        sessionStorage.removeItem("accessToken"); // 세션 스토리지에서 토큰 삭제
+        sessionStorage.removeItem("userName");
+        sessionStorage.removeItem("userEmail");
+        sessionStorage.removeItem("isSocialLogin");
+        localStorage.removeItem("userName");
+        localStorage.removeItem("userEmail");
+        setIsLoggedIn(false);
+        setUserName("");
+        setUserEmail("");
+
+        window.location.href = "/MeetAiExpert";
       }
     };
 
@@ -183,9 +196,9 @@ function App() {
 
             <Route path="/CompletedMail" element={<PageCompletedMail />}></Route>
 
-            <Route path="/BMExpert" element={<BMExpert />}></Route>
+            {/* <Route path="/BMExpert" element={<BMExpert />}></Route>
             <Route path="/PriceAnalysis" element={<PriceAnalysis />}></Route>
-            <Route path="/ExpertExample" element={<ExpertExample />}></Route>
+            <Route path="/ExpertExample" element={<ExpertExample />}></Route> */}
 
             <Route path="/PageAIPanelList" element={<PageAIPanelList />}></Route>
 
