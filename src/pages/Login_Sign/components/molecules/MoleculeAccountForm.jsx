@@ -8,7 +8,6 @@ import { isValidEmail } from "../atoms/AtomValidation";
 import axios from "axios";
 import {
   emailAtom,
-  passwordAtom,
   currentUserAtom,
   errorAtom,
   newPasswordAtom,
@@ -27,7 +26,7 @@ import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeAccountForm = ({ onOpenPopup  = () => {} }) => {  // onOpenPopup  함수 받기
   const [email, setEmail] = useAtom(emailAtom);
-  const [password, setPassword] = useAtom(passwordAtom);
+  const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useAtom(newPasswordAtom);
   const [rePassword, setRePassword] = useAtom(rePasswordAtom);
   const [error, setError] = useAtom(errorAtom);

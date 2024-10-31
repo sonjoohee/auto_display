@@ -82,6 +82,7 @@ import {
   IS_LOADING,
   NEW_ADD_CONTENT,
   IS_ADDING_NOW,
+  IS_LOGIN_POPUP_OPEN,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -213,7 +214,7 @@ const PageMeetAiExpert = () => {
   const [isPopupLogin, setIsPopupLogin] = useState(false); // 로그인 상태가 아닐 때 팝업을 띄우기 위한 상태
   const [isPopupInvalidBusiness, setIsPopupInvalidBusiness] = useState(false);
   const [isAccountPopupOpen, setAccountPopupOpen] = useState(false); // 계정설정 팝업
-  const [isLoginPopupOpen, setLoginPopupOpen] = useState(false); // 로그인 팝업 상태 관리
+  const [isLoginPopupOpen, setLoginPopupOpen] = useAtom(IS_LOGIN_POPUP_OPEN); // 로그인 팝업 상태 관리
   const [isComingSoon, setIsComingSoon] = useState(false);
 
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
