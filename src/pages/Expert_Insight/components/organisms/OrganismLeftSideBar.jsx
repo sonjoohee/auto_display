@@ -180,6 +180,7 @@ const OrganismLeftSideBar = () => {
   const [userEmail, setUserEmail] = useAtom(USER_EMAIL); // 아톰에서 유저 이메일 불러오기
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false); // 삭제 경고 팝업 상태
   const [isChatDeletePopupOpen, setChatIsDeletePopupOpen] = useState(false); // 삭제 경고 팝업 상태
+  const [isExitPopupOpen, setIsExitPopupOpen] = useState(false); // 나가기 경고 팝업 상태
 
   const [reportIdToDelete, setReportIdToDelete] = useState(null); // 삭제하려는 reportId 저장
   const [chatIdToDelete, setChatIdToDelete] = useState(null); // 삭제하려는 reportId 저장
@@ -272,6 +273,13 @@ const OrganismLeftSideBar = () => {
   const handleChangeChatNameButtonClick = (chatId) => {
     setChatIdToChangeName(chatId);
     setIsChatChangePopupOpen(true);
+  };
+
+  const handleExitChatConfirm = () => {
+    navigate("/MeetAiExpert");
+  };
+  const handleExitChatCancel = () => {
+    setIsExitPopupOpen(false);
   };
 
 const handleChangeInsightConfirm = async () => {
@@ -511,7 +519,10 @@ useEffect(() => {
 
   // 인사이트 보관함용 EditBox 열기/닫기 함수
   const insightEditBoxToggle = (index, event) => {
-    if (isLoading) return;
+    if (isLoading) {
+      setIsExitPopupOpen(true);
+      return;
+    }
   
     setInsightEditToggleIndex((prevIndex) => (prevIndex === index ? null : index));
   
@@ -593,7 +604,10 @@ useEffect(() => {
   }, [reportRefreshTrigger, isLoggedIn]);
 
   const handleConversationClick = async (conversationId) => {
-    if (isLoading) return;
+    if (isLoading) {
+      setIsExitPopupOpen(true);
+      return;
+    }
 
     try {
       const accessToken = sessionStorage.getItem("accessToken");
@@ -891,7 +905,10 @@ useEffect(() => {
   };
 
   const handleNewProjectClick = () => {
-    if (isLoading) return;
+    if (isLoading) {
+      setIsExitPopupOpen(true);
+      return;
+    }
 
     navigate("/MeetAiExpert");
     setConversation([]);
@@ -977,7 +994,10 @@ useEffect(() => {
   };
 
   const handleLogoClick = () => {
-    if (isLoading) return;
+    if (isLoading) {
+      setIsExitPopupOpen(true);
+      return;
+    }
 
     // navigate("/Landing");
     navigate("/MeetAiExpert");
@@ -1708,6 +1728,34 @@ useEffect(() => {
           </div>
         </div>
       </ChangeNamePopup>
+    )}
+    {isExitPopupOpen && (
+      <Popup Cancel onClick={handleExitChatCancel}>
+        <div>
+          <button
+            type="button"
+            className="closePopup"
+            onClick={handleExitChatCancel}
+          >
+            닫기
+          </button>
+          <span>
+            <img src={images.ExclamationMark} alt="" />
+          </span>
+          <p>
+            <strong>정말 나가시겠습니까?</strong>
+            <span>진행사항이 저장되지 않을 수 있습니다.</span>
+          </p>
+          <div className="btnWrap">
+            <button type="button" onClick={handleExitChatCancel}>
+              취소
+            </button>
+            <button type="button" onClick={handleExitChatConfirm}>
+              확인
+            </button>
+          </div>
+        </div>
+      </Popup>
     )}
     </>
   );
