@@ -345,4 +345,4 @@ export const IS_ADDING_NOW = atom({
   isAdding: false,
 });
 
-export const SET_NEW_ADD_CONTENT = atom("");
+export const NEW_ADD_CONTENT = atom("");

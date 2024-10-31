@@ -79,6 +79,9 @@ import {
   BM_LEAN_ADS_REPORT_DATA,
   BM_BM_CUSTOM_REPORT_DATA,
   BM_LEAN_CUSTOM_REPORT_DATA,
+  IS_LOADING,
+  NEW_ADD_CONTENT,
+  IS_ADDING_NOW,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -214,6 +217,7 @@ const PageMeetAiExpert = () => {
   const [isComingSoon, setIsComingSoon] = useState(false);
 
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
+  const [isLoading, setIsLoading] = useAtom(IS_LOADING);
 
   const [pocDetailReportData, setpocDetailReportData] = useAtom(
     POC_DETAIL_REPORT_DATA
@@ -222,6 +226,8 @@ const PageMeetAiExpert = () => {
   const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
   const [growthHackerDetailReportData, setGrowthHackerDetailReportData] = useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
   const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
+  const [newAddContent, setNewAddContent] = useAtom(NEW_ADD_CONTENT);
+  const [isAddingNow, setIsAddingNow] = useAtom(IS_ADDING_NOW);
 
   const closePopupRegex = () => {
     setInputBusinessInfo("");
@@ -265,6 +271,9 @@ const PageMeetAiExpert = () => {
   
 
     // Reset all states except inputBusinessInfo
+    setNewAddContent("");
+    setIsAddingNow(false);
+    setIsLoading(false);
     setConversation([]);
     setConversationId(null);
     setConversationStage(1);
