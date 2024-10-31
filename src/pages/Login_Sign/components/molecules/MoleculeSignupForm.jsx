@@ -92,7 +92,11 @@ const MoleculeSignupForm = () => {
         setStatus('inactive');
       } else {
         const result = await response.json();
-        setError(result.email || '회원가입 중 오류가 발생했습니다.');
+        if (result.email[0] === "user의 email은/는 이미 존재합니다.") {
+          setError("이미 사용 중인 이메일 주소입니다.");
+        } else {
+          setError(result.email || '회원가입 중 오류가 발생했습니다.');
+        }
       }
     } catch (error) {
       setError('서버와의 통신 중 오류가 발생했습니다.');

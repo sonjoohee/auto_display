@@ -31,9 +31,13 @@ const RequestResetPassword = () => {
         setIsPopupOpen(true); // 팝업 열기
       } else {
         const result = await response.json();
-        setMessage(
-          result.error || "비밀번호 재설정 요청 중 오류가 발생했습니다."
-        );
+        if(result.error === "User with this email does not exist.") {
+          setMessage("존재하지 않는 사용자입니다.");
+        } else {
+          setMessage(
+            result.error || "비밀번호 재설정 요청 중 오류가 발생했습니다."
+          );
+        }
       }
     } catch (error) {
       setMessage("서버와의 통신 중 오류가 발생했습니다.");
@@ -62,7 +66,11 @@ const RequestResetPassword = () => {
         alert("비밀번호 재설정 이메일이 재발송되었습니다.");
       } else {
         const result = await response.json();
-        alert(result.error || "이메일 재발송 중 오류가 발생했습니다.");
+        if(result.error === "User with this email does not exist.") {
+          setMessage("존재하지 않는 사용자입니다.");
+        } else {
+          setMessage(result.error || "이메일 재발송 중 오류가 발생했습니다.");
+        }
       }
     } catch (error) {
       console.error("이메일 재발송 요청 중 오류 발생:", error);
@@ -74,6 +82,7 @@ const RequestResetPassword = () => {
     setIsPopupOpen(false);       // 현재 팝업 닫기
     setIsLoginPopupOpen(false);  // 다른 팝업도 닫기
     window.location.href = "/MeetAiExpert";  // 메인 페이지로 이동
+    // setIsLoginPopupOpen(true);
   };
 
   return (

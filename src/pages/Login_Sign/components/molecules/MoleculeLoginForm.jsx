@@ -11,7 +11,6 @@ import {
   nameAtom,
   emailAtom,
   signupEmailAtom,
-  passwordAtom,
   signupPasswordAtom,
   confirmPasswordAtom,
   currentUserAtom,
@@ -22,6 +21,7 @@ import {
   loginSuccessAtom,
   USER_NAME,
   USER_EMAIL,
+  IS_LOGIN_POPUP_OPEN,
 } from "../../../../pages/AtomStates"; // 아톰 임포트
 import { Link } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
@@ -34,7 +34,7 @@ const MoleculeLoginForm = () => {
   const [name, setName] = useAtom(nameAtom);
   const [email, setEmail] = useAtom(emailAtom);
   const [, setSignupEmail] = useAtom(signupEmailAtom);
-  const [password, setPassword] = useAtom(passwordAtom);
+  const [password, setPassword] = useState("");
   const [, setSignupPassword] = useAtom(signupPasswordAtom);
   const [confirmPassword, setConfirmPassword] = useAtom(confirmPasswordAtom);
   const [error, setError] = useAtom(errorAtom);
@@ -45,6 +45,7 @@ const MoleculeLoginForm = () => {
   const [, setLoginSuccess] = useAtom(loginSuccessAtom);
   const [, setUserName] = useAtom(USER_NAME); // 유저 이름 아톰
   const [, setUserEmail] = useAtom(USER_EMAIL); // 유저 이메일 아톰
+  const [isLoginPopupOpen, setIsLoginPopupOpen] = useAtom(IS_LOGIN_POPUP_OPEN);
 
   useEffect(() => {
     setError("");
@@ -143,6 +144,7 @@ const MoleculeLoginForm = () => {
   const [isSignPopupOpen, setIsSignPopupOpen] = useState(false); // 회원가입 팝업 상태 관리
   const handleSignClick = () => {
     setIsSignPopupOpen(true); // 회원가입 팝업 열기
+    setIsLoginPopupOpen(false);
   };
   const closeSignPopup = () => {
     setIsSignPopupOpen(false); // 회원가입 팝업 닫기

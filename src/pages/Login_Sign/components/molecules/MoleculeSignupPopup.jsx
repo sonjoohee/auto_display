@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { signupEmailAtom } from "../../../AtomStates";
+import { signupEmailAtom, IS_LOGIN_POPUP_OPEN } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -11,6 +11,7 @@ import images from "../../../../assets/styles/Images";
 const MoleculeSignupPopup = ({ onClose, email }) => {
   const navigate = useNavigate();
   const [, setEmail] = useAtom(signupEmailAtom);
+  const [isLoginPopupOpen, setIsLoginPopupOpen] = useAtom(IS_LOGIN_POPUP_OPEN);
 
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
@@ -33,7 +34,11 @@ const MoleculeSignupPopup = ({ onClose, email }) => {
         alert("인증 이메일이 재발송되었습니다.");
       } else {
         const result = await response.json();
-        alert(result.error || "이메일 재발송 중 오류가 발생했습니다.");
+        if(result.error === "User with this email already exists.") {
+          alert("이미 사용 중인 이메일 주소입니다.");
+        } else {
+          alert(result.error || "이메일 재발송 중 오류가 발생했습니다.");
+        }
       }
     } catch (error) {
       console.error("이메일 재발송 요청 중 오류 발생:", error);
@@ -44,7 +49,7 @@ const MoleculeSignupPopup = ({ onClose, email }) => {
   const handleGoToLogin = () => {
     navigate("/MeetAiExpert");
     setEmail(""); // 이메일 상태를 초기화합니다.
-    // console.log("로그인 페이지로 이동");
+    // setIsLoginPopupOpen(true);
   };
 
   return (
