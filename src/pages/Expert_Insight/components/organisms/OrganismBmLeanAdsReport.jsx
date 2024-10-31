@@ -325,7 +325,14 @@ const OrganismBmLeanAdsReport = () => {
   // 전체 예시를 하나의 배열로 모으기
   const allExamples = bmLeanAdsReportData.reduce((acc, section) => {
     section.keywords.forEach((keywordItem) => {
-      if (keywordItem.examples) acc.push(...keywordItem.examples);
+      if (keywordItem.examples) {
+        // 예시 문자열에서 ':' 이후의 텍스트만 추출하여 추가
+        const extractedExamples = keywordItem.examples.map(example => {
+          const parts = example.split(':');
+          return parts.length > 1 ? parts[1].trim() : example;
+        });
+        acc.push(...extractedExamples);
+      }
     });
     return acc;
   }, []);
