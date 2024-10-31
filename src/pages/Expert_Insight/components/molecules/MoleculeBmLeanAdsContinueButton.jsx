@@ -149,7 +149,7 @@ const MoleculeBmLeanAdsContinueButton = () => {
           {
             type: "system",
             message:
-              "입력해주신 비즈니스 목표에 따른 캔버스의 정교화 방향성을 4가지 도출하였습니다.\n원하시는 방향을 선택하시고, 어떤 요소들이 변화되었는지 확인해보세요",
+              "입력해주신 비즈니스 목표에 따른 캔버스의 정교화 방향성을 도출하였습니다.\n원하시는 방향을 선택하시고, 어떤 요소들이 변화되었는지 확인해보세요",
             expertIndex: selectedExpertIndex,
           },
           { type: `bmLeanAdsReport` }
