@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import './App.css';
 import GlobalStyles from "./assets/GlobalStyle";
-import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useAtom , } from 'jotai';
 import { isLoggedInAtom,USER_NAME, USER_EMAIL ,IS_SOCIAL_LOGGED_IN, EXPERT_DETAIL_DATA, IS_MOBILE } from './pages/AtomStates'; // 로그인 상태 아톰 임포트
@@ -164,8 +163,7 @@ function App() {
         </div>
       )}
 
-      {/* PayPalScriptProvider로 PayPal SDK를 감싸기 */}
-      <PayPalScriptProvider options={{ "client-id": "AZ8YnURNB0jk4DtQea_FPZ7Zq-MfLHCU05aWjD51tpCJKHEGhoW6VwBvWGFqo-iMRpf0Qe05DVupI6Nb" }}>
+
         <BrowserRouter>
           <Routes>
             <Route path="/login" element={<PageLogin />} />
@@ -212,7 +210,6 @@ function App() {
             <Route path="/conversation/:conversationId" element={<PageExpertInsight />} />
           </Routes>
         </BrowserRouter>
-      </PayPalScriptProvider>
     </div>
   );
 }
