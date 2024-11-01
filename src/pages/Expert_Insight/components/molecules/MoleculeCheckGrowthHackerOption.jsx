@@ -53,10 +53,13 @@ import {
   BM_QUESTION_LIST,
 } from "../../../AtomStates";
 
-import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
+import { useSaveConversation } from "../atoms/AtomSaveConversation";
+
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeCheckGrowthHackerOption = () => {
+  const { saveConversation } = useSaveConversation();
+
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
   const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
   const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
@@ -228,58 +231,13 @@ const MoleculeCheckGrowthHackerOption = () => {
     );
     setConversation(updatedConversation);
 
-    await saveConversationToIndexedDB(
-      {
-        id: conversationId,
-        inputBusinessInfo,
-        analysisReportData: {
-          title: titleOfBusinessInfo,
-          mainFeatures: mainFeaturesOfBusinessInformation,
-          mainCharacter: mainCharacteristicOfBusinessInformation,
-          mainCustomer: businessInformationTargetCustomer,
-        },
-        strategyReportData,
-        conversation: updatedConversation,
-        conversationStage: 3,
-        selectedAdditionalKeywords: selectedAdditionalKeyword,
-        selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
-        additionalReportData,
-        customerAdditionalReportData,
-        timestamp: Date.now(),
-        expert_index: selectedExpertIndex,
-        KpiQuestionList: [selectedOption1, selectedOption2, selectedOption3, selectedOption4, selectedOption5, selectedOption6],
-        selectedPocTarget: selectedPocTarget,
-        ideaFeatureData: ideaFeatureData,
-        ideaRequirementData: ideaRequirementData,
-        ideaList: ideaList,
-        ideaGroup: ideaGroup,
-        ideaPriority: ideaPriority,
-        buttonState: buttonState,
-        priceScrapData : priceScrapData,
-        priceReportData : priceReportData,
-        priceProduct : priceProduct,
-        priceSelectedProductSegmentation : priceSelectedProductSegmentation,
-        priceProductSegmentation : priceProductSegmentation,
-        caseHashTag : caseHashTag,
-        caseReportData : caseReportData,
-        bmOrLean : bmOrLean,
-        bmQuestionList : bmQuestionList,
-        bmModelSuggestionReportData : bmModelSuggestionReportData,
-        bmBmAutoReportData : bmBmAutoReportData,
-        bmLeanAutoReportData : bmLeanAutoReportData,
-        bmBmAdsReportData : bmBmAdsReportData,
-        bmSelectedProblemOptions : bmSelectedProblemOptions,
-        bmLeanAdsReportData : bmLeanAdsReportData,
-        bmBmCustomReportData : bmBmCustomReportData,
-        bmLeanCustomReportData : bmLeanCustomReportData,
-        surveyGuidelineReportData : surveyGuidelineReportData,
-        surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
-        surveyGoalSuggestionList: surveyGoalSuggestionList,
-        surveyGoalFixed: surveyGoalFixed,
-        surveyQuestionList: surveyQuestionList,
-      },
-      isLoggedIn,
-      conversationId
+    await saveConversation(
+      { changingConversation: 
+        { conversation: updatedConversation, 
+          KpiQuestionList: [selectedOption1, selectedOption2, selectedOption3, selectedOption4, selectedOption5, selectedOption6],
+          conversationStage: 3,
+        }
+      }
     );
   };
 

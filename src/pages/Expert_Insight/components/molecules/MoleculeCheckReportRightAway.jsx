@@ -25,11 +25,10 @@ import {
 
 import { palette } from "../../../../assets/styles/Palette";
 
-import {
-  saveConversationToIndexedDB,
-} from "../../../../utils/indexedDB";
+import { useSaveConversation } from "../atoms/AtomSaveConversation";
 
 const MoleculeCheckReportRightAway = () => {
+  const { saveConversation } = useSaveConversation();
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
@@ -128,21 +127,8 @@ const MoleculeCheckReportRightAway = () => {
     setExpertButtonState(1); // 버튼 클릭 시 EXPERT_BUTTON_STATE를 1로 설정
     setApproachPath(3);
 
-    await saveConversationToIndexedDB(
-      {
-        id: conversationId,
-        inputBusinessInfo: inputBusinessInfo,
-        analysisReportData: analysisReportData,
-        conversation: updatedConversation,
-        conversationStage: 3,
-        selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
-        customerAdditionalReportData: customerAdditionalReportData,
-        timestamp: Date.now(),
-        expert_index: selectedExpertIndex,
-        buttonState : buttonState,
-      },
-      isLoggedIn,
-      conversationId
+    await saveConversation(
+      { changingConversation: { conversation: updatedConversation, conversationStage: 3 } }
     );
   };
   return (

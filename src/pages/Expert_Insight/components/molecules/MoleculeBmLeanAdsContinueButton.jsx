@@ -56,17 +56,15 @@ import {
   BM_LEAN_CUSTOM_REPORT_DATA,
   BM_MODEL_SUGGESTION_REPORT_DATA,
   BM_QUESTION_LIST,
-} from "../../../AtomStates";
+} from "../../../AtomStates"; 
 
-import {
-  saveConversationToIndexedDB,
-} from "../../../../utils/indexedDB";
-
-import axios from "axios";
+import { useSaveConversation } from "../atoms/AtomSaveConversation";
 
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeBmLeanAdsContinueButton = () => { 
+  const { saveConversation } = useSaveConversation();
+
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
   const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
   const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
@@ -158,58 +156,10 @@ const MoleculeBmLeanAdsContinueButton = () => {
         setConversationStage(3);
         setConversation(updatedConversation);
         setApproachPath(3);
-      await saveConversationToIndexedDB(
-        {
-          id: conversationId,
-          inputBusinessInfo: inputBusinessInfo,
-          analysisReportData: analysisReportData,
-          strategyReportData: strategyReportData,
-          conversation: updatedConversation,
-          conversationStage: 3,
-          selectedAdditionalKeywords: selectedAdditionalKeyword,
-          selectedCustomerAdditionalKeyword:
-          selectedCustomerAdditionalKeyword,
-          additionalReportData: additionalReportData,
-          customerAdditionalReportData: customerAdditionalReportData,
-          timestamp: Date.now(),
-          expert_index: selectedExpertIndex,
-          pocPersonaList: pocPersonaList,
-          selectedPocTarget: selectedPocTarget,
-          pocDetailReportData : pocDetailReportData,
-          ideaFeatureData : ideaFeatureData,
-          ideaRequirementData : ideaRequirementData,
-          ideaList : ideaList,
-          ideaGroup : ideaGroup,
-          ideaMiro : ideaMiro,
-          growthHackerReportData : growthHackerReportData,
-          KpiQuestionList : KpiQuestionList,
-          priceScrapData : priceScrapData,
-          priceReportData : priceReportData,
-          priceProduct : priceProduct,
-          priceSelectedProductSegmentation : priceSelectedProductSegmentation,
-          priceProductSegmentation : priceProductSegmentation,
-          caseHashTag : caseHashTag,
-          caseReportData : caseReportData,
-          buttonState : buttonState,
-          surveyGuidelineReportData : surveyGuidelineReportData,
-          surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
-          surveyGoalSuggestionList: surveyGoalSuggestionList,
-          surveyGoalFixed: surveyGoalFixed,
-          surveyQuestionList: surveyQuestionList,
-          bmOrLean : bmOrLean,
-          bmQuestionList : bmQuestionList,
-          bmModelSuggestionReportData : bmModelSuggestionReportData,
-          bmBmAutoReportData : bmBmAutoReportData,
-          bmLeanAutoReportData : bmLeanAutoReportData,
-          bmBmAdsReportData : bmBmAdsReportData,
-          bmSelectedProblemOptions : bmSelectedProblemOptions,
-          bmLeanAdsReportData : bmLeanAdsReportData,
-          bmBmCustomReportData : bmBmCustomReportData,
-          bmLeanCustomReportData : bmLeanCustomReportData,
-        },
-        isLoggedIn,
-        conversationId
-      );
+
+        saveConversation(
+          { changingConversation: { conversation: updatedConversation, conversationStage: 3 } }
+        );
     } else {
       updatedConversation.push(
         {
@@ -226,60 +176,16 @@ const MoleculeBmLeanAdsContinueButton = () => {
       });
       setConversation(updatedConversation);
 
-      await saveConversationToIndexedDB(
-        {
-          id: conversationId,
-          inputBusinessInfo: inputBusinessInfo,
-          analysisReportData: analysisReportData,
-          strategyReportData: strategyReportData,
-          conversation: updatedConversation,
-          conversationStage: 3,
-          selectedAdditionalKeywords: selectedAdditionalKeyword,
-          selectedCustomerAdditionalKeyword:
-          selectedCustomerAdditionalKeyword,
-          additionalReportData: additionalReportData,
-          customerAdditionalReportData: customerAdditionalReportData,
-          timestamp: Date.now(),
-          expert_index: selectedExpertIndex,
-          pocPersonaList: pocPersonaList,
-          selectedPocTarget: selectedPocTarget,
-          pocDetailReportData : pocDetailReportData,
-          ideaFeatureData : ideaFeatureData,
-          ideaRequirementData : ideaRequirementData,
-          ideaList : ideaList,
-          ideaGroup : ideaGroup,
-          ideaMiro : ideaMiro,
-          growthHackerReportData : growthHackerReportData,
-          KpiQuestionList : KpiQuestionList,
-          priceScrapData : priceScrapData,
-          priceReportData : priceReportData,
-          priceProduct : priceProduct,
-          priceSelectedProductSegmentation : priceSelectedProductSegmentation,
-          priceProductSegmentation : priceProductSegmentation,
-          caseHashTag : caseHashTag,
-          caseReportData : caseReportData,
-          buttonState : {
-            ...buttonState,
-            bmEnough: 1,
-          },
-          surveyGuidelineReportData : surveyGuidelineReportData,
-          surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
-          surveyGoalSuggestionList: surveyGoalSuggestionList,
-          surveyGoalFixed: surveyGoalFixed,
-          surveyQuestionList: surveyQuestionList,
-          bmOrLean : bmOrLean,
-          bmQuestionList : bmQuestionList,
-          bmModelSuggestionReportData : bmModelSuggestionReportData,
-          bmBmAutoReportData : bmBmAutoReportData,
-          bmLeanAutoReportData : bmLeanAutoReportData,
-          bmBmAdsReportData : bmBmAdsReportData,
-          bmSelectedProblemOptions : bmSelectedProblemOptions,
-          bmLeanAdsReportData : bmLeanAdsReportData,
-          bmBmCustomReportData : bmBmCustomReportData,
-          bmLeanCustomReportData : bmLeanCustomReportData,
-        },
-        isLoggedIn,
-        conversationId
+      saveConversation(
+        { changingConversation: 
+          { conversation: updatedConversation, 
+            buttonState : {
+              ...buttonState,
+              bmEnough: 1,
+            },
+            conversationStage: 3,
+          }
+        }
       );
     }
 
