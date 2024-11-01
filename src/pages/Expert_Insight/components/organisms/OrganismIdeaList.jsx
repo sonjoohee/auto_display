@@ -308,29 +308,53 @@ const OrganismIdeaList = () => {
 const handleMiro = async () => {
   try {
     setIsLoadingIdeaMiro(true);
-    
-    const data = {
-      expert_id: "5",
-      business_info: titleOfBusinessInfo,
-      business_analysis_data: {
-        명칭: titleOfBusinessInfo,
-        주요_목적_및_특징: mainFeaturesOfBusinessInformation,
-        주요기능: mainCharacteristicOfBusinessInformation,
-        목표고객: businessInformationTargetCustomer,
-      },
-      dev_report: ideaList,
-      dev_cluster_report: ideaGroup,
+
+    let newIdeaList = [];
+    let req, feat;
+    let miroUrl;
+
+    for (let i = 0; i < ideaList.length; i++) {
+      req = ideaList[i].requirement;
+
+      for (let j = 0; j < ideaList[i].report.ideas.length; j++) {
+        feat = ideaList[i].report.ideas[j].feature;
+
+        for (let k = 0; k < ideaList[i].report.ideas[j].ideas.length; k++) {
+          newIdeaList.push({
+            requirement: req, 
+            feature: feat, 
+            ideas: ideaList[i].report.ideas[j].ideas[k].name
+          });
+        }
+      }
+    }
+
+    const chunkArray = (array, chunkSize) => {
+      const chunks = [];
+      for (let i = 0; i < array.length; i += chunkSize) {
+        chunks.push(array.slice(i, i + chunkSize));
+      }
+      return chunks;
     };
 
-    const response = await axios.post(
-      "https://wishresearch.kr/panels/idea_miro",
-      data,
-      axiosConfig
-    );
+    const ideaChunks = chunkArray(newIdeaList, 15);
 
-    setIdeaMiro(response.data);
-    const miroUrl = response.data;
-    
+    for (const chunk of ideaChunks) {
+      const data = {
+        expert_id: "5",
+        dev_report: chunk,
+      };
+
+      const response = await axios.post(
+        "https://wishresearch.kr/panels/idea_miro",
+        data,
+        axiosConfig
+      );
+
+      setIdeaMiro(response.data);
+      miroUrl = response.data;
+    }
+
     await saveConversationToIndexedDB(
       {
         id: conversationId,
