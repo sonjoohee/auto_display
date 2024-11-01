@@ -84,10 +84,7 @@ import {
 
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
-import {
-  saveConversationToIndexedDB,
-  getConversationByIdFromIndexedDB,
-} from "../../../../utils/indexedDB";
+import { useSaveConversation } from "../atoms/AtomSaveConversation";
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
 
 const MoleculeReportController = ({
@@ -98,6 +95,7 @@ const MoleculeReportController = ({
   report,
   additionalReportCount, // 추가 보고서 복사기능을 위한 인덱스
 }) => {
+  const { saveConversation } = useSaveConversation();
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
   const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
   const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
@@ -305,59 +303,8 @@ const MoleculeReportController = ({
         setEditedIdeaCustomerTitle("");
       }
 
-      await saveConversationToIndexedDB(
-        {
-          id: conversationId,
-          inputBusinessInfo: inputBusinessInfo,
-          analysisReportData: analysisReportData,
-          strategyReportData: strategyReportData,
-          conversation: conversation,
-          conversationStage: conversationStage,
-          selectedAdditionalKeywords: selectedAdditionalKeyword,
-          selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
-          additionalReportData: additionalReportData,
-          customerAdditionalReportData: customerAdditionalReportData,
-          timestamp: Date.now(),
-          expert_index: selectedExpertIndex,
-          selectedPocOptions: selectedPocOptions,
-          pocPersonaList: pocPersonaList,
-          selectedPocTarget: selectedPocTarget,
-          recommendedTargetData: recommendedTargetData,
-          pocDetailReportData : pocDetailReportData,
-          ideaFeatureData : ideaFeatureData,
-          ideaRequirementData : ideaRequirementData,
-          ideaList : ideaList,
-          ideaGroup : ideaGroup,
-          ideaPriority : ideaPriority,
-          buttonState : buttonState,
-          growthHackerReportData : growthHackerReportData,
-          growthHackerDetailReportData : growthHackerDetailReportData,
-          KpiQuestionList : KpiQuestionList,
-          priceScrapData : priceScrapData,
-          priceReportData : priceReportData,
-          priceProduct : priceProduct,
-          priceSelectedProductSegmentation : priceSelectedProductSegmentation,
-          priceProductSegmentation : priceProductSegmentation,
-          caseHashTag : caseHashTag,
-          caseReportData : caseReportData,
-          bmOrLean : bmOrLean,
-          bmQuestionList : bmQuestionList,
-          bmModelSuggestionReportData : bmModelSuggestionReportData,
-          bmBmAutoReportData : bmBmAutoReportData,
-          bmLeanAutoReportData : bmLeanAutoReportData,
-          bmBmAdsReportData : bmBmAdsReportData,
-          bmSelectedProblemOptions : bmSelectedProblemOptions,
-          bmLeanAdsReportData : bmLeanAdsReportData,
-          bmBmCustomReportData : bmBmCustomReportData,
-          bmLeanCustomReportData : bmLeanCustomReportData,
-          surveyGuidelineReportData : surveyGuidelineReportData,
-          surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
-          surveyGoalSuggestionList: surveyGoalSuggestionList,
-          surveyGoalFixed: surveyGoalFixed,
-          surveyQuestionList: surveyQuestionList,
-        },
-        isLoggedIn,
-        conversationId
+      await saveConversation(
+        { changingConversation: {} }
       );
     } 
     else {
@@ -370,24 +317,9 @@ const MoleculeReportController = ({
         mainCharacteristicOfBusinessInformation
       );
       setTempBusinessInformationTargetCustomer(businessInformationTargetCustomer);
-  
-      await saveConversationToIndexedDB(
-        {
-          id: conversationId,
-          conversation: conversation,
-          analysisReportData,
-          inputBusinessInfo,
-          conversationStage: 2,
-          timestamp: Date.now(),
-          expert_index: selectedExpertIndex,
-          selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
-          customerAdditionalReportData: customerAdditionalReportData,
-          selectedPocOptions: selectedPocOptions,
-          selectedPocTarget: selectedPocTarget,
-          buttonState : buttonState,
-        },
-        isLoggedIn,
-        conversationId
+      
+      await saveConversation(
+        { changingConversation: { conversationStage: 2 } }
       );
     }
   };
@@ -451,46 +383,6 @@ const MoleculeReportController = ({
       );
 
       if (response.status === 200) {
-        // // 성공적으로 저장된 경우 savedReports 아톰 업데이트
-        // setSavedReports((prevReports) => [
-        //   ...prevReports,
-        //   {
-        //     title: business_info,
-        //     date: new Date().toLocaleDateString(),
-        //     content: reportData,
-        //     reportIndex: reportIndex, // reportIndex를 추가하여 저장
-        //   },
-        // ]);
-
-        // // 기존 대화 내역에 리포트 데이터 추가
-        // const existingConversation = await getConversationByIdFromIndexedDB(
-        //   conversationId,
-        //   isLoggedIn
-        // );
-
-        // const updatedConversation = {
-        //   ...existingConversation,
-        //   analysisReportData:
-        //     reportIndex === 0
-        //       ? reportData
-        //       : existingConversation.analysisReportData,
-        //   strategyReportData:
-        //     reportIndex === 1
-        //       ? reportData
-        //       : existingConversation.strategyReportData,
-        //   additionalReportData:
-        //     reportIndex === 2
-        //       ? reportData
-        //       : existingConversation.additionalReportData,
-        //   timestamp: Date.now(),
-        //   expert_index: selectedExpertIndex,
-        // };
-
-        // await saveConversationToIndexedDB(
-        //   updatedConversation,
-        //   isLoggedIn,
-        //   conversationId
-        // );
         setReportRefreshTrigger((prev) => !prev); // 트리거 상태를 반전시켜 OrganismLeftSideBar가 새로고침되도록 설정
       } else {
         console.error("API 응답 에러", response.status);
@@ -753,34 +645,6 @@ ${mainCharacteristicOfBusinessInformation
         console.error("복사 실패", error);
       });
   };
-  // const resetConversationState = () => {
-  //   setTitleOfBusinessInfo([]);
-  //   setMainFeaturesOfBusinessInformation([]);
-  //   setMainCharacteristicOfBusinessInformation([]);
-  //   setBusinessInformationTargetCustomer([]);
-  //   setConversation([]);
-  //   setConversationStage(1);
-  //   setInputBusinessInfo("");
-
-  //   saveConversationToIndexedDB(
-  //     {
-  //       id: conversationId,
-  //       conversation: [],
-  //       conversationStage: 1,
-  //       inputBusinessInfo: "",
-  //       analysisReportData: {
-  //         title: [],
-  //         mainFeatures: [],
-  //         mainCharacter: [],
-  //         mainCustomer: [],
-  //       },
-  //       timestamp: Date.now(),
-  //       expert_index: selectedExpertIndex,
-  //     },
-  //     isLoggedIn,
-  //     conversationId
-  //   );
-  // };
 
   const axiosConfig = {
     timeout: 100000, // 100초
@@ -879,24 +743,10 @@ ${mainCharacteristicOfBusinessInformation
         : [],
     };
 
-    await saveConversationToIndexedDB(
-      {
-        id: conversationId,
-        conversation: conversation,
-        analysisReportData,
-        inputBusinessInfo,
-        conversationStage: 2,
-        timestamp: Date.now(),
-        expert_index: selectedExpertIndex,
-        selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
-        customerAdditionalReportData: customerAdditionalReportData,
-        selectedPocOptions: selectedPocOptions,
-        selectedPocTarget: selectedPocTarget,
-        buttonState : buttonState,
-      },
-      isLoggedIn,
-      conversationId
+    await saveConversation(
+      { changingConversation: { conversationStage: 2 } }
     );
+
     setChatRefreshTrigger((prev) => !prev);
     // setReportRefreshTrigger((prev) => !prev);
     setIsLoadingAnalysis(false);

@@ -46,10 +46,11 @@ import {
   BM_QUESTION_LIST,
 } from "../../../AtomStates";
 
-import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
+import { useSaveConversation } from "../atoms/AtomSaveConversation";
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeCheckSurveyOption = () => {
+  const { saveConversation } = useSaveConversation();
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
   const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
   const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
@@ -193,51 +194,13 @@ const MoleculeCheckSurveyOption = () => {
     );
     setConversation(updatedConversation);
 
-    await saveConversationToIndexedDB(
-      {
-        id: conversationId,
-        inputBusinessInfo,
-        analysisReportData: {
-          title: titleOfBusinessInfo,
-          mainFeatures: mainFeaturesOfBusinessInformation,
-          mainCharacter: mainCharacteristicOfBusinessInformation,
-          mainCustomer: businessInformationTargetCustomer,
-        },
-        strategyReportData,
-        conversation: updatedConversation,
-        conversationStage: 3,
-        selectedAdditionalKeywords: selectedAdditionalKeyword,
-        selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
-        additionalReportData,
-        customerAdditionalReportData,
-        timestamp: Date.now(),
-        expert_index: selectedExpertIndex,
-        KpiQuestionList : KpiQuestionList,
-        surveyGoalSuggestionList: surveyGoalSuggestionList,
-        surveyGoalFixed: surveyGoalFixed,
-        surveyQuestionList: [selectedOption1, selectedOption2, selectedOption3, selectedOption4],
-        selectedPocTarget: selectedPocTarget,
-        ideaFeatureData: ideaFeatureData,
-        ideaRequirementData: ideaRequirementData,
-        ideaList: ideaList,
-        ideaGroup: ideaGroup,
-        ideaPriority: ideaPriority,
-        buttonState: buttonState,
-        caseHashTag : caseHashTag,
-        caseReportData : caseReportData,
-        bmOrLean : bmOrLean,
-        bmQuestionList : bmQuestionList,
-        bmModelSuggestionReportData : bmModelSuggestionReportData,
-        bmBmAutoReportData : bmBmAutoReportData,
-        bmLeanAutoReportData : bmLeanAutoReportData,
-        bmBmAdsReportData : bmBmAdsReportData,
-        bmSelectedProblemOptions : bmSelectedProblemOptions,
-        bmLeanAdsReportData : bmLeanAdsReportData,
-        bmBmCustomReportData : bmBmCustomReportData,
-        bmLeanCustomReportData : bmLeanCustomReportData,
-      },
-      isLoggedIn,
-      conversationId
+    await saveConversation(
+      { changingConversation: 
+        { conversation: updatedConversation, 
+          conversationStage: 3,
+          surveyQuestionList: [selectedOption1, selectedOption2, selectedOption3, selectedOption4],
+        } 
+      }
     );
   };
 

@@ -56,15 +56,15 @@ import {
   IS_EDITING_NOW,
 } from "../../../AtomStates";
 
-import {
-  saveConversationToIndexedDB,
-} from "../../../../utils/indexedDB";
+import { useSaveConversation } from "../atoms/AtomSaveConversation";
 
 import axios from "axios";
 
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeCaseStartButton = () => {
+  const { saveConversation } = useSaveConversation();
+
   const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
   const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
@@ -163,58 +163,16 @@ const MoleculeCaseStartButton = () => {
       caseStart : 1,
     });
 
-    await saveConversationToIndexedDB(
-      {
-        id: conversationId,
-        inputBusinessInfo: inputBusinessInfo,
-        analysisReportData: analysisReportData,
-        strategyReportData: strategyReportData,
-        conversation: updatedConversation,
-        conversationStage: 3,
-        selectedAdditionalKeywords: selectedAdditionalKeyword,
-        selectedCustomerAdditionalKeyword:
-        selectedCustomerAdditionalKeyword,
-        additionalReportData: additionalReportData,
-        customerAdditionalReportData: customerAdditionalReportData,
-        timestamp: Date.now(),
-        expert_index: selectedExpertIndex,
-        pocPersonaList: pocPersonaList,
-        selectedPocTarget: selectedPocTarget,
-        pocDetailReportData : pocDetailReportData,
-        ideaFeatureData : ideaFeatureData,
-        ideaRequirementData : ideaRequirementData,
-        ideaList : ideaList,
-        ideaGroup : ideaGroup,
-        buttonState : {
-          ...buttonState,
-          caseStart : 1,
-        },
-        ideaMiro : ideaMiro,
-        growthHackerReportData : growthHackerReportData,
-        KpiQuestionList : KpiQuestionList,
-        priceScrapData : priceScrapData,
-        priceReportData : priceReportData,
-        priceProduct : priceProduct,
-        priceSelectedProductSegmentation : priceSelectedProductSegmentation,
-        priceProductSegmentation : priceProductSegmentation,
-        bmOrLean : bmOrLean,
-        bmQuestionList : bmQuestionList,
-        bmModelSuggestionReportData : bmModelSuggestionReportData,
-        bmBmAutoReportData : bmBmAutoReportData,
-        bmLeanAutoReportData : bmLeanAutoReportData,
-        bmBmAdsReportData : bmBmAdsReportData,
-        bmSelectedProblemOptions : bmSelectedProblemOptions,
-        bmLeanAdsReportData : bmLeanAdsReportData,
-        bmBmCustomReportData : bmBmCustomReportData,
-        bmLeanCustomReportData : bmLeanCustomReportData,
-        surveyGuidelineReportData : surveyGuidelineReportData,
-        surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
-        surveyGoalSuggestionList: surveyGoalSuggestionList,
-        surveyGoalFixed: surveyGoalFixed,
-        surveyQuestionList: surveyQuestionList,
-      },
-      isLoggedIn,
-      conversationId
+    await saveConversation(
+      { changingConversation: 
+        { conversation: updatedConversation, 
+          buttonState : {
+            ...buttonState,
+            caseStart : 1,
+          },
+          conversationStage: 3,
+        }
+      }
     );
 
     const data = {
@@ -265,59 +223,17 @@ const MoleculeCaseStartButton = () => {
     const caseRecommandList = response.data.case_recommand_list;
     setCaseHashTag(caseRecommandList);
 
-    await saveConversationToIndexedDB(
-      {
-        id: conversationId,
-        inputBusinessInfo: inputBusinessInfo,
-        analysisReportData: analysisReportData,
-        strategyReportData: strategyReportData,
-        conversation: updatedConversation,
-        conversationStage: 3,
-        selectedAdditionalKeywords: selectedAdditionalKeyword,
-        selectedCustomerAdditionalKeyword:
-        selectedCustomerAdditionalKeyword,
-        additionalReportData: additionalReportData,
-        customerAdditionalReportData: customerAdditionalReportData,
-        timestamp: Date.now(),
-        expert_index: selectedExpertIndex,
-        pocPersonaList: pocPersonaList,
-        selectedPocTarget: selectedPocTarget,
-        pocDetailReportData : pocDetailReportData,
-        ideaFeatureData : ideaFeatureData,
-        ideaRequirementData : ideaRequirementData,
-        ideaList : ideaList,
-        ideaGroup : ideaGroup,
-        buttonState : {
-          ...buttonState,
-          caseStart : 1,
-        },
-        ideaMiro : ideaMiro,
-        growthHackerReportData : growthHackerReportData,
-        KpiQuestionList : KpiQuestionList,
-        priceScrapData : priceScrapData,
-        priceReportData : priceReportData,
-        priceProduct : priceProduct,
-        priceSelectedProductSegmentation : priceSelectedProductSegmentation,
-        priceProductSegmentation : priceProductSegmentation,
-        caseHashTag : caseRecommandList,
-        bmOrLean : bmOrLean,
-        bmQuestionList : bmQuestionList,
-        bmModelSuggestionReportData : bmModelSuggestionReportData,
-        bmBmAutoReportData : bmBmAutoReportData,
-        bmLeanAutoReportData : bmLeanAutoReportData,
-        bmBmAdsReportData : bmBmAdsReportData,
-        bmSelectedProblemOptions : bmSelectedProblemOptions,
-        bmLeanAdsReportData : bmLeanAdsReportData,
-        bmBmCustomReportData : bmBmCustomReportData,
-        bmLeanCustomReportData : bmLeanCustomReportData,
-        surveyGuidelineReportData : surveyGuidelineReportData,
-        surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
-        surveyGoalSuggestionList: surveyGoalSuggestionList,
-        surveyGoalFixed: surveyGoalFixed,
-        surveyQuestionList: surveyQuestionList,
-      },
-      isLoggedIn,
-      conversationId
+    await saveConversation(
+      { changingConversation: 
+        { conversation: updatedConversation, 
+          caseHashTag : caseRecommandList,
+          buttonState : {
+            ...buttonState,
+            caseStart : 1,
+          },
+          conversationStage: 3,
+        }
+      }
     );
   };
   return (
