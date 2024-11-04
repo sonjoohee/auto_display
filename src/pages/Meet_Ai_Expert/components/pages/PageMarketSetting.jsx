@@ -6,22 +6,46 @@ import styled from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import Landingimages from "../../../../assets/styles/Landingimages"
-import { INPUT_BUSINESS_INFO } from '../../../AtomStates';
+import { 
+  INPUT_BUSINESS_INFO, 
+  ANALYSIS_BUTTON_STATE, 
+  CONVERSATION_ID,
+  nameAtom,
+  emailAtom,
+  signupEmailAtom,
+  signupPasswordAtom,
+  confirmPasswordAtom,
+  errorAtom
+} from '../../../AtomStates';
+import OrganismBizAnalysisSection from "../../../Expert_Insight/components/organisms/OrganismBizAnalysisSection";
+import MoleculeSignPopup from "../../../Login_Sign/components/molecules/MoleculeSignPopup";
+import { createChatOnServer } from "../../../../utils/indexedDB";
 
 const PageMarketSetting = () => {
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
-  const navigate = useNavigate();
+  const [analysisButtonState, setAnalysisButtonState] = useAtom(ANALYSIS_BUTTON_STATE);
+  const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
+  const [name, setName] = useAtom(nameAtom);
+  const [email, setEmail] = useAtom(emailAtom);
+  const [, setSignupEmail] = useAtom(signupEmailAtom);
+  const [password, setPassword] = useState("");
+  const [, setSignupPassword] = useAtom(signupPasswordAtom);
+  const [confirmPassword, setConfirmPassword] = useAtom(confirmPasswordAtom);
+  const [error, setError] = useAtom(errorAtom);
+  const [isSignPopupOpen, setIsSignPopupOpen] = useState(false);
 
-  const handleLogoClick = () => {
-    navigate('/');
+
+  const handleLogoClick = async () => {
+    const newConversationId = await createChatOnServer();
+    setConversationId(newConversationId); // 생성된 대화 ID 설정
   };
   const handleTextChange = (e) => {
     setInputBusinessInfo(e.target.value);
   };
 
   const handleSubmit = () => {
-    // Navigate to MeetAiExpert and pass the inputBusinessInfo as state
-    navigate('/MeetAiExpert', { state: { inputBusinessInfo: inputBusinessInfo } });
+    setAnalysisButtonState(1);
+    setInputBusinessInfo("피자");
   };
 
   const handleKeyPress = (e) => {
@@ -35,15 +59,27 @@ const PageMarketSetting = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  const handleButtonExpert = () => {
-    navigate('/MeetAiExpert');
+  const handleButtonExpert = async () => {
+    setIsSignPopupOpen(true);
+  };
+
+  const closeSignPopup = () => {
+    setIsSignPopupOpen(false);
+    setError("");
+    setName('');
+    setEmail('');
+    setSignupEmail('');
+    setPassword('');
+    setSignupPassword('');
+    setConfirmPassword('');
   };
 
   return (
     <LandingPageWrapper>
+      {isSignPopupOpen && <MoleculeSignPopup onClose={closeSignPopup} />}
       <Header>
         <Logo src={images.SymbolLogo} alt="Logo" onClick={handleLogoClick} style={{ cursor: 'pointer' }} />
-        <button onClick={handleButtonExpert}>서비스 바로가기</button>
+        <button onClick={handleButtonExpert}>회원가입 테스트</button>
       </Header>
 
       <HeroSection>
@@ -53,18 +89,7 @@ const PageMarketSetting = () => {
         </Title>
 
         <InputSection>
-          <div>
-            <p><i>🖐</i>당신의 아이템 또는 프로젝트 아이디어를 적어 주세요</p>
-            <textarea 
-              rows="2"
-              placeholder="여기에 입력해 주세요..."
-              value={inputBusinessInfo}
-              onChange={handleTextChange}
-              onKeyDown={handleKeyPress}
-            />
-            <span><img src={images.IconLightning} alt="" />예시: 헬스케어 웨어러블 기기 데이터 분석 서비스　|　다기능 여행용 스마트 가방 </span>
-          </div>
-          <InputButton onClick={handleSubmit} isActive={inputBusinessInfo.length > 0}><i>🔍</i>내 비즈니스 진단받기</InputButton>
+          <OrganismBizAnalysisSection />
         </InputSection>
       </HeroSection>
 
