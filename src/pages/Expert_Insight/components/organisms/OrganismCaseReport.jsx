@@ -65,7 +65,7 @@ import {
   BM_QUESTION_LIST,
 } from "../../../AtomStates";
 
-import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
+import { useSaveConversation } from "../atoms/AtomSaveConversation";
 
 import {
   SkeletonTitle,
@@ -77,6 +77,7 @@ import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
 
 const OrganismCaseReport = ({ caseReportCount }) => {
+  const { saveConversation } = useSaveConversation();
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
   const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
   const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
@@ -287,61 +288,17 @@ const OrganismCaseReport = ({ caseReportCount }) => {
           setConversationStage(3);
           setConversation(updatedConversation);
 
-          await saveConversationToIndexedDB(
-            {
-              id: conversationId,
-              inputBusinessInfo: inputBusinessInfo,
-              analysisReportData: analysisReportData,
-              strategyReportData: strategyReportData,
-              conversation: updatedConversation,
-              conversationStage: conversationStage,
-              selectedAdditionalKeywords: selectedAdditionalKeyword,
-              selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
-              additionalReportData: additionalReportData,
-              customerAdditionalReportData: customerAdditionalReportData,
-              timestamp: Date.now(),
-              expert_index: selectedExpertIndex,
-              selectedPocOptions: selectedPocOptions,
-              pocPersonaList: pocPersonaList,
-              selectedPocTarget: selectedPocTarget,
-              recommendedTargetData: recommendedTargetData,
-              pocDetailReportData : pocDetailReportData,
-              ideaFeatureData : ideaFeatureData,
-              ideaRequirementData : ideaRequirementData,
-              KpiQuestionList : KpiQuestionList,
-              ideaGroup : ideaGroup,
-              ideaPriority : ideaPriority,
-              ideaMiro : ideaMiro,
-              growthHackerReportData : growthHackerReportData,
-              buttonState : localButtonState,
-              priceScrapData : priceScrapData,
-              priceReportData : priceReportData,
-              priceProduct : priceProduct,
-              priceSelectedProductSegmentation : priceSelectedProductSegmentation,
-              priceProductSegmentation : priceProductSegmentation,
-              caseHashTag : caseHashTag,
-              caseReportData : [
-                ...caseReportData,
-                caseReport,
-              ],
-              bmOrLean : bmOrLean,
-              bmQuestionList : bmQuestionList,
-              bmModelSuggestionReportData : bmModelSuggestionReportData,
-              bmBmAutoReportData : bmBmAutoReportData,
-              bmLeanAutoReportData : bmLeanAutoReportData,
-              bmBmAdsReportData : bmBmAdsReportData,
-              bmSelectedProblemOptions : bmSelectedProblemOptions,
-              bmLeanAdsReportData : bmLeanAdsReportData,
-              bmBmCustomReportData : bmBmCustomReportData,
-              bmLeanCustomReportData : bmLeanCustomReportData,
-              surveyGuidelineReportData : surveyGuidelineReportData,
-              surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
-              surveyGoalSuggestionList: surveyGoalSuggestionList,
-              surveyGoalFixed: surveyGoalFixed,
-              surveyQuestionList: surveyQuestionList,
-            },
-            isLoggedIn,
-            conversationId
+          await saveConversation(
+            { changingConversation: { 
+                conversation: updatedConversation, 
+                conversationStage: 3,               
+                caseReportData : [
+                  ...caseReportData,
+                  caseReport,
+                ],
+                buttonState : localButtonState, 
+              } 
+            }
           );
         }
       } catch (error) {

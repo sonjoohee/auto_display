@@ -64,10 +64,7 @@ import {
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
-import {
-  saveConversationToIndexedDB,
-  getConversationByIdFromIndexedDB,
-} from "../../../../utils/indexedDB";
+import { useSaveConversation } from "../atoms/AtomSaveConversation";
 import axios from "axios";
 import {
   SkeletonH1,
@@ -79,6 +76,7 @@ import e from "cors";
 const OrganismCustomerAdditionalReport = ({
   customerAdditionalReportCount
 }) => {
+  const { saveConversation } = useSaveConversation();
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
   const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
   const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
@@ -364,60 +362,9 @@ const OrganismCustomerAdditionalReport = ({
           }
 
           setConversation(updatedConversation2);
-          await saveConversationToIndexedDB(
-            {
-              id: conversationId,
-              inputBusinessInfo: inputBusinessInfo,
-              analysisReportData: analysisReportData,
-              strategyReportData: strategyReportData,
-              conversation: updatedConversation2,
-              conversationStage: conversationStage,
-              selectedAdditionalKeywords: selectedAdditionalKeyword,
-              selectedCustomerAdditionalKeyword:
-                selectedCustomerAdditionalKeyword,
-              additionalReportData: additionalReportData,
-              customerAdditionalReportData: updatedAdditionalReportData,
-              timestamp: Date.now(),
-              expert_index: selectedExpertIndex,
-              selectedPocOptions: selectedPocOptions,
-              pocPersonaList: pocPersonaList,
-              selectedPocTarget: selectedPocTarget,
-              recommendedTargetData: recommendedTargetData,
-              pocDetailReportData : pocDetailReportData,
-              ideaFeatureData : ideaFeatureData,
-              ideaRequirementData : ideaRequirementData,
-              ideaList : ideaList,
-              ideaGroup : ideaGroup,
-              ideaPriority : ideaPriority,
-              buttonState : buttonState,
-              growthHackerReportData : growthHackerReportData,
-              growthHackerDetailReportData : growthHackerDetailReportData,
-              KpiQuestionList : KpiQuestionList,
-              priceScrapData : priceScrapData,
-              priceReportData : priceReportData,
-              priceProduct : priceProduct,
-              priceSelectedProductSegmentation : priceSelectedProductSegmentation,
-              priceProductSegmentation : priceProductSegmentation,
-              caseHashTag : caseHashTag,
-              caseReportData : caseReportData,
-              bmOrLean : bmOrLean,
-              bmQuestionList : bmQuestionList,
-              bmModelSuggestionReportData : bmModelSuggestionReportData,
-              bmBmAutoReportData : bmBmAutoReportData,
-              bmLeanAutoReportData : bmLeanAutoReportData,
-              bmBmAdsReportData : bmBmAdsReportData,
-              bmSelectedProblemOptions : bmSelectedProblemOptions,
-              bmLeanAdsReportData : bmLeanAdsReportData,
-              bmBmCustomReportData : bmBmCustomReportData,
-              bmLeanCustomReportData : bmLeanCustomReportData,
-              surveyGuidelineReportData : surveyGuidelineReportData,
-              surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
-              surveyGoalSuggestionList: surveyGoalSuggestionList,
-              surveyGoalFixed: surveyGoalFixed,
-              surveyQuestionList: surveyQuestionList,
-            },
-            isLoggedIn,
-            conversationId
+
+          await saveConversation(
+            { changingConversation: { conversation: updatedConversation2, customerAdditionalReportData: updatedAdditionalReportData, } }
           );
         }
       } catch (error) {

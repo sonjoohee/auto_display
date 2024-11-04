@@ -64,7 +64,7 @@ import {
   BM_SELECTED_PROBLEM_OPTIONS,
 } from "../../../AtomStates";
 
-import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
+import { useSaveConversation } from "../atoms/AtomSaveConversation";
 
 import {
   SkeletonTitle,
@@ -76,6 +76,7 @@ import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
 
 const OrganismBmLeanAutoReport = () => {
+  const { saveConversation } = useSaveConversation();
   const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(SURVEY_GUIDELINE_REPORT_DATA);
   const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
   const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
@@ -242,60 +243,8 @@ const OrganismBmLeanAutoReport = () => {
         setConversationStage(3);
         setConversation(updatedConversation);
 
-        await saveConversationToIndexedDB(
-          {
-            id: conversationId,
-            inputBusinessInfo: inputBusinessInfo,
-            analysisReportData: analysisReportData,
-            strategyReportData: strategyReportData,
-            conversation: updatedConversation,
-            conversationStage: conversationStage,
-            selectedAdditionalKeywords: selectedAdditionalKeyword,
-            selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
-            additionalReportData: additionalReportData,
-            customerAdditionalReportData: customerAdditionalReportData,
-            timestamp: Date.now(),
-            expert_index: selectedExpertIndex,
-            selectedPocOptions: selectedPocOptions,
-            pocPersonaList: pocPersonaList,
-            selectedPocTarget: selectedPocTarget,
-            recommendedTargetData: recommendedTargetData,
-            pocDetailReportData : pocDetailReportData,
-            ideaFeatureData : ideaFeatureData,
-            ideaRequirementData : ideaRequirementData,
-            ideaList : ideaList,
-            ideaGroup : ideaGroup,
-            ideaPriority : ideaPriority,
-            buttonState : buttonState,
-            growthHackerReportData : growthHackerReportData,
-            growthHackerDetailReportData : growthHackerDetailReportData,
-            KpiQuestionList : KpiQuestionList,
-            priceScrapData : priceScrapData,
-            priceReportData : priceReportData,
-            priceProduct : priceProduct,
-            priceSelectedProductSegmentation : priceSelectedProductSegmentation,
-            priceProductSegmentation : priceProductSegmentation,
-            caseHashTag : caseHashTag,
-            caseReportData : caseReportData,
-            bmLeanAutoReportData : response.data.bm_lean_auto_report,
-            bmSelectedProblemOptions: bmSelectedProblemOptions,
-            bmOrLean : bmOrLean,
-            bmQuestionList : bmQuestionList,
-            bmModelSuggestionReportData : bmModelSuggestionReportData,
-            bmBmAutoReportData : bmBmAutoReportData,
-            bmBmAdsReportData : bmBmAdsReportData,
-            bmSelectedProblemOptions : bmSelectedProblemOptions,
-            bmLeanAdsReportData : bmLeanAdsReportData,
-            bmBmCustomReportData : bmBmCustomReportData,
-            bmLeanCustomReportData : bmLeanCustomReportData,
-            surveyGuidelineReportData : surveyGuidelineReportData,
-            surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
-            surveyGoalSuggestionList: surveyGoalSuggestionList,
-            surveyGoalFixed: surveyGoalFixed,
-            surveyQuestionList: surveyQuestionList,
-          },
-          isLoggedIn,
-          conversationId
+        await saveConversation(
+          { changingConversation: { conversation: updatedConversation, conversationStage: 3, bmLeanAutoReportData : response.data.bm_lean_auto_report, } }
         );
       }
     };

@@ -92,9 +92,10 @@ import OrganismLeftSideBar from "../../../Expert_Insight/components/organisms/Or
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
 import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/MoleculeAccountPopup"; // 계정설정 팝업 컴포넌트 임포트
 
-import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
+import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
 
 const PageMeetAiExpert = () => {
+  const { saveConversation } = useSaveConversation();
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
   const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
   const [bmSelectedProblemOptions, setBmSelectedProblemOptions] = useAtom(BM_SELECTED_PROBLEM_OPTIONS);
@@ -413,17 +414,8 @@ const PageMeetAiExpert = () => {
         { type: "analysis" }
       );
 
-      await saveConversationToIndexedDB(
-        {
-          id: conversationId,
-          conversation: updatedConversation,
-          inputBusinessInfo,
-          conversationStage: 2,
-          timestamp: Date.now(),
-          buttonState : buttonState,
-        },
-        isLoggedIn,
-        conversationId
+      await saveConversation(
+        { changingConversation: { conversation: updatedConversation, conversationStage: 2 } }
       );
 
       setConversation(updatedConversation);
