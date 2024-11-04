@@ -16,13 +16,14 @@ import PageEmailVerificationFailed from './pages/Login_Sign/components/pages/Pag
 import PageResetPassword from './pages/Login_Sign/components/pages/PageResetPassword';
 import PageRequestResetPassword from './pages/Login_Sign/components/pages/PageRequestResetPassword';
 import PagePayTest from './pages/Purchase_Credit/components/pages/PagePayTest';
+import PageCompletedMail from './pages/Login_Sign/components/pages/PageCompletedMail';
 
-import PageAIPanelList from './pages/AI_Panel/components/pages/PageAIPanelList';
-import BusinessTool from './pages/Business_Tool';
 import PageMeetAiExpert from './pages/Meet_Ai_Expert/components/pages/PageMeetAiExpert';
 import LandingPage from './pages/Meet_Ai_Expert/components/pages/LandingPage';
-
 import PageExpertInsight from "./pages/Expert_Insight/components/pages/PageExpertInsight";
+
+import PageMarketLanding from './pages/Meet_Ai_Expert/components/pages/PageMarketLanding';
+import PageMarketSetting from './pages/Meet_Ai_Expert/components/pages/PageMarketSetting';
 
 // Biz
 import Lending from './pages/Lending';
@@ -30,14 +31,7 @@ import TargetSetting from "./pages/Persona/TargetSetting";
 import TargetChoice from "./pages/Persona/TargetChoice";
 import PersonaGenerator from "./pages/Persona/PersonaGenerator";
 import Loading from "./pages/Persona/Loading";
-import LoadingPersona from "./pages/Persona/LoadingPersona";
-import OrganismReportPopup from './pages/Expert_Insight/components/organisms/OrganismReportPopup'; 
-
-import PageCompletedMail from './pages/Login_Sign/components/pages/PageCompletedMail';
-
-import BMExpert from "./pages/Expert_Insight/components/pages/BMExpert";
-import PriceAnalysis from "./pages/Expert_Insight/components/pages/PriceAnalysis";
-import ExpertExample from './pages/Expert_Insight/components/pages/ExpertExample';
+import LoadingPersona from "./pages/Persona/LoadingPersona"; 
 
 function App() {
   const [, setIsLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태를 위한 아톰
@@ -45,8 +39,7 @@ function App() {
   const [, setUserEmail] = useAtom(USER_EMAIL); // 유저 이메일 아톰
   const [, setIsSocialLoggedIn] = useAtom(IS_SOCIAL_LOGGED_IN); // 소셜 로그인 상태 아톰
   const [isServerDown, setIsServerDown] = useState(false); // 서버 상태 관리
-  const [, setExpertDetail] = useAtom(EXPERT_DETAIL_DATA);
-      // 화면 크기를 체크하는 useEffect
+  const [, setExpertDetail] = useAtom(EXPERT_DETAIL_DATA); // 화면 크기를 체크하는 useEffect
   const [, setIsMobile] = useAtom(IS_MOBILE);
 
   useEffect(() => {
@@ -91,30 +84,6 @@ function App() {
       setIsSocialLoggedIn(false); // 일반 로그인 상태로 설정
     }
   }, [setIsLoggedIn, setUserName, setUserEmail]);
-
-  // useEffect(() => {
-  //   const fetchExperts = async () => {
-  //     try {
-  //       const accessToken = sessionStorage.getItem("accessToken");
-  //       const response = await axios.get(
-  //         "https://wishresearch.kr/expert/list",
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${accessToken}`,
-  //             "Content-Type": "application/json",
-  //           },
-  //           timeout: 100000, // 100 seconds
-  //           withCredentials: true,
-  //         }
-  //       );
-  //       setExpertDetail(response.data);
-  //     } catch (err) {
-  //       console.error("Error fetching experts:", err);
-  //     }
-  //   };
-
-  //   fetchExperts();
-  // }, []); 
 
   // 10분마다 서버 상태 체크
   useEffect(() => {
@@ -176,7 +145,6 @@ function App() {
         </div>
       )}
 
-
         <BrowserRouter>
           <Routes>
             <Route path="/login" element={<PageLogin />} />
@@ -188,26 +156,23 @@ function App() {
             <Route path="/reset-password" element={<PageResetPassword />} />
             <Route path="/request-reset-password" element={<PageRequestResetPassword />} />
             <Route path="/PagePayTest" element={<PagePayTest />} />
+            <Route path="/CompletedMail" element={<PageCompletedMail />}></Route>
 
             <Route path="/" element={<LandingPage />} />
             <Route path="*" element={<LandingPage />} />
+            <Route path="/Landing" element={<LandingPage />}></Route>
             <Route path="/MeetAiExpert" element={<PageMeetAiExpert />} />
             <Route path="/ExpertInsight" element={<PageExpertInsight />}></Route>
+            <Route path="/conversation/:conversationId" element={<PageExpertInsight />} />
 
-            <Route path="/CompletedMail" element={<PageCompletedMail />}></Route>
+            {/* 마케팅 */}
+            <Route path="/MarketLanding" element={<PageMarketLanding />}></Route>
+            <Route path="/MarketSetting" element={<PageMarketSetting />}></Route>
 
-            {/* <Route path="/BMExpert" element={<BMExpert />}></Route>
-            <Route path="/PriceAnalysis" element={<PriceAnalysis />}></Route>
-            <Route path="/ExpertExample" element={<ExpertExample />}></Route> */}
-
-            <Route path="/PageAIPanelList" element={<PageAIPanelList />}></Route>
-
-            <Route path="/Landing" element={<LandingPage />}></Route>
-
-
-
+            {/* AI 패널 */}
             {/* <Route path="/AI_Panel" element={<PageAIPanelList />} />
-            <Route path="/QuickReport" element={<BusinessTool />} /> */}
+            <Route path="/QuickReport" element={<BusinessTool />} />
+            <Route path="/PageAIPanelList" element={<PageAIPanelList />}></Route> */}
 
             {/* Biz */}
             {/* <Route path="/Lending" element={<Lending />} />
@@ -217,10 +182,6 @@ function App() {
             <Route path="/LoadingPersona" element={<LoadingPersona />} />
             <Route path="/PersonaGenerator" element={<PersonaGenerator />} /> */}
 
-            {/* 추가된 Route */}
-
-            <Route path="/report/:id" element={<OrganismReportPopup />} />
-            <Route path="/conversation/:conversationId" element={<PageExpertInsight />} />
           </Routes>
         </BrowserRouter>
     </div>
