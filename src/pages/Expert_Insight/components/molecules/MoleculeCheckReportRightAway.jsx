@@ -6,20 +6,10 @@ import {
   IS_LOADING,
   APPROACH_PATH,
   CONVERSATION,
-  CONVERSATION_ID,
-  INPUT_BUSINESS_INFO,
-  STRATEGY_REPORT_DATA,
   SELECTED_EXPERT_INDEX,
   SELECTED_EXPERT_LIST,
-  SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
-  CUSTOMER_ADDITIONAL_REPORT_DATA,
-  isLoggedInAtom,
   TITLE_OF_BUSINESS_INFORMATION,
-  MAIN_FEATURES_OF_BUSINESS_INFORMATION,
-  MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
-  BUSINESS_INFORMATION_TARGET_CUSTOMER,
   CONVERSATION_STAGE,
-  BUTTON_STATE,
   IS_EDITING_NOW,
 } from "../../../AtomStates";
 
@@ -30,33 +20,15 @@ import { useSaveConversation } from "../atoms/AtomSaveConversation";
 const MoleculeCheckReportRightAway = () => {
   const { saveConversation } = useSaveConversation();
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
-  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
   const [conversation, setConversation] = useAtom(CONVERSATION);
-  const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
-  const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
-  const [strategyReportData] = useAtom(STRATEGY_REPORT_DATA);
   const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
-  const [selectedCustomerAdditionalKeyword, setSelectedCustomerAdditionalKeyword] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
-  const [customerAdditionalReportData, setCustomerAdditionalReportData] = useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
-  const [isLoggedIn] = useAtom(isLoggedInAtom);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [expertButtonState, setExpertButtonState] =
     useAtom(EXPERT_BUTTON_STATE);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
-
-  const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation,] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
-  const [mainCharacteristicOfBusinessInformation, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
-  const [businessInformationTargetCustomer, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
-
-  const analysisReportData = {
-    title: titleOfBusinessInfo,
-    mainFeatures: mainFeaturesOfBusinessInformation,
-    mainCharacter: mainCharacteristicOfBusinessInformation,
-    mainCustomer: businessInformationTargetCustomer,
-  };
 
   const handleClick = async () => {
     if (isLoading) return;

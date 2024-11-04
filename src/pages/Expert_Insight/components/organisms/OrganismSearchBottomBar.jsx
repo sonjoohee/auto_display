@@ -11,7 +11,6 @@ import {
   CONVERSATION_STAGE,
   CONVERSATION,
   INPUT_BUSINESS_INFO,
-  SELECTED_ADDITIONAL_KEYWORD,
   SELECTED_EXPERT_INDEX,
   isLoggedInAtom,
   CONVERSATION_ID,
@@ -20,7 +19,6 @@ import {
   CASE_HASH_TAG,
   SURVEY_USER_GOAL_INPUT,
   SURVEY_GOAL_SUGGESTION_BUTTON_STATE,
-  APPROACH_PATH,
   IS_LOADING_CASE_HASHTAG,
 } from "../../../AtomStates";
 
@@ -30,7 +28,6 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
-  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
   const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [customerAdditionButtonState, setCustomerAdditionButtonState] = useAtom(CUSTOMER_ADDITION_BUTTON_STATE);
@@ -45,7 +42,6 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
   const [isPopupRegex2, setIsPopupRegex2] = useState(false);
   const [surveyUserGoalInput, setSurveyUserGoalInput] = useAtom(SURVEY_USER_GOAL_INPUT);
   const [surveyGoalSuggestionButtonState, setSurveyGoalSuggestionButtonState] = useAtom(SURVEY_GOAL_SUGGESTION_BUTTON_STATE);
-  const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
   const [isLoadingCaseHashTag, setIsLoadingCaseHashTag] = useAtom(IS_LOADING_CASE_HASHTAG);
 
   const closePopupRegex = () => {
