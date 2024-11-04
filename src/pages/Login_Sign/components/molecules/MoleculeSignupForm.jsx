@@ -7,6 +7,7 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import AtomInput from '../atoms/AtomInput';
 import AtomButton from '../atoms/AtomButton';
 import { isValidEmail, isValidPassword } from '../atoms/AtomValidation';
+import axios from 'axios';
 import {
   nameAtom,
   signupEmailAtom,
@@ -14,11 +15,12 @@ import {
   confirmPasswordAtom,
   roleAtom,
   statusAtom,
-  errorAtom
+  errorAtom,
+  CONVERSATION_ID
 } from '../../../AtomStates';
 import MoleculeSignupPopup from './MoleculeSignupPopup'; // 팝업 컴포넌트 임포트
 
-import { IS_LOGIN_POPUP_OPEN, IS_SIGNUP_POPUP_OPEN } from '../../../AtomStates'; // 팝업 상태 atom 임포트
+import { IS_LOGIN_POPUP_OPEN, IS_SIGNUP_POPUP_OPEN, IS_MARKETING } from '../../../AtomStates'; // 팝업 상태 atom 임포트
 
 import { palette } from '../../../../assets/styles/Palette';
 
@@ -35,6 +37,8 @@ const MoleculeSignupForm = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSignupSuccessful, setSignupSuccessful] = useState(false); // 회원가입 성공 상태
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태
+  const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
+  const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const navigate = useNavigate();
 
   // 팝업 상태 atom의 setter 가져오기
@@ -70,6 +74,7 @@ const MoleculeSignupForm = () => {
   };
 
   const handleSignup = async (e) => {
+    let response;
     e.preventDefault();
     setError('');
     if (!validateForm()) return;
@@ -77,11 +82,20 @@ const MoleculeSignupForm = () => {
     setIsLoading(true); // 로딩 상태 시작
 
     try {
-      const response = await fetch('https://wishresearch.kr/api/user/signup/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password, role, status })
-      });
+      if (isMarketing) {
+        response = await fetch('https://wishresearch.kr/api/user/signup_marketing/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password, chatGetId: conversationId })
+        });     
+      } else {
+        response = await fetch('https://wishresearch.kr/api/user/signup/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password, role, status })
+        });
+      }
+
       if (response.ok) {
         setSignupSuccessful(true); // 회원가입 성공 상태 설정
         setName('');
@@ -98,6 +112,7 @@ const MoleculeSignupForm = () => {
           setError(result.email || '회원가입 중 오류가 발생했습니다.');
         }
       }
+      
     } catch (error) {
       setError('서버와의 통신 중 오류가 발생했습니다.');
     } finally {

@@ -6,13 +6,17 @@ import styled from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import Landingimages from "../../../../assets/styles/Landingimages"
-import { INPUT_BUSINESS_INFO, isLoggedInAtom, loginSuccessAtom } from '../../../AtomStates';
+import { createChatOnServer } from "../../../../utils/indexedDB";
+import { INPUT_BUSINESS_INFO, isLoggedInAtom, loginSuccessAtom, ANALYSIS_BUTTON_STATE, CONVERSATION_ID, IS_MARKETING } from '../../../AtomStates';
 import axios from 'axios';
 
 const PageMarketLanding = () => {
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
+  const [analysisButtonState, setAnalysisButtonState] = useAtom(ANALYSIS_BUTTON_STATE);
   const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom);
   const [, setLoginSuccess] = useAtom(loginSuccessAtom);
+  const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
+  const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
   const navigate = useNavigate();
 
   const handleLogoClick = () => {
@@ -35,7 +39,7 @@ const PageMarketLanding = () => {
         axiosConfig
       );
 
-      const accessToken = response.access_token;
+      const accessToken = response.data.access_token;
 
       // accessToken을 세션 스토리지에 저장
       sessionStorage.setItem("accessToken", accessToken);
@@ -47,6 +51,13 @@ const PageMarketLanding = () => {
     } catch (error) {
       console.error("로그인 중 오류가 발생했습니다.", error);
     }
+
+    const newConversationId = await createChatOnServer();
+    setConversationId(newConversationId); // 생성된 대화 ID 설정
+
+    setIsMarketing(true);
+    setAnalysisButtonState(1);
+    setInputBusinessInfo("피자");
     
     navigate('/MarketSetting', { state: { type: type } });
   };
