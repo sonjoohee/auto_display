@@ -17,7 +17,7 @@ import {
   SELECTED_TAB_COPY,
   STRATEGY_REPORT_DATA,
   CONVERSATION_STAGE,
-  isLoggedInAtom,
+  IS_LOGGED_IN,
   IS_LOADING,
   REPORT_REFRESH_TRIGGER,
   CHAT_REFRESH_TRIGGER,
@@ -110,7 +110,7 @@ const MoleculeReportController = ({
     tempMusinessInformationTargetCustomer,
     setTempBusinessInformationTargetCustomer,
   ] = useAtom(TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 관리
+  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN); // 로그인 상태 관리
   const token = sessionStorage.getItem("accessToken");
   const [reportRefreshTrigger, setReportRefreshTrigger] = useAtom(
     REPORT_REFRESH_TRIGGER

@@ -6,12 +6,12 @@ import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
 import MoleculeGoogleLoginForm from "./MoleculeGoogleLoginForm";
 import MoleculeLoginForm from "./MoleculeLoginForm";
-import { loginSuccessAtom } from "../../../../pages/AtomStates"; // 아톰 임포트
+import { LOGIN_SUCCESS } from "../../../../pages/AtomStates"; // 아톰 임포트
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 
 const MoleculeLogin = ({ onClosePopup = () => {} }) => {
-  const [loginSuccess, setLoginSuccess] = useAtom(loginSuccessAtom);
+  const [loginSuccess, setLoginSuccess] = useAtom(LOGIN_SUCCESS);
   const navigate = useNavigate();
 
   useEffect(() => {

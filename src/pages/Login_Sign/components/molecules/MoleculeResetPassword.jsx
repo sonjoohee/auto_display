@@ -10,12 +10,12 @@ import MoleculeLoginForm from "./MoleculeLoginForm";
 
 import MoleculePasswordResetForm from "../pages/PageRequestResetPassword";
 
-import { loginSuccessAtom } from "../../../../pages/AtomStates"; // 아톰 임포트
+import { LOGIN_SUCCESS } from "../../../../pages/AtomStates"; // 아톰 임포트
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 
 const MoleculeResetPassword = ({ onClosePopup = () => {} }) => {
-  const [loginSuccess, setLoginSuccess] = useAtom(loginSuccessAtom);
+  const [loginSuccess, setLoginSuccess] = useAtom(LOGIN_SUCCESS);
   const navigate = useNavigate();
 
   useEffect(() => {

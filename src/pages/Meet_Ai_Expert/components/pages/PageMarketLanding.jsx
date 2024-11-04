@@ -7,14 +7,14 @@ import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import Landingimages from "../../../../assets/styles/Landingimages"
 import { createChatOnServer } from "../../../../utils/indexedDB";
-import { INPUT_BUSINESS_INFO, isLoggedInAtom, loginSuccessAtom, ANALYSIS_BUTTON_STATE, CONVERSATION_ID, IS_MARKETING } from '../../../AtomStates';
+import { INPUT_BUSINESS_INFO, IS_LOGGED_IN, LOGIN_SUCCESS, ANALYSIS_BUTTON_STATE, CONVERSATION_ID, IS_MARKETING } from '../../../AtomStates';
 import axios from 'axios';
 
 const PageMarketLanding = () => {
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [analysisButtonState, setAnalysisButtonState] = useAtom(ANALYSIS_BUTTON_STATE);
-  const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom);
-  const [, setLoginSuccess] = useAtom(loginSuccessAtom);
+  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [, setLoginSuccess] = useAtom(LOGIN_SUCCESS);
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
   const navigate = useNavigate();

@@ -9,13 +9,13 @@ import AtomButton from '../atoms/AtomButton';
 import { isValidEmail, isValidPassword } from '../atoms/AtomValidation';
 import axios from 'axios';
 import {
-  nameAtom,
-  signupEmailAtom,
-  signupPasswordAtom,
-  confirmPasswordAtom,
-  roleAtom,
-  statusAtom,
-  errorAtom,
+  SIGN_UP_NAME,
+  SIGN_UP_EMAIL,
+  SIGN_UP_PASSWORD,
+  CONFIRM_PASSWORD,
+  SIGN_UP_ROLE,
+  SIGN_UP_STATUS,
+  ERROR_STATUS,
   CONVERSATION_ID
 } from '../../../AtomStates';
 import MoleculeSignupPopup from './MoleculeSignupPopup'; // 팝업 컴포넌트 임포트
@@ -25,13 +25,13 @@ import { IS_LOGIN_POPUP_OPEN, IS_SIGNUP_POPUP_OPEN, IS_MARKETING } from '../../.
 import { palette } from '../../../../assets/styles/Palette';
 
 const MoleculeSignupForm = () => {
-  const [name, setName] = useAtom(nameAtom);
-  const [email, setEmail] = useAtom(signupEmailAtom);
-  const [password, setPassword] = useAtom(signupPasswordAtom);
-  const [confirmPassword, setConfirmPassword] = useAtom(confirmPasswordAtom);
-  const [role, setRole] = useAtom(roleAtom);
-  const [status, setStatus] = useAtom(statusAtom);
-  const [error, setError] = useAtom(errorAtom);
+  const [signUpName, setSignUpName] = useAtom(SIGN_UP_NAME);
+  const [signUpEmail, setSignUpEmail] = useAtom(SIGN_UP_EMAIL);
+  const [signUpPassword, setSignUpPassword] = useAtom(SIGN_UP_PASSWORD);
+  const [confirmPassword, setConfirmPassword] = useAtom(CONFIRM_PASSWORD);
+  const [signUpRole, setSignUpRole] = useAtom(SIGN_UP_ROLE);
+  const [signUpStatus, setSignUpStatus] = useAtom(SIGN_UP_STATUS);
+  const [errorStatus, setErrorStatus] = useAtom(ERROR_STATUS);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -46,28 +46,28 @@ const MoleculeSignupForm = () => {
   const [, setIsSignupPopupOpen] = useAtom(IS_SIGNUP_POPUP_OPEN);
 
   useEffect(() => {
-    setError('');
-  }, [setError]);
+    setErrorStatus('');
+  }, [setErrorStatus]);
 
   const validateForm = () => {
-    if (!name || !email || !password || !confirmPassword) {
-      setError('모든 필드를 입력해주세요.');
+    if (!signUpName || !signUpEmail || !signUpPassword || !confirmPassword) {
+      setErrorStatus('모든 필드를 입력해주세요.');
       return false;
     }
-    if (!isValidEmail(email)) {
-      setError('유효한 이메일 주소를 입력해주세요.');
+    if (!isValidEmail(signUpEmail)) {
+      setErrorStatus('유효한 이메일 주소를 입력해주세요.');
       return false;
     }
-    if (!isValidPassword(password)) {
-      setError('비밀번호는 8-16자 길이여야 하며, 문자, 숫자, 특수문자 중 최소 두 가지를 포함해야 합니다.');
+    if (!isValidPassword(signUpPassword)) {
+      setErrorStatus('비밀번호는 8-16자 길이여야 하며, 문자, 숫자, 특수문자 중 최소 두 가지를 포함해야 합니다.');
       return false;
     }
-    if (password !== confirmPassword) {
-      setError('비밀번호가 일치하지 않습니다.');
+    if (signUpPassword !== confirmPassword) {
+      setErrorStatus('비밀번호가 일치하지 않습니다.');
       return false;
     }
     if (!termsAccepted) {
-      setError('이용약관에 동의해야 합니다.');
+      setErrorStatus('이용약관에 동의해야 합니다.');
       return false;
     }
     return true;
@@ -76,7 +76,7 @@ const MoleculeSignupForm = () => {
   const handleSignup = async (e) => {
     let response;
     e.preventDefault();
-    setError('');
+    setErrorStatus('');
     if (!validateForm()) return;
 
     setIsLoading(true); // 로딩 상태 시작
@@ -86,35 +86,35 @@ const MoleculeSignupForm = () => {
         response = await fetch('https://wishresearch.kr/api/user/signup_marketing/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, password, chatGetId: conversationId })
+          body: JSON.stringify({ name : signUpName, email: signUpEmail, password: signUpPassword, chatGetId: conversationId })
         });     
       } else {
         response = await fetch('https://wishresearch.kr/api/user/signup/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, password, role, status })
+          body: JSON.stringify({ name : signUpName, email: signUpEmail, password: signUpPassword, role: signUpRole, status: signUpStatus })
         });
       }
 
       if (response.ok) {
         setSignupSuccessful(true); // 회원가입 성공 상태 설정
-        setName('');
-        // setEmail('');
-        setPassword('');
+        setSignUpName('');
+        // setSignUpEmail('');
+        setSignUpPassword('');
         setConfirmPassword('');
-        setRole('user');
-        setStatus('inactive');
+        setSignUpRole('user');
+        setSignUpStatus('inactive');
       } else {
         const result = await response.json();
         if (result.email[0] === "user의 email은/는 이미 존재합니다.") {
-          setError("이미 사용 중인 이메일 주소입니다.");
+          setErrorStatus("이미 사용 중인 이메일 주소입니다.");
         } else {
-          setError(result.email || '회원가입 중 오류가 발생했습니다.');
+          setErrorStatus(result.email || '회원가입 중 오류가 발생했습니다.');
         }
       }
       
     } catch (error) {
-      setError('서버와의 통신 중 오류가 발생했습니다.');
+      setErrorStatus('서버와의 통신 중 오류가 발생했습니다.');
     } finally {
       setIsLoading(false); // 로딩 상태 종료
     }
@@ -132,10 +132,10 @@ const MoleculeSignupForm = () => {
     setSignupSuccessful(false);
     setIsLoginPopupOpen(false);
     setIsSignupPopupOpen(false);
-    setError('')
-    setName('');
-    setEmail('');
-    setPassword('');
+    setErrorStatus('')
+    setSignUpName('');
+    setSignUpEmail('');
+    setSignUpPassword('');
     setConfirmPassword('');
     navigate('/');
   };
@@ -149,35 +149,35 @@ const MoleculeSignupForm = () => {
       )}
       <SignupFormContainer>
         <div>
-          <label htmlFor="name">이름<span>*</span></label>
+          <label htmlFor="signUpName">이름<span>*</span></label>
           <StyledAtomInput
-            id="name"
+            id="signUpName"
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={signUpName}
+            onChange={(e) => setSignUpName(e.target.value)}
             placeholder="이름을 입력해주세요"
           />
         </div>
 
         <div>
-          <label htmlFor="email">이메일<span>*</span></label>
+          <label htmlFor="signUpEmail">이메일<span>*</span></label>
           <StyledAtomInput
             id="email"
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={signUpEmail}
+            onChange={(e) => setSignUpEmail(e.target.value)}
             placeholder="이메일 주소를 입력해주세요"
           />
         </div>
 
         <div>
-          <label htmlFor="password">비밀번호<span>*</span></label>
+          <label htmlFor="signUpPassword">비밀번호<span>*</span></label>
           <InputWrap>
             <StyledAtomInput
               type={showPassword ? "text" : "password"}
               id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={signUpPassword}
+              onChange={(e) => setSignUpPassword(e.target.value)}
               placeholder="비밀번호를 입력해주세요"
             />
             <TogglePasswordButton onClick={togglePasswordVisibility}>
@@ -187,7 +187,7 @@ const MoleculeSignupForm = () => {
           <InputWrap>
             <StyledAtomInput
               type={showConfirmPassword ? "text" : "password"}
-              id="confirmPassword"
+              id="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="비밀번호 확인을 입력해주세요"
@@ -199,7 +199,7 @@ const MoleculeSignupForm = () => {
           <p>영문/숫자/특수문자 2가지 이상 혼합. 8~16자</p>
         </div>
 
-        {error && <ErrorMessage>{error}</ErrorMessage>}
+        {errorStatus && <ErrorMessage>{errorStatus}</ErrorMessage>}
 
         <TermsAndConditions>
           <input
@@ -211,14 +211,14 @@ const MoleculeSignupForm = () => {
           <label htmlFor="terms">서비스 <a href="#">이용약관</a>과 <a href="#">개인정보처리방침</a>에 동의합니다.</label>
         </TermsAndConditions>
 
-        <StyledAtomButton onClick={handleSignup} disabled={isLoading || !name || !email || !password || !confirmPassword || !termsAccepted}>
+        <StyledAtomButton onClick={handleSignup} disabled={isLoading || !signUpName || !signUpEmail || !signUpPassword || !confirmPassword || !termsAccepted}>
           {isLoading ? "메일을 전송 중입니다..." : "회원가입"}
         </StyledAtomButton>
       </SignupFormContainer>
       {isSignupSuccessful && (
         <MoleculeSignupPopup
           onClose={closePopup}
-          email={email}
+          signUpEmail={signUpEmail}
         />
       )}
     </>

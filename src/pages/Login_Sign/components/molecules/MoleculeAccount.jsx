@@ -3,12 +3,12 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
 import MoleculeAccountForm from "./MoleculeAccountForm";
-import { loginSuccessAtom } from "../../../../pages/AtomStates"; // 아톰 임포트
+import { LOGIN_SUCCESS } from "../../../../pages/AtomStates"; // 아톰 임포트
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 
 const MoleculeAccount = ({ onOpenPopup = () => {} }) => {
-  const [loginSuccess, setLoginSuccess] = useAtom(loginSuccessAtom);
+  const [loginSuccess, setLoginSuccess] = useAtom(LOGIN_SUCCESS);
   const navigate = useNavigate();
 
   useEffect(() => {

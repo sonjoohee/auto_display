@@ -8,11 +8,11 @@ import { useAtom } from "jotai";
 import axios from "axios";
 
 import {
-  passwordAtom,
-  newPasswordAtom,
-  rePasswordAtom,
+  PASSWORD,
+  NEW_PASSWORD,
+  RE_PASSWORD,
   INPUT_BUSINESS_INFO,
-  isLoggedInAtom,
+  IS_LOGGED_IN,
   USER_NAME,
   USER_EMAIL,
   TITLE_OF_BUSINESS_INFORMATION,
@@ -152,9 +152,9 @@ const OrganismLeftSideBar = () => {
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
-  const [password, setPassword] = useAtom(passwordAtom);
-  const [newPassword, setNewPassword] = useAtom(newPasswordAtom);
-  const [rePassword, setRePassword] = useAtom(rePasswordAtom);
+  const [password, setPassword] = useAtom(PASSWORD);
+  const [newPassword, setNewPassword] = useAtom(NEW_PASSWORD);
+  const [rePassword, setRePassword] = useAtom(RE_PASSWORD);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const navigate = useNavigate();
   const [bizName] = useAtom(INPUT_BUSINESS_INFO);
@@ -162,7 +162,7 @@ const OrganismLeftSideBar = () => {
 
   const [selectedReport, setSelectedReport] = useState(null); // 선택된 보고서 상태 관리
   const [conversations, setConversations] = useState([]); // 저장된 대화 상태 관리
-  const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 관리
+  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN); // 로그인 상태 관리
   const [isLoginPopupOpen, setLoginPopupOpen] = useState(false); // 로그인 팝업 상태 관리
   const [reports, setReports] = useState([]); // 서버에서 가져온 보고서 리스트 상태
   const [reportRefreshTrigger, setReportRefreshTrigger] = useAtom(
@@ -175,7 +175,7 @@ const OrganismLeftSideBar = () => {
   const [chatList, setChatList] = useState([]); // 서버에서 가져온 대화 리스트
 
   const [isAccountPopupOpen, setAccountPopupOpen] = useState(false); // 계정설정 팝업
-  const [isSocialLoggedIn] = useAtom(IS_SOCIAL_LOGGED_IN); // 소셜 로그인 상태 읽기
+  const [isSocialLoggedIn, setIsSocialLoggedIn] = useAtom(IS_SOCIAL_LOGGED_IN); // 소셜 로그인 상태 읽기
 
   const [isLogoutPopup, setIsLogoutPopup] = useState(false); // 로그아웃 팝업 상태 관리
   const [userName, setUserName] = useAtom(USER_NAME); // 아톰에서 유저 이름 불러오기
@@ -768,6 +768,7 @@ useEffect(() => {
     localStorage.removeItem("userName");
     localStorage.removeItem("userEmail");
     setIsLoggedIn(false);
+    setIsSocialLoggedIn(false);
     setUserName("");
     setUserEmail("");
     setIsLogoutPopup(false); // 로그아웃 팝업 닫기

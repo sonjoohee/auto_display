@@ -10,12 +10,12 @@ import {
   INPUT_BUSINESS_INFO, 
   ANALYSIS_BUTTON_STATE, 
   CONVERSATION_ID,
-  nameAtom,
-  emailAtom,
-  signupEmailAtom,
-  signupPasswordAtom,
-  confirmPasswordAtom,
-  errorAtom
+  SIGN_UP_NAME,
+  EMAIL,
+  SIGN_UP_EMAIL,
+  SIGN_UP_PASSWORD,
+  CONFIRM_PASSWORD,
+  ERROR_STATUS
 } from '../../../AtomStates';
 import OrganismBizAnalysisSection from "../../../Expert_Insight/components/organisms/OrganismBizAnalysisSection";
 import MoleculeSignPopup from "../../../Login_Sign/components/molecules/MoleculeSignPopup";
@@ -25,13 +25,13 @@ const PageMarketSetting = () => {
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [analysisButtonState, setAnalysisButtonState] = useAtom(ANALYSIS_BUTTON_STATE);
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
-  const [name, setName] = useAtom(nameAtom);
-  const [email, setEmail] = useAtom(emailAtom);
-  const [, setSignupEmail] = useAtom(signupEmailAtom);
+  const [signUpName, setSignUpName] = useAtom(SIGN_UP_NAME);
+  const [email, setEmail] = useAtom(EMAIL);
+  const [, setSignupEmail] = useAtom(SIGN_UP_EMAIL);
   const [password, setPassword] = useState("");
-  const [, setSignupPassword] = useAtom(signupPasswordAtom);
-  const [confirmPassword, setConfirmPassword] = useAtom(confirmPasswordAtom);
-  const [error, setError] = useAtom(errorAtom);
+  const [, setSignupPassword] = useAtom(SIGN_UP_PASSWORD);
+  const [confirmPassword, setConfirmPassword] = useAtom(CONFIRM_PASSWORD);
+  const [errorStatus, setErrorStatus] = useAtom(ERROR_STATUS);
   const [isSignPopupOpen, setIsSignPopupOpen] = useState(false);
 
 
@@ -65,8 +65,8 @@ const PageMarketSetting = () => {
 
   const closeSignPopup = () => {
     setIsSignPopupOpen(false);
-    setError("");
-    setName('');
+    setErrorStatus("");
+    setSignUpName('');
     setEmail('');
     setSignupEmail('');
     setPassword('');

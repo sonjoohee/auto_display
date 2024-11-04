@@ -7,15 +7,14 @@ import AtomButton from "../atoms/AtomButton";
 import { isValidEmail } from "../atoms/AtomValidation";
 import axios from "axios";
 import {
-  emailAtom,
-  currentUserAtom,
-  errorAtom,
-  newPasswordAtom,
-  rePasswordAtom,
+  EMAIL,
+  ERROR_STATUS,
+  NEW_PASSWORD,
+  RE_PASSWORD,
 } from "../../../AtomStates";
 import {
-  isLoggedInAtom,
-  loginSuccessAtom,
+  IS_LOGGED_IN,
+  LOGIN_SUCCESS,
   USER_NAME,
   USER_EMAIL,
 } from "../../../../pages/AtomStates"; // 아톰 임포트
@@ -25,41 +24,40 @@ import { palette } from "../../../../assets/styles/Palette";
 
 
 const MoleculeAccountForm = ({ onOpenPopup  = () => {} }) => {  // onOpenPopup  함수 받기
-  const [email, setEmail] = useAtom(emailAtom);
+  const [email, setEmail] = useAtom(EMAIL);
   const [password, setPassword] = useState("");
-  const [newPassword, setNewPassword] = useAtom(newPasswordAtom);
-  const [rePassword, setRePassword] = useAtom(rePasswordAtom);
-  const [error, setError] = useAtom(errorAtom);
-  const [, setCurrentUser] = useAtom(currentUserAtom);
+  const [newPassword, setNewPassword] = useAtom(NEW_PASSWORD);
+  const [rePassword, setRePassword] = useAtom(RE_PASSWORD);
+  const [errorStatus, setErrorStatus] = useAtom(ERROR_STATUS);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom);
-  const [, setLoginSuccess] = useAtom(loginSuccessAtom);
+  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [, setLoginSuccess] = useAtom(LOGIN_SUCCESS);
   const [, setUserName] = useAtom(USER_NAME); // 유저 이름 아톰
   const [, setUserEmail] = useAtom(USER_EMAIL); // 유저 이메일 아톰
   const [isPopupOpen, setIsPopupOpen] = useState(false); // 팝업 상태 관리
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    setError("");
-  }, [setError]);
+    setErrorStatus("");
+  }, [setErrorStatus]);
 
   const validateCheckPasswordForm = () => {
     if (!newPassword || !password || !rePassword) {
-      setError("모든 필드를 입력해주세요.");
+      setErrorStatus("모든 필드를 입력해주세요.");
       return false;
     }
     if (newPassword == password) {
-      setError("기존 비밀번호와 다른 비밀번호를 입력해주세요.");
+      setErrorStatus("기존 비밀번호와 다른 비밀번호를 입력해주세요.");
       return false;
     }
     if (newPassword != rePassword) {
-      setError("동일한 비밀번호를 입력해주세요.");
+      setErrorStatus("동일한 비밀번호를 입력해주세요.");
       return false;
     }
     // 비밀번호 유효성 검사 추가
     if (!isValidPassword(newPassword)) {
-      setError(
+      setErrorStatus(
         "비밀번호는 8-16자 길이여야 하며, 문자, 숫자, 특수문자 중 최소 두 가지를 포함해야 합니다."
       );
       return false;
@@ -68,7 +66,7 @@ const MoleculeAccountForm = ({ onOpenPopup  = () => {} }) => {  // onOpenPopup  
   };
 
   const handleChangPassword = async () => {
-    setError("");
+    setErrorStatus("");
     if (!validateCheckPasswordForm()) return;
 
     try {
@@ -89,7 +87,7 @@ const MoleculeAccountForm = ({ onOpenPopup  = () => {} }) => {  // onOpenPopup  
           },
         }
       );
-      setError("비밀번호가 변경되었습니다.");
+      setErrorStatus("비밀번호가 변경되었습니다.");
       setIsPopupOpen(true); // 팝업 열기
 
       // 비밀번호 변경 성공 시, 입력된 비밀번호 정보 초기화
@@ -102,7 +100,7 @@ const MoleculeAccountForm = ({ onOpenPopup  = () => {} }) => {  // onOpenPopup  
     } catch (error) {
       const serverErrorMessage = error.response?.data?.message || "비밀번호 변경 중 오류가 발생했습니다.";
     
-      setError(serverErrorMessage);
+      setErrorStatus(serverErrorMessage);
       setPassword(""); 
       setNewPassword("");
       setRePassword("");
@@ -181,8 +179,8 @@ return (
         <p>영문/숫자/특수문자 2가지 이상 혼합. 8~16자</p>
         <p> </p>
       </div>
-      {error && <ErrorMessage>{error}</ErrorMessage>}
-      <div>{error && <p> </p>}</div>
+      {errorStatus && <ErrorMessage>{errorStatus}</ErrorMessage>}
+      <div>{errorStatus && <p> </p>}</div>
       {/* 
       <PasswordResetLink>
         <a onClick={handlePasswordReset}>비밀번호 찾기</a>

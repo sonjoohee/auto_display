@@ -5,14 +5,14 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAtom } from "jotai";
 import {
-  passwordAtom,
-  newPasswordAtom,
-  rePasswordAtom,
+  PASSWORD,
+  NEW_PASSWORD,
+  RE_PASSWORD,
   SELECTED_EXPERT_INDEX,
   INPUT_BUSINESS_INFO,
   APPROACH_PATH,
   ANALYSIS_BUTTON_STATE,
-  isLoggedInAtom,
+  IS_LOGGED_IN,
   TITLE_OF_BUSINESS_INFORMATION,
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
   MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
@@ -151,14 +151,14 @@ const PageMeetAiExpert = () => {
   const [analysisButtonState, setAnalysisButtonState] = useAtom(
     ANALYSIS_BUTTON_STATE
   );
-  const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN); // 로그인 상태 확인
   const [isExpertInsightAccessible, setIsExpertInsightAccessible] = useAtom(
     IS_EXPERT_INSIGHT_ACCESSIBLE
   );
   const [expertData] = useAtom(EXPERT_DETAIL_DATA);
-  const [password, setPassword] = useAtom(passwordAtom);
-  const [newPassword, setNewPassword] = useAtom(newPasswordAtom);
-  const [rePassword, setRePassword] = useAtom(rePasswordAtom);
+  const [password, setPassword] = useAtom(PASSWORD);
+  const [newPassword, setNewPassword] = useAtom(NEW_PASSWORD);
+  const [rePassword, setRePassword] = useAtom(RE_PASSWORD);
   const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(
     SELECTED_EXPERT_INDEX
   );

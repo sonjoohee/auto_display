@@ -8,17 +8,16 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import AtomButton from "../atoms/AtomButton";
 import { isValidEmail } from "../atoms/AtomValidation";
 import {
-  nameAtom,
-  emailAtom,
-  signupEmailAtom,
-  signupPasswordAtom,
-  confirmPasswordAtom,
-  currentUserAtom,
-  errorAtom,
+  SIGN_UP_NAME,
+  EMAIL,
+  SIGN_UP_EMAIL,
+  SIGN_UP_PASSWORD,
+  CONFIRM_PASSWORD,
+  ERROR_STATUS,
 } from "../../../AtomStates";
 import {
-  isLoggedInAtom,
-  loginSuccessAtom,
+  IS_LOGGED_IN,
+  LOGIN_SUCCESS,
   USER_NAME,
   USER_EMAIL,
   IS_LOGIN_POPUP_OPEN,
@@ -31,40 +30,39 @@ import MoleculeSignPopup from "./MoleculeSignPopup";
 import MoleculeResetPasswordPopup from "./MoleculeResetPasswordPopup";
 
 const MoleculeLoginForm = () => {
-  const [name, setName] = useAtom(nameAtom);
-  const [email, setEmail] = useAtom(emailAtom);
-  const [, setSignupEmail] = useAtom(signupEmailAtom);
+  const [signUpName, setSignUpName] = useAtom(SIGN_UP_NAME);
+  const [email, setEmail] = useAtom(EMAIL);
+  const [, setSignupEmail] = useAtom(SIGN_UP_EMAIL);
   const [password, setPassword] = useState("");
-  const [, setSignupPassword] = useAtom(signupPasswordAtom);
-  const [confirmPassword, setConfirmPassword] = useAtom(confirmPasswordAtom);
-  const [error, setError] = useAtom(errorAtom);
-  const [, setCurrentUser] = useAtom(currentUserAtom);
+  const [, setSignupPassword] = useAtom(SIGN_UP_PASSWORD);
+  const [confirmPassword, setConfirmPassword] = useAtom(CONFIRM_PASSWORD);
+  const [errorStatus, setErrorStatus] = useAtom(ERROR_STATUS);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom);
-  const [, setLoginSuccess] = useAtom(loginSuccessAtom);
+  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [, setLoginSuccess] = useAtom(LOGIN_SUCCESS);
   const [, setUserName] = useAtom(USER_NAME); // 유저 이름 아톰
   const [, setUserEmail] = useAtom(USER_EMAIL); // 유저 이메일 아톰
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useAtom(IS_LOGIN_POPUP_OPEN);
 
   useEffect(() => {
-    setError("");
-  }, [setError]);
+    setErrorStatus("");
+  }, [setErrorStatus]);
 
   const validateForm = () => {
     if (!email || !password) {
-      setError("모든 필드를 입력해주세요.");
+      setErrorStatus("모든 필드를 입력해주세요.");
       return false;
     }
     if (!isValidEmail(email)) {
-      setError("유효한 이메일 주소를 입력해주세요.");
+      setErrorStatus("유효한 이메일 주소를 입력해주세요.");
       return false;
     }
     return true;
   };
 
   const handleLogin = async () => {
-    setError("");
+    setErrorStatus("");
     if (!validateForm()) return;
 
     try {
@@ -110,15 +108,15 @@ const MoleculeLoginForm = () => {
           setLoginSuccess(true);
           // navigate("/MeetAiExpert");
         } else {
-          setError("유저 정보를 불러오는 중 오류가 발생했습니다.");
+          setErrorStatus("유저 정보를 불러오는 중 오류가 발생했습니다.");
         }
       } else {
         // 서버에서 받은 에러 메시지 처리
         const result = await response.json();
-        setError(result.message || "로그인 중 오류가 발생했습니다."); // 서버 메시지 표시
+        setErrorStatus(result.message || "로그인 중 오류가 발생했습니다."); // 서버 메시지 표시
       }
     } catch (error) {
-      setError("로그인 중 오류가 발생했습니다.");
+      setErrorStatus("로그인 중 오류가 발생했습니다.");
     }
   };
 
@@ -148,8 +146,8 @@ const MoleculeLoginForm = () => {
   };
   const closeSignPopup = () => {
     setIsSignPopupOpen(false); // 회원가입 팝업 닫기
-    setError("");
-    setName('');
+    setErrorStatus("");
+    setSignUpName('');
     setEmail('');
     setSignupEmail('');
     setPassword('');
@@ -219,7 +217,7 @@ const MoleculeLoginForm = () => {
             로그인
           </StyledLoginButton>
           
-          {error && <ErrorMessage>{error}</ErrorMessage>}
+          {errorStatus && <ErrorMessage>{errorStatus}</ErrorMessage>}
 
           <JoinWrap>
             <p>InterviewX가 처음이에요</p>

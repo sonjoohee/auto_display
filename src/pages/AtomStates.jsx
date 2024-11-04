@@ -2,30 +2,28 @@
 import { atom } from "jotai";
 
 // 로그인 상태
-export const emailAtom = atom("");
-export const passwordAtom = atom("");
-export const newPasswordAtom = atom("");
-export const rePasswordAtom = atom("");
-export const isLoggedInAtom = atom(false);
-export const loginSuccessAtom = atom(null);
+export const EMAIL = atom("");
+export const PASSWORD = atom("");
+export const NEW_PASSWORD = atom("");
+export const RE_PASSWORD = atom("");
+export const IS_LOGGED_IN = atom(false);
+export const LOGIN_SUCCESS = atom(null);
 
 // 회원가입 상태
-export const nameAtom = atom("");
-export const signupEmailAtom = atom("");
-export const signupPasswordAtom = atom("");
-export const confirmPasswordAtom = atom("");
-export const roleAtom = atom("user");
-export const statusAtom = atom("active");
+export const SIGN_UP_NAME = atom("");
+export const SIGN_UP_EMAIL = atom("");
+export const SIGN_UP_PASSWORD = atom("");
+export const CONFIRM_PASSWORD = atom("");
+export const SIGN_UP_ROLE = atom("user");
+export const SIGN_UP_STATUS = atom("active");
 export const USER_NAME = atom("");
 export const USER_EMAIL = atom("");
 
 // 사용자 데이터 상태
-export const usersAtom = atom([]); // db 사용 시 필요 없음
-export const currentUserAtom = atom(null);
-export const errorAtom = atom(""); // 에러 상태 추가
+export const CURRENT_USER_STATUS = atom(null);
+export const ERROR_STATUS = atom(""); // 에러 상태 추가
 
 // 패널 선택 상태
-export const selectedPanelsAtom = atom(new Set());
 export const SELECTED_COUNT = atom(0);
 export const SELECTED_PANELS = atom(new Set()); // 선택된 패널의 ID 저장
 export const SELECTED_ALL_PANELS = atom(false);
