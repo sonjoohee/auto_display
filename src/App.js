@@ -4,7 +4,7 @@ import './App.css';
 import GlobalStyles from "./assets/GlobalStyle";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useAtom } from 'jotai';
-import { isLoggedInAtom,USER_NAME, USER_EMAIL ,IS_SOCIAL_LOGGED_IN, EXPERT_DETAIL_DATA, IS_MOBILE } from './pages/AtomStates'; // 로그인 상태 아톰 임포트
+import { IS_LOGGED_IN,USER_NAME, USER_EMAIL ,IS_SOCIAL_LOGGED_IN, EXPERT_DETAIL_DATA, IS_MOBILE } from './pages/AtomStates'; // 로그인 상태 아톰 임포트
 import axios from "axios";
 
 import PageLogin from './pages/Login_Sign/components/pages/PageLogin';
@@ -34,7 +34,7 @@ import Loading from "./pages/Persona/Loading";
 import LoadingPersona from "./pages/Persona/LoadingPersona"; 
 
 function App() {
-  const [, setIsLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태를 위한 아톰
+  const [, setIsLoggedIn] = useAtom(IS_LOGGED_IN); // 로그인 상태를 위한 아톰
   const [, setUserName] = useAtom(USER_NAME); // 유저 이름 아톰
   const [, setUserEmail] = useAtom(USER_EMAIL); // 유저 이메일 아톰
   const [, setIsSocialLoggedIn] = useAtom(IS_SOCIAL_LOGGED_IN); // 소셜 로그인 상태 아톰

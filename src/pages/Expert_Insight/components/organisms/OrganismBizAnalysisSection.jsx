@@ -29,7 +29,7 @@ import {
   IS_LOADING,
   CONVERSATION,
   APPROACH_PATH,
-  isLoggedInAtom,
+  IS_LOGGED_IN,
   SELECTED_EXPERT_INDEX,
   REPORT_REFRESH_TRIGGER,
   IS_LOADING_ANALYSIS,
@@ -45,7 +45,7 @@ const OrganismBizAnalysisSection = () => {
   const { saveConversation } = useSaveConversation();
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
-  const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN); // 로그인 상태 확인
   const [reportRefreshTrigger, setReportRefreshTrigger] = useAtom(
     REPORT_REFRESH_TRIGGER
   ); // 리프레시 트리거 상태 구독

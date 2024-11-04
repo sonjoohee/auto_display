@@ -16,7 +16,7 @@ import {
   ADDITIONAL_REPORT_DATA,
   CONVERSATION_STAGE,
   CONVERSATION,
-  isLoggedInAtom,
+  IS_LOGGED_IN,
   CONVERSATION_ID,
   SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
@@ -193,7 +193,7 @@ const PageExpertInsight = () => {
 
   const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA); // 변경된 부분
 
-  const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN); // 로그인 상태 확인
   const [advise, setAdvise] = useState(""); // 새로운 advise 상태 추가
 
   const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);

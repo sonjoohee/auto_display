@@ -6,19 +6,19 @@ import MoleculeSearchForm from "../molecules/MoleculeSearchForm";
 import { palette } from "../../../../assets/styles/Palette";
 import { useAtom } from "jotai";
 import { 
-  currentUserAtom, 
+  CURRENT_USER_STATUS, 
   TOTAL_PANEL_COUNT,
 } from "../../../AtomStates";
 
 const OrganismSearchSection = () => {
-  const [currentUser] = useAtom(currentUserAtom);
+  const [currentUserStatus] = useAtom(CURRENT_USER_STATUS);
   const [totalPanelCount, setTotalPanelCount] = useAtom(TOTAL_PANEL_COUNT);
   
   return (
     <StyledSearchSection>
       <h2>
         {totalPanelCount.toLocaleString()}명의 AI 패널 대기 중
-        <p>{currentUser ? `${currentUser.name} 님의 비즈니스를 함께 할 패널을 찾아보세요` : "당신의 비즈니스를 함께 할 패널을 찾아보세요"}</p>
+        <p>{currentUserStatus ? `${currentUserStatus.name} 님의 비즈니스를 함께 할 패널을 찾아보세요` : "당신의 비즈니스를 함께 할 패널을 찾아보세요"}</p>
       </h2>
       <MoleculeSearchForm />
     </StyledSearchSection>

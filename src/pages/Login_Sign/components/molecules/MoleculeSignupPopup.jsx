@@ -3,17 +3,17 @@ import { useAtom } from "jotai";
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { signupEmailAtom, IS_LOGIN_POPUP_OPEN, IS_MARKETING, isLoggedInAtom, USER_NAME, USER_EMAIL } from "../../../AtomStates";
+import { SIGN_UP_EMAIL, IS_LOGIN_POPUP_OPEN, IS_MARKETING, IS_LOGGED_IN, USER_NAME, USER_EMAIL } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 
 const MoleculeSignupPopup = ({ onClose, email }) => {
   const navigate = useNavigate();
-  const [, setEmail] = useAtom(signupEmailAtom);
+  const [, setSignUpEmail] = useAtom(SIGN_UP_EMAIL);
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useAtom(IS_LOGIN_POPUP_OPEN);
   const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
-  const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom);
+  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [userName, setUserName] = useAtom(USER_NAME);
   const [userEmail, setUserEmail] = useAtom(USER_EMAIL);
 
@@ -61,7 +61,7 @@ const MoleculeSignupPopup = ({ onClose, email }) => {
       setUserEmail("");
     }
     navigate("/MeetAiExpert");
-    setEmail(""); // 이메일 상태를 초기화합니다.
+    setSignUpEmail(""); // 이메일 상태를 초기화합니다.
     // setIsLoginPopupOpen(true);
   };
 

@@ -12,7 +12,7 @@ import {
   CONVERSATION,
   INPUT_BUSINESS_INFO,
   SELECTED_EXPERT_INDEX,
-  isLoggedInAtom,
+  IS_LOGGED_IN,
   CONVERSATION_ID,
   CASE_REPORT_BUTTON_STATE,
   CASE_QUESTION_INPUT,
@@ -23,7 +23,7 @@ import {
 } from "../../../AtomStates";
 
 const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
-  const [isLoggedIn] = useAtom(isLoggedInAtom);
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [conversation, setConversation] = useAtom(CONVERSATION);

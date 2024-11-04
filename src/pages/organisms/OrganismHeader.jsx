@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useAtom } from 'jotai';
-import { isLoggedInAtom } from "../AtomStates"; // Jotai 상태 임포트
+import { IS_LOGGED_IN } from "../AtomStates"; // Jotai 상태 임포트
 import { palette } from "../../assets/styles/Palette";
 import images from "../../assets/styles/Images";
 import MoleculeLoginPopup from "../Login_Sign/components/molecules/MoleculeLoginPopup"; // 경로 수정
@@ -80,7 +80,7 @@ const HeaderWrap = styled.header`
 `;
 
 const OrganismHeader = () => {
-  const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom); // Jotai의 로그인 상태 및 상태 업데이트 함수 구독
+  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN); // Jotai의 로그인 상태 및 상태 업데이트 함수 구독
   const [isLoginPopupOpen, setLoginPopupOpen] = useState(false);
 
   const handleLoginClick = (e) => {

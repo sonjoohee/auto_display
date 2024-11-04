@@ -12,7 +12,7 @@ import {
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
   MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
-  isLoggedInAtom,
+  IS_LOGGED_IN,
   CONVERSATION_STAGE,
   BUTTON_STATE,
   CASE_REPORT_BUTTON_STATE,
@@ -49,7 +49,7 @@ const OrganismCaseReport = ({ caseReportCount }) => {
     setBusinessInformationTargetCustomer,
   ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
-  const [isLoggedIn] = useAtom(isLoggedInAtom);
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [isLoadingCaseReport, setIsLoadingCaseReport] = useState(false);

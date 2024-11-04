@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useAtom } from "jotai";
-import { isLoggedInAtom, SELECTED_EXPERT_INDEX } from "../pages/AtomStates"; // AtomStates 파일에서 isLoggedInAtom 임포트
+import { IS_LOGGED_IN, SELECTED_EXPERT_INDEX } from "../pages/AtomStates"; // AtomStates 파일에서 IS_LOGGED_IN 임포트
 
 export const fetchDataById = async (id) => {
   try {

@@ -4,16 +4,16 @@ import MoleculeAccount from "./MoleculeAccount";
 import { useAtom } from "jotai";
 import { palette } from "../../../../assets/styles/Palette";
 import {
-  passwordAtom,
-  newPasswordAtom,
-  rePasswordAtom,
+  PASSWORD,
+  NEW_PASSWORD,
+  RE_PASSWORD,
 } from "../../../../pages/AtomStates";
 import images from "../../../../assets/styles/Images";
 
 const MoleculeAccountPopup = ({ onClose = () => {} }) => {
-  const [, setPassword] = useAtom(passwordAtom);
-  const [, setNewPassword] = useAtom(newPasswordAtom);
-  const [, setRePassword] = useAtom(rePasswordAtom);
+  const [, setPassword] = useAtom(PASSWORD);
+  const [, setNewPassword] = useAtom(NEW_PASSWORD);
+  const [, setRePassword] = useAtom(RE_PASSWORD);
   const [isPopupOpen, setIsPopupOpen] = useState(false); // 팝업 상태 관리
 
   const handleOverlayClick = (e) => {

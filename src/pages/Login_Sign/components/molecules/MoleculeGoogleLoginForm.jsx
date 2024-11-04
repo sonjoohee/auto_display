@@ -9,8 +9,8 @@ import axios from "axios";
 import images from "../../assets/styles/Images"; // Images.jsx 임포트
 import { useAtom } from "jotai";
 import {
-  isLoggedInAtom,
-  loginSuccessAtom,
+  IS_LOGGED_IN,
+  LOGIN_SUCCESS,
   USER_NAME,
   USER_EMAIL,
   IS_SOCIAL_LOGGED_IN,
@@ -22,8 +22,8 @@ import "firebase/auth";
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeGoogleLoginForm = () => {
-  const [, setIsLoggedIn] = useAtom(isLoggedInAtom);
-  const [, setLoginSuccess] = useAtom(loginSuccessAtom);
+  const [, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [, setLoginSuccess] = useAtom(LOGIN_SUCCESS);
   const [, setUserName] = useAtom(USER_NAME); // 유저 이름 아톰
   const [, setUserEmail] = useAtom(USER_EMAIL); // 유저 이메일 아톰
   const [, setIsSocialLoggedIn] = useAtom(IS_SOCIAL_LOGGED_IN); // 소셜 로그인 아톰
