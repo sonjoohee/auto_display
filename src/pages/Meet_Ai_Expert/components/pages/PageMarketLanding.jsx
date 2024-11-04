@@ -19,29 +19,31 @@ const PageMarketLanding = () => {
     navigate('/');
   };
 
+  const axiosConfig = {
+    timeout: 100000, // 100초
+    headers: {
+      "Content-Type": "application/json",
+    },
+    withCredentials: true,
+  };
+
   const handleSubmit = async (type) => {
     try {
       // 로그인 요청
       const response = await axios.get(
-        "http://wishresearch.kr/api/user/login/marketing/",
+        "https://wishresearch.kr/api/user/login/marketing/",
+        axiosConfig
       );
 
-      if (response.ok) {
-        const result = await response.json();
-        const accessToken = result.access_token;
+      const accessToken = response.access_token;
 
-        // accessToken을 세션 스토리지에 저장
-        sessionStorage.setItem("accessToken", accessToken);
+      // accessToken을 세션 스토리지에 저장
+      sessionStorage.setItem("accessToken", accessToken);
 
-        // 로그인 성공 처리
-        setIsLoggedIn(true);
-        setLoginSuccess(true);
+      // 로그인 성공 처리
+      setIsLoggedIn(true);
+      setLoginSuccess(true);
 
-      } else {
-        // 서버에서 받은 에러 메시지 처리
-        const result = await response.json();
-        console.error("로그인 중 오류가 발생했습니다.", result.message);
-      }
     } catch (error) {
       console.error("로그인 중 오류가 발생했습니다.", error);
     }
