@@ -65,7 +65,7 @@ import {
   BM_QUESTION_LIST,
 } from "../../../AtomStates";
 
-import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
+import { useSaveConversation } from "../atoms/AtomSaveConversation";
 
 import {
   SkeletonTitle,
@@ -76,6 +76,7 @@ import {
 import images from "../../../../assets/styles/Images";
 
 const OrganismIdeaList = () => {
+  const { saveConversation } = useSaveConversation();
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
   const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
   const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
@@ -355,59 +356,10 @@ const handleMiro = async () => {
       miroUrl = response.data;
     }
 
-    await saveConversationToIndexedDB(
-      {
-        id: conversationId,
-        inputBusinessInfo: inputBusinessInfo,
-        analysisReportData: analysisReportData,
-        strategyReportData: strategyReportData,
-        conversation: conversation,
-        conversationStage: conversationStage,
-        selectedAdditionalKeywords: selectedAdditionalKeyword,
-        selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
-        additionalReportData: additionalReportData,
-        customerAdditionalReportData: customerAdditionalReportData,
-        timestamp: Date.now(),
-        expert_index: selectedExpertIndex,
-        selectedPocOptions: selectedPocOptions,
-        pocPersonaList: pocPersonaList,
-        selectedPocTarget: selectedPocTarget,
-        recommendedTargetData: recommendedTargetData,
-        pocDetailReportData : pocDetailReportData,
-        ideaFeatureData : ideaFeatureData,
-        ideaRequirementData : ideaRequirementData,
-        ideaList : ideaList,
-        ideaGroup : ideaGroup,
-        buttonState : buttonState,
-        ideaMiro : miroUrl,
-        growthHackerReportData : growthHackerReportData,
-        growthHackerDetailReportData : growthHackerDetailReportData,
-        KpiQuestionList : KpiQuestionList,
-        priceScrapData : priceScrapData,
-        priceReportData : priceReportData,
-        priceProduct : priceProduct,
-        priceSelectedProductSegmentation : priceSelectedProductSegmentation,
-        priceProductSegmentation : priceProductSegmentation,
-        caseHashTag : caseHashTag,
-        caseReportData : caseReportData,
-        bmOrLean : bmOrLean,
-        bmQuestionList : bmQuestionList,
-        bmModelSuggestionReportData : bmModelSuggestionReportData,
-        bmBmAutoReportData : bmBmAutoReportData,
-        bmLeanAutoReportData : bmLeanAutoReportData,
-        bmBmAdsReportData : bmBmAdsReportData,
-        bmSelectedProblemOptions : bmSelectedProblemOptions,
-        bmLeanAdsReportData : bmLeanAdsReportData,
-        bmBmCustomReportData : bmBmCustomReportData,
-        bmLeanCustomReportData : bmLeanCustomReportData,
-        surveyGuidelineReportData : surveyGuidelineReportData,
-        surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
-        surveyGoalSuggestionList: surveyGoalSuggestionList,
-        surveyGoalFixed: surveyGoalFixed,
-        surveyQuestionList: surveyQuestionList,
-      },
-      isLoggedIn,
-      conversationId
+    setConversationStage(3);
+
+    await saveConversation(
+      { changingConversation: { conversationStage: 3, ideaMiro : miroUrl } }
     );
 
     if (typeof miroUrl === 'string' && /^https?:\/\/.+\..+/.test(miroUrl)) {
@@ -574,58 +526,8 @@ useEffect(() => {
         );
         setConversation(updatedConversation);
 
-        await saveConversationToIndexedDB(
-          {
-            id: conversationId,
-            inputBusinessInfo: inputBusinessInfo,
-            analysisReportData: analysisReportData,
-            strategyReportData: strategyReportData,
-            conversation: updatedConversation,
-            conversationStage: conversationStage,
-            selectedAdditionalKeywords: selectedAdditionalKeyword,
-            selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
-            additionalReportData: additionalReportData,
-            customerAdditionalReportData: customerAdditionalReportData,
-            timestamp: Date.now(),
-            expert_index: selectedExpertIndex,
-            selectedPocOptions: selectedPocOptions,
-            pocPersonaList: pocPersonaList,
-            selectedPocTarget: selectedPocTarget,
-            recommendedTargetData: recommendedTargetData,
-            pocDetailReportData : pocDetailReportData,
-            ideaFeatureData : ideaFeatureData,
-            ideaRequirementData : ideaRequirementData,
-            ideaList : finalResponseIdea.dev_report,
-            ideaGroup : responseGroup.data.dev_cluster_report,
-            buttonState : buttonState,
-            growthHackerReportData : growthHackerReportData,
-            growthHackerDetailReportData : growthHackerDetailReportData,
-            KpiQuestionList : KpiQuestionList,
-            priceScrapData : priceScrapData,
-            priceReportData : priceReportData,
-            priceProduct : priceProduct,
-            priceSelectedProductSegmentation : priceSelectedProductSegmentation,
-            priceProductSegmentation : priceProductSegmentation,
-            caseHashTag : caseHashTag,
-            caseReportData : caseReportData,
-            bmOrLean : bmOrLean,
-            bmQuestionList : bmQuestionList,
-            bmModelSuggestionReportData : bmModelSuggestionReportData,
-            bmBmAutoReportData : bmBmAutoReportData,
-            bmLeanAutoReportData : bmLeanAutoReportData,
-            bmBmAdsReportData : bmBmAdsReportData,
-            bmSelectedProblemOptions : bmSelectedProblemOptions,
-            bmLeanAdsReportData : bmLeanAdsReportData,
-            bmBmCustomReportData : bmBmCustomReportData,
-            bmLeanCustomReportData : bmLeanCustomReportData,
-            surveyGuidelineReportData : surveyGuidelineReportData,
-            surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
-            surveyGoalSuggestionList: surveyGoalSuggestionList,
-            surveyGoalFixed: surveyGoalFixed,
-            surveyQuestionList: surveyQuestionList,
-          },
-          isLoggedIn,
-          conversationId
+        await saveConversation(
+          { changingConversation: { conversation: updatedConversation, conversationStage: 3, ideaList : finalResponseIdea.dev_report, ideaGroup : responseGroup.data.dev_cluster_report, } }
         );
       }
     } catch (error) {

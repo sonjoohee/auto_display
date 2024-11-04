@@ -67,7 +67,7 @@ import {
   BM_QUESTION_LIST,
 } from "../../../AtomStates";
 
-import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
+import { useSaveConversation } from "../atoms/AtomSaveConversation";
 import MoleculeReportController from "../molecules/MoleculeReportController";
 
 import {
@@ -79,6 +79,7 @@ import {
 import images from "../../../../assets/styles/Images";
 
 const OrganismIdeaFeature = () => {
+  const { saveConversation } = useSaveConversation();
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
   const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
   const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
@@ -389,57 +390,10 @@ const OrganismIdeaFeature = () => {
             },
           );
           setConversation(updatedConversation);
+          setConversationStage(3);
 
-          await saveConversationToIndexedDB(
-            {
-              id: conversationId,
-              inputBusinessInfo: inputBusinessInfo,
-              analysisReportData: analysisReportData,
-              strategyReportData: strategyReportData,
-              conversation: updatedConversation,
-              conversationStage: conversationStage,
-              selectedAdditionalKeywords: selectedAdditionalKeyword,
-              selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
-              additionalReportData: additionalReportData,
-              customerAdditionalReportData: customerAdditionalReportData,
-              timestamp: Date.now(),
-              expert_index: selectedExpertIndex,
-              selectedPocOptions: selectedPocOptions,
-              pocPersonaList: pocPersonaList,
-              selectedPocTarget: selectedPocTarget,
-              recommendedTargetData: recommendedTargetData,
-              pocDetailReportData : pocDetailReportData,
-              ideaFeatureData : updatedFeatureRequirementList.feature,
-              ideaRequirementData : updatedFeatureRequirementList.requirements,
-              buttonState : buttonState,
-              growthHackerReportData : growthHackerReportData,
-              growthHackerDetailReportData : growthHackerDetailReportData,
-              KpiQuestionList : KpiQuestionList,
-              priceScrapData : priceScrapData,
-              priceReportData : priceReportData,
-              priceProduct : priceProduct,
-              priceSelectedProductSegmentation : priceSelectedProductSegmentation,
-              priceProductSegmentation : priceProductSegmentation,
-              caseHashTag : caseHashTag,
-              caseReportData : caseReportData,
-              bmOrLean : bmOrLean,
-              bmQuestionList : bmQuestionList,
-              bmModelSuggestionReportData : bmModelSuggestionReportData,
-              bmBmAutoReportData : bmBmAutoReportData,
-              bmLeanAutoReportData : bmLeanAutoReportData,
-              bmBmAdsReportData : bmBmAdsReportData,
-              bmSelectedProblemOptions : bmSelectedProblemOptions,
-              bmLeanAdsReportData : bmLeanAdsReportData,
-              bmBmCustomReportData : bmBmCustomReportData,
-              bmLeanCustomReportData : bmLeanCustomReportData,
-              surveyGuidelineReportData : surveyGuidelineReportData,
-              surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
-              surveyGoalSuggestionList: surveyGoalSuggestionList,
-              surveyGoalFixed: surveyGoalFixed,
-              surveyQuestionList: surveyQuestionList,
-            },
-            isLoggedIn,
-            conversationId
+          await saveConversation(
+            { changingConversation: { conversation: updatedConversation, conversationStage: 3, ideaFeatureData : updatedFeatureRequirementList.feature, ideaRequirementData : updatedFeatureRequirementList.requirements, } }
           );
         }
       } catch (error) {

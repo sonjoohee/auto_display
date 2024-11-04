@@ -66,11 +66,10 @@ import {
 
 import { useAtom } from "jotai";
 
-import {
-  saveConversationToIndexedDB,
-} from "../../../../utils/indexedDB";
+import { useSaveConversation } from "../atoms/AtomSaveConversation";
 
 const OrganismGrowthHackerKPI = () => {
+  const { saveConversation } = useSaveConversation();
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
   const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
   const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
@@ -199,54 +198,11 @@ const OrganismGrowthHackerKPI = () => {
         );
 
         setConversation(updatedConversation);
+        setConversationStage(3);
         setGrowthHackerKPIButtonState(0);
 
-        await saveConversationToIndexedDB(
-          {
-            id: conversationId,
-            inputBusinessInfo: inputBusinessInfo,
-            analysisReportData: analysisReportData,
-            strategyReportData: strategyReportData,
-            conversation: updatedConversation,
-            conversationStage: 3,
-            selectedAdditionalKeywords: selectedAdditionalKeyword,
-            selectedCustomerAdditionalKeyword:
-            selectedCustomerAdditionalKeyword,
-            additionalReportData: additionalReportData,
-            customerAdditionalReportData: customerAdditionalReportData,
-            timestamp: Date.now(),
-            expert_index: selectedExpertIndex,
-            pocPersonaList: pocPersonaList,
-            selectedPocTarget: selectedPocTarget,
-            pocDetailReportData : pocDetailReportData,
-            buttonState : buttonState,
-            growthHackerReportData : growthHackerReportData,
-            KpiQuestionList : KpiQuestionList,
-            priceScrapData : priceScrapData,
-            priceReportData : priceReportData,
-            priceProduct : priceProduct,
-            priceSelectedProductSegmentation : priceSelectedProductSegmentation,
-            priceProductSegmentation : priceProductSegmentation,
-            caseHashTag : caseHashTag,
-            caseReportData : caseReportData,
-            bmOrLean : bmOrLean,
-            bmQuestionList : bmQuestionList,
-            bmModelSuggestionReportData : bmModelSuggestionReportData,
-            bmBmAutoReportData : bmBmAutoReportData,
-            bmLeanAutoReportData : bmLeanAutoReportData,
-            bmBmAdsReportData : bmBmAdsReportData,
-            bmSelectedProblemOptions : bmSelectedProblemOptions,
-            bmLeanAdsReportData : bmLeanAdsReportData,
-            bmBmCustomReportData : bmBmCustomReportData,
-            bmLeanCustomReportData : bmLeanCustomReportData,
-            surveyGuidelineReportData : surveyGuidelineReportData,
-            surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
-            surveyGoalSuggestionList: surveyGoalSuggestionList,
-            surveyGoalFixed: surveyGoalFixed,
-            surveyQuestionList: surveyQuestionList,
-          },
-          isLoggedIn,
-          conversationId
+        await saveConversation(
+          { changingConversation: { conversation: updatedConversation, conversationStage: 3 } }
         );
       };
     }
@@ -317,76 +273,14 @@ const OrganismGrowthHackerKPI = () => {
       // 응답으로부터 보고서 내용 가져오기
       const reportContent = response.data.growth_hacker_detailpersona_recommand_report;
 
-      // Markdown 스타일 제거 (정규식 사용)
-      const cleanedContent = reportContent
-        .replace(/##/g, "") // 제목 표시 '##' 제거
-        .replace(/\*\*/g, "") // 굵은 글씨 '**' 제거
-        .replace(/\*/g, "") // 이탤릭체 '*' 제거
-        .replace(/-\s/g, "• ") // 리스트 '-'를 '•'로 변환
-        .replace(/\n/g, "<br/>"); // 줄바꿈을 <br>로 변환
-
       // Atom에 보고서 내용을 저장
       setGrowthHackerDetailReportData(reportContent);
 
       // 저장 후 DOCX 생성 함수 호출
       generateDocx(reportContent, fileName);
 
-      // 저장 후 indexedDB에도 저장
-      await saveConversationToIndexedDB(
-        {
-          id: conversationId,
-          inputBusinessInfo: inputBusinessInfo,
-          analysisReportData: analysisReportData,
-          selectedAdditionalKeywords: selectedKeywords,
-          conversationStage: 3,
-          strategyReportData: strategyReportData,
-          conversation: conversation,
-          selectedAdditionalKeywords: selectedAdditionalKeyword,
-          selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
-          additionalReportData: additionalReportData,
-          customerAdditionalReportData: customerAdditionalReportData,
-          timestamp: Date.now(),
-          expert_index: selectedExpertIndex,
-          selectedPocOptions: selectedPocOptions,
-          pocPersonaList: pocPersonaList,
-          selectedPocTarget: selectedPocTarget,
-          recommendedTargetData: recommendedTargetData,
-          pocDetailReportData: pocDetailReportData,
-          ideaFeatureData : ideaFeatureData,
-          ideaRequirementData : ideaRequirementData,
-          ideaList : ideaList,
-          ideaGroup : ideaGroup,
-          ideaPriority : ideaPriority,
-          ideaMiro : ideaMiro,
-          buttonState : buttonState,
-          growthHackerReportData : growthHackerReportData,
-          growthHackerDetailReportData : cleanedContent,
-          KpiQuestionList : KpiQuestionList,
-          priceScrapData : priceScrapData,
-          priceReportData : priceReportData,
-          priceProduct : priceProduct,
-          priceSelectedProductSegmentation : priceSelectedProductSegmentation,
-          priceProductSegmentation : priceProductSegmentation,
-          caseHashTag : caseHashTag,
-          caseReportData : caseReportData,
-          bmOrLean : bmOrLean,
-          bmQuestionList : bmQuestionList,
-          bmModelSuggestionReportData : bmModelSuggestionReportData,
-          bmBmAutoReportData : bmBmAutoReportData,
-          bmLeanAutoReportData : bmLeanAutoReportData,
-          bmBmAdsReportData : bmBmAdsReportData,
-          bmSelectedProblemOptions : bmSelectedProblemOptions,
-          bmLeanAdsReportData : bmLeanAdsReportData,
-          bmBmCustomReportData : bmBmCustomReportData,
-          bmLeanCustomReportData : bmLeanCustomReportData,
-          surveyGuidelineReportData : surveyGuidelineReportData,
-          surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
-          surveyGoalSuggestionList: surveyGoalSuggestionList,
-          surveyGoalFixed: surveyGoalFixed,
-          surveyQuestionList: surveyQuestionList,
-        },
-        isLoggedIn,
-        conversationId
+      await saveConversation(
+        { changingConversation: { conversationStage: 3, growthHackerDetailReportData : reportContent } }
       );
     } catch (error) {
       console.error("Error fetching report:", error);

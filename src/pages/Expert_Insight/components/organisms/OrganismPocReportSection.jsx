@@ -26,10 +26,7 @@ import {
 } from "../../../../assets/styles/Skeleton";
 
 import MoleculeReportController from "../molecules/MoleculeReportController";
-import {
-  saveConversationToIndexedDB,
-  getConversationByIdFromIndexedDB,
-} from "../../../../utils/indexedDB";
+import { useSaveConversation } from "../atoms/AtomSaveConversation";
 import axios from "axios";
 
 import jsPDF from "jspdf";
@@ -83,6 +80,7 @@ import {
 } from "../../../AtomStates";
 
 const OrganismPocReportSection = ({ expertIndex }) => {
+  const { saveConversation } = useSaveConversation();
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
   const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
   const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
@@ -351,60 +349,9 @@ const OrganismPocReportSection = ({ expertIndex }) => {
           );
           setConversationStage(3);
           setConversation(updatedConversation);
-          await saveConversationToIndexedDB(
-            {
-              id: conversationId,
-              inputBusinessInfo: inputBusinessInfo,
-              analysisReportData: analysisReportData,
-              selectedAdditionalKeywords: selectedKeywords,
-              conversationStage: 3,
-              strategyReportData: updatedStrategyReportData, // Save the entire strategyReportData
-              conversation: updatedConversation,
-              selectedAdditionalKeywords: selectedAdditionalKeyword,
-              selectedCustomerAdditionalKeyword:
-                selectedCustomerAdditionalKeyword,
-              additionalReportData: additionalReportData,
-              customerAdditionalReportData: customerAdditionalReportData,
-              timestamp: Date.now(),
-              expert_index: selectedExpertIndex,
-              selectedPocOptions: selectedPocOptions,
-              pocPersonaList: pocPersonaList,
-              selectedPocTarget: selectedPocTarget,
-              recommendedTargetData: recommendedTargetData,
-              ideaFeatureData : ideaFeatureData,
-              ideaRequirementData : ideaRequirementData,
-              ideaList : ideaList,
-              ideaGroup : ideaGroup,
-              ideaPriority : ideaPriority,
-              buttonState : buttonState,
-              growthHackerReportData : growthHackerReportData,
-              growthHackerDetailReportData : growthHackerDetailReportData,
-              KpiQuestionList : KpiQuestionList,
-              priceScrapData : priceScrapData,
-              priceReportData : priceReportData,
-              priceProduct : priceProduct,
-              priceSelectedProductSegmentation : priceSelectedProductSegmentation,
-              priceProductSegmentation : priceProductSegmentation,
-              caseHashTag : caseHashTag,
-              caseReportData : caseReportData,
-              bmOrLean : bmOrLean,
-              bmQuestionList : bmQuestionList,
-              bmModelSuggestionReportData : bmModelSuggestionReportData,
-              bmBmAutoReportData : bmBmAutoReportData,
-              bmLeanAutoReportData : bmLeanAutoReportData,
-              bmBmAdsReportData : bmBmAdsReportData,
-              bmSelectedProblemOptions : bmSelectedProblemOptions,
-              bmLeanAdsReportData : bmLeanAdsReportData,
-              bmBmCustomReportData : bmBmCustomReportData,
-              bmLeanCustomReportData : bmLeanCustomReportData,
-              surveyGuidelineReportData : surveyGuidelineReportData,
-              surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
-              surveyGoalSuggestionList: surveyGoalSuggestionList,
-              surveyGoalFixed: surveyGoalFixed,
-              surveyQuestionList: surveyQuestionList,
-            },
-            isLoggedIn,
-            conversationId
+
+          await saveConversation(
+            { changingConversation: { conversation: updatedConversation, conversationStage: 3, strategyReportData: updatedStrategyReportData, } }
           );
         }
       } catch (error) {
@@ -603,6 +550,7 @@ const Section = ({
   const [recommendedTargetData, setRecommendedTargetData] = useAtom(
     RECOMMENDED_TARGET_DATA
   );
+  const { saveConversation } = useSaveConversation();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -901,64 +849,15 @@ const Section = ({
         [`${expertIndex}-${index}`]: cleanedContent,
       }));
 
-      // 저장 후 indexedDB에도 저장
-      await saveConversationToIndexedDB(
-        {
-          id: conversationId,
-          inputBusinessInfo: inputBusinessInfo,
-          analysisReportData: analysisReportData,
-          selectedAdditionalKeywords: selectedKeywords,
-          conversationStage: 3,
-          strategyReportData: strategyReportData, // Save the entire strategyReportData
-          conversation: conversation,
-          selectedAdditionalKeywords: selectedAdditionalKeyword,
-          selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
-          additionalReportData: additionalReportData,
-          customerAdditionalReportData: customerAdditionalReportData,
-          timestamp: Date.now(),
-          expert_index: selectedExpertIndex,
-          selectedPocOptions: selectedPocOptions,
-          pocPersonaList: pocPersonaList,
-          selectedPocTarget: selectedPocTarget,
-          recommendedTargetData: recommendedTargetData,
-          pocDetailReportData: {
-            ...pocDetailReportData,
-            [`${expertIndex}-${index}`]: cleanedContent,
-          },
-          ideaFeatureData : ideaFeatureData,
-          ideaRequirementData : ideaRequirementData,
-          ideaList : ideaList,
-          ideaGroup : ideaGroup,
-          ideaPriority : ideaPriority,
-          buttonState : buttonState,
-          growthHackerReportData : growthHackerReportData,
-          growthHackerDetailReportData : growthHackerDetailReportData,
-          KpiQuestionList : KpiQuestionList,
-          priceScrapData : priceScrapData,
-          priceReportData : priceReportData,
-          priceProduct : priceProduct,
-          priceSelectedProductSegmentation : priceSelectedProductSegmentation,
-          priceProductSegmentation : priceProductSegmentation,
-          caseHashTag : caseHashTag,
-          caseReportData : caseReportData,
-          bmOrLean : bmOrLean,
-          bmQuestionList : bmQuestionList,
-          bmModelSuggestionReportData : bmModelSuggestionReportData,
-          bmBmAutoReportData : bmBmAutoReportData,
-          bmLeanAutoReportData : bmLeanAutoReportData,
-          bmBmAdsReportData : bmBmAdsReportData,
-          bmSelectedProblemOptions : bmSelectedProblemOptions,
-          bmLeanAdsReportData : bmLeanAdsReportData,
-          bmBmCustomReportData : bmBmCustomReportData,
-          bmLeanCustomReportData : bmLeanCustomReportData,
-          surveyGuidelineReportData : surveyGuidelineReportData,
-          surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
-          surveyGoalSuggestionList: surveyGoalSuggestionList,
-          surveyGoalFixed: surveyGoalFixed,
-          surveyQuestionList: surveyQuestionList,
-        },
-        isLoggedIn,
-        conversationId
+      await saveConversation(
+        { changingConversation: { 
+            conversationStage: 3,           
+            pocDetailReportData: {
+              ...pocDetailReportData,
+              [`${expertIndex}-${index}`]: cleanedContent,
+            },
+          }
+        }
       );
 
       // PDF 생성 함수 호출
@@ -1068,81 +967,24 @@ const Section = ({
       // 응답으로부터 보고서 내용 가져오기
       const reportContent = response.data.poc_report; // 실제 응답 구조에 맞춰 수정 필요
 
-      // Markdown 스타일 제거 (정규식 사용)
-      const cleanedContent = reportContent
-        .replace(/##/g, "") // 제목 표시 '##' 제거
-        .replace(/\*\*/g, "") // 굵은 글씨 '**' 제거
-        .replace(/\*/g, "") // 이탤릭체 '*' 제거
-        .replace(/-\s/g, "• ") // 리스트 '-'를 '•'로 변환
-        .replace(/\n/g, "<br/>"); // 줄바꿈을 <br>로 변환
-
       // Atom에 보고서 내용을 저장
       setpocDetailReportData((prevReport) => ({
         ...prevReport,
-        [`${expertIndex}-${index}`]: cleanedContent,
+        [`${expertIndex}-${index}`]: reportContent,
       }));
 
       // 저장 후 DOCX 생성 함수 호출
       generateDocx(reportContent, index, fileName);
 
-      // 저장 후 indexedDB에도 저장
-      await saveConversationToIndexedDB(
-        {
-          id: conversationId,
-          inputBusinessInfo: inputBusinessInfo,
-          analysisReportData: analysisReportData,
-          selectedAdditionalKeywords: selectedKeywords,
-          conversationStage: 3,
-          strategyReportData: strategyReportData, // Save the entire strategyReportData
-          conversation: conversation,
-          selectedAdditionalKeywords: selectedAdditionalKeyword,
-          selectedCustomerAdditionalKeyword: selectedCustomerAdditionalKeyword,
-          additionalReportData: additionalReportData,
-          customerAdditionalReportData: customerAdditionalReportData,
-          timestamp: Date.now(),
-          expert_index: selectedExpertIndex,
-          selectedPocOptions: selectedPocOptions,
-          pocPersonaList: pocPersonaList,
-          selectedPocTarget: selectedPocTarget,
-          recommendedTargetData: recommendedTargetData,
-          pocDetailReportData: {
-            ...pocDetailReportData,
-            [`${expertIndex}-${index}`]: reportContent,
-          },
-          ideaFeatureData : ideaFeatureData,
-          ideaRequirementData : ideaRequirementData,
-          ideaList : ideaList,
-          ideaGroup : ideaGroup,
-          ideaPriority : ideaPriority,
-          buttonState : buttonState,
-          growthHackerReportData : growthHackerReportData,
-          growthHackerDetailReportData : growthHackerDetailReportData,
-          KpiQuestionList : KpiQuestionList,
-          priceScrapData : priceScrapData,
-          priceReportData : priceReportData,
-          priceProduct : priceProduct,
-          priceSelectedProductSegmentation : priceSelectedProductSegmentation,
-          priceProductSegmentation : priceProductSegmentation,
-          caseHashTag : caseHashTag,
-          caseReportData : caseReportData,
-          bmOrLean : bmOrLean,
-          bmQuestionList : bmQuestionList,
-          bmModelSuggestionReportData : bmModelSuggestionReportData,
-          bmBmAutoReportData : bmBmAutoReportData,
-          bmLeanAutoReportData : bmLeanAutoReportData,
-          bmBmAdsReportData : bmBmAdsReportData,
-          bmSelectedProblemOptions : bmSelectedProblemOptions,
-          bmLeanAdsReportData : bmLeanAdsReportData,
-          bmBmCustomReportData : bmBmCustomReportData,
-          bmLeanCustomReportData : bmLeanCustomReportData,
-          surveyGuidelineReportData : surveyGuidelineReportData,
-          surveyGuidelineDetailReportData : surveyGuidelineDetailReportData,
-          surveyGoalSuggestionList: surveyGoalSuggestionList,
-          surveyGoalFixed: surveyGoalFixed,
-          surveyQuestionList: surveyQuestionList,
-        },
-        isLoggedIn,
-        conversationId
+      await saveConversation(
+        { changingConversation: { 
+            conversationStage: 3, 
+            pocDetailReportData: {
+              ...pocDetailReportData,
+              [`${expertIndex}-${index}`]: reportContent,
+            },
+          }
+        }
       );
     } catch (error) {
       console.error("Error fetching report:", error);

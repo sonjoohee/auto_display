@@ -10,9 +10,9 @@ import {
 } from "../../../../assets/styles/Skeleton";
 import MoleculeReportController from "../molecules/MoleculeReportController";
 import {
-  saveConversationToIndexedDB,
   getConversationByIdFromIndexedDB,
 } from "../../../../utils/indexedDB";
+import { useSaveConversation } from "../atoms/AtomSaveConversation";
 import axios from "axios";
 
 import {
@@ -42,6 +42,7 @@ import {
 } from "../../../AtomStates";
 
 const OrganismBizAnalysisSection = () => {
+  const { saveConversation } = useSaveConversation();
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [isLoggedIn] = useAtom(isLoggedInAtom); // 로그인 상태 확인
@@ -199,19 +200,11 @@ const OrganismBizAnalysisSection = () => {
           setConversation(updatedConversation);
           setConversationStage(1);
           // **API 데이터가 있을 경우에만 저장**
-          await saveConversationToIndexedDB(
-            {
-              id: conversationId,
-              conversation: updatedConversation,
-              inputBusinessInfo: "",
-              conversationStage: 1,
-              timestamp: Date.now(),
-              expert_index: selectedExpertIndex,
-              buttonState : buttonState,
-            },
-            isLoggedIn,
-            conversationId
+
+          await saveConversation(
+            { changingConversation: { conversation: updatedConversation, conversationStage: 1, inputBusinessInfo: "", } }
           );
+
           // setReportRefreshTrigger((prev) => !prev);
         } else {      
           setAnalysisButtonState(0);
@@ -386,19 +379,9 @@ const OrganismBizAnalysisSection = () => {
 
           setConversation(updatedConversation2);
           // **API 데이터가 있을 경우에만 저장**
-          await saveConversationToIndexedDB(
-            {
-              id: conversationId,
-              conversation: updatedConversation2,
-              analysisReportData,
-              inputBusinessInfo,
-              conversationStage: 2,
-              timestamp: Date.now(),
-              expert_index: selectedExpertIndex,
-              buttonState : buttonState,
-            },
-            isLoggedIn,
-            conversationId
+
+          await saveConversation(
+            { changingConversation: { conversation: updatedConversation2, conversationStage: 2, analysisReportData: analysisReportData } }
           );
           // setReportRefreshTrigger((prev) => !prev);
         }
