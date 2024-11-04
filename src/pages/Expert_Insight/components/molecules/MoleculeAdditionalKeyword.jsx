@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useAtom } from "jotai";
 import {
-  TITLE_OF_BUSINESS_INFORMATION,
   SELECTED_EXPERT_INDEX,
   SELECTED_ADDITIONAL_KEYWORD,
   QUESTION_LIST,

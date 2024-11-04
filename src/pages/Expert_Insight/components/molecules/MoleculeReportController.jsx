@@ -16,27 +16,19 @@ import {
   IS_EDITING_NOW,
   SELECTED_TAB_COPY,
   STRATEGY_REPORT_DATA,
-  APPROACH_PATH,
   CONVERSATION_STAGE,
-  SELECTED_ADDITIONAL_KEYWORD,
-  CONVERSATION,
   isLoggedInAtom,
   IS_LOADING,
   REPORT_REFRESH_TRIGGER,
   CHAT_REFRESH_TRIGGER,
   ADDITIONAL_REPORT_DATA,
   IS_LOADING_ANALYSIS,
-  SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
   CUSTOMER_ADDITIONAL_REPORT_DATA,
-  SELECTED_POC_OPTIONS,
-  SELCTED_POC_TARGET,
   RECOMMENDED_TARGET_DATA,
   IDEA_FEATURE_DATA_TEMP,
   IDEA_REQUIREMENT_DATA_TEMP,
   IDEA_FEATURE_DATA,
   IDEA_REQUIREMENT_DATA,
-  POC_DETAIL_REPORT_DATA,
-  POC_PERSONA_LIST,
   ADDING_IDEA_FEATURE,
   ADD_CONTENT_IDEA_FEATURE,
   ACTIVE_IDEA_FEATURE_INDEX,
@@ -51,23 +43,8 @@ import {
   IDEA_GROUP,
   IDEA_PRIORITY,
   BUTTON_STATE,
-  CONVERSATION_ID,
-  IDEA_MIRO,
   GROWTH_HACKER_REPORT_DATA,
-  GROWTH_HACKER_DETAIL_REPORT_DATA,
-  KPI_QUESTION_LIST,
-  PRICE_SCRAP_DATA,
-  PRICE_REPORT_DATA,
-  PRICE_PRODUCT,
-  PRICE_SELECTED_PRODUCT_SEGMENTATION,
-  PRICE_PRODUCT_SEGMENTATION,
-  CASE_HASH_TAG,
-  CASE_REPORT_DATA,
   SURVEY_GUIDELINE_REPORT_DATA,
-  SURVEY_GUIDELINE_DETAIL_REPORT_DATA,
-  SURVEY_GOAL_SUGGESTION_LIST,
-  SURVEY_GOAL_FIXED,
-  SURVEY_QUESTION_LIST,
   BM_OR_LEAN,
   BM_BM_AUTO_REPORT_DATA,
   BM_LEAN_AUTO_REPORT_DATA,
@@ -96,40 +73,13 @@ const MoleculeReportController = ({
   additionalReportCount, // 추가 보고서 복사기능을 위한 인덱스
 }) => {
   const { saveConversation } = useSaveConversation();
-  const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
-  const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
-  const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
-  const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
-  const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
-  const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
-  const [bmSelectedProblemOptions, setBmSelectedProblemOptions] = useAtom(BM_SELECTED_PROBLEM_OPTIONS);
-  const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
-  const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
-  const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
   const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(SURVEY_GUIDELINE_REPORT_DATA);
-  const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
-  const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
-  const [surveyGoalFixed, setSurveyGoalFixed] = useAtom(SURVEY_GOAL_FIXED);
-  const [surveyQuestionList, setSurveyQuestionList] = useAtom(SURVEY_QUESTION_LIST);
-  const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
-  const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
-  const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
-  const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
-  const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
-  const [priceSelectedProductSegmentation, setPriceSelectedProductSegmentation] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
-  const [priceProductSegmentation, setPriceProductSegmentation] = useAtom(PRICE_PRODUCT_SEGMENTATION);
-  const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
   const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
-  const [growthHackerDetailReportData, setGrowthHackerDetailReportData] = useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
-  const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
-  const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
   const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
-  const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
-  const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
     TITLE_OF_BUSINESS_INFORMATION
   );
@@ -169,11 +119,7 @@ const MoleculeReportController = ({
     CHAT_REFRESH_TRIGGER
   ); // 리프레시 트리거 상태 구독
   
-  const [bizAnalysisReportIndex, setBizAnalysisReportIndex] = useState(0);
-  const [newEditContent, setNewEditContent] = useState("");
-  const [editingIndex, setEditingIndex] = useState({ section: "", index: -1 });
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
-  const [warningMessage, setWarningMessage] = useState("");
 
   const [selectedTabCopy, setSelectedTabCopy] = useAtom(SELECTED_TAB_COPY);
 
@@ -181,13 +127,7 @@ const MoleculeReportController = ({
   const [isPopupOpenCancel, setIsPopupOpenCancel] = useState(false);
 
   const [isPopupSave, setIsPopupSave] = useState(false);
-
-  const [approachPath] = useAtom(APPROACH_PATH);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
-  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
-    SELECTED_ADDITIONAL_KEYWORD
-  );
-  const [conversation, setConversation] = useAtom(CONVERSATION);
   const [isLoginPopupOpen, setLoginPopupOpen] = useState(false); // 로그인 팝업 상태 관리
 
   const [isPopupCopy, setIsPopupCopy] = useState(false);
@@ -196,14 +136,11 @@ const MoleculeReportController = ({
   const [additionalReportData, setAdditionalReportData] = useAtom(
     ADDITIONAL_REPORT_DATA
   );
-  const [selectedCustomerAdditionalKeyword, setSelectedCustomerAdditionalKeyword] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
   const [customerAdditionalReportData, setCustomerAdditionalReportData] = useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
   const [ideaFeatureDataTemp, setIdeaFeatureDataTemp] = useAtom(IDEA_FEATURE_DATA_TEMP);
   const [ideaRequirementDataTemp, setIdeaRequirementDataTemp] = useAtom(IDEA_REQUIREMENT_DATA_TEMP);
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
   const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
-  const [pocDetailReportData, setPocDetailReportData] = useAtom(POC_DETAIL_REPORT_DATA);
-  const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
 
   const [addingIdeaFeature, setAddingIdeaFeature] = useAtom(ADDING_IDEA_FEATURE);
   const [addContentIdeaFeature, setAddContentIdeaFeature] = useAtom(ADD_CONTENT_IDEA_FEATURE);

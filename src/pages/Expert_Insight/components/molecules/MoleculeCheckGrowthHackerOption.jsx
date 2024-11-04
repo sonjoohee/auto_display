@@ -2,55 +2,12 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useAtom } from "jotai";
 import {
-  APPROACH_PATH,
   CONVERSATION,
-  CONVERSATION_ID,
   SELECTED_EXPERT_INDEX,
-  TITLE_OF_BUSINESS_INFORMATION,
-  MAIN_FEATURES_OF_BUSINESS_INFORMATION,
-  MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
-  BUSINESS_INFORMATION_TARGET_CUSTOMER,
-  isLoggedInAtom,
-  STRATEGY_REPORT_DATA,
-  INPUT_BUSINESS_INFO,
   CONVERSATION_STAGE,
-  SELECTED_ADDITIONAL_KEYWORD,
-  SELECTED_CUSTOMER_ADDITIONAL_KEYWORD,
-  ADDITIONAL_REPORT_DATA,
-  CUSTOMER_ADDITIONAL_REPORT_DATA,
-  TARGET_SELECT_BUTTON_STATE,
-  SELECTED_POC_OPTIONS,
-  SELCTED_POC_TARGET,
-  IDEA_FEATURE_DATA,
-  IDEA_REQUIREMENT_DATA,
-  IDEA_LIST,
-  IDEA_GROUP,
-  IDEA_PRIORITY,
   GROWTH_HACKER_BUTTON_STATE,
   KPI_QUESTION_LIST,
-  BUTTON_STATE,
-  PRICE_SCRAP_DATA,
-  PRICE_REPORT_DATA,
-  PRICE_PRODUCT,
-  PRICE_SELECTED_PRODUCT_SEGMENTATION,
-  PRICE_PRODUCT_SEGMENTATION,
-  CASE_HASH_TAG,
-  CASE_REPORT_DATA,
-  SURVEY_GUIDELINE_REPORT_DATA,
-  SURVEY_GUIDELINE_DETAIL_REPORT_DATA,
-  SURVEY_GOAL_SUGGESTION_LIST,
-  SURVEY_GOAL_FIXED,
-  SURVEY_QUESTION_LIST,
-  BM_OR_LEAN,
-  BM_BM_AUTO_REPORT_DATA,
-  BM_LEAN_AUTO_REPORT_DATA,
-  BM_BM_ADS_REPORT_DATA,
-  BM_SELECTED_PROBLEM_OPTIONS,
-  BM_LEAN_ADS_REPORT_DATA,
-  BM_BM_CUSTOM_REPORT_DATA,
-  BM_LEAN_CUSTOM_REPORT_DATA,
-  BM_MODEL_SUGGESTION_REPORT_DATA,
-  BM_QUESTION_LIST,
+  APPROACH_PATH,
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
@@ -58,55 +15,11 @@ import { useSaveConversation } from "../atoms/AtomSaveConversation";
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeCheckGrowthHackerOption = () => {
+  const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
   const { saveConversation } = useSaveConversation();
-
-  const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
-  const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
-  const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
-  const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
-  const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
-  const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
-  const [bmSelectedProblemOptions, setBmSelectedProblemOptions] = useAtom(BM_SELECTED_PROBLEM_OPTIONS);
-  const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
-  const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
-  const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
-  const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(SURVEY_GUIDELINE_REPORT_DATA);
-  const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
-  const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
-  const [surveyGoalFixed, setSurveyGoalFixed] = useAtom(SURVEY_GOAL_FIXED);
-  const [surveyQuestionList, setSurveyQuestionList] = useAtom(SURVEY_QUESTION_LIST);
-  const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
-  const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
-  const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
-  const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
-  const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
-  const [priceSelectedProductSegmentation, setPriceSelectedProductSegmentation] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
-  const [priceProductSegmentation, setPriceProductSegmentation] = useAtom(PRICE_PRODUCT_SEGMENTATION);
-  const [conversationId] = useAtom(CONVERSATION_ID);
-  const [buttonState] = useAtom(BUTTON_STATE);
-  const [ideaFeatureData] = useAtom(IDEA_FEATURE_DATA);
-  const [ideaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
-  const [ideaList] = useAtom(IDEA_LIST);
-  const [ideaGroup] = useAtom(IDEA_GROUP);
-  const [ideaPriority] = useAtom(IDEA_PRIORITY);
-  const [selectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
-  const [inputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
-  const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
-  const [mainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
-  const [mainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
-  const [businessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [targetSelectButtonState, setTargetSelectButtonState] = useAtom(TARGET_SELECT_BUTTON_STATE);
-  const [strategyReportData] = useAtom(STRATEGY_REPORT_DATA);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
-  const [selectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
-  const [selectedCustomerAdditionalKeyword] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
-  const [additionalReportData] = useAtom(ADDITIONAL_REPORT_DATA);
-  const [customerAdditionalReportData] = useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
-  const [isLoggedIn] = useAtom(isLoggedInAtom);
-  const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
-  
   const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
 
   const [selectedOption1, setSelectedOption1] = useState("");

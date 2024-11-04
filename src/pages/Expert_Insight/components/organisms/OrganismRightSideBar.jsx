@@ -5,13 +5,12 @@ import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import panelimages from "../../../../assets/styles/PanelImages";
 import { useAtom } from "jotai";
-import { SELECTED_EXPERT_INDEX, EXPERT_DETAIL_DATA } from "../../../AtomStates";
+import { SELECTED_EXPERT_INDEX } from "../../../AtomStates";
 import expertsData from "./experts_info.json";
 
 const OrganismRightSideBar = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
-  const [expertDetailData] = useAtom(EXPERT_DETAIL_DATA);
 
   const moreProfile = () => {
     setIsOpen(!isOpen);
