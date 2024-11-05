@@ -661,17 +661,6 @@ useEffect(() => {
       setPocPersonaList(chatData.pocPersonaList || []);
       setPocDetailReportData(chatData.pocDetailReportData || {});
 
-      setIsEditingIdeaFeature(false);
-      setIsEditingIdeaCustomer(false);
-      setAddingIdeaFeature(false);
-      setActiveIdeaFeatureIndex(0);
-      setAddContentIdeaFeature("");
-      setEditedIdeaFeatureTitle("");
-      setAddingIdeaCustomer(false);
-      setActiveIdeaCustomerIndex(0);
-      setAddContentIdeaCustomer("");
-      setEditedIdeaCustomerTitle("");
-
       setIdeaFeatureData(chatData.ideaFeatureData || []);
       setIdeaRequirementData(chatData.ideaRequirementData || []);
       setIdeaFeatureDataTemp(chatData.ideaFeatureData || []);
@@ -697,11 +686,6 @@ useEffect(() => {
       setCaseReportData(chatData.caseReportData || []);
       setCaseHashTag(chatData.caseHashTag || []);
 
-      setSurveyGoalSuggestionList(chatData.surveyGoalSuggestionList || []);
-      setSurveyGoalFixed(chatData.surveyGoalFixed || []);
-      setSurveyQuestionList(chatData.surveyQuestionList || []);
-      setSurveyGuidelineReportData(chatData.surveyGuidelineReportData || {});
-
       setSurveyGuidelineDetailReportData(chatData.surveyGuidelineDetailReportData || {});
       setSurveyGuidelineReportData(chatData.surveyGuidelineReportData || {});
       setSurveyGoalSuggestionList(chatData.surveyGoalSuggestionList || []);
@@ -724,7 +708,16 @@ useEffect(() => {
       setApproachPath(2);
 
       setIsEditingNow(false);
-
+      setIsEditingIdeaFeature(false);
+      setIsEditingIdeaCustomer(false);
+      setAddingIdeaFeature(false);
+      setActiveIdeaFeatureIndex(0);
+      setAddContentIdeaFeature("");
+      setEditedIdeaFeatureTitle("");
+      setAddingIdeaCustomer(false);
+      setActiveIdeaCustomerIndex(0);
+      setAddContentIdeaCustomer("");
+      setEditedIdeaCustomerTitle("");
       setAnalysisButtonState(0);
       setExpertButtonState(0);
       setAdditionButtonState(0);
