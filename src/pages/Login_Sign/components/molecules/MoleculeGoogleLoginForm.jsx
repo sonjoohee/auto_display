@@ -14,6 +14,8 @@ import {
   USER_NAME,
   USER_EMAIL,
   IS_SOCIAL_LOGGED_IN,
+  IS_MARKETING,
+  CONVERSATION_ID,
 } from "../../../../pages/AtomStates"; // 아톰 임포트
 
 import firebase from "firebase/app";
@@ -22,28 +24,46 @@ import "firebase/auth";
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeGoogleLoginForm = () => {
+  const navigate = useNavigate();
   const [, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [, setLoginSuccess] = useAtom(LOGIN_SUCCESS);
   const [, setUserName] = useAtom(USER_NAME); // 유저 이름 아톰
   const [, setUserEmail] = useAtom(USER_EMAIL); // 유저 이메일 아톰
   const [, setIsSocialLoggedIn] = useAtom(IS_SOCIAL_LOGGED_IN); // 소셜 로그인 아톰
+  const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
+  const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
 
   const handleGoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
+      let response;
       // 'https://wishresearch.kr/google-login'
       // 'https://wishresearch.kr/api/user/login/google/'
       // Firebase 인증 후 사용자 정보를 서버에 저장
-      const response = await axios.post(
-        "https://wishresearch.kr/api/user/login/google/",
-        {
-          uid: user.uid,
-          name: user.displayName,
-          email: user.email,
-        },
-        { withCredentials: true }
-      );
+
+      if (isMarketing) {
+        response = await axios.post(
+          "https://wishresearch.kr/api/user/login/googleLogin_marketing/",
+          {
+            uid: user.uid,
+            name: user.displayName,
+            email: user.email,
+            chatGetId: conversationId,
+          },
+          { withCredentials: true }
+        );
+      } else {
+        response = await axios.post(
+          "https://wishresearch.kr/api/user/login/google/",
+          {
+            uid: user.uid,
+            name: user.displayName,
+            email: user.email,
+          },
+          { withCredentials: true }
+        );
+      }
 
       const userName = user.displayName;
       const userEmail = user.email;
@@ -61,6 +81,8 @@ const MoleculeGoogleLoginForm = () => {
       setLoginSuccess(true);
     } catch (error) {
       console.error(error);
+    } finally {
+      navigate('/MeetAiExpert');
     }
   };
 

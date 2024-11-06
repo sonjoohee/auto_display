@@ -93,6 +93,7 @@ import {
   BM_LEAN_CUSTOM_REPORT_DATA,
   NEW_ADD_CONTENT,
   IS_ADDING_NOW,
+  IS_MARKETING,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -264,6 +265,7 @@ const OrganismLeftSideBar = () => {
 
   const [newAddContent, setNewAddContent] = useAtom(NEW_ADD_CONTENT);
   const [isAddingNow, setIsAddingNow] = useAtom(IS_ADDING_NOW);
+  const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
 
   // useEffect(() => {
   //   setIsSection1Open(false);
@@ -990,6 +992,7 @@ useEffect(() => {
     setNewAddContent("");
     setIsAddingNow(false);
     setIsLoading(false);
+    setIsMarketing(false);
   };
 
   const handleLogoClick = () => {
@@ -1085,6 +1088,7 @@ useEffect(() => {
     setNewAddContent("");
     setIsAddingNow(false);
     setIsLoading(false);
+    setIsMarketing(false);
   };
   return (
     <>
