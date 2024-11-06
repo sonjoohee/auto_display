@@ -63,6 +63,7 @@ import {
   BM_MODEL_SUGGESTION_REPORT_DATA,
   BM_QUESTION_LIST,
   IDEA_MIRO,
+  IS_MARKETING,
 } from "../../../AtomStates";
 
 import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
@@ -221,21 +222,23 @@ const PageExpertInsight = () => {
   const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
   const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
 
+  const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
+
   let additionalReportCount = 0;
   let customerAdditionalReportCount = 0;
   let caseReportCount = 0;
 
-  // useEffect(() => {
-  //   // 접근 가능 여부를 확인하여 차단 로직 수행
-  //   if (!isExpertInsightAccessible) {
-  //     navigate('/MeetAiExpert'); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
-  //   }
+  useEffect(() => {
+    // 접근 가능 여부를 확인하여 차단 로직 수행
+    if (!isExpertInsightAccessible) {
+      navigate('/MeetAiExpert'); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
+    }
 
-  //   // 페이지를 나갈 때 접근 가능 여부 초기화
-  //   return () => {
-  //     setIsExpertInsightAccessible(false); // 페이지 떠날 때 접근 불가로 설정
-  //   };
-  // }, [navigate]);
+    // 페이지를 나갈 때 접근 가능 여부 초기화
+    return () => {
+      setIsExpertInsightAccessible(false); // 페이지 떠날 때 접근 불가로 설정
+    };
+  }, [navigate]);
 
   useEffect(() => {
     const loadConversation = async () => {
@@ -258,6 +261,11 @@ const PageExpertInsight = () => {
             console.error("Failed to create conversation on server:", error);
             navigate(`/conversation/${conversationId}`, { replace: true });
           }
+        } else if (isMarketing) {
+          // 마케팅으로 진입 시
+          setIsExpertInsightAccessible(true); 
+          setIsLoadingPage(false);
+          navigate(`/conversation/${conversationId}`, { replace: true });
         } else {
           // 3. 대화 ID가 이미 존재하면 IndexedDB에서 대화 불러오기
           const savedConversation = await getConversationByIdFromIndexedDB(conversationId, isLoggedIn);
@@ -331,7 +339,7 @@ const PageExpertInsight = () => {
           setIsLoadingPage(false); // 로딩 완료
         }
       } else {
-        // 4. 비로그인 상태인 경우, 새로운 로컬 대화 ID 생성 또는 기존 대화 로드
+        // 4. 비로그인 상태인 경우, 새로운 로컬 대피 ID 생성 또는 기존 대화 로드
         // if (!conversationId) {
         //   setConversationId(nanoid()); // 비로그인 시 로컬에서 새로운 ID 생성
         //   setIsLoadingPage(false); // 로딩 완료

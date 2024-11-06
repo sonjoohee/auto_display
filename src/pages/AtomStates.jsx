@@ -349,3 +349,4 @@ export const NEW_ADD_CONTENT = atom("");
 /* 마케팅 */
 
 export const IS_MARKETING = atom(false);
+export const MARKETING_HAVE_IEDA = atom(false);

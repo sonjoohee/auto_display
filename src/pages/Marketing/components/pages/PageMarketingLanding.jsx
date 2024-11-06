@@ -7,20 +7,29 @@ import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import Landingimages from "../../../../assets/styles/Landingimages"
 import { createChatOnServer } from "../../../../utils/indexedDB";
-import { INPUT_BUSINESS_INFO, IS_LOGGED_IN, LOGIN_SUCCESS, ANALYSIS_BUTTON_STATE, CONVERSATION_ID, IS_MARKETING } from '../../../AtomStates';
+import { 
+  INPUT_BUSINESS_INFO, 
+  IS_LOGGED_IN, 
+  LOGIN_SUCCESS, 
+  ANALYSIS_BUTTON_STATE, 
+  CONVERSATION_ID, 
+  IS_MARKETING, 
+  MARKETING_HAVE_IEDA 
+} from '../../../AtomStates';
 import axios from 'axios';
 
 const PageMarketLanding = () => {
+  const navigate = useNavigate();
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [analysisButtonState, setAnalysisButtonState] = useAtom(ANALYSIS_BUTTON_STATE);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [, setLoginSuccess] = useAtom(LOGIN_SUCCESS);
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
-  const navigate = useNavigate();
+  const [marketingHaveIdea, setMarketingHaveIdea] = useAtom(MARKETING_HAVE_IEDA);
 
   const handleLogoClick = () => {
-    navigate('/');
+    // navigate('/');
   };
 
   const axiosConfig = {
@@ -56,10 +65,11 @@ const PageMarketLanding = () => {
     setConversationId(newConversationId); // 생성된 대화 ID 설정
 
     setIsMarketing(true);
+    setMarketingHaveIdea(type);
     setAnalysisButtonState(1);
     setInputBusinessInfo("피자");
     
-    navigate('/MarketSetting', { state: { type: type } });
+    navigate('/MarketingSetting');
   };
 
   useEffect(() => {
@@ -67,7 +77,7 @@ const PageMarketLanding = () => {
   }, []);
 
   const handleButtonExpert = () => {
-    navigate('/MeetAiExpert');
+    // navigate('/MeetAiExpert');
   };
 
   return (
@@ -84,8 +94,8 @@ const PageMarketLanding = () => {
         </Title>
 
         <InputSection>
-          <InputButton onClick={() => handleSubmit(1)}><i>🔍</i>계획이 있어요</InputButton>
-          <InputButton onClick={() => handleSubmit(0)}><i>🔍</i>아직 없어요</InputButton>
+          <InputButton onClick={() => handleSubmit(true)}><i>🔍</i>계획이 있어요</InputButton>
+          <InputButton onClick={() => handleSubmit(false)}><i>🔍</i>아직 없어요</InputButton>
         </InputSection>
       </HeroSection>
 
