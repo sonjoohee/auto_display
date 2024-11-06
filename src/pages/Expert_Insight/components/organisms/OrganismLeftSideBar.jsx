@@ -93,6 +93,7 @@ import {
   BM_LEAN_CUSTOM_REPORT_DATA,
   NEW_ADD_CONTENT,
   IS_ADDING_NOW,
+  IS_MARKETING,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -264,6 +265,7 @@ const OrganismLeftSideBar = () => {
 
   const [newAddContent, setNewAddContent] = useAtom(NEW_ADD_CONTENT);
   const [isAddingNow, setIsAddingNow] = useAtom(IS_ADDING_NOW);
+  const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
 
   // useEffect(() => {
   //   setIsSection1Open(false);
@@ -661,17 +663,6 @@ useEffect(() => {
       setPocPersonaList(chatData.pocPersonaList || []);
       setPocDetailReportData(chatData.pocDetailReportData || {});
 
-      setIsEditingIdeaFeature(false);
-      setIsEditingIdeaCustomer(false);
-      setAddingIdeaFeature(false);
-      setActiveIdeaFeatureIndex(0);
-      setAddContentIdeaFeature("");
-      setEditedIdeaFeatureTitle("");
-      setAddingIdeaCustomer(false);
-      setActiveIdeaCustomerIndex(0);
-      setAddContentIdeaCustomer("");
-      setEditedIdeaCustomerTitle("");
-
       setIdeaFeatureData(chatData.ideaFeatureData || []);
       setIdeaRequirementData(chatData.ideaRequirementData || []);
       setIdeaFeatureDataTemp(chatData.ideaFeatureData || []);
@@ -697,11 +688,6 @@ useEffect(() => {
       setCaseReportData(chatData.caseReportData || []);
       setCaseHashTag(chatData.caseHashTag || []);
 
-      setSurveyGoalSuggestionList(chatData.surveyGoalSuggestionList || []);
-      setSurveyGoalFixed(chatData.surveyGoalFixed || []);
-      setSurveyQuestionList(chatData.surveyQuestionList || []);
-      setSurveyGuidelineReportData(chatData.surveyGuidelineReportData || {});
-
       setSurveyGuidelineDetailReportData(chatData.surveyGuidelineDetailReportData || {});
       setSurveyGuidelineReportData(chatData.surveyGuidelineReportData || {});
       setSurveyGoalSuggestionList(chatData.surveyGoalSuggestionList || []);
@@ -724,7 +710,16 @@ useEffect(() => {
       setApproachPath(2);
 
       setIsEditingNow(false);
-
+      setIsEditingIdeaFeature(false);
+      setIsEditingIdeaCustomer(false);
+      setAddingIdeaFeature(false);
+      setActiveIdeaFeatureIndex(0);
+      setAddContentIdeaFeature("");
+      setEditedIdeaFeatureTitle("");
+      setAddingIdeaCustomer(false);
+      setActiveIdeaCustomerIndex(0);
+      setAddContentIdeaCustomer("");
+      setEditedIdeaCustomerTitle("");
       setAnalysisButtonState(0);
       setExpertButtonState(0);
       setAdditionButtonState(0);
@@ -997,6 +992,7 @@ useEffect(() => {
     setNewAddContent("");
     setIsAddingNow(false);
     setIsLoading(false);
+    setIsMarketing(false);
   };
 
   const handleLogoClick = () => {
@@ -1092,6 +1088,7 @@ useEffect(() => {
     setNewAddContent("");
     setIsAddingNow(false);
     setIsLoading(false);
+    setIsMarketing(false);
   };
   return (
     <>

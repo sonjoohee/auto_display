@@ -83,6 +83,7 @@ import {
   NEW_ADD_CONTENT,
   IS_ADDING_NOW,
   IS_LOGIN_POPUP_OPEN,
+  IS_MARKETING,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -230,6 +231,7 @@ const PageMeetAiExpert = () => {
   const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
   const [newAddContent, setNewAddContent] = useAtom(NEW_ADD_CONTENT);
   const [isAddingNow, setIsAddingNow] = useAtom(IS_ADDING_NOW);
+  const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
 
   const closePopupRegex = () => {
     setInputBusinessInfo("");
@@ -350,6 +352,8 @@ const PageMeetAiExpert = () => {
     setBmLeanAdsReportData([]);
     setBmBmCustomReportData([]);
     setBmLeanCustomReportData([]);
+
+    setIsMarketing(false);
   }, [location]);
 
   useEffect(() => {
