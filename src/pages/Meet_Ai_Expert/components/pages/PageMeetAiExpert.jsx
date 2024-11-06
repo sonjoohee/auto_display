@@ -84,6 +84,10 @@ import {
   IS_ADDING_NOW,
   IS_LOGIN_POPUP_OPEN,
   IS_MARKETING,
+  LOGIN_SUCCESS,
+  IS_SOCIAL_LOGGED_IN,
+  USER_NAME,
+  USER_EMAIL,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -152,7 +156,6 @@ const PageMeetAiExpert = () => {
   const [analysisButtonState, setAnalysisButtonState] = useAtom(
     ANALYSIS_BUTTON_STATE
   );
-  const [isLoggedIn] = useAtom(IS_LOGGED_IN); // 로그인 상태 확인
   const [isExpertInsightAccessible, setIsExpertInsightAccessible] = useAtom(
     IS_EXPERT_INSIGHT_ACCESSIBLE
   );
@@ -233,6 +236,12 @@ const PageMeetAiExpert = () => {
   const [isAddingNow, setIsAddingNow] = useAtom(IS_ADDING_NOW);
   const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
 
+  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [loginSuccess, setLoginSuccess] = useAtom(LOGIN_SUCCESS);
+  const [isSocialLoggedIn, setIsSocialLoggedIn] = useAtom(IS_SOCIAL_LOGGED_IN);
+  const [userName, setUserName] = useAtom(USER_NAME);
+  const [userEmail, setUserEmail] = useAtom(USER_EMAIL);
+
   const closePopupRegex = () => {
     setInputBusinessInfo("");
     setIsPopupRegex(false); // 팝업 닫기
@@ -272,7 +281,13 @@ const PageMeetAiExpert = () => {
         setLoginPopupOpen(true);
       }
     }
-  
+
+    // 마케팅 도중 메인으로 이동 시 로그인 상태 초기화
+    if (isMarketing) {
+      sessionStorage.removeItem("accessToken");
+      setIsLoggedIn(false);
+      setLoginSuccess(null);
+    }
 
     // Reset all states except inputBusinessInfo
     setNewAddContent("");
@@ -354,7 +369,7 @@ const PageMeetAiExpert = () => {
     setBmLeanCustomReportData([]);
 
     setIsMarketing(false);
-  }, [location]);
+  }, []);
 
   useEffect(() => {
     const checkboxes = document.querySelectorAll(".accordion-toggle");

@@ -1088,7 +1088,6 @@ useEffect(() => {
     setNewAddContent("");
     setIsAddingNow(false);
     setIsLoading(false);
-    setIsMarketing(false);
   };
   return (
     <>

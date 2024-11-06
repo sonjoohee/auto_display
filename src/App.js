@@ -22,8 +22,8 @@ import PageMeetAiExpert from './pages/Meet_Ai_Expert/components/pages/PageMeetAi
 import LandingPage from './pages/Meet_Ai_Expert/components/pages/LandingPage';
 import PageExpertInsight from "./pages/Expert_Insight/components/pages/PageExpertInsight";
 
-import PageMarketLanding from './pages/Meet_Ai_Expert/components/pages/PageMarketLanding';
-import PageMarketSetting from './pages/Meet_Ai_Expert/components/pages/PageMarketSetting';
+import PageMarketingLanding from './pages/Marketing/components/pages/PageMarketingLanding';
+import PageMarketingSetting from './pages/Marketing/components/pages/PageMarketingSetting';
 
 // Biz
 import Lending from './pages/Lending';
@@ -166,8 +166,8 @@ function App() {
             <Route path="/conversation/:conversationId" element={<PageExpertInsight />} />
 
             {/* 마케팅 */}
-            <Route path="/MarketLanding" element={<PageMarketLanding />}></Route>
-            <Route path="/MarketSetting" element={<PageMarketSetting />}></Route>
+            <Route path="/MarketingLanding" element={<PageMarketingLanding />}></Route>
+            <Route path="/MarketingSetting" element={<PageMarketingSetting />}></Route>
 
             {/* AI 패널 */}
             {/* <Route path="/AI_Panel" element={<PageAIPanelList />} />
