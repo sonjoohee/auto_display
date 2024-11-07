@@ -13,6 +13,7 @@ import {
   BUSINESS_INFORMATION_TARGET_CUSTOMER,
   MARKETING_BM_BUTTON_STATE,
   MARKETING_BM_REPORT_DATA,
+  MARKETING_RESEARCH_REPORT_DATA,
 } from "../../../../AtomStates";
 
 import { useSaveConversation } from "../../atoms/AtomSaveConversation";
@@ -36,7 +37,7 @@ const OrganismMarketingBmReport = () => {
   ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [isLoadingMarketingBmReport, setIsLoadingMarketingBmReport] = useState(false);
-
+  const [marketingResearchReportData] = useAtom(MARKETING_RESEARCH_REPORT_DATA);
   const [marketingBmButtonState, setMarketingBmButtonState] = useAtom(MARKETING_BM_BUTTON_STATE);
   const [marketingBmReportData, setMarketingBmReportData] = useAtom(MARKETING_BM_REPORT_DATA);
 
@@ -65,6 +66,7 @@ const OrganismMarketingBmReport = () => {
               주요기능: mainCharacteristicOfBusinessInformation,
               목표고객: businessInformationTargetCustomer,
             },
+            marketing_research_report: marketingResearchReportData
           };
 
           // let response = await axios.post(
@@ -264,7 +266,7 @@ const OrganismMarketingBmReport = () => {
                 "여기까지가 기본 분석이었어요! 이제 아이템의 성공 가능성을 최대한 끌어올릴 차례입니다.\n더 정확한 타겟 분석과 최적화된 사업 전략을 만들어 봐야겠죠?!  ",
               expertIndex: -1,
             },
-            { type: `marketingCustomer` }
+            { type: `marketingCustomerButton` }
           );
 
           setConversation(updatedConversation);
