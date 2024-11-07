@@ -282,13 +282,6 @@ const PageMeetAiExpert = () => {
       }
     }
 
-    // 마케팅 도중 메인으로 이동 시 로그인 상태 초기화
-    if (isMarketing) {
-      sessionStorage.removeItem("accessToken");
-      setIsLoggedIn(false);
-      setLoginSuccess(null);
-    }
-
     // Reset all states except inputBusinessInfo
     setNewAddContent("");
     setIsAddingNow(false);

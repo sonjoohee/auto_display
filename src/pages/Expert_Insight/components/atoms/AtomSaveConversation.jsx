@@ -54,6 +54,7 @@ import {
   BM_LEAN_CUSTOM_REPORT_DATA,
   BM_MODEL_SUGGESTION_REPORT_DATA,
   BM_QUESTION_LIST,
+  IS_MARKETING
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -112,6 +113,7 @@ export const useSaveConversation = () => {
   const [pocDetailReportData, setPocDetailReportData] = useAtom(POC_DETAIL_REPORT_DATA);
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA);
+  const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
 
   const saveConversation = async ({ changingConversation }) => {
 
@@ -174,7 +176,7 @@ export const useSaveConversation = () => {
             surveyGoalFixed: changingConversation.hasOwnProperty('surveyGoalFixed') ? changingConversation.surveyGoalFixed : surveyGoalFixed,
             surveyQuestionList: changingConversation.hasOwnProperty('surveyQuestionList') ? changingConversation.surveyQuestionList : surveyQuestionList,
         },
-        isLoggedIn,
+        {isLoggedIn : isMarketing ? true : isLoggedIn},
         conversationId
     );
   };

@@ -65,7 +65,7 @@ function App() {
     const storedUserEmail = sessionStorage.getItem('userEmail');
     const isSocialLogin = sessionStorage.getItem('isSocialLogin'); // 소셜 로그인 여부 확인
 
-    if (token) {
+    if (token && storedUserName) {
       setIsLoggedIn(true);  // 토큰이 있으면 로그인 상태로 설정
     } else {
       setIsLoggedIn(false); // 토큰이 없으면 로그아웃 상태로 설정
