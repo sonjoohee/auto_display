@@ -50,7 +50,7 @@ const MoleculeSystemMessage = ({ item }) => {
 
   return (
     <>
-      <SystemMessageContainer>
+      <SystemMessageContainer selectedExpertIndex={selectedExpertIndex}>
         <Thumb>
           {selectedExpertIndex != -1 && (
             <img src={panelimages[`expert_${selectedExpertIndex}`]} alt="" />
@@ -94,7 +94,7 @@ const SystemMessageContainer = styled.div`
   align-items: flex-start;
   flex-direction: ${(props) => (props.Myself ? "row-reverse" : "row")};
   gap: 18px;
-  margin-top: 15px;
+  margin-top: ${(props) => (props.selectedExpertIndex != -1 ? "40px" : "15px")};
 `;
 
 const Bubble = styled.div`
