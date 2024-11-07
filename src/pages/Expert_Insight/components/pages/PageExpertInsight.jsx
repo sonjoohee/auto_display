@@ -131,6 +131,8 @@ import OrganismBmBmCustomReport from "../organisms/OrganismBmBmCustomReport";
 
 import MoleculeMarketingStartButton from "../molecules/Marketing/MoleculeMarketingStartButton";
 import OrganismMarketingResearchReport from "../organisms/Marketing/OrganismMarketingResearchReport";
+import MoleculeMarketingBmButton from "../molecules/Marketing/MoleculeMarketingBmButton";
+import OrganismMarketingBmReport from "../organisms/Marketing/OrganismMarketingBmReport";
 
 const PageExpertInsight = () => {
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
@@ -603,7 +605,11 @@ if (isLoadingPage) {
                   return <MoleculeMarketingStartButton />;
                 } else if (item.type === "marketingResearchReport") {
                   return <OrganismMarketingResearchReport />;
-                }
+                } else if (item.type === "marketingBmButton") {
+                  return <MoleculeMarketingBmButton />;
+                } else if (item.type === "marketingBmReport") {
+                  return <OrganismMarketingBmReport />;
+                } 
 
                 return null;
               })}
