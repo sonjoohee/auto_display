@@ -555,7 +555,7 @@ useEffect(() => {
       try {
         const accessToken = sessionStorage.getItem("accessToken");
 
-        if (!accessToken) {
+        if (!accessToken || !isLoggedIn) {
           setChatList([]); // 로그아웃 상태에서는 대화 리스트를 빈 배열로 설정
           return;
         }
@@ -586,7 +586,7 @@ useEffect(() => {
       try {
         const accessToken = sessionStorage.getItem("accessToken"); // 저장된 토큰 가져오기
 
-        if (!accessToken) {
+        if (!accessToken || !isLoggedIn) {
           setReports([]); // 로그아웃 상태에서는 대화 리스트를 빈 배열로 설정
           return;
         }
@@ -992,7 +992,6 @@ useEffect(() => {
     setNewAddContent("");
     setIsAddingNow(false);
     setIsLoading(false);
-    setIsMarketing(false);
   };
 
   const handleLogoClick = () => {

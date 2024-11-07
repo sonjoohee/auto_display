@@ -53,10 +53,6 @@ const PageMarketLanding = () => {
       // accessToken을 세션 스토리지에 저장
       sessionStorage.setItem("accessToken", accessToken);
 
-      // 로그인 성공 처리
-      setIsLoggedIn(true);
-      setLoginSuccess(true);
-
     } catch (error) {
       console.error("로그인 중 오류가 발생했습니다.", error);
     }
@@ -66,8 +62,6 @@ const PageMarketLanding = () => {
 
     setIsMarketing(true);
     setMarketingHaveIdea(type);
-    setAnalysisButtonState(1);
-    setInputBusinessInfo("피자");
     
     navigate('/MarketingSetting');
   };

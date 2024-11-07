@@ -129,6 +129,9 @@ import OrganismBmBmAutoReport from "../organisms/OrganismBmBmAutoReport";
 import OrganismBmBmAdsReport from "../organisms/OrganismBmBmAdsReport";
 import OrganismBmBmCustomReport from "../organisms/OrganismBmBmCustomReport";
 
+import MoleculeMarketingStartButton from "../molecules/Marketing/MoleculeMarketingStartButton";
+import OrganismMarketingResearchReport from "../organisms/Marketing/OrganismMarketingResearchReport";
+
 const PageExpertInsight = () => {
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
   const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
@@ -261,11 +264,6 @@ const PageExpertInsight = () => {
             console.error("Failed to create conversation on server:", error);
             navigate(`/conversation/${conversationId}`, { replace: true });
           }
-        } else if (isMarketing) {
-          // 마케팅으로 진입 시
-          setIsExpertInsightAccessible(true); 
-          setIsLoadingPage(false);
-          navigate(`/conversation/${conversationId}`, { replace: true });
         } else {
           // 3. 대화 ID가 이미 존재하면 IndexedDB에서 대화 불러오기
           const savedConversation = await getConversationByIdFromIndexedDB(conversationId, isLoggedIn);
@@ -338,6 +336,11 @@ const PageExpertInsight = () => {
           
           setIsLoadingPage(false); // 로딩 완료
         }
+      } else if (isMarketing) {
+        // 마케팅으로 진입 시
+        setIsExpertInsightAccessible(true); 
+        setIsLoadingPage(false);
+        navigate(`/conversation/${conversationId}`, { replace: true });
       } else {
         // 4. 비로그인 상태인 경우, 새로운 로컬 대피 ID 생성 또는 기존 대화 로드
         // if (!conversationId) {
@@ -420,12 +423,12 @@ if (isLoadingPage) {
   return (
     <>
       <ContentsWrap>
-        <OrganismLeftSideBar />
+        {!isMarketing && <OrganismLeftSideBar />}
 
         <MainContent>
           <div>
             <ChatWrap className={isScrolled ? "scrolled" : ""}>
-              <MoleculeBizName date={savedTimestamp} />
+              {!isMarketing && <MoleculeBizName date={savedTimestamp} />}
               {conversation?.map((item, index) => {
                 if (item.type === "user") {
                   return <MoleculeUserMessage key={index} message={item.message} />;
@@ -595,6 +598,13 @@ if (isLoadingPage) {
                   return <OrganismSurveyGuidelineReport />;
                 }
 
+                /* 마케팅 */
+                else if (item.type === "marketingStartButton") {
+                  return <MoleculeMarketingStartButton />;
+                } else if (item.type === "marketingResearchReport") {
+                  return <OrganismMarketingResearchReport />;
+                }
+
                 return null;
               })}
 
@@ -684,39 +694,42 @@ if (isLoadingPage) {
               
             </ChatWrap>
 
-            {conversationStage === 1 ? (
+            {conversationStage === 1 && !isMarketing ? (
               <OrganismSearchBottomBar isBlue={false} />
             ) : (
+              selectedExpertIndex === "1" || selectedExpertIndex === "2" || selectedExpertIndex === "3" ?
+                <OrganismSearchBottomBar isBlue={true} />
+                :
               selectedExpertIndex === "4" ? 
                 Object.keys(recommendedTargetData).length !== 0 && <OrganismSearchBottomBar isBlue={true} /> // 4번 전문가 끝났을 때 활성화
                 : 
-                selectedExpertIndex === "5" ? 
-                  ideaPriority.length !== 0 && <OrganismSearchBottomBar isBlue={true} /> // 5번 전문가 끝났을 때 활성화
+              selectedExpertIndex === "5" ? 
+                ideaPriority.length !== 0 && <OrganismSearchBottomBar isBlue={true} /> // 5번 전문가 끝났을 때 활성화
                 : 
-                selectedExpertIndex === "6" ?
-                  buttonState.growthHackerKPI === 1 && <OrganismSearchBottomBar isBlue={true} /> // 6번 전문가 끝났을 때 활성화
-                : 
-                selectedExpertIndex === "7" ?
-                  buttonState.priceEnough === 1 && <OrganismSearchBottomBar isBlue={true} /> // 7번 전문가 끝났을 때 활성화
-                :
-                selectedExpertIndex === "8" ?
-                  buttonState.caseEnough === 1 ? <OrganismSearchBottomBar isBlue={true} /> // 사례 조사 끝났을 때 활성화
-                  :
-                  buttonState.caseStart === 1 && !isLoading && conversation[conversation.length - 1].type !== "caseContinueButton" && <OrganismSearchBottomBar isBlue={true} isHashTag={true}/> // 사례 조사 시작했을 때 활성화
-                :
-                selectedExpertIndex === "9" ?
-                  buttonState.bmEnough === 1 && <OrganismSearchBottomBar isBlue={true} />
-                :
-                selectedExpertIndex === "10" ?
-                  buttonState.surveyEnd === 1 ? <OrganismSearchBottomBar isBlue={true} /> // 설문조사 끝났을 때 활성화
-                  :
-                  buttonState.surveyGoalInputStart === 1 && <OrganismSearchBottomBar isBlue={true} isHashTag={true}/> // 설문조사 목적 입력 시 활성화
+              selectedExpertIndex === "6" ?
+                buttonState.growthHackerKPI === 1 && <OrganismSearchBottomBar isBlue={true} /> // 6번 전문가 끝났을 때 활성화
+              : 
+              selectedExpertIndex === "7" ?
+                buttonState.priceEnough === 1 && <OrganismSearchBottomBar isBlue={true} /> // 7번 전문가 끝났을 때 활성화
               :
-                <OrganismSearchBottomBar isBlue={true} />
+              selectedExpertIndex === "8" ?
+                buttonState.caseEnough === 1 ? <OrganismSearchBottomBar isBlue={true} /> // 사례 조사 끝났을 때 활성화
+                :
+                buttonState.caseStart === 1 && !isLoading && conversation[conversation.length - 1].type !== "caseContinueButton" && <OrganismSearchBottomBar isBlue={true} isHashTag={true}/> // 사례 조사 시작했을 때 활성화
+              :
+              selectedExpertIndex === "9" ?
+                buttonState.bmEnough === 1 && <OrganismSearchBottomBar isBlue={true} />
+              :
+              selectedExpertIndex === "10" ?
+                buttonState.surveyEnd === 1 ? <OrganismSearchBottomBar isBlue={true} /> // 설문조사 끝났을 때 활성화
+                :
+                buttonState.surveyGoalInputStart === 1 && <OrganismSearchBottomBar isBlue={true} isHashTag={true}/> // 설문조사 목적 입력 시 활성화
+              :
+              null
             )}
           </div>
 
-          <OrganismRightSideBar />
+          {!isMarketing && <OrganismRightSideBar />}
         </MainContent>
       </ContentsWrap>
     </>

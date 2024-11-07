@@ -52,7 +52,9 @@ const MoleculeSystemMessage = ({ item }) => {
     <>
       <SystemMessageContainer>
         <Thumb>
-          <img src={panelimages[`expert_${selectedExpertIndex}`]} alt="" />
+          {selectedExpertIndex != -1 && (
+            <img src={panelimages[`expert_${selectedExpertIndex}`]} alt="" />
+          )}
         </Thumb>
         <Bubble>
           <TypingEffect isTyping={isTyping}>
@@ -92,7 +94,7 @@ const SystemMessageContainer = styled.div`
   align-items: flex-start;
   flex-direction: ${(props) => (props.Myself ? "row-reverse" : "row")};
   gap: 18px;
-  margin-top: 40px;
+  margin-top: 15px;
 `;
 
 const Bubble = styled.div`
