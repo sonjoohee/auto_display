@@ -355,3 +355,6 @@ export const MARKETING_START_BUTTON_STATE = atom(0);
 export const MARKETING_RESEARCH_REPORT_DATA = atom([]);
 export const MARKETING_BM_BUTTON_STATE = atom(0);
 export const MARKETING_BM_REPORT_DATA = atom([]);
+export const MARKETING_CUSTOMER_BUTTON_STATE = atom(0);
+export const MARKETING_CUSTOMER_DATA = atom([]);
+export const MARKETING_SELECTED_CUSTOMER = atom([]);
