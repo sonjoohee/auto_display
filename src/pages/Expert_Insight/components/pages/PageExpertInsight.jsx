@@ -136,6 +136,7 @@ import OrganismMarketingBmReport from "../organisms/Marketing/OrganismMarketingB
 import MoleculeMarketingCustomerButton from "../molecules/Marketing/MoleculeMarketingCustomerButton";
 import MoleculeMarketingCustomer from "../molecules/Marketing/MoleculeMarketingCustomer";
 import OrganismMarketingSegmentReport from "../organisms/Marketing/OrganismMarketingSegmentReport";
+import OrganismMarketingFinalReport from "../organisms/Marketing/OrganismMarketingFinalReport";
 
 const PageExpertInsight = () => {
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
@@ -630,6 +631,8 @@ if (isLoadingPage) {
                       marketingSegmentReportCount={currentMarketingSegmentReportCount}
                     />
                   );
+                } else if (item.type === "marketingFinalReport") {
+                  return <OrganismMarketingFinalReport />;
                 }
 
                 return null;
