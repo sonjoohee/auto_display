@@ -7,6 +7,8 @@ import {
   MARKETING_BM_BUTTON_STATE,
   TITLE_OF_BUSINESS_INFORMATION,
   MARKETING_CUSTOMER_BUTTON_STATE,
+  MARKETING_SELECTED_CUSTOMER,
+  MARKETING_FINAL_CUSTOMER,
 } from "../../../../AtomStates";
 
 import { useSaveConversation } from "../../atoms/AtomSaveConversation";
@@ -19,8 +21,10 @@ const MoleculeMarketingCustomerButton = () => {
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [marketingCustomerButtonState, setMarketingCustomerButtonState] = useAtom(MARKETING_CUSTOMER_BUTTON_STATE);
+  const [marketingSelectedCustomer, setMarketingSelectedCustomer] = useAtom(MARKETING_SELECTED_CUSTOMER);
+  const [marketingFinalCustomer, setMarketingFinalCustomer] = useAtom(MARKETING_FINAL_CUSTOMER);
 
-  const handleClick = async () => {
+  const handleClick = async (type, index) => {
     if (isLoading) return;
     const updatedConversation = [...conversation];
 
@@ -30,30 +34,82 @@ const MoleculeMarketingCustomerButton = () => {
       updatedConversation.pop();
     }
 
-    updatedConversation.push(
-      {
-        type: 'user',
-        message: '고객 알아보기',
-      },
-      {
-        type: 'system',
-        message: `고객 알아보는 중...`,
-        expertIndex: 0,
-      },
-      {
-        type: 'marketingCustomer',
-      }
-    );
+    if (type === 1) {
+      updatedConversation.push(
+        {
+          type: 'user',
+          message: '고객 분석으로 잠재력 발견하기',
+        },
+        {
+          type: 'system',
+          message: `이 아이템에 매력을 느낄 주요 고객은 누구일까요?\n가장 적합하다고 생각하는 타겟을 골라주세요`,
+          expertIndex: 0,
+        },
+        {
+          type: 'marketingCustomer',
+        }
+      );
+      setMarketingCustomerButtonState(1);
+    } 
+    
+    else if (type === 2) {
+      updatedConversation.push(
+        {
+          type: 'user',
+          message: '다른 고객도 알아보기',
+        },
+        {
+          type: 'system',
+          message: `다른 고객들은 어떤 특징을 갖고 있는지 확인이 필요하죠 !\n어떤 고객이 아이템에 관심을 갖을까요? `,
+          expertIndex: 0,
+        },
+        {
+          type: 'marketingCustomer',
+        }
+      );
+    } 
+    
+    else {
+      updatedConversation.push(
+        {
+          type: 'user',
+          message: '고객 분석으로 잠재력 발견하기',
+        },
+        {
+          type: 'system',
+          message: `이제 ${marketingSelectedCustomer[index].content.name}을 타겟 고객으로 한 ${titleOfBusinessInfo}의 잠재력을 확인해 볼 시간입니다.\n과연 대박 가능성을 품고 있을까요? 👀`,
+          expertIndex: 0,
+        },
+        {
+          type: 'marketingFinalReport',
+        }
+      );
+      setMarketingFinalCustomer(marketingSelectedCustomer[index]);
+      saveConversation({ changingConversation: { marketingFinalCustomer: marketingSelectedCustomer[index] } });
+    }
 
     setConversation(updatedConversation);
-    setMarketingCustomerButtonState(1);
 
     saveConversation({ changingConversation: { conversation: updatedConversation } });
   };
   return (
     <>
       <ButtonWrap>
-        <button onClick={handleClick}>고객 알아보기 🔎</button>
+        {marketingSelectedCustomer.length === 0 ?
+          <button onClick={() => handleClick(1)}>고객 분석으로 잠재력 발견하기 🔎</button>
+        :
+          marketingSelectedCustomer.length === 1 || marketingSelectedCustomer.length === 2 ?
+            <>
+              <button onClick={() => handleClick(2)}>다른 고객도 알아보기 🔎 </button>
+              <button onClick={() => handleClick(3, marketingSelectedCustomer.length-1)}>{marketingSelectedCustomer[marketingSelectedCustomer.length-1].content.name}로 잠재력 지수 알아보기 ⭐</button>
+            </>
+          :
+            <>
+              <button onClick={() => handleClick(3, 0)}>{marketingSelectedCustomer[0].content.name}</button>
+              <button onClick={() => handleClick(3, 1)}>{marketingSelectedCustomer[1].content.name}</button>
+              <button onClick={() => handleClick(3, 2)}>{marketingSelectedCustomer[2].content.name}</button>
+            </>
+        }
       </ButtonWrap>
     </>
   );

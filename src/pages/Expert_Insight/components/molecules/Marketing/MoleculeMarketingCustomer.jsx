@@ -78,17 +78,17 @@ const MoleculeMarketingCustomer = ({ marketingCustomerCount }) => {
   }, [marketingSelectedCustomer]);
 
   const handleOptionClick = (index) => {
-    if (marketingSelectedCustomer.length === 0) {
+    if (marketingCustomerCount === 0) {
       setMarketingSelectedCustomerState1({
         content: marketingCustomerData[index],
         index: index,
       });
-    } else if (marketingSelectedCustomer.length === 1) {
+    } else if (marketingCustomerCount === 1) {
       setMarketingSelectedCustomerState2({
         content: marketingCustomerData[index],
         index: index,
       });
-    } else if (marketingSelectedCustomer.length === 2) {
+    } else if (marketingCustomerCount === 2) {
       setMarketingSelectedCustomerState3({
         content: marketingCustomerData[index],
         index: index,
@@ -281,30 +281,41 @@ const MoleculeMarketingCustomer = ({ marketingCustomerCount }) => {
   }, [marketingCustomerButtonState]);
 
   const handleConfirm = async () => {
-    if (marketingSelectedCustomer.length === 0 && Object.keys(marketingSelectedCustomerState1).length === 0 ||
-        marketingSelectedCustomer.length === 1 && Object.keys(marketingSelectedCustomerState2).length === 0 ||
-        marketingSelectedCustomer.length === 2 && Object.keys(marketingSelectedCustomerState3).length === 0
+    if (marketingCustomerCount === 0 && Object.keys(marketingSelectedCustomerState1).length === 0 ||
+        marketingCustomerCount === 1 && Object.keys(marketingSelectedCustomerState2).length === 0 ||
+        marketingCustomerCount === 2 && Object.keys(marketingSelectedCustomerState3).length === 0
       ) return;
 
-    setMarketingSelectedCustomer([...marketingSelectedCustomer, marketingSelectedCustomerState1]);
+    if (marketingCustomerCount === 0) setMarketingSelectedCustomer([marketingSelectedCustomerState1]);
+    else if (marketingCustomerCount === 1) setMarketingSelectedCustomer([...marketingSelectedCustomer, marketingSelectedCustomerState2]);
+    else if (marketingCustomerCount === 2) setMarketingSelectedCustomer([...marketingSelectedCustomer, marketingSelectedCustomerState3]);
 
     const updatedConversation = [...conversation];
     updatedConversation.push(
       {
         type: "user",
-        message: `${marketingSelectedCustomerState1.content.name}`,
+        message: marketingCustomerCount === 0 ? `${marketingSelectedCustomerState1.content.name}`
+                  : marketingCustomerCount === 1 ? `${marketingSelectedCustomerState2.content.name}`
+                    : `${marketingSelectedCustomerState3.content.name}`,
       },
       {
         type: "system",
-        message: `${marketingSelectedCustomerState1.content.name}을 주요 고객으로 생각하시는 군요,\n그럼 이 고객에게 어떤 매력 포인트가 먹힐지, 어떻게 포지셔닝을 하면 좋을지 확인해볼게요 💭`,
+        message: marketingCustomerCount === 0 ? 
+                  `${marketingSelectedCustomerState1.content.name}을 주요 고객으로 생각하시는 군요,\n그럼 이 고객에게 어떤 매력 포인트가 먹힐지, 어떻게 포지셔닝을 하면 좋을지 확인해볼게요 💭` 
+                  : marketingCustomerCount === 1 ? 
+                    `${marketingSelectedCustomerState2.content.name}도 알아보겠습니다.\n${marketingSelectedCustomerState1.content.name}과 어떤 관점에서 변화가 있는지 궁금하네요 🤔`
+                    : 
+                    `${marketingSelectedCustomerState3.content.name}으로 마지막 주요 고객층을 선택하셨네요🙌🏻\n마지막으로 아이템은 어떻게 달라질까요? `,
         expertIndex: 0,
       },
       {
-        type: `marketingSegment`,
+        type: `marketingSegmentReport`,
       },
       {
         type: "system",
-        message: `좋습니다🌞 첫번째 주요 고객을 확인해보았습니다.\n다른 고객들도 주요 고객이라고 생각하신다면, 추가적으로 더 확인해볼게요! (총 3회 가능) `,
+        message: marketingCustomerCount === 0 ? `좋습니다🌞 첫번째 주요 고객을 확인해보았습니다.\n다른 고객들도 주요 고객이라고 생각하신다면, 추가적으로 더 확인해볼게요! (총 3회 가능)`
+                  : marketingCustomerCount === 1 ? `두번째 주요 고객도 확인해 보았네요. 마지막 고객도 확인해 볼까요? (총 3회 가능)`
+                  : `세 가지 타겟 고객층을 모두 확인해 보았습니다. 이제 ${titleOfBusinessInfo}에 가장 적합하다고 생각하는 핵심 타겟 고객층을 하나 선택해 주세요.\n선택하신 타겟층을 중심으로 서비스의 잠재력을 집중 분석해 보겠습니다. 🚀`,
         expertIndex: -1,
       },
       {
@@ -324,29 +335,106 @@ const MoleculeMarketingCustomer = ({ marketingCustomerCount }) => {
       <>
       </>
       :
+      <> 
+      {marketingCustomerCount === 0 ? 
       <>
         <OptionsContainer>
           {marketingCustomerData.map((customer, index) => (
-            <Option
+            <Option1
               key={index}
               onClick={() => handleOptionClick(index)}
               selected={marketingSelectedCustomerState1.index === index}
               marketingSelectedCustomer={marketingSelectedCustomer}
+              marketingCustomerCount={marketingCustomerCount}
             >
-              <Label
+              <Label1
                 marketingSelectedCustomer={marketingSelectedCustomer}
                 selected={marketingSelectedCustomerState1.index === index}
+                marketingCustomerCount={marketingCustomerCount}
               >
                 {customer.name}
-              </Label>
-            </Option>
+              </Label1>
+            </Option1>
           ))}
         </OptionsContainer>
 
+        <ButtonWrap>
+          <Button1 
+            marketingSelectedCustomerState1={marketingSelectedCustomerState1} 
+            marketingSelectedCustomer={marketingSelectedCustomer} 
+            marketingCustomerCount={marketingCustomerCount}
+            onClick={handleConfirm}
+          >확인</Button1>
+        </ButtonWrap>
+      </>
+      : 
+      marketingCustomerCount === 1 ?
+      <>
+        <OptionsContainer>
+          {marketingCustomerData
+          .filter((_, index) => index !== marketingSelectedCustomerState1.index)
+          .map((customer, index) => (
+            <Option2
+              key={index}
+              onClick={() => handleOptionClick(index)}
+              selected={marketingSelectedCustomerState2.index === index}
+              marketingSelectedCustomer={marketingSelectedCustomer}
+              marketingCustomerCount={marketingCustomerCount}
+            >
+              <Label2
+                marketingSelectedCustomer={marketingSelectedCustomer}
+                selected={marketingSelectedCustomerState2.index === index}
+                marketingCustomerCount={marketingCustomerCount}
+              >
+                {customer.name}
+              </Label2>
+            </Option2>
+          ))}
+        </OptionsContainer>
 
         <ButtonWrap>
-          <Button marketingSelectedCustomerState1={marketingSelectedCustomerState1} marketingSelectedCustomer={marketingSelectedCustomer} onClick={handleConfirm}>확인</Button>
+          <Button2 
+            marketingSelectedCustomerState2={marketingSelectedCustomerState2} 
+            marketingSelectedCustomer={marketingSelectedCustomer} 
+            marketingCustomerCount={marketingCustomerCount}
+            onClick={handleConfirm}
+          >확인</Button2>
         </ButtonWrap>
+      </>
+      :
+      <>
+        <OptionsContainer>
+          {marketingCustomerData
+          .filter((_, index) => index !== marketingSelectedCustomerState1.index && index !== marketingSelectedCustomerState2.index)
+          .map((customer, index) => (
+            <Option3
+              key={index}
+              onClick={() => handleOptionClick(index)}
+              selected={marketingSelectedCustomerState3.index === index}
+              marketingSelectedCustomer={marketingSelectedCustomer}
+              marketingCustomerCount={marketingCustomerCount}
+            >
+              <Label3
+                marketingSelectedCustomer={marketingSelectedCustomer}
+                selected={marketingSelectedCustomerState3.index === index}
+                marketingCustomerCount={marketingCustomerCount}
+              >
+                {customer.name}
+              </Label3>
+            </Option3>
+          ))}
+        </OptionsContainer>
+
+        <ButtonWrap>
+          <Button3 
+            marketingSelectedCustomerState3={marketingSelectedCustomerState3} 
+            marketingSelectedCustomer={marketingSelectedCustomer} 
+            marketingCustomerCount={marketingCustomerCount}
+            onClick={handleConfirm}
+          >확인</Button3>
+        </ButtonWrap>
+      </>
+      }
       </>
     }
     </Wrapper>
@@ -375,7 +463,7 @@ const OptionsContainer = styled.div`
   gap:8px;
 `;
 
-const Option = styled.div`
+const Option1 = styled.div`
   position:relative;
   display:flex;
   gap:8px;
@@ -388,11 +476,11 @@ const Option = styled.div`
   cursor: pointer;
   background-color: ${(props) =>
     props.selected
-      ? Object.keys(props.marketingSelectedCustomer).length
+      ? Object.keys(props.marketingSelectedCustomer).length >= 1
         ? "rgba(0,0,0,0.05)"
         : "rgba(4,83,244,0.05)"
       : palette.white};
-  border: 1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length ? palette.gray800 : palette.blue) : palette.lineGray)};
+  border: 1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 1 ? palette.gray800 : palette.blue) : palette.lineGray)};
   transition:all .5s;
 
   p {
@@ -402,7 +490,7 @@ const Option = styled.div`
   
   img {
     margin-bottom: 5px;
-    background-color: ${(props) => (!props.selected || Object.keys(props.marketingSelectedCustomer).length ? "rgba(246, 246, 246, 1)" : "rgba(255, 255, 255, 1)")};
+    background-color: ${(props) => (!props.selected || Object.keys(props.marketingSelectedCustomer).length >= 1 ? "rgba(246, 246, 246, 1)" : "rgba(255, 255, 255, 1)")};
     border-radius: 50%;
     padding: 10px;
     width: 34px;
@@ -411,19 +499,103 @@ const Option = styled.div`
 
   &:hover {
     border-color: ${(props) =>
-      Object.keys(props.marketingSelectedCustomer).length 
+      Object.keys(props.marketingSelectedCustomer).length >= 1
         ? "none" 
         : palette.blue};
   }
 `;
 
-const Label = styled.label`
+const Option2 = styled.div`
+  position:relative;
+  display:flex;
+  gap:8px;
+  align-items:center;
+  color: ${palette.gray800};
+  font-size:0.88rem;
+  text-align: left;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: ${(props) =>
+    props.selected
+      ? Object.keys(props.marketingSelectedCustomer).length >= 2
+        ? "rgba(0,0,0,0.05)"
+        : "rgba(4,83,244,0.05)"
+      : palette.white};
+  border: 1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 2 ? palette.gray800 : palette.blue) : palette.lineGray)};
+  transition:all .5s;
+
+  p {
+    color: ${(props) => (props.selected ? palette.gray800 : palette.gray500)};
+    line-height:1.3;
+  }
+  
+  img {
+    margin-bottom: 5px;
+    background-color: ${(props) => (!props.selected || Object.keys(props.marketingSelectedCustomer).length >= 2 ? "rgba(246, 246, 246, 1)" : "rgba(255, 255, 255, 1)")};
+    border-radius: 50%;
+    padding: 10px;
+    width: 34px;
+    height: 34px;
+  }
+
+  &:hover {
+    border-color: ${(props) =>
+      Object.keys(props.marketingSelectedCustomer).length >= 2
+        ? "none" 
+        : palette.blue};
+  }
+`;
+
+const Option3 = styled.div`
+  position:relative;
+  display:flex;
+  gap:8px;
+  align-items:center;
+  color: ${palette.gray800};
+  font-size:0.88rem;
+  text-align: left;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: ${(props) =>
+    props.selected
+      ? Object.keys(props.marketingSelectedCustomer).length >= 3
+        ? "rgba(0,0,0,0.05)"
+        : "rgba(4,83,244,0.05)"
+      : palette.white};
+  border: 1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 3 ? palette.gray800 : palette.blue) : palette.lineGray)};
+  transition:all .5s;
+
+  p {
+    color: ${(props) => (props.selected ? palette.gray800 : palette.gray500)};
+    line-height:1.3;
+  }
+  
+  img {
+    margin-bottom: 5px;
+    background-color: ${(props) => (!props.selected || Object.keys(props.marketingSelectedCustomer).length >= 3 ? "rgba(246, 246, 246, 1)" : "rgba(255, 255, 255, 1)")};
+    border-radius: 50%;
+    padding: 10px;
+    width: 34px;
+    height: 34px;
+  }
+
+  &:hover {
+    border-color: ${(props) =>
+      Object.keys(props.marketingSelectedCustomer).length >= 3
+        ? "none" 
+        : palette.blue};
+  }
+`;
+
+const Label1 = styled.label`
   position:relative;
   display:flex;
   gap:8px;
   align-items:flex-start;
   width:100%;
-  color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length ? palette.gray800 : palette.blue) : palette.gray800)};
+  color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 1 ? palette.gray800 : palette.blue) : palette.gray800)};
   cursor:pointer;
 
   &:before {
@@ -431,8 +603,70 @@ const Label = styled.label`
     height:20px;
     flex-shrink:0;
     border-radius:50%;
-    border:1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length ? palette.gray800 : palette.blue) : palette.lineGray)};
-    background-color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length ? palette.gray800 : palette.blue) : palette.white)};
+    border:1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 1 ? palette.gray800 : palette.blue) : palette.lineGray)};
+    background-color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 1 ? palette.gray800 : palette.blue) : palette.white)};
+    transition:all .5s;
+    content:'';
+  }
+
+  &:after {
+    position:absolute;
+    left:0;
+    top:0;
+    width:20px;
+    height:20px;
+    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='8' viewBox='0 0 10 8' fill='none'%3E%3Cpath d='M9 0.914062L3.4 6.91406L1 4.51406' stroke='white' stroke-width='1.33333' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center no-repeat;
+    content:'';
+  }
+`;
+
+const Label2 = styled.label`
+  position:relative;
+  display:flex;
+  gap:8px;
+  align-items:flex-start;
+  width:100%;
+  color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 2 ? palette.gray800 : palette.blue) : palette.gray800)};
+  cursor:pointer;
+
+  &:before {
+    width:20px;
+    height:20px;
+    flex-shrink:0;
+    border-radius:50%;
+    border:1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 2 ? palette.gray800 : palette.blue) : palette.lineGray)};
+    background-color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 2 ? palette.gray800 : palette.blue) : palette.white)};
+    transition:all .5s;
+    content:'';
+  }
+
+  &:after {
+    position:absolute;
+    left:0;
+    top:0;
+    width:20px;
+    height:20px;
+    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='8' viewBox='0 0 10 8' fill='none'%3E%3Cpath d='M9 0.914062L3.4 6.91406L1 4.51406' stroke='white' stroke-width='1.33333' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center no-repeat;
+    content:'';
+  }
+`;
+
+const Label3 = styled.label`
+  position:relative;
+  display:flex;
+  gap:8px;
+  align-items:flex-start;
+  width:100%;
+  color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 3 ? palette.gray800 : palette.blue) : palette.gray800)};
+  cursor:pointer;
+
+  &:before {
+    width:20px;
+    height:20px;
+    flex-shrink:0;
+    border-radius:50%;
+    border:1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 3 ? palette.gray800 : palette.blue) : palette.lineGray)};
+    background-color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 3 ? palette.gray800 : palette.blue) : palette.white)};
     transition:all .5s;
     content:'';
   }
@@ -454,10 +688,10 @@ const ButtonWrap = styled.div`
   align-items:center;
 `;
 
-const Button = styled.button`
+const Button1 = styled.button`
   font-family: Pretendard, Poppins;
   font-size:0.88rem;
-  color: ${(props) => (props.marketingSelectedCustomerState1 && Object.keys(props.marketingSelectedCustomerState1).length ? palette.chatBlue : palette.gray500)};
+  color: ${(props) => (Object.keys(props.marketingSelectedCustomerState1).length ? palette.chatBlue : palette.gray500)};
   line-height:22px;
   // padding:8px 20px;
   margin-left:auto;
@@ -467,9 +701,37 @@ const Button = styled.button`
   transition:all .5s;
 
   display: ${(props) => (
-    Object.keys(props.marketingSelectedCustomer).length ? 'none' : 'block')};
+    props.marketingCustomerCount === 0 && Object.keys(props.marketingSelectedCustomer).length >= 1 ? 'none' : 'block')};
 `;
 
-const Spacing = styled.div`
-  margin-bottom: 40px;
+const Button2 = styled.button`
+  font-family: Pretendard, Poppins;
+  font-size:0.88rem;
+  color: ${(props) => (Object.keys(props.marketingSelectedCustomerState2).length ? palette.chatBlue : palette.gray500)};
+  line-height:22px;
+  // padding:8px 20px;
+  margin-left:auto;
+  border-radius:8px;
+  border:0;
+  background:${palette.white};
+  transition:all .5s;
+
+  display: ${(props) => (
+    Object.keys(props.marketingSelectedCustomer).length >= 2 ? 'none' : 'block')};
+`;
+
+const Button3 = styled.button`
+  font-family: Pretendard, Poppins;
+  font-size:0.88rem;
+  color: ${(props) => (Object.keys(props.marketingSelectedCustomerState3).length ? palette.chatBlue : palette.gray500)};
+  line-height:22px;
+  // padding:8px 20px;
+  margin-left:auto;
+  border-radius:8px;
+  border:0;
+  background:${palette.white};
+  transition:all .5s;
+
+  display: ${(props) => (
+    Object.keys(props.marketingSelectedCustomer).length >= 3 ? 'none' : 'block')};
 `;

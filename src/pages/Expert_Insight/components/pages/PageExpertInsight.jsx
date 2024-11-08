@@ -135,6 +135,7 @@ import MoleculeMarketingBmButton from "../molecules/Marketing/MoleculeMarketingB
 import OrganismMarketingBmReport from "../organisms/Marketing/OrganismMarketingBmReport";
 import MoleculeMarketingCustomerButton from "../molecules/Marketing/MoleculeMarketingCustomerButton";
 import MoleculeMarketingCustomer from "../molecules/Marketing/MoleculeMarketingCustomer";
+import OrganismMarketingSegmentReport from "../organisms/Marketing/OrganismMarketingSegmentReport";
 
 const PageExpertInsight = () => {
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
@@ -235,6 +236,7 @@ const PageExpertInsight = () => {
   let customerAdditionalReportCount = 0;
   let caseReportCount = 0;
   let marketingCustomerCount = 0;
+  let marketingSegmentReportCount = 0;
 
   useEffect(() => {
     // 접근 가능 여부를 확인하여 차단 로직 수행
@@ -619,6 +621,13 @@ if (isLoadingPage) {
                   return (
                     <MoleculeMarketingCustomer
                       marketingCustomerCount={currentMarketingCustomerCount}
+                    />
+                  );
+                } else if (item.type === "marketingSegmentReport") {
+                  const currentMarketingSegmentReportCount = marketingSegmentReportCount++;
+                  return (
+                    <OrganismMarketingSegmentReport
+                      marketingSegmentReportCount={currentMarketingSegmentReportCount}
                     />
                   );
                 }
