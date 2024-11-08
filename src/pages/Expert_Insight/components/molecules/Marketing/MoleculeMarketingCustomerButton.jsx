@@ -9,6 +9,7 @@ import {
   MARKETING_CUSTOMER_BUTTON_STATE,
   MARKETING_SELECTED_CUSTOMER,
   MARKETING_FINAL_CUSTOMER,
+  MARKETING_FINAL_REPORT_BUTTON_STATE,
 } from "../../../../AtomStates";
 
 import { useSaveConversation } from "../../atoms/AtomSaveConversation";
@@ -23,6 +24,7 @@ const MoleculeMarketingCustomerButton = () => {
   const [marketingCustomerButtonState, setMarketingCustomerButtonState] = useAtom(MARKETING_CUSTOMER_BUTTON_STATE);
   const [marketingSelectedCustomer, setMarketingSelectedCustomer] = useAtom(MARKETING_SELECTED_CUSTOMER);
   const [marketingFinalCustomer, setMarketingFinalCustomer] = useAtom(MARKETING_FINAL_CUSTOMER);
+  const [marketingFinalReportButtonState, setMarketingFinalReportButtonState] = useAtom(MARKETING_FINAL_REPORT_BUTTON_STATE);
 
   const handleClick = async (type, index) => {
     if (isLoading) return;
@@ -85,6 +87,7 @@ const MoleculeMarketingCustomerButton = () => {
         }
       );
       setMarketingFinalCustomer(marketingSelectedCustomer[index]);
+      setMarketingFinalReportButtonState(1);
       saveConversation({ changingConversation: { marketingFinalCustomer: marketingSelectedCustomer[index] } });
     }
 
