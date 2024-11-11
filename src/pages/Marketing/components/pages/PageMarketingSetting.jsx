@@ -43,8 +43,6 @@ const PageMarketSetting = () => {
   const [marketingMbti, setMarketingMbti] = useAtom(MARKETING_MBTI);
   const [isExpertInsightAccessible, setIsExpertInsightAccessible] = useAtom(IS_EXPERT_INSIGHT_ACCESSIBLE);
 
-  const [isSignPopupOpen, setIsSignPopupOpen] = useState(false);
-
   const handleButtonExpert = async () => {
     const updatedConversation = [...conversation];
 
@@ -74,21 +72,6 @@ const PageMarketSetting = () => {
     navigate("/ExpertInsight");
   };
 
-  const handleButtonSignup = async () => {
-    setIsSignPopupOpen(true);
-  };
-
-  const closeSignPopup = () => {
-    setIsSignPopupOpen(false);
-    setErrorStatus("");
-    setSignUpName('');
-    setEmail('');
-    setSignupEmail('');
-    setPassword('');
-    setSignupPassword('');
-    setConfirmPassword('');
-  };
-
   return (
     <>
       {marketingHaveIdea 
@@ -97,10 +80,7 @@ const PageMarketSetting = () => {
 
       <br />
 
-      {isSignPopupOpen && <MoleculeSignPopup onClose={closeSignPopup} />}
-
-      <button onClick={handleButtonSignup}>회원가입 테스트</button>
-      <button onClick={handleButtonExpert}>전문가 매칭 테스트</button>
+      <button onClick={handleButtonExpert}>사업화 가능성 확인하기 📊</button>
 
       {/* <OrganismBizAnalysisSection /> */}
     </>

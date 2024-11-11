@@ -174,7 +174,7 @@ const MoleculeSurveyGoalSuggestion = () => {
     setConversation(updatedConversation);
 
     await saveConversation(
-      { changingConversation: { conversation: updatedConversation, conversationStage: 3 } }
+      { changingConversation: { conversation: updatedConversation, conversationStage: 3, surveyGoalFixed: surveyGoalFixedState } }
     );
     
     setExpertButtonState(1);

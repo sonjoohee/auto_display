@@ -14,7 +14,8 @@ const MoleculeLoginPopup = ({ onClose = () => {} }) => {
   };
 
   return (
-    <LoginPopupOverlay onClick={handleOverlayClick}>
+    // <LoginPopupOverlay onClick={handleOverlayClick}>
+    <LoginPopupOverlay>
       <PopupContent>
         <CloseButton onClick={onClose}>닫기</CloseButton>
         <MoleculeLogin onClosePopup={onClose} /> {/* 함수 전달 */}
