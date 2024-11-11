@@ -144,6 +144,7 @@ import IconCanvas11 from "../images/iconCanvas11.svg"
 import IconCanvas12 from "../images/iconCanvas12.svg"
 import IconCanvas13 from "../images/iconCanvas13.svg"
 
+import IconDetailView from "../images/IconDetailView.svg"
 
 const images = {
   Logo,
@@ -290,6 +291,8 @@ const images = {
   IconCanvas11,
   IconCanvas12,
   IconCanvas13,
+
+  IconDetailView,
 }
 
 export default images;
