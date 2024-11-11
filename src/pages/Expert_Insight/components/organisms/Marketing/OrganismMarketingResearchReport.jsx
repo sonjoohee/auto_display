@@ -17,7 +17,7 @@ import {
 
 import { useSaveConversation } from "../../atoms/AtomSaveConversation";
 
-const OrganismMarketingResearchReport = ({ caseReportCount }) => {
+const OrganismMarketingResearchReport = () => {
   const { saveConversation } = useSaveConversation();
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
@@ -41,9 +41,11 @@ const OrganismMarketingResearchReport = ({ caseReportCount }) => {
   const [marketingResearchReportData, setMarketingResearchReportData] = useAtom(MARKETING_RESEARCH_REPORT_DATA);
 
   const axiosConfig = {
+    timeout: 10000,
     headers: {
       "Content-Type": "application/json",
-    }
+    },
+    withCredentials: true,
   };
 
   useEffect(() => {
@@ -81,28 +83,32 @@ const OrganismMarketingResearchReport = ({ caseReportCount }) => {
           //   !response.data || 
           //   typeof response.data !== "object" ||
           //   !response.data.hasOwnProperty("marketing_research_report") || 
-          //   !Array.isArray(marketingResearchReport)
-          //   // !marketingResearchReport[0].hasOwnProperty("title") ||
-          //   // !marketingResearchReport[0].hasOwnProperty("text") ||
-          //   // !marketingResearchReport[1].hasOwnProperty("title") ||
-          //   // !marketingResearchReport[1].hasOwnProperty("content") ||
-          //   // !Array.isArray(marketingResearchReport[1].content) ||
-          //   // marketingResearchReport[1].content.some(item => 
-          //   //   !item.hasOwnProperty("title") || 
-          //   //   !item.hasOwnProperty("text") || 
-          //   //   !item.hasOwnProperty("subcontent") || 
-          //   //   !Array.isArray(item.subcontent) || 
-          //   //   item.subcontent.some(contentItem => 
-          //   //     !contentItem.hasOwnProperty("subTitle") || 
-          //   //     !contentItem.hasOwnProperty("text")
-          //   //   )
-          //   // ) ||
-          //   // !marketingResearchReport[2].hasOwnProperty("title") ||
-          //   // !marketingResearchReport[2].hasOwnProperty("text")
+          //   !Array.isArray(marketingResearchReport) ||
+          //   marketingResearchReport.length !== 6 ||
+          //   marketingResearchReport.slice(0, 5).some(item => 
+          //     !item.hasOwnProperty("title") || 
+          //     !item.hasOwnProperty("content") ||
+          //     item.content.some(contentItem => 
+          //       !contentItem.hasOwnProperty("key_content") || 
+          //       !contentItem.hasOwnProperty("specific_data") ||
+          //       !contentItem.hasOwnProperty("keywords") ||
+          //       !Array.isArray(contentItem.keywords) ||
+          //       contentItem.keywords.length === 0 ||
+          //       !contentItem.hasOwnProperty("message") ||
+          //       !contentItem.hasOwnProperty("summary")
+          //     )
+          //   ) ||
+          //   !marketingResearchReport[5].hasOwnProperty("title") ||
+          //   !marketingResearchReport[5].hasOwnProperty("content") ||
+          //   !marketingResearchReport[5].content.hasOwnProperty("conclusion") ||
+          //   !marketingResearchReport[5].content.hasOwnProperty("summary") ||
+          //   !marketingResearchReport[0].content.hasOwnProperty("sources") ||
+          //   !marketingResearchReport[1].content.hasOwnProperty("company_cases") ||
+          //   !marketingResearchReport[3].content.hasOwnProperty("company_cases")
           // )) 
           // {
           //   response = await axios.post(
-          //     "http://58.72.4.190:8503/ix_marketing_research_report",
+          //     "https://wishresearch.kr/marketing_research_report",
           //     data,
           //     axiosConfig
           //   );
@@ -242,32 +248,14 @@ const OrganismMarketingResearchReport = ({ caseReportCount }) => {
         </>
       ) : (
         <>
-          {marketingResearchReportData[0]?.title}
-          {/* <h1>{caseReportData[caseReportCount]?.[0]?.report_title}</h1>
-          <p>{caseReportData[caseReportCount]?.[0]?.text}</p>
-          {caseReportData[caseReportCount]?.[1]?.content.map((report, index) => (
-            <SeparateSection key={index}>
-              <h3>
-                <span className="number">{index + 1}</span>
-                {report.title}
-              </h3>
-              <p>{report.text}</p>
-              <div>
-              <ol className="list-decimal">
-                {report.subcontent.map((subItem, subIndex) => (
-                  <li key={subIndex}>
-                    {subItem.subTitle} : {subItem.text}
-                  </li>
-                ))}
-              </ol>
-              </div>
-            </SeparateSection>
-          ))
-        }
-        <p className="conclusion">{caseReportData[caseReportCount]?.[2]?.text}</p> */}
+          {marketingResearchReportData[5]?.content.summary}<br/><br/>
+          시장현황: {marketingResearchReportData[0]?.content.summary}<br/>
+          업계 변화: {marketingResearchReportData[1]?.content.summary}<br/>
+          고객의 변화: {marketingResearchReportData[2]?.content.summary}<br/>
+          경쟁사 상황: {marketingResearchReportData[3]?.content.summary}<br/>
+          추가 요인: {marketingResearchReportData[4]?.content.summary}
         </>
       )}
-
     </Wrap>
   );
 };
