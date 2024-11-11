@@ -82,10 +82,10 @@ const MoleculeMarketingSignUpButton = () => {
 
   return (
     <>
-      <ButtonWrap>
+      <SelectButton>
         <button onClick={() => setIsSignPopupOpen(true)}>회원가입하고 대화내용 평생 간직 💌</button>
-        <button onClick={() => setIsExitPopupOpen(true)}>저장하지 않고 종료하기 😱</button>
-      </ButtonWrap>
+        <button className="finish" onClick={() => setIsExitPopupOpen(true)}>저장하지 않고 종료하기 😱</button>
+      </SelectButton>
       {isSignPopupOpen && (
         <>
           <MoleculeSignPopup onClose={closeSignPopup} />
@@ -135,35 +135,28 @@ const Overlay = styled.div`
   background: rgba(0, 0, 0, 0.5);
 `;
 
-const ButtonWrap = styled.div`
-  display: flex;
-  align-items: center;
+const SelectButton = styled.div`
+  display:flex;
+  align-items:center;
+  gap:12px;
   margin-top: 15px;
-  padding-bottom: 15px;
   margin-left: 50px;
 
   button {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-family: "Pretendard";
-    font-size: 0.875rem;
-    color: ${palette.darkGray};
-    border: 0;
-    background: none;
-    margin-right: 10px;
+    // display:inline-block;
+    // width:fit-content;
+    font-family: 'Pretendard', 'Poppins';
+    font-size:0.88rem;
+    color:${palette.chatBlue};
+    padding:8px 20px;
+    border-radius:40px;
+    border:0;
+    background:rgba(4, 83, 244, 0.1);
   }
 
-  > button {
-    padding: 8px 16px;
-    border-radius: 40px;
-    border: 1px solid ${palette.lineGray};
-  }
-
-  button.other {
-    color: ${palette.lightGray};
-    font-size: 0.75rem;
-    border: none;
+  .finish {
+    color:${palette.gray500};
+    background:${palette.gray100};
   }
 `;
 
