@@ -97,7 +97,7 @@ const MoleculeMarketingCustomerButton = () => {
   };
   return (
     <>
-      <ButtonWrap>
+      <SelectButton>
         {marketingSelectedCustomer.length === 0 ?
           <button onClick={() => handleClick(1)}>고객 분석으로 잠재력 발견하기 🔎</button>
         :
@@ -113,41 +113,34 @@ const MoleculeMarketingCustomerButton = () => {
               <button onClick={() => handleClick(3, 2)}>{marketingSelectedCustomer[2].content.name}</button>
             </>
         }
-      </ButtonWrap>
+      </SelectButton>
     </>
   );
 };
 
 export default MoleculeMarketingCustomerButton;
 
-const ButtonWrap = styled.div`
-  display: flex;
-  align-items: center;
+const SelectButton = styled.div`
+  display:flex;
+  align-items:center;
+  gap:12px;
   margin-top: 15px;
-  padding-bottom: 15px;
   margin-left: 50px;
 
   button {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-family: "Pretendard";
-    font-size: 0.875rem;
-    color: ${palette.darkGray};
-    border: 0;
-    background: none;
-    margin-right: 10px;
+    // display:inline-block;
+    // width:fit-content;
+    font-family: 'Pretendard', 'Poppins';
+    font-size:0.88rem;
+    color:${palette.chatBlue};
+    padding:8px 20px;
+    border-radius:40px;
+    border:0;
+    background:rgba(4, 83, 244, 0.1);
   }
 
-  > button {
-    padding: 8px 16px;
-    border-radius: 40px;
-    border: 1px solid ${palette.lineGray};
-  }
-
-  button.other {
-    color: ${palette.lightGray};
-    font-size: 0.75rem;
-    border: none;
+  .finish {
+    color:${palette.gray500};
+    background:${palette.gray100};
   }
 `;
