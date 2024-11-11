@@ -15,6 +15,7 @@ export const palette = {
   darkGray: "#3D3D3D",
   gray50: "#FAFAFA",
   gray100: "#F6F6F6",
+  gray200: "#DDDDDD",
   gray300: "#CCCCCC",
   gray500: "#8c8c8c",
   gray700: "#666666",
