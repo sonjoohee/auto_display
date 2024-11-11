@@ -14,13 +14,16 @@ import {
   MARKETING_HAVE_IEDA,
   TITLE_OF_BUSINESS_INFORMATION,
   IS_MARKETING,
-  MARKETING_MBTI,
+  MARKETING_MBTI_ANSWER,
+  MARKETING_MBTI_RESULT,
+  MARKETING_INTEREST,
   CONVERSATION,
   CONVERSATION_STAGE,
   IS_EXPERT_INSIGHT_ACCESSIBLE,
+  MARKETING_MBTI_STAGE,
 } from '../../../AtomStates';
-import MoleculeSignPopup from "../../../Login_Sign/components/molecules/MoleculeSignPopup";
 import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
+import OrganismMarketingBizAnalysis from "../organisms/OrganismMarketingBizAnalysis";
 
 const PageMarketSetting = () => {
   const { saveConversation } = useSaveConversation();
@@ -40,69 +43,100 @@ const PageMarketSetting = () => {
   const [errorStatus, setErrorStatus] = useAtom(ERROR_STATUS);
   const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
   const [marketingHaveIdea, setMarketingHaveIdea] = useAtom(MARKETING_HAVE_IEDA);
-  const [marketingMbti, setMarketingMbti] = useAtom(MARKETING_MBTI);
+  const [marketingMbtiAnswer, setMarketingMbtiAnswer] = useAtom(MARKETING_MBTI_ANSWER);
+  const [marketingMbtiResult, setMarketingMbtiResult] = useAtom(MARKETING_MBTI_RESULT);
+  const [marketingInterest, setMarketingInterest] = useAtom(MARKETING_INTEREST);
+  const [marketingMbtiStage, setMarketingMbtiStage] = useAtom(MARKETING_MBTI_STAGE);
   const [isExpertInsightAccessible, setIsExpertInsightAccessible] = useAtom(IS_EXPERT_INSIGHT_ACCESSIBLE);
-
-  const [isSignPopupOpen, setIsSignPopupOpen] = useState(false);
-
-  const handleButtonExpert = async () => {
-    const updatedConversation = [...conversation];
-
-    updatedConversation.push(
-      {
-        type: "system",
-        message: 
-          marketingHaveIdea 
-          ? `${titleOfBusinessInfo} 사업을 하시려는 창업가 이시군요!\n당신의 스타일에 딱 맞는 창업 전략을 잡는데 도움이 되었으면 좋겠어요. 함께 멋진 여정을 시작해 보아요!  ✨` 
-          : `${marketingMbti} 창업가 이시군요! 그 성향에 맞는 ${titleOfBusinessInfo}을 분석해드릴게요\n당신의 스타일에 딱 맞는 창업 전략을 잡는데 도움이 되었으면 좋겠어요 ✨`,
-        expertIndex: 0,
-      },
-      {
-        type: "system",
-        message: `자! 이제 본격적인 준비를 시작해보겠습니다. 먼저 시장에서 ${titleOfBusinessInfo}의 가능성을 한눈에 파악할 수 있는 시장조사를 바로 시작해볼게요`,
-        expertIndex: -1,
-      },
-      { type: "marketingStartButton" }
-    );
-
-    await saveConversation(
-      { changingConversation: { conversation: updatedConversation } }
-    );
-
-    setConversation(updatedConversation);
-    setIsExpertInsightAccessible(true);
-    navigate("/ExpertInsight");
-  };
-
-  const handleButtonSignup = async () => {
-    setIsSignPopupOpen(true);
-  };
-
-  const closeSignPopup = () => {
-    setIsSignPopupOpen(false);
-    setErrorStatus("");
-    setSignUpName('');
-    setEmail('');
-    setSignupEmail('');
-    setPassword('');
-    setSignupPassword('');
-    setConfirmPassword('');
+  
+  const updateMbtiAnswer = (index, newValue) => {
+    setMarketingMbtiAnswer((prev) => [...prev.slice(0, index), newValue, ...prev.slice(index + 1)]);
   };
 
   return (
     <>
       {marketingHaveIdea 
-        ? "아이디어만으로도 첫걸음을 내딘 창업가이시네요 🎉이제 아이디어의 잠재력을 함께 확인해보아요!" 
+        ? titleOfBusinessInfo ? 
+          <>
+            <p>🔖아이디어를 정리해 보았어요</p>
+            <h1>{titleOfBusinessInfo}</h1>
+          </>
+          : "아이디어만으로도 첫걸음을 내딘 창업가이시네요 🎉이제 아이디어의 잠재력을 함께 확인해보아요!" 
         : "아이디어가 아직 없어도 걱정마세요 ☺창업 성향 테스트로 함께 찾아볼까요?새로운 기회를 발견할지 몰라요!"}
 
       <br />
 
-      {isSignPopupOpen && <MoleculeSignPopup onClose={closeSignPopup} />}
+      {marketingHaveIdea 
+        ? <OrganismMarketingBizAnalysis />
+        : 
+        <>
+          {marketingMbtiStage === 0 && <button onClick={() => setMarketingMbtiStage(1)}>내게 맞는 아이템 찾기</button>}
+          {marketingMbtiStage === 1 && <>
+            <button onClick={() => {updateMbtiAnswer(0, marketingMbtiAnswer[0] - 1); setMarketingMbtiStage(2)}}>-1</button>
+            <p>{marketingMbtiAnswer[0]}{marketingMbtiAnswer[1]}{marketingMbtiAnswer[2]}{marketingMbtiAnswer[3]}</p>
+            <button onClick={() => {updateMbtiAnswer(0, marketingMbtiAnswer[0] + 1); setMarketingMbtiStage(2)}}>+1</button>
+          </>}
+          {marketingMbtiStage === 2 && <>
+            <button onClick={() => {updateMbtiAnswer(0, marketingMbtiAnswer[0] - 1); setMarketingMbtiStage(3)}}>-1</button>
+            <p>{marketingMbtiAnswer[0]}{marketingMbtiAnswer[1]}{marketingMbtiAnswer[2]}{marketingMbtiAnswer[3]}</p>
+            <button onClick={() => {updateMbtiAnswer(0, marketingMbtiAnswer[0] + 1); setMarketingMbtiStage(3)}}>+1</button>
+          </>}
+          {marketingMbtiStage === 3 && <>
+            <button onClick={() => {updateMbtiAnswer(0, marketingMbtiAnswer[0] - 1); setMarketingMbtiStage(4)}}>-1</button>
+            <p>{marketingMbtiAnswer[0]}{marketingMbtiAnswer[1]}{marketingMbtiAnswer[2]}{marketingMbtiAnswer[3]}</p>
+            <button onClick={() => {updateMbtiAnswer(0, marketingMbtiAnswer[0] + 1); setMarketingMbtiStage(4)}}>+1</button>
+          </>}
+          {marketingMbtiStage === 4 && <>
+            <button onClick={() => {updateMbtiAnswer(1, marketingMbtiAnswer[1] - 1); setMarketingMbtiStage(5)}}>-1</button>
+            <p>{marketingMbtiAnswer[0]}{marketingMbtiAnswer[1]}{marketingMbtiAnswer[2]}{marketingMbtiAnswer[3]}</p>
+            <button onClick={() => {updateMbtiAnswer(1, marketingMbtiAnswer[1] + 1); setMarketingMbtiStage(5)}}>+1</button>
+          </>}
+          {marketingMbtiStage === 5 && <>
+            <button onClick={() => {updateMbtiAnswer(1, marketingMbtiAnswer[1] - 1); setMarketingMbtiStage(6)}}>-1</button>
+            <p>{marketingMbtiAnswer[0]}{marketingMbtiAnswer[1]}{marketingMbtiAnswer[2]}{marketingMbtiAnswer[3]}</p>
+            <button onClick={() => {updateMbtiAnswer(1, marketingMbtiAnswer[1] + 1); setMarketingMbtiStage(6)}}>+1</button>
+          </>}
+          {marketingMbtiStage === 6 && <>
+            <button onClick={() => {updateMbtiAnswer(1, marketingMbtiAnswer[1] - 1); setMarketingMbtiStage(7)}}>-1</button>
+            <p>{marketingMbtiAnswer[0]}{marketingMbtiAnswer[1]}{marketingMbtiAnswer[2]}{marketingMbtiAnswer[3]}</p>
+            <button onClick={() => {updateMbtiAnswer(1, marketingMbtiAnswer[1] + 1); setMarketingMbtiStage(7)}}>+1</button>
+          </>}
+          {marketingMbtiStage === 7 && <>
+            <button onClick={() => {updateMbtiAnswer(2, marketingMbtiAnswer[2] - 1); setMarketingMbtiStage(8)}}>-1</button>
+            <p>{marketingMbtiAnswer[0]}{marketingMbtiAnswer[1]}{marketingMbtiAnswer[2]}{marketingMbtiAnswer[3]}</p>
+            <button onClick={() => {updateMbtiAnswer(2, marketingMbtiAnswer[2] + 1); setMarketingMbtiStage(8)}}>+1</button>
+          </>}
+          {marketingMbtiStage === 8 && <>
+            <button onClick={() => {updateMbtiAnswer(2, marketingMbtiAnswer[2] - 1); setMarketingMbtiStage(9)}}>-1</button>
+            <p>{marketingMbtiAnswer[0]}{marketingMbtiAnswer[1]}{marketingMbtiAnswer[2]}{marketingMbtiAnswer[3]}</p>
+            <button onClick={() => {updateMbtiAnswer(2, marketingMbtiAnswer[2] + 1); setMarketingMbtiStage(9)}}>+1</button>
+          </>}
+          {marketingMbtiStage === 9 && <>
+            <button onClick={() => {updateMbtiAnswer(2, marketingMbtiAnswer[2] - 1); setMarketingMbtiStage(10)}}>-1</button>
+            <p>{marketingMbtiAnswer[0]}{marketingMbtiAnswer[1]}{marketingMbtiAnswer[2]}{marketingMbtiAnswer[3]}</p>
+            <button onClick={() => {updateMbtiAnswer(2, marketingMbtiAnswer[2] + 1); setMarketingMbtiStage(10)}}>+1</button>
+          </>}
+          {marketingMbtiStage === 10 && <>
+            <button onClick={() => {updateMbtiAnswer(3, marketingMbtiAnswer[3] - 1); setMarketingMbtiStage(11)}}>-1</button>
+            <p>{marketingMbtiAnswer[0]}{marketingMbtiAnswer[1]}{marketingMbtiAnswer[2]}{marketingMbtiAnswer[3]}</p>
+            <button onClick={() => {updateMbtiAnswer(3, marketingMbtiAnswer[3] + 1); setMarketingMbtiStage(11)}}>+1</button>
+          </>}
+          {marketingMbtiStage === 11 && <>
+            <button onClick={() => {updateMbtiAnswer(3, marketingMbtiAnswer[3] - 1); setMarketingMbtiStage(12)}}>-1</button>
+            <p>{marketingMbtiAnswer[0]}{marketingMbtiAnswer[1]}{marketingMbtiAnswer[2]}{marketingMbtiAnswer[3]}</p>
+            <button onClick={() => {updateMbtiAnswer(3, marketingMbtiAnswer[3] + 1); setMarketingMbtiStage(12)}}>+1</button>
+          </>}
+          {marketingMbtiStage === 12 && <>
+            <button onClick={() => {updateMbtiAnswer(3, marketingMbtiAnswer[3] - 1); setMarketingMbtiStage(13)}}>-1</button>
+            <p>{marketingMbtiAnswer[0]}{marketingMbtiAnswer[1]}{marketingMbtiAnswer[2]}{marketingMbtiAnswer[3]}</p>
+            <button onClick={() => {updateMbtiAnswer(3, marketingMbtiAnswer[3] + 1); setMarketingMbtiStage(13)}}>+1</button>
+          </>}
+          {marketingMbtiStage === 13 && <>
+            <button onClick={() => {setMarketingMbtiStage(14)}}>결과 확인하기</button>
+          </>}
+        </>
+      }
 
-      <button onClick={handleButtonSignup}>회원가입 테스트</button>
-      <button onClick={handleButtonExpert}>전문가 매칭 테스트</button>
-
-      {/* <OrganismBizAnalysisSection /> */}
     </>
   );
 };

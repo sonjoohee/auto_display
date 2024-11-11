@@ -72,56 +72,81 @@ const OrganismMarketingFinalReport = () => {
               주요기능: mainCharacteristicOfBusinessInformation,
               목표고객: businessInformationTargetCustomer,
             },
-            marketing_research_report: marketingResearchReportData
+            marketing_research_report: marketingResearchReportData,
+            marketing_bm_report: marketingBmReportData,
+            marketing_selected_customer: marketingFinalCustomer
           };
 
-          let response = await axios.post(
-            "https://wishresearch.kr/marketing_final_report",
-            data,
-            axiosConfig
-          );
+          // let response = await axios.post(
+          //   "https://wishresearch.kr/marketing_final_report",
+          //   data,
+          //   axiosConfig
+          // );
 
-          let marketingFinalReport = response.data.marketing_final_report;
+          // let marketingFinalReport = response.data.marketing_final_report;
             
-          let retryCount = 0;
-          const maxRetries = 10;
+          // let retryCount = 0;
+          // const maxRetries = 10;
 
-          while (retryCount < maxRetries && (
-            !response || 
-            !response.data || 
-            typeof response.data !== "object" ||
-            !response.data.hasOwnProperty("marketing_final_report") || 
-            !Array.isArray(marketingFinalReport) ||
-            marketingFinalReport.length !== 10 ||
-            marketingFinalReport.slice(0, 9).some(item => 
-              !item.hasOwnProperty("title") || 
-              !item.hasOwnProperty("content") ||
-              item.content.some(contentItem => 
-                !contentItem.hasOwnProperty("key_message") || 
-                !contentItem.hasOwnProperty("keyword") ||
-                !Array.isArray(contentItem.keyword) ||
-                contentItem.keyword.length === 0 ||
-                !contentItem.hasOwnProperty("summary")
-              )
-            ) ||
-            !marketingFinalReport[9].hasOwnProperty("title") ||
-            !marketingFinalReport[9].hasOwnProperty("content") ||
-            !marketingFinalReport[9].content.hasOwnProperty("conclusion") ||
-            !marketingFinalReport[9].content.hasOwnProperty("summary")
-          )) 
-          {
-            response = await axios.post(
-              "https://wishresearch.kr/marketing_final_report",
-              data,
-              axiosConfig
-            );
-            retryCount++;
+          // while (retryCount < maxRetries && (
+          //   !response || 
+          //   !response.data || 
+          //   typeof response.data !== "object" ||
+          //   !response.data.hasOwnProperty("marketing_final_report") || 
+          //   !Array.isArray(marketingFinalReport) ||
+          //   marketingFinalReport.length !== 3 ||
+          //   marketingFinalReport[0].hasOwnProperty("title") ||
+          //   marketingFinalReport[0].hasOwnProperty("content") ||
+          //   marketingFinalReport[0].content.hasOwnProperty("purpose") ||
+          //   marketingFinalReport[0].content.hasOwnProperty("target") ||
+          //   marketingFinalReport[0].content.hasOwnProperty("value") ||
+          //   marketingFinalReport[0].content.hasOwnProperty("elements") ||
+          //   marketingFinalReport[0].content.hasOwnProperty("type") ||
+          //   marketingFinalReport[1].hasOwnProperty("distinctiveness") ||
+          //   marketingFinalReport[1].distinctiveness.hasOwnProperty("score") ||
+          //   marketingFinalReport[1].distinctiveness.hasOwnProperty("description") ||
+          //   marketingFinalReport[1].hasOwnProperty("potential") ||
+          //   marketingFinalReport[1].potential.hasOwnProperty("score") ||
+          //   marketingFinalReport[1].potential.hasOwnProperty("description") ||
+          //   marketingFinalReport[1].hasOwnProperty("model") ||
+          //   marketingFinalReport[1].model.hasOwnProperty("score") ||
+          //   marketingFinalReport[1].model.hasOwnProperty("description") ||
+          //   marketingFinalReport[1].hasOwnProperty("vision") ||
+          //   marketingFinalReport[1].vision.hasOwnProperty("score") ||
+          //   marketingFinalReport[1].vision.hasOwnProperty("description") ||
+          //   marketingFinalReport[1].hasOwnProperty("barriers") ||
+          //   marketingFinalReport[1].barriers.hasOwnProperty("score") ||
+          //   marketingFinalReport[1].barriers.hasOwnProperty("description") ||
+          //   marketingFinalReport[1].hasOwnProperty("scarcity") ||
+          //   marketingFinalReport[1].scarcity.hasOwnProperty("score") ||
+          //   marketingFinalReport[1].scarcity.hasOwnProperty("description") ||
+          //   marketingFinalReport[1].hasOwnProperty("adaptability") ||
+          //   marketingFinalReport[1].adaptability.hasOwnProperty("score") ||
+          //   marketingFinalReport[1].adaptability.hasOwnProperty("description") ||
+          //   marketingFinalReport[1].hasOwnProperty("total_score") ||
+          //   marketingFinalReport[2].hasOwnProperty("session1") ||
+          //   marketingFinalReport[2].hasOwnProperty("session2") ||
+          //   marketingFinalReport[2].hasOwnProperty("session3") ||
+          //   marketingFinalReport[2].session1.hasOwnProperty("title") ||
+          //   marketingFinalReport[2].session1.hasOwnProperty("content") ||
+          //   marketingFinalReport[2].session2.hasOwnProperty("title") ||
+          //   marketingFinalReport[2].session2.hasOwnProperty("content") ||
+          //   marketingFinalReport[2].session3.hasOwnProperty("title") ||
+          //   marketingFinalReport[2].session3.hasOwnProperty("content")
+          // )) 
+          // {
+          //   response = await axios.post(
+          //     "https://wishresearch.kr/marketing_final_report",
+          //     data,
+          //     axiosConfig
+          //   );
+          //   retryCount++;
 
-            marketingFinalReport = response.data.marketing_final_report;
-          }
-          if (retryCount === maxRetries) {
-            throw new Error("Maximum retry attempts reached. Empty response persists.");
-          }
+          //   marketingFinalReport = response.data.marketing_final_report;
+          // }
+          // if (retryCount === maxRetries) {
+          //   throw new Error("Maximum retry attempts reached. Empty response persists.");
+          // }
 
           setMarketingFinalReportData([
             {
@@ -190,7 +215,7 @@ const OrganismMarketingFinalReport = () => {
             {
               type: "system",
               message:
-                "[아이템 명]의 시장조사부터 잠재력 지수까지 모두 확인하셨습니다. 👍🏻\n이번 분석이 창업 준비에 도움이 되었나요? 저희는 비즈니스 전문 AI 솔루션으로 전문가와 1:1 사업 상담이 가능합니다.\n창업 여정의 든든한 조력자로 함께 하겠습니다. 😊",
+                `${titleOfBusinessInfo}의 시장조사부터 잠재력 지수까지 모두 확인하셨습니다. 👍🏻\n이번 분석이 창업 준비에 도움이 되었나요? 저희는 비즈니스 전문 AI 솔루션으로 전문가와 1:1 사업 상담이 가능합니다.\n창업 여정의 든든한 조력자로 함께 하겠습니다. 😊`,
               expertIndex: 0,
             },
             {
@@ -201,9 +226,6 @@ const OrganismMarketingFinalReport = () => {
             },
             { type: `marketingSignUpButton` }
           );
-
-          // 회원가입하고 대화내용 평생 간직 💌
-          // 저장하지 않고 종료하기 😱
 
           setConversation(updatedConversation);
 
@@ -224,16 +246,15 @@ const OrganismMarketingFinalReport = () => {
         </>
       ) : (
         <>
-          {marketingFinalReportData[9]?.content.summary}<br/><br/>
-          타겟 고객군: {marketingFinalReportData[0]?.content.summary}<br/>
-          가치 제안: {marketingFinalReportData[1]?.content.summary}<br/>
-          채널: {marketingFinalReportData[2]?.content.summary}<br/>
-          고객관계: {marketingFinalReportData[3]?.content.summary}<br/>
-          수익원: {marketingFinalReportData[4]?.content.summary}<br/>
-          핵심활동: {marketingFinalReportData[5]?.content.summary}<br/>
-          핵심자원: {marketingFinalReportData[6]?.content.summary}<br/>
-          파트너쉽: {marketingFinalReportData[7]?.content.summary}<br/>
-          비용구조: {marketingFinalReportData[8]?.content.summary}<br/>
+          {marketingFinalReportData[0]?.title}<br/>
+          {marketingFinalReportData[2]?.session1.content}<br/><br/>
+          아이템 차별성: {marketingFinalReportData[1]?.distinctiveness.score}점<br/>
+          시장성: {marketingFinalReportData[1]?.potential.score}점<br/>
+          수익 모델: {marketingFinalReportData[1]?.model.score}점<br/>
+          비전: {marketingFinalReportData[1]?.vision.score}점<br/>
+          시장 진입장벽: {marketingFinalReportData[1]?.barriers.score}점<br/>
+          희소성: {marketingFinalReportData[1]?.scarcity.score}점<br/>
+          적응성: {marketingFinalReportData[1]?.adaptability.score}점<br/>
         </>
       )}
     </Wrap>

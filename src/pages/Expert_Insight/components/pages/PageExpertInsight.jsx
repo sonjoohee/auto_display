@@ -137,6 +137,7 @@ import MoleculeMarketingCustomerButton from "../molecules/Marketing/MoleculeMark
 import MoleculeMarketingCustomer from "../molecules/Marketing/MoleculeMarketingCustomer";
 import OrganismMarketingSegmentReport from "../organisms/Marketing/OrganismMarketingSegmentReport";
 import OrganismMarketingFinalReport from "../organisms/Marketing/OrganismMarketingFinalReport";
+import MoleculeMarketingSignUpButton from "../molecules/Marketing/MoleculeMarketingSignUpButton";
 
 const PageExpertInsight = () => {
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
@@ -409,20 +410,20 @@ const PageExpertInsight = () => {
   }, [conversationId, isLoggedIn, navigate]);
 
 // 스크롤
-const [isScrolled, setIsScrolled] = useState(false);
-useEffect(() => {
-  const handleScroll = () => {
-    if (window.scrollY > 160) {
-      setIsScrolled(true); // 스크롤이 내려가면 상태를 true로 변경
-    } else {
-      setIsScrolled(false); // 스크롤이 최상단에 있을 때 상태를 false로 변경
-    }
-  };
-  window.addEventListener("scroll", handleScroll);
-  return () => {
-    window.removeEventListener("scroll", handleScroll); // 메모리 누수 방지
-  };
-}, []);
+// const [isScrolled, setIsScrolled] = useState(false);
+// useEffect(() => {
+//   const handleScroll = () => {
+//     if (window.scrollY > 160) {
+//       setIsScrolled(true); // 스크롤이 내려가면 상태를 true로 변경
+//     } else {
+//       setIsScrolled(false); // 스크롤이 최상단에 있을 때 상태를 false로 변경
+//     }
+//   };
+//   window.addEventListener("scroll", handleScroll);
+//   return () => {
+//     window.removeEventListener("scroll", handleScroll); // 메모리 누수 방지
+//   };
+// }, []);
 
 if (isLoadingPage) {
   return <div>Loading...</div>;
@@ -435,7 +436,7 @@ if (isLoadingPage) {
 
         <MainContent>
           <div>
-            <ChatWrap className={isScrolled ? "scrolled" : ""}>
+            <ChatWrap>
               {!isMarketing && <MoleculeBizName date={savedTimestamp} />}
               {conversation?.map((item, index) => {
                 if (item.type === "user") {
@@ -633,6 +634,8 @@ if (isLoadingPage) {
                   );
                 } else if (item.type === "marketingFinalReport") {
                   return <OrganismMarketingFinalReport />;
+                } else if (item.type === "marketingSignUpButton") {
+                  return <MoleculeMarketingSignUpButton />;
                 }
 
                 return null;
@@ -830,7 +833,7 @@ const ChatWrap = styled.div`
     content: "";
   }
 
-  &.scrolled:before {
-    height: 180px;
-  }
+  // &.scrolled:before {
+  //   height: 180px;
+  // }
 `;
