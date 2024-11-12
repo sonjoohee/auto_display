@@ -44,40 +44,28 @@ const Time = styled.span`
 `;
 
 const UserMessageContainer = styled.div`
-  // max-width: 70%;
+  font-size:1rem;
   display: flex;
   align-items: flex-end;
   flex-direction: row-reverse;
   gap: 18px;
-  // width: auto;
-  // padding: 15px 20px;
-  // background-color: #ffe0b2;
-  // border-radius: 15px;
-  // font-size: 1rem;
-  // font-weight: 500;
-  // color: #333;
-  // margin-bottom: 20px;
-  // margin-left: auto;
-  // margin-right: 0;
   margin-top: 40px;
   position: relative;
 
   > div {
-    font-size: 0.875rem;
     padding: 14px 20px;
     border-radius: 15px;
-    // background: #ebf3fe;
     background:${palette.chatBlue};
 
     p {
       color:${palette.white};
       text-align:left;
-      line-height: 1.8;
+      line-height: 1.6;
+      font-weight:300;
     }
   }
 
   &:after {
-    // content: '';
     position: absolute;
     top: 50%;
     right: -10px;

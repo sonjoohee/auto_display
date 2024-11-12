@@ -98,13 +98,26 @@ const SystemMessageContainer = styled.div`
 `;
 
 const Bubble = styled.div`
-  font-size: 0.88rem;
+  font-size:1rem;
   padding: 14px 20px;
   border-radius: 15px;
-  border: 1px solid ${(props) => (props.Myself ? "rgba(4,83,244,.05)" : "0")};
-  background: ${(props) =>
-    props.Myself ? "rgba(4,83,244,.05)" : palette.chatGray};
-  max-width: 80%; /* 말풍선 크기를 제한하여 텍스트가 넘어가지 않도록 함 */
+  border:1px solid ${palette.gray200};
+  position:relative;
+  max-width:80%;
+  width:fit-content;
+  display:inline-flex;
+  font-weight:300;
+  color:${palette.gray800};
+  line-height:1.6;
+  text-align:left;
+
+  .time {
+    position:absolute;
+    right:-80px;
+    bottom:1px;
+    font-size:0.75rem;
+    color:${palette.gray500};
+  }
 `;
 
 const TypingEffect = styled.div`

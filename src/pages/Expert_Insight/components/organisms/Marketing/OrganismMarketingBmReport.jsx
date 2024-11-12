@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { palette } from "../../../../../assets/styles/Palette";
 import axios from "axios";
+import images from "../../../../../assets/styles/Images";
 import { useAtom } from "jotai";
 import {
   IS_LOADING,
@@ -41,6 +42,16 @@ const OrganismMarketingBmReport = () => {
   const [marketingBmButtonState, setMarketingBmButtonState] = useAtom(MARKETING_BM_BUTTON_STATE);
   const [marketingBmReportData, setMarketingBmReportData] = useAtom(MARKETING_BM_REPORT_DATA);
 
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  useEffect(() => {
+    document.body.style.overflow = isMenuOpen ? 'hidden' : 'auto';
+  }, [isMenuOpen]);
+  
   const axiosConfig = {
     timeout: 10000,
     headers: {
@@ -94,7 +105,7 @@ const OrganismMarketingBmReport = () => {
           //       !contentItem.hasOwnProperty("key_message") || 
           //       !contentItem.hasOwnProperty("keyword") ||
           //       !Array.isArray(contentItem.keyword) ||
-          //       contentItem.keyword.length === 0 ||
+          //       contentItem.keyword.length < 4 ||
           //       !contentItem.hasOwnProperty("summary")
           //     )
           //   ) ||
@@ -282,108 +293,476 @@ const OrganismMarketingBmReport = () => {
   }, [marketingBmButtonState]);
 
   return (
-    <Wrap>
+    <>
       {isLoadingMarketingBmReport ? (
-        <>
-        </>
+        <SummaryBox>
+          <h3>로딩 중...</h3>
+        </SummaryBox>
       ) : (
         <>
-          {marketingBmReportData[9]?.content.summary}<br/><br/>
-          타겟 고객군: {marketingBmReportData[0]?.content.summary}<br/>
-          가치 제안: {marketingBmReportData[1]?.content.summary}<br/>
-          채널: {marketingBmReportData[2]?.content.summary}<br/>
-          고객관계: {marketingBmReportData[3]?.content.summary}<br/>
-          수익원: {marketingBmReportData[4]?.content.summary}<br/>
-          핵심활동: {marketingBmReportData[5]?.content.summary}<br/>
-          핵심자원: {marketingBmReportData[6]?.content.summary}<br/>
-          파트너쉽: {marketingBmReportData[7]?.content.summary}<br/>
-          비용구조: {marketingBmReportData[8]?.content.summary}<br/>
+          <Overlay isMenuOpen={isMenuOpen} onClick={() => setIsMenuOpen(false)} />
+
+          <SummaryBox>
+            <h3>{marketingBmReportData[9]?.content.summary}</h3>
+            <UlList Number>
+              <li><strong>타겟 고객군 :</strong> {marketingBmReportData[0]?.content.summary}</li>
+              <li><strong>가치 제안 :</strong> {marketingBmReportData[1]?.content.summary}</li>
+              <li><strong>채널 :</strong> {marketingBmReportData[2]?.content.summary}</li>
+              <li><strong>고객관계 :</strong> {marketingBmReportData[3]?.content.summary}</li>
+              <li><strong>수익원 :</strong> {marketingBmReportData[4]?.content.summary}</li>
+              <li><strong>핵심활동 :</strong> {marketingBmReportData[5]?.content.summary}</li>
+              <li><strong>핵심자원 :</strong> {marketingBmReportData[6]?.content.summary}</li>
+              <li><strong>파트너쉽 :</strong> {marketingBmReportData[7]?.content.summary}</li>
+              <li><strong>비용구조 :</strong> {marketingBmReportData[8]?.content.summary}</li>
+            </UlList>
+            <button onClick={() => toggleMenu()}>
+              <img src={images.IconDetailView} alt="" />
+              상세 내용 확인하기
+            </button>
+          </SummaryBox>
+
+          <Sidebar isMenuOpen={isMenuOpen}>
+            <div>
+              <div className="header">
+              <h5>비즈니스 모델 상세 리포트</h5>
+              <button className="closePopup" onClick={() => setIsMenuOpen(false)}>닫기</button>
+            </div>
+            <div className="body">
+              <p>{marketingBmReportData[0]?.content.conclusion}</p>
+              <ScrollWrap>
+                <ListBox>
+                  <div>
+                    <span><img src={images.IconCanvas07} alt="" /></span>
+                    <div>
+                      <strong>타겟 고객군</strong>
+                      <p>{marketingBmReportData[0]?.content.key_message}</p>
+                      <p className="tag">
+                        {marketingBmReportData[0]?.content.keyword.slice(0, 4).map((keyword, index) => (
+                          <span key={index}>#{keyword}</span>
+                        ))}
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <span><img src={images.IconCanvas04} alt="" /></span>
+                    <div>
+                      <strong>가치 제안</strong>
+                      <p>{marketingBmReportData[1]?.content.key_message}</p>
+                      <p className="tag">
+                        {marketingBmReportData[1]?.content.keyword.slice(0, 4).map((keyword, index) => (
+                          <span key={index}>#{keyword}</span>
+                        ))}
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <span><img src={images.IconCanvas06} alt="" /></span>
+                    <div>
+                      <strong>채널</strong>
+                      <p>{marketingBmReportData[2]?.content.key_message}</p>
+                      <p className="tag">
+                        {marketingBmReportData[2]?.content.keyword.slice(0, 4).map((keyword, index) => (
+                          <span key={index}>#{keyword}</span>
+                        ))}
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <span><img src={images.IconCanvas05} alt="" /></span>
+                    <div>
+                      <strong>고객관계</strong>
+                      <p>{marketingBmReportData[3]?.content.key_message}</p>
+                      <p className="tag">
+                        {marketingBmReportData[3]?.content.keyword.slice(0, 4).map((keyword, index) => (
+                          <span key={index}>#{keyword}</span>
+                        ))}
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <span><img src={images.IconCanvas09} alt="" /></span>
+                    <div>
+                      <strong>수익원</strong>
+                      <p>{marketingBmReportData[4]?.content.key_message}</p>
+                      <p className="tag">
+                        {marketingBmReportData[4]?.content.keyword.slice(0, 4).map((keyword, index) => (
+                          <span key={index}>#{keyword}</span>
+                        ))}
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <span><img src={images.IconCanvas02} alt="" /></span>
+                    <div>
+                      <strong>핵심활동</strong>
+                      <p>{marketingBmReportData[5]?.content.key_message}</p>
+                      <p className="tag">
+                        {marketingBmReportData[5]?.content.keyword.slice(0, 4).map((keyword, index) => (
+                          <span key={index}>#{keyword}</span>
+                        ))}
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <span><img src={images.IconCanvas03} alt="" /></span>
+                    <div>
+                      <strong>핵심자원</strong>
+                      <p>{marketingBmReportData[6]?.content.key_message}</p>
+                      <p className="tag">
+                        {marketingBmReportData[6]?.content.keyword.slice(0, 4).map((keyword, index) => (
+                          <span key={index}>#{keyword}</span>
+                        ))}
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <span><img src={images.IconCanvas01} alt="" /></span>
+                    <div>
+                      <strong>핵심 파트너십</strong>
+                      <p>{marketingBmReportData[7]?.content.key_message}</p>
+                      <p className="tag">
+                        {marketingBmReportData[7]?.content.keyword.slice(0, 4).map((keyword, index) => (
+                          <span key={index}>#{keyword}</span>
+                        ))}
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <span><img src={images.IconCanvas08} alt="" /></span>
+                    <div>
+                      <strong>비용구조</strong>
+                      <p>{marketingBmReportData[8]?.content.key_message}</p>
+                      <p className="tag">
+                        {marketingBmReportData[8]?.content.keyword.slice(0, 4).map((keyword, index) => (
+                          <span key={index}>#{keyword}</span>
+                        ))}
+                      </p>
+                    </div>
+                  </div>
+                </ListBox>
+              </ScrollWrap>
+            </div>
+          </div>
+        </Sidebar>
         </>
       )}
-    </Wrap>
+    </>
   );
 };
 
 export default OrganismMarketingBmReport;
 
-const Wrap = styled.div`
-  max-width:986px;
-  // width:100%;
+const SummaryBox = styled.div`
   display:flex;
   flex-direction:column;
-  padding: 28px;
-  margin:15px 0 0 50px;
-  border-radius:15px;
-  border:1px solid ${palette.outlineGray};
-
-  h1 {
-    font-size:1.25rem;
-    font-weight:400;
-    text-align:left;
-    margin-bottom:20px;
-  }
-
-  p {
-    font-size:0.88rem;
-    font-weight:300;
-    color:${palette.black};
-    text-align:left;
-    margin-bottom:10px;
-  }
-
-  .conclusion {
-    margin-top: 20px;
-  }
-`;
-
-const SeparateSection = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: column;
   gap:12px;
-  margin-top: 12px;
-  padding: 20px;
-  border-radius: 10px;
-  background: ${palette.chatGray};
+  max-width:825px;
+  width:fit-content;
+  text-align:left;
+  padding:20px;
+  border-radius:20px;
+  background:${palette.chatGray};
+  margin:15px 0 0 50px;
 
-  h3 {
-    display:flex;
-    align-items:center;
-    gap:12px;
-    font-size:1rem;
-    font-weight:700;
+  h2 {
+    font-size:1.5rem;
+    font-weight:600;
+    line-height:1.3;
+    color:${palette.gray800};
 
-    span {
-      width: 15px;
-      height: 15px;
-      font-size: 0.63rem;
-      color: ${palette.chatBlue};
-      line-height: 15px;
-      text-align: center;
-      border: 1px solid ${palette.chatBlue};
+    p {
+      font-size:1rem;
+      font-weight:300;
+      line-height:1.5;
+      color:${palette.gray800};
+      margin-top:16px;
     }
   }
 
-  p {
-    font-size:0.88rem;
-    font-weight:300;
+  h3 {
+    font-size:1rem;
+    font-weight:500;
     color:${palette.gray800};
-    text-align:left;
+    line-height:1.6;
   }
 
-  div {
-    padding:16px;
-    border-radius:10px;
-    background:${palette.white};
+  > span {
+    display:flex;
+    align-items:center;
+    gap:4px;
+    font-size:0.75rem;
+    color:${palette.gray500};
+    margin-top:4px;
   }
 
-  .list-decimal li {
-    list-style-type:decimal;
-    list-style-position:inside;
-    font-size:0.88rem;
+  button {
+    display:flex;
+    align-items:center;
+    gap:5px;
+    font-family: 'Pretendard', 'Poppins';
+    font-size:0.75rem;
+    color:${palette.gray500};
+    padding:6px 0;
+    margin-top:5px;
+    border:0;
+    background:none;
+  }
+`;
+
+const UlList = styled.ul`
+  display:flex;
+  flex-direction:column;
+  // gap:8px;
+
+  li {
+    position:relative;
     font-weight:300;
     color:${palette.gray800};
     line-height:1.5;
-    text-align:left;
+    padding-left:26px;
   }
+
+  ${props =>
+    props.Disc &&
+    css`
+      li {
+        &:before {
+          position:absolute;
+          left:8px;
+          top:8px;
+          width:3px;
+          height:3px;
+          display:inline-block;
+          border-radius:10px;
+          background:${palette.gray800};
+          content:'';
+        }
+      }
+    `
+  }
+
+  ${props =>
+    props.Number &&
+    css`
+      counter-reset: list-counter;
+
+      li {
+        counter-increment: list-counter;
+
+        &:before {
+          position:absolute;
+          left:0;
+          top:0;
+          width:18px;
+          height:18px;
+          display:flex;
+          justify-content:center;
+          align-items:center;
+          font-size:0.69rem;
+          font-weight:600;
+          text-align:center;
+          border-radius:50px;
+          border:1px solid ${palette.gray800};
+          content:counter(list-counter);
+        }
+      }
+    `
+  }
+
+  strong {
+    font-weight:500;
+  }
+`;
+
+const Sidebar = styled.div`
+  // position:absolute;
+  // top: 0;
+  // right: ${({ isMenuOpen }) => (isMenuOpen ? '0' : '-800px')};
+  // height: 100%;
+  // max-width: 800px;
+  // width:100%;
+
+  width: ${({ isMenuOpen }) => (isMenuOpen ? '800px' : '0')};
+
+  background:${palette.white};
+  // transform: ${({ isMenuOpen }) => (isMenuOpen ? 'translateX(0)' : 'translateX(200%)')};
+  transition: all .5s;
+  z-index: 900;
+
+  visibility: ${({ isMenuOpen }) => (isMenuOpen ? 'visible' : 'hidden')};
+  overflow:hidden;
+  flex-shrink:0;
+  position:fixed;
+  top:0;
+  right:0;
+  height:100vh;
+
+  
+  > div {
+    display: flex;
+    flex-direction: column;
+    gap:50px;
+    width: 100%;
+    // max-width: 800px;
+    height: 100%;
+    text-align: center;
+    // overflow:hidden;
+    padding: 32px;
+    border-radius: 10px;
+    background: ${palette.white};
+  }
+
+  .header {
+    position:relative;
+    display:flex;
+    flex-direction: column;
+    gap:16px;
+    align-items:center;
+
+    h5 {
+      width:100%;
+      font-size:1.25rem;
+      font-weight:600;
+      line-height:1.3;
+      color:${palette.gray800};
+      text-align:left;
+
+      p {
+        font-size:1rem;
+        font-weight:400;
+        line-height:1.5;
+        margin-top:16px;
+      }
+    }
+  }
+
+  .closePopup {
+    position:absolute;
+    top:0;
+    right:0;
+    width:21px;
+    height:21px;
+    font-size:0;
+    border:0;
+    background:none;
+
+    &:before, &:after {
+      position:absolute;
+      top:50%;
+      left:50%;
+      width:3px;
+      height:21px;
+      display:inline-block;
+      border-radius:50px;
+      background:${palette.gray500};
+      content:'';
+    }
+    &:before {
+      transform:translate(-50%, -50%) rotate(45deg);
+    }
+    &:after {
+      transform:translate(-50%, -50%) rotate(-45deg);
+    }
+  }
+
+  .body {
+    height:calc(100% - 80px);
+    display: flex;
+    flex-direction: column;
+    gap:32px;
+
+    p {
+      line-height:1.5;
+      color:${palette.gray800};
+      text-align:left;
+    }
+  }
+
+
+  h2 {
+    margin-top: 0;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    margin: 20px 0;
+  }
+`;
+
+const ScrollWrap = styled.div`
+  position:relative;
+  flex:1 1 0%;
+  overflow-y:auto;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: ${palette.lineGray};
+    border-radius: 10px;
+  }
+`;
+
+const ListBox = styled.div`
+  // max-height:525px;
+  overflow-y:auto;
+  border-radius:10px;
+  border:1px solid ${palette.outlineGray};
+
+  > div {
+    display:flex;
+    gap:8px;
+    padding:14px 20px;
+
+    + div {
+      border-top:1px solid ${palette.outlineGray};
+    }
+
+    span {
+      flex-shrink:0;
+      font-size:0.88rem;
+      line-height:1.5;
+    }
+
+    div {
+      display:flex;
+      flex-direction: column;
+      gap:12px;
+    }
+
+    strong, p {
+      font-size:0.88rem;
+      line-height:1.5;
+      text-align:left;
+    }
+
+    p.tag {
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+  }
+`;
+
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, .1);
+  opacity: ${({ isMenuOpen }) => (isMenuOpen ? 1 : 0)};
+  visibility: ${({ isMenuOpen }) => (isMenuOpen ? 'visible' : 'hidden')};
+  transition: all .5s;
+  z-index: 800;
 `;
