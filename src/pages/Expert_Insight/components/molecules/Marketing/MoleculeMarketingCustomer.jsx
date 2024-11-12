@@ -78,19 +78,21 @@ const MoleculeMarketingCustomer = ({ marketingCustomerCount }) => {
   }, [marketingSelectedCustomer]);
 
   const handleOptionClick = (index) => {
+    const selectedCustomer = marketingCustomerData[index];
+
     if (marketingCustomerCount === 0) {
       setMarketingSelectedCustomerState1({
-        content: marketingCustomerData[index],
+        content: selectedCustomer,
         index: index,
       });
     } else if (marketingCustomerCount === 1) {
       setMarketingSelectedCustomerState2({
-        content: marketingCustomerData[index],
+        content: selectedCustomer,
         index: index,
       });
     } else if (marketingCustomerCount === 2) {
       setMarketingSelectedCustomerState3({
-        content: marketingCustomerData[index],
+        content: selectedCustomer,
         index: index,
       });
     }
@@ -315,7 +317,7 @@ const MoleculeMarketingCustomer = ({ marketingCustomerCount }) => {
         type: "system",
         message: marketingCustomerCount === 0 ? `좋습니다🌞 첫번째 주요 고객을 확인해보았습니다.\n다른 고객들도 주요 고객이라고 생각하신다면, 추가적으로 더 확인해볼게요! (총 3회 가능)`
                   : marketingCustomerCount === 1 ? `두번째 주요 고객도 확인해 보았네요. 마지막 고객도 확인해 볼까요? (총 3회 가능)`
-                  : `세 가지 타겟 고객층을 모두 확인해 보았습니다. 이제 ${titleOfBusinessInfo}에 가장 적합하다고 생각하는 핵심 타겟 고객층을 하나 선택해 주세요.\n선택하신 타겟층을 중심으로 서비스의 잠재력을 집중 분석해 보겠습니다. 🚀`,
+                  : `세 가지 타겟 고객층을 모두 확인해 보았습니다. 이제 ${titleOfBusinessInfo}에 가장 적합하다고 생각하는 핵심 타겟 고객층을 하나 선택해 주세요. 선택하신 타겟층을 중심으로 서비스의 잠재력을 집중 분석해 보겠습니다. 🚀`,
         expertIndex: -1,
       },
       {
@@ -339,6 +341,7 @@ const MoleculeMarketingCustomer = ({ marketingCustomerCount }) => {
       {marketingCustomerCount === 0 ? 
       <>
         <OptionsContainer>
+          <Question>아래 고객 유형 중, 어떤 고객이 주요 고객이라고 생각하시나요?</Question>
           {marketingCustomerData.map((customer, index) => (
             <Option1
               key={index}
@@ -371,25 +374,29 @@ const MoleculeMarketingCustomer = ({ marketingCustomerCount }) => {
       marketingCustomerCount === 1 ?
       <>
         <OptionsContainer>
+          <Question>아래 고객 유형 중, 어떤 고객이 주요 고객이라고 생각하시나요?</Question>
           {marketingCustomerData
           .filter((_, index) => index !== marketingSelectedCustomerState1.index)
-          .map((customer, index) => (
-            <Option2
-              key={index}
-              onClick={() => handleOptionClick(index)}
-              selected={marketingSelectedCustomerState2.index === index}
+          .map((customer) => {
+            const originalIndex = marketingCustomerData.findIndex(c => c.name === customer.name);
+            return (
+              <Option2
+              key={originalIndex}
+              onClick={() => handleOptionClick(originalIndex)}
+              selected={marketingSelectedCustomerState2.index === originalIndex}
               marketingSelectedCustomer={marketingSelectedCustomer}
               marketingCustomerCount={marketingCustomerCount}
             >
               <Label2
                 marketingSelectedCustomer={marketingSelectedCustomer}
-                selected={marketingSelectedCustomerState2.index === index}
+                selected={marketingSelectedCustomerState2.index === originalIndex}
                 marketingCustomerCount={marketingCustomerCount}
               >
                 {customer.name}
               </Label2>
             </Option2>
-          ))}
+            );
+          })}
         </OptionsContainer>
 
         <ButtonWrap>
@@ -404,25 +411,29 @@ const MoleculeMarketingCustomer = ({ marketingCustomerCount }) => {
       :
       <>
         <OptionsContainer>
+          <Question>아래 고객 유형 중, 어떤 고객이 주요 고객이라고 생각하시나요?</Question>
           {marketingCustomerData
           .filter((_, index) => index !== marketingSelectedCustomerState1.index && index !== marketingSelectedCustomerState2.index)
-          .map((customer, index) => (
-            <Option3
-              key={index}
-              onClick={() => handleOptionClick(index)}
-              selected={marketingSelectedCustomerState3.index === index}
-              marketingSelectedCustomer={marketingSelectedCustomer}
-              marketingCustomerCount={marketingCustomerCount}
-            >
+          .map((customer) => {
+            const originalIndex = marketingCustomerData.findIndex(c => c.name === customer.name);
+            return (
+              <Option3
+                key={originalIndex}
+                onClick={() => handleOptionClick(originalIndex)}
+                selected={marketingSelectedCustomerState3.index === originalIndex}
+                marketingSelectedCustomer={marketingSelectedCustomer}
+                marketingCustomerCount={marketingCustomerCount}
+              >
               <Label3
                 marketingSelectedCustomer={marketingSelectedCustomer}
-                selected={marketingSelectedCustomerState3.index === index}
+                selected={marketingSelectedCustomerState3.index === originalIndex}
                 marketingCustomerCount={marketingCustomerCount}
               >
                 {customer.name}
               </Label3>
-            </Option3>
-          ))}
+              </Option3>
+            );
+          })}
         </OptionsContainer>
 
         <ButtonWrap>
@@ -471,7 +482,7 @@ const Option1 = styled.div`
   color: ${palette.gray800};
   font-size:0.88rem;
   text-align: left;
-  padding: 10px;
+  padding:8px 12px;
   border-radius: 8px;
   cursor: pointer;
   background-color: ${(props) =>
@@ -480,7 +491,7 @@ const Option1 = styled.div`
         ? "rgba(0,0,0,0.05)"
         : "rgba(4,83,244,0.05)"
       : palette.white};
-  border: 1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 1 ? palette.gray800 : palette.blue) : palette.lineGray)};
+  border: 1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 1 ? palette.gray800 : palette.chatBlue) : palette.outlineGray)};
   transition:all .5s;
 
   p {
@@ -501,7 +512,7 @@ const Option1 = styled.div`
     border-color: ${(props) =>
       Object.keys(props.marketingSelectedCustomer).length >= 1
         ? "none" 
-        : palette.blue};
+        : palette.chatBlue};
   }
 `;
 
@@ -513,7 +524,7 @@ const Option2 = styled.div`
   color: ${palette.gray800};
   font-size:0.88rem;
   text-align: left;
-  padding: 10px;
+  padding:8px 12px;
   border-radius: 8px;
   cursor: pointer;
   background-color: ${(props) =>
@@ -522,7 +533,7 @@ const Option2 = styled.div`
         ? "rgba(0,0,0,0.05)"
         : "rgba(4,83,244,0.05)"
       : palette.white};
-  border: 1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 2 ? palette.gray800 : palette.blue) : palette.lineGray)};
+  border: 1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 2 ? palette.gray800 : palette.chatBlue) : palette.outlineGray)};
   transition:all .5s;
 
   p {
@@ -543,7 +554,7 @@ const Option2 = styled.div`
     border-color: ${(props) =>
       Object.keys(props.marketingSelectedCustomer).length >= 2
         ? "none" 
-        : palette.blue};
+        : palette.chatBlue};
   }
 `;
 
@@ -555,7 +566,7 @@ const Option3 = styled.div`
   color: ${palette.gray800};
   font-size:0.88rem;
   text-align: left;
-  padding: 10px;
+  padding:8px 12px;
   border-radius: 8px;
   cursor: pointer;
   background-color: ${(props) =>
@@ -564,7 +575,7 @@ const Option3 = styled.div`
         ? "rgba(0,0,0,0.05)"
         : "rgba(4,83,244,0.05)"
       : palette.white};
-  border: 1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 3 ? palette.gray800 : palette.blue) : palette.lineGray)};
+  border: 1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 3 ? palette.gray800 : palette.chatBlue) : palette.outlineGray)};
   transition:all .5s;
 
   p {
@@ -585,7 +596,7 @@ const Option3 = styled.div`
     border-color: ${(props) =>
       Object.keys(props.marketingSelectedCustomer).length >= 3
         ? "none" 
-        : palette.blue};
+        : palette.chatBlue};
   }
 `;
 
@@ -595,7 +606,7 @@ const Label1 = styled.label`
   gap:8px;
   align-items:flex-start;
   width:100%;
-  color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 1 ? palette.gray800 : palette.blue) : palette.gray800)};
+  color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 1 ? palette.gray800 : palette.chatBlue) : palette.gray800)};
   cursor:pointer;
 
   &:before {
@@ -603,8 +614,8 @@ const Label1 = styled.label`
     height:20px;
     flex-shrink:0;
     border-radius:50%;
-    border:1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 1 ? palette.gray800 : palette.blue) : palette.lineGray)};
-    background-color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 1 ? palette.gray800 : palette.blue) : palette.white)};
+    border:1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 1 ? palette.gray800 : palette.chatBlue) : palette.lineGray)};
+    background-color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 1 ? palette.gray800 : palette.chatBlue) : palette.white)};
     transition:all .5s;
     content:'';
   }
@@ -626,7 +637,7 @@ const Label2 = styled.label`
   gap:8px;
   align-items:flex-start;
   width:100%;
-  color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 2 ? palette.gray800 : palette.blue) : palette.gray800)};
+  color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 2 ? palette.gray800 : palette.chatBlue) : palette.gray800)};
   cursor:pointer;
 
   &:before {
@@ -634,8 +645,8 @@ const Label2 = styled.label`
     height:20px;
     flex-shrink:0;
     border-radius:50%;
-    border:1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 2 ? palette.gray800 : palette.blue) : palette.lineGray)};
-    background-color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 2 ? palette.gray800 : palette.blue) : palette.white)};
+    border:1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 2 ? palette.gray800 : palette.chatBlue) : palette.lineGray)};
+    background-color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 2 ? palette.gray800 : palette.chatBlue) : palette.white)};
     transition:all .5s;
     content:'';
   }
@@ -657,7 +668,7 @@ const Label3 = styled.label`
   gap:8px;
   align-items:flex-start;
   width:100%;
-  color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 3 ? palette.gray800 : palette.blue) : palette.gray800)};
+  color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 3 ? palette.gray800 : palette.chatBlue) : palette.gray800)};
   cursor:pointer;
 
   &:before {
@@ -665,8 +676,8 @@ const Label3 = styled.label`
     height:20px;
     flex-shrink:0;
     border-radius:50%;
-    border:1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 3 ? palette.gray800 : palette.blue) : palette.lineGray)};
-    background-color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 3 ? palette.gray800 : palette.blue) : palette.white)};
+    border:1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 3 ? palette.gray800 : palette.chatBlue) : palette.lineGray)};
+    background-color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 3 ? palette.gray800 : palette.chatBlue) : palette.white)};
     transition:all .5s;
     content:'';
   }
@@ -734,4 +745,11 @@ const Button3 = styled.button`
 
   display: ${(props) => (
     Object.keys(props.marketingSelectedCustomer).length >= 3 ? 'none' : 'block')};
+`;
+
+const Question = styled.div`
+  font-size:0.88rem;
+  font-weight:700;
+  text-align:left;
+  padding-bottom: 5px;
 `;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { palette } from "../../../../../assets/styles/Palette";
 import axios from "axios";
 import { useAtom } from "jotai";
@@ -46,6 +46,12 @@ const OrganismMarketingFinalReport = () => {
   const [marketingFinalReportData, setMarketingFinalReportData] = useAtom(MARKETING_FINAL_REPORT_DATA);
   const [marketingFinalCustomer, setMarketingFinalCustomer] = useAtom(MARKETING_FINAL_CUSTOMER);
   const [marketingFinalReportButtonState, setMarketingFinalReportButtonState] = useAtom(MARKETING_FINAL_REPORT_BUTTON_STATE);
+
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const handleToggle = () => {
+    setIsExpanded(!isExpanded);
+  };
 
   const axiosConfig = {
     timeout: 10000,
@@ -240,107 +246,362 @@ const OrganismMarketingFinalReport = () => {
   }, [marketingFinalReportButtonState]);
 
   return (
-    <Wrap>
+    <>
       {isLoadingMarketingFinalReport ? (
-        <>
-        </>
+        <SummaryBox>
+          <h3>로딩 중...</h3>
+        </SummaryBox>
       ) : (
         <>
-          {marketingFinalReportData[0]?.title}<br/>
-          {marketingFinalReportData[2]?.session1.content}<br/><br/>
-          아이템 차별성: {marketingFinalReportData[1]?.distinctiveness.score}점<br/>
-          시장성: {marketingFinalReportData[1]?.potential.score}점<br/>
-          수익 모델: {marketingFinalReportData[1]?.model.score}점<br/>
-          비전: {marketingFinalReportData[1]?.vision.score}점<br/>
-          시장 진입장벽: {marketingFinalReportData[1]?.barriers.score}점<br/>
-          희소성: {marketingFinalReportData[1]?.scarcity.score}점<br/>
-          적응성: {marketingFinalReportData[1]?.adaptability.score}점<br/>
+          <SummaryBox>
+              <h2>
+                {marketingFinalReportData[0]?.title}
+                <p>{marketingFinalReportData[2]?.session1.content}</p>
+              </h2>
+
+              {isExpanded && (
+                <WhiteBoxWrap>
+                  <h3>
+                    <span>📌</span>아이템의 핵심 내용을 다음과 같이 정리했어요
+                  </h3>
+                  <UlList Disc>
+                    <li><strong>특정 행동 :</strong> {marketingFinalReportData[0]?.content?.purpose}</li>
+                    <li><strong>사용 목적 :</strong> {marketingFinalReportData[0]?.content?.target}</li>
+                    <li><strong>제공 가치 :</strong> {marketingFinalReportData[0]?.content?.value}</li>
+                    <li><strong>필요한 요소 :</strong> {marketingFinalReportData[0]?.content?.elements}</li>
+                    <li><strong>프로덕트 타입 :</strong> {marketingFinalReportData[0]?.content?.type}</li>
+                  </UlList>
+                </WhiteBoxWrap>
+              )}
+
+              <ProgressWrap isExpanded={isExpanded}>
+                {isExpanded && (
+                  <h3>
+                    <span>📌</span>아이템으로 사업을 시작하시기 전 검토해야할 내용이에요
+                  </h3>
+                )}
+
+                <div>
+                  <Progress>
+                    <strong>아이템 차별성</strong>
+                    <ProgressBar>
+                      <div style={{width:`${marketingFinalReportData[1]?.distinctiveness.score * 10}%`}}></div>
+                    </ProgressBar>
+                    <span>{marketingFinalReportData[1]?.distinctiveness.score}점</span>
+                  </Progress>
+                  {isExpanded && (
+                    <p>{marketingFinalReportData[1]?.distinctiveness.description}</p>
+                  )}
+                </div>
+
+                <div>
+                  <Progress>
+                    <strong>시장성</strong>
+                    <ProgressBar>
+                      <div style={{width:`${marketingFinalReportData[1]?.potential.score * 10}%`}}></div>
+                    </ProgressBar>
+                    <span>{marketingFinalReportData[1]?.potential.score}점</span>
+                  </Progress>
+                  {isExpanded && (
+                    <p>{marketingFinalReportData[1]?.potential.description}</p>
+                  )}
+                </div>
+
+                <div>
+                  <Progress>
+                    <strong>수익모델</strong>
+                    <ProgressBar>
+                      <div style={{width:`${marketingFinalReportData[1]?.model.score * 10}%`}}></div>
+                    </ProgressBar>
+                    <span>{marketingFinalReportData[1]?.model.score}점</span>
+                  </Progress>
+                  {isExpanded && (
+                    <p>{marketingFinalReportData[1]?.model.description}</p>
+                  )}
+                </div>
+
+                <div>
+                  <Progress>
+                    <strong>비전</strong>
+                    <ProgressBar>
+                      <div style={{width:`${marketingFinalReportData[1]?.vision.score * 10}%`}}></div>
+                    </ProgressBar>
+                    <span>{marketingFinalReportData[1]?.vision.score}점</span>
+                  </Progress>
+                  {isExpanded && (
+                    <p>{marketingFinalReportData[1]?.vision.description}</p>
+                  )}
+                </div>
+
+                <div>
+                  <Progress>
+                    <strong>시장 진입장벽</strong>
+                    <ProgressBar>
+                      <div style={{width:`${marketingFinalReportData[1]?.barriers.score * 10}%`}}></div>
+                    </ProgressBar>
+                    <span>{marketingFinalReportData[1]?.barriers.score}점</span>
+                  </Progress>
+                  {isExpanded && (
+                    <p>{marketingFinalReportData[1]?.barriers.description}</p>
+                  )}
+                </div>
+
+                <div>
+                  <Progress>
+                    <strong>희소성</strong>
+                    <ProgressBar>
+                      <div style={{width:`${marketingFinalReportData[1]?.scarcity.score * 10}%`}}></div>
+                    </ProgressBar>
+                    <span>{marketingFinalReportData[1]?.scarcity.score}점</span>
+                  </Progress>
+                  {isExpanded && (
+                    <p>{marketingFinalReportData[1]?.scarcity.description}</p>
+                  )}
+                </div>
+
+                <div>
+                  <Progress>
+                    <strong>적응성</strong>
+                    <ProgressBar>
+                      <div style={{width:`${marketingFinalReportData[1]?.adaptability.score * 10}%`}}></div>
+                    </ProgressBar>
+                    <span>{marketingFinalReportData[1]?.adaptability.score}점</span>
+                  </Progress>
+                  {isExpanded && (
+                    <p>{marketingFinalReportData[1]?.adaptability.description}</p>
+                  )}
+                </div>
+              </ProgressWrap>
+
+              {isExpanded && (
+                <WhiteBoxWrap>
+                  <h3>
+                    <span>📌</span>앞으로 이런 부분을 고려하세요
+                  </h3>
+                  <UlList Disc>
+                    <li><strong>{marketingFinalReportData[2]?.session2.title} :</strong> {marketingFinalReportData[2]?.session2.content}</li>
+                    <li><strong>{marketingFinalReportData[2]?.session3.title} :</strong> {marketingFinalReportData[2]?.session3.content}</li>
+                  </UlList>
+                </WhiteBoxWrap>
+              )}
+
+              <ButtonDetail onClick={handleToggle}>
+                {isExpanded ? '닫기' : '상세 내용 확인하기'}
+              </ButtonDetail>
+          </SummaryBox>
         </>
       )}
-    </Wrap>
+    </>
   );
 };
 
 export default OrganismMarketingFinalReport;
 
-const Wrap = styled.div`
-  max-width:986px;
-  // width:100%;
+const SummaryBox = styled.div`
   display:flex;
   flex-direction:column;
-  padding: 28px;
+  gap:12px;
+  max-width:825px;
+  width:fit-content;
+  text-align:left;
+  padding:20px;
+  border-radius:20px;
+  background:${palette.chatGray};
   margin:15px 0 0 50px;
-  border-radius:15px;
-  border:1px solid ${palette.outlineGray};
 
-  h1 {
-    font-size:1.25rem;
-    font-weight:400;
-    text-align:left;
-    margin-bottom:20px;
+  h2 {
+    font-size:1.5rem;
+    font-weight:600;
+    line-height:1.3;
+    color:${palette.gray800};
+
+    p {
+      font-size:1rem;
+      font-weight:300;
+      line-height:1.5;
+      color:${palette.gray800};
+      margin-top:16px;
+    }
   }
 
-  p {
-    font-size:0.88rem;
-    font-weight:300;
-    color:${palette.black};
-    text-align:left;
-    margin-bottom:10px;
+  h3 {
+    font-size:1rem;
+    font-weight:500;
+    color:${palette.gray800};
+    line-height:1.6;
   }
 
-  .conclusion {
-    margin-top: 20px;
+  > span {
+    display:flex;
+    align-items:center;
+    gap:4px;
+    font-size:0.75rem;
+    color:${palette.gray500};
+    margin-top:4px;
+  }
+
+  button {
+    display:flex;
+    align-items:center;
+    gap:5px;
+    font-family: 'Pretendard', 'Poppins';
+    font-size:0.75rem;
+    color:${palette.gray500};
+    padding:6px 0;
+    margin-top:5px;
+    border:0;
+    background:none;
   }
 `;
 
-const SeparateSection = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap:12px;
-  margin-top: 12px;
-  padding: 20px;
-  border-radius: 10px;
-  background: ${palette.chatGray};
+const UlList = styled.ul`
+  display:flex;
+  flex-direction:column;
+  // gap:8px;
+
+  li {
+    position:relative;
+    font-weight:300;
+    color:${palette.gray800};
+    line-height:1.5;
+    padding-left:26px;
+  }
+
+  ${props =>
+    props.Disc &&
+    css`
+      li {
+        &:before {
+          position:absolute;
+          left:8px;
+          top:8px;
+          width:3px;
+          height:3px;
+          display:inline-block;
+          border-radius:10px;
+          background:${palette.gray800};
+          content:'';
+        }
+      }
+    `
+  }
+
+  ${props =>
+    props.Number &&
+    css`
+      counter-reset: list-counter;
+
+      li {
+        counter-increment: list-counter;
+
+        &:before {
+          position:absolute;
+          left:0;
+          top:0;
+          width:18px;
+          height:18px;
+          display:flex;
+          justify-content:center;
+          align-items:center;
+          font-size:0.69rem;
+          font-weight:600;
+          text-align:center;
+          border-radius:50px;
+          border:1px solid ${palette.gray800};
+          content:counter(list-counter);
+        }
+      }
+    `
+  }
+
+  strong {
+    font-weight:500;
+  }
+`;
+
+const ProgressWrap = styled.div`
+  display:flex;
+  flex-direction:column;
+  gap: ${({ isExpanded }) => (isExpanded ? '40px' : '20px')};
+  padding:20px;
+  margin:20px 0;
+  border-radius:10px;
+  background:${palette.white};
+
+  > div {
+    display:flex;
+    flex-direction:column;
+    gap: 16px;
+  }
+
+  p {
+    font-weight:400;
+    color:${palette.gray700};
+    line-height:1.5;
+  }
+`;
+
+const Progress = styled.div`
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:35px;
+
+  strong {
+    max-width:90px;
+    width:100%;
+    font-weight:700;
+    color:${palette.gray800};
+  }
+
+  span {
+    font-weight:400;
+  }
+`;
+
+const ProgressBar = styled.div`
+  max-width:540px;
+  width:100%;
+  height:16px;
+  border-radius:20px;
+  background:${palette.gray100};
+  overflow:hidden;
+
+  > div {
+    height:100%;
+    border-radius:20px;
+    background:${palette.blue};
+  }
+`;
+
+const WhiteBoxWrap = styled.div`
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  padding:20px;
+  border-radius:10px;
+  background:${palette.white};
 
   h3 {
     display:flex;
     align-items:center;
     gap:12px;
-    font-size:1rem;
-    font-weight:700;
 
     span {
-      width: 15px;
-      height: 15px;
-      font-size: 0.63rem;
-      color: ${palette.chatBlue};
-      line-height: 15px;
-      text-align: center;
-      border: 1px solid ${palette.chatBlue};
+      font-size:0.88rem;
     }
   }
+`;
 
-  p {
-    font-size:0.88rem;
-    font-weight:300;
-    color:${palette.gray800};
-    text-align:left;
-  }
-
-  div {
-    padding:16px;
-    border-radius:10px;
-    background:${palette.white};
-  }
-
-  .list-decimal li {
-    list-style-type:decimal;
-    list-style-position:inside;
-    font-size:0.88rem;
-    font-weight:300;
-    color:${palette.gray800};
-    line-height:1.5;
-    text-align:left;
-  }
+const ButtonDetail = styled.div`
+  width:100%;
+  font-family: 'Pretendard', 'Poppins';
+  font-size:0.88rem;
+  color:${palette.gray800};
+  line-height:1.5;
+  text-align:center;
+  padding:14px 20px;
+  border-radius:15px;
+  border:1px solid ${palette.outlineGray};
+  cursor:pointer;
 `;
