@@ -65,6 +65,7 @@ import IconTarget2 from "../images/iconTarget2.svg"
 
 import ExclamationMark2 from "../images/iconExclamationMark.svg"
 import ExclamationMark from "../images/iconExclamationMark1.svg"
+import ExclamationMarkRed from "../images/iconExclamationMarkRed.svg"
 import CheckMark from "../images/CheckMark.svg"
 import iconQuestionMark from "../images/iconQuestionMark.svg"
 import iconQuestionMark2 from "../images/iconQuestionMark2.svg"
@@ -214,6 +215,7 @@ const images = {
 
   ExclamationMark2,
   ExclamationMark,
+  ExclamationMarkRed,
   CheckMark,
   iconQuestionMark,
   iconQuestionMark2,
