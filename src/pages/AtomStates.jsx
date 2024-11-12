@@ -349,11 +349,15 @@ export const NEW_ADD_CONTENT = atom("");
 /* 마케팅 */
 
 export const IS_MARKETING = atom(false);
+
 export const MARKETING_HAVE_IEDA = atom(false);
 export const MARKETING_MBTI_STAGE = atom(0);
 export const MARKETING_MBTI_ANSWER = atom([0, 0, 0, 0]);
 export const MARKETING_MBTI_RESULT = atom("");
 export const MARKETING_INTEREST = atom("");
+export const MARKETING_RECOMMENDED_ITEM_DATA = atom({});
+export const MARKETING_RECOMMENDED_ITEM_BUTTON_STATE = atom(0);
+
 export const MARKETING_START_BUTTON_STATE = atom(0);
 export const MARKETING_RESEARCH_REPORT_DATA = atom([]);
 export const MARKETING_BM_BUTTON_STATE = atom(0);
