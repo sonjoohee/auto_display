@@ -20,6 +20,7 @@ import {
   CUSTOMER_ADDITION_QUESTION_INPUT,
   SELECTED_EXPERT_LIST,
   CONVERSATION_ID,
+  STRATEGY_REPORT_DATA,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -71,6 +72,8 @@ const OrganismCustomerAdditionalReport = ({
     mainCharacter: mainCharacteristicOfBusinessInformation,
     mainCustomer: businessInformationTargetCustomer,
   };
+  const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA);
+
   const [title, setTitle] = useState([]);
   const [sections, setSections] = useState([]);
   const [answerData, setAnswerData] = useState("");
@@ -129,6 +132,16 @@ const OrganismCustomerAdditionalReport = ({
           setIsLoadingAdd(true);
           setIsLoading(true);
 
+          // let lastConversation = {};
+          // if (selectedExpertIndex === "3") {
+          //   lastConversation = {
+          //     user : selectedCustomerAdditionalKeyword,
+          //     expert : customerAdditionalReportData,
+          //     conversation : conversation,
+          //     report : strategyReportData[3],
+          //   }
+          // }
+
           const data = {
             business_info: titleOfBusinessInfo,
             business_analysis_data: {
@@ -138,6 +151,7 @@ const OrganismCustomerAdditionalReport = ({
               목표고객: analysisReportData.mainCustomer,
             },
             question_info: customerAdditionQuestionInput,
+            // last_conversation: lastConversation,
           };
 
           let response = await axios.post(
@@ -164,7 +178,7 @@ const OrganismCustomerAdditionalReport = ({
 
           // 임시로 키워드 설정
           const updatedKeywords = [...selectedCustomerAdditionalKeyword];
-          updatedKeywords.push(response.data.keyword.result);
+          updatedKeywords.push(customerAdditionQuestionInput);
           setSelectedCustomerAdditionalKeyword(updatedKeywords);
 
           setAnswerData(answerData);
@@ -284,7 +298,7 @@ const OrganismCustomerAdditionalReport = ({
           setConversation(updatedConversation2);
 
           await saveConversation(
-            { changingConversation: { conversation: updatedConversation2, customerAdditionalReportData: updatedAdditionalReportData, } }
+            { changingConversation: { conversation: updatedConversation2, customerAdditionalReportData: updatedAdditionalReportData, selectedCustomerAdditionalKeyword: updatedKeywords } }
           );
         }
       } catch (error) {
