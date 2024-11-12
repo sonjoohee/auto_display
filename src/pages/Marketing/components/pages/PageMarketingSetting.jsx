@@ -19,11 +19,12 @@ import {
   MARKETING_INTEREST,
   CONVERSATION,
   CONVERSATION_STAGE,
-  IS_EXPERT_INSIGHT_ACCESSIBLE,
   MARKETING_MBTI_STAGE,
+  MARKETING_RECOMMENDED_ITEM_BUTTON_STATE,
 } from '../../../AtomStates';
 import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
 import OrganismMarketingBizAnalysis from "../organisms/OrganismMarketingBizAnalysis";
+import OrganismMarketingRecommendedItem from "../organisms/OrganismMarketingRecommendedItem";
 
 const PageMarketSetting = () => {
   const { saveConversation } = useSaveConversation();
@@ -47,10 +48,32 @@ const PageMarketSetting = () => {
   const [marketingMbtiResult, setMarketingMbtiResult] = useAtom(MARKETING_MBTI_RESULT);
   const [marketingInterest, setMarketingInterest] = useAtom(MARKETING_INTEREST);
   const [marketingMbtiStage, setMarketingMbtiStage] = useAtom(MARKETING_MBTI_STAGE);
-  const [isExpertInsightAccessible, setIsExpertInsightAccessible] = useAtom(IS_EXPERT_INSIGHT_ACCESSIBLE);
+  const [marketingRecommendedItemButtonState, setMarketingRecommendedItemButtonState] = useAtom(MARKETING_RECOMMENDED_ITEM_BUTTON_STATE);
   
   const updateMbtiAnswer = (index, newValue) => {
     setMarketingMbtiAnswer((prev) => [...prev.slice(0, index), newValue, ...prev.slice(index + 1)]);
+  };
+  
+  const generateMbti = (category) => {
+    setMarketingInterest(category);
+
+    let mbti = "";
+
+    if (marketingMbtiAnswer[0] < 0) mbti += "R";
+    else mbti += "S";
+
+    if (marketingMbtiAnswer[1] < 0) mbti += "O";
+    else mbti += "P";
+
+    if (marketingMbtiAnswer[2] < 0) mbti += "I";
+    else mbti += "T";
+
+    if (marketingMbtiAnswer[3] < 0) mbti += "C";
+    else mbti += "A";
+
+    setMarketingMbtiResult(mbti);
+    setMarketingRecommendedItemButtonState(1);
+    setMarketingMbtiStage(14);
   };
 
   return (
@@ -62,7 +85,24 @@ const PageMarketSetting = () => {
             <h1>{titleOfBusinessInfo}</h1>
           </>
           : "아이디어만으로도 첫걸음을 내딘 창업가이시네요 🎉이제 아이디어의 잠재력을 함께 확인해보아요!" 
-        : "아이디어가 아직 없어도 걱정마세요 ☺창업 성향 테스트로 함께 찾아볼까요?새로운 기회를 발견할지 몰라요!"}
+        : <>
+          {marketingMbtiStage === 0 && "아이디어가 아직 없어도 걱정마세요 ☺창업 성향 테스트로 함께 찾아볼까요?새로운 기회를 발견할지 몰라요!"}
+          {marketingMbtiStage === 1 && "Q1"}
+          {marketingMbtiStage === 2 && "Q2"}
+          {marketingMbtiStage === 3 && "Q3"}
+          {marketingMbtiStage === 4 && "Q4"}
+          {marketingMbtiStage === 5 && "Q5"}
+          {marketingMbtiStage === 6 && "Q6"}
+          {marketingMbtiStage === 7 && "Q7"}
+          {marketingMbtiStage === 8 && "Q8"}
+          {marketingMbtiStage === 9 && "Q9"}
+          {marketingMbtiStage === 10 && "Q10"}
+          {marketingMbtiStage === 11 && "Q11"}
+          {marketingMbtiStage === 12 && "Q12"}
+          {marketingMbtiStage === 13 && "Q13"}
+          {marketingMbtiStage === 14 && marketingMbtiResult}
+        </>
+      }
 
       <br />
 
@@ -132,7 +172,14 @@ const PageMarketSetting = () => {
             <button onClick={() => {updateMbtiAnswer(3, marketingMbtiAnswer[3] + 1); setMarketingMbtiStage(13)}}>+1</button>
           </>}
           {marketingMbtiStage === 13 && <>
-            <button onClick={() => {setMarketingMbtiStage(14)}}>결과 확인하기</button>
+            <button onClick={() => {generateMbti("IT/테크")}}>IT/테크</button>
+            <button onClick={() => {generateMbti("헬스케어")}}>헬스케어</button>
+            <button onClick={() => {generateMbti("교육/컨설팅")}}>교육/컨설팅</button>
+            <button onClick={() => {generateMbti("예술/디자인")}}>예술/디자인</button>
+            <button onClick={() => {generateMbti("외식/소매업")}}>외식/소매업</button>
+          </>}
+          {marketingMbtiStage === 14 && <>
+            <OrganismMarketingRecommendedItem />
           </>}
         </>
       }
