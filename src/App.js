@@ -26,6 +26,7 @@ import PageMarketingLanding from './pages/Marketing/components/pages/PageMarketi
 import PageMarketingSetting from './pages/Marketing/components/pages/PageMarketingSetting';
 
 import CuratorStoryboard from "./pages/Expert_Insight/components/pages/CuratorStoryboard";
+import NoItems from "./pages/Expert_Insight/components/pages/NoItems";
 
 // Biz
 import Lending from './pages/Lending';
@@ -172,6 +173,7 @@ function App() {
             <Route path="/MarketingSetting" element={<PageMarketingSetting />}></Route>
 
             <Route path="/CuratorStoryboard" element={<CuratorStoryboard />}></Route>
+            <Route path="/NoItems" element={<NoItems />}></Route>
 
             {/* AI 패널 */}
             {/* <Route path="/AI_Panel" element={<PageAIPanelList />} />

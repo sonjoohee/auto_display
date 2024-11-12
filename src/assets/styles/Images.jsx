@@ -1,5 +1,6 @@
 import Logo from "../images/logoInterviewx.svg";
 import SymbolLogo from "../images/symbolLogo.svg";
+import SymbolLogoWhite from "../images/symbolLogoWhite.svg";
 
 import Filter from "../images/Filter.svg";
 import BgSearch from "../images/BgSearch.png";
@@ -149,6 +150,7 @@ import IconDetailView from "../images/IconDetailView.svg"
 const images = {
   Logo,
   SymbolLogo,
+  SymbolLogoWhite,
   
   Filter,
   BgSearch,
