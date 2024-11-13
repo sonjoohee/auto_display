@@ -74,6 +74,8 @@ const PageMarketSetting = () => {
     setMarketingMbtiResult(mbti);
     setMarketingRecommendedItemButtonState(1);
     setMarketingMbtiStage(14);
+
+    saveConversation({ changingConversation: { marketingMbtiResult: mbti } });
   };
 
   return (

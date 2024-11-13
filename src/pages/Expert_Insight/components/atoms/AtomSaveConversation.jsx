@@ -54,7 +54,14 @@ import {
   BM_LEAN_CUSTOM_REPORT_DATA,
   BM_MODEL_SUGGESTION_REPORT_DATA,
   BM_QUESTION_LIST,
-  IS_MARKETING
+  IS_MARKETING,
+  MARKETING_MBTI_RESULT,
+  MARKETING_RESEARCH_REPORT_DATA,
+  MARKETING_BM_REPORT_DATA,
+  MARKETING_CUSTOMER_DATA,
+  MARKETING_SELECTED_CUSTOMER,
+  MARKETING_FINAL_CUSTOMER,
+  MARKETING_FINAL_REPORT_DATA
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -114,6 +121,13 @@ export const useSaveConversation = () => {
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA);
   const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
+  const [marketingMbtiResult, setMarketingMbtiResult] = useAtom(MARKETING_MBTI_RESULT);
+  const [marketingResearchReportData, setMarketingResearchReportData] = useAtom(MARKETING_RESEARCH_REPORT_DATA);
+  const [marketingBmReportData, setMarketingBmReportData] = useAtom(MARKETING_BM_REPORT_DATA);
+  const [marketingCustomerData, setMarketingCustomerData] = useAtom(MARKETING_CUSTOMER_DATA);
+  const [marketingSelectedCustomer, setMarketingSelectedCustomer] = useAtom(MARKETING_SELECTED_CUSTOMER);
+  const [marketingFinalCustomer, setMarketingFinalCustomer] = useAtom(MARKETING_FINAL_CUSTOMER);
+  const [marketingFinalReportData, setMarketingFinalReportData] = useAtom(MARKETING_FINAL_REPORT_DATA);
 
   const saveConversation = async ({ changingConversation }) => {
 
@@ -175,9 +189,17 @@ export const useSaveConversation = () => {
             surveyGoalSuggestionList: changingConversation.hasOwnProperty('surveyGoalSuggestionList') ? changingConversation.surveyGoalSuggestionList : surveyGoalSuggestionList,
             surveyGoalFixed: changingConversation.hasOwnProperty('surveyGoalFixed') ? changingConversation.surveyGoalFixed : surveyGoalFixed,
             surveyQuestionList: changingConversation.hasOwnProperty('surveyQuestionList') ? changingConversation.surveyQuestionList : surveyQuestionList,
+            isMarketing: changingConversation.hasOwnProperty('isMarketing') ? changingConversation.isMarketing : isMarketing,
+            marketingMbtiResult: changingConversation.hasOwnProperty('marketingMbtiResult') ? changingConversation.marketingMbtiResult : marketingMbtiResult,
+            marketingResearchReportData: changingConversation.hasOwnProperty('marketingResearchReportData') ? changingConversation.marketingResearchReportData : marketingResearchReportData,
+            marketingBmReportData: changingConversation.hasOwnProperty('marketingBmReportData') ? changingConversation.marketingBmReportData : marketingBmReportData,
+            marketingCustomerData: changingConversation.hasOwnProperty('marketingCustomerData') ? changingConversation.marketingCustomerData : marketingCustomerData,
+            marketingSelectedCustomer: changingConversation.hasOwnProperty('marketingSelectedCustomer') ? changingConversation.marketingSelectedCustomer : marketingSelectedCustomer,
+            marketingFinalCustomer: changingConversation.hasOwnProperty('marketingFinalCustomer') ? changingConversation.marketingFinalCustomer : marketingFinalCustomer,
+            marketingFinalReportData: changingConversation.hasOwnProperty('marketingFinalReportData') ? changingConversation.marketingFinalReportData : marketingFinalReportData,
         },
-        {isLoggedIn : isMarketing ? true : isLoggedIn},
-        conversationId
+        isMarketing ? true : isLoggedIn,
+        changingConversation.hasOwnProperty('conversationId') ? changingConversation.conversationId : conversationId
     );
   };
 
