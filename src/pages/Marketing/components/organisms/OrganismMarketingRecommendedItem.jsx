@@ -142,10 +142,6 @@ const OrganismMarketingRecommendedItem = () => {
 
         setIsLoadingRecommendedItem(false);
         setIsLoading(false);
-
-        await saveConversation(
-          { changingConversation: { marketingRecommendedItemData: recommendedItemData } }
-        );
     };
 
     handleRecommendedItem();
@@ -173,11 +169,19 @@ const OrganismMarketingRecommendedItem = () => {
       { type: "marketingStartButton" }
     );
 
+    const analysisReportData = {
+      title: itemName,
+      mainFeatures: itemDetail,
+      mainCharacter: [],
+      mainCustomer: [],
+    };
+
     await saveConversation(
-      { changingConversation: { conversation: updatedConversation } }
+      { changingConversation: { conversation: updatedConversation, analysisReportData: analysisReportData } }
     );
 
     setTitleOfBusinessInfo(itemName);
+    setInputBusinessInfo(itemName);
     setMainFeaturesOfBusinessInformation(itemDetail);
     setConversation(updatedConversation);
     setIsExpertInsightAccessible(true);

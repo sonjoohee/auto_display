@@ -88,6 +88,23 @@ import {
   IS_SOCIAL_LOGGED_IN,
   USER_NAME,
   USER_EMAIL,
+  MARKETING_MBTI_RESULT,
+  MARKETING_RESEARCH_REPORT_DATA,
+  MARKETING_BM_REPORT_DATA,
+  MARKETING_CUSTOMER_DATA,
+  MARKETING_SELECTED_CUSTOMER,
+  MARKETING_FINAL_CUSTOMER,
+  MARKETING_FINAL_REPORT_DATA,
+  MARKETING_FINAL_REPORT_BUTTON_STATE,
+  MARKETING_BM_BUTTON_STATE,
+  MARKETING_CUSTOMER_BUTTON_STATE,
+  MARKETING_HAVE_IEDA,
+  MARKETING_MBTI_STAGE,
+  MARKETING_MBTI_ANSWER,
+  MARKETING_INTEREST,
+  MARKETING_RECOMMENDED_ITEM_DATA,
+  MARKETING_START_BUTTON_STATE,
+  MARKETING_RECOMMENDED_ITEM_BUTTON_STATE,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -242,6 +259,24 @@ const PageMeetAiExpert = () => {
   const [userName, setUserName] = useAtom(USER_NAME);
   const [userEmail, setUserEmail] = useAtom(USER_EMAIL);
 
+  const [marketingMbtiResult, setMarketingMbtiResult] = useAtom(MARKETING_MBTI_RESULT);
+  const [marketingResearchReportData, setMarketingResearchReportData] = useAtom(MARKETING_RESEARCH_REPORT_DATA);
+  const [marketingBmReportData, setMarketingBmReportData] = useAtom(MARKETING_BM_REPORT_DATA);
+  const [marketingCustomerData, setMarketingCustomerData] = useAtom(MARKETING_CUSTOMER_DATA);
+  const [marketingSelectedCustomer, setMarketingSelectedCustomer] = useAtom(MARKETING_SELECTED_CUSTOMER);
+  const [marketingFinalCustomer, setMarketingFinalCustomer] = useAtom(MARKETING_FINAL_CUSTOMER);
+  const [marketingFinalReportData, setMarketingFinalReportData] = useAtom(MARKETING_FINAL_REPORT_DATA);
+  const [marketingFinalReportButtonState, setMarketingFinalReportButtonState] = useAtom(MARKETING_FINAL_REPORT_BUTTON_STATE);
+  const [marketingBmButtonState, setMarketingBmButtonState] = useAtom(MARKETING_BM_BUTTON_STATE);
+  const [marketingCustomerButtonState, setMarketingCustomerButtonState] = useAtom(MARKETING_CUSTOMER_BUTTON_STATE);
+  const [marketingHaveIdea, setMarketingHaveIdea] = useAtom(MARKETING_HAVE_IEDA);
+  const [marketingMbtiStage, setMarketingMbtiStage] = useAtom(MARKETING_MBTI_STAGE);
+  const [marketingMbtiAnswer, setMarketingMbtiAnswer] = useAtom(MARKETING_MBTI_ANSWER);
+  const [marketingInterest, setMarketingInterest] = useAtom(MARKETING_INTEREST);
+  const [marketingRecommendedItemData, setMarketingRecommendedItemData] = useAtom(MARKETING_RECOMMENDED_ITEM_DATA);
+  const [marketingStartButtonState, setMarketingStartButtonState] = useAtom(MARKETING_START_BUTTON_STATE);
+  const [marketingRecommendedItemButtonState, setMarketingRecommendedItemButtonState] = useAtom(MARKETING_RECOMMENDED_ITEM_BUTTON_STATE);
+
   const closePopupRegex = () => {
     setInputBusinessInfo("");
     setIsPopupRegex(false); // 팝업 닫기
@@ -361,7 +396,24 @@ const PageMeetAiExpert = () => {
     setBmBmCustomReportData([]);
     setBmLeanCustomReportData([]);
 
+    setMarketingMbtiResult("");
+    setMarketingResearchReportData([]);
+    setMarketingBmReportData([]);
+    setMarketingCustomerData([]);
+    setMarketingSelectedCustomer([]);
+    setMarketingFinalCustomer({});
+    setMarketingFinalReportData([]);
+
     setIsMarketing(false);
+    setMarketingHaveIdea(false);
+    setMarketingMbtiStage(0);
+    setMarketingMbtiAnswer([0, 0, 0, 0]);
+    setMarketingInterest("");
+    setMarketingRecommendedItemData({});
+    setMarketingStartButtonState(0);
+    setMarketingBmButtonState(0);
+    setMarketingFinalReportButtonState(0);
+    setMarketingRecommendedItemButtonState(0);
   }, []);
 
   useEffect(() => {

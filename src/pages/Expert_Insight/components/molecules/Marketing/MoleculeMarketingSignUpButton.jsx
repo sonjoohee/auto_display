@@ -72,6 +72,7 @@ const MoleculeMarketingSignUpButton = () => {
       updatedConversation[updatedConversation.length - 1].type === "marketingSignUpButton"
     ) {
       updatedConversation.pop();
+      updatedConversation.pop();
     }
 
     setConversation(updatedConversation);

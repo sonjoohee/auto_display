@@ -20,6 +20,7 @@ import {
   CASE_REPORT_DATA,
   SURVEY_GOAL_SUGGESTION_LIST,
   BM_OR_LEAN,
+  IS_MARKETING
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
@@ -52,6 +53,8 @@ const OrganismBizExpertSelect = () => {
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
 
   const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
+
+  const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
 
   const handledExpertSelect = async (index) => {
     if (!isLoading) {
@@ -234,9 +237,10 @@ const OrganismBizExpertSelect = () => {
       }
 
       await saveConversation(
-        { changingConversation: { conversation: updatedConversation, conversationStage: 3, expert_index: index, } }
+        { changingConversation: { conversation: updatedConversation, conversationStage: 3, expert_index: index, isMarketing: false } }
       );
 
+      setIsMarketing(false);
       setConversation(updatedConversation);
       setConversationStage(3);
       setSelectedExpertIndex(index);

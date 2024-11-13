@@ -65,6 +65,13 @@ import {
   BM_QUESTION_LIST,
   IDEA_MIRO,
   IS_MARKETING,
+  MARKETING_MBTI_RESULT,
+  MARKETING_RESEARCH_REPORT_DATA,
+  MARKETING_BM_REPORT_DATA,
+  MARKETING_CUSTOMER_DATA,
+  MARKETING_SELECTED_CUSTOMER,
+  MARKETING_FINAL_CUSTOMER,
+  MARKETING_FINAL_REPORT_DATA
 } from "../../../AtomStates";
 
 import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
@@ -235,6 +242,13 @@ const PageExpertInsight = () => {
   const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
 
   const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
+  const [marketingMbtiResult, setMarketingMbtiResult] = useAtom(MARKETING_MBTI_RESULT);
+  const [marketingResearchReportData, setMarketingResearchReportData] = useAtom(MARKETING_RESEARCH_REPORT_DATA);
+  const [marketingBmReportData, setMarketingBmReportData] = useAtom(MARKETING_BM_REPORT_DATA);
+  const [marketingCustomerData, setMarketingCustomerData] = useAtom(MARKETING_CUSTOMER_DATA);
+  const [marketingSelectedCustomer, setMarketingSelectedCustomer] = useAtom(MARKETING_SELECTED_CUSTOMER);
+  const [marketingFinalCustomer, setMarketingFinalCustomer] = useAtom(MARKETING_FINAL_CUSTOMER);
+  const [marketingFinalReportData, setMarketingFinalReportData] = useAtom(MARKETING_FINAL_REPORT_DATA);
 
   let additionalReportCount = 0;
   let customerAdditionalReportCount = 0;
@@ -245,7 +259,7 @@ const PageExpertInsight = () => {
   const [isExitPopupOpen, setIsExitPopupOpen] = useState(false);
 
   useEffect(() => {
-    if (isMarketing) {
+    if (isMarketing && approachPath !== 2) {
       const handleBeforeUnload = (event) => {
         // Cancel the event as stated by the standard.
         event.preventDefault();
@@ -395,6 +409,15 @@ const PageExpertInsight = () => {
             setBmLeanAdsReportData(savedConversation.bmLeanAdsReportData || []);
             setBmBmCustomReportData(savedConversation.bmBmCustomReportData || []);
             setBmLeanCustomReportData(savedConversation.bmLeanCustomReportData || []);
+
+            setIsMarketing(savedConversation.isMarketing || false);
+            setMarketingMbtiResult(savedConversation.marketingMbtiResult || "");
+            setMarketingResearchReportData(savedConversation.marketingResearchReportData || []);
+            setMarketingBmReportData(savedConversation.marketingBmReportData || []);
+            setMarketingCustomerData(savedConversation.marketingCustomerData || []);
+            setMarketingSelectedCustomer(savedConversation.marketingSelectedCustomer || []);
+            setMarketingFinalCustomer(savedConversation.marketingFinalCustomer || {});
+            setMarketingFinalReportData(savedConversation.marketingFinalReportData || []);
           }
           
           setIsLoadingPage(false); // 로딩 완료
@@ -486,7 +509,7 @@ if (isLoadingPage) {
   return (
     <>
       <ContentsWrap>
-        {!isMarketing && <OrganismLeftSideBar />}
+        {(!isMarketing || approachPath === 2) && <OrganismLeftSideBar />}
 
         <MainContent>
           <div>
@@ -695,7 +718,7 @@ if (isLoadingPage) {
                 return null;
               })}
 
-              {selectedExpertIndex === "0" || selectedExpertIndex === "1" || selectedExpertIndex === "2" || selectedExpertIndex === "3" ?
+              {selectedExpertIndex === "0" || selectedExpertIndex === "1" || selectedExpertIndex === "2" || selectedExpertIndex === "3" || selectedExpertIndex === "11" ?
                 <>
                 {/* 검색해서 시작 */}
                 {(approachPath === -1 || approachPath === 3) && 

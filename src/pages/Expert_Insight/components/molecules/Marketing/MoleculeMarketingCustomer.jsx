@@ -191,9 +191,22 @@ const MoleculeMarketingCustomer = ({ marketingCustomerCount }) => {
         marketingCustomerCount === 2 && Object.keys(marketingSelectedCustomerState3).length === 0
       ) return;
 
-    if (marketingCustomerCount === 0) setMarketingSelectedCustomer([marketingSelectedCustomerState1]);
-    else if (marketingCustomerCount === 1) setMarketingSelectedCustomer([...marketingSelectedCustomer, marketingSelectedCustomerState2]);
-    else if (marketingCustomerCount === 2) setMarketingSelectedCustomer([...marketingSelectedCustomer, marketingSelectedCustomerState3]);
+    if (marketingCustomerCount === 0) {
+      setMarketingSelectedCustomer([marketingSelectedCustomerState1]);
+      await saveConversation(
+        { changingConversation: { marketingSelectedCustomer: [marketingSelectedCustomerState1] } }
+      );
+    } else if (marketingCustomerCount === 1) {
+      setMarketingSelectedCustomer([...marketingSelectedCustomer, marketingSelectedCustomerState2]);
+      await saveConversation(
+        { changingConversation: { marketingSelectedCustomer: [...marketingSelectedCustomer, marketingSelectedCustomerState2] } }
+      );
+    } else if (marketingCustomerCount === 2) {
+      setMarketingSelectedCustomer([...marketingSelectedCustomer, marketingSelectedCustomerState3]);
+      await saveConversation(
+        { changingConversation: { marketingSelectedCustomer: [...marketingSelectedCustomer, marketingSelectedCustomerState3] } }
+      );
+    }
 
     const updatedConversation = [...conversation];
     updatedConversation.push(
