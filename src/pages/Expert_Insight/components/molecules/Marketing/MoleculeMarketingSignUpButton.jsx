@@ -103,7 +103,7 @@ const MoleculeMarketingSignUpButton = () => {
             닫기
           </button>
           <span>
-            <img src={images.ExclamationMark} alt="" />
+            <img src={images.ExclamationMarkRed} alt="" />
           </span>
           <p>
             <strong>정말 종료하시겠습니까?</strong>
