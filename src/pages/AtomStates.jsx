@@ -220,7 +220,7 @@ export const EDITED_IDEA_CUSTOMER_TITLE = atom("");
 export const IDEA_LIST = atom([]);
 export const IDEA_GROUP = atom({});
 export const IDEA_PRIORITY = atom([]);
-export const IDEA_MIRO = atom([]);
+export const IDEA_MIRO_STATE = atom(0);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* 그로스 해커 */
