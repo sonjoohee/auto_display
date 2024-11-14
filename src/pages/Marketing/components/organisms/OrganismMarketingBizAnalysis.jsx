@@ -159,7 +159,7 @@ const OrganismMarketingBizAnalysis = () => {
       },
       {
         type: "system",
-        message: `자! 이제 본격적인 준비를 시작해보겠습니다. 먼저 시장에서 ${titleOfBusinessInfo}의 가능성을 한눈에 파악할 수 있는 시장조사를 바로 시작해볼게요`,
+        message: `자! 이제 본격적인 준비를 시작해보겠습니다.\n먼저 시장에서 ${titleOfBusinessInfo}의 가능성을 한눈에 파악할 수 있는 시장조사를 바로 시작해볼게요`,
         expertIndex: -1,
       },
       { type: "marketingStartButton" }

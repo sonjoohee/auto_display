@@ -14,11 +14,14 @@ import {
   ANALYSIS_BUTTON_STATE, 
   CONVERSATION_ID, 
   IS_MARKETING, 
-  MARKETING_HAVE_IEDA 
+  MARKETING_HAVE_IEDA,
+  SELECTED_EXPERT_INDEX
 } from '../../../AtomStates';
 import axios from 'axios';
+import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
 
 const PageMarketLanding = () => {
+  const { saveConversation } = useSaveConversation();
   const navigate = useNavigate();
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [analysisButtonState, setAnalysisButtonState] = useAtom(ANALYSIS_BUTTON_STATE);
@@ -27,7 +30,8 @@ const PageMarketLanding = () => {
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
   const [marketingHaveIdea, setMarketingHaveIdea] = useAtom(MARKETING_HAVE_IEDA);
-
+  const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
+  
   const handleLogoClick = () => {
     // navigate('/');
   };
@@ -62,6 +66,7 @@ const PageMarketLanding = () => {
 
     setIsMarketing(true);
     setMarketingHaveIdea(type);
+    setSelectedExpertIndex("11");
     
     navigate('/MarketingSetting');
   };

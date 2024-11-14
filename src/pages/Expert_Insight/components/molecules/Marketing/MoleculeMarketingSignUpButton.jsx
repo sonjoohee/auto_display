@@ -72,6 +72,7 @@ const MoleculeMarketingSignUpButton = () => {
       updatedConversation[updatedConversation.length - 1].type === "marketingSignUpButton"
     ) {
       updatedConversation.pop();
+      updatedConversation.pop();
     }
 
     setConversation(updatedConversation);
@@ -103,7 +104,7 @@ const MoleculeMarketingSignUpButton = () => {
             닫기
           </button>
           <span>
-            <img src={images.ExclamationMark} alt="" />
+            <img src={images.ExclamationMarkRed} alt="" />
           </span>
           <p>
             <strong>정말 종료하시겠습니까?</strong>
@@ -177,7 +178,7 @@ const Popup = styled.div`
     width: 16px;
     height: 16px;
     font-size: 0;
-    padding: 11px;
+    padding: 9px;
     border: 0;
     background: none;
 
@@ -189,7 +190,7 @@ const Popup = styled.div`
       width: 2px;
       height: 100%;
       border-radius: 10px;
-      background: ${palette.black};
+      background: ${palette.gray500};
       content: "";
     }
 
@@ -230,7 +231,7 @@ const Popup = styled.div`
       span {
         font-size: 0.75rem !important;
         font-weight: 400;
-        color: #8c8c8c;
+        color: #F40404;
         display: block;
         margin-top: 8px;
       }
@@ -266,6 +267,7 @@ const Popup = styled.div`
           strong {
             font-weight: 600;
             display: block;
+            color: ${palette.gray800};
           }
           span {
             font-size: 1rem;
@@ -279,16 +281,11 @@ const Popup = styled.div`
           border-top: 1px solid ${palette.lineGray};
 
           button {
-            color: ${palette.gray};
-            font-weight: 600;
+            color: ${palette.gray700};
+            font-weight: 400;
             padding: 0;
             border: 0;
             background: none;
-
-            &:last-child {
-              color: ${palette.blue};
-              background: none;
-            }
           }
         }
       `}

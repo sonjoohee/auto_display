@@ -9,11 +9,11 @@ import reportWebVitals from './reportWebVitals';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   /* StrictMode 활성화 */
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  // <React.StrictMode>
+  //   <App />
+  // </React.StrictMode>
 
   /* StrictMode 비활성화 */
-    // <App />
+    <App />
 );
 reportWebVitals();

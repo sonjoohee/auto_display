@@ -94,14 +94,33 @@ import {
   NEW_ADD_CONTENT,
   IS_ADDING_NOW,
   IS_MARKETING,
+  MARKETING_MBTI_RESULT,
+  MARKETING_RESEARCH_REPORT_DATA,
+  MARKETING_BM_REPORT_DATA,
+  MARKETING_CUSTOMER_DATA,
+  MARKETING_SELECTED_CUSTOMER,
+  MARKETING_FINAL_CUSTOMER,
+  MARKETING_FINAL_REPORT_DATA,
+  MARKETING_FINAL_REPORT_BUTTON_STATE,
+  MARKETING_BM_BUTTON_STATE,
+  MARKETING_CUSTOMER_BUTTON_STATE,
+  MARKETING_START_BUTTON_STATE,
+  MARKETING_RECOMMENDED_ITEM_DATA,
+  MARKETING_HAVE_IEDA,
+  MARKETING_MBTI_STAGE,
+  MARKETING_MBTI_ANSWER,
+  MARKETING_INTEREST,
+  MARKETING_RECOMMENDED_ITEM_BUTTON_STATE
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
 import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/MoleculeAccountPopup"; // 계정설정 팝업 컴포넌트 임포트
+import { useSaveConversation } from "../atoms/AtomSaveConversation";
 
 import OrganismReportPopup from "./OrganismReportPopup"; // 팝업 컴포넌트 임포트
 
 const OrganismLeftSideBar = () => {
+  const { saveConversation } = useSaveConversation();
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
   const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
   const [bmSelectedProblemOptions, setBmSelectedProblemOptions] = useAtom(BM_SELECTED_PROBLEM_OPTIONS);
@@ -266,6 +285,23 @@ const OrganismLeftSideBar = () => {
   const [newAddContent, setNewAddContent] = useAtom(NEW_ADD_CONTENT);
   const [isAddingNow, setIsAddingNow] = useAtom(IS_ADDING_NOW);
   const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
+  const [marketingMbtiResult, setMarketingMbtiResult] = useAtom(MARKETING_MBTI_RESULT);
+  const [marketingResearchReportData, setMarketingResearchReportData] = useAtom(MARKETING_RESEARCH_REPORT_DATA);
+  const [marketingBmReportData, setMarketingBmReportData] = useAtom(MARKETING_BM_REPORT_DATA);
+  const [marketingCustomerData, setMarketingCustomerData] = useAtom(MARKETING_CUSTOMER_DATA);
+  const [marketingSelectedCustomer, setMarketingSelectedCustomer] = useAtom(MARKETING_SELECTED_CUSTOMER);
+  const [marketingFinalCustomer, setMarketingFinalCustomer] = useAtom(MARKETING_FINAL_CUSTOMER);
+  const [marketingFinalReportData, setMarketingFinalReportData] = useAtom(MARKETING_FINAL_REPORT_DATA);
+  const [marketingFinalReportButtonState, setMarketingFinalReportButtonState] = useAtom(MARKETING_FINAL_REPORT_BUTTON_STATE);
+  const [marketingBmButtonState, setMarketingBmButtonState] = useAtom(MARKETING_BM_BUTTON_STATE);
+  const [marketingCustomerButtonState, setMarketingCustomerButtonState] = useAtom(MARKETING_CUSTOMER_BUTTON_STATE);
+  const [marketingHaveIdea, setMarketingHaveIdea] = useAtom(MARKETING_HAVE_IEDA);
+  const [marketingMbtiStage, setMarketingMbtiStage] = useAtom(MARKETING_MBTI_STAGE);
+  const [marketingMbtiAnswer, setMarketingMbtiAnswer] = useAtom(MARKETING_MBTI_ANSWER);
+  const [marketingInterest, setMarketingInterest] = useAtom(MARKETING_INTEREST);
+  const [marketingRecommendedItemData, setMarketingRecommendedItemData] = useAtom(MARKETING_RECOMMENDED_ITEM_DATA);
+  const [marketingStartButtonState, setMarketingStartButtonState] = useAtom(MARKETING_START_BUTTON_STATE);
+  const [marketingRecommendedItemButtonState, setMarketingRecommendedItemButtonState] = useAtom(MARKETING_RECOMMENDED_ITEM_BUTTON_STATE);
 
   // useEffect(() => {
   //   setIsSection1Open(false);
@@ -705,6 +741,50 @@ useEffect(() => {
       setBmBmCustomReportData(chatData.bmBmCustomReportData || []);
       setBmLeanCustomReportData(chatData.bmLeanCustomReportData || []);
 
+      setIsMarketing(chatData.isMarketing || false);
+      setMarketingMbtiResult(chatData.marketingMbtiResult || "");
+      setMarketingResearchReportData(chatData.marketingResearchReportData || []);
+      setMarketingBmReportData(chatData.marketingBmReportData || []);
+      setMarketingCustomerData(chatData.marketingCustomerData || []);
+      setMarketingSelectedCustomer(chatData.marketingSelectedCustomer || []);
+      setMarketingFinalCustomer(chatData.marketingFinalCustomer || {});
+      setMarketingFinalReportData(chatData.marketingFinalReportData || []);
+
+      if (chatData.isMarketing) {
+        const updatedConversation = [...chatData.conversation];
+
+        if (updatedConversation.length > 0 &&
+          updatedConversation[updatedConversation.length - 1].type === "marketingSignUpButton"
+        ) {
+          updatedConversation.pop();
+          updatedConversation.pop();
+        }
+
+        setConversation(updatedConversation);
+        saveConversation(
+          { changingConversation: 
+            { conversation: updatedConversation, 
+              conversationId: chatData.id,
+              timestamp: chatData.timestamp,
+              isMarketing: chatData.isMarketing,
+              expert_index: chatData.expert_index,
+              inputBusinessInfo: chatData.inputBusinessInfo,
+              analysisReportData: chatData.analysisReportData,
+              conversationStage: chatData.conversationStage,
+              title: chatData.analysisReportData.title,
+              mainFeatures: chatData.analysisReportData.mainFeatures,
+              marketingMbtiResult: chatData.marketingMbtiResult,
+              marketingResearchReportData: chatData.marketingResearchReportData,
+              marketingBmReportData: chatData.marketingBmReportData,
+              marketingCustomerData: chatData.marketingCustomerData,
+              marketingSelectedCustomer: chatData.marketingSelectedCustomer,
+              marketingFinalCustomer: chatData.marketingFinalCustomer,
+              marketingFinalReportData: chatData.marketingFinalReportData
+            } 
+          }
+        );
+      }
+
       // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
       // set어프로치패스(2)
       setApproachPath(2);
@@ -992,6 +1072,25 @@ useEffect(() => {
     setNewAddContent("");
     setIsAddingNow(false);
     setIsLoading(false);
+
+    setMarketingMbtiResult("");
+    setMarketingResearchReportData([]);
+    setMarketingBmReportData([]);
+    setMarketingCustomerData([]);
+    setMarketingSelectedCustomer([]);
+    setMarketingFinalCustomer({});
+    setMarketingFinalReportData([]);
+
+    setIsMarketing(false);
+    setMarketingHaveIdea(false);
+    setMarketingMbtiStage(0);
+    setMarketingMbtiAnswer([0, 0, 0, 0]);
+    setMarketingInterest("");
+    setMarketingRecommendedItemData({});
+    setMarketingStartButtonState(0);
+    setMarketingBmButtonState(0);
+    setMarketingFinalReportButtonState(0);
+    setMarketingRecommendedItemButtonState(0);
   };
 
   const handleLogoClick = () => {
@@ -1087,6 +1186,25 @@ useEffect(() => {
     setNewAddContent("");
     setIsAddingNow(false);
     setIsLoading(false);
+
+    setMarketingMbtiResult("");
+    setMarketingResearchReportData([]);
+    setMarketingBmReportData([]);
+    setMarketingCustomerData([]);
+    setMarketingSelectedCustomer([]);
+    setMarketingFinalCustomer({});
+    setMarketingFinalReportData([]);
+
+    setIsMarketing(false);
+    setMarketingHaveIdea(false);
+    setMarketingMbtiStage(0);
+    setMarketingMbtiAnswer([0, 0, 0, 0]);
+    setMarketingInterest("");
+    setMarketingRecommendedItemData({});
+    setMarketingStartButtonState(0);
+    setMarketingBmButtonState(0);
+    setMarketingFinalReportButtonState(0);
+    setMarketingRecommendedItemButtonState(0);
   };
   return (
     <>
