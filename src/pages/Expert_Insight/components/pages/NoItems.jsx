@@ -120,46 +120,49 @@ const NoItems = () => {
 
   return (
     <>
-        <Navbar>
-          <h1><img src={images.SymbolLogoWhite} alt="" /></h1>
-          {showNavbar && (
-            <ul>
-              {questions.map((question, index) => (
-                <li
-                  key={question}
-                  className={`${activeQuestion === index ? "active" : ""} ${index < activeQuestion ? "disabled" : ""}`}
-                  // onClick={() => handleScrollToQuestion(index)}
-                  onClick={() => {
-                    if (index <= activeQuestion) handleScrollToQuestion(index);
-                  }}
-                  onMouseOver={(e) => handleMouseOver(e, index)}
-                  onMouseOut={handleMouseOut}
+      <Navbar>
+        <h1><img src={images.SymbolLogoWhite} alt="" /></h1>
+        {showNavbar && (
+          <ul>
+            {questions.map((question, index) => (
+              <li
+                key={question}
+                className={`${activeQuestion === index ? "active" : ""} ${index < activeQuestion ? "disabled" : ""}`}
+                // onClick={() => handleScrollToQuestion(index)}
+                onClick={() => {
+                  if (index <= activeQuestion) handleScrollToQuestion(index);
+                }}
+                onMouseOver={(e) => handleMouseOver(e, index)}
+                onMouseOut={handleMouseOut}
+              >
+                {question}
+                <Tooltip
+                  show={tooltip.show && tooltip.text === tooltips[index]} // 해당 tooltip만 표시
+                  top={tooltip.top}
+                  left={tooltip.left}
                 >
-                  {question}
-                  <Tooltip
-                    show={tooltip.show && tooltip.text === tooltips[index]} // 해당 tooltip만 표시
-                    top={tooltip.top}
-                    left={tooltip.left}
-                  >
-                    {tooltip.text}
-                  </Tooltip>
-                </li>
-              ))}
-            </ul>
-          )}
+                  {tooltip.text}
+                </Tooltip>
+              </li>
+            ))}
+          </ul>
+        )}
       </Navbar>
 
       <QuestionWrap id="question0" ref={(el) => (questionRefs.current[0] = el)}>
         <Question>
           <p>
-            아이디어가 아직 없어도 걱정마세요 ☺<br />
+            아이디어가 아직 없어도 걱정마세요 😊<br />
             창업 성향 테스트로 함께 찾아볼까요?<br />
             새로운 기회를 발견할지 몰라요 !
           </p>
         </Question>
 
         <Answer>
-          <p onClick={() => handleScrollToQuestion(1)}>START</p>
+          <StartWrap>
+            <p onClick={() => handleScrollToQuestion(1)}>START</p>
+            <span>내게 맞는 아이템 찾기</span>
+          </StartWrap>
         </Answer>
       </QuestionWrap>
 
@@ -654,6 +657,34 @@ const Answer = styled.div`
   justify-content:center;
   gap:32px;
   flex:1 1 50%;
+`;
+
+const StartWrap = styled.div`
+  display:flex;
+  flex-direction:column;
+  gap:21px;
+
+  p {
+    width:190px;
+    height:190px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:2.5rem;
+    font-weight:600;
+    line-height:1.5;
+    color:${palette.white};
+    border-radius:100%;
+    background:#5547FF;
+    cursor:pointer;
+  }
+
+  span {
+    font-size:1.25rem;
+    font-weight:300;
+    color:${palette.gray800};
+    line-height:1.3;
+  }
 `;
 
 const RadioButtonWrap = styled.div`

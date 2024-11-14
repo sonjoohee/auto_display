@@ -28,6 +28,7 @@ import PageMarketingSetting from './pages/Marketing/components/pages/PageMarketi
 import CuratorStoryboard from "./pages/Expert_Insight/components/pages/CuratorStoryboard";
 import NoItems from "./pages/Expert_Insight/components/pages/NoItems";
 import NoItemsResult from "./pages/Expert_Insight/components/pages/NoItemsResult";
+import YesItems from "./pages/Expert_Insight/components/pages/YesItems";
 
 
 
@@ -179,6 +180,7 @@ function App() {
             <Route path="/CuratorStoryboard" element={<CuratorStoryboard />}></Route>
             <Route path="/NoItems" element={<NoItems />}></Route>
             <Route path="/NoItemsResult" element={<NoItemsResult />}></Route>
+            <Route path="/YesItems" element={<YesItems />}></Route>
 
             {/* AI 패널 */}
             {/* <Route path="/AI_Panel" element={<PageAIPanelList />} />
