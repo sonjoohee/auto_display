@@ -63,7 +63,7 @@ import {
   BM_LEAN_CUSTOM_REPORT_DATA,
   BM_MODEL_SUGGESTION_REPORT_DATA,
   BM_QUESTION_LIST,
-  IDEA_MIRO,
+  IDEA_MIRO_STATE,
   IS_MARKETING,
   MARKETING_MBTI_RESULT,
   MARKETING_RESEARCH_REPORT_DATA,
@@ -233,7 +233,7 @@ const PageExpertInsight = () => {
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
-  const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
+  const [ideaMiroState, setIdeaMiroState] = useAtom(IDEA_MIRO_STATE);
   const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
   const [growthHackerDetailReportData, setGrowthHackerDetailReportData] = useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
   const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
@@ -377,7 +377,7 @@ const PageExpertInsight = () => {
             setIdeaList(savedConversation.ideaList || []);
             setIdeaGroup(savedConversation.ideaGroup || {});
             setIdeaPriority(savedConversation.ideaPriority || []);
-            setIdeaMiro(savedConversation.ideaMiro || []);
+            setIdeaMiroState(savedConversation.ideaMiroState || 0);
             setButtonState(savedConversation.buttonState || {});
 
             setGrowthHackerReportData(savedConversation.growthHackerReportData || []);

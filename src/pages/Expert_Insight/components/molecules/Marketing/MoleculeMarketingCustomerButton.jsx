@@ -79,7 +79,7 @@ const MoleculeMarketingCustomerButton = () => {
         },
         {
           type: 'system',
-          message: `이제 ${marketingSelectedCustomer[index].content.name}을 타겟 고객으로 한 ${titleOfBusinessInfo}의 잠재력을 확인해 볼 시간입니다.\n과연 대박 가능성을 품고 있을까요? 👀`,
+          message: `이제 ${marketingSelectedCustomer[index].content.name}을 타겟 고객으로 한 ${titleOfBusinessInfo}의 잠재력을 확인해 볼 시간입니다. 과연 대박 가능성을 품고 있을까요? 👀`,
           expertIndex: 0,
         },
         {

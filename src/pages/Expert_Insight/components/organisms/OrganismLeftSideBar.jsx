@@ -65,7 +65,7 @@ import {
   IDEA_FEATURE_DATA_TEMP,
   IDEA_REQUIREMENT_DATA_TEMP,
   BUTTON_STATE,
-  IDEA_MIRO,
+  IDEA_MIRO_STATE,
   GROWTH_HACKER_REPORT_DATA,
   GROWTH_HACKER_DETAIL_REPORT_DATA,
   KPI_QUESTION_LIST,
@@ -143,7 +143,7 @@ const OrganismLeftSideBar = () => {
   const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
   const [priceSelectedProductSegmentation, setPriceSelectedProductSegmentation] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
   const [priceProductSegmentation, setPriceProductSegmentation] = useAtom(PRICE_PRODUCT_SEGMENTATION);
-  const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
+  const [ideaMiroState, setIdeaMiroState] = useAtom(IDEA_MIRO_STATE);
   const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
   const [growthHackerDetailReportData, setGrowthHackerDetailReportData] = useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
   const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
@@ -707,7 +707,7 @@ useEffect(() => {
       setIdeaList(chatData.ideaList || []);
       setIdeaGroup(chatData.ideaGroup || {});
       setIdeaPriority(chatData.ideaPriority || []);
-      setIdeaMiro(chatData.ideaMiro || []);
+      setIdeaMiroState(chatData.ideaMiroState || 0);
 
       setButtonState(chatData.buttonState || {});
 
@@ -1038,7 +1038,7 @@ useEffect(() => {
     setIdeaPriority([]);
     setButtonState({});
 
-    setIdeaMiro([]);
+    setIdeaMiroState(0);
     setGrowthHackerReportData([]);
     setGrowthHackerDetailReportData({});
     setKpiQuestionList([]);
@@ -1152,7 +1152,7 @@ useEffect(() => {
 
     setButtonState({});
 
-    setIdeaMiro([]);
+    setIdeaMiroState(0);
     setGrowthHackerReportData([]);
     setGrowthHackerDetailReportData({});
     setKpiQuestionList([]);
