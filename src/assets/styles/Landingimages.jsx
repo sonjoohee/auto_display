@@ -30,6 +30,10 @@ import ImgAIExpert from "../images/Landing/imgAIExpert.png";
 import ImgProposal01 from "../images/Landing/imgProposal01.png";
 import ImgProposal02 from "../images/Landing/imgProposal02.png";
 
+import ImgMarketing01 from "../images/Landing/imgMarketing01.png";
+import ImgMarketing02 from "../images/Landing/imgMarketing02.png";
+import ImgMarketing03 from "../images/Landing/imgMarketing03.png";
+
 const Landingimages = {
   Img01,
   Img02,
@@ -62,6 +66,10 @@ const Landingimages = {
 
   ImgProposal01,
   ImgProposal02,
+
+  ImgMarketing01,
+  ImgMarketing02,
+  ImgMarketing03,
 }
 
 export default Landingimages;
