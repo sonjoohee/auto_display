@@ -1226,7 +1226,7 @@ useEffect(() => {
           </button>
 
           <AccordionMenu>
-            <AccordionItem> 
+            {/* <AccordionItem> 
             <label 
                 className={`accordion-label ${isSection1Open ? 'open' : ''}`} 
                 onClick={toggleSection1}
@@ -1327,7 +1327,7 @@ useEffect(() => {
                   )}
                 </ul>
               </AccordionContent>
-            </AccordionItem>
+            </AccordionItem> */}
 
             {selectedReport && (
               <OrganismReportPopup
