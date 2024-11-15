@@ -148,22 +148,22 @@ import IconCanvas13 from "../images/iconCanvas13.svg"
 
 import IconDetailView from "../images/IconDetailView.svg"
 
-import ImgMBTIROIA from "../images/ImgMBTI_ROIA.png"
 import ImgMBTIROIC from "../images/ImgMBTI_ROIC.png"
 import ImgMBTIROTC from "../images/ImgMBTI_ROTC.png"
-import ImgMBTIROTA from "../images/ImgMBTI_ROTA.png"
-import ImgMBTIRPIA from "../images/ImgMBTI_RPIA.png"
-import ImgMBTIRPIC from "../images/ImgMBTI_RPIC.png"
-import ImgMBTIRPTA from "../images/ImgMBTI_RPTA.png"
-import ImgMBTIRPTC from "../images/ImgMBTI_RPTC.png"
-
 import ImgMBTISOIA from "../images/ImgMBTI_SOIA.png"
+import ImgMBTIRPTC from "../images/ImgMBTI_RPTC.png"
+import ImgMBTIROTA from "../images/ImgMBTI_ROTA.png"
+import ImgMBTISPIC from "../images/ImgMBTI_SPIC.png"
+import ImgMBTISOTC from "../images/ImgMBTI_SOTC.png"
+import ImgMBTIRPIA from "../images/ImgMBTI_RPIA.png"
+import ImgMBTIROIA from "../images/ImgMBTI_ROIA.png"
+import ImgMBTISPTC from "../images/ImgMBTI_SPTC.png"
+import ImgMBTISPIA from "../images/ImgMBTI_SPIA.png"
+import ImgMBTIRPTA from "../images/ImgMBTI_RPTA.png"
 import ImgMBTISOIC from "../images/ImgMBTI_SOIC.png"
 import ImgMBTISOTA from "../images/ImgMBTI_SOTA.png"
-import ImgMBTISOTC from "../images/ImgMBTI_SOTC.png"
-import ImgMBTISPIA from "../images/ImgMBTI_SPIA.png"
-import ImgMBTISPIC from "../images/ImgMBTI_SPIC.png"
-import ImgMBTISPTC from "../images/ImgMBTI_SPTC.png"
+import ImgMBTIRPIC from "../images/ImgMBTI_RPIC.png"
+import ImgMBTISPTA from "../images/ImgMBTI_SPTA.png"
 
 const images = {
   Logo,
@@ -331,6 +331,7 @@ const images = {
   ImgMBTISPIA,
   ImgMBTISPIC,
   ImgMBTISPTC,
+  ImgMBTISPTA,
 
 }
 

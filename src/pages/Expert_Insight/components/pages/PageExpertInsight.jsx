@@ -305,7 +305,7 @@ const PageExpertInsight = () => {
   };
 
   const handleExitConfirm = () => {
-    window.location.href = "/MeetAiExpert";
+    window.location.href = "/MarketingLanding";
   };
 
   useEffect(() => {
