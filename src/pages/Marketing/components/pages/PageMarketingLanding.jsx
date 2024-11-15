@@ -68,7 +68,11 @@ const PageMarketLanding = () => {
     setMarketingHaveIdea(type);
     setSelectedExpertIndex("11");
     
-    navigate('/MarketingSetting');
+    if (type === true) {
+      navigate('/MarketingSetting/1');
+    } else {
+      navigate('/MarketingSetting/2');
+    }
   };
 
   useEffect(() => {

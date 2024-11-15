@@ -742,7 +742,7 @@ useEffect(() => {
       setBmLeanCustomReportData(chatData.bmLeanCustomReportData || []);
 
       setIsMarketing(chatData.isMarketing || false);
-      setMarketingMbtiResult(chatData.marketingMbtiResult || "");
+      setMarketingMbtiResult(chatData.marketingMbtiResult || {});
       setMarketingResearchReportData(chatData.marketingResearchReportData || []);
       setMarketingBmReportData(chatData.marketingBmReportData || []);
       setMarketingCustomerData(chatData.marketingCustomerData || []);
@@ -1073,7 +1073,7 @@ useEffect(() => {
     setIsAddingNow(false);
     setIsLoading(false);
 
-    setMarketingMbtiResult("");
+    setMarketingMbtiResult({});
     setMarketingResearchReportData([]);
     setMarketingBmReportData([]);
     setMarketingCustomerData([]);
@@ -1187,7 +1187,7 @@ useEffect(() => {
     setIsAddingNow(false);
     setIsLoading(false);
 
-    setMarketingMbtiResult("");
+    setMarketingMbtiResult({});
     setMarketingResearchReportData([]);
     setMarketingBmReportData([]);
     setMarketingCustomerData([]);

@@ -411,7 +411,7 @@ const PageExpertInsight = () => {
             setBmLeanCustomReportData(savedConversation.bmLeanCustomReportData || []);
 
             setIsMarketing(savedConversation.isMarketing || false);
-            setMarketingMbtiResult(savedConversation.marketingMbtiResult || "");
+            setMarketingMbtiResult(savedConversation.marketingMbtiResult || {});
             setMarketingResearchReportData(savedConversation.marketingResearchReportData || []);
             setMarketingBmReportData(savedConversation.marketingBmReportData || []);
             setMarketingCustomerData(savedConversation.marketingCustomerData || []);
