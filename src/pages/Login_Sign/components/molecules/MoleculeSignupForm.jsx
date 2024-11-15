@@ -226,11 +226,11 @@ const MoleculeSignupForm = () => {
             로그인하기
           </Link>
           {isLoginPopupOpen && (
-            <MoleculeLoginPopup />
-          )}
+            <MoleculeLoginPopup onClose={() => setIsLoginPopupOpen(false)} />
+            )}
           </JoinWrap>
         )}
-
+        
       </SignupFormContainer>
       {isSignupSuccessful && (
         <MoleculeSignupPopup
@@ -391,10 +391,16 @@ const JoinWrap = styled.div`
   gap: 12px;
   font-size: 1rem;
   color: ${palette.gray};
-  margin-top: 20px;
+  margin-top: 30px;
 
   a {
     color: ${palette.blue};
     text-decoration: underline;
+    font-weight: 400;
+  }
+
+  p {
+    font-size: 1rem !important;
+    font-weight: 400;
   }
 `;

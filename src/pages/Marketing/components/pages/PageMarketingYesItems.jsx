@@ -69,6 +69,10 @@ const PageMarketingYesItems = () => {
   const [isExitPopupOpen, setIsExitPopupOpen] = useState(false);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
+  useEffect(() => {
       const handleBeforeUnload = (event) => {
         // Cancel the event as stated by the standard.
         event.preventDefault();
