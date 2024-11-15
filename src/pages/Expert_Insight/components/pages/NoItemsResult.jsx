@@ -6,6 +6,40 @@ import { palette } from "../../../../assets/styles/Palette";
 
 const NoItemsResult = () => {
 
+  const [isDragging, setIsDragging] = useState(false);
+  const [startY, setStartY] = useState(null); // 터치 시작 위치
+  const [contentHeight, setContentHeight] = useState('40%');
+
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    setStartY(e.clientY);
+  };
+
+  const handleTouchStart = (e) => {
+    setIsDragging(true);
+    setStartY(e.touches[0].clientY); // 터치 시작 위치 저장
+  };
+
+  const handleMove = (currentY) => {
+    if (!isDragging || startY === null) return;
+
+    // 위로 드래그 시 90%, 아래로 드래그 시 40%
+    if (startY - currentY > 30) { // 위로 드래그했을 때
+      setContentHeight('90%');
+    } else if (currentY - startY > 30) { // 아래로 드래그했을 때
+      setContentHeight('40%');
+    }
+  };
+
+  const handleMouseMove = (e) => handleMove(e.clientY);
+
+  const handleTouchMove = (e) => handleMove(e.touches[0].clientY);
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    setStartY(null);
+  };
+
   // 팝업
   const [isPopup1Open, setIsPopup1Open] = useState(false);
   const handleOpenPopup1 = () => setIsPopup1Open(true);
@@ -17,6 +51,29 @@ const NoItemsResult = () => {
 
   return (
     <>
+      {/* 
+      <Container
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleMouseUp}
+      >
+        <Content
+          height={contentHeight}
+          onMouseDown={handleMouseDown}
+          onTouchStart={handleTouchStart}
+        >
+          <h2>창의적 도전가로, 팀플레이를 통해 위험을 극복하며 목표를 향해 돌진하는 스타일이군요</h2>
+          <p>
+            모험심 가득한 팀플레이어 혁신가: ROTC 유형은 두려움 없이 새로운 것을 추구하는 창의적 도전가로, ‘팀플레이’를 통해 기회를 만들어내는 데 탁월합니다.
+            고위험의 거친 파도 속에서도 팀워크를 발휘해 위기와 기회를 포착하고, 창의적 아이디어로 무기 목표를 향해 돌진합니다. 이들은 팀과 함께할 때 더 큰 에너지를 발휘하며,
+            새로운 방식으로 문제를 해결하는 데도 능합니다.
+          </p>
+        </Content>
+      </Container> 
+      */}
+
       <QuestionWrap>
         <Question>
           <p>
