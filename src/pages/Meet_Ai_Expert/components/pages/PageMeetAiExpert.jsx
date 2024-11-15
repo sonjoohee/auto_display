@@ -566,6 +566,25 @@ const PageMeetAiExpert = () => {
     navigate('/Lending');
   };
 
+  const [showText, setShowText] = useState(false);
+  const [showHint, setShowHint] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // 10초 동안 보여주고, 3초 동안 숨김
+      setShowHint(true);
+      
+      const timeout = setTimeout(() => {
+        setShowHint(false);
+      }, 10000); // 10초 뒤에 숨김 상태로 변경
+  
+      return () => clearTimeout(timeout);
+    }, 13000); // 13초 후 다시 반복 (10초 보여짐 + 3초 숨김)
+  
+    return () => clearInterval(interval);
+  }, []);
+
+
   return (
     <>
       <ContentsWrap isMobile={isMobile}>
@@ -813,6 +832,17 @@ const PageMeetAiExpert = () => {
         </MainContent>
 
         <button onClick={handleButtonLending}>서비스 소개</button>
+
+        <QuickMenu showText={showText} showHint={showHint}>
+          {showHint && <span>창업 MBTI 진행하기</span>}
+          <button
+            onMouseEnter={() => setShowText(true)}
+            onMouseLeave={() => setShowText(false)}
+          >
+            <p><img src={images.SymbolLogo} alt="" /></p>
+            <span>창업 MBTI로 창업 스타일 찾기</span>
+          </button>
+        </QuickMenu>
       </ContentsWrap>
 
       {isPopupRegex && (
@@ -1006,6 +1036,81 @@ const ContentsWrap = styled.div`
   }
 `;
 
+const QuickMenu = styled.div`
+  position:fixed;
+  bottom:3%;
+  right:3%;
+  display:flex;
+  flex-direction:column;
+  align-items:end;
+  gap:10px;
+  transition:all .5s;
+
+  > span {
+    position:relative;
+    font-size:0.88rem;
+    color:${palette.white};
+    line-height:1.5;
+    padding:12px 16px;
+    border-radius:12px;
+    background:${palette.gray800};
+    opacity: ${(props) => (props.showHint ? 1 : 0)};
+    transition: opacity 1s ease-in-out;
+
+    &:after {
+      position:absolute;
+      bottom:-5px;
+      right:12px;
+      transform:rotate(45deg);
+      width:17px;
+      height:17px;
+      border-radius:6px;
+      background:${palette.gray800};
+      content:'';
+    }
+  }
+
+  > button {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    width: ${(props) => (props.showText ? 'auto' : '40px')};
+    height:40px;
+    font-size:0.88rem;
+    font-weight:500;
+    color:${palette.white};
+    line-height:1.5;
+    // padding-right:15px;
+    padding-right: ${(props) => (props.showText 
+      ? '15px' 
+      : '0px')};
+    border-radius:30px;
+    border:0;
+    box-shadow: 2px 2px 15px 0px rgba(0, 0, 0, 0.15);
+    background:#242DFF;
+    overflow:hidden;
+    transition:width .5s ease;
+
+    p {
+      width:30px;
+      height:40px;
+      overflow:hidden;
+
+      img {
+        height:100%;
+      }
+    }
+
+    span {
+      // visibility: ${(props) => (props.showText ? 'visible' : 'hidden')};
+      opacity: ${(props) => (props.showText ? 1 : 0)};
+      transition: opacity 0.3s ease, width 0.3s ease, font-size 0.3s ease;
+      width: ${(props) => (props.showText ? 'auto' : '0')};
+      font-size: ${(props) => (props.showText ? '0.88rem' : '0')};
+    }
+  }
+`;
+
 const Title = styled.h1`
   display: flex;
   flex-direction: column;
@@ -1134,36 +1239,40 @@ const ExpertCard = styled.div`
   text-align: left;
   padding: ${(props) => (props.isMobile ? "20px 15px" : "26px 20px")};
   border-radius: 16px;
+  
   border: ${(props) => {
     if (props.select) return `1px solid ${palette.blue}`;
-    else if (props.Coming) return `none`;
-    else if (props.PoC) return `1px solid #E2E7EA`;
-    else if (props.Marketing) return `1px solid #F0EDE6`;
-    else if (props.Client) return `1px solid #E2E7EA`;
-    else if (props.Strategy) return `1px solid #E0E5DF`;
-    else if (props.Idea) return `1px solid #DAE1F1`;
-    else if (props.Hacker) return `1px solid #EDE9DE`;
-    else if (props.Biz) return `1px solid #CCDAE0`;
-    else if (props.BM) return `1px solid #EEE7E7`;
-    else if (props.Price) return `1px solid #E8E2EA`;
-    else if (props.Survey) return `1px solid #E7E9EE`;
-    else return `1px solid ${palette.gray100}`;
+    // else if (props.Coming) return `none`;
+    // else if (props.PoC) return `1px solid #E2E7EA`;
+    // else if (props.Marketing) return `1px solid #F0EDE6`;
+    // else if (props.Client) return `1px solid #E2E7EA`;
+    // else if (props.Strategy) return `1px solid #E0E5DF`;
+    // else if (props.Idea) return `1px solid #DAE1F1`;
+    // else if (props.Hacker) return `1px solid #EDE9DE`;
+    // else if (props.Biz) return `1px solid #CCDAE0`;
+    // else if (props.BM) return `1px solid #EEE7E7`;
+    // else if (props.Price) return `1px solid #E8E2EA`;
+    // else if (props.Survey) return `1px solid #E7E9EE`;
+    // else return `1px solid ${palette.gray100}`;
+    else return `1px solid ${palette.chatGray}`;
   }};
   background: ${(props) => {
     if (props.select) return palette.blue;
-    else if (props.Coming) return `rgba(0,0,0,.03)`;
-    else if (props.PoC) return `#E2E7EA`;
-    else if (props.Marketing) return `#F0EDE6`;
-    else if (props.Client) return `#E2E7EA`;
-    else if (props.Strategy) return `#E0E5DF`;
-    else if (props.Idea) return `#DAE1F1`;
-    else if (props.Hacker) return `#EDE9DE`;
-    else if (props.Biz) return `#CCDAE0`;
-    else if (props.BM) return `#EEE7E7`;
-    else if (props.Price) return `#E8E2EA`;
-    else if (props.Survey) return `#E7E9EE`;
-    else return palette.gray100;
+    // else if (props.Coming) return `rgba(0,0,0,.03)`;
+    // else if (props.PoC) return `#E2E7EA`;
+    // else if (props.Marketing) return `#F0EDE6`;
+    // else if (props.Client) return `#E2E7EA`;
+    // else if (props.Strategy) return `#E0E5DF`;
+    // else if (props.Idea) return `#DAE1F1`;
+    // else if (props.Hacker) return `#EDE9DE`;
+    // else if (props.Biz) return `#CCDAE0`;
+    // else if (props.BM) return `#EEE7E7`;
+    // else if (props.Price) return `#E8E2EA`;
+    // else if (props.Survey) return `#E7E9EE`;
+    // else return palette.gray100;
+    else return palette.chatGray;
   }};
+  
   box-shadow: ${(props) => {
     if (props.select) return `0 4px 30px rgba(0, 0, 0, 0.1)`;
     else return `none`;

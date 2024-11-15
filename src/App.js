@@ -29,7 +29,7 @@ import CuratorStoryboard from "./pages/Expert_Insight/components/pages/CuratorSt
 import NoItems from "./pages/Expert_Insight/components/pages/NoItems";
 import NoItemsResult from "./pages/Expert_Insight/components/pages/NoItemsResult";
 import YesItems from "./pages/Expert_Insight/components/pages/YesItems";
-
+import MarketingLandingPage from './pages/Meet_Ai_Expert/components/pages/MarketingLandingPage';
 
 
 
@@ -181,6 +181,7 @@ function App() {
             <Route path="/NoItems" element={<NoItems />}></Route>
             <Route path="/NoItemsResult" element={<NoItemsResult />}></Route>
             <Route path="/YesItems" element={<YesItems />}></Route>
+            <Route path="/MarketingLandingPage" element={<MarketingLandingPage />}></Route>
 
             {/* AI 패널 */}
             {/* <Route path="/AI_Panel" element={<PageAIPanelList />} />
