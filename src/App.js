@@ -152,7 +152,7 @@ function App() {
 
         <BrowserRouter>
           <Routes>
-            <Route path="/login" element={<PageLogin />} />
+            {/* <Route path="/login" element={<PageLogin />} />
             <Route path="/signup" element={<PageSignup />} />
             <Route path="/success" element={<PageLoginSuccess />} />
             <Route path="/verify-email" element={<PageVerifyEmail />} />
@@ -161,7 +161,7 @@ function App() {
             <Route path="/reset-password" element={<PageResetPassword />} />
             <Route path="/request-reset-password" element={<PageRequestResetPassword />} />
             <Route path="/PagePayTest" element={<PagePayTest />} />
-            <Route path="/CompletedMail" element={<PageCompletedMail />}></Route>
+            <Route path="/CompletedMail" element={<PageCompletedMail />}></Route> */}
 
             <Route path="/" element={<PageMarketingLanding />} />
             <Route path="*" element={<PageMarketingLanding />} />
