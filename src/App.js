@@ -163,8 +163,8 @@ function App() {
             <Route path="/PagePayTest" element={<PagePayTest />} />
             <Route path="/CompletedMail" element={<PageCompletedMail />}></Route>
 
-            <Route path="/" element={<LandingPage />} />
-            <Route path="*" element={<LandingPage />} />
+            <Route path="/" element={<PageMarketingLanding />} />
+            <Route path="*" element={<PageMarketingLanding />} />
             <Route path="/Landing" element={<LandingPage />}></Route>
             <Route path="/MeetAiExpert" element={<PageMeetAiExpert />} />
             <Route path="/ExpertInsight" element={<PageExpertInsight />}></Route>
@@ -177,7 +177,7 @@ function App() {
             <Route path="/MarketingSetting/2/Result" element={<PageMarketingNoItemsResult />}></Route>
       
             <Route path="/CuratorStoryboard" element={<CuratorStoryboard />}></Route>
-            <Route path="/MarketingLandingPage" element={<MarketingLandingPage />}></Route>
+            {/* <Route path="/MarketingLandingPage" element={<MarketingLandingPage />}></Route> */}
 
             {/* AI 패널 */}
             {/* <Route path="/AI_Panel" element={<PageAIPanelList />} />

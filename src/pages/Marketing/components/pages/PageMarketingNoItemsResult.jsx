@@ -69,6 +69,56 @@ const PageMarketingNoItemsResult = () => {
     setIsPopup1Open(false); // 팝업 닫기
   };
 
+  const [isExitPopupOpen, setIsExitPopupOpen] = useState(false);
+
+  useEffect(() => {
+      const handleBeforeUnload = (event) => {
+        // Cancel the event as stated by the standard.
+        event.preventDefault();
+        // Chrome requires returnValue to be set.
+        event.returnValue = "";
+      };
+
+      const handlePopState = () => {
+        setIsExitPopupOpen(true);
+      };
+
+      const handleKeyDown = (event) => {
+        // if (event.keyCode === 116)
+        if (
+          (event.key === "r" && (event.metaKey || event.ctrlKey)) ||
+          event.key === "F5"
+        ) {
+          // F5 key code
+          setIsExitPopupOpen(true);
+          event.preventDefault();
+          // navigate("/");
+        }
+      };
+
+      //새로고침방지
+      window.addEventListener("beforeunload", handleBeforeUnload);
+
+      window.history.pushState(null, "", "");
+      window.addEventListener("popstate", handlePopState);
+      window.addEventListener("keydown", handleKeyDown);
+
+      return () => {
+        //새로고침 방지
+
+        window.removeEventListener("beforeunload", handleBeforeUnload);
+        window.removeEventListener("popstate", handlePopState);
+      };
+  }, []);
+
+  const handleExitCancel = () => {
+    setIsExitPopupOpen(false);
+  };
+
+  const handleExitConfirm = () => {
+    window.location.href = "/MarketingLanding";
+  };
+
   const axiosConfig = {
     timeout: 100000, // 100초
     headers: {
@@ -316,6 +366,34 @@ const PageMarketingNoItemsResult = () => {
           </Popup>
         )}
       </QuestionWrap>
+      {isExitPopupOpen && (
+        <ExitPopup Cancel>
+        <div>
+          <button
+            type="button"
+            className="closePopup"
+            onClick={handleExitCancel}
+          >
+            닫기
+          </button>
+          <span>
+            <img src={images.ExclamationMarkRed} alt="" />
+          </span>
+          <p>
+            <strong>정말 종료하시겠습니까?</strong>
+            <span>종료 또는 새로고침 할 경우, 모든 대화내역이 사라집니다.</span>
+          </p>
+          <div className="btnWrap">
+            <button type="button" onClick={handleExitCancel}>
+              대화를 저장할래요
+            </button>
+            <button type="button" onClick={handleExitConfirm}>
+              종료할게요
+            </button>
+          </div>
+        </div>
+      </ExitPopup>
+    )}
     </>
   );
 };
@@ -624,5 +702,136 @@ const PopupButton = styled.div`
     border-radius:8px;
     border:0;
     background:${palette.chatBlue};
+  }
+`;
+
+const ExitPopup = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  transition: all 0.5s;
+  z-index: 9999;
+
+  .closePopup {
+    position: absolute;
+    right: 24px;
+    top: 24px;
+    width: 16px;
+    height: 16px;
+    font-size: 0;
+    padding: 9px;
+    border: 0;
+    background: none;
+
+    &:before,
+    &:after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 2px;
+      height: 100%;
+      border-radius: 10px;
+      background: ${palette.gray500};
+      content: "";
+    }
+
+    &:before {
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    &:after {
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
+  }
+
+  > div {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    // overflow:hidden;
+    padding: 45px 24px 24px;
+    border-radius: 10px;
+    background: ${palette.white};
+
+    p {
+      font-family: "Pretendard", "Poppins";
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin: 20px auto 24px;
+      strong {
+        font-weight: 500;
+        display: block;
+      }
+
+      span {
+        font-size: 0.75rem !important;
+        font-weight: 400;
+        color: #F40404;
+        display: block;
+        margin-top: 8px;
+      }
+    }
+    
+    .btnWrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      button {
+        flex: 1;
+        font-family: 'Pretendard', 'Poppins';
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: ${palette.blue};
+        padding: 12px 20px;
+        border-radius: 12px;
+        border: 1px solid ${palette.blue};
+        background: ${palette.white};
+
+        // &:last-child {
+        //   color: ${palette.white};
+        //   background: ${palette.blue};
+        // }
+      }
+    }
+
+    ${(props) =>
+      props.Cancel &&
+      css`
+        p {
+          strong {
+            font-weight: 600;
+            display: block;
+            color: ${palette.gray800};
+          }
+          span {
+            font-size: 1rem;
+            display: block;
+            margin-top: 8px;
+          }
+        }
+
+        .btnWrap {
+          padding-top: 16px;
+          border-top: 1px solid ${palette.lineGray};
+
+          button {
+            color: ${palette.gray700};
+            font-weight: 400;
+            padding: 0;
+            border: 0;
+            background: none;
+          }
+        }
+      `}
   }
 `;
