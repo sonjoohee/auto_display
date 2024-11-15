@@ -16,6 +16,7 @@ import {
   SIGN_UP_EMAIL,
   SIGN_UP_PASSWORD,
   CONFIRM_PASSWORD,
+  IS_LOGGED_IN,
 } from "../../../../AtomStates";
 
 import { useNavigate } from "react-router-dom";
@@ -41,6 +42,7 @@ const MoleculeMarketingSignUpButton = () => {
   const [password, setPassword] = useState("");
   const [signupPassword, setSignupPassword] = useAtom(SIGN_UP_PASSWORD);
   const [confirmPassword, setConfirmPassword] = useAtom(CONFIRM_PASSWORD);
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
 
   const [isSignPopupOpen, setIsSignPopupOpen] = useState(false);
   const [isExitPopupOpen, setIsExitPopupOpen] = useState(false);
@@ -84,8 +86,16 @@ const MoleculeMarketingSignUpButton = () => {
   return (
     <>
       <SelectButton>
-        <button onClick={() => setIsSignPopupOpen(true)}>회원가입하고 대화내용 평생 간직 💌</button>
-        <button className="finish" onClick={() => setIsExitPopupOpen(true)}>저장하지 않고 종료하기 😱</button>
+        {!isLoggedIn ? (
+          <>
+            <button onClick={() => setIsSignPopupOpen(true)}>회원가입하고 대화내용 평생 간직 💌</button>
+            <button className="finish" onClick={() => setIsExitPopupOpen(true)}>저장하지 않고 종료하기 😱</button>
+          </>
+        ) : (
+          <>
+            <button onClick={() => navigate("/MeetAiExpert")}>메인 페이지로 돌아가기</button>
+          </>
+        )}
       </SelectButton>
       {isSignPopupOpen && (
         <>

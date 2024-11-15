@@ -563,7 +563,7 @@ const PageMeetAiExpert = () => {
   };
 
   const handleButtonLending = () => {
-    navigate('/Lending');
+    navigate('/Landing');
   };
 
   const [showText, setShowText] = useState(false);

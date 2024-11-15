@@ -17,6 +17,7 @@ import {
   MARKETING_FINAL_REPORT_DATA,
   MARKETING_FINAL_CUSTOMER,
   MARKETING_FINAL_REPORT_BUTTON_STATE,
+  IS_LOGGED_IN,
 } from "../../../../AtomStates";
 
 import { useSaveConversation } from "../../atoms/AtomSaveConversation";
@@ -46,7 +47,7 @@ const OrganismMarketingFinalReport = () => {
   const [marketingFinalReportData, setMarketingFinalReportData] = useAtom(MARKETING_FINAL_REPORT_DATA);
   const [marketingFinalCustomer, setMarketingFinalCustomer] = useAtom(MARKETING_FINAL_CUSTOMER);
   const [marketingFinalReportButtonState, setMarketingFinalReportButtonState] = useAtom(MARKETING_FINAL_REPORT_BUTTON_STATE);
-
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleToggle = () => {
@@ -147,21 +148,33 @@ const OrganismMarketingFinalReport = () => {
 
           const updatedConversation = [...conversation];
 
-          updatedConversation.push(
-            {
-              type: "system",
-              message:
-                `${titleOfBusinessInfo}의 시장조사부터 잠재력 지수까지 모두 확인하셨습니다. 👍🏻\n이번 분석이 창업 준비에 도움이 되었나요? 저희는 비즈니스 전문 AI 솔루션으로 전문가와 1:1 사업 상담이 가능합니다.\n창업 여정의 든든한 조력자로 함께 하겠습니다. 😊`,
-              expertIndex: 0,
-            },
-            {
-              type: "system",
-              message:
-                "회원가입을 하시면 대화 내역을 저장할 수 있어요.\n회원가입 없이 나가시면 내역이 사라지니 참고해주세요 📌 ",
-              expertIndex: -1,
-            },
-            { type: `marketingSignUpButton` }
-          );
+          if (isLoggedIn) {
+            updatedConversation.push(
+              {
+                type: "system",
+                message:
+                  `${titleOfBusinessInfo}의 시장조사부터 잠재력 지수까지 모두 확인하셨습니다. 👍🏻\n이번 분석이 창업 준비에 도움이 되었나요? 저희는 비즈니스 전문 AI 솔루션으로 전문가와 1:1 사업 상담이 가능합니다.\n창업 여정의 든든한 조력자로 함께 하겠습니다. 😊`,
+                expertIndex: 0,
+              },
+              { type: `marketingSignUpButton` }
+            );
+          } else {
+            updatedConversation.push(
+              {
+                type: "system",
+                message:
+                  `${titleOfBusinessInfo}의 시장조사부터 잠재력 지수까지 모두 확인하셨습니다. 👍🏻\n이번 분석이 창업 준비에 도움이 되었나요? 저희는 비즈니스 전문 AI 솔루션으로 전문가와 1:1 사업 상담이 가능합니다.\n창업 여정의 든든한 조력자로 함께 하겠습니다. 😊`,
+                expertIndex: 0,
+              },
+              {
+                type: "system",
+                message:
+                  "회원가입을 하시면 대화 내역을 저장할 수 있어요.\n회원가입 없이 나가시면 내역이 사라지니 참고해주세요 📌 ",
+                expertIndex: -1,
+              },
+              { type: `marketingSignUpButton` }
+            );
+          }
 
           setConversation(updatedConversation);
 

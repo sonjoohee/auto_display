@@ -41,20 +41,22 @@ const PageMarketLanding = () => {
   };
 
   const handleSubmit = async (type) => {
-    try {
-      // 로그인 요청
-      const response = await axios.get(
-        "https://wishresearch.kr/api/user/login/marketing/",
-        axiosConfig
-      );
+    if(!isLoggedIn) {
+      try {
+        // 로그인 요청
+        const response = await axios.get(
+          "https://wishresearch.kr/api/user/login/marketing/",
+          axiosConfig
+        );
 
-      const accessToken = response.data.access_token;
+        const accessToken = response.data.access_token;
 
-      // accessToken을 세션 스토리지에 저장
-      sessionStorage.setItem("accessToken", accessToken);
+        // accessToken을 세션 스토리지에 저장
+        sessionStorage.setItem("accessToken", accessToken);
 
-    } catch (error) {
-      console.error("로그인 중 오류가 발생했습니다.", error);
+      } catch (error) {
+        console.error("로그인 중 오류가 발생했습니다.", error);
+      }
     }
 
     const newConversationId = await createChatOnServer();
