@@ -220,7 +220,7 @@ export const EDITED_IDEA_CUSTOMER_TITLE = atom("");
 export const IDEA_LIST = atom([]);
 export const IDEA_GROUP = atom({});
 export const IDEA_PRIORITY = atom([]);
-export const IDEA_MIRO = atom([]);
+export const IDEA_MIRO_STATE = atom(0);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* 그로스 해커 */
@@ -353,7 +353,7 @@ export const IS_MARKETING = atom(false);
 export const MARKETING_HAVE_IEDA = atom(false);
 export const MARKETING_MBTI_STAGE = atom(0);
 export const MARKETING_MBTI_ANSWER = atom([0, 0, 0, 0]);
-export const MARKETING_MBTI_RESULT = atom("");
+export const MARKETING_MBTI_RESULT = atom({});
 export const MARKETING_INTEREST = atom("");
 export const MARKETING_RECOMMENDED_ITEM_DATA = atom({});
 export const MARKETING_RECOMMENDED_ITEM_BUTTON_STATE = atom(0);

@@ -19,8 +19,9 @@ import {
   IDEA_REQUIREMENT_DATA,
   IDEA_LIST,
   IDEA_GROUP,
-  IDEA_MIRO,
+  IDEA_MIRO_STATE,
   CONVERSATION_STAGE,
+  CONVERSATION_ID,
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
@@ -34,9 +35,10 @@ import {
 import images from "../../../../assets/styles/Images";
 
 const OrganismIdeaList = () => {
+  const [conversationId] = useAtom(CONVERSATION_ID);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const { saveConversation } = useSaveConversation();
-  const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
+  const [ideaMiroState, setIdeaMiroState] = useAtom(IDEA_MIRO_STATE);
   const [isModalOpen, setIsModalOpen] = useState({});
   const [ideaFeatureData] = useAtom(IDEA_FEATURE_DATA);
   const [ideaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
@@ -214,70 +216,93 @@ const OrganismIdeaList = () => {
 
 const handleMiro = async () => {
   try {
-    setIsLoadingIdeaMiro(true);
+    // let newIdeaList = [];
+    // let req, feat;
+    // let miroUrl;
 
-    let newIdeaList = [];
-    let req, feat;
-    let miroUrl;
+    // for (let i = 0; i < ideaList.length; i++) {
+    //   req = ideaList[i].requirement;
 
-    for (let i = 0; i < ideaList.length; i++) {
-      req = ideaList[i].requirement;
+    //   for (let j = 0; j < ideaList[i].report.ideas.length; j++) {
+    //     feat = ideaList[i].report.ideas[j].feature;
 
-      for (let j = 0; j < ideaList[i].report.ideas.length; j++) {
-        feat = ideaList[i].report.ideas[j].feature;
+    //     for (let k = 0; k < ideaList[i].report.ideas[j].ideas.length; k++) {
+    //       newIdeaList.push({
+    //         requirement: req, 
+    //         feature: feat, 
+    //         ideas: ideaList[i].report.ideas[j].ideas[k].name
+    //       });
+    //     }
+    //   }
+    // }
 
-        for (let k = 0; k < ideaList[i].report.ideas[j].ideas.length; k++) {
-          newIdeaList.push({
-            requirement: req, 
-            feature: feat, 
-            ideas: ideaList[i].report.ideas[j].ideas[k].name
-          });
-        }
-      }
-    }
+    // const chunkArray = (array, chunkSize) => {
+    //   const chunks = [];
+    //   for (let i = 0; i < array.length; i += chunkSize) {
+    //     chunks.push(array.slice(i, i + chunkSize));
+    //   }
+    //   return chunks;
+    // };
 
-    const chunkArray = (array, chunkSize) => {
-      const chunks = [];
-      for (let i = 0; i < array.length; i += chunkSize) {
-        chunks.push(array.slice(i, i + chunkSize));
-      }
-      return chunks;
+    // const ideaChunks = chunkArray(newIdeaList, 15);
+
+    // for (const chunk of ideaChunks) {
+    //   const data = {
+    //     expert_id: "5",
+    //     dev_report: chunk,
+    //   };
+
+    //   const response = await axios.post(
+    //     "https://wishresearch.kr/panels/idea_miro",
+    //     data,
+    //     axiosConfig
+    //   );
+
+    //   setIdeaMiroState(response.data);
+    //   miroUrl = response.data;
+    // }
+
+    const data = {
+      chatGetId: conversationId,
+      expert_id: "5",
+      business_info: titleOfBusinessInfo,
+      business_analysis_data: {
+        명칭: titleOfBusinessInfo,
+        주요_목적_및_특징: mainFeaturesOfBusinessInformation,
+        주요기능: mainCharacteristicOfBusinessInformation,
+        목표고객: businessInformationTargetCustomer,
+      },
+      dev_report: ideaList,
+      dev_cluster_report: ideaGroup,
     };
 
-    const ideaChunks = chunkArray(newIdeaList, 15);
+    const response = await axios.post(
+      "https://wishresearch.kr/panels/idea_miro",
+      data,
+      axiosConfig
+    );
 
-    for (const chunk of ideaChunks) {
-      const data = {
-        expert_id: "5",
-        dev_report: chunk,
-      };
-
-      const response = await axios.post(
-        "https://wishresearch.kr/panels/idea_miro",
-        data,
-        axiosConfig
-      );
-
-      setIdeaMiro(response.data);
-      miroUrl = response.data;
-    }
+    setIdeaMiroState(response.data.miro_state);
 
     setConversationStage(3);
 
     await saveConversation(
-      { changingConversation: { conversationStage: 3, ideaMiro : miroUrl } }
+      { changingConversation: { conversationStage: 3, ideaMiroState : response.data.miro_state } }
     );
 
-    if (typeof miroUrl === 'string' && /^https?:\/\/.+\..+/.test(miroUrl)) {
-      window.open(miroUrl, '_blank');
-    } else {
-      console.error("유효하지 않은 URL입니다:", miroUrl);
-    }
+    // if (typeof miroUrl === 'string' && /^https?:\/\/.+\..+/.test(miroUrl)) {
+    //   window.open(miroUrl, '_blank');
+    // } else {
+    //   console.error("유효하지 않은 URL입니다:", miroUrl);
+    // }
 
   } catch (error) {
     console.error("Error loading Idea List:", error);
   } finally {
-    setIsLoadingIdeaMiro(false);
+    // 5분 후에 ideaMiroState를 0으로 설정
+    setTimeout(() => {
+      setIdeaMiroState(0);
+    }, 300000);
   }
 }
 
@@ -486,7 +511,7 @@ useEffect(() => {
               </li>
               ))}
         </IdeaList>
-        <DownloadButton>
+        <DownloadButton ideaMiroState={ideaMiroState}>
           <p>
             <img src={images.IconEdit3} alt="" />
             자료 (2건)
@@ -499,12 +524,11 @@ useEffect(() => {
                 <span>1.8 MB · Download</span>
               </div>
             </button>
-            <button className="miro-button" disabled onClick={handleMiro}>
+            <button className="miro-button" onClick={handleMiro}>
               <img src={images.IconDownloadMiro} alt="" />
               <div>
-                <strong>{isLoadingIdeaMiro ? "잠시만 기다려 주세요..." : "Miro에서 협업하기"}</strong>
-                {/* <span>외부페이지 이동 · www.miro.com</span> */}
-                <span>준비 중</span>
+                <strong>{ideaMiroState === 1 ? "워크스페이스 생성 중..." : "Miro에서 협업하기"}</strong>
+                <span>{ideaMiroState === 1 ? "약 5분 후에 링크가 메일로 발송됩니다" : "www.miro.com"}</span>
               </div>
             </button>
           </div>
@@ -734,9 +758,10 @@ const DownloadButton = styled.div`
       color:${palette.gray500};
     }
   }
-    
+
   .miro-button {
-    cursor: default;
+    cursor: ${(props) => (props.ideaMiroState === 1 ? "default" : "pointer")};
+    pointer-events: ${(props) => (props.ideaMiroState === 1 ? "none" : "auto")};
   }
 `;
 

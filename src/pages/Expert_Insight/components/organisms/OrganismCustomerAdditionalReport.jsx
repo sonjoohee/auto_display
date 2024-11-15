@@ -132,16 +132,6 @@ const OrganismCustomerAdditionalReport = ({
           setIsLoadingAdd(true);
           setIsLoading(true);
 
-          // let lastConversation = {};
-          // if (selectedExpertIndex === "3") {
-          //   lastConversation = {
-          //     user : selectedCustomerAdditionalKeyword,
-          //     expert : customerAdditionalReportData,
-          //     conversation : conversation,
-          //     report : strategyReportData[3],
-          //   }
-          // }
-
           const data = {
             business_info: titleOfBusinessInfo,
             business_analysis_data: {
@@ -151,7 +141,10 @@ const OrganismCustomerAdditionalReport = ({
               목표고객: analysisReportData.mainCustomer,
             },
             question_info: customerAdditionQuestionInput,
-            // last_conversation: lastConversation,
+            // last_conversation: {
+            //   user: selectedCustomerAdditionalKeyword,
+            //   model: customerAdditionalReportData,
+            // },
           };
 
           let response = await axios.post(

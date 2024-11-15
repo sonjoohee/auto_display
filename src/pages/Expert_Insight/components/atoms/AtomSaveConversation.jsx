@@ -28,7 +28,7 @@ import {
   IDEA_PRIORITY,
   BUTTON_STATE,
   CONVERSATION_ID,
-  IDEA_MIRO,
+  IDEA_MIRO_STATE,
   GROWTH_HACKER_REPORT_DATA,
   GROWTH_HACKER_DETAIL_REPORT_DATA,
   KPI_QUESTION_LIST,
@@ -90,7 +90,7 @@ export const useSaveConversation = () => {
   const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
   const [priceSelectedProductSegmentation, setPriceSelectedProductSegmentation] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
   const [priceProductSegmentation, setPriceProductSegmentation] = useAtom(PRICE_PRODUCT_SEGMENTATION);
-  const [ideaMiro, setIdeaMiro] = useAtom(IDEA_MIRO);
+  const [ideaMiroState, setIdeaMiroState] = useAtom(IDEA_MIRO_STATE);
   const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
   const [growthHackerDetailReportData, setGrowthHackerDetailReportData] = useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
   const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
@@ -162,7 +162,7 @@ export const useSaveConversation = () => {
             ideaList : changingConversation.hasOwnProperty('ideaList') ? changingConversation.ideaList : ideaList,
             ideaGroup : changingConversation.hasOwnProperty('ideaGroup') ? changingConversation.ideaGroup : ideaGroup,
             ideaPriority : changingConversation.hasOwnProperty('ideaPriority') ? changingConversation.ideaPriority : ideaPriority,
-            ideaMiro : changingConversation.hasOwnProperty('ideaMiro') ? changingConversation.ideaMiro : ideaMiro,
+            ideaMiroState : changingConversation.hasOwnProperty('ideaMiroState') ? changingConversation.ideaMiroState : ideaMiroState,
             buttonState : changingConversation.hasOwnProperty('buttonState') ? changingConversation.buttonState : buttonState,
             growthHackerReportData : changingConversation.hasOwnProperty('growthHackerReportData') ? changingConversation.growthHackerReportData : growthHackerReportData,
             growthHackerDetailReportData : changingConversation.hasOwnProperty('growthHackerDetailReportData') ? changingConversation.growthHackerDetailReportData : growthHackerDetailReportData,

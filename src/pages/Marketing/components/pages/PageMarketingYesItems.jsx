@@ -1,10 +1,71 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
+import {
+  SkeletonTitle,
+  SkeletonLine,
+} from "../../../../assets/styles/Skeleton";
+import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
+import axios from "axios";
+import { useAtom } from "jotai";
+import {
+  TITLE_OF_BUSINESS_INFORMATION,
+  MAIN_FEATURES_OF_BUSINESS_INFORMATION,
+  MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
+  BUSINESS_INFORMATION_TARGET_CUSTOMER,
+  TEMP_MAIN_FEATURES_OF_BUSINESS_INFORMATION,
+  TEMP_MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
+  TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER,
+  INPUT_BUSINESS_INFO,
+  ANALYSIS_BUTTON_STATE,
+  IS_LOADING,
+  CONVERSATION,
+  IS_LOADING_ANALYSIS,
+  IS_EXPERT_INSIGHT_ACCESSIBLE,
+} from "../../../AtomStates";
 
-const YesItems = () => {
+const PageMarketingYesItems = () => {
+  const navigate = useNavigate();
+  const { saveConversation } = useSaveConversation();
+
+  const [conversation, setConversation] = useAtom(CONVERSATION);
+
+  const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
+    TITLE_OF_BUSINESS_INFORMATION
+  );
+  const [
+    mainFeaturesOfBusinessInformation,
+    setMainFeaturesOfBusinessInformation,
+  ] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
+  const [
+    mainCharacteristicOfBusinessInformation,
+    setMainCharacteristicOfBusinessInformation,
+  ] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
+  const [
+    businessInformationTargetCustomer,
+    setBusinessInformationTargetCustomer,
+  ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
+
+  const [
+    tempMainFeaturesOfBusinessInformation,
+    setTempMainFeaturesOfBusinessInformation,
+  ] = useAtom(TEMP_MAIN_FEATURES_OF_BUSINESS_INFORMATION);
+  const [
+    tempMainCharacteristicOfBusinessInformation,
+    setTempMainCharacteristicOfBusinessInformation,
+  ] = useAtom(TEMP_MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
+  const [
+    tempBusinessInformationTargetCustomer,
+    setTempBusinessInformationTargetCustomer,
+  ] = useAtom(TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER);
+  const [isLoadingAnalysis, setIsLoadingAnalysis] = useAtom(IS_LOADING_ANALYSIS);
+  const [isLoading, setIsLoading] = useAtom(IS_LOADING);
+
+  const [isExpertInsightAccessible, setIsExpertInsightAccessible] = useAtom(IS_EXPERT_INSIGHT_ACCESSIBLE);
+
   useEffect(() => {
     // 페이지가 로드될 때 body의 overflow를 hidden으로 설정
     document.body.style.overflow = 'hidden';
@@ -22,6 +83,9 @@ const YesItems = () => {
 
   // 특정 섹션으로 스크롤 이동
   const handleScrollToQuestion = (index) => {
+    
+    handleBizAnalysis();
+
     const target = questionRefs.current[index];
     if (target) {
       window.scrollTo({
@@ -49,19 +113,120 @@ const YesItems = () => {
     };
   }, []);
 
-  const handleRadioChange = (index) => {
-    if (index === activeQuestion && index < questions.length - 1) {
-      // 다음 질문으로 이동
-      setActiveQuestion(index + 1);
-      handleScrollToQuestion(index + 1); // 해당 질문으로 스크롤
+   // 입력값 상태 관리
+  const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault(); // 기본 엔터 동작 방지
+      handleScrollToQuestion(1);
+      handleBizAnalysis();
     }
   };
 
-   // 입력값 상태 관리
-  const [inputValue, setInputValue] = useState('');
-  // 입력값 변경 시 상태 업데이트
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
+  const axiosConfig = {
+    timeout: 100000, // 100초
+    headers: {
+      "Content-Type": "application/json",
+    },
+    withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
+  };
+  const data = {
+    business_idea: inputBusinessInfo,
+  };
+
+    const handleBizAnalysis = async () => {
+      let businessData;
+      let attempts = 0;
+      const maxAttempts = 5;
+
+        setIsLoading(true);
+        setIsLoadingAnalysis(true);
+        // 버튼 클릭으로 API 호출
+        let response = await axios.post(
+          "https://wishresearch.kr/panels/business",
+          data,
+          axiosConfig
+        );
+        businessData = response.data.business_analysis;
+
+        // 필요한 데이터가 없을 경우 재시도, 최대 5번
+        while (
+          (!businessData.hasOwnProperty("명칭") ||
+            !businessData.hasOwnProperty("주요_목적_및_특징") ||
+            !businessData.hasOwnProperty("주요기능") ||
+            !businessData.hasOwnProperty("목표고객") ||
+            !businessData["명칭"] ||
+            !businessData["주요_목적_및_특징"].length ||
+            !businessData["주요기능"].length ||
+            !businessData["목표고객"].length) &&
+          attempts < maxAttempts
+        ) {
+          attempts += 1;
+
+          response = await axios.post(
+            "https://wishresearch.kr/panels/business",
+            data,
+            axiosConfig
+          );
+          businessData = response.data.business_analysis;
+        }
+
+        setMainFeaturesOfBusinessInformation(
+          businessData["주요_목적_및_특징"]?.map((item) => item)
+        );
+
+        setMainCharacteristicOfBusinessInformation(
+          businessData["주요기능"]?.map((item) => item)
+        );
+
+        setBusinessInformationTargetCustomer(
+          businessData["목표고객"]?.map((item) => item)
+        );
+
+        setTitleOfBusinessInfo(businessData["명칭"]);
+
+        const analysisReportData = {
+          title: businessData?.["명칭"],
+          mainFeatures: businessData["주요_목적_및_특징"],
+          mainCharacter: businessData["주요기능"],
+          mainCustomer: businessData["목표고객"],
+        };
+
+        setIsLoadingAnalysis(false);
+        setIsLoading(false);
+
+        await saveConversation(
+          { changingConversation: { analysisReportData: analysisReportData } }
+        );
+      
+    };
+
+  const handleButtonExpert = async () => {
+    const updatedConversation = [...conversation];
+
+    updatedConversation.push(
+      {
+        type: "system",
+        message: 
+          `${titleOfBusinessInfo} 사업을 하시려는 창업가 이시군요!\n당신의 스타일에 딱 맞는 창업 전략을 잡는데 도움이 되었으면 좋겠어요. 함께 멋진 여정을 시작해 보아요!  ✨`,
+        expertIndex: 0,
+      },
+      {
+        type: "system",
+        message: `자! 이제 본격적인 준비를 시작해보겠습니다.\n먼저 시장에서 ${titleOfBusinessInfo}의 가능성을 한눈에 파악할 수 있는 시장조사를 바로 시작해볼게요`,
+        expertIndex: -1,
+      },
+      { type: "marketingStartButton" }
+    );
+
+    await saveConversation(
+      { changingConversation: { conversation: updatedConversation } }
+    );
+
+    setConversation(updatedConversation);
+    setIsExpertInsightAccessible(true);
+    navigate("/ExpertInsight");
   };
 
 
@@ -80,31 +245,38 @@ const YesItems = () => {
           </p>
         </Question>
 
-        <Answer inputValue={inputValue}>
+        <Answer inputValue={inputBusinessInfo}>
           <InputIdea>
             <span>어떤 아이디어인가요?</span>
             <input 
               type="text" 
               placeholder="아이디어를 이곳에 알려주세요" 
-              value={inputValue} 
-              onChange={handleInputChange} 
+              value={inputBusinessInfo}
+              onInput={(e) => {
+                if (e.target.value.length > 300) {
+                  e.target.value = e.target.value.substring(0, 300);
+                }
+                setInputBusinessInfo(e.target.value);
+              }} 
+              onKeyDown={handleKeyPress}
             />
           </InputIdea>
           <button 
             className="ideaSubmit" 
             onClick={() => handleScrollToQuestion(1)}
-            disabled={!inputValue}
+            disabled={!inputBusinessInfo}
           >
             확인
           </button>
         </Answer>
+        
       </QuestionWrap>
 
       <QuestionWrap id="question1" ref={(el) => (questionRefs.current[1] = el)}>
         <Question>
           <p>
             <span>🔖 아이디어를 정리해 보았어요</span>
-            프리랜서 일정 및<br />급여 관리 플랫폼
+            {isLoadingAnalysis ? inputBusinessInfo : titleOfBusinessInfo}
           </p>
         </Question>
 
@@ -114,26 +286,36 @@ const YesItems = () => {
               <strong>💡 아이디어의 특징</strong>
               <p>아이디어 특징을 확인하고 내 비즈니스로 발전시킬 힌트를 얻어보세요</p>
             </div>
+            {isLoadingAnalysis ? (
+              <>
+                <SkeletonLine className="content-placeholder" />
+                <SkeletonLine className="content-placeholder" />
+                <SkeletonLine className="content-placeholder" />
+              </>
+            ) : (
+              <>
+              <ListBox>
+                <div>
+                  <p>{mainFeaturesOfBusinessInformation[0]}</p>
+                </div>
+              </ListBox>
 
-            <ListBox>
-              <div>
-                <p>프리랜서 일정 및 급여 관리 플랫폼은 프리랜서들이 자신의 일정을 효율적으로 관리하고, 프로젝트별 급여를 체계적으로 추적하며, 세금 신고를 간편하게 처리할 수 있도록 지원하는 플랫폼입니다. 프로젝트 일정 관리, 급여 및 비용 추적, 세금 신고 기능을 제공하여 프리랜서들의 업무 효율성을 높이고 재정 관리를 간소화하는 데 도움을 줍니다.</p>
-              </div>
-            </ListBox>
+              <button 
+                className="ideaSubmit" 
+                onClick={handleButtonExpert}
+              >
+                사업화 가능성 확인하기 📊
+              </button>
+              </>
+            )}
           </ResultWrap>
-
-          <button 
-            className="ideaSubmit" 
-          >
-            사업화 가능성 확인하기 📊
-          </button>
         </Answer>
       </QuestionWrap>
     </>
   );
 };
 
-export default YesItems;
+export default PageMarketingYesItems;
 
 const Navbar = styled.div`
   position:fixed;
