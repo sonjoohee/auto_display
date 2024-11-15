@@ -71,7 +71,7 @@ const PageMarketingYesItems = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  
+
   useEffect(() => {
       const handleBeforeUnload = (event) => {
         // Cancel the event as stated by the standard.
@@ -174,7 +174,6 @@ const PageMarketingYesItems = () => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault(); // 기본 엔터 동작 방지
       handleScrollToQuestion(1);
-      handleBizAnalysis();
     }
   };
 
@@ -330,7 +329,7 @@ const PageMarketingYesItems = () => {
         <Question>
           <p>
             <span>🔖 아이디어를 정리해 보았어요</span>
-            {isLoadingAnalysis ? inputBusinessInfo : titleOfBusinessInfo}
+            {!titleOfBusinessInfo ? inputBusinessInfo : titleOfBusinessInfo}
           </p>
         </Question>
 
