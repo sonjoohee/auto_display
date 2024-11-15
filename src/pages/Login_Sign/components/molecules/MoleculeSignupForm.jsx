@@ -1,7 +1,7 @@
 // MoleculeSignupForm.jsx
 import React, { useEffect, useState } from 'react';
 import { useAtom } from 'jotai';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import AtomInput from '../atoms/AtomInput';
@@ -23,6 +23,7 @@ import MoleculeSignupPopup from './MoleculeSignupPopup'; // 팝업 컴포넌트 
 import { IS_LOGIN_POPUP_OPEN, IS_SIGNUP_POPUP_OPEN, IS_MARKETING } from '../../../AtomStates'; // 팝업 상태 atom 임포트
 
 import { palette } from '../../../../assets/styles/Palette';
+import MoleculeLoginPopup from './MoleculeLoginPopup';
 
 const MoleculeSignupForm = () => {
   const [signUpName, setSignUpName] = useAtom(SIGN_UP_NAME);
@@ -42,8 +43,8 @@ const MoleculeSignupForm = () => {
   const navigate = useNavigate();
 
   // 팝업 상태 atom의 setter 가져오기
-  const [, setIsLoginPopupOpen] = useAtom(IS_LOGIN_POPUP_OPEN);
-  const [, setIsSignupPopupOpen] = useAtom(IS_SIGNUP_POPUP_OPEN);
+  const [isLoginPopupOpen, setIsLoginPopupOpen] = useAtom(IS_LOGIN_POPUP_OPEN);
+  const [isSignupPopupOpen, setIsSignupPopupOpen] = useAtom(IS_SIGNUP_POPUP_OPEN);
 
   useEffect(() => {
     setErrorStatus('');
@@ -214,6 +215,22 @@ const MoleculeSignupForm = () => {
         <StyledAtomButton onClick={handleSignup} disabled={isLoading || !signUpName || !signUpEmail || !signUpPassword || !confirmPassword || !termsAccepted}>
           {isLoading ? "메일을 전송 중입니다..." : "회원가입"}
         </StyledAtomButton>
+
+        {isMarketing && (
+          <JoinWrap>
+            <p>이미 가입하셨나요?</p>
+          <Link to="#" onClick={() => {
+            setIsSignupPopupOpen(false);
+            setIsLoginPopupOpen(true);
+          }}>
+            로그인하기
+          </Link>
+          {isLoginPopupOpen && (
+            <MoleculeLoginPopup />
+          )}
+          </JoinWrap>
+        )}
+
       </SignupFormContainer>
       {isSignupSuccessful && (
         <MoleculeSignupPopup
@@ -363,5 +380,21 @@ const LoadingOverlay = styled.div`
   @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+  }
+`;
+
+const JoinWrap = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row !important;
+  gap: 12px;
+  font-size: 1rem;
+  color: ${palette.gray};
+  margin-top: 20px;
+
+  a {
+    color: ${palette.blue};
+    text-decoration: underline;
   }
 `;

@@ -21,6 +21,8 @@ import {
   USER_NAME,
   USER_EMAIL,
   IS_LOGIN_POPUP_OPEN,
+  IS_MARKETING,
+  CONVERSATION_ID,
 } from "../../../../pages/AtomStates"; // 아톰 임포트
 import { Link } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
@@ -44,6 +46,8 @@ const MoleculeLoginForm = () => {
   const [, setUserName] = useAtom(USER_NAME); // 유저 이름 아톰
   const [, setUserEmail] = useAtom(USER_EMAIL); // 유저 이메일 아톰
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useAtom(IS_LOGIN_POPUP_OPEN);
+  const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
+  const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
 
   useEffect(() => {
     setErrorStatus("");
@@ -66,15 +70,25 @@ const MoleculeLoginForm = () => {
     if (!validateForm()) return;
 
     try {
+      let response;
+
       // 로그인 요청
-      const response = await fetch(
-        "https://wishresearch.kr/api/user/login/normal/",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        }
-      );
+      if (isMarketing) {
+        response = await fetch('https://wishresearch.kr/api/user/login/defaultLogin_marketing/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password, chatGetId: conversationId })
+        });
+      } else {
+        response = await fetch(
+          "https://wishresearch.kr/api/user/login/normal/",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),  
+          }
+        );
+      }
 
       if (response.ok) {
         const result = await response.json();
@@ -106,7 +120,7 @@ const MoleculeLoginForm = () => {
           // 로그인 성공 처리
           setIsLoggedIn(true);
           setLoginSuccess(true);
-          // navigate("/MeetAiExpert");
+          navigate("/MeetAiExpert");
         } else {
           setErrorStatus("유저 정보를 불러오는 중 오류가 발생했습니다.");
         }
