@@ -396,7 +396,7 @@ const PageMeetAiExpert = () => {
     setBmBmCustomReportData([]);
     setBmLeanCustomReportData([]);
 
-    setMarketingMbtiResult("");
+    setMarketingMbtiResult({});
     setMarketingResearchReportData([]);
     setMarketingBmReportData([]);
     setMarketingCustomerData([]);
@@ -838,6 +838,7 @@ const PageMeetAiExpert = () => {
           <button
             onMouseEnter={() => setShowText(true)}
             onMouseLeave={() => setShowText(false)}
+            onClick={() => navigate('/MarketingLanding')}
           >
             <p><img src={images.SymbolLogo} alt="" /></p>
             <span>창업 MBTI로 창업 스타일 찾기</span>

@@ -23,15 +23,12 @@ import LandingPage from './pages/Meet_Ai_Expert/components/pages/LandingPage';
 import PageExpertInsight from "./pages/Expert_Insight/components/pages/PageExpertInsight";
 
 import PageMarketingLanding from './pages/Marketing/components/pages/PageMarketingLanding';
-import PageMarketingSetting from './pages/Marketing/components/pages/PageMarketingSetting';
 
 import CuratorStoryboard from "./pages/Expert_Insight/components/pages/CuratorStoryboard";
-import NoItems from "./pages/Expert_Insight/components/pages/NoItems";
-import NoItemsResult from "./pages/Expert_Insight/components/pages/NoItemsResult";
-import YesItems from "./pages/Expert_Insight/components/pages/YesItems";
+import PageMarketingYesItems from './pages/Marketing/components/pages/PageMarketingYesItems';
+import PageMarketingNoItems from './pages/Marketing/components/pages/PageMarketingNoItems';
+import PageMarketingNoItemsResult from "./pages/Marketing/components/pages/PageMarketingNoItemsResult";
 import MarketingLandingPage from './pages/Meet_Ai_Expert/components/pages/MarketingLandingPage';
-
-
 
 // Biz
 import Lending from './pages/Lending';
@@ -175,12 +172,11 @@ function App() {
 
             {/* 마케팅 */}
             <Route path="/MarketingLanding" element={<PageMarketingLanding />}></Route>
-            <Route path="/MarketingSetting" element={<PageMarketingSetting />}></Route>
-
+            <Route path="/MarketingSetting/1" element={<PageMarketingYesItems />}></Route>
+            <Route path="/MarketingSetting/2" element={<PageMarketingNoItems />}></Route>
+            <Route path="/MarketingSetting/2/Result" element={<PageMarketingNoItemsResult />}></Route>
+      
             <Route path="/CuratorStoryboard" element={<CuratorStoryboard />}></Route>
-            <Route path="/NoItems" element={<NoItems />}></Route>
-            <Route path="/NoItemsResult" element={<NoItemsResult />}></Route>
-            <Route path="/YesItems" element={<YesItems />}></Route>
             <Route path="/MarketingLandingPage" element={<MarketingLandingPage />}></Route>
 
             {/* AI 패널 */}
