@@ -186,7 +186,29 @@ const PageMarketingNoItemsResult = () => {
       <QuestionWrap>
         <Question>
           <p>
-            <span><img src={images.ImgMBTIROIC} alt="" /></span>
+            <span>
+              <img 
+                src={
+                  marketingMbtiResult.name === "ROIC" ? images.ImgMBTIROIC :
+                  marketingMbtiResult.name === "ROIA" ? images.ImgMBTIROIA :
+                  marketingMbtiResult.name === "ROTC" ? images.ImgMBTIROTC :
+                  marketingMbtiResult.name === "ROTA" ? images.ImgMBTIROTA :
+                  marketingMbtiResult.name === "RPIA" ? images.ImgMBTIRPIA :
+                  marketingMbtiResult.name === "RPIC" ? images.ImgMBTIRPIC :
+                  marketingMbtiResult.name === "RPTA" ? images.ImgMBTIRPTA :
+                  marketingMbtiResult.name === "RPTC" ? images.ImgMBTIRPTC :
+                  marketingMbtiResult.name === "SOIA" ? images.ImgMBTISOIA :
+                  marketingMbtiResult.name === "SOIC" ? images.ImgMBTISOIC :
+                  marketingMbtiResult.name === "SOTA" ? images.ImgMBTISOTA :
+                  marketingMbtiResult.name === "SOTC" ? images.ImgMBTISOTC :
+                  marketingMbtiResult.name === "SPIA" ? images.ImgMBTISPIA :
+                  marketingMbtiResult.name === "SPIC" ? images.ImgMBTISPIC :
+                  marketingMbtiResult.name === "SPTC" ? images.ImgMBTISPTC :
+                  ""
+                } 
+                alt=""
+              />
+            </span>
             {marketingMbtiResult.category}<br />{marketingMbtiResult.name}
           </p>
           <div>
