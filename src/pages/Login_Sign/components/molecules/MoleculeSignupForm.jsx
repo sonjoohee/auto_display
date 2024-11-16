@@ -216,8 +216,7 @@ const MoleculeSignupForm = () => {
           {isLoading ? "메일을 전송 중입니다..." : "회원가입"}
         </StyledAtomButton>
 
-        {isMarketing && (
-          <JoinWrap>
+        <JoinWrap>
             <p>이미 가입하셨나요?</p>
           <Link to="#" onClick={() => {
             setIsSignupPopupOpen(false);
@@ -225,11 +224,7 @@ const MoleculeSignupForm = () => {
           }}>
             로그인하기
           </Link>
-          {isLoginPopupOpen && (
-            <MoleculeLoginPopup onClose={() => setIsLoginPopupOpen(false)} />
-            )}
-          </JoinWrap>
-        )}
+        </JoinWrap>
         
       </SignupFormContainer>
       {isSignupSuccessful && (
@@ -391,7 +386,7 @@ const JoinWrap = styled.div`
   gap: 12px;
   font-size: 1rem;
   color: ${palette.gray};
-  margin-top: 30px;
+  margin-top: 50px;
 
   a {
     color: ${palette.blue};

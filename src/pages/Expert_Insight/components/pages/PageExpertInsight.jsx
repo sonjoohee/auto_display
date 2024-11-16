@@ -505,9 +505,11 @@ const PageExpertInsight = () => {
 const chatEndRef = useRef(null); // 스크롤을 위한 ref 추가
 
 useEffect(() => {
-  if (chatEndRef.current) {
-    chatEndRef.current.scrollIntoView({ behavior: "smooth" });
-  }
+  setTimeout(() => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, 300); // 0.3초 후에 스크롤 실행
 }, [conversation]);
 
 if (isLoadingPage) {
