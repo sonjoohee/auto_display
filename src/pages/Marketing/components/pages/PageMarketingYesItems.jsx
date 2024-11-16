@@ -20,10 +20,8 @@ import {
   TEMP_MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
   TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER,
   INPUT_BUSINESS_INFO,
-  ANALYSIS_BUTTON_STATE,
   IS_LOADING,
   CONVERSATION,
-  IS_LOADING_ANALYSIS,
   IS_EXPERT_INSIGHT_ACCESSIBLE,
 } from "../../../AtomStates";
 
@@ -61,12 +59,18 @@ const PageMarketingYesItems = () => {
     tempBusinessInformationTargetCustomer,
     setTempBusinessInformationTargetCustomer,
   ] = useAtom(TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [isLoadingAnalysis, setIsLoadingAnalysis] = useAtom(IS_LOADING_ANALYSIS);
+  const [isLoadingAnalysis, setIsLoadingAnalysis] = useState(false);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
 
   const [isExpertInsightAccessible, setIsExpertInsightAccessible] = useAtom(IS_EXPERT_INSIGHT_ACCESSIBLE);
 
   const [isExitPopupOpen, setIsExitPopupOpen] = useState(false);
+  const [isPopupRegex, setIsPopupRegex] = useState(false);
+
+  const closePopupRegex = () => {
+    setInputBusinessInfo("");
+    setIsPopupRegex(false); // 팝업 닫기
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -170,10 +174,28 @@ const PageMarketingYesItems = () => {
    // 입력값 상태 관리
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
 
+  const handleSubmit = () => {
+    const regex = /^[가-힣a-zA-Z0-9\s.,'"?!()\-]*$/;
+    const specialChars = /^[.,'"?!()\-]+$/;
+
+    // 단독으로 특수 문자만 사용된 경우
+    if (specialChars.test(inputBusinessInfo.trim())) {
+      setIsPopupRegex(true);
+      return;
+    }
+
+    // 입력 값에 대한 정규식 및 빈 값 체크
+    if (!regex.test(inputBusinessInfo)) {
+      setIsPopupRegex(true);
+      return;
+    }
+    handleScrollToQuestion(1);
+  }
+
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault(); // 기본 엔터 동작 방지
-      handleScrollToQuestion(1);
+      handleSubmit();
     }
   };
 
@@ -225,17 +247,37 @@ const PageMarketingYesItems = () => {
           businessData = response.data.business_analysis;
         }
 
-        setMainFeaturesOfBusinessInformation(
-          businessData["주요_목적_및_특징"]?.map((item) => item)
-        );
+        if (Array.isArray(businessData["주요_목적_및_특징"])) {
+          setMainFeaturesOfBusinessInformation(
+            businessData["주요_목적_및_특징"]?.map((item) => item)
+          );
+        } else {
+          setMainFeaturesOfBusinessInformation(
+            businessData["주요_목적_및_특징"]
+              ? [businessData["주요_목적_및_특징"]]
+              : []
+          );
+        }
 
-        setMainCharacteristicOfBusinessInformation(
-          businessData["주요기능"]?.map((item) => item)
-        );
+        if (Array.isArray(businessData["주요기능"])) {
+          setMainCharacteristicOfBusinessInformation(
+            businessData["주요기능"]?.map((item) => item)
+          );
+        } else {
+          setMainCharacteristicOfBusinessInformation(
+            businessData["주요기능"] ? [businessData["주요기능"]] : []
+          );
+        }
 
-        setBusinessInformationTargetCustomer(
-          businessData["목표고객"]?.map((item) => item)
-        );
+        if (Array.isArray(businessData["목표고객"])) {
+          setBusinessInformationTargetCustomer(
+            businessData["목표고객"]?.map((item) => item)
+          );
+        } else {
+          setBusinessInformationTargetCustomer(
+            businessData["목표고객"] ? [businessData["목표고객"]] : []
+          );
+        }
 
         setTitleOfBusinessInfo(businessData["명칭"]);
 
@@ -316,7 +358,7 @@ const PageMarketingYesItems = () => {
           </InputIdea>
           <button 
             className="ideaSubmit" 
-            onClick={() => handleScrollToQuestion(1)}
+            onClick={() => handleSubmit()}
             disabled={!inputBusinessInfo}
           >
             확인
@@ -329,7 +371,7 @@ const PageMarketingYesItems = () => {
         <Question>
           <p>
             <span>🔖 아이디어를 정리해 보았어요</span>
-            {!titleOfBusinessInfo ? inputBusinessInfo : titleOfBusinessInfo}
+            {isLoadingAnalysis ? inputBusinessInfo : titleOfBusinessInfo}
           </p>
         </Question>
 
@@ -392,6 +434,38 @@ const PageMarketingYesItems = () => {
         </div>
       </Popup>
     )}
+      {isPopupRegex && (
+        <Popup
+          Cancel
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              closePopupRegex(); // 상태를 false로 설정
+            }
+          }}
+        >
+          <div>
+            <button
+              type="button"
+              className="closePopup"
+              onClick={closePopupRegex}
+            >
+              닫기
+            </button>
+            <span>
+              <img src={images.ExclamationMark2} alt="" />
+            </span>
+            <p>
+              한글, 영문 외 특수문자는 입력할 수 없어요. 자음이나 모음만 입력한
+              경우 검색이 제한되니, 문장을 완전하게 입력해주세요.
+            </p>
+            <div className="btnWrap">
+              <button type="button" onClick={closePopupRegex}>
+                확인
+              </button>
+            </div>
+          </div>
+        </Popup>
+      )}
     </>
   );
 };
