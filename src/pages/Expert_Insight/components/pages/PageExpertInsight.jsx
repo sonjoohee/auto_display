@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
@@ -502,6 +502,14 @@ const PageExpertInsight = () => {
 //   };
 // }, []);
 
+const chatEndRef = useRef(null); // 스크롤을 위한 ref 추가
+
+useEffect(() => {
+  if (chatEndRef.current) {
+    chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+  }
+}, [conversation]);
+
 if (isLoadingPage) {
   return <div>Loading...</div>;
 }
@@ -717,6 +725,8 @@ if (isLoadingPage) {
 
                 return null;
               })}
+
+              <div ref={chatEndRef} />
 
               {selectedExpertIndex === "0" || selectedExpertIndex === "1" || selectedExpertIndex === "2" || selectedExpertIndex === "3" || selectedExpertIndex === "11" ?
                 <>
