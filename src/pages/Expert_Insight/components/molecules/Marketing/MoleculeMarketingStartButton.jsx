@@ -62,7 +62,7 @@ const SelectButton = styled.div`
   display:flex;
   align-items:center;
   gap:12px;
-  margin-top: 15px;
+  margin-top: 12px;
   margin-left: 50px;
 
   button {

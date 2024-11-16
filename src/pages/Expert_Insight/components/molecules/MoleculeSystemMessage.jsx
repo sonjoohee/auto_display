@@ -94,7 +94,7 @@ const SystemMessageContainer = styled.div`
   align-items: flex-start;
   flex-direction: ${(props) => (props.Myself ? "row-reverse" : "row")};
   gap: 18px;
-  margin-top: ${(props) => (props.selectedExpertIndex != -1 ? "40px" : "15px")};
+  margin-top: ${(props) => (props.selectedExpertIndex != -1 ? "40px" : "12px")};
 `;
 
 const Bubble = styled.div`

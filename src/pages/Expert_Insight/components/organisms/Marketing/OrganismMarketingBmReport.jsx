@@ -197,7 +197,7 @@ const OrganismMarketingBmReport = () => {
               <button className="closePopup" onClick={() => setIsMenuOpen(false)}>닫기</button>
             </div>
             <div className="body">
-              <p>{marketingBmReportData[0]?.content?.conclusion}</p>
+              <p>{marketingBmReportData[9]?.content?.conclusion}</p>
               <ScrollWrap>
                 <ListBox>
                   <div>
@@ -331,7 +331,7 @@ const SummaryBox = styled.div`
   padding:20px;
   border-radius:20px;
   background:${palette.chatGray};
-  margin:15px 0 0 50px;
+  margin:12px 0 0 50px;
 
   h2 {
     font-size:1.5rem;

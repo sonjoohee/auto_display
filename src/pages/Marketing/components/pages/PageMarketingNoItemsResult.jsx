@@ -600,6 +600,7 @@ const Popup = styled.div`
     padding: 32px;
     border-radius: 20px;
     background: ${palette.white};
+    max-height: 90vh; // 화면을 벗어나지 않도록 최대 높이 설정
   }
 
   .header {
@@ -613,6 +614,7 @@ const Popup = styled.div`
     border-bottom:1px solid ${palette.gray200};
 
     h5 {
+      font-size:16px;
       font-weight:500;
       color:#5547FF;
       line-height:1.7;
@@ -629,6 +631,8 @@ const Popup = styled.div`
     display:flex;
     flex-direction:column;
     gap:32px;
+    overflow-y: auto; // 내용이 넘칠 경우 스크롤 추가
+    max-height: calc(90vh - 64px); // 패딩을 고려한 최대 높이 설정
   }
 `;
 
