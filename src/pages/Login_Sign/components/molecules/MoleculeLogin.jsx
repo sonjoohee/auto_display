@@ -35,7 +35,7 @@ const MoleculeLogin = ({ onClosePopup = () => {} }) => {
         <span>or</span>
         <hr />
       </Separator>
-      <MoleculeLoginForm />
+      <MoleculeLoginForm onClosePopup={onClosePopup} />
     </LoginContainer>
   );
 };

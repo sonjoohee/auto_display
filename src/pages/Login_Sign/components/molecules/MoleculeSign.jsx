@@ -27,7 +27,7 @@ const MoleculeSign = ({ onClosePopup = () => {} }) => {
     <LoginContainer>
       <h1>
         <img src={images.Logo} alt="" />
-        <span>시작하기</span>
+        <span>회원가입</span>
       </h1>
 
       <MoleculeGoogleLoginForm />

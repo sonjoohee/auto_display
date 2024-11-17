@@ -110,11 +110,14 @@ import {
   MARKETING_MBTI_STAGE,
   MARKETING_MBTI_ANSWER,
   MARKETING_INTEREST,
-  MARKETING_RECOMMENDED_ITEM_BUTTON_STATE
+  MARKETING_RECOMMENDED_ITEM_BUTTON_STATE,
+  IS_SIGNUP_POPUP_OPEN,
+  IS_LOGIN_POPUP_OPEN,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
 import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/MoleculeAccountPopup"; // 계정설정 팝업 컴포넌트 임포트
+import MoleculeSignPopup from "../../../Login_Sign/components/molecules/MoleculeSignPopup"; // 회원가입 팝업 컴포넌트 임포트
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
 
 import OrganismReportPopup from "./OrganismReportPopup"; // 팝업 컴포넌트 임포트
@@ -183,7 +186,7 @@ const OrganismLeftSideBar = () => {
   const [selectedReport, setSelectedReport] = useState(null); // 선택된 보고서 상태 관리
   const [conversations, setConversations] = useState([]); // 저장된 대화 상태 관리
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN); // 로그인 상태 관리
-  const [isLoginPopupOpen, setLoginPopupOpen] = useState(false); // 로그인 팝업 상태 관리
+  const [isLoginPopupOpen, setIsLoginPopupOpen] = useAtom(IS_LOGIN_POPUP_OPEN); // 로그인 팝업 상태 관리
   const [reports, setReports] = useState([]); // 서버에서 가져온 보고서 리스트 상태
   const [reportRefreshTrigger, setReportRefreshTrigger] = useAtom(
     REPORT_REFRESH_TRIGGER
@@ -196,7 +199,7 @@ const OrganismLeftSideBar = () => {
 
   const [isAccountPopupOpen, setAccountPopupOpen] = useState(false); // 계정설정 팝업
   const [isSocialLoggedIn, setIsSocialLoggedIn] = useAtom(IS_SOCIAL_LOGGED_IN); // 소셜 로그인 상태 읽기
-
+  const [isSignupPopupOpen, setIsSignupPopupOpen] = useAtom(IS_SIGNUP_POPUP_OPEN); // 회원가입 팝업 상태 관리
   const [isLogoutPopup, setIsLogoutPopup] = useState(false); // 로그아웃 팝업 상태 관리
   const [userName, setUserName] = useAtom(USER_NAME); // 아톰에서 유저 이름 불러오기
   const [userEmail, setUserEmail] = useAtom(USER_EMAIL); // 아톰에서 유저 이메일 불러오기
@@ -814,11 +817,15 @@ useEffect(() => {
   };
 
   const handleLoginClick = () => {
-    setLoginPopupOpen(true); // 로그인 팝업 열기
+    setIsLoginPopupOpen(true); // 로그인 팝업 열기
   };
 
   const closeLoginPopup = () => {
-    setLoginPopupOpen(false); // 로그인 팝업 닫기
+    setIsLoginPopupOpen(false); // 로그인 팝업 닫기
+  };
+
+  const closeSignupPopup = () => {
+    setIsSignupPopupOpen(false); // 회원가입 팝업 닫기
   };
 
   const handleAccountClick = () => {
@@ -1711,6 +1718,7 @@ useEffect(() => {
       </SideBar>
 
       {isLoginPopupOpen && <MoleculeLoginPopup onClose={closeLoginPopup} />}
+      {isSignupPopupOpen && <MoleculeSignPopup onClose={closeSignupPopup} />}
 
       {isAccountPopupOpen && (
         <MoleculeAccountPopup onClose={closeAccountPopup} />

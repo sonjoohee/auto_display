@@ -15,25 +15,25 @@ const MoleculeSignPopup = ({ onClose = () => {} }) => {
 
   return (
     // <LoginPopupOverlay onClick={handleOverlayClick}>
-    <LoginPopupOverlay>
+    <SignPopupOverlay>
       <PopupContent>
         <CloseButton onClick={onClose}>닫기</CloseButton>
         <MoleculeSign onClosePopup={onClose} /> {/* 함수 전달 */}
       </PopupContent>
-    </LoginPopupOverlay>
+    </SignPopupOverlay>
   );
 };
 
 export default MoleculeSignPopup;
 
 // CSS-in-JS 스타일링
-const LoginPopupOverlay = styled.div`
+const SignPopupOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;

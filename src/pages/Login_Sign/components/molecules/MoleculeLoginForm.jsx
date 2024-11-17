@@ -23,15 +23,15 @@ import {
   IS_LOGIN_POPUP_OPEN,
   IS_MARKETING,
   CONVERSATION_ID,
+  IS_SIGNUP_POPUP_OPEN,
 } from "../../../../pages/AtomStates"; // 아톰 임포트
 import { Link } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
 
-import MoleculeSignupPopup from "./MoleculeSignupPopup";
 import MoleculeSignPopup from "./MoleculeSignPopup";
 import MoleculeResetPasswordPopup from "./MoleculeResetPasswordPopup";
 
-const MoleculeLoginForm = () => {
+const MoleculeLoginForm = ({ onClosePopup }) => {
   const [signUpName, setSignUpName] = useAtom(SIGN_UP_NAME);
   const [email, setEmail] = useAtom(EMAIL);
   const [, setSignupEmail] = useAtom(SIGN_UP_EMAIL);
@@ -153,10 +153,12 @@ const MoleculeLoginForm = () => {
     setIsSignupPopupOpen(false);
   };
 
-  const [isSignPopupOpen, setIsSignPopupOpen] = useState(false); // 회원가입 팝업 상태 관리
+  const [isSignPopupOpen, setIsSignPopupOpen] = useAtom(IS_SIGNUP_POPUP_OPEN); // 회원가입 팝업 상태 관리
   const handleSignClick = () => {
+    
     setIsSignPopupOpen(true); // 회원가입 팝업 열기
     setIsLoginPopupOpen(false);
+    onClosePopup();
   };
   const closeSignPopup = () => {
     setIsSignPopupOpen(false); // 회원가입 팝업 닫기
@@ -238,15 +240,9 @@ const MoleculeLoginForm = () => {
             <Link to="#" onClick={handleSignClick}>
               가입하기
             </Link>
-            {isSignupPopupOpen && (
-              <MoleculeSignupPopup onClose={handleClosePopup} />
-            )}
           </JoinWrap>
         </LoginFormContainer>
       )}
-  
-      {/* 회원가입 팝업 */}
-      {isSignPopupOpen && <MoleculeSignPopup onClose={closeSignPopup} />}
   
       {/* 비밀번호 재설정 팝업 */}
       {isPasswordRestPopupOpen && (
@@ -364,7 +360,7 @@ const JoinWrap = styled.div`
   gap: 12px;
   font-size: 1rem;
   color: ${palette.gray};
-  margin-top: 80px;
+  margin-top: 50px;
 
   a {
     color: ${palette.blue};
