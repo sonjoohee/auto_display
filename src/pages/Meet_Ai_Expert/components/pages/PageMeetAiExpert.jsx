@@ -641,7 +641,7 @@ const PageMeetAiExpert = () => {
           <ExpertSelectWrap isMobile={isMobile}>
             {/* 고정 데이터 활용 */}
             <ExpertSelectBox isMobile={isMobile}>
-              <ExpertCard
+              {/* <ExpertCard
                 PoC
                 onClick={() => {
                   handledExpertSelect("4");
@@ -652,7 +652,7 @@ const PageMeetAiExpert = () => {
                 <span>
                   <img src={images.ImgPoC} alt="" />
                 </span>
-              </ExpertCard>
+              </ExpertCard> */}
 
               <ExpertCard
                 Strategy
@@ -667,7 +667,7 @@ const PageMeetAiExpert = () => {
                 </span>
               </ExpertCard>
 
-              <ExpertCard
+              {/* <ExpertCard
                 Marketing
                 onClick={() => {
                   handledExpertSelect("2");
@@ -704,7 +704,7 @@ const PageMeetAiExpert = () => {
                 <span>
                   <img src={images.ImgIdea} alt="" />
                 </span>
-              </ExpertCard>
+              </ExpertCard> */}
 
               <ExpertCard
                 Hacker
@@ -719,7 +719,7 @@ const PageMeetAiExpert = () => {
                 </span>
               </ExpertCard>
 
-              <ExpertCard
+              {/* <ExpertCard
                 Price
                 onClick={() => {
                   handledExpertSelect("7");
@@ -743,7 +743,7 @@ const PageMeetAiExpert = () => {
                 <span>
                   <img src={images.ImgBiz} alt="" />
                 </span>
-              </ExpertCard>
+              </ExpertCard> */}
 
               <ExpertCard
                 BM
@@ -759,7 +759,7 @@ const PageMeetAiExpert = () => {
                 </span>
               </ExpertCard>
 
-              <ExpertCard
+              {/* <ExpertCard
                 Survey
                 onClick={() => {
                   handledExpertSelect("10");
@@ -770,25 +770,25 @@ const PageMeetAiExpert = () => {
                 <span>
                   <img src={images.ImgSurvey} alt="" />
                 </span>
-              </ExpertCard>
+              </ExpertCard> */}
 
-              {/* <ExpertCard Coming>
+              <ExpertCard Coming>
                 <div>
                   <span>
                     <img src={images.ImgComing} alt="" />
                   </span>
                   <p>coming soon</p>
                 </div>
-              </ExpertCard> */}
+              </ExpertCard>
 
-              {/* <ExpertCard Empty>
+              <ExpertCard Empty>
                 <div>
                   <span>
                     <img src="" alt="" />
                   </span>
                   <p></p>
                 </div>
-              </ExpertCard> */}
+              </ExpertCard>
 
             </ExpertSelectBox>
           </ExpertSelectWrap>
@@ -1242,7 +1242,7 @@ const ExpertCard = styled.div`
   
   border: ${(props) => {
     if (props.select) return `1px solid ${palette.blue}`;
-    // else if (props.Coming) return `none`;
+    else if (props.Coming) return `none`;
     // else if (props.PoC) return `1px solid #E2E7EA`;
     // else if (props.Marketing) return `1px solid #F0EDE6`;
     // else if (props.Client) return `1px solid #E2E7EA`;
@@ -1258,7 +1258,7 @@ const ExpertCard = styled.div`
   }};
   background: ${(props) => {
     if (props.select) return palette.blue;
-    // else if (props.Coming) return `rgba(0,0,0,.03)`;
+    else if (props.Coming) return `rgba(0,0,0,.03)`;
     // else if (props.PoC) return `#E2E7EA`;
     // else if (props.Marketing) return `#F0EDE6`;
     // else if (props.Client) return `#E2E7EA`;

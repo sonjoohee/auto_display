@@ -252,16 +252,19 @@ const OrganismBizExpertSelect = () => {
     <>
       {/* 모든 전문가가 선택되었거나, 모든 보고서가 생성되었으면 영역 표시 안함
           selectedExpertList는 DB에 저장되고 있지 않기 떄문에 expertReportData 조건이 필요함 */}
-      {(selectedExpertList.includes("1") || strategyReportData.hasOwnProperty(1)) &&
-        (selectedExpertList.includes("2") || strategyReportData.hasOwnProperty(2)) &&
-        (selectedExpertList.includes("3") || strategyReportData.hasOwnProperty(3)) &&
-        (selectedExpertList.includes("4") || strategyReportData.hasOwnProperty(4)) &&
-        (selectedExpertList.includes("5") || ideaFeatureData.length !== 0) &&
-        (selectedExpertList.includes("6") || KpiQuestionList.length !== 0) &&
-        (selectedExpertList.includes("7") || priceProduct.length !== 0) &&
-        (selectedExpertList.includes("8") || caseReportData.length !== 0) &&
-        (selectedExpertList.includes("9") || bmOrLean) &&
-        (selectedExpertList.includes("10") || surveyGoalSuggestionList.length !== 0) ? null : (
+
+        {(selectedExpertList.includes("1") || strategyReportData.hasOwnProperty(1)) &&
+          // (selectedExpertList.includes("2") || strategyReportData.hasOwnProperty(2)) &&
+          // (selectedExpertList.includes("3") || strategyReportData.hasOwnProperty(3)) &&
+          // (selectedExpertList.includes("4") || strategyReportData.hasOwnProperty(4)) &&
+          // (selectedExpertList.includes("5") || ideaFeatureData.length !== 0) &&
+          (selectedExpertList.includes("6") || KpiQuestionList.length !== 0) &&
+          // (selectedExpertList.includes("7") || priceProduct.length !== 0) &&
+          // (selectedExpertList.includes("8") || caseReportData.length !== 0) &&
+          (selectedExpertList.includes("9") || bmOrLean)
+          // (selectedExpertList.includes("10") || surveyGoalSuggestionList.length !== 0) 
+          
+        ? null : (
   
         <BizExpertSelectContainer>
           <h1>아래 분야별 전문가와 대화를 통해 아이디어를 발전시켜보세요.</h1>
@@ -275,7 +278,7 @@ const OrganismBizExpertSelect = () => {
                 </button>
               </div>
             )}
-            {(selectedExpertList.includes("2") || strategyReportData.hasOwnProperty(2)) ? null : (
+            {/* {(selectedExpertList.includes("2") || strategyReportData.hasOwnProperty(2)) ? null : (
               <div>
                 <img src={images.IconExpert2} alt="" />
                 <p>마케팅 전문가에게 마케팅 전략 상담 받기</p>
@@ -310,7 +313,7 @@ const OrganismBizExpertSelect = () => {
                   시작하기
                 </button>
               </div>
-            )}
+            )} */}
             {(selectedExpertList.includes("6") || KpiQuestionList.length !== 0) ? null : (
               <div>
                 <img src={images.IconExpert6} alt="" />
@@ -320,7 +323,7 @@ const OrganismBizExpertSelect = () => {
                 </button>
               </div>
             )}
-            {(selectedExpertList.includes("7") || priceProduct.length !== 0) ? null : (
+            {/* {(selectedExpertList.includes("7") || priceProduct.length !== 0) ? null : (
               <div>
                 <img src={images.IconExpert7} alt="" />
                 <p>가격 분석 전문가에게 가격 분석 리포트 받기</p>
@@ -337,7 +340,7 @@ const OrganismBizExpertSelect = () => {
                   시작하기
                 </button>
               </div>
-            )}
+            )} */}
             {(selectedExpertList.includes("9") || bmOrLean) ? null : (
               <div>
                 <img src={images.IconExpert9} alt="" />
@@ -347,7 +350,7 @@ const OrganismBizExpertSelect = () => {
                 </button>
               </div>
             )}
-            {(selectedExpertList.includes("10") || surveyGoalSuggestionList.length !== 0) ? null : (
+            {/* {(selectedExpertList.includes("10") || surveyGoalSuggestionList.length !== 0) ? null : (
               <div>
                 <img src={images.IconExpert10} alt="" />
                 <p>조사 설계 전문가에게 조사 설계 받기</p>
@@ -355,7 +358,7 @@ const OrganismBizExpertSelect = () => {
                   시작하기
                 </button>
               </div>
-            )}
+            )} */}
           </SelectOptions>
         </BizExpertSelectContainer>
       )}

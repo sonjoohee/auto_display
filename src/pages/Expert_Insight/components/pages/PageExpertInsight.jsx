@@ -709,7 +709,7 @@ const itemsToRender = approachPath === 2 ? conversation : renderedItems;
         <MainContent>
           <div>
             <ChatWrap>
-              {!isMarketing && <MoleculeBizName date={savedTimestamp} />}
+              {/* {!isMarketing && <MoleculeBizName date={savedTimestamp} />} */}
               {itemsToRender.map((item, index) => {
                 if (item.type === "user") {
                   return (
@@ -1038,7 +1038,7 @@ const itemsToRender = approachPath === 2 ? conversation : renderedItems;
             ) : null}
           </div>
 
-          {!isMarketing && <OrganismRightSideBar />}
+          {/* {!isMarketing && <OrganismRightSideBar />} */}
         </MainContent>
       </ContentsWrap>
       {isExitPopupOpen && (
