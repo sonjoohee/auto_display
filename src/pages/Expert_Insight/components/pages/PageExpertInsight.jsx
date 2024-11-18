@@ -128,7 +128,6 @@ import MoleculeBmModelSuggestion from "../molecules/MoleculeBmModelSuggestion";
 import MoleculeBmSelectModelButton from "../molecules/MoleculeBmSelectModelButton";
 import MoleculeBmBmAdsContinueButton from "../molecules/MoleculeBmBmAdsContinueButton";
 import MoleculeBmLeanAdsContinueButton from "../molecules/MoleculeBmLeanAdsContinueButton";
-import MoleculeBmCustomContinueButton from "../molecules/MoleculeBmCustomContinueButton";
 
 import OrganismBmLeanAutoReport from "../organisms/OrganismBmLeanAutoReport";
 import OrganismBmLeanAdsReport from "../organisms/OrganismBmLeanAdsReport";
@@ -709,7 +708,7 @@ const itemsToRender = approachPath === 2 ? conversation : renderedItems;
         <MainContent>
           <div>
             <ChatWrap>
-              {/* {!isMarketing && <MoleculeBizName date={savedTimestamp} />} */}
+              <MoleculeBizName date={savedTimestamp} />
               {itemsToRender.map((item, index) => {
                 if (item.type === "user") {
                   return (
@@ -854,10 +853,9 @@ const itemsToRender = approachPath === 2 ? conversation : renderedItems;
                   return <OrganismBmLeanCustomReport />;
                 } else if (item.type === "bmBmCustomReport") {
                   return <OrganismBmBmCustomReport />;
-                } else if (item.type === "bmCustomContinueButton") {
-                  return <MoleculeBmCustomContinueButton />;
-                } else if (item.type === "surveyStartButton") {
+                  
                   /* 설문조사 전문가 */
+                } else if (item.type === "surveyStartButton") {
                   return <MoleculeSurveyStartButton />;
                 } else if (item.type === "surveyGoalSuggestion") {
                   return <MoleculeSurveyGoalSuggestion />;

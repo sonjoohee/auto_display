@@ -350,8 +350,14 @@ const OrganismBizAnalysisSection = () => {
                 {
                   type: "system",
                   message:
-                    "분석한 아이템의 특징과 기능이 잘 분석되었나요? 추가하고 싶은 내용이 있으시면 “수정하기” 버튼을 통해 수정해주세요\n분석 결과에 만족하신다면, 먼저 현재 비즈니스에 대한 진단을 진행하겠습니다.",
-                  expertIndex: selectedExpertIndex,
+                    "분석한 특징과 기능은 잘 확인하셨나요?\n수정이 필요하면 “수정하기” 버튼을 사용하면 수정도 가능해요.",
+                  expertIndex: -1,
+                },
+                {
+                  type: "system",
+                  message:
+                    "이상이 없으시면, 본격적인 비즈니스 모델 설계를 진행하겠습니다.\n먼저 현재 아이템을 진단해보겠습니다",
+                  expertIndex: -1,
                 },
                 { type: "bmStartButton" }
               );
