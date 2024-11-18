@@ -384,31 +384,50 @@ const PageExpertInsight = () => {
   useEffect(() => {
     let totalDelay = 0;
     const timers = [];
-
+    const newRenderedItems = [...renderedItems]; // 현재 renderedItems 복사
+  
+    // conversation과 renderedItems를 비교하여 제거된 항목 찾기
+    newRenderedItems.forEach((item, index) => {
+      if (!conversation.includes(item)) {
+        newRenderedItems.splice(index, 1);
+      }
+    });
+  
+    // 제거된 항목을 반영한 renderedItems 업데이트
+    setRenderedItems(newRenderedItems);
+    setLastRenderedIndex(newRenderedItems.length - 1);
+  
+    // 새로 추가된 항목만 렌더링
     for (
-      let index = lastRenderedIndex + 1;
+      let index = newRenderedItems.length;
       index < conversation.length;
       index++
     ) {
       const item = conversation[index];
-
-      // 이전 아이템을 기준으로 딜레이 계산
-      let delay = 0;
-      if (index > 0 && conversation[index - 1].type === "system") {
-        const prevMessageLength = conversation[index - 1].message.length;
-        delay = prevMessageLength * 15; // 밀리초 단위 딜레이
-      }
-
-      totalDelay += delay;
-
-      const timer = setTimeout(() => {
+  
+      if (item.type === "user") {
+        // 'user' 타입은 즉시 추가
         setRenderedItems((prevItems) => [...prevItems, item]);
         setLastRenderedIndex(index);
-      }, totalDelay);
-
-      timers.push(timer);
+      } else {
+        // 그 외 타입은 딜레이 후 추가
+        let delay = 0;
+        if (index > 0 && conversation[index - 1].type === "system") {
+          const prevMessageLength = conversation[index - 1].message.length;
+          delay = prevMessageLength * 15; // 밀리초 단위 딜레이
+        }
+    
+        totalDelay += delay;
+    
+        const timer = setTimeout(() => {
+          setRenderedItems((prevItems) => [...prevItems, item]);
+          setLastRenderedIndex(index);
+        }, totalDelay);
+    
+        timers.push(timer);
+      }
     }
-
+  
     // 컴포넌트가 언마운트될 때 타이머를 정리합니다.
     return () => {
       timers.forEach((timer) => clearTimeout(timer));
@@ -670,16 +689,17 @@ const PageExpertInsight = () => {
 const chatEndRef = useRef(null); // 스크롤을 위한 ref 추가
 
 useEffect(() => {
-  setTimeout(() => {
-    if (chatEndRef.current) {
-      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, 300); // 0.3초 후에 스크롤 실행
-}, [conversation]);
+  if (chatEndRef.current && approachPath !== 2) {
+    chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+  }
+}, [renderedItems]);
 
 if (isLoadingPage) {
   return <div>Loading...</div>;
 }
+
+// 히스토로 진입할 때는 즉시 렌더링
+const itemsToRender = approachPath === 2 ? conversation : renderedItems;
 
   return (
     <>
@@ -690,7 +710,7 @@ if (isLoadingPage) {
           <div>
             <ChatWrap>
               {!isMarketing && <MoleculeBizName date={savedTimestamp} />}
-              {renderedItems.map((item, index) => {
+              {itemsToRender.map((item, index) => {
                 if (item.type === "user") {
                   return (
                     <MoleculeUserMessage key={index} message={item.message} />
@@ -882,6 +902,92 @@ if (isLoadingPage) {
 
                 return null;
               })}
+              
+              <div ref={chatEndRef} />
+
+              {selectedExpertIndex === "0" || selectedExpertIndex === "1" || selectedExpertIndex === "2" || selectedExpertIndex === "3" || selectedExpertIndex === "11" ?
+                <>
+                {/* 검색해서 시작 */}
+                {(approachPath === -1 || approachPath === 3) && 
+                  titleOfBusinessInfo &&
+                  <OrganismBizExpertSelect />
+                }
+
+                {/* 전문가 선택하고 시작 */}
+                {approachPath === 1 &&
+                  Object.keys(strategyReportData).length !== 0 &&
+                  !isLoading &&
+                    <OrganismBizExpertSelect />
+                }
+
+                {/* 히스토리로 진입 시 */}
+                {approachPath === 2 && 
+                  titleOfBusinessInfo &&
+                  conversation.length > 0 &&
+                  conversation[conversation.length - 1].type !== "reportButton" &&
+                  !isLoading &&
+                    <OrganismBizExpertSelect />
+                }
+                </>
+              :
+              selectedExpertIndex === "4" ?
+                <>
+                {
+                  Object.keys(recommendedTargetData).length !== 0 && 
+                    <OrganismBizExpertSelect />
+                }
+                </>
+              :
+              selectedExpertIndex === "5" ?
+                <>
+                {
+                  ideaPriority.length !== 0 &&  
+                    <OrganismBizExpertSelect />
+                }
+                </>
+              :
+              selectedExpertIndex === "6" ?
+                <>
+                {
+                  buttonState.growthHackerKPI === 1 &&
+                    <OrganismBizExpertSelect />
+                }
+                </>
+              :
+              selectedExpertIndex === "7" ?
+                <>
+                {
+                  buttonState.priceEnough === 1 &&
+                    <OrganismBizExpertSelect />
+                }
+                </>
+              :
+              selectedExpertIndex === "8" ?
+                <>
+                {
+                  buttonState.caseEnough === 1 &&
+                    <OrganismBizExpertSelect />
+                }
+                </>
+              :
+              selectedExpertIndex === "9" ?
+                <>
+                {
+                  buttonState.bmEnough === 1 &&
+                    <OrganismBizExpertSelect />
+                }
+                </>
+              :
+              selectedExpertIndex === "10" ?
+                <>
+                {
+                  buttonState.surveyEnd === 1 &&
+                    <OrganismBizExpertSelect />
+                }
+                </>
+              :
+              null
+              }
             </ChatWrap>
 
             {conversationStage === 1 && !isMarketing ? (

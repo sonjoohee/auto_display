@@ -190,7 +190,7 @@ const OrganismMarketingFinalReport = () => {
 
   return (
     <>
-      {isLoadingMarketingFinalReport ? (
+      {isLoadingMarketingFinalReport || marketingFinalReportButtonState ? (
         <SummaryBox>
           <h3>로딩 중...</h3>
         </SummaryBox>

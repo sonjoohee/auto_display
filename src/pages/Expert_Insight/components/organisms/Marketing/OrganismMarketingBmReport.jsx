@@ -163,7 +163,7 @@ const OrganismMarketingBmReport = () => {
 
   return (
     <>
-      {isLoadingMarketingBmReport ? (
+      {isLoadingMarketingBmReport || marketingBmButtonState ? (
         <SummaryBox>
           <h3>로딩 중...</h3>
         </SummaryBox>
