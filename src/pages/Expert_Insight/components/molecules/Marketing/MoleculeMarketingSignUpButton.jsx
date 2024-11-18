@@ -17,11 +17,14 @@ import {
   SIGN_UP_PASSWORD,
   CONFIRM_PASSWORD,
   IS_LOGGED_IN,
+  IS_LOGIN_POPUP_OPEN,
+  IS_SIGNUP_POPUP_OPEN,
 } from "../../../../AtomStates";
 
 import { useNavigate } from "react-router-dom";
 import { useSaveConversation } from "../../atoms/AtomSaveConversation";
 import MoleculeSignPopup from "../../../../Login_Sign/components/molecules/MoleculeSignPopup";
+import MoleculeLoginPopup from "../../../../Login_Sign/components/molecules/MoleculeLoginPopup";
 import { palette } from "../../../../../assets/styles/Palette";
 import images from "../../../../../assets/styles/Images";
 
@@ -44,8 +47,9 @@ const MoleculeMarketingSignUpButton = () => {
   const [confirmPassword, setConfirmPassword] = useAtom(CONFIRM_PASSWORD);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
 
-  const [isSignPopupOpen, setIsSignPopupOpen] = useState(false);
+  const [isSignPopupOpen, setIsSignPopupOpen] = useAtom(IS_SIGNUP_POPUP_OPEN);
   const [isExitPopupOpen, setIsExitPopupOpen] = useState(false);
+  const [isLoginPopupOpen, setIsLoginPopupOpen] = useAtom(IS_LOGIN_POPUP_OPEN);
 
   const closeSignPopup = () => {
     setIsSignPopupOpen(false);
@@ -56,6 +60,10 @@ const MoleculeMarketingSignUpButton = () => {
     setPassword('');
     setSignupPassword('');
     setConfirmPassword('');
+  };
+
+  const closeLoginPopup = () => {
+    setIsLoginPopupOpen(false);
   };
 
   const handleExitChatCancel = () => {
@@ -98,10 +106,10 @@ const MoleculeMarketingSignUpButton = () => {
         )}
       </SelectButton>
       {isSignPopupOpen && (
-        <>
           <MoleculeSignPopup onClose={closeSignPopup} />
-          <Overlay onClick={closeSignPopup} />
-        </>
+      )}
+      {isLoginPopupOpen && (
+          <MoleculeLoginPopup onClose={closeLoginPopup} />
       )}
       {isExitPopupOpen && (
         <Popup Cancel>
@@ -137,20 +145,11 @@ const MoleculeMarketingSignUpButton = () => {
 
 export default MoleculeMarketingSignUpButton;
 
-const Overlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-`;
-
 const SelectButton = styled.div`
   display:flex;
   align-items:center;
   gap:12px;
-  margin-top: 15px;
+  margin-top: 12px;
   margin-left: 50px;
 
   button {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
@@ -650,25 +650,36 @@ const PageExpertInsight = () => {
     loadConversation();
   }, [conversationId, isLoggedIn, navigate]);
 
-  // 스크롤
-  // const [isScrolled, setIsScrolled] = useState(false);
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     if (window.scrollY > 160) {
-  //       setIsScrolled(true); // 스크롤이 내려가면 상태를 true로 변경
-  //     } else {
-  //       setIsScrolled(false); // 스크롤이 최상단에 있을 때 상태를 false로 변경
-  //     }
-  //   };
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => {
-  //     window.removeEventListener("scroll", handleScroll); // 메모리 누수 방지
-  //   };
-  // }, []);
 
-  if (isLoadingPage) {
-    return <div>Loading...</div>;
-  }
+// 스크롤
+// const [isScrolled, setIsScrolled] = useState(false);
+// useEffect(() => {
+//   const handleScroll = () => {
+//     if (window.scrollY > 160) {
+//       setIsScrolled(true); // 스크롤이 내려가면 상태를 true로 변경
+//     } else {
+//       setIsScrolled(false); // 스크롤이 최상단에 있을 때 상태를 false로 변경
+//     }
+//   };
+//   window.addEventListener("scroll", handleScroll);
+//   return () => {
+//     window.removeEventListener("scroll", handleScroll); // 메모리 누수 방지
+//   };
+// }, []);
+
+const chatEndRef = useRef(null); // 스크롤을 위한 ref 추가
+
+useEffect(() => {
+  setTimeout(() => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, 300); // 0.3초 후에 스크롤 실행
+}, [conversation]);
+
+if (isLoadingPage) {
+  return <div>Loading...</div>;
+}
 
   return (
     <>

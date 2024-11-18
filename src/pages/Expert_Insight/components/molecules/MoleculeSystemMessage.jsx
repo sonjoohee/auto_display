@@ -94,7 +94,7 @@ const SystemMessageContainer = styled.div`
   align-items: flex-start;
   flex-direction: ${(props) => (props.Myself ? "row-reverse" : "row")};
   gap: 18px;
-  margin-top: ${(props) => (props.selectedExpertIndex != -1 ? "40px" : "15px")};
+  margin-top: ${(props) => (props.selectedExpertIndex != -1 ? "40px" : "12px")};
 `;
 
 const Bubble = styled.div`
@@ -120,15 +120,32 @@ const Bubble = styled.div`
   }
 `;
 
+// const TypingEffect = styled.div`
+//   overflow: hidden;
+//   text-align: left;
+//   white-space: pre-wrap; /* 줄바꿈을 유지 */
+//   display: inline-block;
+//   border-right: ${({ isTyping }) =>
+//     isTyping ? `2px solid ${palette.lightGray}` : "none"}; /* Cursor effect */
+//   animation: ${({ isTyping }) =>
+//     isTyping ? "blink-caret 0.75s step-end infinite" : "none"};
+
+//   @keyframes blink-caret {
+//     from,
+//     to {
+//       border-color: transparent;
+//     }
+//     50% {
+//       border-color: ${palette.lightGray};
+//     }
+//   }
+// `;
+
 const TypingEffect = styled.div`
   overflow: hidden;
   text-align: left;
   white-space: pre-wrap; /* 줄바꿈을 유지 */
   display: inline-block;
-  border-right: ${({ isTyping }) =>
-    isTyping ? `2px solid ${palette.lightGray}` : "none"}; /* Cursor effect */
-  animation: ${({ isTyping }) =>
-    isTyping ? "blink-caret 0.75s step-end infinite" : "none"};
 
   @keyframes blink-caret {
     from,

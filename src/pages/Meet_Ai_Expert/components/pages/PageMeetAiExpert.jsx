@@ -824,7 +824,6 @@ const PageMeetAiExpert = () => {
               </ExpertCard>
             </ExpertSelectBox>
           </ExpertSelectWrap> */}
-          {isLoginPopupOpen && <MoleculeLoginPopup onClose={closeLoginPopup} />}
 
           {isAccountPopupOpen && (
             <MoleculeAccountPopup onClose={closeAccountPopup} />

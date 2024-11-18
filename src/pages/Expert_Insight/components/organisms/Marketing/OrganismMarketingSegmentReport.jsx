@@ -130,7 +130,7 @@ text-align:left;
 padding:20px;
 border-radius:20px;
 background:${palette.chatGray};
-margin:15px 0 0 50px;
+margin:12px 0 0 50px;
 
 h2 {
   font-size:1.5rem;

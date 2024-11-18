@@ -19,6 +19,10 @@ const PageMarketingNoItems = () => {
   const [isExitPopupOpen, setIsExitPopupOpen] = useState(false);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
+  useEffect(() => {
       const handleBeforeUnload = (event) => {
         // Cancel the event as stated by the standard.
         event.preventDefault();
@@ -82,16 +86,7 @@ const PageMarketingNoItems = () => {
   const questions = Array.from({ length: 14 }, (_, i) => `Q${i + 1}`); // 질문 생성 갯수 설정
   
   // 상태에 따라 Navbar 보여질 여부
-  const [showNavbar, setShowNavbar] = useState(true);
-
-  useEffect(() => {
-    // question0일 때 Navbar 숨기기
-    if (activeQuestion === 0) {
-      setShowNavbar(false);
-    } else {
-      setShowNavbar(true);
-    }
-  }, [activeQuestion]);
+  const [showNavbar, setShowNavbar] = useState(false);
 
   const tooltips = [
     "START",
@@ -129,22 +124,22 @@ const PageMarketingNoItems = () => {
     }
   };
 
-  // 스크롤에 따라 active 클래스 업데이트
-  const updateActiveQuestion = () => {
-    questionRefs.current.forEach((section, index) => {
-      if (window.scrollY >= section.offsetTop - 100) {
-        setActiveQuestion(index);
-      }
-    });
-  };
+  // // 스크롤에 따라 active 클래스 업데이트
+  // const updateActiveQuestion = () => {
+  //   questionRefs.current.forEach((section, index) => {
+  //     if (window.scrollY >= section.offsetTop - 100) {
+  //       setActiveQuestion(index);
+  //     }
+  //   });
+  // };
 
-  // 스크롤 이벤트 설정
-  useEffect(() => {
-    window.addEventListener("scroll", updateActiveQuestion);
-    return () => {
-      window.removeEventListener("scroll", updateActiveQuestion);
-    };
-  }, []);
+  // // 스크롤 이벤트 설정
+  // useEffect(() => {
+  //   window.addEventListener("scroll", updateActiveQuestion);
+  //   return () => {
+  //     window.removeEventListener("scroll", updateActiveQuestion);
+  //   };
+  // }, []);
 
   // 툴팁 표시 핸들러
   const handleMouseOver = (e, index) => {
@@ -225,9 +220,9 @@ const PageMarketingNoItems = () => {
                 key={question}
                 className={`${activeQuestion === index ? "active" : ""} ${index < activeQuestion ? "disabled" : ""}`}
                 // onClick={() => handleScrollToQuestion(index)}
-                onClick={() => {
-                  if (index <= activeQuestion) handleScrollToQuestion(index);
-                }}
+                // onClick={() => {
+                //   if (index <= activeQuestion) handleScrollToQuestion(index);
+                // }}
                 onMouseOver={(e) => handleMouseOver(e, index)}
                 onMouseOut={handleMouseOut}
               >
@@ -256,7 +251,7 @@ const PageMarketingNoItems = () => {
 
         <Answer>
           <StartWrap>
-            <p onClick={() => handleScrollToQuestion(1)}>START</p>
+            <p onClick={() => {setShowNavbar(true); handleScrollToQuestion(1);}}>START</p>
             <span>내게 맞는 아이템 찾기</span>
           </StartWrap>
         </Answer>
@@ -714,7 +709,7 @@ const Navbar = styled.div`
     box-sizing:border-box;
     border-radius:100%;
     background:${palette.white};
-    cursor:pointer;
+    // cursor:pointer;
 
     &.active {
       border:2px solid ${palette.white};
