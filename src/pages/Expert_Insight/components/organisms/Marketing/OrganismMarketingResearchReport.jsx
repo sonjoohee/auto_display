@@ -165,7 +165,7 @@ const OrganismMarketingResearchReport = () => {
 
   return (
     <>
-      {isLoadingMarketingResearchReport ? (
+      {isLoadingMarketingResearchReport || marketingStartButtonState ? (
         <SummaryBox>
           <h3>로딩 중...</h3>
         </SummaryBox>
