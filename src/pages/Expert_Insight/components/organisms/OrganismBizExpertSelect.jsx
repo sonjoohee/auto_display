@@ -91,6 +91,7 @@ const OrganismBizExpertSelect = () => {
               "안녕하세요! 저는 전략 전문가 김도원입니다. 😊 여러분의 아이디어를 구체화하고, 성공적인 전략을 세우는 데 도움을 드리겠습니다. 아이디어나 비즈니스 아이템을 간단히 작성해 주세요. 분석 후, 여러분의 비즈니스에 맞는 전략 리포트를 제공하겠습니다!",
             expertIndex: index,
           },
+          { type: "system", message: "먼저 분석이 필요한 제품이나 서비스에 대해서 알려주세요 📝" },
           { type: `strategy_${index}` }
         );
       } else if (index === "2") {
@@ -172,6 +173,7 @@ const OrganismBizExpertSelect = () => {
               "안녕하세요. 저는 그로스 해커 김세준입니다. 고객 퍼널에 맞는 전략을 수립하는 것은 비즈니스 성장에 중요한 요소입니다. 제가 퍼널을 분석하고 각 단계에서 성장을 가속화할 전략을 제시해드릴게요. 아이템에 대한 설명을 해주세요 📝",
             expertIndex: index,
           },
+          { type: "system", message: "먼저 분석이 필요한 제품이나 서비스에 대해서 알려주세요 📝" },
           { type: `growthHackerOption` }
         );
       } else if (index === "7") {
@@ -214,9 +216,10 @@ const OrganismBizExpertSelect = () => {
           {
             type: "system",
             message:
-              "안녕하세요! 저는 Business Model 수립 전문가 김소윤입니다.\n사업 아이템의 비즈니스 모델 분석과 비즈니스 모델의 각 구성 요소에 따른 최적의 전략을 제시해 드립니다.\n각 구성요소별로 어떤 상호작용과 비즈니스 모델의 변화를 쉽게 확인 하실 수 있어요.\n먼저 분석이 필요한 제품이나 서비스에 대해서 알려주세요 📝",
+              "안녕하세요! 저는 BM 전문가 김소윤입니다.\n아이템에 최적화된 비즈니스 모델을 정의하고, 비즈니스 성과를 극대화 할 수 있도록 전략을 제안드립니다.",
             expertIndex: index,
           },
+          { type: "system", message: "먼저 분석이 필요한 제품이나 서비스에 대해서 알려주세요 📝" },
           { type: `bmStartButton` }
         );
       } else if (index === "10") {

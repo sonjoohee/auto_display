@@ -128,8 +128,8 @@ const MoleculeBmModelSuggestion = () => {
           {
             type: "system",
             message:
-              "이제 작성하고 싶으신 캔버스를 작성할 차례입니다.\n설명을 참고하여 비즈니스에 도움이 될 수있는 캔버스를 선택해주세요.",
-            expertIndex: selectedExpertIndex,
+              "아래 두개의 캔버스 중, 필요하신 캔버스를 선택해주세요",
+            expertIndex: -1,
           },
           { type: `bmSelectModelButton` },
         );

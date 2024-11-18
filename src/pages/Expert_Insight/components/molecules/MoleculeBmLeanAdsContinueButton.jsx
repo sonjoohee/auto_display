@@ -94,48 +94,37 @@ const MoleculeBmLeanAdsContinueButton = () => {
   };
   return (
     <>
-      <ButtonWrap>
-          <button onClick={() => handleClick("more")}>특정 문제(Problem)에 특화된 린 캔버스를 보고 싶습니다</button>
-          <button onClick={() => handleClick("enough")}>이정도면 충분합니다</button>
-      </ButtonWrap>
+      <SelectButton>
+          <button onClick={() => handleClick("more")}>린캔버스 세분화하기 🔎</button>
+          <button onClick={() => handleClick("enough")}>이정도면 충분해요 🔎</button>
+      </SelectButton>
     </>
   );
 };
 
 export default MoleculeBmLeanAdsContinueButton;
 
-const ButtonWrap = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 15px;
-  padding-bottom: 15px;
-  margin-left:50px;
+const SelectButton = styled.div`
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-top: 12px;
+  margin-left: 50px;
 
   button {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-family: "Pretendard";
-    font-size: 0.875rem;
-    color: ${palette.darkGray};
-    border: 0;
-    background: none;
-    margin-right: 10px;
+    // display:inline-block;
+    // width:fit-content;
+    font-family: 'Pretendard', 'Poppins';
+    font-size:0.88rem;
+    color:${palette.chatBlue};
+    padding:8px 20px;
+    border-radius:40px;
+    border:0;
+    background:rgba(4, 83, 244, 0.1);
   }
 
-  > button {
-    padding: 8px 16px;
-    border-radius: 40px;
-    border: 1px solid ${palette.lineGray};
-  }
-
-  button.none {
-    cursor: default;
-  }
-
-  button.other {
-    color: ${palette.lightGray};
-    font-size: 0.75rem;
-    border: none;
+  .finish {
+    color:${palette.gray500};
+    background:${palette.gray100};
   }
 `;
