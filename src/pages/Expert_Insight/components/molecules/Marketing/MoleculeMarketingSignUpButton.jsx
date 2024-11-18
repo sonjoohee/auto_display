@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import styled, { css } from "styled-components";
+import styled, { css, ThemeProvider } from "styled-components";
+import theme from "../../../../../assets/styles/Theme";
 import { useAtom } from "jotai";
 import {
   IS_LOADING,
@@ -93,6 +94,7 @@ const MoleculeMarketingSignUpButton = () => {
 
   return (
     <>
+    <ThemeProvider theme={theme}>
       <SelectButton>
         {!isLoggedIn ? (
           <>
@@ -138,7 +140,8 @@ const MoleculeMarketingSignUpButton = () => {
           </div>
         </div>
       </Popup>
-    )}
+      )}
+    </ThemeProvider>
     </>
   );
 };
@@ -167,6 +170,10 @@ const SelectButton = styled.div`
   .finish {
     color:${palette.gray500};
     background:${palette.gray100};
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    margin-left:0;
   }
 `;
 
@@ -298,5 +305,11 @@ const Popup = styled.div`
           }
         }
       `}
+  }
+  
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    > div {
+      width:90%;
+    }
   }
 `;

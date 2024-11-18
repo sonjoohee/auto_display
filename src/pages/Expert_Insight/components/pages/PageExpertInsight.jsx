@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import styled, { css } from "styled-components";
+import styled, { css, ThemeProvider } from "styled-components";
+import theme from "../../../../assets/styles/Theme";
 import { palette } from "../../../../assets/styles/Palette";
 import { useAtom } from "jotai";
 import image from "../../../../assets/styles/Images";
@@ -683,6 +684,7 @@ if (isLoadingPage) {
 
   return (
     <>
+    <ThemeProvider theme={theme}>
       <ContentsWrap>
         {(!isMarketing || approachPath === 2) && <OrganismLeftSideBar />}
 
@@ -965,6 +967,7 @@ if (isLoadingPage) {
           </div>
         </Popup>
       )}
+    </ThemeProvider>
     </>
   );
 };
@@ -1001,6 +1004,10 @@ const MainContent = styled.div`
     // margin: 0 20px;
     margin: 0 auto;
     // padding-bottom: 60px;
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    padding:0;
   }
 `;
 
@@ -1166,5 +1173,11 @@ const Popup = styled.div`
           }
         }
       `}
+  }
+  
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    > div {
+      width:90%;
+    }
   }
 `;

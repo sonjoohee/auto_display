@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
+import theme from "../../../../../assets/styles/Theme";
 import { useAtom } from "jotai";
 import {
   IS_LOADING,
@@ -51,9 +52,11 @@ const MoleculeMarketingBmButton = () => {
   };
   return (
     <>
+    <ThemeProvider theme={theme}>
       <SelectButton>
         <button onClick={handleClick}>BM분석 시작하기 📈</button>
       </SelectButton>
+    </ThemeProvider>
     </>
   );
 };
@@ -82,5 +85,9 @@ const SelectButton = styled.div`
   .finish {
     color:${palette.gray500};
     background:${palette.gray100};
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    margin-left:0;
   }
 `;

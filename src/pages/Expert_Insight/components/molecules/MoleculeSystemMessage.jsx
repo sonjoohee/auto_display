@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
+import theme from "../../../../assets/styles/Theme";
 import { palette } from "../../../../assets/styles/Palette";
 import panelimages from "../../../../assets/styles/PanelImages";
 import { useAtom } from "jotai";
@@ -50,6 +51,7 @@ const MoleculeSystemMessage = ({ item }) => {
 
   return (
     <>
+    <ThemeProvider theme={theme}>
       <SystemMessageContainer selectedExpertIndex={selectedExpertIndex}>
         <Thumb>
           {selectedExpertIndex != -1 && (
@@ -63,6 +65,7 @@ const MoleculeSystemMessage = ({ item }) => {
         </Bubble>
         {/* <Time>1 min age</Time> */}
       </SystemMessageContainer>
+    </ThemeProvider>
     </>
   );
 };
@@ -95,6 +98,10 @@ const SystemMessageContainer = styled.div`
   flex-direction: ${(props) => (props.Myself ? "row-reverse" : "row")};
   gap: 18px;
   margin-top: ${(props) => (props.selectedExpertIndex != -1 ? "40px" : "12px")};
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    flex-direction: ${(props) => (props.Myself ? "row-reverse" : "column")};
+  }
 `;
 
 const Bubble = styled.div`

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import styled, { css } from "styled-components";
+import styled, { css, ThemeProvider } from "styled-components";
+import theme from "../../../../../assets/styles/Theme";
 import { palette } from "../../../../../assets/styles/Palette";
 import axios from "axios";
 import images from "../../../../../assets/styles/Images";
@@ -163,6 +164,7 @@ const OrganismMarketingBmReport = () => {
 
   return (
     <>
+    <ThemeProvider theme={theme}>
       {isLoadingMarketingBmReport ? (
         <SummaryBox>
           <h3>로딩 중...</h3>
@@ -315,6 +317,7 @@ const OrganismMarketingBmReport = () => {
         </Sidebar>
         </>
       )}
+    </ThemeProvider>
     </>
   );
 };
@@ -375,6 +378,10 @@ const SummaryBox = styled.div`
     margin-top:5px;
     border:0;
     background:none;
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    margin:12px 0 0;
   }
 `;
 
@@ -451,8 +458,8 @@ const Sidebar = styled.div`
   // max-width: 800px;
   // width:100%;
 
-  width: ${({ isMenuOpen }) => (isMenuOpen ? '800px' : '0')};
-
+  max-width: ${({ isMenuOpen }) => (isMenuOpen ? '800px' : '0')};
+  width:100%;
   background:${palette.white};
   // transform: ${({ isMenuOpen }) => (isMenuOpen ? 'translateX(0)' : 'translateX(200%)')};
   transition: all .5s;

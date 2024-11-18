@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import styled, { css } from "styled-components";
+import styled, { css, ThemeProvider } from "styled-components";
+import theme from "../../../../../assets/styles/Theme";
 import { palette } from "../../../../../assets/styles/Palette";
 import images from "../../../../../assets/styles/Images";
 import axios from "axios";
@@ -56,6 +57,7 @@ const OrganismMarketingSegmentReport = ({ marketingSegmentReportCount }) => {
 
   return (
     <>
+    <ThemeProvider theme={theme}>
       <Overlay isMenuOpen={isMenuOpen} onClick={() => setIsMenuOpen(false)} />
 
       <SummaryBox>
@@ -114,6 +116,7 @@ const OrganismMarketingSegmentReport = ({ marketingSegmentReportCount }) => {
           </div>
         </div>
       </Sidebar>
+    </ThemeProvider>
     </>
   );
 };
@@ -121,60 +124,64 @@ const OrganismMarketingSegmentReport = ({ marketingSegmentReportCount }) => {
 export default OrganismMarketingSegmentReport;
 
 const SummaryBox = styled.div`
-display:flex;
-flex-direction:column;
-gap:12px;
-max-width:825px;
-width:fit-content;
-text-align:left;
-padding:20px;
-border-radius:20px;
-background:${palette.chatGray};
-margin:12px 0 0 50px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  max-width:825px;
+  width:fit-content;
+  text-align:left;
+  padding:20px;
+  border-radius:20px;
+  background:${palette.chatGray};
+  margin:12px 0 0 50px;
 
-h2 {
-  font-size:1.5rem;
-  font-weight:600;
-  line-height:1.3;
-  color:${palette.gray800};
-
-  p {
-    font-size:1rem;
-    font-weight:300;
-    line-height:1.5;
+  h2 {
+    font-size:1.5rem;
+    font-weight:600;
+    line-height:1.3;
     color:${palette.gray800};
-    margin-top:16px;
+
+    p {
+      font-size:1rem;
+      font-weight:300;
+      line-height:1.5;
+      color:${palette.gray800};
+      margin-top:16px;
+    }
   }
-}
 
-h3 {
-  font-size:1rem;
-  font-weight:500;
-  color:${palette.gray800};
-  line-height:1.6;
-}
+  h3 {
+    font-size:1rem;
+    font-weight:500;
+    color:${palette.gray800};
+    line-height:1.6;
+  }
 
-> span {
-  display:flex;
-  align-items:center;
-  gap:4px;
-  font-size:0.75rem;
-  color:${palette.gray500};
-  margin-top:4px;
-}
+  > span {
+    display:flex;
+    align-items:center;
+    gap:4px;
+    font-size:0.75rem;
+    color:${palette.gray500};
+    margin-top:4px;
+  }
 
-button {
-  display:flex;
-  align-items:center;
-  gap:5px;
-  font-family: 'Pretendard', 'Poppins';
-  font-size:0.75rem;
-  color:${palette.gray500};
-  padding:6px 0;
-  margin-top:5px;
-  border:0;
-  background:none;
-}
+  button {
+    display:flex;
+    align-items:center;
+    gap:5px;
+    font-family: 'Pretendard', 'Poppins';
+    font-size:0.75rem;
+    color:${palette.gray500};
+    padding:6px 0;
+    margin-top:5px;
+    border:0;
+    background:none;
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    margin:12px 0 0;
+  }
 `;
 
 const UlList = styled.ul`
@@ -250,8 +257,8 @@ const Sidebar = styled.div`
 // max-width: 800px;
 // width:100%;
 
-width: ${({ isMenuOpen }) => (isMenuOpen ? '800px' : '0')};
-
+max-width: ${({ isMenuOpen }) => (isMenuOpen ? '800px' : '0')};
+width:100%;
 background:${palette.white};
 // transform: ${({ isMenuOpen }) => (isMenuOpen ? 'translateX(0)' : 'translateX(200%)')};
 transition: all .5s;

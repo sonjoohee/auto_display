@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import styled, { css } from "styled-components";
+import styled, { css, ThemeProvider } from "styled-components";
+import theme from "../../../../../assets/styles/Theme";
 import { palette } from "../../../../../assets/styles/Palette";
 import axios from "axios";
 import { useAtom } from "jotai";
@@ -190,6 +191,7 @@ const OrganismMarketingFinalReport = () => {
 
   return (
     <>
+    <ThemeProvider theme={theme}>
       {isLoadingMarketingFinalReport ? (
         <SummaryBox>
           <h3>로딩 중...</h3>
@@ -334,6 +336,7 @@ const OrganismMarketingFinalReport = () => {
           </SummaryBox>
         </>
       )}
+    </ThemeProvider>
     </>
   );
 };
@@ -394,6 +397,11 @@ const SummaryBox = styled.div`
     margin-top:5px;
     border:0;
     background:none;
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    margin-left:0;
+    padding:20px;
   }
 `;
 
@@ -498,7 +506,20 @@ const Progress = styled.div`
   }
 
   span {
-    font-weight:400;
+    font-weight:300;
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    position:relative;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:8px;
+
+    span {
+      position:absolute;
+      right:0;
+      top:0;
+    }
   }
 `;
 
@@ -514,6 +535,10 @@ const ProgressBar = styled.div`
     height:100%;
     border-radius:20px;
     background:${palette.blue};
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    height:8px;
   }
 `;
 

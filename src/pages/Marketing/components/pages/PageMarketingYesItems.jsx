@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import styled, { css } from "styled-components";
+import styled, { css, ThemeProvider } from "styled-components";
+import theme from "../../../../assets/styles/Theme";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import images from "../../../../assets/styles/Images";
@@ -327,8 +328,12 @@ const PageMarketingYesItems = () => {
 
   return (
     <>
+    <ThemeProvider theme={theme}>
       <Navbar>
-        <h1 onClick={() => setIsExitPopupOpen(true)}><img src={images.SymbolLogoWhite} alt="" /></h1>
+        <h1 className="pc" onClick={() => setIsExitPopupOpen(true)}>
+          <img src={images.SymbolLogoWhite} alt="" />
+        </h1>
+        <h1 className="mobile" onClick={() => setIsExitPopupOpen(true)}></h1>
       </Navbar>
 
       <QuestionWrap id="question0" ref={(el) => (questionRefs.current[0] = el)}>
@@ -466,6 +471,7 @@ const PageMarketingYesItems = () => {
           </div>
         </Popup>
       )}
+    </ThemeProvider>
     </>
   );
 };
@@ -487,6 +493,10 @@ const Navbar = styled.div`
   h1 {
     font-size:0;
     cursor:pointer;
+
+    &.mobile {
+      display:none;
+    }
   }
 
   ul {
@@ -521,6 +531,34 @@ const Navbar = styled.div`
       display:none;
     }
   }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    top:10px;
+    left:6px;
+    transform:none;
+    height:auto;
+
+    h1 {
+      &.pc {
+        display:none;
+      }
+
+      &.mobile {
+        display:block;
+        padding:10px;
+
+        &:before {
+          width:13px;
+          height:13px;
+          transform:rotate(45deg);
+          display:block;
+          border-left:3px solid ${palette.white};
+          border-bottom:3px solid ${palette.white};
+          content:'';
+        }
+      }
+    }
+  }
 `;
 
 const Tooltip = styled.div`
@@ -546,6 +584,10 @@ const QuestionWrap = styled.section`
   position:relative;
   height:100vh;
   display:flex;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    flex-direction:column;
+  }
 `;
 
 const Question = styled.div`
@@ -570,6 +612,21 @@ const Question = styled.div`
       font-size:1.25rem;
       font-weight:300;
       line-height:1.2;
+    }
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    flex:1 1 22%;
+    align-items:flex-end;
+    padding-bottom:30px;
+
+    p {
+      font-size:1.25rem;
+      gap:12px;
+
+      span {
+        font-size:0.88rem;
+      }
     }
   }
 `;
@@ -612,6 +669,18 @@ const Answer = styled.div`
       pointer-events: none;
     }
   }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    flex:1 1 78%;
+    align-items:flex-start;
+    justify-content:space-between;
+    padding:48px 20px;
+
+    .ideaSubmit {
+      font-size:1rem;
+      line-height:1.6;
+    }
+  }
 `;
 
 const InputIdea = styled.div`
@@ -641,6 +710,19 @@ const InputIdea = styled.div`
       color:${palette.gray200};
     }
   }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    gap:8px;
+
+    span {
+      font-size:0.88rem;
+    }
+
+    input {
+      font-size:1.5rem;
+      letter-spacing:-1px;
+    }
+  }
 `;
 
 const ResultWrap = styled.div`
@@ -665,6 +747,7 @@ const ResultWrap = styled.div`
     p {
       font-weight:300;
       line-height:1.5;
+      word-break:keep-all;
       margin-left:22px;
     }
   }
@@ -675,6 +758,20 @@ const ResultWrap = styled.div`
     color:${palette.gray500};
     line-height:1.5;
     text-align:left;
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    margin:0 auto;
+
+    .title {
+      strong {
+        font-size:1.13rem;
+      }
+
+      p {
+        font-size:0.88rem;
+      }
+    }
   }
 `;
 
@@ -898,5 +995,11 @@ const Popup = styled.div`
           }
         }
       `}
+  }
+  
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    > div {
+      width:90%;
+    }
   }
 `;
