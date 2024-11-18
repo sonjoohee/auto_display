@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -118,43 +118,94 @@ import { useSaveConversation } from "../../../Expert_Insight/components/atoms/At
 
 const PageMeetAiExpert = () => {
   const { saveConversation } = useSaveConversation();
-  const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
+  const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(
+    BM_MODEL_SUGGESTION_REPORT_DATA
+  );
   const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
-  const [bmSelectedProblemOptions, setBmSelectedProblemOptions] = useAtom(BM_SELECTED_PROBLEM_OPTIONS);
+  const [bmSelectedProblemOptions, setBmSelectedProblemOptions] = useAtom(
+    BM_SELECTED_PROBLEM_OPTIONS
+  );
   const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
-  const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
-  const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
-  const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
-  const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
-  const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
-  const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
-  const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
-  const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(SURVEY_GUIDELINE_REPORT_DATA);
-  const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
+  const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(
+    BM_BM_AUTO_REPORT_DATA
+  );
+  const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(
+    BM_LEAN_AUTO_REPORT_DATA
+  );
+  const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(
+    BM_BM_ADS_REPORT_DATA
+  );
+  const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(
+    BM_LEAN_ADS_REPORT_DATA
+  );
+  const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(
+    BM_BM_CUSTOM_REPORT_DATA
+  );
+  const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(
+    BM_LEAN_CUSTOM_REPORT_DATA
+  );
+  const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] =
+    useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
+  const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(
+    SURVEY_GUIDELINE_REPORT_DATA
+  );
+  const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(
+    SURVEY_GOAL_SUGGESTION_LIST
+  );
   const [surveyGoalFixed, setSurveyGoalFixed] = useAtom(SURVEY_GOAL_FIXED);
-  const [surveyQuestionList, setSurveyQuestionList] = useAtom(SURVEY_QUESTION_LIST);
+  const [surveyQuestionList, setSurveyQuestionList] =
+    useAtom(SURVEY_QUESTION_LIST);
   const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
   const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
   const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
   const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
   const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
-  const [priceSelectedProductSegmentation, setPriceSelectedProductSegmentation] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
-  const [priceProductSegmentation, setPriceProductSegmentation] = useAtom(PRICE_PRODUCT_SEGMENTATION);
+  const [
+    priceSelectedProductSegmentation,
+    setPriceSelectedProductSegmentation,
+  ] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
+  const [priceProductSegmentation, setPriceProductSegmentation] = useAtom(
+    PRICE_PRODUCT_SEGMENTATION
+  );
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
-  const [isEditingIdeaFeature, setIsEditingIdeaFeature] = useAtom(IS_EDITING_IDEA_FEATURE);
-  const [isEditingIdeaCustomer, setIsEditingIdeaCustomer] = useAtom(IS_EDITING_IDEA_CUSTOMER);
-  const [addingIdeaFeature, setAddingIdeaFeature] = useAtom(ADDING_IDEA_FEATURE);
-  const [activeIdeaFeatureIndex, setActiveIdeaFeatureIndex] = useAtom(ACTIVE_IDEA_FEATURE_INDEX);
-  const [addContentIdeaFeature, setAddContentIdeaFeature] = useAtom(ADD_CONTENT_IDEA_FEATURE);
-  const [editedIdeaFeatureTitle, setEditedIdeaFeatureTitle] = useAtom(EDITED_IDEA_FEATURE_TITLE);
-  const [addingIdeaCustomer, setAddingIdeaCustomer] = useAtom(ADDING_IDEA_CUSTOMER);
-  const [activeIdeaCustomerIndex, setActiveIdeaCustomerIndex] = useAtom(ACTIVE_IDEA_CUSTOMER_INDEX);
-  const [addContentIdeaCustomer, setAddContentIdeaCustomer] = useAtom(ADD_CONTENT_IDEA_CUSTOMER);
-  const [editedIdeaCustomerTitle, setEditedIdeaCustomerTitle] = useAtom(EDITED_IDEA_CUSTOMER_TITLE);
+  const [isEditingIdeaFeature, setIsEditingIdeaFeature] = useAtom(
+    IS_EDITING_IDEA_FEATURE
+  );
+  const [isEditingIdeaCustomer, setIsEditingIdeaCustomer] = useAtom(
+    IS_EDITING_IDEA_CUSTOMER
+  );
+  const [addingIdeaFeature, setAddingIdeaFeature] =
+    useAtom(ADDING_IDEA_FEATURE);
+  const [activeIdeaFeatureIndex, setActiveIdeaFeatureIndex] = useAtom(
+    ACTIVE_IDEA_FEATURE_INDEX
+  );
+  const [addContentIdeaFeature, setAddContentIdeaFeature] = useAtom(
+    ADD_CONTENT_IDEA_FEATURE
+  );
+  const [editedIdeaFeatureTitle, setEditedIdeaFeatureTitle] = useAtom(
+    EDITED_IDEA_FEATURE_TITLE
+  );
+  const [addingIdeaCustomer, setAddingIdeaCustomer] =
+    useAtom(ADDING_IDEA_CUSTOMER);
+  const [activeIdeaCustomerIndex, setActiveIdeaCustomerIndex] = useAtom(
+    ACTIVE_IDEA_CUSTOMER_INDEX
+  );
+  const [addContentIdeaCustomer, setAddContentIdeaCustomer] = useAtom(
+    ADD_CONTENT_IDEA_CUSTOMER
+  );
+  const [editedIdeaCustomerTitle, setEditedIdeaCustomerTitle] = useAtom(
+    EDITED_IDEA_CUSTOMER_TITLE
+  );
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
-  const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
-  const [ideaFeatureDataTemp, setIdeaFeatureDataTemp] = useAtom(IDEA_FEATURE_DATA_TEMP);
-  const [ideaRequirementDataTemp, setIdeaRequirementDataTemp] = useAtom(IDEA_REQUIREMENT_DATA_TEMP);
+  const [ideaRequirementData, setIdeaRequirementData] = useAtom(
+    IDEA_REQUIREMENT_DATA
+  );
+  const [ideaFeatureDataTemp, setIdeaFeatureDataTemp] = useAtom(
+    IDEA_FEATURE_DATA_TEMP
+  );
+  const [ideaRequirementDataTemp, setIdeaRequirementDataTemp] = useAtom(
+    IDEA_REQUIREMENT_DATA_TEMP
+  );
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
@@ -246,8 +297,11 @@ const PageMeetAiExpert = () => {
     POC_DETAIL_REPORT_DATA
   );
   const [ideaMiroState, setIdeaMiroState] = useAtom(IDEA_MIRO_STATE);
-  const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
-  const [growthHackerDetailReportData, setGrowthHackerDetailReportData] = useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
+  const [growthHackerReportData, setGrowthHackerReportData] = useAtom(
+    GROWTH_HACKER_REPORT_DATA
+  );
+  const [growthHackerDetailReportData, setGrowthHackerDetailReportData] =
+    useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
   const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
   const [newAddContent, setNewAddContent] = useAtom(NEW_ADD_CONTENT);
   const [isAddingNow, setIsAddingNow] = useAtom(IS_ADDING_NOW);
@@ -259,23 +313,51 @@ const PageMeetAiExpert = () => {
   const [userName, setUserName] = useAtom(USER_NAME);
   const [userEmail, setUserEmail] = useAtom(USER_EMAIL);
 
-  const [marketingMbtiResult, setMarketingMbtiResult] = useAtom(MARKETING_MBTI_RESULT);
-  const [marketingResearchReportData, setMarketingResearchReportData] = useAtom(MARKETING_RESEARCH_REPORT_DATA);
-  const [marketingBmReportData, setMarketingBmReportData] = useAtom(MARKETING_BM_REPORT_DATA);
-  const [marketingCustomerData, setMarketingCustomerData] = useAtom(MARKETING_CUSTOMER_DATA);
-  const [marketingSelectedCustomer, setMarketingSelectedCustomer] = useAtom(MARKETING_SELECTED_CUSTOMER);
-  const [marketingFinalCustomer, setMarketingFinalCustomer] = useAtom(MARKETING_FINAL_CUSTOMER);
-  const [marketingFinalReportData, setMarketingFinalReportData] = useAtom(MARKETING_FINAL_REPORT_DATA);
-  const [marketingFinalReportButtonState, setMarketingFinalReportButtonState] = useAtom(MARKETING_FINAL_REPORT_BUTTON_STATE);
-  const [marketingBmButtonState, setMarketingBmButtonState] = useAtom(MARKETING_BM_BUTTON_STATE);
-  const [marketingCustomerButtonState, setMarketingCustomerButtonState] = useAtom(MARKETING_CUSTOMER_BUTTON_STATE);
-  const [marketingHaveIdea, setMarketingHaveIdea] = useAtom(MARKETING_HAVE_IEDA);
-  const [marketingMbtiStage, setMarketingMbtiStage] = useAtom(MARKETING_MBTI_STAGE);
-  const [marketingMbtiAnswer, setMarketingMbtiAnswer] = useAtom(MARKETING_MBTI_ANSWER);
+  const [marketingMbtiResult, setMarketingMbtiResult] = useAtom(
+    MARKETING_MBTI_RESULT
+  );
+  const [marketingResearchReportData, setMarketingResearchReportData] = useAtom(
+    MARKETING_RESEARCH_REPORT_DATA
+  );
+  const [marketingBmReportData, setMarketingBmReportData] = useAtom(
+    MARKETING_BM_REPORT_DATA
+  );
+  const [marketingCustomerData, setMarketingCustomerData] = useAtom(
+    MARKETING_CUSTOMER_DATA
+  );
+  const [marketingSelectedCustomer, setMarketingSelectedCustomer] = useAtom(
+    MARKETING_SELECTED_CUSTOMER
+  );
+  const [marketingFinalCustomer, setMarketingFinalCustomer] = useAtom(
+    MARKETING_FINAL_CUSTOMER
+  );
+  const [marketingFinalReportData, setMarketingFinalReportData] = useAtom(
+    MARKETING_FINAL_REPORT_DATA
+  );
+  const [marketingFinalReportButtonState, setMarketingFinalReportButtonState] =
+    useAtom(MARKETING_FINAL_REPORT_BUTTON_STATE);
+  const [marketingBmButtonState, setMarketingBmButtonState] = useAtom(
+    MARKETING_BM_BUTTON_STATE
+  );
+  const [marketingCustomerButtonState, setMarketingCustomerButtonState] =
+    useAtom(MARKETING_CUSTOMER_BUTTON_STATE);
+  const [marketingHaveIdea, setMarketingHaveIdea] =
+    useAtom(MARKETING_HAVE_IEDA);
+  const [marketingMbtiStage, setMarketingMbtiStage] =
+    useAtom(MARKETING_MBTI_STAGE);
+  const [marketingMbtiAnswer, setMarketingMbtiAnswer] = useAtom(
+    MARKETING_MBTI_ANSWER
+  );
   const [marketingInterest, setMarketingInterest] = useAtom(MARKETING_INTEREST);
-  const [marketingRecommendedItemData, setMarketingRecommendedItemData] = useAtom(MARKETING_RECOMMENDED_ITEM_DATA);
-  const [marketingStartButtonState, setMarketingStartButtonState] = useAtom(MARKETING_START_BUTTON_STATE);
-  const [marketingRecommendedItemButtonState, setMarketingRecommendedItemButtonState] = useAtom(MARKETING_RECOMMENDED_ITEM_BUTTON_STATE);
+  const [marketingRecommendedItemData, setMarketingRecommendedItemData] =
+    useAtom(MARKETING_RECOMMENDED_ITEM_DATA);
+  const [marketingStartButtonState, setMarketingStartButtonState] = useAtom(
+    MARKETING_START_BUTTON_STATE
+  );
+  const [
+    marketingRecommendedItemButtonState,
+    setMarketingRecommendedItemButtonState,
+  ] = useAtom(MARKETING_RECOMMENDED_ITEM_BUTTON_STATE);
 
   const closePopupRegex = () => {
     setInputBusinessInfo("");
@@ -309,7 +391,7 @@ const PageMeetAiExpert = () => {
       // Remove the inputBusinessInfo from location.state
       const newState = { ...location.state };
       delete newState.inputBusinessInfo;
-      window.history.replaceState(newState, '');
+      window.history.replaceState(newState, "");
 
       // 비로그인 상태에서 들어온 경우 로그인 팝업 띄우기
       if (!isLoggedIn) {
@@ -478,9 +560,12 @@ const PageMeetAiExpert = () => {
         { type: "analysis" }
       );
 
-      await saveConversation(
-        { changingConversation: { conversation: updatedConversation, conversationStage: 2 } }
-      );
+      await saveConversation({
+        changingConversation: {
+          conversation: updatedConversation,
+          conversationStage: 2,
+        },
+      });
 
       setConversation(updatedConversation);
       setConversationStage(2);
@@ -489,7 +574,6 @@ const PageMeetAiExpert = () => {
       setAnalysisButtonState(1); // 버튼 상태를 1로 설정
       setSelectedExpertIndex("0");
       navigate("/ExpertInsight");
-
     } else {
       setIsPopupLogin(true); // 로그인 상태가 아니라면 로그인 팝업 띄우기
     }
@@ -514,25 +598,25 @@ const PageMeetAiExpert = () => {
   const getInitialSystemMessage = (index) => {
     switch (index) {
       case "1":
-        return "안녕하세요! 저는 전략 전문가 김도원입니다. 😊 여러분의 아이디어를 구체화하고, 성공적인 전략을 세우는 데 도움을 드리겠습니다. 아이디어나 비즈니스 아이템을 간단히 작성해 주세요. 분석 후, 여러분의 비즈니스에 맞는 전략 리포트를 제공하겠습니다!";
+        return "안녕하세요! 저는 전략 컨설턴트 김도원입니다. \n고객 요구와 시장 현황을 파악하여, 성장을 위한 전략적 인사이트와 맞춤형 개선 방향을 지원하고 있습니다.";
       case "2":
         return "안녕하세요! 마케팅 전문가 이지현입니다. 😄 여러분의 아이디어를 효과적으로 시장에 알릴 수 있는 전략을 함께 고민해 보아요. 아이디어나 비즈니스 아이템을 여기에 작성해 주세요. 제가 분석하고, 효과적인 마케팅 전략 리포트를 준비해 드리겠습니다!";
       case "3":
         return "반갑습니다! 저는 고객 인사이트 전문가 박서연입니다. 😊 여러분의 비즈니스가 목표 고객에게 잘 다가갈 수 있도록 돕겠습니다. 아이디어나 비즈니스 아이템을 작성해 주세요. 분석 후, 타겟 고객을 정의하고 세분화 방법에 대한 리포트를 제공해 드리겠습니다!";
       case "4":
-        return "안녕하세요! 저는 PoC 설계 전문가 장석훈입니다. 😊 여러분의 사업 목표에 맞춘 가설 설정과 PoC 전략을 설계하고, 성공적인 검증 과정을 지원해드립니다. 맞춤형 PoC 설계를 위해 몇가지 질문에 응답 부탁드립니다!"
+        return "안녕하세요! 저는 PoC 설계 전문가 장석훈입니다. 😊 여러분의 사업 목표에 맞춘 가설 설정과 PoC 전략을 설계하고, 성공적인 검증 과정을 지원해드립니다. 맞춤형 PoC 설계를 위해 몇가지 질문에 응답 부탁드립니다!";
       case "5":
-        return "안녕하세요. 저는 아이디어 디벨로퍼 윤재민입니다.\n혼자 아이디어를 고민하다보면, 한정된 생각에 갇히기 쉽습니다. 제가 다각도로 사업 아이디어 발산을 돕고 우선순위 높은 아이디어를 선별해드려요. 아이템에 대한 설명을 해주세요 📝"
+        return "안녕하세요. 저는 아이디어 디벨로퍼 윤재민입니다.\n혼자 아이디어를 고민하다보면, 한정된 생각에 갇히기 쉽습니다. 제가 다각도로 사업 아이디어 발산을 돕고 우선순위 높은 아이디어를 선별해드려요. 아이템에 대한 설명을 해주세요 📝";
       case "6":
-        return "안녕하세요. 저는 그로스 해커 김세준입니다.\n고객 퍼널에 맞는 전략을 수립하는 것은 비즈니스 성장에 중요한 요소입니다. 제가 퍼널을 분석하고 각 단계에서 성장을 가속화할 전략을 제시해드릴게요. 아이템에 대한 설명을 해주세요 📝"
+        return "안녕하세요. 저는 그로스 해커 김세준입니다.\n비즈니스에 적합한 성장을 목표로 데이터를 기반으로 실험하고 최적화된 전략을 제시하고 잇습니다. ";
       case "7":
-        return "안녕하세요! 저는 가격 분석 전문가 한준혁입니다. 다양한 데이터 소스를 활용해 시장의 가격 변동을 분석하고, 적정 가격을 도출해드립니다. 경쟁사 동향과 시장 트렌드를 파악해 최적의 가격 전략을 세울 수 있도록 도와드려요. 분석이 필요한 제품이나 서비스에 대해 알려주세요 📝\n📌 현재는 제품만 분석이 가능합니다"
+        return "안녕하세요! 저는 가격 분석 전문가 한준혁입니다. 다양한 데이터 소스를 활용해 시장의 가격 변동을 분석하고, 적정 가격을 도출해드립니다. 경쟁사 동향과 시장 트렌드를 파악해 최적의 가격 전략을 세울 수 있도록 도와드려요. 분석이 필요한 제품이나 서비스에 대해 알려주세요 📝\n📌 현재는 제품만 분석이 가능합니다";
       case "8":
-        return "안녕하세요! 저는 사례 분석 전문가 이민호입니다. 최신 데이터와 글로벌 사례등을 분석해 비즈니스에 도움을 드립니다.\n정확한 사례 분석을 위해 비즈니스 정보를 입력해 주세요 🔎"
+        return "안녕하세요! 저는 사례 분석 전문가 이민호입니다. 최신 데이터와 글로벌 사례등을 분석해 비즈니스에 도움을 드립니다.\n정확한 사례 분석을 위해 비즈니스 정보를 입력해 주세요 🔎";
       case "9":
-        return "안녕하세요! 저는 BM 전문가 김소윤입니다.\n아이템에 최적화된 비즈니스 모델을 정의하고, 비즈니스 성과를 극대화 할 수 있도록 전략을 제안드립니다."
+        return "안녕하세요! 저는 BM 전문가 김소윤입니다.\n아이템에 최적화된 비즈니스 모델을 정의하고, 비즈니스 성과를 극대화 할 수 있도록 전략을 제안드립니다.";
       case "10":
-        return "안녕하세요! 저는 조사 설계 전문가 김현우입니다.\n고객 요구와 시장 반응을 파악해 비즈니스 인사이트를 제공하고, 이를 통해 비즈니스 성장을 돕는 맞춤형 조사를 설계해드립니다. 조사 결과를 기반으로 전략적 개선 방향을 제시해 비즈니스 성과를 향상시킬 수 있습니다.\n먼저 분석이 필요한 제품이나 서비스에 대해서 알려주세요 📝"
+        return "안녕하세요! 저는 조사 설계 전문가 김현우입니다.\n고객 요구와 시장 반응을 파악해 비즈니스 인사이트를 제공하고, 이를 통해 비즈니스 성장을 돕는 맞춤형 조사를 설계해드립니다. 조사 결과를 기반으로 전략적 개선 방향을 제시해 비즈니스 성과를 향상시킬 수 있습니다.\n먼저 분석이 필요한 제품이나 서비스에 대해서 알려주세요 📝";
       default:
         return "비즈니스(아이디어)를 입력해주세요.";
     }
@@ -540,7 +624,6 @@ const PageMeetAiExpert = () => {
 
   const handledExpertSelect = (index) => {
     if (isLoggedIn) {
-
       const initialMessage = getInitialSystemMessage(index);
 
       setConversation([
@@ -553,7 +636,7 @@ const PageMeetAiExpert = () => {
           type: "system",
           message: "먼저 분석이 필요한 제품이나 서비스에 대해서 알려주세요 📝",
           expertIndex: -1,
-        }
+        },
       ]);
 
       setAnalysisButtonState(1);
@@ -568,7 +651,7 @@ const PageMeetAiExpert = () => {
   };
 
   const handleButtonLending = () => {
-    navigate('/Landing');
+    navigate("/Landing");
   };
 
   const [showText, setShowText] = useState(false);
@@ -578,17 +661,16 @@ const PageMeetAiExpert = () => {
     const interval = setInterval(() => {
       // 10초 동안 보여주고, 3초 동안 숨김
       setShowHint(true);
-      
+
       const timeout = setTimeout(() => {
         setShowHint(false);
       }, 10000); // 10초 뒤에 숨김 상태로 변경
-  
+
       return () => clearTimeout(timeout);
     }, 13000); // 13초 후 다시 반복 (10초 보여짐 + 3초 숨김)
-  
+
     return () => clearInterval(interval);
   }, []);
-
 
   return (
     <>
@@ -718,7 +800,11 @@ const PageMeetAiExpert = () => {
                 }}
               >
                 <strong>그로스 해커</strong>
-                <p>고객 여정을 분석하여, 마케팅<br />퍼널별 전략 제시</p>
+                <p>
+                  고객 여정을 분석하여, 마케팅
+                  <br />
+                  퍼널별 전략 제시
+                </p>
                 <span>
                   <img src={images.ImgHacker} alt="" />
                 </span>
@@ -794,7 +880,6 @@ const PageMeetAiExpert = () => {
                   <p></p>
                 </div>
               </ExpertCard>
-
             </ExpertSelectBox>
           </ExpertSelectWrap>
           {/* API 데이터 활용 */}
@@ -842,9 +927,11 @@ const PageMeetAiExpert = () => {
           <button
             onMouseEnter={() => setShowText(true)}
             onMouseLeave={() => setShowText(false)}
-            onClick={() => navigate('/MarketingLanding')}
+            onClick={() => navigate("/MarketingLanding")}
           >
-            <p><img src={images.SymbolLogo} alt="" /></p>
+            <p>
+              <img src={images.SymbolLogo} alt="" />
+            </p>
             <span>창업 MBTI로 창업 스타일 찾기</span>
           </button>
         </QuickMenu>
@@ -992,7 +1079,11 @@ const PageMeetAiExpert = () => {
             <span>
               <img src={images.ExclamationMark2} alt="" />
             </span>
-            <p>전문가가 곧 공개됩니다<br />조금만 기다려 주세요!</p>
+            <p>
+              전문가가 곧 공개됩니다
+              <br />
+              조금만 기다려 주세요!
+            </p>
             <div className="btnWrap">
               <button type="button" onClick={closeComingSoonPopup}>
                 확인
@@ -1026,92 +1117,90 @@ const ContentsWrap = styled.div`
   padding: ${(props) => (props.isMobile ? "20px" : "0")};
 
   > button {
-    position:absolute;
-    top:30px;
-    right:0;
-    font-family: 'Poppins', 'Pretendard';
-    font-size:1rem;
-    font-weight:400;
-    letter-spacing:-0.3px;
-    padding:8px 12px;
-    border-radius:10px;
-    border:0;
-    background:${palette.gray100};
-    box-shadow:1px 1px 0 rgba(0,0,0,.1);
+    position: absolute;
+    top: 30px;
+    right: 0;
+    font-family: "Poppins", "Pretendard";
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: -0.3px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 0;
+    background: ${palette.gray100};
+    box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.1);
   }
 `;
 
 const QuickMenu = styled.div`
-  position:fixed;
-  bottom:3%;
-  right:3%;
-  display:flex;
-  flex-direction:column;
-  align-items:end;
-  gap:10px;
-  transition:all .5s;
+  position: fixed;
+  bottom: 3%;
+  right: 3%;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  gap: 10px;
+  transition: all 0.5s;
 
   > span {
-    position:relative;
-    font-size:0.88rem;
-    color:${palette.white};
-    line-height:1.5;
-    padding:12px 16px;
-    border-radius:12px;
-    background:${palette.gray800};
+    position: relative;
+    font-size: 0.88rem;
+    color: ${palette.white};
+    line-height: 1.5;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: ${palette.gray800};
     opacity: ${(props) => (props.showHint ? 1 : 0)};
     transition: opacity 1s ease-in-out;
 
     &:after {
-      position:absolute;
-      bottom:-5px;
-      right:12px;
-      transform:rotate(45deg);
-      width:17px;
-      height:17px;
-      border-radius:6px;
-      background:${palette.gray800};
-      content:'';
+      position: absolute;
+      bottom: -5px;
+      right: 12px;
+      transform: rotate(45deg);
+      width: 17px;
+      height: 17px;
+      border-radius: 6px;
+      background: ${palette.gray800};
+      content: "";
     }
   }
 
   > button {
-    display:flex;
-    align-items:center;
-    gap:10px;
-    width: ${(props) => (props.showText ? 'auto' : '40px')};
-    height:40px;
-    font-size:0.88rem;
-    font-weight:500;
-    color:${palette.white};
-    line-height:1.5;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: ${(props) => (props.showText ? "auto" : "40px")};
+    height: 40px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: ${palette.white};
+    line-height: 1.5;
     // padding-right:15px;
-    padding-right: ${(props) => (props.showText 
-      ? '15px' 
-      : '0px')};
-    border-radius:30px;
-    border:0;
+    padding-right: ${(props) => (props.showText ? "15px" : "0px")};
+    border-radius: 30px;
+    border: 0;
     box-shadow: 2px 2px 15px 0px rgba(0, 0, 0, 0.15);
-    background:#242DFF;
-    overflow:hidden;
-    transition:width .5s ease;
+    background: #242dff;
+    overflow: hidden;
+    transition: width 0.5s ease;
 
     p {
-      width:30px;
-      height:40px;
-      overflow:hidden;
+      width: 30px;
+      height: 40px;
+      overflow: hidden;
 
       img {
-        height:100%;
+        height: 100%;
       }
     }
 
     span {
-      // visibility: ${(props) => (props.showText ? 'visible' : 'hidden')};
+      // visibility: ${(props) => (props.showText ? "visible" : "hidden")};
       opacity: ${(props) => (props.showText ? 1 : 0)};
       transition: opacity 0.3s ease, width 0.3s ease, font-size 0.3s ease;
-      width: ${(props) => (props.showText ? 'auto' : '0')};
-      font-size: ${(props) => (props.showText ? '0.88rem' : '0')};
+      width: ${(props) => (props.showText ? "auto" : "0")};
+      font-size: ${(props) => (props.showText ? "0.88rem" : "0")};
     }
   }
 `;
@@ -1244,7 +1333,7 @@ const ExpertCard = styled.div`
   text-align: left;
   padding: ${(props) => (props.isMobile ? "20px 15px" : "26px 20px")};
   border-radius: 16px;
-  
+
   border: ${(props) => {
     if (props.select) return `1px solid ${palette.blue}`;
     else if (props.Coming) return `none`;
@@ -1277,7 +1366,7 @@ const ExpertCard = styled.div`
     // else return palette.gray100;
     else return palette.chatGray;
   }};
-  
+
   box-shadow: ${(props) => {
     if (props.select) return `0 4px 30px rgba(0, 0, 0, 0.1)`;
     else return `none`;
