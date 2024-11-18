@@ -134,8 +134,14 @@ const OrganismBmBmAutoReport = () => {
           {
             type: "system",
             message:
-              "기본 비즈니스 모델 캔버스 작성이 완료되었습니다.\n이제부터는 비즈니스 목표에 따라 비즈니스 모델을 다양하게 구분해보겠습니다.",
+              `위 내용은 ${titleOfBusinessInfo}의 기본 비즈니스 모델 캔버스를 작성한 내용입니다.`,
             expertIndex: selectedExpertIndex,
+          },
+          {
+            type: "system",
+            message:
+              `비즈니스 모델 캔버스는 고객 세그먼트(Customer Segment)를 기반으로 다른 항목들에 영향을 줍니다.\n저와 함께 조금 더 세분화된 비즈니스 모델 캔버스를 만들어 보아요 🎯`,
+            expertIndex: -1,
           },
           { type: `bmBmAdsContinueButton`}
         );
@@ -169,6 +175,8 @@ const OrganismBmBmAutoReport = () => {
         </>
       ) : (
         <>
+          <Overlay isMenuOpen={isMenuOpen} onClick={() => setIsMenuOpen(false)} />
+            
           <h1>{titleOfBusinessInfo}의 비즈니스 모델 캔버스 - 기본형</h1>
           <p>{mainFeaturesOfBusinessInformation[0]}</p>
   

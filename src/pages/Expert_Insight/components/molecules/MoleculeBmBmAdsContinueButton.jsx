@@ -46,7 +46,7 @@ const MoleculeBmBmAdsContinueButton = () => {
           {
             type: "system",
             message:
-              "입력해주신 비즈니스 목표에 따른 캔버스의 정교화 방향성을 도출하였습니다.\n원하시는 방향을 선택하시고, 어떤 요소들이 변화되었는지 확인해보세요",
+              "제가 세분화하기 위한 여러가지 고객 세그먼트를 도출해보았어요",
             expertIndex: selectedExpertIndex,
           },
           { type: `bmBmAdsReport` }
@@ -56,7 +56,6 @@ const MoleculeBmBmAdsContinueButton = () => {
         setBmBmAdsButtonState(1);
 
         saveConversation({ changingConversation: { conversation: updatedConversation, conversationStage: 3 } });
-
     } else {
       updatedConversation.push(
         {
@@ -92,48 +91,37 @@ const MoleculeBmBmAdsContinueButton = () => {
   };
   return (
     <>
-      <ButtonWrap>
-          <button onClick={() => handleClick("more")}>특정 고객에 특화된 비즈니스 모델 캔버스를 보고 싶습니다</button>
-          <button onClick={() => handleClick("enough")}>이정도면 충분합니다</button>
-      </ButtonWrap>
+      <SelectButton>
+          <button onClick={() => handleClick("more")}>비즈니스 모델 캔버스 세분화하기 🔎</button>
+          <button onClick={() => handleClick("enough")}>이정도면 충분해요 🔎</button>
+      </SelectButton>
     </>
   );
 };
 
 export default MoleculeBmBmAdsContinueButton;
 
-const ButtonWrap = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 15px;
-  padding-bottom: 15px;
-  margin-left:50px;
+const SelectButton = styled.div`
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-top: 12px;
+  margin-left: 50px;
 
   button {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-family: "Pretendard";
-    font-size: 0.875rem;
-    color: ${palette.darkGray};
-    border: 0;
-    background: none;
-    margin-right: 10px;
+    // display:inline-block;
+    // width:fit-content;
+    font-family: 'Pretendard', 'Poppins';
+    font-size:0.88rem;
+    color:${palette.chatBlue};
+    padding:8px 20px;
+    border-radius:40px;
+    border:0;
+    background:rgba(4, 83, 244, 0.1);
   }
 
-  > button {
-    padding: 8px 16px;
-    border-radius: 40px;
-    border: 1px solid ${palette.lineGray};
-  }
-
-  button.none {
-    cursor: default;
-  }
-
-  button.other {
-    color: ${palette.lightGray};
-    font-size: 0.75rem;
-    border: none;
+  .finish {
+    color:${palette.gray500};
+    background:${palette.gray100};
   }
 `;

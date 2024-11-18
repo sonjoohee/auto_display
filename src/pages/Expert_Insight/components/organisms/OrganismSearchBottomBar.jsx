@@ -62,6 +62,15 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
     }
   };
 
+  const getInitialSystemMessage = (index) => {
+    switch (index) {
+      case "9":
+        return "아이디어를 입력해주셔서 감사합니다 😄\n비즈니스 모델을 효과적으로 설계하려면, 비즈니스에 대한 정확한 이해가 중요합니다. 제가 분석한 비즈니스 내용을 확인해 보시고, 아이디어가 어떻게 발전 할 수 있을지 함께 살펴보아요";
+      default:
+        return `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻`;
+    }
+  };
+
   const handleSearch = async (inputValue) => {
     if (isLoggedIn) {
       if (!conversationId) {
@@ -101,11 +110,13 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
     if (conversationStage === 1) {
       setInputBusinessInfo(inputValue);
 
+      const initialMessage = getInitialSystemMessage(selectedExpertIndex);
+
       updatedConversation.push(
         { type: "user", message: inputValue },
         {
           type: "system",
-          message: `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻`,
+          message: initialMessage,
           expertIndex: selectedExpertIndex,
         },
         { type: "analysis" }
@@ -140,7 +151,7 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
         { type: "user", message: `${inputValue}` },
         {
           type: "system",
-          message: `입력해주신 비즈니스 목표에 따른 캔버스의 정교화 방향성을 도출하였습니다.\n원하시는 방향을 선택하시고, 어떤 요소들이 변화되었는지 확인해보세요`,
+          message: `제가 세분화하기 위한 여러가지 문제점을 도출해보았어요`,
           expertIndex: selectedExpertIndex,
         },
         { type: "surveyGoalSuggestion" }
