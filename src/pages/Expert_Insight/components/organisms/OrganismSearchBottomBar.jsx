@@ -27,22 +27,36 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [conversation, setConversation] = useAtom(CONVERSATION);
-  const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
-  const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
+  const [inputBusinessInfo, setInputBusinessInfo] =
+    useAtom(INPUT_BUSINESS_INFO);
+  const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(
+    SELECTED_EXPERT_INDEX
+  );
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
-  const [customerAdditionButtonState, setCustomerAdditionButtonState] = useAtom(CUSTOMER_ADDITION_BUTTON_STATE);
-  const [customerAdditionQuestionInput, setCustomerAdditionQuestionInput] = useAtom(CUSTOMER_ADDITION_QUESTION_INPUT);
-  
-  const [caseReportButtonState, setCaseReportButtonState] = useAtom(CASE_REPORT_BUTTON_STATE);
-  const [caseQuestionInput, setCaseQuestionInput] = useAtom(CASE_QUESTION_INPUT);
+  const [customerAdditionButtonState, setCustomerAdditionButtonState] = useAtom(
+    CUSTOMER_ADDITION_BUTTON_STATE
+  );
+  const [customerAdditionQuestionInput, setCustomerAdditionQuestionInput] =
+    useAtom(CUSTOMER_ADDITION_QUESTION_INPUT);
+
+  const [caseReportButtonState, setCaseReportButtonState] = useAtom(
+    CASE_REPORT_BUTTON_STATE
+  );
+  const [caseQuestionInput, setCaseQuestionInput] =
+    useAtom(CASE_QUESTION_INPUT);
   const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
 
   const [inputValue, setInputValue] = useState("");
   const [isPopupRegex, setIsPopupRegex] = useState(false);
   const [isPopupRegex2, setIsPopupRegex2] = useState(false);
-  const [surveyUserGoalInput, setSurveyUserGoalInput] = useAtom(SURVEY_USER_GOAL_INPUT);
-  const [surveyGoalSuggestionButtonState, setSurveyGoalSuggestionButtonState] = useAtom(SURVEY_GOAL_SUGGESTION_BUTTON_STATE);
-  const [isLoadingCaseHashTag, setIsLoadingCaseHashTag] = useAtom(IS_LOADING_CASE_HASHTAG);
+  const [surveyUserGoalInput, setSurveyUserGoalInput] = useAtom(
+    SURVEY_USER_GOAL_INPUT
+  );
+  const [surveyGoalSuggestionButtonState, setSurveyGoalSuggestionButtonState] =
+    useAtom(SURVEY_GOAL_SUGGESTION_BUTTON_STATE);
+  const [isLoadingCaseHashTag, setIsLoadingCaseHashTag] = useAtom(
+    IS_LOADING_CASE_HASHTAG
+  );
 
   const closePopupRegex = () => {
     setIsPopupRegex(false);
@@ -64,8 +78,12 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
 
   const getInitialSystemMessage = (index) => {
     switch (index) {
+      case "1":
+        return "아이디어를 입력해주셔서 감사합니다 😄\n관련된 시장과 고객을 분석하는데 많은 도움이 될 것 같아요.";
+      case "6":
+        return "아이디어를 입력해주셔서 감사합니다 😄\n빠른 성장 전략을 도출하기 위해서, 아이템에 대한 정확한 분석이 필수적입니다.";
       case "9":
-        return "아이디어를 입력해주셔서 감사합니다 😄\n비즈니스 모델을 효과적으로 설계하려면, 비즈니스에 대한 정확한 이해가 중요합니다. 제가 분석한 비즈니스 내용을 확인해 보시고, 아이디어가 어떻게 발전 할 수 있을지 함께 살펴보아요";
+        return "아이디어를 입력해주셔서 감사합니다 😄\n비즈니스 모델을 효과적으로 설계하려면, 비즈니스에 대한 정확한 이해가 중요합니다. 제가 분석한 비즈니스 내용을 확인해 보시고, 아이디어가 어떻게 발전 할 수 있을지 함께 살펴보아요.";
       default:
         return `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻`;
     }
@@ -104,9 +122,9 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
     }
 
     setInputValue("");
-  
+
     const updatedConversation = [...conversation];
-  
+
     if (conversationStage === 1) {
       setInputBusinessInfo(inputValue);
 
@@ -123,8 +141,7 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
       );
 
       setConversationStage(2);
-    }
-    else if (isHashTag && selectedExpertIndex === "8") {
+    } else if (isHashTag && selectedExpertIndex === "8") {
       updatedConversation.push(
         { type: "user", message: `${inputValue}을 찾아주세요` },
         {
@@ -146,7 +163,7 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
     //   setBmBmAdsButtonState(1);
     //   setBmUserGoalInput(inputValue);
     // }
-    else if (isHashTag && selectedExpertIndex === "10" ) {
+    else if (isHashTag && selectedExpertIndex === "10") {
       updatedConversation.push(
         { type: "user", message: `${inputValue}` },
         {
@@ -158,8 +175,7 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
       );
       setSurveyGoalSuggestionButtonState(1);
       setSurveyUserGoalInput(inputValue);
-    }
-    else {
+    } else {
       if (
         (updatedConversation.length > 0 &&
           updatedConversation[updatedConversation.length - 1].type ===
@@ -180,7 +196,7 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
       //   updatedConversation[updatedConversation.length - 1].type === 'getUserSurveyGoal') {
       //   updatedConversation.pop(); // 마지막 메시지를 제거하고 새로운 흐름을 추가
       //   setSurveyUserGoalInput(inputValue); // 사용자가 입력한 값을 user_goal_input에 저장
-  
+
       //   updatedConversation.push(
       //     {
       //       type: "user",
@@ -190,19 +206,19 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
       //       type: "surveyGoalSuggestion",
       //     }
       //   );
-        
+
       //   setSurveyGoalSuggestionButtonState(1);
       //   setConversationStage(3);
       //   setApproachPath(3);
       // }
-  
+
       updatedConversation.push(
         {
           type: "user",
           message: inputValue,
         },
         {
-          type: `customerAddition`
+          type: `customerAddition`,
         }
       );
 
@@ -225,9 +241,9 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
     }
 
     if (isLoading) return;
-  
+
     const updatedConversation = [...conversation];
-  
+
     if (isHashTag && selectedExpertIndex === "8") {
       updatedConversation.push(
         { type: "user", message: `${inputValue}을 찾아주세요` },
@@ -265,16 +281,22 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
   return (
     <>
       <BottomBar>
-      {isBlue && isHashTag && !isLoadingCaseHashTag && (
-        <TagList>
-        {selectedExpertIndex === "8" && caseHashTag.slice(0, 3).map((tag, index) => (
-          <button key={index} onClick={() => handleHashTagClick(tag.title)}># {tag.title}</button> // 최대 3개까지 표시
-        ))}
-        {/* {selectedExpertIndex === "9" && caseHashTag.slice(0, 3).map((tag, index) => (
+        {isBlue && isHashTag && !isLoadingCaseHashTag && (
+          <TagList>
+            {selectedExpertIndex === "8" &&
+              caseHashTag.slice(0, 3).map((tag, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleHashTagClick(tag.title)}
+                >
+                  # {tag.title}
+                </button> // 최대 3개까지 표시
+              ))}
+            {/* {selectedExpertIndex === "9" && caseHashTag.slice(0, 3).map((tag, index) => (
           <button key={index} onClick={() => handleHashTagClick(tag.title)}># {tag.title}</button>
         ))} */}
-        </TagList>
-      )}
+          </TagList>
+        )}
 
         <SearchBar isBlue={isBlue}>
           <svg
@@ -297,26 +319,23 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
             isBlue
             placeholder={
               isBlue && isHashTag
-                ? selectedExpertIndex === "8" 
+                ? selectedExpertIndex === "8"
                   ? "어떤 사례를 찾고 계신가요? 구체적으로 입력해주세요"
-                  : selectedExpertIndex === "9" 
+                  : selectedExpertIndex === "9"
                   ? "비즈니스의 목표가 무엇인가요? 구체적으로 입력해주세요"
                   : selectedExpertIndex === "10"
-                    ? "설문조사의 목적이 무엇인가요? 구체적으로 입력해주세요"
-                    : ""
+                  ? "설문조사의 목적이 무엇인가요? 구체적으로 입력해주세요"
+                  : ""
                 : isBlue
-                  ? "더 알고 싶은 내용이 있으신가요? 추가 질문으로 더 많은 인사이트를 얻어보세요"
-                  : "당신의 아이템 또는 프로젝트 아이디어를 적어 주세요 (예: 원격 근무자를 위한 생산성 관리 툴)"
+                ? "더 알고 싶은 내용이 있으신가요? 추가 질문으로 더 많은 인사이트를 얻어보세요"
+                : "당신의 아이템 또는 프로젝트 아이디어를 적어 주세요 (예: 원격 근무자를 위한 생산성 관리 툴)"
             }
             value={inputValue}
             onChange={handleInputChange}
             onKeyDown={handleKeyPress} // 여기에 키 입력 이벤트 핸들러 추가
           />
 
-          <button
-            type="button"
-            onClick={() => handleSearch(inputValue)}
-          >
+          <button type="button" onClick={() => handleSearch(inputValue)}>
             검색
           </button>
         </SearchBar>
@@ -443,21 +462,21 @@ const BottomBar = styled.div`
 `;
 
 const TagList = styled.div`
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:12px;
-  margin-bottom:12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
 
   > button {
-    font-family: 'Pretendard', 'Poppins';
-    font-size:1rem;
-    color:${palette.gray700};
-    padding:12px 16px;
-    border-radius:50px;
-    border:0;
-    box-shadow:1px 1px 4px rgba(0,0,0,.08);
-    background:${palette.white};
+    font-family: "Pretendard", "Poppins";
+    font-size: 1rem;
+    color: ${palette.gray700};
+    padding: 12px 16px;
+    border-radius: 50px;
+    border: 0;
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
+    background: ${palette.white};
     font-size: 0.875rem;
   }
 `;
