@@ -71,7 +71,7 @@ import {
   MARKETING_CUSTOMER_DATA,
   MARKETING_SELECTED_CUSTOMER,
   MARKETING_FINAL_CUSTOMER,
-  MARKETING_FINAL_REPORT_DATA
+  MARKETING_FINAL_REPORT_DATA,
 } from "../../../AtomStates";
 
 import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
@@ -149,27 +149,54 @@ import MoleculeMarketingSignUpButton from "../molecules/Marketing/MoleculeMarket
 import images from "../../../../assets/styles/Images";
 
 const PageExpertInsight = () => {
-  const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
+  const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(
+    BM_MODEL_SUGGESTION_REPORT_DATA
+  );
   const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
   const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
-  const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
-  const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
-  const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
-  const [bmSelectedProblemOptions, setBmSelectedProblemOptions] = useAtom(BM_SELECTED_PROBLEM_OPTIONS);
-  const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
-  const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
-  const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
-  const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
-  const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(SURVEY_GUIDELINE_REPORT_DATA);
-  const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
+  const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(
+    BM_BM_AUTO_REPORT_DATA
+  );
+  const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(
+    BM_LEAN_AUTO_REPORT_DATA
+  );
+  const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(
+    BM_BM_ADS_REPORT_DATA
+  );
+  const [bmSelectedProblemOptions, setBmSelectedProblemOptions] = useAtom(
+    BM_SELECTED_PROBLEM_OPTIONS
+  );
+  const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(
+    BM_LEAN_ADS_REPORT_DATA
+  );
+  const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(
+    BM_BM_CUSTOM_REPORT_DATA
+  );
+  const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(
+    BM_LEAN_CUSTOM_REPORT_DATA
+  );
+  const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] =
+    useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
+  const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(
+    SURVEY_GUIDELINE_REPORT_DATA
+  );
+  const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(
+    SURVEY_GOAL_SUGGESTION_LIST
+  );
   const [surveyGoalFixed, setSurveyGoalFixed] = useAtom(SURVEY_GOAL_FIXED);
-  const [surveyQuestionList, setSurveyQuestionList] = useAtom(SURVEY_QUESTION_LIST);
+  const [surveyQuestionList, setSurveyQuestionList] =
+    useAtom(SURVEY_QUESTION_LIST);
 
   const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
   const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
   const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
-  const [priceSelectedProductSegmentation, setPriceSelectedProductSegmentation] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
-  const [priceProductSegmentation, setPriceProductSegmentation] = useAtom(PRICE_PRODUCT_SEGMENTATION);
+  const [
+    priceSelectedProductSegmentation,
+    setPriceSelectedProductSegmentation,
+  ] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
+  const [priceProductSegmentation, setPriceProductSegmentation] = useAtom(
+    PRICE_PRODUCT_SEGMENTATION
+  );
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
@@ -178,12 +205,17 @@ const PageExpertInsight = () => {
 
   const navigate = useNavigate();
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
-  const [isExpertInsightAccessible, setIsExpertInsightAccessible] = useAtom(IS_EXPERT_INSIGHT_ACCESSIBLE);
+  const [isExpertInsightAccessible, setIsExpertInsightAccessible] = useAtom(
+    IS_EXPERT_INSIGHT_ACCESSIBLE
+  );
 
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
-  const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
-  const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
+  const [inputBusinessInfo, setInputBusinessInfo] =
+    useAtom(INPUT_BUSINESS_INFO);
+  const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
+    TITLE_OF_BUSINESS_INFORMATION
+  );
   const [
     mainFeaturesOfBusinessInformation,
     setMainFeaturesOfBusinessInformation,
@@ -196,59 +228,96 @@ const PageExpertInsight = () => {
     businessInformationTargetCustomer,
     setBusinessInformationTargetCustomer,
   ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
+  const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(
+    SELECTED_EXPERT_INDEX
+  );
   const [sections, setSections] = useState([]);
 
-  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
+  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
+    SELECTED_ADDITIONAL_KEYWORD
+  );
 
   const [
     selectedCustomerAdditionalKeyword,
     setSelectedCustomerAdditionalKeyword,
   ] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
 
-  const [customerAdditionalReportData, setCustomerAdditionalReportData] = useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
+  const [customerAdditionalReportData, setCustomerAdditionalReportData] =
+    useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
 
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
 
-  const [additionalReportData, setAdditionalReportData] = useAtom(ADDITIONAL_REPORT_DATA); // Use the new list-based atom
+  const [additionalReportData, setAdditionalReportData] = useAtom(
+    ADDITIONAL_REPORT_DATA
+  ); // Use the new list-based atom
 
-  const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA); // 변경된 부분
+  const [strategyReportData, setStrategyReportData] =
+    useAtom(STRATEGY_REPORT_DATA); // 변경된 부분
 
   const [isLoggedIn] = useAtom(IS_LOGGED_IN); // 로그인 상태 확인
   const [advise, setAdvise] = useState(""); // 새로운 advise 상태 추가
 
-  const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
-  
+  const [selectedExpertList, setSelectedExpertList] =
+    useAtom(SELECTED_EXPERT_LIST);
+
   const [savedTimestamp, setSavedTimestamp] = useAtom(SAVED_TIMESTAMP);
 
-  const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
-  const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
+  const [selectedPocOptions, setSelectedPocOptions] =
+    useAtom(SELECTED_POC_OPTIONS);
+  const [recommendedTargetData, setRecommendedTargetData] = useAtom(
+    RECOMMENDED_TARGET_DATA
+  );
 
-  const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_DATA);
+  const [pocDetailReportData, setpocDetailReportData] = useAtom(
+    POC_DETAIL_REPORT_DATA
+  );
 
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
-  const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
-  const [ideaFeatureDataTemp, setIdeaFeatureDataTemp] = useAtom(IDEA_FEATURE_DATA_TEMP);
-  const [ideaRequirementDataTemp, setIdeaRequirementDataTemp] = useAtom(IDEA_REQUIREMENT_DATA_TEMP);
+  const [ideaRequirementData, setIdeaRequirementData] = useAtom(
+    IDEA_REQUIREMENT_DATA
+  );
+  const [ideaFeatureDataTemp, setIdeaFeatureDataTemp] = useAtom(
+    IDEA_FEATURE_DATA_TEMP
+  );
+  const [ideaRequirementDataTemp, setIdeaRequirementDataTemp] = useAtom(
+    IDEA_REQUIREMENT_DATA_TEMP
+  );
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
   const [ideaMiroState, setIdeaMiroState] = useAtom(IDEA_MIRO_STATE);
-  const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
-  const [growthHackerDetailReportData, setGrowthHackerDetailReportData] = useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
+  const [growthHackerReportData, setGrowthHackerReportData] = useAtom(
+    GROWTH_HACKER_REPORT_DATA
+  );
+  const [growthHackerDetailReportData, setGrowthHackerDetailReportData] =
+    useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
   const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
 
   const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
   const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
 
   const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
-  const [marketingMbtiResult, setMarketingMbtiResult] = useAtom(MARKETING_MBTI_RESULT);
-  const [marketingResearchReportData, setMarketingResearchReportData] = useAtom(MARKETING_RESEARCH_REPORT_DATA);
-  const [marketingBmReportData, setMarketingBmReportData] = useAtom(MARKETING_BM_REPORT_DATA);
-  const [marketingCustomerData, setMarketingCustomerData] = useAtom(MARKETING_CUSTOMER_DATA);
-  const [marketingSelectedCustomer, setMarketingSelectedCustomer] = useAtom(MARKETING_SELECTED_CUSTOMER);
-  const [marketingFinalCustomer, setMarketingFinalCustomer] = useAtom(MARKETING_FINAL_CUSTOMER);
-  const [marketingFinalReportData, setMarketingFinalReportData] = useAtom(MARKETING_FINAL_REPORT_DATA);
+  const [marketingMbtiResult, setMarketingMbtiResult] = useAtom(
+    MARKETING_MBTI_RESULT
+  );
+  const [marketingResearchReportData, setMarketingResearchReportData] = useAtom(
+    MARKETING_RESEARCH_REPORT_DATA
+  );
+  const [marketingBmReportData, setMarketingBmReportData] = useAtom(
+    MARKETING_BM_REPORT_DATA
+  );
+  const [marketingCustomerData, setMarketingCustomerData] = useAtom(
+    MARKETING_CUSTOMER_DATA
+  );
+  const [marketingSelectedCustomer, setMarketingSelectedCustomer] = useAtom(
+    MARKETING_SELECTED_CUSTOMER
+  );
+  const [marketingFinalCustomer, setMarketingFinalCustomer] = useAtom(
+    MARKETING_FINAL_CUSTOMER
+  );
+  const [marketingFinalReportData, setMarketingFinalReportData] = useAtom(
+    MARKETING_FINAL_REPORT_DATA
+  );
 
   let additionalReportCount = 0;
   let customerAdditionalReportCount = 0;
@@ -308,10 +377,48 @@ const PageExpertInsight = () => {
     window.location.href = "/MarketingLanding";
   };
 
+  // 대화 아이템을 단계별로 렌더링하기 위한 상태 변수
+  const [renderedItems, setRenderedItems] = useState([]);
+  const [lastRenderedIndex, setLastRenderedIndex] = useState(-1);
+
+  useEffect(() => {
+    let totalDelay = 0;
+    const timers = [];
+
+    for (
+      let index = lastRenderedIndex + 1;
+      index < conversation.length;
+      index++
+    ) {
+      const item = conversation[index];
+
+      // 이전 아이템을 기준으로 딜레이 계산
+      let delay = 0;
+      if (index > 0 && conversation[index - 1].type === "system") {
+        const prevMessageLength = conversation[index - 1].message.length;
+        delay = prevMessageLength * 15; // 밀리초 단위 딜레이
+      }
+
+      totalDelay += delay;
+
+      const timer = setTimeout(() => {
+        setRenderedItems((prevItems) => [...prevItems, item]);
+        setLastRenderedIndex(index);
+      }, totalDelay);
+
+      timers.push(timer);
+    }
+
+    // 컴포넌트가 언마운트될 때 타이머를 정리합니다.
+    return () => {
+      timers.forEach((timer) => clearTimeout(timer));
+    };
+  }, [conversation]);
+
   useEffect(() => {
     // 접근 가능 여부를 확인하여 차단 로직 수행
     if (!isExpertInsightAccessible) {
-      navigate('/MeetAiExpert'); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
+      navigate("/MeetAiExpert"); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
     }
 
     // 페이지를 나갈 때 접근 가능 여부 초기화
@@ -331,27 +438,40 @@ const PageExpertInsight = () => {
             // console.log("서버에서 새로운 대화 ID 생성");
             const newConversationId = await createChatOnServer();
             setConversationId(newConversationId); // 생성된 대화 ID 설정
-            setIsExpertInsightAccessible(true); 
+            setIsExpertInsightAccessible(true);
             setIsLoadingPage(false); // 로딩 완료
             // 새로운 대화 ID로 경로 변경
             navigate(`/conversation/${newConversationId}`, { replace: true });
           } catch (error) {
             setIsLoadingPage(false); // 로딩 완료
-            setIsExpertInsightAccessible(true); 
+            setIsExpertInsightAccessible(true);
             console.error("Failed to create conversation on server:", error);
             navigate(`/conversation/${conversationId}`, { replace: true });
           }
         } else {
           // 3. 대화 ID가 이미 존재하면 IndexedDB에서 대화 불러오기
-          const savedConversation = await getConversationByIdFromIndexedDB(conversationId, isLoggedIn);
+          const savedConversation = await getConversationByIdFromIndexedDB(
+            conversationId,
+            isLoggedIn
+          );
 
           if (savedConversation) {
-            setSelectedExpertIndex(savedConversation.expert_index !== undefined ? savedConversation.expert_index : "0");
+            setSelectedExpertIndex(
+              savedConversation.expert_index !== undefined
+                ? savedConversation.expert_index
+                : "0"
+            );
             const analysisData = savedConversation.analysisReportData || {};
             setTitleOfBusinessInfo(analysisData.title || "");
-            setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
-            setMainCharacteristicOfBusinessInformation(analysisData.mainCharacter || []);
-            setBusinessInformationTargetCustomer(analysisData.mainCustomer || []);
+            setMainFeaturesOfBusinessInformation(
+              analysisData.mainFeatures || []
+            );
+            setMainCharacteristicOfBusinessInformation(
+              analysisData.mainCharacter || []
+            );
+            setBusinessInformationTargetCustomer(
+              analysisData.mainCustomer || []
+            );
 
             // 복구된 데이터를 로컬 상태로 설정
             setConversation(savedConversation.conversation);
@@ -360,71 +480,119 @@ const PageExpertInsight = () => {
 
             // 전략 보고서 데이터 복구
             setStrategyReportData(savedConversation.strategyReportData || {}); // 변경된 부분
-            setAdditionalReportData(savedConversation.additionalReportData || []);
-            setSelectedAdditionalKeyword(savedConversation.selectedAdditionalKeyword || []);
-            setSelectedCustomerAdditionalKeyword(savedConversation.selectedCustomerAdditionalKeyword || []);
-            setCustomerAdditionalReportData(savedConversation.customerAdditionalReportData || []);
+            setAdditionalReportData(
+              savedConversation.additionalReportData || []
+            );
+            setSelectedAdditionalKeyword(
+              savedConversation.selectedAdditionalKeyword || []
+            );
+            setSelectedCustomerAdditionalKeyword(
+              savedConversation.selectedCustomerAdditionalKeyword || []
+            );
+            setCustomerAdditionalReportData(
+              savedConversation.customerAdditionalReportData || []
+            );
 
             setSelectedPocOptions(savedConversation.selectedPocOptions || []);
             setSelectedPocTarget(savedConversation.selectedPocTarget || {});
-            setRecommendedTargetData(savedConversation.recommendedTargetData || {});
+            setRecommendedTargetData(
+              savedConversation.recommendedTargetData || {}
+            );
             setpocDetailReportData(savedConversation.pocDetailReportData || {});
             setPocPersonaList(savedConversation.pocPersonaList || []);
             setIdeaFeatureData(savedConversation.ideaFeatureData || []);
             setIdeaRequirementData(savedConversation.ideaRequirementData || []);
             setIdeaFeatureDataTemp(savedConversation.ideaFeatureData || []);
-            setIdeaRequirementDataTemp(savedConversation.ideaRequirementData || []);
+            setIdeaRequirementDataTemp(
+              savedConversation.ideaRequirementData || []
+            );
             setIdeaList(savedConversation.ideaList || []);
             setIdeaGroup(savedConversation.ideaGroup || {});
             setIdeaPriority(savedConversation.ideaPriority || []);
             setIdeaMiroState(savedConversation.ideaMiroState || 0);
             setButtonState(savedConversation.buttonState || {});
 
-            setGrowthHackerReportData(savedConversation.growthHackerReportData || []);
-            setGrowthHackerDetailReportData(savedConversation.growthHackerDetailReportData || {});
+            setGrowthHackerReportData(
+              savedConversation.growthHackerReportData || []
+            );
+            setGrowthHackerDetailReportData(
+              savedConversation.growthHackerDetailReportData || {}
+            );
             setKpiQuestionList(savedConversation.KpiQuestionList || []);
 
             setPriceScrapData(savedConversation.priceScrapData || {});
             setPriceReportData(savedConversation.priceReportData || {});
             setPriceProduct(savedConversation.priceProduct || []);
-            setPriceSelectedProductSegmentation(savedConversation.priceSelectedProductSegmentation || []);
-            setPriceProductSegmentation(savedConversation.priceProductSegmentation || []);
+            setPriceSelectedProductSegmentation(
+              savedConversation.priceSelectedProductSegmentation || []
+            );
+            setPriceProductSegmentation(
+              savedConversation.priceProductSegmentation || []
+            );
 
             setCaseReportData(savedConversation.caseReportData || []);
             setCaseHashTag(savedConversation.caseHashTag || []);
 
-            setSurveyGuidelineDetailReportData(savedConversation.surveyGuidelineDetailReportData || {});
-            setSurveyGuidelineReportData(savedConversation.surveyGuidelineReportData || {});
-            setSurveyGoalSuggestionList(savedConversation.surveyGoalSuggestionList || []);
+            setSurveyGuidelineDetailReportData(
+              savedConversation.surveyGuidelineDetailReportData || {}
+            );
+            setSurveyGuidelineReportData(
+              savedConversation.surveyGuidelineReportData || {}
+            );
+            setSurveyGoalSuggestionList(
+              savedConversation.surveyGoalSuggestionList || []
+            );
             setSurveyGoalFixed(savedConversation.surveyGoalFixed || []);
             setSurveyQuestionList(savedConversation.surveyQuestionList || []);
 
-            setBmModelSuggestionReportData(savedConversation.bmModelSuggestionReportData || []);
+            setBmModelSuggestionReportData(
+              savedConversation.bmModelSuggestionReportData || []
+            );
             setBmQuestionList(savedConversation.bmQuestionList || []);
-            setBmSelectedProblemOptions(savedConversation.bmSelectedProblemOptions || {});
+            setBmSelectedProblemOptions(
+              savedConversation.bmSelectedProblemOptions || {}
+            );
             setBmOrLean(savedConversation.bmOrLean || "");
             setBmBmAutoReportData(savedConversation.bmBmAutoReportData || []);
-            setBmLeanAutoReportData(savedConversation.bmLeanAutoReportData || []);
+            setBmLeanAutoReportData(
+              savedConversation.bmLeanAutoReportData || []
+            );
             setBmBmAdsReportData(savedConversation.bmBmAdsReportData || []);
             setBmLeanAdsReportData(savedConversation.bmLeanAdsReportData || []);
-            setBmBmCustomReportData(savedConversation.bmBmCustomReportData || []);
-            setBmLeanCustomReportData(savedConversation.bmLeanCustomReportData || []);
+            setBmBmCustomReportData(
+              savedConversation.bmBmCustomReportData || []
+            );
+            setBmLeanCustomReportData(
+              savedConversation.bmLeanCustomReportData || []
+            );
 
             setIsMarketing(savedConversation.isMarketing || false);
             setMarketingMbtiResult(savedConversation.marketingMbtiResult || {});
-            setMarketingResearchReportData(savedConversation.marketingResearchReportData || []);
-            setMarketingBmReportData(savedConversation.marketingBmReportData || []);
-            setMarketingCustomerData(savedConversation.marketingCustomerData || []);
-            setMarketingSelectedCustomer(savedConversation.marketingSelectedCustomer || []);
-            setMarketingFinalCustomer(savedConversation.marketingFinalCustomer || {});
-            setMarketingFinalReportData(savedConversation.marketingFinalReportData || []);
+            setMarketingResearchReportData(
+              savedConversation.marketingResearchReportData || []
+            );
+            setMarketingBmReportData(
+              savedConversation.marketingBmReportData || []
+            );
+            setMarketingCustomerData(
+              savedConversation.marketingCustomerData || []
+            );
+            setMarketingSelectedCustomer(
+              savedConversation.marketingSelectedCustomer || []
+            );
+            setMarketingFinalCustomer(
+              savedConversation.marketingFinalCustomer || {}
+            );
+            setMarketingFinalReportData(
+              savedConversation.marketingFinalReportData || []
+            );
           }
-          
+
           setIsLoadingPage(false); // 로딩 완료
         }
       } else if (isMarketing) {
         // 마케팅으로 진입 시
-        setIsExpertInsightAccessible(true); 
+        setIsExpertInsightAccessible(true);
         setIsLoadingPage(false);
         navigate(`/conversation/${conversationId}`, { replace: true });
       } else {
@@ -432,7 +600,7 @@ const PageExpertInsight = () => {
         // if (!conversationId) {
         //   setConversationId(nanoid()); // 비로그인 시 로컬에서 새로운 ID 생성
         //   setIsLoadingPage(false); // 로딩 완료
-        //   setIsExpertInsightAccessible(true); 
+        //   setIsExpertInsightAccessible(true);
         //   navigate(`/conversation/${conversationId}`, { replace: true });
         // } else {
         //   const savedConversation = await getConversationByIdFromIndexedDB(conversationId, isLoggedIn);
@@ -442,18 +610,14 @@ const PageExpertInsight = () => {
         //     setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
         //     setMainCharacteristicOfBusinessInformation(analysisData.mainCharacter || []);
         //     setBusinessInformationTargetCustomer(analysisData.mainCustomer || []);
-
         //     // 복구된 데이터를 로컬 상태로 설정
         //     setConversation(savedConversation.conversation);
         //     setConversationStage(savedConversation.conversationStage);
         //     setInputBusinessInfo(savedConversation.inputBusinessInfo);
-
         //     // 전략 보고서 데이터 복구
         //     setStrategyReportData(savedConversation.strategyReportData || {}); // 변경된 부분
-
         //     setAdditionalReportData(savedConversation.additionalReportData || []);
         //     setSelectedAdditionalKeyword(savedConversation.selectedAdditionalKeyword || []);
-
         //     // 대화 단계가 초기 상태라면 초기 시스템 메시지 설정
         //     if (savedConversation.conversationStage === 1) {
         //       const initialMessage = getInitialSystemMessage();
@@ -486,25 +650,25 @@ const PageExpertInsight = () => {
     loadConversation();
   }, [conversationId, isLoggedIn, navigate]);
 
-// 스크롤
-// const [isScrolled, setIsScrolled] = useState(false);
-// useEffect(() => {
-//   const handleScroll = () => {
-//     if (window.scrollY > 160) {
-//       setIsScrolled(true); // 스크롤이 내려가면 상태를 true로 변경
-//     } else {
-//       setIsScrolled(false); // 스크롤이 최상단에 있을 때 상태를 false로 변경
-//     }
-//   };
-//   window.addEventListener("scroll", handleScroll);
-//   return () => {
-//     window.removeEventListener("scroll", handleScroll); // 메모리 누수 방지
-//   };
-// }, []);
+  // 스크롤
+  // const [isScrolled, setIsScrolled] = useState(false);
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     if (window.scrollY > 160) {
+  //       setIsScrolled(true); // 스크롤이 내려가면 상태를 true로 변경
+  //     } else {
+  //       setIsScrolled(false); // 스크롤이 최상단에 있을 때 상태를 false로 변경
+  //     }
+  //   };
+  //   window.addEventListener("scroll", handleScroll);
+  //   return () => {
+  //     window.removeEventListener("scroll", handleScroll); // 메모리 누수 방지
+  //   };
+  // }, []);
 
-if (isLoadingPage) {
-  return <div>Loading...</div>;
-}
+  if (isLoadingPage) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -515,10 +679,13 @@ if (isLoadingPage) {
           <div>
             <ChatWrap>
               {!isMarketing && <MoleculeBizName date={savedTimestamp} />}
-              {conversation?.map((item, index) => {
+              {renderedItems.map((item, index) => {
                 if (item.type === "user") {
-                  return <MoleculeUserMessage key={index} message={item.message} />;
+                  return (
+                    <MoleculeUserMessage key={index} message={item.message} />
+                  );
                 } else if (item.type === "system") {
+                  console.log(item);
                   return <MoleculeSystemMessage key={index} item={item} />;
                 } else if (item.type === "analysis") {
                   return <OrganismBizAnalysisSection />;
@@ -538,20 +705,21 @@ if (isLoadingPage) {
                     />
                   );
                 } else if (item.type === "customerAddition") {
-                  const currentCustomerAdditionalReportCount = customerAdditionalReportCount++;
+                  const currentCustomerAdditionalReportCount =
+                    customerAdditionalReportCount++;
                   return (
                     <OrganismCustomerAdditionalReport
-                      customerAdditionalReportCount={currentCustomerAdditionalReportCount}
+                      customerAdditionalReportCount={
+                        currentCustomerAdditionalReportCount
+                      }
                     />
                   );
                 } else if (item.type === "keyword") {
                   return <MoleculeAdditionalKeyword />;
                 } else if (item.type === "reportButton") {
                   return <MoleculeCheckReportRightAway />;
-                } 
-                
-                /* PoC */
-                else if (item.type.startsWith("poc_")) {
+                } else if (item.type.startsWith("poc_")) {
+                  /* PoC */
                   const expertIndex = item.type.split("_")[1];
                   return (
                     <>
@@ -562,28 +730,25 @@ if (isLoadingPage) {
                     </>
                   );
                 } else if (item.type.startsWith("pocTarget_")) {
-                    const expertIndex = item.type.split("_")[1];
-                    return (
-                      <>
-                        <OrganismRecommendedTargetReport
-                          key={`pocTarget_${expertIndex}_${index}`}
-                          expertIndex={expertIndex}
-                        />
-                      </>
-                    );
+                  const expertIndex = item.type.split("_")[1];
+                  return (
+                    <>
+                      <OrganismRecommendedTargetReport
+                        key={`pocTarget_${expertIndex}_${index}`}
+                        expertIndex={expertIndex}
+                      />
+                    </>
+                  );
                 } else if (item.type === "pocPlanButton") {
                   return <MoleculeCheckPocRightAway />;
                 } else if (item.type === "pocTargetButton") {
                   return <MoleculeRecommendedTargetButton />;
                 } else if (item.type === "pocOption") {
                   return <MoleculeCheckPocOption />;
-                  //return <MoleculeCheckGrowthHackerOption />; // 임시 테스트용
                 } else if (item.type === "pocPersona") {
                   return <MoleculePersonaSelect />;
-                }
-                
-                /* 아이디어 디벨로퍼 */
-                else if (item.type === "ideaStartButton") {
+                } else if (item.type === "ideaStartButton") {
+                  /* 아이디어 디벨로퍼 */
                   return <MoleculeIdeaStartButton />;
                 } else if (item.type === "ideaCustomerButton") {
                   return <MoleculeIdeaCustomerButton />;
@@ -599,10 +764,8 @@ if (isLoadingPage) {
                   return <OrganismIdeaList />;
                 } else if (item.type === "ideaPriority") {
                   return <OrganismIdeaPriority />;
-                }
-
-                /* 그로스 해커 */
-                else if (item.type === "growthHackerStartButton") {
+                } else if (item.type === "growthHackerStartButton") {
+                  /* 그로스 해커 */
                   return <MoleculeGrowthHackerStartButton />;
                 } else if (item.type === "growthHackerOption") {
                   return <MoleculeCheckGrowthHackerOption />;
@@ -612,10 +775,8 @@ if (isLoadingPage) {
                   return <MoleculeGrowthHackerKPIButton />;
                 } else if (item.type === "growthHackerKPI") {
                   return <OrganismGrowthHackerKPI />;
-                } 
-
-                /* 가격 분석 전문가 */
-                else if (item.type === "priceStartButton") {
+                } else if (item.type === "priceStartButton") {
+                  /* 가격 분석 전문가 */
                   return <MoleculePriceStartButton />;
                 } else if (item.type === "priceOption") {
                   return <MoleculePriceOption />;
@@ -625,10 +786,8 @@ if (isLoadingPage) {
                   return <MoleculePriceContinueButton />;
                 } else if (item.type === "priceProductSegmentation") {
                   return <MoleculePriceProductSegmentation />;
-                }
-
-                /* 사례 분석 전문가 */
-                else if (item.type === "caseStartButton") {
+                } else if (item.type === "caseStartButton") {
+                  /* 사례 분석 전문가 */
                   return <MoleculeCaseStartButton />;
                 } else if (item.type === "caseContinueButton") {
                   return <MoleculeCaseContinueButton />;
@@ -639,10 +798,8 @@ if (isLoadingPage) {
                       caseReportCount={currentCaseReportCount}
                     />
                   );
-                }
-
-                /* BM 전문가 */
-                else if (item.type === "bmStartButton") {
+                } else if (item.type === "bmStartButton") {
+                  /* BM 전문가 */
                   return <MoleculeBmStartButton />;
                 } else if (item.type === "bmOption") {
                   return <MoleculeCheckBmOption />;
@@ -650,31 +807,26 @@ if (isLoadingPage) {
                   return <MoleculeBmModelSuggestion />;
                 } else if (item.type === "bmSelectModelButton") {
                   return <MoleculeBmSelectModelButton />;
-
                 } else if (item.type === "bmBmAdsContinueButton") {
                   return <MoleculeBmBmAdsContinueButton />;
                 } else if (item.type === "bmLeanAdsContinueButton") {
                   return <MoleculeBmLeanAdsContinueButton />;
-
                 } else if (item.type === "bmBmAutoReport") {
                   return <OrganismBmBmAutoReport />;
                 } else if (item.type === "bmLeanAutoReport") {
                   return <OrganismBmLeanAutoReport />;
-
                 } else if (item.type === "bmLeanAdsReport") {
                   return <OrganismBmLeanAdsReport />;
                 } else if (item.type === "bmBmAdsReport") {
                   return <OrganismBmBmAdsReport />;
-
                 } else if (item.type === "bmLeanCustomReport") {
                   return <OrganismBmLeanCustomReport />;
                 } else if (item.type === "bmBmCustomReport") {
                   return <OrganismBmBmCustomReport />;
                 } else if (item.type === "bmCustomContinueButton") {
-                  return <MoleculeBmCustomContinueButton />;}
-
-                /* 설문조사 전문가 */
-                else if (item.type === "surveyStartButton") {
+                  return <MoleculeBmCustomContinueButton />;
+                } else if (item.type === "surveyStartButton") {
+                  /* 설문조사 전문가 */
                   return <MoleculeSurveyStartButton />;
                 } else if (item.type === "surveyGoalSuggestion") {
                   return <MoleculeSurveyGoalSuggestion />;
@@ -682,10 +834,8 @@ if (isLoadingPage) {
                   return <MoleculeCheckSurveyOption />;
                 } else if (item.type === "surveyGuidelineReport") {
                   return <OrganismSurveyGuidelineReport />;
-                }
-
-                /* 마케팅 */
-                else if (item.type === "marketingStartButton") {
+                } else if (item.type === "marketingStartButton") {
+                  /* 마케팅 */
                   return <MoleculeMarketingStartButton />;
                 } else if (item.type === "marketingResearchReport") {
                   return <OrganismMarketingResearchReport />;
@@ -696,17 +846,21 @@ if (isLoadingPage) {
                 } else if (item.type === "marketingCustomerButton") {
                   return <MoleculeMarketingCustomerButton />;
                 } else if (item.type === "marketingCustomer") {
-                  const currentMarketingCustomerCount = marketingCustomerCount++;
+                  const currentMarketingCustomerCount =
+                    marketingCustomerCount++;
                   return (
                     <MoleculeMarketingCustomer
                       marketingCustomerCount={currentMarketingCustomerCount}
                     />
                   );
                 } else if (item.type === "marketingSegmentReport") {
-                  const currentMarketingSegmentReportCount = marketingSegmentReportCount++;
+                  const currentMarketingSegmentReportCount =
+                    marketingSegmentReportCount++;
                   return (
                     <OrganismMarketingSegmentReport
-                      marketingSegmentReportCount={currentMarketingSegmentReportCount}
+                      marketingSegmentReportCount={
+                        currentMarketingSegmentReportCount
+                      }
                     />
                   );
                 } else if (item.type === "marketingFinalReport") {
@@ -717,126 +871,54 @@ if (isLoadingPage) {
 
                 return null;
               })}
-
-              {selectedExpertIndex === "0" || selectedExpertIndex === "1" || selectedExpertIndex === "2" || selectedExpertIndex === "3" || selectedExpertIndex === "11" ?
-                <>
-                {/* 검색해서 시작 */}
-                {(approachPath === -1 || approachPath === 3) && 
-                  titleOfBusinessInfo &&
-                  <OrganismBizExpertSelect />
-                }
-
-                {/* 전문가 선택하고 시작 */}
-                {approachPath === 1 &&
-                  Object.keys(strategyReportData).length !== 0 &&
-                  !isLoading &&
-                    <OrganismBizExpertSelect />
-                }
-
-                {/* 히스토리로 진입 시 */}
-                {approachPath === 2 && 
-                  titleOfBusinessInfo &&
-                  conversation.length > 0 &&
-                  conversation[conversation.length - 1].type !== "reportButton" &&
-                  !isLoading &&
-                    <OrganismBizExpertSelect />
-                }
-                </>
-              :
-              selectedExpertIndex === "4" ?
-                <>
-                {
-                  Object.keys(recommendedTargetData).length !== 0 && 
-                    <OrganismBizExpertSelect />
-                }
-                </>
-              :
-              selectedExpertIndex === "5" ?
-                <>
-                {
-                  ideaPriority.length !== 0 &&  
-                    <OrganismBizExpertSelect />
-                }
-                </>
-              :
-              selectedExpertIndex === "6" ?
-                <>
-                {
-                  buttonState.growthHackerKPI === 1 &&
-                    <OrganismBizExpertSelect />
-                }
-                </>
-              :
-              selectedExpertIndex === "7" ?
-                <>
-                {
-                  buttonState.priceEnough === 1 &&
-                    <OrganismBizExpertSelect />
-                }
-                </>
-              :
-              selectedExpertIndex === "8" ?
-                <>
-                {
-                  buttonState.caseEnough === 1 &&
-                    <OrganismBizExpertSelect />
-                }
-                </>
-              :
-              selectedExpertIndex === "9" ?
-                <>
-                {
-                  buttonState.bmEnough === 1 &&
-                    <OrganismBizExpertSelect />
-                }
-                </>
-              :
-              selectedExpertIndex === "10" ?
-                <>
-                {
-                  buttonState.surveyEnd === 1 &&
-                    <OrganismBizExpertSelect />
-                }
-                </>
-              :
-              null
-              }
-              
             </ChatWrap>
 
             {conversationStage === 1 && !isMarketing ? (
               <OrganismSearchBottomBar isBlue={false} />
-            ) : (
-              selectedExpertIndex === "1" || selectedExpertIndex === "2" || selectedExpertIndex === "3" ?
+            ) : selectedExpertIndex === "1" ||
+              selectedExpertIndex === "2" ||
+              selectedExpertIndex === "3" ? (
+              <OrganismSearchBottomBar isBlue={true} />
+            ) : selectedExpertIndex === "4" ? (
+              Object.keys(recommendedTargetData).length !== 0 && (
                 <OrganismSearchBottomBar isBlue={true} />
-                :
-              selectedExpertIndex === "4" ? 
-                Object.keys(recommendedTargetData).length !== 0 && <OrganismSearchBottomBar isBlue={true} /> // 4번 전문가 끝났을 때 활성화
-                : 
-              selectedExpertIndex === "5" ? 
-                ideaPriority.length !== 0 && <OrganismSearchBottomBar isBlue={true} /> // 5번 전문가 끝났을 때 활성화
-                : 
-              selectedExpertIndex === "6" ?
-                buttonState.growthHackerKPI === 1 && <OrganismSearchBottomBar isBlue={true} /> // 6번 전문가 끝났을 때 활성화
-              : 
-              selectedExpertIndex === "7" ?
-                buttonState.priceEnough === 1 && <OrganismSearchBottomBar isBlue={true} /> // 7번 전문가 끝났을 때 활성화
-              :
-              selectedExpertIndex === "8" ?
-                buttonState.caseEnough === 1 ? <OrganismSearchBottomBar isBlue={true} /> // 사례 조사 끝났을 때 활성화
-                :
-                buttonState.caseStart === 1 && !isLoading && conversation[conversation.length - 1].type !== "caseContinueButton" && <OrganismSearchBottomBar isBlue={true} isHashTag={true}/> // 사례 조사 시작했을 때 활성화
-              :
-              selectedExpertIndex === "9" ?
-                buttonState.bmEnough === 1 && <OrganismSearchBottomBar isBlue={true} />
-              :
-              selectedExpertIndex === "10" ?
-                buttonState.surveyEnd === 1 ? <OrganismSearchBottomBar isBlue={true} /> // 설문조사 끝났을 때 활성화
-                :
-                buttonState.surveyGoalInputStart === 1 && <OrganismSearchBottomBar isBlue={true} isHashTag={true}/> // 설문조사 목적 입력 시 활성화
-              :
-              null
-            )}
+              ) // 4번 전문가 끝났을 때 활성화
+            ) : selectedExpertIndex === "5" ? (
+              ideaPriority.length !== 0 && (
+                <OrganismSearchBottomBar isBlue={true} />
+              ) // 5번 전문가 끝났을 때 활성화
+            ) : selectedExpertIndex === "6" ? (
+              buttonState.growthHackerKPI === 1 && (
+                <OrganismSearchBottomBar isBlue={true} />
+              ) // 6번 전문가 끝났을 때 활성화
+            ) : selectedExpertIndex === "7" ? (
+              buttonState.priceEnough === 1 && (
+                <OrganismSearchBottomBar isBlue={true} />
+              ) // 7번 전문가 끝났을 때 활성화
+            ) : selectedExpertIndex === "8" ? (
+              buttonState.caseEnough === 1 ? (
+                <OrganismSearchBottomBar isBlue={true} /> // 사례 조사 끝났을 때 활성화
+              ) : (
+                buttonState.caseStart === 1 &&
+                !isLoading &&
+                conversation[conversation.length - 1].type !==
+                  "caseContinueButton" && (
+                  <OrganismSearchBottomBar isBlue={true} isHashTag={true} />
+                )
+              ) // 사례 조사 시작했을 때 활성화
+            ) : selectedExpertIndex === "9" ? (
+              buttonState.bmEnough === 1 && (
+                <OrganismSearchBottomBar isBlue={true} />
+              )
+            ) : selectedExpertIndex === "10" ? (
+              buttonState.surveyEnd === 1 ? (
+                <OrganismSearchBottomBar isBlue={true} /> // 설문조사 끝났을 때 활성화
+              ) : (
+                buttonState.surveyGoalInputStart === 1 && (
+                  <OrganismSearchBottomBar isBlue={true} isHashTag={true} />
+                )
+              ) // 설문조사 목적 입력 시 활성화
+            ) : null}
           </div>
 
           {!isMarketing && <OrganismRightSideBar />}
@@ -844,32 +926,34 @@ if (isLoadingPage) {
       </ContentsWrap>
       {isExitPopupOpen && (
         <Popup Cancel>
-        <div>
-          <button
-            type="button"
-            className="closePopup"
-            onClick={handleExitCancel}
-          >
-            닫기
-          </button>
-          <span>
-            <img src={images.ExclamationMarkRed} alt="" />
-          </span>
-          <p>
-            <strong>정말 종료하시겠습니까?</strong>
-            <span>종료 또는 새로고침 할 경우, 모든 대화내역이 사라집니다.</span>
-          </p>
-          <div className="btnWrap">
-            <button type="button" onClick={handleExitCancel}>
-              대화를 저장할래요
+          <div>
+            <button
+              type="button"
+              className="closePopup"
+              onClick={handleExitCancel}
+            >
+              닫기
             </button>
-            <button type="button" onClick={handleExitConfirm}>
-              종료할게요
-            </button>
+            <span>
+              <img src={images.ExclamationMarkRed} alt="" />
+            </span>
+            <p>
+              <strong>정말 종료하시겠습니까?</strong>
+              <span>
+                종료 또는 새로고침 할 경우, 모든 대화내역이 사라집니다.
+              </span>
+            </p>
+            <div className="btnWrap">
+              <button type="button" onClick={handleExitCancel}>
+                대화를 저장할래요
+              </button>
+              <button type="button" onClick={handleExitConfirm}>
+                종료할게요
+              </button>
+            </div>
           </div>
-        </div>
-      </Popup>
-    )}
+        </Popup>
+      )}
     </>
   );
 };
@@ -889,8 +973,8 @@ const MainContent = styled.div`
   width: calc(100% - 40px);
   // padding-bottom: 150px;
   // margin: 0 auto;
-  margin:0 auto;
-  padding:0 40px;
+  margin: 0 auto;
+  padding: 0 40px;
   // justify-content:center;
 
   > div {
@@ -898,13 +982,13 @@ const MainContent = styled.div`
   }
 
   > div:first-child {
-    max-width:1030px;
+    max-width: 1030px;
     // max-width: 1240px;
     // max-width:800px;
     width: 100%;
     height: calc(100% - 60px);
     // margin: 0 20px;
-    margin:0 auto;
+    margin: 0 auto;
     // padding-bottom: 60px;
   }
 `;
@@ -917,8 +1001,8 @@ const ContentsWrap = styled.div`
 const ChatWrap = styled.div`
   position: relative;
   // height: calc(100% - 55px);
-  min-height:90%;
-  padding-bottom:60px;
+  min-height: 90%;
+  padding-bottom: 60px;
 
   &:before {
     position: sticky;
@@ -1013,12 +1097,12 @@ const Popup = styled.div`
       span {
         font-size: 0.75rem !important;
         font-weight: 400;
-        color: #F40404;
+        color: #f40404;
         display: block;
         margin-top: 8px;
       }
     }
-    
+
     .btnWrap {
       display: flex;
       align-items: center;
@@ -1026,7 +1110,7 @@ const Popup = styled.div`
 
       button {
         flex: 1;
-        font-family: 'Pretendard', 'Poppins';
+        font-family: "Pretendard", "Poppins";
         font-size: 0.875rem;
         font-weight: 600;
         color: ${palette.blue};
