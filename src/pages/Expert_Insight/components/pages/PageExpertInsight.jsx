@@ -383,7 +383,7 @@ const PageExpertInsight = () => {
   useEffect(() => {
     let totalDelay = 0;
     const timers = [];
-    const newRenderedItems = [...renderedItems]; // 현재 renderedItems 복사
+    const newRenderedItems = [...renderedItems];
   
     // conversation과 renderedItems를 비교하여 제거된 항목 찾기
     newRenderedItems.forEach((item, index) => {
@@ -404,30 +404,29 @@ const PageExpertInsight = () => {
     ) {
       const item = conversation[index];
   
-      if (item.type === "user") {
-        // 'user' 타입은 즉시 추가
-        setRenderedItems((prevItems) => [...prevItems, item]);
-        setLastRenderedIndex(index);
-      } else {
-        // 그 외 타입은 딜레이 후 추가
-        let delay = 0;
-        if (index > 0 && conversation[index - 1].type === "system") {
-          const prevMessageLength = conversation[index - 1].message.length;
-          delay = prevMessageLength * 15; // 밀리초 단위 딜레이
-        }
-    
-        totalDelay += delay;
-    
-        const timer = setTimeout(() => {
+      if (!newRenderedItems.includes(item)) { // 중복 방지
+        if (item.type === "user") {
           setRenderedItems((prevItems) => [...prevItems, item]);
           setLastRenderedIndex(index);
-        }, totalDelay);
-    
-        timers.push(timer);
+        } else {
+          let delay = 0;
+          if (index > 0 && conversation[index - 1].type === "system") {
+            const prevMessageLength = conversation[index - 1].message.length;
+            delay = prevMessageLength * 15;
+          }
+  
+          totalDelay += delay;
+  
+          const timer = setTimeout(() => {
+            setRenderedItems((prevItems) => [...prevItems, item]);
+            setLastRenderedIndex(index);
+          }, totalDelay);
+  
+          timers.push(timer);
+        }
       }
     }
   
-    // 컴포넌트가 언마운트될 때 타이머를 정리합니다.
     return () => {
       timers.forEach((timer) => clearTimeout(timer));
     };
@@ -708,14 +707,14 @@ const itemsToRender = approachPath === 2 ? conversation : renderedItems;
         <MainContent>
           <div>
             <ChatWrap>
-              <MoleculeBizName date={savedTimestamp} />
+              {!isMarketing && <MoleculeBizName date={savedTimestamp} />}
               {itemsToRender.map((item, index) => {
                 if (item.type === "user") {
                   return (
                     <MoleculeUserMessage key={index} message={item.message} />
                   );
                 } else if (item.type === "system") {
-                  console.log(item);
+                  // console.log(item);
                   return <MoleculeSystemMessage key={index} item={item} />;
                 } else if (item.type === "analysis") {
                   return <OrganismBizAnalysisSection />;

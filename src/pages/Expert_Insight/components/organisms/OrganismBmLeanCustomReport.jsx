@@ -286,10 +286,15 @@ useEffect(() => {
         // updatedConversation.push(
         //   {
         //     type: "system",
-        //     message: `"${bmSelectedProblemOptions}"에 대한 린 캔버스 작성이 완료되었습니다.\n다른 방향성에 따른 변경된 비즈니스 모델을 확인하려면, 아래 버튼을 클릭해주세요`,
+        //     message: `${bmSelectedProblemOptions.problemOptions}을 기반으로 린캔버스를 세분화하였습니다.`,
         //     expertIndex: selectedExpertIndex,
         //   },
-        //   { type: `bmCustomContinueButton`}
+        //   {
+        //     type: "system",
+        //     message: "추가적으로 세분화 작업을 진행 하실 수 있습니다.",
+        //     expertIndex: -1,
+        //   },
+        //   { type: `bmLeanAdsContinueButton`}
         // );
         updatedConversation.push(
           {
@@ -641,9 +646,9 @@ useEffect(() => {
                     <span><img src={images.IconCanvas10} alt="" /></span>
                     <div>
                       <strong>문제</strong>
-                      <p>{bmLeanAutoReportData[0]?.content?.[0]?.description}</p>
+                      <p>{bmLeanCustomReportData[0]?.content?.[0]?.description}</p>
                       <p className="tag">
-                        {bmLeanAutoReportData[0]?.content?.[0]?.keyword.map((keyword, index) => (
+                        {bmLeanCustomReportData[0]?.content?.[0]?.keyword.map((keyword, index) => (
                           <span key={index}>#{keyword}</span>
                         ))}
                       </p>
@@ -653,9 +658,9 @@ useEffect(() => {
                     <span><img src={images.IconCanvas07} alt="" /></span>
                     <div>
                       <strong>고객 세그먼트</strong>
-                      <p>{bmLeanAutoReportData[1]?.content?.[0]?.description}</p>
+                      <p>{bmLeanCustomReportData[1]?.content?.[0]?.description}</p>
                       <p className="tag">
-                        {bmLeanAutoReportData[1]?.content?.[0]?.keyword.map((keyword, index) => (
+                        {bmLeanCustomReportData[1]?.content?.[0]?.keyword.map((keyword, index) => (
                           <span key={index}>#{keyword}</span>
                         ))}
                       </p>
@@ -665,9 +670,9 @@ useEffect(() => {
                     <span><img src={images.IconCanvas04} alt="" /></span>
                     <div>
                       <strong>가치 제안</strong>
-                      <p>{bmLeanAutoReportData[2]?.content?.[0]?.description}</p>
+                      <p>{bmLeanCustomReportData[2]?.content?.[0]?.description}</p>
                       <p className="tag">
-                        {bmLeanAutoReportData[2]?.content?.[0]?.keyword.map((keyword, index) => (
+                        {bmLeanCustomReportData[2]?.content?.[0]?.keyword.map((keyword, index) => (
                           <span key={index}>#{keyword}</span>
                         ))}
                       </p>
@@ -677,9 +682,9 @@ useEffect(() => {
                     <span><img src={images.IconCanvas11} alt="" /></span>
                     <div>
                       <strong>솔루션</strong>
-                      <p>{bmLeanAutoReportData[3]?.content?.[0]?.description}</p>
+                      <p>{bmLeanCustomReportData[3]?.content?.[0]?.description}</p>
                       <p className="tag">
-                        {bmLeanAutoReportData[3]?.content?.[0]?.keyword.map((keyword, index) => (
+                        {bmLeanCustomReportData[3]?.content?.[0]?.keyword.map((keyword, index) => (
                           <span key={index}>#{keyword}</span>
                         ))}
                       </p>
@@ -689,9 +694,9 @@ useEffect(() => {
                     <span><img src={images.IconCanvas06} alt="" /></span>
                     <div>
                       <strong>채널</strong>
-                      <p>{bmLeanAutoReportData[5]?.content?.[0]?.description}</p>
+                      <p>{bmLeanCustomReportData[5]?.content?.[0]?.description}</p>
                       <p className="tag">
-                        {bmLeanAutoReportData[5]?.content?.[0]?.keyword.map((keyword, index) => (
+                        {bmLeanCustomReportData[5]?.content?.[0]?.keyword.map((keyword, index) => (
                           <span key={index}>#{keyword}</span>
                         ))}
                       </p>
@@ -701,9 +706,9 @@ useEffect(() => {
                     <span><img src={images.IconCanvas09} alt="" /></span>
                     <div>
                       <strong>수익 흐름</strong>
-                      <p>{bmLeanAutoReportData[6]?.content?.[0]?.description}</p>
+                      <p>{bmLeanCustomReportData[6]?.content?.[0]?.description}</p>
                       <p className="tag">
-                        {bmLeanAutoReportData[6]?.content?.[0]?.keyword.map((keyword, index) => (
+                        {bmLeanCustomReportData[6]?.content?.[0]?.keyword.map((keyword, index) => (
                           <span key={index}>#{keyword}</span>
                         ))}
                       </p>
@@ -713,9 +718,9 @@ useEffect(() => {
                     <span><img src={images.IconCanvas08} alt="" /></span>
                     <div>
                       <strong>비용구조</strong>
-                      <p>{bmLeanAutoReportData[7]?.content?.[0]?.description}</p>
+                      <p>{bmLeanCustomReportData[7]?.content?.[0]?.description}</p>
                       <p className="tag">
-                        {bmLeanAutoReportData[7]?.content?.[0]?.keyword.map((keyword, index) => (
+                        {bmLeanCustomReportData[7]?.content?.[0]?.keyword.map((keyword, index) => (
                           <span key={index}>#{keyword}</span>
                         ))}
                       </p>
@@ -725,9 +730,9 @@ useEffect(() => {
                     <span><img src={images.IconCanvas12} alt="" /></span>
                     <div>
                       <strong>핵심지표</strong>
-                      <p>{bmLeanAutoReportData[8]?.content?.[0]?.description}</p>
+                      <p>{bmLeanCustomReportData[8]?.content?.[0]?.description}</p>
                       <p className="tag">
-                        {bmLeanAutoReportData[8]?.content?.[0]?.keyword.map((keyword, index) => (
+                        {bmLeanCustomReportData[8]?.content?.[0]?.keyword.map((keyword, index) => (
                           <span key={index}>#{keyword}</span>
                         ))}
                       </p>
@@ -737,9 +742,9 @@ useEffect(() => {
                     <span><img src={images.IconCanvas13} alt="" /></span>
                     <div>
                       <strong>경쟁우위</strong>
-                      <p>{bmLeanAutoReportData[4]?.content?.[0]?.description}</p>
+                      <p>{bmLeanCustomReportData[4]?.content?.[0]?.description}</p>
                       <p className="tag">
-                        {bmLeanAutoReportData[4]?.content?.[0]?.keyword.map((keyword, index) => (
+                        {bmLeanCustomReportData[4]?.content?.[0]?.keyword.map((keyword, index) => (
                           <span key={index}>#{keyword}</span>
                         ))}
                       </p>
