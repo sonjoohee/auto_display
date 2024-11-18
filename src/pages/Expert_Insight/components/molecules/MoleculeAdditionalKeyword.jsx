@@ -85,7 +85,7 @@ const MoleculeAdditionalKeyword = () => {
 
   return (
     <>
-      <ButtonWrap>
+      <SelectButton>
         <button
           onClick={() =>
             updateSelectedAdditionalKeyword(randomSelections.방법론관련)
@@ -111,45 +111,46 @@ const MoleculeAdditionalKeyword = () => {
           <img src={images.IconRefresh} alt="" />
           다른 인사이트 확인
         </button>
-      </ButtonWrap>
+      </SelectButton>
     </>
   );
 };
 
 export default MoleculeAdditionalKeyword;
 
-const ButtonWrap = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 15px;
-  margin-left:50px;
-  padding-bottom: 15px;
+const SelectButton = styled.div`
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-top: 12px;
+  margin-left: 50px;
 
   button {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    min-height:38px;
-    font-family: "Pretendard", "Poppins";
-    font-size: 0.875rem;
-    color: ${palette.darkGray};
-    text-align:left;
-    border: 0;
-    background: none;
-    margin-right: 10px;
+    // display:inline-block;
+    // width:fit-content;
+    font-family: 'Pretendard', 'Poppins';
+    font-size:0.88rem;
+    color:${palette.chatBlue};
+    padding:8px 20px;
+    border-radius:40px;
+    border:0;
+    background:rgba(4, 83, 244, 0.1);
   }
 
-  > button {
-    padding: 8px 16px;
-    border-radius: 40px;
-    border: 1px solid ${palette.buttonLineGray};
+  .finish {
+    color:${palette.gray500};
+    background:${palette.gray100};
   }
 
   button.other {
+    display: flex;
+    align-items: center;
+    background: none;
     color: ${palette.lightGray};
     font-size: 0.75rem;
     border: none;
     gap: 4px;
+    padding-left: 10px;
 
     img {
       height: 19px;

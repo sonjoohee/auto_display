@@ -113,7 +113,7 @@ const MoleculeCheckBmOption = () => {
     updatedConversation.push(
       {
         type: "user",
-        message: `네 괜찮습니다. 이대로 진행해주세요`,
+        message: `완료되었습니다.`,
       },
       {
         type: "system",
