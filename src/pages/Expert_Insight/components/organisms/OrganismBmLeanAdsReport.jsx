@@ -206,7 +206,7 @@ const OrganismBmLeanAdsReport = () => {
     updatedConversation.push(
       {
         type: "user",
-        message: `*${problemOptions}*에 대한 린 캔버스를 작성해주세요`,
+        message: `${problemOptions}로 세분화 해주세요`,
       },
       {
         type: `bmLeanCustomReport`,

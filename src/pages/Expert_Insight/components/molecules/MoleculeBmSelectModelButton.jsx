@@ -39,7 +39,7 @@ const MoleculeBmSelectModelButton = () => {
     updatedConversation.push(
       {
         type: 'user', 
-        message: '비즈니스 모델 캔버스를 작성해주세요'
+        message: 'BM 모델 확인하기'
       },
       {
         type: 'bmBmAutoReport',
@@ -74,7 +74,7 @@ const MoleculeBmSelectModelButton = () => {
     updatedConversation.push(
       { 
         type: 'user', 
-        message: '린 캔버스를 작성해주세요'
+        message: 'BM 모델 확인하기'
       },
       {
         type: 'bmLeanAutoReport',

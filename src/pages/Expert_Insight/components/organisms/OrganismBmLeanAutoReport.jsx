@@ -565,7 +565,7 @@ const CanvasList = styled.div`
     font-size:0.88rem;
     font-weight:500;
     color:${palette.gray800};
-    margin-bottom:16px;
+    // margin-bottom:16px;
     
     span {
       width:26px;
