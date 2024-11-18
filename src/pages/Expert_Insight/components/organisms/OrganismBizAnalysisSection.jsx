@@ -590,7 +590,7 @@ const OrganismBizAnalysisSection = () => {
   return (
     <>
       <AnalysisSection>
-        {isLoadingAnalysis ? (
+        {isLoadingAnalysis || analysisButtonState ? (
           <>
             <SkeletonTitle className="title-placeholder" />
             <SkeletonLine className="content-placeholder" />
