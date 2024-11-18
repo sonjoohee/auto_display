@@ -44,9 +44,13 @@ const MoleculeBmLeanAdsContinueButton = () => {
     if(type === "more") {
         updatedConversation.push(
           {
+            type: "user",
+            message: "린 캔버스 세분화하기"
+          },
+          {
             type: "system",
             message:
-              "입력해주신 비즈니스 목표에 따른 캔버스의 정교화 방향성을 도출하였습니다.\n원하시는 방향을 선택하시고, 어떤 요소들이 변화되었는지 확인해보세요",
+              "제가 세분화하기 위한 여러가지 문제점을 도출해보았어요",
             expertIndex: selectedExpertIndex,
           },
           { type: `bmLeanAdsReport` }
@@ -64,7 +68,7 @@ const MoleculeBmLeanAdsContinueButton = () => {
         {
           type: "system",
           message:
-            "리포트 내용을 보시고 추가로 궁금한 점이 있나요?\n아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊",
+            "이외에 궁금한 점은 대화창에 입력해주시거나, 아래 키워드를 활용하여 추가적인 조언을 받아보세요",
           expertIndex: selectedExpertIndex,
         },
         { type: `keyword` }

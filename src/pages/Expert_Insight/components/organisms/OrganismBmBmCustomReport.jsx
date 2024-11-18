@@ -284,10 +284,15 @@ const OrganismBmBmCustomReport = () => {
         // updatedConversation.push(
         //   {
         //     type: "system",
-        //     message: `"${bmSelectedProblemOptions}"에 대한 린 캔버스 작성이 완료되었습니다.\n다른 방향성에 따른 변경된 비즈니스 모델을 확인하려면, 아래 버튼을 클릭해주세요`,
+        //     message: `${bmSelectedProblemOptions.problemOptions}을 기반으로 비즈니스 모델 캔버스를 세분화하였습니다.`,
         //     expertIndex: selectedExpertIndex,
         //   },
-        //   { type: `bmCustomContinueButton`}
+        //   {
+        //     type: "system",
+        //     message: "추가적으로 세분화 작업을 진행 하실 수 있습니다.",
+        //     expertIndex: -1,
+        //   },
+        //   { type: `bmBmAdsContinueButton`}
         // );
         updatedConversation.push(
           {
@@ -636,9 +641,9 @@ const OrganismBmBmCustomReport = () => {
                     <span><img src={images.IconCanvas07} alt="" /></span>
                     <div>
                       <strong>타겟 고객군</strong>
-                      <p>{bmBmAutoReportData[0]?.content?.[0]?.description}</p>
+                      <p>{bmBmCustomReportData[0]?.content?.[0]?.description}</p>
                       <p className="tag">
-                        {bmBmAutoReportData[0]?.content?.[0]?.keyword.map((keyword, index) => (
+                        {bmBmCustomReportData[0]?.content?.[0]?.keyword.map((keyword, index) => (
                           <span key={index}>#{keyword}</span>
                         ))}
                       </p>
@@ -648,9 +653,9 @@ const OrganismBmBmCustomReport = () => {
                     <span><img src={images.IconCanvas04} alt="" /></span>
                     <div>
                       <strong>가치 제안</strong>
-                      <p>{bmBmAutoReportData[1]?.content?.[0]?.description}</p>
+                      <p>{bmBmCustomReportData[1]?.content?.[0]?.description}</p>
                       <p className="tag">
-                        {bmBmAutoReportData[1]?.content?.[0]?.keyword.map((keyword, index) => (
+                        {bmBmCustomReportData[1]?.content?.[0]?.keyword.map((keyword, index) => (
                           <span key={index}>#{keyword}</span>
                         ))}
                       </p>
@@ -660,9 +665,9 @@ const OrganismBmBmCustomReport = () => {
                     <span><img src={images.IconCanvas06} alt="" /></span>
                     <div>
                       <strong>채널</strong>
-                      <p>{bmBmAutoReportData[2]?.content?.[0]?.description}</p>
+                      <p>{bmBmCustomReportData[2]?.content?.[0]?.description}</p>
                       <p className="tag">
-                        {bmBmAutoReportData[2]?.content?.[0]?.keyword.map((keyword, index) => (
+                        {bmBmCustomReportData[2]?.content?.[0]?.keyword.map((keyword, index) => (
                           <span key={index}>#{keyword}</span>
                         ))}
                       </p>
@@ -672,9 +677,9 @@ const OrganismBmBmCustomReport = () => {
                     <span><img src={images.IconCanvas05} alt="" /></span>
                     <div>
                       <strong>고객관계</strong>
-                      <p>{bmBmAutoReportData[3]?.content?.[0]?.description}</p>
+                      <p>{bmBmCustomReportData[3]?.content?.[0]?.description}</p>
                       <p className="tag">
-                        {bmBmAutoReportData[3]?.content?.[0]?.keyword.map((keyword, index) => (
+                        {bmBmCustomReportData[3]?.content?.[0]?.keyword.map((keyword, index) => (
                           <span key={index}>#{keyword}</span>
                         ))}
                       </p>
@@ -684,9 +689,9 @@ const OrganismBmBmCustomReport = () => {
                     <span><img src={images.IconCanvas09} alt="" /></span>
                     <div>
                       <strong>수익원</strong>
-                      <p>{bmBmAutoReportData[4]?.content?.[0]?.description}</p>
+                      <p>{bmBmCustomReportData[4]?.content?.[0]?.description}</p>
                       <p className="tag">
-                        {bmBmAutoReportData[4]?.content?.[0]?.keyword.map((keyword, index) => (
+                        {bmBmCustomReportData[4]?.content?.[0]?.keyword.map((keyword, index) => (
                           <span key={index}>#{keyword}</span>
                         ))}
                       </p>
@@ -696,9 +701,9 @@ const OrganismBmBmCustomReport = () => {
                     <span><img src={images.IconCanvas02} alt="" /></span>
                     <div>
                       <strong>핵심활동</strong>
-                      <p>{bmBmAutoReportData[6]?.content?.[0]?.description}</p>
+                      <p>{bmBmCustomReportData[6]?.content?.[0]?.description}</p>
                       <p className="tag">
-                        {bmBmAutoReportData[6]?.content?.[0]?.keyword.map((keyword, index) => (
+                        {bmBmCustomReportData[6]?.content?.[0]?.keyword.map((keyword, index) => (
                           <span key={index}>#{keyword}</span>
                         ))}
                       </p>
@@ -708,9 +713,9 @@ const OrganismBmBmCustomReport = () => {
                     <span><img src={images.IconCanvas03} alt="" /></span>
                     <div>
                       <strong>핵심자원</strong>
-                      <p>{bmBmAutoReportData[5]?.content?.[0]?.description}</p>
+                      <p>{bmBmCustomReportData[5]?.content?.[0]?.description}</p>
                       <p className="tag">
-                        {bmBmAutoReportData[5]?.content?.[0]?.keyword.map((keyword, index) => (
+                        {bmBmCustomReportData[5]?.content?.[0]?.keyword.map((keyword, index) => (
                           <span key={index}>#{keyword}</span>
                         ))}
                       </p>
@@ -720,9 +725,9 @@ const OrganismBmBmCustomReport = () => {
                     <span><img src={images.IconCanvas01} alt="" /></span>
                     <div>
                       <strong>핵심 파트너십</strong>
-                      <p>{bmBmAutoReportData[7]?.content?.[0]?.description}</p>
+                      <p>{bmBmCustomReportData[7]?.content?.[0]?.description}</p>
                       <p className="tag">
-                        {bmBmAutoReportData[7]?.content?.[0]?.keyword.map((keyword, index) => (
+                        {bmBmCustomReportData[7]?.content?.[0]?.keyword.map((keyword, index) => (
                           <span key={index}>#{keyword}</span>
                         ))}
                       </p>
@@ -732,9 +737,9 @@ const OrganismBmBmCustomReport = () => {
                     <span><img src={images.IconCanvas08} alt="" /></span>
                     <div>
                       <strong>비용구조</strong>
-                      <p>{bmBmAutoReportData[8]?.content?.[0]?.description}</p>
+                      <p>{bmBmCustomReportData[8]?.content?.[0]?.description}</p>
                       <p className="tag">
-                        {bmBmAutoReportData[8]?.content?.[0]?.keyword.map((keyword, index) => (
+                        {bmBmCustomReportData[8]?.content?.[0]?.keyword.map((keyword, index) => (
                           <span key={index}>#{keyword}</span>
                         ))}
                       </p>
