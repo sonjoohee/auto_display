@@ -10,7 +10,7 @@ const MoleculeSystemMessage = ({ item }) => {
   const [isTyping, setIsTyping] = useState(true); // 타이핑 중인지 여부
   const message = item.message;
   const selectedExpertIndex = item.expertIndex;
-
+  console.log(item);
 
   useEffect(() => {
     const messageLines = message.split("\n"); // 메시지를 줄바꿈 기준으로 나눔
@@ -98,25 +98,25 @@ const SystemMessageContainer = styled.div`
 `;
 
 const Bubble = styled.div`
-  font-size:1rem;
+  font-size: 1rem;
   padding: 14px 20px;
   border-radius: 15px;
-  border:1px solid ${palette.gray200};
-  position:relative;
-  max-width:80%;
-  width:fit-content;
-  display:inline-flex;
-  font-weight:300;
-  color:${palette.gray800};
-  line-height:1.6;
-  text-align:left;
+  border: 1px solid ${palette.gray200};
+  position: relative;
+  max-width: 80%;
+  width: fit-content;
+  display: inline-flex;
+  font-weight: 300;
+  color: ${palette.gray800};
+  line-height: 1.6;
+  text-align: left;
 
   .time {
-    position:absolute;
-    right:-80px;
-    bottom:1px;
-    font-size:0.75rem;
-    color:${palette.gray500};
+    position: absolute;
+    right: -80px;
+    bottom: 1px;
+    font-size: 0.75rem;
+    color: ${palette.gray500};
   }
 `;
 
