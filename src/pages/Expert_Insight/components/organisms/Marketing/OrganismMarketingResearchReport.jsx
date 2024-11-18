@@ -63,7 +63,7 @@ const OrganismMarketingResearchReport = () => {
   useEffect(() => {
     const fetchMarketingResearchReport = async () => {
       try {
-       if(marketingStartButtonState === 1) {
+      if(marketingStartButtonState === 1) {
           setIsLoadingMarketingResearchReport(true);
           setIsLoading(true);
           setMarketingStartButtonState(0);
@@ -167,7 +167,8 @@ const OrganismMarketingResearchReport = () => {
   return (
     <>
     <ThemeProvider theme={theme}>
-      {isLoadingMarketingResearchReport ? (
+    
+      {isLoadingMarketingResearchReport || marketingStartButtonState ? (
         <SummaryBox>
           <h3>로딩 중...</h3>
         </SummaryBox>
@@ -242,6 +243,7 @@ const OrganismMarketingResearchReport = () => {
         </Sidebar>
         </>
       )}
+      
     </ThemeProvider>
     </>
   );

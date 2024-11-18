@@ -39,7 +39,7 @@ const MoleculeBmSelectModelButton = () => {
     updatedConversation.push(
       {
         type: 'user', 
-        message: '비즈니스 모델 캔버스를 작성해주세요'
+        message: 'BM 모델 확인하기'
       },
       {
         type: 'bmBmAutoReport',
@@ -74,7 +74,7 @@ const MoleculeBmSelectModelButton = () => {
     updatedConversation.push(
       { 
         type: 'user', 
-        message: '린 캔버스를 작성해주세요'
+        message: 'BM 모델 확인하기'
       },
       {
         type: 'bmLeanAutoReport',
@@ -99,44 +99,37 @@ const MoleculeBmSelectModelButton = () => {
   return (
     
     <>
-      <ButtonWrap>
-        <button onClick={handleBMClick}>비즈니스 모델 캔버스 작성하기</button>
-        <button onClick={handleLeanClick}>린 캔버스 작성하기</button>
-      </ButtonWrap>
+      <SelectButton>
+        <button onClick={handleBMClick}>Lean 🔎</button>
+        <button onClick={handleLeanClick}>BM 🔎</button>
+      </SelectButton>
     </>
   );
 };
 
 export default MoleculeBmSelectModelButton;
 
-const ButtonWrap = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 15px;
-  padding-bottom: 15px;
-  margin-left:50px;
+const SelectButton = styled.div`
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-top: 12px;
+  margin-left: 50px;
 
   button {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-family: "Pretendard";
-    font-size: 0.875rem;
-    color: ${palette.darkGray};
-    border: 0;
-    background: none;
-    margin-right: 10px;
+    // display:inline-block;
+    // width:fit-content;
+    font-family: 'Pretendard', 'Poppins';
+    font-size:0.88rem;
+    color:${palette.chatBlue};
+    padding:8px 20px;
+    border-radius:40px;
+    border:0;
+    background:rgba(4, 83, 244, 0.1);
   }
 
-  > button {
-    padding: 8px 16px;
-    border-radius: 40px;
-    border: 1px solid ${palette.lineGray};
-  }
-
-  button.other {
-    color: ${palette.lightGray};
-    font-size: 0.75rem;
-    border: none;
+  .finish {
+    color:${palette.gray500};
+    background:${palette.gray100};
   }
 `;

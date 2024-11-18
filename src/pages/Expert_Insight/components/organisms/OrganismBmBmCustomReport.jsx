@@ -66,6 +66,12 @@ const OrganismBmBmCustomReport = () => {
   const popupRef = useRef(null);
   const [loadingDownload, setLoadingDownload] = useState(false);
 
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   const axiosConfig = {
     timeout: 100000, // 100초
     headers: {
@@ -278,16 +284,21 @@ const OrganismBmBmCustomReport = () => {
         // updatedConversation.push(
         //   {
         //     type: "system",
-        //     message: `"${bmSelectedProblemOptions}"에 대한 린 캔버스 작성이 완료되었습니다.\n다른 방향성에 따른 변경된 비즈니스 모델을 확인하려면, 아래 버튼을 클릭해주세요`,
+        //     message: `${bmSelectedProblemOptions.problemOptions}을 기반으로 비즈니스 모델 캔버스를 세분화하였습니다.`,
         //     expertIndex: selectedExpertIndex,
         //   },
-        //   { type: `bmCustomContinueButton`}
+        //   {
+        //     type: "system",
+        //     message: "추가적으로 세분화 작업을 진행 하실 수 있습니다.",
+        //     expertIndex: -1,
+        //   },
+        //   { type: `bmBmAdsContinueButton`}
         // );
         updatedConversation.push(
           {
             type: "system",
             message:
-              "리포트 내용을 보시고 추가로 궁금한 점이 있나요?\n아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊",
+              "이외에 궁금한 점은 대화창에 입력해주시거나, 아래 키워드를 활용하여 추가적인 조언을 받아보세요",
             expertIndex: selectedExpertIndex,
           },
           { type: `keyword` }
@@ -326,6 +337,8 @@ const OrganismBmBmCustomReport = () => {
         </>
       ) : (
         <>
+          <Overlay isMenuOpen={isMenuOpen} onClick={() => setIsMenuOpen(false)} />
+
           <h1>{titleOfBusinessInfo}의 비즈니스 모델 캔버스 - {bmSelectedProblemOptions.problemOptions}</h1>
           <p>{mainFeaturesOfBusinessInformation[0]}</p>
   
@@ -342,7 +355,7 @@ const OrganismBmBmCustomReport = () => {
                 </strong>
                 {bmBmCustomReportData[7]?.content?.map((contentItem, contentIndex) => (
                   <div key={contentIndex}>
-                    {contentIndex === 0 && <p>{contentItem?.description}</p>}
+                    {/* {contentIndex === 0 && <p>{contentItem?.description}</p>} */}
                     <ul>
                       {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
                         <li key={keywordIndex}>{keywordItem}</li>
@@ -365,7 +378,7 @@ const OrganismBmBmCustomReport = () => {
                   </strong>
                   {section?.content?.map((contentItem, contentIndex) => (
                     <div key={contentIndex}>
-                      {contentIndex === 0 && <p>{contentItem?.description}</p>}
+                      {/* {contentIndex === 0 && <p>{contentItem?.description}</p>} */}
                       <ul>
                         {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
                           <li key={keywordIndex}>{keywordItem}</li>
@@ -388,7 +401,7 @@ const OrganismBmBmCustomReport = () => {
                 </strong>
                 {bmBmCustomReportData[1]?.content?.map((contentItem, contentIndex) => (
                   <div key={contentIndex}>
-                    {contentIndex === 0 && <p>{contentItem?.description}</p>}
+                    {/* {contentIndex === 0 && <p>{contentItem?.description}</p>} */}
                     <ul>
                       {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
                         <li key={keywordIndex}>{keywordItem}</li>
@@ -411,7 +424,7 @@ const OrganismBmBmCustomReport = () => {
                   </strong>
                   {section?.content?.map((contentItem, contentIndex) => (
                     <div key={contentIndex}>
-                      {contentIndex === 0 && <p>{contentItem?.description}</p>}
+                      {/* {contentIndex === 0 && <p>{contentItem?.description}</p>} */}
                       <ul>
                         {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
                           <li key={keywordIndex}>{keywordItem}</li>
@@ -434,7 +447,7 @@ const OrganismBmBmCustomReport = () => {
                 </strong>
                 {bmBmCustomReportData[0]?.content?.map((contentItem, contentIndex) => (
                   <div key={contentIndex}>
-                    {contentIndex === 0 && <p>{contentItem?.description}</p>}
+                    {/* {contentIndex === 0 && <p>{contentItem?.description}</p>} */}
                     <ul>
                       {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
                         <li key={keywordIndex}>{keywordItem}</li>
@@ -458,7 +471,7 @@ const OrganismBmBmCustomReport = () => {
               </strong>
               {bmBmCustomReportData[8]?.content?.map((contentItem, contentIndex) => (
                 <div key={contentIndex}>
-                  {contentIndex === 0 && <p>{contentItem?.description}</p>}
+                  {/* {contentIndex === 0 && <p>{contentItem?.description}</p>} */}
                   <ul>
                     {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
                       <li key={keywordIndex}>{keywordItem}</li>
@@ -480,7 +493,7 @@ const OrganismBmBmCustomReport = () => {
               </strong>
               {bmBmCustomReportData[4]?.content?.map((contentItem, contentIndex) => (
                 <div key={contentIndex}>
-                  {contentIndex === 0 && <p>{contentItem?.description}</p>}
+                  {/* {contentIndex === 0 && <p>{contentItem?.description}</p>} */}
                   <ul>
                     {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
                       <li key={keywordIndex}>{keywordItem}</li>
@@ -491,7 +504,7 @@ const OrganismBmBmCustomReport = () => {
             </section>
           </CanvasList>
         </CanvasSection>
-        <ButtonSectionWrap>
+        {/* <ButtonSectionWrap>
         <DownloadButton onClick={togglePopupDownload} className="download-button">
             <p>
               <img src={images.IconEdit3} alt="" />
@@ -507,7 +520,7 @@ const OrganismBmBmCustomReport = () => {
               </button>
             </div>
           </DownloadButton>
-            {/* <ButtonWrap>
+            <ButtonWrap>
               <div />
               <div>
                 <button type="button">
@@ -519,9 +532,13 @@ const OrganismBmBmCustomReport = () => {
                   저장하기
                 </button>
               </div>
-            </ButtonWrap> */}
-            </ButtonSectionWrap>
+            </ButtonWrap>
+            </ButtonSectionWrap> */}
           </ModelCanvasWrap>
+          <button onClick={() => toggleMenu()}>
+            <img src={images.IconDetailView} alt="" />
+              상세 내용 확인하기
+          </button>
         </>
       )}
       {isPopupOpenDownload && (
@@ -610,6 +627,129 @@ const OrganismBmBmCustomReport = () => {
           </div>
         </DownloadPopup>
       )}
+          <Sidebar isMenuOpen={isMenuOpen}>
+            <div>
+              <div className="header">
+              <h5>비즈니스 모델 상세 리포트</h5>
+              <button className="closePopup" onClick={() => setIsMenuOpen(false)}>닫기</button>
+            </div>
+            <div className="body">
+              {/* <p>{marketingBmReportData[9]?.content?.conclusion}</p> */}
+              <ScrollWrap>
+                <ListBox>
+                  <div>
+                    <span><img src={images.IconCanvas07} alt="" /></span>
+                    <div>
+                      <strong>타겟 고객군</strong>
+                      <p>{bmBmCustomReportData[0]?.content?.[0]?.description}</p>
+                      <p className="tag">
+                        {bmBmCustomReportData[0]?.content?.[0]?.keyword.map((keyword, index) => (
+                          <span key={index}>#{keyword}</span>
+                        ))}
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <span><img src={images.IconCanvas04} alt="" /></span>
+                    <div>
+                      <strong>가치 제안</strong>
+                      <p>{bmBmCustomReportData[1]?.content?.[0]?.description}</p>
+                      <p className="tag">
+                        {bmBmCustomReportData[1]?.content?.[0]?.keyword.map((keyword, index) => (
+                          <span key={index}>#{keyword}</span>
+                        ))}
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <span><img src={images.IconCanvas06} alt="" /></span>
+                    <div>
+                      <strong>채널</strong>
+                      <p>{bmBmCustomReportData[2]?.content?.[0]?.description}</p>
+                      <p className="tag">
+                        {bmBmCustomReportData[2]?.content?.[0]?.keyword.map((keyword, index) => (
+                          <span key={index}>#{keyword}</span>
+                        ))}
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <span><img src={images.IconCanvas05} alt="" /></span>
+                    <div>
+                      <strong>고객관계</strong>
+                      <p>{bmBmCustomReportData[3]?.content?.[0]?.description}</p>
+                      <p className="tag">
+                        {bmBmCustomReportData[3]?.content?.[0]?.keyword.map((keyword, index) => (
+                          <span key={index}>#{keyword}</span>
+                        ))}
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <span><img src={images.IconCanvas09} alt="" /></span>
+                    <div>
+                      <strong>수익원</strong>
+                      <p>{bmBmCustomReportData[4]?.content?.[0]?.description}</p>
+                      <p className="tag">
+                        {bmBmCustomReportData[4]?.content?.[0]?.keyword.map((keyword, index) => (
+                          <span key={index}>#{keyword}</span>
+                        ))}
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <span><img src={images.IconCanvas02} alt="" /></span>
+                    <div>
+                      <strong>핵심활동</strong>
+                      <p>{bmBmCustomReportData[6]?.content?.[0]?.description}</p>
+                      <p className="tag">
+                        {bmBmCustomReportData[6]?.content?.[0]?.keyword.map((keyword, index) => (
+                          <span key={index}>#{keyword}</span>
+                        ))}
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <span><img src={images.IconCanvas03} alt="" /></span>
+                    <div>
+                      <strong>핵심자원</strong>
+                      <p>{bmBmCustomReportData[5]?.content?.[0]?.description}</p>
+                      <p className="tag">
+                        {bmBmCustomReportData[5]?.content?.[0]?.keyword.map((keyword, index) => (
+                          <span key={index}>#{keyword}</span>
+                        ))}
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <span><img src={images.IconCanvas01} alt="" /></span>
+                    <div>
+                      <strong>핵심 파트너십</strong>
+                      <p>{bmBmCustomReportData[7]?.content?.[0]?.description}</p>
+                      <p className="tag">
+                        {bmBmCustomReportData[7]?.content?.[0]?.keyword.map((keyword, index) => (
+                          <span key={index}>#{keyword}</span>
+                        ))}
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <span><img src={images.IconCanvas08} alt="" /></span>
+                    <div>
+                      <strong>비용구조</strong>
+                      <p>{bmBmCustomReportData[8]?.content?.[0]?.description}</p>
+                      <p className="tag">
+                        {bmBmCustomReportData[8]?.content?.[0]?.keyword.map((keyword, index) => (
+                          <span key={index}>#{keyword}</span>
+                        ))}
+                      </p>
+                    </div>
+                  </div>
+                </ListBox>
+              </ScrollWrap>
+            </div>
+          </div>
+        </Sidebar>
     </BoxWrap>
   );
 };
@@ -638,13 +778,26 @@ const BoxWrap = styled.div`
     font-size:0.88rem;
     line-height:1.3;
   }
+
+  button {
+    display:flex;
+    align-items:center;
+    gap:5px;
+    font-family: 'Pretendard', 'Poppins';
+    font-size:0.75rem;
+    color:${palette.gray500};
+    padding:6px 0;
+    margin-top:5px;
+    border:0;
+    background:none;
+  }
 `;
 
 const ModelCanvasWrap = styled.div`
   display:flex;
   flex-direction:column;
   gap:12px;
-  margin:24px auto 0;
+  margin:24px 0;
 `;
 
 const CanvasSection = styled.div`
@@ -686,7 +839,7 @@ const CanvasList = styled.div`
     font-size:0.88rem;
     font-weight:500;
     color:${palette.gray800};
-    margin-bottom:16px;
+    // margin-bottom:16px;
     
     span {
       width:26px;
@@ -993,4 +1146,197 @@ const SelectBox = styled.div`
   .disabled span {
     color: ${palette.gray300};
   }
+`;
+
+const Sidebar = styled.div`
+  // position:absolute;
+  // top: 0;
+  // right: ${({ isMenuOpen }) => (isMenuOpen ? '0' : '-800px')};
+  // height: 100%;
+  // max-width: 800px;
+  // width:100%;
+
+  width: ${({ isMenuOpen }) => (isMenuOpen ? '800px' : '0')};
+
+  background:${palette.white};
+  // transform: ${({ isMenuOpen }) => (isMenuOpen ? 'translateX(0)' : 'translateX(200%)')};
+  transition: all .5s;
+  z-index: 9999;
+
+  visibility: ${({ isMenuOpen }) => (isMenuOpen ? 'visible' : 'hidden')};
+  overflow:hidden;
+  flex-shrink:0;
+  position:fixed;
+  top:0;
+  right:0;
+  height:100vh;
+
+  
+  > div {
+    display: flex;
+    flex-direction: column;
+    gap:50px;
+    width: 100%;
+    // max-width: 800px;
+    height: 100%;
+    text-align: center;
+    // overflow:hidden;
+    padding: 32px;
+    border-radius: 10px;
+    background: ${palette.white};
+  }
+
+  .header {
+    position:relative;
+    display:flex;
+    flex-direction: column;
+    gap:16px;
+    align-items:center;
+
+    h5 {
+      width:100%;
+      font-size:1.25rem;
+      font-weight:600;
+      line-height:1.3;
+      color:${palette.gray800};
+      text-align:left;
+
+      p {
+        font-size:1rem;
+        font-weight:400;
+        line-height:1.5;
+        margin-top:16px;
+      }
+    }
+  }
+
+  .closePopup {
+    position:absolute;
+    top:0;
+    right:0;
+    width:21px;
+    height:21px;
+    font-size:0;
+    border:0;
+    background:none;
+
+    &:before, &:after {
+      position:absolute;
+      top:50%;
+      left:50%;
+      width:3px;
+      height:21px;
+      display:inline-block;
+      border-radius:50px;
+      background:${palette.gray500};
+      content:'';
+    }
+    &:before {
+      transform:translate(-50%, -50%) rotate(45deg);
+    }
+    &:after {
+      transform:translate(-50%, -50%) rotate(-45deg);
+    }
+  }
+
+  .body {
+    height:calc(100% - 80px);
+    display: flex;
+    flex-direction: column;
+    gap:32px;
+
+    p {
+      line-height:1.5;
+      color:${palette.gray800};
+      text-align:left;
+    }
+  }
+
+
+  h2 {
+    margin-top: 0;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    margin: 20px 0;
+  }
+`;
+
+const ScrollWrap = styled.div`
+  position:relative;
+  flex:1 1 0%;
+  overflow-y:auto;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: ${palette.lineGray};
+    border-radius: 10px;
+  }
+`;
+
+const ListBox = styled.div`
+  // max-height:525px;
+  overflow-y:auto;
+  border-radius:10px;
+  border:1px solid ${palette.outlineGray};
+
+  > div {
+    display:flex;
+    gap:8px;
+    padding:14px 20px;
+
+    + div {
+      border-top:1px solid ${palette.outlineGray};
+    }
+
+    span {
+      flex-shrink:0;
+      font-size:0.88rem;
+      line-height:1.5;
+    }
+
+    div {
+      display:flex;
+      flex-direction: column;
+      gap:12px;
+    }
+
+    strong, p {
+      font-size:0.88rem;
+      line-height:1.5;
+      text-align:left;
+    }
+
+    p.tag {
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+  }
+`;
+
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, .1);
+  opacity: ${({ isMenuOpen }) => (isMenuOpen ? 1 : 0)};
+  visibility: ${({ isMenuOpen }) => (isMenuOpen ? 'visible' : 'hidden')};
+  transition: all .5s;
+  z-index: 800;
 `;

@@ -433,28 +433,28 @@ const PageMarketingNoItemsResult = () => {
                   <div>
                     <strong>
                       <span>{marketingMbtiResult.name[0]}</span>
-                      안정 추구 (Safety-seeking)
+                      {marketingMbtiResult.name[0] === "S" ? "안정 추구 (Safety-seeking)" : "고위험 추구 (Risk-seeking)"}
                     </strong>
                     <p>{marketingRecommendedItemData?.example?.[popupIndex]?.mbti?.[0]?.compatibility}</p>
                   </div>
-                  <div>
+                  <div> 
                     <strong>
                       <span>{marketingMbtiResult.name[1]}</span>
-                      기회 포착형 (Opportunity-driven)
+                      {marketingMbtiResult.name[1] === "O" ? "기회 포착형 (Opportunity-driven)" : "계획 기반형 (Planning-driven)"}
                     </strong>
                     <p>{marketingRecommendedItemData?.example?.[popupIndex]?.mbti?.[1]?.compatibility}</p>
                   </div>
                   <div>
                     <strong>
                       <span>{marketingMbtiResult.name[2]}</span>
-                      독립성 중시 (Independence-focused)
+                      {marketingMbtiResult.name[2] === "I" ? "독립성 중시 (Independence-focused)" : "협력 중시 (Teamwork-focused)"}
                     </strong>
                     <p>{marketingRecommendedItemData?.example?.[popupIndex]?.mbti?.[2]?.compatibility}</p>
                   </div>
                   <div>
                     <strong>
                       <span>{marketingMbtiResult.name[3]}</span>
-                      창의성 중심 (Creativity-centered)
+                      {marketingMbtiResult.name[3] === "C" ? "창의성 중심 (Creativity-centered)" : "실용성 중심 (Application-centered)"}
                     </strong>
                     <p>{marketingRecommendedItemData?.example?.[popupIndex]?.mbti?.[3]?.compatibility}</p>
                   </div>

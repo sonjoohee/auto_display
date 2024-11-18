@@ -165,7 +165,7 @@ const OrganismMarketingBmReport = () => {
   return (
     <>
     <ThemeProvider theme={theme}>
-      {isLoadingMarketingBmReport ? (
+      {isLoadingMarketingBmReport || marketingBmButtonState ? (
         <SummaryBox>
           <h3>로딩 중...</h3>
         </SummaryBox>

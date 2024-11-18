@@ -11,7 +11,7 @@ const MoleculeSystemMessage = ({ item }) => {
   const [isTyping, setIsTyping] = useState(true); // 타이핑 중인지 여부
   const message = item.message;
   const selectedExpertIndex = item.expertIndex;
-  console.log(item);
+  // console.log(item);
 
   useEffect(() => {
     const messageLines = message.split("\n"); // 메시지를 줄바꿈 기준으로 나눔

@@ -196,7 +196,7 @@ const OrganismBmBmAdsReport = () => {
     updatedConversation.push(
       {
         type: "user",
-        message: `*${problemOptions}*에 대한 비즈니스 모델 캔버스를 작성해주세요`,
+        message: `${problemOptions}로 세분화 해주세요`,
       },
       {
         type: `bmBmCustomReport`,
@@ -236,7 +236,7 @@ const OrganismBmBmAdsReport = () => {
         </>
       ) : (
         <>
-          <h1>제시된 고객 세그먼트(Customer Segment) 중에서 하나를 골라주세요.</h1>
+          <h1>하나의 고객 세그먼트를 골라주세요</h1>
           <OptionContainer>
             <ul>
               {allExamples.length > 0 ? (

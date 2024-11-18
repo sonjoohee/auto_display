@@ -20,7 +20,7 @@ import {
   CASE_REPORT_DATA,
   SURVEY_GOAL_SUGGESTION_LIST,
   BM_OR_LEAN,
-  IS_MARKETING
+  IS_MARKETING,
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
@@ -28,7 +28,9 @@ import { useSaveConversation } from "../atoms/AtomSaveConversation";
 const OrganismBizExpertSelect = () => {
   const { saveConversation } = useSaveConversation();
   const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
-  const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
+  const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(
+    SURVEY_GOAL_SUGGESTION_LIST
+  );
   const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
   const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
   const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
@@ -48,11 +50,14 @@ const OrganismBizExpertSelect = () => {
   const [expertButtonState, setExpertButtonState] =
     useAtom(EXPERT_BUTTON_STATE);
 
-  const [ideaFeatureButtonState, setIdeaFeatureButtonState] = useAtom(IDEA_FEATURE_BUTTON_STATE);
+  const [ideaFeatureButtonState, setIdeaFeatureButtonState] = useAtom(
+    IDEA_FEATURE_BUTTON_STATE
+  );
 
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
 
-  const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
+  const [selectedExpertList, setSelectedExpertList] =
+    useAtom(SELECTED_EXPERT_LIST);
 
   const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
 
@@ -61,13 +66,12 @@ const OrganismBizExpertSelect = () => {
       const updatedConversation = [...conversation];
 
       if (
-        (updatedConversation.length > 0 &&
-          updatedConversation[updatedConversation.length - 1].type ===
-            "keyword")
+        updatedConversation.length > 0 &&
+        updatedConversation[updatedConversation.length - 1].type === "keyword"
       ) {
         updatedConversation.pop();
       }
-  
+
       // 전문가 선택영역 표시 관련, 선택된 전문가 인덱스 추가
       setSelectedExpertList((prevList) => {
         if (prevList.includes(index)) {
@@ -75,7 +79,7 @@ const OrganismBizExpertSelect = () => {
         }
         return [...prevList, index];
       });
-  
+
       if (index === "1") {
         setExpertButtonState(1);
 
@@ -88,8 +92,13 @@ const OrganismBizExpertSelect = () => {
           {
             type: "system",
             message:
-              "안녕하세요! 저는 전략 전문가 김도원입니다. 😊 여러분의 아이디어를 구체화하고, 성공적인 전략을 세우는 데 도움을 드리겠습니다. 아이디어나 비즈니스 아이템을 간단히 작성해 주세요. 분석 후, 여러분의 비즈니스에 맞는 전략 리포트를 제공하겠습니다!",
+              "안녕하세요! 저는 전략 컨설턴트 김도원입니다. \n고객 요구와 시장 현황을 파악하여, 성장을 위한 전략적 인사이트와 맞춤형 개선 방향을 지원하고 있습니다.",
             expertIndex: index,
+          },
+          {
+            type: "system",
+            message:
+              "먼저 분석이 필요한 제품이나 서비스에 대해서 알려주세요 📝",
           },
           { type: `strategy_${index}` }
         );
@@ -148,8 +157,7 @@ const OrganismBizExpertSelect = () => {
         updatedConversation.push(
           {
             type: "user",
-            message:
-              "체계적인 방법으로 많은 아이디어 발상 부탁드립니다 💡",
+            message: "체계적인 방법으로 많은 아이디어 발상 부탁드립니다 💡",
           },
           {
             type: "system",
@@ -163,14 +171,18 @@ const OrganismBizExpertSelect = () => {
         updatedConversation.push(
           {
             type: "user",
-            message:
-              "함께 사업 아이디어를 확장해가고 싶습니다 💡",
+            message: "함께 사업 아이디어를 확장해가고 싶습니다 💡",
           },
           {
             type: "system",
             message:
-              "안녕하세요. 저는 그로스 해커 김세준입니다. 고객 퍼널에 맞는 전략을 수립하는 것은 비즈니스 성장에 중요한 요소입니다. 제가 퍼널을 분석하고 각 단계에서 성장을 가속화할 전략을 제시해드릴게요. 아이템에 대한 설명을 해주세요 📝",
+              "안녕하세요. 저는 그로스 해커 김세준입니다.\n비즈니스에 적합한 성장을 목표로 데이터를 기반으로 실험하고 최적화된 전략을 제시하고 잇습니다.",
             expertIndex: index,
+          },
+          {
+            type: "system",
+            message:
+              "먼저 분석이 필요한 제품이나 서비스에 대해서 알려주세요 📝",
           },
           { type: `growthHackerOption` }
         );
@@ -178,8 +190,7 @@ const OrganismBizExpertSelect = () => {
         updatedConversation.push(
           {
             type: "user",
-            message:
-              "시장 가격 분석하기를 진행하겠습니다 🙌🏻",
+            message: "시장 가격 분석하기를 진행하겠습니다 🙌🏻",
           },
           {
             type: "system",
@@ -193,8 +204,7 @@ const OrganismBizExpertSelect = () => {
         updatedConversation.push(
           {
             type: "user",
-            message:
-              "사례 분석을 진행하겠습니다 🙌🏻",
+            message: "사례 분석을 진행하겠습니다 🙌🏻",
           },
           {
             type: "system",
@@ -208,14 +218,18 @@ const OrganismBizExpertSelect = () => {
         updatedConversation.push(
           {
             type: "user",
-            message:
-              "비즈니스 모델을 진단하겠습니다. 🙌🏻",
+            message: "비즈니스 모델을 진단하겠습니다. 🙌🏻",
           },
           {
             type: "system",
             message:
-              "안녕하세요! 저는 Business Model 수립 전문가 김소윤입니다.\n사업 아이템의 비즈니스 모델 분석과 비즈니스 모델의 각 구성 요소에 따른 최적의 전략을 제시해 드립니다.\n각 구성요소별로 어떤 상호작용과 비즈니스 모델의 변화를 쉽게 확인 하실 수 있어요.\n먼저 분석이 필요한 제품이나 서비스에 대해서 알려주세요 📝",
+              "안녕하세요! 저는 BM 전문가 김소윤입니다.\n아이템에 최적화된 비즈니스 모델을 정의하고, 비즈니스 성과를 극대화 할 수 있도록 전략을 제안드립니다.",
             expertIndex: index,
+          },
+          {
+            type: "system",
+            message:
+              "먼저 분석이 필요한 제품이나 서비스에 대해서 알려주세요 📝",
           },
           { type: `bmStartButton` }
         );
@@ -223,8 +237,7 @@ const OrganismBizExpertSelect = () => {
         updatedConversation.push(
           {
             type: "user",
-            message:
-              "설문조사 설계를 진행하겠습니다 🙌🏻",
+            message: "설문조사 설계를 진행하겠습니다 🙌🏻",
           },
           {
             type: "system",
@@ -236,9 +249,14 @@ const OrganismBizExpertSelect = () => {
         );
       }
 
-      await saveConversation(
-        { changingConversation: { conversation: updatedConversation, conversationStage: 3, expert_index: index, isMarketing: false } }
-      );
+      await saveConversation({
+        changingConversation: {
+          conversation: updatedConversation,
+          conversationStage: 3,
+          expert_index: index,
+          isMarketing: false,
+        },
+      });
 
       setIsMarketing(false);
       setConversation(updatedConversation);
@@ -252,21 +270,22 @@ const OrganismBizExpertSelect = () => {
     <>
       {/* 모든 전문가가 선택되었거나, 모든 보고서가 생성되었으면 영역 표시 안함
           selectedExpertList는 DB에 저장되고 있지 않기 떄문에 expertReportData 조건이 필요함 */}
-      {(selectedExpertList.includes("1") || strategyReportData.hasOwnProperty(1)) &&
-        (selectedExpertList.includes("2") || strategyReportData.hasOwnProperty(2)) &&
-        (selectedExpertList.includes("3") || strategyReportData.hasOwnProperty(3)) &&
-        (selectedExpertList.includes("4") || strategyReportData.hasOwnProperty(4)) &&
-        (selectedExpertList.includes("5") || ideaFeatureData.length !== 0) &&
-        (selectedExpertList.includes("6") || KpiQuestionList.length !== 0) &&
-        (selectedExpertList.includes("7") || priceProduct.length !== 0) &&
-        (selectedExpertList.includes("8") || caseReportData.length !== 0) &&
-        (selectedExpertList.includes("9") || bmOrLean) &&
-        (selectedExpertList.includes("10") || surveyGoalSuggestionList.length !== 0) ? null : (
-  
+
+      {(selectedExpertList.includes("1") ||
+        strategyReportData.hasOwnProperty(1)) &&
+      // (selectedExpertList.includes("2") || strategyReportData.hasOwnProperty(2)) &&
+      // (selectedExpertList.includes("3") || strategyReportData.hasOwnProperty(3)) &&
+      // (selectedExpertList.includes("4") || strategyReportData.hasOwnProperty(4)) &&
+      // (selectedExpertList.includes("5") || ideaFeatureData.length !== 0) &&
+      (selectedExpertList.includes("6") || KpiQuestionList.length !== 0) &&
+      // (selectedExpertList.includes("7") || priceProduct.length !== 0) &&
+      // (selectedExpertList.includes("8") || caseReportData.length !== 0) &&
+      (selectedExpertList.includes("9") || bmOrLean) ? null : ( // (selectedExpertList.includes("10") || surveyGoalSuggestionList.length !== 0)
         <BizExpertSelectContainer>
           <h1>아래 분야별 전문가와 대화를 통해 아이디어를 발전시켜보세요.</h1>
           <SelectOptions>
-            {(selectedExpertList.includes("1") || strategyReportData.hasOwnProperty(1)) ? null : (
+            {selectedExpertList.includes("1") ||
+            strategyReportData.hasOwnProperty(1) ? null : (
               <div>
                 <img src={images.IconExpert1} alt="" />
                 <p>전략 컨설턴트에게 최적화 전략 상담 받기</p>
@@ -275,7 +294,7 @@ const OrganismBizExpertSelect = () => {
                 </button>
               </div>
             )}
-            {(selectedExpertList.includes("2") || strategyReportData.hasOwnProperty(2)) ? null : (
+            {/* {(selectedExpertList.includes("2") || strategyReportData.hasOwnProperty(2)) ? null : (
               <div>
                 <img src={images.IconExpert2} alt="" />
                 <p>마케팅 전문가에게 마케팅 전략 상담 받기</p>
@@ -310,8 +329,9 @@ const OrganismBizExpertSelect = () => {
                   시작하기
                 </button>
               </div>
-            )}
-            {(selectedExpertList.includes("6") || KpiQuestionList.length !== 0) ? null : (
+            )} */}
+            {selectedExpertList.includes("6") ||
+            KpiQuestionList.length !== 0 ? null : (
               <div>
                 <img src={images.IconExpert6} alt="" />
                 <p>그로스 해커에게 KPI 전략 받기</p>
@@ -320,7 +340,7 @@ const OrganismBizExpertSelect = () => {
                 </button>
               </div>
             )}
-            {(selectedExpertList.includes("7") || priceProduct.length !== 0) ? null : (
+            {/* {(selectedExpertList.includes("7") || priceProduct.length !== 0) ? null : (
               <div>
                 <img src={images.IconExpert7} alt="" />
                 <p>가격 분석 전문가에게 가격 분석 리포트 받기</p>
@@ -337,8 +357,8 @@ const OrganismBizExpertSelect = () => {
                   시작하기
                 </button>
               </div>
-            )}
-            {(selectedExpertList.includes("9") || bmOrLean) ? null : (
+            )} */}
+            {selectedExpertList.includes("9") || bmOrLean ? null : (
               <div>
                 <img src={images.IconExpert9} alt="" />
                 <p>BM 전문가에게 비즈니스 모델 설계 받기</p>
@@ -347,7 +367,7 @@ const OrganismBizExpertSelect = () => {
                 </button>
               </div>
             )}
-            {(selectedExpertList.includes("10") || surveyGoalSuggestionList.length !== 0) ? null : (
+            {/* {(selectedExpertList.includes("10") || surveyGoalSuggestionList.length !== 0) ? null : (
               <div>
                 <img src={images.IconExpert10} alt="" />
                 <p>조사 설계 전문가에게 조사 설계 받기</p>
@@ -355,12 +375,12 @@ const OrganismBizExpertSelect = () => {
                   시작하기
                 </button>
               </div>
-            )}
+            )} */}
           </SelectOptions>
         </BizExpertSelectContainer>
       )}
     </>
-  );  
+  );
 };
 
 export default OrganismBizExpertSelect;
@@ -399,7 +419,7 @@ const SelectOptions = styled.div`
 
     button {
       position: relative;
-      flex-shrink:0;
+      flex-shrink: 0;
       font-family: "Pretendard";
       font-size: 0.75rem;
       color: ${palette.gray};

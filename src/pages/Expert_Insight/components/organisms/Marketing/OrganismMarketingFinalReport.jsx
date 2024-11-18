@@ -192,7 +192,7 @@ const OrganismMarketingFinalReport = () => {
   return (
     <>
     <ThemeProvider theme={theme}>
-      {isLoadingMarketingFinalReport ? (
+      {isLoadingMarketingFinalReport || marketingFinalReportButtonState ? (
         <SummaryBox>
           <h3>로딩 중...</h3>
         </SummaryBox>
