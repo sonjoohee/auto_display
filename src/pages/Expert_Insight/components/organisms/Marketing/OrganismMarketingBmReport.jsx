@@ -570,7 +570,7 @@ const Sidebar = styled.div`
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     > div {
-      overflow-y:auto;
+      // overflow-y:auto;
     }
 
     .header {
@@ -583,6 +583,7 @@ const Sidebar = styled.div`
 
     .body {
       height:calc(100% - 70px);
+      overflow-y:auto;
     }
   }
 `;
@@ -653,6 +654,13 @@ const ListBox = styled.div`
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     overflow:initial;
+
+    > div {
+      p.tag {
+        flex-wrap:wrap;
+        gap:0 12px;
+      }
+    }
   }
 `;
 
