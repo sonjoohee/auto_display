@@ -495,4 +495,9 @@ const Content = styled.div`
     font-weight:500;
     color:${palette.gray500};
   }
+
+  p {
+    font-weight:300;
+    line-height:1.5;
+  }
 `;
