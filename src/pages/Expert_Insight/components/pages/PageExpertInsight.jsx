@@ -798,8 +798,52 @@ const PageExpertInsight = () => {
                     <>
                       <OrganismPocReportSection
                         key={`poc_${expertIndex}_${index}`}
+
                         expertIndex={expertIndex}
                       />
+                    );
+                  } else if (item.type === "addition") {
+                    const currentAdditionalReportCount =
+                      additionalReportCount++;
+                    return (
+                      <OrganismAdditionalReport
+                        additionalReportCount={currentAdditionalReportCount}
+                      />
+                    );
+                  } else if (item.type === "customerAddition") {
+                    const currentCustomerAdditionalReportCount =
+                      customerAdditionalReportCount++;
+                    return (
+                      <OrganismCustomerAdditionalReport
+                        customerAdditionalReportCount={
+                          currentCustomerAdditionalReportCount
+                        }
+                      />
+                    );
+                  } else if (item.type === "keyword") {
+                    return <MoleculeAdditionalKeyword />;
+                  } else if (item.type === "reportButton") {
+                    return <MoleculeCheckReportRightAway />;
+                  } else if (item.type === "strategyButton") {
+                    return <MoleculeStrategyButton />;
+                  } else if (item.type === "strategyConsultant") {
+                    const currentStrategyConsultantCount =
+                      strategyConsultantCount++;
+                    return (
+                      <OrganismStrategyConsultantReport
+                        strategyConsultantCount={currentStrategyConsultantCount}
+                      />
+                    );
+                  } else if (item.type.startsWith("poc_")) {
+                    /* PoC */
+                    const expertIndex = item.type.split("_")[1];
+                    return (
+                      <>
+                        <OrganismPocReportSection
+                          key={`poc_${expertIndex}_${index}`}
+                          expertIndex={expertIndex}
+                        />
+                      </>
                     );
                   } else if (item.type === "addition") {
                     const currentAdditionalReportCount =
@@ -981,7 +1025,6 @@ const PageExpertInsight = () => {
 
                   return null;
                 })}
-
                 <div ref={chatEndRef} />
 
                 {selectedExpertIndex === "0" ||
