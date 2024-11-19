@@ -10,12 +10,12 @@ import {
   SkeletonLine,
 } from "../../../../assets/styles/Skeleton";
 import { palette } from "../../../../assets/styles/Palette";
-import { useAtom } from 'jotai';
-import { 
-  MARKETING_MBTI_RESULT, 
-  MARKETING_INTEREST, 
-  MARKETING_RECOMMENDED_ITEM_BUTTON_STATE, 
-  MARKETING_RECOMMENDED_ITEM_DATA, 
+import { useAtom } from "jotai";
+import {
+  MARKETING_MBTI_RESULT,
+  MARKETING_INTEREST,
+  MARKETING_RECOMMENDED_ITEM_BUTTON_STATE,
+  MARKETING_RECOMMENDED_ITEM_DATA,
   IS_LOADING,
   IS_EXPERT_INSIGHT_ACCESSIBLE,
   CONVERSATION,
@@ -31,14 +31,23 @@ import { useSaveConversation } from "../../../Expert_Insight/components/atoms/At
 const PageMarketingNoItemsResult = () => {
   const navigate = useNavigate();
   const { saveConversation } = useSaveConversation();
-  const [marketingMbtiResult, setMarketingMbtiResult] = useAtom(MARKETING_MBTI_RESULT);
+  const [marketingMbtiResult, setMarketingMbtiResult] = useAtom(
+    MARKETING_MBTI_RESULT
+  );
   const [marketingInterest, setMarketingInterest] = useAtom(MARKETING_INTEREST);
-  const [marketingRecommendedItemButtonState, setMarketingRecommendedItemButtonState] = useAtom(MARKETING_RECOMMENDED_ITEM_BUTTON_STATE);
-  const [marketingRecommendedItemData, setMarketingRecommendedItemData] = useAtom(MARKETING_RECOMMENDED_ITEM_DATA);
-  const [isLoadingRecommendedItem, setIsLoadingRecommendedItem] = useAtom(IS_LOADING);
+  const [
+    marketingRecommendedItemButtonState,
+    setMarketingRecommendedItemButtonState,
+  ] = useAtom(MARKETING_RECOMMENDED_ITEM_BUTTON_STATE);
+  const [marketingRecommendedItemData, setMarketingRecommendedItemData] =
+    useAtom(MARKETING_RECOMMENDED_ITEM_DATA);
+  const [isLoadingRecommendedItem, setIsLoadingRecommendedItem] =
+    useAtom(IS_LOADING);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [conversation, setConversation] = useAtom(CONVERSATION);
-  const [isExpertInsightAccessible, setIsExpertInsightAccessible] = useAtom(IS_EXPERT_INSIGHT_ACCESSIBLE);
+  const [isExpertInsightAccessible, setIsExpertInsightAccessible] = useAtom(
+    IS_EXPERT_INSIGHT_ACCESSIBLE
+  );
 
   const [inputBusinessInfo, setInputBusinessInfo] =
     useAtom(INPUT_BUSINESS_INFO);
@@ -74,43 +83,43 @@ const PageMarketingNoItemsResult = () => {
   const [isExitPopupOpen, setIsExitPopupOpen] = useState(false);
 
   useEffect(() => {
-      const handleBeforeUnload = (event) => {
-        // Cancel the event as stated by the standard.
-        event.preventDefault();
-        // Chrome requires returnValue to be set.
-        event.returnValue = "";
-      };
+    const handleBeforeUnload = (event) => {
+      // Cancel the event as stated by the standard.
+      event.preventDefault();
+      // Chrome requires returnValue to be set.
+      event.returnValue = "";
+    };
 
-      const handlePopState = () => {
+    const handlePopState = () => {
+      setIsExitPopupOpen(true);
+    };
+
+    const handleKeyDown = (event) => {
+      // if (event.keyCode === 116)
+      if (
+        (event.key === "r" && (event.metaKey || event.ctrlKey)) ||
+        event.key === "F5"
+      ) {
+        // F5 key code
         setIsExitPopupOpen(true);
-      };
+        event.preventDefault();
+        // navigate("/");
+      }
+    };
 
-      const handleKeyDown = (event) => {
-        // if (event.keyCode === 116)
-        if (
-          (event.key === "r" && (event.metaKey || event.ctrlKey)) ||
-          event.key === "F5"
-        ) {
-          // F5 key code
-          setIsExitPopupOpen(true);
-          event.preventDefault();
-          // navigate("/");
-        }
-      };
+    //새로고침방지
+    window.addEventListener("beforeunload", handleBeforeUnload);
 
-      //새로고침방지
-      window.addEventListener("beforeunload", handleBeforeUnload);
+    window.history.pushState(null, "", "");
+    window.addEventListener("popstate", handlePopState);
+    window.addEventListener("keydown", handleKeyDown);
 
-      window.history.pushState(null, "", "");
-      window.addEventListener("popstate", handlePopState);
-      window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      //새로고침 방지
 
-      return () => {
-        //새로고침 방지
-
-        window.removeEventListener("beforeunload", handleBeforeUnload);
-        window.removeEventListener("popstate", handlePopState);
-      };
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("popstate", handlePopState);
+    };
   }, []);
 
   const handleExitCancel = () => {
@@ -137,7 +146,7 @@ const PageMarketingNoItemsResult = () => {
 
   useEffect(() => {
     const handleRecommendedItem = async () => {
-      if(marketingRecommendedItemButtonState) {
+      if (marketingRecommendedItemButtonState) {
         setIsLoading(true);
         setIsLoadingRecommendedItem(true);
         setMarketingRecommendedItemButtonState(0);
@@ -152,27 +161,29 @@ const PageMarketingNoItemsResult = () => {
         let retryCount = 0;
         const maxRetries = 10;
 
-        while (retryCount < maxRetries && (
-          !response?.data?.marketing_mbti_result ||
-          typeof recommendedItemData !== "object" ||
-          !recommendedItemData?.overview?.name ||
-          !recommendedItemData?.overview?.description ||
-          !Array.isArray(recommendedItemData?.example) ||
-          recommendedItemData.example.length !== 3 ||
-          recommendedItemData.example.some(item => 
-            !item?.name || 
-            !item?.summary ||
-            !item?.description ||
-            !Array.isArray(item?.mbti) ||
-            item.mbti.some(contentItem => 
-              !contentItem?.type || 
-              !contentItem?.description ||
-              !contentItem?.compatibility
-            )
-          )
-        ))
-          {
-            retryCount += 1;
+        while (
+          retryCount < maxRetries &&
+          (!response?.data?.marketing_mbti_result ||
+            typeof recommendedItemData !== "object" ||
+            !recommendedItemData?.overview?.name ||
+            !recommendedItemData?.overview?.description ||
+            !Array.isArray(recommendedItemData?.example) ||
+            recommendedItemData.example.length !== 3 ||
+            recommendedItemData.example.some(
+              (item) =>
+                !item?.name ||
+                !item?.summary ||
+                !item?.description ||
+                !Array.isArray(item?.mbti) ||
+                item.mbti.some(
+                  (contentItem) =>
+                    !contentItem?.type ||
+                    !contentItem?.description ||
+                    !contentItem?.compatibility
+                )
+            ))
+        ) {
+          retryCount += 1;
 
           response = await axios.post(
             "https://wishresearch.kr/panels/marketing/mbti_result",
@@ -192,18 +203,17 @@ const PageMarketingNoItemsResult = () => {
     handleRecommendedItem();
   }, [marketingRecommendedItemButtonState]);
 
-
   const handleButtonExpert = async (index) => {
     const itemName = marketingRecommendedItemData?.example?.[index]?.summary;
-    const itemDetail = marketingRecommendedItemData?.example?.[index]?.description;
+    const itemDetail =
+      marketingRecommendedItemData?.example?.[index]?.description;
 
     const updatedConversation = [...conversation];
 
     updatedConversation.push(
       {
         type: "system",
-        message: 
-          `${marketingMbtiResult.name} 창업가 이시군요! 그 성향에 맞는 ${itemName}을 분석해드릴게요\n당신의 스타일에 딱 맞는 창업 전략을 잡는데 도움이 되었으면 좋겠어요 ✨`,
+        message: `${marketingMbtiResult.name} 창업가 이시군요! 그 성향에 맞는 ${itemName}을 분석해드릴게요\n당신의 스타일에 딱 맞는 창업 전략을 잡는데 도움이 되었으면 좋겠어요 ✨`,
         expertIndex: 0,
       },
       {
@@ -221,9 +231,12 @@ const PageMarketingNoItemsResult = () => {
       mainCustomer: [],
     };
 
-    await saveConversation(
-      { changingConversation: { conversation: updatedConversation, analysisReportData: analysisReportData } }
-    );
+    await saveConversation({
+      changingConversation: {
+        conversation: updatedConversation,
+        analysisReportData: analysisReportData,
+      },
+    });
 
     setTitleOfBusinessInfo(itemName);
     setInputBusinessInfo(itemName);
@@ -233,285 +246,373 @@ const PageMarketingNoItemsResult = () => {
     navigate("/ExpertInsight");
   };
 
-
-
-
-
-  
-  
-
   const [isDragging, setIsDragging] = useState(false);
   const [startY, setStartY] = useState(null);
-  const [questionFlex, setQuestionFlex] = useState('1 1 100%');
+  const [questionFlex, setQuestionFlex] = useState("1 1 100%");
   const [isMobile, setIsMobile] = useState(false);
-  
+
   useEffect(() => {
     const checkMobile = () => {
       if (window.innerWidth <= 768) {
-        setIsMobile(true);  // 모바일 화면
+        setIsMobile(true); // 모바일 화면
       } else {
         setIsMobile(false); // 데스크탑 화면
       }
     };
-  
-    checkMobile();  // 처음 로드 시 확인
-    window.addEventListener('resize', checkMobile);  // 화면 크기 변경 시 확인
-  
+
+    checkMobile(); // 처음 로드 시 확인
+    window.addEventListener("resize", checkMobile); // 화면 크기 변경 시 확인
+
     return () => {
-      window.removeEventListener('resize', checkMobile);
+      window.removeEventListener("resize", checkMobile);
     };
   }, []);
-  
+
   const handleMouseDown = (e) => {
     if (isMobile) {
       setIsDragging(true);
-      setStartY(e.clientY);  // 마우스 위치 저장
+      setStartY(e.clientY); // 마우스 위치 저장
     }
   };
-  
+
   const handleMouseMove = (e) => {
     if (!isDragging || startY === null) return;
-  
+
     const currentY = e.clientY;
-    
+
     // 위로 드래그 시 flex: 10%, 아래로 드래그 시 flex: 70%
-    if (startY - currentY > 30) { // 위로 드래그했을 때
-      setQuestionFlex('1 1 10%');
+    if (startY - currentY > 30) {
+      // 위로 드래그했을 때
+      setQuestionFlex("1 1 10%");
     } else if (currentY - startY > 30) {
-      setQuestionFlex('1 1 70%');
+      setQuestionFlex("1 1 70%");
     }
   };
-  
+
   const handleMouseUp = () => {
     setIsDragging(false);
     setStartY(null);
   };
-  
+
   const handleTouchStart = (e) => {
     if (isMobile) {
       setIsDragging(true);
       setStartY(e.touches[0].clientY);
     }
   };
-  
+
   const handleTouchMove = (e) => {
     if (!isDragging || startY === null) return;
-  
+
     const currentY = e.touches[0].clientY;
-  
+
     // 위로 드래그 시 flex: 10%, 아래로 드래그 시 flex: 70%
-    if (startY - currentY > 30) { 
-      setQuestionFlex('1 1 10%');
+    if (startY - currentY > 30) {
+      setQuestionFlex("1 1 10%");
     } else if (currentY - startY > 30) {
-      setQuestionFlex('1 1 70%');
+      setQuestionFlex("1 1 70%");
     }
   };
-  
+
   const handleTouchEnd = () => {
     setIsDragging(false);
     setStartY(null);
   };
-  
-
 
   return (
     <>
-    <ThemeProvider theme={theme}>
-      <QuestionWrap>
-        <Question
-          // style={{ flex: questionFlex }}
-          style={{
-            flex: isMobile ? questionFlex : '1 1 50%',
-          }}
-          isDragging={isDragging}
-          questionFlex={questionFlex}
-        >
-          <p>
-            <span>
-              <img 
-                src={
-                  marketingMbtiResult.name === "ROIC" ? images.ImgMBTIROIC :
-                  marketingMbtiResult.name === "ROIA" ? images.ImgMBTIROIA :
-                  marketingMbtiResult.name === "ROTC" ? images.ImgMBTIROTC :
-                  marketingMbtiResult.name === "ROTA" ? images.ImgMBTIROTA :
-                  marketingMbtiResult.name === "RPIA" ? images.ImgMBTIRPIA :
-                  marketingMbtiResult.name === "RPIC" ? images.ImgMBTIRPIC :
-                  marketingMbtiResult.name === "RPTA" ? images.ImgMBTIRPTA :
-                  marketingMbtiResult.name === "RPTC" ? images.ImgMBTIRPTC :
-                  marketingMbtiResult.name === "SOIA" ? images.ImgMBTISOIA :
-                  marketingMbtiResult.name === "SOIC" ? images.ImgMBTISOIC :
-                  marketingMbtiResult.name === "SOTA" ? images.ImgMBTISOTA :
-                  marketingMbtiResult.name === "SOTC" ? images.ImgMBTISOTC :
-                  marketingMbtiResult.name === "SPIA" ? images.ImgMBTISPIA :
-                  marketingMbtiResult.name === "SPIC" ? images.ImgMBTISPIC :
-                  marketingMbtiResult.name === "SPTC" ? images.ImgMBTISPTC :
-                  ""
-                } 
-                alt=""
-              />
-            </span>
-            {marketingMbtiResult.category} <br />{marketingMbtiResult.name}
-          </p>
-          <div>
-            <strong>{marketingMbtiResult.summary}</strong>
-            <p>{marketingMbtiResult.description}</p>
-          </div>
-        </Question>
-
-        <Answer
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-          isDragging={isDragging}
-          questionFlex={questionFlex}
-        >
-          <ResultWrap>
-            <div className="info">
+      <ThemeProvider theme={theme}>
+        <QuestionWrap>
+          <Question
+            // style={{ flex: questionFlex }}
+            style={{
+              flex: isMobile ? questionFlex : "1 1 50%",
+            }}
+            isDragging={isDragging}
+            questionFlex={questionFlex}
+          >
+            <p>
+              <span>
+                <img
+                  src={
+                    marketingMbtiResult.name === "ROIC"
+                      ? images.ImgMBTIROIC
+                      : marketingMbtiResult.name === "ROIA"
+                      ? images.ImgMBTIROIA
+                      : marketingMbtiResult.name === "ROTC"
+                      ? images.ImgMBTIROTC
+                      : marketingMbtiResult.name === "ROTA"
+                      ? images.ImgMBTIROTA
+                      : marketingMbtiResult.name === "RPIA"
+                      ? images.ImgMBTIRPIA
+                      : marketingMbtiResult.name === "RPIC"
+                      ? images.ImgMBTIRPIC
+                      : marketingMbtiResult.name === "RPTA"
+                      ? images.ImgMBTIRPTA
+                      : marketingMbtiResult.name === "RPTC"
+                      ? images.ImgMBTIRPTC
+                      : marketingMbtiResult.name === "SOIA"
+                      ? images.ImgMBTISOIA
+                      : marketingMbtiResult.name === "SOIC"
+                      ? images.ImgMBTISOIC
+                      : marketingMbtiResult.name === "SOTA"
+                      ? images.ImgMBTISOTA
+                      : marketingMbtiResult.name === "SOTC"
+                      ? images.ImgMBTISOTC
+                      : marketingMbtiResult.name === "SPIA"
+                      ? images.ImgMBTISPIA
+                      : marketingMbtiResult.name === "SPIC"
+                      ? images.ImgMBTISPIC
+                      : marketingMbtiResult.name === "SPTC"
+                      ? images.ImgMBTISPTC
+                      : ""
+                  }
+                  alt=""
+                />
+              </span>
+              {marketingMbtiResult.category} <br />
+              {marketingMbtiResult.name}
+            </p>
+            <div>
               <strong>{marketingMbtiResult.summary}</strong>
               <p>{marketingMbtiResult.description}</p>
             </div>
+          </Question>
 
-            <div className="title">
-              <strong>💡 추천 아이템, 내 사업으로 만들기</strong>
-              <p>추천된 아이템의 가능성을 분석하고, 나만의 창업 아이템으로 발전시켜 보세요</p>
-            </div>
-
-            <ListBox>
-              {isLoadingRecommendedItem ? (
-                <>
-                  <div style={{flexDirection:"column", alignItems:"flex-start"}}>
-                    <SkeletonTitle className="title-placeholder" style={{marginBottom:"0"}} />
-                    <SkeletonLine className="title-placeholder" />
-                  </div>
-                  <div style={{flexDirection:"column", alignItems:"flex-start"}}>
-                    <SkeletonTitle className="title-placeholder" style={{marginBottom:"0"}} />
-                    <SkeletonLine className="title-placeholder" />
-                  </div>
-                  <div style={{flexDirection:"column", alignItems:"flex-start"}}>
-                    <SkeletonTitle className="title-placeholder" style={{marginBottom:"0"}} />
-                    <SkeletonLine className="title-placeholder" />
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div>
-                    <p>
-                      <strong>{marketingRecommendedItemData?.example?.[0]?.name}</strong>
-                      {marketingRecommendedItemData?.example?.[0]?.summary}
-                    </p>
-                    <span onClick={() => handleOpenPopup(0)}>시작하기</span>
-                  </div>
-                  <div>
-                    <p>
-                      <strong>{marketingRecommendedItemData?.example?.[1]?.name}</strong>
-                      {marketingRecommendedItemData?.example?.[1]?.summary}
-                    </p>
-                    <span onClick={() => handleOpenPopup(1)}>시작하기</span>
-                  </div>
-                  <div>
-                    <p>
-                      <strong>{marketingRecommendedItemData?.example?.[2]?.name}</strong>
-                      {marketingRecommendedItemData?.example?.[2]?.summary}
-                    </p>
-                    <span onClick={() => handleOpenPopup(2)}>시작하기</span>
-                  </div>
-                </>
-              )}
-            </ListBox>
-
-            <span className="comment">* 일부 아이템은 현실에 없는 아이템으로 혁신적 가능성을 고려해 제시되었습니다.</span>
-          </ResultWrap>
-        </Answer>
-
-        {isPopup1Open && (
-          <Popup
-            onClick={(e) => {
-              if (e.target === e.currentTarget) {
-                closePopup(); // 상태를 false로 설정
-              }
-            }}
+          <Answer
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            isDragging={isDragging}
+            questionFlex={questionFlex}
           >
+            <ResultWrap>
+              <div className="info">
+                <strong>{marketingMbtiResult.summary}</strong>
+                <p>{marketingMbtiResult.description}</p>
+              </div>
+
+              <div className="title">
+                <strong>💡 추천 아이템, 내 사업으로 만들기</strong>
+                <p>
+                  추천된 아이템의 가능성을 분석하고, 나만의 창업 아이템으로
+                  발전시켜 보세요
+                </p>
+              </div>
+
+              <ListBox>
+                {isLoadingRecommendedItem ? (
+                  <>
+                    <div
+                      style={{
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                      }}
+                    >
+                      <SkeletonTitle
+                        className="title-placeholder"
+                        style={{ marginBottom: "0" }}
+                      />
+                      <SkeletonLine className="title-placeholder" />
+                    </div>
+                    <div
+                      style={{
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                      }}
+                    >
+                      <SkeletonTitle
+                        className="title-placeholder"
+                        style={{ marginBottom: "0" }}
+                      />
+                      <SkeletonLine className="title-placeholder" />
+                    </div>
+                    <div
+                      style={{
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                      }}
+                    >
+                      <SkeletonTitle
+                        className="title-placeholder"
+                        style={{ marginBottom: "0" }}
+                      />
+                      <SkeletonLine className="title-placeholder" />
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div>
+                      <p>
+                        <strong>
+                          {marketingRecommendedItemData?.example?.[0]?.name}
+                        </strong>
+                        {marketingRecommendedItemData?.example?.[0]?.summary}
+                      </p>
+                      <span onClick={() => handleOpenPopup(0)}>시작하기</span>
+                    </div>
+                    <div>
+                      <p>
+                        <strong>
+                          {marketingRecommendedItemData?.example?.[1]?.name}
+                        </strong>
+                        {marketingRecommendedItemData?.example?.[1]?.summary}
+                      </p>
+                      <span onClick={() => handleOpenPopup(1)}>시작하기</span>
+                    </div>
+                    <div>
+                      <p>
+                        <strong>
+                          {marketingRecommendedItemData?.example?.[2]?.name}
+                        </strong>
+                        {marketingRecommendedItemData?.example?.[2]?.summary}
+                      </p>
+                      <span onClick={() => handleOpenPopup(2)}>시작하기</span>
+                    </div>
+                  </>
+                )}
+              </ListBox>
+
+              <span className="comment">
+                * 일부 아이템은 현실에 없는 아이템으로 혁신적 가능성을 고려해
+                제시되었습니다.
+              </span>
+            </ResultWrap>
+          </Answer>
+
+          {isPopup1Open && (
+            <Popup
+              onClick={(e) => {
+                if (e.target === e.currentTarget) {
+                  closePopup(); // 상태를 false로 설정
+                }
+              }}
+            >
+              <div>
+                <ScrollBoxWrap>
+                  <div className="header">
+                    <h5>
+                      {
+                        marketingRecommendedItemData?.example?.[popupIndex]
+                          ?.summary
+                      }
+                    </h5>
+                    <p>
+                      {
+                        marketingRecommendedItemData?.example?.[popupIndex]
+                          ?.description
+                      }
+                    </p>
+                    <button className="closePopup" onClick={() => closePopup()}>
+                      닫기
+                    </button>
+                  </div>
+                  <div className="body">
+                    <ScrollWrap>
+                      <div>
+                        <strong>
+                          <span>{marketingMbtiResult.name[0]}</span>
+                          {marketingMbtiResult.name[0] === "S"
+                            ? "안정 추구 (Safety-seeking)"
+                            : "고위험 추구 (Risk-seeking)"}
+                        </strong>
+                        <p>
+                          {
+                            marketingRecommendedItemData?.example?.[popupIndex]
+                              ?.mbti?.[0]?.compatibility
+                          }
+                        </p>
+                      </div>
+                      <div>
+                        <strong>
+                          <span>{marketingMbtiResult.name[1]}</span>
+                          {marketingMbtiResult.name[1] === "O"
+                            ? "기회 포착형 (Opportunity-driven)"
+                            : "계획 기반형 (Planning-driven)"}
+                        </strong>
+                        <p>
+                          {
+                            marketingRecommendedItemData?.example?.[popupIndex]
+                              ?.mbti?.[1]?.compatibility
+                          }
+                        </p>
+                      </div>
+                      <div>
+                        <strong>
+                          <span>{marketingMbtiResult.name[2]}</span>
+                          {marketingMbtiResult.name[2] === "I"
+                            ? "독립성 중시 (Independence-focused)"
+                            : "협력 중시 (Teamwork-focused)"}
+                        </strong>
+                        <p>
+                          {
+                            marketingRecommendedItemData?.example?.[popupIndex]
+                              ?.mbti?.[2]?.compatibility
+                          }
+                        </p>
+                      </div>
+                      <div>
+                        <strong>
+                          <span>{marketingMbtiResult.name[3]}</span>
+                          {marketingMbtiResult.name[3] === "C"
+                            ? "창의성 중심 (Creativity-centered)"
+                            : "실용성 중심 (Application-centered)"}
+                        </strong>
+                        <p>
+                          {
+                            marketingRecommendedItemData?.example?.[popupIndex]
+                              ?.mbti?.[3]?.compatibility
+                          }
+                        </p>
+                      </div>
+                    </ScrollWrap>
+
+                    <PopupButton>
+                      <button onClick={() => handleButtonExpert(popupIndex)}>
+                        사업화 가능성 확인하기
+                      </button>
+                    </PopupButton>
+                  </div>
+                </ScrollBoxWrap>
+              </div>
+            </Popup>
+          )}
+        </QuestionWrap>
+        {isExitPopupOpen && (
+          <ExitPopup Cancel>
             <div>
-              <ScrollBoxWrap>
-                <div className="header">
-                  <h5>{marketingRecommendedItemData?.example?.[popupIndex]?.summary}</h5>
-                  <p>{marketingRecommendedItemData?.example?.[popupIndex]?.description}</p>
-                  <button className="closePopup" onClick={() => closePopup()}>닫기</button>
-                </div>
-                <div className="body">
-                  <ScrollWrap>
-                    <div>
-                      <strong>
-                        <span>{marketingMbtiResult.name[0]}</span>
-                        {marketingMbtiResult.name[0] === "S" ? "안정 추구 (Safety-seeking)" : "고위험 추구 (Risk-seeking)"}
-                      </strong>
-                      <p>{marketingRecommendedItemData?.example?.[popupIndex]?.mbti?.[0]?.compatibility}</p>
-                    </div>
-                    <div> 
-                      <strong>
-                        <span>{marketingMbtiResult.name[1]}</span>
-                        {marketingMbtiResult.name[1] === "O" ? "기회 포착형 (Opportunity-driven)" : "계획 기반형 (Planning-driven)"}
-                      </strong>
-                      <p>{marketingRecommendedItemData?.example?.[popupIndex]?.mbti?.[1]?.compatibility}</p>
-                    </div>
-                    <div>
-                      <strong>
-                        <span>{marketingMbtiResult.name[2]}</span>
-                        {marketingMbtiResult.name[2] === "I" ? "독립성 중시 (Independence-focused)" : "협력 중시 (Teamwork-focused)"}
-                      </strong>
-                      <p>{marketingRecommendedItemData?.example?.[popupIndex]?.mbti?.[2]?.compatibility}</p>
-                    </div>
-                    <div>
-                      <strong>
-                        <span>{marketingMbtiResult.name[3]}</span>
-                        {marketingMbtiResult.name[3] === "C" ? "창의성 중심 (Creativity-centered)" : "실용성 중심 (Application-centered)"}
-                      </strong>
-                      <p>{marketingRecommendedItemData?.example?.[popupIndex]?.mbti?.[3]?.compatibility}</p>
-                    </div>
-                  </ScrollWrap>
-
-                  <PopupButton>
-                    <button onClick={() => handleButtonExpert(popupIndex)}>사업화 가능성 확인하기</button>
-                  </PopupButton>
-                </div>
-              </ScrollBoxWrap>
+              <button
+                type="button"
+                className="closePopup"
+                onClick={handleExitCancel}
+              >
+                닫기
+              </button>
+              <span>
+                <img src={images.ExclamationMarkRed} alt="" />
+              </span>
+              <p>
+                <strong>정말 종료하시겠습니까?</strong>
+                <span>
+                  종료 또는 새로고침 할 경우, 모든 대화내역이 사라집니다.
+                </span>
+              </p>
+              <div className="btnWrap">
+                <button type="button" onClick={handleExitCancel}>
+                  대화를 저장할래요
+                </button>
+                <button type="button" onClick={handleExitConfirm}>
+                  종료할게요
+                </button>
+              </div>
             </div>
-          </Popup>
+          </ExitPopup>
         )}
-      </QuestionWrap>
-      {isExitPopupOpen && (
-        <ExitPopup Cancel>
-        <div>
-          <button
-            type="button"
-            className="closePopup"
-            onClick={handleExitCancel}
-          >
-            닫기
-          </button>
-          <span>
-            <img src={images.ExclamationMarkRed} alt="" />
-          </span>
-          <p>
-            <strong>정말 종료하시겠습니까?</strong>
-            <span>종료 또는 새로고침 할 경우, 모든 대화내역이 사라집니다.</span>
-          </p>
-          <div className="btnWrap">
-            <button type="button" onClick={handleExitCancel}>
-              대화를 저장할래요
-            </button>
-            <button type="button" onClick={handleExitConfirm}>
-              종료할게요
-            </button>
-          </div>
-        </div>
-      </ExitPopup>
-      )}
-    </ThemeProvider>
+      </ThemeProvider>
     </>
   );
 };
@@ -519,68 +620,69 @@ const PageMarketingNoItemsResult = () => {
 export default PageMarketingNoItemsResult;
 
 const QuestionWrap = styled.section`
-  position:relative;
-  height:100dvh;
-  display:flex;
+  position: relative;
+  height: 100dvh;
+  display: flex;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    flex-direction:column;
+    flex-direction: column;
   }
 `;
 
 const Question = styled.div`
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  gap:64px;
-  flex:1 1 50%;
-  background:#5547FF;
-  transition:all .5s;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 64px;
+  flex: 1 1 50%;
+  background: #5547ff;
+  transition: all 0.5s;
 
   > p {
-    font-size:2.5rem;
-    font-weight:600;
-    line-height:1.4;
-    color:${palette.white};
-    text-align:center;
-    display:flex;
-    flex-direction:column;
-    gap:12px;
+    font-size: 2.5rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: ${palette.white};
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 
     span {
-      font-size:1.25rem;
-      font-weight:300;
-      line-height:1.2;
+      font-size: 1.25rem;
+      font-weight: 300;
+      line-height: 1.2;
     }
 
     br {
-      display: ${(props) => (props.questionFlex === '1 1 10%' ? 'none' : 'inline')};
+      display: ${(props) =>
+        props.questionFlex === "1 1 10%" ? "none" : "inline"};
     }
   }
 
   div {
-    display:flex;
-    flex-direction:column;
-    gap:16px;
-    max-width:680px;
-    text-align:left;
-    padding:32px;
-    margin:0 10%;
-    border-radius:20px;
-    background:${palette.white};
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 680px;
+    text-align: left;
+    padding: 32px;
+    margin: 0 10%;
+    border-radius: 20px;
+    background: ${palette.white};
 
     strong {
-      font-size:1.13rem;
-      font-weight:500;
-      color:#5547FF;
-      line-height:1.5;
+      font-size: 1.13rem;
+      font-weight: 500;
+      color: #5547ff;
+      line-height: 1.5;
     }
 
     p {
-      font-size:1.25rem;
-      line-height:1.6;
+      font-size: 1.25rem;
+      line-height: 1.6;
     }
   }
 
@@ -588,23 +690,28 @@ const Question = styled.div`
     flex: 1 1 100%;
     // justify-content:end;
     // padding-bottom:76px;
-    justify-content: ${(props) => (props.questionFlex === '1 1 10%' ? 'center' : 'end')};
-    padding-bottom: ${(props) => (props.questionFlex === '1 1 10%' ? '0' : '76px')};
+    justify-content: ${(props) =>
+      props.questionFlex === "1 1 10%" ? "center" : "end"};
+    padding-bottom: ${(props) =>
+      props.questionFlex === "1 1 10%" ? "0" : "76px"};
 
     > p {
-      font-size:1.25rem;
+      font-size: 1.25rem;
 
       span {
         // display: ${(props) => (props.isSmallFlex ? "none" : "inline-block")};
-        display: ${(props) => (props.questionFlex === '1 1 10%' ? 'none' : 'block')};
+        display: ${(props) =>
+          props.questionFlex === "1 1 10%" ? "none" : "block"};
       }
     }
 
     div {
-      display:none;
+      display: none;
     }
 
-    ${props => props.isDragging && `
+    ${(props) =>
+      props.isDragging &&
+      `
       ${Question} {
         flex: 1 1 10%;
       }
@@ -613,167 +720,170 @@ const Question = styled.div`
 `;
 
 const Answer = styled.div`
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:32px;
-  flex:1 1 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  flex: 1 1 50%;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    flex:1 1 70%;
-    overflow:hidden;
-    justify-content:flex-start;
-    overflow-y: ${(props) => (props.questionFlex === '1 1 10%' ? 'auto' : 'hidden')};
+    flex: 1 1 70%;
+    overflow: hidden;
+    justify-content: flex-start;
+    overflow-y: ${(props) =>
+      props.questionFlex === "1 1 10%" ? "auto" : "hidden"};
 
-    ${props => props.isDragging && `
+    ${(props) =>
+      props.isDragging &&
+      `
       overflow-y: auto;
     `}
   }
 `;
 
 const ResultWrap = styled.div`
-  max-width:566px;
-  display:flex;
-  flex-direction:column;
-  gap:20px;
-  margin:0 10%;
+  max-width: 566px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 0 10%;
 
   .info {
-    display:none;
-    flex-direction:column;
-    gap:16px;
-    text-align:left;
-    padding-bottom:32px;
-    margin-bottom:10px;
-    border-bottom:4px solid ${palette.chatGray};
+    display: none;
+    flex-direction: column;
+    gap: 16px;
+    text-align: left;
+    padding-bottom: 32px;
+    margin-bottom: 10px;
+    border-bottom: 4px solid ${palette.chatGray};
 
     strong {
-      font-size:1.13rem;
-      font-weight:500;
-      line-height:1.5;
-      color:#5547FF;
+      font-size: 1.13rem;
+      font-weight: 500;
+      line-height: 1.5;
+      color: #5547ff;
     }
 
     p {
-      font-weight:300;
-      line-height:1.6;
+      font-weight: 300;
+      line-height: 1.6;
     }
   }
 
   .title {
-    display:flex;
-    flex-direction:column;
-    gap:4px;
-    text-align:left;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: left;
 
     strong {
-      font-size:1.25rem;
-      font-weight:600;
-      line-height:1.5;
+      font-size: 1.25rem;
+      font-weight: 600;
+      line-height: 1.5;
     }
 
     p {
-      font-weight:300;
-      line-height:1.5;
-      margin-left:22px;
+      font-weight: 300;
+      line-height: 1.5;
+      margin-left: 22px;
     }
   }
 
   .comment {
-    font-size:0.88rem;
-    font-weight:300;
-    color:${palette.gray500};
-    line-height:1.5;
-    text-align:left;
+    font-size: 0.88rem;
+    font-weight: 300;
+    color: ${palette.gray500};
+    line-height: 1.5;
+    text-align: left;
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    padding:44px 20px;
-    margin:0 auto;
+    padding: 44px 20px;
+    margin: 0 auto;
 
     .info {
-      display:flex;
+      display: flex;
     }
 
     .title {
       strong {
-        font-size:1.13rem;
+        font-size: 1.13rem;
       }
 
       p {
-        font-size:0.88rem;
+        font-size: 0.88rem;
       }
     }
 
     .comment {
-      font-size:0.75rem;
-      letter-spacing:-0.5px;
+      font-size: 0.75rem;
+      letter-spacing: -0.5px;
     }
   }
 `;
 
 const ListBox = styled.div`
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
 
   > div {
-    width:100%;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:16px;
-    padding:20px;
-    border-radius:20px;
-    border:1px solid ${palette.gray200};
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px;
+    border-radius: 20px;
+    border: 1px solid ${palette.gray200};
   }
 
   p {
-    display:flex;
-    flex-direction:column;
-    gap:4px;
-    font-weight:300;
-    color:${palette.gray800};
-    line-height:1.5;
-    text-align:left;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-weight: 300;
+    color: ${palette.gray800};
+    line-height: 1.5;
+    text-align: left;
 
     strong {
-      font-weight:600;
-      color:#5547FF;
+      font-weight: 600;
+      color: #5547ff;
     }
   }
 
   span {
-    flex-shrink:0;
-    font-size:0.88rem;
-    color:#0453F4;
-    line-height:1.5;
-    padding:8px 20px;
-    border-radius:5px;
-    background:rgba(4, 83, 244, 0.1);
-    cursor:pointer;
+    flex-shrink: 0;
+    font-size: 0.88rem;
+    color: #0453f4;
+    line-height: 1.5;
+    padding: 8px 20px;
+    border-radius: 5px;
+    background: rgba(4, 83, 244, 0.1);
+    cursor: pointer;
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    gap:8px;
+    gap: 8px;
 
     > div {
-      padding:16px 20px;
-      border-radius:15px;
+      padding: 16px 20px;
+      border-radius: 15px;
     }
 
     p {
-      font-size:0.88rem;
+      font-size: 0.88rem;
 
       strong {
-        font-size:1rem;
+        font-size: 1rem;
       }
     }
 
     span {
-      padding:8px 12px;
+      padding: 8px 12px;
     }
   }
 `;
@@ -827,7 +937,7 @@ const Popup = styled.div`
     transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
-    gap:32px;
+    gap: 32px;
     width: 100%;
     max-width: 686px;
     text-align: center;
@@ -838,130 +948,130 @@ const Popup = styled.div`
   }
 
   .header {
-    position:relative;
-    display:flex;
-    flex-direction:column;
-    gap:20px;
-    font-size:1rem;
-    text-align:left;
-    padding-bottom:32px;
-    border-bottom:1px solid ${palette.gray200};
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-size: 1rem;
+    text-align: left;
+    padding-bottom: 32px;
+    border-bottom: 1px solid ${palette.gray200};
 
     h5 {
-      font-size:1rem;
-      font-weight:500;
-      color:#5547FF;
-      line-height:1.7;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #5547ff;
+      line-height: 1.7;
     }
 
     p {
-      font-weight:400;
-      line-height:1.6;
-      color:${palette.gray800};
+      font-weight: 400;
+      line-height: 1.6;
+      color: ${palette.gray800};
     }
   }
 
   .body {
-    display:flex;
-    flex-direction:column;
-    gap:32px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
     overflow-y: auto; // 내용이 넘칠 경우 스크롤 추가
     max-height: calc(90vh - 64px); // 패딩을 고려한 최대 높이 설정
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    background:rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.6);
 
     > div {
-      top:auto;
-      bottom:0;
-      transform:translateX(-50%);
-      height:83%;
+      top: auto;
+      bottom: 0;
+      transform: translateX(-50%);
+      height: 83%;
       // padding:56px 0 0;
-      padding:56px 0 84px;
-      overflow:hidden;
-      border-radius:20px 20px 0 0;
+      padding: 56px 0 84px;
+      overflow: hidden;
+      border-radius: 20px 20px 0 0;
     }
 
     .closePopup {
-      right:20px;
-      top:-40px;
+      right: 20px;
+      top: -40px;
     }
 
     .header {
-      padding:0 20px;
-      gap:16px;
-      padding-bottom:32px;
-      margin-bottom:32px;
+      padding: 0 20px;
+      gap: 16px;
+      padding-bottom: 32px;
+      margin-bottom: 32px;
 
       h5 {
-        font-size:1.13rem;
-        line-height:1.5;
+        font-size: 1.13rem;
+        line-height: 1.5;
       }
 
       p {
-        font-weight:300;
+        font-weight: 300;
       }
     }
 
     .body {
-      padding:0 20px 30px;
-      max-height:100%;
-      overflow:initial;
+      padding: 0 20px 30px;
+      max-height: 100%;
+      overflow: initial;
     }
   }
 `;
 
 const ScrollBoxWrap = styled.div`
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    overflow-y:auto;
+    overflow-y: auto;
   }
 `;
 
 const ScrollWrap = styled.div`
-  display:flex;
-  flex-direction:column;
-  gap:32px;
-  max-height:580px;
-  overflow-y:auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-height: 580px;
+  overflow-y: auto;
 
   > div {
-    display:flex;
-    flex-direction:column;
-    gap:12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 
     strong {
-      display:flex;
-      align-items:center;
-      gap:12px;
-      font-weight:300;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 300;
 
       span {
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        width:32px;
-        height:32px;
-        font-weight:400;
-        color:${palette.blue};
-        border-radius:5px;
-        background:rgba(4, 83, 244, 0.1);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 32px;
+        height: 32px;
+        font-weight: 400;
+        color: ${palette.blue};
+        border-radius: 5px;
+        background: rgba(4, 83, 244, 0.1);
       }
     }
 
     p {
-      font-weight:300;
-      line-height:1.6;
-      color:${palette.gray700};
-      text-align:left;
-      padding-left:44px;
+      font-weight: 300;
+      line-height: 1.6;
+      color: ${palette.gray700};
+      text-align: left;
+      padding-left: 44px;
     }
   }
 
   &::-webkit-scrollbar {
     width: 5px;
   }
-  
+
   &::-webkit-scrollbar-track {
     border-radius: 10px;
     background-color: transparent;
@@ -971,44 +1081,45 @@ const ScrollWrap = styled.div`
     background: ${palette.lineGray};
     border-radius: 10px;
   }
-  
+
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    gap:20px;
-    overflow:initial;
-    
+    gap: 20px;
+    overflow: initial;
+
     > div {
-      text-align:left;
+      text-align: left;
 
       p {
-        font-size:0.88rem;
+        font-size: 0.88rem;
       }
     }
   }
 `;
 
 const PopupButton = styled.div`
-  display:flex;
-  gap:12px;
-  align-itesm:center;
+  display: flex;
+  gap: 12px;
+  align-itesm: center;
 
   button {
-    width:100%;
-    font-family:Pretendard, Poppins;
-    font-weight:600;
-    color:${palette.white};
-    line-height:1.5;
-    padding:12px;
-    border-radius:8px;
-    border:0;
-    background:${palette.chatBlue};
+    width: 100%;
+    font-family: Pretendard, Poppins;
+    font-weight: 600;
+    font-size: 1rem;
+    color: ${palette.white};
+    line-height: 1.5;
+    padding: 12px;
+    border-radius: 8px;
+    border: 0;
+    background: ${palette.chatBlue};
   }
-    
+
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    position:absolute;
-    left:50%;
-    bottom:20px;
-    transform:translateX(-50%);
-    width:calc(100% - 40px);
+    position: absolute;
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%);
+    width: calc(100% - 40px);
   }
 `;
 
@@ -1082,12 +1193,12 @@ const ExitPopup = styled.div`
       span {
         font-size: 0.75rem !important;
         font-weight: 400;
-        color: #F40404;
+        color: #f40404;
         display: block;
         margin-top: 8px;
       }
     }
-    
+
     .btnWrap {
       display: flex;
       align-items: center;
@@ -1095,7 +1206,7 @@ const ExitPopup = styled.div`
 
       button {
         flex: 1;
-        font-family: 'Pretendard', 'Poppins';
+        font-family: "Pretendard", "Poppins";
         font-size: 0.875rem;
         font-weight: 600;
         color: ${palette.blue};
@@ -1141,10 +1252,10 @@ const ExitPopup = styled.div`
         }
       `}
   }
-  
+
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     > div {
-      width:90%;
+      width: 90%;
     }
   }
 `;
