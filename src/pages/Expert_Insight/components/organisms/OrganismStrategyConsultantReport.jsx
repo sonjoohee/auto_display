@@ -66,12 +66,6 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
     withCredentials: true,
   };
 
-  const report_title = strategyButtonState === 0 ? "시장 기회 탐색 리포트" : strategyButtonState === 1 ? "고객 분석과 가치 제안 리포트" : "시장 내 경쟁 우위 방안 리포트 ";
-  const report_subtitle_1 = strategyButtonState === 0 ? "타겟 시장" : strategyButtonState === 1 ? "주요 특징" : "시장 선점 방법";
-  const report_subtitle_2 = strategyButtonState === 0 ? "불편 요소" : strategyButtonState === 1 ? "핵심 가치" : "성장 가속화 방법";
-  const report_subtitle_3 = strategyButtonState === 0 ? "기회 및 니즈" : strategyButtonState === 1 ? "가치 제안 전략" : "";
-  const report_subtitle_4 = "시장 포지셔닝";
-
   useEffect(() => {
     const fetchStrategyConsultantReport = async () => {
       try {
@@ -145,8 +139,7 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
           // if (retryCount === maxRetries) {
           //   throw new Error("Maximum retry attempts reached. Empty response persists.");
           // }
-          console.log(strategyConsultantReportData);
-          console.log([...strategyConsultantReportData, strategyConsultantReport]);
+
           setStrategyConsultantReportData([...strategyConsultantReportData, strategyConsultantReport]);
 
           setIsLoadingStrategyConsultantReport(false);
@@ -216,27 +209,27 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
           <Overlay isMenuOpen={isMenuOpen} onClick={() => setIsMenuOpen(false)} />
 
           <SummaryBox>
-            <h3>{report_title}</h3>
+            <h3>{strategyConsultantCount === 0 ? "시장 기회 탐색 리포트" : strategyConsultantCount === 1 ? "고객 분석과 가치 제안 리포트" : "시장 내 경쟁 우위 방안 리포트 "}</h3>
             <UlList Disc>
-              {strategyButtonState === 1 &&
+              {strategyConsultantCount === 0 &&
                 <>
-                  <li><strong>{report_subtitle_1} :</strong> {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[6]?.content?.[0]}</li>
-                  <li><strong>{report_subtitle_2} :</strong> {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[6]?.content?.[1]}</li>
-                  <li><strong>{report_subtitle_3} :</strong> {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[6]?.content?.[2]}</li>
-                  <li><strong>{report_subtitle_4} :</strong> {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[6]?.content?.[3]}</li>
+                  <li><strong>타겟 시장 :</strong> {strategyConsultantReportData?.[0]?.sections?.[6]?.content?.[0]}</li>
+                  <li><strong>불편 요소 :</strong> {strategyConsultantReportData?.[0]?.sections?.[6]?.content?.[1]}</li>
+                  <li><strong>기회 및 니즈 :</strong> {strategyConsultantReportData?.[0]?.sections?.[6]?.content?.[2]}</li>
+                  <li><strong>시장 포지셔닝 :</strong> {strategyConsultantReportData?.[0]?.sections?.[6]?.content?.[3]}</li>
                 </>
               }
-              {strategyButtonState === 2 &&
+              {strategyConsultantCount === 1 &&
                 <>
-                  <li><strong>{report_subtitle_1} :</strong> {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[5]?.content?.[0]}</li>
-                  <li><strong>{report_subtitle_2} :</strong> {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[5]?.content?.[1]}</li>
-                  <li><strong>{report_subtitle_3} :</strong> {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[5]?.content?.[2]}</li>
+                  <li><strong>주요 특징 :</strong> {strategyConsultantReportData?.[1]?.sections?.[5]?.content?.[0]}</li>
+                  <li><strong>핵심 가치 :</strong> {strategyConsultantReportData?.[1]?.sections?.[5]?.content?.[1]}</li>
+                  <li><strong>가치 제안 전략 :</strong> {strategyConsultantReportData?.[1]?.sections?.[5]?.content?.[2]}</li>
                 </>
               }
-              {strategyButtonState === 3 &&
+              {strategyConsultantCount === 2 &&
                 <>
-                  <li><strong>{report_subtitle_1} :</strong> {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[5]?.content?.[0]}</li>
-                  <li><strong>{report_subtitle_2} :</strong> {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[5]?.content?.[1]}</li>
+                  <li><strong>시장 선점 방법 :</strong> {strategyConsultantReportData?.[2]?.sections?.[5]?.content?.[0]}</li>
+                  <li><strong>성장 가속화 방법 :</strong> {strategyConsultantReportData?.[2]?.sections?.[5]?.content?.[1]}</li>
                 </>
               }
             </UlList>
@@ -249,13 +242,13 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
           <Sidebar isMenuOpen={isMenuOpen}>
           <div>
             <div className="header">
-              <h5>{strategyButtonState === 1 ? "시장 기회 탐색 리포트" : strategyButtonState === 2 ? "고객 가치 제안 상세 리포트" : "시장 내 경쟁 우위 상세 리포트"}</h5>
+              <h5>{strategyConsultantCount === 0 ? "시장 기회 탐색 리포트" : strategyConsultantCount === 1 ? "고객 가치 제안 상세 리포트" : "시장 내 경쟁 우위 상세 리포트"}</h5>
               <button className="closePopup" onClick={() => setIsMenuOpen(false)}>닫기</button>
             </div>
             <div className="body">
-              {strategyButtonState === 2 || strategyButtonState === 3 && <p>{strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[4]?.content?.[0]?.text}</p>}
+              {strategyConsultantCount === 2 || strategyConsultantCount === 2 && <p>{strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[4]?.content?.[0]?.text}</p>}
               <ScrollWrap>
-                {strategyButtonState === 1 && (
+                {strategyConsultantCount === 0 && (
                   <ListBox>
                   <div>
                     <span>👉🏻</span>
@@ -297,7 +290,7 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
                   </div>
                 </ListBox>
                 )}
-                {strategyButtonState === 2 && (
+                {strategyConsultantCount === 1 && (
                   <ListBox>
                   <div>
                     <span>👉🏻</span>
@@ -310,7 +303,7 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
                   <div>
                     <span>📌</span>
                     <div>
-                      <strong>핵심 요소:{strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[0]?.title}</strong>
+                      <strong>핵심 요소 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[0]?.title}</strong>
                       <p>• 장점 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[0]?.content?.[0]?.text}</p>
                       <p>• 도전 과제 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[0]?.content?.[1]?.text}</p>
                     </div>
@@ -318,7 +311,7 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
                   <div>
                     <span>📌</span>
                     <div>
-                      <strong>핵심 요소:{strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[1]?.title}</strong>
+                      <strong>핵심 요소 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[1]?.title}</strong>
                       <p>• 가치 제안 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[1]?.content?.[0]?.text}</p>
                       <p>• 위험 요소 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[1]?.content?.[1]?.text}</p>
                     </div>
@@ -326,14 +319,14 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
                   <div>
                     <span>📌</span>
                     <div>
-                      <strong>핵심 요소:{strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[2]?.title}</strong>
+                      <strong>핵심 요소 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[2]?.title}</strong>
                       <p>• 우선 요소 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[2]?.content?.[0]?.text}</p>
                       <p>• 잠재적 영향 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[2]?.content?.[1]?.text}</p>
                     </div>
                   </div>
                 </ListBox>
                 )}
-                {strategyButtonState === 3 && (
+                {strategyConsultantCount === 2 && (
                   <ListBox>
                   <div>
                     <span>👉🏻</span>
@@ -346,7 +339,7 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
                   <div>
                     <span>📌</span>
                     <div>
-                      <strong>차별점:{strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[0]?.title}</strong>
+                      <strong>차별점 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[0]?.title}</strong>
                       <p>• 경쟁력 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[0]?.content?.[0]?.text}</p>
                       <p>• 경쟁 압박 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[0]?.content?.[1]?.text}</p>
                     </div>
@@ -354,7 +347,7 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
                   <div>
                     <span>📌</span>
                     <div>
-                      <strong>차별점:{strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[1]?.title}</strong>
+                      <strong>차별점 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[1]?.title}</strong>
                       <p>• 고유 강점 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[1]?.content?.[0]?.text}</p>
                       <p>• 위험 요소 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[1]?.content?.[1]?.text}</p>
                     </div>
@@ -523,7 +516,7 @@ const Sidebar = styled.div`
   background:${palette.white};
   // transform: ${({ isMenuOpen }) => (isMenuOpen ? 'translateX(0)' : 'translateX(200%)')};
   transition: all .5s;
-  z-index: 900;
+  z-index: 99999999;
 
   visibility: ${({ isMenuOpen }) => (isMenuOpen ? 'visible' : 'hidden')};
   overflow:hidden;
