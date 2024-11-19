@@ -109,7 +109,7 @@ const MoleculeStrategyButton = () => {
   );
 };
 
-export default MoleculeGrowthHackerStartButton;
+export default MoleculeStrategyButton;
 
 const SelectButton = styled.div`
   display: flex;
