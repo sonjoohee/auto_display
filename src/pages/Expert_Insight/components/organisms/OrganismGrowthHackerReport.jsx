@@ -91,40 +91,40 @@ const OrganismGrowthHackerReport = () => {
         let retryCount = 0;
         const maxRetries = 10;
 
-        while (retryCount < maxRetries && (
-          !response || 
-          !response.data || 
-          typeof response.data !== "object" ||
-          !response.data.hasOwnProperty("growth_hacker_report") || 
-          !Array.isArray(response.data.growth_hacker_report) ||
-          !response.data.growth_hacker_report[0].hasOwnProperty("content") ||
-          !Array.isArray(response.data.growth_hacker_report[0].content) ||
-          !response.data.growth_hacker_report[0].content[0].hasOwnProperty("text") ||
-          !response.data.growth_hacker_report[0].content[1].hasOwnProperty("text") ||
-          response.data.growth_hacker_report[1].content.some(item => 
-            !item.hasOwnProperty("title") || 
-            !item.hasOwnProperty("text") || 
-            !item.hasOwnProperty("subcontent") || 
-            !Array.isArray(item.subcontent) || 
-            item.subcontent.some(contentItem => 
-              !contentItem.hasOwnProperty("subTitle") || 
-              !contentItem.hasOwnProperty("text")
-            )
-          )
-        )) 
-        {
-          response = await axios.post(
-            "https://wishresearch.kr/panels/growth_hacker",
-            data,
-            axiosConfig
-          );
-          retryCount++;
-        }
-        if (retryCount === maxRetries) {
-          console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
-          // 에러 처리 로직 추가
-          throw new Error("Maximum retry attempts reached. Empty response persists.");
-        }
+        // while (retryCount < maxRetries && (
+        //   !response || 
+        //   !response.data || 
+        //   typeof response.data !== "object" ||
+        //   !response.data.hasOwnProperty("growth_hacker_report") || 
+        //   !Array.isArray(response.data.growth_hacker_report) ||
+        //   !response.data.growth_hacker_report[0].hasOwnProperty("content") ||
+        //   !Array.isArray(response.data.growth_hacker_report[0].content) ||
+        //   !response.data.growth_hacker_report[0].content[0].hasOwnProperty("text") ||
+        //   !response.data.growth_hacker_report[0].content[1].hasOwnProperty("text") ||
+        //   response.data.growth_hacker_report[1].content.some(item => 
+        //     !item.hasOwnProperty("title") || 
+        //     !item.hasOwnProperty("text") || 
+        //     !item.hasOwnProperty("subcontent") || 
+        //     !Array.isArray(item.subcontent) || 
+        //     item.subcontent.some(contentItem => 
+        //       !contentItem.hasOwnProperty("subTitle") || 
+        //       !contentItem.hasOwnProperty("text")
+        //     )
+        //   )
+        // )) 
+        // {
+        //   response = await axios.post(
+        //     "https://wishresearch.kr/panels/growth_hacker",
+        //     data,
+        //     axiosConfig
+        //   );
+        //   retryCount++;
+        // }
+        // if (retryCount === maxRetries) {
+        //   console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+        //   // 에러 처리 로직 추가
+        //   throw new Error("Maximum retry attempts reached. Empty response persists.");
+        // }
 
         setGrowthHackerReportData(response.data.growth_hacker_report);
 

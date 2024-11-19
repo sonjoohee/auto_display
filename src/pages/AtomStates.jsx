@@ -229,6 +229,7 @@ export const GROWTH_HACKER_BUTTON_STATE = atom(0);
 export const GROWTH_HACKER_KPI_BUTTON_STATE = atom(0);
 export const KPI_QUESTION_LIST = atom([]);
 export const GROWTH_HACKER_REPORT_DATA = atom([]);
+export const GROWTH_HACKER_RECOMMENDED_SOLUTION = atom([]);
 export const GROWTH_HACKER_DETAIL_REPORT_DATA = atom({});
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

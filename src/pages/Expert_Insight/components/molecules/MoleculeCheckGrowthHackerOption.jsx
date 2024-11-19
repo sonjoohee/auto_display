@@ -131,15 +131,15 @@ const MoleculeCheckGrowthHackerOption = () => {
     updatedConversation.push(
       {
         type: "user",
-        message: `함께 사업 아이디어를 확장해가고 싶습니다.`,
+        message: `응답이 완료되었습니다.`,
       },
       {
         type: "system",
-        message: "응답 내용을 확인한 결과, 현재 아이템의 마케팅 퍼널 현황을 진단할 수 있었습니다.\n아래 각 진단 결과와 개선 방안을 확인해보세요.",
+        message: "아이템을 진단한 결과, 마케팅 퍼널에서 주목해야할 포인트를 확인했습니다.\n다음 내용을 참고하여 성장 전략을 도출해보세요 ",
         expertIndex: selectedExpertIndex,
       },
       {
-        type: `growthHackerReport`,
+        type: `growthHackerKPI`,
       }
     );
     setConversation(updatedConversation);
