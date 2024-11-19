@@ -87,9 +87,10 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
       return navigator.userAgent.match(toMatchItem);
     });
   };
-  const handleMobileWarningConfirm = () => {
-    setShowMobileWarning(false);
-  };
+
+  // const handleMobileWarningConfirm = () => {
+  //   setShowMobileWarning(false);
+  // };
 
   const handleExitCancel = () => {
     setIsExitPopupOpen(false);
@@ -130,45 +131,42 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
       if (response.ok) {
         const result = await response.json();
         const accessToken = result.access_token;
-
-        // accessToken을 세션 스토리지에 저장
         sessionStorage.setItem("accessToken", accessToken);
 
-        // 유저 정보를 요청하기 위해 accessToken을 사용
         const userInfoResponse = await fetch(
           "https://wishresearch.kr/api/user/userInfo/",
           {
             method: "GET",
             headers: {
-              Authorization: `Bearer ${accessToken}`, // 토큰을 Authorization 헤더에 추가
+              Authorization: `Bearer ${accessToken}`,
               "Content-Type": "application/json",
             },
           }
         );
 
-        if (isMobileDevice()) {
-          setShowMobileWarning(true);
-        }
         if (userInfoResponse.ok) {
           const userInfo = await userInfoResponse.json();
 
-          // 유저 정보 (이름과 이메일)를 아톰에 저장
-          setUserName(userInfo.name); // 아톰에 유저 이름 저장
-          setUserEmail(userInfo.email); // 아톰에 유저 이메일 저장
+          // 유저 정보 저장
+          setUserName(userInfo.name);
+          setUserEmail(userInfo.email);
           sessionStorage.setItem("userName", userInfo.name);
           sessionStorage.setItem("userEmail", userInfo.email);
-          // 로그인 성공 처리
           setIsLoggedIn(true);
           setLoginSuccess(true);
 
-          navigate("/MeetAiExpert");
+          // 모바일 기기 체크 후 처리 수정
+          if (isMobileDevice()) {
+            setShowMobileWarning(true);
+          } else {
+            navigate("/MeetAiExpert");
+          }
         } else {
           setErrorStatus("유저 정보를 불러오는 중 오류가 발생했습니다.");
         }
       } else {
-        // 서버에서 받은 에러 메시지 처리
         const result = await response.json();
-        setErrorStatus(result.message || "로그인 중 오류가 발생했습니다."); // 서버 메시지 표시
+        setErrorStatus(result.message || "로그인 중 오류가 발생했습니다.");
       }
     } catch (error) {
       setErrorStatus("로그인 중 오류가 발생했습니다.");
@@ -183,6 +181,10 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
     navigate("/request-reset-password");
   };
 
+  const handleMobileWarningConfirm = () => {
+    setShowMobileWarning(false);
+    navigate("/MeetAiExpert");
+  };
   const [isSignupPopupOpen, setIsSignupPopupOpen] = useState(false);
 
   const handleSignupClick = (e) => {

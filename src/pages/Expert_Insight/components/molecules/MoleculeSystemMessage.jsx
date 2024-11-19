@@ -112,7 +112,7 @@ const Thumb = styled.div`
   height: 32px;
   border-radius: 100px;
   overflow: hidden;
-
+  margin-top: 12px;
   img {
     position: absolute;
     top: 50%;
@@ -127,6 +127,7 @@ const ThumbNone = styled.div`
   width: 32px;
   height: 0px;
 `;
+
 const SystemMessageContainer = styled.div`
   display: flex;
   align-items: flex-start;

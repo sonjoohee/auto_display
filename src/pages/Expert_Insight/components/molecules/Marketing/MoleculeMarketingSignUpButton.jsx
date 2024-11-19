@@ -35,10 +35,16 @@ const MoleculeMarketingSignUpButton = () => {
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
-  const [marketingCustomerButtonState, setMarketingCustomerButtonState] = useAtom(MARKETING_CUSTOMER_BUTTON_STATE);
-  const [marketingSelectedCustomer, setMarketingSelectedCustomer] = useAtom(MARKETING_SELECTED_CUSTOMER);
-  const [marketingFinalCustomer, setMarketingFinalCustomer] = useAtom(MARKETING_FINAL_CUSTOMER);
-  const [marketingFinalReportButtonState, setMarketingFinalReportButtonState] = useAtom(MARKETING_FINAL_REPORT_BUTTON_STATE);
+  const [marketingCustomerButtonState, setMarketingCustomerButtonState] =
+    useAtom(MARKETING_CUSTOMER_BUTTON_STATE);
+  const [marketingSelectedCustomer, setMarketingSelectedCustomer] = useAtom(
+    MARKETING_SELECTED_CUSTOMER
+  );
+  const [marketingFinalCustomer, setMarketingFinalCustomer] = useAtom(
+    MARKETING_FINAL_CUSTOMER
+  );
+  const [marketingFinalReportButtonState, setMarketingFinalReportButtonState] =
+    useAtom(MARKETING_FINAL_REPORT_BUTTON_STATE);
   const [errorStatus, setErrorStatus] = useAtom(ERROR_STATUS);
   const [signUpName, setSignUpName] = useAtom(SIGN_UP_NAME);
   const [email, setEmail] = useAtom(EMAIL);
@@ -55,12 +61,12 @@ const MoleculeMarketingSignUpButton = () => {
   const closeSignPopup = () => {
     setIsSignPopupOpen(false);
     setErrorStatus("");
-    setSignUpName('');
-    setEmail('');
-    setSignupEmail('');
-    setPassword('');
-    setSignupPassword('');
-    setConfirmPassword('');
+    setSignUpName("");
+    setEmail("");
+    setSignupEmail("");
+    setPassword("");
+    setSignupPassword("");
+    setConfirmPassword("");
   };
 
   const closeLoginPopup = () => {
@@ -79,69 +85,80 @@ const MoleculeMarketingSignUpButton = () => {
   const handleExitChatConfirm = () => {
     const updatedConversation = [...conversation];
 
-    if (updatedConversation.length > 0 &&
-      updatedConversation[updatedConversation.length - 1].type === "marketingSignUpButton"
+    if (
+      updatedConversation.length > 0 &&
+      updatedConversation[updatedConversation.length - 1].type ===
+        "marketingSignUpButton"
     ) {
       updatedConversation.pop();
       updatedConversation.pop();
     }
 
     setConversation(updatedConversation);
-    saveConversation({ changingConversation: { conversation: updatedConversation } });
+    saveConversation({
+      changingConversation: { conversation: updatedConversation },
+    });
 
     navigate("/MeetAiExpert");
   };
 
   return (
     <>
-    <ThemeProvider theme={theme}>
-      <SelectButton>
-        {!isLoggedIn ? (
-          <>
-            <button onClick={() => setIsSignPopupOpen(true)}>회원가입하고 대화내용 평생 간직 💌</button>
-            <button className="finish" onClick={() => setIsExitPopupOpen(true)}>저장하지 않고 종료하기 😱</button>
-          </>
-        ) : (
-          <>
-            <button onClick={() => navigate("/MeetAiExpert")}>메인 페이지로 돌아가기</button>
-          </>
+      <ThemeProvider theme={theme}>
+        <SelectButton>
+          {!isLoggedIn ? (
+            <>
+              <button onClick={() => setIsSignPopupOpen(true)}>
+                회원가입하고 대화내용 평생 간직 💌
+              </button>
+              <button
+                className="finish"
+                onClick={() => setIsExitPopupOpen(true)}
+              >
+                저장하지 않고 종료하기 😱
+              </button>
+            </>
+          ) : (
+            <>
+              <button onClick={() => navigate("/MeetAiExpert")}>
+                메인 페이지로 돌아가기
+              </button>
+            </>
+          )}
+        </SelectButton>
+        {isSignPopupOpen && <MoleculeSignPopup onClose={closeSignPopup} />}
+        {isLoginPopupOpen && <MoleculeLoginPopup onClose={closeLoginPopup} />}
+        {isExitPopupOpen && (
+          <Popup Cancel>
+            <div>
+              <button
+                type="button"
+                className="closePopup"
+                onClick={handleExitChatCancel}
+              >
+                닫기
+              </button>
+              <span>
+                <img src={images.ExclamationMarkRed} alt="" />
+              </span>
+              <p>
+                <strong>정말 종료하시겠습니까?</strong>
+                <span>
+                  종료 또는 새로고침 할 경우, 모든 대화내역이 사라집니다.
+                </span>
+              </p>
+              <div className="btnWrap">
+                <button type="button" onClick={handleExitChatCancel2}>
+                  대화를 저장할래요
+                </button>
+                <button type="button" onClick={handleExitChatConfirm}>
+                  종료할게요
+                </button>
+              </div>
+            </div>
+          </Popup>
         )}
-      </SelectButton>
-      {isSignPopupOpen && (
-          <MoleculeSignPopup onClose={closeSignPopup} />
-      )}
-      {isLoginPopupOpen && (
-          <MoleculeLoginPopup onClose={closeLoginPopup} />
-      )}
-      {isExitPopupOpen && (
-        <Popup Cancel>
-        <div>
-          <button
-            type="button"
-            className="closePopup"
-            onClick={handleExitChatCancel}
-          >
-            닫기
-          </button>
-          <span>
-            <img src={images.ExclamationMarkRed} alt="" />
-          </span>
-          <p>
-            <strong>정말 종료하시겠습니까?</strong>
-            <span>종료 또는 새로고침 할 경우, 모든 대화내역이 사라집니다.</span>
-          </p>
-          <div className="btnWrap">
-            <button type="button" onClick={handleExitChatCancel2}>
-              대화를 저장할래요
-            </button>
-            <button type="button" onClick={handleExitChatConfirm}>
-              종료할게요
-            </button>
-          </div>
-        </div>
-      </Popup>
-      )}
-    </ThemeProvider>
+      </ThemeProvider>
     </>
   );
 };
@@ -149,31 +166,31 @@ const MoleculeMarketingSignUpButton = () => {
 export default MoleculeMarketingSignUpButton;
 
 const SelectButton = styled.div`
-  display:flex;
-  align-items:center;
-  gap:12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   margin-top: 12px;
   margin-left: 50px;
 
   button {
     // display:inline-block;
     // width:fit-content;
-    font-family: 'Pretendard', 'Poppins';
-    font-size:0.88rem;
-    color:${palette.chatBlue};
-    padding:8px 20px;
-    border-radius:40px;
-    border:0;
-    background:rgba(4, 83, 244, 0.1);
+    font-family: "Pretendard", "Poppins";
+    font-size: 0.88rem;
+    color: ${palette.chatBlue};
+    padding: 8px 20px;
+    border-radius: 40px;
+    border: 0;
+    background: rgba(4, 83, 244, 0.1);
   }
 
   .finish {
-    color:${palette.gray500};
-    background:${palette.gray100};
+    color: ${palette.gray500};
+    background: ${palette.gray100};
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    margin-left:0;
+    margin-left: 0;
   }
 `;
 
@@ -247,12 +264,12 @@ const Popup = styled.div`
       span {
         font-size: 0.75rem !important;
         font-weight: 400;
-        color: #F40404;
+        color: #f40404;
         display: block;
         margin-top: 8px;
       }
     }
-    
+
     .btnWrap {
       display: flex;
       align-items: center;
@@ -260,7 +277,7 @@ const Popup = styled.div`
 
       button {
         flex: 1;
-        font-family: 'Pretendard', 'Poppins';
+        font-family: "Pretendard", "Poppins";
         font-size: 0.875rem;
         font-weight: 600;
         color: ${palette.blue};
@@ -306,10 +323,10 @@ const Popup = styled.div`
         }
       `}
   }
-  
+
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     > div {
-      width:90%;
+      width: 90%;
     }
   }
 `;
