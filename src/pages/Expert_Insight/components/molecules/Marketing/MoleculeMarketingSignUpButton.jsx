@@ -82,6 +82,38 @@ const MoleculeMarketingSignUpButton = () => {
     setIsSignPopupOpen(true);
   };
 
+  const [showMobileWarning, setShowMobileWarning] = useState(false);
+
+  // 모바일 감지 함수 추가
+  const isMobileDevice = () => {
+    const toMatch = [
+      /Android/i,
+      /webOS/i,
+      /iPhone/i,
+      /iPad/i,
+      /iPod/i,
+      /BlackBerry/i,
+      /Windows Phone/i,
+    ];
+
+    return toMatch.some((toMatchItem) => {
+      return navigator.userAgent.match(toMatchItem);
+    });
+  };
+
+  const handleMobileWarningConfirm = () => {
+    setShowMobileWarning(false);
+    navigate("/MeetAiExpert");
+  };
+
+  const handleNavigateToMain = () => {
+    if (isMobileDevice()) {
+      setShowMobileWarning(true);
+    } else {
+      navigate("/MeetAiExpert");
+    }
+  };
+
   const handleExitChatConfirm = () => {
     const updatedConversation = [...conversation];
 
@@ -120,7 +152,7 @@ const MoleculeMarketingSignUpButton = () => {
             </>
           ) : (
             <>
-              <button onClick={() => navigate("/MeetAiExpert")}>
+              <button onClick={handleNavigateToMain}>
                 메인 페이지로 돌아가기
               </button>
             </>
@@ -153,6 +185,31 @@ const MoleculeMarketingSignUpButton = () => {
                 </button>
                 <button type="button" onClick={handleExitChatConfirm}>
                   종료할게요
+                </button>
+              </div>
+            </div>
+          </Popup>
+        )}
+        {showMobileWarning && (
+          <Popup Cancel>
+            <div>
+              <button
+                type="button"
+                className="closePopup"
+                onClick={() => setShowMobileWarning(false)}
+              >
+                닫기
+              </button>
+              <span>
+                <img src={images.ExclamationMark} alt="" />
+              </span>
+              <p>
+                <strong>본 서비스는 웹 전용으로 운영되고 있습니다.</strong>
+                <span>웹에서 최적의 작업을 진행하세요</span>
+              </p>
+              <div className="btnWrap">
+                <button type="button" onClick={handleMobileWarningConfirm}>
+                  확인
                 </button>
               </div>
             </div>
@@ -264,7 +321,7 @@ const Popup = styled.div`
       span {
         font-size: 0.75rem !important;
         font-weight: 400;
-        color: #f40404;
+        color: #8c8c8c;
         display: block;
         margin-top: 8px;
       }
