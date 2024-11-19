@@ -723,17 +723,24 @@ const PageExpertInsight = () => {
 
   return (
     <>
-    <ThemeProvider theme={theme}>
-      <ProjectName>
-        <div className="inner">
-          <div>
-            <p>
-              <span><img src={images.Graph} alt="" /></span>
-              아이템 명 자리입니다. 두줄도 가능합니다. 세줄까지도 가능합니다. 근데 세줄은 안나올 듯
-            </p>
-          </div>
-          <button onClick={togglePopup}>아이템 핵심 정리</button>
 
+      <ThemeProvider theme={theme}>
+        {isMarketing && (
+          <ProjectName>
+         
+            <div className="inner">
+            <div>
+              <p>
+                <span>
+                  <img src={images.Graph} alt="" />
+                </span>
+                {titleOfBusinessInfo}
+              </p>
+              {/* <button>아이템 핵심 정리</button> */}
+            </div>
+        </div>
+          </ProjectName>
+        )}
           {isPopupVisible && (
             <AutosavePopup>
               <div>
@@ -742,76 +749,76 @@ const PageExpertInsight = () => {
               </div>
             </AutosavePopup>
           )}
-        </div>
-      </ProjectName>
 
-      <ContentsWrap>
-        {(!isMarketing || approachPath === 2) && <OrganismLeftSideBar />}
+        <ContentsWrap>
+          {(!isMarketing || approachPath === 2) && <OrganismLeftSideBar />}
 
-        <MainContent>
-          <div>
-            <ChatWrap>
-              {/* {!isMarketing && <MoleculeBizName date={savedTimestamp} />} */}
+          <MainContent>
+            <div>
+              <ChatWrap>
+                {!isMarketing && <MoleculeBizName date={savedTimestamp} />}
 
-              {itemsToRender.map((item, index) => {
-                if (item.type === "user") {
-                  return (
-                    <MoleculeUserMessage key={index} message={item.message} />
-                  );
-                } else if (item.type === "system") {
-                  // console.log(item);
-                  return <MoleculeSystemMessage key={index} item={item} />;
-                } else if (item.type === "analysis") {
-                  return <OrganismBizAnalysisSection />;
-                } else if (item.type.startsWith("strategy_")) {
-                  const expertIndex = item.type.split("_")[1];
-                  return (
-                    <OrganismStrategyReportSection
-                      key={`strategy_${expertIndex}_${index}`}
-                      expertIndex={expertIndex}
-                    />
-                  );
-                } else if (item.type === "addition") {
-                  const currentAdditionalReportCount = additionalReportCount++;
-                  return (
-                    <OrganismAdditionalReport
-                      additionalReportCount={currentAdditionalReportCount}
-                    />
-                  );
-                } else if (item.type === "customerAddition") {
-                  const currentCustomerAdditionalReportCount =
-                    customerAdditionalReportCount++;
-                  return (
-                    <OrganismCustomerAdditionalReport
-                      customerAdditionalReportCount={
-                        currentCustomerAdditionalReportCount
-                      }
-                    />
-                  );
-                } else if (item.type === "keyword") {
-                  return <MoleculeAdditionalKeyword />;
-                } else if (item.type === "reportButton") {
-                  return <MoleculeCheckReportRightAway />;
-                } else if (item.type === "strategyButton") { 
-                  return <MoleculeStrategyButton />;
-                } else if (item.type === "strategyConsultant") {
-                  const currentStrategyConsultantCount = strategyConsultantCount++;
-                  return (
-                    <OrganismStrategyConsultantReport
-                      strategyConsultantCount={currentStrategyConsultantCount}
-                    />
-                  );
-                } else if (item.type.startsWith("poc_")) {
-                  /* PoC */
-                  const expertIndex = item.type.split("_")[1];
-                  return (
-                    <>
-                      <OrganismPocReportSection
-                        key={`poc_${expertIndex}_${index}`}
-
+                {itemsToRender.map((item, index) => {
+                  if (item.type === "user") {
+                    return (
+                      <MoleculeUserMessage key={index} message={item.message} />
+                    );
+                  } else if (item.type === "system") {
+                    // console.log(item);
+                    return <MoleculeSystemMessage key={index} item={item} />;
+                  } else if (item.type === "analysis") {
+                    return <OrganismBizAnalysisSection />;
+                  } else if (item.type.startsWith("strategy_")) {
+                    const expertIndex = item.type.split("_")[1];
+                    return (
+                      <OrganismStrategyReportSection
+                        key={`strategy_${expertIndex}_${index}`}
                         expertIndex={expertIndex}
                       />
                     </>
+                    );
+                  } else if (item.type === "addition") {
+                    const currentAdditionalReportCount =
+                      additionalReportCount++;
+                    return (
+                      <OrganismAdditionalReport
+                        additionalReportCount={currentAdditionalReportCount}
+                      />
+                    );
+                  } else if (item.type === "customerAddition") {
+                    const currentCustomerAdditionalReportCount =
+                      customerAdditionalReportCount++;
+                    return (
+                      <OrganismCustomerAdditionalReport
+                        customerAdditionalReportCount={
+                          currentCustomerAdditionalReportCount
+                        }
+                      />
+                    );
+                  } else if (item.type === "keyword") {
+                    return <MoleculeAdditionalKeyword />;
+                  } else if (item.type === "reportButton") {
+                    return <MoleculeCheckReportRightAway />;
+                  } else if (item.type === "strategyButton") {
+                    return <MoleculeStrategyButton />;
+                  } else if (item.type === "strategyConsultant") {
+                    const currentStrategyConsultantCount =
+                      strategyConsultantCount++;
+                    return (
+                      <OrganismStrategyConsultantReport
+                        strategyConsultantCount={currentStrategyConsultantCount}
+                      />
+                    );
+                  } else if (item.type.startsWith("poc_")) {
+                    /* PoC */
+                    const expertIndex = item.type.split("_")[1];
+                    return (
+                      <>
+                        <OrganismPocReportSection
+                          key={`poc_${expertIndex}_${index}`}
+                          expertIndex={expertIndex}
+                        />
+                      </>
                     );
                   } else if (item.type === "addition") {
                     const currentAdditionalReportCount =
@@ -1189,16 +1196,16 @@ const PageExpertInsight = () => {
 export default PageExpertInsight;
 
 const ProjectName = styled.div`
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  min-height:88px;
-  display:flex;
-  justify-content:center;
-  border-bottom:1px solid ${palette.gray200};
-  background:${palette.white};
-  z-index:1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 50px;
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid ${palette.gray200};
+  background: ${palette.white};
+  z-index: 1;
 
   .inner {
     position:relative;
@@ -1210,55 +1217,55 @@ const ProjectName = styled.div`
   }
 
   p {
-    display:flex;
-    align-items:center;
-    gap:16px;
-    font-weight:500;
-    line-height:1.5;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-weight: 500;
+    line-height: 1.5;
 
     span {
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      width:22px;
-      height:22px;
-      border-radius:4px;
-      background:${palette.black};
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      background: ${palette.black};
 
       img {
-        width:12px;
+        width: 12px;
       }
     }
   }
 
   button {
     font-family: "Pretendard", "Poppins";
-    font-size:0.75rem;
-    line-height:1.5;
-    color:${palette.gray700};
-    padding:8px 12px;
-    border-radius:5px;
-    border:0;
-    background:${palette.gray100};
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: ${palette.gray700};
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: 0;
+    background: ${palette.gray100};
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     div {
-      padding:0 20px;
+      padding: 0 20px;
     }
 
     p {
-      font-size:0.88rem;
-      font-weight:600;
-      text-align:left;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-align: left;
 
       span {
-        display:none;
+        display: none;
       }
     }
 
     button {
-      display:none;
+      display: none;
     }
   }
 `;
