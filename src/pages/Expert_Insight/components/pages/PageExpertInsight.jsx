@@ -717,29 +717,88 @@ const PageExpertInsight = () => {
 
   return (
     <>
-      <ThemeProvider theme={theme}>
-        <ContentsWrap>
-          {(!isMarketing || approachPath === 2) && <OrganismLeftSideBar />}
+    <ThemeProvider theme={theme}>
+      <ProjectName>
+        <div>
+          <p>
+            <span><img src={images.Graph} alt="" /></span>
+            아이템 명 자리입니다. 두줄도 가능합니다. 세줄까지도 가능합니다. 근데 세줄은 안나올 듯
+          </p>
+          <button>아이템 핵심 정리</button>
+        </div>
+      </ProjectName>
+      
+      <AutosavePopup>
+        <div>
+          <strong>달콤한 베트남 망고 젤리</strong>
+          <p>프리랜서 업무 관리 플랫폼은 프리랜서들이 업무를 효율적으로 관리하고 일정을 체계적으로 계획할 수 있도록 지원하는 서비스입니다. 프로젝트 관리, 시간 기록, 청구서 발행, 고객 관리 등 프리랜서 업무에 필요한 다양한 기능을 제공하여 업무 효율성을 높이고, 시간 관리를 개선하며, 수익 관리를 용이하게 합니다.</p>
+        </div>
+      </AutosavePopup>
 
-          <MainContent>
-            <div>
-              <ChatWrap>
-                {!isMarketing && <MoleculeBizName date={savedTimestamp} />}
-                {itemsToRender.map((item, index) => {
-                  if (item.type === "user") {
-                    return (
-                      <MoleculeUserMessage key={index} message={item.message} />
-                    );
-                  } else if (item.type === "system") {
-                    // console.log(item);
-                    return <MoleculeSystemMessage key={index} item={item} />;
-                  } else if (item.type === "analysis") {
-                    return <OrganismBizAnalysisSection />;
-                  } else if (item.type.startsWith("strategy_")) {
-                    const expertIndex = item.type.split("_")[1];
-                    return (
-                      <OrganismStrategyReportSection
-                        key={`strategy_${expertIndex}_${index}`}
+      <ContentsWrap>
+        {(!isMarketing || approachPath === 2) && <OrganismLeftSideBar />}
+
+        <MainContent>
+          <div>
+            <ChatWrap>
+              {/* {!isMarketing && <MoleculeBizName date={savedTimestamp} />} */}
+
+              {itemsToRender.map((item, index) => {
+                if (item.type === "user") {
+                  return (
+                    <MoleculeUserMessage key={index} message={item.message} />
+                  );
+                } else if (item.type === "system") {
+                  // console.log(item);
+                  return <MoleculeSystemMessage key={index} item={item} />;
+                } else if (item.type === "analysis") {
+                  return <OrganismBizAnalysisSection />;
+                } else if (item.type.startsWith("strategy_")) {
+                  const expertIndex = item.type.split("_")[1];
+                  return (
+                    <OrganismStrategyReportSection
+                      key={`strategy_${expertIndex}_${index}`}
+                      expertIndex={expertIndex}
+                    />
+                  );
+                } else if (item.type === "addition") {
+                  const currentAdditionalReportCount = additionalReportCount++;
+                  return (
+                    <OrganismAdditionalReport
+                      additionalReportCount={currentAdditionalReportCount}
+                    />
+                  );
+                } else if (item.type === "customerAddition") {
+                  const currentCustomerAdditionalReportCount =
+                    customerAdditionalReportCount++;
+                  return (
+                    <OrganismCustomerAdditionalReport
+                      customerAdditionalReportCount={
+                        currentCustomerAdditionalReportCount
+                      }
+                    />
+                  );
+                } else if (item.type === "keyword") {
+                  return <MoleculeAdditionalKeyword />;
+                } else if (item.type === "reportButton") {
+                  return <MoleculeCheckReportRightAway />;
+                } else if (item.type === "strategyButton") { 
+                  return <MoleculeStrategyButton />;
+                } else if (item.type === "strategyConsultant") {
+                  const currentStrategyConsultantCount = strategyConsultantCount++;
+                  return (
+                    <OrganismStrategyConsultantReport
+                      strategyConsultantCount={currentStrategyConsultantCount}
+                    />
+                  );
+                } else if (item.type.startsWith("poc_")) {
+                  /* PoC */
+                  const expertIndex = item.type.split("_")[1];
+                  return (
+                    <>
+                      <OrganismPocReportSection
+                        key={`poc_${expertIndex}_${index}`}
+
                         expertIndex={expertIndex}
                       />
                     );
@@ -1118,9 +1177,140 @@ const PageExpertInsight = () => {
 
 export default PageExpertInsight;
 
+const ProjectName = styled.div`
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  min-height:88px;
+  display:flex;
+  justify-content:center;
+  border-bottom:1px solid ${palette.gray200};
+  background:${palette.white};
+  z-index:1;
+
+  div {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    max-width:1030px;
+    width:100%;
+  }
+
+  p {
+    display:flex;
+    align-items:center;
+    gap:16px;
+    font-weight:500;
+    line-height:1.5;
+
+    span {
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      width:22px;
+      height:22px;
+      border-radius:4px;
+      background:${palette.black};
+
+      img {
+        width:12px;
+      }
+    }
+  }
+
+  button {
+    font-family: "Pretendard", "Poppins";
+    font-size:0.75rem;
+    line-height:1.5;
+    color:${palette.gray700};
+    padding:8px 12px;
+    border-radius:5px;
+    border:0;
+    background:${palette.gray100};
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    div {
+      padding:0 20px;
+    }
+
+    p {
+      font-size:0.88rem;
+      font-weight:600;
+      text-align:left;
+
+      span {
+        display:none;
+      }
+    }
+
+    button {
+      display:none;
+    }
+  }
+`;
+
+const AutosavePopup = styled.div`
+  position: absolute;
+  right: ${(props) => (props.isAutoSaveToggle ? "0" : "-100px")};
+  top: -30px;
+  max-width: 304px;
+  max-height: ${(props) => (props.isAutoSaveToggle ? "0" : "1000px")};
+  flex-direction: column;
+  gap: 20px !important;
+  text-align: left;
+  padding: ${(props) => (props.isAutoSaveToggle ? "0" : "24px")};
+  border-radius: 20px;
+  background: ${palette.white};
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  visibility: ${(props) => (props.isAutoSaveToggle ? "hidden" : "visible")};
+  opacity: ${(props) => (props.isAutoSaveToggle ? "0" : "1")};
+  z-index:1;
+
+  &:before {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0px 20px 12px 20px;
+    border-color: transparent transparent ${palette.white} transparent;
+    filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.2));
+    content: "";
+    zindex: 0;
+  }
+
+  strong {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: ${palette.gray};
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    margin-top: 5px;
+  }
+
+  span {
+    font-size: 0.63rem;
+    font-weight: 300;
+    color: ${palette.gray};
+  }
+
+  p {
+    font-size: 0.75rem;
+    line-height: 1.5;
+    margin-top: 20px;
+  }
+`;
+
 const MainContent = styled.div`
   position: relative;
   top: 40px;
+  // top:70px;
   grid-area: content;
   display: flex;
   flex-direction: row;
