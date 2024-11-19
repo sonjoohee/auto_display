@@ -318,7 +318,10 @@ const PageMarketingNoItemsResult = () => {
     <ThemeProvider theme={theme}>
       <QuestionWrap>
         <Question
-          style={{ flex: questionFlex }}
+          // style={{ flex: questionFlex }}
+          style={{
+            flex: isMobile ? questionFlex : '1 1 50%',
+          }}
           isDragging={isDragging}
           questionFlex={questionFlex}
         >
@@ -706,6 +709,7 @@ const ListBox = styled.div`
     display:flex;
     align-items:center;
     justify-content:space-between;
+    gap:16px;
     padding:20px;
     border-radius:20px;
     border:1px solid ${palette.gray200};
@@ -727,6 +731,7 @@ const ListBox = styled.div`
   }
 
   span {
+    flex-shrink:0;
     font-size:0.88rem;
     color:#0453F4;
     line-height:1.5;
@@ -740,7 +745,6 @@ const ListBox = styled.div`
     gap:8px;
 
     > div {
-      gap:16px;
       padding:16px 20px;
       border-radius:15px;
     }
@@ -754,7 +758,6 @@ const ListBox = styled.div`
     }
 
     span {
-      flex-shrink:0;
       padding:8px 12px;
     }
   }

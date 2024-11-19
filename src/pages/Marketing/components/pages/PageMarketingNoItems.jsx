@@ -72,12 +72,17 @@ const PageMarketingNoItems = () => {
   };
 
   useEffect(() => {
-    // 페이지가 로드될 때 body의 overflow를 hidden으로 설정
+    const preventDefault = (e) => {
+      e.preventDefault(); // 기본 스크롤 동작 차단
+    };
+  
+    // iOS에서 터치 스크롤 차단
     document.body.style.overflow = 'hidden';
-
-    // 페이지가 언마운트될 때 body의 overflow를 원래 상태로 복원
+    document.body.addEventListener('touchmove', preventDefault, { passive: false });
+  
     return () => {
       document.body.style.overflow = '';
+      document.body.removeEventListener('touchmove', preventDefault);
     };
   }, []);
 
@@ -122,13 +127,16 @@ const PageMarketingNoItems = () => {
   const handleScrollToQuestion = (index) => {
     const target = questionRefs.current[index];
     if (target) {
-      window.scrollTo({
-        top: target.offsetTop,
-        behavior: "smooth",
-      });
-      setActiveQuestion(index);
-      setIsRadioSelected(false);
+      setTimeout(() => {
+        target.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 100); // 딜레이를 추가하여 스크롤 안정화
     }
+  
+    setActiveQuestion(index);
+    setIsRadioSelected(false);
   };
 
   // // 스크롤에 따라 active 클래스 업데이트
@@ -754,6 +762,8 @@ const PageMarketingNoItems = () => {
                 <span>교육 / 컨설팅</span>
               </label>
             </RadioButton>
+          </RadioButtonWrap>
+          <RadioButtonWrap>
             <RadioButton onClick={() => {generateMbti("예술/디자인")}}>
               <input type="radio" id="q26" name="question13" />
               <label htmlFor="q26">
@@ -869,13 +879,13 @@ const Navbar = styled.div`
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    top:40px;
+    top:30px;
     left:0;
     width:100%;
     height:auto;
     transform:none;
     align-items:flex-start;
-    gap:28px;
+    gap:25px;
 
     h1 {
       &.pc {
@@ -952,7 +962,7 @@ const Tooltip = styled.div`
 
 const QuestionWrap = styled.section`
   position:relative;
-  height:100vh;
+  height:100dvh;
   display:flex;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
@@ -993,8 +1003,9 @@ const Question = styled.div`
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    flex:1 1 30%;
+    flex:1 1 20%;
     align-items:flex-end;
+    padding-top:140px;
     background:none;
 
     p {
@@ -1003,7 +1014,7 @@ const Question = styled.div`
       color:${palette.gray800};
       text-align:left;
       gap:5px;
-      padding:0 20px 40px;
+      padding:0 20px;
     }
 
     br {
@@ -1022,8 +1033,8 @@ const Answer = styled.div`
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     position:relative;
-    flex:1 1 70%;
-    padding:48px 20px 105px;
+    flex:1 1 80%;
+    padding:0 20px 85px;
   }
 `;
 
@@ -1031,7 +1042,7 @@ const NextButton = styled.button`
   display:none;
   position:absolute;
   left:50%;
-  bottom:48px;
+  bottom:30px;
   transform:translateX(-50%);
   width:calc(100% - 40px);
   font-family: "Pretendard", "Poppins";
