@@ -1006,7 +1006,7 @@ const PopupButton = styled.div`
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     position:absolute;
     left:50%;
-    bottom:0;
+    bottom:20px;
     transform:translateX(-50%);
     width:calc(100% - 40px);
   }
