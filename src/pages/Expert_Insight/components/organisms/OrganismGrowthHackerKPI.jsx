@@ -17,7 +17,16 @@ import {
   CONVERSATION_STAGE,
   KPI_QUESTION_LIST,
   GROWTH_HACKER_DETAIL_REPORT_DATA,
+  IS_LOADING,
+  GROWTH_HACKER_BUTTON_STATE,
+  GROWTH_HACKER_RECOMMENDED_SOLUTION,
 } from "../../../../pages/AtomStates";
+
+import {
+  SkeletonTitle,
+  SkeletonLine,
+  Spacing,
+} from "../../../../assets/styles/Skeleton";
 
 import { useAtom } from "jotai";
 
@@ -34,7 +43,6 @@ const OrganismGrowthHackerKPI = () => {
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [growthHackerKPIButtonState, setGrowthHackerKPIButtonState] = useAtom(GROWTH_HACKER_KPI_BUTTON_STATE);
-  const [growthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
   const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
 
   const [isVisible, setIsVisible] = useState(false);
@@ -50,6 +58,12 @@ const OrganismGrowthHackerKPI = () => {
   const [isPopupOpenDownload, setIsPopupOpenDownload] = useState(false);
   const popupRef = useRef(null);
   const [loadingDownload, setLoadingDownload] = useState(false);
+
+  const [isLoading, setIsLoading] = useAtom(IS_LOADING);
+  const [isLoadingGrowthHacker, setIsLoadingGrowthHacker] = useState(false);
+  const [growthHackerButtonState, setGrowthHackerButtonState] = useAtom(GROWTH_HACKER_BUTTON_STATE);
+  const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
+  const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] = useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
   
   const togglePopupDownload = () => {
     setIsPopupOpenDownload(!isPopupOpenDownload);
@@ -66,182 +80,303 @@ const OrganismGrowthHackerKPI = () => {
                   '자발적 추천하게 만들기(Referral) 단계 집중', 
                   '고객을 통해 수익 창출하기(Revenue) 단계 집중'];
 
+  const findStepIndex = (variable) => {
+    return steps.indexOf(variable);
+  };
+
   // 현재 선택된 단계에 따라 프로그래스바 상태 업데이트
   useEffect(() => {
-    const index = steps.indexOf(growthHackerReportData[2].aarrr_title);
-    if (index !== -1) {
-      setCurrentStep(index);
+    if (growthHackerReportData.length > 0) {
+      const index = steps.indexOf(growthHackerReportData[0].title);
+      if (index !== -1) {
+        setCurrentStep(index);
+      }
     }
-  }, []);
+  }, [growthHackerReportData]);
+
+  const axiosConfig = {
+    timeout: 100000, // 100초
+    headers: {
+      "Content-Type": "application/json",
+    },
+    withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
+  };
 
   useEffect(() => {
-    const fetchGrowthHackerKPI = async () => {
+    const fetchIdeaList = async () => {
 
-      if (growthHackerKPIButtonState) {
+      if(growthHackerButtonState) {
+        setIsLoading(true);
+        setIsLoadingGrowthHacker(true);
+        setGrowthHackerButtonState(0);
+
+        const data = {
+          expert_id: "6",
+          business_info: titleOfBusinessInfo,
+          business_analysis_data: {
+            명칭: titleOfBusinessInfo,
+            주요_목적_및_특징: mainFeaturesOfBusinessInformation,
+            주요기능: mainCharacteristicOfBusinessInformation,
+            목표고객: businessInformationTargetCustomer,
+          },
+          kpi_question_list: KpiQuestionList,
+        };
+
+        let response = await axios.post(
+          "https://wishresearch.kr/panels/growth_hacker",
+          data,
+          axiosConfig
+        );
+
+        let retryCount = 0;
+        const maxRetries = 10;
+
+        // while (retryCount < maxRetries && (
+        //   !response || 
+        //   !response.data || 
+        //   typeof response.data !== "object" ||
+        //   !response.data.hasOwnProperty("growth_hacker_report") || 
+        //   !Array.isArray(response.data.growth_hacker_report) ||
+        //   !response.data.growth_hacker_report[0].hasOwnProperty("content") ||
+        //   !Array.isArray(response.data.growth_hacker_report[0].content) ||
+        //   !response.data.growth_hacker_report[0].content[0].hasOwnProperty("text") ||
+        //   !response.data.growth_hacker_report[0].content[1].hasOwnProperty("text") ||
+        //   response.data.growth_hacker_report[1].content.some(item => 
+        //     !item.hasOwnProperty("title") || 
+        //     !item.hasOwnProperty("text") || 
+        //     !item.hasOwnProperty("subcontent") || 
+        //     !Array.isArray(item.subcontent) || 
+        //     item.subcontent.some(contentItem => 
+        //       !contentItem.hasOwnProperty("subTitle") || 
+        //       !contentItem.hasOwnProperty("text")
+        //     )
+        //   )
+        // )) 
+        // {
+        //   response = await axios.post(
+        //     "https://wishresearch.kr/panels/growth_hacker",
+        //     data,
+        //     axiosConfig
+        //   );
+        //   retryCount++;
+        // }
+        // if (retryCount === maxRetries) {
+        //   console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+        //   // 에러 처리 로직 추가
+        //   throw new Error("Maximum retry attempts reached. Empty response persists.");
+        // }
+
+        setGrowthHackerReportData(response.data.growth_hacker_report);
+        setGrowthHackerRecommendedSolution(response.data.growth_hacker_report[2]);
+
+        setIsLoading(false);
+        setIsLoadingGrowthHacker(false);
+
         const updatedConversation = [...conversation];
-
         updatedConversation.push(
           {
             type: "system",
             message:
-              "리포트 내용을 보시고 추가로 궁금한 점이 있나요?\n아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊",
+              "주목해야할 마케팅 퍼널 포인트를 파악했으니, 이제 퍼널 최적화 방법을 제시해드리겠습니다.\n아래 방법 중 하나를 선택해주세요. ",
             expertIndex: selectedExpertIndex,
           },
-          { type: `keyword` }
+          { type: `growthHackerKPIButton` }
         );
-
-        setConversation(updatedConversation);
         setConversationStage(3);
-        setGrowthHackerKPIButtonState(0);
+        setConversation(updatedConversation);
 
         await saveConversation(
-          { changingConversation: { conversation: updatedConversation, conversationStage: 3 } }
+          { changingConversation: { conversation: updatedConversation, conversationStage: 3, growthHackerReportData : response.data.growth_hacker_report, growthHackerRecommendedSolution : response.data.growth_hacker_report[2] } }
         );
-      };
-    }
-
-    fetchGrowthHackerKPI();
-  }, [growthHackerKPIButtonState]);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        popupRef.current &&
-        !popupRef.current.contains(event.target) &&
-        !event.target.closest(".download-button")
-      ) {
-        setIsPopupOpenDownload(false);
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    fetchIdeaList();
+  }, [growthHackerButtonState]);
 
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isModalOpen]);
+  // useEffect(() => {
+  //   const fetchGrowthHackerKPI = async () => {
+
+  //     if (growthHackerKPIButtonState) {
+  //       const updatedConversation = [...conversation];
+
+  //       updatedConversation.push(
+  //         {
+  //           type: "system",
+  //           message:
+  //             "리포트 내용을 보시고 추가로 궁금한 점이 있나요?\n아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊",
+  //           expertIndex: selectedExpertIndex,
+  //         },
+  //         { type: `keyword` }
+  //       );
+
+  //       setConversation(updatedConversation);
+  //       setConversationStage(3);
+  //       setGrowthHackerKPIButtonState(0);
+
+  //       await saveConversation(
+  //         { changingConversation: { conversation: updatedConversation, conversationStage: 3 } }
+  //       );
+  //     };
+  //   }
+
+  //   fetchGrowthHackerKPI();
+  // }, [growthHackerKPIButtonState]);
+
+  // useEffect(() => {
+  //   const handleClickOutside = (event) => {
+  //     if (
+  //       popupRef.current &&
+  //       !popupRef.current.contains(event.target) &&
+  //       !event.target.closest(".download-button")
+  //     ) {
+  //       setIsPopupOpenDownload(false);
+  //     }
+  //   };
+
+  //   document.addEventListener("mousedown", handleClickOutside);
+
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   };
+  // }, [isModalOpen]);
 
   ////////////////////////////////////////////////////////////////////////////////
 
-  const handleDownloadDocx = async () => {
-    setLoadingDownload(true); // 로딩 상태 시작
+  // const handleDownloadDocx = async () => {
+  //   setLoadingDownload(true); // 로딩 상태 시작
 
-    let fileName = `AARRR 모델 기반 최적의 KPI 도출`; // 기본 파일 이름
+  //   let fileName = `AARRR 모델 기반 최적의 KPI 도출`; // 기본 파일 이름
 
-    // // 목표 행위 텍스트를 파일 이름으로 설정
-    // const content = currentExpertData.tabs[0].sections[0].content[index];
-    // if (content && content.subContent) {
-    //   content.subContent.forEach((subItem) => {
-    //     if (subItem.subTitle === "목표 행위") {
-    //       fileName = `${subItem.text} - PoC 수행 계획서`; // "목표 행위" 텍스트를 파일 이름으로 사용
-    //     }
-    //   });
-    // }
+  //   // // 목표 행위 텍스트를 파일 이름으로 설정
+  //   // const content = currentExpertData.tabs[0].sections[0].content[index];
+  //   // if (content && content.subContent) {
+  //   //   content.subContent.forEach((subItem) => {
+  //   //     if (subItem.subTitle === "목표 행위") {
+  //   //       fileName = `${subItem.text} - PoC 수행 계획서`; // "목표 행위" 텍스트를 파일 이름으로 사용
+  //   //     }
+  //   //   });
+  //   // }
 
-    // 이미 저장된 데이터가 있는 경우 해당 데이터를 사용
-    if (Object.keys(growthHackerDetailReportData).length !== 0) {
-      generateDocx(growthHackerDetailReportData, fileName); // DOCX 생성 함수 호출
-      return;
-    }
+  //   // 이미 저장된 데이터가 있는 경우 해당 데이터를 사용
+  //   if (Object.keys(growthHackerDetailReportData).length !== 0) {
+  //     generateDocx(growthHackerDetailReportData, fileName); // DOCX 생성 함수 호출
+  //     return;
+  //   }
 
-    const data = {
-      expert_id: "6",
-      business_info: titleOfBusinessInfo,
-      business_analysis_data: {
-        명칭: titleOfBusinessInfo,
-        주요_목적_및_특징: mainFeaturesOfBusinessInformation,
-        주요기능: mainCharacteristicOfBusinessInformation,
-        목표고객: businessInformationTargetCustomer,
-      },
-      kpi_question_list: KpiQuestionList,
-    };
+  //   const data = {
+  //     expert_id: "6",
+  //     business_info: titleOfBusinessInfo,
+  //     business_analysis_data: {
+  //       명칭: titleOfBusinessInfo,
+  //       주요_목적_및_특징: mainFeaturesOfBusinessInformation,
+  //       주요기능: mainCharacteristicOfBusinessInformation,
+  //       목표고객: businessInformationTargetCustomer,
+  //     },
+  //     kpi_question_list: KpiQuestionList,
+  //   };
 
-    try {
-      // API 요청 보내기
-      const response = await axios.post(
-        "https://wishresearch.kr/panels/growth_hacker_detail",
-        data,
-      );
+  //   try {
+  //     // API 요청 보내기
+  //     const response = await axios.post(
+  //       "https://wishresearch.kr/panels/growth_hacker_detail",
+  //       data,
+  //     );
 
-      // 응답으로부터 보고서 내용 가져오기
-      const reportContent = response.data.growth_hacker_detailpersona_recommand_report;
+  //     // 응답으로부터 보고서 내용 가져오기
+  //     const reportContent = response.data.growth_hacker_detailpersona_recommand_report;
 
-      // Atom에 보고서 내용을 저장
-      setGrowthHackerDetailReportData(reportContent);
+  //     // Atom에 보고서 내용을 저장
+  //     setGrowthHackerDetailReportData(reportContent);
 
-      // 저장 후 DOCX 생성 함수 호출
-      generateDocx(reportContent, fileName);
+  //     // 저장 후 DOCX 생성 함수 호출
+  //     generateDocx(reportContent, fileName);
 
-      await saveConversation(
-        { changingConversation: { conversationStage: 3, growthHackerDetailReportData : reportContent } }
-      );
-    } catch (error) {
-      console.error("Error fetching report:", error);
-      setLoadingDownload(false);
-      setTimeout(() => {
-      }, 2000);
-    }
-  };
+  //     await saveConversation(
+  //       { changingConversation: { conversationStage: 3, growthHackerDetailReportData : reportContent } }
+  //     );
+  //   } catch (error) {
+  //     console.error("Error fetching report:", error);
+  //     setLoadingDownload(false);
+  //     setTimeout(() => {
+  //     }, 2000);
+  //   }
+  // };
 
-  // DOCX 파일을 생성하는 함수
-  const generateDocx = (content, fileName) => {
-    try {
-      // Word 문서용 전처리
-      const cleanedContent = content
-        .replace(/##/g, "") // 제목 표시 '##' 제거
-        .replace(/\*\*/g, "") // 굵은 글씨 '**' 제거
-        .replace(/\*/g, "") // 이탤릭체 '*' 제거
-        .replace(/-\s/g, "• ") // 리스트 '-'를 '•'로 변환
-        .replace(/<br\/>/g, "\n"); // <br/>을 줄바꿈으로 변환
+  // // DOCX 파일을 생성하는 함수
+  // const generateDocx = (content, fileName) => {
+  //   try {
+  //     // Word 문서용 전처리
+  //     const cleanedContent = content
+  //       .replace(/##/g, "") // 제목 표시 '##' 제거
+  //       .replace(/\*\*/g, "") // 굵은 글씨 '**' 제거
+  //       .replace(/\*/g, "") // 이탤릭체 '*' 제거
+  //       .replace(/-\s/g, "• ") // 리스트 '-'를 '•'로 변환
+  //       .replace(/<br\/>/g, "\n"); // <br/>을 줄바꿈으로 변환
 
-      // 줄바꿈 기준으로 텍스트 분리
-      const contentParagraphs = cleanedContent.split("\n").map((line) => {
-        return new Paragraph({
-          children: [
-            new TextRun({
-              text: line,
-            }),
-          ],
-        });
-      });
+  //     // 줄바꿈 기준으로 텍스트 분리
+  //     const contentParagraphs = cleanedContent.split("\n").map((line) => {
+  //       return new Paragraph({
+  //         children: [
+  //           new TextRun({
+  //             text: line,
+  //           }),
+  //         ],
+  //       });
+  //     });
 
-      // 문서 생성을 위한 docx Document 객체 생성
-      const doc = new Document({
-        sections: [
-          {
-            children: [
-              ...contentParagraphs, // 분리된 각 줄을 Paragraph로 추가
-            ],
-          },
-        ],
-      });
+  //     // 문서 생성을 위한 docx Document 객체 생성
+  //     const doc = new Document({
+  //       sections: [
+  //         {
+  //           children: [
+  //             ...contentParagraphs, // 분리된 각 줄을 Paragraph로 추가
+  //           ],
+  //         },
+  //       ],
+  //     });
 
-      // docx 파일 패킹 및 다운로드
-      Packer.toBlob(doc)
-        .then((blob) => {
-          saveAs(blob, `${fileName}.docx`);
+  //     // docx 파일 패킹 및 다운로드
+  //     Packer.toBlob(doc)
+  //       .then((blob) => {
+  //         saveAs(blob, `${fileName}.docx`);
 
-          // 2초 후 상태 리셋
-          setTimeout(() => {
-            setLoadingDownload(false);
-          }, 2000);
-        })
-        .catch((error) => {
-          console.error("Error generating DOCX:", error);
-          setLoadingDownload(false);
-          setTimeout(() => {
-          }, 2000);
-        });
-    } catch (error) {
-      console.error("Error generating DOCX:", error);
-    }
-  };
+  //         // 2초 후 상태 리셋
+  //         setTimeout(() => {
+  //           setLoadingDownload(false);
+  //         }, 2000);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error generating DOCX:", error);
+  //         setLoadingDownload(false);
+  //         setTimeout(() => {
+  //         }, 2000);
+  //       });
+  //   } catch (error) {
+  //     console.error("Error generating DOCX:", error);
+  //   }
+  // };
 
   ///////////////////////////////////////////////////////////////////////////////////////////////
 
   return (
-    <>
-      <Wrap>
+    <Wrap>
+      {isLoadingGrowthHacker || growthHackerButtonState ? (
+        <>
+          <SkeletonTitle className="title-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <Spacing />
+          <SkeletonTitle className="title-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <Spacing />
+          <SkeletonTitle className="title-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+          <SkeletonLine className="content-placeholder" />
+        </>
+      ) : (
+      <>
         <h1>
           AARRR 모델 기반 최적의 KPI 도출
           <p>
@@ -294,7 +429,7 @@ const OrganismGrowthHackerKPI = () => {
         <KPIWrap>
           <h4>
             <span>비즈니스와 퍼널 분석 결과</span>
-            {titles[currentStep]}
+            {titles[findStepIndex(growthHackerReportData[0].title)]}
           </h4>
 
           <Progress>
@@ -337,11 +472,14 @@ const OrganismGrowthHackerKPI = () => {
           </Progress>
 
           <Content>
-            <span>평가 내용</span>
-            <p>{growthHackerReportData[2].aarrr_content}</p>
+            <span>Why</span>
+            <p>{growthHackerReportData[1].detail}</p>
+            <br />
+            <span>Goal</span>
+            <p>{growthHackerReportData[1].key}</p>
           </Content>
 
-          <DownloadButton onClick={togglePopupDownload} className="download-button">
+          {/* <DownloadButton onClick={togglePopupDownload} className="download-button">
             <p>
               <img src={images.IconEdit3} alt="" />
               자료 (1건)
@@ -355,96 +493,11 @@ const OrganismGrowthHackerKPI = () => {
                 </div>
               </button>
             </div>
-          </DownloadButton>
+          </DownloadButton> */}
         </KPIWrap>
-        {isPopupOpenDownload && (
-        <DownloadPopup
-          ref={popupRef}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              togglePopupDownload();
-            }
-          }}
-        >
-          <span className="close" onClick={togglePopupDownload}></span>
-          <div>
-            <h3>마케팅 전략 다운로드</h3>
-            <SelectBoxWrap>
-                <label>포맷 선택 (택1)</label>
-                <SelectBox>
-                  <div
-                    className={`${
-                      selectedFormat === "Word" ? "selected" : ""
-                    }`}
-                  >
-                    {selectedFormat === "Word" ? (
-                      <img src={images.ImgWord2} alt="" />
-                    ) : (
-                      <img src={images.ImgWord} alt="" />
-                    )}
-                    Word
-                  </div>
-                  {/* <div
-                    className={`${
-                      selectedFormat === "Excel" ? "selected" : ""
-                    }`}
-                    onClick={() => handleFormatChange("Excel")}
-                  >
-                    {selectedFormat === "Excel" ? (
-                      <img src={images.ImgExcel2} alt="" />
-                    ) : (
-                      <img src={images.ImgExcel} alt="" />
-                    )}
-                    Excel
-                  </div> */}
-                </SelectBox>
-              </SelectBoxWrap>
-              <SelectBoxWrap>
-                <label>언어 선택 (택1)</label>
-                <SelectBox>
-                  <div
-                    className={`${
-                      selectedLanguage === "한글" ? "selected" : ""
-                    }`}
-                    onClick={() => handleLanguageChange("한글")}
-                  >
-                    {selectedLanguage === "한글" ? (
-                      <img src={images.ImgKOR2} alt="" />
-                    ) : (
-                      <img src={images.ImgKOR} alt="" />
-                    )}
-                    한국어
-                  </div>
-                  <div
-                    className={`${
-                      selectedLanguage === "영문" ? "selected" : ""
-                    } disabled`}
-                    onClick={() => handleLanguageChange("영문")}
-                  >
-                    {selectedLanguage === "영문" ? (
-                      <img src={images.ImgENG2} alt="" />
-                    ) : (
-                      <img src={images.ImgENG} alt="" />
-                    )}
-                    영문(준비 중)
-                  </div>
-                </SelectBox>
-              </SelectBoxWrap>
-            <div>
-              <button 
-                onClick={handleDownloadDocx}
-                disabled={loadingDownload}
-              >
-                {loadingDownload
-                  ? "다운로드 중..."
-                  : "다운로드"}
-              </button>
-            </div>
-          </div>
-        </DownloadPopup>
+      </>
       )}
-      </Wrap>
-    </>
+    </Wrap>
   );
 };
 
@@ -737,7 +790,7 @@ const Content = styled.div`
   color:${palette.gray800};
   line-height:1.3;
   text-align:left;
-  margin:32px auto;
+  margin-top: 10px;
   padding-top:20px;
   border-top:1px solid ${palette.lineGray};
 

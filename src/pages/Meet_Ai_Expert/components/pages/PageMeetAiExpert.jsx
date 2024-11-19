@@ -105,6 +105,7 @@ import {
   MARKETING_RECOMMENDED_ITEM_DATA,
   MARKETING_START_BUTTON_STATE,
   MARKETING_RECOMMENDED_ITEM_BUTTON_STATE,
+  GROWTH_HACKER_RECOMMENDED_SOLUTION,
 } from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
@@ -117,6 +118,7 @@ import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/Molec
 import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
 
 const PageMeetAiExpert = () => {
+  const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] = useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
   const { saveConversation } = useSaveConversation();
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(
     BM_MODEL_SUGGESTION_REPORT_DATA
@@ -453,6 +455,7 @@ const PageMeetAiExpert = () => {
     setIdeaMiroState(0);
     setGrowthHackerReportData([]);
     setGrowthHackerDetailReportData({});
+    setGrowthHackerRecommendedSolution([]);
     setKpiQuestionList([]);
     setPriceScrapData([]);
     setPriceReportData([]);

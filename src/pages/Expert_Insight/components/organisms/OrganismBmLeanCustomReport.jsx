@@ -474,7 +474,9 @@ useEffect(() => {
                   <img src={images.IconCanvas08} alt="" />
                 </span>
               </strong>
-              {bmLeanCustomReportData[7]?.content?.map((contentItem, contentIndex) => (
+              {bmLeanCustomReportData[7]?.content
+              ?.filter(contentItem => contentItem.title === "핵심 메시지")
+              ?.map((contentItem, contentIndex) => (
                 <div key={contentIndex}>
                   {/* {contentIndex === 0 && <p>{contentItem?.description}</p>} */}
                   <ul>
@@ -496,7 +498,9 @@ useEffect(() => {
                   <img src={images.IconCanvas09} alt="" />
                 </span>
               </strong>
-              {bmLeanCustomReportData[6]?.content?.map((contentItem, contentIndex) => (
+              {bmLeanCustomReportData[6]?.content
+              ?.filter(contentItem => contentItem.title === "핵심 메시지")
+              ?.map((contentItem, contentIndex) => (
                 <div key={contentIndex}>
                   {/* {contentIndex === 0 && <p>{contentItem?.description}</p>} */}
                   <ul>

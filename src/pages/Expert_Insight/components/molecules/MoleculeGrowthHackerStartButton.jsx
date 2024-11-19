@@ -7,6 +7,7 @@ import {
   CONVERSATION,
   CONVERSATION_STAGE,
   IS_EDITING_NOW,
+  SELECTED_EXPERT_INDEX,
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
@@ -20,6 +21,7 @@ const MoleculeGrowthHackerStartButton = () => {
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
+  const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
 
   const handleClick = async () => {
     if (isLoading) return;
@@ -32,6 +34,15 @@ const MoleculeGrowthHackerStartButton = () => {
     }
 
     updatedConversation.push(
+      {
+        type: "user",
+        message: "아이템 진단하기",
+      },
+      {
+        type: "system",
+        message: "마케팅 퍼널 분석을 시작하려면 몇가지 질문에 응답해 주셔야 합니다. ",
+        expertIndex: selectedExpertIndex,
+      },
       {
         type: 'growthHackerOption',
       },
@@ -47,43 +58,36 @@ const MoleculeGrowthHackerStartButton = () => {
   };
   return (
     <>
-      <ButtonWrap>
-        <button onClick={handleClick}>퍼널 분석하기</button>
-      </ButtonWrap>
+      <SelectButton>
+        <button onClick={handleClick}>아이템 진단하기 🛠</button>
+      </SelectButton>
     </>
   );
 };
 
 export default MoleculeGrowthHackerStartButton;
 
-const ButtonWrap = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 15px;
-  margin-left:50px;
-  padding-bottom: 15px;
+const SelectButton = styled.div`
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-top: 12px;
+  margin-left: 50px;
 
   button {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-family: "Pretendard";
-    font-size: 0.875rem;
-    color: ${palette.darkGray};
-    border: 0;
-    background: none;
-    margin-right: 10px;
+    // display:inline-block;
+    // width:fit-content;
+    font-family: 'Pretendard', 'Poppins';
+    font-size:0.88rem;
+    color:${palette.chatBlue};
+    padding:8px 20px;
+    border-radius:40px;
+    border:0;
+    background:rgba(4, 83, 244, 0.1);
   }
 
-  > button {
-    padding: 8px 16px;
-    border-radius: 40px;
-    border: 1px solid ${palette.lineGray};
-  }
-
-  button.other {
-    color: ${palette.lightGray};
-    font-size: 0.75rem;
-    border: none;
+  .finish {
+    color:${palette.gray500};
+    background:${palette.gray100};
   }
 `;

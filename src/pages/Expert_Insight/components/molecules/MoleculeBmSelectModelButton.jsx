@@ -74,7 +74,7 @@ const MoleculeBmSelectModelButton = () => {
     updatedConversation.push(
       { 
         type: 'user', 
-        message: 'BM 모델 확인하기'
+        message: 'Lean 캔버스 확인하기'
       },
       {
         type: 'bmLeanAutoReport',
@@ -100,8 +100,8 @@ const MoleculeBmSelectModelButton = () => {
     
     <>
       <SelectButton>
-        <button onClick={handleBMClick}>Lean 🔎</button>
-        <button onClick={handleLeanClick}>BM 🔎</button>
+        <button onClick={handleLeanClick}>Lean 🔎</button>
+        <button onClick={handleBMClick}>BM 🔎</button>
       </SelectButton>
     </>
   );

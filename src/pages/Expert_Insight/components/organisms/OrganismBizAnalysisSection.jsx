@@ -353,8 +353,8 @@ const OrganismBizAnalysisSection = () => {
                 {
                   type: "system",
                   message:
-                    "이상이 없으시면, 이제 도움이 될만한 사례 분석을 시작해볼까요? ",
-                  expertIndex: selectedExpertIndex,
+                    "이상이 없으시면, 이제 도움이 될만한 사례 분석을 시작해볼까요?",
+                  expertIndex: -1,
                 },
                 { type: "growthHackerStartButton" }
               );

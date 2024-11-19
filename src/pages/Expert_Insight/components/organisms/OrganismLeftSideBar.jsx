@@ -113,6 +113,7 @@ import {
   MARKETING_RECOMMENDED_ITEM_BUTTON_STATE,
   IS_SIGNUP_POPUP_OPEN,
   IS_LOGIN_POPUP_OPEN,
+  GROWTH_HACKER_RECOMMENDED_SOLUTION,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -123,6 +124,7 @@ import { useSaveConversation } from "../atoms/AtomSaveConversation";
 import OrganismReportPopup from "./OrganismReportPopup"; // 팝업 컴포넌트 임포트
 
 const OrganismLeftSideBar = () => {
+  const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] = useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
   const { saveConversation } = useSaveConversation();
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
   const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
@@ -714,6 +716,7 @@ useEffect(() => {
 
       setButtonState(chatData.buttonState || {});
 
+      setGrowthHackerRecommendedSolution(chatData.growthHackerRecommendedSolution || []);
       setGrowthHackerReportData(chatData.growthHackerReportData || []);
       setGrowthHackerDetailReportData(chatData.growthHackerDetailReportData || {});
       setKpiQuestionList(chatData.KpiQuestionList || []);
@@ -1048,6 +1051,7 @@ useEffect(() => {
     setIdeaMiroState(0);
     setGrowthHackerReportData([]);
     setGrowthHackerDetailReportData({});
+    setGrowthHackerRecommendedSolution([]);
     setKpiQuestionList([]);
 
     setPriceReportData({});
@@ -1162,6 +1166,7 @@ useEffect(() => {
     setIdeaMiroState(0);
     setGrowthHackerReportData([]);
     setGrowthHackerDetailReportData({});
+    setGrowthHackerRecommendedSolution([]);
     setKpiQuestionList([]);
 
     setPriceReportData({});

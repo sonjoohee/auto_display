@@ -72,6 +72,7 @@ import {
   MARKETING_SELECTED_CUSTOMER,
   MARKETING_FINAL_CUSTOMER,
   MARKETING_FINAL_REPORT_DATA,
+  GROWTH_HACKER_RECOMMENDED_SOLUTION,
 } from "../../../AtomStates";
 
 import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
@@ -148,6 +149,7 @@ import MoleculeMarketingSignUpButton from "../molecules/Marketing/MoleculeMarket
 import images from "../../../../assets/styles/Images";
 
 const PageExpertInsight = () => {
+  const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] = useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(
     BM_MODEL_SUGGESTION_REPORT_DATA
   );
@@ -534,6 +536,9 @@ const PageExpertInsight = () => {
             );
             setGrowthHackerDetailReportData(
               savedConversation.growthHackerDetailReportData || {}
+            );
+            setGrowthHackerRecommendedSolution(
+              savedConversation.growthHackerRecommendedSolution || []
             );
             setKpiQuestionList(savedConversation.KpiQuestionList || []);
 

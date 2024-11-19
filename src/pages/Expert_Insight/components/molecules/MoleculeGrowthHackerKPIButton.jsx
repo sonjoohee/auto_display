@@ -9,6 +9,7 @@ import {
   CONVERSATION_STAGE,
   GROWTH_HACKER_KPI_BUTTON_STATE,
   BUTTON_STATE,
+  GROWTH_HACKER_RECOMMENDED_SOLUTION,
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
@@ -24,7 +25,9 @@ const MoleculeGrowthHackerKPIButton = () => {
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
   const [growthHackerKPIButtonState, setGrowthHackerKPIButtonState] = useAtom(GROWTH_HACKER_KPI_BUTTON_STATE);
-  const handleClick = async () => {
+  const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] = useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
+
+  const handleClick = async (title, index) => {
     if (isLoading) return;
     const updatedConversation = [...conversation];
 
@@ -38,11 +41,17 @@ const MoleculeGrowthHackerKPIButton = () => {
       {
         type: "user",
         message:
-          "현재 제 아이템에 맞는 최적의 KPI를 추천해 주시면 좋겠습니다",
+          `${title}`,
         expertIndex: selectedExpertIndex,
       },
       {
-        type: 'growthHackerKPI',
+        type: "system",
+        message:
+          `${title}이 어떻게 우리 아이템을 성장시켜 갈 수 있을까요?`,
+        expertIndex: selectedExpertIndex,
+      },
+      {
+        type: 'growthHackerReport',
       },
     );
 
@@ -50,62 +59,59 @@ const MoleculeGrowthHackerKPIButton = () => {
     setConversation(updatedConversation);
     setConversationStage(3);
     setApproachPath(3);
-    setButtonState({
-      ...buttonState,
-      growthHackerKPI : 1,
-    });
+    // setButtonState({
+    //   ...buttonState,
+    //   growthHackerKPI : 1,
+    // });
 
     await saveConversation(
       { changingConversation: { 
           conversation: updatedConversation, 
           conversationStage: 3,
-          buttonState : {
-            ...buttonState,
-            growthHackerKPI : 1,
-          },
+          // buttonState : {
+          //   ...buttonState,
+          //   growthHackerKPI : 1,
+          // },
         }
       }
     );
   };
   return (
     <>
-      <ButtonWrap>
-        <button onClick={handleClick}>최적의 KPI 전략 제안 받기</button>
-      </ButtonWrap>
+      <SelectButton>
+        {growthHackerRecommendedSolution.map((solution, index) => (
+          <button key={index} onClick={() => handleClick(solution.title, index)}>
+            {solution.title}
+          </button>
+        ))}
+      </SelectButton>
     </>
   );
 };
 
 export default MoleculeGrowthHackerKPIButton;
 
-const ButtonWrap = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 15px;
-  margin-left:50px;
-  padding-bottom: 15px;
+const SelectButton = styled.div`
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-top: 12px;
+  margin-left: 50px;
 
   button {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    // display:inline-block;
+    // width:fit-content;
     font-family: 'Pretendard', 'Poppins';
-    font-size: 0.875rem;
-    color: ${palette.darkGray};
-    border: 0;
-    background: none;
-    margin-right: 10px;
+    font-size:0.88rem;
+    color:${palette.chatBlue};
+    padding:8px 20px;
+    border-radius:40px;
+    border:0;
+    background:rgba(4, 83, 244, 0.1);
   }
 
-  > button {
-    padding: 8px 16px;
-    border-radius: 40px;
-    border: 1px solid ${palette.buttonLineGray};
-  }
-
-  button.other {
-    color: ${palette.lightGray};
-    font-size: 0.75rem;
-    border: none;
+  .finish {
+    color:${palette.gray500};
+    background:${palette.gray100};
   }
 `;

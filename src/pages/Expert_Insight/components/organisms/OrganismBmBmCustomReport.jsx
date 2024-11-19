@@ -469,7 +469,9 @@ const OrganismBmBmCustomReport = () => {
                   <img src={images.IconCanvas08} alt="" />
                 </span>
               </strong>
-              {bmBmCustomReportData[8]?.content?.map((contentItem, contentIndex) => (
+              {bmBmCustomReportData[8]?.content
+              ?.filter(contentItem => contentItem.title === "핵심 메시지")
+              ?.map((contentItem, contentIndex) => (
                 <div key={contentIndex}>
                   {/* {contentIndex === 0 && <p>{contentItem?.description}</p>} */}
                   <ul>
@@ -491,7 +493,9 @@ const OrganismBmBmCustomReport = () => {
                   <img src={images.IconCanvas09} alt="" />
                 </span>
               </strong>
-              {bmBmCustomReportData[4]?.content?.map((contentItem, contentIndex) => (
+              {bmBmCustomReportData[4]?.content
+              ?.filter(contentItem => contentItem.title === "핵심 메시지")
+              ?.map((contentItem, contentIndex) => (
                 <div key={contentIndex}>
                   {/* {contentIndex === 0 && <p>{contentItem?.description}</p>} */}
                   <ul>
