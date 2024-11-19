@@ -153,9 +153,12 @@ import MoleculeMarketingSignUpButton from "../molecules/Marketing/MoleculeMarket
 import images from "../../../../assets/styles/Images";
 
 const PageExpertInsight = () => {
-  const [strategyConsultantReportData, setStrategyConsultantReportData] = useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
-  const [growthHackerSelectedSolution, setGrowthHackerSelectedSolution] = useAtom(GROWTH_HACKER_SELECTED_SOLUTION);
-  const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] = useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
+  const [strategyConsultantReportData, setStrategyConsultantReportData] =
+    useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
+  const [growthHackerSelectedSolution, setGrowthHackerSelectedSolution] =
+    useAtom(GROWTH_HACKER_SELECTED_SOLUTION);
+  const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] =
+    useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(
     BM_MODEL_SUGGESTION_REPORT_DATA
   );
@@ -335,7 +338,6 @@ const PageExpertInsight = () => {
   let strategyConsultantCount = 0;
 
   const [isExitPopupOpen, setIsExitPopupOpen] = useState(false);
-
 
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const togglePopup = () => {
@@ -726,32 +728,36 @@ const PageExpertInsight = () => {
 
   return (
     <>
-
       <ThemeProvider theme={theme}>
         {isMarketing && (
           <ProjectName>
-         
             <div className="inner">
-            <div>
-              <p>
-                <span>
-                  <img src={images.Graph} alt="" />
-                </span>
-                {titleOfBusinessInfo}
-              </p>
-              {/* <button>아이템 핵심 정리</button> */}
+              <div>
+                <p>
+                  <span>
+                    <img src={images.Graph} alt="" />
+                  </span>
+                  {titleOfBusinessInfo}
+                </p>
+                {/* <button>아이템 핵심 정리</button> */}
+              </div>
             </div>
-        </div>
           </ProjectName>
         )}
-          {isPopupVisible && (
-            <AutosavePopup>
-              <div>
-                <strong>달콤한 베트남 망고 젤리</strong>
-                <p>프리랜서 업무 관리 플랫폼은 프리랜서들이 업무를 효율적으로 관리하고 일정을 체계적으로 계획할 수 있도록 지원하는 서비스입니다. 프로젝트 관리, 시간 기록, 청구서 발행, 고객 관리 등 프리랜서 업무에 필요한 다양한 기능을 제공하여 업무 효율성을 높이고, 시간 관리를 개선하며, 수익 관리를 용이하게 합니다.</p>
-              </div>
-            </AutosavePopup>
-          )}
+        {isPopupVisible && (
+          <AutosavePopup>
+            <div>
+              <strong>달콤한 베트남 망고 젤리</strong>
+              <p>
+                프리랜서 업무 관리 플랫폼은 프리랜서들이 업무를 효율적으로
+                관리하고 일정을 체계적으로 계획할 수 있도록 지원하는
+                서비스입니다. 프로젝트 관리, 시간 기록, 청구서 발행, 고객 관리
+                등 프리랜서 업무에 필요한 다양한 기능을 제공하여 업무 효율성을
+                높이고, 시간 관리를 개선하며, 수익 관리를 용이하게 합니다.
+              </p>
+            </div>
+          </AutosavePopup>
+        )}
 
         <ContentsWrap>
           {(!isMarketing || approachPath === 2) && <OrganismLeftSideBar />}
@@ -778,7 +784,6 @@ const PageExpertInsight = () => {
                         key={`strategy_${expertIndex}_${index}`}
                         expertIndex={expertIndex}
                       />
-                    </>
                     );
                   } else if (item.type === "addition") {
                     const currentAdditionalReportCount =
@@ -1211,12 +1216,12 @@ const ProjectName = styled.div`
   z-index: 1;
 
   .inner {
-    position:relative;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    max-width:1030px;
-    width:100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1030px;
+    width: 100%;
   }
 
   p {
@@ -1275,7 +1280,7 @@ const ProjectName = styled.div`
 
 const AutosavePopup = styled.div`
   position: absolute;
-  right:-100px;
+  right: -100px;
   top: 80px;
   max-width: 304px;
   max-height: ${(props) => (props.isPopupVisible ? "0" : "1000px")};
@@ -1288,7 +1293,7 @@ const AutosavePopup = styled.div`
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   visibility: ${(props) => (props.isPopupVisible ? "hidden" : "visible")};
   opacity: ${(props) => (props.isPopupVisible ? "0" : "1")};
-  z-index:1;
+  z-index: 1;
 
   &:before {
     position: absolute;
@@ -1332,7 +1337,7 @@ const AutosavePopup = styled.div`
 const MainContent = styled.div`
   position: relative;
   // top: 40px;
-  top:100px;
+  top: 100px;
   grid-area: content;
   display: flex;
   flex-direction: row;
