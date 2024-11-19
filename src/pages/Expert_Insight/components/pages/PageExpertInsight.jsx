@@ -74,6 +74,7 @@ import {
   MARKETING_FINAL_CUSTOMER,
   MARKETING_FINAL_REPORT_DATA,
   GROWTH_HACKER_RECOMMENDED_SOLUTION,
+  GROWTH_HACKER_SELECTED_SOLUTION,
 } from "../../../AtomStates";
 
 import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
@@ -150,6 +151,7 @@ import MoleculeMarketingSignUpButton from "../molecules/Marketing/MoleculeMarket
 import images from "../../../../assets/styles/Images";
 
 const PageExpertInsight = () => {
+  const [growthHackerSelectedSolution, setGrowthHackerSelectedSolution] = useAtom(GROWTH_HACKER_SELECTED_SOLUTION);
   const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] = useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(
     BM_MODEL_SUGGESTION_REPORT_DATA
@@ -326,6 +328,7 @@ const PageExpertInsight = () => {
   let caseReportCount = 0;
   let marketingCustomerCount = 0;
   let marketingSegmentReportCount = 0;
+  let growthHackerReportCount = 0;
 
   const [isExitPopupOpen, setIsExitPopupOpen] = useState(false);
 
@@ -536,10 +539,13 @@ const PageExpertInsight = () => {
               savedConversation.growthHackerReportData || []
             );
             setGrowthHackerDetailReportData(
-              savedConversation.growthHackerDetailReportData || {}
+              savedConversation.growthHackerDetailReportData || []
             );
             setGrowthHackerRecommendedSolution(
               savedConversation.growthHackerRecommendedSolution || []
+            );
+            setGrowthHackerSelectedSolution(
+              savedConversation.growthHackerSelectedSolution || []
             );
             setKpiQuestionList(savedConversation.KpiQuestionList || []);
 
@@ -806,7 +812,13 @@ const itemsToRender = approachPath === 2 ? conversation : renderedItems;
                 } else if (item.type === "growthHackerOption") {
                   return <MoleculeCheckGrowthHackerOption />;
                 } else if (item.type === "growthHackerReport") {
-                  return <OrganismGrowthHackerReport />;
+                  const currentGrowthHackerReportCount = growthHackerReportCount++;
+                  return (
+                    <OrganismGrowthHackerReport
+                      growthHackerReportCount={currentGrowthHackerReportCount}
+                    />
+                  );
+
                 } else if (item.type === "growthHackerKPIButton") {
                   return <MoleculeGrowthHackerKPIButton />;
                 } else if (item.type === "growthHackerKPI") {

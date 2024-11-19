@@ -114,6 +114,7 @@ import {
   IS_SIGNUP_POPUP_OPEN,
   IS_LOGIN_POPUP_OPEN,
   GROWTH_HACKER_RECOMMENDED_SOLUTION,
+  GROWTH_HACKER_SELECTED_SOLUTION,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -125,6 +126,7 @@ import OrganismReportPopup from "./OrganismReportPopup"; // 팝업 컴포넌트 
 
 const OrganismLeftSideBar = () => {
   const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] = useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
+  const [growthHackerSelectedSolution, setGrowthHackerSelectedSolution] = useAtom(GROWTH_HACKER_SELECTED_SOLUTION);
   const { saveConversation } = useSaveConversation();
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
   const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
@@ -718,7 +720,8 @@ useEffect(() => {
 
       setGrowthHackerRecommendedSolution(chatData.growthHackerRecommendedSolution || []);
       setGrowthHackerReportData(chatData.growthHackerReportData || []);
-      setGrowthHackerDetailReportData(chatData.growthHackerDetailReportData || {});
+      setGrowthHackerDetailReportData(chatData.growthHackerDetailReportData || []);
+      setGrowthHackerSelectedSolution(chatData.growthHackerSelectedSolution || []);
       setKpiQuestionList(chatData.KpiQuestionList || []);
 
       setPriceReportData(chatData.priceReportData || {});
@@ -1050,8 +1053,9 @@ useEffect(() => {
 
     setIdeaMiroState(0);
     setGrowthHackerReportData([]);
-    setGrowthHackerDetailReportData({});
+    setGrowthHackerDetailReportData([]);
     setGrowthHackerRecommendedSolution([]);
+    setGrowthHackerSelectedSolution([]);
     setKpiQuestionList([]);
 
     setPriceReportData({});
@@ -1165,8 +1169,9 @@ useEffect(() => {
 
     setIdeaMiroState(0);
     setGrowthHackerReportData([]);
-    setGrowthHackerDetailReportData({});
+    setGrowthHackerDetailReportData([]);
     setGrowthHackerRecommendedSolution([]);
+    setGrowthHackerSelectedSolution([]);
     setKpiQuestionList([]);
 
     setPriceReportData({});

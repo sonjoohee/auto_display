@@ -63,6 +63,7 @@ import {
   MARKETING_FINAL_CUSTOMER,
   MARKETING_FINAL_REPORT_DATA,
   GROWTH_HACKER_RECOMMENDED_SOLUTION,
+  GROWTH_HACKER_SELECTED_SOLUTION,
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -95,6 +96,7 @@ export const useSaveConversation = () => {
   const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
   const [growthHackerDetailReportData, setGrowthHackerDetailReportData] = useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
   const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] = useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
+  const [growthHackerSelectedSolution, setGrowthHackerSelectedSolution] = useAtom(GROWTH_HACKER_SELECTED_SOLUTION);
   const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
@@ -169,6 +171,7 @@ export const useSaveConversation = () => {
             growthHackerReportData : changingConversation.hasOwnProperty('growthHackerReportData') ? changingConversation.growthHackerReportData : growthHackerReportData,
             growthHackerDetailReportData : changingConversation.hasOwnProperty('growthHackerDetailReportData') ? changingConversation.growthHackerDetailReportData : growthHackerDetailReportData,
             growthHackerRecommendedSolution : changingConversation.hasOwnProperty('growthHackerRecommendedSolution') ? changingConversation.growthHackerRecommendedSolution : growthHackerRecommendedSolution,
+            growthHackerSelectedSolution : changingConversation.hasOwnProperty('growthHackerSelectedSolution') ? changingConversation.growthHackerSelectedSolution : growthHackerSelectedSolution,
             KpiQuestionList : changingConversation.hasOwnProperty('KpiQuestionList') ? changingConversation.KpiQuestionList : KpiQuestionList,
             priceScrapData : changingConversation.hasOwnProperty('priceScrapData') ? changingConversation.priceScrapData : priceScrapData,
             priceReportData : changingConversation.hasOwnProperty('priceReportData') ? changingConversation.priceReportData : priceReportData,
