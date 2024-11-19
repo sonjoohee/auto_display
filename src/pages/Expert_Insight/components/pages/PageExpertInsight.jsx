@@ -717,71 +717,74 @@ const PageExpertInsight = () => {
 
   return (
     <>
-    <ThemeProvider theme={theme}>
-      <ContentsWrap>
-        {(!isMarketing || approachPath === 2) && <OrganismLeftSideBar />}
+      <ThemeProvider theme={theme}>
+        <ContentsWrap>
+          {(!isMarketing || approachPath === 2) && <OrganismLeftSideBar />}
 
-        <MainContent>
-          <div>
-            <ChatWrap>
-              {!isMarketing && <MoleculeBizName date={savedTimestamp} />}
-              {itemsToRender.map((item, index) => {
-                if (item.type === "user") {
-                  return (
-                    <MoleculeUserMessage key={index} message={item.message} />
-                  );
-                } else if (item.type === "system") {
-                  // console.log(item);
-                  return <MoleculeSystemMessage key={index} item={item} />;
-                } else if (item.type === "analysis") {
-                  return <OrganismBizAnalysisSection />;
-                } else if (item.type.startsWith("strategy_")) {
-                  const expertIndex = item.type.split("_")[1];
-                  return (
-                    <OrganismStrategyReportSection
-                      key={`strategy_${expertIndex}_${index}`}
-                      expertIndex={expertIndex}
-                    />
-                  );
-                } else if (item.type === "addition") {
-                  const currentAdditionalReportCount = additionalReportCount++;
-                  return (
-                    <OrganismAdditionalReport
-                      additionalReportCount={currentAdditionalReportCount}
-                    />
-                  );
-                } else if (item.type === "customerAddition") {
-                  const currentCustomerAdditionalReportCount =
-                    customerAdditionalReportCount++;
-                  return (
-                    <OrganismCustomerAdditionalReport
-                      customerAdditionalReportCount={
-                        currentCustomerAdditionalReportCount
-                      }
-                    />
-                  );
-                } else if (item.type === "keyword") {
-                  return <MoleculeAdditionalKeyword />;
-                } else if (item.type === "reportButton") {
-                  return <MoleculeCheckReportRightAway />;
-                } else if (item.type === "strategyButton") { 
-                  return <MoleculeStrategyButton />;
-                } else if (item.type === "strategyConsultant") {
-                  const currentStrategyConsultantCount = strategyConsultantCount++;
-                  return (
-                    <OrganismStrategyConsultantReport
-                      strategyConsultantCount={currentStrategyConsultantCount}
-                    />
-                  );
-                } else if (item.type.startsWith("poc_")) {
-                  /* PoC */
-                  const expertIndex = item.type.split("_")[1];
-                  return (
-                    <>
-                      <OrganismPocReportSection
-                        key={`poc_${expertIndex}_${index}`}
+          <MainContent>
+            <div>
+              <ChatWrap>
+                {!isMarketing && <MoleculeBizName date={savedTimestamp} />}
+                {itemsToRender.map((item, index) => {
+                  if (item.type === "user") {
+                    return (
+                      <MoleculeUserMessage key={index} message={item.message} />
+                    );
+                  } else if (item.type === "system") {
+                    // console.log(item);
+                    return <MoleculeSystemMessage key={index} item={item} />;
+                  } else if (item.type === "analysis") {
+                    return <OrganismBizAnalysisSection />;
+                  } else if (item.type.startsWith("strategy_")) {
+                    const expertIndex = item.type.split("_")[1];
+                    return (
+                      <OrganismStrategyReportSection
+                        key={`strategy_${expertIndex}_${index}`}
                         expertIndex={expertIndex}
                       />
+                    );
+                  } else if (item.type === "addition") {
+                    const currentAdditionalReportCount =
+                      additionalReportCount++;
+                    return (
+                      <OrganismAdditionalReport
+                        additionalReportCount={currentAdditionalReportCount}
+                      />
+                    );
+                  } else if (item.type === "customerAddition") {
+                    const currentCustomerAdditionalReportCount =
+                      customerAdditionalReportCount++;
+                    return (
+                      <OrganismCustomerAdditionalReport
+                        customerAdditionalReportCount={
+                          currentCustomerAdditionalReportCount
+                        }
+                      />
+                    );
+                  } else if (item.type === "keyword") {
+                    return <MoleculeAdditionalKeyword />;
+                  } else if (item.type === "reportButton") {
+                    return <MoleculeCheckReportRightAway />;
+                  } else if (item.type === "strategyButton") {
+                    return <MoleculeStrategyButton />;
+                  } else if (item.type === "strategyConsultant") {
+                    const currentStrategyConsultantCount =
+                      strategyConsultantCount++;
+                    return (
+                      <OrganismStrategyConsultantReport
+                        strategyConsultantCount={currentStrategyConsultantCount}
+                      />
+                    );
+                  } else if (item.type.startsWith("poc_")) {
+                    /* PoC */
+                    const expertIndex = item.type.split("_")[1];
+                    return (
+                      <>
+                        <OrganismPocReportSection
+                          key={`poc_${expertIndex}_${index}`}
+                          expertIndex={expertIndex}
+                        />
+                      </>
                     );
                   } else if (item.type === "addition") {
                     const currentAdditionalReportCount =
@@ -963,7 +966,6 @@ const PageExpertInsight = () => {
 
                   return null;
                 })}
-
                 <div ref={chatEndRef} />
 
                 {selectedExpertIndex === "0" ||
