@@ -75,6 +75,7 @@ import {
   MARKETING_FINAL_REPORT_DATA,
   GROWTH_HACKER_RECOMMENDED_SOLUTION,
   GROWTH_HACKER_SELECTED_SOLUTION,
+  STRATEGY_CONSULTANT_REPORT_DATA,
 } from "../../../AtomStates";
 
 import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
@@ -152,6 +153,7 @@ import MoleculeMarketingSignUpButton from "../molecules/Marketing/MoleculeMarket
 import images from "../../../../assets/styles/Images";
 
 const PageExpertInsight = () => {
+  const [strategyConsultantReportData, setStrategyConsultantReportData] = useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
   const [growthHackerSelectedSolution, setGrowthHackerSelectedSolution] = useAtom(GROWTH_HACKER_SELECTED_SOLUTION);
   const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] = useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(
@@ -616,6 +618,9 @@ const PageExpertInsight = () => {
             );
             setMarketingFinalReportData(
               savedConversation.marketingFinalReportData || []
+            );
+            setStrategyConsultantReportData(
+              savedConversation.strategyConsultantReportData || []
             );
           }
 

@@ -17,6 +17,7 @@ import {
   MARKETING_RESEARCH_REPORT_DATA,
   STRATEGY_BUTTON_STATE,
   STRATEGY_CONSULTANT_REPORT_DATA,
+  APPROACH_PATH,
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
@@ -45,6 +46,7 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
   const [marketingResearchReportData, setMarketingResearchReportData] = useAtom(MARKETING_RESEARCH_REPORT_DATA);
   const [strategyButtonState, setStrategyButtonState] = useAtom(STRATEGY_BUTTON_STATE);
   const [strategyConsultantReportData, setStrategyConsultantReportData] = useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
+  const [approachPath] = useAtom(APPROACH_PATH);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -73,7 +75,7 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
   useEffect(() => {
     const fetchStrategyConsultantReport = async () => {
       try {
-        if (strategyButtonState === strategyConsultantCount) {
+        if (strategyButtonState === strategyConsultantCount && approachPath !== 2) {
           setIsLoadingStrategyConsultantReport(true);
           setIsLoading(true);
 
@@ -143,7 +145,8 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
           // if (retryCount === maxRetries) {
           //   throw new Error("Maximum retry attempts reached. Empty response persists.");
           // }
-
+          console.log(strategyConsultantReportData);
+          console.log([...strategyConsultantReportData, strategyConsultantReport]);
           setStrategyConsultantReportData([...strategyConsultantReportData, strategyConsultantReport]);
 
           setIsLoadingStrategyConsultantReport(false);
@@ -188,6 +191,7 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
           );
 
           setConversation(updatedConversation);
+          setStrategyButtonState([...strategyConsultantReportData, strategyConsultantReport].length);
 
           await saveConversation({ changingConversation: { conversation: updatedConversation, strategyConsultantReportData: [...strategyConsultantReportData, strategyConsultantReport] } });
         }
@@ -214,10 +218,27 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
           <SummaryBox>
             <h3>{report_title}</h3>
             <UlList Disc>
-              <li><strong>{report_subtitle_1} :</strong> {strategyConsultantReportData?.sections?.[6]?.content?.[0]}</li>
-              <li><strong>{report_subtitle_2} :</strong> {strategyConsultantReportData?.sections?.[6]?.content?.[1]}</li>
-              {(strategyButtonState === 0 || strategyButtonState === 1) && <li><strong>{report_subtitle_3} :</strong> {strategyConsultantReportData?.sections?.[6]?.content?.[2]}</li>}
-              {strategyButtonState === 0 && <li><strong>{report_subtitle_4} :</strong> {strategyConsultantReportData?.sections?.[6]?.content?.[3]}</li>}
+              {strategyButtonState === 1 &&
+                <>
+                  <li><strong>{report_subtitle_1} :</strong> {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[6]?.content?.[0]}</li>
+                  <li><strong>{report_subtitle_2} :</strong> {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[6]?.content?.[1]}</li>
+                  <li><strong>{report_subtitle_3} :</strong> {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[6]?.content?.[2]}</li>
+                  <li><strong>{report_subtitle_4} :</strong> {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[6]?.content?.[3]}</li>
+                </>
+              }
+              {strategyButtonState === 2 &&
+                <>
+                  <li><strong>{report_subtitle_1} :</strong> {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[5]?.content?.[0]}</li>
+                  <li><strong>{report_subtitle_2} :</strong> {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[5]?.content?.[1]}</li>
+                  <li><strong>{report_subtitle_3} :</strong> {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[5]?.content?.[2]}</li>
+                </>
+              }
+              {strategyButtonState === 3 &&
+                <>
+                  <li><strong>{report_subtitle_1} :</strong> {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[5]?.content?.[0]}</li>
+                  <li><strong>{report_subtitle_2} :</strong> {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[5]?.content?.[1]}</li>
+                </>
+              }
             </UlList>
             <button onClick={() => toggleMenu()}>
               <img src={images.IconDetailView} alt="" />
@@ -228,47 +249,123 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
           <Sidebar isMenuOpen={isMenuOpen}>
           <div>
             <div className="header">
-              <h5>시장조사 상세 리포트</h5>
+              <h5>{strategyButtonState === 1 ? "시장 기회 탐색 리포트" : strategyButtonState === 2 ? "고객 가치 제안 상세 리포트" : "시장 내 경쟁 우위 상세 리포트"}</h5>
               <button className="closePopup" onClick={() => setIsMenuOpen(false)}>닫기</button>
             </div>
             <div className="body">
-              <p>{marketingResearchReportData?.[5]?.content?.conclusion}</p>
+              {strategyButtonState === 2 || strategyButtonState === 3 && <p>{strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[4]?.content?.[0]?.text}</p>}
               <ScrollWrap>
-                {strategyButtonState === 0 && (
+                {strategyButtonState === 1 && (
                   <ListBox>
                   <div>
                     <span>👉🏻</span>
                     <div>
                       <strong>타겟 시장 세그먼트</strong>
-                      <p>{marketingResearchReportData?.[0]?.content?.key_content}</p>
+                      <p>{strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[0]?.content?.[0]?.text}</p>
                     </div>
                   </div>
                   <div>
                     <span>👁‍</span>
                     <div>
                       <strong>기회 및 고려사항</strong>
-                      <p>{marketingResearchReportData?.[1]?.content?.key_content}</p>
+                      <p>• 강점 파악 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[1]?.content?.[0]?.text}</p>
+                      <p>• 고려 사항 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[1]?.content?.[1]?.text}</p>
                     </div>
                   </div>
                   <div>
                     <span>🔎</span>
                     <div>
                       <strong>잠재력 및 리스크</strong>
-                      <p>{marketingResearchReportData?.[2]?.content?.key_content}</p>
+                      <p>• 기회 요소 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[2]?.content?.[0]?.text}</p>
+                      <p>• 리스크 요소 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[2]?.content?.[1]?.text}</p>
                     </div>
                   </div>
                   <div>
                     <span>💬</span>
                     <div>
                       <strong>핵심가치와 경쟁과제</strong>
-                      <p>{marketingResearchReportData?.[3]?.content?.key_content}</p>
+                      <p>• 기회 요소 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[3]?.content?.[0]?.text}</p>
+                      <p>• 리스크 요소 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[3]?.content?.[1]?.text}</p>
                     </div>
                   </div>
                   <div>
                     <span>📌</span>
                     <div>
                       <strong>이상적인 시장 포지셔닝</strong>
-                      <p>{marketingResearchReportData?.[4]?.content?.key_content}</p>
+                      <p>{strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[4]?.content?.[0]?.text}</p>
+                    </div>
+                  </div>
+                </ListBox>
+                )}
+                {strategyButtonState === 2 && (
+                  <ListBox>
+                  <div>
+                    <span>👉🏻</span>
+                    <div>
+                      <strong>고객 중심의 강점과 개선 과제</strong>
+                      <p>• 필수 기대 요소 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[3]?.content?.[0]?.text}</p>
+                      <p>• 우려 사항 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[3]?.content?.[1]?.text}</p>
+                    </div>
+                  </div>
+                  <div>
+                    <span>📌</span>
+                    <div>
+                      <strong>핵심 요소:{strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[0]?.title}</strong>
+                      <p>• 장점 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[0]?.content?.[0]?.text}</p>
+                      <p>• 도전 과제 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[0]?.content?.[1]?.text}</p>
+                    </div>
+                  </div>
+                  <div>
+                    <span>📌</span>
+                    <div>
+                      <strong>핵심 요소:{strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[1]?.title}</strong>
+                      <p>• 가치 제안 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[1]?.content?.[0]?.text}</p>
+                      <p>• 위험 요소 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[1]?.content?.[1]?.text}</p>
+                    </div>
+                  </div>
+                  <div>
+                    <span>📌</span>
+                    <div>
+                      <strong>핵심 요소:{strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[2]?.title}</strong>
+                      <p>• 우선 요소 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[2]?.content?.[0]?.text}</p>
+                      <p>• 잠재적 영향 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[2]?.content?.[1]?.text}</p>
+                    </div>
+                  </div>
+                </ListBox>
+                )}
+                {strategyButtonState === 3 && (
+                  <ListBox>
+                  <div>
+                    <span>👉🏻</span>
+                    <div>
+                      <strong>시장 내 유리한 위치 평가</strong>
+                      <p>• 유리한 위치 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[2]?.content?.[0]?.text}</p>
+                      <p>• 지속 가능성 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[2]?.content?.[1]?.text}</p>
+                    </div>
+                  </div>
+                  <div>
+                    <span>📌</span>
+                    <div>
+                      <strong>차별점:{strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[0]?.title}</strong>
+                      <p>• 경쟁력 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[0]?.content?.[0]?.text}</p>
+                      <p>• 경쟁 압박 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[0]?.content?.[1]?.text}</p>
+                    </div>
+                  </div>
+                  <div>
+                    <span>📌</span>
+                    <div>
+                      <strong>차별점:{strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[1]?.title}</strong>
+                      <p>• 고유 강점 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[1]?.content?.[0]?.text}</p>
+                      <p>• 위험 요소 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[1]?.content?.[1]?.text}</p>
+                    </div>
+                  </div>
+                  <div>
+                    <span>💌</span>
+                    <div>
+                      <strong>제안 사항</strong>
+                      <p>• {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[3]?.content?.[0]?.subTitle} : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[3]?.content?.[0]?.text}</p>
+                      <p>• {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[3]?.content?.[1]?.subTitle} : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[3]?.content?.[1]?.text}</p>
+                      <p>• {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[3]?.content?.[2]?.subTitle} : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[3]?.content?.[2]?.text}</p>
                     </div>
                   </div>
                 </ListBox>

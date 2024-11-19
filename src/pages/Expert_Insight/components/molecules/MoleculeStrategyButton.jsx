@@ -10,6 +10,7 @@ import {
   SELECTED_EXPERT_INDEX,
   STRATEGY_BUTTON_STATE,
   TITLE_OF_BUSINESS_INFORMATION,
+  STRATEGY_CONSULTANT_REPORT_DATA,
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
@@ -30,6 +31,7 @@ const MoleculeStrategyButton = () => {
     SELECTED_EXPERT_INDEX
   );
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
+  const [strategyConsultantReportData] = useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
 
   let button_message, user_message, system_message;
 
@@ -92,7 +94,6 @@ const MoleculeStrategyButton = () => {
     setConversation(updatedConversation);
     setConversationStage(3);
     setApproachPath(3);
-    setStrategyButtonState(1);
 
     await saveConversation({
       changingConversation: {

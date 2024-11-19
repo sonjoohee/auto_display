@@ -115,6 +115,7 @@ import {
   IS_LOGIN_POPUP_OPEN,
   GROWTH_HACKER_RECOMMENDED_SOLUTION,
   GROWTH_HACKER_SELECTED_SOLUTION,
+  STRATEGY_CONSULTANT_REPORT_DATA,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -125,6 +126,7 @@ import { useSaveConversation } from "../atoms/AtomSaveConversation";
 import OrganismReportPopup from "./OrganismReportPopup"; // 팝업 컴포넌트 임포트
 
 const OrganismLeftSideBar = () => {
+  const [strategyConsultantReportData, setStrategyConsultantReportData] = useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
   const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] = useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
   const [growthHackerSelectedSolution, setGrowthHackerSelectedSolution] = useAtom(GROWTH_HACKER_SELECTED_SOLUTION);
   const { saveConversation } = useSaveConversation();
@@ -759,6 +761,8 @@ useEffect(() => {
       setMarketingFinalCustomer(chatData.marketingFinalCustomer || {});
       setMarketingFinalReportData(chatData.marketingFinalReportData || []);
 
+      setStrategyConsultantReportData(chatData.strategyConsultantReportData || []);
+
       if (chatData.isMarketing) {
         const updatedConversation = [...chatData.conversation];
 
@@ -1106,6 +1110,8 @@ useEffect(() => {
     setMarketingBmButtonState(0);
     setMarketingFinalReportButtonState(0);
     setMarketingRecommendedItemButtonState(0);
+
+    setStrategyConsultantReportData([]);
   };
 
   const handleLogoClick = () => {
@@ -1222,6 +1228,8 @@ useEffect(() => {
     setMarketingBmButtonState(0);
     setMarketingFinalReportButtonState(0);
     setMarketingRecommendedItemButtonState(0);
+
+    setStrategyConsultantReportData([]);
   };
   return (
     <>
