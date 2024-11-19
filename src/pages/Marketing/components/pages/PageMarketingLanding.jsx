@@ -378,7 +378,7 @@ const VisualImg = styled.div`
 
     .txt01 {
       right:12%;
-      top:10%;
+      top:7%;
     }
 
     .txt02 {

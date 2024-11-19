@@ -84,7 +84,7 @@ const MoleculeStrategyButton = () => {
         expertIndex: selectedExpertIndex,
       },
       {
-        type: "strategyOption",
+        type: "strategyConsultant",
       }
     );
 
@@ -92,6 +92,7 @@ const MoleculeStrategyButton = () => {
     setConversation(updatedConversation);
     setConversationStage(3);
     setApproachPath(3);
+    setStrategyButtonState(1);
 
     await saveConversation({
       changingConversation: {

@@ -274,11 +274,11 @@ const PageMarketingNoItemsResult = () => {
   
     const currentY = e.clientY;
     
-    // 위로 드래그 시 flex: 10%, 아래로 드래그 시 flex: 100%
+    // 위로 드래그 시 flex: 10%, 아래로 드래그 시 flex: 70%
     if (startY - currentY > 30) { // 위로 드래그했을 때
       setQuestionFlex('1 1 10%');
     } else if (currentY - startY > 30) {
-      setQuestionFlex('1 1 100%');
+      setQuestionFlex('1 1 70%');
     }
   };
   
@@ -299,11 +299,11 @@ const PageMarketingNoItemsResult = () => {
   
     const currentY = e.touches[0].clientY;
   
-    // 위로 드래그 시 flex: 10%, 아래로 드래그 시 flex: 100%
+    // 위로 드래그 시 flex: 10%, 아래로 드래그 시 flex: 70%
     if (startY - currentY > 30) { 
       setQuestionFlex('1 1 10%');
     } else if (currentY - startY > 30) {
-      setQuestionFlex('1 1 100%');
+      setQuestionFlex('1 1 70%');
     }
   };
   
@@ -327,7 +327,7 @@ const PageMarketingNoItemsResult = () => {
           questionFlex={questionFlex}
         >
           <p>
-            <span style={{ display: questionFlex === '1 1 10%' ? 'none' : 'block' }}>
+            <span>
               <img 
                 src={
                   marketingMbtiResult.name === "ROIC" ? images.ImgMBTIROIC :
@@ -436,47 +436,49 @@ const PageMarketingNoItemsResult = () => {
             }}
           >
             <div>
-              <div className="header">
-                <h5>{marketingRecommendedItemData?.example?.[popupIndex]?.summary}</h5>
-                <p>{marketingRecommendedItemData?.example?.[popupIndex]?.description}</p>
-                <button className="closePopup" onClick={() => closePopup()}>닫기</button>
-              </div>
-              <div className="body">
-                <ScrollWrap>
-                  <div>
-                    <strong>
-                      <span>{marketingMbtiResult.name[0]}</span>
-                      {marketingMbtiResult.name[0] === "S" ? "안정 추구 (Safety-seeking)" : "고위험 추구 (Risk-seeking)"}
-                    </strong>
-                    <p>{marketingRecommendedItemData?.example?.[popupIndex]?.mbti?.[0]?.compatibility}</p>
-                  </div>
-                  <div> 
-                    <strong>
-                      <span>{marketingMbtiResult.name[1]}</span>
-                      {marketingMbtiResult.name[1] === "O" ? "기회 포착형 (Opportunity-driven)" : "계획 기반형 (Planning-driven)"}
-                    </strong>
-                    <p>{marketingRecommendedItemData?.example?.[popupIndex]?.mbti?.[1]?.compatibility}</p>
-                  </div>
-                  <div>
-                    <strong>
-                      <span>{marketingMbtiResult.name[2]}</span>
-                      {marketingMbtiResult.name[2] === "I" ? "독립성 중시 (Independence-focused)" : "협력 중시 (Teamwork-focused)"}
-                    </strong>
-                    <p>{marketingRecommendedItemData?.example?.[popupIndex]?.mbti?.[2]?.compatibility}</p>
-                  </div>
-                  <div>
-                    <strong>
-                      <span>{marketingMbtiResult.name[3]}</span>
-                      {marketingMbtiResult.name[3] === "C" ? "창의성 중심 (Creativity-centered)" : "실용성 중심 (Application-centered)"}
-                    </strong>
-                    <p>{marketingRecommendedItemData?.example?.[popupIndex]?.mbti?.[3]?.compatibility}</p>
-                  </div>
-                </ScrollWrap>
+              <ScrollBoxWrap>
+                <div className="header">
+                  <h5>{marketingRecommendedItemData?.example?.[popupIndex]?.summary}</h5>
+                  <p>{marketingRecommendedItemData?.example?.[popupIndex]?.description}</p>
+                  <button className="closePopup" onClick={() => closePopup()}>닫기</button>
+                </div>
+                <div className="body">
+                  <ScrollWrap>
+                    <div>
+                      <strong>
+                        <span>{marketingMbtiResult.name[0]}</span>
+                        {marketingMbtiResult.name[0] === "S" ? "안정 추구 (Safety-seeking)" : "고위험 추구 (Risk-seeking)"}
+                      </strong>
+                      <p>{marketingRecommendedItemData?.example?.[popupIndex]?.mbti?.[0]?.compatibility}</p>
+                    </div>
+                    <div> 
+                      <strong>
+                        <span>{marketingMbtiResult.name[1]}</span>
+                        {marketingMbtiResult.name[1] === "O" ? "기회 포착형 (Opportunity-driven)" : "계획 기반형 (Planning-driven)"}
+                      </strong>
+                      <p>{marketingRecommendedItemData?.example?.[popupIndex]?.mbti?.[1]?.compatibility}</p>
+                    </div>
+                    <div>
+                      <strong>
+                        <span>{marketingMbtiResult.name[2]}</span>
+                        {marketingMbtiResult.name[2] === "I" ? "독립성 중시 (Independence-focused)" : "협력 중시 (Teamwork-focused)"}
+                      </strong>
+                      <p>{marketingRecommendedItemData?.example?.[popupIndex]?.mbti?.[2]?.compatibility}</p>
+                    </div>
+                    <div>
+                      <strong>
+                        <span>{marketingMbtiResult.name[3]}</span>
+                        {marketingMbtiResult.name[3] === "C" ? "창의성 중심 (Creativity-centered)" : "실용성 중심 (Application-centered)"}
+                      </strong>
+                      <p>{marketingRecommendedItemData?.example?.[popupIndex]?.mbti?.[3]?.compatibility}</p>
+                    </div>
+                  </ScrollWrap>
 
-                <PopupButton>
-                  <button onClick={() => handleButtonExpert(popupIndex)}>사업화 가능성 확인하기</button>
-                </PopupButton>
-              </div>
+                  <PopupButton>
+                    <button onClick={() => handleButtonExpert(popupIndex)}>사업화 가능성 확인하기</button>
+                  </PopupButton>
+                </div>
+              </ScrollBoxWrap>
             </div>
           </Popup>
         )}
@@ -518,7 +520,7 @@ export default PageMarketingNoItemsResult;
 
 const QuestionWrap = styled.section`
   position:relative;
-  height:100vh;
+  height:100dvh;
   display:flex;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
@@ -584,14 +586,17 @@ const Question = styled.div`
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     flex: 1 1 100%;
-    justify-content:end;
-    padding-bottom:76px;
+    // justify-content:end;
+    // padding-bottom:76px;
+    justify-content: ${(props) => (props.questionFlex === '1 1 10%' ? 'center' : 'end')};
+    padding-bottom: ${(props) => (props.questionFlex === '1 1 10%' ? '0' : '76px')};
 
     > p {
       font-size:1.25rem;
 
       span {
-        display: ${(props) => (props.isSmallFlex ? "none" : "inline-block")};
+        // display: ${(props) => (props.isSmallFlex ? "none" : "inline-block")};
+        display: ${(props) => (props.questionFlex === '1 1 10%' ? 'none' : 'block')};
       }
     }
 
@@ -872,7 +877,9 @@ const Popup = styled.div`
       bottom:0;
       transform:translateX(-50%);
       height:83%;
-      padding:56px 0 0;
+      // padding:56px 0 0;
+      padding:56px 0 84px;
+      overflow:hidden;
       border-radius:20px 20px 0 0;
     }
 
@@ -885,6 +892,7 @@ const Popup = styled.div`
       padding:0 20px;
       gap:16px;
       padding-bottom:32px;
+      margin-bottom:32px;
 
       h5 {
         font-size:1.13rem;
@@ -898,7 +906,15 @@ const Popup = styled.div`
 
     .body {
       padding:0 20px 30px;
+      max-height:100%;
+      overflow:initial;
     }
+  }
+`;
+
+const ScrollBoxWrap = styled.div`
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    overflow-y:auto;
   }
 `;
 
@@ -958,8 +974,11 @@ const ScrollWrap = styled.div`
   
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     gap:20px;
+    overflow:initial;
     
     > div {
+      text-align:left;
+
       p {
         font-size:0.88rem;
       }
@@ -982,6 +1001,14 @@ const PopupButton = styled.div`
     border-radius:8px;
     border:0;
     background:${palette.chatBlue};
+  }
+    
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    position:absolute;
+    left:50%;
+    bottom:20px;
+    transform:translateX(-50%);
+    width:calc(100% - 40px);
   }
 `;
 

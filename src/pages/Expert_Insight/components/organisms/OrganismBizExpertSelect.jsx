@@ -278,7 +278,7 @@ const OrganismBizExpertSelect = () => {
       // (selectedExpertList.includes("4") || strategyReportData.hasOwnProperty(4)) &&
       // (selectedExpertList.includes("5") || ideaFeatureData.length !== 0) &&
       (selectedExpertList.includes("6") || KpiQuestionList.length !== 0) &&
-      // (selectedExpertList.includes("7") || priceProduct.length !== 0) &&
+      (selectedExpertList.includes("7") || priceProduct.length !== 0) &&
       // (selectedExpertList.includes("8") || caseReportData.length !== 0) &&
       (selectedExpertList.includes("9") || bmOrLean) ? null : ( // (selectedExpertList.includes("10") || surveyGoalSuggestionList.length !== 0)
         <BizExpertSelectContainer>
@@ -340,7 +340,7 @@ const OrganismBizExpertSelect = () => {
                 </button>
               </div>
             )}
-            {/* {(selectedExpertList.includes("7") || priceProduct.length !== 0) ? null : (
+            {(selectedExpertList.includes("7") || priceProduct.length !== 0) ? null : (
               <div>
                 <img src={images.IconExpert7} alt="" />
                 <p>가격 분석 전문가에게 가격 분석 리포트 받기</p>
@@ -349,7 +349,7 @@ const OrganismBizExpertSelect = () => {
                 </button>
               </div>
             )}
-            {(selectedExpertList.includes("8") || caseReportData.length !== 0) ? null : (
+            {/* {(selectedExpertList.includes("8") || caseReportData.length !== 0) ? null : (
               <div>
                 <img src={images.IconExpert8} alt="" />
                 <p>Biz 사례 분석 리서처에게 사례 분석 받기</p>
