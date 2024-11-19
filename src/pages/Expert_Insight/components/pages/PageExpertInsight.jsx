@@ -1208,7 +1208,7 @@ const ProjectName = styled.div`
   top: 0;
   left: 0;
   width: 100%;
-  min-height: 50px;
+  min-height: 60px;
   display: flex;
   justify-content: center;
   border-bottom: 1px solid ${palette.gray200};
@@ -1307,7 +1307,7 @@ const AutosavePopup = styled.div`
     border-color: transparent transparent ${palette.white} transparent;
     filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.2));
     content: "";
-    zindex: 0;
+    z-index: 0;
   }
 
   strong {
@@ -1337,7 +1337,7 @@ const AutosavePopup = styled.div`
 const MainContent = styled.div`
   position: relative;
   // top: 40px;
-  top: 100px;
+  top: 70px;
   grid-area: content;
   display: flex;
   flex-direction: row;
