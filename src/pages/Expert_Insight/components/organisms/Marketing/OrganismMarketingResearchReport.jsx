@@ -494,6 +494,24 @@ const Sidebar = styled.div`
   li {
     margin: 20px 0;
   }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    > div {
+      overflow-y:auto;
+    }
+
+    .header {
+      align-items:flex-start;
+
+      h5 {
+        width:calc(100% - 35px);
+      }
+    }
+
+    .body {
+      height:calc(100% - 70px);
+    }
+  }
 `;
 
 const ScrollWrap = styled.div`
@@ -513,6 +531,10 @@ const ScrollWrap = styled.div`
   &::-webkit-scrollbar-thumb {
     background: ${palette.lineGray};
     border-radius: 10px;
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    overflow:initial;
   }
 `;
 
@@ -554,6 +576,10 @@ const ListBox = styled.div`
       align-items:center;
       gap:12px;
     }
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    overflow:initial;
   }
 `;
 
