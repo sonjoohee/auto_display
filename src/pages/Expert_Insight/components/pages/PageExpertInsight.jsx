@@ -151,8 +151,10 @@ import MoleculeMarketingSignUpButton from "../molecules/Marketing/MoleculeMarket
 import images from "../../../../assets/styles/Images";
 
 const PageExpertInsight = () => {
-  const [growthHackerSelectedSolution, setGrowthHackerSelectedSolution] = useAtom(GROWTH_HACKER_SELECTED_SOLUTION);
-  const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] = useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
+  const [growthHackerSelectedSolution, setGrowthHackerSelectedSolution] =
+    useAtom(GROWTH_HACKER_SELECTED_SOLUTION);
+  const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] =
+    useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(
     BM_MODEL_SUGGESTION_REPORT_DATA
   );
@@ -390,18 +392,18 @@ const PageExpertInsight = () => {
     let totalDelay = 0;
     const timers = [];
     const newRenderedItems = [...renderedItems];
-  
+
     // conversation과 renderedItems를 비교하여 제거된 항목 찾기
     newRenderedItems.forEach((item, index) => {
       if (!conversation.includes(item)) {
         newRenderedItems.splice(index, 1);
       }
     });
-  
+
     // 제거된 항목을 반영한 renderedItems 업데이트
     setRenderedItems(newRenderedItems);
     setLastRenderedIndex(newRenderedItems.length - 1);
-  
+
     // 새로 추가된 항목만 렌더링
     for (
       let index = newRenderedItems.length;
@@ -409,8 +411,9 @@ const PageExpertInsight = () => {
       index++
     ) {
       const item = conversation[index];
-  
-      if (!newRenderedItems.includes(item)) { // 중복 방지
+
+      if (!newRenderedItems.includes(item)) {
+        // 중복 방지
         if (item.type === "user") {
           setRenderedItems((prevItems) => [...prevItems, item]);
           setLastRenderedIndex(index);
@@ -420,19 +423,19 @@ const PageExpertInsight = () => {
             const prevMessageLength = conversation[index - 1].message.length;
             delay = prevMessageLength * 15;
           }
-  
+
           totalDelay += delay;
-  
+
           const timer = setTimeout(() => {
             setRenderedItems((prevItems) => [...prevItems, item]);
             setLastRenderedIndex(index);
           }, totalDelay);
-  
+
           timers.push(timer);
         }
       }
     }
-  
+
     return () => {
       timers.forEach((timer) => clearTimeout(timer));
     };
@@ -679,415 +682,392 @@ const PageExpertInsight = () => {
     loadConversation();
   }, [conversationId, isLoggedIn, navigate]);
 
+  // 스크롤
+  // const [isScrolled, setIsScrolled] = useState(false);
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     if (window.scrollY > 160) {
+  //       setIsScrolled(true); // 스크롤이 내려가면 상태를 true로 변경
+  //     } else {
+  //       setIsScrolled(false); // 스크롤이 최상단에 있을 때 상태를 false로 변경
+  //     }
+  //   };
+  //   window.addEventListener("scroll", handleScroll);
+  //   return () => {
+  //     window.removeEventListener("scroll", handleScroll); // 메모리 누수 방지
+  //   };
+  // }, []);
 
-// 스크롤
-// const [isScrolled, setIsScrolled] = useState(false);
-// useEffect(() => {
-//   const handleScroll = () => {
-//     if (window.scrollY > 160) {
-//       setIsScrolled(true); // 스크롤이 내려가면 상태를 true로 변경
-//     } else {
-//       setIsScrolled(false); // 스크롤이 최상단에 있을 때 상태를 false로 변경
-//     }
-//   };
-//   window.addEventListener("scroll", handleScroll);
-//   return () => {
-//     window.removeEventListener("scroll", handleScroll); // 메모리 누수 방지
-//   };
-// }, []);
+  const chatEndRef = useRef(null); // 스크롤을 위한 ref 추가
 
-const chatEndRef = useRef(null); // 스크롤을 위한 ref 추가
+  useEffect(() => {
+    if (chatEndRef.current && approachPath !== 2) {
+      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [renderedItems]);
 
-useEffect(() => {
-  if (chatEndRef.current && approachPath !== 2) {
-    chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+  if (isLoadingPage) {
+    return <div>Loading...</div>;
   }
-}, [renderedItems]);
 
-if (isLoadingPage) {
-  return <div>Loading...</div>;
-}
-
-// 히스토로 진입할 때는 즉시 렌더링
-const itemsToRender = approachPath === 2 ? conversation : renderedItems;
+  // 히스토로 진입할 때는 즉시 렌더링
+  const itemsToRender = approachPath === 2 ? conversation : renderedItems;
 
   return (
     <>
-    <ThemeProvider theme={theme}>
-      <ContentsWrap>
-        {(!isMarketing || approachPath === 2) && <OrganismLeftSideBar />}
+      <ThemeProvider theme={theme}>
+        <ContentsWrap>
+          {(!isMarketing || approachPath === 2) && <OrganismLeftSideBar />}
 
-        <MainContent>
-          <div>
-            <ChatWrap>
-              {!isMarketing && <MoleculeBizName date={savedTimestamp} />}
-              {itemsToRender.map((item, index) => {
-                if (item.type === "user") {
-                  return (
-                    <MoleculeUserMessage key={index} message={item.message} />
-                  );
-                } else if (item.type === "system") {
-                  // console.log(item);
-                  return <MoleculeSystemMessage key={index} item={item} />;
-                } else if (item.type === "analysis") {
-                  return <OrganismBizAnalysisSection />;
-                } else if (item.type.startsWith("strategy_")) {
-                  const expertIndex = item.type.split("_")[1];
-                  return (
-                    <OrganismStrategyReportSection
-                      key={`strategy_${expertIndex}_${index}`}
-                      expertIndex={expertIndex}
-                    />
-                  );
-                } else if (item.type === "addition") {
-                  const currentAdditionalReportCount = additionalReportCount++;
-                  return (
-                    <OrganismAdditionalReport
-                      additionalReportCount={currentAdditionalReportCount}
-                    />
-                  );
-                } else if (item.type === "customerAddition") {
-                  const currentCustomerAdditionalReportCount =
-                    customerAdditionalReportCount++;
-                  return (
-                    <OrganismCustomerAdditionalReport
-                      customerAdditionalReportCount={
-                        currentCustomerAdditionalReportCount
-                      }
-                    />
-                  );
-                } else if (item.type === "keyword") {
-                  return <MoleculeAdditionalKeyword />;
-                } else if (item.type === "reportButton") {
-                  return <MoleculeCheckReportRightAway />;
-                } else if (item.type.startsWith("poc_")) {
-                  /* PoC */
-                  const expertIndex = item.type.split("_")[1];
-                  return (
-                    <>
-                      <OrganismPocReportSection
-                        key={`poc_${expertIndex}_${index}`}
+          <MainContent>
+            <div>
+              <ChatWrap>
+                {!isMarketing && <MoleculeBizName date={savedTimestamp} />}
+                {itemsToRender.map((item, index) => {
+                  if (item.type === "user") {
+                    return (
+                      <MoleculeUserMessage key={index} message={item.message} />
+                    );
+                  } else if (item.type === "system") {
+                    // console.log(item);
+                    return <MoleculeSystemMessage key={index} item={item} />;
+                  } else if (item.type === "analysis") {
+                    return <OrganismBizAnalysisSection />;
+                  } else if (item.type.startsWith("strategy_")) {
+                    const expertIndex = item.type.split("_")[1];
+                    return (
+                      <OrganismStrategyReportSection
+                        key={`strategy_${expertIndex}_${index}`}
                         expertIndex={expertIndex}
                       />
-                    </>
-                  );
-                } else if (item.type.startsWith("pocTarget_")) {
-                  const expertIndex = item.type.split("_")[1];
-                  return (
-                    <>
-                      <OrganismRecommendedTargetReport
-                        key={`pocTarget_${expertIndex}_${index}`}
-                        expertIndex={expertIndex}
+                    );
+                  } else if (item.type === "addition") {
+                    const currentAdditionalReportCount =
+                      additionalReportCount++;
+                    return (
+                      <OrganismAdditionalReport
+                        additionalReportCount={currentAdditionalReportCount}
                       />
-                    </>
-                  );
-                } else if (item.type === "pocPlanButton") {
-                  return <MoleculeCheckPocRightAway />;
-                } else if (item.type === "pocTargetButton") {
-                  return <MoleculeRecommendedTargetButton />;
-                } else if (item.type === "pocOption") {
-                  return <MoleculeCheckPocOption />;
-                } else if (item.type === "pocPersona") {
-                  return <MoleculePersonaSelect />;
-                } else if (item.type === "ideaStartButton") {
-                  /* 아이디어 디벨로퍼 */
-                  return <MoleculeIdeaStartButton />;
-                } else if (item.type === "ideaCustomerButton") {
-                  return <MoleculeIdeaCustomerButton />;
-                } else if (item.type === "ideaGenerateButton") {
-                  return <MoleculeIdeaGenerateButton />;
-                } else if (item.type === "ideaPriorityButton") {
-                  return <MoleculeIdeaPriorityButton />;
-                } else if (item.type === "ideaFeature") {
-                  return <OrganismIdeaFeature />;
-                } else if (item.type === "ideaCustomer") {
-                  return <OrganismIdeaCustomer />;
-                } else if (item.type === "ideaList") {
-                  return <OrganismIdeaList />;
-                } else if (item.type === "ideaPriority") {
-                  return <OrganismIdeaPriority />;
-                } else if (item.type === "growthHackerStartButton") {
-                  /* 그로스 해커 */
-                  return <MoleculeGrowthHackerStartButton />;
-                } else if (item.type === "growthHackerOption") {
-                  return <MoleculeCheckGrowthHackerOption />;
-                } else if (item.type === "growthHackerReport") {
-                  const currentGrowthHackerReportCount = growthHackerReportCount++;
-                  return (
-                    <OrganismGrowthHackerReport
-                      growthHackerReportCount={currentGrowthHackerReportCount}
-                    />
-                  );
+                    );
+                  } else if (item.type === "customerAddition") {
+                    const currentCustomerAdditionalReportCount =
+                      customerAdditionalReportCount++;
+                    return (
+                      <OrganismCustomerAdditionalReport
+                        customerAdditionalReportCount={
+                          currentCustomerAdditionalReportCount
+                        }
+                      />
+                    );
+                  } else if (item.type === "keyword") {
+                    return <MoleculeAdditionalKeyword />;
+                  } else if (item.type === "reportButton") {
+                    return <MoleculeCheckReportRightAway />;
+                  } else if (item.type.startsWith("poc_")) {
+                    /* PoC */
+                    const expertIndex = item.type.split("_")[1];
+                    return (
+                      <>
+                        <OrganismPocReportSection
+                          key={`poc_${expertIndex}_${index}`}
+                          expertIndex={expertIndex}
+                        />
+                      </>
+                    );
+                  } else if (item.type.startsWith("pocTarget_")) {
+                    const expertIndex = item.type.split("_")[1];
+                    return (
+                      <>
+                        <OrganismRecommendedTargetReport
+                          key={`pocTarget_${expertIndex}_${index}`}
+                          expertIndex={expertIndex}
+                        />
+                      </>
+                    );
+                  } else if (item.type === "pocPlanButton") {
+                    return <MoleculeCheckPocRightAway />;
+                  } else if (item.type === "pocTargetButton") {
+                    return <MoleculeRecommendedTargetButton />;
+                  } else if (item.type === "pocOption") {
+                    return <MoleculeCheckPocOption />;
+                  } else if (item.type === "pocPersona") {
+                    return <MoleculePersonaSelect />;
+                  } else if (item.type === "ideaStartButton") {
+                    /* 아이디어 디벨로퍼 */
+                    return <MoleculeIdeaStartButton />;
+                  } else if (item.type === "ideaCustomerButton") {
+                    return <MoleculeIdeaCustomerButton />;
+                  } else if (item.type === "ideaGenerateButton") {
+                    return <MoleculeIdeaGenerateButton />;
+                  } else if (item.type === "ideaPriorityButton") {
+                    return <MoleculeIdeaPriorityButton />;
+                  } else if (item.type === "ideaFeature") {
+                    return <OrganismIdeaFeature />;
+                  } else if (item.type === "ideaCustomer") {
+                    return <OrganismIdeaCustomer />;
+                  } else if (item.type === "ideaList") {
+                    return <OrganismIdeaList />;
+                  } else if (item.type === "ideaPriority") {
+                    return <OrganismIdeaPriority />;
+                  } else if (item.type === "growthHackerStartButton") {
+                    /* 그로스 해커 */
+                    return <MoleculeGrowthHackerStartButton />;
+                  } else if (item.type === "growthHackerOption") {
+                    return <MoleculeCheckGrowthHackerOption />;
+                  } else if (item.type === "growthHackerReport") {
+                    const currentGrowthHackerReportCount =
+                      growthHackerReportCount++;
+                    return (
+                      <OrganismGrowthHackerReport
+                        growthHackerReportCount={currentGrowthHackerReportCount}
+                      />
+                    );
+                  } else if (item.type === "growthHackerKPIButton") {
+                    return <MoleculeGrowthHackerKPIButton />;
+                  } else if (item.type === "growthHackerKPI") {
+                    return <OrganismGrowthHackerKPI />;
+                  } else if (item.type === "priceStartButton") {
+                    /* 가격 분석 전문가 */
+                    return <MoleculePriceStartButton />;
+                  } else if (item.type === "priceOption") {
+                    return <MoleculePriceOption />;
+                  } else if (item.type === "priceReport") {
+                    return <OrganismPriceReport />;
+                  } else if (item.type === "priceContinueButton") {
+                    return <MoleculePriceContinueButton />;
+                  } else if (item.type === "priceProductSegmentation") {
+                    return <MoleculePriceProductSegmentation />;
+                  } else if (item.type === "caseStartButton") {
+                    /* 사례 분석 전문가 */
+                    return <MoleculeCaseStartButton />;
+                  } else if (item.type === "caseContinueButton") {
+                    return <MoleculeCaseContinueButton />;
+                  } else if (item.type === "caseReport") {
+                    const currentCaseReportCount = caseReportCount++;
+                    return (
+                      <OrganismCaseReport
+                        caseReportCount={currentCaseReportCount}
+                      />
+                    );
+                  } else if (item.type === "bmStartButton") {
+                    /* BM 전문가 */
+                    return <MoleculeBmStartButton />;
+                  } else if (item.type === "bmOption") {
+                    return <MoleculeCheckBmOption />;
+                  } else if (item.type === "bmModelSuggestion") {
+                    return <MoleculeBmModelSuggestion />;
+                  } else if (item.type === "bmSelectModelButton") {
+                    return <MoleculeBmSelectModelButton />;
+                  } else if (item.type === "bmBmAdsContinueButton") {
+                    return <MoleculeBmBmAdsContinueButton />;
+                  } else if (item.type === "bmLeanAdsContinueButton") {
+                    return <MoleculeBmLeanAdsContinueButton />;
+                  } else if (item.type === "bmBmAutoReport") {
+                    return <OrganismBmBmAutoReport />;
+                  } else if (item.type === "bmLeanAutoReport") {
+                    return <OrganismBmLeanAutoReport />;
+                  } else if (item.type === "bmLeanAdsReport") {
+                    return <OrganismBmLeanAdsReport />;
+                  } else if (item.type === "bmBmAdsReport") {
+                    return <OrganismBmBmAdsReport />;
+                  } else if (item.type === "bmLeanCustomReport") {
+                    return <OrganismBmLeanCustomReport />;
+                  } else if (item.type === "bmBmCustomReport") {
+                    return <OrganismBmBmCustomReport />;
 
-                } else if (item.type === "growthHackerKPIButton") {
-                  return <MoleculeGrowthHackerKPIButton />;
-                } else if (item.type === "growthHackerKPI") {
-                  return <OrganismGrowthHackerKPI />;
-                } else if (item.type === "priceStartButton") {
-                  /* 가격 분석 전문가 */
-                  return <MoleculePriceStartButton />;
-                } else if (item.type === "priceOption") {
-                  return <MoleculePriceOption />;
-                } else if (item.type === "priceReport") {
-                  return <OrganismPriceReport />;
-                } else if (item.type === "priceContinueButton") {
-                  return <MoleculePriceContinueButton />;
-                } else if (item.type === "priceProductSegmentation") {
-                  return <MoleculePriceProductSegmentation />;
-                } else if (item.type === "caseStartButton") {
-                  /* 사례 분석 전문가 */
-                  return <MoleculeCaseStartButton />;
-                } else if (item.type === "caseContinueButton") {
-                  return <MoleculeCaseContinueButton />;
-                } else if (item.type === "caseReport") {
-                  const currentCaseReportCount = caseReportCount++;
-                  return (
-                    <OrganismCaseReport
-                      caseReportCount={currentCaseReportCount}
-                    />
-                  );
-                } else if (item.type === "bmStartButton") {
-                  /* BM 전문가 */
-                  return <MoleculeBmStartButton />;
-                } else if (item.type === "bmOption") {
-                  return <MoleculeCheckBmOption />;
-                } else if (item.type === "bmModelSuggestion") {
-                  return <MoleculeBmModelSuggestion />;
-                } else if (item.type === "bmSelectModelButton") {
-                  return <MoleculeBmSelectModelButton />;
-                } else if (item.type === "bmBmAdsContinueButton") {
-                  return <MoleculeBmBmAdsContinueButton />;
-                } else if (item.type === "bmLeanAdsContinueButton") {
-                  return <MoleculeBmLeanAdsContinueButton />;
-                } else if (item.type === "bmBmAutoReport") {
-                  return <OrganismBmBmAutoReport />;
-                } else if (item.type === "bmLeanAutoReport") {
-                  return <OrganismBmLeanAutoReport />;
-                } else if (item.type === "bmLeanAdsReport") {
-                  return <OrganismBmLeanAdsReport />;
-                } else if (item.type === "bmBmAdsReport") {
-                  return <OrganismBmBmAdsReport />;
-                } else if (item.type === "bmLeanCustomReport") {
-                  return <OrganismBmLeanCustomReport />;
-                } else if (item.type === "bmBmCustomReport") {
-                  return <OrganismBmBmCustomReport />;
-                  
-                  /* 설문조사 전문가 */
-                } else if (item.type === "surveyStartButton") {
-                  return <MoleculeSurveyStartButton />;
-                } else if (item.type === "surveyGoalSuggestion") {
-                  return <MoleculeSurveyGoalSuggestion />;
-                } else if (item.type === "surveyOption") {
-                  return <MoleculeCheckSurveyOption />;
-                } else if (item.type === "surveyGuidelineReport") {
-                  return <OrganismSurveyGuidelineReport />;
-                } else if (item.type === "marketingStartButton") {
-                  /* 마케팅 */
-                  return <MoleculeMarketingStartButton />;
-                } else if (item.type === "marketingResearchReport") {
-                  return <OrganismMarketingResearchReport />;
-                } else if (item.type === "marketingBmButton") {
-                  return <MoleculeMarketingBmButton />;
-                } else if (item.type === "marketingBmReport") {
-                  return <OrganismMarketingBmReport />;
-                } else if (item.type === "marketingCustomerButton") {
-                  return <MoleculeMarketingCustomerButton />;
-                } else if (item.type === "marketingCustomer") {
-                  const currentMarketingCustomerCount =
-                    marketingCustomerCount++;
-                  return (
-                    <MoleculeMarketingCustomer
-                      marketingCustomerCount={currentMarketingCustomerCount}
-                    />
-                  );
-                } else if (item.type === "marketingSegmentReport") {
-                  const currentMarketingSegmentReportCount =
-                    marketingSegmentReportCount++;
-                  return (
-                    <OrganismMarketingSegmentReport
-                      marketingSegmentReportCount={
-                        currentMarketingSegmentReportCount
-                      }
-                    />
-                  );
-                } else if (item.type === "marketingFinalReport") {
-                  return <OrganismMarketingFinalReport />;
-                } else if (item.type === "marketingSignUpButton") {
-                  return <MoleculeMarketingSignUpButton />;
-                }
+                    /* 설문조사 전문가 */
+                  } else if (item.type === "surveyStartButton") {
+                    return <MoleculeSurveyStartButton />;
+                  } else if (item.type === "surveyGoalSuggestion") {
+                    return <MoleculeSurveyGoalSuggestion />;
+                  } else if (item.type === "surveyOption") {
+                    return <MoleculeCheckSurveyOption />;
+                  } else if (item.type === "surveyGuidelineReport") {
+                    return <OrganismSurveyGuidelineReport />;
+                  } else if (item.type === "marketingStartButton") {
+                    /* 마케팅 */
+                    return <MoleculeMarketingStartButton />;
+                  } else if (item.type === "marketingResearchReport") {
+                    return <OrganismMarketingResearchReport />;
+                  } else if (item.type === "marketingBmButton") {
+                    return <MoleculeMarketingBmButton />;
+                  } else if (item.type === "marketingBmReport") {
+                    return <OrganismMarketingBmReport />;
+                  } else if (item.type === "marketingCustomerButton") {
+                    return <MoleculeMarketingCustomerButton />;
+                  } else if (item.type === "marketingCustomer") {
+                    const currentMarketingCustomerCount =
+                      marketingCustomerCount++;
+                    return (
+                      <MoleculeMarketingCustomer
+                        marketingCustomerCount={currentMarketingCustomerCount}
+                      />
+                    );
+                  } else if (item.type === "marketingSegmentReport") {
+                    const currentMarketingSegmentReportCount =
+                      marketingSegmentReportCount++;
+                    return (
+                      <OrganismMarketingSegmentReport
+                        marketingSegmentReportCount={
+                          currentMarketingSegmentReportCount
+                        }
+                      />
+                    );
+                  } else if (item.type === "marketingFinalReport") {
+                    return <OrganismMarketingFinalReport />;
+                  } else if (item.type === "marketingSignUpButton") {
+                    return <MoleculeMarketingSignUpButton />;
+                  }
 
-                return null;
-              })}
-              
-              <div ref={chatEndRef} />
+                  return null;
+                })}
 
-              {selectedExpertIndex === "0" || selectedExpertIndex === "1" || selectedExpertIndex === "2" || selectedExpertIndex === "3" || selectedExpertIndex === "11" ?
-                <>
-                {/* 검색해서 시작 */}
-                {(approachPath === -1 || approachPath === 3) && 
-                  titleOfBusinessInfo &&
-                  <OrganismBizExpertSelect />
-                }
+                <div ref={chatEndRef} />
 
-                {/* 전문가 선택하고 시작 */}
-                {approachPath === 1 &&
-                  Object.keys(strategyReportData).length !== 0 &&
+                {selectedExpertIndex === "0" ||
+                selectedExpertIndex === "1" ||
+                selectedExpertIndex === "2" ||
+                selectedExpertIndex === "3" ||
+                selectedExpertIndex === "11" ? (
+                  <>
+                    {/* 검색해서 시작 */}
+                    {(approachPath === -1 || approachPath === 3) &&
+                      titleOfBusinessInfo && <OrganismBizExpertSelect />}
+
+                    {/* 전문가 선택하고 시작 */}
+                    {approachPath === 1 &&
+                      Object.keys(strategyReportData).length !== 0 &&
+                      !isLoading && <OrganismBizExpertSelect />}
+
+                    {/* 히스토리로 진입 시 */}
+                    {approachPath === 2 &&
+                      titleOfBusinessInfo &&
+                      conversation.length > 0 &&
+                      conversation[conversation.length - 1].type !==
+                        "reportButton" &&
+                      !isLoading && <OrganismBizExpertSelect />}
+                  </>
+                ) : selectedExpertIndex === "4" ? (
+                  <>
+                    {Object.keys(recommendedTargetData).length !== 0 && (
+                      <OrganismBizExpertSelect />
+                    )}
+                  </>
+                ) : selectedExpertIndex === "5" ? (
+                  <>
+                    {ideaPriority.length !== 0 && <OrganismBizExpertSelect />}
+                  </>
+                ) : selectedExpertIndex === "6" ? (
+                  <>
+                    {buttonState.growthHackerKPI === 1 && (
+                      <OrganismBizExpertSelect />
+                    )}
+                  </>
+                ) : selectedExpertIndex === "7" ? (
+                  <>
+                    {buttonState.priceEnough === 1 && (
+                      <OrganismBizExpertSelect />
+                    )}
+                  </>
+                ) : selectedExpertIndex === "8" ? (
+                  <>
+                    {buttonState.caseEnough === 1 && (
+                      <OrganismBizExpertSelect />
+                    )}
+                  </>
+                ) : selectedExpertIndex === "9" ? (
+                  <>
+                    {buttonState.bmEnough === 1 && <OrganismBizExpertSelect />}
+                  </>
+                ) : selectedExpertIndex === "10" ? (
+                  <>
+                    {buttonState.surveyEnd === 1 && <OrganismBizExpertSelect />}
+                  </>
+                ) : null}
+              </ChatWrap>
+
+              {conversationStage === 1 && !isMarketing ? (
+                <OrganismSearchBottomBar isBlue={false} />
+              ) : selectedExpertIndex === "1" ||
+                selectedExpertIndex === "2" ||
+                selectedExpertIndex === "3" ? (
+                <OrganismSearchBottomBar isBlue={true} />
+              ) : selectedExpertIndex === "4" ? (
+                Object.keys(recommendedTargetData).length !== 0 && (
+                  <OrganismSearchBottomBar isBlue={true} />
+                ) // 4번 전문가 끝났을 때 활성화
+              ) : selectedExpertIndex === "5" ? (
+                ideaPriority.length !== 0 && (
+                  <OrganismSearchBottomBar isBlue={true} />
+                ) // 5번 전문가 끝났을 때 활성화
+              ) : selectedExpertIndex === "6" ? (
+                buttonState.growthHackerKPI === 1 && (
+                  <OrganismSearchBottomBar isBlue={true} />
+                ) // 6번 전문가 끝났을 때 활성화
+              ) : selectedExpertIndex === "7" ? (
+                buttonState.priceEnough === 1 && (
+                  <OrganismSearchBottomBar isBlue={true} />
+                ) // 7번 전문가 끝났을 때 활성화
+              ) : selectedExpertIndex === "8" ? (
+                buttonState.caseEnough === 1 ? (
+                  <OrganismSearchBottomBar isBlue={true} /> // 사례 조사 끝났을 때 활성화
+                ) : (
+                  buttonState.caseStart === 1 &&
                   !isLoading &&
-                    <OrganismBizExpertSelect />
-                }
-
-                {/* 히스토리로 진입 시 */}
-                {approachPath === 2 && 
-                  titleOfBusinessInfo &&
-                  conversation.length > 0 &&
-                  conversation[conversation.length - 1].type !== "reportButton" &&
-                  !isLoading &&
-                    <OrganismBizExpertSelect />
-                }
-                </>
-              :
-              selectedExpertIndex === "4" ?
-                <>
-                {
-                  Object.keys(recommendedTargetData).length !== 0 && 
-                    <OrganismBizExpertSelect />
-                }
-                </>
-              :
-              selectedExpertIndex === "5" ?
-                <>
-                {
-                  ideaPriority.length !== 0 &&  
-                    <OrganismBizExpertSelect />
-                }
-                </>
-              :
-              selectedExpertIndex === "6" ?
-                <>
-                {
-                  buttonState.growthHackerKPI === 1 &&
-                    <OrganismBizExpertSelect />
-                }
-                </>
-              :
-              selectedExpertIndex === "7" ?
-                <>
-                {
-                  buttonState.priceEnough === 1 &&
-                    <OrganismBizExpertSelect />
-                }
-                </>
-              :
-              selectedExpertIndex === "8" ?
-                <>
-                {
-                  buttonState.caseEnough === 1 &&
-                    <OrganismBizExpertSelect />
-                }
-                </>
-              :
-              selectedExpertIndex === "9" ?
-                <>
-                {
-                  buttonState.bmEnough === 1 &&
-                    <OrganismBizExpertSelect />
-                }
-                </>
-              :
-              selectedExpertIndex === "10" ?
-                <>
-                {
-                  buttonState.surveyEnd === 1 &&
-                    <OrganismBizExpertSelect />
-                }
-                </>
-              :
-              null
-              }
-            </ChatWrap>
-
-            {conversationStage === 1 && !isMarketing ? (
-              <OrganismSearchBottomBar isBlue={false} />
-            ) : selectedExpertIndex === "1" ||
-              selectedExpertIndex === "2" ||
-              selectedExpertIndex === "3" ? (
-              <OrganismSearchBottomBar isBlue={true} />
-            ) : selectedExpertIndex === "4" ? (
-              Object.keys(recommendedTargetData).length !== 0 && (
-                <OrganismSearchBottomBar isBlue={true} />
-              ) // 4번 전문가 끝났을 때 활성화
-            ) : selectedExpertIndex === "5" ? (
-              ideaPriority.length !== 0 && (
-                <OrganismSearchBottomBar isBlue={true} />
-              ) // 5번 전문가 끝났을 때 활성화
-            ) : selectedExpertIndex === "6" ? (
-              buttonState.growthHackerKPI === 1 && (
-                <OrganismSearchBottomBar isBlue={true} />
-              ) // 6번 전문가 끝났을 때 활성화
-            ) : selectedExpertIndex === "7" ? (
-              buttonState.priceEnough === 1 && (
-                <OrganismSearchBottomBar isBlue={true} />
-              ) // 7번 전문가 끝났을 때 활성화
-            ) : selectedExpertIndex === "8" ? (
-              buttonState.caseEnough === 1 ? (
-                <OrganismSearchBottomBar isBlue={true} /> // 사례 조사 끝났을 때 활성화
-              ) : (
-                buttonState.caseStart === 1 &&
-                !isLoading &&
-                conversation[conversation.length - 1].type !==
-                  "caseContinueButton" && (
-                  <OrganismSearchBottomBar isBlue={true} isHashTag={true} />
+                  conversation[conversation.length - 1].type !==
+                    "caseContinueButton" && (
+                    <OrganismSearchBottomBar isBlue={true} isHashTag={true} />
+                  )
+                ) // 사례 조사 시작했을 때 활성화
+              ) : selectedExpertIndex === "9" ? (
+                buttonState.bmEnough === 1 && (
+                  <OrganismSearchBottomBar isBlue={true} />
                 )
-              ) // 사례 조사 시작했을 때 활성화
-            ) : selectedExpertIndex === "9" ? (
-              buttonState.bmEnough === 1 && (
-                <OrganismSearchBottomBar isBlue={true} />
-              )
-            ) : selectedExpertIndex === "10" ? (
-              buttonState.surveyEnd === 1 ? (
-                <OrganismSearchBottomBar isBlue={true} /> // 설문조사 끝났을 때 활성화
-              ) : (
-                buttonState.surveyGoalInputStart === 1 && (
-                  <OrganismSearchBottomBar isBlue={true} isHashTag={true} />
-                )
-              ) // 설문조사 목적 입력 시 활성화
-            ) : null}
-          </div>
-
-          {/* {!isMarketing && <OrganismRightSideBar />} */}
-        </MainContent>
-      </ContentsWrap>
-      {isExitPopupOpen && (
-        <Popup Cancel>
-          <div>
-            <button
-              type="button"
-              className="closePopup"
-              onClick={handleExitCancel}
-            >
-              닫기
-            </button>
-            <span>
-              <img src={images.ExclamationMarkRed} alt="" />
-            </span>
-            <p>
-              <strong>정말 종료하시겠습니까?</strong>
-              <span>
-                종료 또는 새로고침 할 경우, 모든 대화내역이 사라집니다.
-              </span>
-            </p>
-            <div className="btnWrap">
-              <button type="button" onClick={handleExitCancel}>
-                대화를 저장할래요
-              </button>
-              <button type="button" onClick={handleExitConfirm}>
-                종료할게요
-              </button>
+              ) : selectedExpertIndex === "10" ? (
+                buttonState.surveyEnd === 1 ? (
+                  <OrganismSearchBottomBar isBlue={true} /> // 설문조사 끝났을 때 활성화
+                ) : (
+                  buttonState.surveyGoalInputStart === 1 && (
+                    <OrganismSearchBottomBar isBlue={true} isHashTag={true} />
+                  )
+                ) // 설문조사 목적 입력 시 활성화
+              ) : null}
             </div>
-          </div>
-        </Popup>
-      )}
-    </ThemeProvider>
+
+            {/* {!isMarketing && <OrganismRightSideBar />} */}
+          </MainContent>
+        </ContentsWrap>
+        {isExitPopupOpen && (
+          <Popup Cancel>
+            <div>
+              <button
+                type="button"
+                className="closePopup"
+                onClick={handleExitCancel}
+              >
+                닫기
+              </button>
+              <span>
+                <img src={images.ExclamationMarkRed} alt="" />
+              </span>
+              <p>
+                <strong>정말 종료하시겠습니까?</strong>
+                <span>
+                  종료 또는 새로고침 할 경우, 모든 대화내역이 사라집니다.
+                </span>
+              </p>
+              <div className="btnWrap">
+                <button type="button" onClick={handleExitCancel}>
+                  대화를 저장할래요
+                </button>
+                <button type="button" onClick={handleExitConfirm}>
+                  종료할게요
+                </button>
+              </div>
+            </div>
+          </Popup>
+        )}
+      </ThemeProvider>
     </>
   );
 };
@@ -1127,7 +1107,7 @@ const MainContent = styled.div`
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    padding:0;
+    padding: 0;
   }
 `;
 
@@ -1294,10 +1274,10 @@ const Popup = styled.div`
         }
       `}
   }
-  
+
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     > div {
-      width:90%;
+      width: 90%;
     }
   }
 `;

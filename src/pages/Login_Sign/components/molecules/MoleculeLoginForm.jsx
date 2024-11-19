@@ -3,10 +3,13 @@
 import React, { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+// import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import AtomButton from "../atoms/AtomButton";
 import { isValidEmail } from "../atoms/AtomValidation";
+
+import images from "../../../../assets/styles/Images";
 import {
   SIGN_UP_NAME,
   EMAIL,
@@ -48,6 +51,9 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useAtom(IS_LOGIN_POPUP_OPEN);
   const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
+  const [showMobileWarning, setShowMobileWarning] = useState(false);
+
+  const [isExitPopupOpen, setIsExitPopupOpen] = useState(false);
 
   useEffect(() => {
     setErrorStatus("");
@@ -65,6 +71,30 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
     return true;
   };
 
+  // 모바일 감지 함수 추가
+  const isMobileDevice = () => {
+    const toMatch = [
+      /Android/i,
+      /webOS/i,
+      /iPhone/i,
+      /iPad/i,
+      /iPod/i,
+      /BlackBerry/i,
+      /Windows Phone/i,
+    ];
+
+    return toMatch.some((toMatchItem) => {
+      return navigator.userAgent.match(toMatchItem);
+    });
+  };
+  const handleMobileWarningConfirm = () => {
+    setShowMobileWarning(false);
+  };
+
+  const handleExitCancel = () => {
+    setIsExitPopupOpen(false);
+  };
+
   const handleLogin = async () => {
     setErrorStatus("");
     if (!validateForm()) return;
@@ -74,18 +104,25 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
 
       // 로그인 요청
       if (isMarketing) {
-        response = await fetch('https://wishresearch.kr/api/user/login/defaultLogin_marketing/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password, chatGetId: conversationId })
-        });
+        response = await fetch(
+          "https://wishresearch.kr/api/user/login/defaultLogin_marketing/",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email,
+              password,
+              chatGetId: conversationId,
+            }),
+          }
+        );
       } else {
         response = await fetch(
           "https://wishresearch.kr/api/user/login/normal/",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password }),  
+            body: JSON.stringify({ email, password }),
           }
         );
       }
@@ -109,6 +146,9 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
           }
         );
 
+        if (isMobileDevice()) {
+          setShowMobileWarning(true);
+        }
         if (userInfoResponse.ok) {
           const userInfo = await userInfoResponse.json();
 
@@ -120,6 +160,7 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
           // 로그인 성공 처리
           setIsLoggedIn(true);
           setLoginSuccess(true);
+
           navigate("/MeetAiExpert");
         } else {
           setErrorStatus("유저 정보를 불러오는 중 오류가 발생했습니다.");
@@ -155,7 +196,6 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
 
   const [isSignPopupOpen, setIsSignPopupOpen] = useAtom(IS_SIGNUP_POPUP_OPEN); // 회원가입 팝업 상태 관리
   const handleSignClick = () => {
-    
     setIsSignPopupOpen(true); // 회원가입 팝업 열기
     setIsLoginPopupOpen(false);
     onClosePopup();
@@ -163,12 +203,12 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
   const closeSignPopup = () => {
     setIsSignPopupOpen(false); // 회원가입 팝업 닫기
     setErrorStatus("");
-    setSignUpName('');
-    setEmail('');
-    setSignupEmail('');
-    setPassword('');
-    setSignupPassword('');
-    setConfirmPassword('');
+    setSignUpName("");
+    setEmail("");
+    setSignupEmail("");
+    setPassword("");
+    setSignupPassword("");
+    setConfirmPassword("");
   };
 
   const [isPasswordRestPopupOpen, setIsPasswordRestPopupOpen] = useState(false); // 비밀번호 리셋 팝업 상태 관리
@@ -203,7 +243,7 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
               placeholder="이메일 주소를 입력해주세요"
             />
           </div>
-  
+
           <div>
             <label htmlFor="password">
               비밀번호<span>*</span>
@@ -220,19 +260,18 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
               {showPassword ? <FaEye /> : <FaEyeSlash />}
             </TogglePasswordButton>
           </div>
-  
-  
+
           <PasswordResetLink>
             <a onClick={handlePasswordRestClick}>비밀번호 찾기</a>
           </PasswordResetLink>
-  
+
           <StyledLoginButton
             onClick={handleLogin}
             disabled={!email || !password}
           >
             로그인
           </StyledLoginButton>
-          
+
           {errorStatus && <ErrorMessage>{errorStatus}</ErrorMessage>}
 
           <JoinWrap>
@@ -243,14 +282,39 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
           </JoinWrap>
         </LoginFormContainer>
       )}
-  
       {/* 비밀번호 재설정 팝업 */}
       {isPasswordRestPopupOpen && (
         <MoleculeResetPasswordPopup onClose={closePasswordRestPopup} />
+      )}{" "}
+      {/* 모바일 경고 팝업 */}
+      {showMobileWarning && (
+        <Popup Cancel>
+          <div>
+            <button
+              type="button"
+              className="closePopup"
+              onClick={handleExitCancel}
+            >
+              닫기
+            </button>
+            <span>
+              <img src={images.ExclamationMark} alt="" />
+            </span>
+            <p>
+              <strong>본 서비스는 웹 전용으로 운영되고 있습니다.</strong>
+              <span>웹에서 최적의 작업을 진행하세요</span>
+            </p>
+            <div className="btnWrap">
+              <button type="button" onClick={handleMobileWarningConfirm}>
+                확인
+              </button>
+            </div>
+          </div>
+        </Popup>
       )}
     </>
   );
-};  
+};
 export default MoleculeLoginForm;
 
 // CSS-in-JS 스타일링
@@ -285,7 +349,7 @@ const StyledAtomInput = styled.input`
   width: 100%;
   font-family: "Pretendard", "Poppins";
   // font-size: 1rem;
-  font-size:0.75rem;
+  font-size: 0.75rem;
   padding: 12px 16px;
   border-radius: 8px;
   border: 1px solid ${palette.lineGray};
@@ -365,5 +429,136 @@ const JoinWrap = styled.div`
   a {
     color: ${palette.blue};
     text-decoration: underline;
+  }
+`;
+
+const Popup = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  transition: all 0.5s;
+  z-index: 9999;
+
+  .closePopup {
+    position: absolute;
+    right: 24px;
+    top: 24px;
+    width: 16px;
+    height: 16px;
+    font-size: 0;
+    padding: 9px;
+    border: 0;
+    background: none;
+
+    &:before,
+    &:after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 2px;
+      height: 100%;
+      border-radius: 10px;
+      background: ${palette.gray500};
+      content: "";
+    }
+
+    &:before {
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    &:after {
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
+  }
+
+  > div {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    // overflow:hidden;
+    padding: 45px 24px 24px;
+    border-radius: 10px;
+    background: ${palette.white};
+
+    p {
+      font-family: "Pretendard", "Poppins";
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin: 20px auto 24px;
+      strong {
+        font-weight: 500;
+        display: block;
+      }
+
+      span {
+        font-size: 0.75rem !important;
+        font-weight: 400;
+        color: #f40404;
+        display: block;
+        margin-top: 8px;
+      }
+    }
+
+    .btnWrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      button {
+        flex: 1;
+        font-family: "Pretendard", "Poppins";
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: ${palette.blue};
+        padding: 12px 20px;
+        border-radius: 12px;
+        border: 1px solid ${palette.blue};
+        background: ${palette.white};
+
+        // &:last-child {
+        //   color: ${palette.white};
+        //   background: ${palette.blue};
+        // }
+      }
+    }
+
+    ${(props) =>
+      props.Cancel &&
+      css`
+        p {
+          strong {
+            font-weight: 600;
+            display: block;
+            color: ${palette.gray800};
+          }
+          span {
+            font-size: 1rem;
+            display: block;
+            margin-top: 8px;
+          }
+        }
+
+        .btnWrap {
+          padding-top: 16px;
+          border-top: 1px solid ${palette.lineGray};
+
+          button {
+            color: ${palette.gray700};
+            font-weight: 400;
+            padding: 0;
+            border: 0;
+            background: none;
+          }
+        }
+      `}
   }
 `;
