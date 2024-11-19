@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styled, { css } from "styled-components";
+import styled, { css, ThemeProvider } from "styled-components";
+import theme from "../../../../assets/styles/Theme";
 import { Link } from "react-router-dom";
 import images from "../../../../assets/styles/Images";
 import {
@@ -231,12 +232,98 @@ const PageMarketingNoItemsResult = () => {
     navigate("/ExpertInsight");
   };
 
+
+
+
+
+  
+  
+
+  const [isDragging, setIsDragging] = useState(false);
+  const [startY, setStartY] = useState(null);
+  const [questionFlex, setQuestionFlex] = useState('1 1 100%');
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      if (window.innerWidth <= 768) {
+        setIsMobile(true);  // 모바일 화면
+      } else {
+        setIsMobile(false); // 데스크탑 화면
+      }
+    };
+  
+    checkMobile();  // 처음 로드 시 확인
+    window.addEventListener('resize', checkMobile);  // 화면 크기 변경 시 확인
+  
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
+  
+  const handleMouseDown = (e) => {
+    if (isMobile) {
+      setIsDragging(true);
+      setStartY(e.clientY);  // 마우스 위치 저장
+    }
+  };
+  
+  const handleMouseMove = (e) => {
+    if (!isDragging || startY === null) return;
+  
+    const currentY = e.clientY;
+    
+    // 위로 드래그 시 flex: 10%, 아래로 드래그 시 flex: 100%
+    if (startY - currentY > 30) { // 위로 드래그했을 때
+      setQuestionFlex('1 1 10%');
+    } else if (currentY - startY > 30) {
+      setQuestionFlex('1 1 100%');
+    }
+  };
+  
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    setStartY(null);
+  };
+  
+  const handleTouchStart = (e) => {
+    if (isMobile) {
+      setIsDragging(true);
+      setStartY(e.touches[0].clientY);
+    }
+  };
+  
+  const handleTouchMove = (e) => {
+    if (!isDragging || startY === null) return;
+  
+    const currentY = e.touches[0].clientY;
+  
+    // 위로 드래그 시 flex: 10%, 아래로 드래그 시 flex: 100%
+    if (startY - currentY > 30) { 
+      setQuestionFlex('1 1 10%');
+    } else if (currentY - startY > 30) {
+      setQuestionFlex('1 1 100%');
+    }
+  };
+  
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+    setStartY(null);
+  };
+  
+
+
   return (
     <>
+    <ThemeProvider theme={theme}>
       <QuestionWrap>
-        <Question>
+        <Question
+          style={{ flex: questionFlex }}
+          isDragging={isDragging}
+          questionFlex={questionFlex}
+        >
           <p>
-            <span>
+            <span style={{ display: questionFlex === '1 1 10%' ? 'none' : 'block' }}>
               <img 
                 src={
                   marketingMbtiResult.name === "ROIC" ? images.ImgMBTIROIC :
@@ -259,7 +346,7 @@ const PageMarketingNoItemsResult = () => {
                 alt=""
               />
             </span>
-            {marketingMbtiResult.category}<br />{marketingMbtiResult.name}
+            {marketingMbtiResult.category} <br />{marketingMbtiResult.name}
           </p>
           <div>
             <strong>{marketingMbtiResult.summary}</strong>
@@ -267,8 +354,23 @@ const PageMarketingNoItemsResult = () => {
           </div>
         </Question>
 
-        <Answer>
+        <Answer
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          isDragging={isDragging}
+          questionFlex={questionFlex}
+        >
           <ResultWrap>
+            <div className="info">
+              <strong>{marketingMbtiResult.summary}</strong>
+              <p>{marketingMbtiResult.description}</p>
+            </div>
+
             <div className="title">
               <strong>💡 맞춤 추천 아이템</strong>
               <p>아이템이 나에게 맞는지 확인하고, 나만의 비즈니스로 발전시킬 힌트를 얻어보세요</p>
@@ -393,7 +495,8 @@ const PageMarketingNoItemsResult = () => {
           </div>
         </div>
       </ExitPopup>
-    )}
+      )}
+    </ThemeProvider>
     </>
   );
 };
@@ -404,6 +507,10 @@ const QuestionWrap = styled.section`
   position:relative;
   height:100vh;
   display:flex;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    flex-direction:column;
+  }
 `;
 
 const Question = styled.div`
@@ -415,6 +522,7 @@ const Question = styled.div`
   gap:64px;
   flex:1 1 50%;
   background:#5547FF;
+  transition:all .5s;
 
   > p {
     font-size:2.5rem;
@@ -430,6 +538,10 @@ const Question = styled.div`
       font-size:1.25rem;
       font-weight:300;
       line-height:1.2;
+    }
+
+    br {
+      display: ${(props) => (props.questionFlex === '1 1 10%' ? 'none' : 'inline')};
     }
   }
 
@@ -456,6 +568,30 @@ const Question = styled.div`
       line-height:1.6;
     }
   }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    flex: 1 1 100%;
+    justify-content:end;
+    padding-bottom:76px;
+
+    > p {
+      font-size:1.25rem;
+
+      span {
+        display: ${(props) => (props.isSmallFlex ? "none" : "inline-block")};
+      }
+    }
+
+    div {
+      display:none;
+    }
+
+    ${props => props.isDragging && `
+      ${Question} {
+        flex: 1 1 10%;
+      }
+    `}
+  }
 `;
 
 const Answer = styled.div`
@@ -465,6 +601,17 @@ const Answer = styled.div`
   justify-content:center;
   gap:32px;
   flex:1 1 50%;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    flex:1 1 70%;
+    overflow:hidden;
+    justify-content:flex-start;
+    overflow-y: ${(props) => (props.questionFlex === '1 1 10%' ? 'auto' : 'hidden')};
+
+    ${props => props.isDragging && `
+      overflow-y: auto;
+    `}
+  }
 `;
 
 const ResultWrap = styled.div`
@@ -473,6 +620,28 @@ const ResultWrap = styled.div`
   flex-direction:column;
   gap:20px;
   margin:0 10%;
+
+  .info {
+    display:none;
+    flex-direction:column;
+    gap:16px;
+    text-align:left;
+    padding-bottom:32px;
+    margin-bottom:10px;
+    border-bottom:4px solid ${palette.chatGray};
+
+    strong {
+      font-size:1.13rem;
+      font-weight:500;
+      line-height:1.5;
+      color:#5547FF;
+    }
+
+    p {
+      font-weight:300;
+      line-height:1.6;
+    }
+  }
 
   .title {
     display:flex;
@@ -499,6 +668,30 @@ const ResultWrap = styled.div`
     color:${palette.gray500};
     line-height:1.5;
     text-align:left;
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    padding:44px 20px;
+    margin:0 auto;
+
+    .info {
+      display:flex;
+    }
+
+    .title {
+      strong {
+        font-size:1.13rem;
+      }
+
+      p {
+        font-size:0.88rem;
+      }
+    }
+
+    .comment {
+      font-size:0.75rem;
+      letter-spacing:-0.5px;
+    }
   }
 `;
 
@@ -541,6 +734,29 @@ const ListBox = styled.div`
     border-radius:5px;
     background:rgba(4, 83, 244, 0.1);
     cursor:pointer;
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    gap:8px;
+
+    > div {
+      gap:16px;
+      padding:16px 20px;
+      border-radius:15px;
+    }
+
+    p {
+      font-size:0.88rem;
+
+      strong {
+        font-size:1rem;
+      }
+    }
+
+    span {
+      flex-shrink:0;
+      padding:8px 12px;
+    }
   }
 `;
 
@@ -614,7 +830,7 @@ const Popup = styled.div`
     border-bottom:1px solid ${palette.gray200};
 
     h5 {
-      font-size:16px;
+      font-size:1rem;
       font-weight:500;
       color:#5547FF;
       line-height:1.7;
@@ -633,6 +849,43 @@ const Popup = styled.div`
     gap:32px;
     overflow-y: auto; // 내용이 넘칠 경우 스크롤 추가
     max-height: calc(90vh - 64px); // 패딩을 고려한 최대 높이 설정
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    background:rgba(0, 0, 0, 0.6);
+
+    > div {
+      top:auto;
+      bottom:0;
+      transform:translateX(-50%);
+      height:83%;
+      padding:56px 0 0;
+      border-radius:20px 20px 0 0;
+    }
+
+    .closePopup {
+      right:20px;
+      top:-40px;
+    }
+
+    .header {
+      padding:0 20px;
+      gap:16px;
+      padding-bottom:32px;
+
+      h5 {
+        font-size:1.13rem;
+        line-height:1.5;
+      }
+
+      p {
+        font-weight:300;
+      }
+    }
+
+    .body {
+      padding:0 20px 30px;
+    }
   }
 `;
 
@@ -688,6 +941,16 @@ const ScrollWrap = styled.div`
   &::-webkit-scrollbar-thumb {
     background: ${palette.lineGray};
     border-radius: 10px;
+  }
+  
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    gap:20px;
+    
+    > div {
+      p {
+        font-size:0.88rem;
+      }
+    }
   }
 `;
 
@@ -837,5 +1100,11 @@ const ExitPopup = styled.div`
           }
         }
       `}
+  }
+  
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    > div {
+      width:90%;
+    }
   }
 `;

@@ -38,6 +38,8 @@ import PersonaGenerator from "./pages/Persona/PersonaGenerator";
 import Loading from "./pages/Persona/Loading";
 import LoadingPersona from "./pages/Persona/LoadingPersona"; 
 
+import SamplePage from "./pages/Meet_Ai_Expert/components/pages/SamplePage";
+
 function App() {
   const [, setIsLoggedIn] = useAtom(IS_LOGGED_IN); // 로그인 상태를 위한 아톰
   const [, setUserName] = useAtom(USER_NAME); // 유저 이름 아톰
@@ -178,6 +180,7 @@ function App() {
       
             <Route path="/CuratorStoryboard" element={<CuratorStoryboard />}></Route>
             {/* <Route path="/MarketingLandingPage" element={<MarketingLandingPage />}></Route> */}
+            <Route path="/SamplePage" element={<SamplePage />}></Route>
 
             {/* AI 패널 */}
             {/* <Route path="/AI_Panel" element={<PageAIPanelList />} />

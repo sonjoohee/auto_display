@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import styled, { css } from "styled-components";
+import styled, { css, ThemeProvider } from "styled-components";
+import theme from "../../../../../assets/styles/Theme";
 import { palette } from "../../../../../assets/styles/Palette";
 import images from "../../../../../assets/styles/Images";
 import axios from "axios";
@@ -62,7 +63,7 @@ const OrganismMarketingResearchReport = () => {
   useEffect(() => {
     const fetchMarketingResearchReport = async () => {
       try {
-       if(marketingStartButtonState === 1) {
+      if(marketingStartButtonState === 1) {
           setIsLoadingMarketingResearchReport(true);
           setIsLoading(true);
           setMarketingStartButtonState(0);
@@ -165,6 +166,8 @@ const OrganismMarketingResearchReport = () => {
 
   return (
     <>
+    <ThemeProvider theme={theme}>
+    
       {isLoadingMarketingResearchReport || marketingStartButtonState ? (
         <SummaryBox>
           <h3>로딩 중...</h3>
@@ -240,6 +243,8 @@ const OrganismMarketingResearchReport = () => {
         </Sidebar>
         </>
       )}
+      
+    </ThemeProvider>
     </>
   );
 };
@@ -300,6 +305,10 @@ const SummaryBox = styled.div`
     margin-top:5px;
     border:0;
     background:none;
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    margin:12px 0 0;
   }
 `;
 
@@ -376,7 +385,7 @@ const Sidebar = styled.div`
   // max-width: 800px;
   // width:100%;
 
-  width: ${({ isMenuOpen }) => (isMenuOpen ? '800px' : '0')};
+  max-width: ${({ isMenuOpen }) => (isMenuOpen ? '800px' : '0')};
 
   background:${palette.white};
   // transform: ${({ isMenuOpen }) => (isMenuOpen ? 'translateX(0)' : 'translateX(200%)')};

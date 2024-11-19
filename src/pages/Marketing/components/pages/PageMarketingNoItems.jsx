@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import styled, { css } from "styled-components";
+import styled, { css, ThemeProvider } from "styled-components";
+import theme from "../../../../assets/styles/Theme";
 import { Link } from "react-router-dom";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
@@ -82,8 +83,13 @@ const PageMarketingNoItems = () => {
 
   // const [activeQuestion, setActiveQuestion] = useState(null);
   const [activeQuestion, setActiveQuestion] = useState(0);
+  const [isRadioSelected, setIsRadioSelected] = useState(false);
+
   const questionRefs = useRef([]);
   const questions = Array.from({ length: 14 }, (_, i) => `Q${i + 1}`); // 질문 생성 갯수 설정
+
+  // 모바일 여부 확인
+  const isMobile = window.innerWidth <= 768
   
   // 상태에 따라 Navbar 보여질 여부
   const [showNavbar, setShowNavbar] = useState(false);
@@ -121,6 +127,7 @@ const PageMarketingNoItems = () => {
         behavior: "smooth",
       });
       setActiveQuestion(index);
+      setIsRadioSelected(false);
     }
   };
 
@@ -165,11 +172,30 @@ const PageMarketingNoItems = () => {
   //   }
   // };
 
+  // const handleRadioChange = (index) => {
+  //   if (index === activeQuestion && index < questions.length - 1) {
+  //     // 다음 질문으로 이동
+  //     setActiveQuestion(index + 1);
+  //     // 해당 질문으로 스크롤
+  //     handleScrollToQuestion(index + 1); 
+  //   }
+  // };
+
+  // 라디오 버튼 선택 시 동작
   const handleRadioChange = (index) => {
-    if (index === activeQuestion && index < questions.length - 1) {
-      // 다음 질문으로 이동
-      setActiveQuestion(index + 1);
-      handleScrollToQuestion(index + 1); // 해당 질문으로 스크롤
+    if (index === activeQuestion) {
+      setIsRadioSelected(true); // 선택 상태 업데이트
+      if (!isMobile) {
+        // 모바일이 아닐 경우만 섹션 이동
+        handleScrollToQuestion(index + 1);
+      }
+    }
+  };
+
+  // 다음 버튼 클릭 시 동작
+  const handleNextButtonClick = () => {
+    if (isRadioSelected && activeQuestion < questions.length - 1) {
+      handleScrollToQuestion(activeQuestion + 1);
     }
   };
 
@@ -211,8 +237,16 @@ const PageMarketingNoItems = () => {
 
   return (
     <>
+    <ThemeProvider theme={theme}>
       <Navbar>
-        <h1 onClick={() => setIsExitPopupOpen(true)}><img src={images.SymbolLogoWhite} alt="" /></h1>
+        <h1 className="pc" onClick={() => setIsExitPopupOpen(true)}>
+          <img src={images.SymbolLogoWhite} alt="" />
+        </h1>
+        <h1 
+          // className="mobile" 
+          className={`mobile ${activeQuestion >= 1 ? "question1-passed" : ""}`}
+          onClick={() => setIsExitPopupOpen(true)}>
+        </h1>
         {showNavbar && (
           <ul>
             {questions.map((question, index) => (
@@ -261,7 +295,7 @@ const PageMarketingNoItems = () => {
         <Question>
           <p>
             <span>Q1.</span>
-            아침에 직장(학교)를<br />가기전 드는 생각은?
+            아침에 직장(학교)를 <br />가기전 드는 생각은?
           </p>
         </Question>
 
@@ -282,6 +316,14 @@ const PageMarketingNoItems = () => {
               </label>
             </RadioButton>
           </RadioButtonWrap>
+
+          <NextButton
+            isRadioSelected={isRadioSelected}
+            onClick={handleNextButtonClick}
+            disabled={!isRadioSelected}
+          >
+            다음
+          </NextButton>
         </Answer>
       </QuestionWrap>
 
@@ -310,6 +352,14 @@ const PageMarketingNoItems = () => {
               </label>
             </RadioButton>
           </RadioButtonWrap>
+
+          <NextButton
+            isRadioSelected={isRadioSelected}
+            onClick={handleNextButtonClick}
+            disabled={!isRadioSelected}
+          >
+            다음
+          </NextButton>
         </Answer>
       </QuestionWrap>
 
@@ -338,6 +388,14 @@ const PageMarketingNoItems = () => {
               </label>
             </RadioButton>
           </RadioButtonWrap>
+
+          <NextButton
+            isRadioSelected={isRadioSelected}
+            onClick={handleNextButtonClick}
+            disabled={!isRadioSelected}
+          >
+            다음
+          </NextButton>
         </Answer>
       </QuestionWrap>
 
@@ -366,6 +424,14 @@ const PageMarketingNoItems = () => {
               </label>
             </RadioButton>
           </RadioButtonWrap>
+
+          <NextButton
+            isRadioSelected={isRadioSelected}
+            onClick={handleNextButtonClick}
+            disabled={!isRadioSelected}
+          >
+            다음
+          </NextButton>
         </Answer>
       </QuestionWrap>
 
@@ -394,6 +460,14 @@ const PageMarketingNoItems = () => {
               </label>
             </RadioButton>
           </RadioButtonWrap>
+
+          <NextButton
+            isRadioSelected={isRadioSelected}
+            onClick={handleNextButtonClick}
+            disabled={!isRadioSelected}
+          >
+            다음
+          </NextButton>
         </Answer>
       </QuestionWrap>
 
@@ -422,6 +496,14 @@ const PageMarketingNoItems = () => {
               </label>
             </RadioButton>
           </RadioButtonWrap>
+
+          <NextButton
+            isRadioSelected={isRadioSelected}
+            onClick={handleNextButtonClick}
+            disabled={!isRadioSelected}
+          >
+            다음
+          </NextButton>
         </Answer>
       </QuestionWrap>
 
@@ -450,6 +532,14 @@ const PageMarketingNoItems = () => {
               </label>
             </RadioButton>
           </RadioButtonWrap>
+
+          <NextButton
+            isRadioSelected={isRadioSelected}
+            onClick={handleNextButtonClick}
+            disabled={!isRadioSelected}
+          >
+            다음
+          </NextButton>
         </Answer>
       </QuestionWrap>
 
@@ -478,6 +568,14 @@ const PageMarketingNoItems = () => {
               </label>
             </RadioButton>
           </RadioButtonWrap>
+
+          <NextButton
+            isRadioSelected={isRadioSelected}
+            onClick={handleNextButtonClick}
+            disabled={!isRadioSelected}
+          >
+            다음
+          </NextButton>
         </Answer>
       </QuestionWrap>
 
@@ -506,6 +604,14 @@ const PageMarketingNoItems = () => {
               </label>
             </RadioButton>
           </RadioButtonWrap>
+
+          <NextButton
+            isRadioSelected={isRadioSelected}
+            onClick={handleNextButtonClick}
+            disabled={!isRadioSelected}
+          >
+            다음
+          </NextButton>
         </Answer>
       </QuestionWrap>
 
@@ -534,6 +640,14 @@ const PageMarketingNoItems = () => {
               </label>
             </RadioButton>
           </RadioButtonWrap>
+
+          <NextButton
+            isRadioSelected={isRadioSelected}
+            onClick={handleNextButtonClick}
+            disabled={!isRadioSelected}
+          >
+            다음
+          </NextButton>
         </Answer>
       </QuestionWrap>
 
@@ -562,6 +676,14 @@ const PageMarketingNoItems = () => {
               </label>
             </RadioButton>
           </RadioButtonWrap>
+
+          <NextButton
+            isRadioSelected={isRadioSelected}
+            onClick={handleNextButtonClick}
+            disabled={!isRadioSelected}
+          >
+            다음
+          </NextButton>
         </Answer>
       </QuestionWrap>
 
@@ -590,6 +712,14 @@ const PageMarketingNoItems = () => {
               </label>
             </RadioButton>
           </RadioButtonWrap>
+
+          <NextButton
+            isRadioSelected={isRadioSelected}
+            onClick={handleNextButtonClick}
+            disabled={!isRadioSelected}
+          >
+            다음
+          </NextButton>
         </Answer>
       </QuestionWrap>
 
@@ -639,6 +769,14 @@ const PageMarketingNoItems = () => {
               </label>
             </RadioButton>
           </RadioButtonWrap>
+
+          <NextButton
+            isRadioSelected={isRadioSelected}
+            onClick={handleNextButtonClick}
+            disabled={!isRadioSelected}
+          >
+            다음
+          </NextButton>
         </Answer>
       </QuestionWrap>
       {isExitPopupOpen && (
@@ -668,7 +806,8 @@ const PageMarketingNoItems = () => {
           </div>
         </div>
       </Popup>
-    )}
+      )}
+    </ThemeProvider>
     </>
   );
 };
@@ -690,6 +829,10 @@ const Navbar = styled.div`
   h1 {
     font-size:0;
     cursor:pointer;
+
+    &.mobile {
+      display:none;
+    }
   }
 
   ul {
@@ -724,6 +867,68 @@ const Navbar = styled.div`
       display:none;
     }
   }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    top:40px;
+    left:0;
+    width:100%;
+    height:auto;
+    transform:none;
+    align-items:flex-start;
+    gap:28px;
+
+    h1 {
+      &.pc {
+        display:none;
+      }
+
+      &.mobile {
+        display:block;
+        padding:10px;
+        margin-left:15px;
+
+        &:before {
+          width:16px;
+          height:16px;
+          transform:rotate(45deg);
+          display:block;
+          border-left:3px solid ${palette.white};
+          border-bottom:3px solid ${palette.white};
+          content:'';
+        }
+
+        &.question1-passed:before {
+          border-color:${palette.gray800};
+        }
+      }
+    }
+
+    ul {
+      position:relative;
+      top:auto;
+      left:0;
+      transform:none;
+      width:100%;
+      flex-direction:row;
+      gap:0;
+    }
+
+    li {
+      flex:1 1 auto;
+      height:4px;
+      border-radius:0;
+      background:${palette.outlineGray};
+
+      &.active {
+        border:0;
+        background:#5547FF;
+      }
+
+      &.disabled {
+        background:#5547FF;
+      }
+    }
+  }
 `;
 
 const Tooltip = styled.div`
@@ -749,6 +954,24 @@ const QuestionWrap = styled.section`
   position:relative;
   height:100vh;
   display:flex;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    flex-direction:column;
+
+    &#question0 {
+      background:#5547FF;
+    }
+
+    &#question0 p {
+      color:${palette.white};
+      text-align:center;
+      padding:0;
+    }
+
+    &#question0 br {
+      display:block; 
+    }
+  }
 `;
 
 const Question = styled.div`
@@ -768,6 +991,25 @@ const Question = styled.div`
     display:flex;
     flex-direction:column;
   }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    flex:1 1 30%;
+    align-items:flex-end;
+    background:none;
+
+    p {
+      width:100%;
+      font-size:1.25rem;
+      color:${palette.gray800};
+      text-align:left;
+      gap:5px;
+      padding:0 20px 40px;
+    }
+
+    br {
+      display:none;
+    }
+  }
 `;
 
 const Answer = styled.div`
@@ -777,6 +1019,36 @@ const Answer = styled.div`
   justify-content:center;
   gap:32px;
   flex:1 1 50%;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    position:relative;
+    flex:1 1 70%;
+    padding:48px 20px 105px;
+  }
+`;
+
+const NextButton = styled.button`
+  display:none;
+  position:absolute;
+  left:50%;
+  bottom:48px;
+  transform:translateX(-50%);
+  width:calc(100% - 40px);
+  font-family: "Pretendard", "Poppins";
+  font-size:1rem;
+  font-weight:500;
+  line-height:1.6;
+  color:${palette.white};
+  padding:15px 0;
+  border-radius:100px;
+  border:0;
+  background: ${(props) => props.isRadioSelected ? "#5547FF" : palette.gray200};
+  cursor: ${(props) => (props.isRadioSelected ? "pointer" : "not-allowed")};
+  transition:all .5s;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    display:block;
+  }
 `;
 
 const StartWrap = styled.div`
@@ -805,6 +1077,18 @@ const StartWrap = styled.div`
     color:${palette.gray800};
     line-height:1.3;
   }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    p {
+      color:#5547FF !important;
+      background:${palette.white};
+    }
+
+    span {
+      font-size:0.88rem;
+      color:${palette.white};
+    }
+  }
 `;
 
 const RadioButtonWrap = styled.div`
@@ -813,6 +1097,10 @@ const RadioButtonWrap = styled.div`
   flex-wrap:wrap;
   justify-content:center;
   gap:100px;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    gap:50px;
+  }
 `;
 
 const RadioButton = styled.div`
@@ -853,6 +1141,21 @@ const RadioButton = styled.div`
     span {
       font-weight:500;
       color:#5547FF;
+    }
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    label {
+      gap:40px;
+    }
+
+    strong {
+      font-size:3.13rem;
+    }
+
+    span {
+      font-size:1rem;
+      line-height:1.5;
     }
   }
 `;
@@ -985,5 +1288,11 @@ const Popup = styled.div`
           }
         }
       `}
+  }
+  
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    > div {
+      width:90%;
+    }
   }
 `;

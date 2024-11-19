@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import { useAtom } from 'jotai';
-import styled from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
+import theme from "../../../../assets/styles/Theme"
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import Landingimages from "../../../../assets/styles/Landingimages"
@@ -97,60 +98,62 @@ const PageMarketLanding = () => {
 
   return (
     <>
-    <MainVisual>
-      <p>
-        Turn your<span>Ideas</span><br />into <em>Reality</em>
-      </p>
-      <VisualImg>
-        <i className="img01"></i>
-        <i className="img02"></i>
-        <i className="img03"></i>
-        <div className="txt01">
-          <span>중견기업 7년차 과장</span>
-          <p>지금 다니는 회사에 계속<br />의존하기엔 미래가 너무 불확실해요 ㅠ</p>
-        </div>
-        <div className="txt02">
-          <p>어?! 이거 창업하면 되겠는데?</p>
-          <span>5년차 전역 대위</span>
-        </div>
-        <div className="txt03">
-          <p>머릿속에만 있던 아이디어를 현실로 만들어보고 싶어요</p>
-          <span>창업 동아리 팀원</span>
-        </div>
-      </VisualImg>
+    <ThemeProvider theme={theme}>
+      <MainVisual>
+        <p>
+          Turn your<span>Ideas</span><br />into <em>Reality</em>
+        </p>
+        <VisualImg>
+          <i className="img01"></i>
+          <i className="img02"></i>
+          <i className="img03"></i>
+          <div className="txt01">
+            <span>중견기업 7년차 과장</span>
+            <p>지금 다니는 회사에 계속<br />의존하기엔 미래가 너무 불확실해요 ㅠ</p>
+          </div>
+          <div className="txt02">
+            <p>어?! 이거 창업하면 되겠는데?</p>
+            <span>5년차 전역 대위</span>
+          </div>
+          <div className="txt03">
+            <p>머릿속에만 있던 아이디어를 현실로 만들어보고 싶어요</p>
+            <span>창업 동아리 팀원</span>
+          </div>
+        </VisualImg>
 
-      <StartIdeaWrap isFixed={isFixed}>
-        <p>시작하고 싶은 아이디어가 있으신가요?</p>
+        <StartIdeaWrap isFixed={isFixed}>
+          <p>시작하고 싶은 아이디어가 있으신가요?</p>
+          <div>
+            <Link to="#" onClick={() => handleSubmit(true)}>
+              <span>💡</span>네! 있어요
+            </Link>
+            <Link to="#" onClick={() => handleSubmit(false)}>
+              <span>🔎</span>아직 없어요
+            </Link>
+          </div>
+        </StartIdeaWrap>
+      </MainVisual>
+
+      <Section Bg>
+        <p>좋은 아이디어가 떠올라도 막상 실행으로 옮기지 못했나요?<br />AI와 함께 사업의 첫걸음을 내디뎌 보세요 🚀</p>
+      </Section>
+
+      <Section>
         <div>
-          <Link to="#" onClick={() => handleSubmit(true)}>
-            <span>💡</span>네! 있어요
-          </Link>
-          <Link to="#" onClick={() => handleSubmit(false)}>
-            <span>🔎</span>아직 없어요
-          </Link>
+          <h3>아이디어를<br />돈이 되는 사업으로</h3>
+          <p>시장 분석부터 잠재고객 확인까지 한 번에 해결!<br />아이디어만 던져주면, 차근차근 발전시키는 과정을 알려드릴게요.<br />창업의 시작 방법을 알려드릴게요</p>
+          <img src={Landingimages.ImgMarketing01} alt="" />
         </div>
-      </StartIdeaWrap>
-    </MainVisual>
 
-    <Section Bg>
-      <p>좋은 아이디어가 떠올라도 막상 실행으로 옮기지 못했나요?<br />AI와 함께 사업의 첫걸음을 내디뎌 보세요 🚀</p>
-    </Section>
+        <div>
+          <h3>나에게 딱 맞는<br />사업 찾기</h3>
+          <p>10초 만에 확인하는 당신의 창업 DNA!<br />AI가 분석한 성향별 맞춤 사업 아이템으로 시뮬레이션하고<br />자신만의 길을 발견해보세요 </p>
+          <img src={Landingimages.ImgMarketing02} alt="" />
+        </div>
+      </Section>
 
-    <Section>
-      <div>
-        <h3>아이디어를<br />돈이 되는 사업으로</h3>
-        <p>시장 분석부터 잠재고객 확인까지 한 번에 해결!<br />아이디어만 던져주면, 차근차근 발전시키는 과정을 알려드릴게요.<br />창업의 시작 방법을 알려드릴게요</p>
-        <img src={Landingimages.ImgMarketing01} alt="" />
-      </div>
-
-      <div>
-        <h3>나에게 딱 맞는<br />사업 찾기</h3>
-        <p>10초 만에 확인하는 당신의 창업 DNA!<br />AI가 분석한 성향별 맞춤 사업 아이템으로 시뮬레이션하고<br />자신만의 길을 발견해보세요 </p>
-        <img src={Landingimages.ImgMarketing02} alt="" />
-      </div>
-    </Section>
-
-    <Copyright>Copyright ⓒ 2024 Userconnect Co.,Ltd All rights reserved.</Copyright>
+      <Copyright>Copyright ⓒ 2024 Userconnect Co.,Ltd All rights reserved.</Copyright>
+    </ThemeProvider>
     </>
   );
 };
@@ -166,6 +169,7 @@ const MainVisual = styled.section`
   // height:100vh;
   height:890px;
   background:repeating-linear-gradient(90deg, ${palette.gray100}, ${palette.gray100} 2px, ${palette.white} 0, ${palette.white} 30px);
+  overflow:hidden;
 
   > p {
     font-size:2.5rem;
@@ -197,6 +201,18 @@ const MainVisual = styled.section`
         background:#BBFF00;
         z-index:-1;
         content:'';
+      }
+    }
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    height:90vh;
+
+    > p {
+      font-size:2rem;
+
+      em {
+        font-size:2.4rem;
       }
     }
   }
@@ -325,6 +341,56 @@ const VisualImg = styled.div`
       background:#EEF0EB;
     }
   }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    height:80%;
+    
+    .img01 {
+      left:15%;
+      width:120px;
+      height:59px;
+    }
+
+    .img02 {
+      right:-4%;
+      bottom:26%;
+      width:115px;
+      height:81px;
+    }
+
+    .img03 {
+      bottom:4%;
+      width:50px;
+      height:47px;
+    }
+
+    .txt01, .txt02, .txt03 {
+      font-size:0.75rem;
+
+      span {
+        padding:4px 15px;
+      }
+
+      p {
+        padding:7px 14px;
+      }
+    }
+
+    .txt01 {
+      right:12%;
+      top:10%;
+    }
+
+    .txt02 {
+      right:8%;
+      top:24%;
+    }
+
+    .txt03 {
+      left:4%;
+      bottom:23%;
+    }
+  }
 `;
 
 const StartIdeaWrap = styled.div`
@@ -392,6 +458,7 @@ const Section = styled.section`
     font-weight:600;
     line-height:1.5;
     color:${palette.gray800};
+    word-break:keep-all;
   }
 
   > div {
@@ -424,6 +491,36 @@ const Section = styled.section`
       background-size:100% auto;
     }
   }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    padding:${props => {
+      if (props.Bg) return `100px 0`;
+      else return `0`;
+    }};
+
+    > p {
+      max-width:60%;
+      font-size:1.13rem;
+      margin:0 auto;
+    }
+
+    > div {
+      width:72%;
+      padding:80px 0;
+
+      h3 {
+        font-size:1.5rem;
+      }
+
+      p {
+        font-size:0.75rem;
+      }
+
+      img {
+        width:100%;
+      }
+    }
+  }
 `;
 
 const Copyright = styled.p`
@@ -431,4 +528,8 @@ const Copyright = styled.p`
   font-weight:300;
   color:rgba(0, 0, 0, 0.6);
   margin:0 0 150px;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    font-size: 0.75rem;
+  }
 `;

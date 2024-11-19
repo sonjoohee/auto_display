@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
+import theme from "../../../../../assets/styles/Theme";
 import { palette } from "../../../../../assets/styles/Palette";
 import axios from "axios";
 import { useAtom } from "jotai";
@@ -248,124 +249,126 @@ const MoleculeMarketingCustomer = ({ marketingCustomerCount }) => {
   };
 
   return (
-    <Wrapper>
-      {isLoadingMarketingCustomer ?
-      <OptionsContainer>
-        로딩 중...
-      </OptionsContainer>
-      :
-      <> 
-      {marketingCustomerCount === 0 ? 
-      <>
+    <ThemeProvider theme={theme}>
+      <Wrapper>
+        {isLoadingMarketingCustomer ?
         <OptionsContainer>
-          <Question>아래 고객 유형 중, 어떤 고객이 주요 고객이라고 생각하시나요?</Question>
-          {marketingCustomerData?.map((customer, index) => (
-            <Option1
-              key={index}
-              onClick={() => handleOptionClick(index)}
-              selected={marketingSelectedCustomerState1?.index === index}
-              marketingSelectedCustomer={marketingSelectedCustomer}
-              marketingCustomerCount={marketingCustomerCount}
-            >
-              <Label1
-                marketingSelectedCustomer={marketingSelectedCustomer}
+          로딩 중...
+        </OptionsContainer>
+        :
+        <> 
+        {marketingCustomerCount === 0 ? 
+        <>
+          <OptionsContainer>
+            <Question>아래 고객 유형 중, 어떤 고객이 주요 고객이라고 생각하시나요?</Question>
+            {marketingCustomerData?.map((customer, index) => (
+              <Option1
+                key={index}
+                onClick={() => handleOptionClick(index)}
                 selected={marketingSelectedCustomerState1?.index === index}
-                marketingCustomerCount={marketingCustomerCount}
-              >
-                {customer?.name}
-              </Label1>
-            </Option1>
-          ))}
-        </OptionsContainer>
-
-        <ButtonWrap>
-          <Button1 
-            marketingSelectedCustomerState1={marketingSelectedCustomerState1} 
-            marketingSelectedCustomer={marketingSelectedCustomer} 
-            marketingCustomerCount={marketingCustomerCount}
-            onClick={handleConfirm}
-          >확인</Button1>
-        </ButtonWrap>
-      </>
-      : 
-      marketingCustomerCount === 1 ?
-      <>
-        <OptionsContainer>
-          <Question>아래 고객 유형 중, 어떤 고객이 주요 고객이라고 생각하시나요?</Question>
-          {marketingCustomerData
-          .filter((_, index) => index !== marketingSelectedCustomerState1?.index)
-          .map((customer) => {
-            const originalIndex = marketingCustomerData.findIndex(c => c.name === customer.name);
-            return (
-              <Option2
-              key={originalIndex}
-              onClick={() => handleOptionClick(originalIndex)}
-              selected={marketingSelectedCustomerState2?.index === originalIndex}
-              marketingSelectedCustomer={marketingSelectedCustomer}
-              marketingCustomerCount={marketingCustomerCount}
-            >
-              <Label2
                 marketingSelectedCustomer={marketingSelectedCustomer}
-                selected={marketingSelectedCustomerState2?.index === originalIndex}
                 marketingCustomerCount={marketingCustomerCount}
               >
-                {customer.name}
-              </Label2>
-            </Option2>
-            );
-          })}
-        </OptionsContainer>
+                <Label1
+                  marketingSelectedCustomer={marketingSelectedCustomer}
+                  selected={marketingSelectedCustomerState1?.index === index}
+                  marketingCustomerCount={marketingCustomerCount}
+                >
+                  {customer?.name}
+                </Label1>
+              </Option1>
+            ))}
+          </OptionsContainer>
 
-        <ButtonWrap>
-          <Button2 
-            marketingSelectedCustomerState2={marketingSelectedCustomerState2} 
-            marketingSelectedCustomer={marketingSelectedCustomer} 
-            marketingCustomerCount={marketingCustomerCount}
-            onClick={handleConfirm}
-          >확인</Button2>
-        </ButtonWrap>
-      </>
-      :
-      <>
-        <OptionsContainer>
-          <Question>아래 고객 유형 중, 어떤 고객이 주요 고객이라고 생각하시나요?</Question>
-          {marketingCustomerData
-          .filter((_, index) => index !== marketingSelectedCustomerState1?.index && index !== marketingSelectedCustomerState2?.index)
-          .map((customer) => {
-            const originalIndex = marketingCustomerData.findIndex(c => c.name === customer.name);
-            return (
-              <Option3
+          <ButtonWrap>
+            <Button1 
+              marketingSelectedCustomerState1={marketingSelectedCustomerState1} 
+              marketingSelectedCustomer={marketingSelectedCustomer} 
+              marketingCustomerCount={marketingCustomerCount}
+              onClick={handleConfirm}
+            >확인</Button1>
+          </ButtonWrap>
+        </>
+        : 
+        marketingCustomerCount === 1 ?
+        <>
+          <OptionsContainer>
+            <Question>아래 고객 유형 중, 어떤 고객이 주요 고객이라고 생각하시나요?</Question>
+            {marketingCustomerData
+            .filter((_, index) => index !== marketingSelectedCustomerState1?.index)
+            .map((customer) => {
+              const originalIndex = marketingCustomerData.findIndex(c => c.name === customer.name);
+              return (
+                <Option2
                 key={originalIndex}
                 onClick={() => handleOptionClick(originalIndex)}
-                selected={marketingSelectedCustomerState3?.index === originalIndex}
+                selected={marketingSelectedCustomerState2?.index === originalIndex}
                 marketingSelectedCustomer={marketingSelectedCustomer}
                 marketingCustomerCount={marketingCustomerCount}
               >
-              <Label3
-                marketingSelectedCustomer={marketingSelectedCustomer}
-                selected={marketingSelectedCustomerState3?.index === originalIndex}
-                marketingCustomerCount={marketingCustomerCount}
-              >
-                {customer.name}
-              </Label3>
-              </Option3>
-            );
-          })}
-        </OptionsContainer>
+                <Label2
+                  marketingSelectedCustomer={marketingSelectedCustomer}
+                  selected={marketingSelectedCustomerState2?.index === originalIndex}
+                  marketingCustomerCount={marketingCustomerCount}
+                >
+                  {customer.name}
+                </Label2>
+              </Option2>
+              );
+            })}
+          </OptionsContainer>
 
-        <ButtonWrap>
-          <Button3 
-            marketingSelectedCustomerState3={marketingSelectedCustomerState3} 
-            marketingSelectedCustomer={marketingSelectedCustomer} 
-            marketingCustomerCount={marketingCustomerCount}
-            onClick={handleConfirm}
-          >확인</Button3>
-        </ButtonWrap>
-      </>
+          <ButtonWrap>
+            <Button2 
+              marketingSelectedCustomerState2={marketingSelectedCustomerState2} 
+              marketingSelectedCustomer={marketingSelectedCustomer} 
+              marketingCustomerCount={marketingCustomerCount}
+              onClick={handleConfirm}
+            >확인</Button2>
+          </ButtonWrap>
+        </>
+        :
+        <>
+          <OptionsContainer>
+            <Question>아래 고객 유형 중, 어떤 고객이 주요 고객이라고 생각하시나요?</Question>
+            {marketingCustomerData
+            .filter((_, index) => index !== marketingSelectedCustomerState1?.index && index !== marketingSelectedCustomerState2?.index)
+            .map((customer) => {
+              const originalIndex = marketingCustomerData.findIndex(c => c.name === customer.name);
+              return (
+                <Option3
+                  key={originalIndex}
+                  onClick={() => handleOptionClick(originalIndex)}
+                  selected={marketingSelectedCustomerState3?.index === originalIndex}
+                  marketingSelectedCustomer={marketingSelectedCustomer}
+                  marketingCustomerCount={marketingCustomerCount}
+                >
+                <Label3
+                  marketingSelectedCustomer={marketingSelectedCustomer}
+                  selected={marketingSelectedCustomerState3?.index === originalIndex}
+                  marketingCustomerCount={marketingCustomerCount}
+                >
+                  {customer.name}
+                </Label3>
+                </Option3>
+              );
+            })}
+          </OptionsContainer>
+
+          <ButtonWrap>
+            <Button3 
+              marketingSelectedCustomerState3={marketingSelectedCustomerState3} 
+              marketingSelectedCustomer={marketingSelectedCustomer} 
+              marketingCustomerCount={marketingCustomerCount}
+              onClick={handleConfirm}
+            >확인</Button3>
+          </ButtonWrap>
+        </>
+        }
+        </>
       }
-      </>
-    }
-    </Wrapper>
+      </Wrapper>
+    </ThemeProvider>
   );
 };
 
@@ -381,6 +384,10 @@ const Wrapper = styled.div`
   margin:12px 0 0 50px;
   border-radius:15px;
   border:1px solid ${palette.outlineGray};
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    margin-left:0;
+  }
 `;
 
 const OptionsContainer = styled.div`

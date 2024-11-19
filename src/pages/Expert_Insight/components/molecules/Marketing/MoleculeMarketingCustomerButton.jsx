@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
+import theme from "../../../../../assets/styles/Theme";
 import { useAtom } from "jotai";
 import {
   IS_LOADING,
@@ -97,6 +98,7 @@ const MoleculeMarketingCustomerButton = () => {
   };
   return (
     <>
+    <ThemeProvider theme={theme}>
       <SelectButton>
         {marketingSelectedCustomer.length === 0 ?
           <button onClick={() => handleClick(1)}>고객 분석으로 잠재력 발견하기 🔎</button>
@@ -114,6 +116,7 @@ const MoleculeMarketingCustomerButton = () => {
             </>
         }
       </SelectButton>
+    </ThemeProvider>
     </>
   );
 };
@@ -142,5 +145,11 @@ const SelectButton = styled.div`
   .finish {
     color:${palette.gray500};
     background:${palette.gray100};
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    align-items:flex-start;
+    flex-direction:column;
+    margin-left:0;
   }
 `;
