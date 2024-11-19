@@ -80,6 +80,7 @@ import {
 import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import { createChatOnServer } from "../../../../utils/indexedDB"; // 서버와 대화 ID 생성 함수
 import MoleculeStrategyButton from "../molecules/MoleculeStrategyButton";
+import OrganismStrategyConsultantReport from "../organisms/OrganismStrategyConsultantReport";
 import OrganismLeftSideBar from "../organisms/OrganismLeftSideBar";
 import OrganismRightSideBar from "../organisms/OrganismRightSideBar";
 import OrganismBizAnalysisSection from "../organisms/OrganismBizAnalysisSection";
@@ -329,6 +330,7 @@ const PageExpertInsight = () => {
   let marketingCustomerCount = 0;
   let marketingSegmentReportCount = 0;
   let growthHackerReportCount = 0;
+  let strategyConsultantCount = 0;
 
   const [isExitPopupOpen, setIsExitPopupOpen] = useState(false);
 
@@ -760,6 +762,15 @@ const itemsToRender = approachPath === 2 ? conversation : renderedItems;
                   return <MoleculeAdditionalKeyword />;
                 } else if (item.type === "reportButton") {
                   return <MoleculeCheckReportRightAway />;
+                } else if (item.type === "strategyButton") { 
+                  return <MoleculeStrategyButton />;
+                } else if (item.type === "strategyConsultant") {
+                  const currentStrategyConsultantCount = strategyConsultantCount++;
+                  return (
+                    <OrganismStrategyConsultantReport
+                      strategyConsultantCount={currentStrategyConsultantCount}
+                    />
+                  );
                 } else if (item.type.startsWith("poc_")) {
                   /* PoC */
                   const expertIndex = item.type.split("_")[1];

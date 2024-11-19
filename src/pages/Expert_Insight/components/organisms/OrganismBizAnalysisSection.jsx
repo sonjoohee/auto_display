@@ -318,7 +318,7 @@ const OrganismBizAnalysisSection = () => {
                   type: "system",
                   message:
                     "이상이 없으시면, 본격적인 전략 컨설팅을 시작해볼까요? 먼저 시장 현황을 파악해보겠습니다.",
-                  expertIndex: selectedExpertIndex,
+                  expertIndex: -1,
                 },
                 { type: "strategyButton" }
               );
