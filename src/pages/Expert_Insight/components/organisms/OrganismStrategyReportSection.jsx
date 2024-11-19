@@ -57,10 +57,12 @@ const OrganismStrategyReportSection = ({ expertIndex }) => {
     businessInformationTargetCustomer,
     setBusinessInformationTargetCustomer,
   ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [expertButtonState, setExpertButtonState] = useAtom(EXPERT_BUTTON_STATE); // BUTTON_STATE 사용
+  const [expertButtonState, setExpertButtonState] =
+    useAtom(EXPERT_BUTTON_STATE); // BUTTON_STATE 사용
 
   // Use the single strategyReportData atom
-  const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA);
+  const [strategyReportData, setStrategyReportData] =
+    useAtom(STRATEGY_REPORT_DATA);
 
   const analysisReportData = {
     title: titleOfBusinessInfo,
@@ -214,9 +216,13 @@ const OrganismStrategyReportSection = ({ expertIndex }) => {
           setConversation(updatedConversation);
           setConversationStage(3);
 
-          await saveConversation(
-            { changingConversation: { conversation: updatedConversation, conversationStage: 3, strategyReportData: updatedStrategyReportData, } }
-          );
+          await saveConversation({
+            changingConversation: {
+              conversation: updatedConversation,
+              conversationStage: 3,
+              strategyReportData: updatedStrategyReportData,
+            },
+          });
         }
       } catch (error) {
         console.error("Error loading data:", error);
@@ -226,11 +232,11 @@ const OrganismStrategyReportSection = ({ expertIndex }) => {
     loadData();
   }, [conversationId, selectedTab, expertIndex, expertButtonState]); // buttonState 의존성 추가
 
-  const handleTabClick = (index, expertIndex) => {   
+  const handleTabClick = (index, expertIndex) => {
     setSelectedTab(index);
-    setSelectedTabCopy(prevState => ({
+    setSelectedTabCopy((prevState) => ({
       ...prevState,
-      [expertIndex]: index
+      [expertIndex]: index,
     }));
   };
 
@@ -263,11 +269,13 @@ const OrganismStrategyReportSection = ({ expertIndex }) => {
                     expertIndex={expertIndex}
                     onClick={() => handleTabClick(index, expertIndex)}
                   >
-                    {expertIndex === "3" && index === 1 ? "고객 경험 최적화 방법 제시" : tab.title}
+                    {expertIndex === "3" && index === 1
+                      ? "고객 경험 최적화 방법 제시"
+                      : tab.title}
                   </TabButton>
                 ))}
             </TabHeader>
-  
+
             {sections?.map((section, index) => (
               <Section
                 key={index}
@@ -281,7 +289,7 @@ const OrganismStrategyReportSection = ({ expertIndex }) => {
             ))}
           </>
         )}
-  
+
         {!isLoadingExpert && (
           <MoleculeReportController
             reportIndex={1}
@@ -294,7 +302,14 @@ const OrganismStrategyReportSection = ({ expertIndex }) => {
   );
 };
 
-const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }) => {
+const Section = ({
+  title,
+  title_text,
+  content,
+  isLast,
+  expertIndex,
+  selectedTab,
+}) => {
   // 서브 타이틀이 있는 항목과 없는 항목을 분리
   const subTitleItems = content.filter((item) => item.subTitle);
   const nonSubTitleItems = content.filter((item) => !item.subTitle);
@@ -310,7 +325,6 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
   };
 
   // 기존 subTitle과 text를 합쳐 새로운 text 생성
-
 
   return (
     <BoxWrap
@@ -338,7 +352,9 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
           {subTitleItems.length > 0 &&
             subTitleItems.map((item, index) => (
               <SubTextBox key={index}>
-                <SubTitle style={{ marginBottom: "5px" }}>{item.subTitle}</SubTitle>
+                <SubTitle style={{ marginBottom: "5px" }}>
+                  {item.subTitle}
+                </SubTitle>
                 <p className="dashedLine">{item.text}</p>
               </SubTextBox>
             ))}
@@ -365,10 +381,10 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
               title === "장기적인 경쟁 우위 전략"
             ) && (
               <>
-              <strong>
-                <img src={images.Check} alt="" />
-                {title}
-              </strong>
+                <strong>
+                  <img src={images.Check} alt="" />
+                  {title}
+                </strong>
               </>
             )}
 
@@ -534,7 +550,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
               </div>
             </>
           )}
-          
+
           {title === "고객 여정 맵핑" && (
             <>
               {/* 제목과 총평 출력 */}
@@ -624,41 +640,41 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
           {/* "시장 위치 평가 및 경쟁자 분석"일 때 별도의 처리 */}
           {title === "시장 위치 평가 및 경쟁자 분석" && (
             <>
-            <strong>
-              <img src={images.Check} alt="" />
-              {title}
-            </strong>
-            {nonSubTitleItems.length > 0 && <p>{nonSubTitleItems[0].text}</p>}
+              <strong>
+                <img src={images.Check} alt="" />
+                {title}
+              </strong>
+              {nonSubTitleItems.length > 0 && <p>{nonSubTitleItems[0].text}</p>}
 
-            <BgStyledSection>
-              <div className="flexBox">
-                {subTitleItems.map((item, index) => (
-                  <div className="bgWhite" key={index}>
-                    <strong className="title">
-                      {/* 번호 표시를 위한 span.number */}
-                      <span className="number">{index + 1}</span>
-                      {item.subTitle}
-                    </strong>
-                    <ul>
-                      {item.subText1 && (
-                        <li className="dashedLine">
-                          {item.subText1.startsWith("강점:")
-                            ? item.subText1
-                            : `강점: ${item.subText1}`}
-                        </li>
-                      )}
-                      {item.subText2 && (
-                        <li className="dashedLine">
-                          {item.subText2.startsWith("약점:")
-                            ? item.subText2
-                            : `약점: ${item.subText2}`}
-                        </li>
-                      )}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </BgStyledSection>
+              <BgStyledSection>
+                <div className="flexBox">
+                  {subTitleItems.map((item, index) => (
+                    <div className="bgWhite" key={index}>
+                      <strong className="title">
+                        {/* 번호 표시를 위한 span.number */}
+                        <span className="number">{index + 1}</span>
+                        {item.subTitle}
+                      </strong>
+                      <ul>
+                        {item.subText1 && (
+                          <li className="dashedLine">
+                            {item.subText1.startsWith("강점:")
+                              ? item.subText1
+                              : `강점: ${item.subText1}`}
+                          </li>
+                        )}
+                        {item.subText2 && (
+                          <li className="dashedLine">
+                            {item.subText2.startsWith("약점:")
+                              ? item.subText2
+                              : `약점: ${item.subText2}`}
+                          </li>
+                        )}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </BgStyledSection>
             </>
           )}
 
@@ -684,97 +700,107 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
             </BgStyledSection>
           )}
 
-        {(title === "경쟁사 대비 차별화 전략" || 
-          title === "시장 내 경쟁 우위 확보 방안" || 
-          title === "주요 타겟층 특징" || 
-          title === "콘텐츠 및 마케팅 전략") && (
+          {(title === "경쟁사 대비 차별화 전략" ||
+            title === "시장 내 경쟁 우위 확보 방안" ||
+            title === "주요 타겟층 특징" ||
+            title === "콘텐츠 및 마케팅 전략") && (
             <>
-            {title_text && <p>{title_text}</p>}
-            
-            <DoubleGrid columns={2} style={{ padding: "0" }}> {/* 2개의 컬럼을 생성하여 가로로 나열 */}
-              {content.map((section, sectionIndex) => (
-                <SectionWrapper key={sectionIndex}> {/* 각 섹션을 감싸는 div */}
-                  {/* section.title 출력 */}
-                  <SubTitle>{section.title}</SubTitle>
+              {title_text && <p>{title_text}</p>}
 
-                  {/* subContent를 하나의 DynamicGrid 안에서 출력 */}
-                  {section.subContent.map((item, itemIndex) => (
-                    <div key={itemIndex} style={{ marginBottom:"0" }}>
-                      <p className="dashedLine">{item.subTitle} : {item.text}</p>
-                    </div>
-                  ))}
-                </SectionWrapper>
-              ))}
-            </DoubleGrid>
+              <DoubleGrid columns={2} style={{ padding: "0" }}>
+                {" "}
+                {/* 2개의 컬럼을 생성하여 가로로 나열 */}
+                {content.map((section, sectionIndex) => (
+                  <SectionWrapper key={sectionIndex}>
+                    {" "}
+                    {/* 각 섹션을 감싸는 div */}
+                    {/* section.title 출력 */}
+                    <SubTitle>{section.title}</SubTitle>
+                    {/* subContent를 하나의 DynamicGrid 안에서 출력 */}
+                    {section.subContent.map((item, itemIndex) => (
+                      <div key={itemIndex} style={{ marginBottom: "0" }}>
+                        <p className="dashedLine">
+                          {item.subTitle} : {item.text}
+                        </p>
+                      </div>
+                    ))}
+                  </SectionWrapper>
+                ))}
+              </DoubleGrid>
             </>
           )}
 
           {/* "특징" 또는 "차별화 요소" 섹션을 처리 */}
           {(title === "특징" || title === "차별화 요소") &&
-          subTitleItems.length > 0 && (
-            <>
-              {subTitleItems.map((item, index) => (
-                <SeparateSection key={index}>
-                  <SectionWrapper_2>
-                    <strong>
-                      <span className="number">{index + 1}</span>{" "}
-                      {/* 번호 추가 */}
-                      <strong_title>{`${title} : ${item.subTitle}`}</strong_title>{" "}
-                      {/* 이 부분만 bold 처리 */}
-                    </strong>
-                    <p>{item.text}</p>
+            subTitleItems.length > 0 && (
+              <>
+                {subTitleItems.map((item, index) => (
+                  <SeparateSection key={index}>
+                    <SectionWrapper_2>
+                      <strong>
+                        <span className="number">{index + 1}</span>{" "}
+                        {/* 번호 추가 */}
+                        <strong_title>{`${title} : ${item.subTitle}`}</strong_title>{" "}
+                        {/* 이 부분만 bold 처리 */}
+                      </strong>
+                      <p>{item.text}</p>
 
-                    {/* subContent가 존재하는 경우 */}
-                    {item.subContent && item.subContent.length > 0 ? (
-                      <NumDynamicGrid columns={2}>
-                        {item.subContent[0] && (
-                          <div>
-                            <SubTitle>{item.subContent[0].subTitle}</SubTitle>
-                            <p>{item.subContent[0].text}</p>
-                          </div>
-                        )}
-                        {item.subContent[1] && (
-                          <div>
-                            <SubTitle>{item.subContent[1].subTitle}</SubTitle>
-                            <p>{item.subContent[1].text}</p>
-                          </div>
-                        )}
-                        {item.subContent[2] && (
-                          <div>
-                            <SubTitle>{item.subContent[2].subTitle}</SubTitle>
-                            <p>{item.subContent[2].text}</p>
-                          </div>
-                        )}
-                      </NumDynamicGrid>
-                    ) : (
-                      // subContent가 없을 경우 아래 섹션 적용
-                      <NumDynamicGrid columns={2}>
-                        {item.subText1 && (
-                          <div>
-                            <SubTitle>{splitText(item.subText1).subTitle}</SubTitle>
-                            <p>{splitText(item.subText1).text}</p>
-                          </div>
-                        )}
-                        {item.subText2 && (
-                          <div>
-                            <SubTitle>{splitText(item.subText2).subTitle}</SubTitle>
-                            <p>{splitText(item.subText2).text}</p>
-                          </div>
-                        )}
-                        {item.subText3 && (
-                          <div>
-                            <SubTitle>{splitText(item.subText3).subTitle}</SubTitle>
-                            <p>{splitText(item.subText3).text}</p>
-                          </div>
-                        )}
-                      </NumDynamicGrid>
-                    )}
-                  </SectionWrapper_2>
-                </SeparateSection>
-              ))}
-            </>
-          )}
-
+                      {/* subContent가 존재하는 경우 */}
+                      {item.subContent && item.subContent.length > 0 ? (
+                        <NumDynamicGrid columns={2}>
+                          {item.subContent[0] && (
+                            <div>
+                              <SubTitle>{item.subContent[0].subTitle}</SubTitle>
+                              <p>{item.subContent[0].text}</p>
+                            </div>
+                          )}
+                          {item.subContent[1] && (
+                            <div>
+                              <SubTitle>{item.subContent[1].subTitle}</SubTitle>
+                              <p>{item.subContent[1].text}</p>
+                            </div>
+                          )}
+                          {item.subContent[2] && (
+                            <div>
+                              <SubTitle>{item.subContent[2].subTitle}</SubTitle>
+                              <p>{item.subContent[2].text}</p>
+                            </div>
+                          )}
+                        </NumDynamicGrid>
+                      ) : (
+                        // subContent가 없을 경우 아래 섹션 적용
+                        <NumDynamicGrid columns={2}>
+                          {item.subText1 && (
+                            <div>
+                              <SubTitle>
+                                {splitText(item.subText1).subTitle}
+                              </SubTitle>
+                              <p>{splitText(item.subText1).text}</p>
+                            </div>
+                          )}
+                          {item.subText2 && (
+                            <div>
+                              <SubTitle>
+                                {splitText(item.subText2).subTitle}
+                              </SubTitle>
+                              <p>{splitText(item.subText2).text}</p>
+                            </div>
+                          )}
+                          {item.subText3 && (
+                            <div>
+                              <SubTitle>
+                                {splitText(item.subText3).subTitle}
+                              </SubTitle>
+                              <p>{splitText(item.subText3).text}</p>
+                            </div>
+                          )}
+                        </NumDynamicGrid>
+                      )}
+                    </SectionWrapper_2>
+                  </SeparateSection>
+                ))}
+              </>
+            )}
 
           {/* "특징", "차별화 요소", "경쟁 분석"이 아닌 경우 기존 방식대로 처리 */}
           {title !== "특징" &&
@@ -800,28 +826,7 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
                 {nonSubTitleItems.length > 0 &&
                   nonSubTitleItems.map((item, index) => (
                     <>
-                    <div key={index}>
-                      <p>{item.text}</p>
-                      {item.subText1 && (
-                        <SubTextBox>{item.subText1}</SubTextBox>
-                      )}
-                      {item.subText2 && (
-                        <SubTextBox>{item.subText2}</SubTextBox>
-                      )}
-                      {item.subText3 && (
-                        <SubTextBox>{item.subText3}</SubTextBox>
-                      )}
-                    </div>
-                    </>
-                  ))}
-
-                {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
-                {subTitleItems.length > 0 && (
-                  <>
-                  <DynamicGrid columns={subTitleItems.length}>
-                    {subTitleItems.map((item, index) => (
                       <div key={index}>
-                        <SubTitle>{item.subTitle}</SubTitle>
                         <p>{item.text}</p>
                         {item.subText1 && (
                           <SubTextBox>{item.subText1}</SubTextBox>
@@ -833,8 +838,29 @@ const Section = ({ title,title_text, content, isLast, expertIndex, selectedTab }
                           <SubTextBox>{item.subText3}</SubTextBox>
                         )}
                       </div>
-                    ))}
-                  </DynamicGrid>
+                    </>
+                  ))}
+
+                {/* subTitleItems는 DynamicGrid 스타일을 적용 */}
+                {subTitleItems.length > 0 && (
+                  <>
+                    <DynamicGrid columns={subTitleItems.length}>
+                      {subTitleItems.map((item, index) => (
+                        <div key={index}>
+                          <SubTitle>{item.subTitle}</SubTitle>
+                          <p>{item.text}</p>
+                          {item.subText1 && (
+                            <SubTextBox>{item.subText1}</SubTextBox>
+                          )}
+                          {item.subText2 && (
+                            <SubTextBox>{item.subText2}</SubTextBox>
+                          )}
+                          {item.subText3 && (
+                            <SubTextBox>{item.subText3}</SubTextBox>
+                          )}
+                        </div>
+                      ))}
+                    </DynamicGrid>
                   </>
                 )}
               </>
@@ -979,7 +1005,7 @@ const AnalysisSection = styled.div`
   // width: 91.5%;
   text-align: left;
   margin-top: 25px;
-  margin-left:50px;
+  margin-left: 50px;
   padding: 28px;
   border-radius: 15px;
   border: 1px solid ${palette.outlineGray};
@@ -1003,7 +1029,7 @@ const AnalysisSection = styled.div`
 
 const BoxWrap = styled.div`
   padding: ${(props) =>
-    (props.title === "특징" || props.title === "차별화 요소")
+    props.title === "특징" || props.title === "차별화 요소"
       ? "0"
       : props.isLast
       ? "0"
@@ -1011,7 +1037,7 @@ const BoxWrap = styled.div`
 
   border-radius: 10px;
   background: ${(props) =>
-    (props.title === "특징" || props.title === "차별화 요소")
+    props.title === "특징" || props.title === "차별화 요소"
       ? palette.white
       : props.isLast
       ? palette.white
@@ -1034,34 +1060,33 @@ const BoxWrap = styled.div`
         : palette.darkGray}; // 3번 전문가일 때 글자색 녹색
   }
 
-p {
-  font-size: 0.875rem;
-  color: ${(props) =>
-    props.expertIndex === "1"
-      ? palette.darkGray
-      : props.expertIndex === "2"
-      ? palette.darkGray
-      : palette.darkGray};
-  line-height: 1.5;
-  word-wrap: break-word; /* 단어가 긴 경우 자동 줄바꿈 */
-  overflow: visible; /* 내용이 넘치면 자동으로 박스가 확장됨 */
-  height: auto; /* 박스의 높이가 내용에 맞춰 자동으로 조정 */
-}
-
+  p {
+    font-size: 0.875rem;
+    color: ${(props) =>
+      props.expertIndex === "1"
+        ? palette.darkGray
+        : props.expertIndex === "2"
+        ? palette.darkGray
+        : palette.darkGray};
+    line-height: 1.5;
+    word-wrap: break-word; /* 단어가 긴 경우 자동 줄바꿈 */
+    overflow: visible; /* 내용이 넘치면 자동으로 박스가 확장됨 */
+    height: auto; /* 박스의 높이가 내용에 맞춰 자동으로 조정 */
+  }
 
   .dashedLine {
-    position:relative;
-    padding-left:12px;
+    position: relative;
+    padding-left: 12px;
 
     &:before {
-      position:absolute;
-      left:0;
+      position: absolute;
+      left: 0;
       // top:10px;
-      top:0;
+      top: 0;
       // width:5px;
       // height:1px;
       // background:${palette.darkGray};
-      content:'-';
+      content: "-";
     }
   }
 
@@ -1130,15 +1155,15 @@ const DynamicGrid = styled.div`
   }
 
   p {
-    height:64px;
+    height: 64px;
     margin: 0;
     // overflow: hidden;
     // text-overflow: ellipsis;
     display: flex;
     // -webkit-line-clamp: 3;
     // -webkit-box-orient: vertical;
-    overflow-y:auto;
-    scrollbar-width:thin;
+    overflow-y: auto;
+    scrollbar-width: thin;
   }
 `;
 
@@ -1199,7 +1224,7 @@ const NumDynamicGrid = styled.div`
   }
 
   p {
-    height:64px;
+    height: 64px;
     margin: 0;
     font-size: 0.875rem;
     font-weight: 400;
@@ -1211,8 +1236,8 @@ const NumDynamicGrid = styled.div`
     // -webkit-box-orient: vertical;
     // overflow: hidden;
     // text-overflow: ellipsis;
-    overflow-y:auto;
-    scrollbar-width:thin;
+    overflow-y: auto;
+    scrollbar-width: thin;
   }
 `;
 const BgStyledSection = styled.div`
@@ -1307,21 +1332,20 @@ const DoubleGrid = styled.div`
     /* 각 개별 div에서는 border를 제거 */
   }
 
-p {
-  margin: 0;
-  /* 텍스트가 생략되지 않도록 아래 스타일을 제거 */
-  overflow: visible; /* 숨기지 않도록 */
-  text-overflow: unset; /* 생략하지 않음 */
-  display: block; /* 줄바꿈을 정상적으로 처리 */
-}
-
+  p {
+    margin: 0;
+    /* 텍스트가 생략되지 않도록 아래 스타일을 제거 */
+    overflow: visible; /* 숨기지 않도록 */
+    text-overflow: unset; /* 생략하지 않음 */
+    display: block; /* 줄바꿈을 정상적으로 처리 */
+  }
 `;
 const SectionWrapper = styled.div`
   padding: 12px;
   border-radius: 10px;
   border: 1px solid ${palette.lineGray}; /* 각 section에만 border 적용 */
   margin-bottom: 10px; /* 섹션 간 간격 추가 */
-  
+
   div {
     margin-bottom: 8px; /* subContent 간의 간격 */
   }

@@ -81,8 +81,8 @@ export const TEMP_BUSINESS_INFORMATION_TARGET_CUSTOMER = atom([]);
 export const IS_EDITING_NOW = atom(false);
 
 export const SELECTED_TAB_COPY = atom({
-  key: 'selectedTabCopy',
-  default: {}
+  key: "selectedTabCopy",
+  default: {},
 });
 
 export const STRATEGY_REPORT_DATA = atom({});
@@ -230,7 +230,8 @@ export const GROWTH_HACKER_KPI_BUTTON_STATE = atom(0);
 export const KPI_QUESTION_LIST = atom([]);
 export const GROWTH_HACKER_REPORT_DATA = atom([]);
 export const GROWTH_HACKER_RECOMMENDED_SOLUTION = atom([]);
-export const GROWTH_HACKER_DETAIL_REPORT_DATA = atom({});
+export const GROWTH_HACKER_SELECTED_SOLUTION = atom([]);
+export const GROWTH_HACKER_DETAIL_REPORT_DATA = atom([]);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* 가격 분석 전문가 */
@@ -263,7 +264,6 @@ export const BM_LEAN_AUTO_REPORT_BUTTON_STATE = atom(0);
 
 export const BM_BM_ADS_REPORT_DATA = atom([]);
 export const BM_BM_ADS_REPORT_BUTTON_STATE = atom(0);
-
 
 export const BM_SELECTED_PROBLEM_OPTIONS = atom({});
 export const BM_LEAN_ADS_REPORT_DATA = atom([]);
@@ -322,7 +322,7 @@ export const IS_SOCIAL_LOGGED_IN = atom(false); // 소셜 로그인 여부를 �
 
 export const SAVED_TIMESTAMP = atom(0); // 지난 프로젝트의 타임스탬프
 
-export const IS_EXPERT_INSIGHT_ACCESSIBLE = atom(false);// Expert Insight 접근 가능 여부를 나타내는 아톰
+export const IS_EXPERT_INSIGHT_ACCESSIBLE = atom(false); // Expert Insight 접근 가능 여부를 나타내는 아톰
 
 export const SELECTED_POC_OPTIONS = atom([]);
 export const SELCTED_POC_TARGET = atom({});
@@ -369,3 +369,6 @@ export const MARKETING_SELECTED_CUSTOMER = atom([]);
 export const MARKETING_FINAL_CUSTOMER = atom({});
 export const MARKETING_FINAL_REPORT_BUTTON_STATE = atom(0);
 export const MARKETING_FINAL_REPORT_DATA = atom([]);
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+export const STRATEGY_BUTTON_STATE = atom(0);
