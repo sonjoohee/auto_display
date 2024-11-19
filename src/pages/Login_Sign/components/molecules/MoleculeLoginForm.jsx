@@ -153,12 +153,13 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
           sessionStorage.setItem("userName", userInfo.name);
           sessionStorage.setItem("userEmail", userInfo.email);
           setIsLoggedIn(true);
-          setLoginSuccess(true);
 
           // 모바일 기기 체크 후 처리 수정
           if (isMobileDevice()) {
-            setShowMobileWarning(true);
+            setShowMobileWarning(true); // 모바일 경고창 표시
+            setLoginSuccess(false); // 로그인 성공 상태를 false로 유지
           } else {
+            setLoginSuccess(true); // PC에서는 바로 로그인 성공 처리
             navigate("/MeetAiExpert");
           }
         } else {
@@ -183,8 +184,10 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
 
   const handleMobileWarningConfirm = () => {
     setShowMobileWarning(false);
+    setLoginSuccess(true); // 확인 버튼 클릭 시 로그인 성공 처리
     navigate("/MeetAiExpert");
   };
+
   const [isSignupPopupOpen, setIsSignupPopupOpen] = useState(false);
 
   const handleSignupClick = (e) => {
@@ -504,7 +507,7 @@ const Popup = styled.div`
       span {
         font-size: 0.75rem !important;
         font-weight: 400;
-        color: #f40404;
+        color: #8c8c8c;
         display: block;
         margin-top: 8px;
       }
