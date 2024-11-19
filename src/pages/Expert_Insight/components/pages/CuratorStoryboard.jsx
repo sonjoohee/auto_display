@@ -1043,7 +1043,7 @@ const UlList = styled.ul`
         &:before {
           position:absolute;
           left:0;
-          top:0;
+          top:2px;
           width:18px;
           height:18px;
           display:flex;
