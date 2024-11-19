@@ -13,6 +13,34 @@ const MoleculeSystemMessage = ({ item }) => {
   const selectedExpertIndex = item.expertIndex;
   // console.log(item);
 
+  // 모바일 감지 함수 추가
+  const isMobileDevice = () => {
+    const toMatch = [
+      /Android/i,
+      /webOS/i,
+      /iPhone/i,
+      /iPad/i,
+      /iPod/i,
+      /BlackBerry/i,
+      /Windows Phone/i,
+    ];
+
+    return toMatch.some((toMatchItem) => {
+      return navigator.userAgent.match(toMatchItem);
+    });
+  };
+  // isMobileDevice 상태 추가
+  const [isMobile, setIsMobile] = useState(isMobileDevice());
+
+  useEffect(() => {
+    // 초기 모바일 상태 설정 및 리사이즈 이벤트 처리
+    const handleResize = () => {
+      setIsMobile(isMobileDevice());
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   useEffect(() => {
     const messageLines = message.split("\n"); // 메시지를 줄바꿈 기준으로 나눔
     let lineIndex = 0; // 현재 줄 인덱스
@@ -51,21 +79,27 @@ const MoleculeSystemMessage = ({ item }) => {
 
   return (
     <>
-    <ThemeProvider theme={theme}>
-      <SystemMessageContainer selectedExpertIndex={selectedExpertIndex}>
-        <Thumb>
-          {selectedExpertIndex != -1 && (
-            <img src={panelimages[`expert_${selectedExpertIndex}`]} alt="" />
+      <ThemeProvider theme={theme}>
+        <SystemMessageContainer
+          selectedExpertIndex={selectedExpertIndex}
+          isMobile={isMobile}
+        >
+          {selectedExpertIndex != -1 ? (
+            <Thumb>
+              <img src={panelimages[`expert_${selectedExpertIndex}`]} alt="" />
+            </Thumb>
+          ) : (
+            <ThumbNone></ThumbNone>
           )}
-        </Thumb>
-        <Bubble>
-          <TypingEffect isTyping={isTyping}>
-            <p>{displayedText}</p>
-          </TypingEffect>
-        </Bubble>
-        {/* <Time>1 min age</Time> */}
-      </SystemMessageContainer>
-    </ThemeProvider>
+
+          <Bubble>
+            <TypingEffect isTyping={isTyping}>
+              <p>{displayedText}</p>
+            </TypingEffect>
+          </Bubble>
+          {/* <Time>1 min age</Time> */}
+        </SystemMessageContainer>
+      </ThemeProvider>
     </>
   );
 };
@@ -89,15 +123,16 @@ const Thumb = styled.div`
     object-fit: cover;
   }
 `;
-
+const ThumbNone = styled.div`
+  width: 32px;
+  height: 0px;
+`;
 const SystemMessageContainer = styled.div`
   display: flex;
-  // align-items: flex-end;
-  // align-items: center;
   align-items: flex-start;
   flex-direction: ${(props) => (props.Myself ? "row-reverse" : "row")};
   gap: 18px;
-  margin-top: ${(props) => (props.selectedExpertIndex != -1 ? "40px" : "12px")};
+  margin-top: ${(props) => (props.isMobile ? "0px" : "12px")};
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     flex-direction: ${(props) => (props.Myself ? "row-reverse" : "column")};
