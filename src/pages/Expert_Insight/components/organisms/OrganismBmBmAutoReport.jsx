@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import styled, { css } from "styled-components";
+import styled, { css, ThemeProvider } from "styled-components";
+import theme from "../../../../assets/styles/Theme";
 import { palette } from "../../../../assets/styles/Palette";
 import axios from "axios";
 import { useAtom } from "jotai";
@@ -158,63 +159,42 @@ const OrganismBmBmAutoReport = () => {
   }, [bmBmAutoButtonState]);
 
   return (
-    <BoxWrap>
-      {isLoadingIdeaPriority || bmBmAutoButtonState ? (
-        <>
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <Spacing />
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <Spacing />
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-        </>
-      ) : (
-        <>
-          <Overlay isMenuOpen={isMenuOpen} onClick={() => setIsMenuOpen(false)} />
-            
-          <h1>{titleOfBusinessInfo}의 비즈니스 모델 캔버스 - 기본형</h1>
-          <p>{mainFeaturesOfBusinessInformation[0]}</p>
-  
-          <ModelCanvasWrap>
-          <CanvasSection>
-            {/* 1번째 항목 */}
-            <CanvasList>
-              <section>
-                <strong>
-                  핵심 파트너십
-                  <span>
-                    <img src={images.IconCanvas01} alt="" />
-                  </span>
-                </strong>
-                {bmBmAutoReportData[7]?.content?.map((contentItem, contentIndex) => (
-                  <div key={contentIndex}>
-                    {/* <p>{contentItem?.description}</p> */}
-                    <ul>
-                      {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
-                        <li key={keywordIndex}>{keywordItem}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </section>
-            </CanvasList>
-
-            {/* 6번째와 7번째 항목을 묶은 CanvasList Num2 */}
-            <CanvasList Num2>
-              {[...bmBmAutoReportData?.slice(5, 7)].reverse().map((section, index) => (
-                <section key={index + 5}>
+    <>
+    <ThemeProvider theme={theme}>
+      <BoxWrap>
+        {isLoadingIdeaPriority || bmBmAutoButtonState ? (
+          <>
+            <SkeletonTitle className="title-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+            <Spacing />
+            <SkeletonTitle className="title-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+            <Spacing />
+            <SkeletonTitle className="title-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+            <SkeletonLine className="content-placeholder" />
+          </>
+        ) : (
+          <>
+            <Overlay isMenuOpen={isMenuOpen} onClick={() => setIsMenuOpen(false)} />
+              
+            <h1>{titleOfBusinessInfo}의 비즈니스 모델 캔버스 - 기본형</h1>
+            <p>{mainFeaturesOfBusinessInformation[0]}</p>
+    
+            <ModelCanvasWrap>
+            <CanvasSection>
+              {/* 1번째 항목 */}
+              <CanvasList>
+                <section>
                   <strong>
-                    {index === 0 ? "핵심 활동" : "핵심 자원"}
+                    핵심 파트너십
                     <span>
-                      <img src={images[`IconCanvas0${index + 2}`]} alt="" />
+                      <img src={images.IconCanvas01} alt="" />
                     </span>
                   </strong>
-                  {section?.content?.map((contentItem, contentIndex) => (
+                  {bmBmAutoReportData[7]?.content?.map((contentItem, contentIndex) => (
                     <div key={contentIndex}>
                       {/* <p>{contentItem?.description}</p> */}
                       <ul>
@@ -225,42 +205,42 @@ const OrganismBmBmAutoReport = () => {
                     </div>
                   ))}
                 </section>
-              ))}
-            </CanvasList>
+              </CanvasList>
 
-            {/* 2번째 항목 */}
-            <CanvasList>
-              <section>
-                <strong>
-                  가치 제안
-                  <span>
-                    <img src={images.IconCanvas04} alt="" />
-                  </span>
-                </strong>
-                {bmBmAutoReportData[1]?.content?.map((contentItem, contentIndex) => (
-                  <div key={contentIndex}>
-                    {/* <p>{contentItem?.description}</p> */}
-                    <ul>
-                      {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
-                        <li key={keywordIndex}>{keywordItem}</li>
-                      ))}
-                    </ul>
-                  </div>
+              {/* 6번째와 7번째 항목을 묶은 CanvasList Num2 */}
+              <CanvasList Num2>
+                {[...bmBmAutoReportData?.slice(5, 7)].reverse().map((section, index) => (
+                  <section key={index + 5}>
+                    <strong>
+                      {index === 0 ? "핵심 활동" : "핵심 자원"}
+                      <span>
+                        <img src={images[`IconCanvas0${index + 2}`]} alt="" />
+                      </span>
+                    </strong>
+                    {section?.content?.map((contentItem, contentIndex) => (
+                      <div key={contentIndex}>
+                        {/* <p>{contentItem?.description}</p> */}
+                        <ul>
+                          {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
+                            <li key={keywordIndex}>{keywordItem}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </section>
                 ))}
-              </section>
-            </CanvasList>
+              </CanvasList>
 
-            {/* 3번째와 4번째 항목을 묶은 CanvasList Num2 */}
-            <CanvasList Num2>
-              {[...bmBmAutoReportData?.slice(2, 4)].reverse().map((section, index) => (
-                <section key={index + 2}>
+              {/* 2번째 항목 */}
+              <CanvasList>
+                <section>
                   <strong>
-                    {index === 0 ? "고객관계" : "채널"}
+                    가치 제안
                     <span>
-                      <img src={images[`IconCanvas0${index + 5}`]} alt="" />
+                      <img src={images.IconCanvas04} alt="" />
                     </span>
                   </strong>
-                  {section?.content?.map((contentItem, contentIndex) => (
+                  {bmBmAutoReportData[1]?.content?.map((contentItem, contentIndex) => (
                     <div key={contentIndex}>
                       {/* <p>{contentItem?.description}</p> */}
                       <ul>
@@ -271,22 +251,69 @@ const OrganismBmBmAutoReport = () => {
                     </div>
                   ))}
                 </section>
-              ))}
-            </CanvasList>
+              </CanvasList>
 
-            {/* 5번째 항목 */}
+              {/* 3번째와 4번째 항목을 묶은 CanvasList Num2 */}
+              <CanvasList Num2>
+                {[...bmBmAutoReportData?.slice(2, 4)].reverse().map((section, index) => (
+                  <section key={index + 2}>
+                    <strong>
+                      {index === 0 ? "고객관계" : "채널"}
+                      <span>
+                        <img src={images[`IconCanvas0${index + 5}`]} alt="" />
+                      </span>
+                    </strong>
+                    {section?.content?.map((contentItem, contentIndex) => (
+                      <div key={contentIndex}>
+                        {/* <p>{contentItem?.description}</p> */}
+                        <ul>
+                          {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
+                            <li key={keywordIndex}>{keywordItem}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </section>
+                ))}
+              </CanvasList>
+
+              {/* 5번째 항목 */}
+              <CanvasList>
+                <section>
+                  <strong>
+                    고객 세그먼트
+                    <span>
+                      <img src={images.IconCanvas07} alt="" />
+                    </span>
+                  </strong>
+                  {bmBmAutoReportData[0]?.content?.map((contentItem, contentIndex) => (
+                    <div key={contentIndex}>
+                      {/* <p>{contentItem?.description}</p> */}
+                      <p></p>
+                      <ul>
+                        {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
+                          <li key={keywordIndex}>{keywordItem}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </section>
+              </CanvasList>
+            </CanvasSection>
+
+            <CanvasSection>
+            {/* 8번째 항목 */}
             <CanvasList>
               <section>
                 <strong>
-                  고객 세그먼트
+                  비용
                   <span>
-                    <img src={images.IconCanvas07} alt="" />
+                    <img src={images.IconCanvas08} alt="" />
                   </span>
                 </strong>
-                {bmBmAutoReportData[0]?.content?.map((contentItem, contentIndex) => (
+                {bmBmAutoReportData[8]?.content?.map((contentItem, contentIndex) => (
                   <div key={contentIndex}>
                     {/* <p>{contentItem?.description}</p> */}
-                    <p></p>
                     <ul>
                       {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
                         <li key={keywordIndex}>{keywordItem}</li>
@@ -296,188 +323,166 @@ const OrganismBmBmAutoReport = () => {
                 ))}
               </section>
             </CanvasList>
-          </CanvasSection>
 
-          <CanvasSection>
-          {/* 8번째 항목 */}
-          <CanvasList>
-            <section>
-              <strong>
-                비용
-                <span>
-                  <img src={images.IconCanvas08} alt="" />
-                </span>
-              </strong>
-              {bmBmAutoReportData[8]?.content?.map((contentItem, contentIndex) => (
-                <div key={contentIndex}>
-                  {/* <p>{contentItem?.description}</p> */}
-                  <ul>
-                    {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
-                      <li key={keywordIndex}>{keywordItem}</li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </section>
-          </CanvasList>
-
-          {/* 9번째 항목 */}
-          <CanvasList>
-            <section>
-              <strong>
-                수익
-                <span>
-                  <img src={images.IconCanvas09} alt="" />
-                </span>
-              </strong>
-              {bmBmAutoReportData[4]?.content?.map((contentItem, contentIndex) => (
-                <div key={contentIndex}>
-                  {/* <p>{contentItem?.description}</p> */}
-                  <ul>
-                    {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
-                      <li key={keywordIndex}>{keywordItem}</li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </section>
-            </CanvasList>
-          </CanvasSection>
-          </ModelCanvasWrap>
-          <button onClick={() => toggleMenu()}>
-              <img src={images.IconDetailView} alt="" />
-            상세 내용 확인하기
-          </button>
-          {/* <MoleculeReportController
-            reportIndex={9}
-            sampleData={bmBmAutoReportData}
-          /> */}
-          <Sidebar isMenuOpen={isMenuOpen}>
-            <div>
-              <div className="header">
-              <h5>비즈니스 모델 상세 리포트</h5>
-              <button className="closePopup" onClick={() => setIsMenuOpen(false)}>닫기</button>
+            {/* 9번째 항목 */}
+            <CanvasList>
+              <section>
+                <strong>
+                  수익
+                  <span>
+                    <img src={images.IconCanvas09} alt="" />
+                  </span>
+                </strong>
+                {bmBmAutoReportData[4]?.content?.map((contentItem, contentIndex) => (
+                  <div key={contentIndex}>
+                    {/* <p>{contentItem?.description}</p> */}
+                    <ul>
+                      {contentItem?.keyword?.map((keywordItem, keywordIndex) => (
+                        <li key={keywordIndex}>{keywordItem}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </section>
+              </CanvasList>
+            </CanvasSection>
+            </ModelCanvasWrap>
+            <button onClick={() => toggleMenu()}>
+                <img src={images.IconDetailView} alt="" />
+              상세 내용 확인하기
+            </button>
+            {/* <MoleculeReportController
+              reportIndex={9}
+              sampleData={bmBmAutoReportData}
+            /> */}
+            <Sidebar isMenuOpen={isMenuOpen}>
+              <div>
+                <div className="header">
+                <h5>비즈니스 모델 상세 리포트</h5>
+                <button className="closePopup" onClick={() => setIsMenuOpen(false)}>닫기</button>
+              </div>
+              <div className="body">
+                {/* <p>{marketingBmReportData[9]?.content?.conclusion}</p> */}
+                <ScrollWrap>
+                  <ListBox>
+                    <div>
+                      <span><img src={images.IconCanvas07} alt="" /></span>
+                      <div>
+                        <strong>타겟 고객군</strong>
+                        <p>{bmBmAutoReportData[0]?.content?.[0]?.description}</p>
+                        <p className="tag">
+                          {bmBmAutoReportData[0]?.content?.[0]?.keyword.map((keyword, index) => (
+                            <span key={index}>#{keyword}</span>
+                          ))}
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      <span><img src={images.IconCanvas04} alt="" /></span>
+                      <div>
+                        <strong>가치 제안</strong>
+                        <p>{bmBmAutoReportData[1]?.content?.[0]?.description}</p>
+                        <p className="tag">
+                          {bmBmAutoReportData[1]?.content?.[0]?.keyword.map((keyword, index) => (
+                            <span key={index}>#{keyword}</span>
+                          ))}
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      <span><img src={images.IconCanvas06} alt="" /></span>
+                      <div>
+                        <strong>채널</strong>
+                        <p>{bmBmAutoReportData[2]?.content?.[0]?.description}</p>
+                        <p className="tag">
+                          {bmBmAutoReportData[2]?.content?.[0]?.keyword.map((keyword, index) => (
+                            <span key={index}>#{keyword}</span>
+                          ))}
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      <span><img src={images.IconCanvas05} alt="" /></span>
+                      <div>
+                        <strong>고객관계</strong>
+                        <p>{bmBmAutoReportData[3]?.content?.[0]?.description}</p>
+                        <p className="tag">
+                          {bmBmAutoReportData[3]?.content?.[0]?.keyword.map((keyword, index) => (
+                            <span key={index}>#{keyword}</span>
+                          ))}
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      <span><img src={images.IconCanvas09} alt="" /></span>
+                      <div>
+                        <strong>수익원</strong>
+                        <p>{bmBmAutoReportData[4]?.content?.[0]?.description}</p>
+                        <p className="tag">
+                          {bmBmAutoReportData[4]?.content?.[0]?.keyword.map((keyword, index) => (
+                            <span key={index}>#{keyword}</span>
+                          ))}
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      <span><img src={images.IconCanvas02} alt="" /></span>
+                      <div>
+                        <strong>핵심활동</strong>
+                        <p>{bmBmAutoReportData[6]?.content?.[0]?.description}</p>
+                        <p className="tag">
+                          {bmBmAutoReportData[6]?.content?.[0]?.keyword.map((keyword, index) => (
+                            <span key={index}>#{keyword}</span>
+                          ))}
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      <span><img src={images.IconCanvas03} alt="" /></span>
+                      <div>
+                        <strong>핵심자원</strong>
+                        <p>{bmBmAutoReportData[5]?.content?.[0]?.description}</p>
+                        <p className="tag">
+                          {bmBmAutoReportData[5]?.content?.[0]?.keyword.map((keyword, index) => (
+                            <span key={index}>#{keyword}</span>
+                          ))}
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      <span><img src={images.IconCanvas01} alt="" /></span>
+                      <div>
+                        <strong>핵심 파트너십</strong>
+                        <p>{bmBmAutoReportData[7]?.content?.[0]?.description}</p>
+                        <p className="tag">
+                          {bmBmAutoReportData[7]?.content?.[0]?.keyword.map((keyword, index) => (
+                            <span key={index}>#{keyword}</span>
+                          ))}
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      <span><img src={images.IconCanvas08} alt="" /></span>
+                      <div>
+                        <strong>비용구조</strong>
+                        <p>{bmBmAutoReportData[8]?.content?.[0]?.description}</p>
+                        <p className="tag">
+                          {bmBmAutoReportData[8]?.content?.[0]?.keyword.map((keyword, index) => (
+                            <span key={index}>#{keyword}</span>
+                          ))}
+                        </p>
+                      </div>
+                    </div>
+                  </ListBox>
+                </ScrollWrap>
+              </div>
             </div>
-            <div className="body">
-              {/* <p>{marketingBmReportData[9]?.content?.conclusion}</p> */}
-              <ScrollWrap>
-                <ListBox>
-                  <div>
-                    <span><img src={images.IconCanvas07} alt="" /></span>
-                    <div>
-                      <strong>타겟 고객군</strong>
-                      <p>{bmBmAutoReportData[0]?.content?.[0]?.description}</p>
-                      <p className="tag">
-                        {bmBmAutoReportData[0]?.content?.[0]?.keyword.map((keyword, index) => (
-                          <span key={index}>#{keyword}</span>
-                        ))}
-                      </p>
-                    </div>
-                  </div>
-                  <div>
-                    <span><img src={images.IconCanvas04} alt="" /></span>
-                    <div>
-                      <strong>가치 제안</strong>
-                      <p>{bmBmAutoReportData[1]?.content?.[0]?.description}</p>
-                      <p className="tag">
-                        {bmBmAutoReportData[1]?.content?.[0]?.keyword.map((keyword, index) => (
-                          <span key={index}>#{keyword}</span>
-                        ))}
-                      </p>
-                    </div>
-                  </div>
-                  <div>
-                    <span><img src={images.IconCanvas06} alt="" /></span>
-                    <div>
-                      <strong>채널</strong>
-                      <p>{bmBmAutoReportData[2]?.content?.[0]?.description}</p>
-                      <p className="tag">
-                        {bmBmAutoReportData[2]?.content?.[0]?.keyword.map((keyword, index) => (
-                          <span key={index}>#{keyword}</span>
-                        ))}
-                      </p>
-                    </div>
-                  </div>
-                  <div>
-                    <span><img src={images.IconCanvas05} alt="" /></span>
-                    <div>
-                      <strong>고객관계</strong>
-                      <p>{bmBmAutoReportData[3]?.content?.[0]?.description}</p>
-                      <p className="tag">
-                        {bmBmAutoReportData[3]?.content?.[0]?.keyword.map((keyword, index) => (
-                          <span key={index}>#{keyword}</span>
-                        ))}
-                      </p>
-                    </div>
-                  </div>
-                  <div>
-                    <span><img src={images.IconCanvas09} alt="" /></span>
-                    <div>
-                      <strong>수익원</strong>
-                      <p>{bmBmAutoReportData[4]?.content?.[0]?.description}</p>
-                      <p className="tag">
-                        {bmBmAutoReportData[4]?.content?.[0]?.keyword.map((keyword, index) => (
-                          <span key={index}>#{keyword}</span>
-                        ))}
-                      </p>
-                    </div>
-                  </div>
-                  <div>
-                    <span><img src={images.IconCanvas02} alt="" /></span>
-                    <div>
-                      <strong>핵심활동</strong>
-                      <p>{bmBmAutoReportData[6]?.content?.[0]?.description}</p>
-                      <p className="tag">
-                        {bmBmAutoReportData[6]?.content?.[0]?.keyword.map((keyword, index) => (
-                          <span key={index}>#{keyword}</span>
-                        ))}
-                      </p>
-                    </div>
-                  </div>
-                  <div>
-                    <span><img src={images.IconCanvas03} alt="" /></span>
-                    <div>
-                      <strong>핵심자원</strong>
-                      <p>{bmBmAutoReportData[5]?.content?.[0]?.description}</p>
-                      <p className="tag">
-                        {bmBmAutoReportData[5]?.content?.[0]?.keyword.map((keyword, index) => (
-                          <span key={index}>#{keyword}</span>
-                        ))}
-                      </p>
-                    </div>
-                  </div>
-                  <div>
-                    <span><img src={images.IconCanvas01} alt="" /></span>
-                    <div>
-                      <strong>핵심 파트너십</strong>
-                      <p>{bmBmAutoReportData[7]?.content?.[0]?.description}</p>
-                      <p className="tag">
-                        {bmBmAutoReportData[7]?.content?.[0]?.keyword.map((keyword, index) => (
-                          <span key={index}>#{keyword}</span>
-                        ))}
-                      </p>
-                    </div>
-                  </div>
-                  <div>
-                    <span><img src={images.IconCanvas08} alt="" /></span>
-                    <div>
-                      <strong>비용구조</strong>
-                      <p>{bmBmAutoReportData[8]?.content?.[0]?.description}</p>
-                      <p className="tag">
-                        {bmBmAutoReportData[8]?.content?.[0]?.keyword.map((keyword, index) => (
-                          <span key={index}>#{keyword}</span>
-                        ))}
-                      </p>
-                    </div>
-                  </div>
-                </ListBox>
-              </ScrollWrap>
-            </div>
-          </div>
-        </Sidebar>
-        </>
-      )}
-    </BoxWrap>
+          </Sidebar>
+          </>
+        )}
+      </BoxWrap>
+    </ThemeProvider>
+    </>
   );
 };
 
@@ -786,6 +791,24 @@ const Sidebar = styled.div`
   li {
     margin: 20px 0;
   }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    > div {
+      overflow-y:auto;
+    }
+
+    .header {
+      align-items:flex-start;
+
+      h5 {
+        width:calc(100% - 35px);
+      }
+    }
+
+    .body {
+      height:calc(100% - 70px);
+    }
+  }
 `;
 
 const ScrollWrap = styled.div`
@@ -805,6 +828,10 @@ const ScrollWrap = styled.div`
   &::-webkit-scrollbar-thumb {
     background: ${palette.lineGray};
     border-radius: 10px;
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    overflow:initial;
   }
 `;
 
@@ -846,6 +873,10 @@ const ListBox = styled.div`
       align-items:center;
       gap:12px;
     }
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    overflow:initial;
   }
 `;
 

@@ -242,7 +242,6 @@ const PageMarketingNoItems = () => {
     navigate("/MarketingSetting/2/Result");
   };
 
-
   return (
     <>
     <ThemeProvider theme={theme}>
@@ -879,13 +878,12 @@ const Navbar = styled.div`
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    top:30px;
+    top:0;
     left:0;
     width:100%;
     height:auto;
     transform:none;
     align-items:flex-start;
-    gap:25px;
 
     h1 {
       &.pc {
@@ -896,6 +894,7 @@ const Navbar = styled.div`
         display:block;
         padding:10px;
         margin-left:15px;
+        margin-top:30px;
 
         &:before {
           width:16px;
@@ -914,8 +913,7 @@ const Navbar = styled.div`
     }
 
     ul {
-      position:relative;
-      top:auto;
+      top:0;
       left:0;
       transform:none;
       width:100%;
@@ -925,7 +923,8 @@ const Navbar = styled.div`
 
     li {
       flex:1 1 auto;
-      height:4px;
+      // height:4px;
+      height:8px;
       border-radius:0;
       background:${palette.outlineGray};
 
@@ -1005,7 +1004,7 @@ const Question = styled.div`
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     flex:1 1 20%;
     align-items:flex-end;
-    padding-top:140px;
+    padding-top:100px;
     background:none;
 
     p {
