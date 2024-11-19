@@ -202,7 +202,7 @@ const MoleculeCheckBmOption = () => {
           <Question>Q3. 고객의 문제는 명확하게 정의되었습니까?</Question>
           <OptionContainer>
             {options3.map((option3) => (
-              <Option
+              <Option W100
                 key={option3.value}
                 selected={selectedOption3 === option3.value}
                 onClick={() => handleOptionClick(3, option3.value)}
@@ -222,7 +222,7 @@ const MoleculeCheckBmOption = () => {
           <Question>Q4. 현재 비즈니스의 핵심 초점은 무엇입니까?</Question>
           <OptionContainer>
             {options4.map((option4) => (
-              <Option
+              <Option W100
                 key={option4.value}
                 selected={selectedOption4 === option4.value}
                 onClick={() => handleOptionClick(4, option4.value)}
@@ -242,7 +242,7 @@ const MoleculeCheckBmOption = () => {
           <Question>Q5. 파트너십, 자원, 비용 구조 등 비즈니스의 요소들이 복잡한가요?</Question>
           <OptionContainer>
             {options5.map((option5) => (
-              <Option
+              <Option W100
                 key={option5.value}
                 selected={selectedOption5 === option5.value}
                 onClick={() => handleOptionClick(5, option5.value)}
@@ -372,7 +372,11 @@ const Option = styled.div`
   gap:8px;
   align-items:center;
   // flex: 1 1 40%;
-  width:49%;
+  // width:49%;
+  width:${props => {
+    if (props.W100) return `100%`;
+    else return `49%`;
+  }};
   font-size:0.88rem;
   color: ${(props) =>
     props.selected

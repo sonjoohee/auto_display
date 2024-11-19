@@ -5,6 +5,7 @@ import theme from "../../../../assets/styles/Theme";
 import { Link } from "react-router-dom";
 import images from "../../../../assets/styles/Images";
 import {
+  SkeletonH1,
   SkeletonTitle,
   SkeletonLine,
 } from "../../../../assets/styles/Skeleton";
@@ -375,16 +376,25 @@ const PageMarketingNoItemsResult = () => {
             </div>
 
             <div className="title">
-              <strong>💡 맞춤 추천 아이템</strong>
-              <p>아이템이 나에게 맞는지 확인하고, 나만의 비즈니스로 발전시킬 힌트를 얻어보세요</p>
+              <strong>💡 추천 아이템, 내 사업으로 만들기</strong>
+              <p>추천된 아이템의 가능성을 분석하고, 나만의 창업 아이템으로 발전시켜 보세요</p>
             </div>
 
             <ListBox>
               {isLoadingRecommendedItem ? (
                 <>
-                  <SkeletonTitle className="title-placeholder" />
-                  <SkeletonTitle className="title-placeholder" />
-                  <SkeletonTitle className="title-placeholder" />
+                  <div style={{flexDirection:"column", alignItems:"flex-start"}}>
+                    <SkeletonTitle className="title-placeholder" style={{marginBottom:"0"}} />
+                    <SkeletonLine className="title-placeholder" />
+                  </div>
+                  <div style={{flexDirection:"column", alignItems:"flex-start"}}>
+                    <SkeletonTitle className="title-placeholder" style={{marginBottom:"0"}} />
+                    <SkeletonLine className="title-placeholder" />
+                  </div>
+                  <div style={{flexDirection:"column", alignItems:"flex-start"}}>
+                    <SkeletonTitle className="title-placeholder" style={{marginBottom:"0"}} />
+                    <SkeletonLine className="title-placeholder" />
+                  </div>
                 </>
               ) : (
                 <>

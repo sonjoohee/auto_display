@@ -10,6 +10,7 @@ import {
   GROWTH_HACKER_KPI_BUTTON_STATE,
   BUTTON_STATE,
   GROWTH_HACKER_RECOMMENDED_SOLUTION,
+  GROWTH_HACKER_SELECTED_SOLUTION,
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
@@ -26,6 +27,7 @@ const MoleculeGrowthHackerKPIButton = () => {
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
   const [growthHackerKPIButtonState, setGrowthHackerKPIButtonState] = useAtom(GROWTH_HACKER_KPI_BUTTON_STATE);
   const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] = useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
+  const [growthHackerSelectedSolution, setGrowthHackerSelectedSolution] = useAtom(GROWTH_HACKER_SELECTED_SOLUTION);
 
   const handleClick = async (title, index) => {
     if (isLoading) return;
@@ -47,7 +49,7 @@ const MoleculeGrowthHackerKPIButton = () => {
       {
         type: "system",
         message:
-          `${title}이 어떻게 우리 아이템을 성장시켜 갈 수 있을까요?`,
+          `${title}이(가) 어떻게 우리 아이템을 성장시켜 갈 수 있을까요?`,
         expertIndex: selectedExpertIndex,
       },
       {
@@ -55,6 +57,10 @@ const MoleculeGrowthHackerKPIButton = () => {
       },
     );
 
+    setGrowthHackerRecommendedSolution(
+      growthHackerRecommendedSolution.filter((_, i) => i !== index)
+    );
+    setGrowthHackerSelectedSolution([...growthHackerSelectedSolution, growthHackerRecommendedSolution[index]]);
     setGrowthHackerKPIButtonState(1);
     setConversation(updatedConversation);
     setConversationStage(3);
@@ -68,6 +74,8 @@ const MoleculeGrowthHackerKPIButton = () => {
       { changingConversation: { 
           conversation: updatedConversation, 
           conversationStage: 3,
+          growthHackerRecommendedSolution: growthHackerRecommendedSolution.filter((_, i) => i !== index),
+          growthHackerSelectedSolution: [...growthHackerSelectedSolution, growthHackerRecommendedSolution[index]],
           // buttonState : {
           //   ...buttonState,
           //   growthHackerKPI : 1,

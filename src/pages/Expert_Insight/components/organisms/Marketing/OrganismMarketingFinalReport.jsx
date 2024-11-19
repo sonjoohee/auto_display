@@ -526,7 +526,8 @@ const Progress = styled.div`
 const ProgressBar = styled.div`
   max-width:540px;
   width:100%;
-  height:16px;
+  // height:16px;
+  height:8px;
   border-radius:20px;
   background:${palette.gray100};
   overflow:hidden;

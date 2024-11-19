@@ -74,6 +74,7 @@ import {
   MARKETING_FINAL_CUSTOMER,
   MARKETING_FINAL_REPORT_DATA,
   GROWTH_HACKER_RECOMMENDED_SOLUTION,
+  GROWTH_HACKER_SELECTED_SOLUTION,
 } from "../../../AtomStates";
 
 import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
@@ -151,8 +152,10 @@ import MoleculeMarketingSignUpButton from "../molecules/Marketing/MoleculeMarket
 import images from "../../../../assets/styles/Images";
 
 const PageExpertInsight = () => {
-  const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] =
-    useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
+
+  const [growthHackerSelectedSolution, setGrowthHackerSelectedSolution] = useAtom(GROWTH_HACKER_SELECTED_SOLUTION);
+  const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] = useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
+
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(
     BM_MODEL_SUGGESTION_REPORT_DATA
   );
@@ -328,6 +331,7 @@ const PageExpertInsight = () => {
   let caseReportCount = 0;
   let marketingCustomerCount = 0;
   let marketingSegmentReportCount = 0;
+  let growthHackerReportCount = 0;
 
   const [isExitPopupOpen, setIsExitPopupOpen] = useState(false);
 
@@ -539,10 +543,13 @@ const PageExpertInsight = () => {
               savedConversation.growthHackerReportData || []
             );
             setGrowthHackerDetailReportData(
-              savedConversation.growthHackerDetailReportData || {}
+              savedConversation.growthHackerDetailReportData || []
             );
             setGrowthHackerRecommendedSolution(
               savedConversation.growthHackerRecommendedSolution || []
+            );
+            setGrowthHackerSelectedSolution(
+              savedConversation.growthHackerSelectedSolution || []
             );
             setKpiQuestionList(savedConversation.KpiQuestionList || []);
 
@@ -742,245 +749,269 @@ const PageExpertInsight = () => {
                       <OrganismAdditionalReport
                         additionalReportCount={currentAdditionalReportCount}
                       />
-                    );
-                  } else if (item.type === "customerAddition") {
-                    const currentCustomerAdditionalReportCount =
-                      customerAdditionalReportCount++;
-                    return (
-                      <OrganismCustomerAdditionalReport
-                        customerAdditionalReportCount={
-                          currentCustomerAdditionalReportCount
-                        }
-                      />
-                    );
-                  } else if (item.type === "keyword") {
-                    return <MoleculeAdditionalKeyword />;
-                  } else if (item.type === "reportButton") {
-                    return <MoleculeCheckReportRightAway />;
-                  } else if (item.type === "strategyButton") {
-                    return <MoleculeStrategyButton />;
-                  } else if (item.type.startsWith("poc_")) {
-                    /* PoC */
-                    const expertIndex = item.type.split("_")[1];
-                    return (
-                      <>
-                        <OrganismPocReportSection
-                          key={`poc_${expertIndex}_${index}`}
-                          expertIndex={expertIndex}
-                        />
-                      </>
-                    );
-                  } else if (item.type.startsWith("pocTarget_")) {
-                    const expertIndex = item.type.split("_")[1];
-                    return (
-                      <>
-                        <OrganismRecommendedTargetReport
-                          key={`pocTarget_${expertIndex}_${index}`}
-                          expertIndex={expertIndex}
-                        />
-                      </>
-                    );
-                  } else if (item.type === "pocPlanButton") {
-                    return <MoleculeCheckPocRightAway />;
-                  } else if (item.type === "pocTargetButton") {
-                    return <MoleculeRecommendedTargetButton />;
-                  } else if (item.type === "pocOption") {
-                    return <MoleculeCheckPocOption />;
-                  } else if (item.type === "pocPersona") {
-                    return <MoleculePersonaSelect />;
-                  } else if (item.type === "ideaStartButton") {
-                    /* 아이디어 디벨로퍼 */
-                    return <MoleculeIdeaStartButton />;
-                  } else if (item.type === "ideaCustomerButton") {
-                    return <MoleculeIdeaCustomerButton />;
-                  } else if (item.type === "ideaGenerateButton") {
-                    return <MoleculeIdeaGenerateButton />;
-                  } else if (item.type === "ideaPriorityButton") {
-                    return <MoleculeIdeaPriorityButton />;
-                  } else if (item.type === "ideaFeature") {
-                    return <OrganismIdeaFeature />;
-                  } else if (item.type === "ideaCustomer") {
-                    return <OrganismIdeaCustomer />;
-                  } else if (item.type === "ideaList") {
-                    return <OrganismIdeaList />;
-                  } else if (item.type === "ideaPriority") {
-                    return <OrganismIdeaPriority />;
-                  } else if (item.type === "growthHackerStartButton") {
-                    /* 그로스 해커 */
-                    return <MoleculeGrowthHackerStartButton />;
-                  } else if (item.type === "growthHackerOption") {
-                    return <MoleculeCheckGrowthHackerOption />;
-                  } else if (item.type === "growthHackerReport") {
-                    return <OrganismGrowthHackerReport />;
-                  } else if (item.type === "growthHackerKPIButton") {
-                    return <MoleculeGrowthHackerKPIButton />;
-                  } else if (item.type === "growthHackerKPI") {
-                    return <OrganismGrowthHackerKPI />;
-                  } else if (item.type === "priceStartButton") {
-                    /* 가격 분석 전문가 */
-                    return <MoleculePriceStartButton />;
-                  } else if (item.type === "priceOption") {
-                    return <MoleculePriceOption />;
-                  } else if (item.type === "priceReport") {
-                    return <OrganismPriceReport />;
-                  } else if (item.type === "priceContinueButton") {
-                    return <MoleculePriceContinueButton />;
-                  } else if (item.type === "priceProductSegmentation") {
-                    return <MoleculePriceProductSegmentation />;
-                  } else if (item.type === "caseStartButton") {
-                    /* 사례 분석 전문가 */
-                    return <MoleculeCaseStartButton />;
-                  } else if (item.type === "caseContinueButton") {
-                    return <MoleculeCaseContinueButton />;
-                  } else if (item.type === "caseReport") {
-                    const currentCaseReportCount = caseReportCount++;
-                    return (
-                      <OrganismCaseReport
-                        caseReportCount={currentCaseReportCount}
-                      />
-                    );
-                  } else if (item.type === "bmStartButton") {
-                    /* BM 전문가 */
-                    return <MoleculeBmStartButton />;
-                  } else if (item.type === "bmOption") {
-                    return <MoleculeCheckBmOption />;
-                  } else if (item.type === "bmModelSuggestion") {
-                    return <MoleculeBmModelSuggestion />;
-                  } else if (item.type === "bmSelectModelButton") {
-                    return <MoleculeBmSelectModelButton />;
-                  } else if (item.type === "bmBmAdsContinueButton") {
-                    return <MoleculeBmBmAdsContinueButton />;
-                  } else if (item.type === "bmLeanAdsContinueButton") {
-                    return <MoleculeBmLeanAdsContinueButton />;
-                  } else if (item.type === "bmBmAutoReport") {
-                    return <OrganismBmBmAutoReport />;
-                  } else if (item.type === "bmLeanAutoReport") {
-                    return <OrganismBmLeanAutoReport />;
-                  } else if (item.type === "bmLeanAdsReport") {
-                    return <OrganismBmLeanAdsReport />;
-                  } else if (item.type === "bmBmAdsReport") {
-                    return <OrganismBmBmAdsReport />;
-                  } else if (item.type === "bmLeanCustomReport") {
-                    return <OrganismBmLeanCustomReport />;
-                  } else if (item.type === "bmBmCustomReport") {
-                    return <OrganismBmBmCustomReport />;
+                    </>
+                  );
+                } else if (item.type === "pocPlanButton") {
+                  return <MoleculeCheckPocRightAway />;
+                } else if (item.type === "pocTargetButton") {
+                  return <MoleculeRecommendedTargetButton />;
+                } else if (item.type === "pocOption") {
+                  return <MoleculeCheckPocOption />;
+                } else if (item.type === "pocPersona") {
+                  return <MoleculePersonaSelect />;
+                } else if (item.type === "ideaStartButton") {
+                  /* 아이디어 디벨로퍼 */
+                  return <MoleculeIdeaStartButton />;
+                } else if (item.type === "ideaCustomerButton") {
+                  return <MoleculeIdeaCustomerButton />;
+                } else if (item.type === "ideaGenerateButton") {
+                  return <MoleculeIdeaGenerateButton />;
+                } else if (item.type === "ideaPriorityButton") {
+                  return <MoleculeIdeaPriorityButton />;
+                } else if (item.type === "ideaFeature") {
+                  return <OrganismIdeaFeature />;
+                } else if (item.type === "ideaCustomer") {
+                  return <OrganismIdeaCustomer />;
+                } else if (item.type === "ideaList") {
+                  return <OrganismIdeaList />;
+                } else if (item.type === "ideaPriority") {
+                  return <OrganismIdeaPriority />;
+                } else if (item.type === "growthHackerStartButton") {
+                  /* 그로스 해커 */
+                  return <MoleculeGrowthHackerStartButton />;
+                } else if (item.type === "growthHackerOption") {
+                  return <MoleculeCheckGrowthHackerOption />;
+                } else if (item.type === "growthHackerReport") {
+                  const currentGrowthHackerReportCount = growthHackerReportCount++;
+                  return (
+                    <OrganismGrowthHackerReport
+                      growthHackerReportCount={currentGrowthHackerReportCount}
+                    />
+                  );
 
-                    /* 설문조사 전문가 */
-                  } else if (item.type === "surveyStartButton") {
-                    return <MoleculeSurveyStartButton />;
-                  } else if (item.type === "surveyGoalSuggestion") {
-                    return <MoleculeSurveyGoalSuggestion />;
-                  } else if (item.type === "surveyOption") {
-                    return <MoleculeCheckSurveyOption />;
-                  } else if (item.type === "surveyGuidelineReport") {
-                    return <OrganismSurveyGuidelineReport />;
-                  } else if (item.type === "marketingStartButton") {
-                    /* 마케팅 */
-                    return <MoleculeMarketingStartButton />;
-                  } else if (item.type === "marketingResearchReport") {
-                    return <OrganismMarketingResearchReport />;
-                  } else if (item.type === "marketingBmButton") {
-                    return <MoleculeMarketingBmButton />;
-                  } else if (item.type === "marketingBmReport") {
-                    return <OrganismMarketingBmReport />;
-                  } else if (item.type === "marketingCustomerButton") {
-                    return <MoleculeMarketingCustomerButton />;
-                  } else if (item.type === "marketingCustomer") {
-                    const currentMarketingCustomerCount =
-                      marketingCustomerCount++;
-                    return (
-                      <MoleculeMarketingCustomer
-                        marketingCustomerCount={currentMarketingCustomerCount}
-                      />
-                    );
-                  } else if (item.type === "marketingSegmentReport") {
-                    const currentMarketingSegmentReportCount =
-                      marketingSegmentReportCount++;
-                    return (
-                      <OrganismMarketingSegmentReport
-                        marketingSegmentReportCount={
-                          currentMarketingSegmentReportCount
-                        }
-                      />
-                    );
-                  } else if (item.type === "marketingFinalReport") {
-                    return <OrganismMarketingFinalReport />;
-                  } else if (item.type === "marketingSignUpButton") {
-                    return <MoleculeMarketingSignUpButton />;
-                  }
+                } else if (item.type === "growthHackerKPIButton") {
+                  return <MoleculeGrowthHackerKPIButton />;
+                } else if (item.type === "growthHackerKPI") {
+                  return <OrganismGrowthHackerKPI />;
+                } else if (item.type === "priceStartButton") {
+                  /* 가격 분석 전문가 */
+                  return <MoleculePriceStartButton />;
+                } else if (item.type === "priceOption") {
+                  return <MoleculePriceOption />;
+                } else if (item.type === "priceReport") {
+                  return <OrganismPriceReport />;
+                } else if (item.type === "priceContinueButton") {
+                  return <MoleculePriceContinueButton />;
+                } else if (item.type === "priceProductSegmentation") {
+                  return <MoleculePriceProductSegmentation />;
+                } else if (item.type === "caseStartButton") {
+                  /* 사례 분석 전문가 */
+                  return <MoleculeCaseStartButton />;
+                } else if (item.type === "caseContinueButton") {
+                  return <MoleculeCaseContinueButton />;
+                } else if (item.type === "caseReport") {
+                  const currentCaseReportCount = caseReportCount++;
+                  return (
+                    <OrganismCaseReport
+                      caseReportCount={currentCaseReportCount}
+                    />
+                  );
+                } else if (item.type === "bmStartButton") {
+                  /* BM 전문가 */
+                  return <MoleculeBmStartButton />;
+                } else if (item.type === "bmOption") {
+                  return <MoleculeCheckBmOption />;
+                } else if (item.type === "bmModelSuggestion") {
+                  return <MoleculeBmModelSuggestion />;
+                } else if (item.type === "bmSelectModelButton") {
+                  return <MoleculeBmSelectModelButton />;
+                } else if (item.type === "bmBmAdsContinueButton") {
+                  return <MoleculeBmBmAdsContinueButton />;
+                } else if (item.type === "bmLeanAdsContinueButton") {
+                  return <MoleculeBmLeanAdsContinueButton />;
+                } else if (item.type === "bmBmAutoReport") {
+                  return <OrganismBmBmAutoReport />;
+                } else if (item.type === "bmLeanAutoReport") {
+                  return <OrganismBmLeanAutoReport />;
+                } else if (item.type === "bmLeanAdsReport") {
+                  return <OrganismBmLeanAdsReport />;
+                } else if (item.type === "bmBmAdsReport") {
+                  return <OrganismBmBmAdsReport />;
+                } else if (item.type === "bmLeanCustomReport") {
+                  return <OrganismBmLeanCustomReport />;
+                } else if (item.type === "bmBmCustomReport") {
+                  return <OrganismBmBmCustomReport />;
+                  
+                  /* 설문조사 전문가 */
+                } else if (item.type === "surveyStartButton") {
+                  return <MoleculeSurveyStartButton />;
+                } else if (item.type === "surveyGoalSuggestion") {
+                  return <MoleculeSurveyGoalSuggestion />;
+                } else if (item.type === "surveyOption") {
+                  return <MoleculeCheckSurveyOption />;
+                } else if (item.type === "surveyGuidelineReport") {
+                  return <OrganismSurveyGuidelineReport />;
+                } else if (item.type === "marketingStartButton") {
+                  /* 마케팅 */
+                  return <MoleculeMarketingStartButton />;
+                } else if (item.type === "marketingResearchReport") {
+                  return <OrganismMarketingResearchReport />;
+                } else if (item.type === "marketingBmButton") {
+                  return <MoleculeMarketingBmButton />;
+                } else if (item.type === "marketingBmReport") {
+                  return <OrganismMarketingBmReport />;
+                } else if (item.type === "marketingCustomerButton") {
+                  return <MoleculeMarketingCustomerButton />;
+                } else if (item.type === "marketingCustomer") {
+                  const currentMarketingCustomerCount =
+                    marketingCustomerCount++;
+                  return (
+                    <MoleculeMarketingCustomer
+                      marketingCustomerCount={currentMarketingCustomerCount}
+                    />
+                  );
+                } else if (item.type === "marketingSegmentReport") {
+                  const currentMarketingSegmentReportCount =
+                    marketingSegmentReportCount++;
+                  return (
+                    <OrganismMarketingSegmentReport
+                      marketingSegmentReportCount={
+                        currentMarketingSegmentReportCount
+                      }
+                    />
+                  );
+                } else if (item.type === "marketingFinalReport") {
+                  return <OrganismMarketingFinalReport />;
+                } else if (item.type === "marketingSignUpButton") {
+                  return <MoleculeMarketingSignUpButton />;
+                }
 
-                  return null;
-                })}
+                return null;
+              })}
+              
+              <div ref={chatEndRef} />
 
-                <div ref={chatEndRef} />
+              {selectedExpertIndex === "0" || selectedExpertIndex === "1" || selectedExpertIndex === "2" || selectedExpertIndex === "3" || selectedExpertIndex === "11" ?
+                <>
+                {/* 검색해서 시작 */}
+                {(approachPath === -1 || approachPath === 3) && 
+                  titleOfBusinessInfo &&
+                  <OrganismBizExpertSelect />
+                }
 
-                {selectedExpertIndex === "0" ||
-                selectedExpertIndex === "1" ||
-                selectedExpertIndex === "2" ||
-                selectedExpertIndex === "3" ||
-                selectedExpertIndex === "11" ? (
-                  <>
-                    {/* 검색해서 시작 */}
-                    {(approachPath === -1 || approachPath === 3) &&
-                      titleOfBusinessInfo && <OrganismBizExpertSelect />}
+                {/* 전문가 선택하고 시작 */}
+                {approachPath === 1 &&
+                  Object.keys(strategyReportData).length !== 0 &&
+                  !isLoading &&
+                    <OrganismBizExpertSelect />
+                }
 
-                    {/* 전문가 선택하고 시작 */}
-                    {approachPath === 1 &&
-                      Object.keys(strategyReportData).length !== 0 &&
-                      !isLoading && <OrganismBizExpertSelect />}
+                {/* 히스토리로 진입 시 */}
+                {approachPath === 2 && 
+                  titleOfBusinessInfo &&
+                  conversation.length > 0 &&
+                  conversation[conversation.length - 1].type !== "reportButton" &&
+                  !isLoading &&
+                    <OrganismBizExpertSelect />
+                }
+                </>
+              :
+              selectedExpertIndex === "4" ?
+                <>
+                {
+                  Object.keys(recommendedTargetData).length !== 0 && 
+                    <OrganismBizExpertSelect />
+                }
+                </>
+              :
+              selectedExpertIndex === "5" ?
+                <>
+                {
+                  ideaPriority.length !== 0 &&  
+                    <OrganismBizExpertSelect />
+                }
+                </>
+              :
+              selectedExpertIndex === "6" ?
+                <>
+                {
+                  buttonState.growthHackerKPI === 1 &&
+                    <OrganismBizExpertSelect />
+                }
+                </>
+              :
+              selectedExpertIndex === "7" ?
+                <>
+                {
+                  buttonState.priceEnough === 1 &&
+                    <OrganismBizExpertSelect />
+                }
+                </>
+              :
+              selectedExpertIndex === "8" ?
+                <>
+                {
+                  buttonState.caseEnough === 1 &&
+                    <OrganismBizExpertSelect />
+                }
+                </>
+              :
+              selectedExpertIndex === "9" ?
+                <>
+                {
+                  buttonState.bmEnough === 1 &&
+                    <OrganismBizExpertSelect />
+                }
+                </>
+              :
+              selectedExpertIndex === "10" ?
+                <>
+                {
+                  buttonState.surveyEnd === 1 &&
+                    <OrganismBizExpertSelect />
+                }
+                </>
+              :
+              null
+              }
+            </ChatWrap>
 
-                    {/* 히스토리로 진입 시 */}
-                    {approachPath === 2 &&
-                      titleOfBusinessInfo &&
-                      conversation.length > 0 &&
-                      conversation[conversation.length - 1].type !==
-                        "reportButton" &&
-                      !isLoading && <OrganismBizExpertSelect />}
-                  </>
-                ) : selectedExpertIndex === "4" ? (
-                  <>
-                    {Object.keys(recommendedTargetData).length !== 0 && (
-                      <OrganismBizExpertSelect />
-                    )}
-                  </>
-                ) : selectedExpertIndex === "5" ? (
-                  <>
-                    {ideaPriority.length !== 0 && <OrganismBizExpertSelect />}
-                  </>
-                ) : selectedExpertIndex === "6" ? (
-                  <>
-                    {buttonState.growthHackerKPI === 1 && (
-                      <OrganismBizExpertSelect />
-                    )}
-                  </>
-                ) : selectedExpertIndex === "7" ? (
-                  <>
-                    {buttonState.priceEnough === 1 && (
-                      <OrganismBizExpertSelect />
-                    )}
-                  </>
-                ) : selectedExpertIndex === "8" ? (
-                  <>
-                    {buttonState.caseEnough === 1 && (
-                      <OrganismBizExpertSelect />
-                    )}
-                  </>
-                ) : selectedExpertIndex === "9" ? (
-                  <>
-                    {buttonState.bmEnough === 1 && <OrganismBizExpertSelect />}
-                  </>
-                ) : selectedExpertIndex === "10" ? (
-                  <>
-                    {buttonState.surveyEnd === 1 && <OrganismBizExpertSelect />}
-                  </>
-                ) : null}
-              </ChatWrap>
+            {conversationStage === 1 && !isMarketing ? (
+              <OrganismSearchBottomBar isBlue={false} />
+            ) : selectedExpertIndex === "1" ||
+              selectedExpertIndex === "2" ||
+              selectedExpertIndex === "3" ? (
+              <OrganismSearchBottomBar isBlue={true} />
+            ) : selectedExpertIndex === "4" ? (
+              Object.keys(recommendedTargetData).length !== 0 && (
+                <OrganismSearchBottomBar isBlue={true} />
+              ) // 4번 전문가 끝났을 때 활성화
+            ) : selectedExpertIndex === "5" ? (
+              ideaPriority.length !== 0 && (
+                <OrganismSearchBottomBar isBlue={true} />
+              ) // 5번 전문가 끝났을 때 활성화
+            ) : selectedExpertIndex === "6" ? (
+              buttonState.growthHackerKPI === 1 && (
+                <OrganismSearchBottomBar isBlue={true} />
+              ) // 6번 전문가 끝났을 때 활성화
+            ) : selectedExpertIndex === "7" ? (
+              buttonState.priceEnough === 1 && (
+                <OrganismSearchBottomBar isBlue={true} />
+              ) // 7번 전문가 끝났을 때 활성화
+            ) : selectedExpertIndex === "8" ? (
+              buttonState.caseEnough === 1 ? (
+                <OrganismSearchBottomBar isBlue={true} /> // 사례 조사 끝났을 때 활성화
+              ) : (
+                buttonState.caseStart === 1 &&
+                !isLoading &&
+                conversation[conversation.length - 1].type !==
+                  "caseContinueButton" && (
+                  <OrganismSearchBottomBar isBlue={true} isHashTag={true} />
+                )
+              ) // 사례 조사 시작했을 때 활성화
+            ) : selectedExpertIndex === "9" ? (
+              buttonState.bmEnough === 1 && (
 
-              {conversationStage === 1 && !isMarketing ? (
-                <OrganismSearchBottomBar isBlue={false} />
-              ) : selectedExpertIndex === "1" ||
-                selectedExpertIndex === "2" ||
-                selectedExpertIndex === "3" ? (
                 <OrganismSearchBottomBar isBlue={true} />
               ) : selectedExpertIndex === "4" ? (
                 Object.keys(recommendedTargetData).length !== 0 && (
