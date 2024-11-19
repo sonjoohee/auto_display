@@ -816,7 +816,7 @@ const PageMeetAiExpert = () => {
                 </span>
               </ExpertCard>
 
-              {/* <ExpertCard
+              <ExpertCard
                 Price
                 onClick={() => {
                   handledExpertSelect("7");
@@ -829,7 +829,7 @@ const PageMeetAiExpert = () => {
                 </span>
               </ExpertCard>
 
-              <ExpertCard
+              {/* <ExpertCard
                 Biz
                 onClick={() => {
                   handledExpertSelect("8");
@@ -878,14 +878,14 @@ const PageMeetAiExpert = () => {
                 </div>
               </ExpertCard>
 
-              <ExpertCard Empty>
+              {/* <ExpertCard Empty>
                 <div>
                   <span>
                     <img src="" alt="" />
                   </span>
                   <p></p>
                 </div>
-              </ExpertCard>
+              </ExpertCard> */}
             </ExpertSelectBox>
           </ExpertSelectWrap>
           {/* API 데이터 활용 */}

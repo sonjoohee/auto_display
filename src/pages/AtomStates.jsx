@@ -372,3 +372,4 @@ export const MARKETING_FINAL_REPORT_DATA = atom([]);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 export const STRATEGY_BUTTON_STATE = atom(0);
+export const STRATEGY_CONSULTANT_REPORT_DATA = atom([]);
