@@ -394,6 +394,10 @@ const PageMeetAiExpert = () => {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     let savedInputBusinessInfo = "";
     // If there's inputBusinessInfo in the location state, save it
     if (location.state && location.state.inputBusinessInfo) {
