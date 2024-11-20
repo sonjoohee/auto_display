@@ -1,9 +1,10 @@
 // MoleculeLoginPopup.jsx
 
 import React from "react";
-import styled from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
 import MoleculeSign from "./MoleculeSign";
 import { palette } from "../../../../assets/styles/Palette";
+import theme from "../../../../assets/styles/Theme";
 
 const MoleculeSignPopup = ({ onClose = () => {} }) => {
   // 기본값으로 빈 함수 설정
@@ -15,12 +16,16 @@ const MoleculeSignPopup = ({ onClose = () => {} }) => {
 
   return (
     // <LoginPopupOverlay onClick={handleOverlayClick}>
-    <SignPopupOverlay>
-      <PopupContent>
-        <CloseButton onClick={onClose}>닫기</CloseButton>
-        <MoleculeSign onClosePopup={onClose} /> {/* 함수 전달 */}
-      </PopupContent>
-    </SignPopupOverlay>
+    <>
+      <ThemeProvider theme={theme}>
+        <SignPopupOverlay>
+          <PopupContent>
+            <CloseButton onClick={onClose}>닫기</CloseButton>
+            <MoleculeSign onClosePopup={onClose} /> {/* 함수 전달 */}
+          </PopupContent>
+        </SignPopupOverlay>
+      </ThemeProvider>
+    </>
   );
 };
 
@@ -47,6 +52,11 @@ const PopupContent = styled.div`
   border-radius: 20px;
   padding: 64px 144px;
   background: ${palette.white};
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    width:90%;
+    padding:32px 20px;
+  }
 `;
 
 const CloseButton = styled.button`

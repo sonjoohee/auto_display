@@ -1,7 +1,8 @@
 // src/pages/Login_Sign/components/molecules/MoleculeLogin.jsx
 
 import React, { useEffect } from "react";
-import styled from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
+import theme from "../../../../assets/styles/Theme";
 import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
 import MoleculeGoogleLoginForm from "./MoleculeGoogleLoginForm";
@@ -24,20 +25,24 @@ const MoleculeSign = ({ onClosePopup = () => {} }) => {
   }, [loginSuccess, navigate, setLoginSuccess]);
 
   return (
-    <LoginContainer>
-      <h1>
-        <img src={images.Logo} alt="" />
-        <span>회원가입</span>
-      </h1>
+    <>
+      <ThemeProvider theme={theme}>
+        <LoginContainer>
+          <h1>
+            <img src={images.Logo} alt="" />
+            <span>회원가입</span>
+          </h1>
 
-      <MoleculeGoogleLoginForm />
-      <Separator>
-        <hr />
-        <span>or</span>
-        <hr />
-      </Separator>
-      <MoleculeSignupForm />
-    </LoginContainer>
+          <MoleculeGoogleLoginForm />
+          <Separator>
+            <hr />
+            <span>or</span>
+            <hr />
+          </Separator>
+          <MoleculeSignupForm />
+        </LoginContainer>
+      </ThemeProvider>
+    </>
   );
 };
 
@@ -54,10 +59,20 @@ const LoginContainer = styled.div`
     font-weight: 400;
   }
 
-  min-width: 400px;
+  max-width: 400px;
   margin: 0 auto;
   background-color: #fff;
   text-align: center;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    h1 {
+      font-size:1.5rem;
+
+      img {
+        height:23px;
+      }
+    }
+  }
 `;
 
 const Separator = styled.div`

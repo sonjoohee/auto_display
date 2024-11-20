@@ -4,7 +4,8 @@ import React from "react";
 import { auth, provider } from "../../../../firebase";
 import { signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
+import theme from "../../../../assets/styles/Theme";
 import axios from "axios";
 import images from "../../assets/styles/Images"; // Images.jsx 임포트
 import { useAtom } from "jotai";
@@ -87,12 +88,16 @@ const MoleculeGoogleLoginForm = () => {
   };
 
   return (
-    <GoogleLoginForm>
-      <LoginButton onClick={handleGoogleLogin}>
-        <GoogleIconStyled src={images.GoogleIcon} alt="Google Icon" />
-        Google 계정으로 로그인
-      </LoginButton>
-    </GoogleLoginForm>
+    <>
+    <ThemeProvider theme={theme}>
+      <GoogleLoginForm>
+        <LoginButton onClick={handleGoogleLogin}>
+          <GoogleIconStyled src={images.GoogleIcon} alt="Google Icon" />
+          Google 계정으로 로그인
+        </LoginButton>
+      </GoogleLoginForm>
+    </ThemeProvider>
+    </>
   );
 };
 
@@ -103,6 +108,10 @@ const GoogleLoginForm = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 52px;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    margin-top:32px;
+  }
 `;
 
 const LoginButton = styled.button`
@@ -119,6 +128,10 @@ const LoginButton = styled.button`
   border: 1px solid ${palette.lineGray};
   background-color: ${palette.white};
   cursor: pointer;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    padding:10px;
+  }
 `;
 
 const GoogleIconStyled = styled.img`
