@@ -693,6 +693,10 @@ const PageExpertInsight = () => {
     loadConversation();
   }, [conversationId, isLoggedIn, navigate]);
 
+  useEffect(() => {
+    console.log(approachPath);
+  }, [approachPath]);
+
   // 스크롤
   // const [isScrolled, setIsScrolled] = useState(false);
   // useEffect(() => {
@@ -1055,8 +1059,7 @@ const PageExpertInsight = () => {
 
                 {selectedExpertIndex === "0" ||
                 selectedExpertIndex === "2" ||
-                selectedExpertIndex === "3" ||
-                selectedExpertIndex === "11" ? (
+                selectedExpertIndex === "3" ? (
                   <>
                     {/* 검색해서 시작 */}
                     {(approachPath === -1 || approachPath === 3) &&
@@ -1068,12 +1071,12 @@ const PageExpertInsight = () => {
                       !isLoading && <OrganismBizExpertSelect />}
 
                     {/* 히스토리로 진입 시 */}
-                    {approachPath === 2 &&
+                    {/* {approachPath === 2 &&
                       titleOfBusinessInfo &&
                       conversation.length > 0 &&
                       conversation[conversation.length - 1].type !==
                         "reportButton" &&
-                      !isLoading && <OrganismBizExpertSelect />}
+                      !isLoading && <OrganismBizExpertSelect />} */}
                   </>
                 ) : selectedExpertIndex === "1" ? (
                   <>
@@ -1091,28 +1094,28 @@ const PageExpertInsight = () => {
                   <>
                     {ideaPriority.length !== 0 && <OrganismBizExpertSelect />}
                   </>
-                ) : selectedExpertIndex === "6" ? (
-                  <>
-                    {buttonState.growthHackerKPI === 1 && (
-                      <OrganismBizExpertSelect />
-                    )}
-                  </>
-                ) : selectedExpertIndex === "7" ? (
-                  <>
-                    {buttonState.priceEnough === 1 && (
-                      <OrganismBizExpertSelect />
-                    )}
-                  </>
+                // ) : selectedExpertIndex === "6" ? (
+                //   <>
+                //     {buttonState.growthHackerKPI === 1 && (
+                //       <OrganismBizExpertSelect />
+                //     )}
+                //   </>
+                // ) : selectedExpertIndex === "7" ? (
+                //   <>
+                //     {buttonState.priceEnough === 1 && (
+                //       <OrganismBizExpertSelect />
+                //     )}
+                //   </>
                 ) : selectedExpertIndex === "8" ? (
                   <>
                     {buttonState.caseEnough === 1 && (
                       <OrganismBizExpertSelect />
                     )}
                   </>
-                ) : selectedExpertIndex === "9" ? (
-                  <>
-                    {buttonState.bmEnough === 1 && <OrganismBizExpertSelect />}
-                  </>
+                // ) : selectedExpertIndex === "9" ? (
+                //   <>
+                //     {buttonState.bmEnough === 1 && <OrganismBizExpertSelect />}
+                //   </>
                 ) : selectedExpertIndex === "10" ? (
                   <>
                     {buttonState.surveyEnd === 1 && <OrganismBizExpertSelect />}

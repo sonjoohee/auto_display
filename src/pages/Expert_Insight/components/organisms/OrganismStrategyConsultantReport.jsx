@@ -278,8 +278,8 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
                     <span>💬</span>
                     <div>
                       <strong>핵심가치와 경쟁과제</strong>
-                      <p>• 기회 요소 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[3]?.content?.[0]?.text}</p>
-                      <p>• 리스크 요소 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[3]?.content?.[1]?.text}</p>
+                      <p>• 핵심 가치 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[3]?.content?.[0]?.text}</p>
+                      <p>• 경쟁 과제 : {strategyConsultantReportData?.[strategyConsultantCount]?.sections?.[3]?.content?.[1]?.text}</p>
                     </div>
                   </div>
                   <div>
