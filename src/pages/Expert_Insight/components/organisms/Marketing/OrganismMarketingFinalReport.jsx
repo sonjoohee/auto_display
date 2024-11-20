@@ -210,7 +210,7 @@ const OrganismMarketingFinalReport = () => {
                     <span>📌</span>아이템의 핵심 내용을 다음과 같이 정리했어요
                   </h3>
                   <UlList Disc>
-                    <li><strong>특정 행동 :</strong> {marketingFinalReportData?.[0]?.content?.purpose}</li>
+                    <li><strong>주요 니즈 :</strong> {marketingFinalReportData?.[0]?.content?.purpose}</li>
                     <li><strong>사용 목적 :</strong> {marketingFinalReportData?.[0]?.content?.target}</li>
                     <li><strong>제공 가치 :</strong> {marketingFinalReportData?.[0]?.content?.value}</li>
                     <li><strong>필요한 요소 :</strong> {marketingFinalReportData?.[0]?.content?.elements}</li>

@@ -236,7 +236,7 @@ const OrganismBmBmAdsReport = () => {
         </>
       ) : (
         <>
-          <h1>하나의 고객 세그먼트를 골라주세요</h1>
+          <h1>하나의 타겟 고객 세그먼트를 선정해주세요.</h1>
           <OptionContainer>
             <ul>
               {allExamples.length > 0 ? (

@@ -1077,7 +1077,7 @@ const PageExpertInsight = () => {
                   </>
                 ) : selectedExpertIndex === "1" ? (
                   <>
-                    {strategyReportData.length === 3 && (
+                    {strategyConsultantReportData.length === 3 && (
                       <OrganismBizExpertSelect />
                     )}
                   </>

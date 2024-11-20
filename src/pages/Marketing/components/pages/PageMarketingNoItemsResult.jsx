@@ -213,7 +213,7 @@ const PageMarketingNoItemsResult = () => {
     updatedConversation.push(
       {
         type: "system",
-        message: `${marketingMbtiResult.name} 창업가 이시군요! 그 성향에 맞는 ${itemName}을 분석해드릴게요\n당신의 스타일에 딱 맞는 창업 전략을 잡는데 도움이 되었으면 좋겠어요 ✨`,
+        message: `${marketingMbtiResult.category} 스타일 이시군요! 그 성향에 맞는 ${itemName}을 분석해드릴게요\n당신의 스타일에 딱 맞는 창업 전략을 잡는데 도움이 되었으면 좋겠어요 ✨`,
         expertIndex: 0,
       },
       {
@@ -365,7 +365,10 @@ const PageMarketingNoItemsResult = () => {
                       ? images.ImgMBTISPIC
                       : marketingMbtiResult.name === "SPTC"
                       ? images.ImgMBTISPTC
+                      : marketingMbtiResult.name === "SPTA"
+                      ? images.ImgMBTISPTA
                       : ""
+
                   }
                   alt=""
                 />
@@ -478,8 +481,8 @@ const PageMarketingNoItemsResult = () => {
               </ListBox>
 
               <span className="comment">
-                * 일부 아이템은 현실에 없는 아이템으로 혁신적 가능성을 고려해
-                제시되었습니다.
+                * 위 아이템은 창업 MBTI 결과를 기반으로 구성되었으며, 현실에 없는
+                아이템이 포함될 수 있습니다.
               </span>
             </ResultWrap>
           </Answer>
