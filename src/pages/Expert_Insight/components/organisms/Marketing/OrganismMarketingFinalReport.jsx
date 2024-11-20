@@ -194,7 +194,7 @@ const OrganismMarketingFinalReport = () => {
     <>
     <ThemeProvider theme={theme}>
       {isLoadingMarketingFinalReport || marketingFinalReportButtonState ? (
-        <SummaryBox style={{minWidth: "800px", minHeight: "550px", display: "flex", justifyContent: "center", alignItems: "center"}}>
+        <SummaryBox className="loading">
           <Loader />
         </SummaryBox>
       ) : (
@@ -355,6 +355,18 @@ const SummaryBox = styled.div`
   border-radius:20px;
   background:${palette.chatGray};
   margin:12px 0 0 50px;
+
+  .loading {
+    min-width: 800px;
+    min-height: 550px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+      min-width: 150px; // 모바일일 때 크기 조정
+      min-height: 150px; // 모바일일 때 크기 조정
+    }
+  }
 
   h2 {
     font-size:1.5rem;
