@@ -1197,8 +1197,6 @@ const PageMarketingNoItems = () => {
                   <span>교육 / 컨설팅</span>
                 </label>
               </RadioButton>
-            </RadioButtonWrap>
-            <RadioButtonWrap>
               <RadioButton
                 onClick={() => {
                   generateMbti("예술/디자인");
@@ -1221,7 +1219,7 @@ const PageMarketingNoItems = () => {
                   <span>외식 / 소매업</span>
                 </label>
               </RadioButton>
-            </RadioButtonWrap>
+            </RadioButtonWrap> 
 
             <NextButton
               isRadioSelected={isRadioSelected}
