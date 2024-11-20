@@ -1186,6 +1186,7 @@ const QuickMenu = styled.div`
     gap: 10px;
     width: ${(props) => (props.showText ? "auto" : "40px")};
     height: 40px;
+    font-family:Pretendard, Poppins;
     font-size: 0.88rem;
     font-weight: 500;
     color: ${palette.white};
