@@ -110,6 +110,7 @@ const GoogleLoginForm = styled.div`
   margin-top: 52px;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    font-size:0.88rem;
     margin-top:32px;
   }
 `;

@@ -330,10 +330,12 @@ const TermsAndConditions = styled.div`
   margin-top: 30px !important;
   gap:8px;
   text-align: left;
+  align-items:flex-start;
 
   label {
     font-size: 0.875rem !important;
     color: ${palette.gray};
+    flex-wrap:wrap;
   }
 
   a {
@@ -351,7 +353,7 @@ const StyledAtomButton = styled.button`
   color:${palette.white};
   font-family: 'Pretendard', 'Poppins';
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
   margin-top: 20px;
   padding: 15px;
   border-radius: 8px;
@@ -363,6 +365,12 @@ const StyledAtomButton = styled.button`
   &:disabled {
     background-color: ${palette.lightGray};
     cursor: not-allowed;
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    font-size:0.88rem;
+    font-weight:500;
+    padding:10px;
   }
 `;
 
@@ -416,5 +424,6 @@ const JoinWrap = styled.div`
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     margin-top:20px;
+    font-size:0.88rem;
   }
 `;
