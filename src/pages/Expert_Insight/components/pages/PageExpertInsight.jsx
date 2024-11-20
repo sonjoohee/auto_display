@@ -152,7 +152,11 @@ import OrganismMarketingFinalReport from "../organisms/Marketing/OrganismMarketi
 import MoleculeMarketingSignUpButton from "../molecules/Marketing/MoleculeMarketingSignUpButton";
 import images from "../../../../assets/styles/Images";
 
+import { useDynamicViewport } from "../../../../assets/DynamicViewport";
+
 const PageExpertInsight = () => {
+  useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
+
   const [strategyConsultantReportData, setStrategyConsultantReportData] =
     useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
   const [growthHackerSelectedSolution, setGrowthHackerSelectedSolution] =
