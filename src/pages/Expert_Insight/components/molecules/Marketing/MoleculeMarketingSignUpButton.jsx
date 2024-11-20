@@ -248,6 +248,8 @@ const SelectButton = styled.div`
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     margin-left: 0;
+    flex-direction:column;
+    align-items:flex-start;
   }
 `;
 
