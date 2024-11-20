@@ -358,7 +358,10 @@ const PageMarketingNoItems = () => {
     saveConversation({
       changingConversation: { marketingMbtiResult: mbtiResult },
     });
-    navigate("/MarketingSetting/2/Result");
+
+    if(!isRadioSelected) {
+      navigate("/MarketingSetting/2/Result");
+    }
   };
 
   return (
@@ -1220,10 +1223,10 @@ const PageMarketingNoItems = () => {
 
             <NextButton
               isRadioSelected={isRadioSelected}
-              onClick={handleNextButtonClick}
+              onClick={() => navigate("/MarketingSetting/2/Result")}
               disabled={!isRadioSelected}
             >
-              다음
+              완료
             </NextButton>
           </Answer>
         </QuestionWrap>
