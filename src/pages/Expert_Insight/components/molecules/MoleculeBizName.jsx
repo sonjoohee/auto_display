@@ -121,6 +121,17 @@ const BizNameContainer = styled.div`
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   z-index: 98;
 
+  &:before {
+    position:absolute;
+    left:0;
+    top:-41px;
+    width:100%;
+    height:40px;
+    background:${palette.white};
+    z-index:-1
+    content:'';
+  }
+
   > div {
     display: flex;
     align-items: center;
