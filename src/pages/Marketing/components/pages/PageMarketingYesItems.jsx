@@ -1025,4 +1025,9 @@ const LoaderBox = styled.div`
     border-radius:20px;
     border:1px solid ${palette.gray200};
   }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    min-width: 300px;
+    min-height: 150px;
+  }
 `;
