@@ -729,7 +729,7 @@ const PageExpertInsight = () => {
   return (
     <>
       <ThemeProvider theme={theme}>
-        {isMarketing && (
+        {isMarketing && approachPath !== 2 && (
           <ProjectName>
             <div className="inner">
               <div>
@@ -765,7 +765,7 @@ const PageExpertInsight = () => {
           <MainContent>
             <div>
               <ChatWrap>
-                {!isMarketing && <MoleculeBizName date={savedTimestamp} />}
+                {!isMarketing || (isMarketing && approachPath === 2) && <MoleculeBizName date={savedTimestamp} />}
 
                 {itemsToRender.map((item, index) => {
                   if (item.type === "user") {

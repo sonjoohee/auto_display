@@ -299,9 +299,19 @@ useEffect(() => {
         updatedConversation.push(
           {
             type: "system",
+            message: `${bmSelectedProblemOptions.problemOptions}을 기반으로 린캔버스를 세분화하였습니다.`,
+            expertIndex: selectedExpertIndex,
+          },
+          {
+            type: "system",
+            message: "현재 린 캔버스 세분화는 하나의 문제점만 적용이 가능합니다. ⏳\n앞으로는 여러 문제를 한눈에 비교 할 수 있는 기능도 추가될 예정이니, 기대해 주세요.  ",
+            expertIndex: -1,
+          },
+          {
+            type: "system",
             message:
               "이외에 궁금한 점은 대화창에 입력해주시거나, 아래 키워드를 활용하여 추가적인 조언을 받아보세요",
-            expertIndex: selectedExpertIndex,
+            expertIndex: -1,
           },
           { type: `keyword` }
         );

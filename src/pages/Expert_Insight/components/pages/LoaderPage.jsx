@@ -7,8 +7,8 @@ const LoaderPage = () => {
   return (
     <>
     <LoaderWrap>
-      <Loader><em>60%</em></Loader>
-      <p>분석중이에요 ...</p>
+      <Loader><em>분석중이에요 ...</em></Loader>
+      {/* <p>분석중이에요 ...</p> */}
     </LoaderWrap>
     </>
   );
@@ -51,11 +51,15 @@ const Loader = styled.span`
   }
 
   em {
-    font-size:1.25rem;
+    // font-size:1.25rem;
     font-style:normal;
-    line-height:1.3;
-    color:${palette.blue};
+    // line-height:1.3;
+    // color:${palette.blue};
     transform:rotate(-45deg);
+    font-size:0.75rem;
+    font-weight:300;
+    line-height:2.1;
+    color:${palette.gray500};
   }
 
   @keyframes loader {

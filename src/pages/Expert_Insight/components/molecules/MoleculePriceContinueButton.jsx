@@ -103,7 +103,7 @@ const MoleculePriceContinueButton = () => {
   };
   return (
     <>
-      <ButtonWrap>
+      <SelectButton>
         {priceProduct.length === 1 ? (
           <>
             <button className="none">"{titleOfBusinessInfo}"을 더 세분화하여 분석할래요 (준비중)</button>
@@ -119,45 +119,42 @@ const MoleculePriceContinueButton = () => {
             <button onClick={() => handleClick("enough")}>이정도면 충분해요</button>
           </>
         )}
-      </ButtonWrap>
+      </SelectButton>
     </>
   );
 };
 
 export default MoleculePriceContinueButton;
 
-const ButtonWrap = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 15px;
-  padding-bottom: 15px;
-  margin-left:50px;
+const SelectButton = styled.div`
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-top: 12px;
+  margin-left: 50px;
 
   button {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-family: "Pretendard";
-    font-size: 0.875rem;
-    color: ${palette.darkGray};
-    border: 0;
-    background: none;
-    margin-right: 10px;
-  }
-
-  > button {
-    padding: 8px 16px;
-    border-radius: 40px;
-    border: 1px solid ${palette.outlineGray};
+    // display:inline-block;
+    // width:fit-content;
+    font-family: 'Pretendard', 'Poppins';
+    font-size:0.88rem;
+    color:${palette.chatBlue};
+    padding:8px 20px;
+    border-radius:40px;
+    border:0;
+    background:rgba(4, 83, 244, 0.1);
   }
 
   button.none {
     cursor: default;
   }
 
-  button.other {
-    color: ${palette.lightGray};
-    font-size: 0.75rem;
-    border: none;
+  .finish {
+    color:${palette.gray500};
+    background:${palette.gray100};
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    margin-left:0;
   }
 `;

@@ -39,36 +39,66 @@ const MoleculeGrowthHackerKPIButton = () => {
       updatedConversation.pop();
     }
 
-    updatedConversation.push(
-      {
-        type: "user",
-        message:
-          `${title}`,
-        expertIndex: selectedExpertIndex,
-      },
-      {
-        type: "system",
-        message:
-          `${title}이(가) 어떻게 우리 아이템을 성장시켜 갈 수 있을까요?`,
-        expertIndex: selectedExpertIndex,
-      },
-      {
-        type: 'growthHackerReport',
-      },
-    );
+    if (title) {
+      updatedConversation.push(
+        {
+          type: "user",
+          message:
+            `${title}`,
+          expertIndex: selectedExpertIndex,
+        },
+        {
+          type: "system",
+          message:
+            `${title}이(가) 어떻게 우리 아이템을 성장시켜 갈 수 있을까요?`,
+          expertIndex: selectedExpertIndex,
+        },
+        {
+          type: 'growthHackerReport',
+        },
+      );
 
-    setGrowthHackerRecommendedSolution(
-      growthHackerRecommendedSolution.filter((_, i) => i !== index)
-    );
-    setGrowthHackerSelectedSolution([...growthHackerSelectedSolution, growthHackerRecommendedSolution[index]]);
-    setGrowthHackerKPIButtonState(1);
+      setGrowthHackerRecommendedSolution(
+        growthHackerRecommendedSolution.filter((_, i) => i !== index)
+      );
+      setGrowthHackerSelectedSolution([...growthHackerSelectedSolution, growthHackerRecommendedSolution[index]]);
+      setGrowthHackerKPIButtonState(1);
+    } else {
+      updatedConversation.push(
+        {
+          type: "system",
+          message:
+            "이외에 궁금한 점은 대화창에 입력해주시거나, 아래 키워드를 활용하여 추가적인 조언을 받아보세요",
+          expertIndex: selectedExpertIndex,
+        },
+        { type: `keyword` }
+      );
+      setButtonState({
+        ...buttonState,
+        bmEnough: 1,
+      });
+      setConversation(updatedConversation);
+
+      saveConversation(
+        { changingConversation: 
+          { conversation: updatedConversation, 
+            buttonState : {
+              ...buttonState,
+              growthHackerKPI: 1,
+            },
+            conversationStage: 3,
+          }
+        }
+      );
+
+      setButtonState({
+        ...buttonState,
+        growthHackerKPI : 1,
+      });
+    }
     setConversation(updatedConversation);
     setConversationStage(3);
     setApproachPath(3);
-    // setButtonState({
-    //   ...buttonState,
-    //   growthHackerKPI : 1,
-    // });
 
     await saveConversation(
       { changingConversation: { 
@@ -76,10 +106,6 @@ const MoleculeGrowthHackerKPIButton = () => {
           conversationStage: 3,
           growthHackerRecommendedSolution: growthHackerRecommendedSolution.filter((_, i) => i !== index),
           growthHackerSelectedSolution: [...growthHackerSelectedSolution, growthHackerRecommendedSolution[index]],
-          // buttonState : {
-          //   ...buttonState,
-          //   growthHackerKPI : 1,
-          // },
         }
       }
     );
@@ -92,6 +118,7 @@ const MoleculeGrowthHackerKPIButton = () => {
             {solution.title}
           </button>
         ))}
+        {growthHackerRecommendedSolution.length < 4 && <button onClick={() => handleClick()}>이정도면 충분해요</button>}
       </SelectButton>
     </>
   );
