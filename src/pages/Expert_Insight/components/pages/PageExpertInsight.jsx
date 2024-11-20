@@ -1212,7 +1212,8 @@ const PageExpertInsight = () => {
 export default PageExpertInsight;
 
 const ProjectName = styled.div`
-  position: fixed;
+  // position: fixed;
+  position:sticky;
   top: 0;
   left: 0;
   width: 100%;
@@ -1348,8 +1349,8 @@ const AutosavePopup = styled.div`
 
 const MainContent = styled.div`
   position: relative;
-  // top: 40px;
-  top: 70px;
+  top: 40px;
+  // top: 70px;
   grid-area: content;
   display: flex;
   flex-direction: row;
