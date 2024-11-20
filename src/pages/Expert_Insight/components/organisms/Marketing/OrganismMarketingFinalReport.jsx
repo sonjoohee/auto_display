@@ -21,7 +21,7 @@ import {
   IS_LOGGED_IN,
 } from "../../../../AtomStates";
 
-import Loader from "../../pages/LoaderPage";
+import Loader from "../../atoms/AtomLoader";
 import { useSaveConversation } from "../../atoms/AtomSaveConversation";
 
 const OrganismMarketingFinalReport = () => {

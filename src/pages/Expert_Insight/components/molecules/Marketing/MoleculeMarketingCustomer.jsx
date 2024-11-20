@@ -26,7 +26,7 @@ import {
   MARKETING_SELECTED_CUSTOMER,
 } from "../../../../AtomStates";
 
-import Loader from "../../pages/LoaderPage";
+import Loader from "../../atoms/AtomLoader";
 import { useSaveConversation } from "../../atoms/AtomSaveConversation";
 
 const MoleculeMarketingCustomer = ({ marketingCustomerCount }) => {

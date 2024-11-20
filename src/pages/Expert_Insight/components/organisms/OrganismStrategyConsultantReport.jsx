@@ -20,7 +20,7 @@ import {
   APPROACH_PATH,
 } from "../../../AtomStates";
 
-import Loader from "../pages/LoaderPage"
+import Loader from "../atoms/AtomLoader"
 import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
 
 const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
@@ -202,7 +202,7 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
     <ThemeProvider theme={theme}>
     
       {isLoadingStrategyConsultantReport ? (
-        <SummaryBox>
+        <SummaryBox style={{minWidth: "700px", minHeight: "200px", display: "flex", justifyContent: "center", alignItems: "center"}}>
           <Loader />
         </SummaryBox>
       ) : (
