@@ -367,7 +367,7 @@ const LoginFormContainer = styled.div`
 
 const StyledAtomInput = styled.input`
   width: 100%;
-  font-family: "Pretendard", "Poppins";
+  font-family: "Pretendard", "Poppins", sans-serif;
   // font-size: 1rem;
   font-size: 0.75rem;
   padding: 12px 16px;

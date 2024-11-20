@@ -637,7 +637,7 @@ const OrganismBizAnalysisSection = () => {
         {isLoadingAnalysis || analysisButtonState ? (
           <AnalysisSection
             style={{
-              minWidth: "950px", 
+              maxWidth: "950px", 
               minHeight: "532px", 
               display: "flex",
               justifyContent: "center", 
@@ -1183,6 +1183,11 @@ const BoxWrap = styled.div`
       content:'';
     }
 
+    li {
+      display:flex;
+      gap:10px;
+    }
+
     &.disc li {
       position:relative;
       padding-left:13px;
@@ -1199,6 +1204,37 @@ const BoxWrap = styled.div`
       }
     }
   }
+
+  button {
+  flex-shrink: 0;
+  font-family: "Pretendard";
+  font-size: 0;
+  color: ${palette.gray};
+  padding: 5px 8px;
+  border-radius: 5px;
+  border: 0;
+  background: ${palette.white};
+
+  img {
+    width: 14px;
+    height: 14px;
+  }
+
+  &.add {
+    color: ${palette.white};
+    border: 1px solid ${palette.black};
+    background: ${palette.black};
+  }
+}
+
+.moreButton {
+  width: 100%;
+  font-size: 0.75rem;
+  margin-top: 4px;
+  padding: 8px;
+  border: 0;
+}
+
 `;
 
 // const BoxWrap = styled.div`

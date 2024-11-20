@@ -620,14 +620,19 @@ const Question = styled.div`
     }
   }
 
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    padding:0 30px;
+  }
+
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     flex:1 1 22%;
     align-items:flex-end;
-    padding-bottom:30px;
+    padding:0 20px 30px;
 
     p {
       font-size:1.25rem;
       gap:12px;
+      padding-bottom:20px;
 
       span {
         font-size:0.88rem;
@@ -635,8 +640,10 @@ const Question = styled.div`
     }
   }
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    padding:0 30px;
+  @media (max-width: ${({ theme }) => theme.breakpoints.smobile}) {
+    p {
+      font-size:1.13rem;
+    }
   }
 `;
 

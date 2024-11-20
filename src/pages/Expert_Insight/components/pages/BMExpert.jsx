@@ -222,7 +222,6 @@ const BMExpert = () => {
         </ModelCanvasWrap>
 
         <ButtonWrap>
-          <div />
           <div>
             <button type="button">
               <img src={images.IconCopy} alt="" />
@@ -440,7 +439,6 @@ const BMExpert = () => {
         </ModelCanvasWrap>
 
         <ButtonWrap>
-          <div />
           <div>
             <button type="button">
               <img src={images.IconCopy} alt="" />

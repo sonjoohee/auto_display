@@ -710,7 +710,6 @@ ${mainCharacteristicOfBusinessInformation
       return (
         <>
           <ButtonWrap>
-            <div />
             <div>
               <button type="button" onClick={toggleCopy}>
                 <img src={images.IconCopy} alt="" />
@@ -767,7 +766,6 @@ ${mainCharacteristicOfBusinessInformation
             </ButtonWrap>
           ) : (
             <ButtonWrap>
-              <div />
               <div>
                 <button type="button" className="lineBtn" onClick={togglePopupCancel}>
                   취소하기
@@ -830,7 +828,6 @@ ${mainCharacteristicOfBusinessInformation
             </ButtonWrap>
           ) : (
             <ButtonWrap>
-              <div />
               <div>
                 <button type="button" className="lineBtn" onClick={togglePopupCancel}>
                   취소하기
@@ -885,7 +882,6 @@ ${mainCharacteristicOfBusinessInformation
           <>
             {conversationStage > 2 ? (
               <ButtonWrap>
-                <div />
                 <div>
                   <button type="button" onClick={toggleCopy}>
                     <img src={images.IconCopy} alt="" />
@@ -930,7 +926,6 @@ ${mainCharacteristicOfBusinessInformation
                 </ButtonWrap>
                 ) : (
                   <ButtonWrap>
-                    <div />
                     <div>
                       <button
                         type="button"
@@ -952,10 +947,9 @@ ${mainCharacteristicOfBusinessInformation
               </>
             )}
           </>
-       ) : (
+      ) : (
         <>
           <ButtonWrap>
-            <div />
             <div>
               {report ? (
                 // report 값이 있는 경우 복사하기 버튼만 표시
@@ -1130,7 +1124,8 @@ export default MoleculeReportController;
 const ButtonWrap = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  // align-items: center;
+  align-items:flex-end;
   gap: 16px;
   margin-top: 20px !important;
   // padding-top: 20px;

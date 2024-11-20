@@ -159,7 +159,7 @@ const OrganismBmBmAutoReport = () => {
     <ThemeProvider theme={theme}>
       <>
         {isLoadingIdeaPriority || bmBmAutoButtonState ? (
-          <BoxWrap style={{minWidth: "950px", minHeight: "700px", display: "flex", justifyContent: "center", alignItems: "center"}}>
+          <BoxWrap style={{maxWidth: "950px", minHeight: "700px", display: "flex", justifyContent: "center", alignItems: "center"}}>
             <Loader />
           </BoxWrap>
         ) : (
