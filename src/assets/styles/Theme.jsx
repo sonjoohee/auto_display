@@ -1,8 +1,9 @@
 const theme = {
   breakpoints: {
     // mobile: '480px',
+    // tablet: '768px',
     mobile: '440px',
-    tablet: '768px',
+    tablet: '810px',
     desktop: '1024px',
   },
 };

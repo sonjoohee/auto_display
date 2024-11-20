@@ -634,6 +634,10 @@ const Question = styled.div`
       }
     }
   }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    padding:0 30px;
+  }
 `;
 
 const Answer = styled.div`
@@ -703,6 +707,7 @@ const InputIdea = styled.div`
   }
 
   input {
+    width:100%;
     font-family:Pretendard, Poppins;
     font-size:2.5rem;
     font-weight:600;
@@ -727,6 +732,11 @@ const InputIdea = styled.div`
       font-size:1.5rem;
       letter-spacing:-1px;
     }
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    // max-width:300px;
+    padding:0 30px;
   }
 `;
 
