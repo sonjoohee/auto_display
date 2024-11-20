@@ -119,7 +119,11 @@ import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/Molec
 
 import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
 
+import { useDynamicViewport } from "../../../../assets/DynamicViewport";
+
 const PageMeetAiExpert = () => {
+  useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
+
   const [strategyConsultantReportData, setStrategyConsultantReportData] = useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
   const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] = useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
   const [growthHackerSelectedSolution, setGrowthHackerSelectedSolution] = useAtom(GROWTH_HACKER_SELECTED_SOLUTION);

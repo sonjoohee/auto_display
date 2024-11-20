@@ -990,7 +990,8 @@ const Popup = styled.div`
     flex-direction: column;
     gap: 32px;
     overflow-y: auto; // 내용이 넘칠 경우 스크롤 추가
-    max-height: calc(90vh - 64px); // 패딩을 고려한 최대 높이 설정
+    // max-height: calc(90vh - 64px);
+    max-height:570px;
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
@@ -1045,7 +1046,7 @@ const ScrollWrap = styled.div`
   display: flex;
   flex-direction: column;
   gap: 32px;
-  max-height: 580px;
+  // max-height: 580px;
   overflow-y: auto;
 
   > div {
