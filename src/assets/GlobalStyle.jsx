@@ -71,7 +71,7 @@ const GlobalStyles = createGlobalStyle`
     src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Light.woff') format('woff');
     font-weight: 300;
     font-style: normal;
-    // unicode-range: U+AC00-D7A3, U+3200-33FF, U+A960-A97F, U+D7B0-D7FF, U+1100-11FF, U+3130-318F, U+0030-0039, U+0020-002F, U+003A-0040, U+005B-0060, U+007B-007E, U+201C, U+201D, U+00B7; //국문, 특수문자
+    unicode-range: U+AC00-D7A3, U+3200-33FF, U+1100-11FF, U+3130-318F, U+0030-0039, U+0020-002F, U+003A-0040, U+005B-0060, U+007B-007E, U+201C, U+201D, U+00B7; //국문, 특수문자
   }
 
   @font-face {
@@ -79,7 +79,7 @@ const GlobalStyles = createGlobalStyle`
     src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
     font-weight: 400;
     font-style: normal;
-    // unicode-range: U+AC00-D7A3, U+3200-33FF, U+A960-A97F, U+D7B0-D7FF, U+1100-11FF, U+3130-318F, U+0030-0039, U+0020-002F, U+003A-0040, U+005B-0060, U+007B-007E, U+201C, U+201D, U+00B7; //국문, 특수문자
+    unicode-range: U+AC00-D7A3, U+3200-33FF, U+1100-11FF, U+3130-318F, U+0030-0039, U+0020-002F, U+003A-0040, U+005B-0060, U+007B-007E, U+201C, U+201D, U+00B7; //국문, 특수문자
   }
 
   @font-face {
@@ -87,7 +87,7 @@ const GlobalStyles = createGlobalStyle`
     src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Medium.woff') format('woff');
     font-weight: 500;
     font-style: normal;
-    // unicode-range: U+AC00-D7A3, U+3200-33FF, U+A960-A97F, U+D7B0-D7FF, U+1100-11FF, U+3130-318F, U+0030-0039, U+0020-002F, U+003A-0040, U+005B-0060, U+007B-007E, U+201C, U+201D, U+00B7; //국문, 특수문자
+    unicode-range: U+AC00-D7A3, U+3200-33FF, U+1100-11FF, U+3130-318F, U+0030-0039, U+0020-002F, U+003A-0040, U+005B-0060, U+007B-007E, U+201C, U+201D, U+00B7; //국문, 특수문자
   }
 
   @font-face {
@@ -95,7 +95,7 @@ const GlobalStyles = createGlobalStyle`
     src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Bold.woff') format('woff');
     font-weight: 700;
     font-style: normal;
-    // unicode-range: U+AC00-D7A3, U+3200-33FF, U+A960-A97F, U+D7B0-D7FF, U+1100-11FF, U+3130-318F, U+0030-0039, U+0020-002F, U+003A-0040, U+005B-0060, U+007B-007E, U+201C, U+201D, U+00B7; //국문, 특수문자
+    unicode-range: U+AC00-D7A3, U+3200-33FF, U+1100-11FF, U+3130-318F, U+0030-0039, U+0020-002F, U+003A-0040, U+005B-0060, U+007B-007E, U+201C, U+201D, U+00B7; //국문, 특수문자
   }
 
   @font-face {
