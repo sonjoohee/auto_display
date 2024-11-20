@@ -100,8 +100,8 @@ const MoleculeBmSelectModelButton = () => {
     
     <>
       <SelectButton>
-        <button onClick={handleLeanClick}>Lean 🔎</button>
-        <button onClick={handleBMClick}>BM 🔎</button>
+        <button onClick={handleLeanClick}>린캔버스 만들기</button>
+        <button onClick={handleBMClick}>비즈니스 모델 캔버스 만들기</button>
       </SelectButton>
     </>
   );

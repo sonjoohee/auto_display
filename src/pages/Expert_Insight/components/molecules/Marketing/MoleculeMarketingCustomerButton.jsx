@@ -45,7 +45,7 @@ const MoleculeMarketingCustomerButton = () => {
         },
         {
           type: 'system',
-          message: `이 아이템에 매력을 느낄 주요 고객은 누구일까요?\n가장 적합하다고 생각하는 타겟을 골라주세요`,
+          message: `이 아이템에 매력을 느낄 주요 고객은 누구일까요?\n곧 주요 타겟 고객 군을 분석해 제시해 드릴게요 🧾`,
           expertIndex: 0,
         },
         {
@@ -76,7 +76,7 @@ const MoleculeMarketingCustomerButton = () => {
       updatedConversation.push(
         {
           type: 'user',
-          message: '고객 분석으로 잠재력 발견하기',
+          message: `${marketingSelectedCustomer[index].content.name}에 대한 ${titleOfBusinessInfo}의 잠재력 알아보기`,
         },
         {
           type: 'system',

@@ -245,7 +245,7 @@ const OrganismBmLeanAdsReport = () => {
         </>
       ) : (
         <>
-          <h1>하나의 문제를 골라주세요</h1>
+          <h1>하나의 핵심 문제를 선정해주세요.</h1>
           <OptionContainer>
             <ul>
               {allExamples.length > 0 ? (

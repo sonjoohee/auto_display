@@ -117,7 +117,7 @@ const MoleculePriceStartButton = () => {
         {
           type: "system",
           message:
-            `${titleOfBusinessInfo}에 대한 가격 정보를 확인하여 시장 가격 분석을 진행하겠습니다.`,
+            `${titleOfBusinessInfo}에 관련된 제품 가격 정보를 확인하여 시장 가격 분석을 진행하겠습니다.`,
           expertIndex: selectedExpertIndex,
         },
         {
