@@ -1236,6 +1236,7 @@ const ProjectName = styled.div`
     justify-content: space-between;
     max-width: 1030px;
     width: 100%;
+    padding:0 20px;
   }
 
   p {

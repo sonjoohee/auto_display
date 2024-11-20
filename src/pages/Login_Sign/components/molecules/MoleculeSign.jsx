@@ -66,10 +66,10 @@ const LoginContainer = styled.div`
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     h1 {
-      font-size:1.5rem;
+      font-size:1rem;
 
       img {
-        height:23px;
+        height:16px;
       }
     }
   }
@@ -91,5 +91,13 @@ const Separator = styled.div`
     margin: 0 15px;
     font-size: 1rem;
     color: ${palette.gray};
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    margin:22px 0 18px;
+
+    span {
+      font-size:0.75rem;
+    }
   }
 `;
