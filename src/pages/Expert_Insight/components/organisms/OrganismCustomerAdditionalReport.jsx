@@ -141,10 +141,10 @@ const OrganismCustomerAdditionalReport = ({
               목표고객: analysisReportData.mainCustomer,
             },
             question_info: customerAdditionQuestionInput,
-            // last_conversation: {
-            //   user: selectedCustomerAdditionalKeyword,
-            //   model: customerAdditionalReportData,
-            // },
+            last_conversation: {
+              user: selectedCustomerAdditionalKeyword,
+              model: customerAdditionalReportData,
+            }
           };
 
           let response = await axios.post(
