@@ -427,20 +427,26 @@ const PageExpertInsight = () => {
       const item = conversation[index];
 
       if (!newRenderedItems.includes(item)) {
-          let delay = 0;
-          if (index > 0 && conversation[index - 1].type === "system") {
-            const prevMessageLength = conversation[index - 1].message.length;
-            delay = prevMessageLength * 15;
-          }
-
-          totalDelay += delay;
-
-          const timer = setTimeout(() => {
+          // 중복 방지
+          if (item.type === "user") {
             setRenderedItems((prevItems) => [...prevItems, item]);
             setLastRenderedIndex(index);
-          }, totalDelay);
+          } else {
+            let delay = 0;
+            if (index > 0 && conversation[index - 1].type === "system") {
+              const prevMessageLength = conversation[index - 1].message.length;
+              delay = prevMessageLength * 15;
+            }
 
-          timers.push(timer);
+            totalDelay += delay;
+
+            const timer = setTimeout(() => {
+              setRenderedItems((prevItems) => [...prevItems, item]);
+              setLastRenderedIndex(index);
+            }, totalDelay);
+
+            timers.push(timer);
+          }
       }
     }
 
@@ -692,10 +698,6 @@ const PageExpertInsight = () => {
 
     loadConversation();
   }, [conversationId, isLoggedIn, navigate]);
-
-  useEffect(() => {
-    console.log(approachPath);
-  }, [approachPath]);
 
   // 스크롤
   // const [isScrolled, setIsScrolled] = useState(false);
@@ -1057,9 +1059,9 @@ const PageExpertInsight = () => {
                 })}
                 <div ref={chatEndRef} />
 
-                {selectedExpertIndex === "0" ||
+                {(selectedExpertIndex === "0" ||
                 selectedExpertIndex === "2" ||
-                selectedExpertIndex === "3" ? (
+                selectedExpertIndex === "3") && !isMarketing ? (
                   <>
                     {/* 검색해서 시작 */}
                     {(approachPath === -1 || approachPath === 3) &&
@@ -1078,12 +1080,12 @@ const PageExpertInsight = () => {
                         "reportButton" &&
                       !isLoading && <OrganismBizExpertSelect />} */}
                   </>
-                ) : selectedExpertIndex === "1" ? (
-                  <>
-                    {strategyConsultantReportData.length === 3 && (
-                      <OrganismBizExpertSelect />
-                    )}
-                  </>
+                // ) : selectedExpertIndex === "1" ? (
+                //   <>
+                //     {strategyConsultantReportData.length === 3 && (
+                //       <OrganismBizExpertSelect />
+                //     )}
+                //   </>
                 ) : selectedExpertIndex === "4" ? (
                   <>
                     {Object.keys(recommendedTargetData).length !== 0 && (
