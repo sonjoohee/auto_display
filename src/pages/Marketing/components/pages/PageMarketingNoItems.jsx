@@ -359,6 +359,8 @@ const PageMarketingNoItems = () => {
       changingConversation: { marketingMbtiResult: mbtiResult },
     });
 
+    setIsRadioSelected(true);
+
     if (!isMobile) {
       navigate("/MarketingSetting/2/Result");
     }
