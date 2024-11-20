@@ -1,42 +1,49 @@
 // App.js
 import React, { useEffect, useState } from "react";
-import './App.css';
+import "./App.css";
 import GlobalStyles from "./assets/GlobalStyle";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { useAtom } from 'jotai';
-import { IS_LOGGED_IN,USER_NAME, USER_EMAIL ,IS_SOCIAL_LOGGED_IN, EXPERT_DETAIL_DATA, IS_MOBILE } from './pages/AtomStates'; // 로그인 상태 아톰 임포트
+import { useAtom } from "jotai";
+import {
+  IS_LOGGED_IN,
+  USER_NAME,
+  USER_EMAIL,
+  IS_SOCIAL_LOGGED_IN,
+  EXPERT_DETAIL_DATA,
+  IS_MOBILE,
+} from "./pages/AtomStates"; // 로그인 상태 아톰 임포트
 import axios from "axios";
 
-import PageLogin from './pages/Login_Sign/components/pages/PageLogin';
-import PageSignup from './pages/Login_Sign/components/pages/PageSignup';
-import PageLoginSuccess from './pages/Login_Sign/components/pages/PageLoginSuccess';
-import PageVerifyEmail from './pages/Login_Sign/components/pages/PageVerifyEmail';
-import PageEmailVerified from './pages/Login_Sign/components/pages/PageEmailVerified';
-import PageEmailVerificationFailed from './pages/Login_Sign/components/pages/PageEmailVerificationFailed';
-import PageResetPassword from './pages/Login_Sign/components/pages/PageResetPassword';
-import PageRequestResetPassword from './pages/Login_Sign/components/pages/PageRequestResetPassword';
-import PagePayTest from './pages/Purchase_Credit/components/pages/PagePayTest';
-import PageCompletedMail from './pages/Login_Sign/components/pages/PageCompletedMail';
+import PageLogin from "./pages/Login_Sign/components/pages/PageLogin";
+import PageSignup from "./pages/Login_Sign/components/pages/PageSignup";
+import PageLoginSuccess from "./pages/Login_Sign/components/pages/PageLoginSuccess";
+import PageVerifyEmail from "./pages/Login_Sign/components/pages/PageVerifyEmail";
+import PageEmailVerified from "./pages/Login_Sign/components/pages/PageEmailVerified";
+import PageEmailVerificationFailed from "./pages/Login_Sign/components/pages/PageEmailVerificationFailed";
+import PageResetPassword from "./pages/Login_Sign/components/pages/PageResetPassword";
+import PageRequestResetPassword from "./pages/Login_Sign/components/pages/PageRequestResetPassword";
+import PagePayTest from "./pages/Purchase_Credit/components/pages/PagePayTest";
+import PageCompletedMail from "./pages/Login_Sign/components/pages/PageCompletedMail";
 
-import PageMeetAiExpert from './pages/Meet_Ai_Expert/components/pages/PageMeetAiExpert';
-import LandingPage from './pages/Meet_Ai_Expert/components/pages/LandingPage';
+import PageMeetAiExpert from "./pages/Meet_Ai_Expert/components/pages/PageMeetAiExpert";
+import LandingPage from "./pages/Meet_Ai_Expert/components/pages/LandingPage";
 import PageExpertInsight from "./pages/Expert_Insight/components/pages/PageExpertInsight";
 
-import PageMarketingLanding from './pages/Marketing/components/pages/PageMarketingLanding';
+import PageMarketingLanding from "./pages/Marketing/components/pages/PageMarketingLanding";
 
 import CuratorStoryboard from "./pages/Expert_Insight/components/pages/CuratorStoryboard";
-import PageMarketingYesItems from './pages/Marketing/components/pages/PageMarketingYesItems';
-import PageMarketingNoItems from './pages/Marketing/components/pages/PageMarketingNoItems';
+import PageMarketingYesItems from "./pages/Marketing/components/pages/PageMarketingYesItems";
+import PageMarketingNoItems from "./pages/Marketing/components/pages/PageMarketingNoItems";
 import PageMarketingNoItemsResult from "./pages/Marketing/components/pages/PageMarketingNoItemsResult";
-import MarketingLandingPage from './pages/Meet_Ai_Expert/components/pages/MarketingLandingPage';
+import MarketingLandingPage from "./pages/Meet_Ai_Expert/components/pages/MarketingLandingPage";
 
 // Biz
-import Lending from './pages/Lending';
+import Lending from "./pages/Lending";
 import TargetSetting from "./pages/Persona/TargetSetting";
 import TargetChoice from "./pages/Persona/TargetChoice";
 import PersonaGenerator from "./pages/Persona/PersonaGenerator";
 import Loading from "./pages/Persona/Loading";
-import LoadingPersona from "./pages/Persona/LoadingPersona"; 
+import LoadingPersona from "./pages/Persona/LoadingPersona";
 
 import SamplePage from "./pages/Meet_Ai_Expert/components/pages/SamplePage";
 
@@ -67,13 +74,13 @@ function App() {
 
   // 애플리케이션이 로드될 때 로그인 상태 확인
   useEffect(() => {
-    const token = sessionStorage.getItem('accessToken'); // sessionStorage에서 토큰 확인
-    const storedUserName = sessionStorage.getItem('userName');
-    const storedUserEmail = sessionStorage.getItem('userEmail');
-    const isSocialLogin = sessionStorage.getItem('isSocialLogin'); // 소셜 로그인 여부 확인
+    const token = sessionStorage.getItem("accessToken"); // sessionStorage에서 토큰 확인
+    const storedUserName = sessionStorage.getItem("userName");
+    const storedUserEmail = sessionStorage.getItem("userEmail");
+    const isSocialLogin = sessionStorage.getItem("isSocialLogin"); // 소셜 로그인 여부 확인
 
     if (token && storedUserName) {
-      setIsLoggedIn(true);  // 토큰이 있으면 로그인 상태로 설정
+      setIsLoggedIn(true); // 토큰이 있으면 로그인 상태로 설정
     } else {
       setIsLoggedIn(false); // 토큰이 없으면 로그아웃 상태로 설정
     }
@@ -114,7 +121,7 @@ function App() {
       } catch (error) {
         // 서버가 응답하지 않거나 에러 발생 시 서버 다운 처리
         setIsServerDown(true);
-        
+
         sessionStorage.removeItem("accessToken"); // 세션 스토리지에서 토큰 삭제
         sessionStorage.removeItem("userName");
         sessionStorage.removeItem("userEmail");
@@ -152,9 +159,9 @@ function App() {
         </div>
       )}
 
-        <BrowserRouter>
-          <Routes>
-            {/* <Route path="/login" element={<PageLogin />} />
+      <BrowserRouter>
+        <Routes>
+          {/* <Route path="/login" element={<PageLogin />} />
             <Route path="/signup" element={<PageSignup />} />
             <Route path="/success" element={<PageLoginSuccess />} />
             <Route path="/verify-email" element={<PageVerifyEmail />} />
@@ -165,38 +172,55 @@ function App() {
             <Route path="/PagePayTest" element={<PagePayTest />} />
             <Route path="/CompletedMail" element={<PageCompletedMail />}></Route> */}
 
-            <Route path="/" element={<PageMarketingLanding />} />
-            <Route path="*" element={<PageMarketingLanding />} />
-            {/* <Route path="/Landing" element={<LandingPage />}></Route> */}
-            <Route path="/MeetAiExpert" element={<PageMeetAiExpert />} />
-            <Route path="/ExpertInsight" element={<PageExpertInsight />}></Route>
-            <Route path="/conversation/:conversationId" element={<PageExpertInsight />} />
+          <Route path="/" element={<PageMarketingLanding />} />
+          <Route path="*" element={<PageMarketingLanding />} />
+          {/* <Route path="/Landing" element={<LandingPage />}></Route> */}
+          <Route path="/MeetAiExpert" element={<PageMeetAiExpert />} />
+          <Route path="/ExpertInsight" element={<PageExpertInsight />}></Route>
+          <Route
+            path="/conversation/:conversationId"
+            element={<PageExpertInsight />}
+          />
 
-            {/* 마케팅 */}
-            <Route path="/MarketingLanding" element={<PageMarketingLanding />}></Route>
-            <Route path="/MarketingSetting/1" element={<PageMarketingYesItems />}></Route>
-            <Route path="/MarketingSetting/2" element={<PageMarketingNoItems />}></Route>
-            <Route path="/MarketingSetting/2/Result" element={<PageMarketingNoItemsResult />}></Route>
-      
-            <Route path="/CuratorStoryboard" element={<CuratorStoryboard />}></Route>
-            {/* <Route path="/MarketingLandingPage" element={<MarketingLandingPage />}></Route> */}
-            <Route path="/SamplePage" element={<SamplePage />}></Route>
+          {/* 마케팅 */}
+          <Route
+            path="/MarketingLanding"
+            element={<PageMarketingLanding />}
+          ></Route>
+          <Route
+            path="/MarketingSetting/1"
+            element={<PageMarketingYesItems />}
+          ></Route>
+          <Route
+            path="/MarketingSetting/2"
+            element={<PageMarketingNoItems />}
+          ></Route>
+          <Route
+            path="/MarketingSetting/2/Result"
+            element={<PageMarketingNoItemsResult />}
+          ></Route>
 
-            {/* AI 패널 */}
-            {/* <Route path="/AI_Panel" element={<PageAIPanelList />} />
+          <Route
+            path="/CuratorStoryboard"
+            element={<CuratorStoryboard />}
+          ></Route>
+          {/* <Route path="/MarketingLandingPage" element={<MarketingLandingPage />}></Route> */}
+          <Route path="/SamplePage" element={<SamplePage />}></Route>
+
+          {/* AI 패널 */}
+          {/* <Route path="/AI_Panel" element={<PageAIPanelList />} />
             <Route path="/QuickReport" element={<BusinessTool />} />
             <Route path="/PageAIPanelList" element={<PageAIPanelList />}></Route> */}
 
-            {/* Biz */}
-            {/* <Route path="/Lending" element={<Lending />} />
+          {/* Biz */}
+          {/* <Route path="/Lending" element={<Lending />} />
             <Route path="/TargetSetting" element={<TargetSetting />} />
             <Route path="/TargetChoice" element={<TargetChoice />} />
             <Route path="/Loading" element={<Loading />} />
             <Route path="/LoadingPersona" element={<LoadingPersona />} />
             <Route path="/PersonaGenerator" element={<PersonaGenerator />} /> */}
-
-          </Routes>
-        </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
