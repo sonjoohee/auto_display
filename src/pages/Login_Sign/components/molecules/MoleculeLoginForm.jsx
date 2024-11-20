@@ -72,8 +72,20 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
     return true;
   };
 
+  const isIOSDevice = () => {
+    const isIOS =
+      /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const isAppleDevice = navigator.userAgent.includes("Macintosh");
+    const isTouchScreen = navigator.maxTouchPoints >= 1; // iOS 13 이상 체크
+
+    return isIOS || (isAppleDevice && isTouchScreen);
+  };
+
   // 모바일 감지 함수 추가
   const isMobileDevice = () => {
+    if (isIOSDevice()) {
+      return true;
+    }
     const toMatch = [
       /Android/i,
       /webOS/i,
@@ -234,92 +246,92 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
 
   return (
     <>
-    <ThemeProvider theme={theme}>
-      {/* 팝업이 열리면 로그인 폼은 숨기고 팝업만 표시 */}
-      {isSignPopupOpen || isPasswordRestPopupOpen ? null : (
-        <LoginFormContainer>
-          <div>
-            <label htmlFor="email">
-              아이디<span>*</span>
-            </label>
-            <StyledAtomInput
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="이메일 주소를 입력해주세요"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="password">
-              비밀번호<span>*</span>
-            </label>
-            <StyledAtomInput
-              type={showPassword ? "text" : "password"}
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="비밀번호를 입력해주세요"
-              onKeyDown={handleKeyPress}
-            />
-            <TogglePasswordButton onClick={togglePasswordVisibility}>
-              {showPassword ? <FaEye /> : <FaEyeSlash />}
-            </TogglePasswordButton>
-          </div>
-
-          <PasswordResetLink>
-            <a onClick={handlePasswordRestClick}>비밀번호 찾기</a>
-          </PasswordResetLink>
-
-          <StyledLoginButton
-            onClick={handleLogin}
-            disabled={!email || !password}
-          >
-            로그인
-          </StyledLoginButton>
-
-          {errorStatus && <ErrorMessage>{errorStatus}</ErrorMessage>}
-
-          <JoinWrap>
-            <p>InterviewX가 처음이에요</p>
-            <Link to="#" onClick={handleSignClick}>
-              가입하기
-            </Link>
-          </JoinWrap>
-        </LoginFormContainer>
-      )}
-      {/* 비밀번호 재설정 팝업 */}
-      {isPasswordRestPopupOpen && (
-        <MoleculeResetPasswordPopup onClose={closePasswordRestPopup} />
-      )}{" "}
-      {/* 모바일 경고 팝업 */}
-      {showMobileWarning && (
-        <Popup Cancel>
-          <div>
-            <button
-              type="button"
-              className="closePopup"
-              onClick={handleExitCancel}
-            >
-              닫기
-            </button>
-            <span>
-              <img src={images.ExclamationMark} alt="" />
-            </span>
-            <p>
-              <strong>본 서비스는 웹 전용으로 운영되고 있습니다.</strong>
-              <span>웹에서 최적의 작업을 진행하세요</span>
-            </p>
-            <div className="btnWrap">
-              <button type="button" onClick={handleMobileWarningConfirm}>
-                확인
-              </button>
+      <ThemeProvider theme={theme}>
+        {/* 팝업이 열리면 로그인 폼은 숨기고 팝업만 표시 */}
+        {isSignPopupOpen || isPasswordRestPopupOpen ? null : (
+          <LoginFormContainer>
+            <div>
+              <label htmlFor="email">
+                아이디<span>*</span>
+              </label>
+              <StyledAtomInput
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="이메일 주소를 입력해주세요"
+              />
             </div>
-          </div>
-        </Popup>
-      )}
-    </ThemeProvider>
+
+            <div>
+              <label htmlFor="password">
+                비밀번호<span>*</span>
+              </label>
+              <StyledAtomInput
+                type={showPassword ? "text" : "password"}
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="비밀번호를 입력해주세요"
+                onKeyDown={handleKeyPress}
+              />
+              <TogglePasswordButton onClick={togglePasswordVisibility}>
+                {showPassword ? <FaEye /> : <FaEyeSlash />}
+              </TogglePasswordButton>
+            </div>
+
+            <PasswordResetLink>
+              <a onClick={handlePasswordRestClick}>비밀번호 찾기</a>
+            </PasswordResetLink>
+
+            <StyledLoginButton
+              onClick={handleLogin}
+              disabled={!email || !password}
+            >
+              로그인
+            </StyledLoginButton>
+
+            {errorStatus && <ErrorMessage>{errorStatus}</ErrorMessage>}
+
+            <JoinWrap>
+              <p>InterviewX가 처음이에요</p>
+              <Link to="#" onClick={handleSignClick}>
+                가입하기
+              </Link>
+            </JoinWrap>
+          </LoginFormContainer>
+        )}
+        {/* 비밀번호 재설정 팝업 */}
+        {isPasswordRestPopupOpen && (
+          <MoleculeResetPasswordPopup onClose={closePasswordRestPopup} />
+        )}{" "}
+        {/* 모바일 경고 팝업 */}
+        {showMobileWarning && (
+          <Popup Cancel>
+            <div>
+              <button
+                type="button"
+                className="closePopup"
+                onClick={handleExitCancel}
+              >
+                닫기
+              </button>
+              <span>
+                <img src={images.ExclamationMark} alt="" />
+              </span>
+              <p>
+                <strong>본 서비스는 웹 전용으로 운영되고 있습니다.</strong>
+                <span>웹에서 최적의 작업을 진행하세요</span>
+              </p>
+              <div className="btnWrap">
+                <button type="button" onClick={handleMobileWarningConfirm}>
+                  확인
+                </button>
+              </div>
+            </div>
+          </Popup>
+        )}
+      </ThemeProvider>
     </>
   );
 };
@@ -440,7 +452,7 @@ const JoinWrap = styled.div`
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    margin-top:20px;
+    margin-top: 20px;
   }
 `;
 

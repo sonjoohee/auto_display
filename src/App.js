@@ -179,10 +179,13 @@ function App() {
           {/* <Route path="/Landing" element={<LandingPage />}></Route> */}
           <Route path="/MeetAiExpert" element={<PageMeetAiExpert />} />
           <Route path="/ExpertInsight" element={<PageExpertInsight />}></Route>
-          <Route path="/MarketingExpertInsight" element={<PageMarketingExpertInsight />}></Route>
+          <Route
+            path="/MarketingExpertInsight"
+            element={<PageMarketingExpertInsight />}
+          ></Route>
           {isMarketing ? (
             <Route
-            path="/conversation/:conversationId"
+              path="/conversation/:conversationId"
               element={<PageMarketingExpertInsight />}
             />
           ) : (
