@@ -1169,8 +1169,8 @@ const PageMarketingNoItems = () => {
                   generateMbti("IT/테크");
                 }}
               >
-                <input type="radio" id="q23" name="question13" />
-                <label htmlFor="q23">
+                <input type="radio" id="q25" name="question13" />
+                <label htmlFor="q25">
                   <strong>💻</strong>
                   <span>IT / 테크</span>
                 </label>
@@ -1180,8 +1180,8 @@ const PageMarketingNoItems = () => {
                   generateMbti("헬스케어");
                 }}
               >
-                <input type="radio" id="q24" name="question13" />
-                <label htmlFor="q24">
+                <input type="radio" id="q26" name="question13" />
+                <label htmlFor="q26">
                   <strong>🏋️‍♀️</strong>
                   <span>헬스케어</span>
                 </label>
@@ -1191,8 +1191,8 @@ const PageMarketingNoItems = () => {
                   generateMbti("교육/컨설팅");
                 }}
               >
-                <input type="radio" id="q25" name="question13" />
-                <label htmlFor="q25">
+                <input type="radio" id="q27" name="question13" />
+                <label htmlFor="q27">
                   <strong>📘</strong>
                   <span>교육 / 컨설팅</span>
                 </label>
@@ -1202,8 +1202,8 @@ const PageMarketingNoItems = () => {
                   generateMbti("예술/디자인");
                 }}
               >
-                <input type="radio" id="q26" name="question13" />
-                <label htmlFor="q26">
+                <input type="radio" id="q28" name="question13" />
+                <label htmlFor="q28">
                   <strong>🎨</strong>
                   <span>예술 / 디자인</span>
                 </label>
@@ -1213,13 +1213,13 @@ const PageMarketingNoItems = () => {
                   generateMbti("외식/소매업");
                 }}
               >
-                <input type="radio" id="q27" name="question13" />
-                <label htmlFor="q27">
+                <input type="radio" id="q29" name="question13" />
+                <label htmlFor="q29">
                   <strong>🍔</strong>
                   <span>외식 / 소매업</span>
                 </label>
               </RadioButton>
-            </RadioButtonWrap> 
+            </RadioButtonWrap>
 
             <NextButton
               isRadioSelected={isRadioSelected}
