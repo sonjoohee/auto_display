@@ -136,6 +136,7 @@ const SelectButton = styled.div`
     font-family: 'Pretendard', 'Poppins';
     font-size:0.88rem;
     color:${palette.chatBlue};
+    text-align:left;
     padding:8px 20px;
     border-radius:40px;
     border:0;

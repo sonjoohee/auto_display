@@ -4,7 +4,8 @@ import React, { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
 // import styled from "styled-components";
-import styled, { css } from "styled-components";
+import styled, { css, ThemeProvider } from "styled-components";
+import theme from "../../../../assets/styles/Theme";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import AtomButton from "../atoms/AtomButton";
 import { isValidEmail } from "../atoms/AtomValidation";
@@ -233,6 +234,7 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
 
   return (
     <>
+    <ThemeProvider theme={theme}>
       {/* 팝업이 열리면 로그인 폼은 숨기고 팝업만 표시 */}
       {isSignPopupOpen || isPasswordRestPopupOpen ? null : (
         <LoginFormContainer>
@@ -317,6 +319,7 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
           </div>
         </Popup>
       )}
+    </ThemeProvider>
     </>
   );
 };
@@ -434,6 +437,10 @@ const JoinWrap = styled.div`
   a {
     color: ${palette.blue};
     text-decoration: underline;
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    margin-top:20px;
   }
 `;
 

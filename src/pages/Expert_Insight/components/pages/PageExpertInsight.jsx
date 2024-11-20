@@ -1266,6 +1266,10 @@ const ProjectName = styled.div`
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    .inner {
+      padding:0;
+    }
+
     div {
       padding: 0 20px;
     }

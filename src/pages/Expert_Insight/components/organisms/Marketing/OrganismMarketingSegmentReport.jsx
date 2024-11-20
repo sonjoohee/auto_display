@@ -366,26 +366,45 @@ ul {
 li {
   margin: 20px 0;
 }
+
+@media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+  .header {
+    align-items:flex-start;
+
+    h5 {
+      width:calc(100% - 35px);
+    }
+  }
+  
+  .body {
+    overflow:hidden;
+  }
+}
 `;
 
 const ScrollWrap = styled.div`
-position:relative;
-flex:1 1 0%;
-overflow-y:auto;
+  position:relative;
+  flex:1 1 0%;
+  // overflow-y:auto;
+  overflow:hidden;
 
-&::-webkit-scrollbar {
-  width: 5px;
-}
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
 
-&::-webkit-scrollbar-track {
-  border-radius: 10px;
-  background-color: transparent;
-}
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: transparent;
+  }
 
-&::-webkit-scrollbar-thumb {
-  background: ${palette.lineGray};
-  border-radius: 10px;
-}
+  &::-webkit-scrollbar-thumb {
+    background: ${palette.lineGray};
+    border-radius: 10px;
+  }
+
+  > div {
+    height:100%;
+  }
 `;
 
 const ListBox = styled.div`

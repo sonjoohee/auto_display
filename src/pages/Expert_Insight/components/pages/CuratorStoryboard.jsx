@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import styled, { css } from "styled-components";
+import styled, { css, ThemeProvider } from "styled-components";
+import theme from "../../../../assets/styles/Theme";
 import { Link } from "react-router-dom";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
@@ -24,6 +25,7 @@ const CuratorStoryboard = () => {
 
   return (
     <>
+    <ThemeProvider theme={theme}>
       <ChatSlideWrap>
         <Overlay isMenuOpen={isMenuOpen.some((open) => open)} onClick={() => setIsMenuOpen([false, false, false, false])} />
 
@@ -599,6 +601,7 @@ const CuratorStoryboard = () => {
           </div>
         </Sidebar>
       </ChatSlideWrap>
+    </ThemeProvider>
 
 
 {/* 
@@ -1440,6 +1443,14 @@ const Sidebar = styled.div`
 
   li {
     margin: 20px 0;
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    .header {
+      h5 {
+        width:calc(100% - 35px);
+      }
+    }
   }
 `;
 
