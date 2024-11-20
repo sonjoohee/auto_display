@@ -965,6 +965,7 @@ const Popup = styled.div`
     font-size: 1rem;
     text-align: left;
     padding-bottom: 32px;
+    margin-bottom: 32px;
     border-bottom: 1px solid ${palette.gray200};
 
     h5 {
@@ -1012,7 +1013,6 @@ const Popup = styled.div`
       padding: 0 20px;
       gap: 16px;
       padding-bottom: 32px;
-      margin-bottom: 32px;
 
       h5 {
         font-size: 1.13rem;
