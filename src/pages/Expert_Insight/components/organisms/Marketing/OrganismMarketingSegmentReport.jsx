@@ -424,6 +424,7 @@ border:1px solid ${palette.outlineGray};
 
   span {
     flex-shrink:0;
+    width:20px;
     font-size:0.88rem;
     line-height:1.5;
   }
