@@ -9,6 +9,7 @@ import {
   SkeletonLine,
 } from "../../../../assets/styles/Skeleton";
 import MoleculeReportController from "../molecules/MoleculeReportController";
+import Loader from "../atoms/AtomLoader"
 import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
 import axios from "axios";
@@ -630,23 +631,21 @@ const OrganismBizAnalysisSection = () => {
 
   return (
     <>
-      <AnalysisSection>
+      <>
         {isLoadingAnalysis || analysisButtonState ? (
-          <>
-            <SkeletonTitle className="title-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
-            <SkeletonTitle className="title-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
-            <SkeletonTitle className="title-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-          </>
+          <AnalysisSection
+            style={{
+              minWidth: "950px", 
+              minHeight: "532px", 
+              display: "flex",
+              justifyContent: "center", 
+              alignItems: "center"
+            }}
+          >
+            <Loader />
+          </AnalysisSection>
         ) : (
-          <>
+          <AnalysisSection>
             <h1>{titleOfBusinessInfo}</h1>
             {/* 주요 특징 섹션 */}
             <BoxWrap>
@@ -1013,9 +1012,9 @@ const OrganismBizAnalysisSection = () => {
                 strategyReportID={selectedExpertIndex}
               />
             )}
-          </>
+          </AnalysisSection>
         )}
-      </AnalysisSection>
+      </>
 
       {isPopupOpenDelete && (
         <Popup

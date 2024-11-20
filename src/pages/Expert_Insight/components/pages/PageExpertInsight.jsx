@@ -765,7 +765,7 @@ const PageExpertInsight = () => {
           <MainContent>
             <div>
               <ChatWrap>
-                {!isMarketing || (isMarketing && approachPath === 2) && <MoleculeBizName date={savedTimestamp} />}
+                {(!isMarketing || (isMarketing && approachPath === 2)) && <MoleculeBizName date={savedTimestamp} />}
 
                 {itemsToRender.map((item, index) => {
                   if (item.type === "user") {

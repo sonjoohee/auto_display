@@ -17,7 +17,7 @@ import {
   MARKETING_RESEARCH_REPORT_DATA,
 } from "../../../../AtomStates";
 
-import Loader from "../../pages/LoaderPage";
+import Loader from "../../atoms/AtomLoader";
 import { useSaveConversation } from "../../atoms/AtomSaveConversation";
 
 const OrganismMarketingResearchReport = () => {
@@ -170,7 +170,15 @@ const OrganismMarketingResearchReport = () => {
     <ThemeProvider theme={theme}>
     
       {isLoadingMarketingResearchReport || marketingStartButtonState ? (
-        <SummaryBox>
+        <SummaryBox
+          style={{
+            minWidth: "700px",
+            minHeight: "200px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+        >
           <Loader />
         </SummaryBox>
       ) : (
