@@ -167,7 +167,7 @@ function App() {
 
             <Route path="/" element={<PageMarketingLanding />} />
             <Route path="*" element={<PageMarketingLanding />} />
-            <Route path="/Landing" element={<LandingPage />}></Route>
+            {/* <Route path="/Landing" element={<LandingPage />}></Route> */}
             <Route path="/MeetAiExpert" element={<PageMeetAiExpert />} />
             <Route path="/ExpertInsight" element={<PageExpertInsight />}></Route>
             <Route path="/conversation/:conversationId" element={<PageExpertInsight />} />
