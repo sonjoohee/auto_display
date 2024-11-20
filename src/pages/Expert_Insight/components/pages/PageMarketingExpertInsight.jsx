@@ -154,7 +154,7 @@ import images from "../../../../assets/styles/Images";
 
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 
-const PageExpertInsight = () => {
+const PageMarketingExpertInsight = () => {
   const [strategyConsultantReportData, setStrategyConsultantReportData] =
     useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
   const [growthHackerSelectedSolution, setGrowthHackerSelectedSolution] =
@@ -346,7 +346,6 @@ const PageExpertInsight = () => {
     setIsPopupVisible((prev) => !prev);
   };
 
-  useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
   useEffect(() => {
     if (isMarketing && approachPath !== 2) {
       const handleBeforeUnload = (event) => {
