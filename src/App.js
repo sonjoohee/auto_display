@@ -11,6 +11,7 @@ import {
   IS_SOCIAL_LOGGED_IN,
   EXPERT_DETAIL_DATA,
   IS_MOBILE,
+  IS_MARKETING,
 } from "./pages/AtomStates"; // 로그인 상태 아톰 임포트
 import axios from "axios";
 
@@ -28,7 +29,7 @@ import PageCompletedMail from "./pages/Login_Sign/components/pages/PageCompleted
 import PageMeetAiExpert from "./pages/Meet_Ai_Expert/components/pages/PageMeetAiExpert";
 import LandingPage from "./pages/Meet_Ai_Expert/components/pages/LandingPage";
 import PageExpertInsight from "./pages/Expert_Insight/components/pages/PageExpertInsight";
-
+import PageMarketingExpertInsight from "./pages/Expert_Insight/components/pages/PageMarketingExpertInsight";
 import PageMarketingLanding from "./pages/Marketing/components/pages/PageMarketingLanding";
 
 import CuratorStoryboard from "./pages/Expert_Insight/components/pages/CuratorStoryboard";
@@ -55,6 +56,7 @@ function App() {
   const [isServerDown, setIsServerDown] = useState(false); // 서버 상태 관리
   const [, setExpertDetail] = useAtom(EXPERT_DETAIL_DATA); // 화면 크기를 체크하는 useEffect
   const [, setIsMobile] = useAtom(IS_MOBILE);
+  const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
 
   useEffect(() => {
     const handleResize = () => {
@@ -177,10 +179,18 @@ function App() {
           {/* <Route path="/Landing" element={<LandingPage />}></Route> */}
           <Route path="/MeetAiExpert" element={<PageMeetAiExpert />} />
           <Route path="/ExpertInsight" element={<PageExpertInsight />}></Route>
-          <Route
+          <Route path="/MarketingExpertInsight" element={<PageMarketingExpertInsight />}></Route>
+          {isMarketing ? (
+            <Route
             path="/conversation/:conversationId"
-            element={<PageExpertInsight />}
-          />
+              element={<PageMarketingExpertInsight />}
+            />
+          ) : (
+            <Route
+              path="/conversation/:conversationId"
+              element={<PageExpertInsight />}
+            />
+          )}
 
           {/* 마케팅 */}
           <Route
