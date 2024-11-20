@@ -645,6 +645,10 @@ const ListBox = styled.div`
       border-top:1px solid ${palette.outlineGray};
     }
 
+    > span {
+      width:23px;
+    }
+
     span {
       flex-shrink:0;
       font-size:0.88rem;

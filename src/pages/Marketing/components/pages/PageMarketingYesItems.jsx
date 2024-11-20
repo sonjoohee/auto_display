@@ -587,7 +587,7 @@ const Tooltip = styled.div`
 
 const QuestionWrap = styled.section`
   position:relative;
-  height:100vh;
+  height:100dvh;
   display:flex;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
@@ -646,10 +646,10 @@ const Answer = styled.div`
   flex:1 1 50%;
 
   .ideaSubmit {
-    position:absolute;
-    left:50%;
-    bottom:60px;
-    transform:translateX(-50%);
+    // position:absolute;
+    // left:50%;
+    // bottom:4dvh;
+    // transform:translateX(-50%);
     max-width:360px;
     width:100%;
     font-family:Pretendard, Poppins;

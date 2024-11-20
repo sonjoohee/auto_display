@@ -573,4 +573,10 @@ const Popup = styled.div`
         }
       `}
   }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    > div {
+      width: 90%;
+    }
+  }
 `;
