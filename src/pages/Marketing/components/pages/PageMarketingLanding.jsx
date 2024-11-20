@@ -172,9 +172,21 @@ const MainVisual = styled.section`
   overflow:hidden;
 
   > p {
+    position:relative;
     font-size:2.5rem;
     font-weight:700;
     line-height:1.3;
+
+    &:before {
+      position:absolute;
+      left:-40px;
+      top:-30px;
+      width:50px;
+      height:54px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='54' viewBox='0 0 50 54' fill='none'%3E%3Cpath d='M45.198 4.5V22.5' stroke='%23E6DEC7' stroke-opacity='0.5' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M18.698 20L30.9008 32.2028' stroke='%23E6DEC7' stroke-opacity='0.5' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M4.698 45L21.4654 49.5646' stroke='%23E6DEC7' stroke-opacity='0.5' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-size:100%;
+      content:'';
+    }
 
     span {
       padding:3px 15px;
@@ -211,6 +223,13 @@ const MainVisual = styled.section`
     > p {
       font-size:2rem;
 
+      &:before {
+        left:-30px;
+        top:-21px;
+        width:40px;
+        height:44px;
+      }
+  
       em {
         font-size:2.4rem;
       }
@@ -394,16 +413,21 @@ const VisualImg = styled.div`
 `;
 
 const StartIdeaWrap = styled.div`
-  // position:fixed;
+  position:fixed;
   // bottom:40px;
   left:50%;
   transform:translateX(-50%);
-  position: ${(props) => (props.isFixed ? 'fixed' : 'absolute')};  
-  bottom: ${(props) => (props.isFixed ? '40px' : '5%')};
+  // transform: translate(-50%, ${(props) => (props.isFixed ? '0' : 'calc(100% - 80px)')});
+  // position: ${(props) => (props.isFixed ? 'fixed' : 'absolute')};  
+  // bottom: ${(props) => (props.isFixed ? '40px' : '5%')};
+  top: ${(props) => (props.isFixed ? 'calc(100dvh - 150px)' : '700px')};
+
   display:flex;
   flex-direction:column;
   gap:16px;
-  transition:all .5s ease;
+  // transition:all .5s ease;
+  // transition: transform 0.5s ease, bottom 0.5s ease;
+  transition: top 0.5s ease;
 
   p {
     font-size:0.88rem;
@@ -440,6 +464,10 @@ const StartIdeaWrap = styled.div`
       color:${palette.white};
       background:${palette.black};
     }
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    top: ${(props) => (props.isFixed ? 'calc(100dvh - 140px)' : '75%')};
   }
 `;
 
@@ -527,9 +555,11 @@ const Copyright = styled.p`
   font-size:0.94rem;
   font-weight:300;
   color:rgba(0, 0, 0, 0.6);
-  margin:0 0 150px;
+  // margin:0 0 150px;
+  margin:30px 0 20px;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     font-size: 0.75rem;
+    margin-top:40px;
   }
 `;
