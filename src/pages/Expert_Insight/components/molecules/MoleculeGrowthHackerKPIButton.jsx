@@ -129,6 +129,7 @@ export default MoleculeGrowthHackerKPIButton;
 const SelectButton = styled.div`
   display:flex;
   align-items:center;
+  flex-wrap:wrap;
   gap:12px;
   margin-top: 12px;
   margin-left: 50px;
@@ -136,6 +137,7 @@ const SelectButton = styled.div`
   button {
     // display:inline-block;
     // width:fit-content;
+    flex-shrink:0;
     font-family: 'Pretendard', 'Poppins';
     font-size:0.88rem;
     color:${palette.chatBlue};
