@@ -347,7 +347,7 @@ const PageExpertInsight = () => {
   };
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
-  
+
   useEffect(() => {
     if (isMarketing && approachPath !== 2) {
       const handleBeforeUnload = (event) => {
@@ -427,11 +427,6 @@ const PageExpertInsight = () => {
       const item = conversation[index];
 
       if (!newRenderedItems.includes(item)) {
-        // 중복 방지
-        if (item.type === "user") {
-          setRenderedItems((prevItems) => [...prevItems, item]);
-          setLastRenderedIndex(index);
-        } else {
           let delay = 0;
           if (index > 0 && conversation[index - 1].type === "system") {
             const prevMessageLength = conversation[index - 1].message.length;
@@ -446,7 +441,6 @@ const PageExpertInsight = () => {
           }, totalDelay);
 
           timers.push(timer);
-        }
       }
     }
 
