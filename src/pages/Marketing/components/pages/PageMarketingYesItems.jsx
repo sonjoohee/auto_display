@@ -679,7 +679,7 @@ const Answer = styled.div`
     flex:1 1 78%;
     align-items:flex-start;
     justify-content:space-between;
-    padding:48px 20px;
+    padding:48px 20px 20px;
 
     .ideaSubmit {
       font-size:1rem;
@@ -819,6 +819,14 @@ const ListBox = styled.div`
     border-radius:5px;
     background:rgba(4, 83, 244, 0.1);
     cursor:pointer;
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    > div {
+      max-height:40dvh;
+      align-items:flex-start;
+      overflow-y:auto;
+    }
   }
 `;
 
