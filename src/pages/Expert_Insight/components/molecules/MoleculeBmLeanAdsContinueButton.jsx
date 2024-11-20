@@ -50,7 +50,7 @@ const MoleculeBmLeanAdsContinueButton = () => {
           {
             type: "system",
             message:
-              "제가 세분화하기 위한 여러가지 문제점을 도출해보았어요",
+              "캔버스를 보다 정교하게 세분화하기 위해 다양한 문제점을 도출해보았어요",
             expertIndex: selectedExpertIndex,
           },
           { type: `bmLeanAdsReport` }
@@ -99,8 +99,8 @@ const MoleculeBmLeanAdsContinueButton = () => {
   return (
     <>
       <SelectButton>
-          <button onClick={() => handleClick("more")}>린캔버스 세분화하기 🔎</button>
-          <button onClick={() => handleClick("enough")}>이정도면 충분해요 🔎</button>
+          <button onClick={() => handleClick("more")}>린캔버스 세분화하기  ✂</button>
+          <button onClick={() => handleClick("enough")}>이정도면 충분해요</button>
       </SelectButton>
     </>
   );

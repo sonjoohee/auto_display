@@ -353,7 +353,7 @@ const OrganismBizAnalysisSection = () => {
                 {
                   type: "system",
                   message:
-                    "이상이 없으시면, 이제 도움이 될만한 사례 분석을 시작해볼까요?",
+                    "이제 아이템을 분석하여, 성장 가능성을 극대화할 그로스 해킹 방법을 찾아보겠습니다. 시작할까요? 🔍",
                   expertIndex: -1,
                 },
                 { type: "growthHackerStartButton" }

@@ -96,8 +96,8 @@ const MoleculeBmBmAdsContinueButton = () => {
   return (
     <>
       <SelectButton>
-          <button onClick={() => handleClick("more")}>비즈니스 모델 캔버스 세분화하기 🔎</button>
-          <button onClick={() => handleClick("enough")}>이정도면 충분해요 🔎</button>
+          <button onClick={() => handleClick("more")}>비즈니스 모델 캔버스 세분화하기 ✂</button>
+          <button onClick={() => handleClick("enough")}>이정도면 충분해요</button>
       </SelectButton>
     </>
   );

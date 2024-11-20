@@ -21,11 +21,13 @@ import {
   SURVEY_GOAL_SUGGESTION_LIST,
   BM_OR_LEAN,
   IS_MARKETING,
+  STRATEGY_CONSULTANT_REPORT_DATA,
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
 
 const OrganismBizExpertSelect = () => {
+  const [strategyConsultantReportData, setStrategyConsultantReportData] = useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
   const { saveConversation } = useSaveConversation();
   const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
   const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(
@@ -99,6 +101,7 @@ const OrganismBizExpertSelect = () => {
             type: "system",
             message:
               "먼저 분석이 필요한 제품이나 서비스에 대해서 알려주세요 📝",
+            expertIndex: -1,
           },
           { type: `strategy_${index}` }
         );
@@ -195,7 +198,7 @@ const OrganismBizExpertSelect = () => {
           {
             type: "system",
             message:
-              "안녕하세요! 저는 가격 분석 전문가 한준혁입니다. 다양한 데이터 소스를 활용해 시장의 가격 변동을 분석하고, 적정 가격을 도출해드립니다. 경쟁사 동향과 시장 트렌드를 파악해 최적의 가격 전략을 세울 수 있도록 도와드려요. 분석이 필요한 제품이나 서비스에 대해 알려주세요 📝\n📌 현재는 제품만 분석이 가능합니다",
+              "안녕하세요! 저는 가격 분석 전문가 한준혁입니다. 다양한 데이터 소스를 활용해 시장의 가격 변동을 분석하고, 적정 가격을 도출해드립니다. 경쟁사 동향과 시장 트렌드를 파악해 최적의 가격 전략을 세울 수 있도록 도와드려요.",
             expertIndex: index,
           },
           { type: `priceStartButton` }
@@ -271,8 +274,7 @@ const OrganismBizExpertSelect = () => {
       {/* 모든 전문가가 선택되었거나, 모든 보고서가 생성되었으면 영역 표시 안함
           selectedExpertList는 DB에 저장되고 있지 않기 떄문에 expertReportData 조건이 필요함 */}
 
-      {(selectedExpertList.includes("1") ||
-        strategyReportData.hasOwnProperty(1)) &&
+      {(selectedExpertList.includes("1") || strategyConsultantReportData.length !== 0) &&
       // (selectedExpertList.includes("2") || strategyReportData.hasOwnProperty(2)) &&
       // (selectedExpertList.includes("3") || strategyReportData.hasOwnProperty(3)) &&
       // (selectedExpertList.includes("4") || strategyReportData.hasOwnProperty(4)) &&
@@ -285,7 +287,7 @@ const OrganismBizExpertSelect = () => {
           <h1>아래 분야별 전문가와 대화를 통해 아이디어를 발전시켜보세요.</h1>
           <SelectOptions>
             {selectedExpertList.includes("1") ||
-            strategyReportData.hasOwnProperty(1) ? null : (
+            strategyConsultantReportData.length !== 0 ? null : (
               <div>
                 <img src={images.IconExpert1} alt="" />
                 <p>전략 컨설턴트에게 최적화 전략 상담 받기</p>
