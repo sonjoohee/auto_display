@@ -9,6 +9,7 @@ import {
   SkeletonTitle,
   SkeletonLine,
 } from "../../../../assets/styles/Skeleton";
+import Loader from "../../../Expert_Insight/components/atoms/AtomLoader";
 import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
 import axios from "axios";
 import { useAtom } from "jotai";
@@ -393,11 +394,9 @@ const PageMarketingYesItems = () => {
               <p>아이디어 특징을 확인하고 내 비즈니스로 발전시킬 힌트를 얻어보세요</p>
             </div>
             {isLoadingAnalysis ? (
-              <>
-                <SkeletonLine className="content-placeholder" />
-                <SkeletonLine className="content-placeholder" />
-                <SkeletonLine className="content-placeholder" />
-              </>
+              <LoaderBox>
+                <Loader />
+              </LoaderBox>
             ) : (
               <>
               <ListBox>
@@ -1007,5 +1006,23 @@ const Popup = styled.div`
     > div {
       width:90%;
     }
+  }
+`;
+
+const LoaderBox = styled.div`
+  min-width: 544px;
+  min-height: 212px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  > div {
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:20px;
+    border-radius:20px;
+    border:1px solid ${palette.gray200};
   }
 `;

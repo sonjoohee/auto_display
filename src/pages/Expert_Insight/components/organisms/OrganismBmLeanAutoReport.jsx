@@ -19,11 +19,7 @@ import {
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
 
-import {
-  SkeletonTitle,
-  SkeletonLine,
-  Spacing,
-} from "../../../../assets/styles/Skeleton";
+import Loader from "../atoms/AtomLoader";
 
 import images from "../../../../assets/styles/Images";
 
@@ -156,23 +152,13 @@ const OrganismBmLeanAutoReport = () => {
   }, [bmLeanAutoButtonState]);
 
   return (
-    <BoxWrap>
+    <>
       {isLoadingIdeaPriority || bmLeanAutoButtonState ? (
-        <>
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <Spacing />
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <Spacing />
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-        </>
+        <BoxWrap style={{minWidth: "950px", minHeight: "700px", display: "flex", justifyContent: "center", alignItems: "center"}}>
+          <Loader />
+        </BoxWrap>
       ) : (
-        <>
+        <BoxWrap>
           <Overlay isMenuOpen={isMenuOpen} onClick={() => setIsMenuOpen(false)} />
 
           <h1>{titleOfBusinessInfo}의 린 캔버스 - 기본형</h1>
@@ -475,9 +461,9 @@ const OrganismBmLeanAutoReport = () => {
             </div>
           </div>
         </Sidebar>
-        </>
+        </BoxWrap>
       )}
-    </BoxWrap>
+    </>
   );
 };
 

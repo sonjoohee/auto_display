@@ -22,11 +22,7 @@ import {
   GROWTH_HACKER_RECOMMENDED_SOLUTION,
 } from "../../../../pages/AtomStates";
 
-import {
-  SkeletonTitle,
-  SkeletonLine,
-  Spacing,
-} from "../../../../assets/styles/Skeleton";
+import Loader from "../atoms/AtomLoader";
 
 import { useAtom } from "jotai";
 
@@ -354,23 +350,13 @@ const OrganismGrowthHackerKPI = () => {
   ///////////////////////////////////////////////////////////////////////////////////////////////
 
   return (
-    <Wrap>
+    <>
       {isLoadingGrowthHacker || growthHackerButtonState ? (
-        <>
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <Spacing />
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <Spacing />
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-        </>
+        <Wrap style={{minWidth: "520px", minHeight: "555px", display: "flex", justifyContent: "center", alignItems: "center"}}>
+          <Loader />
+        </Wrap>
       ) : (
-      <>
+      <Wrap>
         <h1>
           AARRR 모델 기반 최적의 KPI 도출
           <p>
@@ -489,9 +475,9 @@ const OrganismGrowthHackerKPI = () => {
             </div>
           </DownloadButton> */}
         </KPIWrap>
-      </>
+      </Wrap>
       )}
-    </Wrap>
+    </>
   );
 };
 

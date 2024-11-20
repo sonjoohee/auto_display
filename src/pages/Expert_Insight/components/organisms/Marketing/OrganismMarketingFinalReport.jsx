@@ -194,7 +194,7 @@ const OrganismMarketingFinalReport = () => {
     <>
     <ThemeProvider theme={theme}>
       {isLoadingMarketingFinalReport || marketingFinalReportButtonState ? (
-        <SummaryBox>
+        <SummaryBox style={{minWidth: "800px", minHeight: "550px", display: "flex", justifyContent: "center", alignItems: "center"}}>
           <Loader />
         </SummaryBox>
       ) : (
