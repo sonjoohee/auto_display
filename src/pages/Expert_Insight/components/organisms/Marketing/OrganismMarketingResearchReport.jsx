@@ -193,55 +193,55 @@ const OrganismMarketingResearchReport = () => {
           </SummaryBox>
 
           <Sidebar isMenuOpen={isMenuOpen}>
-          <div>
-            <div className="header">
-              <h5>시장조사 상세 리포트</h5>
-              <button className="closePopup" onClick={() => setIsMenuOpen(false)}>닫기</button>
+            <div>
+              <div className="header">
+                <h5>시장조사 상세 리포트</h5>
+                <button className="closePopup" onClick={() => setIsMenuOpen(false)}>닫기</button>
+              </div>
+              <div className="body">
+                <p>{marketingResearchReportData?.[5]?.content?.conclusion}</p>
+                <ScrollWrap>
+                  <ListBox>
+                    <div>
+                      <span>📌</span>
+                      <div>
+                        <strong>시장에 이슈가 있는 걸까?</strong>
+                        <p>{marketingResearchReportData?.[0]?.content?.key_content}</p>
+                      </div>
+                    </div>
+                    <div>
+                      <span>⏰</span>
+                      <div>
+                        <strong>업계에 변화가 생긴 걸까?</strong>
+                        <p>{marketingResearchReportData?.[1]?.content?.key_content}</p>
+                      </div>
+                    </div>
+                    <div>
+                      <span>👩🏻‍🦰</span>
+                      <div>
+                        <strong>고객의 소비가 변한 걸까?</strong>
+                        <p>{marketingResearchReportData?.[2]?.content?.key_content}</p>
+                      </div>
+                    </div>
+                    <div>
+                      <span>🤝🏻</span>
+                      <div>
+                        <strong>경쟁사 상황은 어떠할까?</strong>
+                        <p>{marketingResearchReportData?.[3]?.content?.key_content}</p>
+                      </div>
+                    </div>
+                    <div>
+                      <span>🔎</span>
+                      <div>
+                        <strong>다른 요인이 더 있을까?</strong>
+                        <p>{marketingResearchReportData?.[4]?.content?.key_content}</p>
+                      </div>
+                    </div>
+                  </ListBox>
+                </ScrollWrap>
+              </div>
             </div>
-            <div className="body">
-              <p>{marketingResearchReportData?.[5]?.content?.conclusion}</p>
-              <ScrollWrap>
-                <ListBox>
-                  <div>
-                    <span>📌</span>
-                    <div>
-                      <strong>시장에 이슈가 있는 걸까?</strong>
-                      <p>{marketingResearchReportData?.[0]?.content?.key_content}</p>
-                    </div>
-                  </div>
-                  <div>
-                    <span>⏰</span>
-                    <div>
-                      <strong>업계에 변화가 생긴 걸까?</strong>
-                      <p>{marketingResearchReportData?.[1]?.content?.key_content}</p>
-                    </div>
-                  </div>
-                  <div>
-                    <span>👩🏻‍🦰</span>
-                    <div>
-                      <strong>고객의 소비가 변한 걸까?</strong>
-                      <p>{marketingResearchReportData?.[2]?.content?.key_content}</p>
-                    </div>
-                  </div>
-                  <div>
-                    <span>🤝🏻</span>
-                    <div>
-                      <strong>경쟁사 상황은 어떠할까?</strong>
-                      <p>{marketingResearchReportData?.[3]?.content?.key_content}</p>
-                    </div>
-                  </div>
-                  <div>
-                    <span>🔎</span>
-                    <div>
-                      <strong>다른 요인이 더 있을까?</strong>
-                      <p>{marketingResearchReportData?.[4]?.content?.key_content}</p>
-                    </div>
-                  </div>
-                </ListBox>
-              </ScrollWrap>
-            </div>
-          </div>
-        </Sidebar>
+          </Sidebar>
         </>
       )}
       
@@ -519,7 +519,8 @@ const Sidebar = styled.div`
 const ScrollWrap = styled.div`
   position:relative;
   flex:1 1 0%;
-  overflow-y:auto;
+  // overflow-y:auto;
+  overflow:hidden;
 
   &::-webkit-scrollbar {
     width: 5px;
@@ -533,6 +534,10 @@ const ScrollWrap = styled.div`
   &::-webkit-scrollbar-thumb {
     background: ${palette.lineGray};
     border-radius: 10px;
+  }
+
+  > div {
+    height:100%;
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
