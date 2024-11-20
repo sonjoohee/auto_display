@@ -435,7 +435,7 @@ const BottomBar = styled.div`
   align-items: center;
   // margin:0 20px;
   // margin-top: 40px;
-  z-index: 998;
+  z-index: 99;
   flex: auto !important;
 
   > p {
