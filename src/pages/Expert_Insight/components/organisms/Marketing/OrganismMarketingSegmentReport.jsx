@@ -366,6 +366,14 @@ ul {
 li {
   margin: 20px 0;
 }
+
+@media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+  .header {
+    h5 {
+      width:calc(100% - 35px);
+    }
+  }
+}
 `;
 
 const ScrollWrap = styled.div`
