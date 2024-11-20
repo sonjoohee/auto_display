@@ -359,7 +359,7 @@ const PageMarketingNoItems = () => {
       changingConversation: { marketingMbtiResult: mbtiResult },
     });
 
-    if(!isRadioSelected) {
+    if (!isMobile) {
       navigate("/MarketingSetting/2/Result");
     }
   };

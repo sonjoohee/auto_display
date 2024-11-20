@@ -186,6 +186,7 @@ const OrganismBizExpertSelect = () => {
             type: "system",
             message:
               "먼저 분석이 필요한 제품이나 서비스에 대해서 알려주세요 📝",
+            expertIndex: -1,
           },
           { type: `growthHackerOption` }
         );
@@ -233,6 +234,7 @@ const OrganismBizExpertSelect = () => {
             type: "system",
             message:
               "먼저 분석이 필요한 제품이나 서비스에 대해서 알려주세요 📝",
+            expertIndex: -1,
           },
           { type: `bmStartButton` }
         );
