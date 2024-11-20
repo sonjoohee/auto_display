@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import styled, { keyframes, css } from "styled-components";
+import styled, { keyframes, css, ThemeProvider } from "styled-components";
+import theme from "../../../../assets/styles/Theme";
 import { useAtom } from "jotai";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -631,6 +632,7 @@ const OrganismBizAnalysisSection = () => {
 
   return (
     <>
+    <ThemeProvider theme={theme}>
       <>
         {isLoadingAnalysis || analysisButtonState ? (
           <AnalysisSection
@@ -646,135 +648,18 @@ const OrganismBizAnalysisSection = () => {
           </AnalysisSection>
         ) : (
           <AnalysisSection>
-            <h1>{titleOfBusinessInfo}</h1>
-            {/* 주요 특징 섹션 */}
-            <BoxWrap>
-              <strong>
-                <img src={images.StarChack} alt="" />
-                주요 특징
-              </strong>
-              <ul>
-                {mainFeaturesOfBusinessInformation?.map((content, index) => (
-                  <li key={index}>
-                    {editingIndex.section === "mainFeatures" &&
-                    editingIndex.index === index ? (
-                      <InputField
-                        type="text"
-                        value={newEditContent}
-                        onChange={(e) => setNewEditContent(e.target.value)}
-                      />
-                    ) : (
-                      <p>{content}</p>
-                    )}
-                    {editingIndex.section === "mainFeatures" &&
-                    editingIndex.index === index ? (
-                      <>
-                        <BtnWrap>
-                          <button onClick={handleEditCancel}>
-                            <img src={images.IconClose2} alt="" />
-                            취소
-                          </button>
-                          <button onClick={handleApplyChange}>
-                            <img src={images.IconCheck2} alt="" />
-                            적용
-                          </button>
-                        </BtnWrap>
-                      </>
-                    ) : (
-                      <>
-                        {isEditingNow && (
-                          <>
-                            <BtnWrap>
-                              <button
-                                onClick={() =>
-                                  handleEditStart("mainFeatures", index)
-                                }
-                              >
-                                <img src={images.IconEdit2} alt="" />
-                                수정
-                              </button>
-                              <button
-                                onClick={() =>
-                                  confirmDelete("mainFeatures", index)
-                                }
-                              >
-                                <img src={images.IconDelete2} alt="" />
-                                삭제
-                              </button>
-                            </BtnWrap>
-                          </>
-                        )}
-                      </>
-                    )}
-                  </li>
-                ))}
-              </ul>
-              {isLoadingAdd1 ? (
-                <ProgressWrap>
-                  <ProgressBarContainer>
-                    <Progress progress={progress} />
-                  </ProgressBarContainer>
-                  <p>잠시만 기다려 주세요 ...</p>
-                </ProgressWrap>
-              ) : isAddingNow.section === "mainFeatures" &&
-                isAddingNow.isAdding &&
-                isEditingNow ? (
-                <AddInfo>
-                  <InputField
-                    value={newAddContent}
-                    onChange={(e) => {
-                      setNewAddContent(e.target.value);
-                    }}
-                    placeholder="새로운 정보를 추가해보세요"
-                  />
-                  <BtnWrap>
-                    <button
-                      onClick={() => {
-                        setIsAddingNow({ section: "", isAdding: false });
-                        setNewAddContent("");
-                      }}
-                    >
-                      <img src={images.IconClose2} alt="" />
-                      취소
-                    </button>
-                    <button onClick={() => handleAddSave("mainFeatures")}>
-                      <img src={images.IconCheck2} alt="" />
-                      저장
-                    </button>
-                    <button
-                      onClick={() => generateAddtionalContent("mainFeatures")}
-                    >
-                      <img src={images.IconMagic2} alt="" />
-                      생성
-                    </button>
-                  </BtnWrap>
-                </AddInfo>
-              ) : (
-                isEditingNow && (
-                  <button
-                    className="moreButton"
-                    onClick={() =>
-                      setIsAddingNow({
-                        section: "mainFeatures",
-                        isAdding: true,
-                      })
-                    }
-                  >
-                    특징 추가하기 +
-                  </button>
-                )
-              )}
-            </BoxWrap>
-            <BoxWrap>
-              <strong>
-                <img src={images.IconSetting} alt="" />
-                주요 기능
-              </strong>
-              <ul>
-                {mainCharacteristicOfBusinessInformation?.map(
-                  (content, index) => (
+            <div>
+              <h1>{titleOfBusinessInfo}</h1>
+              {/* 주요 특징 섹션 */}
+              <BoxWrap>
+                <strong>
+                  {/* <img src={images.StarChack} alt="" /> */}
+                  주요 특징
+                </strong>
+                <ul>
+                  {mainFeaturesOfBusinessInformation?.map((content, index) => (
                     <li key={index}>
-                      {editingIndex.section === "mainCharacteristic" &&
+                      {editingIndex.section === "mainFeatures" &&
                       editingIndex.index === index ? (
                         <InputField
                           type="text"
@@ -784,7 +669,7 @@ const OrganismBizAnalysisSection = () => {
                       ) : (
                         <p>{content}</p>
                       )}
-                      {editingIndex.section === "mainCharacteristic" &&
+                      {editingIndex.section === "mainFeatures" &&
                       editingIndex.index === index ? (
                         <>
                           <BtnWrap>
@@ -805,7 +690,7 @@ const OrganismBizAnalysisSection = () => {
                               <BtnWrap>
                                 <button
                                   onClick={() =>
-                                    handleEditStart("mainCharacteristic", index)
+                                    handleEditStart("mainFeatures", index)
                                   }
                                 >
                                   <img src={images.IconEdit2} alt="" />
@@ -813,7 +698,7 @@ const OrganismBizAnalysisSection = () => {
                                 </button>
                                 <button
                                   onClick={() =>
-                                    confirmDelete("mainCharacteristic", index)
+                                    confirmDelete("mainFeatures", index)
                                   }
                                 >
                                   <img src={images.IconDelete2} alt="" />
@@ -825,67 +710,186 @@ const OrganismBizAnalysisSection = () => {
                         </>
                       )}
                     </li>
-                  )
-                )}
-              </ul>
-              {isLoadingAdd2 ? (
-                <ProgressWrap>
-                  <ProgressBarContainer>
-                    <Progress progress={progress} />
-                  </ProgressBarContainer>
-                  <p>잠시만 기다려 주세요 ...</p>
-                </ProgressWrap>
-              ) : isAddingNow.section === "mainCharacteristic" &&
-                isAddingNow.isAdding &&
-                isEditingNow ? (
-                <AddInfo>
-                  <InputField
-                    value={newAddContent}
-                    onChange={(e) => {
-                      setNewAddContent(e.target.value);
-                    }}
-                    placeholder="새로운 정보를 추가해보세요"
-                  />
-                  <BtnWrap>
-                    <button
-                      onClick={() => {
-                        setIsAddingNow({ section: "", isAdding: false });
-                        setNewAddContent("");
+                  ))}
+                </ul>
+                {isLoadingAdd1 ? (
+                  <ProgressWrap>
+                    <ProgressBarContainer>
+                      <Progress progress={progress} />
+                    </ProgressBarContainer>
+                    <p>잠시만 기다려 주세요 ...</p>
+                  </ProgressWrap>
+                ) : isAddingNow.section === "mainFeatures" &&
+                  isAddingNow.isAdding &&
+                  isEditingNow ? (
+                  <AddInfo>
+                    <InputField
+                      value={newAddContent}
+                      onChange={(e) => {
+                        setNewAddContent(e.target.value);
                       }}
-                    >
-                      <img src={images.IconClose2} alt="" />
-                      취소
-                    </button>
-                    <button onClick={() => handleAddSave("mainCharacteristic")}>
-                      <img src={images.IconCheck2} alt="" />
-                      저장
-                    </button>
+                      placeholder="새로운 정보를 추가해보세요"
+                    />
+                    <BtnWrap>
+                      <button
+                        onClick={() => {
+                          setIsAddingNow({ section: "", isAdding: false });
+                          setNewAddContent("");
+                        }}
+                      >
+                        <img src={images.IconClose2} alt="" />
+                        취소
+                      </button>
+                      <button onClick={() => handleAddSave("mainFeatures")}>
+                        <img src={images.IconCheck2} alt="" />
+                        저장
+                      </button>
+                      <button
+                        onClick={() => generateAddtionalContent("mainFeatures")}
+                      >
+                        <img src={images.IconMagic2} alt="" />
+                        생성
+                      </button>
+                    </BtnWrap>
+                  </AddInfo>
+                ) : (
+                  isEditingNow && (
                     <button
+                      className="moreButton"
                       onClick={() =>
-                        generateAddtionalContent("mainCharacteristic")
+                        setIsAddingNow({
+                          section: "mainFeatures",
+                          isAdding: true,
+                        })
                       }
                     >
-                      <img src={images.IconMagic2} alt="" />
-                      생성
+                      특징 추가하기 +
                     </button>
-                  </BtnWrap>
-                </AddInfo>
-              ) : (
-                isEditingNow && (
-                  <button
-                    className="moreButton"
-                    onClick={() =>
-                      setIsAddingNow({
-                        section: "mainCharacteristic",
-                        isAdding: true,
-                      })
-                    }
-                  >
-                    기능 추가하기 +
-                  </button>
-                )
-              )}
-            </BoxWrap>
+                  )
+                )}
+              </BoxWrap>
+              <BoxWrap>
+                <strong>
+                  {/* <img src={images.IconSetting} alt="" /> */}
+                  주요 기능
+                </strong>
+                <ul className="disc">
+                  {mainCharacteristicOfBusinessInformation?.map(
+                    (content, index) => (
+                      <li key={index}>
+                        {editingIndex.section === "mainCharacteristic" &&
+                        editingIndex.index === index ? (
+                          <InputField
+                            type="text"
+                            value={newEditContent}
+                            onChange={(e) => setNewEditContent(e.target.value)}
+                          />
+                        ) : (
+                          <p>{content}</p>
+                        )}
+                        {editingIndex.section === "mainCharacteristic" &&
+                        editingIndex.index === index ? (
+                          <>
+                            <BtnWrap>
+                              <button onClick={handleEditCancel}>
+                                <img src={images.IconClose2} alt="" />
+                                취소
+                              </button>
+                              <button onClick={handleApplyChange}>
+                                <img src={images.IconCheck2} alt="" />
+                                적용
+                              </button>
+                            </BtnWrap>
+                          </>
+                        ) : (
+                          <>
+                            {isEditingNow && (
+                              <>
+                                <BtnWrap>
+                                  <button
+                                    onClick={() =>
+                                      handleEditStart("mainCharacteristic", index)
+                                    }
+                                  >
+                                    <img src={images.IconEdit2} alt="" />
+                                    수정
+                                  </button>
+                                  <button
+                                    onClick={() =>
+                                      confirmDelete("mainCharacteristic", index)
+                                    }
+                                  >
+                                    <img src={images.IconDelete2} alt="" />
+                                    삭제
+                                  </button>
+                                </BtnWrap>
+                              </>
+                            )}
+                          </>
+                        )}
+                      </li>
+                    )
+                  )}
+                </ul>
+                {isLoadingAdd2 ? (
+                  <ProgressWrap>
+                    <ProgressBarContainer>
+                      <Progress progress={progress} />
+                    </ProgressBarContainer>
+                    <p>잠시만 기다려 주세요 ...</p>
+                  </ProgressWrap>
+                ) : isAddingNow.section === "mainCharacteristic" &&
+                  isAddingNow.isAdding &&
+                  isEditingNow ? (
+                  <AddInfo>
+                    <InputField
+                      value={newAddContent}
+                      onChange={(e) => {
+                        setNewAddContent(e.target.value);
+                      }}
+                      placeholder="새로운 정보를 추가해보세요"
+                    />
+                    <BtnWrap>
+                      <button
+                        onClick={() => {
+                          setIsAddingNow({ section: "", isAdding: false });
+                          setNewAddContent("");
+                        }}
+                      >
+                        <img src={images.IconClose2} alt="" />
+                        취소
+                      </button>
+                      <button onClick={() => handleAddSave("mainCharacteristic")}>
+                        <img src={images.IconCheck2} alt="" />
+                        저장
+                      </button>
+                      <button
+                        onClick={() =>
+                          generateAddtionalContent("mainCharacteristic")
+                        }
+                      >
+                        <img src={images.IconMagic2} alt="" />
+                        생성
+                      </button>
+                    </BtnWrap>
+                  </AddInfo>
+                ) : (
+                  isEditingNow && (
+                    <button
+                      className="moreButton"
+                      onClick={() =>
+                        setIsAddingNow({
+                          section: "mainCharacteristic",
+                          isAdding: true,
+                        })
+                      }
+                    >
+                      기능 추가하기 +
+                    </button>
+                  )
+                )}
+              </BoxWrap>
+            </div>
             {
               // selectedExpertIndex !== "4" && <BoxWrap>
               //   <strong>
@@ -1081,6 +1085,7 @@ const OrganismBizAnalysisSection = () => {
           </div>
         </Popup>
       )}
+    </ThemeProvider>
     </>
   );
 };
@@ -1093,118 +1098,193 @@ const blinkAnimation = keyframes`
   100% { opacity: 1; }
 `;
 
+// const AnalysisSection = styled.div`
+//   position: relative;
+//   max-width: 1135px;
+//   // width: 91.5%;
+//   text-align: left;
+//   margin-top: 25px;
+//   margin-left: 50px;
+//   padding: 28px;
+//   border-radius: 15px;
+//   border: 1px solid ${palette.outlineGray};
+
+//   h1 {
+//     font-size: 1.25rem;
+//     font-weight: 400;
+//     margin-bottom: 20px;
+//   }
+
+//   > p {
+//     font-size: 0.875rem;
+//     line-height: 1.5;
+//     margin-top: 30px;
+
+//     span {
+//       color: ${palette.red};
+//     }
+//   }
+// `;
+
 const AnalysisSection = styled.div`
-  position: relative;
-  max-width: 1135px;
-  // width: 91.5%;
-  text-align: left;
-  margin-top: 25px;
-  margin-left: 50px;
-  padding: 28px;
-  border-radius: 15px;
-  border: 1px solid ${palette.outlineGray};
+  position:relative;
+  max-width:986px;
+  // width:100%;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+  text-align:left;
+  margin-top:25px;
+  margin-left:50px;
+  padding:28px;
+  border-radius:15px;
+  background:${palette.chatGray};
 
   h1 {
-    font-size: 1.25rem;
-    font-weight: 400;
-    margin-bottom: 20px;
+    font-size:1.25rem;
+    font-weight:300;
   }
 
-  > p {
-    font-size: 0.875rem;
-    line-height: 1.5;
-    margin-top: 30px;
+  > div {
+    display:flex;
+    flex-direction:column;
+    gap:40px;
+  }
 
-    span {
-      color: ${palette.red};
-    }
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    margin-left:0;
   }
 `;
 
 const BoxWrap = styled.div`
-  padding: 20px;
-  border-radius: 10px;
-  background: ${palette.chatGray};
-
-  + div {
-    margin-top: 12px;
-  }
+  display:flex;
+  flex-direction:column;
+  gap:12px;
 
   strong {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 10px;
+    font-weight:600;
+    line-height:1.2;
   }
 
-  li {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 5px;
-    padding-left: 10px;
+  ul {
+    position:relative;
+    font-weight:300;
+    line-height:1.6;
+    color:${palette.gray800};
+    padding-left:20px;
 
     &:before {
-      position: absolute;
-      left: 0;
-      top: 10px;
-      // top:50%;
-      // transform:translateY(-50%);
-      width: 5px;
-      height: 1px;
-      background: ${palette.darkGray};
-      content: "";
+      position:absolute;
+      left:0;
+      top:0;
+      width:2px;
+      height:100%;
+      background:${palette.gray200};
+      content:'';
     }
 
-    + li {
-      margin-top: 5px;
+    &.disc li {
+      position:relative;
+      padding-left:13px;
+
+      &:before {
+        position:absolute;
+        left:0;
+        top:11px;
+        width:3px;
+        height:3px;
+        border-radius:100%;
+        background:${palette.gray800};
+        content:'';
+      }
     }
-
-    input[type="text"] {
-      height: 30px;
-      font-size: 0.875rem;
-      padding: 4px 12px;
-      border: 0;
-    }
-  }
-
-  p {
-    font-size: 0.875rem;
-    color: ${palette.darkGray};
-    line-height: 1.5;
-  }
-
-  button {
-    flex-shrink: 0;
-    font-family: "Pretendard";
-    font-size: 0;
-    color: ${palette.gray};
-    padding: 5px 8px;
-    border-radius: 5px;
-    border: 0;
-    background: ${palette.white};
-
-    img {
-      width: 14px;
-      height: 14px;
-    }
-
-    &.add {
-      color: ${palette.white};
-      border: 1px solid ${palette.black};
-      background: ${palette.black};
-    }
-  }
-
-  .moreButton {
-    width: 100%;
-    font-size: 0.75rem;
-    margin-top: 4px;
-    padding: 8px;
-    border: 0;
   }
 `;
+
+// const BoxWrap = styled.div`
+//   padding: 20px;
+//   border-radius: 10px;
+//   background: ${palette.chatGray};
+
+//   + div {
+//     margin-top: 12px;
+//   }
+
+//   strong {
+//     display: flex;
+//     align-items: center;
+//     gap: 8px;
+//     margin-bottom: 10px;
+//   }
+
+//   li {
+//     position: relative;
+//     display: flex;
+//     justify-content: space-between;
+//     align-items: center;
+//     gap: 5px;
+//     padding-left: 10px;
+
+//     &:before {
+//       position: absolute;
+//       left: 0;
+//       top: 10px;
+//       // top:50%;
+//       // transform:translateY(-50%);
+//       width: 5px;
+//       height: 1px;
+//       background: ${palette.darkGray};
+//       content: "";
+//     }
+
+//     + li {
+//       margin-top: 5px;
+//     }
+
+//     input[type="text"] {
+//       height: 30px;
+//       font-size: 0.875rem;
+//       padding: 4px 12px;
+//       border: 0;
+//     }
+//   }
+
+//   p {
+//     font-size: 0.875rem;
+//     color: ${palette.darkGray};
+//     line-height: 1.5;
+//   }
+
+//   button {
+//     flex-shrink: 0;
+//     font-family: "Pretendard";
+//     font-size: 0;
+//     color: ${palette.gray};
+//     padding: 5px 8px;
+//     border-radius: 5px;
+//     border: 0;
+//     background: ${palette.white};
+
+//     img {
+//       width: 14px;
+//       height: 14px;
+//     }
+
+//     &.add {
+//       color: ${palette.white};
+//       border: 1px solid ${palette.black};
+//       background: ${palette.black};
+//     }
+//   }
+
+//   .moreButton {
+//     width: 100%;
+//     font-size: 0.75rem;
+//     margin-top: 4px;
+//     padding: 8px;
+//     border: 0;
+//   }
+// `;
 
 const BtnWrap = styled.div`
   display: flex;
