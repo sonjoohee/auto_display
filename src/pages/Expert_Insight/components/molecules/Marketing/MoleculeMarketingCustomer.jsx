@@ -26,6 +26,7 @@ import {
   MARKETING_SELECTED_CUSTOMER,
 } from "../../../../AtomStates";
 
+import Loader from "../../pages/LoaderPage";
 import { useSaveConversation } from "../../atoms/AtomSaveConversation";
 
 const MoleculeMarketingCustomer = ({ marketingCustomerCount }) => {
@@ -253,7 +254,7 @@ const MoleculeMarketingCustomer = ({ marketingCustomerCount }) => {
       <Wrapper>
         {isLoadingMarketingCustomer ?
         <OptionsContainer>
-          로딩 중...
+          <Loader />
         </OptionsContainer>
         :
         <> 

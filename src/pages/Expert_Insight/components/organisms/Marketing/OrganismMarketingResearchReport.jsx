@@ -17,6 +17,7 @@ import {
   MARKETING_RESEARCH_REPORT_DATA,
 } from "../../../../AtomStates";
 
+import Loader from "../../pages/LoaderPage";
 import { useSaveConversation } from "../../atoms/AtomSaveConversation";
 
 const OrganismMarketingResearchReport = () => {
@@ -170,7 +171,7 @@ const OrganismMarketingResearchReport = () => {
     
       {isLoadingMarketingResearchReport || marketingStartButtonState ? (
         <SummaryBox>
-          <h3>로딩 중...</h3>
+          <Loader />
         </SummaryBox>
       ) : (
         <>
