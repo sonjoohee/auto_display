@@ -21,11 +21,7 @@ import {
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
 
-import {
-  SkeletonTitle,
-  SkeletonLine,
-  Spacing,
-} from "../../../../assets/styles/Skeleton";
+import Loader from "../atoms/AtomLoader";
 
 const OrganismPriceReport = () => {
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
@@ -523,18 +519,8 @@ const OrganismPriceReport = () => {
   return (
     <>
       {isLoadingPrice || priceStartButtonState ? (
-        <Wrap>
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <Spacing />
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <Spacing />
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
+        <Wrap style={{minWidth: "520px", minHeight: "600px", display: "flex", justifyContent: "center", alignItems: "center"}}>
+          <Loader />
         </Wrap>
       ) : (
         <>

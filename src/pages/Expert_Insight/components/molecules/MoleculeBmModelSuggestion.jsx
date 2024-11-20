@@ -3,10 +3,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useAtom } from "jotai";
 import axios from "axios";
-import {
-  SkeletonTitle,
-  SkeletonLine,
-} from "../../../../assets/styles/Skeleton";
+import Loader from "../atoms/AtomLoader";
 import images from "../../../../assets/styles/Images";
 
 import {
@@ -150,25 +147,14 @@ const MoleculeBmModelSuggestion = () => {
     fetchModelSuggestion();
   }, [modelSuggestionButtonState]);
   return (
-    <Wrap>
+    <>
     {isLoadingBmModelSuggestionReport ? (
-      <>
-        <SkeletonTitle className="title-placeholder" />
-        <SkeletonLine className="content-placeholder" />
-        <SkeletonLine className="content-placeholder" />
-        <Spacing />
-        <SkeletonTitle className="title-placeholder" />
-        <SkeletonLine className="content-placeholder" />
-        <SkeletonLine className="content-placeholder" />
-        <Spacing />
-        <SkeletonTitle className="title-placeholder" />
-        <SkeletonLine className="content-placeholder" />
-        <SkeletonLine className="content-placeholder" />
-      </>
-
+      <Wrap style={{minWidth: "518px", minHeight: "530px", display: "flex", justifyContent: "center", alignItems: "center"}}>
+        <Loader />
+      </Wrap>
 
     ) : (
-      <>
+      <Wrap>
         <h1>린 캔버스 vs 비즈니스 모델 캔버스 매칭 분석
         <p>
             캔버스 알아보기
@@ -245,9 +231,9 @@ const MoleculeBmModelSuggestion = () => {
           </Content>
         </CanvasWrap>
         ))}
-    </>
+    </Wrap>
     )}
-  </Wrap>
+  </>
   );
 };
 

@@ -253,7 +253,7 @@ const MoleculeMarketingCustomer = ({ marketingCustomerCount }) => {
     <ThemeProvider theme={theme}>
       <Wrapper>
         {isLoadingMarketingCustomer ?
-        <OptionsContainer>
+        <OptionsContainer style={{minWidth: "500px", minHeight: "300px", display: "flex", justifyContent: "center", alignItems: "center"}}>
           <Loader />
         </OptionsContainer>
         :

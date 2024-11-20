@@ -24,11 +24,7 @@ import {
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
 
-import {
-  SkeletonTitle,
-  SkeletonLine,
-  Spacing,
-} from "../../../../assets/styles/Skeleton";
+import Loader from "../atoms/AtomLoader";
 
 import images from "../../../../assets/styles/Images";
 
@@ -332,23 +328,13 @@ useEffect(() => {
   }, [bmLeanCustomButtonState]);
 
   return (
-    <BoxWrap>
+    <>
       {isLoadingIdeaPriority ? (
-        <>
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <Spacing />
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <Spacing />
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-        </>
+        <BoxWrap style={{minWidth: "950px", minHeight: "700px", display: "flex", justifyContent: "center", alignItems: "center"}}>
+          <Loader />
+        </BoxWrap>
       ) : (
-        <>
+        <BoxWrap>
           <Overlay isMenuOpen={isMenuOpen} onClick={() => setIsMenuOpen(false)} />
 
           <h1>{titleOfBusinessInfo}의 린 캔버스 - {bmSelectedProblemOptions.problemOptions}</h1>
@@ -558,7 +544,7 @@ useEffect(() => {
             <img src={images.IconDetailView} alt="" />
               상세 내용 확인하기
           </button>
-        </>
+        </BoxWrap>
       )}
       {isPopupOpenDownload && (
         <DownloadPopup
@@ -769,7 +755,7 @@ useEffect(() => {
             </div>
           </div>
         </Sidebar>
-    </BoxWrap>
+    </>
   );
 };
 

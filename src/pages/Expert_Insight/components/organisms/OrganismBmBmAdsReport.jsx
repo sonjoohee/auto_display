@@ -21,11 +21,7 @@ import {
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
 
-import {
-  SkeletonTitle,
-  SkeletonLine,
-  Spacing,
-} from "../../../../assets/styles/Skeleton";
+import Loader from "../atoms/AtomLoader";
 
 const OrganismBmBmAdsReport = () => {
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
@@ -219,23 +215,13 @@ const OrganismBmBmAdsReport = () => {
     setConversation(updatedConversation);
     };
   return (
-    <Wrap>
+    <>
       {isLoadingIdeaPriority ? (
-        <>
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <Spacing />
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <Spacing />
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-        </>
+        <Wrap style={{minWidth: "518px", minHeight: "419px", display: "flex", justifyContent: "center", alignItems: "center"}}>
+          <Loader />
+        </Wrap>
       ) : (
-        <>
+        <Wrap>
           <h1>하나의 타겟 고객 세그먼트를 선정해주세요.</h1>
           <OptionContainer>
             <ul>
@@ -292,9 +278,9 @@ const OrganismBmBmAdsReport = () => {
               </Button>
             </ButtonWrap>
           </PaginationWrap>
-        </>
+        </Wrap>
       )}
-    </Wrap>
+    </>
   );
 };
 export default OrganismBmBmAdsReport;
