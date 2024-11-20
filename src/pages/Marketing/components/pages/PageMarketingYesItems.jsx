@@ -124,17 +124,23 @@ const PageMarketingYesItems = () => {
   const handleExitConfirm = () => {
     window.location.href = "/MarketingLanding";
   };
-
   useEffect(() => {
-    // 페이지가 로드될 때 body의 overflow를 hidden으로 설정
-    document.body.style.overflow = 'hidden';
+    const preventDefault = (e) => {
+      e.preventDefault(); // 기본 스크롤 동작 차단
+    };
 
-    // 페이지가 언마운트될 때 body의 overflow를 원래 상태로 복원
+    // iOS에서 터치 스크롤 차단
+    document.body.style.overflow = "hidden";
+    document.body.addEventListener("touchmove", preventDefault, {
+      passive: false,
+    });
+
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
+      document.body.removeEventListener("touchmove", preventDefault);
     };
   }, []);
-
+  
   // const [activeQuestion, setActiveQuestion] = useState(null);
   const [activeQuestion, setActiveQuestion] = useState(0);
   const questionRefs = useRef([]);
