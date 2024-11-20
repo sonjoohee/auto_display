@@ -1552,9 +1552,13 @@ const RadioButtonWrap = styled.div`
   flex-wrap: wrap;
   justify-content: center;
   gap: 100px;
+  max-width:50%;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     gap: 50px;
+    max-width:100%;
+    max-height:60dvh;
+    overflow-y:auto;
   }
 `;
 
