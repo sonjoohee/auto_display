@@ -1054,7 +1054,6 @@ const PageExpertInsight = () => {
                 <div ref={chatEndRef} />
 
                 {selectedExpertIndex === "0" ||
-                selectedExpertIndex === "1" ||
                 selectedExpertIndex === "2" ||
                 selectedExpertIndex === "3" ||
                 selectedExpertIndex === "11" ? (
@@ -1065,7 +1064,7 @@ const PageExpertInsight = () => {
 
                     {/* 전문가 선택하고 시작 */}
                     {approachPath === 1 &&
-                      Object.keys(strategyReportData).length !== 0 &&
+                      Object.keys(strategyConsultantReportData).length !== 0 &&
                       !isLoading && <OrganismBizExpertSelect />}
 
                     {/* 히스토리로 진입 시 */}
@@ -1075,6 +1074,12 @@ const PageExpertInsight = () => {
                       conversation[conversation.length - 1].type !==
                         "reportButton" &&
                       !isLoading && <OrganismBizExpertSelect />}
+                  </>
+                ) : selectedExpertIndex === "1" ? (
+                  <>
+                    {strategyReportData.length === 3 && (
+                      <OrganismBizExpertSelect />
+                    )}
                   </>
                 ) : selectedExpertIndex === "4" ? (
                   <>
@@ -1117,10 +1122,13 @@ const PageExpertInsight = () => {
 
               {conversationStage === 1 && !isMarketing ? (
                 <OrganismSearchBottomBar isBlue={false} />
-              ) : selectedExpertIndex === "1" ||
-                selectedExpertIndex === "2" ||
+              ) : selectedExpertIndex === "2" ||
                 selectedExpertIndex === "3" ? (
                 <OrganismSearchBottomBar isBlue={true} />
+              ) : selectedExpertIndex === "1" ? (
+                strategyConsultantReportData.length === 3 && (
+                  <OrganismSearchBottomBar isBlue={true} />
+                )
               ) : selectedExpertIndex === "4" ? (
                 Object.keys(recommendedTargetData).length !== 0 && (
                   <OrganismSearchBottomBar isBlue={true} />
