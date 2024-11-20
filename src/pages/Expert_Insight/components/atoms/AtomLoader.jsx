@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 
-const LoaderPage = () => {
+const AtomLoader = () => {
 
   return (
     <>
@@ -14,7 +14,7 @@ const LoaderPage = () => {
   );
 };
 
-export default LoaderPage;
+export default AtomLoader;
 
 const LoaderWrap = styled.div`
   display:flex;

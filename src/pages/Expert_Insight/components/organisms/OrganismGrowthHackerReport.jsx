@@ -21,7 +21,7 @@ import {
   BUTTON_STATE,
 } from "../../../AtomStates";
 
-import Loader from "../pages/LoaderPage";
+import Loader from "../atoms/AtomLoader";
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
 
 import {
