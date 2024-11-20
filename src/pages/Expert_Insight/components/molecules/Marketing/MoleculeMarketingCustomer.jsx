@@ -253,9 +253,28 @@ const MoleculeMarketingCustomer = ({ marketingCustomerCount }) => {
     <ThemeProvider theme={theme}>
       <Wrapper>
         {isLoadingMarketingCustomer ?
-        <OptionsContainer style={{minWidth: "500px", minHeight: "300px", display: "flex", justifyContent: "center", alignItems: "center"}}>
-          <Loader />
-        </OptionsContainer>
+        <>
+        <OptionsContainer
+        style={{
+          minWidth: "500px",
+          minHeight: "300px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Loader />
+      </OptionsContainer>
+
+      <style jsx>{`
+        @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+          OptionsContainer {
+            min-width: 300px; // 모바일일 때 크기 조정
+            min-height: 150px; // 모바일일 때 크기 조정
+          }
+        }
+      `}</style>
+      </>
         :
         <> 
         {marketingCustomerCount === 0 ? 
