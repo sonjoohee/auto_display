@@ -152,8 +152,6 @@ import OrganismMarketingFinalReport from "../organisms/Marketing/OrganismMarketi
 import MoleculeMarketingSignUpButton from "../molecules/Marketing/MoleculeMarketingSignUpButton";
 import images from "../../../../assets/styles/Images";
 
-import { useDynamicViewport } from "../../../../assets/DynamicViewport";
-
 const PageMarketingExpertInsight = () => {
   const [strategyConsultantReportData, setStrategyConsultantReportData] =
     useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
@@ -1212,7 +1210,7 @@ const PageMarketingExpertInsight = () => {
   );
 };
 
-export default PageExpertInsight;
+export default PageMarketingExpertInsight;
 
 const ProjectName = styled.div`
   // position: fixed;
