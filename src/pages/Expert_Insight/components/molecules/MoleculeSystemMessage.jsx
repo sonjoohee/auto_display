@@ -13,8 +13,20 @@ const MoleculeSystemMessage = ({ item }) => {
   const selectedExpertIndex = item.expertIndex;
   // console.log(item);
 
+  const isIOSDevice = () => {
+    const isIOS =
+      /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const isAppleDevice = navigator.userAgent.includes("Macintosh");
+    const isTouchScreen = navigator.maxTouchPoints >= 1; // iOS 13 이상 체크
+
+    return isIOS || (isAppleDevice && isTouchScreen);
+  };
+
   // 모바일 감지 함수 추가
   const isMobileDevice = () => {
+    if (isIOSDevice()) {
+      return true;
+    }
     const toMatch = [
       /Android/i,
       /webOS/i,

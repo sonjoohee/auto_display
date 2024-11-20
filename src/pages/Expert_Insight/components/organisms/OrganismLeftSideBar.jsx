@@ -126,58 +126,121 @@ import { useSaveConversation } from "../atoms/AtomSaveConversation";
 import OrganismReportPopup from "./OrganismReportPopup"; // 팝업 컴포넌트 임포트
 
 const OrganismLeftSideBar = () => {
-  const [strategyConsultantReportData, setStrategyConsultantReportData] = useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
-  const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] = useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
-  const [growthHackerSelectedSolution, setGrowthHackerSelectedSolution] = useAtom(GROWTH_HACKER_SELECTED_SOLUTION);
+  const [strategyConsultantReportData, setStrategyConsultantReportData] =
+    useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
+  const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] =
+    useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
+  const [growthHackerSelectedSolution, setGrowthHackerSelectedSolution] =
+    useAtom(GROWTH_HACKER_SELECTED_SOLUTION);
   const { saveConversation } = useSaveConversation();
-  const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
+  const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(
+    BM_MODEL_SUGGESTION_REPORT_DATA
+  );
   const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
-  const [bmSelectedProblemOptions, setBmSelectedProblemOptions] = useAtom(BM_SELECTED_PROBLEM_OPTIONS);
+  const [bmSelectedProblemOptions, setBmSelectedProblemOptions] = useAtom(
+    BM_SELECTED_PROBLEM_OPTIONS
+  );
   const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
-  const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
-  const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
-  const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
-  const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
-  const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
-  const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
-  const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
-  const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
+  const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(
+    BM_BM_AUTO_REPORT_DATA
+  );
+  const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(
+    BM_LEAN_AUTO_REPORT_DATA
+  );
+  const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(
+    BM_BM_ADS_REPORT_DATA
+  );
+  const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(
+    BM_LEAN_ADS_REPORT_DATA
+  );
+  const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(
+    BM_BM_CUSTOM_REPORT_DATA
+  );
+  const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(
+    BM_LEAN_CUSTOM_REPORT_DATA
+  );
+  const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] =
+    useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
+  const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(
+    SURVEY_GOAL_SUGGESTION_LIST
+  );
   const [surveyGoalFixed, setSurveyGoalFixed] = useAtom(SURVEY_GOAL_FIXED);
-  const [surveyQuestionList, setSurveyQuestionList] = useAtom(SURVEY_QUESTION_LIST);
-  const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(SURVEY_GUIDELINE_REPORT_DATA);
+  const [surveyQuestionList, setSurveyQuestionList] =
+    useAtom(SURVEY_QUESTION_LIST);
+  const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(
+    SURVEY_GUIDELINE_REPORT_DATA
+  );
   const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
   const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
   const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
   const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
   const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
-  const [priceSelectedProductSegmentation, setPriceSelectedProductSegmentation] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
-  const [priceProductSegmentation, setPriceProductSegmentation] = useAtom(PRICE_PRODUCT_SEGMENTATION);
+  const [
+    priceSelectedProductSegmentation,
+    setPriceSelectedProductSegmentation,
+  ] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
+  const [priceProductSegmentation, setPriceProductSegmentation] = useAtom(
+    PRICE_PRODUCT_SEGMENTATION
+  );
   const [ideaMiroState, setIdeaMiroState] = useAtom(IDEA_MIRO_STATE);
-  const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
-  const [growthHackerDetailReportData, setGrowthHackerDetailReportData] = useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
+  const [growthHackerReportData, setGrowthHackerReportData] = useAtom(
+    GROWTH_HACKER_REPORT_DATA
+  );
+  const [growthHackerDetailReportData, setGrowthHackerDetailReportData] =
+    useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
   const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
-  const [isEditingIdeaFeature, setIsEditingIdeaFeature] = useAtom(IS_EDITING_IDEA_FEATURE);
-  const [isEditingIdeaCustomer, setIsEditingIdeaCustomer] = useAtom(IS_EDITING_IDEA_CUSTOMER);
-  const [addingIdeaFeature, setAddingIdeaFeature] = useAtom(ADDING_IDEA_FEATURE);
-  const [activeIdeaFeatureIndex, setActiveIdeaFeatureIndex] = useAtom(ACTIVE_IDEA_FEATURE_INDEX);
-  const [addContentIdeaFeature, setAddContentIdeaFeature] = useAtom(ADD_CONTENT_IDEA_FEATURE);
-  const [editedIdeaFeatureTitle, setEditedIdeaFeatureTitle] = useAtom(EDITED_IDEA_FEATURE_TITLE);
-  const [addingIdeaCustomer, setAddingIdeaCustomer] = useAtom(ADDING_IDEA_CUSTOMER);
-  const [activeIdeaCustomerIndex, setActiveIdeaCustomerIndex] = useAtom(ACTIVE_IDEA_CUSTOMER_INDEX);
-  const [addContentIdeaCustomer, setAddContentIdeaCustomer] = useAtom(ADD_CONTENT_IDEA_CUSTOMER);
-  const [editedIdeaCustomerTitle, setEditedIdeaCustomerTitle] = useAtom(EDITED_IDEA_CUSTOMER_TITLE);
+  const [isEditingIdeaFeature, setIsEditingIdeaFeature] = useAtom(
+    IS_EDITING_IDEA_FEATURE
+  );
+  const [isEditingIdeaCustomer, setIsEditingIdeaCustomer] = useAtom(
+    IS_EDITING_IDEA_CUSTOMER
+  );
+  const [addingIdeaFeature, setAddingIdeaFeature] =
+    useAtom(ADDING_IDEA_FEATURE);
+  const [activeIdeaFeatureIndex, setActiveIdeaFeatureIndex] = useAtom(
+    ACTIVE_IDEA_FEATURE_INDEX
+  );
+  const [addContentIdeaFeature, setAddContentIdeaFeature] = useAtom(
+    ADD_CONTENT_IDEA_FEATURE
+  );
+  const [editedIdeaFeatureTitle, setEditedIdeaFeatureTitle] = useAtom(
+    EDITED_IDEA_FEATURE_TITLE
+  );
+  const [addingIdeaCustomer, setAddingIdeaCustomer] =
+    useAtom(ADDING_IDEA_CUSTOMER);
+  const [activeIdeaCustomerIndex, setActiveIdeaCustomerIndex] = useAtom(
+    ACTIVE_IDEA_CUSTOMER_INDEX
+  );
+  const [addContentIdeaCustomer, setAddContentIdeaCustomer] = useAtom(
+    ADD_CONTENT_IDEA_CUSTOMER
+  );
+  const [editedIdeaCustomerTitle, setEditedIdeaCustomerTitle] = useAtom(
+    EDITED_IDEA_CUSTOMER_TITLE
+  );
   const [isMobile] = useAtom(IS_MOBILE);
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
-  const [pocDetailReportData, setPocDetailReportData] = useAtom(POC_DETAIL_REPORT_DATA);
-  const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
+  const [pocDetailReportData, setPocDetailReportData] = useAtom(
+    POC_DETAIL_REPORT_DATA
+  );
+  const [recommendedTargetData, setRecommendedTargetData] = useAtom(
+    RECOMMENDED_TARGET_DATA
+  );
   const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
-  const [selectedPocOptions, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
-  const [selectedExpertList, setSelectedExpertList] = useAtom(SELECTED_EXPERT_LIST);
+  const [selectedPocOptions, setSelectedPocOptions] =
+    useAtom(SELECTED_POC_OPTIONS);
+  const [selectedExpertList, setSelectedExpertList] =
+    useAtom(SELECTED_EXPERT_LIST);
   const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
-  const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
-  const [ideaFeatureDataTemp, setIdeaFeatureDataTemp] = useAtom(IDEA_FEATURE_DATA_TEMP);
-  const [ideaRequirementDataTemp, setIdeaRequirementDataTemp] = useAtom(IDEA_REQUIREMENT_DATA_TEMP);
+  const [ideaRequirementData, setIdeaRequirementData] = useAtom(
+    IDEA_REQUIREMENT_DATA
+  );
+  const [ideaFeatureDataTemp, setIdeaFeatureDataTemp] = useAtom(
+    IDEA_FEATURE_DATA_TEMP
+  );
+  const [ideaRequirementDataTemp, setIdeaRequirementDataTemp] = useAtom(
+    IDEA_REQUIREMENT_DATA_TEMP
+  );
   const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
@@ -187,7 +250,9 @@ const OrganismLeftSideBar = () => {
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const navigate = useNavigate();
   const [bizName] = useAtom(INPUT_BUSINESS_INFO);
-  const [isExpertInsightAccessible, setIsExpertInsightAccessible] = useAtom(IS_EXPERT_INSIGHT_ACCESSIBLE);
+  const [isExpertInsightAccessible, setIsExpertInsightAccessible] = useAtom(
+    IS_EXPERT_INSIGHT_ACCESSIBLE
+  );
 
   const [selectedReport, setSelectedReport] = useState(null); // 선택된 보고서 상태 관리
   const [conversations, setConversations] = useState([]); // 저장된 대화 상태 관리
@@ -197,15 +262,15 @@ const OrganismLeftSideBar = () => {
   const [reportRefreshTrigger, setReportRefreshTrigger] = useAtom(
     REPORT_REFRESH_TRIGGER
   ); // 리프레시 트리거 상태 구독
-  const [chatRefreshTrigger, setChatRefreshTrigger] = useAtom(
-    CHAT_REFRESH_TRIGGER
-  ); // 리프레시 트리거 상태 구독
+  const [chatRefreshTrigger, setChatRefreshTrigger] =
+    useAtom(CHAT_REFRESH_TRIGGER); // 리프레시 트리거 상태 구독
 
   const [chatList, setChatList] = useState([]); // 서버에서 가져온 대화 리스트
 
   const [isAccountPopupOpen, setAccountPopupOpen] = useState(false); // 계정설정 팝업
   const [isSocialLoggedIn, setIsSocialLoggedIn] = useAtom(IS_SOCIAL_LOGGED_IN); // 소셜 로그인 상태 읽기
-  const [isSignupPopupOpen, setIsSignupPopupOpen] = useAtom(IS_SIGNUP_POPUP_OPEN); // 회원가입 팝업 상태 관리
+  const [isSignupPopupOpen, setIsSignupPopupOpen] =
+    useAtom(IS_SIGNUP_POPUP_OPEN); // 회원가입 팝업 상태 관리
   const [isLogoutPopup, setIsLogoutPopup] = useState(false); // 로그아웃 팝업 상태 관리
   const [userName, setUserName] = useAtom(USER_NAME); // 아톰에서 유저 이름 불러오기
   const [userEmail, setUserEmail] = useAtom(USER_EMAIL); // 아톰에서 유저 이메일 불러오기
@@ -250,7 +315,8 @@ const OrganismLeftSideBar = () => {
     ADDITIONAL_REPORT_DATA
   ); // Use the new list-based atom
 
-  const [strategyReportData, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA);
+  const [strategyReportData, setStrategyReportData] =
+    useAtom(STRATEGY_REPORT_DATA);
 
   const [
     selectedCustomerAdditionalKeyword,
@@ -261,8 +327,8 @@ const OrganismLeftSideBar = () => {
   const [inputAdditionalQuestion, setInputAdditionalQuestion] = useState("");
   const insightEditBoxRef = useRef(null);
   const historyEditBoxRef = useRef(null);
-  const toggleRef = useRef(null); 
-  
+  const toggleRef = useRef(null);
+
   const [editToggleIndex, setEditToggleIndex] = useState(null); // 특정 인덱스를 저장
 
   const [savedTimestamp, setSavedTimestamp] = useAtom(SAVED_TIMESTAMP);
@@ -270,13 +336,23 @@ const OrganismLeftSideBar = () => {
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
   const [editBoxPosition, setEditBoxPosition] = useState({ top: 0, left: 0 });
   const accordionContentRef = useRef(null);
-  const [insightEditBoxPosition, setInsightEditBoxPosition] = useState({ top: 0, left: 0 });
+  const [insightEditBoxPosition, setInsightEditBoxPosition] = useState({
+    top: 0,
+    left: 0,
+  });
   const insightAccordionContentRef = useRef(null);
 
-  const [analysisButtonState, setAnalysisButtonState] = useAtom(ANALYSIS_BUTTON_STATE);
-  const [expertButtonState, setExpertButtonState] = useAtom(EXPERT_BUTTON_STATE);
-  const [additionButtonState, setAdditionButtonState] = useAtom(ADDITION_BUTTON_STATE);
-  const [customerAdditionButtonState, setCustomerAdditionButtonState] = useAtom(CUSTOMER_ADDITION_BUTTON_STATE);
+  const [analysisButtonState, setAnalysisButtonState] = useAtom(
+    ANALYSIS_BUTTON_STATE
+  );
+  const [expertButtonState, setExpertButtonState] =
+    useAtom(EXPERT_BUTTON_STATE);
+  const [additionButtonState, setAdditionButtonState] = useAtom(
+    ADDITION_BUTTON_STATE
+  );
+  const [customerAdditionButtonState, setCustomerAdditionButtonState] = useAtom(
+    CUSTOMER_ADDITION_BUTTON_STATE
+  );
 
   const [isSection1Open, setIsSection1Open] = useState(false); // 인사이트 보관함 열림/닫힘 상태
   const [isSection2Open, setIsSection2Open] = useState(false); // 프로젝트 히스토리 열림/닫힘 상태
@@ -294,23 +370,51 @@ const OrganismLeftSideBar = () => {
   const [newAddContent, setNewAddContent] = useAtom(NEW_ADD_CONTENT);
   const [isAddingNow, setIsAddingNow] = useAtom(IS_ADDING_NOW);
   const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
-  const [marketingMbtiResult, setMarketingMbtiResult] = useAtom(MARKETING_MBTI_RESULT);
-  const [marketingResearchReportData, setMarketingResearchReportData] = useAtom(MARKETING_RESEARCH_REPORT_DATA);
-  const [marketingBmReportData, setMarketingBmReportData] = useAtom(MARKETING_BM_REPORT_DATA);
-  const [marketingCustomerData, setMarketingCustomerData] = useAtom(MARKETING_CUSTOMER_DATA);
-  const [marketingSelectedCustomer, setMarketingSelectedCustomer] = useAtom(MARKETING_SELECTED_CUSTOMER);
-  const [marketingFinalCustomer, setMarketingFinalCustomer] = useAtom(MARKETING_FINAL_CUSTOMER);
-  const [marketingFinalReportData, setMarketingFinalReportData] = useAtom(MARKETING_FINAL_REPORT_DATA);
-  const [marketingFinalReportButtonState, setMarketingFinalReportButtonState] = useAtom(MARKETING_FINAL_REPORT_BUTTON_STATE);
-  const [marketingBmButtonState, setMarketingBmButtonState] = useAtom(MARKETING_BM_BUTTON_STATE);
-  const [marketingCustomerButtonState, setMarketingCustomerButtonState] = useAtom(MARKETING_CUSTOMER_BUTTON_STATE);
-  const [marketingHaveIdea, setMarketingHaveIdea] = useAtom(MARKETING_HAVE_IEDA);
-  const [marketingMbtiStage, setMarketingMbtiStage] = useAtom(MARKETING_MBTI_STAGE);
-  const [marketingMbtiAnswer, setMarketingMbtiAnswer] = useAtom(MARKETING_MBTI_ANSWER);
+  const [marketingMbtiResult, setMarketingMbtiResult] = useAtom(
+    MARKETING_MBTI_RESULT
+  );
+  const [marketingResearchReportData, setMarketingResearchReportData] = useAtom(
+    MARKETING_RESEARCH_REPORT_DATA
+  );
+  const [marketingBmReportData, setMarketingBmReportData] = useAtom(
+    MARKETING_BM_REPORT_DATA
+  );
+  const [marketingCustomerData, setMarketingCustomerData] = useAtom(
+    MARKETING_CUSTOMER_DATA
+  );
+  const [marketingSelectedCustomer, setMarketingSelectedCustomer] = useAtom(
+    MARKETING_SELECTED_CUSTOMER
+  );
+  const [marketingFinalCustomer, setMarketingFinalCustomer] = useAtom(
+    MARKETING_FINAL_CUSTOMER
+  );
+  const [marketingFinalReportData, setMarketingFinalReportData] = useAtom(
+    MARKETING_FINAL_REPORT_DATA
+  );
+  const [marketingFinalReportButtonState, setMarketingFinalReportButtonState] =
+    useAtom(MARKETING_FINAL_REPORT_BUTTON_STATE);
+  const [marketingBmButtonState, setMarketingBmButtonState] = useAtom(
+    MARKETING_BM_BUTTON_STATE
+  );
+  const [marketingCustomerButtonState, setMarketingCustomerButtonState] =
+    useAtom(MARKETING_CUSTOMER_BUTTON_STATE);
+  const [marketingHaveIdea, setMarketingHaveIdea] =
+    useAtom(MARKETING_HAVE_IEDA);
+  const [marketingMbtiStage, setMarketingMbtiStage] =
+    useAtom(MARKETING_MBTI_STAGE);
+  const [marketingMbtiAnswer, setMarketingMbtiAnswer] = useAtom(
+    MARKETING_MBTI_ANSWER
+  );
   const [marketingInterest, setMarketingInterest] = useAtom(MARKETING_INTEREST);
-  const [marketingRecommendedItemData, setMarketingRecommendedItemData] = useAtom(MARKETING_RECOMMENDED_ITEM_DATA);
-  const [marketingStartButtonState, setMarketingStartButtonState] = useAtom(MARKETING_START_BUTTON_STATE);
-  const [marketingRecommendedItemButtonState, setMarketingRecommendedItemButtonState] = useAtom(MARKETING_RECOMMENDED_ITEM_BUTTON_STATE);
+  const [marketingRecommendedItemData, setMarketingRecommendedItemData] =
+    useAtom(MARKETING_RECOMMENDED_ITEM_DATA);
+  const [marketingStartButtonState, setMarketingStartButtonState] = useAtom(
+    MARKETING_START_BUTTON_STATE
+  );
+  const [
+    marketingRecommendedItemButtonState,
+    setMarketingRecommendedItemButtonState,
+  ] = useAtom(MARKETING_RECOMMENDED_ITEM_BUTTON_STATE);
 
   // useEffect(() => {
   //   setIsSection1Open(false);
@@ -321,7 +425,7 @@ const OrganismLeftSideBar = () => {
     setReportIdToChangeName(reportId);
     setIsReportChangePopupOpen(true);
   };
-  
+
   const handleChangeChatNameButtonClick = (chatId) => {
     setChatIdToChangeName(chatId);
     setIsChatChangePopupOpen(true);
@@ -334,36 +438,35 @@ const OrganismLeftSideBar = () => {
     setIsExitPopupOpen(false);
   };
 
-const handleChangeInsightConfirm = async () => {
-  try {
-    const accessToken = sessionStorage.getItem("accessToken");
-    const PUT_DATA = {
-      id: reportIdToChangeName,
-      view_name: newReportName,
-    };
-    await axios.put(
-      `https://wishresearch.kr/panels/update_insight`,
-      PUT_DATA,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      }
-    );
-    // Refresh the report list after successful update
-    setReportRefreshTrigger((prev) => !prev);
-    // Close the pop-up and reset state
-    setIsReportChangePopupOpen(false);
-    setReportIdToChangeName(null);
-    setNewReportName("");
-  } catch (error) {
-    console.error("Error updating report name on server:", error);
-  }
-};
+  const handleChangeInsightConfirm = async () => {
+    try {
+      const accessToken = sessionStorage.getItem("accessToken");
+      const PUT_DATA = {
+        id: reportIdToChangeName,
+        view_name: newReportName,
+      };
+      await axios.put(
+        `https://wishresearch.kr/panels/update_insight`,
+        PUT_DATA,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      // Refresh the report list after successful update
+      setReportRefreshTrigger((prev) => !prev);
+      // Close the pop-up and reset state
+      setIsReportChangePopupOpen(false);
+      setReportIdToChangeName(null);
+      setNewReportName("");
+    } catch (error) {
+      console.error("Error updating report name on server:", error);
+    }
+  };
 
-  
   const handleChangeChatConfirm = async () => {
     try {
       const accessToken = sessionStorage.getItem("accessToken");
@@ -371,17 +474,13 @@ const handleChangeInsightConfirm = async () => {
         id: chatIdToChangeName,
         view_name: newChatName,
       };
-      await axios.put(
-        `https://wishresearch.kr/panels/update_chat`,
-        PUT_DATA,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`, // Use the stored access token
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
+      await axios.put(`https://wishresearch.kr/panels/update_chat`, PUT_DATA, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`, // Use the stored access token
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       // Refresh the chat list after successful update
       setChatRefreshTrigger((prev) => !prev);
       // Close the pop-up and reset state
@@ -392,7 +491,6 @@ const handleChangeInsightConfirm = async () => {
       console.error("Error updating conversation on server:", error);
     }
   };
-  
 
   const handleChangeCancel = () => {
     setIsReportChangePopupOpen(false);
@@ -402,60 +500,60 @@ const handleChangeInsightConfirm = async () => {
     setNewReportName("");
     setNewChatName("");
   };
-  
- // 사이드바의 최대 높이 설정
- const maxSidebarHeight = 600; // 예시로 700px 설정
 
- const ITEM_HEIGHT = 50;
+  // 사이드바의 최대 높이 설정
+  const maxSidebarHeight = 600; // 예시로 700px 설정
 
- // 첫 번째 아코디언(보고서)와 두 번째 아코디언(대화 내역)의 높이를 계산하는 함수
- const calculateAccordionHeight = () => {
-   const reportHeight = reports.length * ITEM_HEIGHT; // 보고서 높이
-   const chatHeight = chatList.length * ITEM_HEIGHT; // 대화 내역 높이
- 
-   return { reportHeight, chatHeight };
- };
- 
- const exceedsSidebarHeight = () => {
-   const { reportHeight, chatHeight } = calculateAccordionHeight();
- 
-   // 두 아코디언이 열렸을 때의 총 높이 계산
-   const totalHeight = reportHeight + chatHeight; // 조건 없이 둘 다 더함
-  //  console.log("Total Height:", totalHeight);
- 
-   return totalHeight > maxSidebarHeight; // maxSidebarHeight와 비교하여 넘는지 확인
- };
+  const ITEM_HEIGHT = 50;
 
- // 첫 번째 아코디언 토글 함수
- const toggleSection1 = () => {
-   setIsSection1Open((prev) => {
-     const willOpen = !prev;
+  // 첫 번째 아코디언(보고서)와 두 번째 아코디언(대화 내역)의 높이를 계산하는 함수
+  const calculateAccordionHeight = () => {
+    const reportHeight = reports.length * ITEM_HEIGHT; // 보고서 높이
+    const chatHeight = chatList.length * ITEM_HEIGHT; // 대화 내역 높이
 
-     // 열릴 때 사이드바 높이를 초과하면 두 번째 아코디언을 닫음
-     if (willOpen && exceedsSidebarHeight()) {
-       setIsSection2Open(false);
-     }
-     setIsSection2Open(false);
+    return { reportHeight, chatHeight };
+  };
 
-     return willOpen;
-   });
- };
+  const exceedsSidebarHeight = () => {
+    const { reportHeight, chatHeight } = calculateAccordionHeight();
 
- // 두 번째 아코디언 토글 함수
- const toggleSection2 = () => {
-   setIsSection2Open((prev) => {
-     const willOpen = !prev;
+    // 두 아코디언이 열렸을 때의 총 높이 계산
+    const totalHeight = reportHeight + chatHeight; // 조건 없이 둘 다 더함
+    //  console.log("Total Height:", totalHeight);
 
-     // 열릴 때 사이드바 높이를 초과하면 첫 번째 아코디언을 닫음
-     if (willOpen && exceedsSidebarHeight()) {
-       setIsSection1Open(false);
-     }
-     setIsSection1Open(false);
+    return totalHeight > maxSidebarHeight; // maxSidebarHeight와 비교하여 넘는지 확인
+  };
 
-     return willOpen;
-   });
- };
-  
+  // 첫 번째 아코디언 토글 함수
+  const toggleSection1 = () => {
+    setIsSection1Open((prev) => {
+      const willOpen = !prev;
+
+      // 열릴 때 사이드바 높이를 초과하면 두 번째 아코디언을 닫음
+      if (willOpen && exceedsSidebarHeight()) {
+        setIsSection2Open(false);
+      }
+      setIsSection2Open(false);
+
+      return willOpen;
+    });
+  };
+
+  // 두 번째 아코디언 토글 함수
+  const toggleSection2 = () => {
+    setIsSection2Open((prev) => {
+      const willOpen = !prev;
+
+      // 열릴 때 사이드바 높이를 초과하면 첫 번째 아코디언을 닫음
+      if (willOpen && exceedsSidebarHeight()) {
+        setIsSection1Open(false);
+      }
+      setIsSection1Open(false);
+
+      return willOpen;
+    });
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (toggleRef.current && !toggleRef.current.contains(event.target)) {
@@ -465,7 +563,7 @@ const handleChangeInsightConfirm = async () => {
     };
     // 마운트될 때 클릭 리스너 추가
     document.addEventListener("mousedown", handleClickOutside);
-    
+
     // 언마운트될 때 클릭 리스너 제거
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -477,7 +575,7 @@ const handleChangeInsightConfirm = async () => {
       if (
         insightEditBoxRef.current &&
         !insightEditBoxRef.current.contains(event.target) &&
-        !event.target.closest('.toggle')
+        !event.target.closest(".toggle")
       ) {
         setInsightEditToggleIndex(null);
       }
@@ -493,7 +591,7 @@ const handleChangeInsightConfirm = async () => {
       if (
         historyEditBoxRef.current &&
         !historyEditBoxRef.current.contains(event.target) &&
-        !event.target.closest('.toggle')
+        !event.target.closest(".toggle")
       ) {
         setEditToggleIndex(null); // setInsightEditToggleIndex가 아닌 히스토리용 상태를 업데이트
       }
@@ -504,7 +602,6 @@ const handleChangeInsightConfirm = async () => {
     };
   }, [historyEditBoxRef]);
 
-
   const editBoxToggle = (index, event, category) => {
     // console.log('editBoxPosition:', editBoxPosition);
     if (editToggleIndex === index) {
@@ -512,50 +609,54 @@ const handleChangeInsightConfirm = async () => {
       return;
     }
     setEditToggleIndex(index);
-  
+
     if (event && accordionContentRef.current) {
       const container = accordionContentRef.current;
       const clickedElement = event.currentTarget;
-  
+
       let top = clickedElement.offsetTop - container.scrollTop;
       let left = clickedElement.offsetLeft + clickedElement.offsetWidth + 10;
-  
+
       // category에 따라 이동
-      if (category === 'recent') {
+      if (category === "recent") {
         left -= 40; // 최근 대화면 40px 왼쪽 이동
         top -= 10;
-      } else if (category === '7days') {
+      } else if (category === "7days") {
         left -= 190; // 지난 7일이면 190px 왼쪽 이동
         top += 10; // 10px 아래로 이동
-      } else if (category === '30days') {
+      } else if (category === "30days") {
         left -= 340; // 지난 30일이면 340px 왼쪽 이동
         top += 30; // 20px 아래로 이동
       }
-  
+
       setEditBoxPosition({ top, left });
     }
   };
 
-useEffect(() => {
-  const handleClickOutside = (event) => {
-    if (editToggleIndex !== null) {
-      const editBoxElement = document.getElementById(`edit-box-${editToggleIndex}`);
-      const toggleElement = document.getElementById(`insight-toggle-${editToggleIndex}`);
-      if (
-        editBoxElement &&
-        !editBoxElement.contains(event.target) &&
-        toggleElement &&
-        !toggleElement.contains(event.target)
-      ) {
-        setEditToggleIndex(null);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (editToggleIndex !== null) {
+        const editBoxElement = document.getElementById(
+          `edit-box-${editToggleIndex}`
+        );
+        const toggleElement = document.getElementById(
+          `insight-toggle-${editToggleIndex}`
+        );
+        if (
+          editBoxElement &&
+          !editBoxElement.contains(event.target) &&
+          toggleElement &&
+          !toggleElement.contains(event.target)
+        ) {
+          setEditToggleIndex(null);
+        }
       }
-    }
-  };
-  document.addEventListener("mousedown", handleClickOutside);
-  return () => {
-    document.removeEventListener("mousedown", handleClickOutside);
-  };
-}, [editToggleIndex]);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [editToggleIndex]);
 
   // 삭제 버튼 클릭 시, 삭제 경고 팝업 열기
   const handleDeleteButtonClick = (reportId) => {
@@ -571,21 +672,22 @@ useEffect(() => {
 
   // 인사이트 보관함용 EditBox 열기/닫기 함수
   const insightEditBoxToggle = (index, event) => {
-  
-    setInsightEditToggleIndex((prevIndex) => (prevIndex === index ? null : index));
-  
+    setInsightEditToggleIndex((prevIndex) =>
+      prevIndex === index ? null : index
+    );
+
     if (event && insightAccordionContentRef.current) {
       const container = insightAccordionContentRef.current;
       const clickedElement = event.currentTarget;
-  
+
       // Calculate the position considering the scroll
-      const top = clickedElement.offsetTop - container.scrollTop -10;
-      const left = clickedElement.offsetLeft + clickedElement.offsetWidth -30;
-  
+      const top = clickedElement.offsetTop - container.scrollTop - 10;
+      const left = clickedElement.offsetLeft + clickedElement.offsetWidth - 30;
+
       setInsightEditBoxPosition({ top, left });
     }
   };
-  
+
   useEffect(() => {
     const loadConversations = async () => {
       const allConversations = await getAllConversationsFromIndexedDB();
@@ -613,11 +715,12 @@ useEffect(() => {
           }
         );
         const sortedChatList = response.data
-          .filter((chat) => chat.business_info !== null && chat.business_info !== "") // business_info가 비었으면(기초보고서 생성 전) 히스토리에 남기지 않음
+          .filter(
+            (chat) => chat.business_info !== null && chat.business_info !== ""
+          ) // business_info가 비었으면(기초보고서 생성 전) 히스토리에 남기지 않음
           .sort((a, b) => b.timestamp - a.timestamp); // 최근 날짜 순으로 정렬
 
         setChatList(sortedChatList);
-
       } catch (error) {
         console.error("대화 목록 가져오기 오류:", error);
       }
@@ -691,7 +794,6 @@ useEffect(() => {
       // 전문가 보고서 데이터 복구
       setStrategyReportData(chatData.strategyReportData || {});
 
-
       // 필요하다면 추가 상태 업데이트
       setSelectedAdditionalKeyword(chatData.selectedAdditionalKeyword || []);
       setAdditionalReportData(chatData.additionalReportData || []);
@@ -712,7 +814,7 @@ useEffect(() => {
       setIdeaRequirementData(chatData.ideaRequirementData || []);
       setIdeaFeatureDataTemp(chatData.ideaFeatureData || []);
       setIdeaRequirementDataTemp(chatData.ideaRequirementData || []);
-      
+
       setIdeaList(chatData.ideaList || []);
       setIdeaGroup(chatData.ideaGroup || {});
       setIdeaPriority(chatData.ideaPriority || []);
@@ -720,28 +822,40 @@ useEffect(() => {
 
       setButtonState(chatData.buttonState || {});
 
-      setGrowthHackerRecommendedSolution(chatData.growthHackerRecommendedSolution || []);
+      setGrowthHackerRecommendedSolution(
+        chatData.growthHackerRecommendedSolution || []
+      );
       setGrowthHackerReportData(chatData.growthHackerReportData || []);
-      setGrowthHackerDetailReportData(chatData.growthHackerDetailReportData || []);
-      setGrowthHackerSelectedSolution(chatData.growthHackerSelectedSolution || []);
+      setGrowthHackerDetailReportData(
+        chatData.growthHackerDetailReportData || []
+      );
+      setGrowthHackerSelectedSolution(
+        chatData.growthHackerSelectedSolution || []
+      );
       setKpiQuestionList(chatData.KpiQuestionList || []);
 
       setPriceReportData(chatData.priceReportData || {});
       setPriceScrapData(chatData.priceScrapData || {});
       setPriceProduct(chatData.priceProduct || []);
-      setPriceSelectedProductSegmentation(chatData.priceSelectedProductSegmentation || []);
+      setPriceSelectedProductSegmentation(
+        chatData.priceSelectedProductSegmentation || []
+      );
       setPriceProductSegmentation(chatData.priceProductSegmentation || []);
 
       setCaseReportData(chatData.caseReportData || []);
       setCaseHashTag(chatData.caseHashTag || []);
 
-      setSurveyGuidelineDetailReportData(chatData.surveyGuidelineDetailReportData || {});
+      setSurveyGuidelineDetailReportData(
+        chatData.surveyGuidelineDetailReportData || {}
+      );
       setSurveyGuidelineReportData(chatData.surveyGuidelineReportData || {});
       setSurveyGoalSuggestionList(chatData.surveyGoalSuggestionList || []);
       setSurveyGoalFixed(chatData.surveyGoalFixed || []);
       setSurveyQuestionList(chatData.surveyQuestionList || []);
 
-      setBmModelSuggestionReportData(chatData.bmModelSuggestionReportData || []);
+      setBmModelSuggestionReportData(
+        chatData.bmModelSuggestionReportData || []
+      );
       setBmQuestionList(chatData.bmQuestionList || []);
       setBmSelectedProblemOptions(chatData.bmSelectedProblemOptions || {});
       setBmOrLean(chatData.bmOrLean || "");
@@ -754,48 +868,53 @@ useEffect(() => {
 
       setIsMarketing(chatData.isMarketing || false);
       setMarketingMbtiResult(chatData.marketingMbtiResult || {});
-      setMarketingResearchReportData(chatData.marketingResearchReportData || []);
+      setMarketingResearchReportData(
+        chatData.marketingResearchReportData || []
+      );
       setMarketingBmReportData(chatData.marketingBmReportData || []);
       setMarketingCustomerData(chatData.marketingCustomerData || []);
       setMarketingSelectedCustomer(chatData.marketingSelectedCustomer || []);
       setMarketingFinalCustomer(chatData.marketingFinalCustomer || {});
       setMarketingFinalReportData(chatData.marketingFinalReportData || []);
 
-      setStrategyConsultantReportData(chatData.strategyConsultantReportData || []);
+      setStrategyConsultantReportData(
+        chatData.strategyConsultantReportData || []
+      );
 
       if (chatData.isMarketing) {
         const updatedConversation = [...chatData.conversation];
 
-        if (updatedConversation.length > 0 &&
-          updatedConversation[updatedConversation.length - 1].type === "marketingSignUpButton"
+        if (
+          updatedConversation.length > 0 &&
+          updatedConversation[updatedConversation.length - 1].type ===
+            "marketingSignUpButton"
         ) {
           updatedConversation.pop();
           updatedConversation.pop();
         }
 
         setConversation(updatedConversation);
-        saveConversation(
-          { changingConversation: 
-            { conversation: updatedConversation, 
-              conversationId: chatData.id,
-              timestamp: chatData.timestamp,
-              isMarketing: chatData.isMarketing,
-              expert_index: chatData.expert_index,
-              inputBusinessInfo: chatData.inputBusinessInfo,
-              analysisReportData: chatData.analysisReportData,
-              conversationStage: chatData.conversationStage,
-              title: chatData.analysisReportData.title,
-              mainFeatures: chatData.analysisReportData.mainFeatures,
-              marketingMbtiResult: chatData.marketingMbtiResult,
-              marketingResearchReportData: chatData.marketingResearchReportData,
-              marketingBmReportData: chatData.marketingBmReportData,
-              marketingCustomerData: chatData.marketingCustomerData,
-              marketingSelectedCustomer: chatData.marketingSelectedCustomer,
-              marketingFinalCustomer: chatData.marketingFinalCustomer,
-              marketingFinalReportData: chatData.marketingFinalReportData
-            } 
-          }
-        );
+        saveConversation({
+          changingConversation: {
+            conversation: updatedConversation,
+            conversationId: chatData.id,
+            timestamp: chatData.timestamp,
+            isMarketing: chatData.isMarketing,
+            expert_index: chatData.expert_index,
+            inputBusinessInfo: chatData.inputBusinessInfo,
+            analysisReportData: chatData.analysisReportData,
+            conversationStage: chatData.conversationStage,
+            title: chatData.analysisReportData.title,
+            mainFeatures: chatData.analysisReportData.mainFeatures,
+            marketingMbtiResult: chatData.marketingMbtiResult,
+            marketingResearchReportData: chatData.marketingResearchReportData,
+            marketingBmReportData: chatData.marketingBmReportData,
+            marketingCustomerData: chatData.marketingCustomerData,
+            marketingSelectedCustomer: chatData.marketingSelectedCustomer,
+            marketingFinalCustomer: chatData.marketingFinalCustomer,
+            marketingFinalReportData: chatData.marketingFinalReportData,
+          },
+        });
       }
 
       // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
@@ -818,7 +937,7 @@ useEffect(() => {
       setAdditionButtonState(0);
       setCustomerAdditionButtonState(0);
       setIsExpertInsightAccessible(true); // 접근 가능 상태로 설정
-      
+
       // 페이지를 대화가 이어지는 형태로 전환
       navigate(`/conversation/${conversationId}`);
     } catch (error) {
@@ -1152,7 +1271,7 @@ useEffect(() => {
     setRecommendedTargetData({});
     setPocDetailReportData({});
     setPocPersonaList([]);
-    
+
     setIsEditingIdeaFeature(false);
     setIsEditingIdeaCustomer(false);
     setAddingIdeaFeature(false);
@@ -1188,7 +1307,7 @@ useEffect(() => {
 
     setCaseReportData([]);
     setCaseHashTag([]);
-    
+
     setSurveyGuidelineDetailReportData({});
     setSurveyGuidelineReportData({});
     setSurveyGoalSuggestionList([]);
@@ -1362,28 +1481,171 @@ useEffect(() => {
             )}
 
             <AccordionItem>
-            <label 
-    className={`accordion-label ${isSection2Open ? 'open' : ''}`} 
-    onClick={toggleSection2}
-  >
+              <label
+                className={`accordion-label ${isSection2Open ? "open" : ""}`}
+                onClick={toggleSection2}
+              >
                 <img src={images.Clock} alt="" />
                 프로젝트 히스토리
               </label>
-              <AccordionContent className="scrollbar" ref={accordionContentRef} style={{ maxHeight: isSection2Open ? "calc(100vh - 26rem)" : "0" }}>
-                {chatList && chatList.length > 0 ?               
+              <AccordionContent
+                className="scrollbar"
+                ref={accordionContentRef}
+                style={{
+                  maxHeight: isSection2Open ? "calc(100vh - 26rem)" : "0",
+                }}
+              >
+                {chatList && chatList.length > 0 ? (
                   <div>
-                    {chatList.some(chat => Date.now() - chat.timestamp <= 604800000) && (
+                    {chatList.some(
+                      (chat) => Date.now() - chat.timestamp <= 604800000
+                    ) && (
                       <>
                         <strong>최근 대화</strong>
                         <ul>
                           {chatList
-                            .filter(chat => Date.now() - chat.timestamp <= 604800000)
+                            .filter(
+                              (chat) => Date.now() - chat.timestamp <= 604800000
+                            )
                             .map((chat) => (
-                              <li key={chat.id} className={`toggle ${editToggleIndex === chat.id ? 'active' : ''}`}>
-                                <p onClick={() => handleConversationClick(chat.id)}>
+                              <li
+                                key={chat.id}
+                                className={`toggle ${
+                                  editToggleIndex === chat.id ? "active" : ""
+                                }`}
+                              >
+                                <p
+                                  onClick={() =>
+                                    handleConversationClick(chat.id)
+                                  }
+                                >
                                   {chat.view_name || chat.business_info}
                                 </p>
-                                <div style={{ position: 'relative', display: 'inline-block' }}>
+                                <div
+                                  style={{
+                                    position: "relative",
+                                    display: "inline-block",
+                                  }}
+                                >
+                                  <span
+                                    id={`insight-toggle-${chat.id}`}
+                                    style={{
+                                      display: "inline-block",
+                                      padding: "10px",
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={(event) =>
+                                      editBoxToggle(chat.id, event, "recent")
+                                    }
+                                    className="toggle"
+                                  >
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="14"
+                                      height="3"
+                                      viewBox="0 0 14 3"
+                                      fill="none"
+                                    >
+                                      <circle
+                                        cx="2.0067"
+                                        cy="1.51283"
+                                        r="1.49694"
+                                        transform="rotate(-90 2.0067 1.51283)"
+                                        fill="#A0A0A0"
+                                      />
+                                      <circle
+                                        cx="7.00084"
+                                        cy="1.51283"
+                                        r="1.49694"
+                                        transform="rotate(-90 7.00084 1.51283)"
+                                        fill="#A0A0A0"
+                                      />
+                                      <circle
+                                        cx="11.993"
+                                        cy="1.51283"
+                                        r="1.49694"
+                                        transform="rotate(-90 11.993 1.51283)"
+                                        fill="#A0A0A0"
+                                      />
+                                    </svg>
+                                  </span>
+
+                                  {editToggleIndex === chat.id && (
+                                    <div
+                                      id={`insight-edit-box-${chat.id}`}
+                                      className="insight-toggle"
+                                      ref={historyEditBoxRef}
+                                    >
+                                      <EditBox
+                                        id={`insight-edit-box-${chat.id}`}
+                                        isEditToggle={
+                                          editToggleIndex === chat.id
+                                        }
+                                        style={{
+                                          top: `${editBoxPosition.top}px`,
+                                          left: `${editBoxPosition.left}px`,
+                                        }}
+                                      >
+                                        <button
+                                          type="button"
+                                          onClick={() =>
+                                            handleChatDeleteButtonClick(chat.id)
+                                          }
+                                        >
+                                          <img
+                                            src={images.IconDelete2}
+                                            alt=""
+                                          />
+                                          삭제
+                                        </button>
+                                        <button
+                                          type="button"
+                                          onClick={() =>
+                                            handleChangeChatNameButtonClick(
+                                              chat.id
+                                            )
+                                          }
+                                        >
+                                          <img src={images.IconEdit2} alt="" />
+                                          이름 변경
+                                        </button>
+                                      </EditBox>
+                                    </div>
+                                  )}
+                                </div>
+                              </li>
+                            ))}
+                        </ul>
+                      </>
+                    )}
+                    {chatList.some(
+                      (chat) =>
+                        Date.now() - chat.timestamp > 604800000 &&
+                        Date.now() - chat.timestamp <= 2592000000
+                    ) && (
+                      <>
+                        <strong>지난 7일 대화</strong>
+                        <ul>
+                          {chatList
+                            .filter(
+                              (chat) =>
+                                Date.now() - chat.timestamp > 604800000 &&
+                                Date.now() - chat.timestamp <= 2592000000
+                            )
+                            .map((chat) => (
+                              <li
+                                key={chat.id}
+                                className={`toggle ${
+                                  editToggleIndex === chat.id ? "active" : ""
+                                }`}
+                              >
+                                <p
+                                  onClick={() =>
+                                    handleConversationClick(chat.id)
+                                  }
+                                >
+                                  {chat.view_name || chat.business_info}
+                                </p>
                                 <span
                                   id={`insight-toggle-${chat.id}`}
                                   style={{
@@ -1391,7 +1653,9 @@ useEffect(() => {
                                     padding: "10px",
                                     cursor: "pointer",
                                   }}
-                                  onClick={(event) => editBoxToggle(chat.id, event, 'recent')}
+                                  onClick={(event) =>
+                                    editBoxToggle(chat.id, event, "7days")
+                                  }
                                   className="toggle"
                                 >
                                   <svg
@@ -1424,14 +1688,14 @@ useEffect(() => {
                                     />
                                   </svg>
                                 </span>
-                                
+
                                 {editToggleIndex === chat.id && (
                                   <div
                                     id={`insight-edit-box-${chat.id}`}
                                     className="insight-toggle"
                                     ref={historyEditBoxRef}
                                   >
-                                   <EditBox
+                                    <EditBox
                                       id={`insight-edit-box-${chat.id}`}
                                       isEditToggle={editToggleIndex === chat.id}
                                       style={{
@@ -1451,7 +1715,9 @@ useEffect(() => {
                                       <button
                                         type="button"
                                         onClick={() =>
-                                          handleChangeChatNameButtonClick(chat.id)
+                                          handleChangeChatNameButtonClick(
+                                            chat.id
+                                          )
                                         }
                                       >
                                         <img src={images.IconEdit2} alt="" />
@@ -1460,21 +1726,33 @@ useEffect(() => {
                                     </EditBox>
                                   </div>
                                 )}
-                                </div>
                               </li>
                             ))}
                         </ul>
                       </>
                     )}
-                    {chatList.some(chat => (Date.now() - chat.timestamp) > 604800000 && (Date.now() - chat.timestamp <= 2592000000)) && (
-                      <>            
-                      <strong>지난 7일 대화</strong>
+                    {chatList.some(
+                      (chat) => Date.now() - chat.timestamp > 2592000000
+                    ) && (
+                      <>
+                        <strong>지난 30일 대화</strong>
                         <ul>
                           {chatList
-                            .filter(chat => Date.now() - chat.timestamp > 604800000 && Date.now() - chat.timestamp <= 2592000000)
+                            .filter(
+                              (chat) => Date.now() - chat.timestamp > 2592000000
+                            )
                             .map((chat) => (
-                              <li key={chat.id} className={`toggle ${editToggleIndex === chat.id ? 'active' : ''}`}>
-                                <p onClick={() => handleConversationClick(chat.id)}>
+                              <li
+                                key={chat.id}
+                                className={`toggle ${
+                                  editToggleIndex === chat.id ? "active" : ""
+                                }`}
+                              >
+                                <p
+                                  onClick={() =>
+                                    handleConversationClick(chat.id)
+                                  }
+                                >
                                   {chat.view_name || chat.business_info}
                                 </p>
                                 <span
@@ -1484,7 +1762,9 @@ useEffect(() => {
                                     padding: "10px",
                                     cursor: "pointer",
                                   }}
-                                  onClick={(event) => editBoxToggle(chat.id, event, '7days')}
+                                  onClick={(event) =>
+                                    editBoxToggle(chat.id, event, "30days")
+                                  }
                                   className="toggle"
                                 >
                                   <svg
@@ -1517,21 +1797,21 @@ useEffect(() => {
                                     />
                                   </svg>
                                 </span>
-                                
+
                                 {editToggleIndex === chat.id && (
                                   <div
                                     id={`insight-edit-box-${chat.id}`}
                                     className="insight-toggle"
                                     ref={historyEditBoxRef}
                                   >
-                               <EditBox
-                                  id={`insight-edit-box-${chat.id}`}
-                                  isEditToggle={editToggleIndex === chat.id}
-                                  style={{
-                                    top: `${editBoxPosition.top}px`,
-                                    left: `${editBoxPosition.left}px`,
-                                  }}
-                                >
+                                    <EditBox
+                                      id={`insight-edit-box-${chat.id}`}
+                                      isEditToggle={editToggleIndex === chat.id}
+                                      style={{
+                                        top: `${editBoxPosition.top}px`,
+                                        left: `${editBoxPosition.left}px`,
+                                      }}
+                                    >
                                       <button
                                         type="button"
                                         onClick={() =>
@@ -1544,99 +1824,9 @@ useEffect(() => {
                                       <button
                                         type="button"
                                         onClick={() =>
-                                          handleChangeChatNameButtonClick(chat.id)
-                                        }
-                                      >
-                                        <img src={images.IconEdit2} alt="" />
-                                        이름 변경
-                                      </button>
-                                    </EditBox>
-                                  </div>
-                                )}
-                              </li>
-                            ))}
-                        </ul>
-                      </>
-                    )}
-                    {chatList.some(chat => Date.now() - chat.timestamp > 2592000000) && (
-                      <>            
-                      <strong>지난 30일 대화</strong>
-                        <ul>
-                          {chatList
-                            .filter(chat => Date.now() - chat.timestamp > 2592000000)
-                            .map((chat) => (
-                              <li key={chat.id} className={`toggle ${editToggleIndex === chat.id ? 'active' : ''}`}>
-                                <p onClick={() => handleConversationClick(chat.id)}>
-                                  {chat.view_name || chat.business_info}
-                                </p>
-                                <span
-                                  id={`insight-toggle-${chat.id}`}
-                                  style={{
-                                    display: "inline-block",
-                                    padding: "10px",
-                                    cursor: "pointer",
-                                  }}
-                                  onClick={(event) => editBoxToggle(chat.id, event, '30days')}
-                                  className="toggle"
-                                >
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="14"
-                                    height="3"
-                                    viewBox="0 0 14 3"
-                                    fill="none"
-                                  >
-                                    <circle
-                                      cx="2.0067"
-                                      cy="1.51283"
-                                      r="1.49694"
-                                      transform="rotate(-90 2.0067 1.51283)"
-                                      fill="#A0A0A0"
-                                    />
-                                    <circle
-                                      cx="7.00084"
-                                      cy="1.51283"
-                                      r="1.49694"
-                                      transform="rotate(-90 7.00084 1.51283)"
-                                      fill="#A0A0A0"
-                                    />
-                                    <circle
-                                      cx="11.993"
-                                      cy="1.51283"
-                                      r="1.49694"
-                                      transform="rotate(-90 11.993 1.51283)"
-                                      fill="#A0A0A0"
-                                    />
-                                  </svg>
-                                </span>
-                                
-                                {editToggleIndex === chat.id && (
-                                  <div
-                                    id={`insight-edit-box-${chat.id}`}
-                                    className="insight-toggle"
-                                    ref={historyEditBoxRef}
-                                  >
-                          <EditBox
-                              id={`insight-edit-box-${chat.id}`}
-                              isEditToggle={editToggleIndex === chat.id}
-                              style={{
-                                top: `${editBoxPosition.top}px`,
-                                left: `${editBoxPosition.left}px`,
-                              }}
-                            >
-                                      <button
-                                        type="button"
-                                        onClick={() =>
-                                          handleChatDeleteButtonClick(chat.id)
-                                        }
-                                      >
-                                        <img src={images.IconDelete2} alt="" />
-                                        삭제
-                                      </button>
-                                      <button
-                                        type="button"
-                                        onClick={() =>
-                                          handleChangeChatNameButtonClick(chat.id)
+                                          handleChangeChatNameButtonClick(
+                                            chat.id
+                                          )
                                         }
                                       >
                                         <img src={images.IconEdit2} alt="" />
@@ -1651,11 +1841,11 @@ useEffect(() => {
                       </>
                     )}
                   </div>
-                  :
-                  <ul> 
+                ) : (
+                  <ul>
                     <p>최근 대화 내역이 없습니다</p>
                   </ul>
-                }
+                )}
               </AccordionContent>
             </AccordionItem>
           </AccordionMenu>
@@ -1678,46 +1868,52 @@ useEffect(() => {
                   <span>
                     {(() => {
                       const userName = sessionStorage.getItem("userName");
-                      return userName && userName.length > 1 ? `${userName.slice(0, 1)}` : userName;
+                      return userName && userName.length > 1
+                        ? `${userName.slice(0, 1)}`
+                        : userName;
                     })()}
                   </span>
                 </button>
               </LogoutBtnWrap>
 
-              <LogoutToggle ref={toggleRef} isToggle={isToggle} className="AccountInfo">
-                  <div className="info">
-                    <strong>{sessionStorage.getItem("userName")}</strong>{" "}
-                    {/* 유저 이름 표시 */}
-                    <p>{sessionStorage.getItem("userEmail")}</p>{" "}
-                    {/* 유저 이메일 표시 */}
-                  </div>
+              <LogoutToggle
+                ref={toggleRef}
+                isToggle={isToggle}
+                className="AccountInfo"
+              >
+                <div className="info">
+                  <strong>{sessionStorage.getItem("userName")}</strong>{" "}
+                  {/* 유저 이름 표시 */}
+                  <p>{sessionStorage.getItem("userEmail")}</p>{" "}
+                  {/* 유저 이메일 표시 */}
+                </div>
 
-                  <ul>
-                    {/* 소셜 로그인 상태가 아닐 때만 비밀번호 변경 버튼을 표시 */}
-                    {!isSocialLoggedIn && (
-                      <li>
-                        <button type="button" onClick={handleAccountClick}>
-                          <img src={images.AccountSetting} alt="" />
-                          비밀번호 변경
-                        </button>
-                      </li>
-                    )}
-
+                <ul>
+                  {/* 소셜 로그인 상태가 아닐 때만 비밀번호 변경 버튼을 표시 */}
+                  {!isSocialLoggedIn && (
                     <li>
-                      <button type="button">
-                        <img src={images.AccountInfo} alt="" />
-                        정책 및 약관 정보
+                      <button type="button" onClick={handleAccountClick}>
+                        <img src={images.AccountSetting} alt="" />
+                        비밀번호 변경
                       </button>
                     </li>
+                  )}
 
-                    <li>
-                      <button type="button" onClick={handleLogoutClick}>
-                        <img src={images.AccountLogout} alt="" />
-                        로그아웃
-                      </button>
-                    </li>
-                  </ul>
-                </LogoutToggle>
+                  <li>
+                    <button type="button">
+                      <img src={images.AccountInfo} alt="" />
+                      정책 및 약관 정보
+                    </button>
+                  </li>
+
+                  <li>
+                    <button type="button" onClick={handleLogoutClick}>
+                      <img src={images.AccountLogout} alt="" />
+                      로그아웃
+                    </button>
+                  </li>
+                </ul>
+              </LogoutToggle>
             </>
           ) : (
             <>
@@ -1819,93 +2015,93 @@ useEffect(() => {
       )}
       {/* Report Name Change Popup */}
       {isReportChangePopupOpen && (
-      <ChangeNamePopup onClick={handleChangeCancel}>
-        <div className="popup-content" onClick={(e) => e.stopPropagation()}>
-          <button
-            type="button"
-            className="closePopup"
-            onClick={handleChangeCancel}
-          >
-            닫기
-          </button>
-          <span>
-            <img src={images.ExclamationMark2} alt="" />
-          </span>
-          <p>새로운 보고서 이름을 입력하세요</p>
-          <input
-            type="text"
-            value={newReportName}
-            onChange={(e) => setNewReportName(e.target.value)}
-          />
-          <div className="btnWrap">
-            <button type="button" onClick={handleChangeCancel}>
-              취소
+        <ChangeNamePopup onClick={handleChangeCancel}>
+          <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              className="closePopup"
+              onClick={handleChangeCancel}
+            >
+              닫기
             </button>
-            <button type="button" onClick={handleChangeInsightConfirm}>
-              확인
-            </button>
+            <span>
+              <img src={images.ExclamationMark2} alt="" />
+            </span>
+            <p>새로운 보고서 이름을 입력하세요</p>
+            <input
+              type="text"
+              value={newReportName}
+              onChange={(e) => setNewReportName(e.target.value)}
+            />
+            <div className="btnWrap">
+              <button type="button" onClick={handleChangeCancel}>
+                취소
+              </button>
+              <button type="button" onClick={handleChangeInsightConfirm}>
+                확인
+              </button>
+            </div>
           </div>
-        </div>
-      </ChangeNamePopup>
-    )}
-    {isChatChangePopupOpen && (
-      <ChangeNamePopup onClick={handleChangeCancel}>
-        <div className="popup-content" onClick={(e) => e.stopPropagation()}>
-          <button
-            type="button"
-            className="closePopup"
-            onClick={handleChangeCancel}
-          >
-            닫기
-          </button>
-          <span>
-            <img src={images.ExclamationMark2} alt="" />
-          </span>
-          <p>새로운 프로젝트 이름을 입력하세요</p>
-          <input
-            type="text"
-            value={newChatName}
-            onChange={(e) => setNewChatName(e.target.value)}
-          />
-          <div className="btnWrap">
-            <button type="button" onClick={handleChangeCancel}>
-              취소
+        </ChangeNamePopup>
+      )}
+      {isChatChangePopupOpen && (
+        <ChangeNamePopup onClick={handleChangeCancel}>
+          <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              className="closePopup"
+              onClick={handleChangeCancel}
+            >
+              닫기
             </button>
-            <button type="button" onClick={handleChangeChatConfirm}>
-              확인
-            </button>
+            <span>
+              <img src={images.ExclamationMark2} alt="" />
+            </span>
+            <p>새로운 프로젝트 이름을 입력하세요</p>
+            <input
+              type="text"
+              value={newChatName}
+              onChange={(e) => setNewChatName(e.target.value)}
+            />
+            <div className="btnWrap">
+              <button type="button" onClick={handleChangeCancel}>
+                취소
+              </button>
+              <button type="button" onClick={handleChangeChatConfirm}>
+                확인
+              </button>
+            </div>
           </div>
-        </div>
-      </ChangeNamePopup>
-    )}
-    {isExitPopupOpen && (
-      <Popup Cancel onClick={handleExitChatCancel}>
-        <div>
-          <button
-            type="button"
-            className="closePopup"
-            onClick={handleExitChatCancel}
-          >
-            닫기
-          </button>
-          <span>
-            <img src={images.ExclamationMark} alt="" />
-          </span>
-          <p>
-            <strong>정말 나가시겠습니까?</strong>
-            <span>진행사항이 저장되지 않을 수 있습니다.</span>
-          </p>
-          <div className="btnWrap">
-            <button type="button" onClick={handleExitChatCancel}>
-              취소
+        </ChangeNamePopup>
+      )}
+      {isExitPopupOpen && (
+        <Popup Cancel onClick={handleExitChatCancel}>
+          <div>
+            <button
+              type="button"
+              className="closePopup"
+              onClick={handleExitChatCancel}
+            >
+              닫기
             </button>
-            <button type="button" onClick={handleExitChatConfirm}>
-              확인
-            </button>
+            <span>
+              <img src={images.ExclamationMark} alt="" />
+            </span>
+            <p>
+              <strong>정말 나가시겠습니까?</strong>
+              <span>진행사항이 저장되지 않을 수 있습니다.</span>
+            </p>
+            <div className="btnWrap">
+              <button type="button" onClick={handleExitChatCancel}>
+                취소
+              </button>
+              <button type="button" onClick={handleExitChatConfirm}>
+                확인
+              </button>
+            </div>
           </div>
-        </div>
-      </Popup>
-    )}
+        </Popup>
+      )}
     </>
   );
 };
@@ -2013,7 +2209,7 @@ const ChangeNamePopup = styled.div`
 
       button {
         flex: 1;
-        font-family: 'Pretendard', 'Poppins';
+        font-family: "Pretendard", "Poppins";
         font-size: 0.875rem;
         font-weight: 600;
         color: ${palette.blue};
@@ -2105,7 +2301,7 @@ const Popup = styled.div`
         margin-top: 8px;
       }
     }
-    
+
     .btnWrap {
       display: flex;
       align-items: center;
@@ -2113,7 +2309,7 @@ const Popup = styled.div`
 
       button {
         flex: 1;
-        font-family: 'Pretendard', 'Poppins';
+        font-family: "Pretendard", "Poppins";
         font-size: 0.875rem;
         font-weight: 600;
         color: ${palette.blue};
@@ -2239,28 +2435,38 @@ const Logo = styled.div`
 `;
 
 const SideBar = styled.div`
-  position: ${props => props.isMobile ? 'fixed' : 'sticky'};
-  top: ${props => props.isMobile ? '0' : '40px'};
-  left: ${props => props.isMobile ? '0' : 'auto'};
+  position: ${(props) => (props.isMobile ? "fixed" : "sticky")};
+  top: ${(props) => (props.isMobile ? "0" : "40px")};
+  left: ${(props) => (props.isMobile ? "0" : "auto")};
   display: flex;
   flex-direction: column;
-  max-width: ${props => props.isMobile ? '100%' : (props.bgNone ? "100px" : "257px")};
+  max-width: ${(props) =>
+    props.isMobile ? "100%" : props.bgNone ? "100px" : "257px"};
   width: 100%;
-  height: ${props => props.isMobile ? '80%' : 'calc(100vh - 80px)'};
-  padding: ${props => props.isMobile ? '120px 20px 30px' : '96px 20px 30px'};
-  margin: ${props => props.isMobile ? '0' : (props.bgNone ? "40px 0 0 0" : "40px 0 0 40px")};
-  border-radius: ${props => props.isMobile ? '0' : '15px'};
-  border: ${props => props.isMobile ? 'none' : `1px solid ${palette.lineGray}`};
-  background: ${props => props.isMobile ? palette.white : (props.bgNone ? "none" : `${palette.chatGray}`)};
-  box-shadow: ${props => props.isMobile ? 'none' : `'0 4px 10px rgba(0, 0, 0, 0.05)'`};
+  height: ${(props) => (props.isMobile ? "80%" : "calc(100vh - 80px)")};
+  padding: ${(props) =>
+    props.isMobile ? "120px 20px 30px" : "96px 20px 30px"};
+  margin: ${(props) =>
+    props.isMobile ? "0" : props.bgNone ? "40px 0 0 0" : "40px 0 0 40px"};
+  border-radius: ${(props) => (props.isMobile ? "0" : "15px")};
+  border: ${(props) =>
+    props.isMobile ? "none" : `1px solid ${palette.lineGray}`};
+  background: ${(props) =>
+    props.isMobile
+      ? palette.white
+      : props.bgNone
+      ? "none"
+      : `${palette.chatGray}`};
+  box-shadow: ${(props) =>
+    props.isMobile ? "none" : `'0 4px 10px rgba(0, 0, 0, 0.05)'`};
   transition: all 0.5s;
-  transform: ${props => {
+  transform: ${(props) => {
     if (props.isMobile) {
-      return props.isOpen ? 'translateY(0)' : 'translateY(-100%)';
+      return props.isOpen ? "translateY(0)" : "translateY(-100%)";
     }
     return props.bgNone ? "translateX(-257px)" : "0";
   }};
-  z-index: ${props => props.isMobile ? '99' : '99'};
+  z-index: ${(props) => (props.isMobile ? "99" : "99")};
 
   h3 {
     font-size: 1rem;
@@ -2422,8 +2628,8 @@ const EditBox = styled.div`
   box-shadow: 0 4px 28px rgba(0, 0, 0, 0.05);
   z-index: 1000;
   transition: all 0.5s;
-  visibility: ${(props) => (props.isEditToggle ? 'visible' : 'hidden')};
-  opacity: ${(props) => (props.isEditToggle ? '1' : '0')};
+  visibility: ${(props) => (props.isEditToggle ? "visible" : "hidden")};
+  opacity: ${(props) => (props.isEditToggle ? "1" : "0")};
 
   button {
     display: flex;
@@ -2448,63 +2654,63 @@ const AccordionItem = styled.div`
     display: none;
   }
 
-.accordion-label {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  font-family: "Pretendard";
-  font-size: 1rem;
-  font-weight: 500;
-  padding: 12px 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
+  .accordion-label {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-family: "Pretendard";
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 12px 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
 
-  &:after {
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%) rotate(45deg);
-    width: 8px;
-    height: 8px;
-    border-right: 2px solid ${palette.black};
-    border-bottom: 2px solid ${palette.black};
-    transition: all 0.5s;
-    content: "";
-  }
-}
-
-.accordion-label.open:after {
-  transform: translateY(-50%) rotate(-135deg); /* 아이콘 회전 */
-}
-
-.accordion-toggle + .accordion-label + .scrollbar {
-  max-height: 0;
-  overflow-y: hidden;
-  transition: max-height 0.5s ease, padding 0.5s ease;
-}
-
-.accordion-label.open + .scrollbar {
-  max-height: calc(100vh - 26rem);
-  overflow-y: auto;
-}
-
-.scrollbar {
-  &::-webkit-scrollbar {
-    width: 5px;
+    &:after {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%) rotate(45deg);
+      width: 8px;
+      height: 8px;
+      border-right: 2px solid ${palette.black};
+      border-bottom: 2px solid ${palette.black};
+      transition: all 0.5s;
+      content: "";
+    }
   }
 
-  &::-webkit-scrollbar-track {
-    border-radius: 10px;
-    background-color: transparent;
+  .accordion-label.open:after {
+    transform: translateY(-50%) rotate(-135deg); /* 아이콘 회전 */
   }
 
-  &::-webkit-scrollbar-thumb {
-    background: ${palette.lineGray};
-    border-radius: 10px;
+  .accordion-toggle + .accordion-label + .scrollbar {
+    max-height: 0;
+    overflow-y: hidden;
+    transition: max-height 0.5s ease, padding 0.5s ease;
   }
-}
+
+  .accordion-label.open + .scrollbar {
+    max-height: calc(100vh - 26rem);
+    overflow-y: auto;
+  }
+
+  .scrollbar {
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    &::-webkit-scrollbar-track {
+      border-radius: 10px;
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: ${palette.lineGray};
+      border-radius: 10px;
+    }
+  }
 
   .accordion-toggle:checked + .accordion-label:after {
     transform: translateY(-50%) rotate(-135deg);
@@ -2768,7 +2974,7 @@ const LoginButtonWrap = styled.div`
     border-radius: 10px;
     border: 1px solid ${palette.lineGray};
     // background: ${palette.white};
-    background:transparent;
+    background: transparent;
   }
 
   div {
@@ -2834,7 +3040,7 @@ const LogoutBtnWrap = styled.div`
 
 const LogoutToggle = styled.div`
   position: absolute;
-  min-width:217px;
+  min-width: 217px;
   bottom: 0;
   display: flex;
   flex-direction: column;
