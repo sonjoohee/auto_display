@@ -902,8 +902,7 @@ ${mainCharacteristicOfBusinessInformation
             ) : (
               <>
               {!isEditingNow ? (
-                <ButtonWrap>
-                  <div />
+                <ButtonWrap style={{alignItems:"flex-start"}}>
                   <div>
                     {!report && (
                       <>

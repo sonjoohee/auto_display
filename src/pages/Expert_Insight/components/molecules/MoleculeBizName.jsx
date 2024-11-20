@@ -209,7 +209,8 @@ const Badge = styled.div`
 
 const AutosavePopup = styled.div`
   position: absolute;
-  right: ${(props) => (props.isAutoSaveToggle ? "0" : "-70px")};
+  // right: ${(props) => (props.isAutoSaveToggle ? "0" : "-70px")};
+  right: ${(props) => (props.isAutoSaveToggle ? "0" : "0")};
   top: 70px;
   max-width: 304px;
   max-height: ${(props) => (props.isAutoSaveToggle ? "0" : "1000px")};
