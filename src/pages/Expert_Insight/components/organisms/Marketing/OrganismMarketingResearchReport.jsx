@@ -172,8 +172,8 @@ const OrganismMarketingResearchReport = () => {
       {isLoadingMarketingResearchReport || marketingStartButtonState ? (
         <SummaryBox
           style={{
-            minWidth: "700px",
-            minHeight: "200px",
+            minWidth: "800px",
+            minHeight: "300px",
             display: "flex",
             justifyContent: "center",
             alignItems: "center"

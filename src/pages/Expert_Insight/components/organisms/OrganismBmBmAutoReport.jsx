@@ -21,11 +21,7 @@ import {
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
 
-import {
-  SkeletonTitle,
-  SkeletonLine,
-  Spacing,
-} from "../../../../assets/styles/Skeleton";
+import Loader from "../atoms/AtomLoader";
 
 import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
@@ -161,23 +157,13 @@ const OrganismBmBmAutoReport = () => {
   return (
     <>
     <ThemeProvider theme={theme}>
-      <BoxWrap>
+      <>
         {isLoadingIdeaPriority || bmBmAutoButtonState ? (
-          <>
-            <SkeletonTitle className="title-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <Spacing />
-            <SkeletonTitle className="title-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <Spacing />
-            <SkeletonTitle className="title-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-            <SkeletonLine className="content-placeholder" />
-          </>
+          <BoxWrap style={{minWidth: "950px", minHeight: "700px", display: "flex", justifyContent: "center", alignItems: "center"}}>
+            <Loader />
+          </BoxWrap>
         ) : (
-          <>
+          <BoxWrap>
             <Overlay isMenuOpen={isMenuOpen} onClick={() => setIsMenuOpen(false)} />
               
             <h1>{titleOfBusinessInfo}의 비즈니스 모델 캔버스 - 기본형</h1>
@@ -478,9 +464,9 @@ const OrganismBmBmAutoReport = () => {
               </div>
             </div>
           </Sidebar>
-          </>
+          </BoxWrap>
         )}
-      </BoxWrap>
+      </>
     </ThemeProvider>
     </>
   );

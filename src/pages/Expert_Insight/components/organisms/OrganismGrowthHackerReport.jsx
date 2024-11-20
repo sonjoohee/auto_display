@@ -205,7 +205,7 @@ const OrganismGrowthHackerReport = ({ growthHackerReportCount }) => {
   return (
     <>
       {isLoadingGrowthHacker ? (
-        <SummaryBox>
+        <SummaryBox style={{minWidth: "805px", minHeight: "150px", display: "flex", justifyContent: "center", alignItems: "center"}}>
           <Loader />
         </SummaryBox>
       ) : (
