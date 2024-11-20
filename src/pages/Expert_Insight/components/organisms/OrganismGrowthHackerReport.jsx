@@ -21,6 +21,7 @@ import {
   BUTTON_STATE,
 } from "../../../AtomStates";
 
+import Loader from "../pages/LoaderPage";
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
 
 import {
@@ -205,7 +206,7 @@ const OrganismGrowthHackerReport = ({ growthHackerReportCount }) => {
     <>
       {isLoadingGrowthHacker ? (
         <SummaryBox>
-          로딩 중...
+          <Loader />
         </SummaryBox>
       ) : (
       <>

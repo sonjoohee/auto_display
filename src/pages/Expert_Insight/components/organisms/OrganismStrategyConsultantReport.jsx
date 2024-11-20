@@ -20,6 +20,7 @@ import {
   APPROACH_PATH,
 } from "../../../AtomStates";
 
+import Loader from "../pages/LoaderPage"
 import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
 
 const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
@@ -202,7 +203,7 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
     
       {isLoadingStrategyConsultantReport ? (
         <SummaryBox>
-          <h3>로딩 중...</h3>
+          <Loader />
         </SummaryBox>
       ) : (
         <>
