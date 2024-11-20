@@ -18,6 +18,7 @@ import {
   MARKETING_RESEARCH_REPORT_DATA,
 } from "../../../../AtomStates";
 
+import Loader from "../../pages/LoaderPage";
 import { useSaveConversation } from "../../atoms/AtomSaveConversation";
 
 const OrganismMarketingBmReport = () => {
@@ -167,7 +168,7 @@ const OrganismMarketingBmReport = () => {
     <ThemeProvider theme={theme}>
       {isLoadingMarketingBmReport || marketingBmButtonState ? (
         <SummaryBox>
-          <h3>로딩 중...</h3>
+          <Loader />
         </SummaryBox>
       ) : (
         <>
@@ -591,7 +592,8 @@ const Sidebar = styled.div`
 const ScrollWrap = styled.div`
   position:relative;
   flex:1 1 0%;
-  overflow-y:auto;
+  // overflow-y:auto;
+  overflow:hidden;
 
   &::-webkit-scrollbar {
     width: 5px;
@@ -605,6 +607,10 @@ const ScrollWrap = styled.div`
   &::-webkit-scrollbar-thumb {
     background: ${palette.lineGray};
     border-radius: 10px;
+  }
+
+  > div {
+    height:100%;
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {

@@ -21,6 +21,7 @@ import {
   IS_LOGGED_IN,
 } from "../../../../AtomStates";
 
+import Loader from "../../pages/LoaderPage";
 import { useSaveConversation } from "../../atoms/AtomSaveConversation";
 
 const OrganismMarketingFinalReport = () => {
@@ -194,7 +195,7 @@ const OrganismMarketingFinalReport = () => {
     <ThemeProvider theme={theme}>
       {isLoadingMarketingFinalReport || marketingFinalReportButtonState ? (
         <SummaryBox>
-          <h3>로딩 중...</h3>
+          <Loader />
         </SummaryBox>
       ) : (
         <>

@@ -363,6 +363,8 @@ const PageMarketingNoItemsResult = () => {
                       ? images.ImgMBTISPIA
                       : marketingMbtiResult.name === "SPIC"
                       ? images.ImgMBTISPIC
+                      : marketingMbtiResult.name === "SPTA"
+                      ? images.ImgMBTISPTA
                       : marketingMbtiResult.name === "SPTC"
                       ? images.ImgMBTISPTC
                       : ""
@@ -654,6 +656,10 @@ const Question = styled.div`
       font-size: 1.25rem;
       font-weight: 300;
       line-height: 1.2;
+
+      img {
+        max-width:100px;
+      }
     }
 
     br {
@@ -702,6 +708,10 @@ const Question = styled.div`
         // display: ${(props) => (props.isSmallFlex ? "none" : "inline-block")};
         display: ${(props) =>
           props.questionFlex === "1 1 10%" ? "none" : "block"};
+
+        img {
+          max-width:100%;
+        }
       }
     }
 
@@ -955,6 +965,7 @@ const Popup = styled.div`
     font-size: 1rem;
     text-align: left;
     padding-bottom: 32px;
+    margin-bottom: 32px;
     border-bottom: 1px solid ${palette.gray200};
 
     h5 {
@@ -1002,7 +1013,6 @@ const Popup = styled.div`
       padding: 0 20px;
       gap: 16px;
       padding-bottom: 32px;
-      margin-bottom: 32px;
 
       h5 {
         font-size: 1.13rem;

@@ -2176,7 +2176,7 @@ const Logo = styled.div`
     props.isOpen ? "space-between" : "flex-start"};
   align-items: center;
   gap: ${(props) => (props.isOpen ? "20px" : "0")};
-  z-index: 1000;
+  z-index: 100;
   transition: all 0.5s;
 
   a {
@@ -2260,7 +2260,7 @@ const SideBar = styled.div`
     }
     return props.bgNone ? "translateX(-257px)" : "0";
   }};
-  z-index: ${props => props.isMobile ? '999' : '999'};
+  z-index: ${props => props.isMobile ? '99' : '99'};
 
   h3 {
     font-size: 1rem;
