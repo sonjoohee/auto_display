@@ -187,7 +187,7 @@ const MainVisual = styled.section`
       position:relative;
       font-family:'Poly';
       font-weight:400;
-      font-style:normal;
+      font-style: italic;
       // box-shadow:inset 0 -9px 0px rgba(187, 255, 0, 1);
       z-index:1;
 
