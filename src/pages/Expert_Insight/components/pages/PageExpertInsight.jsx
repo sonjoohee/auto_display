@@ -346,7 +346,7 @@ const PageExpertInsight = () => {
     setIsPopupVisible((prev) => !prev);
   };
 
-  useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
+  // useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
   useEffect(() => {
     if (isMarketing && approachPath !== 2) {
       const handleBeforeUnload = (event) => {
