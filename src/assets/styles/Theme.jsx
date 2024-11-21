@@ -2,6 +2,7 @@ const theme = {
   breakpoints: {
     // mobile: '480px',
     // tablet: '768px',
+    smobile: "320px", // 작은사이즈 모바일
     mobile: "440px",
     tablet: "810px",
     desktop: "1024px",

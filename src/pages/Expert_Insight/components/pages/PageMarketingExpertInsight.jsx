@@ -1398,19 +1398,22 @@ const ChatWrap = styled.div`
   padding-bottom: 60px;
 
   &:before {
-    position: sticky;
+    // position: sticky;
+    position:fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 0;
+    // height: 0;
+    height:40px;
     display: block;
     // height:170px;
     background: rgb(255, 255, 255);
-    background: linear-gradient(
-      0deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 1) 30%
-    );
+    // background: linear-gradient(
+    //   0deg,
+    //   rgba(255, 255, 255, 0) 0%,
+    //   rgba(255, 255, 255, 1) 30%
+    // );
+    background:${palette.white};
     z-index: 1;
     content: "";
   }

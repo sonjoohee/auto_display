@@ -620,10 +620,14 @@ const Question = styled.div`
     }
   }
 
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    padding:0 30px;
+  }
+
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     flex:1 1 22%;
     align-items:flex-end;
-    padding-bottom:30px;
+    padding:0 20px 30px;
 
     p {
       font-size:1.25rem;
@@ -635,8 +639,10 @@ const Question = styled.div`
     }
   }
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    padding:0 30px;
+  @media (max-width: ${({ theme }) => theme.breakpoints.smobile}) {
+    p {
+      font-size:1.13rem;
+    }
   }
 `;
 
@@ -721,8 +727,14 @@ const InputIdea = styled.div`
     }
   }
 
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    // max-width:300px;
+    padding:0 30px;
+  }
+
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     gap:8px;
+    padding:0;
 
     span {
       font-size:0.88rem;
@@ -732,11 +744,6 @@ const InputIdea = styled.div`
       font-size:1.5rem;
       letter-spacing:-1px;
     }
-  }
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    // max-width:300px;
-    padding:0 30px;
   }
 `;
 
