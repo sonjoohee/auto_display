@@ -1223,7 +1223,7 @@ const ProjectName = styled.div`
   justify-content: center;
   border-bottom: 1px solid ${palette.gray200};
   background: ${palette.white};
-  z-index: 1;
+  z-index: 2;
 
   .inner {
     position: relative;
