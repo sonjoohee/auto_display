@@ -1068,9 +1068,9 @@ const PageExpertInsight = () => {
                       titleOfBusinessInfo && <OrganismBizExpertSelect />}
 
                     {/* 전문가 선택하고 시작 */}
-                    {approachPath === 1 &&
+                    {/* {approachPath === 1 &&
                       Object.keys(strategyConsultantReportData).length !== 0 &&
-                      !isLoading && <OrganismBizExpertSelect />}
+                      !isLoading && <OrganismBizExpertSelect />} */}
 
                     {/* 히스토리로 진입 시 */}
                     {/* {approachPath === 2 &&
