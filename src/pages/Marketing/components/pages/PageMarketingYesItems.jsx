@@ -668,6 +668,7 @@ const Answer = styled.div`
     color:${palette.white};
     line-height:1.3;
     padding:15px 22px;
+    margin:0 auto;
     border-radius:28px;
     border:0;
     background: ${(props) => 
