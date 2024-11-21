@@ -601,14 +601,14 @@ const PageMarketingNoItemsResult = () => {
                 <img src={images.ExclamationMarkRed} alt="" />
               </span>
               <p>
-                <strong>정말 종료하시겠습니까?</strong>
+                <strong>모든 내용이 삭제됩니다</strong>
                 <span>
                   종료 또는 새로고침 할 경우, 모든 대화내역이 사라집니다.
                 </span>
               </p>
               <div className="btnWrap">
                 <button type="button" onClick={handleExitCancel}>
-                  대화를 저장할래요
+                  계속 진행하기
                 </button>
                 <button type="button" onClick={handleExitConfirm}>
                   종료할게요

@@ -210,10 +210,17 @@ const OrganismPriceReport = () => {
           updatedConversation.push(
             {
               type: "system",
-              message: `시장 가격 분석이 완료되었습니다.\n${titleOfBusinessInfo}를 더욱 세분화해 가격 분석을 이어가시겠습니까? `,
+              message: `시장 가격 분석이 완료되었습니다.`,
               expertIndex: selectedExpertIndex,
             },
-            { type: `priceContinueButton` }
+            {
+              type: "system",
+              message: `리포트 내용을 보시고 추가로 궁금한 점이 있나요?\n아래 키워드 선택 또는 질문해주시면, 더 많은 인사이트를 제공해 드릴게요! 😊`,
+              expertIndex: -1,
+            },
+            {
+              type: "keyword",
+            }
           );
         } else {
           updatedConversation.push(
