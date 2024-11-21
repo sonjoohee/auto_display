@@ -143,7 +143,7 @@ const MoleculeMarketingSignUpButton = () => {
       changingConversation: { conversation: updatedConversation },
     });
 
-    navigate("/MeetAiExpert");
+    window.location.href = "/MarketingLanding";
   };
 
   return (
