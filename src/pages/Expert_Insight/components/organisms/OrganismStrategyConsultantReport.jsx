@@ -436,6 +436,10 @@ const SummaryBox = styled.div`
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     margin:12px 0 0;
+
+    h2 {
+      font-size:1.25rem;
+    }
   }
 `;
 
