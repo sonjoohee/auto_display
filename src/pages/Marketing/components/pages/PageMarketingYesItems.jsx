@@ -144,18 +144,18 @@ const PageMarketingYesItems = () => {
       );
     };
 
-  // iOS에서 터치 스크롤 차단
-  const scrollableEl = scrollableSectionRef.current;
-  if (scrollableEl) {
-    allowTouchScroll(scrollableEl);
-  }
+    // iOS에서 터치 스크롤 차단
+    const scrollableEl = scrollableSectionRef.current;
+    if (scrollableEl) {
+      allowTouchScroll(scrollableEl);
+    }
 
-  // body의 스크롤 비활성화
-  document.body.style.overflow = "hidden";
+    // body의 스크롤 비활성화
+    document.body.style.overflow = "hidden";
 
-  return () => {
-    document.body.style.overflow = ""; // Cleanup
-  };
+    return () => {
+      document.body.style.overflow = ""; // Cleanup
+    };
   }, []);
   
   // const [activeQuestion, setActiveQuestion] = useState(null);
