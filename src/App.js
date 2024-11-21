@@ -12,6 +12,7 @@ import {
   EXPERT_DETAIL_DATA,
   IS_MOBILE,
   IS_MARKETING,
+  APPROACH_PATH,
 } from "./pages/AtomStates"; // 로그인 상태 아톰 임포트
 import axios from "axios";
 
@@ -57,6 +58,7 @@ function App() {
   const [, setExpertDetail] = useAtom(EXPERT_DETAIL_DATA); // 화면 크기를 체크하는 useEffect
   const [, setIsMobile] = useAtom(IS_MOBILE);
   const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
+  const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
 
   useEffect(() => {
     const handleResize = () => {
@@ -183,7 +185,7 @@ function App() {
             path="/MarketingExpertInsight"
             element={<PageMarketingExpertInsight />}
           ></Route>
-          {isMarketing ? (
+          {isMarketing && approachPath !== 2 ? (
             <Route
               path="/conversation/:conversationId"
               element={<PageMarketingExpertInsight />}
