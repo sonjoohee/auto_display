@@ -99,47 +99,33 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
 
           let strategyConsultantReport = response.data.tabs[0];
             
-          // let retryCount = 0;
-          // const maxRetries = 10;
+          let retryCount = 0;
+          const maxRetries = 10;
 
-          // while (retryCount < maxRetries && (
-          //   !response || 
-          //   !response.data || 
-          //   typeof response.data !== "object" ||
-          //   !response.data.hasOwnProperty("marketing_research_report") || 
-          //   !Array.isArray(marketingResearchReport) ||
-          //   marketingResearchReport.length !== 6 ||
-          //   marketingResearchReport.slice(0, 5).some(item => 
-          //     !item.hasOwnProperty("title") || 
-          //     !item.content.hasOwnProperty("key_content") || 
-          //     !item.content.hasOwnProperty("specific_data") ||
-          //     !item.content.hasOwnProperty("keywords") ||
-          //     !Array.isArray(item.content.keywords) ||
-          //     item.content.keywords.length < 3 ||
-          //     !item.content.hasOwnProperty("message") ||
-          //     !item.content.hasOwnProperty("summary")
-          //   ) ||
-          //   !marketingResearchReport[5].hasOwnProperty("title") ||
-          //   !marketingResearchReport[5].hasOwnProperty("content") ||
-          //   !marketingResearchReport[5].content.hasOwnProperty("conclusion") ||
-          //   !marketingResearchReport[5].content.hasOwnProperty("summary") ||
-          //   !marketingResearchReport[0].content.hasOwnProperty("sources") ||
-          //   !marketingResearchReport[1].content.hasOwnProperty("company_cases") ||
-          //   !marketingResearchReport[3].content.hasOwnProperty("company_cases")
-          // )) 
-          // {
-          //   response = await axios.post(
-          //     "https://wishresearch.kr/panels/marketing/research_report",
-          //     data,
-          //     axiosConfig
-          //   );
-          //   retryCount++;
+          while (retryCount < maxRetries && (
+            !response || 
+            !response.data || 
+            typeof response.data !== "object" ||
+            !response.data.hasOwnProperty("tabs") || 
+            !Array.isArray(response.data.tabs) ||
+            response.data.tabs.length === 0 ||
+            !response.data.tabs[0].hasOwnProperty("title") ||
+            !response.data.tabs[0].hasOwnProperty("sections") ||
+            !Array.isArray(response.data.tabs[0].sections) ||
+            response.data.tabs[0].sections.length === 0
+          )) {
+            response = await axios.post(
+              "https://wishresearch.kr/panels/marketing/research_report",
+              data,
+              axiosConfig
+            );
+            retryCount++;
 
-          //   marketingResearchReport = response.data.marketing_research_report;
-          // }
-          // if (retryCount === maxRetries) {
-          //   throw new Error("Maximum retry attempts reached. Empty response persists.");
-          // }
+            strategyConsultantReport = response.data.tabs[0];
+          }
+          if (retryCount === maxRetries) {
+            throw new Error("Maximum retry attempts reached. Empty response persists.");
+          }
 
           setStrategyConsultantReportData([...strategyConsultantReportData, strategyConsultantReport]);
 

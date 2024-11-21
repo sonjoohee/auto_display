@@ -181,7 +181,7 @@ const OrganismBizAnalysisSection = () => {
             !businessData.hasOwnProperty("목표고객") ||
             !businessData["명칭"] ||
             !businessData["주요_목적_및_특징"].length ||
-            !businessData["주요기능"].length ||
+            businessData["주요기능"].length < 2 ||
             !businessData["목표고객"].length) &&
           attempts < maxAttempts
         ) {

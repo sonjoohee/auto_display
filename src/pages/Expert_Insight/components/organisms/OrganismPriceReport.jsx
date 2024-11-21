@@ -17,6 +17,7 @@ import {
   PRICE_REPORT_DATA,
   PRICE_PRODUCT,
   CONVERSATION_STAGE,
+  BUTTON_STATE,
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
@@ -51,6 +52,7 @@ const OrganismPriceReport = () => {
   );
   const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
   const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
+  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
 
   const axiosConfig = {
     timeout: 100000, // 100초
@@ -105,7 +107,9 @@ const OrganismPriceReport = () => {
             !response1.data ||
             typeof response1.data !== "object" ||
             !response1.data.hasOwnProperty("price_scrap_report") ||
-            typeof response1.data.price_scrap_report !== "object")
+            typeof response1.data.price_scrap_report !== "object") ||
+            !response1.data.price_scrap_report.price_range_groups ||
+            response1.data.price_scrap_report.price_range_groups.length === 0
         ) {
           response1 = await axios.post(
             "https://wishresearch.kr/panels/price_scrap",
@@ -156,7 +160,9 @@ const OrganismPriceReport = () => {
               "price_analysis_persona_recommand_report"
             ) ||
             typeof response2.data.price_analysis_persona_recommand_report !==
-              "object")
+              "object") ||
+            !response2.data.price_analysis_persona_recommand_report.price_analysis ||
+            Object.keys(response2.data.price_analysis_persona_recommand_report.price_analysis).length === 0
         ) {
           response2 = await axios.post(
             "https://wishresearch.kr/panels/price_analysis",
@@ -233,12 +239,20 @@ const OrganismPriceReport = () => {
             { type: `priceContinueButton` }
           );
         }
+        setButtonState({
+          ...buttonState,
+          priceEnough: 1,
+        });
         setConversationStage(3);
         setConversation(updatedConversation);
 
         await saveConversation(
-          { changingConversation: { conversation: updatedConversation, conversationStage: 3, priceScrapData: priceScrap, priceReportData: priceReport, } }
-        );
+          { changingConversation: { conversation: updatedConversation, conversationStage: 3, priceScrapData: priceScrap, priceReportData: priceReport, buttonState: {
+              ...buttonState,
+              priceEnough: 1,
+            },
+          },
+        });
       }
     };
 
