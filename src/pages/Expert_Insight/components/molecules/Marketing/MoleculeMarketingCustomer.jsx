@@ -159,7 +159,7 @@ const MoleculeMarketingCustomer = ({ marketingCustomerCount }) => {
             !item.competence.hasOwnProperty("description")
           )
         )) {
-          console.log(response);
+          // console.log(response);
           response = await axios.post(
             "https://wishresearch.kr/panels/marketing/customer_recommendation",
             data,

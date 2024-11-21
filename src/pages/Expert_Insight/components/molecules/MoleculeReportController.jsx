@@ -887,12 +887,12 @@ ${mainCharacteristicOfBusinessInformation
                     <img src={images.IconCopy} alt="" />
                     복사하기
                   </button>
-                  {!report &&              
+                  {/* {!report &&              
                     <button type="button" onClick={toggleSave}>
                       <img src={images.IconSave} alt="" />
                       저장하기
                     </button>
-                  }
+                  } */}
                 </div>
               </ButtonWrap>
             ) : (
@@ -916,12 +916,12 @@ ${mainCharacteristicOfBusinessInformation
                       <img src={images.IconCopy} alt="" />
                       복사하기
                     </button>
-                    {!report && (
+                    {/* {!report && (
                       <button type="button" onClick={toggleSave}>
                         <img src={images.IconSave} alt="" />
                         저장하기
                       </button>
-                    )}
+                    )} */}
                   </div>
                 </ButtonWrap>
                 ) : (
@@ -970,10 +970,10 @@ ${mainCharacteristicOfBusinessInformation
                     <img src={images.IconCopy} alt="" />
                     복사하기
                   </button>
-                  <button type="button" onClick={toggleSave}>
+                  {/* <button type="button" onClick={toggleSave}>
                     <img src={images.IconSave} alt="" />
                     저장하기
-                  </button>
+                  </button> */}
                 </>
               )}
             </div>
