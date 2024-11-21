@@ -991,7 +991,8 @@ const Popup = styled.div`
     gap: 32px;
     overflow-y: auto; // 내용이 넘칠 경우 스크롤 추가
     // max-height: calc(90vh - 64px);
-    max-height:570px;
+    // max-height:570px;
+    max-height:40dvh;
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
