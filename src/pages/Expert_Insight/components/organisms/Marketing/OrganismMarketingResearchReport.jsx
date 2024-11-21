@@ -170,9 +170,9 @@ const OrganismMarketingResearchReport = () => {
     <ThemeProvider theme={theme}>
     
       {isLoadingMarketingResearchReport || marketingStartButtonState ? (
-        <SummaryBox className="loading">
+        <LoadingSummaryBox>
           <Loader />
-        </SummaryBox>
+        </LoadingSummaryBox>
       ) : (
         <>
           <Overlay isMenuOpen={isMenuOpen} onClick={() => setIsMenuOpen(false)} />
@@ -265,16 +265,87 @@ const SummaryBox = styled.div`
   margin:12px 0 0 50px;
 
   .loading {
-    minWidth: "800px",
-    minHeight: "300px",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center"
+    width:800px;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
       min-width: 150px; // 모바일일 때 크기 조정
       min-height: 150px; // 모바일일 때 크기 조정
     }
+  }
+
+  h2 {
+    font-size:1.5rem;
+    font-weight:600;
+    line-height:1.3;
+    color:${palette.gray800};
+
+    p {
+      font-size:1rem;
+      font-weight:300;
+      line-height:1.5;
+      color:${palette.gray800};
+      margin-top:16px;
+    }
+  }
+
+  h3 {
+    font-size:1rem;
+    font-weight:500;
+    color:${palette.gray800};
+    line-height:1.6;
+  }
+
+  > span {
+    display:flex;
+    align-items:center;
+    gap:4px;
+    font-size:0.75rem;
+    color:${palette.gray500};
+    margin-top:4px;
+  }
+
+  button {
+    display:flex;
+    align-items:center;
+    gap:5px;
+    font-family: 'Pretendard', 'Poppins';
+    font-size:0.75rem;
+    color:${palette.gray500};
+    padding:6px 0;
+    margin-top:5px;
+    border:0;
+    background:none;
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    margin:12px 0 0;
+  }
+`;
+
+const LoadingSummaryBox = styled.div`
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  max-width:825px;
+  text-align:left;
+  padding:20px;
+  border-radius:20px;
+  background:${palette.chatGray};
+  margin:12px 0 0 50px;
+ 
+  min-width: 805px;
+  min-height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    min-width: 150px; // 모바일일 때 크기 조정
+    min-height: 150px; // 모바일일 때 크기 조정
   }
 
   h2 {
