@@ -133,31 +133,29 @@ const PageMarketingYesItems = () => {
       e.preventDefault(); // 기본 스크롤 동작 차단
     };
 
-    // iOS에서 터치 스크롤 차단
-    document.body.style.overflow = "hidden";
-    document.body.addEventListener("touchmove", preventDefault, {
-      passive: false,
-    });
-
-        // 특정 영역의 스크롤 허용 (모바일 터치 스크롤 허용)
-        const allowTouchScroll = (el) => {
-          el.addEventListener(
-            "touchmove",
-            (e) => {
-              e.stopPropagation(); // 상위 body의 스크롤 차단 이벤트 무효화
-            },
-            { passive: false }
-          );
-        };
-    
-        if (scrollableSectionRef.current) {
-          allowTouchScroll(scrollableSectionRef.current);
-        }
-
-    return () => {
-      document.body.style.overflow = "";
-      document.body.removeEventListener("touchmove", preventDefault);
+    // 특정 영역의 스크롤 허용 (모바일 터치 스크롤 허용)
+    const allowTouchScroll = (el) => {
+      el.addEventListener(
+        "touchmove",
+        (e) => {
+          e.stopPropagation(); // 상위 body의 스크롤 차단 이벤트 무효화
+        },
+        { passive: false }
+      );
     };
+
+  // iOS에서 터치 스크롤 차단
+  const scrollableEl = scrollableSectionRef.current;
+  if (scrollableEl) {
+    allowTouchScroll(scrollableEl);
+  }
+
+  // body의 스크롤 비활성화
+  document.body.style.overflow = "hidden";
+
+  return () => {
+    document.body.style.overflow = ""; // Cleanup
+  };
   }, []);
   
   // const [activeQuestion, setActiveQuestion] = useState(null);
@@ -417,8 +415,8 @@ const PageMarketingYesItems = () => {
               </LoaderBox>
             ) : (
               <>
-              <ListBox ref={scrollableSectionRef}>
-                <div>
+              <ListBox>
+                <div ref={scrollableSectionRef}>
                   <p>{mainFeaturesOfBusinessInformation[0]}</p>
                 </div>
               </ListBox>
