@@ -253,9 +253,9 @@ const MoleculeMarketingCustomer = ({ marketingCustomerCount }) => {
     <ThemeProvider theme={theme}>
       <Wrapper>
         {isLoadingMarketingCustomer ?
-        <OptionsContainer className="loading">
+        <LoadingOptionsContainer>
           <Loader />
-        </OptionsContainer>
+        </LoadingOptionsContainer>
         :
         <> 
         {marketingCustomerCount === 0 ? 
@@ -408,6 +408,24 @@ const OptionsContainer = styled.div`
       min-width: 150px; // 모바일일 때 크기 조정
       min-height: 150px; // 모바일일 때 크기 조정
     }
+  }
+`;
+
+const LoadingOptionsContainer = styled.div`
+  display:flex;
+  flex-direction:column;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  gap:8px;
+
+  min-width: 518px;
+  min-height: 317px;
+  justify-content: center;
+  align-items: center;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    min-width: 150px; // 모바일일 때 크기 조정
+    min-height: 150px; // 모바일일 때 크기 조정
   }
 `;
 

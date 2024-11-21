@@ -213,12 +213,12 @@ function App() {
             element={<PageMarketingNoItemsResult />}
           ></Route>
 
-          <Route
+          {/* <Route
             path="/CuratorStoryboard"
             element={<CuratorStoryboard />}
-          ></Route>
+          ></Route> */}
           {/* <Route path="/MarketingLandingPage" element={<MarketingLandingPage />}></Route> */}
-          <Route path="/SamplePage" element={<SamplePage />}></Route>
+          {/* <Route path="/SamplePage" element={<SamplePage />}></Route> */}
 
           {/* AI 패널 */}
           {/* <Route path="/AI_Panel" element={<PageAIPanelList />} />
