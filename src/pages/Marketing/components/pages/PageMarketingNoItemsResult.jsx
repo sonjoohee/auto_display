@@ -1004,20 +1004,22 @@ const Popup = styled.div`
       transform: translateX(-50%);
       height: 83%;
       // padding:56px 0 0;
-      padding: 56px 0 84px;
+      // padding: 56px 0 84px;
+      padding:20px 0 84px;
       overflow: hidden;
       border-radius: 20px 20px 0 0;
     }
 
     .closePopup {
       right: 20px;
-      top: -40px;
+      top: 0;
     }
 
     .header {
       padding: 0 20px;
       gap: 16px;
       padding-bottom: 32px;
+      padding-top:30px;
 
       h5 {
         font-size: 1.13rem;
