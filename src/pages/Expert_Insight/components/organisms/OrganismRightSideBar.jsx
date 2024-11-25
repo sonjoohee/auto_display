@@ -6,7 +6,7 @@ import images from "../../../../assets/styles/Images";
 import panelimages from "../../../../assets/styles/PanelImages";
 import { useAtom } from "jotai";
 import { SELECTED_EXPERT_INDEX } from "../../../AtomStates";
-import expertsData from "./experts_info.json";
+import expertsData from "../../assets/experts_info.json";
 
 const OrganismRightSideBar = () => {
   const [isOpen, setIsOpen] = useState(true);
