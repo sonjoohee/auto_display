@@ -28,16 +28,13 @@ import PagePayTest from "./pages/Purchase_Credit/components/pages/PagePayTest";
 import PageCompletedMail from "./pages/Login_Sign/components/pages/PageCompletedMail";
 
 import PageMeetAiExpert from "./pages/Meet_Ai_Expert/components/pages/PageMeetAiExpert";
-import LandingPage from "./pages/Meet_Ai_Expert/components/pages/LandingPage";
 import PageExpertInsight from "./pages/Expert_Insight/components/pages/PageExpertInsight";
 import PageMarketingExpertInsight from "./pages/Expert_Insight/components/pages/PageMarketingExpertInsight";
 import PageMarketingLanding from "./pages/Marketing/components/pages/PageMarketingLanding";
 
-import CuratorStoryboard from "./pages/Expert_Insight/components/pages/CuratorStoryboard";
 import PageMarketingYesItems from "./pages/Marketing/components/pages/PageMarketingYesItems";
 import PageMarketingNoItems from "./pages/Marketing/components/pages/PageMarketingNoItems";
 import PageMarketingNoItemsResult from "./pages/Marketing/components/pages/PageMarketingNoItemsResult";
-import MarketingLandingPage from "./pages/Meet_Ai_Expert/components/pages/MarketingLandingPage";
 
 // Biz
 import Lending from "./pages/Lending";
@@ -46,8 +43,6 @@ import TargetChoice from "./pages/Persona/TargetChoice";
 import PersonaGenerator from "./pages/Persona/PersonaGenerator";
 import Loading from "./pages/Persona/Loading";
 import LoadingPersona from "./pages/Persona/LoadingPersona";
-
-import SamplePage from "./pages/Meet_Ai_Expert/components/pages/SamplePage";
 
 function App() {
   const [, setIsLoggedIn] = useAtom(IS_LOGGED_IN); // 로그인 상태를 위한 아톰
@@ -178,7 +173,6 @@ function App() {
 
           <Route path="/" element={<PageMarketingLanding />} />
           <Route path="*" element={<PageMarketingLanding />} />
-          {/* <Route path="/Landing" element={<LandingPage />}></Route> */}
           <Route path="/MeetAiExpert" element={<PageMeetAiExpert />} />
           <Route path="/ExpertInsight" element={<PageExpertInsight />}></Route>
           <Route
