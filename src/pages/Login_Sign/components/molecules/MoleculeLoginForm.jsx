@@ -119,7 +119,7 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
       // 로그인 요청
       if (isMarketing) {
         response = await fetch(
-          "https://wishresearch.kr/api/user/login/defaultLogin_marketing/",
+          "https://wishresearch.kr/api/user/test/defaultLogin_marketing/",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },

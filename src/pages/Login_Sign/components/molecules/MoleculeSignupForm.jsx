@@ -85,7 +85,7 @@ const MoleculeSignupForm = () => {
 
     try {
       if (isMarketing) {
-        response = await fetch('https://wishresearch.kr/api/user/signup_marketing/', {
+        response = await fetch('https://wishresearch.kr/api/user/test/signup_marketing/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name : signUpName, email: signUpEmail, password: signUpPassword, chatGetId: conversationId })
