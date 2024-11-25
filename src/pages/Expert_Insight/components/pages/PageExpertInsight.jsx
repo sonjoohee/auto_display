@@ -1064,7 +1064,7 @@ const PageExpertInsight = () => {
                 selectedExpertIndex === "3") && !isMarketing ? (
                   <>
                     {/* 검색해서 시작 */}
-                    {(approachPath === -1 || approachPath === 3) &&
+                    {(approachPath === -1 || approachPath === 3 || conversationStage === 2) &&
                       titleOfBusinessInfo && <OrganismBizExpertSelect />}
 
                     {/* 전문가 선택하고 시작 */}

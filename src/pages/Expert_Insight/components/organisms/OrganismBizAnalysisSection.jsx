@@ -5,10 +5,6 @@ import { useAtom } from "jotai";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import { InputField } from "../../../../assets/styles/Input";
-import {
-  SkeletonTitle,
-  SkeletonLine,
-} from "../../../../assets/styles/Skeleton";
 import MoleculeReportController from "../molecules/MoleculeReportController";
 import Loader from "../atoms/AtomLoader"
 import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
@@ -141,19 +137,6 @@ const OrganismBizAnalysisSection = () => {
     mainFeatures: mainFeaturesOfBusinessInformation,
     mainCharacter: mainCharacteristicOfBusinessInformation,
     mainCustomer: businessInformationTargetCustomer,
-  };
-
-  const getInitialSystemMessage = (index) => {
-    switch (index) {
-      case "1":
-        return "아이디어를 입력해주셔서 감사합니다 😄\n관련된 시장과 고객을 분석하는데 많은 도움이 될 것 같아요.";
-      case "6":
-        return "아이디어를 입력해주셔서 감사합니다 😄\n빠른 성장 전략을 도출하기 위해서, 아이템에 대한 정확한 분석이 필수적입니다.";
-      case "9":
-        return "아이디어를 입력해주셔서 감사합니다 😄\n비즈니스 모델을 효과적으로 설계하려면, 비즈니스에 대한 정확한 이해가 중요합니다. 제가 분석한 비즈니스 내용을 확인해 보시고, 아이디어가 어떻게 발전 할 수 있을지 함께 살펴보아요.";
-      default:
-        return `아이디어를 입력해 주셔서 감사합니다!\n지금부터 아이디어를 세분화하여 주요한 특징과 목표 고객을 파악해보겠습니다 🙌🏻`;
-    }
   };
 
   useEffect(() => {

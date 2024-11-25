@@ -27,12 +27,7 @@ import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
 import axios from "axios";
-import {
-  SkeletonH1,
-  SkeletonTitle,
-  SkeletonLine,
-} from "../../../../assets/styles/Skeleton";
-import e from "cors";
+import Loader from "../atoms/AtomLoader"
 
 const OrganismCustomerAdditionalReport = ({
   customerAdditionalReportCount
@@ -319,23 +314,13 @@ const OrganismCustomerAdditionalReport = ({
   }
 
   return (
-    <AnalysisSection Strategy>
+    <>
       {isLoadingAdd ? (
-        <>
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <Spacing /> {/* 제목과 본문 사이에 간격 추가 */}
-          <SkeletonTitle className="title-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-          <SkeletonLine className="content-placeholder" />
-        </>
+        <AnalysisSection Strategy style={{minWidth: "950px", minHeight: "532px", display: "flex", justifyContent: "center", alignItems: "center"}}>
+          <Loader />
+        </AnalysisSection>
       ) : (
-        <>
+        <AnalysisSection Strategy>
           {title && (
             <TabHeader>
               <TabTitle>{title}</TabTitle>
@@ -358,9 +343,9 @@ const OrganismCustomerAdditionalReport = ({
               additionalReportCount={customerAdditionalReportCount}
             />
           )}
-        </>
+        </AnalysisSection>
       )}
-    </AnalysisSection>
+    </>
   );
 };
 
