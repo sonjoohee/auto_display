@@ -46,7 +46,7 @@ const PageMarketLanding = () => {
       try {
         // 로그인 요청
         const response = await axios.get(
-          "https://wishresearch.kr/api/user/login/marketing/",
+          "https://wishresearch.kr/api/user/test/marketing/",
           axiosConfig
         );
 
