@@ -36,6 +36,10 @@ import PageMarketingYesItems from "./pages/Marketing/components/pages/PageMarket
 import PageMarketingNoItems from "./pages/Marketing/components/pages/PageMarketingNoItems";
 import PageMarketingNoItemsResult from "./pages/Marketing/components/pages/PageMarketingNoItemsResult";
 
+// 디자인페이지
+import PageConnetWithYouTarget from "./pages/Design_Page/PageConnetWithYourTargett";
+import PageBusinessAnalysis from "./pages/Design_Page/PageBusinessAnalysis";
+
 // Biz
 import Lending from "./pages/Lending";
 import TargetSetting from "./pages/Persona/TargetSetting";
@@ -228,6 +232,10 @@ function App() {
             <Route path="/Loading" element={<Loading />} />
             <Route path="/LoadingPersona" element={<LoadingPersona />} />
             <Route path="/PersonaGenerator" element={<PersonaGenerator />} /> */}
+
+            {/* 디자인페이지 */}
+            <Route path="/ConnectWithYourTarget" element={<PageConnetWithYouTarget />} />
+            <Route path="/BusinessAnalysis" element={<PageBusinessAnalysis />} />
         </Routes>
       </BrowserRouter>
     </div>

@@ -133,31 +133,33 @@ const PageMarketingYesItems = () => {
       e.preventDefault(); // 기본 스크롤 동작 차단
     };
 
-    // 특정 영역의 스크롤 허용 (모바일 터치 스크롤 허용)
-    const allowTouchScroll = (el) => {
-      el.addEventListener(
-        "touchmove",
-        (e) => {
-          e.stopPropagation(); // 상위 body의 스크롤 차단 이벤트 무효화
-        },
-        { passive: false }
-      );
-    };
-
     // iOS에서 터치 스크롤 차단
-    const scrollableEl = scrollableSectionRef.current;
-    if (scrollableEl) {
-      allowTouchScroll(scrollableEl);
-    }
+    // document.body.style.overflow = "hidden";
+    // document.body.addEventListener("touchmove", preventDefault, {
+    //   passive: false,
+    // });
 
-    // body의 스크롤 비활성화
-    document.body.style.overflow = "hidden";
+        // 특정 영역의 스크롤 허용 (모바일 터치 스크롤 허용)
+        const allowTouchScroll = (el) => {
+          el.addEventListener(
+            "touchmove",
+            (e) => {
+              e.stopPropagation(); // 상위 body의 스크롤 차단 이벤트 무효화
+            },
+            { passive: false }
+          );
+        };
+    
+        if (scrollableSectionRef.current) {
+          allowTouchScroll(scrollableSectionRef.current);
+        }
 
     return () => {
-      document.body.style.overflow = ""; // Cleanup
+      document.body.style.overflow = "";
+      document.body.removeEventListener("touchmove", preventDefault);
     };
   }, []);
-  
+
   // const [activeQuestion, setActiveQuestion] = useState(null);
   const [activeQuestion, setActiveQuestion] = useState(0);
   const questionRefs = useRef([]);

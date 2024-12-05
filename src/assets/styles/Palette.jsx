@@ -13,17 +13,41 @@ export const palette = {
   lightGray: "#aaa",
   gray: "#7a7a7a",
   darkGray: "#3D3D3D",
-  gray50: "#FAFAFA",
-  gray100: "#F6F6F6",
-  gray200: "#DDDDDD",
-  gray300: "#CCCCCC",
+
+  gray50: "#fafafa",
+  gray100: "#f6f6f6",
+  gray200: "#ddd",
+  gray300: "#ccc",
   gray500: "#8c8c8c",
-  gray700: "#666666",
+  gray700: "#666",
   gray800: "#323232",
+  gray900: "#212121",
 
   red: "#FC3030",
   yellow: "#FFCC33",
 
   white: "#fff",
   black: "#000",
+
+  primary: "#0453f4",
+  mainLight: "#8183ff",
+  main: "#4c4fff",
+  mainDark: "#3537b3",
+
+  secondaryLight: "#5aebb3",
+  secondary: "#14e293",
+  secondaryDark: "#10b576",
+
+  warningLight: "#fcd64c",
+  warning: "#fbc400",
+  warningDark: "#d6a700",
+
+  errorLight: "#ff6d78",
+  error: "#ff2f3e",
+  errorDark: "#cc2632",
+
+  purpleChip: "#7380d8",
+  greenChip: "#3cd7a9",
+
+
 };
