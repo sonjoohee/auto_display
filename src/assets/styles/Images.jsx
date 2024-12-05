@@ -165,6 +165,14 @@ import ImgMBTISOTA from "../images/ImgMBTI_SOTA.png"
 import ImgMBTIRPIC from "../images/ImgMBTI_RPIC.png"
 import ImgMBTISPTA from "../images/ImgMBTI_SPTA.png"
 
+import IconBell from "../images/bell.svg"
+import IconRepeatSquare from "../images/repeat-square.svg"
+import PeopleChatSquareFill from "../images/people-chat-square-fill.svg"
+import MagicStickFillWhite from "../images/magic-stick-fill-white.svg"
+import NotePencil from "../images/note-pencil.svg"
+import ChevronRight from "../images/chevron-right.svg"
+import PencilSquare from "../images/pencil-square.svg"
+
 const images = {
   Logo,
   SymbolLogo,
@@ -333,6 +341,13 @@ const images = {
   ImgMBTISPTC,
   ImgMBTISPTA,
 
+  IconBell,
+  IconRepeatSquare,
+  PeopleChatSquareFill,
+  MagicStickFillWhite,
+  NotePencil,
+  ChevronRight,
+  PencilSquare,
 }
 
 export default images;
