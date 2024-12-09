@@ -387,3 +387,5 @@ export const PERSONA_STEP = atom(1);
 export const PERSONA_LIST = atom([]);
 export const PERSONA_SELECTED_LIST = atom([]);
 export const SELECTED_INTERVIEW_PURPOSE = atom("");
+export const PERSONA_SPECTRUM = atom([]);
+export const POSITIONING_ANALYSIS = atom({});

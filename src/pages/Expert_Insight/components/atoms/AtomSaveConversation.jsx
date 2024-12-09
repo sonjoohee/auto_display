@@ -68,7 +68,9 @@ import {
   PERSONA_STEP,
   PERSONA_LIST,
   SELECTED_INTERVIEW_PURPOSE,
-  PERSONA_SELECTED_LIST
+  PERSONA_SELECTED_LIST,
+  PERSONA_SPECTRUM,
+  POSITIONING_ANALYSIS
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -142,6 +144,9 @@ export const useSaveConversation = () => {
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
   const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(SELECTED_INTERVIEW_PURPOSE);
   const [personaSelectedList, setPersonaSelectedList] = useAtom(PERSONA_SELECTED_LIST);
+  const [personaSpectrum, setPersonaSpectrum] = useAtom(PERSONA_SPECTRUM);
+  const [positioningAnalysis, setPositioningAnalysis] = useAtom(POSITIONING_ANALYSIS);
+
 
   const saveConversation = async ({ changingConversation }) => {
 
@@ -218,6 +223,8 @@ export const useSaveConversation = () => {
             personaList: changingConversation.hasOwnProperty('personaList') ? changingConversation.personaList : personaList,
             selectedInterviewPurpose: changingConversation.hasOwnProperty('selectedInterviewPurpose') ? changingConversation.selectedInterviewPurpose : selectedInterviewPurpose,
             personaSelectedList: changingConversation.hasOwnProperty('personaSelectedList') ? changingConversation.personaSelectedList : personaSelectedList,
+            personaSpectrum: changingConversation.hasOwnProperty('personaSpectrum') ? changingConversation.personaSpectrum : personaSpectrum,
+            positioningAnalysis: changingConversation.hasOwnProperty('positioningAnalysis') ? changingConversation.positioningAnalysis : positioningAnalysis,
           },
         isMarketing ? true : isLoggedIn,
         changingConversation.hasOwnProperty('conversationId') ? changingConversation.conversationId : conversationId
