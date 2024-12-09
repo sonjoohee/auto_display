@@ -43,6 +43,10 @@ import PageBusinessAnalysis from "./pages/Design_Page/PageBusinessAnalysis";
 // 페르소나
 import PageMain from "./pages/Persona/components/pages/PageMain";
 import PagePersona from "./pages/Persona/components/pages/PagePersona";
+import PagePersona2 from "./pages/Persona/components/pages/PagePersona2";
+import PagePersona3 from "./pages/Persona/components/pages/PagePersona3";
+// import PagePersona4 from "./pages/Persona/components/pages/PagePersona4";
+
 
 function App() {
   const [, setIsLoggedIn] = useAtom(IS_LOGGED_IN); // 로그인 상태를 위한 아톰
@@ -202,6 +206,9 @@ function App() {
           <Route path="/Persona" element={<PagePersona />}></Route>
           <Route path="/Main" element={<PageMain />}></Route>
           <Route path="/Persona/:conversationId" element={<PagePersona />}></Route>
+          <Route path="/Persona/2/:conversationId" element={<PagePersona2 />}></Route>
+          <Route path="/Persona/3/:conversationId" element={<PagePersona3 />}></Route>
+          {/* <Route path="/Persona/4/:conversationId" element={<PagePersona4 />}></Route> */}
           
           {/* <Route
             path="/CuratorStoryboard"

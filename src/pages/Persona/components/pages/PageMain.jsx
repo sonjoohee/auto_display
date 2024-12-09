@@ -109,7 +109,8 @@ import {
   GROWTH_HACKER_SELECTED_SOLUTION,
   STRATEGY_CONSULTANT_REPORT_DATA,
   IS_PERSONA_ACCESSIBLE,
-  PERSONA_BUSINESS_BUTTON_STATE,
+  PERSONA_BUTTON_STATE_1,
+  PERSONA_BUTTON_STATE_2,
 } from "../../../AtomStates";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
@@ -121,8 +122,8 @@ const PageMain  = () => {
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
   const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(IS_PERSONA_ACCESSIBLE);
-  const [personaBusinessButtonState, setPersonaBusinessButtonState] = useAtom(PERSONA_BUSINESS_BUTTON_STATE);
-
+  const [personaButtonState1, setPersonaButtonState1] = useAtom(PERSONA_BUTTON_STATE_1);
+  const [personaButtonState2, setPersonaButtonState2] = useAtom(PERSONA_BUTTON_STATE_2);
 
   const [strategyConsultantReportData, setStrategyConsultantReportData] = useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
   const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] = useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
@@ -588,7 +589,8 @@ const PageMain  = () => {
       // setConversation(updatedConversation);
       // setConversationStage(2);
       setIsPersonaAccessible(true);
-      setPersonaBusinessButtonState(1);
+      setPersonaButtonState1(1);
+      saveConversation({changingConversation: {inputBusinessInfo: inputBusinessInfo}});
       // setApproachPath(-1); // 검색을 통해 들어가는 경우
       // setSelectedExpertIndex("0");
       navigate("/Persona");
@@ -733,36 +735,70 @@ const PageMain  = () => {
 
           <ExpertSelectWrap>
             <ExpertSelectBox>
-              <ExpertCard>
-                <strong>PoC 설계 전문가</strong>
-                <p>아이템 및 PoC 목적에 따른 가설 검증 방법 제시</p>
+              <ExpertCard
+                  Strategy
+                  onClick={() => {
+                    handledExpertSelect("1");
+                  }}
+                >
+                  <strong>전략 컨설턴트</strong>
+                  <p>차별화 전략과 리스트 분석 제시</p>
+                  <span>
+                    <img src={images.ImgStrategy} alt="" />
+                  </span>
+                </ExpertCard>
+
+                <ExpertCard
+                Hacker
+                onClick={() => {
+                  handledExpertSelect("6");
+                }}
+              >
+                <strong>그로스 해커</strong>
+                <p>
+                  고객 여정을 분석하여, 마케팅
+                  <br />
+                  퍼널별 전략 제시
+                </p>
                 <span>
-                <img src={images.ImgPoC} alt="" />
+                  <img src={images.ImgHacker} alt="" />
                 </span>
               </ExpertCard>
 
-              <ExpertCard>
-                <strong>마케팅 전략가</strong>
-                <p>아이템 및 PoC 목적에 따른 가설 검증 방법 제시</p>
+              <ExpertCard
+                Price
+                onClick={() => {
+                  handledExpertSelect("7");
+                }}
+              >
+                <strong>가격 분석 전문가</strong>
+                <p>시장 데이터를 기반으로 최적의<br />가격 전략 제시 (제품 한정)</p>
                 <span>
-                <img src={images.ImgMarketing} alt="" />
+                  <img src={images.ImgPrice} alt="" />
                 </span>
               </ExpertCard>
 
-              <ExpertCard>
-                <strong>고객 세분화 전문가</strong>
-                <p>고객 세분화와 맞춤 전략 제시</p>
+              <ExpertCard
+                BM
+                onClick={() => {
+                  handledExpertSelect("9");
+                  // setIsComingSoon(true);
+                }}
+              >
+                <strong>BM 전문가</strong>
+                <p>비즈니스 모델 설계 및 최적화</p>
                 <span>
-                  <img src={images.ImgClient} alt="" />
+                  <img src={images.ImgBM} alt="" />
                 </span>
               </ExpertCard>
 
-              <ExpertCard onClick={() => handledExpertSelect("1")}>
-                <strong>전략 컨설턴트</strong>
-                <p>마케팅 방향성과 실행 방안 제시</p>
-                <span>
-                  <img src={images.ImgStrategy} alt="" />
-                </span>
+              <ExpertCard Coming>
+                <div>
+                  <span>
+                    <img src={images.ImgComing} alt="" />
+                  </span>
+                  <p>coming soon</p>
+                </div>
               </ExpertCard>
             </ExpertSelectBox>
           </ExpertSelectWrap>
