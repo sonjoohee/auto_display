@@ -378,7 +378,12 @@ export const STRATEGY_CONSULTANT_REPORT_DATA = atom([]);
 /* 페르소나 */
 
 export const IS_PERSONA_ACCESSIBLE = atom(false);
-export const PERSONA_BUSINESS_BUTTON_STATE = atom(0);
+export const PERSONA_BUTTON_STATE_1 = atom(0);
+export const PERSONA_BUTTON_STATE_2 = atom(0);
 export const PERSONA_BUSINESS_CAREGORY = atom({});
 export const SHOW_CARD_CONTENT = atom(true);
 export const SHOW_INTERVIEW = atom(false);
+export const PERSONA_STEP = atom(1);
+export const PERSONA_LIST = atom([]);
+export const PERSONA_SELECTED_LIST = atom([]);
+export const SELECTED_INTERVIEW_PURPOSE = atom("");

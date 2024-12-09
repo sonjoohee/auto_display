@@ -2,9 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { palette } from '../../../../assets/styles/Palette';
 
-const MoleculeStepIndicator = ({ steps }) => {
-  const activeStep = steps.find(step => step.active)?.number || 1;
-
+const MoleculeStepIndicator = ({ steps, activeStep }) => {
   return (
     <StepContainer>
       {steps.map((step, index) => (

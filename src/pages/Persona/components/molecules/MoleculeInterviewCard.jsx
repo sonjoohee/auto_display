@@ -4,44 +4,24 @@ import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
 import { Button } from '../../../../assets/styles/ButtonStyle'
 
-const MoleculePersonaCard = ({ 
+const MoleculeInterviewCard = ({ 
   title, 
-  keywords = [], 
   description, 
   expandedContent, 
   isReady = false, 
-  isRequest = false, 
-  showDescription = false,
-  hideCheckCircle = false,
+  isRequest = false,
+  isSelected, 
   onSelect,
-  currentSelection
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
-
-  const handleCheck = () => {
-    // 이미 선택된 상태면 항상 해제 가능
-    if (isChecked) {
-      setIsChecked(false);
-      onSelect(false);
-    } 
-    // 새로 선택하는 경우, 최대 선택 개수 확인
-    else if (currentSelection < 5) {
-      setIsChecked(true);
-      onSelect(true);
-    }
-  };
 
   return (
     <CardContainer>
       <MainContent>
-        {!hideCheckCircle && (
-          <CheckCircle 
-            $isChecked={isChecked}
-            onClick={handleCheck}
-          />
-        )}
-
+        <CheckCircle 
+          $isSelected={isSelected}
+          onClick={() => onSelect(title)}
+        />
         <ContentWrapper>
           <TitleSection>
             <Title>{title}</Title>
@@ -59,17 +39,17 @@ const MoleculePersonaCard = ({
             )}
           </TitleSection>
           
-          {keywords.length > 0 && (
+          {/* {keywords.length > 0 && (
             <KeywordGroup>
               {keywords.map((keyword, index) => (
                 <KeywordTag key={index}>#{keyword}</KeywordTag>
               ))}
             </KeywordGroup>
-          )}
+          )} */}
 
-          {/* {showDescription && description && (
+          {description && (
             <Description>{description}</Description>
-          )}  */}
+          )} 
         </ContentWrapper>
 
         {isReady ? (
@@ -105,7 +85,7 @@ const MoleculePersonaCard = ({
   );
 };
 
-export default MoleculePersonaCard;
+export default MoleculeInterviewCard;
 
 const CardContainer = styled.div`
   display: flex;
@@ -141,7 +121,7 @@ const CheckCircle = styled.div`
   height: 24px;
   border-radius: 50%;
   cursor: pointer;
-  background-image: ${props => props.$isChecked 
+  background-image: ${props => props.$isSelected 
     ? `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='11' stroke='%23226FFF' stroke-width='2'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='%23226FFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
     : `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='11' stroke='%23E0E4EB' stroke-width='2'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='%23E0E4EB' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
   };

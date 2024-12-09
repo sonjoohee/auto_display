@@ -14,7 +14,7 @@ import {
   MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
   TEMP_MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
   IS_LOADING,
-  PERSONA_BUSINESS_BUTTON_STATE,
+  PERSONA_BUTTON_STATE_1,
   INPUT_BUSINESS_INFO,
   PERSONA_BUSINESS_CAREGORY,
   SHOW_CARD_CONTENT,
@@ -22,7 +22,7 @@ import {
 } from "../../../AtomStates";
 import AtomLoader from "../atoms/AtomLoader";
 
-const OrganismBusinessAnalysis = () => {
+const OrganismBusinessAnalysis = ({ personaStep }) => {
     const { saveConversation } = useSaveConversation();
     const navigate = useNavigate();
     const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
@@ -31,12 +31,11 @@ const OrganismBusinessAnalysis = () => {
     const [tempMainFeaturesOfBusinessInformation, setTempMainFeaturesOfBusinessInformation] = useAtom(TEMP_MAIN_FEATURES_OF_BUSINESS_INFORMATION);
     const [mainCharacteristicOfBusinessInformation, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
     const [tempMainCharacteristicOfBusinessInformation, setTempMainCharacteristicOfBusinessInformation] = useAtom(TEMP_MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
-    const [personaBusinessButtonState, setPersonaBusinessButtonState] = useAtom(PERSONA_BUSINESS_BUTTON_STATE);
+    const [personaButtonState1, setPersonaButtonState1] = useAtom(PERSONA_BUTTON_STATE_1);
     const [isLoading, setIsLoading] = useAtom(IS_LOADING);
     const [personaBusinessCategory, setPersonaBusinessCategory] = useAtom(PERSONA_BUSINESS_CAREGORY);
-    const [showCardContent, setShowCardContent] = useAtom(SHOW_CARD_CONTENT);
+    const [showCardContent, setShowCardContent] = useState(personaStep <= 2);
     const [categoryColor, setCategoryColor] = useState({});
-    const [showInterview, setShowInterview] = useAtom(SHOW_INTERVIEW);
 
     const toggleCardContent = () => {
         setShowCardContent(!showCardContent);
@@ -92,9 +91,9 @@ const OrganismBusinessAnalysis = () => {
           const maxAttempts = 5;
     
           try {
-            if (personaBusinessButtonState === 1) {
+            if (personaButtonState1 === 1) {
               setIsLoading(true);
-              await new Promise(resolve => setTimeout(resolve, 2000));
+              await new Promise(resolve => setTimeout(resolve, 1000));
               // 버튼 클릭으로 API 호출
               // let response = await axios.post(
               //   "https://wishresearch.kr/panels/business_category",
@@ -223,7 +222,7 @@ const OrganismBusinessAnalysis = () => {
           } catch (error) {
             console.error("Error in loadAndSaveData:", error);
           } finally {
-            setPersonaBusinessButtonState(0);
+            setPersonaButtonState1(0);
             setIsLoading(false);
           }
         };
@@ -232,7 +231,7 @@ const OrganismBusinessAnalysis = () => {
       }, []);
 
   const handleRegenerate = async () => {
-    setPersonaBusinessButtonState(1);
+    setPersonaButtonState1(1);
     setTitleOfBusinessInfo("");
     let businessData;
     let categoryData;
@@ -241,7 +240,7 @@ const OrganismBusinessAnalysis = () => {
 
     try {
         setIsLoading(true);
-        await new Promise(resolve => setTimeout(resolve, 5000));
+        await new Promise(resolve => setTimeout(resolve, 1000));
         // 버튼 클릭으로 API 호출
         // let response = await axios.post(
         //   "https://wishresearch.kr/panels/business_category",
@@ -369,7 +368,7 @@ const OrganismBusinessAnalysis = () => {
     } catch (error) {
       console.error("Error in handleRegenerate:", error);
     } finally {
-      setPersonaBusinessButtonState(0);
+      setPersonaButtonState1(0);
       setIsLoading(false);
     }
   };
@@ -378,7 +377,7 @@ const OrganismBusinessAnalysis = () => {
     <>
         <Title>
             <h3>비즈니스 분석</h3>
-            {!personaBusinessButtonState && (
+            {!personaButtonState1 && personaStep === 1 && (
               <ButtonGroup>
                 <IconButton onClick={() => handleRegenerate()}>
                     <img src={images.IconRepeatSquare} alt="재생성" />
@@ -391,8 +390,8 @@ const OrganismBusinessAnalysis = () => {
               </ButtonGroup>
             )}
         </Title>
-      {personaBusinessButtonState ? (
-        <CardWrap>
+      {personaButtonState1 ? (
+        <CardWrap >
          <Card>
           <AtomLoader />
          </Card>
@@ -407,7 +406,7 @@ const OrganismBusinessAnalysis = () => {
                     <Tag color={categoryColor.second} />
                     <Tag color={categoryColor.third} />
                     </TagWrap>
-                    {showInterview && (
+                    {personaStep > 2 && (
                     <ToggleButton 
                         showContent={showCardContent}
                         onClick={toggleCardContent}
