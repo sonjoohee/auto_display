@@ -1,4 +1,3 @@
-// src/AtomStates.jsx
 import { atom } from "jotai";
 
 // 로그인 상태
@@ -377,15 +376,65 @@ export const STRATEGY_CONSULTANT_REPORT_DATA = atom([]);
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* 페르소나 */
 
+export const BUSINESS_ANALYSIS = atom({
+  input: "",
+  title: "",
+  characteristics: "",
+  features: [],
+  category: {}
+});
+
+export const TEMP_BUSINESS_ANALYSIS = atom({
+  input: "",
+  title: "",
+  characteristics: "",
+  features: [],
+  category: {}
+});
+
+export const PERSONA_LIST = atom({
+  selected: [],
+  unselected: []
+});
+
+export const CUSTOMIZE_PERSONA_LIST = atom({
+  selected: [],
+  unselected: []
+});
+
+export const REQUEST_PERSONA_LIST = atom({
+  persona: [],
+  positioning: {}
+});
+
+export const INTERVIEW_QUESTION_LIST = atom([
+  {
+    question_type: "",
+    question: "",
+    question_subject: ""
+  },
+  {
+    question_type: "",
+    question: "",
+    question_subject: ""
+  },
+  {
+    question_type: "",
+    question: "",
+    question_subject: ""
+  }
+]);
+
+export const INTERVIEW_ANSWER_LIST = atom([]);
+
+export const PERSONA_FINAL_REPORT = atom([]);
+
 export const IS_PERSONA_ACCESSIBLE = atom(false);
+export const PERSONA_STEP = atom(1);
 export const PERSONA_BUTTON_STATE_1 = atom(0);
 export const PERSONA_BUTTON_STATE_2 = atom(0);
-export const PERSONA_BUSINESS_CAREGORY = atom({});
-export const SHOW_CARD_CONTENT = atom(true);
-export const SHOW_INTERVIEW = atom(false);
-export const PERSONA_STEP = atom(1);
-export const PERSONA_LIST = atom([]);
-export const PERSONA_SELECTED_LIST = atom([]);
+export const PERSONA_BUTTON_STATE_3 = atom(0);
+
 export const SELECTED_INTERVIEW_PURPOSE = atom("");
-export const PERSONA_SPECTRUM = atom([]);
-export const POSITIONING_ANALYSIS = atom({});
+
+export const CATEGORY_COLOR = atom({});

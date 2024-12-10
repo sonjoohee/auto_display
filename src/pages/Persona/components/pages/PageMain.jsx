@@ -111,6 +111,8 @@ import {
   IS_PERSONA_ACCESSIBLE,
   PERSONA_BUTTON_STATE_1,
   PERSONA_BUTTON_STATE_2,
+  BUSINESS_ANALYSIS,
+  TEMP_BUSINESS_ANALYSIS
 } from "../../../AtomStates";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
@@ -370,8 +372,17 @@ const PageMain  = () => {
     setMarketingRecommendedItemButtonState,
   ] = useAtom(MARKETING_RECOMMENDED_ITEM_BUTTON_STATE);
 
+  const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
+  const [tempBusinessAnalysis, setTempBusinessAnalysis] = useAtom(TEMP_BUSINESS_ANALYSIS);
+
   const closePopupRegex = () => {
-    setInputBusinessInfo("");
+    setBusinessAnalysis({
+      input: "",
+      title: "",
+      characteristics: "",
+      features: [],
+      category: {}
+    });
     setIsPopupRegex(false); // 팝업 닫기
   };
   const closePopupRegex2 = () => {
@@ -399,20 +410,20 @@ const PageMain  = () => {
   }, []);
 
   useEffect(() => {
-    let savedInputBusinessInfo = "";
-    // If there's inputBusinessInfo in the location state, save it
-    if (location.state && location.state.inputBusinessInfo) {
-      savedInputBusinessInfo = location.state.inputBusinessInfo;
-      // Remove the inputBusinessInfo from location.state
-      const newState = { ...location.state };
-      delete newState.inputBusinessInfo;
-      window.history.replaceState(newState, "");
+    // let savedInputBusinessInfo = "";
+    // // If there's inputBusinessInfo in the location state, save it
+    // if (location.state && location.state.inputBusinessInfo) {
+    //   savedInputBusinessInfo = location.state.inputBusinessInfo;
+    //   // Remove the inputBusinessInfo from location.state
+    //   const newState = { ...location.state };
+    //   delete newState.inputBusinessInfo;
+    //   window.history.replaceState(newState, "");
 
-      // 비로그인 상태에서 들어온 경우 로그인 팝업 띄우기
-      if (!isLoggedIn) {
-        setLoginPopupOpen(true);
-      }
-    }
+    //   // 비로그인 상태에서 들어온 경우 로그인 팝업 띄우기
+    //   if (!isLoggedIn) {
+    //     setLoginPopupOpen(true);
+    //   }
+    // }
 
     // Reset all states except inputBusinessInfo
     setNewAddContent("");
@@ -445,8 +456,21 @@ const PageMain  = () => {
     setRecommendedTargetData({});
     setpocDetailReportData({});
     setPocPersonaList([]);
-    setInputBusinessInfo(savedInputBusinessInfo);
-
+    // setInputBusinessInfo(savedInputBusinessInfo);
+    setBusinessAnalysis({
+      input: "",
+      title: "",
+      characteristics: "",
+      features: [],
+      category: {}
+    });
+    setTempBusinessAnalysis({
+      input: "",
+      title: "",
+      characteristics: "",
+      features: [],
+      category: {}
+    });
     setIsEditingIdeaFeature(false);
     setIsEditingIdeaCustomer(false);
     setAddingIdeaFeature(false);
@@ -553,17 +577,17 @@ const PageMain  = () => {
       const specialChars = /^[.,'"?!()\-]+$/;
 
       // 단독으로 특수 문자만 사용된 경우
-      if (specialChars.test(inputBusinessInfo.trim())) {
+      if (specialChars.test(businessAnalysis.input.trim())) {
         setIsPopupRegex(true);
         return;
       }
 
       // 입력 값에 대한 정규식 및 빈 값 체크
-      if (!regex.test(inputBusinessInfo)) {
+      if (!regex.test(businessAnalysis.input)) {
         setIsPopupRegex(true);
         return;
       }
-      if (inputBusinessInfo.trim() === "") {
+      if (businessAnalysis.input.trim() === "") {
         setIsPopupRegex2(true);
         return;
       }
@@ -590,7 +614,7 @@ const PageMain  = () => {
       // setConversationStage(2);
       setIsPersonaAccessible(true);
       setPersonaButtonState1(1);
-      saveConversation({changingConversation: {inputBusinessInfo: inputBusinessInfo}});
+      // saveConversation({changingConversation: {inputBusinessInfo: inputBusinessInfo}});
       // setApproachPath(-1); // 검색을 통해 들어가는 경우
       // setSelectedExpertIndex("0");
       navigate("/Persona");
@@ -662,7 +686,13 @@ const PageMain  = () => {
       setAnalysisButtonState(1);
       setIsExpertInsightAccessible(true);
       setApproachPath(1);
-      setInputBusinessInfo(""); // 또는 null, undefined로 초기화
+      setBusinessAnalysis({
+        input: "",
+        title: "",
+        characteristics: "",
+        features: [],
+        category: {}
+      });
       setSelectedExpertIndex(index);
       navigate("/ExpertInsight");
     } else {
@@ -716,7 +746,13 @@ const PageMain  = () => {
                     if (e.target.value.length > 300) {
                       e.target.value = e.target.value.substring(0, 300);
                     }
-                    setInputBusinessInfo(e.target.value);
+                    setBusinessAnalysis({
+                      input: e.target.value,
+                      title: "",
+                      characteristics: "",
+                      features: [],
+                      category: {}
+                    });
 
                     // // 글자 수 표시
                     // const currentLength = e.target.value.length;

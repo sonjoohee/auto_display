@@ -12,14 +12,11 @@ import {
   INPUT_BUSINESS_INFO, 
   TITLE_OF_BUSINESS_INFORMATION, 
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
-  SHOW_CARD_CONTENT,
-  SHOW_INTERVIEW,
   PERSONA_LIST,
-  PERSONA_SELECTED_LIST,
   IS_LOADING,
   PERSONA_STEP,
-  PERSONA_SPECTRUM,
-  POSITIONING_ANALYSIS
+  BUSINESS_ANALYSIS,
+  REQUEST_PERSONA_LIST
 } from "../../../AtomStates";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
@@ -47,10 +44,11 @@ const PagePersona2 = () => {
   const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
-  const [personaSelectedList, setPersonaSelectedList] = useAtom(PERSONA_SELECTED_LIST);
   const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
-  const [personaSpectrum, setPersonaSpectrum] = useAtom(PERSONA_SPECTRUM);
-  const [positioningAnalysis, setPositioningAnalysis] = useAtom(POSITIONING_ANALYSIS);
+  const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
+  const [requestPersonaList, setRequestPersonaList] = useAtom(REQUEST_PERSONA_LIST);
+
+  const [selectedPersonas, setSelectedPersonas] = useState([]);
 
   // const [isLoadingPage, setIsLoadingPage] = useState(true);
 
@@ -63,13 +61,15 @@ const PagePersona2 = () => {
   ]);
 
   const handlePersonaSelect = (persona, isSelected) => {
-    setPersonaSelectedList(prev => {
+    setSelectedPersonas(prev => {
       if (isSelected) {
         // 최대 5개까지만 선택 가능
-        if (prev.length >= 5) return prev;
+        if (prev.length >= 5) {
+          return prev;
+        }
         return [...prev, persona];
       } else {
-        return prev.filter(p => p.persona !== persona.persona);
+        return prev.filter(p => p !== persona);
       }
     });
   };
@@ -133,161 +133,84 @@ const PagePersona2 = () => {
         if (personaButtonState2) {
           setIsLoading(true);
 
-          /* 페르소나 추천 */
-          let data = {
-            target : "출산"
+          let unselectedPersonas = [];
+          let data, response;
+          
+          // 카테고리별로 페르소나 요청
+          for(const category of Object.values(businessAnalysis.category)) {
+            data = {
+              target: category
+            };
+
+            response = await axios.post(
+              "https://wishresearch.kr/person/find", 
+              data,
+              axiosConfig
+            );
+
+            unselectedPersonas.push(...response.data);
+          }
+
+          let personaList = {
+            selected: [],
+            unselected: unselectedPersonas
+          };
+          setPersonaList(personaList);
+
+          ////////////////////////////////////////////////////////////////////////////////////////
+          data = {
+            business_idea : businessAnalysis.title,
           };
 
-          let response = await axios.post(
-            "https://wishresearch.kr/person/find",
+          response = await axios.post(
+            "https://wishresearch.kr/person/persona_request",
             data,
             axiosConfig
           );
 
-          let personaList = response.data;
-          setPersonaList(personaList);
-          await saveConversation({ changingConversation: { personaList: personaList } });
+          personaList = response.data;
+          let retryCount = 0;
+          const maxRetries = 10;
 
-          ////////////////////////////////////////////////////////////////////////////////////////
-          /* 페르소나 모집 요청 */
-          // data = {
-          //   business_idea : titleOfBusinessInfo,
-          //   api_key : 1
-          // };
+          while (retryCount < maxRetries && (
+            !response || 
+            !response.data || 
+            !personaList.hasOwnProperty("persona_spectrum") ||
+            !personaList.hasOwnProperty("positioning_analysis") ||
+            !personaList.persona_spectrum.length === 3
+            // !personaList.persona_spectrum[0].hasOwnProperty("persona_1") ||
+            // !personaList.persona_spectrum[1].hasOwnProperty("persona_2") ||
+            // !personaList.persona_spectrum[2].hasOwnProperty("persona_3") ||
+            // !personaList.persona_spectrum[0].persona_1.hasOwnProperty("persona") ||
+            // !personaList.persona_spectrum[1].persona_2.hasOwnProperty("persona") ||
+            // !personaList.persona_spectrum[2].persona_3.hasOwnProperty("persona") ||
+            // !personaList.persona_spectrum[0].persona_1.persona ||
+            // !personaList.persona_spectrum[1].persona_2.persona ||
+            // !personaList.persona_spectrum[2].persona_3.persona ||
+            // !personaList.persona_spectrum[0].persona_1.hasOwnProperty("keyword") ||
+            // !personaList.persona_spectrum[1].persona_2.hasOwnProperty("keyword") ||
+            // !personaList.persona_spectrum[2].persona_3.hasOwnProperty("keyword") ||
+            // !personaList.persona_spectrum[0].persona_1.keyword.length == 3 ||
+            // !personaList.persona_spectrum[1].persona_2.keyword.length == 3 ||
+            // !personaList.persona_spectrum[2].persona_3.keyword.length == 3
+          ))
+          {
+            response = await axios.post(
+              "https://wishresearch.kr/person/persona_request",
+              data,
+              axiosConfig
+            );
+            retryCount++;
 
-          // response = await axios.post(
-          //   "https://wishresearch.kr/person/request",
-          //   data,
-          //   axiosConfig
-          // );
-
-          // personaList = response.data;
-          // let retryCount = 0;
-          // const maxRetries = 10;
-
-          // while (retryCount < maxRetries && (
-          //   !response || 
-          //   !response.data || 
-          //   personaList.hasOwnProperty("persona_spectrum") ||
-          //   personaList.hasOwnProperty("positioning_analysis") ||
-          //   !personaList.persona_spectrum.length === 3 || 
-          //   !personaList.persona_spectrum[0].hasOwnProperty("persona_1") ||
-          //   !personaList.persona_spectrum[1].hasOwnProperty("persona_2") ||
-          //   !personaList.persona_spectrum[2].hasOwnProperty("persona_3") ||
-          //   !personaList.persona_spectrum[0].persona_1.hasOwnProperty("persona") ||
-          //   !personaList.persona_spectrum[1].persona_2.hasOwnProperty("persona") ||
-          //   !personaList.persona_spectrum[2].persona_3.hasOwnProperty("persona") ||
-          //   !personaList.persona_spectrum[0].persona_1.persona ||
-          //   !personaList.persona_spectrum[1].persona_2.persona ||
-          //   !personaList.persona_spectrum[2].persona_3.persona ||
-          //   !personaList.persona_spectrum[0].persona_1.hasOwnProperty("keyword") ||
-          //   !personaList.persona_spectrum[1].persona_2.hasOwnProperty("keyword") ||
-          //   !personaList.persona_spectrum[2].persona_3.hasOwnProperty("keyword") ||
-          //   !personaList.persona_spectrum[0].persona_1.keyword.length == 3 ||
-          //   !personaList.persona_spectrum[1].persona_2.keyword.length == 3 ||
-          //   !personaList.persona_spectrum[2].persona_3.keyword.length == 3
-          // ))
-          // {
-          //   response = await axios.post(
-          //     "https://wishresearch.kr/person/request",
-          //     data,
-          //     axiosConfig
-          //   );
-          //   retryCount++;
-
-          //   personaList = response.data;
-          // }
-          // if (retryCount === maxRetries) {
-          //   throw new Error("Maximum retry attempts reached. Empty response persists.");
-          // }
-          setPersonaSpectrum([
-            {
-                "persona_1": {
-                    "persona": "시간에 쫓기는 바쁜 직장인",
-                    "age": "25-35세",
-                    "job": "사무직, 마케터, 영업직",
-                    "family": "1인 가구 또는 2인 가구",
-                    "income": "월 250만원~400만원",
-                    "residence": "서울 및 수도권",
-                    "lifestyle": {
-                        "lifestyle_1": "바쁜 일상 속에서 효율성을 중시하며 시간 절약을 최우선으로 생각",
-                        "lifestyle_2": "스마트폰 사용 빈도가 높고, 모바일 서비스 이용에 익숙",
-                        "lifestyle_3": "편리함과 간편함을 추구하는 소비 성향"
-                    },
-                    "interest": {
-                        "interest_1": "세탁 관련 시간 절약 서비스",
-                        "interest_2": "편리한 모바일 주문 및 결제 시스템",
-                        "interest_3": "다양한 세탁 옵션과 추가 서비스"
-                    },
-                    "goal": "세탁에 소요되는 시간과 노력을 최소화하고, 깨끗한 옷을 편리하게 받아보는 것",
-                    "problem": "세탁 시간 부족, 빨래 건조 공간 부족, 세탁물 관리의 어려움",
-                    "relationship_with_product": "모바일 세탁 서비스는 시간을 절약하고 편리하게 세탁을 해결해주는 필수적인 서비스로 인식",
-                    "keyword": [
-                        "시간 절약",
-                        "편리성",
-                        "모바일 주문"
-                    ]
-                }
-            },
-            {
-                "persona_2": {
-                    "persona": "세탁에 시간을 할애하기 어려운 워킹맘",
-                    "age": "30-45세",
-                    "job": "직장인, 프리랜서, 사업가",
-                    "family": "2인 이상 가족",
-                    "income": "월 300만원~500만원",
-                    "residence": "서울 및 수도권",
-                    "lifestyle": {
-                        "lifestyle_1": "육아와 직장 생활을 병행하며 시간 관리에 어려움을 겪음",
-                        "lifestyle_2": "가사 시간 단축을 위한 효율적인 서비스 선호",
-                        "lifestyle_3": "가족 구성원 모두에게 편리한 서비스를 선호"
-                    },
-                    "interest": {
-                        "interest_1": "시간 절약 가능한 세탁 서비스",
-                        "interest_2": "아이 옷 세탁에 특화된 서비스",
-                        "interest_3": "안전하고 위생적인 세탁 서비스"
-                    },
-                    "goal": "세탁으로 인한 시간 부담을 줄이고, 깨끗하고 위생적인 옷을 가족에게 제공하는 것",
-                    "problem": "육아와 직장 생활 병행으로 세탁 시간 부족, 세탁물 관리 어려움, 아이 옷 세탁의 번거로움",
-                    "relationship_with_product": "모바일 세탁 서비스는 육아와 직장 생활 병행에 도움을 주는 필수적인 서비스로 인식",
-                    "keyword": [
-                        "시간 절약",
-                        "육아 편의성",
-                        "위생"
-                    ]
-                }
-            },
-            {
-                "persona_3": {
-                    "persona": "고품질 세탁 서비스를 원하는 고소득 전문직",
-                    "age": "35-55세",
-                    "job": "의사, 변호사, 회계사",
-                    "family": "2인 이상 가족",
-                    "income": "월 500만원 이상",
-                    "residence": "강남 및 고급 주택가",
-                    "lifestyle": {
-                        "lifestyle_1": "시간과 비용에 대한 부담이 적고, 고품질 서비스를 선호",
-                        "lifestyle_2": "편리성과 고급스러움을 동시에 추구",
-                        "lifestyle_3": "프리미엄 서비스 경험을 중시"
-                    },
-                    "interest": {
-                        "interest_1": "고급 세탁 서비스",
-                        "interest_2": "세탁물 관리 전문성",
-                        "interest_3": "프리미엄 세탁 옵션"
-                    },
-                    "goal": "고품질의 세탁 서비스를 통해 편리함과 만족도를 동시에 얻는 것",
-                    "problem": "시간 부족으로 세탁에 신경 쓰기 어려움, 고급 의류 세탁의 어려움",
-                    "relationship_with_product": "모바일 세탁 서비스는 시간과 노력을 절약하면서 고급 의류 관리까지 가능한 프리미엄 서비스로 인식",
-                    "keyword": [
-                        "고급",
-                        "프리미엄",
-                        "전문성"
-                    ]
-                }
-            }
-        ]);
-          // setPositioningAnalysis(personaList.positioning_analysis);
-          // await saveConversation({ changingConversation: { personaList: personaList } });
+            personaList = response.data;
+          }
+          if (retryCount === maxRetries) {
+            throw new Error("Maximum retry attempts reached. Empty response persists.");
+          }
+          setRequestPersonaList({
+            persona: personaList.persona_spectrum,
+            positioning: personaList.positioning_analysis
+          });
         }
       } catch (error) {
         console.error("Error in loadPersona:", error);
@@ -301,9 +224,16 @@ const PagePersona2 = () => {
   }, [personaButtonState2]);
 
   const handleStartInterview = () => {
+    // 선택된 페르소나들을 selected에 반영
+    setPersonaList(prev => ({
+      selected: selectedPersonas,
+      unselected: prev.unselected.filter(
+        persona => !selectedPersonas.includes(persona)
+      )
+    }));
+
     setPersonaStep(3);
     setIsPersonaAccessible(true);
-    saveConversation({ changingConversation: { personaStep: 3 } });
     navigate(`/Persona/3/${conversationId}`, { replace: true });
   };
 
@@ -334,7 +264,7 @@ const PagePersona2 = () => {
                           </PersonaCards>
                         ) : (
                           <PersonaCards>
-                            {personaList.map((persona, index) => (
+                            {personaList.unselected.map((persona, index) => (
                               <MoleculePersonaCard 
                                 key={index}
                                 title={persona.persona}
@@ -342,31 +272,32 @@ const PagePersona2 = () => {
                                 isReady={true}
                                 isRequest={false}
                                 onSelect={(isSelected) => handlePersonaSelect(persona, isSelected)}
-                                currentSelection={personaSelectedList.length}
+                                currentSelection={selectedPersonas.length}
                               />
                             ))}
-                            {personaSpectrum.map((persona, index) => (
+                            {requestPersonaList.persona.map((persona, index) => (
                               <MoleculePersonaCard 
                                 key={index}
                                 title={persona[`persona_${index + 1}`].persona}
                                 keywords={persona[`persona_${index + 1}`].keyword}
                                 isRequest={true} 
                                 onSelect={(isSelected) => handlePersonaSelect(persona, isSelected)}
-                                currentSelection={personaSelectedList.length}
+                                currentSelection={selectedPersonas.length}
                               />
                             ))}
                           </PersonaCards>
                         )}
-                        
-                        <BottomBar>
-                          <p>
-                            선택하신 <span>{personaSelectedList.length}명</span>의 페르소나와 인터뷰 하시겠어요?
-                          </p>
-                          <Button Large Primary Fill onClick={handleStartInterview} disabled={personaSelectedList.length === 0}>
-                            인터뷰 시작하기
-                            <img src={images.ChevronRight} alt="" />
-                          </Button>
-                        </BottomBar>
+                        {!personaButtonState2 &&
+                          <BottomBar>
+                            <p>
+                              선택하신 <span>{selectedPersonas.length}명</span>의 페르소나와 인터뷰 하시겠어요?
+                            </p>
+                            <Button Large Primary Fill onClick={handleStartInterview} disabled={selectedPersonas.length === 0}>
+                              인터뷰 시작하기
+                              <img src={images.ChevronRight} alt="" />
+                            </Button>
+                          </BottomBar>
+                        }
                       </ContentSection>
                     </CustomizePersona>
                   </>
