@@ -1,47 +1,136 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { palette } from '../../assets/styles/Palette';
 import images from '../../assets/styles/Images';
 import { Button } from '../../assets/styles/ButtonStyle'
+import PopupWrap from '../../assets/styles/Popup';
+import { CustomTextarea } from '../../assets/styles/InputStyle';
 
 const PersonaCard = ({ 
   title, 
   keywords = [], 
   description, 
   expandedContent, 
-  isReady = false, 
-  isRequest = false, 
+  isBasic = false, 
+  isCustom = false, 
   showDescription = false,
-  hideCheckCircle = false
+  hideCheckCircle = false,
+  TitleFlex = false,
+  onCheckChange,
+  onInputChange,
+  onShowPopup
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
+  const [state, setState] = useState({
+    isExpanded: false,
+    isChecked: false,
+    showPopup: false,
+    showRequestBadge: false,
+    showCustomModal: false,
+    customTextarea: '',
+    isTextareaValid: false,
+    isRadioSelected: false,
+  });
+
+  const handleToggle = (key) => {
+    setState(prevState => ({ ...prevState, [key]: !prevState[key] }));
+  };
+
+  const handleTextareaChange = (value) => {
+    setState(prevState => ({
+      ...prevState,
+      customTextarea: value,
+      isTextareaValid: value.trim() !== '',
+    }));
+  };
+
+  const handleRequestClick = () => {
+    setState(prevState => ({ ...prevState, showRequestBadge: true, showCustomModal: true }));
+  };
+
+  const handleCheckCircleClick = () => {
+    if (isCustom) {
+        setState(prevState => ({ ...prevState, showPopup: true }));
+        if (onShowPopup) {
+            onShowPopup();
+        }
+    } else {
+        const newCheckedState = !state.isChecked;
+        setState(prevState => ({ ...prevState, isChecked: newCheckedState }));
+        if (onCheckChange) {
+            onCheckChange(newCheckedState);
+        }
+    }
+  };
+
+  const handleConfirm = () => {
+    if (state.isTextareaValid && state.isRadioSelected) {
+      setState(prevState => ({ 
+        ...prevState, 
+        showPopup: false, 
+        showCustomModal: false, 
+        showRequestBadge: true 
+      }));
+      console.log("확인 버튼 클릭");
+    } else {
+      alert("모든 필드를 입력해 주세요.");
+    }
+  };
+
+  const handleCancel = () => {
+    setState(prevState => ({ ...prevState, showPopup: false }));
+    console.log("취소 버튼 클릭");
+  };
+
+  const handleClose = () => {
+    setState(prevState => ({ 
+      ...prevState, 
+      showCustomModal: false 
+    }));
+    handleCancel();
+    if (!state.isTextareaValid || !state.isRadioSelected) {
+      setState(prevState => ({ 
+        ...prevState, 
+        showRequestBadge: false 
+      }));
+    }
+  };
+
+  const handlePopupClose = () => {
+    setState(prevState => ({
+      ...prevState,
+      showPopup: false,
+      showCustomModal: false,
+      isTextareaValid: false,
+      isRadioSelected: false,
+    }));
+  };
+
+
+
+  // const [isExpanded, setIsExpanded] = useState(false);
+  // const [isChecked, setIsChecked] = useState(false);
+  // const [showPopup, setShowPopup] = useState(false);
+  // const [showRequestBadge, setShowRequestBadge] = useState(false);
+  // const [showCustomModal, setShowCustomModal] = useState(false);
+  // const [customTextarea, setCustomTextarea] = useState('');
+  // const [isTextareaValid, setIsTextareaValid] = useState(false);
+  // const [isRadioSelected, setIsRadioSelected] = useState(false);
 
   return (
-    <CardContainer>
+    <CardContainer TitleFlex={TitleFlex}>
       <MainContent>
         {!hideCheckCircle && (
           <CheckCircle 
-            $isChecked={isChecked}
-            onClick={() => setIsChecked(!isChecked)}
+            $isChecked={state.isChecked}
+            onClick={handleCheckCircleClick}
           />
         )}
 
         <ContentWrapper>
           <TitleSection>
-            <Title>{title}</Title>
-            {isReady && (
-              <Badge Ready>
-                <ReadyIcon />
-                Ready
-              </Badge>
-            )}
-            {isRequest && (
-              <Badge>
-                <img src={images.NotePencil} alt="NotePencil" />
-                Request
-              </Badge>
-            )}
+            <Title>
+              {title}
+            </Title>
           </TitleSection>
           
           {keywords.length > 0 && (
@@ -51,25 +140,31 @@ const PersonaCard = ({
               ))}
             </KeywordGroup>
           )}
-
-          {showDescription && description && (
-            <Description>{description}</Description>
-          )} 
         </ContentWrapper>
 
-        {isReady ? (
-          <ToggleButton $isExpanded={isExpanded} onClick={() => setIsExpanded(!isExpanded)} />
-        ) : isRequest ? (
-          <Button Medium Primary>
-            모집 요청하기
-          </Button>
+        {isBasic ? (
+          <Badge Basic>
+            <ReadyIcon />
+            기본형
+          </Badge>
+        ) : isCustom ? (
+          state.showRequestBadge ? (
+            <Badge>
+              <img src={images.NotePencil} alt="NotePencil" />
+              커스터마이즈
+            </Badge>
+          ) : (
+            <Button Medium Primary onClick={handleRequestClick}>
+              모집 요청하기
+            </Button>
+          )
         ) : (
-          <ToggleButton $isExpanded={isExpanded} onClick={() => setIsExpanded(!isExpanded)} />
+          <ToggleButton $isExpanded={state.isExpanded} onClick={() => handleToggle('isExpanded')} />
         )}
       </MainContent>
 
-      {isExpanded && (
-        <DescriptionSection $isExpanded={isExpanded}>
+      {state.isExpanded && (
+        <DescriptionSection $isExpanded={state.isExpanded}>
           <ListUL>
             {Array.isArray(expandedContent) ? (
               <ul>
@@ -86,6 +181,115 @@ const PersonaCard = ({
           </ListUL>
         </DescriptionSection>
       )}
+
+      {state.showCustomModal && (
+        <PopupWrap 
+          title="📝 맞춤형 페르소나 모집 요청하기" 
+          onConfirm={handleConfirm}
+          onCancel={handlePopupClose}
+          buttonType="Fill"
+          confirmText="맞춤 페르소나 모집하기"
+          isModal={true}
+          confirmDisabled={!state.isTextareaValid || !state.isRadioSelected}
+          isTextareaValid={state.isTextareaValid}
+          isRadioSelected={state.isRadioSelected}
+          body={
+            <>
+              <div className="bgBox">
+                <strong>도심에 거주하며 전문직에 종사하는 바쁜 생활인 </strong>
+                <p className="tag">
+                  <span>키워드1</span>
+                  <span>키워드2</span>
+                  <span>키워드3</span>
+                </p>
+              </div>
+
+              <dl>
+                <dt className="point">맞춤형 페르소나는 어떤 용도로 활용하실 계획이신가요?</dt>
+                <dd>
+                  <CustomTextarea 
+                    rows={3}
+                    placeholder="생성하기 위한 목적을 적어 주세요."
+                    onChange={(e) => handleTextareaChange(e.target.value)}
+                  />
+                </dd>
+              </dl>
+
+              <dl>
+                <dt className="point">몇명의 페르소나를 모집하시고 싶으신가요?</dt>
+                <dd>
+                  <input type="radio" id="persona1" name="persona" onChange={() => setState(prevState => ({ ...prevState, isRadioSelected: true }))} />
+                  <label htmlFor="persona1" className="persona">5명</label>
+                  <input type="radio" id="persona2" name="persona" onChange={() => setState(prevState => ({ ...prevState, isRadioSelected: true }))} />
+                  <label htmlFor="persona2" className="persona">10명</label>
+                  <input type="radio" id="persona3" name="persona" onChange={() => setState(prevState => ({ ...prevState, isRadioSelected: true }))} />
+                  <label htmlFor="persona3" className="persona">15명</label>
+                  <input type="radio" id="persona4" name="persona" onChange={() => setState(prevState => ({ ...prevState, isRadioSelected: true }))} />
+                  <label htmlFor="persona4" className="persona">20명</label>
+                </dd>
+              </dl>
+
+              <AccordionSection>
+                <AccordionHeader onClick={() => handleToggle('isExpanded')}>
+                  🔍 추가정보를 입력하여, 더 정확한 타겟 페르소나를 찾으세요
+                  <AccordionIcon $isExpanded={state.isExpanded} />
+                </AccordionHeader>
+                <AccordionContent $isExpanded={state.isExpanded}>
+                  <dl>
+                    <dt>추가정보</dt>
+                    <dd>
+                      <input type="radio" id="gender1" name="gender" />
+                      <label htmlFor="gender1" className="gender men">
+                        <img src={images.GenderMen} alt="GenderMen" />
+                        남자
+                      </label>
+                      <input type="radio" id="gender2" name="gender" />
+                      <label htmlFor="gender2" className="gender women">
+                        <img src={images.GenderWomen} alt="GenderWomen" />
+                        여자
+                      </label>
+                    </dd>
+                  </dl>
+
+                  <dl>
+                    <dt>
+                      나이
+                      <p>* 선택하지 않는 경우, 연령 무관으로 페르소나를 생성합니다.</p>
+                    </dt>
+                    <dd>
+                      <input type="radio" id="age1" name="age" />
+                      <label htmlFor="age1" className="age">10대</label>
+                      <input type="radio" id="age2" name="age" />
+                      <label htmlFor="age2" className="age">20대</label>
+                      <input type="radio" id="age3" name="age" />
+                      <label htmlFor="age3" className="age">30대</label>
+                      <input type="radio" id="age4" name="age" />
+                      <label htmlFor="age4" className="age">40대</label>
+                      <input type="radio" id="age5" name="age" />
+                      <label htmlFor="age5" className="age">50대</label>
+                      <input type="radio" id="age6" name="age" />
+                      <label htmlFor="age6" className="age">60대</label>
+                      <input type="radio" id="age7" name="age" />
+                      <label htmlFor="age7" className="age">70대 이상</label>
+                    </dd>
+                  </dl>
+
+                  <dl>
+                    <dt>더 상세하게 필요한 정보를 입력해주세요 </dt>
+                    <dd>
+                      <CustomTextarea 
+                        rows={3}
+                        placeholder="모집하고 싶은 페르소나의 성향, 목표, 행동 패턴을 구체적으로 입력해주세요"
+                      />
+                    </dd>
+                  </dl>
+                </AccordionContent>
+              </AccordionSection>
+            </>
+          }
+        />
+      )}
+
     </CardContainer>
   );
 };
@@ -101,7 +305,16 @@ const CardContainer = styled.div`
   width: 100%;
   padding: 24px 20px;
   border-radius: 10px;
-  border: 1px solid ${palette.outlineGray};
+  border: 1px solid ${props => props.isActive ? palette.chatBlue : palette.outlineGray};
+  background: ${props => props.isActive ? 'rgba(34, 111, 255, 0.10)' : palette.white};
+  cursor: ${props => props.isClickable ? 'pointer' : 'default'};
+  transition: all 0.2s ease-in-out;
+
+  ${props => props.TitleFlex && css`
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  `}
 `;
 
 const MainContent = styled.div`
@@ -127,7 +340,7 @@ const CheckCircle = styled.div`
   border-radius: 50%;
   cursor: pointer;
   background-image: ${props => props.$isChecked 
-    ? `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='11' stroke='%23226FFF' stroke-width='2'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='%23226FFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
+    ? `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='12' fill='%23226FFF'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
     : `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='11' stroke='%23E0E4EB' stroke-width='2'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='%23E0E4EB' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
   };
   transition: background-image 0.3s ease-in-out;
@@ -155,17 +368,17 @@ const Badge = styled.div`
   font-size:0.75rem;
   line-height: 1.2;
   color: ${props => {
-    if (props.Ready) return `#34C759`;
+    if (props.Basic) return `#34C759`;
     else return palette.gray500;
   }};
   padding: 4px 8px;
   border-radius: 50px;
   border: 1px solid ${props => {
-    if (props.Ready) return `#34C759`;
+    if (props.Basic) return `#34C759`;
     else return palette.outlineGray;
   }};
   background:${props => {
-    if (props.Ready) return `rgba(52, 199, 89, 0.10)`;
+    if (props.Basic) return `rgba(52, 199, 89, 0.10)`;
     else return palette.gray50;
   }};
 `;
@@ -283,3 +496,39 @@ const ListUL = styled.div`
   }
 `;
 
+const AccordionSection = styled.div`
+  width: 100%;
+  margin-top: 20px;
+  padding-top: 40px;
+  border-top: 1px solid ${palette.outlineGray};
+`;
+
+const AccordionHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  line-height: 1.5;
+  color: ${palette.gray800};
+  cursor: pointer;
+`;
+
+const AccordionIcon = styled.span`
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid ${palette.gray800};
+  border-bottom: 2px solid ${palette.gray800};
+  transform: ${props => props.$isExpanded ? 'rotate(225deg)' : 'rotate(45deg)'};
+  transition: transform 0.5s;
+`;
+
+const AccordionContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-height: ${props => props.$isExpanded ? '500px' : '0'};
+  margin-top: ${props => props.$isExpanded ? '20px' : '0'};
+  padding-bottom:5px;
+  overflow: hidden;
+  background: ${palette.white};
+  transition: all 0.5s;
+`;

@@ -168,10 +168,13 @@ import ImgMBTISPTA from "../images/ImgMBTI_SPTA.png"
 import IconBell from "../images/bell.svg"
 import IconRepeatSquare from "../images/repeat-square.svg"
 import PeopleChatSquareFill from "../images/people-chat-square-fill.svg"
+import MagicStick from "../images/magic-stick.svg"
 import MagicStickFillWhite from "../images/magic-stick-fill-white.svg"
 import NotePencil from "../images/note-pencil.svg"
 import ChevronRight from "../images/chevron-right.svg"
 import PencilSquare from "../images/pencil-square.svg"
+import ClockCounterclockwise from "../images/clock-counterclockwise.svg"
+import CheckCircleFill from "../images/check-circle-fill.svg"
 
 const images = {
   Logo,
@@ -344,10 +347,13 @@ const images = {
   IconBell,
   IconRepeatSquare,
   PeopleChatSquareFill,
+  MagicStick,
   MagicStickFillWhite,
   NotePencil,
   ChevronRight,
   PencilSquare,
+  ClockCounterclockwise,
+  CheckCircleFill,
 }
 
 export default images;
