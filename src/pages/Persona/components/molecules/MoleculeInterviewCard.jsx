@@ -3,17 +3,94 @@ import styled from 'styled-components';
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
 import { Button } from '../../../../assets/styles/ButtonStyle'
+import { useAtom } from 'jotai';
+import { BUSINESS_ANALYSIS, SELECTED_INTERVIEW_PURPOSE, INTERVIEW_QUESTION_LIST, IS_LOADING } from '../../../AtomStates';
+import axios from 'axios';
 
 const MoleculeInterviewCard = ({ 
   title, 
   description, 
-  expandedContent, 
-  isReady = false, 
-  isRequest = false,
   isSelected, 
   onSelect,
+  interviewPurpose,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isLoadingQuestion, setIsLoadingQuestion] = useState(false);
+  const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
+  const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(SELECTED_INTERVIEW_PURPOSE);
+  const [interviewQuestionList, setInterviewQuestionList] = useAtom(INTERVIEW_QUESTION_LIST);
+
+  const axiosConfig = {
+    timeout: 100000, // 100초
+    headers: {
+      "Content-Type": "application/json",
+    },
+    withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
+  };
+
+  const loadInterviewQuestion = async () => {
+    const existingQuestions = interviewQuestionList.find(
+      item => item.theory_name === interviewPurpose
+    );
+  
+    // 이미 존재하는 경우 함수 종료
+    if (existingQuestions) {
+      setSelectedInterviewPurpose(interviewPurpose);
+      return;
+    }
+    try {
+        setIsLoadingQuestion(true);
+        
+        let data = {
+          business_idea : businessAnalysis.input,
+          business_analysis_data : {
+            title: businessAnalysis.title,
+            characteristics: businessAnalysis.characteristics,
+            features: businessAnalysis.features
+          },
+          theory_name: interviewPurpose
+        };
+
+        let response = await axios.post(
+          "https://wishresearch.kr/person/persona_interview",
+          data,
+          axiosConfig
+        );
+
+        let questionList = response.data;
+        let retryCount = 0;
+        const maxRetries = 10;
+
+        while (retryCount < maxRetries && (
+          !response || 
+          !response.data || 
+          response.data.length !== 5
+        ))
+        {
+          response = await axios.post(
+            "https://wishresearch.kr/person/persona_interview",
+            data,
+            axiosConfig
+          );
+          retryCount++;
+
+          questionList = response.data;
+        }
+        if (retryCount === maxRetries) {
+          throw new Error("Maximum retry attempts reached. Empty response persists.");
+        }
+        setInterviewQuestionList(prev => [...prev, {
+          theory_name: interviewPurpose,
+          questions: questionList
+        }]);
+        setSelectedInterviewPurpose(interviewPurpose);
+
+    } catch (error) {
+      console.error("Error in loadInterviewQuestion:", error);
+    } finally {
+      setIsLoadingQuestion(false);
+    }
+  };
 
   return (
     <CardContainer>
@@ -25,51 +102,40 @@ const MoleculeInterviewCard = ({
         <ContentWrapper>
           <TitleSection>
             <Title>{title}</Title>
-            {isReady && (
-              <Badge Ready>
-                <ReadyIcon />
-                Ready
-              </Badge>
-            )}
-            {isRequest && (
-              <Badge>
-                <img src={images.NotePencil} alt="NotePencil" />
-                Request
-              </Badge>
-            )}
           </TitleSection>
-
           {description && (
             <Description>{description}</Description>
           )} 
         </ContentWrapper>
 
-        {isReady ? (
-          <ToggleButton $isExpanded={isExpanded} onClick={() => setIsExpanded(!isExpanded)} />
-        ) : isRequest ? (
-          <Button Medium Primary>
-            모집 요청하기
-          </Button>
-        ) : (
-          <ToggleButton $isExpanded={isExpanded} onClick={() => setIsExpanded(!isExpanded)} />
-        )}
+        <ToggleButton 
+          $isExpanded={isExpanded} 
+          onClick={async () => {
+            if (!isExpanded) {
+              await loadInterviewQuestion();
+            }
+            setIsExpanded(!isExpanded);
+          }} 
+        />
       </MainContent>
 
       {isExpanded && (
         <DescriptionSection $isExpanded={isExpanded}>
-          <ListUL>
-            {Array.isArray(expandedContent) ? (
-              <ul>
-                {expandedContent.map((item, index) => (
+        <ListUL>
+          {isLoadingQuestion ? (
+            <div>로딩중...</div>
+          ) : (
+            <ul>
+              {interviewQuestionList
+                .find(item => item.theory_name === interviewPurpose)
+                ?.questions.slice(2, 5).map((item, index) => (
                   <li key={index}>
                     <span className="number">{index + 1}</span>
-                    {item}
+                    {item.question}
                   </li>
                 ))}
-              </ul>
-            ) : (
-              description
-            )}
+            </ul>
+          )}
           </ListUL>
         </DescriptionSection>
       )}
