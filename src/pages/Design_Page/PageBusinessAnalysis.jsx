@@ -603,29 +603,7 @@ const PageBusinessAnalysis = () => {
 
 
 
-                <>
-                  <InterviewReport>
-                    <div>
-                      <ReportHeader>
-                        <h3>제품 경험 평가 결과 리포트</h3>
-                        <p>제품이 고객에게 어떤 가치를 전달하고 있는지, 소비자들이 느끼는 장점과 개선점을 세심히 파악하기 위해 진행되었습니다. 이를 통해 제품에 대한 긍정적인 경험을 더욱 확장하고, 고객 만족과 구매 전환율을 높이는 데 기여하고자 합니다.</p>
-                      </ReportHeader>
 
-                      <ReportContent>
-                        <div>
-                          <h3>조사 방법 및 범위</h3>
-                          <UlList Disc>
-                            <li>조사 방법 : 여러 페르소나와 인터뷰 (1:N)</li>
-                            <li>조사 대상 : OO에 관심있는 페르소나 5명</li>
-                          </UlList>
-                        </div>
-                      </ReportContent>
-                    </div>
-
-                    <div>
-                    </div>
-                  </InterviewReport>
-                </>
 
 
               </CardWrap>
