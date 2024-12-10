@@ -177,22 +177,22 @@ const PagePersona2 = () => {
             !response.data || 
             !personaList.hasOwnProperty("persona_spectrum") ||
             !personaList.hasOwnProperty("positioning_analysis") ||
-            !personaList.persona_spectrum.length === 3
-            // !personaList.persona_spectrum[0].hasOwnProperty("persona_1") ||
-            // !personaList.persona_spectrum[1].hasOwnProperty("persona_2") ||
-            // !personaList.persona_spectrum[2].hasOwnProperty("persona_3") ||
-            // !personaList.persona_spectrum[0].persona_1.hasOwnProperty("persona") ||
-            // !personaList.persona_spectrum[1].persona_2.hasOwnProperty("persona") ||
-            // !personaList.persona_spectrum[2].persona_3.hasOwnProperty("persona") ||
-            // !personaList.persona_spectrum[0].persona_1.persona ||
-            // !personaList.persona_spectrum[1].persona_2.persona ||
-            // !personaList.persona_spectrum[2].persona_3.persona ||
-            // !personaList.persona_spectrum[0].persona_1.hasOwnProperty("keyword") ||
-            // !personaList.persona_spectrum[1].persona_2.hasOwnProperty("keyword") ||
-            // !personaList.persona_spectrum[2].persona_3.hasOwnProperty("keyword") ||
-            // !personaList.persona_spectrum[0].persona_1.keyword.length == 3 ||
-            // !personaList.persona_spectrum[1].persona_2.keyword.length == 3 ||
-            // !personaList.persona_spectrum[2].persona_3.keyword.length == 3
+            !personaList.persona_spectrum.length === 3 ||
+            !personaList.persona_spectrum[0].hasOwnProperty("persona_1") ||
+            !personaList.persona_spectrum[1].hasOwnProperty("persona_2") ||
+            !personaList.persona_spectrum[2].hasOwnProperty("persona_3") ||
+            !personaList.persona_spectrum[0].persona_1.hasOwnProperty("persona") ||
+            !personaList.persona_spectrum[1].persona_2.hasOwnProperty("persona") ||
+            !personaList.persona_spectrum[2].persona_3.hasOwnProperty("persona") ||
+            !personaList.persona_spectrum[0].persona_1.persona ||
+            !personaList.persona_spectrum[1].persona_2.persona ||
+            !personaList.persona_spectrum[2].persona_3.persona ||
+            !personaList.persona_spectrum[0].persona_1.hasOwnProperty("keyword") ||
+            !personaList.persona_spectrum[1].persona_2.hasOwnProperty("keyword") ||
+            !personaList.persona_spectrum[2].persona_3.hasOwnProperty("keyword") ||
+            !personaList.persona_spectrum[0].persona_1.keyword.length == 3 ||
+            !personaList.persona_spectrum[1].persona_2.keyword.length == 3 ||
+            !personaList.persona_spectrum[2].persona_3.keyword.length == 3
           ))
           {
             response = await axios.post(

@@ -124,7 +124,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
                 attempts += 1;
       
                 response = await axios.post(
-                  "https://wishresearch.kr/panels/business",
+                  "https://wishresearch.kr/person/business_category",
                   data,
                   axiosConfig
                 );
@@ -168,7 +168,6 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
 
   const handleRegenerate = async () => {
     setPersonaButtonState1(1);
-    setTitleOfBusinessInfo("");
     let businessData;
     let categoryData;
     let attempts = 0;
@@ -178,7 +177,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
         setIsLoading(true);
         // 버튼 클릭으로 API 호출
         let response = await axios.post(
-          "https://wishresearch.kr/panels/business_category",
+          "https://wishresearch.kr/person/business_category",
           data,
           axiosConfig
         );
@@ -206,7 +205,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
           attempts += 1;
 
           response = await axios.post(
-            "https://wishresearch.kr/panels/business",
+            "https://wishresearch.kr/person/business_category",
             data,
             axiosConfig
           );
