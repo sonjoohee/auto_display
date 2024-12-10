@@ -40,13 +40,13 @@ import PageMarketingNoItemsResult from "./pages/Marketing/components/pages/PageM
 import PageConnetWithYouTarget from "./pages/Design_Page/PageConnetWithYourTargett";
 import PageBusinessAnalysis from "./pages/Design_Page/PageBusinessAnalysis";
 
-// Biz
-import Lending from "./pages/Lending";
-import TargetSetting from "./pages/Persona/TargetSetting";
-import TargetChoice from "./pages/Persona/TargetChoice";
-import PersonaGenerator from "./pages/Persona/PersonaGenerator";
-import Loading from "./pages/Persona/Loading";
-import LoadingPersona from "./pages/Persona/LoadingPersona";
+// 페르소나
+import PageMain from "./pages/Persona/components/pages/PageMain";
+import PagePersona from "./pages/Persona/components/pages/PagePersona";
+import PagePersona2 from "./pages/Persona/components/pages/PagePersona2";
+import PagePersona3 from "./pages/Persona/components/pages/PagePersona3";
+// import PagePersona4 from "./pages/Persona/components/pages/PagePersona4";
+
 
 function App() {
   const [, setIsLoggedIn] = useAtom(IS_LOGGED_IN); // 로그인 상태를 위한 아톰
@@ -164,17 +164,6 @@ function App() {
 
       <BrowserRouter>
         <Routes>
-          {/* <Route path="/login" element={<PageLogin />} />
-            <Route path="/signup" element={<PageSignup />} />
-            <Route path="/success" element={<PageLoginSuccess />} />
-            <Route path="/verify-email" element={<PageVerifyEmail />} />
-            <Route path="/email-verified" element={<PageEmailVerified />} />
-            <Route path="/email-verification-failed" element={<PageEmailVerificationFailed />} />
-            <Route path="/reset-password" element={<PageResetPassword />} />
-            <Route path="/request-reset-password" element={<PageRequestResetPassword />} />
-            <Route path="/PagePayTest" element={<PagePayTest />} />
-            <Route path="/CompletedMail" element={<PageCompletedMail />}></Route> */}
-
           <Route path="/" element={<PageMarketingLanding />} />
           <Route path="*" element={<PageMarketingLanding />} />
           <Route path="/MeetAiExpert" element={<PageMeetAiExpert />} />
@@ -213,6 +202,14 @@ function App() {
             element={<PageMarketingNoItemsResult />}
           ></Route>
 
+          {/* 페르소나 */}
+          <Route path="/Persona" element={<PagePersona />}></Route>
+          <Route path="/Main" element={<PageMain />}></Route>
+          <Route path="/Persona/:conversationId" element={<PagePersona />}></Route>
+          <Route path="/Persona/2/:conversationId" element={<PagePersona2 />}></Route>
+          <Route path="/Persona/3/:conversationId" element={<PagePersona3 />}></Route>
+          {/* <Route path="/Persona/4/:conversationId" element={<PagePersona4 />}></Route> */}
+          
           {/* <Route
             path="/CuratorStoryboard"
             element={<CuratorStoryboard />}
@@ -224,14 +221,6 @@ function App() {
           {/* <Route path="/AI_Panel" element={<PageAIPanelList />} />
             <Route path="/QuickReport" element={<BusinessTool />} />
             <Route path="/PageAIPanelList" element={<PageAIPanelList />}></Route> */}
-
-          {/* Biz */}
-          {/* <Route path="/Lending" element={<Lending />} />
-            <Route path="/TargetSetting" element={<TargetSetting />} />
-            <Route path="/TargetChoice" element={<TargetChoice />} />
-            <Route path="/Loading" element={<Loading />} />
-            <Route path="/LoadingPersona" element={<LoadingPersona />} />
-            <Route path="/PersonaGenerator" element={<PersonaGenerator />} /> */}
 
             {/* 디자인페이지 */}
             <Route path="/ConnectWithYourTarget" element={<PageConnetWithYouTarget />} />

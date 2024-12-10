@@ -65,6 +65,7 @@ import {
   GROWTH_HACKER_RECOMMENDED_SOLUTION,
   GROWTH_HACKER_SELECTED_SOLUTION,
   STRATEGY_CONSULTANT_REPORT_DATA,
+  BUSINESS_ANALYSIS
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -134,6 +135,8 @@ export const useSaveConversation = () => {
   const [marketingFinalCustomer, setMarketingFinalCustomer] = useAtom(MARKETING_FINAL_CUSTOMER);
   const [marketingFinalReportData, setMarketingFinalReportData] = useAtom(MARKETING_FINAL_REPORT_DATA);
   const [strategyConsultantReportData, setStrategyConsultantReportData] = useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
+  const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
+
 
   const saveConversation = async ({ changingConversation }) => {
 
@@ -206,6 +209,7 @@ export const useSaveConversation = () => {
             marketingFinalCustomer: changingConversation.hasOwnProperty('marketingFinalCustomer') ? changingConversation.marketingFinalCustomer : marketingFinalCustomer,
             marketingFinalReportData: changingConversation.hasOwnProperty('marketingFinalReportData') ? changingConversation.marketingFinalReportData : marketingFinalReportData,
             strategyConsultantReportData: changingConversation.hasOwnProperty('strategyConsultantReportData') ? changingConversation.strategyConsultantReportData : strategyConsultantReportData,
+            businessAnalysis: changingConversation.hasOwnProperty('businessAnalysis') ? changingConversation.businessAnalysis : businessAnalysis,
           },
         isMarketing ? true : isLoggedIn,
         changingConversation.hasOwnProperty('conversationId') ? changingConversation.conversationId : conversationId
