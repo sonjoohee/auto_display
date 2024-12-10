@@ -12,11 +12,8 @@ import {
   TITLE_OF_BUSINESS_INFORMATION, 
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
   PERSONA_STEP,
-  PERSONA_SELECTED_LIST,
   SELECTED_INTERVIEW_PURPOSE,
   PERSONA_LIST,
-  PERSONA_SPECTRUM,
-  POSITIONING_ANALYSIS
 } from "../../../AtomStates";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
@@ -39,12 +36,9 @@ const PagePersona3 = () => {
   const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
-  const [personaSelectedList, setPersonaSelectedList] = useAtom(PERSONA_SELECTED_LIST);
   const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
   const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(SELECTED_INTERVIEW_PURPOSE);
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
-  const [personaSpectrum, setPersonaSpectrum] = useAtom(PERSONA_SPECTRUM);
-  const [positioningAnalysis, setPositioningAnalysis] = useAtom(POSITIONING_ANALYSIS);
 
   const [interviewPurpose, setInterviewPurpose] = useState("제품 경험 평가");
   const [selectedInterviewType, setSelectedInterviewType] = useState('multiple');
@@ -93,10 +87,7 @@ const PagePersona3 = () => {
             );
             setInputBusinessInfo(savedConversation.inputBusinessInfo);
             setPersonaList(savedConversation.personaList);
-            setPersonaSelectedList(savedConversation.personaSelectedList);
             setSelectedInterviewPurpose(savedConversation.selectedInterviewPurpose);
-            setPersonaSpectrum(savedConversation.personaSpectrum);
-            setPositioningAnalysis(savedConversation.positioningAnalysis);
           }
 
           // setIsLoadingPage(false); // 로딩 완료
@@ -311,7 +302,7 @@ const PagePersona3 = () => {
                       </Title>
                       <ContentSection>
                         <PersonaCards>
-                          {personaSelectedList.map((persona, index) => (
+                          {personaList.selected.map((persona, index) => (
                             <MoleculePersonaCard 
                               key={index}
                               title={persona.persona}
@@ -349,7 +340,7 @@ const PagePersona3 = () => {
                   </li>
                   <li>
                     <span>참여자</span>
-                    <p>{personaSelectedList.length}명</p>
+                    <p>{personaList.selected.length}명</p>
                   </li>
                 </ul>
                 <Button Large Primary Fill>인터뷰룸 입장</Button>

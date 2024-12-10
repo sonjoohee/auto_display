@@ -13,7 +13,8 @@ import {
   INPUT_BUSINESS_INFO, 
   TITLE_OF_BUSINESS_INFORMATION, 
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
-  PERSONA_STEP
+  PERSONA_STEP,
+  BUSINESS_ANALYSIS
 } from "../../../AtomStates";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
@@ -39,6 +40,7 @@ const PagePersona = () => {
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
   const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
+  const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
 
   const [isLoadingPage, setIsLoadingPage] = useState(true);
 
@@ -49,6 +51,8 @@ const PagePersona = () => {
     { number: 4, label: '페르소나와 인터뷰', active: false },
     { number: 5, label: '의견 분석', active: false }
   ]);
+
+  let newConversationId;
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -73,7 +77,7 @@ const PagePersona = () => {
           try {
             // 서버에서 새로운 대화 ID 생성
             // console.log("서버에서 새로운 대화 ID 생성");
-            const newConversationId = await createChatOnServer();
+            newConversationId = await createChatOnServer();
             setConversationId(newConversationId); // 생성된 대화 ID 설정
             setIsPersonaAccessible(true);
             // setIsLoadingPage(false); // 로딩 완료
@@ -116,7 +120,7 @@ const PagePersona = () => {
   const handleCreatePersona = () => {
     setPersonaStep(2);
     setIsPersonaAccessible(true);
-    saveConversation({ changingConversation: { personaStep: 2 } });
+    // saveConversation({ changingConversation: { personaStep: 2 } });
     setPersonaButtonState2(1);
     navigate(`/Persona/2/${conversationId}`, { replace: true });
   };
@@ -131,10 +135,10 @@ const PagePersona = () => {
         <MainContent>
           <AnalysisWrap>
             <MainSection>
-              <OrganismBusinessAnalysis personaStep={1} />
+              <OrganismBusinessAnalysis personaStep={1} newConversationId={newConversationId} />
               <CardWrap>
                 {/* 맞춤 페르소나 생성 */}
-                {titleOfBusinessInfo && (
+                {businessAnalysis.title && (
                   <CreateCard>
                     <p>
                       <img src={images.PeopleChatSquareFill} alt="" />

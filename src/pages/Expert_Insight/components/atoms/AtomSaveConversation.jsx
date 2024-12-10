@@ -65,12 +65,7 @@ import {
   GROWTH_HACKER_RECOMMENDED_SOLUTION,
   GROWTH_HACKER_SELECTED_SOLUTION,
   STRATEGY_CONSULTANT_REPORT_DATA,
-  PERSONA_STEP,
-  PERSONA_LIST,
-  SELECTED_INTERVIEW_PURPOSE,
-  PERSONA_SELECTED_LIST,
-  PERSONA_SPECTRUM,
-  POSITIONING_ANALYSIS
+  BUSINESS_ANALYSIS
 } from "../../../AtomStates";
 
 import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
@@ -140,12 +135,7 @@ export const useSaveConversation = () => {
   const [marketingFinalCustomer, setMarketingFinalCustomer] = useAtom(MARKETING_FINAL_CUSTOMER);
   const [marketingFinalReportData, setMarketingFinalReportData] = useAtom(MARKETING_FINAL_REPORT_DATA);
   const [strategyConsultantReportData, setStrategyConsultantReportData] = useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
-  const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
-  const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
-  const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(SELECTED_INTERVIEW_PURPOSE);
-  const [personaSelectedList, setPersonaSelectedList] = useAtom(PERSONA_SELECTED_LIST);
-  const [personaSpectrum, setPersonaSpectrum] = useAtom(PERSONA_SPECTRUM);
-  const [positioningAnalysis, setPositioningAnalysis] = useAtom(POSITIONING_ANALYSIS);
+  const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
 
 
   const saveConversation = async ({ changingConversation }) => {
@@ -219,12 +209,7 @@ export const useSaveConversation = () => {
             marketingFinalCustomer: changingConversation.hasOwnProperty('marketingFinalCustomer') ? changingConversation.marketingFinalCustomer : marketingFinalCustomer,
             marketingFinalReportData: changingConversation.hasOwnProperty('marketingFinalReportData') ? changingConversation.marketingFinalReportData : marketingFinalReportData,
             strategyConsultantReportData: changingConversation.hasOwnProperty('strategyConsultantReportData') ? changingConversation.strategyConsultantReportData : strategyConsultantReportData,
-            personaStep: changingConversation.hasOwnProperty('personaStep') ? changingConversation.personaStep : personaStep,
-            personaList: changingConversation.hasOwnProperty('personaList') ? changingConversation.personaList : personaList,
-            selectedInterviewPurpose: changingConversation.hasOwnProperty('selectedInterviewPurpose') ? changingConversation.selectedInterviewPurpose : selectedInterviewPurpose,
-            personaSelectedList: changingConversation.hasOwnProperty('personaSelectedList') ? changingConversation.personaSelectedList : personaSelectedList,
-            personaSpectrum: changingConversation.hasOwnProperty('personaSpectrum') ? changingConversation.personaSpectrum : personaSpectrum,
-            positioningAnalysis: changingConversation.hasOwnProperty('positioningAnalysis') ? changingConversation.positioningAnalysis : positioningAnalysis,
+            businessAnalysis: changingConversation.hasOwnProperty('businessAnalysis') ? changingConversation.businessAnalysis : businessAnalysis,
           },
         isMarketing ? true : isLoggedIn,
         changingConversation.hasOwnProperty('conversationId') ? changingConversation.conversationId : conversationId

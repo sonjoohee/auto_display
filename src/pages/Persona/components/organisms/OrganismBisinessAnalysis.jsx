@@ -16,15 +16,18 @@ import {
   IS_LOADING,
   PERSONA_BUTTON_STATE_1,
   INPUT_BUSINESS_INFO,
-  PERSONA_BUSINESS_CAREGORY,
-  SHOW_CARD_CONTENT,
-  SHOW_INTERVIEW
+  BUSINESS_ANALYSIS,
+  TEMP_BUSINESS_ANALYSIS,
+  CATEGORY_COLOR
 } from "../../../AtomStates";
 import AtomLoader from "../atoms/AtomLoader";
+import { saveConversationToDB } from "../../../../utils/indexedDB";
 
 const OrganismBusinessAnalysis = ({ personaStep }) => {
     const { saveConversation } = useSaveConversation();
     const navigate = useNavigate();
+    const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
+    const [tempBusinessAnalysis, setTempBusinessAnalysis] = useAtom(TEMP_BUSINESS_ANALYSIS);
     const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
     const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
     const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
@@ -33,9 +36,8 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
     const [tempMainCharacteristicOfBusinessInformation, setTempMainCharacteristicOfBusinessInformation] = useAtom(TEMP_MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
     const [personaButtonState1, setPersonaButtonState1] = useAtom(PERSONA_BUTTON_STATE_1);
     const [isLoading, setIsLoading] = useAtom(IS_LOADING);
-    const [personaBusinessCategory, setPersonaBusinessCategory] = useAtom(PERSONA_BUSINESS_CAREGORY);
     const [showCardContent, setShowCardContent] = useState(personaStep <= 2);
-    const [categoryColor, setCategoryColor] = useState({});
+    const [categoryColor, setCategoryColor] = useAtom(CATEGORY_COLOR);
 
     const toggleCardContent = () => {
         setShowCardContent(!showCardContent);
@@ -63,7 +65,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
           case '패션': return 'Copper';
           case '푸드/농업': return 'Shadow';
           case '환경/에너지': return 'Tuscany';
-          case '홈/리빙/펫': return 'VeryLightTangelo';
+          case '홈리빙/펫': return 'VeryLightTangelo';
           case '헬스케어/바이오': return 'Orange';
           case '피트니스/스포츠': return 'CarnationPink';
           default: return '';
@@ -79,8 +81,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
       };
 
     const data = {
-      business_idea: inputBusinessInfo,
-      api_key: 1,
+      business_idea: businessAnalysis.input,
     };
 
     useEffect(() => {
@@ -93,130 +94,65 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
           try {
             if (personaButtonState1 === 1) {
               setIsLoading(true);
-              await new Promise(resolve => setTimeout(resolve, 1000));
               // 버튼 클릭으로 API 호출
-              // let response = await axios.post(
-              //   "https://wishresearch.kr/panels/business_category",
-              //   data,
-              //   axiosConfig
-              // );
+              let response = await axios.post(
+                "https://wishresearch.kr/person/business_category",
+                data,
+                axiosConfig
+              );
 
-              // // 필요한 데이터가 없을 경우 재시도, 최대 5번
-              // while ( 
-              //     attempts < maxAttempts && (
-              //     !response || !response.data || typeof response.data !== "object" ||
-              //     !response.data.hasOwnProperty("business_analysis") ||
-              //     !response.data.hasOwnProperty("category") ||
-              //     !response.data.business_analysis.hasOwnProperty("명칭") ||
-              //     !response.data.business_analysis.hasOwnProperty("주요_목적_및_특징") ||
-              //     !response.data.business_analysis.hasOwnProperty("주요기능") ||
-              //     !response.data.business_analysis["명칭"] ||
-              //     !response.data.business_analysis["주요_목적_및_특징"].length ||
-              //     !response.data.business_analysis["주요기능"].length ||
-              //     !response.data.category.hasOwnProperty("first") ||
-              //     !response.data.category.hasOwnProperty("second") ||
-              //     !response.data.category.hasOwnProperty("third") ||
-              //     !response.data.category.first ||
-              //     !response.data.category.second ||
-              //     !response.data.category.third
-              // )
-              // ) {
-              //   attempts += 1;
+              // 필요한 데이터가 없을 경우 재시도, 최대 5번
+              while ( 
+                  attempts < maxAttempts && (
+                  !response || !response.data || typeof response.data !== "object" ||
+                  !response.data.hasOwnProperty("business_analysis") ||
+                  !response.data.hasOwnProperty("category") ||
+                  !response.data.business_analysis.hasOwnProperty("명칭") ||
+                  !response.data.business_analysis.hasOwnProperty("주요_목적_및_특징") ||
+                  !response.data.business_analysis.hasOwnProperty("주요기능") ||
+                  !response.data.business_analysis["명칭"] ||
+                  !response.data.business_analysis["주요_목적_및_특징"].length ||
+                  !response.data.business_analysis["주요기능"].length ||
+                  !response.data.category.hasOwnProperty("first") ||
+                  !response.data.category.hasOwnProperty("second") ||
+                  !response.data.category.hasOwnProperty("third") ||
+                  !response.data.category.first ||
+                  !response.data.category.second ||
+                  !response.data.category.third
+              )
+              ) {
+                attempts += 1;
       
-              //   response = await axios.post(
-              //     "https://wishresearch.kr/panels/business",
-              //     data,
-              //     axiosConfig
-              //   );
-              // }
+                response = await axios.post(
+                  "https://wishresearch.kr/panels/business",
+                  data,
+                  axiosConfig
+                );
+              }
 
-              // businessData = response.data.business_analysis;
-              // categoryData = response.data.category;
+              businessData = response.data.business_analysis;
+              categoryData = response.data.category;
+
+              const updatedBusinessAnalysis = {
+                input: businessAnalysis.input,
+                title: businessData["명칭"],
+                characteristics: businessData["주요_목적_및_특징"],
+                features: businessData["주요기능"],
+                category: categoryData
+              };
       
-              // if (attempts >= maxAttempts) {
-              //   navigate("/Main");
-              // } else {
-              //   if (Array.isArray(businessData["주요_목적_및_특징"])) {
-              //     setTempMainFeaturesOfBusinessInformation(
-              //       businessData["주요_목적_및_특징"]?.map((item) => item)
-              //     );
-              //     setMainFeaturesOfBusinessInformation(
-              //       businessData["주요_목적_및_특징"]?.map((item) => item)
-              //     );
-              //   } else {
-              //     setTempMainFeaturesOfBusinessInformation(
-              //       businessData["주요_목적_및_특징"]
-              //         ? [businessData["주요_목적_및_특징"]]
-              //         : []
-              //     );
-              //     setMainFeaturesOfBusinessInformation(
-              //       businessData["주요_목적_및_특징"]
-              //         ? [businessData["주요_목적_및_특징"]]
-              //         : []
-              //     );
-              //   }
-      
-              //   if (Array.isArray(businessData["주요기능"])) {
-              //     setTempMainCharacteristicOfBusinessInformation(
-              //       businessData["주요기능"]?.map((item) => item)
-              //     );
-              //     setMainCharacteristicOfBusinessInformation(
-              //       businessData["주요기능"]?.map((item) => item)
-              //     );
-              //   } else {
-              //     setTempMainCharacteristicOfBusinessInformation(
-              //       businessData["주요기능"] ? [businessData["주요기능"]] : []
-              //     );
-              //     setMainCharacteristicOfBusinessInformation(
-              //       businessData["주요기능"] ? [businessData["주요기능"]] : []
-              //     );
-              //   }
-      
-              //   setTitleOfBusinessInfo(businessData["명칭"]);
-
-              //   const analysisReportData = {
-              //     title: businessData?.["명칭"],
-              //     mainFeatures: Array.isArray(businessData?.["주요_목적_및_특징"])
-              //       ? businessData["주요_목적_및_특징"]
-              //       : [],
-              //     mainCharacter: Array.isArray(businessData?.["주요기능"])
-              //       ? businessData["주요기능"]
-              //       : [],
-              //   };
-
-              // setPersonaBusinessCategory(categoryData);
-
-              setTitleOfBusinessInfo("모바일 세탁 서비스");
-              setMainFeaturesOfBusinessInformation(["본 서비스는 바쁜 현대인을 위해 시간과 공간의 제약 없이 편리하게 세탁 서비스를 이용할 수 있도록 모바일 애플리케이션을 기반으로 구축되었습니다.  고객은 스마트폰 앱을 통해 세탁물 예약, 수거, 배달을 간편하게 처리할 수 있으며, 다양한 세탁 옵션과 추가 서비스를 선택할 수 있습니다.  경쟁 서비스와 비교하여 차별화된 특징으로는,  AI 기반의 세탁물 상태 자동 인식 및 맞춤형 세탁 코스 추천,  실시간 배송 추적 시스템을 통한 투명성 확보,  친환경 세제 및 포장재 사용을 통한 지속가능성 추구를 들 수 있습니다.  이는 바쁜 생활 속에서 시간을 절약하고, 편리함과 신뢰성을 높이며, 환경 보호에도 기여하는 가치를 제공합니다."]);
-              setMainCharacteristicOfBusinessInformation([
-                  "세탁물 예약 및 관리 기능: 고객은 앱을 통해 원하는 날짜와 시간, 세탁 종류, 추가 서비스(예: 드라이 크리닝, 섬세 세탁) 등을 선택하여 세탁물을 예약할 수 있습니다.  예약 내역 확인 및 변경도 가능하며, 세탁 진행 상황을 실시간으로 확인할 수 있습니다. 이 기능은 사용자 편의성을 극대화하고 예약 관리의 효율성을 높입니다. 기술적으로는 스케줄링 알고리즘과 실시간 데이터베이스 연동이 핵심입니다. ",
-                  "수거 및 배송 기능: 지정된 시간에 전문 배송 기사가 고객이 지정한 장소로 방문하여 세탁물을 수거하고, 세탁이 완료된 후 다시 배송합니다.  실시간 위치 추적 시스템을 통해 배송 과정을 투명하게 확인할 수 있습니다.  사용자는  세탁물의 이동 경로를 실시간으로 확인하고 배송 예상 시간을 파악하여 편리하게 이용할 수 있습니다. 기술적으로는 GPS 추적 기술과 효율적인 배송 경로 최적화 알고리즘이 중요합니다.",
-                  "결제 및 고객 관리 기능: 다양한 결제 방식(신용카드, 계좌이체 등)을 지원하며,  고객 정보 관리,  세탁 이력 확인,  포인트 적립 및 사용,  쿠폰 발급 등의 기능을 제공합니다.  고객은 자신의 세탁 이력을 쉽게 확인하고 관리할 수 있으며,  회원 등급에 따른 추가 혜택을 받을 수 있습니다. 기술적으로는 안전한 결제 시스템과 개인 정보 보호 기능이 필수적입니다."
-              ]);
-              setPersonaBusinessCategory({
-                  first: "커머스",
-                  second: "물류",
-                  third: "AI/딥테크/블록체인"
-              });
-
-              //   await saveConversation({
-              //     changingConversation: {
-              //       inputBusinessInfo: "",
-              //       analysisReportData: analysisReportData,
-              //     },
-              //   });
-              // }
+              if (attempts >= maxAttempts) {
+                navigate("/Main");
+              } else {
+                setBusinessAnalysis(updatedBusinessAnalysis);
+                setTempBusinessAnalysis(updatedBusinessAnalysis);
+                saveConversation({ changingConversation : {businessAnalysis : updatedBusinessAnalysis }})
+              }
             }
-            //   setCategoryColor({
-            //     first: getCategoryColor(categoryData.first),
-            //     second: getCategoryColor(categoryData.second),
-            //     third: getCategoryColor(categoryData.third)
-            //   });
-
             setCategoryColor({
-              first: getCategoryColor("커머스"),
-              second: getCategoryColor("물류"),
-              third: getCategoryColor("AI/딥테크/블록체인")
+              first: getCategoryColor(categoryData.first),
+              second: getCategoryColor(categoryData.second),
+              third: getCategoryColor(categoryData.third)
             });
 
           } catch (error) {
@@ -240,131 +176,64 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
 
     try {
         setIsLoading(true);
-        await new Promise(resolve => setTimeout(resolve, 1000));
         // 버튼 클릭으로 API 호출
-        // let response = await axios.post(
-        //   "https://wishresearch.kr/panels/business_category",
-        //   data,
-        //   axiosConfig
-        // );
+        let response = await axios.post(
+          "https://wishresearch.kr/panels/business_category",
+          data,
+          axiosConfig
+        );
 
-        // // 필요한 데이터가 없을 경우 재시도, 최대 5번
-        // while ( 
-        //     attempts < maxAttempts && (
-        //     !response || !response.data || typeof response.data !== "object" ||
-        //     !response.data.hasOwnProperty("business_analysis") ||
-        //     !response.data.hasOwnProperty("category") ||
-        //     !response.data.business_analysis.hasOwnProperty("명칭") ||
-        //     !response.data.business_analysis.hasOwnProperty("주요_목적_및_특징") ||
-        //     !response.data.business_analysis.hasOwnProperty("주요기능") ||
-        //     !response.data.business_analysis["명칭"] ||
-        //     !response.data.business_analysis["주요_목적_및_특징"].length ||
-        //     !response.data.business_analysis["주요기능"].length ||
-        //     !response.data.category.hasOwnProperty("first") ||
-        //     !response.data.category.hasOwnProperty("second") ||
-        //     !response.data.category.hasOwnProperty("third") ||
-        //     !response.data.category.first ||
-        //     !response.data.category.second ||
-        //     !response.data.category.third
-        // )
-        // ) {
-        //   attempts += 1;
+        // 필요한 데이터가 없을 경우 재시도, 최대 5번
+        while ( 
+            attempts < maxAttempts && (
+            !response || !response.data || typeof response.data !== "object" ||
+            !response.data.hasOwnProperty("business_analysis") ||
+            !response.data.hasOwnProperty("category") ||
+            !response.data.business_analysis.hasOwnProperty("명칭") ||
+            !response.data.business_analysis.hasOwnProperty("주요_목적_및_특징") ||
+            !response.data.business_analysis.hasOwnProperty("주요기능") ||
+            !response.data.business_analysis["명칭"] ||
+            !response.data.business_analysis["주요_목적_및_특징"].length ||
+            !response.data.business_analysis["주요기능"].length ||
+            !response.data.category.hasOwnProperty("first") ||
+            !response.data.category.hasOwnProperty("second") ||
+            !response.data.category.hasOwnProperty("third") ||
+            !response.data.category.first ||
+            !response.data.category.second ||
+            !response.data.category.third
+        )
+        ) {
+          attempts += 1;
 
-        //   response = await axios.post(
-        //     "https://wishresearch.kr/panels/business",
-        //     data,
-        //     axiosConfig
-        //   );
-        // }
+          response = await axios.post(
+            "https://wishresearch.kr/panels/business",
+            data,
+            axiosConfig
+          );
+        }
 
-        // businessData = response.data.business_analysis;
-        // categoryData = response.data.category;
+        businessData = response.data.business_analysis;
+        categoryData = response.data.category;
 
-        // if (attempts >= maxAttempts) {
-        //   navigate("/Main");
-        // } else {
-        //   if (Array.isArray(businessData["주요_목적_및_특징"])) {
-        //     setTempMainFeaturesOfBusinessInformation(
-        //       businessData["주요_목적_및_특징"]?.map((item) => item)
-        //     );
-        //     setMainFeaturesOfBusinessInformation(
-        //       businessData["주요_목적_및_특징"]?.map((item) => item)
-        //     );
-        //   } else {
-        //     setTempMainFeaturesOfBusinessInformation(
-        //       businessData["주요_목적_및_특징"]
-        //         ? [businessData["주요_목적_및_특징"]]
-        //         : []
-        //     );
-        //     setMainFeaturesOfBusinessInformation(
-        //       businessData["주요_목적_및_특징"]
-        //         ? [businessData["주요_목적_및_특징"]]
-        //         : []
-        //     );
-        //   }
-
-        //   if (Array.isArray(businessData["주요기능"])) {
-        //     setTempMainCharacteristicOfBusinessInformation(
-        //       businessData["주요기능"]?.map((item) => item)
-        //     );
-        //     setMainCharacteristicOfBusinessInformation(
-        //       businessData["주요기능"]?.map((item) => item)
-        //     );
-        //   } else {
-        //     setTempMainCharacteristicOfBusinessInformation(
-        //       businessData["주요기능"] ? [businessData["주요기능"]] : []
-        //     );
-        //     setMainCharacteristicOfBusinessInformation(
-        //       businessData["주요기능"] ? [businessData["주요기능"]] : []
-        //     );
-        //   }
-
-        //   setTitleOfBusinessInfo(businessData["명칭"]);
-
-        //   const analysisReportData = {
-        //     title: businessData?.["명칭"],
-        //     mainFeatures: Array.isArray(businessData?.["주요_목적_및_특징"])
-        //       ? businessData["주요_목적_및_특징"]
-        //       : [],
-        //     mainCharacter: Array.isArray(businessData?.["주요기능"])
-        //       ? businessData["주요기능"]
-        //       : [],
-        //   };
-
-        // setPersonaBusinessCategory(categoryData);
-
-        setTitleOfBusinessInfo("모바일 세탁 서비스");
-        setMainFeaturesOfBusinessInformation(["본 서비스는 바쁜 현대인을 위해 시간과 공간의 제약 없이 편리하게 세탁 서비스를 이용할 수 있도록 모바일 애플리케이션을 기반으로 구축되었습니다.  고객은 스마트폰 앱을 통해 세탁물 예약, 수거, 배달을 간편하게 처리할 수 있으며, 다양한 세탁 옵션과 추가 서비스를 선택할 수 있습니다.  경쟁 서비스와 비교하여 차별화된 특징으로는,  AI 기반의 세탁물 상태 자동 인식 및 맞춤형 세탁 코스 추천,  실시간 배송 추적 시스템을 통한 투명성 확보,  친환경 세제 및 포장재 사용을 통한 지속가능성 추구를 들 수 있습니다.  이는 바쁜 생활 속에서 시간을 절약하고, 편리함과 신뢰성을 높이며, 환경 보호에도 기여하는 가치를 제공합니다."]);
-        setMainCharacteristicOfBusinessInformation([
-            "세탁물 예약 및 관리 기능: 고객은 앱을 통해 원하는 날짜와 시간, 세탁 종류, 추가 서비스(예: 드라이 크리닝, 섬세 세탁) 등을 선택하여 세탁물을 예약할 수 있습니다.  예약 내역 확인 및 변경도 가능하며, 세탁 진행 상황을 실시간으로 확인할 수 있습니다. 이 기능은 사용자 편의성을 극대화하고 예약 관리의 효율성을 높입니다. 기술적으로는 스케줄링 알고리즘과 실시간 데이터베이스 연동이 핵심입니다. ",
-            "수거 및 배송 기능: 지정된 시간에 전문 배송 기사가 고객이 지정한 장소로 방문하여 세탁물을 수거하고, 세탁이 완료된 후 다시 배송합니다.  실시간 위치 추적 시스템을 통해 배송 과정을 투명하게 확인할 수 있습니다.  사용자는  세탁물의 이동 경로를 실시간으로 확인하고 배송 예상 시간을 파악하여 편리하게 이용할 수 있습니다. 기술적으로는 GPS 추적 기술과 효율적인 배송 경로 최적화 알고리즘이 중요합니다.",
-            "결제 및 고객 관리 기능: 다양한 결제 방식(신용카드, 계좌이체 등)을 지원하며,  고객 정보 관리,  세탁 이력 확인,  포인트 적립 및 사용,  쿠폰 발급 등의 기능을 제공합니다.  고객은 자신의 세탁 이력을 쉽게 확인하고 관리할 수 있으며,  회원 등급에 따른 추가 혜택을 받을 수 있습니다. 기술적으로는 안전한 결제 시스템과 개인 정보 보호 기능이 필수적입니다."
-        ]);
-        setPersonaBusinessCategory({
-            first: "커머스",
-            second: "물류",
-            third: "AI/딥테크/블록체인"
+        const updatedBusinessAnalysis = {
+          input: businessAnalysis.input,
+          title: businessData["명칭"],
+          characteristics: businessData["주요_목적_및_특징"],
+          features: businessData["주요기능"],
+          category: categoryData
+        }
+        if (attempts >= maxAttempts) {
+          navigate("/Main");
+        } else {
+          setBusinessAnalysis(updatedBusinessAnalysis);
+          setTempBusinessAnalysis(updatedBusinessAnalysis);
+        }
+        setCategoryColor({
+          first: getCategoryColor(categoryData.first),
+          second: getCategoryColor(categoryData.second),
+          third: getCategoryColor(categoryData.third)
         });
-
-        //   await saveConversation({
-        //     changingConversation: {
-        //       inputBusinessInfo: "",
-        //       analysisReportData: analysisReportData,
-        //     },
-        //   });
-        // }
-
-      //   setCategoryColor({
-      //     first: getCategoryColor(categoryData.first),
-      //     second: getCategoryColor(categoryData.second),
-      //     third: getCategoryColor(categoryData.third)
-      //   });
-
-      setCategoryColor({
-        first: getCategoryColor("커머스"),
-        second: getCategoryColor("물류"),
-        third: getCategoryColor("AI/딥테크/블록체인")
-      });
+        saveConversation({ changingConversation : {businessAnalysis : updatedBusinessAnalysis }})
     } catch (error) {
       console.error("Error in handleRegenerate:", error);
     } finally {
@@ -400,7 +269,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
         <CardWrap>
             <Card>
                 <CardTitle>
-                    <h2>{titleOfBusinessInfo}</h2>
+                    <h2>{businessAnalysis.title}</h2>
                     <TagWrap>
                     <Tag color={categoryColor.first} />
                     <Tag color={categoryColor.second} />
@@ -417,7 +286,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
                 </CardTitle>
                 {showCardContent && (
                     <CardContent>
-                    <p>{mainFeaturesOfBusinessInformation}</p>
+                    <p>{businessAnalysis.characteristics}</p>
                     </CardContent>
                 )}
             </Card>

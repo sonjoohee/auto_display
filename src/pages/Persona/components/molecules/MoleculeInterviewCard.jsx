@@ -38,14 +38,6 @@ const MoleculeInterviewCard = ({
               </Badge>
             )}
           </TitleSection>
-          
-          {/* {keywords.length > 0 && (
-            <KeywordGroup>
-              {keywords.map((keyword, index) => (
-                <KeywordTag key={index}>#{keyword}</KeywordTag>
-              ))}
-            </KeywordGroup>
-          )} */}
 
           {description && (
             <Description>{description}</Description>
