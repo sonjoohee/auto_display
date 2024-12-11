@@ -29,12 +29,12 @@ const IncNavigation = () => {
             <span>새작업</span>
           </li>
 
-          <li onClick={handleWorkManageClick}>
+          <li>
             <img src={images.IconBell} alt="작업관리" />
             <span>작업관리</span>
           </li>
 
-          <li>
+          <li onClick={handleWorkManageClick}>
             <img src={images.IconBell} alt="대화내역" />
             <span>대화내역</span>
           </li>
