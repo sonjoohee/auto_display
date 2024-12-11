@@ -45,18 +45,6 @@ const MoleculePersonaCard = ({
         <ContentWrapper>
           <TitleSection>
             <Title>{title}</Title>
-            {isReady && (
-              <Badge Ready>
-                <ReadyIcon />
-                Ready
-              </Badge>
-            )}
-            {isRequest && (
-              <Badge>
-                <img src={images.NotePencil} alt="NotePencil" />
-                Request
-              </Badge>
-            )}
           </TitleSection>
           
           {keywords.length > 0 && (
