@@ -167,8 +167,8 @@ function App() {
 
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<PageMarketingLanding />} />
-          <Route path="*" element={<PageMarketingLanding />} />
+          <Route path="/" element={<PageMain />} />
+          <Route path="*" element={<PageMain />} />
           <Route path="/MeetAiExpert" element={<PageMeetAiExpert />} />
           <Route path="/ExpertInsight" element={<PageExpertInsight />}></Route>
           <Route
