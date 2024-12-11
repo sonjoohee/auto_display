@@ -396,36 +396,36 @@ const PagePersona2 = () => {
               </CardWrap>
             </MainSection>
 
-            <Sidebar>
-              <h5>Let's Start Now</h5>
+              <Sidebar>
+                <h5>Let's Start Now</h5>
 
-              <ProgressBar>
-                <span>🚀</span>
-                <Progress progress={40} />
-                <span>40%</span>
-              </ProgressBar>
+                <ProgressBar>
+                  <span>🚀</span>
+                  <Progress progress={40} />
+                  <span>40%</span>
+                </ProgressBar>
 
-              <MoleculeStepIndicator steps={steps} activeStep={2} />
-            </Sidebar>
-          </AnalysisWrap>
-        </MainContent>
-      </ContentsWrap>
+                <MoleculeStepIndicator steps={steps} activeStep={2} />
+              </Sidebar>
+            </AnalysisWrap>
+          </MainContent>
+        </ContentsWrap>
 
-      {showPopup && (
-        <PopupWrap
-          Warning
-          title="요청 상태의 페르소나는 선택이 제한됩니다."
-          message="인터뷰를 진행하려면 모집 요청을 먼저 진행해주세요"
-          buttonType="Outline"
-          closeText="확인"
-          isModal={false}
-          onCancel={handlePopupClose}
-          show={showPopup}
-        />
-      )}
-    </>
-  );
-};
+        {showPopup && (
+          <PopupWrap
+            Warning
+            title="요청 상태의 페르소나는 선택이 제한됩니다."
+            message="인터뷰를 진행하려면 모집 요청을 먼저 진행해주세요"
+            buttonType="Outline"
+            closeText="확인"
+            isModal={false}
+            onCancel={handlePopupClose}
+            show={showPopup}
+          />
+        )}
+      </>
+    );
+  };
 
 export default PagePersona2;
 

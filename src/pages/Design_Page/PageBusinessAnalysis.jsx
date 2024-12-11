@@ -22,6 +22,7 @@ import Sidebar from "./IncSidebar";
 import AnalysisInfo from "./PageAnalysisInfo";
 import PopupWrap from "../../assets/styles/Popup";
 import ToastPopupWrap from "../../assets/styles/ToastPopup";
+import IncNavigation from "./IncNavigation";
 
 const PageBusinessAnalysis = () => {
   const [state, setState] = useState({
@@ -86,7 +87,7 @@ const PageBusinessAnalysis = () => {
   return (
     <>
       <ContentsWrap>
-        <OrganismLeftSideBar />
+        <IncNavigation />
 
         <Header />
 

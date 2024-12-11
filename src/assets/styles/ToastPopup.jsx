@@ -2,15 +2,35 @@ import React, { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import { palette } from "./Palette";
 import images from "./Images";
+import PopupWrap from "./Popup";
+import { useNavigate } from "react-router-dom";
 
 const ToastPopupWrap = ({ isActive, onClose }) => {
+  const navigate = useNavigate();
+
   const index = 0;
 
   const [active, setActive] = useState(isActive);
+  const [showWarning, setShowWarning] = useState(false);
+
+  useEffect(() => {
+    setActive(isActive);
+  }, [isActive]);
 
   const handleClose = () => {
+    setShowWarning(true);
+  };
+
+  const handleWarningClose = () => {
+    setShowWarning(false);
     setActive(false);
-    onClose();
+    if (onClose) {
+      onClose();
+    }
+  };
+
+  const handleWarningContinue = () => {
+    setShowWarning(false);
   };
 
   const [visibleAnswers, setVisibleAnswers] = useState({});
@@ -108,6 +128,10 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
     },
   ];
 
+  const handleMoveToReport = () => {
+    navigate('/InterviewResult');
+  };
+
   return (
     <>
       <PopupBox isActive={active}>
@@ -115,7 +139,7 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
           <Header>
             <Title>
               쉽고 빠르게 송금 및 이체 할 수 있는 어플리케이션의 제품 경험 평가
-              <ColseButton onCancel={handleClose} />
+              <ColseButton onClick={handleClose} />
             </Title>
             <ul>
               <li>
@@ -134,7 +158,7 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
           </Header>
 
           <Contents>
-            {/*}
+            {/*
             <LoadingBox>
               <Loading>
                 <div />
@@ -153,7 +177,7 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
 
               <p>
                 결과 분석 완료! 인터뷰 결과를 확인해보세요
-                <span>결과 리포트 확인하기</span>
+                <span onClick={handleMoveToReport}>결과 리포트 확인하기</span>
               </p>
             </LoadingBox>
 
@@ -187,13 +211,28 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
                 <QuestionText>
                   경쟁 제품 사용자가 지금의 브랜드를 바꿔야 한다고 느낄 만한 상황은 어떤 경우일까요?
                 </QuestionText>
-                <Status Complete>진행중</Status>
+                <Status Complete>완료</Status>
               </QuestionWrap>
               {visibleAnswers[2] && <AnswerWrap>내용</AnswerWrap>}
             </InterviewItem> */}
           </Contents>
         </ToastPopup>
       </PopupBox>
+
+      {showWarning && (
+        <PopupWrap 
+          Warning
+          title="인터뷰를 종료하시겠습니까?" 
+          message="모든 내역이 사라집니다. 그래도 중단 하시겠습니까?"
+          buttonType="Outline"
+          closeText="중단하기"
+          confirmText="계속진행하기"
+          isModal={false}
+          onCancel={handleWarningClose}
+          onConfirm={handleWarningContinue}
+        />
+      )}
+
     </>
   );
 };
@@ -204,19 +243,20 @@ const PopupBox = styled.div`
   position: fixed;
   top: 0;
   right: 100%;
-  transform: translateX(100%);
+  transform: ${({ isActive }) => isActive ? 'translateX(100%)' : 'translateX(0)'};
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
   transition: transform 0.3s ease;
-  z-index: 100;
+  z-index: 101;
+  visibility: ${({ isActive }) => isActive ? 'visible' : 'hidden'};
 `;
 
 const ToastPopup = styled.div`
   position: fixed;
   top: 0;
   right: 0;
-  transform: ${({ isActive }) => isActive ? 'translateX(-100%)' : 'translateX(0)'};
+  transform: ${({ isActive }) => isActive ? 'translateX(0)' : 'translateX(100%)'};
   width: 100%;
   max-width: 800px;
   height: 100vh;
@@ -280,11 +320,14 @@ const Title = styled.div`
   word-wrap: break-word;
 `;
 
-export const ColseButton = styled.div`
+export const ColseButton = styled.button`
   position: relative;
   width: 15px;
   height: 15px;
   cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
 
   &:before, &:after {
     position: absolute;
@@ -316,7 +359,6 @@ const Contents = styled.div`
   height: 100%;
   padding-right: 10px;
   overflow-y: auto;
-  scrollbar-width: thin;
 `;
 
 const LoadingBox = styled.div`
@@ -346,6 +388,7 @@ const LoadingBox = styled.div`
       padding: 8px 16px;
       border-radius: 10px;
       background: ${props => props.Complete ? palette.primary : palette.gray300};
+      cursor: pointer;
     }
   }
 `;

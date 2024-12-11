@@ -133,7 +133,10 @@ const IncSidebar = () => {
       )}
       
       {showToast && (
-        <ToastPopupWrap />
+        <ToastPopupWrap 
+          isActive={showToast}
+          onClose={() => setShowToast(false)}
+        />
       )}
 
     </>

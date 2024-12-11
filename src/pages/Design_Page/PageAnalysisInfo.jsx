@@ -91,7 +91,7 @@ const PageAnalysisInfo = ({ showButtons = false }) => {
           <ButtonGroup>
             {isEditMode ? (
               <IconButton onClick={handleSaveClick}>
-                <img src={images.IconRepeatSquare} alt="저장하기" />
+                <img src={images.FolderArrowDown} alt="저장하기" />
                 <span>저장하기</span>
               </IconButton>
             ) : (
@@ -101,7 +101,7 @@ const PageAnalysisInfo = ({ showButtons = false }) => {
                   <span>재생성하기</span>
                 </IconButton>
                 <IconButton onClick={handleEditClick}>
-                  <img src={images.IconRepeatSquare} alt="수정하기" />
+                  <img src={images.PencilSquare} alt="수정하기" />
                   <span>수정하기</span>
                 </IconButton>
               </>
