@@ -31,7 +31,7 @@ import MoleculeHeader from "../molecules/MoleculeHeader";
 import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 import { createProjectOnServer } from "../../../../utils/indexedDB";
-import { createProjectReportOnServer } from "../../../../utils/indexedDB";
+// import { createProjectReportOnServer } from "../../../../utils/indexedDB";
 import OrganismBusinessAnalysis from "../organisms/OrganismBisinessAnalysis";
 
 const PagePersona = () => {
@@ -94,7 +94,7 @@ const PagePersona = () => {
           try {
             // 서버에서 새로운 대화 ID 생성
             // console.log("서버에서 새로운 대화 ID 생성");
-            newProjectId = await createProjectReportOnServer(isLoggedIn);
+            newProjectId = await createProjectOnServer(isLoggedIn);
             setprojectId(newProjectId); // 생성된 대화 ID 설정
             setIsPersonaAccessible(true);
             // setIsLoadingPage(false); // 로딩 완료
