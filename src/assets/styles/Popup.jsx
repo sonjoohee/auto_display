@@ -140,7 +140,7 @@ export const PopupBox = styled.div`
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.50);
-  z-index: 100;
+  z-index: 200;
 `;
 
 export const AlertPopup = styled.div`
@@ -186,9 +186,9 @@ export const Body = styled.div`
   width: 100%;
   height: 100%;
   max-height: 60dvh;
+  padding-right:10px;
   overflow-y: auto;
   overflow-x: hidden;
-  scrollbar-width: thin;
 
   .bgBox {
     display: flex;
@@ -281,10 +281,19 @@ export const Body = styled.div`
     transition: all 0.5s;
   }
 
+  label.age.none {
+    border: 0;
+    cursor: default;
+
+    &:hover {
+      background: none;
+    }
+  }
+
   label.gender {
     flex: 1 1 auto;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 8px;
     font-weight: 300;
     line-height: 1.5;
@@ -296,9 +305,9 @@ export const Body = styled.div`
     transition: all 0.5s;
   }
 
-  input[type="radio"]:checked + label.persona,
-  input[type="radio"]:checked + label.gender,
-  input[type="radio"]:checked + label.age {
+  input[type="radio"]:checked + .persona,
+  input[type="radio"]:checked + .gender,
+  input[type="radio"]:checked + .age {
     color: ${palette.primary};
     border: 1px solid ${palette.primary};
   }
@@ -386,27 +395,35 @@ export const Button = styled.div`
   transition: all 0.5s;
 
   &.Outline {
-    color: ${props => 
-      props.Confirm ? '#0453F4' 
-      : props.Close ? '#7D7D7D' 
-      : palette.gray500};
+    color: ${props => {
+      if (props.Confirm) return '#0453F4';
+      if (props.Close) return palette.gray500;
+      return '#7D7D7D';
+    }};
   }
 
   &.Fill {
     color: ${props => 
-      props.Confirm ? palette.white 
-      : props.Close ? palette.gray500 
-      : palette.white};
+      props.Confirm ? (props.disabled ? palette.gray500 : palette.white)
+      : props.Close ? palette.gray500
+      : palette.gray500};
     padding: 12px 20px;
     border-radius: 8px;
     border: 1px solid ${props => 
-      props.Confirm ? palette.primary 
-      : props.Close ? palette.outlineGray 
-      : palette.primary};
+      props.Confirm ? (props.disabled ? palette.gray300 : palette.primary)
+      : props.Close ? palette.outlineGray
+      : palette.outlineGray};
     background: ${props => 
-      props.Confirm ? palette.primary 
-      : props.Close ? palette.chatGray 
-      : ''};
+      props.Confirm ? (props.disabled ? palette.gray200 : palette.primary)
+      : props.Close ? palette.chatGray
+      : palette.chatGray};
+    
+    &:hover {
+      background: ${props => 
+        props.Confirm && !props.disabled ? palette.blue 
+        : props.Close ? palette.gray100
+        : palette.gray100};
+    }
   }
 
   &.disabled {

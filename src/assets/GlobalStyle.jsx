@@ -129,6 +129,23 @@ const GlobalStyles = createGlobalStyle`
     color: ${palette.black};
   }
 
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: ${palette.outlineGray};
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-button {
+    display: none;
+  }
+
   li {
     list-style:none;
   }

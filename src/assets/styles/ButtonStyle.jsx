@@ -101,8 +101,15 @@ export const Button = styled.button`
     }
 
     &:disabled {
+      color: ${palette.white};
+      border: 1px solid ${palette.gray200};
+      background: ${palette.gray200};
       opacity: 0.5;
       cursor: not-allowed;
+
+      &:hover {
+        background: ${palette.gray200};
+      }
     }
   `}
 `;

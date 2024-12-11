@@ -1916,7 +1916,6 @@ const DynamicGrid = styled.div`
     // -webkit-line-clamp: 3;
     // -webkit-box-orient: vertical;
     overflow-y: auto;
-    scrollbar-width: thin;
   }
 `;
 
@@ -1990,7 +1989,6 @@ const NumDynamicGrid = styled.div`
     // overflow: hidden;
     // text-overflow: ellipsis;
     overflow-y: auto;
-    scrollbar-width: thin;
   }
 `;
 const BgStyledSection = styled.div`

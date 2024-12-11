@@ -1418,7 +1418,6 @@ const DynamicGrid = styled.div`
     // -webkit-line-clamp:3;
     // -webkit-box-orient:vertical;
     overflow-y: auto;
-    scrollbar-width: thin;
   }
 `;
 const AnalysisSection = styled.div`
@@ -1544,7 +1543,6 @@ const BgStyledSection = styled.div`
       // -webkit-line-clamp:3;
       // -webkit-box-orient:vertical;
       overflow-y: auto;
-      scrollbar-width: thin;
     }
   }
 `;
@@ -1634,7 +1632,6 @@ const AdditionalSeparateSection = styled.div`
         // -webkit-line-clamp: 3;
         // -webkit-box-orient: vertical;
         overflow-y: auto;
-        scrollbar-width: thin;
       }
     }
 
@@ -1759,7 +1756,6 @@ const SeparateSection = styled.div`
         // -webkit-line-clamp: 3;
         // -webkit-box-orient: vertical;
         overflow-y: auto;
-        scrollbar-width: thin;
       }
     }
 
@@ -1857,7 +1853,6 @@ const NumDynamicGrid = styled.div`
     // -webkit-line-clamp:3;
     // -webkit-box-orient:vertical;
     overflow-y: auto;
-    scrollbar-width: thin;
   }
 `;
 

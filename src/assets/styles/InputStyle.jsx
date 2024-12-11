@@ -98,7 +98,6 @@ export const CustomTextarea = styled.textarea`
   outline: none;
   resize: none;
   overflow: auto;
-  scrollbar-width: thin;
   transition: all .5s;
 
   ${props => props.Edit && css`

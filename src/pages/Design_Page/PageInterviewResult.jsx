@@ -12,6 +12,7 @@ import OrganismLeftSideBar from '../Expert_Insight/components/organisms/Organism
 import Header from './IncHeader';
 import AnalysisInfo from './PageAnalysisInfo';
 import Sidebar from './IncSidebar';
+import IncNavigation from './IncNavigation';
 
 const PageInterviewResult = () => {
   const [openAccordion, setOpenAccordion] = useState(null);
@@ -48,7 +49,7 @@ const PageInterviewResult = () => {
   return (
     <>
       <ContentsWrap>
-        <OrganismLeftSideBar />
+        <IncNavigation />
 
         <Header />
 

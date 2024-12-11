@@ -12,10 +12,6 @@ import {
   Title,
   CardWrap,
   CustomizePersona,
-  AccordionSection,
-  CustomAccordionHeader,
-  CustomAccordionIcon,
-  CustomAccordionContent,
 } from "../../assets/styles/BusinessAnalysisStyle";
 
 import OrganismLeftSideBar from "../Expert_Insight/components/organisms/OrganismLeftSideBar";
@@ -23,6 +19,7 @@ import Header from "./IncHeader";
 import PersonaCard from "./PersonaCard";
 import AnalysisInfo from "./PageAnalysisInfo";
 import Sidebar from "./IncSidebar";
+import IncNavigation from "./IncNavigation";
 
 import PopupWrap from "../../assets/styles/Popup";
 import { CustomTextarea } from "../../assets/styles/InputStyle";
@@ -75,7 +72,7 @@ const PageCustomizePersona = () => {
   return (
     <>
       <ContentsWrap>
-        <OrganismLeftSideBar />
+        <IncNavigation />
 
         <Header />
 
@@ -87,13 +84,13 @@ const PageCustomizePersona = () => {
               <CustomizePersona>
                   <CardWrap>
                   <Title Column>
-                    <h3>비즈니스 맞춤 페르소나</h3>
+                    <h3>맞춤 페르소나</h3>
                     <p>
                       추천된 페르소나와 인터뷰하세요. 그룹 또는 한 명의 타겟을 선택할 수 있습니다.
-                      <span onClick={handleRecruitClick}>
+                      {/* <span onClick={handleRecruitClick}>
                         <img src={images.PencilSquare} alt="" />
                         편집하기
-                      </span>
+                      </span> */}
                     </p>
                   </Title>
                   
@@ -136,7 +133,6 @@ const PageCustomizePersona = () => {
                         onClick={handleStartInterview}
                       >
                         인터뷰 시작하기
-                        <img src={images.ChevronRight} alt="" />
                       </Button>
                     </BottomBar>
                   </ContentSection>
@@ -195,6 +191,20 @@ const BottomBar = styled.div`
     span {
       color: ${palette.chatBlue};
       text-decoration: underline;
+    }
+  }
+
+  button {
+    gap: 16px;
+
+    &:after {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-right: 2px solid ${palette.white};
+      border-top: 2px solid ${palette.white};
+      transform: rotate(45deg);
+      content: '';
     }
   }
 `;

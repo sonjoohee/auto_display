@@ -27,6 +27,7 @@ import Header from "./IncHeader";
 import PersonaCard from "./PersonaCard";
 import AnalysisInfo from "./PageAnalysisInfo";
 import Sidebar from "./IncSidebar";
+import IncNavigation from "./IncNavigation";
 
 
 const PageWayInterview = () => {
@@ -37,6 +38,7 @@ const PageWayInterview = () => {
     personaCount: '', // 페르소나 수 라디오
   });
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
+  const [showCustomModal, setShowCustomModal] = useState(false);
 
   const handleTypeSelect = (type) => {
     if (type === 'single') return;
@@ -96,10 +98,18 @@ const PageWayInterview = () => {
     setShowPopup(false);
   };
 
+  const handleConfirm = () => {
+    setShowPopup(false);
+  };
+
+  const handleCancel = () => {
+    setShowPopup(false);
+  };
+
   return (
     <>
       <ContentsWrap>
-        <OrganismLeftSideBar />
+        <IncNavigation />
 
         <Header />
 
@@ -168,9 +178,9 @@ const PageWayInterview = () => {
 
               <CustomizePersona>
                 <Title Column>
-                  비즈니스 맞춤 페르소나
+                  인터뷰 참여 페르소나
                   <p>
-                    추천된 페르소나와 인터뷰하세요. 그룹 또는 한 명의 타겟을 선택할 수 있습니다.
+                    참여 페르소나를 확인하세요. 변경은 편집하기 버튼을 통해 가능합니다
                     <span onClick={handleEditClick} style={{ cursor: 'pointer' }}>
                       <img src={images.PencilSquare} alt="" />
                       편집하기
@@ -200,110 +210,73 @@ const PageWayInterview = () => {
         </MainContent>
       </ContentsWrap>
 
-
-
       {showPopup && (
         <PopupWrap 
+          TitleFlex
           title="📝 맞춤형 페르소나 모집 요청하기" 
+          onConfirm={() => {
+            setShowCustomModal(false);
+            handleConfirm();
+          }} 
+          onCancel={() => {
+            setShowCustomModal(false);
+            handleCancel();
+          }}
           buttonType="Fill"
-          confirmText="맞춤 페르소나 모집하기"
+          closeText="닫기"
+          confirmText="편집완료"
           isModal={true}
-          onClose={handlePopupClose}
-          onCancel={handlePopupClose}
+          isFormValid={true}
           body={
-            <div>
-              <div className="bgBox">
-                <strong>도심에 거주하며 전문직에 종사하는 바쁜 생활인 </strong>
-                <p className="tag">
-                  <span>키워드1</span>
-                  <span>키워드2</span>
-                  <span>키워드3</span>
+            <>
+              <Title>
+                <p>
+                  Selected
+                  <span onClick={() => setShowCustomModal(true)}>
+                    <img src={images.ClockCounterclockwise} alt="" />
+                    이전으로 되돌리기
+                  </span>
                 </p>
-              </div>
+              </Title>
+              <PersonaCard 
+                TitleFlex
+                title="가족과 함께 여가를 보내는 활동 지향형 소비자"
+                keywords={['키워드1', '키워드2', '키워드3']}
+                isBasic={true}
+                checked={true}
+              />
+              <PersonaCard 
+                TitleFlex
+                title="가족과 함께 여가를 보내는 활동 지향형 소비자"
+                keywords={['키워드1', '키워드2', '키워드3']}
+                isBasic={true}
+                checked={true}
+              />
 
-              <dl>
-                <dt className="point">맞춤형 페르소나는 어떤 용도로 활용하실 계획이신가요?</dt>
-                <dd>
-                  <CustomTextarea 
-                    rows={3}
-                    placeholder="생성하기 위한 목적을 적어 주세요."
-                    value={formState.purpose}
-                    onChange={(e) => handleInputChange('purpose', e.target.value)}
-                  />
-                </dd>
-              </dl>
-
-              <AccordionSection>
-                <CustomAccordionHeader 
-                  onClick={() => setIsAccordionOpen(!isAccordionOpen)}
-                >
-                  🔍 추가정보를 입력하여, 더 정확한 타겟 페르소나를 찾으세요
-                  <CustomAccordionIcon isOpen={isAccordionOpen} />
-                </CustomAccordionHeader>
-                {isAccordionOpen && (
-                  <CustomAccordionContent>
-                    <dl>
-                      <dt>추가정보</dt>
-                      <dd>
-                        <input type="radio" id="gender1" name="gender" />
-                        <label htmlFor="gender1" className="gender men">
-                          <img src={images.GenderMen} alt="GenderMen" />
-                          남자
-                        </label>
-                        <input type="radio" id="gender2" name="gender" />
-                        <label htmlFor="gender2" className="gender women">
-                          <img src={images.GenderWomen} alt="GenderWomen" />
-                          여자
-                        </label>
-                      </dd>
-                    </dl>
-
-                    <dl>
-                      <dt>
-                        나이
-                        <p>* 선택하지 않는 경우, 연령 무관으로 페르소나를 생성합니다.</p>
-                      </dt>
-                      <dd>
-                        <input type="radio" id="age1" name="age" />
-                        <label htmlFor="age1" className="age">10대</label>
-                        <input type="radio" id="age2" name="age" />
-                        <label htmlFor="age2" className="age">20대</label>
-                        <input type="radio" id="age3" name="age" />
-                        <label htmlFor="age3" className="age">30대</label>
-                        <input type="radio" id="age4" name="age" />
-                        <label htmlFor="age4" className="age">40대</label>
-                        <input type="radio" id="age5" name="age" />
-                        <label htmlFor="age5" className="age">50대</label>
-                        <input type="radio" id="age6" name="age" />
-                        <label htmlFor="age6" className="age">60대</label>
-                        <input type="radio" id="age7" name="age" />
-                        <label htmlFor="age7" className="age">70대 이상</label>
-                      </dd>
-                    </dl>
-
-                    <dl>
-                      <dt>더 상세하게 필요한 정보를 입력해주세요 </dt>
-                      <dd>
-                        <CustomTextarea 
-                          rows={3}
-                          placeholder="모집하고 싶은 페르소나의 성향, 목표, 행동 패턴을 구체적으로 입력해주세요"
-                        />
-                      </dd>
-                    </dl>
-                  </CustomAccordionContent>
-                )}
-              </AccordionSection>
-            </div>
+              <Title style={{marginTop: '20px'}}>
+                <p>
+                  available
+                </p>
+              </Title>
+              <PersonaCard 
+                TitleFlex
+                title="가족과 함께 여가를 보내는 활동 지향형 소비자"
+                keywords={['키워드1', '키워드2', '키워드3']}
+                isBasic={true}
+                checked={true}
+              />
+              <PersonaCard 
+                TitleFlex
+                title="가족과 함께 여가를 보내는 활동 지향형 소비자"
+                keywords={['키워드1', '키워드2', '키워드3']}
+                isBasic={true}
+                checked={true}
+              />
+              
+            </>
           }
         />
       )}
-
-
-
-
-
-
-
     </>
   );
 };
