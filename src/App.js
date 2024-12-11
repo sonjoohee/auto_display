@@ -51,7 +51,6 @@ import PagePersona2 from "./pages/Persona/components/pages/PagePersona2";
 import PagePersona3 from "./pages/Persona/components/pages/PagePersona3";
 // import PagePersona4 from "./pages/Persona/components/pages/PagePersona4";
 
-
 function App() {
   const [, setIsLoggedIn] = useAtom(IS_LOGGED_IN); // 로그인 상태를 위한 아톰
   const [, setUserName] = useAtom(USER_NAME); // 유저 이름 아톰
@@ -209,11 +208,17 @@ function App() {
           {/* 페르소나 */}
           <Route path="/Persona" element={<PagePersona />}></Route>
           <Route path="/Main" element={<PageMain />}></Route>
-          <Route path="/Persona/:conversationId" element={<PagePersona />}></Route>
-          <Route path="/Persona/2/:conversationId" element={<PagePersona2 />}></Route>
-          <Route path="/Persona/3/:conversationId" element={<PagePersona3 />}></Route>
-          {/* <Route path="/Persona/4/:conversationId" element={<PagePersona4 />}></Route> */}
-          
+          <Route path="/Persona/:projectId" element={<PagePersona />}></Route>
+          <Route
+            path="/Persona/2/:projectId"
+            element={<PagePersona2 />}
+          ></Route>
+          <Route
+            path="/Persona/3/:projectId"
+            element={<PagePersona3 />}
+          ></Route>
+          {/* <Route path="/Persona/4/:projectId" element={<PagePersona4 />}></Route> */}
+
           {/* <Route
             path="/CuratorStoryboard"
             element={<CuratorStoryboard />}
@@ -226,13 +231,16 @@ function App() {
             <Route path="/QuickReport" element={<BusinessTool />} />
             <Route path="/PageAIPanelList" element={<PageAIPanelList />}></Route> */}
 
-            {/* 디자인페이지 */}
-            <Route path="/ConnectWithYourTarget" element={<PageConnetWithYouTarget />} />
-            <Route path="/BusinessAnalysis" element={<PageBusinessAnalysis />} />
-            <Route path="/CustomizePersona" element={<PageCustomizePersona />} />
-            <Route path="/WayInterview" element={<PageWayInterview />} />
-            <Route path="/InterviewResult" element={<PageInterviewResult />} />
-            <Route path="/MyProject" element={<PageMyProject />} />
+          {/* 디자인페이지 */}
+          <Route
+            path="/ConnectWithYourTarget"
+            element={<PageConnetWithYouTarget />}
+          />
+          <Route path="/BusinessAnalysis" element={<PageBusinessAnalysis />} />
+          <Route path="/CustomizePersona" element={<PageCustomizePersona />} />
+          <Route path="/WayInterview" element={<PageWayInterview />} />
+          <Route path="/InterviewResult" element={<PageInterviewResult />} />
+          <Route path="/MyProject" element={<PageMyProject />} />
         </Routes>
       </BrowserRouter>
     </div>

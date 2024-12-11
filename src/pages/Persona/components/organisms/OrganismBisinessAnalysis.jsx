@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
-import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
 import {
   TITLE_OF_BUSINESS_INFORMATION,
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
@@ -18,153 +17,217 @@ import {
   INPUT_BUSINESS_INFO,
   BUSINESS_ANALYSIS,
   TEMP_BUSINESS_ANALYSIS,
-  CATEGORY_COLOR
+  CATEGORY_COLOR,
+  PROJECT_ID,
+  IS_LOGGED_IN,
 } from "../../../AtomStates";
 import AtomLoader from "../atoms/AtomLoader";
-import { saveConversationToDB } from "../../../../utils/indexedDB";
+import { updateProjectOnServer } from "../../../../utils/indexedDB";
 
 const OrganismBusinessAnalysis = ({ personaStep }) => {
-    const { saveConversation } = useSaveConversation();
-    const navigate = useNavigate();
-    const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
-    const [tempBusinessAnalysis, setTempBusinessAnalysis] = useAtom(TEMP_BUSINESS_ANALYSIS);
-    const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
-    const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
-    const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
-    const [tempMainFeaturesOfBusinessInformation, setTempMainFeaturesOfBusinessInformation] = useAtom(TEMP_MAIN_FEATURES_OF_BUSINESS_INFORMATION);
-    const [mainCharacteristicOfBusinessInformation, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
-    const [tempMainCharacteristicOfBusinessInformation, setTempMainCharacteristicOfBusinessInformation] = useAtom(TEMP_MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
-    const [personaButtonState1, setPersonaButtonState1] = useAtom(PERSONA_BUTTON_STATE_1);
-    const [isLoading, setIsLoading] = useAtom(IS_LOADING);
-    const [showCardContent, setShowCardContent] = useState(personaStep <= 2);
-    const [categoryColor, setCategoryColor] = useAtom(CATEGORY_COLOR);
+  const [isProjectIdReady, setIsProjectIdReady] = useState(false);
+  const [projectId, setprojectId] = useAtom(PROJECT_ID);
+  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+  const navigate = useNavigate();
+  const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
+  const [tempBusinessAnalysis, setTempBusinessAnalysis] = useAtom(
+    TEMP_BUSINESS_ANALYSIS
+  );
+  const [inputBusinessInfo, setInputBusinessInfo] =
+    useAtom(INPUT_BUSINESS_INFO);
+  const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
+    TITLE_OF_BUSINESS_INFORMATION
+  );
+  const [
+    mainFeaturesOfBusinessInformation,
+    setMainFeaturesOfBusinessInformation,
+  ] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
+  const [
+    tempMainFeaturesOfBusinessInformation,
+    setTempMainFeaturesOfBusinessInformation,
+  ] = useAtom(TEMP_MAIN_FEATURES_OF_BUSINESS_INFORMATION);
+  const [
+    mainCharacteristicOfBusinessInformation,
+    setMainCharacteristicOfBusinessInformation,
+  ] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
+  const [
+    tempMainCharacteristicOfBusinessInformation,
+    setTempMainCharacteristicOfBusinessInformation,
+  ] = useAtom(TEMP_MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
+  const [personaButtonState1, setPersonaButtonState1] = useAtom(
+    PERSONA_BUTTON_STATE_1
+  );
+  const [isLoading, setIsLoading] = useAtom(IS_LOADING);
+  const [showCardContent, setShowCardContent] = useState(personaStep <= 2);
+  const [categoryColor, setCategoryColor] = useAtom(CATEGORY_COLOR);
 
-    const toggleCardContent = () => {
-        setShowCardContent(!showCardContent);
-      };
+  const toggleCardContent = () => {
+    setShowCardContent(!showCardContent);
+  };
 
-    const getCategoryColor = (category) => {
-        switch(category) {
-          case '광고/마케팅': return 'Red';
-          case '교육': return 'LavenderMagenta';
-          case '금융/보험/핀테크': return 'Amethyst';
-          case '게임': return 'VistaBlue';
-          case '모빌리티/교통': return 'BlueYonder';
-          case '물류': return 'MidnightBlue';
-          case '부동산/건설': return 'ButtonBlue';
-          case '뷰티/화장품': return 'ButtonBlue';
-          case 'AI/딥테크/블록체인': return 'MiddleBlueGreen';
-          case '소셜미디어/커뮤니티': return 'GreenSheen';
-          case '여행/레저': return 'TropicalRainForest';
-          case '유아/출산': return 'DollarBill';
-          case '인사/비즈니스/법률': return 'Olivine';
-          case '제조/하드웨어': return 'ChineseGreen';
-          case '커머스': return 'Jonquil';
-          case '콘텐츠/예술': return 'PastelOrange';
-          case '통신/보안/데이터': return 'Tangerine';
-          case '패션': return 'Copper';
-          case '푸드/농업': return 'Shadow';
-          case '환경/에너지': return 'Tuscany';
-          case '홈리빙/펫': return 'VeryLightTangelo';
-          case '헬스케어/바이오': return 'Orange';
-          case '피트니스/스포츠': return 'CarnationPink';
-          default: return '';
-        }
-      };
+  const getCategoryColor = (category) => {
+    switch (category) {
+      case "광고/마케팅":
+        return "Red";
+      case "교육":
+        return "LavenderMagenta";
+      case "금융/보험/핀테크":
+        return "Amethyst";
+      case "게임":
+        return "VistaBlue";
+      case "모빌리티/교통":
+        return "BlueYonder";
+      case "물류":
+        return "MidnightBlue";
+      case "부동산/건설":
+        return "ButtonBlue";
+      case "뷰티/화장품":
+        return "ButtonBlue";
+      case "AI/딥테크/블록체인":
+        return "MiddleBlueGreen";
+      case "소셜미디어/커뮤니티":
+        return "GreenSheen";
+      case "여행/레저":
+        return "TropicalRainForest";
+      case "유아/출산":
+        return "DollarBill";
+      case "인사/비즈니스/법률":
+        return "Olivine";
+      case "제조/하드웨어":
+        return "ChineseGreen";
+      case "커머스":
+        return "Jonquil";
+      case "콘텐츠/예술":
+        return "PastelOrange";
+      case "통신/보안/데이터":
+        return "Tangerine";
+      case "패션":
+        return "Copper";
+      case "푸드/농업":
+        return "Shadow";
+      case "환경/에너지":
+        return "Tuscany";
+      case "홈리빙/펫":
+        return "VeryLightTangelo";
+      case "헬스케어/바이오":
+        return "Orange";
+      case "피트니스/스포츠":
+        return "CarnationPink";
+      default:
+        return "";
+    }
+  };
 
-    const axiosConfig = {
-        timeout: 100000, // 100초
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
-      };
+  const axiosConfig = {
+    timeout: 100000, // 100초
+    headers: {
+      "Content-Type": "application/json",
+    },
+    withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
+  };
 
-    const data = {
-      business_idea: businessAnalysis.input,
-    };
+  const data = {
+    business_idea: businessAnalysis.input,
+  };
 
-    useEffect(() => {
-        const loadBusinessAnalysis = async () => {
-          let businessData;
-          let categoryData;
-          let attempts = 0;
-          const maxAttempts = 5;
-    
-          try {
-            if (personaButtonState1 === 1) {
-              setIsLoading(true);
-              // 버튼 클릭으로 API 호출
-              let response = await axios.post(
-                "https://wishresearch.kr/person/business_category",
-                data,
-                axiosConfig
-              );
+  useEffect(() => {
+    if (projectId) {
+      setIsProjectIdReady(true);
+    }
+  }, [projectId]);
 
-              // 필요한 데이터가 없을 경우 재시도, 최대 5번
-              while ( 
-                  attempts < maxAttempts && (
-                  !response || !response.data || typeof response.data !== "object" ||
-                  !response.data.hasOwnProperty("business_analysis") ||
-                  !response.data.hasOwnProperty("category") ||
-                  !response.data.business_analysis.hasOwnProperty("명칭") ||
-                  !response.data.business_analysis.hasOwnProperty("주요_목적_및_특징") ||
-                  !response.data.business_analysis.hasOwnProperty("주요기능") ||
-                  !response.data.business_analysis["명칭"] ||
-                  !response.data.business_analysis["주요_목적_및_특징"].length ||
-                  !response.data.business_analysis["주요기능"].length ||
-                  !response.data.category.hasOwnProperty("first") ||
-                  !response.data.category.hasOwnProperty("second") ||
-                  !response.data.category.hasOwnProperty("third") ||
-                  !response.data.category.first ||
-                  !response.data.category.second ||
-                  !response.data.category.third
-              )
-              ) {
-                attempts += 1;
-      
-                response = await axios.post(
-                  "https://wishresearch.kr/person/business_category",
-                  data,
-                  axiosConfig
-                );
-              }
+  useEffect(() => {
+    const loadBusinessAnalysis = async () => {
+      if (!isProjectIdReady) return;
 
-              businessData = response.data.business_analysis;
-              categoryData = response.data.category;
+      let businessData;
+      let categoryData;
+      let attempts = 0;
+      const maxAttempts = 5;
 
-              const updatedBusinessAnalysis = {
-                input: businessAnalysis.input,
-                title: businessData["명칭"],
-                characteristics: businessData["주요_목적_및_특징"],
-                features: businessData["주요기능"],
-                category: categoryData
-              };
-      
-              if (attempts >= maxAttempts) {
-                navigate("/Main");
-              } else {
-                setBusinessAnalysis(updatedBusinessAnalysis);
-                setTempBusinessAnalysis(updatedBusinessAnalysis);
-                saveConversation({ changingConversation : {businessAnalysis : updatedBusinessAnalysis }})
-              }
-            }
-            setCategoryColor({
-              first: getCategoryColor(categoryData.first),
-              second: getCategoryColor(categoryData.second),
-              third: getCategoryColor(categoryData.third)
-            });
+      try {
+        if (personaButtonState1 === 1) {
+          setIsLoading(true);
+          // 버튼 클릭으로 API 호출
+          let response = await axios.post(
+            "https://wishresearch.kr/person/business_category",
+            data,
+            axiosConfig
+          );
 
-          } catch (error) {
-            console.error("Error in loadAndSaveData:", error);
-          } finally {
-            setPersonaButtonState1(0);
-            setIsLoading(false);
+          // 필요한 데이터가 없을 경우 재시도, 최대 5번
+          while (
+            attempts < maxAttempts &&
+            (!response ||
+              !response.data ||
+              typeof response.data !== "object" ||
+              !response.data.hasOwnProperty("business_analysis") ||
+              !response.data.hasOwnProperty("category") ||
+              !response.data.business_analysis.hasOwnProperty("명칭") ||
+              !response.data.business_analysis.hasOwnProperty(
+                "주요_목적_및_특징"
+              ) ||
+              !response.data.business_analysis.hasOwnProperty("주요기능") ||
+              !response.data.business_analysis["명칭"] ||
+              !response.data.business_analysis["주요_목적_및_특징"].length ||
+              !response.data.business_analysis["주요기능"].length ||
+              !response.data.category.hasOwnProperty("first") ||
+              !response.data.category.hasOwnProperty("second") ||
+              !response.data.category.hasOwnProperty("third") ||
+              !response.data.category.first ||
+              !response.data.category.second ||
+              !response.data.category.third)
+          ) {
+            attempts += 1;
+
+            response = await axios.post(
+              "https://wishresearch.kr/person/business_category",
+              data,
+              axiosConfig
+            );
           }
-        };
-    
-        loadBusinessAnalysis();
-      }, []);
+
+          businessData = response.data.business_analysis;
+          categoryData = response.data.category;
+
+          const updatedBusinessAnalysis = {
+            input: businessAnalysis.input,
+            title: businessData["명칭"],
+            characteristics: businessData["주요_목적_및_특징"],
+            features: businessData["주요기능"],
+            category: categoryData,
+          };
+
+          if (attempts >= maxAttempts) {
+            navigate("/Main");
+          } else {
+            setBusinessAnalysis(updatedBusinessAnalysis);
+            setTempBusinessAnalysis(updatedBusinessAnalysis);
+            await updateProjectOnServer(
+              projectId,
+              {
+                businessAnalysis: updatedBusinessAnalysis,
+              },
+              isLoggedIn
+            );
+          }
+        }
+        setCategoryColor({
+          first: getCategoryColor(categoryData.first),
+          second: getCategoryColor(categoryData.second),
+          third: getCategoryColor(categoryData.third),
+        });
+      } catch (error) {
+        console.error("Error in loadAndSaveData:", error);
+      } finally {
+        setPersonaButtonState1(0);
+        setIsLoading(false);
+      }
+    };
+    if (isProjectIdReady) {
+      loadBusinessAnalysis();
+    }
+  }, [isProjectIdReady, personaButtonState1]);
 
   const handleRegenerate = async () => {
     setPersonaButtonState1(1);
@@ -174,65 +237,74 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
     const maxAttempts = 5;
 
     try {
-        setIsLoading(true);
-        // 버튼 클릭으로 API 호출
-        let response = await axios.post(
+      setIsLoading(true);
+      // 버튼 클릭으로 API 호출
+      let response = await axios.post(
+        "https://wishresearch.kr/person/business_category",
+        data,
+        axiosConfig
+      );
+
+      // 필요한 데이터가 없을 경우 재시도, 최대 5번
+      while (
+        attempts < maxAttempts &&
+        (!response ||
+          !response.data ||
+          typeof response.data !== "object" ||
+          !response.data.hasOwnProperty("business_analysis") ||
+          !response.data.hasOwnProperty("category") ||
+          !response.data.business_analysis.hasOwnProperty("명칭") ||
+          !response.data.business_analysis.hasOwnProperty(
+            "주요_목적_및_특징"
+          ) ||
+          !response.data.business_analysis.hasOwnProperty("주요기능") ||
+          !response.data.business_analysis["명칭"] ||
+          !response.data.business_analysis["주요_목적_및_특징"].length ||
+          !response.data.business_analysis["주요기능"].length ||
+          !response.data.category.hasOwnProperty("first") ||
+          !response.data.category.hasOwnProperty("second") ||
+          !response.data.category.hasOwnProperty("third") ||
+          !response.data.category.first ||
+          !response.data.category.second ||
+          !response.data.category.third)
+      ) {
+        attempts += 1;
+
+        response = await axios.post(
           "https://wishresearch.kr/person/business_category",
           data,
           axiosConfig
         );
+      }
 
-        // 필요한 데이터가 없을 경우 재시도, 최대 5번
-        while ( 
-            attempts < maxAttempts && (
-            !response || !response.data || typeof response.data !== "object" ||
-            !response.data.hasOwnProperty("business_analysis") ||
-            !response.data.hasOwnProperty("category") ||
-            !response.data.business_analysis.hasOwnProperty("명칭") ||
-            !response.data.business_analysis.hasOwnProperty("주요_목적_및_특징") ||
-            !response.data.business_analysis.hasOwnProperty("주요기능") ||
-            !response.data.business_analysis["명칭"] ||
-            !response.data.business_analysis["주요_목적_및_특징"].length ||
-            !response.data.business_analysis["주요기능"].length ||
-            !response.data.category.hasOwnProperty("first") ||
-            !response.data.category.hasOwnProperty("second") ||
-            !response.data.category.hasOwnProperty("third") ||
-            !response.data.category.first ||
-            !response.data.category.second ||
-            !response.data.category.third
-        )
-        ) {
-          attempts += 1;
+      businessData = response.data.business_analysis;
+      categoryData = response.data.category;
 
-          response = await axios.post(
-            "https://wishresearch.kr/person/business_category",
-            data,
-            axiosConfig
-          );
-        }
-
-        businessData = response.data.business_analysis;
-        categoryData = response.data.category;
-
-        const updatedBusinessAnalysis = {
-          input: businessAnalysis.input,
-          title: businessData["명칭"],
-          characteristics: businessData["주요_목적_및_특징"],
-          features: businessData["주요기능"],
-          category: categoryData
-        }
-        if (attempts >= maxAttempts) {
-          navigate("/Main");
-        } else {
-          setBusinessAnalysis(updatedBusinessAnalysis);
-          setTempBusinessAnalysis(updatedBusinessAnalysis);
-        }
-        setCategoryColor({
-          first: getCategoryColor(categoryData.first),
-          second: getCategoryColor(categoryData.second),
-          third: getCategoryColor(categoryData.third)
-        });
-        saveConversation({ changingConversation : {businessAnalysis : updatedBusinessAnalysis }})
+      const updatedBusinessAnalysis = {
+        input: businessAnalysis.input,
+        title: businessData["명칭"],
+        characteristics: businessData["주요_목적_및_특징"],
+        features: businessData["주요기능"],
+        category: categoryData,
+      };
+      if (attempts >= maxAttempts) {
+        navigate("/Main");
+      } else {
+        setBusinessAnalysis(updatedBusinessAnalysis);
+        setTempBusinessAnalysis(updatedBusinessAnalysis);
+      }
+      setCategoryColor({
+        first: getCategoryColor(categoryData.first),
+        second: getCategoryColor(categoryData.second),
+        third: getCategoryColor(categoryData.third),
+      });
+      await updateProjectOnServer(
+        projectId,
+        {
+          businessAnalysis: updatedBusinessAnalysis,
+        },
+        isLoggedIn
+      );
     } catch (error) {
       console.error("Error in handleRegenerate:", error);
     } finally {
@@ -243,52 +315,52 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
 
   return (
     <>
-        <Title>
-            <h3>비즈니스 분석</h3>
-            {!personaButtonState1 && personaStep === 1 && (
-              <ButtonGroup>
-                <IconButton onClick={() => handleRegenerate()}>
-                    <img src={images.IconRepeatSquare} alt="재생성" />
-                    <span>재생성하기</span>
-                </IconButton>
-                <IconButton>
-                    <img src={images.IconRepeatSquare} alt="수정" />
-                    <span>수정하기</span>
-                </IconButton>
-              </ButtonGroup>
-            )}
-        </Title>
+      <Title>
+        <h3>비즈니스 분석</h3>
+        {!personaButtonState1 && personaStep === 1 && (
+          <ButtonGroup>
+            <IconButton onClick={() => handleRegenerate()}>
+              <img src={images.IconRepeatSquare} alt="재생성" />
+              <span>재생성하기</span>
+            </IconButton>
+            <IconButton>
+              <img src={images.IconRepeatSquare} alt="수정" />
+              <span>수정하기</span>
+            </IconButton>
+          </ButtonGroup>
+        )}
+      </Title>
       {personaButtonState1 ? (
-        <CardWrap >
-         <Card>
-          <AtomLoader />
-         </Card>
+        <CardWrap>
+          <Card>
+            <AtomLoader />
+          </Card>
         </CardWrap>
       ) : (
         <CardWrap>
-            <Card>
-                <CardTitle>
-                    <h2>{businessAnalysis.title}</h2>
-                    <TagWrap>
-                    <Tag color={categoryColor.first} />
-                    <Tag color={categoryColor.second} />
-                    <Tag color={categoryColor.third} />
-                    </TagWrap>
-                    {personaStep > 2 && (
-                    <ToggleButton 
-                        showContent={showCardContent}
-                        onClick={toggleCardContent}
-                    >
-                        {showCardContent ? '' : ''}
-                    </ToggleButton>
-                    )}
-                </CardTitle>
-                {showCardContent && (
-                    <CardContent>
-                    <p>{businessAnalysis.characteristics}</p>
-                    </CardContent>
-                )}
-            </Card>
+          <Card>
+            <CardTitle>
+              <h2>{businessAnalysis.title}</h2>
+              <TagWrap>
+                <Tag color={categoryColor.first} />
+                <Tag color={categoryColor.second} />
+                <Tag color={categoryColor.third} />
+              </TagWrap>
+              {personaStep > 2 && (
+                <ToggleButton
+                  showContent={showCardContent}
+                  onClick={toggleCardContent}
+                >
+                  {showCardContent ? "" : ""}
+                </ToggleButton>
+              )}
+            </CardTitle>
+            {showCardContent && (
+              <CardContent>
+                <p>{businessAnalysis.characteristics}</p>
+              </CardContent>
+            )}
+          </Card>
         </CardWrap>
       )}
     </>
@@ -318,7 +390,7 @@ const IconButton = styled.button`
   display: flex;
   align-items: center;
   gap: 4px;
-  font-family: 'Pretendard', 'Poppins';
+  font-family: "Pretendard", "Poppins";
   font-size: 0.75rem;
   color: ${palette.chatBlue};
   padding: 4px 8px;
@@ -374,156 +446,180 @@ const Tag = styled.span`
   border-radius: 15px;
 
   &::before {
-    content: "${props => {
-      switch(props.color) {
-        case 'Red': return '광고, 마케팅';
-        case 'LavenderMagenta': return '교육';
-        case 'Amethyst': return '금융, 보험, 핀테크';
-        case 'VistaBlue': return '게임';
-        case 'BlueYonder': return '모빌리티, 교통';
-        case 'MidnightBlue': return '물류';
-        case 'ButtonBlue': return '부동산, 건설';
-        case 'ButtonBlue': return '뷰티, 화장품';
-        case 'MiddleBlueGreen': return 'AI, 딥테크, 블록체인';
-        case 'GreenSheen': return '소셜미디어, 커뮤니티';
-        case 'TropicalRainForest': return '여행, 레저';
-        case 'DollarBill': return '유아 출산';
-        case 'Olivine': return '인사, 비즈니스, 법률';
-        case 'ChineseGreen': return '제조, 하드웨어';
-        case 'Jonquil': return '커머스';
-        case 'PastelOrange': return '콘텐츠, 예술';
-        case 'Tangerine': return '통신, 보안, 데이터';
-        case 'Copper': return '패션';
-        case 'Shadow': return '푸드, 농업';
-        case 'Tuscany': return '환경, 에너지';
-        case 'VeryLightTangelo': return '홈 리빙, 펫';
-        case 'Orange': return '헬스케어, 바이오';
-        case 'CarnationPink': return '피트니스, 스포츠';
-        default: return '';
+    content: "${(props) => {
+      switch (props.color) {
+        case "Red":
+          return "광고, 마케팅";
+        case "LavenderMagenta":
+          return "교육";
+        case "Amethyst":
+          return "금융, 보험, 핀테크";
+        case "VistaBlue":
+          return "게임";
+        case "BlueYonder":
+          return "모빌리티, 교통";
+        case "MidnightBlue":
+          return "물류";
+        case "ButtonBlue":
+          return "부동산, 건설";
+        case "ButtonBlue":
+          return "뷰티, 화장품";
+        case "MiddleBlueGreen":
+          return "AI, 딥테크, 블록체인";
+        case "GreenSheen":
+          return "소셜미디어, 커뮤니티";
+        case "TropicalRainForest":
+          return "여행, 레저";
+        case "DollarBill":
+          return "유아 출산";
+        case "Olivine":
+          return "인사, 비즈니스, 법률";
+        case "ChineseGreen":
+          return "제조, 하드웨어";
+        case "Jonquil":
+          return "커머스";
+        case "PastelOrange":
+          return "콘텐츠, 예술";
+        case "Tangerine":
+          return "통신, 보안, 데이터";
+        case "Copper":
+          return "패션";
+        case "Shadow":
+          return "푸드, 농업";
+        case "Tuscany":
+          return "환경, 에너지";
+        case "VeryLightTangelo":
+          return "홈 리빙, 펫";
+        case "Orange":
+          return "헬스케어, 바이오";
+        case "CarnationPink":
+          return "피트니스, 스포츠";
+        default:
+          return "";
       }
     }}";
   }
-  
+
   ${({ color }) => {
-    switch(color) {
-      case 'Red':
+    switch (color) {
+      case "Red":
         return `
           color: #E90102;
           background: rgba(233, 1, 2, 0.06);
         `;
-      case 'LavenderMagenta':
+      case "LavenderMagenta":
         return `
           color: #ED7EED;
           background: rgba(237, 126, 237, 0.06);
         `;
-      case 'Amethyst':
+      case "Amethyst":
         return `
           color: #8B61D1;
           background: rgba(139, 97, 209, 0.06);
         `;
-      case 'VistaBlue':
+      case "VistaBlue":
         return `
           color: #8B61D1;
           background: rgba(125, 140, 225, 0.06);
         `;
-      case 'BlueYonder':
+      case "BlueYonder":
         return `
           color: #8B61D1;
           background: rgba(84, 113, 171, 0.06);
         `;
-      case 'MidnightBlue':
+      case "MidnightBlue":
         return `
           color: #03458F;
           background: rgba(3, 69, 143, 0.06);
         `;
-      case 'ButtonBlue':
+      case "ButtonBlue":
         return `
           color: #20B1EA;
           background: rgba(32, 177, 234, 0.06);
         `;
-      case 'CeruleanFrost':
+      case "CeruleanFrost":
         return `
           color: #5E9EBF;
           background: rgba(94, 158, 191, 0.06);
         `;
-      case 'MiddleBlueGreen':
+      case "MiddleBlueGreen":
         return `
           color: #7DCED2;
           background: rgba(125, 206, 210, 0.06);
 
         `;
-      case 'GreenSheen':
+      case "GreenSheen":
         return `
           color: #74B49C;
           background: rgba(116, 180, 156, 0.06);
         `;
-      case 'TropicalRainForest':
+      case "TropicalRainForest":
         return `
           color: #027355;
           background: rgba(2, 115, 85, 0.06);
         `;
-      case 'DollarBill':
+      case "DollarBill":
         return `
           color: #8DC955;
           background: rgba(141, 201, 85, 0.06);
         `;
-      case 'Olivine':
+      case "Olivine":
         return `
           color: #AABC76;
           background: rgba(170, 188, 118, 0.06);
         `;
-      case 'ChineseGreen':
+      case "ChineseGreen":
         return `
           color: #C7D062;
           background: rgba(199, 208, 98, 0.06);
         `;
-      case 'Jonquil':
+      case "Jonquil":
         return `
           color: #F7CD17;
           background: rgba(247, 205, 23, 0.06);
-        `; 
-      case 'PastelOrange':
+        `;
+      case "PastelOrange":
         return `
           color: #FFBB52;
           background: rgba(255, 187, 82, 0.06);
         `;
-      case 'Tangerine':
+      case "Tangerine":
         return `
           color: #F48D0B;
           background: rgba(244, 141, 11, 0.06);
         `;
-      case 'Copper':
+      case "Copper":
         return `
           color: #BC742F;
           background: rgba(188, 116, 47, 0.06);
         `;
-      case 'Shadow':
+      case "Shadow":
         return `
           color: #8C725B;
           background: rgba(140, 114, 91, 0.06);
         `;
-      case 'Tuscany':
+      case "Tuscany":
         return `
           color: #B1A098;
           background: rgba(177, 160, 152, 0.06);
         `;
-      case 'VeryLightTangelo':
+      case "VeryLightTangelo":
         return `
           color: #FAAD80;
           background: rgba(250, 173, 128, 0.06);
         `;
-      case 'Orange':
+      case "Orange":
         return `
           color: #FC6602;
           background: rgba(252, 102, 2, 0.06);
         `;
-      case 'CarnationPink':
+      case "CarnationPink":
         return `
           color: #FFA8B9;
           background: rgba(255, 168, 185, 0.06);
         `;
       default:
-        return '';
+        return "";
     }
   }}
 `;
@@ -538,7 +634,7 @@ const ToggleButton = styled.button`
   display: flex;
   align-items: center;
   gap: 4px;
-  font-family: 'Pretendard', 'Poppins';
+  font-family: "Pretendard", "Poppins";
   font-size: 0.75rem;
   color: ${palette.chatBlue};
   padding: 4px 8px;
@@ -551,15 +647,16 @@ const ToggleButton = styled.button`
     position: absolute;
     left: 50%;
     top: 50%;
-    transform: ${props => props.showContent 
-      ? 'translate(-50%, -50%) rotate(225deg)' 
-      : 'translate(-50%, -50%) rotate(45deg)'};
+    transform: ${(props) =>
+      props.showContent
+        ? "translate(-50%, -50%) rotate(225deg)"
+        : "translate(-50%, -50%) rotate(45deg)"};
     width: 10px;
     height: 10px;
     border-bottom: 2px solid ${palette.gray300};
     border-right: 2px solid ${palette.gray300};
-    transition: all .5s;
-    content: '';
+    transition: all 0.5s;
+    content: "";
   }
 `;
 
