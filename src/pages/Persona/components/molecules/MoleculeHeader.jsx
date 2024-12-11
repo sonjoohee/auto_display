@@ -1,12 +1,19 @@
 import React from "react";
 import styled, { css } from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
+import { useAtom } from "jotai";
+import { BUSINESS_ANALYSIS } from "../../../AtomStates";
 
 const MoleculeHeader = () => {
+  const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
   return (
     <HeaderWrap>
+      {businessAnalysis.title && (
+        <h1>{businessAnalysis.title}</h1>
+      )}
+
       <div className="gnb">
         <Link to="/">
           <img src={images.IconBell} alt="" />
@@ -31,7 +38,14 @@ const HeaderWrap = styled.div`
   padding:10px 28px;
   border-bottom: 1px solid ${palette.lineGray};
   background: ${palette.white};
-  z-index: 100;
+  z-index: 99;
+
+  h1 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size:1rem;
+  }
 
   .gnb {
     display:flex;
