@@ -19,12 +19,12 @@ import {
   REQUEST_PERSONA_LIST,
   PROJECT_ID,
 } from "../../../AtomStates";
-import { 
-  ContentsWrap, 
+import {
+  ContentsWrap,
   ContentSection,
-  MainContent, 
-  AnalysisWrap, 
-  MainSection, 
+  MainContent,
+  AnalysisWrap,
+  MainSection,
   Title,
   CardWrap,
   CustomizePersona,
@@ -42,16 +42,17 @@ import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
 import MoleculePersonaCard from "../molecules/MoleculePersonaCard";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
+import { updateProjectReportOnServer } from "../../../../utils/indexedDB";
 import OrganismBusinessAnalysis from "../organisms/OrganismBisinessAnalysis";
 import AtomLoader from "../atoms/AtomLoader";
 import PopupWrap from "../../../../assets/styles/Popup";
+import { getProjectReportByIdFromIndexedDB } from "../../../../utils/indexedDB";
 
 const PagePersona2 = () => {
   const [requestPersonaListReady, setRequestPersonaListReady] = useState(false);
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
-  const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
     IS_PERSONA_ACCESSIBLE
   );
@@ -131,23 +132,23 @@ const PagePersona2 = () => {
       // 1. 로그인 여부 확인
       if (isLoggedIn) {
         // 2. 로그인 상태라면 서버에서 새로운 대화 ID를 생성하거나, 저장된 대화를 불러옴
-        // const savedConversation = await getConversationByIdFromIndexedDB(
-        //   conversationId,
-        //   isLoggedIn
-        // );
-        // if (savedConversation) {
-        //   const analysisData = savedConversation.analysisReportData || {};
-        //   setTitleOfBusinessInfo(analysisData.title || "");
-        //   setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
-        //   setInputBusinessInfo(savedConversation.inputBusinessInfo);
-        //   setPersonaList(savedConversation.personaList);
-        // }
+        const savedProjectInfo = await getProjectReportByIdFromIndexedDB(
+          projectId,
+          isLoggedIn
+        );
+        if (savedProjectInfo) {
+          const analysisData = savedProjectInfo.analysisReportData || {};
+          setTitleOfBusinessInfo(analysisData.title || "");
+          setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
+          setInputBusinessInfo(savedProjectInfo.inputBusinessInfo);
+          setPersonaList(savedProjectInfo.personaList);
+        }
         // setIsLoadingPage(false); // 로딩 완료
       }
     };
 
     loadConversation();
-  }, [conversationId, isLoggedIn, navigate]);
+  }, [projectId, isLoggedIn, navigate]);
 
   // if (isLoadingPage) {
   //   return <div>Loading...</div>;
@@ -271,7 +272,7 @@ const PagePersona2 = () => {
           };
 
           setRequestPersonaList(requestPersonaData);
-          await updateProjectOnServer(
+          await updateProjectReportOnServer(
             projectId,
             {
               personaList: personaList,
@@ -302,7 +303,7 @@ const PagePersona2 = () => {
 
     setPersonaStep(3);
     setIsPersonaAccessible(true);
-    navigate(`/Persona/3/${conversationId}`, { replace: true });
+    navigate(`/Persona/3/${projectId}`, { replace: true });
   };
 
   return (
@@ -318,67 +319,77 @@ const PagePersona2 = () => {
               <OrganismBusinessAnalysis personaStep={2} />
               <CardWrap>
                 {/* 비즈니스 맞춤 페르소나 */}
-                  <>
-                    <CustomizePersona>
-                      <Title Column>
-                        <h3>맞춤 페르소나</h3>
-                        <p>추천된 페르소나를 선택하고 인터뷰를 진행하세요. (최대 5명까지 선택이 가능합니다)</p>
-                      </Title>
-                      
-                      <ContentSection>
-                        {personaButtonState2 ? (
-                          <PersonaCards>
-                            <AtomLoader />
-                          </PersonaCards>
-                        ) : (
-                          <PersonaCards>
-                            {personaList.unselected.map((persona, index) => (
-                              <MoleculePersonaCard 
-                                key={index}
-                                title={persona.persona}
-                                keywords={persona.keyword.split(',')}
-                                isBasic={true}
-                                onSelect={(isSelected) => handlePersonaSelect(persona, isSelected)}
-                                currentSelection={selectedPersonas.length}
-                              />
-                            ))}
-                            {requestPersonaList.persona.map((persona, index) => (
-                              <MoleculePersonaCard 
-                                key={index}
-                                title={persona[`persona_${index + 1}`].persona}
-                                keywords={persona[`persona_${index + 1}`].keyword}
-                                isCustom={true}
-                                // onSelect={(isSelected) => handlePersonaSelect(persona, isSelected)}
-                                onClick={() => setShowPopup(true)}
-                                currentSelection={selectedPersonas.length}
-                              />
-                            ))}
-                          </PersonaCards>
-                        )}
-                        {!personaButtonState2 &&
-                          <BottomBar>
-                            <p>
-                              {selectedPersonas.length > 0
-                                ? <>선택하신 <span>{selectedPersonas.length}명</span>의 페르소나와 인터뷰 하시겠어요?</>
-                                : '페르소나를 선택하고 그들의 인터뷰를 시작해 보세요'
+                <>
+                  <CustomizePersona>
+                    <Title Column>
+                      <h3>맞춤 페르소나</h3>
+                      <p>
+                        추천된 페르소나를 선택하고 인터뷰를 진행하세요. (최대
+                        5명까지 선택이 가능합니다)
+                      </p>
+                    </Title>
+
+                    <ContentSection>
+                      {personaButtonState2 ? (
+                        <PersonaCards>
+                          <AtomLoader />
+                        </PersonaCards>
+                      ) : (
+                        <PersonaCards>
+                          {personaList.unselected.map((persona, index) => (
+                            <MoleculePersonaCard
+                              key={index}
+                              title={persona.persona}
+                              keywords={persona.keyword.split(",")}
+                              isBasic={true}
+                              onSelect={(isSelected) =>
+                                handlePersonaSelect(persona, isSelected)
                               }
-                            </p>
-                            <Button 
-                              Large 
-                              Primary 
-                              Fill={selectedPersonas.length > 0} 
-                              Edit={selectedPersonas.length === 0} 
-                              disabled={selectedPersonas.length === 0}
-                              onClick={handleStartInterview}
-                            >
-                              인터뷰 시작하기
-                              <img src={images.ChevronRight} alt="" />
-                            </Button>
-                          </BottomBar>
-                        }
-                      </ContentSection>
-                    </CustomizePersona>
-                  </>
+                              currentSelection={selectedPersonas.length}
+                            />
+                          ))}
+                          {requestPersonaList.persona.map((persona, index) => (
+                            <MoleculePersonaCard
+                              key={index}
+                              title={persona[`persona_${index + 1}`].persona}
+                              keywords={persona[`persona_${index + 1}`].keyword}
+                              isCustom={true}
+                              // onSelect={(isSelected) => handlePersonaSelect(persona, isSelected)}
+                              onClick={() => setShowPopup(true)}
+                              currentSelection={selectedPersonas.length}
+                            />
+                          ))}
+                        </PersonaCards>
+                      )}
+                      {!personaButtonState2 && (
+                        <BottomBar>
+                          <p>
+                            {selectedPersonas.length > 0 ? (
+                              <>
+                                선택하신{" "}
+                                <span>{selectedPersonas.length}명</span>의
+                                페르소나와 인터뷰 하시겠어요?
+                              </>
+                            ) : (
+                              "페르소나를 선택하고 그들의 인터뷰를 시작해 보세요"
+                            )}
+                          </p>
+                          <Button
+                            Large
+                            Primary
+                            Fill={selectedPersonas.length > 0}
+                            Edit={selectedPersonas.length === 0}
+                            disabled={selectedPersonas.length === 0}
+                            onClick={handleStartInterview}
+                          >
+                            인터뷰 시작하기
+                            <img src={images.ChevronRight} alt="" />
+                          </Button>
+                        </BottomBar>
+                      )}
+                    </ContentSection>
+                  </CustomizePersona>
+                </>
               </CardWrap>
             </MainSection>
 
@@ -398,9 +409,9 @@ const PagePersona2 = () => {
       </ContentsWrap>
 
       {showPopup && (
-        <PopupWrap 
+        <PopupWrap
           Warning
-          title="요청 상태의 페르소나는 선택이 제한됩니다." 
+          title="요청 상태의 페르소나는 선택이 제한됩니다."
           message="인터뷰를 진행하려면 모집 요청을 먼저 진행해주세요"
           buttonType="Outline"
           closeText="확인"
@@ -485,9 +496,9 @@ const BottomBar = styled.div`
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
   background: ${palette.white};
 
-//   button:disabled {
-//     cursor: default;
-//   }
+  //   button:disabled {
+  //     cursor: default;
+  //   }
 
   p {
     font-size: 0.875rem;

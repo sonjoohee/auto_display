@@ -1,25 +1,41 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { palette } from '../../../../assets/styles/Palette';
-import images from '../../../../assets/styles/Images';
-import { Button } from '../../../../assets/styles/ButtonStyle'
-import { useAtom } from 'jotai';
-import { BUSINESS_ANALYSIS, SELECTED_INTERVIEW_PURPOSE, INTERVIEW_QUESTION_LIST, IS_LOADING } from '../../../AtomStates';
-import axios from 'axios';
+import React, { useState } from "react";
+import styled from "styled-components";
+import { palette } from "../../../../assets/styles/Palette";
+import images from "../../../../assets/styles/Images";
+import { Button } from "../../../../assets/styles/ButtonStyle";
+import { useAtom } from "jotai";
+import {
+  BUSINESS_ANALYSIS,
+  SELECTED_INTERVIEW_PURPOSE,
+  INTERVIEW_QUESTION_LIST,
+  PROJECT_ID,
+  IS_LOGGED_IN,
+  IS_LOADING,
+} from "../../../AtomStates";
+import axios from "axios";
+import { updateProjectReportOnServer } from "../../../../utils/indexedDB";
 
-const MoleculeInterviewCard = ({ 
-  title, 
-  description, 
-  isSelected, 
+const MoleculeInterviewCard = ({
+  title,
+  description,
+  isSelected,
   onSelect,
   interviewPurpose,
 }) => {
+  const [projectId] = useAtom(PROJECT_ID);
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isLoadingQuestion, setIsLoadingQuestion] = useState(false);
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
-  const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(SELECTED_INTERVIEW_PURPOSE);
-  const [interviewQuestionListState, setInterviewQuestionListState] = useState([]);
-  const [interviewQuestionList, setInterviewQuestionList] = useAtom(INTERVIEW_QUESTION_LIST);
+  const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(
+    SELECTED_INTERVIEW_PURPOSE
+  );
+  const [interviewQuestionListState, setInterviewQuestionListState] = useState(
+    []
+  );
+  const [interviewQuestionList, setInterviewQuestionList] = useAtom(
+    INTERVIEW_QUESTION_LIST
+  );
 
   const axiosConfig = {
     timeout: 100000, // 100초
@@ -31,62 +47,80 @@ const MoleculeInterviewCard = ({
 
   const loadInterviewQuestion = async () => {
     const existingQuestions = interviewQuestionListState.find(
-      item => item.theory_name === title
+      (item) => item.theory_name === title
     );
-  
+
     // 이미 존재하는 경우 함수 종료
     if (existingQuestions) {
       return;
     }
     try {
-        setIsLoadingQuestion(true);
-        
-        let data = {
-          business_idea : businessAnalysis.input,
-          business_analysis_data : {
-            title: businessAnalysis.title,
-            characteristics: businessAnalysis.characteristics,
-            features: businessAnalysis.features
-          },
-          theory_name: title
-        };
+      setIsLoadingQuestion(true);
+      let data = {
+        business_idea: businessAnalysis.input,
+        business_analysis_data: {
+          title: businessAnalysis.title,
+          characteristics: businessAnalysis.characteristics,
+          features: businessAnalysis.features,
+        },
+        theory_name: title,
+      };
 
-        let response = await axios.post(
+      let response = await axios.post(
+        "https://wishresearch.kr/person/persona_interview",
+        data,
+        axiosConfig
+      );
+
+      let questionList = response.data;
+      let retryCount = 0;
+      const maxRetries = 10;
+
+      while (
+        retryCount < maxRetries &&
+        (!response || !response.data || response.data.length !== 5)
+      ) {
+        response = await axios.post(
           "https://wishresearch.kr/person/persona_interview",
           data,
           axiosConfig
         );
+        retryCount++;
 
-        let questionList = response.data;
-        let retryCount = 0;
-        const maxRetries = 10;
-
-        while (retryCount < maxRetries && (
-          !response || 
-          !response.data || 
-          response.data.length !== 5
-        ))
+        questionList = response.data;
+      }
+      if (retryCount === maxRetries) {
+        throw new Error(
+          "Maximum retry attempts reached. Empty response persists."
+        );
+      }
+      setInterviewQuestionListState((prev) => [
+        ...prev,
         {
-          response = await axios.post(
-            "https://wishresearch.kr/person/persona_interview",
-            data,
-            axiosConfig
-          );
-          retryCount++;
+          theory_name: title,
+          questions: questionList,
+        },
+      ]);
+      // 새로운 데이터를 포함한 전체 리스트를 생성
+      const newQuestionList = [
+        ...interviewQuestionList,
+        {
+          theory_name: title,
+          questions: questionList,
+        },
+      ];
 
-          questionList = response.data;
-        }
-        if (retryCount === maxRetries) {
-          throw new Error("Maximum retry attempts reached. Empty response persists.");
-        }
-        setInterviewQuestionListState(prev => [...prev, {
-          theory_name: title,
-          questions: questionList
-        }]);
-        setInterviewQuestionList(prev => [...prev, {
-          theory_name: title,
-          questions: questionList
-        }]);
+      // 상태 업데이트와 서버 업데이트를 순차적으로 실행
+      setInterviewQuestionList(newQuestionList);
+
+      // 서버 업데이트 시 새로운 리스트를 직접 전달
+      await updateProjectReportOnServer(
+        projectId,
+        {
+          interviewQuestionList: newQuestionList,
+        },
+        isLoggedIn
+      );
     } catch (error) {
       console.error("Error in loadInterviewQuestion:", error);
     } finally {
@@ -97,47 +131,43 @@ const MoleculeInterviewCard = ({
   return (
     <CardContainer>
       <MainContent>
-        <CheckCircle 
-          $isSelected={isSelected}
-          onClick={() => onSelect(title)}
-        />
+        <CheckCircle $isSelected={isSelected} onClick={() => onSelect(title)} />
         <ContentWrapper>
           <TitleSection>
             <Title>{title}</Title>
           </TitleSection>
-          {description && (
-            <Description>{description}</Description>
-          )} 
+          {description && <Description>{description}</Description>}
         </ContentWrapper>
 
-        <ToggleButton 
-          $isExpanded={isExpanded} 
+        <ToggleButton
+          $isExpanded={isExpanded}
           onClick={async () => {
             if (!isExpanded) {
               await loadInterviewQuestion();
             }
             setIsExpanded(!isExpanded);
-          }} 
+          }}
         />
       </MainContent>
 
       {isExpanded && (
         <DescriptionSection $isExpanded={isExpanded}>
-        <ListUL>
-          {isLoadingQuestion ? (
-            <div>로딩중...</div>
-          ) : (
-            <ul>
-              {interviewQuestionListState
-                .find(item => item.theory_name === title)
-                ?.questions.slice(2, 5).map((item, index) => (
-                  <li key={index}>
-                    <span className="number">{index + 1}</span>
-                    {item.question}
-                  </li>
-                ))}
-            </ul>
-          )}
+          <ListUL>
+            {isLoadingQuestion ? (
+              <div>로딩중...</div>
+            ) : (
+              <ul>
+                {interviewQuestionListState
+                  .find((item) => item.theory_name === title)
+                  ?.questions.slice(2, 5)
+                  .map((item, index) => (
+                    <li key={index}>
+                      <span className="number">{index + 1}</span>
+                      {item.question}
+                    </li>
+                  ))}
+              </ul>
+            )}
           </ListUL>
         </DescriptionSection>
       )}
@@ -181,10 +211,10 @@ const CheckCircle = styled.div`
   height: 24px;
   border-radius: 50%;
   cursor: pointer;
-  background-image: ${props => props.$isSelected 
-    ? `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='11' stroke='%23226FFF' stroke-width='2'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='%23226FFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
-    : `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='11' stroke='%23E0E4EB' stroke-width='2'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='%23E0E4EB' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
-  };
+  background-image: ${(props) =>
+    props.$isSelected
+      ? `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='11' stroke='%23226FFF' stroke-width='2'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='%23226FFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
+      : `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='11' stroke='%23E0E4EB' stroke-width='2'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='%23E0E4EB' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`};
   transition: background-image 0.3s ease-in-out;
   cursor: pointer;
 `;
@@ -207,19 +237,20 @@ const Badge = styled.div`
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size:0.75rem;
+  font-size: 0.75rem;
   line-height: 1.2;
-  color: ${props => {
+  color: ${(props) => {
     if (props.Ready) return `#34C759`;
     else return palette.gray500;
   }};
   padding: 4px 8px;
   border-radius: 50px;
-  border: 1px solid ${props => {
-    if (props.Ready) return `#34C759`;
-    else return palette.outlineGray;
-  }};
-  background:${props => {
+  border: 1px solid
+    ${(props) => {
+      if (props.Ready) return `#34C759`;
+      else return palette.outlineGray;
+    }};
+  background: ${(props) => {
     if (props.Ready) return `rgba(52, 199, 89, 0.10)`;
     else return palette.gray50;
   }};
@@ -230,7 +261,7 @@ const ReadyIcon = styled.div`
   height: 0px;
   border-style: solid;
   border-width: 4px 0 4px 6px;
-  border-color: transparent transparent transparent #34C759;
+  border-color: transparent transparent transparent #34c759;
   transform: rotate(0deg);
 `;
 
@@ -274,14 +305,15 @@ const ToggleButton = styled.button`
     top: 50%;
     left: 50%;
     width: 10px;
-    height:10px;
-    transform: ${props => props.$isExpanded 
-      ? 'translate(-50%, -50%) rotate(45deg)' 
-      : 'translate(-50%, -50%) rotate(-135deg)'};
+    height: 10px;
+    transform: ${(props) =>
+      props.$isExpanded
+        ? "translate(-50%, -50%) rotate(45deg)"
+        : "translate(-50%, -50%) rotate(-135deg)"};
     margin-top: 2px;
     border-top: 1px solid ${palette.gray500};
     border-left: 1px solid ${palette.gray500};
-    transition: all .5s;
+    transition: all 0.5s;
   }
 `;
 
@@ -293,12 +325,10 @@ const DescriptionSection = styled.div`
   text-align: left;
   padding: 20px;
   border-radius: 10px;
-  border: ${props => props.$isTabContent 
-    ? `1px solid ${palette.outlineGray}`
-    : 'none' };
-  background: ${props => props.$isTabContent 
-    ? 'transparent'
-    : palette.chatGray};
+  border: ${(props) =>
+    props.$isTabContent ? `1px solid ${palette.outlineGray}` : "none"};
+  background: ${(props) =>
+    props.$isTabContent ? "transparent" : palette.chatGray};
 `;
 
 const ListUL = styled.div`
@@ -333,8 +363,7 @@ const ListUL = styled.div`
     height: 20px;
     color: ${palette.chatBlue};
     border-radius: 2px;
-    border: 1px solid rgba(34, 111, 255, 0.50);
+    border: 1px solid rgba(34, 111, 255, 0.5);
     background: rgba(34, 111, 255, 0.04);
   }
 `;
-

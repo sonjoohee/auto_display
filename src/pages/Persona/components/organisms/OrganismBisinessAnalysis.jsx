@@ -6,7 +6,10 @@ import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
-import { CustomInput, CustomTextarea } from "../../../../assets/styles/InputStyle";
+import {
+  CustomInput,
+  CustomTextarea,
+} from "../../../../assets/styles/InputStyle";
 import {
   TITLE_OF_BUSINESS_INFORMATION,
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
@@ -23,9 +26,9 @@ import {
 } from "../../../AtomStates";
 import AtomLoader from "../atoms/AtomLoader";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
+import { updateProjectReportOnServer } from "../../../../utils/indexedDB";
 
 const OrganismBusinessAnalysis = ({ personaStep }) => {
-
   const [isProjectIdReady, setIsProjectIdReady] = useState(false);
   const [projectId, setprojectId] = useAtom(PROJECT_ID);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
@@ -59,186 +62,185 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
   const [showCardContent, setShowCardContent] = useState(personaStep <= 2);
   const [categoryColor, setCategoryColor] = useAtom(CATEGORY_COLOR);
 
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [inputs, setInputs] = useState({
+    field1: {
+      value: "",
+      isValid: true,
+      error: null,
+    },
+    field2: {
+      value: "",
+      isValid: true,
+      error: null,
+    },
+  });
 
-    const [isEditMode, setIsEditMode] = useState(false);
-    const [inputs, setInputs] = useState({
+  // 입력 상태 확인 함수
+  const getInputStatus = (field) => {
+    if (field.error) return "error";
+    if (field.isValid) return "valid";
+    return "normal";
+  };
+
+  // 입력 핸들러
+  const handleChange = (e, fieldName) => {
+    const { value } = e.target;
+    setInputs((prev) => ({
+      ...prev,
+      [fieldName]: {
+        ...prev[fieldName],
+        value,
+        isValid: value.length > 0,
+        error: value.length === 0 ? "필수 입력 항목입니다." : null,
+      },
+    }));
+  };
+
+  const toggleCardContent = () => {
+    setShowCardContent(!showCardContent);
+  };
+
+  const handleEditClick = () => {
+    setIsEditMode(true);
+    setInputs({
       field1: {
-        value: "",
+        value: businessAnalysis.title,
         isValid: true,
-        error: null
+        error: null,
       },
       field2: {
-        value: "",
+        value: businessAnalysis.characteristics,
         isValid: true,
-        error: null
-      }
+        error: null,
+      },
     });
-  
-    // 입력 상태 확인 함수
-    const getInputStatus = (field) => {
-      if (field.error) return 'error';
-      if (field.isValid) return 'valid';
-      return 'normal';
-    };
-  
-    // 입력 핸들러
-    const handleChange = (e, fieldName) => {
-      const { value } = e.target;
-      setInputs(prev => ({
-        ...prev,
-        [fieldName]: {
-          ...prev[fieldName],
-          value,
-          isValid: value.length > 0,
-          error: value.length === 0 ? '필수 입력 항목입니다.' : null
-        }
-      }));
-    };
+  };
 
-    const toggleCardContent = () => {
-        setShowCardContent(!showCardContent);
+  const handleSaveClick = () => {
+    // 입력값 유효성 검사
+    if (inputs.field1.value && inputs.field2.value) {
+      // 새로운 비즈니스 분석 데이터 생성
+      const updatedBusinessAnalysis = {
+        ...businessAnalysis,
+        title: inputs.field1.value,
+        characteristics: inputs.field2.value,
       };
 
-      const handleEditClick = () => {
-        setIsEditMode(true);
-        setInputs({
-          field1: {
-            value: businessAnalysis.title,
-            isValid: true,
-            error: null
-          },
-          field2: {
-            value: businessAnalysis.characteristics,
-            isValid: true,
-            error: null
-          }
-        });
-      };
-    
-      const handleSaveClick = () => {
-        // 입력값 유효성 검사
-        if (inputs.field1.value && inputs.field2.value) {
-          // 새로운 비즈니스 분석 데이터 생성
-          const updatedBusinessAnalysis = {
-            ...businessAnalysis,
-            title: inputs.field1.value,
-            characteristics: inputs.field2.value
-          };
-          
-          // 상태 업데이트
-          setBusinessAnalysis(updatedBusinessAnalysis);
-          
-          // 대화 저장
-          
-          setIsEditMode(false);
-        }
-      };
+      // 상태 업데이트
+      setBusinessAnalysis(updatedBusinessAnalysis);
 
-      const handleUndoClick = () => {
-        setInputs(prev => ({
+      // 대화 저장
+
+      setIsEditMode(false);
+    }
+  };
+
+  const handleUndoClick = () => {
+    setInputs((prev) => ({
+      ...prev,
+      field1: {
+        ...prev.field1,
+        value: businessAnalysis.title,
+      },
+      field2: {
+        ...prev.field2,
+        value: businessAnalysis.characteristics,
+      },
+    }));
+  };
+
+  const handleAIDetailClick = async () => {
+    setPersonaButtonState1(1);
+    let businessData;
+    let categoryData;
+    let attempts = 0;
+    const maxAttempts = 5;
+
+    try {
+      setIsLoading(true);
+
+      const data = {
+        business_analysis_data: businessAnalysis,
+        keyword: inputs.field2.value,
+      };
+      let response = await axios.post(
+        "https://wishresearch.kr/person/business_category_modify",
+        data,
+        axiosConfig
+      );
+
+      // // 필요한 데이터가 없을 경우 재시도, 최대 5번
+      // while (
+      //     attempts < maxAttempts && (
+      //     !response || !response.data || typeof response.data !== "object" ||
+      //     !response.data.hasOwnProperty("business_analysis") ||
+      //     !response.data.hasOwnProperty("category") ||
+      //     !response.data.business_analysis.hasOwnProperty("명칭") ||
+      //     !response.data.business_analysis.hasOwnProperty("주요_목적_및_특징") ||
+      //     !response.data.business_analysis.hasOwnProperty("주요기능") ||
+      //     !response.data.business_analysis["명칭"] ||
+      //     !response.data.business_analysis["주요_목적_및_특징"].length ||
+      //     !response.data.business_analysis["주요기능"].length ||
+      //     !response.data.category.hasOwnProperty("first") ||
+      //     !response.data.category.hasOwnProperty("second") ||
+      //     !response.data.category.hasOwnProperty("third") ||
+      //     !response.data.category.first ||
+      //     !response.data.category.second ||
+      //     !response.data.category.third
+      // )
+      // ) {
+      //   attempts += 1;
+
+      //   response = await axios.post(
+      //     "https://wishresearch.kr/person/business_category",
+      //     data,
+      //     axiosConfig
+      //   );
+      // }
+
+      businessData = response.data.business_analysis;
+      categoryData = response.data.category;
+
+      if (attempts >= maxAttempts) {
+        navigate("/Main");
+      } else {
+        setInputs((prev) => ({
           ...prev,
-          field1: {
-            ...prev.field1,
-            value: businessAnalysis.title
-          },
           field2: {
             ...prev.field2,
-            value: businessAnalysis.characteristics
-          }
+            value: businessData["추가_주요_목적_및_특징"],
+          },
         }));
-      };
+      }
+      setCategoryColor({
+        first: getCategoryColor(categoryData.first),
+        second: getCategoryColor(categoryData.second),
+        third: getCategoryColor(categoryData.third),
+      });
+      // saveConversation({ changingConversation : {businessAnalysis : updatedBusinessAnalysis }})
+    } catch (error) {
+      console.error("Error in handleRegenerate:", error);
+    } finally {
+      setPersonaButtonState1(0);
+      setIsLoading(false);
+    }
+  };
 
-      const handleAIDetailClick = async () => {
-        setPersonaButtonState1(1);
-        let businessData;
-        let categoryData;
-        let attempts = 0;
-        const maxAttempts = 5;
-    
-        try {
-            setIsLoading(true);
-            
-            const data = {
-              business_analysis_data: businessAnalysis,
-              keyword: inputs.field2.value,
-            };
-            let response = await axios.post(
-              "https://wishresearch.kr/person/business_category_modify",
-              data,
-              axiosConfig
-            );
-    
-            // // 필요한 데이터가 없을 경우 재시도, 최대 5번
-            // while ( 
-            //     attempts < maxAttempts && (
-            //     !response || !response.data || typeof response.data !== "object" ||
-            //     !response.data.hasOwnProperty("business_analysis") ||
-            //     !response.data.hasOwnProperty("category") ||
-            //     !response.data.business_analysis.hasOwnProperty("명칭") ||
-            //     !response.data.business_analysis.hasOwnProperty("주요_목적_및_특징") ||
-            //     !response.data.business_analysis.hasOwnProperty("주요기능") ||
-            //     !response.data.business_analysis["명칭"] ||
-            //     !response.data.business_analysis["주요_목적_및_특징"].length ||
-            //     !response.data.business_analysis["주요기능"].length ||
-            //     !response.data.category.hasOwnProperty("first") ||
-            //     !response.data.category.hasOwnProperty("second") ||
-            //     !response.data.category.hasOwnProperty("third") ||
-            //     !response.data.category.first ||
-            //     !response.data.category.second ||
-            //     !response.data.category.third
-            // )
-            // ) {
-            //   attempts += 1;
-    
-            //   response = await axios.post(
-            //     "https://wishresearch.kr/person/business_category",
-            //     data,
-            //     axiosConfig
-            //   );
-            // }
-    
-            businessData = response.data.business_analysis;
-            categoryData = response.data.category;
+  const textareaRef = useRef(null);
 
-            if (attempts >= maxAttempts) {
-              navigate("/Main");
-            } else {
-              setInputs(prev => ({
-                ...prev,
-                field2: {
-                  ...prev.field2,
-                  value: businessData["추가_주요_목적_및_특징"]
-                }
-              }));
-            }
-            setCategoryColor({
-              first: getCategoryColor(categoryData.first),
-              second: getCategoryColor(categoryData.second),
-              third: getCategoryColor(categoryData.third)
-            });
-            // saveConversation({ changingConversation : {businessAnalysis : updatedBusinessAnalysis }})
-        } catch (error) {
-          console.error("Error in handleRegenerate:", error);
-        } finally {
-          setPersonaButtonState1(0);
-          setIsLoading(false);
-        }
-      };
-    
-      const textareaRef = useRef(null);
-    
-      const adjustHeight = () => {
-        const textarea = textareaRef.current;
-        if (textarea) {
-          textarea.style.height = 'auto';
-          const newHeight = Math.min(Math.max(textarea.scrollHeight, 200), 500);
-          textarea.style.height = newHeight + 'px';
-        }
-      };
-    
-      useEffect(() => {
-        adjustHeight();
-      }, [inputs.field2.value]);
+  const adjustHeight = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = "auto";
+      const newHeight = Math.min(Math.max(textarea.scrollHeight, 200), 500);
+      textarea.style.height = newHeight + "px";
+    }
+  };
+
+  useEffect(() => {
+    adjustHeight();
+  }, [inputs.field2.value]);
 
   const getCategoryColor = (category) => {
     switch (category) {
@@ -377,7 +379,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
             navigate("/Main");
           } else {
             setBusinessAnalysis(updatedBusinessAnalysis);
-            await updateProjectOnServer(
+            await updateProjectReportOnServer(
               projectId,
               {
                 businessAnalysis: updatedBusinessAnalysis,
@@ -471,7 +473,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
         second: getCategoryColor(categoryData.second),
         third: getCategoryColor(categoryData.third),
       });
-      await updateProjectOnServer(
+      await updateProjectReportOnServer(
         projectId,
         {
           businessAnalysis: updatedBusinessAnalysis,
@@ -488,114 +490,114 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
 
   return (
     <>
-
-        <Title>
-            <h3>비즈니스 분석</h3>
-            {!personaButtonState1 && personaStep === 1 && (
-              <ButtonGroup>
-                {isEditMode ? (
-                  <IconButton onClick={handleSaveClick}>
-                    <img src={images.IconRepeatSquare} alt="저장하기" />
-                    <span>저장하기</span>
-                  </IconButton>
-                ) : (
-                  <>
-                    <IconButton onClick={handleRegenerate}>
-                      <img src={images.IconRepeatSquare} alt="재생성" />
-                      <span>재생성하기</span>
-                    </IconButton>
-                    <IconButton onClick={handleEditClick}>
-                      <img src={images.IconRepeatSquare} alt="수정하기" />
-                      <span>수정하기</span>
-                    </IconButton>
-                  </>
-                )}
-              </ButtonGroup>
+      <Title>
+        <h3>비즈니스 분석</h3>
+        {!personaButtonState1 && personaStep === 1 && (
+          <ButtonGroup>
+            {isEditMode ? (
+              <IconButton onClick={handleSaveClick}>
+                <img src={images.IconRepeatSquare} alt="저장하기" />
+                <span>저장하기</span>
+              </IconButton>
+            ) : (
+              <>
+                <IconButton onClick={handleRegenerate}>
+                  <img src={images.IconRepeatSquare} alt="재생성" />
+                  <span>재생성하기</span>
+                </IconButton>
+                <IconButton onClick={handleEditClick}>
+                  <img src={images.IconRepeatSquare} alt="수정하기" />
+                  <span>수정하기</span>
+                </IconButton>
+              </>
             )}
-        </Title>
+          </ButtonGroup>
+        )}
+      </Title>
       {personaButtonState1 ? (
-         <Card>
+        <Card>
           <AtomLoader />
-         </Card>
+        </Card>
+      ) : isEditMode ? (
+        <Card Edit>
+          <FormEdit>
+            <span>비즈니스 명</span>
+            <FormBox status={getInputStatus(inputs.field1)}>
+              <CustomInput
+                Edit
+                type="text"
+                placeholder="비즈니스 명을 입력해주세요."
+                value={inputs.field1.value}
+                onChange={(e) => handleChange(e, "field1")}
+                status={getInputStatus(inputs.field1)}
+              />
+            </FormBox>
+          </FormEdit>
+
+          <FormEdit>
+            <span>태그</span>
+            <FormBox>
+              <TagWrap>
+                <Tag color={categoryColor.first} />
+                <Tag color={categoryColor.second} />
+                <Tag color={categoryColor.third} />
+              </TagWrap>
+            </FormBox>
+          </FormEdit>
+
+          <FormEdit>
+            <span>비즈니스 설명</span>
+            <FormBox status={getInputStatus(inputs.field2)}>
+              <CustomTextarea
+                Edit
+                ref={textareaRef}
+                value={inputs.field2.value}
+                onChange={(e) => {
+                  handleChange(e, "field2");
+                  adjustHeight();
+                }}
+                status={getInputStatus(inputs.field2)}
+                // style={{ height: 'auto', overflow: 'hidden', resize: 'none' }}
+              />
+
+              <EditButtonGroup>
+                <IconButton onClick={handleUndoClick}>
+                  <img src={images.ClockCounterclockwise} alt="" />
+                  <span>이전으로 되돌리기</span>
+                </IconButton>
+                <IconButton onClick={handleAIDetailClick}>
+                  <img src={images.MagicStick} alt="" />
+                  <span>AI로 다듬기</span>
+                </IconButton>
+              </EditButtonGroup>
+            </FormBox>
+          </FormEdit>
+        </Card>
       ) : (
-        isEditMode ? (
-          <Card Edit>
-            <FormEdit>
-              <span>비즈니스 명</span>
-              <FormBox status={getInputStatus(inputs.field1)}>
-                <CustomInput Edit
-                  type="text" 
-                  placeholder="비즈니스 명을 입력해주세요."
-                  value={inputs.field1.value}
-                  onChange={(e) => handleChange(e, 'field1')}
-                  status={getInputStatus(inputs.field1)}
-                />
-              </FormBox>
-            </FormEdit>
-  
-            <FormEdit>
-              <span>태그</span>
-              <FormBox>
-                <TagWrap>
-                  <Tag color={categoryColor.first} />
-                  <Tag color={categoryColor.second} />
-                  <Tag color={categoryColor.third} />
-                </TagWrap>
-              </FormBox>
-            </FormEdit>
-  
-            <FormEdit>
-              <span>비즈니스 설명</span>
-              <FormBox status={getInputStatus(inputs.field2)}>
-                <CustomTextarea Edit 
-                  ref={textareaRef}
-                  value={inputs.field2.value}
-                  onChange={(e) => {
-                    handleChange(e, 'field2');
-                    adjustHeight();
-                  }}
-                  status={getInputStatus(inputs.field2)}
-                  // style={{ height: 'auto', overflow: 'hidden', resize: 'none' }}
-                />
-  
-                <EditButtonGroup>
-                  <IconButton onClick={handleUndoClick}>
-                    <img src={images.ClockCounterclockwise} alt="" />
-                    <span>이전으로 되돌리기</span>
-                  </IconButton>
-                  <IconButton onClick={handleAIDetailClick}>
-                    <img src={images.MagicStick} alt="" />
-                    <span>AI로 다듬기</span>
-                  </IconButton>
-                </EditButtonGroup>
-              </FormBox>
-            </FormEdit>
-          </Card>
-        ) : (
-          <Card>
-              <CardTitle>
-                  <h2>{businessAnalysis.title}</h2>
-                  <TagWrap>
-                  <Tag color={categoryColor.first} />
-                  <Tag color={categoryColor.second} />
-                  <Tag color={categoryColor.third} />
-                  </TagWrap>
-                  {personaStep > 2 && (
-                  <ToggleButton 
-                      showContent={showCardContent}
-                      onClick={toggleCardContent}
-                  >
-                      {showCardContent ? '' : ''}
-                  </ToggleButton>
-                  )}
-              </CardTitle>
-              {showCardContent && (
-                  <CardContent>
-                  <p>{businessAnalysis.characteristics}</p>
-                  </CardContent>
-              )}
-          </Card>
-      ))}
+        <Card>
+          <CardTitle>
+            <h2>{businessAnalysis.title}</h2>
+            <TagWrap>
+              <Tag color={categoryColor.first} />
+              <Tag color={categoryColor.second} />
+              <Tag color={categoryColor.third} />
+            </TagWrap>
+            {personaStep > 2 && (
+              <ToggleButton
+                showContent={showCardContent}
+                onClick={toggleCardContent}
+              >
+                {showCardContent ? "" : ""}
+              </ToggleButton>
+            )}
+          </CardTitle>
+          {showCardContent && (
+            <CardContent>
+              <p>{businessAnalysis.characteristics}</p>
+            </CardContent>
+          )}
+        </Card>
+      )}
     </>
   );
 };
@@ -606,15 +608,15 @@ const Title = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-direction: ${props => {
+  flex-direction: ${(props) => {
     if (props.Column) return `column`;
     else return `row`;
   }};
-  align-items: ${props => {
+  align-items: ${(props) => {
     if (props.Column) return `flex-start`;
     else return `center`;
   }};
-  gap: ${props => {
+  gap: ${(props) => {
     if (props.Column) return `8px`;
     else return `0`;
   }};
@@ -714,27 +716,28 @@ const CardTitle = styled.div`
 
 const FormEdit = styled.div`
   display: flex;
-  flex-direction:column;
-  align-items:flex-start;
-  gap:8px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
 
   > span {
     font-weight: 300;
-    line-height:1.5;
-    color:${palette.gray700};
+    line-height: 1.5;
+    color: ${palette.gray700};
   }
 `;
 
 const FormBox = styled.div`
   display: flex;
   flex-direction: column;
-  gap:32px;
-  width:100%;
-  padding:16px;
-  border-radius:10px;
-  border: 1px solid ${props => 
-    props.status === 'error' ? palette.error : palette.outlineGray};
-  transition: all .5s;
+  gap: 32px;
+  width: 100%;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid
+    ${(props) =>
+      props.status === "error" ? palette.error : palette.outlineGray};
+  transition: all 0.5s;
 
   &:focus-within {
     border: 1px solid ${palette.chatBlue};

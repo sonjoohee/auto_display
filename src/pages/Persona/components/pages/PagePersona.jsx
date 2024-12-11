@@ -16,11 +16,11 @@ import {
   PERSONA_STEP,
   BUSINESS_ANALYSIS,
 } from "../../../AtomStates";
-import { 
-  ContentsWrap, 
-  MainContent, 
-  AnalysisWrap, 
-  MainSection, 
+import {
+  ContentsWrap,
+  MainContent,
+  AnalysisWrap,
+  MainSection,
   CardWrap,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../../assets/styles/Images";
@@ -31,6 +31,7 @@ import MoleculeHeader from "../molecules/MoleculeHeader";
 import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 import { createProjectOnServer } from "../../../../utils/indexedDB";
+import { createProjectReportOnServer } from "../../../../utils/indexedDB";
 import OrganismBusinessAnalysis from "../organisms/OrganismBisinessAnalysis";
 
 const PagePersona = () => {
@@ -93,7 +94,7 @@ const PagePersona = () => {
           try {
             // 서버에서 새로운 대화 ID 생성
             // console.log("서버에서 새로운 대화 ID 생성");
-            newProjectId = await createProjectOnServer(isLoggedIn);
+            newProjectId = await createProjectReportOnServer(isLoggedIn);
             setprojectId(newProjectId); // 생성된 대화 ID 설정
             setIsPersonaAccessible(true);
             // setIsLoadingPage(false); // 로딩 완료
