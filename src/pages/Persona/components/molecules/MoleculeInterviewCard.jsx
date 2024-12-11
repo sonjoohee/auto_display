@@ -18,6 +18,7 @@ const MoleculeInterviewCard = ({
   const [isLoadingQuestion, setIsLoadingQuestion] = useState(false);
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
   const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(SELECTED_INTERVIEW_PURPOSE);
+  const [interviewQuestionListState, setInterviewQuestionListState] = useState([]);
   const [interviewQuestionList, setInterviewQuestionList] = useAtom(INTERVIEW_QUESTION_LIST);
 
   const axiosConfig = {
@@ -29,13 +30,12 @@ const MoleculeInterviewCard = ({
   };
 
   const loadInterviewQuestion = async () => {
-    const existingQuestions = interviewQuestionList.find(
-      item => item.theory_name === interviewPurpose
+    const existingQuestions = interviewQuestionListState.find(
+      item => item.theory_name === title
     );
   
     // 이미 존재하는 경우 함수 종료
     if (existingQuestions) {
-      setSelectedInterviewPurpose(interviewPurpose);
       return;
     }
     try {
@@ -48,7 +48,7 @@ const MoleculeInterviewCard = ({
             characteristics: businessAnalysis.characteristics,
             features: businessAnalysis.features
           },
-          theory_name: interviewPurpose
+          theory_name: title
         };
 
         let response = await axios.post(
@@ -79,12 +79,14 @@ const MoleculeInterviewCard = ({
         if (retryCount === maxRetries) {
           throw new Error("Maximum retry attempts reached. Empty response persists.");
         }
-        setInterviewQuestionList(prev => [...prev, {
-          theory_name: interviewPurpose,
+        setInterviewQuestionListState(prev => [...prev, {
+          theory_name: title,
           questions: questionList
         }]);
-        setSelectedInterviewPurpose(interviewPurpose);
-
+        setInterviewQuestionList(prev => [...prev, {
+          theory_name: title,
+          questions: questionList
+        }]);
     } catch (error) {
       console.error("Error in loadInterviewQuestion:", error);
     } finally {
@@ -126,8 +128,8 @@ const MoleculeInterviewCard = ({
             <div>로딩중...</div>
           ) : (
             <ul>
-              {interviewQuestionList
-                .find(item => item.theory_name === interviewPurpose)
+              {interviewQuestionListState
+                .find(item => item.theory_name === title)
                 ?.questions.slice(2, 5).map((item, index) => (
                   <li key={index}>
                     <span className="number">{index + 1}</span>
