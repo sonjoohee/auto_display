@@ -432,7 +432,7 @@ const OrganismLeftSideBar = () => {
   };
 
   const handleExitChatConfirm = () => {
-    navigate("/MeetAiExpert");
+    navigate("/Main");
   };
   const handleExitChatCancel = () => {
     setIsExitPopupOpen(false);
@@ -983,7 +983,7 @@ const OrganismLeftSideBar = () => {
     setUserName("");
     setUserEmail("");
     setIsLogoutPopup(false); // 로그아웃 팝업 닫기
-    navigate("/MeetAiExpert"); // 페이지 이동
+    navigate("/Main"); // 페이지 이동
   };
 
   const handleCloseLogoutPopup = () => {
@@ -1064,7 +1064,7 @@ const OrganismLeftSideBar = () => {
       setChatIdToDelete(null);
       setChatRefreshTrigger((prev) => !prev);
       if (chatIdToDelete === conversationId) {
-        navigate("/MeetAiExpert"); // / 경로로 이동
+        navigate("/Main"); // / 경로로 이동
       }
     } catch (error) {
       console.error("삭제 요청 오류:", error);
@@ -1123,7 +1123,7 @@ const OrganismLeftSideBar = () => {
       return;
     }
 
-    navigate("/MeetAiExpert");
+    navigate("/Main");
     setConversation([]);
     setConversationStage(1);
     setInputBusinessInfo("");
@@ -1240,7 +1240,7 @@ const OrganismLeftSideBar = () => {
     }
 
     // navigate("/Landing");
-    navigate("/MeetAiExpert");
+    navigate("/Main");
     setConversation([]);
     setConversationStage(1);
     setInputBusinessInfo("");

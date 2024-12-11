@@ -139,7 +139,7 @@ function App() {
         setUserName("");
         setUserEmail("");
 
-        window.location.href = "/MeetAiExpert";
+        window.location.href = "/Main";
       }
     };
 
