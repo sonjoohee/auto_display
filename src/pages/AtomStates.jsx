@@ -407,23 +407,7 @@ export const REQUEST_PERSONA_LIST = atom({
   positioning: {}
 });
 
-export const INTERVIEW_QUESTION_LIST = atom([
-  {
-    question_type: "",
-    question: "",
-    question_subject: ""
-  },
-  {
-    question_type: "",
-    question: "",
-    question_subject: ""
-  },
-  {
-    question_type: "",
-    question: "",
-    question_subject: ""
-  }
-]);
+export const INTERVIEW_QUESTION_LIST = atom([]);
 
 export const INTERVIEW_ANSWER_LIST = atom([]);
 
@@ -436,5 +420,4 @@ export const PERSONA_BUTTON_STATE_2 = atom(0);
 export const PERSONA_BUTTON_STATE_3 = atom(0);
 
 export const SELECTED_INTERVIEW_PURPOSE = atom("");
-
 export const CATEGORY_COLOR = atom({});

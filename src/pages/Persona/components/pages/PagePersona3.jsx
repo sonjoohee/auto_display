@@ -167,7 +167,7 @@ const PagePersona3 = () => {
     },
     {
       id: 6,
-      category: '사용자 시뮬레이션',
+      category: '제품 사용 경험',
       title: '소비자 여정 맵핑',
       description: '다양한 시나리오에서 제품의 사용 가능성을 평가하여 부적합한 환경 발견',
       expandedContent: [
@@ -178,7 +178,7 @@ const PagePersona3 = () => {
     },
     {
       id: 7,
-      category: '사용자 시뮬레이션',
+      category: '구매 및 소비 심리',
       title: '제품 이해도 테스트',
       description: '사용자 관점에서 제품의 목적과 사용법을 평가해 접근성 강화',
       expandedContent: [
@@ -281,9 +281,9 @@ const PagePersona3 = () => {
                             key={item.id}
                             title={item.title}
                             description={item.description}
-                            expandedContent={item.expandedContent}
                             isSelected={interviewPurpose === item.title}
                             onSelect={(title) => setInterviewPurpose(title)}
+                            interviewPurpose={interviewPurpose}
                           />
                         ))}
                       </TabContent>
