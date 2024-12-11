@@ -306,7 +306,7 @@ const PagePersona3 = () => {
                             <MoleculePersonaCard 
                               key={index}
                               title={persona.persona}
-                              isReady={true}
+                              isBasic={true}
                               hideCheckCircle={true}
                             />
                           ))}
