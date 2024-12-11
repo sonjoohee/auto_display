@@ -4,14 +4,17 @@ import { Link, useLocation } from "react-router-dom";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
 import { useAtom } from "jotai";
-import { BUSINESS_ANALYSIS } from "../../../AtomStates";
+import { BUSINESS_ANALYSIS, PERSONA_STEP } from "../../../AtomStates";
 
 const MoleculeHeader = () => {
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
+  const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
   return (
     <HeaderWrap>
-      {businessAnalysis.title && (
-        <h1>{businessAnalysis.title}</h1>
+      {personaStep > 0 && (
+        <h1>
+          {businessAnalysis.title ? businessAnalysis.title : "새로운 프로젝트"}
+        </h1>
       )}
 
       <div className="gnb">

@@ -388,14 +388,6 @@ export const BUSINESS_ANALYSIS = atom({
   category: {},
 });
 
-export const TEMP_BUSINESS_ANALYSIS = atom({
-  input: "",
-  title: "",
-  characteristics: "",
-  features: [],
-  category: {},
-});
-
 export const PERSONA_LIST = atom({
   selected: [],
   unselected: [],
@@ -418,7 +410,7 @@ export const INTERVIEW_ANSWER_LIST = atom([]);
 export const PERSONA_FINAL_REPORT = atom([]);
 
 export const IS_PERSONA_ACCESSIBLE = atom(false);
-export const PERSONA_STEP = atom(1);
+export const PERSONA_STEP = atom(0);
 export const PERSONA_BUTTON_STATE_1 = atom(0);
 export const PERSONA_BUTTON_STATE_2 = atom(0);
 export const PERSONA_BUTTON_STATE_3 = atom(0);
