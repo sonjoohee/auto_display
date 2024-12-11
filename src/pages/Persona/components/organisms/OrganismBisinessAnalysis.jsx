@@ -26,7 +26,7 @@ import {
 } from "../../../AtomStates";
 import AtomLoader from "../atoms/AtomLoader";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
-import { updateProjectReportOnServer } from "../../../../utils/indexedDB";
+// import { updateProjectReportOnServer } from "../../../../utils/indexedDB";
 
 const OrganismBusinessAnalysis = ({ personaStep }) => {
   const [isProjectIdReady, setIsProjectIdReady] = useState(false);
@@ -379,7 +379,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
             navigate("/Main");
           } else {
             setBusinessAnalysis(updatedBusinessAnalysis);
-            await updateProjectReportOnServer(
+            await updateProjectOnServer(
               projectId,
               {
                 businessAnalysis: updatedBusinessAnalysis,
@@ -473,7 +473,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
         second: getCategoryColor(categoryData.second),
         third: getCategoryColor(categoryData.third),
       });
-      await updateProjectReportOnServer(
+      await updateProjectOnServer(
         projectId,
         {
           businessAnalysis: updatedBusinessAnalysis,

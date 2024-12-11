@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import { Button } from "../../../../assets/styles/ButtonStyle";
@@ -13,7 +13,7 @@ import {
   IS_LOADING,
 } from "../../../AtomStates";
 import axios from "axios";
-import { updateProjectReportOnServer } from "../../../../utils/indexedDB";
+import { updateProjectOnServer } from "../../../../utils/indexedDB";
 
 const MoleculeInterviewCard = ({
   title,
@@ -44,19 +44,19 @@ const MoleculeInterviewCard = ({
     showPopup: false,
     showRequestBadge: false,
     showCustomModal: false,
-    customTextarea: '',
+    customTextarea: "",
     isTextareaValid: false,
     isRadioSelected: false,
     showQuestions: false,
     showCustomPopup: false,
     isAccordionOpen: false,
     formState: {
-      purpose: '',
-      personaCount: '',
-      gender: '',
-      age: '',
-      additionalInfo: ''
-    }
+      purpose: "",
+      personaCount: "",
+      gender: "",
+      age: "",
+      additionalInfo: "",
+    },
   });
 
   const axiosConfig = {
@@ -136,7 +136,7 @@ const MoleculeInterviewCard = ({
       setInterviewQuestionList(newQuestionList);
 
       // 서버 업데이트 시 새로운 리스트를 직접 전달
-      await updateProjectReportOnServer(
+      await updateProjectOnServer(
         projectId,
         {
           interviewQuestionList: newQuestionList,
@@ -161,22 +161,21 @@ const MoleculeInterviewCard = ({
           {description && <Description>{description}</Description>}
         </ContentWrapper>
 
-
-        <ToggleButton 
-          $isExpanded={isExpanded} 
-          onClick={() => setIsExpanded(!isExpanded)} 
-
+        <ToggleButton
+          $isExpanded={isExpanded}
+          onClick={() => setIsExpanded(!isExpanded)}
         />
       </MainContent>
 
       {isExpanded && (
         <DescriptionSection $isExpanded={isExpanded}>
-
           {!state.showQuestions ? (
-            <span onClick={async () => {
-              await loadInterviewQuestion();
-              setState(prev => ({ ...prev, showQuestions: true }));
-            }}>
+            <span
+              onClick={async () => {
+                await loadInterviewQuestion();
+                setState((prev) => ({ ...prev, showQuestions: true }));
+              }}
+            >
               <img src="" alt="문항보기" />
               문항보기
             </span>
@@ -184,19 +183,17 @@ const MoleculeInterviewCard = ({
             <ListUL>
               <ul>
                 {interviewQuestionListState
-                  .find(item => item.theory_name === title)
-                  ?.questions.slice(2, 5).map((item, index) => (
-
+                  .find((item) => item.theory_name === title)
+                  ?.questions.slice(2, 5)
+                  .map((item, index) => (
                     <li key={index}>
                       <span className="number">{index + 1}</span>
                       {item.question}
                     </li>
                   ))}
               </ul>
-
             </ListUL>
           )}
-
         </DescriptionSection>
       )}
     </CardContainer>
@@ -214,16 +211,20 @@ const CardContainer = styled.div`
   width: 100%;
   padding: 24px 20px;
   border-radius: 10px;
-  border: 1px solid ${props => props.isActive ? palette.chatBlue : palette.outlineGray};
-  background: ${props => props.isActive ? 'rgba(34, 111, 255, 0.10)' : palette.white};
-  cursor: ${props => props.isClickable ? 'pointer' : 'default'};
+  border: 1px solid
+    ${(props) => (props.isActive ? palette.chatBlue : palette.outlineGray)};
+  background: ${(props) =>
+    props.isActive ? "rgba(34, 111, 255, 0.10)" : palette.white};
+  cursor: ${(props) => (props.isClickable ? "pointer" : "default")};
   transition: all 0.2s ease-in-out;
 
-  ${props => props.TitleFlex && css`
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: space-between;
-  `}
+  ${(props) =>
+    props.TitleFlex &&
+    css`
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
+    `}
 `;
 
 const MainContent = styled.div`
@@ -249,10 +250,10 @@ const CheckCircle = styled.div`
   border-radius: 50%;
   cursor: pointer;
 
-  background-image: ${props => props.$isChecked 
-    ? `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='12' fill='%23226FFF'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
-    : `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='11' stroke='%23E0E4EB' stroke-width='2'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='%23E0E4EB' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
-  };
+  background-image: ${(props) =>
+    props.$isChecked
+      ? `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='12' fill='%23226FFF'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
+      : `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='11' stroke='%23E0E4EB' stroke-width='2'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='%23E0E4EB' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`};
 
   transition: background-image 0.3s ease-in-out;
   cursor: pointer;
@@ -279,24 +280,23 @@ const Badge = styled.div`
   font-size: 0.75rem;
   line-height: 1.2;
 
-  color: ${props => {
+  color: ${(props) => {
     if (props.Basic) return `#34C759`;
     else if (props.Custom) return palette.gray500;
-
     else return palette.gray500;
   }};
   padding: 4px 8px;
   border-radius: 50px;
 
-  border: 1px solid ${props => {
-    if (props.Basic) return `#34C759`;
-    else if (props.Custom) return palette.chatBlue;
-    else return palette.outlineGray;
-  }};
-  background:${props => {
+  border: 1px solid
+    ${(props) => {
+      if (props.Basic) return `#34C759`;
+      else if (props.Custom) return palette.chatBlue;
+      else return palette.outlineGray;
+    }};
+  background: ${(props) => {
     if (props.Basic) return `rgba(52, 199, 89, 0.10)`;
     else if (props.Custom) return palette.chatBlue;
-
     else return palette.gray50;
   }};
   cursor: pointer;
@@ -375,9 +375,8 @@ const DescriptionSection = styled.div`
   text-align: left;
   border-radius: 10px;
 
-  border: ${props => props.$isTabContent 
-    ? `1px solid ${palette.outlineGray}`
-    : 'none' };
+  border: ${(props) =>
+    props.$isTabContent ? `1px solid ${palette.outlineGray}` : "none"};
 
   > span {
     display: flex;
@@ -388,12 +387,10 @@ const DescriptionSection = styled.div`
     color: ${palette.gray800};
     padding: 20px;
     border-radius: 10px;
-    background: ${props => props.$isTabContent 
-      ? 'transparent'
-      : palette.chatGray};
+    background: ${(props) =>
+      props.$isTabContent ? "transparent" : palette.chatGray};
     cursor: pointer;
   }
-
 `;
 
 const ListUL = styled.div`

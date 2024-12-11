@@ -42,7 +42,7 @@ import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
 import MoleculePersonaCard from "../molecules/MoleculePersonaCard";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
-import { updateProjectReportOnServer } from "../../../../utils/indexedDB";
+// import { updateProjectReportOnServer } from "../../../../utils/indexedDB";
 import OrganismBusinessAnalysis from "../organisms/OrganismBisinessAnalysis";
 import AtomLoader from "../atoms/AtomLoader";
 import PopupWrap from "../../../../assets/styles/Popup";
@@ -272,7 +272,7 @@ const PagePersona2 = () => {
           };
 
           setRequestPersonaList(requestPersonaData);
-          await updateProjectReportOnServer(
+          await updateProjectOnServer(
             projectId,
             {
               personaList: personaList,
@@ -320,50 +320,31 @@ const PagePersona2 = () => {
               <CardWrap>
                 {/* 비즈니스 맞춤 페르소나 */}
 
-                  <>
-                    <CustomizePersona>
-                      <Title Column>
-                        <h3>맞춤 페르소나</h3>
-                        <p>추천된 페르소나를 선택하고 인터뷰를 진행하세요. (최대 5명까지 선택이 가능합니다)</p>
-                      </Title>
-                      
-                      <ContentSection>
-                        {personaButtonState2 ? (
-                          <PersonaCards>
-                            <AtomLoader />
-                          </PersonaCards>
-                        ) : (
-                          <PersonaCards>
-                            {personaList.unselected.map((persona, index) => (
-                              <MoleculePersonaCard 
-                                key={index}
-                                title={persona.persona}
-                                keywords={persona.keyword.split(',')}
-                                isBasic={true}
-                                onSelect={(isSelected) => handlePersonaSelect(persona, isSelected)}
-                                currentSelection={selectedPersonas.length}
-                              />
-                            ))}
-                            {requestPersonaList.persona.map((persona, index) => (
-                              <MoleculePersonaCard 
-                                key={index}
-                                title={persona[`persona_${index + 1}`].persona}
-                                keywords={persona[`persona_${index + 1}`].keyword}
-                                isCustom={true}
-                                onSelect={(isSelected) => handlePersonaSelect(persona, isSelected)}
-                                onClick={() => setShowPopup(true)}
-                                currentSelection={selectedPersonas.length}
-                              />
-                            ))}
-                          </PersonaCards>
-                        )}
-                        {!personaButtonState2 &&
-                          <BottomBar>
-                            <p>
-                              {selectedPersonas.length > 0
-                                ? <>선택하신 <span>{selectedPersonas.length}명</span>의 페르소나와 인터뷰 하시겠어요?</>
-                                : '페르소나를 선택하고 그들의 인터뷰를 시작해 보세요'
+                <>
+                  <CustomizePersona>
+                    <Title Column>
+                      <h3>맞춤 페르소나</h3>
+                      <p>
+                        추천된 페르소나를 선택하고 인터뷰를 진행하세요. (최대
+                        5명까지 선택이 가능합니다)
+                      </p>
+                    </Title>
 
+                    <ContentSection>
+                      {personaButtonState2 ? (
+                        <PersonaCards>
+                          <AtomLoader />
+                        </PersonaCards>
+                      ) : (
+                        <PersonaCards>
+                          {personaList.unselected.map((persona, index) => (
+                            <MoleculePersonaCard
+                              key={index}
+                              title={persona.persona}
+                              keywords={persona.keyword.split(",")}
+                              isBasic={true}
+                              onSelect={(isSelected) =>
+                                handlePersonaSelect(persona, isSelected)
                               }
                               currentSelection={selectedPersonas.length}
                             />
@@ -374,7 +355,9 @@ const PagePersona2 = () => {
                               title={persona[`persona_${index + 1}`].persona}
                               keywords={persona[`persona_${index + 1}`].keyword}
                               isCustom={true}
-                              // onSelect={(isSelected) => handlePersonaSelect(persona, isSelected)}
+                              onSelect={(isSelected) =>
+                                handlePersonaSelect(persona, isSelected)
+                              }
                               onClick={() => setShowPopup(true)}
                               currentSelection={selectedPersonas.length}
                             />
