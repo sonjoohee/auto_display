@@ -18,10 +18,24 @@ import {
   BUSINESS_ANALYSIS,
   REQUEST_PERSONA_LIST
 } from "../../../AtomStates";
+import { 
+  ContentsWrap, 
+  ContentSection,
+  MainContent, 
+  AnalysisWrap, 
+  MainSection, 
+  Title,
+  CardWrap,
+  CustomizePersona,
+  AccordionSection,
+  CustomAccordionHeader,
+  CustomAccordionIcon,
+  CustomAccordionContent,
+} from "../../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
 import { Button } from "../../../../assets/styles/ButtonStyle";
-import OrganismLeftSideBar from "../../../Expert_Insight/components/organisms/OrganismLeftSideBar";
+import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
 import MoleculeHeader from "../molecules/MoleculeHeader";
 import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
 import MoleculePersonaCard from "../molecules/MoleculePersonaCard";
@@ -31,6 +45,7 @@ import { createChatOnServer } from "../../../../utils/indexedDB";
 import OrganismBusinessAnalysis from "../organisms/OrganismBisinessAnalysis";
 import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
 import AtomLoader from "../atoms/AtomLoader";
+import PopupWrap from "../../../../assets/styles/Popup";
 
 const PagePersona2 = () => {
   const { saveConversation } = useSaveConversation();
@@ -49,6 +64,12 @@ const PagePersona2 = () => {
   const [requestPersonaList, setRequestPersonaList] = useAtom(REQUEST_PERSONA_LIST);
 
   const [selectedPersonas, setSelectedPersonas] = useState([]);
+  const [checkedPersonas, setCheckedPersonas] = useState(0);
+  const [showPopup, setShowPopup] = useState(false);
+
+  const handlePopupClose = () => {
+    setShowPopup(false);
+  };
 
   // const [isLoadingPage, setIsLoadingPage] = useState(true);
 
@@ -240,7 +261,7 @@ const PagePersona2 = () => {
   return (
     <>
       <ContentsWrap>
-        <OrganismLeftSideBar />
+        <OrganismIncNavigation />
 
         <MoleculeHeader />
 
@@ -269,8 +290,7 @@ const PagePersona2 = () => {
                                 key={index}
                                 title={persona.persona}
                                 keywords={persona.keyword.split(',')}
-                                isReady={true}
-                                isRequest={false}
+                                isBasic={true}
                                 onSelect={(isSelected) => handlePersonaSelect(persona, isSelected)}
                                 currentSelection={selectedPersonas.length}
                               />
@@ -280,8 +300,9 @@ const PagePersona2 = () => {
                                 key={index}
                                 title={persona[`persona_${index + 1}`].persona}
                                 keywords={persona[`persona_${index + 1}`].keyword}
-                                isRequest={true} 
-                                onSelect={(isSelected) => handlePersonaSelect(persona, isSelected)}
+                                isCustom={true}
+                                // onSelect={(isSelected) => handlePersonaSelect(persona, isSelected)}
+                                onClick={() => setShowPopup(true)}
                                 currentSelection={selectedPersonas.length}
                               />
                             ))}
@@ -290,9 +311,19 @@ const PagePersona2 = () => {
                         {!personaButtonState2 &&
                           <BottomBar>
                             <p>
-                              선택하신 <span>{selectedPersonas.length}명</span>의 페르소나와 인터뷰 하시겠어요?
+                              {selectedPersonas.length > 0
+                                ? <>선택하신 <span>{selectedPersonas.length}명</span>의 페르소나와 인터뷰 하시겠어요?</>
+                                : '페르소나를 선택하고 그들의 인터뷰를 시작해 보세요'
+                              }
                             </p>
-                            <Button Large Primary Fill onClick={handleStartInterview} disabled={selectedPersonas.length === 0}>
+                            <Button 
+                              Large 
+                              Primary 
+                              Fill={selectedPersonas.length > 0} 
+                              Edit={selectedPersonas.length === 0} 
+                              disabled={selectedPersonas.length === 0}
+                              onClick={handleStartInterview}
+                            >
                               인터뷰 시작하기
                               <img src={images.ChevronRight} alt="" />
                             </Button>
@@ -319,110 +350,24 @@ const PagePersona2 = () => {
           </AnalysisWrap>
         </MainContent>
       </ContentsWrap>
+
+      {showPopup && (
+        <PopupWrap 
+          Warning
+          title="요청 상태의 페르소나는 선택이 제한됩니다." 
+          message="인터뷰를 진행하려면 모집 요청을 먼저 진행해주세요"
+          buttonType="Outline"
+          closeText="확인"
+          isModal={false}
+          onCancel={handlePopupClose}
+          show={showPopup}
+        />
+      )}
     </>
   );
 };
 
 export default PagePersona2;
-
-// Styled Components
-const ContentsWrap = styled.div`
-  position: relative;
-  // width: ${(props) => (props.isMobile ? "100%" : "calc(100% - 40px)")};
-  width: 100%;
-  display: flex;
-  flex-direction: ${(props) => (props.isMobile ? "column" : "row")};
-  gap: ${(props) => (props.isMobile ? "20px" : "40px")};
-  padding: ${(props) => (props.isMobile ? "20px" : "0")};
-`;
-
-const MainContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  max-width: 1024px;
-  min-height: 100vh;
-  width: 100%;
-  justify-content:${props => {
-    if (props.MainSearch) return `center`;
-    else return `flex-start`;
-  }};
-  margin: 57px auto 40px;
-  // padding: ${(props) => (props.isMobile ? "0" : "0 20px")};
-`;
-
-const AnalysisWrap = styled.div`
-  position: relative;
-  width: 100%;
-  display: flex;
-  gap: 16px;
-  margin-top:44px;
-  overflow: visible;
-`;
-
-const MainSection = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
-
-const Title = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-direction: ${props => {
-    if (props.Column) return `column`;
-    else return `row`;
-  }};
-  align-items: ${props => {
-    if (props.Column) return `flex-start`;
-    else return `center`;
-  }};
-  gap: ${props => {
-    if (props.Column) return `8px`;
-    else return `0`;
-  }};
-
-  h3 {
-    font-weight: 500;
-    color: ${palette.gray800};
-  }
-
-  p {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    font-size: 0.88rem;
-    font-weight: 300;
-    line-height: 1.5;
-    color: ${palette.gray500};
-
-    span {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 0.75rem;
-      color: ${palette.chatBlue};
-    }
-  }
-`;
-
-const CardWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
-
-const Card = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 32px 24px;
-  border-radius: 15px;
-  border: 1px solid ${palette.outlineGray};
-  background: ${palette.white};
-`;
 
 const Sidebar = styled.div`
   position: sticky;
@@ -475,21 +420,6 @@ const Progress = styled.div`
   }
 `;
 
-const CustomizePersona = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 100%;
-  height: 100%;
-  margin-top: 30px;
-`;
-
-const ContentSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-`;
-
 const PersonaCards = styled.div`
   display: flex;
   flex-direction: column;
@@ -509,13 +439,9 @@ const BottomBar = styled.div`
   border: 1px solid ${palette.outlineGray};
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
   background: ${palette.white};
-  
-  button:disabled {
-    cursor: default;
-  }
 
   p {
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     line-height: 1.5;
     color: ${palette.gray500};
 

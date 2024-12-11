@@ -16,6 +16,13 @@ import {
   PERSONA_STEP,
   BUSINESS_ANALYSIS
 } from "../../../AtomStates";
+import { 
+  ContentsWrap, 
+  MainContent, 
+  AnalysisWrap, 
+  MainSection, 
+  CardWrap,
+} from "../../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
 import { Button } from "../../../../assets/styles/ButtonStyle";
@@ -173,52 +180,6 @@ const PagePersona = () => {
 };
 
 export default PagePersona;
-
-const ContentsWrap = styled.div`
-  position: relative;
-  // width: ${(props) => (props.isMobile ? "100%" : "calc(100% - 40px)")};
-  width: 100%;
-  display: flex;
-  flex-direction: ${(props) => (props.isMobile ? "column" : "row")};
-  gap: ${(props) => (props.isMobile ? "20px" : "40px")};
-  padding: ${(props) => (props.isMobile ? "20px" : "0")};
-`;
-
-const MainContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  max-width: 1024px;
-  min-height: 100vh;
-  width: 100%;
-  justify-content:${props => {
-    if (props.MainSearch) return `center`;
-    else return `flex-start`;
-  }};
-  margin: 57px auto 40px;
-  // padding: ${(props) => (props.isMobile ? "0" : "0 20px")};
-`;
-
-const AnalysisWrap = styled.div`
-  position: relative;
-  width: 100%;
-  display: flex;
-  gap: 16px;
-  margin-top:44px;
-  overflow: visible;
-`;
-
-const MainSection = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
-
-const CardWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
 
 const Card = styled.div`
   display: flex;

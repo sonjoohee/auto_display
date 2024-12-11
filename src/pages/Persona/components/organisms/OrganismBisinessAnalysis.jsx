@@ -125,8 +125,81 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
         }));
       };
 
-      const handleAIDetailClick = () => {
+      const handleAIDetailClick = async () => {
+        setPersonaButtonState1(1);
+        let businessData;
+        let categoryData;
+        let attempts = 0;
+        const maxAttempts = 5;
+    
+        try {
+            setIsLoading(true);
+            
+            const data = {
+              business_analysis_data: businessAnalysis,
+              keyword: inputs.field2.value,
+            };
+            let response = await axios.post(
+              "https://wishresearch.kr/person/business_category_modify",
+              data,
+              axiosConfig
+            );
+    
+            // // 필요한 데이터가 없을 경우 재시도, 최대 5번
+            // while ( 
+            //     attempts < maxAttempts && (
+            //     !response || !response.data || typeof response.data !== "object" ||
+            //     !response.data.hasOwnProperty("business_analysis") ||
+            //     !response.data.hasOwnProperty("category") ||
+            //     !response.data.business_analysis.hasOwnProperty("명칭") ||
+            //     !response.data.business_analysis.hasOwnProperty("주요_목적_및_특징") ||
+            //     !response.data.business_analysis.hasOwnProperty("주요기능") ||
+            //     !response.data.business_analysis["명칭"] ||
+            //     !response.data.business_analysis["주요_목적_및_특징"].length ||
+            //     !response.data.business_analysis["주요기능"].length ||
+            //     !response.data.category.hasOwnProperty("first") ||
+            //     !response.data.category.hasOwnProperty("second") ||
+            //     !response.data.category.hasOwnProperty("third") ||
+            //     !response.data.category.first ||
+            //     !response.data.category.second ||
+            //     !response.data.category.third
+            // )
+            // ) {
+            //   attempts += 1;
+    
+            //   response = await axios.post(
+            //     "https://wishresearch.kr/person/business_category",
+            //     data,
+            //     axiosConfig
+            //   );
+            // }
+    
+            businessData = response.data.business_analysis;
+            categoryData = response.data.category;
 
+            if (attempts >= maxAttempts) {
+              navigate("/Main");
+            } else {
+              setInputs(prev => ({
+                ...prev,
+                field2: {
+                  ...prev.field2,
+                  value: businessData["추가_주요_목적_및_특징"]
+                }
+              }));
+            }
+            setCategoryColor({
+              first: getCategoryColor(categoryData.first),
+              second: getCategoryColor(categoryData.second),
+              third: getCategoryColor(categoryData.third)
+            });
+            // saveConversation({ changingConversation : {businessAnalysis : updatedBusinessAnalysis }})
+        } catch (error) {
+          console.error("Error in handleRegenerate:", error);
+        } finally {
+          setPersonaButtonState1(0);
+          setIsLoading(false);
+        }
       };
     
       const textareaRef = useRef(null);
