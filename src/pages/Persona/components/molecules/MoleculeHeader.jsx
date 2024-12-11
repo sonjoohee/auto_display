@@ -3,14 +3,15 @@ import styled, { css } from "styled-components";
 import { Link, useLocation } from "react-router-dom";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
+import { useAtom } from "jotai";
+import { BUSINESS_ANALYSIS } from "../../../AtomStates";
 
 const MoleculeHeader = () => {
-  const location = useLocation();
-
+  const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
   return (
     <HeaderWrap>
-      {location.pathname !== "/Main" && (
-        <h1>쉽고 빠른 개인 금융업무 지원 모바일 서비스</h1>
+      {businessAnalysis.title && (
+        <h1>{businessAnalysis.title}</h1>
       )}
 
       <div className="gnb">

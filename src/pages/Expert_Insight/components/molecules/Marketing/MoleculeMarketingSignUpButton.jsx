@@ -115,14 +115,14 @@ const MoleculeMarketingSignUpButton = () => {
 
   const handleMobileWarningConfirm = () => {
     setShowMobileWarning(false);
-    navigate("/MeetAiExpert");
+    navigate("/Main");
   };
 
   const handleNavigateToMain = () => {
     if (isMobileDevice()) {
       setShowMobileWarning(true);
     } else {
-      navigate("/MeetAiExpert");
+      navigate("/Main");
     }
   };
 

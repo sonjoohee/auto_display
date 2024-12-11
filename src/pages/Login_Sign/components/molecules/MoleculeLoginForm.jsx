@@ -173,7 +173,7 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
             setLoginSuccess(false); // 로그인 성공 상태를 false로 유지
           } else {
             setLoginSuccess(true); // PC에서는 바로 로그인 성공 처리
-            navigate("/MeetAiExpert");
+            navigate("/Main");
           }
         } else {
           setErrorStatus("유저 정보를 불러오는 중 오류가 발생했습니다.");
@@ -198,7 +198,7 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
   const handleMobileWarningConfirm = () => {
     setShowMobileWarning(false);
     setLoginSuccess(true); // 확인 버튼 클릭 시 로그인 성공 처리
-    navigate("/MeetAiExpert");
+    navigate("/Main");
   };
 
   const [isSignupPopupOpen, setIsSignupPopupOpen] = useState(false);

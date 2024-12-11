@@ -95,7 +95,7 @@ const MoleculeAccountForm = ({ onOpenPopup  = () => {} }) => {  // onOpenPopup  
       setNewPassword("");
       setRePassword("");
       onOpenPopup ();
-      navigate("/MeetAiExpert");
+      navigate("/Main");
       setIsLoading(false);
     } catch (error) {
       const serverErrorMessage = error.response?.data?.message || "비밀번호 변경 중 오류가 발생했습니다.";
