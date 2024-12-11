@@ -112,7 +112,7 @@ import {
   PERSONA_BUTTON_STATE_1,
   PERSONA_BUTTON_STATE_2,
   BUSINESS_ANALYSIS,
-  TEMP_BUSINESS_ANALYSIS
+  PERSONA_STEP
 } from "../../../AtomStates";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
@@ -126,7 +126,7 @@ const PageMain  = () => {
   const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(IS_PERSONA_ACCESSIBLE);
   const [personaButtonState1, setPersonaButtonState1] = useAtom(PERSONA_BUTTON_STATE_1);
   const [personaButtonState2, setPersonaButtonState2] = useAtom(PERSONA_BUTTON_STATE_2);
-
+  const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
   const [strategyConsultantReportData, setStrategyConsultantReportData] = useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
   const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] = useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
   const [growthHackerSelectedSolution, setGrowthHackerSelectedSolution] = useAtom(GROWTH_HACKER_SELECTED_SOLUTION);
@@ -373,7 +373,6 @@ const PageMain  = () => {
   ] = useAtom(MARKETING_RECOMMENDED_ITEM_BUTTON_STATE);
 
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
-  const [tempBusinessAnalysis, setTempBusinessAnalysis] = useAtom(TEMP_BUSINESS_ANALYSIS);
 
   const closePopupRegex = () => {
     setBusinessAnalysis({
@@ -458,13 +457,6 @@ const PageMain  = () => {
     setPocPersonaList([]);
     // setInputBusinessInfo(savedInputBusinessInfo);
     setBusinessAnalysis({
-      input: "",
-      title: "",
-      characteristics: "",
-      features: [],
-      category: {}
-    });
-    setTempBusinessAnalysis({
       input: "",
       title: "",
       characteristics: "",
@@ -614,6 +606,7 @@ const PageMain  = () => {
       // setConversationStage(2);
       setIsPersonaAccessible(true);
       setPersonaButtonState1(1);
+      setPersonaStep(1);
       // saveConversation({changingConversation: {inputBusinessInfo: inputBusinessInfo}});
       // setApproachPath(-1); // 검색을 통해 들어가는 경우
       // setSelectedExpertIndex("0");
@@ -767,7 +760,7 @@ const PageMain  = () => {
                 </button>
               </div>
               <div className="maxLetter">
-                <span id="letterCount">0/300</span>
+                <span id="letterCount">{businessAnalysis.input.length}/300</span>
               </div>
             </InputWrap>
           </MainSearchWrap>

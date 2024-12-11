@@ -19,7 +19,7 @@ import {
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
 import { Button } from "../../../../assets/styles/ButtonStyle";
-import OrganismLeftSideBar from "../../../Expert_Insight/components/organisms/OrganismLeftSideBar";
+import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
 import MoleculeHeader from "../molecules/MoleculeHeader";
 import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
@@ -128,7 +128,7 @@ const PagePersona = () => {
   return (
     <>
       <ContentsWrap>
-        <OrganismLeftSideBar />
+        <OrganismIncNavigation />
 
         <MoleculeHeader />
 
