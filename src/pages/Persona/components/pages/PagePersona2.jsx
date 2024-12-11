@@ -357,92 +357,65 @@ const PagePersona2 = () => {
                             ))}
                           </PersonaCards>
                         )}
-                        {!personaButtonState2 &&
+                        
+                        {!personaButtonState2 && (
                           <BottomBar>
                             <p>
-                              {selectedPersonas.length > 0
-                                ? <>선택하신 <span>{selectedPersonas.length}명</span>의 페르소나와 인터뷰 하시겠어요?</>
-                                : '페르소나를 선택하고 그들의 인터뷰를 시작해 보세요'
+                              {selectedPersonas.length > 0 ? (
+                                <>선택하신 <span>{selectedPersonas.length}명</span>의 페르소나와 인터뷰 하시겠어요?</>
+                              ) : (
+                                "페르소나를 선택하고 그들의 인터뷰를 시작해 보세요"
+                              )}
+                            </p>
+                            <Button
+                              Large
+                              Primary
+                              Fill={selectedPersonas.length > 0}
+                              Edit={selectedPersonas.length === 0}
+                              disabled={selectedPersonas.length === 0}
+                              onClick={handleStartInterview}
+                            >
+                              인터뷰 시작하기
+                              <img src={images.ChevronRight} alt="" />
+                            </Button>
+                          </BottomBar>
+                        )}
+                      </ContentSection>
+                    </CustomizePersona>
+                  </>
+                </CardWrap>
+              </MainSection>
 
-                              }
-                              currentSelection={selectedPersonas.length}
-                            />
-                          ))}
-                          {requestPersonaList.persona.map((persona, index) => (
-                            <MoleculePersonaCard
-                              key={index}
-                              title={persona[`persona_${index + 1}`].persona}
-                              keywords={persona[`persona_${index + 1}`].keyword}
-                              isCustom={true}
-                              // onSelect={(isSelected) => handlePersonaSelect(persona, isSelected)}
-                              onClick={() => setShowPopup(true)}
-                              currentSelection={selectedPersonas.length}
-                            />
-                          ))}
-                        </PersonaCards>
-                      )}
-                      {!personaButtonState2 && (
-                        <BottomBar>
-                          <p>
-                            {selectedPersonas.length > 0 ? (
-                              <>
-                                선택하신{" "}
-                                <span>{selectedPersonas.length}명</span>의
-                                페르소나와 인터뷰 하시겠어요?
-                              </>
-                            ) : (
-                              "페르소나를 선택하고 그들의 인터뷰를 시작해 보세요"
-                            )}
-                          </p>
-                          <Button
-                            Large
-                            Primary
-                            Fill={selectedPersonas.length > 0}
-                            Edit={selectedPersonas.length === 0}
-                            disabled={selectedPersonas.length === 0}
-                            onClick={handleStartInterview}
-                          >
-                            인터뷰 시작하기
-                            <img src={images.ChevronRight} alt="" />
-                          </Button>
-                        </BottomBar>
-                      )}
-                    </ContentSection>
-                  </CustomizePersona>
-                </>
-              </CardWrap>
-            </MainSection>
+              <Sidebar>
+                <h5>Let's Start Now</h5>
 
-            <Sidebar>
-              <h5>Let's Start Now</h5>
+                <ProgressBar>
+                  <span>🚀</span>
+                  <Progress progress={40} />
+                  <span>40%</span>
+                </ProgressBar>
 
-              <ProgressBar>
-                <span>🚀</span>
-                <Progress progress={40} />
-                <span>40%</span>
-              </ProgressBar>
+                <MoleculeStepIndicator steps={steps} activeStep={2} />
+              </Sidebar>
+            </AnalysisWrap>
+          </MainContent>
+        </ContentsWrap>
 
-              <MoleculeStepIndicator steps={steps} activeStep={2} />
-            </Sidebar>
-          </AnalysisWrap>
-        </MainContent>
-      </ContentsWrap>
-
-      {showPopup && (
-        <PopupWrap
-          Warning
-          title="요청 상태의 페르소나는 선택이 제한됩니다."
-          message="인터뷰를 진행하려면 모집 요청을 먼저 진행해주세요"
-          buttonType="Outline"
-          closeText="확인"
-          isModal={false}
-          onCancel={handlePopupClose}
-          show={showPopup}
-        />
-      )}
-    </>
-  );
-};
+        {showPopup && (
+          <PopupWrap
+            Warning
+            title="요청 상태의 페르소나는 선택이 제한됩니다."
+            message="인터뷰를 진행하려면 모집 요청을 먼저 진행해주세요"
+            buttonType="Outline"
+            closeText="확인"
+            isModal={false}
+            onCancel={handlePopupClose}
+            show={showPopup}
+          />
+        )}
+      </>
+    );
+  };
 
 export default PagePersona2;
 
