@@ -348,7 +348,7 @@ const PagePersona2 = () => {
                                 title={persona[`persona_${index + 1}`].persona}
                                 keywords={persona[`persona_${index + 1}`].keyword}
                                 isCustom={true}
-                                // onSelect={(isSelected) => handlePersonaSelect(persona, isSelected)}
+                                onSelect={(isSelected) => handlePersonaSelect(persona, isSelected)}
                                 onClick={() => setShowPopup(true)}
                                 currentSelection={selectedPersonas.length}
                               />

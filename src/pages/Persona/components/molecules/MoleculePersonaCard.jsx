@@ -20,12 +20,14 @@ const MoleculePersonaCard = ({
   hideCheckCircle = false,
   TitleFlex = false,
   onSelect,
-  currentSelection
+  currentSelection,
+  onClick
 }) => {
   const [isChecked, setIsChecked] = useState(false);
 
   const handleCheck = () => {
     if (isCustom) {
+      onClick && onClick();  // 팝업 표시를 위한 콜백 실행
       return;
     }
     // 이미 선택된 상태면 항상 해제 가능
