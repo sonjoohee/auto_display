@@ -31,9 +31,6 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const navigate = useNavigate();
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
-  const [tempBusinessAnalysis, setTempBusinessAnalysis] = useAtom(
-    TEMP_BUSINESS_ANALYSIS
-  );
   const [inputBusinessInfo, setInputBusinessInfo] =
     useAtom(INPUT_BUSINESS_INFO);
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
