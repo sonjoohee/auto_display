@@ -376,35 +376,31 @@ export const STRATEGY_CONSULTANT_REPORT_DATA = atom([]);
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* 페르소나 */
 
+export const PROJECT_ID = atom("");
+
+export const PROJECT_REPORT_ID = atom("");
+
 export const BUSINESS_ANALYSIS = atom({
   input: "",
   title: "",
   characteristics: "",
   features: [],
-  category: {}
-});
-
-export const TEMP_BUSINESS_ANALYSIS = atom({
-  input: "",
-  title: "",
-  characteristics: "",
-  features: [],
-  category: {}
+  category: {},
 });
 
 export const PERSONA_LIST = atom({
   selected: [],
-  unselected: []
+  unselected: [],
 });
 
 export const CUSTOMIZE_PERSONA_LIST = atom({
   selected: [],
-  unselected: []
+  unselected: [],
 });
 
 export const REQUEST_PERSONA_LIST = atom({
   persona: [],
-  positioning: {}
+  positioning: {},
 });
 
 export const INTERVIEW_QUESTION_LIST = atom([]);
@@ -414,10 +410,13 @@ export const INTERVIEW_ANSWER_LIST = atom([]);
 export const PERSONA_FINAL_REPORT = atom([]);
 
 export const IS_PERSONA_ACCESSIBLE = atom(false);
-export const PERSONA_STEP = atom(1);
+export const PERSONA_STEP = atom(0);
 export const PERSONA_BUTTON_STATE_1 = atom(0);
 export const PERSONA_BUTTON_STATE_2 = atom(0);
 export const PERSONA_BUTTON_STATE_3 = atom(0);
 
 export const SELECTED_INTERVIEW_PURPOSE = atom("");
 export const CATEGORY_COLOR = atom({});
+
+export const PROJECT_LOAD_BUTTON_STATE = atom(false);
+export const REPORT_LOAD_BUTTON_STATE = atom(false);
