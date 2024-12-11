@@ -4,19 +4,20 @@ import styled, { css } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAtom } from "jotai";
-import { 
-  IS_PERSONA_ACCESSIBLE, 
-  PERSONA_BUTTON_STATE_2, 
-  IS_LOGGED_IN, 
-  CONVERSATION_ID, 
-  INPUT_BUSINESS_INFO, 
-  TITLE_OF_BUSINESS_INFORMATION, 
+import {
+  IS_PERSONA_ACCESSIBLE,
+  PERSONA_BUTTON_STATE_2,
+  IS_LOGGED_IN,
+  CONVERSATION_ID,
+  INPUT_BUSINESS_INFO,
+  TITLE_OF_BUSINESS_INFORMATION,
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
   PERSONA_LIST,
   IS_LOADING,
   PERSONA_STEP,
   BUSINESS_ANALYSIS,
-  REQUEST_PERSONA_LIST
+  REQUEST_PERSONA_LIST,
+  PROJECT_ID,
 } from "../../../AtomStates";
 import { 
   ContentsWrap, 
@@ -40,28 +41,38 @@ import MoleculeHeader from "../molecules/MoleculeHeader";
 import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
 import MoleculePersonaCard from "../molecules/MoleculePersonaCard";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
-import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
-import { createChatOnServer } from "../../../../utils/indexedDB";
+import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import OrganismBusinessAnalysis from "../organisms/OrganismBisinessAnalysis";
-import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
 import AtomLoader from "../atoms/AtomLoader";
 import PopupWrap from "../../../../assets/styles/Popup";
 
 const PagePersona2 = () => {
-  const { saveConversation } = useSaveConversation();
+  const [requestPersonaListReady, setRequestPersonaListReady] = useState(false);
+  const [projectId, setProjectId] = useAtom(PROJECT_ID);
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
-  const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(IS_PERSONA_ACCESSIBLE);
-  const [personaButtonState2, setPersonaButtonState2] = useAtom(PERSONA_BUTTON_STATE_2);
-  const [inputBusinessInfo, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
-  const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
-  const [mainFeaturesOfBusinessInformation, setMainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
-  const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
+  const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
+    IS_PERSONA_ACCESSIBLE
+  );
+  const [personaButtonState2, setPersonaButtonState2] = useAtom(
+    PERSONA_BUTTON_STATE_2
+  );
+  const [inputBusinessInfo, setInputBusinessInfo] =
+    useAtom(INPUT_BUSINESS_INFO);
+  const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
+    TITLE_OF_BUSINESS_INFORMATION
+  );
+  const [
+    mainFeaturesOfBusinessInformation,
+    setMainFeaturesOfBusinessInformation,
+  ] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
-  const [requestPersonaList, setRequestPersonaList] = useAtom(REQUEST_PERSONA_LIST);
+  const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
+  const [requestPersonaList, setRequestPersonaList] =
+    useAtom(REQUEST_PERSONA_LIST);
 
   const [selectedPersonas, setSelectedPersonas] = useState([]);
   const [checkedPersonas, setCheckedPersonas] = useState(0);
@@ -74,15 +85,15 @@ const PagePersona2 = () => {
   // const [isLoadingPage, setIsLoadingPage] = useState(true);
 
   const [steps, setSteps] = useState([
-    { number: 1, label: '비즈니스 분석', active: true },
-    { number: 2, label: '맞춤 페르소나 추천', active: true },
-    { number: 3, label: '인터뷰 방법 선택', active: false },
-    { number: 4, label: '페르소나와 인터뷰', active: false },
-    { number: 5, label: '의견 분석', active: false }
+    { number: 1, label: "비즈니스 분석", active: true },
+    { number: 2, label: "맞춤 페르소나 추천", active: true },
+    { number: 3, label: "인터뷰 방법 선택", active: false },
+    { number: 4, label: "페르소나와 인터뷰", active: false },
+    { number: 5, label: "의견 분석", active: false },
   ]);
 
   const handlePersonaSelect = (persona, isSelected) => {
-    setSelectedPersonas(prev => {
+    setSelectedPersonas((prev) => {
       if (isSelected) {
         // 최대 5개까지만 선택 가능
         if (prev.length >= 5) {
@@ -90,7 +101,7 @@ const PagePersona2 = () => {
         }
         return [...prev, persona];
       } else {
-        return prev.filter(p => p !== persona);
+        return prev.filter((p) => p !== persona);
       }
     });
   };
@@ -110,26 +121,28 @@ const PagePersona2 = () => {
   }, [navigate]);
 
   useEffect(() => {
+    if (projectId) {
+      setRequestPersonaListReady(true);
+    }
+  }, [projectId]);
+
+  useEffect(() => {
     const loadConversation = async () => {
       // 1. 로그인 여부 확인
       if (isLoggedIn) {
         // 2. 로그인 상태라면 서버에서 새로운 대화 ID를 생성하거나, 저장된 대화를 불러옴
-          const savedConversation = await getConversationByIdFromIndexedDB(
-            conversationId,
-            isLoggedIn
-          );
-
-          if (savedConversation) {
-            const analysisData = savedConversation.analysisReportData || {};
-            setTitleOfBusinessInfo(analysisData.title || "");
-            setMainFeaturesOfBusinessInformation(
-              analysisData.mainFeatures || []
-            );
-            setInputBusinessInfo(savedConversation.inputBusinessInfo);
-            setPersonaList(savedConversation.personaList);
-          }
-
-          // setIsLoadingPage(false); // 로딩 완료
+        // const savedConversation = await getConversationByIdFromIndexedDB(
+        //   conversationId,
+        //   isLoggedIn
+        // );
+        // if (savedConversation) {
+        //   const analysisData = savedConversation.analysisReportData || {};
+        //   setTitleOfBusinessInfo(analysisData.title || "");
+        //   setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
+        //   setInputBusinessInfo(savedConversation.inputBusinessInfo);
+        //   setPersonaList(savedConversation.personaList);
+        // }
+        // setIsLoadingPage(false); // 로딩 완료
       }
     };
 
@@ -156,15 +169,15 @@ const PagePersona2 = () => {
 
           let unselectedPersonas = [];
           let data, response;
-          
+
           // 카테고리별로 페르소나 요청
-          for(const category of Object.values(businessAnalysis.category)) {
+          for (const category of Object.values(businessAnalysis.category)) {
             data = {
-              target: category
+              target: category,
             };
 
             response = await axios.post(
-              "https://wishresearch.kr/person/find", 
+              "https://wishresearch.kr/person/find",
               data,
               axiosConfig
             );
@@ -174,13 +187,13 @@ const PagePersona2 = () => {
 
           let personaList = {
             selected: [],
-            unselected: unselectedPersonas
+            unselected: unselectedPersonas,
           };
           setPersonaList(personaList);
 
           ////////////////////////////////////////////////////////////////////////////////////////
           data = {
-            business_idea : businessAnalysis.title,
+            business_idea: businessAnalysis.title,
           };
 
           response = await axios.post(
@@ -189,33 +202,54 @@ const PagePersona2 = () => {
             axiosConfig
           );
 
-          personaList = response.data;
+          let requestPersonaList = response.data;
           let retryCount = 0;
           const maxRetries = 10;
 
-          while (retryCount < maxRetries && (
-            !response || 
-            !response.data || 
-            !personaList.hasOwnProperty("persona_spectrum") ||
-            !personaList.hasOwnProperty("positioning_analysis") ||
-            !personaList.persona_spectrum.length === 3 ||
-            !personaList.persona_spectrum[0].hasOwnProperty("persona_1") ||
-            !personaList.persona_spectrum[1].hasOwnProperty("persona_2") ||
-            !personaList.persona_spectrum[2].hasOwnProperty("persona_3") ||
-            !personaList.persona_spectrum[0].persona_1.hasOwnProperty("persona") ||
-            !personaList.persona_spectrum[1].persona_2.hasOwnProperty("persona") ||
-            !personaList.persona_spectrum[2].persona_3.hasOwnProperty("persona") ||
-            !personaList.persona_spectrum[0].persona_1.persona ||
-            !personaList.persona_spectrum[1].persona_2.persona ||
-            !personaList.persona_spectrum[2].persona_3.persona ||
-            !personaList.persona_spectrum[0].persona_1.hasOwnProperty("keyword") ||
-            !personaList.persona_spectrum[1].persona_2.hasOwnProperty("keyword") ||
-            !personaList.persona_spectrum[2].persona_3.hasOwnProperty("keyword") ||
-            !personaList.persona_spectrum[0].persona_1.keyword.length == 3 ||
-            !personaList.persona_spectrum[1].persona_2.keyword.length == 3 ||
-            !personaList.persona_spectrum[2].persona_3.keyword.length == 3
-          ))
-          {
+          while (
+            retryCount < maxRetries &&
+            (!response ||
+              !response.data ||
+              !requestPersonaList.hasOwnProperty("persona_spectrum") ||
+              !requestPersonaList.hasOwnProperty("positioning_analysis") ||
+              !requestPersonaList.persona_spectrum.length === 3 ||
+              !requestPersonaList.persona_spectrum[0].hasOwnProperty(
+                "persona_1"
+              ) ||
+              !requestPersonaList.persona_spectrum[1].hasOwnProperty(
+                "persona_2"
+              ) ||
+              !requestPersonaList.persona_spectrum[2].hasOwnProperty(
+                "persona_3"
+              ) ||
+              !requestPersonaList.persona_spectrum[0].persona_1.hasOwnProperty(
+                "persona"
+              ) ||
+              !requestPersonaList.persona_spectrum[1].persona_2.hasOwnProperty(
+                "persona"
+              ) ||
+              !requestPersonaList.persona_spectrum[2].persona_3.hasOwnProperty(
+                "persona"
+              ) ||
+              !requestPersonaList.persona_spectrum[0].persona_1.persona ||
+              !requestPersonaList.persona_spectrum[1].persona_2.persona ||
+              !requestPersonaList.persona_spectrum[2].persona_3.persona ||
+              !requestPersonaList.persona_spectrum[0].persona_1.hasOwnProperty(
+                "keyword"
+              ) ||
+              !requestPersonaList.persona_spectrum[1].persona_2.hasOwnProperty(
+                "keyword"
+              ) ||
+              !requestPersonaList.persona_spectrum[2].persona_3.hasOwnProperty(
+                "keyword"
+              ) ||
+              !requestPersonaList.persona_spectrum[0].persona_1.keyword
+                .length == 3 ||
+              !requestPersonaList.persona_spectrum[1].persona_2.keyword
+                .length == 3 ||
+              !requestPersonaList.persona_spectrum[2].persona_3.keyword
+                .length == 3)
+          ) {
             response = await axios.post(
               "https://wishresearch.kr/person/persona_request",
               data,
@@ -223,15 +257,28 @@ const PagePersona2 = () => {
             );
             retryCount++;
 
-            personaList = response.data;
+            requestPersonaList = response.data;
           }
           if (retryCount === maxRetries) {
-            throw new Error("Maximum retry attempts reached. Empty response persists.");
+            throw new Error(
+              "Maximum retry attempts reached. Empty response persists."
+            );
           }
-          setRequestPersonaList({
-            persona: personaList.persona_spectrum,
-            positioning: personaList.positioning_analysis
-          });
+
+          const requestPersonaData = {
+            persona: requestPersonaList.persona_spectrum,
+            positioning: requestPersonaList.positioning_analysis,
+          };
+
+          setRequestPersonaList(requestPersonaData);
+          await updateProjectOnServer(
+            projectId,
+            {
+              personaList: personaList,
+              requestPersonaList: requestPersonaData,
+            },
+            isLoggedIn
+          );
         }
       } catch (error) {
         console.error("Error in loadPersona:", error);
@@ -246,11 +293,11 @@ const PagePersona2 = () => {
 
   const handleStartInterview = () => {
     // 선택된 페르소나들을 selected에 반영
-    setPersonaList(prev => ({
+    setPersonaList((prev) => ({
       selected: selectedPersonas,
       unselected: prev.unselected.filter(
-        persona => !selectedPersonas.includes(persona)
-      )
+        (persona) => !selectedPersonas.includes(persona)
+      ),
     }));
 
     setPersonaStep(3);
@@ -332,6 +379,71 @@ const PagePersona2 = () => {
                       </ContentSection>
                     </CustomizePersona>
                   </>
+//                 <>
+//                   <CustomizePersona>
+//                     <Title Column>
+//                       <h3>맞춤 페르소나</h3>
+//                       <p>
+//                         추천된 페르소나를 선택하고 인터뷰를 진행하세요. (최대
+//                         5명까지 선택이 가능합니다)
+//                       </p>
+//                     </Title>
+
+//                     <ContentSection>
+//                       {personaButtonState2 ? (
+//                         <PersonaCards>
+//                           <AtomLoader />
+//                         </PersonaCards>
+//                       ) : (
+//                         <PersonaCards>
+//                           {personaList.unselected.map((persona, index) => (
+//                             <MoleculePersonaCard
+//                               key={index}
+//                               title={persona.persona}
+//                               keywords={persona.keyword.split(",")}
+//                               isReady={true}
+//                               isRequest={false}
+//                               onSelect={(isSelected) =>
+//                                 handlePersonaSelect(persona, isSelected)
+//                               }
+//                               currentSelection={selectedPersonas.length}
+//                             />
+//                           ))}
+//                           {requestPersonaList.persona.map((persona, index) => (
+//                             <MoleculePersonaCard
+//                               key={index}
+//                               title={persona[`persona_${index + 1}`].persona}
+//                               keywords={persona[`persona_${index + 1}`].keyword}
+//                               isRequest={true}
+//                               onSelect={(isSelected) =>
+//                                 handlePersonaSelect(persona, isSelected)
+//                               }
+//                               currentSelection={selectedPersonas.length}
+//                             />
+//                           ))}
+//                         </PersonaCards>
+//                       )}
+//                       {!personaButtonState2 && (
+//                         <BottomBar>
+//                           <p>
+//                             선택하신 <span>{selectedPersonas.length}명</span>의
+//                             페르소나와 인터뷰 하시겠어요?
+//                           </p>
+//                           <Button
+//                             Large
+//                             Primary
+//                             Fill
+//                             onClick={handleStartInterview}
+//                             disabled={selectedPersonas.length === 0}
+//                           >
+//                             인터뷰 시작하기
+//                             <img src={images.ChevronRight} alt="" />
+//                           </Button>
+//                         </BottomBar>
+//                       )}
+//                     </ContentSection>
+//                   </CustomizePersona>
+//                 </>
               </CardWrap>
             </MainSection>
 
@@ -344,8 +456,7 @@ const PagePersona2 = () => {
                 <span>40%</span>
               </ProgressBar>
 
-              <MoleculeStepIndicator steps={steps} activeStep={2}/>
-
+              <MoleculeStepIndicator steps={steps} activeStep={2} />
             </Sidebar>
           </AnalysisWrap>
         </MainContent>
@@ -381,14 +492,13 @@ const Sidebar = styled.div`
   border-radius: 10px;
   background: ${palette.chatGray};
 
-  h5{
+  h5 {
     font-size: 0.88rem;
     font-weight: 500;
     line-height: 1.5;
     color: ${palette.gray700};
     text-align: left;
   }
-
 `;
 
 const ProgressBar = styled.div`
@@ -409,14 +519,14 @@ const Progress = styled.div`
   height: 8px;
   border-radius: 20px;
   background: ${palette.outlineGray};
-  
+
   &:before {
     display: block;
-    width: ${props => props.progress}%;
+    width: ${(props) => props.progress}%;
     height: 100%;
     border-radius: 20px;
     background: ${palette.chatBlue};
-    content: '';
+    content: "";
   }
 `;
 
@@ -439,6 +549,10 @@ const BottomBar = styled.div`
   border: 1px solid ${palette.outlineGray};
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
   background: ${palette.white};
+
+//   button:disabled {
+//     cursor: default;
+//   }
 
   p {
     font-size: 0.875rem;

@@ -376,27 +376,31 @@ export const STRATEGY_CONSULTANT_REPORT_DATA = atom([]);
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* 페르소나 */
 
+export const PROJECT_ID = atom("");
+
+export const PROJECT_REPORT_ID = atom("");
+
 export const BUSINESS_ANALYSIS = atom({
   input: "",
   title: "",
   characteristics: "",
   features: [],
-  category: {}
+  category: {},
 });
 
 export const PERSONA_LIST = atom({
   selected: [],
-  unselected: []
+  unselected: [],
 });
 
 export const CUSTOMIZE_PERSONA_LIST = atom({
   selected: [],
-  unselected: []
+  unselected: [],
 });
 
 export const REQUEST_PERSONA_LIST = atom({
   persona: [],
-  positioning: {}
+  positioning: {},
 });
 
 export const INTERVIEW_QUESTION_LIST = atom([]);
