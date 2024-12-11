@@ -15,10 +15,24 @@ import {
   SELECTED_INTERVIEW_PURPOSE,
   PERSONA_LIST,
 } from "../../../AtomStates";
+import { 
+  ContentsWrap, 
+  ContentSection,
+  MainContent, 
+  AnalysisWrap, 
+  MainSection, 
+  Title,
+  CardWrap,
+  CustomizePersona,
+  AccordionSection,
+  // AccordionHeader,  // 제거
+  // AccordionIcon,    // 제거
+  // AccordionContent, // 제거
+} from "../../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
 import { Button } from "../../../../assets/styles/ButtonStyle";
-import OrganismLeftSideBar from "../../../Expert_Insight/components/organisms/OrganismLeftSideBar";
+import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
 import MoleculeHeader from "../molecules/MoleculeHeader";
 import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
 import MoleculeInterviewCard from "../molecules/MoleculeInterviewCard";
@@ -215,7 +229,7 @@ const PagePersona3 = () => {
   return (
     <>
       <ContentsWrap>
-        <OrganismLeftSideBar />
+        <OrganismIncNavigation />
 
         <MoleculeHeader />
 
@@ -223,10 +237,11 @@ const PagePersona3 = () => {
           <AnalysisWrap>
             <MainSection>
               <OrganismBusinessAnalysis personaStep={personaStep}/>
-              <CardWrap>
+              
                 {/* 인터뷰 방식 선택 */}
                   <>
                     <CustomizePersona>
+                    <CardWrap>
                       <Title>인터뷰 방식 선택</Title>
 
                       <InterviewTypeCards>
@@ -258,6 +273,7 @@ const PagePersona3 = () => {
                           </p>
                         </InterviewTypeCard>
                       </InterviewTypeCards>
+                      </CardWrap>
                     </CustomizePersona>
 
                     <InterviewSelect>
@@ -314,7 +330,6 @@ const PagePersona3 = () => {
                       </ContentSection>
                     </CustomizePersona>
                   </>
-              </CardWrap>
             </MainSection>
 
             <Sidebar>
@@ -354,105 +369,6 @@ const PagePersona3 = () => {
 };
 
 export default PagePersona3;
-
-// Styled Components
-const ContentsWrap = styled.div`
-  position: relative;
-  // width: ${(props) => (props.isMobile ? "100%" : "calc(100% - 40px)")};
-  width: 100%;
-  display: flex;
-  flex-direction: ${(props) => (props.isMobile ? "column" : "row")};
-  gap: ${(props) => (props.isMobile ? "20px" : "40px")};
-  padding: ${(props) => (props.isMobile ? "20px" : "0")};
-`;
-
-const MainContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  max-width: 1024px;
-  min-height: 100vh;
-  width: 100%;
-  justify-content:${props => {
-    if (props.MainSearch) return `center`;
-    else return `flex-start`;
-  }};
-  margin: 57px auto 40px;
-  // padding: ${(props) => (props.isMobile ? "0" : "0 20px")};
-`;
-
-const AnalysisWrap = styled.div`
-  position: relative;
-  width: 100%;
-  display: flex;
-  gap: 16px;
-  margin-top:44px;
-  overflow: visible;
-`;
-
-const MainSection = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
-
-const Title = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-direction: ${props => {
-    if (props.Column) return `column`;
-    else return `row`;
-  }};
-  align-items: ${props => {
-    if (props.Column) return `flex-start`;
-    else return `center`;
-  }};
-  gap: ${props => {
-    if (props.Column) return `8px`;
-    else return `0`;
-  }};
-
-  h3 {
-    font-weight: 500;
-    color: ${palette.gray800};
-  }
-
-  p {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    font-size: 0.88rem;
-    font-weight: 300;
-    line-height: 1.5;
-    color: ${palette.gray500};
-
-    span {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 0.75rem;
-      color: ${palette.chatBlue};
-    }
-  }
-`;
-
-const CardWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
-
-const Card = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 32px 24px;
-  border-radius: 15px;
-  border: 1px solid ${palette.outlineGray};
-  background: ${palette.white};
-`;
 
 const Sidebar = styled.div`
   position: sticky;
@@ -540,29 +456,6 @@ const Progress = styled.div`
   }
 `;
 
-const CustomizePersona = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 100%;
-  height: 100%;
-  margin-top: 30px;
-`;
-
-const ContentSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-`;
-
-const PersonaCards = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  width: 100%;
-`;
-
 const InterviewTypeCards = styled.div`
   display: flex;
   align-items: stretch;
@@ -584,9 +477,9 @@ const InterviewTypeCard = styled.div`
   background: ${props => props.isActive 
     ? 'rgba(34, 111, 255, 0.10)' 
     : 'white'};
-  cursor: ${props => props.disabled ? 'default' : 'pointer'};
+  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+  opacity: ${props => props.disabled ? 0.6 : 1};
   transition: all 0.2s ease-in-out;
-  
 
   strong {
     display: flex;
@@ -671,10 +564,6 @@ const TabButton = styled.button`
   `}
 `;
 
-const TabContent = styled(PersonaCards)`
-  gap: 12px;
-`;
-
 const InterviewSelect = styled.div`
   display: flex;
   flex-direction: column;
@@ -682,4 +571,60 @@ const InterviewSelect = styled.div`
   width: 100%;
   height: 100%;
   margin-top: 30px;
+`;
+
+const PersonaCards = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+`;
+
+const TabContent = styled(PersonaCards)`
+  gap: 12px;
+`;
+
+const CustomAccordionIcon = styled.div`
+  width: 24px;
+  height: 24px;
+  position: relative;
+  
+  &:before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid ${palette.gray500};
+    border-bottom: 2px solid ${palette.gray500};
+    transform: translate(-50%, -50%) ${props => props.isOpen ? 'rotate(-135deg)' : 'rotate(45deg)'};
+    transition: transform 0.3s ease;
+  }
+`;
+
+const CustomAccordionHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background: ${palette.chatGray};
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: ${palette.gray700};
+  transition: background 0.3s ease;
+
+  &:hover {
+    background: ${palette.gray100};
+  }
+`;
+
+const CustomAccordionContent = styled.div`
+  padding: 20px 16px;
+  border: 1px solid ${palette.outlineGray};
+  border-radius: 10px;
+  margin-top: 12px;
+  background: ${palette.white};
 `;
