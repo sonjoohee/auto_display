@@ -39,6 +39,10 @@ import PageMarketingNoItemsResult from "./pages/Marketing/components/pages/PageM
 // 디자인페이지
 import PageConnetWithYouTarget from "./pages/Design_Page/PageConnetWithYourTargett";
 import PageBusinessAnalysis from "./pages/Design_Page/PageBusinessAnalysis";
+import PageCustomizePersona from "./pages/Design_Page/PageCustomizePersona";
+import PageWayInterview from "./pages/Design_Page/PageWayInterview";
+import PageInterviewResult from "./pages/Design_Page/PageInterviewResult";
+import PageMyProject from "./pages/Design_Page/PageMyProject";
 
 // 페르소나
 import PageMain from "./pages/Persona/components/pages/PageMain";
@@ -225,6 +229,10 @@ function App() {
             {/* 디자인페이지 */}
             <Route path="/ConnectWithYourTarget" element={<PageConnetWithYouTarget />} />
             <Route path="/BusinessAnalysis" element={<PageBusinessAnalysis />} />
+            <Route path="/CustomizePersona" element={<PageCustomizePersona />} />
+            <Route path="/WayInterview" element={<PageWayInterview />} />
+            <Route path="/InterviewResult" element={<PageInterviewResult />} />
+            <Route path="/MyProject" element={<PageMyProject />} />
         </Routes>
       </BrowserRouter>
     </div>

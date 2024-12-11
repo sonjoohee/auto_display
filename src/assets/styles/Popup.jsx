@@ -21,6 +21,7 @@ const PopupWrap = ({
   isModal,
   isTextareaValid,
   isRadioSelected,
+  isFormValid,
  }) => {
   const [isOpen, setIsOpen] = useState(true);
 
@@ -73,7 +74,14 @@ const PopupWrap = ({
             <Button Close className="Fill" onClick={handleClose}>{closeText}</Button>
           )}
           {confirmText && (
-            <Button Confirm className={`Fill ${(!isTextareaValid || !isRadioSelected) ? 'disabled' : ''}`} onClick={handleConfirm}>{confirmText}</Button>
+            <Button 
+              Confirm 
+              className={`Fill ${!isFormValid ? 'disabled' : ''}`} 
+              onClick={isFormValid ? handleConfirm : undefined}
+              disabled={!isFormValid}
+            >
+              {confirmText}
+            </Button>
           )}
         </FillButtonWrap>
       );
@@ -402,6 +410,7 @@ export const Button = styled.div`
   }
 
   &.disabled {
+    opacity: 0.5;
     border: 1px solid ${palette.gray300};
     background: ${palette.gray300};
     cursor: not-allowed;
