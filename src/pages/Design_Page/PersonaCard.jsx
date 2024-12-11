@@ -5,6 +5,12 @@ import images from '../../assets/styles/Images';
 import { Button } from '../../assets/styles/ButtonStyle'
 import PopupWrap from '../../assets/styles/Popup';
 import { CustomTextarea } from '../../assets/styles/InputStyle';
+import {
+  AccordionSection,
+  CustomAccordionHeader,
+  CustomAccordionIcon,
+  CustomAccordionContent
+} from '../../components/common/Accordion';
 
 const PersonaCard = ({ 
   title, 
@@ -29,6 +35,16 @@ const PersonaCard = ({
     customTextarea: '',
     isTextareaValid: false,
     isRadioSelected: false,
+    showQuestions: false,
+    showCustomPopup: false,
+    isAccordionOpen: false,
+    formState: {
+      purpose: '',
+      personaCount: '',
+      gender: '',
+      age: '',
+      additionalInfo: ''
+    }
   });
 
   const handleToggle = (key) => {
@@ -49,16 +65,15 @@ const PersonaCard = ({
 
   const handleCheckCircleClick = () => {
     if (isCustom) {
-        setState(prevState => ({ ...prevState, showPopup: true }));
-        if (onShowPopup) {
-            onShowPopup();
-        }
+      if (onCheckChange) {
+        onCheckChange(false, true);
+      }
     } else {
-        const newCheckedState = !state.isChecked;
-        setState(prevState => ({ ...prevState, isChecked: newCheckedState }));
-        if (onCheckChange) {
-            onCheckChange(newCheckedState);
-        }
+      const newCheckedState = !state.isChecked;
+      setState(prevState => ({ ...prevState, isChecked: newCheckedState }));
+      if (onCheckChange) {
+        onCheckChange(newCheckedState, false);
+      }
     }
   };
 
@@ -105,94 +120,139 @@ const PersonaCard = ({
     }));
   };
 
+  const handleClick = () => {
+    if (isCustom) {
+      setState(prev => ({
+        ...prev,
+        showCustomPopup: true
+      }));
+    }
+  };
 
+  const handleInputChange = (field, value) => {
+    setState(prev => ({
+      ...prev,
+      formState: {
+        ...prev.formState,
+        [field]: value
+      }
+    }));
+  };
 
-  // const [isExpanded, setIsExpanded] = useState(false);
-  // const [isChecked, setIsChecked] = useState(false);
-  // const [showPopup, setShowPopup] = useState(false);
-  // const [showRequestBadge, setShowRequestBadge] = useState(false);
-  // const [showCustomModal, setShowCustomModal] = useState(false);
-  // const [customTextarea, setCustomTextarea] = useState('');
-  // const [isTextareaValid, setIsTextareaValid] = useState(false);
-  // const [isRadioSelected, setIsRadioSelected] = useState(false);
+  const isFormValid = () => {
+    return state.formState.purpose.trim() !== '' && state.formState.personaCount !== '';
+  };
 
   return (
-    <CardContainer TitleFlex={TitleFlex}>
-      <MainContent>
-        {!hideCheckCircle && (
-          <CheckCircle 
-            $isChecked={state.isChecked}
-            onClick={handleCheckCircleClick}
-          />
-        )}
-
-        <ContentWrapper>
-          <TitleSection>
-            <Title>
-              {title}
-            </Title>
-          </TitleSection>
-          
-          {keywords.length > 0 && (
-            <KeywordGroup>
-              {keywords.map((keyword, index) => (
-                <KeywordTag key={index}>#{keyword}</KeywordTag>
-              ))}
-            </KeywordGroup>
+    <>
+      <CardContainer TitleFlex={TitleFlex}>
+        <MainContent>
+          {!hideCheckCircle && (
+            <CheckCircle 
+              $isChecked={state.isChecked}
+              onClick={handleCheckCircleClick}
+            />
           )}
-        </ContentWrapper>
 
-        {isBasic ? (
-          <Badge Basic>
-            <ReadyIcon />
-            기본형
-          </Badge>
-        ) : isCustom ? (
-          state.showRequestBadge ? (
-            <Badge>
-              <img src={images.NotePencil} alt="NotePencil" />
-              커스터마이즈
-            </Badge>
-          ) : (
-            <Button Medium Primary onClick={handleRequestClick}>
-              모집 요청하기
-            </Button>
-          )
-        ) : (
-          <ToggleButton $isExpanded={state.isExpanded} onClick={() => handleToggle('isExpanded')} />
-        )}
-      </MainContent>
-
-      {state.isExpanded && (
-        <DescriptionSection $isExpanded={state.isExpanded}>
-          <ListUL>
-            {Array.isArray(expandedContent) ? (
-              <ul>
-                {expandedContent.map((item, index) => (
-                  <li key={index}>
-                    <span className="number">{index + 1}</span>
-                    {item}
-                  </li>
+          <ContentWrapper>
+            <TitleSection>
+              <Title>
+                {title}
+              </Title>
+            </TitleSection>
+            
+            {keywords.length > 0 && (
+              <KeywordGroup>
+                {keywords.map((keyword, index) => (
+                  <KeywordTag key={index}>#{keyword}</KeywordTag>
                 ))}
-              </ul>
-            ) : (
-              description
+              </KeywordGroup>
             )}
-          </ListUL>
-        </DescriptionSection>
-      )}
 
-      {state.showCustomModal && (
+            {description && (
+              <Description>
+                {description}
+              </Description>
+            )}
+          </ContentWrapper>
+
+          {isBasic ? (
+            <Badge Basic>
+              <ReadyIcon />
+              기본형
+            </Badge>
+          ) : isCustom ? (
+            state.showRequestBadge ? (
+              <Badge Custom>
+                <img src={images.NotePencil} alt="NotePencil" />
+                커스터마이즈
+              </Badge>
+            ) : (
+              <Badge 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  console.log('Badge clicked');
+                  setState(prev => {
+                    console.log('Previous state:', prev);
+                    const newState = { ...prev, showPopup: true };
+                    console.log('New state:', newState);
+                    return newState;
+                  });
+                }}
+              >
+                <img src={images.PencilSquare} alt="" />
+                모집 요청하기
+              </Badge>
+            )
+          ) : (
+            <ToggleButton $isExpanded={state.isExpanded} onClick={() => handleToggle('isExpanded')} />
+          )}
+        </MainContent>
+
+        {state.isExpanded && (
+          <DescriptionSection $isExpanded={state.isExpanded}>
+            {!state.showQuestions ? (
+              <span onClick={() => setState(prev => ({ ...prev, showQuestions: true }))}>
+                <img src="" alt="문항보기" />
+                문항보기
+              </span>
+            ) : (
+              <ListUL>
+                {Array.isArray(expandedContent) ? (
+                  <ul>
+                    {expandedContent.map((item, index) => (
+                      <li key={index}>
+                        <span className="number">{index + 1}</span>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  description
+                )}
+              </ListUL>
+            )}
+          </DescriptionSection>
+        )}
+      </CardContainer>
+
+      {state.showPopup && (
         <PopupWrap 
           title="📝 맞춤형 페르소나 모집 요청하기" 
-          onConfirm={handleConfirm}
-          onCancel={handlePopupClose}
           buttonType="Fill"
           confirmText="맞춤 페르소나 모집하기"
           isModal={true}
-          confirmDisabled={!state.isTextareaValid || !state.isRadioSelected}
-          isTextareaValid={state.isTextareaValid}
-          isRadioSelected={state.isRadioSelected}
+          onClose={() => setState(prev => ({ ...prev, showPopup: false }))}
+          onCancel={() => setState(prev => ({ ...prev, showPopup: false }))}
+          onConfirm={() => {
+            if (isFormValid()) {
+              setState(prev => ({
+                ...prev,
+                showPopup: false
+              }));
+            }
+          }}
+          isFormValid={isFormValid()}
           body={
             <>
               <div className="bgBox">
@@ -210,7 +270,8 @@ const PersonaCard = ({
                   <CustomTextarea 
                     rows={3}
                     placeholder="생성하기 위한 목적을 적어 주세요."
-                    onChange={(e) => handleTextareaChange(e.target.value)}
+                    value={state.formState.purpose}
+                    onChange={(e) => handleInputChange('purpose', e.target.value)}
                   />
                 </dd>
               </dl>
@@ -218,79 +279,109 @@ const PersonaCard = ({
               <dl>
                 <dt className="point">몇명의 페르소나를 모집하시고 싶으신가요?</dt>
                 <dd>
-                  <input type="radio" id="persona1" name="persona" onChange={() => setState(prevState => ({ ...prevState, isRadioSelected: true }))} />
+                  <input 
+                    type="radio" 
+                    id="persona1" 
+                    name="persona" 
+                    value="5"
+                    onChange={(e) => handleInputChange('personaCount', e.target.value)}
+                  />
                   <label htmlFor="persona1" className="persona">5명</label>
-                  <input type="radio" id="persona2" name="persona" onChange={() => setState(prevState => ({ ...prevState, isRadioSelected: true }))} />
+                  <input 
+                    type="radio" 
+                    id="persona2" 
+                    name="persona" 
+                    value="10"
+                    onChange={(e) => handleInputChange('personaCount', e.target.value)}
+                  />
                   <label htmlFor="persona2" className="persona">10명</label>
-                  <input type="radio" id="persona3" name="persona" onChange={() => setState(prevState => ({ ...prevState, isRadioSelected: true }))} />
+                  <input 
+                    type="radio" 
+                    id="persona3" 
+                    name="persona" 
+                    value="15"
+                    onChange={(e) => handleInputChange('personaCount', e.target.value)}
+                  />
                   <label htmlFor="persona3" className="persona">15명</label>
-                  <input type="radio" id="persona4" name="persona" onChange={() => setState(prevState => ({ ...prevState, isRadioSelected: true }))} />
+                  <input 
+                    type="radio" 
+                    id="persona4" 
+                    name="persona" 
+                    value="20"
+                    onChange={(e) => handleInputChange('personaCount', e.target.value)}
+                  />
                   <label htmlFor="persona4" className="persona">20명</label>
                 </dd>
               </dl>
 
               <AccordionSection>
-                <AccordionHeader onClick={() => handleToggle('isExpanded')}>
+                <CustomAccordionHeader 
+                  onClick={() => setState(prev => ({
+                    ...prev,
+                    isAccordionOpen: !prev.isAccordionOpen
+                  }))}
+                >
                   🔍 추가정보를 입력하여, 더 정확한 타겟 페르소나를 찾으세요
-                  <AccordionIcon $isExpanded={state.isExpanded} />
-                </AccordionHeader>
-                <AccordionContent $isExpanded={state.isExpanded}>
-                  <dl>
-                    <dt>추가정보</dt>
-                    <dd>
-                      <input type="radio" id="gender1" name="gender" />
-                      <label htmlFor="gender1" className="gender men">
-                        <img src={images.GenderMen} alt="GenderMen" />
-                        남자
-                      </label>
-                      <input type="radio" id="gender2" name="gender" />
-                      <label htmlFor="gender2" className="gender women">
-                        <img src={images.GenderWomen} alt="GenderWomen" />
-                        여자
-                      </label>
-                    </dd>
-                  </dl>
+                  <CustomAccordionIcon isOpen={state.isAccordionOpen} />
+                </CustomAccordionHeader>
+                {state.isAccordionOpen && (
+                  <CustomAccordionContent>
+                    <dl>
+                      <dt>추가정보</dt>
+                      <dd>
+                        <input type="radio" id="gender1" name="gender" />
+                        <label htmlFor="gender1" className="gender men">
+                          <img src={images.GenderMen} alt="GenderMen" />
+                          남자
+                        </label>
+                        <input type="radio" id="gender2" name="gender" />
+                        <label htmlFor="gender2" className="gender women">
+                          <img src={images.GenderWomen} alt="GenderWomen" />
+                          여자
+                        </label>
+                      </dd>
+                    </dl>
 
-                  <dl>
-                    <dt>
-                      나이
-                      <p>* 선택하지 않는 경우, 연령 무관으로 페르소나를 생성합니다.</p>
-                    </dt>
-                    <dd>
-                      <input type="radio" id="age1" name="age" />
-                      <label htmlFor="age1" className="age">10대</label>
-                      <input type="radio" id="age2" name="age" />
-                      <label htmlFor="age2" className="age">20대</label>
-                      <input type="radio" id="age3" name="age" />
-                      <label htmlFor="age3" className="age">30대</label>
-                      <input type="radio" id="age4" name="age" />
-                      <label htmlFor="age4" className="age">40대</label>
-                      <input type="radio" id="age5" name="age" />
-                      <label htmlFor="age5" className="age">50대</label>
-                      <input type="radio" id="age6" name="age" />
-                      <label htmlFor="age6" className="age">60대</label>
-                      <input type="radio" id="age7" name="age" />
-                      <label htmlFor="age7" className="age">70대 이상</label>
-                    </dd>
-                  </dl>
+                    <dl>
+                      <dt>
+                        나이
+                        <p>* 선택하지 않는 경우, 연령 무관으로 페르소나를 생성합니다.</p>
+                      </dt>
+                      <dd>
+                        <input type="radio" id="age1" name="age" />
+                        <label htmlFor="age1" className="age">10대</label>
+                        <input type="radio" id="age2" name="age" />
+                        <label htmlFor="age2" className="age">20대</label>
+                        <input type="radio" id="age3" name="age" />
+                        <label htmlFor="age3" className="age">30대</label>
+                        <input type="radio" id="age4" name="age" />
+                        <label htmlFor="age4" className="age">40대</label>
+                        <input type="radio" id="age5" name="age" />
+                        <label htmlFor="age5" className="age">50대</label>
+                        <input type="radio" id="age6" name="age" />
+                        <label htmlFor="age6" className="age">60대</label>
+                        <input type="radio" id="age7" name="age" />
+                        <label htmlFor="age7" className="age">70대 이상</label>
+                      </dd>
+                    </dl>
 
-                  <dl>
-                    <dt>더 상세하게 필요한 정보를 입력해주세요 </dt>
-                    <dd>
-                      <CustomTextarea 
-                        rows={3}
-                        placeholder="모집하고 싶은 페르소나의 성향, 목표, 행동 패턴을 구체적으로 입력해주세요"
-                      />
-                    </dd>
-                  </dl>
-                </AccordionContent>
+                    <dl>
+                      <dt>더 상세하게 필요한 정보를 입력해주세요 </dt>
+                      <dd>
+                        <CustomTextarea 
+                          rows={3}
+                          placeholder="모집하고 싶은 페르소나의 성향, 목표, 행동 패턴을 구체적으로 입력해주세요"
+                        />
+                      </dd>
+                    </dl>
+                  </CustomAccordionContent>
+                )}
               </AccordionSection>
             </>
           }
         />
       )}
-
-    </CardContainer>
+    </>
   );
 };
 
@@ -365,22 +456,26 @@ const Badge = styled.div`
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size:0.75rem;
+  font-size: 0.75rem;
   line-height: 1.2;
   color: ${props => {
     if (props.Basic) return `#34C759`;
+    else if (props.Custom) return palette.gray500;
     else return palette.gray500;
   }};
   padding: 4px 8px;
   border-radius: 50px;
   border: 1px solid ${props => {
     if (props.Basic) return `#34C759`;
+    else if (props.Custom) return palette.chatBlue;
     else return palette.outlineGray;
   }};
   background:${props => {
     if (props.Basic) return `rgba(52, 199, 89, 0.10)`;
+    else if (props.Custom) return palette.chatBlue;
     else return palette.gray50;
   }};
+  cursor: pointer;
 `;
 
 const ReadyIcon = styled.div`
@@ -399,10 +494,14 @@ const KeywordGroup = styled.div`
 `;
 
 const Description = styled.div`
+  width: 100%;
   font-size: 0.875rem;
+  font-weight: 300;
   line-height: 1.5;
   color: ${palette.gray500};
   text-align: left;
+  word-break: keep-all;
+  white-space: pre-wrap;
 `;
 
 const KeywordTag = styled.div`
@@ -449,18 +548,31 @@ const DescriptionSection = styled.div`
   line-height: 1.5;
   color: ${palette.gray800};
   text-align: left;
-  padding: 20px;
   border-radius: 10px;
   border: ${props => props.$isTabContent 
     ? `1px solid ${palette.outlineGray}`
     : 'none' };
-  background: ${props => props.$isTabContent 
-    ? 'transparent'
-    : palette.chatGray};
+
+  > span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    line-height: 1.5;
+    color: ${palette.gray800};
+    padding: 20px;
+    border-radius: 10px;
+    background: ${props => props.$isTabContent 
+      ? 'transparent'
+      : palette.chatGray};
+    cursor: pointer;
+  }
 `;
 
 const ListUL = styled.div`
-  padding: 0;
+  padding: 20px;
+  border-radius: 15px;
+  border: 1px solid ${palette.outlineGray};
 
   ul {
     display: flex;
@@ -496,39 +608,24 @@ const ListUL = styled.div`
   }
 `;
 
-const AccordionSection = styled.div`
-  width: 100%;
-  margin-top: 20px;
-  padding-top: 40px;
-  border-top: 1px solid ${palette.outlineGray};
-`;
-
-const AccordionHeader = styled.div`
+const RecruitButton = styled.button`
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  line-height: 1.5;
-  color: ${palette.gray800};
+  gap: 4px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  background: ${palette.chatBlue};
+  color: ${palette.white};
+  font-size: 0.875rem;
+  border: none;
   cursor: pointer;
-`;
-
-const AccordionIcon = styled.span`
-  width: 10px;
-  height: 10px;
-  border-right: 2px solid ${palette.gray800};
-  border-bottom: 2px solid ${palette.gray800};
-  transform: ${props => props.$isExpanded ? 'rotate(225deg)' : 'rotate(45deg)'};
-  transition: transform 0.5s;
-`;
-
-const AccordionContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-  max-height: ${props => props.$isExpanded ? '500px' : '0'};
-  margin-top: ${props => props.$isExpanded ? '20px' : '0'};
-  padding-bottom:5px;
-  overflow: hidden;
-  background: ${palette.white};
-  transition: all 0.5s;
+  
+  &:hover {
+    background: ${palette.chatBlueDark};
+  }
+  
+  img {
+    width: 16px;
+    height: 16px;
+  }
 `;

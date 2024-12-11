@@ -38,7 +38,7 @@ const HeaderWrap = styled.div`
   padding:10px 28px;
   border-bottom: 1px solid ${palette.lineGray};
   background: ${palette.white};
-  z-index: 100;
+  z-index: 99;
 
   h1 {
     position: absolute;

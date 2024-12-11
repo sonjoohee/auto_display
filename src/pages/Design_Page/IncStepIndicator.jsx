@@ -45,7 +45,7 @@ const StepNumber = styled.div`
   height: 16px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
   border-radius: 50px;
   border: 1px solid ${props => {
     if (props.completed) return palette.chatBlue;

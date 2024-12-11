@@ -7,14 +7,14 @@ import { useAtom } from "jotai";
 
 import images from "../../assets/styles/Images";
 import { palette } from "../../assets/styles/Palette";
-import OrganismLeftSideBar from "../Expert_Insight/components/organisms/OrganismLeftSideBar";
+import IncNavigation from "./IncNavigation";
 import Header from "./IncHeader";
 
 const PageConnetWithYouTarget  = () => {
   return (
     <>
       <ContentsWrap>
-        <OrganismLeftSideBar />
+        <IncNavigation />
 
         <Header />
 
@@ -46,6 +46,9 @@ const PageConnetWithYouTarget  = () => {
                 <button type="button">
                   검색
                 </button>
+              </div>
+              <div className="maxLetter">
+                <span id="letterCount">0/300</span>
               </div>
             </InputWrap>
           </MainSearchWrap>
@@ -126,7 +129,7 @@ const MainSearchWrap = styled.div`
     else return `flex-start`;
   }};
   gap:22px;
-  height:90dvh;
+  height:85dvh;
 `;
 
 const Title = styled.h1`
@@ -139,31 +142,34 @@ const Title = styled.h1`
   // margin: ${(props) => (props.isMobile ? "40px auto 30px" : "120px auto 55px")};
 
   p {
-    font-size: ${(props) => (props.isMobile ? "0.75rem" : "0.75rem")};
+    font-size: ${(props) => (props.isMobile ? "0.75rem" : "0.875rem")};
     font-weight: 300;
   }
 `;
 
 const InputWrap = styled.div`
-  max-width: ${(props) => (props.isMobile ? "100%" : "485px")};
+  // max-width:1000px;
+  max-width: ${(props) => (props.isMobile ? "100%" : "608px")};
   width: 100%;
   display: flex;
   flex-direction: column;
   margin: 0 auto;
-  padding:13px 12px;
-  border-radius: 12px;
+  border-radius: 20px;
+  border: 1px solid ${palette.lineGray};
   background: ${palette.white};
-  box-shadow: 0 3px 16px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
   overflow: hidden;
 
   .inputWrap {
     display: flex;
-    flex-direction: column;
     justify-content: space-between;
-    gap: 10px;
+    gap: 20px;
+    // padding:28px 38px;
+    padding: ${(props) => (props.isMobile ? "20px" : "28px")};
 
     textarea {
       width: 100%;
+      height: 40px;
       font-family: "Pretendard", "Poppins";
       font-size: 1rem;
       outline: 0;
@@ -171,9 +177,8 @@ const InputWrap = styled.div`
       resize: none;
 
       &::placeholder {
-        font-size:0.75rem;
-        font-weight: 300;
-        color: ${palette.gray500};
+        font-size: 1rem;
+        color: #A9A9A9;
       }
     }
 
@@ -183,15 +188,12 @@ const InputWrap = styled.div`
       height: 27px;
       font-family: "Pretendard", "Poppins";
       font-size: 0;
-      margin-left: auto;
       border: 0;
       background: url(${images.IconSearch}) center no-repeat;
-      background-size: 12px;
       transition: all 0.5s;
 
       &:hover {
         background: url(${images.IconSearchHover}) center no-repeat;
-      background-size: 12px;
       }
     }
   }
@@ -209,9 +211,10 @@ const InputWrap = styled.div`
 
 const ExpertSelectWrap = styled.div`
   position: relative;
-  max-width: 1040px;
+  // max-width: 1040px;
+  max-width: 815px;
   width: 100%;
-  margin-bottom: 40px;
+  margin: 0 auto 40px;
 
   h2 {
     display: flex;
