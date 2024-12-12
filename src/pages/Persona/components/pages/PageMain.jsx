@@ -112,7 +112,7 @@ import {
   PERSONA_BUTTON_STATE_1,
   PERSONA_BUTTON_STATE_2,
   BUSINESS_ANALYSIS,
-  PERSONA_STEP
+  PERSONA_STEP,
 } from "../../../AtomStates";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
@@ -120,16 +120,25 @@ import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
 import MoleculeHeader from "../molecules/MoleculeHeader";
 import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
-const PageMain  = () => {
+const PageMain = () => {
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
-  const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(IS_PERSONA_ACCESSIBLE);
-  const [personaButtonState1, setPersonaButtonState1] = useAtom(PERSONA_BUTTON_STATE_1);
-  const [personaButtonState2, setPersonaButtonState2] = useAtom(PERSONA_BUTTON_STATE_2);
+  const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
+    IS_PERSONA_ACCESSIBLE
+  );
+  const [personaButtonState1, setPersonaButtonState1] = useAtom(
+    PERSONA_BUTTON_STATE_1
+  );
+  const [personaButtonState2, setPersonaButtonState2] = useAtom(
+    PERSONA_BUTTON_STATE_2
+  );
   const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
-  const [strategyConsultantReportData, setStrategyConsultantReportData] = useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
-  const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] = useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
-  const [growthHackerSelectedSolution, setGrowthHackerSelectedSolution] = useAtom(GROWTH_HACKER_SELECTED_SOLUTION);
+  const [strategyConsultantReportData, setStrategyConsultantReportData] =
+    useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
+  const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] =
+    useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
+  const [growthHackerSelectedSolution, setGrowthHackerSelectedSolution] =
+    useAtom(GROWTH_HACKER_SELECTED_SOLUTION);
   const { saveConversation } = useSaveConversation();
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(
     BM_MODEL_SUGGESTION_REPORT_DATA
@@ -380,7 +389,7 @@ const PageMain  = () => {
       title: "",
       characteristics: "",
       features: [],
-      category: {}
+      category: {},
     });
     setIsPopupRegex(false); // 팝업 닫기
   };
@@ -461,7 +470,7 @@ const PageMain  = () => {
       title: "",
       characteristics: "",
       features: [],
-      category: {}
+      category: {},
     });
     setIsEditingIdeaFeature(false);
     setIsEditingIdeaCustomer(false);
@@ -671,7 +680,10 @@ const PageMain  = () => {
         },
         {
           type: "system",
-          message: index === "7" ? "먼저 분석이 필요한 제품이나 서비스에 대해서 알려주세요 📝\n📌 현재는 제품만 분석이 가능합니다" : "먼저 분석이 필요한 제품이나 서비스에 대해서 알려주세요 📝",
+          message:
+            index === "7"
+              ? "먼저 분석이 필요한 제품이나 서비스에 대해서 알려주세요 📝\n📌 현재는 제품만 분석이 가능합니다"
+              : "먼저 분석이 필요한 제품이나 서비스에 대해서 알려주세요 📝",
           expertIndex: -1,
         },
       ]);
@@ -684,7 +696,7 @@ const PageMain  = () => {
         title: "",
         characteristics: "",
         features: [],
-        category: {}
+        category: {},
       });
       setSelectedExpertIndex(index);
       navigate("/ExpertInsight");
@@ -725,7 +737,7 @@ const PageMain  = () => {
         <MainContent MainSearch>
           <MainSearchWrap MainSearch>
             <Title>
-              Connet with Your Persona
+              Connect with Your Persona
               <p>타겟 페르소나와 소통하고, 비즈니스 인사이트를 확인하세요</p>
             </Title>
 
@@ -744,7 +756,7 @@ const PageMain  = () => {
                       title: "",
                       characteristics: "",
                       features: [],
-                      category: {}
+                      category: {},
                     });
 
                     // // 글자 수 표시
@@ -760,7 +772,9 @@ const PageMain  = () => {
                 </button>
               </div>
               <div className="maxLetter">
-                <span id="letterCount">{businessAnalysis.input.length}/300</span>
+                <span id="letterCount">
+                  {businessAnalysis.input.length}/300
+                </span>
               </div>
             </InputWrap>
           </MainSearchWrap>
@@ -768,19 +782,19 @@ const PageMain  = () => {
           <ExpertSelectWrap>
             <ExpertSelectBox>
               <ExpertCard
-                  Strategy
-                  onClick={() => {
-                    handledExpertSelect("1");
-                  }}
-                >
-                  <strong>전략 컨설턴트</strong>
-                  <p>차별화 전략과 리스트 분석 제시</p>
-                  <span>
-                    <img src={images.ImgStrategy} alt="" />
-                  </span>
-                </ExpertCard>
+                Strategy
+                onClick={() => {
+                  handledExpertSelect("1");
+                }}
+              >
+                <strong>전략 컨설턴트</strong>
+                <p>차별화 전략과 리스트 분석 제시</p>
+                <span>
+                  <img src={images.ImgStrategy} alt="" />
+                </span>
+              </ExpertCard>
 
-                <ExpertCard
+              <ExpertCard
                 Hacker
                 onClick={() => {
                   handledExpertSelect("6");
@@ -804,7 +818,11 @@ const PageMain  = () => {
                 }}
               >
                 <strong>가격 분석 전문가</strong>
-                <p>시장 데이터를 기반으로 최적의<br />가격 전략 제시 (제품 한정)</p>
+                <p>
+                  시장 데이터를 기반으로 최적의
+                  <br />
+                  가격 전략 제시 (제품 한정)
+                </p>
                 <span>
                   <img src={images.ImgPrice} alt="" />
                 </span>
@@ -1013,7 +1031,7 @@ const MainContent = styled.div`
   flex-direction: column;
   max-width: 1024px;
   width: 100%;
-  justify-content:${props => {
+  justify-content: ${(props) => {
     if (props.MainSearch) return `center`;
     else return `flex-start`;
   }};
@@ -1025,12 +1043,12 @@ const MainSearchWrap = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content:${props => {
+  justify-content: ${(props) => {
     if (props.MainSearch) return `center`;
     else return `flex-start`;
   }};
-  gap:22px;
-  height:85dvh;
+  gap: 22px;
+  height: 85dvh;
 `;
 
 const Title = styled.h1`
@@ -1040,7 +1058,8 @@ const Title = styled.h1`
   gap: 7px;
   font-size: ${(props) => (props.isMobile ? "1.5rem" : "2.25rem")};
   font-weight: 600;
-  // margin: ${(props) => (props.isMobile ? "40px auto 30px" : "120px auto 55px")};
+  /* margin: ${(props) =>
+    props.isMobile ? "40px auto 30px" : "120px auto 55px"}; */
 
   p {
     font-size: ${(props) => (props.isMobile ? "0.75rem" : "0.875rem")};
@@ -1078,7 +1097,7 @@ const InputWrap = styled.div`
 
       &::placeholder {
         font-size: 1rem;
-        color: #A9A9A9;
+        color: #a9a9a9;
       }
     }
 

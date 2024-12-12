@@ -14,7 +14,7 @@ import {
   PERSONA_STEP,
   SELECTED_INTERVIEW_PURPOSE,
   PERSONA_LIST,
-  PERSONA_BUTTON_STATE_3
+  PERSONA_BUTTON_STATE_3,
 } from "../../../AtomStates";
 import {
   ContentsWrap,
@@ -46,7 +46,9 @@ import ToastPopupWrap from "../../../../assets/styles/ToastPopup";
 
 const PagePersona3 = () => {
   const navigate = useNavigate();
-  const [personaButtonState3, setPersonaButtonState3] = useAtom(PERSONA_BUTTON_STATE_3);
+  const [personaButtonState3, setPersonaButtonState3] = useAtom(
+    PERSONA_BUTTON_STATE_3
+  );
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
@@ -78,7 +80,7 @@ const PagePersona3 = () => {
   const handlePopupClose = () => {
     setShowInterviewReady(false);
     setShowToast(false);
-  }
+  };
 
   // const [isLoadingPage, setIsLoadingPage] = useState(true);
 
@@ -256,7 +258,7 @@ const PagePersona3 = () => {
     setPersonaButtonState3(1);
     handlePopupClose();
     setShowToast(true);
-  }
+  };
 
   return (
     <>
@@ -268,7 +270,7 @@ const PagePersona3 = () => {
         <MainContent>
           <AnalysisWrap>
             <MainSection>
-              <OrganismBusinessAnalysis personaStep={personaStep} />
+              <OrganismBusinessAnalysis personaStep={3} />
 
               {/* 인터뷰 방식 선택 */}
               <>
@@ -401,21 +403,27 @@ const PagePersona3 = () => {
                     <p>{personaList.selected.length}명</p>
                   </li>
                 </ul>
-                <Button Large Primary Fill onClick={() => setShowInterviewReady(true)}>
+                <Button
+                  Large
+                  Primary
+                  Fill
+                  onClick={() => setShowInterviewReady(true)}
+                >
                   인터뷰룸 입장
                 </Button>
               </InterviewRoom>
             </Sidebar>
 
             {showInterviewReady && (
-              <PopupWrap 
+              <PopupWrap
                 Check
-                title="인터뷰 준비 완료" 
+                title="인터뷰 준비 완료"
                 message={
                   <>
-                    인터뷰 룸 이동 시, 바로 시작됩니다.<br />
+                    인터뷰 룸 이동 시, 바로 시작됩니다.
+                    <br />
                     인터뷰를 중단하면 모든 내역이 삭제되니 주의하세요
-                  </> 
+                  </>
                 }
                 buttonType="Outline"
                 closeText="취소"
@@ -427,9 +435,9 @@ const PagePersona3 = () => {
                 }}
               />
             )}
-            
+
             {showToast && (
-              <ToastPopupWrap 
+              <ToastPopupWrap
                 isActive={showToast}
                 onClose={() => setShowToast(false)}
               />
