@@ -14,11 +14,17 @@ import {
   INTERVIEW_QUESTION_LIST,
   PERSONA_BUTTON_STATE_3,
   BUSINESS_ANALYSIS,
-  PROJECT_ID
+  PROJECT_ID,
+  INTERVIEW_DATA,
+  INTERVIEW_REPORT,
+  INTERVIEW_REPORT_ADDITIONAL
 } from "../../pages/AtomStates";
 import { updateProjectOnServer } from "../../utils/indexedDB";
 
 const ToastPopupWrap = ({ isActive, onClose }) => {
+  const [interviewReport, setInterviewReport] = useAtom(INTERVIEW_REPORT);
+  const [interviewReportAdditional, setInterviewReportAdditional] = useAtom(INTERVIEW_REPORT_ADDITIONAL);
+  const [interviewData, setInterviewData] = useAtom(INTERVIEW_DATA);
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [personaButtonState3, setPersonaButtonState3] = useAtom(PERSONA_BUTTON_STATE_3);
@@ -43,6 +49,9 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
   const [answers, setAnswers] = useState({});
   const [isGenerating, setIsGenerating] = useState(false);
   const [visibleAnswers, setVisibleAnswers] = useState({});
+  const [personaInfo, setPersonaInfo] = useState([]);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isAnalysisComplete, setIsAnalysisComplete] = useState(false);
 
   const axiosConfig = {
     timeout: 100000,
@@ -146,20 +155,40 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
         }));
 
         try {
+          let allAnswers = [];
+          let personaInfoState = [];
+
           for (let i = 0; i < personaList.selected.length; i++) {
             setIsGenerating(true);
+            
+            // 현재 페르소나의 이전 답변들 수집
+            const lastInterview = [];
+            for (let q = 0; q < currentQuestionIndex; q++) {
+              const questionAnswers = answers[q] || [];
+              const personaAnswer = questionAnswers.find(
+                ans => ans.persona.personIndex === personaList.selected[i].personIndex
+              );
+              if (personaAnswer) {
+                lastInterview.push({
+                  question: interviewQuestionListState[q].question,
+                  answer: personaAnswer.answer
+                });
+              }
+            }
+
+            const personaInfo = {
+              "id": personaList.selected[i].personIndex.replace(/[^1-9]/g, ''),
+              "name": personaList.selected[i].persona,
+              "keyword": personaList.selected[i].keyword,
+              "hashtag": personaList.selected[i].tag,
+              "summary": personaList.selected[i].summary
+            };
             
             const data = {
               business_analysis_data: businessAnalysis,
               question: interviewQuestionListState[currentQuestionIndex],
-              persona_info: {
-                "id": personaList.selected[i].personIndex.replace(/[^1-9]/g, ''),
-                "name": personaList.selected[i].persona,
-                "keyword": personaList.selected[i].keyword,
-                "hashtag": personaList.selected[i].tag,
-                "summary": personaList.selected[i].summary
-              },
-              last_interview: []
+              persona_info: personaInfo,
+              last_interview: lastInterview
             };
 
             const response = await axios.post(
@@ -169,10 +198,13 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
             );
 
             setIsGenerating(false);
+            allAnswers.push(response.data.answer);
+
+            personaInfoState.push(personaInfo);
 
             setAnswers(prev => ({
               ...prev,
-              [currentQuestionIndex]: [
+              [currentQuestionIndex]: [ 
                 ...prev[currentQuestionIndex],
                 {
                   persona: personaList.selected[i],
@@ -182,9 +214,93 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
             }));
 
             if (i === personaList.selected.length - 1) {
+              // 모든 페르소나의 답변이 완료되면 interviewData 업데이트
+              setInterviewData(prev => {
+                const newData = [...(prev || [])];
+                newData[currentQuestionIndex] = {
+                  [`question_${currentQuestionIndex + 1}`]: interviewQuestionListState[currentQuestionIndex].question,
+                  [`answer_${currentQuestionIndex + 1}`]: allAnswers
+                };
+                return newData;
+              });
+
               newStatus[currentQuestionIndex] = 'Complete';
               setInterviewStatus(newStatus);
               
+              // 모든 인터뷰가 완료되었는지 확인
+              const allComplete = newStatus.every(status => status === 'Complete');
+              if (allComplete) {
+                try {
+
+                  await updateProjectOnServer(
+                    projectId,
+                    {
+                      interviewData: [
+                        ...interviewData,
+                        {
+                          [`question_${currentQuestionIndex + 1}`]: interviewQuestionListState[currentQuestionIndex].question,
+                          [`answer_${currentQuestionIndex + 1}`]: allAnswers
+                        }
+                      ],
+                    },
+                    isLoggedIn
+                  );
+
+                  setIsAnalyzing(true);
+                  const finalData1 = {
+                    business_idea: businessAnalysis,
+                    persona_info: personaInfoState,
+                    interview_data: [
+                      ...interviewData,
+                      {
+                        [`question_${currentQuestionIndex + 1}`]: interviewQuestionListState[currentQuestionIndex].question,
+                        [`answer_${currentQuestionIndex + 1}`]: allAnswers
+                      }
+                    ],
+                    theory_type: selectedInterviewPurpose
+                  };
+
+                  const responseReport = await axios.post(
+                    "https://wishresearch.kr/person/interview_reports",
+                    finalData1,
+                    axiosConfig
+                  );
+
+                  setInterviewReport(responseReport.data);
+
+                  const finalData2 = {
+                    business_idea: businessAnalysis,
+                    persona_info: personaInfoState,
+                    report_data: responseReport.data,
+                    interview_data: [
+                      ...interviewData,
+                      {
+                        [`question_${currentQuestionIndex + 1}`]: interviewQuestionListState[currentQuestionIndex].question,
+                        [`answer_${currentQuestionIndex + 1}`]: allAnswers
+                      }
+                    ],
+                    theory_type: selectedInterviewPurpose
+                  };
+
+                  const responseReportAdditional = await axios.post(
+                    "https://wishresearch.kr/person/interview_report_additional",
+                    finalData2,
+                    axiosConfig
+                  );
+
+                  setInterviewReportAdditional(responseReportAdditional.data);
+
+                  if (responseReport.data && responseReportAdditional.data) {
+                    setIsAnalyzing(false);
+                    setIsAnalysisComplete(true);
+                    // 필요한 경우 분석 결과 저장
+                  }
+                } catch (error) {
+                  console.error('Analysis error:', error);
+                  setIsAnalyzing(false);
+                }
+              }
+
               if (currentQuestionIndex < interviewQuestionListState.length - 1) {
                 setCurrentQuestionIndex(prev => prev + 1);
               }
@@ -255,13 +371,14 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
   useEffect(() => {
     setVisibleAnswers(prev => {
       const newVisibleAnswers = { ...prev };
-      interviewStatus.forEach((status, index) => {
+      interviewStatus.forEach(async (status, index) => {
         // 진행중인 질문은 자동으로 열기
         if (status === 'Ing') {
           newVisibleAnswers[index] = true;
         }
         // 완료된 질문은 자동으로 닫기
         else if (status === 'Complete') {
+          await new Promise(resolve => setTimeout(resolve, 5000));
           newVisibleAnswers[index] = false;
         }
       });
@@ -288,7 +405,7 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
           <Number status={interviewStatus[index] || 'Pre'}>{index + 1}</Number>
           <QuestionText>{item.question}</QuestionText>
           <Status status={interviewStatus[index] || 'Pre'}>
-            {interviewStatus[index] === 'Ing' ? '진행중' 
+            {interviewStatus[index] === 'Ing' ? '진행중'
             : interviewStatus[index] === 'Complete' ? '완료' 
             : '준비중'}
           </Status>
@@ -302,13 +419,18 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
     ));
   };
 
+  const handleCheckResult = () => {
+    navigate(`/Persona/4/${projectId}`, { replace: true });
+    handleWarningClose();
+  };
+
   return (
     <>
       <PopupBox isActive={active}>
         <ToastPopup isActive={active}>
           <Header>
             <Title>
-              {businessAnalysis.title}
+              {businessAnalysis.title}의 {selectedInterviewPurpose}
               <ColseButton onClick={handleClose} />
             </Title>
             <ul>
@@ -328,6 +450,15 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
           </Header>
 
           <Contents>
+            {/* <LoadingBox Complete>
+              <img src={images.CheckCircleFill} alt="완료" />
+
+              <p>
+                페르소나 입장 완료! 인터뷰를 시작하겠습니다
+                <span>지금 시작하기</span>
+              </p>
+            </LoadingBox> */}
+
             {isLoadingPrepare &&
               <LoadingBox>
                 <Loading>
@@ -343,6 +474,31 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
             }
 
             {!isLoadingPrepare && renderInterviewItems()}
+
+            {isAnalyzing &&
+              <LoadingBox>
+                <Loading>
+                  <div />
+                  <div />
+                  <div />
+                </Loading>
+                <p>
+                  인터뷰 결과를 취합하고 분석 중입니다. 
+                  <span>잠시만 기다려주세요 ...</span>
+                </p>
+              </LoadingBox>
+            }
+
+            {isAnalysisComplete &&
+              <LoadingBox Complete>
+                <img src={images.CheckCircleFill} alt="완료" />
+
+              <p>
+                결과 분석이 완료되었습니다. 지금 바로 확인해보세요!
+                <span onClick={handleCheckResult}>지금 확인하기</span>
+                </p>
+              </LoadingBox>
+            }
           </Contents>
         </ToastPopup>
       </PopupBox>

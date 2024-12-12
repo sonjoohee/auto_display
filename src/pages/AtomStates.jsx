@@ -415,8 +415,12 @@ export const PERSONA_BUTTON_STATE_1 = atom(0);
 export const PERSONA_BUTTON_STATE_2 = atom(0);
 export const PERSONA_BUTTON_STATE_3 = atom(0);
 
-export const SELECTED_INTERVIEW_PURPOSE = atom("제품 경험 평가"); // 초기값
+export const SELECTED_INTERVIEW_PURPOSE = atom(""); // 초기값
 export const CATEGORY_COLOR = atom({});
 
 export const PROJECT_LOAD_BUTTON_STATE = atom(false);
 export const REPORT_LOAD_BUTTON_STATE = atom(false);
+
+export const INTERVIEW_DATA = atom([]);
+export const INTERVIEW_REPORT = atom([]);
+export const INTERVIEW_REPORT_ADDITIONAL = atom([]);

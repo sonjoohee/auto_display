@@ -8,6 +8,9 @@ import {
   PROJECT_ID,
   PROJECT_REPORT_ID,
   REPORT_LOAD_BUTTON_STATE,
+  SELECTED_INTERVIEW_PURPOSE,
+  INTERVIEW_REPORT,
+  INTERVIEW_REPORT_ADDITIONAL
 } from "../../../AtomStates";
 import {
   ContentsWrap,
@@ -30,13 +33,18 @@ import IncNavigation from "../organisms/OrganismIncNavigation";
 import OrganismBusinessAnalysis from "../organisms/OrganismBisinessAnalysis";
 import { createProjectReportOnServer } from "../../../../utils/indexedDB";
 import { getProjectReportByIdFromIndexedDB } from "../../../../utils/indexedDB";
+import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
 
 const PagePersona4 = () => {
   const navigate = useNavigate();
+  const [interviewReport, setInterviewReport] = useAtom(INTERVIEW_REPORT);
+  const [interviewReportAdditional, setInterviewReportAdditional] = useAtom(INTERVIEW_REPORT_ADDITIONAL);
   const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
     IS_PERSONA_ACCESSIBLE
   );
-
+  const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(
+    SELECTED_INTERVIEW_PURPOSE
+  );
   const [reportReady, setReportReady] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
@@ -49,7 +57,19 @@ const PagePersona4 = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const cardRef = useRef(null);
 
+  const [steps, setSteps] = useState([
+    { number: 1, label: "비즈니스 분석", active: true },
+    { number: 2, label: "맞춤 페르소나 추천", active: true },
+    { number: 3, label: "인터뷰 방법 선택", active: true },
+    { number: 4, label: "페르소나와 인터뷰", active: true },
+    { number: 5, label: "의견 분석", active: true },
+  ]);
+
   let newReportId;
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     if (reportId) {
@@ -124,6 +144,37 @@ const PagePersona4 = () => {
     }
   };
 
+  const getInterviewPurposeDescription = (purpose) => {
+    switch (purpose) {
+      case "제품 경험 평가":
+        return "제품이 고객에게 어떤 가치를 전달하고 있는지, 소비자들이 느끼는 장점과 개선점을 세심히 파악하기 위해 진행되었습니다. 이를 통해 제품에 대한 긍정적인 경험을 더욱 확장하고, 고객 만족과 구매 전환율을 높이는 데 기여하고자 합니다.";
+      
+      case "구매 전환 요인 분석":
+        return "소비자가 구매를 결정하는 데 영향을 미치는 핵심 요인을 파악하여, 최적의 구매 환경을 설계하기 위해 수행됩니다. 이를 통해 고객의 구매 장벽을 낮추고 전환율을 높이는 전략적 개선점을 도출합니다.";
+      
+      case "소비자 여정 맵핑":
+        return "소비자가 제품 또는 서비스를 이용하는 과정에서의 모든 접점과 경험을 분석하여, 고객의 니즈와 개선이 필요한 부분을 명확히 식별하는 데 활용됩니다. 이를 기반으로 고객 여정을 최적화하고 긍정적인 경험을 제공합니다.";
+      
+      case "사용 맥락 조사":
+        return "제품이 사용되는 실제 환경과 상황적 요인을 이해하여, 사용자 경험에 영향을 미치는 요소를 체계적으로 분석합니다. 이를 통해 제품 사용의 편의성을 높이고 환경적 제약을 고려한 개선안을 도출합니다.";
+      
+      case "제품 이해도 테스트":
+        return "소비자가 제품의 개념과 사용 방법을 얼마나 잘 이해하는지를 측정하고, 이를 바탕으로 정보 전달과 사용성 문제를 해결합니다. 이를 통해 제품과 사용자 간의 상호작용을 개선합니다.";
+      
+      case "소비자 행동 유도 요소 분석":
+        return "소비자가 구매, 클릭 등의 특정 행동을 하도록 유도하는 설계 요소를 분석하여, 전환율을 높이는 전략적 개선 기회를 제공합니다. 이를 통해 사용자 참여를 극대화하고 비즈니스 성과를 향상시킵니다.";
+      
+      case "제품 기대치 확인":
+        return "소비자가 제품에 대해 가지는 초기 기대와 실제 사용 경험 간의 차이를 분석하여, 기대 불일치를 줄이고 사용자 만족을 높이는 데 초점을 맞춥니다. 이를 통해 고객 신뢰를 강화하고 긍정적인 제품 이미지를 확립합니다.";
+      
+      case "사용자 경험 시뮬레이션":
+        return "제품 사용 과정을 가상으로 재현하여, 발생 가능한 문제를 사전에 파악하고 개선 기회를 찾는 데 활용됩니다. 이를 통해 사용자 중심의 설계를 실현하고 제품 품질을 한 단계 끌어올립니다.";
+      
+      default:
+        return "제품이 고객에게 어떤 가치를 전달하고 있는지, 소비자들이 느끼는 장점과 개선점을 세심히 파악하기 위해 진행되었습니다. 이를 통해 제품에 대한 긍정적인 경험을 더욱 확장하고, 고객 만족과 구매 전환율을 높이는 데 기여하고자 합니다.";
+    }
+  };
+
   return (
     <>
       <ContentsWrap>
@@ -139,14 +190,8 @@ const PagePersona4 = () => {
               <InterviewReport>
                 <div>
                   <ReportHeader>
-                    <h3>제품 경험 평가 결과 리포트</h3>
-                    <p>
-                      제품이 고객에게 어떤 가치를 전달하고 있는지, 소비자들이
-                      느끼는 장점과 개선점을 세심히 파악하기 위해
-                      진행되었습니다. 이를 통해 제품에 대한 긍정적인 경험을 더욱
-                      확장하고, 고객 만족과 구매 전환율을 높이는 데 기여하고자
-                      합니다.
-                    </p>
+                    <h3>{selectedInterviewPurpose} 결과 리포트</h3>
+                    <p>{getInterviewPurposeDescription(selectedInterviewPurpose)}</p>
                   </ReportHeader>
 
                   <ReportContent>
@@ -435,7 +480,19 @@ const PagePersona4 = () => {
               </InterviewFind>
             </MainSection>
 
-            <Sidebar />
+            <Sidebar>
+              <h5>Let's Start Now</h5>
+
+              <ProgressBar>
+                <span>🚀</span>
+                <Progress progress={100} />
+                <span>Fin</span>
+              </ProgressBar>
+
+              <MoleculeStepIndicator steps={steps} activeStep={5} />
+
+            </Sidebar>
+          
           </AnalysisWrap>
         </MainContent>
       </ContentsWrap>
@@ -802,5 +859,33 @@ const CardDescription = styled.div`
       transform: rotate(45deg);
       content: "";
     }
+  }
+`;
+const ProgressBar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  span {
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: ${palette.gray700};
+  }
+`;
+
+const Progress = styled.div`
+  width: 100%;
+  height: 8px;
+  border-radius: 20px;
+  background: ${palette.outlineGray};
+
+  &:before {
+    display: block;
+    width: ${(props) => props.progress}%;
+    height: 100%;
+    border-radius: 20px;
+    background: ${palette.chatBlue};
+    content: "";
   }
 `;
