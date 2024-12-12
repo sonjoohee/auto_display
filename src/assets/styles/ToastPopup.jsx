@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 import { palette } from "./Palette";
 import images from "./Images";
 import PopupWrap from "./Popup";
@@ -402,13 +402,13 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
         style={{ cursor: interviewStatus[index] === 'Pre' ? 'default' : 'pointer' }}
       >
         <QuestionWrap onClick={() => handleAnswerToggle(index)}>
-          <Number status={interviewStatus[index] || 'Pre'}>{index + 1}</Number>
-          <QuestionText>{item.question}</QuestionText>
           <Status status={interviewStatus[index] || 'Pre'}>
-            {interviewStatus[index] === 'Ing' ? '진행중'
+            {interviewStatus[index] === 'Ing' ? '진행 중'
             : interviewStatus[index] === 'Complete' ? '완료' 
-            : '준비중'}
+            : '준비 중'}
           </Status>
+          {/* <Number status={interviewStatus[index] || 'Pre'}>{index + 1}</Number> */}
+          <QuestionText>Q{index + 1}. {item.question}</QuestionText>
         </QuestionWrap>
         {visibleAnswers[index] && (interviewStatus[index] === 'Ing' || interviewStatus[index] === 'Complete') && (
           <AnswerWrap>
@@ -436,13 +436,13 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
             <ul>
               <li>
                 <span>
-                  <img src={images.QuestionCount} alt="문항수" />문항수
+                  <img src={images.FileText} alt="문항수" />문항수
                 </span>
                 <span>3개</span>
               </li>
               <li>
                 <span>
-                  <img src={images.PersonaCount} alt="참여페르소나" />참여페르소나
+                  <img src={images.PeopleFill} alt="참여페르소나" />참여페르소나
                 </span>
                 <span>{personaList.selected.length}명</span>
               </li>
@@ -765,6 +765,19 @@ const QuestionWrap = styled.div`
   width: 100%;
   // cursor: ${props => (props.status === 'Ing' || props.status === 'Complete') ? 'pointer' : 'default'};
   cursor: inherit;
+
+  ${props => props.complete && css`
+    &:after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      transform: ${props.checked ? 'rotate(45deg)' : 'rotate(225deg)'};
+      border-bottom: 2px solid ${palette.gray500};
+      border-right: 2px solid ${palette.gray500};
+      background: rgba(0, 0, 0, 0.5);
+      transition: all 0.5s;
+    }
+  `}
 `;
 
 const Number = styled.div`
@@ -801,7 +814,9 @@ const Status = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 4px;
+  max-width: 54px;
+  width: 100%;
   font-size: 0.75rem;
   line-height: 1.5;
   color: ${props =>
@@ -809,7 +824,7 @@ const Status = styled.div`
     : props.status === 'Complete' ? palette.green
     : palette.gray700
   };
-  margin-left: auto;
+  // margin-left: auto;
   padding: 2px 8px;
   border-radius: 2px;
   border: ${props =>
@@ -823,10 +838,14 @@ const Status = styled.div`
     : palette.chatGray
   };
 
-  &:before {
-    content: '';
-    background: url(${images.CheckGreen}) center no-repeat;
-  }
+  ${props => props.status === 'Complete' && css`
+    &:before {
+      width: 10px;
+      height: 10px;
+      content: '';
+      background: url(${images.CheckGreen}) center no-repeat;
+    }
+  `}
 `;
 
 const AnswerWrap = styled.div`
@@ -856,7 +875,7 @@ const TypeName = styled.div`
   align-items: center;
   justify-content: flex-start;
   gap: 12px;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   line-height: 1.5;
   color: ${palette.gray800};
 `;
@@ -871,7 +890,7 @@ const Thumb = styled.div`
 
 const TextContainer = styled.div`
   align-self: flex-start;
-  font-size: 0.875rem;
+  font-size: 1rem;
   line-height: 1.5;
   color: ${palette.gray800};
   margin-left: 44px;

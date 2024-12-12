@@ -1396,14 +1396,14 @@ const OrganismIncNavigation = () => {
 
                 <button className="more" onMouseDown={moreProfile}>
                   {/* <img src={images.AccountSetting} alt="" /> */}
-                  {/* <span>
+                  <span>
                     {(() => {
                       const userName = sessionStorage.getItem("userName");
                       return userName && userName.length > 1
                         ? `${userName.slice(0, 1)}`
                         : userName;
                     })()}
-                  </span> */}
+                  </span>
                 </button>
               </LogoutBtnWrap>
 
@@ -1449,6 +1449,7 @@ const OrganismIncNavigation = () => {
           ) : (
             <>
               <button onClick={handleLoginClick} className="login">
+                <img src={images.PersonCircle} alt="로그인" />
                 로그인
               </button>
               {/* <Link to="/signup">회원가입</Link> */}
@@ -2032,25 +2033,32 @@ const MenuList = styled.ul`
   }
 
   span {
-    font-size: 0.63rem;
+    font-size: 0.75rem;
     font-weight: 300;
     color: ${palette.gray700};
   }
 `;
 
 const Setting = styled.div`
-  width: 22px;
-  height: 22px;
+  // width: 22px;
+  // height: 22px;
   margin-top: auto;
 
   button.login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     width: 100%;
     height: 100%;
-    font-size: 0;
+    font-family: "Pretendard", "Poppins";
+    font-size: 0.75rem;
+    color: ${palette.gray700};
     border: 0;
     background: none;
-    background: url(${images.Gear}) no-repeat center;
-    background-size: contain;
+    // background: url(${images.Gear}) no-repeat center;
+    // background-size: contain;
   }
 `;
 
@@ -3054,8 +3062,6 @@ const LoginButtonWrap = styled.div`
 
 const LogoutBtnWrap = styled.div`
   justify-content: space-between !important;
-  width: 22px;
-  height: 22px;
   // padding: 12px 16px;
   // border-radius: 10px;
   // border: 1px solid ${palette.lineGray};
@@ -3082,14 +3088,22 @@ const LogoutBtnWrap = styled.div`
   }
 
   button {
-    width: 100%;
-    height: 100%;
-    font-size: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    font-family: "Pretendard", "Poppins";
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: ${palette.white};
     padding: 0;
     border: 0;
     flex-shrink: 0;
+    border-radius: 50%;
+    background: #9EB0D1;
     // background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M8.86724 2.23147L8.51621 1.47925C8.30624 1.02933 7.66602 1.03062 7.45787 1.48139L7.10987 2.23502C6.67141 3.18455 5.57856 3.63981 4.59565 3.28238L3.81553 2.9987C3.34892 2.82902 2.89712 3.28264 3.06868 3.74857L3.3555 4.52753C3.71689 5.509 3.26604 6.60367 2.31828 7.04596L1.56606 7.39699C1.11613 7.60695 1.11742 8.24718 1.56819 8.45533L2.32182 8.80333C3.27136 9.24179 3.72661 10.3346 3.36918 11.3175L3.0855 12.0977C2.91582 12.5643 3.36945 13.0161 3.83537 12.8445L4.61434 12.5577C5.5958 12.1963 6.69047 12.6472 7.13276 13.5949L7.48379 14.3471C7.69376 14.7971 8.33398 14.7958 8.54213 14.345L8.89013 13.5914C9.32859 12.6418 10.4214 12.1866 11.4044 12.544L12.1845 12.8277C12.6511 12.9974 13.1029 12.5437 12.9313 12.0778L12.6445 11.2989C12.2831 10.3174 12.734 9.22272 13.6817 8.78044L14.4339 8.4294C14.8839 8.21944 14.8826 7.57921 14.4318 7.37106L13.6782 7.02307C12.7286 6.5846 12.2734 5.49175 12.6308 4.50884L12.9145 3.72873C13.0842 3.26212 12.6306 2.81032 12.1646 2.98188L11.3857 3.2687C10.4042 3.63008 9.30953 3.17923 8.86724 2.23147ZM9.16348 1.1772C8.69645 0.176413 7.27237 0.179282 6.80938 1.18194L6.46138 1.93557C6.17858 2.548 5.47371 2.84163 4.83975 2.6111L4.05963 2.32742C3.02174 1.95 2.01679 2.959 2.39839 3.99537L2.68521 4.77434C2.9183 5.40737 2.62751 6.11341 2.01622 6.39868L1.264 6.74971C0.263217 7.21674 0.266087 8.64082 1.26874 9.10381L2.02237 9.45181C2.63481 9.73461 2.92844 10.4395 2.6979 11.0734L2.41422 11.8536C2.0368 12.8915 3.04581 13.8964 4.08218 13.5148L4.86114 13.228C5.49417 12.9949 6.20022 13.2857 6.48549 13.897L6.83652 14.6492C7.30355 15.65 8.72763 15.6471 9.19062 14.6445L9.53862 13.8908C9.82142 13.2784 10.5263 12.9848 11.1603 13.2153L11.9404 13.499C12.9783 13.8764 13.9832 12.8674 13.6016 11.831L13.3148 11.0521C13.0817 10.419 13.3725 9.71298 13.9838 9.42771L14.736 9.07668C15.7368 8.60965 15.7339 7.18557 14.7313 6.72258L13.9776 6.37458C13.3652 6.09178 13.0716 5.38691 13.3021 4.75295L13.5858 3.97283C13.9632 2.93493 12.9542 1.92998 11.9178 2.31158L11.1389 2.59841C10.5058 2.83149 9.79978 2.5407 9.51452 1.92941L9.16348 1.1772Z' fill='%238C8C8C'/%3E%3Cpath d='M10.7611 7.91279C10.7611 9.43735 9.52524 10.6732 8.00068 10.6732C6.47613 10.6732 5.24023 9.43735 5.24023 7.91279C5.24023 6.38824 6.47613 5.15234 8.00068 5.15234C9.52524 5.15234 10.7611 6.38824 10.7611 7.91279Z' fill='white'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M8.00068 9.95896C9.13075 9.95896 10.0468 9.04286 10.0468 7.91279C10.0468 6.78273 9.13075 5.86663 8.00068 5.86663C6.87062 5.86663 5.95452 6.78273 5.95452 7.91279C5.95452 9.04286 6.87062 9.95896 8.00068 9.95896ZM8.00068 10.6732C9.52524 10.6732 10.7611 9.43735 10.7611 7.91279C10.7611 6.38824 9.52524 5.15234 8.00068 5.15234C6.47613 5.15234 5.24023 6.38824 5.24023 7.91279C5.24023 9.43735 6.47613 10.6732 8.00068 10.6732Z' fill='%238C8C8C'/%3E%3C/svg%3E") center no-repeat !important;
-    background: url(${images.Gear}) center no-repeat;
+    // background: url(${images.Gear}) center no-repeat;
     background-size: contain;
   }
 `;
@@ -3110,7 +3124,7 @@ const LogoutToggle = styled.div`
   visibility: ${(props) => (props.isToggle ? "hidden" : "visible")};
   opacity: ${(props) => (props.isToggle ? "0" : "1")};
   // transition: max-height 0.5s ease, padding 0.5s ease;
-  transform: translateX(260px);
+  transform: translateX(45px);
   transition: all 0.5s;
 
   .info {
@@ -3150,6 +3164,8 @@ const LogoutToggle = styled.div`
       display: flex;
       align-items: center;
       gap: 8px;
+      font-family: "Pretendard", "Poppins";
+      font-weight: 300;
       padding: 0;
       border: 0;
       background: none;

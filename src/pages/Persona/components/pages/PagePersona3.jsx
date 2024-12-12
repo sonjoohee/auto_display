@@ -316,7 +316,7 @@ const PagePersona3 = () => {
                 </CustomizePersona>
 
                 <InterviewSelect>
-                  <Title>인터뷰 목적</Title>
+                  <Title>인터뷰 목적 선택</Title>
 
                   <TabWrap>
                     {purposeCategories.map((category) => (
@@ -692,13 +692,13 @@ const TabButton = styled.button`
     background: rgba(34, 111, 255, 0.1);
     border: 1px solid ${palette.primary};
     color: ${palette.primary};
-    font-weight: 600;
+    font-weight: 500;
   `
       : `
     background: ${palette.chatGray};
     border: 1px solid ${palette.outlineGray};
     color: ${palette.gray500};
-    font-weight: 400;
+    font-weight: 300;
   `}
 `;
 
@@ -721,6 +721,10 @@ const PersonaCards = styled.div`
 
 const TabContent = styled(PersonaCards)`
   gap: 12px;
+
+  > div {
+    padding: 12px 20px;
+  }
 `;
 
 const CustomAccordionIcon = styled.div`

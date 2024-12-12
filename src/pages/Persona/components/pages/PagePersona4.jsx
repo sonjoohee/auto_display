@@ -28,7 +28,8 @@ import {
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import Header from "../molecules/MoleculeHeader";
 import { palette } from "../../../../assets/styles/Palette";
-import Sidebar from "../../../Design_Page/IncSidebar";
+import images from "../../../../assets/styles/Images";
+// import Sidebar from "../../../Design_Page/IncSidebar";
 import IncNavigation from "../organisms/OrganismIncNavigation";
 import OrganismBusinessAnalysis from "../organisms/OrganismBisinessAnalysis";
 import { createProjectReportOnServer } from "../../../../utils/indexedDB";
@@ -218,7 +219,10 @@ const PagePersona4 = () => {
                     <div>
                       <h3>
                         3. 문항별 결과
-                        <span>인터뷰 스크립트 보기</span>
+                        <span>
+                          <img src={images.ReportSearch} alt="인터뷰 스크립트 보기" />
+                          인터뷰 스크립트 보기
+                        </span>
                       </h3>
 
                       <ResultAccordion>
@@ -347,7 +351,7 @@ const PagePersona4 = () => {
                               <div>
                                 <p>
                                   비대면 방식과 모바일 앱을 통한 편리한 예약 및
-                                  관리 시스템이 가장 큰 ��별점으로 인식됩니다.
+                                  관리 시스템이 가장 큰 차별점으로 인식됩니다.
                                   바쁜 현대인의 시간 부족 문제를 효과적으로
                                   해결하며, 실시간 진행 상황 확인 기능은
                                   투명성을 제공합니다. 다양한 세탁 옵션 또한
@@ -381,12 +385,12 @@ const PagePersona4 = () => {
                     <span
                       className="prev"
                       onClick={() => handleSlide("prev")}
-                      style={{ opacity: currentSlide === 0 ? 0.5 : 1 }}
+                      style={{ opacity: currentSlide === 0 ? 0.4 : 1 }}
                     />
                     <span
                       className="next"
                       onClick={() => handleSlide("next")}
-                      style={{ opacity: currentSlide === 2 ? 0.5 : 1 }}
+                      style={{ opacity: currentSlide === 2 ? 0.4 : 1 }}
                     />
                   </div>
                 </FindTitle>
@@ -402,30 +406,44 @@ const PagePersona4 = () => {
                   >
                     {[
                       {
-                        icon: "💡",
-                        badge: { icon: "🎯", text: "사용자 경험" },
-                        title: "개인화된 기능 강화 필요",
+                        icon: images.DiscoveryBrand,
+                        badge: { icon: "🌟", text: "브랜드 파워" },
+                        title: "디자인 강점 더 알리기 디자인 강점 더 알리기",
                         description:
                           "사용자들은 개인 맞춤형 기능이 부족하다고 느끼고 있습니다. 특히 가족 구성원별 설정, 사용 패턴 학습을 통한 자동화 기능 등이 요구됩니다. 개인화 기능을 강화하여 사용자 만족도를 높일 수 있습니다.",
                       },
                       {
-                        icon: "🔒",
-                        badge: { icon: "🛡️", text: "보안" },
-                        title: "정보 보안 강화 필요",
+                        icon: images.DiscoveryInsight,
+                        badge: { icon: "🎟", text: "타겟 세분화" },
+                        title: "디자인 강점 더 알리기 디자인 강점 더 알리기",
                         description:
                           "개인정보 보안에 대한 우려가 높게 나타났습니다. 강화된 보안 시스템 구축과 함께, 사용자들에게 보안 정책을 명확하게 전달하고 정기적인 보안 업데이트를 제공하는 것이 중요합니다.",
                       },
                       {
-                        icon: "👨‍👩‍👧‍👦",
-                        badge: { icon: "✨", text: "사용성" },
-                        title: "가족 친화적 UX 개선",
+                        icon: images.DiscoverySuccess,
+                        badge: { icon: "🚀", text: "성공 전략" },
+                        title: "디자인 강점 더 알리기 디자인 강점 더 알리기",
                         description:
                           "모든 연령대가 쉽게 사용할 수 있는 직관적인 인터페이스가 필요합니다. 특히 고령자를 위한 큰 글씨 모드, 음성 안내 기능 등 접근성을 고려한 UI/UX 개선이 요구됩니다.",
                       },
                       {
-                        icon: "📱",
-                        badge: { icon: "⚡", text: "성능" },
-                        title: "반응 속도 최적화",
+                        icon: images.DiscoveryExperience,
+                        badge: { icon: "🤝", text: "고객 경험" },
+                        title: "디자인 강점 더 알리기 디자인 강점 더 알리기",
+                        description:
+                          "전반적인 음성 인식률과 반응 속도는 긍정적으로 평가되었으나, 일부 복잡한 명령어 처리 시 지연이 발생합니다. 성능 최적화를 통해 더 빠르고 정확한 응답 시스템 구축이 필요합니다.",
+                      },
+                      {
+                        icon: images.DiscoveryScale,
+                        badge: { icon: "📈", text: "스케일업" },
+                        title: "디자인 강점 더 알리기 디자인 강점 더 알리기",
+                        description:
+                          "전반적인 음성 인식률과 반응 속도는 긍정적으로 평가되었으나, 일부 복잡한 명령어 처리 시 지연이 발생합니다. 성능 최적화를 통해 더 빠르고 정확한 응답 시스템 구축이 필요합니다.",
+                      },
+                      {
+                        icon: images.DiscoveryBM,
+                        badge: { icon: "📋", text: "BM 전략" },
+                        title: "디자인 강점 더 알리기 디자인 강점 더 알리기",
                         description:
                           "전반적인 음성 인식률과 반응 속도는 긍정적으로 평가되었으나, 일부 복잡한 명령어 처리 시 지연이 발생합니다. 성능 최적화를 통해 더 빠르고 정확한 응답 시스템 구축이 필요합니다.",
                       },
@@ -434,9 +452,9 @@ const PagePersona4 = () => {
                         {openCard !== index ? (
                           <>
                             <CardIcon>
-                              <span>{item.icon}</span>
+                              <img src={item.icon} />
                             </CardIcon>
-                            <CardBadge>
+                            <CardBadge text={item.badge.text}>
                               <span>{item.badge.icon}</span>
                               {item.badge.text}
                             </CardBadge>
@@ -477,11 +495,34 @@ const PagePersona4 = () => {
 
 export default PagePersona4;
 
+const Sidebar = styled.div`
+  position: sticky;
+  top: 101px;
+  display: flex;
+  flex-direction: column;
+  align-self: flex-start;
+  gap: 16px;
+  width: 290px;
+  padding: 16px 20px;
+  margin-top: 44px;
+  border-radius: 10px;
+  background: ${palette.chatGray};
+
+  h5 {
+    font-size: 0.88rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: ${palette.gray700};
+    text-align: left;
+  }
+`;
+
 const InterviewReport = styled.div`
   display: flex;
   flex-direction: column;
   gap: 64px;
   width: 100%;
+  margin-top: 20px;
 `;
 
 const ReportHeader = styled.div`
@@ -537,6 +578,7 @@ const ReportContent = styled.div`
       font-size: 0.875rem;
       font-weight: 300;
       color: ${palette.primary};
+      line-height: 1.5;
       padding: 4px 16px;
       border-radius: 10px;
       border: 1px solid ${palette.primary};
@@ -597,7 +639,7 @@ const AccordionHeader = styled.div`
     width: 30px;
     height: 30px;
     font-size: 0.875rem;
-    color: ${palette.chatBlue};
+    color: ${palette.primary};
     line-height: 1.5;
     border-radius: 2px;
     border: 1px solid rgba(34, 111, 255, 0.5);
@@ -705,14 +747,44 @@ const FindTitle = styled.div`
     gap: 12px;
 
     span {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
       width: 30px;
       height: 30px;
       border-radius: 50%;
-      background: ${palette.gray200};
+      border: 1px solid ${palette.outlineGray};
+      background: ${palette.white};
       cursor: pointer;
+
+      &:before {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 10px;
+        height: 2px;
+        border-radius: 50%;
+        background: ${palette.gray800};
+        content: "";
+      }
+
+      &.prev {
+        transform: rotate(180deg);
+      }
+
+      &:after {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%) rotate(45deg);
+        width: 9px;
+        height: 9px;
+        border-right: 2px solid ${palette.gray800};
+        border-top: 2px solid ${palette.gray800};
+        content: "";
+      }
     }
   }
 `;
@@ -750,10 +822,17 @@ const Card = styled.div`
   &:hover {
     background: ${palette.outlineGray};
   }
+
+  &:hover {
+    img {
+      filter: brightness(120%);
+    }
+  }
 `;
 
 const CardIcon = styled.div`
   align-self: flex-end;
+  transition: all 0.5s;
 `;
 
 const CardBadge = styled.div`
@@ -762,11 +841,54 @@ const CardBadge = styled.div`
   gap: 4px;
   font-size: 0.75rem;
   line-height: 1.5;
-  color: #4d2d42;
   padding: 4px 12px;
   margin-top: auto;
   border-radius: 14px;
-  background: #fad6ec;
+  
+  ${props => {
+    switch (props.text) {
+      case "브랜드 파워":
+        return `
+          background: #FAD6EC;
+          color: #4D2D42;
+        `;
+      case "마케팅 인사이트":
+        return `
+          background: #FED6D6;
+          color: #513333;
+        `;
+      case "타겟 세분화":
+        return `
+          background: #DFD3F5;
+          color: #7525FF;
+        `;
+      case "성공 전략":
+        return `
+          background: #D3F3DB;
+          color: #1F7534;
+        `;
+      case "고객 경험":
+        return `
+          background: #FDFCCE;
+          color: #212622;
+        `;
+      case "스케일업":
+        return `
+          background: #E7EDDF;
+          color: #008722;
+        `;
+      case "BM 전략":
+        return `
+          background: #D5DDE5;
+          color: #2E2E2E;
+        `;
+      default:
+        return `
+          background: #D5DDE5;
+          color: #2E2E2E;
+        `;
+    }
+  }}
 `;
 
 const CardTitle = styled.div`
@@ -860,7 +982,7 @@ const Progress = styled.div`
     width: ${(props) => props.progress}%;
     height: 100%;
     border-radius: 20px;
-    background: ${palette.chatBlue};
+    background: ${palette.primary};
     content: "";
   }
 `;

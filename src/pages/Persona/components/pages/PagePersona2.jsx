@@ -710,8 +710,10 @@ const BottomBar = styled.div`
     color: ${palette.gray500};
 
     span {
+      font-size: 1rem;
+      font-weight: 600;
       color: ${palette.primary};
-      text-decoration: underline;
+      // text-decoration: underline;
     }
   }
 `;
