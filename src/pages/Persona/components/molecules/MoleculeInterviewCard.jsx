@@ -176,7 +176,7 @@ const MoleculeInterviewCard = ({
                 setState((prev) => ({ ...prev, showQuestions: true }));
               }}
             >
-              <img src="" alt="문항보기" />
+              <img src={images.FileSearch} alt="문항보기" />
               문항보기
             </span>
           ) : (
