@@ -139,7 +139,7 @@ const PagePersona = () => {
               />
               <CardWrap>
                 {/* 맞춤 페르소나 생성 */}
-                {businessAnalysis.title && (
+                {personaButtonState1 === 0 && (
                   <CreateCard>
                     <p>
                       <img src={images.PeopleChatSquareFill} alt="" />

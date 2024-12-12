@@ -69,9 +69,9 @@ const PagePersona3 = () => {
   );
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
 
-  const [interviewPurpose, setInterviewPurpose] = useState("제품 경험 평가");
+  const [interviewPurpose, setInterviewPurpose] = useState("");
   const [selectedInterviewType, setSelectedInterviewType] =
-    useState("multiple");
+    useState("");
   const [activeCategory, setActiveCategory] = useState(1);
   const [showInterview, setShowInterview] = useState(false);
   const [showInterviewReady, setShowInterviewReady] = useState(false);
@@ -81,6 +81,10 @@ const PagePersona3 = () => {
     setShowInterviewReady(false);
     setShowToast(false);
   };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   // const [isLoadingPage, setIsLoadingPage] = useState(true);
 
@@ -391,12 +395,14 @@ const PagePersona3 = () => {
                     <p>
                       {selectedInterviewType === "multiple"
                         ? "1:N 인터뷰"
-                        : "1:1 인터뷰"}
+                        : selectedInterviewType === "single"
+                        ? "1:1 인터뷰"
+                        : "선택해주세요"}
                     </p>
                   </li>
                   <li>
                     <span>목적</span>
-                    <p>{interviewPurpose}</p>
+                    <p>{interviewPurpose ? interviewPurpose : "선택해주세요"}</p>
                   </li>
                   <li>
                     <span>참여자</span>
@@ -407,6 +413,7 @@ const PagePersona3 = () => {
                   Large
                   Primary
                   Fill
+                  disabled={!interviewPurpose || !selectedInterviewType}
                   onClick={() => setShowInterviewReady(true)}
                 >
                   인터뷰룸 입장
