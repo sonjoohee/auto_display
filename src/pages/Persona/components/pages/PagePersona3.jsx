@@ -42,7 +42,7 @@ import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import OrganismBusinessAnalysis from "../organisms/OrganismBisinessAnalysis";
 import PopupWrap from "../../../../assets/styles/Popup";
-import ToastPopupWrap from "../../../../assets/styles/ToastPopup";
+import OrganismToastPopup from "../organisms/OrganismToastPopup";
 
 const PagePersona3 = () => {
   const navigate = useNavigate();
@@ -67,9 +67,9 @@ const PagePersona3 = () => {
   );
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
 
-  const [interviewPurpose, setInterviewPurpose] = useState("제품 경험 평가");
+  const [interviewPurpose, setInterviewPurpose] = useState("");
   const [selectedInterviewType, setSelectedInterviewType] =
-    useState("multiple");
+    useState("");
   const [activeCategory, setActiveCategory] = useState(1);
   const [showInterview, setShowInterview] = useState(false);
   const [showInterviewReady, setShowInterviewReady] = useState(false);
@@ -390,7 +390,9 @@ const PagePersona3 = () => {
                     <p>
                       {selectedInterviewType === "multiple"
                         ? "1:N 인터뷰"
-                        : "1:1 인터뷰"}
+                        : selectedInterviewType === "single"
+                        ? "1:1 인터뷰"
+                        : ""}
                     </p>
                   </li>
                   <li>
@@ -494,7 +496,7 @@ const PagePersona3 = () => {
             )}
             
             {showToast && (
-              <ToastPopupWrap 
+              <OrganismToastPopup
                 isActive={showToast}
                 onClose={() => setShowToast(false)}
               />
