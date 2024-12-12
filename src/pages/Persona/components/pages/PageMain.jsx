@@ -760,6 +760,7 @@ const PageMain  = () => {
                 </button>
               </div>
               <div className="maxLetter">
+                <p>현재 서비스는 B2C 비즈니스에 특화되어 있습니다</p>
                 <span id="letterCount">{businessAnalysis.input.length}/300</span>
               </div>
             </InputWrap>
@@ -1029,7 +1030,7 @@ const MainSearchWrap = styled.div`
     if (props.MainSearch) return `center`;
     else return `flex-start`;
   }};
-  gap:22px;
+  gap:42px;
   height:85dvh;
 `;
 
@@ -1049,23 +1050,25 @@ const Title = styled.h1`
 `;
 
 const InputWrap = styled.div`
-  max-width: ${(props) => (props.isMobile ? "100%" : "608px")};
+  max-width: ${(props) => (props.isMobile ? "100%" : "610px")};
   width: 100%;
   display: flex;
   flex-direction: column;
+  gap: 20px;
   margin: 0 auto;
   border-radius: 20px;
-  border: 1px solid ${palette.lineGray};
+  // border: 1px solid ${palette.lineGray};
   background: ${palette.white};
-  box-shadow: 0 3px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.12);
   overflow: hidden;
 
   .inputWrap {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     gap: 20px;
     // padding:28px 38px;
-    padding: ${(props) => (props.isMobile ? "20px" : "28px")};
+    padding: ${(props) => (props.isMobile ? "20px" : "20px")};
 
     textarea {
       width: 100%;
@@ -1078,6 +1081,7 @@ const InputWrap = styled.div`
 
       &::placeholder {
         font-size: 1rem;
+        font-weight: 300;
         color: #A9A9A9;
       }
     }
@@ -1100,12 +1104,23 @@ const InputWrap = styled.div`
 
   .maxLetter {
     display: flex;
-    justify-content: flex-end;
-    font-size: 0.75rem;
+    justify-content: space-between;
     color: ${palette.gray500};
-    padding: 15px 35px;
-    border-top: 1px solid ${palette.lineGray};
-    background: #ebf3fe;
+    padding: 12px 20px;
+    border-top: 1px solid ${palette.outlineGray};
+    background: #F5F9FF;
+
+    p {
+      font-size: 0.875rem;
+      font-weight: 300;
+      color: ${palette.gray300};
+      line-height: 1.5;
+    }
+
+    span {
+      font-size: 0.75rem;
+      color: #525252;
+    }
   }
 `;
 
