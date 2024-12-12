@@ -153,7 +153,7 @@ const MoleculeInterviewCard = ({
   return (
     <CardContainer>
       <MainContent>
-        <CheckCircle $isSelected={isSelected} onClick={() => onSelect(title)} />
+        <CheckCircle $isSelected={isSelected} onClick={() => {setSelectedInterviewPurpose(title); onSelect(title)}} />
         <ContentWrapper>
           <TitleSection>
             <Title>{title}</Title>
