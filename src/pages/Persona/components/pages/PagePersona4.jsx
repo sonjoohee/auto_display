@@ -10,7 +10,8 @@ import {
   REPORT_LOAD_BUTTON_STATE,
   SELECTED_INTERVIEW_PURPOSE,
   INTERVIEW_REPORT,
-  INTERVIEW_REPORT_ADDITIONAL
+  INTERVIEW_REPORT_ADDITIONAL,
+  INTERVIEW_QUESTION_LIST
 } from "../../../AtomStates";
 import {
   ContentsWrap,
@@ -28,7 +29,7 @@ import {
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import Header from "../molecules/MoleculeHeader";
 import { palette } from "../../../../assets/styles/Palette";
-import Sidebar from "../../../Design_Page/IncSidebar";
+// import Sidebar from "../../../Design_Page/IncSidebar";
 import IncNavigation from "../organisms/OrganismIncNavigation";
 import OrganismBusinessAnalysis from "../organisms/OrganismBisinessAnalysis";
 import { createProjectReportOnServer } from "../../../../utils/indexedDB";
@@ -37,6 +38,7 @@ import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
 
 const PagePersona4 = () => {
   const navigate = useNavigate();
+  const [interviewQuestionList, setInterviewQuestionList] = useAtom(INTERVIEW_QUESTION_LIST);
   const [interviewReport, setInterviewReport] = useAtom(INTERVIEW_REPORT);
   const [interviewReportAdditional, setInterviewReportAdditional] = useAtom(INTERVIEW_REPORT_ADDITIONAL);
   const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
@@ -66,6 +68,18 @@ const PagePersona4 = () => {
   ]);
 
   let newReportId;
+
+  useEffect(() => {
+    // 접근 가능 여부를 확인하여 차단 로직 수행
+    if (!isPersonaAccessible) {
+      navigate("/Main"); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
+    }
+
+    // 페이지를 나갈 때 접근 가능 여부 초기화
+    return () => {
+      setIsPersonaAccessible(false); // 페이지 떠날 때 접근 불가로 설정
+    };
+  }, [navigate]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -175,6 +189,10 @@ const PagePersona4 = () => {
     }
   };
 
+  const existingQuestions = interviewQuestionList.find(
+    (item) => item.theory_name === selectedInterviewPurpose
+  );
+
   return (
     <>
       <ContentsWrap>
@@ -227,7 +245,7 @@ const PagePersona4 = () => {
                           isOpen={openAccordion === 1}
                         >
                           <span>1</span>
-                          <p>제품이 고객에게 전달하는 가치는 무엇인가요?</p>
+                          <p>{existingQuestions?.questions[0]?.question}</p>
                         </AccordionHeader>
 
                         {openAccordion === 1 && (
@@ -246,21 +264,10 @@ const PagePersona4 = () => {
                               <strong>인터뷰 인사이드</strong>
                               <div>
                                 <p>
-                                  비대면 방식과 모바일 앱을 통한 편리한 예약 및
-                                  관리 시스템이 가장 큰 차별점으로 인식됩니다.
-                                  바쁜 현대인의 시간 부족 문제를 효과적으로
-                                  해결하며, 실시간 진행 상황 확인 기능은
-                                  투명성을 제공합니다. 다양한 세탁 옵션 또한
-                                  고객 맞춤형 서비스를 제공하는 강점으로
-                                  작용합니다.
+                                  {interviewReport[2].content[0].question_insight[0].text}
                                 </p>
                                 <p>
-                                  시간 절약과 편리성 외에도, 세탁 옵션의
-                                  다양성과 정확한 세탁 의뢰 및 배송 추적
-                                  시스템이 높은 평가를 받고 있습니다. 특히,
-                                  개인의 시간 관리가 중요한 직장인들에게 업무
-                                  효율 향상에 기여하는 점이 큰 장점으로
-                                  인식됩니다.
+                                  {interviewReport[2].content[0].question_insight[1].text}
                                 </p>
                               </div>
                             </BgInside>
@@ -275,8 +282,7 @@ const PagePersona4 = () => {
                         >
                           <span>2</span>
                           <p>
-                            경쟁 제품 사용자가 지금의 브랜드를 바꿔야 한다고
-                            느낄 만한 상황은 어떤 경우일까요?
+                            {existingQuestions?.questions[1]?.question}
                           </p>
                         </AccordionHeader>
 
@@ -296,21 +302,10 @@ const PagePersona4 = () => {
                               <strong>인터뷰 인사이드</strong>
                               <div>
                                 <p>
-                                  비대면 방식과 모바일 앱을 통한 편리한 예약 및
-                                  관리 시스템이 가장 큰 차별점으로 인식됩니다.
-                                  바쁜 현대인의 시간 부족 문제를 효과적으로
-                                  해결하며, 실시간 진행 상황 확인 기능은
-                                  투명성을 제공합니다. 다양한 세탁 옵션 또한
-                                  고객 맞춤형 서비스를 제공하는 강점으로
-                                  작용합니다.
+                                  {interviewReport[2].content[1].question_insight[0].text}
                                 </p>
                                 <p>
-                                  시간 절약과 편리성 외에도, 세탁 옵션의
-                                  다양성과 정확한 세탁 의뢰 및 배송 추적
-                                  시스템이 높은 평가를 받고 있습니다. 특히,
-                                  개인의 시간 관리가 중요한 직장인들에게 업무
-                                  효율 향상에 기여하는 점이 큰 장점으로
-                                  인식됩니다.
+                                  {interviewReport[2].content[1].question_insight[1].text}
                                 </p>
                               </div>
                             </BgInside>
@@ -325,8 +320,7 @@ const PagePersona4 = () => {
                         >
                           <span>3</span>
                           <p>
-                            경쟁 제품 사용자가 지금의 브랜드를 바꿔야 한다고
-                            느낄 만한 상황은 어떤 경우일까요?
+                            {existingQuestions?.questions[2]?.question}
                           </p>
                         </AccordionHeader>
 
@@ -346,21 +340,10 @@ const PagePersona4 = () => {
                               <strong>인터뷰 인사이드</strong>
                               <div>
                                 <p>
-                                  비대면 방식과 모바일 앱을 통한 편리한 예약 및
-                                  관리 시스템이 가장 큰 ��별점으로 인식됩니다.
-                                  바쁜 현대인의 시간 부족 문제를 효과적으로
-                                  해결하며, 실시간 진행 상황 확인 기능은
-                                  투명성을 제공합니다. 다양한 세탁 옵션 또한
-                                  고객 맞춤형 서비스를 제공하는 강점으로
-                                  작용합니다.
+                                  {interviewReport[2].content[2].question_insight[0].text}
                                 </p>
                                 <p>
-                                  시간 절약과 편리성 외에도, 세탁 옵션의
-                                  다양성과 정확한 세탁 의뢰 및 배송 추적
-                                  시스템이 높은 평가를 받고 있습니다. 특히,
-                                  개인의 시간 관리가 중요한 직장인들에게 업무
-                                  효율 향상에 기여하는 점이 큰 장점으로
-                                  인식됩니다.
+                                  {interviewReport[2].content[2].question_insight[1].text}
                                 </p>
                               </div>
                             </BgInside>
@@ -465,7 +448,6 @@ const PagePersona4 = () => {
               </ProgressBar>
 
               <MoleculeStepIndicator steps={steps} activeStep={5} />
-
             </Sidebar>
           
           </AnalysisWrap>
@@ -836,6 +818,28 @@ const CardDescription = styled.div`
     }
   }
 `;
+const Sidebar = styled.div`
+  position: sticky;
+  top: 101px;
+  display: flex;
+  flex-direction: column;
+  align-self: flex-start;
+  gap: 16px;
+  width: 290px;
+  padding: 16px 20px;
+  margin-top: 44px;
+  border-radius: 10px;
+  background: ${palette.chatGray};
+
+  h5 {
+    font-size: 0.88rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: ${palette.gray700};
+    text-align: left;
+  }
+`;
+
 const ProgressBar = styled.div`
   display: flex;
   align-items: center;
@@ -860,7 +864,7 @@ const Progress = styled.div`
     width: ${(props) => props.progress}%;
     height: 100%;
     border-radius: 20px;
-    background: ${palette.chatBlue};
+    background: ${palette.primary};
     content: "";
   }
 `;
