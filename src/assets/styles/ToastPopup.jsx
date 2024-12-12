@@ -34,31 +34,22 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
   
   const navigate = useNavigate();
 
-  const index = 0;
-
   const [active, setActive] = useState(isActive);
   const [showWarning, setShowWarning] = useState(false);
   const [isLoadingPrepare, setIsLoadingPrepare] = useState(true);
-  const [interviewQuestionListState, setInterviewQuestionListState] = useState(INTERVIEW_QUESTION_LIST);
+  const [interviewQuestionListState, setInterviewQuestionListState] = useState([]);
   const [interviewStatus, setInterviewStatus] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [currentPersonaIndex, setCurrentPersonaIndex] = useState(0);
-
-  useEffect(() => {
-    if (interviewQuestionListState.length > 0) {
-      // 초기 상태 설정
-      const initialStatus = interviewQuestionListState.map(() => 'Pre');
-      console.log('initialStatus', initialStatus);
-      setInterviewStatus(initialStatus);
-    }
-  }, [interviewQuestionListState]);
+  const [answers, setAnswers] = useState({});
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [visibleAnswers, setVisibleAnswers] = useState({});
 
   const axiosConfig = {
-    timeout: 100000, // 100초
+    timeout: 100000,
     headers: {
       "Content-Type": "application/json",
     },
-    withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
+    withCredentials: true,
   };
 
   useEffect(() => {
@@ -70,7 +61,7 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
           );
       
           if (existingQuestions) {
-            setInterviewQuestionListState(existingQuestions.questions);
+            setInterviewQuestionListState(existingQuestions.questions.slice(2));
             await new Promise(resolve => setTimeout(resolve, 5000));
           } else {
             let data = {
@@ -103,16 +94,13 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
                 axiosConfig
               );
               retryCount++;
-      
               questionList = response.data;
             }
+
             if (retryCount === maxRetries) {
-              throw new Error(
-                "Maximum retry attempts reached. Empty response persists."
-              );
+              throw new Error("Maximum retry attempts reached.");
             }
 
-            // 새로운 데이터를 포함한 전체 리스트를 생성
             const newQuestionList = [
               ...interviewQuestionList,
               {
@@ -121,11 +109,9 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
               },
             ];
       
-            // 상태 업데이트와 서버 업데이트를 순차적으로 실행
             setInterviewQuestionList(newQuestionList);
-            setInterviewQuestionListState(questionList);
+            setInterviewQuestionListState(questionList.slice(2));
       
-            // 서버 업데이트 시 새로운 리스트를 직접 전달
             await updateProjectOnServer(
               projectId,
               {
@@ -140,58 +126,109 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
       } finally {
         setPersonaButtonState3(0);
         setIsLoadingPrepare(false);
-        processInterview();
+        const initialStatus = new Array(interviewQuestionListState.length).fill('Pre');
+        setInterviewStatus(initialStatus);
       }
     }
     interviewLoading();
   }, [personaButtonState3]);
 
-  const processInterview = async () => {
-    if (interviewStatus[currentQuestionIndex] === 'Pre') {
-      // 현재 질문 상태를 'Ing'로 변경
-      const newStatus = [...interviewStatus];
-      newStatus[currentQuestionIndex] = 'Ing';
-      setInterviewStatus(newStatus);
+  useEffect(() => {
+    const processInterview = async () => {
+      if (!isLoadingPrepare && interviewStatus[currentQuestionIndex] === 'Pre') {
+        const newStatus = [...interviewStatus];
+        newStatus[currentQuestionIndex] = 'Ing';
+        setInterviewStatus(newStatus);
 
-      // 현재 질문에 대해 모든 페르소나의 응답 처리
-      try {
-        while (currentPersonaIndex < personaList.selected.length) {
-          const data = {
-            business_analysis_data: businessAnalysis,
-            question: interviewQuestionListState[currentQuestionIndex].question,
-            persona_info: {
-              "id": personaList.selected[currentPersonaIndex].personIndex.replace(/[^1-9]/g, ''),
-              "name": personaList.selected[currentPersonaIndex].persona,
-              "keyword": personaList.selected[currentPersonaIndex].keyword,
-              "hashtag": personaList.selected[currentPersonaIndex].tag,
-              "summary": personaList.selected[currentPersonaIndex].summary
-            },
-            last_interview: []
-          };
+        setAnswers(prev => ({
+          ...prev,
+          [currentQuestionIndex]: []
+        }));
 
-          let response = await axios.post(
-            "https://wishresearch.kr/person/persona_interview_module",
-            data,
-            axiosConfig
-          );
+        try {
+          for (let i = 0; i < personaList.selected.length; i++) {
+            setIsGenerating(true);
+            
+            const data = {
+              business_analysis_data: businessAnalysis,
+              question: interviewQuestionListState[currentQuestionIndex],
+              persona_info: {
+                "id": personaList.selected[i].personIndex.replace(/[^1-9]/g, ''),
+                "name": personaList.selected[i].persona,
+                "keyword": personaList.selected[i].keyword,
+                "hashtag": personaList.selected[i].tag,
+                "summary": personaList.selected[i].summary
+              },
+              last_interview: []
+            };
 
-          setCurrentPersonaIndex(prev => prev + 1);
+            const response = await axios.post(
+              "https://wishresearch.kr/person/persona_interview_module",
+              data,
+              axiosConfig
+            );
+
+            setIsGenerating(false);
+
+            setAnswers(prev => ({
+              ...prev,
+              [currentQuestionIndex]: [
+                ...prev[currentQuestionIndex],
+                {
+                  persona: personaList.selected[i],
+                  answer: response.data.answer
+                }
+              ]
+            }));
+
+            if (i === personaList.selected.length - 1) {
+              newStatus[currentQuestionIndex] = 'Complete';
+              setInterviewStatus(newStatus);
+              
+              if (currentQuestionIndex < interviewQuestionListState.length - 1) {
+                setCurrentQuestionIndex(prev => prev + 1);
+              }
+            }
+          }
+        } catch (error) {
+          console.error('Interview process error:', error);
+          setIsGenerating(false);
         }
-
-        // 모든 페르소나가 응답을 마치면
-        if (currentPersonaIndex >= personaList.length) {
-          // 현재 질문을 'Complete'로 변경
-          newStatus[currentQuestionIndex] = 'Complete';
-          setInterviewStatus(newStatus);
-          
-          // 다음 질문으로 이동
-          setCurrentQuestionIndex(prev => prev + 1);
-          setCurrentPersonaIndex(0);
-        }
-      } catch (error) {
-        console.error('Interview process error:', error);
       }
-    }
+    };
+
+    processInterview();
+  }, [isLoadingPrepare, currentQuestionIndex, interviewStatus]);
+
+  const renderAnswers = (questionIndex) => {
+    const questionAnswers = answers[questionIndex] || [];
+    
+    return (
+      <>
+        {questionAnswers.map((answer, index) => (
+          <AnswerItem key={index}>
+            <TypeName>
+              <Thumb />
+              {answer.persona.persona}
+            </TypeName>
+            <TextContainer>
+              {answer.answer}
+            </TextContainer>
+          </AnswerItem>
+        ))}
+        {isGenerating && interviewStatus[questionIndex] === 'Ing' && (
+          <AnswerItem>
+            <TypeName>
+              <Thumb />
+              {personaList.selected[questionAnswers.length].persona}
+            </TypeName>
+            <TextContainer>
+              <Entering />
+            </TextContainer>
+          </AnswerItem>
+        )}
+      </>
+    );
   };
 
   useEffect(() => {
@@ -215,14 +252,38 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
     setShowWarning(false);
   };
 
-  const [visibleAnswers, setVisibleAnswers] = useState({});
+  useEffect(() => {
+    setVisibleAnswers(prev => {
+      const newVisibleAnswers = { ...prev };
+      interviewStatus.forEach((status, index) => {
+        // 진행중인 질문은 자동으로 열기
+        if (status === 'Ing') {
+          newVisibleAnswers[index] = true;
+        }
+        // 완료된 질문은 자동으로 닫기
+        else if (status === 'Complete') {
+          newVisibleAnswers[index] = false;
+        }
+      });
+      return newVisibleAnswers;
+    });
+  }, [interviewStatus]);
+
   const handleAnswerToggle = (index) => {
+    // 'Pre' 상태일 때는 토글 불가능
+    if (interviewStatus[index] === 'Pre') return;
+    
     setVisibleAnswers(prev => ({ ...prev, [index]: !prev[index] }));
   };
 
-  const renderInterviewItems = (items) => {
-    return items.map((item, index) => (
-      <InterviewItem key={index} status={interviewStatus[index] || 'Pre'}>
+  const renderInterviewItems = () => {
+    return interviewQuestionListState.map((item, index) => (
+      <InterviewItem 
+        key={index} 
+        status={interviewStatus[index] || 'Pre'}
+        // 'Pre' 상태일 때는 커서 스타일 변경
+        style={{ cursor: interviewStatus[index] === 'Pre' ? 'default' : 'pointer' }}
+      >
         <QuestionWrap onClick={() => handleAnswerToggle(index)}>
           <Number status={interviewStatus[index] || 'Pre'}>{index + 1}</Number>
           <QuestionText>{item.question}</QuestionText>
@@ -232,89 +293,13 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
             : '준비중'}
           </Status>
         </QuestionWrap>
-        {visibleAnswers[index] && (interviewStatus[index] === 'Ing' || interviewStatus[index] === 'Complete') && 
-          <AnswerWrap>{item.answer}</AnswerWrap>
-        }
+        {visibleAnswers[index] && (interviewStatus[index] === 'Ing' || interviewStatus[index] === 'Complete') && (
+          <AnswerWrap>
+            {renderAnswers(index)}
+          </AnswerWrap>
+        )}
       </InterviewItem>
     ));
-  };
-
-  const answer1 = `
-    <Container>
-      <Item>
-        <Circle />
-        <TextContainer>
-          <Text>꼼꼼한 계획형 자산 관리 성향</Text>
-        </TextContainer>
-      </Item>
-      <Item>
-        <CircleWrapper>
-          <Circle />
-        </CircleWrapper>
-        <Content>
-          <Text>전기면도기를 사용하는 데 전원이 필요한데, 만약 외부 활동 중 전원이 부족하다면 사용이 어려울 수 있습니다. 전기가 공급되지 않는 환경에는 사용이 어려울 것 같습니다.</Text>
-        </Content>
-      </Item>
-    </Container>
-  `;
-  const answer2 = (
-    <>
-      <AnswerItem>
-        <TypeName>
-          <Thumb />
-          꼼꼼한 계획형 자산 관리 성향
-        </TypeName>
-
-        <TextContainer>
-          전기면도기를 사용하는 데 전원이 필요한데, 만약 외부 활동 중 전원이 부족하다면 사용이 어려울 수 있습니다. 전기가 공급되지 않는 환경에는 사용이 어려울 것 같습니다.
-        </TextContainer>
-      </AnswerItem>
-
-      <AnswerItem>
-        <TypeName>
-          <Thumb />
-          꼼꼼한 계획형 자산 관리 성향
-        </TypeName>
-
-        <TextContainer>
-          <Entering />
-        </TextContainer>
-      </AnswerItem>
-
-      <AnswerItem>
-        <TypeName>
-          <Thumb />
-          꼼꼼한 계획형 자산 관리 성향
-        </TypeName>
-
-        <TextContainer>
-          전기면도기를 사용하는 데 전원이 필요한데, 만약 외부 활동 중 전원이 부족하다면 사용이 어려울 수 있습니다. 전기가 공급되지 않는 환경에는 사용이 어려울 것 같습니다.
-        </TextContainer>
-      </AnswerItem>
-    </>
-  );
-  const answer3 = '내용 3';
-
-  const interviewData = [
-    {
-      status: 'Pre',
-      question: interviewQuestionListState?.[2]?.question,
-      answer: answer1,
-    },
-    {
-      status: 'Pre',
-      question: interviewQuestionListState?.[3]?.question,
-      answer: answer2,
-    },
-    {
-      status: 'Pre',
-      question: interviewQuestionListState?.[4]?.question,
-      answer: answer3,
-    },
-  ];
-
-  const handleMoveToReport = () => {
-    navigate('/InterviewResult');
   };
 
   return (
@@ -323,21 +308,21 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
         <ToastPopup isActive={active}>
           <Header>
             <Title>
-              쉽고 빠르게 송금 및 이체 할 수 있는 어플리케이션의 제품 경험 평가
+              {businessAnalysis.title}
               <ColseButton onClick={handleClose} />
             </Title>
             <ul>
               <li>
                 <span>
-                  <img src="" alt="문항수" />문항수
+                  <img src={images.QuestionCount} alt="문항수" />문항수
                 </span>
                 <span>3개</span>
               </li>
               <li>
                 <span>
-                  <img src="" alt="참여페르소나" />참여페르소나
+                  <img src={images.PersonaCount} alt="참여페르소나" />참여페르소나
                 </span>
-                <span>5명</span>
+                <span>{personaList.selected.length}명</span>
               </li>
             </ul>
           </Header>
@@ -357,48 +342,7 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
               </LoadingBox>
             }
 
-            {/* <LoadingBox Complete>
-              <img src={images.CheckCircleFill} alt="완료" />
-              <p>
-                결과 분석 완료! 인터뷰 결과를 확인해보세요
-                <span onClick={handleMoveToReport}>결과 리포트 확인하기</span>
-              </p>
-            </LoadingBox> */}
-
-            {renderInterviewItems(interviewData)}
-
-            {/* <InterviewItem status="Ing">
-              <QuestionWrap onClick={() => handleAnswerToggle(0)}>
-                <Number>{index + 1}</Number>
-                <QuestionText>
-                  쉽고 빠르게 송금 및 이체 할 수 있는 어플리케이션의 제품 경험 평가
-                </QuestionText>
-                <Status>진행중</Status>
-              </QuestionWrap>
-              {visibleAnswers[0] && <AnswerWrap>내용</AnswerWrap>}
-            </InterviewItem>
-
-            <InterviewItem>
-              <QuestionWrap onClick={() => handleAnswerToggle(1)}>
-                <Number>{index + 1}</Number>
-                <QuestionText>
-                  경쟁 제품 사용자가 지금의 브랜드를 바꿔야 한다고 느낄 만한 상황은 어떤 경우일까요?
-                </QuestionText>
-                <Status Ing>진행중</Status>
-              </QuestionWrap>
-              {visibleAnswers[1] && <AnswerWrap>내용</AnswerWrap>}
-            </InterviewItem>
-
-            <InterviewItem>
-              <QuestionWrap onClick={() => handleAnswerToggle(2)}>
-                <Number>{index + 1}</Number>
-                <QuestionText>
-                  경쟁 제품 사용자가 지금의 브랜드를 바꿔야 한다고 느낄 만한 상황은 어떤 경우일까요?
-                </QuestionText>
-                <Status Complete>완료</Status>
-              </QuestionWrap>
-              {visibleAnswers[2] && <AnswerWrap>내용</AnswerWrap>}
-            </InterviewItem> */}
+            {!isLoadingPrepare && renderInterviewItems()}
           </Contents>
         </ToastPopup>
       </PopupBox>
@@ -416,7 +360,6 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
           onConfirm={handleWarningContinue}
         />
       )}
-
     </>
   );
 };
@@ -655,6 +598,7 @@ const InterviewItem = styled.div`
   padding: 20px;
   border-radius: 10px;
   border: 1px solid ${palette.outlineGray};
+  cursor: ${props => props.status === 'Pre' ? 'default' : 'pointer'};
 `;
 
 const QuestionWrap = styled.div`
@@ -663,7 +607,8 @@ const QuestionWrap = styled.div`
   justify-content: flex-start;
   gap: 12px;
   width: 100%;
-  cursor: ${props => (props.status === 'Ing' || props.status === 'Complete') ? 'pointer' : 'default'};
+  // cursor: ${props => (props.status === 'Ing' || props.status === 'Complete') ? 'pointer' : 'default'};
+  cursor: inherit;
 `;
 
 const Number = styled.div`
