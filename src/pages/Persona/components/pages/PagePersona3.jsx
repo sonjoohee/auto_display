@@ -14,6 +14,7 @@ import {
   PERSONA_STEP,
   SELECTED_INTERVIEW_PURPOSE,
   PERSONA_LIST,
+  PERSONA_BUTTON_STATE_3
 } from "../../../AtomStates";
 import {
   ContentsWrap,
@@ -40,9 +41,12 @@ import MoleculePersonaCard from "../molecules/MoleculePersonaCard";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import OrganismBusinessAnalysis from "../organisms/OrganismBisinessAnalysis";
+import PopupWrap from "../../../../assets/styles/Popup";
+import ToastPopupWrap from "../../../../assets/styles/ToastPopup";
 
 const PagePersona3 = () => {
   const navigate = useNavigate();
+  const [personaButtonState3, setPersonaButtonState3] = useAtom(PERSONA_BUTTON_STATE_3);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
@@ -67,6 +71,14 @@ const PagePersona3 = () => {
   const [selectedInterviewType, setSelectedInterviewType] =
     useState("multiple");
   const [activeCategory, setActiveCategory] = useState(1);
+  const [showInterview, setShowInterview] = useState(false);
+  const [showInterviewReady, setShowInterviewReady] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+
+  const handlePopupClose = () => {
+    setShowInterviewReady(false);
+    setShowToast(false);
+  }
 
   // const [isLoadingPage, setIsLoadingPage] = useState(true);
 
@@ -239,6 +251,13 @@ const PagePersona3 = () => {
     4: purposeItems.filter((item) => item.category === "사용자 시뮬레이션"),
   };
 
+  const handleEnterInterviewRoom = () => {
+    setPersonaStep(4);
+    setPersonaButtonState3(1);
+    handlePopupClose();
+    setShowToast(true);
+  }
+
   return (
     <>
       <ContentsWrap>
@@ -382,11 +401,39 @@ const PagePersona3 = () => {
                     <p>{personaList.selected.length}명</p>
                   </li>
                 </ul>
-                <Button Large Primary Fill>
+                <Button Large Primary Fill onClick={() => setShowInterviewReady(true)}>
                   인터뷰룸 입장
                 </Button>
               </InterviewRoom>
             </Sidebar>
+
+            {showInterviewReady && (
+              <PopupWrap 
+                Check
+                title="인터뷰 준비 완료" 
+                message={
+                  <>
+                    인터뷰 룸 이동 시, 바로 시작됩니다.<br />
+                    인터뷰를 중단하면 모든 내역이 삭제되니 주의하세요
+                  </> 
+                }
+                buttonType="Outline"
+                closeText="취소"
+                confirmText="시작하기"
+                isModal={false}
+                onCancel={handlePopupClose}
+                onConfirm={() => {
+                  handleEnterInterviewRoom();
+                }}
+              />
+            )}
+            
+            {showToast && (
+              <ToastPopupWrap 
+                isActive={showToast}
+                onClose={() => setShowToast(false)}
+              />
+            )}
           </AnalysisWrap>
         </MainContent>
       </ContentsWrap>
