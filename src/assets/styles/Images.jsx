@@ -1,6 +1,7 @@
 import Logo from "../images/logoInterviewx.svg";
 import SymbolLogo from "../images/symbolLogo.svg";
 import SymbolLogoWhite from "../images/symbolLogoWhite.svg";
+import LogoVerticality from "../images/logo-verticality.svg";
 
 import Filter from "../images/Filter.svg";
 import BgSearch from "../images/BgSearch.png";
@@ -181,11 +182,15 @@ import StatusBadgeCustom from "../images/status-badge-custom.svg"
 import GenderMen from "../images/gender-men.svg"
 import GenderWomen from "../images/gender-women.svg"
 import FileSearch from "../images/file-search.svg"
+import PlusSquareWhite from "../images/plus-square-white.svg"
+import Gear from "../images/gear.svg"
+import ArrowBarLeft from "../images/arrow-bar-left.svg"
 
 const images = {
   Logo,
   SymbolLogo,
   SymbolLogoWhite,
+  LogoVerticality,
   
   Filter,
   BgSearch,
@@ -366,6 +371,9 @@ const images = {
   GenderMen,
   GenderWomen,
   FileSearch,
+  PlusSquareWhite,
+  Gear,
+  ArrowBarLeft,
 }
 
 export default images;

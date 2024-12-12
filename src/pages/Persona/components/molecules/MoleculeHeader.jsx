@@ -36,9 +36,9 @@ const MoleculeHeader = () => {
       )}
 
       <div className="gnb">
-        <Link to="/">
+        <Notify Alarm onClick={handleAlertToggle}>
           <img src={images.IconBell} alt="" />
-        </Link>
+        </Notify>
         <div className="userInfo">
           유저프로필
         </div>

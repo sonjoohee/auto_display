@@ -25,17 +25,17 @@ const IncNavigation = () => {
 
         <MenuList>
           <li>
-            <img src={images.IconBell} alt="새작업" />
+            <img src={images.PlusSquareWhite} alt="새작업" />
             <span>새작업</span>
           </li>
 
           <li>
-            <img src={images.IconBell} alt="작업관리" />
+            <img src={images.Folder} alt="작업관리" />
             <span>작업관리</span>
           </li>
 
           <li onClick={handleWorkManageClick}>
-            <img src={images.IconBell} alt="대화내역" />
+            <img src={images.Clock} alt="대화내역" />
             <span>대화내역</span>
           </li>
         </MenuList>
@@ -108,8 +108,9 @@ const NavigationWrap = styled.div`
 
 const Logo = styled.div`
   width: 32px;
-  height: 32px;
-  background: ${palette.primary};
+  height: 50px;
+  background: url(${images.LogoVerticality}) no-repeat center;
+  background-size: cover;
 `;
 
 const MenuList = styled.ul`
@@ -133,8 +134,8 @@ const MenuList = styled.ul`
 `;
 
 const Setting = styled.div`
-  width: 32px;
-  height: 32px;
+  width: 22px;
+  height: 22px;
   margin-top: auto;
   background: ${palette.primary};
 `;

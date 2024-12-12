@@ -105,17 +105,19 @@ const MoleculePersonaCard = ({
 
         {isBasic ? (
             <Badge Basic>
-              <ReadyIcon />
+              <img src={images.StatusBadgeBasic} alt="기본형" />
               기본형
             </Badge>
           ) : isCustom ? (
             state.showRequestBadge ? (
               <Badge Custom>
-                <img src={images.NotePencil} alt="NotePencil" />
+                <img src={images.StatusBadgeCustom} alt="NotePencil" />
                 커스터마이즈
               </Badge>
             ) : (
-              <Badge 
+              <Button 
+                Medium 
+                Primary
                 onClick={(e) => {
                   e.stopPropagation();
                   // console.log('Badge clicked');
@@ -127,9 +129,9 @@ const MoleculePersonaCard = ({
                   });
                 }}
               >
-                <img src={images.PencilSquare} alt="" />
+                {/* <img src={images.PencilSquare} alt="" /> */}
                 모집 요청하기
-              </Badge>
+              </Button>
             )
           ) : (
             <></>
@@ -315,6 +317,22 @@ const MainContent = styled.div`
   justify-content: space-between;
   gap: 16px;
   width: 100%;
+
+  > button {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    &:after {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-right: 2px solid ${palette.primary};
+      border-top: 2px solid ${palette.primary};
+      transform: rotate(45deg);
+      content: '';
+    }
+  }
 `;
 
 const ContentWrapper = styled.div`
