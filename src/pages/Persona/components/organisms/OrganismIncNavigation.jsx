@@ -1369,17 +1369,17 @@ const OrganismIncNavigation = () => {
 
         <MenuList>
           <li>
-            <img src={images.IconBell} alt="새작업" />
+            <img src={images.PlusSquareWhite} alt="새작업" />
             <span>새작업</span>
           </li>
 
           <li>
-            <img src={images.IconBell} alt="작업관리" />
+            <img src={images.Folder} alt="작업관리" />
             <span>작업관리</span>
           </li>
 
           <li onClick={handleWorkManageClick}>
-            <img src={images.IconBell} alt="대화내역" />
+            <img src={images.Clock} alt="대화내역" />
             <span>대화내역</span>
           </li>
         </MenuList>
@@ -1468,14 +1468,14 @@ const OrganismIncNavigation = () => {
             <img src={images.ClockCounterclockwise} alt="" />
             AI 전문가 대화내역
           </div>
-          <img src={images.IconClose2} alt="닫기" onClick={handleCloseSubNav} />
+          <img src={images.ArrowBarLeft} alt="닫기" onClick={handleCloseSubNav} />
         </SubTitle>
 
         <HistoryWrap
           className="scrollbar"
           ref={accordionContentRef}
           style={{
-            maxHeight: isSection2Open ? "calc(100vh - 26rem)" : "0",
+            maxHeight: isSection2Open ? "calc(100vh - 26rem)" : "auto",
           }}
         >
           {chatList && chatList.length > 0 ? (
@@ -1511,7 +1511,7 @@ const OrganismIncNavigation = () => {
                                 id={`insight-toggle-${chat.id}`}
                                 style={{
                                   display: "inline-block",
-                                  padding: "10px",
+                                  // padding: "10px",
                                   cursor: "pointer",
                                 }}
                                 onClick={(event) =>
@@ -1622,7 +1622,7 @@ const OrganismIncNavigation = () => {
                               id={`insight-toggle-${chat.id}`}
                               style={{
                                 display: "inline-block",
-                                padding: "10px",
+                                // padding: "10px",
                                 cursor: "pointer",
                               }}
                               onClick={(event) =>
@@ -1701,6 +1701,9 @@ const OrganismIncNavigation = () => {
                     </ul>
                   </>
                 )}
+              </HistoryList>
+
+              <HistoryList>
                 {chatList.some(
                   (chat) => Date.now() - chat.timestamp > 2592000000
                 ) && (
@@ -1725,7 +1728,7 @@ const OrganismIncNavigation = () => {
                               id={`insight-toggle-${chat.id}`}
                               style={{
                                 display: "inline-block",
-                                padding: "10px",
+                                // padding: "10px",
                                 cursor: "pointer",
                               }}
                               onClick={(event) =>
@@ -2009,9 +2012,10 @@ const NavigationWrap = styled.div`
 `;
 
 const Logo = styled.div`
-  width: 32px;
-  height: 32px;
-  background: ${palette.primary};
+  width: 48px;
+  height: 50px;
+  background: url(${images.LogoVerticality}) no-repeat center;
+  background-size: contain;
 `;
 
 const MenuList = styled.ul`
@@ -2035,10 +2039,19 @@ const MenuList = styled.ul`
 `;
 
 const Setting = styled.div`
-  width: 32px;
-  height: 32px;
+  width: 22px;
+  height: 22px;
   margin-top: auto;
-  background: ${palette.primary};
+
+  button.login {
+    width: 100%;
+    height: 100%;
+    font-size: 0;
+    border: 0;
+    background: none;
+    background: url(${images.Gear}) no-repeat center;
+    background-size: contain;
+  }
 `;
 
 const SubNavigation = styled.div`
@@ -2056,6 +2069,7 @@ const SubNavigation = styled.div`
   padding: 20px 16px;
   border-right: 1px solid ${palette.outlineGray};
   background: ${palette.white};
+  overflow-y: auto;
   z-index: 100;
   transform: translateX(${(props) => (props.show ? "0" : "-100%")});
   transition: transform 0.3s ease-in-out;
@@ -2133,18 +2147,19 @@ const HistoryList = styled.div`
 
     p {
       width: 78%;
+      font-weight: 300;
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
     }
 
-    span {
-      width: 10px;
-      height: 10px;
-      display: block;
-      margin-left: auto;
-      background: #cecece;
-    }
+    // span {
+    //   width: 10px;
+    //   height: 10px;
+    //   display: block;
+    //   margin-left: auto;
+    //   background: #cecece;
+    // }
   }
 `;
 
