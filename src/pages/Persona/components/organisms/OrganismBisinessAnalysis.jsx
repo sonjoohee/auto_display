@@ -7,6 +7,10 @@ import axios from "axios";
 import { useAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
 import {
+  SkeletonTitle,
+  SkeletonLine,
+} from "../../../../assets/styles/Skeleton";
+import {
   CustomInput,
   CustomTextarea,
 } from "../../../../assets/styles/InputStyle";
@@ -58,7 +62,8 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
   const [personaButtonState1, setPersonaButtonState1] = useAtom(
     PERSONA_BUTTON_STATE_1
   );
-  const [isLoading, setIsLoading] = useAtom(IS_LOADING);
+  const [isLoading, setIsLoading] = useAtom(IS_LOADING); 
+  const [loadingState, setLoadingState] = useState(false);
   const [showCardContent, setShowCardContent] = useState(personaStep <= 2);
   const [categoryColor, setCategoryColor] = useAtom(CATEGORY_COLOR);
 
@@ -159,6 +164,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
 
     try {
       setIsLoading(true);
+      setLoadingState(true);
 
       const data = {
         business_analysis_data: businessAnalysis,
@@ -224,6 +230,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
     } finally {
       setPersonaButtonState1(0);
       setIsLoading(false);
+      setLoadingState(false);
     }
   };
 
@@ -547,7 +554,14 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
 
           <FormEdit>
             <span>비즈니스 설명</span>
-            <FormBox status={getInputStatus(inputs.field2)}>
+          <FormBox status={getInputStatus(inputs.field2)}>
+          {loadingState ? (
+            <>
+            <SkeletonLine />
+            <SkeletonLine />
+            </>
+          ) : (
+            <>
               <CustomTextarea
                 Edit
                 ref={textareaRef}
@@ -557,7 +571,6 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
                   adjustHeight();
                 }}
                 status={getInputStatus(inputs.field2)}
-                // style={{ height: 'auto', overflow: 'hidden', resize: 'none' }}
               />
 
               <EditButtonGroup>
@@ -570,7 +583,9 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
                   <span>AI로 다듬기</span>
                 </IconButton>
               </EditButtonGroup>
-            </FormBox>
+            </>
+          )}
+        </FormBox>
           </FormEdit>
         </Card>
       ) : (

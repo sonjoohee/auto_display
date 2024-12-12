@@ -18,6 +18,7 @@ import {
   BUSINESS_ANALYSIS,
   REQUEST_PERSONA_LIST,
   PROJECT_ID,
+  PROJECT_LOAD_BUTTON_STATE,
 } from "../../../AtomStates";
 import {
   ContentsWrap,
@@ -46,9 +47,12 @@ import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import OrganismBusinessAnalysis from "../organisms/OrganismBisinessAnalysis";
 import AtomLoader from "../atoms/AtomLoader";
 import PopupWrap from "../../../../assets/styles/Popup";
-import { getProjectReportByIdFromIndexedDB } from "../../../../utils/indexedDB";
+import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 
 const PagePersona2 = () => {
+  const [projectLoadButtonState, setProjectLoadButtonState] = useAtom(
+    PROJECT_LOAD_BUTTON_STATE
+  );
   const [requestPersonaListReady, setRequestPersonaListReady] = useState(false);
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
   const navigate = useNavigate();
@@ -128,13 +132,14 @@ const PagePersona2 = () => {
   }, [projectId]);
 
   useEffect(() => {
-    const loadConversation = async () => {
+    const loadProject = async () => {
       // 1. 로그인 여부 확인
-      if (isLoggedIn) {
+
+      if (projectLoadButtonState) {
         // 2. 로그인 상태라면 서버에서 새로운 대화 ID를 생성하거나, 저장된 대화를 불러옴
-        const savedProjectInfo = await getProjectReportByIdFromIndexedDB(
+        const savedProjectInfo = await getProjectByIdFromIndexedDB(
           projectId,
-          isLoggedIn
+          projectLoadButtonState
         );
         if (savedProjectInfo) {
           const analysisData = savedProjectInfo.analysisReportData || {};
@@ -145,10 +150,11 @@ const PagePersona2 = () => {
         }
         // setIsLoadingPage(false); // 로딩 완료
       }
+      setProjectLoadButtonState(false);
     };
 
-    loadConversation();
-  }, [projectId, isLoggedIn, navigate]);
+    loadProject();
+  }, [projectId, projectLoadButtonState, navigate]);
 
   // if (isLoadingPage) {
   //   return <div>Loading...</div>;
@@ -451,21 +457,21 @@ const PagePersona2 = () => {
         </MainContent>
       </ContentsWrap>
 
-        {showPopup && (
-          <PopupWrap
-            Warning
-            title="요청 상태의 페르소나는 선택이 제한됩니다."
-            message="인터뷰를 진행하려면 모집 요청을 먼저 진행해주세요"
-            buttonType="Outline"
-            closeText="확인"
-            isModal={false}
-            onCancel={handlePopupClose}
-            show={showPopup}
-          />
-        )}
-      </>
-    );
-  };
+      {showPopup && (
+        <PopupWrap
+          Warning
+          title="요청 상태의 페르소나는 선택이 제한됩니다."
+          message="인터뷰를 진행하려면 모집 요청을 먼저 진행해주세요"
+          buttonType="Outline"
+          closeText="확인"
+          isModal={false}
+          onCancel={handlePopupClose}
+          show={showPopup}
+        />
+      )}
+    </>
+  );
+};
 
 export default PagePersona2;
 
