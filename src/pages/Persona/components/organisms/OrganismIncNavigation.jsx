@@ -1358,6 +1358,14 @@ const OrganismIncNavigation = () => {
     setShowSubNav(!showSubNav);
   };
 
+  const handleMyProjectClick = () => {
+    if (isLoggedIn) {
+      navigate("/MyProject");
+    } else {
+      navigate("/Main");
+    }
+  };
+
   const handleCloseSubNav = () => {
     setShowSubNav(false);
   };
@@ -1365,15 +1373,17 @@ const OrganismIncNavigation = () => {
   return (
     <>
       <NavigationWrap>
-        <Link to="/"><Logo /></Link>
+        <Link to="/">
+          <Logo />
+        </Link>
 
         <MenuList>
-          <li>
+          <li onClick={handleNewProjectClick}>
             <img src={images.PlusSquareWhite} alt="새작업" />
             <span>새작업</span>
           </li>
 
-          <li>
+          <li onClick={handleMyProjectClick}>
             <img src={images.Folder} alt="작업관리" />
             <span>작업관리</span>
           </li>
@@ -1468,7 +1478,11 @@ const OrganismIncNavigation = () => {
             <img src={images.ClockCounterclockwise} alt="" />
             AI 전문가 대화내역
           </div>
-          <img src={images.ArrowBarLeft} alt="닫기" onClick={handleCloseSubNav} />
+          <img
+            src={images.ArrowBarLeft}
+            alt="닫기"
+            onClick={handleCloseSubNav}
+          />
         </SubTitle>
 
         <HistoryWrap

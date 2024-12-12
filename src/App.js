@@ -42,7 +42,6 @@ import PageBusinessAnalysis from "./pages/Design_Page/PageBusinessAnalysis";
 import PageCustomizePersona from "./pages/Design_Page/PageCustomizePersona";
 import PageWayInterview from "./pages/Design_Page/PageWayInterview";
 import PageInterviewResult from "./pages/Design_Page/PageInterviewResult";
-import PageMyProject from "./pages/Design_Page/PageMyProject";
 
 // 페르소나
 import PageMain from "./pages/Persona/components/pages/PageMain";
@@ -50,6 +49,7 @@ import PagePersona from "./pages/Persona/components/pages/PagePersona";
 import PagePersona2 from "./pages/Persona/components/pages/PagePersona2";
 import PagePersona3 from "./pages/Persona/components/pages/PagePersona3";
 import PagePersona4 from "./pages/Persona/components/pages/PagePersona4";
+import PageMyProject from "./pages/Persona/components/pages/PageMyProject";
 
 function App() {
   const [, setIsLoggedIn] = useAtom(IS_LOGGED_IN); // 로그인 상태를 위한 아톰
@@ -222,6 +222,7 @@ function App() {
             element={<PagePersona4 />}
           ></Route>
 
+          <Route path="/MyProject" element={<PageMyProject />} />
           {/* <Route
             path="/CuratorStoryboard"
             element={<CuratorStoryboard />}
@@ -243,7 +244,6 @@ function App() {
           <Route path="/CustomizePersona" element={<PageCustomizePersona />} />
           <Route path="/WayInterview" element={<PageWayInterview />} />
           <Route path="/InterviewResult" element={<PageInterviewResult />} />
-          <Route path="/MyProject" element={<PageMyProject />} />
         </Routes>
       </BrowserRouter>
     </div>
