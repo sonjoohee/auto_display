@@ -9,7 +9,7 @@ const MoleculeStepIndicator = ({ steps, activeStep }) => {
         <StepItem key={index}>
           <StepNumber active={step.active} completed={step.number < activeStep}>
             {step.number < activeStep ? (
-              <CheckIcon>✓</CheckIcon>
+              <CheckIcon />
             ) : (
               <span>{step.number}</span>
             )}
@@ -46,15 +46,17 @@ const StepNumber = styled.div`
   align-items: stretch;
   border-radius: 50px;
   border: 1px solid ${props => {
-    if (props.completed) return palette.chatBlue;
-    return props.active ? palette.chatBlue : palette.gray500;
+    if (props.completed) return palette.primary;
+    return props.active ? palette.primary : palette.gray500;
   }};
-  background-color: ${props => props.completed ? palette.chatBlue : 'transparent'};
+  background-color: ${props => props.completed ? palette.primary : 'transparent'};
   
   span {
+    width: 100%;
+    height: 100%;
     font-size: 0.67rem;
     font-weight: 500;
-    color: ${props => props.active ? palette.chatBlue : palette.gray500};
+    color: ${props => props.active ? palette.primary : palette.gray500};
   }
 `;
 
@@ -69,4 +71,6 @@ const CheckIcon = styled.span`
   color: ${palette.white};
   font-size: 0.67rem;
   font-weight: bold;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 6.92 5.93'%3E%3Cpath fill='%23fff' d='M2.28,5.93c-.14,0-.28-.06-.37-.17L.13,3.79c-.18-.21-.17-.52.04-.71.21-.19.52-.17.71.04l1.39,1.55L6.04.18c.18-.21.49-.24.7-.06.21.18.24.49.06.7L2.66,5.75c-.09.11-.23.18-.37.18h0Z'/%3E%3C/svg%3E") center no-repeat;
+  background-size: 7px;
 `;

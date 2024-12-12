@@ -1,8 +1,8 @@
 export const palette = {
   blue: "#0453F4",
-  chatBlue: "#226FFF",
+  // chatBlue: "#226FFF",
   skyBlue: "#99CAFF",
-  green: "#00C01E",
+  green: "#34C759",
   lightGreen: "#51D888",
 
   chatGray: "#F7F8FA",
@@ -29,7 +29,7 @@ export const palette = {
   white: "#fff",
   black: "#000",
 
-  primary: "#0453f4",
+  primary: "#226FFF",
   mainLight: "#8183ff",
   main: "#4c4fff",
   mainDark: "#3537b3",

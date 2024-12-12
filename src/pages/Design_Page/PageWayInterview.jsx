@@ -299,7 +299,7 @@ const InterviewTypeCard = styled.div`
   gap: 16px;
   border-radius: 10px;
   border: 1px solid ${props => props.isActive 
-    ? palette.chatBlue 
+    ? palette.primary 
     : palette.outlineGray};
   background: ${props => props.isActive 
     ? 'rgba(34, 111, 255, 0.10)' 
@@ -315,7 +315,7 @@ const InterviewTypeCard = styled.div`
     font-weight: 600;
     line-height: 1.5;
     color: ${props => props.isActive 
-      ? palette.chatBlue 
+      ? palette.primary 
       : palette.gray800};
     text-align: left;
 
@@ -346,8 +346,8 @@ const CheckBox = styled.div`
   width: 24px;
   height: 24px;
   border-radius: 12px;
-  border: 1px solid ${props => props.isActive ? palette.chatBlue : palette.outlineGray};
-  background: ${props => props.isActive ? palette.chatBlue : 'white'};
+  border: 1px solid ${props => props.isActive ? palette.primary : palette.outlineGray};
+  background: ${props => props.isActive ? palette.primary : 'white'};
   
   ${props => props.isActive && `
     &:after {
@@ -380,8 +380,8 @@ const TabButton = styled.button`
 
   ${({ isActive }) => isActive ? `
     background: rgba(34, 111, 255, 0.1);
-    border: 1px solid ${palette.chatBlue};
-    color: ${palette.chatBlue};
+    border: 1px solid ${palette.primary};
+    color: ${palette.primary};
     font-weight: 600;
   ` : `
     background: ${palette.chatGray};

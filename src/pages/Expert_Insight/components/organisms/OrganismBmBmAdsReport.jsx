@@ -425,7 +425,7 @@ const Pagination = styled.ul`
 
     &.active {
       font-weight:500;
-      color:${(props) => props.bmSelectedProblemOptions ? palette.gray800 : palette.chatBlue};
+      color:${(props) => props.bmSelectedProblemOptions ? palette.gray800 : palette.primary};
     }
   }
 `;
@@ -440,7 +440,7 @@ const Button = styled.button`
   font-family: Pretendard, Poppins;
   font-size:0.88rem;
   font-weight:400;
-  color: ${(props) => (props.problemOptions ? palette.chatBlue : palette.gray500)};
+  color: ${(props) => (props.problemOptions ? palette.primary : palette.gray500)};
   line-height:22px;
   padding:8px 20px;
   margin-left:auto;

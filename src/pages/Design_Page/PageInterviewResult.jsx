@@ -385,7 +385,7 @@ const AccordionHeader = styled.div`
     width: 30px;
     height: 30px;
     font-size: 0.875rem;
-    color: ${palette.chatBlue};
+    color: ${palette.primary};
     line-height: 1.5;
     border-radius: 2px;
     border: 1px solid rgba(34, 111, 255, 0.50);

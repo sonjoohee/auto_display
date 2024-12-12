@@ -419,7 +419,7 @@ const ButtonWrap = styled.div`
         ? palette.gray500
         : !props.selectedOption1
         ? palette.gray500
-        : palette.chatBlue};
+        : palette.primary};
     background: ${(props) =>
       props.selectedPocOptions.length !== 0
         ? palette.white
@@ -435,7 +435,7 @@ const ButtonWrap = styled.div`
         ? palette.gray500
         : !props.selectedOption1 || !props.selectedOption2
         ? palette.gray500
-        : palette.chatBlue};
+        : palette.primary};
     background: ${(props) =>
       props.selectedPocOptions.length !== 0
         ? palette.white

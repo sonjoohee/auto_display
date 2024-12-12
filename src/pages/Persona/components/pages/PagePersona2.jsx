@@ -306,6 +306,8 @@ const PagePersona2 = () => {
     navigate(`/Persona/3/${projectId}`, { replace: true });
   };
 
+  const [showTooltip, setShowTooltip] = useState(false);
+
   return (
     <>
       <ContentsWrap>
@@ -327,6 +329,44 @@ const PagePersona2 = () => {
                       <p>
                         추천된 페르소나를 선택하고 인터뷰를 진행하세요. (최대
                         5명까지 선택이 가능합니다)
+                        <TooltipButton onClick={() => setShowTooltip(!showTooltip)}>
+                          유형별 설명 보기
+
+                          {showTooltip && (
+                            <TooltipContent>
+                              <TooltipHeader>
+                                아이콘에 대한 정보
+                                <span />
+                              </TooltipHeader>
+
+                              <TooltipBody>
+                                <div>
+                                  <Badge Basic>
+                                    <img src={images.StatusBadgeBasic} alt="기본형" />
+                                    기본형
+                                  </Badge>
+                                  <p>기본형은 특정 요구 사항 없이도 다양한 질문과 답변을 처리할 수 있는 표준형 AI Person입니다. 범용적인 활용이 가능하며, 일반적인 상황에 적합합니다.</p>
+                                </div>
+
+                                <div>
+                                  <Badge Custom>
+                                    <img src={images.StatusBadgeCustom} alt="커스터마이즈" />
+                                    커스터마이즈
+                                  </Badge>
+                                  <p>커스터마이즈는 특정 요구 사항에 맞춰 설정된 AI Person입니다. 라이프스타일, 경험, 지식 등을 학습하여 원하는 목적에 맞게 활용할 수 있으며, 보다 깊이 있는 대화에 적합합니다.</p>
+                                </div>
+
+                                <div>
+                                  <Badge>
+                                    <img src={images.NoteArrowUp} alt="요청 필요" />
+                                    요청 필요
+                                  </Badge>
+                                  <p>요청필요는 사용자 요청에 따라 준비되는 AI Person입니다. 원하는 정보와 경험을 입력하시면 맞춤 제작이 가능합니다.</p>
+                                </div>
+                              </TooltipBody>
+                            </TooltipContent>
+                          )}
+                        </TooltipButton>
                       </p>
                     </Title>
 
@@ -396,20 +436,20 @@ const PagePersona2 = () => {
               </CardWrap>
             </MainSection>
 
-              <Sidebar>
-                <h5>Let's Start Now</h5>
+            <Sidebar>
+              <h5>Let's Start Now</h5>
 
-                <ProgressBar>
-                  <span>🚀</span>
-                  <Progress progress={40} />
-                  <span>40%</span>
-                </ProgressBar>
+              <ProgressBar>
+                <span>🚀</span>
+                <Progress progress={40} />
+                <span>40%</span>
+              </ProgressBar>
 
-                <MoleculeStepIndicator steps={steps} activeStep={2} />
-              </Sidebar>
-            </AnalysisWrap>
-          </MainContent>
-        </ContentsWrap>
+              <MoleculeStepIndicator steps={steps} activeStep={2} />
+            </Sidebar>
+          </AnalysisWrap>
+        </MainContent>
+      </ContentsWrap>
 
         {showPopup && (
           <PopupWrap
@@ -429,6 +469,160 @@ const PagePersona2 = () => {
 
 export default PagePersona2;
 
+const TooltipButton = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap:4px;
+  font-size: 0.75rem;
+  color: ${palette.gray300};
+  padding: 4px 8px;
+  cursor: pointer;
+
+  &:after {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    width: 14px;
+    height: 14px;
+    font-size: 0.63rem;
+    color: ${palette.gray500};
+    border: 1px solid ${palette.outlineGray};
+    background: ${palette.chatGray};
+    content: "?";
+  }
+`;
+
+const TooltipContent = styled.div`
+  position: absolute;
+  top: -25px;
+  right: -300px;
+  width: 290px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 24px;
+  padding: 20px 20px 32px;
+  border-radius: 15px;
+  background: ${palette.white};
+  filter: drop-shadow(0px 4px 30px rgba(0, 0, 0, 0.15));
+  animation: fadeIn 0.3s ease-in-out;
+  cursor: default;
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  &:before {
+    position: absolute;
+    top: 30px;
+    left: -10px;
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid ${palette.white};
+    content: '';
+  }
+`;
+
+const TooltipHeader = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1rem;
+  font-weight: 300;
+  color: ${palette.gray800};
+  line-height: 1.5;
+  width:100%;
+
+  span {
+    position: relative;
+    width: 16px;
+    height: 16px;
+    display: block;
+
+    &:before, &:after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 2px;
+      height:16px;
+      display: block;
+      border-radius:5px;
+      background: ${palette.gray700};
+      content: '';
+    }
+
+    &:before {
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    &:after {
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
+  }
+`;
+
+const TooltipBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 16px;
+  width:100%;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 8px;
+    width:100%;
+  }
+
+  p {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: ${palette.gray700};
+    text-align: left;
+  }
+`;
+
+const Badge = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: ${props => props.Basic || props.Custom ? '0.75rem' : '0.63rem'};
+  color: ${props => 
+    props.Basic ? palette.green 
+    : props.Custom ? palette.primary 
+    : palette.gray500};
+  line-height: 1.2;
+  padding: 4px 8px;
+  border-radius: 50px;
+  border: 1px solid ${props => 
+    props.Basic ? `rgba(52, 199, 89, 0.10)` 
+    : props.Custom ? `rgba(34, 111, 255, 0.10)` 
+    : palette.gray200};
+  background: ${props => 
+    props.Basic ? `rgba(52, 199, 89, 0.10)` 
+    : props.Custom ? `rgba(34, 111, 255, 0.10)` 
+    : palette.white};
+`;
+
 const Sidebar = styled.div`
   position: sticky;
   top: 101px;
@@ -438,6 +632,7 @@ const Sidebar = styled.div`
   gap: 16px;
   width: 290px;
   padding: 16px 20px;
+  margin-top: 44px;
   border-radius: 10px;
   background: ${palette.chatGray};
 
@@ -474,7 +669,7 @@ const Progress = styled.div`
     width: ${(props) => props.progress}%;
     height: 100%;
     border-radius: 20px;
-    background: ${palette.chatBlue};
+    background: ${palette.primary};
     content: "";
   }
 `;
@@ -509,7 +704,7 @@ const BottomBar = styled.div`
     color: ${palette.gray500};
 
     span {
-      color: ${palette.chatBlue};
+      color: ${palette.primary};
       text-decoration: underline;
     }
   }

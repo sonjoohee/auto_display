@@ -74,6 +74,7 @@ const PagePersona3 = () => {
   const [showInterview, setShowInterview] = useState(false);
   const [showInterviewReady, setShowInterviewReady] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  const [showEditPersona, setShowEditPersona] = useState(false);
 
   const handlePopupClose = () => {
     setShowInterviewReady(false);
@@ -175,7 +176,7 @@ const PagePersona3 = () => {
       description:
         "소비자의 구매 결정에 영향을 미치는 핵심 요인을 파악해 최적의 전략을 설계",
       expandedContent: [
-        "이 제품에 대해 소비자가 가장 많이 질문할 가능성이 있는 부분은 무엇일까요?",
+        "이 제���에 대해 소비자가 가장 많이 질문할 가능성이 있는 부분은 무엇일까요?",
         "경쟁 제품 대비 이 제품이 소비자의 선택을 받을 가능성이 높은 이유는 무엇인가요?",
         "소비자가 이 제품을 구매하지 않을 가능성이 있다면, 그 이유는 무엇일까요?",
       ],
@@ -349,7 +350,7 @@ const PagePersona3 = () => {
                     <p>
                       추천된 페르소나와 인터뷰하세요. 그룹 또는 한 명의 타겟을
                       선택할 수 있습니다.
-                      <span>
+                      <span onClick={() => setShowEditPersona(true)}>
                         <img src={images.PencilSquare} alt="" />
                         편집하기
                       </span>
@@ -407,6 +408,70 @@ const PagePersona3 = () => {
               </InterviewRoom>
             </Sidebar>
 
+            {showEditPersona && (
+              <PopupWrap 
+                TitleFlex
+                title="📝 맞춤형 페르소나 모집 요청하기" 
+                buttonType="Fill"
+                closeText="닫기"
+                confirmText="편집완료"
+                isModal={true}
+                isFormValid={true}
+                onCancel={() => setShowEditPersona(false)}
+                onConfirm={() => {
+                  // 편집 완료 로직 구현
+                  setShowEditPersona(false);
+                }}
+                body={
+                  <>
+                    <Title>
+                      <p>
+                        Selected
+                        <span>
+                          <img src={images.ClockCounterclockwise} alt="" />
+                          이전으로 되돌리기
+                        </span>
+                      </p>
+                    </Title>
+                    <MoleculePersonaCard 
+                      TitleFlex
+                      title="가족과 함께 여가를 보내는 활동 지향형 소비자"
+                      keywords={['키워드1', '키워드2', '키워드3']}
+                      isBasic={true}
+                      checked={true}
+                    />
+                    <MoleculePersonaCard 
+                      TitleFlex
+                      title="가족과 함께 여가를 보내는 활동 지향형 소비자"
+                      keywords={['키워드1', '키워드2', '키워드3']}
+                      isBasic={true}
+                      checked={true}
+                    />
+
+                    <Title style={{marginTop: '20px'}}>
+                      <p>
+                        available
+                      </p>
+                    </Title>
+                    <MoleculePersonaCard 
+                      TitleFlex
+                      title="가족과 함께 여가를 보내는 활동 지향형 소비자"
+                      keywords={['키워드1', '키워드2', '키워드3']}
+                      isBasic={true}
+                      checked={true}
+                    />
+                    <MoleculePersonaCard 
+                      TitleFlex
+                      title="가족과 함께 여가를 보내는 활동 지향형 소비자"
+                      keywords={['키워드1', '키워드2', '키워드3']}
+                      isBasic={true}
+                      checked={true}
+                    />
+                  </>
+                }
+              />
+            )}
+
             {showInterviewReady && (
               <PopupWrap 
                 Check
@@ -452,6 +517,7 @@ const Sidebar = styled.div`
   gap: 16px;
   width: 290px;
   padding: 16px 20px;
+  margin-top: 44px;
   border-radius: 10px;
   background: ${palette.chatGray};
 
@@ -523,7 +589,7 @@ const Progress = styled.div`
     width: ${(props) => props.progress}%;
     height: 100%;
     border-radius: 20px;
-    background: ${palette.chatBlue};
+    background: ${palette.primary};
     content: "";
   }
 `;
@@ -544,7 +610,7 @@ const InterviewTypeCard = styled.div`
   gap: 16px;
   border-radius: 10px;
   border: 1px solid
-    ${(props) => (props.isActive ? palette.chatBlue : palette.outlineGray)};
+    ${(props) => (props.isActive ? palette.primary : palette.outlineGray)};
   background: ${(props) =>
     props.isActive ? "rgba(34, 111, 255, 0.10)" : "white"};
   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
@@ -557,7 +623,7 @@ const InterviewTypeCard = styled.div`
     gap: 8px;
     font-weight: 600;
     line-height: 1.5;
-    color: ${(props) => (props.isActive ? palette.chatBlue : palette.gray800)};
+    color: ${(props) => (props.isActive ? palette.primary : palette.gray800)};
     text-align: left;
 
     span {
@@ -586,8 +652,8 @@ const CheckBox = styled.div`
   height: 24px;
   border-radius: 12px;
   border: 1px solid
-    ${(props) => (props.isActive ? palette.chatBlue : palette.outlineGray)};
-  background: ${(props) => (props.isActive ? palette.chatBlue : "white")};
+    ${(props) => (props.isActive ? palette.primary : palette.outlineGray)};
+  background: ${(props) => (props.isActive ? palette.primary : "white")};
 
   ${(props) =>
     props.isActive &&
@@ -624,8 +690,8 @@ const TabButton = styled.button`
     isActive
       ? `
     background: rgba(34, 111, 255, 0.1);
-    border: 1px solid ${palette.chatBlue};
-    color: ${palette.chatBlue};
+    border: 1px solid ${palette.primary};
+    color: ${palette.primary};
     font-weight: 600;
   `
       : `

@@ -1128,7 +1128,7 @@ const PopupButton = styled.div`
     padding: 12px;
     border-radius: 8px;
     border: 0;
-    background: ${palette.chatBlue};
+    background: ${palette.primary};
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {

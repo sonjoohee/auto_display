@@ -488,7 +488,7 @@ const OrganismPriceReport = () => {
         .attr("y", height - margin.bottom - rangeIndicatorHeight / 2)
         .attr("width", x(endPosition) - x(startPosition))
         .attr("height", rangeIndicatorHeight)
-        .style("fill", palette.chatBlue);
+        .style("fill", palette.primary);
 
       // 핸들 그리기
       svg
@@ -500,7 +500,7 @@ const OrganismPriceReport = () => {
         .attr("cx", (d) => x(d))
         .attr("cy", height - margin.bottom)
         .attr("r", 8)
-        .style("fill", palette.chatBlue)
+        .style("fill", palette.primary)
         .on("mouseenter", (event, d) => {
           tooltip
             .style("opacity", 1)
@@ -757,7 +757,7 @@ const ButtonWrap = styled.div`
 
   .finish {
     font-size: 0.88rem;
-    color: ${palette.chatBlue};
+    color: ${palette.primary};
     margin-left: auto;
     border-radius: 8px;
     background: none;

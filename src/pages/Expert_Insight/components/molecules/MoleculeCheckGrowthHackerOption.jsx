@@ -541,7 +541,7 @@ const ButtonWrap = styled.div`
         || props.tabs === 3 && props.selectedOption4
         || props.tabs === 4 && props.selectedOption5
         || props.tabs === 5 && props.selectedOption6
-        ? palette.chatBlue
+        ? palette.primary
         : palette.gray500};
     background: ${palette.white};
     cursor: ${(props) => (
@@ -560,7 +560,7 @@ const ButtonWrap = styled.div`
         ? palette.gray500
         : !props.selectedOption1 || !props.selectedOption2 || !props.selectedOption3 || !props.selectedOption4 || !props.selectedOption5 || !props.selectedOption6
         ? palette.gray500
-        : palette.chatBlue};
+        : palette.primary};
     background: ${palette.white};
     cursor: ${(props) => props.KpiQuestionList.length !== 0 
         ? "default" 

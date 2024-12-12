@@ -473,7 +473,7 @@ const CardContainer = styled.div`
   width: 100%;
   padding: 24px 20px;
   border-radius: 10px;
-  border: 1px solid ${props => props.$isChecked ? palette.chatBlue : palette.outlineGray};
+  border: 1px solid ${props => props.$isChecked ? palette.primary : palette.outlineGray};
   background: ${props => props.isActive ? 'rgba(34, 111, 255, 0.10)' : palette.white};
   cursor: ${props => props.isClickable ? 'pointer' : 'default'};
   transition: all 0.2s ease-in-out;
@@ -685,7 +685,7 @@ const ListUL = styled.div`
     flex-shrink: 0;
     width: 20px;
     height: 20px;
-    color: ${palette.chatBlue};
+    color: ${palette.primary};
     border-radius: 2px;
     border: 1px solid rgba(34, 111, 255, 0.50);
     background: rgba(34, 111, 255, 0.04);

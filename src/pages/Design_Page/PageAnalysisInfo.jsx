@@ -232,7 +232,7 @@ const Title = styled.div`
       align-items: center;
       gap: 4px;
       font-size: 0.75rem;
-      color: ${palette.chatBlue};
+      color: ${palette.primary};
       cursor: pointer;
     }
   }
@@ -253,7 +253,7 @@ const IconButton = styled.button`
   gap: 4px;
   font-family: 'Pretendard', 'Poppins';
   font-size: 0.75rem;
-  color: ${palette.chatBlue};
+  color: ${palette.primary};
   padding: 4px 8px;
   border: none;
   background: none;
@@ -329,7 +329,7 @@ const FormBox = styled.div`
   transition: all .5s;
 
   &:focus-within {
-    border: 1px solid ${palette.chatBlue};
+    border: 1px solid ${palette.primary};
     box-shadow: 0 0 8px 0 rgba(34, 111, 255, 0.5);
   }
 `;
@@ -512,7 +512,7 @@ const ToggleButton = styled.button`
   gap: 4px;
   font-family: 'Pretendard', 'Poppins';
   font-size: 0.75rem;
-  color: ${palette.chatBlue};
+  color: ${palette.primary};
   padding: 4px 8px;
   border-radius: 100px;
   border: none;

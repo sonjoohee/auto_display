@@ -189,7 +189,7 @@ const BottomBar = styled.div`
     color: ${palette.gray500};
 
     span {
-      color: ${palette.chatBlue};
+      color: ${palette.primary};
       text-decoration: underline;
     }
   }

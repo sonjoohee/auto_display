@@ -496,7 +496,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
           <ButtonGroup>
             {isEditMode ? (
               <IconButton onClick={handleSaveClick}>
-                <img src={images.IconRepeatSquare} alt="저장하기" />
+                <img src={images.FolderArrowDown} alt="저장하기" />
                 <span>저장하기</span>
               </IconButton>
             ) : (
@@ -506,7 +506,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
                   <span>재생성하기</span>
                 </IconButton>
                 <IconButton onClick={handleEditClick}>
-                  <img src={images.IconRepeatSquare} alt="수정하기" />
+                  <img src={images.PencilSquare} alt="수정하기" />
                   <span>수정하기</span>
                 </IconButton>
               </>
@@ -642,7 +642,7 @@ const Title = styled.div`
       align-items: center;
       gap: 4px;
       font-size: 0.75rem;
-      color: ${palette.chatBlue};
+      color: ${palette.primary};
       cursor: pointer;
     }
   }
@@ -663,7 +663,7 @@ const IconButton = styled.button`
   gap: 4px;
   font-family: "Pretendard", "Poppins";
   font-size: 0.75rem;
-  color: ${palette.chatBlue};
+  color: ${palette.primary};
   padding: 4px 8px;
   border: none;
   background: none;
@@ -740,7 +740,7 @@ const FormBox = styled.div`
   transition: all 0.5s;
 
   &:focus-within {
-    border: 1px solid ${palette.chatBlue};
+    border: 1px solid ${palette.primary};
     box-shadow: 0 0 8px 0 rgba(34, 111, 255, 0.5);
   }
 `;
@@ -947,7 +947,7 @@ const ToggleButton = styled.button`
   gap: 4px;
   font-family: "Pretendard", "Poppins";
   font-size: 0.75rem;
-  color: ${palette.chatBlue};
+  color: ${palette.primary};
   padding: 4px 8px;
   border-radius: 100px;
   border: none;
@@ -964,8 +964,8 @@ const ToggleButton = styled.button`
         : "translate(-50%, -50%) rotate(45deg)"};
     width: 10px;
     height: 10px;
-    border-bottom: 2px solid ${palette.gray300};
-    border-right: 2px solid ${palette.gray300};
+    border-bottom: 2px solid ${palette.gray500};
+    border-right: 2px solid ${palette.gray500};
     transition: all 0.5s;
     content: "";
   }

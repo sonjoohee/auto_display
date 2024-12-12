@@ -286,10 +286,10 @@ const Wrap = styled.div`
         height:12px;
         font-size:0.63rem;
         font-weight:700;
-        color:${palette.chatBlue};
+        color:${palette.primary};
         text-align:center;
         border-radius:50%;
-        border:1px solid ${palette.chatBlue};
+        border:1px solid ${palette.primary};
         cursor:pointer;
       }
     }

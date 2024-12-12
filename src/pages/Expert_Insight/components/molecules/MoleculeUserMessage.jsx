@@ -55,7 +55,7 @@ const UserMessageContainer = styled.div`
   > div {
     padding: 14px 20px;
     border-radius: 15px;
-    background:${palette.chatBlue};
+    background:${palette.primary};
 
     p {
       color:${palette.white};
