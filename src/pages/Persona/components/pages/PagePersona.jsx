@@ -31,7 +31,6 @@ import MoleculeHeader from "../molecules/MoleculeHeader";
 import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 import { createProjectOnServer } from "../../../../utils/indexedDB";
-// import { createProjectReportOnServer } from "../../../../utils/indexedDB";
 import OrganismBusinessAnalysis from "../organisms/OrganismBisinessAnalysis";
 
 const PagePersona = () => {
@@ -86,7 +85,7 @@ const PagePersona = () => {
   }, [navigate]);
 
   useEffect(() => {
-    const loadProject = async () => {
+    const createProject = async () => {
       // 1. 로그인 여부 확인
       if (isLoggedIn) {
         // 2. 로그인 상태라면 서버에서 새로운 대화 ID를 생성하거나, 저장된 대화를 불러옴
@@ -106,26 +105,10 @@ const PagePersona = () => {
             console.error("Failed to create project on server:", error);
             navigate(`/Persona/${projectId}`, { replace: true });
           }
-        } else {
-          // 3. 대화 ID가 이미 존재하면 IndexedDB에서 대화 불러오기
-          // const savedProject = await getProjectByIdFromIndexedDB(
-          //   projectId,
-          //   isLoggedIn
-          // );
-          // if (savedProject) {
-          //   const analysisData = savedProject.analysisReportData || {};
-          //   setTitleOfBusinessInfo(analysisData.title || "");
-          //   setMainFeaturesOfBusinessInformation(
-          //     analysisData.mainFeatures || []
-          //   );
-          //   setInputBusinessInfo(savedProject.inputBusinessInfo);
-          // }
-          // setIsLoadingPage(false); // 로딩 완료
         }
       }
     };
-
-    loadProject();
+    createProject();
   }, [projectId, isLoggedIn, navigate]);
 
   // if (isLoadingPage) {
