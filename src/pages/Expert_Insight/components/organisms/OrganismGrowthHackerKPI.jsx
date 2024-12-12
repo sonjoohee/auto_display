@@ -520,10 +520,10 @@ const Wrap = styled.div`
         height:12px;
         font-size:0.63rem;
         font-weight:700;
-        color:${palette.chatBlue};
+        color:${palette.primary};
         text-align:center;
         border-radius:50%;
-        border:1px solid ${palette.chatBlue};
+        border:1px solid ${palette.primary};
         cursor:pointer;
       }
     }
@@ -688,7 +688,7 @@ const Progress = styled.div`
       top:0;
       width:100%;
       height:100%;
-      background-color:${palette.chatBlue};
+      background-color:${palette.primary};
       content:'';
     }
   }
@@ -702,7 +702,7 @@ const Progress = styled.div`
       top: 0;
       width: 50%;
       height: 100%;
-      background-color: ${palette.chatBlue}; /* 활성화된 색상 */
+      background-color: ${palette.primary}; /* 활성화된 색상 */
       content: '';
     }
   }
@@ -721,7 +721,7 @@ const Progress = styled.div`
     border-radius: 50%;
     border:1px solid ${palette.white};
     box-shadow:2px 2px 8px rgba(34,111,255,.5);
-    background-color:${palette.chatBlue};
+    background-color:${palette.primary};
     cursor: pointer;
     pointer-events: none;
     display:flex;
@@ -738,7 +738,7 @@ const Progress = styled.div`
       color:${palette.white};
       padding:8px;
       border-radius:15px;
-      background:${palette.chatBlue};
+      background:${palette.primary};
       box-shadow:2px 2px 8px rgba(34, 111, 255, .5);
 
       &:before {
@@ -750,7 +750,7 @@ const Progress = styled.div`
         height: 0;
         border-style: solid;
         border-width: 14px 7px 0px 7px;
-        border-color: ${palette.chatBlue} transparent transparent transparent;
+        border-color: ${palette.primary} transparent transparent transparent;
         content:'';
       }
     }

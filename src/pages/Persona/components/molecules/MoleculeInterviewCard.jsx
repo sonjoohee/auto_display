@@ -212,7 +212,7 @@ const CardContainer = styled.div`
   padding: 24px 20px;
   border-radius: 10px;
   border: 1px solid
-    ${(props) => (props.isActive ? palette.chatBlue : palette.outlineGray)};
+    ${(props) => (props.isActive ? palette.primary : palette.outlineGray)};
   background: ${(props) =>
     props.isActive ? "rgba(34, 111, 255, 0.10)" : palette.white};
   cursor: ${(props) => (props.isClickable ? "pointer" : "default")};
@@ -291,12 +291,12 @@ const Badge = styled.div`
   border: 1px solid
     ${(props) => {
       if (props.Basic) return `#34C759`;
-      else if (props.Custom) return palette.chatBlue;
+      else if (props.Custom) return palette.primary;
       else return palette.outlineGray;
     }};
   background: ${(props) => {
     if (props.Basic) return `rgba(52, 199, 89, 0.10)`;
-    else if (props.Custom) return palette.chatBlue;
+    else if (props.Custom) return palette.primary;
     else return palette.gray50;
   }};
   cursor: pointer;
@@ -425,7 +425,7 @@ const ListUL = styled.div`
     flex-shrink: 0;
     width: 20px;
     height: 20px;
-    color: ${palette.chatBlue};
+    color: ${palette.primary};
     border-radius: 2px;
     border: 1px solid rgba(34, 111, 255, 0.5);
     background: rgba(34, 111, 255, 0.04);

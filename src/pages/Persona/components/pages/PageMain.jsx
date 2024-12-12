@@ -114,6 +114,7 @@ import {
   BUSINESS_ANALYSIS,
   PERSONA_STEP,
 } from "../../../AtomStates";
+import { CustomTextarea } from "../../../../assets/styles/InputStyle";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
 import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
@@ -743,7 +744,8 @@ const PageMain = () => {
 
             <InputWrap>
               <div className="inputWrap">
-                <textarea
+                <CustomTextarea
+                  Edit
                   rows={4}
                   placeholder="비즈니스 설명을 입력하면, 최적의 페르소나를 제안해드려요"
                   onInput={(e) => {
@@ -766,7 +768,7 @@ const PageMain = () => {
                     // ).innerText = `${currentLength}/300`;
                   }}
                   onKeyDown={handleKeyPress}
-                ></textarea>
+                ></CustomTextarea>
                 <button type="button" onClick={handledSearch}>
                   검색
                 </button>

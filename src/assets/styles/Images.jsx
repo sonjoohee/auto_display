@@ -185,6 +185,8 @@ import FileSearch from "../images/file-search.svg"
 import PlusSquareWhite from "../images/plus-square-white.svg"
 import Gear from "../images/gear.svg"
 import ArrowBarLeft from "../images/arrow-bar-left.svg"
+import NoteArrowUp from "../images/note-arrow-up.svg"
+import CheckGreen from "../images/check-green.svg"
 
 const images = {
   Logo,
@@ -374,6 +376,8 @@ const images = {
   PlusSquareWhite,
   Gear,
   ArrowBarLeft,
+  NoteArrowUp,
+  CheckGreen,
 }
 
 export default images;

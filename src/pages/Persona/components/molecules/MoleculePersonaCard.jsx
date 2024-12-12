@@ -79,7 +79,7 @@ const MoleculePersonaCard = ({
 
   return (
     <>
-    <CardContainer TitleFlex={TitleFlex}>
+    <CardContainer TitleFlex={TitleFlex} $isChecked={isChecked}>
       <MainContent>
         {!hideCheckCircle && (
           <CheckCircle 
@@ -111,12 +111,12 @@ const MoleculePersonaCard = ({
           ) : isCustom ? (
             state.showRequestBadge ? (
               <Badge Custom>
-                <img src={images.StatusBadgeCustom} alt="NotePencil" />
+                <img src={images.StatusBadgeCustom} alt="커스터마이즈" />
                 커스터마이즈
               </Badge>
             ) : (
               <Button 
-                Medium 
+                Large 
                 Primary
                 onClick={(e) => {
                   e.stopPropagation();
@@ -299,7 +299,7 @@ const CardContainer = styled.div`
   width: 100%;
   padding: 24px 20px;
   border-radius: 10px;
-  border: 1px solid ${props => props.isActive ? palette.chatBlue : palette.outlineGray};
+  border: 1px solid ${props => props.$isChecked ? palette.primary : palette.outlineGray};
   background: ${props => props.isActive ? 'rgba(34, 111, 255, 0.10)' : palette.white};
   cursor: ${props => props.isClickable ? 'pointer' : 'default'};
   transition: all 0.2s ease-in-out;
@@ -386,12 +386,12 @@ const Badge = styled.div`
   border-radius: 50px;
   border: 1px solid ${props => {
     if (props.Basic) return `#34C759`;
-    else if (props.Custom) return palette.chatBlue;
+    else if (props.Custom) return palette.primary;
     else return palette.outlineGray;
   }};
   background:${props => {
     if (props.Basic) return `rgba(52, 199, 89, 0.10)`;
-    else if (props.Custom) return palette.chatBlue;
+    else if (props.Custom) return palette.primary;
     else return palette.gray50;
   }};
   cursor: pointer;
@@ -520,7 +520,7 @@ const ListUL = styled.div`
     flex-shrink: 0;
     width: 20px;
     height: 20px;
-    color: ${palette.chatBlue};
+    color: ${palette.primary};
     border-radius: 2px;
     border: 1px solid rgba(34, 111, 255, 0.50);
     background: rgba(34, 111, 255, 0.04);
@@ -533,14 +533,14 @@ const RecruitButton = styled.button`
   gap: 4px;
   padding: 8px 16px;
   border-radius: 4px;
-  background: ${palette.chatBlue};
+  background: ${palette.primary};
   color: ${palette.white};
   font-size: 0.875rem;
   border: none;
   cursor: pointer;
   
   &:hover {
-    background: ${palette.chatBlueDark};
+    background: ${palette.primaryDark};
   }
   
   img {

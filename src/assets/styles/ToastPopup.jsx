@@ -798,12 +798,16 @@ const QuestionText = styled.div`
 
 const Status = styled.div`
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   font-size: 0.75rem;
   line-height: 1.5;
   color: ${props =>
     props.status === 'Ing' ? palette.primary
     : props.status === 'Complete' ? palette.green
-    : palette.gray300
+    : palette.gray700
   };
   margin-left: auto;
   padding: 2px 8px;
@@ -811,9 +815,18 @@ const Status = styled.div`
   border: ${props =>
     props.status === 'Ing' ? `1px solid ${palette.primary}`
     : props.status === 'Complete' ? `1px solid ${palette.green}`
-    : `1px solid ${palette.gray300}`
+    : `1px solid ${palette.outlineGray}`
   };
-  background: ${palette.white};
+  background: ${props =>
+    props.status === 'Ing' ? `rgba(34, 111, 255, 0.04)`
+    : props.status === 'Complete' ? palette.white
+    : palette.chatGray
+  };
+
+  &:before {
+    content: '';
+    background: url(${images.CheckGreen}) center no-repeat;
+  }
 `;
 
 const AnswerWrap = styled.div`

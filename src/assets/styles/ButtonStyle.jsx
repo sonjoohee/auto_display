@@ -5,9 +5,7 @@ export const Button = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
   font-family: 'Pretendard', 'Poppins';
-  font-weight: 600;
   border-radius: 4px;
   border: 0;
   box-sizing: border-box;
@@ -19,21 +17,26 @@ export const Button = styled.button`
   }
 
   ${props => props.Small && css`
-    font-size: 0.81rem;
-    line-height: 1.6;
-    padding: 4px 10px;
+    gap: 4px;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    padding: 6px 10px;
   `}
 
   ${props => props.Medium && css`
-    font-size: 0.88rem;
-    line-height: 1.7;
-    padding: 6px 16px;
+    gap: 12px;
+    font-size: 1rem;
+    line-height: 1.5;
+    padding: 8px 24px;
+    border-radius: 8px;
   `}
 
   ${props => props.Large && css`
-    font-size: 0.94rem;
-    line-height: 1.7;
-    padding: 8px 22px;
+    gap: 12px;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    padding: 12px 16px;
+    border-radius: 8px;
   `}
 
   ${props => props.Round && css`
@@ -102,13 +105,13 @@ export const Button = styled.button`
 
     &:disabled {
       color: ${palette.white};
-      border: 1px solid ${palette.gray200};
-      background: ${palette.gray200};
+      border: 1px solid ${palette.gray300};
+      background: ${palette.gray300};
       opacity: 0.5;
       cursor: not-allowed;
 
       &:hover {
-        background: ${palette.gray200};
+        background: ${palette.gray300};
       }
     }
   `}

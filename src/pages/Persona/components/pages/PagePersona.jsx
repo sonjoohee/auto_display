@@ -150,7 +150,7 @@ const PagePersona = () => {
                     </p>
 
                     <Button
-                      Large
+                      Medium
                       Primary
                       Fill
                       Round
@@ -216,6 +216,7 @@ const Sidebar = styled.div`
   gap: 16px;
   width: 290px;
   padding: 16px 20px;
+  margin-top: 44px;
   border-radius: 10px;
   background: ${palette.chatGray};
 
@@ -252,7 +253,7 @@ const Progress = styled.div`
     width: ${(props) => props.progress}%;
     height: 100%;
     border-radius: 20px;
-    background: ${palette.chatBlue};
+    background: ${palette.primary};
     content: "";
   }
 `;

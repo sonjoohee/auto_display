@@ -14,7 +14,7 @@ import {
   PERSONA_STEP,
   SELECTED_INTERVIEW_PURPOSE,
   PERSONA_LIST,
-  PERSONA_BUTTON_STATE_3,
+  PERSONA_BUTTON_STATE_3
 } from "../../../AtomStates";
 import {
   ContentsWrap,
@@ -46,9 +46,7 @@ import ToastPopupWrap from "../../../../assets/styles/ToastPopup";
 
 const PagePersona3 = () => {
   const navigate = useNavigate();
-  const [personaButtonState3, setPersonaButtonState3] = useAtom(
-    PERSONA_BUTTON_STATE_3
-  );
+  const [personaButtonState3, setPersonaButtonState3] = useAtom(PERSONA_BUTTON_STATE_3);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
@@ -69,22 +67,19 @@ const PagePersona3 = () => {
   );
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
 
-  const [interviewPurpose, setInterviewPurpose] = useState("");
+  const [interviewPurpose, setInterviewPurpose] = useState("제품 경험 평가");
   const [selectedInterviewType, setSelectedInterviewType] =
-    useState("");
+    useState("multiple");
   const [activeCategory, setActiveCategory] = useState(1);
   const [showInterview, setShowInterview] = useState(false);
   const [showInterviewReady, setShowInterviewReady] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  const [showEditPersona, setShowEditPersona] = useState(false);
 
   const handlePopupClose = () => {
     setShowInterviewReady(false);
     setShowToast(false);
-  };
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  }
 
   // const [isLoadingPage, setIsLoadingPage] = useState(true);
 
@@ -262,7 +257,7 @@ const PagePersona3 = () => {
     setPersonaButtonState3(1);
     handlePopupClose();
     setShowToast(true);
-  };
+  }
 
   return (
     <>
@@ -274,7 +269,7 @@ const PagePersona3 = () => {
         <MainContent>
           <AnalysisWrap>
             <MainSection>
-              <OrganismBusinessAnalysis personaStep={3} />
+              <OrganismBusinessAnalysis personaStep={personaStep} />
 
               {/* 인터뷰 방식 선택 */}
               <>
@@ -355,7 +350,7 @@ const PagePersona3 = () => {
                     <p>
                       추천된 페르소나와 인터뷰하세요. 그룹 또는 한 명의 타겟을
                       선택할 수 있습니다.
-                      <span>
+                      <span onClick={() => setShowEditPersona(true)}>
                         <img src={images.PencilSquare} alt="" />
                         편집하기
                       </span>
@@ -395,42 +390,97 @@ const PagePersona3 = () => {
                     <p>
                       {selectedInterviewType === "multiple"
                         ? "1:N 인터뷰"
-                        : selectedInterviewType === "single"
-                        ? "1:1 인터뷰"
-                        : "선택해주세요"}
+                        : "1:1 인터뷰"}
                     </p>
                   </li>
                   <li>
                     <span>목적</span>
-                    <p>{interviewPurpose ? interviewPurpose : "선택해주세요"}</p>
+                    <p>{interviewPurpose}</p>
                   </li>
                   <li>
                     <span>참여자</span>
                     <p>{personaList.selected.length}명</p>
                   </li>
                 </ul>
-                <Button
-                  Large
-                  Primary
-                  Fill
-                  disabled={!interviewPurpose || !selectedInterviewType}
-                  onClick={() => setShowInterviewReady(true)}
-                >
+                <Button Large Primary Fill onClick={() => setShowInterviewReady(true)}>
                   인터뷰룸 입장
                 </Button>
               </InterviewRoom>
             </Sidebar>
 
+            {showEditPersona && (
+              <PopupWrap 
+                TitleFlex
+                title="📝 맞춤형 페르소나 모집 요청하기" 
+                buttonType="Fill"
+                closeText="닫기"
+                confirmText="편집완료"
+                isModal={true}
+                isFormValid={true}
+                onCancel={() => setShowEditPersona(false)}
+                onConfirm={() => {
+                  // 편집 완료 로직 구현
+                  setShowEditPersona(false);
+                }}
+                body={
+                  <>
+                    <Title>
+                      <p>
+                        Selected
+                        <span>
+                          <img src={images.ClockCounterclockwise} alt="" />
+                          이전으로 되돌리기
+                        </span>
+                      </p>
+                    </Title>
+                    <MoleculePersonaCard 
+                      TitleFlex
+                      title="가족과 함께 여가를 보내는 활동 지향형 소비자"
+                      keywords={['키워드1', '키워드2', '키워드3']}
+                      isBasic={true}
+                      checked={true}
+                    />
+                    <MoleculePersonaCard 
+                      TitleFlex
+                      title="가족과 함께 여가를 보내는 활동 지향형 소비자"
+                      keywords={['키워드1', '키워드2', '키워드3']}
+                      isBasic={true}
+                      checked={true}
+                    />
+
+                    <Title style={{marginTop: '20px'}}>
+                      <p>
+                        available
+                      </p>
+                    </Title>
+                    <MoleculePersonaCard 
+                      TitleFlex
+                      title="가족과 함께 여가를 보내는 활동 지향형 소비자"
+                      keywords={['키워드1', '키워드2', '키워드3']}
+                      isBasic={true}
+                      checked={true}
+                    />
+                    <MoleculePersonaCard 
+                      TitleFlex
+                      title="가족과 함께 여가를 보내는 활동 지향형 소비자"
+                      keywords={['키워드1', '키워드2', '키워드3']}
+                      isBasic={true}
+                      checked={true}
+                    />
+                  </>
+                }
+              />
+            )}
+
             {showInterviewReady && (
-              <PopupWrap
+              <PopupWrap 
                 Check
-                title="인터뷰 준비 완료"
+                title="인터뷰 준비 완료" 
                 message={
                   <>
-                    인터뷰 룸 이동 시, 바로 시작됩니다.
-                    <br />
+                    인터뷰 룸 이동 시, 바로 시작됩니다.<br />
                     인터뷰를 중단하면 모든 내역이 삭제되니 주의하세요
-                  </>
+                  </> 
                 }
                 buttonType="Outline"
                 closeText="취소"
@@ -442,9 +492,9 @@ const PagePersona3 = () => {
                 }}
               />
             )}
-
+            
             {showToast && (
-              <ToastPopupWrap
+              <ToastPopupWrap 
                 isActive={showToast}
                 onClose={() => setShowToast(false)}
               />
@@ -467,6 +517,7 @@ const Sidebar = styled.div`
   gap: 16px;
   width: 290px;
   padding: 16px 20px;
+  margin-top: 44px;
   border-radius: 10px;
   background: ${palette.chatGray};
 
@@ -538,7 +589,7 @@ const Progress = styled.div`
     width: ${(props) => props.progress}%;
     height: 100%;
     border-radius: 20px;
-    background: ${palette.chatBlue};
+    background: ${palette.primary};
     content: "";
   }
 `;
@@ -559,7 +610,7 @@ const InterviewTypeCard = styled.div`
   gap: 16px;
   border-radius: 10px;
   border: 1px solid
-    ${(props) => (props.isActive ? palette.chatBlue : palette.outlineGray)};
+    ${(props) => (props.isActive ? palette.primary : palette.outlineGray)};
   background: ${(props) =>
     props.isActive ? "rgba(34, 111, 255, 0.10)" : "white"};
   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
@@ -572,7 +623,7 @@ const InterviewTypeCard = styled.div`
     gap: 8px;
     font-weight: 600;
     line-height: 1.5;
-    color: ${(props) => (props.isActive ? palette.chatBlue : palette.gray800)};
+    color: ${(props) => (props.isActive ? palette.primary : palette.gray800)};
     text-align: left;
 
     span {
@@ -601,8 +652,8 @@ const CheckBox = styled.div`
   height: 24px;
   border-radius: 12px;
   border: 1px solid
-    ${(props) => (props.isActive ? palette.chatBlue : palette.outlineGray)};
-  background: ${(props) => (props.isActive ? palette.chatBlue : "white")};
+    ${(props) => (props.isActive ? palette.primary : palette.outlineGray)};
+  background: ${(props) => (props.isActive ? palette.primary : "white")};
 
   ${(props) =>
     props.isActive &&
@@ -639,8 +690,8 @@ const TabButton = styled.button`
     isActive
       ? `
     background: rgba(34, 111, 255, 0.1);
-    border: 1px solid ${palette.chatBlue};
-    color: ${palette.chatBlue};
+    border: 1px solid ${palette.primary};
+    color: ${palette.primary};
     font-weight: 600;
   `
       : `

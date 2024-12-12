@@ -191,7 +191,7 @@ const Progress = styled.div`
     width: ${props => props.progress}%;
     height: 100%;
     border-radius: 20px;
-    background: ${palette.chatBlue};
+    background: ${palette.primary};
     content: '';
   }
 `;

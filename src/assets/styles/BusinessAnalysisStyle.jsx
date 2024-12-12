@@ -86,7 +86,7 @@ export const Title = styled.div`
       align-items: center;
       gap: 4px;
       font-size: 0.75rem;
-      color: ${palette.chatBlue};
+      color: ${palette.primary};
       cursor: pointer;
     }
   }

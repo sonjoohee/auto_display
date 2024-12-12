@@ -446,7 +446,7 @@ const Option1 = styled.div`
         ? "rgba(0,0,0,0.05)"
         : "rgba(4,83,244,0.05)"
       : palette.white};
-  border: 1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 1 ? palette.gray800 : palette.chatBlue) : palette.outlineGray)};
+  border: 1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 1 ? palette.gray800 : palette.primary) : palette.outlineGray)};
   transition:all .5s;
 
   p {
@@ -467,7 +467,7 @@ const Option1 = styled.div`
     border-color: ${(props) =>
       Object.keys(props.marketingSelectedCustomer).length >= 1
         ? "none" 
-        : palette.chatBlue};
+        : palette.primary};
   }
 `;
 
@@ -488,7 +488,7 @@ const Option2 = styled.div`
         ? "rgba(0,0,0,0.05)"
         : "rgba(4,83,244,0.05)"
       : palette.white};
-  border: 1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 2 ? palette.gray800 : palette.chatBlue) : palette.outlineGray)};
+  border: 1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 2 ? palette.gray800 : palette.primary) : palette.outlineGray)};
   transition:all .5s;
 
   p {
@@ -509,7 +509,7 @@ const Option2 = styled.div`
     border-color: ${(props) =>
       Object.keys(props.marketingSelectedCustomer).length >= 2
         ? "none" 
-        : palette.chatBlue};
+        : palette.primary};
   }
 `;
 
@@ -530,7 +530,7 @@ const Option3 = styled.div`
         ? "rgba(0,0,0,0.05)"
         : "rgba(4,83,244,0.05)"
       : palette.white};
-  border: 1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 3 ? palette.gray800 : palette.chatBlue) : palette.outlineGray)};
+  border: 1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 3 ? palette.gray800 : palette.primary) : palette.outlineGray)};
   transition:all .5s;
 
   p {
@@ -551,7 +551,7 @@ const Option3 = styled.div`
     border-color: ${(props) =>
       Object.keys(props.marketingSelectedCustomer).length >= 3
         ? "none" 
-        : palette.chatBlue};
+        : palette.primary};
   }
 `;
 
@@ -561,7 +561,7 @@ const Label1 = styled.label`
   gap:8px;
   align-items:flex-start;
   width:100%;
-  color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 1 ? palette.gray800 : palette.chatBlue) : palette.gray800)};
+  color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 1 ? palette.gray800 : palette.primary) : palette.gray800)};
   cursor:pointer;
 
   &:before {
@@ -569,8 +569,8 @@ const Label1 = styled.label`
     height:20px;
     flex-shrink:0;
     border-radius:50%;
-    border:1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 1 ? palette.gray800 : palette.chatBlue) : palette.lineGray)};
-    background-color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 1 ? palette.gray800 : palette.chatBlue) : palette.white)};
+    border:1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 1 ? palette.gray800 : palette.primary) : palette.lineGray)};
+    background-color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 1 ? palette.gray800 : palette.primary) : palette.white)};
     transition:all .5s;
     content:'';
   }
@@ -592,7 +592,7 @@ const Label2 = styled.label`
   gap:8px;
   align-items:flex-start;
   width:100%;
-  color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 2 ? palette.gray800 : palette.chatBlue) : palette.gray800)};
+  color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 2 ? palette.gray800 : palette.primary) : palette.gray800)};
   cursor:pointer;
 
   &:before {
@@ -600,8 +600,8 @@ const Label2 = styled.label`
     height:20px;
     flex-shrink:0;
     border-radius:50%;
-    border:1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 2 ? palette.gray800 : palette.chatBlue) : palette.lineGray)};
-    background-color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 2 ? palette.gray800 : palette.chatBlue) : palette.white)};
+    border:1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 2 ? palette.gray800 : palette.primary) : palette.lineGray)};
+    background-color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 2 ? palette.gray800 : palette.primary) : palette.white)};
     transition:all .5s;
     content:'';
   }
@@ -623,7 +623,7 @@ const Label3 = styled.label`
   gap:8px;
   align-items:flex-start;
   width:100%;
-  color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 3 ? palette.gray800 : palette.chatBlue) : palette.gray800)};
+  color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 3 ? palette.gray800 : palette.primary) : palette.gray800)};
   cursor:pointer;
 
   &:before {
@@ -631,8 +631,8 @@ const Label3 = styled.label`
     height:20px;
     flex-shrink:0;
     border-radius:50%;
-    border:1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 3 ? palette.gray800 : palette.chatBlue) : palette.lineGray)};
-    background-color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 3 ? palette.gray800 : palette.chatBlue) : palette.white)};
+    border:1px solid ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 3 ? palette.gray800 : palette.primary) : palette.lineGray)};
+    background-color: ${(props) => (props.selected ? (Object.keys(props.marketingSelectedCustomer).length >= 3 ? palette.gray800 : palette.primary) : palette.white)};
     transition:all .5s;
     content:'';
   }
@@ -657,7 +657,7 @@ const ButtonWrap = styled.div`
 const Button1 = styled.button`
   font-family: Pretendard, Poppins;
   font-size:0.88rem;
-  color: ${(props) => (Object.keys(props.marketingSelectedCustomerState1).length ? palette.chatBlue : palette.gray500)};
+  color: ${(props) => (Object.keys(props.marketingSelectedCustomerState1).length ? palette.primary : palette.gray500)};
   line-height:22px;
   // padding:8px 20px;
   margin-left:auto;
@@ -673,7 +673,7 @@ const Button1 = styled.button`
 const Button2 = styled.button`
   font-family: Pretendard, Poppins;
   font-size:0.88rem;
-  color: ${(props) => (Object.keys(props.marketingSelectedCustomerState2).length ? palette.chatBlue : palette.gray500)};
+  color: ${(props) => (Object.keys(props.marketingSelectedCustomerState2).length ? palette.primary : palette.gray500)};
   line-height:22px;
   // padding:8px 20px;
   margin-left:auto;
@@ -689,7 +689,7 @@ const Button2 = styled.button`
 const Button3 = styled.button`
   font-family: Pretendard, Poppins;
   font-size:0.88rem;
-  color: ${(props) => (Object.keys(props.marketingSelectedCustomerState3).length ? palette.chatBlue : palette.gray500)};
+  color: ${(props) => (Object.keys(props.marketingSelectedCustomerState3).length ? palette.primary : palette.gray500)};
   line-height:22px;
   // padding:8px 20px;
   margin-left:auto;

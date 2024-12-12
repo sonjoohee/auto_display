@@ -48,15 +48,15 @@ const StepNumber = styled.div`
   align-items: stretch;
   border-radius: 50px;
   border: 1px solid ${props => {
-    if (props.completed) return palette.chatBlue;
-    return props.active ? palette.chatBlue : palette.gray500;
+    if (props.completed) return palette.primary;
+    return props.active ? palette.primary : palette.gray500;
   }};
-  background-color: ${props => props.completed ? palette.chatBlue : 'transparent'};
+  background-color: ${props => props.completed ? palette.primary : 'transparent'};
   
   span {
     font-size: 0.67rem;
     font-weight: 500;
-    color: ${props => props.active ? palette.chatBlue : palette.gray500};
+    color: ${props => props.active ? palette.primary : palette.gray500};
   }
 `;
 

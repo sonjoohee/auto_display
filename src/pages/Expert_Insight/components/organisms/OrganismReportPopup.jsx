@@ -2061,10 +2061,10 @@ const SeparateSection2 = styled.div`
       width: 15px;
       height: 15px;
       font-size: 0.63rem;
-      color: ${palette.chatBlue};
+      color: ${palette.primary};
       line-height: 15px;
       text-align: center;
-      border: 1px solid ${palette.chatBlue};
+      border: 1px solid ${palette.primary};
     }
   }
 
@@ -2146,10 +2146,10 @@ const SeparateSection3 = styled.div`
       width: 15px;
       height: 15px;
       font-size: 0.63rem;
-      color: ${palette.chatBlue};
+      color: ${palette.primary};
       line-height: 15px;
       text-align: center;
-      border: 1px solid ${palette.chatBlue};
+      border: 1px solid ${palette.primary};
     }
   }
 
@@ -2615,10 +2615,10 @@ const SeparateSection4 = styled.div`
       width: 15px;
       height: 15px;
       font-size: 0.63rem;
-      color: ${palette.chatBlue};
+      color: ${palette.primary};
       line-height: 15px;
       text-align: center;
-      border: 1px solid ${palette.chatBlue};
+      border: 1px solid ${palette.primary};
     }
   }
 
