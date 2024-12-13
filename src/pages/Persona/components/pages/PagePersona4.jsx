@@ -509,7 +509,7 @@ const PagePersona4 = () => {
               <h5>Let's Start Now</h5>
 
               <ProgressBar>
-                <span>🚀</span>
+                <span className="icon">🚀</span>
                 <Progress progress={100} />
                 <span>Fin</span>
               </ProgressBar>
@@ -998,6 +998,10 @@ const ProgressBar = styled.div`
     font-size: 0.75rem;
     line-height: 1.5;
     color: ${palette.gray700};
+  }
+
+  .icon {
+    font-size: 1.13rem;
   }
 `;
 

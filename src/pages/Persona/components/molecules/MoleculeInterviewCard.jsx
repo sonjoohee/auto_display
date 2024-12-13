@@ -23,9 +23,11 @@ const MoleculeInterviewCard = ({
   title,
   description,
   isSelected,
-
+  NoBackground,
   onSelect,
   interviewPurpose,
+  isActive,
+  ...props
 }) => {
   const [projectId] = useAtom(PROJECT_ID);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
@@ -155,7 +157,11 @@ const MoleculeInterviewCard = ({
   };
 
   return (
-    <CardContainer>
+    <CardContainer 
+      $isSelected={isSelected} 
+      NoBackground={NoBackground}
+      {...props}
+    >
       <MainContent>
         <CheckCircle $isSelected={isSelected} onClick={() => {setSelectedInterviewPurpose(title); onSelect(title)}} />
         <ContentWrapper>
@@ -233,11 +239,14 @@ const CardContainer = styled.div`
   width: 100%;
   padding: 24px 20px;
   border-radius: 10px;
-  border: 1px solid
-    ${(props) => (props.isActive ? palette.primary : palette.outlineGray)};
-  background: ${(props) =>
-    props.isActive ? "rgba(34, 111, 255, 0.10)" : palette.white};
-  cursor: ${(props) => (props.isClickable ? "pointer" : "default")};
+  border: 1px solid ${props => props.$isSelected ? palette.primary : palette.outlineGray};
+  background: ${props => {
+    if (props.NoBackground) {
+      return props.$isSelected ? palette.white : palette.white;
+    }
+    return props.$isSelected ? 'rgba(34, 111, 255, 0.10)' : palette.white;
+  }};
+  cursor: pointer;
   transition: all 0.2s ease-in-out;
 
   ${(props) =>
@@ -275,7 +284,7 @@ const CheckCircle = styled.div`
   background-image: ${(props) =>
     props.$isSelected
       ? `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='12' fill='%23226FFF'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
-      : `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='11' stroke='%23E0E4EB' stroke-width='2'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='%23E0E4EB' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`};
+      : `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='11.5' stroke='%23E0E4EB'/%3E%3C/svg%3E")`};
 
   transition: background-image 0.3s ease-in-out;
   cursor: pointer;
