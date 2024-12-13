@@ -355,17 +355,17 @@ export const Text = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
 
   strong {
-    font-size: 0.875rem;
-    font-weight: 500;
+    font-size: 1rem;
+    font-weight: 600;
     line-height: 1.5;
     color: ${palette.gray800};
   }
 
   p {
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     font-weight: 300;
     line-height: 1.5;
     color: ${palette.gray500};
@@ -377,7 +377,8 @@ export const ButtonWrap = styled.div`
   align-self: stretch;
   align-items: flex-start;
   gap: 16px;
-  padding-top: 16px;
+  // padding-top: 16px;
+  padding-top: 8px;
   border-top: 1px solid ${palette.gray200};
 `;
 
@@ -389,8 +390,9 @@ export const FillButtonWrap = styled(ButtonWrap)`
 export const Button = styled.div`
   flex: 1 1 auto;
   font-size: 0.875rem;
-  font-weight: 300;
+  font-weight: 500;
   line-height: 1.5;
+  padding: 8px 0 0;
   cursor: ${props => (props.disabled ? 'not-allowed' : 'pointer')};
   transition: all 0.5s;
 

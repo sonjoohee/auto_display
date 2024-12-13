@@ -187,6 +187,26 @@ import Gear from "../images/gear.svg"
 import ArrowBarLeft from "../images/arrow-bar-left.svg"
 import NoteArrowUp from "../images/note-arrow-up.svg"
 import CheckGreen from "../images/check-green.svg"
+import FileText from "../images/file-text.svg"
+import PeopleFill from "../images/people-fill.svg"
+import ReportSearch from "../images/report-search.svg"
+import PersonCircle from "../images/person-circle.svg"
+
+import DiscoveryBrand from "../images/Discovery-Brand.png"
+import DiscoveryInsight from "../images/Discovery-Insight.png"
+import DiscoveryTarget from "../images/Discovery-Target.png"
+import DiscoverySuccess from "../images/Discovery-Success.png"
+import DiscoveryExperience from "../images/Discovery-Experience.png"
+import DiscoveryScale from "../images/Discovery-Scale.png"
+import DiscoveryBM from "../images/Discovery-BM.png"
+
+import DiscoveryBrandHover from "../images/Discovery-Brand-hover.png"
+import DiscoveryInsightHover from "../images/Discovery-Insight-hover.png"
+import DiscoveryTargetHover from "../images/Discovery-Target-hover.png"
+import DiscoverySuccessHover from "../images/Discovery-Success-hover.png"
+import DiscoveryExperienceHover from "../images/Discovery-Experience-hover.png"
+import DiscoveryScaleHover from "../images/Discovery-Scale-hover.png"
+import DiscoveryBMHover from "../images/Discovery-BM-hover.png"
 
 const images = {
   Logo,
@@ -378,6 +398,26 @@ const images = {
   ArrowBarLeft,
   NoteArrowUp,
   CheckGreen,
+  FileText,
+  PeopleFill,
+  ReportSearch,
+  PersonCircle,
+
+  DiscoveryBrand,
+  DiscoveryInsight,
+  DiscoveryTarget,
+  DiscoverySuccess,
+  DiscoveryExperience,
+  DiscoveryScale,
+  DiscoveryBM,
+
+  DiscoveryBrandHover,
+  DiscoveryInsightHover,
+  DiscoveryTargetHover,
+  DiscoverySuccessHover,
+  DiscoveryExperienceHover,
+  DiscoveryScaleHover,
+  DiscoveryBMHover,
 }
 
 export default images;

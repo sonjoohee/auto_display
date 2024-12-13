@@ -194,7 +194,7 @@ const MoleculeSignupForm = () => {
                   id="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="비밀번호 확인을 입력해주세요"
+                  placeholder="비밀번호 다시 입력해주세요"
                 />
                 <TogglePasswordButton onClick={toggleConfirmPasswordVisibility}>
                   {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}

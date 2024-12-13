@@ -187,7 +187,7 @@ const MoleculeInterviewCard = ({
                   ?.questions.slice(2, 5)
                   .map((item, index) => (
                     <li key={index}>
-                      <span className="number">{index + 1}</span>
+                      <span className="number">Q{index + 1}.</span>
                       {item.question}
                     </li>
                   ))}
@@ -396,7 +396,7 @@ const DescriptionSection = styled.div`
 const ListUL = styled.div`
   padding: 20px;
   border-radius: 15px;
-  border: 1px solid ${palette.outlineGray};
+  background: ${palette.chatGray};
 
   ul {
     display: flex;
@@ -405,7 +405,7 @@ const ListUL = styled.div`
 
   li {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 8px;
     font-size: 0.875rem;
     line-height: 1.5;
@@ -423,11 +423,12 @@ const ListUL = styled.div`
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    // height: 20px;
+    font-weight: 600;
     color: ${palette.primary};
-    border-radius: 2px;
-    border: 1px solid rgba(34, 111, 255, 0.5);
-    background: rgba(34, 111, 255, 0.04);
+    // border-radius: 2px;
+    // border: 1px solid rgba(34, 111, 255, 0.5);
+    // background: rgba(34, 111, 255, 0.04);
   }
 `;
