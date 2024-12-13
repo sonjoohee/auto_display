@@ -1,104 +1,136 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { useAtom } from "jotai";
-import { palette } from "../../../../assets/styles/Palette";
-import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
-import Header from "../../../Design_Page/IncHeader";
-import {
-  ContentsWrap,
-  MainContent,
-} from "../../../../assets/styles/BusinessAnalysisStyle";
-import { Badge } from "../../../../assets/styles/Badge";
 import { useNavigate } from "react-router-dom";
-import {
-  IS_LOGGED_IN,
-  PROJECT_ID,
-  PROJECT_REPORT_ID,
-  PROJECT_LIST,
-  PROJECT_REPORT_LIST,
-} from "../../../AtomStates";
-import OrganismProjectCard from "../organisms/OrganismProjectCard";
-import { getProjectListByIdFromIndexedDB } from "../../../../utils/indexedDB";
+import { palette } from "../../../../assets/styles/Palette";
+import { Badge } from "../../../../assets/styles/Badge";
 
-const PageMyProject = () => {
+const OrganismProjectCard = ({ project, index }) => {
   const navigate = useNavigate();
   const [openStates, setOpenStates] = useState({});
   const [closingStates, setClosingStates] = useState({});
-  const [projectLoadButtonState, setProjectLoadButtonState] = useState(true);
-  const [projectId, setProjectId] = useAtom(PROJECT_ID);
-  const [projectReportId, setProjectReportId] = useAtom(PROJECT_REPORT_ID);
-  const [projectList, setProjectList] = useAtom(PROJECT_LIST);
-  const [projectReportList, setProjectReportList] =
-    useAtom(PROJECT_REPORT_LIST);
-  const [isLoadingPage, setIsLoadingPage] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+
   const toggleView = (projectId) => {
     if (openStates[projectId]) {
-      // 닫을 때
       setClosingStates((prev) => ({ ...prev, [projectId]: true }));
       setTimeout(() => {
         setOpenStates((prev) => ({ ...prev, [projectId]: false }));
         setClosingStates((prev) => ({ ...prev, [projectId]: false }));
-      }, 280); // 애니메이션 시간보다 살짝 짧게
+      }, 280);
     } else {
-      // 열 때
       setOpenStates((prev) => ({ ...prev, [projectId]: true }));
     }
   };
 
-  useEffect(() => {
-    const loadProjectList = async () => {
-      // 1. 로그인 여부 확인
-      console.log("isLoggedIn", isLoggedIn);
-      if (isLoggedIn) {
-        // 2. 로그인 상태라면 서버에서 새로운 대화 ID를 생성하거나, 저장된 대화를 불러옴
-        const savedProjectListInfo = await getProjectListByIdFromIndexedDB(
-          isLoggedIn
-        );
-        if (savedProjectListInfo) {
-          setProjectList(savedProjectListInfo);
-        }
-        // setIsLoadingPage(false); // 로딩 완료
-      }
-      setProjectLoadButtonState(false);
-    };
+  const getRecruitStatusText = (project) => {
+    const selectedCount = project.personaList?.selected?.length || 0;
+    const requestCount = project.requestPersonaList?.persona?.length || 0;
 
-    loadProjectList();
-  }, []);
+    if (selectedCount === 0 && requestCount === 0) return "대기중";
+    if (selectedCount === requestCount) return "모집 완료";
+    return "모집 중";
+  };
+
+  const getRecruitStatus = (project) => {
+    const status = getRecruitStatusText(project);
+    if (status === "모집 완료") return "complete";
+    if (status === "모집 중") return "ing";
+    return "";
+  };
 
   return (
-    <>
-      <ContentsWrap>
-        <OrganismIncNavigation />
-        <Header />
-        <MainContent>
-          <MyProjectWrap>
-            <Title>프로젝트 리스트</Title>
-            <ProjectList>
-              <ProjectHeader>
-                <div>프로젝트 명</div>
-                <div>맞춤 페르소나</div>
-                <div>페르소나 모집</div>
-                <div>결과 리포트</div>
-              </ProjectHeader>
-              <ProjectContent>
-                {projectList.map((project, index) => (
-                  <OrganismProjectCard
-                    key={index}
-                    project={project}
-                    index={index}
-                  />
-                ))}
-              </ProjectContent>
-            </ProjectList>
-          </MyProjectWrap>
-        </MainContent>
-      </ContentsWrap>
-    </>
+    <ProjectItem $isOpen={openStates[index]}>
+      <ProjectInfo>
+        <Name>
+          <strong>{project.businessAnalysis.title}</strong>
+          <span>
+            생성일 - {new Date(project.updateDate).toLocaleDateString()}
+          </span>
+        </Name>
+        <Persona>
+          <div>
+            <span>기본형</span>
+            <p>{project.personaList?.unselected?.length || 0}명</p>
+          </div>
+          <div>
+            <span>커스터마이즈</span>
+            <p>
+              {project.customPersonaList?.persona?.length || 0}명
+              {project.customPersonaList?.persona?.length > 0 && <Badge New />}
+            </p>
+          </div>
+        </Persona>
+        <Recruit>
+          <span>
+            {project.requestPersonaList?.persona?.length || 0}개 페르소나
+          </span>
+          <p className={getRecruitStatus(project)}>
+            {getRecruitStatusText(project)}
+          </p>
+        </Recruit>
+        <Report>
+          <div>
+            <span>Report</span>
+            <p>{project.projectReportList?.length || 0}건</p>
+          </div>
+          <div>
+            <button onClick={() => toggleView(index)}>자세히 보기</button>
+          </div>
+        </Report>
+      </ProjectInfo>
+
+      {openStates[index] && (
+        <ProjectButton>
+          <p>맞춤 페르소나와 인터뷰를 시작해보세요!</p>
+          <button onClick={() => navigate(`/Persona/${project._id}`)}>
+            바로가기
+          </button>
+        </ProjectButton>
+      )}
+
+      {openStates[index] && (
+        <ProjectView className={closingStates[index] ? "closing" : ""}>
+          {project.projectReportList && project.projectReportList.length > 0 ? (
+            project.projectReportList.map((report, reportIndex) => (
+              <ViewInfo key={reportIndex}>
+                <div className="title">
+                  {report.theory_name}
+                  <span>
+                    {new Date(project.updateDate).toLocaleDateString()}
+                  </span>
+                </div>
+                <div className="info">
+                  <div>
+                    <span>문항수</span>
+                    <p>{report.questions?.length || 0}개</p>
+                  </div>
+                  <div>
+                    <span>참여페르소나</span>
+                    <p>{project.personaList?.selected?.length || 0}명</p>
+                  </div>
+                </div>
+                <div className="button">
+                  <button className="view">자세히 보기</button>
+                  <button className="analysis">결과 분석 보기</button>
+                </div>
+              </ViewInfo>
+            ))
+          ) : (
+            <ViewInfoNodata>
+              <div>
+                <div>
+                  아직 생성된 리포트가 없습니다.
+                  <span>리포트 생성하기</span>
+                </div>
+              </div>
+            </ViewInfoNodata>
+          )}
+        </ProjectView>
+      )}
+    </ProjectItem>
   );
 };
 
-export default PageMyProject;
+export default OrganismProjectCard;
 
 const MyProjectWrap = styled.div`
   width: 100%;
