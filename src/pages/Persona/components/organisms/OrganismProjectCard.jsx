@@ -52,7 +52,7 @@ const OrganismProjectCard = ({ project, index }) => {
         <Persona>
           <div>
             <span>기본형</span>
-            <p>{project.personaList?.unselected?.length || 0}명</p>
+            <p>{project.personaList || 0}명</p>
           </div>
           <div>
             <span>커스터마이즈</span>

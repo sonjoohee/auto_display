@@ -24,7 +24,7 @@ import {
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import { createProjectReportOnServer } from "../../../../utils/indexedDB";
 
-const OrganismToastPopup = ({ isActive, onClose }) => {
+const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
   const [reportId, setReportId] = useAtom(PROJECT_REPORT_ID);
   const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
     IS_PERSONA_ACCESSIBLE
@@ -77,6 +77,44 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
   useEffect(() => {
     const interviewLoading = async () => {
       try {
+        // isComplete가 true일 경우 즉시 완료 상태로 설정
+        if (isComplete) {
+          const existingQuestions = interviewQuestionList.find(
+            (item) => item.theory_name === selectedInterviewPurpose
+          );
+          
+          if (existingQuestions) {
+            const questions = existingQuestions.questions.slice(2);
+            setInterviewQuestionListState(questions);
+            
+            // 모든 질문을 Complete 상태로 설정
+            const completedStatus = new Array(questions.length).fill('Complete');
+            setInterviewStatus(completedStatus);
+
+            console.log(completedStatus); 
+            
+            // interviewData에서 답변 설정
+            const newAnswers = {};
+            questions.forEach((_, index) => {
+              const answers = interviewData[index][`answer_${index + 1}`];
+              newAnswers[index] = personaList.selected.map((persona, pIndex) => ({
+                persona: persona,
+                answer: answers[pIndex]
+              }));
+            });
+            setAnswers(newAnswers);
+  
+            // 모든 답변을 보이도록 설정
+            const allVisible = {};
+            questions.forEach((_, index) => {
+              allVisible[index] = true;
+            });
+            setVisibleAnswers(allVisible);
+            
+            setIsLoadingPrepare(false);
+          }
+          return; // API 호출 없이 종료
+        }
         if (personaButtonState3 === 1) {
           const existingQuestions = interviewQuestionList.find(
             (item) => item.theory_name === selectedInterviewPurpose
@@ -155,7 +193,7 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
       }
     };
     interviewLoading();
-  }, [personaButtonState3]);
+  }, [personaButtonState3, isComplete]);
 
   useEffect(() => {
     const processInterview = async () => {
@@ -219,10 +257,13 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
 
             let retryCount = 0;
             const maxRetries = 10;
-      
+
             while (
               retryCount < maxRetries &&
-              (!response || !response.data || !response.data.hasOwnProperty("answer") || !response.data.answer)
+              (!response ||
+                !response.data ||
+                !response.data.hasOwnProperty("answer") ||
+                !response.data.answer)
             ) {
               response = await axios.post(
                 "https://wishresearch.kr/person/persona_interview_module",
@@ -308,28 +349,33 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
                   let responseReport;
                   let retryCount = 0;
                   const maxRetries = 10;
-                
+
                   while (retryCount < maxRetries) {
                     responseReport = await axios.post(
                       "https://wishresearch.kr/person/interview_reports",
                       finalData1,
                       axiosConfig
                     );
-                
+
                     // 응답 데이터가 유효한지 확인
-                    if (responseReport && responseReport.data && 
-                        responseReport.data.length > 0 && 
-                        responseReport.data[0].title && 
-                        responseReport.data[0].text) {
+                    if (
+                      responseReport &&
+                      responseReport.data &&
+                      responseReport.data.length > 0 &&
+                      responseReport.data[0].title &&
+                      responseReport.data[0].text
+                    ) {
                       break;
                     }
-                
+
                     retryCount++;
-                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    await new Promise((resolve) => setTimeout(resolve, 1000));
                   }
-                
+
                   if (retryCount === maxRetries) {
-                    throw new Error("Maximum retry attempts reached for interview reports.");
+                    throw new Error(
+                      "Maximum retry attempts reached for interview reports."
+                    );
                   }
 
                   setInterviewReport(responseReport.data);
@@ -352,15 +398,16 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
 
                   let responseReportAdditional;
                   retryCount = 0;
-                  
+
                   while (retryCount < maxRetries) {
                     responseReportAdditional = await axios.post(
                       "https://wishresearch.kr/person/interview_report_additional",
                       finalData2,
                       axiosConfig
                     );
-                  
+
                     // 응답 데이터의 유효성 검사
+
                     if (responseReportAdditional && responseReportAdditional.data && 
                         responseReportAdditional.data.title && 
                         responseReportAdditional.data.suggestion_list && 
@@ -368,17 +415,26 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
                         responseReportAdditional.data.suggestion_list.every(item => 
                           item.title && 
                           item.title_text && 
-                          item.description_text
+                          item.description_text &&
+                          item.title === "브랜드 강화 관점" ||
+                          item.title === "타겟팅 관점" ||
+                          item.title === "세그먼트화 관점" ||
+                          item.title === "사업 전략 관점" ||
+                          item.title === "고객 경험 개선 관점" ||
+                          item.title === "성장 전략 관점" ||
+                          item.title === "비즈니스 모델 캔버스 관점"
                         )) {
                       break;
                     }
-                  
+
                     retryCount++;
-                    await new Promise(resolve => setTimeout(resolve, 1000)); // 1초 대기
+                    await new Promise((resolve) => setTimeout(resolve, 1000)); // 1초 대기
                   }
-                  
+
                   if (retryCount === maxRetries) {
-                    throw new Error("Maximum retry attempts reached for interview report additional.");
+                    throw new Error(
+                      "Maximum retry attempts reached for interview report additional."
+                    );
                   }
 
                   setInterviewReportAdditional(responseReportAdditional.data);
@@ -441,11 +497,49 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
     );
   };
 
+  const renderAnswersComplete = (questionIndex) => {
+    const questionAnswers = answers[questionIndex] || [];
+
+    return (
+      <>
+        {questionAnswers.map((answer, index) => (
+          <AnswerItem key={index}>
+            <TypeName>
+              <Thumb />
+              {answer.persona.persona}
+            </TypeName>
+            <TextContainer>
+              {answer.answer}
+            </TextContainer>
+          </AnswerItem>
+        ))}
+      </>
+    );
+  };
+
+  // // 완료 상태일 때는 모든 답변을 보이도록 설정
+  // useEffect(() => {
+  //   if (isComplete) {
+  //     const allVisible = {};
+  //     interviewQuestionListState.forEach((_, index) => {
+  //       allVisible[index] = true;
+  //     });
+  //     setVisibleAnswers(allVisible);
+  //   }
+  // }, [isComplete, interviewQuestionListState]);
+
   useEffect(() => {
     setActive(isActive);
   }, [isActive]);
 
   const handleClose = () => {
+    if (isComplete) {
+      setActive(false);
+      if (onClose) {
+        onClose();
+      }
+      return;
+    }
     setShowWarning(true);
   };
 
@@ -455,6 +549,9 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
     setActive(false);
     if (onClose) {
       onClose();
+    }
+    if (!isComplete) {
+      navigate(`/Main`, { replace: true });
     }
   };
 
@@ -482,9 +579,9 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
 
   const handleAnswerToggle = (index) => {
     // 'Pre' 상태일 때는 토글 불가능
-    if (interviewStatus[index] === "Pre") return;
-
-    setVisibleAnswers((prev) => ({ ...prev, [index]: !prev[index] }));
+    // if (interviewStatus[index] === 'Pre') return;
+    
+    setVisibleAnswers(prev => ({ ...prev, [index]: !prev[index] }));
   };
 
   const renderInterviewItems = () => {
@@ -511,18 +608,43 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
           </Status>
           <QuestionText>Q{index + 1}. {item.question}</QuestionText>
         </QuestionWrap>
-        {visibleAnswers[index] &&
-          (interviewStatus[index] === "Ing" ||
-            interviewStatus[index] === "Complete") && (
-            <AnswerWrap>{renderAnswers(index)}</AnswerWrap>
-          )}
+        {visibleAnswers[index] && (
+          <AnswerWrap>
+            {renderAnswers(index)}
+          </AnswerWrap>
+        )}
       </InterviewItem>
     ));
   };
 
+  const renderInterviewItemsComplete = () => {
+    return interviewQuestionListState.map((item, index) => (
+      <InterviewItem 
+        key={index} 
+        status={'Complete'}
+        style={{ cursor: 'pointer' }}
+      >
+        <QuestionWrap onClick={() => handleAnswerToggle(index)}>
+          <Number status={'Complete'}>{index + 1}</Number>
+          <QuestionText>{item.question}</QuestionText>
+          <Status status={'Complete'}>
+            완료
+          </Status>
+        </QuestionWrap>
+        {visibleAnswers[index] && (
+          <AnswerWrap>
+            {renderAnswersComplete(index)}
+          </AnswerWrap>
+        )}
+      </InterviewItem>
+    ));
+  };
+
+
   const handleCheckResult = async () => {
     handleWarningClose();
     setIsPersonaAccessible(true);
+
     if (!reportId && isPersonaAccessible) {
       try {
         let newReportId = await createProjectReportOnServer(isLoggedIn);
@@ -588,7 +710,9 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
               </LoadingBox>
             )}
 
-            {!isLoadingPrepare && renderInterviewItems()}
+            {!isLoadingPrepare && 
+              isComplete ? renderInterviewItemsComplete() : renderInterviewItems()
+            }
 
             {isAnalyzing && (
               <LoadingBox>
