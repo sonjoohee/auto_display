@@ -366,7 +366,7 @@ export const updateProjectReportOnServer = async (
   updateData,
   isLoggedIn
 ) => {
-  console.log("🚀 ~ projectId:", reportId);
+  console.log("🚀 ~ reportId:", reportId);
   console.log("🚀 ~ updateData:", updateData);
   if (isLoggedIn) {
     // 사용자 로그인 시 서버에 저장
@@ -384,7 +384,7 @@ export const updateProjectReportOnServer = async (
       const PUT_DATA = {
         id: reportId,
         ...updateData,
-        updateDate: new Date().toISOString(),
+        createDate: new Date().toISOString(),
       };
       await axios.put(
         `https://wishresearch.kr/project/report/update`,
