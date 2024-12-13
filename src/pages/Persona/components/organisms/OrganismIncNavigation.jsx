@@ -117,6 +117,7 @@ import {
   GROWTH_HACKER_RECOMMENDED_SOLUTION,
   GROWTH_HACKER_SELECTED_SOLUTION,
   STRATEGY_CONSULTANT_REPORT_DATA,
+  PERSONA_STEP,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -127,6 +128,7 @@ import { useSaveConversation } from "../../../Expert_Insight/components/atoms/At
 import OrganismReportPopup from "../../../Expert_Insight/components/organisms/OrganismReportPopup"; // 팝업 컴포넌트 임포트
 
 const OrganismIncNavigation = () => {
+  const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
   const [strategyConsultantReportData, setStrategyConsultantReportData] =
     useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
   const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] =
@@ -1124,6 +1126,8 @@ const OrganismIncNavigation = () => {
       return;
     }
 
+    setPersonaStep(0);
+
     navigate("/Main");
     setConversation([]);
     setConversationStage(1);
@@ -1373,7 +1377,7 @@ const OrganismIncNavigation = () => {
   return (
     <>
       <NavigationWrap>
-        <Link to="/">
+        <Link to="/" onClick={handleNewProjectClick}>
           <Logo />
         </Link>
 

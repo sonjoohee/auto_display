@@ -75,6 +75,7 @@ const PagePersona3 = () => {
   const [showInterviewReady, setShowInterviewReady] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [showEditPersona, setShowEditPersona] = useState(false);
+  const [personaListState, setPersonaListState] = useState(null);
 
   const handlePopupClose = () => {
     setShowInterviewReady(false);
@@ -259,6 +260,44 @@ const PagePersona3 = () => {
     setShowToast(true);
   }
 
+  // 페르소나 선택/해제 처리 함수 추가
+  const handlePersonaToggle = (persona, isCurrentlySelected) => {
+    if (isCurrentlySelected) {
+      // selected에서 제거하고 unselected로 이동
+      if (personaListState.selected.length > 1) {
+        setPersonaListState({
+          selected: personaListState.selected.filter(p => p.persona !== persona.persona),
+          unselected: [...personaListState.unselected, persona]
+        });
+      }
+    } else {
+      // 선택 개수가 5개 미만일 때만 추가 허용
+      if (personaListState.selected.length < 5) {
+        setPersonaListState({
+          selected: [...personaListState.selected, persona],
+          unselected: personaListState.unselected.filter(p => p.persona !== persona.persona)
+        });
+      }
+    }
+  };
+
+  // 편집 팝업 열기
+  const handleEditPersonaOpen = () => {
+    setPersonaListState(personaList); // 현재 상태 저장
+    setShowEditPersona(true);
+  };
+
+  // 이전으로 되돌리기
+  const handleRevertPersonaList = () => {
+    setPersonaListState(personaList);
+  };
+
+  // 편집 완료
+  const handleConfirmEditPersona = () => {
+    setPersonaList(personaListState);
+    setShowEditPersona(false);
+  };
+
   return (
     <>
       <ContentsWrap>
@@ -350,7 +389,7 @@ const PagePersona3 = () => {
                     <p>
                       추천된 페르소나와 인터뷰하세요. 그룹 또는 한 명의 타겟을
                       선택할 수 있습니다.
-                      <span onClick={() => setShowEditPersona(true)}>
+                      <span onClick={() => handleEditPersonaOpen()}>
                         <img src={images.PencilSquare} alt="" />
                         편집하기
                       </span>
@@ -426,54 +465,47 @@ const PagePersona3 = () => {
                 isFormValid={true}
                 onCancel={() => setShowEditPersona(false)}
                 onConfirm={() => {
-                  // 편집 완료 로직 구현
-                  setShowEditPersona(false);
+                  handleConfirmEditPersona();
                 }}
                 body={
                   <>
                     <Title>
                       <p>
                         Selected
-                        <span>
+                        <span onClick={handleRevertPersonaList}>
                           <img src={images.ClockCounterclockwise} alt="" />
                           이전으로 되돌리기
                         </span>
                       </p>
                     </Title>
-                    <MoleculePersonaCard 
-                      TitleFlex
-                      title="가족과 함께 여가를 보내는 활동 지향형 소비자"
-                      keywords={['키워드1', '키워드2', '키워드3']}
-                      isBasic={true}
-                      checked={true}
-                    />
-                    <MoleculePersonaCard 
-                      TitleFlex
-                      title="가족과 함께 여가를 보내는 활동 지향형 소비자"
-                      keywords={['키워드1', '키워드2', '키워드3']}
-                      isBasic={true}
-                      checked={true}
-                    />
+                    {personaListState.selected.map((persona, index) => (
+                      <MoleculePersonaCard 
+                        key={index}
+                        TitleFlex
+                        title={persona.persona}
+                        keywords={persona.keywords || []}
+                        isBasic={true}
+                        checked={true}
+                        onSelect={() => handlePersonaToggle(persona, true)}
+                      />
+                    ))}
 
                     <Title style={{marginTop: '20px'}}>
                       <p>
                         available
                       </p>
                     </Title>
-                    <MoleculePersonaCard 
-                      TitleFlex
-                      title="가족과 함께 여가를 보내는 활동 지향형 소비자"
-                      keywords={['키워드1', '키워드2', '키워드3']}
-                      isBasic={true}
-                      checked={true}
-                    />
-                    <MoleculePersonaCard 
-                      TitleFlex
-                      title="가족과 함께 여가를 보내는 활동 지향형 소비자"
-                      keywords={['키워드1', '키워드2', '키워드3']}
-                      isBasic={true}
-                      checked={true}
-                    />
+                    {personaListState.unselected.map((persona, index) => (
+                      <MoleculePersonaCard 
+                        key={index}
+                        TitleFlex
+                        title={persona.persona}
+                        keywords={persona.keywords || []}
+                        isBasic={true}
+                        checked={false}
+                        onSelect={() => handlePersonaToggle(persona, false)}
+                      />
+                    ))}
                   </>
                 }
               />

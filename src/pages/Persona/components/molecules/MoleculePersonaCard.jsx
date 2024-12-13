@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
@@ -21,22 +21,29 @@ const MoleculePersonaCard = ({
   TitleFlex = false,
   onSelect,
   currentSelection,
-  onClick
+  onClick,
+  checked = null,
 }) => {
   const [isChecked, setIsChecked] = useState(false);
+
+  useEffect(() => {
+    setIsChecked(checked);
+  }, [checked]);
 
   const handleCheck = () => {
     if (isCustom) {
       onClick && onClick();  // 팝업 표시를 위한 콜백 실행
       return;
     }
+    onSelect && onSelect();
+
     // 이미 선택된 상태면 항상 해제 가능
-    if (isChecked) {
+    if (isChecked && checked === null) {
       setIsChecked(false);
       onSelect(false);
     } 
     // 새로 선택하는 경우, 최대 선택 개수 확인
-    else if (currentSelection < 5) {
+    else if (currentSelection < 5 && checked === null) {
       setIsChecked(true);
       onSelect(true);
     }

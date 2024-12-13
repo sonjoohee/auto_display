@@ -550,6 +550,9 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
     if (onClose) {
       onClose();
     }
+    if (!isComplete) {
+      navigate(`/Main`, { replace: true });
+    }
   };
 
   const handleWarningContinue = () => {
