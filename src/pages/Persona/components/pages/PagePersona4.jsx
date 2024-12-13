@@ -34,6 +34,7 @@ import { updateProjectReportOnServer } from "../../../../utils/indexedDB";
 import { getProjectReportByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
+import OrganismToastPopup from "../organisms/OrganismToastPopup";
 
 const PagePersona4 = () => {
   const [reportList, setReportList] = useAtom(REPORT_LIST);
@@ -65,6 +66,7 @@ const PagePersona4 = () => {
   const [openCard, setOpenCard] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const cardRef = useRef(null);
+  const [showToast, setShowToast] = useState(false);
 
   const [steps, setSteps] = useState([
     { number: 1, label: "비즈니스 분석", active: true },
@@ -267,6 +269,10 @@ const PagePersona4 = () => {
     }));
   };
 
+  const handleEnterInterviewRoom = () => {
+    setShowToast(true);
+  }
+
   return (
     <>
       <ContentsWrap>
@@ -312,11 +318,8 @@ const PagePersona4 = () => {
                     <div>
                       <h3>
                         3. 문항별 결과
-                        <span>
-                          <img
-                            src={images.ReportSearch}
-                            alt="인터뷰 스크립트 보기"
-                          />
+                        <span onClick={handleEnterInterviewRoom}>
+                          <img src={images.ReportSearch} alt="인터뷰 스크립트 보기" />
                           인터뷰 스크립트 보기
                         </span>
                       </h3>
@@ -327,7 +330,7 @@ const PagePersona4 = () => {
                           isOpen={openAccordion === 1}
                         >
                           <span>1</span>
-                          <p>{existingQuestions?.questions[0]?.question}</p>
+                          <p>{existingQuestions?.questions[2]?.question}</p>
                         </AccordionHeader>
 
                         {openAccordion === 1 && (
@@ -369,7 +372,9 @@ const PagePersona4 = () => {
                           isOpen={openAccordion === 2}
                         >
                           <span>2</span>
-                          <p>{existingQuestions?.questions[1]?.question}</p>
+                          <p>
+                            {existingQuestions?.questions[3]?.question}
+                          </p>
                         </AccordionHeader>
 
                         {openAccordion === 2 && (
@@ -411,7 +416,9 @@ const PagePersona4 = () => {
                           isOpen={openAccordion === 3}
                         >
                           <span>3</span>
-                          <p>{existingQuestions?.questions[2]?.question}</p>
+                          <p>
+                            {existingQuestions?.questions[4]?.question}
+                          </p>
                         </AccordionHeader>
 
                         {openAccordion === 3 && (
@@ -515,7 +522,14 @@ const PagePersona4 = () => {
               </ProgressBar>
 
               <MoleculeStepIndicator steps={steps} activeStep={5} />
-            </Sidebar>
+            </Sidebar>  
+            {showToast && (
+              <OrganismToastPopup
+                isActive={showToast}
+                onClose={() => setShowToast(false)}
+                isComplete={true}
+              />
+            )}
           </AnalysisWrap>
         </MainContent>
       </ContentsWrap>
