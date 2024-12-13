@@ -399,6 +399,8 @@ export const PERSONA_LIST = atom({
   unselected: [],
 });
 
+export const SELECTED_PERSONA_LIST = atom([]);
+
 export const CUSTOMIZE_PERSONA_LIST = atom({
   selected: [],
   unselected: [],
@@ -426,9 +428,12 @@ export const CATEGORY_COLOR = atom({});
 
 export const PROJECT_LOAD_BUTTON_STATE = atom(false);
 export const REPORT_LOAD_BUTTON_STATE = atom(false);
+export const REPORT_DESCRIPTION_LOAD_BUTTON_STATE = atom(false);
 
 export const INTERVIEW_DATA = atom([]);
 export const INTERVIEW_REPORT = atom([]);
 export const INTERVIEW_REPORT_ADDITIONAL = atom([]);
 
 export const IS_EDIT_MODE = atom(false);
+
+export const IS_SHOW_TOAST = atom(false);

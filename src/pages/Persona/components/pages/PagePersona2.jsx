@@ -187,6 +187,7 @@ const PagePersona2 = () => {
         return "";
     }
   };
+
   useEffect(() => {
     const loadProject = async () => {
       if (projectLoadButtonState) {

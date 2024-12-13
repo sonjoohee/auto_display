@@ -5,7 +5,11 @@ import {
   PROJECT_DATA,
   IS_PERSONA_ACCESSIBLE,
   PROJECT_LOAD_BUTTON_STATE,
+  REPORT_LOAD_BUTTON_STATE,
+  REPORT_DESCRIPTION_LOAD_BUTTON_STATE,
   PROJECT_ID,
+  PROJECT_REPORT_ID,
+  PERSONA_STEP,
 } from "../../../AtomStates";
 import { useNavigate } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
@@ -14,6 +18,15 @@ import { Badge } from "../../../../assets/styles/Badge";
 import images from "../../../../assets/styles/Images";
 
 const OrganismProjectCard = ({ project, index }) => {
+  const [
+    reportDescriptionLoadButtonState,
+    setReportDescriptionLoadButtonState,
+  ] = useAtom(REPORT_DESCRIPTION_LOAD_BUTTON_STATE);
+  const [reportLoadButtonState, setReportLoadButtonState] = useAtom(
+    REPORT_LOAD_BUTTON_STATE
+  );
+  const [reportId, setReportId] = useAtom(PROJECT_REPORT_ID);
+  const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
   const [projectLoadButtonState, setProjectLoadButtonState] = useAtom(
     PROJECT_LOAD_BUTTON_STATE
@@ -68,9 +81,30 @@ const OrganismProjectCard = ({ project, index }) => {
 
   const navigateToPersonaPage = (projectId) => {
     setProjectId(project._id);
+    setPersonaStep(2);
     setProjectLoadButtonState(true);
     setIsPersonaAccessible(true);
     navigate(`/Persona/2/${projectId}`);
+  };
+
+  const navigateToInterviewReportPage = (reportId) => {
+    console.log("🚀 ~ navigateToInterviewReportPage ~ reportId:", reportId);
+    setProjectId(project._id);
+    setReportId(reportId);
+    setPersonaStep(4);
+    setReportLoadButtonState(true);
+    setIsPersonaAccessible(true);
+    navigate(`/Persona/4/${project._id}`);
+  };
+
+  const navigateToInterviewReportDescriptionPage = (reportId) => {
+    setProjectId(project._id);
+    setReportId(reportId);
+    setReportDescriptionLoadButtonState(true);
+    setPersonaStep(4);
+    setReportLoadButtonState(true);
+    setIsPersonaAccessible(true);
+    navigate(`/Persona/4/${project._id}`);
   };
 
   return (
@@ -129,60 +163,6 @@ const OrganismProjectCard = ({ project, index }) => {
           </ProjectButton>
         )}
       </ProjectItem>
-      {/* // =======
-//     <ProjectItem $isOpen={openStates[index]}>
-//       <ProjectInfo>
-//         <Name>
-//           <strong>{project.businessAnalysis.title}</strong>
-//           <span>
-//             생성일 - {new Date(project.updateDate).toLocaleDateString()}
-//           </span>
-//         </Name>
-//         <Persona>
-//           <div>
-//             <span>기본형</span>
-//             <p>{project.personaList || 0}명</p>
-//           </div>
-//           <div>
-//             <span>커스터마이즈</span>
-//             <p>
-//               {project.customPersonaList?.persona?.length || 0}명
-//               {project.customPersonaList?.persona?.length > 0 && <Badge New />}
-//             </p>
-//           </div>
-//         </Persona>
-//         <Recruit>
-//           <span>
-//             {project.requestPersonaList?.persona?.length || 0}개 페르소나
-//           </span>
-//           <p className={getRecruitStatus(project)}>
-//             {getRecruitStatusText(project)}
-//           </p>
-//         </Recruit>
-//         <Report>
-//           <div>
-//             <span>Report</span>
-//             <p>{project.projectReportList?.length || 0}건</p>
-//           </div>
-//           <div>
-//             <button onClick={() => toggleView(index)}>자세히 보기</button>
-//           </div>
-//         </Report>
-//       </ProjectInfo> */}
-
-      {/* //       {openStates[index] && (
-//         <ProjectButton>
-//           <p>
-//             <img src={images.PeopleFillPrimary} alt="" />
-//             맞춤 페르소나와 인터뷰를 시작해보세요!
-//           </p>
-//           <button onClick={() => navigate(`/Persona/${project._id}`)}>
-//             바로가기
-//           </button>
-//         </ProjectButton>
-//       )}
-//     </ProjectItem>
-// >>>>>>> main */}
 
       {openStates[index] && (
         <ProjectView className={closingStates[index] ? "closing" : ""}>
@@ -206,8 +186,22 @@ const OrganismProjectCard = ({ project, index }) => {
                   </div>
                 </div>
                 <div className="button">
-                  <button className="view">인터뷰 상세 보기</button>
-                  <button className="analysis">결과 분석 보기</button>
+                  <button
+                    onClick={() =>
+                      navigateToInterviewReportDescriptionPage(report.reportId)
+                    }
+                    className="view"
+                  >
+                    인터뷰 상세 보기
+                  </button>
+                  <button
+                    onClick={() =>
+                      navigateToInterviewReportPage(report.reportId)
+                    }
+                    className="analysis"
+                  >
+                    결과 분석 보기
+                  </button>
                 </div>
               </ViewInfo>
             ))
