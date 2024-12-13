@@ -277,7 +277,7 @@ const PagePersona2 = () => {
               "Maximum retry attempts reached. Empty response persists."
             );
           }
- 
+
           const requestPersonaData = {
             persona: requestPersonaList.persona_spectrum,
             positioning: requestPersonaList.positioning_analysis,
@@ -287,7 +287,7 @@ const PagePersona2 = () => {
           await updateProjectOnServer(
             projectId,
             {
-              personaList: personaList,
+              personaList: personaList.unselected.length,
               requestPersonaList: requestPersonaData,
             },
             isLoggedIn
