@@ -255,13 +255,12 @@ const PagePersona2 = () => {
               !requestPersonaList.persona_spectrum[2].persona_3.hasOwnProperty(
                 "keyword"
               ) ||
-              requestPersonaList.persona_spectrum[0].persona_1.keyword
-                .length != 3 ||
-              requestPersonaList.persona_spectrum[1].persona_2.keyword
-                .length != 3 ||
-              requestPersonaList.persona_spectrum[2].persona_3.keyword
-                .length != 3
-              )
+              requestPersonaList.persona_spectrum[0].persona_1.keyword.length !=
+                3 ||
+              requestPersonaList.persona_spectrum[1].persona_2.keyword.length !=
+                3 ||
+              requestPersonaList.persona_spectrum[2].persona_3.keyword.length !=
+                3)
           ) {
             response = await axios.post(
               "https://wishresearch.kr/person/persona_request",
@@ -277,7 +276,7 @@ const PagePersona2 = () => {
               "Maximum retry attempts reached. Empty response persists."
             );
           }
- 
+
           const requestPersonaData = {
             persona: requestPersonaList.persona_spectrum,
             positioning: requestPersonaList.positioning_analysis,
@@ -287,7 +286,7 @@ const PagePersona2 = () => {
           await updateProjectOnServer(
             projectId,
             {
-              personaList: personaList,
+              personaList: personaList.unselected.length,
               requestPersonaList: requestPersonaData,
             },
             isLoggedIn

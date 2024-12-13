@@ -219,10 +219,13 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
 
             let retryCount = 0;
             const maxRetries = 10;
-      
+
             while (
               retryCount < maxRetries &&
-              (!response || !response.data || !response.data.hasOwnProperty("answer") || !response.data.answer)
+              (!response ||
+                !response.data ||
+                !response.data.hasOwnProperty("answer") ||
+                !response.data.answer)
             ) {
               response = await axios.post(
                 "https://wishresearch.kr/person/persona_interview_module",
@@ -308,28 +311,33 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
                   let responseReport;
                   let retryCount = 0;
                   const maxRetries = 10;
-                
+
                   while (retryCount < maxRetries) {
                     responseReport = await axios.post(
                       "https://wishresearch.kr/person/interview_reports",
                       finalData1,
                       axiosConfig
                     );
-                
+
                     // 응답 데이터가 유효한지 확인
-                    if (responseReport && responseReport.data && 
-                        responseReport.data.length > 0 && 
-                        responseReport.data[0].title && 
-                        responseReport.data[0].text) {
+                    if (
+                      responseReport &&
+                      responseReport.data &&
+                      responseReport.data.length > 0 &&
+                      responseReport.data[0].title &&
+                      responseReport.data[0].text
+                    ) {
                       break;
                     }
-                
+
                     retryCount++;
-                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    await new Promise((resolve) => setTimeout(resolve, 1000));
                   }
-                
+
                   if (retryCount === maxRetries) {
-                    throw new Error("Maximum retry attempts reached for interview reports.");
+                    throw new Error(
+                      "Maximum retry attempts reached for interview reports."
+                    );
                   }
 
                   setInterviewReport(responseReport.data);
@@ -352,33 +360,38 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
 
                   let responseReportAdditional;
                   retryCount = 0;
-                  
+
                   while (retryCount < maxRetries) {
                     responseReportAdditional = await axios.post(
                       "https://wishresearch.kr/person/interview_report_additional",
                       finalData2,
                       axiosConfig
                     );
-                  
+
                     // 응답 데이터의 유효성 검사
-                    if (responseReportAdditional && responseReportAdditional.data && 
-                        responseReportAdditional.data.title && 
-                        responseReportAdditional.data.suggestion_list && 
-                        responseReportAdditional.data.suggestion_list.length === 5 &&
-                        responseReportAdditional.data.suggestion_list.every(item => 
-                          item.title && 
-                          item.title_text && 
-                          item.description_text
-                        )) {
+                    if (
+                      responseReportAdditional &&
+                      responseReportAdditional.data &&
+                      responseReportAdditional.data.title &&
+                      responseReportAdditional.data.suggestion_list &&
+                      responseReportAdditional.data.suggestion_list.length ===
+                        5 &&
+                      responseReportAdditional.data.suggestion_list.every(
+                        (item) =>
+                          item.title && item.title_text && item.description_text
+                      )
+                    ) {
                       break;
                     }
-                  
+
                     retryCount++;
-                    await new Promise(resolve => setTimeout(resolve, 1000)); // 1초 대기
+                    await new Promise((resolve) => setTimeout(resolve, 1000)); // 1초 대기
                   }
-                  
+
                   if (retryCount === maxRetries) {
-                    throw new Error("Maximum retry attempts reached for interview report additional.");
+                    throw new Error(
+                      "Maximum retry attempts reached for interview report additional."
+                    );
                   }
 
                   setInterviewReportAdditional(responseReportAdditional.data);
@@ -520,6 +533,7 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
   const handleCheckResult = async () => {
     handleWarningClose();
     setIsPersonaAccessible(true);
+
     if (!reportId && isPersonaAccessible) {
       try {
         let newReportId = await createProjectReportOnServer(isLoggedIn);

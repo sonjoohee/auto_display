@@ -49,8 +49,9 @@ const PageMyProject = () => {
   useEffect(() => {
     const loadProjectList = async () => {
       // 1. 로그인 여부 확인
-      console.log("isLoggedIn", isLoggedIn);
+      console.log("isLoggedIn22222222222222222", isLoggedIn);
       if (isLoggedIn) {
+        console.log("🚀 ~ loadProjectList ~ isLoggedIn:", isLoggedIn);
         // 2. 로그인 상태라면 서버에서 새로운 대화 ID를 생성하거나, 저장된 대화를 불러옴
         const savedProjectListInfo = await getProjectListByIdFromIndexedDB(
           isLoggedIn
