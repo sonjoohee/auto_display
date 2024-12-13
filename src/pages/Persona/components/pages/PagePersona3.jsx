@@ -7,14 +7,14 @@ import { useAtom } from "jotai";
 import {
   IS_PERSONA_ACCESSIBLE,
   IS_LOGGED_IN,
-  CONVERSATION_ID,
-  INPUT_BUSINESS_INFO,
-  TITLE_OF_BUSINESS_INFORMATION,
-  MAIN_FEATURES_OF_BUSINESS_INFORMATION,
   PERSONA_STEP,
   SELECTED_INTERVIEW_PURPOSE,
   PERSONA_LIST,
-  PERSONA_BUTTON_STATE_3
+  PERSONA_BUTTON_STATE_3,
+  BUSINESS_ANALYSIS,
+  REQUEST_PERSONA_LIST,
+  PROJECT_LOAD_BUTTON_STATE,
+  PROJECT_ID,
 } from "../../../AtomStates";
 import {
   ContentsWrap,
@@ -39,33 +39,29 @@ import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
 import MoleculeInterviewCard from "../molecules/MoleculeInterviewCard";
 import MoleculePersonaCard from "../molecules/MoleculePersonaCard";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
-import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
+import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import OrganismBusinessAnalysis from "../organisms/OrganismBisinessAnalysis";
 import PopupWrap from "../../../../assets/styles/Popup";
 import OrganismToastPopup from "../organisms/OrganismToastPopup";
 
 const PagePersona3 = () => {
   const navigate = useNavigate();
+  const [projectId, setProjectId] = useAtom(PROJECT_ID);
+  const [projectLoadButtonState, setProjectLoadButtonState] = useAtom(
+    PROJECT_LOAD_BUTTON_STATE
+  );
   const [personaButtonState3, setPersonaButtonState3] = useAtom(PERSONA_BUTTON_STATE_3);
-  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
-  const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
+  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);  
   const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
     IS_PERSONA_ACCESSIBLE
   );
-  const [inputBusinessInfo, setInputBusinessInfo] =
-    useAtom(INPUT_BUSINESS_INFO);
-  const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
-    TITLE_OF_BUSINESS_INFORMATION
-  );
-  const [
-    mainFeaturesOfBusinessInformation,
-    setMainFeaturesOfBusinessInformation,
-  ] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
+  const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
   const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
   const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(
     SELECTED_INTERVIEW_PURPOSE
   );
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
+  const [requestPersonaList, setRequestPersonaList] = useAtom(REQUEST_PERSONA_LIST);
 
   const [interviewPurpose, setInterviewPurpose] = useState("");
   const [selectedInterviewType, setSelectedInterviewType] =
@@ -106,33 +102,27 @@ const PagePersona3 = () => {
     };
   }, [navigate]);
 
-  useEffect(() => {
-    const loadConversation = async () => {
-      // 1. 로그인 여부 확인
-      if (isLoggedIn) {
-        // 3. 대화 ID가 이미 존재하면 IndexedDB에서 대화 불러오기
-        const savedConversation = await getConversationByIdFromIndexedDB(
-          conversationId,
-          isLoggedIn
-        );
+  // useEffect(() => {
+  //   const loadProject = async () => {
 
-        if (savedConversation) {
-          const analysisData = savedConversation.analysisReportData || {};
-          setTitleOfBusinessInfo(analysisData.title || "");
-          setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
-          setInputBusinessInfo(savedConversation.inputBusinessInfo);
-          setPersonaList(savedConversation.personaList);
-          setSelectedInterviewPurpose(
-            savedConversation.selectedInterviewPurpose
-          );
-        }
+  //     if (projectLoadButtonState) {
 
-        // setIsLoadingPage(false); // 로딩 완료
-      }
-    };
+  //       const savedProjectInfo = await getProjectByIdFromIndexedDB(
+  //         projectId,
+  //         projectLoadButtonState
+  //       );
+  //       if (savedProjectInfo) {
+  //         setBusinessAnalysis(savedProjectInfo.businessAnalysis);
+  //         setPersonaList(savedProjectInfo.personaList);
+  //         setRequestPersonaList(savedProjectInfo.requestPersonaList);
+  //       }
+  //       // setIsLoadingPage(false); // 로딩 완료
+  //     }
+  //     setProjectLoadButtonState(false);
+  //   };
 
-    loadConversation();
-  }, [conversationId, isLoggedIn, navigate]);
+  //   loadProject();
+  // }, [projectId, projectLoadButtonState, navigate]);
 
   // if (isLoadingPage) {
   //   return <div>Loading...</div>;

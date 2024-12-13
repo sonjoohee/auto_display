@@ -135,22 +135,40 @@ const PagePersona2 = () => {
 
   useEffect(() => {
     const loadProject = async () => {
-      // 1. 로그인 여부 확인
 
       if (projectLoadButtonState) {
-        // 2. 로그인 상태라면 서버에서 새로운 대화 ID를 생성하거나, 저장된 대화를 불러옴
+
         const savedProjectInfo = await getProjectByIdFromIndexedDB(
           projectId,
           projectLoadButtonState
         );
         if (savedProjectInfo) {
-          const analysisData = savedProjectInfo.analysisReportData || {};
-          setTitleOfBusinessInfo(analysisData.title || "");
-          setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
-          setInputBusinessInfo(savedProjectInfo.inputBusinessInfo);
-          setPersonaList(savedProjectInfo.personaList);
+          setBusinessAnalysis(savedProjectInfo.businessAnalysis);
           setRequestPersonaList(savedProjectInfo.requestPersonaList);
-          setReportList(savedProjectInfo.reportList || []);
+
+          let unselectedPersonas = [];
+          let data, response;
+
+          // 카테고리별로 페르소나 요청
+          for (const category of Object.values(savedProjectInfo.businessAnalysis.category)) {
+            data = {
+              target: category,
+            };
+
+            response = await axios.post(
+              "https://wishresearch.kr/person/find", 
+              data,
+              axiosConfig
+            );
+
+            unselectedPersonas.push(...response.data);
+          }
+
+          let personaList = {
+            selected: [],
+            unselected: unselectedPersonas,
+          };
+          setPersonaList(personaList);
         }
         // setIsLoadingPage(false); // 로딩 완료
       }

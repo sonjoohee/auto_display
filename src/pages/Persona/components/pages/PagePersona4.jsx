@@ -83,12 +83,12 @@ const PagePersona4 = () => {
     if (!isPersonaAccessible) {
       navigate("/Main"); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
     }
-
+  
     // 페이지를 나갈 때 접근 가능 여부 초기화
     return () => {
       setIsPersonaAccessible(false); // 페이지 떠날 때 접근 불가로 설정
     };
-  }, [navigate]);
+  }, [navigate, isPersonaAccessible, setIsPersonaAccessible]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
