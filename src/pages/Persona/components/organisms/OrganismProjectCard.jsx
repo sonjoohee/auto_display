@@ -11,6 +11,17 @@ const OrganismProjectCard = ({ project, index }) => {
   const [openStates, setOpenStates] = useState({});
   const [closingStates, setClosingStates] = useState({});
 
+  //   const toggleView = (projectId) => {
+  //     if (openStates[projectId]) {
+  //       setClosingStates((prev) => ({ ...prev, [projectId]: true }));
+  //       setTimeout(() => {
+  //         setOpenStates((prev) => ({ ...prev, [projectId]: false }));
+  //         setClosingStates((prev) => ({ ...prev, [projectId]: false }));
+  //       }, 280);
+  //     } else {
+  //       setOpenStates((prev) => ({ ...prev, [projectId]: true }));
+  //     }
+  //   };
   const toggleView = (projectId) => {
     if (openStates[projectId]) {
       setClosingStates((prev) => ({ ...prev, [projectId]: true }));
@@ -22,7 +33,6 @@ const OrganismProjectCard = ({ project, index }) => {
       setOpenStates((prev) => ({ ...prev, [projectId]: true }));
     }
   };
-
   const getRecruitStatusText = (project) => {
     const selectedCount = project.personaList?.selected?.length || 0;
     const requestCount = project.requestPersonaList?.persona?.length || 0;
@@ -41,82 +51,136 @@ const OrganismProjectCard = ({ project, index }) => {
 
   return (
     <>
-    <ProjectItem $isOpen={openStates[index]}>
-      <ProjectInfo>
-        <Name>
-          <strong>{project.businessAnalysis.title}</strong>
-          <span>
-            생성일 - {new Date(project.updateDate).toLocaleDateString()}
-          </span>
-        </Name>
-        <Persona>
-          <div>
-            <span>기본형</span>
-            <p>{project.personaList || 0}명</p>
-          </div>
-          <div>
-            <span>커스터마이즈</span>
-            <p>
-              {project.customPersonaList?.persona?.length || 0}명
-              {project.customPersonaList?.persona?.length > 0 && <Badge New />}
-            </p>
-          </div>
-        </Persona>
-        <Recruit>
-          <span>
-            {project.requestPersonaList?.persona?.length || 0}개 페르소나
-          </span>
-          <p className={getRecruitStatus(project)}>
-            {getRecruitStatusText(project)}
-          </p>
-        </Recruit>
-        <Report>
-          <div>
-            <span>Report</span>
-            <p>{project.projectReportList?.length || 0}건</p>
-          </div>
-          <div>
-            <button onClick={() => toggleView(index)}>자세히 보기</button>
-          </div>
-        </Report>
-      </ProjectInfo>
 
-      {openStates[index] && (
-        <ProjectButton>
-          <p>
-            <img src={images.PeopleFillPrimary} alt="" />
-            맞춤 페르소나와 인터뷰를 시작해보세요!
-          </p>
-          <button onClick={() => navigate(`/Persona/${project._id}`)}>
-            바로가기
-          </button>
-        </ProjectButton>
-      )}
-    </ProjectItem>
+      <ProjectItem $isOpen={openStates[index]}>
+        <ProjectInfo>
+          <Name>
+            <strong>{project.businessAnalysis.title}</strong>
+            <span>
+              생성일 - {new Date(project.updateDate).toLocaleDateString()}
+            </span>
+          </Name>
+          <Persona>
+            <div>
+              <span>기본형</span>
+              <p>{project.personaList || 0}명</p>
+            </div>
+            <div>
+              <span>커스터마이즈</span>
+              <p>
+                {project.customPersonaList?.persona?.length || 0}명
+                {project.customPersonaList?.persona?.length > 0 && (
+                  <Badge New />
+                )}
+              </p>
+            </div>
+          </Persona>
+          <Recruit>
+            <span>
+              {project.requestPersonaList?.persona?.length || 0}개 페르소나
+            </span>
+            <p className={getRecruitStatus(project)}>
+              {getRecruitStatusText(project)}
+            </p>
+          </Recruit>
+          <Report>
+            <div>
+              <span>Report</span>
+              <p>{project.reportList?.length || 0}건</p>
+            </div>
+            <div>
+              <button onClick={() => toggleView(index)}>자세히 보기</button>
+            </div>
+          </Report>
+        </ProjectInfo>
+
+        {openStates[index] && (
+          <ProjectButton>
+            <p>6명의 맞춤 페르소나가 사용자님을 기다리고 있어요!</p>
+            <button onClick={() => navigate(`/Persona/${project._id}`)}>
+              바로가기
+            </button>
+          </ProjectButton>
+        )}
+      </ProjectItem>
+// =======
+//     <ProjectItem $isOpen={openStates[index]}>
+//       <ProjectInfo>
+//         <Name>
+//           <strong>{project.businessAnalysis.title}</strong>
+//           <span>
+//             생성일 - {new Date(project.updateDate).toLocaleDateString()}
+//           </span>
+//         </Name>
+//         <Persona>
+//           <div>
+//             <span>기본형</span>
+//             <p>{project.personaList || 0}명</p>
+//           </div>
+//           <div>
+//             <span>커스터마이즈</span>
+//             <p>
+//               {project.customPersonaList?.persona?.length || 0}명
+//               {project.customPersonaList?.persona?.length > 0 && <Badge New />}
+//             </p>
+//           </div>
+//         </Persona>
+//         <Recruit>
+//           <span>
+//             {project.requestPersonaList?.persona?.length || 0}개 페르소나
+//           </span>
+//           <p className={getRecruitStatus(project)}>
+//             {getRecruitStatusText(project)}
+//           </p>
+//         </Recruit>
+//         <Report>
+//           <div>
+//             <span>Report</span>
+//             <p>{project.projectReportList?.length || 0}건</p>
+//           </div>
+//           <div>
+//             <button onClick={() => toggleView(index)}>자세히 보기</button>
+//           </div>
+//         </Report>
+//       </ProjectInfo>
+
+//       {openStates[index] && (
+//         <ProjectButton>
+//           <p>
+//             <img src={images.PeopleFillPrimary} alt="" />
+//             맞춤 페르소나와 인터뷰를 시작해보세요!
+//           </p>
+//           <button onClick={() => navigate(`/Persona/${project._id}`)}>
+//             바로가기
+//           </button>
+//         </ProjectButton>
+//       )}
+//     </ProjectItem>
+// >>>>>>> main
 
       {openStates[index] && (
         <ProjectView className={closingStates[index] ? "closing" : ""}>
-          {project.projectReportList && project.projectReportList.length > 0 ? (
-            project.projectReportList.map((report, reportIndex) => (
+          {project.reportList && project.reportList.length > 0 ? (
+            project.reportList.map((report, reportIndex) => (
               <ViewInfo key={reportIndex}>
                 <div className="title">
-                  {report.theory_name}
+                  {report.reportTitle}
                   <span>
-                    {new Date(project.updateDate).toLocaleDateString()}
+                    {new Date(report.createDate).toLocaleDateString()}
                   </span>
                 </div>
                 <div className="info">
                   <div>
                     <span>문항수</span>
-                    <p>{report.questions?.length || 0}개</p>
+                    <p>{report.interviewData || 0}개</p>
                   </div>
                   <div>
                     <span>참여페르소나</span>
-                    <p>{project.personaList?.selected?.length || 0}명</p>
+                    <p>{report.selectedPersona || 0}명</p>
                   </div>
                 </div>
                 <div className="button">
-                  <button className="view">자세히 보기</button>
+                  <button className="view">인터뷰 상세 보기</button>
                   <button className="analysis">결과 분석 보기</button>
                 </div>
               </ViewInfo>
@@ -126,8 +190,16 @@ const OrganismProjectCard = ({ project, index }) => {
               <div>
                 <img src={images.FileFill} alt="" />
                 <div>
+// <<<<<<< branch-fixProjectCard
+//                   현재 리포트가 비어 있습니다.
+//                   <br />
+//                   추천 페르소나와 인터뷰를 완료하시면 결과 리포트를 확인할 수
+//                   있습니다.
+//                   <span>맞춤페르소나와 인터뷰 진행하기</span>
+// =======
                   현재 리포트가 비어 있습니다.<br />추천 페르소나와 인터뷰를 완료하시면 결과 리포트를 확인할 수 있습니다.
                   <Button Medium Primary Round>맞춤페르소나와 인터뷰 진행하기</Button>
+// >>>>>>> main
                 </div>
               </div>
             </ViewInfoNodata>

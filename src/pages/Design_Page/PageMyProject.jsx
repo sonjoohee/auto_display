@@ -3,7 +3,10 @@ import styled from "styled-components";
 import { palette } from "../../assets/styles/Palette";
 import IncNavigation from "./IncNavigation";
 import Header from "./IncHeader";
-import { ContentsWrap, MainContent } from "../../assets/styles/BusinessAnalysisStyle";
+import {
+  ContentsWrap,
+  MainContent,
+} from "../../assets/styles/BusinessAnalysisStyle";
 import { Badge } from "../../assets/styles/Badge";
 
 const PageMyProject = () => {
@@ -13,14 +16,14 @@ const PageMyProject = () => {
   const toggleView = (projectId) => {
     if (openStates[projectId]) {
       // 닫을 때
-      setClosingStates(prev => ({ ...prev, [projectId]: true }));
+      setClosingStates((prev) => ({ ...prev, [projectId]: true }));
       setTimeout(() => {
-        setOpenStates(prev => ({ ...prev, [projectId]: false }));
-        setClosingStates(prev => ({ ...prev, [projectId]: false }));
+        setOpenStates((prev) => ({ ...prev, [projectId]: false }));
+        setClosingStates((prev) => ({ ...prev, [projectId]: false }));
       }, 280); // 애니메이션 시간보다 살짝 짧게
     } else {
       // 열 때
-      setOpenStates(prev => ({ ...prev, [projectId]: true }));
+      setOpenStates((prev) => ({ ...prev, [projectId]: true }));
     }
   };
 
@@ -47,7 +50,9 @@ const PageMyProject = () => {
                 <ProjectItem $isOpen={openStates[1]}>
                   <ProjectInfo>
                     <Name>
-                      <strong>쉽고 빠르게 송금 및 이체 할 수 있는 어플리케이션</strong>
+                      <strong>
+                        쉽고 빠르게 송금 및 이체 할 수 있는 어플리케이션
+                      </strong>
                       <span>생성일 - 2024. 10. 26</span>
                     </Name>
                     <Persona>
@@ -89,7 +94,7 @@ const PageMyProject = () => {
                 </ProjectItem>
 
                 {openStates[1] && (
-                  <ProjectView className={closingStates[1] ? 'closing' : ''}>
+                  <ProjectView className={closingStates[1] ? "closing" : ""}>
                     <ViewInfo>
                       <div className="title">
                         제품 경험 평가
@@ -136,7 +141,9 @@ const PageMyProject = () => {
                 <ProjectItem $isOpen={openStates[2]}>
                   <ProjectInfo>
                     <Name>
-                      <strong>쉽고 빠르게 송금 및 이체 할 수 있는 어플리케이션</strong>
+                      <strong>
+                        쉽고 빠르게 송금 및 이체 할 수 있는 어플리케이션
+                      </strong>
                       <span>생성일 - 2024. 10. 26</span>
                     </Name>
                     <Persona>
@@ -175,7 +182,7 @@ const PageMyProject = () => {
                 </ProjectItem>
 
                 {openStates[2] && (
-                  <ProjectView className={closingStates[2] ? 'closing' : ''}>
+                  <ProjectView className={closingStates[2] ? "closing" : ""}>
                     <ViewInfo>
                       <div className="title">
                         제품 경험 평가
@@ -222,7 +229,9 @@ const PageMyProject = () => {
                 <ProjectItem $isOpen={openStates[3]}>
                   <ProjectInfo>
                     <Name>
-                      <strong>쉽고 빠르게 송금 및 이체 할 수 있는 어플리케이션</strong>
+                      <strong>
+                        쉽고 빠르게 송금 및 이체 할 수 있는 어플리케이션
+                      </strong>
                       <span>생성일 - 2024. 10. 26</span>
                     </Name>
                     <Persona>
@@ -261,13 +270,16 @@ const PageMyProject = () => {
                 </ProjectItem>
 
                 {openStates[3] && (
-                  <ProjectView className={closingStates[2] ? 'closing' : ''}>
+                  <ProjectView className={closingStates[2] ? "closing" : ""}>
                     <ViewInfoNodata>
                       <div>
                         <img src="" alt="nodata" />
 
                         <div>
-                          현재 리포트가 비어 있습니다.<br />추천 페르소나와 인터뷰를 완료하시면 결과 리포트를 확인할 수 있습니다.
+                          현재 리포트가 비어 있습니다.
+                          <br />
+                          추천 페르소나와 인터뷰를 완료하시면 결과 리포트를
+                          확인할 수 있습니다.
                           <span>맞춤페르소나와 인터뷰 진행하기</span>
                         </div>
                       </div>
@@ -284,7 +296,6 @@ const PageMyProject = () => {
 };
 
 export default PageMyProject;
-
 
 const MyProjectWrap = styled.div`
   width: 100%;
@@ -361,8 +372,10 @@ const ProjectItem = styled.div`
   background-color: ${palette.white};
   z-index: 1;
   transition: box-shadow 0.3s ease-in-out;
-  
-  ${({ $isOpen }) => $isOpen && `
+
+  ${({ $isOpen }) =>
+    $isOpen &&
+    `
     box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
   `}
 `;
@@ -558,7 +571,7 @@ const ProjectView = styled.div`
   animation: slideDown 0.3s ease-in-out;
   transform-origin: top;
   opacity: 1;
-  
+
   &.closing {
     animation: slideUp 0.3s ease-in-out;
   }
@@ -667,7 +680,7 @@ const ViewInfo = styled.div`
       &.analysis {
         color: ${palette.primary};
         border: 1px solid ${palette.primary};
-        background: #E9F1FF;
+        background: #e9f1ff;
       }
     }
   }
@@ -701,7 +714,7 @@ const ViewInfoNodata = styled(ViewInfo)`
         padding: 6px 10px;
         border-radius: 6px;
         border: 1px solid ${palette.primary};
-        background-color: #E9F1FF;
+        background-color: #e9f1ff;
         cursor: pointer;
       }
     }

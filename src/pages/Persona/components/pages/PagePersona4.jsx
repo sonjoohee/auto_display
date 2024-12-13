@@ -130,7 +130,7 @@ const PagePersona4 = () => {
         setReportLoadButtonState(false);
       } else {
         // 2. 로그인 상태라면 서버에서 새로운 대화 ID를 생성하거나, 저장된 대화를 불러옴
-        if (reportId && isPersonaAccessible) {
+        if (reportId) {
           await updateProjectReportOnServer(
             reportId,
             {
@@ -150,8 +150,8 @@ const PagePersona4 = () => {
                 {
                   reportId: reportId,
                   reportTitle: selectedInterviewPurpose,
-                  interviewQuestionLength: interviewQuestionList.length,
-                  selectedPersona: personaList.selected,
+                  interviewData: interviewData.length,
+                  selectedPersona: personaList.selected.length,
                   createDate: new Date().toISOString(),
                 },
               ],
@@ -234,44 +234,44 @@ const PagePersona4 = () => {
     const viewpointMapping = {
       "브랜드 강화 관점": {
         icon: images.DiscoveryBrand,
-        badge: { icon: "🌟", text: "브랜드 파워" }
+        badge: { icon: "🌟", text: "브랜드 파워" },
       },
       "타겟팅 관점": {
         icon: images.DiscoveryInsight,
-        badge: { icon: "🎯", text: "마케팅 인사이트" }
+        badge: { icon: "🎯", text: "마케팅 인사이트" },
       },
       "세그먼트화 관점": {
         icon: images.DiscoveryInsight,
-        badge: { icon: "🎟", text: "타겟 세분화" }
+        badge: { icon: "🎟", text: "타겟 세분화" },
       },
       "사업 전략 관점": {
         icon: images.DiscoverySuccess,
-        badge: { icon: "🚀", text: "성공 전략" }
+        badge: { icon: "🚀", text: "성공 전략" },
       },
       "고객 경험 개선 관점": {
         icon: images.DiscoveryExperience,
-        badge: { icon: "🤝", text: "고객 경험" }
+        badge: { icon: "🤝", text: "고객 경험" },
       },
       "성장 전략 관점": {
         icon: images.DiscoveryScale,
-        badge: { icon: "📈", text: "스케일업" }
+        badge: { icon: "📈", text: "스케일업" },
       },
       "비즈니스 모델 캔버스 관점": {
         icon: images.DiscoveryBM,
-        badge: { icon: "📋", text: "BM 전략" }
-      }
+        badge: { icon: "📋", text: "BM 전략" },
+      },
     };
-  
-    return suggestionList.map(suggestion => ({
+
+    return suggestionList.map((suggestion) => ({
       ...viewpointMapping[suggestion.title],
       title: suggestion.title_text,
-      description: suggestion.description_text
+      description: suggestion.description_text,
     }));
   };
 
   const handleEnterInterviewRoom = () => {
     setShowToast(true);
-  }
+  };
 
   return (
     <>
@@ -319,7 +319,10 @@ const PagePersona4 = () => {
                       <h3>
                         3. 문항별 결과
                         <span onClick={handleEnterInterviewRoom}>
-                          <img src={images.ReportSearch} alt="인터뷰 스크립트 보기" />
+                          <img
+                            src={images.ReportSearch}
+                            alt="인터뷰 스크립트 보기"
+                          />
                           인터뷰 스크립트 보기
                         </span>
                       </h3>
@@ -372,9 +375,7 @@ const PagePersona4 = () => {
                           isOpen={openAccordion === 2}
                         >
                           <span>2</span>
-                          <p>
-                            {existingQuestions?.questions[3]?.question}
-                          </p>
+                          <p>{existingQuestions?.questions[3]?.question}</p>
                         </AccordionHeader>
 
                         {openAccordion === 2 && (
@@ -416,9 +417,7 @@ const PagePersona4 = () => {
                           isOpen={openAccordion === 3}
                         >
                           <span>3</span>
-                          <p>
-                            {existingQuestions?.questions[4]?.question}
-                          </p>
+                          <p>{existingQuestions?.questions[4]?.question}</p>
                         </AccordionHeader>
 
                         {openAccordion === 3 && (
@@ -486,27 +485,32 @@ const PagePersona4 = () => {
                       transition: "transform 0.3s ease-in-out",
                     }}
                   >
-                  {getCardData(interviewReportAdditional.suggestion_list).map((item, index) => (
-                    <Card key={index} onClick={() => handleCardClick(index)}>
-                      {openCard !== index ? (
-                        <>
-                          <CardIcon>
-                            <img src={item.icon} />
-                          </CardIcon>
-                          <CardBadge text={item.badge.text}>
-                            <span>{item.badge.icon}</span>
-                            {item.badge.text}
-                          </CardBadge>
-                          <CardTitle>{item.title}</CardTitle>
-                        </>
-                      ) : (
-                        <CardDescription>
-                          <strong>{item.title}</strong>
-                          <p>{item.description}</p>
-                        </CardDescription>
-                      )}
-                    </Card>
-                  ))}
+                    {getCardData(interviewReportAdditional.suggestion_list).map(
+                      (item, index) => (
+                        <Card
+                          key={index}
+                          onClick={() => handleCardClick(index)}
+                        >
+                          {openCard !== index ? (
+                            <>
+                              <CardIcon>
+                                <img src={item.icon} />
+                              </CardIcon>
+                              <CardBadge text={item.badge.text}>
+                                <span>{item.badge.icon}</span>
+                                {item.badge.text}
+                              </CardBadge>
+                              <CardTitle>{item.title}</CardTitle>
+                            </>
+                          ) : (
+                            <CardDescription>
+                              <strong>{item.title}</strong>
+                              <p>{item.description}</p>
+                            </CardDescription>
+                          )}
+                        </Card>
+                      )
+                    )}
                   </div>
                 </FindCard>
               </InterviewFind>
@@ -522,7 +526,7 @@ const PagePersona4 = () => {
               </ProgressBar>
 
               <MoleculeStepIndicator steps={steps} activeStep={5} />
-            </Sidebar>  
+            </Sidebar>
             {showToast && (
               <OrganismToastPopup
                 isActive={showToast}

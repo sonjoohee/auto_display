@@ -82,35 +82,39 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
           const existingQuestions = interviewQuestionList.find(
             (item) => item.theory_name === selectedInterviewPurpose
           );
-          
+
           if (existingQuestions) {
             const questions = existingQuestions.questions.slice(2);
             setInterviewQuestionListState(questions);
-            
+
             // 모든 질문을 Complete 상태로 설정
-            const completedStatus = new Array(questions.length).fill('Complete');
+            const completedStatus = new Array(questions.length).fill(
+              "Complete"
+            );
             setInterviewStatus(completedStatus);
 
-            console.log(completedStatus); 
-            
+            console.log(completedStatus);
+
             // interviewData에서 답변 설정
             const newAnswers = {};
             questions.forEach((_, index) => {
               const answers = interviewData[index][`answer_${index + 1}`];
-              newAnswers[index] = personaList.selected.map((persona, pIndex) => ({
-                persona: persona,
-                answer: answers[pIndex]
-              }));
+              newAnswers[index] = personaList.selected.map(
+                (persona, pIndex) => ({
+                  persona: persona,
+                  answer: answers[pIndex],
+                })
+              );
             });
             setAnswers(newAnswers);
-  
+
             // 모든 답변을 보이도록 설정
             const allVisible = {};
             questions.forEach((_, index) => {
               allVisible[index] = true;
             });
             setVisibleAnswers(allVisible);
-            
+
             setIsLoadingPrepare(false);
           }
           return; // API 호출 없이 종료
@@ -408,22 +412,27 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
 
                     // 응답 데이터의 유효성 검사
 
-                    if (responseReportAdditional && responseReportAdditional.data && 
-                        responseReportAdditional.data.title && 
-                        responseReportAdditional.data.suggestion_list && 
-                        responseReportAdditional.data.suggestion_list.length === 5 &&
-                        responseReportAdditional.data.suggestion_list.every(item => 
-                          item.title && 
-                          item.title_text && 
-                          item.description_text &&
-                          item.title === "브랜드 강화 관점" ||
+                    if (
+                      responseReportAdditional &&
+                      responseReportAdditional.data &&
+                      responseReportAdditional.data.title &&
+                      responseReportAdditional.data.suggestion_list &&
+                      responseReportAdditional.data.suggestion_list.length ===
+                        5 &&
+                      responseReportAdditional.data.suggestion_list.every(
+                        (item) =>
+                          (item.title &&
+                            item.title_text &&
+                            item.description_text &&
+                            item.title === "브랜드 강화 관점") ||
                           item.title === "타겟팅 관점" ||
                           item.title === "세그먼트화 관점" ||
                           item.title === "사업 전략 관점" ||
                           item.title === "고객 경험 개선 관점" ||
                           item.title === "성장 전략 관점" ||
                           item.title === "비즈니스 모델 캔버스 관점"
-                        )) {
+                      )
+                    ) {
                       break;
                     }
 
@@ -508,9 +517,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               <Thumb />
               {answer.persona.persona}
             </TypeName>
-            <TextContainer>
-              {answer.answer}
-            </TextContainer>
+            <TextContainer>{answer.answer}</TextContainer>
           </AnswerItem>
         ))}
       </>
@@ -580,8 +587,8 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
   const handleAnswerToggle = (index) => {
     // 'Pre' 상태일 때는 토글 불가능
     // if (interviewStatus[index] === 'Pre') return;
-    
-    setVisibleAnswers(prev => ({ ...prev, [index]: !prev[index] }));
+
+    setVisibleAnswers((prev) => ({ ...prev, [index]: !prev[index] }));
   };
 
   const renderInterviewItems = () => {
@@ -609,9 +616,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
           <QuestionText>Q{index + 1}. {item.question}</QuestionText>
         </QuestionWrap>
         {visibleAnswers[index] && (
-          <AnswerWrap>
-            {renderAnswers(index)}
-          </AnswerWrap>
+          <AnswerWrap>{renderAnswers(index)}</AnswerWrap>
         )}
       </InterviewItem>
     ));
@@ -619,40 +624,34 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
 
   const renderInterviewItemsComplete = () => {
     return interviewQuestionListState.map((item, index) => (
-      <InterviewItem 
-        key={index} 
-        status={'Complete'}
-        style={{ cursor: 'pointer' }}
+      <InterviewItem
+        key={index}
+        status={"Complete"}
+        style={{ cursor: "pointer" }}
       >
         <QuestionWrap onClick={() => handleAnswerToggle(index)}>
-          <Number status={'Complete'}>{index + 1}</Number>
+          <Number status={"Complete"}>{index + 1}</Number>
           <QuestionText>{item.question}</QuestionText>
-          <Status status={'Complete'}>
-            완료
-          </Status>
+          <Status status={"Complete"}>완료</Status>
         </QuestionWrap>
         {visibleAnswers[index] && (
-          <AnswerWrap>
-            {renderAnswersComplete(index)}
-          </AnswerWrap>
+          <AnswerWrap>{renderAnswersComplete(index)}</AnswerWrap>
         )}
       </InterviewItem>
     ));
   };
 
-
   const handleCheckResult = async () => {
     handleWarningClose();
     setIsPersonaAccessible(true);
-
-    if (!reportId && isPersonaAccessible) {
+    console.log("🚀 ~ handleCheckResult ~ reportId:", reportId);
+    if (!reportId) {
       try {
         let newReportId = await createProjectReportOnServer(isLoggedIn);
         setReportId(newReportId); // 생성된 대화 ID 설정
-        setIsPersonaAccessible(true);
+        console.log("🚀 ~ handleCheckResult ~ newReportId:", newReportId);
       } catch (error) {
         // setIsLoadingPage(false); // 로딩 완료
-        setIsPersonaAccessible(true);
         console.error("Failed to create project on server:", error);
       }
     }
@@ -710,9 +709,9 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               </LoadingBox>
             )}
 
-            {!isLoadingPrepare && 
-              isComplete ? renderInterviewItemsComplete() : renderInterviewItems()
-            }
+            {!isLoadingPrepare && isComplete
+              ? renderInterviewItemsComplete()
+              : renderInterviewItems()}
 
             {isAnalyzing && (
               <LoadingBox>
