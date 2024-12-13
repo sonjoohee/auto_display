@@ -13,6 +13,7 @@ import {
   TITLE_OF_BUSINESS_INFORMATION,
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
   PERSONA_LIST,
+  REPORT_LIST,
   IS_LOADING,
   PERSONA_STEP,
   BUSINESS_ANALYSIS,
@@ -50,6 +51,7 @@ import PopupWrap from "../../../../assets/styles/Popup";
 import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 
 const PagePersona2 = () => {
+  const [reportList, setReportList] = useAtom(REPORT_LIST);
   const [projectLoadButtonState, setProjectLoadButtonState] = useAtom(
     PROJECT_LOAD_BUTTON_STATE
   );
@@ -147,6 +149,8 @@ const PagePersona2 = () => {
           setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
           setInputBusinessInfo(savedProjectInfo.inputBusinessInfo);
           setPersonaList(savedProjectInfo.personaList);
+          setRequestPersonaList(savedProjectInfo.requestPersonaList);
+          setReportList(savedProjectInfo.reportList || []);
         }
         // setIsLoadingPage(false); // 로딩 완료
       }
@@ -210,6 +214,7 @@ const PagePersona2 = () => {
           );
 
           let requestPersonaList = response.data;
+
           let retryCount = 0;
           const maxRetries = 10;
           console.log(requestPersonaList);
@@ -336,9 +341,10 @@ const PagePersona2 = () => {
                       <p>
                         추천된 페르소나를 선택하고 인터뷰를 진행하세요. (최대
                         5명까지 선택이 가능합니다)
-                        <TooltipButton onClick={() => setShowTooltip(!showTooltip)}>
+                        <TooltipButton
+                          onClick={() => setShowTooltip(!showTooltip)}
+                        >
                           유형별 설명 보기
-
                           {showTooltip && (
                             <TooltipContent>
                               <TooltipHeader>
@@ -349,26 +355,49 @@ const PagePersona2 = () => {
                               <TooltipBody>
                                 <div>
                                   <Badge Basic>
-                                    <img src={images.StatusBadgeBasic} alt="기본형" />
+                                    <img
+                                      src={images.StatusBadgeBasic}
+                                      alt="기본형"
+                                    />
                                     기본형
                                   </Badge>
-                                  <p>기본형은 특정 요구 사항 없이도 다양한 질문과 답변을 처리할 수 있는 표준형 AI Person입니다. 범용적인 활용이 가능하며, 일반적인 상황에 적합합니다.</p>
+                                  <p>
+                                    기본형은 특정 요구 사항 없이도 다양한 질문과
+                                    답변을 처리할 수 있는 표준형 AI
+                                    Person입니다. 범용적인 활용이 가능하며,
+                                    일반적인 상황에 적합합니다.
+                                  </p>
                                 </div>
 
                                 <div>
                                   <Badge Custom>
-                                    <img src={images.StatusBadgeCustom} alt="커스터마이즈" />
+                                    <img
+                                      src={images.StatusBadgeCustom}
+                                      alt="커스터마이즈"
+                                    />
                                     커스터마이즈
                                   </Badge>
-                                  <p>커스터마이즈는 특정 요구 사항에 맞춰 설정된 AI Person입니다. 라이프스타일, 경험, 지식 등을 학습하여 원하는 목적에 맞게 활용할 수 있으며, 보다 깊이 있는 대화에 적합합니다.</p>
+                                  <p>
+                                    커스터마이즈는 특정 요구 사항에 맞춰 설정된
+                                    AI Person입니다. 라이프스타일, 경험, 지식
+                                    등을 학습하여 원하는 목적에 맞게 활용할 수
+                                    있으며, 보다 깊이 있는 대화에 적합합니다.
+                                  </p>
                                 </div>
 
                                 <div>
                                   <Badge>
-                                    <img src={images.NoteArrowUp} alt="요청 필요" />
+                                    <img
+                                      src={images.NoteArrowUp}
+                                      alt="요청 필요"
+                                    />
                                     요청 필요
                                   </Badge>
-                                  <p>요청필요는 사용자 요청에 따라 준비되는 AI Person입니다. 원하는 정보와 경험을 입력하시면 맞춤 제작이 가능합니다.</p>
+                                  <p>
+                                    요청필요는 사용자 요청에 따라 준비되는 AI
+                                    Person입니다. 원하는 정보와 경험을
+                                    입력하시면 맞춤 제작이 가능합니다.
+                                  </p>
                                 </div>
                               </TooltipBody>
                             </TooltipContent>
@@ -481,7 +510,7 @@ const TooltipButton = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap:4px;
+  gap: 4px;
   font-size: 0.75rem;
   color: ${palette.gray300};
   padding: 4px 8px;
@@ -518,7 +547,7 @@ const TooltipContent = styled.div`
   filter: drop-shadow(0px 4px 30px rgba(0, 0, 0, 0.15));
   animation: fadeIn 0.3s ease-in-out;
   cursor: default;
-  
+
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -539,7 +568,7 @@ const TooltipContent = styled.div`
     border-top: 10px solid transparent;
     border-bottom: 10px solid transparent;
     border-right: 10px solid ${palette.white};
-    content: '';
+    content: "";
   }
 `;
 
@@ -552,7 +581,7 @@ const TooltipHeader = styled.div`
   font-weight: 300;
   color: ${palette.gray800};
   line-height: 1.5;
-  width:100%;
+  width: 100%;
 
   span {
     position: relative;
@@ -560,16 +589,17 @@ const TooltipHeader = styled.div`
     height: 16px;
     display: block;
 
-    &:before, &:after {
+    &:before,
+    &:after {
       position: absolute;
       top: 50%;
       left: 50%;
       width: 2px;
-      height:16px;
+      height: 16px;
       display: block;
-      border-radius:5px;
+      border-radius: 5px;
       background: ${palette.gray700};
-      content: '';
+      content: "";
     }
 
     &:before {
@@ -588,7 +618,7 @@ const TooltipBody = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   gap: 16px;
-  width:100%;
+  width: 100%;
 
   > div {
     display: flex;
@@ -596,7 +626,7 @@ const TooltipBody = styled.div`
     align-items: flex-start;
     justify-content: flex-start;
     gap: 8px;
-    width:100%;
+    width: 100%;
   }
 
   p {
@@ -612,22 +642,30 @@ const Badge = styled.div`
   align-items: center;
   justify-content: center;
   gap: 4px;
-  font-size: ${props => props.Basic || props.Custom ? '0.75rem' : '0.63rem'};
-  color: ${props => 
-    props.Basic ? palette.green 
-    : props.Custom ? palette.primary 
-    : palette.gray500};
+  font-size: ${(props) =>
+    props.Basic || props.Custom ? "0.75rem" : "0.63rem"};
+  color: ${(props) =>
+    props.Basic
+      ? palette.green
+      : props.Custom
+      ? palette.primary
+      : palette.gray500};
   line-height: 1.2;
   padding: 4px 8px;
   border-radius: 50px;
-  border: 1px solid ${props => 
-    props.Basic ? `rgba(52, 199, 89, 0.10)` 
-    : props.Custom ? `rgba(34, 111, 255, 0.10)` 
-    : palette.gray200};
-  background: ${props => 
-    props.Basic ? `rgba(52, 199, 89, 0.10)` 
-    : props.Custom ? `rgba(34, 111, 255, 0.10)` 
-    : palette.white};
+  border: 1px solid
+    ${(props) =>
+      props.Basic
+        ? `rgba(52, 199, 89, 0.10)`
+        : props.Custom
+        ? `rgba(34, 111, 255, 0.10)`
+        : palette.gray200};
+  background: ${(props) =>
+    props.Basic
+      ? `rgba(52, 199, 89, 0.10)`
+      : props.Custom
+      ? `rgba(34, 111, 255, 0.10)`
+      : palette.white};
 `;
 
 const Sidebar = styled.div`
