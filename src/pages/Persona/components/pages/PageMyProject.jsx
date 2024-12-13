@@ -56,6 +56,10 @@ const PageMyProject = () => {
           isLoggedIn
         );
         if (savedProjectListInfo) {
+          console.log(
+            "🚀 ~ loadProjectList ~ savedProjectListInfo:",
+            savedProjectListInfo
+          );
           setProjectList(savedProjectListInfo);
         }
         // setIsLoadingPage(false); // 로딩 완료
