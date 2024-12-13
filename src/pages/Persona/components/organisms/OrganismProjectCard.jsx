@@ -1,5 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useAtom } from "jotai";
+import {
+  PROJECT_DATA,
+  IS_PERSONA_ACCESSIBLE,
+  PROJECT_LOAD_BUTTON_STATE,
+  PROJECT_ID,
+} from "../../../AtomStates";
 import { useNavigate } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
 import { Button } from "../../../../assets/styles/ButtonStyle";
@@ -7,7 +14,15 @@ import { Badge } from "../../../../assets/styles/Badge";
 import images from "../../../../assets/styles/Images";
 
 const OrganismProjectCard = ({ project, index }) => {
+  const [projectId, setProjectId] = useAtom(PROJECT_ID);
+  const [projectLoadButtonState, setProjectLoadButtonState] = useAtom(
+    PROJECT_LOAD_BUTTON_STATE
+  );
+  const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
+    IS_PERSONA_ACCESSIBLE
+  );
   const navigate = useNavigate();
+  const [projectData, setProjectData] = useAtom(PROJECT_DATA);
   const [openStates, setOpenStates] = useState({});
   const [closingStates, setClosingStates] = useState({});
 
@@ -22,6 +37,7 @@ const OrganismProjectCard = ({ project, index }) => {
   //       setOpenStates((prev) => ({ ...prev, [projectId]: true }));
   //     }
   //   };
+
   const toggleView = (projectId) => {
     if (openStates[projectId]) {
       setClosingStates((prev) => ({ ...prev, [projectId]: true }));
@@ -33,6 +49,7 @@ const OrganismProjectCard = ({ project, index }) => {
       setOpenStates((prev) => ({ ...prev, [projectId]: true }));
     }
   };
+
   const getRecruitStatusText = (project) => {
     const selectedCount = project.personaList?.selected?.length || 0;
     const requestCount = project.requestPersonaList?.persona?.length || 0;
@@ -47,6 +64,13 @@ const OrganismProjectCard = ({ project, index }) => {
     if (status === "모집 완료") return "complete";
     if (status === "모집 중") return "ing";
     return "";
+  };
+
+  const navigateToPersonaPage = (projectId) => {
+    setProjectId(project._id);
+    setProjectLoadButtonState(true);
+    setIsPersonaAccessible(true);
+    navigate(`/Persona/2/${projectId}`);
   };
 
   return (
@@ -95,8 +119,11 @@ const OrganismProjectCard = ({ project, index }) => {
 
         {openStates[index] && (
           <ProjectButton>
-            <p>6명의 맞춤 페르소나가 사용자님을 기다리고 있어요!</p>
-            <button onClick={() => navigate(`/Persona/${project._id}`)}>
+            <p>
+              {project.personaList || 0}명의 맞춤 페르소나가 사용자님을 기다리고
+              있어요!
+            </p>
+            <button onClick={() => navigateToPersonaPage(project._id)}>
               바로가기
             </button>
           </ProjectButton>
