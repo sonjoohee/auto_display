@@ -2,6 +2,7 @@ import Logo from "../images/logoInterviewx.svg";
 import SymbolLogo from "../images/symbolLogo.svg";
 import SymbolLogoWhite from "../images/symbolLogoWhite.svg";
 import LogoVerticality from "../images/logo-verticality.svg";
+import LogoSymbolWhite from "../images/logo-symbol-white.svg";
 
 import Filter from "../images/Filter.svg";
 import BgSearch from "../images/BgSearch.png";
@@ -215,6 +216,7 @@ const images = {
   SymbolLogo,
   SymbolLogoWhite,
   LogoVerticality,
+  LogoSymbolWhite,
   
   Filter,
   BgSearch,

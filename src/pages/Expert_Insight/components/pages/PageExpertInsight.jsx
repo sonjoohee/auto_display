@@ -82,7 +82,11 @@ import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import { createChatOnServer } from "../../../../utils/indexedDB"; // 서버와 대화 ID 생성 함수
 import MoleculeStrategyButton from "../molecules/MoleculeStrategyButton";
 import OrganismStrategyConsultantReport from "../organisms/OrganismStrategyConsultantReport";
-import OrganismLeftSideBar from "../organisms/OrganismLeftSideBar";
+// import OrganismLeftSideBar from "../organisms/OrganismLeftSideBar";
+import OrganismLeftSideBar from "../../../../pages/Persona/components/organisms/OrganismIncNavigation"
+import Header from "../../../../pages/Persona/components/molecules/MoleculeHeader"
+
+
 import OrganismRightSideBar from "../organisms/OrganismRightSideBar";
 import OrganismBizAnalysisSection from "../organisms/OrganismBizAnalysisSection";
 import OrganismStrategyReportSection from "../organisms/OrganismStrategyReportSection";
@@ -732,6 +736,8 @@ const PageExpertInsight = () => {
 
   return (
     <>
+      <Header />
+
       <ThemeProvider theme={theme}>
         {isMarketing && approachPath !== 2 && (
           <ProjectName>
@@ -1354,8 +1360,8 @@ const AutosavePopup = styled.div`
 
 const MainContent = styled.div`
   position: relative;
-  top: 40px;
-  // top: 70px;
+  // top: 40px;
+  top: 70px;
   grid-area: content;
   display: flex;
   flex-direction: row;

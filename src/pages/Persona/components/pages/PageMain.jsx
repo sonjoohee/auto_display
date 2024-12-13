@@ -864,7 +864,7 @@ const PageMain = () => {
             onClick={() => navigate("/MarketingLanding")}
           >
             <p>
-              <img src={images.SymbolLogo} alt="" />
+              <img src={images.LogoSymbolWhite} alt="" />
             </p>
             <span>창업 MBTI로 창업 스타일 찾기</span>
           </button>
@@ -1553,7 +1553,8 @@ const QuickMenu = styled.div`
   > button {
     display: flex;
     align-items: center;
-    gap: 10px;
+    // gap: 10px;
+    gap: 0;
     width: ${(props) => (props.showText ? "auto" : "40px")};
     height: 40px;
     font-family:Pretendard, Poppins;
@@ -1566,14 +1567,17 @@ const QuickMenu = styled.div`
     border-radius: 30px;
     border: 0;
     box-shadow: 2px 2px 15px 0px rgba(0, 0, 0, 0.15);
-    background: #242dff;
+    background: ${palette.primary};
     overflow: hidden;
     transition: width 0.5s ease;
 
     p {
-      width: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
       height: 40px;
-      overflow: hidden;
+      // overflow: hidden;
 
       img {
         height: 100%;
