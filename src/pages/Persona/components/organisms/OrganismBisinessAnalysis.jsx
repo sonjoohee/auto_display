@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import { useEffect, useState, useRef } from "react";
@@ -27,6 +27,7 @@ import {
   CATEGORY_COLOR,
   PROJECT_ID,
   IS_LOGGED_IN,
+  IS_EDIT_MODE,
 } from "../../../AtomStates";
 import AtomLoader from "../atoms/AtomLoader";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
@@ -67,7 +68,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
   const [showCardContent, setShowCardContent] = useState(personaStep <= 2);
   const [categoryColor, setCategoryColor] = useAtom(CATEGORY_COLOR);
 
-  const [isEditMode, setIsEditMode] = useState(false);
+  const [isEditMode, setIsEditMode] = useAtom(IS_EDIT_MODE);
   const [inputs, setInputs] = useState({
     field1: {
       value: "",
@@ -122,8 +123,32 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
     });
   };
 
+  const [isPopupRegex, setIsPopupRegex] = useState(false);
+
+  const closePopupRegex = () => {
+    setIsPopupRegex(false); // 팝업 닫기
+  };
+
   const handleSaveClick = () => {
+    if (loadingState) {
+      return;
+    }
     // 입력값 유효성 검사
+    const regex = /^[가-힣a-zA-Z0-9\s.,'"?!()\-]*$/;
+    const specialChars = /^[.,'"?!()\-]+$/;
+
+    // 단독으로 특수 문자만 사용된 경우
+    if (specialChars.test(inputs.field1.value) || specialChars.test(inputs.field2.value)) {
+      setIsPopupRegex(true);
+      return;
+    }
+
+    // 입력 값에 대한 정규식 체크
+    if (!regex.test(inputs.field1.value) || !regex.test(inputs.field2.value)) {
+      setIsPopupRegex(true);
+      return;
+    }
+
     if (inputs.field1.value && inputs.field2.value) {
       // 새로운 비즈니스 분석 데이터 생성
       const updatedBusinessAnalysis = {
@@ -156,7 +181,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
   };
 
   const handleAIDetailClick = async () => {
-    setPersonaButtonState1(1);
+    // setPersonaButtonState1(1);
     let businessData;
     let categoryData;
     let attempts = 0;
@@ -228,7 +253,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
     } catch (error) {
       console.error("Error in handleRegenerate:", error);
     } finally {
-      setPersonaButtonState1(0);
+      // setPersonaButtonState1(0);
       setIsLoading(false);
       setLoadingState(false);
     }
@@ -356,11 +381,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
               !response.data.business_analysis["주요_목적_및_특징"].length ||
               !response.data.business_analysis["주요기능"].length ||
               !response.data.category.hasOwnProperty("first") ||
-              !response.data.category.hasOwnProperty("second") ||
-              !response.data.category.hasOwnProperty("third") ||
-              !response.data.category.first ||
-              !response.data.category.second ||
-              !response.data.category.third)
+              !response.data.category.first)
           ) {
             attempts += 1;
 
@@ -445,11 +466,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
           !response.data.business_analysis["주요_목적_및_특징"].length ||
           !response.data.business_analysis["주요기능"].length ||
           !response.data.category.hasOwnProperty("first") ||
-          !response.data.category.hasOwnProperty("second") ||
-          !response.data.category.hasOwnProperty("third") ||
-          !response.data.category.first ||
-          !response.data.category.second ||
-          !response.data.category.third)
+          !response.data.category.first)
       ) {
         attempts += 1;
 
@@ -612,6 +629,38 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
             </CardContent>
           )}
         </Card>
+      )}
+            {isPopupRegex && (
+        <Popup
+          Cancel
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              closePopupRegex(); // 상태를 false로 설정
+            }
+          }}
+        >
+          <div>
+            <button
+              type="button"
+              className="closePopup"
+              onClick={closePopupRegex}
+            >
+              닫기
+            </button>
+            <span>
+              <img src={images.ExclamationMark2} alt="" />
+            </span>
+            <p>
+              한글, 영문 외 특수문자는 입력할 수 없어요. 자음이나 모음만 입력한
+              경우 검색이 제한되니, 문장을 완전하게 입력해주세요.
+            </p>
+            <div className="btnWrap">
+              <button type="button" onClick={closePopupRegex}>
+                확인
+              </button>
+            </div>
+          </div>
+        </Popup>
       )}
     </>
   );
@@ -994,5 +1043,132 @@ const CardContent = styled.div`
 
   p + p {
     margin-top: 20px;
+  }
+`;
+
+const Popup = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  transition: all 0.5s;
+  z-index: 9999;
+
+  .closePopup {
+    position: absolute;
+    right: 24px;
+    top: 24px;
+    width: 16px;
+    height: 16px;
+    font-size: 0;
+    padding: 11px;
+    border: 0;
+    background: none;
+
+    &:before,
+    &:after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 2px;
+      height: 100%;
+      border-radius: 10px;
+      background: ${palette.black};
+      content: "";
+    }
+
+    &:before {
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    &:after {
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
+  }
+
+  > div {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    // overflow:hidden;
+    padding: 45px 24px 24px;
+    border-radius: 10px;
+    background: ${palette.white};
+
+    p {
+      font-family: "Pretendard", "Poppins";
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin: 20px auto 24px;
+      line-height: 1.5;
+    }
+
+    .btnWrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      button {
+        flex: 1;
+        font-family: "Pretendard", "Poppins";
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: ${palette.blue};
+        padding: 12px 20px;
+        border-radius: 8px;
+        border: 1px solid ${palette.blue};
+        background: ${palette.white};
+
+        &:last-child {
+          color: ${palette.white};
+          background: ${palette.blue};
+        }
+      }
+    }
+
+    ${(props) =>
+      props.Cancel &&
+      css`
+        p {
+          strong {
+            font-weight: 500;
+            display: block;
+          }
+          span {
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: ${palette.gray500};
+            display: block;
+            margin-top: 8px;
+          }
+        }
+
+        .btnWrap {
+          padding-top: 16px;
+          border-top: 1px solid ${palette.lineGray};
+
+          button {
+            font-family: "Pretendard", "Poppins";
+            color: ${palette.gray};
+            font-weight: 600;
+            padding: 0;
+            border: 0;
+            background: none;
+
+            &:last-child {
+              color: ${palette.blue};
+              background: none;
+            }
+          }
+        }
+      `}
   }
 `;
