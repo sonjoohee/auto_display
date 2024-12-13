@@ -24,7 +24,7 @@ import {
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import { createProjectReportOnServer } from "../../../../utils/indexedDB";
 
-const OrganismToastPopup = ({ isActive, onClose }) => {
+const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
   const [reportId, setReportId] = useAtom(PROJECT_REPORT_ID);
   const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
     IS_PERSONA_ACCESSIBLE
