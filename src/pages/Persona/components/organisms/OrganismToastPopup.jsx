@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import PopupWrap from "../../../../assets/styles/Popup";
@@ -594,16 +594,19 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
           cursor: interviewStatus[index] === "Pre" ? "default" : "pointer",
         }}
       >
-        <QuestionWrap onClick={() => handleAnswerToggle(index)}>
-          <Number status={interviewStatus[index] || "Pre"}>{index + 1}</Number>
-          <QuestionText>{item.question}</QuestionText>
+        <QuestionWrap 
+          onClick={() => handleAnswerToggle(index)}
+          status={interviewStatus[index] || "Pre"}
+          isOpen={visibleAnswers[index]}
+        >
           <Status status={interviewStatus[index] || "Pre"}>
             {interviewStatus[index] === "Ing"
-              ? "진행중"
+              ? "진행 중"
               : interviewStatus[index] === "Complete"
               ? "완료"
-              : "준비중"}
+              : "준비 중"}
           </Status>
+          <QuestionText>Q{index + 1}. {item.question}</QuestionText>
         </QuestionWrap>
         {visibleAnswers[index] && (
           <AnswerWrap>
@@ -668,14 +671,14 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             <ul>
               <li>
                 <span>
-                  <img src={images.QuestionCount} alt="문항수" />
+                  <img src={images.FileText} alt="문항수" />
                   문항수
                 </span>
                 <span>3개</span>
               </li>
               <li>
                 <span>
-                  <img src={images.PersonaCount} alt="참여페르소나" />
+                  <img src={images.PeopleFill} alt="참여페르소나" />
                   참여페르소나
                 </span>
                 <span>{personaList.selected.length}명</span>
@@ -1003,11 +1006,30 @@ const QuestionWrap = styled.div`
   justify-content: flex-start;
   gap: 12px;
   width: 100%;
-  /* cursor: ${(props) =>
-    props.status === "Ing" || props.status === "Complete"
-      ? "pointer"
-      : "default"}; */
   cursor: inherit;
+  position: relative;
+  padding-right: 24px;
+
+  ${props => props.status === "Complete" && css`
+    &:after {
+      content: "";
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%) rotate(45deg);
+      width: 8px;
+      height: 8px;
+      border-right: 2px solid ${palette.gray500};
+      border-bottom: 2px solid ${palette.gray500};
+      transition: transform 0.3s ease;
+    }
+  `}
+
+  ${props => props.status === "Complete" && props.isOpen && css`
+    &:after {
+      transform: translateY(-50%) rotate(225deg);
+    }
+  `}
 `;
 
 const Number = styled.div`
@@ -1050,6 +1072,8 @@ const Status = styled.div`
   align-items: center;
   justify-content: center;
   gap: 8px;
+  max-width: 55px;
+  width: 100%;
   font-size: 0.75rem;
   line-height: 1.5;
   color: ${(props) =>
@@ -1058,7 +1082,7 @@ const Status = styled.div`
       : props.status === "Complete"
       ? palette.green
       : palette.gray700};
-  margin-left: auto;
+  // margin-left: auto;
   padding: 2px 8px;
   border-radius: 2px;
   border: ${(props) =>
@@ -1074,10 +1098,14 @@ const Status = styled.div`
       ? palette.white
       : palette.chatGray};
 
-  &:before {
-    content: "";
-    background: url(${images.CheckGreen}) center no-repeat;
-  }
+  ${props => props.status === "Complete" && css`
+    &:before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      background: url(${images.CheckGreen}) center no-repeat;
+    }
+  `}
 `;
 
 const AnswerWrap = styled.div`
@@ -1107,7 +1135,8 @@ const TypeName = styled.div`
   align-items: center;
   justify-content: flex-start;
   gap: 12px;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 300;
   line-height: 1.5;
   color: ${palette.gray800};
 `;

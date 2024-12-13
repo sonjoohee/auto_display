@@ -12,7 +12,6 @@ export const Button = styled.button`
   transition: all 0.3s ease;
 
   &:disabled {
-    opacity: 0.5;
     cursor: not-allowed;
   }
 
@@ -56,7 +55,6 @@ export const Button = styled.button`
     }
 
     &:disabled {
-      opacity: 0.5;
       cursor: not-allowed;
     }
   `}
@@ -85,7 +83,6 @@ export const Button = styled.button`
     }
 
     &:disabled {
-      opacity: 0.5;
       cursor: not-allowed;
     }
   `}
@@ -105,10 +102,9 @@ export const Button = styled.button`
 
     &:disabled {
       color: ${palette.white};
-      border: 1px solid ${palette.gray300};
+      border: none;
+      // border: 1px solid ${palette.gray300};
       background: ${palette.gray300};
-      opacity: 0.5;
-      cursor: not-allowed;
 
       &:hover {
         background: ${palette.gray300};

@@ -1383,18 +1383,31 @@ const OrganismIncNavigation = () => {
 
         <MenuList>
           <li onClick={handleNewProjectClick}>
-            <img src={images.PlusSquareWhite} alt="새작업" />
-            <span>새작업</span>
+            <svg width="32" height="33" viewBox="0 0 32 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect y="0.267578" width="32" height="32" rx="9.84615" fill="#fff"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M16.999 13.1006C16.999 12.5483 16.5513 12.1006 15.999 12.1006C15.4467 12.1006 14.999 12.5483 14.999 13.1006V15.2676H12.833C12.2807 15.2676 11.833 15.7153 11.833 16.2676C11.833 16.8199 12.2807 17.2676 12.833 17.2676H14.999V19.4341C14.999 19.9864 15.4467 20.4341 15.999 20.4341C16.5513 20.4341 16.999 19.9864 16.999 19.4341V17.2676H19.1665C19.7188 17.2676 20.1665 16.8199 20.1665 16.2676C20.1665 15.7153 19.7188 15.2676 19.1665 15.2676H16.999V13.1006Z" fill="#226FFF"/>
+            </svg>
+
+            {/* <img src={images.PlusSquareWhite} alt="새 작업" /> */}
+            <span>새 작업</span>
           </li>
 
-          <li onClick={handleMyProjectClick}>
-            <img src={images.Folder} alt="작업관리" />
+          <li onClick={handleMyProjectClick} className="management">
+            <svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6.20104 1.3291H2C1.44772 1.3291 1 1.77682 1 2.3291V13.6713C1 14.2236 1.44772 14.6713 2 14.6713H16C16.5523 14.6713 17 14.2236 17 13.6713V4.40885C17 3.85657 16.5523 3.40885 16 3.40885H8.79244C8.48312 3.40885 8.19121 3.26571 8.00181 3.02115L6.99167 1.71681C6.80227 1.47225 6.51036 1.3291 6.20104 1.3291Z" stroke="#666"/>
+            </svg>
+
+            {/* <img src={images.Folder} alt="작업관리" /> */}
             <span>작업관리</span>
           </li>
 
-          <li onClick={handleWorkManageClick}>
-            <img src={images.Clock} alt="대화내역" />
-            <span>대화내역</span>
+          <li onClick={handleWorkManageClick} className="history">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M3.57468 5.40948C4.43398 3.92612 5.79676 2.80012 7.41555 2.23594C9.03433 1.67177 10.8018 1.70685 12.3969 2.3348C13.992 2.96275 15.309 4.14194 16.1088 5.65823C16.9086 7.17451 17.138 8.92734 16.7555 10.5984C16.373 12.2695 15.4039 13.7479 14.0242 14.7653C12.6445 15.7827 10.9456 16.2716 9.23616 16.1431C7.5267 16.0147 5.92 15.2774 4.70782 14.0652C4.51256 13.87 4.19597 13.87 4.00071 14.0652C3.80545 14.2605 3.80545 14.5771 4.00071 14.7723C5.38211 16.1537 7.21312 16.9939 9.16122 17.1403C11.1093 17.2867 13.0453 16.7296 14.6177 15.5702C16.19 14.4107 17.2944 12.7259 17.7303 10.8215C18.1662 8.91718 17.9047 6.91966 16.9933 5.19169C16.0819 3.46373 14.581 2.11992 12.7632 1.40431C10.9454 0.688688 8.93122 0.648717 7.08645 1.29165C5.24167 1.93458 3.68865 3.21778 2.70939 4.90822C1.95489 6.21068 1.57955 7.68833 1.61166 9.17627L0.91703 8.48164C0.721768 8.28638 0.405185 8.28638 0.209923 8.48164C0.014661 8.6769 0.014661 8.99348 0.209923 9.18874L1.83023 10.8091C2.01742 10.9962 2.3161 11.004 2.51251 10.8323C2.57063 10.7947 2.61983 10.7456 2.65753 10.6889L4.15764 9.18874C4.35291 8.99348 4.35291 8.6769 4.15765 8.48164C3.96238 8.28638 3.6458 8.28638 3.45054 8.48164L2.61671 9.31547C2.55678 7.95571 2.88544 6.59929 3.57468 5.40948ZM9.85905 6.0391C9.85905 5.76296 9.63519 5.5391 9.35905 5.5391C9.08291 5.5391 8.85905 5.76296 8.85905 6.0391V9.54488V9.81521L9.08523 9.96324L11.8282 11.7585C12.0593 11.9098 12.3692 11.845 12.5204 11.614C12.6716 11.3829 12.6069 11.073 12.3759 10.9218L9.85905 9.27456V6.0391Z" fill="#666"/>
+            </svg>
+
+            {/* <img src={images.Clock} alt="히스토리" /> */}
+            <span>히스토리</span>
           </li>
         </MenuList>
 
@@ -2016,7 +2029,7 @@ const NavigationWrap = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  max-width: 64px;
+  max-width: 69px;
   width: 100%;
   height: 100dvh;
   display: flex;
@@ -2047,13 +2060,38 @@ const MenuList = styled.ul`
     flex-direction: column;
     align-items: center;
     gap: 8px;
+    padding: 6px 6px 4px;
     cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.5s;
+
+    &:hover {
+      background: #E5EFFF;
+
+      span {
+        color: ${palette.primary};
+      }
+
+      &.management path {
+        stroke: ${palette.primary};
+      }
+
+      &.history path {
+        fill: ${palette.primary};
+      }
+    }
+  }
+
+  img {
+    transition: all 0.5s;
   }
 
   span {
     font-size: 0.75rem;
     font-weight: 300;
     color: ${palette.gray700};
+    line-height: 1.5;
+    letter-spacing: -1px;
   }
 `;
 

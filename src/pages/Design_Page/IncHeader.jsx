@@ -33,9 +33,9 @@ const IncHeader = () => {
           <Notify Alarm onClick={handleAlertToggle}>
             <img src={images.IconBell} alt="" />
           </Notify>
-          <div className="userInfo">
+          {/* <div className="userInfo">
             유저프로필
-          </div>
+          </div> */}
         </div>
       </HeaderWrap>
 

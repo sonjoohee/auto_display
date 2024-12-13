@@ -362,12 +362,14 @@ const PagePersona3 = () => {
                   <TabContent>
                     {categoryItems[activeCategory].map((item) => (
                       <MoleculeInterviewCard
+                        NoBackground
                         key={item.id}
                         title={item.title}
                         description={item.description}
                         isSelected={interviewPurpose === item.title}
                         onSelect={(title) => setInterviewPurpose(title)}
                         interviewPurpose={interviewPurpose}
+                        isActive={interviewPurpose === item.title}
                       />
                     ))}
                   </TabContent>
@@ -405,7 +407,7 @@ const PagePersona3 = () => {
               <h5>Let's Start Now</h5>
 
               <ProgressBar>
-                <span>🚀</span>
+                <span className="icon">🚀</span>
                 <Progress progress={60} />
                 <span>60%</span>
               </ProgressBar>
@@ -604,6 +606,10 @@ const ProgressBar = styled.div`
     font-size: 0.75rem;
     line-height: 1.5;
     color: ${palette.gray700};
+  }
+
+  .icon {
+    font-size: 1.13rem;
   }
 `;
 
