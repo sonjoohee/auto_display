@@ -20,11 +20,15 @@ import {
   INTERVIEW_REPORT,
   INTERVIEW_REPORT_ADDITIONAL,
   IS_PERSONA_ACCESSIBLE,
+  SELECTED_PERSONA_LIST,
 } from "../../../AtomStates";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import { createProjectReportOnServer } from "../../../../utils/indexedDB";
 
 const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
+  const [selectedPersonaList, setSelectedPersonaList] = useAtom(
+    SELECTED_PERSONA_LIST
+  );
   const [reportId, setReportId] = useAtom(PROJECT_REPORT_ID);
   const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
     IS_PERSONA_ACCESSIBLE
@@ -115,6 +119,52 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             });
             setVisibleAnswers(allVisible);
 
+            setIsLoadingPrepare(false);
+          } else {
+            const questions = interviewData.map((item) => ({
+              question: item.question_1 || item.question_2 || item.question_3,
+            }));
+            setInterviewQuestionListState(questions);
+            // 모든 질문을 Complete 상태로 설정
+            const completedStatus = new Array(interviewData.length).fill(
+              "Complete"
+            );
+            setInterviewStatus(completedStatus);
+
+            console.log(completedStatus);
+
+            // interviewData에서 답변 설정
+            const newAnswers = {};
+            questions.forEach((_, index) => {
+              const answers = interviewData[index][`answer_${index + 1}`];
+
+              console.log("🚀 ~ questions.forEach ~ answers:", answers);
+
+              if (personaList.selected.length > 0) {
+                newAnswers[index] = personaList.selected.map(
+                  (persona, pIndex) => ({
+                    persona: persona,
+                    answer: answers[pIndex],
+                  })
+                );
+              } else {
+                newAnswers[index] = selectedPersonaList.map(
+                  (persona, pIndex) => ({
+                    persona: persona,
+                    answer: answers[pIndex],
+                  })
+                );
+              }
+            });
+            setAnswers(newAnswers);
+
+            console.log("🚀 ~ interviewLoading ~ newAnswers:", newAnswers);
+            // 모든 답변을 보이도록 설정
+            const allVisible = {};
+            questions.forEach((_, index) => {
+              allVisible[index] = true;
+            });
+            setVisibleAnswers(allVisible);
             setIsLoadingPrepare(false);
           }
           return; // API 호출 없이 종료
@@ -524,17 +574,6 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
     );
   };
 
-  // // 완료 상태일 때는 모든 답변을 보이도록 설정
-  // useEffect(() => {
-  //   if (isComplete) {
-  //     const allVisible = {};
-  //     interviewQuestionListState.forEach((_, index) => {
-  //       allVisible[index] = true;
-  //     });
-  //     setVisibleAnswers(allVisible);
-  //   }
-  // }, [isComplete, interviewQuestionListState]);
-
   useEffect(() => {
     setActive(isActive);
   }, [isActive]);
@@ -601,7 +640,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
           cursor: interviewStatus[index] === "Pre" ? "default" : "pointer",
         }}
       >
-        <QuestionWrap 
+        <QuestionWrap
           onClick={() => handleAnswerToggle(index)}
           status={interviewStatus[index] || "Pre"}
           isOpen={visibleAnswers[index]}
@@ -613,7 +652,9 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               ? "완료"
               : "준비 중"}
           </Status>
-          <QuestionText>Q{index + 1}. {item.question}</QuestionText>
+          <QuestionText>
+            Q{index + 1}. {item.question}
+          </QuestionText>
         </QuestionWrap>
         {visibleAnswers[index] && (
           <AnswerWrap>{renderAnswers(index)}</AnswerWrap>
@@ -677,10 +718,12 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               </li>
               <li>
                 <span>
-                  <img src={images.PeopleFill} alt="참여페르소나" />
-                  참여페르소나
+                  <img src={images.PeopleFill} alt="참여 페르소나" />
+                  참여 페르소나
                 </span>
-                <span>{personaList.selected.length}명</span>
+                <span>
+                  {personaList.selected.length || selectedPersonaList.length}명
+                </span>
               </li>
             </ul>
           </Header>
@@ -1009,26 +1052,31 @@ const QuestionWrap = styled.div`
   position: relative;
   padding-right: 24px;
 
-  ${props => props.status === "Complete" && css`
-    &:after {
-      content: "";
-      position: absolute;
-      right: 8px;
-      top: 50%;
-      transform: translateY(-50%) rotate(45deg);
-      width: 8px;
-      height: 8px;
-      border-right: 2px solid ${palette.gray500};
-      border-bottom: 2px solid ${palette.gray500};
-      transition: transform 0.3s ease;
-    }
-  `}
+  ${(props) =>
+    props.status === "Complete" &&
+    css`
+      &:after {
+        content: "";
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%) rotate(45deg);
+        width: 8px;
+        height: 8px;
+        border-right: 2px solid ${palette.gray500};
+        border-bottom: 2px solid ${palette.gray500};
+        transition: transform 0.3s ease;
+      }
+    `}
 
-  ${props => props.status === "Complete" && props.isOpen && css`
-    &:after {
-      transform: translateY(-50%) rotate(225deg);
-    }
-  `}
+  ${(props) =>
+    props.status === "Complete" &&
+    props.isOpen &&
+    css`
+      &:after {
+        transform: translateY(-50%) rotate(225deg);
+      }
+    `}
 `;
 
 const Number = styled.div`
@@ -1097,14 +1145,16 @@ const Status = styled.div`
       ? palette.white
       : palette.chatGray};
 
-  ${props => props.status === "Complete" && css`
-    &:before {
-      content: "";
-      width: 8px;
-      height: 8px;
-      background: url(${images.CheckGreen}) center no-repeat;
-    }
-  `}
+  ${(props) =>
+    props.status === "Complete" &&
+    css`
+      &:before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        background: url(${images.CheckGreen}) center no-repeat;
+      }
+    `}
 `;
 
 const AnswerWrap = styled.div`
