@@ -15,21 +15,30 @@ import {
   PERSONA_BUTTON_STATE_3,
   BUSINESS_ANALYSIS,
   PROJECT_ID,
+  PROJECT_REPORT_ID,
   INTERVIEW_DATA,
   INTERVIEW_REPORT,
   INTERVIEW_REPORT_ADDITIONAL,
-  IS_PERSONA_ACCESSIBLE
+  IS_PERSONA_ACCESSIBLE,
 } from "../../../AtomStates";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
+import { createProjectReportOnServer } from "../../../../utils/indexedDB";
 
 const OrganismToastPopup = ({ isActive, onClose }) => {
-  const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(IS_PERSONA_ACCESSIBLE);
+  const [reportId, setReportId] = useAtom(PROJECT_REPORT_ID);
+  const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
+    IS_PERSONA_ACCESSIBLE
+  );
   const [interviewReport, setInterviewReport] = useAtom(INTERVIEW_REPORT);
-  const [interviewReportAdditional, setInterviewReportAdditional] = useAtom(INTERVIEW_REPORT_ADDITIONAL);
+  const [interviewReportAdditional, setInterviewReportAdditional] = useAtom(
+    INTERVIEW_REPORT_ADDITIONAL
+  );
   const [interviewData, setInterviewData] = useAtom(INTERVIEW_DATA);
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
-  const [personaButtonState3, setPersonaButtonState3] = useAtom(PERSONA_BUTTON_STATE_3);
+  const [personaButtonState3, setPersonaButtonState3] = useAtom(
+    PERSONA_BUTTON_STATE_3
+  );
   const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
   const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(
     SELECTED_INTERVIEW_PURPOSE
@@ -39,13 +48,15 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
     INTERVIEW_QUESTION_LIST
   );
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
-  
+
   const navigate = useNavigate();
 
   const [active, setActive] = useState(isActive);
   const [showWarning, setShowWarning] = useState(false);
   const [isLoadingPrepare, setIsLoadingPrepare] = useState(true);
-  const [interviewQuestionListState, setInterviewQuestionListState] = useState([]);
+  const [interviewQuestionListState, setInterviewQuestionListState] = useState(
+    []
+  );
   const [interviewStatus, setInterviewStatus] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -70,10 +81,10 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
           const existingQuestions = interviewQuestionList.find(
             (item) => item.theory_name === selectedInterviewPurpose
           );
-      
+
           if (existingQuestions) {
             setInterviewQuestionListState(existingQuestions.questions.slice(2));
-            await new Promise(resolve => setTimeout(resolve, 5000));
+            await new Promise((resolve) => setTimeout(resolve, 5000));
           } else {
             let data = {
               business_idea: businessAnalysis.input,
@@ -90,11 +101,11 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
               data,
               axiosConfig
             );
-      
+
             let questionList = response.data;
             let retryCount = 0;
             const maxRetries = 10;
-      
+
             while (
               retryCount < maxRetries &&
               (!response || !response.data || response.data.length !== 5)
@@ -119,10 +130,10 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
                 questions: questionList,
               },
             ];
-      
+
             setInterviewQuestionList(newQuestionList);
             setInterviewQuestionListState(questionList.slice(2));
-      
+
             await updateProjectOnServer(
               projectId,
               {
@@ -137,23 +148,28 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
       } finally {
         setPersonaButtonState3(0);
         setIsLoadingPrepare(false);
-        const initialStatus = new Array(interviewQuestionListState.length).fill('Pre');
+        const initialStatus = new Array(interviewQuestionListState.length).fill(
+          "Pre"
+        );
         setInterviewStatus(initialStatus);
       }
-    }
+    };
     interviewLoading();
   }, [personaButtonState3]);
 
   useEffect(() => {
     const processInterview = async () => {
-      if (!isLoadingPrepare && interviewStatus[currentQuestionIndex] === 'Pre') {
+      if (
+        !isLoadingPrepare &&
+        interviewStatus[currentQuestionIndex] === "Pre"
+      ) {
         const newStatus = [...interviewStatus];
-        newStatus[currentQuestionIndex] = 'Ing';
+        newStatus[currentQuestionIndex] = "Ing";
         setInterviewStatus(newStatus);
 
-        setAnswers(prev => ({
+        setAnswers((prev) => ({
           ...prev,
-          [currentQuestionIndex]: []
+          [currentQuestionIndex]: [],
         }));
 
         try {
@@ -162,35 +178,37 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
 
           for (let i = 0; i < personaList.selected.length; i++) {
             setIsGenerating(true);
-            
+
             // 현재 페르소나의 이전 답변들 수집
             const lastInterview = [];
             for (let q = 0; q < currentQuestionIndex; q++) {
               const questionAnswers = answers[q] || [];
               const personaAnswer = questionAnswers.find(
-                ans => ans.persona.personIndex === personaList.selected[i].personIndex
+                (ans) =>
+                  ans.persona.personIndex ===
+                  personaList.selected[i].personIndex
               );
               if (personaAnswer) {
                 lastInterview.push({
                   question: interviewQuestionListState[q].question,
-                  answer: personaAnswer.answer
+                  answer: personaAnswer.answer,
                 });
               }
             }
 
             const personaInfo = {
-              "id": personaList.selected[i].personIndex.replace(/[^1-9]/g, ''),
-              "name": personaList.selected[i].persona,
-              "keyword": personaList.selected[i].keyword,
-              "hashtag": personaList.selected[i].tag,
-              "summary": personaList.selected[i].summary
+              id: personaList.selected[i].personIndex.replace(/[^1-9]/g, ""),
+              name: personaList.selected[i].persona,
+              keyword: personaList.selected[i].keyword,
+              hashtag: personaList.selected[i].tag,
+              summary: personaList.selected[i].summary,
             };
-            
+
             const data = {
               business_analysis_data: businessAnalysis,
               question: interviewQuestionListState[currentQuestionIndex],
               persona_info: personaInfo,
-              last_interview: lastInterview
+              last_interview: lastInterview,
             };
 
             const response = await axios.post(
@@ -204,45 +222,49 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
 
             personaInfoState.push(personaInfo);
 
-            setAnswers(prev => ({
+            setAnswers((prev) => ({
               ...prev,
-              [currentQuestionIndex]: [ 
+              [currentQuestionIndex]: [
                 ...prev[currentQuestionIndex],
                 {
                   persona: personaList.selected[i],
-                  answer: response.data.answer
-                }
-              ]
+                  answer: response.data.answer,
+                },
+              ],
             }));
 
             if (i === personaList.selected.length - 1) {
               // 모든 페르소나의 답변이 완료되면 interviewData 업데이트
-              setInterviewData(prev => {
+              setInterviewData((prev) => {
                 const newData = [...(prev || [])];
                 newData[currentQuestionIndex] = {
-                  [`question_${currentQuestionIndex + 1}`]: interviewQuestionListState[currentQuestionIndex].question,
-                  [`answer_${currentQuestionIndex + 1}`]: allAnswers
+                  [`question_${currentQuestionIndex + 1}`]:
+                    interviewQuestionListState[currentQuestionIndex].question,
+                  [`answer_${currentQuestionIndex + 1}`]: allAnswers,
                 };
                 return newData;
               });
 
-              newStatus[currentQuestionIndex] = 'Complete';
+              newStatus[currentQuestionIndex] = "Complete";
               setInterviewStatus(newStatus);
-              
+
               // 모든 인터뷰가 완료되었는지 확인
-              const allComplete = newStatus.every(status => status === 'Complete');
+              const allComplete = newStatus.every(
+                (status) => status === "Complete"
+              );
               if (allComplete) {
                 try {
-
                   await updateProjectOnServer(
                     projectId,
                     {
                       interviewData: [
                         ...interviewData,
                         {
-                          [`question_${currentQuestionIndex + 1}`]: interviewQuestionListState[currentQuestionIndex].question,
-                          [`answer_${currentQuestionIndex + 1}`]: allAnswers
-                        }
+                          [`question_${currentQuestionIndex + 1}`]:
+                            interviewQuestionListState[currentQuestionIndex]
+                              .question,
+                          [`answer_${currentQuestionIndex + 1}`]: allAnswers,
+                        },
                       ],
                     },
                     isLoggedIn
@@ -255,11 +277,13 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
                     interview_data: [
                       ...interviewData,
                       {
-                        [`question_${currentQuestionIndex + 1}`]: interviewQuestionListState[currentQuestionIndex].question,
-                        [`answer_${currentQuestionIndex + 1}`]: allAnswers
-                      }
+                        [`question_${currentQuestionIndex + 1}`]:
+                          interviewQuestionListState[currentQuestionIndex]
+                            .question,
+                        [`answer_${currentQuestionIndex + 1}`]: allAnswers,
+                      },
                     ],
-                    theory_type: selectedInterviewPurpose
+                    theory_type: selectedInterviewPurpose,
                   };
 
                   const responseReport = await axios.post(
@@ -277,11 +301,13 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
                     interview_data: [
                       ...interviewData,
                       {
-                        [`question_${currentQuestionIndex + 1}`]: interviewQuestionListState[currentQuestionIndex].question,
-                        [`answer_${currentQuestionIndex + 1}`]: allAnswers
-                      }
+                        [`question_${currentQuestionIndex + 1}`]:
+                          interviewQuestionListState[currentQuestionIndex]
+                            .question,
+                        [`answer_${currentQuestionIndex + 1}`]: allAnswers,
+                      },
                     ],
-                    theory_type: selectedInterviewPurpose
+                    theory_type: selectedInterviewPurpose,
                   };
 
                   const responseReportAdditional = await axios.post(
@@ -298,18 +324,21 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
                     // 필요한 경우 분석 결과 저장
                   }
                 } catch (error) {
-                  console.error('Analysis error:', error);
+                  console.error("Analysis error:", error);
                   setIsAnalyzing(false);
                 }
               }
 
-              if (currentQuestionIndex < interviewQuestionListState.length - 1) {
-                setCurrentQuestionIndex(prev => prev + 1);
+              if (
+                currentQuestionIndex <
+                interviewQuestionListState.length - 1
+              ) {
+                setCurrentQuestionIndex((prev) => prev + 1);
               }
             }
           }
         } catch (error) {
-          console.error('Interview process error:', error);
+          console.error("Interview process error:", error);
           setIsGenerating(false);
         }
       }
@@ -320,7 +349,7 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
 
   const renderAnswers = (questionIndex) => {
     const questionAnswers = answers[questionIndex] || [];
-    
+
     return (
       <>
         {questionAnswers.map((answer, index) => (
@@ -329,12 +358,10 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
               <Thumb />
               {answer.persona.persona}
             </TypeName>
-            <TextContainer>
-              {answer.answer}
-            </TextContainer>
+            <TextContainer>{answer.answer}</TextContainer>
           </AnswerItem>
         ))}
-        {isGenerating && interviewStatus[questionIndex] === 'Ing' && (
+        {isGenerating && interviewStatus[questionIndex] === "Ing" && (
           <AnswerItem>
             <TypeName>
               <Thumb />
@@ -371,16 +398,16 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
   };
 
   useEffect(() => {
-    setVisibleAnswers(prev => {
+    setVisibleAnswers((prev) => {
       const newVisibleAnswers = { ...prev };
       interviewStatus.forEach(async (status, index) => {
         // 진행중인 질문은 자동으로 열기
-        if (status === 'Ing') {
+        if (status === "Ing") {
           newVisibleAnswers[index] = true;
         }
         // 완료된 질문은 자동으로 닫기
-        else if (status === 'Complete') {
-          await new Promise(resolve => setTimeout(resolve, 5000));
+        else if (status === "Complete") {
+          await new Promise((resolve) => setTimeout(resolve, 5000));
           newVisibleAnswers[index] = false;
         }
       });
@@ -390,40 +417,55 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
 
   const handleAnswerToggle = (index) => {
     // 'Pre' 상태일 때는 토글 불가능
-    if (interviewStatus[index] === 'Pre') return;
-    
-    setVisibleAnswers(prev => ({ ...prev, [index]: !prev[index] }));
+    if (interviewStatus[index] === "Pre") return;
+
+    setVisibleAnswers((prev) => ({ ...prev, [index]: !prev[index] }));
   };
 
   const renderInterviewItems = () => {
     return interviewQuestionListState.map((item, index) => (
-      <InterviewItem 
-        key={index} 
-        status={interviewStatus[index] || 'Pre'}
+      <InterviewItem
+        key={index}
+        status={interviewStatus[index] || "Pre"}
         // 'Pre' 상태일 때는 커서 스타일 변경
-        style={{ cursor: interviewStatus[index] === 'Pre' ? 'default' : 'pointer' }}
+        style={{
+          cursor: interviewStatus[index] === "Pre" ? "default" : "pointer",
+        }}
       >
         <QuestionWrap onClick={() => handleAnswerToggle(index)}>
-          <Number status={interviewStatus[index] || 'Pre'}>{index + 1}</Number>
+          <Number status={interviewStatus[index] || "Pre"}>{index + 1}</Number>
           <QuestionText>{item.question}</QuestionText>
-          <Status status={interviewStatus[index] || 'Pre'}>
-            {interviewStatus[index] === 'Ing' ? '진행중'
-            : interviewStatus[index] === 'Complete' ? '완료' 
-            : '준비중'}
+          <Status status={interviewStatus[index] || "Pre"}>
+            {interviewStatus[index] === "Ing"
+              ? "진행중"
+              : interviewStatus[index] === "Complete"
+              ? "완료"
+              : "준비중"}
           </Status>
         </QuestionWrap>
-        {visibleAnswers[index] && (interviewStatus[index] === 'Ing' || interviewStatus[index] === 'Complete') && (
-          <AnswerWrap>
-            {renderAnswers(index)}
-          </AnswerWrap>
-        )}
+        {visibleAnswers[index] &&
+          (interviewStatus[index] === "Ing" ||
+            interviewStatus[index] === "Complete") && (
+            <AnswerWrap>{renderAnswers(index)}</AnswerWrap>
+          )}
       </InterviewItem>
     ));
   };
 
-  const handleCheckResult = () => {
+  const handleCheckResult = async () => {
     handleWarningClose();
     setIsPersonaAccessible(true);
+    if (!reportId && isPersonaAccessible) {
+      try {
+        let newReportId = await createProjectReportOnServer(isLoggedIn);
+        setReportId(newReportId); // 생성된 대화 ID 설정
+        setIsPersonaAccessible(true);
+      } catch (error) {
+        // setIsLoadingPage(false); // 로딩 완료
+        setIsPersonaAccessible(true);
+        console.error("Failed to create project on server:", error);
+      }
+    }
     navigate(`/Persona/4/${projectId}`, { replace: true });
   };
 
@@ -439,13 +481,15 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
             <ul>
               <li>
                 <span>
-                  <img src={images.QuestionCount} alt="문항수" />문항수
+                  <img src={images.QuestionCount} alt="문항수" />
+                  문항수
                 </span>
                 <span>3개</span>
               </li>
               <li>
                 <span>
-                  <img src={images.PersonaCount} alt="참여페르소나" />참여페르소나
+                  <img src={images.PersonaCount} alt="참여페르소나" />
+                  참여페르소나
                 </span>
                 <span>{personaList.selected.length}명</span>
               </li>
@@ -462,7 +506,7 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
               </p>
             </LoadingBox> */}
 
-            {isLoadingPrepare &&
+            {isLoadingPrepare && (
               <LoadingBox>
                 <Loading>
                   <div />
@@ -474,11 +518,11 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
                   <span>잠시만 기다려주세요 ...</span>
                 </p>
               </LoadingBox>
-            }
+            )}
 
             {!isLoadingPrepare && renderInterviewItems()}
 
-            {isAnalyzing &&
+            {isAnalyzing && (
               <LoadingBox>
                 <Loading>
                   <div />
@@ -486,30 +530,30 @@ const OrganismToastPopup = ({ isActive, onClose }) => {
                   <div />
                 </Loading>
                 <p>
-                  인터뷰 결과를 취합하고 분석 중입니다. 
+                  인터뷰 결과를 취합하고 분석 중입니다.
                   <span>잠시만 기다려주세요 ...</span>
                 </p>
               </LoadingBox>
-            }
+            )}
 
-            {isAnalysisComplete &&
+            {isAnalysisComplete && (
               <LoadingBox Complete>
                 <img src={images.CheckCircleFill} alt="완료" />
 
-              <p>
-                결과 분석이 완료되었습니다. 지금 바로 확인해보세요!
-                <span onClick={handleCheckResult}>지금 확인하기</span>
+                <p>
+                  결과 분석이 완료되었습니다. 지금 바로 확인해보세요!
+                  <span onClick={handleCheckResult}>지금 확인하기</span>
                 </p>
               </LoadingBox>
-            }
+            )}
           </Contents>
         </ToastPopup>
       </PopupBox>
 
       {showWarning && (
-        <PopupWrap 
+        <PopupWrap
           Warning
-          title="인터뷰를 종료하시겠습니까?" 
+          title="인터뷰를 종료하시겠습니까?"
           message="모든 내역이 사라집니다. 그래도 중단 하시겠습니까?"
           buttonType="Outline"
           closeText="중단하기"
@@ -529,20 +573,22 @@ const PopupBox = styled.div`
   position: fixed;
   top: 0;
   right: 100%;
-  transform: ${({ isActive }) => isActive ? 'translateX(100%)' : 'translateX(0)'};
+  transform: ${({ isActive }) =>
+    isActive ? "translateX(100%)" : "translateX(0)"};
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
   transition: transform 0.3s ease;
   z-index: 101;
-  visibility: ${({ isActive }) => isActive ? 'visible' : 'hidden'};
+  visibility: ${({ isActive }) => (isActive ? "visible" : "hidden")};
 `;
 
 const ToastPopup = styled.div`
   position: fixed;
   top: 0;
   right: 0;
-  transform: ${({ isActive }) => isActive ? 'translateX(0)' : 'translateX(100%)'};
+  transform: ${({ isActive }) =>
+    isActive ? "translateX(0)" : "translateX(100%)"};
   width: 100%;
   max-width: 800px;
   height: 100vh;
@@ -566,9 +612,9 @@ const Header = styled.div`
   width: 100%;
 
   ul {
-    display:flex;
-    align-items:center;
-    width:100%;
+    display: flex;
+    align-items: center;
+    width: 100%;
     font-size: 0.88rem;
     color: ${palette.gray500};
     font-weight: 300;
@@ -615,7 +661,8 @@ export const ColseButton = styled.button`
   background: none;
   padding: 0;
 
-  &:before, &:after {
+  &:before,
+  &:after {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -623,9 +670,9 @@ export const ColseButton = styled.button`
     height: 100%;
     border-radius: 10px;
     background-color: ${palette.black};
-    content: '';
+    content: "";
   }
-  
+
   &:before {
     transform: translate(-50%, -50%) rotate(45deg);
   }
@@ -673,7 +720,8 @@ const LoadingBox = styled.div`
       color: ${palette.white};
       padding: 8px 16px;
       border-radius: 10px;
-      background: ${props => props.Complete ? palette.primary : palette.gray300};
+      background: ${(props) =>
+        props.Complete ? palette.primary : palette.gray300};
       cursor: pointer;
     }
   }
@@ -732,13 +780,13 @@ const Loading = styled.div`
       background: rgba(34, 111, 255, 1);
       animation: ${move} 2s 0s linear infinite;
       animation-delay: -3s;
-      opacity: .7;
+      opacity: 0.7;
     }
     &:nth-child(2) {
       border: 1px solid ${palette.primary};
       background: rgba(34, 111, 255, 1);
       animation: ${move} 2s 0s linear infinite;
-      opacity: .5;
+      opacity: 0.5;
     }
     &:nth-child(3) {
       background: ${palette.primary};
@@ -757,7 +805,7 @@ const InterviewItem = styled.div`
   padding: 20px;
   border-radius: 10px;
   border: 1px solid ${palette.outlineGray};
-  cursor: ${props => props.status === 'Pre' ? 'default' : 'pointer'};
+  cursor: ${(props) => (props.status === "Pre" ? "default" : "pointer")};
 `;
 
 const QuestionWrap = styled.div`
@@ -766,7 +814,10 @@ const QuestionWrap = styled.div`
   justify-content: flex-start;
   gap: 12px;
   width: 100%;
-  // cursor: ${props => (props.status === 'Ing' || props.status === 'Complete') ? 'pointer' : 'default'};
+  /* cursor: ${(props) =>
+    props.status === "Ing" || props.status === "Complete"
+      ? "pointer"
+      : "default"}; */
   cursor: inherit;
 `;
 
@@ -779,15 +830,20 @@ const Number = styled.div`
   height: 30px;
   font-size: 0.875rem;
   line-height: 1.5;
-  color: ${props => 
-    props.status === 'Ing' ? palette.primary 
-    : props.status === 'Complete' ? palette.green 
-    : palette.gray300};
+  color: ${(props) =>
+    props.status === "Ing"
+      ? palette.primary
+      : props.status === "Complete"
+      ? palette.green
+      : palette.gray300};
   border-radius: 2px;
-  border: 1px solid ${props => 
-    props.status === 'Ing' ? palette.primary 
-    : props.status === 'Complete' ? palette.green
-    : palette.gray300};
+  border: 1px solid
+    ${(props) =>
+      props.status === "Ing"
+        ? palette.primary
+        : props.status === "Complete"
+        ? palette.green
+        : palette.gray300};
   background: ${palette.chatGray};
 `;
 
@@ -807,27 +863,30 @@ const Status = styled.div`
   gap: 8px;
   font-size: 0.75rem;
   line-height: 1.5;
-  color: ${props =>
-    props.status === 'Ing' ? palette.primary
-    : props.status === 'Complete' ? palette.green
-    : palette.gray700
-  };
+  color: ${(props) =>
+    props.status === "Ing"
+      ? palette.primary
+      : props.status === "Complete"
+      ? palette.green
+      : palette.gray700};
   margin-left: auto;
   padding: 2px 8px;
   border-radius: 2px;
-  border: ${props =>
-    props.status === 'Ing' ? `1px solid ${palette.primary}`
-    : props.status === 'Complete' ? `1px solid ${palette.green}`
-    : `1px solid ${palette.outlineGray}`
-  };
-  background: ${props =>
-    props.status === 'Ing' ? `rgba(34, 111, 255, 0.04)`
-    : props.status === 'Complete' ? palette.white
-    : palette.chatGray
-  };
+  border: ${(props) =>
+    props.status === "Ing"
+      ? `1px solid ${palette.primary}`
+      : props.status === "Complete"
+      ? `1px solid ${palette.green}`
+      : `1px solid ${palette.outlineGray}`};
+  background: ${(props) =>
+    props.status === "Ing"
+      ? `rgba(34, 111, 255, 0.04)`
+      : props.status === "Complete"
+      ? palette.white
+      : palette.chatGray};
 
   &:before {
-    content: '';
+    content: "";
     background: url(${images.CheckGreen}) center no-repeat;
   }
 `;
@@ -901,7 +960,7 @@ const flash = keyframes`
 const Entering = styled.div`
   width: 6px;
   height: 6px;
-  margin:0 12px;
+  margin: 0 12px;
   border-radius: 50%;
   background: ${palette.gray500};
   box-shadow: 12px 0 ${palette.gray500}, -12px 0 ${palette.gray500};

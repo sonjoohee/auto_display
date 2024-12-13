@@ -5,27 +5,23 @@ import { useAtom } from "jotai";
 import {
   IS_PERSONA_ACCESSIBLE,
   IS_LOGGED_IN,
+  BUSINESS_ANALYSIS,
   PROJECT_ID,
   PROJECT_REPORT_ID,
   REPORT_LOAD_BUTTON_STATE,
+  PERSONA_LIST,
+  REPORT_LIST,
+  INTERVIEW_DATA,
   SELECTED_INTERVIEW_PURPOSE,
   INTERVIEW_REPORT,
   INTERVIEW_REPORT_ADDITIONAL,
-  INTERVIEW_QUESTION_LIST
+  INTERVIEW_QUESTION_LIST,
 } from "../../../AtomStates";
 import {
   ContentsWrap,
-  ContentSection,
   MainContent,
   AnalysisWrap,
   MainSection,
-  Title,
-  CardWrap,
-  CustomizePersona,
-  AccordionSection,
-  CustomAccordionHeader,
-  CustomAccordionIcon,
-  CustomAccordionContent,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import Header from "../molecules/MoleculeHeader";
 import { palette } from "../../../../assets/styles/Palette";
@@ -33,15 +29,25 @@ import images from "../../../../assets/styles/Images";
 // import Sidebar from "../../../Design_Page/IncSidebar";
 import IncNavigation from "../organisms/OrganismIncNavigation";
 import OrganismBusinessAnalysis from "../organisms/OrganismBisinessAnalysis";
-import { createProjectReportOnServer } from "../../../../utils/indexedDB";
+import { updateProjectOnServer } from "../../../../utils/indexedDB";
+import { updateProjectReportOnServer } from "../../../../utils/indexedDB";
 import { getProjectReportByIdFromIndexedDB } from "../../../../utils/indexedDB";
+import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
 
 const PagePersona4 = () => {
+  const [reportList, setReportList] = useAtom(REPORT_LIST);
+  const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
+  const [interviewData, setInterviewData] = useAtom(INTERVIEW_DATA);
+  const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
   const navigate = useNavigate();
-  const [interviewQuestionList, setInterviewQuestionList] = useAtom(INTERVIEW_QUESTION_LIST);
+  const [interviewQuestionList, setInterviewQuestionList] = useAtom(
+    INTERVIEW_QUESTION_LIST
+  );
   const [interviewReport, setInterviewReport] = useAtom(INTERVIEW_REPORT);
-  const [interviewReportAdditional, setInterviewReportAdditional] = useAtom(INTERVIEW_REPORT_ADDITIONAL);
+  const [interviewReportAdditional, setInterviewReportAdditional] = useAtom(
+    INTERVIEW_REPORT_ADDITIONAL
+  );
   const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
     IS_PERSONA_ACCESSIBLE
   );
@@ -95,33 +101,61 @@ const PagePersona4 = () => {
   useEffect(() => {
     const loadProjectReport = async () => {
       // 1. 로그인 여부 확인
-      if (reportLoadButtonState) {
+      if (reportId && reportLoadButtonState) {
         // 2. 로그인 상태라면 서버에서 새로운 대화 ID를 생성하거나, 저장된 대화를 불러옴
+        const savedProjectInfo = await getProjectByIdFromIndexedDB(
+          projectId,
+          reportLoadButtonState
+        );
+        if (savedProjectInfo) {
+          setBusinessAnalysis(savedProjectInfo.businessAnalysis);
+          setReportList(savedProjectInfo.reportList);
+        }
         const savedProjectReportInfo = await getProjectReportByIdFromIndexedDB(
           reportId,
           reportLoadButtonState
         );
         if (savedProjectReportInfo) {
-          // const analysisData = savedProjectInfo.analysisReportData || {};
-          // setTitleOfBusinessInfo(analysisData.title || "");
-          // setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
-          // setInputBusinessInfo(savedProjectInfo.inputBusinessInfo);
-          // setPersonaList(savedProjectInfo.personaList);
+          setSelectedInterviewPurpose(savedProjectReportInfo.theory_type);
+          setInterviewData(savedProjectReportInfo.interviewData);
+          setPersonaList(savedProjectReportInfo.personaList);
+          setInterviewReport(savedProjectReportInfo.interviewReport);
+          setInterviewReportAdditional(
+            savedProjectReportInfo.interviewReportAdditional
+          );
         }
         // setIsLoadingPage(false); // 로딩 완료
         setReportLoadButtonState(false);
       } else {
         // 2. 로그인 상태라면 서버에서 새로운 대화 ID를 생성하거나, 저장된 대화를 불러옴
-        if (!reportId && isPersonaAccessible) {
-          try {
-            newReportId = await createProjectReportOnServer(isLoggedIn);
-            setReportId(newReportId); // 생성된 대화 ID 설정
-            setIsPersonaAccessible(true);
-          } catch (error) {
-            // setIsLoadingPage(false); // 로딩 완료
-            setIsPersonaAccessible(true);
-            console.error("Failed to create project on server:", error);
-          }
+        if (reportId && isPersonaAccessible) {
+          await updateProjectReportOnServer(
+            reportId,
+            {
+              theory_type: selectedInterviewPurpose,
+              interviewData: interviewData,
+              personaList: personaList.selected,
+              interviewReport: interviewReport,
+              interviewReportAdditional: interviewReportAdditional,
+            },
+            isLoggedIn
+          );
+          await updateProjectOnServer(
+            projectId,
+            {
+              reportList: [
+                ...reportList,
+                {
+                  reportId: reportId,
+                  reportTitle: selectedInterviewPurpose,
+                  interviewQuestionLength: interviewQuestionList.length,
+                  selectedPersona: personaList.selected,
+                  createDate: new Date().toISOString(),
+                },
+              ],
+            },
+            isLoggedIn
+          );
         }
       }
     };
@@ -163,28 +197,28 @@ const PagePersona4 = () => {
     switch (purpose) {
       case "제품 경험 평가":
         return "제품이 고객에게 어떤 가치를 전달하고 있는지, 소비자들이 느끼는 장점과 개선점을 세심히 파악하기 위해 진행되었습니다. 이를 통해 제품에 대한 긍정적인 경험을 더욱 확장하고, 고객 만족과 구매 전환율을 높이는 데 기여하고자 합니다.";
-      
+
       case "구매 전환 요인 분석":
         return "소비자가 구매를 결정하는 데 영향을 미치는 핵심 요인을 파악하여, 최적의 구매 환경을 설계하기 위해 수행됩니다. 이를 통해 고객의 구매 장벽을 낮추고 전환율을 높이는 전략적 개선점을 도출합니다.";
-      
+
       case "소비자 여정 맵핑":
         return "소비자가 제품 또는 서비스를 이용하는 과정에서의 모든 접점과 경험을 분석하여, 고객의 니즈와 개선이 필요한 부분을 명확히 식별하는 데 활용됩니다. 이를 기반으로 고객 여정을 최적화하고 긍정적인 경험을 제공합니다.";
-      
+
       case "사용 맥락 조사":
         return "제품이 사용되는 실제 환경과 상황적 요인을 이해하여, 사용자 경험에 영향을 미치는 요소를 체계적으로 분석합니다. 이를 통해 제품 사용의 편의성을 높이고 환경적 제약을 고려한 개선안을 도출합니다.";
-      
+
       case "제품 이해도 테스트":
         return "소비자가 제품의 개념과 사용 방법을 얼마나 잘 이해하는지를 측정하고, 이를 바탕으로 정보 전달과 사용성 문제를 해결합니다. 이를 통해 제품과 사용자 간의 상호작용을 개선합니다.";
-      
+
       case "소비자 행동 유도 요소 분석":
         return "소비자가 구매, 클릭 등의 특정 행동을 하도록 유도하는 설계 요소를 분석하여, 전환율을 높이는 전략적 개선 기회를 제공합니다. 이를 통해 사용자 참여를 극대화하고 비즈니스 성과를 향상시킵니다.";
-      
+
       case "제품 기대치 확인":
         return "소비자가 제품에 대해 가지는 초기 기대와 실제 사용 경험 간의 차이를 분석하여, 기대 불일치를 줄이고 사용자 만족을 높이는 데 초점을 맞춥니다. 이를 통해 고객 신뢰를 강화하고 긍정적인 제품 이미지를 확립합니다.";
-      
+
       case "사용자 경험 시뮬레이션":
         return "제품 사용 과정을 가상으로 재현하여, 발생 가능한 문제를 사전에 파악하고 개선 기회를 찾는 데 활용됩니다. 이를 통해 사용자 중심의 설계를 실현하고 제품 품질을 한 단계 끌어올립니다.";
-      
+
       default:
         return "제품이 고객에게 어떤 가치를 전달하고 있는지, 소비자들이 느끼는 장점과 개선점을 세심히 파악하기 위해 진행되었습니다. 이를 통해 제품에 대한 긍정적인 경험을 더욱 확장하고, 고객 만족과 구매 전환율을 높이는 데 기여하고자 합니다.";
     }
@@ -210,7 +244,9 @@ const PagePersona4 = () => {
                 <div>
                   <ReportHeader>
                     <h3>{selectedInterviewPurpose} 결과 리포트</h3>
-                    <p>{getInterviewPurposeDescription(selectedInterviewPurpose)}</p>
+                    <p>
+                      {getInterviewPurposeDescription(selectedInterviewPurpose)}
+                    </p>
                   </ReportHeader>
 
                   <ReportContent>
@@ -238,7 +274,10 @@ const PagePersona4 = () => {
                       <h3>
                         3. 문항별 결과
                         <span>
-                          <img src={images.ReportSearch} alt="인터뷰 스크립트 보기" />
+                          <img
+                            src={images.ReportSearch}
+                            alt="인터뷰 스크립트 보기"
+                          />
                           인터뷰 스크립트 보기
                         </span>
                       </h3>
@@ -268,10 +307,16 @@ const PagePersona4 = () => {
                               <strong>인터뷰 인사이드</strong>
                               <div>
                                 <p>
-                                  {interviewReport[2].content[0].question_insight[0].text}
+                                  {
+                                    interviewReport[2].content[0]
+                                      .question_insight[0].text
+                                  }
                                 </p>
                                 <p>
-                                  {interviewReport[2].content[0].question_insight[1].text}
+                                  {
+                                    interviewReport[2].content[0]
+                                      .question_insight[1].text
+                                  }
                                 </p>
                               </div>
                             </BgInside>
@@ -285,9 +330,7 @@ const PagePersona4 = () => {
                           isOpen={openAccordion === 2}
                         >
                           <span>2</span>
-                          <p>
-                            {existingQuestions?.questions[1]?.question}
-                          </p>
+                          <p>{existingQuestions?.questions[1]?.question}</p>
                         </AccordionHeader>
 
                         {openAccordion === 2 && (
@@ -306,10 +349,16 @@ const PagePersona4 = () => {
                               <strong>인터뷰 인사이드</strong>
                               <div>
                                 <p>
-                                  {interviewReport[2].content[1].question_insight[0].text}
+                                  {
+                                    interviewReport[2].content[1]
+                                      .question_insight[0].text
+                                  }
                                 </p>
                                 <p>
-                                  {interviewReport[2].content[1].question_insight[1].text}
+                                  {
+                                    interviewReport[2].content[1]
+                                      .question_insight[1].text
+                                  }
                                 </p>
                               </div>
                             </BgInside>
@@ -323,9 +372,7 @@ const PagePersona4 = () => {
                           isOpen={openAccordion === 3}
                         >
                           <span>3</span>
-                          <p>
-                            {existingQuestions?.questions[2]?.question}
-                          </p>
+                          <p>{existingQuestions?.questions[2]?.question}</p>
                         </AccordionHeader>
 
                         {openAccordion === 3 && (
@@ -344,10 +391,16 @@ const PagePersona4 = () => {
                               <strong>인터뷰 인사이드</strong>
                               <div>
                                 <p>
-                                  {interviewReport[2].content[2].question_insight[0].text}
+                                  {
+                                    interviewReport[2].content[2]
+                                      .question_insight[0].text
+                                  }
                                 </p>
                                 <p>
-                                  {interviewReport[2].content[2].question_insight[1].text}
+                                  {
+                                    interviewReport[2].content[2]
+                                      .question_insight[1].text
+                                  }
                                 </p>
                               </div>
                             </BgInside>
@@ -467,7 +520,6 @@ const PagePersona4 = () => {
 
               <MoleculeStepIndicator steps={steps} activeStep={5} />
             </Sidebar>
-          
           </AnalysisWrap>
         </MainContent>
       </ContentsWrap>
@@ -804,8 +856,8 @@ const CardBadge = styled.div`
   padding: 4px 12px;
   margin-top: auto;
   border-radius: 14px;
-  
-  ${props => {
+
+  ${(props) => {
     switch (props.text) {
       case "브랜드 파워":
         return `
