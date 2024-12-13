@@ -191,6 +191,8 @@ import FileText from "../images/file-text.svg"
 import PeopleFill from "../images/people-fill.svg"
 import ReportSearch from "../images/report-search.svg"
 import PersonCircle from "../images/person-circle.svg"
+import FileFill from "../images/file-fill.svg"
+import PeopleFillPrimary from "../images/people-fill-primary.svg"
 
 import DiscoveryBrand from "../images/Discovery-Brand.png"
 import DiscoveryInsight from "../images/Discovery-Insight.png"
@@ -402,6 +404,8 @@ const images = {
   PeopleFill,
   ReportSearch,
   PersonCircle,
+  FileFill,
+  PeopleFillPrimary,
 
   DiscoveryBrand,
   DiscoveryInsight,

@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
+import { Button } from "../../../../assets/styles/ButtonStyle";
 import { Badge } from "../../../../assets/styles/Badge";
+import images from "../../../../assets/styles/Images";
 
 const OrganismProjectCard = ({ project, index }) => {
   const navigate = useNavigate();
@@ -38,6 +40,7 @@ const OrganismProjectCard = ({ project, index }) => {
   };
 
   return (
+    <>
     <ProjectItem $isOpen={openStates[index]}>
       <ProjectInfo>
         <Name>
@@ -80,12 +83,16 @@ const OrganismProjectCard = ({ project, index }) => {
 
       {openStates[index] && (
         <ProjectButton>
-          <p>맞춤 페르소나와 인터뷰를 시작해보세요!</p>
+          <p>
+            <img src={images.PeopleFillPrimary} alt="" />
+            맞춤 페르소나와 인터뷰를 시작해보세요!
+          </p>
           <button onClick={() => navigate(`/Persona/${project._id}`)}>
             바로가기
           </button>
         </ProjectButton>
       )}
+    </ProjectItem>
 
       {openStates[index] && (
         <ProjectView className={closingStates[index] ? "closing" : ""}>
@@ -117,16 +124,17 @@ const OrganismProjectCard = ({ project, index }) => {
           ) : (
             <ViewInfoNodata>
               <div>
+                <img src={images.FileFill} alt="" />
                 <div>
-                  아직 생성된 리포트가 없습니다.
-                  <span>리포트 생성하기</span>
+                  현재 리포트가 비어 있습니다.<br />추천 페르소나와 인터뷰를 완료하시면 결과 리포트를 확인할 수 있습니다.
+                  <Button Medium Primary Round>맞춤페르소나와 인터뷰 진행하기</Button>
                 </div>
               </div>
             </ViewInfoNodata>
           )}
         </ProjectView>
       )}
-    </ProjectItem>
+    </>
   );
 };
 
@@ -376,7 +384,12 @@ const ProjectButton = styled.div`
   border-top: 1px solid ${palette.outlineGray};
 
   p {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 4px;
     font-size: 0.875rem;
+    font-weight: 300;
     color: ${palette.gray800};
   }
 
