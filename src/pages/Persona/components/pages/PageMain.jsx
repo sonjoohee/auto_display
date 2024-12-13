@@ -855,6 +855,21 @@ const PageMain = () => {
             </ExpertSelectBox>
           </ExpertSelectWrap>
         </MainContent>
+
+        <QuickMenu showText={showText} showHint={showHint}>
+          {showHint && <span>창업 MBTI 진행하기</span>}
+          <button
+            onMouseEnter={() => setShowText(true)}
+            onMouseLeave={() => setShowText(false)}
+            onClick={() => navigate("/MarketingLanding")}
+          >
+            <p>
+              <img src={images.SymbolLogo} alt="" />
+            </p>
+            <span>창업 MBTI로 창업 스타일 찾기</span>
+          </button>
+        </QuickMenu>
+
       </ContentsWrap>
       {isPopupRegex && (
         <Popup
@@ -1498,5 +1513,79 @@ const Popup = styled.div`
           }
         }
       `}
+  }
+`;
+
+const QuickMenu = styled.div`
+  position: fixed;
+  bottom: 3%;
+  right: 3%;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  gap: 10px;
+  transition: all 0.5s;
+
+  > span {
+    position: relative;
+    font-size: 0.88rem;
+    color: ${palette.white};
+    line-height: 1.5;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: ${palette.gray800};
+    opacity: ${(props) => (props.showHint ? 1 : 0)};
+    transition: opacity 1s ease-in-out;
+
+    &:after {
+      position: absolute;
+      bottom: -5px;
+      right: 12px;
+      transform: rotate(45deg);
+      width: 17px;
+      height: 17px;
+      border-radius: 6px;
+      background: ${palette.gray800};
+      content: "";
+    }
+  }
+
+  > button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: ${(props) => (props.showText ? "auto" : "40px")};
+    height: 40px;
+    font-family:Pretendard, Poppins;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: ${palette.white};
+    line-height: 1.5;
+    // padding-right:15px;
+    padding-right: ${(props) => (props.showText ? "15px" : "0px")};
+    border-radius: 30px;
+    border: 0;
+    box-shadow: 2px 2px 15px 0px rgba(0, 0, 0, 0.15);
+    background: #242dff;
+    overflow: hidden;
+    transition: width 0.5s ease;
+
+    p {
+      width: 30px;
+      height: 40px;
+      overflow: hidden;
+
+      img {
+        height: 100%;
+      }
+    }
+
+    span {
+      // visibility: ${(props) => (props.showText ? "visible" : "hidden")};
+      opacity: ${(props) => (props.showText ? 1 : 0)};
+      transition: opacity 0.3s ease, width 0.3s ease, font-size 0.3s ease;
+      width: ${(props) => (props.showText ? "auto" : "0")};
+      font-size: ${(props) => (props.showText ? "0.88rem" : "0")};
+    }
   }
 `;

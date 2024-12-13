@@ -210,72 +210,72 @@ const PagePersona2 = () => {
           );
 
           let requestPersonaList = response.data;
-          // let retryCount = 0;
-          // const maxRetries = 10;
-          // console.log(requestPersonaList);
-          // while (
-          //   retryCount < maxRetries &&
-          //   (!response ||
-          //     !response.data ||
-          //     !requestPersonaList[0].hasOwnProperty("persona_spectrum") ||
-          //     !requestPersonaList[0].hasOwnProperty("positioning_analysis") ||
-          //     requestPersonaList[0].persona_spectrum.length !== 3 ||
-          //     !requestPersonaList[0].persona_spectrum[0].hasOwnProperty(
-          //       "persona_1"
-          //     ) ||
-          //     !requestPersonaList[0].persona_spectrum[1].hasOwnProperty(
-          //       "persona_2"
-          //     ) ||
-          //     !requestPersonaList[0].persona_spectrum[2].hasOwnProperty(
-          //       "persona_3"
-          //     ) ||
-          //     !requestPersonaList[0].persona_spectrum[0].persona_1.hasOwnProperty(
-          //       "persona"
-          //     ) ||
-          //     !requestPersonaList[0].persona_spectrum[1].persona_2.hasOwnProperty(
-          //       "persona"
-          //     ) ||
-          //     !requestPersonaList[0].persona_spectrum[2].persona_3.hasOwnProperty(
-          //       "persona"
-          //     ) ||
-          //     !requestPersonaList[0].persona_spectrum[0].persona_1.persona ||
-          //     !requestPersonaList[0].persona_spectrum[1].persona_2.persona ||
-          //     !requestPersonaList[0].persona_spectrum[2].persona_3.persona ||
-          //     !requestPersonaList[0].persona_spectrum[0].persona_1.hasOwnProperty(
-          //       "keyword"
-          //     ) ||
-          //     !requestPersonaList[0].persona_spectrum[1].persona_2.hasOwnProperty(
-          //       "keyword"
-          //     ) ||
-          //     !requestPersonaList[0].persona_spectrum[2].persona_3.hasOwnProperty(
-          //       "keyword"
-          //     ) ||
-          //     requestPersonaList[0].persona_spectrum[0].persona_1.keyword
-          //       .length != 3 ||
-          //     requestPersonaList[0].persona_spectrum[1].persona_2.keyword
-          //       .length != 3 ||
-          //     requestPersonaList[0].persona_spectrum[2].persona_3.keyword
-          //       .length != 3
-          //     )
-          // ) {
-          //   response = await axios.post(
-          //     "https://wishresearch.kr/person/persona_request",
-          //     data,
-          //     axiosConfig
-          //   );
-          //   retryCount++;
+          let retryCount = 0;
+          const maxRetries = 10;
+          console.log(requestPersonaList);
+          while (
+            retryCount < maxRetries &&
+            (!response ||
+              !response.data ||
+              !requestPersonaList.hasOwnProperty("persona_spectrum") ||
+              !requestPersonaList.hasOwnProperty("positioning_analysis") ||
+              requestPersonaList.persona_spectrum.length !== 3 ||
+              !requestPersonaList.persona_spectrum[0].hasOwnProperty(
+                "persona_1"
+              ) ||
+              !requestPersonaList.persona_spectrum[1].hasOwnProperty(
+                "persona_2"
+              ) ||
+              !requestPersonaList.persona_spectrum[2].hasOwnProperty(
+                "persona_3"
+              ) ||
+              !requestPersonaList.persona_spectrum[0].persona_1.hasOwnProperty(
+                "persona"
+              ) ||
+              !requestPersonaList.persona_spectrum[1].persona_2.hasOwnProperty(
+                "persona"
+              ) ||
+              !requestPersonaList.persona_spectrum[2].persona_3.hasOwnProperty(
+                "persona"
+              ) ||
+              !requestPersonaList.persona_spectrum[0].persona_1.persona ||
+              !requestPersonaList.persona_spectrum[1].persona_2.persona ||
+              !requestPersonaList.persona_spectrum[2].persona_3.persona ||
+              !requestPersonaList.persona_spectrum[0].persona_1.hasOwnProperty(
+                "keyword"
+              ) ||
+              !requestPersonaList.persona_spectrum[1].persona_2.hasOwnProperty(
+                "keyword"
+              ) ||
+              !requestPersonaList.persona_spectrum[2].persona_3.hasOwnProperty(
+                "keyword"
+              ) ||
+              requestPersonaList.persona_spectrum[0].persona_1.keyword
+                .length != 3 ||
+              requestPersonaList.persona_spectrum[1].persona_2.keyword
+                .length != 3 ||
+              requestPersonaList.persona_spectrum[2].persona_3.keyword
+                .length != 3
+              )
+          ) {
+            response = await axios.post(
+              "https://wishresearch.kr/person/persona_request",
+              data,
+              axiosConfig
+            );
+            retryCount++;
 
-          //   requestPersonaList = response.data;
-          // }
-          // if (retryCount === maxRetries) {
-          //   throw new Error(
-          //     "Maximum retry attempts reached. Empty response persists."
-          //   );
-          // }
+            requestPersonaList = response.data;
+          }
+          if (retryCount === maxRetries) {
+            throw new Error(
+              "Maximum retry attempts reached. Empty response persists."
+            );
+          }
  
           const requestPersonaData = {
-            persona: requestPersonaList[0].persona_spectrum,
-            positioning: requestPersonaList[1].positioning_analysis,
+            persona: requestPersonaList.persona_spectrum,
+            positioning: requestPersonaList.positioning_analysis,
           };
 
           setRequestPersonaList(requestPersonaData);
