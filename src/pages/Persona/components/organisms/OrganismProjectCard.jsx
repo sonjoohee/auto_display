@@ -51,7 +51,6 @@ const OrganismProjectCard = ({ project, index }) => {
 
   return (
     <>
-
       <ProjectItem $isOpen={openStates[index]}>
         <ProjectInfo>
           <Name>
@@ -103,7 +102,7 @@ const OrganismProjectCard = ({ project, index }) => {
           </ProjectButton>
         )}
       </ProjectItem>
-// =======
+      {/* // =======
 //     <ProjectItem $isOpen={openStates[index]}>
 //       <ProjectInfo>
 //         <Name>
@@ -142,9 +141,9 @@ const OrganismProjectCard = ({ project, index }) => {
 //             <button onClick={() => toggleView(index)}>자세히 보기</button>
 //           </div>
 //         </Report>
-//       </ProjectInfo>
+//       </ProjectInfo> */}
 
-//       {openStates[index] && (
+      {/* //       {openStates[index] && (
 //         <ProjectButton>
 //           <p>
 //             <img src={images.PeopleFillPrimary} alt="" />
@@ -156,7 +155,7 @@ const OrganismProjectCard = ({ project, index }) => {
 //         </ProjectButton>
 //       )}
 //     </ProjectItem>
-// >>>>>>> main
+// >>>>>>> main */}
 
       {openStates[index] && (
         <ProjectView className={closingStates[index] ? "closing" : ""}>
@@ -190,16 +189,20 @@ const OrganismProjectCard = ({ project, index }) => {
               <div>
                 <img src={images.FileFill} alt="" />
                 <div>
-// <<<<<<< branch-fixProjectCard
+                  {/* // <<<<<<< branch-fixProjectCard
 //                   현재 리포트가 비어 있습니다.
 //                   <br />
 //                   추천 페르소나와 인터뷰를 완료하시면 결과 리포트를 확인할 수
 //                   있습니다.
 //                   <span>맞춤페르소나와 인터뷰 진행하기</span>
-// =======
-                  현재 리포트가 비어 있습니다.<br />추천 페르소나와 인터뷰를 완료하시면 결과 리포트를 확인할 수 있습니다.
-                  <Button Medium Primary Round>맞춤페르소나와 인터뷰 진행하기</Button>
-// >>>>>>> main
+// ======= */}
+                  현재 리포트가 비어 있습니다.
+                  <br />
+                  추천 페르소나와 인터뷰를 완료하시면 결과 리포트를 확인할 수
+                  있습니다.
+                  <Button Medium Primary Round>
+                    맞춤페르소나와 인터뷰 진행하기
+                  </Button>
                 </div>
               </div>
             </ViewInfoNodata>
