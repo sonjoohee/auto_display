@@ -2,6 +2,7 @@ import Logo from "../images/logoInterviewx.svg";
 import SymbolLogo from "../images/symbolLogo.svg";
 import SymbolLogoWhite from "../images/symbolLogoWhite.svg";
 import LogoVerticality from "../images/logo-verticality.svg";
+import LogoSymbolWhite from "../images/logo-symbol-white.svg";
 
 import Filter from "../images/Filter.svg";
 import BgSearch from "../images/BgSearch.png";
@@ -191,6 +192,8 @@ import FileText from "../images/file-text.svg"
 import PeopleFill from "../images/people-fill.svg"
 import ReportSearch from "../images/report-search.svg"
 import PersonCircle from "../images/person-circle.svg"
+import FileFill from "../images/file-fill.svg"
+import PeopleFillPrimary from "../images/people-fill-primary.svg"
 
 import DiscoveryBrand from "../images/Discovery-Brand.png"
 import DiscoveryInsight from "../images/Discovery-Insight.png"
@@ -213,6 +216,7 @@ const images = {
   SymbolLogo,
   SymbolLogoWhite,
   LogoVerticality,
+  LogoSymbolWhite,
   
   Filter,
   BgSearch,
@@ -402,6 +406,8 @@ const images = {
   PeopleFill,
   ReportSearch,
   PersonCircle,
+  FileFill,
+  PeopleFillPrimary,
 
   DiscoveryBrand,
   DiscoveryInsight,

@@ -135,22 +135,40 @@ const PagePersona2 = () => {
 
   useEffect(() => {
     const loadProject = async () => {
-      // 1. 로그인 여부 확인
 
       if (projectLoadButtonState) {
-        // 2. 로그인 상태라면 서버에서 새로운 대화 ID를 생성하거나, 저장된 대화를 불러옴
+
         const savedProjectInfo = await getProjectByIdFromIndexedDB(
           projectId,
           projectLoadButtonState
         );
         if (savedProjectInfo) {
-          const analysisData = savedProjectInfo.analysisReportData || {};
-          setTitleOfBusinessInfo(analysisData.title || "");
-          setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
-          setInputBusinessInfo(savedProjectInfo.inputBusinessInfo);
-          setPersonaList(savedProjectInfo.personaList);
+          setBusinessAnalysis(savedProjectInfo.businessAnalysis);
           setRequestPersonaList(savedProjectInfo.requestPersonaList);
-          setReportList(savedProjectInfo.reportList || []);
+
+          let unselectedPersonas = [];
+          let data, response;
+
+          // 카테고리별로 페르소나 요청
+          for (const category of Object.values(savedProjectInfo.businessAnalysis.category)) {
+            data = {
+              target: category,
+            };
+
+            response = await axios.post(
+              "https://wishresearch.kr/person/find", 
+              data,
+              axiosConfig
+            );
+
+            unselectedPersonas.push(...response.data);
+          }
+
+          let personaList = {
+            selected: [],
+            unselected: unselectedPersonas,
+          };
+          setPersonaList(personaList);
         }
         // setIsLoadingPage(false); // 로딩 완료
       }
@@ -255,12 +273,13 @@ const PagePersona2 = () => {
               !requestPersonaList.persona_spectrum[2].persona_3.hasOwnProperty(
                 "keyword"
               ) ||
-              requestPersonaList.persona_spectrum[0].persona_1.keyword.length !=
-                3 ||
-              requestPersonaList.persona_spectrum[1].persona_2.keyword.length !=
-                3 ||
-              requestPersonaList.persona_spectrum[2].persona_3.keyword.length !=
-                3)
+              requestPersonaList.persona_spectrum[0].persona_1.keyword
+                .length < 3 ||
+              requestPersonaList.persona_spectrum[1].persona_2.keyword
+                .length < 3 ||
+              requestPersonaList.persona_spectrum[2].persona_3.keyword
+                .length < 3
+              )
           ) {
             response = await axios.post(
               "https://wishresearch.kr/person/persona_request",
@@ -475,7 +494,7 @@ const PagePersona2 = () => {
               <h5>Let's Start Now</h5>
 
               <ProgressBar>
-                <span>🚀</span>
+                <span className="icon">🚀</span>
                 <Progress progress={40} />
                 <span>40%</span>
               </ProgressBar>
@@ -699,6 +718,10 @@ const ProgressBar = styled.div`
     font-size: 0.75rem;
     line-height: 1.5;
     color: ${palette.gray700};
+  }
+
+  .icon {
+    font-size: 1.13rem;
   }
 `;
 

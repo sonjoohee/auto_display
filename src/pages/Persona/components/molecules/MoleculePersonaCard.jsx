@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { palette } from '../../../../assets/styles/Palette';
 import images from '../../../../assets/styles/Images';
@@ -21,22 +21,29 @@ const MoleculePersonaCard = ({
   TitleFlex = false,
   onSelect,
   currentSelection,
-  onClick
+  onClick,
+  checked = null,
 }) => {
   const [isChecked, setIsChecked] = useState(false);
+
+  useEffect(() => {
+    setIsChecked(checked);
+  }, [checked]);
 
   const handleCheck = () => {
     if (isCustom) {
       onClick && onClick();  // 팝업 표시를 위한 콜백 실행
       return;
     }
+    onSelect && onSelect();
+
     // 이미 선택된 상태면 항상 해제 가능
-    if (isChecked) {
+    if (isChecked && checked === null) {
       setIsChecked(false);
       onSelect(false);
     } 
     // 새로 선택하는 경우, 최대 선택 개수 확인
-    else if (currentSelection < 5) {
+    else if (currentSelection < 5 && checked === null) {
       setIsChecked(true);
       onSelect(true);
     }
@@ -351,7 +358,7 @@ const CheckCircle = styled.div`
   cursor: pointer;
   background-image: ${props => props.$isChecked 
     ? `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='12' fill='%23226FFF'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
-    : `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='11' stroke='%23E0E4EB' stroke-width='2'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='%23E0E4EB' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
+    : `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='11.5' stroke='%23E0E4EB'/%3E%3C/svg%3E")`
   };
   transition: background-image 0.3s ease-in-out;
   cursor: pointer;

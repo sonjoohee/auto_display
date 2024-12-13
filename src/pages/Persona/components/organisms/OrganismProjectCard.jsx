@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
+import { Button } from "../../../../assets/styles/ButtonStyle";
 import { Badge } from "../../../../assets/styles/Badge";
+import images from "../../../../assets/styles/Images";
 
 const OrganismProjectCard = ({ project, index }) => {
   const navigate = useNavigate();
@@ -49,6 +51,7 @@ const OrganismProjectCard = ({ project, index }) => {
 
   return (
     <>
+
       <ProjectItem $isOpen={openStates[index]}>
         <ProjectInfo>
           <Name>
@@ -100,6 +103,60 @@ const OrganismProjectCard = ({ project, index }) => {
           </ProjectButton>
         )}
       </ProjectItem>
+// =======
+//     <ProjectItem $isOpen={openStates[index]}>
+//       <ProjectInfo>
+//         <Name>
+//           <strong>{project.businessAnalysis.title}</strong>
+//           <span>
+//             생성일 - {new Date(project.updateDate).toLocaleDateString()}
+//           </span>
+//         </Name>
+//         <Persona>
+//           <div>
+//             <span>기본형</span>
+//             <p>{project.personaList || 0}명</p>
+//           </div>
+//           <div>
+//             <span>커스터마이즈</span>
+//             <p>
+//               {project.customPersonaList?.persona?.length || 0}명
+//               {project.customPersonaList?.persona?.length > 0 && <Badge New />}
+//             </p>
+//           </div>
+//         </Persona>
+//         <Recruit>
+//           <span>
+//             {project.requestPersonaList?.persona?.length || 0}개 페르소나
+//           </span>
+//           <p className={getRecruitStatus(project)}>
+//             {getRecruitStatusText(project)}
+//           </p>
+//         </Recruit>
+//         <Report>
+//           <div>
+//             <span>Report</span>
+//             <p>{project.projectReportList?.length || 0}건</p>
+//           </div>
+//           <div>
+//             <button onClick={() => toggleView(index)}>자세히 보기</button>
+//           </div>
+//         </Report>
+//       </ProjectInfo>
+
+//       {openStates[index] && (
+//         <ProjectButton>
+//           <p>
+//             <img src={images.PeopleFillPrimary} alt="" />
+//             맞춤 페르소나와 인터뷰를 시작해보세요!
+//           </p>
+//           <button onClick={() => navigate(`/Persona/${project._id}`)}>
+//             바로가기
+//           </button>
+//         </ProjectButton>
+//       )}
+//     </ProjectItem>
+// >>>>>>> main
 
       {openStates[index] && (
         <ProjectView className={closingStates[index] ? "closing" : ""}>
@@ -131,12 +188,18 @@ const OrganismProjectCard = ({ project, index }) => {
           ) : (
             <ViewInfoNodata>
               <div>
+                <img src={images.FileFill} alt="" />
                 <div>
-                  현재 리포트가 비어 있습니다.
-                  <br />
-                  추천 페르소나와 인터뷰를 완료하시면 결과 리포트를 확인할 수
-                  있습니다.
-                  <span>맞춤페르소나와 인터뷰 진행하기</span>
+// <<<<<<< branch-fixProjectCard
+//                   현재 리포트가 비어 있습니다.
+//                   <br />
+//                   추천 페르소나와 인터뷰를 완료하시면 결과 리포트를 확인할 수
+//                   있습니다.
+//                   <span>맞춤페르소나와 인터뷰 진행하기</span>
+// =======
+                  현재 리포트가 비어 있습니다.<br />추천 페르소나와 인터뷰를 완료하시면 결과 리포트를 확인할 수 있습니다.
+                  <Button Medium Primary Round>맞춤페르소나와 인터뷰 진행하기</Button>
+// >>>>>>> main
                 </div>
               </div>
             </ViewInfoNodata>
@@ -393,7 +456,12 @@ const ProjectButton = styled.div`
   border-top: 1px solid ${palette.outlineGray};
 
   p {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 4px;
     font-size: 0.875rem;
+    font-weight: 300;
     color: ${palette.gray800};
   }
 

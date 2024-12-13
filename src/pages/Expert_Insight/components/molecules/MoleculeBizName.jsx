@@ -105,7 +105,8 @@ export default MoleculeBizName;
 
 const BizNameContainer = styled.div`
   position: sticky;
-  top: 40px;
+  // top: 40px;
+  top: 70px;
   width: 100%;
   display: flex;
   align-items: center;

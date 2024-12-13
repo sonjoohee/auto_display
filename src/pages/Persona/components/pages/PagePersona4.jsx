@@ -83,12 +83,12 @@ const PagePersona4 = () => {
     if (!isPersonaAccessible) {
       navigate("/Main"); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
     }
-
+  
     // 페이지를 나갈 때 접근 가능 여부 초기화
     return () => {
       setIsPersonaAccessible(false); // 페이지 떠날 때 접근 불가로 설정
     };
-  }, [navigate]);
+  }, [navigate, isPersonaAccessible, setIsPersonaAccessible]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -520,7 +520,7 @@ const PagePersona4 = () => {
               <h5>Let's Start Now</h5>
 
               <ProgressBar>
-                <span>🚀</span>
+                <span className="icon">🚀</span>
                 <Progress progress={100} />
                 <span>Fin</span>
               </ProgressBar>
@@ -1016,6 +1016,10 @@ const ProgressBar = styled.div`
     font-size: 0.75rem;
     line-height: 1.5;
     color: ${palette.gray700};
+  }
+
+  .icon {
+    font-size: 1.13rem;
   }
 `;
 

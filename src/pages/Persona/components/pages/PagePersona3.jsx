@@ -7,14 +7,14 @@ import { useAtom } from "jotai";
 import {
   IS_PERSONA_ACCESSIBLE,
   IS_LOGGED_IN,
-  CONVERSATION_ID,
-  INPUT_BUSINESS_INFO,
-  TITLE_OF_BUSINESS_INFORMATION,
-  MAIN_FEATURES_OF_BUSINESS_INFORMATION,
   PERSONA_STEP,
   SELECTED_INTERVIEW_PURPOSE,
   PERSONA_LIST,
-  PERSONA_BUTTON_STATE_3
+  PERSONA_BUTTON_STATE_3,
+  BUSINESS_ANALYSIS,
+  REQUEST_PERSONA_LIST,
+  PROJECT_LOAD_BUTTON_STATE,
+  PROJECT_ID,
 } from "../../../AtomStates";
 import {
   ContentsWrap,
@@ -39,33 +39,29 @@ import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
 import MoleculeInterviewCard from "../molecules/MoleculeInterviewCard";
 import MoleculePersonaCard from "../molecules/MoleculePersonaCard";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
-import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
+import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import OrganismBusinessAnalysis from "../organisms/OrganismBisinessAnalysis";
 import PopupWrap from "../../../../assets/styles/Popup";
 import OrganismToastPopup from "../organisms/OrganismToastPopup";
 
 const PagePersona3 = () => {
   const navigate = useNavigate();
+  const [projectId, setProjectId] = useAtom(PROJECT_ID);
+  const [projectLoadButtonState, setProjectLoadButtonState] = useAtom(
+    PROJECT_LOAD_BUTTON_STATE
+  );
   const [personaButtonState3, setPersonaButtonState3] = useAtom(PERSONA_BUTTON_STATE_3);
-  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
-  const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
+  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);  
   const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
     IS_PERSONA_ACCESSIBLE
   );
-  const [inputBusinessInfo, setInputBusinessInfo] =
-    useAtom(INPUT_BUSINESS_INFO);
-  const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
-    TITLE_OF_BUSINESS_INFORMATION
-  );
-  const [
-    mainFeaturesOfBusinessInformation,
-    setMainFeaturesOfBusinessInformation,
-  ] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
+  const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
   const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
   const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(
     SELECTED_INTERVIEW_PURPOSE
   );
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
+  const [requestPersonaList, setRequestPersonaList] = useAtom(REQUEST_PERSONA_LIST);
 
   const [interviewPurpose, setInterviewPurpose] = useState("");
   const [selectedInterviewType, setSelectedInterviewType] =
@@ -75,6 +71,7 @@ const PagePersona3 = () => {
   const [showInterviewReady, setShowInterviewReady] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [showEditPersona, setShowEditPersona] = useState(false);
+  const [personaListState, setPersonaListState] = useState(null);
 
   const handlePopupClose = () => {
     setShowInterviewReady(false);
@@ -105,33 +102,27 @@ const PagePersona3 = () => {
     };
   }, [navigate]);
 
-  useEffect(() => {
-    const loadConversation = async () => {
-      // 1. 로그인 여부 확인
-      if (isLoggedIn) {
-        // 3. 대화 ID가 이미 존재하면 IndexedDB에서 대화 불러오기
-        const savedConversation = await getConversationByIdFromIndexedDB(
-          conversationId,
-          isLoggedIn
-        );
+  // useEffect(() => {
+  //   const loadProject = async () => {
 
-        if (savedConversation) {
-          const analysisData = savedConversation.analysisReportData || {};
-          setTitleOfBusinessInfo(analysisData.title || "");
-          setMainFeaturesOfBusinessInformation(analysisData.mainFeatures || []);
-          setInputBusinessInfo(savedConversation.inputBusinessInfo);
-          setPersonaList(savedConversation.personaList);
-          setSelectedInterviewPurpose(
-            savedConversation.selectedInterviewPurpose
-          );
-        }
+  //     if (projectLoadButtonState) {
 
-        // setIsLoadingPage(false); // 로딩 완료
-      }
-    };
+  //       const savedProjectInfo = await getProjectByIdFromIndexedDB(
+  //         projectId,
+  //         projectLoadButtonState
+  //       );
+  //       if (savedProjectInfo) {
+  //         setBusinessAnalysis(savedProjectInfo.businessAnalysis);
+  //         setPersonaList(savedProjectInfo.personaList);
+  //         setRequestPersonaList(savedProjectInfo.requestPersonaList);
+  //       }
+  //       // setIsLoadingPage(false); // 로딩 완료
+  //     }
+  //     setProjectLoadButtonState(false);
+  //   };
 
-    loadConversation();
-  }, [conversationId, isLoggedIn, navigate]);
+  //   loadProject();
+  // }, [projectId, projectLoadButtonState, navigate]);
 
   // if (isLoadingPage) {
   //   return <div>Loading...</div>;
@@ -259,6 +250,44 @@ const PagePersona3 = () => {
     setShowToast(true);
   }
 
+  // 페르소나 선택/해제 처리 함수 추가
+  const handlePersonaToggle = (persona, isCurrentlySelected) => {
+    if (isCurrentlySelected) {
+      // selected에서 제거하고 unselected로 이동
+      if (personaListState.selected.length > 1) {
+        setPersonaListState({
+          selected: personaListState.selected.filter(p => p.persona !== persona.persona),
+          unselected: [...personaListState.unselected, persona]
+        });
+      }
+    } else {
+      // 선택 개수가 5개 미만일 때만 추가 허용
+      if (personaListState.selected.length < 5) {
+        setPersonaListState({
+          selected: [...personaListState.selected, persona],
+          unselected: personaListState.unselected.filter(p => p.persona !== persona.persona)
+        });
+      }
+    }
+  };
+
+  // 편집 팝업 열기
+  const handleEditPersonaOpen = () => {
+    setPersonaListState(personaList); // 현재 상태 저장
+    setShowEditPersona(true);
+  };
+
+  // 이전으로 되돌리기
+  const handleRevertPersonaList = () => {
+    setPersonaListState(personaList);
+  };
+
+  // 편집 완료
+  const handleConfirmEditPersona = () => {
+    setPersonaList(personaListState);
+    setShowEditPersona(false);
+  };
+
   return (
     <>
       <ContentsWrap>
@@ -333,12 +362,14 @@ const PagePersona3 = () => {
                   <TabContent>
                     {categoryItems[activeCategory].map((item) => (
                       <MoleculeInterviewCard
+                        NoBackground
                         key={item.id}
                         title={item.title}
                         description={item.description}
                         isSelected={interviewPurpose === item.title}
                         onSelect={(title) => setInterviewPurpose(title)}
                         interviewPurpose={interviewPurpose}
+                        isActive={interviewPurpose === item.title}
                       />
                     ))}
                   </TabContent>
@@ -350,7 +381,7 @@ const PagePersona3 = () => {
                     <p>
                       추천된 페르소나와 인터뷰하세요. 그룹 또는 한 명의 타겟을
                       선택할 수 있습니다.
-                      <span onClick={() => setShowEditPersona(true)}>
+                      <span onClick={() => handleEditPersonaOpen()}>
                         <img src={images.PencilSquare} alt="" />
                         편집하기
                       </span>
@@ -376,7 +407,7 @@ const PagePersona3 = () => {
               <h5>Let's Start Now</h5>
 
               <ProgressBar>
-                <span>🚀</span>
+                <span className="icon">🚀</span>
                 <Progress progress={60} />
                 <span>60%</span>
               </ProgressBar>
@@ -426,54 +457,47 @@ const PagePersona3 = () => {
                 isFormValid={true}
                 onCancel={() => setShowEditPersona(false)}
                 onConfirm={() => {
-                  // 편집 완료 로직 구현
-                  setShowEditPersona(false);
+                  handleConfirmEditPersona();
                 }}
                 body={
                   <>
                     <Title>
                       <p>
                         Selected
-                        <span>
+                        <span onClick={handleRevertPersonaList}>
                           <img src={images.ClockCounterclockwise} alt="" />
                           이전으로 되돌리기
                         </span>
                       </p>
                     </Title>
-                    <MoleculePersonaCard 
-                      TitleFlex
-                      title="가족과 함께 여가를 보내는 활동 지향형 소비자"
-                      keywords={['키워드1', '키워드2', '키워드3']}
-                      isBasic={true}
-                      checked={true}
-                    />
-                    <MoleculePersonaCard 
-                      TitleFlex
-                      title="가족과 함께 여가를 보내는 활동 지향형 소비자"
-                      keywords={['키워드1', '키워드2', '키워드3']}
-                      isBasic={true}
-                      checked={true}
-                    />
+                    {personaListState.selected.map((persona, index) => (
+                      <MoleculePersonaCard 
+                        key={index}
+                        TitleFlex
+                        title={persona.persona}
+                        keywords={persona.keywords || []}
+                        isBasic={true}
+                        checked={true}
+                        onSelect={() => handlePersonaToggle(persona, true)}
+                      />
+                    ))}
 
                     <Title style={{marginTop: '20px'}}>
                       <p>
                         available
                       </p>
                     </Title>
-                    <MoleculePersonaCard 
-                      TitleFlex
-                      title="가족과 함께 여가를 보내는 활동 지향형 소비자"
-                      keywords={['키워드1', '키워드2', '키워드3']}
-                      isBasic={true}
-                      checked={true}
-                    />
-                    <MoleculePersonaCard 
-                      TitleFlex
-                      title="가족과 함께 여가를 보내는 활동 지향형 소비자"
-                      keywords={['키워드1', '키워드2', '키워드3']}
-                      isBasic={true}
-                      checked={true}
-                    />
+                    {personaListState.unselected.map((persona, index) => (
+                      <MoleculePersonaCard 
+                        key={index}
+                        TitleFlex
+                        title={persona.persona}
+                        keywords={persona.keywords || []}
+                        isBasic={true}
+                        checked={false}
+                        onSelect={() => handlePersonaToggle(persona, false)}
+                      />
+                    ))}
                   </>
                 }
               />
@@ -582,6 +606,10 @@ const ProgressBar = styled.div`
     font-size: 0.75rem;
     line-height: 1.5;
     color: ${palette.gray700};
+  }
+
+  .icon {
+    font-size: 1.13rem;
   }
 `;
 
