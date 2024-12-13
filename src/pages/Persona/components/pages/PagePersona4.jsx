@@ -228,6 +228,45 @@ const PagePersona4 = () => {
     (item) => item.theory_name === selectedInterviewPurpose
   );
 
+  const getCardData = (suggestionList) => {
+    const viewpointMapping = {
+      "브랜드 강화 관점": {
+        icon: images.DiscoveryBrand,
+        badge: { icon: "🌟", text: "브랜드 파워" }
+      },
+      "타겟팅 관점": {
+        icon: images.DiscoveryInsight,
+        badge: { icon: "🎯", text: "마케팅 인사이트" }
+      },
+      "세그먼트화 관점": {
+        icon: images.DiscoveryInsight,
+        badge: { icon: "🎟", text: "타겟 세분화" }
+      },
+      "사업 전략 관점": {
+        icon: images.DiscoverySuccess,
+        badge: { icon: "🚀", text: "성공 전략" }
+      },
+      "고객 경험 개선 관점": {
+        icon: images.DiscoveryExperience,
+        badge: { icon: "🤝", text: "고객 경험" }
+      },
+      "성장 전략 관점": {
+        icon: images.DiscoveryScale,
+        badge: { icon: "📈", text: "스케일업" }
+      },
+      "비즈니스 모델 캔버스 관점": {
+        icon: images.DiscoveryBM,
+        badge: { icon: "📋", text: "BM 전략" }
+      }
+    };
+  
+    return suggestionList.map(suggestion => ({
+      ...viewpointMapping[suggestion.title],
+      title: suggestion.title_text,
+      description: suggestion.description_text
+    }));
+  };
+
   return (
     <>
       <ContentsWrap>
@@ -440,70 +479,27 @@ const PagePersona4 = () => {
                       transition: "transform 0.3s ease-in-out",
                     }}
                   >
-                    {[
-                      {
-                        icon: images.DiscoveryBrand,
-                        badge: { icon: "🌟", text: "브랜드 파워" },
-                        title: "디자인 강점 더 알리기 디자인 강점 더 알리기",
-                        description:
-                          "사용자들은 개인 맞춤형 기능이 부족하다고 느끼고 있습니다. 특히 가족 구성원별 설정, 사용 패턴 학습을 통한 자동화 기능 등이 요구됩니다. 개인화 기능을 강화하여 사용자 만족도를 높일 수 있습니다.",
-                      },
-                      {
-                        icon: images.DiscoveryInsight,
-                        badge: { icon: "🎟", text: "타겟 세분화" },
-                        title: "디자인 강점 더 알리기 디자인 강점 더 알리기",
-                        description:
-                          "개인정보 보안에 대한 우려가 높게 나타났습니다. 강화된 보안 시스템 구축과 함께, 사용자들에게 보안 정책을 명확하게 전달하고 정기적인 보안 업데이트를 제공하는 것이 중요합니다.",
-                      },
-                      {
-                        icon: images.DiscoverySuccess,
-                        badge: { icon: "🚀", text: "성공 전략" },
-                        title: "디자인 강점 더 알리기 디자인 강점 더 알리기",
-                        description:
-                          "모든 연령대가 쉽게 사용할 수 있는 직관적인 인터페이스가 필요합니다. 특히 고령자를 위한 큰 글씨 모드, 음성 안내 기능 등 접근성을 고려한 UI/UX 개선이 요구됩니다.",
-                      },
-                      {
-                        icon: images.DiscoveryExperience,
-                        badge: { icon: "🤝", text: "고객 경험" },
-                        title: "디자인 강점 더 알리기 디자인 강점 더 알리기",
-                        description:
-                          "전반적인 음성 인식률과 반응 속도는 긍정적으로 평가되었으나, 일부 복잡한 명령어 처리 시 지연이 발생합니다. 성능 최적화를 통해 더 빠르고 정확한 응답 시스템 구축이 필요합니다.",
-                      },
-                      {
-                        icon: images.DiscoveryScale,
-                        badge: { icon: "📈", text: "스케일업" },
-                        title: "디자인 강점 더 알리기 디자인 강점 더 알리기",
-                        description:
-                          "전반적인 음성 인식률과 반응 속도는 긍정적으로 평가되었으나, 일부 복잡한 명령어 처리 시 지연이 발생합니다. 성능 최적화를 통해 더 빠르고 정확한 응답 시스템 구축이 필요합니다.",
-                      },
-                      {
-                        icon: images.DiscoveryBM,
-                        badge: { icon: "📋", text: "BM 전략" },
-                        title: "디자인 강점 더 알리기 디자인 강점 더 알리기",
-                        description:
-                          "전반적인 음성 인식률과 반응 속도는 긍정적으로 평가되었으나, 일부 복잡한 명령어 처리 시 지연이 발생합니다. 성능 최적화를 통해 더 빠르고 정확한 응답 시스템 구축이 필요합니다.",
-                      },
-                    ].map((item, index) => (
-                      <Card key={index} onClick={() => handleCardClick(index)}>
-                        {openCard !== index ? (
-                          <>
-                            <CardIcon>
-                              <img src={item.icon} />
-                            </CardIcon>
-                            <CardBadge text={item.badge.text}>
-                              <span>{item.badge.icon}</span>
-                              {item.badge.text}
-                            </CardBadge>
-                            <CardTitle>{item.title}</CardTitle>
-                          </>
-                        ) : (
-                          <CardDescription>
-                            <strong>{item.title}</strong>
-                            <p>{item.description}</p>
-                          </CardDescription>
-                        )}
-                      </Card>
-                    ))}
+                  {getCardData(interviewReportAdditional.suggestion_list).map((item, index) => (
+                    <Card key={index} onClick={() => handleCardClick(index)}>
+                      {openCard !== index ? (
+                        <>
+                          <CardIcon>
+                            <img src={item.icon} />
+                          </CardIcon>
+                          <CardBadge text={item.badge.text}>
+                            <span>{item.badge.icon}</span>
+                            {item.badge.text}
+                          </CardBadge>
+                          <CardTitle>{item.title}</CardTitle>
+                        </>
+                      ) : (
+                        <CardDescription>
+                          <strong>{item.title}</strong>
+                          <p>{item.description}</p>
+                        </CardDescription>
+                      )}
+                    </Card>
+                  ))}
                   </div>
                 </FindCard>
               </InterviewFind>

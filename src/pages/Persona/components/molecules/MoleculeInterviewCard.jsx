@@ -12,6 +12,10 @@ import {
   IS_LOGGED_IN,
   IS_LOADING,
 } from "../../../AtomStates";
+import {
+  SkeletonTitle,
+  SkeletonLine,
+} from "../../../../assets/styles/Skeleton";
 import axios from "axios";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 
@@ -167,22 +171,39 @@ const MoleculeInterviewCard = ({
         />
       </MainContent>
 
-      {isExpanded && (
-        <DescriptionSection $isExpanded={isExpanded}>
-          {!state.showQuestions ? (
-            <span
-              onClick={async () => {
-                await loadInterviewQuestion();
-                setState((prev) => ({ ...prev, showQuestions: true }));
-              }}
-            >
-              <img src={images.FileSearch} alt="문항보기" />
-              문항보기
-            </span>
-          ) : (
-            <ListUL>
-              <ul>
-                {interviewQuestionListState
+    {isExpanded && (
+      <DescriptionSection $isExpanded={isExpanded}>
+        {!state.showQuestions ? (
+          <span
+            onClick={async () => {
+              setState((prev) => ({ ...prev, showQuestions: true }));
+              await loadInterviewQuestion();
+            }}
+          >
+            <img src={images.FileSearch} alt="문항보기" />
+            문항보기
+          </span>
+        ) : (
+          <ListUL>
+            <ul>
+              {isLoadingQuestion ? (
+                <>
+                  <li>
+                    <span className="number">Q1.</span>
+                    <SkeletonLine width="100%" height="20px" />
+                  </li>
+                  <li>
+                    <span className="number">Q2.</span>
+                    <SkeletonLine width="100%" height="20px" />
+                  </li>
+                  <li>
+                    <span className="number">Q3.</span>
+                    <SkeletonLine width="100%" height="20px" />
+                  </li>
+                </>
+              ) : (
+                // 실제 질문 데이터
+                interviewQuestionListState
                   .find((item) => item.theory_name === title)
                   ?.questions.slice(2, 5)
                   .map((item, index) => (
@@ -190,12 +211,13 @@ const MoleculeInterviewCard = ({
                       <span className="number">Q{index + 1}.</span>
                       {item.question}
                     </li>
-                  ))}
-              </ul>
-            </ListUL>
-          )}
-        </DescriptionSection>
-      )}
+                  ))
+              )}
+            </ul>
+          </ListUL>
+        )}
+      </DescriptionSection>
+    )}
     </CardContainer>
   );
 };

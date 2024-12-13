@@ -404,7 +404,12 @@ const PagePersona3 = () => {
                     <p>{personaList.selected.length}명</p>
                   </li>
                 </ul>
-                <Button Large Primary Fill onClick={() => setShowInterviewReady(true)}>
+                <Button 
+                  Large Primary Fill 
+                  disabled={!selectedInterviewType || !interviewPurpose}
+                  style={{cursor: !selectedInterviewType || !interviewPurpose ? 'default' : 'pointer'}}
+                  onClick={() => setShowInterviewReady(true)}
+                >
                   인터뷰룸 입장
                 </Button>
               </InterviewRoom>
