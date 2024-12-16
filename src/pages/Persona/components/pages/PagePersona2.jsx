@@ -57,6 +57,7 @@ import OrganismBusinessAnalysis from "../organisms/OrganismBisinessAnalysis";
 import AtomLoader from "../atoms/AtomLoader";
 import PopupWrap from "../../../../assets/styles/Popup";
 import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
+import MoleculeRequestPersonaCard from "../molecules/MoleculeRequestPersonaCard";
 
 const PagePersona2 = () => {
   const [categoryColor, setCategoryColor] = useAtom(CATEGORY_COLOR);
@@ -74,15 +75,6 @@ const PagePersona2 = () => {
   const [personaButtonState2, setPersonaButtonState2] = useAtom(
     PERSONA_BUTTON_STATE_2
   );
-  const [inputBusinessInfo, setInputBusinessInfo] =
-    useAtom(INPUT_BUSINESS_INFO);
-  const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
-    TITLE_OF_BUSINESS_INFORMATION
-  );
-  const [
-    mainFeaturesOfBusinessInformation,
-    setMainFeaturesOfBusinessInformation,
-  ] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
@@ -91,10 +83,7 @@ const PagePersona2 = () => {
     useAtom(REQUEST_PERSONA_LIST);
 
   const [selectedPersonas, setSelectedPersonas] = useState([]);
-  const [checkedPersonas, setCheckedPersonas] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
-  const [selectedPersonaForPopup, setSelectedPersonaForPopup] = useState(null);
-  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [showCustomizePopup, setShowCustomizePopup] = useState(false);
   const [customizeFormState, setCustomizeFormState] = useState({
     quantity: 1,
@@ -215,6 +204,7 @@ const PagePersona2 = () => {
         );
         if (savedProjectInfo) {
           setBusinessAnalysis(savedProjectInfo.businessAnalysis);
+          console.log(savedProjectInfo.requestPersonaList);
           setRequestPersonaList(savedProjectInfo.requestPersonaList);
           setCategoryColor({
             first: getCategoryColor(
@@ -412,6 +402,7 @@ const PagePersona2 = () => {
           };
 
           setRequestPersonaList(requestPersonaData);
+
           await updateProjectOnServer(
             projectId,
             {
@@ -448,17 +439,6 @@ const PagePersona2 = () => {
 
   const [showTooltip, setShowTooltip] = useState(false);
 
-  const [activeTab, setActiveTab] = useState("lifestyle");
-
-  const handleInterviewRequest = () => {
-    setSelectedPersonaForPopup(null);
-    setShowSuccessPopup(true);
-  };
-
-  const handleSuccessPopupClose = () => {
-    setShowSuccessPopup(false);
-  };
-
   const handleCustomizeRequest = () => {
     setShowCustomizePopup(true);
   };
@@ -487,216 +467,27 @@ const PagePersona2 = () => {
               <OrganismBusinessAnalysis personaStep={2} />
               <CardWrap>
                 <>
-                  {/* 비즈니스 맞춤 페르소나 */}
-                  <CustomizePersona>
-                    <Title Column>
-                      <h3>비즈니스 맞춤 페르소나</h3>
-                      <p>
-                        비즈니스에 딱 맞는 페르소나를 추천해드려요. 요청을
-                        보내주시면 인터뷰 참여 모집이 시작됩니다.
-                      </p>
-                    </Title>
-
-                    <ContentSection row>
-                      <CardPersona>
-                        <span>
-                          <img src={images.CheckCircle} alt="요청 필요" />
-                          요청 필요
-                        </span>
-
-                        <div>
-                          <h4>시간이 부족한 바쁜 프리랜서</h4>
-                          <p className="keywords">
-                            <span>#키워드1</span>
-                            <span>#키워드2</span>
-                            <span>#키워드3</span>
-                          </p>
-                          <div className="content">
-                            김지영은 아침마다 피트니스 센터에서 운동을 하고,
-                            건강한 아침 식사로 하루를 시작하는 활동적인 생활을
-                            즐깁니다. 직장에서 효율적으로 업무를 처리하며 최신
-                            마케팅 트렌드를 주시합니다.
-                          </div>
-                        </div>
-
-                        <Button
-                          Small
-                          Primary
-                          onClick={() => setSelectedPersonaForPopup(true)}
-                        >
-                          자세히 보기
-                          <img src={images.ChevronRightPrimary} alt="" />
-                        </Button>
-                      </CardPersona>
-
-                      <CardPersona>
-                        <span>
-                          <img src={images.CheckCircle} alt="요청 필요" />
-                          요청 필요
-                        </span>
-
-                        <div>
-                          <h4>시간이 부족한 바쁜 프리랜서</h4>
-                          <p className="keywords">
-                            <span>#키워드1</span>
-                            <span>#키워드2</span>
-                            <span>#키워드3</span>
-                          </p>
-                          <div className="content">
-                            김지영은 아침마다 피트니스 센터에서 운동을 하고,
-                            건강한 아침 식사로 하루를 시작하는 활동적인 생활을
-                            즐깁니다. 직장에서 효율적으로 업무를 처리하며 최신
-                            마케팅 트렌드를 주시합니다.
-                          </div>
-                        </div>
-
-                        <Button
-                          Small
-                          Primary
-                          onClick={() => setSelectedPersonaForPopup(true)}
-                        >
-                          자세히 보기
-                          <img src={images.ChevronRightPrimary} alt="" />
-                        </Button>
-                      </CardPersona>
-
-                      <CardPersona>
-                        <span>
-                          <img src={images.CheckCircle} alt="요청 필요" />
-                          요청 필요
-                        </span>
-
-                        <div>
-                          <h4>시간이 부족한 바쁜 프리랜서</h4>
-                          <p className="keywords">
-                            <span>#키워드1</span>
-                            <span>#키워드2</span>
-                            <span>#키워드3</span>
-                          </p>
-                          <div className="content">
-                            김지영은 아침마다 피트니스 센터에서 운동을 하고,
-                            건강한 아침 식사로 하루를 시작하는 활동적인 생활을
-                            즐깁니다. 직장에서 효율적으로 업무를 처리하며 최신
-                            마케팅 트렌드를 주시합니다.
-                          </div>
-                        </div>
-
-                        <Button
-                          Small
-                          Primary
-                          onClick={() => setSelectedPersonaForPopup(true)}
-                        >
-                          자세히 보기
-                          <img src={images.ChevronRightPrimary} alt="" />
-                        </Button>
-                      </CardPersona>
-
-                      {selectedPersonaForPopup && (
-                        <InterviewPopup>
-                          <div>
-                            <div className="header">
-                              <h4>
-                                시간이 부족한 바쁜 프리랜서
-                                <span
-                                  className="close"
-                                  onClick={() =>
-                                    setSelectedPersonaForPopup(null)
-                                  }
-                                />
-                              </h4>
-                              <p className="info">
-                                <span>여성</span>
-                                <span>25세</span>
-                                <span>서울 송파구 거주</span>
-                              </p>
-                            </div>
-
-                            <p className="keywords">
-                              <span>#시간 관리</span>
-                              <span>#페르소나 키워드</span>
-                              <span>#업무 효율</span>
-                            </p>
-
-                            <div className="content">
-                              <TabButton>
-                                <button
-                                  className={
-                                    activeTab === "lifestyle" ? "active" : ""
-                                  }
-                                  onClick={() => setActiveTab("lifestyle")}
-                                >
-                                  라이프스타일
-                                </button>
-                                <button
-                                  className={
-                                    activeTab === "interests" ? "active" : ""
-                                  }
-                                  onClick={() => setActiveTab("interests")}
-                                >
-                                  관심사
-                                </button>
-                                <button
-                                  className={
-                                    activeTab === "consumption" ? "active" : ""
-                                  }
-                                  onClick={() => setActiveTab("consumption")}
-                                >
-                                  소비성향
-                                </button>
-                              </TabButton>
-
-                              {activeTab === "lifestyle" && (
-                                <TabContent>
-                                  [라이프스타일] 학업과 여가를 균형 있게
-                                  추구하며, 문화적 호기심이 많습니다. 대학
-                                  근처의 문화 공간을 자주 방문하며, 예술 전시와
-                                  독립영화를 감상하거나 워크숍에 참여합니다.
-                                  소셜 미디어를 통해 최신 문화 소식을 빠르게
-                                  접하고, 친구들과 경험을 공유하는 것을
-                                  즐깁니다. 새로운 시도를 통해 자기 계발을
-                                  추구하며, 학업과 관련된 창의적 활동에도
-                                  열정적입니다.
-                                </TabContent>
-                              )}
-                              {activeTab === "interests" && (
-                                <TabContent>
-                                  [관심사] 학업과 여가를 균형 있게 추구하며,
-                                  문화적 호기심이 많습니다. 대학 근처의 문화
-                                  공간을 자주 방문하며, 예술 전시와 독립영화를
-                                  감상하거나 워크숍에 참여합니다. 소셜 미디어를
-                                  통해 최신 문화 소식을 빠르게 접하고, 친구들과
-                                  경험을 공유하는 것을 즐깁니다. 새로운 시도를
-                                  통해 자기 계발을 추구하며, 학업과 관련된
-                                  창의적 활동에도 열정적입니다.
-                                </TabContent>
-                              )}
-                              {activeTab === "consumption" && (
-                                <TabContent>
-                                  [소비성향] 학업과 여가를 균형 있게 추구하며,
-                                  문화적 호기심이 많습니다. 대학 근처의 문화
-                                  공간을 자주 방문하며, 예술 전시와 독립영화를
-                                  감상하거나 워크숍에 참여합니다. 소셜 미디어를
-                                  통해 최신 문화 소식을 빠르게 접하고, 친구들과
-                                  경험을 공유하는 것을 즐깁니다. 새로운 시도를
-                                  통해 자기 계발을 추구하며, 학업과 관련된
-                                  창의적 활동에도 열정적입니다.
-                                </TabContent>
-                              )}
-                            </div>
-
-                            <Button
-                              Large
-                              Primary
-                              style={{ width: "100%", marginTop: "16px" }}
-                              onClick={handleInterviewRequest}
-                            >
-                              인터뷰 준비 요청하기
-                            </Button>
-                          </div>
-                        </InterviewPopup>
-                      )}
-                    </ContentSection>
-                  </CustomizePersona>
+                <CustomizePersona>
+                <Title Column>
+                  <h3>비즈니스 맞춤 페르소나</h3>
+                  <p>
+                    비즈니스에 딱 맞는 페르소나를 추천해드려요. 요청을
+                    보내주시면 인터뷰 참여 모집이 시작됩니다.
+                  </p>
+                </Title>
+                {personaButtonState2 ? (
+                  <PersonaCards>
+                    <AtomLoader />
+                  </PersonaCards>
+                ) : (
+                  requestPersonaList.persona.map((persona, index) => (
+                    <MoleculeRequestPersonaCard
+                      key={index}
+                      persona={persona[`persona_${index + 1}`]}
+                    />
+                  ))
+                )}
+                </CustomizePersona>
 
                   {/* 산업별 인기 페르소나 */}
                   <CustomizePersona>
@@ -886,24 +677,6 @@ const PagePersona2 = () => {
           isModal={false}
           onCancel={handlePopupClose}
           show={showPopup}
-        />
-      )}
-
-      {showSuccessPopup && (
-        <PopupWrap
-          Check
-          title={
-            <>
-              인터뷰 준비 요청이 완료되었습니다.
-              <br />
-              완료 후 알림을 보내드릴게요
-            </>
-          }
-          buttonType="Outline"
-          closeText="확인"
-          isModal={false}
-          onCancel={handleSuccessPopupClose}
-          show={true}
         />
       )}
 
@@ -1284,88 +1057,6 @@ const PersonaCards = styled.div`
   width: 100%;
 `;
 
-const CardPersona = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  width: 100%;
-  padding: 20px;
-  border-radius: 10px;
-  border: 1px solid ${palette.outlineGray};
-
-  > span {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    font-size: 0.63rem;
-    line-height: 1.2;
-    color: ${palette.primary};
-  }
-
-  h4 {
-    font-size: 1rem;
-    font-weight: 600;
-    line-height: 1.3;
-    color: ${palette.gray700};
-    text-align: left;
-  }
-
-  .keywords {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin: 8px auto 20px;
-
-    span {
-      font-size: 0.75rem;
-      line-height: 1.2;
-      color: ${palette.gray700};
-      line-height: 1.5;
-      padding: 4px 8px;
-      border-radius: 4px;
-      border: 1px solid ${palette.outlineGray};
-    }
-  }
-
-  .content {
-    position: relative;
-    height: 110px;
-    font-size: 0.75rem;
-    line-height: 1.5;
-    font-weight: 300;
-    color: ${palette.gray500};
-    text-align: left;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 5;
-    -webkit-box-orient: vertical;
-
-    &:before {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 44px;
-      background: linear-gradient(
-        to bottom,
-        rgba(255, 255, 255, 0),
-        ${palette.white} 80%
-      );
-      content: "";
-    }
-  }
-
-  button {
-    width: 100%;
-  }
-`;
-
 const BottomBar = styled.div`
   position: sticky;
   bottom: 40px;
@@ -1394,171 +1085,6 @@ const BottomBar = styled.div`
       // text-decoration: underline;
     }
   }
-`;
-
-const InterviewPopup = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 200;
-
-  > div {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    max-width: 450px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 20px;
-    padding: 20px;
-    border-radius: 15px;
-    background: ${palette.white};
-    box-shadow: 4px 4px 30px rgba(0, 0, 0, 0.15);
-  }
-
-  .header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    flex-direction: column;
-    gap: 4px;
-    width: 100%;
-
-    h4 {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      width: 100%;
-      font-size: 1.25rem;
-      font-weight: 500;
-      line-height: 1.3;
-      color: ${palette.gray800};
-
-      .close {
-        position: relative;
-        width: 16px;
-        height: 16px;
-        cursor: pointer;
-
-        &:before,
-        &:after {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 2px;
-          height: 16px;
-          background: ${palette.gray700};
-          content: "";
-        }
-
-        &:before {
-          transform: translate(-50%, -50%) rotate(45deg);
-        }
-
-        &:after {
-          transform: translate(-50%, -50%) rotate(-45deg);
-        }
-      }
-    }
-
-    .info {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 6px;
-      width: 100%;
-
-      span {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        gap: 6px;
-        font-size: 0.875rem;
-        font-weight: 300;
-        line-height: 1.5;
-        color: ${palette.gray700};
-
-        + span:before {
-          content: "";
-          display: inline-block;
-          width: 1px;
-          height: 9px;
-          background: ${palette.gray700};
-        }
-      }
-    }
-  }
-
-  .keywords {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 4px;
-    width: 100%;
-    flex-wrap: wrap;
-
-    span {
-      font-size: 0.875rem;
-      font-weight: 300;
-      line-height: 1.5;
-      color: ${palette.gray700};
-      padding: 4px 8px;
-      border-radius: 4px;
-      border: 1px solid ${palette.outlineGray};
-    }
-  }
-
-  .content {
-    width: 100%;
-  }
-`;
-
-const TabButton = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 4px;
-  padding: 4px;
-  border-radius: 20px;
-  background: ${palette.chatGray};
-
-  button {
-    width: 100%;
-    font-family: "Pretendard", "Poppins";
-    font-size: 1rem;
-    font-weight: 300;
-    color: ${palette.gray500};
-    padding: 6px 10px;
-    border-radius: 20px;
-    border: 0;
-    background: transparent;
-    transition: all 0.5s;
-
-    &.active {
-      font-weight: 400;
-      color: ${palette.gray800};
-      background: ${palette.white};
-    }
-  }
-`;
-
-const TabContent = styled.div`
-  width: 100%;
-  max-height: 200px;
-  margin-top: 18px;
-  overflow-y: auto;
-  line-height: 1.5;
-  color: ${palette.gray700};
-  text-align: left;
 `;
 
 const BannerPersona = styled.div`
