@@ -174,8 +174,10 @@ import MagicStick from "../images/magic-stick.svg"
 import MagicStickFillWhite from "../images/magic-stick-fill-white.svg"
 import NotePencil from "../images/note-pencil.svg"
 import ChevronRight from "../images/chevron-right.svg"
+import ChevronRightPrimary from "../images/chevron-right-primary.svg"
 import PencilSquare from "../images/pencil-square.svg"
 import ClockCounterclockwise from "../images/clock-counterclockwise.svg"
+import CheckCircle from "../images/check-circle.svg"
 import CheckCircleFill from "../images/check-circle-fill.svg"
 import FolderArrowDown from "../images/folder-arrow-down.svg"
 import StatusBadgeBasic from "../images/status-badge-basic.svg"
@@ -189,11 +191,14 @@ import ArrowBarLeft from "../images/arrow-bar-left.svg"
 import NoteArrowUp from "../images/note-arrow-up.svg"
 import CheckGreen from "../images/check-green.svg"
 import FileText from "../images/file-text.svg"
+import People from "../images/people.svg"
 import PeopleFill from "../images/people-fill.svg"
 import ReportSearch from "../images/report-search.svg"
 import PersonCircle from "../images/person-circle.svg"
 import FileFill from "../images/file-fill.svg"
 import PeopleFillPrimary from "../images/people-fill-primary.svg"
+
+import PersonaCustomizing from "../images/persona-customizing.png"
 
 import DiscoveryBrand from "../images/Discovery-Brand.png"
 import DiscoveryInsight from "../images/Discovery-Insight.png"
@@ -388,8 +393,10 @@ const images = {
   MagicStickFillWhite,
   NotePencil,
   ChevronRight,
+  ChevronRightPrimary,
   PencilSquare,
   ClockCounterclockwise,
+  CheckCircle,
   CheckCircleFill,
   FolderArrowDown,
   StatusBadgeBasic,
@@ -403,11 +410,14 @@ const images = {
   NoteArrowUp,
   CheckGreen,
   FileText,
+  People,
   PeopleFill,
   ReportSearch,
-  PersonCircle,
+  PersonCircle,  
   FileFill,
   PeopleFillPrimary,
+
+  PersonaCustomizing,
 
   DiscoveryBrand,
   DiscoveryInsight,

@@ -13,8 +13,15 @@ export const ContentsWrap = styled.div`
 
 export const ContentSection = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 32px;
+  flex-direction: ${props => {
+    if (props.row) return `row`;
+    else return `column`;
+  }};
+  // gap: 32px;
+  gap: ${props => {
+    if (props.row) return `16px`;
+    else return `32px`;
+  }};
 `;
 
 export const MainContent = styled.div`
@@ -100,7 +107,12 @@ export const CardWrap = styled.div`
 
 export const CustomizePersona = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: ${props => {
+    if (props.row) return `row`;
+    else return `column`;
+  }};
+  flex-wrap: wrap;
+  // flex-direction: column;
   gap: 20px;
   width: 100%;
   height: 100%;
@@ -120,6 +132,8 @@ export const AccordionHeader = styled.div`
   align-items: center;
   line-height: 1.5;
   color: ${palette.gray800};
+  padding: 16px;
+  background: ${palette.white};
   cursor: pointer;
 `;
 
@@ -167,22 +181,32 @@ export const CustomAccordionHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px;
-  background: ${palette.chatGray};
+  padding: ${props => props.None ? '0' : '16px'};
+  // padding: 16px;
+  background: ${props => props.None ? 'transparent' : palette.chatGray};
+  // background: ${palette.chatGray};
   border-radius: 10px;
   cursor: pointer;
-  font-size: 0.875rem;
-  color: ${palette.gray700};
+  font-size: ${props => props.None ? '1rem' : '0.875rem'};
+  // font-size: 0.875rem;
+  color: ${props => props.None ? palette.gray800 : palette.gray700};
+  // color: ${palette.gray700};
   transition: background 0.3s ease;
 
   &:hover {
-    background: ${palette.gray100};
+    background: ${props => props.None ? 'transparent' : palette.gray100};
+    // background: ${palette.gray100};
   }
 `;
 
 export const CustomAccordionContent = styled.div`
-  padding: 20px 16px;
-  border: 1px solid ${palette.outlineGray};
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: ${props => props.None ? '0' : '20px 16px'};
+  // padding: 20px 16px;
+  border: 1px solid ${props => props.None ? 'none' : props.outlineGray};
+  // border: 1px solid ${palette.outlineGray};
   border-radius: 10px;
   margin-top: 12px;
   background: ${palette.white};

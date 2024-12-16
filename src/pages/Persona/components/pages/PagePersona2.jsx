@@ -32,6 +32,9 @@ import {
   CardWrap,
   CustomizePersona,
   AccordionSection,
+  AccordionHeader,
+  AccordionIcon,
+  AccordionContent,
   CustomAccordionHeader,
   CustomAccordionIcon,
   CustomAccordionContent,
@@ -39,6 +42,7 @@ import {
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
 import { Button } from "../../../../assets/styles/ButtonStyle";
+import { CustomTextarea, CustomInput } from "../../../../assets/styles/InputStyle";
 import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
 import MoleculeHeader from "../molecules/MoleculeHeader";
 import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
@@ -86,6 +90,13 @@ const PagePersona2 = () => {
   const [selectedPersonas, setSelectedPersonas] = useState([]);
   const [checkedPersonas, setCheckedPersonas] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
+  const [selectedPersonaForPopup, setSelectedPersonaForPopup] = useState(null);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [showCustomizePopup, setShowCustomizePopup] = useState(false);
+  const [customizeFormState, setCustomizeFormState] = useState({
+    quantity: 1,
+    isAccordionOpen: false
+  });
 
   const handlePopupClose = () => {
     setShowPopup(false);
@@ -435,6 +446,32 @@ const PagePersona2 = () => {
 
   const [showTooltip, setShowTooltip] = useState(false);
 
+  const [activeTab, setActiveTab] = useState('lifestyle');
+
+  const handleInterviewRequest = () => {
+    setSelectedPersonaForPopup(null);
+    setShowSuccessPopup(true);
+  };
+
+  const handleSuccessPopupClose = () => {
+    setShowSuccessPopup(false);
+  };
+
+  const handleCustomizeRequest = () => {
+    setShowCustomizePopup(true);
+  };
+
+  const handleCustomizePopupClose = () => {
+    setShowCustomizePopup(false);
+  };
+
+  const [state, setState] = useState({
+    isAccordionOpen: false,
+    formState: {
+      quantity: 1,
+    },
+  });
+
   return (
     <>
       <ContentsWrap>
@@ -447,15 +484,164 @@ const PagePersona2 = () => {
             <MainSection>
               <OrganismBusinessAnalysis personaStep={2} />
               <CardWrap>
-                {/* 비즈니스 맞춤 페르소나 */}
-
                 <>
+                  {/* 비즈니스 맞춤 페르소나 */}
                   <CustomizePersona>
                     <Title Column>
-                      <h3>맞춤 페르소나</h3>
+                      <h3>비즈니스 맞춤 페르소나</h3>
+                      <p>비즈니스에 딱 맞는 페르소나를 추천해드려요. 요청을 보내주시면 인터뷰 참여 모집이 시작됩니다.</p>
+                    </Title>
+
+                    <ContentSection row>
+                      <CardPersona>
+                        <span>
+                          <img src={images.CheckCircle} alt="요청 필요" />
+                          요청 필요
+                        </span>
+
+                        <div>
+                          <h4>시간이 부족한 바쁜 프리랜서</h4>
+                          <p className="keywords">
+                            <span>#키워드1</span>
+                            <span>#키워드2</span>
+                            <span>#키워드3</span>
+                          </p>
+                          <div className="content">
+                            김지영은 아침마다 피트니스 센터에서 운동을 하고, 건강한 아침 식사로 하루를 시작하는 활동적인 생활을 즐깁니다. 직장에서 효율적으로 업무를 처리하며 최신 마케팅 트렌드를 주시합니다. 
+                          </div>
+                        </div>
+
+                        <Button Small Primary onClick={() => setSelectedPersonaForPopup(true)}>
+                          자세히 보기
+                          <img src={images.ChevronRightPrimary} alt="" />
+                        </Button>
+                      </CardPersona>
+
+                      <CardPersona>
+                        <span>
+                          <img src={images.CheckCircle} alt="요청 필요" />
+                          요청 필요
+                        </span>
+
+                        <div>
+                          <h4>시간이 부족한 바쁜 프리랜서</h4>
+                          <p className="keywords">
+                            <span>#키워드1</span>
+                            <span>#키워드2</span>
+                            <span>#키워드3</span>
+                          </p>
+                          <div className="content">
+                            김지영은 아침마다 피트니스 센터에서 운동을 하고, 건강한 아침 식사로 하루를 시작하는 활동적인 생활을 즐깁니다. 직장에서 효율적으로 업무를 처리하며 최신 마케팅 트렌드를 주시합니다. 
+                          </div>
+                        </div>
+
+                        <Button Small Primary onClick={() => setSelectedPersonaForPopup(true)}>
+                          자세히 보기
+                          <img src={images.ChevronRightPrimary} alt="" />
+                        </Button>
+                      </CardPersona>
+
+                      <CardPersona>
+                        <span>
+                          <img src={images.CheckCircle} alt="요청 필요" />
+                          요청 필요
+                        </span>
+
+                        <div>
+                          <h4>시간이 부족한 바쁜 프리랜서</h4>
+                          <p className="keywords">
+                            <span>#키워드1</span>
+                            <span>#키워드2</span>
+                            <span>#키워드3</span>
+                          </p>
+                          <div className="content">
+                            김지영은 아침마다 피트니스 센터에서 운동을 하고, 건강한 아침 식사로 하루를 시작하는 활동적인 생활을 즐깁니다. 직장에서 효율적으로 업무를 처리하며 최신 마케팅 트렌드를 주시합니다. 
+                          </div>
+                        </div>
+
+                        <Button Small Primary onClick={() => setSelectedPersonaForPopup(true)}>
+                          자세히 보기
+                          <img src={images.ChevronRightPrimary} alt="" />
+                        </Button>
+                      </CardPersona>
+
+                      {selectedPersonaForPopup && (
+                        <InterviewPopup>
+                          <div>
+                            <div className="header">
+                              <h4>
+                                시간이 부족한 바쁜 프리랜서
+                                <span 
+                                  className="close" 
+                                  onClick={() => setSelectedPersonaForPopup(null)}
+                                />
+                              </h4>
+                              <p className="info">
+                                <span>여성</span>
+                                <span>25세</span>
+                                <span>서울 송파구 거주</span>
+                              </p>
+                            </div>
+
+                            <p className="keywords">
+                              <span>#시간 관리</span>
+                              <span>#페르소나 키워드</span>
+                              <span>#업무 효율</span>
+                            </p>
+
+                            <div className="content">
+                              <TabButton>
+                                <button 
+                                  className={activeTab === 'lifestyle' ? 'active' : ''} 
+                                  onClick={() => setActiveTab('lifestyle')}
+                                >
+                                  라이프스타일
+                                </button>
+                                <button 
+                                  className={activeTab === 'interests' ? 'active' : ''} 
+                                  onClick={() => setActiveTab('interests')}
+                                >
+                                  관심사
+                                </button>
+                                <button 
+                                  className={activeTab === 'consumption' ? 'active' : ''} 
+                                  onClick={() => setActiveTab('consumption')}
+                                >
+                                  소비성향
+                                </button>
+                              </TabButton>
+
+                              {activeTab === 'lifestyle' && (
+                                <TabContent>[라이프스타일] 학업과 여가를 균형 있게 추구하며, 문화적 호기심이 많습니다. 대학 근처의 문화 공간을 자주 방문하며, 예술 전시와 독립영화를 감상하거나 워크숍에 참여합니다. 소셜 미디어를 통해 최신 문화 소식을 빠르게 접하고, 친구들과 경험을 공유하는 것을 즐깁니다. 새로운 시도를 통해 자기 계발을 추구하며, 학업과 관련된 창의적 활동에도 열정적입니다.</TabContent>
+                              )}
+                              {activeTab === 'interests' && (
+                                <TabContent>[관심사] 학업과 여가를 균형 있게 추구하며, 문화적 호기심이 많습니다. 대학 근처의 문화 공간을 자주 방문하며, 예술 전시와 독립영화를 감상하거나 워크숍에 참여합니다. 소셜 미디어를 통해 최신 문화 소식을 빠르게 접하고, 친구들과 경험을 공유하는 것을 즐깁니다. 새로운 시도를 통해 자기 계발을 추구하며, 학업과 관련된 창의적 활동에도 열정적입니다.</TabContent>
+                              )}
+                              {activeTab === 'consumption' && (
+                                <TabContent>[소비성향] 학업과 여가를 균형 있게 추구하며, 문화적 호기심이 많습니다. 대학 근처의 문화 공간을 자주 방문하며, 예술 전시와 독립영화를 감상하거나 워크숍에 참여합니다. 소셜 미디어를 통해 최신 문화 소식을 빠르게 접하고, 친구들과 경험을 공유하는 것을 즐깁니다. 새로운 시도를 통해 자기 계발을 추구하며, 학업과 관련된 창의적 활동에도 열정적입니다.</TabContent>
+                              )}
+                            </div>
+
+                            <Button 
+                              Large 
+                              Primary 
+                              style={{ width: '100%', marginTop: '16px' }}
+                              onClick={handleInterviewRequest}
+                            >
+                              인터뷰 준비 요청하기
+                            </Button>
+                          </div>
+                        </InterviewPopup>
+                      )}
+                    </ContentSection>
+                  </CustomizePersona>
+
+                  {/* 산업별 인기 페르소나 */}
+                  <CustomizePersona>
+                    <Title Column>
+                      <h3>산업별 인기 페르소나</h3>
                       <p>
-                        추천된 페르소나를 선택하고 인터뷰를 진행하세요. (최대
-                        5명까지 선택이 가능합니다)
+                      산업별로 자주 활용되는 페르소나를 지금 바로 확인하고 인사이트를 얻어보세요.
                         <TooltipButton
                           onClick={() => setShowTooltip(!showTooltip)}
                         >
@@ -527,6 +713,7 @@ const PagePersona2 = () => {
                           <AtomLoader />
                         </PersonaCards>
                       ) : (
+                        <>
                         <PersonaCards>
                           {requestPersonaList.persona.map((persona, index) => (
                             <MoleculePersonaCard
@@ -554,6 +741,25 @@ const PagePersona2 = () => {
                             />
                           ))}
                         </PersonaCards>
+
+                        {/* 나만의 페르소나 커스터마이징 배너 */}
+                        <BannerPersona>
+                          <div>
+                            <h2>
+                              나만의 페르소나 커스터마이징
+                              <p>
+                                페르소나를 커스터마이징하여 더 정확한 인터뷰를 진행해보세요.
+                              </p>
+                            </h2>
+
+                            <Button Large Primary onClick={handleCustomizeRequest}>
+                              요청하기
+                              <img src={images.ChevronRightPrimary} alt="" />
+                            </Button>
+                          </div>
+                          <img src={images.PersonaCustomizing} alt="" />
+                        </BannerPersona>
+                        </>
                       )}
                       {!personaButtonState2 && (
                         <BottomBar>
@@ -614,6 +820,143 @@ const PagePersona2 = () => {
           show={showPopup}
         />
       )}
+
+      {showSuccessPopup && (
+        <PopupWrap
+          Check
+          title={
+            <>
+              인터뷰 준비 요청이 완료되었습니다.
+              <br />
+              완료 후 알림을 보내드릴게요
+            </>
+          }
+          buttonType="Outline"
+          closeText="확인"
+          isModal={false}
+          onCancel={handleSuccessPopupClose}
+          show={true}
+        />
+      )}
+
+      {showCustomizePopup && (
+        <PopupWrap
+          TitleFlex
+          title="📝 맞춤형 페르소나 모집 요청하기"
+          buttonType="Fill"
+          confirmText="맞춤 페르소나 모집하기"
+          isModal={true}
+          isFormValid={true}
+          onCancel={handleCustomizePopupClose}
+          onConfirm={() => {
+            // 여기에 확인 버튼 클릭 시 처리할 로직 추가
+            handleCustomizePopupClose();
+          }}
+          body={
+            <>
+              <Title>
+                <p>어떤 페르소나가 필요하신가요? *</p>
+              </Title>
+
+              <div style={{ width: '100%' }}>
+                <CustomTextarea
+                  rows={4}
+                  placeholder="필요한 페르소나의 특징과 역할을 적어주세요."
+                />
+              </div>
+
+              <Title>
+                <p>이 페르소나를 사용하려는 목적은 무엇인가요? *</p>
+              </Title>
+
+              <div style={{ width: '100%' }}>
+                <CustomTextarea
+                  rows={4}
+                  placeholder="해당 페르소나가 필요한 이유, 얻고 싶은 인사이트, 하고자 하는 목표 등을 입력해주세요."
+                />
+              </div>
+
+              <Title>
+                <p>몇명의 페르소나를 모집하시고 싶으신가요? *</p>
+              </Title>
+
+              <Quantity>
+                <span className="down">줄이기</span>
+                <CustomInput type="number" value={customizeFormState.quantity} />
+                <span className="up">늘리기</span>
+              </Quantity>
+
+              <AccordionSection>
+                <CustomAccordionHeader
+                  None
+                  onClick={() =>
+                    setCustomizeFormState(prev => ({
+                      ...prev,
+                      isAccordionOpen: !prev.isAccordionOpen
+                    }))
+                  }
+                >
+                  🔍 세부 사항 설정
+                  <CustomAccordionIcon isOpen={customizeFormState.isAccordionOpen} />
+                </CustomAccordionHeader>
+                {customizeFormState.isAccordionOpen && (
+                  <CustomAccordionContent None>
+                    <dl>
+                      <dt>성별</dt>
+                      <dd>
+                        <input type="radio" id="gender1" name="gender" />
+                        <label htmlFor="gender1" className="gender men">
+                          <img src={images.GenderMen} alt="GenderMen" />
+                          남자
+                        </label>
+                        <input type="radio" id="gender2" name="gender" />
+                        <label htmlFor="gender2" className="gender women">
+                          <img src={images.GenderWomen} alt="GenderWomen" />
+                          여자
+                        </label>
+                      </dd>
+                    </dl>
+
+                    <dl>
+                      <dt>
+                        연령 (다중 선택)
+                        <p>* 선택하지 않는 경우, 연령 무관으로 페르소나를 생성합니다.</p>
+                      </dt>
+                      <dd>
+                        <input type="checkbox" id="age1" name="age" />
+                        <label htmlFor="age1" className="age">10대</label>
+                        <input type="checkbox" id="age2" name="age" />
+                        <label htmlFor="age2" className="age">20대</label>
+                        <input type="checkbox" id="age3" name="age" />
+                        <label htmlFor="age3" className="age">30대</label>
+                        <input type="checkbox" id="age4" name="age" />
+                        <label htmlFor="age4" className="age">40대</label>
+                        <input type="checkbox" id="age5" name="age" />
+                        <label htmlFor="age5" className="age">50대</label>
+                        <input type="checkbox" id="age6" name="age" />
+                        <label htmlFor="age6" className="age">60대</label>
+                        <input type="checkbox" id="age7" name="age" />
+                        <label htmlFor="age7" className="age">70대 이상</label>
+                        <label className="age none" />
+                      </dd>
+                    </dl>
+
+                    <dl>
+                      <dt>필수적으로 필요한 정보가 있다면, 알려주세요</dt>
+                      <dd>
+                        <CustomTextarea
+                          rows={3}
+                          placeholder="필수로 고려해야할 정보가 있다면 작성해주세요."
+                        />
+                      </dd>
+                    </dl>
+                  </CustomAccordionContent>
+                )}
+              </AccordionSection>
+            </>
+          }
+        />
+      )}
     </>
   );
 };
@@ -630,6 +973,7 @@ const TooltipButton = styled.div`
   color: ${palette.gray300};
   padding: 4px 8px;
   cursor: pointer;
+  z-index: 1;
 
   &:after {
     display: flex;
@@ -840,10 +1184,92 @@ const Progress = styled.div`
 
 const PersonaCards = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: ${props => {
+    if (props.row) return `row`;
+    else return `column`;
+  }};
+  flex-wrap: wrap;
   align-items: center;
   gap: 16px;
   width: 100%;
+`;
+
+const CardPersona = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid ${palette.outlineGray};
+
+  > span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 0.63rem;
+    line-height: 1.2;
+    color: ${palette.primary};
+  }
+
+  h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: ${palette.gray700};
+    text-align: left;
+  }
+
+  .keywords {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 8px auto 20px;
+
+    span {
+      font-size: 0.75rem;
+      line-height: 1.2;
+      color: ${palette.gray700};
+      line-height: 1.5;
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid ${palette.outlineGray};
+    }
+  }
+
+  .content {
+    position: relative;
+    height: 110px;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    font-weight: 300;
+    color: ${palette.gray500};
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+
+    &:before {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 44px;
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0), ${palette.white} 80%);
+      content: "";
+    }
+  }
+
+  button {
+    width: 100%;
+  }
 `;
 
 const BottomBar = styled.div`
@@ -872,6 +1298,269 @@ const BottomBar = styled.div`
       font-weight: 600;
       color: ${palette.primary};
       // text-decoration: underline;
+    }
+  }
+`;
+
+const InterviewPopup = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 200;
+
+  > div {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 450px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 20px;
+    padding: 20px;
+    border-radius: 15px;
+    background: ${palette.white};
+    box-shadow: 4px 4px 30px rgba(0, 0, 0, 0.15);
+  }
+
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+
+    h4 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      width: 100%;
+      font-size: 1.25rem;
+      font-weight: 500;
+      line-height: 1.3;
+      color: ${palette.gray800};
+
+      .close {
+        position: relative;
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+        
+        &:before,
+        &:after {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 2px;
+          height: 16px;
+          background: ${palette.gray700};
+          content: "";
+        }
+
+        &:before {
+          transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        &:after {
+          transform: translate(-50%, -50%) rotate(-45deg);
+        }
+      }
+    }
+
+    .info {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 6px;
+      width: 100%;
+
+      span {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 6px;
+        font-size: 0.875rem;
+        font-weight: 300;
+        line-height: 1.5;
+        color: ${palette.gray700};
+
+        + span:before {
+          content: "";
+          display: inline-block;
+          width: 1px;
+          height: 9px;
+          background: ${palette.gray700};
+        }
+      }
+    }
+  }
+
+  .keywords {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 4px;
+    width: 100%;
+    flex-wrap: wrap;
+
+    span {
+      font-size: 0.875rem;
+      font-weight: 300;
+      line-height: 1.5;
+      color: ${palette.gray700};
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid ${palette.outlineGray};
+    }
+  }
+
+  .content {
+    width: 100%;
+  }
+`;
+
+const TabButton = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 20px;
+  background: ${palette.chatGray};
+
+  button {
+    width: 100%;
+    font-family: 'Pretendard', 'Poppins';
+    font-size: 1rem;
+    font-weight: 300;
+    color: ${palette.gray500};
+    padding: 6px 10px;
+    border-radius: 20px;
+    border: 0;
+    background: transparent;
+    transition: all 0.5s;
+    
+    &.active {
+      font-weight: 400;
+      color: ${palette.gray800};
+      background: ${palette.white};
+    }
+  }
+`;
+
+const TabContent = styled.div`
+  width: 100%;
+  max-height: 200px;
+  margin-top: 18px;
+  overflow-y: auto;
+  line-height: 1.5;
+  color: ${palette.gray700};
+  text-align: left;
+`;
+
+const BannerPersona = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 26px 32px 26px 50px;
+  border-radius: 10px;
+  background: #F8F9FD;
+  overflow: hidden;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 24px;
+  }
+
+  h2 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 4px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: ${palette.gray800};
+
+    p {
+      font-size: 0.875rem;
+      font-weight: 400;
+      line-height: 1.5;
+      color: ${palette.gray700};
+    }
+  }
+`;
+
+const Quantity = styled.div`
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+
+  span {
+    position: relative;
+    font-size: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 67px;
+    height: 67px;
+    border-radius: 10px;
+    border: 1px solid ${palette.outlineGray};
+    background: ${palette.chatGray};
+    cursor: pointer;
+
+    &.down:before, 
+    &.up:before,
+    &.up:after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 11px;
+      height: 2px;
+      border-radius: 10px;
+      background: ${palette.gray500};
+      content: "";
+    }
+
+    &.up:after {
+      transform: translate(-50%, -50%) rotate(90deg);
+    }
+  }
+
+  input {
+    font-size: 1rem;
+    font-weight: 300;
+    color: ${palette.gray500};
+    text-align: center;
+    padding: 24px;
+    border-radius: 10px;
+    border: 1px solid ${palette.outlineGray};
+    outline: none;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      appearance: none;
+      margin: 0;
     }
   }
 `;
