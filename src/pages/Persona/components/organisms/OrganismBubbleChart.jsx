@@ -42,7 +42,8 @@ const BubbleChart = ({ data, customWidth, customHeight }) => {
         .force("center", d3.forceCenter(width / 2, height / 2).strength(1))
         .force(
           "collision",
-          d3.forceCollide().radius((d) => Math.sqrt(d.value * 150)) // 200에서 150으로 수정하여 버블 크기 조정
+          // 충돌 반경을 약간 증가
+          d3.forceCollide().radius((d) => Math.sqrt(d.value * 150) + 10) // +4px 여백 추가
         )
         .force("charge", d3.forceManyBody().strength(-30))
         .force("x", d3.forceX(width / 2).strength(0.1))
@@ -55,25 +56,27 @@ const BubbleChart = ({ data, customWidth, customHeight }) => {
         .append("g")
         .attr("class", "node");
 
+      // 원 크기 증가
       nodes
         .append("circle")
-        .attr("r", (d) => Math.sqrt(d.value * 150)) // 200에서 150으로 수정
+        .attr("r", (d) => Math.sqrt(d.value * 150) + 10) // +4px 여백 추가
         .style("fill", (d) => categoryColors[d.category])
         .style("stroke", "#fff")
         .style("stroke-width", "2px");
 
+      // 텍스트 크기는 그대로 유지
       nodes
         .append("text")
         .text((d) => `${d.name}\n${d.value}%`)
         .attr("text-anchor", "middle")
         .attr("dominant-baseline", "middle")
-        // 텍스트 크기 계산식 수정
+        .attr("dy", "0.35em")
         .style("font-size", (d) => {
-          // 기본 크기를 키우고, 값에 따른 크기 변화를 더 크게 설정
-          const baseSize = Math.sqrt(d.value) * 3.2; // 2에서 3.2로 증가
-          return `${Math.max(baseSize, 14)}px`; // 최소 크기 14px 보장
+          // const baseSize = Math.sqrt(d.value) * 3.2;
+          // return `${Math.max(baseSize, 14)}px`;
+          return `14px`;
         })
-        .style("font-weight", "500") // 글씨 두께 추가
+        .style("font-weight", "500")
         .style("fill", (d) => {
           const category = d.category;
           switch (category) {
@@ -92,7 +95,7 @@ const BubbleChart = ({ data, customWidth, customHeight }) => {
           const words = text.text().split("\n");
           text.text("");
 
-          const lineHeight = 1.1; // 줄 간격을 약간 줄임 (1.2에서 1.1로)
+          const lineHeight = 1.1;
           const totalLines = words.length;
           const startY = -(lineHeight * (totalLines - 1)) / 2;
 
@@ -102,10 +105,9 @@ const BubbleChart = ({ data, customWidth, customHeight }) => {
               .text(word)
               .attr("x", 0)
               .attr("y", 0)
-              .attr("dy", `${startY + i * lineHeight + 0.3}em`);
+              .attr("dy", `${startY + i * lineHeight + 0.2}em`);
           });
         });
-
       simulation.on("tick", () => {
         nodes.attr("transform", (d) => {
           // 여백을 줄이기 위해 제한 값을 25로 수정 (기존 50의 절반)
