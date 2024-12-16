@@ -715,7 +715,7 @@ const PagePersona2 = () => {
                       ) : (
                         <>
                         <PersonaCards>
-                          {requestPersonaList.persona.map((persona, index) => (
+                          {/* {requestPersonaList.persona.map((persona, index) => (
                             <MoleculePersonaCard
                               key={index}
                               title={persona[`persona_${index + 1}`].persona}
@@ -727,7 +727,7 @@ const PagePersona2 = () => {
                               onClick={() => setShowPopup(true)}
                               currentSelection={selectedPersonas.length}
                             />
-                          ))}
+                          ))} */}
                           {personaList.unselected.map((persona, index) => (
                             <MoleculePersonaCard
                               key={index}
