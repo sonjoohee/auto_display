@@ -1,188 +1,29 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
-// const BubbleChart = (chartData) => {
-//   const containerRef = useRef(null);
-//   const svgRef = useRef(null);
-//   const data = chartData.data;
-//   useEffect(() => {
-//     // 샘플 데이터
-//     // const data = [
-//     //   { id: 1, name: "그룹 A", value: 10, category: "카테고리1" },
-//     //   { id: 2, name: "그룹 B", value: 45, category: "카테고리1" },
-//     //   { id: 3, name: "그룹 C", value: 25, category: "카테고리2" },
-//     //   { id: 4, name: "그룹 D", value: 55, category: "카테고리2" },
-//     //   { id: 5, name: "그룹 E", value: 35, category: "카테고리3" },
-//     //   { id: 6, name: "그룹 F", value: 40, category: "카테고리3" },
-//     // ];
-
-//     const updateChart = () => {
-//       const container = containerRef.current;
-//       const containerWidth = container.clientWidth;
-
-//       // SVG 크기 설정
-//       const width = containerWidth;
-//       const height = Math.min(containerWidth, 500);
-
-//       // 기존 SVG 삭제
-//       d3.select(svgRef.current).selectAll("*").remove();
-
-//       // SVG 생성
-//       const svg = d3
-//         .select(svgRef.current)
-//         .attr("width", width)
-//         .attr("height", height);
-
-//       // 카테고리별 색상 정의
-//       const categoryColors = {
-//         카테고리1: "rgba(54,26,128,.1)",
-//         카테고리2: "rgba(86,154,126,.1)",
-//         카테고리3: "rgba(161,98,109,.1)",
-//       };
-
-//       // 시뮬레이션 설정
-//       const simulation = d3
-//         .forceSimulation(data)
-//         .force("charge", d3.forceManyBody().strength(100))
-//         .force("center", d3.forceCenter(width / 2, height / 2))
-//         .force(
-//           "collision",
-//           d3.forceCollide().radius((d) => Math.sqrt(d.value * 100))
-//         );
-
-//       // 색상 함수 정의
-//       const color = (d) => categoryColors[d.category];
-
-//       // 툴팁 생성
-//       const tooltip = d3
-//         .select("body")
-//         .append("div")
-//         .style("position", "absolute")
-//         .style("padding", "10px")
-//         .style("background", "rgba(255, 255, 255, 0.9)")
-//         .style("border", "1px solid #ddd")
-//         .style("border-radius", "4px")
-//         .style("pointer-events", "none")
-//         .style("font-size", "14px")
-//         .style("line-height", "1.4")
-//         .style("box-shadow", "0 2px 4px rgba(0, 0, 0, 0.1)")
-//         .style("opacity", 0);
-
-//       // 버블 그리기
-//       const nodes = svg
-//         .selectAll(".node")
-//         .data(data)
-//         .enter()
-//         .append("g")
-//         .attr("class", "node")
-//         .style("cursor", "pointer");
-
-//       // 원 추가
-//       nodes
-//         .append("circle")
-//         .attr("r", (d) => Math.sqrt(d.value * 100))
-//         .style("fill", (d) => color(d))
-//         .style("stroke", "#fff")
-//         .style("stroke-width", "2px")
-//         .style("transition", "all 0.3s ease")
-//         .on("mouseover", (event, d) => {
-//           d3.select(event.currentTarget)
-//             .style("stroke-width", "3px")
-//             .style("opacity", 0.8);
-
-//           tooltip.transition().duration(200).style("opacity", 0.9);
-//           tooltip
-//             .html(
-//               `이름: ${d.name}<br/>
-//              카테고리: ${d.category}<br/>
-//              값: ${d.value}`
-//             )
-//             .style("left", event.pageX + 10 + "px")
-//             .style("top", event.pageY - 28 + "px");
-//         })
-//         .on("mouseout", (event) => {
-//           d3.select(event.currentTarget)
-//             .style("stroke-width", "2px")
-//             .style("opacity", 1);
-
-//           tooltip.transition().duration(500).style("opacity", 0);
-//         });
-
-//       // 텍스트 추가
-//       nodes
-//         .append("text")
-//         .text((d) => d.name)
-//         .append("tspan")
-//         .attr("x", 0)
-//         .attr("dy", "1.2em")
-//         .text((d) => `${d.value}%`)
-//         .attr("text-anchor", "middle")
-//         .attr("dy", ".3em")
-//         .style("font-size", (d) => `${Math.sqrt(d.value) * 3}px`)
-//         .style("pointer-events", "none")
-//         .style("fill", (d) => {
-//           const category = d.category;
-//           switch (category) {
-//             case "카테고리1":
-//               return "#361a80"; // 흰색
-//             case "카테고리2":
-//               return "#569a7e"; // 흰색
-//             case "카테고리3":
-//               return "#a1626d"; // 흰색
-//             default:
-//               return "#333333";
-//           }
-//         });
-
-//       // 시뮬레이션 업데이트
-//       simulation.on("tick", () => {
-//         nodes.attr("transform", (d) => `translate(${d.x},${d.y})`);
-//       });
-//     };
-
-//     // 초기 차트 생성
-//     updateChart();
-
-//     // 윈도우 리사이즈 이벤트 리스너
-//     const handleResize = () => {
-//       updateChart();
-//     };
-
-//     window.addEventListener("resize", handleResize);
-
-//     return () => {
-//       window.removeEventListener("resize", handleResize);
-//     };
-//   }, []);
-
-//   return (
-//     <div
-//       ref={containerRef}
-//       style={{
-//         width: "100%",
-//         maxWidth: "1000px",
-//         margin: "0 auto",
-//         padding: "20px",
-//       }}
-//     >
-//       <svg ref={svgRef}></svg>
-//     </div>
-//   );
-// };
-
-// export default BubbleChart;
-const BubbleChart = (chartData) => {
-  const containerRef = useRef(null);
-  const svgRef = useRef(null);
-  const data = chartData.data;
 
   useEffect(() => {
     const updateChart = () => {
       const container = containerRef.current;
-      const containerWidth = container.clientWidth;
-      const width = containerWidth;
-      // 높이를 조정하여 여백 줄이기
-      const height = Math.min(containerWidth, 350); // 500에서 300으로 수정
+// <<<<<<< branch-fixBubbleChartNode
+//       const containerWidth = container.clientWidth;
+//       const width = containerWidth;
+//       // 높이를 조정하여 여백 줄이기
+//       const height = Math.min(containerWidth, 350); // 500에서 300으로 수정
+// =======
+      
+      // 너비 설정
+      const width = customWidth || container.clientWidth;
+      
+      // 높이 설정 수정
+      // 데이터의 크기를 고려하여 최소 높이 계산
+      const minHeight = Math.max(
+        ...data.map(d => Math.sqrt(d.value * 100) * 2.5) // 버블 크기의 2.5배
+      ) * 2; // 상하 여백을 위해 2배
+      
+      // customHeight가 있으면 사용하고, 없으면 계산된 minHeight와 container.clientWidth 중 큰 값 사용
+      const height = customHeight || Math.max(minHeight, Math.min(container.clientWidth, 400));
+
 
       d3.select(svgRef.current).selectAll("*").remove();
 
@@ -277,17 +118,30 @@ const BubbleChart = (chartData) => {
     };
 
     window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [data]);
+// <<<<<<< branch-fixBubbleChartNode
+//     return () => window.removeEventListener("resize", handleResize);
+//   }, [data]);
+// =======
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [customWidth, customHeight]);
+// >>>>>>> main
 
   return (
     <div
       ref={containerRef}
       style={{
-        width: "100%",
+        width: customWidth || "100%",
+        height: customHeight || "auto",
         maxWidth: "1000px",
         margin: "0 auto",
-        padding: "10px", // 20px에서 10px로 수정
+// <<<<<<< branch-fixBubbleChartNode
+//         padding: "10px", // 20px에서 10px로 수정
+// =======
+        overflow: "hidden"
+// >>>>>>> main
       }}
     >
       <svg ref={svgRef}></svg>
