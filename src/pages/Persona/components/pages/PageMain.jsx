@@ -113,6 +113,26 @@ import {
   PERSONA_BUTTON_STATE_2,
   BUSINESS_ANALYSIS,
   PERSONA_STEP,
+  PROJECT_ID,
+  PROJECT_REPORT_ID,
+  PROJECT_LIST,
+  PROJECT_REPORT_LIST, 
+  REPORT_LIST,
+  PERSONA_LIST,
+  SELECTED_PERSONA_LIST,
+  CUSTOMIZE_PERSONA_LIST,
+  REQUEST_PERSONA_LIST,
+  INTERVIEW_QUESTION_LIST,
+  SELECTED_INTERVIEW_PURPOSE,
+  CATEGORY_COLOR,
+  PROJECT_LOAD_BUTTON_STATE,
+  REPORT_LOAD_BUTTON_STATE,
+  REPORT_DESCRIPTION_LOAD_BUTTON_STATE,
+  INTERVIEW_DATA,
+  INTERVIEW_REPORT,
+  INTERVIEW_REPORT_ADDITIONAL,
+  IS_EDIT_MODE,
+  IS_SHOW_TOAST
 } from "../../../AtomStates";
 import { CustomTextarea } from "../../../../assets/styles/InputStyle";
 import images from "../../../../assets/styles/Images";
@@ -384,6 +404,27 @@ const PageMain = () => {
 
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
 
+  const [projectId, setProjectId] = useAtom(PROJECT_ID);
+  const [projectReportId, setProjectReportId] = useAtom(PROJECT_REPORT_ID);
+  const [projectList, setProjectList] = useAtom(PROJECT_LIST);
+  const [projectReportList, setProjectReportList] = useAtom(PROJECT_REPORT_LIST);
+  const [reportList, setReportList] = useAtom(REPORT_LIST);
+  const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
+  const [selectedPersonaList, setSelectedPersonaList] = useAtom(SELECTED_PERSONA_LIST);
+  const [customizePersonaList, setCustomizePersonaList] = useAtom(CUSTOMIZE_PERSONA_LIST);
+  const [requestPersonaList, setRequestPersonaList] = useAtom(REQUEST_PERSONA_LIST);
+  const [interviewQuestionList, setInterviewQuestionList] = useAtom(INTERVIEW_QUESTION_LIST);
+  const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(SELECTED_INTERVIEW_PURPOSE);
+  const [categoryColor, setCategoryColor] = useAtom(CATEGORY_COLOR);
+  const [projectLoadButtonState, setProjectLoadButtonState] = useAtom(PROJECT_LOAD_BUTTON_STATE);
+  const [reportLoadButtonState, setReportLoadButtonState] = useAtom(REPORT_LOAD_BUTTON_STATE);
+  const [reportDescriptionLoadButtonState, setReportDescriptionLoadButtonState] = useAtom(REPORT_DESCRIPTION_LOAD_BUTTON_STATE);
+  const [interviewData, setInterviewData] = useAtom(INTERVIEW_DATA);
+  const [interviewReport, setInterviewReport] = useAtom(INTERVIEW_REPORT);
+  const [interviewReportAdditional, setInterviewReportAdditional] = useAtom(INTERVIEW_REPORT_ADDITIONAL);
+  const [isEditMode, setIsEditMode] = useAtom(IS_EDIT_MODE);
+  const [isShowToast, setIsShowToast] = useAtom(IS_SHOW_TOAST);
+
   const closePopupRegex = () => {
     setBusinessAnalysis({
       input: "",
@@ -541,6 +582,37 @@ const PageMain = () => {
     setMarketingRecommendedItemButtonState(0);
 
     setStrategyConsultantReportData([]);
+
+    setProjectId("");
+    setProjectReportId("");
+    setProjectList([]);
+    setProjectReportList([]); 
+    setReportList([]);
+    setPersonaList({
+      selected: [],
+      unselected: []
+    });
+    setSelectedPersonaList([]);
+    setCustomizePersonaList({
+      selected: [],
+      unselected: []
+    });
+    setRequestPersonaList({
+      persona: [],
+      positioning: {}
+    });
+    setInterviewQuestionList([]);
+    setSelectedInterviewPurpose("");
+    setCategoryColor({});
+    setProjectLoadButtonState(false);
+    setReportLoadButtonState(false);
+    setReportDescriptionLoadButtonState(false);
+    setInterviewData([]);
+    setInterviewReport([]);
+    setInterviewReportAdditional([]);
+    setIsEditMode(false);
+    setIsShowToast(false);
+
   }, []);
 
   useEffect(() => {
