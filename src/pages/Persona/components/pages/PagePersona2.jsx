@@ -42,7 +42,10 @@ import {
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
 import { Button } from "../../../../assets/styles/ButtonStyle";
-import { CustomTextarea, CustomInput } from "../../../../assets/styles/InputStyle";
+import {
+  CustomTextarea,
+  CustomInput,
+} from "../../../../assets/styles/InputStyle";
 import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
 import MoleculeHeader from "../molecules/MoleculeHeader";
 import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
@@ -95,7 +98,7 @@ const PagePersona2 = () => {
   const [showCustomizePopup, setShowCustomizePopup] = useState(false);
   const [customizeFormState, setCustomizeFormState] = useState({
     quantity: 1,
-    isAccordionOpen: false
+    isAccordionOpen: false,
   });
 
   const handlePopupClose = () => {
@@ -304,7 +307,7 @@ const PagePersona2 = () => {
               data,
               axiosConfig
             );
-            
+
             let newPersonas = response.data;
 
             // 이미 존재하는 페르소나는 제외
@@ -320,7 +323,6 @@ const PagePersona2 = () => {
                 unselectedPersonas.push(newPersonas[i]);
               }
             }
-            
           }
 
           let personaList = {
@@ -446,7 +448,7 @@ const PagePersona2 = () => {
 
   const [showTooltip, setShowTooltip] = useState(false);
 
-  const [activeTab, setActiveTab] = useState('lifestyle');
+  const [activeTab, setActiveTab] = useState("lifestyle");
 
   const handleInterviewRequest = () => {
     setSelectedPersonaForPopup(null);
@@ -489,7 +491,10 @@ const PagePersona2 = () => {
                   <CustomizePersona>
                     <Title Column>
                       <h3>비즈니스 맞춤 페르소나</h3>
-                      <p>비즈니스에 딱 맞는 페르소나를 추천해드려요. 요청을 보내주시면 인터뷰 참여 모집이 시작됩니다.</p>
+                      <p>
+                        비즈니스에 딱 맞는 페르소나를 추천해드려요. 요청을
+                        보내주시면 인터뷰 참여 모집이 시작됩니다.
+                      </p>
                     </Title>
 
                     <ContentSection row>
@@ -507,11 +512,18 @@ const PagePersona2 = () => {
                             <span>#키워드3</span>
                           </p>
                           <div className="content">
-                            김지영은 아침마다 피트니스 센터에서 운동을 하고, 건강한 아침 식사로 하루를 시작하는 활동적인 생활을 즐깁니다. 직장에서 효율적으로 업무를 처리하며 최신 마케팅 트렌드를 주시합니다. 
+                            김지영은 아침마다 피트니스 센터에서 운동을 하고,
+                            건강한 아침 식사로 하루를 시작하는 활동적인 생활을
+                            즐깁니다. 직장에서 효율적으로 업무를 처리하며 최신
+                            마케팅 트렌드를 주시합니다.
                           </div>
                         </div>
 
-                        <Button Small Primary onClick={() => setSelectedPersonaForPopup(true)}>
+                        <Button
+                          Small
+                          Primary
+                          onClick={() => setSelectedPersonaForPopup(true)}
+                        >
                           자세히 보기
                           <img src={images.ChevronRightPrimary} alt="" />
                         </Button>
@@ -531,11 +543,18 @@ const PagePersona2 = () => {
                             <span>#키워드3</span>
                           </p>
                           <div className="content">
-                            김지영은 아침마다 피트니스 센터에서 운동을 하고, 건강한 아침 식사로 하루를 시작하는 활동적인 생활을 즐깁니다. 직장에서 효율적으로 업무를 처리하며 최신 마케팅 트렌드를 주시합니다. 
+                            김지영은 아침마다 피트니스 센터에서 운동을 하고,
+                            건강한 아침 식사로 하루를 시작하는 활동적인 생활을
+                            즐깁니다. 직장에서 효율적으로 업무를 처리하며 최신
+                            마케팅 트렌드를 주시합니다.
                           </div>
                         </div>
 
-                        <Button Small Primary onClick={() => setSelectedPersonaForPopup(true)}>
+                        <Button
+                          Small
+                          Primary
+                          onClick={() => setSelectedPersonaForPopup(true)}
+                        >
                           자세히 보기
                           <img src={images.ChevronRightPrimary} alt="" />
                         </Button>
@@ -555,11 +574,18 @@ const PagePersona2 = () => {
                             <span>#키워드3</span>
                           </p>
                           <div className="content">
-                            김지영은 아침마다 피트니스 센터에서 운동을 하고, 건강한 아침 식사로 하루를 시작하는 활동적인 생활을 즐깁니다. 직장에서 효율적으로 업무를 처리하며 최신 마케팅 트렌드를 주시합니다. 
+                            김지영은 아침마다 피트니스 센터에서 운동을 하고,
+                            건강한 아침 식사로 하루를 시작하는 활동적인 생활을
+                            즐깁니다. 직장에서 효율적으로 업무를 처리하며 최신
+                            마케팅 트렌드를 주시합니다.
                           </div>
                         </div>
 
-                        <Button Small Primary onClick={() => setSelectedPersonaForPopup(true)}>
+                        <Button
+                          Small
+                          Primary
+                          onClick={() => setSelectedPersonaForPopup(true)}
+                        >
                           자세히 보기
                           <img src={images.ChevronRightPrimary} alt="" />
                         </Button>
@@ -571,9 +597,11 @@ const PagePersona2 = () => {
                             <div className="header">
                               <h4>
                                 시간이 부족한 바쁜 프리랜서
-                                <span 
-                                  className="close" 
-                                  onClick={() => setSelectedPersonaForPopup(null)}
+                                <span
+                                  className="close"
+                                  onClick={() =>
+                                    setSelectedPersonaForPopup(null)
+                                  }
                                 />
                               </h4>
                               <p className="info">
@@ -591,41 +619,75 @@ const PagePersona2 = () => {
 
                             <div className="content">
                               <TabButton>
-                                <button 
-                                  className={activeTab === 'lifestyle' ? 'active' : ''} 
-                                  onClick={() => setActiveTab('lifestyle')}
+                                <button
+                                  className={
+                                    activeTab === "lifestyle" ? "active" : ""
+                                  }
+                                  onClick={() => setActiveTab("lifestyle")}
                                 >
                                   라이프스타일
                                 </button>
-                                <button 
-                                  className={activeTab === 'interests' ? 'active' : ''} 
-                                  onClick={() => setActiveTab('interests')}
+                                <button
+                                  className={
+                                    activeTab === "interests" ? "active" : ""
+                                  }
+                                  onClick={() => setActiveTab("interests")}
                                 >
                                   관심사
                                 </button>
-                                <button 
-                                  className={activeTab === 'consumption' ? 'active' : ''} 
-                                  onClick={() => setActiveTab('consumption')}
+                                <button
+                                  className={
+                                    activeTab === "consumption" ? "active" : ""
+                                  }
+                                  onClick={() => setActiveTab("consumption")}
                                 >
                                   소비성향
                                 </button>
                               </TabButton>
 
-                              {activeTab === 'lifestyle' && (
-                                <TabContent>[라이프스타일] 학업과 여가를 균형 있게 추구하며, 문화적 호기심이 많습니다. 대학 근처의 문화 공간을 자주 방문하며, 예술 전시와 독립영화를 감상하거나 워크숍에 참여합니다. 소셜 미디어를 통해 최신 문화 소식을 빠르게 접하고, 친구들과 경험을 공유하는 것을 즐깁니다. 새로운 시도를 통해 자기 계발을 추구하며, 학업과 관련된 창의적 활동에도 열정적입니다.</TabContent>
+                              {activeTab === "lifestyle" && (
+                                <TabContent>
+                                  [라이프스타일] 학업과 여가를 균형 있게
+                                  추구하며, 문화적 호기심이 많습니다. 대학
+                                  근처의 문화 공간을 자주 방문하며, 예술 전시와
+                                  독립영화를 감상하거나 워크숍에 참여합니다.
+                                  소셜 미디어를 통해 최신 문화 소식을 빠르게
+                                  접하고, 친구들과 경험을 공유하는 것을
+                                  즐깁니다. 새로운 시도를 통해 자기 계발을
+                                  추구하며, 학업과 관련된 창의적 활동에도
+                                  열정적입니다.
+                                </TabContent>
                               )}
-                              {activeTab === 'interests' && (
-                                <TabContent>[관심사] 학업과 여가를 균형 있게 추구하며, 문화적 호기심이 많습니다. 대학 근처의 문화 공간을 자주 방문하며, 예술 전시와 독립영화를 감상하거나 워크숍에 참여합니다. 소셜 미디어를 통해 최신 문화 소식을 빠르게 접하고, 친구들과 경험을 공유하는 것을 즐깁니다. 새로운 시도를 통해 자기 계발을 추구하며, 학업과 관련된 창의적 활동에도 열정적입니다.</TabContent>
+                              {activeTab === "interests" && (
+                                <TabContent>
+                                  [관심사] 학업과 여가를 균형 있게 추구하며,
+                                  문화적 호기심이 많습니다. 대학 근처의 문화
+                                  공간을 자주 방문하며, 예술 전시와 독립영화를
+                                  감상하거나 워크숍에 참여합니다. 소셜 미디어를
+                                  통해 최신 문화 소식을 빠르게 접하고, 친구들과
+                                  경험을 공유하는 것을 즐깁니다. 새로운 시도를
+                                  통해 자기 계발을 추구하며, 학업과 관련된
+                                  창의적 활동에도 열정적입니다.
+                                </TabContent>
                               )}
-                              {activeTab === 'consumption' && (
-                                <TabContent>[소비성향] 학업과 여가를 균형 있게 추구하며, 문화적 호기심이 많습니다. 대학 근처의 문화 공간을 자주 방문하며, 예술 전시와 독립영화를 감상하거나 워크숍에 참여합니다. 소셜 미디어를 통해 최신 문화 소식을 빠르게 접하고, 친구들과 경험을 공유하는 것을 즐깁니다. 새로운 시도를 통해 자기 계발을 추구하며, 학업과 관련된 창의적 활동에도 열정적입니다.</TabContent>
+                              {activeTab === "consumption" && (
+                                <TabContent>
+                                  [소비성향] 학업과 여가를 균형 있게 추구하며,
+                                  문화적 호기심이 많습니다. 대학 근처의 문화
+                                  공간을 자주 방문하며, 예술 전시와 독립영화를
+                                  감상하거나 워크숍에 참여합니다. 소셜 미디어를
+                                  통해 최신 문화 소식을 빠르게 접하고, 친구들과
+                                  경험을 공유하는 것을 즐깁니다. 새로운 시도를
+                                  통해 자기 계발을 추구하며, 학업과 관련된
+                                  창의적 활동에도 열정적입니다.
+                                </TabContent>
                               )}
                             </div>
 
-                            <Button 
-                              Large 
-                              Primary 
-                              style={{ width: '100%', marginTop: '16px' }}
+                            <Button
+                              Large
+                              Primary
+                              style={{ width: "100%", marginTop: "16px" }}
                               onClick={handleInterviewRequest}
                             >
                               인터뷰 준비 요청하기
@@ -641,7 +703,8 @@ const PagePersona2 = () => {
                     <Title Column>
                       <h3>산업별 인기 페르소나</h3>
                       <p>
-                      산업별로 자주 활용되는 페르소나를 지금 바로 확인하고 인사이트를 얻어보세요.
+                        산업별로 자주 활용되는 페르소나를 지금 바로 확인하고
+                        인사이트를 얻어보세요.
                         <TooltipButton
                           onClick={() => setShowTooltip(!showTooltip)}
                         >
@@ -714,8 +777,8 @@ const PagePersona2 = () => {
                         </PersonaCards>
                       ) : (
                         <>
-                        <PersonaCards>
-                          {requestPersonaList.persona.map((persona, index) => (
+                          <PersonaCards>
+                            {/* {requestPersonaList.persona.map((persona, index) => (
                             <MoleculePersonaCard
                               key={index}
                               title={persona[`persona_${index + 1}`].persona}
@@ -727,38 +790,43 @@ const PagePersona2 = () => {
                               onClick={() => setShowPopup(true)}
                               currentSelection={selectedPersonas.length}
                             />
-                          ))}
-                          {personaList.unselected.map((persona, index) => (
-                            <MoleculePersonaCard
-                              key={index}
-                              title={persona.persona}
-                              keywords={persona.keyword.split(",")}
-                              isBasic={true}
-                              onSelect={(isSelected) =>
-                                handlePersonaSelect(persona, isSelected)
-                              }
-                              currentSelection={selectedPersonas.length}
-                            />
-                          ))}
-                        </PersonaCards>
+                          ))} */}
+                            {personaList.unselected.map((persona, index) => (
+                              <MoleculePersonaCard
+                                key={index}
+                                title={persona.persona}
+                                keywords={persona.keyword.split(",")}
+                                isBasic={true}
+                                onSelect={(isSelected) =>
+                                  handlePersonaSelect(persona, isSelected)
+                                }
+                                currentSelection={selectedPersonas.length}
+                              />
+                            ))}
+                          </PersonaCards>
 
-                        {/* 나만의 페르소나 커스터마이징 배너 */}
-                        <BannerPersona>
-                          <div>
-                            <h2>
-                              나만의 페르소나 커스터마이징
-                              <p>
-                                페르소나를 커스터마이징하여 더 정확한 인터뷰를 진행해보세요.
-                              </p>
-                            </h2>
+                          {/* 나만의 페르소나 커스터마이징 배너 */}
+                          <BannerPersona>
+                            <div>
+                              <h2>
+                                나만의 페르소나 커스터마이징
+                                <p>
+                                  페르소나를 커스터마이징하여 더 정확한 인터뷰를
+                                  진행해보세요.
+                                </p>
+                              </h2>
 
-                            <Button Large Primary onClick={handleCustomizeRequest}>
-                              요청하기
-                              <img src={images.ChevronRightPrimary} alt="" />
-                            </Button>
-                          </div>
-                          <img src={images.PersonaCustomizing} alt="" />
-                        </BannerPersona>
+                              <Button
+                                Large
+                                Primary
+                                onClick={handleCustomizeRequest}
+                              >
+                                요청하기
+                                <img src={images.ChevronRightPrimary} alt="" />
+                              </Button>
+                            </div>
+                            <img src={images.PersonaCustomizing} alt="" />
+                          </BannerPersona>
                         </>
                       )}
                       {!personaButtonState2 && (
@@ -858,7 +926,7 @@ const PagePersona2 = () => {
                 <p>어떤 페르소나가 필요하신가요? *</p>
               </Title>
 
-              <div style={{ width: '100%' }}>
+              <div style={{ width: "100%" }}>
                 <CustomTextarea
                   rows={4}
                   placeholder="필요한 페르소나의 특징과 역할을 적어주세요."
@@ -869,7 +937,7 @@ const PagePersona2 = () => {
                 <p>이 페르소나를 사용하려는 목적은 무엇인가요? *</p>
               </Title>
 
-              <div style={{ width: '100%' }}>
+              <div style={{ width: "100%" }}>
                 <CustomTextarea
                   rows={4}
                   placeholder="해당 페르소나가 필요한 이유, 얻고 싶은 인사이트, 하고자 하는 목표 등을 입력해주세요."
@@ -882,7 +950,10 @@ const PagePersona2 = () => {
 
               <Quantity>
                 <span className="down">줄이기</span>
-                <CustomInput type="number" value={customizeFormState.quantity} />
+                <CustomInput
+                  type="number"
+                  value={customizeFormState.quantity}
+                />
                 <span className="up">늘리기</span>
               </Quantity>
 
@@ -890,14 +961,16 @@ const PagePersona2 = () => {
                 <CustomAccordionHeader
                   None
                   onClick={() =>
-                    setCustomizeFormState(prev => ({
+                    setCustomizeFormState((prev) => ({
                       ...prev,
-                      isAccordionOpen: !prev.isAccordionOpen
+                      isAccordionOpen: !prev.isAccordionOpen,
                     }))
                   }
                 >
                   🔍 세부 사항 설정
-                  <CustomAccordionIcon isOpen={customizeFormState.isAccordionOpen} />
+                  <CustomAccordionIcon
+                    isOpen={customizeFormState.isAccordionOpen}
+                  />
                 </CustomAccordionHeader>
                 {customizeFormState.isAccordionOpen && (
                   <CustomAccordionContent None>
@@ -920,23 +993,40 @@ const PagePersona2 = () => {
                     <dl>
                       <dt>
                         연령 (다중 선택)
-                        <p>* 선택하지 않는 경우, 연령 무관으로 페르소나를 생성합니다.</p>
+                        <p>
+                          * 선택하지 않는 경우, 연령 무관으로 페르소나를
+                          생성합니다.
+                        </p>
                       </dt>
                       <dd>
                         <input type="checkbox" id="age1" name="age" />
-                        <label htmlFor="age1" className="age">10대</label>
+                        <label htmlFor="age1" className="age">
+                          10대
+                        </label>
                         <input type="checkbox" id="age2" name="age" />
-                        <label htmlFor="age2" className="age">20대</label>
+                        <label htmlFor="age2" className="age">
+                          20대
+                        </label>
                         <input type="checkbox" id="age3" name="age" />
-                        <label htmlFor="age3" className="age">30대</label>
+                        <label htmlFor="age3" className="age">
+                          30대
+                        </label>
                         <input type="checkbox" id="age4" name="age" />
-                        <label htmlFor="age4" className="age">40대</label>
+                        <label htmlFor="age4" className="age">
+                          40대
+                        </label>
                         <input type="checkbox" id="age5" name="age" />
-                        <label htmlFor="age5" className="age">50대</label>
+                        <label htmlFor="age5" className="age">
+                          50대
+                        </label>
                         <input type="checkbox" id="age6" name="age" />
-                        <label htmlFor="age6" className="age">60대</label>
+                        <label htmlFor="age6" className="age">
+                          60대
+                        </label>
                         <input type="checkbox" id="age7" name="age" />
-                        <label htmlFor="age7" className="age">70대 이상</label>
+                        <label htmlFor="age7" className="age">
+                          70대 이상
+                        </label>
                         <label className="age none" />
                       </dd>
                     </dl>
@@ -1184,7 +1274,7 @@ const Progress = styled.div`
 
 const PersonaCards = styled.div`
   display: flex;
-  flex-direction: ${props => {
+  flex-direction: ${(props) => {
     if (props.row) return `row`;
     else return `column`;
   }};
@@ -1262,7 +1352,11 @@ const CardPersona = styled.div`
       left: 0;
       width: 100%;
       height: 44px;
-      background: linear-gradient(to bottom, rgba(255, 255, 255, 0), ${palette.white} 80%);
+      background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0),
+        ${palette.white} 80%
+      );
       content: "";
     }
   }
@@ -1353,7 +1447,7 @@ const InterviewPopup = styled.div`
         width: 16px;
         height: 16px;
         cursor: pointer;
-        
+
         &:before,
         &:after {
           position: absolute;
@@ -1439,7 +1533,7 @@ const TabButton = styled.div`
 
   button {
     width: 100%;
-    font-family: 'Pretendard', 'Poppins';
+    font-family: "Pretendard", "Poppins";
     font-size: 1rem;
     font-weight: 300;
     color: ${palette.gray500};
@@ -1448,7 +1542,7 @@ const TabButton = styled.div`
     border: 0;
     background: transparent;
     transition: all 0.5s;
-    
+
     &.active {
       font-weight: 400;
       color: ${palette.gray800};
@@ -1475,7 +1569,7 @@ const BannerPersona = styled.div`
   gap: 10px;
   padding: 26px 32px 26px 50px;
   border-radius: 10px;
-  background: #F8F9FD;
+  background: #f8f9fd;
   overflow: hidden;
 
   > div {
@@ -1527,7 +1621,7 @@ const Quantity = styled.div`
     background: ${palette.chatGray};
     cursor: pointer;
 
-    &.down:before, 
+    &.down:before,
     &.up:before,
     &.up:after {
       position: absolute;
