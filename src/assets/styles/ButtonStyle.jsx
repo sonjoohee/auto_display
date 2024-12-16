@@ -59,6 +59,26 @@ export const Button = styled.button`
     }
   `}
 
+    ${props => props.Primary && props.Fill && props.Large && css`
+    color: ${palette.white};
+    background: ${palette.primary};
+
+    &:hover {
+      background: #3537B3;
+    }
+
+    &:disabled {
+      color: ${palette.white};
+      border: none;
+      // border: 1px solid ${palette.gray300};
+      background: ${palette.gray300};
+
+      &:hover {
+        background: ${palette.gray300};
+      }
+    }
+  `}
+
   ${props => props.Primary && !props.Fill && css`
     color: ${palette.main};
     border: 1px solid ${palette.main};

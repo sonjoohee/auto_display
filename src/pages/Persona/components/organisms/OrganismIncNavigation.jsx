@@ -118,6 +118,27 @@ import {
   GROWTH_HACKER_SELECTED_SOLUTION,
   STRATEGY_CONSULTANT_REPORT_DATA,
   PERSONA_STEP,
+  IS_PERSONA_ACCESSIBLE,
+  PROJECT_ID,
+  PROJECT_REPORT_ID,
+  PROJECT_LIST,
+  PROJECT_REPORT_LIST, 
+  REPORT_LIST,
+  PERSONA_LIST,
+  SELECTED_PERSONA_LIST,
+  CUSTOMIZE_PERSONA_LIST,
+  REQUEST_PERSONA_LIST,
+  INTERVIEW_QUESTION_LIST,
+  SELECTED_INTERVIEW_PURPOSE,
+  CATEGORY_COLOR,
+  PROJECT_LOAD_BUTTON_STATE,
+  REPORT_LOAD_BUTTON_STATE,
+  REPORT_DESCRIPTION_LOAD_BUTTON_STATE,
+  INTERVIEW_DATA,
+  INTERVIEW_REPORT,
+  INTERVIEW_REPORT_ADDITIONAL,
+  IS_EDIT_MODE,
+  IS_SHOW_TOAST
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -128,6 +149,28 @@ import { useSaveConversation } from "../../../Expert_Insight/components/atoms/At
 import OrganismReportPopup from "../../../Expert_Insight/components/organisms/OrganismReportPopup"; // 팝업 컴포넌트 임포트
 
 const OrganismIncNavigation = () => {
+  const [projectLoadButtonState, setProjectLoadButtonState] = useAtom(PROJECT_LOAD_BUTTON_STATE);
+  const [projectId, setProjectId] = useAtom(PROJECT_ID);
+  const [projectReportId, setProjectReportId] = useAtom(PROJECT_REPORT_ID);
+  const [projectList, setProjectList] = useAtom(PROJECT_LIST);
+  const [projectReportList, setProjectReportList] =
+    useAtom(PROJECT_REPORT_LIST);
+  const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(IS_PERSONA_ACCESSIBLE);
+  const [reportList, setReportList] = useAtom(REPORT_LIST);
+  const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
+  const [selectedPersonaList, setSelectedPersonaList] = useAtom(SELECTED_PERSONA_LIST);
+  const [customizePersonaList, setCustomizePersonaList] = useAtom(CUSTOMIZE_PERSONA_LIST);
+  const [requestPersonaList, setRequestPersonaList] = useAtom(REQUEST_PERSONA_LIST);
+  const [interviewQuestionList, setInterviewQuestionList] = useAtom(INTERVIEW_QUESTION_LIST);
+  const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(SELECTED_INTERVIEW_PURPOSE);
+  const [categoryColor, setCategoryColor] = useAtom(CATEGORY_COLOR);
+  const [reportLoadButtonState, setReportLoadButtonState] = useAtom(REPORT_LOAD_BUTTON_STATE);
+  const [reportDescriptionLoadButtonState, setReportDescriptionLoadButtonState] = useAtom(REPORT_DESCRIPTION_LOAD_BUTTON_STATE);
+  const [interviewData, setInterviewData] = useAtom(INTERVIEW_DATA);
+  const [interviewReport, setInterviewReport] = useAtom(INTERVIEW_REPORT);
+  const [interviewReportAdditional, setInterviewReportAdditional] = useAtom(INTERVIEW_REPORT_ADDITIONAL);
+  const [isEditMode, setIsEditMode] = useAtom(IS_EDIT_MODE);
+  const [isShowToast, setIsShowToast] = useAtom(IS_SHOW_TOAST);
   const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
   const [strategyConsultantReportData, setStrategyConsultantReportData] =
     useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
@@ -423,6 +466,12 @@ const OrganismIncNavigation = () => {
   //   setIsSection1Open(false);
   //   setIsSection2Open(false);
   // }, [isLoggedIn]);
+
+  const [isPopupLogin, setIsPopupLogin] = useState(false);
+
+  const closePopupLogin = () => {
+    setIsPopupLogin(false);
+  };
 
   const handleChangeReportNameButtonClick = (reportId) => {
     setReportIdToChangeName(reportId);
@@ -1121,6 +1170,11 @@ const OrganismIncNavigation = () => {
   };
 
   const handleNewProjectClick = () => {
+    if (!isLoggedIn) {
+      setIsPopupLogin(true);
+      return;
+    }
+    
     if (isLoading) {
       setIsExitPopupOpen(true);
       return;
@@ -1236,6 +1290,36 @@ const OrganismIncNavigation = () => {
     setMarketingRecommendedItemButtonState(0);
 
     setStrategyConsultantReportData([]);
+
+    setProjectId("");
+    setProjectReportId("");
+    setProjectList([]);
+    setProjectReportList([]); 
+    setReportList([]);
+    setPersonaList({
+      selected: [],
+      unselected: []
+    });
+    setSelectedPersonaList([]);
+    setCustomizePersonaList({
+      selected: [],
+      unselected: []
+    });
+    setRequestPersonaList({
+      persona: [],
+      positioning: {}
+    });
+    setInterviewQuestionList([]);
+    setSelectedInterviewPurpose("");
+    setCategoryColor({});
+    setProjectLoadButtonState(false);
+    setReportLoadButtonState(false);
+    setReportDescriptionLoadButtonState(false);
+    setInterviewData([]);
+    setInterviewReport([]);
+    setInterviewReportAdditional([]);
+    setIsEditMode(false);
+    setIsShowToast(false);
   };
 
   const handleLogoClick = () => {
@@ -1359,14 +1443,52 @@ const OrganismIncNavigation = () => {
   const [showSubNav, setShowSubNav] = useState(false);
 
   const handleWorkManageClick = () => {
+    if (!isLoggedIn) {
+      setIsPopupLogin(true);
+      return;
+    }
+    
     setShowSubNav(!showSubNav);
   };
 
   const handleMyProjectClick = () => {
+    setProjectId("");
+    setProjectReportId("");
+    setProjectList([]);
+    setProjectReportList([]); 
+    setReportList([]);
+    setPersonaList({
+      selected: [],
+      unselected: []
+    });
+    setSelectedPersonaList([]);
+    setCustomizePersonaList({
+      selected: [],
+      unselected: []
+    });
+    setRequestPersonaList({
+      persona: [],
+      positioning: {}
+    });
+    setInterviewQuestionList([]);
+    setSelectedInterviewPurpose("");
+    setCategoryColor({});
+    setProjectLoadButtonState(false);
+    setReportLoadButtonState(false);
+    setReportDescriptionLoadButtonState(false);
+    setInterviewData([]);
+    setInterviewReport([]);
+    setInterviewReportAdditional([]);
+    setIsEditMode(false);
+    setIsShowToast(false);
+
     if (isLoggedIn) {
       navigate("/MyProject");
     } else {
-      navigate("/Main");
+        if (!isLoggedIn) {
+          setIsPopupLogin(true);
+          return;
+        }
     }
   };
 
@@ -2019,6 +2141,31 @@ const OrganismIncNavigation = () => {
           </div>
         </Popup>
       )}
+      {isPopupLogin && (
+      <Popup
+        Cancel
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            closePopupLogin();
+          }
+        }}
+      >
+        <div>
+          <button type="button" className="closePopup" onClick={closePopupLogin}>
+            닫기
+          </button>
+          <span>
+            <img src={images.ExclamationMark2} alt="" />
+          </span>
+          <p>로그인 후 사용해 주세요.</p>
+          <div className="btnWrap">
+            <button type="button" onClick={closePopupLogin}>
+              확인
+            </button>
+          </div>
+        </div>
+      </Popup>
+    )}
     </>
   );
 };
