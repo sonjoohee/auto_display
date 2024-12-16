@@ -67,7 +67,13 @@ const BubbleChart = ({ data, customWidth, customHeight }) => {
         .text((d) => `${d.name}\n${d.value}%`)
         .attr("text-anchor", "middle")
         .attr("dominant-baseline", "middle")
-        .style("font-size", (d) => `${Math.sqrt(d.value) * 2}px`) // 2.5에서 2로 수정하여 텍스트 크기 조정
+        // 텍스트 크기 계산식 수정
+        .style("font-size", (d) => {
+          // 기본 크기를 키우고, 값에 따른 크기 변화를 더 크게 설정
+          const baseSize = Math.sqrt(d.value) * 3.2; // 2에서 3.2로 증가
+          return `${Math.max(baseSize, 14)}px`; // 최소 크기 14px 보장
+        })
+        .style("font-weight", "500") // 글씨 두께 추가
         .style("fill", (d) => {
           const category = d.category;
           switch (category) {
@@ -86,7 +92,7 @@ const BubbleChart = ({ data, customWidth, customHeight }) => {
           const words = text.text().split("\n");
           text.text("");
 
-          const lineHeight = 1.2;
+          const lineHeight = 1.1; // 줄 간격을 약간 줄임 (1.2에서 1.1로)
           const totalLines = words.length;
           const startY = -(lineHeight * (totalLines - 1)) / 2;
 
@@ -96,7 +102,7 @@ const BubbleChart = ({ data, customWidth, customHeight }) => {
               .text(word)
               .attr("x", 0)
               .attr("y", 0)
-              .attr("dy", `${startY + i * lineHeight}em`);
+              .attr("dy", `${startY + i * lineHeight + 0.3}em`);
           });
         });
 
