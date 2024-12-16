@@ -63,7 +63,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
   const [personaButtonState1, setPersonaButtonState1] = useAtom(
     PERSONA_BUTTON_STATE_1
   );
-  const [isLoading, setIsLoading] = useAtom(IS_LOADING); 
+  const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [loadingState, setLoadingState] = useState(false);
   const [showCardContent, setShowCardContent] = useState(personaStep <= 2);
   const [categoryColor, setCategoryColor] = useAtom(CATEGORY_COLOR);
@@ -138,7 +138,10 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
     const specialChars = /^[.,'"?!()\-]+$/;
 
     // 단독으로 특수 문자만 사용된 경우
-    if (specialChars.test(inputs.field1.value) || specialChars.test(inputs.field2.value)) {
+    if (
+      specialChars.test(inputs.field1.value) ||
+      specialChars.test(inputs.field2.value)
+    ) {
       setIsPopupRegex(true);
       return;
     }
@@ -356,6 +359,10 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
 
       try {
         if (personaButtonState1 === 1) {
+          console.log(
+            "🚀 ~ loadBusinessAnalysis ~ personaButtonState1:",
+            personaButtonState1
+          );
           setIsLoading(true);
           // 버튼 클릭으로 API 호출
           let response = await axios.post(
@@ -571,38 +578,38 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
 
           <FormEdit>
             <span>비즈니스 설명</span>
-          <FormBox status={getInputStatus(inputs.field2)}>
-          {loadingState ? (
-            <>
-            <SkeletonLine />
-            <SkeletonLine />
-            </>
-          ) : (
-            <>
-              <CustomTextarea
-                Edit
-                ref={textareaRef}
-                value={inputs.field2.value}
-                onChange={(e) => {
-                  handleChange(e, "field2");
-                  adjustHeight();
-                }}
-                status={getInputStatus(inputs.field2)}
-              />
+            <FormBox status={getInputStatus(inputs.field2)}>
+              {loadingState ? (
+                <>
+                  <SkeletonLine />
+                  <SkeletonLine />
+                </>
+              ) : (
+                <>
+                  <CustomTextarea
+                    Edit
+                    ref={textareaRef}
+                    value={inputs.field2.value}
+                    onChange={(e) => {
+                      handleChange(e, "field2");
+                      adjustHeight();
+                    }}
+                    status={getInputStatus(inputs.field2)}
+                  />
 
-              <EditButtonGroup>
-                <IconButton onClick={handleUndoClick}>
-                  <img src={images.ClockCounterclockwise} alt="" />
-                  <span>이전으로 되돌리기</span>
-                </IconButton>
-                <IconButton onClick={handleAIDetailClick}>
-                  <img src={images.MagicStick} alt="" />
-                  <span>AI로 다듬기</span>
-                </IconButton>
-              </EditButtonGroup>
-            </>
-          )}
-        </FormBox>
+                  <EditButtonGroup>
+                    <IconButton onClick={handleUndoClick}>
+                      <img src={images.ClockCounterclockwise} alt="" />
+                      <span>이전으로 되돌리기</span>
+                    </IconButton>
+                    <IconButton onClick={handleAIDetailClick}>
+                      <img src={images.MagicStick} alt="" />
+                      <span>AI로 다듬기</span>
+                    </IconButton>
+                  </EditButtonGroup>
+                </>
+              )}
+            </FormBox>
           </FormEdit>
         </Card>
       ) : (
@@ -630,7 +637,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
           )}
         </Card>
       )}
-            {isPopupRegex && (
+      {isPopupRegex && (
         <Popup
           Cancel
           onClick={(e) => {

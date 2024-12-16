@@ -686,7 +686,6 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
   const handleCheckResult = async () => {
     handleWarningClose();
     setIsPersonaAccessible(true);
-    console.log("🚀 ~ handleCheckResult ~ reportId:", reportId);
     try {
       let newReportId = await createProjectReportOnServer(isLoggedIn);
       setReportId(newReportId); // 생성된 대화 ID 설정
