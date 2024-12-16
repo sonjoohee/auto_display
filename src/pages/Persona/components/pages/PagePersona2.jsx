@@ -275,15 +275,27 @@ const PagePersona2 = () => {
               data,
               axiosConfig
             );
+            
+            let newPersonas = response.data;
+            
+            console.log(newPersonas);
 
             // 이미 존재하는 페르소나는 제외
-            response.data.forEach(newPersona => {
-              if (!unselectedPersonas.some(existingPersona => 
-                existingPersona.persona === newPersona.persona
-              )) {
-                unselectedPersonas.push(newPersona);
+            for (let i = 0; i < newPersonas.length; i++) {
+              let isDuplicate = false;
+              for (let j = 0; j < unselectedPersonas.length; j++) {
+                if (unselectedPersonas[j].persona === newPersonas[i].persona) {
+                  isDuplicate = true;
+                  break;
+                }
               }
-            });
+              if (!isDuplicate) {
+                unselectedPersonas.push(newPersonas[i]);
+              }
+            }
+
+            console.log(unselectedPersonas);
+            
           }
 
           let personaList = {
