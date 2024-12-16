@@ -283,6 +283,7 @@ const PagePersona4 = () => {
       }
     }
   };
+
   const transformInterviewDataToBubbleChart = (
     interviewData,
     questionIndex
@@ -293,19 +294,22 @@ const PagePersona4 = () => {
     const keywordAnalysis =
       interviewData[2].content[questionIndex].keyword_analysis;
 
-    return keywordAnalysis.map((item, index) => {
-      const value = parseInt(
-        item[`insight_${index + 1}_frequency`].replace("%", "")
-      );
+    return keywordAnalysis
+      .map((item, index) => {
+        const value = parseInt(
+          item[`insight_${index + 1}_frequency`].replace("%", "")
+        );
 
-      return {
-        id: index + 1,
-        name: item[`insight_${index + 1}_text`],
-        value: value,
-        category: `카테고리${index + 1}`,
-      };
-    });
+        return {
+          id: index + 1,
+          name: item[`insight_${index + 1}_text`],
+          value: value,
+          category: `카테고리${index + 1}`,
+        };
+      })
+      .filter((item) => item.value !== 0);
   };
+
   const getInterviewPurposeDescription = (purpose) => {
     switch (purpose) {
       case "제품 경험 평가":
