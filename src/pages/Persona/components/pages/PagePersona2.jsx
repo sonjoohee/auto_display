@@ -276,7 +276,14 @@ const PagePersona2 = () => {
               axiosConfig
             );
 
-            unselectedPersonas.push(...response.data);
+            // 이미 존재하는 페르소나는 제외
+            response.data.forEach(newPersona => {
+              if (!unselectedPersonas.some(existingPersona => 
+                existingPersona.persona === newPersona.persona
+              )) {
+                unselectedPersonas.push(newPersona);
+              }
+            });
           }
 
           let personaList = {
@@ -300,7 +307,7 @@ const PagePersona2 = () => {
 
           let retryCount = 0;
           const maxRetries = 10;
-          console.log(requestPersonaList);
+          // console.log(requestPersonaList);
           while (
             retryCount < maxRetries &&
             (!response ||
