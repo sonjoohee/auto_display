@@ -325,7 +325,6 @@ const PagePersona2 = () => {
             (!response ||
               !response.data ||
               !requestPersonaList.hasOwnProperty("persona_spectrum") ||
-              !requestPersonaList.hasOwnProperty("positioning_analysis") ||
               requestPersonaList.persona_spectrum.length !== 3 ||
               !requestPersonaList.persona_spectrum[0].hasOwnProperty(
                 "persona_1"
