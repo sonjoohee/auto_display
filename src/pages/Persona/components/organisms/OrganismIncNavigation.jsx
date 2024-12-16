@@ -1483,7 +1483,7 @@ const OrganismIncNavigation = () => {
     setIsShowToast(false);
 
     if (isLoggedIn) {
-      navigate("/MyProject");
+      window.location.href = "/MyProject";
     } else {
         if (!isLoggedIn) {
           setIsPopupLogin(true);
