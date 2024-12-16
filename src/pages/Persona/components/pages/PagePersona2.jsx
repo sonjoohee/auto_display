@@ -495,18 +495,6 @@ const PagePersona2 = () => {
                         </PersonaCards>
                       ) : (
                         <PersonaCards>
-                          {personaList.unselected.map((persona, index) => (
-                            <MoleculePersonaCard
-                              key={index}
-                              title={persona.persona}
-                              keywords={persona.keyword.split(",")}
-                              isBasic={true}
-                              onSelect={(isSelected) =>
-                                handlePersonaSelect(persona, isSelected)
-                              }
-                              currentSelection={selectedPersonas.length}
-                            />
-                          ))}
                           {requestPersonaList.persona.map((persona, index) => (
                             <MoleculePersonaCard
                               key={index}
@@ -517,6 +505,18 @@ const PagePersona2 = () => {
                                 handlePersonaSelect(persona, isSelected)
                               }
                               onClick={() => setShowPopup(true)}
+                              currentSelection={selectedPersonas.length}
+                            />
+                          ))}
+                          {personaList.unselected.map((persona, index) => (
+                            <MoleculePersonaCard
+                              key={index}
+                              title={persona.persona}
+                              keywords={persona.keyword.split(",")}
+                              isBasic={true}
+                              onSelect={(isSelected) =>
+                                handlePersonaSelect(persona, isSelected)
+                              }
                               currentSelection={selectedPersonas.length}
                             />
                           ))}
@@ -555,7 +555,7 @@ const PagePersona2 = () => {
             </MainSection>
 
             <Sidebar>
-              <h5>Let's Start Now</h5>
+              <h5>Discover Your Persona</h5>
 
               <ProgressBar>
                 <span className="icon">🚀</span>
