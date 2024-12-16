@@ -283,7 +283,29 @@ const PagePersona4 = () => {
       }
     }
   };
+  const transformInterviewDataToBubbleChart = (
+    interviewData,
+    questionIndex
+  ) => {
+    if (!interviewData?.[2]?.content?.[questionIndex]?.keyword_analysis)
+      return [];
 
+    const keywordAnalysis =
+      interviewData[2].content[questionIndex].keyword_analysis;
+
+    return keywordAnalysis.map((item, index) => {
+      const value = parseInt(
+        item[`insight_${index + 1}_frequency`].replace("%", "")
+      );
+
+      return {
+        id: index + 1,
+        name: item[`insight_${index + 1}_text`],
+        value: value,
+        category: `카테고리${index + 1}`,
+      };
+    });
+  };
   const getInterviewPurposeDescription = (purpose) => {
     switch (purpose) {
       case "제품 경험 평가":
@@ -446,7 +468,12 @@ const PagePersona4 = () => {
                               </p>
                             </div>
 
-                            <BubbleChart />
+                            <BubbleChart
+                              data={transformInterviewDataToBubbleChart(
+                                interviewReport,
+                                0
+                              )}
+                            />
 
                             <BgInside>
                               <strong>인터뷰 인사이드</strong>
@@ -491,7 +518,12 @@ const PagePersona4 = () => {
                               </p>
                             </div>
 
-                            <BubbleChart />
+                            <BubbleChart
+                              data={transformInterviewDataToBubbleChart(
+                                interviewReport,
+                                1
+                              )}
+                            />
 
                             <BgInside>
                               <strong>인터뷰 인사이드</strong>
@@ -536,7 +568,12 @@ const PagePersona4 = () => {
                               </p>
                             </div>
 
-                            <BubbleChart />
+                            <BubbleChart
+                              data={transformInterviewDataToBubbleChart(
+                                interviewReport,
+                                2
+                              )}
+                            />
 
                             <BgInside>
                               <strong>인터뷰 인사이드</strong>
