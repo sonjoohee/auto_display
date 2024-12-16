@@ -686,15 +686,13 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
     handleWarningClose();
     setIsPersonaAccessible(true);
     console.log("🚀 ~ handleCheckResult ~ reportId:", reportId);
-    if (!reportId) {
-      try {
-        let newReportId = await createProjectReportOnServer(isLoggedIn);
-        setReportId(newReportId); // 생성된 대화 ID 설정
-        console.log("🚀 ~ handleCheckResult ~ newReportId:", newReportId);
-      } catch (error) {
-        // setIsLoadingPage(false); // 로딩 완료
-        console.error("Failed to create project on server:", error);
-      }
+    try {
+      let newReportId = await createProjectReportOnServer(isLoggedIn);
+      setReportId(newReportId); // 생성된 대화 ID 설정
+      console.log("🚀 ~ handleCheckResult ~ newReportId:", newReportId);
+    } catch (error) {
+      // setIsLoadingPage(false); // 로딩 완료
+      console.error("Failed to create project on server:", error);
     }
     navigate(`/Persona/4/${projectId}`, { replace: true });
   };
