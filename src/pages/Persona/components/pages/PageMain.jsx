@@ -1606,7 +1606,7 @@ const QuickMenu = styled.div`
     padding: 12px 16px;
     border-radius: 12px;
     background: ${palette.gray800};
-    opacity: ${(props) => (props.showHint ? 1 : 0)};
+    opacity: ${(props) => (props.showHint && !props.showText ? 1 : 0)};
     transition: opacity 1s ease-in-out;
 
     &:after {
