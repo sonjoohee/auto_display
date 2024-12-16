@@ -277,10 +277,13 @@ const PagePersona2 = () => {
             );
 
             // 이미 존재하는 페르소나는 제외
-            response.data.forEach(newPersona => {
-              if (!unselectedPersonas.some(existingPersona => 
-                existingPersona.persona === newPersona.persona
-              )) {
+            response.data.forEach((newPersona) => {
+              if (
+                !unselectedPersonas.some(
+                  (existingPersona) =>
+                    existingPersona.persona === newPersona.persona
+                )
+              ) {
                 unselectedPersonas.push(newPersona);
               }
             });
@@ -313,7 +316,6 @@ const PagePersona2 = () => {
             (!response ||
               !response.data ||
               !requestPersonaList.hasOwnProperty("persona_spectrum") ||
-              !requestPersonaList.hasOwnProperty("positioning_analysis") ||
               requestPersonaList.persona_spectrum.length !== 3 ||
               !requestPersonaList.persona_spectrum[0].hasOwnProperty(
                 "persona_1"
