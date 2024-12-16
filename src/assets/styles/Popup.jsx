@@ -264,7 +264,8 @@ export const Body = styled.div`
     width: 100%;
   }
 
-  input[type="radio"] {
+  input[type="radio"],
+  input[type="checkbox"] {
     display: none;
   }
 
@@ -307,7 +308,8 @@ export const Body = styled.div`
 
   input[type="radio"]:checked + .persona,
   input[type="radio"]:checked + .gender,
-  input[type="radio"]:checked + .age {
+  input[type="radio"]:checked + .age,
+  input[type="checkbox"]:checked + .age {
     color: ${palette.primary};
     border: 1px solid ${palette.primary};
   }
