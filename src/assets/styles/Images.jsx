@@ -189,6 +189,7 @@ import ArrowBarLeft from "../images/arrow-bar-left.svg"
 import NoteArrowUp from "../images/note-arrow-up.svg"
 import CheckGreen from "../images/check-green.svg"
 import FileText from "../images/file-text.svg"
+import People from "../images/people.svg"
 import PeopleFill from "../images/people-fill.svg"
 import ReportSearch from "../images/report-search.svg"
 import PersonCircle from "../images/person-circle.svg"
@@ -403,9 +404,10 @@ const images = {
   NoteArrowUp,
   CheckGreen,
   FileText,
+  People,
   PeopleFill,
   ReportSearch,
-  PersonCircle,
+  PersonCircle,  
   FileFill,
   PeopleFillPrimary,
 

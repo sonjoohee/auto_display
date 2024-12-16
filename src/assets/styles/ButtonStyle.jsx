@@ -60,8 +60,8 @@ export const Button = styled.button`
   `}
 
   ${props => props.Primary && !props.Fill && css`
-    color: ${palette.main};
-    border: 1px solid ${palette.main};
+    color: ${palette.primary};
+    border: 1px solid ${palette.primary};
     background: ${palette.white};
 
     &:hover {
@@ -109,6 +109,25 @@ export const Button = styled.button`
       &:hover {
         background: ${palette.gray300};
       }
+    }
+  `}
+
+  
+  ${props => props.Outline && props.Fill && css`
+    color: ${palette.gray700};
+    border: 1px solid ${palette.outlineGray};
+    background: ${palette.chatGray};
+
+    &:hover {
+      background: ${palette.chatGray};
+
+      &:disabled {
+        background: ${palette.chatGray};
+      }
+    }
+
+    &:disabled {
+      cursor: not-allowed;
     }
   `}
 `;

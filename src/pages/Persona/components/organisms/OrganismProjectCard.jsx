@@ -88,7 +88,7 @@ const OrganismProjectCard = ({ project, index }) => {
               <p>{project.reportList?.length || 0}건</p>
             </div>
             <div>
-              <button onClick={() => toggleView(index)}>자세히 보기</button>
+              <Button Small Outline Fill onClick={() => toggleView(index)}>자세히 보기</Button>
             </div>
           </Report>
         </ProjectInfo>
@@ -96,9 +96,9 @@ const OrganismProjectCard = ({ project, index }) => {
         {openStates[index] && (
           <ProjectButton>
             <p>6명의 맞춤 페르소나가 사용자님을 기다리고 있어요!</p>
-            <button onClick={() => navigate(`/Persona/${project._id}`)}>
+            <Button Small Primary Fill onClick={() => navigate(`/Persona/${project._id}`)}>
               바로가기
-            </button>
+            </Button>
           </ProjectButton>
         )}
       </ProjectItem>
@@ -170,17 +170,27 @@ const OrganismProjectCard = ({ project, index }) => {
                 </div>
                 <div className="info">
                   <div>
-                    <span>문항수</span>
-                    <p>{report.interviewData || 0}개</p>
+                    <span>
+                      <img src={images.FileSearch} alt="문항수" />
+                      문항수
+                    </span>
+                    <p>
+                      {report.interviewData || 0}개
+                    </p>
                   </div>
                   <div>
-                    <span>참여페르소나</span>
-                    <p>{report.selectedPersona || 0}명</p>
+                    <span>
+                      <img src={images.People} alt="참여페르소나" />
+                      참여페르소나
+                    </span>
+                    <p>
+                      {report.selectedPersona || 0}명
+                    </p>
                   </div>
                 </div>
                 <div className="button">
-                  <button className="view">인터뷰 상세 보기</button>
-                  <button className="analysis">결과 분석 보기</button>
+                  <Button Small Outline Fill>인터뷰 상세 보기</Button>
+                  <Button Small Primary>결과 분석 보기</Button>
                 </div>
               </ViewInfo>
             ))
@@ -525,7 +535,7 @@ const ProjectView = styled.div`
 const ViewInfo = styled.div`
   display: flex;
   align-items: center;
-  justify-content: $space-between;
+  justify-content: space-between;
   gap: 4px;
   width: 100%;
   font-size: 0.875rem;
@@ -556,6 +566,17 @@ const ViewInfo = styled.div`
     align-items: center;
     justify-content: center;
     gap: 32px;
+
+    span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+
+      img {
+        width: 14px;
+        height: 14px;
+      }
+    }
 
     div {
       position: relative;
