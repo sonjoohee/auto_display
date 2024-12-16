@@ -226,7 +226,21 @@ const PagePersona2 = () => {
               axiosConfig
             );
 
-            unselectedPersonas.push(...response.data);
+            let newPersonas = response.data;
+
+            // 이미 존재하는 페르소나는 제외
+            for (let i = 0; i < newPersonas.length; i++) {
+              let isDuplicate = false;
+              for (let j = 0; j < unselectedPersonas.length; j++) {
+                if (unselectedPersonas[j].persona === newPersonas[i].persona) {
+                  isDuplicate = true;
+                  break;
+                }
+              }
+              if (!isDuplicate) {
+                unselectedPersonas.push(newPersonas[i]);
+              }
+            }
           }
 
           let personaList = {
@@ -277,8 +291,6 @@ const PagePersona2 = () => {
             );
             
             let newPersonas = response.data;
-            
-            console.log(newPersonas);
 
             // 이미 존재하는 페르소나는 제외
             for (let i = 0; i < newPersonas.length; i++) {
@@ -293,8 +305,6 @@ const PagePersona2 = () => {
                 unselectedPersonas.push(newPersonas[i]);
               }
             }
-
-            console.log(unselectedPersonas);
             
           }
 
@@ -302,6 +312,7 @@ const PagePersona2 = () => {
             selected: [],
             unselected: unselectedPersonas,
           };
+          console.log(personaList);
           setPersonaList(personaList);
 
           ////////////////////////////////////////////////////////////////////////////////////////
