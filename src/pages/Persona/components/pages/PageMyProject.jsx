@@ -31,12 +31,14 @@ import {
   INTERVIEW_REPORT,
   INTERVIEW_REPORT_ADDITIONAL,
   IS_EDIT_MODE,
-  IS_SHOW_TOAST
+  IS_SHOW_TOAST,
+  IS_PERSONA_ACCESSIBLE,
 } from "../../../AtomStates";
 import OrganismProjectCard from "../organisms/OrganismProjectCard";
 import { getProjectListByIdFromIndexedDB } from "../../../../utils/indexedDB";
 
 const PageMyProject = () => {
+  const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(IS_PERSONA_ACCESSIBLE);
   const [reportList, setReportList] = useAtom(REPORT_LIST);
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
   const [selectedPersonaList, setSelectedPersonaList] = useAtom(SELECTED_PERSONA_LIST);
@@ -78,46 +80,18 @@ const PageMyProject = () => {
   };
 
   useEffect(() => {
-    setProjectId("");
-    setProjectReportId("");
-    setProjectList([]);
-    setProjectReportList([]); 
-    setReportList([]);
-    setPersonaList({
-      selected: [],
-      unselected: []
-    });
-    setSelectedPersonaList([]);
-    setCustomizePersonaList({
-      selected: [],
-      unselected: []
-    });
-    setRequestPersonaList({
-      persona: [],
-      positioning: {}
-    });
-    setInterviewQuestionList([]);
-    setSelectedInterviewPurpose("");
-    setCategoryColor({});
-    setProjectLoadButtonState(false);
-    setReportLoadButtonState(false);
-    setReportDescriptionLoadButtonState(false);
-    setInterviewData([]);
-    setInterviewReport([]);
-    setInterviewReportAdditional([]);
-    setIsEditMode(false);
-    setIsShowToast(false);
+    window.scrollTo(0, 0);
   }, []);
 
   useEffect(() => {
     const loadProjectList = async () => {
       // 1. 로그인 여부 확인
       console.log("isLoggedIn22222222222222222", isLoggedIn);
-      if (isLoggedIn) {
+      // if (isLoggedIn) {
         console.log("🚀 ~ loadProjectList ~ isLoggedIn:", isLoggedIn);
         // 2. 로그인 상태라면 서버에서 새로운 대화 ID를 생성하거나, 저장된 대화를 불러옴
         const savedProjectListInfo = await getProjectListByIdFromIndexedDB(
-          isLoggedIn
+          true
         );
         if (savedProjectListInfo) {
           console.log(
@@ -127,7 +101,7 @@ const PageMyProject = () => {
           setProjectList(savedProjectListInfo);
         }
         // setIsLoadingPage(false); // 로딩 완료
-      }
+      // }
       setProjectLoadButtonState(false);
     };
 

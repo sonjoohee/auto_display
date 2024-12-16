@@ -294,6 +294,10 @@ const PagePersona3 = () => {
     setShowEditPersona(false);
   };
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <>
       <ContentsWrap>
