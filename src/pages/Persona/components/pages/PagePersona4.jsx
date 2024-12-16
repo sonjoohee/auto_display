@@ -40,6 +40,7 @@ import { getProjectReportByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
 import OrganismToastPopup from "../organisms/OrganismToastPopup";
+import BubbleChart from "../organisms/OrganismBubbleChart";
 
 const PagePersona4 = () => {
   const [
@@ -445,7 +446,7 @@ const PagePersona4 = () => {
                               </p>
                             </div>
 
-                            <GraphWrap />
+                            <BubbleChart />
 
                             <BgInside>
                               <strong>인터뷰 인사이드</strong>
@@ -490,7 +491,7 @@ const PagePersona4 = () => {
                               </p>
                             </div>
 
-                            <GraphWrap />
+                            <BubbleChart />
 
                             <BgInside>
                               <strong>인터뷰 인사이드</strong>
@@ -535,7 +536,7 @@ const PagePersona4 = () => {
                               </p>
                             </div>
 
-                            <GraphWrap />
+                            <BubbleChart />
 
                             <BgInside>
                               <strong>인터뷰 인사이드</strong>
