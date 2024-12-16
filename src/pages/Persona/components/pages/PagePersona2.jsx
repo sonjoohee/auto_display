@@ -20,6 +20,7 @@ import {
   REQUEST_PERSONA_LIST,
   PROJECT_ID,
   PROJECT_LOAD_BUTTON_STATE,
+  CATEGORY_COLOR,
 } from "../../../AtomStates";
 import {
   ContentsWrap,
@@ -51,6 +52,7 @@ import PopupWrap from "../../../../assets/styles/Popup";
 import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 
 const PagePersona2 = () => {
+  const [categoryColor, setCategoryColor] = useAtom(CATEGORY_COLOR);
   const [reportList, setReportList] = useAtom(REPORT_LIST);
   const [projectLoadButtonState, setProjectLoadButtonState] = useAtom(
     PROJECT_LOAD_BUTTON_STATE
@@ -133,11 +135,62 @@ const PagePersona2 = () => {
     }
   }, [projectId]);
 
+  const getCategoryColor = (category) => {
+    switch (category) {
+      case "광고/마케팅":
+        return "Red";
+      case "교육":
+        return "LavenderMagenta";
+      case "금융/보험/핀테크":
+        return "Amethyst";
+      case "게임":
+        return "VistaBlue";
+      case "모빌리티/교통":
+        return "BlueYonder";
+      case "물류":
+        return "MidnightBlue";
+      case "부동산/건설":
+        return "ButtonBlue";
+      case "뷰티/화장품":
+        return "ButtonBlue";
+      case "AI/딥테크/블록체인":
+        return "MiddleBlueGreen";
+      case "소셜미디어/커뮤니티":
+        return "GreenSheen";
+      case "여행/레저":
+        return "TropicalRainForest";
+      case "유아/출산":
+        return "DollarBill";
+      case "인사/비즈니스/법률":
+        return "Olivine";
+      case "제조/하드웨어":
+        return "ChineseGreen";
+      case "커머스":
+        return "Jonquil";
+      case "콘텐츠/예술":
+        return "PastelOrange";
+      case "통신/보안/데이터":
+        return "Tangerine";
+      case "패션":
+        return "Copper";
+      case "푸드/농업":
+        return "Shadow";
+      case "환경/에너지":
+        return "Tuscany";
+      case "홈리빙/펫":
+        return "VeryLightTangelo";
+      case "헬스케어/바이오":
+        return "Orange";
+      case "피트니스/스포츠":
+        return "CarnationPink";
+      default:
+        return "";
+    }
+  };
+
   useEffect(() => {
     const loadProject = async () => {
-
       if (projectLoadButtonState) {
-
         const savedProjectInfo = await getProjectByIdFromIndexedDB(
           projectId,
           projectLoadButtonState
@@ -145,18 +198,30 @@ const PagePersona2 = () => {
         if (savedProjectInfo) {
           setBusinessAnalysis(savedProjectInfo.businessAnalysis);
           setRequestPersonaList(savedProjectInfo.requestPersonaList);
-
+          setCategoryColor({
+            first: getCategoryColor(
+              savedProjectInfo.businessAnalysis.category.first
+            ),
+            second: getCategoryColor(
+              savedProjectInfo.businessAnalysis.category.second
+            ),
+            third: getCategoryColor(
+              savedProjectInfo.businessAnalysis.category.third
+            ),
+          });
           let unselectedPersonas = [];
           let data, response;
 
           // 카테고리별로 페르소나 요청
-          for (const category of Object.values(savedProjectInfo.businessAnalysis.category)) {
+          for (const category of Object.values(
+            savedProjectInfo.businessAnalysis.category
+          )) {
             data = {
               target: category,
             };
 
             response = await axios.post(
-              "https://wishresearch.kr/person/find", 
+              "https://wishresearch.kr/person/find",
               data,
               axiosConfig
             );
@@ -273,13 +338,12 @@ const PagePersona2 = () => {
               !requestPersonaList.persona_spectrum[2].persona_3.hasOwnProperty(
                 "keyword"
               ) ||
-              requestPersonaList.persona_spectrum[0].persona_1.keyword
-                .length < 3 ||
-              requestPersonaList.persona_spectrum[1].persona_2.keyword
-                .length < 3 ||
-              requestPersonaList.persona_spectrum[2].persona_3.keyword
-                .length < 3
-              )
+              requestPersonaList.persona_spectrum[0].persona_1.keyword.length <
+                3 ||
+              requestPersonaList.persona_spectrum[1].persona_2.keyword.length <
+                3 ||
+              requestPersonaList.persona_spectrum[2].persona_3.keyword.length <
+                3)
           ) {
             response = await axios.post(
               "https://wishresearch.kr/person/persona_request",
@@ -431,18 +495,6 @@ const PagePersona2 = () => {
                         </PersonaCards>
                       ) : (
                         <PersonaCards>
-                          {personaList.unselected.map((persona, index) => (
-                            <MoleculePersonaCard
-                              key={index}
-                              title={persona.persona}
-                              keywords={persona.keyword.split(",")}
-                              isBasic={true}
-                              onSelect={(isSelected) =>
-                                handlePersonaSelect(persona, isSelected)
-                              }
-                              currentSelection={selectedPersonas.length}
-                            />
-                          ))}
                           {requestPersonaList.persona.map((persona, index) => (
                             <MoleculePersonaCard
                               key={index}
@@ -453,6 +505,18 @@ const PagePersona2 = () => {
                                 handlePersonaSelect(persona, isSelected)
                               }
                               onClick={() => setShowPopup(true)}
+                              currentSelection={selectedPersonas.length}
+                            />
+                          ))}
+                          {personaList.unselected.map((persona, index) => (
+                            <MoleculePersonaCard
+                              key={index}
+                              title={persona.persona}
+                              keywords={persona.keyword.split(",")}
+                              isBasic={true}
+                              onSelect={(isSelected) =>
+                                handlePersonaSelect(persona, isSelected)
+                              }
                               currentSelection={selectedPersonas.length}
                             />
                           ))}
@@ -491,7 +555,7 @@ const PagePersona2 = () => {
             </MainSection>
 
             <Sidebar>
-              <h5>Let's Start Now</h5>
+              <h5>Discover Your Persona</h5>
 
               <ProgressBar>
                 <span className="icon">🚀</span>

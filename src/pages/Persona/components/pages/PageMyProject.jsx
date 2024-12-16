@@ -12,15 +12,46 @@ import { Badge } from "../../../../assets/styles/Badge";
 import { useNavigate } from "react-router-dom";
 import {
   IS_LOGGED_IN,
+  PROJECT_REPORT_LIST,
   PROJECT_ID,
   PROJECT_REPORT_ID,
   PROJECT_LIST,
-  PROJECT_REPORT_LIST,
+  REPORT_LIST,
+  PERSONA_LIST,
+  SELECTED_PERSONA_LIST,
+  CUSTOMIZE_PERSONA_LIST,
+  REQUEST_PERSONA_LIST,
+  INTERVIEW_QUESTION_LIST,
+  SELECTED_INTERVIEW_PURPOSE,
+  CATEGORY_COLOR,
+  PROJECT_LOAD_BUTTON_STATE,
+  REPORT_LOAD_BUTTON_STATE,
+  REPORT_DESCRIPTION_LOAD_BUTTON_STATE,
+  INTERVIEW_DATA,
+  INTERVIEW_REPORT,
+  INTERVIEW_REPORT_ADDITIONAL,
+  IS_EDIT_MODE,
+  IS_SHOW_TOAST
 } from "../../../AtomStates";
 import OrganismProjectCard from "../organisms/OrganismProjectCard";
 import { getProjectListByIdFromIndexedDB } from "../../../../utils/indexedDB";
 
 const PageMyProject = () => {
+  const [reportList, setReportList] = useAtom(REPORT_LIST);
+  const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
+  const [selectedPersonaList, setSelectedPersonaList] = useAtom(SELECTED_PERSONA_LIST);
+  const [customizePersonaList, setCustomizePersonaList] = useAtom(CUSTOMIZE_PERSONA_LIST);
+  const [requestPersonaList, setRequestPersonaList] = useAtom(REQUEST_PERSONA_LIST);
+  const [interviewQuestionList, setInterviewQuestionList] = useAtom(INTERVIEW_QUESTION_LIST);
+  const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(SELECTED_INTERVIEW_PURPOSE);
+  const [categoryColor, setCategoryColor] = useAtom(CATEGORY_COLOR);
+  const [reportLoadButtonState, setReportLoadButtonState] = useAtom(REPORT_LOAD_BUTTON_STATE);
+  const [reportDescriptionLoadButtonState, setReportDescriptionLoadButtonState] = useAtom(REPORT_DESCRIPTION_LOAD_BUTTON_STATE);
+  const [interviewData, setInterviewData] = useAtom(INTERVIEW_DATA);
+  const [interviewReport, setInterviewReport] = useAtom(INTERVIEW_REPORT);
+  const [interviewReportAdditional, setInterviewReportAdditional] = useAtom(INTERVIEW_REPORT_ADDITIONAL);
+  const [isEditMode, setIsEditMode] = useAtom(IS_EDIT_MODE);
+  const [isShowToast, setIsShowToast] = useAtom(IS_SHOW_TOAST);
   const navigate = useNavigate();
   const [openStates, setOpenStates] = useState({});
   const [closingStates, setClosingStates] = useState({});
@@ -45,6 +76,38 @@ const PageMyProject = () => {
       setOpenStates((prev) => ({ ...prev, [projectId]: true }));
     }
   };
+
+  useEffect(() => {
+    setProjectId("");
+    setProjectReportId("");
+    setProjectList([]);
+    setProjectReportList([]); 
+    setReportList([]);
+    setPersonaList({
+      selected: [],
+      unselected: []
+    });
+    setSelectedPersonaList([]);
+    setCustomizePersonaList({
+      selected: [],
+      unselected: []
+    });
+    setRequestPersonaList({
+      persona: [],
+      positioning: {}
+    });
+    setInterviewQuestionList([]);
+    setSelectedInterviewPurpose("");
+    setCategoryColor({});
+    setProjectLoadButtonState(false);
+    setReportLoadButtonState(false);
+    setReportDescriptionLoadButtonState(false);
+    setInterviewData([]);
+    setInterviewReport([]);
+    setInterviewReportAdditional([]);
+    setIsEditMode(false);
+    setIsShowToast(false);
+  }, []);
 
   useEffect(() => {
     const loadProjectList = async () => {

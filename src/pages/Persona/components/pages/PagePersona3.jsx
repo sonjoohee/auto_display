@@ -50,8 +50,10 @@ const PagePersona3 = () => {
   const [projectLoadButtonState, setProjectLoadButtonState] = useAtom(
     PROJECT_LOAD_BUTTON_STATE
   );
-  const [personaButtonState3, setPersonaButtonState3] = useAtom(PERSONA_BUTTON_STATE_3);
-  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);  
+  const [personaButtonState3, setPersonaButtonState3] = useAtom(
+    PERSONA_BUTTON_STATE_3
+  );
+  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
     IS_PERSONA_ACCESSIBLE
   );
@@ -61,11 +63,11 @@ const PagePersona3 = () => {
     SELECTED_INTERVIEW_PURPOSE
   );
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
-  const [requestPersonaList, setRequestPersonaList] = useAtom(REQUEST_PERSONA_LIST);
+  const [requestPersonaList, setRequestPersonaList] =
+    useAtom(REQUEST_PERSONA_LIST);
 
   const [interviewPurpose, setInterviewPurpose] = useState("");
-  const [selectedInterviewType, setSelectedInterviewType] =
-    useState("");
+  const [selectedInterviewType, setSelectedInterviewType] = useState("");
   const [activeCategory, setActiveCategory] = useState(1);
   const [showInterview, setShowInterview] = useState(false);
   const [showInterviewReady, setShowInterviewReady] = useState(false);
@@ -76,7 +78,7 @@ const PagePersona3 = () => {
   const handlePopupClose = () => {
     setShowInterviewReady(false);
     setShowToast(false);
-  }
+  };
 
   // const [isLoadingPage, setIsLoadingPage] = useState(true);
 
@@ -248,7 +250,7 @@ const PagePersona3 = () => {
     setPersonaButtonState3(1);
     handlePopupClose();
     setShowToast(true);
-  }
+  };
 
   // 페르소나 선택/해제 처리 함수 추가
   const handlePersonaToggle = (persona, isCurrentlySelected) => {
@@ -256,8 +258,10 @@ const PagePersona3 = () => {
       // selected에서 제거하고 unselected로 이동
       if (personaListState.selected.length > 1) {
         setPersonaListState({
-          selected: personaListState.selected.filter(p => p.persona !== persona.persona),
-          unselected: [...personaListState.unselected, persona]
+          selected: personaListState.selected.filter(
+            (p) => p.persona !== persona.persona
+          ),
+          unselected: [...personaListState.unselected, persona],
         });
       }
     } else {
@@ -265,7 +269,9 @@ const PagePersona3 = () => {
       if (personaListState.selected.length < 5) {
         setPersonaListState({
           selected: [...personaListState.selected, persona],
-          unselected: personaListState.unselected.filter(p => p.persona !== persona.persona)
+          unselected: personaListState.unselected.filter(
+            (p) => p.persona !== persona.persona
+          ),
         });
       }
     }
@@ -404,7 +410,7 @@ const PagePersona3 = () => {
             </MainSection>
 
             <Sidebar>
-              <h5>Let's Start Now</h5>
+              <h5>Start Your Interview</h5>
 
               <ProgressBar>
                 <span className="icon">🚀</span>
@@ -435,10 +441,17 @@ const PagePersona3 = () => {
                     <p>{personaList.selected.length}명</p>
                   </li>
                 </ul>
-                <Button 
-                  Large Primary Fill 
+                <Button
+                  Large
+                  Primary
+                  Fill
                   disabled={!selectedInterviewType || !interviewPurpose}
-                  style={{cursor: !selectedInterviewType || !interviewPurpose ? 'default' : 'pointer'}}
+                  style={{
+                    cursor:
+                      !selectedInterviewType || !interviewPurpose
+                        ? "default"
+                        : "pointer",
+                  }}
                   onClick={() => setShowInterviewReady(true)}
                 >
                   인터뷰룸 입장
@@ -447,9 +460,9 @@ const PagePersona3 = () => {
             </Sidebar>
 
             {showEditPersona && (
-              <PopupWrap 
+              <PopupWrap
                 TitleFlex
-                title="📝 맞춤형 페르소나 모집 요청하기" 
+                title="📝 맞춤형 페르소나 모집 요청하기"
                 buttonType="Fill"
                 closeText="닫기"
                 confirmText="편집완료"
@@ -471,7 +484,7 @@ const PagePersona3 = () => {
                       </p>
                     </Title>
                     {personaListState.selected.map((persona, index) => (
-                      <MoleculePersonaCard 
+                      <MoleculePersonaCard
                         key={index}
                         TitleFlex
                         title={persona.persona}
@@ -482,13 +495,11 @@ const PagePersona3 = () => {
                       />
                     ))}
 
-                    <Title style={{marginTop: '20px'}}>
-                      <p>
-                        available
-                      </p>
+                    <Title style={{ marginTop: "20px" }}>
+                      <p>available</p>
                     </Title>
                     {personaListState.unselected.map((persona, index) => (
-                      <MoleculePersonaCard 
+                      <MoleculePersonaCard
                         key={index}
                         TitleFlex
                         title={persona.persona}
@@ -504,14 +515,15 @@ const PagePersona3 = () => {
             )}
 
             {showInterviewReady && (
-              <PopupWrap 
+              <PopupWrap
                 Check
-                title="인터뷰 준비 완료" 
+                title="인터뷰 준비 완료"
                 message={
                   <>
-                    인터뷰 룸 이동 시, 바로 시작됩니다.<br />
+                    인터뷰 룸 이동 시, 바로 시작됩니다.
+                    <br />
                     인터뷰를 중단하면 모든 내역이 삭제되니 주의하세요
-                  </> 
+                  </>
                 }
                 buttonType="Outline"
                 closeText="취소"
@@ -523,7 +535,7 @@ const PagePersona3 = () => {
                 }}
               />
             )}
-            
+
             {showToast && (
               <OrganismToastPopup
                 isActive={showToast}

@@ -9,6 +9,8 @@ import {
   PROJECT_ID,
   PROJECT_REPORT_ID,
   REPORT_LOAD_BUTTON_STATE,
+  PROJECT_LOAD_BUTTON_STATE,
+  REPORT_DESCRIPTION_LOAD_BUTTON_STATE,
   PERSONA_LIST,
   REPORT_LIST,
   INTERVIEW_DATA,
@@ -16,6 +18,9 @@ import {
   INTERVIEW_REPORT,
   INTERVIEW_REPORT_ADDITIONAL,
   INTERVIEW_QUESTION_LIST,
+  CATEGORY_COLOR,
+  SELECTED_PERSONA_LIST,
+  IS_SHOW_TOAST,
 } from "../../../AtomStates";
 import {
   ContentsWrap,
@@ -37,6 +42,18 @@ import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
 import OrganismToastPopup from "../organisms/OrganismToastPopup";
 
 const PagePersona4 = () => {
+  const [
+    reportDescriptionLoadButtonState,
+    setReportDescriptionLoadButtonState,
+  ] = useAtom(REPORT_DESCRIPTION_LOAD_BUTTON_STATE);
+  const [showToast, setShowToast] = useState(false);
+  const [selectedPersonaList, setSelectedPersonaList] = useAtom(
+    SELECTED_PERSONA_LIST
+  );
+  const [categoryColor, setCategoryColor] = useAtom(CATEGORY_COLOR);
+  const [projectLoadButtonState, setProjectLoadButtonState] = useAtom(
+    PROJECT_LOAD_BUTTON_STATE
+  );
   const [reportList, setReportList] = useAtom(REPORT_LIST);
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
   const [interviewData, setInterviewData] = useAtom(INTERVIEW_DATA);
@@ -66,7 +83,6 @@ const PagePersona4 = () => {
   const [openCard, setOpenCard] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const cardRef = useRef(null);
-  const [showToast, setShowToast] = useState(false);
 
   const [steps, setSteps] = useState([
     { number: 1, label: "비즈니스 분석", active: true },
@@ -76,14 +92,12 @@ const PagePersona4 = () => {
     { number: 5, label: "의견 분석", active: true },
   ]);
 
-  let newReportId;
-
   // useEffect(() => {
   //   // 접근 가능 여부를 확인하여 차단 로직 수행
   //   if (!isPersonaAccessible) {
   //     navigate("/Main"); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
   //   }
-  
+
   //   // 페이지를 나갈 때 접근 가능 여부 초기화
   //   return () => {
   //     setIsPersonaAccessible(false); // 페이지 떠날 때 접근 불가로 설정
@@ -100,10 +114,65 @@ const PagePersona4 = () => {
     }
   }, [reportId]);
 
+  const getCategoryColor = (category) => {
+    switch (category) {
+      case "광고/마케팅":
+        return "Red";
+      case "교육":
+        return "LavenderMagenta";
+      case "금융/보험/핀테크":
+        return "Amethyst";
+      case "게임":
+        return "VistaBlue";
+      case "모빌리티/교통":
+        return "BlueYonder";
+      case "물류":
+        return "MidnightBlue";
+      case "부동산/건설":
+        return "ButtonBlue";
+      case "뷰티/화장품":
+        return "ButtonBlue";
+      case "AI/딥테크/블록체인":
+        return "MiddleBlueGreen";
+      case "소셜미디어/커뮤니티":
+        return "GreenSheen";
+      case "여행/레저":
+        return "TropicalRainForest";
+      case "유아/출산":
+        return "DollarBill";
+      case "인사/비즈니스/법률":
+        return "Olivine";
+      case "제조/하드웨어":
+        return "ChineseGreen";
+      case "커머스":
+        return "Jonquil";
+      case "콘텐츠/예술":
+        return "PastelOrange";
+      case "통신/보안/데이터":
+        return "Tangerine";
+      case "패션":
+        return "Copper";
+      case "푸드/농업":
+        return "Shadow";
+      case "환경/에너지":
+        return "Tuscany";
+      case "홈리빙/펫":
+        return "VeryLightTangelo";
+      case "헬스케어/바이오":
+        return "Orange";
+      case "피트니스/스포츠":
+        return "CarnationPink";
+      default:
+        return "";
+    }
+  };
+
   useEffect(() => {
+    console.log("🚀 ~ useEffect ~ reportId:", reportId);
     const loadProjectReport = async () => {
       // 1. 로그인 여부 확인
       if (reportId && reportLoadButtonState) {
+        console.log("🚀 ~ loadProjectReport ~ reportId:", reportId);
         // 2. 로그인 상태라면 서버에서 새로운 대화 ID를 생성하거나, 저장된 대화를 불러옴
         const savedProjectInfo = await getProjectByIdFromIndexedDB(
           projectId,
@@ -112,6 +181,17 @@ const PagePersona4 = () => {
         if (savedProjectInfo) {
           setBusinessAnalysis(savedProjectInfo.businessAnalysis);
           setReportList(savedProjectInfo.reportList);
+          setCategoryColor({
+            first: getCategoryColor(
+              savedProjectInfo.businessAnalysis.category.first
+            ),
+            second: getCategoryColor(
+              savedProjectInfo.businessAnalysis.category.second
+            ),
+            third: getCategoryColor(
+              savedProjectInfo.businessAnalysis.category.third
+            ),
+          });
         }
         const savedProjectReportInfo = await getProjectReportByIdFromIndexedDB(
           reportId,
@@ -120,7 +200,7 @@ const PagePersona4 = () => {
         if (savedProjectReportInfo) {
           setSelectedInterviewPurpose(savedProjectReportInfo.theory_type);
           setInterviewData(savedProjectReportInfo.interviewData);
-          setPersonaList(savedProjectReportInfo.personaList);
+          setSelectedPersonaList(savedProjectReportInfo.personaList);
           setInterviewReport(savedProjectReportInfo.interviewReport);
           setInterviewReportAdditional(
             savedProjectReportInfo.interviewReportAdditional
@@ -129,7 +209,7 @@ const PagePersona4 = () => {
         // setIsLoadingPage(false); // 로딩 완료
         setReportLoadButtonState(false);
       } else {
-        // 2. 로그인 상태라면 서버에서 새로운 대화 ID를 생성하거나, 저장된 대화를 불러옴
+        // 2. 새로 생성된 보고서
         if (reportId) {
           await updateProjectReportOnServer(
             reportId,
@@ -163,7 +243,15 @@ const PagePersona4 = () => {
     };
 
     loadProjectReport();
-  }, [reportId, isLoggedIn, navigate]);
+  }, [reportId, navigate]);
+
+  useEffect(() => {
+    if (reportDescriptionLoadButtonState) {
+      setTimeout(() => {
+        setShowToast(true);
+      }, 1000);
+    }
+  }, [reportDescriptionLoadButtonState]);
 
   const handleAccordionClick = (index) => {
     setOpenAccordion(openAccordion === index ? null : index);
@@ -262,7 +350,7 @@ const PagePersona4 = () => {
       },
     };
 
-    return suggestionList.map((suggestion) => ({
+    return suggestionList?.map((suggestion) => ({
       ...viewpointMapping[suggestion.title],
       title: suggestion.title_text,
       description: suggestion.description_text,
@@ -288,9 +376,11 @@ const PagePersona4 = () => {
               <InterviewReport>
                 <div>
                   <ReportHeader>
-                    <h3>{selectedInterviewPurpose} 결과 리포트</h3>
+                    <h3>{selectedInterviewPurpose || "인터뷰"} 결과 리포트</h3>
                     <p>
-                      {getInterviewPurposeDescription(selectedInterviewPurpose)}
+                      {getInterviewPurposeDescription(
+                        selectedInterviewPurpose || ""
+                      )}
                     </p>
                   </ReportHeader>
 
@@ -299,7 +389,7 @@ const PagePersona4 = () => {
                       <h3>1. 조사 방법 및 범위</h3>
                       <UlList Disc>
                         <li>조사 방법 : 여러 페르소나와 인터뷰 (1:N)</li>
-                        <li>조사 대상 : {interviewReport[0].text}</li>
+                        <li>조사 대상 : {interviewReport?.[0]?.text}</li>
                       </UlList>
                     </div>
 
@@ -307,10 +397,16 @@ const PagePersona4 = () => {
                       <h3>2. 주요 인사이트</h3>
                       <UlList Disc Spacing>
                         <li>
-                          {interviewReport[1].main_insight[0].description_1}
+                          {
+                            interviewReport?.[1]?.main_insight?.[0]
+                              ?.description_1
+                          }
                         </li>
                         <li>
-                          {interviewReport[1].main_insight[1].description_2}
+                          {
+                            interviewReport?.[1]?.main_insight?.[1]
+                              ?.description_2
+                          }
                         </li>
                       </UlList>
                     </div>
@@ -333,7 +429,10 @@ const PagePersona4 = () => {
                           isOpen={openAccordion === 1}
                         >
                           <span>1</span>
-                          <p>{existingQuestions?.questions[2]?.question}</p>
+                          <p>
+                            {existingQuestions?.questions[2]?.question ||
+                              interviewData[0]?.question_1}
+                          </p>
                         </AccordionHeader>
 
                         {openAccordion === 1 && (
@@ -353,14 +452,14 @@ const PagePersona4 = () => {
                               <div>
                                 <p>
                                   {
-                                    interviewReport[2].content[0]
-                                      .question_insight[0].text
+                                    interviewReport?.[2]?.content?.[0]
+                                      ?.question_insight?.[0]?.text
                                   }
                                 </p>
                                 <p>
                                   {
-                                    interviewReport[2].content[0]
-                                      .question_insight[1].text
+                                    interviewReport?.[2]?.content?.[0]
+                                      ?.question_insight?.[1]?.text
                                   }
                                 </p>
                               </div>
@@ -375,7 +474,10 @@ const PagePersona4 = () => {
                           isOpen={openAccordion === 2}
                         >
                           <span>2</span>
-                          <p>{existingQuestions?.questions[3]?.question}</p>
+                          <p>
+                            {existingQuestions?.questions[3]?.question ||
+                              interviewData[1]?.question_2}
+                          </p>
                         </AccordionHeader>
 
                         {openAccordion === 2 && (
@@ -395,14 +497,14 @@ const PagePersona4 = () => {
                               <div>
                                 <p>
                                   {
-                                    interviewReport[2].content[1]
-                                      .question_insight[0].text
+                                    interviewReport?.[2]?.content?.[1]
+                                      ?.question_insight?.[0]?.text
                                   }
                                 </p>
                                 <p>
                                   {
-                                    interviewReport[2].content[1]
-                                      .question_insight[1].text
+                                    interviewReport?.[2]?.content?.[1]
+                                      ?.question_insight?.[1]?.text
                                   }
                                 </p>
                               </div>
@@ -417,7 +519,10 @@ const PagePersona4 = () => {
                           isOpen={openAccordion === 3}
                         >
                           <span>3</span>
-                          <p>{existingQuestions?.questions[4]?.question}</p>
+                          <p>
+                            {existingQuestions?.questions[4]?.question ||
+                              interviewData[2]?.question_3}
+                          </p>
                         </AccordionHeader>
 
                         {openAccordion === 3 && (
@@ -437,14 +542,14 @@ const PagePersona4 = () => {
                               <div>
                                 <p>
                                   {
-                                    interviewReport[2].content[2]
-                                      .question_insight[0].text
+                                    interviewReport?.[2]?.content?.[2]
+                                      ?.question_insight?.[0]?.text
                                   }
                                 </p>
                                 <p>
                                   {
-                                    interviewReport[2].content[2]
-                                      .question_insight[1].text
+                                    interviewReport?.[2]?.content?.[2]
+                                      ?.question_insight?.[1]?.text
                                   }
                                 </p>
                               </div>
@@ -485,39 +590,36 @@ const PagePersona4 = () => {
                       transition: "transform 0.3s ease-in-out",
                     }}
                   >
-                    {getCardData(interviewReportAdditional.suggestion_list).map(
-                      (item, index) => (
-                        <Card
-                          key={index}
-                          onClick={() => handleCardClick(index)}
-                        >
-                          {openCard !== index ? (
-                            <>
-                              <CardIcon>
-                                <img src={item.icon} />
-                              </CardIcon>
-                              <CardBadge text={item.badge.text}>
-                                <span>{item.badge.icon}</span>
-                                {item.badge.text}
-                              </CardBadge>
-                              <CardTitle>{item.title}</CardTitle>
-                            </>
-                          ) : (
-                            <CardDescription>
-                              <strong>{item.title}</strong>
-                              <p>{item.description}</p>
-                            </CardDescription>
-                          )}
-                        </Card>
-                      )
-                    )}
+                    {getCardData(
+                      interviewReportAdditional?.suggestion_list || []
+                    ).map((item, index) => (
+                      <Card key={index} onClick={() => handleCardClick(index)}>
+                        {openCard !== index ? (
+                          <>
+                            <CardIcon>
+                              <img src={item.icon} />
+                            </CardIcon>
+                            <CardBadge text={item.badge.text}>
+                              <span>{item.badge.icon}</span>
+                              {item.badge.text}
+                            </CardBadge>
+                            <CardTitle>{item.title}</CardTitle>
+                          </>
+                        ) : (
+                          <CardDescription>
+                            <strong>{item.title}</strong>
+                            <p>{item.description}</p>
+                          </CardDescription>
+                        )}
+                      </Card>
+                    ))}
                   </div>
                 </FindCard>
               </InterviewFind>
             </MainSection>
 
             <Sidebar>
-              <h5>Let's Start Now</h5>
+              <h5>Key Insight</h5>
 
               <ProgressBar>
                 <span className="icon">🚀</span>
