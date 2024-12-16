@@ -1,29 +1,28 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
+const BubbleChart = ({ data, customWidth, customHeight }) => {
+  const svgRef = useRef(null);
+  const containerRef = useRef(null);
 
   useEffect(() => {
     const updateChart = () => {
       const container = containerRef.current;
-// <<<<<<< branch-fixBubbleChartNode
-//       const containerWidth = container.clientWidth;
-//       const width = containerWidth;
-//       // 높이를 조정하여 여백 줄이기
-//       const height = Math.min(containerWidth, 350); // 500에서 300으로 수정
-// =======
-      
+
       // 너비 설정
       const width = customWidth || container.clientWidth;
-      
+
       // 높이 설정 수정
       // 데이터의 크기를 고려하여 최소 높이 계산
-      const minHeight = Math.max(
-        ...data.map(d => Math.sqrt(d.value * 100) * 2.5) // 버블 크기의 2.5배
-      ) * 2; // 상하 여백을 위해 2배
-      
-      // customHeight가 있으면 사용하고, 없으면 계산된 minHeight와 container.clientWidth 중 큰 값 사용
-      const height = customHeight || Math.max(minHeight, Math.min(container.clientWidth, 400));
+      const minHeight =
+        Math.max(
+          ...data.map((d) => Math.sqrt(d.value * 100) * 2) // 버블 크기의 2.5배
+        ) * 2; // 상하 여백을 위해 2배
 
+      // customHeight가 있으면 사용하고, 없으면 계산된 minHeight와 container.clientWidth 중 큰 값 사용
+      const height =
+        customHeight ||
+        Math.max(minHeight, Math.min(container.clientWidth, 400));
 
       d3.select(svgRef.current).selectAll("*").remove();
 
@@ -118,16 +117,12 @@ import * as d3 from "d3";
     };
 
     window.addEventListener("resize", handleResize);
-// <<<<<<< branch-fixBubbleChartNode
-//     return () => window.removeEventListener("resize", handleResize);
-//   }, [data]);
-// =======
 
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, [customWidth, customHeight]);
-// >>>>>>> main
+  // >>>>>>> main
 
   return (
     <div
@@ -137,11 +132,7 @@ import * as d3 from "d3";
         height: customHeight || "auto",
         maxWidth: "1000px",
         margin: "0 auto",
-// <<<<<<< branch-fixBubbleChartNode
-//         padding: "10px", // 20px에서 10px로 수정
-// =======
-        overflow: "hidden"
-// >>>>>>> main
+        overflow: "hidden",
       }}
     >
       <svg ref={svgRef}></svg>
