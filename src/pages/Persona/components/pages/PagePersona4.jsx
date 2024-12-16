@@ -92,19 +92,17 @@ const PagePersona4 = () => {
     { number: 5, label: "의견 분석", active: true },
   ]);
 
-  let newReportId;
+  // useEffect(() => {
+  //   // 접근 가능 여부를 확인하여 차단 로직 수행
+  //   if (!isPersonaAccessible) {
+  //     navigate("/Main"); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
+  //   }
 
-  useEffect(() => {
-    // 접근 가능 여부를 확인하여 차단 로직 수행
-    if (!isPersonaAccessible) {
-      navigate("/Main"); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
-    }
-
-    // 페이지를 나갈 때 접근 가능 여부 초기화
-    return () => {
-      setIsPersonaAccessible(false); // 페이지 떠날 때 접근 불가로 설정
-    };
-  }, [navigate]);
+  //   // 페이지를 나갈 때 접근 가능 여부 초기화
+  //   return () => {
+  //     setIsPersonaAccessible(false); // 페이지 떠날 때 접근 불가로 설정
+  //   };
+  // }, [navigate]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -211,7 +209,7 @@ const PagePersona4 = () => {
         // setIsLoadingPage(false); // 로딩 완료
         setReportLoadButtonState(false);
       } else {
-        // 2. 로그인 상태라면 서버에서 새로운 대화 ID를 생성하거나, 저장된 대화를 불러옴
+        // 2. 새로 생성된 보고서
         if (reportId) {
           await updateProjectReportOnServer(
             reportId,
