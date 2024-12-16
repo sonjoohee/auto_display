@@ -116,7 +116,7 @@ import {
   PROJECT_ID,
   PROJECT_REPORT_ID,
   PROJECT_LIST,
-  PROJECT_REPORT_LIST, 
+  PROJECT_REPORT_LIST,
   REPORT_LIST,
   PERSONA_LIST,
   SELECTED_PERSONA_LIST,
@@ -132,7 +132,7 @@ import {
   INTERVIEW_REPORT,
   INTERVIEW_REPORT_ADDITIONAL,
   IS_EDIT_MODE,
-  IS_SHOW_TOAST
+  IS_SHOW_TOAST,
 } from "../../../AtomStates";
 import { CustomTextarea } from "../../../../assets/styles/InputStyle";
 import images from "../../../../assets/styles/Images";
@@ -407,21 +407,40 @@ const PageMain = () => {
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
   const [projectReportId, setProjectReportId] = useAtom(PROJECT_REPORT_ID);
   const [projectList, setProjectList] = useAtom(PROJECT_LIST);
-  const [projectReportList, setProjectReportList] = useAtom(PROJECT_REPORT_LIST);
+  const [projectReportList, setProjectReportList] =
+    useAtom(PROJECT_REPORT_LIST);
   const [reportList, setReportList] = useAtom(REPORT_LIST);
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
-  const [selectedPersonaList, setSelectedPersonaList] = useAtom(SELECTED_PERSONA_LIST);
-  const [customizePersonaList, setCustomizePersonaList] = useAtom(CUSTOMIZE_PERSONA_LIST);
-  const [requestPersonaList, setRequestPersonaList] = useAtom(REQUEST_PERSONA_LIST);
-  const [interviewQuestionList, setInterviewQuestionList] = useAtom(INTERVIEW_QUESTION_LIST);
-  const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(SELECTED_INTERVIEW_PURPOSE);
+  const [selectedPersonaList, setSelectedPersonaList] = useAtom(
+    SELECTED_PERSONA_LIST
+  );
+  const [customizePersonaList, setCustomizePersonaList] = useAtom(
+    CUSTOMIZE_PERSONA_LIST
+  );
+  const [requestPersonaList, setRequestPersonaList] =
+    useAtom(REQUEST_PERSONA_LIST);
+  const [interviewQuestionList, setInterviewQuestionList] = useAtom(
+    INTERVIEW_QUESTION_LIST
+  );
+  const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(
+    SELECTED_INTERVIEW_PURPOSE
+  );
   const [categoryColor, setCategoryColor] = useAtom(CATEGORY_COLOR);
-  const [projectLoadButtonState, setProjectLoadButtonState] = useAtom(PROJECT_LOAD_BUTTON_STATE);
-  const [reportLoadButtonState, setReportLoadButtonState] = useAtom(REPORT_LOAD_BUTTON_STATE);
-  const [reportDescriptionLoadButtonState, setReportDescriptionLoadButtonState] = useAtom(REPORT_DESCRIPTION_LOAD_BUTTON_STATE);
+  const [projectLoadButtonState, setProjectLoadButtonState] = useAtom(
+    PROJECT_LOAD_BUTTON_STATE
+  );
+  const [reportLoadButtonState, setReportLoadButtonState] = useAtom(
+    REPORT_LOAD_BUTTON_STATE
+  );
+  const [
+    reportDescriptionLoadButtonState,
+    setReportDescriptionLoadButtonState,
+  ] = useAtom(REPORT_DESCRIPTION_LOAD_BUTTON_STATE);
   const [interviewData, setInterviewData] = useAtom(INTERVIEW_DATA);
   const [interviewReport, setInterviewReport] = useAtom(INTERVIEW_REPORT);
-  const [interviewReportAdditional, setInterviewReportAdditional] = useAtom(INTERVIEW_REPORT_ADDITIONAL);
+  const [interviewReportAdditional, setInterviewReportAdditional] = useAtom(
+    INTERVIEW_REPORT_ADDITIONAL
+  );
   const [isEditMode, setIsEditMode] = useAtom(IS_EDIT_MODE);
   const [isShowToast, setIsShowToast] = useAtom(IS_SHOW_TOAST);
 
@@ -511,13 +530,13 @@ const PageMain = () => {
     setpocDetailReportData({});
     setPocPersonaList([]);
     // setInputBusinessInfo(savedInputBusinessInfo);
-    setBusinessAnalysis({
-      input: "",
-      title: "",
-      characteristics: "",
-      features: [],
-      category: {},
-    });
+    // setBusinessAnalysis({
+    //   input: "",
+    //   title: "",
+    //   characteristics: "",
+    //   features: [],
+    //   category: {},
+    // });
     setIsEditingIdeaFeature(false);
     setIsEditingIdeaCustomer(false);
     setAddingIdeaFeature(false);
@@ -819,9 +838,10 @@ const PageMain = () => {
                 </button>
               </div>
               <div className="maxLetter">
-
                 <p>현재 서비스는 B2C 비즈니스에 특화되어 있습니다</p>
-                <span id="letterCount">{businessAnalysis.input.length}/300</span>
+                <span id="letterCount">
+                  {businessAnalysis.input.length}/300
+                </span>
               </div>
             </InputWrap>
           </MainSearchWrap>
@@ -914,7 +934,6 @@ const PageMain = () => {
             <span>창업 MBTI로 창업 스타일 찾기</span>
           </button>
         </QuickMenu>
-
       </ContentsWrap>
       {isPopupRegex && (
         <Popup
@@ -1110,9 +1129,8 @@ const MainSearchWrap = styled.div`
     else return `flex-start`;
   }};
 
-  gap:42px;
-  height:85dvh;
-
+  gap: 42px;
+  height: 85dvh;
 `;
 
 const Title = styled.h1`
@@ -1165,8 +1183,7 @@ const InputWrap = styled.div`
         font-size: 1rem;
 
         font-weight: 300;
-        color: #A9A9A9;
-
+        color: #a9a9a9;
       }
     }
 
@@ -1192,7 +1209,7 @@ const InputWrap = styled.div`
     color: ${palette.gray500};
     padding: 12px 20px;
     border-top: 1px solid ${palette.outlineGray};
-    background: #F5F9FF;
+    background: #f5f9ff;
 
     p {
       font-size: 0.875rem;
@@ -1602,7 +1619,7 @@ const QuickMenu = styled.div`
     gap: 0;
     width: ${(props) => (props.showText ? "auto" : "40px")};
     height: 40px;
-    font-family:Pretendard, Poppins;
+    font-family: Pretendard, Poppins;
     font-size: 0.88rem;
     font-weight: 500;
     color: ${palette.white};
