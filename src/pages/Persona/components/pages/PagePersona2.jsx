@@ -475,6 +475,7 @@ const PagePersona2 = () => {
                     보내주시면 인터뷰 참여 모집이 시작됩니다.
                   </p>
                 </Title>
+                <ContentSection row>
                 {personaButtonState2 ? (
                   <PersonaCards>
                     <AtomLoader />
@@ -487,6 +488,7 @@ const PagePersona2 = () => {
                     />
                   ))
                 )}
+                </ContentSection>
                 </CustomizePersona>
 
                   {/* 산업별 인기 페르소나 */}
@@ -563,9 +565,7 @@ const PagePersona2 = () => {
 
                     <ContentSection>
                       {personaButtonState2 ? (
-                        <PersonaCards>
-                          <AtomLoader />
-                        </PersonaCards>
+                        <></>
                       ) : (
                         <>
                           <PersonaCards>

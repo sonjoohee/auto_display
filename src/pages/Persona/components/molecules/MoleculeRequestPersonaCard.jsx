@@ -26,7 +26,6 @@ const MoleculeRequestPersonaCard = ({ persona, index }) => {
 
   return (
     <>
-    <ContentSection row>
       <CardPersona>
         <span>
           <img src={images.CheckCircle} alt="요청 필요" />
@@ -137,7 +136,6 @@ const MoleculeRequestPersonaCard = ({ persona, index }) => {
           </div>
         </InterviewPopup>
       )}
-    </ContentSection>
 
     {showSuccessPopup && (
       <PopupWrap
@@ -230,11 +228,7 @@ const CardPersona = styled.div`
       left: 0;
       width: 100%;
       height: 44px;
-      background: linear-gradient(
-        to bottom,
-        rgba(255, 255, 255, 0),
-        ${palette.white} 80%
-      );
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0), ${palette.white} 80%);
       content: "";
     }
   }
@@ -243,6 +237,7 @@ const CardPersona = styled.div`
     width: 100%;
   }
 `;
+
 const InterviewPopup = styled.div`
   position: fixed;
   top: 0;
@@ -294,7 +289,7 @@ const InterviewPopup = styled.div`
         width: 16px;
         height: 16px;
         cursor: pointer;
-
+        
         &:before,
         &:after {
           position: absolute;
@@ -380,7 +375,7 @@ const TabButton = styled.div`
 
   button {
     width: 100%;
-    font-family: "Pretendard", "Poppins";
+    font-family: 'Pretendard', 'Poppins';
     font-size: 1rem;
     font-weight: 300;
     color: ${palette.gray500};
@@ -389,7 +384,7 @@ const TabButton = styled.div`
     border: 0;
     background: transparent;
     transition: all 0.5s;
-
+    
     &.active {
       font-weight: 400;
       color: ${palette.gray800};
