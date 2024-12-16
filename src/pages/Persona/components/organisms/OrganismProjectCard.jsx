@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useAtom } from "jotai";
 import {
-  PROJECT_DATA,
   IS_PERSONA_ACCESSIBLE,
   PROJECT_LOAD_BUTTON_STATE,
   REPORT_LOAD_BUTTON_STATE,
@@ -35,7 +34,6 @@ const OrganismProjectCard = ({ project, index }) => {
     IS_PERSONA_ACCESSIBLE
   );
   const navigate = useNavigate();
-  const [projectData, setProjectData] = useAtom(PROJECT_DATA);
   const [openStates, setOpenStates] = useState({});
   const [closingStates, setClosingStates] = useState({});
 
