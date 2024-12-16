@@ -621,7 +621,7 @@ const PagePersona4 = () => {
             </MainSection>
 
             <Sidebar>
-              <h5>Let's Start Now</h5>
+              <h5>Key Insight</h5>
 
               <ProgressBar>
                 <span className="icon">🚀</span>
