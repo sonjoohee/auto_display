@@ -125,6 +125,10 @@ const PagePersona = () => {
     navigate(`/Persona/2/${projectId}`, { replace: true });
   };
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <>
       <ContentsWrap>

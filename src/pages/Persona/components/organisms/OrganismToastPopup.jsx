@@ -671,9 +671,10 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
         style={{ cursor: "pointer" }}
       >
         <QuestionWrap onClick={() => handleAnswerToggle(index)}>
-          <Number status={"Complete"}>{index + 1}</Number>
-          <QuestionText>{item.question}</QuestionText>
           <Status status={"Complete"}>완료</Status>
+          <QuestionText>
+            Q{index + 1}. {item.question}
+          </QuestionText>
         </QuestionWrap>
         {visibleAnswers[index] && (
           <AnswerWrap>{renderAnswersComplete(index)}</AnswerWrap>

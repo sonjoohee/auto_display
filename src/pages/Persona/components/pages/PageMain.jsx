@@ -425,6 +425,10 @@ const PageMain = () => {
   const [isEditMode, setIsEditMode] = useAtom(IS_EDIT_MODE);
   const [isShowToast, setIsShowToast] = useAtom(IS_SHOW_TOAST);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const closePopupRegex = () => {
     setBusinessAnalysis({
       input: "",
@@ -582,37 +586,6 @@ const PageMain = () => {
     setMarketingRecommendedItemButtonState(0);
 
     setStrategyConsultantReportData([]);
-
-    setProjectId("");
-    setProjectReportId("");
-    setProjectList([]);
-    setProjectReportList([]); 
-    setReportList([]);
-    setPersonaList({
-      selected: [],
-      unselected: []
-    });
-    setSelectedPersonaList([]);
-    setCustomizePersonaList({
-      selected: [],
-      unselected: []
-    });
-    setRequestPersonaList({
-      persona: [],
-      positioning: {}
-    });
-    setInterviewQuestionList([]);
-    setSelectedInterviewPurpose("");
-    setCategoryColor({});
-    setProjectLoadButtonState(false);
-    setReportLoadButtonState(false);
-    setReportDescriptionLoadButtonState(false);
-    setInterviewData([]);
-    setInterviewReport([]);
-    setInterviewReportAdditional([]);
-    setIsEditMode(false);
-    setIsShowToast(false);
-
   }, []);
 
   useEffect(() => {
@@ -1606,7 +1579,7 @@ const QuickMenu = styled.div`
     padding: 12px 16px;
     border-radius: 12px;
     background: ${palette.gray800};
-    opacity: ${(props) => (props.showHint ? 1 : 0)};
+    opacity: ${(props) => (props.showHint && !props.showText ? 1 : 0)};
     transition: opacity 1s ease-in-out;
 
     &:after {

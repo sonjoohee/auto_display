@@ -126,6 +126,10 @@ const PagePersona2 = () => {
     });
   };
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
   useEffect(() => {
@@ -237,7 +241,21 @@ const PagePersona2 = () => {
               axiosConfig
             );
 
-            unselectedPersonas.push(...response.data);
+            let newPersonas = response.data;
+
+            // 이미 존재하는 페르소나는 제외
+            for (let i = 0; i < newPersonas.length; i++) {
+              let isDuplicate = false;
+              for (let j = 0; j < unselectedPersonas.length; j++) {
+                if (unselectedPersonas[j].persona === newPersonas[i].persona) {
+                  isDuplicate = true;
+                  break;
+                }
+              }
+              if (!isDuplicate) {
+                unselectedPersonas.push(newPersonas[i]);
+              }
+            }
           }
 
           let personaList = {
@@ -286,14 +304,30 @@ const PagePersona2 = () => {
               data,
               axiosConfig
             );
+            
+            let newPersonas = response.data;
 
-            unselectedPersonas.push(...response.data);
+            // 이미 존재하는 페르소나는 제외
+            for (let i = 0; i < newPersonas.length; i++) {
+              let isDuplicate = false;
+              for (let j = 0; j < unselectedPersonas.length; j++) {
+                if (unselectedPersonas[j].persona === newPersonas[i].persona) {
+                  isDuplicate = true;
+                  break;
+                }
+              }
+              if (!isDuplicate) {
+                unselectedPersonas.push(newPersonas[i]);
+              }
+            }
+            
           }
 
           let personaList = {
             selected: [],
             unselected: unselectedPersonas,
           };
+          console.log(personaList);
           setPersonaList(personaList);
 
           ////////////////////////////////////////////////////////////////////////////////////////
@@ -311,13 +345,12 @@ const PagePersona2 = () => {
 
           let retryCount = 0;
           const maxRetries = 10;
-          console.log(requestPersonaList);
+          // console.log(requestPersonaList);
           while (
             retryCount < maxRetries &&
             (!response ||
               !response.data ||
               !requestPersonaList.hasOwnProperty("persona_spectrum") ||
-              !requestPersonaList.hasOwnProperty("positioning_analysis") ||
               requestPersonaList.persona_spectrum.length !== 3 ||
               !requestPersonaList.persona_spectrum[0].hasOwnProperty(
                 "persona_1"
