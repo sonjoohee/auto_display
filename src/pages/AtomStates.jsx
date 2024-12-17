@@ -383,6 +383,7 @@ export const PROJECT_REPORT_ID = atom("");
 export const PROJECT_LIST = atom([]);
 export const PROJECT_REPORT_LIST = atom([]);
 export const REPORT_LIST = atom([]);
+export const REQUESTED_PERSONA = atom([]);
 
 export const BUSINESS_ANALYSIS = atom({
   input: "",
