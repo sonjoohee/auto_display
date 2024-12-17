@@ -76,18 +76,18 @@ const MoleculeSignupPopup = ({ onClose, email }) => {
         <p>
           <strong>이메일 인증 후, 회원가입이 완료됩니다.</strong>
           <span>
-            인증 메일은 입력하신 이메일 주소로 발송되엇습니다
+            인증 메일이 발송되었습니다.
             <br />
-            메일을 받지 못하셨다면 스팸함을 확인해주세요.
+            받지 못하셨다면, 스팸함 확인 또는 메일 재발송을 해주세요.
           </span>
         </p>
 
         <div className="btnWrap">
-          {/* <button type="button" onClick={handleResendEmail}>
+          <button type="button" onClick={handleResendEmail}>
             재발송하기
-          </button> */}
+          </button>
           <a href="/Main" onClick={handleGoToLogin}>
-            로그인 하러가기
+            로그인 바로가기
           </a>
         </div>
 

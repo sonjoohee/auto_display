@@ -109,7 +109,7 @@ export const CustomTextarea = styled.textarea`
 
   &::placeholder {
     font-weight: 300;
-    line-height: 1.5;
+    // line-height: 1.5;
     color: ${palette.gray500};
   }
 `;

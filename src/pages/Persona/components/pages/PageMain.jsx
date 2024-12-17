@@ -810,7 +810,7 @@ const PageMain = () => {
               <div className="inputWrap">
                 <CustomTextarea
                   Edit
-                  rows={4}
+                  rows={1}
                   placeholder="비즈니스 설명을 입력하면, 최적의 페르소나를 제안해드려요"
                   onInput={(e) => {
                     // 입력값을 최대 300자로 제한
@@ -1172,12 +1172,13 @@ const InputWrap = styled.div`
 
     textarea {
       width: 100%;
-      height: 40px;
+      // height: 40px;
       font-family: "Pretendard", "Poppins";
       font-size: 1rem;
       outline: 0;
       border: 0;
       resize: none;
+      margin-bottom: 20px;
 
       &::placeholder {
         font-size: 1rem;

@@ -289,7 +289,7 @@ const CardPersona = styled.div`
 
   .content {
     position: relative;
-    height: 110px;
+    height: 175px;
     font-size: 0.75rem;
     line-height: 1.5;
     font-weight: 300;
@@ -298,8 +298,8 @@ const CardPersona = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 5;
-    -webkit-box-orient: vertical;
+    // -webkit-line-clamp: 5;
+    // -webkit-box-orient: vertical;
 
     &:before {
       position: absolute;
@@ -437,6 +437,7 @@ const InterviewPopup = styled.div`
       font-weight: 300;
       line-height: 1.5;
       color: ${palette.gray700};
+      text-align: left;
       padding: 4px 8px;
       border-radius: 4px;
       border: 1px solid ${palette.outlineGray};
@@ -480,7 +481,7 @@ const TabButton = styled.div`
 
 const TabContent = styled.div`
   width: 100%;
-  max-height: 200px;
+  max-height: 246px;
   margin-top: 18px;
   overflow-y: auto;
   line-height: 1.5;
