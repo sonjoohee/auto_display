@@ -49,6 +49,14 @@ const MoleculeHeader = () => {
         <AlertHeader>알림</AlertHeader>
 
         <AlertContent>
+          {/* 메시지 있을 때 */}
+          <Messageox NoAlarm>
+            <img src={images.NoAlarm} alt="" />
+            <p>알림이 없습니다.</p>
+          </Messageox>
+
+          {/* 메시지 있을 떄 */}
+          {/*
           <Messageox>
             <img src={images.CheckMark} alt="" />
             <Message>
@@ -75,7 +83,9 @@ const MoleculeHeader = () => {
                 <Button>페르소나 확인</Button>
               </ButtonWrap>
             </Message>
-          </Messageox>
+          </Messageox> 
+          */}
+
         </AlertContent>
       </AlertToogle>
     )}
@@ -223,12 +233,21 @@ const AlertContent = styled.div`
 
 const Messageox = styled.div`
   display: flex;
+  flex-direction: ${props => props.NoAlarm ? 'column' : 'row'};
   justify-content: flex-start;
   align-items: center;
   gap: 16px;
   width: 100%;
-  padding: 16px;
+  padding: ${props => props.NoAlarm ? '38px 0' : '16px'};
+  // padding: 16px;
   transition: all 0.5s;
+
+  > p {
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: ${palette.gray500};
+  }
 
   > img {
     width: 28px;
@@ -240,7 +259,8 @@ const Messageox = styled.div`
   }
 
   &:hover {
-    background: rgba(34, 111, 255, 0.04);
+    background: ${props => props.NoAlarm ? 'transparent' : 'rgba(34, 111, 255, 0.04)'};
+    // background: rgba(34, 111, 255, 0.04);
   }
 `;
 

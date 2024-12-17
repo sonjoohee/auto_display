@@ -658,9 +658,9 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
         key={index}
         status={interviewStatus[index] || "Pre"}
         // 'Pre' 상태일 때는 커서 스타일 변경
-        style={{
-          cursor: interviewStatus[index] === "Pre" ? "default" : "pointer",
-        }}
+        // style={{
+        //   cursor: interviewStatus[index] === "Pre" ? "default" : "pointer",
+        // }}
       >
         <QuestionWrap
           onClick={() => handleAnswerToggle(index)}
@@ -1062,7 +1062,7 @@ const InterviewItem = styled.div`
   padding: 20px;
   border-radius: 10px;
   border: 1px solid ${palette.outlineGray};
-  cursor: ${(props) => (props.status === "Pre" ? "default" : "pointer")};
+  // cursor: ${(props) => (props.status === "Pre" ? "default" : "pointer")};
 `;
 
 const QuestionWrap = styled.div`
@@ -1074,6 +1074,7 @@ const QuestionWrap = styled.div`
   cursor: inherit;
   position: relative;
   padding-right: 24px;
+  cursor: ${(props) => (props.status === "Pre" ? "default" : "pointer")};
 
   ${(props) =>
     props.status === "Complete" &&
