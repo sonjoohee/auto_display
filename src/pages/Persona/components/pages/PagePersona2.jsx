@@ -467,29 +467,30 @@ const PagePersona2 = () => {
               <OrganismBusinessAnalysis personaStep={2} />
               <CardWrap>
                 <>
-                <CustomizePersona>
-                <Title Column>
-                  <h3>비즈니스 맞춤 페르소나</h3>
-                  <p>
-                    비즈니스에 딱 맞는 페르소나를 추천해드려요. 요청을
-                    보내주시면 인터뷰 참여 모집이 시작됩니다.
-                  </p>
-                </Title>
-                <ContentSection row>
-                {personaButtonState2 ? (
-                  <PersonaCards>
-                    <AtomLoader />
-                  </PersonaCards>
-                ) : (
-                  requestPersonaList.persona.map((persona, index) => (
-                    <MoleculeRequestPersonaCard
-                      key={index}
-                      persona={persona[`persona_${index + 1}`]}
-                    />
-                  ))
-                )}
-                </ContentSection>
-                </CustomizePersona>
+                  <CustomizePersona>
+                    <Title Column>
+                      <h3>비즈니스 맞춤 페르소나</h3>
+                      <p>
+                        비즈니스에 딱 맞는 페르소나를 추천해드려요. 요청을
+                        보내주시면 인터뷰 참여 모집이 시작됩니다.
+                      </p>
+                    </Title>
+                    <ContentSection row>
+                      {personaButtonState2 ? (
+                        <PersonaCards>
+                          <AtomLoader />
+                        </PersonaCards>
+                      ) : (
+                        requestPersonaList.persona.map((persona, index) => (
+                          <MoleculeRequestPersonaCard
+                            key={index}
+                            persona={persona[`persona_${index + 1}`]}
+                            personaIndex={index + 1}
+                          />
+                        ))
+                      )}
+                    </ContentSection>
+                  </CustomizePersona>
 
                   {/* 산업별 인기 페르소나 */}
                   <CustomizePersona>

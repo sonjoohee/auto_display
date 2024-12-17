@@ -1,23 +1,97 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import { palette } from "../../../../assets/styles/Palette";
+import { useAtom } from "jotai";
+import {
+  PROJECT_ID,
+  IS_LOGGED_IN,
+  REQUESTED_PERSONA,
+} from "../../../AtomStates";
 import images from "../../../../assets/styles/Images";
 import {
   ContentSection,
   Title,
-  CustomizePersona
+  CustomizePersona,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import PopupWrap from "../../../../assets/styles/Popup";
+import { updateProjectOnServer } from "../../../../utils/indexedDB";
+import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 
-const MoleculeRequestPersonaCard = ({ persona, index }) => {
+const MoleculeRequestPersonaCard = ({ persona, personaIndex }) => {
+  console.log("🚀 ~ MoleculeRequestPersonaCard ~ persona:", persona);
+  const [requestedPersona, setRequestedPersona] = useAtom(REQUESTED_PERSONA);
+  const [projectId, setProjectId] = useAtom(PROJECT_ID);
+  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [selectedPersonaForPopup, setSelectedPersonaForPopup] = useState(null);
-  const [activeTab, setActiveTab] = useState('lifestyle');
+  const [activeTab, setActiveTab] = useState("lifestyle");
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
-  const handleInterviewRequest = () => {
-    setSelectedPersonaForPopup(null); 
-    setShowSuccessPopup(true);
+  useEffect(() => {
+    const loadRequestedPersona = async () => {
+      try {
+        const currentProject = await getProjectByIdFromIndexedDB(
+          projectId,
+          isLoggedIn
+        );
+        setRequestedPersona(currentProject?.requestedPersona || []);
+      } catch (error) {
+        console.error("요청된 페르소나 데이터 로딩 중 오류 발생:", error);
+      }
+    };
+
+    loadRequestedPersona();
+  }, [projectId, isLoggedIn, setRequestedPersona]);
+
+  const isPersonaRequested = () => {
+    return requestedPersona?.some(
+      (persona) => persona.personaIndex === personaIndex
+    );
+  };
+  const handleInterviewRequest = async () => {
+    setSelectedPersonaForPopup(null);
+
+    try {
+      // 현재 서버에 저장된 requestedPersona 값을 가져옴
+      const currentProject = await getProjectByIdFromIndexedDB(
+        projectId,
+        isLoggedIn
+      );
+      const currentRequestedPersona = currentProject?.requestedPersona || [];
+
+      // 중복 체크
+      const isDuplicate = currentRequestedPersona.some(
+        (persona) => persona.personaIndex === personaIndex
+      );
+
+      if (!isDuplicate) {
+        // 새로운 requestedPersona 배열 생성
+        const newRequestedPersona = [
+          ...currentRequestedPersona,
+          {
+            personaIndex: personaIndex,
+          },
+        ];
+
+        // 서버 업데이트
+        await updateProjectOnServer(
+          projectId,
+          {
+            requestedPersona: newRequestedPersona,
+          },
+          isLoggedIn
+        );
+
+        // 로컬 상태 업데이트
+        setRequestedPersona(newRequestedPersona);
+        setShowSuccessPopup(true);
+      } else {
+        setShowSuccessPopup(true);
+        console.log("이미 요청된 페르소나입니다.");
+      }
+    } catch (error) {
+      console.error("페르소나 요청 중 오류 발생:", error);
+    }
   };
 
   const handleSuccessPopupClose = () => {
@@ -28,27 +102,26 @@ const MoleculeRequestPersonaCard = ({ persona, index }) => {
     <>
       <CardPersona>
         <span>
-          <img src={images.CheckCircle} alt="요청 필요" />
-          요청 필요
+          <img
+            src={
+              isPersonaRequested() ? images.CheckCircleFill : images.CheckCircle
+            }
+            alt={isPersonaRequested() ? "요청 완료" : "요청 필요"}
+          />
+          {isPersonaRequested() ? "요청 완료" : "요청 필요"}
         </span>
 
         <div>
           <h4>{persona.persona}</h4>
           <p className="keywords">
-              {persona.keyword.map((keyword, idx) => (
-                <span key={idx}>#{keyword}</span>
-              ))}
-            </p>
-          <div className="content">
-            {persona.lifestyle}
-          </div>
+            {persona.keyword.map((keyword, idx) => (
+              <span key={idx}>#{keyword}</span>
+            ))}
+          </p>
+          <div className="content">{persona.lifestyle}</div>
         </div>
 
-        <Button
-          Small
-          Primary
-          onClick={() => setSelectedPersonaForPopup(true)}
-        >
+        <Button Small Primary onClick={() => setSelectedPersonaForPopup(true)}>
           자세히 보기
           <img src={images.ChevronRightPrimary} alt="" />
         </Button>
@@ -62,9 +135,7 @@ const MoleculeRequestPersonaCard = ({ persona, index }) => {
                 {persona.persona}
                 <span
                   className="close"
-                  onClick={() =>
-                    setSelectedPersonaForPopup(null)
-                  }
+                  onClick={() => setSelectedPersonaForPopup(null)}
                 />
               </h4>
               <p className="info">
@@ -83,25 +154,19 @@ const MoleculeRequestPersonaCard = ({ persona, index }) => {
             <div className="content">
               <TabButton>
                 <button
-                  className={
-                    activeTab === "lifestyle" ? "active" : ""
-                  }
+                  className={activeTab === "lifestyle" ? "active" : ""}
                   onClick={() => setActiveTab("lifestyle")}
                 >
                   라이프스타일
                 </button>
                 <button
-                  className={
-                    activeTab === "interests" ? "active" : ""
-                  }
+                  className={activeTab === "interests" ? "active" : ""}
                   onClick={() => setActiveTab("interests")}
                 >
                   관심사
                 </button>
                 <button
-                  className={
-                    activeTab === "consumption" ? "active" : ""
-                  }
+                  className={activeTab === "consumption" ? "active" : ""}
                   onClick={() => setActiveTab("consumption")}
                 >
                   소비성향
@@ -109,19 +174,13 @@ const MoleculeRequestPersonaCard = ({ persona, index }) => {
               </TabButton>
 
               {activeTab === "lifestyle" && (
-                <TabContent>
-                  {persona.lifestyle}
-                </TabContent>
+                <TabContent>{persona.lifestyle}</TabContent>
               )}
               {activeTab === "interests" && (
-                <TabContent>
-                  {persona.interest}
-                </TabContent>
+                <TabContent>{persona.interest}</TabContent>
               )}
               {activeTab === "consumption" && (
-                <TabContent>
-                  {persona.consumption_pattern}
-                </TabContent>
+                <TabContent>{persona.consumption_pattern}</TabContent>
               )}
             </div>
 
@@ -130,31 +189,34 @@ const MoleculeRequestPersonaCard = ({ persona, index }) => {
               Primary
               style={{ width: "100%", marginTop: "16px" }}
               onClick={handleInterviewRequest}
+              disabled={isPersonaRequested()}
             >
-              인터뷰 준비 요청하기
+              {isPersonaRequested()
+                ? "이미 요청한 페르소나입니다"
+                : "인터뷰 준비 요청하기"}
             </Button>
           </div>
         </InterviewPopup>
       )}
 
-    {showSuccessPopup && (
-      <PopupWrap
-        Check
-        title={
-          <>
-            인터뷰 준비 요청이 완료되었습니다.
-            <br />
-            완료 후 알림을 보내드릴게요
-          </>
-        }
-        buttonType="Outline"
-        closeText="확인"
-        isModal={false}
-        onCancel={handleSuccessPopupClose}
-        show={true}
-      />
-    )}
-  </>
+      {showSuccessPopup && (
+        <PopupWrap
+          Check
+          title={
+            <>
+              인터뷰 준비 요청이 완료되었습니다.
+              <br />
+              완료 후 알림을 보내드릴게요
+            </>
+          }
+          buttonType="Outline"
+          closeText="확인"
+          isModal={false}
+          onCancel={handleSuccessPopupClose}
+          show={true}
+        />
+      )}
+    </>
   );
 };
 
@@ -228,7 +290,11 @@ const CardPersona = styled.div`
       left: 0;
       width: 100%;
       height: 44px;
-      background: linear-gradient(to bottom, rgba(255, 255, 255, 0), ${palette.white} 80%);
+      background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0),
+        ${palette.white} 80%
+      );
       content: "";
     }
   }
@@ -289,7 +355,7 @@ const InterviewPopup = styled.div`
         width: 16px;
         height: 16px;
         cursor: pointer;
-        
+
         &:before,
         &:after {
           position: absolute;
@@ -375,7 +441,7 @@ const TabButton = styled.div`
 
   button {
     width: 100%;
-    font-family: 'Pretendard', 'Poppins';
+    font-family: "Pretendard", "Poppins";
     font-size: 1rem;
     font-weight: 300;
     color: ${palette.gray500};
@@ -384,7 +450,7 @@ const TabButton = styled.div`
     border: 0;
     background: transparent;
     transition: all 0.5s;
-    
+
     &.active {
       font-weight: 400;
       color: ${palette.gray800};
