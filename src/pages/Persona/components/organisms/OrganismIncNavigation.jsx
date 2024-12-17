@@ -1172,19 +1172,19 @@ const OrganismIncNavigation = () => {
   };
 
   const handleNewProjectClick = () => {
-    if (!isLoggedIn) {
-      setIsPopupLogin(true);
-      return;
-    }
+    // if (!isLoggedIn) {
+    //   setIsPopupLogin(true);
+    //   return;
+    // }
     
-    if (isLoading) {
-      setIsExitPopupOpen(true);
-      return;
-    }
+    // if (isLoading) {
+    //   setIsExitPopupOpen(true);
+    //   return;
+    // }
 
     setPersonaStep(0);
 
-    navigate("/Main");
+    window.location.href = "/Main";
     setConversation([]);
     setConversationStage(1);
     setInputBusinessInfo("");
@@ -1498,23 +1498,25 @@ const OrganismIncNavigation = () => {
     setShowSubNav(false);
   };
 
-  // 새로운 핸들러 함수 추가
+  const [isHomePopupOpen, setIsHomePopupOpen] = useState(false);
+
   const handleConfirmAndNavigate = () => {
-    handleNewProjectClick(); // 새 프로젝트로 이동
-    setIsPopupOpen(false); // 팝업 닫기
+    handleNewProjectClick();
+    setIsHomePopupOpen(false);
   };
 
-  // PopupWrap을 위한 state와 handler 추가
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const handleCloseHomePopup = () => {
+    setIsHomePopupOpen(false);
+  }
 
-  const handleClosePopup = () => {
-    setIsPopupOpen(false);
-  };
+  const handleClickHome = () => {
+      setIsHomePopupOpen(true);
+  }
 
   return (
     <>
       <NavigationWrap>
-        <Link to="/" onClick={handleNewProjectClick}>
+        <Link to="/" onClick={handleClickHome}>
           <Logo />
         </Link>
 
@@ -2182,16 +2184,18 @@ const OrganismIncNavigation = () => {
       </Popup>
       )}
 
-      {/* <PopupWrap
-        Warning
-        title="홈으로 이동하시겠습니까?"
-        buttonType="Outline"
-        closeText="아니요"
-        confirmText="이동하기"
-        isModal={false}
-        onClose={handleClosePopup}
-        onConfirm={handleConfirmAndNavigate} // 새로운 핸들러 함수 사용
-      /> */}
+      {isHomePopupOpen && (
+        <PopupWrap
+          Warning
+          title="홈으로 이동하시겠습니까?"
+          buttonType="Outline"
+          closeText="아니요"
+          confirmText="이동하기"
+          isModal={false}
+          onClose={handleCloseHomePopup}
+          onConfirm={handleConfirmAndNavigate}
+        />
+      )}
     </>
   );
 };
