@@ -186,7 +186,8 @@ const MoleculeRequestPersonaCard = ({ persona, personaIndex }) => {
 
             <Button
               Large
-              Primary
+              Primary={!isPersonaRequested()}
+              Fill={!isPersonaRequested()}
               style={{ width: "100%", marginTop: "16px" }}
               onClick={handleInterviewRequest}
               disabled={isPersonaRequested()}
@@ -226,7 +227,7 @@ const CardPersona = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 16px;
   width: 100%;
   padding: 20px;
@@ -241,6 +242,11 @@ const CardPersona = styled.div`
     font-size: 0.63rem;
     line-height: 1.2;
     color: ${palette.primary};
+
+    img {
+      width: 12px;
+      height: 12px;
+    }
   }
 
   h4 {
@@ -301,6 +307,7 @@ const CardPersona = styled.div`
 
   button {
     width: 100%;
+    margin-top: auto;
   }
 `;
 
@@ -325,7 +332,7 @@ const InterviewPopup = styled.div`
     align-items: flex-start;
     justify-content: flex-start;
     gap: 20px;
-    padding: 20px;
+    padding: 32px 24px;
     border-radius: 15px;
     background: ${palette.white};
     box-shadow: 4px 4px 30px rgba(0, 0, 0, 0.15);
@@ -349,6 +356,7 @@ const InterviewPopup = styled.div`
       font-weight: 500;
       line-height: 1.3;
       color: ${palette.gray800};
+      text-align: left;
 
       .close {
         position: relative;

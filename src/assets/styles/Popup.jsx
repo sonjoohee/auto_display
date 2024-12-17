@@ -22,6 +22,7 @@ const PopupWrap = ({
   isTextareaValid,
   isRadioSelected,
   isFormValid,
+  TitleFlex,
  }) => {
   const [isOpen, setIsOpen] = useState(true);
 
@@ -97,7 +98,7 @@ const PopupWrap = ({
         <ModalPopup>
           <Header>
             {title}
-            <ColseButton onClick={handleClose} />
+            <ColseButton TitleFlex={TitleFlex} onClick={handleClose} />
           </Header>
 
           <Body>{body}</Body>
@@ -106,7 +107,7 @@ const PopupWrap = ({
         </ModalPopup>
       ) : (
         <AlertPopup>
-          <ColseButton onClick={handleClose} />
+          <ColseButton TitleFlex={TitleFlex} onClick={handleClose} />
           <Contents>
             {Warning ? (
               <img src={images.ExclamationMark} alt="Warning" />
@@ -317,10 +318,14 @@ export const Body = styled.div`
 
 export const ColseButton = styled.div`
   position: absolute;
-  top: 24px;
-  right: 24px;
-  width: 12px;
-  height: 12px;
+  top: ${props => props.TitleFlex ? '37px' : '24px'};
+  right: ${props => props.TitleFlex ? '32px' : '24px'};
+  // top: 24px;
+  // right: 24px;
+  width: ${props => props.TitleFlex ? '16px' : '12px'};
+  height: ${props => props.TitleFlex ? '16px' : '12px'};
+  // width: 12px;
+  // height: 12px;
   cursor: pointer;
 
   &:before, &:after {

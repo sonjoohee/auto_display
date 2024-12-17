@@ -54,7 +54,7 @@ import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 // import { updateProjectReportOnServer } from "../../../../utils/indexedDB";
 import OrganismBusinessAnalysis from "../organisms/OrganismBisinessAnalysis";
-import AtomLoader from "../atoms/AtomLoader";
+import AtomPersonaLoader from "../atoms/AtomPersonaLoader";
 import PopupWrap from "../../../../assets/styles/Popup";
 import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import MoleculeRequestPersonaCard from "../molecules/MoleculeRequestPersonaCard";
@@ -88,6 +88,8 @@ const PagePersona2 = () => {
   const [customizeFormState, setCustomizeFormState] = useState({
     quantity: 1,
     isAccordionOpen: false,
+    personaDescription: '', // 페르소나 설명
+    purposeDescription: '', // 목적 설명
   });
 
   const handlePopupClose = () => {
@@ -454,6 +456,28 @@ const PagePersona2 = () => {
     },
   });
 
+  const handleInputChange = (field, value) => {
+    setCustomizeFormState(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const isFormValid = () => {
+    return customizeFormState.personaDescription.trim() !== '' && 
+           customizeFormState.purposeDescription.trim() !== '';
+  };
+
+  // quantity 조절 함수 추가
+  const handleQuantityChange = (action) => {
+    setCustomizeFormState(prev => ({
+      ...prev,
+      quantity: action === 'increase' 
+        ? Math.min(prev.quantity + 1, 10) // 최대 10명까지
+        : Math.max(prev.quantity - 1, 1)  // 최소 1명
+    }));
+  };
+
   return (
     <>
       <ContentsWrap>
@@ -478,7 +502,7 @@ const PagePersona2 = () => {
                     <ContentSection row>
                       {personaButtonState2 ? (
                         <PersonaCards>
-                          <AtomLoader />
+                          <AtomPersonaLoader message="최적의 페르소나를 모집하고 있습니다..." />
                         </PersonaCards>
                       ) : (
                         requestPersonaList.persona.map((persona, index) => (
@@ -625,10 +649,10 @@ const PagePersona2 = () => {
                               <>
                                 선택하신{" "}
                                 <span>{selectedPersonas.length}명</span>의
-                                페르소나와 인터뷰 하시겠어요?
+                                페르소나와 인터뷰 하시겠어요? ({selectedPersonas.length}/5)
                               </>
                             ) : (
-                              "페르소나를 선택하고 그들의 인터뷰를 시작해 보세요"
+                              "페르소나를 선택하고 그들의 인터뷰를 시작해 보세요 (최대 5명 선택 가능)"
                             )}
                           </p>
                           <Button
@@ -686,7 +710,7 @@ const PagePersona2 = () => {
           buttonType="Fill"
           confirmText="맞춤 페르소나 모집하기"
           isModal={true}
-          isFormValid={true}
+          isFormValid={isFormValid()}
           onCancel={handleCustomizePopupClose}
           onConfirm={() => {
             // 여기에 확인 버튼 클릭 시 처리할 로직 추가
@@ -695,38 +719,59 @@ const PagePersona2 = () => {
           body={
             <>
               <Title>
-                <p>어떤 페르소나가 필요하신가요? *</p>
+                <p className="required">어떤 페르소나가 필요하신가요?</p>
               </Title>
 
               <div style={{ width: "100%" }}>
                 <CustomTextarea
                   rows={4}
                   placeholder="필요한 페르소나의 특징과 역할을 적어주세요."
+                  value={customizeFormState.personaDescription}
+                  onChange={(e) => handleInputChange('personaDescription', e.target.value)}
+                  required
                 />
               </div>
 
               <Title>
-                <p>이 페르소나를 사용하려는 목적은 무엇인가요? *</p>
+                <p className="required">이 페르소나를 사용하려는 목적은 무엇인가요?</p>
               </Title>
 
               <div style={{ width: "100%" }}>
                 <CustomTextarea
                   rows={4}
                   placeholder="해당 페르소나가 필요한 이유, 얻고 싶은 인사이트, 하고자 하는 목표 등을 입력해주세요."
+                  value={customizeFormState.purposeDescription}
+                  onChange={(e) => handleInputChange('purposeDescription', e.target.value)}
+                  required
                 />
               </div>
 
               <Title>
-                <p>몇명의 페르소나를 모집하시고 싶으신가요? *</p>
+                <p className="required">몇명의 페르소나를 모집하시고 싶으신가요?</p>
               </Title>
 
               <Quantity>
-                <span className="down">줄이기</span>
+                <span 
+                  className="down" 
+                  onClick={() => handleQuantityChange('decrease')}
+                >
+                  줄이기
+                </span>
                 <CustomInput
                   type="number"
                   value={customizeFormState.quantity}
+                  onChange={(e) => {
+                    const value = Math.max(1, Math.min(10, parseInt(e.target.value) || 1));
+                    handleInputChange('quantity', value);
+                  }}
+                  required
                 />
-                <span className="up">늘리기</span>
+                <span 
+                  className="up" 
+                  onClick={() => handleQuantityChange('increase')}
+                >
+                  늘리기
+                </span>
               </Quantity>
 
               <AccordionSection>
@@ -1074,6 +1119,7 @@ const BottomBar = styled.div`
 
   p {
     font-size: 0.875rem;
+    font-weight: 300;
     line-height: 1.5;
     color: ${palette.gray500};
 

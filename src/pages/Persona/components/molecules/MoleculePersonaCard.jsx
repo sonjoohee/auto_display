@@ -19,6 +19,7 @@ const MoleculePersonaCard = ({
   isCustom = false, 
   hideCheckCircle = false,
   TitleFlex = false,
+  NoLine = false,
   onSelect,
   currentSelection,
   onClick,
@@ -86,8 +87,8 @@ const MoleculePersonaCard = ({
 
   return (
     <>
-    <CardContainer TitleFlex={TitleFlex} $isChecked={isChecked}>
-      <MainContent>
+    <CardContainer TitleFlex={TitleFlex} $isChecked={isChecked} NoLine={NoLine}>
+      <MainContent NoLine={NoLine}>
         {!hideCheckCircle && (
           <CheckCircle 
             $isChecked={isChecked}
@@ -95,9 +96,9 @@ const MoleculePersonaCard = ({
           />
         )}
 
-        <ContentWrapper>
+        <ContentWrapper NoLine={NoLine}>
           <TitleSection>
-            <Title>{title}</Title>
+            <Title NoLine={NoLine}>{title}</Title>
           </TitleSection>
           
           {keywords.length > 0 && (
@@ -316,6 +317,16 @@ const CardContainer = styled.div`
     align-items: flex-start;
     justify-content: space-between;
   `}
+
+  ${props => props.NoLine && css`
+    padding: 0;
+    border: none;
+
+    + div {
+      padding-top: 16px;
+      border-top: 1px solid ${palette.outlineGray};
+    }
+  `}
 `;
 
 const MainContent = styled.div`
@@ -340,6 +351,18 @@ const MainContent = styled.div`
       content: '';
     }
   }
+
+  ${props => props.NoLine && css`
+    justify-content: flex-start;
+    gap: 8px;
+
+    &:before {
+      content: '';
+      width: 20px;
+      height: 20px;
+      background: url(${images.PersonFill}) no-repeat center center / contain;
+    }
+  `}
 `;
 
 const ContentWrapper = styled.div`
@@ -349,6 +372,10 @@ const ContentWrapper = styled.div`
   justify-content: center;
   align-items: flex-start;
   gap: 8px;
+
+  ${props => props.NoLine && css`
+    flex: initial;
+  `}
 `;
 
 const CheckCircle = styled.div`
@@ -376,6 +403,11 @@ const Title = styled.div`
   color: ${palette.gray800};
   text-align: left;
   word-wrap: break-word;
+
+  ${props => props.NoLine && css`
+    font-weight: 400;
+    line-height: 1.5;
+  `}
 `;
 
 const Badge = styled.div`

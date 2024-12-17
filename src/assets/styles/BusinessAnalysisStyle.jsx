@@ -97,6 +97,18 @@ export const Title = styled.div`
       cursor: pointer;
     }
   }
+
+  .required {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 4px;
+
+    &:after {
+      content: "*";
+      color: ${palette.red};
+    }
+  }
 `;
 
 export const CardWrap = styled.div`
