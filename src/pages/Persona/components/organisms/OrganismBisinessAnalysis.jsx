@@ -187,7 +187,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
       await updateProjectOnServer(
         projectId,
         {
-          businessAnalysis: updatedBusinessAnalysis
+          businessAnalysis: updatedBusinessAnalysis,
         },
         isLoggedIn
       );
@@ -254,35 +254,6 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
         data,
         axiosConfig
       );
-
-      // // 필요한 데이터가 없을 경우 재시도, 최대 5번
-      // while (
-      //     attempts < maxAttempts && (
-      //     !response || !response.data || typeof response.data !== "object" ||
-      //     !response.data.hasOwnProperty("business_analysis") ||
-      //     !response.data.hasOwnProperty("category") ||
-      //     !response.data.business_analysis.hasOwnProperty("명칭") ||
-      //     !response.data.business_analysis.hasOwnProperty("주요_목적_및_특징") ||
-      //     !response.data.business_analysis.hasOwnProperty("주요기능") ||
-      //     !response.data.business_analysis["명칭"] ||
-      //     !response.data.business_analysis["주요_목적_및_특징"].length ||
-      //     !response.data.business_analysis["주요기능"].length ||
-      //     !response.data.category.hasOwnProperty("first") ||
-      //     !response.data.category.hasOwnProperty("second") ||
-      //     !response.data.category.hasOwnProperty("third") ||
-      //     !response.data.category.first ||
-      //     !response.data.category.second ||
-      //     !response.data.category.third
-      // )
-      // ) {
-      //   attempts += 1;
-
-      //   response = await axios.post(
-      //     "https://wishresearch.kr/person/business_category",
-      //     data,
-      //     axiosConfig
-      //   );
-      // }
 
       businessData = response.data.business_analysis;
       categoryData = response.data.category;
