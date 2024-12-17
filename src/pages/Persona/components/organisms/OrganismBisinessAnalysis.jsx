@@ -29,6 +29,7 @@ import {
   IS_LOGGED_IN,
   IS_EDIT_MODE,
 } from "../../../AtomStates";
+import PopupWrap from "../../../../assets/styles/Popup";
 import AtomPersonaLoader from "../atoms/AtomPersonaLoader";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 // import { updateProjectReportOnServer } from "../../../../utils/indexedDB";
@@ -87,6 +88,8 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
       value: "",
     },
   });
+
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
 
   // 입력 상태 확인 함수
   const getInputStatus = (field) => {
@@ -258,8 +261,9 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
       businessData = response.data.business_analysis;
       categoryData = response.data.category;
 
-      if (attempts >= maxAttempts) {
-        navigate("/Main");
+      if (attempts >= maxAttempts) { 
+        setShowErrorPopup(true);
+        return;
       } else {
         setInputs((prev) => ({
           ...prev,
@@ -434,7 +438,8 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
           };
 
           if (attempts >= maxAttempts) {
-            navigate("/Main");
+            setShowErrorPopup(true);
+            return;
           } else {
             setBusinessAnalysis(updatedBusinessAnalysis);
             await updateProjectOnServer(
@@ -519,7 +524,8 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
         category: categoryData,
       };
       if (attempts >= maxAttempts) {
-        navigate("/Main");
+        setShowErrorPopup(true);
+        return;
       } else {
         setBusinessAnalysis(updatedBusinessAnalysis);
       }
@@ -692,6 +698,23 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
             </div>
           </div>
         </Popup>
+      )}
+      {showErrorPopup && (
+        <PopupWrap
+          Warning
+          title="작업이 중단되었습니다"
+          message="입력된 내용에 문제가 있어 페이지가 초기화되었습니다. 다시 입력해주세요."
+          buttonType="Outline"
+          closeText="확인"
+          onConfirm={() => {
+            setShowErrorPopup(false);
+            window.location.href = "/";
+          }}
+          onCancel={() => {
+            setShowErrorPopup(false);
+            window.location.href = "/";
+          }}
+        />
       )}
     </>
   );

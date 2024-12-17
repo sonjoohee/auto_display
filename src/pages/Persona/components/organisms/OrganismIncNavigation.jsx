@@ -1516,7 +1516,7 @@ const OrganismIncNavigation = () => {
   return (
     <>
       <NavigationWrap>
-        <Link to="/" onClick={handleClickHome}>
+        <Link onClick={() => handleClickHome()}>
           <Logo />
         </Link>
 
