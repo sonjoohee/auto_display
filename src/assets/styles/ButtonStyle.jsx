@@ -47,7 +47,7 @@ export const Button = styled.button`
     background: ${palette.primary};
 
     &:hover {
-      background: #3537B3;
+      background: #0B45B1;
 
       &:disabled {
         background: ${palette.primary};
@@ -59,12 +59,12 @@ export const Button = styled.button`
     }
   `}
 
-    ${props => props.Primary && props.Fill && props.Large && css`
+  ${props => props.Primary && props.Fill && props.Large && css`
     color: ${palette.white};
     background: ${palette.primary};
 
     &:hover {
-      background: #3537B3;
+      background: #0B45B1;
     }
 
     &:disabled {
@@ -85,7 +85,7 @@ export const Button = styled.button`
     background: ${palette.white};
 
     &:hover {
-      background-color: rgba(76, 79, 255, 0.1);
+      background-color: rgba(34, 111, 255, 0.10);
     }
   `}
 

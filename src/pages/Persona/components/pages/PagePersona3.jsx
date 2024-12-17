@@ -308,9 +308,28 @@ const PagePersona3 = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  useEffect(() => {
+    // 팝업이 열려있을 때
+    if (showToast || showInterviewReady || showEditPersona) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = '15px'; // 스크롤바 자리만큼 패딩 추가하여 레이아웃 밀림 방지
+    } 
+    // 팝업이 닫혔을 때
+    else {
+      document.body.style.overflow = 'auto';
+      document.body.style.paddingRight = '0';
+    }
+
+    // 컴포넌트가 언마운트될 때 원래대로 복구
+    return () => {
+      document.body.style.overflow = 'auto';
+      document.body.style.paddingRight = '0';
+    };
+  }, [showToast, showInterviewReady, showEditPersona]);
+
   return (
     <>
-      <ContentsWrap>
+      <ContentsWrap noScroll={showToast || showInterviewReady || showEditPersona}>
         <OrganismIncNavigation />
 
         <MoleculeHeader />
@@ -411,6 +430,7 @@ const PagePersona3 = () => {
                     <PersonaCards>
                       {personaList.selected.map((persona, index) => (
                         <MoleculePersonaCard
+                          NoLine
                           key={index}
                           title={persona.persona}
                           isBasic={true}
@@ -791,10 +811,16 @@ const PersonaCards = styled.div`
   align-items: center;
   gap: 16px;
   width: 100%;
+  padding: 24px 24px 24px 20px;
+  border-radius: 10px;
+  border: 1px solid ${palette.outlineGray};
 `;
 
 const TabContent = styled(PersonaCards)`
   gap: 12px;
+  padding: 0;
+  border-radius: 0;
+  border: none;
 
   > div {
     padding: 12px 20px;

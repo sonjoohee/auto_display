@@ -54,7 +54,7 @@ import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 // import { updateProjectReportOnServer } from "../../../../utils/indexedDB";
 import OrganismBusinessAnalysis from "../organisms/OrganismBisinessAnalysis";
-import AtomLoader from "../atoms/AtomLoader";
+import AtomPersonaLoader from "../atoms/AtomPersonaLoader";
 import PopupWrap from "../../../../assets/styles/Popup";
 import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import MoleculeRequestPersonaCard from "../molecules/MoleculeRequestPersonaCard";
@@ -96,6 +96,8 @@ const PagePersona2 = () => {
 
   const [customizeFormState, setCustomizeFormState] = useState({
     isAccordionOpen: false,
+    personaDescription: '', // 페르소나 설명
+    purposeDescription: '', // 목적 설명
   });
   const handlePopupClose = () => {
     setShowPopup(false);
@@ -544,6 +546,22 @@ const PagePersona2 = () => {
     }
   };
 
+  // 폼 유효성 검사 함수 추가
+  const isFormValid = () => {
+    // 필수 필드 검사
+    const requiredFields = {
+      description: customPersonaForm.description.trim(),
+      purpose: customPersonaForm.purpose.trim(),
+    };
+
+    // 모든 필수 필드가 채워져 있는지 확인
+    const isRequiredFieldsFilled = Object.values(requiredFields).every(
+      (field) => field.length > 0
+    );
+
+    return isRequiredFieldsFilled;
+  };
+
   return (
     <>
       <ContentsWrap>
@@ -568,7 +586,7 @@ const PagePersona2 = () => {
                     <ContentSection row>
                       {personaButtonState2 ? (
                         <PersonaCards>
-                          <AtomLoader />
+                          <AtomPersonaLoader message="최적의 페르소나를 모집하고 있습니다..." />
                         </PersonaCards>
                       ) : (
                         requestPersonaList.persona.map((persona, index) => (
@@ -716,10 +734,10 @@ const PagePersona2 = () => {
                                 <>
                                   선택하신{" "}
                                   <span>{selectedPersonas.length}명</span>의
-                                  페르소나와 인터뷰 하시겠어요?
+                                  페르소나와 인터뷰 하시겠어요? ({selectedPersonas.length}/5)
                                 </>
                               ) : (
-                                "페르소나를 선택하고 그들의 인터뷰를 시작해 보세요"
+                                "페르소나를 선택하고 그들의 인터뷰를 시작해 보세요 (최대 5명 선택 가능)"
                               )}
                             </p>
                             <Button
@@ -777,7 +795,7 @@ const PagePersona2 = () => {
           buttonType="Fill"
           confirmText="맞춤 페르소나 모집하기"
           isModal={true}
-          isFormValid={true}
+          isFormValid={isFormValid()}
           onCancel={handleCustomizePopupClose}
           onConfirm={() => {
             // 여기에 확인 버튼 클릭 시 처리할 로직 추가
@@ -786,7 +804,7 @@ const PagePersona2 = () => {
           body={
             <>
               <Title>
-                <p>어떤 페르소나가 필요하신가요? *</p>
+                <p className="required">어떤 페르소나가 필요하신가요?</p>
               </Title>
               <div style={{ width: "100%" }}>
                 <CustomTextarea
@@ -799,7 +817,7 @@ const PagePersona2 = () => {
                 />
               </div>
               <Title>
-                <p>이 페르소나를 사용하려는 목적은 무엇인가요? *</p>
+                <p className="required">이 페르소나를 사용하려는 목적은 무엇인가요?</p>
               </Title>
               <div style={{ width: "100%" }}>
                 <CustomTextarea
@@ -812,7 +830,7 @@ const PagePersona2 = () => {
                 />
               </div>
               <Title>
-                <p>몇명의 페르소나를 모집하시고 싶으신가요? *</p>
+                <p className="required">몇명의 페르소나를 모집하시고 싶으신가요?</p>
               </Title>
 
               <Quantity>
@@ -1201,6 +1219,7 @@ const BottomBar = styled.div`
 
   p {
     font-size: 0.875rem;
+    font-weight: 300;
     line-height: 1.5;
     color: ${palette.gray500};
 

@@ -195,6 +195,7 @@ import People from "../images/people.svg"
 import PeopleFill from "../images/people-fill.svg"
 import ReportSearch from "../images/report-search.svg"
 import PersonCircle from "../images/person-circle.svg"
+import PersonFill from "../images/person-fill.svg"
 import FileFill from "../images/file-fill.svg"
 import PeopleFillPrimary from "../images/people-fill-primary.svg"
 
@@ -414,6 +415,7 @@ const images = {
   PeopleFill,
   ReportSearch,
   PersonCircle,  
+  PersonFill,
   FileFill,
   PeopleFillPrimary,
 

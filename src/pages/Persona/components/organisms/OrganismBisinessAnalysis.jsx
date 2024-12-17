@@ -29,7 +29,7 @@ import {
   IS_LOGGED_IN,
   IS_EDIT_MODE,
 } from "../../../AtomStates";
-import AtomLoader from "../atoms/AtomLoader";
+import AtomPersonaLoader from "../atoms/AtomPersonaLoader";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 // import { updateProjectReportOnServer } from "../../../../utils/indexedDB";
 
@@ -600,7 +600,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
       </Title>
       {personaButtonState1 ? (
         <Card>
-          <AtomLoader />
+          <AtomPersonaLoader message="비즈니스를 분석하고 있어요..." />
         </Card>
       ) : isEditMode ? (
         <Card Edit>
@@ -1075,7 +1075,7 @@ const ToggleButton = styled.button`
   padding: 4px 8px;
   border-radius: 100px;
   border: none;
-  background: ${palette.chatGray};
+  background: ${palette.white};
   cursor: pointer;
 
   &:before {
