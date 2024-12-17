@@ -537,7 +537,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             <TypeName>
               <Thumb>
                 <img 
-                  src={`/ai_person/${answer.persona.personaImg.replace('\r','')}.jpg`} 
+                  src={`/ai_person/${answer.persona.personaImg}.jpg`} 
                   alt={answer.persona.persona} 
                 />
               </Thumb>
@@ -551,7 +551,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             <TypeName>
               <Thumb>
                 <img 
-                  src={`/ai_person/${personaList.selected[questionAnswers.length].personaImg.replace('\r','')}.jpg`} 
+                  src={`/ai_person/${personaList.selected[questionAnswers.length].personaImg}.jpg`} 
                   alt={personaList.selected[questionAnswers.length].persona} 
                 />
               </Thumb>
@@ -576,7 +576,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             <TypeName>
               <Thumb>
                 <img 
-                  src={`/ai_person/${answer.persona.personaImg.replace('\r','')}.jpg`} 
+                  src={`/ai_person/${answer.persona.personaImg}.jpg`} 
                   alt={answer.persona.persona}
                 />
               </Thumb>
