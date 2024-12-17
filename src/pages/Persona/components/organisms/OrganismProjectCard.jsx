@@ -127,11 +127,16 @@ const OrganismProjectCard = ({ project, index }) => {
           </Name>
           <Persona>
             <div>
-              <span>기본형</span>
+              <span>
+                <img src={images.StatusBadgeBasic} alt="기본형" />
+                기본형</span>
               <p>{project.personaList || 0}명</p>
             </div>
             <div>
-              <span>커스터마이즈</span>
+              <span>
+                <img src={images.StatusBadgeCustom} alt="커스터마이즈" />
+                커스터마이즈
+              </span>
               <p>
                 {project.customPersonaList?.persona?.length || 0}명
                 {project.customPersonaList?.persona?.length > 0 && (
@@ -142,6 +147,7 @@ const OrganismProjectCard = ({ project, index }) => {
           </Persona>
           <Recruit>
             <span>
+              <img src={images.People} alt="" />
               {project.requestPersonaList?.persona?.length || 0}개 페르소나
             </span>
             <p className={getRecruitStatus(project)}>
@@ -150,7 +156,10 @@ const OrganismProjectCard = ({ project, index }) => {
           </Recruit>
           <Report>
             <div>
-              <span>Report</span>
+              <span>
+                <img src={images.FileText} alt="" />
+                Report
+              </span>
               <p>{project.reportList?.length || 0}건</p>
             </div>
             <div>
@@ -415,6 +424,11 @@ const Persona = styled.div`
       gap: 4px;
       font-size: 0.75rem;
       color: ${palette.gray300};
+
+      img {
+        filter: grayscale(100%);
+        opacity: 0.5;
+      }
     }
 
     p {
