@@ -589,7 +589,7 @@ const ViewInfo = styled.div`
   }
 
   .title {
-    flex: 4; // 4/10 비율
+    flex: 3; // 4/10 비율
     min-width: 0; // flex-basis 오버플로우 방지
     display: flex;
     align-items: flex-end;
