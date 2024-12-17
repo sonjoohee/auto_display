@@ -252,7 +252,20 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
         second: getCategoryColor(categoryData.second),
         third: getCategoryColor(categoryData.third),
       });
-      // saveConversation({ changingConversation : {businessAnalysis : updatedBusinessAnalysis }})
+      
+      await updateProjectOnServer(
+        projectId,
+        {
+          businessAnalysis: {
+            ...businessAnalysis,
+            characteristics: businessData["추가_주요_목적_및_특징"],
+            features: businessData["추가_주요기능"],
+            category: categoryData,
+          },
+        },
+        isLoggedIn
+      );
+
     } catch (error) {
       console.error("Error in handleRegenerate:", error);
     } finally {

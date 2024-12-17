@@ -471,6 +471,7 @@ const OrganismIncNavigation = () => {
 
   const closePopupLogin = () => {
     setIsPopupLogin(false);
+    setIsLoginPopupOpen(true);
   };
 
   const handleChangeReportNameButtonClick = (reportId) => {
