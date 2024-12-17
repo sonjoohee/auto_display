@@ -368,21 +368,21 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               );
               if (allComplete) {
                 try {
-                  await updateProjectOnServer(
-                    projectId,
-                    {
-                      interviewData: [
-                        ...interviewData,
-                        {
-                          [`question_${currentQuestionIndex + 1}`]:
-                            interviewQuestionListState[currentQuestionIndex]
-                              .question,
-                          [`answer_${currentQuestionIndex + 1}`]: allAnswers,
-                        },
-                      ],
-                    },
-                    isLoggedIn
-                  );
+                  // await updateProjectOnServer(
+                  //   projectId,
+                  //   {
+                  //     interviewData: [
+                  //       ...interviewData,
+                  //       {
+                  //         [`question_${currentQuestionIndex + 1}`]:
+                  //           interviewQuestionListState[currentQuestionIndex]
+                  //             .question,
+                  //         [`answer_${currentQuestionIndex + 1}`]: allAnswers,
+                  //       },
+                  //     ],
+                  //   },
+                  //   isLoggedIn
+                  // );
 
                   setIsAnalyzing(true);
                   const finalData1 = {
