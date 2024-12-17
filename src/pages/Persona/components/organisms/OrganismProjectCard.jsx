@@ -610,7 +610,7 @@ const ViewInfo = styled.div`
   }
 
   .title {
-    flex: 4; // 4/10 비율
+    // flex: 4;
     min-width: 0; // flex-basis 오버플로우 방지
     display: flex;
     align-items: flex-end;
@@ -627,7 +627,7 @@ const ViewInfo = styled.div`
   }
 
   .info {
-    flex: 4; // 3/10 비율
+    // flex: 4;
     min-width: 0; // flex-basis 오버플로우 방지
     display: flex;
     align-items: center;
@@ -670,7 +670,7 @@ const ViewInfo = styled.div`
   }
 
   .button {
-    flex: 3; // 3/10 비율
+    // flex: 3;
     min-width: 0; // flex-basis 오버플로우 방지
     display: flex;
     align-items: center;
@@ -686,15 +686,15 @@ const ViewInfo = styled.div`
       border-radius: 6px;
 
       &.view {
-        color: ${palette.black};
-        border: 1px solid ${palette.outlineGray};
-        background: ${palette.chatGray};
+        // color: ${palette.black};
+        // border: 1px solid ${palette.outlineGray};
+        // background: ${palette.chatGray};
       }
 
       &.analysis {
-        color: ${palette.primary};
-        border: 1px solid ${palette.primary};
-        background: #e9f1ff;
+        // color: ${palette.primary};
+        // border: 1px solid ${palette.primary};
+        // background: #e9f1ff;
       }
     }
   }
