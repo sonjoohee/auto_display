@@ -127,11 +127,16 @@ const OrganismProjectCard = ({ project, index }) => {
           </Name>
           <Persona>
             <div>
-              <span>기본형</span>
+              <span>
+                <img src={images.StatusBadgeBasic} alt="기본형" />
+                기본형</span>
               <p>{project.personaList || 0}명</p>
             </div>
             <div>
-              <span>커스터마이즈</span>
+              <span>
+                <img src={images.StatusBadgeCustom} alt="커스터마이즈" />
+                커스터마이즈
+              </span>
               <p>
                 {project.customPersonaList?.persona?.length || 0}명
                 {project.customPersonaList?.persona?.length > 0 && (
@@ -142,6 +147,7 @@ const OrganismProjectCard = ({ project, index }) => {
           </Persona>
           <Recruit>
             <span>
+              <img src={images.People} alt="" />
               {project.requestPersonaList?.persona?.length || 0}개 페르소나
             </span>
             <p className={getRecruitStatus(project)}>
@@ -150,7 +156,10 @@ const OrganismProjectCard = ({ project, index }) => {
           </Recruit>
           <Report>
             <div>
-              <span>Report</span>
+              <span>
+                <img src={images.NotePencil} alt="" />
+                Report
+              </span>
               <p>{project.reportList?.length || 0}건</p>
             </div>
             <div>
@@ -415,6 +424,11 @@ const Persona = styled.div`
       gap: 4px;
       font-size: 0.75rem;
       color: ${palette.gray300};
+
+      img {
+        filter: grayscale(100%);
+        opacity: 0.4;
+      }
     }
 
     p {
@@ -434,9 +448,10 @@ const Recruit = styled.div`
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 4px;
+  gap: 8px;
   max-width: 155px;
   width: 100%;
+  padding: 8px 0;
 
   span {
     display: flex;
@@ -466,7 +481,8 @@ const Report = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 8px;
+  padding: 8px 0;
 
   span {
     display: flex;
@@ -475,6 +491,11 @@ const Report = styled.div`
     gap: 4px;
     font-size: 0.75rem;
     color: ${palette.gray300};
+
+    img {
+      filter: grayscale(100%);
+      opacity: 0.5;
+    }
   }
 
   p {

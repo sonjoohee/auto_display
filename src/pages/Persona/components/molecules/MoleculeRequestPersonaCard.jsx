@@ -481,7 +481,8 @@ const TabButton = styled.div`
 
 const TabContent = styled.div`
   width: 100%;
-  max-height: 246px;
+  // max-height: 246px;
+  height: 246px;
   margin-top: 18px;
   overflow-y: auto;
   line-height: 1.5;
