@@ -74,6 +74,16 @@ const PagePersona3 = () => {
   const [showToast, setShowToast] = useState(false);
   const [showEditPersona, setShowEditPersona] = useState(false);
   const [personaListState, setPersonaListState] = useState(null);
+  const [showInterviewTypeAlert, setShowInterviewTypeAlert] = useState(false);
+
+  // 인터뷰 목적 선택 핸들러 수정
+  const handleInterviewPurposeSelect = (title) => {
+    if (!selectedInterviewType) {
+      setShowInterviewTypeAlert(true);
+      return;
+    }
+    setInterviewPurpose(title);
+  };
 
   const handlePopupClose = () => {
     setShowInterviewReady(false);
@@ -377,7 +387,7 @@ const PagePersona3 = () => {
                         title={item.title}
                         description={item.description}
                         isSelected={interviewPurpose === item.title}
-                        onSelect={(title) => setInterviewPurpose(title)}
+                        onSelect={(title) => handleInterviewPurposeSelect(title)}
                         interviewPurpose={interviewPurpose}
                         isActive={interviewPurpose === item.title}
                       />
@@ -466,7 +476,7 @@ const PagePersona3 = () => {
             {showEditPersona && (
               <PopupWrap
                 TitleFlex
-                title="📝 맞춤형 페르소나 모집 요청하기"
+                title="📝 페르소나 편집하기"
                 buttonType="Fill"
                 closeText="닫기"
                 confirmText="편집완료"
@@ -546,6 +556,19 @@ const PagePersona3 = () => {
                 onClose={() => setShowToast(false)}
               />
             )}
+
+          {showInterviewTypeAlert && (
+            <PopupWrap
+              Warning
+              title="인터뷰 방식을 선택해주세요"
+              message="인터뷰 목적을 선택하기 전에 인터뷰 방식을 먼저 선택해주세요."
+              buttonType="Outline"
+              confirmText="확인"
+              isModal={false}
+              onCancel={() => setShowInterviewTypeAlert(false)}
+              onConfirm={() => setShowInterviewTypeAlert(false)}
+            />
+          )}
           </AnalysisWrap>
         </MainContent>
       </ContentsWrap>

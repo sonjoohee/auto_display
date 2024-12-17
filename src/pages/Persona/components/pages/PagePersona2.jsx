@@ -493,6 +493,7 @@ const PagePersona2 = () => {
                   </CustomizePersona>
 
                   {/* 산업별 인기 페르소나 */}
+                  {!personaButtonState2 && (
                   <CustomizePersona>
                     <Title Column>
                       <h3>산업별 인기 페르소나</h3>
@@ -543,7 +544,7 @@ const PagePersona2 = () => {
                                   </p>
                                 </div>
 
-                                <div>
+                                <div> 
                                   <Badge>
                                     <img
                                       src={images.NoteArrowUp}
@@ -565,9 +566,6 @@ const PagePersona2 = () => {
                     </Title>
 
                     <ContentSection>
-                      {personaButtonState2 ? (
-                        <></>
-                      ) : (
                         <>
                           <PersonaCards>
                             {/* {requestPersonaList.persona.map((persona, index) => (
@@ -620,7 +618,6 @@ const PagePersona2 = () => {
                             <img src={images.PersonaCustomizing} alt="" />
                           </BannerPersona>
                         </>
-                      )}
                       {!personaButtonState2 && (
                         <BottomBar>
                           <p>
@@ -649,7 +646,8 @@ const PagePersona2 = () => {
                       )}
                     </ContentSection>
                   </CustomizePersona>
-                </>
+              )}
+              </>
               </CardWrap>
             </MainSection>
 
