@@ -203,9 +203,16 @@ const PageMarketingYesItems = () => {
   const handleSubmit = () => {
     const regex = /^[가-힣a-zA-Z0-9\s.,'"?!()\-]*$/;
     const specialChars = /^[.,'"?!()\-]+$/;
+    const consecutiveSpecialChars = /[.,'"?!()\-·%]{2,}/; // 특수문자가 2번 이상 연속되는 패턴
 
     // 단독으로 특수 문자만 사용된 경우
     if (specialChars.test(inputBusinessInfo.trim())) {
+      setIsPopupRegex(true);
+      return;
+    }
+
+    // 연속된 특수문자 체크
+    if (consecutiveSpecialChars.test(inputBusinessInfo.trim())) {
       setIsPopupRegex(true);
       return;
     }

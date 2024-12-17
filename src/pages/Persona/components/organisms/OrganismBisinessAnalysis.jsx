@@ -80,6 +80,9 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
       isValid: true,
       error: null,
     },
+    field3: {
+      value: "",
+    },
   });
 
   // 입력 상태 확인 함수
@@ -120,6 +123,9 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
         isValid: true,
         error: null,
       },
+      field3: {
+        value: businessAnalysis.features,
+      },
     });
   };
 
@@ -129,18 +135,28 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
     setIsPopupRegex(false); // 팝업 닫기
   };
 
-  const handleSaveClick = () => {
+  const handleSaveClick = async () => {
     if (loadingState) {
       return;
     }
     // 입력값 유효성 검사
-    const regex = /^[가-힣a-zA-Z0-9\s.,'"?!()\-]*$/;
-    const specialChars = /^[.,'"?!()\-]+$/;
+    const regex = /^[가-힣a-zA-Z0-9\s.,'"?!()\-·%]*$/;
+    const specialChars = /^[.,'"?!()\-·%]+$/;
+    const consecutiveSpecialChars = /[.,'"?!()\-·%]{2,}/; // 특수문자가 2번 이상 연속되는 패턴
 
     // 단독으로 특수 문자만 사용된 경우
     if (
       specialChars.test(inputs.field1.value) ||
       specialChars.test(inputs.field2.value)
+    ) {
+      setIsPopupRegex(true);
+      return;
+    }
+
+    // 연속된 특수문자 체크
+    if (
+      consecutiveSpecialChars.test(inputs.field1.value) ||
+      consecutiveSpecialChars.test(inputs.field2.value)
     ) {
       setIsPopupRegex(true);
       return;
@@ -158,7 +174,16 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
         ...businessAnalysis,
         title: inputs.field1.value,
         characteristics: inputs.field2.value,
+        features: inputs.field3.value,
       };
+
+      await updateProjectOnServer(
+        projectId,
+        {
+          businessAnalysis: updatedBusinessAnalysis
+        },
+        isLoggedIn
+      );
 
       // 상태 업데이트
       setBusinessAnalysis(updatedBusinessAnalysis);
@@ -179,6 +204,10 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
       field2: {
         ...prev.field2,
         value: businessAnalysis.characteristics,
+      },
+      field3: {
+        ...prev.field3,
+        value: businessAnalysis.features,
       },
     }));
   };
@@ -245,6 +274,9 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
             ...prev.field2,
             value: businessData["추가_주요_목적_및_특징"],
           },
+          field3: {
+            value: businessData["추가_주요기능"],
+          },
         }));
       }
       setCategoryColor({
@@ -252,20 +284,6 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
         second: getCategoryColor(categoryData.second),
         third: getCategoryColor(categoryData.third),
       });
-      
-      await updateProjectOnServer(
-        projectId,
-        {
-          businessAnalysis: {
-            ...businessAnalysis,
-            characteristics: businessData["추가_주요_목적_및_특징"],
-            features: businessData["추가_주요기능"],
-            category: categoryData,
-          },
-        },
-        isLoggedIn
-      );
-
     } catch (error) {
       console.error("Error in handleRegenerate:", error);
     } finally {

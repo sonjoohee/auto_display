@@ -324,7 +324,7 @@ const PagePersona2 = () => {
 
           ////////////////////////////////////////////////////////////////////////////////////////
           data = {
-            business_idea: businessAnalysis.title,
+            business_idea: businessAnalysis,
           };
 
           response = await axios.post(
