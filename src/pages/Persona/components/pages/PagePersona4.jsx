@@ -486,7 +486,7 @@ const PagePersona4 = () => {
                             />
 
                             <BgInside>
-                              <strong>인터뷰 인사이드</strong>
+                              <strong>인터뷰 인사이트</strong>
                               <div>
                                 <p>
                                   {
@@ -536,7 +536,7 @@ const PagePersona4 = () => {
                             />
 
                             <BgInside>
-                              <strong>인터뷰 인사이드</strong>
+                              <strong>인터뷰 인사이트</strong>
                               <div>
                                 <p>
                                   {
@@ -586,7 +586,7 @@ const PagePersona4 = () => {
                             />
 
                             <BgInside>
-                              <strong>인터뷰 인사이드</strong>
+                              <strong>인터뷰 인사이트</strong>
                               <div>
                                 <p>
                                   {
