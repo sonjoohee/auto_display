@@ -605,6 +605,43 @@ const PageMain = () => {
     setMarketingRecommendedItemButtonState(0);
 
     setStrategyConsultantReportData([]);
+
+    setBusinessAnalysis({
+      input: "",
+      title: "",
+      characteristics: "",
+      features: [],
+      category: {},
+    });
+    setProjectId("");
+    setProjectReportId("");
+    setProjectList([]);
+    setProjectReportList([]); 
+    setReportList([]);
+    setPersonaList({
+      selected: [],
+      unselected: []
+    });
+    setSelectedPersonaList([]);
+    setCustomizePersonaList({
+      selected: [],
+      unselected: []
+    });
+    setRequestPersonaList({
+      persona: [],
+      positioning: {}
+    });
+    setInterviewQuestionList([]);
+    setSelectedInterviewPurpose("");
+    setCategoryColor({});
+    setProjectLoadButtonState(false);
+    setReportLoadButtonState(false);
+    setReportDescriptionLoadButtonState(false);
+    setInterviewData([]);
+    setInterviewReport([]);
+    setInterviewReportAdditional([]);
+    setIsEditMode(false);
+    setIsShowToast(false);
   }, []);
 
   useEffect(() => {
