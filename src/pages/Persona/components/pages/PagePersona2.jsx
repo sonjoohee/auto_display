@@ -58,7 +58,7 @@ import AtomLoader from "../atoms/AtomLoader";
 import PopupWrap from "../../../../assets/styles/Popup";
 import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import MoleculeRequestPersonaCard from "../molecules/MoleculeRequestPersonaCard";
-
+import { createRequestPersonOnServer } from "../../../../utils/indexedDB";
 const PagePersona2 = () => {
   const [customPersonaForm, setCustomPersonaForm] = useState({
     description: "", // 페르소나 특징과 역할
@@ -93,11 +93,10 @@ const PagePersona2 = () => {
   const [selectedPersonas, setSelectedPersonas] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [showCustomizePopup, setShowCustomizePopup] = useState(false);
+
   const [customizeFormState, setCustomizeFormState] = useState({
-    quantity: 1,
     isAccordionOpen: false,
   });
-
   const handlePopupClose = () => {
     setShowPopup(false);
   };
@@ -463,8 +462,9 @@ const PagePersona2 = () => {
     },
   });
 
+  // quantity 변경 핸들러 수정
   const handleQuantityChange = (type) => {
-    setCustomizeFormState((prev) => {
+    setCustomPersonaForm((prev) => {
       const newQuantity =
         type === "up"
           ? Math.min(prev.quantity + 1, 20) // 최대 20
@@ -507,6 +507,7 @@ const PagePersona2 = () => {
     try {
       const requestData = {
         projectId: projectId,
+        businessAnalysis: businessAnalysis,
         requestDate: new Date().toLocaleString("ko-KR", {
           timeZone: "Asia/Seoul",
         }),
@@ -522,10 +523,9 @@ const PagePersona2 = () => {
         },
       };
 
-      const response = await axios.post(
-        "https://wishresearch.kr/person/custom-request",
+      const response = await createRequestPersonOnServer(
         requestData,
-        axiosConfig
+        isLoggedIn
       );
 
       if (response.status === 200) {
@@ -798,7 +798,6 @@ const PagePersona2 = () => {
                   }
                 />
               </div>
-
               <Title>
                 <p>이 페르소나를 사용하려는 목적은 무엇인가요? *</p>
               </Title>
@@ -820,13 +819,13 @@ const PagePersona2 = () => {
                 <span
                   className="down"
                   onClick={() => handleQuantityChange("down")}
-                  disabled={customizeFormState.quantity <= 1}
+                  disabled={customPersonaForm.quantity <= 1}
                 >
                   줄이기
                 </span>
                 <CustomInput
                   type="number"
-                  value={customizeFormState.quantity}
+                  value={customPersonaForm.quantity}
                   min={1}
                   max={20}
                   onChange={(e) => {
@@ -834,7 +833,7 @@ const PagePersona2 = () => {
                       1,
                       Math.min(20, parseInt(e.target.value) || 1)
                     );
-                    setCustomizeFormState((prev) => ({
+                    setCustomPersonaForm((prev) => ({
                       ...prev,
                       quantity: value,
                     }));
@@ -843,12 +842,11 @@ const PagePersona2 = () => {
                 <span
                   className="up"
                   onClick={() => handleQuantityChange("up")}
-                  disabled={customizeFormState.quantity >= 20}
+                  disabled={customPersonaForm.quantity >= 20}
                 >
                   늘리기
                 </span>
               </Quantity>
-
               <AccordionSection>
                 <CustomAccordionHeader
                   None

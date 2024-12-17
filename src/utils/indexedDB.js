@@ -431,3 +431,79 @@ export const getProjectReportByIdFromIndexedDB = async (
     }
   }
 };
+
+// AI Person 요청 업데이트 api
+export const createRequestPersonOnServer = async (updateData, isLoggedIn) => {
+  console.log("🚀 ~ updateData:", updateData);
+  if (isLoggedIn) {
+    // 사용자 로그인 시 서버에 저장
+    try {
+      const token = sessionStorage.getItem("accessToken"); // 액세스 토큰을 세션에서 가져오기
+      // console.log("token", token);
+
+      if (!token) {
+        throw new Error("액세스 토큰이 존재하지 않습니다.");
+      }
+
+      const PUT_DATA = {
+        ...updateData,
+      };
+
+      const response = await axios.post(
+        "https://wishresearch.kr/project/request/person",
+        PUT_DATA, // POST 요청에 보낼 데이터가 없는 경우 빈 객체 전달
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Bearer 토큰을 헤더에 추가
+            "Content-Type": "application/json",
+          },
+          withCredentials: true, // 쿠키와 자격 증명 포함 (필요 시)
+        }
+      );
+
+      // console.log(response.data.inserted_id);
+      return response.data.inserted_id; // 서버로부터 가져온 conversationId 반환
+    } catch (error) {
+      console.error("Error creating chat on server:", error);
+      throw error;
+    }
+  }
+};
+
+// AI Persona 요청 업데이트 api
+export const createRequestPersonaOnServer = async (updateData, isLoggedIn) => {
+  console.log("🚀 ~ updateData:", updateData);
+  if (isLoggedIn) {
+    // 사용자 로그인 시 서버에 저장
+    try {
+      const token = sessionStorage.getItem("accessToken"); // 액세스 토큰을 세션에서 가져오기
+      // console.log("token", token);
+
+      if (!token) {
+        throw new Error("액세스 토큰이 존재하지 않습니다.");
+      }
+
+      const PUT_DATA = {
+        ...updateData,
+      };
+
+      const response = await axios.post(
+        "https://wishresearch.kr/project/request/persona",
+        PUT_DATA, // POST 요청에 보낼 데이터가 없는 경우 빈 객체 전달
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Bearer 토큰을 헤더에 추가
+            "Content-Type": "application/json",
+          },
+          withCredentials: true, // 쿠키와 자격 증명 포함 (필요 시)
+        }
+      );
+
+      // console.log(response.data.inserted_id);
+      return response.data.inserted_id; // 서버로부터 가져온 conversationId 반환
+    } catch (error) {
+      console.error("Error creating chat on server:", error);
+      throw error;
+    }
+  }
+};
