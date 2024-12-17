@@ -58,8 +58,16 @@ import AtomPersonaLoader from "../atoms/AtomPersonaLoader";
 import PopupWrap from "../../../../assets/styles/Popup";
 import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import MoleculeRequestPersonaCard from "../molecules/MoleculeRequestPersonaCard";
-
+import { createRequestPersonOnServer } from "../../../../utils/indexedDB";
 const PagePersona2 = () => {
+  const [customPersonaForm, setCustomPersonaForm] = useState({
+    description: "", // 페르소나 특징과 역할
+    purpose: "", // 사용 목적
+    quantity: 1, // 모집 인원
+    gender: "", // 성별 ('' | 'male' | 'female')
+    ageGroups: [], // 연령대 선택 ['10s', '20s', ...]
+    additionalInfo: "", // 추가 필요 정보
+  });
   const [categoryColor, setCategoryColor] = useAtom(CATEGORY_COLOR);
   const [reportList, setReportList] = useAtom(REPORT_LIST);
   const [projectLoadButtonState, setProjectLoadButtonState] = useAtom(
@@ -85,13 +93,12 @@ const PagePersona2 = () => {
   const [selectedPersonas, setSelectedPersonas] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [showCustomizePopup, setShowCustomizePopup] = useState(false);
+
   const [customizeFormState, setCustomizeFormState] = useState({
-    quantity: 1,
     isAccordionOpen: false,
     personaDescription: '', // 페르소나 설명
     purposeDescription: '', // 목적 설명
   });
-
   const handlePopupClose = () => {
     setShowPopup(false);
   };
@@ -326,7 +333,7 @@ const PagePersona2 = () => {
 
           ////////////////////////////////////////////////////////////////////////////////////////
           data = {
-            business_idea: businessAnalysis.title,
+            business_idea: businessAnalysis,
           };
 
           response = await axios.post(
@@ -446,6 +453,7 @@ const PagePersona2 = () => {
   };
 
   const handleCustomizePopupClose = () => {
+    submitCustomPersonaRequest();
     setShowCustomizePopup(false);
   };
 
@@ -456,26 +464,86 @@ const PagePersona2 = () => {
     },
   });
 
-  const handleInputChange = (field, value) => {
-    setCustomizeFormState(prev => ({
+  // quantity 변경 핸들러 수정
+  const handleQuantityChange = (type) => {
+    setCustomPersonaForm((prev) => {
+      const newQuantity =
+        type === "up"
+          ? Math.min(prev.quantity + 1, 20) // 최대 20
+          : Math.max(prev.quantity - 1, 1); // 최소 1
+      return {
+        ...prev,
+        quantity: newQuantity,
+      };
+    });
+  };
+
+  // 각 입력 필드의 onChange 핸들러
+  const handleCustomPersonaChange = (field, value) => {
+    setCustomPersonaForm((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
-  const isFormValid = () => {
-    return customizeFormState.personaDescription.trim() !== '' && 
-           customizeFormState.purposeDescription.trim() !== '';
+  // 연령대 선택 핸들러
+  const handleAgeGroupChange = (ageGroup) => {
+    setCustomPersonaForm((prev) => ({
+      ...prev,
+      ageGroups: prev.ageGroups.includes(ageGroup)
+        ? prev.ageGroups.filter((age) => age !== ageGroup)
+        : [...prev.ageGroups, ageGroup],
+    }));
+  };
+  const initialCustomPersonaForm = {
+    description: "",
+    purpose: "",
+    quantity: 1,
+    gender: "",
+    ageGroups: [],
+    additionalInfo: "",
   };
 
-  // quantity 조절 함수 추가
-  const handleQuantityChange = (action) => {
-    setCustomizeFormState(prev => ({
-      ...prev,
-      quantity: action === 'increase' 
-        ? Math.min(prev.quantity + 1, 10) // 최대 10명까지
-        : Math.max(prev.quantity - 1, 1)  // 최소 1명
-    }));
+  // API 호출 함수
+  const submitCustomPersonaRequest = async () => {
+    try {
+      const requestData = {
+        projectId: projectId,
+        businessAnalysis: businessAnalysis,
+        requestDate: new Date().toLocaleString("ko-KR", {
+          timeZone: "Asia/Seoul",
+        }),
+        personaRequest: {
+          description: customPersonaForm.description,
+          purpose: customPersonaForm.purpose,
+          quantity: customPersonaForm.quantity,
+          preferences: {
+            gender: customPersonaForm.gender,
+            ageGroups: customPersonaForm.ageGroups,
+          },
+          additionalInfo: customPersonaForm.additionalInfo,
+        },
+      };
+
+      const response = await createRequestPersonOnServer(
+        requestData,
+        isLoggedIn
+      );
+
+      if (response.status === 200) {
+        // 요청 성공 시 상태 초기화
+        setCustomPersonaForm(initialCustomPersonaForm);
+        setCustomizeFormState({
+          quantity: 1,
+          isAccordionOpen: false,
+        });
+        handleCustomizePopupClose();
+        // 성공 메시지 표시 등 추가 처리
+      }
+    } catch (error) {
+      console.error("Custom persona request failed:", error);
+      // 에러 처리
+    }
   };
 
   return (
@@ -518,78 +586,79 @@ const PagePersona2 = () => {
 
                   {/* 산업별 인기 페르소나 */}
                   {!personaButtonState2 && (
-                  <CustomizePersona>
-                    <Title Column>
-                      <h3>산업별 인기 페르소나</h3>
-                      <p>
-                        산업별로 자주 활용되는 페르소나를 지금 바로 확인하고
-                        인사이트를 얻어보세요.
-                        <TooltipButton
-                          onClick={() => setShowTooltip(!showTooltip)}
-                        >
-                          유형별 설명 보기
-                          {showTooltip && (
-                            <TooltipContent>
-                              <TooltipHeader>
-                                아이콘에 대한 정보
-                                <span />
-                              </TooltipHeader>
+                    <CustomizePersona>
+                      <Title Column>
+                        <h3>산업별 인기 페르소나</h3>
+                        <p>
+                          산업별로 자주 활용되는 페르소나를 지금 바로 확인하고
+                          인사이트를 얻어보세요.
+                          <TooltipButton
+                            onClick={() => setShowTooltip(!showTooltip)}
+                          >
+                            유형별 설명 보기
+                            {showTooltip && (
+                              <TooltipContent>
+                                <TooltipHeader>
+                                  아이콘에 대한 정보
+                                  <span />
+                                </TooltipHeader>
 
-                              <TooltipBody>
-                                <div>
-                                  <Badge Basic>
-                                    <img
-                                      src={images.StatusBadgeBasic}
-                                      alt="기본형"
-                                    />
-                                    기본형
-                                  </Badge>
-                                  <p>
-                                    기본형은 특정 요구 사항 없이도 다양한 질문과
-                                    답변을 처리할 수 있는 표준형 AI
-                                    Person입니다. 범용적인 활용이 가능하며,
-                                    일반적인 상황에 적합합니다.
-                                  </p>
-                                </div>
+                                <TooltipBody>
+                                  <div>
+                                    <Badge Basic>
+                                      <img
+                                        src={images.StatusBadgeBasic}
+                                        alt="기본형"
+                                      />
+                                      기본형
+                                    </Badge>
+                                    <p>
+                                      기본형은 특정 요구 사항 없이도 다양한
+                                      질문과 답변을 처리할 수 있는 표준형 AI
+                                      Person입니다. 범용적인 활용이 가능하며,
+                                      일반적인 상황에 적합합니다.
+                                    </p>
+                                  </div>
 
-                                <div>
-                                  <Badge Custom>
-                                    <img
-                                      src={images.StatusBadgeCustom}
-                                      alt="커스터마이즈"
-                                    />
-                                    커스터마이즈
-                                  </Badge>
-                                  <p>
-                                    커스터마이즈는 특정 요구 사항에 맞춰 설정된
-                                    AI Person입니다. 라이프스타일, 경험, 지식
-                                    등을 학습하여 원하는 목적에 맞게 활용할 수
-                                    있으며, 보다 깊이 있는 대화에 적합합니다.
-                                  </p>
-                                </div>
+                                  <div>
+                                    <Badge Custom>
+                                      <img
+                                        src={images.StatusBadgeCustom}
+                                        alt="커스터마이즈"
+                                      />
+                                      커스터마이즈
+                                    </Badge>
+                                    <p>
+                                      커스터마이즈는 특정 요구 사항에 맞춰
+                                      설정된 AI Person입니다. 라이프스타일,
+                                      경험, 지식 등을 학습하여 원하는 목적에
+                                      맞게 활용할 수 있으며, 보다 깊이 있는
+                                      대화에 적합합니다.
+                                    </p>
+                                  </div>
 
-                                <div> 
-                                  <Badge>
-                                    <img
-                                      src={images.NoteArrowUp}
-                                      alt="요청 필요"
-                                    />
-                                    요청 필요
-                                  </Badge>
-                                  <p>
-                                    요청필요는 사용자 요청에 따라 준비되는 AI
-                                    Person입니다. 원하는 정보와 경험을
-                                    입력하시면 맞춤 제작이 가능합니다.
-                                  </p>
-                                </div>
-                              </TooltipBody>
-                            </TooltipContent>
-                          )}
-                        </TooltipButton>
-                      </p>
-                    </Title>
+                                  <div>
+                                    <Badge>
+                                      <img
+                                        src={images.NoteArrowUp}
+                                        alt="요청 필요"
+                                      />
+                                      요청 필요
+                                    </Badge>
+                                    <p>
+                                      요청필요는 사용자 요청에 따라 준비되는 AI
+                                      Person입니다. 원하는 정보와 경험을
+                                      입력하시면 맞춤 제작이 가능합니다.
+                                    </p>
+                                  </div>
+                                </TooltipBody>
+                              </TooltipContent>
+                            )}
+                          </TooltipButton>
+                        </p>
+                      </Title>
 
-                    <ContentSection>
+                      <ContentSection>
                         <>
                           <PersonaCards>
                             {/* {requestPersonaList.persona.map((persona, index) => (
@@ -642,36 +711,36 @@ const PagePersona2 = () => {
                             <img src={images.PersonaCustomizing} alt="" />
                           </BannerPersona>
                         </>
-                      {!personaButtonState2 && (
-                        <BottomBar>
-                          <p>
-                            {selectedPersonas.length > 0 ? (
-                              <>
-                                선택하신{" "}
-                                <span>{selectedPersonas.length}명</span>의
-                                페르소나와 인터뷰 하시겠어요? ({selectedPersonas.length}/5)
-                              </>
-                            ) : (
-                              "페르소나를 선택하고 그들의 인터뷰를 시작해 보세요 (최대 5명 선택 가능)"
-                            )}
-                          </p>
-                          <Button
-                            Large
-                            Primary
-                            Fill={selectedPersonas.length > 0}
-                            Edit={selectedPersonas.length === 0}
-                            disabled={selectedPersonas.length === 0}
-                            onClick={handleStartInterview}
-                          >
-                            인터뷰 시작하기
-                            <img src={images.ChevronRight} alt="" />
-                          </Button>
-                        </BottomBar>
-                      )}
-                    </ContentSection>
-                  </CustomizePersona>
-              )}
-              </>
+                        {!personaButtonState2 && (
+                          <BottomBar>
+                            <p>
+                              {selectedPersonas.length > 0 ? (
+                                <>
+                                  선택하신{" "}
+                                  <span>{selectedPersonas.length}명</span>의
+                                  페르소나와 인터뷰 하시겠어요?
+                                </>
+                              ) : (
+                                "페르소나를 선택하고 그들의 인터뷰를 시작해 보세요"
+                              )}
+                            </p>
+                            <Button
+                              Large
+                              Primary
+                              Fill={selectedPersonas.length > 0}
+                              Edit={selectedPersonas.length === 0}
+                              disabled={selectedPersonas.length === 0}
+                              onClick={handleStartInterview}
+                            >
+                              인터뷰 시작하기
+                              <img src={images.ChevronRight} alt="" />
+                            </Button>
+                          </BottomBar>
+                        )}
+                      </ContentSection>
+                    </CustomizePersona>
+                  )}
+                </>
               </CardWrap>
             </MainSection>
 
@@ -721,59 +790,65 @@ const PagePersona2 = () => {
               <Title>
                 <p className="required">어떤 페르소나가 필요하신가요?</p>
               </Title>
-
               <div style={{ width: "100%" }}>
                 <CustomTextarea
                   rows={4}
                   placeholder="필요한 페르소나의 특징과 역할을 적어주세요."
-                  value={customizeFormState.personaDescription}
-                  onChange={(e) => handleInputChange('personaDescription', e.target.value)}
-                  required
+                  value={customPersonaForm.description}
+                  onChange={(e) =>
+                    handleCustomPersonaChange("description", e.target.value)
+                  }
                 />
               </div>
-
               <Title>
                 <p className="required">이 페르소나를 사용하려는 목적은 무엇인가요?</p>
               </Title>
-
               <div style={{ width: "100%" }}>
                 <CustomTextarea
                   rows={4}
                   placeholder="해당 페르소나가 필요한 이유, 얻고 싶은 인사이트, 하고자 하는 목표 등을 입력해주세요."
-                  value={customizeFormState.purposeDescription}
-                  onChange={(e) => handleInputChange('purposeDescription', e.target.value)}
-                  required
+                  value={customPersonaForm.purpose}
+                  onChange={(e) =>
+                    handleCustomPersonaChange("purpose", e.target.value)
+                  }
                 />
               </div>
-
               <Title>
                 <p className="required">몇명의 페르소나를 모집하시고 싶으신가요?</p>
               </Title>
 
               <Quantity>
-                <span 
-                  className="down" 
-                  onClick={() => handleQuantityChange('decrease')}
+                <span
+                  className="down"
+                  onClick={() => handleQuantityChange("down")}
+                  disabled={customPersonaForm.quantity <= 1}
                 >
                   줄이기
                 </span>
                 <CustomInput
                   type="number"
-                  value={customizeFormState.quantity}
+                  value={customPersonaForm.quantity}
+                  min={1}
+                  max={20}
                   onChange={(e) => {
-                    const value = Math.max(1, Math.min(10, parseInt(e.target.value) || 1));
-                    handleInputChange('quantity', value);
+                    const value = Math.max(
+                      1,
+                      Math.min(20, parseInt(e.target.value) || 1)
+                    );
+                    setCustomPersonaForm((prev) => ({
+                      ...prev,
+                      quantity: value,
+                    }));
                   }}
-                  required
                 />
-                <span 
-                  className="up" 
-                  onClick={() => handleQuantityChange('increase')}
+                <span
+                  className="up"
+                  onClick={() => handleQuantityChange("up")}
+                  disabled={customPersonaForm.quantity >= 20}
                 >
                   늘리기
                 </span>
               </Quantity>
-
               <AccordionSection>
                 <CustomAccordionHeader
                   None
@@ -794,12 +869,28 @@ const PagePersona2 = () => {
                     <dl>
                       <dt>성별</dt>
                       <dd>
-                        <input type="radio" id="gender1" name="gender" />
+                        <input
+                          type="radio"
+                          id="gender1"
+                          name="gender"
+                          checked={customPersonaForm.gender === "male"}
+                          onChange={() =>
+                            handleCustomPersonaChange("gender", "male")
+                          }
+                        />
                         <label htmlFor="gender1" className="gender men">
                           <img src={images.GenderMen} alt="GenderMen" />
                           남자
                         </label>
-                        <input type="radio" id="gender2" name="gender" />
+                        <input
+                          type="radio"
+                          id="gender2"
+                          name="gender"
+                          checked={customPersonaForm.gender === "female"}
+                          onChange={() =>
+                            handleCustomPersonaChange("gender", "female")
+                          }
+                        />
                         <label htmlFor="gender2" className="gender women">
                           <img src={images.GenderWomen} alt="GenderWomen" />
                           여자
@@ -808,43 +899,29 @@ const PagePersona2 = () => {
                     </dl>
 
                     <dl>
-                      <dt>
-                        연령 (다중 선택)
-                        <p>
-                          * 선택하지 않는 경우, 연령 무관으로 페르소나를
-                          생성합니다.
-                        </p>
-                      </dt>
+                      <dt>연령 (다중 선택)</dt>
                       <dd>
-                        <input type="checkbox" id="age1" name="age" />
-                        <label htmlFor="age1" className="age">
-                          10대
-                        </label>
-                        <input type="checkbox" id="age2" name="age" />
-                        <label htmlFor="age2" className="age">
-                          20대
-                        </label>
-                        <input type="checkbox" id="age3" name="age" />
-                        <label htmlFor="age3" className="age">
-                          30대
-                        </label>
-                        <input type="checkbox" id="age4" name="age" />
-                        <label htmlFor="age4" className="age">
-                          40대
-                        </label>
-                        <input type="checkbox" id="age5" name="age" />
-                        <label htmlFor="age5" className="age">
-                          50대
-                        </label>
-                        <input type="checkbox" id="age6" name="age" />
-                        <label htmlFor="age6" className="age">
-                          60대
-                        </label>
-                        <input type="checkbox" id="age7" name="age" />
-                        <label htmlFor="age7" className="age">
-                          70대 이상
-                        </label>
-                        <label className="age none" />
+                        {["10s", "20s", "30s", "40s", "50s", "60s", "70s"].map(
+                          (age, index) => (
+                            <React.Fragment key={age}>
+                              <input
+                                type="checkbox"
+                                id={`age${index + 1}`}
+                                name="age"
+                                checked={customPersonaForm.ageGroups.includes(
+                                  age
+                                )}
+                                onChange={() => handleAgeGroupChange(age)}
+                              />
+                              <label
+                                htmlFor={`age${index + 1}`}
+                                className="age"
+                              >
+                                {age.replace("s", "대")}
+                              </label>
+                            </React.Fragment>
+                          )
+                        )}
                       </dd>
                     </dl>
 
@@ -854,6 +931,13 @@ const PagePersona2 = () => {
                         <CustomTextarea
                           rows={3}
                           placeholder="필수로 고려해야할 정보가 있다면 작성해주세요."
+                          value={customPersonaForm.additionalInfo}
+                          onChange={(e) =>
+                            handleCustomPersonaChange(
+                              "additionalInfo",
+                              e.target.value
+                            )
+                          }
                         />
                       </dd>
                     </dl>
@@ -1177,6 +1261,7 @@ const Quantity = styled.div`
   justify-content: space-between;
   gap: 12px;
   width: 100%;
+  height: 67px;
 
   span {
     position: relative;
@@ -1191,7 +1276,10 @@ const Quantity = styled.div`
     border: 1px solid ${palette.outlineGray};
     background: ${palette.chatGray};
     cursor: pointer;
-
+    &[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
     &.down:before,
     &.up:before,
     &.up:after {

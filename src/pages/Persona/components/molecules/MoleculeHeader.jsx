@@ -125,18 +125,18 @@ const Notify = styled.div`
   position: relative;
   cursor: pointer;
 
-  ${props => props.Alarm && css`
-    &::after {
-      position: absolute;
-      top: -5px;
-      right: -5px;
-      width: 6px;
-      height: 6px;
-      background: ${palette.red};
-      border-radius: 100px;
-      content: '';
-      animation: blink 1.5s infinite;
-    }
+  // ${props => props.Alarm && css`
+  //   &::after {
+  //     position: absolute;
+  //     top: -5px;
+  //     right: -5px;
+  //     width: 6px;
+  //     height: 6px;
+  //     background: ${palette.red};
+  //     border-radius: 100px;
+  //     content: '';
+  //     animation: blink 1.5s infinite;
+  //   }
 
     @keyframes blink {
       0% { opacity: 1; }

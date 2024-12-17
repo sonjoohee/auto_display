@@ -7,6 +7,7 @@ import {
   PROJECT_ID,
   IS_LOGGED_IN,
   REQUESTED_PERSONA,
+  BUSINESS_ANALYSIS,
 } from "../../../AtomStates";
 import images from "../../../../assets/styles/Images";
 import {
@@ -17,9 +18,10 @@ import {
 import PopupWrap from "../../../../assets/styles/Popup";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
+import { createRequestPersonaOnServer } from "../../../../utils/indexedDB";
 
 const MoleculeRequestPersonaCard = ({ persona, personaIndex }) => {
-  console.log("🚀 ~ MoleculeRequestPersonaCard ~ persona:", persona);
+  const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
   const [requestedPersona, setRequestedPersona] = useAtom(REQUESTED_PERSONA);
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
@@ -82,6 +84,15 @@ const MoleculeRequestPersonaCard = ({ persona, personaIndex }) => {
           isLoggedIn
         );
 
+        const requestData = {
+          projectId: projectId,
+          requestDate: new Date().toLocaleString("ko-KR", {
+            timeZone: "Asia/Seoul",
+          }),
+          businessAnalysis: businessAnalysis,
+          personaRequest: { persona },
+        };
+        createRequestPersonaOnServer(requestData, isLoggedIn);
         // 로컬 상태 업데이트
         setRequestedPersona(newRequestedPersona);
         setShowSuccessPopup(true);
