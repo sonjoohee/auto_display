@@ -196,7 +196,9 @@ const NameTitle = styled.div`
       display: -webkit-box;
       -webkit-line-clamp: 1;
       -webkit-box-orient: vertical;
-      word-break: keep-all;
+      // word-break: keep-all;
+      word-wrap: break-word;
+      word-break: break-word;
     }
   }
 

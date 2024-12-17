@@ -847,6 +847,7 @@ const PageMain = () => {
           </MainSearchWrap>
 
           <ExpertSelectWrap>
+            <h2>🔎 AI 전문가가와 비즈니스 인사이트를 나누세요</h2>
             <ExpertSelectBox>
               <ExpertCard
                 Strategy
@@ -1237,8 +1238,9 @@ const ExpertSelectWrap = styled.div`
     align-items: center;
     gap: 12px;
     font-size: 1rem;
-    font-weight: 500;
-    margin-bottom: 22px;
+    font-weight: 300;
+    line-height: 1.5;
+    margin-bottom: 20px;
   }
 
   a {

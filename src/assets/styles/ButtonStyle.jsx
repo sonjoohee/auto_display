@@ -12,7 +12,9 @@ export const Button = styled.button`
   transition: all 0.3s ease;
 
   &:disabled {
+    color: ${palette.white};
     cursor: not-allowed;
+    background: ${palette.gray300};
   }
 
   ${props => props.Small && css`
@@ -49,14 +51,14 @@ export const Button = styled.button`
     &:hover {
       background: #0B45B1;
 
-      &:disabled {
-        background: ${palette.primary};
-      }
+      // &:disabled {
+      //   background: ${palette.primary};
+      // }
     }
 
-    &:disabled {
-      cursor: not-allowed;
-    }
+    // &:disabled {
+    //   cursor: not-allowed;
+    // }
   `}
 
   ${props => props.Primary && props.Fill && props.Large && css`
@@ -68,10 +70,10 @@ export const Button = styled.button`
     }
 
     &:disabled {
-      color: ${palette.white};
+      // color: ${palette.white};
       border: none;
       // border: 1px solid ${palette.gray300};
-      background: ${palette.gray300};
+      // background: ${palette.gray300};
 
       &:hover {
         background: ${palette.gray300};
@@ -84,9 +86,13 @@ export const Button = styled.button`
     border: 1px solid ${palette.primary};
     background: ${palette.white};
 
-    &:hover {
-      background-color: rgba(34, 111, 255, 0.10);
+    &:disabled {
+      border: none;
     }
+
+    // &:hover {
+    //   background-color: rgba(34, 111, 255, 0.10);
+    // }
   `}
 
   ${props => props.Error && css`
@@ -97,14 +103,14 @@ export const Button = styled.button`
     &:hover {
       background: rgba(255, 47, 62, 0.10);
 
-      &:disabled {
-        background: ${palette.white};
-      }
+      // &:disabled {
+      //   background: ${palette.white};
+      // }
     }
 
-    &:disabled {
-      cursor: not-allowed;
-    }
+    // &:disabled {
+    //   cursor: not-allowed;
+    // }
   `}
 
   ${props => props.Edit && css`
@@ -115,21 +121,21 @@ export const Button = styled.button`
     &:hover {
       background: ${palette.gray50};
 
-      &:disabled {
-        background: ${palette.white};
-      }
+      // &:disabled {
+      //   background: ${palette.white};
+      // }
     }
 
-    &:disabled {
-      color: ${palette.white};
-      border: none;
-      // border: 1px solid ${palette.gray300};
-      background: ${palette.gray300};
+    // &:disabled {
+    //   color: ${palette.white};
+    //   border: none;
+    //   // border: 1px solid ${palette.gray300};
+    //   background: ${palette.gray300};
 
-      &:hover {
-        background: ${palette.gray300};
-      }
-    }
+    //   &:hover {
+    //     background: ${palette.gray300};
+    //   }
+    // }
   `}
 
   
@@ -141,13 +147,13 @@ export const Button = styled.button`
     &:hover {
       background: ${palette.chatGray};
 
-      &:disabled {
-        background: ${palette.chatGray};
-      }
+      // &:disabled {
+      //   background: ${palette.chatGray};
+      // }
     }
 
-    &:disabled {
-      cursor: not-allowed;
-    }
+    // &:disabled {
+    //   cursor: not-allowed;
+    // }
   `}
 `;
