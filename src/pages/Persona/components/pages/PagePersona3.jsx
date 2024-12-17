@@ -112,33 +112,7 @@ const PagePersona3 = () => {
     return () => {
       setIsPersonaAccessible(false); // 페이지 떠날 때 접근 불가로 설정
     };
-  }, [navigate]);
-
-  // useEffect(() => {
-  //   const loadProject = async () => {
-
-  //     if (projectLoadButtonState) {
-
-  //       const savedProjectInfo = await getProjectByIdFromIndexedDB(
-  //         projectId,
-  //         projectLoadButtonState
-  //       );
-  //       if (savedProjectInfo) {
-  //         setBusinessAnalysis(savedProjectInfo.businessAnalysis);
-  //         setPersonaList(savedProjectInfo.personaList);
-  //         setRequestPersonaList(savedProjectInfo.requestPersonaList);
-  //       }
-  //       // setIsLoadingPage(false); // 로딩 완료
-  //     }
-  //     setProjectLoadButtonState(false);
-  //   };
-
-  //   loadProject();
-  // }, [projectId, projectLoadButtonState, navigate]);
-
-  // if (isLoadingPage) {
-  //   return <div>Loading...</div>;
-  // }
+  }, []);
 
   const handleCategoryClick = (categoryId) => {
     setActiveCategory(categoryId);
@@ -311,25 +285,27 @@ const PagePersona3 = () => {
   useEffect(() => {
     // 팝업이 열려있을 때
     if (showToast || showInterviewReady || showEditPersona) {
-      document.body.style.overflow = 'hidden';
-      document.body.style.paddingRight = '15px'; // 스크롤바 자리만큼 패딩 추가하여 레이아웃 밀림 방지
-    } 
+      document.body.style.overflow = "hidden";
+      document.body.style.paddingRight = "15px"; // 스크롤바 자리만큼 패딩 추가하여 레이아웃 밀림 방지
+    }
     // 팝업이 닫혔을 때
     else {
-      document.body.style.overflow = 'auto';
-      document.body.style.paddingRight = '0';
+      document.body.style.overflow = "auto";
+      document.body.style.paddingRight = "0";
     }
 
     // 컴포넌트가 언마운트될 때 원래대로 복구
     return () => {
-      document.body.style.overflow = 'auto';
-      document.body.style.paddingRight = '0';
+      document.body.style.overflow = "auto";
+      document.body.style.paddingRight = "0";
     };
   }, [showToast, showInterviewReady, showEditPersona]);
 
   return (
     <>
-      <ContentsWrap noScroll={showToast || showInterviewReady || showEditPersona}>
+      <ContentsWrap
+        noScroll={showToast || showInterviewReady || showEditPersona}
+      >
         <OrganismIncNavigation />
 
         <MoleculeHeader />
@@ -406,7 +382,9 @@ const PagePersona3 = () => {
                         title={item.title}
                         description={item.description}
                         isSelected={interviewPurpose === item.title}
-                        onSelect={(title) => handleInterviewPurposeSelect(title)}
+                        onSelect={(title) =>
+                          handleInterviewPurposeSelect(title)
+                        }
                         interviewPurpose={interviewPurpose}
                         isActive={interviewPurpose === item.title}
                       />
@@ -577,18 +555,18 @@ const PagePersona3 = () => {
               />
             )}
 
-          {showInterviewTypeAlert && (
-            <PopupWrap
-              Warning
-              title="인터뷰 방식을 선택해주세요"
-              message="인터뷰 목적을 선택하기 전에 인터뷰 방식을 먼저 선택해주세요."
-              buttonType="Outline"
-              confirmText="확인"
-              isModal={false}
-              onCancel={() => setShowInterviewTypeAlert(false)}
-              onConfirm={() => setShowInterviewTypeAlert(false)}
-            />
-          )}
+            {showInterviewTypeAlert && (
+              <PopupWrap
+                Warning
+                title="인터뷰 방식을 선택해주세요"
+                message="인터뷰 목적을 선택하기 전에 인터뷰 방식을 먼저 선택해주세요."
+                buttonType="Outline"
+                confirmText="확인"
+                isModal={false}
+                onCancel={() => setShowInterviewTypeAlert(false)}
+                onConfirm={() => setShowInterviewTypeAlert(false)}
+              />
+            )}
           </AnalysisWrap>
         </MainContent>
       </ContentsWrap>

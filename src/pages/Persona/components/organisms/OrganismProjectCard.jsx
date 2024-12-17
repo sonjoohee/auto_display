@@ -589,6 +589,8 @@ const ViewInfo = styled.div`
   }
 
   .title {
+    flex: 4; // 4/10 비율
+    min-width: 0; // flex-basis 오버플로우 방지
     display: flex;
     align-items: flex-end;
     justify-content: flex-start;
@@ -604,6 +606,8 @@ const ViewInfo = styled.div`
   }
 
   .info {
+    flex: 4; // 3/10 비율
+    min-width: 0; // flex-basis 오버플로우 방지
     display: flex;
     align-items: center;
     justify-content: center;
@@ -645,10 +649,13 @@ const ViewInfo = styled.div`
   }
 
   .button {
+    flex: 3; // 3/10 비율
+    min-width: 0; // flex-basis 오버플로우 방지
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
     gap: 8px;
+    margin-right: 5px;
 
     button {
       font-family: "Pretendard", poppins;
