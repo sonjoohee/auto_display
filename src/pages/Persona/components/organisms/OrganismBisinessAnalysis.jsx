@@ -171,7 +171,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
     if (inputs.field1.value && inputs.field2.value) {
       // 새로운 비즈니스 분석 데이터 생성
       const updatedBusinessAnalysis = {
-        ...businessAnalysis,
+        input: inputs.field1.value,
         title: inputs.field1.value,
         characteristics: inputs.field2.value,
         features: inputs.field3.value,
@@ -224,7 +224,11 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
       setLoadingState(true);
 
       const data = {
-        business_analysis_data: businessAnalysis,
+        business_analysis_data: {
+          title: inputs.field1.value,
+          characteristics: inputs.field2.value,
+          features: inputs.field3.value,
+        },
         keyword: inputs.field2.value,
       };
       let response = await axios.post(
