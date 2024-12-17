@@ -85,23 +85,20 @@ const PageMyProject = () => {
 
   useEffect(() => {
     const loadProjectList = async () => {
-      // 1. 로그인 여부 확인
-      console.log("isLoggedIn22222222222222222", isLoggedIn);
-      // if (isLoggedIn) {
-        console.log("🚀 ~ loadProjectList ~ isLoggedIn:", isLoggedIn);
-        // 2. 로그인 상태라면 서버에서 새로운 대화 ID를 생성하거나, 저장된 대화를 불러옴
         const savedProjectListInfo = await getProjectListByIdFromIndexedDB(
           true
         );
         if (savedProjectListInfo) {
-          console.log(
-            "🚀 ~ loadProjectList ~ savedProjectListInfo:",
-            savedProjectListInfo
+          const sortedList = [...savedProjectListInfo].map(project => ({
+            ...project,
+            reportList: project.reportList?.sort((a, b) => 
+              new Date(b.createDate) - new Date(a.createDate)
+            ) || []
+          })).sort((a, b) => 
+            new Date(b.updateDate) - new Date(a.updateDate)
           );
-          setProjectList(savedProjectListInfo);
+          setProjectList(sortedList);
         }
-        // setIsLoadingPage(false); // 로딩 완료
-      // }
       setProjectLoadButtonState(false);
     };
 

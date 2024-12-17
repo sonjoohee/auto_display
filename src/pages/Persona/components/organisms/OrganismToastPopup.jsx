@@ -535,7 +535,13 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
         {questionAnswers.map((answer, index) => (
           <AnswerItem key={index}>
             <TypeName>
-              <Thumb />
+              <Thumb>
+                <img 
+                  // src={`/ai_person/${answer.persona.img}.jpg`} 
+                  src={`/ai_person/ai_person_0000138_avartar.jpg`}
+                  alt={answer.persona.persona} 
+                />
+              </Thumb>
               {answer.persona.persona}
             </TypeName>
             <TextContainer>{answer.answer}</TextContainer>
@@ -544,7 +550,13 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
         {isGenerating && interviewStatus[questionIndex] === "Ing" && (
           <AnswerItem>
             <TypeName>
-              <Thumb />
+              <Thumb>
+                <img 
+                  // src={`/ai_person/${answer.persona.img}.jpg`} 
+                  src={`/ai_person/ai_person_0000138_avartar.jpg`}
+                  alt={"ai_person_avartar"} 
+                />
+              </Thumb>
               {personaList.selected[questionAnswers.length].persona}
             </TypeName>
             <TextContainer>
@@ -564,7 +576,13 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
         {questionAnswers.map((answer, index) => (
           <AnswerItem key={index}>
             <TypeName>
-              <Thumb />
+              <Thumb>
+                <img 
+                  // src={`/ai_person/${answer.persona.img}.jpg`} 
+                  src={`/ai_person/ai_person_0000138_avartar.jpg`}
+                  alt={answer.persona.persona}
+                />
+              </Thumb>
               {answer.persona.persona}
             </TypeName>
             <TextContainer>{answer.answer}</TextContainer>
@@ -1193,7 +1211,14 @@ const Thumb = styled.div`
   width: 32px;
   height: 32px;
   border-radius: 50%;
+  overflow: hidden;
   background: ${palette.gray200};
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 `;
 
 const TextContainer = styled.div`
