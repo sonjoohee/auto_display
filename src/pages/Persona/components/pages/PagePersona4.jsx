@@ -223,11 +223,17 @@ const PagePersona4 = () => {
             },
             isLoggedIn
           );
+          const currentProject = await getProjectByIdFromIndexedDB(
+            projectId,
+            isLoggedIn
+          );
+          const currentReportList = currentProject?.reportList || [];
+
           await updateProjectOnServer(
             projectId,
             {
               reportList: [
-                ...reportList,
+                ...currentReportList, // 서버의 기존 데이터 유지
                 {
                   reportId: reportId,
                   reportTitle: selectedInterviewPurpose,
