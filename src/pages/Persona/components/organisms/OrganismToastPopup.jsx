@@ -295,6 +295,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               hashtag: personaList.selected[i].tag,
               summary: personaList.selected[i].summary,
             };
+            console.log("🚀 ~ processInterview ~ personaInfo:", personaInfo);
 
             const data = {
               business_analysis_data: businessAnalysis,
@@ -346,7 +347,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                 },
               ],
             }));
-
+            console.log("🚀 ~ processInterview ~ setAnswers:", answers);
             if (i === personaList.selected.length - 1) {
               // 모든 페르소나의 답변이 완료되면 interviewData 업데이트
               setInterviewData((prev) => {
@@ -358,6 +359,10 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                 };
                 return newData;
               });
+              console.log(
+                "🚀 ~ processInterview ~ setInterviewData:",
+                interviewData
+              );
 
               newStatus[currentQuestionIndex] = "Complete";
               setInterviewStatus(newStatus);
@@ -536,9 +541,9 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
           <AnswerItem key={index}>
             <TypeName>
               <Thumb>
-                <img 
-                  src={`/ai_person/${answer.persona.personaImg}.jpg`} 
-                  alt={answer.persona.persona} 
+                <img
+                  src={`/ai_person/${answer.persona.personaImg}.jpg`}
+                  alt={answer.persona.persona}
                 />
               </Thumb>
               {answer.persona.persona}
@@ -550,9 +555,11 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
           <AnswerItem>
             <TypeName>
               <Thumb>
-                <img 
-                  src={`/ai_person/${personaList.selected[questionAnswers.length].personaImg}.jpg`} 
-                  alt={personaList.selected[questionAnswers.length].persona} 
+                <img
+                  src={`/ai_person/${
+                    personaList.selected[questionAnswers.length].personaImg
+                  }.jpg`}
+                  alt={personaList.selected[questionAnswers.length].persona}
                 />
               </Thumb>
               {personaList.selected[questionAnswers.length].persona}
@@ -575,8 +582,8 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
           <AnswerItem key={index}>
             <TypeName>
               <Thumb>
-                <img 
-                  src={`/ai_person/${answer.persona.personaImg}.jpg`} 
+                <img
+                  src={`/ai_person/${answer.persona.personaImg}.jpg`}
                   alt={answer.persona.persona}
                 />
               </Thumb>
