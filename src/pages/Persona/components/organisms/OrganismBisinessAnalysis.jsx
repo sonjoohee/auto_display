@@ -83,6 +83,9 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
     field3: {
       value: "",
     },
+    field4: {
+      value: "",
+    },
   });
 
   // 입력 상태 확인 함수
@@ -125,6 +128,9 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
       },
       field3: {
         value: businessAnalysis.features,
+      },
+      field4: {
+        value: businessAnalysis.category,
       },
     });
   };
@@ -175,6 +181,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
         title: inputs.field1.value,
         characteristics: inputs.field2.value,
         features: inputs.field3.value,
+        category: inputs.field4.value,
       };
 
       await updateProjectOnServer(
@@ -184,6 +191,12 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
         },
         isLoggedIn
       );
+
+      setCategoryColor({
+        first: getCategoryColor(updatedBusinessAnalysis.category.first),
+        second: getCategoryColor(updatedBusinessAnalysis.category.second),
+        third: getCategoryColor(updatedBusinessAnalysis.category.third),
+      });
 
       // 상태 업데이트
       setBusinessAnalysis(updatedBusinessAnalysis);
@@ -209,6 +222,10 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
         ...prev.field3,
         value: businessAnalysis.features,
       },
+      field4: {
+        ...prev.field4,
+        value: businessAnalysis.category,
+      },
     }));
   };
 
@@ -228,6 +245,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
           title: inputs.field1.value,
           characteristics: inputs.field2.value,
           features: inputs.field3.value,
+          category: inputs.field4.value,
         },
         keyword: inputs.field2.value,
       };
@@ -281,13 +299,11 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
           field3: {
             value: businessData["추가_주요기능"],
           },
+          field4: {
+            value: categoryData,
+          },
         }));
       }
-      setCategoryColor({
-        first: getCategoryColor(categoryData.first),
-        second: getCategoryColor(categoryData.second),
-        third: getCategoryColor(categoryData.third),
-      });
     } catch (error) {
       console.error("Error in handleRegenerate:", error);
     } finally {
@@ -423,7 +439,8 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
               !response.data.business_analysis["주요_목적_및_특징"].length ||
               !response.data.business_analysis["주요기능"].length ||
               !response.data.category.hasOwnProperty("first") ||
-              !response.data.category.first)
+              !response.data.category.first ||
+              response.data.category.first === "기타")
           ) {
             attempts += 1;
 
@@ -508,7 +525,8 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
           !response.data.business_analysis["주요_목적_및_특징"].length ||
           !response.data.business_analysis["주요기능"].length ||
           !response.data.category.hasOwnProperty("first") ||
-          !response.data.category.first)
+          !response.data.category.first ||
+          response.data.category.first === "기타")
       ) {
         attempts += 1;
 
@@ -604,9 +622,9 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
             <span>태그</span>
             <FormBox>
               <TagWrap>
-                <Tag color={categoryColor.first} />
-                <Tag color={categoryColor.second} />
-                <Tag color={categoryColor.third} />
+                <Tag color={getCategoryColor(inputs.field4.value.first)} />
+                <Tag color={getCategoryColor(inputs.field4.value.second)} />
+                <Tag color={getCategoryColor(inputs.field4.value.third)} />
               </TagWrap>
             </FormBox>
           </FormEdit>
