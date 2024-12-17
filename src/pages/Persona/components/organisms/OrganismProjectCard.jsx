@@ -61,20 +61,30 @@ const OrganismProjectCard = ({ project, index }) => {
     }
   };
 
+  //   const getRecruitStatusText = (project) => {
+  //     const selectedCount = project.personaList?.selected?.length || 0;
+  //     const requestCount = project.requestPersonaList?.persona?.length || 0;
+
+  //     if (selectedCount === 0 && requestCount === 0) return "대기중";
+  //     if (selectedCount === requestCount) return "모집 완료";
+  //     return "모집 중";
+  //   };
+  //   const getRecruitStatus = (project) => {
+  //     const status = getRecruitStatusText(project);
+  //     if (status === "모집 완료") return "complete";
+  //     if (status === "모집 중") return "ing";
+  //     return "";
+  //   };
   const getRecruitStatusText = (project) => {
-    const selectedCount = project.personaList?.selected?.length || 0;
-    const requestCount = project.requestPersonaList?.persona?.length || 0;
+    const requestedPersonaCount = project.requestedPersona?.length || 0;
 
-    if (selectedCount === 0 && requestCount === 0) return "대기중";
-    if (selectedCount === requestCount) return "모집 완료";
-    return "모집 중";
+    if (requestedPersonaCount === 0) return "대기 중";
+    return `모집 중`;
+    // return `${requestedPersonaCount}개 그룹 모집 중`;
   };
-
   const getRecruitStatus = (project) => {
-    const status = getRecruitStatusText(project);
-    if (status === "모집 완료") return "complete";
-    if (status === "모집 중") return "ing";
-    return "";
+    const requestedPersonaCount = project.requestedPersona?.length || 0;
+    return requestedPersonaCount === 0 ? "complete" : "ing";
   };
 
   const navigateToPersonaPage = (projectId) => {
@@ -144,7 +154,9 @@ const OrganismProjectCard = ({ project, index }) => {
               <p>{project.reportList?.length || 0}건</p>
             </div>
             <div>
-              <Button Small Outline Fill onClick={() => toggleView(index)}>자세히 보기</Button>
+              <Button Small Outline Fill onClick={() => toggleView(index)}>
+                자세히 보기
+              </Button>
             </div>
           </Report>
         </ProjectInfo>
@@ -155,7 +167,12 @@ const OrganismProjectCard = ({ project, index }) => {
               {project.personaList || 0}명의 맞춤 페르소나가 사용자님을 기다리고
               있어요!
             </p>
-            <Button Small Primary Fill onClick={() => navigateToPersonaPage(project._id)}>
+            <Button
+              Small
+              Primary
+              Fill
+              onClick={() => navigateToPersonaPage(project._id)}
+            >
               바로가기
             </Button>
           </ProjectButton>
@@ -179,22 +196,21 @@ const OrganismProjectCard = ({ project, index }) => {
                       <img src={images.FileSearch} alt="문항수" />
                       문항수
                     </span>
-                    <p>
-                      {report.interviewData || 0}개
-                    </p>
+                    <p>{report.interviewData || 0}개</p>
                   </div>
                   <div>
                     <span>
                       <img src={images.People} alt="참여페르소나" />
                       참여페르소나
                     </span>
-                    <p>
-                      {report.selectedPersona || 0}명
-                    </p>
+                    <p>{report.selectedPersona || 0}명</p>
                   </div>
                 </div>
                 <div className="button">
-                  <Button Small Outline Fill
+                  <Button
+                    Small
+                    Outline
+                    Fill
                     onClick={() =>
                       navigateToInterviewReportDescriptionPage(report.reportId)
                     }
@@ -202,7 +218,9 @@ const OrganismProjectCard = ({ project, index }) => {
                   >
                     인터뷰 상세 보기
                   </Button>
-                  <Button Small Primary
+                  <Button
+                    Small
+                    Primary
                     onClick={() =>
                       navigateToInterviewReportPage(report.reportId)
                     }
