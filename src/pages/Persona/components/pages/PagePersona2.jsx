@@ -546,6 +546,22 @@ const PagePersona2 = () => {
     }
   };
 
+  // 폼 유효성 검사 함수 추가
+  const isFormValid = () => {
+    // 필수 필드 검사
+    const requiredFields = {
+      description: customPersonaForm.description.trim(),
+      purpose: customPersonaForm.purpose.trim(),
+    };
+
+    // 모든 필수 필드가 채워져 있는지 확인
+    const isRequiredFieldsFilled = Object.values(requiredFields).every(
+      (field) => field.length > 0
+    );
+
+    return isRequiredFieldsFilled;
+  };
+
   return (
     <>
       <ContentsWrap>
@@ -718,10 +734,10 @@ const PagePersona2 = () => {
                                 <>
                                   선택하신{" "}
                                   <span>{selectedPersonas.length}명</span>의
-                                  페르소나와 인터뷰 하시겠어요?
+                                  페르소나와 인터뷰 하시겠어요? ({selectedPersonas.length}/5)
                                 </>
                               ) : (
-                                "페르소나를 선택하고 그들의 인터뷰를 시작해 보세요"
+                                "페르소나를 선택하고 그들의 인터뷰를 시작해 보세요 (최대 5명 선택 가능)"
                               )}
                             </p>
                             <Button
