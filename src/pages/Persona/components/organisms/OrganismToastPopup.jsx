@@ -706,7 +706,10 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
   };
 
   const handleCheckResult = async () => {
-    handleWarningClose();
+    setActive(false);
+    if (onClose) {
+      onClose();
+    }
     setIsPersonaAccessible(true);
     try {
       let newReportId = await createProjectReportOnServer(isLoggedIn);
