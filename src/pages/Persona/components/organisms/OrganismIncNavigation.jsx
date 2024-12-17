@@ -7,6 +7,7 @@ import { useAtom } from "jotai";
 import axios from "axios";
 import { SubtractiveBlending } from "three/src/constants.js";
 import panelimages from "../../../../assets/styles/PanelImages";
+import PopupWrap from "../../../../assets/styles/Popup";
 
 import {
   PASSWORD,
@@ -1497,6 +1498,19 @@ const OrganismIncNavigation = () => {
     setShowSubNav(false);
   };
 
+  // 새로운 핸들러 함수 추가
+  const handleConfirmAndNavigate = () => {
+    handleNewProjectClick(); // 새 프로젝트로 이동
+    setIsPopupOpen(false); // 팝업 닫기
+  };
+
+  // PopupWrap을 위한 state와 handler 추가
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  const handleClosePopup = () => {
+    setIsPopupOpen(false);
+  };
+
   return (
     <>
       <NavigationWrap>
@@ -2166,7 +2180,18 @@ const OrganismIncNavigation = () => {
           </div>
         </div>
       </Popup>
-    )}
+      )}
+
+      {/* <PopupWrap
+        Warning
+        title="홈으로 이동하시겠습니까?"
+        buttonType="Outline"
+        closeText="아니요"
+        confirmText="이동하기"
+        isModal={false}
+        onClose={handleClosePopup}
+        onConfirm={handleConfirmAndNavigate} // 새로운 핸들러 함수 사용
+      /> */}
     </>
   );
 };

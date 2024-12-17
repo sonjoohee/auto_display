@@ -624,7 +624,7 @@ const PagePersona4 = () => {
                     <span
                       className="next"
                       onClick={() => handleSlide("next")}
-                      style={{ opacity: currentSlide === 2 ? 0.4 : 1 }}
+                      style={{ opacity: currentSlide === 3 ? 0.4 : 1 }}
                     />
                   </div>
                 </FindTitle>
@@ -823,6 +823,7 @@ const AccordionHeader = styled.div`
   }
 
   &:after {
+    flex-shrink: 0;
     width: 12px;
     height: 12px;
     margin-left: auto;
@@ -887,8 +888,13 @@ const BgInside = styled.div`
   div {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 8px;
     font-weight: 300;
+
+    p + p {
+      padding-top: 8px;
+      border-top: 1px solid ${palette.outlineGray};
+    }
   }
 `;
 
@@ -900,6 +906,7 @@ const InterviewFind = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   gap: 20px;
+  margin-bottom: 140px;
 `;
 
 const FindTitle = styled.div`
