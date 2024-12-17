@@ -744,7 +744,7 @@ const PagePersona2 = () => {
                               Large
                               Primary
                               Fill={selectedPersonas.length > 0}
-                              Edit={selectedPersonas.length === 0}
+                              // Edit={selectedPersonas.length === 0}
                               disabled={selectedPersonas.length === 0}
                               onClick={handleStartInterview}
                             >

@@ -62,6 +62,8 @@ const UserMessageContainer = styled.div`
       text-align:left;
       line-height: 1.6;
       font-weight:300;
+      word-wrap: break-word;
+      word-break: break-word;
     }
   }
 
