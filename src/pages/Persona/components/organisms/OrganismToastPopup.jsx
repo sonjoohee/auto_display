@@ -289,7 +289,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             }
 
             const personaInfo = {
-              id: personaList.selected[i].personIndex.replace(/[^1-9]/g, ""),
+              id: personaList.selected[i].personIndex.replace(/[^0-9]/g, ""),
               name: personaList.selected[i].persona,
               keyword: personaList.selected[i].keyword,
               hashtag: personaList.selected[i].tag,
