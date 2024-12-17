@@ -1198,7 +1198,7 @@ const TypeName = styled.div`
   justify-content: flex-start;
   gap: 12px;
   font-size: 0.875rem;
-  font-weight: 300;
+  font-weight: 500;
   line-height: 1.5;
   color: ${palette.gray800};
 `;
