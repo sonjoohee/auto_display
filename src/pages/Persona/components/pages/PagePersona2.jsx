@@ -834,7 +834,7 @@ const PagePersona2 = () => {
                                         대화에 적합합니다.
                                       </p>
                                     </div>
-
+                                    {/* 
                                     <div>
                                       <Badge>
                                         <img
@@ -848,7 +848,8 @@ const PagePersona2 = () => {
                                         AI Person입니다. 원하는 정보와 경험을
                                         입력하시면 맞춤 제작이 가능합니다.
                                       </p>
-                                    </div>
+                                    </div> 
+                                    */}
                                   </TooltipBody>
                                 </TooltipContent>
                               )}

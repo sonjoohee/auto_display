@@ -383,6 +383,7 @@ const CardContainer = styled.div`
 
       + div {
         padding-top: 16px;
+        border-radius: 0;
         border-top: 1px solid ${palette.outlineGray};
       }
     `}
@@ -579,6 +580,7 @@ const ToggleButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 6px;
   border: none;
   background: none;
   cursor: pointer;
@@ -594,7 +596,7 @@ const ToggleButton = styled.button`
       props.$isExpanded
         ? "translate(-50%, -50%) rotate(45deg)"
         : "translate(-50%, -50%) rotate(-135deg)"};
-    margin-top: 2px;
+    // margin-top: 2px;
     border-top: 1px solid ${palette.gray500};
     border-left: 1px solid ${palette.gray500};
     transition: all 0.5s;

@@ -683,12 +683,38 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
               <FormBox regenerate>
                 <MoleculeRecreate Medium onRegenerate={handleAIDetailClick} />
               </FormBox>
-            ) : (
-              <FormBox status={getInputStatus(inputs.field2)}>
-                {loadingState ? (
-                  <>
-                    <SkeletonLine />
-                    <SkeletonLine />
+
+            </FormEdit>
+
+            <FormEdit>
+              <span>태그</span>
+              <FormBox>
+                <TagWrap>
+                  <Tag color={getCategoryColor(inputs.field4.value.first)} />
+                  <Tag color={getCategoryColor(inputs.field4.value.second)} />
+                  <Tag color={getCategoryColor(inputs.field4.value.third)} />
+                </TagWrap>
+              </FormBox>
+            </FormEdit>
+
+            <FormEdit>
+              <span>비즈니스 설명</span>
+              {showRegenerateButton2 ? (
+                <FormBox regenerate>
+                  <MoleculeRecreate Medium onRegenerate={handleAIDetailClick}/>
+                </FormBox>
+              ) : (
+                <FormBox status={getInputStatus(inputs.field2)}>
+                  {loadingState ? (
+                    <>
+                    <div style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
+                      <SkeletonLine />
+                      <SkeletonTitle />
+                      <SkeletonLine />
+                      <SkeletonLine />
+                      <SkeletonLine />
+                    </div>
+
                   </>
                 ) : (
                   <>
@@ -1146,7 +1172,7 @@ const Tag = styled.span`
           background: rgba(255, 168, 185, 0.06);
         `;
       default:
-        return "";
+        return "display: none;";
     }
   }}
 `;
