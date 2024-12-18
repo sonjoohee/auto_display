@@ -634,7 +634,7 @@ const PagePersona2 = () => {
     setCustomPersonaForm((prev) => {
       const newQuantity =
         type === "up"
-          ? Math.min(prev.quantity + 1, 20) // 최대 20
+          ? Math.min(prev.quantity + 1, 30) // 최대 30
           : Math.max(prev.quantity - 1, 1); // 최소 1
       return {
         ...prev,
@@ -1035,7 +1035,7 @@ const PagePersona2 = () => {
               </div>
               <Title>
                 <p className="required">
-                  몇명의 페르소나를 모집하시고 싶으신가요?
+                  몇명의 페르소나를 모집하시고 싶으신가요?(최대 30명)
                 </p>
               </Title>
 
@@ -1051,11 +1051,11 @@ const PagePersona2 = () => {
                   type="number"
                   value={customPersonaForm.quantity}
                   min={1}
-                  max={20}
+                  max={30}
                   onChange={(e) => {
                     const value = Math.max(
                       1,
-                      Math.min(20, parseInt(e.target.value) || 1)
+                      Math.min(30, parseInt(e.target.value) || 1)
                     );
                     setCustomPersonaForm((prev) => ({
                       ...prev,
@@ -1066,7 +1066,7 @@ const PagePersona2 = () => {
                 <span
                   className="up"
                   onClick={() => handleQuantityChange("up")}
-                  disabled={customPersonaForm.quantity >= 20}
+                  disabled={customPersonaForm.quantity >= 30}
                 >
                   늘리기
                 </span>
@@ -1174,7 +1174,7 @@ const PagePersona2 = () => {
         <PopupWrap
           Warning
           title="작업이 중단되었습니다"
-          message="데이터 오류로 인해 페이지가 초기화됩니다 작업 중인 내용은 작업관리 페이지를 확인하세요"
+          message="데이터 오류로 인해 페이지가 초기화됩니다.\n작업 중인 내용은 작업관리 페이지를 확인하세요."
           buttonType="Outline"
           closeText="확인"
           onConfirm={() => {

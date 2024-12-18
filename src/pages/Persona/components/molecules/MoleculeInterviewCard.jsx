@@ -81,7 +81,7 @@ const MoleculeInterviewCard = ({
 
   const loadInterviewQuestion = async () => {
     setShowRegenerateButton(false);
-    
+
     const existingQuestions = interviewQuestionListState.find(
       (item) => item.theory_name === title
     );
@@ -184,97 +184,101 @@ const MoleculeInterviewCard = ({
 
   return (
     <>
-    <CardContainer 
-      $isSelected={isSelected} 
-      NoBackground={NoBackground}
-      {...props}
-    >
-      <MainContent>
-        <CheckCircle $isSelected={isSelected} onClick={() => {setSelectedInterviewPurpose(title); onSelect(title)}} />
-        <ContentWrapper>
-          <TitleSection>
-            <Title>{title}</Title>
-          </TitleSection>
-          {description && <Description>{description}</Description>}
-        </ContentWrapper>
-
-        <ToggleButton
-          $isExpanded={isExpanded}
-          onClick={() => setIsExpanded(!isExpanded)}
-        />
-      </MainContent>
-
-    {isExpanded && (
-      <DescriptionSection $isExpanded={isExpanded}>
-        {!state.showQuestions ? (
-          <span
-            onClick={async () => {
-              setState((prev) => ({ ...prev, showQuestions: true }));
-              await loadInterviewQuestion();
+      <CardContainer
+        $isSelected={isSelected}
+        NoBackground={NoBackground}
+        {...props}
+      >
+        <MainContent>
+          <CheckCircle
+            $isSelected={isSelected}
+            onClick={() => {
+              setSelectedInterviewPurpose(title);
+              onSelect(title);
             }}
-          >
-            <img src={images.FileSearch} alt="문항보기" />
-            문항보기
-          </span>
-        ) : (
-          showRegenerateButton ? (
-            <ListUL>
-              <MoleculeRecreate Small onRegenerate={loadInterviewQuestion}/>
-            </ListUL>
-          ) : (
-            <ListUL>
-              <ul>
-                {isLoadingQuestion ? (
-                <>
-                  <li>
-                    <span className="number">Q1.</span>
-                    <SkeletonLine width="100%" height="20px" />
-                  </li>
-                  <li>
-                    <span className="number">Q2.</span>
-                    <SkeletonLine width="100%" height="20px" />
-                  </li>
-                  <li>
-                    <span className="number">Q3.</span>
-                    <SkeletonLine width="100%" height="20px" />
-                  </li>
-                </>
-                ) : (
-                  // 실제 질문 데이터
-                  interviewQuestionListState
-                    .find((item) => item.theory_name === title)
-                    ?.questions.slice(2, 5)
-                    .map((item, index) => (
-                      <li key={index}>
-                        <span className="number">Q{index + 1}.</span>
-                        {item.question}
+          />
+          <ContentWrapper>
+            <TitleSection>
+              <Title>{title}</Title>
+            </TitleSection>
+            {description && <Description>{description}</Description>}
+          </ContentWrapper>
+
+          <ToggleButton
+            $isExpanded={isExpanded}
+            onClick={() => setIsExpanded(!isExpanded)}
+          />
+        </MainContent>
+
+        {isExpanded && (
+          <DescriptionSection $isExpanded={isExpanded}>
+            {!state.showQuestions ? (
+              <span
+                onClick={async () => {
+                  setState((prev) => ({ ...prev, showQuestions: true }));
+                  await loadInterviewQuestion();
+                }}
+              >
+                <img src={images.FileSearch} alt="문항보기" />
+                문항보기
+              </span>
+            ) : showRegenerateButton ? (
+              <ListUL>
+                <MoleculeRecreate Small onRegenerate={loadInterviewQuestion} />
+              </ListUL>
+            ) : (
+              <ListUL>
+                <ul>
+                  {isLoadingQuestion ? (
+                    <>
+                      <li>
+                        <span className="number">Q1.</span>
+                        <SkeletonLine width="100%" height="20px" />
                       </li>
-                    ))
-                )}
-              </ul>
-            </ListUL>
-          )
+                      <li>
+                        <span className="number">Q2.</span>
+                        <SkeletonLine width="100%" height="20px" />
+                      </li>
+                      <li>
+                        <span className="number">Q3.</span>
+                        <SkeletonLine width="100%" height="20px" />
+                      </li>
+                    </>
+                  ) : (
+                    // 실제 질문 데이터
+                    interviewQuestionListState
+                      .find((item) => item.theory_name === title)
+                      ?.questions.slice(2, 5)
+                      .map((item, index) => (
+                        <li key={index}>
+                          <span className="number">Q{index + 1}.</span>
+                          {item.question}
+                        </li>
+                      ))
+                  )}
+                </ul>
+              </ListUL>
+            )}
+          </DescriptionSection>
         )}
-      </DescriptionSection>
-    )}
-    </CardContainer>
-    {showErrorPopup && (
-      <PopupWrap
-        Warning
-        title="작업이 중단되었습니다"
-        message="데이터 오류로 인해 페이지가 초기화됩니다 작업 중인 내용은 작업관리 페이지를 확인하세요"
-        buttonType="Outline"
-        closeText="확인"
-        onConfirm={() => {
-          setShowErrorPopup(false);
-          window.location.href = "/";
-        }}
-        onCancel={() => {
-          setShowErrorPopup(false);
-          window.location.href = "/";
-        }}
-      />
-    )}
+      </CardContainer>
+      {showErrorPopup && (
+        <PopupWrap
+          Warning
+          title="작업이 중단되었습니다"
+          message="데이터 오류로 인해 페이지가 초기화됩니다.\n작업 중인 내용은 작업관리 페이지를 확인하세요."
+          buttonType="Outline"
+          closeText="확인"
+          onConfirm={() => {
+            setShowErrorPopup(false);
+            window.location.href = "/";
+          }}
+          onCancel={() => {
+            setShowErrorPopup(false);
+            window.location.href = "/";
+          }}
+        />
+      )}
     </>
   );
 };
@@ -290,12 +294,13 @@ const CardContainer = styled.div`
   width: 100%;
   padding: 24px 20px;
   border-radius: 10px;
-  border: 1px solid ${props => props.$isSelected ? palette.primary : palette.outlineGray};
-  background: ${props => {
+  border: 1px solid
+    ${(props) => (props.$isSelected ? palette.primary : palette.outlineGray)};
+  background: ${(props) => {
     if (props.NoBackground) {
       return props.$isSelected ? palette.white : palette.white;
     }
-    return props.$isSelected ? 'rgba(34, 111, 255, 0.10)' : palette.white;
+    return props.$isSelected ? "rgba(34, 111, 255, 0.10)" : palette.white;
   }};
   cursor: pointer;
   transition: all 0.2s ease-in-out;

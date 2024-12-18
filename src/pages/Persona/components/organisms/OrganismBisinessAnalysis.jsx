@@ -37,7 +37,9 @@ import MoleculeRecreate from "../molecules/MoleculeRecreate";
 // import { updateProjectReportOnServer } from "../../../../utils/indexedDB";
 
 const OrganismBusinessAnalysis = ({ personaStep }) => {
-  const [isLoadingBusinessAnalysis, setIsLoadingBusinessAnalysis] = useAtom(IS_LOADING_BUSINESS_ANALYSIS);
+  const [isLoadingBusinessAnalysis, setIsLoadingBusinessAnalysis] = useAtom(
+    IS_LOADING_BUSINESS_ANALYSIS
+  );
   const [isProjectIdReady, setIsProjectIdReady] = useState(false);
   const [projectId, setprojectId] = useAtom(PROJECT_ID);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
@@ -611,32 +613,34 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
       setIsLoadingBusinessAnalysis(false);
     }
   };
-  
+
   return (
     <>
       <Title>
-        <h3>비즈니스 분석</h3> 
-        {!personaButtonState1 && !isLoadingBusinessAnalysis && personaStep === 1 && (
-          <ButtonGroup>
-            {isEditMode ? (
-              <IconButton onClick={handleSaveClick}>
-                <img src={images.FolderArrowDown} alt="저장하기" />
-                <span>저장하기</span>
-              </IconButton>
-            ) : (
-              <>
-                <IconButton onClick={handleRegenerate}>
-                  <img src={images.IconRepeatSquare} alt="재생성" />
-                  <span>재생성하기</span>
+        <h3>비즈니스 분석</h3>
+        {!personaButtonState1 &&
+          !isLoadingBusinessAnalysis &&
+          personaStep === 1 && (
+            <ButtonGroup>
+              {isEditMode ? (
+                <IconButton onClick={handleSaveClick}>
+                  <img src={images.FolderArrowDown} alt="저장하기" />
+                  <span>저장하기</span>
                 </IconButton>
-                <IconButton onClick={handleEditClick}>
-                  <img src={images.PencilSquare} alt="수정하기" />
-                  <span>수정하기</span>
-                </IconButton>
-              </>
-            )}
-          </ButtonGroup>
-        )}
+              ) : (
+                <>
+                  <IconButton onClick={handleRegenerate}>
+                    <img src={images.IconRepeatSquare} alt="재생성" />
+                    <span>재생성하기</span>
+                  </IconButton>
+                  <IconButton onClick={handleEditClick}>
+                    <img src={images.PencilSquare} alt="수정하기" />
+                    <span>수정하기</span>
+                  </IconButton>
+                </>
+              )}
+            </ButtonGroup>
+          )}
       </Title>
       {isLoadingBusinessAnalysis ? (
         <Card>
@@ -644,77 +648,77 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
         </Card>
       ) : showRegenerateButton1 ? (
         <Card>
-          <MoleculeRecreate Large onRegenerate={handleRegenerate}/>
+          <MoleculeRecreate Large onRegenerate={handleRegenerate} />
         </Card>
       ) : isEditMode ? (
-          <Card Edit>
-            <FormEdit>
-              <span>비즈니스 명</span>
-              <FormBox status={getInputStatus(inputs.field1)}>
-                <CustomInput
-                  Edit
-                  type="text"
-                  placeholder="비즈니스 명을 입력해주세요."
-                  value={inputs.field1.value}
-                  onChange={(e) => handleChange(e, "field1")}
-                  status={getInputStatus(inputs.field1)}
-                />
-              </FormBox>
-            </FormEdit>
+        <Card Edit>
+          <FormEdit>
+            <span>비즈니스 명</span>
+            <FormBox status={getInputStatus(inputs.field1)}>
+              <CustomInput
+                Edit
+                type="text"
+                placeholder="비즈니스 명을 입력해주세요."
+                value={inputs.field1.value}
+                onChange={(e) => handleChange(e, "field1")}
+                status={getInputStatus(inputs.field1)}
+              />
+            </FormBox>
+          </FormEdit>
 
-            <FormEdit>
-              <span>태그</span>
-              <FormBox>
-                <TagWrap>
-                  <Tag color={getCategoryColor(inputs.field4.value.first)} />
-                  <Tag color={getCategoryColor(inputs.field4.value.second)} />
-                  <Tag color={getCategoryColor(inputs.field4.value.third)} />
-                </TagWrap>
-              </FormBox>
-            </FormEdit>
+          <FormEdit>
+            <span>태그</span>
+            <FormBox>
+              <TagWrap>
+                <Tag color={getCategoryColor(inputs.field4.value.first)} />
+                <Tag color={getCategoryColor(inputs.field4.value.second)} />
+                <Tag color={getCategoryColor(inputs.field4.value.third)} />
+              </TagWrap>
+            </FormBox>
+          </FormEdit>
 
-            <FormEdit>
-              <span>비즈니스 설명</span>
-              {showRegenerateButton2 ? (
-                <FormBox regenerate>
-                  <MoleculeRecreate Medium onRegenerate={handleAIDetailClick}/>
-                </FormBox>
-              ) : (
-                <FormBox status={getInputStatus(inputs.field2)}>
-                  {loadingState ? (
-                    <>
+          <FormEdit>
+            <span>비즈니스 설명</span>
+            {showRegenerateButton2 ? (
+              <FormBox regenerate>
+                <MoleculeRecreate Medium onRegenerate={handleAIDetailClick} />
+              </FormBox>
+            ) : (
+              <FormBox status={getInputStatus(inputs.field2)}>
+                {loadingState ? (
+                  <>
                     <SkeletonLine />
                     <SkeletonLine />
                   </>
-                  ) : (
-                    <>
-                      <CustomTextarea
-                        Edit
-                        ref={textareaRef}
-                        value={inputs.field2.value}
-                        onChange={(e) => {
-                          handleChange(e, "field2");
-                          adjustHeight();
-                        }}
-                        status={getInputStatus(inputs.field2)}
-                      />
+                ) : (
+                  <>
+                    <CustomTextarea
+                      Edit
+                      ref={textareaRef}
+                      value={inputs.field2.value}
+                      onChange={(e) => {
+                        handleChange(e, "field2");
+                        adjustHeight();
+                      }}
+                      status={getInputStatus(inputs.field2)}
+                    />
 
-                      <EditButtonGroup>
-                        <IconButton onClick={handleUndoClick}>
-                          <img src={images.ClockCounterclockwise} alt="" />
-                          <span>이전으로 되돌리기</span>
-                        </IconButton>
-                        <IconButton onClick={handleAIDetailClick}>
-                          <img src={images.MagicStick} alt="" />
-                          <span>AI로 다듬기</span>
-                        </IconButton>
-                      </EditButtonGroup>
-                    </>
-                  )}
-                </FormBox>
-              )}
-            </FormEdit>
-          </Card>
+                    <EditButtonGroup>
+                      <IconButton onClick={handleUndoClick}>
+                        <img src={images.ClockCounterclockwise} alt="" />
+                        <span>이전으로 되돌리기</span>
+                      </IconButton>
+                      <IconButton onClick={handleAIDetailClick}>
+                        <img src={images.MagicStick} alt="" />
+                        <span>AI로 다듬기</span>
+                      </IconButton>
+                    </EditButtonGroup>
+                  </>
+                )}
+              </FormBox>
+            )}
+          </FormEdit>
+        </Card>
       ) : (
         <Card>
           <CardTitle>
@@ -776,7 +780,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
         <PopupWrap
           Warning
           title="작업이 중단되었습니다"
-          message="입력된 내용에 문제가 있어 페이지가 초기화되었습니다. 다시 입력해주세요."
+          message="입력된 내용에 문제가 있어 페이지가 초기화되었습니다.\n다시 입력해주세요."
           buttonType="Outline"
           closeText="확인"
           onConfirm={() => {
@@ -793,7 +797,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
         <PopupWrap
           Warning
           title="작업이 중단되었습니다"
-          message="데이터 오류로 인해 페이지가 초기화됩니다 작업 중인 내용은 작업관리 페이지를 확인하세요"
+          message="데이터 오류로 인해 페이지가 초기화됩니다.\n작업 중인 내용은 작업관리 페이지를 확인하세요."
           buttonType="Outline"
           closeText="확인"
           onConfirm={() => {
@@ -948,8 +952,12 @@ const FormBox = styled.div`
   transition: all 0.5s;
 
   &:focus-within {
-    border: ${(props) => props.regenerate ? `1px solid ${palette.outlineGray}` : `1px solid ${palette.primary}`};
-    box-shadow: ${(props) => props.regenerate ? `` : `0 0 8px 0 rgba(34, 111, 255, 0.5)`};
+    border: ${(props) =>
+      props.regenerate
+        ? `1px solid ${palette.outlineGray}`
+        : `1px solid ${palette.primary}`};
+    box-shadow: ${(props) =>
+      props.regenerate ? `` : `0 0 8px 0 rgba(34, 111, 255, 0.5)`};
   }
 `;
 
