@@ -424,6 +424,13 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             allAnswers.push(response.data.answer);
 
             personaInfoState.push(personaInfo);
+            const profileArray = personaList.selected[i].profile
+              .replace(/['\[\]]/g, "")
+              .split(", ");
+            const age = profileArray[0].split(": ")[1];
+            const gender =
+              profileArray[1].split(": ")[1] === "남성" ? "남성" : "여성";
+            const job = profileArray[2].split(": ")[1];
 
             setAnswers((prev) => ({
               ...prev,
@@ -431,6 +438,9 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                 ...prev[currentQuestionIndex],
                 {
                   persona: personaList.selected[i],
+                  gender: gender,
+                  age: age,
+                  job: job,
                   answer: response.data.answer,
                 },
               ],
@@ -684,11 +694,25 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               </Thumb>
               <div>
                 {personaList.selected[questionAnswers.length].persona}
-                <p>
-                  <span>여성</span>
-                  <span>20세</span>
-                  <span>건물용고체고분자연료전지시스템통합개발자</span>
-                </p>
+                {(() => {
+                  const profileArray = personaList.selected[
+                    questionAnswers.length
+                  ].profile
+                    .replace(/['\[\]]/g, "")
+                    .split(", ");
+                  const age = profileArray[0].split(": ")[1];
+                  const gender =
+                    profileArray[1].split(": ")[1] === "남성" ? "남성" : "여성";
+                  const job = profileArray[2].split(": ")[1];
+
+                  return (
+                    <p>
+                      <span>{gender}</span>
+                      <span>{age}세</span>
+                      <span>{job}</span>
+                    </p>
+                  );
+                })()}
               </div>
             </TypeName>
             <TextContainer>
@@ -714,7 +738,6 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                   alt={answer.persona.persona}
                 />
               </Thumb>
-
               <div>
                 {answer.persona.persona}
                 <p>
