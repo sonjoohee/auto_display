@@ -406,15 +406,30 @@ const PagePersona3 = () => {
                   </Title>
                   <ContentSection>
                     <PersonaCards>
-                      {personaList.selected.map((persona, index) => (
-                        <MoleculePersonaCard
-                          NoLine
-                          key={index}
-                          title={persona.persona}
-                          isBasic={true}
-                          hideCheckCircle={true}
-                        />
-                      ))}
+                      {personaList.selected.map((persona, index) => {
+                        const profileArray = persona.profile
+                          .replace(/['\[\]]/g, "")
+                          .split(", ");
+                        const age = profileArray[0].split(": ")[1];
+                        const gender =
+                          profileArray[1].split(": ")[1] === "남성"
+                            ? "남성"
+                            : "여성";
+                        const job = profileArray[2].split(": ")[1];
+
+                        return (
+                          <MoleculePersonaCard
+                            NoLine
+                            key={index}
+                            title={persona.persona}
+                            isBasic={true}
+                            hideCheckCircle={true}
+                            gender={gender}
+                            age={age}
+                            job={job}
+                            />
+                          );
+                      })}
                     </PersonaCards>
                   </ContentSection>
                 </CustomizePersona>
@@ -495,32 +510,64 @@ const PagePersona3 = () => {
                         </span>
                       </p>
                     </Title>
-                    {personaListState.selected.map((persona, index) => (
-                      <MoleculePersonaCard
-                        key={index}
-                        TitleFlex
-                        title={persona.persona}
-                        keywords={persona.keywords || []}
-                        isBasic={true}
-                        checked={true}
-                        onSelect={() => handlePersonaToggle(persona, true)}
-                      />
-                    ))}
+                    {personaListState.selected.map((persona, index) => {
+                      const profileArray = persona.profile
+                        .replace(/['\[\]]/g, "")
+                        .split(", ");
+                      const age = profileArray[0].split(": ")[1];
+                      const gender =
+                        profileArray[1].split(": ")[1] === "남성"
+                          ? "남성"
+                          : "여성";
+                      const job = profileArray[2].split(": ")[1];
+
+                      return (
+                        <MoleculePersonaCard
+                          key={index}
+                          TitleFlex
+                          title={persona.persona}
+                          keywords={persona.keywords || []}
+                          isBasic={true}
+                          checked={true}
+                          onSelect={() => handlePersonaToggle(persona, true)}
+                          gender={gender}
+                          age={age}
+                          job={job}
+                          newLine={true}
+                        />
+                      );
+                    })}
 
                     <Title style={{ marginTop: "20px" }}>
-                      <p>available</p>
+                      <p>Available</p>
                     </Title>
-                    {personaListState.unselected.map((persona, index) => (
-                      <MoleculePersonaCard
-                        key={index}
-                        TitleFlex
-                        title={persona.persona}
-                        keywords={persona.keywords || []}
-                        isBasic={true}
-                        checked={false}
-                        onSelect={() => handlePersonaToggle(persona, false)}
-                      />
-                    ))}
+                    {personaListState.unselected.map((persona, index) => {
+                      const profileArray = persona.profile
+                        .replace(/['\[\]]/g, "")
+                        .split(", ");
+                      const age = profileArray[0].split(": ")[1];
+                      const gender =
+                        profileArray[1].split(": ")[1] === "남성"
+                          ? "남성"
+                          : "여성";
+                      const job = profileArray[2].split(": ")[1];
+
+                      return (
+                        <MoleculePersonaCard
+                          key={index}
+                          TitleFlex
+                          title={persona.persona}
+                          keywords={persona.keywords || []}
+                          isBasic={true}
+                          checked={false}
+                          onSelect={() => handlePersonaToggle(persona, false)}
+                          gender={gender}
+                          age={age}
+                          job={job}
+                          newLine={true}
+                        />
+                      );
+                    })}
                   </>
                 }
               />
