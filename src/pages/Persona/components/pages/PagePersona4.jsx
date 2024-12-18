@@ -167,6 +167,24 @@ const PagePersona4 = () => {
         return "";
     }
   };
+  useEffect(() => {
+    // 팝업이 열려있을 때
+    if (showToast) {
+      document.body.style.overflow = "hidden";
+      document.body.style.paddingRight = "15px"; // 스크롤바 자리만큼 패딩 추가
+    }
+    // 팝업이 닫혔을 때
+    else {
+      document.body.style.overflow = "auto";
+      document.body.style.paddingRight = "0";
+    }
+
+    // 컴포넌트 언마운트 시 원래대로 복구
+    return () => {
+      document.body.style.overflow = "auto";
+      document.body.style.paddingRight = "0";
+    };
+  }, [showToast]);
 
   useEffect(() => {
     // console.log("🚀 ~ useEffect ~ reportId:", reportId);
@@ -402,7 +420,7 @@ const PagePersona4 = () => {
 
   return (
     <>
-      <ContentsWrap>
+      <ContentsWrap noScroll={showToast}>
         <IncNavigation />
 
         <Header />
@@ -687,13 +705,14 @@ const PagePersona4 = () => {
 
               <SidebarBottom>
                 <strong>
-                  다른 페르소나의 이야기가 궁금하시다면,<br />
+                  다른 페르소나의 이야기가 궁금하시다면,
+                  <br />
                   지금 바로 대화해보세요 🙌🏻
                 </strong>
 
                 <span onClick={navigateToPersonaPage}>
                   맞춤 페르소나 보러가기
-                  </span>
+                </span>
               </SidebarBottom>
             </SidebarWrap>
 

@@ -333,7 +333,8 @@ const PagePersona3 = () => {
                           여러 페르소나 인터뷰 (1:N)
                         </strong>
                         <p isActive={selectedInterviewType === "multiple"}>
-                          여러 페르소나의 다양한 의견을 한 번에 확인 하세요. 폭넓은 시각과 다양한 의견을 파악하는데 적합합니다. 
+                          여러 페르소나의 다양한 의견을 한 번에 확인 하세요.
+                          폭넓은 시각과 다양한 의견을 파악하는데 적합합니다.
                         </p>
                       </InterviewTypeCard>
 
@@ -350,7 +351,9 @@ const PagePersona3 = () => {
                           <span>준비중</span>
                         </strong>
                         <p isActive={selectedInterviewType === "single"}>
-                          한 명의 페르소나와 깊이 있는 대화를 통해 자세한 인사이트를 도출하세요. 구체적인 피드백이 필요한 경우 유용합니다. 
+                          한 명의 페르소나와 깊이 있는 대화를 통해 자세한
+                          인사이트를 도출하세요. 구체적인 피드백이 필요한 경우
+                          유용합니다.
                         </p>
                       </InterviewTypeCard>
                     </InterviewTypeCards>
@@ -390,7 +393,7 @@ const PagePersona3 = () => {
                   </TabContent>
                 </InterviewSelect>
 
-                <CustomizePersona style={{marginBottom: '140px'}}>
+                <CustomizePersona style={{ marginBottom: "140px" }}>
                   <Title Column>
                     참여 페르소나 확인
                     <p>
@@ -425,8 +428,8 @@ const PagePersona3 = () => {
                             gender={gender}
                             age={age}
                             job={job}
-                            />
-                          );
+                          />
+                        );
                       })}
                     </PersonaCards>
                   </ContentSection>
