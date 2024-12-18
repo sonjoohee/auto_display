@@ -16,6 +16,7 @@ import {
   PERSONA_STEP,
   BUSINESS_ANALYSIS,
   IS_EDIT_MODE,
+  IS_LOADING_BUSINESS_ANALYSIS,
 } from "../../../AtomStates";
 import {
   ContentsWrap,
@@ -36,6 +37,7 @@ import OrganismBusinessAnalysis from "../organisms/OrganismBisinessAnalysis";
 
 const PagePersona = () => {
   const navigate = useNavigate();
+  const [isLoadingBusinessAnalysis, setIsLoadingBusinessAnalysis] = useAtom(IS_LOADING_BUSINESS_ANALYSIS);
   const [isEditMode, setIsEditMode] = useAtom(IS_EDIT_MODE);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectId, setprojectId] = useAtom(PROJECT_ID);
@@ -145,7 +147,7 @@ const PagePersona = () => {
               />
               <CardWrap>
                 {/* 맞춤 페르소나 생성 */}
-                {personaButtonState1 === 0 && !isEditMode && (
+                {personaButtonState1 === 0 && !isEditMode && !isLoadingBusinessAnalysis && (
                   <CreateCard>
                     <p>
                       <img src={images.PeopleChatSquareFill} alt="" />

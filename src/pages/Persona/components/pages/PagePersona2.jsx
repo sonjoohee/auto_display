@@ -59,6 +59,8 @@ import PopupWrap from "../../../../assets/styles/Popup";
 import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import MoleculeRequestPersonaCard from "../molecules/MoleculeRequestPersonaCard";
 import { createRequestPersonOnServer } from "../../../../utils/indexedDB";
+import MoleculeRecreate from "../molecules/MoleculeRecreate";
+
 const PagePersona2 = () => {
   const [customPersonaForm, setCustomPersonaForm] = useState({
     description: "", // 페르소나 특징과 역할
@@ -101,6 +103,8 @@ const PagePersona2 = () => {
   });
 
   const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const [regenerateCount, setRegenerateCount] = useState(0);
+  const [showRegenerateButton, setShowRegenerateButton] = useState(false);
 
   const handlePopupClose = () => {
     setShowPopup(false);
@@ -280,7 +284,7 @@ const PagePersona2 = () => {
               setShowErrorPopup(true);
               break;
             case 504:
-              // 재생성하기
+              setShowErrorPopup(true);
               break;
             default:
               setShowErrorPopup(true);
@@ -304,6 +308,129 @@ const PagePersona2 = () => {
       "Content-Type": "application/json",
     },
     withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
+  };
+
+  const reloadPersona = async () => {
+    try {
+      if (personaButtonState2) {
+        setIsLoading(true);
+        setShowRegenerateButton(false);
+
+        let data, response;
+
+        data = {
+          business_idea: businessAnalysis,
+        };
+
+        response = await axios.post(
+          "https://wishresearch.kr/person/persona_request",
+          data,
+          axiosConfig
+        );
+
+        let requestPersonaList = response.data;
+
+        let retryCount = 0;
+        const maxRetries = 10;
+
+        while (
+          retryCount < maxRetries &&
+          (!response ||
+            !response.data ||
+            !requestPersonaList.hasOwnProperty("persona_spectrum") ||
+            requestPersonaList.persona_spectrum.length !== 3 ||
+            !requestPersonaList.persona_spectrum[0].hasOwnProperty(
+              "persona_1"
+            ) ||
+            !requestPersonaList.persona_spectrum[1].hasOwnProperty(
+              "persona_2"
+            ) ||
+            !requestPersonaList.persona_spectrum[2].hasOwnProperty(
+              "persona_3"
+            ) ||
+            !requestPersonaList.persona_spectrum[0].persona_1.hasOwnProperty(
+              "persona"
+            ) ||
+            !requestPersonaList.persona_spectrum[1].persona_2.hasOwnProperty(
+              "persona"
+            ) ||
+            !requestPersonaList.persona_spectrum[2].persona_3.hasOwnProperty(
+              "persona"
+            ) ||
+            !requestPersonaList.persona_spectrum[0].persona_1.persona ||
+            !requestPersonaList.persona_spectrum[1].persona_2.persona ||
+            !requestPersonaList.persona_spectrum[2].persona_3.persona ||
+            !requestPersonaList.persona_spectrum[0].persona_1.hasOwnProperty(
+              "keyword"
+            ) ||
+            !requestPersonaList.persona_spectrum[1].persona_2.hasOwnProperty(
+              "keyword"
+            ) ||
+            !requestPersonaList.persona_spectrum[2].persona_3.hasOwnProperty(
+              "keyword"
+            ) ||
+            requestPersonaList.persona_spectrum[0].persona_1.keyword.length <
+              3 ||
+            requestPersonaList.persona_spectrum[1].persona_2.keyword.length <
+              3 ||
+            requestPersonaList.persona_spectrum[2].persona_3.keyword.length <
+              3)
+        ) {
+          response = await axios.post(
+            "https://wishresearch.kr/person/persona_request",
+            data,
+            axiosConfig
+          );
+          retryCount++;
+
+          requestPersonaList = response.data;
+        }
+        if (retryCount >= maxRetries) {
+          setShowErrorPopup(true);
+          return;
+        }
+        setPersonaButtonState2(0);
+
+        const requestPersonaData = {
+          persona: requestPersonaList.persona_spectrum,
+          positioning: requestPersonaList.positioning_analysis,
+        };
+
+        setRequestPersonaList(requestPersonaData);
+
+        await updateProjectOnServer(
+          projectId,
+          {
+            personaList: personaList.unselected.length,
+            requestPersonaList: requestPersonaData,
+          },
+          isLoggedIn
+        );
+      }
+    } catch (error) {
+      if (error.response) {
+        switch (error.response.status) {
+          case 500:
+            setShowErrorPopup(true);
+            break;
+          case 504:
+            if (regenerateCount >= 3) {
+              setShowErrorPopup(true);
+              return;
+            } else {
+              setShowRegenerateButton(true);
+              setRegenerateCount(regenerateCount + 1);
+            }
+            break;
+          default:
+            setShowErrorPopup(true);
+            break;
+        }
+        console.error("Error details:", error);
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -348,7 +475,6 @@ const PagePersona2 = () => {
             selected: [],
             unselected: unselectedPersonas,
           };
-          console.log(personaList);
           setPersonaList(personaList);
 
           ////////////////////////////////////////////////////////////////////////////////////////
@@ -421,7 +547,9 @@ const PagePersona2 = () => {
           }
           if (retryCount >= maxRetries) {
             setShowErrorPopup(true);
+            return;
           }
+          setPersonaButtonState2(0);
 
           const requestPersonaData = {
             persona: requestPersonaList.persona_spectrum,
@@ -446,7 +574,13 @@ const PagePersona2 = () => {
               setShowErrorPopup(true);
               break;
             case 504:
-              // 재생성하기
+              if (regenerateCount >= 3) {
+                setShowErrorPopup(true);
+                return;
+              } else {
+                setShowRegenerateButton(true);
+                setRegenerateCount(regenerateCount + 1);
+              }
               break;
             default:
               setShowErrorPopup(true);
@@ -455,7 +589,6 @@ const PagePersona2 = () => {
           console.error("Error details:", error);
         }
       } finally {
-        setPersonaButtonState2(0);
         setIsLoading(false);
       }
     };
@@ -554,7 +687,7 @@ const PagePersona2 = () => {
           },
           additionalInfo: customPersonaForm.additionalInfo,
         },
-      };
+      }; 
 
       const response = await createRequestPersonOnServer(
         requestData,
@@ -616,6 +749,11 @@ const PagePersona2 = () => {
           <AnalysisWrap>
             <MainSection>
               <OrganismBusinessAnalysis personaStep={2} />
+              {showRegenerateButton ? (
+                <CardWrap>
+                  <MoleculeRecreate Large onRegenerate={reloadPersona}/>
+                </CardWrap>
+              ) : (
               <CardWrap>
                 <>
                   <CustomizePersona>
@@ -802,6 +940,7 @@ const PagePersona2 = () => {
                   )}
                 </>
               </CardWrap>
+              )}
             </MainSection>
 
             <Sidebar>
