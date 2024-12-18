@@ -121,13 +121,13 @@ const MoleculePersonaCard = ({
               </Title>
             </TitleSection>
 
-            {newLine &&                 
-              <Title>
-                <TitleInfo>{gender}</TitleInfo>
-                <TitleInfo>{age}세</TitleInfo>
-                <TitleInfo>{job}</TitleInfo>
-              </Title>
-            }
+            {newLine && (
+              <TitleInfo>
+              <span>{gender}</span>
+              <span>{age}세</span>
+              <span>{job}</span>
+              </TitleInfo>
+            )}
             
             {keywords.length > 0 && (
               <KeywordGroup>
