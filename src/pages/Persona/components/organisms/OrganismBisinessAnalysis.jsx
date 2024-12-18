@@ -683,8 +683,13 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
                 <FormBox status={getInputStatus(inputs.field2)}>
                   {loadingState ? (
                     <>
-                    <SkeletonLine />
-                    <SkeletonLine />
+                    <div style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
+                      <SkeletonLine />
+                      <SkeletonTitle />
+                      <SkeletonLine />
+                      <SkeletonLine />
+                      <SkeletonLine />
+                    </div>
                   </>
                   ) : (
                     <>
@@ -1138,7 +1143,7 @@ const Tag = styled.span`
           background: rgba(255, 168, 185, 0.06);
         `;
       default:
-        return "";
+        return "display: none;";
     }
   }}
 `;

@@ -289,7 +289,7 @@ const CardPersona = styled.div`
 
   .content {
     position: relative;
-    height: 175px;
+    height: 95px;
     font-size: 0.75rem;
     line-height: 1.5;
     font-weight: 300;

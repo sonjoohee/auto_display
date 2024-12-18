@@ -35,7 +35,7 @@ export const SkeletonH1 = styled.h1`
 
 export const SkeletonTitle = styled.div`
   width: 20%;
-  height: 22px;
+  height: 32px;
   border-radius: 6px;
   margin-bottom: 10px;
   // animation: shimmer 1.5s infinite linear;
@@ -57,7 +57,7 @@ export const SkeletonTitle = styled.div`
 
 export const SkeletonLine = styled.div`
   width: 100%;
-  height: 16px;
+  height: 32px;
   border-radius: 6px;
   margin-top: 8px;
   // animation: shimmer 1.5s infinite linear;

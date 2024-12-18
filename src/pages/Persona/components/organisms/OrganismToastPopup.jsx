@@ -1286,7 +1286,7 @@ const QuestionWrap = styled.div`
   width: 100%;
   cursor: inherit;
   position: relative;
-  padding-right: 24px;
+  padding-right: 56px;
   cursor: ${(props) => (props.status === "Pre" ? "default" : "pointer")};
 
   ${(props) =>
