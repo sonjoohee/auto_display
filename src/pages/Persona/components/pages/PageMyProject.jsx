@@ -217,13 +217,13 @@ const PageMyProject = () => {
                 <ProjectContent>
 
                   {/* 진행중인 프로젝트 없을때 디자인 */}
-                  <ProjectItem Nodata>
+                  {/* <ProjectItem Nodata>
                     <img src={images.FileFill} alt="" />
                     <div>
                       <p>아직 진행 중인 프로젝트가 없습니다.<br />지금 바로 새 프로젝트를 만들어보세요</p>
                       <Button Medium Primary Round>새 프로젝트 시작하기</Button>
                     </div>
-                  </ProjectItem>
+                  </ProjectItem> */}
 
                   {projectList.map((project, index) => (
                     <OrganismProjectCard
