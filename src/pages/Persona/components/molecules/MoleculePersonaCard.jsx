@@ -93,39 +93,37 @@ const MoleculePersonaCard = ({
 
   return (
     <>
-
-    <CardContainer TitleFlex={TitleFlex} $isChecked={isChecked} NoLine={NoLine}>
-      <MainContent NoLine={NoLine}>
-        {!hideCheckCircle && (
-          <CheckCircle 
-            $isChecked={isChecked}
-            onClick={handleCheck}
-          />
-        )}
-
-        <ContentWrapper NoLine={NoLine}>
-          <TitleSection>
-            <Title NoLine={NoLine}>
-              <p>{title}</p>
-
-              <TitleInfo>
-                <span>{gender}</span>
-                <span>{age}</span>
-                <span>{job}</span>
-              </TitleInfo>
-            </Title>
-          </TitleSection>
-          
-          {keywords.length > 0 && (
-            <KeywordGroup>
-              {keywords.map((keyword, index) => (
-                <KeywordTag key={index}>#{keyword}</KeywordTag>
-              ))}
-            </KeywordGroup>
-
+      <CardContainer
+        TitleFlex={TitleFlex}
+        $isChecked={isChecked}
+        NoLine={NoLine}
+      >
+        <MainContent NoLine={NoLine}>
+          {!hideCheckCircle && (
+            <CheckCircle $isChecked={isChecked} onClick={handleCheck} />
           )}
 
+          <ContentWrapper NoLine={NoLine}>
+            <TitleSection>
+              <Title NoLine={NoLine}>
+                <p>{title}</p>
 
+                <TitleInfo>
+                  <span>{gender}</span>
+                  <span>{age}세</span>
+                  <span>{job}</span>
+                </TitleInfo>
+              </Title>
+            </TitleSection>
+
+            {keywords.length > 0 && (
+              <KeywordGroup>
+                {keywords.map((keyword, index) => (
+                  <KeywordTag key={index}>#{keyword}</KeywordTag>
+                ))}
+              </KeywordGroup>
+            )}
+          </ContentWrapper>
           {isBasic ? (
             <Badge Basic>
               <img src={images.StatusBadgeBasic} alt="기본형" />
@@ -505,7 +503,7 @@ const TitleInfo = styled.div`
         height: 9px;
         margin-right: 6px;
         background: ${palette.gray500};
-        content: '';
+        content: "";
       }
     }
   }
