@@ -394,6 +394,12 @@ const PagePersona4 = () => {
     setShowToast(true);
   };
 
+  const navigateToPersonaPage = () => {
+    setProjectLoadButtonState(true);
+    setIsPersonaAccessible(true);
+    navigate(`/Persona/2/${projectId}`);
+  };
+
   return (
     <>
       <ContentsWrap>
@@ -685,7 +691,7 @@ const PagePersona4 = () => {
                   지금 바로 대화해보세요 🙌🏻
                 </strong>
 
-                <span>
+                <span onClick={navigateToPersonaPage}>
                   맞춤 페르소나 보러가기
                   </span>
               </SidebarBottom>
