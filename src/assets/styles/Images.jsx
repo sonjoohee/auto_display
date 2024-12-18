@@ -188,6 +188,7 @@ import FileSearch from "../images/file-search.svg"
 import PlusSquareWhite from "../images/plus-square-white.svg"
 import Gear from "../images/gear.svg"
 import ArrowBarLeft from "../images/arrow-bar-left.svg"
+import ArrowClockwise from "../images/arrow-clockwise.svg"
 import NoteArrowUp from "../images/note-arrow-up.svg"
 import CheckGreen from "../images/check-green.svg"
 import FileText from "../images/file-text.svg"
@@ -409,6 +410,7 @@ const images = {
   PlusSquareWhite,
   Gear,
   ArrowBarLeft,
+  ArrowClockwise,
   NoteArrowUp,
   CheckGreen,
   FileText,

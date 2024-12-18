@@ -138,7 +138,12 @@ export const Button = styled.button`
     // }
   `}
 
-  
+  ${props => props.Outline && css`
+    color: ${palette.gray700};
+    border: 1px solid ${palette.outlineGray};
+    background: transparent;
+  `}
+
   ${props => props.Outline && props.Fill && css`
     color: ${palette.gray700};
     border: 1px solid ${palette.outlineGray};
@@ -156,4 +161,5 @@ export const Button = styled.button`
     //   cursor: not-allowed;
     // }
   `}
+
 `;
