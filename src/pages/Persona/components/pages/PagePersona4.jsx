@@ -169,11 +169,11 @@ const PagePersona4 = () => {
   };
 
   useEffect(() => {
-    console.log("🚀 ~ useEffect ~ reportId:", reportId);
+    // console.log("🚀 ~ useEffect ~ reportId:", reportId);
     const loadProjectReport = async () => {
       // 1. 로그인 여부 확인
       if (reportId && reportLoadButtonState) {
-        console.log("🚀 ~ loadProjectReport ~ reportId:", reportId);
+        // console.log("🚀 ~ loadProjectReport ~ reportId:", reportId);
         // 2. 로그인 상태라면 서버에서 새로운 대화 ID를 생성하거나, 저장된 대화를 불러옴
         const savedProjectInfo = await getProjectByIdFromIndexedDB(
           projectId,

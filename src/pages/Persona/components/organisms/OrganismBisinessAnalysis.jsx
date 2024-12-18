@@ -261,7 +261,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
       businessData = response.data.business_analysis;
       categoryData = response.data.category;
 
-      if (attempts >= maxAttempts) { 
+      if (attempts >= maxAttempts) {
         setShowErrorPopup(true);
         return;
       } else {
@@ -385,10 +385,6 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
 
       try {
         if (personaButtonState1 === 1) {
-          console.log(
-            "🚀 ~ loadBusinessAnalysis ~ personaButtonState1:",
-            personaButtonState1
-          );
           setIsLoading(true);
           // 버튼 클릭으로 API 호출
           let response = await axios.post(
