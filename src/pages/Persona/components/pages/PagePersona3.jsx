@@ -392,7 +392,7 @@ const PagePersona3 = () => {
                   </TabContent>
                 </InterviewSelect>
 
-                <CustomizePersona>
+                <CustomizePersona style={{marginBottom: '140px'}}>
                   <Title Column>
                     참여 페르소나 확인
                     <p>
