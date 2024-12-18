@@ -254,6 +254,8 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
         if (existingQuestions) {
           setInterviewQuestionListState(existingQuestions.questions.slice(2));
           await new Promise((resolve) => setTimeout(resolve, 5000));
+            setIsLoadingPrepare(false);
+            setInterviewStatus(["Pre","Pre","Pre"]);
         } else {
           let data = {
             business_idea: businessAnalysis.input,
@@ -782,7 +784,8 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
     if (onClose) {
       onClose();
     }
-    window.location.href = "/";
+    setPersonaButtonState3(0);
+    onClose();
   };
 
   const handleWarningContinue = () => {
