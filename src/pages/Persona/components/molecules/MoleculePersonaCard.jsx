@@ -119,14 +119,14 @@ const MoleculePersonaCard = ({
               </Title>
             </TitleSection>
 
-            {newLine &&                 
+            {newLine && (
               <TitleInfo>
                 <span>{gender}</span>
                 <span>{age}세</span>
                 <span>{job}</span>
               </TitleInfo>
-            }
-            
+            )}
+
             {keywords.length > 0 && (
               <KeywordGroup>
                 {keywords.map((keyword, index) => (
@@ -426,7 +426,7 @@ const MainContent = styled.div`
   ${(props) =>
     props.NoLine &&
     css`
-      justify-content: flex-start;
+      justify-content: space-between; // space-between으로 변경
       gap: 8px;
 
       &:before {
@@ -450,7 +450,8 @@ const ContentWrapper = styled.div`
   ${(props) =>
     props.NoLine &&
     css`
-      flex: initial;
+      flex: 1; // flex: 1로 변경하여 공간을 채우도록 설정
+      margin-right: 12px; // 기본값과 동일하게 유지
     `}
 `;
 

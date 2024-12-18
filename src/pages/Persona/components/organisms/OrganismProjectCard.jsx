@@ -84,7 +84,11 @@ const OrganismProjectCard = ({ project, index }) => {
   };
   const getRecruitStatus = (project) => {
     const requestedPersonaCount = project.requestedPersona?.length || 0;
-    return requestedPersonaCount === 3 ? "complete" : requestedPersonaCount > 0 ? "ing" : "";
+    return requestedPersonaCount === 3
+      ? "complete"
+      : requestedPersonaCount > 0
+      ? "ing"
+      : "";
   };
 
   const navigateToPersonaPage = (projectId) => {
@@ -611,7 +615,7 @@ const ViewInfo = styled.div`
   }
 
   .title {
-    // flex: 4;
+    flex: 4;
     min-width: 0; // flex-basis 오버플로우 방지
     display: flex;
     align-items: flex-end;
@@ -628,7 +632,7 @@ const ViewInfo = styled.div`
   }
 
   .info {
-    // flex: 4;
+    flex: 4;
     min-width: 0; // flex-basis 오버플로우 방지
     display: flex;
     align-items: center;
@@ -671,7 +675,7 @@ const ViewInfo = styled.div`
   }
 
   .button {
-    // flex: 3;
+    flex: 3;
     min-width: 0; // flex-basis 오버플로우 방지
     display: flex;
     align-items: center;

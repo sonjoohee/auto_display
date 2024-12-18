@@ -112,7 +112,7 @@ const PopupWrap = ({
         <ModalPopup>
           <Header>
             {title}
-            {/* <CloseButton TitleFlex={TitleFlex} onClick={handleClose} /> */}
+            <CloseButton TitleFlex={TitleFlex} onClick={handleClose} />
           </Header>
 
           <Body>{body}</Body>
@@ -196,7 +196,7 @@ export const AlertPopup = styled.div`
 
 export const ModalPopup = styled(AlertPopup)`
   gap: 32px;
-  max-width: 600px;
+  max-width: 800px;
   padding: 32px;
 `;
 
