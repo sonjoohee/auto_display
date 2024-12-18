@@ -71,6 +71,8 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isAnalysisComplete, setIsAnalysisComplete] = useState(false);
 
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
+
   const axiosConfig = {
     timeout: 100000,
     headers: {
@@ -212,8 +214,9 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               questionList = response.data;
             }
 
-            if (retryCount === maxRetries) {
-              throw new Error("Maximum retry attempts reached.");
+            if (retryCount >= maxRetries) {
+              setShowErrorPopup(true);
+              return;
             }
 
             const newQuestionList = [
@@ -237,7 +240,20 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
           }
         }
       } catch (error) {
-        console.error(error);
+        if (error.response) {
+          switch (error.response.status) {
+            case 500:
+              setShowErrorPopup(true);
+              break;
+            case 504:
+              // 재생성하기
+              break;
+            default:
+              setShowErrorPopup(true);
+              break;
+          }
+          console.error("Error details:", error);
+        }
       } finally {
         setPersonaButtonState3(0);
         setIsLoadingPrepare(false);
@@ -329,8 +345,9 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               retryCount++;
             }
 
-            if (retryCount === maxRetries) {
-              throw new Error("Maximum retry attempts reached.");
+            if (retryCount >= maxRetries) {
+              setShowErrorPopup(true);
+              return;
             }
 
             setIsGenerating(false);
@@ -432,10 +449,9 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                     await new Promise((resolve) => setTimeout(resolve, 1000));
                   }
 
-                  if (retryCount === maxRetries) {
-                    throw new Error(
-                      "Maximum retry attempts reached for interview reports."
-                    );
+                  if (retryCount >= maxRetries) {
+                    setShowErrorPopup(true);
+                    return;
                   }
 
                   setInterviewReport(responseReport.data);
@@ -496,10 +512,9 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                     await new Promise((resolve) => setTimeout(resolve, 1000)); // 1초 대기
                   }
 
-                  if (retryCount === maxRetries) {
-                    throw new Error(
-                      "Maximum retry attempts reached for interview report additional."
-                    );
+                  if (retryCount >= maxRetries) {
+                    setShowErrorPopup(true);
+                    return;
                   }
 
                   setInterviewReportAdditional(responseReportAdditional.data);
@@ -510,7 +525,20 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                     // 필요한 경우 분석 결과 저장
                   }
                 } catch (error) {
-                  console.error("Analysis error:", error);
+                  if (error.response) {
+                    switch (error.response.status) {
+                      case 500:
+                        setShowErrorPopup(true);
+                        break;
+                      case 504:
+                        // 재생성하기
+                        break;
+                      default:
+                        setShowErrorPopup(true);
+                        break;
+                    }
+                    console.error("Error details:", error);
+                  }
                   setIsAnalyzing(false);
                 }
               }
@@ -524,7 +552,20 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             }
           }
         } catch (error) {
-          console.error("Interview process error:", error);
+          if (error.response) {
+            switch (error.response.status) {
+              case 500:
+                setShowErrorPopup(true);
+                break;
+              case 504:
+                // 재생성하기
+                break;
+              default:
+                setShowErrorPopup(true);
+                break;
+            }
+            console.error("Error details:", error);
+          }
           setIsGenerating(false);
         }
       }
@@ -840,6 +881,19 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
           isModal={false}
           onCancel={handleWarningClose}
           onConfirm={handleWarningContinue}
+        />
+      )}
+      {showErrorPopup && (
+        <PopupWrap
+          Warning
+          title="작업이 중단되었습니다"
+          message="데이터 오류로 인해 페이지가 초기화됩니다 작업 중인 내용은 작업관리 페이지를 확인하세요"
+          buttonType="Outline"
+          closeText="확인"
+          onConfirm={() => {
+            setShowErrorPopup(false);
+            window.location.href = "/";
+          }}
         />
       )}
     </>

@@ -89,7 +89,12 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
     },
   });
 
+  let regenerateCount1 = 0;
+  let regenerateCount2 = 0;
+  const [showRegenerateButton1, setShowRegenerateButton1] = useState(false);
+  const [showRegenerateButton2, setShowRegenerateButton2] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const [showErrorPopup2, setShowErrorPopup2] = useState(false);
 
   // 입력 상태 확인 함수
   const getInputStatus = (field) => {
@@ -280,7 +285,26 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
         }));
       }
     } catch (error) {
-      console.error("Error in handleRegenerate:", error);
+      if (error.response) {
+        switch (error.response.status) {
+          case 500:
+            setShowErrorPopup2(true);
+            break;
+          case 504:
+            if (regenerateCount2 >= 3) {
+              setShowErrorPopup2(true);
+              return;
+            } else {
+              setShowRegenerateButton2(true);
+              regenerateCount2 += 1;
+            }
+            break;
+          default:
+            setShowErrorPopup2(true);
+            break;
+        }
+        console.error("Error details:", error);
+      }
     } finally {
       // setPersonaButtonState1(0);
       setIsLoading(false);
@@ -453,7 +477,26 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
           third: getCategoryColor(categoryData.third),
         });
       } catch (error) {
-        console.error("Error in loadAndSaveData:", error);
+        if (error.response) {
+          switch (error.response.status) {
+            case 500:
+              setShowErrorPopup2(true);
+              break;
+            case 504:
+              if (regenerateCount1 >= 3) {
+                setShowErrorPopup2(true);
+                return;
+              } else {
+                setShowRegenerateButton1(true);
+                regenerateCount1 += 1;
+              }
+              break;
+            default:
+              setShowErrorPopup2(true);
+              break;
+          }
+          console.error("Error details:", error);
+        }
       } finally {
         setPersonaButtonState1(0);
         setIsLoading(false);
@@ -538,17 +581,36 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
         isLoggedIn
       );
     } catch (error) {
-      console.error("Error in handleRegenerate:", error);
+      if (error.response) {
+        switch (error.response.status) {
+          case 500:
+            setShowErrorPopup2(true);
+            break;
+          case 504:
+            if (regenerateCount1 >= 3) {
+              setShowErrorPopup2(true);
+              return;
+            } else {
+              setShowRegenerateButton1(true);
+              regenerateCount1 += 1;
+            }
+            break;
+          default:
+            setShowErrorPopup2(true);
+            break;
+        }
+        console.error("Error details:", error);
+      }
     } finally {
       setPersonaButtonState1(0);
       setIsLoading(false);
     }
   };
-
+  
   return (
     <>
       <Title>
-        <h3>비즈니스 분석</h3>
+        <h3>비즈니스 분석</h3> 
         {!personaButtonState1 && personaStep === 1 && (
           <ButtonGroup>
             {isEditMode ? (
@@ -575,69 +637,79 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
         <Card>
           <AtomPersonaLoader message="비즈니스를 분석하고 있어요..." />
         </Card>
-      ) : isEditMode ? (
-        <Card Edit>
-          <FormEdit>
-            <span>비즈니스 명</span>
-            <FormBox status={getInputStatus(inputs.field1)}>
-              <CustomInput
-                Edit
-                type="text"
-                placeholder="비즈니스 명을 입력해주세요."
-                value={inputs.field1.value}
-                onChange={(e) => handleChange(e, "field1")}
-                status={getInputStatus(inputs.field1)}
-              />
-            </FormBox>
-          </FormEdit>
-
-          <FormEdit>
-            <span>태그</span>
-            <FormBox>
-              <TagWrap>
-                <Tag color={getCategoryColor(inputs.field4.value.first)} />
-                <Tag color={getCategoryColor(inputs.field4.value.second)} />
-                <Tag color={getCategoryColor(inputs.field4.value.third)} />
-              </TagWrap>
-            </FormBox>
-          </FormEdit>
-
-          <FormEdit>
-            <span>비즈니스 설명</span>
-            <FormBox status={getInputStatus(inputs.field2)}>
-              {loadingState ? (
-                <>
-                  <SkeletonLine />
-                  <SkeletonLine />
-                </>
-              ) : (
-                <>
-                  <CustomTextarea
-                    Edit
-                    ref={textareaRef}
-                    value={inputs.field2.value}
-                    onChange={(e) => {
-                      handleChange(e, "field2");
-                      adjustHeight();
-                    }}
-                    status={getInputStatus(inputs.field2)}
-                  />
-
-                  <EditButtonGroup>
-                    <IconButton onClick={handleUndoClick}>
-                      <img src={images.ClockCounterclockwise} alt="" />
-                      <span>이전으로 되돌리기</span>
-                    </IconButton>
-                    <IconButton onClick={handleAIDetailClick}>
-                      <img src={images.MagicStick} alt="" />
-                      <span>AI로 다듬기</span>
-                    </IconButton>
-                  </EditButtonGroup>
-                </>
-              )}
-            </FormBox>
-          </FormEdit>
+      ) : showRegenerateButton1 ? (
+        <Card>
+          {/* 재생성하기 버튼 handleRegenerate() */}
         </Card>
+      ) : isEditMode ? (
+          <Card Edit>
+            <FormEdit>
+              <span>비즈니스 명</span>
+              <FormBox status={getInputStatus(inputs.field1)}>
+                <CustomInput
+                  Edit
+                  type="text"
+                  placeholder="비즈니스 명을 입력해주세요."
+                  value={inputs.field1.value}
+                  onChange={(e) => handleChange(e, "field1")}
+                  status={getInputStatus(inputs.field1)}
+                />
+              </FormBox>
+            </FormEdit>
+
+            <FormEdit>
+              <span>태그</span>
+              <FormBox>
+                <TagWrap>
+                  <Tag color={getCategoryColor(inputs.field4.value.first)} />
+                  <Tag color={getCategoryColor(inputs.field4.value.second)} />
+                  <Tag color={getCategoryColor(inputs.field4.value.third)} />
+                </TagWrap>
+              </FormBox>
+            </FormEdit>
+
+            <FormEdit>
+              <span>비즈니스 설명</span>
+              {showRegenerateButton2 ? (
+                <Card>
+                  {/* 재생성하기 버튼 handleAIDetailClick() */}
+                </Card>
+              ) : (
+                <FormBox status={getInputStatus(inputs.field2)}>
+                  {loadingState ? (
+                    <>
+                    <SkeletonLine />
+                    <SkeletonLine />
+                  </>
+                  ) : (
+                    <>
+                      <CustomTextarea
+                        Edit
+                        ref={textareaRef}
+                        value={inputs.field2.value}
+                        onChange={(e) => {
+                          handleChange(e, "field2");
+                          adjustHeight();
+                        }}
+                        status={getInputStatus(inputs.field2)}
+                      />
+
+                      <EditButtonGroup>
+                        <IconButton onClick={handleUndoClick}>
+                          <img src={images.ClockCounterclockwise} alt="" />
+                          <span>이전으로 되돌리기</span>
+                        </IconButton>
+                        <IconButton onClick={handleAIDetailClick}>
+                          <img src={images.MagicStick} alt="" />
+                          <span>AI로 다듬기</span>
+                        </IconButton>
+                      </EditButtonGroup>
+                    </>
+                  )}
+                </FormBox>
+              )}
+            </FormEdit>
+          </Card>
       ) : (
         <Card>
           <CardTitle>
@@ -708,6 +780,23 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
           }}
           onCancel={() => {
             setShowErrorPopup(false);
+            window.location.href = "/";
+          }}
+        />
+      )}
+      {showErrorPopup2 && (
+        <PopupWrap
+          Warning
+          title="작업이 중단되었습니다"
+          message="데이터 오류로 인해 페이지가 초기화됩니다 작업 중인 내용은 작업관리 페이지를 확인하세요"
+          buttonType="Outline"
+          closeText="확인"
+          onConfirm={() => {
+            setShowErrorPopup2(false);
+            window.location.href = "/";
+          }}
+          onCancel={() => {
+            setShowErrorPopup2(false);
             window.location.href = "/";
           }}
         />
