@@ -93,34 +93,38 @@ const MoleculePersonaCard = ({
 
   return (
     <>
-      <CardContainer
-        TitleFlex={TitleFlex}
-        $isChecked={isChecked}
-        NoLine={NoLine}
-      >
-        <MainContent NoLine={NoLine}>
-          {!hideCheckCircle && (
-            <CheckCircle $isChecked={isChecked} onClick={handleCheck} />
-          )}
 
-          <ContentWrapper NoLine={NoLine}>
-            <TitleSection>
-              <Title NoLine={NoLine}>{title}</Title>
-              <p className="info">
+    <CardContainer TitleFlex={TitleFlex} $isChecked={isChecked} NoLine={NoLine}>
+      <MainContent NoLine={NoLine}>
+        {!hideCheckCircle && (
+          <CheckCircle 
+            $isChecked={isChecked}
+            onClick={handleCheck}
+          />
+        )}
+
+        <ContentWrapper NoLine={NoLine}>
+          <TitleSection>
+            <Title NoLine={NoLine}>
+              <p>{title}</p>
+
+              <TitleInfo>
                 <span>{gender}</span>
                 <span>{age}</span>
                 <span>{job}</span>
-              </p>
-            </TitleSection>
+              </TitleInfo>
+            </Title>
+          </TitleSection>
+          
+          {keywords.length > 0 && (
+            <KeywordGroup>
+              {keywords.map((keyword, index) => (
+                <KeywordTag key={index}>#{keyword}</KeywordTag>
+              ))}
+            </KeywordGroup>
 
-            {keywords.length > 0 && (
-              <KeywordGroup>
-                {keywords.map((keyword, index) => (
-                  <KeywordTag key={index}>#{keyword}</KeywordTag>
-                ))}
-              </KeywordGroup>
-            )}
-          </ContentWrapper>
+          )}
+
 
           {isBasic ? (
             <Badge Basic>
@@ -431,6 +435,7 @@ const ContentWrapper = styled.div`
   justify-content: center;
   align-items: flex-start;
   gap: 8px;
+  margin-right: 12px;
 
   ${(props) =>
     props.NoLine &&
@@ -464,6 +469,13 @@ const Title = styled.div`
   color: ${palette.gray800};
   text-align: left;
   word-wrap: break-word;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  > p {
+    flex-shrink: 0;
+  }
 
   ${(props) =>
     props.NoLine &&
@@ -471,6 +483,32 @@ const Title = styled.div`
       font-weight: 400;
       line-height: 1.5;
     `}
+`;
+
+const TitleInfo = styled.div`
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.875rem;
+  font-weight: 300;
+  line-height: 1.3;
+  color: ${palette.gray500};
+
+  span {
+    + span {
+      margin-left: 6px;
+
+      &:before {
+        display: inline-block;
+        width: 1px;
+        height: 9px;
+        margin-right: 6px;
+        background: ${palette.gray500};
+        content: '';
+      }
+    }
+  }
 `;
 
 const Badge = styled.div`
