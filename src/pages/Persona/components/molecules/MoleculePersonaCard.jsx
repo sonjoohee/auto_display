@@ -98,7 +98,15 @@ const MoleculePersonaCard = ({
 
         <ContentWrapper NoLine={NoLine}>
           <TitleSection>
-            <Title NoLine={NoLine}>{title}</Title>
+            <Title NoLine={NoLine}>
+              <p>{title}</p>
+
+              <TitleInfo>
+                <span>여성</span>
+                <span>20세</span>
+                <span>건물용고체고분자연료전지시스템통합개발자</span>
+              </TitleInfo>
+            </Title>
           </TitleSection>
           
           {keywords.length > 0 && (
@@ -372,6 +380,7 @@ const ContentWrapper = styled.div`
   justify-content: center;
   align-items: flex-start;
   gap: 8px;
+  margin-right: 12px;
 
   ${props => props.NoLine && css`
     flex: initial;
@@ -403,11 +412,44 @@ const Title = styled.div`
   color: ${palette.gray800};
   text-align: left;
   word-wrap: break-word;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  > p {
+    flex-shrink: 0;
+  }
 
   ${props => props.NoLine && css`
     font-weight: 400;
     line-height: 1.5;
   `}
+`;
+
+const TitleInfo = styled.div`
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.875rem;
+  font-weight: 300;
+  line-height: 1.3;
+  color: ${palette.gray500};
+
+  span {
+    + span {
+      margin-left: 6px;
+
+      &:before {
+        display: inline-block;
+        width: 1px;
+        height: 9px;
+        margin-right: 6px;
+        background: ${palette.gray500};
+        content: '';
+      }
+    }
+  }
 `;
 
 const Badge = styled.div`
