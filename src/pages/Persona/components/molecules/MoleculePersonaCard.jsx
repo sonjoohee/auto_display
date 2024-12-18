@@ -482,6 +482,10 @@ const Title = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
 
   > p {
     flex-shrink: 0;
@@ -524,6 +528,7 @@ const TitleInfo = styled.div`
 const Badge = styled.div`
   display: flex;
   align-items: center;
+  flex-shrink: 0;
   gap: 4px;
   font-size: 0.75rem;
   line-height: 1.2;
