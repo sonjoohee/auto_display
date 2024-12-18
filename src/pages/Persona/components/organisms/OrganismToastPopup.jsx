@@ -812,7 +812,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
 
   const handleAnswerToggle = (index) => {
     // 'Pre' 상태일 때는 토글 불가능
-    // if (interviewStatus[index] === 'Pre') return;
+    if (interviewStatus[index] === 'Pre') return;
 
     setVisibleAnswers((prev) => ({ ...prev, [index]: !prev[index] }));
   };
@@ -857,7 +857,11 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
         status={"Complete"}
         style={{ cursor: "pointer" }}
       >
-        <QuestionWrap onClick={() => handleAnswerToggle(index)}>
+        <QuestionWrap 
+          onClick={() => handleAnswerToggle(index)}
+          status={"Complete"}
+          isOpen={visibleAnswers[index]}
+        >
           <Status status={"Complete"}>완료</Status>
           <QuestionText>
             Q{index + 1}. {item.question}
