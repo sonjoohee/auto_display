@@ -447,7 +447,7 @@ const ContentWrapper = styled.div`
   justify-content: center;
   align-items: flex-start;
   gap: 8px;
-  margin-right: 12px;
+  // margin-right: 12px;
 
   ${(props) =>
     props.NoLine &&
@@ -460,6 +460,7 @@ const ContentWrapper = styled.div`
 const CheckCircle = styled.div`
   width: 24px;
   height: 24px;
+  flex-shrink: 0;
   border-radius: 50%;
   cursor: pointer;
   background-image: ${(props) =>
