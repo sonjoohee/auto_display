@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { palette } from "./Palette";
 
 export const ContentsWrap = styled.div`
-  overflow: ${({ noScroll }) => (noScroll ? "hidden" : "auto")};
+  // overflow: ${({ noScroll }) => (noScroll ? "hidden" : "auto")};
   position: relative;
   // width: ${(props) => (props.isMobile ? "100%" : "calc(100% - 40px)")};
   width: 100%;
@@ -10,6 +10,7 @@ export const ContentsWrap = styled.div`
   flex-direction: ${(props) => (props.isMobile ? "column" : "row")};
   gap: ${(props) => (props.isMobile ? "20px" : "40px")};
   padding: ${(props) => (props.isMobile ? "20px" : "0")};
+  min-height: 100vh;
 `;
 
 export const ContentSection = styled.div`
@@ -26,15 +27,13 @@ export const ContentSection = styled.div`
 `;
 
 export const MainContent = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   max-width: 1024px;
-  min-height: 100vh;
+  // min-height: 100vh;
   width: 100%;
-  justify-content: ${(props) => {
-    if (props.MainSearch) return `center`;
-    else return `flex-start`;
-  }};
+  justify-content: flex-start;
   padding: 57px 0 40px;
   margin: 0 auto;
   // padding: ${(props) => (props.isMobile ? "0" : "0 20px")};
@@ -50,6 +49,7 @@ export const AnalysisWrap = styled.div`
 `;
 
 export const MainSection = styled.div`
+  position: relative;
   flex: 1;
   display: flex;
   flex-direction: column;
