@@ -1010,7 +1010,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
         <PopupWrap
           Warning
           title="작업이 중단되었습니다"
-          message="데이터 오류로 인해 페이지가 초기화됩니다 작업 중인 내용은 작업관리 페이지를 확인하세요"
+          message="데이터 오류로 인해 페이지가 초기화됩니다.\n작업 중인 내용은 작업관리 페이지를 확인하세요."
           buttonType="Outline"
           closeText="확인"
           onConfirm={() => {
