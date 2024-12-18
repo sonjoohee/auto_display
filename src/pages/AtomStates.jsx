@@ -432,3 +432,5 @@ export const INTERVIEW_REPORT_ADDITIONAL = atom([]);
 export const IS_EDIT_MODE = atom(false);
 
 export const IS_SHOW_TOAST = atom(false);
+
+export const IS_LOADING_BUSINESS_ANALYSIS = atom(false);

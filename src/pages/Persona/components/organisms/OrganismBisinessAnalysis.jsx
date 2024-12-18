@@ -28,13 +28,16 @@ import {
   PROJECT_ID,
   IS_LOGGED_IN,
   IS_EDIT_MODE,
+  IS_LOADING_BUSINESS_ANALYSIS,
 } from "../../../AtomStates";
 import PopupWrap from "../../../../assets/styles/Popup";
 import AtomPersonaLoader from "../atoms/AtomPersonaLoader";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
+import MoleculeRecreate from "../molecules/MoleculeRecreate";
 // import { updateProjectReportOnServer } from "../../../../utils/indexedDB";
 
 const OrganismBusinessAnalysis = ({ personaStep }) => {
+  const [isLoadingBusinessAnalysis, setIsLoadingBusinessAnalysis] = useAtom(IS_LOADING_BUSINESS_ANALYSIS);
   const [isProjectIdReady, setIsProjectIdReady] = useState(false);
   const [projectId, setprojectId] = useAtom(PROJECT_ID);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
@@ -89,8 +92,8 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
     },
   });
 
-  let regenerateCount1 = 0;
-  let regenerateCount2 = 0;
+  const [regenerateCount1, setRegenerateCount1] = useState(0);
+  const [regenerateCount2, setRegenerateCount2] = useState(0);
   const [showRegenerateButton1, setShowRegenerateButton1] = useState(false);
   const [showRegenerateButton2, setShowRegenerateButton2] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
@@ -239,6 +242,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
 
   const handleAIDetailClick = async () => {
     // setPersonaButtonState1(1);
+    setShowRegenerateButton2(false);
     let businessData;
     let categoryData;
     let attempts = 0;
@@ -296,7 +300,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
               return;
             } else {
               setShowRegenerateButton2(true);
-              regenerateCount2 += 1;
+              setRegenerateCount2(regenerateCount2 + 1);
             }
             break;
           default:
@@ -409,7 +413,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
 
       try {
         if (personaButtonState1 === 1) {
-          setIsLoading(true);
+          setIsLoadingBusinessAnalysis(true);
           // 버튼 클릭으로 API 호출
           let response = await axios.post(
             "https://wishresearch.kr/person/business_category",
@@ -461,6 +465,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
             setShowErrorPopup(true);
             return;
           } else {
+            setPersonaButtonState1(0);
             setBusinessAnalysis(updatedBusinessAnalysis);
             await updateProjectOnServer(
               projectId,
@@ -488,7 +493,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
                 return;
               } else {
                 setShowRegenerateButton1(true);
-                regenerateCount1 += 1;
+                setRegenerateCount1(regenerateCount1 + 1);
               }
               break;
             default:
@@ -498,8 +503,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
           console.error("Error details:", error);
         }
       } finally {
-        setPersonaButtonState1(0);
-        setIsLoading(false);
+        setIsLoadingBusinessAnalysis(false);
       }
     };
     if (isProjectIdReady) {
@@ -508,7 +512,8 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
   }, [isProjectIdReady, personaButtonState1]);
 
   const handleRegenerate = async () => {
-    setPersonaButtonState1(1);
+    setShowRegenerateButton1(false);
+    setIsLoadingBusinessAnalysis(true);
     let businessData;
     let categoryData;
     let attempts = 0;
@@ -566,6 +571,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
         setShowErrorPopup(true);
         return;
       } else {
+        setPersonaButtonState1(0);
         setBusinessAnalysis(updatedBusinessAnalysis);
       }
       setCategoryColor({
@@ -592,7 +598,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
               return;
             } else {
               setShowRegenerateButton1(true);
-              regenerateCount1 += 1;
+              setRegenerateCount1(regenerateCount1 + 1);
             }
             break;
           default:
@@ -602,8 +608,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
         console.error("Error details:", error);
       }
     } finally {
-      setPersonaButtonState1(0);
-      setIsLoading(false);
+      setIsLoadingBusinessAnalysis(false);
     }
   };
   
@@ -611,7 +616,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
     <>
       <Title>
         <h3>비즈니스 분석</h3> 
-        {!personaButtonState1 && personaStep === 1 && (
+        {!personaButtonState1 && !isLoadingBusinessAnalysis && personaStep === 1 && (
           <ButtonGroup>
             {isEditMode ? (
               <IconButton onClick={handleSaveClick}>
@@ -633,13 +638,13 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
           </ButtonGroup>
         )}
       </Title>
-      {personaButtonState1 ? (
+      {isLoadingBusinessAnalysis ? (
         <Card>
           <AtomPersonaLoader message="비즈니스를 분석하고 있어요..." />
         </Card>
       ) : showRegenerateButton1 ? (
         <Card>
-          {/* 재생성하기 버튼 handleRegenerate() */}
+          <MoleculeRecreate Large onRegenerate={handleRegenerate}/>
         </Card>
       ) : isEditMode ? (
           <Card Edit>
@@ -671,9 +676,9 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
             <FormEdit>
               <span>비즈니스 설명</span>
               {showRegenerateButton2 ? (
-                <Card>
-                  {/* 재생성하기 버튼 handleAIDetailClick() */}
-                </Card>
+                <FormBox regenerate>
+                  <MoleculeRecreate Medium onRegenerate={handleAIDetailClick}/>
+                </FormBox>
               ) : (
                 <FormBox status={getInputStatus(inputs.field2)}>
                   {loadingState ? (
@@ -943,8 +948,8 @@ const FormBox = styled.div`
   transition: all 0.5s;
 
   &:focus-within {
-    border: 1px solid ${palette.primary};
-    box-shadow: 0 0 8px 0 rgba(34, 111, 255, 0.5);
+    border: ${(props) => props.regenerate ? `1px solid ${palette.outlineGray}` : `1px solid ${palette.primary}`};
+    box-shadow: ${(props) => props.regenerate ? `` : `0 0 8px 0 rgba(34, 111, 255, 0.5)`};
   }
 `;
 
