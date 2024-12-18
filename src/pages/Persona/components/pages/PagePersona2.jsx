@@ -96,8 +96,8 @@ const PagePersona2 = () => {
 
   const [customizeFormState, setCustomizeFormState] = useState({
     isAccordionOpen: false,
-    personaDescription: '', // 페르소나 설명
-    purposeDescription: '', // 목적 설명
+    personaDescription: "", // 페르소나 설명
+    purposeDescription: "", // 목적 설명
   });
   const handlePopupClose = () => {
     setShowPopup(false);
@@ -606,8 +606,8 @@ const PagePersona2 = () => {
                       <Title Column>
                         <h3>산업별 인기 페르소나</h3>
                         <p>
-                          산업별로 자주 활용되는 페르소나를 지금 바로 확인하고
-                          인사이트를 얻어보세요.
+                          산업별로 자주 활용되는 페르소나를 확인하고 지금 바로
+                          대화하여 인사이트를 얻어보세요.
                           <TooltipButton
                             onClick={() => setShowTooltip(!showTooltip)}
                           >
@@ -734,7 +734,8 @@ const PagePersona2 = () => {
                                 <>
                                   선택하신{" "}
                                   <span>{selectedPersonas.length}명</span>의
-                                  페르소나와 인터뷰 하시겠어요? ({selectedPersonas.length}/5)
+                                  페르소나와 인터뷰 하시겠어요? (
+                                  {selectedPersonas.length}/5)
                                 </>
                               ) : (
                                 "페르소나를 선택하고 그들의 인터뷰를 시작해 보세요 (최대 5명 선택 가능)"
@@ -817,7 +818,9 @@ const PagePersona2 = () => {
                 />
               </div>
               <Title>
-                <p className="required">이 페르소나를 사용하려는 목적은 무엇인가요?</p>
+                <p className="required">
+                  이 페르소나를 사용하려는 목적은 무엇인가요?
+                </p>
               </Title>
               <div style={{ width: "100%" }}>
                 <CustomTextarea
@@ -830,7 +833,9 @@ const PagePersona2 = () => {
                 />
               </div>
               <Title>
-                <p className="required">몇명의 페르소나를 모집하시고 싶으신가요?</p>
+                <p className="required">
+                  몇명의 페르소나를 모집하시고 싶으신가요?
+                </p>
               </Title>
 
               <Quantity>

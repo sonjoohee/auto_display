@@ -138,7 +138,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             questions.forEach((_, index) => {
               const answers = interviewData[index][`answer_${index + 1}`];
 
-              console.log("🚀 ~ questions.forEach ~ answers:", answers);
+              // console.log("🚀 ~ questions.forEach ~ answers:", answers);
 
               if (personaList.selected.length > 0) {
                 newAnswers[index] = personaList.selected.map(
@@ -158,7 +158,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             });
             setAnswers(newAnswers);
 
-            console.log("🚀 ~ interviewLoading ~ newAnswers:", newAnswers);
+            // console.log("🚀 ~ interviewLoading ~ newAnswers:", newAnswers);
             // 모든 답변을 보이도록 설정
             const allVisible = {};
             questions.forEach((_, index) => {
@@ -295,7 +295,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               hashtag: personaList.selected[i].tag,
               summary: personaList.selected[i].summary,
             };
-            console.log("🚀 ~ processInterview ~ personaInfo:", personaInfo);
+            // console.log("🚀 ~ processInterview ~ personaInfo:", personaInfo);
 
             const data = {
               business_analysis_data: businessAnalysis,
@@ -347,7 +347,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                 },
               ],
             }));
-            console.log("🚀 ~ processInterview ~ setAnswers:", answers);
+            // console.log("🚀 ~ processInterview ~ setAnswers:", answers);
             if (i === personaList.selected.length - 1) {
               // 모든 페르소나의 답변이 완료되면 interviewData 업데이트
               setInterviewData((prev) => {
@@ -359,10 +359,10 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                 };
                 return newData;
               });
-              console.log(
-                "🚀 ~ processInterview ~ setInterviewData:",
-                interviewData
-              );
+              // console.log(
+              //   "🚀 ~ processInterview ~ setInterviewData:",
+              //   interviewData
+              // );
 
               newStatus[currentQuestionIndex] = "Complete";
               setInterviewStatus(newStatus);
@@ -714,7 +714,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
     try {
       let newReportId = await createProjectReportOnServer(isLoggedIn);
       setReportId(newReportId); // 생성된 대화 ID 설정
-      console.log("🚀 ~ handleCheckResult ~ newReportId:", newReportId);
+      // console.log("🚀 ~ handleCheckResult ~ newReportId:", newReportId);
     } catch (error) {
       // setIsLoadingPage(false); // 로딩 완료
       console.error("Failed to create project on server:", error);
