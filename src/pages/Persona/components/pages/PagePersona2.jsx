@@ -99,6 +99,9 @@ const PagePersona2 = () => {
     personaDescription: '', // 페르소나 설명
     purposeDescription: '', // 목적 설명
   });
+
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
+
   const handlePopupClose = () => {
     setShowPopup(false);
   };
@@ -206,69 +209,86 @@ const PagePersona2 = () => {
 
   useEffect(() => {
     const loadProject = async () => {
-      if (projectLoadButtonState) {
-        const savedProjectInfo = await getProjectByIdFromIndexedDB(
-          projectId,
-          projectLoadButtonState
-        );
-        if (savedProjectInfo) {
-          setBusinessAnalysis(savedProjectInfo.businessAnalysis);
-          console.log(savedProjectInfo.requestPersonaList);
-          setRequestPersonaList(savedProjectInfo.requestPersonaList);
-          setCategoryColor({
-            first: getCategoryColor(
-              savedProjectInfo.businessAnalysis.category.first
-            ),
-            second: getCategoryColor(
-              savedProjectInfo.businessAnalysis.category.second
-            ),
-            third: getCategoryColor(
-              savedProjectInfo.businessAnalysis.category.third
-            ),
-          });
-          let unselectedPersonas = [];
-          let data, response;
+      try {
+        if (projectLoadButtonState) {
+          const savedProjectInfo = await getProjectByIdFromIndexedDB(
+            projectId,
+            projectLoadButtonState
+          );
+          if (savedProjectInfo) {
+            setBusinessAnalysis(savedProjectInfo.businessAnalysis);
+            console.log(savedProjectInfo.requestPersonaList);
+            setRequestPersonaList(savedProjectInfo.requestPersonaList);
+            setCategoryColor({
+              first: getCategoryColor(
+                savedProjectInfo.businessAnalysis.category.first
+              ),
+              second: getCategoryColor(
+                savedProjectInfo.businessAnalysis.category.second
+              ),
+              third: getCategoryColor(
+                savedProjectInfo.businessAnalysis.category.third
+              ),
+            });
+            let unselectedPersonas = [];
+            let data, response;
 
-          // 카테고리별로 페르소나 요청
-          for (const category of Object.values(
-            savedProjectInfo.businessAnalysis.category
-          )) {
-            data = {
-              target: category,
-            };
+            // 카테고리별로 페르소나 요청
+            for (const category of Object.values(
+              savedProjectInfo.businessAnalysis.category
+            )) {
+              data = {
+                target: category,
+              };
 
-            response = await axios.post(
-              "https://wishresearch.kr/person/find",
-              data,
-              axiosConfig
-            );
+              response = await axios.post(
+                "https://wishresearch.kr/person/find",
+                data,
+                axiosConfig
+              );
 
-            let newPersonas = response.data;
+              let newPersonas = response.data;
 
-            // 이미 존재하는 페르소나는 제외
-            for (let i = 0; i < newPersonas.length; i++) {
-              let isDuplicate = false;
-              for (let j = 0; j < unselectedPersonas.length; j++) {
-                if (unselectedPersonas[j].persona === newPersonas[i].persona) {
-                  isDuplicate = true;
-                  break;
+              // 이미 존재하는 페르소나는 제외
+              for (let i = 0; i < newPersonas.length; i++) {
+                let isDuplicate = false;
+                for (let j = 0; j < unselectedPersonas.length; j++) {
+                  if (unselectedPersonas[j].persona === newPersonas[i].persona) {
+                    isDuplicate = true;
+                    break;
+                  }
+                }
+                if (!isDuplicate) {
+                  unselectedPersonas.push(newPersonas[i]);
                 }
               }
-              if (!isDuplicate) {
-                unselectedPersonas.push(newPersonas[i]);
-              }
             }
-          }
 
-          let personaList = {
-            selected: [],
-            unselected: unselectedPersonas,
-          };
-          setPersonaList(personaList);
+            let personaList = {
+              selected: [],
+              unselected: unselectedPersonas,
+            };
+            setPersonaList(personaList);
+          }
+          // setIsLoadingPage(false); // 로딩 완료
         }
-        // setIsLoadingPage(false); // 로딩 완료
+        setProjectLoadButtonState(false);
+      } catch (error) {
+        if (error.response) {
+          switch (error.response.status) {
+            case 500:
+              setShowErrorPopup(true);
+              break;
+            case 504:
+              // 재생성하기
+              break;
+            default:
+              setShowErrorPopup(true);
+              break;
+          }
+          console.error("Error details:", error);
+        }
       }
-      setProjectLoadButtonState(false);
     };
 
     loadProject();
@@ -316,7 +336,7 @@ const PagePersona2 = () => {
                 if (unselectedPersonas[j].persona === newPersonas[i].persona) {
                   isDuplicate = true;
                   break;
-                }
+                } 
               }
               if (!isDuplicate) {
                 unselectedPersonas.push(newPersonas[i]);
@@ -399,10 +419,8 @@ const PagePersona2 = () => {
 
             requestPersonaList = response.data;
           }
-          if (retryCount === maxRetries) {
-            throw new Error(
-              "Maximum retry attempts reached. Empty response persists."
-            );
+          if (retryCount >= maxRetries) {
+            setShowErrorPopup(true);
           }
 
           const requestPersonaData = {
@@ -422,7 +440,20 @@ const PagePersona2 = () => {
           );
         }
       } catch (error) {
-        console.error("Error in loadPersona:", error);
+        if (error.response) {
+          switch (error.response.status) {
+            case 500:
+              setShowErrorPopup(true);
+              break;
+            case 504:
+              // 재생성하기
+              break;
+            default:
+              setShowErrorPopup(true);
+              break;
+          }
+          console.error("Error details:", error);
+        }
       } finally {
         setPersonaButtonState2(0);
         setIsLoading(false);
@@ -541,8 +572,20 @@ const PagePersona2 = () => {
         // 성공 메시지 표시 등 추가 처리
       }
     } catch (error) {
-      console.error("Custom persona request failed:", error);
-      // 에러 처리
+      if (error.response) {
+        switch (error.response.status) {
+          case 500:
+            setShowErrorPopup(true);
+            break;
+          case 504:
+            // 재생성하기
+            break;
+          default:
+            setShowErrorPopup(true);
+            break;
+        }
+        console.error("Error details:", error);
+      }
     }
   };
 
@@ -962,6 +1005,23 @@ const PagePersona2 = () => {
               </AccordionSection>
             </>
           }
+        />
+      )}
+      {showErrorPopup && (
+        <PopupWrap
+          Warning
+          title="작업이 중단되었습니다"
+          message="데이터 오류로 인해 페이지가 초기화됩니다 작업 중인 내용은 작업관리 페이지를 확인하세요"
+          buttonType="Outline"
+          closeText="확인"
+          onConfirm={() => {
+            setShowErrorPopup(false);
+            window.location.href = "/";
+          }}
+          onCancel={() => {
+            setShowErrorPopup(false);
+            window.location.href = "/";
+          }}
         />
       )}
     </>
