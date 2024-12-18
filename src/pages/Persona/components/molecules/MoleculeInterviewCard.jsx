@@ -19,6 +19,7 @@ import {
 import PopupWrap from "../../../../assets/styles/Popup";
 import axios from "axios";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
+import MoleculeRecreate from "./MoleculeRecreate";
 
 const MoleculeInterviewCard = ({
   title,
@@ -67,6 +68,9 @@ const MoleculeInterviewCard = ({
     },
   });
 
+  const [regenerateCount, setRegenerateCount] = useState(0);
+  const [showRegenerateButton, setShowRegenerateButton] = useState(false);
+
   const axiosConfig = {
     timeout: 100000, // 100초
     headers: {
@@ -76,6 +80,8 @@ const MoleculeInterviewCard = ({
   };
 
   const loadInterviewQuestion = async () => {
+    setShowRegenerateButton(false);
+    
     const existingQuestions = interviewQuestionListState.find(
       (item) => item.theory_name === title
     );
@@ -157,7 +163,13 @@ const MoleculeInterviewCard = ({
             setShowErrorPopup(true);
             break;
           case 504:
-            // 재생성하기
+            if (regenerateCount >= 3) {
+              setShowErrorPopup(true);
+              return;
+            } else {
+              setShowRegenerateButton(true);
+              setRegenerateCount(regenerateCount + 1);
+            }
             break;
           default:
             setShowErrorPopup(true);
@@ -205,9 +217,14 @@ const MoleculeInterviewCard = ({
             문항보기
           </span>
         ) : (
-          <ListUL>
-            <ul>
-              {isLoadingQuestion ? (
+          showRegenerateButton ? (
+            <ListUL>
+              <MoleculeRecreate Small onRegenerate={loadInterviewQuestion}/>
+            </ListUL>
+          ) : (
+            <ListUL>
+              <ul>
+                {isLoadingQuestion ? (
                 <>
                   <li>
                     <span className="number">Q1.</span>
@@ -222,20 +239,21 @@ const MoleculeInterviewCard = ({
                     <SkeletonLine width="100%" height="20px" />
                   </li>
                 </>
-              ) : (
-                // 실제 질문 데이터
-                interviewQuestionListState
-                  .find((item) => item.theory_name === title)
-                  ?.questions.slice(2, 5)
-                  .map((item, index) => (
-                    <li key={index}>
-                      <span className="number">Q{index + 1}.</span>
-                      {item.question}
-                    </li>
-                  ))
-              )}
-            </ul>
-          </ListUL>
+                ) : (
+                  // 실제 질문 데이터
+                  interviewQuestionListState
+                    .find((item) => item.theory_name === title)
+                    ?.questions.slice(2, 5)
+                    .map((item, index) => (
+                      <li key={index}>
+                        <span className="number">Q{index + 1}.</span>
+                        {item.question}
+                      </li>
+                    ))
+                )}
+              </ul>
+            </ListUL>
+          )
         )}
       </DescriptionSection>
     )}
