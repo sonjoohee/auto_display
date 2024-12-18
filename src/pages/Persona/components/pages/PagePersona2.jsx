@@ -1426,9 +1426,41 @@ const PersonaCards = styled.div`
   width: 100%;
 `;
 
+// const BottomBar = styled.div`
+//   position: sticky;
+//   bottom: 40px;
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   padding: 24px 20px;
+//   border-radius: 10px;
+//   border: 1px solid ${palette.outlineGray};
+//   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+//   background: ${palette.white};
+
+//   //   button:disabled {
+//   //     cursor: default;
+//   //   }
+
+//   p {
+//     font-size: 0.875rem;
+//     font-weight: 300;
+//     line-height: 1.5;
+//     color: ${palette.gray500};
+
+//     span {
+//       font-size: 1rem;
+//       font-weight: 600;
+//       color: ${palette.primary};
+//       // text-decoration: underline;
+//     }
+//   }
+// `;
+
 const BottomBar = styled.div`
-  position: sticky;
+  position: fixed;
   bottom: 40px;
+  width: 718px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1437,10 +1469,7 @@ const BottomBar = styled.div`
   border: 1px solid ${palette.outlineGray};
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
   background: ${palette.white};
-
-  //   button:disabled {
-  //     cursor: default;
-  //   }
+  z-index: 100;
 
   p {
     font-size: 0.875rem;
@@ -1452,7 +1481,6 @@ const BottomBar = styled.div`
       font-size: 1rem;
       font-weight: 600;
       color: ${palette.primary};
-      // text-decoration: underline;
     }
   }
 `;
@@ -1467,6 +1495,7 @@ const BannerPersona = styled.div`
   border-radius: 10px;
   background: #f8f9fd;
   overflow: hidden;
+  margin-bottom: 120px; // 하단 여백 추가하여 BottomBar가 가리지 않도록 함
 
   > div {
     display: flex;

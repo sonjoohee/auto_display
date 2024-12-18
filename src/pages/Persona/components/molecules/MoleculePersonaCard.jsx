@@ -123,12 +123,12 @@ const MoleculePersonaCard = ({
 
             {newLine && (
               <TitleInfo>
-              <span>{gender}</span>
-              <span>{age}세</span>
-              <span>{job}</span>
+                <span>{gender}</span>
+                <span>{age}세</span>
+                <span>{job}</span>
               </TitleInfo>
             )}
-            
+
             {keywords.length > 0 && (
               <KeywordGroup>
                 {keywords.map((keyword, index) => (
@@ -431,12 +431,12 @@ const MainContent = styled.div`
       justify-content: space-between; // space-between으로 변경
       gap: 8px;
 
-      &:before {
+      /* &:before {
         content: "";
         width: 20px;
         height: 20px;
         background: url(${images.PersonFill}) no-repeat center center / contain;
-      }
+      } */
     `}
 `;
 
@@ -478,7 +478,6 @@ const TitleSection = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-
 `;
 
 const Title = styled.div`
@@ -490,7 +489,6 @@ const Title = styled.div`
   display: block;
   align-items: center;
   gap: 8px;
-
 
   > p {
     // flex-shrink: 0;
@@ -519,7 +517,6 @@ const TitleInfo = styled.span`
   line-height: 1.3;
   color: ${palette.gray500};
   margin-left: 6px;
-
 
   + span {
     &:before {

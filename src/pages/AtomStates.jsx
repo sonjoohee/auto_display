@@ -434,3 +434,10 @@ export const IS_EDIT_MODE = atom(false);
 export const IS_SHOW_TOAST = atom(false);
 
 export const IS_LOADING_BUSINESS_ANALYSIS = atom(false);
+
+export const PROJECT_LOADING = atom({
+  isLoading: false,
+  lastLoadTime: null,
+  error: null,
+});
+export const PROJECT_REFRESH_TRIGGER = atom(0);
