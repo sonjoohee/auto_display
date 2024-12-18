@@ -27,6 +27,7 @@ const MoleculePersonaCard = ({
   currentSelection,
   onClick,
   checked = null,
+  newLine = false,
 }) => {
   const [isChecked, setIsChecked] = useState(false);
 
@@ -108,14 +109,24 @@ const MoleculePersonaCard = ({
               <Title NoLine={NoLine}>
                 <p>{title}</p>
 
-                <TitleInfo>
-                  <span>{gender}</span>
-                  <span>{age}세</span>
-                  <span>{job}</span>
-                </TitleInfo>
+                {!newLine && (
+                  <TitleInfo>
+                    <span>{gender}</span>
+                    <span>{age}세</span>
+                    <span>{job}</span>
+                  </TitleInfo>
+                )}
               </Title>
             </TitleSection>
 
+            {newLine &&                 
+              <TitleInfo>
+                <span>{gender}</span>
+                <span>{age}세</span>
+                <span>{job}</span>
+              </TitleInfo>
+            }
+            
             {keywords.length > 0 && (
               <KeywordGroup>
                 {keywords.map((keyword, index) => (
