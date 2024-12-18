@@ -16,6 +16,7 @@ import {
   SkeletonTitle,
   SkeletonLine,
 } from "../../../../assets/styles/Skeleton";
+import PopupWrap from "../../../../assets/styles/Popup";
 import axios from "axios";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 
@@ -43,6 +44,7 @@ const MoleculeInterviewCard = ({
   const [interviewQuestionList, setInterviewQuestionList] = useAtom(
     INTERVIEW_QUESTION_LIST
   );
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
 
   const [state, setState] = useState({
     isExpanded: false,
@@ -117,10 +119,9 @@ const MoleculeInterviewCard = ({
 
         questionList = response.data;
       }
-      if (retryCount === maxRetries) {
-        throw new Error(
-          "Maximum retry attempts reached. Empty response persists."
-        );
+      if (retryCount >= maxRetries) {
+        setShowErrorPopup(true);
+        return;
       }
       setInterviewQuestionListState((prev) => [
         ...prev,
@@ -150,13 +151,27 @@ const MoleculeInterviewCard = ({
         isLoggedIn
       );
     } catch (error) {
-      console.error("Error in loadInterviewQuestion:", error);
+      if (error.response) {
+        switch (error.response.status) {
+          case 500:
+            setShowErrorPopup(true);
+            break;
+          case 504:
+            // 재생성하기
+            break;
+          default:
+            setShowErrorPopup(true);
+            break;
+        }
+        console.error("Error details:", error);
+      }
     } finally {
       setIsLoadingQuestion(false);
     }
   };
 
   return (
+    <>
     <CardContainer 
       $isSelected={isSelected} 
       NoBackground={NoBackground}
@@ -225,6 +240,24 @@ const MoleculeInterviewCard = ({
       </DescriptionSection>
     )}
     </CardContainer>
+    {showErrorPopup && (
+      <PopupWrap
+        Warning
+        title="작업이 중단되었습니다"
+        message="데이터 오류로 인해 페이지가 초기화됩니다 작업 중인 내용은 작업관리 페이지를 확인하세요"
+        buttonType="Outline"
+        closeText="확인"
+        onConfirm={() => {
+          setShowErrorPopup(false);
+          window.location.href = "/";
+        }}
+        onCancel={() => {
+          setShowErrorPopup(false);
+          window.location.href = "/";
+        }}
+      />
+    )}
+    </>
   );
 };
 
