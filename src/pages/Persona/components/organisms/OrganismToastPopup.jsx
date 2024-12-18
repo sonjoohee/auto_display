@@ -91,28 +91,98 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
 
   useEffect(() => {
     const interviewLoading = async () => {
-        // isComplete가 true일 경우 즉시 완료 상태로 설정
-        if (isComplete) {
-          const existingQuestions = interviewQuestionList.find(
-            (item) => item.theory_name === selectedInterviewPurpose
+      // isComplete가 true일 경우 즉시 완료 상태로 설정
+      if (isComplete) {
+        const existingQuestions = interviewQuestionList.find(
+          (item) => item.theory_name === selectedInterviewPurpose
+        );
+
+        if (existingQuestions) {
+          const questions = existingQuestions.questions.slice(2);
+          setInterviewQuestionListState(questions);
+
+          // 모든 질문을 Complete 상태로 설정
+          const completedStatus = new Array(questions.length).fill("Complete");
+          setInterviewStatus(completedStatus);
+
+          console.log(completedStatus);
+
+          // interviewData에서 답변 설정
+          const newAnswers = {};
+          questions.forEach((_, index) => {
+            const answers = interviewData[index][`answer_${index + 1}`];
+            newAnswers[index] = personaList.selected.map((persona, pIndex) => {
+              // profile 문자열에서 정보 추출
+              const profileArray = persona.profile
+                .replace(/['\[\]]/g, "")
+                .split(", ");
+              const age = profileArray[0].split(": ")[1];
+              const gender =
+                profileArray[1].split(": ")[1] === "남성" ? "남성" : "여성";
+              const job = profileArray[2].split(": ")[1];
+
+              return {
+                persona: persona,
+                gender: gender,
+                age: age,
+                job: job,
+                answer: answers[pIndex],
+              };
+            });
+          });
+          setAnswers(newAnswers);
+
+          // 모든 답변을 보이도록 설정
+          const allVisible = {};
+          questions.forEach((_, index) => {
+            allVisible[index] = true;
+          });
+          setVisibleAnswers(allVisible);
+
+          setIsLoadingPrepare(false);
+        } else {
+          const questions = interviewData.map((item) => ({
+            question: item.question_1 || item.question_2 || item.question_3,
+          }));
+          setInterviewQuestionListState(questions);
+          // 모든 질문을 Complete 상태로 설정
+          const completedStatus = new Array(interviewData.length).fill(
+            "Complete"
           );
+          setInterviewStatus(completedStatus);
 
-          if (existingQuestions) {
-            const questions = existingQuestions.questions.slice(2);
-            setInterviewQuestionListState(questions);
+          console.log(completedStatus);
 
-            // 모든 질문을 Complete 상태로 설정
-            const completedStatus = new Array(questions.length).fill(
-              "Complete"
-            );
-            setInterviewStatus(completedStatus);
+          // interviewData에서 답변 설정
+          const newAnswers = {};
 
-            console.log(completedStatus);
+          questions.forEach((_, index) => {
+            const answers = interviewData[index][`answer_${index + 1}`];
+            newAnswers[index] = personaList.selected.map((persona, pIndex) => {
+              // profile 문자열에서 정보 추출
+              const profileArray = persona.profile
+                .replace(/['\[\]]/g, "")
+                .split(", ");
+              const age = profileArray[0].split(": ")[1];
+              const gender =
+                profileArray[1].split(": ")[1] === "남성" ? "남성" : "여성";
+              const job = profileArray[2].split(": ")[1];
 
-            // interviewData에서 답변 설정
-            const newAnswers = {};
-            questions.forEach((_, index) => {
-              const answers = interviewData[index][`answer_${index + 1}`];
+              return {
+                persona: persona,
+                gender: gender,
+                age: age,
+                job: job,
+                answer: answers[pIndex],
+              };
+            });
+          });
+          questions.forEach((_, index) => {
+            const answers = interviewData[index][`answer_${index + 1}`];
+
+            // console.log("🚀 ~ questions.forEach ~ answers:", answers);
+
+            if (personaList.selected.length > 0) {
               newAnswers[index] = personaList.selected.map(
                 (persona, pIndex) => {
                   // profile 문자열에서 정보 추출
@@ -133,124 +203,42 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                   };
                 }
               );
-            });
-            setAnswers(newAnswers);
+            } else {
+              newAnswers[index] = selectedPersonaList.map((persona, pIndex) => {
+                // profile 문자열에서 정보 추출
+                const profileArray = persona.profile
+                  .replace(/['\[\]]/g, "")
+                  .split(", ");
+                const age = profileArray[0].split(": ")[1];
+                const gender =
+                  profileArray[1].split(": ")[1] === "남성" ? "남성" : "여성";
+                const job = profileArray[2].split(": ")[1];
 
-            // 모든 답변을 보이도록 설정
-            const allVisible = {};
-            questions.forEach((_, index) => {
-              allVisible[index] = true;
-            });
-            setVisibleAnswers(allVisible);
+                return {
+                  persona: persona,
+                  gender: gender,
+                  age: age,
+                  job: job,
+                  answer: answers[pIndex],
+                };
+              });
+            }
+          });
+          setAnswers(newAnswers);
 
-            setIsLoadingPrepare(false);
-          } else {
-            const questions = interviewData.map((item) => ({
-              question: item.question_1 || item.question_2 || item.question_3,
-            }));
-            setInterviewQuestionListState(questions);
-            // 모든 질문을 Complete 상태로 설정
-            const completedStatus = new Array(interviewData.length).fill(
-              "Complete"
-            );
-            setInterviewStatus(completedStatus);
-
-            console.log(completedStatus);
-
-            // interviewData에서 답변 설정
-            const newAnswers = {};
-
-            questions.forEach((_, index) => {
-              const answers = interviewData[index][`answer_${index + 1}`];
-              newAnswers[index] = personaList.selected.map(
-                (persona, pIndex) => {
-                  // profile 문자열에서 정보 추출
-                  const profileArray = persona.profile
-                    .replace(/['\[\]]/g, "")
-                    .split(", ");
-                  const age = profileArray[0].split(": ")[1];
-                  const gender =
-                    profileArray[1].split(": ")[1] === "남성" ? "남성" : "여성";
-                  const job = profileArray[2].split(": ")[1];
-
-                  return {
-                    persona: persona,
-                    gender: gender,
-                    age: age,
-                    job: job,
-                    answer: answers[pIndex],
-                  };
-                }
-              );
-            });
-            questions.forEach((_, index) => {
-              const answers = interviewData[index][`answer_${index + 1}`];
-
-              // console.log("🚀 ~ questions.forEach ~ answers:", answers);
-
-              if (personaList.selected.length > 0) {
-                newAnswers[index] = personaList.selected.map(
-                  (persona, pIndex) => {
-                    // profile 문자열에서 정보 추출
-                    const profileArray = persona.profile
-                      .replace(/['\[\]]/g, "")
-                      .split(", ");
-                    const age = profileArray[0].split(": ")[1];
-                    const gender =
-                      profileArray[1].split(": ")[1] === "남성"
-                        ? "남성"
-                        : "여성";
-                    const job = profileArray[2].split(": ")[1];
-
-                    return {
-                      persona: persona,
-                      gender: gender,
-                      age: age,
-                      job: job,
-                      answer: answers[pIndex],
-                    };
-                  }
-                );
-              } else {
-                newAnswers[index] = selectedPersonaList.map(
-                  (persona, pIndex) => {
-                    // profile 문자열에서 정보 추출
-                    const profileArray = persona.profile
-                      .replace(/['\[\]]/g, "")
-                      .split(", ");
-                    const age = profileArray[0].split(": ")[1];
-                    const gender =
-                      profileArray[1].split(": ")[1] === "남성"
-                        ? "남성"
-                        : "여성";
-                    const job = profileArray[2].split(": ")[1];
-
-                    return {
-                      persona: persona,
-                      gender: gender,
-                      age: age,
-                      job: job,
-                      answer: answers[pIndex],
-                    };
-                  }
-                );
-              }
-            });
-            setAnswers(newAnswers);
-
-            // console.log("🚀 ~ interviewLoading ~ newAnswers:", newAnswers);
-            // 모든 답변을 보이도록 설정
-            const allVisible = {};
-            questions.forEach((_, index) => {
-              allVisible[index] = true;
-            });
-            setVisibleAnswers(allVisible);
-            setIsLoadingPrepare(false);
-          }
-          return; // API 호출 없이 종료
+          // console.log("🚀 ~ interviewLoading ~ newAnswers:", newAnswers);
+          // 모든 답변을 보이도록 설정
+          const allVisible = {};
+          questions.forEach((_, index) => {
+            allVisible[index] = true;
+          });
+          setVisibleAnswers(allVisible);
+          setIsLoadingPrepare(false);
         }
-        
-        loadInterviewQuestion();
+        return; // API 호출 없이 종료
+      }
+
+      loadInterviewQuestion();
     };
     interviewLoading();
   }, [personaButtonState3, isComplete]);
@@ -305,7 +293,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             return;
           }
 
-          const newQuestionList = [ 
+          const newQuestionList = [
             ...interviewQuestionList,
             {
               theory_name: selectedInterviewPurpose,
@@ -367,8 +355,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
           ...interviewData,
           {
             [`question_${currentQuestionIndex + 1}`]:
-              interviewQuestionListState[currentQuestionIndex]
-                .question,
+              interviewQuestionListState[currentQuestionIndex].question,
             [`answer_${currentQuestionIndex + 1}`]: allAnswers,
           },
         ],
@@ -416,8 +403,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
           ...interviewData,
           {
             [`question_${currentQuestionIndex + 1}`]:
-              interviewQuestionListState[currentQuestionIndex]
-                .question,
+              interviewQuestionListState[currentQuestionIndex].question,
             [`answer_${currentQuestionIndex + 1}`]: allAnswers,
           },
         ],
@@ -441,8 +427,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
           responseReportAdditional.data &&
           responseReportAdditional.data.title &&
           responseReportAdditional.data.suggestion_list &&
-          responseReportAdditional.data.suggestion_list.length ===
-            5 &&
+          responseReportAdditional.data.suggestion_list.length === 5 &&
           responseReportAdditional.data.suggestion_list.every(
             (item) =>
               (item.title &&
@@ -488,7 +473,10 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               return;
             } else {
               setShowRegenerateButton2(true);
-              console.log("🚀 ~ loadInterviewReport ~ setShowRegenerateButton2:", showRegenerateButton2);
+              console.log(
+                "🚀 ~ loadInterviewReport ~ setShowRegenerateButton2:",
+                showRegenerateButton2
+              );
               setRegenerateCount2(regenerateCount2 + 1);
             }
             break;
@@ -499,7 +487,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
         console.error("Error details:", error);
       }
     }
-  }
+  };
 
   let allAnswers = [];
   let personaInfoState = [];
@@ -795,7 +783,8 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
       onClose();
     }
     if (!isComplete) {
-      navigate(`/Main`, { replace: true });
+      setPersonaButtonState3(0);
+      onClose();
     }
   };
 
@@ -952,57 +941,65 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               </div>
             </ErrorAnswerItem> */}
 
-            {isLoadingPrepare && (
-              showRegenerateButton1 ? (
+            {isLoadingPrepare &&
+              (showRegenerateButton1 ? (
                 <LoadingBox>
-                  <MoleculeRecreate Medium onRegenerate={loadInterviewQuestion}/>
+                  <MoleculeRecreate
+                    Medium
+                    onRegenerate={loadInterviewQuestion}
+                  />
                 </LoadingBox>
               ) : (
-              <LoadingBox>
-                <Loading>
-                  <div />
-                  <div />
-                  <div />
-                </Loading>
-                <p>
-                  페르소나가 인터뷰 룸으로 입장 중이에요
-                  <span>잠시만 기다려주세요 ...</span>
-                </p>
-              </LoadingBox>
-              )
-            )}
+                <LoadingBox>
+                  <Loading>
+                    <div />
+                    <div />
+                    <div />
+                  </Loading>
+                  <p>
+                    페르소나가 인터뷰 룸으로 입장 중이에요
+                    <span>잠시만 기다려주세요 ...</span>
+                  </p>
+                </LoadingBox>
+              ))}
 
             {!isLoadingPrepare && isComplete
               ? renderInterviewItemsComplete()
               : renderInterviewItems()}
 
-            {isAnalyzing && (
-              showRegenerateButton2 ? (
+            {isAnalyzing &&
+              (showRegenerateButton2 ? (
                 <ErrorInterviewItem>
-                <p>
-                  분석 중 오류가 발생했어요
-                  <br />
-                  지금 나가시면 인터뷰 내용이 저장되지 않으니, 다시 시도해주세요
-                </p>
-                <Button Small Outline onClick={() => loadInterviewReport(personaInfoState, allAnswers)}>
-                  <img src={images.ArrowClockwise} alt="" />
-                  분석 다시하기
+                  <p>
+                    분석 중 오류가 발생했어요
+                    <br />
+                    지금 나가시면 인터뷰 내용이 저장되지 않으니, 다시
+                    시도해주세요
+                  </p>
+                  <Button
+                    Small
+                    Outline
+                    onClick={() =>
+                      loadInterviewReport(personaInfoState, allAnswers)
+                    }
+                  >
+                    <img src={images.ArrowClockwise} alt="" />
+                    분석 다시하기
                   </Button>
                 </ErrorInterviewItem>
               ) : (
                 <LoadingBox>
                   <Loading>
-                  <div />
-                  <div />
-                  <div />
-                </Loading>
-                <p>
-                  인터뷰 결과를 취합하고 분석 중입니다.
-                  <span>잠시만 기다려주세요 ...</span>
-                </p>
-              </LoadingBox>
-              )
-            )}
+                    <div />
+                    <div />
+                    <div />
+                  </Loading>
+                  <p>
+                    인터뷰 결과를 취합하고 분석 중입니다.
+                    <span>잠시만 기다려주세요 ...</span>
+                  </p>
+                </LoadingBox>
+              ))}
 
             {isAnalysisComplete && (
               <LoadingBox Complete>
