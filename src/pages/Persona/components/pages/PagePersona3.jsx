@@ -394,10 +394,10 @@ const PagePersona3 = () => {
 
                 <CustomizePersona>
                   <Title Column>
-                    비즈니스 맞춤 페르소나
+                    참여 페르소나 확인
                     <p>
-                      추천된 페르소나와 인터뷰하세요. 그룹 또는 한 명의 타겟을
-                      선택할 수 있습니다.
+                      인터뷰 참여 페르소나를 확인하세요. 변경은 편집하기 버튼을
+                      통해 가능합니다
                       <span onClick={() => handleEditPersonaOpen()}>
                         <img src={images.PencilSquare} alt="" />
                         편집하기

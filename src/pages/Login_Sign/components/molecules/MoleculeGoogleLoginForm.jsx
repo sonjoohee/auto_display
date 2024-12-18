@@ -83,20 +83,20 @@ const MoleculeGoogleLoginForm = () => {
     } catch (error) {
       console.error(error);
     } finally {
-      navigate('/Main');
+      navigate("/Main");
     }
   };
 
   return (
     <>
-    <ThemeProvider theme={theme}>
-      <GoogleLoginForm>
-        <LoginButton onClick={handleGoogleLogin}>
-          <GoogleIconStyled src={images.GoogleIcon} alt="Google Icon" />
-          Google 계정으로 로그인
-        </LoginButton>
-      </GoogleLoginForm>
-    </ThemeProvider>
+      <ThemeProvider theme={theme}>
+        <GoogleLoginForm>
+          <LoginButton onClick={handleGoogleLogin}>
+            <GoogleIconStyled src={images.GoogleIcon} alt="Google Icon" />
+            Google 계정으로 시작하기
+          </LoginButton>
+        </GoogleLoginForm>
+      </ThemeProvider>
     </>
   );
 };
@@ -110,8 +110,8 @@ const GoogleLoginForm = styled.div`
   margin-top: 52px;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    font-size:0.88rem;
-    margin-top:32px;
+    font-size: 0.88rem;
+    margin-top: 32px;
   }
 `;
 
@@ -131,7 +131,7 @@ const LoginButton = styled.button`
   cursor: pointer;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    padding:10px;
+    padding: 10px;
   }
 `;
 
