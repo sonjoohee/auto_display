@@ -3,39 +3,39 @@ import styled from "styled-components";
 import { palette } from "./Palette";
 import images from "./Images";
 
-const PopupWrap = ({ 
-  title, 
+const PopupWrap = ({
+  title,
   message,
   message2,
   body,
-  onConfirm, 
+  onConfirm,
   onCancel,
-  Warning, 
-  Check, 
-  Error, 
-  Info, 
-  buttonType, 
-  nomalText, 
+  Warning,
+  Check,
+  Error,
+  Info,
+  buttonType,
+  nomalText,
   closeText,
-  confirmText, 
-  redirectUrl, 
+  confirmText,
+  redirectUrl,
   isModal,
   isTextareaValid,
   isRadioSelected,
   isFormValid,
   TitleFlex,
- }) => {
+}) => {
   const [isOpen, setIsOpen] = useState(true);
 
   // 부모 스크롤 비활성화
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     }
     return () => {
-      document.body.style.overflow = 'auto'; // 컴포넌트 언마운트 시 원래 상태로 복원
+      document.body.style.overflow = "auto"; // 컴포넌트 언마운트 시 원래 상태로 복원
     };
   }, [isOpen]);
 
@@ -43,7 +43,7 @@ const PopupWrap = ({
     setIsOpen(false);
     onCancel();
   };
-  
+
   const handleConfirm = () => {
     onConfirm();
     if (redirectUrl) {
@@ -51,34 +51,47 @@ const PopupWrap = ({
     }
   };
 
-  const renderButtons = (buttonType, handleClose, handleConfirm, nomalText, closeText, confirmText) => {
-    if (buttonType === 'Outline') {
+  const renderButtons = (
+    buttonType,
+    handleClose,
+    handleConfirm,
+    nomalText,
+    closeText,
+    confirmText
+  ) => {
+    if (buttonType === "Outline") {
       return (
         <ButtonWrap>
           {nomalText && (
-            <Button className="Outline" onClick={handleClose}>{nomalText}</Button>
+            <Button className="Outline" onClick={handleClose}>
+              {nomalText}
+            </Button>
           )}
           {closeText && (
-            <Button Close className="Outline" onClick={handleClose}>{closeText}</Button>
+            <Button Close className="Outline" onClick={handleClose}>
+              {closeText}
+            </Button>
           )}
           {confirmText && (
-            <Button Confirm className="Outline" onClick={handleConfirm}>{confirmText}</Button>
+            <Button Confirm className="Outline" onClick={handleConfirm}>
+              {confirmText}
+            </Button>
           )}
         </ButtonWrap>
       );
-    } else if (buttonType === 'Fill') {
+    } else if (buttonType === "Fill") {
       return (
         <FillButtonWrap>
-          {nomalText && (
-            <Button className="Fill">{nomalText}</Button>
-          )}
+          {nomalText && <Button className="Fill">{nomalText}</Button>}
           {closeText && (
-            <Button Close className="Fill" onClick={handleClose}>{closeText}</Button>
+            <Button Close className="Fill" onClick={handleClose}>
+              {closeText}
+            </Button>
           )}
           {confirmText && (
-            <Button 
-              Confirm 
-              className={`Fill ${!isFormValid ? 'disabled' : ''}`} 
+            <Button
+              Confirm
+              className={`Fill ${!isFormValid ? "disabled" : ""}`}
               onClick={isFormValid ? handleConfirm : undefined}
               disabled={!isFormValid}
             >
@@ -99,16 +112,23 @@ const PopupWrap = ({
         <ModalPopup>
           <Header>
             {title}
-            <ColseButton TitleFlex={TitleFlex} onClick={handleClose} />
+            {/* <CloseButton TitleFlex={TitleFlex} onClick={handleClose} /> */}
           </Header>
 
           <Body>{body}</Body>
 
-          {renderButtons(buttonType, handleClose, handleConfirm, nomalText, closeText, confirmText)}
+          {renderButtons(
+            buttonType,
+            handleClose,
+            handleConfirm,
+            nomalText,
+            closeText,
+            confirmText
+          )}
         </ModalPopup>
       ) : (
         <AlertPopup>
-          <ColseButton TitleFlex={TitleFlex} onClick={handleClose} />
+          {/* <CloseButton TitleFlex={TitleFlex} onClick={handleClose} /> */}
           <Contents>
             {Warning ? (
               <img src={images.ExclamationMark} alt="Warning" />
@@ -119,14 +139,25 @@ const PopupWrap = ({
             ) : Error ? (
               <img src={images.ExclamationMark} alt="Error" />
             ) : null}
-            
+
             <Text>
               <strong>{title}</strong>
-              <p>{message}<br />{message2}</p>
+              <p>
+                {message}
+                <br />
+                {message2}
+              </p>
             </Text>
           </Contents>
 
-          {renderButtons(buttonType, handleClose, handleConfirm, nomalText, closeText, confirmText)}
+          {renderButtons(
+            buttonType,
+            handleClose,
+            handleConfirm,
+            nomalText,
+            closeText,
+            confirmText
+          )}
         </AlertPopup>
       )}
     </PopupBox>
@@ -141,7 +172,7 @@ export const PopupBox = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.50);
+  background: rgba(0, 0, 0, 0.5);
   z-index: 200;
 `;
 
@@ -184,11 +215,11 @@ export const Body = styled.div`
   flex-direction: column;
   align-items: flex-start;
   // gap: 20px;
-  gap: ${props => props.TitleFlex ? '20px' : '12px'};
+  gap: ${(props) => (props.TitleFlex ? "20px" : "12px")};
   width: 100%;
   height: 100%;
   max-height: 60dvh;
-  padding-right:10px;
+  padding-right: 10px;
   overflow-y: auto;
   overflow-x: hidden;
 
@@ -225,7 +256,7 @@ export const Body = styled.div`
         border: 1px solid ${palette.outlineGray};
 
         &:before {
-          content: '#';
+          content: "#";
         }
       }
     }
@@ -247,9 +278,9 @@ export const Body = styled.div`
     &.point:after {
       color: ${palette.error};
       margin-left: 4px;
-      content: '*';
+      content: "*";
     }
-    
+
     p {
       font-size: 0.875rem;
       line-height: 1.5;
@@ -317,19 +348,20 @@ export const Body = styled.div`
   }
 `;
 
-export const ColseButton = styled.div`
+export const CloseButton = styled.div`
   position: absolute;
-  top: ${props => props.TitleFlex ? '37px' : '24px'};
-  right: ${props => props.TitleFlex ? '32px' : '24px'};
+  top: ${(props) => (props.TitleFlex ? "37px" : "24px")};
+  right: ${(props) => (props.TitleFlex ? "32px" : "24px")};
   // top: 24px;
   // right: 24px;
-  width: ${props => props.TitleFlex ? '16px' : '12px'};
-  height: ${props => props.TitleFlex ? '16px' : '12px'};
+  width: ${(props) => (props.TitleFlex ? "16px" : "12px")};
+  height: ${(props) => (props.TitleFlex ? "16px" : "12px")};
   // width: 12px;
   // height: 12px;
   cursor: pointer;
 
-  &:before, &:after {
+  &:before,
+  &:after {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -337,9 +369,9 @@ export const ColseButton = styled.div`
     height: 100%;
     border-radius: 10px;
     background-color: ${palette.gray500};
-    content: '';
+    content: "";
   }
-  
+
   &:before {
     transform: translate(-50%, -50%) rotate(45deg);
   }
@@ -401,38 +433,53 @@ export const Button = styled.div`
   font-weight: 500;
   line-height: 1.5;
   padding: 8px 0 0;
-  cursor: ${props => (props.disabled ? 'not-allowed' : 'pointer')};
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
   transition: all 0.5s;
 
   &.Outline {
-    color: ${props => {
-      if (props.Confirm) return '#0453F4';
+    color: ${(props) => {
+      if (props.Confirm) return "#0453F4";
       if (props.Close) return palette.gray500;
-      return '#7D7D7D';
+      return "#7D7D7D";
     }};
   }
 
   &.Fill {
-    color: ${props => 
-      props.Confirm ? (props.disabled ? palette.gray500 : palette.white)
-      : props.Close ? palette.gray500
-      : palette.gray500};
+    color: ${(props) =>
+      props.Confirm
+        ? props.disabled
+          ? palette.gray500
+          : palette.white
+        : props.Close
+        ? palette.gray500
+        : palette.gray500};
     padding: 12px 20px;
     border-radius: 8px;
-    border: 1px solid ${props => 
-      props.Confirm ? (props.disabled ? palette.gray300 : palette.primary)
-      : props.Close ? palette.outlineGray
-      : palette.outlineGray};
-    background: ${props => 
-      props.Confirm ? (props.disabled ? palette.gray200 : palette.primary)
-      : props.Close ? palette.chatGray
-      : palette.chatGray};
-    
+    border: 1px solid
+      ${(props) =>
+        props.Confirm
+          ? props.disabled
+            ? palette.gray300
+            : palette.primary
+          : props.Close
+          ? palette.outlineGray
+          : palette.outlineGray};
+    background: ${(props) =>
+      props.Confirm
+        ? props.disabled
+          ? palette.gray200
+          : palette.primary
+        : props.Close
+        ? palette.chatGray
+        : palette.chatGray};
+
     &:hover {
-      background: ${props => 
-        props.Confirm && !props.disabled ? palette.blue 
-        : props.Close ? palette.gray100
-        : palette.gray100};
+      background: ${(props) =>
+        props.Confirm && !props.disabled
+          ? palette.blue
+          : props.Close
+          ? palette.gray100
+          : palette.gray100};
     }
   }
 
