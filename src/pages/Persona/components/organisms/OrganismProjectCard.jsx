@@ -79,16 +79,15 @@ const OrganismProjectCard = ({ project, index }) => {
     const requestedPersonaCount = project.requestedPersona?.length || 0;
 
     if (requestedPersonaCount === 0) return "모집 대기 중";
-    // if (requestedPersonaCount === 3) return "모집 완료";
+    if (requestedPersonaCount === 3) return "모집 완료";
     return `${requestedPersonaCount}명 모집 중`;
   };
   const getRecruitStatus = (project) => {
     const requestedPersonaCount = project.requestedPersona?.length || 0;
 
-    if (requestedPersonaCount > 0) return "ing";
-    // if (requestedPersonaCount === 3) return "complete";
-    return "";
-
+    if (requestedPersonaCount === 0) return "";
+    if (requestedPersonaCount === 3) return "complete";
+    return "ing";
   };
 
   const navigateToPersonaPage = (projectId) => {

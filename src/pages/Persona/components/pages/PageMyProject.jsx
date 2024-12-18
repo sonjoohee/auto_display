@@ -36,25 +36,48 @@ import {
   IS_EDIT_MODE,
   IS_SHOW_TOAST,
   IS_PERSONA_ACCESSIBLE,
+  PROJECT_LOADING,
+  PROJECT_REFRESH_TRIGGER,
 } from "../../../AtomStates";
 import OrganismProjectCard from "../organisms/OrganismProjectCard";
 import { getProjectListByIdFromIndexedDB } from "../../../../utils/indexedDB";
+import OrganizmEmptyProject from "../organisms/OrganizmEmptyProject";
 
 const PageMyProject = () => {
-  const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(IS_PERSONA_ACCESSIBLE);
+  const [projectLoading, setProjectLoading] = useAtom(PROJECT_LOADING);
+  const [refreshTrigger, setRefreshTrigger] = useAtom(PROJECT_REFRESH_TRIGGER);
+  const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
+    IS_PERSONA_ACCESSIBLE
+  );
   const [reportList, setReportList] = useAtom(REPORT_LIST);
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
-  const [selectedPersonaList, setSelectedPersonaList] = useAtom(SELECTED_PERSONA_LIST);
-  const [customizePersonaList, setCustomizePersonaList] = useAtom(CUSTOMIZE_PERSONA_LIST);
-  const [requestPersonaList, setRequestPersonaList] = useAtom(REQUEST_PERSONA_LIST);
-  const [interviewQuestionList, setInterviewQuestionList] = useAtom(INTERVIEW_QUESTION_LIST);
-  const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(SELECTED_INTERVIEW_PURPOSE);
+  const [selectedPersonaList, setSelectedPersonaList] = useAtom(
+    SELECTED_PERSONA_LIST
+  );
+  const [customizePersonaList, setCustomizePersonaList] = useAtom(
+    CUSTOMIZE_PERSONA_LIST
+  );
+  const [requestPersonaList, setRequestPersonaList] =
+    useAtom(REQUEST_PERSONA_LIST);
+  const [interviewQuestionList, setInterviewQuestionList] = useAtom(
+    INTERVIEW_QUESTION_LIST
+  );
+  const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(
+    SELECTED_INTERVIEW_PURPOSE
+  );
   const [categoryColor, setCategoryColor] = useAtom(CATEGORY_COLOR);
-  const [reportLoadButtonState, setReportLoadButtonState] = useAtom(REPORT_LOAD_BUTTON_STATE);
-  const [reportDescriptionLoadButtonState, setReportDescriptionLoadButtonState] = useAtom(REPORT_DESCRIPTION_LOAD_BUTTON_STATE);
+  const [reportLoadButtonState, setReportLoadButtonState] = useAtom(
+    REPORT_LOAD_BUTTON_STATE
+  );
+  const [
+    reportDescriptionLoadButtonState,
+    setReportDescriptionLoadButtonState,
+  ] = useAtom(REPORT_DESCRIPTION_LOAD_BUTTON_STATE);
   const [interviewData, setInterviewData] = useAtom(INTERVIEW_DATA);
   const [interviewReport, setInterviewReport] = useAtom(INTERVIEW_REPORT);
-  const [interviewReportAdditional, setInterviewReportAdditional] = useAtom(INTERVIEW_REPORT_ADDITIONAL);
+  const [interviewReportAdditional, setInterviewReportAdditional] = useAtom(
+    INTERVIEW_REPORT_ADDITIONAL
+  );
   const [isEditMode, setIsEditMode] = useAtom(IS_EDIT_MODE);
   const [isShowToast, setIsShowToast] = useAtom(IS_SHOW_TOAST);
   const navigate = useNavigate();
@@ -85,29 +108,94 @@ const PageMyProject = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+  useEffect(() => {
+    // 브라우저 뒤로가기 감지 및 상태 초기화
+    const handlePopState = () => {
+      // 필요한 상태들 초기화
+      setProjectList([]);
+      setReportList([]);
+      setPersonaList([]);
+      setSelectedPersonaList([]);
+      setCustomizePersonaList([]);
+      setRequestPersonaList([]);
+      setInterviewQuestionList([]);
+      setSelectedInterviewPurpose("");
+      setCategoryColor("");
+      setIsEditMode(false);
+      setIsShowToast(false);
 
+      // 필요한 경우 특정 페이지로 리다이렉트
+      navigate("/");
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [navigate]);
+  // useEffect(() => {
+  //   const loadProjectList = async () => {
+  //     const savedProjectListInfo = await getProjectListByIdFromIndexedDB(true);
+  //     if (savedProjectListInfo) {
+  //       const sortedList = [...savedProjectListInfo]
+  //         .map((project) => ({
+  //           ...project,
+  //           reportList:
+  //             project.reportList?.sort(
+  //               (a, b) => new Date(b.createDate) - new Date(a.createDate)
+  //             ) || [],
+  //         }))
+  //         .sort((a, b) => new Date(b.updateDate) - new Date(a.updateDate));
+  //       setProjectList(sortedList);
+  //     }
+  //     setProjectLoadButtonState(false);
+  //   };
+  //   loadProjectList();
+  // }, []);
   useEffect(() => {
     const loadProjectList = async () => {
+      try {
+        setProjectLoading({
+          isLoading: true,
+          lastLoadTime: new Date(),
+          error: null,
+        });
+
         const savedProjectListInfo = await getProjectListByIdFromIndexedDB(
           true
         );
         if (savedProjectListInfo) {
-          const sortedList = [...savedProjectListInfo].map(project => ({
-            ...project,
-            reportList: project.reportList?.sort((a, b) => 
-              new Date(b.createDate) - new Date(a.createDate)
-            ) || []
-          })).sort((a, b) => 
-            new Date(b.updateDate) - new Date(a.updateDate)
-          );
+          const sortedList = [...savedProjectListInfo]
+            .map((project) => ({
+              ...project,
+              reportList:
+                project.reportList?.sort(
+                  (a, b) => new Date(b.createDate) - new Date(a.createDate)
+                ) || [],
+            }))
+            .sort((a, b) => new Date(b.updateDate) - new Date(a.updateDate));
           setProjectList(sortedList);
         }
-      setProjectLoadButtonState(false);
+
+        setProjectLoading({
+          isLoading: false,
+          lastLoadTime: new Date(),
+          error: null,
+        });
+      } catch (error) {
+        setProjectLoading({
+          isLoading: false,
+          lastLoadTime: new Date(),
+          error: error.message,
+        });
+        console.error("프로젝트 목록을 불러오는데 실패했습니다:", error);
+      }
     };
 
     loadProjectList();
-  }, []);
-
+  }, [refreshTrigger]); // refreshTrigger가 변경될 때마다 데이터 다시 로드
   return (
     <>
       <ContentsWrap>
@@ -116,31 +204,37 @@ const PageMyProject = () => {
         <MainContent>
           <MyProjectWrap>
             <Title>프로젝트 리스트</Title>
-            <ProjectList>
-              <ProjectHeader>
-                <div>프로젝트 명</div>
-                <div>맞춤 페르소나</div>
-                <div>페르소나 모집</div>
-                <div>결과 리포트</div>
-              </ProjectHeader>
-              <ProjectContent>
-                <ProjectItem Nodata>
-                  <img src={images.FileFill} alt="" />
-                  <div>
-                    <p>아직 진행 중인 프로젝트가 없습니다.<br />지금 바로 새 프로젝트를 만들어보세요</p>
-                    <Button Medium Primary Round>새 프로젝트 시작하기</Button>
-                  </div>
-                </ProjectItem>
+            {projectList.length === 0 ? (
+              <OrganizmEmptyProject />
+            ) : (
+              <ProjectList>
+                <ProjectHeader>
+                  <div>프로젝트 명</div>
+                  <div>맞춤 페르소나</div>
+                  <div>페르소나 모집</div>
+                  <div>결과 리포트</div>
+                </ProjectHeader>
+                <ProjectContent>
 
-                {projectList.map((project, index) => (
-                  <OrganismProjectCard
-                    key={index}
-                    project={project}
-                    index={index}
-                  />
-                ))}
-              </ProjectContent>
-            </ProjectList>
+                  {/* 진행중인 프로젝트 없을때 디자인 */}
+                  <ProjectItem Nodata>
+                    <img src={images.FileFill} alt="" />
+                    <div>
+                      <p>아직 진행 중인 프로젝트가 없습니다.<br />지금 바로 새 프로젝트를 만들어보세요</p>
+                      <Button Medium Primary Round>새 프로젝트 시작하기</Button>
+                    </div>
+                  </ProjectItem>
+
+                  {projectList.map((project, index) => (
+                    <OrganismProjectCard
+                      key={index}
+                      project={project}
+                      index={index}
+                    />
+                  ))}
+                </ProjectContent>
+              </ProjectList>
+            )}
           </MyProjectWrap>
         </MainContent>
       </ContentsWrap>
