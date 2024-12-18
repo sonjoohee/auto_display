@@ -107,24 +107,26 @@ const MoleculePersonaCard = ({
           <ContentWrapper NoLine={NoLine}>
             <TitleSection>
               <Title NoLine={NoLine}>
-                <p>{title}</p>
+                <p>
+                  {title}
 
-                {!newLine && (
-                  <TitleInfo>
-                    <span>{gender}</span>
-                    <span>{age}세</span>
-                    <span>{job}</span>
-                  </TitleInfo>
-                )}
+                  {!newLine && (
+                    <>
+                      <TitleInfo>{gender}</TitleInfo>
+                      <TitleInfo>{age}세</TitleInfo>
+                      <TitleInfo>{job}</TitleInfo>
+                    </>
+                  )}
+                </p>
               </Title>
             </TitleSection>
 
             {newLine &&                 
-              <TitleInfo>
-                <span>{gender}</span>
-                <span>{age}세</span>
-                <span>{job}</span>
-              </TitleInfo>
+              <Title>
+                <TitleInfo>{gender}</TitleInfo>
+                <TitleInfo>{age}세</TitleInfo>
+                <TitleInfo>{job}</TitleInfo>
+              </Title>
             }
             
             {keywords.length > 0 && (
@@ -472,6 +474,10 @@ const TitleSection = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
 `;
 
 const Title = styled.div`
@@ -479,16 +485,23 @@ const Title = styled.div`
   color: ${palette.gray800};
   text-align: left;
   word-wrap: break-word;
-  display: flex;
+  // display: flex;
+  display: block;
   align-items: center;
   gap: 8px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 
 
   > p {
-    flex-shrink: 0;
+    // flex-shrink: 0;
+    // display: flex;
+    max-width: 538px;
+    width: 100%;
+    display: block;
+    align-items: center;
+    gap: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   ${(props) =>
@@ -499,28 +512,22 @@ const Title = styled.div`
     `}
 `;
 
-const TitleInfo = styled.div`
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+const TitleInfo = styled.span`
   font-size: 0.875rem;
   font-weight: 300;
   line-height: 1.3;
   color: ${palette.gray500};
+  margin-left: 6px;
 
-  span {
-    + span {
-      margin-left: 6px;
 
-      &:before {
-        display: inline-block;
-        width: 1px;
-        height: 9px;
-        margin-right: 6px;
-        background: ${palette.gray500};
-        content: "";
-      }
+  + span {
+    &:before {
+      display: inline-block;
+      width: 1px;
+      height: 9px;
+      margin-right: 6px;
+      background: ${palette.gray500};
+      content: "";
     }
   }
 `;
