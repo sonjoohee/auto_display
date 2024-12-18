@@ -330,11 +330,10 @@ const PagePersona3 = () => {
                           isActive={selectedInterviewType === "multiple"}
                         />
                         <strong isActive={selectedInterviewType === "multiple"}>
-                          (1:N) 다양한 페르소나와 인터뷰
+                          여러 페르소나 인터뷰 (1:N)
                         </strong>
                         <p isActive={selectedInterviewType === "multiple"}>
-                          다양한 타겟 페르소나의 의견을 수집하여 인사이트를
-                          얻어보세요.
+                          여러 페르소나의 다양한 의견을 한 번에 확인 하세요. 폭넓은 시각과 다양한 의견을 파악하는데 적합합니다. 
                         </p>
                       </InterviewTypeCard>
 
@@ -347,12 +346,11 @@ const PagePersona3 = () => {
                           isActive={selectedInterviewType === "single"}
                         />
                         <strong isActive={selectedInterviewType === "single"}>
-                          (1:1) 심층 인터뷰
+                          한 명과 심층 인터뷰 (1:1)
                           <span>준비중</span>
                         </strong>
                         <p isActive={selectedInterviewType === "single"}>
-                          한 명의 타겟 페르소나에게 개인화된 질문으로 심층적인
-                          인사이트를 얻어보세요
+                          한 명의 페르소나와 깊이 있는 대화를 통해 자세한 인사이트를 도출하세요. 구체적인 피드백이 필요한 경우 유용합니다. 
                         </p>
                       </InterviewTypeCard>
                     </InterviewTypeCards>
