@@ -588,7 +588,14 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                   alt={answer.persona.persona}
                 />
               </Thumb>
-              {answer.persona.persona}
+              <div>
+                {answer.persona.persona}
+                <p>
+                  <span>여성</span>
+                  <span>20세</span>
+                  <span>건물용고체고분자연료전지시스템통합개발자</span>
+                </p>
+              </div>
             </TypeName>
             <TextContainer>{answer.answer}</TextContainer>
           </AnswerItem>
@@ -604,7 +611,14 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                   alt={personaList.selected[questionAnswers.length].persona}
                 />
               </Thumb>
-              {personaList.selected[questionAnswers.length].persona}
+              <div>
+                {personaList.selected[questionAnswers.length].persona}
+                <p>
+                  <span>여성</span>
+                  <span>20세</span>
+                  <span>건물용고체고분자연료전지시스템통합개발자</span>
+                </p>
+              </div>
             </TypeName>
             <TextContainer>
               <Entering />
@@ -629,7 +643,14 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                   alt={answer.persona.persona}
                 />
               </Thumb>
-              {answer.persona.persona}
+              <div>
+                {answer.persona.persona}
+                <p>
+                  <span>여성</span>
+                  <span>20세</span>
+                  <span>건물용고체고분자연료전지시스템통합개발자</span>
+                </p>
+              </div>
             </TypeName>
             <TextContainer>{answer.answer}</TextContainer>
           </AnswerItem>
@@ -1354,6 +1375,31 @@ const TypeName = styled.div`
   font-weight: 500;
   line-height: 1.5;
   color: ${palette.gray800};
+
+  p {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-size: 0.75rem;
+      font-weight: 300;
+      line-height: 1.3;
+      color: ${palette.gray500};
+
+      + span:before {
+        display: inline-block;
+        width: 1px;
+        height: 9px;
+        background: ${palette.gray500};
+        content: '';
+      }
+    }
+  }
 `;
 
 const Thumb = styled.div`
