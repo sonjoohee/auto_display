@@ -200,6 +200,7 @@ import PersonFill from "../images/person-fill.svg"
 import FileFill from "../images/file-fill.svg"
 import PeopleFillPrimary from "../images/people-fill-primary.svg"
 import NoAlarm from "../images/alarm-no.svg"
+import ExclamationCircleFill from "../images/exclamation-circle-fill.svg"
 
 import PersonaCustomizing from "../images/persona-customizing.png"
 
@@ -422,6 +423,7 @@ const images = {
   FileFill,
   PeopleFillPrimary,
   NoAlarm,
+  ExclamationCircleFill,
 
   PersonaCustomizing,
 
