@@ -663,7 +663,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                 {answer.persona.persona}
                 <p>
                   <span>{answer.gender}</span>
-                  <span>{answer.age}</span>
+                  <span>{answer.age}세</span>
                   <span>{answer.job}</span>
                 </p>
               </div>
@@ -719,7 +719,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                 {answer.persona.persona}
                 <p>
                   <span>{answer.gender}</span>
-                  <span>{answer.age}</span>
+                  <span>{answer.age}세</span>
                   <span>{answer.job}</span>
                 </p>
               </div>
@@ -1475,7 +1475,7 @@ const TypeName = styled.div`
         width: 1px;
         height: 9px;
         background: ${palette.gray500};
-        content: '';
+        content: "";
       }
     }
   }
