@@ -1143,7 +1143,8 @@ const InterviewItem = styled.div`
 
 const ErrorInterviewItem = styled(InterviewItem)`
   gap: 12px;
-  padding: 70px 0;
+  padding: 73px 0;
+  border: 0;
   background: ${palette.chatGray};
 
   p {
