@@ -85,11 +85,9 @@ const OrganismProjectCard = ({ project, index }) => {
   const getRecruitStatus = (project) => {
     const requestedPersonaCount = project.requestedPersona?.length || 0;
 
-    return requestedPersonaCount === 3
-      ? "complete"
-      : requestedPersonaCount > 0
-      ? "ing"
-      : "";
+    if (requestedPersonaCount > 0) return "ing";
+    // if (requestedPersonaCount === 3) return "complete";
+    return "";
 
   };
 
