@@ -257,7 +257,9 @@ const PagePersona2 = () => {
               for (let i = 0; i < newPersonas.length; i++) {
                 let isDuplicate = false;
                 for (let j = 0; j < unselectedPersonas.length; j++) {
-                  if (unselectedPersonas[j].persona === newPersonas[i].persona) {
+                  if (
+                    unselectedPersonas[j].persona === newPersonas[i].persona
+                  ) {
                     isDuplicate = true;
                     break;
                   }
@@ -373,8 +375,7 @@ const PagePersona2 = () => {
               3 ||
             requestPersonaList.persona_spectrum[1].persona_2.keyword.length <
               3 ||
-            requestPersonaList.persona_spectrum[2].persona_3.keyword.length <
-              3)
+            requestPersonaList.persona_spectrum[2].persona_3.keyword.length < 3)
         ) {
           response = await axios.post(
             "https://wishresearch.kr/person/persona_request",
@@ -463,7 +464,7 @@ const PagePersona2 = () => {
                 if (unselectedPersonas[j].persona === newPersonas[i].persona) {
                   isDuplicate = true;
                   break;
-                } 
+                }
               }
               if (!isDuplicate) {
                 unselectedPersonas.push(newPersonas[i]);
@@ -687,7 +688,7 @@ const PagePersona2 = () => {
           },
           additionalInfo: customPersonaForm.additionalInfo,
         },
-      }; 
+      };
 
       const response = await createRequestPersonOnServer(
         requestData,
@@ -751,114 +752,114 @@ const PagePersona2 = () => {
               <OrganismBusinessAnalysis personaStep={2} />
               {showRegenerateButton ? (
                 <CardWrap>
-                  <MoleculeRecreate Large onRegenerate={reloadPersona}/>
+                  <MoleculeRecreate Large onRegenerate={reloadPersona} />
                 </CardWrap>
               ) : (
-              <CardWrap>
-                <>
-                  <CustomizePersona>
-                    <Title Column>
-                      <h3>비즈니스 맞춤 페르소나</h3>
-                      <p>
-                        비즈니스에 딱 맞는 페르소나를 추천해드려요. 요청을
-                        보내주시면 인터뷰 참여 모집이 시작됩니다.
-                      </p>
-                    </Title>
-                    <ContentSection row>
-                      {personaButtonState2 ? (
-                        <PersonaCards>
-                          <AtomPersonaLoader message="최적의 페르소나를 모집하고 있습니다..." />
-                        </PersonaCards>
-                      ) : (
-                        requestPersonaList.persona.map((persona, index) => (
-                          <MoleculeRequestPersonaCard
-                            key={index}
-                            persona={persona[`persona_${index + 1}`]}
-                            personaIndex={index + 1}
-                          />
-                        ))
-                      )}
-                    </ContentSection>
-                  </CustomizePersona>
-
-                  {/* 산업별 인기 페르소나 */}
-                  {!personaButtonState2 && (
+                <CardWrap>
+                  <>
                     <CustomizePersona>
                       <Title Column>
-                        <h3>산업별 인기 페르소나</h3>
+                        <h3>비즈니스 맞춤 페르소나</h3>
                         <p>
-                          산업별로 자주 활용되는 페르소나를 확인하고 지금 바로
-                          대화하여 인사이트를 얻어보세요.
-                          <TooltipButton
-                            onClick={() => setShowTooltip(!showTooltip)}
-                          >
-                            유형별 설명 보기
-                            {showTooltip && (
-                              <TooltipContent>
-                                <TooltipHeader>
-                                  아이콘에 대한 정보
-                                  <span />
-                                </TooltipHeader>
-
-                                <TooltipBody>
-                                  <div>
-                                    <Badge Basic>
-                                      <img
-                                        src={images.StatusBadgeBasic}
-                                        alt="기본형"
-                                      />
-                                      기본형
-                                    </Badge>
-                                    <p>
-                                      기본형은 특정 요구 사항 없이도 다양한
-                                      질문과 답변을 처리할 수 있는 표준형 AI
-                                      Person입니다. 범용적인 활용이 가능하며,
-                                      일반적인 상황에 적합합니다.
-                                    </p>
-                                  </div>
-
-                                  <div>
-                                    <Badge Custom>
-                                      <img
-                                        src={images.StatusBadgeCustom}
-                                        alt="커스터마이즈"
-                                      />
-                                      커스터마이즈
-                                    </Badge>
-                                    <p>
-                                      커스터마이즈는 특정 요구 사항에 맞춰
-                                      설정된 AI Person입니다. 라이프스타일,
-                                      경험, 지식 등을 학습하여 원하는 목적에
-                                      맞게 활용할 수 있으며, 보다 깊이 있는
-                                      대화에 적합합니다.
-                                    </p>
-                                  </div>
-
-                                  <div>
-                                    <Badge>
-                                      <img
-                                        src={images.NoteArrowUp}
-                                        alt="요청 필요"
-                                      />
-                                      요청 필요
-                                    </Badge>
-                                    <p>
-                                      요청필요는 사용자 요청에 따라 준비되는 AI
-                                      Person입니다. 원하는 정보와 경험을
-                                      입력하시면 맞춤 제작이 가능합니다.
-                                    </p>
-                                  </div>
-                                </TooltipBody>
-                              </TooltipContent>
-                            )}
-                          </TooltipButton>
+                          비즈니스에 딱 맞는 페르소나를 추천해드려요. 요청을
+                          보내주시면 인터뷰 참여 모집이 시작됩니다.
                         </p>
                       </Title>
-
-                      <ContentSection>
-                        <>
+                      <ContentSection row>
+                        {personaButtonState2 ? (
                           <PersonaCards>
-                            {/* {requestPersonaList.persona.map((persona, index) => (
+                            <AtomPersonaLoader message="최적의 페르소나를 모집하고 있습니다..." />
+                          </PersonaCards>
+                        ) : (
+                          requestPersonaList.persona.map((persona, index) => (
+                            <MoleculeRequestPersonaCard
+                              key={index}
+                              persona={persona[`persona_${index + 1}`]}
+                              personaIndex={index + 1}
+                            />
+                          ))
+                        )}
+                      </ContentSection>
+                    </CustomizePersona>
+
+                    {/* 산업별 인기 페르소나 */}
+                    {!personaButtonState2 && (
+                      <CustomizePersona>
+                        <Title Column>
+                          <h3>산업별 인기 페르소나</h3>
+                          <p>
+                            산업별로 자주 활용되는 페르소나를 확인하고 지금 바로
+                            대화하여 인사이트를 얻어보세요.
+                            <TooltipButton
+                              onClick={() => setShowTooltip(!showTooltip)}
+                            >
+                              유형별 설명 보기
+                              {showTooltip && (
+                                <TooltipContent>
+                                  <TooltipHeader>
+                                    아이콘에 대한 정보
+                                    <span />
+                                  </TooltipHeader>
+
+                                  <TooltipBody>
+                                    <div>
+                                      <Badge Basic>
+                                        <img
+                                          src={images.StatusBadgeBasic}
+                                          alt="기본형"
+                                        />
+                                        기본형
+                                      </Badge>
+                                      <p>
+                                        기본형은 특정 요구 사항 없이도 다양한
+                                        질문과 답변을 처리할 수 있는 표준형 AI
+                                        Person입니다. 범용적인 활용이 가능하며,
+                                        일반적인 상황에 적합합니다.
+                                      </p>
+                                    </div>
+
+                                    <div>
+                                      <Badge Custom>
+                                        <img
+                                          src={images.StatusBadgeCustom}
+                                          alt="커스터마이즈"
+                                        />
+                                        커스터마이즈
+                                      </Badge>
+                                      <p>
+                                        커스터마이즈는 특정 요구 사항에 맞춰
+                                        설정된 AI Person입니다. 라이프스타일,
+                                        경험, 지식 등을 학습하여 원하는 목적에
+                                        맞게 활용할 수 있으며, 보다 깊이 있는
+                                        대화에 적합합니다.
+                                      </p>
+                                    </div>
+
+                                    <div>
+                                      <Badge>
+                                        <img
+                                          src={images.NoteArrowUp}
+                                          alt="요청 필요"
+                                        />
+                                        요청 필요
+                                      </Badge>
+                                      <p>
+                                        요청필요는 사용자 요청에 따라 준비되는
+                                        AI Person입니다. 원하는 정보와 경험을
+                                        입력하시면 맞춤 제작이 가능합니다.
+                                      </p>
+                                    </div>
+                                  </TooltipBody>
+                                </TooltipContent>
+                              )}
+                            </TooltipButton>
+                          </p>
+                        </Title>
+
+                        <ContentSection>
+                          <>
+                            <PersonaCards>
+                              {/* {requestPersonaList.persona.map((persona, index) => (
                             <MoleculePersonaCard
                               key={index}
                               title={persona[`persona_${index + 1}`].persona}
@@ -871,75 +872,93 @@ const PagePersona2 = () => {
                               currentSelection={selectedPersonas.length}
                             />
                           ))} */}
-                            {personaList.unselected.map((persona, index) => (
-                              <MoleculePersonaCard
-                                key={index}
-                                title={persona.persona}
-                                keywords={persona.keyword.split(",")}
-                                isBasic={true}
-                                onSelect={(isSelected) =>
-                                  handlePersonaSelect(persona, isSelected)
-                                }
-                                currentSelection={selectedPersonas.length}
-                              />
-                            ))}
-                          </PersonaCards>
+                              {personaList.unselected.map((persona, index) => {
+                                const profileArray = persona.profile
+                                  .replace(/['\[\]]/g, "")
+                                  .split(", ");
+                                const age = profileArray[0].split(": ")[1];
+                                const gender =
+                                  profileArray[1].split(": ")[1] === "남성"
+                                    ? "남성"
+                                    : "여성";
+                                const job = profileArray[2].split(": ")[1];
 
-                          {/* 나만의 페르소나 커스터마이징 배너 */}
-                          <BannerPersona>
-                            <div>
-                              <h2>
-                                나만의 페르소나 커스터마이징
-                                <p>
-                                  페르소나를 커스터마이징하여 더 정확한 인터뷰를
-                                  진행해보세요.
-                                </p>
-                              </h2>
+                                return (
+                                  <MoleculePersonaCard
+                                    key={index}
+                                    title={persona.persona}
+                                    keywords={persona.keyword.split(",")}
+                                    gender={gender}
+                                    age={age}
+                                    job={job}
+                                    isBasic={true}
+                                    onSelect={(isSelected) =>
+                                      handlePersonaSelect(persona, isSelected)
+                                    }
+                                    currentSelection={selectedPersonas.length}
+                                  />
+                                );
+                              })}
+                            </PersonaCards>
 
+                            {/* 나만의 페르소나 커스터마이징 배너 */}
+                            <BannerPersona>
+                              <div>
+                                <h2>
+                                  나만의 페르소나 커스터마이징
+                                  <p>
+                                    페르소나를 커스터마이징하여 더 정확한
+                                    인터뷰를 진행해보세요.
+                                  </p>
+                                </h2>
+
+                                <Button
+                                  Large
+                                  Primary
+                                  onClick={handleCustomizeRequest}
+                                >
+                                  요청하기
+                                  <img
+                                    src={images.ChevronRightPrimary}
+                                    alt=""
+                                  />
+                                </Button>
+                              </div>
+                              <img src={images.PersonaCustomizing} alt="" />
+                            </BannerPersona>
+                          </>
+                          {!personaButtonState2 && (
+                            <BottomBar>
+                              <p>
+                                {selectedPersonas.length > 0 ? (
+                                  <>
+                                    선택하신{" "}
+                                    <span>{selectedPersonas.length}명</span>의
+                                    페르소나와 인터뷰 하시겠어요? (
+                                    {selectedPersonas.length}/5)
+                                  </>
+                                ) : (
+                                  "페르소나를 선택하고 그들의 인터뷰를 시작해 보세요 (최대 5명 선택 가능)"
+                                )}
+                              </p>
                               <Button
                                 Large
                                 Primary
-                                onClick={handleCustomizeRequest}
+                                Fill={selectedPersonas.length > 0}
+                                // Edit={selectedPersonas.length === 0}
+                                disabled={selectedPersonas.length === 0}
+                                onClick={handleStartInterview}
                               >
-                                요청하기
-                                <img src={images.ChevronRightPrimary} alt="" />
+                                인터뷰 시작하기
+                                <img src={images.ChevronRight} alt="" />
                               </Button>
-                            </div>
-                            <img src={images.PersonaCustomizing} alt="" />
-                          </BannerPersona>
-                        </>
-                        {!personaButtonState2 && (
-                          <BottomBar>
-                            <p>
-                              {selectedPersonas.length > 0 ? (
-                                <>
-                                  선택하신{" "}
-                                  <span>{selectedPersonas.length}명</span>의
-                                  페르소나와 인터뷰 하시겠어요? (
-                                  {selectedPersonas.length}/5)
-                                </>
-                              ) : (
-                                "페르소나를 선택하고 그들의 인터뷰를 시작해 보세요 (최대 5명 선택 가능)"
-                              )}
-                            </p>
-                            <Button
-                              Large
-                              Primary
-                              Fill={selectedPersonas.length > 0}
-                              // Edit={selectedPersonas.length === 0}
-                              disabled={selectedPersonas.length === 0}
-                              onClick={handleStartInterview}
-                            >
-                              인터뷰 시작하기
-                              <img src={images.ChevronRight} alt="" />
-                            </Button>
-                          </BottomBar>
-                        )}
-                      </ContentSection>
-                    </CustomizePersona>
-                  )}
-                </>
-              </CardWrap>
+                            </BottomBar>
+                          )}
+                        </ContentSection>
+                      </CustomizePersona>
+                    )}
+                  </>
+                </CardWrap>
               )}
             </MainSection>
 
