@@ -801,7 +801,7 @@ const TabContent = styled(PersonaCards)`
   border: none;
 
   > div {
-    padding: 12px 20px;
+    padding: 14px 20px 12px;
   }
 `;
 

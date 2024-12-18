@@ -188,6 +188,7 @@ export const Body = styled.div`
   height: 100%;
   max-height: 60dvh;
   padding-right:10px;
+  padding-bottom: 10px;
   overflow-y: auto;
   overflow-x: hidden;
 

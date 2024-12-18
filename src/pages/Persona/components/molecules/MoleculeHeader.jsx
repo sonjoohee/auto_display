@@ -166,7 +166,8 @@ const AlertToogle = styled.div`
   align-items: flex-start;
   max-width: 396px;
   width: 100%;
-  margin-top: 20px;
+  // margin-top: 20px;
+  margin-top: 3px;
   border-radius: 15px;
   background: ${palette.white};
   filter: drop-shadow(0px 4px 30px rgba(0, 0, 0, 0.15));
@@ -208,7 +209,7 @@ const AlertToogle = styled.div`
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
     border-bottom: 10px solid ${palette.white};
-    content: '';
+    // content: '';
   }
 `;
 

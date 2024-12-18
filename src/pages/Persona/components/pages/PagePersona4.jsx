@@ -362,7 +362,7 @@ const PagePersona4 = () => {
         badge: { icon: "🎯", text: "마케팅 인사이트" },
       },
       "세그먼트화 관점": {
-        icon: images.DiscoveryInsight,
+        icon: images.DiscoveryTarget,
         badge: { icon: "🎟", text: "타겟 세분화" },
       },
       "사업 전략 관점": {

@@ -103,6 +103,7 @@ export const Title = styled.div`
     align-items: center;
     justify-content: start;
     gap: 4px;
+    font-size: 1rem;
 
     &:after {
       content: "*";

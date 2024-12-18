@@ -323,7 +323,7 @@ const ContentWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  gap: 8px;
+  gap: 4px;
 `;
 
 const CheckCircle = styled.div`
@@ -427,6 +427,7 @@ const ToggleButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 6px;
   border: none;
   background: none;
   cursor: pointer;
