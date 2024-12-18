@@ -394,6 +394,12 @@ const PagePersona4 = () => {
     setShowToast(true);
   };
 
+  const navigateToPersonaPage = () => {
+    setProjectLoadButtonState(true);
+    setIsPersonaAccessible(true);
+    navigate(`/Persona/2/${projectId}`);
+  };
+
   return (
     <>
       <ContentsWrap>
@@ -666,17 +672,31 @@ const PagePersona4 = () => {
               </InterviewFind>
             </MainSection>
 
-            <Sidebar>
-              <h5>Key Insight</h5>
+            <SidebarWrap>
+              <Sidebar>
+                <h5>Key Insight</h5>
 
-              <ProgressBar>
-                <span className="icon">🚀</span>
-                <Progress progress={100} />
-                <span>Fin</span>
-              </ProgressBar>
+                <ProgressBar>
+                  <span className="icon">🚀</span>
+                  <Progress progress={100} />
+                  <span>Fin</span>
+                </ProgressBar>
 
-              <MoleculeStepIndicator steps={steps} activeStep={5} />
-            </Sidebar>
+                <MoleculeStepIndicator steps={steps} activeStep={5} />
+              </Sidebar>
+
+              <SidebarBottom>
+                <strong>
+                  다른 페르소나의 이야기가 궁금하시다면,<br />
+                  지금 바로 대화해보세요 🙌🏻
+                </strong>
+
+                <span onClick={navigateToPersonaPage}>
+                  맞춤 페르소나 보러가기
+                  </span>
+              </SidebarBottom>
+            </SidebarWrap>
+
             {showToast && (
               <OrganismToastPopup
                 isActive={showToast}
@@ -1141,16 +1161,24 @@ const CardDescription = styled.div`
     }
   }
 `;
-const Sidebar = styled.div`
+
+const SidebarWrap = styled.div`
   position: sticky;
   top: 101px;
   display: flex;
   flex-direction: column;
   align-self: flex-start;
   gap: 16px;
+  margin-top: 44px;
+`;
+
+const Sidebar = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-self: flex-start;
+  gap: 16px;
   width: 290px;
   padding: 16px 20px;
-  margin-top: 44px;
   border-radius: 10px;
   background: ${palette.chatGray};
 
@@ -1160,6 +1188,46 @@ const Sidebar = styled.div`
     line-height: 1.5;
     color: ${palette.gray700};
     text-align: left;
+  }
+`;
+
+const SidebarBottom = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px 24px;
+  border-radius: 10px;
+  border-left: 2px solid ${palette.primary};
+  background: rgba(34, 111, 255, 0.04);
+  cursor: pointer;
+
+  strong {
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: ${palette.gray800};
+    text-align: left;
+  }
+
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: ${palette.primary};
+
+    &:after {
+      width: 6px;
+      height: 6px;
+      transform: rotate(45deg);
+      display: block;
+      border-top: 1px solid ${palette.primary};
+      border-right: 1px solid ${palette.primary};
+      content: "";
+    }
   }
 `;
 

@@ -84,11 +84,13 @@ const OrganismProjectCard = ({ project, index }) => {
   };
   const getRecruitStatus = (project) => {
     const requestedPersonaCount = project.requestedPersona?.length || 0;
+
     return requestedPersonaCount === 3
       ? "complete"
       : requestedPersonaCount > 0
       ? "ing"
       : "";
+
   };
 
   const navigateToPersonaPage = (projectId) => {
