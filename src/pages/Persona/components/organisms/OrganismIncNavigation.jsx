@@ -2364,11 +2364,18 @@ const HistoryList = styled.div`
   li {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 12px;
     font-size: 0.875rem;
     color: #393939;
     padding: 8px 12px;
     cursor: pointer;
+
+    span {
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.5s;
+    }
 
     &:before {
       display: block;
@@ -2381,6 +2388,11 @@ const HistoryList = styled.div`
     }
 
     &:hover {
+      span {
+        opacity: 1;
+        visibility: visible;
+      }
+
       &:before {
         background: ${palette.primary};
       }
