@@ -5,7 +5,8 @@ import images from "./Images";
 
 const PopupWrap = ({ 
   title, 
-  message, 
+  message,
+  message2,
   body,
   onConfirm, 
   onCancel,
@@ -121,7 +122,7 @@ const PopupWrap = ({
             
             <Text>
               <strong>{title}</strong>
-              <p>{message}</p>
+              <p>{message}<br />{message2}</p>
             </Text>
           </Contents>
 
@@ -188,7 +189,6 @@ export const Body = styled.div`
   height: 100%;
   max-height: 60dvh;
   padding-right:10px;
-  padding-bottom: 10px;
   overflow-y: auto;
   overflow-x: hidden;
 
