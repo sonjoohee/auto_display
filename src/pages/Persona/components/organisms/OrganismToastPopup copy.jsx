@@ -249,7 +249,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
           }
           return; // API 호출 없이 종료
         }
-        
+
         loadInterviewQuestion();
     };
     interviewLoading();
@@ -305,7 +305,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             return;
           }
 
-          const newQuestionList = [ 
+          const newQuestionList = [
             ...interviewQuestionList,
             {
               theory_name: selectedInterviewPurpose,
@@ -318,7 +318,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
 
           setPersonaButtonState3(0);
           setIsLoadingPrepare(false);
-          const initialStatus = new Array(questionList.slice(2).length).fill(
+          const initialStatus = new Array(questionList.slice(2)).fill(
             "Pre"
           );
           setInterviewStatus(initialStatus);
@@ -488,7 +488,6 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               return;
             } else {
               setShowRegenerateButton2(true);
-              console.log("🚀 ~ loadInterviewReport ~ setShowRegenerateButton2:", showRegenerateButton2);
               setRegenerateCount2(regenerateCount2 + 1);
             }
             break;
@@ -498,11 +497,9 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
         }
         console.error("Error details:", error);
       }
+      setIsAnalyzing(false);
     }
   }
-
-  let allAnswers = [];
-  let personaInfoState = [];
 
   useEffect(() => {
     const processInterview = async () => {
@@ -520,8 +517,8 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
         }));
 
         try {
-          allAnswers = [];
-          personaInfoState = [];
+          let allAnswers = [];
+          let personaInfoState = [];
 
           for (let i = 0; i < personaList.selected.length; i++) {
             setIsGenerating(true);
@@ -592,13 +589,6 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             allAnswers.push(response.data.answer);
 
             personaInfoState.push(personaInfo);
-            const profileArray = personaList.selected[i].profile
-              .replace(/['\[\]]/g, "")
-              .split(", ");
-            const age = profileArray[0].split(": ")[1];
-            const gender =
-              profileArray[1].split(": ")[1] === "남성" ? "남성" : "여성";
-            const job = profileArray[2].split(": ")[1];
 
             setAnswers((prev) => ({
               ...prev,
@@ -606,9 +596,6 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                 ...prev[currentQuestionIndex],
                 {
                   persona: personaList.selected[i],
-                  gender: gender,
-                  age: age,
-                  job: job,
                   answer: response.data.answer,
                 },
               ],
@@ -656,7 +643,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                 setShowErrorPopup(true);
                 break;
               case 504:
-                setShowErrorPopup(true);
+                // 재생성하기
                 break;
               default:
                 setShowErrorPopup(true);
@@ -712,25 +699,11 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               </Thumb>
               <div>
                 {personaList.selected[questionAnswers.length].persona}
-                {(() => {
-                  const profileArray = personaList.selected[
-                    questionAnswers.length
-                  ].profile
-                    .replace(/['\[\]]/g, "")
-                    .split(", ");
-                  const age = profileArray[0].split(": ")[1];
-                  const gender =
-                    profileArray[1].split(": ")[1] === "남성" ? "남성" : "여성";
-                  const job = profileArray[2].split(": ")[1];
-
-                  return (
-                    <p>
-                      <span>{gender}</span>
-                      <span>{age}세</span>
-                      <span>{job}</span>
-                    </p>
-                  );
-                })()}
+                <p>
+                  <span>여성</span>
+                  <span>20세</span>
+                  <span>건물용고체고분자연료전지시스템통합개발자</span>
+                </p>
               </div>
             </TypeName>
             <TextContainer>
@@ -756,6 +729,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                   alt={answer.persona.persona}
                 />
               </Thumb>
+
               <div>
                 {answer.persona.persona}
                 <p>
@@ -795,7 +769,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
       onClose();
     }
     if (!isComplete) {
-      navigate(`/Main`, { replace: true });
+      window.location.href = "/";
     }
   };
 
@@ -984,7 +958,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                   <br />
                   지금 나가시면 인터뷰 내용이 저장되지 않으니, 다시 시도해주세요
                 </p>
-                <Button Small Outline onClick={() => loadInterviewReport(personaInfoState, allAnswers)}>
+                <Button Small Outline onClick={loadInterviewReport}>
                   <img src={images.ArrowClockwise} alt="" />
                   분석 다시하기
                   </Button>
@@ -1035,16 +1009,16 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
         <PopupWrap
           Warning
           title="작업이 중단되었습니다"
-          message="데이터 오류로 인해 페이지가 초기화됩니다.\n작업 중인 내용은 작업관리 페이지를 확인하세요."
+          message="데이터 오류로 인해 페이지가 초기화됩니다. 작업 중인 내용은 작업관리 페이지를 확인하세요"
           buttonType="Outline"
           closeText="확인"
           onConfirm={() => {
             setShowErrorPopup(false);
-            window.location.href = "/";
+            handleWarningClose();
           }}
           onCancel={() => {
             setShowErrorPopup(false);
-            window.location.href = "/";
+            handleWarningClose();
           }}
         />
       )}
@@ -1315,7 +1289,7 @@ const QuestionWrap = styled.div`
   width: 100%;
   cursor: inherit;
   position: relative;
-  padding-right: 56px;
+  padding-right: 24px;
   cursor: ${(props) => (props.status === "Pre" ? "default" : "pointer")};
 
   ${(props) =>
