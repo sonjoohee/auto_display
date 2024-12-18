@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled, { keyframes, css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
+import { Button } from "../../../../assets/styles/ButtonStyle";
 import images from "../../../../assets/styles/Images";
 import PopupWrap from "../../../../assets/styles/Popup";
 import { useNavigate } from "react-router-dom";
@@ -761,6 +762,27 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               </p>
             </LoadingBox> */}
 
+            {/* 대화중단 에러 */}
+            <ErrorAnswerItem>
+              <strong>앗! 대화가 잠시 중단되었네요</strong>
+              <div>
+                <p>잠시 대화가 중단되었어요. 대화를 이어가시려면 아래 ‘다시 이어하기’ 버튼을 눌러주세요</p>
+                <Button Small Outline>
+                  <img src={images.ArrowClockwise} alt="" />
+                  다시 이어하기
+                </Button>
+              </div>
+            </ErrorAnswerItem>
+
+            {/* 분석오류 에러 */}
+            <ErrorInterviewItem>
+              <p>분석 중 오류가 발생했어요<br />지금 나가시면 인터뷰 내용이 저장되지 않으니, 다시 시도해주세요</p>
+              <Button Small Outline>
+                <img src={images.ArrowClockwise} alt="" />
+                분석 다시하기
+              </Button>
+            </ErrorInterviewItem>
+
             {isLoadingPrepare && (
               <LoadingBox>
                 <Loading>
@@ -1065,6 +1087,19 @@ const InterviewItem = styled.div`
   // cursor: ${(props) => (props.status === "Pre" ? "default" : "pointer")};
 `;
 
+const ErrorInterviewItem = styled(InterviewItem)`
+  gap: 12px;
+  padding: 70px 0;
+  background: ${palette.chatGray};
+
+  p {
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: ${palette.gray700};
+  }
+`;
+
 const QuestionWrap = styled.div`
   display: flex;
   align-items: center;
@@ -1201,6 +1236,58 @@ const AnswerItem = styled.div`
   align-items: stretch;
   gap: 12px;
   width: 100%;
+`;
+
+const ErrorAnswerItem = styled(AnswerItem)`
+  align-items: flex-start;
+  margin-top: 24px;
+  padding: 20px;
+  border-radius: 15px;
+  border: 1px solid ${palette.error};
+  background: rgba(255, 59, 48, 0.06);
+
+  strong {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: ${palette.error};
+
+    &:before {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      background: url(${images.ExclamationCircleFill}) center no-repeat;
+      background-size: 100%;
+      content: '';
+    }
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-left: 28px;
+  }
+
+  p {
+    font-size: 0.875rem;
+    font-weight: 300;
+    line-height: 1.5;
+    color: ${palette.gray700};
+  }
+
+  button {
+    font-size: 0.875rem;
+    color: ${palette.gray800};
+    border-radius: 8px;
+    border: 1px solid ${palette.gray500};
+  }
 `;
 
 const TypeName = styled.div`
