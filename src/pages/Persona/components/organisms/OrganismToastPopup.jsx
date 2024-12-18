@@ -107,10 +107,24 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             questions.forEach((_, index) => {
               const answers = interviewData[index][`answer_${index + 1}`];
               newAnswers[index] = personaList.selected.map(
-                (persona, pIndex) => ({
-                  persona: persona,
-                  answer: answers[pIndex],
-                })
+                (persona, pIndex) => {
+                  // profile 문자열에서 정보 추출
+                  const profileArray = persona.profile
+                    .replace(/['\[\]]/g, "")
+                    .split(", ");
+                  const age = profileArray[0].split(": ")[1];
+                  const gender =
+                    profileArray[1].split(": ")[1] === "남성" ? "남성" : "여성";
+                  const job = profileArray[2].split(": ")[1];
+
+                  return {
+                    persona: persona,
+                    gender: gender,
+                    age: age,
+                    job: job,
+                    answer: answers[pIndex],
+                  };
+                }
               );
             });
             setAnswers(newAnswers);
@@ -138,6 +152,30 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
 
             // interviewData에서 답변 설정
             const newAnswers = {};
+
+            questions.forEach((_, index) => {
+              const answers = interviewData[index][`answer_${index + 1}`];
+              newAnswers[index] = personaList.selected.map(
+                (persona, pIndex) => {
+                  // profile 문자열에서 정보 추출
+                  const profileArray = persona.profile
+                    .replace(/['\[\]]/g, "")
+                    .split(", ");
+                  const age = profileArray[0].split(": ")[1];
+                  const gender =
+                    profileArray[1].split(": ")[1] === "남성" ? "남성" : "여성";
+                  const job = profileArray[2].split(": ")[1];
+
+                  return {
+                    persona: persona,
+                    gender: gender,
+                    age: age,
+                    job: job,
+                    answer: answers[pIndex],
+                  };
+                }
+              );
+            });
             questions.forEach((_, index) => {
               const answers = interviewData[index][`answer_${index + 1}`];
 
@@ -145,17 +183,49 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
 
               if (personaList.selected.length > 0) {
                 newAnswers[index] = personaList.selected.map(
-                  (persona, pIndex) => ({
-                    persona: persona,
-                    answer: answers[pIndex],
-                  })
+                  (persona, pIndex) => {
+                    // profile 문자열에서 정보 추출
+                    const profileArray = persona.profile
+                      .replace(/['\[\]]/g, "")
+                      .split(", ");
+                    const age = profileArray[0].split(": ")[1];
+                    const gender =
+                      profileArray[1].split(": ")[1] === "남성"
+                        ? "남성"
+                        : "여성";
+                    const job = profileArray[2].split(": ")[1];
+
+                    return {
+                      persona: persona,
+                      gender: gender,
+                      age: age,
+                      job: job,
+                      answer: answers[pIndex],
+                    };
+                  }
                 );
               } else {
                 newAnswers[index] = selectedPersonaList.map(
-                  (persona, pIndex) => ({
-                    persona: persona,
-                    answer: answers[pIndex],
-                  })
+                  (persona, pIndex) => {
+                    // profile 문자열에서 정보 추출
+                    const profileArray = persona.profile
+                      .replace(/['\[\]]/g, "")
+                      .split(", ");
+                    const age = profileArray[0].split(": ")[1];
+                    const gender =
+                      profileArray[1].split(": ")[1] === "남성"
+                        ? "남성"
+                        : "여성";
+                    const job = profileArray[2].split(": ")[1];
+
+                    return {
+                      persona: persona,
+                      gender: gender,
+                      age: age,
+                      job: job,
+                      answer: answers[pIndex],
+                    };
+                  }
                 );
               }
             });
@@ -589,6 +659,10 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                 />
               </Thumb>
               {answer.persona.persona}
+
+              {answer.gender}
+              {answer.age}
+              {answer.job}
             </TypeName>
             <TextContainer>{answer.answer}</TextContainer>
           </AnswerItem>
@@ -630,6 +704,9 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                 />
               </Thumb>
               {answer.persona.persona}
+              {answer.gender}
+              {answer.age}
+              {answer.job}
             </TypeName>
             <TextContainer>{answer.answer}</TextContainer>
           </AnswerItem>
@@ -807,7 +884,10 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             <ErrorAnswerItem>
               <strong>앗! 대화가 잠시 중단되었네요</strong>
               <div>
-                <p>잠시 대화가 중단되었어요. 대화를 이어가시려면 아래 ‘다시 이어하기’ 버튼을 눌러주세요</p>
+                <p>
+                  잠시 대화가 중단되었어요. 대화를 이어가시려면 아래 ‘다시
+                  이어하기’ 버튼을 눌러주세요
+                </p>
                 <Button Small Outline>
                   <img src={images.ArrowClockwise} alt="" />
                   다시 이어하기
@@ -817,7 +897,11 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
 
             {/* 분석오류 에러 */}
             <ErrorInterviewItem>
-              <p>분석 중 오류가 발생했어요<br />지금 나가시면 인터뷰 내용이 저장되지 않으니, 다시 시도해주세요</p>
+              <p>
+                분석 중 오류가 발생했어요
+                <br />
+                지금 나가시면 인터뷰 내용이 저장되지 않으니, 다시 시도해주세요
+              </p>
               <Button Small Outline>
                 <img src={images.ArrowClockwise} alt="" />
                 분석 다시하기
@@ -1318,7 +1402,7 @@ const ErrorAnswerItem = styled(AnswerItem)`
       height: 20px;
       background: url(${images.ExclamationCircleFill}) center no-repeat;
       background-size: 100%;
-      content: '';
+      content: "";
     }
   }
 

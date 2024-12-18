@@ -1,22 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import styled, { css } from 'styled-components';
-import { palette } from '../../../../assets/styles/Palette';
-import images from '../../../../assets/styles/Images';
-import { Button } from '../../../../assets/styles/ButtonStyle'
-import PopupWrap from '../../../../assets/styles/Popup';
-import { CustomTextarea } from '../../../../assets/styles/InputStyle';
+import React, { useState, useEffect } from "react";
+import styled, { css } from "styled-components";
+import { palette } from "../../../../assets/styles/Palette";
+import images from "../../../../assets/styles/Images";
+import { Button } from "../../../../assets/styles/ButtonStyle";
+import PopupWrap from "../../../../assets/styles/Popup";
+import { CustomTextarea } from "../../../../assets/styles/InputStyle";
 import {
   AccordionSection,
   CustomAccordionHeader,
   CustomAccordionIcon,
-  CustomAccordionContent
-} from '../../../../components/common/Accordion';
+  CustomAccordionContent,
+} from "../../../../components/common/Accordion";
 
-const MoleculePersonaCard = ({ 
-  title, 
-  keywords = [], 
-  isBasic = false, 
-  isCustom = false, 
+const MoleculePersonaCard = ({
+  title,
+  keywords = [],
+  gender,
+  age,
+  job,
+  isBasic = false,
+  isCustom = false,
   hideCheckCircle = false,
   TitleFlex = false,
   NoLine = false,
@@ -33,7 +36,7 @@ const MoleculePersonaCard = ({
 
   const handleCheck = () => {
     if (isCustom) {
-      onClick && onClick();  // 팝업 표시를 위한 콜백 실행
+      onClick && onClick(); // 팝업 표시를 위한 콜백 실행
       return;
     }
     onSelect && onSelect();
@@ -42,7 +45,7 @@ const MoleculePersonaCard = ({
     if (isChecked && checked === null) {
       setIsChecked(false);
       onSelect(false);
-    } 
+    }
     // 새로 선택하는 경우, 최대 선택 개수 확인
     else if (currentSelection < 5 && checked === null) {
       setIsChecked(true);
@@ -56,62 +59,70 @@ const MoleculePersonaCard = ({
     showPopup: false,
     showRequestBadge: false,
     showCustomModal: false,
-    customTextarea: '',
+    customTextarea: "",
     isTextareaValid: false,
     isRadioSelected: false,
     showQuestions: false,
     showCustomPopup: false,
     isAccordionOpen: false,
     formState: {
-      purpose: '',
-      personaCount: '',
-      gender: '',
-      age: '',
-      additionalInfo: ''
-    }
+      purpose: "",
+      personaCount: "",
+      gender: "",
+      age: "",
+      additionalInfo: "",
+    },
   });
 
   const handleInputChange = (field, value) => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       formState: {
         ...prev.formState,
-        [field]: value
-      }
+        [field]: value,
+      },
     }));
   };
 
   const isFormValid = () => {
-    return state.formState.purpose.trim() !== '' && state.formState.personaCount !== '';
+    return (
+      state.formState.purpose.trim() !== "" &&
+      state.formState.personaCount !== ""
+    );
   };
 
   return (
     <>
-    <CardContainer TitleFlex={TitleFlex} $isChecked={isChecked} NoLine={NoLine}>
-      <MainContent NoLine={NoLine}>
-        {!hideCheckCircle && (
-          <CheckCircle 
-            $isChecked={isChecked}
-            onClick={handleCheck}
-          />
-        )}
-
-        <ContentWrapper NoLine={NoLine}>
-          <TitleSection>
-            <Title NoLine={NoLine}>{title}</Title>
-          </TitleSection>
-          
-          {keywords.length > 0 && (
-            <KeywordGroup>
-              {keywords.map((keyword, index) => (
-                <KeywordTag key={index}>#{keyword}</KeywordTag>
-              ))}
-            </KeywordGroup>
+      <CardContainer
+        TitleFlex={TitleFlex}
+        $isChecked={isChecked}
+        NoLine={NoLine}
+      >
+        <MainContent NoLine={NoLine}>
+          {!hideCheckCircle && (
+            <CheckCircle $isChecked={isChecked} onClick={handleCheck} />
           )}
 
-        </ContentWrapper>
+          <ContentWrapper NoLine={NoLine}>
+            <TitleSection>
+              <Title NoLine={NoLine}>{title}</Title>
+              <p className="info">
+                <span>{gender}</span>
+                <span>{age}</span>
+                <span>{job}</span>
+              </p>
+            </TitleSection>
 
-        {isBasic ? (
+            {keywords.length > 0 && (
+              <KeywordGroup>
+                {keywords.map((keyword, index) => (
+                  <KeywordTag key={index}>#{keyword}</KeywordTag>
+                ))}
+              </KeywordGroup>
+            )}
+          </ContentWrapper>
+
+          {isBasic ? (
             <Badge Basic>
               <img src={images.StatusBadgeBasic} alt="기본형" />
               기본형
@@ -123,13 +134,13 @@ const MoleculePersonaCard = ({
                 커스터마이즈
               </Badge>
             ) : (
-              <Button 
-                Large 
+              <Button
+                Large
                 Primary
                 onClick={(e) => {
                   e.stopPropagation();
                   // console.log('Badge clicked');
-                  setState(prev => {
+                  setState((prev) => {
                     // console.log('Previous state:', prev);
                     const newState = { ...prev, showPopup: true };
                     // console.log('New state:', newState);
@@ -144,22 +155,21 @@ const MoleculePersonaCard = ({
           ) : (
             <></>
           )}
-      </MainContent>
-
-    </CardContainer>
+        </MainContent>
+      </CardContainer>
       {state.showPopup && (
-        <PopupWrap 
-          title="📝 맞춤형 페르소나 모집 요청하기" 
+        <PopupWrap
+          title="📝 맞춤형 페르소나 모집 요청하기"
           buttonType="Fill"
           confirmText="맞춤 페르소나 모집하기"
           isModal={true}
-          onClose={() => setState(prev => ({ ...prev, showPopup: false }))}
-          onCancel={() => setState(prev => ({ ...prev, showPopup: false }))}
+          onClose={() => setState((prev) => ({ ...prev, showPopup: false }))}
+          onCancel={() => setState((prev) => ({ ...prev, showPopup: false }))}
           onConfirm={() => {
             if (isFormValid()) {
-              setState(prev => ({
+              setState((prev) => ({
                 ...prev,
-                showPopup: false
+                showPopup: false,
               }));
             }
           }}
@@ -167,7 +177,7 @@ const MoleculePersonaCard = ({
           body={
             <>
               <div className="bgBox">
-                <strong>도심에 거주하며 전문직에 종사하는 바쁜 생활인 </strong>
+                <strong>도심에 거주하며 전문직에 종사하는 바쁜 생활인</strong>
                 <p className="tag">
                   <span>키워드1</span>
                   <span>키워드2</span>
@@ -176,61 +186,85 @@ const MoleculePersonaCard = ({
               </div>
 
               <dl>
-                <dt className="point">맞춤형 페르소나는 어떤 용도로 활용하실 계획이신가요?</dt>
+                <dt className="point">
+                  맞춤형 페르소나는 어떤 용도로 활용하실 계획이신가요?
+                </dt>
                 <dd>
-                  <CustomTextarea 
+                  <CustomTextarea
                     rows={3}
                     placeholder="생성하기 위한 목적을 적어 주세요."
                     value={state.formState.purpose}
-                    onChange={(e) => handleInputChange('purpose', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("purpose", e.target.value)
+                    }
                   />
                 </dd>
               </dl>
 
               <dl>
-                <dt className="point">몇명의 페르소나를 모집하시고 싶으신가요?</dt>
+                <dt className="point">
+                  몇명의 페르소나를 모집하시고 싶으신가요?
+                </dt>
                 <dd>
-                  <input 
-                    type="radio" 
-                    id="persona1" 
-                    name="persona" 
+                  <input
+                    type="radio"
+                    id="persona1"
+                    name="persona"
                     value="5"
-                    onChange={(e) => handleInputChange('personaCount', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("personaCount", e.target.value)
+                    }
                   />
-                  <label htmlFor="persona1" className="persona">5명</label>
-                  <input 
-                    type="radio" 
-                    id="persona2" 
-                    name="persona" 
+                  <label htmlFor="persona1" className="persona">
+                    5명
+                  </label>
+                  <input
+                    type="radio"
+                    id="persona2"
+                    name="persona"
                     value="10"
-                    onChange={(e) => handleInputChange('personaCount', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("personaCount", e.target.value)
+                    }
                   />
-                  <label htmlFor="persona2" className="persona">10명</label>
-                  <input 
-                    type="radio" 
-                    id="persona3" 
-                    name="persona" 
+                  <label htmlFor="persona2" className="persona">
+                    10명
+                  </label>
+                  <input
+                    type="radio"
+                    id="persona3"
+                    name="persona"
                     value="15"
-                    onChange={(e) => handleInputChange('personaCount', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("personaCount", e.target.value)
+                    }
                   />
-                  <label htmlFor="persona3" className="persona">15명</label>
-                  <input 
-                    type="radio" 
-                    id="persona4" 
-                    name="persona" 
+                  <label htmlFor="persona3" className="persona">
+                    15명
+                  </label>
+                  <input
+                    type="radio"
+                    id="persona4"
+                    name="persona"
                     value="20"
-                    onChange={(e) => handleInputChange('personaCount', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("personaCount", e.target.value)
+                    }
                   />
-                  <label htmlFor="persona4" className="persona">20명</label>
+                  <label htmlFor="persona4" className="persona">
+                    20명
+                  </label>
                 </dd>
               </dl>
 
               <AccordionSection>
-                <CustomAccordionHeader 
-                  onClick={() => setState(prev => ({
-                    ...prev,
-                    isAccordionOpen: !prev.isAccordionOpen
-                  }))}
+                <CustomAccordionHeader
+                  onClick={() =>
+                    setState((prev) => ({
+                      ...prev,
+                      isAccordionOpen: !prev.isAccordionOpen,
+                    }))
+                  }
                 >
                   🔍 추가정보를 입력하여, 더 정확한 타겟 페르소나를 찾으세요
                   <CustomAccordionIcon isOpen={state.isAccordionOpen} />
@@ -256,30 +290,47 @@ const MoleculePersonaCard = ({
                     <dl>
                       <dt>
                         나이
-                        <p>* 선택하지 않는 경우, 연령 무관으로 페르소나를 생성합니다.</p>
+                        <p>
+                          * 선택하지 않는 경우, 연령 무관으로 페르소나를
+                          생성합니다.
+                        </p>
                       </dt>
                       <dd>
                         <input type="radio" id="age1" name="age" />
-                        <label htmlFor="age1" className="age">10대</label>
+                        <label htmlFor="age1" className="age">
+                          10대
+                        </label>
                         <input type="radio" id="age2" name="age" />
-                        <label htmlFor="age2" className="age">20대</label>
+                        <label htmlFor="age2" className="age">
+                          20대
+                        </label>
                         <input type="radio" id="age3" name="age" />
-                        <label htmlFor="age3" className="age">30대</label>
+                        <label htmlFor="age3" className="age">
+                          30대
+                        </label>
                         <input type="radio" id="age4" name="age" />
-                        <label htmlFor="age4" className="age">40대</label>
+                        <label htmlFor="age4" className="age">
+                          40대
+                        </label>
                         <input type="radio" id="age5" name="age" />
-                        <label htmlFor="age5" className="age">50대</label>
+                        <label htmlFor="age5" className="age">
+                          50대
+                        </label>
                         <input type="radio" id="age6" name="age" />
-                        <label htmlFor="age6" className="age">60대</label>
+                        <label htmlFor="age6" className="age">
+                          60대
+                        </label>
                         <input type="radio" id="age7" name="age" />
-                        <label htmlFor="age7" className="age">70대 이상</label>
+                        <label htmlFor="age7" className="age">
+                          70대 이상
+                        </label>
                       </dd>
                     </dl>
 
                     <dl>
                       <dt>더 상세하게 필요한 정보를 입력해주세요 </dt>
                       <dd>
-                        <CustomTextarea 
+                        <CustomTextarea
                           rows={3}
                           placeholder="모집하고 싶은 페르소나의 성향, 목표, 행동 패턴을 구체적으로 입력해주세요"
                         />
@@ -307,26 +358,32 @@ const CardContainer = styled.div`
   width: 100%;
   padding: 24px 20px;
   border-radius: 10px;
-  border: 1px solid ${props => props.$isChecked ? palette.primary : palette.outlineGray};
-  background: ${props => props.isActive ? 'rgba(34, 111, 255, 0.10)' : palette.white};
-  cursor: ${props => props.isClickable ? 'pointer' : 'default'};
+  border: 1px solid
+    ${(props) => (props.$isChecked ? palette.primary : palette.outlineGray)};
+  background: ${(props) =>
+    props.isActive ? "rgba(34, 111, 255, 0.10)" : palette.white};
+  cursor: ${(props) => (props.isClickable ? "pointer" : "default")};
   transition: all 0.2s ease-in-out;
 
-  ${props => props.TitleFlex && css`
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: space-between;
-  `}
+  ${(props) =>
+    props.TitleFlex &&
+    css`
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
+    `}
 
-  ${props => props.NoLine && css`
-    padding: 0;
-    border: none;
+  ${(props) =>
+    props.NoLine &&
+    css`
+      padding: 0;
+      border: none;
 
-    + div {
-      padding-top: 16px;
-      border-top: 1px solid ${palette.outlineGray};
-    }
-  `}
+      + div {
+        padding-top: 16px;
+        border-top: 1px solid ${palette.outlineGray};
+      }
+    `}
 `;
 
 const MainContent = styled.div`
@@ -348,21 +405,23 @@ const MainContent = styled.div`
       border-right: 2px solid ${palette.primary};
       border-top: 2px solid ${palette.primary};
       transform: rotate(45deg);
-      content: '';
+      content: "";
     }
   }
 
-  ${props => props.NoLine && css`
-    justify-content: flex-start;
-    gap: 8px;
+  ${(props) =>
+    props.NoLine &&
+    css`
+      justify-content: flex-start;
+      gap: 8px;
 
-    &:before {
-      content: '';
-      width: 20px;
-      height: 20px;
-      background: url(${images.PersonFill}) no-repeat center center / contain;
-    }
-  `}
+      &:before {
+        content: "";
+        width: 20px;
+        height: 20px;
+        background: url(${images.PersonFill}) no-repeat center center / contain;
+      }
+    `}
 `;
 
 const ContentWrapper = styled.div`
@@ -373,9 +432,11 @@ const ContentWrapper = styled.div`
   align-items: flex-start;
   gap: 8px;
 
-  ${props => props.NoLine && css`
-    flex: initial;
-  `}
+  ${(props) =>
+    props.NoLine &&
+    css`
+      flex: initial;
+    `}
 `;
 
 const CheckCircle = styled.div`
@@ -383,10 +444,10 @@ const CheckCircle = styled.div`
   height: 24px;
   border-radius: 50%;
   cursor: pointer;
-  background-image: ${props => props.$isChecked 
-    ? `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='12' fill='%23226FFF'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
-    : `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='11.5' stroke='%23E0E4EB'/%3E%3C/svg%3E")`
-  };
+  background-image: ${(props) =>
+    props.$isChecked
+      ? `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='12' fill='%23226FFF'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
+      : `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='11.5' stroke='%23E0E4EB'/%3E%3C/svg%3E")`};
   transition: background-image 0.3s ease-in-out;
   cursor: pointer;
 `;
@@ -404,10 +465,12 @@ const Title = styled.div`
   text-align: left;
   word-wrap: break-word;
 
-  ${props => props.NoLine && css`
-    font-weight: 400;
-    line-height: 1.5;
-  `}
+  ${(props) =>
+    props.NoLine &&
+    css`
+      font-weight: 400;
+      line-height: 1.5;
+    `}
 `;
 
 const Badge = styled.div`
@@ -416,19 +479,20 @@ const Badge = styled.div`
   gap: 4px;
   font-size: 0.75rem;
   line-height: 1.2;
-  color: ${props => {
+  color: ${(props) => {
     if (props.Basic) return `#34C759`;
     else if (props.Custom) return palette.gray500;
     else return palette.gray500;
   }};
   padding: 4px 8px;
   border-radius: 50px;
-  border: 1px solid ${props => {
-    if (props.Basic) return `#34C759`;
-    else if (props.Custom) return palette.primary;
-    else return palette.outlineGray;
-  }};
-  background:${props => {
+  border: 1px solid
+    ${(props) => {
+      if (props.Basic) return `#34C759`;
+      else if (props.Custom) return palette.primary;
+      else return palette.outlineGray;
+    }};
+  background: ${(props) => {
     if (props.Basic) return `rgba(52, 199, 89, 0.10)`;
     else if (props.Custom) return palette.primary;
     else return palette.gray50;
@@ -441,7 +505,7 @@ const ReadyIcon = styled.div`
   height: 0px;
   border-style: solid;
   border-width: 4px 0 4px 6px;
-  border-color: transparent transparent transparent #34C759;
+  border-color: transparent transparent transparent #34c759;
   transform: rotate(0deg);
 `;
 
@@ -489,14 +553,15 @@ const ToggleButton = styled.button`
     top: 50%;
     left: 50%;
     width: 10px;
-    height:10px;
-    transform: ${props => props.$isExpanded 
-      ? 'translate(-50%, -50%) rotate(45deg)' 
-      : 'translate(-50%, -50%) rotate(-135deg)'};
+    height: 10px;
+    transform: ${(props) =>
+      props.$isExpanded
+        ? "translate(-50%, -50%) rotate(45deg)"
+        : "translate(-50%, -50%) rotate(-135deg)"};
     margin-top: 2px;
     border-top: 1px solid ${palette.gray500};
     border-left: 1px solid ${palette.gray500};
-    transition: all .5s;
+    transition: all 0.5s;
   }
 `;
 
@@ -507,9 +572,8 @@ const DescriptionSection = styled.div`
   color: ${palette.gray800};
   text-align: left;
   border-radius: 10px;
-  border: ${props => props.$isTabContent 
-    ? `1px solid ${palette.outlineGray}`
-    : 'none' };
+  border: ${(props) =>
+    props.$isTabContent ? `1px solid ${palette.outlineGray}` : "none"};
 
   > span {
     display: flex;
@@ -520,9 +584,8 @@ const DescriptionSection = styled.div`
     color: ${palette.gray800};
     padding: 20px;
     border-radius: 10px;
-    background: ${props => props.$isTabContent 
-      ? 'transparent'
-      : palette.chatGray};
+    background: ${(props) =>
+      props.$isTabContent ? "transparent" : palette.chatGray};
     cursor: pointer;
   }
 `;
@@ -561,7 +624,7 @@ const ListUL = styled.div`
     height: 20px;
     color: ${palette.primary};
     border-radius: 2px;
-    border: 1px solid rgba(34, 111, 255, 0.50);
+    border: 1px solid rgba(34, 111, 255, 0.5);
     background: rgba(34, 111, 255, 0.04);
   }
 `;
@@ -577,11 +640,11 @@ const RecruitButton = styled.button`
   font-size: 0.875rem;
   border: none;
   cursor: pointer;
-  
+
   &:hover {
     background: ${palette.primaryDark};
   }
-  
+
   img {
     width: 16px;
     height: 16px;
