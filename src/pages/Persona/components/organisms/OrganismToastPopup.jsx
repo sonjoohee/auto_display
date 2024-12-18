@@ -782,10 +782,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
     if (onClose) {
       onClose();
     }
-    if (!isComplete) {
-      setPersonaButtonState3(0);
-      onClose();
-    }
+    window.location.href = "/";
   };
 
   const handleWarningContinue = () => {
@@ -812,7 +809,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
 
   const handleAnswerToggle = (index) => {
     // 'Pre' 상태일 때는 토글 불가능
-    if (interviewStatus[index] === 'Pre') return;
+    if (interviewStatus[index] === 'Pre' || interviewStatus[index] === 'Ing') return;
 
     setVisibleAnswers((prev) => ({ ...prev, [index]: !prev[index] }));
   };

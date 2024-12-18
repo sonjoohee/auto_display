@@ -791,7 +791,8 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
         <PopupWrap
           Warning
           title="작업이 중단되었습니다"
-          message="입력된 내용에 문제가 있어 페이지가 초기화되었습니다.\n다시 입력해주세요."
+          message="입력된 내용에 문제가 있어 페이지가 초기화되었습니다."
+          message2="다시 입력해주세요."
           buttonType="Outline"
           closeText="확인"
           onConfirm={() => {
