@@ -107,9 +107,9 @@ const MoleculePersonaCard = ({
           <ContentWrapper NoLine={NoLine}>
             <TitleSection>
               <Title NoLine={NoLine}>
-              <p>{title}</p>
+                <p>{title}</p>
 
-              {!newLine && (
+                {!newLine && (
                   <TitleInfo>
                     <span>{gender}</span>
                     <span>{age}세</span>
@@ -428,13 +428,6 @@ const MainContent = styled.div`
     css`
       justify-content: space-between; // space-between으로 변경
       gap: 8px;
-
-      &:before {
-        content: "";
-        width: 20px;
-        height: 20px;
-        background: url(${images.PersonFill}) no-repeat center center / contain;
-      }
     `}
 `;
 
