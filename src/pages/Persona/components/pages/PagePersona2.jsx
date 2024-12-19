@@ -221,7 +221,7 @@ const PagePersona2 = () => {
           );
           if (savedProjectInfo) {
             setBusinessAnalysis(savedProjectInfo.businessAnalysis);
-            console.log(savedProjectInfo.requestPersonaList);
+            // console.log(savedProjectInfo.requestPersonaList);
             setRequestPersonaList(savedProjectInfo.requestPersonaList);
             setCategoryColor({
               first: getCategoryColor(

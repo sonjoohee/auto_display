@@ -1280,7 +1280,7 @@ const OrganismIncNavigation = () => {
   };
 
   const handleClickHome = () => {
-    console.log("test logo click");
+    // console.log("test logo click");
     if (location.pathname !== "/") {
       setIsHomePopupOpen(true);
     }

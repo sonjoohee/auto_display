@@ -105,7 +105,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
           const completedStatus = new Array(questions.length).fill("Complete");
           setInterviewStatus(completedStatus);
 
-          console.log(completedStatus);
+          // console.log(completedStatus);
 
           // interviewData에서 답변 설정
           const newAnswers = {};
@@ -151,7 +151,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
           );
           setInterviewStatus(completedStatus);
 
-          console.log(completedStatus);
+          // console.log(completedStatus);
 
           // interviewData에서 답변 설정
           const newAnswers = {};
@@ -475,10 +475,10 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               return;
             } else {
               setShowRegenerateButton2(true);
-              console.log(
-                "🚀 ~ loadInterviewReport ~ setShowRegenerateButton2:",
-                showRegenerateButton2
-              );
+              // console.log(
+              //   "🚀 ~ loadInterviewReport ~ setShowRegenerateButton2:",
+              //   showRegenerateButton2
+              // );
               setRegenerateCount2(regenerateCount2 + 1);
             }
             break;

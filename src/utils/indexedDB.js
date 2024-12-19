@@ -254,8 +254,8 @@ export const updateProjectOnServer = async (
   updateData,
   isLoggedIn
 ) => {
-  console.log("🚀 ~ projectId:", projectId);
-  console.log("🚀 ~ updateData:", updateData);
+  // console.log("🚀 ~ projectId:", projectId);
+  // console.log("🚀 ~ updateData:", updateData);
   if (isLoggedIn) {
     // 사용자 로그인 시 서버에 저장
     try {
@@ -294,7 +294,7 @@ export const getProjectByIdFromIndexedDB = async (
   projectId,
   projectLoadButtonState
 ) => {
-  console.log("🚀 ~ getProjectByIdFromIndexedDB ~ projectId:", projectId);
+  // console.log("🚀 ~ getProjectByIdFromIndexedDB ~ projectId:", projectId);
 
   if (projectLoadButtonState) {
     // 사용자 로그인 시 서버에서 데이터 가져오기
@@ -373,8 +373,8 @@ export const updateProjectReportOnServer = async (
   updateData,
   isLoggedIn
 ) => {
-  console.log("🚀 ~ reportId:", reportId);
-  console.log("🚀 ~ updateData:", updateData);
+  // console.log("🚀 ~ reportId:", reportId);
+  // console.log("🚀 ~ updateData:", updateData);
   if (isLoggedIn) {
     // 사용자 로그인 시 서버에 저장
     try {
@@ -417,7 +417,7 @@ export const getProjectReportByIdFromIndexedDB = async (
   reportId,
   reportLoadButtonState
 ) => {
-  console.log("🚀 ~ reportId:", reportId);
+  // console.log("🚀 ~ reportId:", reportId);
 
   if (reportLoadButtonState) {
     // 사용자 로그인 시 서버에서 데이터 가져오기
@@ -431,7 +431,7 @@ export const getProjectReportByIdFromIndexedDB = async (
           },
         }
       );
-      console.log("🚀 ~ response:", response);
+      // console.log("🚀 ~ response:", response);
 
       return response.data;
     } catch (error) {
@@ -443,7 +443,7 @@ export const getProjectReportByIdFromIndexedDB = async (
 
 // AI Person 요청 업데이트 api
 export const createRequestPersonOnServer = async (updateData, isLoggedIn) => {
-  console.log("🚀 ~ updateData:", updateData);
+  // console.log("🚀 ~ updateData:", updateData);
   if (isLoggedIn) {
     // 사용자 로그인 시 서버에 저장
     try {
@@ -481,7 +481,7 @@ export const createRequestPersonOnServer = async (updateData, isLoggedIn) => {
 
 // AI Persona 요청 업데이트 api
 export const createRequestPersonaOnServer = async (updateData, isLoggedIn) => {
-  console.log("🚀 ~ updateData:", updateData);
+  // console.log("🚀 ~ updateData:", updateData);
   if (isLoggedIn) {
     // 사용자 로그인 시 서버에 저장
     try {
