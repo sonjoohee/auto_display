@@ -133,6 +133,9 @@ import {
   INTERVIEW_REPORT_ADDITIONAL,
   IS_EDIT_MODE,
   IS_SHOW_TOAST,
+  PROJECT_LOADING,
+  PROJECT_REFRESH_TRIGGER,
+  IS_LOADING_BUSINESS_ANALYSIS,
 } from "../../../AtomStates";
 import { CustomTextarea } from "../../../../assets/styles/InputStyle";
 import images from "../../../../assets/styles/Images";
@@ -144,6 +147,9 @@ import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 const PageMain = () => {
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
+  const [projectLoading, setProjectLoading] = useAtom(PROJECT_LOADING);
+  const [projectRefreshTrigger, setProjectRefreshTrigger] = useAtom(PROJECT_REFRESH_TRIGGER);
+  const [isLoadingBusinessAnalysis, setIsLoadingBusinessAnalysis] = useAtom(IS_LOADING_BUSINESS_ANALYSIS);
   const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
     IS_PERSONA_ACCESSIBLE
   );
@@ -642,6 +648,14 @@ const PageMain = () => {
     setInterviewReportAdditional([]);
     setIsEditMode(false);
     setIsShowToast(false);
+    setPersonaStep(0);
+    setIsLoadingBusinessAnalysis(false);
+    setProjectLoading({
+      isLoading: false,
+      lastLoadTime: null,
+      error: null,
+    });
+    setProjectRefreshTrigger(0);
   }, []);
 
   useEffect(() => {
