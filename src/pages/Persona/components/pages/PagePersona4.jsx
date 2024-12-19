@@ -1198,12 +1198,15 @@ const SidebarWrap = styled.div`
 `;
 
 const Sidebar = styled.div`
+  position: sticky;
+  top: 101px;
   display: flex;
   flex-direction: column;
   align-self: flex-start;
   gap: 16px;
   width: 290px;
   padding: 16px 20px;
+  margin-top: 44px;
   border-radius: 10px;
   background: ${palette.chatGray};
 
@@ -1213,6 +1216,39 @@ const Sidebar = styled.div`
     line-height: 1.5;
     color: ${palette.gray700};
     text-align: left;
+  }
+`;
+
+const ProgressBar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  span {
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: ${palette.gray700};
+  }
+
+  .icon {
+    font-size: 1.13rem;
+  }
+`;
+
+const Progress = styled.div`
+  width: 100%;
+  height: 8px;
+  border-radius: 20px;
+  background: ${palette.outlineGray};
+
+  &:before {
+    display: block;
+    width: ${(props) => props.progress}%;
+    height: 100%;
+    border-radius: 20px;
+    background: ${palette.primary};
+    content: "";
   }
 `;
 
@@ -1253,39 +1289,5 @@ const SidebarBottom = styled.div`
       border-right: 1px solid ${palette.primary};
       content: "";
     }
-  }
-`;
-
-const ProgressBar = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-
-  span {
-    font-size: 0.75rem;
-    line-height: 1.5;
-    color: ${palette.gray700};
-  }
-
-  .icon {
-    font-size: 1.13rem;
-  }
-`;
-
-const Progress = styled.div`
-  width: 100%;
-  height: 8px;
-  border-radius: 20px;
-  background: ${palette.outlineGray};
-
-  &:before {
-    display: block;
-    width: ${(props) => props.progress}%;
-    height: 100%;
-    border-radius: 20px;
-    background: ${palette.primary};
-    background: ${palette.primary};
-    content: "";
   }
 `;

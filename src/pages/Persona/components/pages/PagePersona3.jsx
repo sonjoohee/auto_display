@@ -624,28 +624,6 @@ const PagePersona3 = () => {
 
 export default PagePersona3;
 
-const Sidebar = styled.div`
-  position: sticky;
-  top: 101px;
-  display: flex;
-  flex-direction: column;
-  align-self: flex-start;
-  gap: 16px;
-  width: 290px;
-  padding: 16px 20px;
-  margin-top: 44px;
-  border-radius: 10px;
-  background: ${palette.chatGray};
-
-  h5 {
-    font-size: 0.88rem;
-    font-weight: 500;
-    line-height: 1.5;
-    color: ${palette.gray700};
-    text-align: left;
-  }
-`;
-
 const InterviewRoom = styled.div`
   // display: ${(props) => (props.showInterview ? "flex" : "none")};
   display: flex;
@@ -678,6 +656,28 @@ const InterviewRoom = styled.div`
         text-align: right;
       }
     }
+  }
+`;
+
+const Sidebar = styled.div`
+  position: sticky;
+  top: 101px;
+  display: flex;
+  flex-direction: column;
+  align-self: flex-start;
+  gap: 16px;
+  width: 290px;
+  padding: 16px 20px;
+  margin-top: 44px;
+  border-radius: 10px;
+  background: ${palette.chatGray};
+
+  h5 {
+    font-size: 0.88rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: ${palette.gray700};
+    text-align: left;
   }
 `;
 
