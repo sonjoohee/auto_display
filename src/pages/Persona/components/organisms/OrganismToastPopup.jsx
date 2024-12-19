@@ -812,7 +812,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
 
   const handleAnswerToggle = (index) => {
     // 'Pre' 상태일 때는 토글 불가능
-    if (interviewStatus[index] === 'Pre' || interviewStatus[index] === 'Ing') return;
+    if (interviewStatus[index] === 'Pre' || interviewStatus[index] === 'Ing' || interviewStatus[index] === undefined) return;
 
     setVisibleAnswers((prev) => ({ ...prev, [index]: !prev[index] }));
   };
@@ -855,11 +855,11 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
       <InterviewItem
         key={index}
         status={"Complete"}
-        style={{ cursor: "pointer" }}
       >
         <QuestionWrap 
           onClick={() => handleAnswerToggle(index)}
           status={"Complete"}
+          style={{ cursor: "pointer" }}
           isOpen={visibleAnswers[index]}
         >
           <Status status={"Complete"}>완료</Status>
@@ -1318,7 +1318,7 @@ const QuestionWrap = styled.div`
   cursor: inherit;
   position: relative;
   padding-right: 56px;
-  cursor: ${(props) => (props.status === "Pre" ? "default" : "pointer")};
+  cursor: ${(props) => (props.status === "Complete" ? "pointer" : "default")};
 
   ${(props) =>
     props.status === "Complete" &&
