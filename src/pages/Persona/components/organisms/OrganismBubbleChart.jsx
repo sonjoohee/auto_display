@@ -8,21 +8,18 @@ const BubbleChart = ({ data, customWidth, customHeight }) => {
   useEffect(() => {
     const updateChart = () => {
       const container = containerRef.current;
-
-      // 너비 설정
       const width = customWidth || container.clientWidth;
 
-      // 높이 설정 수정
-      // 데이터의 크기를 고려하여 최소 높이 계산
-      const minHeight =
-        Math.max(
-          ...data.map((d) => Math.sqrt(d.value * 100) * 2) // 버블 크기의 2.5배
-        ) * 2; // 상하 여백을 위해 2배
-
-      // customHeight가 있으면 사용하고, 없으면 계산된 minHeight와 container.clientWidth 중 큰 값 사용
+      // 버블 최대 크기와 높이 계산
+      const MAX_BUBBLE_RADIUS = Math.min(width, 400) * 0.25; // 25%로 줄임
+      const calculateBubbleRadius = (value) =>
+        Math.min(Math.sqrt(value * 150) + 10, MAX_BUBBLE_RADIUS);
+      const maxBubbleSize =
+        Math.max(...data.map((d) => calculateBubbleRadius(d.value))) * 2;
+      const minHeight = maxBubbleSize + 40; // 여백 줄임
       const height =
         customHeight ||
-        Math.max(minHeight, Math.min(container.clientWidth, 400));
+        Math.max(minHeight, Math.min(container.clientWidth, 400)); // 최대 높이 400으로 제한
 
       d3.select(svgRef.current).selectAll("*").remove();
 
@@ -39,15 +36,14 @@ const BubbleChart = ({ data, customWidth, customHeight }) => {
 
       const simulation = d3
         .forceSimulation(data)
-        .force("center", d3.forceCenter(width / 2, height / 2).strength(1))
+        .force("center", d3.forceCenter(width / 2, height / 2).strength(1)) // 중심 강도 증가
         .force(
           "collision",
-          // 충돌 반경을 약간 증가
-          d3.forceCollide().radius((d) => Math.sqrt(d.value * 150) + 10) // +4px 여백 추가
+          d3.forceCollide().radius((d) => calculateBubbleRadius(d.value) + 1)
         )
-        .force("charge", d3.forceManyBody().strength(-30))
-        .force("x", d3.forceX(width / 2).strength(0.1))
-        .force("y", d3.forceY(height / 2).strength(0.1));
+        .force("charge", d3.forceManyBody().strength(-20)) // 반발력 감소
+        .force("x", d3.forceX(width / 2).strength(0.2)) // x축 강도 증가
+        .force("y", d3.forceY(height / 2).strength(0.2)); // y축 강도 증가
 
       const nodes = svg
         .selectAll(".node")
@@ -59,7 +55,7 @@ const BubbleChart = ({ data, customWidth, customHeight }) => {
       // 원 크기 증가
       nodes
         .append("circle")
-        .attr("r", (d) => Math.sqrt(d.value * 150) + 10) // +4px 여백 추가
+        .attr("r", (d) => calculateBubbleRadius(d.value))
         .style("fill", (d) => categoryColors[d.category])
         .style("stroke", "#fff")
         .style("stroke-width", "2px");
@@ -110,9 +106,9 @@ const BubbleChart = ({ data, customWidth, customHeight }) => {
         });
       simulation.on("tick", () => {
         nodes.attr("transform", (d) => {
-          // 여백을 줄이기 위해 제한 값을 25로 수정 (기존 50의 절반)
-          d.x = Math.max(25, Math.min(width - 25, d.x));
-          d.y = Math.max(25, Math.min(height - 25, d.y));
+          const r = calculateBubbleRadius(d.value);
+          d.x = Math.max(r, Math.min(width - r, d.x));
+          d.y = Math.max(r, Math.min(height - r, d.y));
           return `translate(${d.x},${d.y})`;
         });
       });
@@ -129,7 +125,7 @@ const BubbleChart = ({ data, customWidth, customHeight }) => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [customWidth, customHeight]);
+  }, [customWidth, customHeight, data]);
   // >>>>>>> main
 
   return (
