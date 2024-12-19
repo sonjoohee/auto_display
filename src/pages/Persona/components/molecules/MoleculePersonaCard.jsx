@@ -107,17 +107,15 @@ const MoleculePersonaCard = ({
           <ContentWrapper NoLine={NoLine}>
             <TitleSection>
               <Title NoLine={NoLine}>
-                <p>
-                  {title}
+              <p>{title}</p>
 
-                  {!newLine && (
-                    <>
-                      <TitleInfo>{gender}</TitleInfo>
-                      <TitleInfo>{age}세</TitleInfo>
-                      <TitleInfo>{job}</TitleInfo>
-                    </>
-                  )}
-                </p>
+              {!newLine && (
+                  <TitleInfo>
+                    <span>{gender}</span>
+                    <span>{age}세</span>
+                    <span>{job}</span>
+                  </TitleInfo>
+                )}
               </Title>
             </TitleSection>
 
@@ -431,12 +429,12 @@ const MainContent = styled.div`
       justify-content: space-between; // space-between으로 변경
       gap: 8px;
 
-      /* &:before {
+      &:before {
         content: "";
         width: 20px;
         height: 20px;
         background: url(${images.PersonFill}) no-repeat center center / contain;
-      } */
+      }
     `}
 `;
 
@@ -447,7 +445,7 @@ const ContentWrapper = styled.div`
   justify-content: center;
   align-items: flex-start;
   gap: 8px;
-  // margin-right: 12px;
+  margin-right: 12px;
 
   ${(props) =>
     props.NoLine &&
@@ -460,7 +458,6 @@ const ContentWrapper = styled.div`
 const CheckCircle = styled.div`
   width: 24px;
   height: 24px;
-  flex-shrink: 0;
   border-radius: 50%;
   cursor: pointer;
   background-image: ${(props) =>
@@ -476,9 +473,6 @@ const TitleSection = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 `;
 
 const Title = styled.div`
@@ -486,22 +480,12 @@ const Title = styled.div`
   color: ${palette.gray800};
   text-align: left;
   word-wrap: break-word;
-  // display: flex;
-  display: block;
+  display: flex;
   align-items: center;
   gap: 8px;
 
   > p {
-    // flex-shrink: 0;
-    // display: flex;
-    max-width: 538px;
-    width: 100%;
-    display: block;
-    align-items: center;
-    gap: 8px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    flex-shrink: 0;
   }
 
   ${(props) =>
@@ -512,21 +496,28 @@ const Title = styled.div`
     `}
 `;
 
-const TitleInfo = styled.span`
+const TitleInfo = styled.div`
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: 0.875rem;
   font-weight: 300;
   line-height: 1.3;
   color: ${palette.gray500};
-  margin-left: 6px;
 
-  + span {
-    &:before {
-      display: inline-block;
-      width: 1px;
-      height: 9px;
-      margin-right: 6px;
-      background: ${palette.gray500};
-      content: "";
+  span {
+    + span {
+      margin-left: 6px;
+
+      &:before {
+        display: inline-block;
+        width: 1px;
+        height: 9px;
+        margin-right: 6px;
+        background: ${palette.gray500};
+        content: "";
+      }
     }
   }
 `;
@@ -534,7 +525,6 @@ const TitleInfo = styled.span`
 const Badge = styled.div`
   display: flex;
   align-items: center;
-  flex-shrink: 0;
   gap: 4px;
   font-size: 0.75rem;
   line-height: 1.2;
@@ -557,6 +547,7 @@ const Badge = styled.div`
     else return palette.gray50;
   }};
   cursor: pointer;
+  flex-shrink: 0;
 `;
 
 const ReadyIcon = styled.div`
