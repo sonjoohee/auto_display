@@ -124,9 +124,7 @@ const OrganismProjectCard = ({ project, index }) => {
         <ProjectInfo>
           <Name>
             <strong>{project.businessAnalysis.title}</strong>
-            <span>
-              생성일 - {new Date(project.updateDate).toLocaleDateString()}
-            </span>
+            <span>생성일 - {project.updateDate}</span>
           </Name>
           <Persona>
             <div>
@@ -199,9 +197,7 @@ const OrganismProjectCard = ({ project, index }) => {
               <ViewInfo key={reportIndex}>
                 <div className="title">
                   {report.reportTitle}
-                  <span>
-                    {new Date(report.createDate).toLocaleDateString()}
-                  </span>
+                  <span>{report.createDate}</span>
                 </div>
                 <div className="info">
                   <div>

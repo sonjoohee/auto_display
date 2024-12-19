@@ -143,9 +143,9 @@ const PopupWrap = ({
             <Text>
               <strong>{title}</strong>
               <p>
-                {message}
-                <br />
-                {message2}
+                {message && message}
+                {message && message2 && <br />}
+                {message2 && message2}
               </p>
             </Text>
           </Contents>
