@@ -267,7 +267,9 @@ export const updateProjectOnServer = async (
       const PUT_DATA = {
         id: projectId,
         ...updateData,
-        updateDate: new Date().toISOString(),
+        updateDate: new Date().toLocaleString("ko-KR", {
+          timeZone: "Asia/Seoul",
+        }),
       };
       await axios.put(`https://wishresearch.kr/project/update`, PUT_DATA, {
         headers: {
@@ -384,7 +386,9 @@ export const updateProjectReportOnServer = async (
       const PUT_DATA = {
         id: reportId,
         ...updateData,
-        createDate: new Date().toISOString(),
+        createDate: new Date().toLocaleString("ko-KR", {
+          timeZone: "Asia/Seoul",
+        }),
       };
       await axios.put(
         `https://wishresearch.kr/project/report/update`,
