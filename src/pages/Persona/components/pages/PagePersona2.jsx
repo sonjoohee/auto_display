@@ -1016,9 +1016,11 @@ const PagePersona2 = () => {
                   rows={4}
                   placeholder="필요한 페르소나의 특징과 역할을 적어주세요."
                   value={customPersonaForm.description}
-                  onChange={(e) =>
-                    handleCustomPersonaChange("description", e.target.value)
-                  }
+                  onChange={(e) => {
+                    if (e.target.value.length <= 300) {
+                      handleCustomPersonaChange("description", e.target.value)
+                    }
+                  }}
                 />
               </div>
               <Title>
@@ -1031,9 +1033,11 @@ const PagePersona2 = () => {
                   rows={4}
                   placeholder="해당 페르소나가 필요한 이유, 얻고 싶은 인사이트, 하고자 하는 목표 등을 입력해주세요."
                   value={customPersonaForm.purpose}
-                  onChange={(e) =>
-                    handleCustomPersonaChange("purpose", e.target.value)
-                  }
+                  onChange={(e) => {
+                    if (e.target.value.length <= 300) {
+                      handleCustomPersonaChange("purpose", e.target.value)
+                    }
+                  }}
                 />
               </div>
               <Title>
@@ -1157,12 +1161,14 @@ const PagePersona2 = () => {
                           rows={3}
                           placeholder="필수로 고려해야할 정보가 있다면 작성해주세요."
                           value={customPersonaForm.additionalInfo}
-                          onChange={(e) =>
-                            handleCustomPersonaChange(
-                              "additionalInfo",
-                              e.target.value
-                            )
-                          }
+                          onChange={(e) => {
+                            if (e.target.value.length <= 300) {
+                              handleCustomPersonaChange(
+                                "additionalInfo", 
+                                e.target.value
+                              )
+                            }
+                          }}
                         />
                       </dd>
                     </dl>
