@@ -159,9 +159,9 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
       return;
     }
     // 입력값 유효성 검사
-    const regex = /^[가-힣a-zA-Z0-9\s.,'"?!()\-·%]*$/;
-    const specialChars = /^[.,'"?!()/\-·%]+$/;
-    const consecutiveSpecialChars = /[.,'"?!()\/\-·%]{2,}/; // 특수문자가 2번 이상 연속되는 패턴
+    const regex = /^[가-힣a-zA-Z0-9\s.,'"?!()\-·:%]*$/;
+    const specialChars = /^[.,'"?!()/\-·:%]+$/;
+    const consecutiveSpecialChars = /[.,'"?!()\/\-·:%]{2,}/; // 특수문자가 2번 이상 연속되는 패턴
 
     // 단독으로 특수 문자만 사용된 경우
     if (
@@ -660,7 +660,11 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
                 type="text"
                 placeholder="비즈니스 명을 입력해주세요."
                 value={inputs.field1.value}
-                onChange={(e) => handleChange(e, "field1")}
+                onChange={(e) => {
+                  if (e.target.value.length <= 20) {
+                    handleChange(e, "field1");
+                  }
+                }}
                 status={getInputStatus(inputs.field1)}
               />
             </FormBox>
@@ -708,8 +712,10 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
                       ref={textareaRef}
                       value={inputs.field2.value}
                       onChange={(e) => {
-                        handleChange(e, "field2");
-                        adjustHeight();
+                        if (e.target.value.length <= 300) {
+                          handleChange(e, "field2");
+                          adjustHeight();
+                        }
                       }}
                       status={getInputStatus(inputs.field2)}
                     />

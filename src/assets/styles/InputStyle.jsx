@@ -109,6 +109,7 @@ export const CustomTextarea = styled.textarea`
   resize: none;
   overflow: auto;
   transition: all 0.5s;
+  margin-bottom: 10px;
   /* height: 320px !important; // 고정 높이 */
 
   ${(props) =>
