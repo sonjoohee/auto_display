@@ -257,7 +257,9 @@ const PagePersona4 = () => {
                   reportTitle: selectedInterviewPurpose,
                   interviewData: interviewData.length,
                   selectedPersona: personaList.selected.length,
-                  createDate: new Date().toISOString(),
+                  createDate: new Date().toLocaleString("ko-KR", {
+                    timeZone: "Asia/Seoul",
+                  }),
                 },
               ],
             },

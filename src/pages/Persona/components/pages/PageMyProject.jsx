@@ -167,15 +167,35 @@ const PageMyProject = () => {
           true
         );
         if (savedProjectListInfo) {
+          const parseKoreanDate = (dateStr) => {
+            const [date, time] = dateStr.split("오");
+            const [year, month, day] = date.split(".").map((s) => s.trim());
+            const [hour, minute, second] = time.includes("전")
+              ? time.trim().replace("전", "").split(":")
+              : time.trim().replace("후", "").split(":");
+
+            const adjustedHour = time.includes("오후")
+              ? Number(hour) + 12
+              : Number(hour);
+
+            return new Date(year, month - 1, day, adjustedHour, minute, second);
+          };
+
           const sortedList = [...savedProjectListInfo]
             .map((project) => ({
               ...project,
               reportList:
-                project.reportList?.sort(
-                  (a, b) => new Date(b.createDate) - new Date(a.createDate)
-                ) || [],
+                project.reportList?.sort((a, b) => {
+                  const dateA = parseKoreanDate(a.createDate);
+                  const dateB = parseKoreanDate(b.createDate);
+                  return dateB - dateA; // 최신 날짜가 위로
+                }) || [],
             }))
-            .sort((a, b) => new Date(b.updateDate) - new Date(a.updateDate));
+            .sort((a, b) => {
+              const dateA = parseKoreanDate(a.updateDate);
+              const dateB = parseKoreanDate(b.updateDate);
+              return dateB - dateA; // 최신 날짜가 위로
+            });
           setProjectList(sortedList);
         }
 
@@ -215,7 +235,6 @@ const PageMyProject = () => {
                   <div>결과 리포트</div>
                 </ProjectHeader>
                 <ProjectContent>
-
                   {/* 진행중인 프로젝트 없을때 디자인 */}
                   {/* <ProjectItem Nodata>
                     <img src={images.FileFill} alt="" />
@@ -328,20 +347,22 @@ const ProjectItem = styled.div`
     box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
   `}
 
-  ${props => props.Nodata && css`
-    div {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
+  ${(props) =>
+    props.Nodata &&
+    css`
+      div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
 
-      p {
-        color: ${palette.gray500};
-        line-height: 1.5;
+        p {
+          color: ${palette.gray500};
+          line-height: 1.5;
+        }
       }
-    }
-  `}
+    `}
 `;
 
 const ProjectInfo = styled.div`
