@@ -646,8 +646,20 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                 setShowErrorPopup(true);
                 break;
               case 504:
-                setShowErrorPopup(true);
-                break;
+              // if (regenerateCount3 >= 3) {
+              //   setShowErrorPopup(true);
+              //   return;
+              // } else {
+              //   setShowRegenerateButton3(true);
+              //   setRegenerateCount3(regenerateCount3 + 1);
+              //   // 현재 상태를 Pre로 되돌림
+              //   const resetStatus = [...interviewStatus];
+              //   resetStatus[currentQuestionIndex] = "Pre";
+              //   setInterviewStatus(resetStatus);
+              // }
+              // break;
+              setShowErrorPopup(true);
+              break;
               default:
                 setShowErrorPopup(true);
                 break;
@@ -943,7 +955,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                   다시 이어하기
                 </Button>
               </div>
-            </ErrorAnswerItem> */}
+            </ErrorAnswerItem> */} 
 
             {isLoadingPrepare &&
               (showRegenerateButton1 ? (
