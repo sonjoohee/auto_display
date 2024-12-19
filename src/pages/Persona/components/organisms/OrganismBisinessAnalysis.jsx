@@ -146,6 +146,9 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
         value: businessAnalysis.category,
       },
     });
+    setTimeout(() => {
+      adjustHeight();
+    }, 0);
   };
 
   const [isPopupRegex, setIsPopupRegex] = useState(false);
@@ -332,6 +335,12 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
   useEffect(() => {
     adjustHeight();
   }, [inputs.field2.value]);
+
+  useEffect(() => {
+    if (isEditMode) {
+      adjustHeight();
+    }
+  }, [isEditMode]);
 
   const getCategoryColor = (category) => {
     switch (category) {
