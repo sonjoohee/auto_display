@@ -83,9 +83,8 @@ import { createChatOnServer } from "../../../../utils/indexedDB"; // 서버와 �
 import MoleculeStrategyButton from "../molecules/MoleculeStrategyButton";
 import OrganismStrategyConsultantReport from "../organisms/OrganismStrategyConsultantReport";
 // import OrganismLeftSideBar from "../organisms/OrganismLeftSideBar";
-import OrganismLeftSideBar from "../../../../pages/Persona/components/organisms/OrganismIncNavigation"
-import Header from "../../../../pages/Persona/components/molecules/MoleculeHeader"
-
+import OrganismLeftSideBar from "../../../../pages/Persona/components/organisms/OrganismIncNavigation";
+import Header from "../../../../pages/Persona/components/molecules/MoleculeHeader";
 
 import OrganismRightSideBar from "../organisms/OrganismRightSideBar";
 import OrganismBizAnalysisSection from "../organisms/OrganismBizAnalysisSection";
@@ -431,26 +430,26 @@ const PageExpertInsight = () => {
       const item = conversation[index];
 
       if (!newRenderedItems.includes(item)) {
-          // 중복 방지
-          if (item.type === "user") {
+        // 중복 방지
+        if (item.type === "user") {
+          setRenderedItems((prevItems) => [...prevItems, item]);
+          setLastRenderedIndex(index);
+        } else {
+          let delay = 0;
+          if (index > 0 && conversation[index - 1].type === "system") {
+            const prevMessageLength = conversation[index - 1].message.length;
+            delay = prevMessageLength * 15;
+          }
+
+          totalDelay += delay;
+
+          const timer = setTimeout(() => {
             setRenderedItems((prevItems) => [...prevItems, item]);
             setLastRenderedIndex(index);
-          } else {
-            let delay = 0;
-            if (index > 0 && conversation[index - 1].type === "system") {
-              const prevMessageLength = conversation[index - 1].message.length;
-              delay = prevMessageLength * 15;
-            }
+          }, totalDelay);
 
-            totalDelay += delay;
-
-            const timer = setTimeout(() => {
-              setRenderedItems((prevItems) => [...prevItems, item]);
-              setLastRenderedIndex(index);
-            }, totalDelay);
-
-            timers.push(timer);
-          }
+          timers.push(timer);
+        }
       }
     }
 
@@ -1066,11 +1065,14 @@ const PageExpertInsight = () => {
                 <div ref={chatEndRef} />
 
                 {(selectedExpertIndex === "0" ||
-                selectedExpertIndex === "2" ||
-                selectedExpertIndex === "3") && !isMarketing ? (
+                  selectedExpertIndex === "2" ||
+                  selectedExpertIndex === "3") &&
+                !isMarketing ? (
                   <>
                     {/* 검색해서 시작 */}
-                    {(approachPath === -1 || approachPath === 3 || conversationStage === 2) &&
+                    {(approachPath === -1 ||
+                      approachPath === 3 ||
+                      conversationStage === 2) &&
                       titleOfBusinessInfo && <OrganismBizExpertSelect />}
 
                     {/* 전문가 선택하고 시작 */}
@@ -1086,13 +1088,13 @@ const PageExpertInsight = () => {
                         "reportButton" &&
                       !isLoading && <OrganismBizExpertSelect />} */}
                   </>
-                // ) : selectedExpertIndex === "1" ? (
+                ) : // ) : selectedExpertIndex === "1" ? (
                 //   <>
                 //     {strategyConsultantReportData.length === 3 && (
                 //       <OrganismBizExpertSelect />
                 //     )}
                 //   </>
-                ) : selectedExpertIndex === "4" ? (
+                selectedExpertIndex === "4" ? (
                   <>
                     {Object.keys(recommendedTargetData).length !== 0 && (
                       <OrganismBizExpertSelect />
@@ -1102,7 +1104,7 @@ const PageExpertInsight = () => {
                   <>
                     {ideaPriority.length !== 0 && <OrganismBizExpertSelect />}
                   </>
-                // ) : selectedExpertIndex === "6" ? (
+                ) : // ) : selectedExpertIndex === "6" ? (
                 //   <>
                 //     {buttonState.growthHackerKPI === 1 && (
                 //       <OrganismBizExpertSelect />
@@ -1114,17 +1116,17 @@ const PageExpertInsight = () => {
                 //       <OrganismBizExpertSelect />
                 //     )}
                 //   </>
-                ) : selectedExpertIndex === "8" ? (
+                selectedExpertIndex === "8" ? (
                   <>
                     {buttonState.caseEnough === 1 && (
                       <OrganismBizExpertSelect />
                     )}
                   </>
-                // ) : selectedExpertIndex === "9" ? (
+                ) : // ) : selectedExpertIndex === "9" ? (
                 //   <>
                 //     {buttonState.bmEnough === 1 && <OrganismBizExpertSelect />}
                 //   </>
-                ) : selectedExpertIndex === "10" ? (
+                selectedExpertIndex === "10" ? (
                   <>
                     {buttonState.surveyEnd === 1 && <OrganismBizExpertSelect />}
                   </>
@@ -1241,7 +1243,7 @@ const ProjectName = styled.div`
     justify-content: space-between;
     max-width: 1030px;
     width: 100%;
-    padding:0 20px;
+    padding: 0 20px;
   }
 
   p {
@@ -1370,7 +1372,6 @@ const MainContent = styled.div`
   min-width: 1px;
   max-width: 1484px;
   width: calc(100% - 40px);
-  height: calc(100vh - 70px);
   // padding-bottom: 150px;
   // margin: 0 auto;
   margin: 0 auto;
@@ -1410,12 +1411,12 @@ const ChatWrap = styled.div`
 
   &:before {
     // position: sticky;
-    position:fixed;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     // height: 0;
-    height:40px;
+    height: 40px;
     display: block;
     // height:170px;
     background: rgb(255, 255, 255);
@@ -1424,7 +1425,7 @@ const ChatWrap = styled.div`
     //   rgba(255, 255, 255, 0) 0%,
     //   rgba(255, 255, 255, 1) 30%
     // );
-    background:${palette.white};
+    background: ${palette.white};
     z-index: 1;
     content: "";
   }
