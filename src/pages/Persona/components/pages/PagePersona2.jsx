@@ -618,10 +618,12 @@ const PagePersona2 = () => {
   };
 
   const handleCustomizePopupClose = () => {
+    setShowCustomizePopup(false);
+  };
+  const handleCustomizePopupConfirm = () => {
     submitCustomPersonaRequest();
     setShowCustomizePopup(false);
   };
-
   const [state, setState] = useState({
     isAccordionOpen: false,
     formState: {
@@ -1002,7 +1004,7 @@ const PagePersona2 = () => {
           onCancel={handleCustomizePopupClose}
           onConfirm={() => {
             // 여기에 확인 버튼 클릭 시 처리할 로직 추가
-            handleCustomizePopupClose();
+            handleCustomizePopupConfirm();
           }}
           body={
             <>
