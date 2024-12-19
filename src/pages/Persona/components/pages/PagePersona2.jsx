@@ -1106,9 +1106,14 @@ const PagePersona2 = () => {
                           id="gender1"
                           name="gender"
                           checked={customPersonaForm.gender === "male"}
-                          onChange={() =>
-                            handleCustomPersonaChange("gender", "male")
-                          }
+                          onClick={() => {
+                            // 현재 선택된 값과 같은 값을 클릭하면 선택 해제
+                            if (customPersonaForm.gender === "male") {
+                              handleCustomPersonaChange("gender", "");
+                            } else {
+                              handleCustomPersonaChange("gender", "male");
+                            }
+                          }}
                         />
                         <label htmlFor="gender1" className="gender men">
                           {/* <img src={images.GenderMen} alt="GenderMen" /> */}
@@ -1121,9 +1126,14 @@ const PagePersona2 = () => {
                           id="gender2"
                           name="gender"
                           checked={customPersonaForm.gender === "female"}
-                          onChange={() =>
-                            handleCustomPersonaChange("gender", "female")
-                          }
+                          onClick={() => {
+                            // 현재 선택된 값과 같은 값을 클릭하면 선택 해제
+                            if (customPersonaForm.gender === "female") {
+                              handleCustomPersonaChange("gender", "");
+                            } else {
+                              handleCustomPersonaChange("gender", "female");
+                            }
+                          }}
                         />
                         <label htmlFor="gender2" className="gender women">
                           {/* <img src={images.GenderWomen} alt="GenderWomen" /> */}
