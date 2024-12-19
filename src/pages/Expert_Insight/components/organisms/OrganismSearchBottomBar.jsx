@@ -430,13 +430,13 @@ export default OrganismSearchBottomBar;
 // 스타일 정의는 그대로 사용
 
 const BottomBar = styled.div`
-  position: sticky;
+  position: fixed;
   bottom: 40px;
   left: 0;
-  // left: 50%;
-  // transform: translateX(-50%);
+  left: 50%;
+  transform: translateX(-50%);
   width: 100%;
-  // max-width:1240px;
+  max-width: 1030px;
   color: white;
   display: flex;
   flex-direction: column;
