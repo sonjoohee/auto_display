@@ -60,7 +60,7 @@ const MoleculeSignupPopup = ({ onClose, email }) => {
       setUserName("");
       setUserEmail("");
     }
-    navigate("/Main");
+    navigate("/");
     setSignUpEmail(""); // 이메일 상태를 초기화합니다.
     // setIsLoginPopupOpen(true);
   };
@@ -86,7 +86,7 @@ const MoleculeSignupPopup = ({ onClose, email }) => {
           <button type="button" onClick={handleResendEmail}>
             재발송하기
           </button>
-          <a href="/Main" onClick={handleGoToLogin}>
+          <a href="/" onClick={handleGoToLogin}>
             로그인 바로가기
           </a>
         </div>

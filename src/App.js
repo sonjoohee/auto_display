@@ -140,7 +140,7 @@ function App() {
         setUserName("");
         setUserEmail("");
 
-        window.location.href = "/Main";
+        window.location.href = "/";
       }
     };
 
@@ -209,7 +209,7 @@ function App() {
 
           {/* 페르소나 */}
           <Route path="/Persona" element={<PagePersona />}></Route>
-          <Route path="/Main" element={<PageMain />}></Route>
+          <Route path="/" element={<PageMain />}></Route>
           <Route path="/Persona/:projectId" element={<PagePersona />}></Route>
           <Route
             path="/Persona/2/:projectId"
@@ -238,7 +238,7 @@ function App() {
             <Route path="/PageAIPanelList" element={<PageAIPanelList />}></Route> */}
 
           {/* 디자인페이지 */}
-          <Route
+          {/* <Route
             path="/ConnectWithYourTarget"
             element={<PageConnetWithYouTarget />}
           />
@@ -247,7 +247,7 @@ function App() {
           <Route path="/WayInterview" element={<PageWayInterview />} />
           <Route path="/InterviewResult" element={<PageInterviewResult />} />
           <Route path="/PersonaLoader" element={<PagePersonaLoader />} />
-          <Route path="/Recreate" element={<PageRecreate />} />
+          <Route path="/Recreate" element={<PageRecreate />} /> */}
         </Routes>
       </BrowserRouter>
     </div>
