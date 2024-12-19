@@ -115,14 +115,14 @@ const MoleculeMarketingSignUpButton = () => {
 
   const handleMobileWarningConfirm = () => {
     setShowMobileWarning(false);
-    navigate("/Main");
+    navigate("/");
   };
 
   const handleNavigateToMain = () => {
     if (isMobileDevice()) {
       setShowMobileWarning(true);
     } else {
-      navigate("/Main");
+      navigate("/");
     }
   };
 

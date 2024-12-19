@@ -509,7 +509,7 @@ const OrganismIncNavigation = () => {
   };
 
   const handleExitChatConfirm = () => {
-    navigate("/Main");
+    navigate("/");
   };
   const handleExitChatCancel = () => {
     setIsExitPopupOpen(false);
@@ -1060,7 +1060,7 @@ const OrganismIncNavigation = () => {
     setUserName("");
     setUserEmail("");
     setIsLogoutPopup(false); // 로그아웃 팝업 닫기
-    navigate("/Main"); // 페이지 이동
+    navigate("/"); // 페이지 이동
   };
 
   const handleCloseLogoutPopup = () => {
@@ -1141,7 +1141,7 @@ const OrganismIncNavigation = () => {
       setChatIdToDelete(null);
       setChatRefreshTrigger((prev) => !prev);
       if (chatIdToDelete === conversationId) {
-        navigate("/Main"); // / 경로로 이동
+        navigate("/"); // / 경로로 이동
       }
     } catch (error) {
       console.error("삭제 요청 오류:", error);
@@ -1208,6 +1208,7 @@ const OrganismIncNavigation = () => {
     setPersonaStep(0);
 
     window.location.href = "/";
+
   };
 
   const [showSubNav, setShowSubNav] = useState(false);
