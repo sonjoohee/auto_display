@@ -696,14 +696,17 @@ const PagePersona2 = () => {
         requestData,
         isLoggedIn
       );
-
-      if (response.status === 200) {
+      if (response) {
         // 요청 성공 시 상태 초기화
-        setCustomPersonaForm(initialCustomPersonaForm);
-        setCustomizeFormState({
-          quantity: 1,
-          isAccordionOpen: false,
+        setCustomPersonaForm({
+          description: "", // 페르소나 특징과 역할
+          purpose: "", // 사용 목적
+          quantity: 1, // 모집 인원
+          gender: "", // 성별 ('' | 'male' | 'female')
+          ageGroups: [], // 연령대 선택 ['10s', '20s', ...]
+          additionalInfo: "", // 추가 필요 정보
         });
+
         handleCustomizePopupClose();
         // 성공 메시지 표시 등 추가 처리
       }
@@ -1130,27 +1133,51 @@ const PagePersona2 = () => {
                     <dl>
                       <dt>연령 (다중 선택)</dt>
                       <dd>
-                        {["10s", "20s", "30s", "40s", "50s", "60s", "70s"].map(
-                          (age, index) => (
-                            <React.Fragment key={age}>
-                              <input
-                                type="checkbox"
-                                id={`age${index + 1}`}
-                                name="age"
-                                checked={customPersonaForm.ageGroups.includes(
-                                  age
-                                )}
-                                onChange={() => handleAgeGroupChange(age)}
-                              />
-                              <label
-                                htmlFor={`age${index + 1}`}
-                                className="age"
-                              >
-                                {age.replace("s", "대")}
-                              </label>
-                            </React.Fragment>
-                          )
-                        )}
+                        <AgeGroup>
+                          <div>
+                            {["10s", "20s", "30s", "40s"].map((age, index) => (
+                              <React.Fragment key={age}>
+                                <input
+                                  type="checkbox"
+                                  id={`age${index + 1}`}
+                                  name="age"
+                                  checked={customPersonaForm.ageGroups.includes(
+                                    age
+                                  )}
+                                  onChange={() => handleAgeGroupChange(age)}
+                                />
+                                <label
+                                  htmlFor={`age${index + 1}`}
+                                  className="age"
+                                >
+                                  {age.replace("s", "대")}
+                                </label>
+                              </React.Fragment>
+                            ))}
+                          </div>
+                          <div>
+                            {["50s", "60s", "70s"].map((age, index) => (
+                              <React.Fragment key={age}>
+                                <input
+                                  type="checkbox"
+                                  id={`age${index + 5}`}
+                                  name="age"
+                                  checked={customPersonaForm.ageGroups.includes(
+                                    age
+                                  )}
+                                  onChange={() => handleAgeGroupChange(age)}
+                                />
+                                <label
+                                  htmlFor={`age${index + 5}`}
+                                  className="age"
+                                >
+                                  {age.replace("s", "대")}
+                                </label>
+                              </React.Fragment>
+                            ))}
+                            <div className="empty-space"></div>
+                          </div>
+                        </AgeGroup>
                       </dd>
                     </dl>
 
@@ -1202,6 +1229,23 @@ const PagePersona2 = () => {
 };
 
 export default PagePersona2;
+
+const AgeGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+
+  > div {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+
+  .empty-space {
+    width: 100%;
+  }
+`;
 
 const TooltipButton = styled.div`
   position: relative;

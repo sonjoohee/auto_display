@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import styled, { css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAtom } from "jotai";
 import axios from "axios";
 import { SubtractiveBlending } from "three/src/constants.js";
@@ -151,6 +151,7 @@ import { useSaveConversation } from "../../../Expert_Insight/components/atoms/At
 import OrganismReportPopup from "../../../Expert_Insight/components/organisms/OrganismReportPopup"; // 팝업 컴포넌트 임포트
 
 const OrganismIncNavigation = () => {
+  const location = useLocation();
   const [, setRefreshTrigger] = useAtom(PROJECT_REFRESH_TRIGGER);
   const [projectLoadButtonState, setProjectLoadButtonState] = useAtom(
     PROJECT_LOAD_BUTTON_STATE
@@ -695,13 +696,13 @@ const OrganismIncNavigation = () => {
 
       // category에 따라 이동
       if (category === "recent") {
-        left -= 40; // 최근 대화면 40px 왼쪽 이동
-        top -= 10;
+        left -= 190; // 최근 대화면 40px 왼쪽 이동
+        top += 30; // 10px 아래로 이동
       } else if (category === "7days") {
         left -= 190; // 지난 7일이면 190px 왼쪽 이동
-        top += 10; // 10px 아래로 이동
+        top += 30; // 10px 아래로 이동
       } else if (category === "30days") {
-        left -= 340; // 지난 30일이면 340px 왼쪽 이동
+        left -= 190; // 지난 30일이면 340px 왼쪽 이동
         top += 30; // 20px 아래로 이동
       }
 
@@ -1534,7 +1535,9 @@ const OrganismIncNavigation = () => {
 
   const handleClickHome = () => {
     console.log("test logo click");
-    setIsHomePopupOpen(true);
+    if (location.pathname !== "/") {
+      setIsHomePopupOpen(true);
+    }
   };
 
   return (
@@ -1733,91 +1736,83 @@ const OrganismIncNavigation = () => {
                             <p onClick={() => handleConversationClick(chat.id)}>
                               {chat.view_name || chat.business_info}
                             </p>
-                            <div
+                            <span
+                              id={`insight-toggle-${chat.id}`}
                               style={{
-                                position: "relative",
                                 display: "inline-block",
+                                cursor: "pointer",
                               }}
+                              onClick={(event) =>
+                                editBoxToggle(chat.id, event, "recent")
+                              }
+                              className="toggle"
                             >
-                              <span
-                                id={`insight-toggle-${chat.id}`}
-                                style={{
-                                  display: "inline-block",
-                                  // padding: "10px",
-                                  cursor: "pointer",
-                                }}
-                                onClick={(event) =>
-                                  editBoxToggle(chat.id, event, "recent")
-                                }
-                                className="toggle"
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="14"
+                                height="3"
+                                viewBox="0 0 14 3"
+                                fill="none"
                               >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  width="14"
-                                  height="3"
-                                  viewBox="0 0 14 3"
-                                  fill="none"
-                                >
-                                  <circle
-                                    cx="2.0067"
-                                    cy="1.51283"
-                                    r="1.49694"
-                                    transform="rotate(-90 2.0067 1.51283)"
-                                    fill="#A0A0A0"
-                                  />
-                                  <circle
-                                    cx="7.00084"
-                                    cy="1.51283"
-                                    r="1.49694"
-                                    transform="rotate(-90 7.00084 1.51283)"
-                                    fill="#A0A0A0"
-                                  />
-                                  <circle
-                                    cx="11.993"
-                                    cy="1.51283"
-                                    r="1.49694"
-                                    transform="rotate(-90 11.993 1.51283)"
-                                    fill="#A0A0A0"
-                                  />
-                                </svg>
-                              </span>
+                                <circle
+                                  cx="2.0067"
+                                  cy="1.51283"
+                                  r="1.49694"
+                                  transform="rotate(-90 2.0067 1.51283)"
+                                  fill="#A0A0A0"
+                                />
+                                <circle
+                                  cx="7.00084"
+                                  cy="1.51283"
+                                  r="1.49694"
+                                  transform="rotate(-90 7.00084 1.51283)"
+                                  fill="#A0A0A0"
+                                />
+                                <circle
+                                  cx="11.993"
+                                  cy="1.51283"
+                                  r="1.49694"
+                                  transform="rotate(-90 11.993 1.51283)"
+                                  fill="#A0A0A0"
+                                />
+                              </svg>
+                            </span>
 
-                              {editToggleIndex === chat.id && (
-                                <div
+                            {editToggleIndex === chat.id && (
+                              <div
+                                id={`insight-edit-box-${chat.id}`}
+                                className="insight-toggle"
+                                ref={historyEditBoxRef}
+                              >
+                                <EditBox
                                   id={`insight-edit-box-${chat.id}`}
-                                  className="insight-toggle"
-                                  ref={historyEditBoxRef}
+                                  isEditToggle={editToggleIndex === chat.id}
+                                  style={{
+                                    top: `${editBoxPosition.top}px`,
+                                    left: `${editBoxPosition.left}px`,
+                                  }}
                                 >
-                                  <EditBox
-                                    id={`insight-edit-box-${chat.id}`}
-                                    isEditToggle={editToggleIndex === chat.id}
-                                    style={{
-                                      top: `${editBoxPosition.top}px`,
-                                      left: `${editBoxPosition.left}px`,
-                                    }}
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      handleChatDeleteButtonClick(chat.id)
+                                    }
                                   >
-                                    <button
-                                      type="button"
-                                      onClick={() =>
-                                        handleChatDeleteButtonClick(chat.id)
-                                      }
-                                    >
-                                      <img src={images.IconDelete2} alt="" />
-                                      삭제
-                                    </button>
-                                    <button
-                                      type="button"
-                                      onClick={() =>
-                                        handleChangeChatNameButtonClick(chat.id)
-                                      }
-                                    >
-                                      <img src={images.IconEdit2} alt="" />
-                                      이름 변경
-                                    </button>
-                                  </EditBox>
-                                </div>
-                              )}
-                            </div>
+                                    <img src={images.IconDelete2} alt="" />
+                                    삭제
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      handleChangeChatNameButtonClick(chat.id)
+                                    }
+                                  >
+                                    <img src={images.IconEdit2} alt="" />
+                                    이름 변경
+                                  </button>
+                                </EditBox>
+                              </div>
+                            )}
                           </li>
                         ))}
                     </ul>
