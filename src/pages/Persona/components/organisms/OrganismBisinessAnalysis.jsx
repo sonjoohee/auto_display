@@ -661,7 +661,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
                 placeholder="비즈니스 명을 입력해주세요."
                 value={inputs.field1.value}
                 onChange={(e) => {
-                  if (e.target.value.length <= 20) {
+                  if (e.target.value.length <= 30) {
                     handleChange(e, "field1");
                   }
                 }}
@@ -712,7 +712,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
                       ref={textareaRef}
                       value={inputs.field2.value}
                       onChange={(e) => {
-                        if (e.target.value.length <= 300) {
+                        if (e.target.value.length <= 500) {
                           handleChange(e, "field2");
                           adjustHeight();
                         }
