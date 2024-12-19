@@ -1111,8 +1111,10 @@ const PagePersona2 = () => {
                           }
                         />
                         <label htmlFor="gender1" className="gender men">
-                          <img src={images.GenderMen} alt="GenderMen" />
-                          남자
+                          {/* <img src={images.GenderMen} alt="GenderMen" /> */}
+                          <i class="icon man" />
+                          man
+                          <span className="check-circle" />
                         </label>
                         <input
                           type="radio"
@@ -1124,8 +1126,10 @@ const PagePersona2 = () => {
                           }
                         />
                         <label htmlFor="gender2" className="gender women">
-                          <img src={images.GenderWomen} alt="GenderWomen" />
-                          여자
+                          {/* <img src={images.GenderWomen} alt="GenderWomen" /> */}
+                          <i class="icon woman" />
+                          woman
+                          <span className="check-circle" />
                         </label>
                       </dd>
                     </dl>
