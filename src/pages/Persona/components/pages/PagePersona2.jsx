@@ -1021,7 +1021,7 @@ const PagePersona2 = () => {
                   value={customPersonaForm.description}
                   onChange={(e) => {
                     if (e.target.value.length <= 300) {
-                      handleCustomPersonaChange("description", e.target.value)
+                      handleCustomPersonaChange("description", e.target.value);
                     }
                   }}
                 />
@@ -1038,7 +1038,7 @@ const PagePersona2 = () => {
                   value={customPersonaForm.purpose}
                   onChange={(e) => {
                     if (e.target.value.length <= 300) {
-                      handleCustomPersonaChange("purpose", e.target.value)
+                      handleCustomPersonaChange("purpose", e.target.value);
                     }
                   }}
                 />
@@ -1191,9 +1191,9 @@ const PagePersona2 = () => {
                           onChange={(e) => {
                             if (e.target.value.length <= 300) {
                               handleCustomPersonaChange(
-                                "additionalInfo", 
+                                "additionalInfo",
                                 e.target.value
-                              )
+                              );
                             }
                           }}
                         />
@@ -1290,6 +1290,7 @@ const TooltipContent = styled.div`
   filter: drop-shadow(0px 4px 30px rgba(0, 0, 0, 0.15));
   animation: fadeIn 0.3s ease-in-out;
   cursor: default;
+  z-index: 100;
 
   @keyframes fadeIn {
     from {
@@ -1422,7 +1423,6 @@ const Sidebar = styled.div`
   margin-top: 44px;
   border-radius: 10px;
   background: ${palette.chatGray};
-  z-index: 10;
   align-self: flex-start;
   height: fit-content;
 `;

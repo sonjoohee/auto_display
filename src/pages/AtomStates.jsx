@@ -441,3 +441,141 @@ export const PROJECT_LOADING = atom({
   error: null,
 });
 export const PROJECT_REFRESH_TRIGGER = atom(0);
+
+// setConversation([]);
+// setConversationStage(1);
+// setInputBusinessInfo("");
+// setTitleOfBusinessInfo("");
+// setMainFeaturesOfBusinessInformation([]);
+// setMainCharacteristicOfBusinessInformation([]);
+// setBusinessInformationTargetCustomer([]);
+// setSelectedExpertIndex("0");
+// setSections([]);
+// setAdditionalReportCount(0);
+// setSelectedAdditionalKeyword([]);
+// setApproachPath(0);
+// setAdditionalReportData([]);
+// setCustomerAdditionalReportData([]);
+// setSelectedCustomerAdditionalKeyword([]);
+// setStrategyReportData({});
+// setInputAdditionalQuestion("");
+// setConversationId(null);
+// setPassword("");
+// setNewPassword("");
+// setRePassword("");
+// setSelectedExpertList([]);
+// setIsEditingNow(false);
+// setIsSection1Open(false);
+// setIsSection2Open(false);
+// setSelectedPocOptions([]);
+// setSelectedPocTarget({});
+// setRecommendedTargetData({});
+// setPocDetailReportData({});
+// setPocPersonaList([]);
+
+// setIsEditingIdeaFeature(false);
+// setIsEditingIdeaCustomer(false);
+// setAddingIdeaFeature(false);
+// setActiveIdeaFeatureIndex(0);
+// setAddContentIdeaFeature("");
+// setEditedIdeaFeatureTitle("");
+// setAddingIdeaCustomer(false);
+// setActiveIdeaCustomerIndex(0);
+// setAddContentIdeaCustomer("");
+// setEditedIdeaCustomerTitle("");
+// setIdeaFeatureData([]);
+// setIdeaRequirementData([]);
+// setIdeaFeatureDataTemp([]);
+// setIdeaRequirementDataTemp([]);
+// setIdeaList([]);
+// setIdeaGroup({});
+// setIdeaPriority([]);
+// setButtonState({});
+
+// setIdeaMiroState(0);
+// setGrowthHackerReportData([]);
+// setGrowthHackerDetailReportData([]);
+// setGrowthHackerRecommendedSolution([]);
+// setGrowthHackerSelectedSolution([]);
+// setKpiQuestionList([]);
+
+// setPriceReportData({});
+// setPriceScrapData({});
+// setPriceProduct([]);
+// setPriceSelectedProductSegmentation([]);
+// setPriceProductSegmentation([]);
+
+// setCaseReportData([]);
+// setCaseHashTag([]);
+
+// setSurveyGuidelineDetailReportData({});
+// setSurveyGuidelineReportData({});
+// setSurveyGoalSuggestionList([]);
+// setSurveyGoalFixed([]);
+// setSurveyQuestionList([]);
+
+// setBmModelSuggestionReportData([]);
+// setBmQuestionList([]);
+// setBmSelectedProblemOptions({});
+// setBmOrLean("");
+// setBmBmAutoReportData([]);
+// setBmLeanAutoReportData([]);
+// setBmBmAdsReportData([]);
+// setBmLeanAdsReportData([]);
+// setBmBmCustomReportData([]);
+// setBmLeanCustomReportData([]);
+
+// setNewAddContent("");
+// setIsAddingNow(false);
+// setIsLoading(false);
+
+// setMarketingMbtiResult({});
+// setMarketingResearchReportData([]);
+// setMarketingBmReportData([]);
+// setMarketingCustomerData([]);
+// setMarketingSelectedCustomer([]);
+// setMarketingFinalCustomer({});
+// setMarketingFinalReportData([]);
+
+// setIsMarketing(false);
+// setMarketingHaveIdea(false);
+// setMarketingMbtiStage(0);
+// setMarketingMbtiAnswer([0, 0, 0, 0]);
+// setMarketingInterest("");
+// setMarketingRecommendedItemData({});
+// setMarketingStartButtonState(0);
+// setMarketingBmButtonState(0);
+// setMarketingFinalReportButtonState(0);
+// setMarketingRecommendedItemButtonState(0);
+
+// setStrategyConsultantReportData([]);
+
+// setProjectId("");
+// setProjectReportId("");
+// setProjectList([]);
+// setProjectReportList([]);
+// setReportList([]);
+// setPersonaList({
+//   selected: [],
+//   unselected: [],
+// });
+// setSelectedPersonaList([]);
+// setCustomizePersonaList({
+//   selected: [],
+//   unselected: [],
+// });
+// setRequestPersonaList({
+//   persona: [],
+//   positioning: {},
+// });
+// setInterviewQuestionList([]);
+// setSelectedInterviewPurpose("");
+// setCategoryColor({});
+// setProjectLoadButtonState(false);
+// setReportLoadButtonState(false);
+// setReportDescriptionLoadButtonState(false);
+// setInterviewData([]);
+// setInterviewReport([]);
+// setInterviewReportAdditional([]);
+// setIsEditMode(false);
+// setIsShowToast(false);
