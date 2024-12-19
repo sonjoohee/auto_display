@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { useAtom } from "jotai";
 import { palette } from "../../../../assets/styles/Palette";
 import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
-import Header from "../../../Design_Page/IncHeader";
+// import Header from "../../../Design_Page/IncHeader";
+import MoleculeHeader from "../molecules/MoleculeHeader";
+import { Button } from "../../../../assets/styles/ButtonStyle";
 import {
   ContentsWrap,
   MainContent,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import { Badge } from "../../../../assets/styles/Badge";
+import images from "../../../../assets/styles/Images";
 import { useNavigate } from "react-router-dom";
 import {
   IS_LOGGED_IN,
@@ -197,7 +200,7 @@ const PageMyProject = () => {
     <>
       <ContentsWrap>
         <OrganismIncNavigation />
-        <Header />
+        <MoleculeHeader />
         <MainContent>
           <MyProjectWrap>
             <Title>프로젝트 리스트</Title>
@@ -212,6 +215,16 @@ const PageMyProject = () => {
                   <div>결과 리포트</div>
                 </ProjectHeader>
                 <ProjectContent>
+
+                  {/* 진행중인 프로젝트 없을때 디자인 */}
+                  {/* <ProjectItem Nodata>
+                    <img src={images.FileFill} alt="" />
+                    <div>
+                      <p>아직 진행 중인 프로젝트가 없습니다.<br />지금 바로 새 프로젝트를 만들어보세요</p>
+                      <Button Medium Primary Round>새 프로젝트 시작하기</Button>
+                    </div>
+                  </ProjectItem> */}
+
                   {projectList.map((project, index) => (
                     <OrganismProjectCard
                       key={index}
@@ -299,8 +312,10 @@ const ProjectItem = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  gap: 12px;
-  padding: 12px 24px;
+  // gap: 12px;
+  gap: ${(props) => (props.Nodata ? "16px" : "12px")};
+  // padding: 12px 24px;
+  padding: ${(props) => (props.Nodata ? "52px 24px 40px" : "12px 24px")};
   border-radius: 10px;
   border: 1px solid ${palette.outlineGray};
   background-color: ${palette.white};
@@ -311,6 +326,21 @@ const ProjectItem = styled.div`
     $isOpen &&
     `
     box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
+  `}
+
+  ${props => props.Nodata && css`
+    div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+
+      p {
+        color: ${palette.gray500};
+        line-height: 1.5;
+      }
+    }
   `}
 `;
 
