@@ -1370,6 +1370,7 @@ const MainContent = styled.div`
   min-width: 1px;
   max-width: 1484px;
   width: calc(100% - 40px);
+  height: calc(100vh - 70px);
   // padding-bottom: 150px;
   // margin: 0 auto;
   margin: 0 auto;
