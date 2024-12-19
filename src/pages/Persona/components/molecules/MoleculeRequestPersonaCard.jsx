@@ -98,7 +98,7 @@ const MoleculeRequestPersonaCard = ({ persona, personaIndex }) => {
         setShowSuccessPopup(true);
       } else {
         setShowSuccessPopup(true);
-        console.log("이미 요청된 페르소나입니다.");
+        // console.log("이미 요청된 페르소나입니다.");
       }
     } catch (error) {
       console.error("페르소나 요청 중 오류 발생:", error);
