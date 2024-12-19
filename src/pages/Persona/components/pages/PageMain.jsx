@@ -676,9 +676,9 @@ const PageMain = () => {
   const handledSearch = async () => {
     // 로그인 상태인지 확인 후 처리
     if (isLoggedIn) {
-      const regex = /^[가-힣a-zA-Z0-9\s.,'"?!()\-·:%]*$/;
-      const specialChars = /^[.,'"?!()/\-·:%]+$/;
-      const consecutiveSpecialChars = /[.,'"?!()\/\-·:%]{2,}/; // 특수문자가 2번 이상 연속되는 패턴
+      const regex = /^[가-힣a-zA-Z0-9\s.,'"?!()\/\-·:\\%]*$/;
+      const specialChars = /^[.,'"?!()\/\-·:\\%]+$/;
+      const consecutiveSpecialChars = /[.,'"?!()\/\-·:\\%]{2,}/; // 특수문자가 2번 이상 연속되는 패턴
 
       // 단독으로 특수 문자만 사용된 경우
       if (specialChars.test(businessAnalysis.input.trim())) {
