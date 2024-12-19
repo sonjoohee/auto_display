@@ -847,6 +847,8 @@ const AccordionHeader = styled.div`
   font-weight: 600;
   color: ${palette.gray800};
   cursor: pointer;
+  padding-right: 32px; // 화살표 공간 + 간격(32px) 확보
+  position: relative;
 
   span {
     display: flex;
@@ -864,14 +866,16 @@ const AccordionHeader = styled.div`
   }
 
   &:after {
-    flex-shrink: 0;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%)
+      rotate(${(props) => (props.isOpen ? "225deg" : "45deg")});
     width: 12px;
     height: 12px;
-    margin-left: auto;
     border-right: 2px solid ${palette.gray500};
     border-bottom: 2px solid ${palette.gray500};
     transition: transform 0.3s ease;
-    transform: rotate(${(props) => (props.isOpen ? "225deg" : "45deg")});
     content: "";
   }
 `;

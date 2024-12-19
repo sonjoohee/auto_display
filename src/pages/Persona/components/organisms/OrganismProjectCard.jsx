@@ -124,7 +124,7 @@ const OrganismProjectCard = ({ project, index }) => {
         <ProjectInfo>
           <Name>
             <strong>{project.businessAnalysis.title}</strong>
-            <span>생성일 - {project.updateDate}</span>
+            <span>생성일 - {project.createDate || project.updateDate}</span>
           </Name>
           <Persona>
             <div>
