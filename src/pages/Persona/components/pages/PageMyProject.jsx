@@ -41,7 +41,7 @@ import {
 } from "../../../AtomStates";
 import OrganismProjectCard from "../organisms/OrganismProjectCard";
 import { getProjectListByIdFromIndexedDB } from "../../../../utils/indexedDB";
-import OrganizmEmptyProject from "../organisms/OrganizmEmptyProject";
+import OrganismEmptyProject from "../organisms/OrganismEmptyProject";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 
 const PageMyProject = () => {
@@ -228,7 +228,7 @@ const PageMyProject = () => {
           <MyProjectWrap>
             <Title>프로젝트 리스트</Title>
             {projectList.length === 0 ? (
-              <OrganizmEmptyProject />
+              <OrganismEmptyProject />
             ) : (
               <ProjectList>
                 <ProjectHeader>
