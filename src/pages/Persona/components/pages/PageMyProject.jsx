@@ -42,8 +42,11 @@ import {
 import OrganismProjectCard from "../organisms/OrganismProjectCard";
 import { getProjectListByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import OrganizmEmptyProject from "../organisms/OrganizmEmptyProject";
+import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 
 const PageMyProject = () => {
+  useDynamicViewport("width=1280");
+
   const [projectLoading, setProjectLoading] = useAtom(PROJECT_LOADING);
   const [refreshTrigger, setRefreshTrigger] = useAtom(PROJECT_REFRESH_TRIGGER);
   const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(

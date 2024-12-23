@@ -15,11 +15,6 @@ import {
   CustomTextarea,
 } from "../../../../assets/styles/InputStyle";
 import {
-  TITLE_OF_BUSINESS_INFORMATION,
-  MAIN_FEATURES_OF_BUSINESS_INFORMATION,
-  TEMP_MAIN_FEATURES_OF_BUSINESS_INFORMATION,
-  MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
-  TEMP_MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
   IS_LOADING,
   PERSONA_BUTTON_STATE_1,
   INPUT_BUSINESS_INFO,
@@ -34,7 +29,6 @@ import PopupWrap from "../../../../assets/styles/Popup";
 import AtomPersonaLoader from "../atoms/AtomPersonaLoader";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import MoleculeRecreate from "../molecules/MoleculeRecreate";
-// import { updateProjectReportOnServer } from "../../../../utils/indexedDB";
 
 const OrganismBusinessAnalysis = ({ personaStep }) => {
   const [isLoadingBusinessAnalysis, setIsLoadingBusinessAnalysis] = useAtom(
@@ -45,27 +39,6 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const navigate = useNavigate();
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
-  const [inputBusinessInfo, setInputBusinessInfo] =
-    useAtom(INPUT_BUSINESS_INFO);
-  const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
-    TITLE_OF_BUSINESS_INFORMATION
-  );
-  const [
-    mainFeaturesOfBusinessInformation,
-    setMainFeaturesOfBusinessInformation,
-  ] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
-  const [
-    tempMainFeaturesOfBusinessInformation,
-    setTempMainFeaturesOfBusinessInformation,
-  ] = useAtom(TEMP_MAIN_FEATURES_OF_BUSINESS_INFORMATION);
-  const [
-    mainCharacteristicOfBusinessInformation,
-    setMainCharacteristicOfBusinessInformation,
-  ] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
-  const [
-    tempMainCharacteristicOfBusinessInformation,
-    setTempMainCharacteristicOfBusinessInformation,
-  ] = useAtom(TEMP_MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
   const [personaButtonState1, setPersonaButtonState1] = useAtom(
     PERSONA_BUTTON_STATE_1
   );
