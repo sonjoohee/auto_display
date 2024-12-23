@@ -33,7 +33,7 @@ import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 // import Sidebar from "../../../Design_Page/IncSidebar";
 import IncNavigation from "../organisms/OrganismIncNavigation";
-import OrganismBusinessAnalysis from "../organisms/OrganismBisinessAnalysis";
+import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import { updateProjectReportOnServer } from "../../../../utils/indexedDB";
 import { getProjectReportByIdFromIndexedDB } from "../../../../utils/indexedDB";
@@ -41,8 +41,10 @@ import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
 import OrganismToastPopup from "../organisms/OrganismToastPopup";
 import BubbleChart from "../organisms/OrganismBubbleChart";
+import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 
 const PagePersona4 = () => {
+  useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
   const [
     reportDescriptionLoadButtonState,
     setReportDescriptionLoadButtonState,

@@ -40,7 +40,7 @@ import MoleculeInterviewCard from "../molecules/MoleculeInterviewCard";
 import MoleculePersonaCard from "../molecules/MoleculePersonaCard";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
-import OrganismBusinessAnalysis from "../organisms/OrganismBisinessAnalysis";
+import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
 import PopupWrap from "../../../../assets/styles/Popup";
 import OrganismToastPopup from "../organisms/OrganismToastPopup";
 

@@ -33,7 +33,7 @@ import MoleculeHeader from "../molecules/MoleculeHeader";
 import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 import { createProjectOnServer } from "../../../../utils/indexedDB";
-import OrganismBusinessAnalysis from "../organisms/OrganismBisinessAnalysis";
+import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
 
 const PagePersona = () => {
   const navigate = useNavigate();

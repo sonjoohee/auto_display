@@ -3,14 +3,6 @@ import styled, { css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import { Button } from "../../../../assets/styles/ButtonStyle";
-import PopupWrap from "../../../../assets/styles/Popup";
-import { CustomTextarea } from "../../../../assets/styles/InputStyle";
-import {
-  AccordionSection,
-  CustomAccordionHeader,
-  CustomAccordionIcon,
-  CustomAccordionContent,
-} from "../../../../components/common/Accordion";
 
 const MoleculePersonaCard = ({
   title,
@@ -52,44 +44,6 @@ const MoleculePersonaCard = ({
       setIsChecked(true);
       onSelect(true);
     }
-  };
-
-  const [state, setState] = useState({
-    isExpanded: false,
-    isChecked: false,
-    showPopup: false,
-    showRequestBadge: false,
-    showCustomModal: false,
-    customTextarea: "",
-    isTextareaValid: false,
-    isRadioSelected: false,
-    showQuestions: false,
-    showCustomPopup: false,
-    isAccordionOpen: false,
-    formState: {
-      purpose: "",
-      personaCount: "",
-      gender: "",
-      age: "",
-      additionalInfo: "",
-    },
-  });
-
-  const handleInputChange = (field, value) => {
-    setState((prev) => ({
-      ...prev,
-      formState: {
-        ...prev.formState,
-        [field]: value,
-      },
-    }));
-  };
-
-  const isFormValid = () => {
-    return (
-      state.formState.purpose.trim() !== "" &&
-      state.formState.personaCount !== ""
-    );
   };
 
   return (
@@ -141,221 +95,15 @@ const MoleculePersonaCard = ({
               기본형
             </Badge>
           ) : isCustom ? (
-            state.showRequestBadge ? (
               <Badge Custom>
                 <img src={images.StatusBadgeCustom} alt="커스터마이즈" />
                 커스터마이즈
               </Badge>
-            ) : (
-              <Button
-                Large
-                Primary
-                onClick={(e) => {
-                  e.stopPropagation();
-                  // console.log('Badge clicked');
-                  setState((prev) => {
-                    // console.log('Previous state:', prev);
-                    const newState = { ...prev, showPopup: true };
-                    // console.log('New state:', newState);
-                    return newState;
-                  });
-                }}
-              >
-                {/* <img src={images.PencilSquare} alt="" /> */}
-                모집 요청하기
-              </Button>
-            )
           ) : (
             <></>
           )}
         </MainContent>
       </CardContainer>
-      {state.showPopup && (
-        <PopupWrap
-          title="📝 맞춤형 페르소나 모집 요청하기"
-          buttonType="Fill"
-          confirmText="맞춤 페르소나 모집하기"
-          isModal={true}
-          onClose={() => setState((prev) => ({ ...prev, showPopup: false }))}
-          onCancel={() => setState((prev) => ({ ...prev, showPopup: false }))}
-          onConfirm={() => {
-            if (isFormValid()) {
-              setState((prev) => ({
-                ...prev,
-                showPopup: false,
-              }));
-            }
-          }}
-          isFormValid={isFormValid()}
-          body={
-            <>
-              <div className="bgBox">
-                <strong>도심에 거주하며 전문직에 종사하는 바쁜 생활인</strong>
-                <p className="tag">
-                  <span>키워드1</span>
-                  <span>키워드2</span>
-                  <span>키워드3</span>
-                </p>
-              </div>
-
-              <dl>
-                <dt className="point">
-                  맞춤형 페르소나는 어떤 용도로 활용하실 계획이신가요?
-                </dt>
-                <dd>
-                  <CustomTextarea
-                    rows={3}
-                    placeholder="생성하기 위한 목적을 적어 주세요."
-                    value={state.formState.purpose}
-                    onChange={(e) =>
-                      handleInputChange("purpose", e.target.value)
-                    }
-                  />
-                </dd>
-              </dl>
-
-              <dl>
-                <dt className="point">
-                  몇명의 페르소나를 모집하시고 싶으신가요?
-                </dt>
-                <dd>
-                  <input
-                    type="radio"
-                    id="persona1"
-                    name="persona"
-                    value="5"
-                    onChange={(e) =>
-                      handleInputChange("personaCount", e.target.value)
-                    }
-                  />
-                  <label htmlFor="persona1" className="persona">
-                    5명
-                  </label>
-                  <input
-                    type="radio"
-                    id="persona2"
-                    name="persona"
-                    value="10"
-                    onChange={(e) =>
-                      handleInputChange("personaCount", e.target.value)
-                    }
-                  />
-                  <label htmlFor="persona2" className="persona">
-                    10명
-                  </label>
-                  <input
-                    type="radio"
-                    id="persona3"
-                    name="persona"
-                    value="15"
-                    onChange={(e) =>
-                      handleInputChange("personaCount", e.target.value)
-                    }
-                  />
-                  <label htmlFor="persona3" className="persona">
-                    15명
-                  </label>
-                  <input
-                    type="radio"
-                    id="persona4"
-                    name="persona"
-                    value="20"
-                    onChange={(e) =>
-                      handleInputChange("personaCount", e.target.value)
-                    }
-                  />
-                  <label htmlFor="persona4" className="persona">
-                    20명
-                  </label>
-                </dd>
-              </dl>
-
-              <AccordionSection>
-                <CustomAccordionHeader
-                  onClick={() =>
-                    setState((prev) => ({
-                      ...prev,
-                      isAccordionOpen: !prev.isAccordionOpen,
-                    }))
-                  }
-                >
-                  🔍 추가정보를 입력하여, 더 정확한 타겟 페르소나를 찾으세요
-                  <CustomAccordionIcon isOpen={state.isAccordionOpen} />
-                </CustomAccordionHeader>
-                {state.isAccordionOpen && (
-                  <CustomAccordionContent>
-                    <dl>
-                      <dt>추가정보</dt>
-                      <dd>
-                        <input type="radio" id="gender1" name="gender" />
-                        <label htmlFor="gender1" className="gender men">
-                          <img src={images.GenderMen} alt="GenderMen" />
-                          남자
-                        </label>
-                        <input type="radio" id="gender2" name="gender" />
-                        <label htmlFor="gender2" className="gender women">
-                          <img src={images.GenderWomen} alt="GenderWomen" />
-                          여자
-                        </label>
-                      </dd>
-                    </dl>
-
-                    <dl>
-                      <dt>
-                        나이
-                        <p>
-                          * 선택하지 않는 경우, 연령 무관으로 페르소나를
-                          생성합니다.
-                        </p>
-                      </dt>
-                      <dd>
-                        <input type="radio" id="age1" name="age" />
-                        <label htmlFor="age1" className="age">
-                          10대
-                        </label>
-                        <input type="radio" id="age2" name="age" />
-                        <label htmlFor="age2" className="age">
-                          20대
-                        </label>
-                        <input type="radio" id="age3" name="age" />
-                        <label htmlFor="age3" className="age">
-                          30대
-                        </label>
-                        <input type="radio" id="age4" name="age" />
-                        <label htmlFor="age4" className="age">
-                          40대
-                        </label>
-                        <input type="radio" id="age5" name="age" />
-                        <label htmlFor="age5" className="age">
-                          50대
-                        </label>
-                        <input type="radio" id="age6" name="age" />
-                        <label htmlFor="age6" className="age">
-                          60대
-                        </label>
-                        <input type="radio" id="age7" name="age" />
-                        <label htmlFor="age7" className="age">
-                          70대 이상
-                        </label>
-                      </dd>
-                    </dl>
-
-                    <dl>
-                      <dt>더 상세하게 필요한 정보를 입력해주세요 </dt>
-                      <dd>
-                        <CustomTextarea
-                          rows={3}
-                          placeholder="모집하고 싶은 페르소나의 성향, 목표, 행동 패턴을 구체적으로 입력해주세요"
-                        />
-                      </dd>
-                    </dl>
-                  </CustomAccordionContent>
-                )}
-              </AccordionSection>
-            </>
-          }
-        />
-      )}
     </>
   );
 };
