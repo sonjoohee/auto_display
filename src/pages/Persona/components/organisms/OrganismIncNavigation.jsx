@@ -1223,6 +1223,7 @@ const OrganismIncNavigation = () => {
   };
 
   const handleMyProjectClick = () => {
+    setPersonaStep(0);
     setProjectId("");
     setProjectReportId("");
     setProjectList([]);

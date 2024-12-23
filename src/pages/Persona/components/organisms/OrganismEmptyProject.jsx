@@ -5,7 +5,7 @@ import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 
-const OrganizmEmptyProject = () => {
+const OrganismEmptyProject = () => {
   const navigate = useNavigate();
 
   const handleNewProject = () => {
@@ -76,4 +76,4 @@ const SubText = styled.span`
   margin-top: 4px;
 `;
 
-export default OrganizmEmptyProject;
+export default OrganismEmptyProject;
