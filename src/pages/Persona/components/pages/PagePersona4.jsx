@@ -417,6 +417,7 @@ const PagePersona4 = () => {
   };
 
   const navigateToPersonaPage = () => {
+    setReportDescriptionLoadButtonState(false);
     setProjectLoadButtonState(true);
     setIsPersonaAccessible(true);
     navigate(`/Persona/2/${projectId}`);
