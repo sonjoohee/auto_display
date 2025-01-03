@@ -29,6 +29,7 @@ const MoleculeRequestPersonaCard = ({ persona, personaIndex }) => {
   const [activeTab, setActiveTab] = useState("lifestyle");
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
+  //요청된 페르소나 요청 로드
   useEffect(() => {
     const loadRequestedPersona = async () => {
       try {
@@ -36,6 +37,7 @@ const MoleculeRequestPersonaCard = ({ persona, personaIndex }) => {
           projectId,
           isLoggedIn
         );
+        //currentProject에서 요청된 페르소나 목록을 가져오되, 없으면 빈 배열을 사용하여 requestedPersona 상태를 설정
         setRequestedPersona(currentProject?.requestedPersona || []);
       } catch (error) {
         console.error("요청된 페르소나 데이터 로딩 중 오류 발생:", error);

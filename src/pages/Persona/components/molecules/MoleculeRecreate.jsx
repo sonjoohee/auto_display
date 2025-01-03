@@ -1,3 +1,4 @@
+//재생성 버튼 컴포넌트
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Button } from "../../../../assets/styles/ButtonStyle";

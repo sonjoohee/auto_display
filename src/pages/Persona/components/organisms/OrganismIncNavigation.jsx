@@ -1,3 +1,6 @@
+//네비게이션 컴포넌트
+//좌측 사이드바 네비게이션 컴포넌트
+//로그인/로그아웃 관리, 대화 히스토리 관리, 프로젝트 관리. 사용자 계정 설정
 import React, { useState, useEffect, useRef } from "react";
 import styled, { css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
@@ -578,18 +581,24 @@ const OrganismIncNavigation = () => {
     setNewChatName("");
   };
 
+
+//히스토리 부분?? 
+  //아코디언 생성 코드   //아코디언 :  클릭하면 펼처지고 다시 클릭하면 접히는 형태의 인터페이스 
+  //1. 높이 제한 
   // 사이드바의 최대 높이 설정
   const maxSidebarHeight = 600; // 예시로 700px 설정
-
+ //각 아이템의 높이 설정
   const ITEM_HEIGHT = 50;
 
-  // 첫 번째 아코디언(보고서)와 두 번째 아코디언(대화 내역)의 높이를 계산하는 함수
+  // 2. 첫 번째 아코디언(보고서)와 두 번째 아코디언(대화 내역)의 높이를 계산하는 함수 
   const calculateAccordionHeight = () => {
-    const reportHeight = reports.length * ITEM_HEIGHT; // 보고서 높이
+    const reportHeight = reports.length * ITEM_HEIGHT; // 보고서 섹션 높이
     const chatHeight = chatList.length * ITEM_HEIGHT; // 대화 내역 높이
 
     return { reportHeight, chatHeight };
   };
+
+  //3. 높이 초과 체크 
 
   const exceedsSidebarHeight = () => {
     const { reportHeight, chatHeight } = calculateAccordionHeight();
@@ -631,6 +640,7 @@ const OrganismIncNavigation = () => {
     });
   };
 
+  //아코디언 외부 클릭 감지 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (toggleRef.current && !toggleRef.current.contains(event.target)) {
@@ -647,17 +657,18 @@ const OrganismIncNavigation = () => {
     };
   }, []);
 
+  //
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
         insightEditBoxRef.current &&
-        !insightEditBoxRef.current.contains(event.target) &&
+        !insightEditBoxRef.current.contains(event.target) && //클릭한 요소가 인사이트 편집 박스 내부가 아니면 
         !event.target.closest(".toggle")
       ) {
-        setInsightEditToggleIndex(null);
+        setInsightEditToggleIndex(null); //클릭이 컴포넌트 외부에서 발생
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside); //문서 전체에 마우스 클릭 이벤트 적용 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -1194,6 +1205,7 @@ const OrganismIncNavigation = () => {
     setIsToggle((prev) => !prev); // 팝업 열기/닫기
   };
 
+  //새작업 버튼 클릭 시 호출되는 함수
   const handleNewProjectClick = () => {
     // if (!isLoggedIn) {
     //   setIsPopupLogin(true);
@@ -1287,6 +1299,7 @@ const OrganismIncNavigation = () => {
     }
   };
 
+  //메뉴리스트-> molcules로?
   return (
     <>
       <NavigationWrap>
@@ -1294,23 +1307,23 @@ const OrganismIncNavigation = () => {
           <Logo />
         </Link>
 
-        <MenuList>
-          <li onClick={handleNewProjectClick}>
-            <svg
+        <MenuList> 
+          <li onClick={handleNewProjectClick}> 
+            <svg 
               width="32"
               height="33"
               viewBox="0 0 32 33"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <rect
+              <rect //배경 사각형
                 y="0.267578"
                 width="32"
                 height="32"
                 rx="9.84615"
                 fill="#fff"
               />
-              <path
+              <path //플러스 기호 
                 fill-rule="evenodd"
                 clip-rule="evenodd"
                 d="M16.999 13.1006C16.999 12.5483 16.5513 12.1006 15.999 12.1006C15.4467 12.1006 14.999 12.5483 14.999 13.1006V15.2676H12.833C12.2807 15.2676 11.833 15.7153 11.833 16.2676C11.833 16.8199 12.2807 17.2676 12.833 17.2676H14.999V19.4341C14.999 19.9864 15.4467 20.4341 15.999 20.4341C16.5513 20.4341 16.999 19.9864 16.999 19.4341V17.2676H19.1665C19.7188 17.2676 20.1665 16.8199 20.1665 16.2676C20.1665 15.7153 19.7188 15.2676 19.1665 15.2676H16.999V13.1006Z"
@@ -1440,7 +1453,9 @@ const OrganismIncNavigation = () => {
         </Setting>
       </NavigationWrap>
 
+
       <SubNavigation show={showSubNav}>
+          {/* 히스토리 누르면 */}
         <SubTitle>
           <div>
             <img src={images.ClockCounterclockwise} alt="" />
@@ -1792,7 +1807,7 @@ const OrganismIncNavigation = () => {
       </SubNavigation>
       {isLoginPopupOpen && <MoleculeLoginPopup onClose={closeLoginPopup} />}
       {isSignupPopupOpen && <MoleculeSignPopup onClose={closeSignupPopup} />}
-
+     
       {isAccountPopupOpen && (
         <MoleculeAccountPopup onClose={closeAccountPopup} />
       )}

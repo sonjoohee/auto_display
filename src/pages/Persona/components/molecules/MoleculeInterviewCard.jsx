@@ -1,3 +1,4 @@
+//인터뷰 질문 로드하고 관리
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
@@ -35,7 +36,7 @@ const MoleculeInterviewCard = ({
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isLoadingQuestion, setIsLoadingQuestion] = useState(false);
-  const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
+  const [businessAnalysis] = useAtom(BUSINESS_ANALYSIS);
   const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(
     SELECTED_INTERVIEW_PURPOSE
   );
@@ -80,8 +81,10 @@ const MoleculeInterviewCard = ({
   };
 
   const loadInterviewQuestion = async () => {
+    //재생성 버튼 숨기기
     setShowRegenerateButton(false);
 
+    //이미 해당하는 title에 대한 질문이 있는지 확인 
     const existingQuestions = interviewQuestionListState.find(
       (item) => item.theory_name === title
     );
@@ -92,6 +95,7 @@ const MoleculeInterviewCard = ({
     }
     try {
       setIsLoadingQuestion(true);
+      //API 요청 데이터 생성 
       let data = {
         business_idea: businessAnalysis.input,
         business_analysis_data: {
@@ -101,7 +105,9 @@ const MoleculeInterviewCard = ({
         },
         theory_name: title,
       };
+ 
 
+      //첫번째 API 호출
       let response = await axios.post(
         "https://wishresearch.kr/person/persona_interview",
         data,
@@ -112,6 +118,7 @@ const MoleculeInterviewCard = ({
       let retryCount = 0;
       const maxRetries = 10;
 
+      //응답이 없거나, 데이터가 없거나 질문이 5개인 경우 재시도 
       while (
         retryCount < maxRetries &&
         (!response || !response.data || response.data.length !== 5)
@@ -125,10 +132,12 @@ const MoleculeInterviewCard = ({
 
         questionList = response.data;
       }
+      //최대 재시도 횟수를 초과한 경우 에러 팝업 표시 
       if (retryCount >= maxRetries) {
         setShowErrorPopup(true);
         return;
       }
+      //성공적으로 데이터를 받아온 경우 로컬 상태 없데이트
       setInterviewQuestionListState((prev) => [
         ...prev,
         {

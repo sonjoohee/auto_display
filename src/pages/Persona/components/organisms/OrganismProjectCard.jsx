@@ -1,3 +1,4 @@
+// 작업관리 누르면 뜨는 프로젝트 리스트 
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useAtom } from "jotai";
@@ -98,6 +99,7 @@ const OrganismProjectCard = ({ project, index }) => {
     navigate(`/Persona/2/${projectId}`);
   };
 
+  //결과 분석 보기 
   const navigateToInterviewReportPage = (reportId) => {
     // console.log("🚀 ~ navigateToInterviewReportPage ~ reportId:", reportId);
     setProjectId(project._id);
@@ -108,6 +110,7 @@ const OrganismProjectCard = ({ project, index }) => {
     navigate(`/Persona/4/${project._id}`);
   };
 
+  //인터뷰 상세보기 
   const navigateToInterviewReportDescriptionPage = (reportId) => {
     setProjectId(project._id);
     setReportId(reportId);
