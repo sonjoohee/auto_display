@@ -1,3 +1,4 @@
+//작업관리/ 프로젝트 리스트 
 import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { useAtom } from "jotai";
@@ -248,11 +249,12 @@ const PageMyProject = () => {
                     </div>
                   </ProjectItem> */}
 
+                          {/*  key는 오직 React의 내부 처리를 위한 것이며, 컴포넌트의 실제 props로는 전달되지 않습니다.*/}
                   {projectList.map((project, index) => (
                     <OrganismProjectCard
-                      key={index}
+                      key={index} 
                       project={project}
-                      index={index}
+                      index={index} 
                     />
                   ))}
                 </ProjectContent>

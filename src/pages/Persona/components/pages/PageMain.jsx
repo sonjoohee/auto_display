@@ -206,7 +206,7 @@ const PageMain = () => {
   const [surveyQuestionList, setSurveyQuestionList] =
     useAtom(SURVEY_QUESTION_LIST);
   const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
-  const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
+  const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG); 
   const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
   const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
   const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
@@ -506,6 +506,7 @@ const PageMain = () => {
     // }
 
     // Reset all states except inputBusinessInfo
+    //새로운 세션이나 페이지 전환 시 데이터 일관성 보장 
     setNewAddContent("");
     setIsAddingNow(false);
     setIsLoading(false);
@@ -743,7 +744,7 @@ const PageMain = () => {
       // saveConversation({changingConversation: {inputBusinessInfo: inputBusinessInfo}});
       // setApproachPath(-1); // 검색을 통해 들어가는 경우
       // setSelectedExpertIndex("0");
-      navigate("/Persona");
+      navigate("/Persona"); //pagepersona
     } else {
       setIsPopupLogin(true); // 로그인 상태가 아니라면 로그인 팝업 띄우기
     }
@@ -765,6 +766,7 @@ const PageMain = () => {
   //   }
   // };
 
+  //전문가 부분 누르면
   const getInitialSystemMessage = (index) => {
     switch (index) {
       case "1":
@@ -792,6 +794,7 @@ const PageMain = () => {
     }
   };
 
+  //전문가 부분 누르면 
   const handledExpertSelect = (index) => {
     if (isLoggedIn) {
       const initialMessage = getInitialSystemMessage(index);
@@ -858,7 +861,7 @@ const PageMain = () => {
 
         <MoleculeHeader />
 
-        <MainContent MainSearch>
+        <MainContent MainSearch> 
           <MainSearchWrap MainSearch>
             <Title>
               Connect with Your Persona

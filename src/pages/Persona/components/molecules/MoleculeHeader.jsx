@@ -1,3 +1,4 @@
+//헤더 컴포넌트
 import React, { useState, useRef, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { Link, useLocation } from "react-router-dom";

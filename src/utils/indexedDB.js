@@ -293,13 +293,15 @@ export const updateProjectOnServer = async (
 export const getProjectByIdFromIndexedDB = async (
   projectId,
   projectLoadButtonState
-) => {
+) => { //두개 매개변수 받음
   // console.log("🚀 ~ getProjectByIdFromIndexedDB ~ projectId:", projectId);
 
   if (projectLoadButtonState) {
     // 사용자 로그인 시 서버에서 데이터 가져오기
     try {
+      //요청이 유효한 사용자인지 확인 
       const accessToken = sessionStorage.getItem("accessToken");
+      
       const response = await axios.get(
         `https://wishresearch.kr/project/find/${projectId}`,
         {

@@ -1,3 +1,4 @@
+//작업관리/ 프로젝트 리스트/ 자세히 보기/인터뷰 상세보기
 import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
@@ -170,7 +171,7 @@ const PagePersona4 = () => {
     }
   };
   useEffect(() => {
-    // 팝업이 열려있을 때
+    // 팝업이 열려있을 때 배경 스크롤 맊음 
     if (showToast) {
       document.body.style.overflow = "hidden";
       document.body.style.paddingRight = "15px"; // 스크롤바 자리만큼 패딩 추가
@@ -338,6 +339,7 @@ const PagePersona4 = () => {
       .filter((item) => item.value !== 0);
   };
 
+  //작업관리 / 인터뷰 시작하기/ 바로가기 인터뷰 목적 선택 
   const getInterviewPurposeDescription = (purpose) => {
     switch (purpose) {
       case "제품 경험 평가":
@@ -699,6 +701,7 @@ const PagePersona4 = () => {
               <Sidebar>
                 <h5>Key Insight</h5>
 
+            
                 <ProgressBar>
                   <span className="icon">🚀</span>
                   <Progress progress={100} />

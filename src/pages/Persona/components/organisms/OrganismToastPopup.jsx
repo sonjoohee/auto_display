@@ -1,3 +1,4 @@
+//인터뷰룸
 import React, { useState, useEffect } from "react";
 import styled, { keyframes, css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
@@ -26,6 +27,7 @@ import {
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import { createProjectReportOnServer } from "../../../../utils/indexedDB";
 import MoleculeRecreate from "../molecules/MoleculeRecreate";
+
 
 const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
   const [selectedPersonaList, setSelectedPersonaList] = useAtom(
@@ -83,11 +85,13 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
     headers: {
       "Content-Type": "application/json",
     },
-    withCredentials: true,
+    withCredentials: true, //크로스 도메인( 다른 도메인으로 http )요청 시 쿠키 전송 허용
   };
 
+
+  //저장되었던 인터뷰 로드
   useEffect(() => {
-    // 인터뷰 준비 함수
+
     const interviewLoading = async () => {
       // 인터뷰 스크립트 보기, 인터뷰 상세보기로 진입 시 isComplete는 True
       if (isComplete) {
@@ -185,6 +189,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             (!response || !response.data || response.data.length !== 5)
           ) {
             response = await axios.post(
+              //인터뷰 질문 생성 api
               "https://wishresearch.kr/person/persona_interview",
               data,
               axiosConfig
@@ -254,7 +259,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
     setShowRegenerateButton2(false);
     try {
       setIsAnalyzing(true);
-      const finalData1 = {
+      const finalData1 = { 
         business_idea: businessAnalysis,
         persona_info: personaInfoState,
         interview_data: [
@@ -274,6 +279,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
 
       while (retryCount < maxRetries) {
         responseReport = await axios.post(
+          //인터뷰 보고서 생서 api
           "https://wishresearch.kr/person/interview_reports",
           finalData1,
           axiosConfig
@@ -321,6 +327,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
 
       while (retryCount < maxRetries) {
         responseReportAdditional = await axios.post(
+          //추가 보고서 생성 api (기본 보고서의 데이터 포함)
           "https://wishresearch.kr/person/interview_report_additional",
           finalData2,
           axiosConfig
@@ -418,16 +425,20 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
           for (let i = 0; i < personaList.selected.length; i++) {
             setIsGenerating(true);
 
-            // 현재 페르소나의 이전 답변들 수집
+            // 현재 페르소나의 이전 답변들 수집(저장):  AI가 답변을 생성할때 맥락 정보로 활용
             const lastInterview = [];
+            // 현재 질문 이전 질문들 수집
             for (let q = 0; q < currentQuestionIndex; q++) {
+              //각 질문에 대해서 answers 배열에서 해당 질문의 답변들을 찾음
               const questionAnswers = answers[q] || [];
+              //페르소나 매칭
               const personaAnswer = questionAnswers.find(
                 (ans) =>
                   ans.persona.personIndex ===
                   personaList.selected[i].personIndex
               );
               if (personaAnswer) {
+                //찾은 답변이 있다면 질문과 답변을 쌍으로 배열에 추가
                 lastInterview.push({
                   question: interviewQuestionListState[q].question,
                   answer: personaAnswer.answer,
@@ -443,7 +454,8 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               summary: personaList.selected[i].summary,
             };
 
-            const data = {
+            //수집된 답변들 api요청에 포함
+            const data = { 
               business_analysis_data: businessAnalysis,
               question: interviewQuestionListState[currentQuestionIndex],
               persona_info: personaInfo,
@@ -451,6 +463,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             };
 
             let response = await axios.post(
+               //페르소나 답변 생성하는 api
               "https://wishresearch.kr/person/persona_interview_module",
               data,
               axiosConfig
@@ -467,6 +480,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                 !response.data.answer)
             ) {
               response = await axios.post(
+              
                 "https://wishresearch.kr/person/persona_interview_module",
                 data,
                 axiosConfig
@@ -483,6 +497,8 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             allAnswers.push(response.data.answer);
 
             personaInfoState.push(personaInfo);
+
+            //페르소나 정보 처리 (나이, 성별, 직업 정보 추출 )
             const profileArray = personaList.selected[i].profile
               .replace(/['\[\]]/g, "")
               .split(", ");
@@ -491,6 +507,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               profileArray[1].split(": ")[1] === "남성" ? "남성" : "여성";
             const job = profileArray[2].split(": ")[1];
 
+            //답변 상태 업데이트 ( 현재 질문에 대한 각 페르소나의 답변 저장 )
             setAnswers((prev) => ({
               ...prev,
               [currentQuestionIndex]: [
@@ -505,8 +522,9 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               ],
             }));
 
+
+// 한 질문에 대한 모든 페르소나의 답변이 완료되면 interviewData 업데이트
             if (i === personaList.selected.length - 1) {
-              // 한 질문에 대한 모든 페르소나의 답변이 완료되면 interviewData 업데이트
               setInterviewData((prev) => {
                 const newData = [...(prev || [])];
                 newData[currentQuestionIndex] = {
@@ -776,12 +794,14 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
     }
     setIsPersonaAccessible(true);
     try {
+      // 인터뷰 완료 후 결과 저장하기 위해 새로운 리포트 생성 (나중에 리포트 조회)
       let newReportId = await createProjectReportOnServer(isLoggedIn);
       setReportId(newReportId); // 생성된 대화 ID 설정
     } catch (error) {
       console.error("Failed to create project on server:", error);
     }
     navigate(`/Persona/4/${projectId}`, { replace: true });
+    //replace: true 현재 페이지를 대체하여 이동( 뒤로 가기 시 이전 인터뷰 화면으로 돌아감 방지)
   };
 
   return (

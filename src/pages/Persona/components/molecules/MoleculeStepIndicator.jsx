@@ -1,3 +1,4 @@
+//페르소나 진행 상황 표시 컴포넌트(인터뷰 상세보기의 오른쪽 바 혹은  분석할때 )
 import React from 'react';
 import styled from 'styled-components';
 import { palette } from '../../../../assets/styles/Palette';
