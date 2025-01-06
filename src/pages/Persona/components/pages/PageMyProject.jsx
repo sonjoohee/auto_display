@@ -43,6 +43,7 @@ import OrganismProjectCard from "../organisms/OrganismProjectCard";
 import { getProjectListByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import OrganismEmptyProject from "../organisms/OrganismEmptyProject";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
+import { H5 } from "../../../../assets/styles/Typography";
 
 const PageMyProject = () => {
   useDynamicViewport("width=1280");
@@ -275,13 +276,11 @@ const MyProjectWrap = styled.div`
   margin: 50px auto;
 `;
 
-const Title = styled.h2`
+const Title = styled(H5)`
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  font-size: 1.25rem;
-  font-weight: 500;
   color: ${palette.gray800};
   padding-bottom: 20px;
   border-bottom: 1px solid ${palette.outlineGray};

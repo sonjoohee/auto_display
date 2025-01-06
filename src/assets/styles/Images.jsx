@@ -220,6 +220,9 @@ import DiscoveryExperienceHover from "../images/Discovery-Experience-hover.png"
 import DiscoveryScaleHover from "../images/Discovery-Scale-hover.png"
 import DiscoveryBMHover from "../images/Discovery-BM-hover.png"
 
+import Crown3D from "../images/Crown-3D.png"
+import StarFill3D from "../images/Star-Fill-3D.png"
+
 const images = {
   Logo,
   SymbolLogo,
@@ -442,6 +445,9 @@ const images = {
   DiscoveryExperienceHover,
   DiscoveryScaleHover,
   DiscoveryBMHover,
+
+  Crown3D,
+  StarFill3D,
 }
 
 export default images;

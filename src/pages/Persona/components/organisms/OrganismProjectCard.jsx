@@ -15,6 +15,7 @@ import { palette } from "../../../../assets/styles/Palette";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import { Badge } from "../../../../assets/styles/Badge";
 import images from "../../../../assets/styles/Images";
+import { Body2_1, Caption2 } from "../../../../assets/styles/Typography";
 
 const OrganismProjectCard = ({ project, index }) => {
   const [
@@ -123,8 +124,8 @@ const OrganismProjectCard = ({ project, index }) => {
       <ProjectItem $isOpen={openStates[index]}>
         <ProjectInfo>
           <Name>
-            <strong>{project.businessAnalysis.title}</strong>
-            <span>생성일 - {project.createDate || project.updateDate}</span>
+            <Body2_1>{project.businessAnalysis.title}</Body2_1>
+            <Caption2>생성일 - {project.createDate || project.updateDate}</Caption2>
           </Name>
           <Persona>
             <div>
@@ -372,7 +373,7 @@ const Name = styled.div`
   color: ${palette.gray800};
   text-align: left;
 
-  span {
+  p {
     font-size: 0.75rem;
     font-weight: 300;
     color: ${palette.gray500};

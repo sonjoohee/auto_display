@@ -137,6 +137,7 @@ import {
   PROJECT_REFRESH_TRIGGER,
   IS_LOADING_BUSINESS_ANALYSIS,
 } from "../../../AtomStates";
+import { Body1, Body3, Caption2 } from "../../../../assets/styles/Typography";
 import { CustomTextarea } from "../../../../assets/styles/InputStyle";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
@@ -905,7 +906,7 @@ const PageMain = () => {
           </MainSearchWrap>
 
           <ExpertSelectWrap>
-            <h2>🔎 AI 전문가가와 비즈니스 인사이트를 나누세요</h2>
+            <Body3>🔎 AI 전문가가와 비즈니스 인사이트를 나누세요</Body3>
             <ExpertSelectBox>
               <ExpertCard
                 Strategy
@@ -913,8 +914,8 @@ const PageMain = () => {
                   handledExpertSelect("1");
                 }}
               >
-                <strong>전략 컨설턴트</strong>
-                <p>차별화 전략과 리스트 분석 제시</p>
+                <Body1>전략 컨설턴트</Body1>
+                <Caption2>차별화 전략과 리스트 분석 제시</Caption2>
                 <span>
                   <img src={images.ImgStrategy} alt="" />
                 </span>
@@ -926,12 +927,12 @@ const PageMain = () => {
                   handledExpertSelect("6");
                 }}
               >
-                <strong>그로스 해커</strong>
-                <p>
+                <Body1>그로스 해커</Body1>
+                <Caption2>
                   고객 여정을 분석하여, 마케팅
                   <br />
                   퍼널별 전략 제시
-                </p>
+                </Caption2>
                 <span>
                   <img src={images.ImgHacker} alt="" />
                 </span>
@@ -943,12 +944,12 @@ const PageMain = () => {
                   handledExpertSelect("7");
                 }}
               >
-                <strong>가격 분석 전문가</strong>
-                <p>
+                <Body1>가격 분석 전문가</Body1>
+                <Caption2>
                   시장 데이터를 기반으로 최적의
                   <br />
                   가격 전략 제시 (제품 한정)
-                </p>
+                </Caption2>
                 <span>
                   <img src={images.ImgPrice} alt="" />
                 </span>
@@ -961,8 +962,8 @@ const PageMain = () => {
                   // setIsComingSoon(true);
                 }}
               >
-                <strong>BM 전문가</strong>
-                <p>비즈니스 모델 설계 및 최적화</p>
+                <Body1>BM 전문가</Body1>
+                <Caption2>비즈니스 모델 설계 및 최적화</Caption2>
                 <span>
                   <img src={images.ImgBM} alt="" />
                 </span>
@@ -973,7 +974,7 @@ const PageMain = () => {
                   <span>
                     <img src={images.ImgComing} alt="" />
                   </span>
-                  <p>coming soon</p>
+                  <Caption2>coming soon</Caption2>
                 </div>
               </ExpertCard>
             </ExpertSelectBox>
@@ -1289,16 +1290,15 @@ const ExpertSelectWrap = styled.div`
   position: relative;
   max-width: 1040px;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   margin-bottom: 40px;
 
-  h2 {
+  > p {
     display: flex;
     align-items: center;
     gap: 12px;
-    font-size: 1rem;
-    font-weight: 300;
-    line-height: 1.5;
-    margin-bottom: 20px;
   }
 
   a {
@@ -1401,19 +1401,12 @@ const ExpertCard = styled.div`
   }
 
   p {
-    font-size: 0.75rem;
-    font-weight: 400;
     color: ${(props) => (props.select ? palette.white : palette.gray500)};
   }
 
   strong {
-    font-family: "Pretendard", "Poppins";
-    font-size: 1rem;
-    font-weight: 700;
     color: ${(props) => (props.select ? palette.white : palette.darkGray)};
-    letter-spacing: -1px;
-    line-height: 1.2rem;
-    min-height: 1.2rem;
+    // min-height: 1.2rem;
   }
 
   &:hover {
