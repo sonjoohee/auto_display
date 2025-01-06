@@ -29,6 +29,7 @@ import PopupWrap from "../../../../assets/styles/Popup";
 import AtomPersonaLoader from "../atoms/AtomPersonaLoader";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import MoleculeRecreate from "../molecules/MoleculeRecreate";
+import { Body2 } from "../../../../assets/styles/Typography";
 
 const OrganismBusinessAnalysis = ({ personaStep }) => {
   const [isLoadingBusinessAnalysis, setIsLoadingBusinessAnalysis] = useAtom(
@@ -599,7 +600,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
   return (
     <>
       <Title>
-        <h3>비즈니스 분석</h3>
+        <Body2>비즈니스 분석</Body2>
         {!personaButtonState1 &&
           !isLoadingBusinessAnalysis &&
           personaStep === 1 && (
@@ -835,7 +836,7 @@ const Title = styled.div`
   }};
   width: 100%;
 
-  h3 {
+  div {
     font-weight: 500;
     color: ${palette.gray800};
   }

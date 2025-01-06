@@ -472,6 +472,7 @@ export const Button = styled.div`
   font-size: 0.875rem;
   font-weight: 500;
   line-height: 1.5;
+  text-align: center;
   padding: 8px 0 0;
   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
   transition: all 0.5s;

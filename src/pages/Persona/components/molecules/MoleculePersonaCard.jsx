@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import { Button } from "../../../../assets/styles/ButtonStyle";
+import { Body2_1 } from "../../../../assets/styles/Typography";
 
 const MoleculePersonaCard = ({
   title,
@@ -61,7 +62,7 @@ const MoleculePersonaCard = ({
           <ContentWrapper NoLine={NoLine}>
             <TitleSection>
               <Title NoLine={NoLine}>
-                <p>{title}</p>
+                <body2_1>{title}</body2_1>
 
                 {!newLine && (
                   <TitleInfo>

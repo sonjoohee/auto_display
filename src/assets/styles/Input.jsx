@@ -83,6 +83,15 @@ export const CheckBox = styled.div`
       }
     }
 
+    &:disabled + label {
+      color:${palette.gray300};
+      cursor:not-allowed;
+
+      &:before {
+        border:1px solid ${palette.gray300};
+      }
+    }
+
     &:checked + label:before {
       border:1px solid ${palette.blue};
     }

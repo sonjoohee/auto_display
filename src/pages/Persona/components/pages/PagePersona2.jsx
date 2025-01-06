@@ -42,6 +42,7 @@ import {
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
 import { Button } from "../../../../assets/styles/ButtonStyle";
+import { Body2 } from "../../../../assets/styles/Typography";
 import {
   CustomTextarea,
   CustomInput,
@@ -764,7 +765,7 @@ const PagePersona2 = () => {
                   <>
                     <CustomizePersona>
                       <Title Column>
-                        <h3>비즈니스 맞춤 페르소나</h3>
+                        <Body2>비즈니스 맞춤 페르소나</Body2>
                         <p>
                           비즈니스에 딱 맞는 페르소나를 추천해드려요. 요청을
                           보내주시면 인터뷰 참여 모집이 시작됩니다.
@@ -791,7 +792,7 @@ const PagePersona2 = () => {
                     {!personaButtonState2 && (
                       <CustomizePersona>
                         <Title Column>
-                          <h3>산업별 인기 페르소나</h3>
+                          <Body2>산업별 인기 페르소나</Body2>
                           <p>
                             산업별로 자주 활용되는 페르소나를 확인하고 지금 바로
                             대화하여 인사이트를 얻어보세요.
