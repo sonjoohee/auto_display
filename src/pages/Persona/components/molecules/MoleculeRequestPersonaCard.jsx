@@ -1,3 +1,4 @@
+//비즈니스 맞춤 페르소나
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Button } from "../../../../assets/styles/ButtonStyle";

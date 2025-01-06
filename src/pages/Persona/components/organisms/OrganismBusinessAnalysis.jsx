@@ -1,3 +1,4 @@
+//persona step 1비즈니스 분석 첫번재 카드 
 import React from "react";
 import styled, { css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
@@ -386,6 +387,9 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
     }
   }, [projectId]);
 
+
+
+  //비즈니스 분석과 카테고리 정보 로드
   useEffect(() => {
     const loadBusinessAnalysis = async () => {
       if (!isProjectIdReady) return;

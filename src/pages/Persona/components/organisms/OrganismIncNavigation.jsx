@@ -518,6 +518,7 @@ const OrganismIncNavigation = () => {
     setIsExitPopupOpen(false);
   };
 
+  //사이드바/히스토리 섹션/ .../이름변경
   const handleChangeInsightConfirm = async () => {
     try {
       const accessToken = sessionStorage.getItem("accessToken");
@@ -1375,6 +1376,7 @@ const OrganismIncNavigation = () => {
         </MenuList>
 
         <Setting className="logBtn">
+            {/*v CSS에서  */}
           {isLoggedIn ? (
             // <button onClick={handleLogout}>로그아웃</button>
             <>

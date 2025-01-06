@@ -1,4 +1,4 @@
-//PagePersona4 에서 호출되는 팝업 컴포넌트 
+//인터뷰룸
 import React, { useState, useEffect } from "react";
 import styled, { keyframes, css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
@@ -85,11 +85,13 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
     headers: {
       "Content-Type": "application/json",
     },
-    withCredentials: true,
+    withCredentials: true, //크로스 도메인( 다른 도메인으로 http )요청 시 쿠키 전송 허용
   };
 
+
+  //저장되었던 인터뷰 로드
   useEffect(() => {
-    // 인터뷰 준비 함수
+
     const interviewLoading = async () => {
       // 인터뷰 스크립트 보기, 인터뷰 상세보기로 진입 시 isComplete는 True
       if (isComplete) {
@@ -257,7 +259,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
     setShowRegenerateButton2(false);
     try {
       setIsAnalyzing(true);
-      const finalData1 = {
+      const finalData1 = { 
         business_idea: businessAnalysis,
         persona_info: personaInfoState,
         interview_data: [
@@ -325,7 +327,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
 
       while (retryCount < maxRetries) {
         responseReportAdditional = await axios.post(
-          //추가 보고서 생성 api
+          //추가 보고서 생성 api (기본 보고서의 데이터 포함)
           "https://wishresearch.kr/person/interview_report_additional",
           finalData2,
           axiosConfig
@@ -520,8 +522,9 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               ],
             }));
 
+
+// 한 질문에 대한 모든 페르소나의 답변이 완료되면 interviewData 업데이트
             if (i === personaList.selected.length - 1) {
-              // 한 질문에 대한 모든 페르소나의 답변이 완료되면 interviewData 업데이트
               setInterviewData((prev) => {
                 const newData = [...(prev || [])];
                 newData[currentQuestionIndex] = {

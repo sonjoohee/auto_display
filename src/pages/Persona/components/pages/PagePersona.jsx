@@ -1,3 +1,4 @@
+//persona step 1 비즈니스 분석
 import React, { useEffect, useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import styled, { css } from "styled-components";
@@ -64,6 +65,7 @@ const PagePersona = () => {
 
   const [isLoadingPage, setIsLoadingPage] = useState(true);
 
+  //let's start now 페이지 진행 상황 표시
   const [steps, setSteps] = useState([
     { number: 1, label: "비즈니스 분석", active: true },
     { number: 2, label: "맞춤 페르소나 추천", active: false },
@@ -141,6 +143,7 @@ const PagePersona = () => {
         <MainContent>
           <AnalysisWrap>
             <MainSection>
+              {/* 비즈니스 분석 첫번째 카드 */}
               <OrganismBusinessAnalysis
                 personaStep={1}
                 newProjectId={newProjectId}

@@ -1,3 +1,4 @@
+//산업별 인기 페르소나 카드
 import React, { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";

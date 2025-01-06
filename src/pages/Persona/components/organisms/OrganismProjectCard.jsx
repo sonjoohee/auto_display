@@ -17,6 +17,7 @@ import { Button } from "../../../../assets/styles/ButtonStyle";
 import { Badge } from "../../../../assets/styles/Badge";
 import images from "../../../../assets/styles/Images";
 
+//pagemyproject에서 props받아옴
 const OrganismProjectCard = ({ project, index }) => {
   const [
     reportDescriptionLoadButtonState,

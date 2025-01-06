@@ -1,3 +1,4 @@
+//persona step 2 맞춤 페르소나 추천
 import React, { useEffect, useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import styled, { css } from "styled-components";
@@ -84,7 +85,8 @@ const PagePersona2 = () => {
   );
   const [personaButtonState2, setPersonaButtonState2] = useAtom(
     PERSONA_BUTTON_STATE_2
-  );
+  );//페르소나 생성/로딩 상태 관리 setPersonaButtonState2(0) :  api 호출 완료
+  
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
@@ -211,6 +213,8 @@ const PagePersona2 = () => {
     }
   };
 
+
+  //특정 카테고리에 맞는 페르소나 찾는 api 호출
   useEffect(() => {
     const loadProject = async () => {
       try {

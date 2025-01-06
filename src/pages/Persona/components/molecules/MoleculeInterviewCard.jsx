@@ -1,4 +1,4 @@
-//인터뷰 질문 로드하고 관리
+//인터뷰 목적 선택 
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
