@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import styled, { css, ThemeProvider } from "styled-components";
 import theme from "../../../../assets/styles/Theme";
 import { Link } from "react-router-dom";
@@ -319,6 +319,31 @@ const PageMarketingNoItemsResult = () => {
     setStartY(null);
   };
 
+  const handleShare = async () => {
+    try {
+      // 실제 배포된 도메인으로 변경해야 합니다
+      const shareUrl = `${window.location.origin}/MarketingSetting/Share/${marketingMbtiResult.name}`;
+      
+      await navigator.clipboard.writeText(shareUrl);
+      alert('URL이 클립보드에 복사되었습니다!'); // 사용자에게 복사 성공 알림
+      
+      // navigate(`/MarketingSetting/Share/${marketingMbtiResult.name}`, {
+      //   state: {
+      //     mbtiResult: {
+      //       name: marketingMbtiResult.name,
+      //       category: marketingMbtiResult.category,
+      //       summary: marketingMbtiResult.summary,
+      //       description: marketingMbtiResult.description
+      //     }
+      //   },
+      //   replace: true
+      // });
+    } catch (err) {
+      console.error("Error sharing:", err);
+      alert("URL 복사에 실패했습니다. 다시 시도해주세요.");
+    }
+  };
+
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -381,6 +406,9 @@ const PageMarketingNoItemsResult = () => {
             <div>
               <strong>{marketingMbtiResult.summary}</strong>
               <p>{marketingMbtiResult.description}</p>
+              <ShareButton onClick={handleShare}>
+                결과 공유하기
+              </ShareButton>
             </div>
           </Question>
 
@@ -537,7 +565,7 @@ const PageMarketingNoItemsResult = () => {
                           <span>{marketingMbtiResult.name[1]}</span>
                           {marketingMbtiResult.name[1] === "O"
                             ? "기회 포착형 (Opportunity-driven)"
-                            : "계획 기반형 (Planning-driven)"}
+                            : "계획획 기반형 (Planning-driven)"}
                         </strong>
                         <p>
                           {
@@ -1274,5 +1302,28 @@ const ExitPopup = styled.div`
     > div {
       width: 90%;
     }
+  }
+`;
+
+const ShareButton = styled.button`
+  padding: 16px 48px;
+  background: ${palette.white};
+  color: #5547ff;
+  border: none;
+  border-radius: 50px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 16px;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    padding: 12px 32px;
+    font-size: 1rem;
   }
 `;

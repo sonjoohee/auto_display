@@ -250,7 +250,7 @@ const PagePersona4 = () => {
           );
           const currentReportList = currentProject?.reportList || [];
 
-          await updateProjectOnServer(
+          await updateProjectOnServer( //프로젝트의 리포트 목록 업데이트하기 위해서 (나중에 모든 인터뷰 리포트 이력 확인 할 때 사용)
             projectId,
             {
               reportList: [

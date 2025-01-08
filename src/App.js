@@ -54,6 +54,10 @@ import PagePersona3 from "./pages/Persona/components/pages/PagePersona3";
 import PagePersona4 from "./pages/Persona/components/pages/PagePersona4";
 import PageMyProject from "./pages/Persona/components/pages/PageMyProject";
 
+// 테스트 라우트 추가
+import Test from './pages/Persona/components/pages/Test';
+import PageMarketingNoItemsShare from "./pages/Marketing/components/pages/PageMarketingNoItemsShare";
+
 function App() {
   const [, setIsLoggedIn] = useAtom(IS_LOGGED_IN); // 로그인 상태를 위한 아톰
   const [, setUserName] = useAtom(USER_NAME); // 유저 이름 아톰
@@ -190,6 +194,9 @@ function App() {
             />
           )}
 
+          {/* 테스트 라우트 추가
+        <Route path="/interview-test" element={<InterviewTest />} /> */}
+
           {/* 마케팅 */}
           <Route
             path="/MarketingLanding"
@@ -207,6 +214,14 @@ function App() {
             path="/MarketingSetting/2/Result"
             element={<PageMarketingNoItemsResult />}
           ></Route>
+         
+         
+          {/* 마케팅 쉐어 */}
+         <Route path="/MarketingSetting/Share/:mbtiType" element={<PageMarketingNoItemsShare />} />
+
+          
+           {/* 테스트 라우트 추가 */}
+        <Route path="/interview-test" element={<Test />} />
 
           {/* 페르소나 */}
           <Route path="/Persona" element={<PagePersona />}></Route>

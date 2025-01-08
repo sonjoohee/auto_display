@@ -12,7 +12,7 @@ const MoleculePersonaCard = ({
   gender,
   age,
   job,
-  isBasic = false,
+  isBasic = false, 
   isCustom = false,
   hideCheckCircle = false,
   TitleFlex = false,

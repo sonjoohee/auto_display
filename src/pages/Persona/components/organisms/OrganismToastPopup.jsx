@@ -147,7 +147,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
     interviewLoading();
   }, [personaButtonState3, isComplete]);
 
-  // 인터뷰 질문 생성 함수
+  // 인터뷰 질문 생성 단계 
   const loadInterviewQuestion = async () => {
     setShowRegenerateButton1(false);
     try {
@@ -180,7 +180,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             axiosConfig
           );
 
-          let questionList = response.data;
+          let questionList = response.data; //응답 반환하는 부분 (질문 받아옴)
           let retryCount = 0;
           const maxRetries = 10;
 
@@ -279,7 +279,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
 
       while (retryCount < maxRetries) {
         responseReport = await axios.post(
-          //인터뷰 보고서 생서 api
+          //인터뷰 보고서 생성 api (요약보고서) 
           "https://wishresearch.kr/person/interview_reports",
           finalData1,
           axiosConfig
@@ -327,7 +327,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
 
       while (retryCount < maxRetries) {
         responseReportAdditional = await axios.post(
-          //추가 보고서 생성 api (기본 보고서의 데이터 포함)
+          //추가 보고서 생성 api (기본 보고서의 데이터 포함) (상세보고서 : 인사이트 부분 )
           "https://wishresearch.kr/person/interview_report_additional",
           finalData2,
           axiosConfig
@@ -472,6 +472,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             let retryCount = 0;
             const maxRetries = 10;
 
+            //에러시 실행 
             while (
               retryCount < maxRetries &&
               (!response ||
@@ -508,6 +509,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             const job = profileArray[2].split(": ")[1];
 
             //답변 상태 업데이트 ( 현재 질문에 대한 각 페르소나의 답변 저장 )
+            //각 질문에 대해 모든 페르소나의 답변을 받고 나서야 다음 질문으로 넘어
             setAnswers((prev) => ({
               ...prev,
               [currentQuestionIndex]: [
