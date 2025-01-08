@@ -127,7 +127,7 @@ const PageMarketingNoItemsResult = () => {
   };
 
   const handleExitConfirm = () => {
-    window.location.href = "/MarketingLanding";
+    window.location.href = "/";
   };
 
   const axiosConfig = {
@@ -395,7 +395,6 @@ const PageMarketingNoItemsResult = () => {
                       : marketingMbtiResult.name === "SPTA"
                       ? images.ImgMBTISPTA
                       : ""
-
                   }
                   alt=""
                 />
@@ -511,8 +510,8 @@ const PageMarketingNoItemsResult = () => {
               </ListBox>
 
               <span className="comment">
-                * 위 아이템은 창업 MBTI 결과를 기반으로 구성되었으며, 현실에 없는
-                아이템이 포함될 수 있습니다.
+                * 위 아이템은 창업 MBTI 결과를 기반으로 구성되었으며, 현실에
+                없는 아이템이 포함될 수 있습니다.
               </span>
             </ResultWrap>
           </Answer>
@@ -689,7 +688,7 @@ const Question = styled.div`
       line-height: 1.2;
 
       img {
-        max-width:100px;
+        max-width: 100px;
       }
     }
 
@@ -741,7 +740,7 @@ const Question = styled.div`
           props.questionFlex === "1 1 10%" ? "none" : "block"};
 
         img {
-          max-width:100%;
+          max-width: 100%;
         }
       }
     }
@@ -1020,7 +1019,7 @@ const Popup = styled.div`
     overflow-y: auto; // 내용이 넘칠 경우 스크롤 추가
     // max-height: calc(90vh - 64px);
     // max-height:570px;
-    max-height:40dvh;
+    max-height: 40dvh;
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
@@ -1033,7 +1032,7 @@ const Popup = styled.div`
       height: 83%;
       // padding:56px 0 0;
       // padding: 56px 0 84px;
-      padding:20px 0 84px;
+      padding: 20px 0 84px;
       overflow: hidden;
       border-radius: 20px 20px 0 0;
     }
@@ -1047,7 +1046,7 @@ const Popup = styled.div`
       padding: 0 20px;
       gap: 16px;
       padding-bottom: 32px;
-      padding-top:30px;
+      padding-top: 30px;
 
       h5 {
         font-size: 1.13rem;
