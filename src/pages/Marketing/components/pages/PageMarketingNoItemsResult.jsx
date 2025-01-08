@@ -127,7 +127,7 @@ const PageMarketingNoItemsResult = () => {
   };
 
   const handleExitConfirm = () => {
-    window.location.href = "/";
+    window.location.href = "/MarketingLanding";
   };
 
   const axiosConfig = {
@@ -323,10 +323,10 @@ const PageMarketingNoItemsResult = () => {
     try {
       // 실제 배포된 도메인으로 변경해야 합니다
       const shareUrl = `${window.location.origin}/MarketingSetting/Share/${marketingMbtiResult.name}`;
-      
+
       await navigator.clipboard.writeText(shareUrl);
-      alert('URL이 클립보드에 복사되었습니다!'); // 사용자에게 복사 성공 알림
-      
+      alert("URL이 클립보드에 복사되었습니다!"); // 사용자에게 복사 성공 알림
+
       // navigate(`/MarketingSetting/Share/${marketingMbtiResult.name}`, {
       //   state: {
       //     mbtiResult: {
@@ -347,6 +347,12 @@ const PageMarketingNoItemsResult = () => {
   return (
     <>
       <ThemeProvider theme={theme}>
+        <Navbar>
+          <h1 className="pc" onClick={() => setIsExitPopupOpen(true)}>
+            <img src={images.SymbolLogoWhite} alt="" />
+          </h1>
+          <h1 className="mobile" onClick={() => setIsExitPopupOpen(true)}></h1>
+        </Navbar>
         <QuestionWrap>
           <Question
             // style={{ flex: questionFlex }}
@@ -405,9 +411,7 @@ const PageMarketingNoItemsResult = () => {
             <div>
               <strong>{marketingMbtiResult.summary}</strong>
               <p>{marketingMbtiResult.description}</p>
-              <ShareButton onClick={handleShare}>
-                결과 공유하기
-              </ShareButton>
+              <ShareButton onClick={handleShare}>결과 공유하기</ShareButton>
             </div>
           </Question>
 
@@ -650,6 +654,89 @@ const PageMarketingNoItemsResult = () => {
 };
 
 export default PageMarketingNoItemsResult;
+
+const Navbar = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 40px;
+  transform: translateY(-50%);
+  height: calc(100vh - 40px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.5s;
+  z-index: 99;
+
+  h1 {
+    font-size: 0;
+    cursor: pointer;
+
+    &.mobile {
+      display: none;
+    }
+  }
+
+  ul {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  li {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    font-size: 0;
+    box-sizing: border-box;
+    border-radius: 100%;
+    background: ${palette.white};
+    cursor: pointer;
+
+    &.active {
+      border: 2px solid ${palette.white};
+      background: none;
+    }
+
+    &.disabled {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    &:nth-child(1) {
+      display: none;
+    }
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    top: 10px;
+    left: 6px;
+    transform: none;
+    height: auto;
+
+    h1 {
+      &.pc {
+        display: none;
+      }
+
+      &.mobile {
+        display: block;
+        padding: 10px;
+
+        &:before {
+          width: 13px;
+          height: 13px;
+          transform: rotate(45deg);
+          display: block;
+          border-left: 3px solid ${palette.white};
+          border-bottom: 3px solid ${palette.white};
+          content: "";
+        }
+      }
+    }
+  }
+`;
 
 const QuestionWrap = styled.section`
   position: relative;

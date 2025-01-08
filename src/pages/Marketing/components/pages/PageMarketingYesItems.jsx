@@ -125,7 +125,7 @@ const PageMarketingYesItems = () => {
   };
 
   const handleExitConfirm = () => {
-    window.location.href = "/";
+    window.location.href = "/MarketingLanding";
   };
 
   const scrollableSectionRef = useRef(null);
