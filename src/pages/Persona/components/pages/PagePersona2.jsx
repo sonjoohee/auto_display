@@ -39,6 +39,7 @@ import {
   CustomAccordionHeader,
   CustomAccordionIcon,
   CustomAccordionContent,
+  BackgroundBox,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
@@ -767,6 +768,11 @@ const PagePersona2 = () => {
               ) : (
                 <CardWrap>
                   <>
+                  <BackgroundBox>
+                    <strong>추천 페르소나</strong>
+                    <p>관련 산업과 비즈니스에 딱 맞는 페르소나를 추천드려요. 지금 바로 대화하며 새로운 인사이트를 발견해보세요</p>
+                  </BackgroundBox>
+
                     <CustomizePersona>
                       <Title Column>
                         <Body2>비즈니스 맞춤 페르소나</Body2>
@@ -973,6 +979,7 @@ const PagePersona2 = () => {
               )}
             </MainSection>
 
+            {/* 
             <Sidebar>
               <h5>Discover Your Persona</h5>
 
@@ -984,6 +991,7 @@ const PagePersona2 = () => {
 
               <MoleculeStepIndicator steps={steps} activeStep={2} />
             </Sidebar>
+             */}
           </AnalysisWrap>
         </MainContent>
       </ContentsWrap>

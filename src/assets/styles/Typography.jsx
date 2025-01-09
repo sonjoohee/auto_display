@@ -93,7 +93,7 @@ export const Body3 = styled.p`
 
 // Sub1
 export const Sub1 = styled.div`
-  font-size: 0.875rem;
+  font-size: 0.88rem;
   font-weight: 600;
   line-height: 1.55;
   color: ${(props) => palette[props.color] || "inherit"};
@@ -102,7 +102,7 @@ export const Sub1 = styled.div`
 
 // Sub2_1
 export const Sub2_1 = styled.div`
-  font-size: 0.875rem;
+  font-size: 0.88rem;
   font-weight: 500;
   line-height: 1.55;
   color: ${(props) => palette[props.color] || "inherit"};
@@ -111,7 +111,7 @@ export const Sub2_1 = styled.div`
 
 // Sub2
 export const Sub2 = styled.div`
-  font-size: 0.875rem;
+  font-size: 0.88rem;
   font-weight: 500;
   line-height: 1.55;
   color: ${(props) => palette[props.color] || "inherit"};
@@ -120,7 +120,7 @@ export const Sub2 = styled.div`
 
 // Sub3
 export const Sub3 = styled.div`
-  font-size: 0.875rem;
+  font-size: 0.88rem;
   font-weight: 500;
   line-height: 1.55;
   color: ${(props) => palette[props.color] || "inherit"};

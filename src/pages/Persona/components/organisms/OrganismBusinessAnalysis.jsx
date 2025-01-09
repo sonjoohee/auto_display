@@ -30,7 +30,8 @@ import PopupWrap from "../../../../assets/styles/Popup";
 import AtomPersonaLoader from "../atoms/AtomPersonaLoader";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import MoleculeRecreate from "../molecules/MoleculeRecreate";
-import { Body2 } from "../../../../assets/styles/Typography";
+import { Body2, Body3, H5 } from "../../../../assets/styles/Typography";
+import { Tag } from "../../../../assets/styles/BusinessAnalysisStyle";
 
 const OrganismBusinessAnalysis = ({ personaStep }) => {
   const [isLoadingBusinessAnalysis, setIsLoadingBusinessAnalysis] = useAtom(
@@ -726,7 +727,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
       ) : (
         <Card>
           <CardTitle>
-            <h2>{businessAnalysis.title}</h2>
+            <H5>{businessAnalysis.title}</H5>
             <TagWrap>
               <Tag color={categoryColor.first} />
               <Tag color={categoryColor.second} />
@@ -743,7 +744,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
           </CardTitle>
           {showCardContent && (
             <CardContent>
-              <p>{businessAnalysis.characteristics}</p>
+              <Body3>{businessAnalysis.characteristics}</Body3>
             </CardContent>
           )}
         </Card>
@@ -972,191 +973,6 @@ const TagWrap = styled.div`
   gap: 8px;
 `;
 
-const Tag = styled.span`
-  font-size: 0.88rem;
-  line-height: 1.5;
-  padding: 4px 12px;
-  border-radius: 15px;
-
-  &::before {
-    content: "${(props) => {
-      switch (props.color) {
-        case "Red":
-          return "광고, 마케팅";
-        case "LavenderMagenta":
-          return "교육";
-        case "Amethyst":
-          return "금융, 보험, 핀테크";
-        case "VistaBlue":
-          return "게임";
-        case "BlueYonder":
-          return "모빌리티, 교통";
-        case "MidnightBlue":
-          return "물류";
-        case "ButtonBlue":
-          return "부동산, 건설";
-        case "ButtonBlue":
-          return "뷰티, 화장품";
-        case "MiddleBlueGreen":
-          return "AI, 딥테크, 블록체인";
-        case "GreenSheen":
-          return "소셜미디어, 커뮤니티";
-        case "TropicalRainForest":
-          return "여행, 레저";
-        case "DollarBill":
-          return "유아 출산";
-        case "Olivine":
-          return "인사, 비즈니스, 법률";
-        case "ChineseGreen":
-          return "제조, 하드웨어";
-        case "Jonquil":
-          return "커머스";
-        case "PastelOrange":
-          return "콘텐츠, 예술";
-        case "Tangerine":
-          return "통신, 보안, 데이터";
-        case "Copper":
-          return "패션";
-        case "Shadow":
-          return "푸드, 농업";
-        case "Tuscany":
-          return "환경, 에너지";
-        case "VeryLightTangelo":
-          return "홈 리빙, 펫";
-        case "Orange":
-          return "헬스케어, 바이오";
-        case "CarnationPink":
-          return "피트니스, 스포츠";
-        default:
-          return "";
-      }
-    }}";
-  }
-
-  ${({ color }) => {
-    switch (color) {
-      case "Red":
-        return `
-          color: #E90102;
-          background: rgba(233, 1, 2, 0.06);
-        `;
-      case "LavenderMagenta":
-        return `
-          color: #ED7EED;
-          background: rgba(237, 126, 237, 0.06);
-        `;
-      case "Amethyst":
-        return `
-          color: #8B61D1;
-          background: rgba(139, 97, 209, 0.06);
-        `;
-      case "VistaBlue":
-        return `
-          color: #8B61D1;
-          background: rgba(125, 140, 225, 0.06);
-        `;
-      case "BlueYonder":
-        return `
-          color: #8B61D1;
-          background: rgba(84, 113, 171, 0.06);
-        `;
-      case "MidnightBlue":
-        return `
-          color: #03458F;
-          background: rgba(3, 69, 143, 0.06);
-        `;
-      case "ButtonBlue":
-        return `
-          color: #20B1EA;
-          background: rgba(32, 177, 234, 0.06);
-        `;
-      case "CeruleanFrost":
-        return `
-          color: #5E9EBF;
-          background: rgba(94, 158, 191, 0.06);
-        `;
-      case "MiddleBlueGreen":
-        return `
-          color: #7DCED2;
-          background: rgba(125, 206, 210, 0.06);
-
-        `;
-      case "GreenSheen":
-        return `
-          color: #74B49C;
-          background: rgba(116, 180, 156, 0.06);
-        `;
-      case "TropicalRainForest":
-        return `
-          color: #027355;
-          background: rgba(2, 115, 85, 0.06);
-        `;
-      case "DollarBill":
-        return `
-          color: #8DC955;
-          background: rgba(141, 201, 85, 0.06);
-        `;
-      case "Olivine":
-        return `
-          color: #AABC76;
-          background: rgba(170, 188, 118, 0.06);
-        `;
-      case "ChineseGreen":
-        return `
-          color: #C7D062;
-          background: rgba(199, 208, 98, 0.06);
-        `;
-      case "Jonquil":
-        return `
-          color: #F7CD17;
-          background: rgba(247, 205, 23, 0.06);
-        `;
-      case "PastelOrange":
-        return `
-          color: #FFBB52;
-          background: rgba(255, 187, 82, 0.06);
-        `;
-      case "Tangerine":
-        return `
-          color: #F48D0B;
-          background: rgba(244, 141, 11, 0.06);
-        `;
-      case "Copper":
-        return `
-          color: #BC742F;
-          background: rgba(188, 116, 47, 0.06);
-        `;
-      case "Shadow":
-        return `
-          color: #8C725B;
-          background: rgba(140, 114, 91, 0.06);
-        `;
-      case "Tuscany":
-        return `
-          color: #B1A098;
-          background: rgba(177, 160, 152, 0.06);
-        `;
-      case "VeryLightTangelo":
-        return `
-          color: #FAAD80;
-          background: rgba(250, 173, 128, 0.06);
-        `;
-      case "Orange":
-        return `
-          color: #FC6602;
-          background: rgba(252, 102, 2, 0.06);
-        `;
-      case "CarnationPink":
-        return `
-          color: #FFA8B9;
-          background: rgba(255, 168, 185, 0.06);
-        `;
-      default:
-        return "display: none;";
-    }
-  }}
-`;
-
 const ToggleButton = styled.button`
   position: absolute;
   right: 0;
@@ -1194,8 +1010,8 @@ const ToggleButton = styled.button`
 `;
 
 const CardContent = styled.div`
-  font-weight: 300;
-  line-height: 1.5;
+  // font-weight: 300;
+  // line-height: 1.5;
   color: ${palette.gray800};
   text-align: left;
 

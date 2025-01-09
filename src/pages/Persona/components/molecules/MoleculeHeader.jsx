@@ -4,6 +4,7 @@ import styled, { css } from "styled-components";
 import { Link, useLocation } from "react-router-dom";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
+import { Body2 } from "../../../../assets/styles/Typography";
 import { useAtom } from "jotai";
 import { BUSINESS_ANALYSIS, PERSONA_STEP } from "../../../AtomStates";
 
@@ -31,12 +32,15 @@ const MoleculeHeader = () => {
     <>
     <HeaderWrap>
       {personaStep > 0 && (
-        <h1>
+        <Title>
           {businessAnalysis.title ? businessAnalysis.title : "새로운 프로젝트"}
-        </h1>
+        </Title>
       )}
 
       <div className="gnb">
+        <div>
+          <img src={images.ChatSquareDots} alt="" />
+        </div>
         <Notify Alarm onClick={handleAlertToggle}>
           <img src={images.IconBell} alt="" />
         </Notify>
@@ -130,6 +134,12 @@ const HeaderWrap = styled.div`
     border-radius: 100px;
     background: ${palette.gray200};
   }
+`;
+
+const Title = styled(Body2)`
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 `;
 
 const Notify = styled.div`

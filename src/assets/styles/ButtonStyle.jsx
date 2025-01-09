@@ -44,6 +44,20 @@ export const Button = styled.button`
     border-radius: 70px;
   `}
 
+  ${props => props.PrimaryLightest && props.Fill && css`
+    color: ${palette.primary};
+    background: ${palette.primaryLightest};
+
+    &:hover {
+      background: ${palette.primaryLightest};
+    }
+
+    &:disabled {
+      background: ${palette.primaryLightest};
+      cursor: not-allowed;
+    }
+  `}
+
   ${props => props.Primary && props.Fill && css`
     color: ${palette.white};
     background: ${palette.primary};

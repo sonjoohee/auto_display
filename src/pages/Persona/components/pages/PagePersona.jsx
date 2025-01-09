@@ -29,6 +29,7 @@ import {
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
 import { Button } from "../../../../assets/styles/ButtonStyle";
+import { Body2 } from "../../../../assets/styles/Typography";
 import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
 import MoleculeHeader from "../molecules/MoleculeHeader";
 import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
@@ -152,13 +153,13 @@ const PagePersona = () => {
                 {/* 맞춤 페르소나 생성 */}
                 {personaButtonState1 === 0 && !isEditMode && !isLoadingBusinessAnalysis && (
                   <CreateCard>
-                    <p>
+                    <Body2>
                       <img src={images.PeopleChatSquareFill} alt="" />
                       나의 비즈니스 고객은 누구일까요? 그리고 어떤 생각을 하고
                       있을까요?
                       <br />
                       당신의 타겟 고객에게 바로 물어보세요
-                    </p>
+                    </Body2>
 
                     <Button
                       Medium
@@ -174,6 +175,7 @@ const PagePersona = () => {
                 )}
               </CardWrap>
             </MainSection>
+            {/* 
             <Sidebar>
               <h5>Let's Start Now</h5>
 
@@ -185,6 +187,7 @@ const PagePersona = () => {
 
               <MoleculeStepIndicator steps={steps} activeStep={1} />
             </Sidebar>
+             */}
           </AnalysisWrap>
         </MainContent>
       </ContentsWrap>
@@ -208,12 +211,12 @@ const CreateCard = styled(Card)`
   align-items: center;
   padding: 44px 24px;
 
-  p {
+  div {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 16px;
-    line-height: 1.5;
+    // line-height: 1.5;
     color: ${palette.gray500};
   }
 `;
