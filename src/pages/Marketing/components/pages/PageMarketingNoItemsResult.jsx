@@ -430,6 +430,7 @@ const PageMarketingNoItemsResult = () => {
               <div className="info">
                 <strong>{marketingMbtiResult.summary}</strong>
                 <p>{marketingMbtiResult.description}</p>
+                <ShareButton onClick={handleShare}>결과 공유하기</ShareButton>
               </div>
 
               <div className="title">
