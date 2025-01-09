@@ -1207,8 +1207,9 @@ const Title = styled.h1`
     props.isMobile ? "40px auto 30px" : "120px auto 55px"}; */
 
   p {
-    font-size: ${(props) => (props.isMobile ? "0.75rem" : "0.875rem")};
-    font-weight: 300;
+    font-size: ${(props) => (props.isMobile ? "0.75rem" : "0.88rem")};
+    font-weight: 400;
+    line-height: 1.5;
   }
 `;
 
@@ -1276,7 +1277,7 @@ const InputWrap = styled.div`
     background: #f5f9ff;
 
     p {
-      font-size: 0.875rem;
+      font-size: 0.88rem;
       font-weight: 300;
       color: ${palette.gray300};
       line-height: 1.5;

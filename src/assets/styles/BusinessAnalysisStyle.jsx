@@ -32,7 +32,8 @@ export const MainContent = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  max-width: 1024px;
+  max-width: 816px;
+  // max-width: 1024px;
   // min-height: 100vh;
   width: 100%;
   justify-content: flex-start;
@@ -1308,3 +1309,27 @@ export const TypeButton = styled.button`
     };
   `}
 `;
+
+export const BackgroundBox = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start !important;
+  gap: 4px !important;
+  padding: 20px 32px;
+  border-radius: 15px;
+  background-color: ${palette.chatGray};
+
+  strong {
+    font-weight: 600;
+    color: ${palette.gray800};
+  }
+
+  p {
+    font-size: 0.88rem;
+    color: ${palette.gray500};
+    line-height: 1.55;
+  }
+`;
+
+

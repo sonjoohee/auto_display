@@ -39,13 +39,15 @@ import {
   CardTitle,
   CardButton,
   ViewType,
-  TypeButton
+  TypeButton,
+  BackgroundBox
 } from "../../assets/styles/BusinessAnalysisStyle";
 import PopupWrap from "../../assets/styles/Popup";
 import { SkeletonH1, SkeletonTitle, SkeletonLine } from "../../assets/styles/Skeleton";
 import AtomPersonaLoader from "../Persona/components/atoms/AtomPersonaLoader";
 import images from "../../assets/styles/Images";
 import personaImages from "../../assets/styles/PersonaImages";
+import BarChart from '../../components/Charts/BarChart';
 
 const PageStyleGuide  = () => {
   const [activeSection, setActiveSection] = useState('');
@@ -122,6 +124,8 @@ const PageStyleGuide  = () => {
         <a href="#bottombar" onClick={scrollToSection}>BottomBar</a>
         <a href="#personas" onClick={scrollToSection}>Personas</a>
         <a href="#listgroup" onClick={scrollToSection}>ListGroup</a>
+        <a href="#barChart" onClick={scrollToSection}>BarChart</a>
+        <a href="#backgroundbox" onClick={scrollToSection}>Background Box</a>
       </Header>
 
       <ContentsWrap>
@@ -335,12 +339,14 @@ const PageStyleGuide  = () => {
             채움버튼을 사용시, Primary 속성을 적용해야 합니다.<br />
             채움 버튼 : Fill
             <CodeBlock>
-              {'<Button Primary Fill>바로가기</Button>'}
+              {`<Button Primary Fill>바로가기</Button>
+<Button Small PrimaryLightest Fill>채움 버튼</Button>`}
             </CodeBlock>
           </Note>
 
           <FlexBox>
             <Button Small Primary Fill>채움 버튼</Button>
+            <Button Small PrimaryLightest Fill>채움 버튼</Button>
           </FlexBox>
 
           <Sub1>5. Disabled</Sub1>
@@ -1245,7 +1251,7 @@ onChange={() => setSelectedRadio2('gender1')}
               </ListBoxItem>
             </CardGroupWrap>
           </FlexBox>
-{/* 
+
 
           <Sub1>2. 카드 형</Sub1>
           <Note>
@@ -1278,6 +1284,7 @@ onChange={() => setSelectedRadio2('gender1')}
 </CardGroupWrap>`}
             </CodeBlock>
           </Note>
+
           <FlexBox>
             <CardGroupWrap>
               <CardListItem>
@@ -1376,7 +1383,45 @@ onChange={() => setSelectedRadio2('gender1')}
               </CardListItem>
             </CardGroupWrap>
           </FlexBox>
-           */}
+        </div>
+
+        <div id="barChart">
+          <h2>Bar Chart</h2>
+
+          <FlexBox>
+            <BarChart />
+          </FlexBox>
+        </div>
+
+        <div id="backgroundbox">
+          <h2>Background Box</h2>
+          <Note>
+            안에 내용은 별도로 작성해주세요.<br />
+            기본형은 strong과 p를 사용해주세요.
+            <CodeBlock>
+              {`<BackgroundBox>
+  <strong>추천 페르소나</strong>
+  <p>관련 산업과 비즈니스에 딱 맞는 페르소나를 추천드려요. 지금 바로 대화하며 새로운 인사이트를 발견해보세요</p>
+</BackgroundBox>
+
+<BackgroundBox>
+  <Body2>추천 페르소나</Body2>
+  <Sub3>관련 산업과 비즈니스에 딱 맞는 페르소나를 추천드려요. 지금 바로 대화하며 새로운 인사이트를 발견해보세요</Sub3>
+</BackgroundBox>`}
+            </CodeBlock>
+          </Note>
+
+          <FlexBox column>
+            <BackgroundBox>
+              <strong>추천 페르소나</strong>
+              <p>관련 산업과 비즈니스에 딱 맞는 페르소나를 추천드려요. 지금 바로 대화하며 새로운 인사이트를 발견해보세요</p>
+            </BackgroundBox>
+
+            <BackgroundBox>
+              <Body2>추천 페르소나</Body2>
+              <Sub3>관련 산업과 비즈니스에 딱 맞는 페르소나를 추천드려요. 지금 바로 대화하며 새로운 인사이트를 발견해보세요</Sub3>
+            </BackgroundBox>
+          </FlexBox>
         </div>
       </ContentsWrap>
     </>
@@ -1392,6 +1437,7 @@ const Header = styled.div`
   width: 100%;
   display: flex;
   justify-content: flex-start;
+  flex-wrap: wrap;
   gap: 10px;
   padding: 10px 30px;
   border-bottom: 1px solid ${palette.lineGray};
@@ -1438,7 +1484,9 @@ const ContentsWrap = styled.div`
   #popup > h2,
   #bottombar > h2,
   #personas > h2,
-  #listgroup > h2 {
+  #listgroup > h2,
+  #barChart > h2,
+  #backgroundbox > h2 {
     font-size: 1.25rem;
     font-weight: 700;
     text-align:left;

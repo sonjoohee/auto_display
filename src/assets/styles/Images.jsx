@@ -170,6 +170,7 @@ import ImgMBTISPTA from "../images/ImgMBTI_SPTA.png"
 import IconBell from "../images/bell.svg"
 import IconRepeatSquare from "../images/repeat-square.svg"
 import PeopleChatSquareFill from "../images/people-chat-square-fill.svg"
+import ChatSquareDots from "../images/chat-square-dots.svg"
 import MagicStick from "../images/magic-stick.svg"
 import MagicStickFillWhite from "../images/magic-stick-fill-white.svg"
 import NotePencil from "../images/note-pencil.svg"
@@ -396,6 +397,7 @@ const images = {
   IconBell,
   IconRepeatSquare,
   PeopleChatSquareFill,
+  ChatSquareDots,
   MagicStick,
   MagicStickFillWhite,
   NotePencil,
