@@ -28,6 +28,7 @@ import {
 import axios from "axios";
 import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
 import PopupWrap from "../../../../assets/styles/Popup";
+import { Button } from "../../../../assets/styles/ButtonStyle";
 
 const PageMarketingNoItemsResult = () => {
   const navigate = useNavigate();
@@ -401,7 +402,7 @@ const PageMarketingNoItemsResult = () => {
             <div>
               <strong>{marketingMbtiResult.summary}</strong>
               <p>{marketingMbtiResult.description}</p>
-              <ShareButton onClick={handleShare}>결과 공유하기</ShareButton>
+              <CustomButton DbExLarge PrimaryLightest Fill onClick={handleShare}>결과 공유하기</CustomButton>
             </div>
           </Question>
 
@@ -860,6 +861,11 @@ const Question = styled.div`
       }
     `}
   }
+`;
+
+const CustomButton = styled(Button)`
+  color: #5547ff;
+  background: rgba(85, 71, 255, .05);
 `;
 
 const Answer = styled.div`
