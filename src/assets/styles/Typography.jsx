@@ -56,7 +56,7 @@ export const H6 = styled.h6`
 `;
 
 // Body1
-export const Body1 = styled.strong`
+export const Body1 = styled.div`
   font-size: 1rem;
   font-weight: 700;
   line-height: 1.55;
@@ -68,7 +68,7 @@ export const Body1 = styled.strong`
 export const Body2_1 = styled.strong`
   font-size: 1rem;
   font-weight: 500;
-  line-height: 1.3;
+  line-height: 1.55;
   color: ${(props) => palette[props.color] || "inherit"};
   letter-spacing: -0.48px;
 `;
@@ -121,7 +121,7 @@ export const Sub2 = styled.div`
 // Sub3
 export const Sub3 = styled.div`
   font-size: 0.88rem;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1.55;
   color: ${(props) => palette[props.color] || "inherit"};
   letter-spacing: -0.42px;
@@ -158,7 +158,7 @@ export const InputText = styled.div`
 export const Helptext = styled.div`
   font-size: 0.63rem;
   font-weight: 400;
-  line-height: 1.5;
+  line-height: 1.2;
   color: ${(props) => palette[props.color] || "inherit"};
   letter-spacing: -0.3px;
 `;

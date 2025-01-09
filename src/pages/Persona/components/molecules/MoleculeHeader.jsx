@@ -4,7 +4,7 @@ import styled, { css } from "styled-components";
 import { Link, useLocation } from "react-router-dom";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
-import { Body2 } from "../../../../assets/styles/Typography";
+import { Body2, Sub2 } from "../../../../assets/styles/Typography";
 import { useAtom } from "jotai";
 import { BUSINESS_ANALYSIS, PERSONA_STEP } from "../../../AtomStates";
 
@@ -38,9 +38,9 @@ const MoleculeHeader = () => {
       )}
 
       <div className="gnb">
-        <div>
-          <img src={images.ChatSquareDots} alt="" />
-        </div>
+        <Sub2>
+          서비스 소개
+        </Sub2>
         <Notify Alarm onClick={handleAlertToggle}>
           <img src={images.IconBell} alt="" />
         </Notify>

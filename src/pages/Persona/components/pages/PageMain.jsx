@@ -137,7 +137,8 @@ import {
   PROJECT_REFRESH_TRIGGER,
   IS_LOADING_BUSINESS_ANALYSIS,
 } from "../../../AtomStates";
-import { Body1, Body3, Caption2 } from "../../../../assets/styles/Typography";
+import { ContentsWrap } from "../../../../assets/styles/BusinessAnalysisStyle";
+import { Body1, Body3, Sub3, Caption1, Caption2 } from "../../../../assets/styles/Typography";
 import { CustomTextarea } from "../../../../assets/styles/InputStyle";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
@@ -900,7 +901,7 @@ const PageMain = () => {
                 </button>
               </div>
               <div className="maxLetter">
-                <p>현재 서비스는 B2C 비즈니스에 특화되어 있습니다</p>
+                <Sub3 color="gray300">현재 서비스는 B2C 비즈니스에 특화되어 있습니다</Sub3>
                 <span id="letterCount">
                   {businessAnalysis.input.length}/300
                 </span>
@@ -918,7 +919,7 @@ const PageMain = () => {
                 }}
               >
                 <Body1>전략 컨설턴트</Body1>
-                <Caption2>차별화 전략과 리스트 분석 제시</Caption2>
+                <Caption1 color="gray500">차별화 전략과 리스트 분석 제시</Caption1>
                 <span>
                   <img src={images.ImgStrategy} alt="" />
                 </span>
@@ -931,11 +932,11 @@ const PageMain = () => {
                 }}
               >
                 <Body1>그로스 해커</Body1>
-                <Caption2>
+                <Caption1 color="gray500">
                   고객 여정을 분석하여, 마케팅
                   <br />
                   퍼널별 전략 제시
-                </Caption2>
+                </Caption1>
                 <span>
                   <img src={images.ImgHacker} alt="" />
                 </span>
@@ -948,11 +949,11 @@ const PageMain = () => {
                 }}
               >
                 <Body1>가격 분석 전문가</Body1>
-                <Caption2>
+                <Caption1 color="gray500">
                   시장 데이터를 기반으로 최적의
                   <br />
                   가격 전략 제시 (제품 한정)
-                </Caption2>
+                </Caption1>
                 <span>
                   <img src={images.ImgPrice} alt="" />
                 </span>
@@ -966,7 +967,7 @@ const PageMain = () => {
                 }}
               >
                 <Body1>BM 전문가</Body1>
-                <Caption2>비즈니스 모델 설계 및 최적화</Caption2>
+                <Caption1 color="gray500">비즈니스 모델 설계 및 최적화</Caption1>
                 <span>
                   <img src={images.ImgBM} alt="" />
                 </span>
@@ -977,7 +978,7 @@ const PageMain = () => {
                   <span>
                     <img src={images.ImgComing} alt="" />
                   </span>
-                  <Caption2>coming soon</Caption2>
+                  <Caption1 color="gray500">coming soon</Caption1>
                 </div>
               </ExpertCard>
             </ExpertSelectBox>
@@ -1159,16 +1160,7 @@ const PageMain = () => {
 
 export default PageMain;
 
-// 스타일 정의는 기존대로 유지
-const ContentsWrap = styled.div`
-  position: relative;
-  // width: ${(props) => (props.isMobile ? "100%" : "calc(100% - 40px)")};
-  width: 100%;
-  display: flex;
-  flex-direction: ${(props) => (props.isMobile ? "column" : "row")};
-  gap: ${(props) => (props.isMobile ? "20px" : "40px")};
-  padding: ${(props) => (props.isMobile ? "20px" : "0")};
-`;
+
 
 const MainContent = styled.div`
   display: flex;
@@ -1214,7 +1206,7 @@ const Title = styled.h1`
 `;
 
 const InputWrap = styled.div`
-  max-width: ${(props) => (props.isMobile ? "100%" : "610px")};
+  max-width: ${(props) => (props.isMobile ? "100%" : "616px")};
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -1417,8 +1409,7 @@ const ExpertCard = styled.div`
     border: 1px solid ${palette.blue};
     background: ${palette.blue};
 
-    p,
-    strong {
+    div {
       color: ${palette.white};
     }
   }

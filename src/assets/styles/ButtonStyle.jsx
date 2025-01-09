@@ -122,7 +122,7 @@ export const Button = styled.button`
     }
 
     &:hover {
-      background-color: rgba(34, 111, 255, 0.10);
+      background-color: rgba(34, 111, 255, 0.1);
     }
   `}
 
