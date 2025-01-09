@@ -28,6 +28,7 @@ import {
 import axios from "axios";
 import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
 import PopupWrap from "../../../../assets/styles/Popup";
+import html2canvas from 'html2canvas';
 
 const PageMarketingNoItemsResult = () => {
   const navigate = useNavigate();
@@ -323,13 +324,66 @@ const PageMarketingNoItemsResult = () => {
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
 
-  const handleShare = async () => {
+  const captureAndShare = async () => {
     try {
-      const shareUrl = `${window.location.origin}/MarketingSetting/Share/${marketingMbtiResult.name}`;
-      await navigator.clipboard.writeText(shareUrl);
-      setShowSuccessPopup(true);
+      const questionElement = document.querySelector('.capture-area');
+      
+      // 버튼 요소를 일시적으로 숨김
+      const shareButton = questionElement.querySelector('button');
+      if (shareButton) {
+        shareButton.style.display = 'none';
+      }
+
+      const canvas = await html2canvas(questionElement, {
+        backgroundColor: '#5547ff',
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        allowTaint: true,
+      });
+      
+      // 버튼을 다시 보이게 함
+      if (shareButton) {
+        shareButton.style.display = '';
+      }
+      
+      const image = canvas.toDataURL('image/png', 1.0);
+      
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      
+      try {
+        if (isMobile && navigator.share) {
+          const blob = await (await fetch(image)).blob();
+          const file = new File([blob], `${marketingMbtiResult.name}_result.png`, { type: 'image/png' });
+          
+          await navigator.share({
+            files: [file],
+            title: '창업 MBTI 결과',
+            text: `나의 창업 MBTI는 ${marketingMbtiResult.name}입니다!`,
+          });
+        } else {
+          const link = document.createElement('a');
+          link.href = image;
+          link.download = `${marketingMbtiResult.name}_result.png`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+        
+        const shareUrl = `${window.location.origin}/MarketingSetting/Share/${marketingMbtiResult.name}`;
+        await navigator.clipboard.writeText(shareUrl);
+        setShowSuccessPopup(true);
+      } catch (shareError) {
+        const link = document.createElement('a');
+        link.href = image;
+        link.download = `${marketingMbtiResult.name}_result.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setShowSuccessPopup(true);
+      }
     } catch (err) {
-      console.error("Error sharing:", err);
+      console.error("Error capturing or sharing:", err);
       setShowErrorPopup(true);
     }
   };
@@ -345,7 +399,7 @@ const PageMarketingNoItemsResult = () => {
         </Navbar>
         <QuestionWrap>
           <Question
-            // style={{ flex: questionFlex }}
+            className="capture-area"
             style={{
               flex: isMobile ? questionFlex : "1 1 50%",
             }}
@@ -401,7 +455,7 @@ const PageMarketingNoItemsResult = () => {
             <div>
               <strong>{marketingMbtiResult.summary}</strong>
               <p>{marketingMbtiResult.description}</p>
-              <ShareButton onClick={handleShare}>결과 공유하기</ShareButton>
+              <ShareButton onClick={captureAndShare}>결과 저장/공유하기</ShareButton>
             </div>
           </Question>
 
@@ -420,7 +474,7 @@ const PageMarketingNoItemsResult = () => {
               <div className="info">
                 <strong>{marketingMbtiResult.summary}</strong>
                 <p>{marketingMbtiResult.description}</p>
-                <ShareButton onClick={handleShare}>결과 공유하기</ShareButton>
+                <ShareButton onClick={captureAndShare}>결과 저장/공유하기</ShareButton>
               </div>
 
               <div className="title">
@@ -642,8 +696,8 @@ const PageMarketingNoItemsResult = () => {
         {showSuccessPopup && (
           <PopupWrap
             Check
-            title="URL이 복사되었습니다"
-            message="클립보드에 URL이 복사되었습니다"
+            title="이미지가 저장되었습니다"
+            message="결과 이미지가 저장되었습니다"
             buttonType="Outline"
             confirmText="확인"
             isModal={false}
@@ -655,8 +709,8 @@ const PageMarketingNoItemsResult = () => {
         {showErrorPopup && (
           <PopupWrap
             Warning
-            title="복사 실패"
-            message="URL 복사에 실패했습니다. 다시 시도해주세요."
+            title="저장 실패"
+            message="이미지 저장에 실패했습니다. 다시 시도해주세요."
             buttonType="Outline"
             confirmText="확인"
             isModal={false}
