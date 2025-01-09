@@ -8,6 +8,8 @@ import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import Landingimages from "../../../../assets/styles/Landingimages";
 import { createChatOnServer } from "../../../../utils/indexedDB";
+import PopupWrap from "../../../../assets/styles/Popup";
+
 import {
   INPUT_BUSINESS_INFO,
   IS_LOGGED_IN,
@@ -17,6 +19,7 @@ import {
   IS_MARKETING,
   MARKETING_HAVE_IEDA,
   SELECTED_EXPERT_INDEX,
+  PERSONA_STEP,
 } from "../../../AtomStates";
 import axios from "axios";
 import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
@@ -40,6 +43,7 @@ const PageMarketLanding = () => {
     SELECTED_EXPERT_INDEX
   );
 
+  const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
   const [isHomePopupOpen, setIsHomePopupOpen] = useState(false);
   const [isExitPopupOpen, setIsExitPopupOpen] = useState(false);
   const axiosConfig = {
@@ -117,6 +121,31 @@ const PageMarketLanding = () => {
     if (location.pathname !== "/") {
       setIsHomePopupOpen(true);
     }
+  };
+
+  const handleCloseHomePopup = () => {
+    setIsHomePopupOpen(false);
+  };
+
+  const handleConfirmAndNavigate = () => {
+    handleNewProjectClick();
+    setIsHomePopupOpen(false);
+  };
+  //새작업 버튼 클릭 시 호출되는 함수
+  const handleNewProjectClick = () => {
+    // if (!isLoggedIn) {
+    //   setIsPopupLogin(true);
+    //   return;
+    // }
+
+    // if (isLoading) {
+    //   setIsExitPopupOpen(true);
+    //   return;
+    // }
+
+    setPersonaStep(0);
+
+    window.location.href = "/";
   };
   return (
     <>
@@ -211,34 +240,45 @@ const PageMarketLanding = () => {
           </div>
         </Section>
         {isExitPopupOpen && (
-          <Popup Cancel>
-            <div>
-              <button
-                type="button"
-                className="closePopup"
-                onClick={handleExitCancel}
-              >
-                닫기
-              </button>
-              <span>
-                <img src={images.ExclamationMarkRed} alt="" />
-              </span>
-              <p>
-                <strong>모든 내용이 삭제됩니다</strong>
-                <span>
-                  종료 또는 새로고침 할 경우, 모든 대화내역이 사라집니다.
-                </span>
-              </p>
-              <div className="btnWrap">
-                <button type="button" onClick={handleExitCancel}>
-                  계속 진행하기
-                </button>
-                <button type="button" onClick={handleExitConfirm}>
-                  종료할게요
-                </button>
-              </div>
-            </div>
-          </Popup>
+          <PopupWrap
+            Warning
+            title="홈으로 이동하시겠습니까?"
+            buttonType="Outline"
+            closeText="아니요"
+            confirmText="이동하기"
+            isModal={false}
+            onCancel={handleCloseHomePopup}
+            // onClose={handleCloseHomePopup}
+            onConfirm={handleConfirmAndNavigate}
+          />
+          // <Popup Cancel>
+          //   <div>
+          //     <button
+          //       type="button"
+          //       className="closePopup"
+          //       onClick={handleExitCancel}
+          //     >
+          //       닫기
+          //     </button>
+          //     <span>
+          //       <img src={images.ExclamationMarkRed} alt="" />
+          //     </span>
+          //     <p>
+          //       <strong>모든 내용이 삭제됩니다</strong>
+          //       <span>
+          //         종료 또는 새로고침 할 경우, 모든 대화내역이 사라집니다.
+          //       </span>
+          //     </p>
+          //     <div className="btnWrap">
+          //       <button type="button" onClick={handleExitCancel}>
+          //         계속 진행하기
+          //       </button>
+          //       <button type="button" onClick={handleExitConfirm}>
+          //         종료할게요
+          //       </button>
+          //     </div>
+          //   </div>
+          // </Popup>
         )}
         <Copyright>
           Copyright ⓒ 2024 Userconnect Co.,Ltd All rights reserved.

@@ -27,6 +27,7 @@ import {
 } from "../../../AtomStates";
 import axios from "axios";
 import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
+import PopupWrap from "../../../../assets/styles/Popup";
 
 const PageMarketingNoItemsResult = () => {
   const navigate = useNavigate();
@@ -319,28 +320,17 @@ const PageMarketingNoItemsResult = () => {
     setStartY(null);
   };
 
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
+
   const handleShare = async () => {
     try {
-      // 실제 배포된 도메인으로 변경해야 합니다
       const shareUrl = `${window.location.origin}/MarketingSetting/Share/${marketingMbtiResult.name}`;
-
       await navigator.clipboard.writeText(shareUrl);
-      alert("URL이 클립보드에 복사되었습니다!"); // 사용자에게 복사 성공 알림
-
-      // navigate(`/MarketingSetting/Share/${marketingMbtiResult.name}`, {
-      //   state: {
-      //     mbtiResult: {
-      //       name: marketingMbtiResult.name,
-      //       category: marketingMbtiResult.category,
-      //       summary: marketingMbtiResult.summary,
-      //       description: marketingMbtiResult.description
-      //     }
-      //   },
-      //   replace: true
-      // });
+      setShowSuccessPopup(true);
     } catch (err) {
       console.error("Error sharing:", err);
-      alert("URL 복사에 실패했습니다. 다시 시도해주세요.");
+      setShowErrorPopup(true);
     }
   };
 
@@ -648,6 +638,31 @@ const PageMarketingNoItemsResult = () => {
               </div>
             </div>
           </ExitPopup>
+        )}
+        {showSuccessPopup && (
+          <PopupWrap
+            Check
+            title="URL이 복사되었습니다"
+            message="클립보드에 URL이 복사되었습니다"
+            buttonType="Outline"
+            confirmText="확인"
+            isModal={false}
+            onCancel={() => setShowSuccessPopup(false)}
+            onConfirm={() => setShowSuccessPopup(false)}
+          />
+        )}
+
+        {showErrorPopup && (
+          <PopupWrap
+            Warning
+            title="복사 실패"
+            message="URL 복사에 실패했습니다. 다시 시도해주세요."
+            buttonType="Outline"
+            confirmText="확인"
+            isModal={false}
+            onCancel={() => setShowErrorPopup(false)}
+            onConfirm={() => setShowErrorPopup(false)}
+          />
         )}
       </ThemeProvider>
     </>
