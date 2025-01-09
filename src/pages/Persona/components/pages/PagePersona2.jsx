@@ -40,6 +40,7 @@ import {
   CustomAccordionIcon,
   CustomAccordionContent,
   BackgroundBox,
+  BottomBar
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
@@ -1537,33 +1538,33 @@ const PersonaCards = styled.div`
 //   }
 // `;
 
-const BottomBar = styled.div`
-  position: fixed;
-  bottom: 40px;
-  width: 718px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 24px 20px;
-  border-radius: 10px;
-  border: 1px solid ${palette.outlineGray};
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
-  background: ${palette.white};
-  z-index: 100;
+// const BottomBar = styled.div`
+//   position: fixed;
+//   bottom: 40px;
+//   width: 718px;
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   padding: 24px 20px;
+//   border-radius: 10px;
+//   border: 1px solid ${palette.outlineGray};
+//   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+//   background: ${palette.white};
+//   z-index: 100;
 
-  p {
-    font-size: 0.875rem;
-    font-weight: 300;
-    line-height: 1.5;
-    color: ${palette.gray500};
+//   p {
+//     font-size: 0.875rem;
+//     font-weight: 300;
+//     line-height: 1.5;
+//     color: ${palette.gray500};
 
-    span {
-      font-size: 1rem;
-      font-weight: 600;
-      color: ${palette.primary};
-    }
-  }
-`;
+//     span {
+//       font-size: 1rem;
+//       font-weight: 600;
+//       color: ${palette.primary};
+//     }
+//   }
+// `;
 
 const BannerPersona = styled.div`
   width: 100%;

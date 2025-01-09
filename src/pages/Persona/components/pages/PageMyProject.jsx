@@ -226,7 +226,7 @@ const PageMyProject = () => {
       <ContentsWrap>
         <OrganismIncNavigation />
         <MoleculeHeader />
-        <MainContent>
+        <MainContent Wide>
           <MyProjectWrap>
             <Title>프로젝트 리스트</Title>
             {projectList.length === 0 ? (

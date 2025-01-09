@@ -32,7 +32,7 @@ export const MainContent = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  max-width: 816px;
+  max-width: ${props => props.Wide ? "1024px" : "816px"};
   // max-width: 1024px;
   // min-height: 100vh;
   width: 100%;
@@ -615,7 +615,11 @@ export const Tag = styled.span`
 export const BottomBar = styled.div`
   position: fixed;
   bottom: 40px;
-  width: ${(props) => (props.W100 ? "100%" : "718px")};
+  width: ${(props) => {
+    if (props.W100) return "100%";
+    if (props.Wide) return "1024px";
+    return "816px";
+  }};
   display: flex;
   justify-content: space-between;
   align-items: center;
