@@ -48,6 +48,13 @@ const OrganismOneInterview = ({ isActive, onClose, testData }) => {
 
   const loadInitialQuestions = async () => {
     try {
+      // API 호출 전에 testData가 있는 경우 사용
+      if (testData?.interviewQuestions) {
+        setInterviewQuestions(testData.interviewQuestions);
+        setInterviewStatus(new Array(testData.interviewQuestions.length).fill("pending"));
+        return;
+      }
+
       const response = await axios.post(
         "https://wishresearch.kr/person/persona_interview",
         {
@@ -62,6 +69,13 @@ const OrganismOneInterview = ({ isActive, onClose, testData }) => {
       console.error("Failed to load questions:", error);
     }
   };
+
+  // 디버깅을 위한 콘솔 로그 추가
+  useEffect(() => {
+    console.log('Current Questions:', interviewQuestions);
+    console.log('Current Status:', interviewStatus);
+    console.log('Test Data:', testData);
+  }, [interviewQuestions, interviewStatus, testData]);
 
   const generateAnswer = async (questionIndex) => {
     setIsGenerating(true);
