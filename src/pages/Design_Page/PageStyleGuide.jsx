@@ -286,9 +286,11 @@ const PageStyleGuide  = () => {
 
           <Sub1>2. Size</Sub1>
           <Note>
-            작은 사이즈 : Small<br />
+            제일 작은 사이즈 : Small<br />
             중간 사이즈 : Medium<br />
-            큰 사이즈 : Large
+            큰 사이즈 : Large<br />
+            좀 더 큰 사이즈 : ExLarge<br />
+            제일 큰 사이즈 : DbExLarge
             <CodeBlock>
               {'<Button Medium>바로가기</Button>'}
             </CodeBlock>
@@ -297,7 +299,7 @@ const PageStyleGuide  = () => {
           <FlexBox column>
             <div>
               <Sub2>Small</Sub2>
-              <Button Small>작은 사이즈 버튼</Button>
+              <Button Small>제일 작은 사이즈 버튼</Button>
             </div>
             <div>
               <Sub2>Medium</Sub2>
@@ -307,11 +309,20 @@ const PageStyleGuide  = () => {
               <Sub2>Large</Sub2>
               <Button Large>큰 사이즈 버튼</Button>
             </div>
+            <div>
+              <Sub2>ExLarge</Sub2>
+              <Button ExLarge>좀 더 큰 사이즈 버튼</Button>
+            </div>
+            <div>
+              <Sub2>DbExLarge</Sub2>
+              <Button DbExLarge>제일 큰 사이즈 버튼</Button>
+            </div>
           </FlexBox>
 
           <Sub1>3. Color</Sub1>
           <Note>
             기본 버튼 : Primary<br />
+            서브 버튼 : PrimaryLightest (※ Fill 속성 필수로 입력합니다. 추후 아웃라인 추가가능 합니다.)<br />
             에러 버튼 : Error<br />
             수정 버튼 : Edit
             <CodeBlock>
@@ -323,6 +334,10 @@ const PageStyleGuide  = () => {
             <div>
               <Sub2>기본 버튼</Sub2>
               <Button Small Primary>기본 버튼</Button>
+            </div>
+            <div>
+              <Sub2>서브 버튼</Sub2>
+              <Button Small PrimaryLightest Fill>서브 버튼</Button>
             </div>
             <div>
               <Sub2>에러 버튼</Sub2>
@@ -337,9 +352,9 @@ const PageStyleGuide  = () => {
           <Sub1>4. Fill</Sub1>
           <Note>
             채움버튼을 사용시, Primary 속성을 적용해야 합니다.<br />
-            채움 버튼 : Fill
+            채움 버튼 : Fill, PrimaryLightest
             <CodeBlock>
-              {`<Button Primary Fill>바로가기</Button>
+              {`<Button Small Primary Fill>바로가기</Button>
 <Button Small PrimaryLightest Fill>채움 버튼</Button>`}
             </CodeBlock>
           </Note>
@@ -352,13 +367,14 @@ const PageStyleGuide  = () => {
           <Sub1>5. Disabled</Sub1>
           <Note>
             <CodeBlock>
-              {'<Button disabled>바로가기</Button>'}
+              {`<Button disabled>바로가기</Button>
+<Button Round disabled>바로가기</Button>`}
             </CodeBlock>
           </Note>
 
           <FlexBox>
-            <Button Small Primary disabled>Disabled 버튼</Button>
-            <Button Small Primary Round disabled>Disabled 버튼</Button>
+            <Button Small disabled>Disabled 버튼</Button>
+            <Button Small Round disabled>Disabled 버튼</Button>
           </FlexBox>
 
           <Sub1>6. Icon Type</Sub1>

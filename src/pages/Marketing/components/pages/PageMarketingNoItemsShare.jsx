@@ -6,6 +6,7 @@ import images from "../../../../assets/styles/Images";
 import { useAtom } from "jotai";
 import { MARKETING_MBTI_RESULT } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
+import { Button } from "../../../../assets/styles/ButtonStyle";
 
 const PageMarketingNoItemsShare = () => {
   const { mbtiType } = useParams();
@@ -190,9 +191,9 @@ const PageMarketingNoItemsShare = () => {
             <strong>{marketingMbtiResult?.summary}</strong>
             <p>{marketingMbtiResult?.description}</p>
 
-            <StartButton onClick={() => navigate("/MarketingLanding")}>
+            <CustomButton DbExLarge PrimaryLightest Fill onClick={() => navigate("/MarketingLanding")}>
               창업해보기
-            </StartButton>
+            </CustomButton>
           </div>
           {/* </div> */}
         </Question>
@@ -202,9 +203,9 @@ const PageMarketingNoItemsShare = () => {
           <div className="info">
             <strong>{marketingMbtiResult.summary}</strong>
             <p>{marketingMbtiResult.description}</p>
-            <StartButton onClick={() => navigate("/MarketingLanding")}>
+            <Button ExLarge onClick={() => navigate("/MarketingLanding")}>
               창업해보기
-            </StartButton>
+            </Button>
           </div>
         </ResultWrap>
         {/* </Answer> */}
@@ -344,6 +345,11 @@ const StartButton = styled.button`
     padding: 12px 32px;
     font-size: 1rem;
   }
+`;
+
+const CustomButton = styled(Button)`
+  color: #5547ff;
+  background: rgba(85, 71, 255, .05);
 `;
 
 export default PageMarketingNoItemsShare;

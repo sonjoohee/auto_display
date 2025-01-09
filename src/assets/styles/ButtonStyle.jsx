@@ -25,17 +25,33 @@ export const Button = styled.button`
   `}
 
   ${props => props.Medium && css`
-    gap: 12px;
-    font-size: 1rem;
+    gap: 4px;
+    font-size: 0.75rem;
     line-height: 1.5;
-    padding: 8px 24px;
-    border-radius: 8px;
+    padding: 6px 12px;
+    border-radius: 4px;
   `}
 
   ${props => props.Large && css`
-    gap: 12px;
-    font-size: 0.875rem;
+    gap: 4px;
+    font-size: 0.88rem;
     line-height: 1.5;
+    padding: 8px 12px;
+    border-radius: 4px;
+  `}
+
+  ${props => props.ExLarge && css`
+    gap: 8px;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    padding: 8px 12px;
+    border-radius: 8px;
+  `}
+
+  ${props => props.DbExLarge && css`
+    gap: 12px;
+    font-size: 0.88rem;
+    line-height: 1.55;
     padding: 12px 16px;
     border-radius: 8px;
   `}
@@ -49,11 +65,12 @@ export const Button = styled.button`
     background: ${palette.primaryLightest};
 
     &:hover {
-      background: ${palette.primaryLightest};
+      background: rgba(34, 111, 255, 0.2);
     }
 
     &:disabled {
-      background: ${palette.primaryLightest};
+      color: ${palette.gray500};
+      background: #ECEFF3;
       cursor: not-allowed;
     }
   `}
@@ -104,9 +121,9 @@ export const Button = styled.button`
       border: none;
     }
 
-    // &:hover {
-    //   background-color: rgba(34, 111, 255, 0.10);
-    // }
+    &:hover {
+      background-color: rgba(34, 111, 255, 0.10);
+    }
   `}
 
   ${props => props.Error && css`
