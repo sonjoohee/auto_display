@@ -701,8 +701,8 @@ const PageMarketingNoItemsResult = () => {
         {showSuccessPopup && (
           <PopupWrap
             Check
-            title="이미지가 저장되었습니다"
-            message="결과 이미지가 저장되었습니다"
+            title="저장 및 복사 완료"
+            message="이미지 저장 및 URL 복사가 완료되었습니다."
             buttonType="Outline"
             confirmText="확인"
             isModal={false}
