@@ -44,6 +44,8 @@ import {
   CategoryView,
   ChoiceWrap,
   Choice,
+  OCEANRangeWrap,
+  RangeSlider,
 } from "../../assets/styles/BusinessAnalysisStyle";
 import PopupWrap from "../../assets/styles/Popup";
 import { SkeletonH1, SkeletonTitle, SkeletonLine } from "../../assets/styles/Skeleton";
@@ -64,6 +66,7 @@ const PageStyleGuide  = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const [rangeValue, setRangeValue] = useState(50);
 
   const handleWarningClose = () => {
     setShowWarning(false);
@@ -129,6 +132,7 @@ const PageStyleGuide  = () => {
         <a href="#listgroup" onClick={scrollToSection}>ListGroup</a>
         <a href="#barChart" onClick={scrollToSection}>BarChart</a>
         <a href="#boxWrap" onClick={scrollToSection}>BoxWrap</a>
+        <a href="#rangeSlider" onClick={scrollToSection}>RangeSlider</a>
       </Header>
 
       <ContentsWrap>
@@ -1509,6 +1513,26 @@ onChange={() => setSelectedRadio2('gender1')}
                 <Body3 color="gray700">내용</Body3>
               </div>
             </BoxWrap>
+          </FlexBox>
+        </div>
+
+        <div id="rangeSlider">
+          <h2>RangeSlider</h2>
+
+          <FlexBox>
+            <OCEANRangeWrap>
+              <div>
+                <Body3 color="gray800">보수적</Body3>
+                <RangeSlider 
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={rangeValue}
+                  onChange={(e) => setRangeValue(e.target.value)}
+                />
+                <Body3 color="gray800">개방적</Body3>
+              </div>
+            </OCEANRangeWrap>
           </FlexBox>
         </div>
       </ContentsWrap>

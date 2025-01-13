@@ -187,6 +187,7 @@ export const ErrorMessage = styled.p`
 // 라디오박스
 export const CheckCircle = styled.input`
   appearance: none;
+  display: block !important;
   flex-shrink: 0;
   width: 24px;
   height: 24px;
@@ -236,7 +237,8 @@ export const RadioRightBox = styled.label`
   gap: 10px;
   min-width: 200px;
   width: 100%;
-  padding: 8px 12px;
+  // padding: 8px 12px;
+  padding: 11px 12px;
   border-radius: 10px;
   border: 1px solid ${props => props.checked ? palette.primary : palette.outlineGray};
   cursor: pointer;

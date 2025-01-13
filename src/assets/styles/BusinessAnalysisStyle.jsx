@@ -117,6 +117,23 @@ export const Title = styled.div`
   }
 `;
 
+export const PopupTitle = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  width: 100%;
+  font-size: 1rem;
+  font-weight: 600;
+  color: ${palette.gray700};
+`;
+
+export const PopupContent = styled.div`
+  display: flex;
+  gap: 12px;
+  width: 100%;
+`;
+
 export const CardWrap = styled.div`
   display: flex;
   flex-direction: column;
@@ -1785,5 +1802,57 @@ export const InterviewPopup = styled.div`
     width: 100%;
   }
 `;
+
+export const OCEANRangeWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  width: 100%;
+
+  > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    width: 100%;
+  }
+
+  p {
+    flex-shrink: 0;
+  }
+`;
+
+export const RangeSlider = styled.input`
+  width: 100%;
+  height: 1px;
+  background: ${palette.outlineGray};
+  -webkit-appearance: none;
+  
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 0;
+    background: ${palette.primary};
+    cursor: pointer;
+  }
+
+  &::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 0;
+    background: ${palette.primary};
+    cursor: pointer;
+  }
+
+  &:focus {
+    outline: none;
+  }
+`;
+
 
 
