@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { palette } from "./Palette";
 import images from "./Images";
+import { TabWrapType3, TabButtonType3 } from "./BusinessAnalysisStyle";
 
 const PopupWrap = ({
   title,
@@ -24,6 +25,10 @@ const PopupWrap = ({
   isRadioSelected,
   isFormValid,
   TitleFlex,
+  showTabs,
+  activeTab,
+  onTabChange,
+  tabs,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
 
@@ -114,6 +119,20 @@ const PopupWrap = ({
             {title}
             <CloseButton TitleFlex={TitleFlex} onClick={handleClose} />
           </Header>
+          
+          {showTabs && tabs && (
+            <TabWrapContainer>
+              {tabs.map((tab, index) => (
+                <TabButtonType3
+                  key={index}
+                  isActive={activeTab === index}
+                  onClick={() => onTabChange(index)}
+                >
+                  {tab}
+                </TabButtonType3>
+              ))}
+            </TabWrapContainer>
+          )}
 
           <Body>{body}</Body>
 
@@ -166,6 +185,10 @@ const PopupWrap = ({
 
 export default PopupWrap;
 
+export const TabWrapContainer = styled(TabWrapType3)`
+  width: 100%;
+`;
+
 export const PopupBox = styled.div`
   position: fixed;
   top: 0;
@@ -196,7 +219,8 @@ export const AlertPopup = styled.div`
 
 export const ModalPopup = styled(AlertPopup)`
   gap: 32px;
-  max-width: 800px;
+  // max-width: 800px;
+  max-width: 583px;
   padding: 32px;
 `;
 
@@ -215,13 +239,21 @@ export const Body = styled.div`
   flex-direction: column;
   align-items: flex-start;
   // gap: 20px;
-  gap: ${(props) => (props.TitleFlex ? "20px" : "12px")};
+  gap: ${(props) => (props.TitleFlex ? "20px" : "32px")};
   width: 100%;
   height: 100%;
   max-height: 60dvh;
   padding-right: 10px;
   overflow-y: auto;
   overflow-x: hidden;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    width: 100%;
+  }
 
   .bgBox {
     display: flex;
@@ -308,7 +340,7 @@ export const Body = styled.div`
     font-weight: 300;
     line-height: 1.5;
     color: ${palette.gray500};
-    padding: 20px;
+    padding: 12px;
     border-radius: 10px;
     border: 1px solid ${palette.outlineGray};
     cursor: pointer;

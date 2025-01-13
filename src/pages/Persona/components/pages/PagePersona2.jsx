@@ -56,6 +56,10 @@ import {
   TypeItemList,
   TypeItem,
   TypeListItem,
+  PopupTitle,
+  PopupContent,
+  OCEANRangeWrap,
+  RangeSlider,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
@@ -64,6 +68,7 @@ import { H4, Body2, Body3, Sub1, Sub3, Caption2 } from "../../../../assets/style
 import {
   CustomTextarea,
   CustomInput,
+  GenderRadioButton,
 } from "../../../../assets/styles/InputStyle";
 import { CheckBox } from "../../../../assets/styles/Input";
 import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
@@ -118,6 +123,7 @@ const PagePersona2 = () => {
 
   const [showInterviewPopup, setShowInterviewPopup] = useState(false);
   const [selectedPersonaForPopup, setSelectedPersonaForPopup] = useState(null);
+  const [rangeValue, setRangeValue] = useState(50);
 
   const [customizeFormState, setCustomizeFormState] = useState({
     isAccordionOpen: false,
@@ -135,6 +141,8 @@ const PagePersona2 = () => {
   const [showTypeList, setShowTypeList] = useState(false);
 
   const [selectedTypes, setSelectedTypes] = useState([]);
+
+  const [activeTabIndex, setActiveTabIndex] = useState(0);
 
   const [unselectedTypes, setUnselectedTypes] = useState([
     { id: 'type1', label: '대표 사용자', count: 1 },
@@ -1200,16 +1208,228 @@ const PagePersona2 = () => {
           TitleFlex
           title="📝 맞춤형 페르소나 모집 요청하기"
           buttonType="Fill"
-          confirmText="맞춤 페르소나 모집하기"
+          confirmText={activeTabIndex === 0 ? "다음" : "맞춤 페르소나 모집하기"}
           isModal={true}
           isFormValid={isFormValid()}
           onCancel={handleCustomizePopupClose}
           onConfirm={() => {
-            // 여기에 확인 버튼 클릭 시 처리할 로직 추가
-            handleCustomizePopupConfirm();
+            if (activeTabIndex === 0) {
+              setActiveTabIndex(1);
+            } else {
+              handleCustomizePopupConfirm();
+            }
           }}
+          showTabs={true}
+          tabs={['필수정보', 'OCEAN 정보']}
+          onTabChange={(index) => setActiveTabIndex(index)}
+          activeTab={activeTabIndex}
           body={
             <>
+              {activeTabIndex === 0 && (
+                <>
+                <div>
+                  <PopupTitle>
+                    성별
+                    <Sub3>
+                      * 선택하지 않는 경우, 성별 무관으로 페르소나를 생성합니다.
+                    </Sub3>
+                  </PopupTitle>
+
+                  <PopupContent>
+                    <GenderRadioButton
+                      id="gender1"
+                      name="gender"
+                      gender="남자"
+                      icon={images.GenderMen}
+                      checked={customPersonaForm.gender === "male"}
+                      onClick={() => {
+                        // 현재 선택된 값과 같은 값을 클릭하면 선택 해제
+                        if (customPersonaForm.gender === "male") {
+                          handleCustomPersonaChange("gender", "");
+                        } else {
+                          handleCustomPersonaChange("gender", "male");
+                        }
+                      }}
+                    />
+                    <GenderRadioButton
+                      id="gender2"
+                      name="gender"
+                      gender="여자"
+                      icon={images.GenderWomen}
+                      checked={customPersonaForm.gender === "female"}
+                      onClick={() => {
+                        // 현재 선택된 값과 같은 값을 클릭하면 선택 해제
+                        if (customPersonaForm.gender === "female") {
+                          handleCustomPersonaChange("gender", "");
+                        } else {
+                          handleCustomPersonaChange("gender", "female");
+                        }
+                      }}
+                    />
+                  </PopupContent>
+                </div>
+
+                <div>
+                  <PopupTitle>
+                    연령 (다중 선택)
+                    <Sub3>
+                      * 선택하지 않는 경우, 연령 무관으로 페르소나를 생성합니다.
+                    </Sub3>
+                  </PopupTitle>
+
+                  <PopupContent>
+                    <AgeGroup>
+                      <div>
+                        {["10s", "20s", "30s", "40s"].map((age, index) => (
+                          <React.Fragment key={age}>
+                            <input
+                              type="checkbox"
+                              id={`age${index + 1}`}
+                              name="age"
+                              checked={customPersonaForm.ageGroups.includes(
+                                age
+                              )}
+                              onChange={() => handleAgeGroupChange(age)}
+                            />
+                            <label
+                              htmlFor={`age${index + 1}`}
+                              className="age"
+                            >
+                              {age.replace("s", "대")}
+                            </label>
+                          </React.Fragment>
+                        ))}
+                      </div>
+                      <div>
+                        {["50s", "60s", "70s"].map((age, index) => (
+                          <React.Fragment key={age}>
+                            <input
+                              type="checkbox"
+                              id={`age${index + 5}`}
+                              name="age"
+                              checked={customPersonaForm.ageGroups.includes(
+                                age
+                              )}
+                              onChange={() => handleAgeGroupChange(age)}
+                            />
+                            <label
+                              htmlFor={`age${index + 5}`}
+                              className="age"
+                            >
+                              {age.replace("s", "대")}
+                            </label>
+                          </React.Fragment>
+                        ))}
+                        <div className="empty-space"></div>
+                      </div>
+                    </AgeGroup>
+                  </PopupContent>
+                </div>
+
+                <div>
+                  <PopupTitle>
+                    필수적으로 필요한 정보가 있다면, 알려주세요
+                  </PopupTitle>
+
+                  <PopupContent>
+                    <CustomTextarea
+                      rows={3}
+                      placeholder="필수로 고려해야할 정보가 있다면 작성해주세요."
+                      value={customPersonaForm.additionalInfo}
+                      onChange={(e) => {
+                        if (e.target.value.length <= 300) {
+                          handleCustomPersonaChange(
+                            "additionalInfo",
+                            e.target.value
+                          );
+                        }
+                      }}
+                    />
+                  </PopupContent>
+                </div>
+                </>
+              )}
+
+              {activeTabIndex === 1 && (
+                <>
+                  <div>
+                    <PopupTitle>
+                      성향
+                      <Sub3>
+                        * 선택하지 않는 경우, 성향 무관으로 페르소나를 생성합니다. 
+                      </Sub3>
+                    </PopupTitle>
+
+                    <PopupContent>
+                      <OCEANRangeWrap>
+                        <div>
+                          <Body3 color="gray800">보수적</Body3>
+                          <RangeSlider 
+                            type="range"
+                            min="0"
+                            max="100"
+                            value={rangeValue}
+                            onChange={(e) => setRangeValue(e.target.value)}
+                          />
+                          <Body3 color="gray800">개방적</Body3>
+                        </div>
+                        <div>
+                          <Body3 color="gray800">즉흥적</Body3>
+                          <RangeSlider 
+                            type="range"
+                            min="0"
+                            max="100"
+                            value={rangeValue}
+                            onChange={(e) => setRangeValue(e.target.value)}
+                          />
+                          <Body3 color="gray800">성실함</Body3>
+                        </div>
+                        <div>
+                          <Body3 color="gray800">내향적</Body3>
+                          <RangeSlider 
+                            type="range"
+                            min="0"
+                            max="100"
+                            value={rangeValue}
+                            onChange={(e) => setRangeValue(e.target.value)}
+                          />
+                          <Body3 color="gray800">외향적</Body3>
+                        </div>
+                        <div>
+                          <Body3 color="gray800">배타적</Body3>
+                          <RangeSlider 
+                            type="range"
+                            min="0"
+                            max="100"
+                            value={rangeValue}
+                            onChange={(e) => setRangeValue(e.target.value)}
+                          />
+                          <Body3 color="gray800">우호적</Body3>
+                        </div>
+                        <div>
+                          <Body3 color="gray800">무던함</Body3>
+                          <RangeSlider 
+                            type="range"
+                            min="0"
+                            max="100"
+                            value={rangeValue}
+                            onChange={(e) => setRangeValue(e.target.value)}
+                          />
+                          <Body3 color="gray800">신경적</Body3>
+                        </div>
+                      </OCEANRangeWrap>
+                    </PopupContent>
+                  </div>
+
+                  <div style={{ marginTop: "12px", textAlign: "left" }}>
+                    <Body3 color="gray500">
+                    페르소나 마다의 다양한 성향이 있습니다. 이러한 성향에 따라 생성되는 페르소나는 각양각색의 무한한 가능성과 여러가지 방법들이 있습니다. 원하는 바를 위해 최대한 커스터마이징 하여 페르소나를 도출해 내시기를 기원합니다.
+                    </Body3>
+                  </div>
+                </>
+              )}
+
+              {/* 
               <Title>
                 <p className="required">어떤 페르소나가 필요하신가요?</p>
               </Title>
@@ -1247,7 +1467,6 @@ const PagePersona2 = () => {
                   몇명의 페르소나를 모집하시고 싶으신가요?(최대 30명)
                 </p>
               </Title>
-
               <Quantity>
                 <span
                   className="down"
@@ -1315,7 +1534,6 @@ const PagePersona2 = () => {
                           }}
                         />
                         <label htmlFor="gender1" className="gender men">
-                          {/* <img src={images.GenderMen} alt="GenderMen" /> */}
                           <i class="icon man" />
                           man
                           <span className="check-circle" />
@@ -1335,7 +1553,6 @@ const PagePersona2 = () => {
                           }}
                         />
                         <label htmlFor="gender2" className="gender women">
-                          {/* <img src={images.GenderWomen} alt="GenderWomen" /> */}
                           <i class="icon woman" />
                           woman
                           <span className="check-circle" />
@@ -1415,6 +1632,7 @@ const PagePersona2 = () => {
                   </CustomAccordionContent>
                 )}
               </AccordionSection>
+               */}
             </>
           }
         />
