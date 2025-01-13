@@ -155,6 +155,21 @@ const PagePersona2 = () => {
     { id: 'type8', label: '비주류 사용자', count: 1 }
   ]);
 
+  const [oceanValues, setOceanValues] = useState({
+    openness: 80,     // 개방적
+    conscientiousness: 70,  // 성실함
+    extraversion: 90,      // 외향적
+    agreeableness: 40,     // 우호적
+    neuroticism: 30        // 신경적
+  });
+
+  const handleOceanChange = (trait, value) => {
+    setOceanValues(prev => ({
+      ...prev,
+      [trait]: value
+    }));
+  };
+
   const handleViewTypeChange = (type) => {
     setViewType(type);
   };
@@ -1368,8 +1383,8 @@ const PagePersona2 = () => {
                             type="range"
                             min="0"
                             max="100"
-                            value={rangeValue}
-                            onChange={(e) => setRangeValue(e.target.value)}
+                            value={oceanValues.openness}
+                            onChange={(e) => handleOceanChange('openness', e.target.value)}
                           />
                           <Body3 color="gray800">개방적</Body3>
                         </div>
@@ -1379,8 +1394,8 @@ const PagePersona2 = () => {
                             type="range"
                             min="0"
                             max="100"
-                            value={rangeValue}
-                            onChange={(e) => setRangeValue(e.target.value)}
+                            value={oceanValues.conscientiousness}
+                            onChange={(e) => handleOceanChange('conscientiousness', e.target.value)}
                           />
                           <Body3 color="gray800">성실함</Body3>
                         </div>
@@ -1390,19 +1405,19 @@ const PagePersona2 = () => {
                             type="range"
                             min="0"
                             max="100"
-                            value={rangeValue}
-                            onChange={(e) => setRangeValue(e.target.value)}
+                            value={oceanValues.extraversion}
+                            onChange={(e) => handleOceanChange('extraversion', e.target.value)}
                           />
                           <Body3 color="gray800">외향적</Body3>
                         </div>
                         <div>
-                          <Body3 color="gray800">배타적</Body3>
+                          <Body3 color="gray800">독립적</Body3>
                           <RangeSlider 
                             type="range"
                             min="0"
                             max="100"
-                            value={rangeValue}
-                            onChange={(e) => setRangeValue(e.target.value)}
+                            value={oceanValues.agreeableness}
+                            onChange={(e) => handleOceanChange('agreeableness', e.target.value)}
                           />
                           <Body3 color="gray800">우호적</Body3>
                         </div>
@@ -1412,8 +1427,8 @@ const PagePersona2 = () => {
                             type="range"
                             min="0"
                             max="100"
-                            value={rangeValue}
-                            onChange={(e) => setRangeValue(e.target.value)}
+                            value={oceanValues.neuroticism}
+                            onChange={(e) => handleOceanChange('neuroticism', e.target.value)}
                           />
                           <Body3 color="gray800">신경적</Body3>
                         </div>
