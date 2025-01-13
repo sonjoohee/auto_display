@@ -14,6 +14,7 @@ import {
 import {
   CustomInput,
   CustomTextarea,
+  FormBox
 } from "../../../../assets/styles/InputStyle";
 import {
   IS_LOADING,
@@ -32,6 +33,7 @@ import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import MoleculeRecreate from "../molecules/MoleculeRecreate";
 import { Body2, Body3, H5 } from "../../../../assets/styles/Typography";
 import { Tag } from "../../../../assets/styles/BusinessAnalysisStyle";
+import { IconButton } from "../../../../assets/styles/ButtonStyle";
 
 const OrganismBusinessAnalysis = ({ personaStep }) => {
   const [isLoadingBusinessAnalysis, setIsLoadingBusinessAnalysis] = useAtom(
@@ -641,8 +643,8 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
       ) : isEditMode ? (
         <Card Edit>
           <FormEdit>
-            <span>비즈니스 명</span>
-            <FormBox status={getInputStatus(inputs.field1)}>
+            <Body3 color="gray700">비즈니스 명</Body3>
+            <FormBox Medium status={getInputStatus(inputs.field1)}>
               <CustomInput
                 Edit
                 type="text"
@@ -659,8 +661,8 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
           </FormEdit>
 
           <FormEdit>
-            <span>태그</span>
-            <FormBox>
+            <Body3 color="gray700">태그</Body3>
+            <FormBox Medium>
               <TagWrap>
                 <Tag color={getCategoryColor(inputs.field4.value.first)} />
                 <Tag color={getCategoryColor(inputs.field4.value.second)} />
@@ -670,7 +672,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
           </FormEdit>
 
           <FormEdit>
-            <span>비즈니스 설명</span>
+            <Body3 color="gray700">비즈니스 설명</Body3>
             {showRegenerateButton2 ? (
               <FormBox regenerate>
                 <MoleculeRecreate Medium onRegenerate={handleAIDetailClick} />
@@ -876,25 +878,6 @@ const EditButtonGroup = styled(ButtonGroup)`
   justify-content: end;
 `;
 
-const IconButton = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-family: "Pretendard", "Poppins";
-  font-size: 0.75rem;
-  color: ${palette.primary};
-  padding: 4px 8px;
-  border: none;
-  background: none;
-  cursor: pointer;
-
-  img {
-    width: 16px;
-    height: 16px;
-    object-fit: contain;
-  }
-`;
-
 const Card = styled.div`
   display: flex;
   flex-direction: column;
@@ -943,28 +926,6 @@ const FormEdit = styled.div`
     font-weight: 300;
     line-height: 1.5;
     color: ${palette.gray700};
-  }
-`;
-
-const FormBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-  width: 100%;
-  padding: 16px;
-  border-radius: 10px;
-  border: 1px solid
-    ${(props) =>
-      props.status === "error" ? palette.error : palette.outlineGray};
-  transition: all 0.5s;
-
-  &:focus-within {
-    border: ${(props) =>
-      props.regenerate
-        ? `1px solid ${palette.outlineGray}`
-        : `1px solid ${palette.primary}`};
-    box-shadow: ${(props) =>
-      props.regenerate ? `` : `0 0 8px 0 rgba(34, 111, 255, 0.5)`};
   }
 `;
 

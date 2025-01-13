@@ -14,7 +14,13 @@ export const FormBox = styled.div`
   flex-direction: column;
   gap: 32px;
   width: 100%;
-  padding: 16px;
+  padding: ${(props) =>
+    props.Small 
+    ? "8px 12px" 
+    : props.Medium 
+    ? "8px 16px" 
+    : "16px"
+  };
   border-radius: 10px;
   border: 1px solid
     ${(props) =>

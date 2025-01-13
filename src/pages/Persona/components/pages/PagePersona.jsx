@@ -153,7 +153,7 @@ const PagePersona = () => {
                 {/* 맞춤 페르소나 생성 */}
                 {personaButtonState1 === 0 && !isEditMode && !isLoadingBusinessAnalysis && (
                   <CreateCard>
-                    <Body2>
+                    <Body2 color="gray500">
                       <img src={images.PeopleChatSquareFill} alt="" />
                       나의 비즈니스 고객은 누구일까요? 그리고 어떤 생각을 하고
                       있을까요?
@@ -162,13 +162,13 @@ const PagePersona = () => {
                     </Body2>
 
                     <Button
-                      Medium
+                      ExLarge
                       Primary
                       Fill
                       Round
                       onClick={handleCreatePersona}
                     >
-                      맞춤 페르소나 생성
+                      <Body2 color="white">맞춤 페르소나 생성</Body2>
                       <img src={images.MagicStickFillWhite} alt="" />
                     </Button>
                   </CreateCard>
@@ -217,7 +217,7 @@ const CreateCard = styled(Card)`
     align-items: center;
     gap: 16px;
     // line-height: 1.5;
-    color: ${palette.gray500};
+    // color: ${palette.gray500};
   }
 `;
 

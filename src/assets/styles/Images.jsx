@@ -176,6 +176,7 @@ import MagicStickFillWhite from "../images/magic-stick-fill-white.svg"
 import NotePencil from "../images/note-pencil.svg"
 import ChevronRight from "../images/chevron-right.svg"
 import ChevronRightPrimary from "../images/chevron-right-primary.svg"
+import ChevronDown from "../images/chevron-down.svg"
 import PencilSquare from "../images/pencil-square.svg"
 import ClockCounterclockwise from "../images/clock-counterclockwise.svg"
 import CheckCircle from "../images/check-circle.svg"
@@ -187,6 +188,8 @@ import GenderMen from "../images/gender-men.svg"
 import GenderWomen from "../images/gender-women.svg"
 import FileSearch from "../images/file-search.svg"
 import PlusSquareWhite from "../images/plus-square-white.svg"
+import Plus from "../images/plus.svg"
+import PlusPrimary from "../images/plus-primary.svg"
 import Gear from "../images/gear.svg"
 import ArrowBarLeft from "../images/arrow-bar-left.svg"
 import ArrowClockwise from "../images/arrow-clockwise.svg"
@@ -202,6 +205,9 @@ import FileFill from "../images/file-fill.svg"
 import PeopleFillPrimary from "../images/people-fill-primary.svg"
 import NoAlarm from "../images/alarm-no.svg"
 import ExclamationCircleFill from "../images/exclamation-circle-fill.svg"
+import BoxArrowUpRight from "../images/box-arrow-up-right.svg"
+import CalendarCheck from "../images/calendar-check.svg"
+import Headset from "../images/headset.svg"
 
 import PersonaCustomizing from "../images/persona-customizing.png"
 
@@ -223,6 +229,9 @@ import DiscoveryBMHover from "../images/Discovery-BM-hover.png"
 
 import Crown3D from "../images/Crown-3D.png"
 import StarFill3D from "../images/Star-Fill-3D.png"
+
+import BgUserChatDots from "../images/bg-user-chat-dots.svg"
+import CloseBlack from "../images/close-black.svg"
 
 const images = {
   Logo,
@@ -403,6 +412,7 @@ const images = {
   NotePencil,
   ChevronRight,
   ChevronRightPrimary,
+  ChevronDown,
   PencilSquare,
   ClockCounterclockwise,
   CheckCircle,
@@ -414,6 +424,8 @@ const images = {
   GenderWomen,
   FileSearch,
   PlusSquareWhite,
+  Plus,
+  PlusPrimary,
   Gear,
   ArrowBarLeft,
   ArrowClockwise,
@@ -429,6 +441,9 @@ const images = {
   PeopleFillPrimary,
   NoAlarm,
   ExclamationCircleFill,
+  BoxArrowUpRight,
+  CalendarCheck,
+  Headset,
 
   PersonaCustomizing,
 
@@ -450,6 +465,9 @@ const images = {
 
   Crown3D,
   StarFill3D,
+
+  BgUserChatDots,
+  CloseBlack,
 }
 
 export default images;

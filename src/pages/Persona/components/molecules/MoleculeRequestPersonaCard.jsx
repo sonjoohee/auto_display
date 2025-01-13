@@ -15,7 +15,13 @@ import {
   ContentSection,
   Title,
   CustomizePersona,
+  InterviewPopup,
+  Status,
+  TabWrapType2,
+  TabButtonType2,
+  TabContent,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
+import { H4, Body3, Sub3 } from "../../../../assets/styles/Typography";
 import PopupWrap from "../../../../assets/styles/Popup";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
@@ -29,6 +35,8 @@ const MoleculeRequestPersonaCard = ({ persona, personaIndex }) => {
   const [selectedPersonaForPopup, setSelectedPersonaForPopup] = useState(null);
   const [activeTab, setActiveTab] = useState("lifestyle");
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+
+  const [activeTab1, setActiveTab1] = useState("lifestyle");
 
   //요청된 페르소나 요청 로드
   useEffect(() => {
@@ -145,56 +153,56 @@ const MoleculeRequestPersonaCard = ({ persona, personaIndex }) => {
         <InterviewPopup>
           <div>
             <div className="header">
-              <h4>
+              <H4>
                 {persona.persona}
                 <span
                   className="close"
                   onClick={() => setSelectedPersonaForPopup(null)}
                 />
-              </h4>
-              <p className="info">
-                <span>{persona.gender}</span>
-                <span>{persona.age}</span>
-                <span>{persona.residence} 거주</span>
-              </p>
+              </H4>
+              <div className="info">
+                <Sub3>{persona.gender}</Sub3>
+                <Sub3>{persona.age}</Sub3>
+                <Sub3>{persona.residence} 거주</Sub3>
+              </div>
             </div>
 
-            <p className="keywords">
+            <div className="keywords">
               {persona.keyword.map((keyword, idx) => (
-                <span key={idx}>#{keyword}</span>
+                <Status key={idx}>#{keyword}</Status>
               ))}
-            </p>
+            </div>
 
             <div className="content">
-              <TabButton>
-                <button
+              <TabWrapType2>
+                <TabButtonType2
                   className={activeTab === "lifestyle" ? "active" : ""}
                   onClick={() => setActiveTab("lifestyle")}
                 >
                   라이프스타일
-                </button>
-                <button
+                </TabButtonType2>
+                <TabButtonType2
                   className={activeTab === "interests" ? "active" : ""}
                   onClick={() => setActiveTab("interests")}
                 >
                   관심사
-                </button>
-                <button
+                </TabButtonType2>
+                <TabButtonType2
                   className={activeTab === "consumption" ? "active" : ""}
                   onClick={() => setActiveTab("consumption")}
                 >
                   소비성향
-                </button>
-              </TabButton>
+                </TabButtonType2>
+              </TabWrapType2>
 
               {activeTab === "lifestyle" && (
-                <TabContent>{persona.lifestyle}</TabContent>
+                <TabContent><Body3 color="gray700">{persona.lifestyle}</Body3></TabContent>
               )}
               {activeTab === "interests" && (
-                <TabContent>{persona.interest}</TabContent>
+                <TabContent><Body3 color="gray700">{persona.interest}</Body3></TabContent>
               )}
               {activeTab === "consumption" && (
-                <TabContent>{persona.consumption_pattern}</TabContent>
+                <TabContent><Body3 color="gray700">{persona.consumption_pattern}</Body3></TabContent>
               )}
             </div>
 
@@ -325,132 +333,132 @@ const CardPersona = styled.div`
   }
 `;
 
-const InterviewPopup = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 200;
+// const InterviewPopup = styled.div`
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   width: 100%;
+//   height: 100%;
+//   background: rgba(0, 0, 0, 0.5);
+//   z-index: 200;
 
-  > div {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    max-width: 450px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 20px;
-    padding: 32px 24px;
-    border-radius: 15px;
-    background: ${palette.white};
-    box-shadow: 4px 4px 30px rgba(0, 0, 0, 0.15);
-  }
+//   > div {
+//     position: fixed;
+//     top: 50%;
+//     left: 50%;
+//     transform: translate(-50%, -50%);
+//     max-width: 450px;
+//     width: 100%;
+//     display: flex;
+//     flex-direction: column;
+//     align-items: flex-start;
+//     justify-content: flex-start;
+//     gap: 20px;
+//     padding: 32px 24px;
+//     border-radius: 15px;
+//     background: ${palette.white};
+//     box-shadow: 4px 4px 30px rgba(0, 0, 0, 0.15);
+//   }
 
-  .header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    flex-direction: column;
-    gap: 4px;
-    width: 100%;
+//   .header {
+//     display: flex;
+//     align-items: flex-start;
+//     justify-content: flex-start;
+//     flex-direction: column;
+//     gap: 4px;
+//     width: 100%;
 
-    h4 {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      width: 100%;
-      font-size: 1.25rem;
-      font-weight: 500;
-      line-height: 1.3;
-      color: ${palette.gray800};
-      text-align: left;
+//     h4 {
+//       display: flex;
+//       align-items: center;
+//       justify-content: space-between;
+//       gap: 10px;
+//       width: 100%;
+//       font-size: 1.25rem;
+//       font-weight: 500;
+//       line-height: 1.3;
+//       color: ${palette.gray800};
+//       text-align: left;
 
-      .close {
-        position: relative;
-        width: 16px;
-        height: 16px;
-        cursor: pointer;
+//       .close {
+//         position: relative;
+//         width: 16px;
+//         height: 16px;
+//         cursor: pointer;
 
-        &:before,
-        &:after {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 2px;
-          height: 16px;
-          background: ${palette.gray700};
-          content: "";
-        }
+//         &:before,
+//         &:after {
+//           position: absolute;
+//           top: 50%;
+//           left: 50%;
+//           width: 2px;
+//           height: 16px;
+//           background: ${palette.gray700};
+//           content: "";
+//         }
 
-        &:before {
-          transform: translate(-50%, -50%) rotate(45deg);
-        }
+//         &:before {
+//           transform: translate(-50%, -50%) rotate(45deg);
+//         }
 
-        &:after {
-          transform: translate(-50%, -50%) rotate(-45deg);
-        }
-      }
-    }
+//         &:after {
+//           transform: translate(-50%, -50%) rotate(-45deg);
+//         }
+//       }
+//     }
 
-    .info {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 6px;
-      width: 100%;
+//     .info {
+//       display: flex;
+//       align-items: center;
+//       justify-content: flex-start;
+//       gap: 6px;
+//       width: 100%;
 
-      span {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        gap: 6px;
-        font-size: 0.875rem;
-        font-weight: 300;
-        line-height: 1.5;
-        color: ${palette.gray700};
+//       span {
+//         display: flex;
+//         align-items: center;
+//         justify-content: flex-start;
+//         gap: 6px;
+//         font-size: 0.875rem;
+//         font-weight: 300;
+//         line-height: 1.5;
+//         color: ${palette.gray700};
 
-        + span:before {
-          content: "";
-          display: inline-block;
-          width: 1px;
-          height: 9px;
-          background: ${palette.gray700};
-        }
-      }
-    }
-  }
+//         + span:before {
+//           content: "";
+//           display: inline-block;
+//           width: 1px;
+//           height: 9px;
+//           background: ${palette.gray700};
+//         }
+//       }
+//     }
+//   }
 
-  .keywords {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 4px;
-    width: 100%;
-    flex-wrap: wrap;
+//   .keywords {
+//     display: flex;
+//     align-items: center;
+//     justify-content: flex-start;
+//     gap: 4px;
+//     width: 100%;
+//     flex-wrap: wrap;
 
-    span {
-      font-size: 0.875rem;
-      font-weight: 300;
-      line-height: 1.5;
-      color: ${palette.gray700};
-      text-align: left;
-      padding: 4px 8px;
-      border-radius: 4px;
-      border: 1px solid ${palette.outlineGray};
-    }
-  }
+//     span {
+//       font-size: 0.875rem;
+//       font-weight: 300;
+//       line-height: 1.5;
+//       color: ${palette.gray700};
+//       text-align: left;
+//       padding: 4px 8px;
+//       border-radius: 4px;
+//       border: 1px solid ${palette.outlineGray};
+//     }
+//   }
 
-  .content {
-    width: 100%;
-  }
-`;
+//   .content {
+//     width: 100%;
+//   }
+// `;
 
 const TabButton = styled.div`
   width: 100%;
@@ -482,13 +490,13 @@ const TabButton = styled.div`
   }
 `;
 
-const TabContent = styled.div`
-  width: 100%;
-  // max-height: 246px;
-  height: 246px;
-  margin-top: 18px;
-  overflow-y: auto;
-  line-height: 1.5;
-  color: ${palette.gray700};
-  text-align: left;
-`;
+// const TabContent = styled.div`
+//   width: 100%;
+//   // max-height: 246px;
+//   height: 246px;
+//   margin-top: 18px;
+//   overflow-y: auto;
+//   line-height: 1.5;
+//   color: ${palette.gray700};
+//   text-align: left;
+// `;

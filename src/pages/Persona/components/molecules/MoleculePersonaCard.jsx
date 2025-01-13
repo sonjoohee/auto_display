@@ -4,7 +4,24 @@ import styled, { css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import { Button } from "../../../../assets/styles/ButtonStyle";
-import { Body2_1 } from "../../../../assets/styles/Typography";
+import { H4, Body1, Body3, Sub3 } from "../../../../assets/styles/Typography";
+import { 
+  ListBoxItem,
+  ListSubtitle,
+  ListText,
+  ListTitle,
+  ListButton,
+  Badge,
+  CardListItem,
+  CardText,
+  CardTitle,
+  CardButton,
+  InterviewPopup,
+  Status,
+  TabWrapType2,
+  TabButtonType2,
+  TabContent,
+} from "../../../../assets/styles/BusinessAnalysisStyle";
 
 const MoleculePersonaCard = ({
   title,
@@ -14,6 +31,8 @@ const MoleculePersonaCard = ({
   job,
   isBasic = false, 
   isCustom = false,
+  isComplete = false,
+  isRequest = true,
   hideCheckCircle = false,
   TitleFlex = false,
   NoLine = false,
@@ -22,8 +41,14 @@ const MoleculePersonaCard = ({
   onClick,
   checked = null,
   newLine = false,
+  viewType = 'list',
 }) => {
   const [isChecked, setIsChecked] = useState(false);
+  const [requestStatus, setRequestStatus] = useState(isRequest);
+
+  const [selectedPersonaForPopup, setSelectedPersonaForPopup] = useState(null);
+  const [activeTab1, setActiveTab1] = useState("lifestyle");
+  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     setIsChecked(checked);
@@ -48,69 +73,302 @@ const MoleculePersonaCard = ({
     }
   };
 
+  const handleRequestClick = () => {
+    setRequestStatus(false);
+  };
+
+  const handleDetailClick = () => {
+    setShowPopup(true);
+  };
+
   return (
     <>
-      <CardContainer
-        TitleFlex={TitleFlex}
-        $isChecked={isChecked}
-        NoLine={NoLine}
-      >
-        <MainContent NoLine={NoLine}>
-          {!hideCheckCircle && (
-            <CheckCircle $isChecked={isChecked} onClick={handleCheck} />
-          )}
-
-          <ContentWrapper NoLine={NoLine}>
-            <TitleSection>
-              <Title NoLine={NoLine}>
-                <body2_1>{title}</body2_1>
-
-                {!newLine && (
-                  <TitleInfo>
-                    <span>{gender}</span>
-                    <span>{age}세</span>
-                    <span>{job}</span>
-                  </TitleInfo>
-                )}
-              </Title>
-            </TitleSection>
-
-            {newLine && (
-              <TitleInfo>
-                <span>{gender}</span>
-                <span>{age}세</span>
-                <span>{job}</span>
-              </TitleInfo>
-            )}
-
+      {/* 리스트 버전 */}
+      {viewType === 'list' && (
+        <ListBoxItem
+          TitleFlex={TitleFlex}
+          $isChecked={isChecked}
+          NoLine={NoLine}
+        >
+          <ListText>
+            <ListTitle>
+              <Body1>{title}</Body1>
+              {isRequest && (
+                isBasic ? (
+                  <Badge Basic>
+                    <img src={images.StatusBadgeBasic} alt="기본형" />
+                    기본형
+                  </Badge>
+                ) : isCustom ? (
+                  <Badge Custom>
+                    <img src={images.StatusBadgeCustom} alt="커스터마이즈" />
+                    커스터마이즈
+                  </Badge>
+                ) : isComplete ? (
+                  <Badge Complete>
+                    <img src={images.CheckGreen} alt="모집 완료" />
+                    모집 완료
+                  </Badge>
+                ) : requestStatus ? (
+                  <Badge Request>
+                    <img src={images.Plus} alt="요청 필요" />
+                    요청 필요
+                  </Badge>
+                ) : (
+                  <Badge Complete>
+                    <img src={images.CheckGreen} alt="모집 완료" />
+                    모집 완료
+                  </Badge>
+                )
+              )}
+            </ListTitle>
+            
             {keywords.length > 0 && (
-              <KeywordGroup>
+              <ListSubtitle>
                 {keywords.map((keyword, index) => (
-                  <KeywordTag key={index}>#{keyword}</KeywordTag>
+                  <Badge Keyword key={index}>#{keyword}</Badge>
                 ))}
-              </KeywordGroup>
+              </ListSubtitle>
             )}
-          </ContentWrapper>
-          {isBasic ? (
-            <Badge Basic>
-              <img src={images.StatusBadgeBasic} alt="기본형" />
-              기본형
-            </Badge>
-          ) : isCustom ? (
-              <Badge Custom>
-                <img src={images.StatusBadgeCustom} alt="커스터마이즈" />
-                커스터마이즈
+          </ListText>
+
+          <ListButton>
+            <CustomButton 
+              Medium 
+              PrimaryLightest 
+              Fill
+              onClick={handleDetailClick}
+            >
+              자세히
+            </CustomButton>
+            {requestStatus && (
+              <CustomButton 
+                Medium 
+                Primary 
+                Fill
+                onClick={handleRequestClick}
+              >
+                모집 요청
+              </CustomButton>
+            )}
+          </ListButton>
+
+
+          {/* 
+          <ListText NoLine={NoLine}>
+            {!hideCheckCircle && (
+              <CheckCircle $isChecked={isChecked} onClick={handleCheck} />
+            )}
+            <ContentWrapper NoLine={NoLine}>
+              <TitleSection>
+                <Title NoLine={NoLine}>
+                  <Body1>{title}</Body1>
+
+                  {!newLine && (
+                    <TitleInfo>
+                      <span>{gender}</span>
+                      <span>{age}세</span>
+                      <span>{job}</span>
+                    </TitleInfo>
+                  )} 
+                </Title>
+              </TitleSection>
+
+              {newLine && (
+                <TitleInfo>
+                  <span>{gender}</span>
+                  <span>{age}세</span>
+                  <span>{job}</span>
+                </TitleInfo>
+              )}
+              
+              {keywords.length > 0 && (
+                <ListSubtitle>
+                  {keywords.map((keyword, index) => (
+                    <Badge Keyword key={index}>#{keyword}</Badge>
+                  ))}
+                </ListSubtitle>
+              )}
+            </ContentWrapper>
+            {isBasic ? (
+              <Badge Basic>
+                <img src={images.StatusBadgeBasic} alt="기본형" />
+                기본형
               </Badge>
-          ) : (
-            <></>
-          )}
-        </MainContent>
-      </CardContainer>
+            ) : isCustom ? (
+                <Badge Custom>
+                  <img src={images.StatusBadgeCustom} alt="커스터마이즈" />
+                  커스터마이즈
+                </Badge>
+            ) : (
+              <></>
+            )}
+          </ListText>
+           */}
+
+
+        </ListBoxItem>
+      )}
+
+      {/* 카드 버전 */}
+      {viewType === 'card' && (
+        <CardListItem>
+          <CardText>
+            <CardTitle>
+            {isRequest && (
+                isBasic ? (
+                  <Badge Basic>
+                    <img src={images.StatusBadgeBasic} alt="기본형" />
+                    기본형
+                  </Badge>
+                ) : isCustom ? (
+                  <Badge Custom>
+                    <img src={images.StatusBadgeCustom} alt="커스터마이즈" />
+                    커스터마이즈
+                  </Badge>
+                ) : isComplete ? (
+                  <Badge Complete>
+                    <img src={images.CheckGreen} alt="모집 완료" />
+                    모집 완료
+                  </Badge>
+                ) : requestStatus ? (
+                  <Badge Request>
+                    <img src={images.Plus} alt="요청 필요" />
+                    요청 필요
+                  </Badge>
+                ) : (
+                  <Badge Complete>
+                    <img src={images.CheckGreen} alt="모집 완료" />
+                    모집 완료
+                  </Badge>
+                )
+              )}
+              <Body1>{title}</Body1>
+            </CardTitle>
+
+            <ListSubtitle>
+              {keywords.map((keyword, index) => (
+                <Badge Keyword key={index}>#{keyword}</Badge>
+              ))}
+            </ListSubtitle>
+
+            <ListSubtitle>
+              <p>
+                김지영은 아침마다 피트니스 센터에서 운동을 하고, 건강한 아침 식사로 하루를 시작하는 활동적인 생활을 즐깁니다. 직장에서 효율적으로 업무를 처리하며 최신 마케팅 트렌드를 주시합니다.<br />
+                주말에는 친구들과 브런치를 즐기거나 패션 아이템을 쇼핑하며 사교적인 시간을 보냅니다. 또한, 새로운 장소를 탐험하는 것을 좋아해 국내외 여행을 자주 다닙니다. 자기계발에도 관심이 많아 꾸준히 독서와 온라인 강의를 통해 지식을 넓혀갑니다.
+              </p>
+            </ListSubtitle>
+          </CardText>
+
+          <CardButton>
+            <CustomButton 
+              Medium 
+              PrimaryLightest 
+              Fill
+              onClick={handleDetailClick}
+            >
+              자세히
+            </CustomButton>
+            {requestStatus && (
+              <CustomButton 
+                Medium 
+                Primary 
+                Fill
+                onClick={handleRequestClick}
+              >
+                모집 요청
+              </CustomButton>
+            )}
+          </CardButton>
+        </CardListItem>
+      )}
+
+      
+      {showPopup && (
+        <>
+          <InterviewPopup>
+            <div>
+              <div className="header">
+                <H4>
+                  시간이 부족한 바쁜 프리랜서
+                  <span
+                    className="close"
+                    onClick={() => setShowPopup(false)}
+                  />
+                </H4>
+                <p className="info">
+                  <Sub3>여성</Sub3>
+                  <Sub3>25세</Sub3>
+                  <Sub3>서울 송파구 거주</Sub3>
+                </p>
+              </div>
+
+              <div className="keywords">
+                <Status>시간 관리</Status>
+                <Status>페르소나 키워드</Status>
+                <Status>업무 효율</Status>
+              </div>
+
+              <div className="content">
+                <TabWrapType2>
+                  <TabButtonType2
+                    isActive={activeTab1 === "lifestyle"}
+                    onClick={() => setActiveTab1("lifestyle")}
+                  >
+                    라이프스타일
+                  </TabButtonType2>
+                  <TabButtonType2
+                    isActive={activeTab1 === "interests"}
+                    onClick={() => setActiveTab1("interests")}
+                  >
+                    관심사
+                  </TabButtonType2>
+                  <TabButtonType2
+                    isActive={activeTab1 === "consumption"}
+                    onClick={() => setActiveTab1("consumption")}
+                  >
+                    소비성향
+                  </TabButtonType2>
+                </TabWrapType2>
+
+                {activeTab1 === "lifestyle" && (
+                  <TabContent>
+                    <Body3 color="gray700">라이프스타일</Body3>
+                  </TabContent>
+                )}
+                {activeTab1 === "interests" && (
+                  <TabContent>
+                    <Body3 color="gray700">관심사</Body3>
+                  </TabContent>
+                )}
+                {activeTab1 === "consumption" && (
+                  <TabContent>
+                    <Body3 color="gray700">소비성향</Body3>
+                  </TabContent>
+                )}
+              </div>
+
+              <Button
+                Large
+                Primary
+                Fill
+              >
+                인터뷰 준비 요청하기
+              </Button>
+            </div>
+          </InterviewPopup>
+        </>
+      )}
+
     </>
   );
 };
 
 export default MoleculePersonaCard;
+
+const CustomButton = styled(Button)`
+  min-width: 92px;
+`;
 
 const CardContainer = styled.div`
   display: flex;
@@ -265,33 +523,33 @@ const TitleInfo = styled.div`
   }
 `;
 
-const Badge = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.75rem;
-  line-height: 1.2;
-  color: ${(props) => {
-    if (props.Basic) return `#34C759`;
-    else if (props.Custom) return palette.gray500;
-    else return palette.gray500;
-  }};
-  padding: 4px 8px;
-  border-radius: 50px;
-  border: 1px solid
-    ${(props) => {
-      if (props.Basic) return `#34C759`;
-      else if (props.Custom) return palette.primary;
-      else return palette.outlineGray;
-    }};
-  background: ${(props) => {
-    if (props.Basic) return `rgba(52, 199, 89, 0.10)`;
-    else if (props.Custom) return palette.primary;
-    else return palette.gray50;
-  }};
-  cursor: pointer;
-  flex-shrink: 0;
-`;
+// const Badge = styled.div`
+//   display: flex;
+//   align-items: center;
+//   gap: 4px;
+//   font-size: 0.75rem;
+//   line-height: 1.2;
+//   color: ${(props) => {
+//     if (props.Basic) return `#34C759`;
+//     else if (props.Custom) return palette.gray500;
+//     else return palette.gray500;
+//   }};
+//   padding: 4px 8px;
+//   border-radius: 50px;
+//   border: 1px solid
+//     ${(props) => {
+//       if (props.Basic) return `#34C759`;
+//       else if (props.Custom) return palette.primary;
+//       else return palette.outlineGray;
+//     }};
+//   background: ${(props) => {
+//     if (props.Basic) return `rgba(52, 199, 89, 0.10)`;
+//     else if (props.Custom) return palette.primary;
+//     else return palette.gray50;
+//   }};
+//   cursor: pointer;
+//   flex-shrink: 0;
+// `;
 
 const ReadyIcon = styled.div`
   width: 0px;

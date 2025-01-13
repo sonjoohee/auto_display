@@ -137,7 +137,7 @@ export const Caption1 = styled.div`
 `;
 
 // Caption2
-export const Caption2 = styled.p`
+export const Caption2 = styled.div`
   font-size: 0.75rem;
   font-weight: 400;
   line-height: 1.5;

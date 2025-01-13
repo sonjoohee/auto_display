@@ -26,6 +26,7 @@ export const ContentSection = styled.div`
     if (props.row) return `16px`;
     else return `32px`;
   }};
+  width: 100%;
 `;
 
 export const MainContent = styled.div`
@@ -130,10 +131,12 @@ export const CustomizePersona = styled.div`
   }};
   flex-wrap: wrap;
   // flex-direction: column;
+  align-items: center;
   gap: 20px;
   width: 100%;
   height: 100%;
   margin-top: 30px;
+  margin-bottom: 100px;
 `;
 
 export const AccordionSection = styled.div`
@@ -323,14 +326,22 @@ export const TabButtonType3 = styled(TabButton)`
       `}
 `;
 
+export const TabContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
+`;
+
 export const Status = styled.div`
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px !important;
-  max-width: 55px;
-  width: 100%;
+  min-width: 55px;
+  // max-width: 55px;
+  // width: 100%;
   font-size: 0.75rem;
   line-height: 1.5;
   color: ${(props) =>
@@ -338,9 +349,18 @@ export const Status = styled.div`
       ? palette.primary
       : props.status === "Complete"
       ? palette.green
+      : props.status === "Pre"
+      ? palette.gray700
       : palette.gray700};
   // margin-left: auto;
-  padding: 2px 8px;
+  padding: ${(props) =>
+    props.status === "Ing"
+      ? `2px 8px`
+      : props.status === "Complete"
+      ? `2px 8px`
+      : props.status === "Pre"
+      ? `2px 8px`
+      : `4px 8px`};
   border-radius: 2px;
   border: ${(props) =>
     props.status === "Ing"
@@ -353,7 +373,9 @@ export const Status = styled.div`
       ? `rgba(34, 111, 255, 0.04)`
       : props.status === "Complete"
       ? palette.white
-      : palette.chatGray};
+      : props.status === "Pre"
+      ? palette.chatGray
+      : palette.white};
   
   ${(props) =>
     props.status === "Pre" &&
@@ -403,9 +425,19 @@ export const Badge = styled.div`
       ? palette.green
       : props.Custom
       ? palette.primary
-      : palette.gray500};
+      : props.Complete
+      ? palette.green
+      : props.Request
+      ? palette.gray500
+      : palette.gray500
+    };
   line-height: 1.2;
-  padding: ${(props) => (props.None ? "0" : "4px 8px")};
+  padding: ${(props) =>
+    props.Keyword
+      ? "4px 10px"
+      : props.None
+      ? "0"
+      : "4px 8px"};
   border-radius: 50px;
   border: 1px solid
     ${(props) =>
@@ -415,6 +447,10 @@ export const Badge = styled.div`
         ? `rgba(34, 111, 255, 0.10)`
         : props.None
         ? `none`
+        : props.Keyword
+        ? `none`
+        : props.Complete
+        ? palette.green
         : palette.gray200};
   background: ${(props) =>
     props.Basic
@@ -612,18 +648,313 @@ export const Tag = styled.span`
   }}
 `;
 
+export const CategoryView = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 8px;
+  border-radius: 10px;
+  border: 1px solid ${palette.outlineGray};
+  background: ${palette.white};
+
+  /* 좌측 그라데이션 */
+  &:before {
+    content: '';
+    position: absolute;
+    left: inherit;
+    top: inherit;
+    width: 12px;
+    height: 32px;
+    background: linear-gradient(270deg, rgba(102, 102, 102, 0.00) 0%, #666 100%);
+    pointer-events: none;
+    opacity: ${props => props.showLeftGradient ? 0.2 : 0};
+    transition: opacity 0.2s ease;
+    z-index: 1;
+  }
+
+  /* 우측 그라데이션 */
+  &:after {
+    content: '';
+    position: absolute;
+    right: 170px;
+    top: inherit;
+    width: 12px;
+    height: 32px;
+    background: linear-gradient(270deg, #666 0%, rgba(102, 102, 102, 0.00) 100%);
+    pointer-events: none;
+    opacity: ${props => props.showRightGradient ? 0.2 : 0};
+    transition: opacity 0.2s ease;
+    z-index: 1;
+  }
+`;
+
+export const ChoiceWrap = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  max-width: 640px;
+  width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+  
+  /* 스크롤바 숨기기 */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* 마우스 드래그 스크롤 가능하도록 설정 */
+  cursor: grab;
+  &:active {
+    cursor: grabbing;
+  }
+`;
+
+export const Choice = styled.button`
+  position: relative;
+  z-index: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: "Pretendard", "poppins";
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.6;
+  color: ${palette.gray700};
+  padding: 6px 10px;
+  border-radius: 5px;
+  border: 0;
+  background: ${palette.chatGray};
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    &:after {
+      opacity: 0.8;
+    }
+  }
+
+  &:after {
+    width: 10px;
+    height: 10px;
+    background: url(${images.CloseBlack}) center no-repeat;
+    content: "";
+    flex-shrink: 0;
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
+  }
+`;
+
+export const TypeMore = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+
+  &:before {
+    width: 1px;
+    height: 32px;
+    background: ${palette.outlineGray};
+    content: "";
+  }
+`;
+
+export const Personnel = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.6;
+  color: ${palette.gray700};
+  padding: 6px 7px;
+  border-radius: 10px;
+  border: 1px solid ${palette.outlineGray};
+`;
+
+export const MoreButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-shrink: 0;
+  font-family: "Pretendard", "poppins";
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: ${palette.gray500};
+  border: 0;
+  background: ${palette.white};
+  cursor: pointer;
+
+  &:after {
+    width: 10px;
+    height: 10px;
+    background: url(${images.ChevronDown}) center no-repeat;
+    transform: rotate(${props => props.isOpen ? '180deg' : '0deg'});
+    transition: transform 0.3s ease;
+    content: "";
+  }
+`;
+
+export const TypeList = styled.div`
+  position: absolute;
+  top: 55px;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 32px;
+  max-width: 383px;
+  width: 100%;
+  padding: 20px 8px;
+  border-radius: 10px;
+  border: 1px solid ${palette.outlineGray};
+  background: ${palette.white};
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.15);
+  
+  /* 애니메이션 효과 추가 */
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: slideDown 0.3s ease forwards;
+
+  @keyframes slideDown {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+`;
+
+export const TypeItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 8px;
+  width: 100%;
+
+  > p {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: ${palette.gray700};
+    line-height: 1.6;
+    margin: 0 12px;
+
+    span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      font-size: 0.75rem;
+      color: ${palette.gray500};
+      border: 1px solid ${palette.outlineGray};
+      border-radius: 50%;
+      cursor: help;
+    }
+
+    div {
+      display: none;
+      position: absolute;
+      top: -65px;
+      left: 108px;
+      width: 130px;
+      text-align: left;
+      padding: 8px 12px;
+      border-radius: 5px;
+      background: ${palette.gray800};
+      z-index: 1;
+
+      &:before {
+        position: absolute;
+        bottom: -10px;
+        left: 10px;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 10px 5px 0px 5px;
+        border-color: ${palette.gray800} transparent transparent transparent;
+        content: "";
+      }
+    }
+
+    span:hover + div {
+      display: block;
+    }
+  }
+`;
+
+export const TypeItemList = styled.ul`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  width: 100%;
+
+  > li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+
+    > span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 32px;
+      font-size: 0.75rem;
+      font-weight: 400;
+      line-height: 1.5;
+      color: ${palette.gray500};
+      margin-left: auto;
+      padding: 2px 4px;
+      border-radius: 5px;
+      background: ${palette.chatGray};
+    }
+  }
+`;
+
+export const TypeListItem = styled.li`
+  background: ${props => props.isSelected ? 'rgba(34, 111, 255, 0.04)' : 'transparent'};
+  border-radius: 8px;
+  padding: ${props => props.isSelected ? '8px 12px' : '0 12px'};
+  transition: background-color 0.2s ease;
+
+  input[type="checkbox"]:before {
+    background: transparent !important;
+  }
+`;
+
 export const BottomBar = styled.div`
   position: fixed;
   bottom: 40px;
   width: ${(props) => {
     if (props.W100) return "100%";
     if (props.Wide) return "1024px";
-    return "816px";
+    return "608px";
   }};
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 20px;
+  padding: ${(props) => {
+    if (props.Black) return "16px 24px 16px 32px";
+    return "24px 20px";
+  }};
   border-radius: ${(props) => {
     if (props.Round) return "50px";
     if (props.Black) return "15px";
@@ -1202,7 +1533,7 @@ export const Persona = styled.div`
 export const CardGroupWrap = styled.div`
   display: flex;
   flex-direction: ${props => props.column ? "column" : "row"};
-  gap: 16px !important;
+  gap: 15px !important;
   flex-wrap: wrap;
   width: 100%;
 `;
@@ -1233,6 +1564,7 @@ export const ListTitle = styled(Body1)`
 export const ListSubtitle = styled.div`
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 4px;
 
   p {
@@ -1262,6 +1594,7 @@ export const ListButton = styled.div`
 export const CardListItem = styled(ListBoxItem)`
   flex-direction: column;
   max-width: 262px;
+  text-align: left;
 `;
 
 export const CardText = styled(ListText)`
@@ -1284,7 +1617,7 @@ export const CardButton = styled(ListButton)`
 export const ViewType = styled.div`
   display: flex;
   gap: 8px;
-  padding: 8px 12px;
+  padding: 7px 12px;
   border-radius: 10px;
   border: 1px solid ${palette.outlineGray};
 `;
@@ -1314,25 +1647,142 @@ export const TypeButton = styled.button`
   `}
 `;
 
-export const BackgroundBox = styled.div`
+export const BoxWrap = styled.div`
   width: 100%;
   display: flex;
-  flex-direction: column;
   align-items: flex-start !important;
-  gap: 4px !important;
+  gap: 20px !important;
   padding: 20px 32px;
   border-radius: 15px;
-  background-color: ${palette.chatGray};
+  border: 1px solid ${palette.outlineGray};
 
-  strong {
-    font-weight: 600;
-    color: ${palette.gray800};
+  div, p, strong {
+    text-align: left;
+  }
+`;
+
+export const InterviewPopup = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 200;
+
+  > div {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 450px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 20px;
+    padding: 32px 24px;
+    border-radius: 15px;
+    background: ${palette.white};
+    box-shadow: 4px 4px 30px rgba(0, 0, 0, 0.15);
   }
 
-  p {
-    font-size: 0.88rem;
-    color: ${palette.gray500};
-    line-height: 1.55;
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+
+    h4 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      width: 100%;
+
+      .close {
+        position: relative;
+        width: 16px;
+        height: 16px;
+        margin-left: auto;
+        cursor: pointer;
+
+        &:before,
+        &:after {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 2px;
+          height: 16px;
+          background: ${palette.gray700};
+          content: "";
+        }
+
+        &:before {
+          transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        &:after {
+          transform: translate(-50%, -50%) rotate(-45deg);
+        }
+      }
+    }
+
+    .info {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 6px;
+      width: 100%;
+
+      div {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 6px;
+        font-size: 0.875rem;
+        font-weight: 300;
+        line-height: 1.5;
+        color: ${palette.gray700};
+
+        + div:before {
+          content: "";
+          display: inline-block;
+          width: 1px;
+          height: 9px;
+          background: ${palette.gray700};
+        }
+      }
+    }
+  }
+
+  .keywords {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 4px;
+    width: 100%;
+    flex-wrap: wrap;
+
+    span {
+      font-size: 0.875rem;
+      font-weight: 300;
+      line-height: 1.5;
+      color: ${palette.gray700};
+      text-align: left;
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid ${palette.outlineGray};
+    }
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    width: 100%;
   }
 `;
 
