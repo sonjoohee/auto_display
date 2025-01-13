@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { palette } from "../../assets/styles/Palette";
-import { Button } from "../../assets/styles/ButtonStyle";
+import { Button, IconButton } from "../../assets/styles/ButtonStyle";
 import { 
   FormBox, 
   CustomInput, 
@@ -40,7 +40,10 @@ import {
   CardButton,
   ViewType,
   TypeButton,
-  BackgroundBox
+  BoxWrap,
+  CategoryView,
+  ChoiceWrap,
+  Choice,
 } from "../../assets/styles/BusinessAnalysisStyle";
 import PopupWrap from "../../assets/styles/Popup";
 import { SkeletonH1, SkeletonTitle, SkeletonLine } from "../../assets/styles/Skeleton";
@@ -125,7 +128,7 @@ const PageStyleGuide  = () => {
         <a href="#personas" onClick={scrollToSection}>Personas</a>
         <a href="#listgroup" onClick={scrollToSection}>ListGroup</a>
         <a href="#barChart" onClick={scrollToSection}>BarChart</a>
-        <a href="#backgroundbox" onClick={scrollToSection}>Background Box</a>
+        <a href="#boxWrap" onClick={scrollToSection}>BoxWrap</a>
       </Header>
 
       <ContentsWrap>
@@ -388,6 +391,64 @@ const PageStyleGuide  = () => {
           <FlexBox>
             <Button Small Primary>바로가기<img src={images.ChevronRightPrimary} alt="" /></Button>
             <Button Small Primary><img src={images.PeopleFillPrimary} alt="" />바로가기</Button>
+          </FlexBox>
+
+          <Sub1>7. Icon Type 2</Sub1>
+          <Note>
+            아이콘을 삽입할 경우, 아이콘 위치를 지정해야 합니다.<br />
+            필요에 따라, 박스가 필요할 경우 6번 참고
+            <strong><br />아이콘 명</strong>
+            저장하기 : FolderArrowDown<br />
+            재생성하기 : IconRepeatSquare<br />
+            수정하기 : PencilSquare<br />
+            이전으로 되돌리기 : ClockCounterclockwise<br />
+            AI로 다듬기 : MagicStick<br />
+            인터뷰 스크립트 보기 : MagicStick<br />
+            결과리포트 리스트 : BoxArrowUpRight<br />
+            구독 플랜 관리 : CalendarCheck<br />
+            고객 서비스 : Headset
+            <CodeBlock>
+              {'<IconButton>바로가기<img src="이미지" alt="" /></IconButton>'}
+            </CodeBlock>
+          </Note>
+
+          <FlexBox>
+            <IconButton>
+              <img src={images.FolderArrowDown} alt="저장하기" />
+              <span>저장하기</span>
+            </IconButton>
+            <IconButton>
+              <img src={images.IconRepeatSquare} alt="재생성하기" />
+              <span>재생성하기</span>
+            </IconButton>
+            <IconButton>
+              <img src={images.PencilSquare} alt="수정하기" />
+              <span>수정하기</span>
+            </IconButton>
+            <IconButton>
+              <img src={images.ClockCounterclockwise} alt="이전으로 되돌리기" />
+              <span>이전으로 되돌리기</span>
+            </IconButton>
+            <IconButton>
+              <img src={images.MagicStick} alt="AI로 다듬기" />
+              <span>AI로 다듬기</span>
+            </IconButton>
+            <IconButton>
+              <img src={images.ReportSearch} alt="인터뷰 스크립트 보기" />
+              <span>인터뷰 스크립트 보기</span>
+            </IconButton>
+            <IconButton>
+              <span>결과리포트 리스트</span>
+              <img src={images.BoxArrowUpRight} alt="결과리포트 리스트" />
+            </IconButton>
+            <IconButton>
+              <img src={images.CalendarCheck} alt="구독 플랜 관리" />
+              <span>구독 플랜 관리</span>
+            </IconButton>
+            <IconButton>
+              <img src={images.Headset} alt="고객 서비스" />
+              <span>고객 서비스</span>
+            </IconButton>
           </FlexBox>
         </div>
 
@@ -874,6 +935,14 @@ onChange={() => setSelectedRadio2('gender1')}
             <Tag color="Orange" />
             <Tag color="CarnationPink" />
           </FlexBox>
+
+          <Sub1>4. Category</Sub1>
+
+          <FlexBox>
+            <ChoiceWrap>
+              <Choice>대표 사용자</Choice>
+            </ChoiceWrap>
+          </FlexBox>
         </div>
 
         <div id="viewtype">
@@ -946,14 +1015,14 @@ onChange={() => setSelectedRadio2('gender1')}
 
           <Note>
             플러팅 바 입니다.<br />
-            최소 가로사이즈는 718px 입니다.<br />
+            최소 가로사이즈는 608px 입니다.<br />
             바의 기본 백그라운드 컬러는 흰색입니다. (Black 속성을 추가하면 검은색으로 변경됩니다.)<br />
             바의 라운드 속성은 10px 입니다. (Round 속성을 추가하면 50px로 변경됩니다.)
             <CodeBlock>
-              {`<BottomBarWrap>
+              {`<BottomBar>
   <p>BottomBar</p>
   <Button Medium Primary Fill>Button</Button>
-</BottomBarWrap>`}
+</BottomBar>`}
             </CodeBlock>
           </Note>
 
@@ -1409,34 +1478,37 @@ onChange={() => setSelectedRadio2('gender1')}
           </FlexBox>
         </div>
 
-        <div id="backgroundbox">
+        <div id="boxWrap">
           <h2>Background Box</h2>
           <Note>
             안에 내용은 별도로 작성해주세요.<br />
-            기본형은 strong과 p를 사용해주세요.
+            필요에 따라 이미지를 추가, 삭제 가능합니다.
             <CodeBlock>
-              {`<BackgroundBox>
-  <strong>추천 페르소나</strong>
-  <p>관련 산업과 비즈니스에 딱 맞는 페르소나를 추천드려요. 지금 바로 대화하며 새로운 인사이트를 발견해보세요</p>
-</BackgroundBox>
-
-<BackgroundBox>
-  <Body2>추천 페르소나</Body2>
-  <Sub3>관련 산업과 비즈니스에 딱 맞는 페르소나를 추천드려요. 지금 바로 대화하며 새로운 인사이트를 발견해보세요</Sub3>
-</BackgroundBox>`}
+              {`<BoxWrap>
+  <img src={images.BgUserChatDots} alt="" />
+  <div>
+    <Body1>타이틀</Body1>
+    <Body3 color="gray700">내용</Body3>
+  </div>
+</BoxWrap>`}
             </CodeBlock>
           </Note>
 
           <FlexBox column>
-            <BackgroundBox>
-              <strong>추천 페르소나</strong>
-              <p>관련 산업과 비즈니스에 딱 맞는 페르소나를 추천드려요. 지금 바로 대화하며 새로운 인사이트를 발견해보세요</p>
-            </BackgroundBox>
+            <BoxWrap>
+              <div>
+                <Body1>타이틀</Body1>
+                <Body3 color="gray700">내용</Body3>
+              </div>
+            </BoxWrap>
 
-            <BackgroundBox>
-              <Body2>추천 페르소나</Body2>
-              <Sub3>관련 산업과 비즈니스에 딱 맞는 페르소나를 추천드려요. 지금 바로 대화하며 새로운 인사이트를 발견해보세요</Sub3>
-            </BackgroundBox>
+            <BoxWrap>
+              <img src={images.BgUserChatDots} alt="" />
+              <div>
+                <Body1>타이틀</Body1>
+                <Body3 color="gray700">내용</Body3>
+              </div>
+            </BoxWrap>
           </FlexBox>
         </div>
       </ContentsWrap>

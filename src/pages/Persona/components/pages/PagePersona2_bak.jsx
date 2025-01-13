@@ -45,27 +45,15 @@ import {
   TabButtonType3,
   ViewType,
   TypeButton,
-  CardGroupWrap,
-  CategoryView,
-  ChoiceWrap,
-  Choice,
-  TypeMore,
-  Personnel,
-  MoreButton,
-  TypeList,
-  TypeItemList,
-  TypeItem,
-  TypeListItem,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
 import { Button } from "../../../../assets/styles/ButtonStyle";
-import { H4, Body2, Body3, Sub1, Sub3, Caption2 } from "../../../../assets/styles/Typography";
+import { Body2, Body3 } from "../../../../assets/styles/Typography";
 import {
   CustomTextarea,
   CustomInput,
 } from "../../../../assets/styles/InputStyle";
-import { CheckBox } from "../../../../assets/styles/Input";
 import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
 import MoleculeHeader from "../molecules/MoleculeHeader";
 import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
@@ -75,7 +63,7 @@ import { updateProjectOnServer } from "../../../../utils/indexedDB";
 // import { updateProjectReportOnServer } from "../../../../utils/indexedDB";
 import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
 import AtomPersonaLoader from "../atoms/AtomPersonaLoader";
-import PopupWrap, { Contents } from "../../../../assets/styles/Popup";
+import PopupWrap from "../../../../assets/styles/Popup";
 import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import MoleculeRequestPersonaCard from "../molecules/MoleculeRequestPersonaCard";
 import { createRequestPersonOnServer } from "../../../../utils/indexedDB";
@@ -110,14 +98,12 @@ const PagePersona2 = () => {
   const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
-  const [requestPersonaList, setRequestPersonaList] = useAtom(REQUEST_PERSONA_LIST);
+  const [requestPersonaList, setRequestPersonaList] =
+    useAtom(REQUEST_PERSONA_LIST);
 
   const [selectedPersonas, setSelectedPersonas] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [showCustomizePopup, setShowCustomizePopup] = useState(false);
-
-  const [showInterviewPopup, setShowInterviewPopup] = useState(false);
-  const [selectedPersonaForPopup, setSelectedPersonaForPopup] = useState(null);
 
   const [customizeFormState, setCustomizeFormState] = useState({
     isAccordionOpen: false,
@@ -128,28 +114,6 @@ const PagePersona2 = () => {
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [regenerateCount, setRegenerateCount] = useState(0);
   const [showRegenerateButton, setShowRegenerateButton] = useState(false);
-
-  const [viewType, setViewType] = useState('list'); // 'list' 또는 'card'
-  const [activeTab, setActiveTab] = useState('daily'); // 'daily' 또는 'business'
-
-  const [showTypeList, setShowTypeList] = useState(false);
-
-  const [selectedTypes, setSelectedTypes] = useState([]);
-
-  const [unselectedTypes, setUnselectedTypes] = useState([
-    { id: 'type1', label: '대표 사용자', count: 1 },
-    { id: 'type2', label: '극단적 사용자', count: 2 },
-    { id: 'type3', label: '비교 분석형 사용자', count: 1 },
-    { id: 'type4', label: '비주류 사용자', count: 1 },
-    { id: 'type5', label: '대표 사용자', count: 3 },
-    { id: 'type6', label: '극단적 사용자', count: 2 },
-    { id: 'type7', label: '비교 분석형 사용자', count: 1 },
-    { id: 'type8', label: '비주류 사용자', count: 1 }
-  ]);
-
-  const handleViewTypeChange = (type) => {
-    setViewType(type);
-  };
 
   const handlePopupClose = () => {
     setShowPopup(false);
@@ -791,87 +755,6 @@ const PagePersona2 = () => {
     return isRequiredFieldsFilled;
   };
 
-  // 유형 선택/해제 처리 함수
-  const handleTypeToggle = (typeId, isSelected) => {
-    if (isSelected) {
-      // 선택 해제: 선택된 유형에서만 제거
-      const typeToMove = selectedTypes.find(type => type.id === typeId);
-      setSelectedTypes(prev => prev.filter(type => type.id !== typeId));
-    } else {
-      // 선택: 선택된 유형에 추가
-      const typeToMove = unselectedTypes.find(type => type.id === typeId);
-      setSelectedTypes(prev => [...prev, { 
-        id: typeId, 
-        label: typeToMove.label, 
-        type: typeToMove.type,  // type 값 추가
-        count: typeToMove.count // unselectedTypes의 count 값 사용
-      }]);
-    }
-  };
-
-  // 마우스 드래그 스크롤 핸들러 추가
-  const handleMouseDrag = (e) => {
-    const slider = e.currentTarget;
-    let isDown = false;
-    let startX;
-    let scrollLeft;
-
-    slider.addEventListener('mousedown', (e) => {
-      isDown = true;
-      slider.style.cursor = 'grabbing';
-      startX = e.pageX - slider.offsetLeft;
-      scrollLeft = slider.scrollLeft;
-    });
-
-    slider.addEventListener('mouseleave', () => {
-      isDown = false;
-      slider.style.cursor = 'grab';
-    });
-
-    slider.addEventListener('mouseup', () => {
-      isDown = false;
-      slider.style.cursor = 'grab';
-    });
-
-    slider.addEventListener('mousemove', (e) => {
-      if (!isDown) return;
-      e.preventDefault();
-      const x = e.pageX - slider.offsetLeft;
-      const walk = (x - startX) * 2; // 스크롤 속도 조절
-      slider.scrollLeft = scrollLeft - walk;
-    });
-  };
-
-  // Choice 컴포넌트에서 X 버튼 클릭 시 삭제하는 핸들러 추가
-  const handleRemoveType = (typeId) => {
-    setSelectedTypes(prev => prev.filter(type => type.id !== typeId));
-  };
-
-  // 총 인원수를 계산하는 함수 추가
-  const getTotalCount = () => {
-    return selectedTypes.reduce((sum, type) => sum + type.count, 0);
-  };
-
-  // 스크롤 위치에 따른 그라데이션 상태 관리
-  const [showLeftGradient, setShowLeftGradient] = useState(false);  // 왼쪽은 처음에 안보임
-  const [showRightGradient, setShowRightGradient] = useState(false); // 오른쪽은 처음에 보임
-
-  // 스크롤 이벤트 핸들러
-  const handleScroll = (e) => {
-    const container = e.target;
-    const isAtStart = container.scrollLeft <= 0;
-    const isAtEnd = container.scrollLeft + container.offsetWidth >= container.scrollWidth;
-
-    setShowLeftGradient(!isAtStart);
-    setShowRightGradient(!isAtEnd);
-  };
-
-  // 일상/비즈니스 페르소나 카운트를 구분하여 계산하는 함수
-  const getPersonaCount = (type) => {
-    if (!personaList || !personaList.unselected) return 0;
-    return personaList.unselected.filter(persona => persona.type === type).length;
-  };
-
   return (
     <>
       <ContentsWrap>
@@ -899,49 +782,41 @@ const PagePersona2 = () => {
 
                       <Tabheader>
                         <TabWrapType3>
-                          <TabButtonType3 
-                            isActive={activeTab === 'daily'}
-                            onClick={() => setActiveTab('daily')}
-                          >
-                            일상 페르소나 ({getPersonaCount('daily')})
-                          </TabButtonType3>
-                          <TabButtonType3 
-                            isActive={activeTab === 'business'}
-                            onClick={() => setActiveTab('business')}
-                          >
-                            비즈니스 페르소나 ({getPersonaCount('business')})
-                          </TabButtonType3>
+                          <TabButtonType3>일상 페르소나 (12)</TabButtonType3>
+                          <TabButtonType3>비즈니스 페르소나 (12)</TabButtonType3>
                         </TabWrapType3>
 
                         <FillterWrap>
                           <ViewType>
-                            <TypeButton 
-                              List 
-                              active={viewType === 'list'} 
-                              onClick={() => handleViewTypeChange('list')}
-                            >
-                              리스트
-                            </TypeButton>
-                            <TypeButton 
-                              Card 
-                              active={viewType === 'card'} 
-                              onClick={() => handleViewTypeChange('card')}
-                            >
-                              카드
-                            </TypeButton>
+                            <TypeButton List active>리스트</TypeButton>
+                            <TypeButton Card>카드</TypeButton>
                           </ViewType>
 
-                          <Button Large PrimaryLightest Fill onClick={handleCustomizeRequest}>
+                          <Button Large PrimaryLightest Fill>
                             <img src={images.PlusPrimary} alt="" />
                             페르소나 요청
                           </Button>
                         </FillterWrap>
                       </Tabheader>
 
-                      {activeTab === 'daily' ? (
-                        <ContentSection>
+
+
+                      <ContentSection>
                           <>
-                            <CardGroupWrap>
+                            <PersonaCards>
+                              {/* {requestPersonaList.persona.map((persona, index) => (
+                            <MoleculePersonaCard
+                              key={index}
+                              title={persona[`persona_${index + 1}`].persona}
+                              keywords={persona[`persona_${index + 1}`].keyword}
+                              isCustom={true}
+                              onSelect={(isSelected) =>
+                                handlePersonaSelect(persona, isSelected)
+                              }
+                              onClick={() => setShowPopup(true)}
+                              currentSelection={selectedPersonas.length}
+                            />
+                          ))} */}
                               {personaList.unselected.map((persona, index) => {
                                 const profileArray = persona.profile
                                   .replace(/['\[\]]/g, "")
@@ -961,18 +836,17 @@ const PagePersona2 = () => {
                                     gender={gender}
                                     age={age}
                                     job={job}
-                                    isRequest={false}
+                                    isBasic={true}
                                     onSelect={(isSelected) =>
                                       handlePersonaSelect(persona, isSelected)
                                     }
                                     currentSelection={selectedPersonas.length}
-                                    viewType={viewType}
                                   />
                                 );
                               })}
-                            </CardGroupWrap>
+                            </PersonaCards>
 
-                            {/* 
+                            {/* 나만의 페르소나 커스터마이징 배너 */}
                             <BannerPersona>
                               <div>
                                 <h2>
@@ -997,169 +871,243 @@ const PagePersona2 = () => {
                               </div>
                               <img src={images.PersonaCustomizing} alt="" />
                             </BannerPersona>
-                             */}
                           </>
+                          {!personaButtonState2 && (
+                            <BottomBar>
+                              <p>
+                                {selectedPersonas.length > 0 ? (
+                                  <>
+                                    선택하신{" "}
+                                    <span>{selectedPersonas.length}명</span>의
+                                    페르소나와 인터뷰 하시겠어요? (
+                                    {selectedPersonas.length}/5)
+                                  </>
+                                ) : (
+                                  "페르소나를 선택하고 그들의 인터뷰를 시작해 보세요 (최대 5명 선택 가능)"
+                                )}
+                              </p>
+                              <Button
+                                Large
+                                Primary
+                                Fill={selectedPersonas.length > 0}
+                                // Edit={selectedPersonas.length === 0}
+                                disabled={selectedPersonas.length === 0}
+                                onClick={handleStartInterview}
+                              >
+                                인터뷰 시작하기
+                                <img src={images.ChevronRight} alt="" />
+                              </Button>
+                            </BottomBar>
+                          )}
                         </ContentSection>
-                      ) : (
-                        <ContentSection>
 
-                          <CategoryView
-                            showLeftGradient={showLeftGradient}
-                            showRightGradient={showRightGradient}
-                          >
-                            <ChoiceWrap 
-                              onMouseDown={handleMouseDrag} 
-                              onScroll={handleScroll}
-                            >
-                              {selectedTypes.length > 0 ? (
-                                selectedTypes.map(type => (
-                                  <Choice 
-                                    key={type.id} 
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleRemoveType(type.id);
-                                    }}
-                                  >
-                                    {type.label}
-                                  </Choice>
-                                ))
-                              ) : (
-                                <></>
-                              )}
-                            </ChoiceWrap>
 
-                            <TypeMore>
-                              <Personnel>{getTotalCount()}명</Personnel>
-                              <MoreButton onClick={() => setShowTypeList(!showTypeList)}>
-                                유형 더보기
-                              </MoreButton>
 
-                              {showTypeList && (
-                                <TypeList>
-                                  <TypeItem>
-                                    <p>선택된 유형 ({selectedTypes.length})</p>
-                                    <TypeItemList style={{ padding: '0 12px' }}>
-                                      {selectedTypes.map(type => (
-                                        <li key={type.id}>
-                                          <CheckBox Round>
-                                            <input
-                                              type="checkbox"
-                                              id={type.id}
-                                              checked={true}
-                                              onChange={() => handleTypeToggle(type.id, true)}
-                                            />
-                                            <label htmlFor={type.id}>{type.label}</label>
-                                          </CheckBox>
-                                          <span>{type.count}명</span>
-                                        </li>
-                                      ))}
-                                    </TypeItemList>
-                                  </TypeItem>
+                      {/* 
+                      <Title Column>
+                        <Body2>비즈니스 맞춤 페르소나</Body2>
+                        <p>
+                          비즈니스에 딱 맞는 페르소나를 추천해드려요. 요청을
+                          보내주시면 인터뷰 참여 모집이 시작됩니다.
+                        </p>
+                      </Title>
+                      <ContentSection row>
+                        {personaButtonState2 ? (
+                          <PersonaCards>
+                            <AtomPersonaLoader message="최적의 페르소나를 모집하고 있습니다..." />
+                          </PersonaCards>
+                        ) : (
+                          requestPersonaList.persona.map((persona, index) => (
+                            <MoleculeRequestPersonaCard
+                              key={index}
+                              persona={persona[`persona_${index + 1}`]}
+                              personaIndex={index + 1}
+                            />
+                          ))
+                        )}
+                      </ContentSection>
+                       */}
+                    </CustomizePersona>
 
-                                  <TypeItem>
-                                    <p>
-                                      선택하지 않은 유형 ({unselectedTypes.length})
-                                      <span>?</span>
-                                      <div>
-                                        <Caption2 color="white">선택시 나타나는 변화에 대한 여러가지 설명</Caption2>
-                                      </div>
-                                    </p>
-                                    <TypeItemList>
-                                      {unselectedTypes.map(type => {
-                                        const isTypeSelected = selectedTypes.some(selectedType => selectedType.id === type.id);
-                                        return (
-                                          <TypeListItem key={type.id} isSelected={isTypeSelected}>
-                                            <CheckBox Round>
-                                              <input
-                                                type="checkbox"
-                                                id={type.id}
-                                                checked={isTypeSelected}
-                                                onChange={() => handleTypeToggle(type.id, isTypeSelected)}
-                                              />
-                                              <label htmlFor={type.id}>{type.label}</label>
-                                            </CheckBox>
-                                          </TypeListItem>
-                                        );
-                                      })}
-                                    </TypeItemList>
+                    {/* 산업별 인기 페르소나 */}
 
-                                    <Button ExLarge PrimaryLightest Fill
-                                      style={{ margin: '20px 12px 0' }}
-                                    >
-                                      3개 유형 더보기
-                                    </Button>
-
-                                    <Caption2 color="gray500">
-                                      유형 추가 중 입니다. 몇 초걸림... 
-                                    </Caption2>
-                                  </TypeItem>
-                                </TypeList>
-                              )}
-                            </TypeMore>
-                          </CategoryView>
-                          
-                          <CardGroupWrap>
-                            {personaList.unselected.map((persona, index) => {
-                              const profileArray = persona.profile
-                                .replace(/['\[\]]/g, "")
-                                .split(", ");
-                              const age = profileArray[0].split(": ")[1];
-                              const gender =
-                                profileArray[1].split(": ")[1] === "남성"
-                                  ? "남성"
-                                  : "여성";
-                              const job = profileArray[2].split(": ")[1];
-
-                              return (
-                                <MoleculePersonaCard
-                                  key={index}
-                                  title={persona.persona}
-                                  keywords={persona.keyword.split(",")}
-                                  gender={gender}
-                                  age={age}
-                                  job={job}
-                                  isRequest={true}
-                                  onSelect={(isSelected) =>
-                                    handlePersonaSelect(persona, isSelected)
-                                  }
-                                  currentSelection={selectedPersonas.length}
-                                  viewType={viewType}
-                                />
-                              );
-                            })}
-                          </CardGroupWrap>
-
-                        </ContentSection>
-                      )}
-
-                      {!personaButtonState2 && (
-                        <BottomBar Black Round>
+                    {!personaButtonState2 && (
+                      <CustomizePersona>
+                        
+                        <Title Column>
+                          <Body2>산업별 인기 페르소나</Body2>
                           <p>
-                            {selectedPersonas.length > 0 ? (
-                              <>
-                                선택하신{" "}
-                                <span>{selectedPersonas.length}명</span>의
-                                페르소나와 인터뷰 하시겠어요? (
-                                {selectedPersonas.length}/5)
-                              </>
-                            ) : (
-                              "추천 페르소나 10명이 인터뷰를 기다리고 있어요"
-                            )}
+                            산업별로 자주 활용되는 페르소나를 확인하고 지금 바로
+                            대화하여 인사이트를 얻어보세요.
+                            <TooltipButton
+                              onClick={() => setShowTooltip(!showTooltip)}
+                            >
+                              유형별 설명 보기
+                              {showTooltip && (
+                                <TooltipContent>
+                                  <TooltipHeader>
+                                    아이콘에 대한 정보
+                                    <span />
+                                  </TooltipHeader>
+
+                                  <TooltipBody>
+                                    <div>
+                                      <Badge Basic>
+                                        <img
+                                          src={images.StatusBadgeBasic}
+                                          alt="기본형"
+                                        />
+                                        기본형
+                                      </Badge>
+                                      <p>
+                                        기본형은 특정 요구 사항 없이도 다양한
+                                        질문과 답변을 처리할 수 있는 표준형 AI
+                                        Person입니다. 범용적인 활용이 가능하며,
+                                        일반적인 상황에 적합합니다.
+                                      </p>
+                                    </div>
+
+                                    <div>
+                                      <Badge Custom>
+                                        <img
+                                          src={images.StatusBadgeCustom}
+                                          alt="커스터마이즈"
+                                        />
+                                        커스터마이즈
+                                      </Badge>
+                                      <p>
+                                        커스터마이즈는 특정 요구 사항에 맞춰
+                                        설정된 AI Person입니다. 라이프스타일,
+                                        경험, 지식 등을 학습하여 원하는 목적에
+                                        맞게 활용할 수 있으며, 보다 깊이 있는
+                                        대화에 적합합니다.
+                                      </p>
+                                    </div>
+                                    {/* 
+                                    <div>
+                                      <Badge>
+                                        <img
+                                          src={images.NoteArrowUp}
+                                          alt="요청 필요"
+                                        />
+                                        요청 필요
+                                      </Badge>
+                                      <p>
+                                        요청필요는 사용자 요청에 따라 준비되는
+                                        AI Person입니다. 원하는 정보와 경험을
+                                        입력하시면 맞춤 제작이 가능합니다.
+                                      </p>
+                                    </div> 
+                                    */}
+                                  </TooltipBody>
+                                </TooltipContent>
+                              )}
+                            </TooltipButton>
                           </p>
-                          <Button
-                            DbExLarge
-                            Round
-                            Fill={selectedPersonas.length > 0}
-                            // Edit={selectedPersonas.length === 0}
-                            // disabled={selectedPersonas.length === 0}
-                            onClick={handleStartInterview}
-                          >
-                            <Sub1 color="gray800">인터뷰 시작하기</Sub1>
-                            <img src={images.ChevronRight} alt="" />
-                          </Button>
-                        </BottomBar>
-                      )}
-                    </CustomizePersona>                    
+                        </Title>
+
+                        <ContentSection>
+                          <>
+                            <PersonaCards>
+                              {/* {requestPersonaList.persona.map((persona, index) => (
+                            <MoleculePersonaCard
+                              key={index}
+                              title={persona[`persona_${index + 1}`].persona}
+                              keywords={persona[`persona_${index + 1}`].keyword}
+                              isCustom={true}
+                              onSelect={(isSelected) =>
+                                handlePersonaSelect(persona, isSelected)
+                              }
+                              onClick={() => setShowPopup(true)}
+                              currentSelection={selectedPersonas.length}
+                            />
+                          ))} */}
+                              {personaList.unselected.map((persona, index) => {
+                                const profileArray = persona.profile
+                                  .replace(/['\[\]]/g, "")
+                                  .split(", ");
+                                const age = profileArray[0].split(": ")[1];
+                                const gender =
+                                  profileArray[1].split(": ")[1] === "남성"
+                                    ? "남성"
+                                    : "여성";
+                                const job = profileArray[2].split(": ")[1];
+
+                                return (
+                                  <MoleculePersonaCard
+                                    key={index}
+                                    title={persona.persona}
+                                    keywords={persona.keyword.split(",")}
+                                    gender={gender}
+                                    age={age}
+                                    job={job}
+                                    isBasic={true}
+                                    onSelect={(isSelected) =>
+                                      handlePersonaSelect(persona, isSelected)
+                                    }
+                                    currentSelection={selectedPersonas.length}
+                                  />
+                                );
+                              })}
+                            </PersonaCards>
+
+                            {/* 나만의 페르소나 커스터마이징 배너 */}
+                            <BannerPersona>
+                              <div>
+                                <h2>
+                                  나만의 페르소나 커스터마이징
+                                  <p>
+                                    페르소나를 커스터마이징하여 더 정확한
+                                    인터뷰를 진행해보세요.
+                                  </p>
+                                </h2>
+
+                                <Button
+                                  Large
+                                  Primary
+                                  onClick={handleCustomizeRequest}
+                                >
+                                  요청하기
+                                  <img
+                                    src={images.ChevronRightPrimary}
+                                    alt=""
+                                  />
+                                </Button>
+                              </div>
+                              <img src={images.PersonaCustomizing} alt="" />
+                            </BannerPersona>
+                          </>
+                          {!personaButtonState2 && (
+                            <BottomBar>
+                              <p>
+                                {selectedPersonas.length > 0 ? (
+                                  <>
+                                    선택하신{" "}
+                                    <span>{selectedPersonas.length}명</span>의
+                                    페르소나와 인터뷰 하시겠어요? (
+                                    {selectedPersonas.length}/5)
+                                  </>
+                                ) : (
+                                  "페르소나를 선택하고 그들의 인터뷰를 시작해 보세요 (최대 5명 선택 가능)"
+                                )}
+                              </p>
+                              <Button
+                                Large
+                                Primary
+                                Fill={selectedPersonas.length > 0}
+                                // Edit={selectedPersonas.length === 0}
+                                disabled={selectedPersonas.length === 0}
+                                onClick={handleStartInterview}
+                              >
+                                인터뷰 시작하기
+                                <img src={images.ChevronRight} alt="" />
+                              </Button>
+                            </BottomBar>
+                          )}
+                        </ContentSection>
+                      </CustomizePersona>
+                    )}
+                    
                   </>
                 </CardWrap>
               )}

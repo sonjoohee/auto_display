@@ -194,3 +194,23 @@ export const Button = styled.button`
   `}
 
 `;
+
+export const IconButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: "Pretendard", "Poppins";
+  font-size: 0.75rem;
+  color: ${palette.primary};
+  padding: 4px 8px;
+  border: none;
+  background: none;
+  cursor: pointer;
+
+  img {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+  }
+`;
+

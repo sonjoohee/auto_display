@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { palette } from "./Palette";
+import images from "./Images";
 
 // input
 export const InputField = styled.input`
@@ -34,71 +35,54 @@ export const InputField = styled.input`
 
 // checkbox
 export const CheckBox = styled.div`
-  position:relative;
-  display:flex;
-  flex-wrap:wrap;
-  gap:20px;
-  align-items:center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
 
-  input {
-    position:absolute;
-    visibility:hidden;
+  input[type="checkbox"] {
+    appearance: none;
+    position: relative;
+    border: 1px solid ${palette.outlineGray};
+    border-radius: ${(props) => (props.Round ? "50px" : "4px")};
+    background: ${palette.white};
+    width: ${(props) => (props.Round ? "15px" : "20px")};
+    height: ${(props) => (props.Round ? "15px" : "20px")};
+    cursor: pointer;
 
-    + label {
-      position:relative;
-      display:inline-block;
-      font-family:Pretendard, Poppins;
-      font-size: ${props => (props.Small ? "0.875rem" : "1rem")};
-      line-height:22px;
-      padding-left:30px;
-      vertical-align:top;
-      cursor:pointer;
-
-      &:before {
-        position:absolute;
-        top:2px;
-        left:0;
-        width:20px;
-        height:20px;
-        border:1px solid ${palette.gray};
-        border-radius:3px;
-        background:${palette.white};
-        transition:all .5s;
-        content:'';
-      }
-
-      &:after {
-        position:absolute;
-        top:2px;
-        left:0;
-        width:20px;
-        height:20px;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='11' viewBox='0 0 14 11' fill='none'%3E%3Cpath d='M4.44912 8.38963L1.13019 5.28001L0 6.33147L4.44912 10.5L14 1.55145L12.8778 0.5L4.44912 8.38963Z' fill='%230453F4'/%3E%3C/svg%3E");
-        background-size:60%;
-        background-repeat:no-repeat;
-        background-position:center;
-        transition:all .5s;
-        opacity:0;
-        content:'';
-      }
-    }
-
-    &:disabled + label {
-      color:${palette.gray300};
-      cursor:not-allowed;
+    &:checked {
+      border-color: ${palette.primary};
+      background: transparent;
 
       &:before {
-        border:1px solid ${palette.gray300};
+        content: "";
+        position: absolute;
+        // top: 3px;
+        // left: 3px;
+        top: ${(props) => (props.Round ? "0" : "3px")};
+        left: ${(props) => (props.Round ? "0" : "3px")};
+        // width: 12px;
+        // height: 12px;
+        width: ${(props) => (props.Round ? "100%" : "12px")};
+        height: ${(props) => (props.Round ? "100%" : "12px")};
+        // background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M10 3L4.5 8.5L2 6' stroke='%23226FFF' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center no-repeat;
+        background: ${(props) =>
+          props.Round
+          ? `url(${images.CheckCircleFill})` 
+          : `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M10 3L4.5 8.5L2 6' stroke='%23226FFF' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center no-repeat`
+        };
+        background-size: 100%;
       }
     }
+  }
 
-    &:checked + label:before {
-      border:1px solid ${palette.blue};
-    }
-
-    &:checked + label:after {
-      opacity:1;
-    }
+  label {
+    font-size: 0.875rem;
+    font-weight: 300;
+    line-height: 1.5;
+    color: ${palette.gray700};
+    cursor: pointer;
   }
 `;
 
