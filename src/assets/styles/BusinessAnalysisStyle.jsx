@@ -965,6 +965,10 @@ export const BottomBar = styled.div`
     if (props.Wide) return "1024px";
     return "608px";
   }};
+  max-width: ${(props) => {
+    if (props.W100) return "816px";
+    return "608px";
+  }};
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1394,8 +1398,7 @@ export const Persona = styled.div`
             width: 16px;
             height: 16px;
             border-radius: 50%;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10' fill='none'%3E%3Cpath d='M2.08351 8.33203V7.4987H7.91688V8.33203H2.08351ZM2.08351 6.8737L1.55225 3.52995C1.53836 3.52995 1.52267 3.53175 1.50517 3.53537C1.48767 3.53898 1.47211 3.54064 1.4585 3.54037C1.28489 3.54037 1.13739 3.47953 1.016 3.35787C0.894609 3.2362 0.833775 3.0887 0.833497 2.91537C0.833219 2.74203 0.894053 2.59453 1.016 2.47287C1.13794 2.3512 1.28544 2.29037 1.4585 2.29037C1.63156 2.29037 1.7792 2.3512 1.90142 2.47287C2.02364 2.59453 2.08434 2.74203 2.08351 2.91537C2.08351 2.96398 2.07823 3.00912 2.06767 3.05078C2.05712 3.09245 2.04503 3.13064 2.03142 3.16537L3.33351 3.7487L4.63561 1.96745C4.55922 1.91189 4.49672 1.83898 4.4481 1.7487C4.39949 1.65842 4.37519 1.5612 4.37519 1.45703C4.37519 1.28342 4.43602 1.13578 4.55769 1.01412C4.67936 0.892449 4.82686 0.831754 5.00019 0.832032C5.17353 0.83231 5.32117 0.893143 5.44311 1.01453C5.56506 1.13592 5.62575 1.28342 5.6252 1.45703C5.6252 1.5612 5.60089 1.65842 5.55228 1.7487C5.50367 1.83898 5.44117 1.91189 5.36478 1.96745L6.66687 3.7487L7.96896 3.16537C7.95507 3.13064 7.94285 3.09245 7.93229 3.05078C7.92174 3.00912 7.9166 2.96398 7.91688 2.91537C7.91688 2.74175 7.97771 2.59412 8.09938 2.47245C8.22105 2.35078 8.36855 2.29009 8.54188 2.29037C8.71522 2.29064 8.86286 2.35148 8.9848 2.47287C9.10675 2.59425 9.16744 2.74175 9.16689 2.91537C9.16633 3.08898 9.10564 3.23662 8.9848 3.35828C8.86397 3.47995 8.71633 3.54064 8.54188 3.54037C8.52799 3.54037 8.51244 3.5387 8.49521 3.53537C8.47799 3.53203 8.4623 3.53023 8.44813 3.52995L7.91688 6.8737H2.08351ZM2.79184 6.04037H7.20854L7.47937 4.30078L6.38562 4.77995L5.00019 2.8737L3.61477 4.77995L2.52101 4.30078L2.79184 6.04037Z' fill='white'/%3E%3C/svg%3E") center no-repeat #323232;
-          }
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10' fill='none'%3E%3Cpath d='M2.08351 8.33203V7.4987H7.91688V8.33203H2.08351ZM2.08351 6.8737L1.55225 3.52995C1.53836 3.52995 1.52267 3.53175 1.50517 3.53537C1.48767 3.53898 1.47211 3.54064 1.4585 3.54037C1.28489 3.54037 1.13739 3.47953 1.016 3.35787C0.894609 3.2362 0.833775 3.0887 0.833497 2.91537C0.833219 2.74203 0.894053 2.59453 1.016 2.47287C1.13794 2.3512 1.28544 2.29037 1.4585 2.29037C1.63156 2.29037 1.7792 2.3512 1.90142 2.47287C2.02364 2.59453 2.08434 2.74203 2.08351 2.91537C2.08351 2.96398 2.07823 3.00912 2.06767 3.05078C2.05712 3.09245 2.04503 3.13064 2.03142 3.16537L3.33351 3.7487L4.63561 1.96745C4.55922 1.91189 4.49672 1.83898 4.4481 1.7487C4.39949 1.65842 4.37519 1.5612 4.37519 1.45703C4.37519 1.28342 4.43602 1.13578 4.55769 1.01412C4.67936 0.892449 4.82686 0.831754 5.00019 0.832032C5.17353 0.83231 5.32117 0.893143 5.44311 1.01453C5.56506 1.13592 5.62575 1.28342 5.6252 1.45703C5.6252 1.5612 5.60089 1.65842 5.55228 1.7487C5.50367 1.83898 5.44117 1.91189 5.36478 1.96745L6.66687 3.7487L7.96896 3.16537C7.95507 3.13064 7.94285 3.09245 7.93229 3.05078C7.92174 3.00912 7.9166 2.96398 7.91688 2.91537C7.91688 2.74175 7.97771 2.59412 8.09938 2.47245C8.22105 2.35078 8.36855 2.29009 8.54188 2.29037C8.71522 2.29064 8.86286 2.35148 8.9848 2.47287C9.10675 2.59425 9.16744 2.74175 9.16689 2.91537C9.16633 3.08898 9.10564 3.23662 8.9848 3.35828C8.86397 3.47995 8.71633 3.54064 8.54188 3.54037C8.52799 3.54037 8.51244 3.5387 8.49521 3.53537C8.47799 3.53203 8.4623 3.53023 8.44813 3.52995L7.91688 6.8737H2.08351ZM2.79184 6.04037H7.20854L7.47937 4.30078L6.38562 4.77995L5.00019 2.8737L3.61477 4.77995L2.52101 4.30078L2.79184 6.04037Z' fill='white'/%3E%3C/svg%3E") center no-repeat #323232;          }
         `;
       case "BlueTopCrownFill":
         return css`
@@ -1558,12 +1561,36 @@ export const CardGroupWrap = styled.div`
 export const ListBoxItem = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  // justify-content: space-between;
   gap: 16px;
   width: 100%;
   padding: 24px 20px;
   border-radius: 10px;
-  border: 1px solid ${palette.outlineGray};
+  // border: 1px solid ${palette.outlineGray};
+  border: 1px solid ${props => 
+    props.active 
+    ? palette.primary 
+    : palette.outlineGray
+  };
+  background: ${props => 
+    props.active && props.showQuestions 
+      ? palette.white 
+      : props.active 
+        ? `rgba(34, 111, 255, 0.10)`
+        : palette.white
+  };
+  transition: background 0.2s ease;
+  flex-wrap: wrap; // 추가
+  
+  // 애니메이션 효과 추가
+  opacity: 0;
+  animation: fadeIn 0.3s ease forwards;
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
 `;
 
 export const ListText = styled.div`
@@ -1606,6 +1633,7 @@ export const ListButton = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
+  margin-left: auto;
 `;
 
 export const CardListItem = styled(ListBoxItem)`
@@ -1854,5 +1882,60 @@ export const RangeSlider = styled.input`
   }
 `;
 
+export const BoxListWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  margin-top: 16px;
+  margin-left: 36px;
+  padding-top: 20px;
+  border-top: 1px solid ${palette.outlineGray};
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 12px;
+    width: 100%;
+  }
+`;
+
+export const BgBoxList = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 8px;
+  width: 100%;
+`;
+
+export const BgBoxItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid ${palette.outlineGray};
+  background: ${props => props.white ? palette.white : palette.chatGray};
+`;
+
+export const TextInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+`;
+
+export const TextBox = styled.div`
+  white-space: pre-wrap;
+  word-break: break-all;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1px solid ${palette.outlineGray};
+`;
 
 

@@ -1518,6 +1518,25 @@ onChange={() => setSelectedRadio2('gender1')}
 
         <div id="rangeSlider">
           <h2>RangeSlider</h2>
+          <Note>
+            범위 컨트롤 컴포넌트입니다.<br />
+            Body3 대신 다른 컴포넌트를 사용할 수 있습니다.
+            <CodeBlock>
+              {`<OCEANRangeWrap>
+  <div>
+    <Body3 color="gray800">보수적</Body3>
+    <RangeSlider 
+      type="range"
+      min="0"
+      max="100"
+      value={rangeValue}
+      onChange={(e) => setRangeValue(e.target.value)}
+    />
+    <Body3 color="gray800">개방적</Body3>
+  </div>
+</OCEANRangeWrap>`}
+            </CodeBlock>
+          </Note>
 
           <FlexBox>
             <OCEANRangeWrap>
@@ -1598,7 +1617,8 @@ const ContentsWrap = styled.div`
   #personas > h2,
   #listgroup > h2,
   #barChart > h2,
-  #backgroundbox > h2 {
+  #boxWrap > h2,
+  #rangeSlider > h2 {
     font-size: 1.25rem;
     font-weight: 700;
     text-align:left;

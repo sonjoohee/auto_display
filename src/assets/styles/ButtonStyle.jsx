@@ -56,6 +56,10 @@ export const Button = styled.button`
     border-radius: 8px;
   `}
 
+  ${props => props.W100 && css`
+    width: 100%;
+  `}
+
   ${props => props.Round && css`
     border-radius: 70px;
   `}
@@ -193,6 +197,22 @@ export const Button = styled.button`
     // }
   `}
 
+  ${props => props.View && css`
+    font-weight: 500;
+    color: ${palette.gray500};
+    border: 0;
+    background: ${palette.chatGray};
+  `}
+
+`;
+
+export const ButtonGroup = styled.div`
+  display: flex;
+  gap: 12px;
+`;
+
+export const EditButtonGroup = styled(ButtonGroup)`
+  justify-content: end;
 `;
 
 export const IconButton = styled.button`
