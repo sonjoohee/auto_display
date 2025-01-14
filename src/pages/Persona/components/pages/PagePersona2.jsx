@@ -294,10 +294,13 @@ const PagePersona2 = () => {
             projectId,
             projectLoadButtonState
           );
+          console.log(savedProjectInfo);
           if (savedProjectInfo) {
             setBusinessAnalysis(savedProjectInfo.businessAnalysis);
             // console.log(savedProjectInfo.requestPersonaList);
             setRequestPersonaList(savedProjectInfo.requestPersonaList);
+            setFilteredProjectList(savedProjectInfo.filteredPersonaList);
+            console.log(filteredProjectList);
             setCategoryColor({
               first: getCategoryColor(
                 savedProjectInfo.businessAnalysis.category.first
@@ -523,7 +526,6 @@ const PagePersona2 = () => {
     } else {
       setIsLoadingMore(true);
     }
-      // setIsLoading(true);
       
       let availablePersonas = []; 
       
@@ -534,13 +536,6 @@ const PagePersona2 = () => {
           { target: category },
           axiosConfig
         );
-        
-      //   response.data.forEach(newPersona => {
-      //     if (!availablePersonas.some(p => p.persona === newPersona.persona)) {
-      //       availablePersonas.push(newPersona);
-      //     }
-      //   });
-      // }
 
 
       response.data.forEach(newPersona => {
@@ -640,8 +635,6 @@ const PagePersona2 = () => {
             return null;
           })
           .filter(Boolean); // null 값 제거
-
-
     
 
           console.log('Valid Personas after processing:', validPersonas);
@@ -650,13 +643,6 @@ const PagePersona2 = () => {
           filteredPersonas.push(...validPersonas);
           console.log('Updated filteredPersonas:', filteredPersonas);
           
-          // 필터된 페르소나를 상태에 저장
-          setFilteredProjectList(filteredPersonas);
-
-          // setFilteredProjectList(prev => [...prev, ...validPersonas]);
-
-          // 사용된 페르소나 제거
-          // const usedPersonas = validPersonas.map(p => p.persona);
 
           // 다음 필터링을 위해 사용되지 않은 페르소나만 남김
           availablePersonas = availablePersonas.filter(availablePersona => 
@@ -673,6 +659,8 @@ const PagePersona2 = () => {
       }
 
 
+      // 필터된 페르소나를 상태에 저장
+      setFilteredProjectList(filteredPersonas);
       setHasMorePersonas(availablePersonas.length > 0);
 
       // 최종 데이터 저장
@@ -732,18 +720,6 @@ const PagePersona2 = () => {
     }
   }; 
 
-  // // 초기 로딩 (9개)
-  // useEffect(() => {
-  //   if (personaButtonState2) {
-  //     loadPersonaWithFilter(9);  // 한 번에 9개 로딩
-  //   }
-  // }, [personaButtonState2]);
-  
-  // // 더보기 버튼 핸들러
-  // const handleLoadMore = () => {
-  //   loadPersonaWithFilter(1, personaList.remainingPersonas);
-  // };
-
   // 초기 로딩 (9개)
 useEffect(() => {
   if (personaButtonState2) {
@@ -756,169 +732,7 @@ const handleLoadMore = () => {
   loadPersonaWithFilter(false);
 };
 
-  // useEffect(() => {
-  //   const loadPersona = async () => {
-  //     try {
-  //       if (personaButtonState2) {
-  //         setIsLoading(true);
-
-  //         let unselectedPersonas = [];
-  //         let data, response;
-
-  //         // 카테고리별로 페르소나 요청
-  //         for (const category of Object.values(businessAnalysis.category)) {
-  //           data = {
-  //             target: category,
-  //           };
-
-  //           response = await axios.post(
-  //             "https://wishresearch.kr/person/find",
-  //             data,
-  //             axiosConfig
-  //           );
-
-  //           let newPersonas = response.data;
-
-  //           // 이미 존재하는 페르소나는 제외
-  //           for (let i = 0; i < newPersonas.length; i++) {
-  //             let isDuplicate = false;
-  //             for (let j = 0; j < unselectedPersonas.length; j++) {
-  //               if (unselectedPersonas[j].persona === newPersonas[i].persona) {
-  //                 isDuplicate = true;
-  //                 break;
-  //               }
-  //             }
-  //             if (!isDuplicate) {
-  //               unselectedPersonas.push(newPersonas[i]);
-  //             }
-  //           }
-  //         }
-
-  //         let personaList = {
-  //           selected: [],
-  //           unselected: unselectedPersonas,
-  //         };
-  //         setPersonaList(personaList);
-
-  //         ////////////////////////////////////////////////////////////////////////////////////////
-  //         data = {
-  //           business_idea: businessAnalysis,
-  //         };
-
-  //         response = await axios.post(
-  //           "https://wishresearch.kr/person/persona_request",
-  //           data,
-  //           axiosConfig
-  //         );
-
-  //         let requestPersonaList = response.data;
-
-  //         let retryCount = 0;
-  //         const maxRetries = 10;
-  //         // console.log(requestPersonaList); //데이터 검증
-  //         while (
-  //           retryCount < maxRetries &&
-  //           (!response ||
-  //             !response.data ||
-  //             !requestPersonaList.hasOwnProperty("persona_spectrum") ||
-  //             requestPersonaList.persona_spectrum.length !== 3 ||
-  //             !requestPersonaList.persona_spectrum[0].hasOwnProperty(
-  //               "persona_1"
-  //             ) ||
-  //             !requestPersonaList.persona_spectrum[1].hasOwnProperty(
-  //               "persona_2"
-  //             ) ||
-  //             !requestPersonaList.persona_spectrum[2].hasOwnProperty(
-  //               "persona_3"
-  //             ) ||
-  //             !requestPersonaList.persona_spectrum[0].persona_1.hasOwnProperty(
-  //               "persona"
-  //             ) ||
-  //             !requestPersonaList.persona_spectrum[1].persona_2.hasOwnProperty(
-  //               "persona"
-  //             ) ||
-  //             !requestPersonaList.persona_spectrum[2].persona_3.hasOwnProperty(
-  //               "persona"
-  //             ) ||
-  //             !requestPersonaList.persona_spectrum[0].persona_1.persona ||
-  //             !requestPersonaList.persona_spectrum[1].persona_2.persona ||
-  //             !requestPersonaList.persona_spectrum[2].persona_3.persona ||
-  //             !requestPersonaList.persona_spectrum[0].persona_1.hasOwnProperty(
-  //               "keyword"
-  //             ) ||
-  //             !requestPersonaList.persona_spectrum[1].persona_2.hasOwnProperty(
-  //               "keyword"
-  //             ) ||
-  //             !requestPersonaList.persona_spectrum[2].persona_3.hasOwnProperty(
-  //               "keyword"
-  //             ) ||
-  //             requestPersonaList.persona_spectrum[0].persona_1.keyword.length <
-  //               3 ||
-  //             requestPersonaList.persona_spectrum[1].persona_2.keyword.length <
-  //               3 ||
-  //             requestPersonaList.persona_spectrum[2].persona_3.keyword.length <
-  //               3)
-  //         ) {
-  //           response = await axios.post(
-  //             "https://wishresearch.kr/person/persona_request",
-  //             data,
-  //             axiosConfig
-  //           );
-  //           retryCount++;
-
-  //           requestPersonaList = response.data;
-  //         }
-  //         if (retryCount >= maxRetries) {
-  //           setShowErrorPopup(true);
-  //           return;
-  //         }
-  //         setPersonaButtonState2(0);
-
-  //         const requestPersonaData = {
-  //           persona: requestPersonaList.persona_spectrum,
-  //           positioning: requestPersonaList.positioning_analysis,
-  //         };
-
-  //         setRequestPersonaList(requestPersonaData);
-
-  //         await updateProjectOnServer(
-  //           projectId,
-  //           {
-  //             personaList: personaList.unselected.length,
-  //             requestPersonaList: requestPersonaData,
-  //           },
-  //           isLoggedIn
-  //         );
-  //       }
-  //     } catch (error) {
-  //       if (error.response) {
-  //         switch (error.response.status) {
-  //           case 500:
-  //             setShowErrorPopup(true);
-  //             break;
-  //           case 504:
-  //             if (regenerateCount >= 3) {
-  //               setShowErrorPopup(true);
-  //               return;
-  //             } else {
-  //               setShowRegenerateButton(true);
-  //               setRegenerateCount(regenerateCount + 1);
-  //             }
-  //             break;
-  //           default:
-  //             setShowErrorPopup(true);
-  //             break;
-  //         }
-  //         console.error("Error details:", error);
-  //       }
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   loadPersona();
-  // }, [personaButtonState2]);
-
+  
   const handleStartInterview = () => {
     // 선택된 페르소나들을 selected에 반영
     setPersonaList((prev) => ({
@@ -1149,7 +963,18 @@ const handleLoadMore = () => {
 
   const getPersonaCount = (tabType) => {
     if (!filteredProjectList) return 0;
-    return filteredProjectList.length;
+    
+    // daily 탭일 때는 filteredProjectList의 길이 반환
+    if (tabType === 'daily') {
+      return filteredProjectList.length;
+    }
+    
+    // business 탭일 때는 personaList.unselected의 길이 반환
+    if (tabType === 'business') {
+      return personaList?.unselected?.length || 0;
+    }
+    
+    return 0;
   };
 
   return (
