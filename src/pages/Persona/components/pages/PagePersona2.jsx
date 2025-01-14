@@ -22,6 +22,7 @@ import {
   PROJECT_ID,
   PROJECT_LOAD_BUTTON_STATE,
   CATEGORY_COLOR,
+  FILTERED_PROJECT_LIST,
 } from "../../../AtomStates";
 import {
   ContentsWrap,
@@ -85,6 +86,7 @@ import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import MoleculeRequestPersonaCard from "../molecules/MoleculeRequestPersonaCard";
 import { createRequestPersonOnServer } from "../../../../utils/indexedDB";
 import MoleculeRecreate from "../molecules/MoleculeRecreate";
+import { InterviewXInterviewReportPersonaFilter } from "../../../../utils/indexedDB";
 
 const PagePersona2 = () => {
   const [customPersonaForm, setCustomPersonaForm] = useState({
@@ -114,6 +116,7 @@ const PagePersona2 = () => {
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
+  const [filteredProjectList, setFilteredProjectList] = useAtom(FILTERED_PROJECT_LIST);
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
   const [requestPersonaList, setRequestPersonaList] = useAtom(REQUEST_PERSONA_LIST);
 
@@ -134,6 +137,7 @@ const PagePersona2 = () => {
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [regenerateCount, setRegenerateCount] = useState(0);
   const [showRegenerateButton, setShowRegenerateButton] = useState(false);
+  const [hasMorePersonas, setHasMorePersonas] = useState(true);
 
   const [viewType, setViewType] = useState('list'); // 'list' 또는 'card'
   const [activeTab, setActiveTab] = useState('daily'); // 'daily' 또는 'business'
@@ -316,7 +320,7 @@ const PagePersona2 = () => {
               };
 
               response = await axios.post(
-                "https://wishresearch.kr/person/find",
+                "https://wishresearch.kr/person/findPersonapreSet",
                 data,
                 axiosConfig
               );
@@ -382,6 +386,7 @@ const PagePersona2 = () => {
     withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
   };
 
+  //페르소나 새로 생성
   const reloadPersona = async () => {
     try {
       if (personaButtonState2) {
@@ -504,168 +509,406 @@ const PagePersona2 = () => {
     }
   };
 
-  useEffect(() => {
-    const loadPersona = async () => {
-      try {
-        if (personaButtonState2) {
-          setIsLoading(true);
 
-          let unselectedPersonas = [];
-          let data, response;
+  const loadPersonaWithFilter = async (isInitial = true) => {
+    try {
 
-          // 카테고리별로 페르소나 요청
-          for (const category of Object.values(businessAnalysis.category)) {
-            data = {
-              target: category,
-            };
+       // 초기 로딩인 경우에만 전체 로딩 상태 설정
+    // if (isInitial) {
+    //   setIsLoading(true);
+    // } else {
+    //   setIsLoadingMore(true);
+    // }
+      setIsLoading(true);
+      
+      let availablePersonas = []; 
+      
+      // 초기 페르소나 데이터 로드
+      for (const category of Object.values(businessAnalysis.category)) {
+        const response = await axios.post(
+          "https://wishresearch.kr/person/findPersonapreSet",
+          { target: category },
+          axiosConfig
+        );
+        
+      //   response.data.forEach(newPersona => {
+      //     if (!availablePersonas.some(p => p.persona === newPersona.persona)) {
+      //       availablePersonas.push(newPersona);
+      //     }
+      //   });
+      // }
 
-            response = await axios.post(
-              "https://wishresearch.kr/person/find",
-              data,
-              axiosConfig
+
+      response.data.forEach(newPersona => {
+        // 이미 필터링된 페르소나는 제외
+        const isAlreadyFiltered = filteredProjectList.some(
+          filtered => filtered.persona_id === newPersona.persona_id
+        );
+        
+        if (!isAlreadyFiltered && 
+            !availablePersonas.some(p => p.persona_id === newPersona.persona_id)) {
+          availablePersonas.push(newPersona);
+        }
+      });
+    }
+
+
+      // 초기 로드시 3번(9개), 더보기 클릭시 1번(3개) 필터링
+      const filteringCount = isInitial ? 3 : 1;
+      let filteredPersonas = isInitial ? [] : [...filteredProjectList]; // 기존 리스트 유지
+
+      // let filteredPersonas = [];
+      let filterResponse = null;
+
+      // 3번의 필터링 수행
+      // for (let i = 0; i < 3 && availablePersonas.length > 0; i++) {
+       for (let i = 0; i < filteringCount && availablePersonas.length > 0; i++) {
+        filterResponse = await InterviewXInterviewReportPersonaFilter({
+          business_idea: businessAnalysis.title,
+          business_analysis_data: businessAnalysis,
+          persona_data: availablePersonas
+        }, isLoggedIn);
+
+        let retryCount = 0;
+        const maxRetries = 10;
+        
+        while (
+          retryCount < maxRetries &&
+          (!filterResponse?.response?.persona_1?.persona_filter ||
+           !filterResponse?.response?.persona_2?.persona_filter ||
+           !filterResponse?.response?.persona_3?.persona_filter ||
+           !filterResponse?.response?.persona_1?.persona_reason ||
+           !filterResponse?.response?.persona_2?.persona_reason ||
+           !filterResponse?.response?.persona_3?.persona_reason ||
+           !Array.isArray(filterResponse?.response?.persona_1?.persona_keyword) ||
+           !Array.isArray(filterResponse?.response?.persona_2?.persona_keyword) ||
+           !Array.isArray(filterResponse?.response?.persona_3?.persona_keyword) ||
+           filterResponse?.response?.persona_1?.persona_keyword?.length < 3 ||
+           filterResponse?.response?.persona_2?.persona_keyword?.length < 3 ||
+           filterResponse?.response?.persona_3?.persona_keyword?.length < 3)
+        ) {
+          console.log('Retrying filter request. Attempt:', retryCount + 1);
+          filterResponse = await InterviewXInterviewReportPersonaFilter({
+            business_idea: businessAnalysis.title,
+            business_analysis_data: businessAnalysis,
+            persona_data: availablePersonas
+          }, isLoggedIn);
+          retryCount++;
+        }
+
+        if (retryCount >= maxRetries) {
+          setShowErrorPopup(true);
+          return;
+        }
+
+        // 필터된 페르소나 추가
+        if (filterResponse && filterResponse.response) {
+          const { persona_1, persona_2, persona_3 } = filterResponse.response;
+          
+      
+          console.log('Individual Personas:', {
+            persona_1: persona_1,
+            persona_2: persona_2,
+            persona_3: persona_3
+          });
+          
+          // 유효한 페르소나 응답들을 배열로 구성
+          const validPersonas = [persona_1, persona_2, persona_3]
+          .filter(p => {
+            console.log('Filtering persona:', p);
+            return p && p.persona_filter;
+          })
+          .map(p => {
+            console.log('Mapping persona:', p);
+            // availablePersonas에서 일치하는 페르소나 찾기
+            const matchingPersona = availablePersonas.find(
+              available => available.persona_id === p.persona_filter
             );
-
-            let newPersonas = response.data;
-
-            // 이미 존재하는 페르소나는 제외
-            for (let i = 0; i < newPersonas.length; i++) {
-              let isDuplicate = false;
-              for (let j = 0; j < unselectedPersonas.length; j++) {
-                if (unselectedPersonas[j].persona === newPersonas[i].persona) {
-                  isDuplicate = true;
-                  break;
-                }
-              }
-              if (!isDuplicate) {
-                unselectedPersonas.push(newPersonas[i]);
-              }
+        
+            if (matchingPersona) {
+              // 기존 페르소나 정보에 persona_keyword 추가
+              return {
+                ...matchingPersona,
+                persona_keyword: p.persona_keyword,
+                reason: p.persona_reason
+              };
             }
-          }
+            return null;
+          })
+          .filter(Boolean); // null 값 제거
 
-          let personaList = {
-            selected: [],
-            unselected: unselectedPersonas,
-          };
-          setPersonaList(personaList);
 
-          ////////////////////////////////////////////////////////////////////////////////////////
-          data = {
-            business_idea: businessAnalysis,
-          };
+    
 
-          response = await axios.post(
-            "https://wishresearch.kr/person/persona_request",
-            data,
-            axiosConfig
+          console.log('Valid Personas after processing:', validPersonas);
+
+          // 필터된 페르소나 추가
+          filteredPersonas.push(...validPersonas);
+          console.log('Updated filteredPersonas:', filteredPersonas);
+          
+          // 필터된 페르소나를 상태에 저장
+          setFilteredProjectList(filteredPersonas);
+
+          // setFilteredProjectList(prev => [...prev, ...validPersonas]);
+
+          // 사용된 페르소나 제거
+          // const usedPersonas = validPersonas.map(p => p.persona);
+
+          // 다음 필터링을 위해 사용되지 않은 페르소나만 남김
+          availablePersonas = availablePersonas.filter(availablePersona => 
+            !filteredPersonas.some(filteredPersona => 
+              filteredPersona.persona_id === availablePersona.persona_id
+            )
           );
 
-          let requestPersonaList = response.data;
+          console.log('사용된 페르소나 수:', filteredPersonas.length);
+          console.log('남은 페르소나 수:', availablePersonas.length);
+          console.log(`=== 필터링 ${i + 1}차 종료 ===\n`);
 
-          let retryCount = 0;
-          const maxRetries = 10;
-          // console.log(requestPersonaList);
-          while (
-            retryCount < maxRetries &&
-            (!response ||
-              !response.data ||
-              !requestPersonaList.hasOwnProperty("persona_spectrum") ||
-              requestPersonaList.persona_spectrum.length !== 3 ||
-              !requestPersonaList.persona_spectrum[0].hasOwnProperty(
-                "persona_1"
-              ) ||
-              !requestPersonaList.persona_spectrum[1].hasOwnProperty(
-                "persona_2"
-              ) ||
-              !requestPersonaList.persona_spectrum[2].hasOwnProperty(
-                "persona_3"
-              ) ||
-              !requestPersonaList.persona_spectrum[0].persona_1.hasOwnProperty(
-                "persona"
-              ) ||
-              !requestPersonaList.persona_spectrum[1].persona_2.hasOwnProperty(
-                "persona"
-              ) ||
-              !requestPersonaList.persona_spectrum[2].persona_3.hasOwnProperty(
-                "persona"
-              ) ||
-              !requestPersonaList.persona_spectrum[0].persona_1.persona ||
-              !requestPersonaList.persona_spectrum[1].persona_2.persona ||
-              !requestPersonaList.persona_spectrum[2].persona_3.persona ||
-              !requestPersonaList.persona_spectrum[0].persona_1.hasOwnProperty(
-                "keyword"
-              ) ||
-              !requestPersonaList.persona_spectrum[1].persona_2.hasOwnProperty(
-                "keyword"
-              ) ||
-              !requestPersonaList.persona_spectrum[2].persona_3.hasOwnProperty(
-                "keyword"
-              ) ||
-              requestPersonaList.persona_spectrum[0].persona_1.keyword.length <
-                3 ||
-              requestPersonaList.persona_spectrum[1].persona_2.keyword.length <
-                3 ||
-              requestPersonaList.persona_spectrum[2].persona_3.keyword.length <
-                3)
-          ) {
-            response = await axios.post(
-              "https://wishresearch.kr/person/persona_request",
-              data,
-              axiosConfig
-            );
-            retryCount++;
-
-            requestPersonaList = response.data;
-          }
-          if (retryCount >= maxRetries) {
-            setShowErrorPopup(true);
-            return;
-          }
-          setPersonaButtonState2(0);
-
-          const requestPersonaData = {
-            persona: requestPersonaList.persona_spectrum,
-            positioning: requestPersonaList.positioning_analysis,
-          };
-
-          setRequestPersonaList(requestPersonaData);
-
-          await updateProjectOnServer(
-            projectId,
-            {
-              personaList: personaList.unselected.length,
-              requestPersonaList: requestPersonaData,
-            },
-            isLoggedIn
-          );
         }
-      } catch (error) {
-        if (error.response) {
-          switch (error.response.status) {
-            case 500:
-              setShowErrorPopup(true);
-              break;
-            case 504:
-              if (regenerateCount >= 3) {
-                setShowErrorPopup(true);
-                return;
-              } else {
-                setShowRegenerateButton(true);
-                setRegenerateCount(regenerateCount + 1);
-              }
-              break;
-            default:
-              setShowErrorPopup(true);
-              break;
-          }
-          console.error("Error details:", error);
-        }
-      } finally {
-        setIsLoading(false);
       }
-    };
 
-    loadPersona();
-  }, [personaButtonState2]);
+
+      setHasMorePersonas(availablePersonas.length > 0);
+
+      // 최종 데이터 저장
+      const requestPersonaData = {
+        persona: filteredPersonas,
+        positioning: filterResponse?.positioning_analysis || {},
+      };
+
+      console.log('=== 최종 저장 데이터 ===');
+      console.log('필터링된 페르소나 수:', filteredPersonas.length);
+      console.log('필터링된 페르소나:', filteredPersonas);
+      console.log('포지셔닝 데이터:', requestPersonaData.positioning);
+      console.log('=== 저장 완료 ===\n');
+
+      setRequestPersonaList(requestPersonaData);
+      // setPersonaList([...selectedPersonas]);
+
+      await updateProjectOnServer(
+        projectId,
+        {
+          personaList: filteredPersonas.length,
+          filteredPersonaList: filteredPersonas,
+          requestPersonaList: requestPersonaData,
+        },
+        isLoggedIn
+      );
+
+      setPersonaButtonState2(0);
+
+    } catch (error) {
+      if (error.response) {
+        switch (error.response.status) {
+          case 500:
+            setShowErrorPopup(true);
+            break;
+          case 504:
+            if (regenerateCount >= 3) {
+              setShowErrorPopup(true);
+            } else {
+              setShowRegenerateButton(true);
+              setRegenerateCount(prev => prev + 1);
+            }
+            break;
+          default:
+            setShowErrorPopup(true);
+            break;
+        }
+      }
+      console.error("Error in loadPersonaWithFilter:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }; 
+
+  // // 초기 로딩 (9개)
+  // useEffect(() => {
+  //   if (personaButtonState2) {
+  //     loadPersonaWithFilter(9);  // 한 번에 9개 로딩
+  //   }
+  // }, [personaButtonState2]);
+  
+  // // 더보기 버튼 핸들러
+  // const handleLoadMore = () => {
+  //   loadPersonaWithFilter(1, personaList.remainingPersonas);
+  // };
+
+  // 초기 로딩 (9개)
+useEffect(() => {
+  if (personaButtonState2) {
+    loadPersonaWithFilter(true);
+  }
+}, [personaButtonState2]);
+
+// 더보기 버튼 핸들러
+const handleLoadMore = () => {
+  loadPersonaWithFilter(false);
+};
+
+  // useEffect(() => {
+  //   const loadPersona = async () => {
+  //     try {
+  //       if (personaButtonState2) {
+  //         setIsLoading(true);
+
+  //         let unselectedPersonas = [];
+  //         let data, response;
+
+  //         // 카테고리별로 페르소나 요청
+  //         for (const category of Object.values(businessAnalysis.category)) {
+  //           data = {
+  //             target: category,
+  //           };
+
+  //           response = await axios.post(
+  //             "https://wishresearch.kr/person/find",
+  //             data,
+  //             axiosConfig
+  //           );
+
+  //           let newPersonas = response.data;
+
+  //           // 이미 존재하는 페르소나는 제외
+  //           for (let i = 0; i < newPersonas.length; i++) {
+  //             let isDuplicate = false;
+  //             for (let j = 0; j < unselectedPersonas.length; j++) {
+  //               if (unselectedPersonas[j].persona === newPersonas[i].persona) {
+  //                 isDuplicate = true;
+  //                 break;
+  //               }
+  //             }
+  //             if (!isDuplicate) {
+  //               unselectedPersonas.push(newPersonas[i]);
+  //             }
+  //           }
+  //         }
+
+  //         let personaList = {
+  //           selected: [],
+  //           unselected: unselectedPersonas,
+  //         };
+  //         setPersonaList(personaList);
+
+  //         ////////////////////////////////////////////////////////////////////////////////////////
+  //         data = {
+  //           business_idea: businessAnalysis,
+  //         };
+
+  //         response = await axios.post(
+  //           "https://wishresearch.kr/person/persona_request",
+  //           data,
+  //           axiosConfig
+  //         );
+
+  //         let requestPersonaList = response.data;
+
+  //         let retryCount = 0;
+  //         const maxRetries = 10;
+  //         // console.log(requestPersonaList); //데이터 검증
+  //         while (
+  //           retryCount < maxRetries &&
+  //           (!response ||
+  //             !response.data ||
+  //             !requestPersonaList.hasOwnProperty("persona_spectrum") ||
+  //             requestPersonaList.persona_spectrum.length !== 3 ||
+  //             !requestPersonaList.persona_spectrum[0].hasOwnProperty(
+  //               "persona_1"
+  //             ) ||
+  //             !requestPersonaList.persona_spectrum[1].hasOwnProperty(
+  //               "persona_2"
+  //             ) ||
+  //             !requestPersonaList.persona_spectrum[2].hasOwnProperty(
+  //               "persona_3"
+  //             ) ||
+  //             !requestPersonaList.persona_spectrum[0].persona_1.hasOwnProperty(
+  //               "persona"
+  //             ) ||
+  //             !requestPersonaList.persona_spectrum[1].persona_2.hasOwnProperty(
+  //               "persona"
+  //             ) ||
+  //             !requestPersonaList.persona_spectrum[2].persona_3.hasOwnProperty(
+  //               "persona"
+  //             ) ||
+  //             !requestPersonaList.persona_spectrum[0].persona_1.persona ||
+  //             !requestPersonaList.persona_spectrum[1].persona_2.persona ||
+  //             !requestPersonaList.persona_spectrum[2].persona_3.persona ||
+  //             !requestPersonaList.persona_spectrum[0].persona_1.hasOwnProperty(
+  //               "keyword"
+  //             ) ||
+  //             !requestPersonaList.persona_spectrum[1].persona_2.hasOwnProperty(
+  //               "keyword"
+  //             ) ||
+  //             !requestPersonaList.persona_spectrum[2].persona_3.hasOwnProperty(
+  //               "keyword"
+  //             ) ||
+  //             requestPersonaList.persona_spectrum[0].persona_1.keyword.length <
+  //               3 ||
+  //             requestPersonaList.persona_spectrum[1].persona_2.keyword.length <
+  //               3 ||
+  //             requestPersonaList.persona_spectrum[2].persona_3.keyword.length <
+  //               3)
+  //         ) {
+  //           response = await axios.post(
+  //             "https://wishresearch.kr/person/persona_request",
+  //             data,
+  //             axiosConfig
+  //           );
+  //           retryCount++;
+
+  //           requestPersonaList = response.data;
+  //         }
+  //         if (retryCount >= maxRetries) {
+  //           setShowErrorPopup(true);
+  //           return;
+  //         }
+  //         setPersonaButtonState2(0);
+
+  //         const requestPersonaData = {
+  //           persona: requestPersonaList.persona_spectrum,
+  //           positioning: requestPersonaList.positioning_analysis,
+  //         };
+
+  //         setRequestPersonaList(requestPersonaData);
+
+  //         await updateProjectOnServer(
+  //           projectId,
+  //           {
+  //             personaList: personaList.unselected.length,
+  //             requestPersonaList: requestPersonaData,
+  //           },
+  //           isLoggedIn
+  //         );
+  //       }
+  //     } catch (error) {
+  //       if (error.response) {
+  //         switch (error.response.status) {
+  //           case 500:
+  //             setShowErrorPopup(true);
+  //             break;
+  //           case 504:
+  //             if (regenerateCount >= 3) {
+  //               setShowErrorPopup(true);
+  //               return;
+  //             } else {
+  //               setShowRegenerateButton(true);
+  //               setRegenerateCount(regenerateCount + 1);
+  //             }
+  //             break;
+  //           default:
+  //             setShowErrorPopup(true);
+  //             break;
+  //         }
+  //         console.error("Error details:", error);
+  //       }
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+
+  //   loadPersona();
+  // }, [personaButtonState2]);
 
   const handleStartInterview = () => {
     // 선택된 페르소나들을 selected에 반영
@@ -890,9 +1133,14 @@ const PagePersona2 = () => {
   };
 
   // 일상/비즈니스 페르소나 카운트를 구분하여 계산하는 함수
-  const getPersonaCount = (type) => {
-    if (!personaList || !personaList.unselected) return 0;
-    return personaList.unselected.filter(persona => persona.type === type).length;
+  // const getPersonaCount = (type) => {
+  //   if (!personaList || !personaList.unselected) return 0;
+  //   return filteredProjectList.filter(persona => persona.type === type).length;
+  // };
+
+  const getPersonaCount = (tabType) => {
+    if (!filteredProjectList) return 0;
+    return filteredProjectList.length;
   };
 
   return (
@@ -906,7 +1154,12 @@ const PagePersona2 = () => {
           <AnalysisWrap>
             <MainSection>
               <OrganismBusinessAnalysis personaStep={2} />
-              {showRegenerateButton ? (
+              {/* {showRegenerateButton ? ( */}
+              {isLoading ? (
+                <CardWrap>
+                  <AtomPersonaLoader />
+                </CardWrap>
+              ) : showRegenerateButton ? (
                 <CardWrap>
                   <MoleculeRecreate Large onRegenerate={reloadPersona} />
                 </CardWrap>
@@ -965,35 +1218,29 @@ const PagePersona2 = () => {
                         <ContentSection>
                           <>
                             <CardGroupWrap>
-                              {personaList.unselected.map((persona, index) => {
-                                const profileArray = persona.profile
-                                  .replace(/['\[\]]/g, "")
-                                  .split(", ");
-                                const age = profileArray[0].split(": ")[1];
-                                const gender =
-                                  profileArray[1].split(": ")[1] === "남성"
-                                    ? "남성"
-                                    : "여성";
-                                const job = profileArray[2].split(": ")[1];
-
-                                return (
-                                  <MoleculePersonaCard
-                                    key={index}
-                                    title={persona.persona}
-                                    keywords={persona.keyword.split(",")}
-                                    gender={gender}
-                                    age={age}
-                                    job={job}
-                                    isRequest={false}
-                                    onSelect={(isSelected) =>
-                                      handlePersonaSelect(persona, isSelected)
-                                    }
-                                    currentSelection={selectedPersonas.length}
-                                    viewType={viewType}
-                                  />
-                                );
-                              })}
+                              {filteredProjectList.map((persona, index) => (
+                                <MoleculePersonaCard
+                                  key={index}
+                                  title={persona.persona_view}
+                                  keywords={persona.persona_keyword}
+                                  gender={persona.gender}
+                                  age={persona.age}
+                                  job={persona.job}
+                                  isRequest={false}
+                                  personaData = {persona}
+                                  onSelect={(isSelected) =>
+                                    handlePersonaSelect(persona, isSelected)
+                                  }
+                                  currentSelection={selectedPersonas.length}
+                                  viewType={viewType}
+                                />
+                              ))}
                             </CardGroupWrap>
+                            {hasMorePersonas && !isLoading && (
+                              <LoadMoreButton onClick={handleLoadMore}>
+                                더보기
+                              </LoadMoreButton>
+                            )}
 
                             {/* 
                             <BannerPersona>
@@ -2100,4 +2347,22 @@ const FillterWrap = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+`;
+
+
+
+const LoadMoreButton = styled.button`
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+
+  &:hover {
+    background-color: #0056b3;
+  }
 `;

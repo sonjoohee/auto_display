@@ -379,7 +379,7 @@ export const STRATEGY_CONSULTANT_REPORT_DATA = atom([]);
 export const PROJECT_ID = atom("");
 
 export const PROJECT_REPORT_ID = atom("");
-
+export const FILTERED_PROJECT_LIST = atom([]);
 export const PROJECT_LIST = atom([]);
 export const PROJECT_REPORT_LIST = atom([]);
 export const REPORT_LIST = atom([]);
@@ -441,6 +441,8 @@ export const PROJECT_LOADING = atom({
   error: null,
 });
 export const PROJECT_REFRESH_TRIGGER = atom(0);
+
+
 
 // setConversation([]);
 // setConversationStage(1);

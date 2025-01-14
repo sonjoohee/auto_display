@@ -42,6 +42,7 @@ const MoleculePersonaCard = ({
   checked = null,
   newLine = false,
   viewType = 'list',
+  personaData = {},
 }) => {
   const [isChecked, setIsChecked] = useState(false);
   const [requestStatus, setRequestStatus] = useState(isRequest);
@@ -290,23 +291,23 @@ const MoleculePersonaCard = ({
             <div>
               <div className="header">
                 <H4>
-                  시간이 부족한 바쁜 프리랜서
+                  {personaData.persona_view}
                   <span
                     className="close"
                     onClick={() => setShowPopup(false)}
                   />
                 </H4>
                 <p className="info">
-                  <Sub3>여성</Sub3>
-                  <Sub3>25세</Sub3>
-                  <Sub3>서울 송파구 거주</Sub3>
+                  <Sub3>{personaData.gender}</Sub3>
+                  <Sub3>{personaData.age}세</Sub3>
+                  <Sub3>{personaData.residence}</Sub3>
                 </p>
               </div>
 
               <div className="keywords">
-                <Status>시간 관리</Status>
-                <Status>페르소나 키워드</Status>
-                <Status>업무 효율</Status>
+                <Status>{personaData.persona_keyword[0]}</Status>
+                <Status>{personaData.persona_keyword[1]}</Status>
+                <Status>{personaData.persona_keyword[2]}</Status>
               </div>
 
               <div className="content">
@@ -333,17 +334,17 @@ const MoleculePersonaCard = ({
 
                 {activeTab1 === "lifestyle" && (
                   <TabContent>
-                    <Body3 color="gray700">라이프스타일</Body3>
+                    <Body3 color="gray700">{personaData.lifestyle}</Body3>
                   </TabContent>
                 )}
                 {activeTab1 === "interests" && (
                   <TabContent>
-                    <Body3 color="gray700">관심사</Body3>
+                    <Body3 color="gray700">{personaData.interest}</Body3>
                   </TabContent>
                 )}
                 {activeTab1 === "consumption" && (
                   <TabContent>
-                    <Body3 color="gray700">소비성향</Body3>
+                    <Body3 color="gray700">{personaData.consumption_pattern}</Body3>
                   </TabContent>
                 )}
               </div>
