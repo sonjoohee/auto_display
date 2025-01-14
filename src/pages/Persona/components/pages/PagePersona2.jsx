@@ -119,6 +119,7 @@ const PagePersona2 = () => {
   const [filteredProjectList, setFilteredProjectList] = useAtom(FILTERED_PROJECT_LIST);
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
   const [requestPersonaList, setRequestPersonaList] = useAtom(REQUEST_PERSONA_LIST);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const [selectedPersonas, setSelectedPersonas] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
@@ -506,20 +507,23 @@ const PagePersona2 = () => {
       }
     } finally {
       setIsLoading(false);
+      
     }
   };
+
+
 
 
   const loadPersonaWithFilter = async (isInitial = true) => {
     try {
 
-       // 초기 로딩인 경우에만 전체 로딩 상태 설정
-    // if (isInitial) {
-    //   setIsLoading(true);
-    // } else {
-    //   setIsLoadingMore(true);
-    // }
+       //초기 로딩인 경우에만 전체 로딩 상태 설정
+    if (isInitial) {
       setIsLoading(true);
+    } else {
+      setIsLoadingMore(true);
+    }
+      // setIsLoading(true);
       
       let availablePersonas = []; 
       
@@ -719,7 +723,12 @@ const PagePersona2 = () => {
       }
       console.error("Error in loadPersonaWithFilter:", error);
     } finally {
-      setIsLoading(false);
+      // setIsLoading(false);
+      if (isInitial) {
+        setIsLoading(false);
+      } else {
+        setIsLoadingMore(false);
+      }
     }
   }; 
 
@@ -1235,8 +1244,13 @@ const handleLoadMore = () => {
                                   viewType={viewType}
                                 />
                               ))}
+                              {isLoadingMore && (
+                                <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+                                  <AtomPersonaLoader />
+                                </div>
+                              )}
                             </CardGroupWrap>
-                            {hasMorePersonas && !isLoading && (
+                            {hasMorePersonas && !isLoading && !isLoadingMore && (
                               <LoadMoreButton onClick={handleLoadMore}>
                                 더보기
                               </LoadMoreButton>
