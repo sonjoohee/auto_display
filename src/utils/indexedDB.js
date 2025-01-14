@@ -518,3 +518,95 @@ export const createRequestPersonaOnServer = async (updateData, isLoggedIn) => {
     }
   }
 };
+
+//페르소나 필터 api
+export const InterviewXInterviewReportPersonaFilter = async (data, isLoggedIn) => {
+  console.log("페르소나 필터 시작 - 입력 데이터:", data);
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    console.log("API 요청 시작...");
+    const response = await axios.post(
+      `https://wishresearch.kr/project/temporary/personaFilter`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      }
+    );
+    
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    console.log(`${response.data.time}ms 후 결과 조회 예정...`);
+    await new Promise(resolve => setTimeout(resolve, response.data.time));
+    
+    console.log("termkey 결과 조회 시작:", response.data.objectId);
+    const result = await getTermkeyResult(response.data.objectId);
+    console.log("최종 결과:", result);
+    return result;
+
+  } catch (error) {
+    console.error("페르소나 필터 처리 중 오류 발생:", error);
+    console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+// termkey를 이용한 결과 조회 API
+export const getTermkeyResult = async (termkey) => {
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("인증 토큰이 없습니다. 로그인이 필요합니다.");
+    }
+    
+    while (true) {
+      try {
+        const response = await axios.get(
+          `https://wishresearch.kr/project/temporary/findTemp/${termkey}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            },
+            withCredentials: true
+          }
+        );
+
+        console.log("API 응답:", response?.data);
+
+        if (!response?.data) {
+          throw new Error("응답 데이터가 없습니다.");
+        }
+
+        // state가 0이 아닐 때 (처리가 완료되었을 때) 즉시 결과 반환
+        if (response.data.state !== 0) {
+          console.log("처리 완료, 결과 반환");
+          return response.data;
+        }
+
+        console.log("처리 중...");
+        await new Promise(resolve => setTimeout(resolve, 5000));
+      } catch (error) {
+        console.error("결과 조회 중 오류 발생:", error);
+        throw error;
+      }
+    }
+  } catch (error) {
+    console.error("termkey를 이용한 결과 조회 중 오류:", error);
+    throw error;
+  }
+};
