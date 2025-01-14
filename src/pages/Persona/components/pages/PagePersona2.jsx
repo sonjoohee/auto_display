@@ -294,10 +294,8 @@ const PagePersona2 = () => {
             projectId,
             projectLoadButtonState
           );
-          console.log(savedProjectInfo);
           if (savedProjectInfo) {
             setBusinessAnalysis(savedProjectInfo.businessAnalysis);
-            // console.log(savedProjectInfo.requestPersonaList);
             setRequestPersonaList(savedProjectInfo.requestPersonaList);
             setFilteredProjectList(savedProjectInfo.filteredPersonaList);
             console.log(filteredProjectList);
