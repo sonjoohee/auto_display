@@ -23,6 +23,7 @@ import {
   PROJECT_LOAD_BUTTON_STATE,
   CATEGORY_COLOR,
   FILTERED_PROJECT_LIST,
+  BUSINESS_PERSONA_LIST,
 } from "../../../AtomStates";
 import {
   ContentsWrap,
@@ -87,6 +88,7 @@ import MoleculeRequestPersonaCard from "../molecules/MoleculeRequestPersonaCard"
 import { createRequestPersonOnServer } from "../../../../utils/indexedDB";
 import MoleculeRecreate from "../molecules/MoleculeRecreate";
 import { InterviewXInterviewReportPersonaFilter } from "../../../../utils/indexedDB";
+import { InterviewXPersonaRequestType } from "../../../../utils/indexedDB";
 
 const PagePersona2 = () => {
   const [customPersonaForm, setCustomPersonaForm] = useState({
@@ -117,6 +119,7 @@ const PagePersona2 = () => {
   const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
   const [filteredProjectList, setFilteredProjectList] = useAtom(FILTERED_PROJECT_LIST);
+  const [businessPersonaList, setBusinessPersonaList] = useAtom(BUSINESS_PERSONA_LIST);
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
   const [requestPersonaList, setRequestPersonaList] = useAtom(REQUEST_PERSONA_LIST);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -128,6 +131,10 @@ const PagePersona2 = () => {
   const [showInterviewPopup, setShowInterviewPopup] = useState(false);
   const [selectedPersonaForPopup, setSelectedPersonaForPopup] = useState(null);
   const [rangeValue, setRangeValue] = useState(50);
+
+  const [isLoadingType, setIsLoadingType] = useState(false);
+  const [currentTypeIndex, setCurrentTypeIndex] = useState(0);
+  const [displayedPersonas, setDisplayedPersonas] = useState([]);
 
   const [customizeFormState, setCustomizeFormState] = useState({
     isAccordionOpen: false,
@@ -150,14 +157,27 @@ const PagePersona2 = () => {
   const [activeTabIndex, setActiveTabIndex] = useState(0);
 
   const [unselectedTypes, setUnselectedTypes] = useState([
-    { id: 'type1', label: '대표 사용자', count: 1 },
-    { id: 'type2', label: '극단적 사용자', count: 2 },
-    { id: 'type3', label: '비교 분석형 사용자', count: 1 },
-    { id: 'type4', label: '비주류 사용자', count: 1 },
-    { id: 'type5', label: '대표 사용자', count: 3 },
-    { id: 'type6', label: '극단적 사용자', count: 2 },
-    { id: 'type7', label: '비교 분석형 사용자', count: 1 },
-    { id: 'type8', label: '비주류 사용자', count: 1 }
+    { id: 'type1', label: '전형적 사용자 페르소나', count: 1 },
+    { id: 'type2', label: '극단적 사용자 페르소나', count: 2 },
+    { id: 'type3', label: '비교 소비자 페르소나', count: 1 },
+    { id: 'type4', label: '비전통적 사용자 페르소나', count: 1 },
+    { id: 'type5', label: '문제 해결 중심 페르소나', count: 3 },
+    { id: 'type6', label: '건강 중시 페르소나', count: 2 },
+    { id: 'type7', label: '시장 트렌드 리더 페르소나', count: 1 },
+    { id: 'type8', label: '예산 중시 소비자 페르소나', count: 1 },
+    { id: 'type9', label: '혁신 추구 소비자 페르소나', count: 1 },
+    { id: 'type10', label: '환경/윤리 중시 페르소나', count: 2 },
+    { id: 'type11', label: '기능/성능 중시 소비자 페르소나', count: 1 },
+    { id: 'type12', label: '브랜드 충성 소비자 페르소나', count: 1 },
+    { id: 'type13', label: '감성적 소비자 페르소나', count: 3 },
+    { id: 'type14', label: '특정 상황 중심페르소나', count: 2 },
+    { id: 'type15', label: '문화적/지역적 특성 중심 페르소나', count: 1 },
+    { id: 'type16', label: 'DIY/커스터마이징 선호 페르소나', count: 1 },
+    { id: 'type17', label: '트렌드 회의적 소비자 페르소나', count: 1 },
+    { id: 'type18', label: '단체 구매 소비자 페르소나', count: 3 },
+    { id: 'type19', label: '호기심 기반 소비자 페르소나', count: 2 },
+    { id: 'type20', label: '브랜드 전환 의향 소비자 페르소나', count: 1 },
+    
   ]);
 
   const [oceanValues, setOceanValues] = useState({
@@ -551,7 +571,7 @@ const PagePersona2 = () => {
 
 
       // 초기 로드시 3번(9개), 더보기 클릭시 1번(3개) 필터링
-      const filteringCount = isInitial ? 3 : 1;
+      const filteringCount = isInitial ? 0 : 1;
       let filteredPersonas = isInitial ? [] : [...filteredProjectList]; // 기존 리스트 유지
 
       // let filteredPersonas = [];
@@ -730,6 +750,139 @@ const handleLoadMore = () => {
   loadPersonaWithFilter(false);
 };
 
+const [allBusinessPersonas, setAllBusinessPersonas] = useState([]); // 전체 비즈니스 페르소나 상태
+
+const loadBusinessPersona = async (personaType) => {
+  try {
+    // setIsLoadingType(true); // Start loading for the current type
+    setIsLoadingMore(true);
+
+    let allBusinessPersonas = [];
+    const requestData = {
+      business_idea: businessAnalysis.title,
+      business_analysis_data: businessAnalysis,
+      persona_type: personaType.label
+    };
+
+    console.log(`=== ${personaType.label} 페르소나 요청 시작 ===`);
+    console.log('요청 데이터:', requestData);
+
+    const result = await InterviewXPersonaRequestType(requestData, isLoggedIn);
+    console.log('API 응답 결과:', result);
+    console.log('페르소나 스펙트럼:', result?.response?.persona_spectrum);
+
+    if (result?.response?.persona_spectrum) {
+      const newPersonas = result.response.persona_spectrum.map(p => Object.values(p)[0]);
+
+
+       // 기존 상태에 새로운 페르소나를 추가
+       setAllBusinessPersonas(prev => {
+        const updatedList = [...prev, ...newPersonas]; // 누적된 리스트
+        console.log('누적된 전체 비즈니스 페르소나:', updatedList);
+        return updatedList; // 업데이트된 리스트 반환
+      });
+
+      // allBusinessPersonas = [...allBusinessPersonas, ...newPersonas];
+      console.log('새로운 페르소나 데이터 누적:', newPersonas);
+      // console.log('누적된 전체 비즈니스 페르소나:', allBusinessPersonas);
+
+
+      setBusinessPersonaList(allBusinessPersonas);
+      setDisplayedPersonas(prevDisplayed => [...prevDisplayed, ...newPersonas]);
+      // console.log('기존 displayedPersonas:', prevDisplayed)
+    }
+  } catch (error) {
+    console.error("비즈니스 페르소나 로드 중 오류:", error);
+    setShowErrorPopup(true);
+  } finally {
+    // setIsLoading(false);
+    setIsLoadingMore(false); // End loading for the current type
+  }
+};
+
+
+
+// 비즈니스 탭 선택 시 상위 4개 타입의 페르소나 로드
+useEffect(() => {
+  if (activeTab === 'business') {
+    // 기존 데이터 초기화
+    setPersonaList(prevState => ({
+      ...prevState,
+      unselected: []
+    }));
+    
+    // 상위 4개 타입만 필터링
+    const topFourTypes = unselectedTypes
+      .filter((type, index) => index < 4);
+
+  // 각 타입별로 순차적으로 페르소나 요청
+  const loadTopFourTypes = async () => {
+    for (let i = currentTypeIndex; i < topFourTypes.length; i++) {
+      const personaType = topFourTypes[i];
+      await loadBusinessPersona(personaType);
+      setCurrentTypeIndex(i + 1); // 다음 타입으로 인덱스 업데이트
+    }
+  };
+
+  
+    
+    loadTopFourTypes();
+  }
+}, [activeTab]);
+
+
+
+//unction to load more personas
+const loadMorePersonas = async () => {
+  const nextIndex = currentTypeIndex + 1;
+  if (nextIndex < unselectedTypes.length) {
+    setCurrentTypeIndex(nextIndex);
+    const personaType = unselectedTypes[nextIndex]; // 다음 페르소나 타입 가져오기
+    await loadBusinessPersona(personaType); // 새로운 타입에 대한 페르소나 로드
+  }
+};
+
+
+
+ // 유형 선택/해제 처리 함수
+ const handleTypeToggle = async (typeId, isSelected) => {
+  if (isSelected) {
+    // 선택 해제: 선택된 유형에서만 제거
+    
+    setSelectedTypes(prev => prev.filter(type => type.id !== typeId));
+  } else {
+    // 선택: 선택된 유형에 추가
+    const typeToMove = unselectedTypes.find(type => type.id === typeId);
+    setSelectedTypes(prev => [...prev, { 
+      id: typeId, 
+      label: typeToMove.label, 
+      type: typeToMove.type,  // type 값 추가
+      count: typeToMove.count // unselectedTypes의 count 값 사용
+    }]);
+
+    // 선택한 타입에 대한 페르소나 로드
+    // 선택한 타입에 대한 페르소나 로드
+    setIsLoadingMore(true); // 로딩 상태 시작
+    await loadBusinessPersona(typeToMove); // 선택한 타입에 대한 페르소나 로드
+    setIsLoadingMore(false); // 로딩 상태 종료
+  // await loadBusinessPersona(typeToMove); // 선택한 타입에 대한 페르소나 로드
+  }
+};
+
+useEffect(() => {
+  // unselectedTypes가 변경될 때마다 selectedTypes를 초기화
+  setSelectedTypes(unselectedTypes.slice(0, 4).map(type => ({
+    id: type.id,
+    label: type.label,
+    type: type.type,
+    count: type.count
+  })));
+}, [unselectedTypes]);
+
+
+
+
+
   
   const handleStartInterview = () => {
     // 선택된 페르소나들을 selected에 반영
@@ -878,23 +1031,49 @@ const handleLoadMore = () => {
     return isRequiredFieldsFilled;
   };
 
-  // 유형 선택/해제 처리 함수
-  const handleTypeToggle = (typeId, isSelected) => {
-    if (isSelected) {
-      // 선택 해제: 선택된 유형에서만 제거
-      const typeToMove = selectedTypes.find(type => type.id === typeId);
-      setSelectedTypes(prev => prev.filter(type => type.id !== typeId));
-    } else {
-      // 선택: 선택된 유형에 추가
-      const typeToMove = unselectedTypes.find(type => type.id === typeId);
-      setSelectedTypes(prev => [...prev, { 
-        id: typeId, 
-        label: typeToMove.label, 
-        type: typeToMove.type,  // type 값 추가
-        count: typeToMove.count // unselectedTypes의 count 값 사용
-      }]);
-    }
-  };
+  // // 유형 선택/해제 처리 함수
+  // const handleTypeToggle = (typeId, isSelected) => {
+  //   if (isSelected) {
+  //     // 선택 해제: 선택된 유형에서만 제거
+      
+  //     setSelectedTypes(prev => prev.filter(type => type.id !== typeId));
+  //   } else {
+  //     // 선택: 선택된 유형에 추가
+  //     const typeToMove = unselectedTypes.find(type => type.id === typeId);
+  //     setSelectedTypes(prev => [...prev, { 
+  //       id: typeId, 
+  //       label: typeToMove.label, 
+  //       type: typeToMove.type,  // type 값 추가
+  //       count: typeToMove.count // unselectedTypes의 count 값 사용
+  //     }]);
+
+  //     // 선택한 타입에 대한 페르소나 로드
+  //   // await loadBusinessPersona(typeToMove); // 선택한 타입에 대한 페르소나 로드
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   // unselectedTypes가 변경될 때마다 selectedTypes를 초기화
+  //   setSelectedTypes(unselectedTypes.slice(0, 4).map(type => ({
+  //     id: type.id,
+  //     label: type.label,
+  //     type: type.type,
+  //     count: type.count
+  //   })));
+  // }, [unselectedTypes]);
+
+
+
+// const [selectedTypes, setSelectedTypes] = useState(() => {
+//   // Initialize with the top 4 types from unselectedTypes
+//   return unselectedTypes.slice(0, 4).map(type => ({
+//     id: type.id,
+//     label: type.label,
+//     type: type.type,  // Ensure type is included
+//     count: type.count // Use count from unselectedTypes
+//   }));
+// });
+
 
   // 마우스 드래그 스크롤 핸들러 추가
   const handleMouseDrag = (e) => {
@@ -969,7 +1148,7 @@ const handleLoadMore = () => {
     
     // business 탭일 때는 personaList.unselected의 길이 반환
     if (tabType === 'business') {
-      return personaList?.unselected?.length || 0;
+      return displayedPersonas?.length || 0;
     }
     
     return 0;
@@ -1060,6 +1239,7 @@ const handleLoadMore = () => {
                                   job={persona.job}
                                   isRequest={false}
                                   personaData = {persona}
+                                  isBasic={true}
                                   onSelect={(isSelected) =>
                                     handlePersonaSelect(persona, isSelected)
                                   }
@@ -1135,7 +1315,7 @@ const handleLoadMore = () => {
                               )}
                             </ChoiceWrap>
 
-                            <TypeMore>
+                            <TypeMore style={{ zIndex: 10 }}>
                               <Personnel>{getTotalCount()}명</Personnel>
                               <MoreButton onClick={() => setShowTypeList(!showTypeList)}>
                                 유형 더보기
@@ -1206,7 +1386,31 @@ const handleLoadMore = () => {
                           </CategoryView>
                           
                           <CardGroupWrap>
-                            {personaList.unselected.map((persona, index) => {
+
+                          {displayedPersonas.map((persona, index) => (
+                                <MoleculePersonaCard
+                                  key={index}
+                                  title={persona.persona}
+                                  keywords={persona.keyword}
+                                  gender={persona.gender}
+                                  age={persona.age}
+                                  job={persona.job}
+                                  isRequest={true}
+                                  personaData = {persona}
+                                  isBasic={false} // 비즈니스페르소나랑 일상 페르소나 구분
+                                  onSelect={(isSelected) =>
+                                    handlePersonaSelect(persona, isSelected)
+                                  }
+                                  currentSelection={selectedPersonas.length}
+                                  viewType={viewType}
+                                />
+                              ))}
+                              {isLoadingMore && (
+                                <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+                                  <AtomPersonaLoader />
+                                </div>
+                              )}
+                            {/* {personaList.unselected.map((persona, index) => {
                               const profileArray = persona.profile
                                 .replace(/['\[\]]/g, "")
                                 .split(", ");
@@ -1233,7 +1437,7 @@ const handleLoadMore = () => {
                                   viewType={viewType}
                                 />
                               );
-                            })}
+                            })} */}
                           </CardGroupWrap>
 
                         </ContentSection>
@@ -1755,6 +1959,7 @@ const handleLoadMore = () => {
           }}
         />
       )}
+      {isLoadingType && <div className="loading-bar">Loading...</div>}
     </>
   );
 };

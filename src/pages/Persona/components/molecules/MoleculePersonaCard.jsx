@@ -29,7 +29,7 @@ const MoleculePersonaCard = ({
   gender,
   age,
   job,
-  isBasic = false, 
+  isBasic = false,
   isCustom = false,
   isComplete = false,
   isRequest = true,
@@ -285,7 +285,7 @@ const MoleculePersonaCard = ({
       )}
 
       
-      {showPopup && (
+      {showPopup && isBasic && (
         <>
           <InterviewPopup>
             <div>
@@ -308,6 +308,84 @@ const MoleculePersonaCard = ({
                 <Status>{personaData.persona_keyword[0]}</Status>
                 <Status>{personaData.persona_keyword[1]}</Status>
                 <Status>{personaData.persona_keyword[2]}</Status>
+              </div>
+
+              <div className="content">
+                <TabWrapType2>
+                  <TabButtonType2
+                    isActive={activeTab1 === "lifestyle"}
+                    onClick={() => setActiveTab1("lifestyle")}
+                  >
+                    라이프스타일
+                  </TabButtonType2>
+                  <TabButtonType2
+                    isActive={activeTab1 === "interests"}
+                    onClick={() => setActiveTab1("interests")}
+                  >
+                    관심사
+                  </TabButtonType2>
+                  <TabButtonType2
+                    isActive={activeTab1 === "consumption"}
+                    onClick={() => setActiveTab1("consumption")}
+                  >
+                    소비성향
+                  </TabButtonType2>
+                </TabWrapType2>
+
+                {activeTab1 === "lifestyle" && (
+                  <TabContent>
+                    <Body3 color="gray700">{personaData.lifestyle}</Body3>
+                  </TabContent>
+                )}
+                {activeTab1 === "interests" && (
+                  <TabContent>
+                    <Body3 color="gray700">{personaData.interest}</Body3>
+                  </TabContent>
+                )}
+                {activeTab1 === "consumption" && (
+                  <TabContent>
+                    <Body3 color="gray700">{personaData.consumption_pattern}</Body3>
+                  </TabContent>
+                )}
+              </div>
+
+              <Button
+                Large
+                Primary
+                Fill
+              >
+                인터뷰 준비 요청하기
+              </Button>
+            </div>
+          </InterviewPopup>
+        </>
+      )}
+
+
+
+{showPopup && !isBasic && (
+        <>
+          <InterviewPopup>
+            <div>
+              <div className="header">
+                <H4>
+                  {personaData.persona}
+                  <span
+                    className="close"
+                    onClick={() => setShowPopup(false)}
+                  />
+                </H4>
+                <p className="info">
+                  <Sub3>{personaData.gender}</Sub3>
+                  <Sub3>{personaData.age}세</Sub3>
+                  <Sub3>{personaData.residence}</Sub3>
+                </p>
+              </div>
+
+              <div className="keywords">
+                <Status>{personaData.keyword[0]}</Status>
+                <Status>{personaData.keyword[1]}</Status>
+                <Status>{personaData.keyword[2]}</Status>
               </div>
 
               <div className="content">
