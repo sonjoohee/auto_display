@@ -6,12 +6,18 @@ import { palette } from "../../../../assets/styles/Palette";
 import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
 // import Header from "../../../Design_Page/IncHeader";
 import MoleculeHeader from "../molecules/MoleculeHeader";
-import { Button } from "../../../../assets/styles/ButtonStyle";
+import { ButtonGroup, Button, IconButton } from "../../../../assets/styles/ButtonStyle";
 import {
   ContentsWrap,
   MainContent,
+  Badge,
+  DashboardCard,
+  DashboardAmount,
+  TabWrapType3,
+  TabButtonType3,
+  ToggleBox,
+  ToggleList,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
-import { Badge } from "../../../../assets/styles/Badge";
 import images from "../../../../assets/styles/Images";
 import { useNavigate } from "react-router-dom";
 import {
@@ -44,7 +50,7 @@ import OrganismProjectCard from "../organisms/OrganismProjectCard";
 import { getProjectListByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import OrganismEmptyProject from "../organisms/OrganismEmptyProject";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
-import { H5 } from "../../../../assets/styles/Typography";
+import { H2, H3, H5, Body2, Body3, Sub3, Caption2 } from "../../../../assets/styles/Typography";
 
 const PageMyProject = () => {
   useDynamicViewport("width=1280");
@@ -96,6 +102,18 @@ const PageMyProject = () => {
     useAtom(PROJECT_REPORT_LIST);
   const [isLoadingPage, setIsLoadingPage] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [activeTab, setActiveTab] = useState('project');
+  const [isServiceMenuOpen, setIsServiceMenuOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+
+  const closeServiceMenu = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setIsServiceMenuOpen(false);
+      setIsClosing(false);
+    }, 300); // 애니메이션 시간과 동일하게 설정
+  };
+
   const toggleView = (projectId) => {
     if (openStates[projectId]) {
       // 닫을 때
@@ -225,40 +243,189 @@ const PageMyProject = () => {
     <>
       <ContentsWrap>
         <OrganismIncNavigation />
+
         <MoleculeHeader />
+
         <MainContent Wide>
           <MyProjectWrap>
-            <Title>프로젝트 리스트</Title>
+            <MyDashboard>
+              <MyDashboardHeader>
+                <MyDashboardTitle>
+                  <H2>이혜은님</H2>
+                  <Badge classBasic>Basic</Badge>
+                </MyDashboardTitle>
+
+                <ButtonGroup>
+                  <Button Primary>
+                    <img src={images.CalendarCheck} alt="구독 플랜 관리" />
+                    <Sub3 color="primary">구독 플랜 관리</Sub3>
+                  </Button>
+                  <div style={{ position: 'relative' }}>
+                    <Button 
+                      Primary 
+                      onClick={() => {
+                        if (isServiceMenuOpen) {
+                          closeServiceMenu();
+                        } else {
+                          setIsServiceMenuOpen(true);
+                        }
+                      }}
+                    >
+                      <img src={images.Headset} alt="고객 서비스" />
+                      <Sub3 color="primary">고객 서비스</Sub3>
+                    </Button>
+                    
+                    {(isServiceMenuOpen || isClosing) && (
+                      <ToggleBox $isClosing={isClosing}>
+                        <Body3>고객 서비스</Body3>
+                        <ToggleList>
+                          <IconButton>
+                            <img src={images.QuestionCircle} alt="고객 서비스" />
+                            <Sub3 color="gray700">문의사항</Sub3>
+                          </IconButton>
+                          <IconButton>
+                            <img src={images.ExclamationCircle} alt="이용약관" />
+                            <Sub3 color="gray700">문의사항</Sub3>
+                          </IconButton>
+                          <IconButton>
+                            <img src={images.Lock} alt="개인정보 이용 정책" />
+                            <Sub3 color="gray700">개인정보 이용 정책</Sub3>
+                          </IconButton>
+                        </ToggleList>
+                      </ToggleBox>
+                    )}
+                  </div>
+                </ButtonGroup>
+              </MyDashboardHeader>
+
+              <MyDashboardContent>
+                <DashboardCard>
+                  <Body2 color="gray500">
+                    요청 페르소나
+                  </Body2>
+                  <DashboardAmount>
+                    <H3 color="gray800">3건</H3>
+                    <Badge New>new</Badge>
+                  </DashboardAmount>
+                </DashboardCard>
+                <DashboardCard>
+                  <Body2 color="gray500">
+                    완료 페르소나
+                  </Body2>
+                  <DashboardAmount>
+                    <H3 color="gray800">1건</H3>
+                    <Badge New>new</Badge>
+                  </DashboardAmount>
+                </DashboardCard>
+                <DashboardCard>
+                  <Body2 color="gray500">
+                    인터뷰 진행 건(수)
+                  </Body2>
+                  <DashboardAmount>
+                    <H3 color="gray800">0건</H3>
+                  </DashboardAmount>
+                </DashboardCard>
+                <DashboardCard>
+                  <Body2 color="gray500">
+                    당월 요금제
+                  </Body2>
+                  <DashboardAmount>
+                    <H3 color="gray800">Pro Plan</H3>
+                  </DashboardAmount>
+                </DashboardCard>
+              </MyDashboardContent>
+            </MyDashboard>
+            
+            {/* <Title>프로젝트 리스트</Title> */}
             {projectList.length === 0 ? (
               <OrganismEmptyProject />
             ) : (
-              <ProjectList>
-                <ProjectHeader>
-                  <div>프로젝트 명</div>
-                  <div>맞춤 페르소나</div>
-                  <div>페르소나 모집</div>
-                  <div>결과 리포트</div>
-                </ProjectHeader>
-                <ProjectContent>
-                  {/* 진행중인 프로젝트 없을때 디자인 */}
-                  {/* <ProjectItem Nodata>
-                    <img src={images.FileFill} alt="" />
-                    <div>
-                      <p>아직 진행 중인 프로젝트가 없습니다.<br />지금 바로 새 프로젝트를 만들어보세요</p>
-                      <Button Medium Primary Round>새 프로젝트 시작하기</Button>
-                    </div>
-                  </ProjectItem> */}
+              <>
+                <MyProjectList>
+                  <TabWrapType3>
+                    <TabButtonType3 
+                      isActive={activeTab === 'project'}
+                      onClick={() => setActiveTab('project')}
+                    >
+                      프로젝트 리스트 ({projectList.length})
+                    </TabButtonType3>
+                    <TabButtonType3 
+                      isActive={activeTab === 'persona'}
+                      onClick={() => setActiveTab('persona')}
+                    >
+                      페르소나 리스트
+                    </TabButtonType3>
+                  </TabWrapType3>
 
-                          {/*  key는 오직 React의 내부 처리를 위한 것이며, 컴포넌트의 실제 props로는 전달되지 않습니다.*/}
-                  {projectList.map((project, index) => (
-                    <OrganismProjectCard
-                      key={index} 
-                      project={project}
-                      index={index} 
-                    />
-                  ))}
-                </ProjectContent>
-              </ProjectList>
+                  {activeTab === 'project' && (
+                    /* 프로젝트 리스트 */
+                    <ProjectList>
+                      <ProjectHeader>
+                        <Body3 color="gray500">프로젝트 명</Body3>
+                        <Body3 color="gray500">맞춤 페르소나</Body3>
+                        <Body3 color="gray500">페르소나 모집</Body3>
+                        <Body3 color="gray500">결과 리포트</Body3>
+                      </ProjectHeader>
+                      <ProjectContent>
+                        {projectList.map((project, index) => (
+                          <OrganismProjectCard
+                            key={index} 
+                            project={project}
+                            index={index} 
+                          />
+                        ))}
+                      </ProjectContent>
+                    </ProjectList>
+                  )}
+
+                  {activeTab === 'persona' && (
+                    /* 페르소나 리스트 */
+                    <ProjectList>
+                      <ProjectHeader>
+                        <Body3 color="gray500">페르소나 명</Body3>
+                        <Body3 color="gray500">요청일</Body3>
+                        <Body3 color="gray500">생성 완료일</Body3>
+                      </ProjectHeader>
+                      <ProjectContent>
+                        <ProjectItem>
+                          <ProjectInfo>
+                            <Name>
+                              <Caption2 color="gray500">홈리빙 플랫폼 서비스</Caption2>
+                              <Body2 color="gray800">가족과 함께 여가를 보내는 활동 지향형 소비자</Body2>
+                            </Name>
+                            <Persona>
+                              <Sub3 color="gray500">2024. 10. 26</Sub3>
+                            </Persona>
+                            <Report>
+                              <Badge Keyword>In Process</Badge>
+                              <Button Small Outline Fill>
+                                자세히
+                              </Button>
+                            </Report>
+                          </ProjectInfo>
+                        </ProjectItem>
+                        <ProjectItem>
+                          <ProjectInfo>
+                            <Name>
+                              <Caption2 color="gray500">홈리빙 플랫폼 서비스</Caption2>
+                              <Body2 color="gray800">가족과 함께 여가를 보내는 활동 지향형 소비자</Body2>
+                            </Name>
+                            <Persona>
+                              <Sub3 color="gray500">2024. 10. 26</Sub3>
+                            </Persona>
+                            <Report>
+                              <Sub3 color="gray500">2024. 10. 26</Sub3>
+                              <Button Small Outline Fill>
+                                자세히
+                              </Button>
+                            </Report>
+                          </ProjectInfo>
+                        </ProjectItem>
+                      </ProjectContent>
+                    </ProjectList>
+                  )}
+                </MyProjectList>
+              </>
             )}
           </MyProjectWrap>
         </MainContent>
@@ -269,13 +436,47 @@ const PageMyProject = () => {
 
 export default PageMyProject;
 
+const MyDashboard = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+`;
+
+const MyDashboardHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+`;
+
+const MyDashboardTitle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+`;
+
+const MyDashboardContent = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+`;
+
 const MyProjectWrap = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 80px;
   margin: 50px auto;
+`;
+
+const MyProjectList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 `;
 
 const Title = styled(H5)`
@@ -301,24 +502,22 @@ const ProjectHeader = styled.div`
   justify-content: flex-start;
   align-items: center;
 
-  > div {
+  > p {
     flex-grow: 1;
-    font-weight: 300;
-    color: ${palette.gray500};
     text-align: left;
   }
 
-  > div:nth-child(1) {
+  > p:nth-child(1) {
     max-width: 475px;
     width: 100%;
   }
 
-  > div:nth-child(2) {
+  > p:nth-child(2) {
     max-width: 220px;
     width: 100%;
   }
 
-  > div:nth-child(3) {
+  > p:nth-child(3) {
     max-width: 150px;
     width: 100%;
   }

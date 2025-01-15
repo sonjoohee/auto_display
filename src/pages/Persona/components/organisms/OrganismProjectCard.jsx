@@ -16,7 +16,14 @@ import { palette } from "../../../../assets/styles/Palette";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import { Badge } from "../../../../assets/styles/Badge";
 import images from "../../../../assets/styles/Images";
-import { Body2_1, Caption2 } from "../../../../assets/styles/Typography";
+import { Body2, Sub3, Caption2 } from "../../../../assets/styles/Typography";
+import { 
+  ProjectItem, 
+  ProjectInfo, 
+  Name,
+  ViewInfo,
+  ViewInfoNodata,
+} from "../../../../assets/styles/BusinessAnalysisStyle";
 
 //pagemyproject에서 props받아옴
 const OrganismProjectCard = ({ project, index }) => {
@@ -81,7 +88,7 @@ const OrganismProjectCard = ({ project, index }) => {
   const getRecruitStatusText = (project) => {
     const requestedPersonaCount = project.requestedPersona?.length || 0;
 
-    if (requestedPersonaCount === 0) return "모집 대기 중";
+    if (requestedPersonaCount === 0) return "대기 중";
     // if (requestedPersonaCount === 3) return "모집 완료";
     return `${requestedPersonaCount}명 모집 중`;
   };
@@ -128,8 +135,10 @@ const OrganismProjectCard = ({ project, index }) => {
       <ProjectItem $isOpen={openStates[index]}>
         <ProjectInfo>
           <Name>
-            <Body2_1>{project.businessAnalysis.title}</Body2_1>
-            <Caption2>생성일 - {project.createDate || project.updateDate}</Caption2>
+            <Body2>{project.businessAnalysis.title}</Body2>
+            <Caption2 color="gray500">
+              작성일 - {project.createDate || project.updateDate}
+            </Caption2>
           </Name>
           <Persona>
             <div>
@@ -179,10 +188,14 @@ const OrganismProjectCard = ({ project, index }) => {
 
         {openStates[index] && (
           <ProjectButton>
-            <p>
+            {/* <p>
               {project.personaList || 0}명의 맞춤 페르소나가 사용자님을 기다리고
               있어요!
-            </p>
+            </p> */}
+            <Sub3 color="gray500">
+              <img src={images.PeopleFillPrimary} alt="" />
+              비즈니스 맞춤 페르소나를 확인하세요
+            </Sub3>
             <Button
               Small
               Primary
@@ -249,20 +262,20 @@ const OrganismProjectCard = ({ project, index }) => {
             <ViewInfoNodata>
               <div>
                 <img src={images.FileFill} alt="" />
-                <div>
+                <Body2 color="gray500">
                   현재 리포트가 비어 있습니다.
                   <br />
                   추천 페르소나와 인터뷰를 완료하시면 결과 리포트를 확인할 수
                   있습니다.
                   <Button
-                    Medium
+                    DbExLarge
                     Primary
                     Round
                     onClick={() => navigateToPersonaPage(project._id)}
                   >
-                    맞춤페르소나와 인터뷰 진행하기
+                    <Body2 color="primary">맞춤페르소나와 인터뷰 진행하기</Body2>
                   </Button>
-                </div>
+                </Body2>
               </div>
             </ViewInfoNodata>
           )}
@@ -335,53 +348,6 @@ const ProjectContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
-`;
-
-const ProjectItem = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 24px;
-  border-radius: 10px;
-  border: 1px solid ${palette.outlineGray};
-  background-color: ${palette.white};
-  z-index: 1;
-  transition: box-shadow 0.3s ease-in-out;
-
-  ${({ $isOpen }) =>
-    $isOpen &&
-    `
-    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
-  `}
-`;
-
-const ProjectInfo = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-`;
-
-const Name = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 4px;
-  max-width: 440px;
-  width: 100%;
-  font-weight: 400;
-  line-height: 1.5;
-  color: ${palette.gray800};
-  text-align: left;
-
-  p {
-    font-size: 0.75rem;
-    font-weight: 300;
-    color: ${palette.gray500};
-  }
 `;
 
 const Persona = styled.div`
@@ -529,14 +495,11 @@ const ProjectButton = styled.div`
   padding-top: 12px;
   border-top: 1px solid ${palette.outlineGray};
 
-  p {
+  div {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     gap: 4px;
-    font-size: 0.875rem;
-    font-weight: 300;
-    color: ${palette.gray800};
   }
 
   button {
@@ -589,146 +552,6 @@ const ProjectView = styled.div`
     to {
       opacity: 0;
       transform: translateY(-10px);
-    }
-  }
-`;
-
-const ViewInfo = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 4px;
-  width: 100%;
-  font-size: 0.875rem;
-  color: ${palette.gray800};
-
-  + div {
-    padding-top: 16px;
-    border-top: 1px solid ${palette.outlineGray};
-  }
-
-  .title {
-    flex: 4;
-    min-width: 0;
-    display: flex;
-    align-items: center; // flex-end에서 center로 변경
-    justify-content: flex-start;
-    gap: 8px;
-    font-size: 0.875rem;
-    color: ${palette.black};
-
-    span {
-      font-size: 0.75rem;
-      font-weight: 300;
-      color: ${palette.gray500};
-    }
-  }
-
-  .info {
-    flex: 4;
-    min-width: 0; // flex-basis 오버플로우 방지
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 32px;
-
-    span {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-
-      img {
-        width: 14px;
-        height: 14px;
-      }
-    }
-
-    div {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 7px;
-      font-size: 0.875rem;
-      font-weight: 300;
-      color: ${palette.gray500};
-      line-height: 1.5;
-
-      + div:before {
-        position: absolute;
-        top: 50%;
-        left: -16px;
-        transform: translateY(-50%);
-        width: 1px;
-        height: 12px;
-        background-color: ${palette.outlineGray};
-        content: "";
-      }
-    }
-  }
-
-  .button {
-    flex: 3;
-    min-width: 0; // flex-basis 오버플로우 방지
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 8px;
-    margin-right: 5px;
-
-    button {
-      font-family: "Pretendard", poppins;
-      font-size: 0.75rem;
-      font-weight: 300;
-      padding: 6px 10px;
-      border-radius: 6px;
-
-      &.view {
-        // color: ${palette.black};
-        // border: 1px solid ${palette.outlineGray};
-        // background: ${palette.chatGray};
-      }
-
-      &.analysis {
-        // color: ${palette.primary};
-        // border: 1px solid ${palette.primary};
-        // background: #e9f1ff;
-      }
-    }
-  }
-`;
-
-const ViewInfoNodata = styled(ViewInfo)`
-  justify-content: center;
-  padding: 24px 0 16px;
-
-  > div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-
-    > div {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      line-height: 1.5;
-      color: ${palette.gray500};
-
-      span {
-        font-size: 0.875rem;
-        font-weight: 300;
-        line-height: 1.5;
-        color: ${palette.primary};
-        padding: 6px 10px;
-        border-radius: 6px;
-        border: 1px solid ${palette.primary};
-        background-color: #e9f1ff;
-        cursor: pointer;
-      }
     }
   }
 `;

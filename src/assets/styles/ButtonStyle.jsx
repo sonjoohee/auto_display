@@ -5,8 +5,10 @@ export const Button = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 4px;
   font-family: 'Pretendard', 'Poppins';
-  border-radius: 4px;
+  padding: 4px 8px;
+  border-radius: 5px;
   border: 0;
   box-sizing: border-box;
   transition: all 0.3s ease;
