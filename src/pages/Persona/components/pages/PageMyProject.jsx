@@ -225,10 +225,12 @@ const PageMyProject = () => {
     <>
       <ContentsWrap>
         <OrganismIncNavigation />
+
         <MoleculeHeader />
+
         <MainContent Wide>
           <MyProjectWrap>
-            <Title>프로젝트 리스트</Title>
+            <Title>프로젝트 리스트1</Title>
             {projectList.length === 0 ? (
               <OrganismEmptyProject />
             ) : (
