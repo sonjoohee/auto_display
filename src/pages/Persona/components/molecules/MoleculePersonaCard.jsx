@@ -5,7 +5,7 @@ import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import { H4, Body1, Body3, Sub3 } from "../../../../assets/styles/Typography";
-import { 
+import {
   ListBoxItem,
   ListSubtitle,
   ListText,
@@ -29,7 +29,7 @@ const MoleculePersonaCard = ({
   gender,
   age,
   job,
-  isBasic = false, 
+  isBasic = false,
   isCustom = false,
   isComplete = false,
   isRequest = true,
@@ -41,7 +41,7 @@ const MoleculePersonaCard = ({
   onClick,
   checked = null,
   newLine = false,
-  viewType = 'list',
+  viewType = "list",
   personaData = {},
 }) => {
   const [isChecked, setIsChecked] = useState(false);
@@ -85,7 +85,7 @@ const MoleculePersonaCard = ({
   return (
     <>
       {/* 리스트 버전 */}
-      {viewType === 'list' && (
+      {viewType === "list" && (
         <ListBoxItem
           TitleFlex={TitleFlex}
           $isChecked={isChecked}
@@ -94,8 +94,8 @@ const MoleculePersonaCard = ({
           <ListText>
             <ListTitle>
               <Body1>{title}</Body1>
-              {isRequest && (
-                isBasic ? (
+              {isRequest &&
+                (isBasic ? (
                   <Badge Basic>
                     <img src={images.StatusBadgeBasic} alt="기본형" />
                     기본형
@@ -120,40 +120,35 @@ const MoleculePersonaCard = ({
                     <img src={images.CheckGreen} alt="모집 완료" />
                     모집 완료
                   </Badge>
-                )
-              )}
+                ))}
             </ListTitle>
-            
+
             {keywords.length > 0 && (
               <ListSubtitle>
                 {keywords.map((keyword, index) => (
-                  <Badge Keyword key={index}>#{keyword}</Badge>
+                  <Badge Keyword key={index}>
+                    #{keyword}
+                  </Badge>
                 ))}
               </ListSubtitle>
             )}
           </ListText>
 
           <ListButton>
-            <CustomButton 
-              Medium 
-              PrimaryLightest 
+            <CustomButton
+              Medium
+              PrimaryLightest
               Fill
               onClick={handleDetailClick}
             >
               자세히
             </CustomButton>
             {requestStatus && (
-              <CustomButton 
-                Medium 
-                Primary 
-                Fill
-                onClick={handleRequestClick}
-              >
+              <CustomButton Medium Primary Fill onClick={handleRequestClick}>
                 모집 요청
               </CustomButton>
             )}
           </ListButton>
-
 
           {/* 
           <ListText NoLine={NoLine}>
@@ -206,18 +201,16 @@ const MoleculePersonaCard = ({
             )}
           </ListText>
            */}
-
-
         </ListBoxItem>
       )}
 
       {/* 카드 버전 */}
-      {viewType === 'card' && (
+      {viewType === "card" && (
         <CardListItem>
           <CardText>
             <CardTitle>
-            {isRequest && (
-                isBasic ? (
+              {isRequest &&
+                (isBasic ? (
                   <Badge Basic>
                     <img src={images.StatusBadgeBasic} alt="기본형" />
                     기본형
@@ -242,41 +235,43 @@ const MoleculePersonaCard = ({
                     <img src={images.CheckGreen} alt="모집 완료" />
                     모집 완료
                   </Badge>
-                )
-              )}
+                ))}
               <Body1>{title}</Body1>
             </CardTitle>
 
             <ListSubtitle>
               {keywords.map((keyword, index) => (
-                <Badge Keyword key={index}>#{keyword}</Badge>
+                <Badge Keyword key={index}>
+                  #{keyword}
+                </Badge>
               ))}
             </ListSubtitle>
 
             <ListSubtitle>
               <p>
-                김지영은 아침마다 피트니스 센터에서 운동을 하고, 건강한 아침 식사로 하루를 시작하는 활동적인 생활을 즐깁니다. 직장에서 효율적으로 업무를 처리하며 최신 마케팅 트렌드를 주시합니다.<br />
-                주말에는 친구들과 브런치를 즐기거나 패션 아이템을 쇼핑하며 사교적인 시간을 보냅니다. 또한, 새로운 장소를 탐험하는 것을 좋아해 국내외 여행을 자주 다닙니다. 자기계발에도 관심이 많아 꾸준히 독서와 온라인 강의를 통해 지식을 넓혀갑니다.
+                김지영은 아침마다 피트니스 센터에서 운동을 하고, 건강한 아침
+                식사로 하루를 시작하는 활동적인 생활을 즐깁니다. 직장에서
+                효율적으로 업무를 처리하며 최신 마케팅 트렌드를 주시합니다.
+                <br />
+                주말에는 친구들과 브런치를 즐기거나 패션 아이템을 쇼핑하며
+                사교적인 시간을 보냅니다. 또한, 새로운 장소를 탐험하는 것을
+                좋아해 국내외 여행을 자주 다닙니다. 자기계발에도 관심이 많아
+                꾸준히 독서와 온라인 강의를 통해 지식을 넓혀갑니다.
               </p>
             </ListSubtitle>
           </CardText>
 
           <CardButton>
-            <CustomButton 
-              Medium 
-              PrimaryLightest 
+            <CustomButton
+              Medium
+              PrimaryLightest
               Fill
               onClick={handleDetailClick}
             >
               자세히
             </CustomButton>
             {requestStatus && (
-              <CustomButton 
-                Medium 
-                Primary 
-                Fill
-                onClick={handleRequestClick}
-              >
+              <CustomButton Medium Primary Fill onClick={handleRequestClick}>
                 모집 요청
               </CustomButton>
             )}
@@ -284,22 +279,22 @@ const MoleculePersonaCard = ({
         </CardListItem>
       )}
 
-      
-      {showPopup && (
+      {showPopup && isBasic && (
         <>
           <InterviewPopup>
             <div>
               <div className="header">
                 <H4>
                   {personaData.persona_view}
-                  <span
-                    className="close"
-                    onClick={() => setShowPopup(false)}
-                  />
+                  <span className="close" onClick={() => setShowPopup(false)} />
                 </H4>
                 <p className="info">
                   <Sub3>{personaData.gender}</Sub3>
-                  <Sub3>{personaData.age}세</Sub3>
+                  <Sub3>
+                    {personaData.age.includes("세")
+                      ? personaData.age
+                      : `${personaData.age}세`}
+                  </Sub3>
                   <Sub3>{personaData.residence}</Sub3>
                 </p>
               </div>
@@ -344,16 +339,14 @@ const MoleculePersonaCard = ({
                 )}
                 {activeTab1 === "consumption" && (
                   <TabContent>
-                    <Body3 color="gray700">{personaData.consumption_pattern}</Body3>
+                    <Body3 color="gray700">
+                      {personaData.consumption_pattern}
+                    </Body3>
                   </TabContent>
                 )}
               </div>
 
-              <Button
-                Large
-                Primary
-                Fill
-              >
+              <Button Large Primary Fill>
                 인터뷰 준비 요청하기
               </Button>
             </div>
@@ -361,6 +354,80 @@ const MoleculePersonaCard = ({
         </>
       )}
 
+      {showPopup && !isBasic && (
+        <>
+          <InterviewPopup>
+            <div>
+              <div className="header">
+                <H4>
+                  {personaData.persona}
+                  <span className="close" onClick={() => setShowPopup(false)} />
+                </H4>
+                <p className="info">
+                  <Sub3>{personaData.gender}</Sub3>
+                  <Sub3>
+                    {personaData.age.includes("세")
+                      ? personaData.age
+                      : `${personaData.age}세`}
+                  </Sub3>
+                  <Sub3>{personaData.residence}</Sub3>
+                </p>
+              </div>
+
+              <div className="keywords">
+                <Status>{personaData.keyword[0]}</Status>
+                <Status>{personaData.keyword[1]}</Status>
+                <Status>{personaData.keyword[2]}</Status>
+              </div>
+
+              <div className="content">
+                <TabWrapType2>
+                  <TabButtonType2
+                    isActive={activeTab1 === "lifestyle"}
+                    onClick={() => setActiveTab1("lifestyle")}
+                  >
+                    라이프스타일
+                  </TabButtonType2>
+                  <TabButtonType2
+                    isActive={activeTab1 === "interests"}
+                    onClick={() => setActiveTab1("interests")}
+                  >
+                    관심사
+                  </TabButtonType2>
+                  <TabButtonType2
+                    isActive={activeTab1 === "consumption"}
+                    onClick={() => setActiveTab1("consumption")}
+                  >
+                    소비성향
+                  </TabButtonType2>
+                </TabWrapType2>
+
+                {activeTab1 === "lifestyle" && (
+                  <TabContent>
+                    <Body3 color="gray700">{personaData.lifestyle}</Body3>
+                  </TabContent>
+                )}
+                {activeTab1 === "interests" && (
+                  <TabContent>
+                    <Body3 color="gray700">{personaData.interest}</Body3>
+                  </TabContent>
+                )}
+                {activeTab1 === "consumption" && (
+                  <TabContent>
+                    <Body3 color="gray700">
+                      {personaData.consumption_pattern}
+                    </Body3>
+                  </TabContent>
+                )}
+              </div>
+
+              <Button Large Primary Fill>
+                인터뷰 준비 요청하기
+              </Button>
+            </div>
+          </InterviewPopup>
+        </>
+      )}
     </>
   );
 };

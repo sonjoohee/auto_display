@@ -380,6 +380,7 @@ export const PROJECT_ID = atom("");
 
 export const PROJECT_REPORT_ID = atom("");
 export const FILTERED_PROJECT_LIST = atom([]);
+export const BUSINESS_PERSONA_LIST = atom([]);
 export const PROJECT_LIST = atom([]);
 export const PROJECT_REPORT_LIST = atom([]);
 export const REPORT_LIST = atom([]);
