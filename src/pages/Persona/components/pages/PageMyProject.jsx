@@ -256,7 +256,10 @@ const PageMyProject = () => {
                 </MyDashboardTitle>
 
                 <ButtonGroup>
-                  <Button Primary>
+                  <Button 
+                    Primary
+                    onClick={() => navigate('/Payment')}
+                  >
                     <img src={images.CalendarCheck} alt="구독 플랜 관리" />
                     <Sub3 color="primary">구독 플랜 관리</Sub3>
                   </Button>
@@ -285,7 +288,7 @@ const PageMyProject = () => {
                           </IconButton>
                           <IconButton>
                             <img src={images.ExclamationCircle} alt="이용약관" />
-                            <Sub3 color="gray700">문의사항</Sub3>
+                            <Sub3 color="gray700">이용약관</Sub3>
                           </IconButton>
                           <IconButton>
                             <img src={images.Lock} alt="개인정보 이용 정책" />
