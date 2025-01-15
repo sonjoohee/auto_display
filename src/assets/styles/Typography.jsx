@@ -16,6 +16,7 @@ export const H2 = styled.h2`
   font-weight: 600;
   line-height: 1.3;
   color: ${(props) => palette[props.color] || "inherit"};
+  text-align: ${(props) => props.align || "center"};
   letter-spacing: -0.72px;
 `;
 

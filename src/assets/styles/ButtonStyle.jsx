@@ -10,6 +10,7 @@ export const Button = styled.button`
   padding: 4px 8px;
   border-radius: 5px;
   border: 0;
+  background: ${palette.chatGray};
   box-sizing: border-box;
   transition: all 0.3s ease;
 
@@ -179,6 +180,7 @@ export const Button = styled.button`
     color: ${palette.gray700};
     border: 1px solid ${palette.outlineGray};
     background: transparent;
+    padding: ${props.DbExLarge ? '11px 15px' : props.padding};
   `}
 
   ${props => props.Outline && props.Fill && css`
