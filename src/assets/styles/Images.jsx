@@ -72,6 +72,7 @@ import ExclamationMarkRed from "../images/iconExclamationMarkRed.svg"
 import CheckMark from "../images/CheckMark.svg"
 import iconQuestionMark from "../images/iconQuestionMark.svg"
 import iconQuestionMark2 from "../images/iconQuestionMark2.svg"
+import QuestionCircle from "../images/question-circle.svg"
 
 import ProfessionalValue from "../images/ProfessionalValue.svg"
 import ProfessionalRoadmap from "../images/ProfessionalRoadmap.svg"
@@ -204,6 +205,7 @@ import PersonFill from "../images/person-fill.svg"
 import FileFill from "../images/file-fill.svg"
 import PeopleFillPrimary from "../images/people-fill-primary.svg"
 import NoAlarm from "../images/alarm-no.svg"
+import ExclamationCircle from "../images/exclamation-circle.svg"
 import ExclamationCircleFill from "../images/exclamation-circle-fill.svg"
 import BoxArrowUpRight from "../images/box-arrow-up-right.svg"
 import CalendarCheck from "../images/calendar-check.svg"
@@ -232,6 +234,7 @@ import StarFill3D from "../images/Star-Fill-3D.png"
 
 import BgUserChatDots from "../images/bg-user-chat-dots.svg"
 import CloseBlack from "../images/close-black.svg"
+import Lock from "../images/lock.svg"
 
 const images = {
   Logo,
@@ -308,6 +311,7 @@ const images = {
   CheckMark,
   iconQuestionMark,
   iconQuestionMark2,
+  QuestionCircle,
 
   ProfessionalValue,
   ProfessionalRoadmap,
@@ -440,6 +444,7 @@ const images = {
   FileFill,
   PeopleFillPrimary,
   NoAlarm,
+  ExclamationCircle,
   ExclamationCircleFill,
   BoxArrowUpRight,
   CalendarCheck,
@@ -468,6 +473,7 @@ const images = {
 
   BgUserChatDots,
   CloseBlack,
+  Lock,
 }
 
 export default images;
