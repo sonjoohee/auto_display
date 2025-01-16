@@ -2233,3 +2233,119 @@ export const ToggleList = styled.div`
   }
 `;
 
+export const PaymentWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 40px;
+  margin: 50px 0;
+`;
+
+export const PaymentCard = styled.div`
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+
+  button {
+    margin-top: auto;
+  }
+`;
+
+export const PaymentPlan = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  width: 100%;
+  padding: 32px 44px;
+  border-radius: 10px;
+  border: 1px solid ${palette.outlineGray};
+  background: ${palette.white};
+`;
+
+export const PaymentCredit = styled(PaymentPlan)`
+  gap: 32px;
+  height: 334px;
+  padding: 60px 40px 40px;
+
+  p {
+    font-size: 2.5rem;
+    font-weight: 400;
+    color: ${palette.gray700};
+    line-height: 1.2;
+    letter-spacing: -1.2px;
+  }
+
+  h2 {
+    margin-top: auto;
+  }
+`;
+
+export const PlanTitle = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2px;
+  width: 100%;
+
+  h1 {
+    font-size: 4.5rem;
+    font-weight: 400;
+    color: ${palette.gray800};
+    line-height: 1.2;
+    letter-spacing: -2.16px;
+  }
+
+  .price {
+    display: flex;
+    gap: 4px;
+
+    &:before {
+      align-self: center;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: ${palette.gray800};
+      line-height: 1.3;
+      letter-spacing: -0.72px;
+      content: "₩";
+    }
+
+    &:after {
+      align-self: flex-end;
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: ${palette.gray500};
+      line-height: 1.2;
+      letter-spacing: -0.6px;
+      margin-bottom: 15px;
+      content: "/월";
+    }
+  }
+`;
+
+export const PlanList = styled.ul`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 8px;
+  width: 100%;
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    text-align: left;
+  }
+
+  img {
+    width: 12px;
+    height: 10px;
+  }
+`;

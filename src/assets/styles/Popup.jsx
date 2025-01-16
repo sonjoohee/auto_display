@@ -15,6 +15,8 @@ const PopupWrap = ({
   Check,
   Error,
   Info,
+  Success,
+  Fail,
   buttonType,
   nomalText,
   closeText,
@@ -157,6 +159,10 @@ const PopupWrap = ({
               <img src={images.iconQuestionMark} alt="Info" />
             ) : Error ? (
               <img src={images.ExclamationMark} alt="Error" />
+            ) : Success ? (
+              <img src={images.RocketSuccess} alt="Success" />
+            ) : Fail ? (
+              <img src={images.RocketFail} alt="Fail" />
             ) : null}
 
             <Text>

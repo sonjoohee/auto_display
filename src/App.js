@@ -46,6 +46,7 @@ import PagePersonaLoader from "./pages/Persona/components/atoms/AtomPersonaLoade
 import PageRecreate from "./assets/styles/PageRecreate";
 import PageInterviewWay from "./pages/Design_Page/PageInterviewWay";
 import PageStyleGuide from "./pages/Design_Page/PageStyleGuide";
+import PagePayment from "./pages/Persona/components/pages/PagePayment";
 
 // 페르소나
 import PageMain from "./pages/Persona/components/pages/PageMain";
@@ -266,6 +267,7 @@ function App() {
           <Route path="/PersonaLoader" element={<PagePersonaLoader />} />
           <Route path="/Recreate" element={<PageRecreate />} /> */}
           <Route path="/InterviewWay" element={<PageInterviewWay />} />
+          <Route path="/Payment" element={<PagePayment />} />
 
           <Route path="/style_guide" element={<PageStyleGuide />} />
         </Routes>

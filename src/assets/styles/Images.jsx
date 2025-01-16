@@ -236,6 +236,13 @@ import BgUserChatDots from "../images/bg-user-chat-dots.svg"
 import CloseBlack from "../images/close-black.svg"
 import Lock from "../images/lock.svg"
 
+import CoinSmall from "../images/coin-small.svg"
+import CoinMedium from "../images/coin-medium.svg"
+import CoinLarge from "../images/coin-large.svg"
+
+import RocketSuccess from "../images/rocket-success.svg"
+import RocketFail from "../images/rocket-fail.svg"
+
 const images = {
   Logo,
   SymbolLogo,
@@ -474,6 +481,13 @@ const images = {
   BgUserChatDots,
   CloseBlack,
   Lock,
+
+  CoinSmall,
+  CoinMedium,
+  CoinLarge,
+
+  RocketSuccess,
+  RocketFail,
 }
 
 export default images;
