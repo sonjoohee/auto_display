@@ -16,23 +16,35 @@ import {
   PROJECT_LOAD_BUTTON_STATE,
   PROJECT_ID,
 } from "../../../AtomStates";
-import {
-  ContentsWrap,
-  ContentSection,
-  MainContent,
-  AnalysisWrap,
-  MainSection,
+import { SELECTED_INTERVIEW_TYPE } from "../../../../AtomStates";
+import { 
+  ContentsWrap, 
+  MainContent, 
+  AnalysisWrap, 
+  MainSection, 
   Title,
   CardWrap,
-  CustomizePersona,
-  AccordionSection,
-  // AccordionHeader,  // 제거
-  // AccordionIcon,    // 제거
-  // AccordionContent, // 제거
+  CardGroupWrap,
+  ListBoxItem,
+  ListText,
+  ListTitle,
+  ListSubtitle,
+  ListButton,
+  BoxListWrap,
+  BgBoxList,
+  BgBoxItem,
+  TextBox,
+  TextInfo,
+  Badge,
+  BottomBar
 } from "../../../../assets/styles/BusinessAnalysisStyle";
+import { 
+  H5, Body1, Body2, Body3, Sub1, Caption1, Caption2 
+} from "../../../../assets/styles/Typography";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
-import { Button } from "../../../../assets/styles/ButtonStyle";
+import { RadioButton, CustomTextarea, FormBox } from "../../../../assets/styles/InputStyle";
+import { Button, ButtonGroup, IconButton } from "../../../../assets/styles/ButtonStyle";
 import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
 import MoleculeHeader from "../molecules/MoleculeHeader";
 import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
@@ -44,7 +56,42 @@ import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
 import PopupWrap from "../../../../assets/styles/Popup";
 import OrganismToastPopup from "../organisms/OrganismToastPopup";
 
+const FULL_DEFINITION_TEXT = '사용자 트렌드 민감도 분석은 사용자가 시장의 최신 트렌드에 얼마나 빠르고 효과적으로 반응하는지를 측정하는 방법론입니다. 이 분석은 사용자가 새로운 트렌드를 어떻게 인식하고, 그 트렌드에 따라 행동이 어떻게 변화하는지 파악하는 데 중점을 둡니다.';
+
 const PagePersona3 = () => {
+  const [showPopup, setShowPopup] = useState(false);
+
+  const [selectedRadio1, setSelectedRadio1] = useState();
+  const [selectedRadio2, setSelectedRadio2] = useState();
+  const [showCustomButton, setShowCustomButton] = useState(true);
+  const [customizations, setCustomizations] = useState([]);
+  const [showCustomization, setShowCustomization] = useState(false);
+  const [showMethodology, setShowMethodology] = useState(false);
+
+  const [showQuestions, setShowQuestions] = useState({
+    radio3: false,
+    radio4: false,
+    radio5: false
+  });
+
+  const handleEditClick = (index) => {
+    const newCustomizations = [...customizations];
+    newCustomizations[index].isEditing = true;
+    newCustomizations[index].editedDefinition = newCustomizations[index].definitionText;
+    newCustomizations[index].editedPurpose = newCustomizations[index].purposeText;
+    setCustomizations(newCustomizations);
+  };
+
+  const handleEditComplete = (index) => {
+    const newCustomizations = [...customizations];
+    newCustomizations[index].definitionText = newCustomizations[index].editedDefinition;
+    newCustomizations[index].purposeText = newCustomizations[index].editedPurpose;
+    newCustomizations[index].isEditing = false;
+    setCustomizations(newCustomizations);
+  };
+
+  const [showNewListBox, setShowNewListBox] = useState(false);
+
   const navigate = useNavigate();
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
   const [projectLoadButtonState, setProjectLoadButtonState] = useAtom(
@@ -67,7 +114,7 @@ const PagePersona3 = () => {
     useAtom(REQUEST_PERSONA_LIST);
 
   const [interviewPurpose, setInterviewPurpose] = useState("");
-  const [selectedInterviewType, setSelectedInterviewType] = useState("");
+  const [selectedInterviewType, setSelectedInterviewType] = useAtom(SELECTED_INTERVIEW_TYPE);
   const [activeCategory, setActiveCategory] = useState(1);
   const [showInterview, setShowInterview] = useState(false);
   const [showInterviewReady, setShowInterviewReady] = useState(false);
@@ -301,6 +348,11 @@ const PagePersona3 = () => {
     };
   }, [showToast, showInterviewReady, showEditPersona]);
 
+  // radio6 선택 핸들러 수정
+  const handlePurposeSelect = (purpose) => {
+    setSelectedInterviewPurpose(purpose);
+  };
+
   return (
     <>
       <ContentsWrap
@@ -313,179 +365,634 @@ const PagePersona3 = () => {
         <MainContent>
           <AnalysisWrap>
             <MainSection>
-              <OrganismBusinessAnalysis personaStep={personaStep} />
+              <InterviewWayTab>
+                <InterviewWayTabItem active>
+                  <span>1</span>
+                  <H5>인터뷰 방법 선택</H5>
+                </InterviewWayTabItem>
+                <InterviewWayTabItem>
+                  <span>2</span>
+                  <H5>참여 페르소나 선택</H5>
+                </InterviewWayTabItem>
+              </InterviewWayTab>
 
-              {/* 인터뷰 방식 선택 */}
-              <>
-                <CustomizePersona>
-                  <CardWrap>
-                    <Title>인터뷰 방식 선택</Title>
+              <InterviewWayContent>
+                <div>
+                  <Body2 color="gray800">인터뷰 방법 선택</Body2>
 
-                    <InterviewTypeCards>
-                      <InterviewTypeCard
-                        isActive={selectedInterviewType === "multiple"}
-                        onClick={() => handleInterviewTypeSelect("multiple")}
-                      >
-                        <CheckBox
-                          isActive={selectedInterviewType === "multiple"}
+                  <CardGroupWrap>
+                    <ListBoxItem active={selectedInterviewType === 'multiple'}>
+                      <div>
+                        <RadioButton 
+                          id="radio1"
+                          name="radioGroup1"
+                          checked={selectedInterviewType === 'multiple'} 
+                          onChange={() => handleInterviewTypeSelect('multiple')} 
                         />
-                        <strong isActive={selectedInterviewType === "multiple"}>
-                          여러 페르소나 인터뷰 (1:N)
-                        </strong>
-                        <p isActive={selectedInterviewType === "multiple"}>
-                          여러 페르소나의 다양한 의견을 한 번에 확인 하세요.
-                          폭넓은 시각과 다양한 의견을 파악하는데 적합합니다.
-                        </p>
-                      </InterviewTypeCard>
-
-                      <InterviewTypeCard
-                        isActive={selectedInterviewType === "single"}
-                        // onClick={() => handleInterviewTypeSelect('single')}
-                        disabled={true}
-                      >
-                        <CheckBox
-                          isActive={selectedInterviewType === "single"}
+                      </div>
+                      <ListText>
+                        <ListTitle>
+                          <Body1 color={selectedInterviewType === 'multiple' ? "primary" : "gray800"}>
+                            여러 페르소나 인터뷰 (1:N)
+                          </Body1>
+                        </ListTitle>
+                        <ListSubtitle>
+                          <Caption1 color={selectedInterviewType === 'multiple' ? "gray800" : "gray500"}>
+                            여러 페르소나의 다양한 의견을 한 번에 확인 하세요. 폭넓은 시각과 다양한 의견을 파악하는데 적합합니다. 
+                          </Caption1>
+                        </ListSubtitle>
+                      </ListText>
+                    </ListBoxItem>
+                    
+                    <ListBoxItem active={selectedInterviewType === 'single'}>
+                      <div>
+                        <RadioButton 
+                          id="radio2"
+                          name="radioGroup1"
+                          checked={selectedInterviewType === 'single'} 
+                          onChange={() => handleInterviewTypeSelect('single')} 
                         />
-                        <strong isActive={selectedInterviewType === "single"}>
-                          한 명과 심층 인터뷰 (1:1)
-                          <span>준비중</span>
-                        </strong>
-                        <p isActive={selectedInterviewType === "single"}>
-                          한 명의 페르소나와 깊이 있는 대화를 통해 자세한
-                          인사이트를 도출하세요. 구체적인 피드백이 필요한 경우
-                          유용합니다.
-                        </p>
-                      </InterviewTypeCard>
-                    </InterviewTypeCards>
-                  </CardWrap>
-                </CustomizePersona>
+                      </div>
+                      <ListText>
+                        <ListTitle>
+                          <Body1 color={selectedInterviewType === 'single' ? "primary" : "gray800"}>
+                            한 명과 심층 인터뷰 (1:1)
+                          </Body1>
+                        </ListTitle>
+                        <ListSubtitle>
+                          <Caption1 color={selectedInterviewType === 'multiple' ? "gray800" : "gray500"}>
+                            한 명의 페르소나와 깊이 있는 대화를 통해 자세한 인사이트를 도출하세요. 구체적인 피드백이 필요한 경우 유용합니다.
+                          </Caption1>
+                        </ListSubtitle>
+                      </ListText>
+                    </ListBoxItem>
+                  </CardGroupWrap>
+                </div>
 
-                <InterviewSelect>
-                  <Title>인터뷰 목적 선택</Title>
+                <div>
+                  <Body2 color="gray800">인터뷰 목적</Body2>
 
-                  <TabWrap>
-                    {purposeCategories.map((category) => (
-                      <TabButton
-                        key={category.id}
-                        isActive={activeCategory === category.id}
-                        onClick={() => handleCategoryClick(category.id)}
+                  <CardGroupWrap>
+                    {showNewListBox && (
+                      <ListBoxItem New
+                        active={selectedInterviewPurpose === 'product_experience_new'}
+                        showQuestions={showQuestions.radio6}
                       >
-                        {category.label}
-                      </TabButton>
-                    ))}
-                  </TabWrap>
-
-                  <TabContent>
-                    {categoryItems[activeCategory].map((item) => (
-                      <MoleculeInterviewCard
-                        NoBackground
-                        key={item.id}
-                        title={item.title}
-                        description={item.description}
-                        isSelected={interviewPurpose === item.title}
-                        onSelect={(title) =>
-                          handleInterviewPurposeSelect(title)
-                        }
-                        interviewPurpose={interviewPurpose}
-                        isActive={interviewPurpose === item.title}
-                      />
-                    ))}
-                  </TabContent>
-                </InterviewSelect>
-
-                <CustomizePersona style={{ marginBottom: "140px" }}>
-                  <Title Column>
-                    참여 페르소나 확인
-                    <p>
-                      인터뷰 참여 페르소나를 확인하세요. 변경은 편집하기 버튼을
-                      통해 가능합니다
-                      <span onClick={() => handleEditPersonaOpen()}>
-                        <img src={images.PencilSquare} alt="" />
-                        편집하기
-                      </span>
-                    </p>
-                  </Title>
-                  <ContentSection>
-                    <PersonaCards>
-                      {personaList.selected.map((persona, index) => {
-                        const profileArray = persona.profile
-                          .replace(/['\[\]]/g, "")
-                          .split(", ");
-                        const age = profileArray[0].split(": ")[1];
-                        const gender =
-                          profileArray[1].split(": ")[1] === "남성"
-                            ? "남성"
-                            : "여성";
-                        const job = profileArray[2].split(": ")[1];
-
-                        return (
-                          <MoleculePersonaCard
-                            NoLine
-                            key={index}
-                            title={persona.persona}
-                            isBasic={true}
-                            hideCheckCircle={true}
-                            gender={gender}
-                            age={age}
-                            job={job}
+                        <div>
+                          <RadioButton 
+                            id="radio6"
+                            name="radioGroup1"
+                            checked={selectedInterviewPurpose === 'product_experience_new'} 
+                            onChange={() => handlePurposeSelect('product_experience_new')} 
                           />
-                        );
-                      })}
-                    </PersonaCards>
-                  </ContentSection>
-                </CustomizePersona>
-              </>
-            </MainSection>
+                        </div>
+                        <ListText>
+                          <ListTitle>
+                            <Body1 color={selectedInterviewPurpose === 'product_experience_new' ? "primary" : "gray800"}>
+                              제품 경험 평가
+                            </Body1>
+                            <Badge Complete>New</Badge>
+                          </ListTitle>
+                          <ListSubtitle>
+                            <Caption1 color="gray500">
+                              다양한 시나리오에서 제품의 사용 가능성을 평가하여 부적합한 환경 발견 
+                            </Caption1>
+                          </ListSubtitle>
+                        </ListText>
+                        <ListButton>
+                          <Button 
+                            Medium 
+                            {...(showQuestions.radio6 ? { PrimaryLightest: true, Fill: true } : { View: true })}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setShowQuestions(prev => ({
+                                ...prev,
+                                radio6: !prev.radio6
+                              }));
+                            }}
+                          >
+                            {showQuestions.radio6 ? '문항 닫기' : '문항 보기'}
+                          </Button>
+                        </ListButton>
 
-            <Sidebar>
-              <h5>Start Your Interview</h5>
+                        {showQuestions.radio6 && (
+                          <BoxListWrap>
+                            <div>
+                              <Body1 color="gray800">공통 질문</Body1>
+                              <BgBoxList>
+                                <BgBoxItem>
+                                  <Body3 color="gray700">01.</Body3>
+                                  <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
+                                </BgBoxItem>
+                                <BgBoxItem>
+                                  <Body3 color="gray700">02.</Body3>
+                                  <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
+                                </BgBoxItem>
+                                <BgBoxItem>
+                                  <Body3 color="gray700">03.</Body3>
+                                  <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
+                                </BgBoxItem>
+                              </BgBoxList>
+                            </div>
 
-              <ProgressBar>
-                <span className="icon">🚀</span>
-                <Progress progress={60} />
-                <span>60%</span>
-              </ProgressBar>
+                            <div>
+                              <Body1 color="gray800">특화 질문</Body1>
+                              <BgBoxList>
+                                <BgBoxItem>
+                                  <Body3 color="gray700">01.</Body3>
+                                  <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
+                                </BgBoxItem>
+                                <BgBoxItem>
+                                  <Body3 color="gray700">02.</Body3>
+                                  <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
+                                </BgBoxItem>
+                                <BgBoxItem>
+                                  <Body3 color="gray700">03.</Body3>
+                                  <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
+                                </BgBoxItem>
+                              </BgBoxList>
+                            </div>
+                          </BoxListWrap>
+                        )}
+                      </ListBoxItem>
+                    )}
 
-              <MoleculeStepIndicator steps={steps} activeStep={3} />
+                    <ListBoxItem 
+                      active={selectedInterviewPurpose === 'usage_context'}
+                      showQuestions={showQuestions.radio3}
+                    >
+                      <div>
+                        <RadioButton 
+                          id="radio3"
+                          name="radioGroup1"
+                          checked={selectedInterviewPurpose === 'usage_context'} 
+                          onChange={() => handlePurposeSelect('usage_context')} 
+                        />
+                      </div>
+                      <ListText>
+                        <ListTitle>
+                          <Body1 color={selectedInterviewPurpose === 'usage_context' ? "primary" : "gray800"}>
+                            사용 맥락 조사
+                          </Body1>
+                        </ListTitle>
+                        <ListSubtitle>
+                          <Caption1 color="gray500">
+                            다양한 시나리오에서 제품의 사용 가능성을 평가하여 부적합한 환경 발견 
+                          </Caption1>
+                        </ListSubtitle>
+                      </ListText>
+                      <ListButton>
+                        <Button 
+                          Medium 
+                          {...(showQuestions.radio3 ? { PrimaryLightest: true, Fill: true } : { View: true })}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setShowQuestions(prev => ({
+                              ...prev,
+                              radio3: !prev.radio3
+                            }));
+                          }}
+                        >
+                          {showQuestions.radio3 ? '문항 닫기' : '문항 보기'}
+                        </Button>
+                      </ListButton>
 
-              <InterviewRoom>
-                <ul>
-                  <li>
-                    <span>방식</span>
-                    <p>
-                      {selectedInterviewType === "multiple"
-                        ? "1:N 인터뷰"
-                        : selectedInterviewType === "single"
-                        ? "1:1 인터뷰"
-                        : ""}
-                    </p>
-                  </li>
-                  <li>
-                    <span>목적</span>
-                    <p>{interviewPurpose}</p>
-                  </li>
-                  <li>
-                    <span>참여자</span>
-                    <p>{personaList.selected.length}명</p>
-                  </li>
-                </ul>
-                <Button
-                  Large
-                  Primary
+                      {showQuestions.radio3 && (
+                        <BoxListWrap>
+                          <div>
+                            <Body1 color="gray800">공통 질문</Body1>
+                            <BgBoxList>
+                              <BgBoxItem>
+                                <Body3 color="gray700">01.</Body3>
+                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
+                              </BgBoxItem>
+                              <BgBoxItem>
+                                <Body3 color="gray700">02.</Body3>
+                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
+                              </BgBoxItem>
+                              <BgBoxItem>
+                                <Body3 color="gray700">03.</Body3>
+                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
+                              </BgBoxItem>
+                            </BgBoxList>
+                          </div>
+
+                          <div>
+                            <Body1 color="gray800">특화 질문</Body1>
+                            <BgBoxList>
+                              <BgBoxItem>
+                                <Body3 color="gray700">01.</Body3>
+                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
+                              </BgBoxItem>
+                              <BgBoxItem>
+                                <Body3 color="gray700">02.</Body3>
+                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
+                              </BgBoxItem>
+                              <BgBoxItem>
+                                <Body3 color="gray700">03.</Body3>
+                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
+                              </BgBoxItem>
+                            </BgBoxList>
+                          </div>
+                        </BoxListWrap>
+                      )}
+                    </ListBoxItem>
+
+                    <ListBoxItem 
+                      active={selectedInterviewPurpose === 'purchase_factors'}
+                      showQuestions={showQuestions.radio4}
+                    >
+                      <div>
+                        <RadioButton 
+                          id="radio4"
+                          name="radioGroup1"
+                          checked={selectedInterviewPurpose === 'purchase_factors'} 
+                          onChange={() => handlePurposeSelect('purchase_factors')} 
+                        />
+                      </div>
+                      <ListText>
+                        <ListTitle>
+                          <Body1 color={selectedInterviewPurpose === 'purchase_factors' ? "primary" : "gray800"}>
+                            구매 전환 요인 분석
+                          </Body1>
+                        </ListTitle>
+                        <ListSubtitle>
+                          <Caption1 color="gray500">
+                            다양한 시나리오에서 제품의 사용 가능성을 평가하여 부적합한 환경 발견 
+                          </Caption1>
+                        </ListSubtitle>
+                      </ListText>
+                      <ListButton>
+                        <Button 
+                          Medium 
+                          {...(showQuestions.radio4 ? { PrimaryLightest: true, Fill: true } : { View: true })}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setShowQuestions(prev => ({
+                              ...prev,
+                              radio4: !prev.radio4
+                            }));
+                          }}
+                        >
+                          {showQuestions.radio4 ? '문항 닫기' : '문항 보기'}
+                        </Button>
+                      </ListButton>
+
+                      {showQuestions.radio4 && (
+                        <BoxListWrap>
+                          <div>
+                            <Body1 color="gray800">공통 질문</Body1>
+                            <BgBoxList>
+                              <BgBoxItem>
+                                <Body3 color="gray700">01.</Body3>
+                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
+                              </BgBoxItem>
+                              <BgBoxItem>
+                                <Body3 color="gray700">02.</Body3>
+                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
+                              </BgBoxItem>
+                              <BgBoxItem>
+                                <Body3 color="gray700">03.</Body3>
+                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
+                              </BgBoxItem>
+                            </BgBoxList>
+                          </div>
+
+                          <div>
+                            <Body1 color="gray800">특화 질문</Body1>
+                            <BgBoxList>
+                              <BgBoxItem>
+                                <Body3 color="gray700">01.</Body3>
+                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
+                              </BgBoxItem>
+                              <BgBoxItem>
+                                <Body3 color="gray700">02.</Body3>
+                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
+                              </BgBoxItem>
+                              <BgBoxItem>
+                                <Body3 color="gray700">03.</Body3>
+                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
+                              </BgBoxItem>
+                            </BgBoxList>
+                          </div>
+                        </BoxListWrap>
+                      )}
+                    </ListBoxItem>
+
+                    <ListBoxItem 
+                      active={selectedInterviewPurpose === 'behavior_analysis'}
+                      showQuestions={showQuestions.radio5}
+                    >
+                      <div>
+                        <RadioButton 
+                          id="radio5"
+                          name="radioGroup1"
+                          checked={selectedInterviewPurpose === 'behavior_analysis'} 
+                          onChange={() => handlePurposeSelect('behavior_analysis')} 
+                        />
+                      </div>
+                      <ListText>
+                        <ListTitle>
+                          <Body1 color={selectedInterviewPurpose === 'behavior_analysis' ? "primary" : "gray800"}>
+                            소비자 행동 유도 요소 분석
+                          </Body1>
+                        </ListTitle>
+                        <ListSubtitle>
+                          <Caption1 color="gray500">
+                            다양한 시나리오에서 제품의 사용 가능성을 평가하여 부적합한 환경 발견 
+                          </Caption1>
+                        </ListSubtitle>
+                      </ListText>
+                      <ListButton>
+                        <Button 
+                          Medium 
+                          {...(showQuestions.radio5 ? { PrimaryLightest: true, Fill: true } : { View: true })}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setShowQuestions(prev => ({
+                              ...prev,
+                              radio5: !prev.radio5
+                            }));
+                          }}
+                        >
+                          {showQuestions.radio5 ? '문항 닫기' : '문항 보기'}
+                        </Button>
+                      </ListButton>
+
+                      {showQuestions.radio5 && (
+                        <BoxListWrap>
+                          <div>
+                            <Body1 color="gray800">공통 질문</Body1>
+                            <BgBoxList>
+                              <BgBoxItem>
+                                <Body3 color="gray700">01.</Body3>
+                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
+                              </BgBoxItem>
+                              <BgBoxItem>
+                                <Body3 color="gray700">02.</Body3>
+                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
+                              </BgBoxItem>
+                              <BgBoxItem>
+                                <Body3 color="gray700">03.</Body3>
+                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
+                              </BgBoxItem>
+                            </BgBoxList>
+                          </div>
+
+                          <div>
+                            <Body1 color="gray800">특화 질문</Body1>
+                            <BgBoxList>
+                              <BgBoxItem>
+                                <Body3 color="gray700">01.</Body3>
+                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
+                              </BgBoxItem>
+                              <BgBoxItem>
+                                <Body3 color="gray700">02.</Body3>
+                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
+                              </BgBoxItem>
+                              <BgBoxItem>
+                                <Body3 color="gray700">03.</Body3>
+                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
+                              </BgBoxItem>
+                            </BgBoxList>
+                          </div>
+                        </BoxListWrap>
+                      )}
+                    </ListBoxItem>
+
+                    <CustomizationWrap>
+                      {showCustomButton && (
+                        <Button 
+                          DbExLarge 
+                          W100 
+                          Outline
+                          onClick={() => {
+                            setCustomizations(prev => [...prev, {
+                              id: Date.now(),
+                              purposeText: '',
+                              showMethodology: false,
+                              isEditing: false,
+                              definitionText: FULL_DEFINITION_TEXT,
+                              editedDefinition: '',
+                              editedPurpose: ''
+                            }]);
+                            setShowCustomButton(false);
+                          }}
+                        >
+                          <span />
+                          <Sub1 color="gray700">인터뷰 커스터마이징</Sub1>
+                        </Button>
+                      )}
+                      
+                      {customizations.map((custom, index) => (
+                        <div key={custom.id}>
+                          {!custom.showMethodology ? (
+                            <CustomizationBox>
+                              <Body1 color="gray800" style={{ alignSelf: 'flex-start' }}>
+                                인터뷰 목적
+                              </Body1>
+                              <CustomTextarea 
+                                rows={4} 
+                                placeholder="페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다." 
+                                value={custom.purposeText}
+                                onChange={(e) => {
+                                  const newCustomizations = [...customizations];
+                                  newCustomizations[index].purposeText = e.target.value;
+                                  setCustomizations(newCustomizations);
+                                }} 
+                              />
+                              <Button 
+                                Medium 
+                                Primary 
+                                onClick={() => {
+                                  if (!custom.purposeText.trim()) {
+                                    setShowPopup(true);
+                                  } else {
+                                    const newCustomizations = [...customizations];
+                                    newCustomizations[index].showMethodology = true;
+                                    setCustomizations(newCustomizations);
+                                  }
+                                }}
+                              >
+                                목적 생성
+                              </Button>
+                            </CustomizationBox>
+                          ) : (
+                            <>
+                              {!custom.isEditing ? (
+                                <CustomizationBox>
+                                  <CustomTitle>
+                                    <Body1 color="gray800" style={{ alignSelf: 'flex-start' }}>
+                                      방법론 타이틀
+                                    </Body1>
+                                    <ButtonGroup>
+                                      <IconButton onClick={() => handleEditClick(index)}>
+                                        <img src={images.PencilSquare} alt="수정하기" />
+                                        수정하기
+                                      </IconButton>
+                                      <IconButton>
+                                        <img src={images.MagicStick} alt="AI로 다듬기" />
+                                        AI로 다듬기
+                                      </IconButton>
+                                    </ButtonGroup>
+                                  </CustomTitle>
+
+                                  <TextInfo>
+                                    <Body3 color="gray700">정의</Body3>
+                                    <TextBox>
+                                      <Body3 color="gray700">{custom.definitionText}</Body3>
+                                    </TextBox>
+                                  </TextInfo>
+
+                                  <TextInfo>
+                                    <Body3 color="gray700">목적</Body3>
+                                    <TextBox>
+                                      <Body3 color="gray700">{custom.purposeText}</Body3>
+                                    </TextBox>
+                                  </TextInfo>
+
+                                  <TextInfo>
+                                    <Body3 color="gray700">질문</Body3>
+                                    <BgBoxList>
+                                      <BgBoxItem white>
+                                        <Body3 color="gray800">사용자의 트렌드 인지와 반응 속도 측정</Body3>
+                                      </BgBoxItem>
+                                      <BgBoxItem white>
+                                        <Body3 color="gray800">시장 변화에 대한 사용자의 태도와 행동 분석</Body3>
+                                      </BgBoxItem>
+                                      <BgBoxItem white>
+                                        <Body3 color="gray800">트렌드에 따른 구매 결정 요인 파악</Body3>
+                                      </BgBoxItem>
+                                      <BgBoxItem white>
+                                        <Body3 color="gray800">다양한 데모그래픽과 트렌드 반응성 비교</Body3>
+                                      </BgBoxItem>
+                                    </BgBoxList>
+                                  </TextInfo>
+
+                                  <Caption2 color="gray500" style={{ alignSelf: 'flex-start' }}>
+                                    * 본 서비스는 B2C 페르소나를 타겟으로 진행되어, 질문문항이 소비자 중심으로 되지 않았을 경우, 적합한 결과 도출이 나오지 않을 수 있습니다. 
+                                  </Caption2>
+
+                                  <Button 
+                                    Medium 
+                                    Primary 
+                                    onClick={() => {
+                                      setShowNewListBox(true);
+                                      setShowCustomization(false);
+                                      setShowMethodology(false);
+                                      setShowCustomButton(true);
+                                      setCustomizations([]);
+                                      setTimeout(() => {
+                                        setShowCustomization(false);
+                                      }, 100);
+                                    }}
+                                  >
+                                    질문 생성하기
+                                  </Button>
+                                </CustomizationBox>
+                              ) : (
+                                <CustomizationBox Edit={custom.isEditing}>
+                                  <CustomTitle>
+                                    <Body1 color="gray800" style={{ alignSelf: 'flex-start' }}>
+                                      방법론 타이틀
+                                    </Body1>
+                                    <ButtonGroup>
+                                      <IconButton>
+                                        <img src={images.PencilSquare} alt="수정하기" />
+                                        수정하기
+                                      </IconButton>
+                                      <IconButton>
+                                        <img src={images.MagicStick} alt="AI로 다듬기" />
+                                        AI로 다듬기
+                                      </IconButton>
+                                    </ButtonGroup>
+                                  </CustomTitle>
+
+                                  <TextInfo>
+                                    <Body3 color="gray700">정의</Body3>
+                                    <FormBox>
+                                      <CustomTextarea 
+                                        Edit 
+                                        rows={3}
+                                        placeholder="textarea" 
+                                        onChange={(e) => {
+                                          const newCustomizations = [...customizations];
+                                          newCustomizations[index].editedDefinition = e.target.value;
+                                          setCustomizations(newCustomizations);
+                                        }}
+                                        value={custom.editedDefinition}
+                                      />
+                                    </FormBox>
+                                  </TextInfo>
+
+                                  <TextInfo>
+                                    <Body3 color="gray700">목적</Body3>
+                                    <FormBox>
+                                      <CustomTextarea 
+                                        Edit 
+                                        rows={3}
+                                        placeholder="textarea" 
+                                        onChange={(e) => {
+                                          const newCustomizations = [...customizations];
+                                          newCustomizations[index].editedPurpose = e.target.value;
+                                          setCustomizations(newCustomizations);
+                                        }}
+                                        value={custom.editedPurpose}
+                                      />
+                                    </FormBox>
+                                  </TextInfo>
+
+                                  <TextInfo>
+                                    <Body3 color="gray700">질문</Body3>
+                                    <BgBoxList>
+                                      <BgBoxItem white>
+                                        <Body3 color="gray800">사용자의 트렌드 인지와 반응 속도 측정</Body3>
+                                      </BgBoxItem>
+                                      <BgBoxItem white>
+                                        <Body3 color="gray800">시장 변화에 대한 사용자의 태도와 행동 분석</Body3>
+                                      </BgBoxItem>
+                                      <BgBoxItem white>
+                                        <Body3 color="gray800">트렌드에 따른 구매 결정 요인 파악</Body3>
+                                      </BgBoxItem>
+                                      <BgBoxItem white>
+                                        <Body3 color="gray800">다양한 데모그래픽과 트렌드 반응성 비교</Body3>
+                                      </BgBoxItem>
+                                    </BgBoxList>
+                                  </TextInfo>
+
+                                  <Caption2 color="gray500" style={{ alignSelf: 'flex-start' }}>
+                                    * 본 서비스는 B2C 페르소나를 타겟으로 진행되어, 질문문항이 소비자 중심으로 되지 않았을 경우, 적합한 결과 도출이 나오지 않을 수 있습니다. 
+                                  </Caption2>
+
+                                  <Button Medium Primary onClick={() => handleEditComplete(index)}>완료</Button>
+                                </CustomizationBox>
+                              )}
+                            </>
+                          )}
+                        </div>
+                      ))}
+                    </CustomizationWrap>
+                  </CardGroupWrap>
+                </div>
+              </InterviewWayContent>
+
+              <BottomBar W100>
+                <Body2 color="gray800">
+                  {selectedInterviewPurpose === 'product_experience_new' ? '제품 경험 평가' : ''} 인터뷰에 참여할 페르소나를 선택하세요
+                </Body2>
+                <Button 
+                  Large 
+                  Primary 
+                  Round 
                   Fill
-                  disabled={!selectedInterviewType || !interviewPurpose}
-                  style={{
-                    cursor:
-                      !selectedInterviewType || !interviewPurpose
-                        ? "default"
-                        : "pointer",
-                  }}
-                  onClick={() => setShowInterviewReady(true)}
+                  disabled={!selectedInterviewType || !selectedInterviewPurpose}
+                  onClick={() => navigate('/PersonaSelect')}
                 >
-                  인터뷰룸 입장
+                  다음
+                  <img src={images.ChevronRight} alt="다음" />
                 </Button>
-              </InterviewRoom>
-            </Sidebar>
+              </BottomBar>
+            </MainSection>
 
             {showEditPersona && (
               <PopupWrap
@@ -624,211 +1131,122 @@ const PagePersona3 = () => {
 
 export default PagePersona3;
 
-const InterviewRoom = styled.div`
-  // display: ${(props) => (props.showInterview ? "flex" : "none")};
+const InterviewWayTab = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid ${palette.outlineGray};
-
-  ul {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-
-    li {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.875rem;
-      line-height: 1.5;
-      color: ${palette.gray700};
-
-      span {
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-      }
-
-      p {
-        text-align: right;
-      }
-    }
-  }
-`;
-
-const Sidebar = styled.div`
-  position: sticky;
-  top: 101px;
-  display: flex;
-  flex-direction: column;
-  align-self: flex-start;
   gap: 16px;
-  width: 290px;
-  padding: 16px 20px;
-  margin-top: 44px;
-  border-radius: 10px;
-  background: ${palette.chatGray};
-
-  h5 {
-    font-size: 0.88rem;
-    font-weight: 500;
-    line-height: 1.5;
-    color: ${palette.gray700};
-    text-align: left;
-  }
+  width: 100%;
+  margin-bottom: 20px;
 `;
 
-const ProgressBar = styled.div`
+const InterviewWayTabItem = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
-
-  span {
-    font-size: 0.75rem;
-    line-height: 1.5;
-    color: ${palette.gray700};
-  }
-
-  .icon {
-    font-size: 1.13rem;
-  }
-`;
-
-const Progress = styled.div`
-  width: 100%;
-  height: 8px;
-  border-radius: 20px;
-  background: ${palette.outlineGray};
-
-  &:before {
-    display: block;
-    width: ${(props) => props.progress}%;
-    height: 100%;
-    border-radius: 20px;
-    background: ${palette.primary};
-    content: "";
-  }
-`;
-
-const InterviewTypeCards = styled.div`
-  display: flex;
-  align-items: stretch;
-  gap: 16px;
-  width: 100%;
-`;
-
-const InterviewTypeCard = styled.div`
-  position: relative;
+  gap: 12px;
   flex: 1;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  border-radius: 10px;
-  border: 1px solid
-    ${(props) => (props.isActive ? palette.primary : palette.outlineGray)};
-  background: ${(props) =>
-    props.isActive ? "rgba(34, 111, 255, 0.10)" : "white"};
-  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
-  opacity: ${(props) => (props.disabled ? 0.6 : 1)};
-  transition: all 0.2s ease-in-out;
+  color: ${props => 
+    props.active 
+    ? palette.gray800 
+    : palette.gray300
+  };
+  padding: 20px 24px;
+  border-radius: 15px;
+  background: ${props => 
+    props.active 
+    ? palette.chatGray 
+    : palette.white
+  };
 
-  strong {
+  > span {
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    font-size: 0.88rem;
     font-weight: 600;
     line-height: 1.5;
-    color: ${(props) => (props.isActive ? palette.primary : palette.gray800)};
-    text-align: left;
-
-    span {
-      font-size: 0.75rem;
-      font-weight: 400;
-      color: ${palette.gray300};
-      padding: 2px 8px;
-      border-radius: 15px;
-      background: ${palette.gray100};
-    }
-  }
-
-  p {
-    font-size: 0.75rem;
-    line-height: 1.5;
-    color: ${(props) => (props.isActive ? palette.gray800 : palette.gray500)};
-    text-align: left;
+    color: ${palette.white};
+    border-radius: 50%;
+    background: ${props => 
+      props.active 
+      ? palette.primary 
+      : palette.gray300
+    };
   }
 `;
 
-const CheckBox = styled.div`
-  position: absolute;
-  right: 20px;
-  top: 20px;
-  width: 24px;
-  height: 24px;
-  border-radius: 12px;
-  border: 1px solid
-    ${(props) => (props.isActive ? palette.primary : palette.outlineGray)};
-  background: ${(props) => (props.isActive ? palette.primary : "white")};
-
-  ${(props) =>
-    props.isActive &&
-    `
-    &:after {
-      content: '';
-      position: absolute;
-      left: 8px;
-      top: 5px;
-      width: 6px;
-      height: 10px;
-      border: solid white;
-      border-width: 0 2px 2px 0;
-      transform: rotate(45deg);
-    }
-  `}
-`;
-
-const TabWrap = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`;
-
-const TabButton = styled.button`
-  font-family: "Pretendard", "Poppins";
-  font-size: 0.875rem;
-  line-height: 1.5;
-  padding: 4px 16px;
-  border-radius: 50px;
-  cursor: pointer;
-
-  ${({ isActive }) =>
-    isActive
-      ? `
-    background: rgba(34, 111, 255, 0.1);
-    border: 1px solid ${palette.primary};
-    color: ${palette.primary};
-    font-weight: 500;
-  `
-      : `
-    background: ${palette.chatGray};
-    border: 1px solid ${palette.outlineGray};
-    color: ${palette.gray500};
-    font-weight: 300;
-  `}
-`;
-
-const InterviewSelect = styled.div`
+const InterviewWayContent = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 40px;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 100px;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+`;
+
+const CustomizationWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+
+  > div {
+    width: 100%;
+  }
+
+  button span {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid ${palette.gray700};
+
+    &::before, &::after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px;
+      height: 1px;
+      background: ${palette.gray700};
+      content: '';
+    }
+
+    &::after {
+      transform: translate(-50%, -50%) rotate(90deg);
+    }
+  }
+`;
+
+const CustomizationBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 20px;
   width: 100%;
-  height: 100%;
-  margin-top: 30px;
+  padding: 24px 24px 20px 20px;
+  border-radius: 10px;
+  border: 1px solid ${palette.outlineGray};
+`;
+
+const CustomTitle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 `;
 
 const PersonaCards = styled.div`
@@ -840,60 +1258,4 @@ const PersonaCards = styled.div`
   padding: 24px 24px 24px 20px;
   border-radius: 10px;
   border: 1px solid ${palette.outlineGray};
-`;
-
-const TabContent = styled(PersonaCards)`
-  gap: 12px;
-  padding: 0;
-  border-radius: 0;
-  border: none;
-
-  > div {
-    padding: 14px 20px 12px;
-  }
-`;
-
-const CustomAccordionIcon = styled.div`
-  width: 24px;
-  height: 24px;
-  position: relative;
-
-  &:before {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 8px;
-    height: 8px;
-    border-right: 2px solid ${palette.gray500};
-    border-bottom: 2px solid ${palette.gray500};
-    transform: translate(-50%, -50%)
-      ${(props) => (props.isOpen ? "rotate(-135deg)" : "rotate(45deg)")};
-    transition: transform 0.3s ease;
-  }
-`;
-
-const CustomAccordionHeader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px;
-  background: ${palette.chatGray};
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 0.875rem;
-  color: ${palette.gray700};
-  transition: background 0.3s ease;
-
-  &:hover {
-    background: ${palette.gray100};
-  }
-`;
-
-const CustomAccordionContent = styled.div`
-  padding: 20px 16px;
-  border: 1px solid ${palette.outlineGray};
-  border-radius: 10px;
-  margin-top: 12px;
-  background: ${palette.white};
 `;

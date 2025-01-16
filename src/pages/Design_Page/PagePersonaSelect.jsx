@@ -9,9 +9,10 @@ import AnalysisInfo from "./PageAnalysisInfo";
 import OrganismIncNavigation from "../Persona/components/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../Persona/components/molecules/MoleculeHeader";
 import PopupWrap from "../../assets/styles/Popup";
-
+import OrganismToastPopup from "../Persona/components/organisms/OrganismToastPopup";
 import { Button, ButtonGroup, IconButton } from "../../assets/styles/ButtonStyle";
 import images from "../../assets/styles/Images";
+import personaImages from "../../assets/styles/PersonaImages";
 import { palette } from "../../assets/styles/Palette";
 import { RadioButton, CustomTextarea, FormBox } from "../../assets/styles/InputStyle";
 import { 
@@ -22,6 +23,7 @@ import {
   CardWrap,
   CardGroupWrap,
   ListBoxItem,
+  ListBorderItem,
   ListText,
   ListTitle,
   ListSubtitle,
@@ -32,15 +34,24 @@ import {
   TextBox,
   TextInfo,
   Badge,
-  BottomBar
+  BottomBar,
+  ListBoxGroup,
+  PersonaGroup,
+  Persona,
+  Title,
+  PersonaInfo,
+  SwitchToggle,
+  SwitchToggleItem,
+  SwitchHandle
 } from "../../assets/styles/BusinessAnalysisStyle";
-import { H5, Body1, Body2, Body3, Sub1, Caption1, Caption2 } from "../../assets/styles/Typography";
+import { 
+  H5, Body1, Body2, Body3, Sub1, Sub2, Sub3, Caption1, Caption2 
+} from "../../assets/styles/Typography";
+import { SELECTED_INTERVIEW_TYPE, SELECTED_INTERVIEW_PURPOSE } from "../../AtomStates";
 
 const FULL_DEFINITION_TEXT = '사용자 트렌드 민감도 분석은 사용자가 시장의 최신 트렌드에 얼마나 빠르고 효과적으로 반응하는지를 측정하는 방법론입니다. 이 분석은 사용자가 새로운 트렌드를 어떻게 인식하고, 그 트렌드에 따라 행동이 어떻게 변화하는지 파악하는 데 중점을 둡니다.';
 
 const PagePersonaSelect = () => {
-  const [selectedRadio1, setSelectedRadio1] = useState();
-  const [selectedRadio2, setSelectedRadio2] = useState();
   const [showPopup, setShowPopup] = useState(false);
   const [showQuestions, setShowQuestions] = useState({
     radio3: false,
@@ -59,9 +70,22 @@ const PagePersonaSelect = () => {
   const [showNewListBox, setShowNewListBox] = useState(false);
   const [customizations, setCustomizations] = useState([]);
   const [showCustomButton, setShowCustomButton] = useState(true);
+  const [selectedPersonas, setSelectedPersonas] = useState(null);
+  const [showToast, setShowToast] = useState(false);
+  const [selectedInterviewType] = useAtom(SELECTED_INTERVIEW_TYPE);
+  const [selectedInterviewPurpose] = useAtom(SELECTED_INTERVIEW_PURPOSE);
+
+  const handleStartInterview = () => {
+    setShowPopup(true);
+  };
 
   const handlePopupClose = () => {
     setShowPopup(false);
+  };
+
+  const handleConfirmStart = () => {
+    setShowPopup(false);
+    setShowToast(true);
   };
 
   const handleCreatePurpose = () => {
@@ -86,6 +110,10 @@ const PagePersonaSelect = () => {
     newCustomizations[index].purposeText = newCustomizations[index].editedPurpose;
     newCustomizations[index].isEditing = false;
     setCustomizations(newCustomizations);
+  };
+
+  const handlePersonaSelect = (personaId) => {
+    setSelectedPersonas(personaId);
   };
 
   return (
@@ -114,614 +142,387 @@ const PagePersonaSelect = () => {
                 <div>
                   <Body2 color="gray800">인터뷰 정보</Body2>
 
-                  <CardGroupWrap>
-                    <ListBoxItem active={selectedRadio1 === 'radio1'}>
-                      <div>
-                        <RadioButton 
-                          id="radio1"
-                          name="radioGroup1"
-                          checked={selectedRadio1 === 'radio1'} 
-                          onChange={() => setSelectedRadio1('radio1')} 
-                        />
-                      </div>
-                      <ListText>
-                        <ListTitle>
-                          <Body1 color={selectedRadio1 === 'radio1' ? "primary" : "gray800"}>
-                            여러 페르소나 인터뷰 (1:N)
-                          </Body1>
-                        </ListTitle>
-                        <ListSubtitle>
-                          <Caption1 color={selectedRadio1 === 'radio1' ? "gray800" : "gray500"}>
-                            여러 페르소나의 다양한 의견을 한 번에 확인 하세요. 폭넓은 시각과 다양한 의견을 파악하는데 적합합니다. 
-                          </Caption1>
-                        </ListSubtitle>
-                      </ListText>
-                    </ListBoxItem>
-                    
-                    <ListBoxItem active={selectedRadio1 === 'radio2'}>
-                      <div>
-                        <RadioButton 
-                          id="radio2"
-                          name="radioGroup1"
-                          checked={selectedRadio1 === 'radio2'} 
-                          onChange={() => setSelectedRadio1('radio2')} 
-                        />
-                      </div>
-                      <ListText>
-                        <ListTitle>
-                          <Body1 color={selectedRadio1 === 'radio2' ? "primary" : "gray800"}>
-                            한 명과 심층 인터뷰 (1:1)
-                          </Body1>
-                        </ListTitle>
-                        <ListSubtitle>
-                          <Caption1 color={selectedRadio1 === 'radio1' ? "gray800" : "gray500"}>
-                            한 명의 페르소나와 깊이 있는 대화를 통해 자세한 인사이트를 도출하세요. 구체적인 피드백이 필요한 경우 유용합니다.
-                          </Caption1>
-                        </ListSubtitle>
-                      </ListText>
-                    </ListBoxItem>
-                  </CardGroupWrap>
+                  <ListBoxGroup>
+                    <li>
+                      <Body2 color="gray500">인터뷰 방식</Body2>
+                      {selectedInterviewType === 'multiple' ? (
+                        <Body2 color="gray800">여러 페르소나 인터뷰 (1:N)</Body2>
+                      ) : selectedInterviewType === 'single' ? (
+                        <Body2 color="gray800">한명과 심층 인터뷰 (1:1)</Body2>
+                      ) : null}
+                    </li>
+                    <li>
+                      <Body2 color="gray500">인터뷰 목적</Body2>
+                      <Body2 color="gray800">제품 경험 평가</Body2>
+                    </li>
+                    <li>
+                      <Body2 color="gray500">페르소나 선택</Body2>
+                      <PersonaGroup>
+                        <span>+2</span>
+                        <Persona color="Linen" size="Small" Round>
+                          <img src={personaImages.PersonaWomen01} alt="페르소나" />
+                        </Persona>
+                        <Persona color="PastelPink" size="Small" Round>
+                          <img src={personaImages.PersonaWomen02} alt="페르소나" />
+                        </Persona>
+                        <Persona color="Crayola" size="Small" Round>
+                          <img src={personaImages.PersonaWomen03} alt="페르소나" />
+                        </Persona>
+                      </PersonaGroup>
+                    </li>
+                    {selectedInterviewType === 'multiple' ? (
+                      <></>
+                      ) : selectedInterviewType === 'single' ? (
+                        <li>
+                          <Body2 color="gray500">반응형 인터뷰</Body2>
+                          <SwitchToggle>
+                            <SwitchToggleItem>
+                              <input type="checkbox" />
+                              <span data-on="ON" data-off="OFF" />
+                              <SwitchHandle />
+                            </SwitchToggleItem>
+                            <Body2 color="gray800">추가 질문 생성</Body2>
+                          </SwitchToggle>
+                        </li>
+                      ) : null}
+
+                  </ListBoxGroup>
                 </div>
 
                 <div>
-                  <Body2 color="gray800">인터뷰 목적 </Body2>
+                  <Title>
+                    {selectedInterviewType === 'multiple' ? (
+                      <>
+                        <Body2 color="gray800">⭐ 페르소나 리스트</Body2>
+                        <Sub3 color="gray800">2명 선택됨</Sub3>
+                      </>
+                    ) : selectedInterviewType === 'single' ? (
+                      <>
+                        <Body2 color="gray800">📌 추천 페르소나</Body2>
+                        <Sub3 color="gray800">2명 선택됨</Sub3>
+                      </>
+                    ) : null}
+                  </Title>
 
-                  <CardGroupWrap>
-                    {showNewListBox && (
-                      <ListBoxItem New
-                        active={selectedRadio2 === 'radio6'}
-                        showQuestions={showQuestions.radio6}
-                      >
-                        <div>
-                          <RadioButton 
-                            id="radio6"
-                            name="radioGroup1"
-                            checked={selectedRadio2 === 'radio6'} 
-                            onChange={() => setSelectedRadio2('radio6')} 
-                          />
-                        </div>
+                  {selectedInterviewType === 'multiple' ? (
+                    <CardGroupWrap>
+                      <ListBoxItem>
+                        <Persona color="Linen" size="Large" Round>
+                          <img src={personaImages.PersonaWomen01} alt="페르소나" />
+                        </Persona>
                         <ListText>
                           <ListTitle>
-                            <Body1 color={selectedRadio2 === 'radio6' ? "primary" : "gray800"}>
+                            <Body1 color="gray800">
                               제품 경험 평가
                             </Body1>
-                            <Badge Complete>New</Badge>
+                            <Badge New>비즈니스</Badge>
                           </ListTitle>
                           <ListSubtitle>
-                            <Caption1 color="gray500">
-                              다양한 시나리오에서 제품의 사용 가능성을 평가하여 부적합한 환경 발견 
-                            </Caption1>
+                            <PersonaInfo>
+                              <span>여성</span>
+                              <span>25세</span>
+                              <span>직업</span>
+                            </PersonaInfo>
                           </ListSubtitle>
                         </ListText>
+
                         <ListButton>
                           <Button 
                             Medium 
-                            {...(showQuestions.radio6 ? { PrimaryLightest: true, Fill: true } : { View: true })}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              setShowQuestions(prev => ({
-                                ...prev,
-                                radio6: !prev.radio6
-                              }));
-                            }}
+                            PrimaryLightest={selectedPersonas === "persona1"} 
+                            Fill={selectedPersonas === "persona1"}
+                            onClick={() => handlePersonaSelect("persona1")}
                           >
-                            {showQuestions.radio6 ? '문항 닫기' : '문항 보기'}
+                            {selectedPersonas === "persona1" ? (
+                              "Selected"
+                            ) : (
+                              <Sub2 color="gray500">Add</Sub2>
+                            )}
                           </Button>
                         </ListButton>
-
-                        {showQuestions.radio6 && (
-                          <BoxListWrap>
-                            <div>
-                              <Body1 color="gray800">공통 질문</Body1>
-                              <BgBoxList>
-                                <BgBoxItem>
-                                  <Body3 color="gray700">01.</Body3>
-                                  <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
-                                </BgBoxItem>
-                                <BgBoxItem>
-                                  <Body3 color="gray700">02.</Body3>
-                                  <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
-                                </BgBoxItem>
-                                <BgBoxItem>
-                                  <Body3 color="gray700">03.</Body3>
-                                  <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
-                                </BgBoxItem>
-                              </BgBoxList>
-                            </div>
-
-                            <div>
-                              <Body1 color="gray800">특화 질문</Body1>
-                              <BgBoxList>
-                                <BgBoxItem>
-                                  <Body3 color="gray700">01.</Body3>
-                                  <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
-                                </BgBoxItem>
-                                <BgBoxItem>
-                                  <Body3 color="gray700">02.</Body3>
-                                  <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
-                                </BgBoxItem>
-                                <BgBoxItem>
-                                  <Body3 color="gray700">03.</Body3>
-                                  <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
-                                </BgBoxItem>
-                              </BgBoxList>
-                            </div>
-                          </BoxListWrap>
-                        )}
                       </ListBoxItem>
-                    )}
 
-                    <ListBoxItem 
-                      active={selectedRadio2 === 'radio3'}
-                      showQuestions={showQuestions.radio3}
-                    >
-                      <div>
-                        <RadioButton 
-                          id="radio3"
-                          name="radioGroup1"
-                          checked={selectedRadio2 === 'radio3'} 
-                          onChange={() => setSelectedRadio2('radio3')} 
-                        />
-                      </div>
-                      <ListText>
-                        <ListTitle>
-                          <Body1 color={selectedRadio2 === 'radio3' ? "primary" : "gray800"}>
-                            제품 경험 평가
-                          </Body1>
-                        </ListTitle>
-                        <ListSubtitle>
-                          <Caption1 color="gray500">
-                            다양한 시나리오에서 제품의 사용 가능성을 평가하여 부적합한 환경 발견 
-                          </Caption1>
-                        </ListSubtitle>
-                      </ListText>
-                      <ListButton>
-                        <Button 
-                          Medium 
-                          {...(showQuestions.radio3 ? { PrimaryLightest: true, Fill: true } : { View: true })}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setShowQuestions(prev => ({
-                              ...prev,
-                              radio3: !prev.radio3
-                            }));
-                          }}
-                        >
-                          {showQuestions.radio3 ? '문항 닫기' : '문항 보기'}
-                        </Button>
-                      </ListButton>
+                      <ListBoxItem>
+                        <Persona color="Linen" size="Large" Round>
+                          <img src={personaImages.PersonaWomen01} alt="페르소나" />
+                        </Persona>
+                        <ListText>
+                          <ListTitle>
+                            <Body1 color="gray800">
+                              제품 경험 평가
+                            </Body1>
+                            <Badge New>비즈니스</Badge>
+                          </ListTitle>
+                          <ListSubtitle>
+                            <PersonaInfo>
+                              <span>여성</span>
+                              <span>25세</span>
+                              <span>직업</span>
+                            </PersonaInfo>
+                          </ListSubtitle>
+                        </ListText>
 
-                      {showQuestions.radio3 && (
-                        <BoxListWrap>
-                          <div>
-                            <Body1 color="gray800">공통 질문</Body1>
-                            <BgBoxList>
-                              <BgBoxItem>
-                                <Body3 color="gray700">01.</Body3>
-                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
-                              </BgBoxItem>
-                              <BgBoxItem>
-                                <Body3 color="gray700">02.</Body3>
-                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
-                              </BgBoxItem>
-                              <BgBoxItem>
-                                <Body3 color="gray700">03.</Body3>
-                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
-                              </BgBoxItem>
-                            </BgBoxList>
-                          </div>
+                        <ListButton>
+                          <Button 
+                            Medium 
+                            PrimaryLightest={selectedPersonas === "persona2"} 
+                            Fill={selectedPersonas === "persona2"}
+                            onClick={() => handlePersonaSelect("persona2")}
+                          >
+                            {selectedPersonas === "persona2" ? (
+                              "Selected"
+                            ) : (
+                              <Sub2 color="gray500">Add</Sub2>
+                            )}
+                          </Button>
+                        </ListButton>
+                      </ListBoxItem>
 
-                          <div>
-                            <Body1 color="gray800">특화 질문</Body1>
-                            <BgBoxList>
-                              <BgBoxItem>
-                                <Body3 color="gray700">01.</Body3>
-                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
-                              </BgBoxItem>
-                              <BgBoxItem>
-                                <Body3 color="gray700">02.</Body3>
-                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
-                              </BgBoxItem>
-                              <BgBoxItem>
-                                <Body3 color="gray700">03.</Body3>
-                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
-                              </BgBoxItem>
-                            </BgBoxList>
-                          </div>
-                        </BoxListWrap>
-                      )}
-                    </ListBoxItem>
+                      <ListBoxItem>
+                        <Persona color="Linen" size="Large" Round>
+                          <img src={personaImages.PersonaWomen01} alt="페르소나" />
+                        </Persona>
+                        <ListText>
+                          <ListTitle>
+                            <Body1 color="gray800">
+                              제품 경험 평가
+                            </Body1>
+                            <Badge New>비즈니스</Badge>
+                          </ListTitle>
+                          <ListSubtitle>
+                            <PersonaInfo>
+                              <span>여성</span>
+                              <span>25세</span>
+                              <span>직업</span>
+                            </PersonaInfo>
+                          </ListSubtitle>
+                        </ListText>
 
-                    <ListBoxItem 
-                      active={selectedRadio2 === 'radio4'} 
-                      showQuestions={showQuestions.radio4}
-                    >
-                      <div>
-                        <RadioButton 
-                          id="radio4"
-                          name="radioGroup1"
-                          checked={selectedRadio2 === 'radio4'} 
-                          onChange={() => setSelectedRadio2('radio4')} 
-                        />
-                      </div>
-                      <ListText>
-                        <ListTitle>
-                          <Body1 color={selectedRadio2 === 'radio4' ? "primary" : "gray800"}>
-                            제품 경험 평가
-                          </Body1>
-                        </ListTitle>
-                        <ListSubtitle>
-                          <Caption1 color="gray500">
-                            다양한 시나리오에서 제품의 사용 가능성을 평가하여 부적합한 환경 발견 
-                          </Caption1>
-                        </ListSubtitle>
-                      </ListText>
-                      <ListButton>
-                        <Button 
-                          Medium 
-                          {...(showQuestions.radio4 ? { PrimaryLightest: true, Fill: true } : { View: true })}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setShowQuestions(prev => ({
-                              ...prev,
-                              radio4: !prev.radio4
-                            }));
-                          }}
-                        >
-                          {showQuestions.radio4 ? '문항 닫기' : '문항 보기'}
-                        </Button>
-                      </ListButton>
+                        <ListButton>
+                          <Button 
+                            Medium 
+                            PrimaryLightest={selectedPersonas === "persona3"} 
+                            Fill={selectedPersonas === "persona3"}
+                            onClick={() => handlePersonaSelect("persona3")}
+                          >
+                            {selectedPersonas === "persona3" ? (
+                              "Selected"
+                            ) : (
+                              <Sub2 color="gray500">Add</Sub2>
+                            )}
+                          </Button>
+                        </ListButton>
+                      </ListBoxItem>
 
-                      {showQuestions.radio4 && (
-                        <BoxListWrap>
-                          <div>
-                            <Body1 color="gray800">공통 질문</Body1>
-                            <BgBoxList>
-                              <BgBoxItem>
-                                <Body3 color="gray700">01.</Body3>
-                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
-                              </BgBoxItem>
-                              <BgBoxItem>
-                                <Body3 color="gray700">02.</Body3>
-                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
-                              </BgBoxItem>
-                              <BgBoxItem>
-                                <Body3 color="gray700">03.</Body3>
-                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
-                              </BgBoxItem>
-                            </BgBoxList>
-                          </div>
+                      <ListBoxItem>
+                        <Persona color="Linen" size="Large" Round>
+                          <img src={personaImages.PersonaWomen01} alt="페르소나" />
+                        </Persona>
+                        <ListText>
+                          <ListTitle>
+                            <Body1 color="gray800">
+                              제품 경험 평가
+                            </Body1>
+                          </ListTitle>
+                          <ListSubtitle>
+                            <PersonaInfo>
+                              <span>여성</span>
+                              <span>25세</span>
+                              <span>직업</span>
+                            </PersonaInfo>
+                          </ListSubtitle>
+                        </ListText>
 
-                          <div>
-                            <Body1 color="gray800">특화 질문</Body1>
-                            <BgBoxList>
-                              <BgBoxItem>
-                                <Body3 color="gray700">01.</Body3>
-                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
-                              </BgBoxItem>
-                              <BgBoxItem>
-                                <Body3 color="gray700">02.</Body3>
-                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
-                              </BgBoxItem>
-                              <BgBoxItem>
-                                <Body3 color="gray700">03.</Body3>
-                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
-                              </BgBoxItem>
-                            </BgBoxList>
-                          </div>
-                        </BoxListWrap>
-                      )}
-                    </ListBoxItem>
+                        <ListButton>
+                          <Button 
+                            Medium 
+                            PrimaryLightest={selectedPersonas === "persona4"} 
+                            Fill={selectedPersonas === "persona4"}
+                            onClick={() => handlePersonaSelect("persona4")}
+                          >
+                            {selectedPersonas === "persona4" ? (
+                              "Selected"
+                            ) : (
+                              <Sub2 color="gray500">Add</Sub2>
+                            )}
+                          </Button>
+                        </ListButton>
+                      </ListBoxItem>
+                    </CardGroupWrap>
+                  ) : selectedInterviewType === 'single' ? (
+                    <CardGroupWrap style={{ gap: '8px' }}>
+                      <ListBorderItem 
+                        selected={selectedPersonas === "persona1"} 
+                        anySelected={selectedPersonas !== null}
+                      >
+                        <Persona color="Linen" size="Large" Round>
+                          <img src={personaImages.PersonaWomen01} alt="페르소나" />
+                        </Persona>
+                        <ListText style={{ gap: '4px' }}>
+                          <ListTitle>
+                            <Body1 color="gray800">
+                              가족과 함께 여가를 보내는 활동 지향형 소비자
+                            </Body1>
+                            <Badge New>비즈니스</Badge>
+                          </ListTitle>
+                          <ListSubtitle>
+                            <PersonaInfo>
+                              <span>여성</span>
+                              <span>25세</span>
+                              <span>직업</span>
+                            </PersonaInfo>
+                          </ListSubtitle>
+                        </ListText>
 
-                    <ListBoxItem 
-                      active={selectedRadio2 === 'radio5'}
-                      showQuestions={showQuestions.radio5}
-                    >
-                      <div>
-                        <RadioButton 
-                          id="radio5"
-                          name="radioGroup1"
-                          checked={selectedRadio2 === 'radio5'} 
-                          onChange={() => setSelectedRadio2('radio5')} 
-                        />
-                      </div>
-                      <ListText>
-                        <ListTitle>
-                          <Body1 color={selectedRadio2 === 'radio5' ? "primary" : "gray800"}>
-                            제품 경험 평가
-                          </Body1>
-                        </ListTitle>
-                        <ListSubtitle>
-                          <Caption1 color="gray500">
-                            다양한 시나리오에서 제품의 사용 가능성을 평가하여 부적합한 환경 발견 
-                          </Caption1>
-                        </ListSubtitle>
-                      </ListText>
-                      <ListButton>
-                        <Button 
-                          Medium 
-                          {...(showQuestions.radio5 ? { PrimaryLightest: true, Fill: true } : { View: true })}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setShowQuestions(prev => ({
-                              ...prev,
-                              radio5: !prev.radio5
-                            }));
-                          }}
-                        >
-                          {showQuestions.radio5 ? '문항 닫기' : '문항 보기'}
-                        </Button>
-                      </ListButton>
+                        <ListButton>
+                          <Button 
+                            Medium 
+                            PrimaryLightest={selectedPersonas === "persona1"} 
+                            Fill={selectedPersonas === "persona1"}
+                            onClick={() => handlePersonaSelect("persona1")}
+                          >
+                            {selectedPersonas === "persona1" ? (
+                              "Selected"
+                            ) : (
+                              <Sub2 color="gray500">Add</Sub2>
+                            )}
+                          </Button>
+                        </ListButton>
+                      </ListBorderItem>
 
-                      {showQuestions.radio5 && (
-                        <BoxListWrap>
-                          <div>
-                            <Body1 color="gray800">공통 질문</Body1>
-                            <BgBoxList>
-                              <BgBoxItem>
-                                <Body3 color="gray700">01.</Body3>
-                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
-                              </BgBoxItem>
-                              <BgBoxItem>
-                                <Body3 color="gray700">02.</Body3>
-                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
-                              </BgBoxItem>
-                              <BgBoxItem>
-                                <Body3 color="gray700">03.</Body3>
-                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
-                              </BgBoxItem>
-                            </BgBoxList>
-                          </div>
+                      <ListBorderItem 
+                        selected={selectedPersonas === "persona2"} 
+                        anySelected={selectedPersonas !== null}
+                      >
+                        <Persona color="Linen" size="Large" Round>
+                          <img src={personaImages.PersonaWomen01} alt="페르소나" />
+                        </Persona>
+                        <ListText style={{ gap: '4px' }}>
+                          <ListTitle>
+                            <Body1 color="gray800">
+                              가족과 함께 여가를 보내는 활동 지향형 소비자
+                            </Body1>
+                            <Badge New>비즈니스</Badge>
+                          </ListTitle>
+                          <ListSubtitle>
+                            <PersonaInfo>
+                              <span>여성</span>
+                              <span>25세</span>
+                              <span>직업</span>
+                            </PersonaInfo>
+                          </ListSubtitle>
+                        </ListText>
 
-                          <div>
-                            <Body1 color="gray800">특화 질문</Body1>
-                            <BgBoxList>
-                              <BgBoxItem>
-                                <Body3 color="gray700">01.</Body3>
-                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
-                              </BgBoxItem>
-                              <BgBoxItem>
-                                <Body3 color="gray700">02.</Body3>
-                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
-                              </BgBoxItem>
-                              <BgBoxItem>
-                                <Body3 color="gray700">03.</Body3>
-                                <Body3 color="gray700">페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.</Body3>
-                              </BgBoxItem>
-                            </BgBoxList>
-                          </div>
-                        </BoxListWrap>
-                      )}
-                    </ListBoxItem>
+                        <ListButton>
+                          <Button 
+                            Medium 
+                            PrimaryLightest={selectedPersonas === "persona2"} 
+                            Fill={selectedPersonas === "persona2"}
+                            onClick={() => handlePersonaSelect("persona2")}
+                          >
+                            {selectedPersonas === "persona2" ? (
+                              "Selected"
+                            ) : (
+                              <Sub2 color="gray500">Add</Sub2>
+                            )}
+                          </Button>
+                        </ListButton>
+                      </ListBorderItem>
 
-                    <CustomizationWrap>
-                      {showCustomButton && (
-                        <Button 
-                          DbExLarge 
-                          W100 
-                          Outline
-                          onClick={() => {
-                            setCustomizations(prev => [...prev, {
-                              id: Date.now(),
-                              purposeText: '',
-                              showMethodology: false,
-                              isEditing: false,
-                              definitionText: FULL_DEFINITION_TEXT,
-                              editedDefinition: '',
-                              editedPurpose: ''
-                            }]);
-                            setShowCustomButton(false);
-                          }}
-                        >
-                          <span />
-                          <Sub1 color="gray700">인터뷰 커스터마이징</Sub1>
-                        </Button>
-                      )}
-                      
-                      {customizations.map((custom, index) => (
-                        <div key={custom.id}>
-                          {!custom.showMethodology ? (
-                            <CustomizationBox>
-                              <Body1 color="gray800" style={{ alignSelf: 'flex-start' }}>
-                                인터뷰 목적
-                              </Body1>
-                              <CustomTextarea 
-                                rows={4} 
-                                placeholder="페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다." 
-                                value={custom.purposeText}
-                                onChange={(e) => {
-                                  const newCustomizations = [...customizations];
-                                  newCustomizations[index].purposeText = e.target.value;
-                                  setCustomizations(newCustomizations);
-                                }} 
-                              />
-                              <Button 
-                                Medium 
-                                Primary 
-                                onClick={() => {
-                                  if (!custom.purposeText.trim()) {
-                                    setShowPopup(true);
-                                  } else {
-                                    const newCustomizations = [...customizations];
-                                    newCustomizations[index].showMethodology = true;
-                                    setCustomizations(newCustomizations);
-                                  }
-                                }}
-                              >
-                                목적 생성
-                              </Button>
-                            </CustomizationBox>
-                          ) : (
-                            <>
-                              {!custom.isEditing ? (
-                                <CustomizationBox>
-                                  <CustomTitle>
-                                    <Body1 color="gray800" style={{ alignSelf: 'flex-start' }}>
-                                      방법론 타이틀
-                                    </Body1>
-                                    <ButtonGroup>
-                                      <IconButton onClick={() => handleEditClick(index)}>
-                                        <img src={images.PencilSquare} alt="수정하기" />
-                                        수정하기
-                                      </IconButton>
-                                      <IconButton>
-                                        <img src={images.MagicStick} alt="AI로 다듬기" />
-                                        AI로 다듬기
-                                      </IconButton>
-                                    </ButtonGroup>
-                                  </CustomTitle>
+                      <ListBorderItem 
+                        selected={selectedPersonas === "persona3"} 
+                        anySelected={selectedPersonas !== null}
+                      >
+                        <Persona color="Linen" size="Large" Round>
+                          <img src={personaImages.PersonaWomen01} alt="페르소나" />
+                        </Persona>
+                        <ListText style={{ gap: '4px' }}>
+                          <ListTitle>
+                            <Body1 color="gray800">
+                              가족과 함께 여가를 보내는 활동 지향형 소비자
+                            </Body1>
+                            <Badge New>비즈니스</Badge>
+                          </ListTitle>
+                          <ListSubtitle>
+                            <PersonaInfo>
+                              <span>여성</span>
+                              <span>25세</span>
+                              <span>직업</span>
+                            </PersonaInfo>
+                          </ListSubtitle>
+                        </ListText>
 
-                                  <TextInfo>
-                                    <Body3 color="gray700">정의</Body3>
-                                    <TextBox>
-                                      <Body3 color="gray700">{custom.definitionText}</Body3>
-                                    </TextBox>
-                                  </TextInfo>
+                        <ListButton>
+                          <Button 
+                            Medium 
+                            PrimaryLightest={selectedPersonas === "persona3"} 
+                            Fill={selectedPersonas === "persona3"}
+                            onClick={() => handlePersonaSelect("persona3")}
+                          >
+                            {selectedPersonas === "persona3" ? (
+                              "Selected"
+                            ) : (
+                              <Sub2 color="gray500">Add</Sub2>
+                            )}
+                          </Button>
+                        </ListButton>
+                      </ListBorderItem>
 
-                                  <TextInfo>
-                                    <Body3 color="gray700">목적</Body3>
-                                    <TextBox>
-                                      <Body3 color="gray700">{custom.purposeText}</Body3>
-                                    </TextBox>
-                                  </TextInfo>
+                      <ListBorderItem 
+                        selected={selectedPersonas === "persona4"} 
+                        anySelected={selectedPersonas !== null}
+                      >
+                        <Persona color="Linen" size="Large" Round>
+                          <img src={personaImages.PersonaWomen01} alt="페르소나" />
+                        </Persona>
+                        <ListText style={{ gap: '4px' }}>
+                          <ListTitle>
+                            <Body1 color="gray800">
+                              가족과 함께 여가를 보내는 활동 지향형 소비자
+                            </Body1>
+                          </ListTitle>
+                          <ListSubtitle>
+                            <PersonaInfo>
+                              <span>여성</span>
+                              <span>25세</span>
+                              <span>직업</span>
+                            </PersonaInfo>
+                          </ListSubtitle>
+                        </ListText>
 
-                                  <TextInfo>
-                                    <Body3 color="gray700">질문</Body3>
-                                    <BgBoxList>
-                                      <BgBoxItem white>
-                                        <Body3 color="gray800">사용자의 트렌드 인지와 반응 속도 측정</Body3>
-                                      </BgBoxItem>
-                                      <BgBoxItem white>
-                                        <Body3 color="gray800">시장 변화에 대한 사용자의 태도와 행동 분석</Body3>
-                                      </BgBoxItem>
-                                      <BgBoxItem white>
-                                        <Body3 color="gray800">트렌드에 따른 구매 결정 요인 파악</Body3>
-                                      </BgBoxItem>
-                                      <BgBoxItem white>
-                                        <Body3 color="gray800">다양한 데모그래픽과 트렌드 반응성 비교</Body3>
-                                      </BgBoxItem>
-                                    </BgBoxList>
-                                  </TextInfo>
+                        <ListButton>
+                          <Button 
+                            Medium 
+                            PrimaryLightest={selectedPersonas === "persona4"} 
+                            Fill={selectedPersonas === "persona4"}
+                            onClick={() => handlePersonaSelect("persona4")}
+                          >
+                            {selectedPersonas === "persona4" ? (
+                              "Selected"
+                            ) : (
+                              <Sub2 color="gray500">Add</Sub2>
+                            )}
+                          </Button>
+                        </ListButton>
+                      </ListBorderItem>
+                    </CardGroupWrap>
+                  ) : null}
 
-                                  <Caption2 color="gray500" style={{ alignSelf: 'flex-start' }}>
-                                    * 본 서비스는 B2C 페르소나를 타겟으로 진행되어, 질문문항이 소비자 중심으로 되지 않았을 경우, 적합한 결과 도출이 나오지 않을 수 있습니다. 
-                                  </Caption2>
-
-                                  <Button 
-                                    Medium 
-                                    Primary 
-                                    onClick={() => {
-                                      setShowNewListBox(true);
-                                      setShowCustomization(false);
-                                      setShowMethodology(false);
-                                      setShowCustomButton(true);
-                                      setCustomizations([]);
-                                      setTimeout(() => {
-                                        setShowCustomization(false);
-                                      }, 100);
-                                    }}
-                                  >
-                                    질문 생성하기
-                                  </Button>
-                                </CustomizationBox>
-                              ) : (
-                                <CustomizationBox Edit={custom.isEditing}>
-                                  <CustomTitle>
-                                    <Body1 color="gray800" style={{ alignSelf: 'flex-start' }}>
-                                      방법론 타이틀
-                                    </Body1>
-                                    <ButtonGroup>
-                                      <IconButton>
-                                        <img src={images.PencilSquare} alt="수정하기" />
-                                        수정하기
-                                      </IconButton>
-                                      <IconButton>
-                                        <img src={images.MagicStick} alt="AI로 다듬기" />
-                                        AI로 다듬기
-                                      </IconButton>
-                                    </ButtonGroup>
-                                  </CustomTitle>
-
-                                  <TextInfo>
-                                    <Body3 color="gray700">정의</Body3>
-                                    <FormBox>
-                                      <CustomTextarea 
-                                        Edit 
-                                        rows={3}
-                                        placeholder="textarea" 
-                                        onChange={(e) => {
-                                          const newCustomizations = [...customizations];
-                                          newCustomizations[index].editedDefinition = e.target.value;
-                                          setCustomizations(newCustomizations);
-                                        }}
-                                        value={custom.editedDefinition}
-                                      />
-                                    </FormBox>
-                                  </TextInfo>
-
-                                  <TextInfo>
-                                    <Body3 color="gray700">목적</Body3>
-                                    <FormBox>
-                                      <CustomTextarea 
-                                        Edit 
-                                        rows={3}
-                                        placeholder="textarea" 
-                                        onChange={(e) => {
-                                          const newCustomizations = [...customizations];
-                                          newCustomizations[index].editedPurpose = e.target.value;
-                                          setCustomizations(newCustomizations);
-                                        }}
-                                        value={custom.editedPurpose}
-                                      />
-                                    </FormBox>
-                                  </TextInfo>
-
-                                  <TextInfo>
-                                    <Body3 color="gray700">질문</Body3>
-                                    <BgBoxList>
-                                      <BgBoxItem white>
-                                        <Body3 color="gray800">사용자의 트렌드 인지와 반응 속도 측정</Body3>
-                                      </BgBoxItem>
-                                      <BgBoxItem white>
-                                        <Body3 color="gray800">시장 변화에 대한 사용자의 태도와 행동 분석</Body3>
-                                      </BgBoxItem>
-                                      <BgBoxItem white>
-                                        <Body3 color="gray800">트렌드에 따른 구매 결정 요인 파악</Body3>
-                                      </BgBoxItem>
-                                      <BgBoxItem white>
-                                        <Body3 color="gray800">다양한 데모그래픽과 트렌드 반응성 비교</Body3>
-                                      </BgBoxItem>
-                                    </BgBoxList>
-                                  </TextInfo>
-
-                                  <Caption2 color="gray500" style={{ alignSelf: 'flex-start' }}>
-                                    * 본 서비스는 B2C 페르소나를 타겟으로 진행되어, 질문문항이 소비자 중심으로 되지 않았을 경우, 적합한 결과 도출이 나오지 않을 수 있습니다. 
-                                  </Caption2>
-
-                                  <Button Medium Primary onClick={() => handleEditComplete(index)}>완료</Button>
-                                </CustomizationBox>
-                              )}
-                            </>
-                          )}
-                        </div>
-                      ))}
-                    </CustomizationWrap>
-                  </CardGroupWrap>
                 </div>
               </InterviewWayContent>
 
               <BottomBar W100>
                 <Body2 color="gray800">
-                  제품 경험 평가 인터뷰에 참여할 페르소나를 선택하세요
+                  5명의 페르소나와 인터뷰를 진행하시겠습니까?
                 </Body2>
                 <Button 
                   Large 
                   Primary 
                   Round 
                   Fill
-                  disabled={!selectedRadio1 || !selectedRadio2}
+                  onClick={handleStartInterview}
                 >
-                  다음
+                  인터뷰 시작
                   <img src={images.ChevronRight} alt="다음" />
                 </Button>
               </BottomBar>
@@ -732,16 +533,29 @@ const PagePersonaSelect = () => {
 
       {showPopup && (
         <PopupWrap 
-          Warning
-          title="다시 입력해 주세요." 
-          message="현재 입력하신 정보는 목적을 생성할 수 없습니다."
+          Check
+          title="인터뷰 준비 완료" 
+          message={
+            <>
+              인터뷰 룸 이동 시, 바로 시작됩니다.<br />
+              인터뷰를 중단하면 모든 내역이 삭제되니 주의하세요
+            </>
+          }
           buttonType="Outline"
-          closeText="확인"
+          closeText="취소"
+          confirmText="시작하기"
           isModal={false}
           onCancel={handlePopupClose}
+          onConfirm={handleConfirmStart}
           show={showPopup}
         />
       )}
+
+      <OrganismToastPopup
+        isActive={showToast}
+        autoClose={false}
+      />
+
     </>
   );
 };
@@ -796,7 +610,7 @@ const InterviewWayTabItem = styled.div`
 const InterviewWayContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 60px;
   width: 100%;
   text-align: left;
   margin-bottom: 100px;

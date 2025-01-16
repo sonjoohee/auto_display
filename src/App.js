@@ -268,8 +268,8 @@ function App() {
           <Route path="/WayInterview" element={<PageWayInterview />} />
           <Route path="/InterviewResult" element={<PageInterviewResult />} />
           <Route path="/PersonaLoader" element={<PagePersonaLoader />} />
-          <Route path="/Recreate" element={<PageRecreate />} /> */}
-          <Route path="/InterviewWay" element={<PageInterviewWay />} />
+          <Route path="/Recreate" element={<PageRecreate />} />
+          <Route path="/InterviewWay" element={<PageInterviewWay />} /> */}
           <Route path="/PersonaSelect" element={<PagePersonaSelect />} />
           <Route path="/Payment" element={<PagePayment />} />
 

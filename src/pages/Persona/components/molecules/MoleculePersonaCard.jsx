@@ -289,9 +289,9 @@ const MoleculePersonaCard = ({
               </div>
 
               <div className="keywords">
-                <Status>{personaData.persona_keyword[0]}</Status>
-                <Status>{personaData.persona_keyword[1]}</Status>
-                <Status>{personaData.persona_keyword[2]}</Status>
+                <Status>#{personaData.persona_keyword[0]}</Status>
+                <Status>#{personaData.persona_keyword[1]}</Status>
+                <Status>#{personaData.persona_keyword[2]}</Status>
               </div>
 
               <div className="content">

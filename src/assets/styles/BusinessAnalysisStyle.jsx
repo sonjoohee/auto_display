@@ -1031,7 +1031,7 @@ export const PersonaGroup = styled.div`
   transform: translateZ(0px);
 
   > div {
-    margin-right: -20px;
+    margin-right: -8px;
     border: 1px solid ${palette.white};
   }
 
@@ -1572,6 +1572,26 @@ export const Persona = styled.div`
   }}
 `;
 
+export const ListBoxGroup = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid ${palette.outlineGray};
+
+  li {
+    display: flex;
+    align-items: center;
+
+    div:nth-child(1) {
+      min-width: 110px;
+      width: 100px;
+    }
+  }
+`;
+
 export const CardGroupWrap = styled.div`
   display: flex;
   flex-direction: ${props => props.column ? "column" : "row"};
@@ -1612,6 +1632,29 @@ export const ListBoxItem = styled.div`
     to {
       opacity: 1;
     }
+  }
+`;
+
+export const ListBorderItem = styled(ListBoxItem)`
+  position: relative;
+  padding: 12px 16px;
+  border: 0;
+  background: ${props => props.selected ? '#EAF0FF' : palette.white};
+  transition: all 0.2s ease;
+
+  ${({ selected, anySelected }) => anySelected && !selected && `
+    img, p, span, div {
+      opacity: 0.7;
+    }
+  `}
+
+  + div:before {
+    position: absolute;
+    top: -8px;
+    left: 0;
+    width: 100%;
+    border-top: 1px solid ${palette.outlineGray};
+    content: "";
   }
 `;
 
@@ -2348,4 +2391,109 @@ export const PlanList = styled.ul`
     width: 12px;
     height: 10px;
   }
+`;
+
+export const PersonaInfo = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  width: 100%;
+
+  span {
+    font-size: 0.88rem;
+    color: ${palette.gray500};
+    line-height: 1.3;
+    letter-spacing: -0.42px;
+
+    + span:before {
+      display: inline-block;
+      width: 1px;
+      height: 9px;
+      margin-right: 6px;
+      background-color: ${palette.gray500};
+      content: "";
+    }
+  }
+`;
+
+export const SwitchToggle = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+`;
+
+export const SwitchToggleItem = styled.label`
+  position: relative;
+  display: inline-block;
+  max-width: 60px;
+  width: 100%;
+  height: 24px;
+  padding: 2px;
+  border-radius: 50px;
+  cursor: pointer;
+
+  input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+
+    &:checked + span {
+      background-color: ${palette.gray800};
+      
+      & + div {
+        left: 34px;
+        background-color: ${palette.white};
+      }
+    }
+  }
+
+  > span {
+    position: relative;
+    display: block;
+    height: inherit;
+    border-radius: inherit;
+    background-color: #EFF1F5;
+    transition: all 0.5s;
+
+    &:before,
+    &:after {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.75rem;
+      line-height: 1.5;
+      letter-spacing: -0.36px;
+      color: ${palette.gray800};
+    }
+
+    &:before {
+      right: 10px;
+      content: attr(data-off);
+    }
+
+    &:after {
+      left: 9px;
+      color: ${palette.white};
+      content: attr(data-on);
+    }
+  }
+`;
+
+export const SwitchHandle = styled.div`
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: ${palette.white};
+  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.08) inset;
+  transition: all 0.5s;
+`;
+
+export const SwitchToggleInput = styled.input`
+  display: none;
 `;
