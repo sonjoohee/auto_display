@@ -1,5 +1,5 @@
 //persona step 2 맞춤 페르소나 추천
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useLocation, Link } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { useNavigate } from "react-router-dom";
@@ -24,6 +24,7 @@ import {
   CATEGORY_COLOR,
   FILTERED_PROJECT_LIST,
   BUSINESS_PERSONA_LIST,
+  TYPES_LIST,
 } from "../../../AtomStates";
 import {
   ContentsWrap,
@@ -66,7 +67,14 @@ import {
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
 import { Button } from "../../../../assets/styles/ButtonStyle";
-import { H4, Body2, Body3, Sub1, Sub3, Caption2 } from "../../../../assets/styles/Typography";
+import {
+  H4,
+  Body2,
+  Body3,
+  Sub1,
+  Sub3,
+  Caption2,
+} from "../../../../assets/styles/Typography";
 import {
   CustomTextarea,
   CustomInput,
@@ -113,16 +121,24 @@ const PagePersona2 = () => {
   );
   const [personaButtonState2, setPersonaButtonState2] = useAtom(
     PERSONA_BUTTON_STATE_2
-  );//페르소나 생성/로딩 상태 관리 setPersonaButtonState2(0) :  api 호출 완료
-  
+  ); //페르소나 생성/로딩 상태 관리 setPersonaButtonState2(0) :  api 호출 완료
+
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
-  const [filteredProjectList, setFilteredProjectList] = useAtom(FILTERED_PROJECT_LIST);
-  const [businessPersonaList, setBusinessPersonaList] = useAtom(BUSINESS_PERSONA_LIST);
+  const [filteredProjectList, setFilteredProjectList] = useAtom(
+    FILTERED_PROJECT_LIST
+  );
+  const [businessPersonaList, setBusinessPersonaList] = useAtom(
+    BUSINESS_PERSONA_LIST
+  );
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
-  const [requestPersonaList, setRequestPersonaList] = useAtom(REQUEST_PERSONA_LIST);
+  const [requestPersonaList, setRequestPersonaList] =
+    useAtom(REQUEST_PERSONA_LIST);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [allBusinessPersonas, setAllBusinessPersonas] = useState([]); // 전체 비즈니스 페르소나 상태
+  // const [allBusinessPersonas, setAllBusinessPersonas] = useAtom(All_BUSINESS_PERSONA_LIST);
+  // const [typesList, setTypesList] = useAtom(TYPES_LIST);
 
   const [selectedPersonas, setSelectedPersonas] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
@@ -147,8 +163,10 @@ const PagePersona2 = () => {
   const [showRegenerateButton, setShowRegenerateButton] = useState(false);
   const [hasMorePersonas, setHasMorePersonas] = useState(true);
 
-  const [viewType, setViewType] = useState('list'); // 'list' 또는 'card'
-  const [activeTab, setActiveTab] = useState('daily'); // 'daily' 또는 'business'
+  // 로딩 상태 관리
+  const loadingRef = useRef(false);
+  const [viewType, setViewType] = useState("list"); // 'list' 또는 'card'
+  const [activeTab, setActiveTab] = useState("daily"); // 'daily' 또는 'business'
 
   const [showTypeList, setShowTypeList] = useState(false);
 
@@ -157,41 +175,72 @@ const PagePersona2 = () => {
   const [activeTabIndex, setActiveTabIndex] = useState(0);
 
   const [unselectedTypes, setUnselectedTypes] = useState([
-    { id: 'type1', label: '전형적 사용자 페르소나', count: 1 },
-    { id: 'type2', label: '극단적 사용자 페르소나', count: 2 },
-    { id: 'type3', label: '비교 소비자 페르소나', count: 1 },
-    { id: 'type4', label: '비전통적 사용자 페르소나', count: 1 },
-    { id: 'type5', label: '문제 해결 중심 페르소나', count: 3 },
-    { id: 'type6', label: '건강 중시 페르소나', count: 2 },
-    { id: 'type7', label: '시장 트렌드 리더 페르소나', count: 1 },
-    { id: 'type8', label: '예산 중시 소비자 페르소나', count: 1 },
-    { id: 'type9', label: '혁신 추구 소비자 페르소나', count: 1 },
-    { id: 'type10', label: '환경/윤리 중시 페르소나', count: 2 },
-    { id: 'type11', label: '기능/성능 중시 소비자 페르소나', count: 1 },
-    { id: 'type12', label: '브랜드 충성 소비자 페르소나', count: 1 },
-    { id: 'type13', label: '감성적 소비자 페르소나', count: 3 },
-    { id: 'type14', label: '특정 상황 중심페르소나', count: 2 },
-    { id: 'type15', label: '문화적/지역적 특성 중심 페르소나', count: 1 },
-    { id: 'type16', label: 'DIY/커스터마이징 선호 페르소나', count: 1 },
-    { id: 'type17', label: '트렌드 회의적 소비자 페르소나', count: 1 },
-    { id: 'type18', label: '단체 구매 소비자 페르소나', count: 3 },
-    { id: 'type19', label: '호기심 기반 소비자 페르소나', count: 2 },
-    { id: 'type20', label: '브랜드 전환 의향 소비자 페르소나', count: 1 },
-    
+    { index: 1, id: "type1", label: "전형적 사용자 페르소나", count: 1 },
+    { index: 2, id: "type2", label: "극단적 사용자 페르소나", count: 2 },
+    { index: 3, id: "type3", label: "비교 소비자 페르소나", count: 1 },
+    { index: 4, id: "type4", label: "비전통적 사용자 페르소나", count: 1 },
+    { index: 5, id: "type5", label: "문제 해결 중심 페르소나", count: 3 },
+    { index: 6, id: "type6", label: "건강 중시 페르소나", count: 2 },
+    { index: 7, id: "type7", label: "시장 트렌드 리더 페르소나", count: 1 },
+    { index: 8, id: "type8", label: "예산 중시 소비자 페르소나", count: 1 },
+    { index: 9, id: "type9", label: "혁신 추구 소비자 페르소나", count: 1 },
+    { index: 10, id: "type10", label: "환경/윤리 중시 페르소나", count: 2 },
+    {
+      index: 11,
+      id: "type11",
+      label: "기능/성능 중시 소비자 페르소나",
+      count: 1,
+    },
+    { index: 12, id: "type12", label: "브랜드 충성 소비자 페르소나", count: 1 },
+    { index: 13, id: "type13", label: "감성적 소비자 페르소나", count: 3 },
+    { index: 14, id: "type14", label: "특정 상황 중심페르소나", count: 2 },
+    {
+      index: 15,
+      id: "type15",
+      label: "문화적/지역적 특성 중심 페르소나",
+      count: 1,
+    },
+    {
+      index: 16,
+      id: "type16",
+      label: "DIY/커스터마이징 선호 페르소나",
+      count: 1,
+    },
+    {
+      index: 17,
+      id: "type17",
+      label: "트렌드 회의적 소비자 페르소나",
+      count: 1,
+    },
+    { index: 18, id: "type18", label: "단체 구매 소비자 페르소나", count: 3 },
+    { index: 19, id: "type19", label: "호기심 기반 소비자 페르소나", count: 2 },
+    {
+      index: 20,
+      id: "type20",
+      label: "브랜드 전환 의향 소비자 페르소나",
+      count: 1,
+    },
   ]);
 
+  const [originalUnselectedTypes, setOriginalUnselectedTypes] =
+    useState(unselectedTypes);
+
+  const [activeTabTlick, setActiveTabTlick] = useState(true);
+
+  const [visibleSelectedTypes, setVisibleSelectedTypes] = useState([]);
+
   const [oceanValues, setOceanValues] = useState({
-    openness: 80,     // 개방적
-    conscientiousness: 70,  // 성실함
-    extraversion: 90,      // 외향적
-    agreeableness: 40,     // 우호적
-    neuroticism: 30        // 신경적
+    openness: 80, // 개방적
+    conscientiousness: 70, // 성실함
+    extraversion: 90, // 외향적
+    agreeableness: 40, // 우호적
+    neuroticism: 30, // 신경적
   });
 
   const handleOceanChange = (trait, value) => {
-    setOceanValues(prev => ({
+    setOceanValues((prev) => ({
       ...prev,
-      [trait]: value
+      [trait]: value,
     }));
   };
 
@@ -203,6 +252,7 @@ const PagePersona2 = () => {
     setShowPopup(false);
   };
 
+  const [currentLoadingType, setCurrentLoadingType] = useState(null);
   // const [isLoadingPage, setIsLoadingPage] = useState(true);
 
   const [steps, setSteps] = useState([
@@ -304,7 +354,6 @@ const PagePersona2 = () => {
     }
   };
 
-
   //특정 카테고리에 맞는 페르소나 찾는 api 호출
   useEffect(() => {
     const loadProject = async () => {
@@ -318,7 +367,44 @@ const PagePersona2 = () => {
             setBusinessAnalysis(savedProjectInfo.businessAnalysis);
             setRequestPersonaList(savedProjectInfo.requestPersonaList);
             setFilteredProjectList(savedProjectInfo.filteredPersonaList);
-            console.log(filteredProjectList);
+            setAllBusinessPersonas(savedProjectInfo.businessPersonaList);
+
+            // businessPersonaList에서 고유한 persona_type 추출
+            const uniqueTypes = [
+              ...new Set(
+                savedProjectInfo.businessPersonaList.map(
+                  (persona) => persona.persona_type
+                )
+              ),
+            ];
+
+            // 추출된 타입들을 기반으로 selectedTypes 구성
+            const typesToAdd = unselectedTypes
+              .filter((type) => uniqueTypes.includes(type.label))
+              .map((type) => ({
+                id: type.id,
+                label: type.label,
+                type: type.type,
+                count: type.count,
+                index: type.index,
+              }));
+            console.log("🚀 ~ loadProject ~ typesToAdd:", typesToAdd);
+            // selectedTypes와 visibleSelectedTypes 업데이트
+            setSelectedTypes(typesToAdd);
+            setVisibleSelectedTypes(typesToAdd);
+
+            // unselectedTypes에서 선택된 타입들 제거
+            setUnselectedTypes((prev) => {
+              const filtered = prev.filter((type) => {
+                const isTypeSelected = uniqueTypes.includes(type.label);
+                return !isTypeSelected;
+              });
+              console.log("필터링된 unselectedTypes:", filtered);
+              return filtered;
+            });
+            // displayedPersonas 업데이트
+            setDisplayedPersonas(savedProjectInfo.businessPersonaList);
+
             setCategoryColor({
               first: getCategoryColor(
                 savedProjectInfo.businessAnalysis.category.first
@@ -330,6 +416,7 @@ const PagePersona2 = () => {
                 savedProjectInfo.businessAnalysis.category.third
               ),
             });
+
             let unselectedPersonas = [];
             let data, response;
 
@@ -528,25 +615,20 @@ const PagePersona2 = () => {
       }
     } finally {
       setIsLoading(false);
-      
     }
   };
 
-
-
-
   const loadPersonaWithFilter = async (isInitial = true) => {
     try {
+      //초기 로딩인 경우에만 전체 로딩 상태 설정
+      if (isInitial) {
+        setIsLoading(true);
+      } else {
+        setIsLoadingMore(true);
+      }
 
-       //초기 로딩인 경우에만 전체 로딩 상태 설정
-    if (isInitial) {
-      setIsLoading(true);
-    } else {
-      setIsLoadingMore(true);
-    }
-      
-      let availablePersonas = []; 
-      
+      let availablePersonas = [];
+
       // 초기 페르소나 데이터 로드
       for (const category of Object.values(businessAnalysis.category)) {
         const response = await axios.post(
@@ -555,23 +637,25 @@ const PagePersona2 = () => {
           axiosConfig
         );
 
+        response.data.forEach((newPersona) => {
+          // 이미 필터링된 페르소나는 제외
+          const isAlreadyFiltered = filteredProjectList.some(
+            (filtered) => filtered.persona_id === newPersona.persona_id
+          );
 
-      response.data.forEach(newPersona => {
-        // 이미 필터링된 페르소나는 제외
-        const isAlreadyFiltered = filteredProjectList.some(
-          filtered => filtered.persona_id === newPersona.persona_id
-        );
-        
-        if (!isAlreadyFiltered && 
-            !availablePersonas.some(p => p.persona_id === newPersona.persona_id)) {
-          availablePersonas.push(newPersona);
-        }
-      });
-    }
-
+          if (
+            !isAlreadyFiltered &&
+            !availablePersonas.some(
+              (p) => p.persona_id === newPersona.persona_id
+            )
+          ) {
+            availablePersonas.push(newPersona);
+          }
+        });
+      }
 
       // 초기 로드시 3번(9개), 더보기 클릭시 1번(3개) 필터링
-      const filteringCount = isInitial ? 0 : 1;
+      const filteringCount = isInitial ? 1 : 1;
       let filteredPersonas = isInitial ? [] : [...filteredProjectList]; // 기존 리스트 유지
 
       // let filteredPersonas = [];
@@ -579,37 +663,49 @@ const PagePersona2 = () => {
 
       // 3번의 필터링 수행
       // for (let i = 0; i < 3 && availablePersonas.length > 0; i++) {
-       for (let i = 0; i < filteringCount && availablePersonas.length > 0; i++) {
-        filterResponse = await InterviewXInterviewReportPersonaFilter({
-          business_idea: businessAnalysis.title,
-          business_analysis_data: businessAnalysis,
-          persona_data: availablePersonas
-        }, isLoggedIn);
+      for (let i = 0; i < filteringCount && availablePersonas.length > 0; i++) {
+        filterResponse = await InterviewXInterviewReportPersonaFilter(
+          {
+            business_idea: businessAnalysis.title,
+            business_analysis_data: businessAnalysis,
+            persona_data: availablePersonas,
+          },
+          isLoggedIn
+        );
 
         let retryCount = 0;
         const maxRetries = 10;
-        
+
         while (
           retryCount < maxRetries &&
           (!filterResponse?.response?.persona_1?.persona_filter ||
-           !filterResponse?.response?.persona_2?.persona_filter ||
-           !filterResponse?.response?.persona_3?.persona_filter ||
-           !filterResponse?.response?.persona_1?.persona_reason ||
-           !filterResponse?.response?.persona_2?.persona_reason ||
-           !filterResponse?.response?.persona_3?.persona_reason ||
-           !Array.isArray(filterResponse?.response?.persona_1?.persona_keyword) ||
-           !Array.isArray(filterResponse?.response?.persona_2?.persona_keyword) ||
-           !Array.isArray(filterResponse?.response?.persona_3?.persona_keyword) ||
-           filterResponse?.response?.persona_1?.persona_keyword?.length < 3 ||
-           filterResponse?.response?.persona_2?.persona_keyword?.length < 3 ||
-           filterResponse?.response?.persona_3?.persona_keyword?.length < 3)
+            !filterResponse?.response?.persona_2?.persona_filter ||
+            !filterResponse?.response?.persona_3?.persona_filter ||
+            !filterResponse?.response?.persona_1?.persona_reason ||
+            !filterResponse?.response?.persona_2?.persona_reason ||
+            !filterResponse?.response?.persona_3?.persona_reason ||
+            !Array.isArray(
+              filterResponse?.response?.persona_1?.persona_keyword
+            ) ||
+            !Array.isArray(
+              filterResponse?.response?.persona_2?.persona_keyword
+            ) ||
+            !Array.isArray(
+              filterResponse?.response?.persona_3?.persona_keyword
+            ) ||
+            filterResponse?.response?.persona_1?.persona_keyword?.length < 3 ||
+            filterResponse?.response?.persona_2?.persona_keyword?.length < 3 ||
+            filterResponse?.response?.persona_3?.persona_keyword?.length < 3)
         ) {
-          console.log('Retrying filter request. Attempt:', retryCount + 1);
-          filterResponse = await InterviewXInterviewReportPersonaFilter({
-            business_idea: businessAnalysis.title,
-            business_analysis_data: businessAnalysis,
-            persona_data: availablePersonas
-          }, isLoggedIn);
+          console.log("Retrying filter request. Attempt:", retryCount + 1);
+          filterResponse = await InterviewXInterviewReportPersonaFilter(
+            {
+              business_idea: businessAnalysis.title,
+              business_analysis_data: businessAnalysis,
+              persona_data: availablePersonas,
+            },
+            isLoggedIn
+          );
           retryCount++;
         }
 
@@ -620,62 +716,85 @@ const PagePersona2 = () => {
 
         // 필터된 페르소나 추가
         if (filterResponse && filterResponse.response) {
-          const { persona_1, persona_2, persona_3 } = filterResponse.response;
-          
-      
-          console.log('Individual Personas:', {
+          const {
+            persona_1,
+            persona_2,
+            persona_3,
+            persona_4,
+            persona_5,
+            persona_6,
+            persona_7,
+            persona_8,
+            persona_9,
+          } = filterResponse.response;
+
+          console.log("Individual Personas:", {
             persona_1: persona_1,
             persona_2: persona_2,
-            persona_3: persona_3
+            persona_3: persona_3,
+            persona_4: persona_4,
+            persona_5: persona_5,
+            persona_6: persona_6,
+            persona_7: persona_7,
+            persona_8: persona_8,
+            persona_9: persona_9,
           });
-          
-          // 유효한 페르소나 응답들을 배열로 구성
-          const validPersonas = [persona_1, persona_2, persona_3]
-          .filter(p => {
-            console.log('Filtering persona:', p);
-            return p && p.persona_filter;
-          })
-          .map(p => {
-            console.log('Mapping persona:', p);
-            // availablePersonas에서 일치하는 페르소나 찾기
-            const matchingPersona = availablePersonas.find(
-              available => available.persona_id === p.persona_filter
-            );
-        
-            if (matchingPersona) {
-              // 기존 페르소나 정보에 persona_keyword 추가
-              return {
-                ...matchingPersona,
-                persona_keyword: p.persona_keyword,
-                reason: p.persona_reason
-              };
-            }
-            return null;
-          })
-          .filter(Boolean); // null 값 제거
-    
 
-          console.log('Valid Personas after processing:', validPersonas);
+          // 유효한 페르소나 응답들을 배열로 구성
+          const validPersonas = [
+            persona_1,
+            persona_2,
+            persona_3,
+            persona_4,
+            persona_5,
+            persona_6,
+            persona_7,
+            persona_8,
+            persona_9,
+          ]
+            .filter((p) => {
+              console.log("Filtering persona:", p);
+              return p && p.persona_filter;
+            })
+            .map((p) => {
+              console.log("Mapping persona:", p);
+              // availablePersonas에서 일치하는 페르소나 찾기
+              const matchingPersona = availablePersonas.find(
+                (available) => available.persona_id === p.persona_filter
+              );
+
+              if (matchingPersona) {
+                // 기존 페르소나 정보에 persona_keyword 추가
+                return {
+                  ...matchingPersona,
+                  persona_keyword: p.persona_keyword,
+                  reason: p.persona_reason,
+                };
+              }
+              return null;
+            })
+            .filter(Boolean); // null 값 제거
+
+          console.log("Valid Personas after processing:", validPersonas);
 
           // 필터된 페르소나 추가
           filteredPersonas.push(...validPersonas);
-          console.log('Updated filteredPersonas:', filteredPersonas);
-          
+          console.log("Updated filteredPersonas:", filteredPersonas);
 
           // 다음 필터링을 위해 사용되지 않은 페르소나만 남김
-          availablePersonas = availablePersonas.filter(availablePersona => 
-            !filteredPersonas.some(filteredPersona => 
-              filteredPersona.persona_id === availablePersona.persona_id
-            )
+          availablePersonas = availablePersonas.filter(
+            (availablePersona) =>
+              !filteredPersonas.some(
+                (filteredPersona) =>
+                  filteredPersona.persona_id === availablePersona.persona_id
+              )
           );
 
-          console.log('사용된 페르소나 수:', filteredPersonas.length);
-          console.log('남은 페르소나 수:', availablePersonas.length);
+          console.log("사용된 페르소나 수:", filteredPersonas.length);
+          console.log("남은 페르소나 수:", availablePersonas.length);
           console.log(`=== 필터링 ${i + 1}차 종료 ===\n`);
-
         }
       }
-
 
       // 필터된 페르소나를 상태에 저장
       setFilteredProjectList(filteredPersonas);
@@ -687,11 +806,11 @@ const PagePersona2 = () => {
         positioning: filterResponse?.positioning_analysis || {},
       };
 
-      console.log('=== 최종 저장 데이터 ===');
-      console.log('필터링된 페르소나 수:', filteredPersonas.length);
-      console.log('필터링된 페르소나:', filteredPersonas);
-      console.log('포지셔닝 데이터:', requestPersonaData.positioning);
-      console.log('=== 저장 완료 ===\n');
+      console.log("=== 최종 저장 데이터 ===");
+      console.log("필터링된 페르소나 수:", filteredPersonas.length);
+      console.log("필터링된 페르소나:", filteredPersonas);
+      console.log("포지셔닝 데이터:", requestPersonaData.positioning);
+      console.log("=== 저장 완료 ===\n");
 
       setRequestPersonaList(requestPersonaData);
       // setPersonaList([...selectedPersonas]);
@@ -707,7 +826,6 @@ const PagePersona2 = () => {
       );
 
       setPersonaButtonState2(0);
-
     } catch (error) {
       if (error.response) {
         switch (error.response.status) {
@@ -715,11 +833,11 @@ const PagePersona2 = () => {
             setShowErrorPopup(true);
             break;
           case 504:
-            if (regenerateCount >= 3) {
+            if (regenerateCount >= 6) {
               setShowErrorPopup(true);
             } else {
               setShowRegenerateButton(true);
-              setRegenerateCount(prev => prev + 1);
+              setRegenerateCount((prev) => prev + 1);
             }
             break;
           default:
@@ -736,154 +854,249 @@ const PagePersona2 = () => {
         setIsLoadingMore(false);
       }
     }
-  }; 
+  };
 
   // 초기 로딩 (9개)
-useEffect(() => {
-  if (personaButtonState2) {
-    loadPersonaWithFilter(true);
-  }
-}, [personaButtonState2]);
-
-// 더보기 버튼 핸들러
-const handleLoadMore = () => {
-  loadPersonaWithFilter(false);
-};
-
-const [allBusinessPersonas, setAllBusinessPersonas] = useState([]); // 전체 비즈니스 페르소나 상태
-
-const loadBusinessPersona = async (personaType) => {
-  try {
-    // setIsLoadingType(true); // Start loading for the current type
-    setIsLoadingMore(true);
-
-    let allBusinessPersonas = [];
-    const requestData = {
-      business_idea: businessAnalysis.title,
-      business_analysis_data: businessAnalysis,
-      persona_type: personaType.label
-    };
-
-    console.log(`=== ${personaType.label} 페르소나 요청 시작 ===`);
-    console.log('요청 데이터:', requestData);
-
-    const result = await InterviewXPersonaRequestType(requestData, isLoggedIn);
-    console.log('API 응답 결과:', result);
-    console.log('페르소나 스펙트럼:', result?.response?.persona_spectrum);
-
-    if (result?.response?.persona_spectrum) {
-      const newPersonas = result.response.persona_spectrum.map(p => Object.values(p)[0]);
-
-
-       // 기존 상태에 새로운 페르소나를 추가
-       setAllBusinessPersonas(prev => {
-        const updatedList = [...prev, ...newPersonas]; // 누적된 리스트
-        console.log('누적된 전체 비즈니스 페르소나:', updatedList);
-        return updatedList; // 업데이트된 리스트 반환
-      });
-
-      // allBusinessPersonas = [...allBusinessPersonas, ...newPersonas];
-      console.log('새로운 페르소나 데이터 누적:', newPersonas);
-      // console.log('누적된 전체 비즈니스 페르소나:', allBusinessPersonas);
-
-
-      setBusinessPersonaList(allBusinessPersonas);
-      setDisplayedPersonas(prevDisplayed => [...prevDisplayed, ...newPersonas]);
-      // console.log('기존 displayedPersonas:', prevDisplayed)
+  useEffect(() => {
+    if (personaButtonState2) {
+      loadPersonaWithFilter(true);
     }
-  } catch (error) {
-    console.error("비즈니스 페르소나 로드 중 오류:", error);
-    setShowErrorPopup(true);
-  } finally {
-    // setIsLoading(false);
-    setIsLoadingMore(false); // End loading for the current type
-  }
-};
+  }, [personaButtonState2]);
 
+  // 더보기 버튼 핸들러
+  const handleLoadMore = () => {
+    loadPersonaWithFilter(false);
+  };
+  const loadBusinessPersona = async (personaType) => {
+    try {
+      setIsLoadingMore(true);
+      setCurrentLoadingType(personaType); // 현재 로딩 중인 타입 설정
+      // 페르소나 타입이 이미 로드되었는지 확인
+      //반복문으로 전체 페르소나 조회 및 추가
+      const existingPersonas = allBusinessPersonas.filter(
+        (p) => p.persona_type === personaType.label
+      );
+      console.log("existingPersona:", existingPersonas);
+      if (existingPersonas.length > 0) {
+        // 이미 존재하는 페르소나들을 UI에 업데이트
+        setDisplayedPersonas((prevDisplayed) => {
+          // 중복 제거를 위해 Set 사용
+          const uniquePersonas = new Set([
+            ...prevDisplayed,
+            ...existingPersonas,
+          ]);
+          return Array.from(uniquePersonas);
+        });
+        console.log("displayedPersonas:", displayedPersonas);
+        setIsLoadingMore(false);
+        return;
+      }
 
+      const requestData = {
+        business_idea: businessAnalysis.title,
+        business_analysis_data: businessAnalysis,
+        persona_type: personaType.label,
+      };
 
-// 비즈니스 탭 선택 시 상위 4개 타입의 페르소나 로드
-useEffect(() => {
-  if (activeTab === 'business') {
-    // 기존 데이터 초기화
-    setPersonaList(prevState => ({
-      ...prevState,
-      unselected: []
-    }));
-    
-    // 상위 4개 타입만 필터링
-    const topFourTypes = unselectedTypes
-      .filter((type, index) => index < 4);
+      // Validation logic
+      if (
+        !requestData.business_idea ||
+        !requestData.business_analysis_data ||
+        !requestData.persona_type
+      ) {
+        console.error("Invalid request data:", requestData);
+        setShowErrorPopup(true);
+        return; // Exit the function if validation fails
+      }
 
-  // 각 타입별로 순차적으로 페르소나 요청
-  const loadTopFourTypes = async () => {
-    for (let i = currentTypeIndex; i < topFourTypes.length; i++) {
-      const personaType = topFourTypes[i];
-      await loadBusinessPersona(personaType);
-      setCurrentTypeIndex(i + 1); // 다음 타입으로 인덱스 업데이트
+      console.log(`=== ${personaType.label} 페르소나 요청 시작 ===`);
+      console.log("요청 데이터:", requestData);
+
+      const result = await InterviewXPersonaRequestType(
+        requestData,
+        isLoggedIn
+      );
+      console.log("API 응답 결과:", result);
+      console.log("페르소나 스펙트럼:", result?.response?.persona_spectrum);
+
+      if (result?.response?.persona_spectrum) {
+        const newPersonas = result.response.persona_spectrum.map(
+          (p) => Object.values(p)[0]
+        );
+        console.log("새로운 페르소나 데이터 누적:", newPersonas);
+
+        const updatedList = [...businessPersonaList, ...newPersonas]; // 누적된 리스트
+        console.log("누적된 전체 비즈니스 페르소나:", updatedList);
+        // setBusinessPersonaList(updatedList);
+        // console.log('businessPersonaList:', businessPersonaList);
+        // 기존 상태에 새로운 페르소나를 추가
+        // setBusinessPersonaList(updatedList);
+
+        allBusinessPersonas.push(...updatedList);
+        console.log("Updated allBusinessPersonas:", allBusinessPersonas);
+
+        // setBusinessPersonaList(allBusinessPersonas);
+        console.log("businessPersonaList:", businessPersonaList);
+
+        setDisplayedPersonas((prevDisplayed) => [
+          ...prevDisplayed,
+          ...newPersonas,
+        ]);
+
+        // updateResponse 변수를 선언하고 값을 할당합니다.
+        await updateProjectOnServer(
+          projectId,
+          {
+            businessPersonaList: allBusinessPersonas,
+          },
+          isLoggedIn
+        );
+
+        setPersonaButtonState2(0);
+      }
+    } catch (error) {
+      if (error.response) {
+        switch (error.response.status) {
+          case 500:
+            setShowErrorPopup(true);
+            break;
+          case 504:
+            if (regenerateCount >= 3) {
+              setShowErrorPopup(true);
+            } else {
+              setShowRegenerateButton(true);
+              setRegenerateCount((prev) => prev + 1);
+            }
+            break;
+          default:
+            setShowErrorPopup(true);
+            break;
+        }
+      } else {
+        console.error("비즈니스 페르소나 로드 중 오류:", error);
+        setShowErrorPopup(true);
+      }
+    } finally {
+      setIsLoadingMore(false); // End loading for the current type
+      setCurrentLoadingType(null); // 로딩 완료 시 초기화
     }
   };
 
-  
-    
-    loadTopFourTypes();
-  }
-}, [activeTab]);
+  useEffect(() => {
+    if (
+      activeTab === "business" &&
+      activeTabTlick &&
+      selectedTypes.length < 4
+    ) {
+      setActiveTabTlick(false);
 
+      // 기존 데이터 초기화
+      setPersonaList((prevState) => ({
+        ...prevState,
+        unselected: [],
+      }));
 
+      // 상위 4개 타입만 필터링
+      const topFourTypes = unselectedTypes.filter((type, index) => index < 4);
 
-//unction to load more personas
-const loadMorePersonas = async () => {
-  const nextIndex = currentTypeIndex + 1;
-  if (nextIndex < unselectedTypes.length) {
-    setCurrentTypeIndex(nextIndex);
-    const personaType = unselectedTypes[nextIndex]; // 다음 페르소나 타입 가져오기
-    await loadBusinessPersona(personaType); // 새로운 타입에 대한 페르소나 로드
-  }
-};
+      // selectedTypes 업데이트
+      setSelectedTypes(
+        topFourTypes.map((type) => ({
+          id: type.id,
+          label: type.label,
+          type: type.type,
+          count: type.count,
+        }))
+      );
 
+      // 선택한 유형을 선택하지 않은 유형 목록에서 제거
+      topFourTypes.forEach((type) => {
+        setUnselectedTypes((prevUnselected) =>
+          prevUnselected.filter(
+            (unselectedType) => unselectedType.id !== type.id
+          )
+        );
+      });
 
+      setVisibleSelectedTypes(topFourTypes); // 선택된 유형을 visibleSelectedTypes에 설정
 
- // 유형 선택/해제 처리 함수
- const handleTypeToggle = async (typeId, isSelected) => {
-  if (isSelected) {
-    // 선택 해제: 선택된 유형에서만 제거
-    
-    setSelectedTypes(prev => prev.filter(type => type.id !== typeId));
-  } else {
-    // 선택: 선택된 유형에 추가
-    const typeToMove = unselectedTypes.find(type => type.id === typeId);
-    setSelectedTypes(prev => [...prev, { 
-      id: typeId, 
-      label: typeToMove.label, 
-      type: typeToMove.type,  // type 값 추가
-      count: typeToMove.count // unselectedTypes의 count 값 사용
-    }]);
+      // 각 타입별로 순차적으로 페르소나 요청
+      const loadTopFourTypes = async () => {
+        for (let i = 0; i < topFourTypes.length; i++) {
+          const personaType = topFourTypes[i];
+          await loadBusinessPersona(personaType);
+        }
+      };
 
-    // 선택한 타입에 대한 페르소나 로드
-    // 선택한 타입에 대한 페르소나 로드
-    setIsLoadingMore(true); // 로딩 상태 시작
-    await loadBusinessPersona(typeToMove); // 선택한 타입에 대한 페르소나 로드
-    setIsLoadingMore(false); // 로딩 상태 종료
-  // await loadBusinessPersona(typeToMove); // 선택한 타입에 대한 페르소나 로드
-  }
-};
+      loadTopFourTypes();
+    }
+  }, [activeTab]);
 
-useEffect(() => {
-  // unselectedTypes가 변경될 때마다 selectedTypes를 초기화
-  setSelectedTypes(unselectedTypes.slice(0, 4).map(type => ({
-    id: type.id,
-    label: type.label,
-    type: type.type,
-    count: type.count
-  })));
-}, [unselectedTypes]);
+  const handleTypeToggle = async (typeId, isSelected) => {
+    if (isSelected) {
+      // 선택 해제: 선택된 유형에서만 제거
+      setSelectedTypes((prev) => {
+        const updatedSelected = prev.filter((type) => type.id !== typeId);
+        console.log("updatedSelected:", updatedSelected);
 
+        // 제거된 타입을 unselectedTypes에 추가하고 인덱스로 정렬
+        const typeToAddBack = originalUnselectedTypes.find(
+          (type) => type.id === typeId
+        );
 
+        if (typeToAddBack) {
+          setUnselectedTypes((prevUnselected) => {
+            const updatedUnselected = [...prevUnselected, typeToAddBack];
+            // index 기준으로 정렬
+            return updatedUnselected.sort((a, b) => a.index - b.index);
+          });
+        }
 
+        return updatedSelected;
+      });
+    } else {
+      // 선택: 선택된 유형에 추가
+      const typeToMove = unselectedTypes.find((type) => type.id === typeId);
+      setSelectedTypes((prev) => {
+        // 새로운 타입을 추가하고 index로 정렬
+        const updatedSelected = [
+          ...prev,
+          {
+            id: typeId,
+            label: typeToMove.label,
+            type: typeToMove.type,
+            count: typeToMove.count,
+            index: typeToMove.index, // index 값도 함께 저장
+          },
+        ];
+        // index 기준으로 정렬
+        return updatedSelected.sort((a, b) => a.index - b.index);
+      });
 
+      // 선택한 유형을 선택하지 않은 유형 목록에서 제거
+      setUnselectedTypes((prevUnselected) =>
+        prevUnselected.filter((type) => type.id !== typeId)
+      );
+    }
+  };
+  // 선택 유형 보기 버튼 클릭 핸들러 수정
+  const handleTypeSelection = async () => {
+    setIsLoadingMore(true);
+    setShowTypeList(false); // 팝업 닫기
+    setVisibleSelectedTypes(selectedTypes.sort((a, b) => a.index - b.index));
+    // 기존 displayedPersonas 초기화
+    setDisplayedPersonas([]);
 
-  
+    // 선택된 타입들에 대한 페르소나 로드
+    for (const type of selectedTypes) {
+      await loadBusinessPersona(type);
+    }
+
+    // 선택된 유형을 visibleSelectedTypes에 설정
+    // setVisibleSelectedTypes(selectedTypes);
+    setIsLoadingMore(false);
+  };
+
   const handleStartInterview = () => {
     // 선택된 페르소나들을 selected에 반영
     setPersonaList((prev) => ({
@@ -1031,50 +1244,6 @@ useEffect(() => {
     return isRequiredFieldsFilled;
   };
 
-  // // 유형 선택/해제 처리 함수
-  // const handleTypeToggle = (typeId, isSelected) => {
-  //   if (isSelected) {
-  //     // 선택 해제: 선택된 유형에서만 제거
-      
-  //     setSelectedTypes(prev => prev.filter(type => type.id !== typeId));
-  //   } else {
-  //     // 선택: 선택된 유형에 추가
-  //     const typeToMove = unselectedTypes.find(type => type.id === typeId);
-  //     setSelectedTypes(prev => [...prev, { 
-  //       id: typeId, 
-  //       label: typeToMove.label, 
-  //       type: typeToMove.type,  // type 값 추가
-  //       count: typeToMove.count // unselectedTypes의 count 값 사용
-  //     }]);
-
-  //     // 선택한 타입에 대한 페르소나 로드
-  //   // await loadBusinessPersona(typeToMove); // 선택한 타입에 대한 페르소나 로드
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   // unselectedTypes가 변경될 때마다 selectedTypes를 초기화
-  //   setSelectedTypes(unselectedTypes.slice(0, 4).map(type => ({
-  //     id: type.id,
-  //     label: type.label,
-  //     type: type.type,
-  //     count: type.count
-  //   })));
-  // }, [unselectedTypes]);
-
-
-
-// const [selectedTypes, setSelectedTypes] = useState(() => {
-//   // Initialize with the top 4 types from unselectedTypes
-//   return unselectedTypes.slice(0, 4).map(type => ({
-//     id: type.id,
-//     label: type.label,
-//     type: type.type,  // Ensure type is included
-//     count: type.count // Use count from unselectedTypes
-//   }));
-// });
-
-
   // 마우스 드래그 스크롤 핸들러 추가
   const handleMouseDrag = (e) => {
     const slider = e.currentTarget;
@@ -1082,24 +1251,24 @@ useEffect(() => {
     let startX;
     let scrollLeft;
 
-    slider.addEventListener('mousedown', (e) => {
+    slider.addEventListener("mousedown", (e) => {
       isDown = true;
-      slider.style.cursor = 'grabbing';
+      slider.style.cursor = "grabbing";
       startX = e.pageX - slider.offsetLeft;
       scrollLeft = slider.scrollLeft;
     });
 
-    slider.addEventListener('mouseleave', () => {
+    slider.addEventListener("mouseleave", () => {
       isDown = false;
-      slider.style.cursor = 'grab';
+      slider.style.cursor = "grab";
     });
 
-    slider.addEventListener('mouseup', () => {
+    slider.addEventListener("mouseup", () => {
       isDown = false;
-      slider.style.cursor = 'grab';
+      slider.style.cursor = "grab";
     });
 
-    slider.addEventListener('mousemove', (e) => {
+    slider.addEventListener("mousemove", (e) => {
       if (!isDown) return;
       e.preventDefault();
       const x = e.pageX - slider.offsetLeft;
@@ -1108,25 +1277,65 @@ useEffect(() => {
     });
   };
 
-  // Choice 컴포넌트에서 X 버튼 클릭 시 삭제하는 핸들러 추가
   const handleRemoveType = (typeId) => {
-    setSelectedTypes(prev => prev.filter(type => type.id !== typeId));
-  };
+    // visibleSelectedTypes에서 제거할 타입 찾기
+    const typeToRemove = visibleSelectedTypes.find(
+      (type) => type.id === typeId
+    );
 
+    if (typeToRemove) {
+      // visibleSelectedTypes에서 제거 (index로 정렬)
+      setVisibleSelectedTypes((prev) => {
+        const filtered = prev.filter((type) => type.id !== typeId);
+        return filtered.sort((a, b) => a.index - b.index);
+      });
+
+      // selectedTypes에서도 제거 (index로 정렬)
+      setSelectedTypes((prev) => {
+        const filtered = prev.filter((type) => type.id !== typeId);
+        return filtered.sort((a, b) => a.index - b.index);
+      });
+
+      // unselectedTypes에 추가 (원래 순서 유지)
+      setUnselectedTypes((prev) => {
+        const updatedUnselected = [...prev, typeToRemove];
+        // originalUnselectedTypes의 순서를 기준으로 정렬
+        return updatedUnselected.sort((a, b) => {
+          const aIndex = originalUnselectedTypes.findIndex(
+            (type) => type.id === a.id
+          );
+          const bIndex = originalUnselectedTypes.findIndex(
+            (type) => type.id === b.id
+          );
+          return aIndex - bIndex;
+        });
+      });
+
+      // displayedPersonas에서 해당 타입의 페르소나 제거
+      setDisplayedPersonas((prev) => {
+        const filteredPersonas = prev.filter(
+          (persona) => persona.persona_type !== typeToRemove.label
+        );
+        console.log("Filtered displayedPersonas:", filteredPersonas);
+        return filteredPersonas;
+      });
+    }
+  };
   // 총 인원수를 계산하는 함수 추가
   const getTotalCount = () => {
     return selectedTypes.reduce((sum, type) => sum + type.count, 0);
   };
 
   // 스크롤 위치에 따른 그라데이션 상태 관리
-  const [showLeftGradient, setShowLeftGradient] = useState(false);  // 왼쪽은 처음에 안보임
+  const [showLeftGradient, setShowLeftGradient] = useState(false); // 왼쪽은 처음에 안보임
   const [showRightGradient, setShowRightGradient] = useState(false); // 오른쪽은 처음에 보임
 
   // 스크롤 이벤트 핸들러
   const handleScroll = (e) => {
     const container = e.target;
     const isAtStart = container.scrollLeft <= 0;
-    const isAtEnd = container.scrollLeft + container.offsetWidth >= container.scrollWidth;
+    const isAtEnd =
+      container.scrollLeft + container.offsetWidth >= container.scrollWidth;
 
     setShowLeftGradient(!isAtStart);
     setShowRightGradient(!isAtEnd);
@@ -1140,18 +1349,23 @@ useEffect(() => {
 
   const getPersonaCount = (tabType) => {
     if (!filteredProjectList) return 0;
-    
+
     // daily 탭일 때는 filteredProjectList의 길이 반환
-    if (tabType === 'daily') {
+    if (tabType === "daily") {
       return filteredProjectList.length;
     }
-    
+
     // business 탭일 때는 personaList.unselected의 길이 반환
-    if (tabType === 'business') {
+    if (tabType === "business") {
       return displayedPersonas?.length || 0;
     }
-    
+
     return 0;
+  };
+
+  // "유형 더보기" 버튼 클릭 핸들러
+  const handleShowTypeListToggle = () => {
+    setShowTypeList((prev) => !prev); // 상태 토글
   };
 
   return (
@@ -1168,7 +1382,7 @@ useEffect(() => {
               {/* {showRegenerateButton ? ( */}
               {isLoading ? (
                 <CardWrap>
-                  <AtomPersonaLoader />
+                  <AtomPersonaLoader message="페르소나를 추천하기 위해 분석하고 있어요" />
                 </CardWrap>
               ) : showRegenerateButton ? (
                 <CardWrap>
@@ -1179,53 +1393,61 @@ useEffect(() => {
                   <>
                     <BoxWrap>
                       <img src={images.BgUserChatDots} alt="" />
-                      <Body3 color="gray700">바로 대화를 원하시면 일상 페르소나와 함께 !<br />맞춤형 비즈니스 대화를 원하시면 비즈니스 페르소나를 요청해주세요 </Body3>
+                      <Body3 color="gray700">
+                        바로 대화를 원하시면 일상 페르소나와 함께 !<br />
+                        맞춤형 비즈니스 대화를 원하시면 비즈니스 페르소나를
+                        요청해주세요{" "}
+                      </Body3>
                     </BoxWrap>
 
                     <CustomizePersona>
-
                       <Tabheader>
                         <TabWrapType3>
-                          <TabButtonType3 
-                            isActive={activeTab === 'daily'}
-                            onClick={() => setActiveTab('daily')}
+                          <TabButtonType3
+                            isActive={activeTab === "daily"}
+                            onClick={() => setActiveTab("daily")}
                           >
-                            일상 페르소나 ({getPersonaCount('daily')})
+                            일상 페르소나 ({getPersonaCount("daily")})
                           </TabButtonType3>
-                          <TabButtonType3 
-                            isActive={activeTab === 'business'}
-                            onClick={() => setActiveTab('business')}
+                          <TabButtonType3
+                            isActive={activeTab === "business"}
+                            onClick={() => setActiveTab("business")}
                           >
-                            비즈니스 페르소나 ({getPersonaCount('business')})
+                            비즈니스 페르소나 ({getPersonaCount("business")})
                           </TabButtonType3>
                         </TabWrapType3>
 
                         <FillterWrap>
                           <ViewType>
-                            <TypeButton 
-                              List 
-                              active={viewType === 'list'} 
-                              onClick={() => handleViewTypeChange('list')}
+                            <TypeButton
+                              List
+                              active={viewType === "list"}
+                              onClick={() => handleViewTypeChange("list")}
                             >
                               리스트
                             </TypeButton>
-                            <TypeButton 
-                              Card 
-                              active={viewType === 'card'} 
-                              onClick={() => handleViewTypeChange('card')}
+                            <TypeButton
+                              Card
+                              active={viewType === "card"}
+                              onClick={() => handleViewTypeChange("card")}
                             >
                               카드
                             </TypeButton>
                           </ViewType>
 
-                          <Button Large PrimaryLightest Fill onClick={handleCustomizeRequest}>
+                          <Button
+                            Large
+                            PrimaryLightest
+                            Fill
+                            onClick={handleCustomizeRequest}
+                          >
                             <img src={images.PlusPrimary} alt="" />
                             페르소나 요청
                           </Button>
                         </FillterWrap>
                       </Tabheader>
 
-                      {activeTab === 'daily' ? (
+                      {activeTab === "daily" ? (
                         <ContentSection>
                           <>
                             <CardGroupWrap>
@@ -1238,7 +1460,7 @@ useEffect(() => {
                                   age={persona.age}
                                   job={persona.job}
                                   isRequest={false}
-                                  personaData = {persona}
+                                  personaData={persona}
                                   isBasic={true}
                                   onSelect={(isSelected) =>
                                     handlePersonaSelect(persona, isSelected)
@@ -1248,16 +1470,24 @@ useEffect(() => {
                                 />
                               ))}
                               {isLoadingMore && (
-                                <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-                                  <AtomPersonaLoader />
+                                <div
+                                  style={{
+                                    width: "100%",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                  }}
+                                >
+                                  <AtomPersonaLoader message="일상 페르소나를 추천하기 위해 분석하고 있어요" />
                                 </div>
                               )}
                             </CardGroupWrap>
-                            {hasMorePersonas && !isLoading && !isLoadingMore && (
-                              <LoadMoreButton onClick={handleLoadMore}>
-                                더보기
-                              </LoadMoreButton>
-                            )}
+                            {hasMorePersonas &&
+                              !isLoading &&
+                              !isLoadingMore && (
+                                <LoadMoreButton onClick={handleLoadMore}>
+                                  더보기
+                                </LoadMoreButton>
+                              )}
 
                             {/* 
                             <BannerPersona>
@@ -1289,19 +1519,18 @@ useEffect(() => {
                         </ContentSection>
                       ) : (
                         <ContentSection>
-
                           <CategoryView
                             showLeftGradient={showLeftGradient}
                             showRightGradient={showRightGradient}
                           >
-                            <ChoiceWrap 
-                              onMouseDown={handleMouseDrag} 
+                            <ChoiceWrap
+                              onMouseDown={handleMouseDrag}
                               onScroll={handleScroll}
                             >
-                              {selectedTypes.length > 0 ? (
-                                selectedTypes.map(type => (
-                                  <Choice 
-                                    key={type.id} 
+                              {visibleSelectedTypes.length > 0 ? (
+                                visibleSelectedTypes.map((type) => (
+                                  <Choice
+                                    key={type.id}
                                     onClick={(e) => {
                                       e.stopPropagation();
                                       handleRemoveType(type.id);
@@ -1311,13 +1540,27 @@ useEffect(() => {
                                   </Choice>
                                 ))
                               ) : (
+                                // {/* {selectedTypes.length > 0 ? (
+                                //   selectedTypes.map(type => (
+                                //     <Choice
+                                //       key={type.id}
+                                //       onClick={(e) => {
+                                //         e.stopPropagation();
+                                //         handleRemoveType(type.id);
+                                //       }}
+                                //     >
+                                //       {type.label}
+                                //     </Choice>
+                                //   )) */}
                                 <></>
                               )}
                             </ChoiceWrap>
 
                             <TypeMore style={{ zIndex: 10 }}>
-                              <Personnel>{getTotalCount()}명</Personnel>
-                              <MoreButton onClick={() => setShowTypeList(!showTypeList)}>
+                              <Personnel>{selectedTypes.length}개</Personnel>
+                              <MoreButton
+                                onClick={() => setShowTypeList(!showTypeList)}
+                              >
                                 유형 더보기
                               </MoreButton>
 
@@ -1325,19 +1568,24 @@ useEffect(() => {
                                 <TypeList>
                                   <TypeItem>
                                     <p>선택된 유형 ({selectedTypes.length})</p>
-                                    <TypeItemList style={{ padding: '0 12px' }}>
-                                      {selectedTypes.map(type => (
+                                    <TypeItemList style={{ padding: "0 12px" }}>
+                                      {selectedTypes.map((type) => (
                                         <li key={type.id}>
                                           <CheckBox Round>
                                             <input
                                               type="checkbox"
                                               id={type.id}
                                               checked={true}
-                                              onChange={() => handleTypeToggle(type.id, true)}
+                                              onChange={() =>
+                                                handleTypeToggle(type.id, true)
+                                              }
+                                              // onChange={() => { /* 아무것도 하지 않거나 다르게 처리 */ }}
                                             />
-                                            <label htmlFor={type.id}>{type.label}</label>
+                                            <label htmlFor={type.id}>
+                                              {type.label}
+                                            </label>
                                           </CheckBox>
-                                          <span>{type.count}명</span>
+                                          <span>3명</span>
                                         </li>
                                       ))}
                                     </TypeItemList>
@@ -1345,101 +1593,117 @@ useEffect(() => {
 
                                   <TypeItem>
                                     <p>
-                                      선택하지 않은 유형 ({unselectedTypes.length})
-                                      <span>?</span>
+                                      선택하지 않은 유형 (
+                                      {unselectedTypes.length})<span>?</span>
                                       <div>
-                                        <Caption2 color="white">선택시 나타나는 변화에 대한 여러가지 설명</Caption2>
+                                        <Caption2 color="white">
+                                          선택시 나타나는 변화에 대한 여러가지
+                                          설명
+                                        </Caption2>
                                       </div>
                                     </p>
                                     <TypeItemList>
-                                      {unselectedTypes.map(type => {
-                                        const isTypeSelected = selectedTypes.some(selectedType => selectedType.id === type.id);
+                                      {unselectedTypes.map((type) => {
+                                        const isTypeSelected =
+                                          selectedTypes.some(
+                                            (selectedType) =>
+                                              selectedType.id === type.id
+                                          );
                                         return (
-                                          <TypeListItem key={type.id} isSelected={isTypeSelected}>
+                                          <TypeListItem
+                                            key={type.id}
+                                            isSelected={isTypeSelected}
+                                          >
                                             <CheckBox Round>
                                               <input
                                                 type="checkbox"
                                                 id={type.id}
                                                 checked={isTypeSelected}
-                                                onChange={() => handleTypeToggle(type.id, isTypeSelected)}
+                                                // onChange={() => { /* 아무것도 하지 않거나 다르게 처리 */ }}
+                                                onChange={() =>
+                                                  handleTypeToggle(
+                                                    type.id,
+                                                    isTypeSelected
+                                                  )
+                                                }
                                               />
-                                              <label htmlFor={type.id}>{type.label}</label>
+                                              <label htmlFor={type.id}>
+                                                {type.label}
+                                              </label>
                                             </CheckBox>
                                           </TypeListItem>
                                         );
                                       })}
                                     </TypeItemList>
 
-                                    <Button ExLarge PrimaryLightest Fill
-                                      style={{ margin: '20px 12px 0' }}
+                                    <Button
+                                      ExLarge
+                                      PrimaryLightest
+                                      Fill
+                                      style={{ margin: "20px 12px 0" }}
+                                      // onClick={handleTypeSelection} // 버튼 클릭 시 선택된 타입 처리
+                                      onClick={async () => {
+                                        setIsLoadingMore(true); // 로딩 상태 시작
+                                        handleTypeSelection(); // 선택된 유형을 설정
+
+                                        // // 선택된 타입에 대한 페르소나 로드
+                                        // for (const type of selectedTypes) {
+                                        //   await loadBusinessPersona(type); // 선택한 타입에 대한 페르소나 로드
+                                        // }
+                                        setIsLoadingMore(false); // 로딩 상태 종료
+                                      }}
                                     >
-                                      3개 유형 더보기
+                                      선택 유형 보기
                                     </Button>
 
                                     <Caption2 color="gray500">
-                                      유형 추가 중 입니다. 몇 초걸림... 
+                                      유형 추가 중 입니다. 몇 초걸림...
                                     </Caption2>
                                   </TypeItem>
                                 </TypeList>
                               )}
                             </TypeMore>
                           </CategoryView>
-                          
+
                           <CardGroupWrap>
-
-                          {displayedPersonas.map((persona, index) => (
-                                <MoleculePersonaCard
-                                  key={index}
-                                  title={persona.persona}
-                                  keywords={persona.keyword}
-                                  gender={persona.gender}
-                                  age={persona.age}
-                                  job={persona.job}
-                                  isRequest={true}
-                                  personaData = {persona}
-                                  isBasic={false} // 비즈니스페르소나랑 일상 페르소나 구분
-                                  onSelect={(isSelected) =>
-                                    handlePersonaSelect(persona, isSelected)
-                                  }
-                                  currentSelection={selectedPersonas.length}
-                                  viewType={viewType}
+                            {displayedPersonas.map((persona, index) => (
+                              <MoleculePersonaCard
+                                key={index}
+                                title={persona.persona}
+                                keywords={[
+                                  persona.persona_type,
+                                  ...persona.keyword,
+                                ]}
+                                gender={persona.gender}
+                                age={persona.age}
+                                job={persona.job}
+                                isRequest={true}
+                                personaData={persona}
+                                isBasic={false} // 비즈니스페르소나랑 일상 페르소나 구분
+                                onSelect={(isSelected) =>
+                                  handlePersonaSelect(persona, isSelected)
+                                }
+                                currentSelection={selectedPersonas.length}
+                                viewType={viewType}
+                              />
+                            ))}
+                            {isLoadingMore && (
+                              <div
+                                style={{
+                                  width: "100%",
+                                  display: "flex",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <AtomPersonaLoader
+                                  message={`${
+                                    currentLoadingType?.label ||
+                                    "비즈니스 페르소나"
+                                  }를 추천하기 위해 분석하고 있어요`}
                                 />
-                              ))}
-                              {isLoadingMore && (
-                                <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-                                  <AtomPersonaLoader />
-                                </div>
-                              )}
-                            {/* {personaList.unselected.map((persona, index) => {
-                              const profileArray = persona.profile
-                                .replace(/['\[\]]/g, "")
-                                .split(", ");
-                              const age = profileArray[0].split(": ")[1];
-                              const gender =
-                                profileArray[1].split(": ")[1] === "남성"
-                                  ? "남성"
-                                  : "여성";
-                              const job = profileArray[2].split(": ")[1];
-
-                              return (
-                                <MoleculePersonaCard
-                                  key={index}
-                                  title={persona.persona}
-                                  keywords={persona.keyword.split(",")}
-                                  gender={gender}
-                                  age={age}
-                                  job={job}
-                                  isRequest={true}
-                                  onSelect={(isSelected) =>
-                                    handlePersonaSelect(persona, isSelected)
-                                  }
-                                  currentSelection={selectedPersonas.length}
-                                  viewType={viewType}
-                                />
-                              );
-                            })} */}
+                              </div>
+                            )}
                           </CardGroupWrap>
-
                         </ContentSection>
                       )}
 
@@ -1470,25 +1734,11 @@ useEffect(() => {
                           </Button>
                         </BottomBar>
                       )}
-                    </CustomizePersona>                    
+                    </CustomizePersona>
                   </>
                 </CardWrap>
               )}
             </MainSection>
-
-            {/* 
-            <Sidebar>
-              <h5>Discover Your Persona</h5>
-
-              <ProgressBar>
-                <span className="icon">🚀</span>
-                <Progress progress={40} />
-                <span>40%</span>
-              </ProgressBar>
-
-              <MoleculeStepIndicator steps={steps} activeStep={2} />
-            </Sidebar>
-             */}
           </AnalysisWrap>
         </MainContent>
       </ContentsWrap>
@@ -1523,133 +1773,135 @@ useEffect(() => {
             }
           }}
           showTabs={true}
-          tabs={['필수정보', 'OCEAN 정보']}
+          tabs={["필수정보", "OCEAN 정보"]}
           onTabChange={(index) => setActiveTabIndex(index)}
           activeTab={activeTabIndex}
           body={
             <>
               {activeTabIndex === 0 && (
                 <>
-                <div>
-                  <PopupTitle>
-                    성별
-                    <Sub3>
-                      * 선택하지 않는 경우, 성별 무관으로 페르소나를 생성합니다.
-                    </Sub3>
-                  </PopupTitle>
+                  <div>
+                    <PopupTitle>
+                      성별
+                      <Sub3>
+                        * 선택하지 않는 경우, 성별 무관으로 페르소나를
+                        생성합니다.
+                      </Sub3>
+                    </PopupTitle>
 
-                  <PopupContent>
-                    <GenderRadioButton
-                      id="gender1"
-                      name="gender"
-                      gender="남자"
-                      icon={images.GenderMen}
-                      checked={customPersonaForm.gender === "male"}
-                      onClick={() => {
-                        // 현재 선택된 값과 같은 값을 클릭하면 선택 해제
-                        if (customPersonaForm.gender === "male") {
-                          handleCustomPersonaChange("gender", "");
-                        } else {
-                          handleCustomPersonaChange("gender", "male");
-                        }
-                      }}
-                    />
-                    <GenderRadioButton
-                      id="gender2"
-                      name="gender"
-                      gender="여자"
-                      icon={images.GenderWomen}
-                      checked={customPersonaForm.gender === "female"}
-                      onClick={() => {
-                        // 현재 선택된 값과 같은 값을 클릭하면 선택 해제
-                        if (customPersonaForm.gender === "female") {
-                          handleCustomPersonaChange("gender", "");
-                        } else {
-                          handleCustomPersonaChange("gender", "female");
-                        }
-                      }}
-                    />
-                  </PopupContent>
-                </div>
+                    <PopupContent>
+                      <GenderRadioButton
+                        id="gender1"
+                        name="gender"
+                        gender="남자"
+                        icon={images.GenderMen}
+                        checked={customPersonaForm.gender === "male"}
+                        onClick={() => {
+                          // 현재 선택된 값과 같은 값을 클릭하면 선택 해제
+                          if (customPersonaForm.gender === "male") {
+                            handleCustomPersonaChange("gender", "");
+                          } else {
+                            handleCustomPersonaChange("gender", "male");
+                          }
+                        }}
+                      />
+                      <GenderRadioButton
+                        id="gender2"
+                        name="gender"
+                        gender="여자"
+                        icon={images.GenderWomen}
+                        checked={customPersonaForm.gender === "female"}
+                        onClick={() => {
+                          // 현재 선택된 값과 같은 값을 클릭하면 선택 해제
+                          if (customPersonaForm.gender === "female") {
+                            handleCustomPersonaChange("gender", "");
+                          } else {
+                            handleCustomPersonaChange("gender", "female");
+                          }
+                        }}
+                      />
+                    </PopupContent>
+                  </div>
 
-                <div>
-                  <PopupTitle>
-                    연령 (다중 선택)
-                    <Sub3>
-                      * 선택하지 않는 경우, 연령 무관으로 페르소나를 생성합니다.
-                    </Sub3>
-                  </PopupTitle>
+                  <div>
+                    <PopupTitle>
+                      연령 (다중 선택)
+                      <Sub3>
+                        * 선택하지 않는 경우, 연령 무관으로 페르소나를
+                        생성합니다.
+                      </Sub3>
+                    </PopupTitle>
 
-                  <PopupContent>
-                    <AgeGroup>
-                      <div>
-                        {["10s", "20s", "30s", "40s"].map((age, index) => (
-                          <React.Fragment key={age}>
-                            <input
-                              type="checkbox"
-                              id={`age${index + 1}`}
-                              name="age"
-                              checked={customPersonaForm.ageGroups.includes(
-                                age
-                              )}
-                              onChange={() => handleAgeGroupChange(age)}
-                            />
-                            <label
-                              htmlFor={`age${index + 1}`}
-                              className="age"
-                            >
-                              {age.replace("s", "대")}
-                            </label>
-                          </React.Fragment>
-                        ))}
-                      </div>
-                      <div>
-                        {["50s", "60s", "70s"].map((age, index) => (
-                          <React.Fragment key={age}>
-                            <input
-                              type="checkbox"
-                              id={`age${index + 5}`}
-                              name="age"
-                              checked={customPersonaForm.ageGroups.includes(
-                                age
-                              )}
-                              onChange={() => handleAgeGroupChange(age)}
-                            />
-                            <label
-                              htmlFor={`age${index + 5}`}
-                              className="age"
-                            >
-                              {age.replace("s", "대")}
-                            </label>
-                          </React.Fragment>
-                        ))}
-                        <div className="empty-space"></div>
-                      </div>
-                    </AgeGroup>
-                  </PopupContent>
-                </div>
+                    <PopupContent>
+                      <AgeGroup>
+                        <div>
+                          {["10s", "20s", "30s", "40s"].map((age, index) => (
+                            <React.Fragment key={age}>
+                              <input
+                                type="checkbox"
+                                id={`age${index + 1}`}
+                                name="age"
+                                checked={customPersonaForm.ageGroups.includes(
+                                  age
+                                )}
+                                onChange={() => handleAgeGroupChange(age)}
+                              />
+                              <label
+                                htmlFor={`age${index + 1}`}
+                                className="age"
+                              >
+                                {age.replace("s", "대")}
+                              </label>
+                            </React.Fragment>
+                          ))}
+                        </div>
+                        <div>
+                          {["50s", "60s", "70s"].map((age, index) => (
+                            <React.Fragment key={age}>
+                              <input
+                                type="checkbox"
+                                id={`age${index + 5}`}
+                                name="age"
+                                checked={customPersonaForm.ageGroups.includes(
+                                  age
+                                )}
+                                onChange={() => handleAgeGroupChange(age)}
+                              />
+                              <label
+                                htmlFor={`age${index + 5}`}
+                                className="age"
+                              >
+                                {age.replace("s", "대")}
+                              </label>
+                            </React.Fragment>
+                          ))}
+                          <div className="empty-space"></div>
+                        </div>
+                      </AgeGroup>
+                    </PopupContent>
+                  </div>
 
-                <div>
-                  <PopupTitle>
-                    필수적으로 필요한 정보가 있다면, 알려주세요
-                  </PopupTitle>
+                  <div>
+                    <PopupTitle>
+                      필수적으로 필요한 정보가 있다면, 알려주세요
+                    </PopupTitle>
 
-                  <PopupContent>
-                    <CustomTextarea
-                      rows={3}
-                      placeholder="필수로 고려해야할 정보가 있다면 작성해주세요."
-                      value={customPersonaForm.additionalInfo}
-                      onChange={(e) => {
-                        if (e.target.value.length <= 300) {
-                          handleCustomPersonaChange(
-                            "additionalInfo",
-                            e.target.value
-                          );
-                        }
-                      }}
-                    />
-                  </PopupContent>
-                </div>
+                    <PopupContent>
+                      <CustomTextarea
+                        rows={3}
+                        placeholder="필수로 고려해야할 정보가 있다면 작성해주세요."
+                        value={customPersonaForm.additionalInfo}
+                        onChange={(e) => {
+                          if (e.target.value.length <= 300) {
+                            handleCustomPersonaChange(
+                              "additionalInfo",
+                              e.target.value
+                            );
+                          }
+                        }}
+                      />
+                    </PopupContent>
+                  </div>
                 </>
               )}
 
@@ -1659,7 +1911,8 @@ useEffect(() => {
                     <PopupTitle>
                       성향
                       <Sub3>
-                        * 선택하지 않는 경우, 성향 무관으로 페르소나를 생성합니다. 
+                        * 선택하지 않는 경우, 성향 무관으로 페르소나를
+                        생성합니다.
                       </Sub3>
                     </PopupTitle>
 
@@ -1667,56 +1920,69 @@ useEffect(() => {
                       <OCEANRangeWrap>
                         <div>
                           <Body3 color="gray800">보수적</Body3>
-                          <RangeSlider 
+                          <RangeSlider
                             type="range"
                             min="0"
                             max="100"
                             value={oceanValues.openness}
-                            onChange={(e) => handleOceanChange('openness', e.target.value)}
+                            onChange={(e) =>
+                              handleOceanChange("openness", e.target.value)
+                            }
                           />
                           <Body3 color="gray800">개방적</Body3>
                         </div>
                         <div>
                           <Body3 color="gray800">즉흥적</Body3>
-                          <RangeSlider 
+                          <RangeSlider
                             type="range"
                             min="0"
                             max="100"
                             value={oceanValues.conscientiousness}
-                            onChange={(e) => handleOceanChange('conscientiousness', e.target.value)}
+                            onChange={(e) =>
+                              handleOceanChange(
+                                "conscientiousness",
+                                e.target.value
+                              )
+                            }
                           />
                           <Body3 color="gray800">성실함</Body3>
                         </div>
                         <div>
                           <Body3 color="gray800">내향적</Body3>
-                          <RangeSlider 
+                          <RangeSlider
                             type="range"
                             min="0"
                             max="100"
                             value={oceanValues.extraversion}
-                            onChange={(e) => handleOceanChange('extraversion', e.target.value)}
+                            onChange={(e) =>
+                              handleOceanChange("extraversion", e.target.value)
+                            }
                           />
                           <Body3 color="gray800">외향적</Body3>
                         </div>
                         <div>
                           <Body3 color="gray800">독립적</Body3>
-                          <RangeSlider 
+                          <RangeSlider
                             type="range"
                             min="0"
                             max="100"
                             value={oceanValues.agreeableness}
-                            onChange={(e) => handleOceanChange('agreeableness', e.target.value)}
+                            onChange={(e) =>
+                              handleOceanChange("agreeableness", e.target.value)
+                            }
                           />
                           <Body3 color="gray800">우호적</Body3>
                         </div>
                         <div>
                           <Body3 color="gray800">무던함</Body3>
-                          <RangeSlider 
+                          <RangeSlider
                             type="range"
                             min="0"
                             max="100"
                             value={oceanValues.neuroticism}
-                            onChange={(e) => handleOceanChange('neuroticism', e.target.value)}
+                            onChange={(e) =>
+                              handleOceanChange("neuroticism", e.target.value)
+                            }
                           />
                           <Body3 color="gray800">신경적</Body3>
                         </div>
@@ -1726,7 +1992,10 @@ useEffect(() => {
 
                   <div style={{ marginTop: "12px", textAlign: "left" }}>
                     <Body3 color="gray500">
-                    페르소나 마다의 다양한 성향이 있습니다. 이러한 성향에 따라 생성되는 페르소나는 각양각색의 무한한 가능성과 여러가지 방법들이 있습니다. 원하는 바를 위해 최대한 커스터마이징 하여 페르소나를 도출해 내시기를 기원합니다.
+                      페르소나 마다의 다양한 성향이 있습니다. 이러한 성향에 따라
+                      생성되는 페르소나는 각양각색의 무한한 가능성과 여러가지
+                      방법들이 있습니다. 원하는 바를 위해 최대한 커스터마이징
+                      하여 페르소나를 도출해 내시기를 기원합니다.
                     </Body3>
                   </div>
                 </>
@@ -2390,8 +2659,6 @@ const FillterWrap = styled.div`
   align-items: center;
   gap: 10px;
 `;
-
-
 
 const LoadMoreButton = styled.button`
   display: block;

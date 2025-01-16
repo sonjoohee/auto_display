@@ -1,4 +1,4 @@
-//작업관리/ 프로젝트 리스트 
+//작업관리/ 프로젝트 리스트
 import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { useAtom } from "jotai";
@@ -6,7 +6,11 @@ import { palette } from "../../../../assets/styles/Palette";
 import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
 // import Header from "../../../Design_Page/IncHeader";
 import MoleculeHeader from "../molecules/MoleculeHeader";
-import { ButtonGroup, Button, IconButton } from "../../../../assets/styles/ButtonStyle";
+import {
+  ButtonGroup,
+  Button,
+  IconButton,
+} from "../../../../assets/styles/ButtonStyle";
 import {
   ContentsWrap,
   MainContent,
@@ -45,12 +49,21 @@ import {
   IS_PERSONA_ACCESSIBLE,
   PROJECT_LOADING,
   PROJECT_REFRESH_TRIGGER,
+  USER_NAME,
 } from "../../../AtomStates";
 import OrganismProjectCard from "../organisms/OrganismProjectCard";
 import { getProjectListByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import OrganismEmptyProject from "../organisms/OrganismEmptyProject";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
-import { H2, H3, H5, Body2, Body3, Sub3, Caption2 } from "../../../../assets/styles/Typography";
+import {
+  H2,
+  H3,
+  H5,
+  Body2,
+  Body3,
+  Sub3,
+  Caption2,
+} from "../../../../assets/styles/Typography";
 
 const PageMyProject = () => {
   useDynamicViewport("width=1280");
@@ -89,6 +102,7 @@ const PageMyProject = () => {
   const [interviewReportAdditional, setInterviewReportAdditional] = useAtom(
     INTERVIEW_REPORT_ADDITIONAL
   );
+  const [userName, setUserName] = useAtom(USER_NAME); // 아톰에서 유저 이름 불러오기
   const [isEditMode, setIsEditMode] = useAtom(IS_EDIT_MODE);
   const [isShowToast, setIsShowToast] = useAtom(IS_SHOW_TOAST);
   const navigate = useNavigate();
@@ -102,7 +116,7 @@ const PageMyProject = () => {
     useAtom(PROJECT_REPORT_LIST);
   const [isLoadingPage, setIsLoadingPage] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
-  const [activeTab, setActiveTab] = useState('project');
+  const [activeTab, setActiveTab] = useState("project");
   const [isServiceMenuOpen, setIsServiceMenuOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
 
@@ -251,21 +265,18 @@ const PageMyProject = () => {
             <MyDashboard>
               <MyDashboardHeader>
                 <MyDashboardTitle>
-                  <H2>이혜은님</H2>
+                  <H2>{userName}님</H2>
                   <Badge classBasic>Basic</Badge>
                 </MyDashboardTitle>
 
                 <ButtonGroup>
-                  <Button 
-                    Primary
-                    onClick={() => navigate('/Payment')}
-                  >
+                  <Button Primary onClick={() => navigate("/Payment")}>
                     <img src={images.CalendarCheck} alt="구독 플랜 관리" />
                     <Sub3 color="primary">구독 플랜 관리</Sub3>
                   </Button>
-                  <div style={{ position: 'relative' }}>
-                    <Button 
-                      Primary 
+                  <div style={{ position: "relative" }}>
+                    <Button
+                      Primary
                       onClick={() => {
                         if (isServiceMenuOpen) {
                           closeServiceMenu();
@@ -277,17 +288,23 @@ const PageMyProject = () => {
                       <img src={images.Headset} alt="고객 서비스" />
                       <Sub3 color="primary">고객 서비스</Sub3>
                     </Button>
-                    
+
                     {(isServiceMenuOpen || isClosing) && (
                       <ToggleBox $isClosing={isClosing}>
                         <Body3>고객 서비스</Body3>
                         <ToggleList>
                           <IconButton>
-                            <img src={images.QuestionCircle} alt="고객 서비스" />
+                            <img
+                              src={images.QuestionCircle}
+                              alt="고객 서비스"
+                            />
                             <Sub3 color="gray700">문의사항</Sub3>
                           </IconButton>
                           <IconButton>
-                            <img src={images.ExclamationCircle} alt="이용약관" />
+                            <img
+                              src={images.ExclamationCircle}
+                              alt="이용약관"
+                            />
                             <Sub3 color="gray700">이용약관</Sub3>
                           </IconButton>
                           <IconButton>
@@ -303,42 +320,34 @@ const PageMyProject = () => {
 
               <MyDashboardContent>
                 <DashboardCard>
-                  <Body2 color="gray500">
-                    요청 페르소나
-                  </Body2>
+                  <Body2 color="gray500">요청 페르소나</Body2>
                   <DashboardAmount>
                     <H3 color="gray800">3건</H3>
                     <Badge New>new</Badge>
                   </DashboardAmount>
                 </DashboardCard>
                 <DashboardCard>
-                  <Body2 color="gray500">
-                    완료 페르소나
-                  </Body2>
+                  <Body2 color="gray500">완료 페르소나</Body2>
                   <DashboardAmount>
                     <H3 color="gray800">1건</H3>
                     <Badge New>new</Badge>
                   </DashboardAmount>
                 </DashboardCard>
                 <DashboardCard>
-                  <Body2 color="gray500">
-                    인터뷰 진행 건(수)
-                  </Body2>
+                  <Body2 color="gray500">인터뷰 진행 건(수)</Body2>
                   <DashboardAmount>
                     <H3 color="gray800">0건</H3>
                   </DashboardAmount>
                 </DashboardCard>
                 <DashboardCard>
-                  <Body2 color="gray500">
-                    당월 요금제
-                  </Body2>
+                  <Body2 color="gray500">당월 요금제</Body2>
                   <DashboardAmount>
                     <H3 color="gray800">Pro Plan</H3>
                   </DashboardAmount>
                 </DashboardCard>
               </MyDashboardContent>
             </MyDashboard>
-            
+
             {/* <Title>프로젝트 리스트</Title> */}
             {projectList.length === 0 ? (
               <OrganismEmptyProject />
@@ -346,21 +355,21 @@ const PageMyProject = () => {
               <>
                 <MyProjectList>
                   <TabWrapType3>
-                    <TabButtonType3 
-                      isActive={activeTab === 'project'}
-                      onClick={() => setActiveTab('project')}
+                    <TabButtonType3
+                      isActive={activeTab === "project"}
+                      onClick={() => setActiveTab("project")}
                     >
                       프로젝트 리스트 ({projectList.length})
                     </TabButtonType3>
-                    <TabButtonType3 
-                      isActive={activeTab === 'persona'}
-                      onClick={() => setActiveTab('persona')}
+                    <TabButtonType3
+                      isActive={activeTab === "persona"}
+                      onClick={() => setActiveTab("persona")}
                     >
                       페르소나 리스트
                     </TabButtonType3>
                   </TabWrapType3>
 
-                  {activeTab === 'project' && (
+                  {activeTab === "project" && (
                     /* 프로젝트 리스트 */
                     <ProjectList>
                       <ProjectHeader>
@@ -372,16 +381,16 @@ const PageMyProject = () => {
                       <ProjectContent>
                         {projectList.map((project, index) => (
                           <OrganismProjectCard
-                            key={index} 
+                            key={index}
                             project={project}
-                            index={index} 
+                            index={index}
                           />
                         ))}
                       </ProjectContent>
                     </ProjectList>
                   )}
 
-                  {activeTab === 'persona' && (
+                  {activeTab === "persona" && (
                     /* 페르소나 리스트 */
                     <ProjectList>
                       <ProjectHeader>
@@ -393,8 +402,12 @@ const PageMyProject = () => {
                         <ProjectItem>
                           <ProjectInfo>
                             <Name>
-                              <Caption2 color="gray500">홈리빙 플랫폼 서비스</Caption2>
-                              <Body2 color="gray800">가족과 함께 여가를 보내는 활동 지향형 소비자</Body2>
+                              <Caption2 color="gray500">
+                                홈리빙 플랫폼 서비스
+                              </Caption2>
+                              <Body2 color="gray800">
+                                가족과 함께 여가를 보내는 활동 지향형 소비자
+                              </Body2>
                             </Name>
                             <Persona>
                               <Sub3 color="gray500">2024. 10. 26</Sub3>
@@ -410,8 +423,12 @@ const PageMyProject = () => {
                         <ProjectItem>
                           <ProjectInfo>
                             <Name>
-                              <Caption2 color="gray500">홈리빙 플랫폼 서비스</Caption2>
-                              <Body2 color="gray800">가족과 함께 여가를 보내는 활동 지향형 소비자</Body2>
+                              <Caption2 color="gray500">
+                                홈리빙 플랫폼 서비스
+                              </Caption2>
+                              <Body2 color="gray800">
+                                가족과 함께 여가를 보내는 활동 지향형 소비자
+                              </Body2>
                             </Name>
                             <Persona>
                               <Sub3 color="gray500">2024. 10. 26</Sub3>

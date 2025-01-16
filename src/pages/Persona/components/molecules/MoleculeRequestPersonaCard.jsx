@@ -196,17 +196,23 @@ const MoleculeRequestPersonaCard = ({ persona, personaIndex }) => {
               </TabWrapType2>
 
               {activeTab === "lifestyle" && (
-                <TabContent><Body3 color="gray700">{persona.lifestyle}</Body3></TabContent>
+                <TabContent>
+                  <Body3 color="gray700">{persona.lifestyle}</Body3>
+                </TabContent>
               )}
               {activeTab === "interests" && (
-                <TabContent><Body3 color="gray700">{persona.interest}</Body3></TabContent>
+                <TabContent>
+                  <Body3 color="gray700">{persona.interest}</Body3>
+                </TabContent>
               )}
               {activeTab === "consumption" && (
-                <TabContent><Body3 color="gray700">{persona.consumption_pattern}</Body3></TabContent>
+                <TabContent>
+                  <Body3 color="gray700">{persona.consumption_pattern}</Body3>
+                </TabContent>
               )}
             </div>
 
-            <Button
+            {/* <Button
               Large
               Primary={!isPersonaRequested()}
               Fill={!isPersonaRequested()}
@@ -217,7 +223,7 @@ const MoleculeRequestPersonaCard = ({ persona, personaIndex }) => {
               {isPersonaRequested()
                 ? "이미 요청한 페르소나입니다"
                 : "인터뷰 준비 요청하기"}
-            </Button>
+            </Button> */}
           </div>
         </InterviewPopup>
       )}
