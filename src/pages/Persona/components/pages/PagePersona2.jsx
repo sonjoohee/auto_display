@@ -252,6 +252,7 @@ const PagePersona2 = () => {
     setShowPopup(false);
   };
 
+  const [currentLoadingType, setCurrentLoadingType] = useState(null);
   // const [isLoadingPage, setIsLoadingPage] = useState(true);
 
   const [steps, setSteps] = useState([
@@ -366,13 +367,44 @@ const PagePersona2 = () => {
             setBusinessAnalysis(savedProjectInfo.businessAnalysis);
             setRequestPersonaList(savedProjectInfo.requestPersonaList);
             setFilteredProjectList(savedProjectInfo.filteredPersonaList);
-            console.log(filteredProjectList);
             setAllBusinessPersonas(savedProjectInfo.businessPersonaList);
-            console.log(
-              "savedProjectInfo.businessPersonaList:",
-              savedProjectInfo
-            );
-            console.log(allBusinessPersonas);
+
+            // businessPersonaList에서 고유한 persona_type 추출
+            const uniqueTypes = [
+              ...new Set(
+                savedProjectInfo.businessPersonaList.map(
+                  (persona) => persona.persona_type
+                )
+              ),
+            ];
+
+            // 추출된 타입들을 기반으로 selectedTypes 구성
+            const typesToAdd = unselectedTypes
+              .filter((type) => uniqueTypes.includes(type.label))
+              .map((type) => ({
+                id: type.id,
+                label: type.label,
+                type: type.type,
+                count: type.count,
+                index: type.index,
+              }));
+            console.log("🚀 ~ loadProject ~ typesToAdd:", typesToAdd);
+            // selectedTypes와 visibleSelectedTypes 업데이트
+            setSelectedTypes(typesToAdd);
+            setVisibleSelectedTypes(typesToAdd);
+
+            // unselectedTypes에서 선택된 타입들 제거
+            setUnselectedTypes((prev) => {
+              const filtered = prev.filter((type) => {
+                const isTypeSelected = uniqueTypes.includes(type.label);
+                return !isTypeSelected;
+              });
+              console.log("필터링된 unselectedTypes:", filtered);
+              return filtered;
+            });
+            // displayedPersonas 업데이트
+            setDisplayedPersonas(savedProjectInfo.businessPersonaList);
+
             setCategoryColor({
               first: getCategoryColor(
                 savedProjectInfo.businessAnalysis.category.first
@@ -384,30 +416,6 @@ const PagePersona2 = () => {
                 savedProjectInfo.businessAnalysis.category.third
               ),
             });
-
-            // // businessPersonaList에서 고유한 페르소나 타입 추출
-            // const uniquePersonaTypes = [
-            //   ...new Set(
-            //     savedProjectInfo.businessPersonaList
-            //       .map((persona) => persona.persona_type)
-            //       .filter(Boolean) // null이나 undefined 제거
-            //   ),
-            // ];
-
-            // // unselectedTypes에서 매칭되는 타입 찾아서 selectedTypes 구성
-            // const selectedTypesList = unselectedTypes
-            //   .filter((type) => uniquePersonaTypes.includes(type.label))
-            //   .sort((a, b) => a.index - b.index);
-
-            // // selectedTypes 업데이트
-            // setSelectedTypes(selectedTypesList);
-
-            // // unselectedTypes 업데이트 - 선택된 타입들 제거
-            // setUnselectedTypes(
-            //   unselectedTypes.filter(
-            //     (type) => !uniquePersonaTypes.includes(type.label)
-            //   )
-            // );
 
             let unselectedPersonas = [];
             let data, response;
@@ -862,7 +870,7 @@ const PagePersona2 = () => {
   const loadBusinessPersona = async (personaType) => {
     try {
       setIsLoadingMore(true);
-
+      setCurrentLoadingType(personaType); // 현재 로딩 중인 타입 설정
       // 페르소나 타입이 이미 로드되었는지 확인
       //반복문으로 전체 페르소나 조회 및 추가
       const existingPersonas = allBusinessPersonas.filter(
@@ -970,11 +978,16 @@ const PagePersona2 = () => {
       }
     } finally {
       setIsLoadingMore(false); // End loading for the current type
+      setCurrentLoadingType(null); // 로딩 완료 시 초기화
     }
   };
 
   useEffect(() => {
-    if (activeTab === "business" && activeTabTlick) {
+    if (
+      activeTab === "business" &&
+      activeTabTlick &&
+      selectedTypes.length < 4
+    ) {
       setActiveTabTlick(false);
 
       // 기존 데이터 초기화
@@ -1369,7 +1382,7 @@ const PagePersona2 = () => {
               {/* {showRegenerateButton ? ( */}
               {isLoading ? (
                 <CardWrap>
-                  <AtomPersonaLoader message="페르소나를 추천하기 위해 분석하고 있어요..." />
+                  <AtomPersonaLoader message="페르소나를 추천하기 위해 분석하고 있어요" />
                 </CardWrap>
               ) : showRegenerateButton ? (
                 <CardWrap>
@@ -1464,7 +1477,7 @@ const PagePersona2 = () => {
                                     justifyContent: "center",
                                   }}
                                 >
-                                  <AtomPersonaLoader message="일상 페르소나를 추천하기 위해 분석하고 있어요..." />
+                                  <AtomPersonaLoader message="일상 페르소나를 추천하기 위해 분석하고 있어요" />
                                 </div>
                               )}
                             </CardGroupWrap>
@@ -1682,7 +1695,12 @@ const PagePersona2 = () => {
                                   justifyContent: "center",
                                 }}
                               >
-                                <AtomPersonaLoader message="비즈니스 페르소나를 추천하기 위해 분석하고 있어요..." />
+                                <AtomPersonaLoader
+                                  message={`${
+                                    currentLoadingType?.label ||
+                                    "비즈니스 페르소나"
+                                  }를 추천하기 위해 분석하고 있어요`}
+                                />
                               </div>
                             )}
                           </CardGroupWrap>

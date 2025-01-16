@@ -1,4 +1,4 @@
-//persona step 1비즈니스 분석 첫번재 카드 
+//persona step 1비즈니스 분석 첫번재 카드
 import React from "react";
 import styled, { css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
@@ -14,7 +14,7 @@ import {
 import {
   CustomInput,
   CustomTextarea,
-  FormBox
+  FormBox,
 } from "../../../../assets/styles/InputStyle";
 import {
   IS_LOADING,
@@ -391,8 +391,6 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
     }
   }, [projectId]);
 
-
-
   //비즈니스 분석과 카테고리 정보 로드
   useEffect(() => {
     const loadBusinessAnalysis = async () => {
@@ -635,7 +633,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
       </Title>
       {isLoadingBusinessAnalysis ? (
         <Card>
-          <AtomPersonaLoader message="비즈니스를 분석하고 있어요..." />
+          <AtomPersonaLoader message="비즈니스를 분석하고 있어요" />
         </Card>
       ) : showRegenerateButton1 ? (
         <Card>
