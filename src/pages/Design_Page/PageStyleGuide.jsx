@@ -1289,7 +1289,7 @@ onChange={() => setSelectedRadio2('gender1')}
           <Sub1>1. 리스트 형</Sub1>
           <Note>
             <CodeBlock>
-              {`<CardGroupWrap>
+              {`<CardGroupWrap column>
   <ListBoxItem>
     <ListText>
       <ListTitle>

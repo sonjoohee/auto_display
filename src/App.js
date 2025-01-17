@@ -44,9 +44,12 @@ import PageWayInterview from "./pages/Design_Page/PageWayInterview";
 import PageInterviewResult from "./pages/Design_Page/PageInterviewResult";
 import PagePersonaLoader from "./pages/Persona/components/atoms/AtomPersonaLoader";
 import PageRecreate from "./assets/styles/PageRecreate";
+
 import PageInterviewWay from "./pages/Design_Page/PageInterviewWay";
-import PageStyleGuide from "./pages/Design_Page/PageStyleGuide";
+import PagePersonaSelect from "./pages/Design_Page/PagePersonaSelect";
 import PagePayment from "./pages/Persona/components/pages/PagePayment";
+
+import PageStyleGuide from "./pages/Design_Page/PageStyleGuide";
 
 // 페르소나
 import PageMain from "./pages/Persona/components/pages/PageMain";
@@ -265,8 +268,9 @@ function App() {
           <Route path="/WayInterview" element={<PageWayInterview />} />
           <Route path="/InterviewResult" element={<PageInterviewResult />} />
           <Route path="/PersonaLoader" element={<PagePersonaLoader />} />
-          <Route path="/Recreate" element={<PageRecreate />} /> */}
-          <Route path="/InterviewWay" element={<PageInterviewWay />} />
+          <Route path="/Recreate" element={<PageRecreate />} />
+          <Route path="/InterviewWay" element={<PageInterviewWay />} /> */}
+          <Route path="/PersonaSelect" element={<PagePersonaSelect />} />
           <Route path="/Payment" element={<PagePayment />} />
 
           <Route path="/style_guide" element={<PageStyleGuide />} />
