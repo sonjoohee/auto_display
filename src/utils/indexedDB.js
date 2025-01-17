@@ -293,15 +293,16 @@ export const updateProjectOnServer = async (
 export const getProjectByIdFromIndexedDB = async (
   projectId,
   projectLoadButtonState
-) => { //두개 매개변수 받음
+) => {
+  //두개 매개변수 받음
   // console.log("🚀 ~ getProjectByIdFromIndexedDB ~ projectId:", projectId);
 
   if (projectLoadButtonState) {
     // 사용자 로그인 시 서버에서 데이터 가져오기
     try {
-      //요청이 유효한 사용자인지 확인 
+      //요청이 유효한 사용자인지 확인
       const accessToken = sessionStorage.getItem("accessToken");
-      
+
       const response = await axios.get(
         `https://wishresearch.kr/project/find/${projectId}`,
         {
@@ -520,7 +521,10 @@ export const createRequestPersonaOnServer = async (updateData, isLoggedIn) => {
 };
 
 //페르소나 필터 api
-export const InterviewXInterviewReportPersonaFilter = async (data, isLoggedIn) => {
+export const InterviewXInterviewReportPersonaFilter = async (
+  data,
+  isLoggedIn
+) => {
   console.log("페르소나 필터 시작 - 입력 데이터:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
@@ -540,31 +544,29 @@ export const InterviewXInterviewReportPersonaFilter = async (data, isLoggedIn) =
       {
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        withCredentials: true
+        withCredentials: true,
       }
     );
-    
+
     if (!response.data?.time || !response.data?.objectId) {
       return response.data;
     }
 
     console.log(`${response.data.time}ms 후 결과 조회 예정...`);
-    await new Promise(resolve => setTimeout(resolve, response.data.time));
-    
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
     console.log("termkey 결과 조회 시작:", response.data.objectId);
     const result = await getTermkeyResult(response.data.objectId);
     console.log("최종 결과:", result);
     return result;
-
   } catch (error) {
     console.error("페르소나 필터 처리 중 오류 발생:", error);
     console.error("오류 상세:", error.response?.data || error.message);
     throw error;
   }
 };
-
 
 //페르소나 필터 api
 export const InterviewXPersonaRequestType = async (data, isLoggedIn) => {
@@ -587,32 +589,29 @@ export const InterviewXPersonaRequestType = async (data, isLoggedIn) => {
       {
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        withCredentials: true
+        withCredentials: true,
       }
     );
-    
+
     if (!response.data?.time || !response.data?.objectId) {
       return response.data;
     }
 
     console.log(`${response.data.time}ms 후 결과 조회 예정...`);
-    await new Promise(resolve => setTimeout(resolve, response.data.time));
-    
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
     console.log("termkey 결과 조회 시작:", response.data.objectId);
     const result = await getTermkeyResult(response.data.objectId);
     console.log("최종 결과:", result);
     return result;
-
   } catch (error) {
     console.error("비즈니스 페르소나 요청 처리 중 오류 발생:", error);
     console.error("오류 상세:", error.response?.data || error.message);
     throw error;
   }
 };
-
-
 
 // termkey를 이용한 결과 조회 API
 export const getTermkeyResult = async (termkey) => {
@@ -621,7 +620,7 @@ export const getTermkeyResult = async (termkey) => {
     if (!token) {
       throw new Error("인증 토큰이 없습니다. 로그인이 필요합니다.");
     }
-    
+
     while (true) {
       try {
         const response = await axios.get(
@@ -629,9 +628,9 @@ export const getTermkeyResult = async (termkey) => {
           {
             headers: {
               Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json'
+              "Content-Type": "application/json",
             },
-            withCredentials: true
+            withCredentials: true,
           }
         );
 
@@ -648,7 +647,10 @@ export const getTermkeyResult = async (termkey) => {
         }
 
         console.log("처리 중...");
-        await new Promise(resolve => setTimeout(resolve, 5000));
+        const randomDelay = Math.floor(
+          Math.random() * (5000 - 3000 + 1) + 3000
+        ); // 3000ms(3초)에서 5000ms(5초) 사이의 랜덤한 시간
+        await new Promise((resolve) => setTimeout(resolve, randomDelay));
       } catch (error) {
         console.error("결과 조회 중 오류 발생:", error);
         throw error;
