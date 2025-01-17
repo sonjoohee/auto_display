@@ -25,6 +25,8 @@ import {
   FILTERED_PROJECT_LIST,
   BUSINESS_PERSONA_LIST,
   TYPES_LIST,
+  SINGLE_INTERVIEW_QUESTION_LIST,
+  INTERVIEW_QUESTION_LIST,
 } from "../../../AtomStates";
 import {
   ContentsWrap,
@@ -162,7 +164,12 @@ const PagePersona2 = () => {
   const [regenerateCount, setRegenerateCount] = useState(0);
   const [showRegenerateButton, setShowRegenerateButton] = useState(false);
   const [hasMorePersonas, setHasMorePersonas] = useState(true);
-
+  const [singleInterviewQuestionList, setSingleInterviewQuestionList] = useAtom(
+    SINGLE_INTERVIEW_QUESTION_LIST
+  );
+  const [interviewQuestionList, setInterviewQuestionList] = useAtom(
+    INTERVIEW_QUESTION_LIST
+  );
   // 로딩 상태 관리
   const loadingRef = useRef(false);
   const [viewType, setViewType] = useState("list"); // 'list' 또는 'card'
@@ -368,6 +375,10 @@ const PagePersona2 = () => {
             setRequestPersonaList(savedProjectInfo.requestPersonaList);
             setFilteredProjectList(savedProjectInfo.filteredPersonaList);
             setAllBusinessPersonas(savedProjectInfo.businessPersonaList);
+            setSingleInterviewQuestionList(
+              savedProjectInfo.singleInterviewQuestionList
+            );
+            setInterviewQuestionList(savedProjectInfo.interviewQuestionList);
 
             // businessPersonaList에서 고유한 persona_type 추출
             const uniqueTypes = [
@@ -867,6 +878,7 @@ const PagePersona2 = () => {
   const handleLoadMore = () => {
     loadPersonaWithFilter(false);
   };
+
   const loadBusinessPersona = async (personaType) => {
     try {
       setIsLoadingMore(true);
