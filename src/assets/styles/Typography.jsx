@@ -7,6 +7,7 @@ export const H1 = styled.h1`
   font-weight: 600;
   line-height: 1.2;
   color: ${(props) => palette[props.color] || "inherit"};
+  text-align: ${(props) => props.align || "center"};
   letter-spacing: -0.96px;
 `;
 
@@ -26,6 +27,7 @@ export const H3 = styled.h3`
   font-weight: 700;
   line-height: 1.3;
   color: ${(props) => palette[props.color] || "inherit"};
+  text-align: ${(props) => props.align || "center"};
   letter-spacing: -0.66px;
 `;
 
@@ -35,6 +37,7 @@ export const H4 = styled.h4`
   font-weight: 600;
   line-height: 1.3;
   color: ${(props) => palette[props.color] || "inherit"};
+  text-align: ${(props) => props.align || "center"};
   letter-spacing: -0.6px;
 `;
 
@@ -44,6 +47,7 @@ export const H5 = styled.h5`
   font-weight: 500;
   line-height: 1.3;
   color: ${(props) => palette[props.color] || "inherit"};
+  text-align: ${(props) => props.align || "center"};
   letter-spacing: -0.6px;
 `;
 
@@ -53,6 +57,7 @@ export const H6 = styled.h6`
   font-weight: 400;
   line-height: 1.3;
   color: ${(props) => palette[props.color] || "inherit"};
+  text-align: ${(props) => props.align || "center"};
   letter-spacing: -0.6px;
 `;
 
@@ -62,6 +67,7 @@ export const Body1 = styled.div`
   font-weight: 700;
   line-height: 1.55;
   color: ${(props) => palette[props.color] || "inherit"};
+  text-align: ${(props) => props.align || "center"};
   letter-spacing: -0.48px;
 `;
 
@@ -71,6 +77,7 @@ export const Body2_1 = styled.strong`
   font-weight: 500;
   line-height: 1.55;
   color: ${(props) => palette[props.color] || "inherit"};
+  text-align: ${(props) => props.align || "center"};
   letter-spacing: -0.48px;
 `;
 
@@ -80,6 +87,7 @@ export const Body2 = styled.div`
   font-weight: 500;
   line-height: 1.55;
   color: ${(props) => palette[props.color] || "inherit"};
+  text-align: ${(props) => props.align || "center"};
   letter-spacing: -0.48px;
 `;
 
@@ -89,6 +97,7 @@ export const Body3 = styled.p`
   font-weight: 400;
   line-height: 1.55;
   color: ${(props) => palette[props.color] || "inherit"};
+  text-align: ${(props) => props.align || "center"};
   letter-spacing: -0.48px;
 `;
 
@@ -98,6 +107,7 @@ export const Sub1 = styled.div`
   font-weight: 600;
   line-height: 1.55;
   color: ${(props) => palette[props.color] || "inherit"};
+  text-align: ${(props) => props.align || "center"};
   letter-spacing: -0.42px;
 `;
 
@@ -107,6 +117,7 @@ export const Sub2_1 = styled.div`
   font-weight: 500;
   line-height: 1.55;
   color: ${(props) => palette[props.color] || "inherit"};
+  text-align: ${(props) => props.align || "center"};
   letter-spacing: -0.42px;
 `;
 
@@ -116,6 +127,7 @@ export const Sub2 = styled.div`
   font-weight: 500;
   line-height: 1.55;
   color: ${(props) => palette[props.color] || "inherit"};
+  text-align: ${(props) => props.align || "center"};
   letter-spacing: -0.42px;
 `;
 
@@ -125,6 +137,7 @@ export const Sub3 = styled.div`
   font-weight: 400;
   line-height: 1.55;
   color: ${(props) => palette[props.color] || "inherit"};
+  text-align: ${(props) => props.align || "center"};
   letter-spacing: -0.42px;
 `;
 
@@ -134,6 +147,7 @@ export const Caption1 = styled.div`
   font-weight: 500;
   line-height: 1.5;
   color: ${(props) => palette[props.color] || "inherit"};
+  text-align: ${(props) => props.align || "center"};
   letter-spacing: -0.36px;
 `;
 
@@ -143,6 +157,7 @@ export const Caption2 = styled.div`
   font-weight: 400;
   line-height: 1.5;
   color: ${(props) => palette[props.color] || "inherit"};
+  text-align: ${(props) => props.align || "center"};
   letter-spacing: -0.36px;
 `;
 
@@ -152,6 +167,7 @@ export const InputText = styled.div`
   font-weight: 500;
   line-height: 1.2;
   color: ${(props) => palette[props.color] || "inherit"};
+  text-align: ${(props) => props.align || "center"};
   letter-spacing: -0.36px;
 `;
 
@@ -161,6 +177,7 @@ export const Helptext = styled.div`
   font-weight: 400;
   line-height: 1.2;
   color: ${(props) => palette[props.color] || "inherit"};
+  text-align: ${(props) => props.align || "center"};
   letter-spacing: -0.3px;
 `;
 

@@ -449,7 +449,7 @@ const PagePersona3 = () => {
 
               <InterviewWayContent>
                 <div>
-                  <Body2 color="gray800">인터뷰 방법 선택</Body2>
+                  <Body2 color="gray800" align="left">인터뷰 방법 선택</Body2>
 
                   <CardGroupWrap>
                     <ListBoxItem active={selectedInterviewType === "multiple"}>
@@ -528,7 +528,7 @@ const PagePersona3 = () => {
                 </div>
 
                 <div>
-                  <Body2 color="gray800">인터뷰 목적</Body2>
+                  <Body2 color="gray800" align="left">인터뷰 목적</Body2>
 
                   {selectedInterviewType === "multiple" ? (
                     <InterviewSelect>

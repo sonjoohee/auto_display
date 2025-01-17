@@ -81,21 +81,21 @@ const MoleculeCustomization = ({
               </CustomTitle>
 
               <TextInfo>
-                <Body3 color="gray700">정의</Body3>
+                <Body3 color="gray700" align="left">정의</Body3>
                 <TextBox>
                   <Body3 color="gray700">{custom.definitionText}</Body3>
                 </TextBox>
               </TextInfo>
 
               <TextInfo>
-                <Body3 color="gray700">목적</Body3>
+                <Body3 color="gray700" align="left">목적</Body3>
                 <TextBox>
                   <Body3 color="gray700">{custom.purposeText}</Body3>
                 </TextBox>
               </TextInfo>
 
               <TextInfo>
-                <Body3 color="gray700">질문</Body3>
+                <Body3 color="gray700" align="left">질문</Body3>
                 <BgBoxList>
                   {/* Add your questions here */}
                 </BgBoxList>
