@@ -64,7 +64,7 @@ export const CustomInput = styled.input`
   line-height: 1.2;
   color: ${props => props.status === "error" ? palette.error : palette.gray900};
   padding: 16px;
-  border-radius: 0;
+  border-radius: ${(props) => props.Round ? "50px" : "0"};
   border: 1px solid ${getStatusColor};
   outline: none;
   transition: all 0.5s;
