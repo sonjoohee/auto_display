@@ -69,8 +69,8 @@ import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
 import PopupWrap from "../../../../assets/styles/Popup";
 import OrganismToastPopup from "../organisms/OrganismToastPopup";
-import MoleculeInterviewPurpose from '../molecules/MoleculeInterviewPurpose';
-import MoleculeCustomization from '../molecules/MoleculeCustomization'; 
+import MoleculeInterviewPurpose from "../molecules/MoleculeInterviewPurpose.jsx";
+import MoleculeCustomization from "../molecules/MoleculeCustomization";
 
 const FULL_DEFINITION_TEXT =
   "사용자 트렌드 민감도 분석은 사용자가 시장의 최신 트렌드에 얼마나 빠르고 효과적으로 반응하는지를 측정하는 방법론입니다. 이 분석은 사용자가 새로운 트렌드를 어떻게 인식하고, 그 트렌드에 따라 행동이 어떻게 변화하는지 파악하는 데 중점을 둡니다.";
@@ -310,56 +310,42 @@ const PagePersona3 = () => {
       id: 1,
       category: "제품 사용 경험",
       title: "소비자 가치 우선순위 분석",
-      description:
-        "사용자의 기능, 디자인, 사용성 경험을 분석해 만족도와 불만족 요인을 도출",
-      expandedContent: [
-        "이 제품이 현재의 시장 경쟁 제품들과 비교해 독특하다고 느껴질 수 있는 요소는 무엇인가요?",
-        "이 제품이 더 많은 사람들에게 매력적으로 다가가기 위해 추가되거나 개선되어야 할 가장 중요한 요소는 무엇이라고 생각하시나요?",
-        "이 제품이 사용자에게 전달하려는 메시지나 숨겨진 이야기가 있다면, 그것은 무엇일까요?",
-      ],
+      view_title: "소비자 중요 가치 분석",
+      description: "고객이 가장 원하는 가치를 이해하고 효과적인 전략 수립",
     },
     {
       id: 2,
       category: "제품 사용 경험",
       title: "감성적 가치 평가",
-      description: "사용 환경과 패턴을 이해해 사용자 문제와 제약 요인을 해결",
-      expandedContent: [
-        "이 제품을 사용하는 데 있어 불편하거나 부적합할 수 있는 상황은 어떤 경우일까요?",
-        "이 제품을 사용할 수 있는 환경에서 가장 중요한 조건은 무엇이라고 생각하시나요?",
-        "이 제품이 예상치 못한 환경에서도 효과적으로 사용될 가능성이 있다면, 어떤 환경일까요?",
-      ],
+      view_title: "감성적 매력 평가",
+      description: "고객이 제품/서비스에 느끼는 감정을 분석하여 매력 향상",
     },
     {
       id: 3,
       category: "구매 및 소비 심리",
-      title: "",
-      description:
-        "소비자의 구매 결정에 영향을 미치는 핵심 요인을 파악해 최적의 전략을 설계",
-      expandedContent: [
-        "이 제품에 대해 소비자가 가장 많이 질문할 가능성이 있는 부분은 무엇일까요?",
-        "경쟁 제품 대비 이 제품이 소비자의 선택을 받을 가능성이 높은 이유는 무엇인가요?",
-        "소비자가 이 제품을 구매하지 않을 가능성이 있다면, 그 이유는 무엇일까요?",
-      ],
+      title: "구매 장벽 및 유인 요소 분석",
+      view_title: "구매 요인과 장애물 분석",
+      description: "구매 결정을 방해하는 요인과 구매를 이끄는 핵심 발굴",
     },
   ];
-  const purposeCategoriesSingle = [
-    { id: 1, label: "전체" },
-    { id: 2, label: "제품 사용 경험" },
-    { id: 3, label: "구매 및 소비 심리" },
-    { id: 4, label: "사용자 시뮬레이션" },
-  ];
-  const categoryItemsSingle = {
-    1: purposeItemsMultiple,
-    2: purposeItemsMultiple.filter(
-      (item) => item.category === "제품 사용 경험"
-    ),
-    3: purposeItemsMultiple.filter(
-      (item) => item.category === "구매 및 소비 심리"
-    ),
-    4: purposeItemsMultiple.filter(
-      (item) => item.category === "사용자 시뮬레이션"
-    ),
-  };
+  // const purposeCategoriesSingle = [
+  //   { id: 1, label: "전체" },
+  //   { id: 2, label: "제품 사용 경험" },
+  //   { id: 3, label: "구매 및 소비 심리" },
+  //   { id: 4, label: "사용자 시뮬레이션" },
+  // ];
+  // const categoryItemsSingle = {
+  //   1: purposeItemsMultiple,
+  //   2: purposeItemsMultiple.filter(
+  //     (item) => item.category === "제품 사용 경험"
+  //   ),
+  //   3: purposeItemsMultiple.filter(
+  //     (item) => item.category === "구매 및 소비 심리"
+  //   ),
+  //   4: purposeItemsMultiple.filter(
+  //     (item) => item.category === "사용자 시뮬레이션"
+  //   ),
+  // };
 
   const handleEnterInterviewRoom = () => {
     setPersonaStep(4);
@@ -579,25 +565,22 @@ const PagePersona3 = () => {
                     </InterviewSelect>
                   ) : selectedInterviewType === "single" ? (
                     <CardGroupWrap>
+                      {purposeItemsSingle.map((purpose) => (
+                        <MoleculeInterviewPurpose
+                          key={purpose.id}
+                          purpose={purpose}
+                          selectedPurpose={selectedInterviewPurpose}
+                          showQuestions={showQuestions}
+                          onPurposeSelect={handlePurposeSelect}
+                          toggleQuestions={(id) =>
+                            setShowQuestions((prev) => ({
+                              ...prev,
+                              [id]: !prev[id],
+                            }))
+                          }
+                        />
+                      ))}
 
-                    {purposeItemsSingle.map((purpose) => (
-                      <MoleculeInterviewPurpose
-                        key={purpose.id}
-                        purpose={{
-                          id: purpose.id,
-                          title: purpose.title,
-                          description: purpose.description,
-                          isNew: purpose.id === 1, // 예시로 첫 번째 항목을 New로 설정
-                          commonQuestions: purpose.expandedContent,
-                          specialQuestions: purpose.expandedContent, // 필요에 따라 수정
-                        }}
-                        selectedPurpose={selectedInterviewPurpose}
-                        showQuestions={showQuestions}
-                        onPurposeSelect={handlePurposeSelect}
-                        toggleQuestions={(id) => setShowQuestions((prev) => ({ ...prev, [id]: !prev[id] }))}
-                      />
-                    ))}
-            
                       <CustomizationWrap>
                         {showCustomButton && (
                           <Button
@@ -635,7 +618,6 @@ const PagePersona3 = () => {
                         />
                       </CustomizationWrap>
                     </CardGroupWrap>
-
                   ) : (
                     <ListBoxItem>
                       <ListText style={{ textAlign: "center", width: "100%" }}>
@@ -978,8 +960,8 @@ const TabContent = styled(PersonaCards)`
   }
 `;
 
-
-          {/* {showNewListBox && (
+{
+  /* {showNewListBox && (
                         <ListBoxItem
                           New
                           active={
@@ -1151,8 +1133,10 @@ const TabContent = styled(PersonaCards)`
                           >
                             {showQuestions.radio3 ? "문항 닫기" : "문항 보기"}
                           </Button>
-                        </ListButton> */}
-{/* 
+                        </ListButton> */
+}
+{
+  /* 
                         {showQuestions.radio3 && (
                           <BoxListWrap>
                             <div>
@@ -1436,14 +1420,10 @@ const TabContent = styled(PersonaCards)`
                             </div>
                           </BoxListWrap>
                         )}
-                      </ListBoxItem> */}
+                      </ListBoxItem> */
+}
 
-
-
-                      //---------------------------
-
-
-                      
+//---------------------------
 
 // {customizations.map((custom, index) => (
 //   <div key={custom.id}>
