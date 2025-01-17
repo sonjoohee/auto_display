@@ -867,6 +867,8 @@ const PagePersona2 = () => {
   const handleLoadMore = () => {
     loadPersonaWithFilter(false);
   };
+
+  
   const loadBusinessPersona = async (personaType) => {
     try {
       setIsLoadingMore(true);
