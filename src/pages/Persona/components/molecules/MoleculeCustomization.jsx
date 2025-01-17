@@ -190,7 +190,7 @@ const MoleculeCustomization = ({
               {/*   </CustomTitle> */}
 
               <TextInfo>
-                <Body3 color="gray700">정의</Body3>
+                <Body3 color="gray700" align="left">정의</Body3>
                 <TextBox>
                   <Body3 color="gray700">
                     {apiResponse?.response?.custom_theory_data?.definition || custom.definitionText}
@@ -199,7 +199,7 @@ const MoleculeCustomization = ({
               </TextInfo>
 
               <TextInfo>
-                <Body3 color="gray700">목적</Body3>
+                <Body3 color="gray700" align="left">목적</Body3>
                 <TextBox>
                   <Body3 color="gray700">
                     {apiResponse?.response?.custom_theory_data?.objective || custom.purposeText}
@@ -216,6 +216,7 @@ const MoleculeCustomization = ({
                     </TextBox>
                   )) || <Body3 color="gray700">특징이 없습니다.</Body3>}
               
+
               </TextInfo>
 
             

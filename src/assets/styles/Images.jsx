@@ -242,6 +242,7 @@ import CoinLarge from "../images/coin-large.svg"
 
 import RocketSuccess from "../images/rocket-success.svg"
 import RocketFail from "../images/rocket-fail.svg"
+import PatchCheckFill from "../images/patch-check-fill.svg"
 
 const images = {
   Logo,
@@ -488,6 +489,7 @@ const images = {
 
   RocketSuccess,
   RocketFail,
+  PatchCheckFill,
 }
 
 export default images;

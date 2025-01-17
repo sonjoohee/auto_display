@@ -59,7 +59,7 @@ import PersonaMen24 from "../images/Persona/PersonaMen24.png";
 import PersonaMen25 from "../images/Persona/PersonaMen25.png";
 import PersonaMen26 from "../images/Persona/PersonaMen26.png";
 import PersonaMen27 from "../images/Persona/PersonaMen27.png";
-
+import PersonaMen28 from "../images/Persona/PersonaMen28.png";
 
 const personaImages = {
   PersonaWomen01,
@@ -123,6 +123,7 @@ const personaImages = {
   PersonaMen25,
   PersonaMen26,
   PersonaMen27,
+  PersonaMen28,
 }
 
 export default personaImages;

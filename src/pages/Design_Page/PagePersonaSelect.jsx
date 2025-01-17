@@ -9,7 +9,7 @@ import AnalysisInfo from "./PageAnalysisInfo";
 import OrganismIncNavigation from "../Persona/components/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../Persona/components/molecules/MoleculeHeader";
 import PopupWrap from "../../assets/styles/Popup";
-import OrganismToastPopup from "../Persona/components/organisms/OrganismToastPopup";
+import OrganismToastPopup from "../../assets/styles/ToastPopupChat";
 import { Button, ButtonGroup, IconButton } from "../../assets/styles/ButtonStyle";
 import images from "../../assets/styles/Images";
 import personaImages from "../../assets/styles/PersonaImages";
@@ -523,7 +523,7 @@ const PagePersonaSelect = () => {
                   onClick={handleStartInterview}
                 >
                   인터뷰 시작
-                  <img src={images.ChevronRight} alt="다음" />
+                  <img src={images.ChevronRight} alt="인터뷰 시작" />
                 </Button>
               </BottomBar>
             </MainSection>
