@@ -1045,6 +1045,7 @@ export const PersonaGroup = styled.div`
 `;
 
 export const Persona = styled.div`
+  flex-shrink: 0;
   position: relative;
   display: flex;
   align-items: center;

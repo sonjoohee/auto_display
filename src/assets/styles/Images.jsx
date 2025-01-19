@@ -213,13 +213,21 @@ import Headset from "../images/headset.svg"
 
 import PersonaCustomizing from "../images/persona-customizing.png"
 
-import DiscoveryBrand from "../images/Discovery-Brand.png"
-import DiscoveryInsight from "../images/Discovery-Insight.png"
-import DiscoveryTarget from "../images/Discovery-Target.png"
-import DiscoverySuccess from "../images/Discovery-Success.png"
-import DiscoveryExperience from "../images/Discovery-Experience.png"
-import DiscoveryScale from "../images/Discovery-Scale.png"
-import DiscoveryBM from "../images/Discovery-BM.png"
+// import DiscoveryBrand from "../images/Discovery-Brand.png"
+// import DiscoveryInsight from "../images/Discovery-Insight.png"
+// import DiscoveryTarget from "../images/Discovery-Target.png"
+// import DiscoverySuccess from "../images/Discovery-Success.png"
+// import DiscoveryExperience from "../images/Discovery-Experience.png"
+// import DiscoveryScale from "../images/Discovery-Scale.png"
+// import DiscoveryBM from "../images/Discovery-BM.png"
+
+import DiscoveryBrand from "../images/Discovery-Brand.svg"
+import DiscoveryInsight from "../images/Discovery-Insight.svg"
+import DiscoveryTarget from "../images/Discovery-Target.svg"
+import DiscoverySuccess from "../images/Discovery-Success.svg"
+import DiscoveryExperience from "../images/Discovery-Experience.svg"
+import DiscoveryScale from "../images/Discovery-Scale.svg"
+import DiscoveryBM from "../images/Discovery-BM.svg"
 
 import DiscoveryBrandHover from "../images/Discovery-Brand-hover.png"
 import DiscoveryInsightHover from "../images/Discovery-Insight-hover.png"
@@ -243,6 +251,9 @@ import CoinLarge from "../images/coin-large.svg"
 import RocketSuccess from "../images/rocket-success.svg"
 import RocketFail from "../images/rocket-fail.svg"
 import PatchCheckFill from "../images/patch-check-fill.svg"
+import KeyCircle from "../images/key-circle.svg"
+
+import ListUserSearch from "../images/list-user-search.svg"
 
 const images = {
   Logo,
@@ -490,6 +501,9 @@ const images = {
   RocketSuccess,
   RocketFail,
   PatchCheckFill,
+  KeyCircle,
+
+  ListUserSearch,
 }
 
 export default images;
