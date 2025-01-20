@@ -60,7 +60,6 @@ import PagePersona4 from "./pages/Persona/components/pages/PagePersona4";
 import PageMyProject from "./pages/Persona/components/pages/PageMyProject";
 import PagePersona3Select from "./pages/Persona/components/pages/PagePersona3Select";
 // 테스트 라우트 추가
-import Test from "./pages/Persona/components/pages/Test";
 import PageMarketingNoItemsShare from "./pages/Marketing/components/pages/PageMarketingNoItemsShare";
 
 function App() {
@@ -225,9 +224,6 @@ function App() {
             path="/MarketingSetting/Share/:mbtiType"
             element={<PageMarketingNoItemsShare />}
           />
-
-          {/* 테스트 라우트 추가 */}
-          <Route path="/interview-test" element={<Test />} />
 
           {/* 페르소나 */}
           <Route path="/Persona" element={<PagePersona />}></Route>

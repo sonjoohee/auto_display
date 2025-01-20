@@ -15,6 +15,7 @@ import {
   PROJECT_LOAD_BUTTON_STATE,
   PROJECT_ID,
   PURPOSE_ITEMS_SINGLE,
+  IS_LOADING_QUESTION,
 } from "../../../AtomStates";
 import {
   ListBoxItem,
@@ -46,13 +47,16 @@ const MoleculeInterviewPurpose = ({
   regenerateCount,
   setRegenerateCount,
 }) => {
+  console.log("🚀 ~ purpose:", purpose);
+
   const [businessAnalysis] = useAtom(BUSINESS_ANALYSIS);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectId] = useAtom(PROJECT_ID);
   const [singleInterviewQuestionList, setSingleInterviewQuestionList] = useAtom(
     SINGLE_INTERVIEW_QUESTION_LIST
   );
-  const [isLoadingQuestion, setIsLoadingQuestion] = useState(false);
+  const [isLoadingQuestion, setIsLoadingQuestion] =
+    useAtom(IS_LOADING_QUESTION);
   const [showRegenerateButton, setShowRegenerateButton] = useState(false);
 
   const [purposeItemsSingleAtom, setPurposeItemsSingleAtom] =
@@ -62,7 +66,9 @@ const MoleculeInterviewPurpose = ({
     setShowRegenerateButton(false);
 
     const existingQuestions = singleInterviewQuestionList.find(
-      (item) => item.theory_name === title
+      (item) =>
+        item.theory_name ===
+        (purpose.id === 4 ? purpose.custom_theory_data.theory_title : title)
     );
     if (existingQuestions) {
       console.log("이미 존재하는 질문입니다:", existingQuestions);
@@ -97,8 +103,6 @@ const MoleculeInterviewPurpose = ({
             },
             custom_theory_data: purpose.custom_theory_data,
           };
-
-          console.log("API 요청 데이터:4:", data);
 
           response =
             await InterviewXPersonaSingleInterviewGeneratorRequestTheoryCustom(
@@ -137,7 +141,10 @@ const MoleculeInterviewPurpose = ({
           .map((item) => item.question);
 
         const newQuestionData = {
-          theory_name: purpose.title,
+          theory_name:
+            purpose.id === 4
+              ? purpose.custom_theory_data.theory_title
+              : purpose.title,
           commonQuestions,
           specialQuestions,
         };
@@ -187,6 +194,22 @@ const MoleculeInterviewPurpose = ({
     }
   };
 
+  const handleQuestionClick = () => {
+    // 문항 보기 토글
+    toggleQuestions(purpose.id);
+
+    // 커스텀 방법론이 아니고, 문항이 없는 경우에만 API 호출
+    if (purpose.id !== 4 && !showQuestions[purpose.id]) {
+      const existingQuestions = singleInterviewQuestionList.find(
+        (item) => item.theory_name === purpose.title
+      );
+
+      if (!existingQuestions) {
+        loadInterviewQuestion(purpose.title);
+      }
+    }
+  };
+
   return (
     <ListBoxItem
       active={selectedPurpose === purpose["id"]}
@@ -218,14 +241,7 @@ const MoleculeInterviewPurpose = ({
           {...(showQuestions[purpose["id"]]
             ? { PrimaryLightest: true, Fill: true }
             : { View: true })}
-          onClick={(e) => {
-            console.log("🚀 ~ onClick ~ e:", e);
-            e.preventDefault();
-            toggleQuestions(purpose["id"]);
-            if (!showQuestions[purpose["id"]]) {
-              loadInterviewQuestion(purpose["title"]);
-            }
-          }}
+          onClick={handleQuestionClick}
         >
           {showQuestions[purpose["id"]] ? "문항 닫기" : "문항 보기"}
         </Button>
@@ -236,7 +252,7 @@ const MoleculeInterviewPurpose = ({
           <div>
             <Body1 color="gray800">공통 질문</Body1>
             <BgBoxList>
-              {isLoadingQuestion ? (
+              {isLoadingQuestion && purpose.id === 4 ? (
                 <>
                   <SkeletonLine width="100%" height="20px" />
                   <SkeletonLine width="100%" height="20px" />
@@ -245,7 +261,11 @@ const MoleculeInterviewPurpose = ({
               ) : (
                 (() => {
                   const questions = singleInterviewQuestionList.find(
-                    (item) => item.theory_name === purpose["title"]
+                    (item) =>
+                      item.theory_name ===
+                      (purpose.id === 4
+                        ? purpose.custom_theory_data.theory_title
+                        : purpose["title"])
                   );
                   console.log("현재 표시할 질문:", questions);
                   return (
@@ -267,7 +287,7 @@ const MoleculeInterviewPurpose = ({
           <div>
             <Body1 color="gray800">특화 질문</Body1>
             <BgBoxList>
-              {isLoadingQuestion ? (
+              {isLoadingQuestion && purpose.id === 4 ? (
                 <>
                   <SkeletonLine width="100%" height="20px" />
                   <SkeletonLine width="100%" height="20px" />
@@ -276,7 +296,11 @@ const MoleculeInterviewPurpose = ({
               ) : (
                 (() => {
                   const questions = singleInterviewQuestionList.find(
-                    (item) => item.theory_name === purpose["title"]
+                    (item) =>
+                      item.theory_name ===
+                      (purpose.id === 4
+                        ? purpose.custom_theory_data.theory_title
+                        : purpose["title"])
                   );
                   return (
                     questions?.specialQuestions?.map((question, index) => (

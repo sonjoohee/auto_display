@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import styled, { css } from "styled-components";
 import { useAtom } from "jotai";
-
+import { useNavigate } from "react-router-dom";
 import OrganismIncNavigation from "../../../Persona/components/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../../Persona/components/molecules/MoleculeHeader";
 import PopupWrap from "../../../../assets/styles/Popup";
@@ -63,6 +63,9 @@ import {
   FILTERED_PROJECT_LIST,
   PERSONA_LIST,
   REQUEST_PERSONA_LIST,
+  IS_PERSONA_ACCESSIBLE,
+  INTERVIEW_QUESTION_LIST,
+  PERSONA_BUTTON_STATE_3,
 } from "../../../../pages/AtomStates.jsx";
 
 const FULL_DEFINITION_TEXT =
@@ -75,6 +78,10 @@ const PagePersona3Select = () => {
     radio4: false,
     radio5: false,
   });
+  const [interviewQuestionList, setInterviewQuestionList] = useAtom(
+    INTERVIEW_QUESTION_LIST
+  );
+  const navigate = useNavigate();
   const [showCustomization, setShowCustomization] = useState(false);
   const [purposeText, setPurposeText] = useState("");
   const [showMethodology, setShowMethodology] = useState(false);
@@ -94,6 +101,9 @@ const PagePersona3Select = () => {
   const [selectedInterviewPurposeData] = useAtom(
     SELECTED_INTERVIEW_PURPOSE_DATA
   );
+  const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
+    IS_PERSONA_ACCESSIBLE
+  );
   const [filteredProjectList, setFilteredProjectList] = useAtom(
     FILTERED_PROJECT_LIST
   );
@@ -103,7 +113,27 @@ const PagePersona3Select = () => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   // const [allBusinessPersonas, setAllBusinessPersonas] = useState([]); // 전체 비즈니스 페르소나 상태
 
+  const [personaButtonState3, setPersonaButtonState3] = useAtom(
+    PERSONA_BUTTON_STATE_3
+  );
+  useEffect(() => {
+    // 접근 가능 여부를 확인하여 차단 로직 수행
+    if (!isPersonaAccessible) {
+      navigate("/"); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
+    }
+
+    // 페이지를 나갈 때 접근 가능 여부 초기화
+    return () => {
+      setIsPersonaAccessible(false); // 페이지 떠날 때 접근 불가로 설정
+    };
+  }, []);
+
   const handleStartInterview = () => {
+    console.log("인터뷰 시작");
+    console.log("personaList", personaList);
+    console.log("interviewQuestionList", interviewQuestionList);
+    console.log("selectedInterviewPurpose", selectedInterviewPurpose);
+
     setShowPopup(true);
   };
 
@@ -112,6 +142,7 @@ const PagePersona3Select = () => {
   };
 
   const handleConfirmStart = () => {
+    setPersonaButtonState3(1);
     setShowPopup(false);
     setShowToast(true);
   };

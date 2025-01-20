@@ -488,6 +488,8 @@ export const SELECTED_INTERVIEW_PURPOSE_DATA = atom({});
 export const PURPOSE_ITEMS_SINGLE = atom([]);
 export const CUSTOM_THEORY_DATA = atom({});
 
+export const IS_LOADING_QUESTION = atom(false);
+
 // setConversation([]);
 // setConversationStage(1);
 // setInputBusinessInfo("");
