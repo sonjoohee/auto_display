@@ -30,10 +30,11 @@ import { Body1, Body3, Caption1 } from "../../../../assets/styles/Typography";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import { RadioButton } from "../../../../assets/styles/InputStyle";
 
-import { InterviewXPersonaSingleInterviewGeneratorRequest, InterviewXPersonaSingleInterviewGeneratorRequestTheoryCustom } from "../../../../utils/indexedDB";
+import {
+  InterviewXPersonaSingleInterviewGeneratorRequest,
+  InterviewXPersonaSingleInterviewGeneratorRequestTheoryCustom,
+} from "../../../../utils/indexedDB";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
-
-
 
 const MoleculeInterviewPurpose = ({
   purpose,
@@ -44,7 +45,6 @@ const MoleculeInterviewPurpose = ({
   setShowErrorPopup,
   regenerateCount,
   setRegenerateCount,
-  custom_theory_data,
 }) => {
   const [businessAnalysis] = useAtom(BUSINESS_ANALYSIS);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
@@ -54,7 +54,9 @@ const MoleculeInterviewPurpose = ({
   );
   const [isLoadingQuestion, setIsLoadingQuestion] = useState(false);
   const [showRegenerateButton, setShowRegenerateButton] = useState(false);
-  const [purposeItemsSingle] = useAtom(PURPOSE_ITEMS_SINGLE);
+
+  const [purposeItemsSingleAtom, setPurposeItemsSingleAtom] =
+    useAtom(PURPOSE_ITEMS_SINGLE);
 
   const loadInterviewQuestion = async (title) => {
     setShowRegenerateButton(false);
@@ -62,7 +64,6 @@ const MoleculeInterviewPurpose = ({
     const existingQuestions = singleInterviewQuestionList.find(
       (item) => item.theory_name === title
     );
-
     if (existingQuestions) {
       console.log("이미 존재하는 질문입니다:", existingQuestions);
       return;
@@ -73,12 +74,18 @@ const MoleculeInterviewPurpose = ({
 
       // let response = await fetchInterviewQuestions(data, purpose.id, isLoggedIn);
 
-      let response = {}
+      let response = {};
       if (purpose.id === 4) {
-        const generatedQuestions = purposeItemsSingle.find(item => item.id === 4);
+        console.log("🚀 ~ loadInterviewQuestion ~ purpose.id === 4:", purpose);
+        const generatedQuestions = purposeItemsSingleAtom.find(
+          (item) => item.id === 4
+        );
 
         if (generatedQuestions) {
-          setSingleInterviewQuestionList((prev) => [...prev, generatedQuestions]);
+          // setSingleInterviewQuestionList((prev) => [
+          //   ...prev,
+          //   generatedQuestions,
+          // ]);
 
           // InterviewXPersonaSingleInterviewGeneratorRequestTheoryCustom에 data를 보냄
           let data = {
@@ -88,7 +95,7 @@ const MoleculeInterviewPurpose = ({
               characteristics: businessAnalysis.characteristics,
               features: businessAnalysis.features,
             },
-            custom_theory_data: custom_theory_data,
+            custom_theory_data: purpose.custom_theory_data,
           };
 
           console.log("API 요청 데이터:4:", data);
@@ -102,6 +109,7 @@ const MoleculeInterviewPurpose = ({
           console.log("API 응답:", response);
         }
       } else if (purpose.id !== 4) {
+        console.log("🚀 ~ loadInterviewQuestion ~ purpose.id !== 4:", purpose);
         let data = {
           business_idea: businessAnalysis.input,
           business_analysis_data: {
@@ -109,13 +117,16 @@ const MoleculeInterviewPurpose = ({
             characteristics: businessAnalysis.characteristics,
             features: businessAnalysis.features,
           },
-          theory_name: purpose.id === 4 ? custom_theory_data : title,
+          theory_name: title,
         };
 
-        response = await InterviewXPersonaSingleInterviewGeneratorRequest(data, isLoggedIn);
+        response = await InterviewXPersonaSingleInterviewGeneratorRequest(
+          data,
+          isLoggedIn
+        );
         console.log("API 응답:", response);
       }
-      
+
       if (response.response) {
         const commonQuestions = response.response
           .filter((item) => item.question_type === "공통질문")
@@ -126,7 +137,7 @@ const MoleculeInterviewPurpose = ({
           .map((item) => item.question);
 
         const newQuestionData = {
-          theory_name: purpose.id === 4 ? custom_theory_data.theory_title : title,
+          theory_name: purpose.title,
           commonQuestions,
           specialQuestions,
         };
@@ -208,6 +219,7 @@ const MoleculeInterviewPurpose = ({
             ? { PrimaryLightest: true, Fill: true }
             : { View: true })}
           onClick={(e) => {
+            console.log("🚀 ~ onClick ~ e:", e);
             e.preventDefault();
             toggleQuestions(purpose["id"]);
             if (!showQuestions[purpose["id"]]) {

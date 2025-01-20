@@ -31,7 +31,6 @@ import {
   PURPOSE_ITEMS_SINGLE,
 } from "../../../AtomStates";
 
-
 const OrganismCustomization = ({
   customizations,
   setCustomizations,
@@ -46,7 +45,8 @@ const OrganismCustomization = ({
   const [singleInterviewQuestionList, setSingleInterviewQuestionList] = useAtom(
     SINGLE_INTERVIEW_QUESTION_LIST
   );
-  const [purposeItemsSingle, setPurposeItemsSingle] = useAtom(PURPOSE_ITEMS_SINGLE);
+  const [purposeItemsSingleAtom, setPurposeItemsSingleAtom] =
+    useAtom(PURPOSE_ITEMS_SINGLE);
 
   const [apiResponse, setApiResponse] = useState(null);
   const [showQuestions, setShowQuestions] = useState({});
@@ -57,7 +57,8 @@ const OrganismCustomization = ({
     useState(false);
   const [currentPurposeData, setCurrentPurposeData] = useState(null);
   const [showResults, setShowResults] = useState(true);
-  const [showOrganismCustomization, setShowOrganismCustomization] = useState(true);
+  const [showOrganismCustomization, setShowOrganismCustomization] =
+    useState(true);
   // const [loadInterviewQuestions, setLoadInterviewQuestions] = useState(null); // 상태 추가
 
   const handleEditComplete = (index) => {
@@ -71,7 +72,6 @@ const OrganismCustomization = ({
   };
   const [isLoadingQuestion, setIsLoadingQuestion] = useState(false);
   const [customTheoryData, setCustomTheoryData] = useState(null);
-  
 
   const handlePurposeGeneration = async (custom, index) => {
     try {
@@ -93,7 +93,6 @@ const OrganismCustomization = ({
       );
       setShowResults(true);
       // 새로운 카드 추가
-    
     } catch (error) {
       if (error.response) {
         switch (error.response.status) {
@@ -183,9 +182,12 @@ const OrganismCustomization = ({
                     <>
                       {showResults && (
                         <>
-                          <Body1 color="gray800" style={{ alignSelf: "flex-start" }}>
-                            {apiResponse?.response?.custom_theory_data?.theory_title ||
-                              custom.definitionText}
+                          <Body1
+                            color="gray800"
+                            style={{ alignSelf: "flex-start" }}
+                          >
+                            {apiResponse?.response?.custom_theory_data
+                              ?.theory_title || custom.definitionText}
                           </Body1>
                           <TextInfo>
                             <Body3 color="gray700" align="left">
@@ -205,8 +207,8 @@ const OrganismCustomization = ({
                             </Body3>
                             <TextBox>
                               <Body3 color="gray700">
-                                {apiResponse?.response?.custom_theory_data?.objective ||
-                                  custom.purposeText}
+                                {apiResponse?.response?.custom_theory_data
+                                  ?.objective || custom.purposeText}
                               </Body3>
                             </TextBox>
                           </TextInfo>
@@ -220,39 +222,65 @@ const OrganismCustomization = ({
                                   <Body3 color="gray700">{char}</Body3>
                                 </TextBox>
                               )
-                            ) || <Body3 color="gray700">특징이 없습니다.</Body3>}
+                            ) || (
+                              <Body3 color="gray700">특징이 없습니다.</Body3>
+                            )}
                           </TextInfo>
 
-                          <Caption2 color="gray500" style={{ alignSelf: "flex-start" }}>
-                            * 본 서비스는 B2C 페르소나를 타겟으로 진행되어, 질문문항이
-                            소비자 중심으로 되지 않았을 경우, 적합한 결과 도출이 나오지
-                            않을 수 있습니다.
+                          <Caption2
+                            color="gray500"
+                            style={{ alignSelf: "flex-start" }}
+                          >
+                            * 본 서비스는 B2C 페르소나를 타겟으로 진행되어,
+                            질문문항이 소비자 중심으로 되지 않았을 경우, 적합한
+                            결과 도출이 나오지 않을 수 있습니다.
                           </Caption2>
                           <Button
                             Medium
                             onClick={() => {
                               const generatedQuestions = {
                                 id: 4,
-                                theory_title: apiResponse?.response?.custom_theory_data?.theory_title || "",
-                                view_title: apiResponse?.response?.custom_theory_data?.theory_title || "",
-                                definition: apiResponse?.response?.custom_theory_data?.definition || "",
-                                objective: apiResponse?.response?.custom_theory_data?.objective || "",
-                                characteristic: apiResponse?.response?.custom_theory_data?.characteristic || [],
+                                theory_title:
+                                  apiResponse?.response?.custom_theory_data
+                                    ?.theory_title || "",
+                                view_title:
+                                  apiResponse?.response?.custom_theory_data
+                                    ?.theory_title || "",
+                                definition:
+                                  apiResponse?.response?.custom_theory_data
+                                    ?.definition || "",
+                                objective:
+                                  apiResponse?.response?.custom_theory_data
+                                    ?.objective || "",
+                                characteristic:
+                                  apiResponse?.response?.custom_theory_data
+                                    ?.characteristic || [],
                                 description: "사용자 커스텀 방법론" || "",
-                                custom_theory_data: apiResponse?.response?.custom_theory_data || "",
+                                custom_theory_data:
+                                  apiResponse?.response?.custom_theory_data ||
+                                  "",
                               };
                               console.log(generatedQuestions); // 생성된 질문을 콘솔에 로그
-
-                              setPurposeItemsSingle((prev) => {
-                                const updatedItems = [...prev];
-                                // 생성된 질문이 이미 존재하는지 확인
-                                if (!updatedItems.some(item => item.id === generatedQuestions.id)) {
-                                  updatedItems.push(generatedQuestions);
-                                }
-                                // 4개 항목으로 제한
-                                console.log(updatedItems); // 업데이트된 PURPOSE_ITEMS_SINGLE 로그
-                                return updatedItems.slice(0, 4);
-                              });
+                              if (purposeItemsSingleAtom.length < 4) {
+                                setPurposeItemsSingleAtom((prev) => {
+                                  const updatedItems = [...prev];
+                                  // 생성된 질문이 이미 존재하는지 확인
+                                  if (
+                                    !updatedItems.some(
+                                      (item) =>
+                                        item.id === generatedQuestions.id
+                                    )
+                                  ) {
+                                    updatedItems.push(generatedQuestions);
+                                  }
+                                  // 4개 항목으로 제한
+                                  console.log(
+                                    "🚀 ~ setPurposeItemsSingle ~ updatedItems:",
+                                    updatedItems
+                                  );
+                                  return updatedItems.slice(0, 4);
+                                });
+                              }
 
                               setShowResults(false); // 결과 숨기기
                               setShowCustomInterviewPurpose(true);
