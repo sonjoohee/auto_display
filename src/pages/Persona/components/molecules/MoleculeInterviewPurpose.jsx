@@ -65,6 +65,7 @@ const MoleculeInterviewPurpose = ({
 
     try {
       setIsLoadingQuestion(true);
+
       let data = {
         business_idea: businessAnalysis.input,
         business_analysis_data: {

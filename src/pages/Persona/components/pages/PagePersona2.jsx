@@ -1110,13 +1110,17 @@ const PagePersona2 = () => {
   };
 
   const handleStartInterview = () => {
+    console.log(selectedPersonas);
     // 선택된 페르소나들을 selected에 반영
     setPersonaList((prev) => ({
-      selected: selectedPersonas,
-      unselected: prev.unselected.filter(
-        (persona) => !selectedPersonas.includes(persona)
-      ),
+      selected: [],
+      unselected: filteredProjectList,
     }));
+
+    console.log(
+      "🚀 ~ setPersonaList ~ filteredProjectList:",
+      filteredProjectList
+    );
 
     setPersonaStep(3);
     setIsPersonaAccessible(true);
