@@ -70,7 +70,7 @@ import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
 import PopupWrap from "../../../../assets/styles/Popup";
 import OrganismToastPopup from "../organisms/OrganismToastPopup";
 import MoleculeInterviewPurpose from "../molecules/MoleculeInterviewPurpose.jsx";
-import MoleculeCustomization from "../molecules/MoleculeCustomization";
+import OrganismCustomization from "../organisms/OrganismCustomization.jsx";
 
 const FULL_DEFINITION_TEXT =
   "사용자 트렌드 민감도 분석은 사용자가 시장의 최신 트렌드에 얼마나 빠르고 효과적으로 반응하는지를 측정하는 방법론입니다. 이 분석은 사용자가 새로운 트렌드를 어떻게 인식하고, 그 트렌드에 따라 행동이 어떻게 변화하는지 파악하는 데 중점을 둡니다.";
@@ -449,7 +449,9 @@ const PagePersona3 = () => {
 
               <InterviewWayContent>
                 <div>
-                  <Body2 color="gray800" align="left">인터뷰 방법 선택</Body2>
+                  <Body2 color="gray800" align="left">
+                    인터뷰 방법 선택
+                  </Body2>
 
                   <CardGroupWrap>
                     <ListBoxItem active={selectedInterviewType === "multiple"}>
@@ -528,7 +530,9 @@ const PagePersona3 = () => {
                 </div>
 
                 <div>
-                  <Body2 color="gray800" align="left">인터뷰 목적</Body2>
+                  <Body2 color="gray800" align="left">
+                    인터뷰 목적
+                  </Body2>
 
                   {selectedInterviewType === "multiple" ? (
                     <InterviewSelect>
@@ -608,7 +612,7 @@ const PagePersona3 = () => {
                           </Button>
                         )}
 
-                        <MoleculeCustomization
+                        <OrganismCustomization
                           customizations={customizations}
                           setCustomizations={setCustomizations}
                           setShowPopup={setShowPopup}
