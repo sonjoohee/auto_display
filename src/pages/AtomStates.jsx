@@ -188,6 +188,8 @@ export const CUSTOMER_ADDITION_BUTTON_STATE = atom(0);
 export const TARGET_REPORT_BUTTON_STATE = atom(0);
 export const TARGET_SELECT_BUTTON_STATE = atom(0);
 
+export const PURPOSE_ITEMS_SINGLE = atom([]);
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* 아이디어 디벨로퍼 */
 
