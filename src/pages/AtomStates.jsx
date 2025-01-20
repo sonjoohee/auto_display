@@ -425,7 +425,7 @@ export const PERSONA_BUTTON_STATE_1 = atom(0);
 export const PERSONA_BUTTON_STATE_2 = atom(0);
 export const PERSONA_BUTTON_STATE_3 = atom(0);
 
-export const SELECTED_INTERVIEW_PURPOSE = atom("");
+// export const SELECTED_INTERVIEW_PURPOSE = atom("");
 export const CATEGORY_COLOR = atom({});
 
 export const PROJECT_LOAD_BUTTON_STATE = atom(false);
@@ -474,6 +474,18 @@ export const TYPES_LIST = atom({
   ],
   selected: [],
 });
+
+export const SELECTED_INTERVIEW_TYPE = atom({
+  key: "selectedInterviewType",
+  default: "",
+});
+
+export const SELECTED_INTERVIEW_PURPOSE = atom({
+  key: "selectedInterviewPurpose",
+  default: "",
+});
+
+export const SELECTED_INTERVIEW_PURPOSE_DATA = atom({});
 
 // setConversation([]);
 // setConversationStage(1);

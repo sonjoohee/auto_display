@@ -15,9 +15,11 @@ import {
   REQUEST_PERSONA_LIST,
   PROJECT_LOAD_BUTTON_STATE,
   PROJECT_ID,
+  SELECTED_INTERVIEW_TYPE,
+  SELECTED_INTERVIEW_PURPOSE_DATA,
   PURPOSE_ITEMS_SINGLE,
 } from "../../../AtomStates";
-import { SELECTED_INTERVIEW_TYPE } from "../../../../AtomStates";
+// import { SELECTED_INTERVIEW_TYPE } from "../../../../AtomStates";
 import {
   ContentsWrap,
   MainContent,
@@ -141,6 +143,8 @@ const PagePersona3 = () => {
   const [selectedInterviewType, setSelectedInterviewType] = useAtom(
     SELECTED_INTERVIEW_TYPE
   );
+  const [selectedInterviewPurposeData, setSelectedInterviewPurposeData] =
+    useAtom(SELECTED_INTERVIEW_PURPOSE_DATA);
   const [activeCategory, setActiveCategory] = useState(1);
   const [showInterview, setShowInterview] = useState(false);
   const [showInterviewReady, setShowInterviewReady] = useState(false);
@@ -410,6 +414,16 @@ const PagePersona3 = () => {
 
   // radio6 선택 핸들러 수정
   const handlePurposeSelect = (purpose) => {
+    const selectedPurpose = purposeItemsSingle.find(
+      (item) => item.id === purpose
+    );
+    console.log(
+      "🚀 ~ handlePurposeSelect ~ purpose:",
+      selectedPurpose?.view_title
+    );
+
+    setSelectedInterviewPurposeData(selectedPurpose);
+    // setSelectedInterviewPurpose(selectedPurpose?.view_title);
     setSelectedInterviewPurpose(purpose);
   };
 
@@ -564,7 +578,9 @@ const PagePersona3 = () => {
                           purpose={purpose}
                           selectedPurpose={selectedInterviewPurpose}
                           showQuestions={showQuestions}
-                          onPurposeSelect={handlePurposeSelect}
+                          onPurposeSelect={(view_title) =>
+                            handlePurposeSelect(view_title)
+                          }
                           toggleQuestions={(id) =>
                             setShowQuestions((prev) => ({
                               ...prev,
@@ -640,7 +656,11 @@ const PagePersona3 = () => {
                   Round
                   Fill
                   disabled={!selectedInterviewType || !selectedInterviewPurpose}
-                  onClick={() => navigate("/PersonaSelect")}
+                  onClick={() =>
+                    navigate(`/Persona/3/Select/${projectId}`, {
+                      replace: true,
+                    })
+                  }
                 >
                   다음
                   <img src={images.ChevronRight} alt="다음" />
