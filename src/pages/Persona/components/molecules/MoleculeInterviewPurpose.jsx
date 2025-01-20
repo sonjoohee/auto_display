@@ -14,6 +14,7 @@ import {
   REQUEST_PERSONA_LIST,
   PROJECT_LOAD_BUTTON_STATE,
   PROJECT_ID,
+  PURPOSE_ITEMS_SINGLE,
 } from "../../../AtomStates";
 import {
   ListBoxItem,
@@ -29,8 +30,10 @@ import { Body1, Body3, Caption1 } from "../../../../assets/styles/Typography";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import { RadioButton } from "../../../../assets/styles/InputStyle";
 
-import { InterviewXPersonaSingleInterviewGeneratorRequest } from "../../../../utils/indexedDB";
+import { InterviewXPersonaSingleInterviewGeneratorRequest, InterviewXPersonaSingleInterviewGeneratorRequestTheoryCustom } from "../../../../utils/indexedDB";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
+
+
 
 const MoleculeInterviewPurpose = ({
   purpose,
@@ -41,6 +44,7 @@ const MoleculeInterviewPurpose = ({
   setShowErrorPopup,
   regenerateCount,
   setRegenerateCount,
+  custom_theory_data,
 }) => {
   const [businessAnalysis] = useAtom(BUSINESS_ANALYSIS);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
@@ -50,6 +54,7 @@ const MoleculeInterviewPurpose = ({
   );
   const [isLoadingQuestion, setIsLoadingQuestion] = useState(false);
   const [showRegenerateButton, setShowRegenerateButton] = useState(false);
+  const [purposeItemsSingle] = useAtom(PURPOSE_ITEMS_SINGLE);
 
   const loadInterviewQuestion = async (title) => {
     setShowRegenerateButton(false);
@@ -65,25 +70,52 @@ const MoleculeInterviewPurpose = ({
 
     try {
       setIsLoadingQuestion(true);
-      let data = {
-        business_idea: businessAnalysis.input,
-        business_analysis_data: {
-          title: businessAnalysis.title,
-          characteristics: businessAnalysis.characteristics,
-          features: businessAnalysis.features,
-        },
-        theory_name: title,
-      };
 
-      console.log("API 요청 데이터:", data);
+      // let response = await fetchInterviewQuestions(data, purpose.id, isLoggedIn);
 
-      let response = await InterviewXPersonaSingleInterviewGeneratorRequest(
-        data,
-        isLoggedIn
-      );
+      let response = {}
+      if (purpose.id === 4) {
+        const generatedQuestions = purposeItemsSingle.find(item => item.id === 4);
 
-      console.log("API 응답:", response);
+        if (generatedQuestions) {
+          setSingleInterviewQuestionList((prev) => [...prev, generatedQuestions]);
 
+          // InterviewXPersonaSingleInterviewGeneratorRequestTheoryCustom에 data를 보냄
+          let data = {
+            business_idea: businessAnalysis.input,
+            business_analysis_data: {
+              title: businessAnalysis.title,
+              characteristics: businessAnalysis.characteristics,
+              features: businessAnalysis.features,
+            },
+            custom_theory_data: custom_theory_data,
+          };
+
+          console.log("API 요청 데이터:4:", data);
+
+          response =
+            await InterviewXPersonaSingleInterviewGeneratorRequestTheoryCustom(
+              data, // data를 그대로 사용
+              isLoggedIn
+            );
+
+          console.log("API 응답:", response);
+        }
+      } else if (purpose.id !== 4) {
+        let data = {
+          business_idea: businessAnalysis.input,
+          business_analysis_data: {
+            title: businessAnalysis.title,
+            characteristics: businessAnalysis.characteristics,
+            features: businessAnalysis.features,
+          },
+          theory_name: purpose.id === 4 ? custom_theory_data : title,
+        };
+
+        response = await InterviewXPersonaSingleInterviewGeneratorRequest(data, isLoggedIn);
+        console.log("API 응답:", response);
+      }
+      
       if (response.response) {
         const commonQuestions = response.response
           .filter((item) => item.question_type === "공통질문")
@@ -94,7 +126,7 @@ const MoleculeInterviewPurpose = ({
           .map((item) => item.question);
 
         const newQuestionData = {
-          theory_name: title,
+          theory_name: purpose.id === 4 ? custom_theory_data.theory_title : title,
           commonQuestions,
           specialQuestions,
         };
@@ -106,8 +138,6 @@ const MoleculeInterviewPurpose = ({
           console.log("업데이트된 상태:", newState);
           return newState;
         });
-
-        setSingleInterviewQuestionList((prev) => [...prev, newQuestionData]);
 
         await updateProjectOnServer(
           projectId,
