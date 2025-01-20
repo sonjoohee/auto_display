@@ -29,6 +29,7 @@ import {
   BUSINESS_ANALYSIS,
   SINGLE_INTERVIEW_QUESTION_LIST,
   PURPOSE_ITEMS_SINGLE,
+  IS_LOADING_QUESTION,
 } from "../../../AtomStates";
 
 const OrganismCustomization = ({
@@ -38,18 +39,19 @@ const OrganismCustomization = ({
   setShowNewListBox,
   setShowCustomization,
   setShowCustomButton,
+  setShowQuestions,
 }) => {
   const [projectId] = useAtom(PROJECT_ID);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [businessAnalysis] = useAtom(BUSINESS_ANALYSIS);
+  const [purposeItemsSingleAtom, setPurposeItemsSingleAtom] =
+    useAtom(PURPOSE_ITEMS_SINGLE);
   const [singleInterviewQuestionList, setSingleInterviewQuestionList] = useAtom(
     SINGLE_INTERVIEW_QUESTION_LIST
   );
-  const [purposeItemsSingleAtom, setPurposeItemsSingleAtom] =
-    useAtom(PURPOSE_ITEMS_SINGLE);
-
+  const [isLoadingQuestion, setIsLoadingQuestion] =
+    useAtom(IS_LOADING_QUESTION);
   const [apiResponse, setApiResponse] = useState(null);
-  const [showQuestions, setShowQuestions] = useState({});
   const [selectedPurpose, setSelectedPurpose] = useState(null);
   const [regenerateCount, setRegenerateCount] = useState(0);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
@@ -59,7 +61,8 @@ const OrganismCustomization = ({
   const [showResults, setShowResults] = useState(true);
   const [showOrganismCustomization, setShowOrganismCustomization] =
     useState(true);
-  // const [loadInterviewQuestions, setLoadInterviewQuestions] = useState(null); // 상태 추가
+  const [selectedTheory, setSelectedTheory] = useState(null);
+  const [customTheoryData, setCustomTheoryData] = useState(null);
 
   const handleEditComplete = (index) => {
     const newCustomizations = [...customizations];
@@ -70,8 +73,6 @@ const OrganismCustomization = ({
     newCustomizations[index].isEditing = false;
     setCustomizations(newCustomizations);
   };
-  const [isLoadingQuestion, setIsLoadingQuestion] = useState(false);
-  const [customTheoryData, setCustomTheoryData] = useState(null);
 
   const handlePurposeGeneration = async (custom, index) => {
     try {
@@ -114,16 +115,96 @@ const OrganismCustomization = ({
     }
   };
 
-  const handleGenerateQuestions = (title) => {
+  const handleGenerateQuestions = async (title) => {
     try {
-      // 여기서 질문 생성 로직을 추가합니다.
-      if (loadInterviewQuestions) {
-        loadInterviewQuestions(title); // MoleculeInterviewPurpose의 함수를 호출
-      } else {
-        console.error("loadInterviewQuestions is not defined");
+      // 1. 로딩 상태 설정
+      setIsLoadingQuestion(true);
+
+      // 2. 카드 열기
+      setShowQuestions((prev) => ({
+        ...prev,
+        4: true,
+      }));
+
+      // 3. PURPOSE_ITEMS_SINGLE 업데이트
+      const generatedQuestions = {
+        id: 4,
+        theory_title: customTheoryData.theory_title,
+        view_title: customTheoryData.theory_title,
+        definition: customTheoryData.definition,
+        objective: customTheoryData.objective,
+        characteristic: customTheoryData.characteristic || [],
+        description: "사용자 커스텀 방법론",
+        custom_theory_data: customTheoryData,
+      };
+
+      await setPurposeItemsSingleAtom((prev) => {
+        const updatedItems = prev.filter((item) => item.id !== 4);
+        return [...updatedItems, generatedQuestions];
+      });
+
+      // 4. OrganismCustomization 닫기
+      setShowOrganismCustomization(false);
+
+      // 5. API 호출
+      const data = {
+        business_idea: businessAnalysis.input,
+        business_analysis_data: {
+          title: businessAnalysis.title,
+          characteristics: businessAnalysis.characteristics,
+          features: businessAnalysis.features,
+        },
+        custom_theory_data: customTheoryData,
+      };
+
+      const result =
+        await InterviewXPersonaSingleInterviewGeneratorRequestTheoryCustom(
+          data,
+          true
+        );
+
+      if (result?.response) {
+        const commonQuestions = result.response
+          .filter((item) => item.question_type === "공통질문")
+          .map((item) => item.question);
+
+        const specialQuestions = result.response
+          .filter((item) => item.question_type === "특화질문")
+          .map((item) => item.question);
+
+        const newQuestionList = {
+          theory_name: customTheoryData.theory_title,
+          commonQuestions,
+          specialQuestions,
+        };
+
+        await setSingleInterviewQuestionList((prev) => {
+          const filtered = prev.filter(
+            (item) => item.theory_name !== customTheoryData.theory_title
+          );
+          return [...filtered, newQuestionList];
+        });
+
+        await updateProjectOnServer(
+          projectId,
+          {
+            singleInterviewQuestionList: [
+              ...singleInterviewQuestionList,
+              newQuestionList,
+            ],
+          },
+          isLoggedIn
+        );
       }
     } catch (error) {
       console.error("Error in handleGenerateQuestions:", error);
+      setShowErrorPopup(true);
+      setShowQuestions((prev) => ({
+        ...prev,
+        4: false,
+      }));
+    } finally {
+      setIsLoadingQuestion(false);
     }
   };
 
@@ -259,12 +340,12 @@ const OrganismCustomization = ({
                                 custom_theory_data:
                                   apiResponse?.response?.custom_theory_data ||
                                   "",
+                                isQuestionVisible: true,
                               };
-                              console.log(generatedQuestions); // 생성된 질문을 콘솔에 로그
+
                               if (purposeItemsSingleAtom.length < 4) {
                                 setPurposeItemsSingleAtom((prev) => {
                                   const updatedItems = [...prev];
-                                  // 생성된 질문이 이미 존재하는지 확인
                                   if (
                                     !updatedItems.some(
                                       (item) =>
@@ -273,19 +354,14 @@ const OrganismCustomization = ({
                                   ) {
                                     updatedItems.push(generatedQuestions);
                                   }
-                                  // 4개 항목으로 제한
-                                  console.log(
-                                    "🚀 ~ setPurposeItemsSingle ~ updatedItems:",
-                                    updatedItems
-                                  );
                                   return updatedItems.slice(0, 4);
                                 });
                               }
 
-                              setShowResults(false); // 결과 숨기기
-                              setShowCustomInterviewPurpose(true);
-                              setCurrentPurposeData(generatedQuestions);
-                              setShowOrganismCustomization(false); // 전체 컴포넌트 숨기기
+                              handleGenerateQuestions(
+                                generatedQuestions.theory_title
+                              );
+                              setShowOrganismCustomization(false);
                             }}
                           >
                             문항 생성
@@ -298,31 +374,6 @@ const OrganismCustomization = ({
               )}
             </div>
           ))}
-        </>
-      )}
-
-      {showCustomInterviewPurpose && currentPurposeData && (
-        <>
-          {console.log("MoleculeInterviewPurpose is being rendered")}
-          <MoleculeInterviewPurpose
-            key={currentPurposeData.id}
-            purpose={currentPurposeData}
-            selectedPurpose={selectedPurpose}
-            onPurposeSelect={(id) => setSelectedPurpose(id)}
-            toggleQuestions={(id) =>
-              setShowQuestions((prev) => ({
-                ...prev,
-                [id]: !prev[id],
-              }))
-            }
-            showQuestions={showQuestions}
-            loadInterviewQuestion={loadInterviewQuestions}
-            onGenerateQuestions={(title) => handleGenerateQuestions(title)}
-            setShowErrorPopup={setShowErrorPopup}
-            regenerateCount={regenerateCount}
-            setRegenerateCount={setRegenerateCount}
-            custom_theory_data={currentPurposeData.custom_theory_data}
-          />
         </>
       )}
 

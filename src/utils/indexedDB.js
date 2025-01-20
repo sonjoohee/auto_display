@@ -812,3 +812,105 @@ export const getTermkeyResult = async (termkey) => {
     throw error;
   }
 };
+
+//1:N 인터뷰 커스텀 방법론 질문 생성
+export const InterviewXPersonaMultipleInterviewGeneratorRequest = async (
+  data,
+  isLoggedIn
+) => {
+  console.log("1:N 인터뷰 방법론 질문 생성 요청 시작  - 입력 데이터:", data);
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    console.log("API 요청 시작...");
+    const response = await axios.post(
+      "https://wishresearch.kr/person/persona_interview",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    console.log(`${response.data.time}ms 후 결과 조회 예정...`);
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    console.log("termkey 결과 조회 시작:", response.data.objectId);
+    const result = await getTermkeyResult(response.data.objectId);
+    console.log("최종 결과:", result);
+    return result;
+  } catch (error) {
+    console.error(
+      "1:1 인터뷰 커스텀 방법론 질문 생성 처리 중 오류 발생:",
+      error
+    );
+    console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+//1:N 인터뷰
+export const InterviewXPersonaMultipleInterviewRequest = async (
+  data,
+  isLoggedIn
+) => {
+  console.log("1:N 인터뷰 방법론 질문 생성 요청 시작  - 입력 데이터:", data);
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    console.log("API 요청 시작...");
+    const response = await axios.post(
+      "https://wishresearch.kr/person/persona_interview_module",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    console.log(`${response.data.time}ms 후 결과 조회 예정...`);
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    console.log("termkey 결과 조회 시작:", response.data.objectId);
+    const result = await getTermkeyResult(response.data.objectId);
+    console.log("최종 결과:", result);
+    return result;
+  } catch (error) {
+    console.error(
+      "1:1 인터뷰 커스텀 방법론 질문 생성 처리 중 오류 발생:",
+      error
+    );
+    console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+  }
+};

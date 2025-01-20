@@ -1019,7 +1019,8 @@ const PagePersona2 = () => {
     if (
       activeTab === "business" &&
       activeTabTlick &&
-      selectedTypes.length < 4
+      selectedTypes.length < 4 &&
+      allBusinessPersonas.length === 0
     ) {
       setActiveTabTlick(false);
 

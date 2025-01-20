@@ -37,10 +37,12 @@ import {
   INTERVIEW_REPORT_ADDITIONAL,
   IS_PERSONA_ACCESSIBLE,
   SELECTED_PERSONA_LIST,
+  SELECTED_INTERVIEW_PURPOSE_DATA,
 } from "../../../../pages/AtomStates";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import { createProjectReportOnServer } from "../../../../utils/indexedDB";
 import MoleculeRecreate from "../../../../pages/Persona/components/molecules/MoleculeRecreate";
+import { InterviewXPersonaMultipleInterviewGeneratorRequest } from "../../../../utils/indexedDB";
 
 const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
   const [selectedPersonaList, setSelectedPersonaList] = useAtom(
@@ -69,7 +71,8 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
     INTERVIEW_QUESTION_LIST
   );
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
-
+  const [selectedInterviewPurposeData, setSelectedInterviewPurposeData] =
+    useAtom(SELECTED_INTERVIEW_PURPOSE_DATA);
   const navigate = useNavigate();
 
   const [active, setActive] = useState(isActive);
@@ -203,12 +206,16 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             theory_name: selectedInterviewPurpose,
           };
 
-          let response = await axios.post(
-            "https://wishresearch.kr/person/persona_interview",
-            data,
-            axiosConfig
-          );
-
+          // let response = await axios.post(
+          //   "https://wishresearch.kr/person/persona_interview",
+          //   data,
+          //   axiosConfig
+          // );
+          let response =
+            await InterviewXPersonaMultipleInterviewGeneratorRequest(
+              data,
+              isLoggedIn
+            );
           let questionList = response.data; //응답 반환하는 부분 (질문 받아옴)
           let retryCount = 0;
           const maxRetries = 10;
@@ -217,11 +224,15 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             retryCount < maxRetries &&
             (!response || !response.data || response.data.length !== 5)
           ) {
-            response = await axios.post(
-              //인터뷰 질문 생성 api
-              "https://wishresearch.kr/person/persona_interview",
+            // response = await axios.post(
+            //   //인터뷰 질문 생성 api
+            //   "https://wishresearch.kr/person/persona_interview",
+            //   data,
+            //   axiosConfig
+            // );
+            response = await InterviewXPersonaMultipleInterviewGeneratorRequest(
               data,
-              axiosConfig
+              isLoggedIn
             );
             retryCount++;
             questionList = response.data;

@@ -170,7 +170,17 @@ const PagePersona3 = () => {
     setShowInterviewReady(false);
     setShowToast(false);
   };
+  const handleSelectPersona = () => {
+    // 선택된 페르소나들을 selected에 반영
+    // setPersonaList((prev) => ({
+    //   selected: [],
+    //   unselected: filteredProjectList,
+    // }));
 
+    setPersonaStep(3);
+    setIsPersonaAccessible(true);
+    navigate(`/Persona/3/Select/${projectId}`, { replace: true });
+  };
   // const [isLoadingPage, setIsLoadingPage] = useState(true);
 
   const [steps, setSteps] = useState([
@@ -644,6 +654,7 @@ const PagePersona3 = () => {
                           setShowNewListBox={setShowNewListBox}
                           setShowCustomization={setShowCustomization}
                           setShowCustomButton={setShowCustomButton}
+                          setShowQuestions={setShowQuestions}
                         />
                       </CustomizationWrap>
                     </CardGroupWrap>
@@ -676,11 +687,7 @@ const PagePersona3 = () => {
                   Round
                   Fill
                   disabled={!selectedInterviewType || !selectedInterviewPurpose}
-                  onClick={() =>
-                    navigate(`/Persona/3/Select/${projectId}`, {
-                      replace: true,
-                    })
-                  }
+                  onClick={handleSelectPersona}
                 >
                   다음
                   <img src={images.ChevronRight} alt="다음" />
