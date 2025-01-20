@@ -407,7 +407,7 @@ const PageStyleGuide  = () => {
             수정하기 : PencilSquare<br />
             이전으로 되돌리기 : ClockCounterclockwise<br />
             AI로 다듬기 : MagicStick<br />
-            인터뷰 스크립트 보기 : MagicStick<br />
+            인터뷰 스크립트 보기 : ReportSearch<br />
             결과리포트 리스트 : BoxArrowUpRight<br />
             구독 플랜 관리 : CalendarCheck<br />
             고객 서비스 : Headset

@@ -25,18 +25,13 @@ import {
 } from "../../../AtomStates";
 import {
   ContentsWrap,
-  Title,
   MainContent,
   AnalysisWrap,
   MainSection,
-  Persona,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
-import { H2, H4, Body1, Body2_1, Body3, Sub1, Sub3, Caption1, Caption2 } from "../../../../assets/styles/Typography";
 import Header from "../molecules/MoleculeHeader";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
-import personaImages from "../../../../assets/styles/PersonaImages";
-import { Button } from "../../../../assets/styles/ButtonStyle";
 // import Sidebar from "../../../Design_Page/IncSidebar";
 import IncNavigation from "../organisms/OrganismIncNavigation";
 import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
@@ -92,7 +87,6 @@ const PagePersona4 = () => {
   const [openCard, setOpenCard] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const cardRef = useRef(null);
-  const [showInsightCards, setShowInsightCards] = useState(false);
 
   const [steps, setSteps] = useState([
     { number: 1, label: "비즈니스 분석", active: true },
@@ -299,7 +293,7 @@ const PagePersona4 = () => {
 
   const handleSlide = (direction) => {
     const cards = document.querySelectorAll(".find-card > div > div");
-    const cardWidth = 718;
+    const cardWidth = 311;
     const maxSlide = Math.max(0, cards.length - 2);
 
     if (direction === "next" && currentSlide < maxSlide) {
@@ -438,31 +432,25 @@ const PagePersona4 = () => {
 
         <Header />
 
-        <MainContent Wide>
+        <MainContent>
           <AnalysisWrap>
             <MainSection>
-              {/* <OrganismBusinessAnalysis personaStep={4} /> */}
+              <OrganismBusinessAnalysis personaStep={4} />
 
               <InterviewReport>
                 <div>
                   <ReportHeader>
-                    <Title>
-                      <H2>{selectedInterviewPurpose || "인터뷰"} 결과 리포트</H2>
-                      <Button Primary onClick={handleEnterInterviewRoom}>
-                        <img src={images.ReportSearch} alt="인터뷰 스크립트 보기" />
-                        인터뷰 스크립트 보기
-                      </Button>
-                    </Title>
-                    {/* <p>
+                    <h3>{selectedInterviewPurpose || "인터뷰"} 결과 리포트</h3>
+                    <p>
                       {getInterviewPurposeDescription(
                         selectedInterviewPurpose || ""
                       )}
-                    </p> */}
+                    </p>
                   </ReportHeader>
 
                   <ReportContent>
                     <div>
-                      <H4>1. 조사 방법 및 범위</H4>
+                      <h3>1. 조사 방법 및 범위</h3>
                       <UlList Disc>
                         <li>조사 방법 : 여러 페르소나와 인터뷰 (1:N)</li>
                         <li>조사 대상 : {interviewReport?.[0]?.text}</li>
@@ -470,14 +458,7 @@ const PagePersona4 = () => {
                     </div>
 
                     <div>
-                      <H4>2. 조사 목적</H4>
-                      <UlList Disc Spacing>
-                        <li>제품이 고객에게 어떤 가치를 전달하고 있는지, 소비자들이 느끼는 장점과 개선점을 세심히 파악하기 위해 진행되었습니다. 이를 통해 제품에 대한 긍정적인 경험을 더욱 확장하고, 고객 만족과 구매 전환율을 높이는 데 기여하고자 합니다.</li>
-                      </UlList>
-                    </div>
-
-                    <div>
-                      <h3>3. 주요 인사이트</h3>
+                      <h3>2. 주요 인사이트</h3>
                       <UlList Disc Spacing>
                         <li>
                           {
@@ -497,13 +478,13 @@ const PagePersona4 = () => {
                     <div>
                       <h3>
                         3. 문항별 결과
-                        {/* <span onClick={handleEnterInterviewRoom}>
+                        <span onClick={handleEnterInterviewRoom}>
                           <img
                             src={images.ReportSearch}
                             alt="인터뷰 스크립트 보기"
                           />
                           인터뷰 스크립트 보기
-                        </span> */}
+                        </span>
                       </h3>
 
                       <ResultAccordion>
@@ -512,19 +493,20 @@ const PagePersona4 = () => {
                           isOpen={openAccordion === 1}
                         >
                           <span>1</span>
-                          <Body1 color="gray800">
+                          <p>
                             {existingQuestions?.questions[2]?.question ||
                               interviewData[0]?.question_1}
-                          </Body1>
+                          </p>
                         </AccordionHeader>
 
                         {openAccordion === 1 && (
                           <AccordionContent>
                             <div className="title">
-                              <Sub1 color="gray800">인터뷰 핵심 키워드</Sub1>
-                              <Caption2 color="gray700">
-                                응답자의 의견을 바탕으로 키워드 빈도수를 분석해 문항별 인사이트를 도출했습니다.
-                              </Caption2>
+                              <strong>인터뷰 핵심 키워드</strong>
+                              <p>
+                                응답자의 의견을 바탕으로 키워드 빈도수를 분석해
+                                문항별 인사이트를 도출했습니다.
+                              </p>
                             </div>
 
                             <BubbleChart
@@ -535,20 +517,20 @@ const PagePersona4 = () => {
                             />
 
                             <BgInside>
-                              <Body1 color="gray800">인터뷰 인사이트</Body1>
+                              <strong>인터뷰 인사이트</strong>
                               <div>
-                                <Body3 color="gray800">
+                                <p>
                                   {
                                     interviewReport?.[2]?.content?.[0]
                                       ?.question_insight?.[0]?.text
                                   }
-                                </Body3>
-                                <Body3 color="gray800">
+                                </p>
+                                <p>
                                   {
                                     interviewReport?.[2]?.content?.[0]
                                       ?.question_insight?.[1]?.text
                                   }
-                                </Body3>
+                                </p>
                               </div>
                             </BgInside>
                           </AccordionContent>
@@ -570,11 +552,11 @@ const PagePersona4 = () => {
                         {openAccordion === 2 && (
                           <AccordionContent>
                             <div className="title">
-                              <Sub1 color="gray800">인터뷰 핵심 키워드</Sub1>
-                              <Caption2 color="gray700">
+                              <strong>인터뷰 핵심 키워드</strong>
+                              <p>
                                 응답자의 의견을 바탕으로 키워드 빈도수를 분석해
                                 문항별 인사이트를 도출했습니다.
-                              </Caption2>
+                              </p>
                             </div>
 
                             <BubbleChart
@@ -585,20 +567,20 @@ const PagePersona4 = () => {
                             />
 
                             <BgInside>
-                              <Body1 color="gray800">인터뷰 인사이트</Body1>
+                              <strong>인터뷰 인사이트</strong>
                               <div>
-                                <Body3 color="gray800">
+                                <p>
                                   {
                                     interviewReport?.[2]?.content?.[1]
                                       ?.question_insight?.[0]?.text
                                   }
-                                </Body3>
-                                <Body3 color="gray800">
+                                </p>
+                                <p>
                                   {
                                     interviewReport?.[2]?.content?.[1]
                                       ?.question_insight?.[1]?.text
                                   }
-                                </Body3>
+                                </p>
                               </div>
                             </BgInside>
                           </AccordionContent>
@@ -611,20 +593,20 @@ const PagePersona4 = () => {
                           isOpen={openAccordion === 3}
                         >
                           <span>3</span>
-                          <Body1 color="gray800">
+                          <p>
                             {existingQuestions?.questions[4]?.question ||
                               interviewData[2]?.question_3}
-                          </Body1>
+                          </p>
                         </AccordionHeader>
 
                         {openAccordion === 3 && (
                           <AccordionContent>
                             <div className="title">
-                              <Sub1 color="gray800">인터뷰 핵심 키워드</Sub1>
-                              <Caption2 color="gray700">
+                              <strong>인터뷰 핵심 키워드</strong>
+                              <p>
                                 응답자의 의견을 바탕으로 키워드 빈도수를 분석해
                                 문항별 인사이트를 도출했습니다.
-                              </Caption2>
+                              </p>
                             </div>
 
                             <BubbleChart
@@ -635,20 +617,20 @@ const PagePersona4 = () => {
                             />
 
                             <BgInside>
-                              <Body1 color="gray800">인터뷰 인사이트</Body1>
+                              <strong>인터뷰 인사이트</strong>
                               <div>
-                                <Body3 color="gray800">
+                                <p>
                                   {
                                     interviewReport?.[2]?.content?.[2]
                                       ?.question_insight?.[0]?.text
                                   }
-                                </Body3>
-                                <Body3 color="gray800">
+                                </p>
+                                <p>
                                   {
                                     interviewReport?.[2]?.content?.[2]
                                       ?.question_insight?.[1]?.text
                                   }
-                                </Body3>
+                                </p>
                               </div>
                             </BgInside>
                           </AccordionContent>
@@ -661,82 +643,65 @@ const PagePersona4 = () => {
                 <div></div>
               </InterviewReport>
 
-              {!showInsightCards ? (
-                <InterviewInsight onClick={() => setShowInsightCards(!showInsightCards)}>
-                  <img src={images.KeyCircle} alt="인터뷰 인사이트" />
-
+              <InterviewFind>
+                <FindTitle>
+                  <h3>💡 인터뷰로 이런 걸 발견했어요 !</h3>
                   <div>
-                    <H4 color="gray700">인터뷰 내용에 대해 비즈니스 분야별 인사이트를 확인하세요</H4>
-                    <Body3 color="gray500">
-                      여러가지 정보를 확인 하고 싶으시면 클릭해 보세요!
-                    </Body3>
-                  </div>                
-                </InterviewInsight>
-              ) : (
-                <InterviewFind>
-                  <FindCardButton>
                     <span
                       className="prev"
                       onClick={() => handleSlide("prev")}
-                      style={{ opacity: currentSlide === 0 ? 1 : 1 }}
+                      style={{ opacity: currentSlide === 0 ? 0.4 : 1 }}
                     />
                     <span
                       className="next"
                       onClick={() => handleSlide("next")}
-                      style={{ opacity: currentSlide === 3 ? 1 : 1 }}
+                      style={{ opacity: currentSlide === 3 ? 0.4 : 1 }}
                     />
-                  </FindCardButton>
+                  </div>
+                </FindTitle>
 
-                  <FindCard className="find-card">
-                    <CardWrap
-                      ref={cardRef}
-                      style={{
-                        display: "flex",
-                        // gap: "16px",
-                        transition: "transform 0.3s ease-in-out",
-                      }}
-                    >
-                      {getCardData(
-                        interviewReportAdditional?.suggestion_list || []
-                      ).map((item, index) => (
-                        <Card key={index} onClick={() => handleCardClick(index)}>
-                          {openCard !== index ? (
-                            <>
-                              <CardDescription>
-                                <H4 color="gray800">{item.title}</H4>
-                                <Body3 color="gray700">{item.description}</Body3>
-                              </CardDescription>
-                              <CardIcon>
-                                <img src={item.icon} />
-                              </CardIcon>
-                              {/* <CardBadge text={item.badge.text}>
-                                <span>{item.badge.icon}</span>
-                                {item.badge.text}
-                              </CardBadge> 
-                              <CardTitle>{item.title}</CardTitle>*/}
-                            </>
-                          ) : (
-                            <>
-                              <CardDescription>
-                                <H4 color="gray800">{item.title}</H4>
-                                <Body3 color="gray700">{item.description}</Body3>
-                              </CardDescription>
-                                <CardIcon>
-                                <img src={item.icon} />
-                              </CardIcon>
-                            </>
-                          )}
-                        </Card>
-                      ))}
-                    </CardWrap>
-                  </FindCard>
-                </InterviewFind>
-              )}
+                <FindCard className="find-card">
+                  <div
+                    ref={cardRef}
+                    style={{
+                      display: "flex",
+                      gap: "16px",
+                      transition: "transform 0.3s ease-in-out",
+                    }}
+                  >
+                    {getCardData(
+                      interviewReportAdditional?.suggestion_list || []
+                    ).map((item, index) => (
+                      <Card key={index} onClick={() => handleCardClick(index)}>
+                        {openCard !== index ? (
+                          <>
+                            <CardIcon>
+                              <img src={item.icon} />
+                            </CardIcon>
+                            <CardBadge text={item.badge.text}>
+                              <span>{item.badge.icon}</span>
+                              {item.badge.text}
+                            </CardBadge>
+                            <CardTitle>{item.title}</CardTitle>
+                          </>
+                        ) : (
+                          <CardDescription>
+                            <strong>{item.title}</strong>
+                            <p>{item.description}</p>
+                          </CardDescription>
+                        )}
+                      </Card>
+                    ))}
+                  </div>
+                </FindCard>
+              </InterviewFind>
             </MainSection>
 
             <SidebarWrap>
-              {/* <Sidebar>
+              <Sidebar>
                 <h5>Key Insight</h5>
+
+            
                 <ProgressBar>
                   <span className="icon">🚀</span>
                   <Progress progress={100} />
@@ -744,54 +709,9 @@ const PagePersona4 = () => {
                 </ProgressBar>
 
                 <MoleculeStepIndicator steps={steps} activeStep={5} />
-              </Sidebar> */}
-
-              <Sidebar>
-                <PersonaInfoWrap>
-                  <PersonaInfoTitle>
-                    <Body2_1 color="gray800" align="left">참여페르소나 정보</Body2_1>
-                    <Sub3 color="gray700" align="left">
-                      1명의 페르소나가 참여했어요
-                    </Sub3>
-                  </PersonaInfoTitle>
-
-                  <PersonaInfoContent>
-                    <Persona color="Linen" size="Large" Round>
-                      <img src={personaImages.PersonaWomen01} alt="페르소나" />
-                    </Persona>
-                    <PersonaText>
-                      <Caption1 color="gray800" align="left">
-                        꼼꼼한 계획형 자산 관리 성향
-                      </Caption1>
-                      <PersonaInfo>
-                        <span>여성</span>
-                        <span>25세</span>
-                        <span>직업</span>
-                      </PersonaInfo>
-                    </PersonaText>
-                  </PersonaInfoContent>
-
-                  <Button Medium PrimaryLightest Fill>
-                    같은 페르소나에게 다른 질문하기
-                  </Button>
-                </PersonaInfoWrap>
-
-                <WaitPersonaWrap>
-                  <WaitPersonaTitle>
-                    <Body2_1 color="gray800" align="left">👀 기다리는 페르소나가 있어요</Body2_1>
-                    <Sub3 color="gray700" align="left">
-                      지금 바로 인터뷰가 가능한 12명의 페르소나가 인터뷰를 기다리고 있어요 
-                    </Sub3>
-                  </WaitPersonaTitle>
-                  
-                  <Button Medium PrimaryLightest Fill>
-                    <img src={images.ListUserSearch} alt="" />
-                    비즈니스 페르소나 보러가기
-                  </Button>
-                </WaitPersonaWrap>
               </Sidebar>
 
-              {/* <SidebarBottom>
+              <SidebarBottom>
                 <strong>
                   다른 페르소나의 이야기가 궁금하시다면,
                   <br />
@@ -801,7 +721,7 @@ const PagePersona4 = () => {
                 <span onClick={navigateToPersonaPage}>
                   맞춤 페르소나 보러가기
                 </span>
-              </SidebarBottom> */}
+              </SidebarBottom>
             </SidebarWrap>
 
             {showToast && (
@@ -856,6 +776,8 @@ const ReportContent = styled.div`
   width: 100%;
   text-align: left;
   margin-top: 40px;
+  padding-top: 40px;
+  border-top: 1px solid ${palette.outlineGray};
 
   > div {
     display: flex;
@@ -1010,10 +932,15 @@ const BgInside = styled.div`
   border-radius: 10px;
   background: ${palette.chatGray};
 
+  strong {
+    font-weight: 600;
+  }
+
   div {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    font-weight: 300;
 
     p + p {
       padding-top: 8px;
@@ -1022,32 +949,7 @@ const BgInside = styled.div`
   }
 `;
 
-const InterviewInsight = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  width: 100%;
-  padding: 32px 32px 44px;
-  border-radius: 10px;
-  background: ${palette.gray50};
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background: ${palette.chatGray};
-  }
-
-  > div {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-`;
-
 const InterviewFind = styled.div`
-  position: relative;
   width: 100%;
   height: 100%;
   display: inline-flex;
@@ -1056,18 +958,6 @@ const InterviewFind = styled.div`
   align-items: flex-start;
   gap: 20px;
   margin-bottom: 140px;
-  animation: slideDown 0.5s ease-out;
-
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
 `;
 
 const FindTitle = styled.div`
@@ -1084,110 +974,98 @@ const FindTitle = styled.div`
     line-height: 1.3;
     text-align: left;
   }
+
+  div {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    span {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1px solid ${palette.outlineGray};
+      background: ${palette.white};
+      cursor: pointer;
+
+      &:before {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 10px;
+        height: 2px;
+        border-radius: 50%;
+        background: ${palette.gray800};
+        content: "";
+      }
+
+      &.prev {
+        transform: rotate(180deg);
+      }
+
+      &:after {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%) rotate(45deg);
+        width: 9px;
+        height: 9px;
+        border-right: 2px solid ${palette.gray800};
+        border-top: 2px solid ${palette.gray800};
+        content: "";
+      }
+    }
+  }
 `;
 
 const FindCard = styled.div`
-  position: relative;
   display: flex;
   width: 100%;
   max-width: 718px;
   overflow: hidden;
   position: relative;
+
+  > div {
+    display: flex;
+    gap: 16px;
+    transition: transform 0.3s ease-in-out;
+    flex-shrink: 0;
+  }
 `;
 
-const FindCardButton = styled.div`
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+const Card = styled.div`
+  width: 295px;
+  min-width: 295px;
+  height: 320px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  width: 100%;
-  z-index: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-shrink: 0;
+  gap: 16px;
+  padding: 24px;
+  border-radius: 15px;
+  background: ${palette.chatGray};
+  cursor: pointer;
+  transition: all 0.5s;
 
-  span {
-    position: relative;
-    right: -10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    // border: 1px solid ${palette.outlineGray};
-    // background: ${palette.white};
-    background: ${palette.chatGray};
-    cursor: pointer;
+  &:hover {
+    background: ${palette.outlineGray};
+  }
 
-    &:before {
-      position: absolute;
-      right: 5px;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      width: 10px;
-      height: 2px;
-      border-radius: 50%;
-      background: ${palette.gray800};
-      // content: "";
-    }
-
-    &.prev {
-      left: -15px;
-      transform: rotate(180deg);
-    }
-
-    &:after {
-      position: absolute;
-      // left: 50%;
-      left: 45%;
-      top: 50%;
-      transform: translate(-50%, -50%) rotate(45deg);
-      width: 9px;
-      height: 9px;
-      border-right: 2px solid ${palette.gray500};
-      border-top: 2px solid ${palette.gray500};
-      content: "";
+  &:hover {
+    img {
+      filter: brightness(120%);
     }
   }
 `;
 
-const CardWrap = styled.div`
-  display: flex;
-  // gap: 16px;
-  transition: transform 0.3s ease-in-out;
-  flex-shrink: 0;
-`;
-
-const Card = styled.div`
-  // width: 295px;
-  max-width: 718px;
-  height: 250px;
-  display: flex;
-  // flex-direction: column;
-  align-items: center;
-  flex-shrink: 0;
-  gap: 32px;
-  padding: 32px;
-  border-radius: 10px;
-  border: 1px solid ${palette.outlineGray};
-  // background: ${palette.chatGray};
-  cursor: pointer;
-  transition: all 0.5s;
-
-  // &:hover {
-  //   background: ${palette.outlineGray};
-  // }
-
-  // &:hover {
-  //   img {
-  //     filter: brightness(120%);
-  //   }
-  // }
-`;
-
 const CardIcon = styled.div`
-  // align-self: flex-end;
+  align-self: flex-end;
   transition: all 0.5s;
 `;
 
@@ -1310,7 +1188,7 @@ const CardDescription = styled.div`
       border-right: 2px solid ${palette.gray500};
       border-bottom: 2px solid ${palette.gray500};
       transform: rotate(45deg);
-      // content: "";
+      content: "";
     }
   }
 `;
@@ -1321,8 +1199,8 @@ const SidebarWrap = styled.div`
   display: flex;
   flex-direction: column;
   align-self: flex-start;
-  gap: 20px;
-  // margin-top: 44px;
+  gap: 16px;
+  margin-top: 44px;
 `;
 
 const Sidebar = styled.div`
@@ -1333,10 +1211,10 @@ const Sidebar = styled.div`
   align-self: flex-start;
   gap: 16px;
   width: 290px;
-  // padding: 16px 20px;
-  // margin-top: 44px;
-  // border-radius: 10px;
-  // background: ${palette.chatGray};
+  padding: 16px 20px;
+  margin-top: 44px;
+  border-radius: 10px;
+  background: ${palette.chatGray};
 
   h5 {
     font-size: 0.88rem;
@@ -1345,69 +1223,6 @@ const Sidebar = styled.div`
     color: ${palette.gray700};
     text-align: left;
   }
-`;
-
-const PersonaInfoWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 100%;
-  padding: 20px 20px 12px;
-  border-radius: 10px;
-  border: 1px solid ${palette.outlineGray};
-`;
-
-const PersonaInfoTitle = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  width: 100%;
-`;
-
-const PersonaInfoContent = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-`;
-
-const PersonaText = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  width: 100%;
-`;
-
-const PersonaInfo = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 6px;
-  width: 100%;
-
-  span {
-    font-size: 0.75rem;
-    line-height: 1.3;
-    color: ${palette.gray500};
-    letter-spacing: -0.36px;
-
-    + span:before {
-      display: inline-block;
-      width: 1px;
-      height: 9px;
-      margin-right: 6px;
-      background: ${palette.gray500};
-      content: "";
-    }
-  }
-`;
-
-const WaitPersonaWrap = styled(PersonaInfoWrap)`
-  gap: 24px;
-`;
-
-const WaitPersonaTitle = styled(PersonaInfoTitle)`
-  gap: 12px;
 `;
 
 const ProgressBar = styled.div`
