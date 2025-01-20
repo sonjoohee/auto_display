@@ -18,6 +18,7 @@ import {
   SELECTED_INTERVIEW_TYPE,
   SELECTED_INTERVIEW_PURPOSE_DATA,
   PURPOSE_ITEMS_SINGLE,
+  CUSTOM_THEORY_DATA,
 } from "../../../AtomStates";
 // import { SELECTED_INTERVIEW_TYPE } from "../../../../AtomStates";
 import {
@@ -114,6 +115,8 @@ const PagePersona3 = () => {
     setCustomizations(newCustomizations);
   };
 
+  const [customTheoryData, setCustomTheoryData] = useAtom(CUSTOM_THEORY_DATA);
+
   const [showNewListBox, setShowNewListBox] = useState(false);
 
   const navigate = useNavigate();
@@ -137,7 +140,8 @@ const PagePersona3 = () => {
   const [requestPersonaList, setRequestPersonaList] =
     useAtom(REQUEST_PERSONA_LIST);
 
-  const [purposeItemsSingleAtom, setPurposeItemsSingleAtom] = useAtom(PURPOSE_ITEMS_SINGLE);
+  const [purposeItemsSingleAtom, setPurposeItemsSingleAtom] =
+    useAtom(PURPOSE_ITEMS_SINGLE);
 
   const [interviewPurpose, setInterviewPurpose] = useState("");
   const [selectedInterviewType, setSelectedInterviewType] = useAtom(
@@ -333,11 +337,27 @@ const PagePersona3 = () => {
       title: "구매 장벽 및 유인 요소 분석",
       view_title: "구매 요인과 장애물 분석",
       description: "구매 결정을 방해하는 요인과 구매를 이끄는 핵심 발굴",
-    }
+    },
   ];
 
   useEffect(() => {
     setPurposeItemsSingleAtom(purposeItemsSingle);
+    console.log("🚀 ~ useEffect ~ customTheoryData:", customTheoryData);
+    if (customTheoryData?.theory_title) {
+      console.log("🚀 ~ useEffect ~ customTheoryData:", customTheoryData);
+      const generatedQuestions = {
+        id: 4,
+        title: customTheoryData?.theory_title || "",
+        theory_title: customTheoryData?.theory_title || "",
+        view_title: customTheoryData?.theory_title || "",
+        definition: customTheoryData?.definition || "",
+        objective: customTheoryData?.objective || "",
+        characteristic: customTheoryData?.characteristic || [],
+        description: "사용자 커스텀 방법론" || "",
+        custom_theory_data: customTheoryData || "",
+      };
+      setPurposeItemsSingleAtom((prev) => [...prev, generatedQuestions]);
+    }
   }, [setPurposeItemsSingleAtom]);
 
   const handleEnterInterviewRoom = () => {
@@ -414,7 +434,8 @@ const PagePersona3 = () => {
 
   // radio6 선택 핸들러 수정
   const handlePurposeSelect = (purpose) => {
-    const selectedPurpose = purposeItemsSingle.find(
+    console.log("🚀 ~ handlePurposeSelect ~ purpose:", purpose);
+    const selectedPurpose = purposeItemsSingleAtom.find(
       (item) => item.id === purpose
     );
     console.log(
@@ -572,15 +593,13 @@ const PagePersona3 = () => {
                     </InterviewSelect>
                   ) : selectedInterviewType === "single" ? (
                     <CardGroupWrap>
-                      {purposeItemsSingle.map((purpose) => (
+                      {purposeItemsSingleAtom.map((purpose) => (
                         <MoleculeInterviewPurpose
                           key={purpose.id}
                           purpose={purpose}
                           selectedPurpose={selectedInterviewPurpose}
                           showQuestions={showQuestions}
-                          onPurposeSelect={(view_title) =>
-                            handlePurposeSelect(view_title)
-                          }
+                          onPurposeSelect={handlePurposeSelect}
                           toggleQuestions={(id) =>
                             setShowQuestions((prev) => ({
                               ...prev,
@@ -591,31 +610,32 @@ const PagePersona3 = () => {
                       ))}
 
                       <CustomizationWrap>
-                        {showCustomButton && (
-                          <Button
-                            DbExLarge
-                            W100
-                            Outline
-                            onClick={() => {
-                              setCustomizations((prev) => [
-                                ...prev,
-                                {
-                                  id: Date.now(),
-                                  purposeText: "",
-                                  showMethodology: false,
-                                  isEditing: false,
-                                  definitionText: FULL_DEFINITION_TEXT,
-                                  editedDefinition: "",
-                                  editedPurpose: "",
-                                },
-                              ]);
-                              setShowCustomButton(false);
-                            }}
-                          >
-                            <span />
-                            <Sub1 color="gray700">인터뷰 커스터마이징</Sub1>
-                          </Button>
-                        )}
+                        {showCustomButton &&
+                          !customTheoryData?.theory_title && (
+                            <Button
+                              DbExLarge
+                              W100
+                              Outline
+                              onClick={() => {
+                                setCustomizations((prev) => [
+                                  ...prev,
+                                  {
+                                    id: Date.now(),
+                                    purposeText: "",
+                                    showMethodology: false,
+                                    isEditing: false,
+                                    definitionText: FULL_DEFINITION_TEXT,
+                                    editedDefinition: "",
+                                    editedPurpose: "",
+                                  },
+                                ]);
+                                setShowCustomButton(false);
+                              }}
+                            >
+                              <span />
+                              <Sub1 color="gray700">인터뷰 커스터마이징</Sub1>
+                            </Button>
+                          )}
 
                         <OrganismCustomization
                           customizations={customizations}
