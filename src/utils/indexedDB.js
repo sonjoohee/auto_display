@@ -540,7 +540,6 @@ export const InterviewXInterviewReportPersonaFilter = async (
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
 
-    console.log("API 요청 시작...");
     const response = await axios.post(
       `https://wishresearch.kr/project/temporary/personaFilter`,
       data,
@@ -557,12 +556,9 @@ export const InterviewXInterviewReportPersonaFilter = async (
       return response.data;
     }
 
-    console.log(`${response.data.time}ms 후 결과 조회 예정...`);
     await new Promise((resolve) => setTimeout(resolve, response.data.time));
 
-    console.log("termkey 결과 조회 시작:", response.data.objectId);
     const result = await getTermkeyResult(response.data.objectId);
-    console.log("최종 결과:", result);
     return result;
   } catch (error) {
     console.error("페르소나 필터 처리 중 오류 발생:", error);
@@ -585,7 +581,6 @@ export const InterviewXPersonaRequestType = async (data, isLoggedIn) => {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
 
-    console.log("API 요청 시작...");
     const response = await axios.post(
       `https://wishresearch.kr/project/temporary/personaRequestType`,
       data,
@@ -602,12 +597,9 @@ export const InterviewXPersonaRequestType = async (data, isLoggedIn) => {
       return response.data;
     }
 
-    console.log(`${response.data.time}ms 후 결과 조회 예정...`);
     await new Promise((resolve) => setTimeout(resolve, response.data.time));
 
-    console.log("termkey 결과 조회 시작:", response.data.objectId);
     const result = await getTermkeyResult(response.data.objectId);
-    console.log("최종 결과:", result);
     return result;
   } catch (error) {
     console.error("비즈니스 페르소나 요청 처리 중 오류 발생:", error);
@@ -633,7 +625,6 @@ export const InterviewXPersonaSingleInterviewGeneratorRequest = async (
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
 
-    console.log("API 요청 시작...");
     const response = await axios.post(
       `https://wishresearch.kr/project/temporary/personaSingleInterview`,
       data,
@@ -650,12 +641,9 @@ export const InterviewXPersonaSingleInterviewGeneratorRequest = async (
       return response.data;
     }
 
-    console.log(`${response.data.time}ms 후 결과 조회 예정...`);
     await new Promise((resolve) => setTimeout(resolve, response.data.time));
 
-    console.log("termkey 결과 조회 시작:", response.data.objectId);
     const result = await getTermkeyResult(response.data.objectId);
-    console.log("최종 결과:", result);
     return result;
   } catch (error) {
     console.error("1:1 인터뷰 방법론 별 질문 요청 처리 중 오류 발생:", error);
@@ -684,7 +672,6 @@ export const InterviewXPersonaSingleInterviewTheoryCustom = async (
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
 
-    console.log("API 요청 시작...");
     const response = await axios.post(
       `https://wishresearch.kr/project/temporary/personaSingleCustomInterview`,
       data,
@@ -701,12 +688,9 @@ export const InterviewXPersonaSingleInterviewTheoryCustom = async (
       return response.data;
     }
 
-    console.log(`${response.data.time}ms 후 결과 조회 예정...`);
     await new Promise((resolve) => setTimeout(resolve, response.data.time));
 
-    console.log("termkey 결과 조회 시작:", response.data.objectId);
     const result = await getTermkeyResult(response.data.objectId);
-    console.log("최종 결과:", result);
     return result;
   } catch (error) {
     console.error("1:1 인터뷰 방법론 별 질문 요청 처리 중 오류 발생:", error);
@@ -733,7 +717,6 @@ export const InterviewXPersonaSingleInterviewGeneratorRequestTheoryCustom =
         throw new Error("액세스 토큰이 존재하지 않습니다.");
       }
 
-      console.log("API 요청 시작...");
       const response = await axios.post(
         `https://wishresearch.kr/project/temporary/personaSingleCustomQuestionInterview`,
         data,
@@ -750,12 +733,9 @@ export const InterviewXPersonaSingleInterviewGeneratorRequestTheoryCustom =
         return response.data;
       }
 
-      console.log(`${response.data.time}ms 후 결과 조회 예정...`);
       await new Promise((resolve) => setTimeout(resolve, response.data.time));
 
-      console.log("termkey 결과 조회 시작:", response.data.objectId);
       const result = await getTermkeyResult(response.data.objectId);
-      console.log("최종 결과:", result);
       return result;
     } catch (error) {
       console.error(
@@ -788,8 +768,6 @@ export const getTermkeyResult = async (termkey) => {
           }
         );
 
-        console.log("API 응답:", response?.data);
-
         if (!response?.data) {
           throw new Error("응답 데이터가 없습니다.");
         }
@@ -800,7 +778,6 @@ export const getTermkeyResult = async (termkey) => {
           return response.data;
         }
 
-        console.log("처리 중...");
         const randomDelay = Math.floor(
           Math.random() * (5000 - 3000 + 1) + 3000
         ); // 3000ms(3초)에서 5000ms(5초) 사이의 랜덤한 시간
@@ -833,7 +810,6 @@ export const InterviewXPersonaMultipleInterviewGeneratorRequest = async (
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
 
-    console.log("API 요청 시작...");
     const response = await axios.post(
       "https://wishresearch.kr/person/temporary/persona_multiple_interview_generator",
       data,
@@ -850,12 +826,9 @@ export const InterviewXPersonaMultipleInterviewGeneratorRequest = async (
       return response.data;
     }
 
-    console.log(`${response.data.time}ms 후 결과 조회 예정...`);
     await new Promise((resolve) => setTimeout(resolve, response.data.time));
 
-    console.log("termkey 결과 조회 시작:", response.data.objectId);
     const result = await getTermkeyResult(response.data.objectId);
-    console.log("최종 결과:", result);
     return result;
   } catch (error) {
     console.error(
@@ -884,7 +857,6 @@ export const InterviewXPersonaMultipleInterviewRequest = async (
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
 
-    console.log("API 요청 시작...");
     const response = await axios.post(
       "https://wishresearch.kr/person/temporary/persona_multiple_interview_module",
       data,
@@ -901,12 +873,9 @@ export const InterviewXPersonaMultipleInterviewRequest = async (
       return response.data;
     }
 
-    console.log(`${response.data.time}ms 후 결과 조회 예정...`);
     await new Promise((resolve) => setTimeout(resolve, response.data.time));
 
-    console.log("termkey 결과 조회 시작:", response.data.objectId);
     const result = await getTermkeyResult(response.data.objectId);
-    console.log("최종 결과:", result);
     return result;
     // return response.data;
   } catch (error) {
@@ -936,7 +905,6 @@ export const InterviewXPersonaSingleInterviewRequest = async (
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
 
-    console.log("API 요청 시작...");
     const response = await axios.post(
       "https://wishresearch.kr/person/temporary/persona_single_interview_module",
       data,
@@ -953,12 +921,9 @@ export const InterviewXPersonaSingleInterviewRequest = async (
       return response.data;
     }
 
-    console.log(`${response.data.time}ms 후 결과 조회 예정...`);
     await new Promise((resolve) => setTimeout(resolve, response.data.time));
 
-    console.log("termkey 결과 조회 시작:", response.data.objectId);
     const result = await getTermkeyResult(response.data.objectId);
-    console.log("최종 결과:", result);
     return result;
     // return response.data;
   } catch (error) {

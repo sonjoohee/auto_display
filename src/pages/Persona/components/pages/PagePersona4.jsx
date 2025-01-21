@@ -31,7 +31,17 @@ import {
   MainSection,
   Persona,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
-import { H2, H4, Body1, Body2_1, Body3, Sub1, Sub3, Caption1, Caption2 } from "../../../../assets/styles/Typography";
+import {
+  H2,
+  H4,
+  Body1,
+  Body2_1,
+  Body3,
+  Sub1,
+  Sub3,
+  Caption1,
+  Caption2,
+} from "../../../../assets/styles/Typography";
 import Header from "../molecules/MoleculeHeader";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -177,7 +187,7 @@ const PagePersona4 = () => {
     }
   };
   useEffect(() => {
-    // 팝업이 열려있을 때 배경 스크롤 맊음 
+    // 팝업이 열려있을 때 배경 스크롤 맊음
     if (showToast) {
       document.body.style.overflow = "hidden";
       document.body.style.paddingRight = "15px"; // 스크롤바 자리만큼 패딩 추가
@@ -198,13 +208,19 @@ const PagePersona4 = () => {
   useEffect(() => {
     // console.log("🚀 ~ useEffect ~ reportId:", reportId);
     const loadProjectReport = async () => {
+      console.log("🚀 ~ loadProjectReport ~ reportId:", reportId);
       // 1. 로그인 여부 확인
       if (reportId && reportLoadButtonState) {
+        console.log("🚀 ~ loadProjectReport ~ reportId:", reportId);
         // console.log("🚀 ~ loadProjectReport ~ reportId:", reportId);
         // 2. 로그인 상태라면 서버에서 새로운 대화 ID를 생성하거나, 저장된 대화를 불러옴
         const savedProjectInfo = await getProjectByIdFromIndexedDB(
           projectId,
           reportLoadButtonState
+        );
+        console.log(
+          "🚀 ~ loadProjectReport ~ savedProjectInfo:",
+          savedProjectInfo
         );
         if (savedProjectInfo) {
           setBusinessAnalysis(savedProjectInfo.businessAnalysis);
@@ -256,7 +272,8 @@ const PagePersona4 = () => {
           );
           const currentReportList = currentProject?.reportList || [];
 
-          await updateProjectOnServer( //프로젝트의 리포트 목록 업데이트하기 위해서 (나중에 모든 인터뷰 리포트 이력 확인 할 때 사용)
+          await updateProjectOnServer(
+            //프로젝트의 리포트 목록 업데이트하기 위해서 (나중에 모든 인터뷰 리포트 이력 확인 할 때 사용)
             projectId,
             {
               reportList: [
@@ -345,7 +362,7 @@ const PagePersona4 = () => {
       .filter((item) => item.value !== 0);
   };
 
-  //작업관리 / 인터뷰 시작하기/ 바로가기 인터뷰 목적 선택 
+  //작업관리 / 인터뷰 시작하기/ 바로가기 인터뷰 목적 선택
   const getInterviewPurposeDescription = (purpose) => {
     switch (purpose) {
       case "제품 경험 평가":
@@ -447,9 +464,14 @@ const PagePersona4 = () => {
                 <div>
                   <ReportHeader>
                     <Title>
-                      <H2>{selectedInterviewPurpose || "인터뷰"} 결과 리포트</H2>
+                      <H2>
+                        {selectedInterviewPurpose || "인터뷰"} 결과 리포트
+                      </H2>
                       <Button Primary onClick={handleEnterInterviewRoom}>
-                        <img src={images.ReportSearch} alt="인터뷰 스크립트 보기" />
+                        <img
+                          src={images.ReportSearch}
+                          alt="인터뷰 스크립트 보기"
+                        />
                         인터뷰 스크립트 보기
                       </Button>
                     </Title>
@@ -472,7 +494,13 @@ const PagePersona4 = () => {
                     <div>
                       <H4>2. 조사 목적</H4>
                       <UlList Disc Spacing>
-                        <li>제품이 고객에게 어떤 가치를 전달하고 있는지, 소비자들이 느끼는 장점과 개선점을 세심히 파악하기 위해 진행되었습니다. 이를 통해 제품에 대한 긍정적인 경험을 더욱 확장하고, 고객 만족과 구매 전환율을 높이는 데 기여하고자 합니다.</li>
+                        <li>
+                          제품이 고객에게 어떤 가치를 전달하고 있는지,
+                          소비자들이 느끼는 장점과 개선점을 세심히 파악하기 위해
+                          진행되었습니다. 이를 통해 제품에 대한 긍정적인 경험을
+                          더욱 확장하고, 고객 만족과 구매 전환율을 높이는 데
+                          기여하고자 합니다.
+                        </li>
                       </UlList>
                     </div>
 
@@ -523,7 +551,8 @@ const PagePersona4 = () => {
                             <div className="title">
                               <Sub1 color="gray800">인터뷰 핵심 키워드</Sub1>
                               <Caption2 color="gray700">
-                                응답자의 의견을 바탕으로 키워드 빈도수를 분석해 문항별 인사이트를 도출했습니다.
+                                응답자의 의견을 바탕으로 키워드 빈도수를 분석해
+                                문항별 인사이트를 도출했습니다.
                               </Caption2>
                             </div>
 
@@ -662,15 +691,19 @@ const PagePersona4 = () => {
               </InterviewReport>
 
               {!showInsightCards ? (
-                <InterviewInsight onClick={() => setShowInsightCards(!showInsightCards)}>
+                <InterviewInsight
+                  onClick={() => setShowInsightCards(!showInsightCards)}
+                >
                   <img src={images.KeyCircle} alt="인터뷰 인사이트" />
 
                   <div>
-                    <H4 color="gray700">인터뷰 내용에 대해 비즈니스 분야별 인사이트를 확인하세요</H4>
+                    <H4 color="gray700">
+                      인터뷰 내용에 대해 비즈니스 분야별 인사이트를 확인하세요
+                    </H4>
                     <Body3 color="gray500">
                       여러가지 정보를 확인 하고 싶으시면 클릭해 보세요!
                     </Body3>
-                  </div>                
+                  </div>
                 </InterviewInsight>
               ) : (
                 <InterviewFind>
@@ -699,12 +732,17 @@ const PagePersona4 = () => {
                       {getCardData(
                         interviewReportAdditional?.suggestion_list || []
                       ).map((item, index) => (
-                        <Card key={index} onClick={() => handleCardClick(index)}>
+                        <Card
+                          key={index}
+                          onClick={() => handleCardClick(index)}
+                        >
                           {openCard !== index ? (
                             <>
                               <CardDescription>
                                 <H4 color="gray800">{item.title}</H4>
-                                <Body3 color="gray700">{item.description}</Body3>
+                                <Body3 color="gray700">
+                                  {item.description}
+                                </Body3>
                               </CardDescription>
                               <CardIcon>
                                 <img src={item.icon} />
@@ -719,9 +757,11 @@ const PagePersona4 = () => {
                             <>
                               <CardDescription>
                                 <H4 color="gray800">{item.title}</H4>
-                                <Body3 color="gray700">{item.description}</Body3>
+                                <Body3 color="gray700">
+                                  {item.description}
+                                </Body3>
                               </CardDescription>
-                                <CardIcon>
+                              <CardIcon>
                                 <img src={item.icon} />
                               </CardIcon>
                             </>
@@ -749,26 +789,47 @@ const PagePersona4 = () => {
               <Sidebar>
                 <PersonaInfoWrap>
                   <PersonaInfoTitle>
-                    <Body2_1 color="gray800" align="left">참여페르소나 정보</Body2_1>
+                    <Body2_1 color="gray800" align="left">
+                      참여 페르소나 정보
+                    </Body2_1>
                     <Sub3 color="gray700" align="left">
-                      1명의 페르소나가 참여했어요
+                      {selectedPersonaList?.length || 0}명의 페르소나가
+                      참여했어요
                     </Sub3>
                   </PersonaInfoTitle>
 
                   <PersonaInfoContent>
-                    <Persona color="Linen" size="Large" Round>
-                      <img src={personaImages.PersonaWomen01} alt="페르소나" />
-                    </Persona>
-                    <PersonaText>
-                      <Caption1 color="gray800" align="left">
-                        꼼꼼한 계획형 자산 관리 성향
+                    {selectedPersonaList?.[0] ? (
+                      <>
+                        <Persona color="Linen" size="Large" Round>
+                          <img
+                            src={
+                              personaImages[selectedPersonaList[0].image] ||
+                              personaImages.PersonaWomen01
+                            }
+                            alt="페르소나"
+                          />
+                        </Persona>
+                        <PersonaText>
+                          <Caption1 color="gray800" align="left">
+                            {selectedPersonaList[0].persona || "성향 정보 없음"}
+                          </Caption1>
+                          <PersonaInfo>
+                            <span>
+                              {selectedPersonaList[0].gender || "성별"}
+                            </span>
+                            <span>
+                              {selectedPersonaList[0].age || "나이"}세
+                            </span>
+                            <span>{selectedPersonaList[0].job || "직업"}</span>
+                          </PersonaInfo>
+                        </PersonaText>
+                      </>
+                    ) : (
+                      <Caption1 color="gray700" align="center">
+                        선택된 페르소나가 없습니다
                       </Caption1>
-                      <PersonaInfo>
-                        <span>여성</span>
-                        <span>25세</span>
-                        <span>직업</span>
-                      </PersonaInfo>
-                    </PersonaText>
+                    )}
                   </PersonaInfoContent>
 
                   <Button Medium PrimaryLightest Fill>
@@ -778,12 +839,15 @@ const PagePersona4 = () => {
 
                 <WaitPersonaWrap>
                   <WaitPersonaTitle>
-                    <Body2_1 color="gray800" align="left">👀 기다리는 페르소나가 있어요</Body2_1>
+                    <Body2_1 color="gray800" align="left">
+                      👀 기다리는 페르소나가 있어요
+                    </Body2_1>
                     <Sub3 color="gray700" align="left">
-                      지금 바로 인터뷰가 가능한 12명의 페르소나가 인터뷰를 기다리고 있어요 
+                      지금 바로 인터뷰가 가능한 12명의 페르소나가 인터뷰를
+                      기다리고 있어요
                     </Sub3>
                   </WaitPersonaTitle>
-                  
+
                   <Button Medium PrimaryLightest Fill>
                     <img src={images.ListUserSearch} alt="" />
                     비즈니스 페르소나 보러가기
