@@ -719,15 +719,10 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
               <div>
                 {personaList.selected[questionAnswers.length].persona}
                 {(() => {
-                  const profileArray = personaList.selected[
-                    questionAnswers.length
-                  ].profile
-                    .replace(/['\[\]]/g, "")
-                    .split(", ");
-                  const age = profileArray[0].split(": ")[1];
+                  const age = personaList.selected[questionAnswers.length].age;
                   const gender =
-                    profileArray[1].split(": ")[1] === "남성" ? "남성" : "여성";
-                  const job = profileArray[2].split(": ")[1];
+                    personaList.selected[questionAnswers.length].gender;
+                  const job = personaList.selected[questionAnswers.length].job;
 
                   return (
                     <p>
