@@ -28,7 +28,7 @@ const AtomPersonaLoader = ({ message = "비즈니스를 분석하고 있어요" 
       </LoaderContainer>
       <p>
         {message}
-        {dots}
+        {/* {dots} */}
       </p>
     </LoaderWrap>
   );

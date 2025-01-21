@@ -64,6 +64,9 @@ const MoleculeInterviewPurpose = ({
   const [checkGenerateQuestion, setCheckGenerateQuestion] = useState("");
   const [loadingStates, setLoadingStates] = useState({});
 
+  const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(
+    SELECTED_INTERVIEW_PURPOSE
+  );
   const loadInterviewQuestion = async (title) => {
     console.log("loadInterviewQuestion 시작", {
       purposeId: purpose.id,
@@ -75,12 +78,23 @@ const MoleculeInterviewPurpose = ({
 
     // 현재 카드의 로딩 상태 설정
     setLoadingStates((prev) => {
-      const newState = {
-        ...prev,
-        [purpose.id]: true,
-      };
-      console.log("loadingStates 설정:", newState);
-      return newState;
+      if (purpose.id === 4) {
+        const newState = {
+          ...prev,
+          [selectedInterviewPurpose]: true,
+        };
+        console.log("loadingStates 설정:", newState);
+        return newState;
+      } else {
+        const newState = {
+          ...prev,
+          [purpose.id]: true,
+        };
+        console.log("loadingStates 설정:", newState);
+        return newState;
+      }
+      // console.log("loadingStates 설정:", newState);
+      // return newState;
     });
 
     const existingQuestions = singleInterviewQuestionList.find(
@@ -105,27 +119,29 @@ const MoleculeInterviewPurpose = ({
       let response = {};
       if (purpose.id === 4) {
         console.log("🚀 ~ loadInterviewQuestion ~ purpose.id === 4:", purpose);
-        const generatedQuestions = purposeItemsSingleAtom.find(
-          (item) => item.id === 4
-        );
+        // const generatedQuestions = purposeItemsSingleAtom.find(
+        //   (item) => item.id === 4
+        // );
 
-        if (generatedQuestions) {
-          let data = {
-            business_idea: businessAnalysis.input,
-            business_analysis_data: {
-              title: businessAnalysis.title,
-              characteristics: businessAnalysis.characteristics,
-              features: businessAnalysis.features,
-            },
-            custom_theory_data: purpose,
-          };
+        // if (generatedQuestions) {
+        let data = {
+          business_idea: businessAnalysis.input,
+          business_analysis_data: {
+            title: businessAnalysis.title,
+            characteristics: businessAnalysis.characteristics,
+            features: businessAnalysis.features,
+          },
+          custom_theory_data: purpose,
+        };
 
-          response =
-            await InterviewXPersonaSingleInterviewGeneratorRequestTheoryCustom(
-              data,
-              isLoggedIn
-            );
-        }
+        response =
+          await InterviewXPersonaSingleInterviewGeneratorRequestTheoryCustom(
+            data,
+            isLoggedIn
+          );
+
+        console.log("🚀 ~ loadInterviewQuestion ~ response:", response);
+        // }
       } else if (purpose.id !== 4) {
         console.log("🚀 ~ loadInterviewQuestion ~ purpose.id !== 4:", purpose);
         let data = {
@@ -222,6 +238,8 @@ const MoleculeInterviewPurpose = ({
       isLoadingQuestion,
     });
 
+    setSelectedInterviewPurpose(purpose.id);
+
     toggleQuestions(purpose.id);
 
     if (purpose.id !== 4 && !showQuestions[purpose.id]) {
@@ -252,7 +270,7 @@ const MoleculeInterviewPurpose = ({
         console.log("커스텀 방법론 질문 생성 시작");
         setLoadingStates((prev) => ({
           ...prev,
-          [purpose.id]: true,
+          [selectedInterviewPurpose]: true,
         }));
         setIsLoadingQuestion(true);
         loadInterviewQuestion(purpose.theory_title);
@@ -291,6 +309,7 @@ const MoleculeInterviewPurpose = ({
           {...(showQuestions[purpose["id"]]
             ? { PrimaryLightest: true, Fill: true }
             : { View: true })}
+          disabled={isLoadingQuestion}
           onClick={handleQuestionClick}
         >
           {showQuestions[purpose["id"]] ? "문항 닫기" : "문항 보기"}
@@ -303,6 +322,17 @@ const MoleculeInterviewPurpose = ({
             <Body1 color="gray800">공통 질문</Body1>
             <BgBoxList>
               {isLoadingQuestion && loadingStates[purpose.id] ? (
+                <>
+                  <SkeletonLine width="100%" height="20px" />
+                  <SkeletonLine width="100%" height="20px" />
+                  <SkeletonLine width="100%" height="20px" />
+                </>
+              ) : isLoadingQuestion &&
+                purpose.id === 4 &&
+                !singleInterviewQuestionList.find(
+                  (item) =>
+                    item.theory_name === purpose.custom_theory_data.theory_title
+                ) ? (
                 <>
                   <SkeletonLine width="100%" height="20px" />
                   <SkeletonLine width="100%" height="20px" />
@@ -337,6 +367,17 @@ const MoleculeInterviewPurpose = ({
             <Body1 color="gray800">특화 질문</Body1>
             <BgBoxList>
               {isLoadingQuestion && loadingStates[purpose.id] ? (
+                <>
+                  <SkeletonLine width="100%" height="20px" />
+                  <SkeletonLine width="100%" height="20px" />
+                  <SkeletonLine width="100%" height="20px" />
+                </>
+              ) : isLoadingQuestion &&
+                purpose.id === 4 &&
+                !singleInterviewQuestionList.find(
+                  (item) =>
+                    item.theory_name === purpose.custom_theory_data.theory_title
+                ) ? (
                 <>
                   <SkeletonLine width="100%" height="20px" />
                   <SkeletonLine width="100%" height="20px" />
