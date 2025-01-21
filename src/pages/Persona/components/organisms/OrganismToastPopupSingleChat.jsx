@@ -4,7 +4,21 @@ import styled, { keyframes, css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import images from "../../../../assets/styles/Images";
+import personaImages from "../../../../assets/styles/PersonaImages";
 import PopupWrap from "../../../../assets/styles/Popup";
+import { CustomInput } from "../../../../assets/styles/InputStyle";
+import {
+  Body1,
+  H3,
+  H4,
+  Helptext,
+  Sub1,
+  Sub2,
+  Sub3,
+  Body2,
+  Body3,
+} from "../../../../assets/styles/Typography";
+import { Persona } from "../../../../assets/styles/BusinessAnalysisStyle";
 import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
 import axios from "axios";
@@ -23,14 +37,14 @@ import {
   INTERVIEW_REPORT_ADDITIONAL,
   IS_PERSONA_ACCESSIBLE,
   SELECTED_PERSONA_LIST,
-} from "../../../AtomStates";
+  SELECTED_INTERVIEW_PURPOSE_DATA,
+} from "../../../../pages/AtomStates";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import { createProjectReportOnServer } from "../../../../utils/indexedDB";
-import MoleculeRecreate from "../molecules/MoleculeRecreate";
+import MoleculeRecreate from "../../../../pages/Persona/components/molecules/MoleculeRecreate";
 import { InterviewXPersonaMultipleInterviewGeneratorRequest } from "../../../../utils/indexedDB";
-import { InterviewXPersonaMultipleInterviewRequest } from "../../../../utils/indexedDB";
 
-const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
+const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
   const [selectedPersonaList, setSelectedPersonaList] = useAtom(
     SELECTED_PERSONA_LIST
   );
@@ -57,7 +71,8 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
     INTERVIEW_QUESTION_LIST
   );
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
-
+  const [selectedInterviewPurposeData, setSelectedInterviewPurposeData] =
+    useAtom(SELECTED_INTERVIEW_PURPOSE_DATA);
   const navigate = useNavigate();
 
   const [active, setActive] = useState(isActive);
@@ -83,12 +98,25 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
   const [showRegenerateButton2, setShowRegenerateButton2] = useState(false);
   const [showRegenerateButton3, setShowRegenerateButton3] = useState(false);
 
+  const [selectedQuestions, setSelectedQuestions] = useState([]);
+  const [showAddQuestion, setShowAddQuestion] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+
   const axiosConfig = {
     timeout: 100000,
     headers: {
       "Content-Type": "application/json",
     },
     withCredentials: true, //크로스 도메인( 다른 도메인으로 http )요청 시 쿠키 전송 허용
+  };
+
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+    if (e.target.value.length > 0) {
+      setShowAddQuestion(true);
+    } else {
+      setShowAddQuestion(false);
+    }
   };
 
   //저장되었던 인터뷰 로드
@@ -161,11 +189,6 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
         );
 
         if (existingQuestions) {
-          console.log(
-            "🚀 ~ loadInterviewQuestion ~ existingQuestions:",
-            existingQuestions
-          );
-
           // 이미 질문이 생성된 상태하면 상태값 설정 후 5초 대기
           setInterviewQuestionListState(existingQuestions.questions.slice(2));
           await new Promise((resolve) => setTimeout(resolve, 5000));
@@ -201,16 +224,16 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             retryCount < maxRetries &&
             (!response || !response.data || response.data.length !== 5)
           ) {
-            response = await InterviewXPersonaMultipleInterviewGeneratorRequest(
-              data,
-              isLoggedIn
-            );
             // response = await axios.post(
             //   //인터뷰 질문 생성 api
             //   "https://wishresearch.kr/person/persona_interview",
             //   data,
             //   axiosConfig
             // );
+            response = await InterviewXPersonaMultipleInterviewGeneratorRequest(
+              data,
+              isLoggedIn
+            );
             retryCount++;
             questionList = response.data;
           }
@@ -435,13 +458,11 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
         }));
 
         try {
-          console.log("인터뷰 진행 시작");
           allAnswers = [];
           personaInfoState = [];
 
           // 선택된 페르소나 수 만큼 반복
           for (let i = 0; i < personaList.selected.length; i++) {
-            console.log("🚀 ~ processInterview ~ personaList:", personaList);
             setIsGenerating(true);
 
             // 현재 페르소나의 이전 답변들 수집(저장):  AI가 답변을 생성할때 맥락 정보로 활용
@@ -481,15 +502,11 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               last_interview: lastInterview,
             };
 
-            // let response = await axios.post(
-            //   //페르소나 답변 생성하는 api
-            //   "https://wishresearch.kr/person/persona_interview_module",
-            //   data,
-            //   axiosConfig
-            // );
-            let response = await InterviewXPersonaMultipleInterviewRequest(
+            let response = await axios.post(
+              //페르소나 답변 생성하는 api
+              "https://wishresearch.kr/person/persona_interview_module",
               data,
-              isLoggedIn
+              axiosConfig
             );
 
             let retryCount = 0;
@@ -503,15 +520,10 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                 !response.data.hasOwnProperty("answer") ||
                 !response.data.answer)
             ) {
-              // response = await axios.post(
-              //   "https://wishresearch.kr/person/persona_interview_module",
-              //   data,
-              //   axiosConfig
-              // );
-
-              response = await InterviewXPersonaMultipleInterviewRequest(
+              response = await axios.post(
+                "https://wishresearch.kr/person/persona_interview_module",
                 data,
-                isLoggedIn
+                axiosConfig
               );
               retryCount++;
             }
@@ -831,131 +843,324 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
     //replace: true 현재 페이지를 대체하여 이동( 뒤로 가기 시 이전 인터뷰 화면으로 돌아감 방지)
   };
 
+  const handleQuestionSelect = (index) => {
+    setSelectedQuestions((prev) => {
+      if (prev.includes(index)) {
+        // 이미 선택된 항목이면 제거
+        return prev.filter((item) => item !== index);
+      } else {
+        // 선택되지 않은 항목이면 추가
+        return [...prev, index];
+      }
+    });
+  };
+
   return (
     <>
       <PopupBox isActive={active}>
-        <ToastPopup isActive={active}>
-          <Header>
-            <Title>
-              {businessAnalysis.title}의 {selectedInterviewPurpose}
-              <ColseButton onClick={handleClose} />
-            </Title>
-            <ul>
-              <li>
+        <ToastPopup Wide isActive={active}>
+          <QuestionListWrap>
+            {/* {businessAnalysis.title}의 {selectedInterviewPurpose} */}
+            <H4 color="gray700" align="left">
+              문항 리스트
+            </H4>
+
+            <QuestionList>
+              <QuestionItem checked>
+                <Sub2 color="gray800">
+                  Q1. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰
+                  이유는 무엇이라고 생각하시나요?
+                </Sub2>
                 <span>
-                  <img src={images.FileText} alt="문항수" />
-                  문항수
+                  <img src={images.CheckGreen} alt="완료" />
                 </span>
-                <span>3개</span>
-              </li>
-              <li>
+              </QuestionItem>
+              <QuestionItem checked>
+                <Sub2 color="gray800">
+                  Q2. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰
+                  이유는 무엇이라고 생각하시나요?
+                </Sub2>
                 <span>
-                  <img src={images.PeopleFill} alt="참여 페르소나" />
-                  참여 페르소나
+                  <img src={images.CheckGreen} alt="완료" />
                 </span>
+              </QuestionItem>
+              <QuestionItem checked>
+                <Sub2 color="gray800">
+                  Q3. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰
+                  이유는 무엇이라고 생각하시나요?
+                </Sub2>
                 <span>
-                  {personaList.selected.length || selectedPersonaList.length}명
+                  <img src={images.CheckGreen} alt="완료" />
                 </span>
-              </li>
-            </ul>
-          </Header>
+              </QuestionItem>
+              <QuestionItem>
+                <Sub2 color="gray800">
+                  Q4. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰
+                  이유는 무엇이라고 생각하시나요?
+                </Sub2>
+                <span>
+                  <img src={images.CheckGreen} alt="완료" />
+                </span>
+              </QuestionItem>
+              <QuestionItem disabled>
+                <Sub2 color="gray800">
+                  Q5. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰
+                  이유는 무엇이라고 생각하시나요?
+                </Sub2>
+                <span>
+                  <img src={images.CheckGreen} alt="완료" />
+                </span>
+              </QuestionItem>
+            </QuestionList>
+          </QuestionListWrap>
 
-          <Contents>
-            {/* <LoadingBox Complete>
-              <img src={images.CheckCircleFill} alt="완료" />
+          <ChatWrap>
+            <Header>
+              <Title>
+                {businessAnalysis.title}의 {selectedInterviewPurpose}
+                <ColseButton onClick={handleClose} />
+              </Title>
+              <ul>
+                <li>
+                  <span>
+                    <img src={images.FileText} alt="문항수" />
+                    문항수
+                  </span>
+                  <span>3개</span>
+                </li>
+                <li>
+                  <span>
+                    <img src={images.PeopleFill} alt="참여 페르소나" />
+                    참여 페르소나
+                  </span>
+                  <span>
+                    {personaList.selected.length || selectedPersonaList.length}
+                    명
+                  </span>
+                </li>
+              </ul>
+            </Header>
 
-              <p>
-                페르소나 입장 완료! 인터뷰를 시작하겠습니다
-                <span>지금 시작하기</span>
-              </p>
-            </LoadingBox> */}
-
-            {/* 대화중단 에러 */}
-            {/* <ErrorAnswerItem>
-              <strong>앗! 대화가 잠시 중단되었네요</strong>
-              <div>
-                <p>
-                  잠시 대화가 중단되었어요. 대화를 이어가시려면 아래 ‘다시
-                  이어하기’ 버튼을 눌러주세요
-                </p>
-                <Button Small Outline>
-                  <img src={images.ArrowClockwise} alt="" />
-                  다시 이어하기
-                </Button>
-              </div>
-            </ErrorAnswerItem> */}
-
-            {isLoadingPrepare &&
-              (showRegenerateButton1 ? (
-                <LoadingBox>
-                  <MoleculeRecreate
-                    Medium
-                    onRegenerate={loadInterviewQuestion}
-                  />
-                </LoadingBox>
-              ) : (
-                <LoadingBox>
-                  <Loading>
-                    <div />
-                    <div />
-                    <div />
-                  </Loading>
-                  <p>
-                    페르소나가 인터뷰 룸으로 입장 중이에요
-                    <span>잠시만 기다려주세요 ...</span>
-                  </p>
-                </LoadingBox>
-              ))}
-
-            {!isLoadingPrepare && isComplete
-              ? renderInterviewItemsComplete()
-              : renderInterviewItems()}
-
-            {isAnalyzing &&
-              (showRegenerateButton2 ? (
-                <ErrorInterviewItem>
-                  <p>
-                    분석 중 오류가 발생했어요
-                    <br />
-                    지금 나가시면 인터뷰 내용이 저장되지 않으니, 다시
-                    시도해주세요
-                  </p>
-                  <Button
-                    Small
-                    Outline
-                    onClick={() =>
-                      loadInterviewReport(personaInfoState, allAnswers)
-                    }
-                  >
-                    <img src={images.ArrowClockwise} alt="" />
-                    분석 다시하기
-                  </Button>
-                </ErrorInterviewItem>
-              ) : (
-                <LoadingBox>
-                  <Loading>
-                    <div />
-                    <div />
-                    <div />
-                  </Loading>
-                  <p>
-                    인터뷰 결과를 취합하고 분석 중입니다.
-                    <span>잠시만 기다려주세요 ...</span>
-                  </p>
-                </LoadingBox>
-              ))}
-
-            {isAnalysisComplete && (
-              <LoadingBox Complete>
+            <Contents showAddQuestion={showAddQuestion}>
+              {/* <LoadingBox Complete>
                 <img src={images.CheckCircleFill} alt="완료" />
 
                 <p>
-                  결과 분석이 완료되었습니다. 지금 바로 확인해보세요!
-                  <span onClick={handleCheckResult}>지금 확인하기</span>
+                  페르소나 입장 완료! 인터뷰를 시작하겠습니다
+                  <span>지금 시작하기</span>
                 </p>
-              </LoadingBox>
-            )}
-          </Contents>
+              </LoadingBox> */}
+
+              {/* 대화중단 에러 */}
+              {/* <ErrorAnswerItem>
+                <strong>앗! 대화가 잠시 중단되었네요</strong>
+                <div>
+                  <p>
+                    잠시 대화가 중단되었어요. 대화를 이어가시려면 아래 ‘다시
+                    이어하기’ 버튼을 눌러주세요
+                  </p>
+                  <Button Small Outline>
+                    <img src={images.ArrowClockwise} alt="" />
+                    다시 이어하기
+                  </Button>
+                </div>
+              </ErrorAnswerItem> */}
+
+              {isLoadingPrepare &&
+                (showRegenerateButton1 ? (
+                  <LoadingBox>
+                    <MoleculeRecreate
+                      Medium
+                      onRegenerate={loadInterviewQuestion}
+                    />
+                  </LoadingBox>
+                ) : (
+                  <LoadingBox>
+                    <Loading>
+                      <div />
+                      <div />
+                      <div />
+                    </Loading>
+                    <p>
+                      페르소나가 인터뷰 룸으로 입장 중이에요
+                      <span>잠시만 기다려주세요 ...</span>
+                    </p>
+                  </LoadingBox>
+                ))}
+
+              {!isLoadingPrepare && isComplete
+                ? renderInterviewItemsComplete()
+                : renderInterviewItems()}
+
+              {isAnalyzing &&
+                (showRegenerateButton2 ? (
+                  <ErrorInterviewItem>
+                    <p>
+                      분석 중 오류가 발생했어요
+                      <br />
+                      지금 나가시면 인터뷰 내용이 저장되지 않으니, 다시
+                      시도해주세요
+                    </p>
+                    <Button
+                      Small
+                      Outline
+                      onClick={() =>
+                        loadInterviewReport(personaInfoState, allAnswers)
+                      }
+                    >
+                      <img src={images.ArrowClockwise} alt="" />
+                      분석 다시하기
+                    </Button>
+                  </ErrorInterviewItem>
+                ) : (
+                  <LoadingBox>
+                    <Loading>
+                      <div />
+                      <div />
+                      <div />
+                    </Loading>
+                    <p>
+                      인터뷰 결과를 취합하고 분석 중입니다.
+                      <span>잠시만 기다려주세요 ...</span>
+                    </p>
+                  </LoadingBox>
+                ))}
+
+              {isAnalysisComplete && (
+                <LoadingBox Complete>
+                  <img src={images.CheckCircleFill} alt="완료" />
+
+                  <p>
+                    결과 분석이 완료되었습니다. 지금 바로 확인해보세요!
+                    <span onClick={handleCheckResult}>지금 확인하기</span>
+                  </p>
+                </LoadingBox>
+              )}
+
+              <ChatListWrap>
+                <ChatItem Persona>
+                  <Persona color="Linen" size="Medium" Round>
+                    <img src={personaImages.PersonaWomen02} alt="페르소나" />
+                  </Persona>
+                  <ChatBox Persona>
+                    <Sub1 color="gray800" align="left">
+                      전기면도기를 사용하는 데 전원이 필요한데, 만약 외부 활동
+                      중 전원이 부족하다면 사용이 어려울 수 있습니다. 전기가
+                      공급되지 않는 환경에는 사용이 어려울 것 같습니다.
+                    </Sub1>
+                  </ChatBox>
+                </ChatItem>
+                <ChatItem Moder>
+                  <Persona color="Gainsboro" size="Medium" Round>
+                    <img src={personaImages.PersonaMen28} alt="모더" />
+                    <span>
+                      <img src={images.PatchCheckFill} alt="" />
+                      <Helptext color="primary">모더</Helptext>
+                    </span>
+                  </Persona>
+                  <ChatBox Moder data-time="1 min ago">
+                    <Sub1 color="gray800" align="left">
+                      Q1. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰
+                      이유는 무엇이라고 생각하시나요?
+                    </Sub1>
+                  </ChatBox>
+                </ChatItem>
+                <ChatItem Persona>
+                  <Persona color="Linen" size="Medium" Round>
+                    <img src={personaImages.PersonaWomen02} alt="페르소나" />
+                  </Persona>
+                  <ChatBox Persona>
+                    <Sub1 color="gray800" align="left">
+                      전기면도기를 사용하는 데 전원이 필요한데, 만약 외부 활동
+                      중 전원이 부족하다면 사용이 어려울 수 있습니다. 전기가
+                      공급되지 않는 환경에는 사용이 어려울 것 같습니다.
+                    </Sub1>
+                  </ChatBox>
+                </ChatItem>
+                <ChatItem Moder>
+                  <Persona color="Gainsboro" size="Medium" Round>
+                    <img src={personaImages.PersonaMen28} alt="모더" />
+                    <span>
+                      <img src={images.PatchCheckFill} alt="" />
+                      <Helptext color="primary">모더</Helptext>
+                    </span>
+                  </Persona>
+                  <ChatBox Moder data-time="1 min ago">
+                    <Sub1 color="gray800" align="left">
+                      Q1. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰
+                      이유는 무엇이라고 생각하시나요?
+                    </Sub1>
+                  </ChatBox>
+                </ChatItem>
+                <ChatItem Persona>
+                  <Persona color="Linen" size="Medium" Round>
+                    <img src={personaImages.PersonaWomen02} alt="페르소나" />
+                  </Persona>
+                  <ChatBox Persona>
+                    <Sub1 color="gray800" align="left">
+                      전기면도기를 사용하는 데 전원이 필요한데, 만약 외부 활동
+                      중 전원이 부족하다면 사용이 어려울 수 있습니다. 전기가
+                      공급되지 않는 환경에는 사용이 어려울 것 같습니다.
+                    </Sub1>
+                  </ChatBox>
+                </ChatItem>
+                <ChatItem Add>
+                  <ChatBox Moder data-time="1 min ago">
+                    <Sub1 color="gray800" align="left">
+                      추가로 질문 하실 부분이 있으신가요?/
+                      <span>(Basic 1회 가능)</span>
+                    </Sub1>
+                  </ChatBox>
+                  <ChatAddButton>
+                    <button type="button">네, 있습니다!</button>
+                    <button type="button">아니요, 괜찮습니다.</button>
+                  </ChatAddButton>
+                </ChatItem>
+              </ChatListWrap>
+            </Contents>
+
+            <AddQuestion show={showAddQuestion}>
+              <AddQuestionTitle>
+                <Body1 color="gray800">
+                  요청하신 질문의 의도를 반영하여 아래와 같이 다듬었습니다
+                </Body1>
+                <Body3 color="gray800">1회 사용가능</Body3>
+              </AddQuestionTitle>
+
+              <ul>
+                {[1, 2, 3].map((_, index) => (
+                  <li
+                    key={index}
+                    onClick={() => handleQuestionSelect(index)}
+                    className={
+                      selectedQuestions.includes(index) ? "selected" : ""
+                    }
+                  >
+                    <Body3 color="gray800">
+                      Q{index + 1}. 페르소나의 특성 및 라이프스타일 등을 파악할
+                      수 있는 질문 구성 입니다.
+                    </Body3>
+                    <div>
+                      <Body2 color="gray800" />
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </AddQuestion>
+
+            <ChatFooter>
+              <ChatInput>
+                <CustomInput
+                  Edit
+                  type="text"
+                  value={inputValue}
+                  onChange={handleInputChange}
+                  placeholder="Pro 요금제를 사용하시면 해당란에 원하시는 정보를 입력하여 추가 정보를 얻으실 수 있습니다."
+                />
+                <button type="button">검색</button>
+              </ChatInput>
+            </ChatFooter>
+          </ChatWrap>
         </ToastPopup>
       </PopupBox>
 
@@ -994,7 +1199,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
   );
 };
 
-export default OrganismToastPopup;
+export default OrganismToastPopupSingleChat;
 
 const PopupBox = styled.div`
   position: fixed;
@@ -1017,26 +1222,198 @@ const ToastPopup = styled.div`
   transform: ${({ isActive }) =>
     isActive ? "translateX(0)" : "translateX(100%)"};
   width: 100%;
-  max-width: 800px;
+  max-width: ${({ Wide }) => (Wide ? "1175px" : "800px")};
   height: 100vh;
   display: flex;
-  flex-direction: column;
+  flex-direction: ${({ Wide }) => (Wide ? "row" : "column")};
+  align-items: ${({ Wide }) => (Wide ? "flex-start" : "center")};
   justify-content: flex-start;
-  align-items: center;
-  gap: 40px;
-  padding: 32px;
+  gap: ${({ Wide }) => (Wide ? "0" : "40px")};
+  padding: ${({ Wide }) => (Wide ? "0 0 0 32px" : "32px")};
   border-radius: 15px 0 0 15px;
   background: ${palette.white};
   transition: transform 0.3s ease;
 `;
 
-const Header = styled.div`
+const QuestionListWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 40px;
+  max-width: 340px;
+  width: 100%;
+  height: 100%;
+  padding: 32px 20px 32px 0;
+  border-right: 1px solid ${palette.outlineGray};
+`;
+
+const QuestionList = styled.ul`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  width: 100%;
+  overflow-y: auto;
+`;
+
+const QuestionItem = styled.li`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  width: 100%;
+  padding: 17px 12px;
+  border-radius: 8px;
+  border: ${({ checked }) =>
+    checked ? `1px solid ${palette.outlineGray}` : "none"};
+  background: ${({ checked }) =>
+    checked ? palette.white : `rgba(34, 111, 255, 0.10)`};
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
+  filter: ${({ disabled }) =>
+    disabled ? "grayscale(1) opacity(0.3)" : "grayscale(0) opacity(1)"};
+
+  > div {
+    word-break: keep-all;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  span {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+  }
+
+  img {
+    width: 12px;
+    opacity: 0;
+  }
+
+  ${({ checked }) =>
+    checked &&
+    `
+    img {
+      opacity: 1;
+    }
+  `}
+`;
+
+const ChatWrap = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+`;
+
+const ChatListWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: 100%;
+`;
+
+const ChatItem = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: ${(props) =>
+    props.Persona
+      ? "row"
+      : props.Moder
+      ? "row-reverse"
+      : props.Add
+      ? "column"
+      : "none"};
+  align-items: ${({ Add }) => (Add ? "flex-end" : "flex-start")};
+  justify-content: flex-start;
+  gap: ${({ Add }) => (Add ? "8px" : "12px")};
+  width: 100%;
+`;
+
+const ChatBox = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 12px;
+  max-width: 624px;
+  padding: ${(props) =>
+    props.Persona ? "12px" : props.Moder ? "14px 20px" : "0"};
+  border-radius: ${(props) =>
+    props.Persona
+      ? "0 15px 15px 15px"
+      : props.Moder
+      ? "15px 0 15px 15px"
+      : "0"};
+  background: ${(props) =>
+    props.Persona
+      ? `rgba(34, 111, 255, 0.06)`
+      : props.Moder
+      ? palette.white
+      : "none"};
+
+  &:before {
+    content: attr(data-time);
+    position: absolute;
+    right: 102%;
+    bottom: 0;
+    font-size: 0.75rem;
+    color: ${palette.gray500};
+    white-space: nowrap;
+  }
+
+  span {
+    font-size: 0.88rem;
+    font-weight: 400;
+    color: ${palette.gray500};
+  }
+`;
+
+const ChatAddButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  width: 100%;
+
+  button {
+    flex-shrink: 0;
+    font-family: "Pretendard", "Poppins";
+    font-size: 0.88rem;
+    color: ${palette.gray700};
+    font-weight: 400;
+    line-height: 1.55;
+    letter-spacing: -0.42px;
+    padding: 4px 12px;
+    border-radius: 40px;
+    border: 1px solid ${palette.gray700};
+    outline: none;
+    background: transparent;
+    transition: all 0.5s;
+
+    &:hover {
+      color: ${palette.white};
+      background: ${palette.gray800};
+    }
+  }
+`;
+
+const Header = styled.div`
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
   justify-content: space-between;
   gap: 16px;
   width: 100%;
+  padding: 32px;
+  border-bottom: 1px solid ${palette.outlineGray};
 
   ul {
     display: flex;
@@ -1063,6 +1440,168 @@ const Header = styled.div`
       display: flex;
       align-items: center;
       gap: 4px;
+    }
+  }
+`;
+
+const ChatFooter = styled.div`
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 12px 14px 12px 20px;
+  border-top: 1px solid ${palette.outlineGray};
+  background: ${palette.white};
+  z-index: 1;
+
+  input {
+    width: 100%;
+    font-size: 1rem;
+    line-height: 1.55;
+
+    &::placeholder {
+      color: ${palette.gray300};
+    }
+
+    &:disabled {
+      background: ${palette.white};
+    }
+  }
+
+  button {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    font-size: 0;
+    border: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='33' height='32' viewBox='0 0 33 32' fill='none'%3E%3Cg clip-path='url(%23clip0_690_5724)'%3E%3Cpath d='M5.64515 11.6483L25.4734 5.18259C26.7812 4.75614 28.0145 6.00577 27.571 7.30785L20.9018 26.8849C20.4086 28.3327 18.39 28.41 17.7875 27.0042L15.036 20.5839C14.7672 19.9567 14.9072 19.229 15.3896 18.7463L20.4659 13.6676C20.8353 13.298 20.8353 12.6989 20.4657 12.3294C20.083 11.9466 19.4625 11.9466 19.0797 12.3294L14.036 17.373C13.5486 17.8605 12.8116 17.9982 12.1811 17.7195L5.488 14.7621C4.08754 14.1433 4.1895 12.123 5.64515 11.6483Z' fill='%23226FFF'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='clip0_690_5724'%3E%3Crect width='32' height='32' fill='white' transform='translate(0.5)'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E")
+      center no-repeat;
+    background-size: 100%;
+    filter: grayscale(1) opacity(0.3);
+    transition: all 0.5s;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+
+      &:hover {
+        opacity: 0.3;
+      }
+    }
+
+    &:not(:disabled):hover {
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='33' height='32' viewBox='0 0 33 32' fill='none'%3E%3Cg clip-path='url(%23clip0_690_5724)'%3E%3Cpath d='M5.64515 11.6483L25.4734 5.18259C26.7812 4.75614 28.0145 6.00577 27.571 7.30785L20.9018 26.8849C20.4086 28.3327 18.39 28.41 17.7875 27.0042L15.036 20.5839C14.7672 19.9567 14.9072 19.229 15.3896 18.7463L20.4659 13.6676C20.8353 13.298 20.8353 12.6989 20.4657 12.3294C20.083 11.9466 19.4625 11.9466 19.0797 12.3294L14.036 17.373C13.5486 17.8605 12.8116 17.9982 12.1811 17.7195L5.488 14.7621C4.08754 14.1433 4.1895 12.123 5.64515 11.6483Z' fill='%23226FFF'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='clip0_690_5724'%3E%3Crect width='32' height='32' fill='white' transform='translate(0.5)'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E")
+        center no-repeat;
+      filter: grayscale(0) opacity(1);
+    }
+  }
+`;
+
+const AddQuestion = styled.div`
+  position: sticky;
+  bottom: ${({ show }) => (show ? "58px" : "-100%")};
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  width: 100%;
+  padding: 20px 20px 12px 20px;
+  border-top: 1px solid ${palette.outlineGray};
+  background: ${palette.white};
+  transform: translateY(${({ show }) => (show ? "0" : "100%")});
+  // opacity: ${({ show }) => (show ? "1" : "0")};
+  visibility: ${({ show }) => (show ? "visible" : "collapse")};
+  transition: all 0.3s ease-in-out;
+  z-index: 1;
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    width: 100%;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid ${palette.outlineGray};
+    background: ${palette.chatGray};
+    transition: all 0.5s;
+    cursor: pointer;
+
+    div ${Body2} {
+      &:before {
+        content: "Select";
+      }
+    }
+
+    &:hover {
+      border-color: ${palette.primary};
+      background: ${palette.white};
+
+      div ${Body2} {
+        &:before {
+          content: "Done";
+        }
+      }
+    }
+
+    &.selected {
+      opacity: 0.3;
+      background: ${palette.white};
+
+      div ${Body2} {
+        &:before {
+          content: "Done";
+        }
+      }
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+`;
+
+const AddQuestionTitle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+`;
+
+const ChatInput = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+  padding: 12px 14px 12px 20px;
+  border-radius: 50px;
+  border: 1px solid ${palette.outlineGray};
+  background: ${palette.white};
+  transition: all 0.3s ease;
+
+  &:has(input:hover),
+  &:has(input:focus) {
+    border-color: ${palette.primary};
+
+    button {
+      filter: grayscale(0) opacity(1);
     }
   }
 `;
@@ -1116,9 +1655,12 @@ const Contents = styled.div`
   align-items: center;
   gap: 20px;
   width: 100%;
-  height: 100%;
-  padding-right: 10px;
+  height: ${({ showAddQuestion }) =>
+    showAddQuestion ? "calc(100% - 58px)" : "100%"};
+  padding: 40px 32px;
   overflow-y: auto;
+  background: ${palette.chatGray};
+  transition: all 0.3s ease-in-out;
 `;
 
 const LoadingBox = styled.div`

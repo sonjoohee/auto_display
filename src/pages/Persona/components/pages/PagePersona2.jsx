@@ -27,6 +27,8 @@ import {
   TYPES_LIST,
   SINGLE_INTERVIEW_QUESTION_LIST,
   INTERVIEW_QUESTION_LIST,
+  CUSTOM_THEORY_DATA,
+  All_BUSINESS_PERSONA_LIST,
 } from "../../../AtomStates";
 import {
   ContentsWrap,
@@ -124,7 +126,7 @@ const PagePersona2 = () => {
   const [personaButtonState2, setPersonaButtonState2] = useAtom(
     PERSONA_BUTTON_STATE_2
   ); //페르소나 생성/로딩 상태 관리 setPersonaButtonState2(0) :  api 호출 완료
-
+  const [customTheoryData, setCustomTheoryData] = useAtom(CUSTOM_THEORY_DATA);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
@@ -138,8 +140,10 @@ const PagePersona2 = () => {
   const [requestPersonaList, setRequestPersonaList] =
     useAtom(REQUEST_PERSONA_LIST);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [allBusinessPersonas, setAllBusinessPersonas] = useState([]); // 전체 비즈니스 페르소나 상태
-  // const [allBusinessPersonas, setAllBusinessPersonas] = useAtom(All_BUSINESS_PERSONA_LIST);
+  // const [allBusinessPersonas, setAllBusinessPersonas] = useState([]); // 전체 비즈니스 페르소나 상태
+  const [allBusinessPersonas, setAllBusinessPersonas] = useAtom(
+    All_BUSINESS_PERSONA_LIST
+  );
   // const [typesList, setTypesList] = useAtom(TYPES_LIST);
 
   const [selectedPersonas, setSelectedPersonas] = useState([]);
@@ -373,12 +377,23 @@ const PagePersona2 = () => {
           if (savedProjectInfo) {
             setBusinessAnalysis(savedProjectInfo.businessAnalysis);
             setRequestPersonaList(savedProjectInfo.requestPersonaList);
-            setFilteredProjectList(savedProjectInfo.filteredPersonaList);
-            setAllBusinessPersonas(savedProjectInfo.businessPersonaList);
-            setSingleInterviewQuestionList(
-              savedProjectInfo.singleInterviewQuestionList
-            );
-            setInterviewQuestionList(savedProjectInfo.interviewQuestionList);
+            if (savedProjectInfo.filteredPersonaList) {
+              setFilteredProjectList(savedProjectInfo.filteredPersonaList);
+            }
+            if (savedProjectInfo.businessPersonaList) {
+              setAllBusinessPersonas(savedProjectInfo.businessPersonaList);
+            }
+            if (savedProjectInfo.singleInterviewQuestionList) {
+              setSingleInterviewQuestionList(
+                savedProjectInfo.singleInterviewQuestionList
+              );
+            }
+            if (savedProjectInfo.interviewQuestionList) {
+              setInterviewQuestionList(savedProjectInfo.interviewQuestionList);
+            }
+            if (savedProjectInfo.customTheoryData) {
+              setCustomTheoryData(savedProjectInfo.customTheoryData);
+            }
 
             // businessPersonaList에서 고유한 persona_type 추출
             const uniqueTypes = [
@@ -880,12 +895,18 @@ const PagePersona2 = () => {
   };
 
   const loadBusinessPersona = async (personaType) => {
+    console.log("🚀 ~ loadBusinessPersona ~ personaType:", personaType);
+
     try {
+      console.log(
+        "🚀 ~ loadBusinessPersona ~ allBusinessPersonas:",
+        allBusinessPersonas
+      );
       setIsLoadingMore(true);
       setCurrentLoadingType(personaType); // 현재 로딩 중인 타입 설정
       // 페르소나 타입이 이미 로드되었는지 확인
       //반복문으로 전체 페르소나 조회 및 추가
-      const existingPersonas = allBusinessPersonas.filter(
+      const existingPersonas = allBusinessPersonas?.filter(
         (p) => p.persona_type === personaType.label
       );
       console.log("existingPersona:", existingPersonas);
@@ -998,7 +1019,8 @@ const PagePersona2 = () => {
     if (
       activeTab === "business" &&
       activeTabTlick &&
-      selectedTypes.length < 4
+      selectedTypes.length < 4 &&
+      allBusinessPersonas.length === 0
     ) {
       setActiveTabTlick(false);
 
@@ -1110,13 +1132,17 @@ const PagePersona2 = () => {
   };
 
   const handleStartInterview = () => {
+    console.log(selectedPersonas);
     // 선택된 페르소나들을 selected에 반영
     setPersonaList((prev) => ({
-      selected: selectedPersonas,
-      unselected: prev.unselected.filter(
-        (persona) => !selectedPersonas.includes(persona)
-      ),
+      selected: [],
+      unselected: filteredProjectList,
     }));
+
+    console.log(
+      "🚀 ~ setPersonaList ~ filteredProjectList:",
+      filteredProjectList
+    );
 
     setPersonaStep(3);
     setIsPersonaAccessible(true);

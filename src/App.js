@@ -58,9 +58,8 @@ import PagePersona2 from "./pages/Persona/components/pages/PagePersona2";
 import PagePersona3 from "./pages/Persona/components/pages/PagePersona3";
 import PagePersona4 from "./pages/Persona/components/pages/PagePersona4";
 import PageMyProject from "./pages/Persona/components/pages/PageMyProject";
-
+import PagePersona3Select from "./pages/Persona/components/pages/PagePersona3Select";
 // 테스트 라우트 추가
-import Test from './pages/Persona/components/pages/Test';
 import PageMarketingNoItemsShare from "./pages/Marketing/components/pages/PageMarketingNoItemsShare";
 
 function App() {
@@ -219,14 +218,12 @@ function App() {
             path="/MarketingSetting/2/Result"
             element={<PageMarketingNoItemsResult />}
           ></Route>
-         
-         
-          {/* 마케팅 쉐어 */}
-         <Route path="/MarketingSetting/Share/:mbtiType" element={<PageMarketingNoItemsShare />} />
 
-          
-           {/* 테스트 라우트 추가 */}
-        <Route path="/interview-test" element={<Test />} />
+          {/* 마케팅 쉐어 */}
+          <Route
+            path="/MarketingSetting/Share/:mbtiType"
+            element={<PageMarketingNoItemsShare />}
+          />
 
           {/* 페르소나 */}
           <Route path="/Persona" element={<PagePersona />}></Route>
@@ -239,6 +236,10 @@ function App() {
           <Route
             path="/Persona/3/:projectId"
             element={<PagePersona3 />}
+          ></Route>
+          <Route
+            path="/Persona/3/Select/:projectId"
+            element={<PagePersona3Select />}
           ></Route>
           <Route
             path="/Persona/4/:projectId"

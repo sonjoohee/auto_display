@@ -21,6 +21,7 @@ import PopupWrap from "../../../../assets/styles/Popup";
 import axios from "axios";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import MoleculeRecreate from "./MoleculeRecreate";
+import { InterviewXPersonaMultipleInterviewGeneratorRequest } from "../../../../utils/indexedDB";
 
 const MoleculeInterviewCard = ({
   title,
@@ -107,12 +108,15 @@ const MoleculeInterviewCard = ({
       };
 
       //첫번째 API 호출
-      let response = await axios.post(
-        "https://wishresearch.kr/person/persona_interview",
+      // let response = await axios.post(
+      //   "https://wishresearch.kr/person/persona_interview",
+      //   data,
+      //   axiosConfig
+      // );
+      let response = await InterviewXPersonaMultipleInterviewGeneratorRequest(
         data,
-        axiosConfig
+        isLoggedIn
       );
-
       let questionList = response.data;
       let retryCount = 0;
       const maxRetries = 10;
@@ -122,10 +126,14 @@ const MoleculeInterviewCard = ({
         retryCount < maxRetries &&
         (!response || !response.data || response.data.length !== 5)
       ) {
-        response = await axios.post(
-          "https://wishresearch.kr/person/persona_interview",
+        // response = await axios.post(
+        //   "https://wishresearch.kr/person/persona_interview",
+        //   data,
+        //   axiosConfig
+        // );
+        response = await InterviewXPersonaMultipleInterviewGeneratorRequest(
           data,
-          axiosConfig
+          isLoggedIn
         );
         retryCount++;
 
