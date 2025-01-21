@@ -66,6 +66,7 @@ import {
   IS_PERSONA_ACCESSIBLE,
   INTERVIEW_QUESTION_LIST,
   PERSONA_BUTTON_STATE_3,
+  SINGLE_INTERVIEW_QUESTION_LIST,
 } from "../../../../pages/AtomStates.jsx";
 
 const FULL_DEFINITION_TEXT =
@@ -80,6 +81,9 @@ const PagePersona3Select = () => {
   });
   const [interviewQuestionList, setInterviewQuestionList] = useAtom(
     INTERVIEW_QUESTION_LIST
+  );
+  const [singleInterviewQuestionList, setSingleInterviewQuestionList] = useAtom(
+    SINGLE_INTERVIEW_QUESTION_LIST
   );
   const navigate = useNavigate();
   const [showCustomization, setShowCustomization] = useState(false);
@@ -133,6 +137,7 @@ const PagePersona3Select = () => {
     console.log("personaList", personaList);
     console.log("interviewQuestionList", interviewQuestionList);
     console.log("selectedInterviewPurpose", selectedInterviewPurpose);
+    console.log("singleInterviewQuestionList", singleInterviewQuestionList);
 
     setShowPopup(true);
   };
@@ -338,10 +343,16 @@ const PagePersona3Select = () => {
       )}
 
       {selectedInterviewType === "multiple" ? (
-        <OrganismToastPopup isActive={showToast} autoClose={false} />
-      ) : (
-        <OrganismToastPopupSingleChat isActive={showToast} autoClose={false} />
-      )}
+        <OrganismToastPopup
+          isActive={showToast}
+          onClose={() => setShowToast(false)}
+        />
+      ) : selectedInterviewType === "single" ? (
+        <OrganismToastPopupSingleChat
+          isActive={showToast}
+          onClose={() => setShowToast(false)}
+        />
+      ) : null}
     </>
   );
 };

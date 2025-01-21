@@ -216,13 +216,13 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
               data,
               isLoggedIn
             );
-          let questionList = response.data; //응답 반환하는 부분 (질문 받아옴)
+          let questionList = response.response; //응답 반환하는 부분 (질문 받아옴)
           let retryCount = 0;
           const maxRetries = 10;
 
           while (
             retryCount < maxRetries &&
-            (!response || !response.data || response.data.length !== 5)
+            (!response || !response.response || response.response.length !== 5)
           ) {
             // response = await axios.post(
             //   //인터뷰 질문 생성 api
@@ -235,7 +235,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
               isLoggedIn
             );
             retryCount++;
-            questionList = response.data;
+            questionList = response.response;
           }
 
           if (retryCount >= maxRetries) {
@@ -516,9 +516,9 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             while (
               retryCount < maxRetries &&
               (!response ||
-                !response.data ||
-                !response.data.hasOwnProperty("answer") ||
-                !response.data.answer)
+                !response.response ||
+                !response.response.hasOwnProperty("answer") ||
+                !response.response.answer)
             ) {
               response = await axios.post(
                 "https://wishresearch.kr/person/persona_interview_module",
@@ -534,7 +534,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             }
 
             setIsGenerating(false);
-            allAnswers.push(response.data.answer);
+            allAnswers.push(response.response.answer);
 
             personaInfoState.push(personaInfo);
 
@@ -558,7 +558,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                   gender: gender,
                   age: age,
                   job: job,
-                  answer: response.data.answer,
+                  answer: response.response.answer,
                 },
               ],
             }));
