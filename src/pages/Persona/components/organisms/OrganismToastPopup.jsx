@@ -524,9 +524,9 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             //에러시 실행
             while (
               retryCount < maxRetries &&
-              (!response ||
-                !response.hasOwnProperty("answer") ||
-                !response.answer)
+              (!response.response ||
+                !response.response.hasOwnProperty("answer") ||
+                !response.response.answer)
             ) {
               // response = await axios.post(
               //   "https://wishresearch.kr/person/persona_interview_module",
@@ -671,25 +671,17 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               </Thumb>
               <div>
                 {personaList.selected[questionAnswers.length].persona}
-                {(() => {
-                  const profileArray = personaList.selected[
-                    questionAnswers.length
-                  ].profile
-                    .replace(/['\[\]]/g, "")
-                    .split(", ");
-                  const age = profileArray[0].split(": ")[1];
-                  const gender =
-                    profileArray[1].split(": ")[1] === "남성" ? "남성" : "여성";
-                  const job = profileArray[2].split(": ")[1];
-
-                  return (
-                    <p>
-                      <span>{gender}</span>
-                      <span>{age}세</span>
-                      <span>{job}</span>
-                    </p>
-                  );
-                })()}
+                <p>
+                  <span>
+                    {personaList.selected[questionAnswers.length].gender}
+                  </span>
+                  <span>
+                    {personaList.selected[questionAnswers.length].age}세
+                  </span>
+                  <span>
+                    {personaList.selected[questionAnswers.length].job}
+                  </span>
+                </p>
               </div>
             </TypeName>
             <TextContainer>

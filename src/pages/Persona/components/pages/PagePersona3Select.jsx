@@ -67,6 +67,7 @@ import {
   INTERVIEW_QUESTION_LIST,
   PERSONA_BUTTON_STATE_3,
   SINGLE_INTERVIEW_QUESTION_LIST,
+  PURPOSE_ITEMS_SINGLE,
 } from "../../../../pages/AtomStates.jsx";
 
 const FULL_DEFINITION_TEXT =
@@ -85,6 +86,8 @@ const PagePersona3Select = () => {
   const [singleInterviewQuestionList, setSingleInterviewQuestionList] = useAtom(
     SINGLE_INTERVIEW_QUESTION_LIST
   );
+  const [purposeItemsSingleAtom, setPurposeItemsSingleAtom] =
+    useAtom(PURPOSE_ITEMS_SINGLE);
   const navigate = useNavigate();
   const [showCustomization, setShowCustomization] = useState(false);
   const [purposeText, setPurposeText] = useState("");
@@ -138,7 +141,7 @@ const PagePersona3Select = () => {
     console.log("singleInterviewQuestionList", singleInterviewQuestionList);
     // console.log("selectedInterviewPurpose", selectedInterviewPurpose);
     console.log("selectedInterviewPurposeData", selectedInterviewPurposeData);
-
+    console.log("purposeItemsSingleAtom", purposeItemsSingleAtom);
     setShowPopup(true);
   };
 

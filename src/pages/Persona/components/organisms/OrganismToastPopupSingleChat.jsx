@@ -39,17 +39,23 @@ import {
   SELECTED_PERSONA_LIST,
   SELECTED_INTERVIEW_PURPOSE_DATA,
   SINGLE_INTERVIEW_QUESTION_LIST,
+  PURPOSE_ITEMS_SINGLE,
 } from "../../../../pages/AtomStates";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import { createProjectReportOnServer } from "../../../../utils/indexedDB";
 import MoleculeRecreate from "../../../../pages/Persona/components/molecules/MoleculeRecreate";
 // import { InterviewXPersonaMultipleInterviewGeneratorRequest } from "../../../../utils/indexedDB";
 import { InterviewXPersonaSingleInterviewGeneratorRequest } from "../../../../utils/indexedDB";
+import { InterviewXPersonaSingleInterviewRequest } from "../../../../utils/indexedDB";
 
 const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
   const [selectedPersonaList, setSelectedPersonaList] = useAtom(
     SELECTED_PERSONA_LIST
   );
+
+  const [purposeItemsSingleAtom, setPurposeItemsSingleAtom] =
+    useAtom(PURPOSE_ITEMS_SINGLE);
+
   const [reportId, setReportId] = useAtom(PROJECT_REPORT_ID);
   const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
     IS_PERSONA_ACCESSIBLE
@@ -182,34 +188,38 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
     interviewLoading();
   }, [personaButtonState3, isComplete]);
 
-   // 인터뷰 질문 생성 단계
-   const loadInterviewQuestion = async () => {
+  // 인터뷰 질문 생성 단계
+  const loadInterviewQuestion = async () => {
     setShowRegenerateButton1(false);
     try {
       console.log("Loading interview questions..."); // 추가된 로그
       if (personaButtonState3 === 1) {
         // selectedInterviewPurpose와 같은 view_title을 가진 질문 찾기
+
+        console.log(
+          "🚀 ~ loadInterviewQuestion ~ selectedInterviewPurposeData:",
+          selectedInterviewPurposeData
+        );
         const existingQuestions = singleInterviewQuestionList.find(
           (item) => item.theory_name === selectedInterviewPurposeData.title
         );
 
-        console.log("Existing Questions:", existingQuestions); 
-
-        if (existingQuestions && existingQuestions.commonQuestions && existingQuestions.specialQuestions) {
-          console.log("Common Questions:", existingQuestions.commonQuestions); 
-          console.log("Special Questions:", existingQuestions.specialQuestions); 
+        if (
+          existingQuestions &&
+          existingQuestions.commonQuestions &&
+          existingQuestions.specialQuestions
+        ) {
           // 이미 질문이 생성된 상태면 상태값 설정 후 5초 대기
           const combinedQuestions = [
             ...existingQuestions.commonQuestions,
             ...existingQuestions.specialQuestions,
           ];
-          console.log("Setting Interview Questions:", combinedQuestions); 
           setInterviewQuestionListState(combinedQuestions);
           await new Promise((resolve) => setTimeout(resolve, 5000));
           setIsLoadingPrepare(false);
-          setInterviewStatus(["Pre", "Pre", "Pre"]);
+          setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
         } else {
-          console.log("No existing questions, making API request..."); 
+          console.log("No existing questions, making API request...");
           // 생성된 질문이 없다면 API 요청
           let data = {
             business_idea: businessAnalysis.input,
@@ -227,16 +237,13 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             isLoggedIn
           );
           console.log("API Response:", response); // API 응답 로그
-          let questionList = response.response; //응답 반환하는 부분 (질문 받아옴)
-          console.log("Question List:", questionList); // 추가된 로그
 
           let retryCount = 0;
           const maxRetries = 10;
 
           while (
             retryCount < maxRetries &&
-            (!response || !response.response || response.response.length < 10)
-
+            (!response || !response.response || response.response.questions)
           ) {
             console.log("Attempting API request..."); // API 요청 시도 로그
             response = await InterviewXPersonaSingleInterviewGeneratorRequest(
@@ -245,44 +252,55 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             );
             console.log("API Response:", response); // API 응답 로그
             retryCount++;
-            questionList = response.response;
           }
 
           if (retryCount >= maxRetries) {
             setShowErrorPopup(true);
             return;
           } else {
-            let questionList = response.response; // 응답에서 질문 목록 설정
+            if (response.response) {
+              const commonQuestions = response.response
+                .filter((item) => item.question_type === "공통질문")
+                .map((item) => item.question);
 
-            const newQuestionList = [
-              ...singleInterviewQuestionList,
-              {
-                theory_name: selectedInterviewPurpose,
-                questions: questionList,
-              },
-            ];
+              const specialQuestions = response.response
+                .filter((item) => item.question_type === "특화질문")
+                .map((item) => item.question);
 
-            console.log("Updated singleInterviewQuestionList:", newQuestionList); // Added console log
-            setSingleInterviewQuestionList(newQuestionList);
-        
-            console.log("Setting Interview Questions:", questionList); // Added console log
-            setInterviewQuestionListState(questionList);
-            // setInterviewQuestionListState(questionList.slice(2));
+              const newQuestionData = {
+                theory_name: selectedInterviewPurposeData.title,
+                commonQuestions,
+                specialQuestions,
+              };
 
-            setPersonaButtonState3(0);
-            setIsLoadingPrepare(false);
-            const initialStatus = new Array(questionList.slice(2).length).fill(
-              "Pre"
-            );
-            setInterviewStatus(initialStatus);
+              console.log("새로운 질문 데이터:", newQuestionData);
 
-            await updateProjectOnServer(
-              projectId,
-              {
-                singleInterviewQuestionList: newQuestionList,
-              },
-              isLoggedIn
-            );
+              setSingleInterviewQuestionList((prev) => {
+                const newState = [...prev, newQuestionData];
+                console.log("업데이트된 상태:", newState);
+                return newState;
+              });
+
+              const combinedQuestions = [
+                ...newQuestionData.commonQuestions,
+                ...newQuestionData.specialQuestions,
+              ];
+              setInterviewQuestionListState(combinedQuestions);
+              console.log(
+                "🚀 ~ loadInterviewQuestion ~ interviewQuestionListState:",
+                interviewQuestionListState
+              );
+              await updateProjectOnServer(
+                projectId,
+                {
+                  singleInterviewQuestionList: [
+                    ...singleInterviewQuestionList,
+                    newQuestionData,
+                  ],
+                },
+                isLoggedIn
+              );
+            }
           }
         }
       }
@@ -468,12 +486,18 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
         newStatus[currentQuestionIndex] = "Ing";
         setInterviewStatus(newStatus);
 
+        console.log(
+          "🚀 ~ processInterview ~ interviewStatus:",
+          interviewStatus
+        );
+
         setAnswers((prev) => ({
           ...prev,
           [currentQuestionIndex]: [],
         }));
 
         try {
+          console.log("🚀 ~ processInterview ~ allAnswers:", allAnswers);
           allAnswers = [];
           personaInfoState = [];
 
@@ -502,32 +526,44 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
               }
             }
 
+            console.log(
+              "🚀 ~ processInterview ~ lastInterview:",
+              lastInterview
+            );
             const personaInfo = {
-              id: personaList.selected[i].personIndex.replace(/[^0-9]/g, ""),
+              id: personaList.selected[i].persona_id.replace(/[^0-9]/g, ""),
               name: personaList.selected[i].persona,
-              keyword: personaList.selected[i].keyword,
-              hashtag: personaList.selected[i].tag,
-              summary: personaList.selected[i].summary,
+              keyword: personaList.selected[i].persona_keyword,
+              hashtag: personaList.selected[i].lifestyle,
+              summary: personaList.selected[i].consumption_pattern,
             };
 
             //수집된 답변들 api요청에 포함
             const data = {
               business_analysis_data: businessAnalysis,
               question: interviewQuestionListState[currentQuestionIndex],
+              theory_data: purposeItemsSingleAtom,
               persona_info: personaInfo,
               last_interview: lastInterview,
             };
+            console.log("🚀 ~ processInterview ~ data:", data);
 
-            let response = await axios.post(
-              //페르소나 답변 생성하는 api
-              "https://wishresearch.kr/person/persona_interview_module",
+            // let response = await axios.post(
+            //   //페르소나 답변 생성하는 api
+            //   "https://wishresearch.kr/person/persona_interview_module",
+            //   data,
+            //   axiosConfig
+            // );
+
+            let response = await InterviewXPersonaSingleInterviewRequest(
               data,
-              axiosConfig
+              isLoggedIn
             );
 
             let retryCount = 0;
             const maxRetries = 10;
 
+            console.log("🚀 ~ processInterview ~ response:", response);
             //에러시 실행
             while (
               retryCount < maxRetries &&
@@ -536,11 +572,16 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                 !response.response.hasOwnProperty("answer") ||
                 !response.response.answer)
             ) {
-              response = await axios.post(
-                "https://wishresearch.kr/person/persona_interview_module",
+              response = await InterviewXPersonaSingleInterviewRequest(
                 data,
-                axiosConfig
+                isLoggedIn
               );
+
+              // response = await axios.post(
+              //   "https://wishresearch.kr/person/persona_interview_module",
+              //   data,
+              //   axiosConfig
+              // );
               retryCount++;
             }
 
@@ -552,16 +593,18 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             setIsGenerating(false);
             allAnswers.push(response.response.answer);
 
+            console.log("🚀 ~ processInterview ~ allAnswers:", allAnswers);
             personaInfoState.push(personaInfo);
 
             //페르소나 정보 처리 (나이, 성별, 직업 정보 추출 )
-            const profileArray = personaList.selected[i].profile
-              .replace(/['\[\]]/g, "")
-              .split(", ");
-            const age = profileArray[0].split(": ")[1];
-            const gender =
-              profileArray[1].split(": ")[1] === "남성" ? "남성" : "여성";
-            const job = profileArray[2].split(": ")[1];
+            console.log(
+              "🚀 ~ processInterview ~ personaList.selected[i].profile:",
+              personaList.selected[i]
+            );
+
+            const age = personaList.selected[i].age;
+            const gender = personaList.selected[i].gender;
+            const job = personaList.selected[i].job;
 
             //답변 상태 업데이트 ( 현재 질문에 대한 각 페르소나의 답변 저장 )
             //각 질문에 대해 모든 페르소나의 답변을 받고 나서야 다음 질문으로 넘어
@@ -578,6 +621,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                 },
               ],
             }));
+            console.log("🚀 ~ processInterview ~ answers:", answers);
 
             // 한 질문에 대한 모든 페르소나의 답변이 완료되면 interviewData 업데이트
             if (i === personaList.selected.length - 1) {
@@ -824,9 +868,9 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
     return interviewQuestionListState.map((item, index) => {
       return (
         <ChatItem Persona key={index}>
-        <Persona color="Linen" size="Medium" Round>
-                    <img src={personaImages.PersonaWomen02} alt="페르소나" />
-                  </Persona>
+          <Persona color="Linen" size="Medium" Round>
+            <img src={personaImages.PersonaWomen02} alt="페르소나" />
+          </Persona>
           <ChatBox Moder data-time="1 min ago">
             <Sub1 color="gray800" align="left">
               {item} {/* 질문 내용 */}
@@ -839,7 +883,9 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
               </Persona>
               <ChatBox Persona>
                 <Sub1 color="gray800" align="left">
-                  전기면도기를 사용하는 데 전원이 필요한데, 만약 외부 활동 중 전원이 부족하다면 사용이 어려울 수 있습니다. 전기가 공급되지 않는 환경에는 사용이 어려울 것 같습니다.
+                  전기면도기를 사용하는 데 전원이 필요한데, 만약 외부 활동 중
+                  전원이 부족하다면 사용이 어려울 수 있습니다. 전기가 공급되지
+                  않는 환경에는 사용이 어려울 것 같습니다.
                 </Sub1>
               </ChatBox>
             </ChatItem>
@@ -916,7 +962,11 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                 interviewQuestionListState.map((item, index) => {
                   const status = interviewStatus[index] || "Pre"; // 현재 질문의 상태를 가져옴
                   return (
-                    <QuestionItem key={index} checked={item.checked} disabled={status === "Pre"}>
+                    <QuestionItem
+                      key={index}
+                      checked={item.checked}
+                      disabled={status === "Pre"}
+                    >
                       <Sub2 color="gray800">
                         Q{index + 1}. {item}
                       </Sub2>
@@ -1112,22 +1162,20 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
               )}
 
               <ChatListWrap>
-                
-                  {renderInterviewItems()}
-                  <ChatItem Add>
-                    <ChatBox Moder data-time="1 min ago">
-                      <Sub1 color="gray800" align="left">
-                        추가로 질문 하실 부분이 있으신가요?/
-                        <span>(Basic 1회 가능)</span>
-                      </Sub1>
-                    </ChatBox>
-                    <ChatAddButton>
-                      <button type="button">네, 있습니다!</button>
-                      <button type="button">아니요, 괜찮습니다.</button>
-                    </ChatAddButton>
-             
-         
-                {/* <ChatItem Persona>
+                {renderInterviewItems()}
+                <ChatItem Add>
+                  <ChatBox Moder data-time="1 min ago">
+                    <Sub1 color="gray800" align="left">
+                      추가로 질문 하실 부분이 있으신가요?/
+                      <span>(Basic 1회 가능)</span>
+                    </Sub1>
+                  </ChatBox>
+                  <ChatAddButton>
+                    <button type="button">네, 있습니다!</button>
+                    <button type="button">아니요, 괜찮습니다.</button>
+                  </ChatAddButton>
+
+                  {/* <ChatItem Persona>
                   <Persona color="Linen" size="Medium" Round>
                     <img src={personaImages.PersonaWomen02} alt="페르소나" />
                   </Persona>
@@ -2076,7 +2124,7 @@ const Entering = styled.div`
 
 const AddQuestion = styled.div`
   position: sticky;
-  bottom: ${({ show }) => (show ? '58px' : '-100%')};
+  bottom: ${({ show }) => (show ? "58px" : "-100%")};
   left: 0;
   right: 0;
   display: flex;
@@ -2088,9 +2136,9 @@ const AddQuestion = styled.div`
   padding: 20px 20px 12px 20px;
   border-top: 1px solid ${palette.outlineGray};
   background: ${palette.white};
-  transform: translateY(${({ show }) => (show ? '0' : '100%')});
-  // opacity: ${({ show }) => (show ? '1' : '0')};
-  visibility: ${({ show }) => (show ? 'visible' : 'collapse')};
+  transform: translateY(${({ show }) => (show ? "0" : "100%")});
+  // opacity: ${({ show }) => (show ? "1" : "0")};
+  visibility: ${({ show }) => (show ? "visible" : "collapse")};
   transition: all 0.3s ease-in-out;
   z-index: 1;
 
