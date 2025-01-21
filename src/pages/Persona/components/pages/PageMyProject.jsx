@@ -6,6 +6,7 @@ import { palette } from "../../../../assets/styles/Palette";
 import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
 // import Header from "../../../Design_Page/IncHeader";
 import MoleculeHeader from "../molecules/MoleculeHeader";
+import PopupWrap from "../../../../assets/styles/Popup";
 import {
   ButtonGroup,
   Button,
@@ -16,11 +17,21 @@ import {
   MainContent,
   Badge,
   DashboardCard,
+  DashboardCardTitle,
   DashboardAmount,
   TabWrapType3,
   TabButtonType3,
   ToggleBox,
   ToggleList,
+  CreditTotal,
+  CreditDashBoardWrap,
+  CreditDashBoard,
+  CreditDashBoardItem,
+  CreditDashBoardList,
+  CreditDashBoardListHeader,
+  CreditDashBoardListContent,
+  CreditListItem,
+  CreditBadge,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../../assets/styles/Images";
 import { useNavigate } from "react-router-dom";
@@ -59,14 +70,22 @@ import {
   H2,
   H3,
   H5,
+  H6,
   Body2,
   Body3,
+  Sub2_1,
   Sub3,
   Caption2,
 } from "../../../../assets/styles/Typography";
+import Pagination from '../../../../components/common/Pagination';
 
 const PageMyProject = () => {
   useDynamicViewport("width=1280");
+
+  const [showPopup, setShowPopup] = useState(false);
+  const handlePopupConfirm = () => {
+    setShowPopup(false);
+  };
 
   const [projectLoading, setProjectLoading] = useAtom(PROJECT_LOADING);
   const [refreshTrigger, setRefreshTrigger] = useAtom(PROJECT_REFRESH_TRIGGER);
@@ -119,6 +138,7 @@ const PageMyProject = () => {
   const [activeTab, setActiveTab] = useState("project");
   const [isServiceMenuOpen, setIsServiceMenuOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  const [showCreditPopup, setShowCreditPopup] = useState(false);
 
   const closeServiceMenu = () => {
     setIsClosing(true);
@@ -140,6 +160,14 @@ const PageMyProject = () => {
       // 열 때
       setOpenStates((prev) => ({ ...prev, [projectId]: true }));
     }
+  };
+
+  const handleCreditHistoryClick = () => {
+    setShowCreditPopup(true);
+  };
+
+  const handleCreditPopupClose = () => {
+    setShowCreditPopup(false);
   };
 
   useEffect(() => {
@@ -271,8 +299,9 @@ const PageMyProject = () => {
 
                 <ButtonGroup>
                   <Button Primary onClick={() => navigate("/Payment")}>
-                    <img src={images.CalendarCheck} alt="구독 플랜 관리" />
-                    <Sub3 color="primary">구독 플랜 관리</Sub3>
+                    <images.CoinSmall width="12px" height="8px" color={palette.primary} />
+                    {/* <img src={images.CoinSmall} alt="요금제 관리" /> */}
+                    <Sub3 color="primary">요금제 관리</Sub3>
                   </Button>
                   <div style={{ position: "relative" }}>
                     <Button
@@ -327,7 +356,7 @@ const PageMyProject = () => {
                   </DashboardAmount>
                 </DashboardCard>
                 <DashboardCard>
-                  <Body2 color="gray500">완료 페르소나</Body2>
+                  <Body2 color="gray500">생성 완료 페르소나</Body2>
                   <DashboardAmount>
                     <H3 color="gray800">1건</H3>
                     <Badge New>new</Badge>
@@ -340,9 +369,24 @@ const PageMyProject = () => {
                   </DashboardAmount>
                 </DashboardCard>
                 <DashboardCard>
-                  <Body2 color="gray500">당월 요금제</Body2>
-                  <DashboardAmount>
-                    <H3 color="gray800">Pro Plan</H3>
+                  <DashboardCardTitle>
+                    <Body2 color="gray500">잔여 크레딧</Body2>
+                    <Caption2 color="gray500" onClick={handleCreditHistoryClick} style={{ cursor: 'pointer' }}>
+                      사용 내역
+                      <images.ChevronRight width="16px" height="16px" color={palette.gray700} />
+                    </Caption2>
+                  </DashboardCardTitle>
+                  <DashboardAmount Coin>
+                    {/* <H3 color="gray800">Pro Plan</H3> */}
+                    <CreditTotal>
+                      <div>
+                        <span>
+                          <images.CoinSmall width="12px" height="8px" color={palette.white} />
+                        </span>
+                        <H6 color="gray800">21,250</H6>
+                      </div>
+                      <images.ChevronDown width="20px" height="20px" color={palette.gray300} />
+                    </CreditTotal>
                   </DashboardAmount>
                 </DashboardCard>
               </MyDashboardContent>
@@ -450,6 +494,100 @@ const PageMyProject = () => {
           </MyProjectWrap>
         </MainContent>
       </ContentsWrap>
+
+      {showCreditPopup && (
+        <PopupWrap 
+          Wide
+          TitleFlex
+          title="크레딧 사용 내역" 
+          onConfirm={handleCreditPopupClose}
+          onCancel={handleCreditPopupClose}
+          isModal={true}
+          body={
+            <>
+              <CreditDashBoardWrap>
+                <H5>잔여 크레딧 : 21,250</H5>
+                <CreditDashBoard>
+                  <CreditDashBoardItem>
+                    <div class="icon yellow">
+                      <images.CoinFill width="19" height="12" color="#FFD54A" />
+                    </div>
+                    <div class="text">
+                      <Sub3 color="gray500" align="left">일반 크레딧</Sub3>
+                      <H6 color="gray800" align="left">11,000</H6>
+                    </div>
+                  </CreditDashBoardItem>
+                  <CreditDashBoardItem>
+                    <div class="icon green" align="left">
+                      <images.CoinFill width="19" height="12" color="#34C759" />
+                    </div>
+                    <div class="text">
+                      <Sub3 color="gray500" align="left">구독 크레딧</Sub3>
+                      <H6 color="gray800" align="left">10,000</H6>
+                    </div>
+                  </CreditDashBoardItem>
+                  <CreditDashBoardItem>
+                    <div class="icon red">
+                      <images.CoinFill width="19" height="12" color="#FF5322" />
+                    </div>
+                    <div class="text">
+                      <Sub3 color="gray500" align="left">이벤트 크레딧</Sub3>
+                      <H6 color="gray800" align="left">150</H6>
+                    </div>
+                  </CreditDashBoardItem>
+                </CreditDashBoard>
+
+                <CreditDashBoardList>
+                  <CreditDashBoardListHeader>
+                    <Body3 color="gray500">크레딧 타입</Body3>
+                    <Body3 color="gray500">사용 내역</Body3>
+                    <Body3 color="gray500">날짜</Body3>
+                    <Body3 color="gray500">크레딧 소모</Body3>
+                  </CreditDashBoardListHeader>
+
+                  <CreditDashBoardListContent>
+                    <CreditListItem>
+                      <div>
+                      <CreditBadge General>
+                        <span><images.CoinFill color="#FFD54A" /></span>
+                        <Sub2_1>일반 크레딧</Sub2_1>
+                      </CreditBadge>
+                      </div>
+                      <Body3 color="gray500">비즈니스 페르소나 생성 비즈니스 페르소나 생성 비즈니스 페르소나 생성</Body3>
+                      <Body3 color="gray500">2025년 1월 14일</Body3>
+                      <Body3 color="gray500">-50</Body3>
+                    </CreditListItem>
+                    <CreditListItem>
+                      <div>
+                      <CreditBadge Subscription>
+                        <span><images.CoinFill color="#34C759" /></span>
+                        <Sub2_1>구독 크레딧</Sub2_1>
+                      </CreditBadge>
+                      </div>
+                      <Body3 color="gray500">비즈니스 페르소나 생성</Body3>
+                      <Body3 color="gray500">2025년 1월 14일</Body3>
+                      <Body3 color="gray500">-50</Body3>
+                    </CreditListItem>
+                    <CreditListItem>
+                      <div>
+                      <CreditBadge Event>
+                        <span><images.CoinFill color="#FF5322" /></span>
+                        <Sub2_1>이벤트</Sub2_1>
+                      </CreditBadge>
+                      </div>
+                      <Body3 color="gray500">비즈니스 페르소나 생성</Body3>
+                      <Body3 color="gray500">2025년 1월 14일</Body3>
+                      <Body3 color="gray500">-50</Body3>
+                    </CreditListItem>
+                  </CreditDashBoardListContent>
+                </CreditDashBoardList>
+
+                <Pagination currentPage={1} totalPages={11} />
+              </CreditDashBoardWrap>
+            </>
+          }
+        />
+      )}
     </>
   );
 };
