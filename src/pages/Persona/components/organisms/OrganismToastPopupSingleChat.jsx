@@ -110,6 +110,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
   const [selectedQuestions, setSelectedQuestions] = useState([]);
   const [showAddQuestion, setShowAddQuestion] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const [allAnswersState, setAllAnswersState] = useState([]); // 상태로 관리
 
   const axiosConfig = {
     timeout: 100000,
@@ -482,16 +483,19 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
         !isLoadingPrepare &&
         interviewStatus[currentQuestionIndex] === "Pre"
       ) {
-        console.log("Current status for question index", currentQuestionIndex, "is Pre."); // 현재 상태가 Pre일 때 콘솔 로그 추가
+        console.log(
+          "Current status for question index",
+          currentQuestionIndex,
+          "is Pre."
+        ); // 현재 상태가 Pre일 때 콘솔 로그 추가
         const newStatus = [...interviewStatus];
         newStatus[currentQuestionIndex] = "Ing";
-        console.log("Updated status for question index", currentQuestionIndex, "to Ing."); // 상태를 Ing으로 업데이트할 때 콘솔 로그 추가
-        setInterviewStatus(newStatus);
-
         console.log(
-          "🚀 ~ processInterview ~ interviewStatus:",
-          interviewStatus
-        );
+          "Updated status for question index",
+          currentQuestionIndex,
+          "to Ing."
+        ); // 상태를 Ing으로 업데이트할 때 콘솔 로그 추가
+        setInterviewStatus(newStatus);
 
         setAnswers((prev) => ({
           ...prev,
@@ -499,8 +503,6 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
         }));
 
         try {
-          console.log("🚀 ~ processInterview ~ allAnswers:", allAnswers);
-          allAnswers = [];
           personaInfoState = [];
 
           // 선택된 페르소나 수 만큼 반복
@@ -522,7 +524,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
               if (personaAnswer) {
                 //찾은 답변이 있다면 질문과 답변을 쌍으로 배열에 추가
                 lastInterview.push({
-                  question: interviewQuestionListState[q].question,
+                  question: interviewQuestionListState[q],
                   answer: personaAnswer.answer,
                 });
               }
@@ -565,7 +567,6 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             let retryCount = 0;
             const maxRetries = 10;
 
-            console.log("🚀 ~ processInterview ~ response:", response);
             //에러시 실행
             while (
               retryCount < maxRetries &&
@@ -574,6 +575,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                 !response.response.hasOwnProperty("answer") ||
                 !response.response.answer)
             ) {
+              console.log("🚀 ~ processInterview ~ response 재실행:", response);
               response = await InterviewXPersonaSingleInterviewRequest(
                 data,
                 isLoggedIn
@@ -593,9 +595,15 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             }
 
             setIsGenerating(false);
-            allAnswers.push(response.response.answer);
 
-            console.log("🚀 ~ processInterview ~ allAnswers:", allAnswers);
+            // allAnswers 대신 상태 사용
+            setAllAnswersState((prev) => [...prev, response.response.answer]);
+
+            console.log(
+              "🚀 ~ processInterview ~ allAnswersState:",
+              allAnswersState
+            );
+
             personaInfoState.push(personaInfo);
 
             //페르소나 정보 처리 (나이, 성별, 직업 정보 추출 )
@@ -623,7 +631,6 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                 },
               ],
             }));
-            console.log("🚀 ~ processInterview ~ answers:", answers);
 
             // 한 질문에 대한 모든 페르소나의 답변이 완료되면 interviewData 업데이트
             if (i === personaList.selected.length - 1) {
@@ -632,7 +639,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                 newData[currentQuestionIndex] = {
                   [`question_${currentQuestionIndex + 1}`]:
                     interviewQuestionListState[currentQuestionIndex].question,
-                  [`answer_${currentQuestionIndex + 1}`]: allAnswers,
+                  [`answer_${currentQuestionIndex + 1}`]: allAnswersState,
                 };
                 return newData;
               });
@@ -642,15 +649,17 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
               setInterviewStatus(newStatus); // 상태 업데이트
 
               // 현재 질문의 상태를 콘솔에 출력
-              console.log(`Question ${currentQuestionIndex + 1} status: Complete`);
+              console.log(
+                `Question ${currentQuestionIndex + 1} status: Complete`
+              );
 
               // 모든 인터뷰가 완료되었는지 확인
               const allComplete = newStatus.every(
                 (status) => status === "Complete"
               );
-          
+
               if (allComplete) {
-                loadInterviewReport(personaInfoState, allAnswers); // 결과 보고서 생성 함수 호출
+                // loadInterviewReport(personaInfoState, allAnswersState); // allAnswersState 전달
               }
 
               if (
@@ -684,7 +693,6 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
     processInterview();
     // 인터뷰 준비완료, 다음 질문 세팅, 인터뷰 상태 변경 시 마다 useEffect 실행
   }, [isLoadingPrepare, currentQuestionIndex, interviewStatus]);
-
 
   // const renderAnswers = (questionIndex) => {
   //   const questionAnswers = answers[questionIndex] || [];
@@ -886,38 +894,67 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
 
   const renderInterviewItems = () => {
     return interviewQuestionListState.map((item, index) => {
-      const status = interviewStatus[index] || "Pre"; // 현재 질문의 상태를 가져옴
-      return (
-        (status === "Ing" || status === "Complete") && ( // 상태가 "Ing" 또는 "Complete"일 때만 질문을 보여줌
-          <ChatItem Moder key={index}>
-            <Persona color="Linen" size="Medium" Round>
-              <img src={personaImages.PersonaWomen02} alt="페르소나" />
-            </Persona>
-            <ChatBox Moder data-time="1 min ago">
-              <Sub1 color="gray800" align="left">
-                {item} {/* 질문 내용 */}
-              </Sub1>
-            </ChatBox>
-            {visibleAnswers[index] && (
-              <ChatBox Persona>
+      const status = interviewStatus[index] || "Pre";
+      if (status === "Ing" || status === "Complete") {
+        return (
+          <React.Fragment key={index}>
+            {/* 모더레이터의 질문 */}
+            <ChatItem Moder>
+              <Persona color="Gainsboro" size="Medium" Round>
+                <img src={personaImages.PersonaMen28} alt="모더" />
+                <span>
+                  <img src={images.PatchCheckFill} alt="" />
+                  <Helptext color="primary">모더</Helptext>
+                </span>
+              </Persona>
+              <ChatBox Moder data-time="1 min ago">
                 <Sub1 color="gray800" align="left">
-                  {answers[index]?.[0]?.answer} 
+                  Q{index + 1}. {item}
                 </Sub1>
               </ChatBox>
+            </ChatItem>
+
+            {/* 페르소나들의 답변 */}
+            {answers[index]?.map((answer, answerIndex) => (
+              <ChatItem Persona key={`${index}-${answerIndex}`}>
+                <Persona color="Linen" size="Medium" Round>
+                  <img
+                    src={`/ai_person/${answer.persona.personaImg}.jpg`}
+                    alt={answer.persona.persona}
+                  />
+                </Persona>
+                <ChatBox Persona>
+                  <Sub1 color="gray800" align="left">
+                    {answer.answer}
+                  </Sub1>
+                </ChatBox>
+              </ChatItem>
+            ))}
+
+            {/* 답변 생성 중인 경우 */}
+            {status === "Ing" && isGenerating && (
+              <ChatItem Persona>
+                <Persona color="Linen" size="Medium" Round>
+                  <img
+                    src={`/ai_person/${
+                      personaList.selected[answers[index]?.length || 0]
+                        ?.personaImg
+                    }.jpg`}
+                    alt="페르소나"
+                  />
+                </Persona>
+                <ChatBox Persona>
+                  <Entering />
+                </ChatBox>
+              </ChatItem>
             )}
-            
-            {interviewStatus[index] === "Complete" && (
-              <ChatBox Persona>
-                <Sub1 color="gray800" align="left">
-                  {answers[index]?.[0]?.answer} 
-                </Sub1>
-              </ChatBox>
-            )}
-          </ChatItem>
-        )
-      );
+          </React.Fragment>
+        );
+      }
+      return null;
     });
   };
+
   // 이미 완료된 인터뷰를 확인할 때 사용 ex)인터뷰 스크립트 보기, 인터뷰 상세보기
   const renderInterviewItemsComplete = () => {
     return interviewQuestionListState.map((item, index) => (
@@ -1152,7 +1189,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                       Small
                       Outline
                       onClick={() =>
-                        loadInterviewReport(personaInfoState, allAnswers)
+                        loadInterviewReport(personaInfoState, allAnswersState)
                       }
                     >
                       <img src={images.ArrowClockwise} alt="" />
@@ -1186,96 +1223,22 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
 
               <ChatListWrap>
                 {renderInterviewItems()}
-                <ChatItem Add>
-                  <ChatBox Moder data-time="1 min ago">
-                    <Sub1 color="gray800" align="left">
-                      추가로 질문 하실 부분이 있으신가요?/
-                      <span>(Basic 1회 가능)</span>
-                    </Sub1>
-                  </ChatBox>
-                  <ChatAddButton>
-                    <button type="button">네, 있습니다!</button>
-                    <button type="button">아니요, 괜찮습니다.</button>
-                  </ChatAddButton>
-
-                  {/* <ChatItem Persona>
-                  <Persona color="Linen" size="Medium" Round>
-                    <img src={personaImages.PersonaWomen02} alt="페르소나" />
-                  </Persona>
-                  <ChatBox Persona>
-                    <Sub1 color="gray800" align="left">
-                      전기면도기를 사용하는 데 전원이 필요한데, 만약 외부 활동
-                      중 전원이 부족하다면 사용이 어려울 수 있습니다. 전기가
-                      공급되지 않는 환경에는 사용이 어려울 것 같습니다.
-                    </Sub1>
-                  </ChatBox>
-                </ChatItem>
-                <ChatItem Moder>
-                  <Persona color="Gainsboro" size="Medium" Round>
-                    <img src={personaImages.PersonaMen28} alt="모더" />
-                    <span>
-                      <img src={images.PatchCheckFill} alt="" />
-                      <Helptext color="primary">모더</Helptext>
-                    </span>
-                  </Persona>
-                  <ChatBox Moder data-time="1 min ago">
-                    <Sub1 color="gray800" align="left">
-                      Q1. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰
-                      이유는 무엇이라고 생각하시나요?
-                    </Sub1>
-                  </ChatBox>
-                </ChatItem>
-                <ChatItem Persona>
-                  <Persona color="Linen" size="Medium" Round>
-                    <img src={personaImages.PersonaWomen02} alt="페르소나" />
-                  </Persona>
-                  <ChatBox Persona>
-                    <Sub1 color="gray800" align="left">
-                      전기면도기를 사용하는 데 전원이 필요한데, 만약 외부 활동
-                      중 전원이 부족하다면 사용이 어려울 수 있습니다. 전기가
-                      공급되지 않는 환경에는 사용이 어려울 것 같습니다.
-                    </Sub1>
-                  </ChatBox>
-                </ChatItem>
-                <ChatItem Moder>
-                  <Persona color="Gainsboro" size="Medium" Round>
-                    <img src={personaImages.PersonaMen28} alt="모더" />
-                    <span>
-                      <img src={images.PatchCheckFill} alt="" />
-                      <Helptext color="primary">모더</Helptext>
-                    </span>
-                  </Persona>
-                  <ChatBox Moder data-time="1 min ago">
-                    <Sub1 color="gray800" align="left">
-                      Q1. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰
-                      이유는 무엇이라고 생각하시나요?
-                    </Sub1>
-                  </ChatBox>
-                </ChatItem>
-                <ChatItem Persona>
-                  <Persona color="Linen" size="Medium" Round>
-                    <img src={personaImages.PersonaWomen02} alt="페르소나" />
-                  </Persona>
-                  <ChatBox Persona>
-                    <Sub1 color="gray800" align="left">
-                      전기면도기를 사용하는 데 전원이 필요한데, 만약 외부 활동
-                      중 전원이 부족하다면 사용이 어려울 수 있습니다. 전기가
-                      공급되지 않는 환경에는 사용이 어려울 것 같습니다.
-                    </Sub1>
-                  </ChatBox>
-                </ChatItem>
-                <ChatItem Add>
-                  <ChatBox Moder data-time="1 min ago">
-                    <Sub1 color="gray800" align="left">
-                      추가로 질문 하실 부분이 있으신가요?/
-                      <span>(Basic 1회 가능)</span>
-                    </Sub1>
-                  </ChatBox> */}
-                  <ChatAddButton>
-                    <button type="button">네, 있습니다!</button>
-                    <button type="button">아니요, 괜찮습니다.</button>
-                  </ChatAddButton>
-                </ChatItem>
+                {/* 모든 질문이 Complete 상태일 때만 추가 질문 메시지 표시 */}
+                {interviewStatus.length > 0 &&
+                  interviewStatus.every((status) => status === "Complete") && (
+                    <ChatItem Add>
+                      <ChatBox Moder data-time="1 min ago">
+                        <Sub1 color="gray800" align="left">
+                          추가로 질문 하실 부분이 있으신가요?
+                          <span>(Basic 1회 가능)</span>
+                        </Sub1>
+                      </ChatBox>
+                      <ChatAddButton>
+                        <button type="button">네, 있습니다!</button>
+                        <button type="button">아니요, 괜찮습니다.</button>
+                      </ChatAddButton>
+                    </ChatItem>
+                  )}
               </ChatListWrap>
             </Contents>
 
