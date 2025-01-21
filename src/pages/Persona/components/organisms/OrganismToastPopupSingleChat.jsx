@@ -482,8 +482,10 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
         !isLoadingPrepare &&
         interviewStatus[currentQuestionIndex] === "Pre"
       ) {
+        console.log("Current status for question index", currentQuestionIndex, "is Pre."); // 현재 상태가 Pre일 때 콘솔 로그 추가
         const newStatus = [...interviewStatus];
         newStatus[currentQuestionIndex] = "Ing";
+        console.log("Updated status for question index", currentQuestionIndex, "to Ing."); // 상태를 Ing으로 업데이트할 때 콘솔 로그 추가
         setInterviewStatus(newStatus);
 
         console.log(
@@ -635,13 +637,18 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                 return newData;
               });
 
-              newStatus[currentQuestionIndex] = "Complete";
-              setInterviewStatus(newStatus); // 해당 질문 완료로 업데이트
+              // 콘솔 로그 추가
+              newStatus[currentQuestionIndex] = "Complete"; // 현재 질문 상태를 "Complete"로 업데이트
+              setInterviewStatus(newStatus); // 상태 업데이트
+
+              // 현재 질문의 상태를 콘솔에 출력
+              console.log(`Question ${currentQuestionIndex + 1} status: Complete`);
 
               // 모든 인터뷰가 완료되었는지 확인
               const allComplete = newStatus.every(
                 (status) => status === "Complete"
               );
+          
               if (allComplete) {
                 loadInterviewReport(personaInfoState, allAnswers); // 결과 보고서 생성 함수 호출
               }
@@ -678,75 +685,75 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
     // 인터뷰 준비완료, 다음 질문 세팅, 인터뷰 상태 변경 시 마다 useEffect 실행
   }, [isLoadingPrepare, currentQuestionIndex, interviewStatus]);
 
-  const renderAnswers = (questionIndex) => {
-    const questionAnswers = answers[questionIndex] || [];
+  // const renderAnswers = (questionIndex) => {
+  //   const questionAnswers = answers[questionIndex] || [];
 
-    return (
-      <>
-        {questionAnswers.map((answer, index) => (
-          <AnswerItem key={index}>
-            <TypeName>
-              <Thumb>
-                <img
-                  src={`/ai_person/${answer.persona.personaImg}.jpg`}
-                  alt={answer.persona.persona}
-                />
-              </Thumb>
+  //   return (
+  //     <>
+  //       {questionAnswers.map((answer, index) => (
+  //         <AnswerItem key={index}>
+  //           <TypeName>
+  //             <Thumb>
+  //               <img
+  //                 src={`/ai_person/${answer.persona.personaImg}.jpg`}
+  //                 alt={answer.persona.persona}
+  //               />
+  //             </Thumb>
 
-              <div>
-                {answer.persona.persona}
-                <p>
-                  <span>{answer.gender}</span>
-                  <span>{answer.age}세</span>
-                  <span>{answer.job}</span>
-                </p>
-              </div>
-            </TypeName>
-            <TextContainer>{answer.answer}</TextContainer>
-          </AnswerItem>
-        ))}
-        {isGenerating && interviewStatus[questionIndex] === "Ing" && (
-          <AnswerItem>
-            <TypeName>
-              <Thumb>
-                <img
-                  src={`/ai_person/${
-                    personaList.selected[questionAnswers.length].personaImg
-                  }.jpg`}
-                  alt={personaList.selected[questionAnswers.length].persona}
-                />
-              </Thumb>
-              <div>
-                {personaList.selected[questionAnswers.length].persona}
-                {(() => {
-                  const profileArray = personaList.selected[
-                    questionAnswers.length
-                  ].profile
-                    .replace(/['\[\]]/g, "")
-                    .split(", ");
-                  const age = profileArray[0].split(": ")[1];
-                  const gender =
-                    profileArray[1].split(": ")[1] === "남성" ? "남성" : "여성";
-                  const job = profileArray[2].split(": ")[1];
+  //             <div>
+  //               {answer.persona.persona}
+  //               <p>
+  //                 <span>{answer.gender}</span>
+  //                 <span>{answer.age}세</span>
+  //                 <span>{answer.job}</span>
+  //               </p>
+  //             </div>
+  //           </TypeName>
+  //           <TextContainer>{answer.answer}</TextContainer>
+  //         </AnswerItem>
+  //       ))}
+  //       {isGenerating && interviewStatus[questionIndex] === "Ing" && (
+  //         <AnswerItem>
+  //           <TypeName>
+  //             <Thumb>
+  //               <img
+  //                 src={`/ai_person/${
+  //                   personaList.selected[questionAnswers.length].personaImg
+  //                 }.jpg`}
+  //                 alt={personaList.selected[questionAnswers.length].persona}
+  //               />
+  //             </Thumb>
+  //             <div>
+  //               {personaList.selected[questionAnswers.length].persona}
+  //               {(() => {
+  //                 const profileArray = personaList.selected[
+  //                   questionAnswers.length
+  //                 ].profile
+  //                   .replace(/['\[\]]/g, "")
+  //                   .split(", ");
+  //                 const age = profileArray[0].split(": ")[1];
+  //                 const gender =
+  //                   profileArray[1].split(": ")[1] === "남성" ? "남성" : "여성";
+  //                 const job = profileArray[2].split(": ")[1];
 
-                  return (
-                    <p>
-                      <span>{gender}</span>
-                      <span>{age}세</span>
-                      <span>{job}</span>
-                    </p>
-                  );
-                })()}
-              </div>
-            </TypeName>
-            <TextContainer>
-              <Entering />
-            </TextContainer>
-          </AnswerItem>
-        )}
-      </>
-    );
-  };
+  //                 return (
+  //                   <p>
+  //                     <span>{gender}</span>
+  //                     <span>{age}세</span>
+  //                     <span>{job}</span>
+  //                   </p>
+  //                 );
+  //               })()}
+  //             </div>
+  //           </TypeName>
+  //           <TextContainer>
+  //             <Entering />
+  //           </TextContainer>
+  //         </AnswerItem>
+  //       )}
+  //     </>
+  //   );
+  // };
 
   const renderAnswersComplete = (questionIndex) => {
     const questionAnswers = answers[questionIndex] || [];
@@ -863,38 +870,53 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
   //     </InterviewItem>
   //   ));
   // };
+  const renderChatItem = (personaImage, message) => (
+    <ChatItem Persona>
+      <Persona color="Linen" size="Medium" Round>
+        <img src={personaImage} alt="페르소나" />
+      </Persona>
+      <ChatBox Persona>
+        <Sub1 color="gray800" align="left">
+          {message}
+        </Sub1>
+      </ChatBox>
+    </ChatItem>
+  );
 
   const renderInterviewItems = () => {
     return interviewQuestionListState.map((item, index) => {
+      const status = interviewStatus[index] || "Pre"; // 현재 질문의 상태를 가져옴
       return (
-        <ChatItem Persona key={index}>
-          <Persona color="Linen" size="Medium" Round>
-            <img src={personaImages.PersonaWomen02} alt="페르소나" />
-          </Persona>
-          <ChatBox Moder data-time="1 min ago">
-            <Sub1 color="gray800" align="left">
-              {item} {/* 질문 내용 */}
-            </Sub1>
-          </ChatBox>
-          {visibleAnswers[index] && (
-            <ChatItem Persona>
-              <Persona color="Linen" size="Medium" Round>
-                <img src={personaImages.PersonaWomen02} alt="페르소나" />
-              </Persona>
+        (status === "Ing" || status === "Complete") && ( // 상태가 "Ing" 또는 "Complete"일 때만 질문을 보여줌
+          <ChatItem Moder key={index}>
+            <Persona color="Linen" size="Medium" Round>
+              <img src={personaImages.PersonaWomen02} alt="페르소나" />
+            </Persona>
+            <ChatBox Moder data-time="1 min ago">
+              <Sub1 color="gray800" align="left">
+                {item} {/* 질문 내용 */}
+              </Sub1>
+            </ChatBox>
+            {visibleAnswers[index] && (
               <ChatBox Persona>
                 <Sub1 color="gray800" align="left">
-                  전기면도기를 사용하는 데 전원이 필요한데, 만약 외부 활동 중
-                  전원이 부족하다면 사용이 어려울 수 있습니다. 전기가 공급되지
-                  않는 환경에는 사용이 어려울 것 같습니다.
+                  {answers[index]?.[0]?.answer} 
                 </Sub1>
               </ChatBox>
-            </ChatItem>
-          )}
-        </ChatItem>
+            )}
+            
+            {interviewStatus[index] === "Complete" && (
+              <ChatBox Persona>
+                <Sub1 color="gray800" align="left">
+                  {answers[index]?.[0]?.answer} 
+                </Sub1>
+              </ChatBox>
+            )}
+          </ChatItem>
+        )
       );
     });
   };
-
   // 이미 완료된 인터뷰를 확인할 때 사용 ex)인터뷰 스크립트 보기, 인터뷰 상세보기
   const renderInterviewItemsComplete = () => {
     return interviewQuestionListState.map((item, index) => (
@@ -964,7 +986,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                   return (
                     <QuestionItem
                       key={index}
-                      checked={item.checked}
+                      checked={status === "Complete" ? true : item.checked} // Complete일 때 checked를 true로 설정
                       disabled={status === "Pre"}
                     >
                       <Sub2 color="gray800">
@@ -1041,7 +1063,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
           <ChatWrap>
             <Header>
               <Title>
-                {businessAnalysis.title}의 {selectedInterviewPurpose}
+                {businessAnalysis.title}의 {selectedInterviewPurposeData.title}
                 <ColseButton onClick={handleClose} />
               </Title>
               <ul>
@@ -1050,7 +1072,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                     <img src={images.FileText} alt="문항수" />
                     문항수
                   </span>
-                  <span>3개</span>
+                  <span>{interviewQuestionListState.length}개</span>
                 </li>
                 <li>
                   <span>
