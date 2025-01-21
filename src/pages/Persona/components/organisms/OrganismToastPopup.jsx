@@ -96,6 +96,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
     const interviewLoading = async () => {
       // 인터뷰 스크립트 보기, 인터뷰 상세보기로 진입 시 isComplete는 True
       if (isComplete) {
+        console.log("🚀 ~ interviewLoading ~ isComplete:", isComplete);
         const questions = interviewData.map((item) => ({
           question: item.question_1 || item.question_2 || item.question_3,
         }));
@@ -116,13 +117,10 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               : personaList.selected
           ).map((persona, pIndex) => {
             // profile 문자열에서 정보 추출
-            const profileArray = persona.profile
-              .replace(/['\[\]]/g, "")
-              .split(", ");
-            const age = profileArray[0].split(": ")[1];
-            const gender =
-              profileArray[1].split(": ")[1] === "남성" ? "남성" : "여성";
-            const job = profileArray[2].split(": ")[1];
+
+            const age = persona.age;
+            const gender = persona.gender;
+            const job = persona.job;
 
             return {
               persona: persona,
@@ -552,13 +550,10 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             personaInfoState.push(personaInfo);
 
             //페르소나 정보 처리 (나이, 성별, 직업 정보 추출 )
-            const profileArray = personaList.selected[i].profile
-              .replace(/['\[\]]/g, "")
-              .split(", ");
-            const age = profileArray[0].split(": ")[1];
-            const gender =
-              profileArray[1].split(": ")[1] === "남성" ? "남성" : "여성";
-            const job = profileArray[2].split(": ")[1];
+
+            const age = personaList.selected[i].age;
+            const gender = personaList.selected[i].gender;
+            const job = personaList.selected[i].job;
 
             //답변 상태 업데이트 ( 현재 질문에 대한 각 페르소나의 답변 저장 )
             //각 질문에 대해 모든 페르소나의 답변을 받고 나서야 다음 질문으로 넘어
