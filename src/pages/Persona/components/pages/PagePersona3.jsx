@@ -690,7 +690,7 @@ const PagePersona3 = () => {
                   onClick={handleSelectPersona}
                 >
                   다음
-                  <img src={images.ChevronRight} alt="다음" />
+                  {/* <img src={images.ChevronRight} alt="다음" /> */}
                 </Button>
               </BottomBar>
             </MainSection>

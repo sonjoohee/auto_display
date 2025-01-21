@@ -482,7 +482,7 @@ export const SELECTED_INTERVIEW_PURPOSE = atom({
   key: "selectedInterviewPurpose",
   default: "",
 });
-
+export const SELECTED_PURPOSE_INDEX = atom(0);
 export const SELECTED_INTERVIEW_PURPOSE_DATA = atom({});
 
 export const PURPOSE_ITEMS_SINGLE = atom([]);

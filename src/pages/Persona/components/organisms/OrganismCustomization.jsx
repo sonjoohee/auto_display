@@ -3,20 +3,12 @@ import styled, { css } from "styled-components";
 import {
   TextInfo,
   TextBox,
-  BgBoxList,
-  BgBoxItem,
 } from "../../../../assets/styles/BusinessAnalysisStyle"; // Adjust the import path as necessary
 import { Body1, Body3, Caption2 } from "../../../../assets/styles/Typography";
 import { CustomTextarea, FormBox } from "../../../../assets/styles/InputStyle";
 import { palette } from "../../../../assets/styles/Palette";
 
-import {
-  Button,
-  ButtonGroup,
-  IconButton,
-} from "../../../../assets/styles/ButtonStyle";
-import images from "../../../../assets/styles/Images";
-import MoleculeInterviewPurpose from "../molecules/MoleculeInterviewPurpose";
+import { Button } from "../../../../assets/styles/ButtonStyle";
 import { InterviewXPersonaSingleInterviewTheoryCustom } from "../../../../utils/indexedDB";
 import { InterviewXPersonaSingleInterviewGeneratorRequestTheoryCustom } from "../../../../utils/indexedDB";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
@@ -30,6 +22,7 @@ import {
   SINGLE_INTERVIEW_QUESTION_LIST,
   PURPOSE_ITEMS_SINGLE,
   IS_LOADING_QUESTION,
+  SELECTED_INTERVIEW_PURPOSE,
 } from "../../../AtomStates";
 
 const OrganismCustomization = ({
@@ -49,12 +42,15 @@ const OrganismCustomization = ({
   const [singleInterviewQuestionList, setSingleInterviewQuestionList] = useAtom(
     SINGLE_INTERVIEW_QUESTION_LIST
   );
+  const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(
+    SELECTED_INTERVIEW_PURPOSE
+  );
   const [isLoadingQuestion, setIsLoadingQuestion] =
     useAtom(IS_LOADING_QUESTION);
   const [apiResponse, setApiResponse] = useState(null);
-  const [selectedPurpose, setSelectedPurpose] = useState(null);
   const [regenerateCount, setRegenerateCount] = useState(0);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const [showCustomErrorPopup, setShowCustomErrorPopup] = useState(false);
   const [showCustomInterviewPurpose, setShowCustomInterviewPurpose] =
     useState(false);
   const [currentPurposeData, setCurrentPurposeData] = useState(null);
@@ -77,11 +73,39 @@ const OrganismCustomization = ({
   const handlePurposeGeneration = async (custom, index) => {
     try {
       setIsLoadingQuestion(true);
-      const result = await InterviewXPersonaSingleInterviewTheoryCustom(
+      let result = await InterviewXPersonaSingleInterviewTheoryCustom(
         { input_data: custom.purposeText },
-        true
+        isLoggedIn
       ); // Adjust parameters as needed
-      console.log(result);
+      let retryCount = 0;
+      const maxRetries = 10;
+      if (result.response.check_validity.check_index === 0) {
+        setShowCustomErrorPopup(true);
+        // 이전 상태로 되돌리기
+        const newCustomizations = [...customizations];
+        newCustomizations[index].showMethodology = false;
+        setCustomizations(newCustomizations);
+        return;
+      }
+      while (
+        retryCount < maxRetries &&
+        (!result ||
+          !result.response ||
+          result.response.custom_theory_data.characteristic.length !== 4)
+      ) {
+        result = await InterviewXPersonaSingleInterviewTheoryCustom(
+          { input_data: custom.purposeText },
+          isLoggedIn
+        );
+        // response = await axios.post(
+        //   //인터뷰 질문 생성 api
+        //   "https://wishresearch.kr/person/persona_interview",
+        //   data,
+        //   axiosConfig
+        // );
+        retryCount++;
+      }
+      console.log("🚀 ~ handlePurposeGeneration ~ result:", result);
       setApiResponse(result);
       setCustomTheoryData(result?.response?.custom_theory_data);
       // Update project on server with the new data
@@ -115,10 +139,10 @@ const OrganismCustomization = ({
     }
   };
 
-  const handleGenerateQuestions = async (title) => {
+  const handleGenerateQuestions = async (generatedCustomInfo) => {
     try {
       setIsLoadingQuestion(true);
-      setSelectedPurpose(4); // 커스텀 방법론의 ID
+      setSelectedInterviewPurpose(4); // 커스텀 방법론의 ID
 
       // 2. 카드 열기
       setShowQuestions((prev) => ({
@@ -127,20 +151,11 @@ const OrganismCustomization = ({
       }));
 
       // 3. PURPOSE_ITEMS_SINGLE 업데이트
-      const generatedQuestions = {
-        id: 4,
-        theory_title: customTheoryData.theory_title,
-        view_title: customTheoryData.theory_title,
-        definition: customTheoryData.definition,
-        objective: customTheoryData.objective,
-        characteristic: customTheoryData.characteristic || [],
-        description: "사용자 커스텀 방법론",
-        custom_theory_data: customTheoryData,
-      };
+      // const generatedQuestions = generatedCustomInfo
 
-      await setPurposeItemsSingleAtom((prev) => {
+      setPurposeItemsSingleAtom((prev) => {
         const updatedItems = prev.filter((item) => item.id !== 4);
-        return [...updatedItems, generatedQuestions];
+        return [...updatedItems, generatedCustomInfo];
       });
 
       // 4. OrganismCustomization 닫기
@@ -238,6 +253,7 @@ const OrganismCustomization = ({
                   <Button
                     Medium
                     Primary
+                    disabled={isLoadingQuestion}
                     onClick={async () => {
                       if (!custom.purposeText.trim()) {
                         setShowPopup(true);
@@ -319,9 +335,12 @@ const OrganismCustomization = ({
                           <Button
                             Medium
                             onClick={() => {
-                              const generatedQuestions = {
+                              const generatedCustomInfo = {
                                 id: 4,
                                 theory_title:
+                                  apiResponse?.response?.custom_theory_data
+                                    ?.theory_title || "",
+                                title:
                                   apiResponse?.response?.custom_theory_data
                                     ?.theory_title || "",
                                 view_title:
@@ -349,18 +368,16 @@ const OrganismCustomization = ({
                                   if (
                                     !updatedItems.some(
                                       (item) =>
-                                        item.id === generatedQuestions.id
+                                        item.id === generatedCustomInfo.id
                                     )
                                   ) {
-                                    updatedItems.push(generatedQuestions);
+                                    updatedItems.push(generatedCustomInfo);
                                   }
                                   return updatedItems.slice(0, 4);
                                 });
                               }
 
-                              handleGenerateQuestions(
-                                generatedQuestions.theory_title
-                              );
+                              handleGenerateQuestions(generatedCustomInfo);
                               setShowOrganismCustomization(false);
                             }}
                           >
@@ -377,6 +394,18 @@ const OrganismCustomization = ({
         </>
       )}
 
+      {showCustomErrorPopup && (
+        <PopupWrap
+          Warning
+          title="오류가 발생했습니다(멘트 수정)"
+          message="커스텀 방법론 생성 중 문제가 발생했습니다. 다시 시도해주세요.(멘트 수정)"
+          buttonType="Outline"
+          closeText="확인"
+          isModal={false}
+          onCancel={() => setShowCustomErrorPopup(false)}
+          show={showCustomErrorPopup}
+        />
+      )}
       {showErrorPopup && (
         <PopupWrap
           Warning

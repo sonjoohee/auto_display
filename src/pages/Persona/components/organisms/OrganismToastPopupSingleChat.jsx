@@ -907,7 +907,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                   <Helptext color="primary">모더</Helptext>
                 </span>
               </Persona>
-              <ChatBox Moder data-time="1 min ago">
+              <ChatBox Moder>
                 <Sub1 color="gray800" align="left">
                   Q{index + 1}. {item}
                 </Sub1>
@@ -1227,7 +1227,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                 {interviewStatus.length > 0 &&
                   interviewStatus.every((status) => status === "Complete") && (
                     <ChatItem Add>
-                      <ChatBox Moder data-time="1 min ago">
+                      <ChatBox Moder>
                         <Sub1 color="gray800" align="left">
                           추가로 질문 하실 부분이 있으신가요?
                           <span>(Basic 1회 가능)</span>
