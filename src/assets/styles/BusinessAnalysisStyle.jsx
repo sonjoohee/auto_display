@@ -2,6 +2,7 @@ import styled, { css } from "styled-components";
 import { palette } from "./Palette";
 import { Body1 } from "./Typography";
 import images from "./Images";
+import { Caption2 } from "./Typography";
 
 export const ContentsWrap = styled.div`
   // overflow: ${({ noScroll }) => (noScroll ? "hidden" : "auto")};
@@ -499,6 +500,45 @@ export const Badge = styled.div`
       : props.New
       ? `rgba(52, 199, 89, 0.06)`
       : palette.white};
+`;
+
+export const CreditBadge = styled.p`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  max-width: 102px;
+  color: ${(props) => 
+    props.General 
+    ? `#FFC300` 
+    : props.Subscription
+    ? `#34C759`
+    : props.Event
+    ? `#FF5322`
+    : palette.gray500
+  };
+  padding: 4px 8px;
+  border-radius: 5px;
+  background: ${(props) => 
+    props.General 
+    ? `#FFF0C0` 
+    : props.Subscription
+    ? `#C7F2D2`
+    : props.Event
+    ? `#FDEBE7`
+    : palette.white
+  };
+
+  span {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: ${palette.white};
+  }
 `;
 
 export const Tag = styled.span`
@@ -2026,6 +2066,20 @@ export const DashboardCard = styled.div`
   border: 1px solid ${palette.outlineGray};
 `;
 
+export const DashboardCardTitle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+
+  ${Caption2} {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+  }
+`;
+
 export const DashboardAmount = styled.div`
   display: flex;
   align-items: center;
@@ -2034,6 +2088,154 @@ export const DashboardAmount = styled.div`
   width: 100%;
 `;
 
+export const CreditDashBoardWrap = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  width: 100%;
+  padding-top: 20px;
+  border-top: 1px solid ${palette.outlineGray};
+`;
+
+export const CreditDashBoard = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+`;
+
+export const CreditDashBoardItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  width: 100%;
+  padding: 24px;
+  border-radius: 10px;
+  border: 1px solid ${palette.outlineGray};
+
+  .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+
+    &.yellow {
+      background: #FFF0C0;
+    }
+
+    &.green {
+      background: #C7F2D2;
+    }
+
+    &.red {
+      background: #FDEBE7;
+    }
+  }
+`;
+
+export const CreditDashBoardList = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
+  width: 100%;
+  margin-top: 18px;
+`;
+
+export const CreditDashBoardListHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 0 20px;
+
+  p {
+    flex-grow: 0.8;
+    text-align: left;
+
+    &:nth-child(2) {
+      flex-grow: 2;
+    }
+
+    &:nth-child(4) {
+      text-align: right;
+    }
+  }
+`;
+
+export const CreditDashBoardListContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
+  width: 100%;
+`;
+
+export const CreditListItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 40px;
+  width: 100%;
+  padding: 16px 20px;
+  border-radius: 10px;
+  border: 1px solid ${palette.outlineGray};
+
+  > div {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 4px;
+  }
+
+  > * {
+    flex: 1;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &:nth-child(2) {
+      flex-grow: 2;
+    }
+
+    &:nth-child(4) {
+      text-align: right;
+    }
+  }
+`;
+
+export const CreditTotal = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  width: 100%;
+
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 4px;
+  }
+
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #FFD54A;
+  }
+`;
 
 export const ProjectItem = styled.div`
   display: flex;
@@ -2293,6 +2495,7 @@ export const PaymentWrap = styled.div`
   align-items: flex-start;
   justify-content: center;
   gap: 40px;
+  width: 100%;
   margin: 50px 0;
 `;
 
@@ -2322,20 +2525,77 @@ export const PaymentPlan = styled.div`
 `;
 
 export const PaymentCredit = styled(PaymentPlan)`
-  gap: 32px;
+  gap: 20px;
   height: 334px;
-  padding: 60px 40px 40px;
+  padding: 48px 32px 32px;
+  cursor: pointer;
+  transition: all 0.5s;
 
   p {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 8px;
     font-size: 2.5rem;
     font-weight: 400;
     color: ${palette.gray700};
     line-height: 1.2;
     letter-spacing: -1.2px;
+    transition: all 0.5s;
+
+    span {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: ${palette.gray700};
+      line-height: 1.55;
+      letter-spacing: -0.42px;
+      margin-bottom: 7px;
+      transition: all 0.5s;
+    }
   }
 
-  h2 {
-    margin-top: auto;
+  h6 {
+    transition: all 0.5s;
+  }
+
+  svg {
+    height: 32px;
+    transition: all 0.5s;
+  }
+
+  &:hover {
+    border-color: ${palette.primary};
+    background: #F0F4FF;
+
+    button {
+      color: ${palette.white};
+      background: ${palette.primary};
+    }
+
+    p, span, h6 {
+      color: ${palette.primary};
+    }
+
+    svg {
+      path {
+        stroke: ${palette.primary}; // hover 시 stroke 색상 변경
+        fill: ${palette.primary}; // hover 시 fill 색상 변경
+      }
+    }
+  }
+`;
+
+export const PaymentPrice = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: auto;
+
+  button {
+    border: 1px solid ${palette.primary};
   }
 `;
 

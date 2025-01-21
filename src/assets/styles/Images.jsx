@@ -175,11 +175,14 @@ import ChatSquareDots from "../images/chat-square-dots.svg"
 import MagicStick from "../images/magic-stick.svg"
 import MagicStickFillWhite from "../images/magic-stick-fill-white.svg"
 import NotePencil from "../images/note-pencil.svg"
-import ChevronRight from "../images/chevron-right.svg"
+import ChevronRight from '../icons/ChevronRight';
+// import ChevronRight from "../images/chevron-right.svg"
 import ChevronRightPrimary from "../images/chevron-right-primary.svg"
-import ChevronDown from "../images/chevron-down.svg"
+import ChevronDown from '../icons/ChevronDown';
+// import ChevronDown from "../images/chevron-down.svg"
 import PencilSquare from "../images/pencil-square.svg"
 import ClockCounterclockwise from "../images/clock-counterclockwise.svg"
+import ClockClockwise from "../icons/ClockClockwise";
 import CheckCircle from "../images/check-circle.svg"
 import CheckCircleFill from "../images/check-circle-fill.svg"
 import FolderArrowDown from "../images/folder-arrow-down.svg"
@@ -244,16 +247,20 @@ import BgUserChatDots from "../images/bg-user-chat-dots.svg"
 import CloseBlack from "../images/close-black.svg"
 import Lock from "../images/lock.svg"
 
-import CoinSmall from "../images/coin-small.svg"
-import CoinMedium from "../images/coin-medium.svg"
-import CoinLarge from "../images/coin-large.svg"
+// import CoinSmall from "../images/coin-small.svg"
+// import CoinMedium from "../images/coin-medium.svg"
+// import CoinLarge from "../images/coin-large.svg"
+import CoinSmall from '../icons/CoinSmall';
+import CoinMedium from '../icons/CoinMedium';
+import CoinLarge from '../icons/CoinLarge';
+import CoinFill from '../icons/CoinFill';
 
-import RocketSuccess from "../images/rocket-success.svg"
-import RocketFail from "../images/rocket-fail.svg"
-import PatchCheckFill from "../images/patch-check-fill.svg"
-import KeyCircle from "../images/key-circle.svg"
+import RocketSuccess from "../images/rocket-success.svg";
+import RocketFail from "../images/rocket-fail.svg";
+import PatchCheckFill from "../images/patch-check-fill.svg";
+import KeyCircle from "../images/key-circle.svg";
 
-import ListUserSearch from "../images/list-user-search.svg"
+import ListUserSearch from "../images/list-user-search.svg";
 
 const images = {
   Logo,
@@ -438,6 +445,7 @@ const images = {
   ChevronDown,
   PencilSquare,
   ClockCounterclockwise,
+  ClockClockwise,
   CheckCircle,
   CheckCircleFill,
   FolderArrowDown,
@@ -497,6 +505,7 @@ const images = {
   CoinSmall,
   CoinMedium,
   CoinLarge,
+  CoinFill,
 
   RocketSuccess,
   RocketFail,
