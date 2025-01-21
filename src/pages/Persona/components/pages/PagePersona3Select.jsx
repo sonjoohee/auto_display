@@ -135,9 +135,9 @@ const PagePersona3Select = () => {
   const handleStartInterview = () => {
     console.log("인터뷰 시작");
     console.log("personaList", personaList);
-    console.log("interviewQuestionList", interviewQuestionList);
-    console.log("selectedInterviewPurpose", selectedInterviewPurpose);
     console.log("singleInterviewQuestionList", singleInterviewQuestionList);
+    // console.log("selectedInterviewPurpose", selectedInterviewPurpose);
+    console.log("selectedInterviewPurposeData", selectedInterviewPurposeData);
 
     setShowPopup(true);
   };
@@ -343,15 +343,9 @@ const PagePersona3Select = () => {
       )}
 
       {selectedInterviewType === "multiple" ? (
-        <OrganismToastPopup
-          isActive={showToast}
-          onClose={() => setShowToast(false)}
-        />
+        <OrganismToastPopup isActive={showToast} autoClose={false} />
       ) : selectedInterviewType === "single" ? (
-        <OrganismToastPopupSingleChat
-          isActive={showToast}
-          onClose={() => setShowToast(false)}
-        />
+        <OrganismToastPopupSingleChat isActive={showToast} autoClose={false} />
       ) : null}
     </>
   );
