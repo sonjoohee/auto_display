@@ -117,14 +117,14 @@ const MoleculeInterviewCard = ({
         data,
         isLoggedIn
       );
-      let questionList = response.data;
+      let questionList = response.response;
       let retryCount = 0;
       const maxRetries = 10;
 
       //응답이 없거나, 데이터가 없거나 질문이 5개인 경우 재시도
       while (
         retryCount < maxRetries &&
-        (!response || !response.data || response.data.length !== 5)
+        (!response || !response.response || response.response.length !== 5)
       ) {
         // response = await axios.post(
         //   "https://wishresearch.kr/person/persona_interview",
@@ -137,7 +137,7 @@ const MoleculeInterviewCard = ({
         );
         retryCount++;
 
-        questionList = response.data;
+        questionList = response.response;
       }
       //최대 재시도 횟수를 초과한 경우 에러 팝업 표시
       if (retryCount >= maxRetries) {

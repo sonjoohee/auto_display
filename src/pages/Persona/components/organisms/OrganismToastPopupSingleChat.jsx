@@ -38,11 +38,13 @@ import {
   IS_PERSONA_ACCESSIBLE,
   SELECTED_PERSONA_LIST,
   SELECTED_INTERVIEW_PURPOSE_DATA,
+  SINGLE_INTERVIEW_QUESTION_LIST,
 } from "../../../../pages/AtomStates";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import { createProjectReportOnServer } from "../../../../utils/indexedDB";
 import MoleculeRecreate from "../../../../pages/Persona/components/molecules/MoleculeRecreate";
-import { InterviewXPersonaMultipleInterviewGeneratorRequest } from "../../../../utils/indexedDB";
+// import { InterviewXPersonaMultipleInterviewGeneratorRequest } from "../../../../utils/indexedDB";
+import { InterviewXPersonaSingleInterviewGeneratorRequest } from "../../../../utils/indexedDB";
 
 const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
   const [selectedPersonaList, setSelectedPersonaList] = useAtom(
@@ -67,9 +69,10 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
     SELECTED_INTERVIEW_PURPOSE
   );
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
-  const [interviewQuestionList, setInterviewQuestionList] = useAtom(
-    INTERVIEW_QUESTION_LIST
+  const [singleInterviewQuestionList, setSingleInterviewQuestionList] = useAtom(
+    SINGLE_INTERVIEW_QUESTION_LIST
   );
+
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
   const [selectedInterviewPurposeData, setSelectedInterviewPurposeData] =
     useAtom(SELECTED_INTERVIEW_PURPOSE_DATA);
@@ -179,22 +182,34 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
     interviewLoading();
   }, [personaButtonState3, isComplete]);
 
-  // 인터뷰 질문 생성 단계
-  const loadInterviewQuestion = async () => {
+   // 인터뷰 질문 생성 단계
+   const loadInterviewQuestion = async () => {
     setShowRegenerateButton1(false);
     try {
+      console.log("Loading interview questions..."); // 추가된 로그
       if (personaButtonState3 === 1) {
-        const existingQuestions = interviewQuestionList.find(
-          (item) => item.theory_name === selectedInterviewPurpose
+        // selectedInterviewPurpose와 같은 view_title을 가진 질문 찾기
+        const existingQuestions = singleInterviewQuestionList.find(
+          (item) => item.theory_name === selectedInterviewPurposeData.title
         );
 
-        if (existingQuestions) {
-          // 이미 질문이 생성된 상태하면 상태값 설정 후 5초 대기
-          setInterviewQuestionListState(existingQuestions.questions.slice(2));
+        console.log("Existing Questions:", existingQuestions); 
+
+        if (existingQuestions && existingQuestions.commonQuestions && existingQuestions.specialQuestions) {
+          console.log("Common Questions:", existingQuestions.commonQuestions); 
+          console.log("Special Questions:", existingQuestions.specialQuestions); 
+          // 이미 질문이 생성된 상태면 상태값 설정 후 5초 대기
+          const combinedQuestions = [
+            ...existingQuestions.commonQuestions,
+            ...existingQuestions.specialQuestions,
+          ];
+          console.log("Setting Interview Questions:", combinedQuestions); 
+          setInterviewQuestionListState(combinedQuestions);
           await new Promise((resolve) => setTimeout(resolve, 5000));
           setIsLoadingPrepare(false);
           setInterviewStatus(["Pre", "Pre", "Pre"]);
         } else {
+          console.log("No existing questions, making API request..."); 
           // 생성된 질문이 없다면 API 요청
           let data = {
             business_idea: businessAnalysis.input,
@@ -203,71 +218,72 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
               characteristics: businessAnalysis.characteristics,
               features: businessAnalysis.features,
             },
-            theory_name: selectedInterviewPurpose,
+            theory_name: selectedInterviewPurposeData.title,
           };
 
-          // let response = await axios.post(
-          //   "https://wishresearch.kr/person/persona_interview",
-          //   data,
-          //   axiosConfig
-          // );
-          let response =
-            await InterviewXPersonaMultipleInterviewGeneratorRequest(
-              data,
-              isLoggedIn
-            );
-          let questionList = response.data; //응답 반환하는 부분 (질문 받아옴)
+          console.log("API 요청 데이터:", data); // 추가된 로그
+          let response = await InterviewXPersonaSingleInterviewGeneratorRequest(
+            data,
+            isLoggedIn
+          );
+          console.log("API Response:", response); // API 응답 로그
+          let questionList = response.response; //응답 반환하는 부분 (질문 받아옴)
+          console.log("Question List:", questionList); // 추가된 로그
+
           let retryCount = 0;
           const maxRetries = 10;
 
           while (
             retryCount < maxRetries &&
-            (!response || !response.data || response.data.length !== 5)
+            (!response || !response.response || response.response.length < 10)
+
           ) {
-            // response = await axios.post(
-            //   //인터뷰 질문 생성 api
-            //   "https://wishresearch.kr/person/persona_interview",
-            //   data,
-            //   axiosConfig
-            // );
-            response = await InterviewXPersonaMultipleInterviewGeneratorRequest(
+            console.log("Attempting API request..."); // API 요청 시도 로그
+            response = await InterviewXPersonaSingleInterviewGeneratorRequest(
               data,
               isLoggedIn
             );
+            console.log("API Response:", response); // API 응답 로그
             retryCount++;
-            questionList = response.data;
+            questionList = response.response;
           }
 
           if (retryCount >= maxRetries) {
             setShowErrorPopup(true);
             return;
+          } else {
+            let questionList = response.response; // 응답에서 질문 목록 설정
+
+            const newQuestionList = [
+              ...singleInterviewQuestionList,
+              {
+                theory_name: selectedInterviewPurpose,
+                questions: questionList,
+              },
+            ];
+
+            console.log("Updated singleInterviewQuestionList:", newQuestionList); // Added console log
+            setSingleInterviewQuestionList(newQuestionList);
+        
+            console.log("Setting Interview Questions:", questionList); // Added console log
+            setInterviewQuestionListState(questionList);
+            // setInterviewQuestionListState(questionList.slice(2));
+
+            setPersonaButtonState3(0);
+            setIsLoadingPrepare(false);
+            const initialStatus = new Array(questionList.slice(2).length).fill(
+              "Pre"
+            );
+            setInterviewStatus(initialStatus);
+
+            await updateProjectOnServer(
+              projectId,
+              {
+                singleInterviewQuestionList: newQuestionList,
+              },
+              isLoggedIn
+            );
           }
-
-          const newQuestionList = [
-            ...interviewQuestionList,
-            {
-              theory_name: selectedInterviewPurpose,
-              questions: questionList,
-            },
-          ];
-
-          setInterviewQuestionList(newQuestionList);
-          setInterviewQuestionListState(questionList.slice(2));
-
-          setPersonaButtonState3(0);
-          setIsLoadingPrepare(false);
-          const initialStatus = new Array(questionList.slice(2).length).fill(
-            "Pre"
-          );
-          setInterviewStatus(initialStatus);
-
-          await updateProjectOnServer(
-            projectId,
-            {
-              interviewQuestionList: newQuestionList,
-            },
-            isLoggedIn
-          );
         }
       }
     } catch (error) {
@@ -516,9 +532,9 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             while (
               retryCount < maxRetries &&
               (!response ||
-                !response.data ||
-                !response.data.hasOwnProperty("answer") ||
-                !response.data.answer)
+                !response.response ||
+                !response.response.hasOwnProperty("answer") ||
+                !response.response.answer)
             ) {
               response = await axios.post(
                 "https://wishresearch.kr/person/persona_interview_module",
@@ -534,7 +550,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             }
 
             setIsGenerating(false);
-            allAnswers.push(response.data.answer);
+            allAnswers.push(response.response.answer);
 
             personaInfoState.push(personaInfo);
 
@@ -558,7 +574,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                   gender: gender,
                   age: age,
                   job: job,
-                  answer: response.data.answer,
+                  answer: response.response.answer,
                 },
               ],
             }));
@@ -778,30 +794,59 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
   };
 
   // 인터뷰를 진행할 때 사용
+  // const renderInterviewItems = () => {
+  //   return interviewQuestionListState.map((item, index) => (
+  //     <InterviewItem key={index} status={interviewStatus[index] || "Pre"}>
+  //       <QuestionWrap
+  //         onClick={() => handleAnswerToggle(index)}
+  //         status={interviewStatus[index] || "Pre"}
+  //         isOpen={visibleAnswers[index]}
+  //       >
+  //         <Status status={interviewStatus[index] || "Pre"}>
+  //           {interviewStatus[index] === "Ing"
+  //             ? "진행 중"
+  //             : interviewStatus[index] === "Complete"
+  //             ? "완료"
+  //             : "준비 중"}
+  //         </Status>
+  //         <QuestionText>
+  //           Q{index + 1}. {item}
+  //         </QuestionText>
+  //       </QuestionWrap>
+  //       {visibleAnswers[index] && (
+  //         <AnswerWrap>{renderAnswers(index)}</AnswerWrap>
+  //       )}
+  //     </InterviewItem>
+  //   ));
+  // };
+
   const renderInterviewItems = () => {
-    return interviewQuestionListState.map((item, index) => (
-      <InterviewItem key={index} status={interviewStatus[index] || "Pre"}>
-        <QuestionWrap
-          onClick={() => handleAnswerToggle(index)}
-          status={interviewStatus[index] || "Pre"}
-          isOpen={visibleAnswers[index]}
-        >
-          <Status status={interviewStatus[index] || "Pre"}>
-            {interviewStatus[index] === "Ing"
-              ? "진행 중"
-              : interviewStatus[index] === "Complete"
-              ? "완료"
-              : "준비 중"}
-          </Status>
-          <QuestionText>
-            Q{index + 1}. {item.question}
-          </QuestionText>
-        </QuestionWrap>
-        {visibleAnswers[index] && (
-          <AnswerWrap>{renderAnswers(index)}</AnswerWrap>
-        )}
-      </InterviewItem>
-    ));
+    return interviewQuestionListState.map((item, index) => {
+      return (
+        <ChatItem Persona key={index}>
+        <Persona color="Linen" size="Medium" Round>
+                    <img src={personaImages.PersonaWomen02} alt="페르소나" />
+                  </Persona>
+          <ChatBox Moder data-time="1 min ago">
+            <Sub1 color="gray800" align="left">
+              {item} {/* 질문 내용 */}
+            </Sub1>
+          </ChatBox>
+          {visibleAnswers[index] && (
+            <ChatItem Persona>
+              <Persona color="Linen" size="Medium" Round>
+                <img src={personaImages.PersonaWomen02} alt="페르소나" />
+              </Persona>
+              <ChatBox Persona>
+                <Sub1 color="gray800" align="left">
+                  전기면도기를 사용하는 데 전원이 필요한데, 만약 외부 활동 중 전원이 부족하다면 사용이 어려울 수 있습니다. 전기가 공급되지 않는 환경에는 사용이 어려울 것 같습니다.
+                </Sub1>
+              </ChatBox>
+            </ChatItem>
+          )}
+        </ChatItem>
+      );
+    });
   };
 
   // 이미 완료된 인터뷰를 확인할 때 사용 ex)인터뷰 스크립트 보기, 인터뷰 상세보기
@@ -816,7 +861,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
         >
           <Status status={"Complete"}>완료</Status>
           <QuestionText>
-            Q{index + 1}. {item.question}
+            Q{index + 1}. {item}
           </QuestionText>
         </QuestionWrap>
         {visibleAnswers[index] && (
@@ -866,6 +911,35 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             </H4>
 
             <QuestionList>
+              {/* Dynamically displaying the interview questions */}
+              {interviewQuestionListState.length > 0 ? (
+                interviewQuestionListState.map((item, index) => {
+                  const status = interviewStatus[index] || "Pre"; // 현재 질문의 상태를 가져옴
+                  return (
+                    <QuestionItem key={index} checked={item.checked} disabled={status === "Pre"}>
+                      <Sub2 color="gray800">
+                        Q{index + 1}. {item}
+                      </Sub2>
+                      <span>
+                        {status === "Complete" ? (
+                          <img src={images.CheckGreen} alt="완료" />
+                        ) : status === "Ing" ? (
+                          // 진행 중일 때 표시 (텍스트 제거)
+                          <span></span>
+                        ) : (
+                          // 준비 중일 때 표시 (텍스트 제거)
+                          <span></span>
+                        )}
+                      </span>
+                    </QuestionItem>
+                  );
+                })
+              ) : (
+                <Sub2 color="gray800">질문이 없습니다.</Sub2> // 질문이 없을 때 메시지 표시
+              )}
+            </QuestionList>
+
+            {/* <QuestionList>
               <QuestionItem checked>
                 <Sub2 color="gray800">
                   Q1. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰
@@ -911,7 +985,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                   <img src={images.CheckGreen} alt="완료" />
                 </span>
               </QuestionItem>
-            </QuestionList>
+            </QuestionList> */}
           </QuestionListWrap>
 
           <ChatWrap>
@@ -956,8 +1030,8 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                 <strong>앗! 대화가 잠시 중단되었네요</strong>
                 <div>
                   <p>
-                    잠시 대화가 중단되었어요. 대화를 이어가시려면 아래 ‘다시
-                    이어하기’ 버튼을 눌러주세요
+                    잠시 대화가 중단되었어요. 대화를 이어가시려면 아래 '다시
+                    이어하기' 버튼을 눌러주세요
                   </p>
                   <Button Small Outline>
                     <img src={images.ArrowClockwise} alt="" />
@@ -988,9 +1062,9 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                   </LoadingBox>
                 ))}
 
-              {!isLoadingPrepare && isComplete
+              {/* {!isLoadingPrepare && isComplete
                 ? renderInterviewItemsComplete()
-                : renderInterviewItems()}
+                : renderInterviewItems()} */}
 
               {isAnalyzing &&
                 (showRegenerateButton2 ? (
@@ -1038,7 +1112,22 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
               )}
 
               <ChatListWrap>
-                <ChatItem Persona>
+                
+                  {renderInterviewItems()}
+                  <ChatItem Add>
+                    <ChatBox Moder data-time="1 min ago">
+                      <Sub1 color="gray800" align="left">
+                        추가로 질문 하실 부분이 있으신가요?/
+                        <span>(Basic 1회 가능)</span>
+                      </Sub1>
+                    </ChatBox>
+                    <ChatAddButton>
+                      <button type="button">네, 있습니다!</button>
+                      <button type="button">아니요, 괜찮습니다.</button>
+                    </ChatAddButton>
+             
+         
+                {/* <ChatItem Persona>
                   <Persona color="Linen" size="Medium" Round>
                     <img src={personaImages.PersonaWomen02} alt="페르소나" />
                   </Persona>
@@ -1110,7 +1199,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                       추가로 질문 하실 부분이 있으신가요?/
                       <span>(Basic 1회 가능)</span>
                     </Sub1>
-                  </ChatBox>
+                  </ChatBox> */}
                   <ChatAddButton>
                     <button type="button">네, 있습니다!</button>
                     <button type="button">아니요, 괜찮습니다.</button>
@@ -1500,90 +1589,6 @@ const ChatFooter = styled.div`
     }
   }
 `;
-
-const AddQuestion = styled.div`
-  position: sticky;
-  bottom: ${({ show }) => (show ? "58px" : "-100%")};
-  left: 0;
-  right: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 16px;
-  width: 100%;
-  padding: 20px 20px 12px 20px;
-  border-top: 1px solid ${palette.outlineGray};
-  background: ${palette.white};
-  transform: translateY(${({ show }) => (show ? "0" : "100%")});
-  // opacity: ${({ show }) => (show ? "1" : "0")};
-  visibility: ${({ show }) => (show ? "visible" : "collapse")};
-  transition: all 0.3s ease-in-out;
-  z-index: 1;
-
-  ul {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 8px;
-    width: 100%;
-  }
-
-  li {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    width: 100%;
-    padding: 8px 12px;
-    border-radius: 10px;
-    border: 1px solid ${palette.outlineGray};
-    background: ${palette.chatGray};
-    transition: all 0.5s;
-    cursor: pointer;
-
-    div ${Body2} {
-      &:before {
-        content: "Select";
-      }
-    }
-
-    &:hover {
-      border-color: ${palette.primary};
-      background: ${palette.white};
-
-      div ${Body2} {
-        &:before {
-          content: "Done";
-        }
-      }
-    }
-
-    &.selected {
-      opacity: 0.3;
-      background: ${palette.white};
-
-      div ${Body2} {
-        &:before {
-          content: "Done";
-        }
-      }
-
-      &:hover {
-        opacity: 1;
-      }
-    }
-  }
-`;
-
-const AddQuestionTitle = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-`;
-
 const ChatInput = styled.div`
   display: flex;
   align-items: center;
@@ -2067,4 +2072,87 @@ const Entering = styled.div`
   box-shadow: 12px 0 ${palette.gray500}, -12px 0 ${palette.gray500};
   position: relative;
   animation: ${flash} 0.5s ease-out infinite alternate;
+`;
+
+const AddQuestion = styled.div`
+  position: sticky;
+  bottom: ${({ show }) => (show ? '58px' : '-100%')};
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  width: 100%;
+  padding: 20px 20px 12px 20px;
+  border-top: 1px solid ${palette.outlineGray};
+  background: ${palette.white};
+  transform: translateY(${({ show }) => (show ? '0' : '100%')});
+  // opacity: ${({ show }) => (show ? '1' : '0')};
+  visibility: ${({ show }) => (show ? 'visible' : 'collapse')};
+  transition: all 0.3s ease-in-out;
+  z-index: 1;
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    width: 100%;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid ${palette.outlineGray};
+    background: ${palette.chatGray};
+    transition: all 0.5s;
+    cursor: pointer;
+
+    div ${Body2} {
+      &:before {
+        content: "Select";
+      }
+    }
+
+    &:hover {
+      border-color: ${palette.primary};
+      background: ${palette.white};
+
+      div ${Body2} {
+        &:before {
+          content: "Done";
+        }
+      }
+    }
+
+    &.selected {
+      opacity: 0.3;
+      background: ${palette.white};
+
+      div ${Body2} {
+        &:before {
+          content: "Done";
+        }
+      }
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+`;
+
+const AddQuestionTitle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 `;

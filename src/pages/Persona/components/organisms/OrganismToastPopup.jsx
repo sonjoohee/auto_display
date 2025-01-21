@@ -193,13 +193,13 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               data,
               isLoggedIn
             );
-          let questionList = response.data; //응답 반환하는 부분 (질문 받아옴)
+          let questionList = response.response; //응답 반환하는 부분 (질문 받아옴)
           let retryCount = 0;
           const maxRetries = 10;
 
           while (
             retryCount < maxRetries &&
-            (!response || !response.data || response.data.length !== 5)
+            (!response || !response.response || response.response.length !== 5)
           ) {
             response = await InterviewXPersonaMultipleInterviewGeneratorRequest(
               data,
@@ -212,7 +212,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             //   axiosConfig
             // );
             retryCount++;
-            questionList = response.data;
+            questionList = response.response;
           }
 
           if (retryCount >= maxRetries) {
@@ -421,6 +421,12 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
   useEffect(() => {
     // 인터뷰 진행 함수
     const processInterview = async () => {
+      console.log("Conditions check:", {
+        isLoadingPrepare,
+        currentQuestionIndex,
+        interviewStatus: interviewStatus[currentQuestionIndex],
+      });
+
       if (
         !isLoadingPrepare &&
         interviewStatus[currentQuestionIndex] === "Pre"
@@ -435,7 +441,11 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
         }));
 
         try {
-          console.log("인터뷰 진행 시작");
+          console.log("Interview started with:", {
+            currentQuestionIndex,
+            interviewStatus,
+            personaList,
+          });
           allAnswers = [];
           personaInfoState = [];
 
@@ -448,6 +458,11 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             const lastInterview = [];
             // 현재 질문 이전 질문들 수집
             for (let q = 0; q < currentQuestionIndex; q++) {
+              console.log(
+                "🚀 ~ processInterview ~ currentQuestionIndex:",
+                currentQuestionIndex
+              );
+
               //각 질문에 대해서 answers 배열에서 해당 질문의 답변들을 찾음
               const questionAnswers = answers[q] || [];
               //페르소나 매칭
@@ -465,13 +480,22 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               }
             }
 
+            console.log(
+              "🚀 ~ processInterview ~ interviewQuestionListState:",
+              personaList.selected[i]
+            );
             const personaInfo = {
-              id: personaList.selected[i].personIndex.replace(/[^0-9]/g, ""),
+              id: personaList.selected[i].persona_id.replace(/[^0-9]/g, ""),
               name: personaList.selected[i].persona,
-              keyword: personaList.selected[i].keyword,
-              hashtag: personaList.selected[i].tag,
-              summary: personaList.selected[i].summary,
+              keyword: personaList.selected[i].persona_keyword,
+              hashtag: personaList.selected[i].lifestyle,
+              summary: personaList.selected[i].consumption_pattern,
             };
+            console.log("🚀 ~ processInterview ~ personaInfo:", personaInfo);
+            console.log(
+              "🚀 ~ processInterview ~ interviewQuestionListState:",
+              interviewQuestionListState
+            );
 
             //수집된 답변들 api요청에 포함
             const data = {
@@ -480,6 +504,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               persona_info: personaInfo,
               last_interview: lastInterview,
             };
+            console.log("🚀 ~ processInterview ~ data:", data);
 
             // let response = await axios.post(
             //   //페르소나 답변 생성하는 api
@@ -492,6 +517,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               isLoggedIn
             );
 
+            console.log("🚀 ~ processInterview ~ response:", response);
             let retryCount = 0;
             const maxRetries = 10;
 
@@ -499,16 +525,15 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             while (
               retryCount < maxRetries &&
               (!response ||
-                !response.data ||
-                !response.data.hasOwnProperty("answer") ||
-                !response.data.answer)
+                !response.hasOwnProperty("answer") ||
+                !response.answer)
             ) {
               // response = await axios.post(
               //   "https://wishresearch.kr/person/persona_interview_module",
               //   data,
               //   axiosConfig
               // );
-
+              console.log("🚀 ~ 재실행 436789214567839165748391573892 ");
               response = await InterviewXPersonaMultipleInterviewRequest(
                 data,
                 isLoggedIn
@@ -522,7 +547,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             }
 
             setIsGenerating(false);
-            allAnswers.push(response.data.answer);
+            allAnswers.push(response.response.answer);
 
             personaInfoState.push(personaInfo);
 
@@ -546,7 +571,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                   gender: gender,
                   age: age,
                   job: job,
-                  answer: response.data.answer,
+                  answer: response.response.answer,
                 },
               ],
             }));
@@ -772,7 +797,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
         <QuestionWrap
           onClick={() => handleAnswerToggle(index)}
           status={interviewStatus[index] || "Pre"}
-          isOpen={visibleAnswers[index]}
+          $isOpen={visibleAnswers[index]}
         >
           <Status status={interviewStatus[index] || "Pre"}>
             {interviewStatus[index] === "Ing"

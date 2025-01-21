@@ -61,24 +61,46 @@ const MoleculeInterviewPurpose = ({
 
   const [purposeItemsSingleAtom, setPurposeItemsSingleAtom] =
     useAtom(PURPOSE_ITEMS_SINGLE);
+  const [checkGenerateQuestion, setCheckGenerateQuestion] = useState("");
+  const [loadingStates, setLoadingStates] = useState({});
 
   const loadInterviewQuestion = async (title) => {
+    console.log("loadInterviewQuestion 시작", {
+      purposeId: purpose.id,
+      title,
+      isCustom: purpose.id === 4,
+    });
+
     setShowRegenerateButton(false);
+
+    // 현재 카드의 로딩 상태 설정
+    setLoadingStates((prev) => {
+      const newState = {
+        ...prev,
+        [purpose.id]: true,
+      };
+      console.log("loadingStates 설정:", newState);
+      return newState;
+    });
 
     const existingQuestions = singleInterviewQuestionList.find(
       (item) =>
         item.theory_name ===
         (purpose.id === 4 ? purpose.custom_theory_data.theory_title : title)
     );
+
     if (existingQuestions) {
       console.log("이미 존재하는 질문입니다:", existingQuestions);
+      setCheckGenerateQuestion("");
+      setLoadingStates((prev) => ({
+        ...prev,
+        [purpose.id]: false,
+      }));
       return;
     }
 
     try {
       setIsLoadingQuestion(true);
-
-      // let response = await fetchInterviewQuestions(data, purpose.id, isLoggedIn);
 
       let response = {};
       if (purpose.id === 4) {
@@ -88,12 +110,6 @@ const MoleculeInterviewPurpose = ({
         );
 
         if (generatedQuestions) {
-          // setSingleInterviewQuestionList((prev) => [
-          //   ...prev,
-          //   generatedQuestions,
-          // ]);
-
-          // InterviewXPersonaSingleInterviewGeneratorRequestTheoryCustom에 data를 보냄
           let data = {
             business_idea: businessAnalysis.input,
             business_analysis_data: {
@@ -101,16 +117,14 @@ const MoleculeInterviewPurpose = ({
               characteristics: businessAnalysis.characteristics,
               features: businessAnalysis.features,
             },
-            custom_theory_data: purpose.custom_theory_data,
+            custom_theory_data: purpose,
           };
 
           response =
             await InterviewXPersonaSingleInterviewGeneratorRequestTheoryCustom(
-              data, // data를 그대로 사용
+              data,
               isLoggedIn
             );
-
-          console.log("API 응답:", response);
         }
       } else if (purpose.id !== 4) {
         console.log("🚀 ~ loadInterviewQuestion ~ purpose.id !== 4:", purpose);
@@ -190,22 +204,58 @@ const MoleculeInterviewPurpose = ({
         }
       }
     } finally {
+      setLoadingStates((prev) => ({
+        ...prev,
+        [purpose.id]: false,
+      }));
       setIsLoadingQuestion(false);
+      setCheckGenerateQuestion("");
     }
   };
 
   const handleQuestionClick = () => {
-    // 문항 보기 토글
+    console.log("handleQuestionClick 시작", {
+      purposeId: purpose.id,
+      isCustom: purpose.id === 4,
+      showQuestions: showQuestions[purpose.id],
+      loadingStates: loadingStates,
+      isLoadingQuestion,
+    });
+
     toggleQuestions(purpose.id);
 
-    // 커스텀 방법론이 아니고, 문항이 없는 경우에만 API 호출
     if (purpose.id !== 4 && !showQuestions[purpose.id]) {
+      console.log("일반 방법론 처리");
       const existingQuestions = singleInterviewQuestionList.find(
         (item) => item.theory_name === purpose.title
       );
 
       if (!existingQuestions) {
+        setLoadingStates((prev) => ({
+          ...prev,
+          [purpose.id]: true,
+        }));
+        setIsLoadingQuestion(true);
         loadInterviewQuestion(purpose.title);
+      }
+    } else if (purpose.id === 4 && !showQuestions[purpose.id]) {
+      console.log("커스텀 방법론 처리", {
+        theoryTitle: purpose.theory_title,
+      });
+
+      const existingQuestions = singleInterviewQuestionList.find(
+        (item) => item.theory_name === purpose.theory_title
+      );
+      console.log("existingQuestions:", existingQuestions);
+
+      if (!existingQuestions) {
+        console.log("커스텀 방법론 질문 생성 시작");
+        setLoadingStates((prev) => ({
+          ...prev,
+          [purpose.id]: true,
+        }));
+        setIsLoadingQuestion(true);
+        loadInterviewQuestion(purpose.theory_title);
       }
     }
   };
@@ -252,7 +302,7 @@ const MoleculeInterviewPurpose = ({
           <div>
             <Body1 color="gray800">공통 질문</Body1>
             <BgBoxList>
-              {isLoadingQuestion && purpose.id === 4 ? (
+              {isLoadingQuestion && loadingStates[purpose.id] ? (
                 <>
                   <SkeletonLine width="100%" height="20px" />
                   <SkeletonLine width="100%" height="20px" />
@@ -267,7 +317,6 @@ const MoleculeInterviewPurpose = ({
                         ? purpose.custom_theory_data.theory_title
                         : purpose["title"])
                   );
-                  console.log("현재 표시할 질문:", questions);
                   return (
                     questions?.commonQuestions?.map((question, index) => (
                       <BgBoxItem key={index}>
@@ -287,7 +336,7 @@ const MoleculeInterviewPurpose = ({
           <div>
             <Body1 color="gray800">특화 질문</Body1>
             <BgBoxList>
-              {isLoadingQuestion && purpose.id === 4 ? (
+              {isLoadingQuestion && loadingStates[purpose.id] ? (
                 <>
                   <SkeletonLine width="100%" height="20px" />
                   <SkeletonLine width="100%" height="20px" />
