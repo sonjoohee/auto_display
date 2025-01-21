@@ -685,6 +685,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
     // 인터뷰 준비완료, 다음 질문 세팅, 인터뷰 상태 변경 시 마다 useEffect 실행
   }, [isLoadingPrepare, currentQuestionIndex, interviewStatus]);
 
+
   // const renderAnswers = (questionIndex) => {
   //   const questionAnswers = answers[questionIndex] || [];
 

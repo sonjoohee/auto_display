@@ -1,4 +1,4 @@
-// 작업관리 누르면 뜨는 프로젝트 리스트 
+// 작업관리 누르면 뜨는 프로젝트 리스트
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useAtom } from "jotai";
@@ -17,9 +17,9 @@ import { Button } from "../../../../assets/styles/ButtonStyle";
 import { Badge } from "../../../../assets/styles/Badge";
 import images from "../../../../assets/styles/Images";
 import { Body2, Sub3, Caption2 } from "../../../../assets/styles/Typography";
-import { 
-  ProjectItem, 
-  ProjectInfo, 
+import {
+  ProjectItem,
+  ProjectInfo,
   Name,
   ViewInfo,
   ViewInfoNodata,
@@ -108,23 +108,23 @@ const OrganismProjectCard = ({ project, index }) => {
     navigate(`/Persona/2/${projectId}`);
   };
 
-  //결과 분석 보기 
+  //결과 분석 보기
   const navigateToInterviewReportPage = (reportId) => {
     // console.log("🚀 ~ navigateToInterviewReportPage ~ reportId:", reportId);
     setProjectId(project._id);
     setReportId(reportId);
-    setPersonaStep(4);
+    // setPersonaStep(4);
     setReportLoadButtonState(true);
     setIsPersonaAccessible(true);
     navigate(`/Persona/4/${project._id}`);
   };
 
-  //인터뷰 상세보기 
+  //인터뷰 상세보기
   const navigateToInterviewReportDescriptionPage = (reportId) => {
     setProjectId(project._id);
     setReportId(reportId);
     setReportDescriptionLoadButtonState(true);
-    setPersonaStep(4);
+    // setPersonaStep(4);
     setReportLoadButtonState(true);
     setIsPersonaAccessible(true);
     navigate(`/Persona/4/${project._id}`);
@@ -273,7 +273,9 @@ const OrganismProjectCard = ({ project, index }) => {
                     Round
                     onClick={() => navigateToPersonaPage(project._id)}
                   >
-                    <Body2 color="primary">맞춤페르소나와 인터뷰 진행하기</Body2>
+                    <Body2 color="primary">
+                      맞춤페르소나와 인터뷰 진행하기
+                    </Body2>
                   </Button>
                 </Body2>
               </div>
