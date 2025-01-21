@@ -790,27 +790,46 @@ const PagePersona4 = () => {
                 <PersonaInfoWrap>
                   <PersonaInfoTitle>
                     <Body2_1 color="gray800" align="left">
-                      참여페르소나 정보
+                      참여 페르소나 정보
                     </Body2_1>
                     <Sub3 color="gray700" align="left">
-                      1명의 페르소나가 참여했어요
+                      {selectedPersonaList?.length || 0}명의 페르소나가
+                      참여했어요
                     </Sub3>
                   </PersonaInfoTitle>
 
                   <PersonaInfoContent>
-                    <Persona color="Linen" size="Large" Round>
-                      <img src={personaImages.PersonaWomen01} alt="페르소나" />
-                    </Persona>
-                    <PersonaText>
-                      <Caption1 color="gray800" align="left">
-                        꼼꼼한 계획형 자산 관리 성향
+                    {selectedPersonaList?.[0] ? (
+                      <>
+                        <Persona color="Linen" size="Large" Round>
+                          <img
+                            src={
+                              personaImages[selectedPersonaList[0].image] ||
+                              personaImages.PersonaWomen01
+                            }
+                            alt="페르소나"
+                          />
+                        </Persona>
+                        <PersonaText>
+                          <Caption1 color="gray800" align="left">
+                            {selectedPersonaList[0].persona || "성향 정보 없음"}
+                          </Caption1>
+                          <PersonaInfo>
+                            <span>
+                              {selectedPersonaList[0].gender || "성별"}
+                            </span>
+                            <span>
+                              {selectedPersonaList[0].age || "나이"}세
+                            </span>
+                            <span>{selectedPersonaList[0].job || "직업"}</span>
+                          </PersonaInfo>
+                        </PersonaText>
+                      </>
+                    ) : (
+                      <Caption1 color="gray700" align="center">
+                        선택된 페르소나가 없습니다
                       </Caption1>
-                      <PersonaInfo>
-                        <span>여성</span>
-                        <span>25세</span>
-                        <span>직업</span>
-                      </PersonaInfo>
-                    </PersonaText>
+                    )}
                   </PersonaInfoContent>
 
                   <Button Medium PrimaryLightest Fill>
