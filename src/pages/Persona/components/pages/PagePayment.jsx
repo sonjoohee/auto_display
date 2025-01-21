@@ -17,6 +17,8 @@ import {
   PlanList,
   PaymentCredit,
   ToggleList,
+  Title,
+  PaymentPrice,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../../assets/styles/Images";
 import { useNavigate } from "react-router-dom";
@@ -56,13 +58,19 @@ import PopupWrap from "../../../../assets/styles/Popup";
 const PagePayment = () => {
   const [isProPlan, setIsProPlan] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [showFailPopup, setShowFailPopup] = useState(false);
 
   const handlePlanChange = () => {
     setShowSuccessPopup(true);
   };
 
+  const handlePlanChange2 = () => {
+    setShowFailPopup(true);
+  };
+
   const handlePopupConfirm = () => {
     setShowSuccessPopup(false);
+    setShowFailPopup(false);
     setIsProPlan(true);
   };
 
@@ -75,9 +83,77 @@ const PagePayment = () => {
 
         <MainContent Wide>
           <PaymentWrap>
-            <H2 color="gray800" align="left">Pro Plan으로<br />모든 기능을 자유롭게 활용하세요</H2>
+            <Title Column>
+              <H2 color="gray800">크레딧 충전</H2>
+              <H6 color="gray800">필요한 만큼, 원하는 만큼 자유롭게 선택하세요</H6>
+            </Title>
 
-            <PaymentCard>
+            <PaymentWrap> 
+              <PaymentCard>
+                <PaymentCredit onClick={handlePlanChange2}>
+                  <images.CoinSmall color={palette.gray700} />
+                  <div>
+                    <p>50</p>
+                    <H6 color="gray700">Credit</H6>
+                  </div>
+
+                  <PaymentPrice>
+                    <Button Large PrimaryLightest Fill Round W100>
+                      <H5>￦1,100</H5>
+                    </Button>
+
+                    <H6 color="gray700">5% 할인</H6>
+                  </PaymentPrice>
+                </PaymentCredit>
+                <PaymentCredit onClick={handlePlanChange2}>
+                  <images.CoinMedium color={palette.gray700} />
+                  <div>
+                    <p>160</p>
+                    <H6 color="gray700">Credit</H6>
+                  </div>
+
+                  <PaymentPrice>
+                    <Button Large PrimaryLightest Fill Round W100>
+                      <H5>￦3,300</H5>
+                    </Button>
+
+                    <H6 color="gray700">10% 할인</H6>
+                  </PaymentPrice>
+                </PaymentCredit>
+                <PaymentCredit onClick={handlePlanChange}>
+                  <images.CoinLarge width="34px" height="32px" color={palette.gray700} />
+                  <div>
+                    <p>300</p>
+                    <H6 color="gray700">Credit</H6>
+                  </div>
+
+                  <PaymentPrice>
+                    <Button Large PrimaryLightest Fill Round W100>
+                      <H5>￦5,500</H5>
+                    </Button>
+
+                    <H6 color="gray700">20% 할인</H6>
+                  </PaymentPrice>
+                </PaymentCredit>
+                <PaymentCredit onClick={handlePlanChange}>
+                  <images.ClockClockwise width="39px" height="36px" color={palette.gray700} />
+                  <div>
+                    <p>1,000<span>/월</span></p>
+                    <H6 color="gray700">Credit</H6>
+                  </div>
+
+                  <PaymentPrice>
+                    <Button Large PrimaryLightest Fill Round W100>
+                      <H5>구독 플랜</H5>
+                    </Button>
+
+                    <H6 color="gray700">35% 할인</H6>
+                  </PaymentPrice>
+                </PaymentCredit>
+              </PaymentCard>
+            </PaymentWrap>
+
+            {/* <PaymentCard>
               <PaymentPlan>
                 <PlanTitle>
                   <H2>Basic Plan</H2>
@@ -153,8 +229,9 @@ const PagePayment = () => {
                   </Button>
                 )}
               </PaymentPlan>
-            </PaymentCard>
+            </PaymentCard> */}
           </PaymentWrap>
+
 
           {showSuccessPopup && (
             <PopupWrap
@@ -169,39 +246,23 @@ const PagePayment = () => {
             />
           )}
 
-          <PaymentWrap>
-            <H4 color="gray800" align="left">PRO들이 쓰는 Plan을 간편하게 크레딧 구매로!</H4>
-
-            <PaymentCard>
-              <PaymentCredit>
-                <img src={images.CoinSmall} alt="" />
-                <div>
-                  <p>50</p>
-                  <H6 color="gray700">Credit</H6>
-                </div>
-
-                <H2 color="gray700">1,100￦</H2>
-              </PaymentCredit>
-              <PaymentCredit>
-                <img src={images.CoinMedium} alt="" />
-                <div>
-                  <p>160</p>
-                  <H6 color="gray700">Credit</H6>
-                </div>
-
-                <H2 color="gray700">3,300￦</H2>
-              </PaymentCredit>
-              <PaymentCredit>
-                <img src={images.CoinLarge} alt="" />
-                <div>
-                  <p>300</p>
-                  <H6 color="gray700">Credit</H6>
-                </div>
-
-                <H2 color="gray700">5,500￦</H2>
-              </PaymentCredit>
-            </PaymentCard>
-          </PaymentWrap>
+          {showFailPopup && (
+            <PopupWrap
+              Fail
+              title="결제 실패"
+              message={
+                <>
+                  현재 (문제명)로 인하여 결제에 실패했습니다.<br />
+                  다시 시도해주세요
+                </>
+              }
+              buttonType="Outline"
+              confirmText="확인"
+              isModal={false}
+              onConfirm={handlePopupConfirm}
+              onCancel={handlePopupConfirm}
+            />
+          )}
 
         </MainContent>
       </ContentsWrap>

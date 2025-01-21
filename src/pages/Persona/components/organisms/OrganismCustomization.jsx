@@ -117,8 +117,8 @@ const OrganismCustomization = ({
 
   const handleGenerateQuestions = async (title) => {
     try {
-      // 1. 로딩 상태 설정
       setIsLoadingQuestion(true);
+      setSelectedPurpose(4); // 커스텀 방법론의 ID
 
       // 2. 카드 열기
       setShowQuestions((prev) => ({

@@ -229,12 +229,14 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
           console.log("API Response:", response); // API 응답 로그
           let questionList = response.response; //응답 반환하는 부분 (질문 받아옴)
           console.log("Question List:", questionList); // 추가된 로그
+
           let retryCount = 0;
           const maxRetries = 10;
 
           while (
             retryCount < maxRetries &&
             (!response || !response.response || response.response.length < 10)
+
           ) {
             console.log("Attempting API request..."); // API 요청 시도 로그
             response = await InterviewXPersonaSingleInterviewGeneratorRequest(
@@ -530,9 +532,9 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             while (
               retryCount < maxRetries &&
               (!response ||
-                !response.data ||
-                !response.data.hasOwnProperty("answer") ||
-                !response.data.answer)
+                !response.response ||
+                !response.response.hasOwnProperty("answer") ||
+                !response.response.answer)
             ) {
               response = await axios.post(
                 "https://wishresearch.kr/person/persona_interview_module",
@@ -548,7 +550,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             }
 
             setIsGenerating(false);
-            allAnswers.push(response.data.answer);
+            allAnswers.push(response.response.answer);
 
             personaInfoState.push(personaInfo);
 
@@ -572,7 +574,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                   gender: gender,
                   age: age,
                   job: job,
-                  answer: response.data.answer,
+                  answer: response.response.answer,
                 },
               ],
             }));
