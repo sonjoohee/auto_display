@@ -1,12 +1,17 @@
-//작업관리/ 프로젝트 리스트 
+//작업관리/ 프로젝트 리스트
 import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { useAtom } from "jotai";
+import { v4 as uuidv4 } from "uuid";
 import { palette } from "../../../../assets/styles/Palette";
 import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
 // import Header from "../../../Design_Page/IncHeader";
 import MoleculeHeader from "../molecules/MoleculeHeader";
-import { ButtonGroup, Button, IconButton } from "../../../../assets/styles/ButtonStyle";
+import {
+  ButtonGroup,
+  Button,
+  IconButton,
+} from "../../../../assets/styles/ButtonStyle";
 import {
   ContentsWrap,
   MainContent,
@@ -52,10 +57,122 @@ import OrganismProjectCard from "../organisms/OrganismProjectCard";
 import { getProjectListByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import OrganismEmptyProject from "../organisms/OrganismEmptyProject";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
-import { H2, H3, H4, H5, H6, Body2, Body3, Sub3, Caption2 } from "../../../../assets/styles/Typography";
+import { useLocation } from "react-router-dom";
+import {
+  H2,
+  H3,
+  H4,
+  H5,
+  H6,
+  Body2,
+  Body3,
+  Sub3,
+  Caption2,
+} from "../../../../assets/styles/Typography";
 import PopupWrap from "../../../../assets/styles/Popup";
 
 const PagePayment = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // URL의 쿼리 파라미터 확인
+    const queryParams = new URLSearchParams(location.search);
+
+    // 결제 후 리다이렉트된 경우의 파라미터 체크
+    const tid = queryParams.get("tid");
+    const orderId = queryParams.get("orderId");
+    const status = queryParams.get("status");
+    const mou = queryParams.get("mou");
+
+    if (tid && orderId) {
+      const verifyPayment = async () => {
+        try {
+          // const response = await fetch("http://localhost:8000/payment/onePay", {
+          const response = await fetch("https://wishresearch.kr/payment/onePay", {
+
+            
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              // 필요한 경우 인증 헤더 추가
+              // 'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+              tid: tid,
+              orderId: orderId,
+              status: status,
+              amount: mou,
+              // 필요한 다른 데이터들도 추가
+            }),
+          });
+
+          const result = await response.json();
+
+          console.log("result::", result);
+
+          if (result.resultCode === "0000") {
+            setShowSuccessPopup(true);
+            // 지선님 여기 결제 성공 됬으니까 해당 팝업버튼 나오고.
+            // 해당 팝업버튼 확인 버튼 누를시 페이지 리프래쉬 한번해야해요. 선근선임님하고 소통해볼꼐여
+            // 상단에 결제내역이 남아있음 ( 다시시도해도 안되긴함. )
+          } else {
+            setShowFailPopup(true);
+            // 결제 실패시 데이터 전달해서 결제 실패 사유를  사용자가 알아야할거같아요.
+            // 우선 결제 실패시 result 에 resultMsg 에 담겨있어요
+            // 실패 이후 확인시 네비게이터로  / Payment 로 이동
+          }
+        } catch (error) {
+          alert("결제 처리 중 오류가 발생했습니다.");
+        }
+      };
+
+      verifyPayment();
+    }
+
+    // 스크립트 로드
+    const script = document.createElement("script");
+    script.src = "https://pay.nicepay.co.kr/v1/js/";
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, [location]);
+
+  const onePayments = (e) => {
+    if (window.AUTHNICE) {
+      console.log("CLICK!!");
+      const priceElement = e.currentTarget.querySelector("[data-price]");
+      const price = priceElement.getAttribute("data-price");
+      const creditElement = e.currentTarget.querySelector("[credit-name]");
+      const credit = creditElement.getAttribute("credit-name");
+
+      const createdOrderId = "UC_" + uuidv4();
+      const goodsItem = "Credit" + credit;
+
+      console.log(price);
+      console.log(createdOrderId);
+
+      window.AUTHNICE.requestPay({
+        clientId: "S2_9fea099793f145afa7800b21958ab376",
+        method: "card",
+        orderId: createdOrderId,
+        amount: price,
+        goodsName: goodsItem,
+        
+        // returnUrl: "http://localhost:8000/payment/onePayCall",
+        returnUrl: "https://wishresearch.kr/payment/onePayCall",
+        fnError: function (result) {
+          alert("개발자확인용 : " + result.errorMsg + "");
+        },
+      });
+    } else {
+      console.error("AUTHNICE is not loaded");
+    }
+  };
+
   const [isProPlan, setIsProPlan] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [showFailPopup, setShowFailPopup] = useState(false);
@@ -72,6 +189,7 @@ const PagePayment = () => {
     setShowSuccessPopup(false);
     setShowFailPopup(false);
     setIsProPlan(true);
+    navigate(0);
   };
 
   return (
@@ -85,21 +203,23 @@ const PagePayment = () => {
           <PaymentWrap>
             <Title Column>
               <H2 color="gray800">크레딧 충전</H2>
-              <H6 color="gray800">필요한 만큼, 원하는 만큼 자유롭게 선택하세요</H6>
+              <H6 color="gray800">
+                필요한 만큼, 원하는 만큼 자유롭게 선택하세요
+              </H6>
             </Title>
 
-            <PaymentWrap> 
+            <PaymentWrap>
               <PaymentCard>
-                <PaymentCredit onClick={handlePlanChange2}>
+                <PaymentCredit onClick={onePayments}>
                   <images.CoinSmall color={palette.gray700} />
                   <div>
-                    <p>50</p>
+                    <p credit-name="50">50</p>
                     <H6 color="gray700">Credit</H6>
                   </div>
 
                   <PaymentPrice>
                     <Button Large PrimaryLightest Fill Round W100>
-                      <H5>￦1,100</H5>
+                      <H5 data-price="1100">￦1,100</H5>
                     </Button>
 
                     <H6 color="gray700">5% 할인</H6>
@@ -114,14 +234,18 @@ const PagePayment = () => {
 
                   <PaymentPrice>
                     <Button Large PrimaryLightest Fill Round W100>
-                      <H5>￦3,300</H5>
+                      <H5 data-price="3300">￦3,300</H5>
                     </Button>
 
                     <H6 color="gray700">10% 할인</H6>
                   </PaymentPrice>
                 </PaymentCredit>
                 <PaymentCredit onClick={handlePlanChange}>
-                  <images.CoinLarge width="34px" height="32px" color={palette.gray700} />
+                  <images.CoinLarge
+                    width="34px"
+                    height="32px"
+                    color={palette.gray700}
+                  />
                   <div>
                     <p>300</p>
                     <H6 color="gray700">Credit</H6>
@@ -129,22 +253,28 @@ const PagePayment = () => {
 
                   <PaymentPrice>
                     <Button Large PrimaryLightest Fill Round W100>
-                      <H5>￦5,500</H5>
+                      <H5 data-price="5500">￦5,500</H5>
                     </Button>
 
                     <H6 color="gray700">20% 할인</H6>
                   </PaymentPrice>
                 </PaymentCredit>
                 <PaymentCredit onClick={handlePlanChange}>
-                  <images.ClockClockwise width="39px" height="36px" color={palette.gray700} />
+                  <images.ClockClockwise
+                    width="39px"
+                    height="36px"
+                    color={palette.gray700}
+                  />
                   <div>
-                    <p>1,000<span>/월</span></p>
+                    <p>
+                      1,000<span>/월</span>
+                    </p>
                     <H6 color="gray700">Credit</H6>
                   </div>
 
                   <PaymentPrice>
                     <Button Large PrimaryLightest Fill Round W100>
-                      <H5>구독 플랜</H5>
+                      <H5 data-price="12900">구독 플랜</H5>
                     </Button>
 
                     <H6 color="gray700">35% 할인</H6>
@@ -232,7 +362,6 @@ const PagePayment = () => {
             </PaymentCard> */}
           </PaymentWrap>
 
-
           {showSuccessPopup && (
             <PopupWrap
               Success
@@ -252,7 +381,8 @@ const PagePayment = () => {
               title="결제 실패"
               message={
                 <>
-                  현재 (문제명)로 인하여 결제에 실패했습니다.<br />
+                  현재 (문제명)로 인하여 결제에 실패했습니다.
+                  <br />
                   다시 시도해주세요
                 </>
               }
@@ -263,7 +393,6 @@ const PagePayment = () => {
               onCancel={handlePopupConfirm}
             />
           )}
-
         </MainContent>
       </ContentsWrap>
     </>
