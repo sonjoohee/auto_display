@@ -111,6 +111,8 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
   const [inputValue, setInputValue] = useState("");
   const [allAnswersState, setAllAnswersState] = useState([]); // 상태로 관리
 
+  const [isInputEnabled, setIsInputEnabled] = useState(false); // New state for input enable/disable
+
   const axiosConfig = {
     timeout: 100000,
     headers: {
@@ -215,8 +217,10 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             ...existingQuestions.specialQuestions,
           ];
           setInterviewQuestionListState(combinedQuestions);
+          console.log("🚀 ~ loadInterviewQuestion ~ combinedQuestions:", combinedQuestions)
           await new Promise((resolve) => setTimeout(resolve, 5000));
           setIsLoadingPrepare(false);
+          // setInterviewStatus(["Pre"]); // 테스트 하나
           setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
         } else {
           console.log("No existing questions, making API request...");
@@ -287,6 +291,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
               ];
               setInterviewQuestionListState(combinedQuestions);
               setIsLoadingPrepare(false);
+              // setInterviewStatus(["Pre"]); // 테스트 하나
               setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
               console.log(
                 "🚀 ~ loadInterviewQuestion ~ interviewQuestionListState:",
@@ -435,7 +440,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
         }
 
         retryCount++;
-        await new Promise((resolve) => setTimeout(resolve, 1000)); // 1초 대기
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       }
 
       if (retryCount >= maxRetries) {
@@ -509,20 +514,21 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
           for (let i = 0; i < personaList.selected.length; i++) {
             setIsGenerating(true);
 
-            // 현재 페르소나의 이전 답변들 수집(저장):  AI가 답변을 생성할때 맥락 정보로 활용
+            // 현재 페르소나의 이전 답변들 수집(저장): AI가 답변을 생성할때 맥락 정보로 활용
             const lastInterview = [];
             // 현재 질문 이전 질문들 수집
-            for (let q = 0; q < currentQuestionIndex; q++) {
-              //각 질문에 대해서 answers 배열에서 해당 질문의 답변들을 찾음
+            for (let q = 0; q <= currentQuestionIndex; q++) { // <=로 변경하여 추가된 질문도 포함
+              // 각 질문에 대해서 answers 배열에서 해당 질문의 답변들을 찾음
               const questionAnswers = answers[q] || [];
-              //페르소나 매칭
+              console.log("Collected answers for question index:", q, "Answers:", questionAnswers); // 추가된 로그
+              // 페르소나 매칭
               const personaAnswer = questionAnswers.find(
                 (ans) =>
                   ans.persona.personIndex ===
                   personaList.selected[i].personIndex
               );
               if (personaAnswer) {
-                //찾은 답변이 있다면 질문과 답변을 쌍으로 배열에 추가
+                // 찾은 답변이 있다면 질문과 답변을 쌍으로 배열에 추가
                 lastInterview.push({
                   question: interviewQuestionListState[q],
                   answer: personaAnswer.answer,
@@ -542,7 +548,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
               summary: personaList.selected[i].consumption_pattern,
             };
 
-            //수집된 답변들 api요청에 포함
+            // 수집된 답변들 api요청에 포함
             const data = {
               business_analysis_data: businessAnalysis,
               question: interviewQuestionListState[currentQuestionIndex],
@@ -552,13 +558,6 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             };
             console.log("🚀 ~ processInterview ~ data:", data);
 
-            // let response = await axios.post(
-            //   //페르소나 답변 생성하는 api
-            //   "https://wishresearch.kr/person/persona_interview_module",
-            //   data,
-            //   axiosConfig
-            // );
-
             let response = await InterviewXPersonaSingleInterviewRequest(
               data,
               isLoggedIn
@@ -567,7 +566,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             let retryCount = 0;
             const maxRetries = 10;
 
-            //에러시 실행
+            // 에러시 실행
             while (
               retryCount < maxRetries &&
               (!response ||
@@ -581,11 +580,6 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                 isLoggedIn
               );
 
-              // response = await axios.post(
-              //   "https://wishresearch.kr/person/persona_interview_module",
-              //   data,
-              //   axiosConfig
-              // );
               retryCount++;
             }
 
@@ -596,37 +590,13 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
 
             setIsGenerating(false);
 
-            // allAnswers 대신 상태 사용
-            setAllAnswersState((prev) => [...prev, response.response.answer]);
-
-            console.log(
-              "🚀 ~ processInterview ~ allAnswersState:",
-              allAnswersState
-            );
-
-            personaInfoState.push(personaInfo);
-
-            //페르소나 정보 처리 (나이, 성별, 직업 정보 추출 )
-            console.log(
-              "🚀 ~ processInterview ~ personaList.selected[i].profile:",
-              personaList.selected[i]
-            );
-
-            const age = personaList.selected[i].age;
-            const gender = personaList.selected[i].gender;
-            const job = personaList.selected[i].job;
-
-            //답변 상태 업데이트 ( 현재 질문에 대한 각 페르소나의 답변 저장 )
-            //각 질문에 대해 모든 페르소나의 답변을 받고 나서야 다음 질문으로 넘어
+            // 답변 상태 업데이트 (현재 질문에 대한 각 페르소나의 답변 저장)
             setAnswers((prev) => ({
               ...prev,
               [currentQuestionIndex]: [
                 ...prev[currentQuestionIndex],
                 {
                   persona: personaList.selected[i],
-                  gender: gender,
-                  age: age,
-                  job: job,
                   answer: response.response.answer,
                 },
               ],
@@ -639,7 +609,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                 newData[currentQuestionIndex] = {
                   [`question_${currentQuestionIndex + 1}`]:
                     interviewQuestionListState[currentQuestionIndex].question,
-                  [`answer_${currentQuestionIndex + 1}`]: allAnswersState,
+                  [`answer_${currentQuestionIndex + 1}`]: response.response.answer,
                 };
                 return newData;
               });
@@ -691,78 +661,12 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
     };
 
     processInterview();
-    // 인터뷰 준비완료, 다음 질문 세팅, 인터뷰 상태 변경 시 마다 useEffect 실행
   }, [isLoadingPrepare, currentQuestionIndex, interviewStatus]);
 
-  // const renderAnswers = (questionIndex) => {
-  //   const questionAnswers = answers[questionIndex] || [];
-
-  //   return (
-  //     <>
-  //       {questionAnswers.map((answer, index) => (
-  //         <AnswerItem key={index}>
-  //           <TypeName>
-  //             <Thumb>
-  //               <img
-  //                 src={`/ai_person/${answer.persona.personaImg}.jpg`}
-  //                 alt={answer.persona.persona}
-  //               />
-  //             </Thumb>
-
-  //             <div>
-  //               {answer.persona.persona}
-  //               <p>
-  //                 <span>{answer.gender}</span>
-  //                 <span>{answer.age}세</span>
-  //                 <span>{answer.job}</span>
-  //               </p>
-  //             </div>
-  //           </TypeName>
-  //           <TextContainer>{answer.answer}</TextContainer>
-  //         </AnswerItem>
-  //       ))}
-  //       {isGenerating && interviewStatus[questionIndex] === "Ing" && (
-  //         <AnswerItem>
-  //           <TypeName>
-  //             <Thumb>
-  //               <img
-  //                 src={`/ai_person/${
-  //                   personaList.selected[questionAnswers.length].personaImg
-  //                 }.jpg`}
-  //                 alt={personaList.selected[questionAnswers.length].persona}
-  //               />
-  //             </Thumb>
-  //             <div>
-  //               {personaList.selected[questionAnswers.length].persona}
-  //               {(() => {
-  //                 const profileArray = personaList.selected[
-  //                   questionAnswers.length
-  //                 ].profile
-  //                   .replace(/['\[\]]/g, "")
-  //                   .split(", ");
-  //                 const age = profileArray[0].split(": ")[1];
-  //                 const gender =
-  //                   profileArray[1].split(": ")[1] === "남성" ? "남성" : "여성";
-  //                 const job = profileArray[2].split(": ")[1];
-
-  //                 return (
-  //                   <p>
-  //                     <span>{gender}</span>
-  //                     <span>{age}세</span>
-  //                     <span>{job}</span>
-  //                   </p>
-  //                 );
-  //               })()}
-  //             </div>
-  //           </TypeName>
-  //           <TextContainer>
-  //             <Entering />
-  //           </TextContainer>
-  //         </AnswerItem>
-  //       )}
-  //     </>
-  //   );
-  // };
+  useEffect(() => {
+    console.log("Updated Interview Status:", interviewStatus);
+    renderInterviewItems(); // 상태가 변경될 때마다 호출
+  }, [interviewStatus]); // interviewStatus가 변경될 때마다 실행
 
   const renderAnswersComplete = (questionIndex) => {
     const questionAnswers = answers[questionIndex] || [];
@@ -853,46 +757,8 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
     setVisibleAnswers((prev) => ({ ...prev, [index]: !prev[index] }));
   };
 
-  // 인터뷰를 진행할 때 사용
-  // const renderInterviewItems = () => {
-  //   return interviewQuestionListState.map((item, index) => (
-  //     <InterviewItem key={index} status={interviewStatus[index] || "Pre"}>
-  //       <QuestionWrap
-  //         onClick={() => handleAnswerToggle(index)}
-  //         status={interviewStatus[index] || "Pre"}
-  //         isOpen={visibleAnswers[index]}
-  //       >
-  //         <Status status={interviewStatus[index] || "Pre"}>
-  //           {interviewStatus[index] === "Ing"
-  //             ? "진행 중"
-  //             : interviewStatus[index] === "Complete"
-  //             ? "완료"
-  //             : "준비 중"}
-  //         </Status>
-  //         <QuestionText>
-  //           Q{index + 1}. {item}
-  //         </QuestionText>
-  //       </QuestionWrap>
-  //       {visibleAnswers[index] && (
-  //         <AnswerWrap>{renderAnswers(index)}</AnswerWrap>
-  //       )}
-  //     </InterviewItem>
-  //   ));
-  // };
-  const renderChatItem = (personaImage, message) => (
-    <ChatItem Persona>
-      <Persona color="Linen" size="Medium" Round>
-        <img src={personaImage} alt="페르소나" />
-      </Persona>
-      <ChatBox Persona>
-        <Sub1 color="gray800" align="left">
-          {message}
-        </Sub1>
-      </ChatBox>
-    </ChatItem>
-  );
-
   const renderInterviewItems = () => {
+    console.log("Rendering interview items with status:", interviewStatus); // 추가된 로그
     return interviewQuestionListState.map((item, index) => {
       const status = interviewStatus[index] || "Pre";
       if (status === "Ing" || status === "Complete") {
@@ -913,6 +779,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                 </Sub1>
               </ChatBox>
             </ChatItem>
+
 
             {/* 페르소나들의 답변 */}
             {answers[index]?.map((answer, answerIndex) => (
@@ -994,6 +861,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
     //replace: true 현재 페이지를 대체하여 이동( 뒤로 가기 시 이전 인터뷰 화면으로 돌아감 방지)
   };
 
+  // 상태 업데이트 함수
   const handleQuestionSelect = (index) => {
     setSelectedQuestions((prev) => {
       if (prev.includes(index)) {
@@ -1001,6 +869,23 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
         return prev.filter((item) => item !== index);
       } else {
         // 선택되지 않은 항목이면 추가
+        const newQuestion = `페르소나의 특성 및 라이프스타일 등을 파악할`; // 문자열 형태로 추가
+
+        // 인터뷰 질문 목록에 새로운 질문을 추가
+        setInterviewQuestionListState((prevList) => {
+          const updatedList = [...prevList, newQuestion]; // 새로운 질문 추가
+          console.log("Updated interviewQuestionListState:", updatedList); // 추가된 질문 목록을 콘솔에 출력
+          return updatedList;
+        });
+
+        // 인터뷰 상태 업데이트
+        setInterviewStatus((prevStatus) => {
+          const newStatus = [...prevStatus, "Ing"]; // 새로운 질문의 상태를 "Pre"로 추가
+          console.log("Updated Interview Status:", newStatus); // 업데이트된 상태를 콘솔에 출력
+          return newStatus;
+        });
+
+        console.log("New question added:", newQuestion); // 추가된 질문을 콘솔에 출력
         return [...prev, index];
       }
     });
@@ -1020,6 +905,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
               {/* Dynamically displaying the interview questions */}
               {interviewQuestionListState.length > 0 ? (
                 interviewQuestionListState.map((item, index) => {
+                  // interviewQuestionListState.slice(0, 1).map((item, index) => {
                   const status = interviewStatus[index] || "Pre"; // 현재 질문의 상태를 가져옴
                   return (
                     <QuestionItem
@@ -1105,7 +991,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                 <ColseButton onClick={handleClose} />
               </Title>
               <ul>
-                <li>
+         {/* <li>
                   <span>
                     <img src={images.FileText} alt="문항수" />
                     문항수
@@ -1121,7 +1007,20 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                     {personaList.selected.length || selectedPersonaList.length}
                     명
                   </span>
-                </li>
+                </li> */}
+                  {/* 추가된 부분: 페르소나 정보 표시 */}
+                  {personaList.selected.map((persona) => {
+                  return (
+                    <li key={persona.persona_id}>
+                      <span>
+                        {persona.persona}
+                      </span>
+                      <span>
+                        {persona.gender} | {persona.age}세 | {persona.job} {/* 성별, 나이, 직업 표시 */}
+                      </span>
+                    </li>
+                  );
+                })}
               </ul>
             </Header>
 
@@ -1234,8 +1133,22 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                         </Sub1>
                       </ChatBox>
                       <ChatAddButton>
-                        <button type="button">네, 있습니다!</button>
-                        <button type="button">아니요, 괜찮습니다.</button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsInputEnabled(true);
+                            setShowAddQuestion(false); // Hide the question list after selection
+                          }}
+              
+                        >
+                          네, 있습니다!
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setShowAddQuestion(false)} // Hide the question list
+                        >
+                          아니요, 괜찮습니다.
+                        </button>
                       </ChatAddButton>
                     </ChatItem>
                   )}
@@ -1279,6 +1192,10 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                   value={inputValue}
                   onChange={handleInputChange}
                   placeholder="Pro 요금제를 사용하시면 해당란에 원하시는 정보를 입력하여 추가 정보를 얻으실 수 있습니다."
+                  disabled={!isInputEnabled} // Use the new state to control disabled
+                  style={{
+                    pointerEvents: isInputEnabled ? 'auto' : 'none', // Update pointer events based on new state
+                  }}
                 />
                 <button type="button">검색</button>
               </ChatInput>
