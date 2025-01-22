@@ -16,6 +16,7 @@ import {
   PROJECT_ID,
   PURPOSE_ITEMS_SINGLE,
   IS_LOADING_QUESTION,
+  SELECTED_INTERVIEW_PURPOSE_DATA,
 } from "../../../AtomStates";
 import {
   ListBoxItem,
@@ -67,6 +68,9 @@ const MoleculeInterviewPurpose = ({
   const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(
     SELECTED_INTERVIEW_PURPOSE
   );
+  const [selectedInterviewPurposeData, setSelectedInterviewPurposeData] =
+    useAtom(SELECTED_INTERVIEW_PURPOSE_DATA);
+
   const loadInterviewQuestion = async (title) => {
     console.log("loadInterviewQuestion 시작", {
       purposeId: purpose.id,
@@ -131,7 +135,7 @@ const MoleculeInterviewPurpose = ({
             characteristics: businessAnalysis.characteristics,
             features: businessAnalysis.features,
           },
-          custom_theory_data: purpose,
+          custom_theory_data: purpose.custom_theory_data,
         };
 
         response =
@@ -239,7 +243,15 @@ const MoleculeInterviewPurpose = ({
     });
 
     setSelectedInterviewPurpose(purpose.id);
+    const selectedPurpose = purposeItemsSingleAtom.find(
+      (item) => item.id === purpose.id
+    );
+    console.log(
+      "🚀 ~ handlePurposeSelect ~ purpose:",
+      selectedPurpose?.view_title
+    );
 
+    setSelectedInterviewPurposeData(selectedPurpose);
     toggleQuestions(purpose.id);
 
     if (purpose.id !== 4 && !showQuestions[purpose.id]) {
