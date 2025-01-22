@@ -433,6 +433,9 @@ export const REPORT_DESCRIPTION_LOAD_BUTTON_STATE = atom(false);
 export const INTERVIEW_DATA = atom([]);
 export const INTERVIEW_REPORT = atom([]);
 export const INTERVIEW_REPORT_ADDITIONAL = atom([]);
+export const SINGLE_INTERVIEW_REPORT_TAB1 = atom([]);
+export const SINGLE_INTERVIEW_REPORT_TAB2 = atom([]);
+export const SINGLE_INTERVIEW_REPORT_TAB3 = atom([]);
 
 export const IS_EDIT_MODE = atom(false);
 
