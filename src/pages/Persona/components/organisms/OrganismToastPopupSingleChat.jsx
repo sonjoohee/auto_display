@@ -1,4 +1,3 @@
-//인터뷰룸
 import React, { useState, useEffect } from "react";
 import styled, { keyframes, css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
@@ -287,6 +286,8 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                 ...newQuestionData.specialQuestions,
               ];
               setInterviewQuestionListState(combinedQuestions);
+              setIsLoadingPrepare(false);
+              setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
               console.log(
                 "🚀 ~ loadInterviewQuestion ~ interviewQuestionListState:",
                 interviewQuestionListState
@@ -473,7 +474,6 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
     }
   };
 
-  let allAnswers = [];
   let personaInfoState = [];
 
   useEffect(() => {
@@ -1105,7 +1105,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                 <ColseButton onClick={handleClose} />
               </Title>
               <ul>
-                {/* <li>
+                <li>
                   <span>
                     <img src={images.FileText} alt="문항수" />
                     문항수
@@ -1121,21 +1121,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                     {personaList.selected.length || selectedPersonaList.length}
                     명
                   </span>
-                </li> */}
-                  {/* 추가된 부분: 페르소나 정보 표시 */}
-                  {personaList.selected.map((persona) => {
-                  console.log("Selected Persona:", persona); // 콘솔에 페르소나 정보 출력
-                  return (
-                    <li key={persona.persona_id}>
-                      <span>
-                        {persona.persona}
-                      </span>
-                      <span>
-                        {persona.gender} | {persona.age}세 | {persona.job} {/* 성별, 나이, 직업 표시 */}
-                      </span>
-                    </li>
-                  );
-                })}
+                </li>
               </ul>
             </Header>
 
