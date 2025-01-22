@@ -23,6 +23,7 @@ import {
   PURPOSE_ITEMS_SINGLE,
   IS_LOADING_QUESTION,
   SELECTED_INTERVIEW_PURPOSE,
+  SELECTED_INTERVIEW_PURPOSE_DATA,
 } from "../../../AtomStates";
 
 const OrganismCustomization = ({
@@ -45,6 +46,8 @@ const OrganismCustomization = ({
   const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(
     SELECTED_INTERVIEW_PURPOSE
   );
+  const [selectedInterviewPurposeData, setSelectedInterviewPurposeData] =
+    useAtom(SELECTED_INTERVIEW_PURPOSE_DATA);
   const [isLoadingQuestion, setIsLoadingQuestion] =
     useAtom(IS_LOADING_QUESTION);
   const [apiResponse, setApiResponse] = useState(null);
@@ -109,6 +112,24 @@ const OrganismCustomization = ({
       setApiResponse(result);
       setCustomTheoryData(result?.response?.custom_theory_data);
       // Update project on server with the new data
+
+      if (customTheoryData?.theory_title) {
+        console.log("🚀 ~ useEffect ~ customTheoryData:", customTheoryData);
+        const generatedQuestions = {
+          id: 4,
+          title: customTheoryData?.theory_title || "",
+          theory_title: customTheoryData?.theory_title || "",
+          view_title: customTheoryData?.theory_title || "",
+          definition: customTheoryData?.definition || "",
+          objective: customTheoryData?.objective || "",
+          characteristic: customTheoryData?.characteristic || [],
+          description: "사용자 커스텀 방법론" || "",
+          custom_theory_data: customTheoryData || "",
+          question_list: customTheoryData?.question_list || [],
+        };
+        setPurposeItemsSingleAtom((prev) => [...prev, generatedQuestions]);
+      }
+
       await updateProjectOnServer(
         projectId,
         {
@@ -144,6 +165,19 @@ const OrganismCustomization = ({
       setIsLoadingQuestion(true);
       setSelectedInterviewPurpose(4); // 커스텀 방법론의 ID
 
+      console.log(
+        "🚀 ~ handleGenerateQuestions222222222222222 ~ purposeItemsSingleAtom:",
+        purposeItemsSingleAtom
+      );
+      const selectedPurpose = purposeItemsSingleAtom.find(
+        (item) => item.id === 4
+      );
+      console.log(
+        "🚀 ~ handleGenerateQuestions3333333333333 ~ purpose:",
+        selectedPurpose?.view_title
+      );
+
+      setSelectedInterviewPurposeData(selectedPurpose);
       // 2. 카드 열기
       setShowQuestions((prev) => ({
         ...prev,
@@ -273,7 +307,7 @@ const OrganismCustomization = ({
                 </CustomizationBox>
               ) : (
                 <CustomizationBox>
-                  {isLoadingQuestion ? (
+                  {isLoadingQuestion && customTheoryData === null ? (
                     <AtomPersonaLoader message="입력하신 데이터를 분석하고 있어요" />
                   ) : (
                     <>
@@ -334,6 +368,7 @@ const OrganismCustomization = ({
                           </Caption2>
                           <Button
                             Medium
+                            disabled={isLoadingQuestion}
                             onClick={() => {
                               const generatedCustomInfo = {
                                 id: 4,
