@@ -1,4 +1,3 @@
-//인터뷰룸
 import React, { useState, useEffect } from "react";
 import styled, { keyframes, css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";

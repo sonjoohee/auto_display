@@ -416,7 +416,7 @@ const PageMyProject = () => {
                   {activeTab === "project" && (
                     /* 프로젝트 리스트 */
                     <ProjectList>
-                      <ProjectHeader>
+                      <ProjectHeader> 
                         <Body3 color="gray500">프로젝트 명</Body3>
                         <Body3 color="gray500">맞춤 페르소나</Body3>
                         <Body3 color="gray500">페르소나 모집</Body3>
