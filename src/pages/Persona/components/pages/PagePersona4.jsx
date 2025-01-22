@@ -218,11 +218,9 @@ const PagePersona4 = () => {
           projectId,
           reportLoadButtonState
         );
-        console.log(
-          "🚀 ~ loadProjectReport ~ savedProjectInfo:",
-          savedProjectInfo
-        );
+        console.log("🚀 ~ savedProjectInfo:", savedProjectInfo);
         if (savedProjectInfo) {
+          console.log("🚀 ~ savedProjectInfo.reportList:", savedProjectInfo.reportList); // reportList 콘솔 출력
           setBusinessAnalysis(savedProjectInfo.businessAnalysis);
           setReportList(savedProjectInfo.reportList);
           setCategoryColor({
