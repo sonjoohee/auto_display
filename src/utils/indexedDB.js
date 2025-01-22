@@ -983,3 +983,138 @@ export const InterviewXPersonaSingleInterviewRequestAddQuestion = async (
     throw error;
   }
 };
+
+//1:1 인터뷰 결과보고서 탭1
+export const InterviewXPersonaSingleInterviewReportTab1 = async (
+  data,
+  isLoggedIn
+) => {
+  console.log("1:1 인터뷰 결과 보고서 탭1 요청 시작  - 입력 데이터:", data);
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/person/temporary/persona_single_interview_reoport_tab1",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+    return result;
+    // return response.data;
+  } catch (error) {
+    console.error("1:1 인터뷰 결과보고서 탭1 생성 처리 중 오류 발생:", error);
+    console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+//1:1 인터뷰 결과보고서 탭2
+export const InterviewXPersonaSingleInterviewReportTab2 = async (
+  data,
+  isLoggedIn
+) => {
+  console.log("1:1 인터뷰 결과 보고서 탭2 요청 시작  - 입력 데이터:", data);
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/person/temporary/persona_single_interview_reoport_tab2",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+    return result;
+    // return response.data;
+  } catch (error) {
+    console.error("1:1 인터뷰 결과보고서 탭2 생성 처리 중 오류 발생:", error);
+    console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+//1:1 인터뷰 결과보고서 탭3
+export const InterviewXPersonaSingleInterviewReportTab3 = async (
+  data,
+  isLoggedIn
+) => {
+  console.log("1:1 인터뷰 결과 보고서 탭3 요청 시작  - 입력 데이터:", data);
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/person/temporary/persona_single_interview_reoport_tab3",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+    return result;
+    // return response.data;
+  } catch (error) {
+    console.error("1:1 인터뷰 결과보고서 탭3 생성 처리 중 오류 발생:", error);
+    console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+  }
+};
