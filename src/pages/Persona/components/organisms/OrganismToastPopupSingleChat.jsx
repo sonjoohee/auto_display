@@ -46,6 +46,7 @@ import MoleculeRecreate from "../../../../pages/Persona/components/molecules/Mol
 // import { InterviewXPersonaMultipleInterviewGeneratorRequest } from "../../../../utils/indexedDB";
 import { InterviewXPersonaSingleInterviewGeneratorRequest } from "../../../../utils/indexedDB";
 import { InterviewXPersonaSingleInterviewRequest } from "../../../../utils/indexedDB";
+import { InterviewXPersonaSingleInterviewRequestAddQuestion } from "../../../../utils/indexedDB";
 
 const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
   const [selectedPersonaList, setSelectedPersonaList] = useAtom(
@@ -106,12 +107,19 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
   const [showRegenerateButton2, setShowRegenerateButton2] = useState(false);
   const [showRegenerateButton3, setShowRegenerateButton3] = useState(false);
 
+  const [interviewAdditionalQuestion, setInterviewAdditionalQuestion] =
+    useState({});
   const [selectedQuestions, setSelectedQuestions] = useState([]);
+  const [selectedAdditionalQuestion, setSelectedAdditionalQuestion] = useState(
+    []
+  );
   const [showAddQuestion, setShowAddQuestion] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [allAnswersState, setAllAnswersState] = useState([]); // 상태로 관리
 
   const [isInputEnabled, setIsInputEnabled] = useState(false); // New state for input enable/disable
+
+  const [countAdditionalQuestion, setCountAdditionalQuestion] = useState(1);
 
   const axiosConfig = {
     timeout: 100000,
@@ -123,11 +131,147 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
-    if (e.target.value.length > 0) {
-      setShowAddQuestion(true);
-    } else {
-      setShowAddQuestion(false);
+    // if (e.target.value.length > 0) {
+    //   setShowAddQuestion(true);
+    // } else {
+    //   setShowAddQuestion(false);
+    // }
+  };
+
+  const handleAddQuestionGenerate = async () => {
+    if (!inputValue.trim()) {
+      return; // 빈 입력값인 경우 처리하지 않음
     }
+    try {
+      if (inputValue.length > 0) {
+        const lastInterview = [];
+        // 현재 질문 이전 질문들 수집
+        for (let q = 0; q <= currentQuestionIndex; q++) {
+          // <=로 변경하여 추가된 질문도 포함
+          // 각 질문에 대해서 answers 배열에서 해당 질문의 답변들을 찾음
+          const questionAnswers = answers[q] || [];
+          console.log(
+            "Collected answers for question index:",
+            q,
+            "Answers:",
+            questionAnswers
+          ); // 추가된 로그
+          // 페르소나 매칭
+          const personaAnswer = questionAnswers.find(
+            (ans) =>
+              ans.persona.personIndex === personaList.selected[0].personIndex
+          );
+          if (personaAnswer) {
+            // 찾은 답변이 있다면 질문과 답변을 쌍으로 배열에 추가
+            lastInterview.push({
+              question: interviewQuestionListState[q],
+              answer: personaAnswer.answer,
+            });
+          }
+        }
+        // 생성된 질문이 없다면 API 요청
+        let data = {
+          business_idea: businessAnalysis.input,
+          business_analysis_data: {
+            title: businessAnalysis.title,
+            characteristics: businessAnalysis.characteristics,
+            features: businessAnalysis.features,
+          },
+          answer_list: lastInterview,
+          theory_data: selectedInterviewPurposeData,
+          input_data: inputValue,
+        };
+
+        console.log("API 요청 데이터:", data); // 추가된 로그
+        let response = await InterviewXPersonaSingleInterviewRequestAddQuestion(
+          data,
+          isLoggedIn
+        );
+        console.log("API Response:", response); // API 응답 로그
+
+        let retryCount = 0;
+        const maxRetries = 10;
+
+        //   answer_template = {
+        //     "moderator_question_1" : "모더레이터 질문 or 0",
+        //     "moderator_question_2" : "모더레이터 질문 or 0",
+        //     "moderator_question_3" : "모더레이터 질문 or 0",
+        //     "check_inputdata" : 0
+        // }
+        while (
+          retryCount < maxRetries &&
+          (!response ||
+            !response.response ||
+            !response.response.moderator_question_1 ||
+            !response.response.moderator_question_2 ||
+            !response.response.moderator_question_3 ||
+            !response.response.check_inputdata)
+        ) {
+          console.log("Attempting API request..."); // API 요청 시도 로그
+          response = await InterviewXPersonaSingleInterviewRequestAddQuestion(
+            data,
+            isLoggedIn
+          );
+          console.log("API Response:", response); // API 응답 로그
+          retryCount++;
+        }
+
+        if (retryCount >= maxRetries) {
+          setShowErrorPopup(true);
+          return;
+        } else {
+          if (response.response) {
+            if (response.response.check_inputdata === 0) {
+              setShowErrorPopup(true);
+            } else {
+              setInterviewAdditionalQuestion(response.response);
+              setShowAddQuestion(true);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      if (error.response) {
+        switch (error.response.status) {
+          case 500:
+            setShowErrorPopup(true);
+            break;
+          case 504:
+            if (regenerateCount1 >= 3) {
+              setShowErrorPopup(true);
+              return;
+            } else {
+              setShowRegenerateButton1(true);
+              setRegenerateCount1(regenerateCount1 + 1);
+            }
+            break;
+          default:
+            setShowErrorPopup(true);
+            break;
+        }
+        console.error("Error details:", error);
+      }
+    }
+
+    // // 새로운 질문 생성
+    // const newQuestion = {
+    //   question: inputValue,
+    // };
+
+    // // 인터뷰 질문 목록에 새 질문 추가
+    // setInterviewQuestionListState((prev) => [...prev, newQuestion]);
+
+    // // 인터뷰 상태 업데이트
+    // setInterviewStatus((prev) => [...prev, "Pre"]);
+
+    // // 입력값 초기화
+    // setInputValue("");
+
+    // // 입력 비활성화
+    // setIsInputEnabled(false);
+
+    // // 질문 추가 UI 숨기기
+    // setShowAddQuestion(false);
   };
 
   //저장되었던 인터뷰 로드
@@ -216,12 +360,19 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             ...existingQuestions.commonQuestions,
             ...existingQuestions.specialQuestions,
           ];
-          setInterviewQuestionListState(combinedQuestions);
-          console.log("🚀 ~ loadInterviewQuestion ~ combinedQuestions:", combinedQuestions)
+          setInterviewQuestionListState([combinedQuestions[0]]);
+          // setInterviewQuestionListState(combinedQuestions);
+          console.log(
+            "🚀 ~ loadInterviewQuestion ~ combinedQuestions:",
+            combinedQuestions
+          );
           await new Promise((resolve) => setTimeout(resolve, 5000));
           setIsLoadingPrepare(false);
           // setInterviewStatus(["Pre"]); // 테스트 하나
-          setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
+
+          setInterviewStatus(["Pre"]);
+
+          // setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
         } else {
           console.log("No existing questions, making API request...");
           // 생성된 질문이 없다면 API 요청
@@ -517,10 +668,16 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             // 현재 페르소나의 이전 답변들 수집(저장): AI가 답변을 생성할때 맥락 정보로 활용
             const lastInterview = [];
             // 현재 질문 이전 질문들 수집
-            for (let q = 0; q <= currentQuestionIndex; q++) { // <=로 변경하여 추가된 질문도 포함
+            for (let q = 0; q <= currentQuestionIndex; q++) {
+              // <=로 변경하여 추가된 질문도 포함
               // 각 질문에 대해서 answers 배열에서 해당 질문의 답변들을 찾음
               const questionAnswers = answers[q] || [];
-              console.log("Collected answers for question index:", q, "Answers:", questionAnswers); // 추가된 로그
+              console.log(
+                "Collected answers for question index:",
+                q,
+                "Answers:",
+                questionAnswers
+              ); // 추가된 로그
               // 페르소나 매칭
               const personaAnswer = questionAnswers.find(
                 (ans) =>
@@ -609,7 +766,8 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                 newData[currentQuestionIndex] = {
                   [`question_${currentQuestionIndex + 1}`]:
                     interviewQuestionListState[currentQuestionIndex].question,
-                  [`answer_${currentQuestionIndex + 1}`]: response.response.answer,
+                  [`answer_${currentQuestionIndex + 1}`]:
+                    response.response.answer,
                 };
                 return newData;
               });
@@ -780,7 +938,6 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
               </ChatBox>
             </ChatItem>
 
-
             {/* 페르소나들의 답변 */}
             {answers[index]?.map((answer, answerIndex) => (
               <ChatItem Persona key={`${index}-${answerIndex}`}>
@@ -861,31 +1018,67 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
     //replace: true 현재 페이지를 대체하여 이동( 뒤로 가기 시 이전 인터뷰 화면으로 돌아감 방지)
   };
 
-  // 상태 업데이트 함수
-  const handleQuestionSelect = (index) => {
+  // // 상태 업데이트 함수
+  // const handleQuestionSelect = (index, questionText) => {
+  //   setSelectedQuestions((prev) => {
+  //     if (prev.includes(index)) {
+  //       // 이미 선택된 항목이면 제거
+  //       return prev.filter((item) => item !== index);
+  //     } else {
+  //       // 선택되지 않은 항목이면 추가
+  //       const newQuestion = questionText; // 문자열 형태로 추가
+
+  //       // 인터뷰 질문 목록에 새로운 질문을 추가
+  //       setInterviewQuestionListState((prevList) => {
+  //         const updatedList = [...prevList, newQuestion]; // 새로운 질문 추가
+  //         console.log("Updated interviewQuestionListState:", updatedList); // 추가된 질문 목록을 콘솔에 출력
+  //         return updatedList;
+  //       });
+
+  //       // 인터뷰 상태 업데이트
+  //       setInterviewStatus((prevStatus) => {
+  //         const newStatus = [...prevStatus, "Ing"]; // 새로운 질문의 상태를 "Pre"로 추가
+  //         console.log("Updated Interview Status:", newStatus); // 업데이트된 상태를 콘솔에 출력
+  //         return newStatus;
+  //       });
+
+  //       console.log("New question added:", newQuestion); // 추가된 질문을 콘솔에 출력
+  //       return [...prev, index];
+  //     }
+  //   });
+
+  //   if (currentQuestionIndex < interviewQuestionListState.length - 1) {
+  //     setCurrentQuestionIndex((prev) => prev + 1);
+  //   }
+  // };
+
+  const handleQuestionSelect = (index, questionText) => {
     setSelectedQuestions((prev) => {
       if (prev.includes(index)) {
-        // 이미 선택된 항목이면 제거
         return prev.filter((item) => item !== index);
       } else {
-        // 선택되지 않은 항목이면 추가
-        const newQuestion = `페르소나의 특성 및 라이프스타일 등을 파악할`; // 문자열 형태로 추가
-
         // 인터뷰 질문 목록에 새로운 질문을 추가
         setInterviewQuestionListState((prevList) => {
-          const updatedList = [...prevList, newQuestion]; // 새로운 질문 추가
-          console.log("Updated interviewQuestionListState:", updatedList); // 추가된 질문 목록을 콘솔에 출력
+          const updatedList = [...prevList, questionText]; // 객체 대신 문자열로 추가
+          console.log("Updated interviewQuestionListState:", updatedList);
           return updatedList;
         });
 
         // 인터뷰 상태 업데이트
         setInterviewStatus((prevStatus) => {
-          const newStatus = [...prevStatus, "Ing"]; // 새로운 질문의 상태를 "Pre"로 추가
-          console.log("Updated Interview Status:", newStatus); // 업데이트된 상태를 콘솔에 출력
+          const newStatus = [...prevStatus, "Pre"];
+          console.log("Updated Interview Status:", newStatus);
           return newStatus;
         });
 
-        console.log("New question added:", newQuestion); // 추가된 질문을 콘솔에 출력
+        // 현재 질문 인덱스를 새로 추가된 질문의 인덱스로 업데이트
+        setCurrentQuestionIndex(interviewQuestionListState.length);
+
+        // // 추가 질문 UI 숨기기
+        // setShowAddQuestion(false);
+
+        console.log("New question added:", questionText);
+        setCountAdditionalQuestion(countAdditionalQuestion - 1);
         return [...prev, index];
       }
     });
@@ -934,54 +1127,6 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                 <Sub2 color="gray800">질문이 없습니다.</Sub2> // 질문이 없을 때 메시지 표시
               )}
             </QuestionList>
-
-            {/* <QuestionList>
-              <QuestionItem checked>
-                <Sub2 color="gray800">
-                  Q1. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰
-                  이유는 무엇이라고 생각하시나요?
-                </Sub2>
-                <span>
-                  <img src={images.CheckGreen} alt="완료" />
-                </span>
-              </QuestionItem>
-              <QuestionItem checked>
-                <Sub2 color="gray800">
-                  Q2. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰
-                  이유는 무엇이라고 생각하시나요?
-                </Sub2>
-                <span>
-                  <img src={images.CheckGreen} alt="완료" />
-                </span>
-              </QuestionItem>
-              <QuestionItem checked>
-                <Sub2 color="gray800">
-                  Q3. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰
-                  이유는 무엇이라고 생각하시나요?
-                </Sub2>
-                <span>
-                  <img src={images.CheckGreen} alt="완료" />
-                </span>
-              </QuestionItem>
-              <QuestionItem>
-                <Sub2 color="gray800">
-                  Q4. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰
-                  이유는 무엇이라고 생각하시나요?
-                </Sub2>
-                <span>
-                  <img src={images.CheckGreen} alt="완료" />
-                </span>
-              </QuestionItem>
-              <QuestionItem disabled>
-                <Sub2 color="gray800">
-                  Q5. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰
-                  이유는 무엇이라고 생각하시나요?
-                </Sub2>
-                <span>
-                  <img src={images.CheckGreen} alt="완료" />
-                </span>
-              </QuestionItem>
-            </QuestionList> */}
           </QuestionListWrap>
 
           <ChatWrap>
@@ -991,32 +1136,14 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                 <ColseButton onClick={handleClose} />
               </Title>
               <ul>
-         {/* <li>
-                  <span>
-                    <img src={images.FileText} alt="문항수" />
-                    문항수
-                  </span>
-                  <span>{interviewQuestionListState.length}개</span>
-                </li>
-                <li>
-                  <span>
-                    <img src={images.PeopleFill} alt="참여 페르소나" />
-                    참여 페르소나
-                  </span>
-                  <span>
-                    {personaList.selected.length || selectedPersonaList.length}
-                    명
-                  </span>
-                </li> */}
-                  {/* 추가된 부분: 페르소나 정보 표시 */}
-                  {personaList.selected.map((persona) => {
+                {/* 추가된 부분: 페르소나 정보 표시 */}
+                {personaList.selected.map((persona) => {
                   return (
                     <li key={persona.persona_id}>
+                      <span>{persona.persona}</span>
                       <span>
-                        {persona.persona}
-                      </span>
-                      <span>
-                        {persona.gender} | {persona.age}세 | {persona.job} {/* 성별, 나이, 직업 표시 */}
+                        {persona.gender} | {persona.age}세 | {persona.job}{" "}
+                        {/* 성별, 나이, 직업 표시 */}
                       </span>
                     </li>
                   );
@@ -1124,22 +1251,23 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                 {renderInterviewItems()}
                 {/* 모든 질문이 Complete 상태일 때만 추가 질문 메시지 표시 */}
                 {interviewStatus.length > 0 &&
-                  interviewStatus.every((status) => status === "Complete") && (
+                  interviewStatus.every((status) => status === "Complete") &&
+                  countAdditionalQuestion !== 0 && (
                     <ChatItem Add>
                       <ChatBox Moder>
                         <Sub1 color="gray800" align="left">
                           추가로 질문 하실 부분이 있으신가요?
-                          <span>(Basic 1회 가능)</span>
+                          <span>(Basic {countAdditionalQuestion}회 가능)</span>
                         </Sub1>
                       </ChatBox>
                       <ChatAddButton>
                         <button
                           type="button"
+                          disabled={countAdditionalQuestion === 0}
                           onClick={() => {
                             setIsInputEnabled(true);
                             setShowAddQuestion(false); // Hide the question list after selection
                           }}
-              
                         >
                           네, 있습니다!
                         </button>
@@ -1160,27 +1288,38 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                 <Body1 color="gray800">
                   요청하신 질문의 의도를 반영하여 아래와 같이 다듬었습니다
                 </Body1>
-                <Body3 color="gray800">1회 사용가능</Body3>
+                <Body3 color="gray800">
+                  {countAdditionalQuestion}회 사용가능
+                </Body3>
               </AddQuestionTitle>
 
               <ul>
-                {[1, 2, 3].map((_, index) => (
-                  <li
-                    key={index}
-                    onClick={() => handleQuestionSelect(index)}
-                    className={
-                      selectedQuestions.includes(index) ? "selected" : ""
-                    }
-                  >
-                    <Body3 color="gray800">
-                      Q{index + 1}. 페르소나의 특성 및 라이프스타일 등을 파악할
-                      수 있는 질문 구성 입니다.
-                    </Body3>
-                    <div>
-                      <Body2 color="gray800" />
-                    </div>
-                  </li>
-                ))}
+                {interviewAdditionalQuestion &&
+                  Object.entries(interviewAdditionalQuestion)
+                    .filter(
+                      ([key, value]) =>
+                        key.startsWith("moderator_question_") && value !== "0"
+                    )
+                    .map(([key, value], index) => (
+                      <li
+                        key={key}
+                        onClick={() =>
+                          countAdditionalQuestion > 0 &&
+                          handleQuestionSelect(index, value)
+                        }
+                        className={`
+                          ${selectedQuestions.includes(index) ? "selected" : ""}
+                          ${countAdditionalQuestion === 0 ? "disabled" : ""}
+                        `}
+                      >
+                        <Body3 color="gray800">
+                          Q{index + 1}. {value}
+                        </Body3>
+                        <div>
+                          <Body2 color="gray800" />
+                        </div>
+                      </li>
+                    ))}
               </ul>
             </AddQuestion>
 
@@ -1192,12 +1331,18 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                   value={inputValue}
                   onChange={handleInputChange}
                   placeholder="Pro 요금제를 사용하시면 해당란에 원하시는 정보를 입력하여 추가 정보를 얻으실 수 있습니다."
-                  disabled={!isInputEnabled} // Use the new state to control disabled
+                  disabled={!isInputEnabled}
                   style={{
-                    pointerEvents: isInputEnabled ? 'auto' : 'none', // Update pointer events based on new state
+                    pointerEvents: isInputEnabled ? "auto" : "none",
                   }}
                 />
-                <button type="button">검색</button>
+                <button
+                  type="button"
+                  onClick={handleAddQuestionGenerate}
+                  disabled={!isInputEnabled || !inputValue.trim()}
+                >
+                  검색
+                </button>
               </ChatInput>
             </ChatFooter>
           </ChatWrap>
@@ -1510,7 +1655,6 @@ const ChatFooter = styled.div`
       background: ${palette.white};
     }
   }
-
   button {
     flex-shrink: 0;
     width: 32px;
@@ -1540,6 +1684,7 @@ const ChatFooter = styled.div`
     }
   }
 `;
+
 const ChatInput = styled.div`
   display: flex;
   align-items: center;
@@ -2038,7 +2183,7 @@ const AddQuestion = styled.div`
   width: 100%;
   padding: 20px 20px 12px 20px;
   border-top: 1px solid ${palette.outlineGray};
-  background: ${palette.white};
+  /* background: ${palette.white}; */
   transform: translateY(${({ show }) => (show ? "0" : "100%")});
   // opacity: ${({ show }) => (show ? "1" : "0")};
   visibility: ${({ show }) => (show ? "visible" : "collapse")};
@@ -2096,6 +2241,16 @@ const AddQuestion = styled.div`
 
       &:hover {
         opacity: 1;
+      }
+    }
+
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+
+      &:hover {
+        border-color: ${palette.outlineGray};
+        background: ${palette.chatGray};
       }
     }
   }
