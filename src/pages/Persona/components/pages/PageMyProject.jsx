@@ -298,11 +298,12 @@ const PageMyProject = () => {
                 </MyDashboardTitle>
 
                 <ButtonGroup>
-                  <Button Primary onClick={() => navigate("/Payment")}>
+                  {/* <Button Primary onClick={() => navigate("/Payment")}>
                     <images.CoinSmall width="12px" height="8px" color={palette.primary} />
-                    {/* <img src={images.CoinSmall} alt="요금제 관리" /> */}
+                    
                     <Sub3 color="primary">요금제 관리</Sub3>
-                  </Button>
+                  </Button> */}
+                  {/* <img src={images.CoinSmall} alt="요금제 관리" /> */}
                   <div style={{ position: "relative" }}>
                     <Button
                       Primary
