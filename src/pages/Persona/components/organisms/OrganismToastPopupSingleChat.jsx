@@ -287,6 +287,8 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                 ...newQuestionData.specialQuestions,
               ];
               setInterviewQuestionListState(combinedQuestions);
+              setIsLoadingPrepare(false);
+              setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
               console.log(
                 "🚀 ~ loadInterviewQuestion ~ interviewQuestionListState:",
                 interviewQuestionListState
@@ -473,7 +475,6 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
     }
   };
 
-  let allAnswers = [];
   let personaInfoState = [];
 
   useEffect(() => {
