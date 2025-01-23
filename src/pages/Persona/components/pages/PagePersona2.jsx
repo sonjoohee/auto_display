@@ -247,7 +247,7 @@ const PagePersona2 = () => {
   const [visibleSelectedTypes, setVisibleSelectedTypes] = useState([]);
 
   const [oceanValues, setOceanValues] = useState({
-    openness: 0.5,      // 중간값 0.5로 시작
+    openness: 0.5, // 중간값 0.5로 시작
     conscientiousness: 0.5,
     extraversion: 0.5,
     agreeableness: 0.5,
@@ -255,9 +255,9 @@ const PagePersona2 = () => {
   });
 
   const handleOceanChange = (trait, value) => {
-    setOceanValues(prev => ({
+    setOceanValues((prev) => ({
       ...prev,
-      [trait]: Number(value)
+      [trait]: Number(value),
     }));
   };
 
@@ -1282,7 +1282,7 @@ const PagePersona2 = () => {
       // 첫 번째 탭에서는 성별과 연령대 선택 여부 확인
       const isGenderSelected = customPersonaForm.gender !== "";
       const isAgeGroupSelected = customPersonaForm.ageGroups.length > 0;
-      
+
       return isGenderSelected && isAgeGroupSelected;
     } else {
       // 두 번째 탭에서는 항상 true 반환
@@ -1601,7 +1601,10 @@ const PagePersona2 = () => {
                                   </Choice>
                                 ))
                               ) : (
-                                <Sub2_1 color="gray500" style={{ padding: "6px 10px" }}>
+                                <Sub2_1
+                                  color="gray500"
+                                  style={{ padding: "6px 10px" }}
+                                >
                                   페르소나 유형을 선택해 주세요.
                                 </Sub2_1>
                               )}
@@ -1609,13 +1612,19 @@ const PagePersona2 = () => {
 
                             <TypeMore style={{ zIndex: 10 }}>
                               <Personnel>
-                                {selectedTypes.length > 0 ? `${selectedTypes.length}개` : "0개"}
+                                {selectedTypes.length > 0
+                                  ? `${selectedTypes.length}개`
+                                  : "0개"}
                               </Personnel>
                               <MoreButton
                                 onClick={() => setShowTypeList(!showTypeList)}
                               >
                                 유형 더보기
-                                <images.ChevronDown width="24" height="24" color={palette.gray700} />
+                                <images.ChevronDown
+                                  width="24"
+                                  height="24"
+                                  color={palette.gray700}
+                                />
                               </MoreButton>
 
                               {showTypeList && (
@@ -1762,16 +1771,26 @@ const PagePersona2 = () => {
                       )}
 
                       {!personaButtonState2 && (
-                        <BottomBar Responsive Round onClick={handleStartInterview}>
+                        <BottomBar
+                          Responsive
+                          Round
+                          onClick={handleStartInterview}
+                        >
                           <div className="responsive">
                             <Body2 color="gray800">인터뷰 진행</Body2>
                             <Body3 color="gray800">
-                              💬 지금 바로 인터뷰가 가능 {filteredProjectList.length}명의 페르소나가 기다리고 있어요
+                              💬 지금 바로 인터뷰가 가능한{" "}
+                              {filteredProjectList.length}명의 페르소나가
+                              기다리고 있어요
                             </Body3>
                           </div>
 
                           <span>
-                            <images.ChevronRight width="22" height="22" color={palette.white} />
+                            <images.ChevronRight
+                              width="22"
+                              height="22"
+                              color={palette.white}
+                            />
                           </span>
                           {/* <p>
                             {selectedPersonas.length > 0 ? (
@@ -1861,7 +1880,9 @@ const PagePersona2 = () => {
                         gender="남자"
                         icon={images.GenderMen}
                         checked={customPersonaForm.gender === "male"}
-                        onChange={() => handleCustomPersonaChange("gender", "male")}
+                        onChange={() =>
+                          handleCustomPersonaChange("gender", "male")
+                        }
                       />
                       <GenderRadioButton
                         id="gender2"
@@ -1870,7 +1891,9 @@ const PagePersona2 = () => {
                         gender="여자"
                         icon={images.GenderWomen}
                         checked={customPersonaForm.gender === "female"}
-                        onChange={() => handleCustomPersonaChange("gender", "female")}
+                        onChange={() =>
+                          handleCustomPersonaChange("gender", "female")
+                        }
                       />
                     </PopupContent>
                   </div>
@@ -1962,8 +1985,12 @@ const PagePersona2 = () => {
                   <div>
                     <BgBoxItem NoOutline>
                       <Sub3 color="gray500" align="left">
-                        OCEAN이란?<br />
-                        성격 심리학에서 인간의 성격을 설명하는 다섯 요인 창의성(Openness), 성실성(Conscientiouseness), 외향성(Extraversion), 친화성(Agreeableness), 정서적 안정성(Neuroticism)을 평가하는 방법입니다. 
+                        OCEAN이란?
+                        <br />
+                        성격 심리학에서 인간의 성격을 설명하는 다섯 요인
+                        창의성(Openness), 성실성(Conscientiouseness),
+                        외향성(Extraversion), 친화성(Agreeableness), 정서적
+                        안정성(Neuroticism)을 평가하는 방법입니다.
                       </Sub3>
                     </BgBoxItem>
 
@@ -1985,7 +2012,9 @@ const PagePersona2 = () => {
                             max="1"
                             step="0.5"
                             value={oceanValues.openness}
-                            onChange={(e) => handleOceanChange("openness", e.target.value)}
+                            onChange={(e) =>
+                              handleOceanChange("openness", e.target.value)
+                            }
                             disabled={ignoreOcean}
                             $ignored={ignoreOcean}
                           />
@@ -1999,7 +2028,12 @@ const PagePersona2 = () => {
                             max="1"
                             step="0.5"
                             value={oceanValues.conscientiousness}
-                            onChange={(e) => handleOceanChange("conscientiousness", e.target.value)}
+                            onChange={(e) =>
+                              handleOceanChange(
+                                "conscientiousness",
+                                e.target.value
+                              )
+                            }
                             disabled={ignoreOcean}
                             $ignored={ignoreOcean}
                           />
@@ -2013,7 +2047,9 @@ const PagePersona2 = () => {
                             max="1"
                             step="0.5"
                             value={oceanValues.extraversion}
-                            onChange={(e) => handleOceanChange("extraversion", e.target.value)}
+                            onChange={(e) =>
+                              handleOceanChange("extraversion", e.target.value)
+                            }
                             disabled={ignoreOcean}
                             $ignored={ignoreOcean}
                           />
@@ -2027,7 +2063,9 @@ const PagePersona2 = () => {
                             max="1"
                             step="0.5"
                             value={oceanValues.agreeableness}
-                            onChange={(e) => handleOceanChange("agreeableness", e.target.value)}
+                            onChange={(e) =>
+                              handleOceanChange("agreeableness", e.target.value)
+                            }
                             disabled={ignoreOcean}
                             $ignored={ignoreOcean}
                           />
@@ -2041,7 +2079,9 @@ const PagePersona2 = () => {
                             max="1"
                             step="0.5"
                             value={oceanValues.neuroticism}
-                            onChange={(e) => handleOceanChange("neuroticism", e.target.value)}
+                            onChange={(e) =>
+                              handleOceanChange("neuroticism", e.target.value)
+                            }
                             disabled={ignoreOcean}
                             $ignored={ignoreOcean}
                           />
@@ -2059,14 +2099,16 @@ const PagePersona2 = () => {
                       하여 페르소나를 도출해 내시기를 기원합니다.
                     </Body3> */}
                     <CheckBox>
-                      <input 
-                        type="checkbox" 
-                        id="chk1" 
+                      <input
+                        type="checkbox"
+                        id="chk1"
                         style={{ display: "block" }}
                         checked={ignoreOcean}
                         onChange={handleIgnoreOcean}
                       />
-                      <label htmlFor="chk1">페르소나의 성격 유형은 신경 쓰지 않습니다.</label>
+                      <label htmlFor="chk1">
+                        페르소나의 성격 유형은 신경 쓰지 않습니다.
+                      </label>
                     </CheckBox>
                   </div>
                 </>

@@ -271,7 +271,7 @@ const PagePersona3Select = () => {
                           ))}
                       </PersonaGroup>
                     </li>
-                    {selectedInterviewType === "multiple" ? (
+                    {/* {selectedInterviewType === "multiple" ? (
                       <></>
                     ) : selectedInterviewType === "single" ? (
                       <li>
@@ -285,7 +285,7 @@ const PagePersona3Select = () => {
                           <Body2 color="gray800">추가 질문 생성</Body2>
                         </SwitchToggle>
                       </li>
-                    ) : null}
+                    ) : null} */}
                   </ListBoxGroup>
                 </div>
 
