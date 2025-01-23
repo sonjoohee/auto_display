@@ -272,7 +272,7 @@ const PagePersona3Select = () => {
                           ))}
                       </PersonaGroup>
                     </li>
-                    {/* {selectedInterviewType === "multiple" ? (
+                    {selectedInterviewType === "multiple" ? (
                       <></>
                     ) : selectedInterviewType === "single" ? (
                       <li>
@@ -280,13 +280,11 @@ const PagePersona3Select = () => {
                           반응형 인터뷰
                           <Tooltip>
                             <span>?</span>
-                            <div>
-                              <Caption2 align="left" color="white">
-                                반응형 인터뷰란?<br />
-                                페르소나의 답변에 맞춰, 모더레이터가 자동으로 추가 질문을 제시하는<br />
-                                맞춤형 인터뷰 방식 입니다.
-                              </Caption2>
-                            </div>
+                            <Caption2 align="left" color="white">
+                              반응형 인터뷰란?<br />
+                              페르소나의 답변에 맞춰, 모더레이터가 자동으로 추가 질문을 제시하는<br />
+                              맞춤형 인터뷰 방식 입니다.
+                            </Caption2>
                           </Tooltip>
                         </Body2>
                         <SwitchToggle>
@@ -298,7 +296,7 @@ const PagePersona3Select = () => {
                           <Body2 color="gray800">추가 질문 생성</Body2>
                         </SwitchToggle>
                       </li>
-                    ) : null} */}
+                    ) : null}
                   </ListBoxGroup>
                 </div>
 

@@ -493,7 +493,7 @@ const PagePersona3 = () => {
               <InterviewWayContent>
                 <div>
                   <Body2 color="gray800" align="left">
-                    인터뷰 방법 선택
+                    인터뷰 방식
                   </Body2>
 
                   <CardGroupWrap>
@@ -573,13 +573,13 @@ const PagePersona3 = () => {
                 </div>
 
                 <div>
-                  <Body2 color="gray800" align="left">
-                    인터뷰 목적
-                  </Body2>
 
                   {selectedInterviewType === "multiple" ? (
                     <InterviewSelect>
-                      <Title>인터뷰 목적 선택</Title>
+                      {/* <Title>인터뷰 목적 선택</Title> */}
+                      <Body2 color="gray800" align="left">
+                        인터뷰 목적
+                      </Body2>
 
                       <TabWrap>
                         {purposeCategoriesMultiple.map((category) => (
@@ -612,8 +612,12 @@ const PagePersona3 = () => {
                     </InterviewSelect>
                   ) : selectedInterviewType === "single" ? (
                     <CardGroupWrap>
+                      <Body2 color="gray800" align="left">
+                        인터뷰 목적
+                      </Body2>
                       {purposeItemsSingleAtom.map((purpose) => (
                         <MoleculeInterviewPurpose
+                          Small
                           key={purpose.id}
                           purpose={purpose}
                           selectedPurpose={selectedInterviewPurpose}
@@ -967,7 +971,7 @@ const InterviewSelect = styled.div`
   gap: 20px;
   width: 100%;
   height: 100%;
-  margin-top: 30px;
+  // margin-top: 30px;
 `;
 
 const TabWrap = styled.div`

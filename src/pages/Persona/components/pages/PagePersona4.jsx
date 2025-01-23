@@ -568,7 +568,7 @@ const PagePersona4 = () => {
                     </div>
 
                     <div>
-                      <h3>3. 주요 인사이트</h3>
+                      <H4>3. 주요 인사이트</H4>
                       <UlList Disc Spacing>
                         <li>
                           {
@@ -586,7 +586,7 @@ const PagePersona4 = () => {
                     </div>
 
                     <div>
-                      <h3>
+                      <H4>
                         3. 문항별 결과
                         {/* <span onClick={handleEnterInterviewRoom}>
                           <img
@@ -595,7 +595,7 @@ const PagePersona4 = () => {
                           />
                           인터뷰 스크립트 보기
                         </span> */}
-                      </h3>
+                      </H4>
 
                       <ResultAccordion>
                         <AccordionHeader

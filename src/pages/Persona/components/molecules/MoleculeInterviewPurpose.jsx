@@ -39,6 +39,7 @@ import {
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 
 const MoleculeInterviewPurpose = ({
+  Small,
   purpose,
   selectedPurpose,
   showQuestions,
@@ -291,7 +292,8 @@ const MoleculeInterviewPurpose = ({
   };
 
   return (
-    <ListBoxItem
+    <ListBoxItem 
+      Small={Small}
       active={selectedPurpose === purpose["id"]}
       showQuestions={showQuestions[purpose["id"]]}
     >

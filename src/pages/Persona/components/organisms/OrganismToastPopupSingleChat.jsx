@@ -957,7 +957,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             {/* 모더레이터의 질문 */}
             <ChatItem Moder>
               <Persona color="Gainsboro" size="Medium" Round>
-                <img src={personaImages.PersonaMen28} alt="모더" />
+                <img src={personaImages.PersonaModer} alt="모더" />
                 <span>
                   <img src={images.PatchCheckFill} alt="" />
                   <Helptext color="primary">모더</Helptext>

@@ -1544,9 +1544,10 @@ const PagePersona2 = () => {
                                 personaList.unselected.length
                               ) && (
                                 <LoadMoreButton onClick={handleLoadMore}>
-                                  더보기
-                                  {/* {filteredProjectList.length} /{" "}
-                                  {personaList?.unselected?.length} */}
+                                  <Body3 color="gray700">
+                                    더보기
+                                    ({personaList?.unselected?.length}/{filteredProjectList.length})
+                                  </Body3>
                                 </LoadMoreButton>
                               )}
 
@@ -2777,25 +2778,21 @@ const LoadMoreButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 4px;
   width: 100%;
-  padding: 12px 0;
+  font-family: 'Pretendard', 'Poppins';
   margin: 20px auto;
-  font-size: 16px;
-  color: ${palette.gray600};
   border: none;
   background: transparent;
   cursor: pointer;
+  transition: all 0.5s;
 
   &:before {
     content: "+ ";
-    margin-right: 4px;
   }
 
-  /* &:after {
-    margin-left: 4px;
-  } */
-
-  &:hover {
+  &:hover,
+  &:hover p {
     color: ${palette.primary};
   }
 `;
