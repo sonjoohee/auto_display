@@ -1262,46 +1262,44 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                     </ChatItem>
                   )}
               </ChatListWrap>
-            </Contents>
+              {isAnalyzing &&
+                (showRegenerateButton2 ? (
+                  <ErrorInterviewItem>
+                    <p>
+                      분석 중 오류가 발생했어요
+                      <br />
+                      지금 나가시면 인터뷰 내용이 저장되지 않으니, 다시
+                      시도해주세요
+                    </p>
+                    <Button Small Outline onClick={() => loadInterviewReport()}>
+                      <img src={images.ArrowClockwise} alt="" />
+                      분석 다시하기
+                    </Button>
+                  </ErrorInterviewItem>
+                ) : (
+                  <LoadingBox>
+                    <Loading>
+                      <div />
+                      <div />
+                      <div />
+                    </Loading>
+                    <p>
+                      인터뷰 결과를 취합하고 분석 중입니다.
+                      <span>잠시만 기다려주세요 ...</span>
+                    </p>
+                  </LoadingBox>
+                ))}
+              {isAnalysisComplete && (
+                <LoadingBox Complete>
+                  <img src={images.CheckCircleFill} alt="완료" />
 
-            {isAnalyzing &&
-              (showRegenerateButton2 ? (
-                <ErrorInterviewItem>
                   <p>
-                    분석 중 오류가 발생했어요
-                    <br />
-                    지금 나가시면 인터뷰 내용이 저장되지 않으니, 다시
-                    시도해주세요
-                  </p>
-                  <Button Small Outline onClick={() => loadInterviewReport()}>
-                    <img src={images.ArrowClockwise} alt="" />
-                    분석 다시하기
-                  </Button>
-                </ErrorInterviewItem>
-              ) : (
-                <LoadingBox>
-                  <Loading>
-                    <div />
-                    <div />
-                    <div />
-                  </Loading>
-                  <p>
-                    인터뷰 결과를 취합하고 분석 중입니다.
-                    <span>잠시만 기다려주세요 ...</span>
+                    결과 분석이 완료되었습니다. 지금 바로 확인해보세요!
+                    <span onClick={handleCheckResult}>지금 확인하기</span>
                   </p>
                 </LoadingBox>
-              ))}
-
-            {isAnalysisComplete && (
-              <LoadingBox Complete>
-                <img src={images.CheckCircleFill} alt="완료" />
-
-                <p>
-                  결과 분석이 완료되었습니다. 지금 바로 확인해보세요!
-                  <span onClick={handleCheckResult}>지금 확인하기</span>
-                </p>
-              </LoadingBox>
-            )}
+              )}
+            </Contents>
 
             <AddQuestion show={showAddQuestion}>
               <AddQuestionTitle>
@@ -2220,14 +2218,16 @@ const AddQuestion = styled.div`
   justify-content: flex-start;
   gap: 16px;
   width: 100%;
-  padding: 20px 20px 12px 20px;
-  border-top: 1px solid ${palette.outlineGray};
-  /* background: ${palette.white}; */
+  height: ${({ show }) => (show ? "auto" : "0")};
+  padding: ${({ show }) => (show ? "20px 20px 12px 20px" : "0")};
+  border-top: ${({ show }) =>
+    show ? `1px solid ${palette.outlineGray}` : "none"};
+  background: ${palette.white};
   transform: translateY(${({ show }) => (show ? "0" : "100%")});
-  // opacity: ${({ show }) => (show ? "1" : "0")};
-  visibility: ${({ show }) => (show ? "visible" : "collapse")};
+  visibility: ${({ show }) => (show ? "visible" : "hidden")};
   transition: all 0.3s ease-in-out;
   z-index: 1;
+  /* overflow: hidden; */
 
   ul {
     display: flex;
