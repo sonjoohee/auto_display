@@ -7,14 +7,18 @@ import { palette } from "../../../../assets/styles/Palette";
 import { Body2, Sub2 } from "../../../../assets/styles/Typography";
 import { useAtom } from "jotai";
 import { BUSINESS_ANALYSIS, PERSONA_STEP } from "../../../AtomStates";
+import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
 
 const MoleculeHeader = () => {
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
   const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
-
   const location = useLocation();
   const [showAlert, setShowAlert] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  const [showBusinessAnalysis, setShowBusinessAnalysis] = useState(false);
+
+  // Persona/3 경로 체크를 위한 조건 수정
+  const isPersona3Page = /^\/Persona\/3\/[^/]+$/.test(location.pathname);
 
   const handleAlertToggle = () => {
     if (showAlert) {
@@ -27,14 +31,33 @@ const MoleculeHeader = () => {
       setShowAlert(true);
     }
   };
+
+  const handleBusinessAnalysisToggle = () => {
+    setShowBusinessAnalysis(!showBusinessAnalysis);
+  };
   
   return (
     <>
     <HeaderWrap>
       {personaStep > 0 && (
+        <>
         <Title>
           {businessAnalysis.title ? businessAnalysis.title : "새로운 프로젝트"}
+          {isPersona3Page && (
+            <>
+              <images.ChatPlus color={palette.primary} onClick={handleBusinessAnalysisToggle} />
+              {showBusinessAnalysis && 
+                <>
+                <div className="businessAnalysis">
+                  <OrganismBusinessAnalysis personaStep={2} />
+                  <CloseButton onClick={handleBusinessAnalysisToggle} />
+                </div>
+                </>
+              }
+            </>
+          )}
         </Title>
+        </>
       )}
 
       <div className="gnb">
@@ -140,6 +163,76 @@ const Title = styled(Body2)`
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  svg {
+    cursor: pointer;
+
+    &:hover {
+      path {
+        fill: #0B45B1;
+      }
+    }
+  }
+
+  // OrganismBusinessAnalysis의 위치를 조정하기 위한 스타일 추가
+  .businessAnalysis {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 816px;
+    z-index: 100;
+    animation: fadeIn 0.3s ease-in-out;
+    border-radius: 15px;
+    box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+
+    > div:nth-child(1) {
+      display: none;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+`;
+
+const CloseButton = styled.div`
+  position: absolute;
+  top: 32px;
+  right: 24px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+
+  &:before,
+  &:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 16px;
+    height: 2px;
+    background: ${palette.gray700};
+  }
+
+  &:before {
+    transform: rotate(45deg);
+  }
+
+  &:after {
+    transform: rotate(-45deg);
+  }
 `;
 
 const Notify = styled.div`

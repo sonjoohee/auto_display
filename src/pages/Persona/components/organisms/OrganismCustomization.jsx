@@ -435,8 +435,8 @@ const OrganismCustomization = ({
       {showCustomErrorPopup && (
         <PopupWrap
           Warning
-          title="오류가 발생했습니다(멘트 수정)"
-          message="커스텀 방법론 생성 중 문제가 발생했습니다. 다시 시도해주세요.(멘트 수정)"
+          title="다시 입력해 주세요."
+          message="현재 입력하신 정보는 목적을 생성할 수 없습니다."
           buttonType="Outline"
           closeText="확인"
           isModal={false}

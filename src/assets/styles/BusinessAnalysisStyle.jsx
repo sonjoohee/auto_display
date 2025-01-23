@@ -1072,7 +1072,13 @@ export const BottomBar = styled.div`
     font-size: 0.875rem;
     font-weight: 300;
     line-height: 1.5;
-    color: ${(props) => (props.Black ? palette.white : palette.gray500)};
+    color: ${(props) => (
+      props.Black 
+      ? palette.white 
+      : props.Responsive 
+      ? palette.gray800 
+      : palette.gray500
+    )};
 
     span {
       font-size: 1rem;
@@ -1175,12 +1181,12 @@ export const Persona = styled.div`
   align-items: center;
   justify-content: center;
   border-radius: ${(props) => (props.Round ? "50%" : "0")};
+  overflow: hidden;
 
   > img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    padding: 5px;
   }
 
   &:before {
@@ -1747,7 +1753,7 @@ export const ListBoxItem = styled.div`
   // justify-content: space-between;
   gap: 16px;
   width: 100%;
-  padding: 24px 20px;
+  padding: ${props => props.Small ? '12px 20px' : '24px 20px'};
   border-radius: 10px;
   // border: 1px solid ${palette.outlineGray};
   border: 1px solid ${props => 
@@ -1763,9 +1769,8 @@ export const ListBoxItem = styled.div`
         : palette.white
   };
   transition: background 0.2s ease;
-  flex-wrap: wrap; // 추가
+  flex-wrap: wrap;
   
-  // 애니메이션 효과 추가
   opacity: 0;
   animation: fadeIn 0.3s ease forwards;
 
@@ -2910,18 +2915,26 @@ export const Tooltip = styled.div`
     justify-content: center;
     width: 14px;
     height: 14px;
+    font-size: 0.75rem;
+    color: ${palette.gray500};
     border-radius: 50%;
     border: 0.5px solid ${palette.outlineGray};
     background-color: ${palette.chatGray};
+    cursor: help;
   }
 
-  div {
+  ${Caption2} {
     position: absolute;
-    top: -65px;
-    left: 10px;
-    padding: 8px 12px;
-    border-radius: 5px;
-    background-color: ${palette.gray800};
+    bottom: 25px;
+    left: -7px;
+    min-width: 340px;
+    padding: 12px 16px;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 8px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease-in-out;
+    z-index: 10;
 
     &:before {
       position: absolute;
@@ -2934,5 +2947,10 @@ export const Tooltip = styled.div`
       border-color: ${palette.gray800} transparent transparent transparent;
       content: "";
     }
+  }
+
+  &:hover ${Caption2} {
+    opacity: 1;
+    visibility: visible;
   }
 `;

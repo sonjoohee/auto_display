@@ -261,6 +261,7 @@ import PatchCheckFill from "../images/patch-check-fill.svg";
 import KeyCircle from "../images/key-circle.svg";
 
 import ListUserSearch from "../images/list-user-search.svg";
+import ChatPlus from "../icons/ChatPlus";
 
 const images = {
   Logo,
@@ -513,6 +514,7 @@ const images = {
   KeyCircle,
 
   ListUserSearch,
+  ChatPlus,
 }
 
 export default images;

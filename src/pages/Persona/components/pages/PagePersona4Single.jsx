@@ -35,14 +35,18 @@ import {
   AnalysisWrap,
   MainSection,
   Persona,
+  TabButtonType3,
+  TabWrap,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import {
   H2,
   H4,
   Body1,
+  Body2,
   Body2_1,
   Body3,
   Sub1,
+  Sub2_1,
   Sub3,
   Caption1,
   Caption2,
@@ -121,6 +125,7 @@ const PagePersona4 = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const cardRef = useRef(null);
   const [showInsightCards, setShowInsightCards] = useState(false);
+  const [activeTab, setActiveTab] = useState(1);
 
   const [steps, setSteps] = useState([
     { number: 1, label: "비즈니스 분석", active: true },
@@ -510,6 +515,10 @@ const PagePersona4 = () => {
     setIsPersonaAccessible(true);
     navigate(`/Persona/2/${projectId}`);
   };
+  
+  const handleTabClick = (tabNumber) => {
+    setActiveTab(tabNumber);
+  };
 
   return (
     <>
@@ -545,11 +554,32 @@ const PagePersona4 = () => {
                     </p> */}
                   </ReportHeader>
 
-                  <ReportContent>
+                  <TabWrapType3>
+                    <TabButtonType3 
+                      isActive={activeTab === 1}
+                      onClick={() => handleTabClick(1)}
+                    >
+                      조사 개요
+                    </TabButtonType3>
+                    <TabButtonType3 
+                      isActive={activeTab === 2}
+                      onClick={() => handleTabClick(2)}
+                    >
+                      페르소나 행동 패턴 분석
+                    </TabButtonType3>
+                    <TabButtonType3 
+                      isActive={activeTab === 3}
+                      onClick={() => handleTabClick(3)}
+                    >
+                      감정 요인 분석
+                    </TabButtonType3>
+                  </TabWrapType3>
+
+                  <ReportContent section={1} style={{ display: activeTab === 1 ? 'flex' : 'none' }}>
                     <div>
                       <H4>1. 조사 방법 및 범위</H4>
                       <UlList Disc>
-                        <li>조사 방법 : 여러 페르소나와 인터뷰 (1:N)</li>
+                        <li>조사 방법 : 여러 페르소나와 인터뷰 (1:1)</li>
                         <li>조사 대상 : {interviewReport?.[0]?.text}</li>
                       </UlList>
                     </div>
@@ -568,7 +598,7 @@ const PagePersona4 = () => {
                     </div>
 
                     <div>
-                      <h3>3. 주요 인사이트</h3>
+                      <H4>3. 주요 인사이트</H4>
                       <UlList Disc Spacing>
                         <li>
                           {
@@ -585,256 +615,283 @@ const PagePersona4 = () => {
                       </UlList>
                     </div>
 
-                    <div>
-                      <h3>
-                        3. 문항별 결과
-                        {/* <span onClick={handleEnterInterviewRoom}>
-                          <img
-                            src={images.ReportSearch}
-                            alt="인터뷰 스크립트 보기"
+                    {!showInsightCards ? (
+                      <InterviewInsight
+                        onClick={() => setShowInsightCards(!showInsightCards)}
+                      >
+                        <img src={images.KeyCircle} alt="인터뷰 인사이트" />
+
+                        <div>
+                          <H4 color="gray700">
+                            인터뷰 내용에 대해 비즈니스 분야별 인사이트를 확인하세요
+                          </H4>
+                          <Body3 color="gray500">
+                            여러가지 정보를 확인 하고 싶으시면 클릭해 보세요!
+                          </Body3>
+                        </div>
+                      </InterviewInsight>
+                    ) : (
+                      <InterviewFind>
+                        <FindCardButton>
+                          <span
+                            className="prev"
+                            onClick={() => handleSlide("prev")}
+                            style={{ opacity: currentSlide === 0 ? 1 : 1 }}
                           />
-                          인터뷰 스크립트 보기
-                        </span> */}
-                      </h3>
+                          <span
+                            className="next"
+                            onClick={() => handleSlide("next")}
+                            style={{ opacity: currentSlide === 3 ? 1 : 1 }}
+                          />
+                        </FindCardButton>
 
-                      <ResultAccordion>
-                        <AccordionHeader
-                          onClick={() => handleAccordionClick(1)}
-                          isOpen={openAccordion === 1}
-                        >
-                          <span>1</span>
-                          <Body1 color="gray800">
-                            {existingQuestions?.questions[2]?.question ||
-                              interviewData[0]?.question_1}
-                          </Body1>
-                        </AccordionHeader>
+                        <FindCard className="find-card">
+                          <CardWrap
+                            ref={cardRef}
+                            style={{
+                              display: "flex",
+                              // gap: "16px",
+                              transition: "transform 0.3s ease-in-out",
+                            }}
+                          >
+                            {getCardData(
+                              interviewReportAdditional?.suggestion_list || []
+                            ).map((item, index) => (
+                              <Card
+                                key={index}
+                                onClick={() => handleCardClick(index)}
+                              >
+                                {openCard !== index ? (
+                                  <>
+                                    <CardDescription>
+                                      <H4 color="gray800">{item.title}</H4>
+                                      <Body3 color="gray700">
+                                        {item.description}
+                                      </Body3>
+                                    </CardDescription>
+                                    <CardIcon>
+                                      <img src={item.icon} />
+                                    </CardIcon>
+                                    {/* <CardBadge text={item.badge.text}>
+                                      <span>{item.badge.icon}</span>
+                                      {item.badge.text}
+                                    </CardBadge> 
+                                    <CardTitle>{item.title}</CardTitle>*/}
+                                  </>
+                                ) : (
+                                  <>
+                                    <CardDescription>
+                                      <H4 color="gray800">{item.title}</H4>
+                                      <Body3 color="gray700">
+                                        {item.description}
+                                      </Body3>
+                                    </CardDescription>
+                                    <CardIcon>
+                                      <img src={item.icon} />
+                                    </CardIcon>
+                                  </>
+                                )}
+                              </Card>
+                            ))}
+                          </CardWrap>
+                        </FindCard>
+                      </InterviewFind>
+                    )}
 
-                        {openAccordion === 1 && (
-                          <AccordionContent>
-                            <div className="title">
-                              <Sub1 color="gray800">인터뷰 핵심 키워드</Sub1>
-                              <Caption2 color="gray700">
-                                응답자의 의견을 바탕으로 키워드 빈도수를 분석해
-                                문항별 인사이트를 도출했습니다.
-                              </Caption2>
-                            </div>
+                  </ReportContent>
 
-                            <BubbleChart
-                              data={transformInterviewDataToBubbleChart(
-                                interviewReport,
-                                0
-                              )}
-                            />
+                  <ReportContent section={2} style={{ display: activeTab === 2 ? 'flex' : 'none' }}>
+                    <div>
+                      <H4>1. 페르소나 정보</H4>
+                      <PersonaInformationWrap>
+                        <PersonaInformation>
+                          <div className="thumb"><img src={personaImages.PersonaMen28} alt="페르소나" /></div>
+                          <div className="info">
+                            <Body1>꼼꼼한 계획형 자산 관리 성향</Body1>
+                            <PersonaInfo>
+                              <Body3 color="gray500">성별</Body3>
+                              <Body3 color="gray500">나이</Body3>
+                              <Body3 color="gray500">직업</Body3>
+                            </PersonaInfo>
+                          </div>
+                        </PersonaInformation>
+                        <div className="content">
+                          <Body3 color="gray700">제품이 고객에게 어떤 가치를 전달하고 있는지, 소비자들이 느끼는 장점과 개선점을 세심히 파악하기 위해 진행되었습니다. 이를 통해 제품에 대한 긍정적인 경험을 더욱 확장하고, 고객 만족과 구매 전환율을 높이는 데 기여하고자 합니다.</Body3>
+                        </div>
+                      </PersonaInformationWrap>
+                    </div>
 
-                            <BgInside>
-                              <Body1 color="gray800">인터뷰 인사이트</Body1>
-                              <div>
-                                <Body3 color="gray800">
-                                  {
-                                    interviewReport?.[2]?.content?.[0]
-                                      ?.question_insight?.[0]?.text
-                                  }
-                                </Body3>
-                                <Body3 color="gray800">
-                                  {
-                                    interviewReport?.[2]?.content?.[0]
-                                      ?.question_insight?.[1]?.text
-                                  }
-                                </Body3>
+                    <div>
+                      <CategoryGraphWrap>
+                        <CategoryGraph>
+                          <Sub1>활용 수준</Sub1>
+                          <UsageLevelGraphWrap>
+                            <UsageLevelGraph>
+                              <div className="title">
+                                <Sub3 color="gray800">카테고리2</Sub3>
+                                <Sub2_1 color="gray800">85</Sub2_1>
                               </div>
-                            </BgInside>
-                          </AccordionContent>
-                        )}
-                      </ResultAccordion>
-
-                      <ResultAccordion>
-                        <AccordionHeader
-                          onClick={() => handleAccordionClick(2)}
-                          isOpen={openAccordion === 2}
-                        >
-                          <span>2</span>
-                          <p>
-                            {existingQuestions?.questions[3]?.question ||
-                              interviewData[1]?.question_2}
-                          </p>
-                        </AccordionHeader>
-
-                        {openAccordion === 2 && (
-                          <AccordionContent>
-                            <div className="title">
-                              <Sub1 color="gray800">인터뷰 핵심 키워드</Sub1>
-                              <Caption2 color="gray700">
-                                응답자의 의견을 바탕으로 키워드 빈도수를 분석해
-                                문항별 인사이트를 도출했습니다.
-                              </Caption2>
-                            </div>
-
-                            <BubbleChart
-                              data={transformInterviewDataToBubbleChart(
-                                interviewReport,
-                                1
-                              )}
-                            />
-
-                            <BgInside>
-                              <Body1 color="gray800">인터뷰 인사이트</Body1>
-                              <div>
-                                <Body3 color="gray800">
-                                  {
-                                    interviewReport?.[2]?.content?.[1]
-                                      ?.question_insight?.[0]?.text
-                                  }
-                                </Body3>
-                                <Body3 color="gray800">
-                                  {
-                                    interviewReport?.[2]?.content?.[1]
-                                      ?.question_insight?.[1]?.text
-                                  }
-                                </Body3>
+                              <div className="graph">
+                                <div className="bar" style={{ width: "85%" }}></div>
                               </div>
-                            </BgInside>
-                          </AccordionContent>
-                        )}
-                      </ResultAccordion>
-
-                      <ResultAccordion>
-                        <AccordionHeader
-                          onClick={() => handleAccordionClick(3)}
-                          isOpen={openAccordion === 3}
-                        >
-                          <span>3</span>
-                          <Body1 color="gray800">
-                            {existingQuestions?.questions[4]?.question ||
-                              interviewData[2]?.question_3}
-                          </Body1>
-                        </AccordionHeader>
-
-                        {openAccordion === 3 && (
-                          <AccordionContent>
-                            <div className="title">
-                              <Sub1 color="gray800">인터뷰 핵심 키워드</Sub1>
-                              <Caption2 color="gray700">
-                                응답자의 의견을 바탕으로 키워드 빈도수를 분석해
-                                문항별 인사이트를 도출했습니다.
-                              </Caption2>
-                            </div>
-
-                            <BubbleChart
-                              data={transformInterviewDataToBubbleChart(
-                                interviewReport,
-                                2
-                              )}
-                            />
-
-                            <BgInside>
-                              <Body1 color="gray800">인터뷰 인사이트</Body1>
-                              <div>
-                                <Body3 color="gray800">
-                                  {
-                                    interviewReport?.[2]?.content?.[2]
-                                      ?.question_insight?.[0]?.text
-                                  }
-                                </Body3>
-                                <Body3 color="gray800">
-                                  {
-                                    interviewReport?.[2]?.content?.[2]
-                                      ?.question_insight?.[1]?.text
-                                  }
-                                </Body3>
+                            </UsageLevelGraph>
+                            <UsageLevelGraph>
+                              <div className="title">
+                                <Sub3 color="gray800">카테고리1</Sub3>
+                                <Sub2_1 color="gray800">70</Sub2_1>
                               </div>
-                            </BgInside>
-                          </AccordionContent>
-                        )}
-                      </ResultAccordion>
+                              <div className="graph">
+                                <div className="bar" style={{ width: "70%" }}></div>
+                              </div>
+                            </UsageLevelGraph>
+                            <UsageLevelGraph>
+                              <div className="title">
+                                <Sub3 color="gray800">카테고리4</Sub3>
+                                <Sub2_1 color="gray800">55</Sub2_1>
+                              </div>
+                              <div className="graph">
+                                <div className="bar" style={{ width: "55%" }}></div>
+                              </div>
+                            </UsageLevelGraph>
+                            <UsageLevelGraph>
+                              <div className="title">
+                                <Sub3 color="gray800">카테고리3</Sub3>
+                                <Sub2_1 color="gray800">35</Sub2_1>
+                              </div>
+                              <div className="graph">
+                                <div className="bar" style={{ width: "35%" }}></div>
+                              </div>
+                            </UsageLevelGraph>
+                            <UsageLevelGraph>
+                              <div className="title">
+                                <Sub3 color="gray800">카테고리5</Sub3>
+                                <Sub2_1 color="gray800">30</Sub2_1>
+                              </div>
+                              <div className="graph">
+                                <div className="bar" style={{ width: "30%" }}></div>
+                              </div>
+                            </UsageLevelGraph>
+                          </UsageLevelGraphWrap>
+                        </CategoryGraph>
+
+                        <CategoryGraph>
+                          <Sub1>행동 패턴</Sub1>
+                          <UsageLevelGraphWrap>
+                            <UsageLevelGraph>
+                              <div className="title">
+                                <Sub3 color="gray800">카테고리1</Sub3>
+                                <Sub2_1 color="gray800">85</Sub2_1>
+                              </div>
+                              <div className="graph">
+                                <div className="bar" style={{ width: "85%" }}></div>
+                              </div>
+                            </UsageLevelGraph>
+                            <UsageLevelGraph>
+                              <div className="title">
+                                <Sub3 color="gray800">카테고리4</Sub3>
+                                <Sub2_1 color="gray800">70</Sub2_1>
+                              </div>
+                              <div className="graph">
+                                <div className="bar" style={{ width: "70%" }}></div>
+                              </div>
+                            </UsageLevelGraph>
+                            <UsageLevelGraph>
+                              <div className="title">
+                                <Sub3 color="gray800">카테고리3</Sub3>
+                                <Sub2_1 color="gray800">55</Sub2_1>
+                              </div>
+                              <div className="graph">
+                                <div className="bar" style={{ width: "55%" }}></div>
+                              </div>
+                            </UsageLevelGraph>
+                            <UsageLevelGraph>
+                              <div className="title">
+                                <Sub3 color="gray800">카테고리2</Sub3>
+                                <Sub2_1 color="gray800">35</Sub2_1>
+                              </div>
+                              <div className="graph">
+                                <div className="bar" style={{ width: "35%" }}></div>
+                              </div>
+                            </UsageLevelGraph>
+                            <UsageLevelGraph>
+                              <div className="title">
+                                <Sub3 color="gray800">카테고리5</Sub3>
+                                <Sub2_1 color="gray800">30</Sub2_1>
+                              </div>
+                              <div className="graph">
+                                <div className="bar" style={{ width: "30%" }}></div>
+                              </div>
+                            </UsageLevelGraph>
+                          </UsageLevelGraphWrap>
+                        </CategoryGraph>
+                      </CategoryGraphWrap>
+                    </div>
+
+                    <div>
+                      <H4>2. 제품 관련 행동 패턴</H4>
+                      <UlList Disc>
+                        <li>인터뷰 결과, 스마트홈 스피커의 음성 인식률과 반응 속도는 높게 평가되었으나, 개인 맞춤형 기능 부족 및 정보 보안에 대한 우려가 주요 문제점으로 나타났습니다. 특히, 워킹맘 답변자는 자녀를 위한 교육 콘텐츠 및 안전 기능 강화의 필요성을 강조했고, 50대 가장 답변자는 가족 구성원 모두가 쉽게 사용할 수 있는 가족 친화적인 인터페이스 부족을 지적했습니다.</li>
+                      </UlList>
+                    </div>
+
+                    <div>
+                      <H4>3. 구매 및 활용 동기</H4>
+                      <UlList Disc>
+                        <li>인터뷰 결과, 스마트홈 스피커의 음성 인식률과 반응 속도는 높게 평가되었으나, 개인 맞춤형 기능 부족 및 정보 보안에 대한 우려가 주요 문제점으로 나타났습니다. 특히, 워킹맘 답변자는 자녀를 위한 교육 콘텐츠 및 안전 기능 강화의 필요성을 강조했고, 50대 가장 답변자는 가족 구성원 모두가 쉽게 사용할 수 있는 가족 친화적인 인터페이스 부족을 지적했습니다.</li>
+                      </UlList>
+                    </div>
+
+                    <div>
+                      <H4>4. 문제점 및 요구 사항</H4>
+                      <UlList Disc>
+                        <li>인터뷰 결과, 스마트홈 스피커의 음성 인식률과 반응 속도는 높게 평가되었으나, 개인 맞춤형 기능 부족 및 정보 보안에 대한 우려가 주요 문제점으로 나타났습니다. 특히, 워킹맘 답변자는 자녀를 위한 교육 콘텐츠 및 안전 기능 강화의 필요성을 강조했고, 50대 가장 답변자는 가족 구성원 모두가 쉽게 사용할 수 있는 가족 친화적인 인터페이스 부족을 지적했습니다.</li>
+                      </UlList>
+                    </div>
+                  </ReportContent>
+
+                  <ReportContent section={3} style={{ display: activeTab === 3 ? 'flex' : 'none' }}>
+                    <BgBoxItem>
+                      <H4 color="gray800">“페르소나에 대한 요약 문장”</H4>
+                    </BgBoxItem>
+
+                    <div>
+                      <ResultTitle>
+                        <Body2 color="primary"># 키워드 </Body2>
+                        <H4 color="gray800">페르소나와 방법론에 대한 핵심 문장 </H4>
+                      </ResultTitle>
+
+                      <UlList Disc>
+                        <li>페르소나는 대출 상품 비교 기능이 유용했지만, 플랫폼에서 제공하는 정보량이 많고 각 상품의 상세 설명이 이해하기 어려웠다고 언급했습니다. 이로 인해 플랫폼 사용 초기에 혼란과 피로를 경험했으며, 효율적인 상품 비교를 위해 더 직관적인 정보 구조와 사용자 맞춤형 필터링 기능이 필요하다고 느꼈습니다. 예를 들어, 간단한 차트나 시각화된 비교 도구를 제공하면 사용자의 선택 과정을 단순화할 수 있습니다​.</li>
+                        <li>페르소나는 대출 상품 비교 기능이 유용했지만, 플랫폼에서 제공하는 정보량이 많고 각 상품의 상세 설명이 이해하기 어려웠다고 언급했습니다. 이로 인해 플랫폼 사용 초기에 혼란과 피로를 경험했으며, 효율적인 상품 비교를 위해 더 직관적인 정보 구조와 사용자 맞춤형 필터링 기능이 필요하다고 느꼈습니다. 예를 들어, 간단한 차트나 시각화된 비교 도구를 제공하면 사용자의 선택 과정을 단순화할 수 있습니다​.</li>
+                      </UlList>
+                    </div>
+
+                    <div>
+                      <ResultTitle>
+                        <Body2 color="primary"># 키워드</Body2>
+                        <H4 color="gray800">페르소나와 방법론에 대한 핵심 문장</H4>
+                      </ResultTitle>
+
+                      <UlList Disc>
+                        <li>페르소나는 대출 상품 비교 기능이 유용했지만, 플랫폼에서 제공하는 정보량이 많고 각 상품의 상세 설명이 이해하기 어려웠다고 언급했습니다. 이로 인해 플랫폼 사용 초기에 혼란과 피로를 경험했으며, 효율적인 상품 비교를 위해 더 직관적인 정보 구조와 사용자 맞춤형 필터링 기능이 필요하다고 느꼈습니다. 예를 들어, 간단한 차트나 시각화된 비교 도구를 제공하면 사용자의 선택 과정을 단순화할 수 있습니다​.</li>
+                        <li>페르소나는 대출 상품 비교 기능이 유용했지만, 플랫폼에서 제공하는 정보량이 많고 각 상품의 상세 설명이 이해하기 어려웠다고 언급했습니다. 이로 인해 플랫폼 사용 초기에 혼란과 피로를 경험했으며, 효율적인 상품 비교를 위해 더 직관적인 정보 구조와 사용자 맞춤형 필터링 기능이 필요하다고 느꼈습니다. 예를 들어, 간단한 차트나 시각화된 비교 도구를 제공하면 사용자의 선택 과정을 단순화할 수 있습니다​.</li>
+                      </UlList>
+                    </div>
+
+                    <div>
+                      <ResultTitle>
+                        <Body2 color="primary"># 키워드</Body2>
+                        <H4 color="gray800">페르소나와 방법론에 대한 핵심 문장</H4>
+                      </ResultTitle>
+
+                      <UlList Disc>
+                        <li>페르소나는 대출 상품 비교 기능이 유용했지만, 플랫폼에서 제공하는 정보량이 많고 각 상품의 상세 설명이 이해하기 어려웠다고 언급했습니다. 이로 인해 플랫폼 사용 초기에 혼란과 피로를 경험했으며, 효율적인 상품 비교를 위해 더 직관적인 정보 구조와 사용자 맞춤형 필터링 기능이 필요하다고 느꼈습니다. 예를 들어, 간단한 차트나 시각화된 비교 도구를 제공하면 사용자의 선택 과정을 단순화할 수 있습니다​.</li>
+                        <li>페르소나는 대출 상품 비교 기능이 유용했지만, 플랫폼에서 제공하는 정보량이 많고 각 상품의 상세 설명이 이해하기 어려웠다고 언급했습니다. 이로 인해 플랫폼 사용 초기에 혼란과 피로를 경험했으며, 효율적인 상품 비교를 위해 더 직관적인 정보 구조와 사용자 맞춤형 필터링 기능이 필요하다고 느꼈습니다. 예를 들어, 간단한 차트나 시각화된 비교 도구를 제공하면 사용자의 선택 과정을 단순화할 수 있습니다​.</li>
+                      </UlList>
                     </div>
                   </ReportContent>
                 </div>
-
-                <div></div>
               </InterviewReport>
-
-              {!showInsightCards ? (
-                <InterviewInsight
-                  onClick={() => setShowInsightCards(!showInsightCards)}
-                >
-                  <img src={images.KeyCircle} alt="인터뷰 인사이트" />
-
-                  <div>
-                    <H4 color="gray700">
-                      인터뷰 내용에 대해 비즈니스 분야별 인사이트를 확인하세요
-                    </H4>
-                    <Body3 color="gray500">
-                      여러가지 정보를 확인 하고 싶으시면 클릭해 보세요!
-                    </Body3>
-                  </div>
-                </InterviewInsight>
-              ) : (
-                <InterviewFind>
-                  <FindCardButton>
-                    <span
-                      className="prev"
-                      onClick={() => handleSlide("prev")}
-                      style={{ opacity: currentSlide === 0 ? 1 : 1 }}
-                    />
-                    <span
-                      className="next"
-                      onClick={() => handleSlide("next")}
-                      style={{ opacity: currentSlide === 3 ? 1 : 1 }}
-                    />
-                  </FindCardButton>
-
-                  <FindCard className="find-card">
-                    <CardWrap
-                      ref={cardRef}
-                      style={{
-                        display: "flex",
-                        // gap: "16px",
-                        transition: "transform 0.3s ease-in-out",
-                      }}
-                    >
-                      {getCardData(
-                        interviewReportAdditional?.suggestion_list || []
-                      ).map((item, index) => (
-                        <Card
-                          key={index}
-                          onClick={() => handleCardClick(index)}
-                        >
-                          {openCard !== index ? (
-                            <>
-                              <CardDescription>
-                                <H4 color="gray800">{item.title}</H4>
-                                <Body3 color="gray700">
-                                  {item.description}
-                                </Body3>
-                              </CardDescription>
-                              <CardIcon>
-                                <img src={item.icon} />
-                              </CardIcon>
-                              {/* <CardBadge text={item.badge.text}>
-                                <span>{item.badge.icon}</span>
-                                {item.badge.text}
-                              </CardBadge> 
-                              <CardTitle>{item.title}</CardTitle>*/}
-                            </>
-                          ) : (
-                            <>
-                              <CardDescription>
-                                <H4 color="gray800">{item.title}</H4>
-                                <Body3 color="gray700">
-                                  {item.description}
-                                </Body3>
-                              </CardDescription>
-                              <CardIcon>
-                                <img src={item.icon} />
-                              </CardIcon>
-                            </>
-                          )}
-                        </Card>
-                      ))}
-                    </CardWrap>
-                  </FindCard>
-                </InterviewFind>
-              )}
             </MainSection>
 
             <SidebarWrap>
@@ -946,6 +1003,112 @@ const PagePersona4 = () => {
 };
 
 export default PagePersona4;
+
+const TabWrapType3 = styled(TabWrap)`
+  gap: 16px !important;
+  margin-top: 40px;
+  border-bottom: 1px solid ${palette.outlineGray};
+`;
+
+const PersonaInformationWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+
+  .content {
+    margin-left: 56px;
+  }
+`;
+
+const PersonaInformation = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+
+  .thumb {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+
+  .info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+`;
+
+const CategoryGraphWrap = styled.div`
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  padding-left: 56px;
+`;
+
+const CategoryGraph = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 50%;
+`;
+
+const UsageLevelGraphWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+`;
+
+const UsageLevelGraph = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+
+  .title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .graph {
+    position: relative;
+    width: 100%;
+    height: 8px;
+    border-radius: 2px;
+    background: ${palette.chatGray};
+    overflow: hidden;
+  }
+
+  .bar {
+    height: 100%;
+    border-radius: 2px;
+    background: ${palette.primary};
+  }
+`;
+
+const BgBoxItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 20px 32px;
+  margin-bottom: 8px;
+  border-radius: 15px;
+  background: ${palette.chatGray};
+`;
+
+const ResultTitle = styled(Title)`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px !important;
+  width: 100%;
+`;
 
 const InterviewReport = styled.div`
   display: flex;
@@ -1526,6 +1689,15 @@ const PersonaInfo = styled.div`
       background: ${palette.gray500};
       content: "";
     }
+  }
+
+  p + p:before {
+    display: inline-block;
+    width: 1px;
+    height: 9px;
+    margin-right: 6px;
+    background: ${palette.gray500};
+    content: "";
   }
 `;
 
