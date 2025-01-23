@@ -44,6 +44,7 @@ import {
   SwitchToggle,
   SwitchToggleItem,
   SwitchHandle,
+  Tooltip,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import {
   H5,
@@ -275,7 +276,19 @@ const PagePersona3Select = () => {
                       <></>
                     ) : selectedInterviewType === "single" ? (
                       <li>
-                        <Body2 color="gray500">반응형 인터뷰</Body2>
+                        <Body2 color="gray500">
+                          반응형 인터뷰
+                          <Tooltip>
+                            <span>?</span>
+                            <div>
+                              <Caption2 align="left" color="white">
+                                반응형 인터뷰란?<br />
+                                페르소나의 답변에 맞춰, 모더레이터가 자동으로 추가 질문을 제시하는<br />
+                                맞춤형 인터뷰 방식 입니다.
+                              </Caption2>
+                            </div>
+                          </Tooltip>
+                        </Body2>
                         <SwitchToggle>
                           <SwitchToggleItem>
                             <input type="checkbox" />

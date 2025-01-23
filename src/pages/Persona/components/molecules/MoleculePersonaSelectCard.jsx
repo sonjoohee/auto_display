@@ -134,7 +134,7 @@ const MoleculePersonaSelectCard = ({
               Fill={true}
               onClick={() => handlePersonaSelect(persona.persona_id)}
             >
-              <Sub2 color="gray500">Selected</Sub2>
+              <Sub2 color="primary">Selected</Sub2>
             </Button>
           </ListButton>
         </ListBoxItem>
@@ -190,7 +190,7 @@ export default MoleculePersonaSelectCard;
 const CardGroupWrap = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  // gap: 8px;
   width: 100%;
 `;
 
@@ -202,9 +202,13 @@ const ListBoxItem = styled.div`
   padding: 16px;
   border-radius: 10px;
   background: ${(props) => props.theme.white};
-  border: 1px solid
-    ${(props) => (props.selected ? palette.primary : palette.outlineGray)};
+  // border: 1px solid
+  //   ${(props) => (props.selected ? palette.outlineGray : palette.outlineGray)};
   opacity: ${(props) => (props.anySelected && !props.selected ? 0.5 : 1)};
+
+  + div {
+    border-top: 1px solid ${palette.outlineGray};
+  }
 `;
 
 const Persona = styled.div`

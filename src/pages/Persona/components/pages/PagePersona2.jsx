@@ -1762,11 +1762,11 @@ const PagePersona2 = () => {
                       )}
 
                       {!personaButtonState2 && (
-                        <BottomBar Responsive Round>
+                        <BottomBar Responsive Round onClick={handleStartInterview}>
                           <div className="responsive">
                             <Body2 color="gray800">인터뷰 진행</Body2>
                             <Body3 color="gray800">
-                              💬 지금 바로 인터뷰가 가능 12명의 페르소나가 기다리고 있어요
+                              💬 지금 바로 인터뷰가 가능 {filteredProjectList.length}명의 페르소나가 기다리고 있어요
                             </Body3>
                           </div>
 

@@ -49,6 +49,9 @@ import PageInterviewWay from "./pages/Design_Page/PageInterviewWay";
 import PagePersonaSelect from "./pages/Design_Page/PagePersonaSelect";
 import PagePayment from "./pages/Persona/components/pages/PagePayment";
 
+import PageTerms from "./pages/PageTerms";
+import PagePolicy from "./pages/PagePolicy";
+
 import PageStyleGuide from "./pages/Design_Page/PageStyleGuide";
 
 // 페르소나
@@ -273,6 +276,9 @@ function App() {
           <Route path="/InterviewWay" element={<PageInterviewWay />} /> */}
           <Route path="/PersonaSelect" element={<PagePersonaSelect />} />
           <Route path="/Payment" element={<PagePayment />} />
+
+          <Route path="/Terms" element={<PageTerms />} />
+          <Route path="/Policy" element={<PagePolicy />} />
 
           <Route path="/style_guide" element={<PageStyleGuide />} />
         </Routes>
