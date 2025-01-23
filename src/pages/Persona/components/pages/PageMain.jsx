@@ -983,6 +983,21 @@ const PageMain = () => {
               </ExpertCard>
             </ExpertSelectBox>
           </ExpertSelectWrap>
+
+          <CopyRight>
+            <div>
+              <Sub3 color="gray300">회사명 : (주)유저커넥트</Sub3>
+              <Sub3 color="gray300">대표: 박영수</Sub3>
+              <Sub3 color="gray300">개인정보관리책임자 : 이선근</Sub3>
+              <Sub3 color="gray300">전화: 031 - 216 - 5930</Sub3>
+              <Sub3 color="gray300">메일 : info@userconnect.kr</Sub3>
+              <Sub3 color="gray300">사업자등록번호 : 678 - 81 - 01795</Sub3>
+            </div>
+            <div>
+              <Sub3 color="gray300">통신판매업신고 : 제2025 - 경기안산 - 0424 호</Sub3>
+              <Sub3 color="gray300">주소: 경기도 안산시 상록구 해양3로 15, 1512호 ~ 1515호 (그랑시티 시그니처타워)</Sub3>
+            </div>
+          </CopyRight>
         </MainContent>
 
         <QuickMenu showText={showText} showHint={showHint}>
@@ -1289,7 +1304,7 @@ const ExpertSelectWrap = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  margin-bottom: 40px;
+  margin-bottom: 290px;
 
   > p {
     display: flex;
@@ -1305,6 +1320,17 @@ const ExpertSelectWrap = styled.div`
     &:hover {
       color: ${palette.black};
     }
+  }
+`;
+
+const CopyRight = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 36px;
+
+  > div {
+    display: flex;
+    gap: 20px;
   }
 `;
 

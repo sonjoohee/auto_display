@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 import { palette } from "./Palette";
-import { Body1 } from "./Typography";
+import { Body1, Body2, Body3 } from "./Typography";
 import images from "./Images";
 import { Caption2 } from "./Typography";
 
@@ -153,7 +153,7 @@ export const CustomizePersona = styled.div`
   gap: 20px;
   width: 100%;
   height: 100%;
-  margin-top: 30px;
+  margin-top: 14px;
   margin-bottom: 100px;
 `;
 
@@ -349,6 +349,7 @@ export const TabContent = styled.div`
   flex-direction: column;
   gap: 16px;
   text-align: left;
+  height: 275px;
 `;
 
 export const Status = styled.div`
@@ -433,7 +434,7 @@ export const Badge = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px !important;
+  gap: ${(props) => props.Ing ? "9px !important" : "4px !important"};
   min-height: 25px;
   font-weight: 400 !important;
   font-size: ${(props) =>
@@ -451,6 +452,8 @@ export const Badge = styled.div`
       ? palette.primary
       : props.New
       ? palette.green
+      : props.Ing
+      ? palette.primary
       : palette.gray500
     };
   line-height: 
@@ -466,6 +469,8 @@ export const Badge = styled.div`
       ? "0"
       : props.New
       ? "2px 10px"
+      : props.Ing
+      ? "2px 10px 2px 15px"
       : "4px 8px"};
   border-radius: 
     ${(props) =>
@@ -484,9 +489,13 @@ export const Badge = styled.div`
         : props.Keyword
         ? `none`
         : props.Complete
-        ? palette.green
+        ? `1px solid ${palette.green}`
         : props.classBasic
         ? `none`
+        : props.Request
+        ? `1px solid ${palette.outlineGray}`
+        : props.Ing
+        ? `1px solid rgba(34, 111, 255, 0.50)`
         : palette.gray200};
   background: ${(props) =>
     props.Basic
@@ -499,7 +508,23 @@ export const Badge = styled.div`
       ? `#F0F4FF`
       : props.New
       ? `rgba(52, 199, 89, 0.06)`
-      : palette.white};
+      : props.Ing
+      ? `rgba(34, 111, 255, 0.04)`
+      : palette.white
+  };
+
+  ${(props) =>
+    props.Ing &&
+    css`
+      &:before {
+        width: 2px;
+        height: 2px;
+        border-radius: 50%;
+        background: ${palette.primary};
+        box-shadow: -4px 0 ${palette.primary}, 4px 0 ${palette.primary};
+        content: "";
+      }
+    `}
 `;
 
 export const CreditBadge = styled.p`
@@ -852,7 +877,7 @@ export const Personnel = styled.span`
   justify-content: center;
   flex-shrink: 0;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 400;
   line-height: 1.6;
   color: ${palette.gray700};
   padding: 6px 7px;
@@ -864,7 +889,7 @@ export const MoreButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 4px;
   flex-shrink: 0;
   font-family: "Pretendard", "poppins";
   font-size: 0.88rem;
@@ -874,15 +899,6 @@ export const MoreButton = styled.button`
   border: 0;
   background: ${palette.white};
   cursor: pointer;
-
-  &:after {
-    width: 10px;
-    height: 10px;
-    background: url(${images.ChevronDown}) center no-repeat;
-    transform: rotate(${props => props.isOpen ? '180deg' : '0deg'});
-    transition: transform 0.3s ease;
-    content: "";
-  }
 `;
 
 export const TypeList = styled.div`
@@ -1025,6 +1041,7 @@ export const BottomBar = styled.div`
   width: ${(props) => {
     if (props.W100) return "100%";
     if (props.Wide) return "1024px";
+    if (props.Responsive) return "auto";
     return "608px";
   }};
   max-width: ${(props) => {
@@ -1032,10 +1049,11 @@ export const BottomBar = styled.div`
     return "608px";
   }};
   display: flex;
-  justify-content: space-between;
+  justify-content: ${props => props.Responsive ? 'flex-start' : 'space-between'};
   align-items: center;
   padding: ${(props) => {
     if (props.Black) return "16px 24px 16px 32px";
+    if (props.Responsive) return "12px 12px 12px 24px";
     return "24px 20px";
   }};
   border-radius: ${(props) => {
@@ -1047,6 +1065,8 @@ export const BottomBar = styled.div`
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
   background: ${(props) => (props.Black ? palette.gray800 : palette.white)};
   z-index: 100;
+  cursor: ${props => props.Responsive ? 'pointer' : 'default'};
+  overflow: hidden;
 
   p {
     font-size: 0.875rem;
@@ -1060,6 +1080,70 @@ export const BottomBar = styled.div`
       color: ${palette.primary};
     }
   }
+
+  ${props => props.Responsive && css`
+    gap: 12px;
+    transition: all .5s;
+
+    span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: ${palette.primary};
+      transition: transform 0.3s ease;
+      transform: translateX(0);
+    }
+
+    .responsive {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      transition: all .5s;
+
+      ${Body2} {
+        width: auto;
+        height: 24px;
+        transform: translateX(0);
+        transition: all 0.3s ease-in-out;
+        opacity: 1;
+        overflow: hidden;
+      }
+
+      ${Body3} {
+        width: 0;
+        height: 21px;
+        transform: translateX(0);
+        transition: all 0.3s ease-in-out;
+        opacity: 0;
+        overflow: hidden;
+      }
+    }
+  
+    &:hover {
+      max-width: 608px;
+      width: 100%;
+
+      span {
+        transform: translateX(182px);
+      }
+
+      ${Body2} {
+        width: 0;
+        transform: translateX(-30px);
+        opacity: 0;
+      }
+
+      ${Body3} {
+        width: auto;
+        transform: translateX(-12px);
+        opacity: 1;
+      }
+    }
+  `}
 `;
 
 export const PersonaGroup = styled.div`
@@ -1727,6 +1811,15 @@ export const ListSubtitle = styled.div`
   flex-wrap: wrap;
   gap: 4px;
 
+  ${props => props.TextOverflow && css`
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    max-height: 102px;
+    overflow: hidden;
+    margin-top: auto;
+  `}
+
   p {
     font-size: 0.75rem;
     font-weight: 300;
@@ -1740,7 +1833,6 @@ export const ListSubtitle = styled.div`
   }
 
   &:last-child {
-    margin-top: auto;
   }
 `;
 
@@ -1813,7 +1905,7 @@ export const BoxWrap = styled.div`
   display: flex;
   align-items: flex-start !important;
   gap: 20px !important;
-  padding: 20px 32px;
+  padding: 20px 24px;
   border-radius: 15px;
   border: 1px solid ${palette.outlineGray};
 
@@ -1969,19 +2061,23 @@ export const OCEANRangeWrap = styled.div`
 `;
 
 export const RangeSlider = styled.input`
+  -webkit-appearance: none;
   width: 100%;
   height: 1px;
   background: ${palette.outlineGray};
-  -webkit-appearance: none;
-  
+  outline: none;
+  opacity: ${props => props.disabled ? 0.5 : 1};
+  transition: all 0.2s;
+
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
+    appearance: none;
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    border: 0;
-    background: ${palette.primary};
-    cursor: pointer;
+    background: ${props => props.$ignored ? palette.gray500 : palette.primary};
+    cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+    transition: all 0.2s;
   }
 
   &::-moz-range-thumb {
@@ -1989,12 +2085,39 @@ export const RangeSlider = styled.input`
     height: 24px;
     border-radius: 50%;
     border: 0;
-    background: ${palette.primary};
-    cursor: pointer;
+    background: ${props => props.$ignored ? palette.gray500 : palette.primary};
+    cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+    transition: all 0.2s ease;
+  }
+
+  /* 중간 영역 표시를 위한 스타일 */
+  &::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      ${palette.outlineGray} calc(50% - 1px),
+      transparent calc(50% - 1px) calc(50% + 1px),
+      ${palette.outlineGray} calc(50% + 1px)
+    );
+  }
+
+  &::-moz-range-track {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      ${palette.outlineGray} calc(50% - 1px),
+      transparent calc(50% - 1px) calc(50% + 1px),
+      ${palette.outlineGray} calc(50% + 1px)
+    );
   }
 
   &:focus {
     outline: none;
+    background: ${props => props.$ignored ? palette.gray500 : palette.primary};
+    cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+    transition: all 0.2s;
   }
 `;
 
@@ -2033,9 +2156,9 @@ export const BgBoxItem = styled.div`
   justify-content: flex-start;
   gap: 4px;
   width: 100%;
-  padding: 8px 12px;
+  padding: ${props => props.NoOutline ? '12px' : '8px 12px'};
   border-radius: 10px;
-  border: 1px solid ${palette.outlineGray};
+  border: ${props => props.NoOutline ? '0' : `1px solid ${palette.outlineGray}`};
   background: ${props => props.white ? palette.white : palette.chatGray};
 `;
 

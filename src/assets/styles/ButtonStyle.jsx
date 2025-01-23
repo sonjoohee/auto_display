@@ -59,12 +59,36 @@ export const Button = styled.button`
     border-radius: 8px;
   `}
 
+  ${props => props.Other && css`
+    gap: 12px;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    padding: 8px 24px;
+    border-radius: 20px;
+    border: 1px solid ${palette.primary};
+    background: ${palette.white};
+  `}
+
   ${props => props.W100 && css`
     width: 100%;
   `}
 
   ${props => props.Round && css`
     border-radius: 70px;
+  `}
+
+  ${props => props.Other && props.Fill && css`
+    color: ${palette.white};
+
+    &:hover {
+      background: rgba(34, 111, 255, 0.2);
+    }
+
+    &:disabled {
+      color: ${palette.gray500};
+      background: #ECEFF3;
+      cursor: not-allowed;
+    }
   `}
 
   ${props => props.PrimaryLightest && props.Fill && css`

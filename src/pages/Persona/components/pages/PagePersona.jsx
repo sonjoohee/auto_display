@@ -162,7 +162,7 @@ const PagePersona = () => {
                     </Body2>
 
                     <Button
-                      ExLarge
+                      Other
                       Primary
                       Fill
                       Round
