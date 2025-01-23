@@ -1725,6 +1725,12 @@ export const ListBoxGroup = styled.ul`
       width: 100px;
     }
   }
+
+  ${Body2} {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
 `;
 
 export const CardGroupWrap = styled.div`
@@ -2890,4 +2896,43 @@ export const SwitchHandle = styled.div`
 
 export const SwitchToggleInput = styled.input`
   display: none;
+`;
+
+export const Tooltip = styled.div`
+  position: relative;
+  display: inline-block;
+  min-width: 14px !important;
+  width: 14px !important;
+
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 0.5px solid ${palette.outlineGray};
+    background-color: ${palette.chatGray};
+  }
+
+  div {
+    position: absolute;
+    top: -65px;
+    left: 10px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    background-color: ${palette.gray800};
+
+    &:before {
+      position: absolute;
+      bottom: -10px;
+      left: 10px;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 10px 5px 0 5px;
+      border-color: ${palette.gray800} transparent transparent transparent;
+      content: "";
+    }
+  }
 `;

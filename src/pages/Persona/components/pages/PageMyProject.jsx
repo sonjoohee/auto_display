@@ -330,14 +330,14 @@ const PageMyProject = () => {
                             />
                             <Sub3 color="gray700">문의사항</Sub3>
                           </IconButton>
-                          <IconButton>
+                          <IconButton onClick={() => navigate('/Terms')}>
                             <img
                               src={images.ExclamationCircle}
                               alt="이용약관"
                             />
                             <Sub3 color="gray700">이용약관</Sub3>
                           </IconButton>
-                          <IconButton>
+                          <IconButton onClick={() => navigate('/Policy')}>
                             <img src={images.Lock} alt="개인정보 이용 정책" />
                             <Sub3 color="gray700">개인정보 이용 정책</Sub3>
                           </IconButton>

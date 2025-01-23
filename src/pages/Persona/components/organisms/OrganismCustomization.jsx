@@ -366,6 +366,7 @@ const OrganismCustomization = ({
                           </Caption2>
                           <Button
                             Medium
+                            Primary
                             disabled={isLoadingQuestion}
                             onClick={() => {
                               const generatedCustomInfo = {
@@ -418,7 +419,7 @@ const OrganismCustomization = ({
                               setShowOrganismCustomization(false);
                             }}
                           >
-                            문항 생성
+                            질문 생성하기
                           </Button>
                         </>
                       )}
@@ -464,7 +465,7 @@ export default OrganismCustomization;
 const CustomizationBox = styled.div`
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
+  align-items: center;
   gap: 20px;
   width: 100%;
   padding: 24px 24px 20px 20px;
