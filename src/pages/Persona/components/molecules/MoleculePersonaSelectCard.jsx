@@ -117,7 +117,11 @@ const MoleculePersonaSelectCard = ({
             <ListSubtitle>
               <PersonaInfo>
                 <span>{persona.gender}</span>
-                <span>{persona.age}세</span>
+                <span>
+                  {persona.age.includes("세")
+                    ? persona.age
+                    : `${persona.age}세`}
+                </span>
                 <span>{persona.job}</span>
               </PersonaInfo>
             </ListSubtitle>
@@ -155,7 +159,11 @@ const MoleculePersonaSelectCard = ({
             <ListSubtitle>
               <PersonaInfo>
                 <span>{persona.gender}</span>
-                <span>{persona.age}세</span>
+                <span>
+                  {persona.age.includes("세")
+                    ? persona.age
+                    : `${persona.age}세`}
+                </span>
                 <span>{persona.job}</span>
               </PersonaInfo>
             </ListSubtitle>

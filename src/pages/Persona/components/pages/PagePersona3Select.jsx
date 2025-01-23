@@ -66,6 +66,8 @@ import {
   IS_PERSONA_ACCESSIBLE,
   INTERVIEW_QUESTION_LIST,
   PERSONA_BUTTON_STATE_3,
+  SINGLE_INTERVIEW_QUESTION_LIST,
+  PURPOSE_ITEMS_SINGLE,
 } from "../../../../pages/AtomStates.jsx";
 
 const FULL_DEFINITION_TEXT =
@@ -81,6 +83,11 @@ const PagePersona3Select = () => {
   const [interviewQuestionList, setInterviewQuestionList] = useAtom(
     INTERVIEW_QUESTION_LIST
   );
+  const [singleInterviewQuestionList, setSingleInterviewQuestionList] = useAtom(
+    SINGLE_INTERVIEW_QUESTION_LIST
+  );
+  const [purposeItemsSingleAtom, setPurposeItemsSingleAtom] =
+    useAtom(PURPOSE_ITEMS_SINGLE);
   const navigate = useNavigate();
   const [showCustomization, setShowCustomization] = useState(false);
   const [purposeText, setPurposeText] = useState("");
@@ -131,9 +138,10 @@ const PagePersona3Select = () => {
   const handleStartInterview = () => {
     console.log("인터뷰 시작");
     console.log("personaList", personaList);
-    console.log("interviewQuestionList", interviewQuestionList);
-    console.log("selectedInterviewPurpose", selectedInterviewPurpose);
-
+    console.log("singleInterviewQuestionList", singleInterviewQuestionList);
+    // console.log("selectedInterviewPurpose", selectedInterviewPurpose);
+    console.log("selectedInterviewPurposeData", selectedInterviewPurposeData);
+    console.log("purposeItemsSingleAtom", purposeItemsSingleAtom);
     setShowPopup(true);
   };
 
@@ -236,25 +244,31 @@ const PagePersona3Select = () => {
                     <li>
                       <Body2 color="gray500">페르소나 선택</Body2>
                       <PersonaGroup>
-                        <span>+2</span>
-                        <Persona color="Linen" size="Small" Round>
-                          <img
-                            src={personaImages.PersonaWomen01}
-                            alt="페르소나"
-                          />
-                        </Persona>
-                        <Persona color="PastelPink" size="Small" Round>
-                          <img
-                            src={personaImages.PersonaWomen02}
-                            alt="페르소나"
-                          />
-                        </Persona>
-                        <Persona color="Crayola" size="Small" Round>
-                          <img
-                            src={personaImages.PersonaWomen03}
-                            alt="페르소나"
-                          />
-                        </Persona>
+                        {selectedPersonas &&
+                          (Array.isArray(selectedPersonas) ? (
+                            <>
+                              {selectedPersonas.length > 3 && (
+                                <span>+{selectedPersonas.length - 3}</span>
+                              )}
+                              {selectedPersonas
+                                .slice(0, 3)
+                                .map((persona, index) => (
+                                  <Persona key={index} size="Small" Round>
+                                    <img
+                                      src={persona.profileImage}
+                                      alt={`선택된 페르소나 ${index + 1}`}
+                                    />
+                                  </Persona>
+                                ))}
+                            </>
+                          ) : (
+                            <Persona size="Small" Round>
+                              <img
+                                src={selectedPersonas.profileImage}
+                                alt="선택된 페르소나"
+                              />
+                            </Persona>
+                          ))}
                       </PersonaGroup>
                     </li>
                     {selectedInterviewType === "multiple" ? (
@@ -304,11 +318,20 @@ const PagePersona3Select = () => {
 
               <BottomBar W100>
                 <Body2 color="gray800">
-                  5명의 페르소나와 인터뷰를 진행하시겠습니까?
+                  {selectedInterviewType === "multiple"
+                    ? `선택한 ${getSelectedCount()}명의 페르소나와 인터뷰를 진행하시겠습니까?`
+                    : "선택한 페르소나와 인터뷰를 진행하시겠습니까?"}
                 </Body2>
-                <Button Large Primary Round Fill onClick={handleStartInterview}>
+                <Button
+                  Large
+                  Primary
+                  Round
+                  Fill
+                  disabled={getSelectedCount() === 0}
+                  onClick={handleStartInterview}
+                >
                   인터뷰 시작
-                  <img src={images.ChevronRight} alt="인터뷰 시작" />
+                  {/* <img src={images.ChevronRight} alt="인터뷰 시작" /> */}
                 </Button>
               </BottomBar>
             </MainSection>
@@ -339,9 +362,9 @@ const PagePersona3Select = () => {
 
       {selectedInterviewType === "multiple" ? (
         <OrganismToastPopup isActive={showToast} autoClose={false} />
-      ) : (
+      ) : selectedInterviewType === "single" ? (
         <OrganismToastPopupSingleChat isActive={showToast} autoClose={false} />
-      )}
+      ) : null}
     </>
   );
 };

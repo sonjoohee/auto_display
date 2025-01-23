@@ -298,11 +298,12 @@ const PageMyProject = () => {
                 </MyDashboardTitle>
 
                 <ButtonGroup>
-                  <Button Primary onClick={() => navigate("/Payment")}>
+                  {/* <Button Primary onClick={() => navigate("/Payment")}>
                     <images.CoinSmall width="12px" height="8px" color={palette.primary} />
-                    {/* <img src={images.CoinSmall} alt="요금제 관리" /> */}
+                    
                     <Sub3 color="primary">요금제 관리</Sub3>
-                  </Button>
+                  </Button> */}
+                  {/* <img src={images.CoinSmall} alt="요금제 관리" /> */}
                   <div style={{ position: "relative" }}>
                     <Button
                       Primary
@@ -416,7 +417,7 @@ const PageMyProject = () => {
                   {activeTab === "project" && (
                     /* 프로젝트 리스트 */
                     <ProjectList>
-                      <ProjectHeader>
+                      <ProjectHeader> 
                         <Body3 color="gray500">프로젝트 명</Body3>
                         <Body3 color="gray500">맞춤 페르소나</Body3>
                         <Body3 color="gray500">페르소나 모집</Body3>

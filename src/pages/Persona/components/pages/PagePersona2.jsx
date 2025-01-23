@@ -181,6 +181,10 @@ const PagePersona2 = () => {
   const [viewType, setViewType] = useState("list"); // 'list' 또는 'card'
   const [activeTab, setActiveTab] = useState("daily"); // 'daily' 또는 'business'
 
+  // 새로운 상태 추가 (컴포넌트 최상단)
+  const [isLoadingDaily, setIsLoadingDaily] = useState(false);
+  const [isLoadingBusiness, setIsLoadingBusiness] = useState(false);
+
   const [showTypeList, setShowTypeList] = useState(false);
 
   const [selectedTypes, setSelectedTypes] = useState([]);
@@ -652,6 +656,7 @@ const PagePersona2 = () => {
       if (isInitial) {
         setIsLoading(true);
       } else {
+        setIsLoadingDaily(true);
         setIsLoadingMore(true);
       }
 
@@ -875,11 +880,12 @@ const PagePersona2 = () => {
       }
       console.error("Error in loadPersonaWithFilter:", error);
     } finally {
-      // setIsLoading(false);
       if (isInitial) {
         setIsLoading(false);
+        setIsLoadingDaily(false);
       } else {
         setIsLoadingMore(false);
+        setIsLoadingDaily(false);
       }
     }
   };
@@ -897,9 +903,10 @@ const PagePersona2 = () => {
   };
 
   const loadBusinessPersona = async (personaType) => {
-    console.log("🚀 ~ loadBusinessPersona ~ personaType:", personaType);
-
     try {
+      setIsLoadingBusiness(true);
+      console.log("🚀 ~ loadBusinessPersona ~ personaType:", personaType);
+
       console.log(
         "🚀 ~ loadBusinessPersona ~ allBusinessPersonas:",
         allBusinessPersonas
@@ -1012,6 +1019,7 @@ const PagePersona2 = () => {
         setShowErrorPopup(true);
       }
     } finally {
+      setIsLoadingBusiness(false);
       setIsLoadingMore(false); // End loading for the current type
       setCurrentLoadingType(null); // 로딩 완료 시 초기화
     }
@@ -1515,7 +1523,7 @@ const PagePersona2 = () => {
                                   viewType={viewType}
                                 />
                               ))}
-                              {isLoadingMore && (
+                              {isLoadingMore && isLoadingDaily && (
                                 <div
                                   style={{
                                     width: "100%",
@@ -1529,9 +1537,16 @@ const PagePersona2 = () => {
                             </CardGroupWrap>
                             {hasMorePersonas &&
                               !isLoading &&
-                              !isLoadingMore && (
+                              // !isLoadingMore &&
+                              !isLoadingDaily &&
+                              !(
+                                filteredProjectList.length ===
+                                personaList.unselected.length
+                              ) && (
                                 <LoadMoreButton onClick={handleLoadMore}>
                                   더보기
+                                  {/* {filteredProjectList.length} /{" "}
+                                  {personaList?.unselected?.length} */}
                                 </LoadMoreButton>
                               )}
 
@@ -1726,7 +1741,7 @@ const PagePersona2 = () => {
                                 viewType={viewType}
                               />
                             ))}
-                            {isLoadingMore && (
+                            {isLoadingMore && isLoadingBusiness && (
                               <div
                                 style={{
                                   width: "100%",
@@ -1767,7 +1782,7 @@ const PagePersona2 = () => {
                                 {selectedPersonas.length}/5)
                               </>
                             ) : (
-                              "추천 페르소나 10명이 인터뷰를 기다리고 있어요"
+                              `추천 페르소나 ${filteredProjectList.length}명이 인터뷰를 기다리고 있어요`
                             )}
                           </p>
                           <Button
@@ -2717,17 +2732,28 @@ const FillterWrap = styled.div`
 `;
 
 const LoadMoreButton = styled.button`
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 12px 0;
   margin: 20px auto;
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
   font-size: 16px;
+  color: ${palette.gray600};
+  border: none;
+  background: transparent;
+  cursor: pointer;
+
+  &:before {
+    content: "+ ";
+    margin-right: 4px;
+  }
+
+  /* &:after {
+    margin-left: 4px;
+  } */
 
   &:hover {
-    background-color: #0056b3;
+    color: ${palette.primary};
   }
 `;
