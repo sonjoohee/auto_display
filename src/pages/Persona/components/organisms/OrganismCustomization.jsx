@@ -113,19 +113,21 @@ const OrganismCustomization = ({
       setCustomTheoryData(result?.response?.custom_theory_data);
       // Update project on server with the new data
 
-      if (customTheoryData?.theory_title) {
-        console.log("🚀 ~ useEffect ~ customTheoryData:", customTheoryData);
+      if (result?.response?.custom_theory_data?.theory_title) {
         const generatedQuestions = {
           id: 4,
-          title: customTheoryData?.theory_title || "",
-          theory_title: customTheoryData?.theory_title || "",
-          view_title: customTheoryData?.theory_title || "",
-          definition: customTheoryData?.definition || "",
-          objective: customTheoryData?.objective || "",
-          characteristic: customTheoryData?.characteristic || [],
+          title: result?.response?.custom_theory_data?.theory_title || "",
+          theory_title:
+            result?.response?.custom_theory_data?.theory_title || "",
+          view_title: result?.response?.custom_theory_data?.theory_title || "",
+          definition: result?.response?.custom_theory_data?.definition || "",
+          objective: result?.response?.custom_theory_data?.objective || "",
+          characteristic:
+            result?.response?.custom_theory_data?.characteristic || [],
           description: "사용자 커스텀 방법론" || "",
-          custom_theory_data: customTheoryData || "",
-          question_list: customTheoryData?.question_list || [],
+          custom_theory_data: result?.response?.custom_theory_data || "",
+          question_list:
+            result?.response?.custom_theory_data?.question_list || [],
         };
         setPurposeItemsSingleAtom((prev) => [...prev, generatedQuestions]);
       }
@@ -165,16 +167,8 @@ const OrganismCustomization = ({
       setIsLoadingQuestion(true);
       setSelectedInterviewPurpose(4); // 커스텀 방법론의 ID
 
-      console.log(
-        "🚀 ~ handleGenerateQuestions222222222222222 ~ purposeItemsSingleAtom:",
-        purposeItemsSingleAtom
-      );
       const selectedPurpose = purposeItemsSingleAtom.find(
         (item) => item.id === 4
-      );
-      console.log(
-        "🚀 ~ handleGenerateQuestions3333333333333 ~ purpose:",
-        selectedPurpose?.view_title
       );
 
       setSelectedInterviewPurposeData(selectedPurpose);
@@ -227,7 +221,7 @@ const OrganismCustomization = ({
           specialQuestions,
         };
 
-        await setSingleInterviewQuestionList((prev) => {
+        setSingleInterviewQuestionList((prev) => {
           const filtered = prev.filter(
             (item) => item.theory_name !== customTheoryData.theory_title
           );
@@ -243,6 +237,10 @@ const OrganismCustomization = ({
             ],
           },
           isLoggedIn
+        );
+        console.log(
+          "🚀 ~ handleGenerateQuestions ~ singleInterviewQuestionList:",
+          singleInterviewQuestionList
         );
       }
     } catch (error) {
@@ -396,6 +394,10 @@ const OrganismCustomization = ({
                                   "",
                                 isQuestionVisible: true,
                               };
+                              console.log(
+                                "🚀 ~ generatedCustomInfo:",
+                                generatedCustomInfo
+                              );
 
                               if (purposeItemsSingleAtom.length < 4) {
                                 setPurposeItemsSingleAtom((prev) => {
