@@ -96,7 +96,6 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
     const interviewLoading = async () => {
       // 인터뷰 스크립트 보기, 인터뷰 상세보기로 진입 시 isComplete는 True
       if (isComplete) {
-        console.log("🚀 ~ interviewLoading ~ isComplete:", isComplete);
         const questions = interviewData.map((item) => ({
           question: item.question_1 || item.question_2 || item.question_3,
         }));
@@ -159,11 +158,6 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
         );
 
         if (existingQuestions) {
-          console.log(
-            "🚀 ~ loadInterviewQuestion ~ existingQuestions:",
-            existingQuestions
-          );
-
           // 이미 질문이 생성된 상태하면 상태값 설정 후 5초 대기
           setInterviewQuestionListState(existingQuestions.questions.slice(2));
           await new Promise((resolve) => setTimeout(resolve, 5000));
@@ -419,12 +413,6 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
   useEffect(() => {
     // 인터뷰 진행 함수
     const processInterview = async () => {
-      console.log("Conditions check:", {
-        isLoadingPrepare,
-        currentQuestionIndex,
-        interviewStatus: interviewStatus[currentQuestionIndex],
-      });
-
       if (
         !isLoadingPrepare &&
         interviewStatus[currentQuestionIndex] === "Pre"
@@ -439,28 +427,17 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
         }));
 
         try {
-          console.log("Interview started with:", {
-            currentQuestionIndex,
-            interviewStatus,
-            personaList,
-          });
           allAnswers = [];
           personaInfoState = [];
 
           // 선택된 페르소나 수 만큼 반복
           for (let i = 0; i < personaList.selected.length; i++) {
-            console.log("🚀 ~ processInterview ~ personaList:", personaList);
             setIsGenerating(true);
 
             // 현재 페르소나의 이전 답변들 수집(저장):  AI가 답변을 생성할때 맥락 정보로 활용
             const lastInterview = [];
             // 현재 질문 이전 질문들 수집
             for (let q = 0; q < currentQuestionIndex; q++) {
-              console.log(
-                "🚀 ~ processInterview ~ currentQuestionIndex:",
-                currentQuestionIndex
-              );
-
               //각 질문에 대해서 answers 배열에서 해당 질문의 답변들을 찾음
               const questionAnswers = answers[q] || [];
               //페르소나 매칭
@@ -478,10 +455,6 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               }
             }
 
-            console.log(
-              "🚀 ~ processInterview ~ interviewQuestionListState:",
-              personaList.selected[i]
-            );
             const personaInfo = {
               id: personaList.selected[i].persona_id.replace(/[^0-9]/g, ""),
               name: personaList.selected[i].persona,
@@ -489,11 +462,6 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               hashtag: personaList.selected[i].lifestyle,
               summary: personaList.selected[i].consumption_pattern,
             };
-            console.log("🚀 ~ processInterview ~ personaInfo:", personaInfo);
-            console.log(
-              "🚀 ~ processInterview ~ interviewQuestionListState:",
-              interviewQuestionListState
-            );
 
             //수집된 답변들 api요청에 포함
             const data = {
@@ -501,10 +469,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               question: interviewQuestionListState[currentQuestionIndex],
               persona_info: personaInfo,
               last_interview: lastInterview,
-            };
-            console.log("🚀 ~ processInterview ~ data:", data);
-
-            // let response = await axios.post(
+            }; // let response = await axios.post(
             //   //페르소나 답변 생성하는 api
             //   "https://wishresearch.kr/person/persona_interview_module",
             //   data,
@@ -515,7 +480,6 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               isLoggedIn
             );
 
-            console.log("🚀 ~ processInterview ~ response:", response);
             let retryCount = 0;
             const maxRetries = 10;
 
@@ -531,7 +495,6 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               //   data,
               //   axiosConfig
               // );
-              console.log("🚀 ~ 재실행 436789214567839165748391573892 ");
               response = await InterviewXPersonaMultipleInterviewRequest(
                 data,
                 isLoggedIn
