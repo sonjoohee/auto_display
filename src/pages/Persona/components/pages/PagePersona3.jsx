@@ -176,7 +176,10 @@ const PagePersona3 = () => {
     //   selected: [],
     //   unselected: filteredProjectList,
     // }));
-
+    console.log(
+      "🚀 ~ handleSelectPersona ~ selectedInterviewPurposeData:",
+      selectedInterviewPurposeData
+    );
     setPersonaStep(3);
     setIsPersonaAccessible(true);
     navigate(`/Persona/3/Select/${projectId}`, { replace: true });
