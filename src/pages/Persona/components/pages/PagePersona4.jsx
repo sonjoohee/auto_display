@@ -22,6 +22,11 @@ import {
   CATEGORY_COLOR,
   SELECTED_PERSONA_LIST,
   IS_SHOW_TOAST,
+  SELECTED_INTERVIEW_TYPE,
+  SINGLE_INTERVIEW_REPORT_TAB1,
+  SINGLE_INTERVIEW_REPORT_TAB2,
+  SINGLE_INTERVIEW_REPORT_TAB3,
+  SELECTED_INTERVIEW_PURPOSE_DATA,
 } from "../../../AtomStates";
 import {
   ContentsWrap,
@@ -85,11 +90,23 @@ const PagePersona4 = () => {
   const [interviewReportAdditional, setInterviewReportAdditional] = useAtom(
     INTERVIEW_REPORT_ADDITIONAL
   );
+  const [singleInterviewReportTab1, setSingleInterviewReportTab1] = useAtom(
+    SINGLE_INTERVIEW_REPORT_TAB1
+  );
+  const [singleInterviewReportTab2, setSingleInterviewReportTab2] = useAtom(
+    SINGLE_INTERVIEW_REPORT_TAB2
+  );
+  const [singleInterviewReportTab3, setSingleInterviewReportTab3] = useAtom(
+    SINGLE_INTERVIEW_REPORT_TAB3
+  );
   const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
     IS_PERSONA_ACCESSIBLE
   );
   const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(
     SELECTED_INTERVIEW_PURPOSE
+  );
+  const [selectedInterviewPurposeData] = useAtom(
+    SELECTED_INTERVIEW_PURPOSE_DATA
   );
   const [reportReady, setReportReady] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
@@ -98,6 +115,7 @@ const PagePersona4 = () => {
   const [reportLoadButtonState, setReportLoadButtonState] = useAtom(
     REPORT_LOAD_BUTTON_STATE
   );
+  const [selectedInterviewType] = useAtom(SELECTED_INTERVIEW_TYPE);
   const [openAccordion, setOpenAccordion] = useState(null);
   const [openCard, setOpenCard] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -220,7 +238,10 @@ const PagePersona4 = () => {
         );
         console.log("🚀 ~ savedProjectInfo:", savedProjectInfo);
         if (savedProjectInfo) {
-          console.log("🚀 ~ savedProjectInfo.reportList:", savedProjectInfo.reportList); // reportList 콘솔 출력
+          console.log(
+            "🚀 ~ savedProjectInfo.reportList:",
+            savedProjectInfo.reportList
+          ); // reportList 콘솔 출력
           setBusinessAnalysis(savedProjectInfo.businessAnalysis);
           setReportList(savedProjectInfo.reportList);
           setCategoryColor({
@@ -253,42 +274,86 @@ const PagePersona4 = () => {
       } else {
         // 2. 새로 생성된 보고서
         if (reportId) {
-          await updateProjectReportOnServer(
-            reportId,
-            {
-              theory_type: selectedInterviewPurpose,
-              interviewData: interviewData,
-              personaList: personaList.selected,
-              interviewReport: interviewReport,
-              interviewReportAdditional: interviewReportAdditional,
-            },
-            isLoggedIn
-          );
-          const currentProject = await getProjectByIdFromIndexedDB(
-            projectId,
-            isLoggedIn
-          );
-          const currentReportList = currentProject?.reportList || [];
+          if (selectedInterviewType === "multiple") {
+            await updateProjectReportOnServer(
+              reportId,
+              {
+                interviewType: selectedInterviewType,
+                theoryType: selectedInterviewPurpose,
+                interviewData: interviewData,
+                personaList: personaList.selected,
+                interviewReport: interviewReport,
+                interviewReportAdditional: interviewReportAdditional,
+              },
+              isLoggedIn
+            );
+            const currentProject = await getProjectByIdFromIndexedDB(
+              projectId,
+              isLoggedIn
+            );
+            const currentReportList = currentProject?.reportList || [];
 
-          await updateProjectOnServer(
-            //프로젝트의 리포트 목록 업데이트하기 위해서 (나중에 모든 인터뷰 리포트 이력 확인 할 때 사용)
-            projectId,
-            {
-              reportList: [
-                ...currentReportList, // 서버의 기존 데이터 유지
-                {
-                  reportId: reportId,
-                  reportTitle: selectedInterviewPurpose,
-                  interviewData: interviewData.length,
-                  selectedPersona: personaList.selected.length,
-                  createDate: new Date().toLocaleString("ko-KR", {
-                    timeZone: "Asia/Seoul",
-                  }),
-                },
-              ],
-            },
-            isLoggedIn
-          );
+            await updateProjectOnServer(
+              //프로젝트의 리포트 목록 업데이트하기 위해서 (나중에 모든 인터뷰 리포트 이력 확인 할 때 사용)
+              projectId,
+              {
+                reportList: [
+                  ...currentReportList, // 서버의 기존 데이터 유지
+                  {
+                    reportId: reportId,
+                    interviewType: selectedInterviewType,
+                    reportTitle: selectedInterviewPurpose,
+                    interviewData: interviewData.length,
+                    selectedPersona: personaList.selected.length,
+                    createDate: new Date().toLocaleString("ko-KR", {
+                      timeZone: "Asia/Seoul",
+                    }),
+                  },
+                ],
+              },
+              isLoggedIn
+            );
+          } else if (selectedInterviewType === "single") {
+            await updateProjectReportOnServer(
+              reportId,
+              {
+                interviewType: selectedInterviewType,
+                theoryType: selectedInterviewPurposeData.theory_name,
+                interviewData: interviewData,
+                personaList: personaList.selected,
+                singleInterviewReportTab1: singleInterviewReportTab1,
+                singleInterviewReportTab2: singleInterviewReportTab2,
+                singleInterviewReportTab3: singleInterviewReportTab3,
+              },
+              isLoggedIn
+            );
+            const currentProject = await getProjectByIdFromIndexedDB(
+              projectId,
+              isLoggedIn
+            );
+            const currentReportList = currentProject?.reportList || [];
+
+            await updateProjectOnServer(
+              //프로젝트의 리포트 목록 업데이트하기 위해서 (나중에 모든 인터뷰 리포트 이력 확인 할 때 사용)
+              projectId,
+              {
+                reportList: [
+                  ...currentReportList, // 서버의 기존 데이터 유지
+                  {
+                    reportId: reportId,
+                    interviewType: selectedInterviewType,
+                    reportTitle: selectedInterviewPurposeData.theory_name,
+                    interviewData: interviewData.length,
+                    selectedPersona: personaList.selected.length,
+                    createDate: new Date().toLocaleString("ko-KR", {
+                      timeZone: "Asia/Seoul",
+                    }),
+                  },
+                ],
+              },
+              isLoggedIn
+            );
+          }
         }
       }
     };

@@ -349,6 +349,7 @@ export const TabContent = styled.div`
   flex-direction: column;
   gap: 16px;
   text-align: left;
+  height: 275px;
 `;
 
 export const Status = styled.div`
@@ -2091,7 +2092,7 @@ export const RangeSlider = styled.input`
     border-radius: 50%;
     border: 0;
     background: ${props => props.$ignored ? palette.gray500 : palette.primary};
-    cursor: pointer;
+    cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
     transition: all 0.2s ease;
   }
 
