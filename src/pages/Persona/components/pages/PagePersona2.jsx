@@ -67,6 +67,7 @@ import {
   PopupContent,
   OCEANRangeWrap,
   RangeSlider,
+  BgBoxItem,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
@@ -78,6 +79,7 @@ import {
   Sub1,
   Sub3,
   Caption2,
+  Sub2_1,
 } from "../../../../assets/styles/Typography";
 import {
   CustomTextarea,
@@ -241,17 +243,17 @@ const PagePersona2 = () => {
   const [visibleSelectedTypes, setVisibleSelectedTypes] = useState([]);
 
   const [oceanValues, setOceanValues] = useState({
-    openness: 80, // 개방적
-    conscientiousness: 70, // 성실함
-    extraversion: 90, // 외향적
-    agreeableness: 40, // 우호적
-    neuroticism: 30, // 신경적
+    openness: 0.5,      // 중간값 0.5로 시작
+    conscientiousness: 0.5,
+    extraversion: 0.5,
+    agreeableness: 0.5,
+    neuroticism: 0.5,
   });
 
   const handleOceanChange = (trait, value) => {
-    setOceanValues((prev) => ({
+    setOceanValues(prev => ({
       ...prev,
-      [trait]: value,
+      [trait]: Number(value)
     }));
   };
 
@@ -1266,20 +1268,18 @@ const PagePersona2 = () => {
     }
   };
 
-  // 폼 유효성 검사 함수 추가
+  // 폼 유효성 검사 함수 수정
   const isFormValid = () => {
-    // 필수 필드 검사
-    const requiredFields = {
-      description: customPersonaForm.description.trim(),
-      purpose: customPersonaForm.purpose.trim(),
-    };
-
-    // 모든 필수 필드가 채워져 있는지 확인
-    const isRequiredFieldsFilled = Object.values(requiredFields).every(
-      (field) => field.length > 0
-    );
-
-    return isRequiredFieldsFilled;
+    if (activeTabIndex === 0) {
+      // 첫 번째 탭에서는 성별과 연령대 선택 여부 확인
+      const isGenderSelected = customPersonaForm.gender !== "";
+      const isAgeGroupSelected = customPersonaForm.ageGroups.length > 0;
+      
+      return isGenderSelected && isAgeGroupSelected;
+    } else {
+      // 두 번째 탭에서는 항상 true 반환
+      return true;
+    }
   };
 
   // 마우스 드래그 스크롤 핸들러 추가
@@ -1406,6 +1406,14 @@ const PagePersona2 = () => {
     setShowTypeList((prev) => !prev); // 상태 토글
   };
 
+  // 체크박스 상태 관리를 위한 state 추가
+  const [ignoreOcean, setIgnoreOcean] = useState(false);
+
+  // 체크박스 핸들러 추가
+  const handleIgnoreOcean = (e) => {
+    setIgnoreOcean(e.target.checked);
+  };
+
   return (
     <>
       <ContentsWrap>
@@ -1480,7 +1488,7 @@ const PagePersona2 = () => {
                             onClick={handleCustomizeRequest}
                           >
                             <img src={images.PlusPrimary} alt="" />
-                            페르소나 요청
+                            맞춤 페르소나
                           </Button>
                         </FillterWrap>
                       </Tabheader>
@@ -1578,28 +1586,21 @@ const PagePersona2 = () => {
                                   </Choice>
                                 ))
                               ) : (
-                                // {/* {selectedTypes.length > 0 ? (
-                                //   selectedTypes.map(type => (
-                                //     <Choice
-                                //       key={type.id}
-                                //       onClick={(e) => {
-                                //         e.stopPropagation();
-                                //         handleRemoveType(type.id);
-                                //       }}
-                                //     >
-                                //       {type.label}
-                                //     </Choice>
-                                //   )) */}
-                                <></>
+                                <Sub2_1 color="gray500" style={{ padding: "6px 10px" }}>
+                                  페르소나 유형을 선택해 주세요.
+                                </Sub2_1>
                               )}
                             </ChoiceWrap>
 
                             <TypeMore style={{ zIndex: 10 }}>
-                              <Personnel>{selectedTypes.length}개</Personnel>
+                              <Personnel>
+                                {selectedTypes.length > 0 ? `${selectedTypes.length}개` : "0개"}
+                              </Personnel>
                               <MoreButton
                                 onClick={() => setShowTypeList(!showTypeList)}
                               >
                                 유형 더보기
+                                <images.ChevronDown width="24" height="24" color={palette.gray700} />
                               </MoreButton>
 
                               {showTypeList && (
@@ -1746,8 +1747,18 @@ const PagePersona2 = () => {
                       )}
 
                       {!personaButtonState2 && (
-                        <BottomBar Black Round>
-                          <p>
+                        <BottomBar Responsive Round>
+                          <div className="responsive">
+                            <Body2 color="gray800">인터뷰 진행</Body2>
+                            <Body3 color="gray800">
+                              💬 지금 바로 인터뷰가 가능 12명의 페르소나가 기다리고 있어요
+                            </Body3>
+                          </div>
+
+                          <span>
+                            <images.ChevronRight width="22" height="22" color={palette.white} />
+                          </span>
+                          {/* <p>
                             {selectedPersonas.length > 0 ? (
                               <>
                                 선택하신{" "}
@@ -1769,7 +1780,7 @@ const PagePersona2 = () => {
                           >
                             <Sub1 color="gray800">인터뷰 시작하기</Sub1>
                             <img src={images.ChevronRight} alt="" />
-                          </Button>
+                          </Button> */}
                         </BottomBar>
                       )}
                     </CustomizePersona>
@@ -1811,7 +1822,7 @@ const PagePersona2 = () => {
             }
           }}
           showTabs={true}
-          tabs={["필수정보", "OCEAN 정보"]}
+          tabs={["필수정보", "성격(OCEAN) 정보"]}
           onTabChange={(index) => setActiveTabIndex(index)}
           activeTab={activeTabIndex}
           body={
@@ -1831,32 +1842,20 @@ const PagePersona2 = () => {
                       <GenderRadioButton
                         id="gender1"
                         name="gender"
+                        type="radio"
                         gender="남자"
                         icon={images.GenderMen}
                         checked={customPersonaForm.gender === "male"}
-                        onClick={() => {
-                          // 현재 선택된 값과 같은 값을 클릭하면 선택 해제
-                          if (customPersonaForm.gender === "male") {
-                            handleCustomPersonaChange("gender", "");
-                          } else {
-                            handleCustomPersonaChange("gender", "male");
-                          }
-                        }}
+                        onChange={() => handleCustomPersonaChange("gender", "male")}
                       />
                       <GenderRadioButton
                         id="gender2"
                         name="gender"
+                        type="radio"
                         gender="여자"
                         icon={images.GenderWomen}
                         checked={customPersonaForm.gender === "female"}
-                        onClick={() => {
-                          // 현재 선택된 값과 같은 값을 클릭하면 선택 해제
-                          if (customPersonaForm.gender === "female") {
-                            handleCustomPersonaChange("gender", "");
-                          } else {
-                            handleCustomPersonaChange("gender", "female");
-                          }
-                        }}
+                        onChange={() => handleCustomPersonaChange("gender", "female")}
                       />
                     </PopupContent>
                   </div>
@@ -1946,13 +1945,20 @@ const PagePersona2 = () => {
               {activeTabIndex === 1 && (
                 <>
                   <div>
-                    <PopupTitle>
+                    <BgBoxItem NoOutline>
+                      <Sub3 color="gray500" align="left">
+                        OCEAN이란?<br />
+                        성격 심리학에서 인간의 성격을 설명하는 다섯 요인 창의성(Openness), 성실성(Conscientiouseness), 외향성(Extraversion), 친화성(Agreeableness), 정서적 안정성(Neuroticism)을 평가하는 방법입니다. 
+                      </Sub3>
+                    </BgBoxItem>
+
+                    {/* <PopupTitle>
                       성향
                       <Sub3>
                         * 선택하지 않는 경우, 성향 무관으로 페르소나를
                         생성합니다.
                       </Sub3>
-                    </PopupTitle>
+                    </PopupTitle> */}
 
                     <PopupContent>
                       <OCEANRangeWrap>
@@ -1961,11 +1967,12 @@ const PagePersona2 = () => {
                           <RangeSlider
                             type="range"
                             min="0"
-                            max="100"
+                            max="1"
+                            step="0.5"
                             value={oceanValues.openness}
-                            onChange={(e) =>
-                              handleOceanChange("openness", e.target.value)
-                            }
+                            onChange={(e) => handleOceanChange("openness", e.target.value)}
+                            disabled={ignoreOcean}
+                            $ignored={ignoreOcean}
                           />
                           <Body3 color="gray800">개방적</Body3>
                         </div>
@@ -1974,14 +1981,12 @@ const PagePersona2 = () => {
                           <RangeSlider
                             type="range"
                             min="0"
-                            max="100"
+                            max="1"
+                            step="0.5"
                             value={oceanValues.conscientiousness}
-                            onChange={(e) =>
-                              handleOceanChange(
-                                "conscientiousness",
-                                e.target.value
-                              )
-                            }
+                            onChange={(e) => handleOceanChange("conscientiousness", e.target.value)}
+                            disabled={ignoreOcean}
+                            $ignored={ignoreOcean}
                           />
                           <Body3 color="gray800">성실함</Body3>
                         </div>
@@ -1990,11 +1995,12 @@ const PagePersona2 = () => {
                           <RangeSlider
                             type="range"
                             min="0"
-                            max="100"
+                            max="1"
+                            step="0.5"
                             value={oceanValues.extraversion}
-                            onChange={(e) =>
-                              handleOceanChange("extraversion", e.target.value)
-                            }
+                            onChange={(e) => handleOceanChange("extraversion", e.target.value)}
+                            disabled={ignoreOcean}
+                            $ignored={ignoreOcean}
                           />
                           <Body3 color="gray800">외향적</Body3>
                         </div>
@@ -2003,11 +2009,12 @@ const PagePersona2 = () => {
                           <RangeSlider
                             type="range"
                             min="0"
-                            max="100"
+                            max="1"
+                            step="0.5"
                             value={oceanValues.agreeableness}
-                            onChange={(e) =>
-                              handleOceanChange("agreeableness", e.target.value)
-                            }
+                            onChange={(e) => handleOceanChange("agreeableness", e.target.value)}
+                            disabled={ignoreOcean}
+                            $ignored={ignoreOcean}
                           />
                           <Body3 color="gray800">우호적</Body3>
                         </div>
@@ -2016,11 +2023,12 @@ const PagePersona2 = () => {
                           <RangeSlider
                             type="range"
                             min="0"
-                            max="100"
+                            max="1"
+                            step="0.5"
                             value={oceanValues.neuroticism}
-                            onChange={(e) =>
-                              handleOceanChange("neuroticism", e.target.value)
-                            }
+                            onChange={(e) => handleOceanChange("neuroticism", e.target.value)}
+                            disabled={ignoreOcean}
+                            $ignored={ignoreOcean}
                           />
                           <Body3 color="gray800">신경적</Body3>
                         </div>
@@ -2029,12 +2037,22 @@ const PagePersona2 = () => {
                   </div>
 
                   <div style={{ marginTop: "12px", textAlign: "left" }}>
-                    <Body3 color="gray500">
+                    {/* <Body3 color="gray500">
                       페르소나 마다의 다양한 성향이 있습니다. 이러한 성향에 따라
                       생성되는 페르소나는 각양각색의 무한한 가능성과 여러가지
                       방법들이 있습니다. 원하는 바를 위해 최대한 커스터마이징
                       하여 페르소나를 도출해 내시기를 기원합니다.
-                    </Body3>
+                    </Body3> */}
+                    <CheckBox>
+                      <input 
+                        type="checkbox" 
+                        id="chk1" 
+                        style={{ display: "block" }}
+                        checked={ignoreOcean}
+                        onChange={handleIgnoreOcean}
+                      />
+                      <label htmlFor="chk1">페르소나의 성격 유형은 신경 쓰지 않습니다.</label>
+                    </CheckBox>
                   </div>
                 </>
               )}

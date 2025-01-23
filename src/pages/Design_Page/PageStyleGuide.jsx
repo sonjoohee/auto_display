@@ -873,14 +873,29 @@ onChange={() => setSelectedRadio2('gender1')}
   커스터마이즈
 </Badge>
 
-<Badge>
+<Badge Request>
   <img src={images.NoteArrowUp} alt="요청필요" />
   요청 필요
 </Badge>
 
 <Badge Keyword>
   #키워드
-</Badge>`}
+</Badge>
+
+<Badge Request>
+<img src={images.Plus} alt="모집 요청" />
+모집 요청
+</Badge>
+
+<Badge Ing>
+모집 중
+</Badge>
+
+<Badge Complete>
+<img src={images.CheckGreen} alt="모집 완료" />
+모집 완료
+</Badge>
+`}
             </CodeBlock>
           </Note>
 
@@ -895,13 +910,22 @@ onChange={() => setSelectedRadio2('gender1')}
               커스터마이즈
             </Badge>
 
-            <Badge>
-              <img src={images.NoteArrowUp} alt="요청필요" />
-              요청 필요
-            </Badge>
-
             <Badge Keyword>
               #키워드
+            </Badge>
+
+            <Badge Request>
+              <img src={images.Plus} alt="모집 요청" />
+              모집 요청
+            </Badge>
+
+            <Badge Ing>
+              모집 중
+            </Badge>
+
+            <Badge Complete>
+              <img src={images.CheckGreen} alt="모집 완료" />
+              모집 완료
             </Badge>
           </FlexBox>
 

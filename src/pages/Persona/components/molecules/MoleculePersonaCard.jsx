@@ -4,7 +4,7 @@ import styled, { css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import { Button } from "../../../../assets/styles/ButtonStyle";
-import { H4, Body1, Body3, Sub3 } from "../../../../assets/styles/Typography";
+import { H4, Body1, Body3, Sub3, Caption2 } from "../../../../assets/styles/Typography";
 import {
   ListBoxItem,
   ListSubtitle,
@@ -112,8 +112,8 @@ const MoleculePersonaCard = ({
                   </Badge>
                 ) : requestStatus ? (
                   <Badge Request>
-                    <img src={images.Plus} alt="요청 필요" />
-                    요청 필요
+                    <img src={images.Plus} alt="모집 요청" />
+                    모집 요청
                   </Badge>
                 ) : (
                   <Badge Complete>
@@ -247,7 +247,9 @@ const MoleculePersonaCard = ({
               ))}
             </ListSubtitle>
 
-            <ListSubtitle>{personaData.lifestyle}</ListSubtitle>
+            <ListSubtitle TextOverflow>
+              <Caption2 color="gray500">{personaData.lifestyle}</Caption2>
+            </ListSubtitle>
           </CardText>
 
           <CardButton>
@@ -335,9 +337,9 @@ const MoleculePersonaCard = ({
                 )}
               </div>
 
-              <Button Large Primary Fill>
+              {/* <Button Large Primary Fill>
                 인터뷰 준비 요청하기
-              </Button>
+              </Button> */}
             </div>
           </InterviewPopup>
         </>
@@ -410,9 +412,9 @@ const MoleculePersonaCard = ({
                 )}
               </div>
 
-              <Button Large Primary Fill>
+              {/* <Button Large Primary Fill>
                 인터뷰 준비 요청하기
-              </Button>
+              </Button> */}
             </div>
           </InterviewPopup>
         </>
