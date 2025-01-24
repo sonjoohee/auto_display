@@ -1181,7 +1181,7 @@ export const Persona = styled.div`
   align-items: center;
   justify-content: center;
   border-radius: ${(props) => (props.Round ? "50%" : "0")};
-  overflow: hidden;
+  overflow: ${(props) => (props.Moder ? "initial" : "hidden")};
 
   > img {
     width: 100%;
