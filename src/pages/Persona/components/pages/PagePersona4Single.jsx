@@ -545,13 +545,13 @@ const PagePersona4 = () => {
                       isActive={activeTab === 2}
                       onClick={() => handleTabClick(2)}
                     >
-                      감정 요인 분석
+                      페르소나 행동 패턴 분석
                     </TabButtonType3>
                     <TabButtonType3
                       isActive={activeTab === 3}
                       onClick={() => handleTabClick(3)}
                     >
-                      페르소나 행동 패턴 분석
+                      감정 요인 분석
                     </TabButtonType3>
                   </TabWrapType3>
 
