@@ -345,6 +345,18 @@ export const IS_ADDING_NOW = atom({
 
 export const NEW_ADD_CONTENT = atom("");
 
+
+export const USER_CREDIT_DATA = atom([]);
+export const USER_PAGE_CNT = atom([]);
+export const USER_PROJECT_LIST = atom([]);
+export const USER_CREDIT_LIST = atom([]);
+
+
+export const CREDIT_TARGET_PAGE = atom(1)
+export const PROJECT_TARGET_PAGE = atom(1)
+
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* 마케팅 */
 

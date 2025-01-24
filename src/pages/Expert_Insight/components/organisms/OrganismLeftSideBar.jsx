@@ -2957,7 +2957,7 @@ const AccordionContent = styled.div`
         display: flex;
       }
     }
-  }
+  
 `;
 
 const LoginButtonWrap = styled.div`
