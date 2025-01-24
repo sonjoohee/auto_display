@@ -1267,7 +1267,6 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                             setInputValue(""); // 입력 필드 초기화
                           }}
                         >
-                        
                           네, 있습니다!
                         </button>
                         <button
@@ -1638,9 +1637,26 @@ const ChatAddButton = styled.div`
     background: transparent;
     transition: all 0.5s;
 
+    &:hover:not(:disabled) {
+      color: ${palette.primary};
+      border-color: ${palette.primary};
+      background: rgba(34, 111, 255, 0.04);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
     &:hover {
       color: ${palette.white};
       background: ${palette.gray800};
+    }
+      
+    &[type="button"]:active {
+      color: ${palette.primary};
+      border-color: ${palette.primary};
+      background: rgba(34, 111, 255, 0.04);
     }
   }
 `;
