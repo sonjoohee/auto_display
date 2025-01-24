@@ -124,14 +124,18 @@ const OrganismProjectCard = ({ project, index }) => {
   };
 
   //인터뷰 상세보기
-  const navigateToInterviewReportDescriptionPage = (reportId) => {
+  const navigateToInterviewReportDescriptionPage = (report) => {
     setProjectId(project._id);
-    setReportId(reportId);
+    setReportId(report.reportId);
     setReportDescriptionLoadButtonState(true);
     // setPersonaStep(4);
     setReportLoadButtonState(true);
     setIsPersonaAccessible(true);
-    navigate(`/Persona/4/${project._id}`);
+    if (report.interviewType === "single") {
+      navigate(`/Persona/4/Single/${project._id}`);
+    } else {
+      navigate(`/Persona/4/${project._id}`);
+    }
   };
 
   return (
