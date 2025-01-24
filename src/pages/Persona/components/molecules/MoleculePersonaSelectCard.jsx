@@ -219,7 +219,22 @@ const ListBoxItem = styled.div`
   opacity: ${(props) =>
     props.interviewType === "single" && props.anySelected && !props.selected
       ? 0.5
-      : 1};
+      : 1
+  };
+  
+  // hover 효과 추가
+  transition: background-color 0.2s ease;
+  
+  ${(props) =>
+    props.interviewType === "single" &&
+    !props.selected &&
+    `
+    &:hover {
+      border-radius: 10px;
+      background-color: ${palette.chatGray};
+      cursor: pointer;
+    }
+  `}
 
   + div {
     border-top: 1px solid ${palette.outlineGray};
