@@ -441,7 +441,7 @@ const PageMyProject = () => {
                   <Badge classBasic>Basic</Badge>
                 </MyDashboardTitle>
 
-                <ButtonGroup>
+                {/* <ButtonGroup>
                   <Button Primary onClick={() => navigate("/Payment")}>
                     <images.CoinSmall
                       width="12px"
@@ -451,7 +451,6 @@ const PageMyProject = () => {
 
                     <Sub3 color="primary">요금제 관리</Sub3>
                   </Button>
-                  {/* <img src={images.CoinSmall} alt="요금제 관리" /> */}
                   <div style={{ position: "relative" }}>
                     <Button
                       Primary
@@ -493,7 +492,7 @@ const PageMyProject = () => {
                       </ToggleBox>
                     )}
                   </div>
-                </ButtonGroup>
+                </ButtonGroup> */}
               </MyDashboardHeader>
 
               <MyDashboardContent>

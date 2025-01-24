@@ -1447,7 +1447,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                         <Body3 color="gray800" align="left">
                           Q{index + 1}. {value}
                         </Body3>
-                        <div>
+                        <div style={{ width: "46px" }}>
                           <Body2 color="gray800" />
                         </div>
                       </li>
@@ -1737,21 +1737,33 @@ const ChatAddButton = styled.div`
           border: 1px solid ${palette.gray800};
           background: ${palette.gray800};
         }
+      }
+    }
 
-        &:disabled {
-          + span {
-            border-color: ${palette.gray300};
-            background: transparent;
-            cursor: not-allowed;
-          }
-        }
+    &[disabled] {
+      cursor: not-allowed;
+      
+      span {
+        opacity: 0.5;
+        cursor: not-allowed;
 
         &:hover {
-          + span {
-            color: ${palette.white};
-            border: 1px solid ${palette.gray300};
-            background: ${palette.gray300};
-          }
+          color: ${palette.gray700};
+          border: 1px solid ${palette.gray700};
+          background: transparent;
+        }
+      }
+
+      input[type="radio"]:checked + span {
+        color: ${palette.white};
+        border: 1px solid ${palette.gray800};
+        background: ${palette.gray800};
+        opacity: 0.5;
+
+        &:hover {
+          color: ${palette.white};
+          border: 1px solid ${palette.gray800};
+          background: ${palette.gray800};
         }
       }
     }
