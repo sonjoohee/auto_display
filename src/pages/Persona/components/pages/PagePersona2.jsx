@@ -694,6 +694,7 @@ const PagePersona2 = () => {
       // let filteredPersonas = [];
       let filterResponse = null;
 
+      console.log("🚀 ~ availablePersonas:", availablePersonas);
       // 3번의 필터링 수행
       // for (let i = 0; i < 3 && availablePersonas.length > 0; i++) {
       for (let i = 0; i < filteringCount && availablePersonas.length > 0; i++) {
@@ -1545,8 +1546,8 @@ const PagePersona2 = () => {
                               ) && (
                                 <LoadMoreButton onClick={handleLoadMore}>
                                   <Body3 color="gray700">
-                                    더보기
-                                    ({personaList?.unselected?.length}/{filteredProjectList.length})
+                                    더보기 ({personaList?.unselected?.length}/
+                                    {filteredProjectList.length})
                                   </Body3>
                                 </LoadMoreButton>
                               )}
@@ -2780,7 +2781,7 @@ const LoadMoreButton = styled.button`
   justify-content: center;
   gap: 4px;
   width: 100%;
-  font-family: 'Pretendard', 'Poppins';
+  font-family: "Pretendard", "Poppins";
   margin: 20px auto;
   border: none;
   background: transparent;

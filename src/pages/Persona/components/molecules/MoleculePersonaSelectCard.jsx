@@ -14,6 +14,9 @@ const MoleculePersonaSelectCard = ({
   selectedPersonas,
   onPersonaSelect,
 }) => {
+  console.log("🚀 ~ onPersonaSelect:", onPersonaSelect);
+  console.log("🚀 ~ selectedPersonas:", selectedPersonas);
+  console.log("🚀 ~ personaList:", personaList);
   const [personaListState, setPersonaListState] = useAtom(PERSONA_LIST);
 
   // 컴포넌트 마운트 시 초기 unselected 리스트 설정
@@ -26,14 +29,14 @@ const MoleculePersonaSelectCard = ({
     }
   }, [personaList]);
 
-  const handlePersonaSelect = (personaId) => {
+  const handlePersonaSelect = (persona) => {
     const targetPersona = [
       ...personaListState.selected,
       ...personaListState.unselected,
-    ].find((p) => p.persona_id === personaId);
+    ].find((p) => p.persona_id === persona.persona_id);
 
     if (interviewType === "single") {
-      if (selectedPersonas === personaId) {
+      if (selectedPersonas === persona.persona_id) {
         // 선택 해제
         setPersonaListState({
           selected: [],
@@ -43,7 +46,7 @@ const MoleculePersonaSelectCard = ({
       } else {
         // 새로운 선택
         const newUnselected = personaListState.unselected.filter(
-          (p) => p.persona_id !== personaId
+          (p) => p.persona_id !== persona.persona_id
         );
         if (personaListState.selected.length > 0) {
           // 기존 선택된 항목이 있으면 unselected로 이동
@@ -53,7 +56,7 @@ const MoleculePersonaSelectCard = ({
           selected: [targetPersona],
           unselected: newUnselected,
         });
-        onPersonaSelect(personaId);
+        onPersonaSelect(persona);
       }
     } else {
       // multiple 선택 모드
@@ -61,27 +64,29 @@ const MoleculePersonaSelectCard = ({
         ? selectedPersonas
         : [];
 
-      if (currentSelected.includes(personaId)) {
+      if (currentSelected.includes(persona.persona_id)) {
         // 선택 해제
         const removedPersona = personaListState.selected.find(
-          (p) => p.persona_id === personaId
+          (p) => p.persona_id === persona.persona_id
         );
         setPersonaListState({
           selected: personaListState.selected.filter(
-            (p) => p.persona_id !== personaId
+            (p) => p.persona_id !== persona.persona_id
           ),
           unselected: [...personaListState.unselected, removedPersona],
         });
-        onPersonaSelect(currentSelected.filter((id) => id !== personaId));
+        onPersonaSelect(
+          currentSelected.filter((id) => id !== persona.persona_id)
+        );
       } else if (currentSelected.length < 5) {
         // 새로운 선택 (최대 5개)
         setPersonaListState({
           selected: [...personaListState.selected, targetPersona],
           unselected: personaListState.unselected.filter(
-            (p) => p.persona_id !== personaId
+            (p) => p.persona_id !== persona.persona_id
           ),
         });
-        onPersonaSelect([...currentSelected, personaId]);
+        onPersonaSelect([...currentSelected, persona]);
       }
     }
   };
@@ -107,7 +112,11 @@ const MoleculePersonaSelectCard = ({
         >
           {/* 카드 내용 렌더링 */}
           <Persona color="Linen" size="Large" Round>
-            <img src={personaImages.PersonaWomen01} alt="페르소나" />
+            <img
+              //   src={`/ai_person/ai_persona_0000003_avartar.png`}
+              src={`/ai_person/${persona.personaImg}.png`}
+              alt={persona.persona}
+            />
           </Persona>
           <ListText>
             <ListTitle>
@@ -132,7 +141,7 @@ const MoleculePersonaSelectCard = ({
               Medium
               PrimaryLightest={true}
               Fill={true}
-              onClick={() => handlePersonaSelect(persona.persona_id)}
+              onClick={() => handlePersonaSelect(persona)}
             >
               <Sub2 color="primary">Selected</Sub2>
             </Button>
@@ -149,7 +158,10 @@ const MoleculePersonaSelectCard = ({
         >
           {/* 카드 내용 렌더링 */}
           <Persona color="Linen" size="Large" Round>
-            <img src={personaImages.PersonaWomen01} alt="페르소나" />
+            <img
+              src={`/ai_person/${persona.personaImg}.png`}
+              alt={persona.persona}
+            />
           </Persona>
           <ListText>
             <ListTitle>
@@ -174,7 +186,7 @@ const MoleculePersonaSelectCard = ({
               Medium
               PrimaryLightest={false}
               Fill={false}
-              onClick={() => handlePersonaSelect(persona.persona_id)}
+              onClick={() => handlePersonaSelect(persona)}
             >
               <Sub2 color="gray500">Add</Sub2>
             </Button>
@@ -203,7 +215,8 @@ const ListBoxItem = styled.div`
   border-radius: 10px;
   background: ${(props) => props.theme.white};
   // border: 1px solid
-  //   ${(props) => (props.selected ? palette.outlineGray : palette.outlineGray)};
+  /* ${(props) =>
+    props.selected ? palette.outlineGray : palette.outlineGray}; */
   opacity: ${(props) => (props.anySelected && !props.selected ? 0.5 : 1)};
 
   + div {

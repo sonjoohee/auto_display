@@ -327,6 +327,7 @@ const PagePersona4 = () => {
                     theoryType: selectedInterviewPurposeData.title,
                     interviewData: interviewData.length,
                     selectedPersona: personaList.selected.length,
+                    createTimestamp: new Date().getTime(),
                     createDate: new Date().toLocaleString("ko-KR", {
                       timeZone: "Asia/Seoul",
                     }),
