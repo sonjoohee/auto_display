@@ -1757,7 +1757,7 @@ const ChatAddButton = styled.div`
 
     &[disabled] {
       cursor: not-allowed;
-      
+
       span {
         opacity: 0.5;
         cursor: not-allowed;
