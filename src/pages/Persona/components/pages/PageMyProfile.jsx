@@ -9,11 +9,15 @@ import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
 import MoleculeHeader from "../molecules/MoleculeHeader";
 import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/MoleculeAccountPopup";
 import {
+  ButtonGroup,
   Button,
+  IconButton,
 } from "../../../../assets/styles/ButtonStyle";
 import {
   ContentsWrap,
   MainContent,
+  ToggleBox,
+  ToggleList,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../../assets/styles/Images";
 import {
@@ -21,6 +25,7 @@ import {
   H4,
   H5,
   Body2,
+  Body3,
   Sub3,
   Caption2,
   InputText,
@@ -28,7 +33,8 @@ import {
 
 const PageMyProfile = () => {
   const navigate = useNavigate();
-
+  const [isServiceMenuOpen, setIsServiceMenuOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const [isAccountPopupOpen, setAccountPopupOpen] = useState(false); // 계정설정 팝업
 
   const handleAccountClick = () => {
@@ -37,6 +43,14 @@ const PageMyProfile = () => {
 
   const closeAccountPopup = () => {
     setAccountPopupOpen(false); // 계정설정 팝업 닫기
+  };
+
+  const closeServiceMenu = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setIsServiceMenuOpen(false);
+      setIsClosing(false);
+    }, 300); // 애니메이션 시간과 동일하게 설정
   };
 
   return (
@@ -48,7 +62,63 @@ const PageMyProfile = () => {
 
         <MainContent Wide>
           <MyProfileWrap>
-            <H2 color="gray800" align="left">내 프로필</H2>
+            <MyProfileHeader>
+              <H2 color="gray800" align="left">내 프로필</H2>
+
+              <ButtonGroup>
+                <Button Primary onClick={() => navigate("/Payment")}>
+                  <images.CoinSmall
+                    width="12px"
+                    height="8px"
+                    color={palette.primary}
+                  />
+
+                  <Sub3 color="primary">요금제 관리</Sub3>
+                </Button>
+                {/* <img src={images.CoinSmall} alt="요금제 관리" /> */}
+                <div style={{ position: "relative" }}>
+                  <Button
+                    Primary
+                    onClick={() => {
+                      if (isServiceMenuOpen) {
+                        closeServiceMenu();
+                      } else {
+                        setIsServiceMenuOpen(true);
+                      }
+                    }}
+                  >
+                    <img src={images.Headset} alt="고객 서비스" />
+                    <Sub3 color="primary">고객 서비스</Sub3>
+                  </Button>
+
+                  {(isServiceMenuOpen || isClosing) && (
+                    <ToggleBox $isClosing={isClosing}>
+                      <Body3>고객 서비스</Body3>
+                      <ToggleList>
+                        <IconButton>
+                          <img
+                            src={images.QuestionCircle}
+                            alt="고객 서비스"
+                          />
+                          <Sub3 color="gray700">문의사기 및 환불요청</Sub3>
+                        </IconButton>
+                        <IconButton onClick={() => navigate("/Terms")}>
+                          <img
+                            src={images.ExclamationCircle}
+                            alt="이용약관"
+                          />
+                          <Sub3 color="gray700">이용약관</Sub3>
+                        </IconButton>
+                        <IconButton onClick={() => navigate("/Policy")}>
+                          <img src={images.Lock} alt="개인정보 이용 정책" />
+                          <Sub3 color="gray700">개인정보 이용 정책</Sub3>
+                        </IconButton>
+                      </ToggleList>
+                    </ToggleBox>
+                  )}
+                </div>
+              </ButtonGroup>
+            </MyProfileHeader>
 
             <ProfileInfoWrap>
               <ProfileInfo>
@@ -153,6 +223,12 @@ const MyProfileWrap = styled.div`
   flex-direction: column;
   gap: 32px;
   margin: 50px auto;
+`;
+
+const MyProfileHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const ProfileInfoWrap = styled.div`
