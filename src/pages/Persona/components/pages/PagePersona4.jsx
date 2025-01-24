@@ -305,46 +305,7 @@ const PagePersona4 = () => {
                     reportTitle: selectedInterviewPurpose,
                     interviewData: interviewData.length,
                     selectedPersona: personaList.selected.length,
-                    createDate: new Date().toLocaleString("ko-KR", {
-                      timeZone: "Asia/Seoul",
-                    }),
-                  },
-                ],
-              },
-              isLoggedIn
-            );
-          } else if (selectedInterviewType === "single") {
-            await updateProjectReportOnServer(
-              reportId,
-              {
-                interviewType: selectedInterviewType,
-                theoryType: selectedInterviewPurposeData.theory_name,
-                interviewData: interviewData,
-                personaList: personaList.selected,
-                singleInterviewReportTab1: singleInterviewReportTab1,
-                singleInterviewReportTab2: singleInterviewReportTab2,
-                singleInterviewReportTab3: singleInterviewReportTab3,
-              },
-              isLoggedIn
-            );
-            const currentProject = await getProjectByIdFromIndexedDB(
-              projectId,
-              isLoggedIn
-            );
-            const currentReportList = currentProject?.reportList || [];
-
-            await updateProjectOnServer(
-              //프로젝트의 리포트 목록 업데이트하기 위해서 (나중에 모든 인터뷰 리포트 이력 확인 할 때 사용)
-              projectId,
-              {
-                reportList: [
-                  ...currentReportList, // 서버의 기존 데이터 유지
-                  {
-                    reportId: reportId,
-                    interviewType: selectedInterviewType,
-                    reportTitle: selectedInterviewPurposeData.theory_name,
-                    interviewData: interviewData.length,
-                    selectedPersona: personaList.selected.length,
+                    createTimestamp: new Date().getTime(),
                     createDate: new Date().toLocaleString("ko-KR", {
                       timeZone: "Asia/Seoul",
                     }),
