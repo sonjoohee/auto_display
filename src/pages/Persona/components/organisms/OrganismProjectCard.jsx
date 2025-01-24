@@ -109,14 +109,18 @@ const OrganismProjectCard = ({ project, index }) => {
   };
 
   //결과 분석 보기
-  const navigateToInterviewReportPage = (reportId) => {
+  const navigateToInterviewReportPage = (report) => {
     // console.log("🚀 ~ navigateToInterviewReportPage ~ reportId:", reportId);
     setProjectId(project._id);
-    setReportId(reportId);
+    setReportId(report.reportId);
     // setPersonaStep(4);
     setReportLoadButtonState(true);
     setIsPersonaAccessible(true);
-    navigate(`/Persona/4/${project._id}`);
+    if (report.interviewType === "single") {
+      navigate(`/Persona/4/Single/${project._id}`);
+    } else {
+      navigate(`/Persona/4/${project._id}`);
+    }
   };
 
   //인터뷰 상세보기
@@ -214,7 +218,7 @@ const OrganismProjectCard = ({ project, index }) => {
             project.reportList.map((report, reportIndex) => (
               <ViewInfo key={reportIndex}>
                 <div className="title">
-                  {report.reportTitle}
+                  {report.theoryType}
                   <span>{report.createDate}</span>
                 </div>
                 <div className="info">
@@ -239,7 +243,7 @@ const OrganismProjectCard = ({ project, index }) => {
                     Outline
                     Fill
                     onClick={() =>
-                      navigateToInterviewReportDescriptionPage(report.reportId)
+                      navigateToInterviewReportDescriptionPage(report)
                     }
                     className="view"
                   >
@@ -248,9 +252,7 @@ const OrganismProjectCard = ({ project, index }) => {
                   <Button
                     Small
                     Primary
-                    onClick={() =>
-                      navigateToInterviewReportPage(report.reportId)
-                    }
+                    onClick={() => navigateToInterviewReportPage(report)}
                     className="analysis"
                   >
                     결과 분석 보기
