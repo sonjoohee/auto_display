@@ -2318,7 +2318,7 @@ export const CreditListItem = styled.div`
   justify-content: flex-start;
   gap: 40px;
   width: 100%;
-  padding: 16px 20px;
+  padding: 12px 20px;
   border-radius: 10px;
   border: 1px solid ${palette.outlineGray};
 
