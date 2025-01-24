@@ -275,7 +275,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
     const interviewLoading = async () => {
       // 인터뷰 스크립트 보기, 인터뷰 상세보기로 진입 시 isComplete는 True
       if (isComplete) {
-        console.log("인터뷰 불러오기 ");
+        console.log("인터뷰 불러오기 1");
         const questions = interviewData.map((item) => {
           // 모든 question 키를 찾아서 값이 있는 첫 번째 question을 반환
           const questionKeys = Object.keys(item).filter((key) =>
