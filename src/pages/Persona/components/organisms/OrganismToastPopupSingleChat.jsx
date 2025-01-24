@@ -270,20 +270,14 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
     }
   };
 
-  //!저장되었던 인터뷰 로드
+  //저장되었던 인터뷰 로드
   useEffect(() => {
     const interviewLoading = async () => {
       // 인터뷰 스크립트 보기, 인터뷰 상세보기로 진입 시 isComplete는 True
       if (isComplete) {
-        console.log("인터뷰 불러오기 1");
-        const questions = interviewData.map((item) => {
-          // 모든 question 키를 찾아서 값이 있는 첫 번째 question을 반환
-          const questionKeys = Object.keys(item).filter((key) =>
-            key.startsWith("question_")
-          );
-          const question = questionKeys.map((key) => item[key]).find((q) => q);
-          return { question };
-        });
+        const questions = interviewData.map((item) => ({
+          question: item.question_1 || item.question_2 || item.question_3,
+        }));
         setInterviewQuestionListState(questions);
         // 모든 질문을 Complete 상태로 설정
         const completedStatus = new Array(interviewData.length).fill(
@@ -293,26 +287,33 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
 
         const newAnswers = {};
 
-        console.log("인터뷰 불러오기 2", interviewData);
-
         questions.forEach((_, index) => {
-          const answers = interviewData[index].answer;
+          const answers = interviewData[index][`answer_${index + 1}`];
           newAnswers[index] = (
             selectedPersonaList.length
               ? selectedPersonaList
               : personaList.selected
           ).map((persona, pIndex) => {
             // profile 문자열에서 정보 추출
+            const profileArray = persona.profile
+              .replace(/['\[\]]/g, "")
+              .split(", ");
+            const age = profileArray[0].split(": ")[1];
+            const gender =
+              profileArray[1].split(": ")[1] === "남성" ? "남성" : "여성";
+            const job = profileArray[2].split(": ")[1];
 
             return {
               persona: persona,
-              answer: answers,
+              gender: gender,
+              age: age,
+              job: job,
+              answer: answers[pIndex],
             };
           });
         });
         setAnswers(newAnswers);
 
-        console.log("🚀 ~ interviewLoading ~ newAnswers:", newAnswers);
         // 모든 답변을 보이도록 설정
         const allVisible = {};
         questions.forEach((_, index) => {
@@ -321,7 +322,6 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
         setVisibleAnswers(allVisible);
         setIsLoadingPrepare(false);
 
-        console.log("🚀 ~ questions.forEach ~ questions:", questions);
         return; // isComplete가 True일 때 API 호출 없이 종료
       }
 
@@ -1013,7 +1013,6 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
 
   // 이미 완료된 인터뷰를 확인할 때 사용 ex)인터뷰 스크립트 보기, 인터뷰 상세보기
   const renderInterviewItemsComplete = () => {
-    console.log("인터뷰 완료 렌더링");
     return interviewQuestionListState.map((item, index) => (
       <InterviewItem key={index} status={"Complete"}>
         <QuestionWrap
@@ -1113,6 +1112,21 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
       setShowErrorPopup(true);
     }
   };
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      // Enter 키가 눌렸을 때의 동작을 여기에 추가하세요.
+      handleAddQuestionGenerate(); // 예시: 질문 추가 함수 호출
+    }
+  };
+
+  // 추가: useEffect를 사용하여 isInputEnabled가 true로 변경될 때 포커스 설정
+  useEffect(() => {
+    if (isInputEnabled) {
+      document.querySelector('input[type="text"]').focus(); // 입력 필드에 포커스
+    }
+  }, [isInputEnabled]); // isInputEnabled가 변경될 때마다 실행
+
   return (
     <>
       <PopupBox isActive={active}>
@@ -1227,9 +1241,9 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                   </LoadingBox>
                 ))}
 
-              {!isLoadingPrepare && isComplete
+              {/* {!isLoadingPrepare && isComplete
                 ? renderInterviewItemsComplete()
-                : renderInterviewItems()}
+                : renderInterviewItems()} */}
 
               <ChatListWrap>
                 {renderInterviewItems()}
@@ -1249,14 +1263,16 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                           type="button"
                           disabled={countAdditionalQuestion === 0}
                           onClick={() => {
-                            setIsInputEnabled(true);
+                            setIsInputEnabled(true); // 입력 필드 활성화
+                            setInputValue(""); // 입력 필드 초기화
                           }}
                         >
+                        
                           네, 있습니다!
                         </button>
                         <button
                           type="button"
-                          onClick={() => loadInterviewReport()} // Hide the question list
+                          onClick={() => loadInterviewReport()} // 질문 목록 숨기기
                         >
                           아니요, 괜찮습니다.
                         </button>
@@ -1363,6 +1379,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                   Edit
                   type="text"
                   value={inputValue}
+                  onKeyPress={handleKeyPress} // 여기에 handleKeyPress 사용
                   onChange={handleInputChange}
                   placeholder="Pro 요금제를 사용하시면 해당란에 원하시는 정보를 입력하여 추가 정보를 얻으실 수 있습니다."
                   disabled={!isInputEnabled}
