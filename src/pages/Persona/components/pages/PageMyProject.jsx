@@ -71,10 +71,13 @@ import {
   USER_PAGE_CNT,
   USER_PROJECT_LIST,
   USER_CREDIT_LIST,
+  USER_PERSONA_LIST,
   CREDIT_TARGET_PAGE,
   PROJECT_TARGET_PAGE,
+  PERSONA_TARGET_PAGE,
 } from "../../../AtomStates";
 import OrganismProjectCard from "../organisms/OrganismProjectCard";
+
 import { getProjectListByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import OrganismEmptyProject from "../organisms/OrganismEmptyProject";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
@@ -157,10 +160,12 @@ const PageMyProject = () => {
     useAtom(CREDIT_TARGET_PAGE);
   const [userProjecTargetPage, setProjectTargetPage] =
     useAtom(PROJECT_TARGET_PAGE);
+  const [userPersonaTargetPage, setPersonaTagetPage] =
+    useAtom(PERSONA_TARGET_PAGE);
   const [userPageCnt, setUserPageCnt] = useAtom(USER_PAGE_CNT);
   const [userProjectList, setUserProjectList] = useAtom(USER_PROJECT_LIST);
-
   const [userCreditList, setUserCreditList] = useAtom(USER_CREDIT_LIST);
+  const [userPersonaList, setUserPersonaList] = useAtom(USER_PERSONA_LIST);
 
   const closeServiceMenu = () => {
     setIsClosing(true);
@@ -255,6 +260,18 @@ const PageMyProject = () => {
 
         console.log(creditListData.data);
         setUserCreditList(creditListData.data);
+
+        const personaListData = await axios.get(
+          `https://wishresearch.kr/api/user/myPage/personaList?page=${userPersonaTargetPage}&size=10`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        setUserPersonaList(personaListData.data);
+        console.log("PERSONA::",personaListData.data);
       } catch (err) {
         console.error("사용자 정보 조회 실패:", err);
 
@@ -419,11 +436,35 @@ const PageMyProject = () => {
     loadProjectPage();
   }, [userProjecTargetPage]); // userCreditData가 변경
 
-  // const handleLoadMore = () => {
-  //   if (panelList.length < filterdPanelCount) {
-  //     setCreditListPageCount((prevPageCount) => prevPageCount + 1);
-  //   }
-  // };
+  useEffect(() => {
+    const loadPersonaPage = async () => {
+      if (!userPersonaList) return; // userCreditData가 없으면 종료
+
+      const accessToken = sessionStorage.getItem("accessToken");
+      if (!accessToken) {
+        console.error("토큰이 없습니다.");
+        return;
+      }
+
+      try {
+        const personaListData = await axios.get(
+          `https://wishresearch.kr/api/user/myPage/personaList?page=${userPersonaTargetPage}&size=10`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        setUserPersonaList(personaListData.data);
+        console.log(personaListData.data);
+      } catch (error) {
+        console.error("페르소나  로드 실패:", error);
+      }
+    };
+
+    loadPersonaPage();
+  }, [userPersonaTargetPage]); // userCreditData가 변경
 
   return (
     <>
@@ -552,9 +593,9 @@ const PageMyProject = () => {
                           />
                         </span>
                         <H6 color="gray800">
-                          {userCreditData.event_credit +
+                          {(userCreditData.event_credit +
                             userCreditData.regular_credit +
-                            userCreditData.additional_credit}
+                            userCreditData.additional_credit).toLocaleString()}
                         </H6>
                       </div>
                       <images.ChevronDown
@@ -585,7 +626,7 @@ const PageMyProject = () => {
                       isActive={activeTab === "persona"}
                       onClick={() => setActiveTab("persona")}
                     >
-                      페르소나 리스트
+                    페르소나 리스트 ({userPersonaList.count > 0 ? userPersonaList.count : 0})
                     </TabButtonType3>
                   </TabWrapType3>
 
@@ -614,64 +655,86 @@ const PageMyProject = () => {
 
                       <PaginationWrap>
                         {userProjectList.count > 10 && (
-                          <ArrowButton 
-                            $direction="left" 
-                            onClick={() => userProjecTargetPage > 1 && setProjectTargetPage(userProjecTargetPage - 1)}
-                            style={{ visibility: userProjecTargetPage <= 1 ? 'hidden' : 'visible' }}
+                          <ArrowButton
+                            $direction="left"
+                            onClick={() =>
+                              userProjecTargetPage > 1 &&
+                              setProjectTargetPage(userProjecTargetPage - 1)
+                            }
+                            style={{
+                              visibility:
+                                userProjecTargetPage <= 1
+                                  ? "hidden"
+                                  : "visible",
+                            }}
                           >
-                            <images.ChevronRight width="24" height="24" color={palette.gray500} />
+                            <images.ChevronRight
+                              width="24"
+                              height="24"
+                              color={palette.gray500}
+                            />
                           </ArrowButton>
                         )}
-                        
+
                         <NumbersWrapper>
-                            {/* <Pagination currentPage={1} totalPages={11} /> */}
-                            {/* 지선님 여기 디자인 부탁드립니다. 하단의 페이징 처리. !!! */}
-                            {/*  PageWrap  이거 임시로 제가 영역잡아놧어여.. tempwrap도 전체를 묶기위해 만든것이니 제거가능. */}
-                            {Array.from({
-                              length: Math.ceil(userProjectList.count / 10),
-                            }).map((_, pageIndex) => (
-                              <li key={pageIndex}>
-                                <a
-                                  onClick={() =>
-                                    setProjectTargetPage(pageIndex + 1)
-                                  }
-                                  disabled={userProjecTargetPage === pageIndex + 1}
-                                  className={
-                                    userProjecTargetPage === pageIndex + 1
-                                      ? "active"
-                                      : ""
-                                  }
-                                >
-                                  <Body3 color="gray700">{pageIndex + 1}</Body3>
-                                </a>
-                                {/* 10페이지 이상이고 현재 페이지가 마지막 페이지가 아닐 때만 점 표시 */}
-                                {Math.ceil(userProjectList.count / 10) > 10 && 
-                                 pageIndex < Math.ceil(userProjectList.count / 10) - 1 && 
-                                 pageIndex === 4 && (
+                          {/* <Pagination currentPage={1} totalPages={11} /> */}
+                          {/* 지선님 여기 디자인 부탁드립니다. 하단의 페이징 처리. !!! */}
+                          {/*  PageWrap  이거 임시로 제가 영역잡아놧어여.. tempwrap도 전체를 묶기위해 만든것이니 제거가능. */}
+                          {Array.from({
+                            length: Math.ceil(userProjectList.count / 10),
+                          }).map((_, pageIndex) => (
+                            <li key={pageIndex}>
+                              <a
+                                onClick={() =>
+                                  setProjectTargetPage(pageIndex + 1)
+                                }
+                                disabled={
+                                  userProjecTargetPage === pageIndex + 1
+                                }
+                                className={
+                                  userProjecTargetPage === pageIndex + 1
+                                    ? "active"
+                                    : ""
+                                }
+                              >
+                                <Body3 color="gray700">{pageIndex + 1}</Body3>
+                              </a>
+                              {/* 10페이지 이상이고 현재 페이지가 마지막 페이지가 아닐 때만 점 표시 */}
+                              {Math.ceil(userProjectList.count / 10) > 10 &&
+                                pageIndex <
+                                  Math.ceil(userProjectList.count / 10) - 1 &&
+                                pageIndex === 4 && (
                                   <Dots>
                                     <Dot />
                                     <Dot />
                                     <Dot />
                                   </Dots>
                                 )}
-                              </li>
-                            ))}
+                            </li>
+                          ))}
                         </NumbersWrapper>
 
                         {userProjectList.count > 10 && (
-                          <ArrowButton 
+                          <ArrowButton
                             $direction="right"
-                            onClick={() => 
-                              userProjecTargetPage < Math.ceil(userProjectList.count / 10) && 
+                            onClick={() =>
+                              userProjecTargetPage <
+                                Math.ceil(userProjectList.count / 10) &&
                               setProjectTargetPage(userProjecTargetPage + 1)
                             }
-                            style={{ 
-                              visibility: userProjecTargetPage >= Math.ceil(userProjectList.count / 10) 
-                                ? 'hidden' 
-                                : 'visible' 
+                            style={{
+                              visibility:
+                                userProjecTargetPage >=
+                                Math.ceil(userProjectList.count / 10)
+                                  ? "hidden"
+                                  : "visible",
                             }}
                           >
-                            <images.ChevronRight width="24" height="24" color={palette.gray500} />
+                            <images.ChevronRight
+                              width="24"
+                              height="24"
+                              color={palette.gray500}
+                            />
                           </ArrowButton>
                         )}
                       </PaginationWrap>
@@ -687,48 +750,41 @@ const PageMyProject = () => {
                         <Body3 color="gray500">생성 완료일</Body3>
                       </ProjectHeader>
                       <ProjectContent>
-                        <ProjectItem>
-                          <ProjectInfo>
-                            <Name>
-                              <Caption2 color="gray500">
-                                홈리빙 플랫폼 서비스
-                              </Caption2>
-                              <Body2 color="gray800">
-                                가족과 함께 여가를 보내는 활동 지향형 소비자
-                              </Body2>
-                            </Name>
-                            <Persona>
-                              <Sub3 color="gray500">2024. 10. 26</Sub3>
-                            </Persona>
-                            <Report>
-                              <Badge Keyword>In Process</Badge>
-                              <Button Small Outline Fill>
-                                자세히
-                              </Button>
-                            </Report>
-                          </ProjectInfo>
-                        </ProjectItem>
-                        <ProjectItem>
-                          <ProjectInfo>
-                            <Name>
-                              <Caption2 color="gray500">
-                                홈리빙 플랫폼 서비스
-                              </Caption2>
-                              <Body2 color="gray800">
-                                가족과 함께 여가를 보내는 활동 지향형 소비자
-                              </Body2>
-                            </Name>
-                            <Persona>
-                              <Sub3 color="gray500">2024. 10. 26</Sub3>
-                            </Persona>
-                            <Report>
-                              <Sub3 color="gray500">2024. 10. 26</Sub3>
-                              <Button Small Outline Fill>
-                                자세히
-                              </Button>
-                            </Report>
-                          </ProjectInfo>
-                        </ProjectItem>
+                        {userPersonaList.count > 0 ? (
+                          userPersonaList.results.persona.map((persona) => (
+
+                            
+                            <ProjectItem key={persona.id}>
+                              <ProjectInfo>
+                                <Name>
+                                  <Caption2 color="gray500">
+                                  {persona.businessAnalysis.title}
+                                  </Caption2>
+                                  <Body2 color="gray800">
+                                    {persona.personaRequest.persona.persona}
+                                    
+                                  </Body2>
+                                </Name>
+                                <Persona>
+                                  <Sub3 color="gray500">
+                                    {persona.requestDate}
+                                  </Sub3>
+                                </Persona>
+                                <Report>
+                                  <Badge Keyword>
+                                    Request
+                                    {/* In Process */}
+                                    </Badge>
+                                  <Button Small Outline Fill>
+                                    자세히
+                                  </Button>
+                                </Report>
+                              </ProjectInfo>
+                            </ProjectItem>
+                          ))
+                        ) : (
+                          <div>데이터가 없습니다.</div> // 데이터가 없을 경우 메시지 표시
+                        )}
                       </ProjectContent>
                     </ProjectList>
                   )}
@@ -752,9 +808,9 @@ const PageMyProject = () => {
               <CreditDashBoardWrap>
                 <H5>
                   잔여 크레딧 :
-                  {userCreditData.event_credit +
+                   { (userCreditData.event_credit +
                     userCreditData.regular_credit +
-                    userCreditData.additional_credit}
+                    userCreditData.additional_credit).toLocaleString()}
                 </H5>
                 <CreditDashBoard>
                   <CreditDashBoardItem>
@@ -766,7 +822,7 @@ const PageMyProject = () => {
                         일반 크레딧
                       </Sub3>
                       <H6 color="gray800" align="left">
-                        {userCreditData.additional_credit}
+                        {userCreditData.additional_credit.toLocaleString()}
                       </H6>
                     </div>
                   </CreditDashBoardItem>
@@ -779,7 +835,7 @@ const PageMyProject = () => {
                         구독 크레딧
                       </Sub3>
                       <H6 color="gray800" align="left">
-                        {userCreditData.regular_credit}
+                        {userCreditData.regular_credit.toLocaleString()}
                       </H6>
                     </div>
                   </CreditDashBoardItem>
@@ -792,7 +848,7 @@ const PageMyProject = () => {
                         이벤트 크레딧
                       </Sub3>
                       <H6 color="gray800" align="left">
-                        {userCreditData.event_credit}
+                        {userCreditData.event_credit.toLocaleString()}
                       </H6>
                     </div>
                   </CreditDashBoardItem>
@@ -850,21 +906,28 @@ const PageMyProject = () => {
                   </CreditDashBoardListContent>
                 </CreditDashBoardList>
 
-
                 <PaginationWrap>
                   {userProjectList.count > 5 && (
-                    <ArrowButton 
-                      $direction="left" 
-                      onClick={() => userProjecTargetPage > 1 && setProjectTargetPage(userProjecTargetPage - 1)}
-                      style={{ visibility: userProjecTargetPage <= 1 ? 'hidden' : 'visible' }}
+                    <ArrowButton
+                      $direction="left"
+                      onClick={() =>
+                        userProjecTargetPage > 1 &&
+                        setProjectTargetPage(userProjecTargetPage - 1)
+                      }
+                      style={{
+                        visibility:
+                          userProjecTargetPage <= 1 ? "hidden" : "visible",
+                      }}
                     >
-                      <images.ChevronRight width="24" height="24" color={palette.gray500} />
+                      <images.ChevronRight
+                        width="24"
+                        height="24"
+                        color={palette.gray500}
+                      />
                     </ArrowButton>
                   )}
 
                   <NumbersWrapper>
-                    {/* <Pagination currentPage={1} totalPages={11} /> */}
-                    {/* 지선님 여기 디자인 부탁드립니다. 하단의 페이징 처리. !!! */}
                     {Array.from({
                       length: Math.ceil(userCreditList.count / 5),
                     }).map((_, pageIndex) => (
@@ -873,43 +936,52 @@ const PageMyProject = () => {
                           onClick={() => setCreditTargetPage(pageIndex + 1)}
                           disabled={userCreditTargetPage === pageIndex + 1} // 현재 페이지와 같으면 비활성화
                           className={
-                            userCreditTargetPage === pageIndex + 1 ? "active" : ""
+                            userCreditTargetPage === pageIndex + 1
+                              ? "active"
+                              : ""
                           }
                         >
                           {pageIndex + 1}
                         </a>
                         {/* 5페이지 이상이고 현재 페이지가 마지막 페이지가 아닐 때만 점 표시 */}
-                        {Math.ceil(userProjectList.count / 5) > 5 && 
-                          pageIndex < Math.ceil(userProjectList.count / 5) - 1 && 
+                        {Math.ceil(userProjectList.count / 5) > 5 &&
+                          pageIndex <
+                            Math.ceil(userProjectList.count / 5) - 1 &&
                           pageIndex === 4 && (
-                          <Dots>
-                            <Dot />
-                            <Dot />
-                            <Dot />
-                          </Dots>
-                        )}
+                            <Dots>
+                              <Dot />
+                              <Dot />
+                              <Dot />
+                            </Dots>
+                          )}
                       </li>
                     ))}
                   </NumbersWrapper>
-                  
+
                   {userProjectList.count > 5 && (
-                    <ArrowButton 
+                    <ArrowButton
                       $direction="right"
-                      onClick={() => 
-                        userProjecTargetPage < Math.ceil(userProjectList.count / 5) && 
+                      onClick={() =>
+                        userProjecTargetPage <
+                          Math.ceil(userProjectList.count / 5) &&
                         setProjectTargetPage(userProjecTargetPage + 1)
                       }
-                      style={{ 
-                        visibility: userProjecTargetPage >= Math.ceil(userProjectList.count / 5) 
-                          ? 'hidden' 
-                          : 'visible' 
+                      style={{
+                        visibility:
+                          userProjecTargetPage >=
+                          Math.ceil(userProjectList.count / 5)
+                            ? "hidden"
+                            : "visible",
                       }}
                     >
-                      <images.ChevronRight width="24" height="24" color={palette.gray500} />
+                      <images.ChevronRight
+                        width="24"
+                        height="24"
+                        color={palette.gray500}
+                      />
                     </ArrowButton>
                   )}
                 </PaginationWrap>
-
               </CreditDashBoardWrap>
             </>
           }
