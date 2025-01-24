@@ -6,6 +6,7 @@ import { palette } from "../../../../assets/styles/Palette";
 import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
 // import Header from "../../../Design_Page/IncHeader";
 import MoleculeHeader from "../molecules/MoleculeHeader";
+import axios from "axios";
 import PopupWrap from "../../../../assets/styles/Popup";
 import {
   ButtonGroup,
@@ -61,6 +62,12 @@ import {
   PROJECT_LOADING,
   PROJECT_REFRESH_TRIGGER,
   USER_NAME,
+  USER_CREDIT_DATA,
+  USER_PAGE_CNT,
+  USER_PROJECT_LIST,
+  USER_CREDIT_LIST,
+  CREDIT_TARGET_PAGE,
+  PROJECT_TARGET_PAGE,
 } from "../../../AtomStates";
 import OrganismProjectCard from "../organisms/OrganismProjectCard";
 import { getProjectListByIdFromIndexedDB } from "../../../../utils/indexedDB";
@@ -77,7 +84,7 @@ import {
   Sub3,
   Caption2,
 } from "../../../../assets/styles/Typography";
-import Pagination from '../../../../components/common/Pagination';
+import Pagination from "../../../../components/common/Pagination";
 
 const PageMyProject = () => {
   useDynamicViewport("width=1280");
@@ -140,6 +147,16 @@ const PageMyProject = () => {
   const [isClosing, setIsClosing] = useState(false);
   const [showCreditPopup, setShowCreditPopup] = useState(false);
 
+  const [userCreditData, setUserCreditData] = useAtom(USER_CREDIT_DATA);
+  const [userCreditTargetPage, setCreditTargetPage] =
+    useAtom(CREDIT_TARGET_PAGE);
+  const [userProjecTargetPage, setProjectTargetPage] =
+    useAtom(PROJECT_TARGET_PAGE);
+  const [userPageCnt, setUserPageCnt] = useAtom(USER_PAGE_CNT);
+  const [userProjectList, setUserProjectList] = useAtom(USER_PROJECT_LIST);
+
+  const [userCreditList, setUserCreditList] = useAtom(USER_CREDIT_LIST);
+
   const closeServiceMenu = () => {
     setIsClosing(true);
     setTimeout(() => {
@@ -174,6 +191,77 @@ const PageMyProject = () => {
     window.scrollTo(0, 0);
   }, []);
   useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        // 로컬 스토리지에서 토큰 가져오기
+        const accessToken = sessionStorage.getItem("accessToken");
+
+        if (!accessToken) {
+          throw new Error("토큰이 없습니다.");
+        }
+
+        const userCreditValue = await axios.get(
+          `${process.env.REACT_APP_SERVER_URL}/api/user/userInfo/`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log(userCreditValue.data);
+        setUserCreditData(userCreditValue.data);
+
+        const userPageCnt = await axios.get(
+          `${process.env.REACT_APP_SERVER_URL}/api/user/myPage/myPageCnt`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        setUserPageCnt(userPageCnt.data);
+        console.log(userPageCnt.data);
+
+        console.log("조타이 저장값 ::", userProjecTargetPage);
+
+        const projectListData = await axios.get(
+          `${process.env.REACT_APP_SERVER_URL}/api/user/myPage/projectList?page=${userProjecTargetPage}&size=10`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        setUserProjectList(projectListData.data);
+        console.log(projectListData.data);
+
+        const creditListData = await axios.get(
+          `${process.env.REACT_APP_SERVER_URL}/api/user/myPage/creditList?page=${userCreditTargetPage}&size=5`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        console.log(creditListData.data);
+        setUserCreditList(creditListData.data);
+      } catch (err) {
+        console.error("사용자 정보 조회 실패:", err);
+
+        // 토큰 만료 등의 인증 에러 처리
+        if (err.response?.status === 401) {
+          // 로그아웃 처리 또는 토큰 갱신 로직
+          navigate("/");
+        }
+      }
+    };
+
+    fetchUserInfo();
     // 브라우저 뒤로가기 감지 및 상태 초기화
     const handlePopState = () => {
       // 필요한 상태들 초기화
@@ -200,25 +288,7 @@ const PageMyProject = () => {
       window.removeEventListener("popstate", handlePopState);
     };
   }, [navigate]);
-  // useEffect(() => {
-  //   const loadProjectList = async () => {
-  //     const savedProjectListInfo = await getProjectListByIdFromIndexedDB(true);
-  //     if (savedProjectListInfo) {
-  //       const sortedList = [...savedProjectListInfo]
-  //         .map((project) => ({
-  //           ...project,
-  //           reportList:
-  //             project.reportList?.sort(
-  //               (a, b) => new Date(b.createDate) - new Date(a.createDate)
-  //             ) || [],
-  //         }))
-  //         .sort((a, b) => new Date(b.updateDate) - new Date(a.updateDate));
-  //       setProjectList(sortedList);
-  //     }
-  //     setProjectLoadButtonState(false);
-  //   };
-  //   loadProjectList();
-  // }, []);
+
   useEffect(() => {
     const loadProjectList = async () => {
       try {
@@ -281,6 +351,75 @@ const PageMyProject = () => {
 
     loadProjectList();
   }, [refreshTrigger]); // refreshTrigger가 변경될 때마다 데이터 다시 로드
+
+  useEffect(() => {
+    const loadCreditList = async () => {
+      if (!userCreditData) return; // userCreditData가 없으면 종료
+
+      const accessToken = sessionStorage.getItem("accessToken");
+      if (!accessToken) {
+        console.error("토큰이 없습니다.");
+        return;
+      }
+
+      try {
+        const creditListData = await axios.get(
+          `${process.env.REACT_APP_SERVER_URL}/api/user/myPage/creditList?page=${userCreditTargetPage}&size=5`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        console.log(creditListData.data);
+        console.log("크레딧 리스트 로드 성공");
+        setUserCreditList(creditListData.data);
+      } catch (error) {
+        console.error("크레딧 리스트 로드 실패:", error);
+      }
+    };
+
+    loadCreditList();
+  }, [userCreditTargetPage, userCreditData]); // userCreditData가 변경
+
+  useEffect(() => {
+    const loadProjectPage = async () => {
+      if (!userProjectList) return; // userCreditData가 없으면 종료
+
+      const accessToken = sessionStorage.getItem("accessToken");
+      if (!accessToken) {
+        console.error("토큰이 없습니다.");
+        return;
+      }
+
+      try {
+        const projectListData = await axios.get(
+          `${process.env.REACT_APP_SERVER_URL}/api/user/myPage/projectList?page=${userProjecTargetPage}&size=10`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        setUserProjectList(projectListData.data);
+        console.log(projectListData.data);
+      } catch (error) {
+        console.error("프로젝트 리스트 로드 실패:", error);
+      }
+    };
+
+    loadProjectPage();
+  }, [userProjecTargetPage]); // userCreditData가 변경
+
+  // const handleLoadMore = () => {
+  //   if (panelList.length < filterdPanelCount) {
+  //     setCreditListPageCount((prevPageCount) => prevPageCount + 1);
+  //   }
+  // };
+
   return (
     <>
       <ContentsWrap>
@@ -293,16 +432,20 @@ const PageMyProject = () => {
             <MyDashboard>
               <MyDashboardHeader>
                 <MyDashboardTitle>
-                  <H2>{userName}님</H2>
+                  <H2>{userName}님 </H2>
                   <Badge classBasic>Basic</Badge>
                 </MyDashboardTitle>
 
                 <ButtonGroup>
-                  {/* <Button Primary onClick={() => navigate("/Payment")}>
-                    <images.CoinSmall width="12px" height="8px" color={palette.primary} />
-                    
+                  <Button Primary onClick={() => navigate("/Payment")}>
+                    <images.CoinSmall
+                      width="12px"
+                      height="8px"
+                      color={palette.primary}
+                    />
+
                     <Sub3 color="primary">요금제 관리</Sub3>
-                  </Button> */}
+                  </Button>
                   {/* <img src={images.CoinSmall} alt="요금제 관리" /> */}
                   <div style={{ position: "relative" }}>
                     <Button
@@ -330,14 +473,14 @@ const PageMyProject = () => {
                             />
                             <Sub3 color="gray700">문의사항</Sub3>
                           </IconButton>
-                          <IconButton onClick={() => navigate('/Terms')}>
+                          <IconButton onClick={() => navigate("/Terms")}>
                             <img
                               src={images.ExclamationCircle}
                               alt="이용약관"
                             />
                             <Sub3 color="gray700">이용약관</Sub3>
                           </IconButton>
-                          <IconButton onClick={() => navigate('/Policy')}>
+                          <IconButton onClick={() => navigate("/Policy")}>
                             <img src={images.Lock} alt="개인정보 이용 정책" />
                             <Sub3 color="gray700">개인정보 이용 정책</Sub3>
                           </IconButton>
@@ -352,31 +495,44 @@ const PageMyProject = () => {
                 <DashboardCard>
                   <Body2 color="gray500">요청 페르소나</Body2>
                   <DashboardAmount>
-                    <H3 color="gray800">3건</H3>
+                    <H3 color="gray800">{userPageCnt.persona_count}건</H3>
                     <Badge New>new</Badge>
                   </DashboardAmount>
                 </DashboardCard>
                 <DashboardCard>
                   <Body2 color="gray500">생성 완료 페르소나</Body2>
                   <DashboardAmount>
-                    <H3 color="gray800">1건</H3>
+                    <H3 color="gray800">0건(아직안됨)</H3>
                     <Badge New>new</Badge>
                   </DashboardAmount>
                 </DashboardCard>
                 <DashboardCard>
                   <Body2 color="gray500">인터뷰 진행 건(수)</Body2>
                   <DashboardAmount>
+                    {/* <H3 color="gray800">{userPageCnt.report_count}건</H3> */}
                     <H3 color="gray800">
-                      {projectList.reduce((total, proj) => total + (proj.reportList?.length || 0), 0)}건
+                      {projectList.reduce(
+                        (total, proj) => total + (proj.reportList?.length || 0),
+                        0
+                      )}
+                      건
                     </H3>
                   </DashboardAmount>
                 </DashboardCard>
                 <DashboardCard>
                   <DashboardCardTitle>
                     <Body2 color="gray500">잔여 크레딧</Body2>
-                    <Caption2 color="gray500" onClick={handleCreditHistoryClick} style={{ cursor: 'pointer' }}>
+                    <Caption2
+                      color="gray500"
+                      onClick={handleCreditHistoryClick}
+                      style={{ cursor: "pointer" }}
+                    >
                       사용 내역
-                      <images.ChevronRight width="16px" height="16px" color={palette.gray700} />
+                      <images.ChevronRight
+                        width="16px"
+                        height="16px"
+                        color={palette.gray700}
+                      />
                     </Caption2>
                   </DashboardCardTitle>
                   <DashboardAmount Coin>
@@ -384,11 +540,23 @@ const PageMyProject = () => {
                     <CreditTotal>
                       <div>
                         <span>
-                          <images.CoinSmall width="12px" height="8px" color={palette.white} />
+                          <images.CoinSmall
+                            width="12px"
+                            height="8px"
+                            color={palette.white}
+                          />
                         </span>
-                        <H6 color="gray800">21,250</H6>
+                        <H6 color="gray800">
+                          {userCreditData.event_credit +
+                            userCreditData.regular_credit +
+                            userCreditData.additional_credit}
+                        </H6>
                       </div>
-                      <images.ChevronDown width="20px" height="20px" color={palette.gray300} />
+                      <images.ChevronDown
+                        width="20px"
+                        height="20px"
+                        color={palette.gray300}
+                      />
                     </CreditTotal>
                   </DashboardAmount>
                 </DashboardCard>
@@ -396,7 +564,7 @@ const PageMyProject = () => {
             </MyDashboard>
 
             {/* <Title>프로젝트 리스트</Title> */}
-            {projectList.length === 0 ? (
+            {userProjectList.length === 0 ? (
               <OrganismEmptyProject />
             ) : (
               <>
@@ -406,7 +574,7 @@ const PageMyProject = () => {
                       isActive={activeTab === "project"}
                       onClick={() => setActiveTab("project")}
                     >
-                      프로젝트 리스트 ({projectList.length})
+                      프로젝트 리스트 ({userProjectList.count})
                     </TabButtonType3>
                     <TabButtonType3
                       isActive={activeTab === "persona"}
@@ -418,23 +586,52 @@ const PageMyProject = () => {
 
                   {activeTab === "project" && (
                     /* 프로젝트 리스트 */
-                    <ProjectList>
-                      <ProjectHeader> 
-                        <Body3 color="gray500">프로젝트 명</Body3>
-                        <Body3 color="gray500">맞춤 페르소나</Body3>
-                        <Body3 color="gray500">페르소나 모집</Body3>
-                        <Body3 color="gray500">결과 리포트</Body3>
-                      </ProjectHeader>
-                      <ProjectContent>
-                        {projectList.map((project, index) => (
-                          <OrganismProjectCard
-                            key={index}
-                            project={project}
-                            index={index}
-                          />
+                    <tmpwarp>
+                      <ProjectList>
+                        <ProjectHeader>
+                          <Body3 color="gray500">프로젝트 명</Body3>
+                          <Body3 color="gray500">맞춤 페르소나</Body3>
+                          <Body3 color="gray500">페르소나 모집</Body3>
+                          <Body3 color="gray500">결과 리포트</Body3>
+                        </ProjectHeader>
+                        <ProjectContent>
+                          {userProjectList.results.projects.map(
+                            (project, index) => (
+                              <OrganismProjectCard
+                                key={index}
+                                project={project}
+                                index={index}
+                              />
+                            )
+                          )}
+                        </ProjectContent>
+                      </ProjectList>
+
+                      <PageWrap>
+                        {/* <Pagination currentPage={1} totalPages={11} /> */}
+                        {/* 지선님 여기 디자인 부탁드립니다. 하단의 페이징 처리. !!! */}
+                        {/*  PageWrap  이거 임시로 제가 영역잡아놧어여.. tempwrap도 전체를 묶기위해 만든것이니 제거가능. */}
+                        {Array.from({
+                          length: Math.ceil(userProjectList.count / 10),
+                        }).map((_, pageIndex) => (
+                          <li key={pageIndex}>
+                            <a
+                              onClick={() =>
+                                setProjectTargetPage(pageIndex + 1)
+                              }
+                              disabled={userProjecTargetPage === pageIndex + 1} // 현재 페이지와 같으면 비활성화
+                              className={
+                                userProjecTargetPage === pageIndex + 1
+                                  ? "active"
+                                  : ""
+                              }
+                            >
+                              {pageIndex + 1}
+                            </a>
+                          </li>
                         ))}
-                      </ProjectContent>
-                    </ProjectList>
+                      </PageWrap>
+                    </tmpwarp>
                   )}
 
                   {activeTab === "persona" && (
@@ -499,25 +696,34 @@ const PageMyProject = () => {
       </ContentsWrap>
 
       {showCreditPopup && (
-        <PopupWrap 
+        <PopupWrap
           Wide
           TitleFlex
-          title="크레딧 사용 내역" 
+          title="크레딧 사용 내역"
           onConfirm={handleCreditPopupClose}
           onCancel={handleCreditPopupClose}
           isModal={true}
           body={
             <>
               <CreditDashBoardWrap>
-                <H5>잔여 크레딧 : 21,250</H5>
+                <H5>
+                  잔여 크레딧 :
+                  {userCreditData.event_credit +
+                    userCreditData.regular_credit +
+                    userCreditData.additional_credit}
+                </H5>
                 <CreditDashBoard>
                   <CreditDashBoardItem>
                     <div class="icon yellow">
                       <images.CoinFill width="19" height="12" color="#FFD54A" />
                     </div>
                     <div class="text">
-                      <Sub3 color="gray500" align="left">일반 크레딧</Sub3>
-                      <H6 color="gray800" align="left">11,000</H6>
+                      <Sub3 color="gray500" align="left">
+                        일반 크레딧
+                      </Sub3>
+                      <H6 color="gray800" align="left">
+                        {userCreditData.additional_credit}
+                      </H6>
                     </div>
                   </CreditDashBoardItem>
                   <CreditDashBoardItem>
@@ -525,8 +731,12 @@ const PageMyProject = () => {
                       <images.CoinFill width="19" height="12" color="#34C759" />
                     </div>
                     <div class="text">
-                      <Sub3 color="gray500" align="left">구독 크레딧</Sub3>
-                      <H6 color="gray800" align="left">10,000</H6>
+                      <Sub3 color="gray500" align="left">
+                        구독 크레딧
+                      </Sub3>
+                      <H6 color="gray800" align="left">
+                        {userCreditData.regular_credit}
+                      </H6>
                     </div>
                   </CreditDashBoardItem>
                   <CreditDashBoardItem>
@@ -534,8 +744,12 @@ const PageMyProject = () => {
                       <images.CoinFill width="19" height="12" color="#FF5322" />
                     </div>
                     <div class="text">
-                      <Sub3 color="gray500" align="left">이벤트 크레딧</Sub3>
-                      <H6 color="gray800" align="left">150</H6>
+                      <Sub3 color="gray500" align="left">
+                        이벤트 크레딧
+                      </Sub3>
+                      <H6 color="gray800" align="left">
+                        {userCreditData.event_credit}
+                      </H6>
                     </div>
                   </CreditDashBoardItem>
                 </CreditDashBoard>
@@ -549,43 +763,66 @@ const PageMyProject = () => {
                   </CreditDashBoardListHeader>
 
                   <CreditDashBoardListContent>
-                    <CreditListItem>
-                      <div>
-                      <CreditBadge General>
-                        <span><images.CoinFill color="#FFD54A" /></span>
-                        <Sub2_1>일반 크레딧</Sub2_1>
-                      </CreditBadge>
-                      </div>
-                      <Body3 color="gray500">비즈니스 페르소나 생성 비즈니스 페르소나 생성 비즈니스 페르소나 생성</Body3>
-                      <Body3 color="gray500">2025년 1월 14일</Body3>
-                      <Body3 color="gray500">-50</Body3>
-                    </CreditListItem>
-                    <CreditListItem>
-                      <div>
-                      <CreditBadge Subscription>
-                        <span><images.CoinFill color="#34C759" /></span>
-                        <Sub2_1>구독 크레딧</Sub2_1>
-                      </CreditBadge>
-                      </div>
-                      <Body3 color="gray500">비즈니스 페르소나 생성</Body3>
-                      <Body3 color="gray500">2025년 1월 14일</Body3>
-                      <Body3 color="gray500">-50</Body3>
-                    </CreditListItem>
-                    <CreditListItem>
-                      <div>
-                      <CreditBadge Event>
-                        <span><images.CoinFill color="#FF5322" /></span>
-                        <Sub2_1>이벤트</Sub2_1>
-                      </CreditBadge>
-                      </div>
-                      <Body3 color="gray500">비즈니스 페르소나 생성</Body3>
-                      <Body3 color="gray500">2025년 1월 14일</Body3>
-                      <Body3 color="gray500">-50</Body3>
-                    </CreditListItem>
+                    {userCreditList.results.map((credit) => (
+                      <CreditListItem>
+                        <div>
+                          {credit.credit_type === "일반 크레딧" ? (
+                            <CreditBadge General>
+                              <span>
+                                <images.CoinFill color="#FFD54A" />
+                              </span>
+                              <Sub2_1>{credit.credit_type}</Sub2_1>
+                            </CreditBadge>
+                          ) : credit.credit_type === "구독 크레딧" ? (
+                            <CreditBadge Subscription>
+                              <span>
+                                <images.CoinFill color="#34C759" />
+                              </span>
+                              <Sub2_1>{credit.credit_type}</Sub2_1>
+                            </CreditBadge>
+                          ) : credit.credit_type === "이벤트 크레딧" ? (
+                            <CreditBadge Event>
+                              <span>
+                                <images.CoinFill color="#FF5322" />
+                              </span>
+                              <Sub2_1>{credit.credit_type}</Sub2_1>
+                            </CreditBadge>
+                          ) : null}
+                        </div>
+                        <Body3 color="gray500">{credit.title}</Body3>
+                        <Body3 color="gray500">
+                          {new Date(credit.credit_created).toLocaleDateString(
+                            "ko-KR",
+                            {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            }
+                          )}
+                        </Body3>
+                        <Body3 color="gray500">-50</Body3>
+                      </CreditListItem>
+                    ))}
                   </CreditDashBoardListContent>
                 </CreditDashBoardList>
 
-                <Pagination currentPage={1} totalPages={11} />
+                {/* <Pagination currentPage={1} totalPages={11} /> */}
+                {/* 지선님 여기 디자인 부탁드립니다. 하단의 페이징 처리. !!! */}
+                {Array.from({
+                  length: Math.ceil(userCreditList.count / 5),
+                }).map((_, pageIndex) => (
+                  <li key={pageIndex}>
+                    <a
+                      onClick={() => setCreditTargetPage(pageIndex + 1)}
+                      disabled={userCreditTargetPage === pageIndex + 1} // 현재 페이지와 같으면 비활성화
+                      className={
+                        userCreditTargetPage === pageIndex + 1 ? "active" : ""
+                      }
+                    >
+                      {pageIndex + 1}
+                    </a>
+                  </li>
+                ))}
               </CreditDashBoardWrap>
             </>
           }
@@ -1068,4 +1305,8 @@ const ViewInfoNodata = styled(ViewInfo)`
       }
     }
   }
+`;
+
+const PageWrap = styled.div`
+  width: 100%;
 `;
