@@ -109,6 +109,7 @@ const MoleculePersonaSelectCard = ({
           key={persona.persona_id}
           selected={true}
           anySelected={true}
+          interviewType={interviewType}
         >
           {/* 카드 내용 렌더링 */}
           <Persona color="Linen" size="Large" Round>
@@ -155,6 +156,7 @@ const MoleculePersonaSelectCard = ({
           key={persona.persona_id}
           selected={false}
           anySelected={personaListState.selected.length > 0}
+          interviewType={interviewType}
         >
           {/* 카드 내용 렌더링 */}
           <Persona color="Linen" size="Large" Round>
@@ -214,13 +216,29 @@ const ListBoxItem = styled.div`
   padding: 16px;
   border-radius: 10px;
   background: ${(props) => props.theme.white};
-  // border: 1px solid
-  /* ${(props) =>
-    props.selected ? palette.outlineGray : palette.outlineGray}; */
-  opacity: ${(props) => (props.anySelected && !props.selected ? 0.5 : 1)};
+  opacity: ${(props) =>
+    props.interviewType === "single" && props.anySelected && !props.selected
+      ? 0.5
+      : 1
+  };
+  
+  // hover 효과 추가
+  transition: background-color 0.2s ease;
+  
+  ${(props) =>
+    props.interviewType === "single" &&
+    !props.selected &&
+    `
+    &:hover {
+      border-radius: 10px;
+      background-color: ${palette.chatGray};
+      cursor: pointer;
+    }
+  `}
 
   + div {
     border-top: 1px solid ${palette.outlineGray};
+    border-radius: 0;
   }
 `;
 

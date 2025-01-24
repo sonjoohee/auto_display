@@ -28,6 +28,7 @@ const PopupWrap = ({
   isFormValid,
   Wide,
   TitleFlex,
+  TitleBorder,
   showTabs,
   activeTab,
   onTabChange,
@@ -117,7 +118,7 @@ const PopupWrap = ({
   return (
     <PopupBox>
       {isModal ? (
-        <ModalPopup Wide={Wide}>
+        <ModalPopup Wide={Wide} TitleBorder={TitleBorder}>
           <Header>
             {title}
             <CloseButton TitleFlex={TitleFlex} onClick={handleClose} />
@@ -225,7 +226,7 @@ export const AlertPopup = styled.div`
 `;
 
 export const ModalPopup = styled(AlertPopup)`
-  gap: 32px;
+  gap: ${(props) => (props.TitleBorder ? "20px" : "32px")};
   // max-width: 800px;
   max-width: ${(props) => (props.Wide ? "820px" : "583px")};
   padding: 32px;
