@@ -263,6 +263,8 @@ import KeyCircle from "../images/key-circle.svg";
 import ListUserSearch from "../images/list-user-search.svg";
 import ChatPlus from "../icons/ChatPlus";
 
+import Repeat from "../images/repeat.svg";
+
 const images = {
   Logo,
   SymbolLogo,
@@ -515,6 +517,8 @@ const images = {
 
   ListUserSearch,
   ChatPlus,
+
+  Repeat,
 }
 
 export default images;
