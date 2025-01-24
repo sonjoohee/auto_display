@@ -366,7 +366,9 @@ const PageMyProject = () => {
                 <DashboardCard>
                   <Body2 color="gray500">인터뷰 진행 건(수)</Body2>
                   <DashboardAmount>
-                    <H3 color="gray800">0건</H3>
+                    <H3 color="gray800">
+                      {projectList.reduce((total, proj) => total + (proj.reportList?.length || 0), 0)}건
+                    </H3>
                   </DashboardAmount>
                 </DashboardCard>
                 <DashboardCard>
