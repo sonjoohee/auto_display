@@ -2954,3 +2954,60 @@ export const Tooltip = styled.div`
     visibility: visible;
   }
 `;
+
+export const PaginationWrap = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 64px;
+`;
+
+export const NumbersWrapper = styled.ul`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    a {
+      padding: 0 9px;
+      border-radius: 2px;
+      cursor: pointer;
+
+      &.active, &.active > * {
+        color: ${palette.primary};
+        background: #F0F4FF;
+      }
+    }
+  }
+
+`;
+
+export const ArrowButton = styled.div`
+  transform: ${props => 
+    props.$direction === 'left' 
+    ? 'rotate(180deg)' 
+    : 'rotate(0)'
+  };
+  cursor: pointer;
+`;
+
+export const Dots = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+`;
+
+export const Dot = styled.div`
+  width: 3px;
+  height: 3px;
+  background: ${palette.gray300};
+  border-radius: 50%;
+`;
