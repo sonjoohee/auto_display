@@ -124,14 +124,18 @@ const OrganismProjectCard = ({ project, index }) => {
   };
 
   //인터뷰 상세보기
-  const navigateToInterviewReportDescriptionPage = (reportId) => {
+  const navigateToInterviewReportDescriptionPage = (report) => {
     setProjectId(project._id);
-    setReportId(reportId);
+    setReportId(report.reportId);
     setReportDescriptionLoadButtonState(true);
     // setPersonaStep(4);
     setReportLoadButtonState(true);
     setIsPersonaAccessible(true);
-    navigate(`/Persona/4/${project._id}`);
+    if (report.interviewType === "single") {
+      navigate(`/Persona/4/Single/${project._id}`);
+    } else {
+      navigate(`/Persona/4/${project._id}`);
+    }
   };
 
   return (
@@ -215,51 +219,53 @@ const OrganismProjectCard = ({ project, index }) => {
       {openStates[index] && (
         <ProjectView className={closingStates[index] ? "closing" : ""}>
           {project.reportList && project.reportList.length > 0 ? (
-            project.reportList.map((report, reportIndex) => (
-              <ViewInfo key={reportIndex}>
-                <div className="title">
-                  {report.theoryType}
-                  <span>{report.createDate}</span>
-                </div>
-                <div className="info">
-                  <div>
-                    <span>
-                      <img src={images.FileSearch} alt="문항수" />
-                      문항수
-                    </span>
-                    <p>{report.interviewData || 0}개</p>
+            [...project.reportList]
+              .sort((a, b) => new Date(b.createDate) - new Date(a.createDate))
+              .map((report, reportIndex) => (
+                <ViewInfo key={reportIndex}>
+                  <div className="title">
+                    {report.theoryType}
+                    <span>{report.createDate}</span>
                   </div>
-                  <div>
-                    <span>
-                      <img src={images.People} alt="참여페르소나" />
-                      참여페르소나
-                    </span>
-                    <p>{report.selectedPersona || 0}명</p>
+                  <div className="info">
+                    <div>
+                      <span>
+                        <img src={images.FileSearch} alt="문항수" />
+                        문항수
+                      </span>
+                      <p>{report.interviewData || 0}개</p>
+                    </div>
+                    <div>
+                      <span>
+                        <img src={images.People} alt="참여페르소나" />
+                        참여페르소나
+                      </span>
+                      <p>{report.selectedPersona || 0}명</p>
+                    </div>
                   </div>
-                </div>
-                <div className="button">
-                  <Button
-                    Small
-                    Outline
-                    Fill
-                    onClick={() =>
-                      navigateToInterviewReportDescriptionPage(report)
-                    }
-                    className="view"
-                  >
-                    인터뷰 상세 보기
-                  </Button>
-                  <Button
-                    Small
-                    Primary
-                    onClick={() => navigateToInterviewReportPage(report)}
-                    className="analysis"
-                  >
-                    결과 분석 보기
-                  </Button>
-                </div>
-              </ViewInfo>
-            ))
+                  <div className="button">
+                    <Button
+                      Small
+                      Outline
+                      Fill
+                      onClick={() =>
+                        navigateToInterviewReportDescriptionPage(report)
+                      }
+                      className="view"
+                    >
+                      인터뷰 상세 보기
+                    </Button>
+                    <Button
+                      Small
+                      Primary
+                      onClick={() => navigateToInterviewReportPage(report)}
+                      className="analysis"
+                    >
+                      결과 분석 보기
+                    </Button>
+                  </div>
+                </ViewInfo>
+              ))
           ) : (
             <ViewInfoNodata>
               <div>

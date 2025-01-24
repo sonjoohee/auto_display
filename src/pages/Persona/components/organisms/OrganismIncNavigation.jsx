@@ -11,6 +11,7 @@ import axios from "axios";
 import { SubtractiveBlending } from "three/src/constants.js";
 import panelimages from "../../../../assets/styles/PanelImages";
 import PopupWrap from "../../../../assets/styles/Popup";
+import { Caption2 } from "../../../../assets/styles/Typography";
 
 import {
   PASSWORD,
@@ -1405,29 +1406,41 @@ const OrganismIncNavigation = () => {
                 className="AccountInfo"
               >
                 <div className="info">
-                  <strong>{sessionStorage.getItem("userName")}</strong>{" "}
+                  <div className="userName">
+                    <strong>{sessionStorage.getItem("userName")}</strong>
+                    {/* 일반일때 Grade General */}
+                    <Grade General />
+                    {/* 구독일때 Grade */}
+                    <Grade />
+                  </div>
                   {/* 유저 이름 표시 */}
-                  <p>{sessionStorage.getItem("userEmail")}</p>{" "}
+                  <Caption2 color="gray500" align="left">{sessionStorage.getItem("userEmail")}</Caption2>
                   {/* 유저 이메일 표시 */}
                 </div>
 
                 <ul>
                   {/* 소셜 로그인 상태가 아닐 때만 비밀번호 변경 버튼을 표시 */}
                   {!isSocialLoggedIn && (
+                    // <li>
+                    //   <button type="button" onClick={handleAccountClick}>
+                    //     <img src={images.AccountSetting} alt="" />
+                    //     비밀번호 변경
+                    //   </button>
+                    // </li>
                     <li>
-                      <button type="button" onClick={handleAccountClick}>
+                      <button type="button" onClick={() => navigate("/MyProfile")}>
                         <img src={images.AccountSetting} alt="" />
-                        비밀번호 변경
+                        계정 설정
                       </button>
                     </li>
                   )}
 
-                  <li>
+                  {/* <li>
                     <button type="button">
                       <img src={images.AccountInfo} alt="" />
                       정책 및 약관 정보
                     </button>
-                  </li>
+                  </li> */}
 
                   <li>
                     <button type="button" onClick={handleLogoutClick}>
@@ -2599,10 +2612,21 @@ const LogoutToggle = styled.div`
     border-bottom: 1px solid ${palette.lineGray};
   }
 
-  ul,
-  strong,
-  p {
-    display: block;
+  .userName {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: ${palette.gray700};
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
     width: 100%;
     text-align: left;
     word-wrap: break-word;
@@ -2616,19 +2640,42 @@ const LogoutToggle = styled.div`
     justify-content: flex-start;
     gap: 8px;
 
-    + li {
-      margin-top: 20px;
-    }
-
     button {
       display: flex;
       align-items: center;
       gap: 8px;
       font-family: "Pretendard", "Poppins";
-      font-weight: 300;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.60);
       padding: 0;
       border: 0;
       background: none;
     }
   }
 `;
+
+const Grade = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: ${(props) => (
+    props.General 
+    ? palette.primaryLightest 
+    : palette.primary
+  )};
+
+  &:before {
+    font-size: 0.63rem;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.3px;
+    color: ${(props) => (
+      props.General 
+      ? palette.primary 
+      : palette.white
+    )};
+    content: "${props => props.General ? '일반' : '구독'}";
+  }
+`

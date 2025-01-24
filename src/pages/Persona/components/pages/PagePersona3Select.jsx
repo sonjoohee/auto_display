@@ -184,8 +184,8 @@ const PagePersona3Select = () => {
     setCustomizations(newCustomizations);
   };
 
-  const handlePersonaSelect = (personaId) => {
-    setSelectedPersonas(personaId);
+  const handlePersonaSelect = (personaImg) => {
+    setSelectedPersonas(personaImg);
   };
 
   const getSelectedCount = () => {
@@ -256,8 +256,8 @@ const PagePersona3Select = () => {
                                 .map((persona, index) => (
                                   <Persona key={index} size="Small" Round>
                                     <img
-                                      src={persona.profileImage}
-                                      alt={`선택된 페르소나 ${index + 1}`}
+                                      src={`/ai_person/${persona.personaImg}.png`}
+                                      alt={persona.persona}
                                     />
                                   </Persona>
                                 ))}
@@ -265,8 +265,8 @@ const PagePersona3Select = () => {
                           ) : (
                             <Persona size="Small" Round>
                               <img
-                                src={selectedPersonas.profileImage}
-                                alt="선택된 페르소나"
+                                src={`/ai_person/${selectedPersonas.personaImg}.png`}
+                                alt={selectedPersonas.persona}
                               />
                             </Persona>
                           ))}
@@ -281,8 +281,11 @@ const PagePersona3Select = () => {
                           <Tooltip>
                             <span>?</span>
                             <Caption2 align="left" color="white">
-                              반응형 인터뷰란?<br />
-                              페르소나의 답변에 맞춰, 모더레이터가 자동으로 추가 질문을 제시하는<br />
+                              반응형 인터뷰란?
+                              <br />
+                              페르소나의 답변에 맞춰, 모더레이터가 자동으로 추가
+                              질문을 제시하는
+                              <br />
                               맞춤형 인터뷰 방식 입니다.
                             </Caption2>
                           </Tooltip>
@@ -342,6 +345,11 @@ const PagePersona3Select = () => {
                   onClick={handleStartInterview}
                 >
                   인터뷰 시작
+                  <images.ChevronRight
+                    width="20px"
+                    height="20px"
+                    color="white"
+                  />
                   {/* <img src={images.ChevronRight} alt="인터뷰 시작" /> */}
                 </Button>
               </BottomBar>

@@ -251,11 +251,11 @@ const PagePolicy = () => {
                 </li>
               </CircleNumber>
 
-              <Sub3 align="left" color="gray700">
+              {/* <Sub3 align="left" color="gray700">
                 - 앱 : 앱 우측상단 “≡” > 설정 > 계정관리 > 회원 탈퇴
-              </Sub3>
+              </Sub3> */}
               <Sub3 align="left" color="gray700">
-                - 웹 : 우측상단(이름) > 설정 > 회원 탈퇴
+                - 웹 : 좌측 하단(이름) > 계정 설정 > 회원 탈퇴
               </Sub3>
 
               <CircleNumber>

@@ -275,44 +275,45 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
     const interviewLoading = async () => {
       // 인터뷰 스크립트 보기, 인터뷰 상세보기로 진입 시 isComplete는 True
       if (isComplete) {
-        const questions = interviewData.map((item) => ({
-          question: item.question_1 || item.question_2 || item.question_3,
-        }));
+        console.log("인터뷰 불러오기 1");
+        const questions = interviewData.map((item) => {
+          // 모든 question 키를 찾아서 값이 있는 첫 번째 question을 반환
+          const questionKeys = Object.keys(item).filter((key) =>
+            key.startsWith("question_")
+          );
+          const question = questionKeys.map((key) => item[key]).find((q) => q);
+          return { question };
+        });
+        console.log("Loaded questions:", questions); // 여기 콘솔로
+
+        console.log("questions:", questions);
+     
         setInterviewQuestionListState(questions);
+        console.log("Updated interviewQuestionListState:", questions); // Log the updated state
         // 모든 질문을 Complete 상태로 설정
-        const completedStatus = new Array(interviewData.length).fill(
-          "Complete"
-        );
+        const completedStatus = new Array(interviewData.length).fill("Complete");
         setInterviewStatus(completedStatus);
 
         const newAnswers = {};
+        console.log("인터뷰 불러오기 2", interviewData);
 
         questions.forEach((_, index) => {
-          const answers = interviewData[index][`answer_${index + 1}`];
+          const answers = interviewData[index].answer;
           newAnswers[index] = (
             selectedPersonaList.length
               ? selectedPersonaList
               : personaList.selected
           ).map((persona, pIndex) => {
-            // profile 문자열에서 정보 추출
-            const profileArray = persona.profile
-              .replace(/['\[\]]/g, "")
-              .split(", ");
-            const age = profileArray[0].split(": ")[1];
-            const gender =
-              profileArray[1].split(": ")[1] === "남성" ? "남성" : "여성";
-            const job = profileArray[2].split(": ")[1];
-
+            // Ensure that answers[pIndex] exists
+            const answer = answers && answers[pIndex] !== undefined ? answers[pIndex] : null;
             return {
               persona: persona,
-              gender: gender,
-              age: age,
-              job: job,
-              answer: answers[pIndex],
+              answer: answer,
             };
           });
         });
         setAnswers(newAnswers);
+        console.log("🚀 ~ interviewLoading ~ newAnswers:", newAnswers);
 
         // 모든 답변을 보이도록 설정
         const allVisible = {};
@@ -322,6 +323,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
         setVisibleAnswers(allVisible);
         setIsLoadingPrepare(false);
 
+        console.log("🚀 ~ questions.forEach ~ questions:", questions);
         return; // isComplete가 True일 때 API 호출 없이 종료
       }
 
@@ -351,13 +353,13 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             ...existingQuestions.commonQuestions,
             ...existingQuestions.specialQuestions,
           ];
-          // setInterviewQuestionListState([combinedQuestions[0]]);
-          setInterviewQuestionListState(combinedQuestions);
+          setInterviewQuestionListState([combinedQuestions[0]]); // 질문 한개 테스트
+          // setInterviewQuestionListState(combinedQuestions);
 
           await new Promise((resolve) => setTimeout(resolve, 5000));
           setIsLoadingPrepare(false);
-          // setInterviewStatus(["Pre"]); // 테스트 하나
-          setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
+          setInterviewStatus(["Pre"]); // 테스트 하나
+          // setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
         } else {
           // 생성된 질문이 없다면 API 요청
           let data = {
@@ -956,7 +958,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
           <React.Fragment key={index}>
             {/* 모더레이터의 질문 */}
             <ChatItem Moder>
-              <Persona color="Gainsboro" size="Medium" Round>
+              <Persona Moder color="Gainsboro" size="Medium" Round>
                 <img src={personaImages.PersonaModer} alt="모더" />
                 <span>
                   <img src={images.PatchCheckFill} alt="" />
@@ -965,7 +967,8 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
               </Persona>
               <ChatBox Moder>
                 <Sub1 color="gray800" align="left">
-                  Q{index + 1}. {item}
+                  {console.log("현재 질문:", item.question)} {/* 콘솔에 질문 출력 */}
+                  Q{index + 1}. {item.question}
                 </Sub1>
               </ChatBox>
             </ChatItem>
@@ -1011,29 +1014,69 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
     });
   };
 
-  // 이미 완료된 인터뷰를 확인할 때 사용 ex)인터뷰 스크립트 보기, 인터뷰 상세보기
+  // 이미 완료된 인터뷰를 확인할 때 사용
   const renderInterviewItemsComplete = () => {
-    return interviewQuestionListState.map((item, index) => (
-      <InterviewItem key={index} status={"Complete"}>
-        <QuestionWrap
-          onClick={() => handleAnswerToggle(index)}
-          status={"Complete"}
-          style={{ cursor: "pointer" }}
-          isOpen={visibleAnswers[index]}
-        >
-          <Status status={"Complete"}>완료</Status>
-          <QuestionText>
-            Q{index + 1}. {item}
-          </QuestionText>
-        </QuestionWrap>
-        {visibleAnswers[index] && (
-          <AnswerWrap>{renderAnswersComplete(index)}</AnswerWrap>
-        )}
-      </InterviewItem>
-    ));
+    console.log("인터뷰 완료 렌더링");
+
+    // interviewData에서 질문과 답변을 추출
+    const questionsAndAnswers = interviewData.map((item) => {
+      const questionKeys = Object.keys(item).filter((key) =>
+        key.startsWith("question")
+      );
+      const question = questionKeys.map((key) => item[key]).find((q) => q);
+      const answer = item.answer; // 답변을 가져옴
+      return { question, answer }; // 질문과 답변을 반환
+    }).filter(q => q.question); // 유효한 질문만 필터
+
+    return questionsAndAnswers.map((item, index) => {
+      const status = interviewStatus[index]; // 질문 상태 가져오기
+      console.log("질문 상태:", status); // 각 질문의 상태 로그
+      if (status === "Complete") {
+        console.log("질문:", item.question); // 질문 로그
+        console.log("답변:", item.answer); // 답변 로그
+        return (
+          <React.Fragment key={index}>
+            {/* 모더레이터의 질문 */}
+            <ChatItem Moder>
+              <Persona color="Gainsboro" size="Medium" Round>
+                <img src={personaImages.PersonaModer} alt="모더" />
+                <span>
+                  <img src={images.PatchCheckFill} alt="" />
+                  <Helptext color="primary">모더</Helptext>
+                </span>
+              </Persona>
+              <ChatBox Moder>
+                <Sub1 color="gray800" align="left">
+                {console.log("현재 질문:", item.question)} 
+                  Q{index + 1}. {item.question}
+                </Sub1>
+              </ChatBox>
+            </ChatItem>
+            </React.Fragment>
+
+          //   <ChatItem Persona>
+          //     <Persona color="Linen" size="Medium" Round>
+          //       {/* <img
+          //         src={`/ai_person/${item.answer.persona.personaImg}.jpg`} // Adjusted to use item.answer
+          //         alt={item.answer.persona.persona}
+          //       /> */}
+          //     </Persona>
+          //     <ChatBox Persona>
+          //       <Sub1 color="gray800" align="left">
+          //         {console.log("현재 질문:",item.answer)}
+          //         {item.answer}
+          //       </Sub1>
+          //     </ChatBox>
+          //   </ChatItem>
+          // </React.Fragment>
+        );
+      }
+      return null; // 상태가 "Complete"가 아닐 경우 null 반환
+    });
   };
 
   const handleCheckResult = async () => {
+  
     setActive(false);
     if (onClose) {
       onClose();
@@ -1112,6 +1155,24 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
       setShowErrorPopup(true);
     }
   };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      // Enter 키가 눌렸을 때의 동작을 여기에 추가하세요.
+      handleAddQuestionGenerate(); // 예시: 질문 추가 함수 호출
+    }
+  };
+
+  // 추가: useEffect를 사용하여 isInputEnabled가 true로 변경될 때 포커스 설정
+  useEffect(() => {
+    if (isInputEnabled) {
+      document.querySelector('input[type="text"]').focus(); // 입력 필드에 포커스
+    }
+  }, [isInputEnabled]); // isInputEnabled가 변경될 때마다 실행
+
+  // 라디오 버튼 선택 상태를 관리하기 위한 새로운 state 추가
+  const [selectedRadio, setSelectedRadio] = useState(null);
+
   return (
     <>
       <PopupBox isActive={active}>
@@ -1226,12 +1287,12 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                   </LoadingBox>
                 ))}
 
-              {/* {!isLoadingPrepare && isComplete
+              {!isLoadingPrepare && isComplete
                 ? renderInterviewItemsComplete()
-                : renderInterviewItems()} */}
+                : renderInterviewItems()}
 
               <ChatListWrap>
-                {renderInterviewItems()}
+                {/* {renderInterviewItems()} */}
                 {/* 모든 질문이 Complete 상태일 때만 추가 질문 메시지 표시 */}
                 {interviewStatus.length > 0 &&
                   interviewStatus.every((status) => status === "Complete") &&
@@ -1244,21 +1305,59 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                         </Sub1>
                       </ChatBox>
                       <ChatAddButton>
-                        <button
+                        <label
+                          disabled={countAdditionalQuestion === 0 || selectedRadio !== null}
+                          onClick={() => {
+                            if (selectedRadio === null) {
+                              setSelectedRadio('yes');
+                              setIsInputEnabled(true);
+                              setInputValue("");
+                            }
+                          }}
+                        >
+                          <input 
+                            type="radio" 
+                            name="addQuestion" 
+                            checked={selectedRadio === 'yes'}
+                            disabled={selectedRadio !== null}
+                          />
+                          <span>네, 있습니다!</span>
+                        </label>
+
+                        <label
+                          disabled={selectedRadio !== null}
+                          onClick={() => {
+                            if (selectedRadio === null) {
+                              setSelectedRadio('no');
+                              loadInterviewReport();
+                            }
+                          }}
+                        >
+                          <input 
+                            type="radio" 
+                            name="addQuestion" 
+                            checked={selectedRadio === 'no'}
+                            disabled={selectedRadio !== null}
+                          />
+                          <span>아니요, 괜찮습니다.</span>
+                        </label>
+
+                        {/* <button
                           type="button"
                           disabled={countAdditionalQuestion === 0}
                           onClick={() => {
-                            setIsInputEnabled(true);
+                            setIsInputEnabled(true); // 입력 필드 활성화
+                            setInputValue(""); // 입력 필드 초기화
                           }}
                         >
                           네, 있습니다!
                         </button>
                         <button
                           type="button"
-                          onClick={() => loadInterviewReport()} // Hide the question list
+                          onClick={() => loadInterviewReport()} // 질문 목록 숨기기
                         >
                           아니요, 괜찮습니다.
-                        </button>
+                        </button> */}
                       </ChatAddButton>
                     </ChatItem>
                   )}
@@ -1345,7 +1444,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                           ${countAdditionalQuestion === 0 ? "disabled" : ""}
                         `}
                       >
-                        <Body3 color="gray800">
+                        <Body3 color="gray800" align="left">
                           Q{index + 1}. {value}
                         </Body3>
                         <div>
@@ -1362,6 +1461,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                   Edit
                   type="text"
                   value={inputValue}
+                  onKeyPress={handleKeyPress} // 여기에 handleKeyPress 사용
                   onChange={handleInputChange}
                   placeholder="Pro 요금제를 사용하시면 해당란에 원하시는 정보를 입력하여 추가 정보를 얻으실 수 있습니다."
                   disabled={!isInputEnabled}
@@ -1605,6 +1705,58 @@ const ChatAddButton = styled.div`
   gap: 8px;
   width: 100%;
 
+  label {
+    span {
+      font-family: "Pretendard", "Poppins";
+      font-size: 0.88rem;
+      color: ${palette.gray700};
+      font-weight: 400;
+      line-height: 1.55;
+      letter-spacing: -0.42px;
+      padding: 5px 12px;
+      border-radius: 40px;
+      border: 1px solid ${palette.gray700};
+      outline: none;
+      background: transparent;
+      transition: all 0.5s;
+      cursor: pointer;
+
+      &:hover {
+        color: ${palette.white};
+        border: 1px solid ${palette.gray800};
+        background: ${palette.gray800};
+      }
+    }
+
+    input[type="radio"] {
+      display: none;
+
+      &:checked {
+        + span {
+          color: ${palette.white};
+          border: 1px solid ${palette.gray800};
+          background: ${palette.gray800};
+        }
+
+        &:disabled {
+          + span {
+            border-color: ${palette.gray300};
+            background: transparent;
+            cursor: not-allowed;
+          }
+        }
+
+        &:hover {
+          + span {
+            color: ${palette.white};
+            border: 1px solid ${palette.gray300};
+            background: ${palette.gray300};
+          }
+        }
+      }
+    }
+  }
+
   button {
     flex-shrink: 0;
     font-family: "Pretendard", "Poppins";
@@ -1620,9 +1772,26 @@ const ChatAddButton = styled.div`
     background: transparent;
     transition: all 0.5s;
 
+    &:hover:not(:disabled) {
+      color: ${palette.primary};
+      border-color: ${palette.primary};
+      background: rgba(34, 111, 255, 0.04);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
     &:hover {
       color: ${palette.white};
       background: ${palette.gray800};
+    }
+
+    &[type="button"]:active {
+      color: ${palette.primary};
+      border-color: ${palette.primary};
+      background: rgba(34, 111, 255, 0.04);
     }
   }
 `;
@@ -1731,7 +1900,11 @@ const ChatInput = styled.div`
   width: 100%;
   padding: 12px 14px 12px 20px;
   border-radius: 50px;
-  border: 1px solid ${palette.outlineGray};
+
+  border: ${(props) =>
+    props.isInputEnabled
+      ? `1px solid ${palette.primary}`
+      : `1px solid ${palette.outlineGray}`};
   background: ${palette.white};
   transition: all 0.3s ease;
 
@@ -2302,3 +2475,5 @@ const AddQuestionTitle = styled.div`
   justify-content: space-between;
   width: 100%;
 `;
+
+

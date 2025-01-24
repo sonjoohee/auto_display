@@ -49,6 +49,8 @@ import PageInterviewWay from "./pages/Design_Page/PageInterviewWay";
 import PagePersonaSelect from "./pages/Design_Page/PagePersonaSelect";
 import PagePayment from "./pages/Persona/components/pages/PagePayment";
 
+import PageMyProfile from "./pages/Persona/components/pages/PageMyProfile";
+
 import PageTerms from "./pages/PageTerms";
 import PagePolicy from "./pages/PagePolicy";
 
@@ -281,6 +283,8 @@ function App() {
           <Route path="/InterviewWay" element={<PageInterviewWay />} /> */}
           <Route path="/PersonaSelect" element={<PagePersonaSelect />} />
           <Route path="/Payment" element={<PagePayment />} />
+
+          <Route path="/MyProfile" element={<PageMyProfile />} />
 
           <Route path="/Terms" element={<PageTerms />} />
           <Route path="/Policy" element={<PagePolicy />} />
