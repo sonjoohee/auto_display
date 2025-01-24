@@ -1038,6 +1038,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
     if (onClose) {
       onClose();
     }
+    setSelectedPersonaList(personaList.selected);
     setIsPersonaAccessible(true);
     try {
       // 인터뷰 완료 후 결과 저장하기 위해 새로운 리포트 생성 (나중에 리포트 조회)

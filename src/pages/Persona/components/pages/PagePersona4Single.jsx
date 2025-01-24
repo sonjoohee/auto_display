@@ -109,9 +109,8 @@ const PagePersona4 = () => {
   const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(
     SELECTED_INTERVIEW_PURPOSE
   );
-  const [selectedInterviewPurposeData] = useAtom(
-    SELECTED_INTERVIEW_PURPOSE_DATA
-  );
+  const [selectedInterviewPurposeData, setSelectedInterviewPurposeData] =
+    useAtom(SELECTED_INTERVIEW_PURPOSE_DATA);
   const [reportReady, setReportReady] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
@@ -271,8 +270,8 @@ const PagePersona4 = () => {
         );
         if (savedProjectReportInfo) {
           setSelectedInterviewPurpose(savedProjectReportInfo.theory_type);
+          setSelectedInterviewPurposeData(savedProjectReportInfo.purposeData);
           setInterviewData(savedProjectReportInfo.interviewData);
-          setPersonaList(savedProjectReportInfo.personaList);
           setSelectedPersonaList(savedProjectReportInfo.personaList);
           setInterviewReport(savedProjectReportInfo.interviewReport);
           setInterviewReportAdditional(
@@ -293,57 +292,19 @@ const PagePersona4 = () => {
       } else {
         // 2. 새로 생성된 보고서
         if (reportId) {
-          if (selectedInterviewType === "multiple") {
-            await updateProjectReportOnServer(
-              reportId,
-              {
-                interviewType: selectedInterviewType,
-                theoryType: selectedInterviewPurpose,
-                interviewData: interviewData,
-                personaList: personaList.selected,
-                interviewReport: interviewReport,
-                interviewReportAdditional: interviewReportAdditional,
-              },
-              isLoggedIn
-            );
-            const currentProject = await getProjectByIdFromIndexedDB(
-              projectId,
-              isLoggedIn
-            );
-            const currentReportList = currentProject?.reportList || [];
-
-            await updateProjectOnServer(
-              //프로젝트의 리포트 목록 업데이트하기 위해서 (나중에 모든 인터뷰 리포트 이력 확인 할 때 사용)
-              projectId,
-              {
-                reportList: [
-                  ...currentReportList, // 서버의 기존 데이터 유지
-                  {
-                    reportId: reportId,
-                    interviewType: selectedInterviewType,
-                    reportTitle: selectedInterviewPurpose,
-                    interviewData: interviewData.length,
-                    selectedPersona: personaList.selected.length,
-                    createDate: new Date().toLocaleString("ko-KR", {
-                      timeZone: "Asia/Seoul",
-                    }),
-                  },
-                ],
-              },
-              isLoggedIn
-            );
-          } else if (selectedInterviewType === "single") {
+          if (selectedInterviewType === "single") {
             console.log(
               "🚀 ~ loadProjectReport ~ reportId2222222222222:",
-              selectedInterviewPurposeData.theory_name
+              selectedInterviewPurposeData
             );
             await updateProjectReportOnServer(
               reportId,
               {
                 interviewType: selectedInterviewType,
-                reportTitle: selectedInterviewPurposeData.theory_title,
+                reportTitle: selectedInterviewPurposeData.title,
                 interviewData: interviewData,
                 personaList: personaList.selected,
+                purposeData: selectedInterviewPurposeData,
                 singleInterviewReportTab1: singleInterviewReportTab1,
                 singleInterviewReportTab2: singleInterviewReportTab2,
                 singleInterviewReportTab3: singleInterviewReportTab3,
@@ -365,7 +326,7 @@ const PagePersona4 = () => {
                   {
                     reportId: reportId,
                     interviewType: selectedInterviewType,
-                    theoryType: selectedInterviewPurposeData.theory_title,
+                    theoryType: selectedInterviewPurposeData.title,
                     interviewData: interviewData.length,
                     selectedPersona: personaList.selected.length,
                     createDate: new Date().toLocaleString("ko-KR", {
@@ -555,8 +516,8 @@ const PagePersona4 = () => {
                   <ReportHeader>
                     <Title>
                       <H2>
-                        {selectedInterviewPurposeData?.theory_title || "인터뷰"}{" "}
-                        결과 리포트
+                        {selectedInterviewPurposeData?.title || "인터뷰"} 결과
+                        리포트
                       </H2>
                       <Button Primary onClick={handleEnterInterviewRoom}>
                         <img
@@ -744,26 +705,17 @@ const PagePersona4 = () => {
                           </div>
                           <div className="info">
                             <Body1>
-                              {personaList?.selected[0]?.persona_view ||
-                                selectedPersonaList?.selected[0]
-                                  ?.persona_view ||
-                                ""}
+                              {selectedPersonaList[0]?.persona_view || ""}
                             </Body1>
                             <PersonaInfo>
                               <Body3 color="gray500">
-                                {personaList?.selected[0]?.gender ||
-                                  selectedPersonaList?.selected[0]?.gender ||
-                                  ""}
+                                {selectedPersonaList[0]?.gender || ""}
                               </Body3>
                               <Body3 color="gray500">
-                                {personaList?.selected[0]?.age ||
-                                  selectedPersonaList?.selected[0]?.age ||
-                                  ""}
+                                {selectedPersonaList[0]?.age || ""}
                               </Body3>
                               <Body3 color="gray500">
-                                {personaList?.selected[0]?.job ||
-                                  selectedPersonaList?.selected[0]?.job ||
-                                  ""}
+                                {selectedPersonaList[0]?.job || ""}
                               </Body3>
                             </PersonaInfo>
                           </div>
