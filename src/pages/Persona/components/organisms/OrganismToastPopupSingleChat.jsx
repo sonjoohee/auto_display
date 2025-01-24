@@ -1170,6 +1170,9 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
     }
   }, [isInputEnabled]); // isInputEnabled가 변경될 때마다 실행
 
+  // 라디오 버튼 선택 상태를 관리하기 위한 새로운 state 추가
+  const [selectedRadio, setSelectedRadio] = useState(null);
+
   return (
     <>
       <PopupBox isActive={active}>
@@ -1302,7 +1305,44 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                         </Sub1>
                       </ChatBox>
                       <ChatAddButton>
-                        <button
+                        <label
+                          disabled={countAdditionalQuestion === 0 || selectedRadio !== null}
+                          onClick={() => {
+                            if (selectedRadio === null) {
+                              setSelectedRadio('yes');
+                              setIsInputEnabled(true);
+                              setInputValue("");
+                            }
+                          }}
+                        >
+                          <input 
+                            type="radio" 
+                            name="addQuestion" 
+                            checked={selectedRadio === 'yes'}
+                            disabled={selectedRadio !== null}
+                          />
+                          <span>네, 있습니다!</span>
+                        </label>
+
+                        <label
+                          disabled={selectedRadio !== null}
+                          onClick={() => {
+                            if (selectedRadio === null) {
+                              setSelectedRadio('no');
+                              loadInterviewReport();
+                            }
+                          }}
+                        >
+                          <input 
+                            type="radio" 
+                            name="addQuestion" 
+                            checked={selectedRadio === 'no'}
+                            disabled={selectedRadio !== null}
+                          />
+                          <span>아니요, 괜찮습니다.</span>
+                        </label>
+
+                        {/* <button
                           type="button"
                           disabled={countAdditionalQuestion === 0}
                           onClick={() => {
@@ -1317,7 +1357,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                           onClick={() => loadInterviewReport()} // 질문 목록 숨기기
                         >
                           아니요, 괜찮습니다.
-                        </button>
+                        </button> */}
                       </ChatAddButton>
                     </ChatItem>
                   )}
@@ -1664,6 +1704,58 @@ const ChatAddButton = styled.div`
   justify-content: flex-end;
   gap: 8px;
   width: 100%;
+
+  label {
+    span {
+      font-family: "Pretendard", "Poppins";
+      font-size: 0.88rem;
+      color: ${palette.gray700};
+      font-weight: 400;
+      line-height: 1.55;
+      letter-spacing: -0.42px;
+      padding: 5px 12px;
+      border-radius: 40px;
+      border: 1px solid ${palette.gray700};
+      outline: none;
+      background: transparent;
+      transition: all 0.5s;
+      cursor: pointer;
+
+      &:hover {
+        color: ${palette.white};
+        border: 1px solid ${palette.gray800};
+        background: ${palette.gray800};
+      }
+    }
+
+    input[type="radio"] {
+      display: none;
+
+      &:checked {
+        + span {
+          color: ${palette.white};
+          border: 1px solid ${palette.gray800};
+          background: ${palette.gray800};
+        }
+
+        &:disabled {
+          + span {
+            border-color: ${palette.gray300};
+            background: transparent;
+            cursor: not-allowed;
+          }
+        }
+
+        &:hover {
+          + span {
+            color: ${palette.white};
+            border: 1px solid ${palette.gray300};
+            background: ${palette.gray300};
+          }
+        }
+      }
+    }
+  }
 
   button {
     flex-shrink: 0;
