@@ -1146,10 +1146,7 @@ const PagePersona4 = () => {
                       <>
                         <Persona color="Linen" size="Large" Round>
                           <img
-                            src={
-                              personaImages[selectedPersonaList[0].image] ||
-                              personaImages.PersonaWomen01
-                            }
+                            src={`/ai_person/${selectedPersonaList[0].personaImg}.png`}
                             alt="페르소나"
                           />
                         </Persona>
@@ -1175,9 +1172,9 @@ const PagePersona4 = () => {
                     )}
                   </PersonaInfoContent>
 
-                  <Button Medium PrimaryLightest Fill>
+                  {/* <Button Medium PrimaryLightest Fill>
                     같은 페르소나에게 다른 질문하기
-                  </Button>
+                  </Button> */}
                 </PersonaInfoWrap>
 
                 <WaitPersonaWrap>
