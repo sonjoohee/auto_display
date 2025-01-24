@@ -4,7 +4,8 @@ import styled, { css } from "styled-components";
 import { Link, useLocation } from "react-router-dom";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
-import { Body2, Sub2 } from "../../../../assets/styles/Typography";
+import { Body2, Sub1, Sub2, Sub3, Caption2 } from "../../../../assets/styles/Typography";
+import { CreditTotal, CreditDashBoardItem } from "../../../../assets/styles/BusinessAnalysisStyle";
 import { useAtom } from "jotai";
 import { BUSINESS_ANALYSIS, PERSONA_STEP } from "../../../AtomStates";
 import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
@@ -16,6 +17,8 @@ const MoleculeHeader = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [showBusinessAnalysis, setShowBusinessAnalysis] = useState(false);
+  const [showCreditToggle, setShowCreditToggle] = useState(false);
+  const [isClosingCreditToggle, setIsClosingCreditToggle] = useState(false);
 
   // Persona/3 경로 체크를 위한 조건 수정
   const isPersona3Page = /^\/Persona\/3\/[^/]+$/.test(location.pathname);
@@ -37,6 +40,18 @@ const MoleculeHeader = () => {
 
   const handleBusinessAnalysisToggle = () => {
     setShowBusinessAnalysis(!showBusinessAnalysis);
+  };
+
+  const handleCreditToggle = () => {
+    if (showCreditToggle) {
+      setIsClosingCreditToggle(true);
+      setTimeout(() => {
+        setShowCreditToggle(false);
+        setIsClosingCreditToggle(false);
+      }, 300);
+    } else {
+      setShowCreditToggle(true);
+    }
   };
   
   return (
@@ -69,6 +84,74 @@ const MoleculeHeader = () => {
             서비스 소개
           </Sub2>
         )}
+
+        <TotalCreditToggle>
+          <CreditTotal onClick={handleCreditToggle} style={{ cursor: 'pointer' }}>
+            <div>
+              <span>
+                <images.CoinSmall
+                  width="12px"
+                  height="8px"
+                  color={palette.white}
+                />
+              </span>
+              <Sub2 color="gray800">
+                123,456
+              </Sub2>
+            </div>
+            <images.ChevronDown
+              width="20px"
+              height="20px"
+              color={palette.gray300}
+              style={{
+                transform: showCreditToggle ? 'rotate(180deg)' : 'rotate(0deg)',
+                transition: 'transform 0.3s ease'
+              }}
+            />
+          </CreditTotal>
+
+          {showCreditToggle && (
+            <CreditToggle className={isClosingCreditToggle ? 'closing' : ''}>
+              <div className="title">
+                <Sub1 color="gray700">크레딧 내역</Sub1>
+                <button>
+                  <Caption2 color="primary">충전하기</Caption2>
+                </button>
+              </div>
+
+              <ul>
+                <li>
+                  <CreditDashBoardItem NoLine>
+                    <div class="icon yellow">
+                      <images.CoinFill width="9.6" height="6.1" color="#FFD54A" />
+                    </div>
+                    <Sub3 color="gray500" align="left">일반 크레딧</Sub3>
+                  </CreditDashBoardItem>
+                  <Sub3 color="gray500" align="right">10,000</Sub3>
+                </li>
+                <li>
+                  <CreditDashBoardItem NoLine>
+                    <div class="icon green">
+                      <images.CoinFill width="9.6" height="6.1" color="#34C759" />
+                    </div>
+                    <Sub3 color="gray500" align="left">구독 크레딧</Sub3>
+                  </CreditDashBoardItem>
+                  <Sub3 color="gray500" align="right">10,000</Sub3>
+                </li>
+                <li>
+                  <CreditDashBoardItem NoLine>
+                    <div class="icon red">
+                      <images.CoinFill width="9.6" height="6.1" color="#FF5322" />
+                    </div>
+                    <Sub3 color="gray500" align="left">이벤트 크레딧</Sub3>
+                  </CreditDashBoardItem>
+                  <Sub3 color="gray500" align="right">10,000</Sub3>
+                </li>
+              </ul>
+            </CreditToggle>
+          )}
+        </TotalCreditToggle>
+
         <Notify Alarm onClick={handleAlertToggle}>
           <img src={images.IconBell} alt="" />
         </Notify>
@@ -77,7 +160,8 @@ const MoleculeHeader = () => {
         </div> */}
       </div>
     </HeaderWrap>
-    {showAlert && (
+
+    {showAlert && ( 
       <AlertToogle className={isClosing ? 'closing' : ''}>
         <AlertHeader>알림</AlertHeader>
 
@@ -128,6 +212,87 @@ const MoleculeHeader = () => {
 
 export default MoleculeHeader;
 
+const TotalCreditToggle = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 4px;
+`;
+
+const CreditToggle = styled.div`
+  position: absolute;
+  top: 30px;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 240px;
+  padding: 16px;
+  border-radius: 5px;
+  background: ${palette.white};
+  box-shadow: 0px 6px 30px 0px rgba(0, 0, 0, 0.10);
+  animation: fadeIn 0.3s ease-in-out;
+  z-index: 100;
+
+  &.closing {
+    animation: fadeOut 0.3s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
+
+  .title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    button {
+      font-family: 'Pretendard', 'Poppins';
+      padding: 2px 4px;
+      border-radius: 5px;
+      border: 0;
+      background: ${palette.chatGray};
+    }
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      + li {
+        padding-top: 8px;
+        border-top: 1px solid ${palette.chatGray};
+      }
+    }
+  }
+`;
+
 const HeaderWrap = styled.div`
   position: fixed;
   top: 0;
@@ -150,7 +315,7 @@ const HeaderWrap = styled.div`
   .gnb {
     display:flex;
     align-items: center;
-    gap: 24px;
+    gap: 32px;
     margin-left: auto;
   }
 

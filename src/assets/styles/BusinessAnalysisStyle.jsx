@@ -2244,11 +2244,23 @@ export const CreditDashBoardItem = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 16px;
+  gap: ${(props) => (
+    props.NoLine
+    ? "4px"
+    : "16px"
+  )};
   width: 100%;
-  padding: 24px;
+  padding: ${(props) => (
+    props.NoLine
+    ? "0"
+    : "24px"
+  )};
   border-radius: 10px;
-  border: 1px solid ${palette.outlineGray};
+  border: ${(props) => (
+    props.NoLine
+    ? "0"
+    : "1px solid ${palette.outlineGray}"
+  )};
 
   .icon {
     display: flex;
@@ -2270,6 +2282,14 @@ export const CreditDashBoardItem = styled.div`
       background: #FDEBE7;
     }
   }
+
+  ${props => props.NoLine && css`
+    .icon {
+      width: 20px;
+      height: 20px;
+    }
+  `}
+
 `;
 
 export const CreditDashBoardList = styled.div`
@@ -2351,7 +2371,7 @@ export const CreditTotal = styled.div`
   align-items: center;
   justify-content: flex-start;
   gap: 8px;
-  width: 100%;
+  width: auto;
 
   div {
     display: flex;
