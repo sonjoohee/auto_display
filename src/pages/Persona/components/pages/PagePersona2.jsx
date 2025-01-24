@@ -180,7 +180,7 @@ const PagePersona2 = () => {
   const loadingRef = useRef(false);
   const [viewType, setViewType] = useState("list"); // 'list' 또는 'card'
   const [activeTab, setActiveTab] = useState("daily"); // 'daily' 또는 'business'
-
+  const [findPersonas, setFindPersonas] = useState([]);
   // 새로운 상태 추가 (컴포넌트 최상단)
   const [isLoadingDaily, setIsLoadingDaily] = useState(false);
   const [isLoadingBusiness, setIsLoadingBusiness] = useState(false);
@@ -293,6 +293,13 @@ const PagePersona2 = () => {
       }
     });
   };
+  const axiosConfig = {
+    timeout: 100000, // 100초
+    headers: {
+      "Content-Type": "application/json",
+    },
+    withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -380,6 +387,8 @@ const PagePersona2 = () => {
             projectId,
             projectLoadButtonState
           );
+
+          // console.log("🚀 ~ loadProject ~ savedProjectInfo:", savedProjectInfo);
           if (savedProjectInfo) {
             setBusinessAnalysis(savedProjectInfo.businessAnalysis);
             setRequestPersonaList(savedProjectInfo.requestPersonaList);
@@ -400,6 +409,35 @@ const PagePersona2 = () => {
             if (savedProjectInfo.customTheoryData) {
               setCustomTheoryData(savedProjectInfo.customTheoryData);
             }
+
+            let availablePersonas = [];
+            // 초기 페르소나 데이터 로드
+            for (const category of Object.values(
+              savedProjectInfo.businessAnalysis.category
+            )) {
+              const response = await axios.post(
+                "https://wishresearch.kr/person/findPersonapreSet",
+                { target: category },
+                axiosConfig
+              );
+
+              response.data.forEach((newPersona) => {
+                // 이미 필터링된 페르소나는 제외
+                const isAlreadyFiltered = filteredProjectList.some(
+                  (filtered) => filtered.persona_id === newPersona.persona_id
+                );
+
+                if (
+                  !isAlreadyFiltered &&
+                  !availablePersonas.some(
+                    (p) => p.persona_id === newPersona.persona_id
+                  )
+                ) {
+                  availablePersonas.push(newPersona);
+                }
+              });
+            }
+            setFindPersonas(availablePersonas);
 
             // businessPersonaList에서 고유한 persona_type 추출
             const uniqueTypes = [
@@ -482,14 +520,19 @@ const PagePersona2 = () => {
                 if (!isDuplicate) {
                   unselectedPersonas.push(newPersonas[i]);
                 }
+                console.log(
+                  "🚀 ~ loadProject ~ unselectedPersonas:",
+                  unselectedPersonas
+                );
               }
             }
 
-            let personaList = {
+            let personfindList = {
               selected: [],
               unselected: unselectedPersonas,
             };
-            setPersonaList(personaList);
+            console.log("🚀 ~ loadProject ~ personfindList:", personfindList);
+            setPersonaList(personfindList);
           }
           // setIsLoadingPage(false); // 로딩 완료
         }
@@ -518,14 +561,6 @@ const PagePersona2 = () => {
   // if (isLoadingPage) {
   //   return <div>Loading...</div>;
   // }
-
-  const axiosConfig = {
-    timeout: 100000, // 100초
-    headers: {
-      "Content-Type": "application/json",
-    },
-    withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
-  };
 
   //페르소나 새로 생성
   const reloadPersona = async () => {
@@ -661,6 +696,7 @@ const PagePersona2 = () => {
       }
 
       let availablePersonas = [];
+      console.log("🚀 ~ availablePersonas:", availablePersonas);
 
       // 초기 페르소나 데이터 로드
       for (const category of Object.values(businessAnalysis.category)) {
@@ -1546,8 +1582,8 @@ const PagePersona2 = () => {
                               ) && (
                                 <LoadMoreButton onClick={handleLoadMore}>
                                   <Body3 color="gray700">
-                                    더보기 ({personaList?.unselected?.length}/
-                                    {filteredProjectList.length})
+                                    더보기 ({filteredProjectList.length}/
+                                    {findPersonas.length})
                                   </Body3>
                                 </LoadMoreButton>
                               )}

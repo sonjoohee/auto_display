@@ -353,7 +353,6 @@ const PageMyProject = () => {
         console.error("프로젝트 목록을 불러오는데 실패했습니다:", error);
       }
     };
-
     loadProjectList();
   }, [refreshTrigger]); // refreshTrigger가 변경될 때마다 데이터 다시 로드
 
