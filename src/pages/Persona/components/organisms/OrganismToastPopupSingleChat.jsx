@@ -1112,6 +1112,21 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
       setShowErrorPopup(true);
     }
   };
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      // Enter 키가 눌렸을 때의 동작을 여기에 추가하세요.
+      handleAddQuestionGenerate(); // 예시: 질문 추가 함수 호출
+    }
+  };
+
+  // 추가: useEffect를 사용하여 isInputEnabled가 true로 변경될 때 포커스 설정
+  useEffect(() => {
+    if (isInputEnabled) {
+      document.querySelector('input[type="text"]').focus(); // 입력 필드에 포커스
+    }
+  }, [isInputEnabled]); // isInputEnabled가 변경될 때마다 실행
+
   return (
     <>
       <PopupBox isActive={active}>
@@ -1248,14 +1263,16 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                           type="button"
                           disabled={countAdditionalQuestion === 0}
                           onClick={() => {
-                            setIsInputEnabled(true);
+                            setIsInputEnabled(true); // 입력 필드 활성화
+                            setInputValue(""); // 입력 필드 초기화
                           }}
                         >
+                        
                           네, 있습니다!
                         </button>
                         <button
                           type="button"
-                          onClick={() => loadInterviewReport()} // Hide the question list
+                          onClick={() => loadInterviewReport()} // 질문 목록 숨기기
                         >
                           아니요, 괜찮습니다.
                         </button>
@@ -1362,6 +1379,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                   Edit
                   type="text"
                   value={inputValue}
+                  onKeyPress={handleKeyPress} // 여기에 handleKeyPress 사용
                   onChange={handleInputChange}
                   placeholder="Pro 요금제를 사용하시면 해당란에 원하시는 정보를 입력하여 추가 정보를 얻으실 수 있습니다."
                   disabled={!isInputEnabled}

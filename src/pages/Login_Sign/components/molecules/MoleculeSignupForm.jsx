@@ -213,7 +213,7 @@ const MoleculeSignupForm = () => {
               checked={termsAccepted}
               onChange={(e) => setTermsAccepted(e.target.checked)}
             />
-            <label htmlFor="terms">서비스 <a href="#">이용약관</a>과 <a href="#">개인정보처리방침</a>에 동의합니다.</label>
+            <label htmlFor="terms">서비스 <a href="/Terms" target="_blank">이용약관</a>과 <a href="/Policy" target="_blank">개인정보처리방침</a>에 동의합니다.</label>
           </TermsAndConditions>
 
           <StyledAtomButton onClick={handleSignup} disabled={isLoading || !signUpName || !signUpEmail || !signUpPassword || !confirmPassword || !termsAccepted}>
