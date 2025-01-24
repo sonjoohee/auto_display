@@ -342,6 +342,7 @@ const PagePersona3Select = () => {
                   onClick={handleStartInterview}
                 >
                   인터뷰 시작
+                  <images.ChevronRight width="20px" height="20px" color="white" />
                   {/* <img src={images.ChevronRight} alt="인터뷰 시작" /> */}
                 </Button>
               </BottomBar>

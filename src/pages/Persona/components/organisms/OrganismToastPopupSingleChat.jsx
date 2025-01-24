@@ -956,7 +956,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
           <React.Fragment key={index}>
             {/* 모더레이터의 질문 */}
             <ChatItem Moder>
-              <Persona color="Gainsboro" size="Medium" Round>
+              <Persona Moder color="Gainsboro" size="Medium" Round>
                 <img src={personaImages.PersonaModer} alt="모더" />
                 <span>
                   <img src={images.PatchCheckFill} alt="" />
@@ -1267,7 +1267,6 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                             setInputValue(""); // 입력 필드 초기화
                           }}
                         >
-                        
                           네, 있습니다!
                         </button>
                         <button
@@ -1362,7 +1361,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                           ${countAdditionalQuestion === 0 ? "disabled" : ""}
                         `}
                       >
-                        <Body3 color="gray800">
+                        <Body3 color="gray800" align="left">
                           Q{index + 1}. {value}
                         </Body3>
                         <div>
@@ -1638,9 +1637,26 @@ const ChatAddButton = styled.div`
     background: transparent;
     transition: all 0.5s;
 
+    &:hover:not(:disabled) {
+      color: ${palette.primary};
+      border-color: ${palette.primary};
+      background: rgba(34, 111, 255, 0.04);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
     &:hover {
       color: ${palette.white};
       background: ${palette.gray800};
+    }
+      
+    &[type="button"]:active {
+      color: ${palette.primary};
+      border-color: ${palette.primary};
+      background: rgba(34, 111, 255, 0.04);
     }
   }
 `;
@@ -1749,7 +1765,12 @@ const ChatInput = styled.div`
   width: 100%;
   padding: 12px 14px 12px 20px;
   border-radius: 50px;
-  border: 1px solid ${palette.outlineGray};
+
+  border: ${(props) =>
+    props.isInputEnabled
+      ? `1px solid ${palette.primary}`
+      : `1px solid ${palette.outlineGray}`
+    };
   background: ${palette.white};
   transition: all 0.3s ease;
 

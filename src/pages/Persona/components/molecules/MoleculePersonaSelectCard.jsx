@@ -241,6 +241,7 @@ const ListSubtitle = styled.div``;
 
 const PersonaInfo = styled.div`
   display: flex;
+  align-items: center;
   gap: 8px;
 
   span {
