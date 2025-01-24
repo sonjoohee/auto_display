@@ -265,13 +265,27 @@ const PagePersona4 = () => {
           reportId,
           reportLoadButtonState
         );
+        console.log(
+          "🚀 ~ loadProjectReport ~ savedProjectReportInfo:",
+          savedProjectReportInfo
+        );
         if (savedProjectReportInfo) {
           setSelectedInterviewPurpose(savedProjectReportInfo.theory_type);
           setInterviewData(savedProjectReportInfo.interviewData);
+          setPersonaList(savedProjectReportInfo.personaList);
           setSelectedPersonaList(savedProjectReportInfo.personaList);
           setInterviewReport(savedProjectReportInfo.interviewReport);
           setInterviewReportAdditional(
             savedProjectReportInfo.interviewReportAdditional
+          );
+          setSingleInterviewReportTab1(
+            savedProjectReportInfo.singleInterviewReportTab1
+          );
+          setSingleInterviewReportTab2(
+            savedProjectReportInfo.singleInterviewReportTab2
+          );
+          setSingleInterviewReportTab3(
+            savedProjectReportInfo.singleInterviewReportTab3
           );
         }
         // setIsLoadingPage(false); // 로딩 완료
@@ -319,11 +333,15 @@ const PagePersona4 = () => {
               isLoggedIn
             );
           } else if (selectedInterviewType === "single") {
+            console.log(
+              "🚀 ~ loadProjectReport ~ reportId2222222222222:",
+              selectedInterviewPurposeData.theory_name
+            );
             await updateProjectReportOnServer(
               reportId,
               {
                 interviewType: selectedInterviewType,
-                theoryType: selectedInterviewPurposeData.theory_name,
+                reportTitle: selectedInterviewPurposeData.theory_title,
                 interviewData: interviewData,
                 personaList: personaList.selected,
                 singleInterviewReportTab1: singleInterviewReportTab1,
@@ -347,7 +365,7 @@ const PagePersona4 = () => {
                   {
                     reportId: reportId,
                     interviewType: selectedInterviewType,
-                    reportTitle: selectedInterviewPurposeData.theory_name,
+                    theoryType: selectedInterviewPurposeData.theory_title,
                     interviewData: interviewData.length,
                     selectedPersona: personaList.selected.length,
                     createDate: new Date().toLocaleString("ko-KR", {
@@ -515,7 +533,7 @@ const PagePersona4 = () => {
     setIsPersonaAccessible(true);
     navigate(`/Persona/2/${projectId}`);
   };
-  
+
   const handleTabClick = (tabNumber) => {
     setActiveTab(tabNumber);
   };
@@ -537,7 +555,8 @@ const PagePersona4 = () => {
                   <ReportHeader>
                     <Title>
                       <H2>
-                        {selectedInterviewPurpose || "인터뷰"} 결과 리포트
+                        {selectedInterviewPurposeData?.theory_title || "인터뷰"}{" "}
+                        결과 리포트
                       </H2>
                       <Button Primary onClick={handleEnterInterviewRoom}>
                         <img
@@ -555,45 +574,54 @@ const PagePersona4 = () => {
                   </ReportHeader>
 
                   <TabWrapType3>
-                    <TabButtonType3 
+                    <TabButtonType3
                       isActive={activeTab === 1}
                       onClick={() => handleTabClick(1)}
                     >
                       조사 개요
                     </TabButtonType3>
-                    <TabButtonType3 
+                    <TabButtonType3
                       isActive={activeTab === 2}
                       onClick={() => handleTabClick(2)}
                     >
-                      페르소나 행동 패턴 분석
+                      감정 요인 분석
                     </TabButtonType3>
-                    <TabButtonType3 
+                    <TabButtonType3
                       isActive={activeTab === 3}
                       onClick={() => handleTabClick(3)}
                     >
-                      감정 요인 분석
+                      페르소나 행동 패턴 분석
                     </TabButtonType3>
                   </TabWrapType3>
 
-                  <ReportContent section={1} style={{ display: activeTab === 1 ? 'flex' : 'none' }}>
+                  <ReportContent
+                    section={1}
+                    style={{ display: activeTab === 1 ? "flex" : "none" }}
+                  >
                     <div>
                       <H4>1. 조사 방법 및 범위</H4>
                       <UlList Disc>
-                        <li>조사 방법 : 여러 페르소나와 인터뷰 (1:1)</li>
-                        <li>조사 대상 : {interviewReport?.[0]?.text}</li>
+                        <li>
+                          조사 방법 :{" "}
+                          {
+                            singleInterviewReportTab1?.research_theory
+                              ?.research_type
+                          }
+                        </li>
+                        <li>
+                          조사 대상 :{" "}
+                          {
+                            singleInterviewReportTab1?.research_theory
+                              ?.research_target
+                          }
+                        </li>
                       </UlList>
                     </div>
 
                     <div>
                       <H4>2. 조사 목적</H4>
                       <UlList Disc Spacing>
-                        <li>
-                          제품이 고객에게 어떤 가치를 전달하고 있는지,
-                          소비자들이 느끼는 장점과 개선점을 세심히 파악하기 위해
-                          진행되었습니다. 이를 통해 제품에 대한 긍정적인 경험을
-                          더욱 확장하고, 고객 만족과 구매 전환율을 높이는 데
-                          기여하고자 합니다.
-                        </li>
+                        <li>{singleInterviewReportTab1?.research_purpose}</li>
                       </UlList>
                     </div>
 
@@ -602,14 +630,14 @@ const PagePersona4 = () => {
                       <UlList Disc Spacing>
                         <li>
                           {
-                            interviewReport?.[1]?.main_insight?.[0]
-                              ?.description_1
+                            singleInterviewReportTab1?.research_insight
+                              ?.insight_1
                           }
                         </li>
                         <li>
                           {
-                            interviewReport?.[1]?.main_insight?.[1]
-                              ?.description_2
+                            singleInterviewReportTab1?.research_insight
+                              ?.insight_2
                           }
                         </li>
                       </UlList>
@@ -623,7 +651,8 @@ const PagePersona4 = () => {
 
                         <div>
                           <H4 color="gray700">
-                            인터뷰 내용에 대해 비즈니스 분야별 인사이트를 확인하세요
+                            인터뷰 내용에 대해 비즈니스 분야별 인사이트를
+                            확인하세요
                           </H4>
                           <Body3 color="gray500">
                             여러가지 정보를 확인 하고 싶으시면 클릭해 보세요!
@@ -697,26 +726,52 @@ const PagePersona4 = () => {
                         </FindCard>
                       </InterviewFind>
                     )}
-
                   </ReportContent>
 
-                  <ReportContent section={2} style={{ display: activeTab === 2 ? 'flex' : 'none' }}>
+                  <ReportContent
+                    section={2}
+                    style={{ display: activeTab === 2 ? "flex" : "none" }}
+                  >
                     <div>
                       <H4>1. 페르소나 정보</H4>
                       <PersonaInformationWrap>
                         <PersonaInformation>
-                          <div className="thumb"><img src={personaImages.PersonaMen28} alt="페르소나" /></div>
+                          <div className="thumb">
+                            <img
+                              src={personaImages.PersonaMen28}
+                              alt="페르소나"
+                            />
+                          </div>
                           <div className="info">
-                            <Body1>꼼꼼한 계획형 자산 관리 성향</Body1>
+                            <Body1>
+                              {personaList?.selected[0]?.persona_view ||
+                                selectedPersonaList?.selected[0]
+                                  ?.persona_view ||
+                                ""}
+                            </Body1>
                             <PersonaInfo>
-                              <Body3 color="gray500">성별</Body3>
-                              <Body3 color="gray500">나이</Body3>
-                              <Body3 color="gray500">직업</Body3>
+                              <Body3 color="gray500">
+                                {personaList?.selected[0]?.gender ||
+                                  selectedPersonaList?.selected[0]?.gender ||
+                                  ""}
+                              </Body3>
+                              <Body3 color="gray500">
+                                {personaList?.selected[0]?.age ||
+                                  selectedPersonaList?.selected[0]?.age ||
+                                  ""}
+                              </Body3>
+                              <Body3 color="gray500">
+                                {personaList?.selected[0]?.job ||
+                                  selectedPersonaList?.selected[0]?.job ||
+                                  ""}
+                              </Body3>
                             </PersonaInfo>
                           </div>
                         </PersonaInformation>
                         <div className="content">
-                          <Body3 color="gray700">제품이 고객에게 어떤 가치를 전달하고 있는지, 소비자들이 느끼는 장점과 개선점을 세심히 파악하기 위해 진행되었습니다. 이를 통해 제품에 대한 긍정적인 경험을 더욱 확장하고, 고객 만족과 구매 전환율을 높이는 데 기여하고자 합니다.</Body3>
+                          <Body3 color="gray700">
+                            {singleInterviewReportTab2?.persona_info}
+                          </Body3>
                         </div>
                       </PersonaInformationWrap>
                     </div>
@@ -728,47 +783,130 @@ const PagePersona4 = () => {
                           <UsageLevelGraphWrap>
                             <UsageLevelGraph>
                               <div className="title">
-                                <Sub3 color="gray800">카테고리2</Sub3>
-                                <Sub2_1 color="gray800">85</Sub2_1>
+                                <Sub3 color="gray800">관심도</Sub3>
+                                <Sub2_1 color="gray800">
+                                  {
+                                    singleInterviewReportTab2?.persona_attitude
+                                      ?.interest_score
+                                  }
+                                </Sub2_1>
                               </div>
                               <div className="graph">
-                                <div className="bar" style={{ width: "85%" }}></div>
+                                <div
+                                  className="bar"
+                                  style={{
+                                    width: `${
+                                      (singleInterviewReportTab2
+                                        ?.persona_attitude?.interest_score /
+                                        7) *
+                                      100
+                                    }%`,
+                                  }}
+                                ></div>
                               </div>
                             </UsageLevelGraph>
                             <UsageLevelGraph>
                               <div className="title">
-                                <Sub3 color="gray800">카테고리1</Sub3>
-                                <Sub2_1 color="gray800">70</Sub2_1>
+                                <Sub3 color="gray800">
+                                  품질과 브랜드 선호도
+                                </Sub3>
+                                <Sub2_1 color="gray800">
+                                  {
+                                    singleInterviewReportTab2?.persona_attitude
+                                      ?.quality_preference_score
+                                  }
+                                </Sub2_1>
                               </div>
                               <div className="graph">
-                                <div className="bar" style={{ width: "70%" }}></div>
+                                <div
+                                  className="bar"
+                                  style={{
+                                    width: `${
+                                      (singleInterviewReportTab2
+                                        ?.persona_attitude
+                                        ?.quality_preference_score /
+                                        7) *
+                                      100
+                                    }%`,
+                                  }}
+                                ></div>
                               </div>
                             </UsageLevelGraph>
                             <UsageLevelGraph>
                               <div className="title">
-                                <Sub3 color="gray800">카테고리4</Sub3>
-                                <Sub2_1 color="gray800">55</Sub2_1>
+                                <Sub3 color="gray800">정보 탐색 행동</Sub3>
+                                <Sub2_1 color="gray800">
+                                  {
+                                    singleInterviewReportTab2?.persona_attitude
+                                      ?.search_behavior_score
+                                  }
+                                </Sub2_1>
                               </div>
                               <div className="graph">
-                                <div className="bar" style={{ width: "55%" }}></div>
+                                <div
+                                  className="bar"
+                                  style={{
+                                    width: `${
+                                      (singleInterviewReportTab2
+                                        ?.persona_attitude
+                                        ?.search_behavior_score /
+                                        7) *
+                                      100
+                                    }%`,
+                                  }}
+                                ></div>
                               </div>
                             </UsageLevelGraph>
                             <UsageLevelGraph>
                               <div className="title">
-                                <Sub3 color="gray800">카테고리3</Sub3>
-                                <Sub2_1 color="gray800">35</Sub2_1>
+                                <Sub3 color="gray800">가격 민감도</Sub3>
+                                <Sub2_1 color="gray800">
+                                  {
+                                    singleInterviewReportTab2?.persona_attitude
+                                      ?.price_sensitivity_score
+                                  }
+                                </Sub2_1>
                               </div>
                               <div className="graph">
-                                <div className="bar" style={{ width: "35%" }}></div>
+                                <div
+                                  className="bar"
+                                  style={{
+                                    width: `${
+                                      (singleInterviewReportTab2
+                                        ?.persona_attitude
+                                        ?.price_sensitivity_score /
+                                        7) *
+                                      100
+                                    }%`,
+                                  }}
+                                ></div>
                               </div>
                             </UsageLevelGraph>
                             <UsageLevelGraph>
                               <div className="title">
-                                <Sub3 color="gray800">카테고리5</Sub3>
-                                <Sub2_1 color="gray800">30</Sub2_1>
+                                <Sub3 color="gray800">
+                                  제품/서비스 사용 빈도
+                                </Sub3>
+                                <Sub2_1 color="gray800">
+                                  {
+                                    singleInterviewReportTab2?.persona_attitude
+                                      ?.product_service_usage_frequency_score
+                                  }
+                                </Sub2_1>
                               </div>
                               <div className="graph">
-                                <div className="bar" style={{ width: "30%" }}></div>
+                                <div
+                                  className="bar"
+                                  style={{
+                                    width: `${
+                                      (singleInterviewReportTab2
+                                        ?.persona_attitude
+                                        ?.product_service_usage_frequency_score /
+                                        7) *
+                                      100
+                                    }%`,
+                                  }}
+                                ></div>
                               </div>
                             </UsageLevelGraph>
                           </UsageLevelGraphWrap>
@@ -779,47 +917,140 @@ const PagePersona4 = () => {
                           <UsageLevelGraphWrap>
                             <UsageLevelGraph>
                               <div className="title">
-                                <Sub3 color="gray800">카테고리1</Sub3>
-                                <Sub2_1 color="gray800">85</Sub2_1>
+                                <Sub3 color="gray800">개방성 (Openness)</Sub3>
+                                <Sub2_1 color="gray800">
+                                  {
+                                    singleInterviewReportTab2
+                                      ?.big_five_personality_traits
+                                      ?.openness_score
+                                  }
+                                </Sub2_1>
                               </div>
                               <div className="graph">
-                                <div className="bar" style={{ width: "85%" }}></div>
+                                <div
+                                  className="bar"
+                                  style={{
+                                    width: `${
+                                      (singleInterviewReportTab2
+                                        ?.big_five_personality_traits
+                                        ?.openness_score /
+                                        3) *
+                                      100
+                                    }%`,
+                                  }}
+                                ></div>
                               </div>
                             </UsageLevelGraph>
                             <UsageLevelGraph>
                               <div className="title">
-                                <Sub3 color="gray800">카테고리4</Sub3>
-                                <Sub2_1 color="gray800">70</Sub2_1>
+                                <Sub3 color="gray800">
+                                  성실성 (Conscientiousness)
+                                </Sub3>
+                                <Sub2_1 color="gray800">
+                                  {
+                                    singleInterviewReportTab2
+                                      ?.big_five_personality_traits
+                                      ?.conscientiousness_score
+                                  }
+                                </Sub2_1>
                               </div>
                               <div className="graph">
-                                <div className="bar" style={{ width: "70%" }}></div>
+                                <div
+                                  className="bar"
+                                  style={{
+                                    width: `${
+                                      (singleInterviewReportTab2
+                                        ?.big_five_personality_traits
+                                        ?.conscientiousness_score /
+                                        3) *
+                                      100
+                                    }%`,
+                                  }}
+                                ></div>
                               </div>
                             </UsageLevelGraph>
                             <UsageLevelGraph>
                               <div className="title">
-                                <Sub3 color="gray800">카테고리3</Sub3>
-                                <Sub2_1 color="gray800">55</Sub2_1>
+                                <Sub3 color="gray800">
+                                  외향성 (Extraversion)
+                                </Sub3>
+                                <Sub2_1 color="gray800">
+                                  {
+                                    singleInterviewReportTab2
+                                      ?.big_five_personality_traits
+                                      ?.extraversion_score
+                                  }
+                                </Sub2_1>
                               </div>
                               <div className="graph">
-                                <div className="bar" style={{ width: "55%" }}></div>
+                                <div
+                                  className="bar"
+                                  style={{
+                                    width: `${
+                                      (singleInterviewReportTab2
+                                        ?.big_five_personality_traits
+                                        ?.extraversion_score /
+                                        3) *
+                                      100
+                                    }%`,
+                                  }}
+                                ></div>
                               </div>
                             </UsageLevelGraph>
                             <UsageLevelGraph>
                               <div className="title">
-                                <Sub3 color="gray800">카테고리2</Sub3>
-                                <Sub2_1 color="gray800">35</Sub2_1>
+                                <Sub3 color="gray800">
+                                  친화성 (Agreeableness)
+                                </Sub3>
+                                <Sub2_1 color="gray800">
+                                  {
+                                    singleInterviewReportTab2
+                                      ?.big_five_personality_traits
+                                      ?.agreeableness_score
+                                  }
+                                </Sub2_1>
                               </div>
                               <div className="graph">
-                                <div className="bar" style={{ width: "35%" }}></div>
+                                <div
+                                  className="bar"
+                                  style={{
+                                    width: `${
+                                      (singleInterviewReportTab2
+                                        ?.big_five_personality_traits
+                                        ?.agreeableness_score /
+                                        3) *
+                                      100
+                                    }%`,
+                                  }}
+                                ></div>
                               </div>
                             </UsageLevelGraph>
                             <UsageLevelGraph>
                               <div className="title">
-                                <Sub3 color="gray800">카테고리5</Sub3>
-                                <Sub2_1 color="gray800">30</Sub2_1>
+                                <Sub3 color="gray800">
+                                  신경성 (Neuroticism)
+                                </Sub3>
+                                <Sub2_1 color="gray800">
+                                  {
+                                    singleInterviewReportTab2
+                                      ?.big_five_personality_traits
+                                      ?.neuroticism_score
+                                  }
+                                </Sub2_1>
                               </div>
                               <div className="graph">
-                                <div className="bar" style={{ width: "30%" }}></div>
+                                <div
+                                  className="bar"
+                                  style={{
+                                    width: `${
+                                      (singleInterviewReportTab2
+                                        ?.big_five_personality_traits
+                                        ?.neuroticism_score /
+                                        3) *
+                                      100
+                                    }%`,
+                                  }}
+                                ></div>
                               </div>
                             </UsageLevelGraph>
                           </UsageLevelGraphWrap>
@@ -830,63 +1061,117 @@ const PagePersona4 = () => {
                     <div>
                       <H4>2. 제품 관련 행동 패턴</H4>
                       <UlList Disc>
-                        <li>인터뷰 결과, 스마트홈 스피커의 음성 인식률과 반응 속도는 높게 평가되었으나, 개인 맞춤형 기능 부족 및 정보 보안에 대한 우려가 주요 문제점으로 나타났습니다. 특히, 워킹맘 답변자는 자녀를 위한 교육 콘텐츠 및 안전 기능 강화의 필요성을 강조했고, 50대 가장 답변자는 가족 구성원 모두가 쉽게 사용할 수 있는 가족 친화적인 인터페이스 부족을 지적했습니다.</li>
+                        <li>
+                          {
+                            singleInterviewReportTab2?.product_service_usage_pattern
+                          }
+                        </li>
                       </UlList>
                     </div>
 
                     <div>
                       <H4>3. 구매 및 활용 동기</H4>
                       <UlList Disc>
-                        <li>인터뷰 결과, 스마트홈 스피커의 음성 인식률과 반응 속도는 높게 평가되었으나, 개인 맞춤형 기능 부족 및 정보 보안에 대한 우려가 주요 문제점으로 나타났습니다. 특히, 워킹맘 답변자는 자녀를 위한 교육 콘텐츠 및 안전 기능 강화의 필요성을 강조했고, 50대 가장 답변자는 가족 구성원 모두가 쉽게 사용할 수 있는 가족 친화적인 인터페이스 부족을 지적했습니다.</li>
+                        <li>
+                          {
+                            singleInterviewReportTab2?.purchase_and_usage_motivation
+                          }
+                        </li>
                       </UlList>
                     </div>
 
                     <div>
                       <H4>4. 문제점 및 요구 사항</H4>
                       <UlList Disc>
-                        <li>인터뷰 결과, 스마트홈 스피커의 음성 인식률과 반응 속도는 높게 평가되었으나, 개인 맞춤형 기능 부족 및 정보 보안에 대한 우려가 주요 문제점으로 나타났습니다. 특히, 워킹맘 답변자는 자녀를 위한 교육 콘텐츠 및 안전 기능 강화의 필요성을 강조했고, 50대 가장 답변자는 가족 구성원 모두가 쉽게 사용할 수 있는 가족 친화적인 인터페이스 부족을 지적했습니다.</li>
+                        <li>
+                          {singleInterviewReportTab2?.problems_and_requirements}
+                        </li>
                       </UlList>
                     </div>
                   </ReportContent>
 
-                  <ReportContent section={3} style={{ display: activeTab === 3 ? 'flex' : 'none' }}>
+                  <ReportContent
+                    section={3}
+                    style={{ display: activeTab === 3 ? "flex" : "none" }}
+                  >
                     <BgBoxItem>
-                      <H4 color="gray800">“페르소나에 대한 요약 문장”</H4>
+                      <H4 color="gray800">
+                        {singleInterviewReportTab3?.persona_summary}
+                      </H4>
                     </BgBoxItem>
 
                     <div>
                       <ResultTitle>
-                        <Body2 color="primary"># 키워드 </Body2>
-                        <H4 color="gray800">페르소나와 방법론에 대한 핵심 문장 </H4>
+                        <Body2 color="primary">
+                          #
+                          {singleInterviewReportTab3?.insight_1?.keyword_1 ||
+                            ""}
+                        </Body2>
+                        <H4 color="gray800">
+                          {singleInterviewReportTab3?.insight_1
+                            ?.insight_1_sentence || ""}
+                        </H4>
                       </ResultTitle>
 
                       <UlList Disc>
-                        <li>페르소나는 대출 상품 비교 기능이 유용했지만, 플랫폼에서 제공하는 정보량이 많고 각 상품의 상세 설명이 이해하기 어려웠다고 언급했습니다. 이로 인해 플랫폼 사용 초기에 혼란과 피로를 경험했으며, 효율적인 상품 비교를 위해 더 직관적인 정보 구조와 사용자 맞춤형 필터링 기능이 필요하다고 느꼈습니다. 예를 들어, 간단한 차트나 시각화된 비교 도구를 제공하면 사용자의 선택 과정을 단순화할 수 있습니다​.</li>
-                        <li>페르소나는 대출 상품 비교 기능이 유용했지만, 플랫폼에서 제공하는 정보량이 많고 각 상품의 상세 설명이 이해하기 어려웠다고 언급했습니다. 이로 인해 플랫폼 사용 초기에 혼란과 피로를 경험했으며, 효율적인 상품 비교를 위해 더 직관적인 정보 구조와 사용자 맞춤형 필터링 기능이 필요하다고 느꼈습니다. 예를 들어, 간단한 차트나 시각화된 비교 도구를 제공하면 사용자의 선택 과정을 단순화할 수 있습니다​.</li>
+                        <li>
+                          {singleInterviewReportTab3?.insight_1
+                            ?.insight_1_context || ""}
+                        </li>
+                        <li>
+                          {singleInterviewReportTab3?.insight_1
+                            ?.insight_1_solution || ""}
+                        </li>
                       </UlList>
                     </div>
 
                     <div>
                       <ResultTitle>
-                        <Body2 color="primary"># 키워드</Body2>
-                        <H4 color="gray800">페르소나와 방법론에 대한 핵심 문장</H4>
+                        <Body2 color="primary">
+                          #
+                          {singleInterviewReportTab3?.insight_2?.keyword_2 ||
+                            ""}
+                        </Body2>
+                        <H4 color="gray800">
+                          {singleInterviewReportTab3?.insight_2
+                            ?.insight_2_sentence || ""}
+                        </H4>
                       </ResultTitle>
 
                       <UlList Disc>
-                        <li>페르소나는 대출 상품 비교 기능이 유용했지만, 플랫폼에서 제공하는 정보량이 많고 각 상품의 상세 설명이 이해하기 어려웠다고 언급했습니다. 이로 인해 플랫폼 사용 초기에 혼란과 피로를 경험했으며, 효율적인 상품 비교를 위해 더 직관적인 정보 구조와 사용자 맞춤형 필터링 기능이 필요하다고 느꼈습니다. 예를 들어, 간단한 차트나 시각화된 비교 도구를 제공하면 사용자의 선택 과정을 단순화할 수 있습니다​.</li>
-                        <li>페르소나는 대출 상품 비교 기능이 유용했지만, 플랫폼에서 제공하는 정보량이 많고 각 상품의 상세 설명이 이해하기 어려웠다고 언급했습니다. 이로 인해 플랫폼 사용 초기에 혼란과 피로를 경험했으며, 효율적인 상품 비교를 위해 더 직관적인 정보 구조와 사용자 맞춤형 필터링 기능이 필요하다고 느꼈습니다. 예를 들어, 간단한 차트나 시각화된 비교 도구를 제공하면 사용자의 선택 과정을 단순화할 수 있습니다​.</li>
+                        <li>
+                          {singleInterviewReportTab3?.insight_2
+                            ?.insight_2_context || ""}
+                        </li>
+                        <li>
+                          {singleInterviewReportTab3?.insight_2
+                            ?.insight_2_solution || ""}
+                        </li>
                       </UlList>
                     </div>
 
                     <div>
                       <ResultTitle>
-                        <Body2 color="primary"># 키워드</Body2>
-                        <H4 color="gray800">페르소나와 방법론에 대한 핵심 문장</H4>
+                        <Body2 color="primary">
+                          #
+                          {singleInterviewReportTab3?.insight_3?.keyword_3 ||
+                            ""}
+                        </Body2>
+                        <H4 color="gray800">
+                          {singleInterviewReportTab3?.insight_3
+                            ?.insight_3_sentence || ""}
+                        </H4>
                       </ResultTitle>
 
                       <UlList Disc>
-                        <li>페르소나는 대출 상품 비교 기능이 유용했지만, 플랫폼에서 제공하는 정보량이 많고 각 상품의 상세 설명이 이해하기 어려웠다고 언급했습니다. 이로 인해 플랫폼 사용 초기에 혼란과 피로를 경험했으며, 효율적인 상품 비교를 위해 더 직관적인 정보 구조와 사용자 맞춤형 필터링 기능이 필요하다고 느꼈습니다. 예를 들어, 간단한 차트나 시각화된 비교 도구를 제공하면 사용자의 선택 과정을 단순화할 수 있습니다​.</li>
-                        <li>페르소나는 대출 상품 비교 기능이 유용했지만, 플랫폼에서 제공하는 정보량이 많고 각 상품의 상세 설명이 이해하기 어려웠다고 언급했습니다. 이로 인해 플랫폼 사용 초기에 혼란과 피로를 경험했으며, 효율적인 상품 비교를 위해 더 직관적인 정보 구조와 사용자 맞춤형 필터링 기능이 필요하다고 느꼈습니다. 예를 들어, 간단한 차트나 시각화된 비교 도구를 제공하면 사용자의 선택 과정을 단순화할 수 있습니다​.</li>
+                        <li>
+                          {singleInterviewReportTab3?.insight_3
+                            ?.insight_3_context || ""}
+                        </li>
+                        <li>
+                          {singleInterviewReportTab3?.insight_3
+                            ?.insight_3_solution || ""}
+                        </li>
                       </UlList>
                     </div>
                   </ReportContent>

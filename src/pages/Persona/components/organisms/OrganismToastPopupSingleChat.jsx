@@ -351,13 +351,13 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             ...existingQuestions.commonQuestions,
             ...existingQuestions.specialQuestions,
           ];
-          // setInterviewQuestionListState([combinedQuestions[0]]);
-          setInterviewQuestionListState(combinedQuestions);
+          setInterviewQuestionListState([combinedQuestions[0]]);
+          // setInterviewQuestionListState(combinedQuestions);
 
           await new Promise((resolve) => setTimeout(resolve, 5000));
           setIsLoadingPrepare(false);
-          // setInterviewStatus(["Pre"]); // 테스트 하나
-          setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
+          setInterviewStatus(["Pre"]); // 테스트 하나
+          // setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
         } else {
           // 생성된 질문이 없다면 API 요청
           let data = {
@@ -1046,7 +1046,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
     } catch (error) {
       console.error("Failed to create project on server:", error);
     }
-    navigate(`/Persona/4/${projectId}`, { replace: true });
+    navigate(`/Persona/4/Single/${projectId}`, { replace: true });
     //replace: true 현재 페이지를 대체하여 이동( 뒤로 가기 시 이전 인터뷰 화면으로 돌아감 방지)
   };
 

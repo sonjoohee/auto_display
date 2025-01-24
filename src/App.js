@@ -60,7 +60,7 @@ import PagePersona from "./pages/Persona/components/pages/PagePersona";
 import PagePersona2 from "./pages/Persona/components/pages/PagePersona2";
 import PagePersona3 from "./pages/Persona/components/pages/PagePersona3";
 import PagePersona4 from "./pages/Persona/components/pages/PagePersona4";
-// import PagePersona4 from "./pages/Persona/components/pages/PagePersona4Single";
+import PagePersona4Single from "./pages/Persona/components/pages/PagePersona4Single";
 import PageMyProject from "./pages/Persona/components/pages/PageMyProject";
 import PagePersona3Select from "./pages/Persona/components/pages/PagePersona3Select";
 // 테스트 라우트 추가
@@ -248,6 +248,10 @@ function App() {
           <Route
             path="/Persona/4/:projectId"
             element={<PagePersona4 />}
+          ></Route>
+          <Route
+            path="/Persona/4/Single/:projectId"
+            element={<PagePersona4Single />}
           ></Route>
 
           <Route path="/MyProject" element={<PageMyProject />} />
