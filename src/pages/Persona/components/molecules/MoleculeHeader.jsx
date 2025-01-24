@@ -20,6 +20,9 @@ const MoleculeHeader = () => {
   // Persona/3 경로 체크를 위한 조건 수정
   const isPersona3Page = /^\/Persona\/3\/[^/]+$/.test(location.pathname);
 
+  // 첫 페이지 체크 (루트 경로 확인)
+  const isRootPage = location.pathname === '/';
+
   const handleAlertToggle = () => {
     if (showAlert) {
       setIsClosing(true);
@@ -61,9 +64,11 @@ const MoleculeHeader = () => {
       )}
 
       <div className="gnb">
-        <Sub2>
-          서비스 소개
-        </Sub2>
+        {isRootPage && (
+          <Sub2>
+            서비스 소개
+          </Sub2>
+        )}
         <Notify Alarm onClick={handleAlertToggle}>
           <img src={images.IconBell} alt="" />
         </Notify>
