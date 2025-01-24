@@ -353,13 +353,13 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             ...existingQuestions.commonQuestions,
             ...existingQuestions.specialQuestions,
           ];
-          // setInterviewQuestionListState([combinedQuestions[0]]);
-          setInterviewQuestionListState(combinedQuestions);
+          setInterviewQuestionListState([combinedQuestions[0]]); // 질문 한개 테스트
+          // setInterviewQuestionListState(combinedQuestions);
 
           await new Promise((resolve) => setTimeout(resolve, 5000));
           setIsLoadingPrepare(false);
-          // setInterviewStatus(["Pre"]); // 테스트 하나
-          setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
+          setInterviewStatus(["Pre"]); // 테스트 하나
+          // setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
         } else {
           // 생성된 질문이 없다면 API 요청
           let data = {
@@ -1157,7 +1157,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
   };
 
   const handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       // Enter 키가 눌렸을 때의 동작을 여기에 추가하세요.
       handleAddQuestionGenerate(); // 예시: 질문 추가 함수 호출
     }
@@ -1799,7 +1799,7 @@ const ChatAddButton = styled.div`
       color: ${palette.white};
       background: ${palette.gray800};
     }
-      
+
     &[type="button"]:active {
       color: ${palette.primary};
       border-color: ${palette.primary};
@@ -1916,8 +1916,7 @@ const ChatInput = styled.div`
   border: ${(props) =>
     props.isInputEnabled
       ? `1px solid ${palette.primary}`
-      : `1px solid ${palette.outlineGray}`
-    };
+      : `1px solid ${palette.outlineGray}`};
   background: ${palette.white};
   transition: all 0.3s ease;
 
