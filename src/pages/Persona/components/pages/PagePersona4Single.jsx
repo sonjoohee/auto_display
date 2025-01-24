@@ -63,10 +63,8 @@ import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import { updateProjectReportOnServer } from "../../../../utils/indexedDB";
 import { getProjectReportByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
-import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
-import OrganismToastPopup from "../organisms/OrganismToastPopup";
-import BubbleChart from "../organisms/OrganismBubbleChart";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
+import OrganismToastPopupSingleChat from "../organisms/OrganismToastPopupSingleChat";
 
 const PagePersona4 = () => {
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
@@ -1192,7 +1190,12 @@ const PagePersona4 = () => {
                     </Sub3>
                   </WaitPersonaTitle>
 
-                  <Button Medium PrimaryLightest Fill>
+                  <Button
+                    Medium
+                    PrimaryLightest
+                    Fill
+                    onClick={navigateToPersonaPage}
+                  >
                     <img src={images.ListUserSearch} alt="" />
                     비즈니스 페르소나 보러가기
                   </Button>
@@ -1213,7 +1216,7 @@ const PagePersona4 = () => {
             </SidebarWrap>
 
             {showToast && (
-              <OrganismToastPopup
+              <OrganismToastPopupSingleChat
                 isActive={showToast}
                 onClose={() => setShowToast(false)}
                 isComplete={true}

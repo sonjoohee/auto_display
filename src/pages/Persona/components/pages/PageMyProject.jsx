@@ -206,7 +206,7 @@ const PageMyProject = () => {
         }
 
         const userCreditValue = await axios.get(
-          `${process.env.REACT_APP_SERVER_URL}/api/user/userInfo/`,
+          `https://wishresearch.kr/api/user/userInfo/`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -218,7 +218,7 @@ const PageMyProject = () => {
         setUserCreditData(userCreditValue.data);
 
         const userPageCnt = await axios.get(
-          `${process.env.REACT_APP_SERVER_URL}/api/user/myPage/myPageCnt`,
+          `https://wishresearch.kr/api/user/myPage/myPageCnt`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -232,7 +232,7 @@ const PageMyProject = () => {
         console.log("조타이 저장값 ::", userProjecTargetPage);
 
         const projectListData = await axios.get(
-          `${process.env.REACT_APP_SERVER_URL}/api/user/myPage/projectList?page=${userProjecTargetPage}&size=10`,
+          `https://wishresearch.kr/api/user/myPage/projectList?page=${userProjecTargetPage}&size=10`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -244,7 +244,7 @@ const PageMyProject = () => {
         console.log(projectListData.data);
 
         const creditListData = await axios.get(
-          `${process.env.REACT_APP_SERVER_URL}/api/user/myPage/creditList?page=${userCreditTargetPage}&size=5`,
+          `https://wishresearch.kr/api/user/myPage/creditList?page=${userCreditTargetPage}&size=5`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -369,7 +369,7 @@ const PageMyProject = () => {
 
       try {
         const creditListData = await axios.get(
-          `${process.env.REACT_APP_SERVER_URL}/api/user/myPage/creditList?page=${userCreditTargetPage}&size=5`,
+          `https://wishresearch.kr/api/user/myPage/creditList?page=${userCreditTargetPage}&size=5`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -401,7 +401,7 @@ const PageMyProject = () => {
 
       try {
         const projectListData = await axios.get(
-          `${process.env.REACT_APP_SERVER_URL}/api/user/myPage/projectList?page=${userProjecTargetPage}&size=10`,
+          `https://wishresearch.kr/api/user/myPage/projectList?page=${userProjecTargetPage}&size=10`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
