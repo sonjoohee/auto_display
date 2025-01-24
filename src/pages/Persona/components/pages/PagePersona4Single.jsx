@@ -737,10 +737,9 @@ const PagePersona4 = () => {
                               <div className="title">
                                 <Sub3 color="gray800">관심도</Sub3>
                                 <Sub2_1 color="gray800">
-                                  {
-                                    singleInterviewReportTab2?.persona_attitude
-                                      ?.interest_score
-                                  }
+                                  {singleInterviewReportTab2
+                                    ?.persona_attitude?.[0]?.interest_score ||
+                                    0}
                                 </Sub2_1>
                               </div>
                               <div className="graph">
@@ -749,9 +748,10 @@ const PagePersona4 = () => {
                                   style={{
                                     width: `${
                                       (singleInterviewReportTab2
-                                        ?.persona_attitude?.interest_score /
+                                        ?.persona_attitude?.[0]
+                                        ?.interest_score /
                                         7) *
-                                      100
+                                        100 || 0
                                     }%`,
                                   }}
                                 ></div>
@@ -763,10 +763,9 @@ const PagePersona4 = () => {
                                   품질과 브랜드 선호도
                                 </Sub3>
                                 <Sub2_1 color="gray800">
-                                  {
-                                    singleInterviewReportTab2?.persona_attitude
-                                      ?.quality_preference_score
-                                  }
+                                  {singleInterviewReportTab2
+                                    ?.persona_attitude?.[1]
+                                    ?.quality_preference_score || 0}
                                 </Sub2_1>
                               </div>
                               <div className="graph">
@@ -775,10 +774,10 @@ const PagePersona4 = () => {
                                   style={{
                                     width: `${
                                       (singleInterviewReportTab2
-                                        ?.persona_attitude
+                                        ?.persona_attitude?.[1]
                                         ?.quality_preference_score /
                                         7) *
-                                      100
+                                        100 || 0
                                     }%`,
                                   }}
                                 ></div>
@@ -788,10 +787,9 @@ const PagePersona4 = () => {
                               <div className="title">
                                 <Sub3 color="gray800">정보 탐색 행동</Sub3>
                                 <Sub2_1 color="gray800">
-                                  {
-                                    singleInterviewReportTab2?.persona_attitude
-                                      ?.search_behavior_score
-                                  }
+                                  {singleInterviewReportTab2
+                                    ?.persona_attitude?.[2]
+                                    ?.search_behavior_score || 0}
                                 </Sub2_1>
                               </div>
                               <div className="graph">
@@ -800,10 +798,10 @@ const PagePersona4 = () => {
                                   style={{
                                     width: `${
                                       (singleInterviewReportTab2
-                                        ?.persona_attitude
+                                        ?.persona_attitude?.[2]
                                         ?.search_behavior_score /
                                         7) *
-                                      100
+                                        100 || 0
                                     }%`,
                                   }}
                                 ></div>
@@ -813,10 +811,9 @@ const PagePersona4 = () => {
                               <div className="title">
                                 <Sub3 color="gray800">가격 민감도</Sub3>
                                 <Sub2_1 color="gray800">
-                                  {
-                                    singleInterviewReportTab2?.persona_attitude
-                                      ?.price_sensitivity_score
-                                  }
+                                  {singleInterviewReportTab2
+                                    ?.persona_attitude?.[3]
+                                    ?.price_sensitivity_score || 0}
                                 </Sub2_1>
                               </div>
                               <div className="graph">
@@ -825,10 +822,10 @@ const PagePersona4 = () => {
                                   style={{
                                     width: `${
                                       (singleInterviewReportTab2
-                                        ?.persona_attitude
+                                        ?.persona_attitude?.[3]
                                         ?.price_sensitivity_score /
                                         7) *
-                                      100
+                                        100 || 0
                                     }%`,
                                   }}
                                 ></div>
@@ -840,10 +837,10 @@ const PagePersona4 = () => {
                                   제품/서비스 사용 빈도
                                 </Sub3>
                                 <Sub2_1 color="gray800">
-                                  {
-                                    singleInterviewReportTab2?.persona_attitude
-                                      ?.product_service_usage_frequency_score
-                                  }
+                                  {singleInterviewReportTab2
+                                    ?.persona_attitude?.[4]
+                                    ?.product_service_usage_frequency_score ||
+                                    0}
                                 </Sub2_1>
                               </div>
                               <div className="graph">
@@ -852,10 +849,10 @@ const PagePersona4 = () => {
                                   style={{
                                     width: `${
                                       (singleInterviewReportTab2
-                                        ?.persona_attitude
+                                        ?.persona_attitude?.[4]
                                         ?.product_service_usage_frequency_score /
                                         7) *
-                                      100
+                                        100 || 0
                                     }%`,
                                   }}
                                 ></div>
@@ -871,11 +868,9 @@ const PagePersona4 = () => {
                               <div className="title">
                                 <Sub3 color="gray800">개방성 (Openness)</Sub3>
                                 <Sub2_1 color="gray800">
-                                  {
-                                    singleInterviewReportTab2
-                                      ?.big_five_personality_traits
-                                      ?.openness_score
-                                  }
+                                  {singleInterviewReportTab2
+                                    ?.big_five_personality_traits?.[0]
+                                    ?.openness_score || 0}
                                 </Sub2_1>
                               </div>
                               <div className="graph">
@@ -884,10 +879,10 @@ const PagePersona4 = () => {
                                   style={{
                                     width: `${
                                       (singleInterviewReportTab2
-                                        ?.big_five_personality_traits
+                                        ?.big_five_personality_traits?.[0]
                                         ?.openness_score /
                                         3) *
-                                      100
+                                        100 || 0
                                     }%`,
                                   }}
                                 ></div>
@@ -899,11 +894,9 @@ const PagePersona4 = () => {
                                   성실성 (Conscientiousness)
                                 </Sub3>
                                 <Sub2_1 color="gray800">
-                                  {
-                                    singleInterviewReportTab2
-                                      ?.big_five_personality_traits
-                                      ?.conscientiousness_score
-                                  }
+                                  {singleInterviewReportTab2
+                                    ?.big_five_personality_traits?.[1]
+                                    ?.conscientiousness_score || 0}
                                 </Sub2_1>
                               </div>
                               <div className="graph">
@@ -912,10 +905,10 @@ const PagePersona4 = () => {
                                   style={{
                                     width: `${
                                       (singleInterviewReportTab2
-                                        ?.big_five_personality_traits
+                                        ?.big_five_personality_traits?.[1]
                                         ?.conscientiousness_score /
                                         3) *
-                                      100
+                                        100 || 0
                                     }%`,
                                   }}
                                 ></div>
@@ -927,11 +920,9 @@ const PagePersona4 = () => {
                                   외향성 (Extraversion)
                                 </Sub3>
                                 <Sub2_1 color="gray800">
-                                  {
-                                    singleInterviewReportTab2
-                                      ?.big_five_personality_traits
-                                      ?.extraversion_score
-                                  }
+                                  {singleInterviewReportTab2
+                                    ?.big_five_personality_traits?.[2]
+                                    ?.extraversion_score || 0}
                                 </Sub2_1>
                               </div>
                               <div className="graph">
@@ -940,10 +931,10 @@ const PagePersona4 = () => {
                                   style={{
                                     width: `${
                                       (singleInterviewReportTab2
-                                        ?.big_five_personality_traits
+                                        ?.big_five_personality_traits?.[2]
                                         ?.extraversion_score /
                                         3) *
-                                      100
+                                        100 || 0
                                     }%`,
                                   }}
                                 ></div>
@@ -955,11 +946,9 @@ const PagePersona4 = () => {
                                   친화성 (Agreeableness)
                                 </Sub3>
                                 <Sub2_1 color="gray800">
-                                  {
-                                    singleInterviewReportTab2
-                                      ?.big_five_personality_traits
-                                      ?.agreeableness_score
-                                  }
+                                  {singleInterviewReportTab2
+                                    ?.big_five_personality_traits?.[3]
+                                    ?.agreeableness_score || 0}
                                 </Sub2_1>
                               </div>
                               <div className="graph">
@@ -968,10 +957,10 @@ const PagePersona4 = () => {
                                   style={{
                                     width: `${
                                       (singleInterviewReportTab2
-                                        ?.big_five_personality_traits
+                                        ?.big_five_personality_traits?.[3]
                                         ?.agreeableness_score /
                                         3) *
-                                      100
+                                        100 || 0
                                     }%`,
                                   }}
                                 ></div>
@@ -983,11 +972,9 @@ const PagePersona4 = () => {
                                   신경성 (Neuroticism)
                                 </Sub3>
                                 <Sub2_1 color="gray800">
-                                  {
-                                    singleInterviewReportTab2
-                                      ?.big_five_personality_traits
-                                      ?.neuroticism_score
-                                  }
+                                  {singleInterviewReportTab2
+                                    ?.big_five_personality_traits?.[4]
+                                    ?.neuroticism_score || 0}
                                 </Sub2_1>
                               </div>
                               <div className="graph">
@@ -996,10 +983,10 @@ const PagePersona4 = () => {
                                   style={{
                                     width: `${
                                       (singleInterviewReportTab2
-                                        ?.big_five_personality_traits
+                                        ?.big_five_personality_traits?.[4]
                                         ?.neuroticism_score /
                                         3) *
-                                      100
+                                        100 || 0
                                     }%`,
                                   }}
                                 ></div>
