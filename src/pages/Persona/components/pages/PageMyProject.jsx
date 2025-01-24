@@ -33,6 +33,11 @@ import {
   CreditDashBoardListContent,
   CreditListItem,
   CreditBadge,
+  PaginationWrap,
+  NumbersWrapper,
+  ArrowButton,
+  Dots,
+  Dot,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../../assets/styles/Images";
 import { useNavigate } from "react-router-dom";
@@ -607,30 +612,69 @@ const PageMyProject = () => {
                         </ProjectContent>
                       </ProjectList>
 
-                      <PageWrap>
-                        {/* <Pagination currentPage={1} totalPages={11} /> */}
-                        {/* 지선님 여기 디자인 부탁드립니다. 하단의 페이징 처리. !!! */}
-                        {/*  PageWrap  이거 임시로 제가 영역잡아놧어여.. tempwrap도 전체를 묶기위해 만든것이니 제거가능. */}
-                        {Array.from({
-                          length: Math.ceil(userProjectList.count / 10),
-                        }).map((_, pageIndex) => (
-                          <li key={pageIndex}>
-                            <a
-                              onClick={() =>
-                                setProjectTargetPage(pageIndex + 1)
-                              }
-                              disabled={userProjecTargetPage === pageIndex + 1} // 현재 페이지와 같으면 비활성화
-                              className={
-                                userProjecTargetPage === pageIndex + 1
-                                  ? "active"
-                                  : ""
-                              }
-                            >
-                              {pageIndex + 1}
-                            </a>
-                          </li>
-                        ))}
-                      </PageWrap>
+                      <PaginationWrap>
+                        {userProjectList.count > 10 && (
+                          <ArrowButton 
+                            $direction="left" 
+                            onClick={() => userProjecTargetPage > 1 && setProjectTargetPage(userProjecTargetPage - 1)}
+                            style={{ visibility: userProjecTargetPage <= 1 ? 'hidden' : 'visible' }}
+                          >
+                            <images.ChevronRight width="24" height="24" color={palette.gray500} />
+                          </ArrowButton>
+                        )}
+                        
+                        <NumbersWrapper>
+                            {/* <Pagination currentPage={1} totalPages={11} /> */}
+                            {/* 지선님 여기 디자인 부탁드립니다. 하단의 페이징 처리. !!! */}
+                            {/*  PageWrap  이거 임시로 제가 영역잡아놧어여.. tempwrap도 전체를 묶기위해 만든것이니 제거가능. */}
+                            {Array.from({
+                              length: Math.ceil(userProjectList.count / 10),
+                            }).map((_, pageIndex) => (
+                              <li key={pageIndex}>
+                                <a
+                                  onClick={() =>
+                                    setProjectTargetPage(pageIndex + 1)
+                                  }
+                                  disabled={userProjecTargetPage === pageIndex + 1}
+                                  className={
+                                    userProjecTargetPage === pageIndex + 1
+                                      ? "active"
+                                      : ""
+                                  }
+                                >
+                                  <Body3 color="gray700">{pageIndex + 1}</Body3>
+                                </a>
+                                {/* 10페이지 이상이고 현재 페이지가 마지막 페이지가 아닐 때만 점 표시 */}
+                                {Math.ceil(userProjectList.count / 10) > 10 && 
+                                 pageIndex < Math.ceil(userProjectList.count / 10) - 1 && 
+                                 pageIndex === 4 && (
+                                  <Dots>
+                                    <Dot />
+                                    <Dot />
+                                    <Dot />
+                                  </Dots>
+                                )}
+                              </li>
+                            ))}
+                        </NumbersWrapper>
+
+                        {userProjectList.count > 10 && (
+                          <ArrowButton 
+                            $direction="right"
+                            onClick={() => 
+                              userProjecTargetPage < Math.ceil(userProjectList.count / 10) && 
+                              setProjectTargetPage(userProjecTargetPage + 1)
+                            }
+                            style={{ 
+                              visibility: userProjecTargetPage >= Math.ceil(userProjectList.count / 10) 
+                                ? 'hidden' 
+                                : 'visible' 
+                            }}
+                          >
+                            <images.ChevronRight width="24" height="24" color={palette.gray500} />
+                          </ArrowButton>
+                        )}
+                      </PaginationWrap>
                     </tmpwarp>
                   )}
 
@@ -806,23 +850,66 @@ const PageMyProject = () => {
                   </CreditDashBoardListContent>
                 </CreditDashBoardList>
 
-                {/* <Pagination currentPage={1} totalPages={11} /> */}
-                {/* 지선님 여기 디자인 부탁드립니다. 하단의 페이징 처리. !!! */}
-                {Array.from({
-                  length: Math.ceil(userCreditList.count / 5),
-                }).map((_, pageIndex) => (
-                  <li key={pageIndex}>
-                    <a
-                      onClick={() => setCreditTargetPage(pageIndex + 1)}
-                      disabled={userCreditTargetPage === pageIndex + 1} // 현재 페이지와 같으면 비활성화
-                      className={
-                        userCreditTargetPage === pageIndex + 1 ? "active" : ""
-                      }
+
+                <PaginationWrap>
+                  {userProjectList.count > 5 && (
+                    <ArrowButton 
+                      $direction="left" 
+                      onClick={() => userProjecTargetPage > 1 && setProjectTargetPage(userProjecTargetPage - 1)}
+                      style={{ visibility: userProjecTargetPage <= 1 ? 'hidden' : 'visible' }}
                     >
-                      {pageIndex + 1}
-                    </a>
-                  </li>
-                ))}
+                      <images.ChevronRight width="24" height="24" color={palette.gray500} />
+                    </ArrowButton>
+                  )}
+
+                  <NumbersWrapper>
+                    {/* <Pagination currentPage={1} totalPages={11} /> */}
+                    {/* 지선님 여기 디자인 부탁드립니다. 하단의 페이징 처리. !!! */}
+                    {Array.from({
+                      length: Math.ceil(userCreditList.count / 5),
+                    }).map((_, pageIndex) => (
+                      <li key={pageIndex}>
+                        <a
+                          onClick={() => setCreditTargetPage(pageIndex + 1)}
+                          disabled={userCreditTargetPage === pageIndex + 1} // 현재 페이지와 같으면 비활성화
+                          className={
+                            userCreditTargetPage === pageIndex + 1 ? "active" : ""
+                          }
+                        >
+                          {pageIndex + 1}
+                        </a>
+                        {/* 5페이지 이상이고 현재 페이지가 마지막 페이지가 아닐 때만 점 표시 */}
+                        {Math.ceil(userProjectList.count / 5) > 5 && 
+                          pageIndex < Math.ceil(userProjectList.count / 5) - 1 && 
+                          pageIndex === 4 && (
+                          <Dots>
+                            <Dot />
+                            <Dot />
+                            <Dot />
+                          </Dots>
+                        )}
+                      </li>
+                    ))}
+                  </NumbersWrapper>
+                  
+                  {userProjectList.count > 5 && (
+                    <ArrowButton 
+                      $direction="right"
+                      onClick={() => 
+                        userProjecTargetPage < Math.ceil(userProjectList.count / 5) && 
+                        setProjectTargetPage(userProjecTargetPage + 1)
+                      }
+                      style={{ 
+                        visibility: userProjecTargetPage >= Math.ceil(userProjectList.count / 5) 
+                          ? 'hidden' 
+                          : 'visible' 
+                      }}
+                    >
+                      <images.ChevronRight width="24" height="24" color={palette.gray500} />
+                    </ArrowButton>
+                  )}
+                </PaginationWrap>
+
               </CreditDashBoardWrap>
             </>
           }
