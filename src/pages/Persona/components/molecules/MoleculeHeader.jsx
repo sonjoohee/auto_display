@@ -21,10 +21,19 @@ const MoleculeHeader = () => {
   const [isClosingCreditToggle, setIsClosingCreditToggle] = useState(false);
 
   // Persona/3 경로 체크를 위한 조건 수정
-  const isPersona3Page = /^\/Persona\/3\/[^/]+$/.test(location.pathname);
+  const isPersona3Page = /^\/Persona\/(3\/[^/]+|3\/Select\/[^/]+|4\/[^/]+|4\/Single\/[^/]+)$/.test(location.pathname);
 
   // 첫 페이지 체크 (루트 경로 확인)
   const isRootPage = location.pathname === '/';
+
+  // MyProject 경로 체크 추가
+  const isMyProjectPage = location.pathname === '/MyProject';
+
+  // MyProfile 경로 체크 추가
+  const isMyProfilePage = location.pathname === '/MyProfile';
+
+  // Payment 경로 체크 추가
+  const isPaymentPage = location.pathname === '/Payment';
 
   const handleAlertToggle = () => {
     if (showAlert) {
@@ -57,10 +66,17 @@ const MoleculeHeader = () => {
   return (
     <>
     <HeaderWrap>
-      {personaStep > 0 && (
+      {(personaStep > 0 || isMyProjectPage || isMyProfilePage || isPaymentPage) && (
         <>
         <Title>
-          {businessAnalysis.title ? businessAnalysis.title : "새로운 프로젝트"}
+          {isMyProjectPage 
+            ? "작업관리" 
+            : isMyProfilePage
+            ? "계정관리"
+            : isPaymentPage
+            ? "크레딧"
+            : (businessAnalysis.title ? businessAnalysis.title : "새로운 프로젝트")
+          }
           {isPersona3Page && (
             <>
               <images.ChatPlus color={palette.primary} onClick={handleBusinessAnalysisToggle} />
@@ -347,13 +363,13 @@ const Title = styled(Body2)`
     }
   }
 
-  // OrganismBusinessAnalysis의 위치를 조정하기 위한 스타일 추가
   .businessAnalysis {
     position: absolute;
     top: 30px;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 77px;
+    transform: none;
     width: 816px;
+    margin-left: -408px;
     z-index: 100;
     animation: fadeIn 0.3s ease-in-out;
     border-radius: 15px;

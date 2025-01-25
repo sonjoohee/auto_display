@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import { Button } from "../../../../assets/styles/ButtonStyle";
+import { Body2 } from "../../../../assets/styles/Typography";
 
 const OrganismEmptyProject = () => {
   const navigate = useNavigate();
@@ -20,11 +21,11 @@ const OrganismEmptyProject = () => {
           <img src={images.FileFill} alt="빈 프로젝트" />
         </EmptyIcon>
         <EmptyText>
-          <SubText>아직 진행 중인 프로젝트가 없습니다.</SubText>
-          <SubText>지금 바로 새 프로젝트를 만들어보세요</SubText>
+          <Body2 color="gray500">아직 진행 중인 프로젝트가 없습니다.</Body2>
+          <Body2 color="gray500">지금 바로 새 프로젝트를 만들어보세요</Body2>
         </EmptyText>
-        <Button Medium Primary Round onClick={handleNewProject}>
-          새 프로젝트 시작하기
+        <Button Other Primary Round onClick={handleNewProject}>
+          <Body2 color="primary">새 프로젝트 시작하기</Body2>
         </Button>
       </EmptyStateContent>
     </EmptyStateWrapper>

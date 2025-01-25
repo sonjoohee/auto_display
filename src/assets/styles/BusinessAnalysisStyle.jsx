@@ -5,15 +5,14 @@ import images from "./Images";
 import { Caption2 } from "./Typography";
 
 export const ContentsWrap = styled.div`
-  // overflow: ${({ noScroll }) => (noScroll ? "hidden" : "auto")};
   position: relative;
-  // width: ${(props) => (props.isMobile ? "100%" : "calc(100% - 40px)")};
   width: 100%;
   display: flex;
   flex-direction: ${(props) => (props.isMobile ? "column" : "row")};
   gap: ${(props) => (props.isMobile ? "20px" : "40px")};
   padding: ${(props) => (props.isMobile ? "20px" : "0")};
   min-height: 100vh;
+  overflow: ${({ noScroll }) => (noScroll ? "hidden" : "auto")};
 `;
 
 export const ContentSection = styled.div`
@@ -349,7 +348,8 @@ export const TabContent = styled.div`
   flex-direction: column;
   gap: 16px;
   text-align: left;
-  height: 275px;
+  height: ${(props) => (props.Daily ? "175px" : "275px")};
+  overflow-y: auto;
 `;
 
 export const Status = styled.div`
@@ -592,7 +592,7 @@ export const Tag = styled.span`
         case "DollarBill":
           return "유아 출산";
         case "Olivine":
-          return "인사, 비즈니스, 법률";
+          return "인사, 비즈니스";
         case "ChineseGreen":
           return "제조, 하드웨어";
         case "Jonquil":
@@ -608,11 +608,17 @@ export const Tag = styled.span`
         case "Tuscany":
           return "환경, 에너지";
         case "VeryLightTangelo":
-          return "홈 리빙, 펫";
+          return "홈 리빙";
         case "Orange":
           return "헬스케어, 바이오";
         case "CarnationPink":
           return "피트니스, 스포츠";
+        case "TurkishRose":
+          return "법률";
+        case "SuperPink":
+          return "펫";
+        case "NavyBlue":
+          return "기타";
         default:
           return "";
       }
@@ -665,7 +671,6 @@ export const Tag = styled.span`
         return `
           color: #7DCED2;
           background: rgba(125, 206, 210, 0.06);
-
         `;
       case "GreenSheen":
         return `
@@ -737,6 +742,21 @@ export const Tag = styled.span`
           color: #FFA8B9;
           background: rgba(255, 168, 185, 0.06);
         `;
+      case "TurkishRose":
+        return `
+          color: #B47489;
+          background: rgba(180, 116, 137, 0.06);
+        `;
+      case "SuperPink":
+        return `
+          color: #D161AC;
+          background: rgba(209, 97, 172, 0.06);
+        `;
+      case "NavyBlue":
+        return `
+          color: #020273;
+          background: rgba(2, 2, 115, 0.06);
+        `;
       default:
         return "display: none;";
     }
@@ -761,11 +781,11 @@ export const CategoryView = styled.div`
     position: absolute;
     left: inherit;
     top: inherit;
-    width: 12px;
+    width: 25px;
     height: 32px;
-    background: linear-gradient(270deg, rgba(102, 102, 102, 0) 0%, #666 100%);
+    background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
     pointer-events: none;
-    opacity: ${(props) => (props.showLeftGradient ? 0.2 : 0)};
+    opacity: ${(props) => (props.showLeftGradient ? 1 : 0)};
     transition: opacity 0.2s ease;
     z-index: 1;
   }
@@ -776,11 +796,11 @@ export const CategoryView = styled.div`
     position: absolute;
     right: 170px;
     top: inherit;
-    width: 12px;
+    width: 25px;
     height: 32px;
-    background: linear-gradient(270deg, #666 0%, rgba(102, 102, 102, 0) 100%);
+    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
     pointer-events: none;
-    opacity: ${(props) => (props.showRightGradient ? 0.2 : 0)};
+    opacity: ${(props) => (props.showRightGradient ? 1 : 0)};
     transition: opacity 0.2s ease;
     z-index: 1;
   }
@@ -1022,8 +1042,21 @@ export const TypeListItem = styled.li`
   padding: ${(props) => (props.isSelected ? "8px 12px" : "0 12px")};
   transition: background-color 0.2s ease;
 
-  input[type="checkbox"]:before {
-    background: transparent !important;
+  /* 체크박스 스타일 수정 */
+  input[type="checkbox"] {
+    &:checked {
+      border-color: ${palette.primary} !important;
+      background-color: transparent !important;
+
+      &:before {
+        background: transparent !important;
+      }
+    }
+
+    &:not(:checked) {
+      border-color: ${palette.gray300} !important;
+      background-color: transparent !important;
+    }
   }
 `;
 
@@ -1054,8 +1087,11 @@ export const BottomBar = styled.div`
     if (props.Black) return "15px";
     return "10px";
   }};
-  border: ${(props) =>
-    props.Black ? "none" : "1px solid ${palette.outlineGray}"};
+  border: ${(props) => {
+    if (props.Black) return "none";
+    if (props.Responsive) return "1px solid ${palette.outlineGray}";
+    return "1px solid ${palette.outlineGray}";
+  }};
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
   background: ${(props) => (props.Black ? palette.gray800 : palette.white)};
   z-index: 100;
@@ -1084,6 +1120,7 @@ export const BottomBar = styled.div`
     props.Responsive &&
     css`
       gap: 12px;
+      border: 1px solid ${palette.outlineGray};
       transition: all 0.5s;
 
       span {
@@ -1129,7 +1166,7 @@ export const BottomBar = styled.div`
         width: 100%;
 
         span {
-          transform: translateX(182px);
+          transform: translateX(175px);
         }
 
         ${Body2} {
@@ -1151,7 +1188,7 @@ export const PersonaGroup = styled.div`
   display: flex;
   align-items: center;
   flex-direction: row-reverse;
-  margin-left: 10px;
+  // margin-left: 10px;
   padding-right: 6px;
   transform: translateZ(0px);
 
@@ -1213,23 +1250,24 @@ export const Persona = styled.div`
     switch (props.size) {
       case "Small":
         return css`
-          width: 32px;
-          height: 32px;
+          width: 32px !important;
+          min-width: 32px !important;
+          height: 32px !important;
         `;
       case "Medium":
         return css`
-          width: 44px;
-          height: 44px;
+          width: 44px !important;
+          height: 44px !important;
         `;
       case "Large":
         return css`
-          width: 48px;
-          height: 48px;
+          width: 48px !important;
+          height: 48px !important;
         `;
       default:
         return css`
-          width: 32px;
-          height: 32px;
+          width: 32px !important;
+          height: 32px !important;
         `;
     }
   }}
@@ -2094,37 +2132,15 @@ export const OCEANRangeWrap = styled.div`
 
 export const RangeSlider = styled.input`
   -webkit-appearance: none;
+  position: relative;
   width: 100%;
-  height: 1px;
-  background: ${palette.outlineGray};
+  height: 24px; // thumb 높이와 동일하게 설정
+  background: transparent; // 배경을 투명하게
   outline: none;
   opacity: ${(props) => (props.disabled ? 0.5 : 1)};
   transition: all 0.2s;
 
-  &::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: ${(props) =>
-      props.$ignored ? palette.gray500 : palette.primary};
-    cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
-    transition: all 0.2s;
-  }
-
-  &::-moz-range-thumb {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    border: 0;
-    background: ${(props) =>
-      props.$ignored ? palette.gray500 : palette.primary};
-    cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
-    transition: all 0.2s ease;
-  }
-
-  /* 중간 영역 표시를 위한 스타일 */
+  // 트랙 스타일링
   &::-webkit-slider-runnable-track {
     width: 100%;
     height: 1px;
@@ -2147,10 +2163,37 @@ export const RangeSlider = styled.input`
     );
   }
 
+  // thumb 스타일링
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    position: relative;
+    top: 50%; // 중앙 정렬
+    transform: translateY(-50%); // 중앙 정렬
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: ${(props) => (props.$ignored ? palette.gray500 : palette.primary)};
+    cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+    transition: all 0.2s;
+  }
+
+  &::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border: none;
+    border-radius: 50%;
+    background: ${(props) => (props.$ignored ? palette.gray500 : palette.primary)};
+    cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+    transition: all 0.2s;
+  }
+
+  // Firefox에서 focus 스타일 제거
+  &::-moz-focus-outer {
+    border: 0;
+  }
+
   &:focus {
     outline: none;
-    background: ${(props) =>
-      props.$ignored ? palette.gray500 : palette.primary};
     cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
     transition: all 0.2s;
   }

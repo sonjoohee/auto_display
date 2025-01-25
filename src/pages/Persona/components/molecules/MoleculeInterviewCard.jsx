@@ -202,7 +202,8 @@ const MoleculeInterviewCard = ({
     <>
       <CardContainer
         $isSelected={isSelected}
-        NoBackground={NoBackground}
+        $isExpanded={isExpanded}
+        // NoBackground={NoBackground}
         {...props}
       >
         <MainContent>
@@ -315,9 +316,9 @@ const CardContainer = styled.div`
     ${(props) => (props.$isSelected ? palette.primary : palette.outlineGray)};
   background: ${(props) => {
     if (props.NoBackground) {
-      return props.$isSelected ? palette.white : palette.white;
+      return props.$isSelected ? "rgba(34, 111, 255, 0.10)" : palette.white;
     }
-    return props.$isSelected ? "rgba(34, 111, 255, 0.10)" : palette.white;
+    return props.$isSelected && !props.$isExpanded ? "rgba(34, 111, 255, 0.10)" : palette.white;
   }};
   cursor: pointer;
   transition: all 0.2s ease-in-out;
@@ -479,9 +480,9 @@ const DescriptionSection = styled.div`
   color: ${palette.gray800};
   text-align: left;
   border-radius: 10px;
-
   border: ${(props) =>
-    props.$isTabContent ? `1px solid ${palette.outlineGray}` : "none"};
+    props.$isExpanded ? `1px solid ${palette.outlineGray}` : "none"};
+  background: ${palette.white};
 
   > span {
     display: flex;
@@ -493,7 +494,7 @@ const DescriptionSection = styled.div`
     padding: 20px;
     border-radius: 10px;
     background: ${(props) =>
-      props.$isTabContent ? "transparent" : palette.chatGray};
+      props.$isExpanded ? "transparent" : palette.chatGray};
     cursor: pointer;
   }
 `;

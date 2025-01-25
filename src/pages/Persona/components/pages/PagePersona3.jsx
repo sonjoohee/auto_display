@@ -156,6 +156,7 @@ const PagePersona3 = () => {
   const [showEditPersona, setShowEditPersona] = useState(false);
   const [personaListState, setPersonaListState] = useState(null);
   const [showInterviewTypeAlert, setShowInterviewTypeAlert] = useState(false);
+  const [showRequestPopup, setShowRequestPopup] = useState(false);
 
   // 인터뷰 목적 선택 핸들러 수정
   const handleInterviewPurposeSelect = (title) => {
@@ -433,20 +434,20 @@ const PagePersona3 = () => {
   }, []);
 
   useEffect(() => {
-    // 팝업이 열려있을 때
+    // 팝업이나 토스트가 열려있을 때
     if (showToast || showInterviewReady || showEditPersona) {
       document.body.style.overflow = "hidden";
-      document.body.style.paddingRight = "15px"; // 스크롤바 자리만큼 패딩 추가하여 레이아웃 밀림 방지
+      document.body.style.paddingRight = "15px"; // 스크롤바 자리만큼 패딩 추가
     }
-    // 팝업이 닫혔을 때
+    // 팝업이나 토스트가 닫혔을 때
     else {
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = "auto";  // "hidden"에서 "auto"로 변경
       document.body.style.paddingRight = "0";
     }
 
     // 컴포넌트가 언마운트될 때 원래대로 복구
     return () => {
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = "auto";  // "hidden"에서 "auto"로 변경
       document.body.style.paddingRight = "0";
     };
   }, [showToast, showInterviewReady, showEditPersona]);
@@ -467,10 +468,27 @@ const PagePersona3 = () => {
     setSelectedInterviewPurpose(purpose);
   };
 
+  const handleCloseRequestPopup = () => {
+    setShowRequestPopup(false);
+    setShowCustomButton(false);
+    setCustomizations((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        purposeText: "",
+        showMethodology: false,
+        isEditing: false,
+        definitionText: FULL_DEFINITION_TEXT,
+        editedDefinition: "",
+        editedPurpose: "",
+      },
+    ]);
+  };
+
   return (
     <>
       <ContentsWrap
-        noScroll={showToast || showInterviewReady || showEditPersona}
+        noScroll={Boolean(showToast || showInterviewReady || showEditPersona)}
       >
         <OrganismIncNavigation />
 
@@ -639,21 +657,7 @@ const PagePersona3 = () => {
                               DbExLarge
                               W100
                               Outline
-                              onClick={() => {
-                                setCustomizations((prev) => [
-                                  ...prev,
-                                  {
-                                    id: Date.now(),
-                                    purposeText: "",
-                                    showMethodology: false,
-                                    isEditing: false,
-                                    definitionText: FULL_DEFINITION_TEXT,
-                                    editedDefinition: "",
-                                    editedPurpose: "",
-                                  },
-                                ]);
-                                setShowCustomButton(false);
-                              }}
+                              onClick={() => setShowRequestPopup(true)}
                             >
                               <span />
                               <Sub1 color="gray700">인터뷰 커스터마이징</Sub1>
@@ -708,6 +712,41 @@ const PagePersona3 = () => {
                 </Button>
               </BottomBar>
             </MainSection>
+
+            {/* 크레딧 소진팝업 */}
+            {/* <PopupWrap
+              Warning
+              title="크레딧이 모두 소진되었습니다"
+              message={
+                <>
+                  매월 1일 (서비스)크레딧이 충전됩니다<br />
+                  (베타서비스) 종료시 크레딧이 자동 소멸됩니다
+                </>
+              }
+              buttonType="Outline"
+              closeText="확인"
+              isModal={false}
+            /> */}
+
+            {/* 인터뷰 커스터마이징 하기 팝업 */}
+            {showRequestPopup && (
+              <PopupWrap
+                Event
+                title="인터뷰 커스터마이징 하기"
+                message={
+                  <>
+                    현재 (베타서비스) 기간으로 (서비스)크레딧이 소진됩니다.<br />
+                    (10 크레딧)
+                  </>
+                }
+                buttonType="Outline"
+                closeText="취소"
+                confirmText="시작하기"
+                isModal={false}
+                onCancel={() => setShowRequestPopup(false)}
+                onConfirm={handleCloseRequestPopup}
+              />
+            )}
 
             {showEditPersona && (
               <PopupWrap
