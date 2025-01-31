@@ -5,7 +5,13 @@ import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import PopupWrap from "../../../../assets/styles/Popup";
-import { H4, Body1, Body3, Sub3, Caption2 } from "../../../../assets/styles/Typography";
+import {
+  H4,
+  Body1,
+  Body3,
+  Sub3,
+  Caption2,
+} from "../../../../assets/styles/Typography";
 import {
   ListBoxItem,
   ListSubtitle,
@@ -23,6 +29,7 @@ import {
   TabButtonType2,
   TabContent,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
+import axios from "axios";
 
 const MoleculePersonaCard = ({
   title,
@@ -87,6 +94,45 @@ const MoleculePersonaCard = ({
 
   const handleDetailClick = () => {
     setShowPopup(true);
+  };
+
+  const creditUse = async () => {
+    // 팝업 닫기
+    setShowRequestPopup(false);
+
+    const accessToken = sessionStorage.getItem("accessToken");
+    if (!accessToken) {
+      console.error("토큰이 없습니다.");
+      return;
+    }
+
+    // 크레딧 소모 API 요청
+    try {
+      const response = await axios.post(
+        // 크레딧 소모 API 엔드포인트
+        "https://wishresearch.kr/api/user/credit/use", 
+        // "http://localhost:8000/api/user/credit/use", 
+        {
+          title: "현재 미정 어떻게받을지 정해야함! ",
+          service_type: "페르소나 모집 요청",
+          target: "",
+          state: "use",
+          mount: 10,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("크레딧 소모 성공:", response.data);
+      // 추가적인 성공 처리 로직
+    } catch (error) {
+      console.error("크레딧 소모 중 오류 발생:", error);
+      // 오류 처리 로직
+    }
   };
 
   return (
@@ -434,7 +480,8 @@ const MoleculePersonaCard = ({
           title="페르소나 모집 요청"
           message={
             <>
-              현재 (베타서비스) 기간으로 (서비스)크레딧이 소진됩니다.<br />
+              현재 (베타서비스) 기간으로 (서비스)크레딧이 소진됩니다.
+              <br />
               (10 크레딧)
             </>
           }
@@ -443,10 +490,12 @@ const MoleculePersonaCard = ({
           confirmText="시작하기"
           isModal={false}
           onCancel={() => setShowRequestPopup(false)}
-          onConfirm={handleCloseRequestPopup}
+          onConfirm={() => {
+            handleCloseRequestPopup();
+            creditUse();
+          }}
         />
       )}
-
     </>
   );
 };

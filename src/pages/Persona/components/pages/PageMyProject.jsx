@@ -271,7 +271,7 @@ const PageMyProject = () => {
           }
         );
         setUserPersonaList(personaListData.data);
-        console.log("PERSONA::",personaListData.data);
+        console.log("PERSONA::", personaListData.data);
       } catch (err) {
         console.error("사용자 정보 조회 실패:", err);
 
@@ -468,6 +468,34 @@ const PageMyProject = () => {
     loadPersonaPage();
   }, [userPersonaTargetPage]); // userCreditData가 변경
 
+  const handleCancel = (tid) => {
+    // 결제 취소 로직을 여기에 추가
+    const accessToken = sessionStorage.getItem("accessToken");
+    if (!accessToken) {
+      console.error("토큰이 없습니다.");
+      return;
+    }
+
+    console.log("Cancel payment with TID:", tid);
+    try {
+      const personaListData = axios.post(
+        `https://wishresearch.kr/payment/refundPay`,
+        // `http://127.0.0.1:8000/payment/refundPay`,
+        tid,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setUserPersonaList(personaListData.data);
+      console.log(personaListData.data);
+    } catch (error) {
+      console.error("페르소나  로드 실패:", error);
+    }
+  };
+
   return (
     <>
       <ContentsWrap>
@@ -594,9 +622,11 @@ const PageMyProject = () => {
                           />
                         </span>
                         <H6 color="gray800">
-                          {(userCreditData.event_credit +
+                          {(
+                            userCreditData.event_credit +
                             userCreditData.regular_credit +
-                            userCreditData.additional_credit).toLocaleString()}
+                            userCreditData.additional_credit
+                          ).toLocaleString()}
                         </H6>
                       </div>
                       <images.ChevronDown
@@ -627,7 +657,8 @@ const PageMyProject = () => {
                       isActive={activeTab === "persona"}
                       onClick={() => setActiveTab("persona")}
                     >
-                    페르소나 리스트 ({userPersonaList.count > 0 ? userPersonaList.count : 0})
+                      페르소나 리스트 (
+                      {userPersonaList.count > 0 ? userPersonaList.count : 0})
                     </TabButtonType3>
                   </TabWrapType3>
 
@@ -753,17 +784,14 @@ const PageMyProject = () => {
                       <ProjectContent>
                         {userPersonaList.count > 0 ? (
                           userPersonaList.results.persona.map((persona) => (
-
-                            
                             <ProjectItem key={persona.id}>
                               <ProjectInfo>
                                 <Name>
                                   <Caption2 color="gray500">
-                                  {persona.businessAnalysis.title}
+                                    {persona.businessAnalysis.title}
                                   </Caption2>
                                   <Body2 color="gray800">
                                     {persona.personaRequest.persona.persona}
-                                    
                                   </Body2>
                                 </Name>
                                 <Persona>
@@ -775,7 +803,7 @@ const PageMyProject = () => {
                                   <Badge Keyword>
                                     Request
                                     {/* In Process */}
-                                    </Badge>
+                                  </Badge>
                                   <Button Small Outline Fill>
                                     자세히
                                   </Button>
@@ -809,9 +837,11 @@ const PageMyProject = () => {
               <CreditDashBoardWrap>
                 <H5>
                   잔여 크레딧 :
-                   { (userCreditData.event_credit +
+                  {(
+                    userCreditData.event_credit +
                     userCreditData.regular_credit +
-                    userCreditData.additional_credit).toLocaleString()}
+                    userCreditData.additional_credit
+                  ).toLocaleString()}
                 </H5>
                 <CreditDashBoard>
                   <CreditDashBoardItem>
@@ -890,7 +920,17 @@ const PageMyProject = () => {
                             </CreditBadge>
                           ) : null}
                         </div>
-                        <Body3 color="gray500">{credit.title}</Body3>
+                        <Body3 color="gray500">
+                          {credit.title}
+                          {/* 
+                          {credit.tid !== null && (
+                            <Button onClick={() => handleCancel(credit.tid)}>
+                              결제 취소
+                            </Button>
+                          )} 
+                           */}
+                        </Body3>
+
                         <Body3 color="gray500">
                           {new Date(credit.credit_created).toLocaleDateString(
                             "ko-KR",
@@ -901,7 +941,7 @@ const PageMyProject = () => {
                             }
                           )}
                         </Body3>
-                        <Body3 color="gray500">-50</Body3>
+                        <Body3 color="gray500">{credit.credit}</Body3>
                       </CreditListItem>
                     ))}
                   </CreditDashBoardListContent>
