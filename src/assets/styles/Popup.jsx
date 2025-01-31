@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { palette } from "./Palette";
 import images from "./Images";
 import { TabWrapType3, TabButtonType3 } from "./BusinessAnalysisStyle";
+import { Sub3 } from "./Typography";
 
 const PopupWrap = ({
   title,
@@ -17,6 +18,7 @@ const PopupWrap = ({
   Info,
   Success,
   Fail,
+  Event,
   buttonType,
   nomalText,
   closeText,
@@ -28,6 +30,7 @@ const PopupWrap = ({
   isFormValid,
   Wide,
   TitleFlex,
+  TitleBorder,
   showTabs,
   activeTab,
   onTabChange,
@@ -81,7 +84,12 @@ const PopupWrap = ({
             </Button>
           )}
           {confirmText && (
-            <Button Confirm className="Outline" onClick={handleConfirm}>
+            <Button 
+              Confirm 
+              Event={Event}
+              className="Outline" 
+              onClick={handleConfirm}
+            >
               {confirmText}
             </Button>
           )}
@@ -104,6 +112,13 @@ const PopupWrap = ({
               disabled={!isFormValid}
             >
               {confirmText}
+              {confirmText === "다음" && (
+                <images.ChevronRight 
+                  width="20" 
+                  height="20" 
+                  color={!isFormValid ? palette.gray500 : palette.white} 
+                />
+              )}
             </Button>
           )}
         </FillButtonWrap>
@@ -117,24 +132,33 @@ const PopupWrap = ({
   return (
     <PopupBox>
       {isModal ? (
-        <ModalPopup Wide={Wide}>
+        <ModalPopup Wide={Wide} TitleBorder={TitleBorder}>
           <Header>
             {title}
             <CloseButton TitleFlex={TitleFlex} onClick={handleClose} />
           </Header>
           
           {showTabs && tabs && (
-            <TabWrapContainer>
-              {tabs.map((tab, index) => (
-                <TabButtonType3
-                  key={index}
-                  isActive={activeTab === index}
-                  onClick={() => onTabChange(index)}
-                >
-                  {tab}
-                </TabButtonType3>
-              ))}
-            </TabWrapContainer>
+            <>
+              <AlertBox Green>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M18.5 10C18.5 14.6944 14.6944 18.5 10 18.5C5.30558 18.5 1.5 14.6944 1.5 10C1.5 5.30558 5.30558 1.5 10 1.5C14.6944 1.5 18.5 5.30558 18.5 10ZM20 10C20 15.5228 15.5228 20 10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0C15.5228 0 20 4.47715 20 10ZM10.729 12.2828L10.871 6H9.11619L9.27103 12.2828H10.729ZM10.0065 13.0943C9.45166 13.1004 8.99362 13.5246 9.00007 14.041C8.99362 14.5697 9.45166 15 10.0065 15C10.542 15 11 14.5697 11 14.041C11 13.5246 10.542 13.1004 10.0065 13.0943Z" fill="#34C759"/>
+                </svg>
+                <Sub3 color="green">(베타)서비스 기간으로 (서비스)크레딧이 사용되고 있습니다 (10 크레딧)</Sub3>
+              </AlertBox>
+
+              <TabWrapContainer>
+                {tabs.map((tab, index) => (
+                  <TabButtonType3
+                    key={index}
+                    isActive={activeTab === index}
+                    onClick={() => onTabChange(index)}
+                  >
+                    {tab}
+                  </TabButtonType3>
+                ))}
+              </TabWrapContainer>
+            </>
           )}
 
           <Body>{body}</Body>
@@ -164,6 +188,8 @@ const PopupWrap = ({
               <img src={images.RocketSuccess} alt="Success" />
             ) : Fail ? (
               <img src={images.RocketFail} alt="Fail" />
+            ) : Event ? (
+              <img src={images.EventMark} alt="Event" />
             ) : null}
 
             <Text>
@@ -191,6 +217,17 @@ const PopupWrap = ({
 };
 
 export default PopupWrap;
+
+export const AlertBox = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 4px 8px;
+  border-radius: 10px;
+  background: ${(props) => props.Green ? "rgba(52, 199, 89, 0.10)" : palette.gray100};
+`;
 
 export const TabWrapContainer = styled(TabWrapType3)`
   width: 100%;
@@ -225,7 +262,7 @@ export const AlertPopup = styled.div`
 `;
 
 export const ModalPopup = styled(AlertPopup)`
-  gap: 32px;
+  gap: ${(props) => (props.TitleBorder ? "20px" : "32px")};
   // max-width: 800px;
   max-width: ${(props) => (props.Wide ? "820px" : "583px")};
   padding: 32px;
@@ -516,8 +553,15 @@ export const Button = styled.div`
   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
   transition: all 0.5s;
 
+  // 텍스트와 이미지를 가로로 정렬하기 위한 스타일 추가
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
   &.Outline {
     color: ${(props) => {
+      if (props.Confirm && props.Event) return palette.green;
       if (props.Confirm) return "#0453F4";
       if (props.Close) return palette.gray500;
       return "#7D7D7D";

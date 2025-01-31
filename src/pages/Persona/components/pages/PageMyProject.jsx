@@ -370,7 +370,6 @@ const PageMyProject = () => {
         console.error("프로젝트 목록을 불러오는데 실패했습니다:", error);
       }
     };
-
     loadProjectList();
   }, [refreshTrigger]); // refreshTrigger가 변경될 때마다 데이터 다시 로드
 
@@ -427,7 +426,10 @@ const PageMyProject = () => {
           }
         );
         setUserProjectList(projectListData.data);
-        console.log(projectListData.data);
+        console.log(
+          "ferwu8iayfgueriaksfghrjeilwhgiurlewhgujrileahdfiol",
+          projectListData.data
+        );
       } catch (error) {
         console.error("프로젝트 리스트 로드 실패:", error);
       }
@@ -482,7 +484,7 @@ const PageMyProject = () => {
                   <Badge classBasic>Basic</Badge>
                 </MyDashboardTitle>
 
-                <ButtonGroup>
+                {/* <ButtonGroup>
                   <Button Primary onClick={() => navigate("/Payment")}>
                     <images.CoinSmall
                       width="12px"
@@ -492,7 +494,6 @@ const PageMyProject = () => {
 
                     <Sub3 color="primary">요금제 관리</Sub3>
                   </Button>
-                  {/* <img src={images.CoinSmall} alt="요금제 관리" /> */}
                   <div style={{ position: "relative" }}>
                     <Button
                       Primary
@@ -534,7 +535,7 @@ const PageMyProject = () => {
                       </ToggleBox>
                     )}
                   </div>
-                </ButtonGroup>
+                </ButtonGroup> */}
               </MyDashboardHeader>
 
               <MyDashboardContent>
@@ -610,7 +611,7 @@ const PageMyProject = () => {
             </MyDashboard>
 
             {/* <Title>프로젝트 리스트</Title> */}
-            {userProjectList.length === 0 ? (
+            {userProjectList.count === 0 ? (
               <OrganismEmptyProject />
             ) : (
               <>
@@ -641,7 +642,7 @@ const PageMyProject = () => {
                           <Body3 color="gray500">결과 리포트</Body3>
                         </ProjectHeader>
                         <ProjectContent>
-                          {userProjectList.results.projects.map(
+                          {userProjectList?.results?.projects?.map(
                             (project, index) => (
                               <OrganismProjectCard
                                 key={index}

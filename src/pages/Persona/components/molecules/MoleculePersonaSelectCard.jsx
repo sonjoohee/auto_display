@@ -64,8 +64,8 @@ const MoleculePersonaSelectCard = ({
         ? selectedPersonas
         : [];
 
-      if (currentSelected.includes(persona.persona_id)) {
-        // 선택 해제
+      if (currentSelected.some(p => p.persona_id === persona.persona_id)) {
+        // 이미 선택된 페르소나인 경우 선택 해제
         const removedPersona = personaListState.selected.find(
           (p) => p.persona_id === persona.persona_id
         );
@@ -76,7 +76,7 @@ const MoleculePersonaSelectCard = ({
           unselected: [...personaListState.unselected, removedPersona],
         });
         onPersonaSelect(
-          currentSelected.filter((id) => id !== persona.persona_id)
+          currentSelected.filter((p) => p.persona_id !== persona.persona_id)
         );
       } else if (currentSelected.length < 5) {
         // 새로운 선택 (최대 5개)
@@ -109,6 +109,7 @@ const MoleculePersonaSelectCard = ({
           key={persona.persona_id}
           selected={true}
           anySelected={true}
+          interviewType={interviewType}
         >
           {/* 카드 내용 렌더링 */}
           <Persona color="Linen" size="Large" Round>
@@ -155,6 +156,7 @@ const MoleculePersonaSelectCard = ({
           key={persona.persona_id}
           selected={false}
           anySelected={personaListState.selected.length > 0}
+          interviewType={interviewType}
         >
           {/* 카드 내용 렌더링 */}
           <Persona color="Linen" size="Large" Round>
@@ -213,14 +215,75 @@ const ListBoxItem = styled.div`
   width: 100%;
   padding: 16px;
   border-radius: 10px;
-  background: ${(props) => props.theme.white};
-  // border: 1px solid
-  /* ${(props) =>
-    props.selected ? palette.outlineGray : palette.outlineGray}; */
-  opacity: ${(props) => (props.anySelected && !props.selected ? 0.5 : 1)};
+  background: ${(props) => 
+    props.selected && props.interviewType === "single" 
+      ? palette.primaryLightest 
+      : props.theme.white
+  };
+  opacity: ${(props) =>
+    props.interviewType === "single" && props.anySelected && !props.selected
+      ? 0.5
+      : 1
+  };
+  
+  // hover 효과 추가
+  transition: background-color 0.2s ease;
+  
+  ${(props) =>
+    ((props.interviewType === "single" && !props.selected) ||
+     props.interviewType === "multiple") &&
+    `
+    &:hover {
+      border-radius: 10px;
+      background-color: ${palette.chatGray};
+      cursor: pointer;
+
+      ${Button} {
+        color: ${palette.gray500};
+        border-color: ${palette.chatGray};
+        background-color: #ECEFF3;
+      }
+
+      ${Sub2} {
+        color: ${palette.gray500};
+      }
+    }
+  `}
+  
+  ${(props) =>
+    props.selected && props.interviewType === "multiple" &&
+    `
+    &:hover {
+      ${Button} {
+        background: ${palette.primaryLightest};
+      }
+
+      ${Sub2} {
+        color: ${palette.primary};
+      }
+    }
+  `}
+
+  ${(props) =>
+    props.selected && props.interviewType === "single" &&
+    `
+      ${Button} {
+        color: ${palette.primary};
+        border: 1px solid ${palette.primary};
+      }
+
+      ${Sub2} {
+        color: ${palette.primary};
+      }
+
+      &:hover {
+        background-color: ${palette.primaryLightest};
+      }
+    `}
 
   + div {
     border-top: 1px solid ${palette.outlineGray};
+    border-radius: 0;
   }
 `;
 

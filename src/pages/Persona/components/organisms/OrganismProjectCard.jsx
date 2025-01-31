@@ -220,14 +220,26 @@ const OrganismProjectCard = ({ project, index }) => {
         <ProjectView className={closingStates[index] ? "closing" : ""}>
           {project.reportList && project.reportList.length > 0 ? (
             [...project.reportList]
-              .sort((a, b) => new Date(b.createDate) - new Date(a.createDate))
+              .sort(
+                (a, b) =>
+                  new Date(b.createTimestamp) - new Date(a.createTimestamp)
+              )
               .map((report, reportIndex) => (
                 <ViewInfo key={reportIndex}>
                   <div className="title">
-                    {report.theoryType}
+                    {report.interviewType === "single"
+                      ? report.theoryType
+                      : report.reportTitle}
                     <span>{report.createDate}</span>
                   </div>
                   <div className="info">
+                    <div>
+                      <span>
+                        <img src={images.FileSearch} alt="문항수" />
+                        인터뷰 타입
+                      </span>
+                      <p>{report.interviewType === "single" ? "1:1" : "1:N"}</p>
+                    </div>
                     <div>
                       <span>
                         <img src={images.FileSearch} alt="문항수" />
@@ -244,7 +256,7 @@ const OrganismProjectCard = ({ project, index }) => {
                     </div>
                   </div>
                   <div className="button">
-                    <Button
+                    {/* <Button
                       Small
                       Outline
                       Fill
@@ -254,7 +266,7 @@ const OrganismProjectCard = ({ project, index }) => {
                       className="view"
                     >
                       인터뷰 상세 보기
-                    </Button>
+                    </Button> */}
                     <Button
                       Small
                       Primary

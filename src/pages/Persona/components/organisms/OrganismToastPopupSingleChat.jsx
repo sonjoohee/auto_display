@@ -287,11 +287,13 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
         console.log("Loaded questions:", questions); // 여기 콘솔로
 
         console.log("questions:", questions);
-     
+
         setInterviewQuestionListState(questions);
         console.log("Updated interviewQuestionListState:", questions); // Log the updated state
         // 모든 질문을 Complete 상태로 설정
-        const completedStatus = new Array(interviewData.length).fill("Complete");
+        const completedStatus = new Array(interviewData.length).fill(
+          "Complete"
+        );
         setInterviewStatus(completedStatus);
 
         const newAnswers = {};
@@ -305,7 +307,8 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
               : personaList.selected
           ).map((persona, pIndex) => {
             // Ensure that answers[pIndex] exists
-            const answer = answers && answers[pIndex] !== undefined ? answers[pIndex] : null;
+            const answer =
+              answers && answers[pIndex] !== undefined ? answers[pIndex] : null;
             return {
               persona: persona,
               answer: answer,
@@ -353,13 +356,13 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             ...existingQuestions.commonQuestions,
             ...existingQuestions.specialQuestions,
           ];
-          setInterviewQuestionListState([combinedQuestions[0]]); // 질문 한개 테스트
-          // setInterviewQuestionListState(combinedQuestions);
+          // setInterviewQuestionListState([combinedQuestions[0]]); // 질문 한개 테스트
+          setInterviewQuestionListState(combinedQuestions);
 
           await new Promise((resolve) => setTimeout(resolve, 5000));
           setIsLoadingPrepare(false);
-          setInterviewStatus(["Pre"]); // 테스트 하나
-          // setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
+          // setInterviewStatus(["Pre"]); // 테스트 하나
+          setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
         } else {
           // 생성된 질문이 없다면 API 요청
           let data = {
@@ -371,7 +374,13 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             },
             theory_name: selectedInterviewPurposeData.title,
           };
-
+          {
+            /* <CardBadge text={item.badge.text}>
+                                      <span>{item.badge.icon}</span>
+                                      {item.badge.text}
+                                    </CardBadge> 
+                                    <CardTitle>{item.title}</CardTitle>*/
+          }
           let response = await InterviewXPersonaSingleInterviewGeneratorRequest(
             data,
             isLoggedIn
@@ -871,7 +880,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             <TypeName>
               <Thumb>
                 <img
-                  src={`/ai_person/${answer.persona.personaImg}.jpg`}
+                  src={`/ai_person/${answer.persona.personaImg}.png`}
                   alt={answer.persona.persona}
                 />
               </Thumb>
@@ -967,8 +976,10 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
               </Persona>
               <ChatBox Moder>
                 <Sub1 color="gray800" align="left">
-                  {console.log("현재 질문:", item.question)} {/* 콘솔에 질문 출력 */}
-                  Q{index + 1}. {item.question}
+                  {console.log("현재 질문:", item.question)}
+                  {/* Q{index + 1}.{" "}
+                  {item.question} */}
+                  {/* 콘솔에 질문 출력 */}Q{index + 1}. {item}
                 </Sub1>
               </ChatBox>
             </ChatItem>
@@ -978,7 +989,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
               <ChatItem Persona key={`${index}-${answerIndex}`}>
                 <Persona color="Linen" size="Medium" Round>
                   <img
-                    src={`/ai_person/${answer.persona.personaImg}.jpg`}
+                    src={`/ai_person/${answer.persona.personaImg}.png`}
                     alt={answer.persona.persona}
                   />
                 </Persona>
@@ -998,7 +1009,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                     src={`/ai_person/${
                       personaList.selected[answers[index]?.length || 0]
                         ?.personaImg
-                    }.jpg`}
+                    }.png`}
                     alt="페르소나"
                   />
                 </Persona>
@@ -1019,14 +1030,16 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
     console.log("인터뷰 완료 렌더링");
 
     // interviewData에서 질문과 답변을 추출
-    const questionsAndAnswers = interviewData.map((item) => {
-      const questionKeys = Object.keys(item).filter((key) =>
-        key.startsWith("question")
-      );
-      const question = questionKeys.map((key) => item[key]).find((q) => q);
-      const answer = item.answer; // 답변을 가져옴
-      return { question, answer }; // 질문과 답변을 반환
-    }).filter(q => q.question); // 유효한 질문만 필터
+    const questionsAndAnswers = interviewData
+      .map((item) => {
+        const questionKeys = Object.keys(item).filter((key) =>
+          key.startsWith("question")
+        );
+        const question = questionKeys.map((key) => item[key]).find((q) => q);
+        const answer = item.answer; // 답변을 가져옴
+        return { question, answer }; // 질문과 답변을 반환
+      })
+      .filter((q) => q.question); // 유효한 질문만 필터
 
     return questionsAndAnswers.map((item, index) => {
       const status = interviewStatus[index]; // 질문 상태 가져오기
@@ -1047,12 +1060,12 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
               </Persona>
               <ChatBox Moder>
                 <Sub1 color="gray800" align="left">
-                {console.log("현재 질문:", item.question)} 
-                  Q{index + 1}. {item.question}
+                  {console.log("현재 질문:", item.question)}Q{index + 1}.{" "}
+                  {item.question}
                 </Sub1>
               </ChatBox>
             </ChatItem>
-            </React.Fragment>
+          </React.Fragment>
 
           //   <ChatItem Persona>
           //     <Persona color="Linen" size="Medium" Round>
@@ -1076,7 +1089,6 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
   };
 
   const handleCheckResult = async () => {
-  
     setActive(false);
     if (onClose) {
       onClose();
@@ -1229,6 +1241,12 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                 {personaList.selected.map((persona) => {
                   return (
                     <li key={persona.persona_id}>
+                      <Thumb>
+                        <img
+                          src={`/ai_person/${persona.personaImg}.png`}
+                          alt={persona.persona}
+                        />
+                      </Thumb>
                       <span>{persona.persona}</span>
                       <span>
                         {persona.gender} | {persona.age}세 | {persona.job}{" "}
@@ -1306,19 +1324,22 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                       </ChatBox>
                       <ChatAddButton>
                         <label
-                          disabled={countAdditionalQuestion === 0 || selectedRadio !== null}
+                          disabled={
+                            countAdditionalQuestion === 0 ||
+                            selectedRadio !== null
+                          }
                           onClick={() => {
                             if (selectedRadio === null) {
-                              setSelectedRadio('yes');
+                              setSelectedRadio("yes");
                               setIsInputEnabled(true);
                               setInputValue("");
                             }
                           }}
                         >
-                          <input 
-                            type="radio" 
-                            name="addQuestion" 
-                            checked={selectedRadio === 'yes'}
+                          <input
+                            type="radio"
+                            name="addQuestion"
+                            checked={selectedRadio === "yes"}
                             disabled={selectedRadio !== null}
                           />
                           <span>네, 있습니다!</span>
@@ -1328,15 +1349,15 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                           disabled={selectedRadio !== null}
                           onClick={() => {
                             if (selectedRadio === null) {
-                              setSelectedRadio('no');
+                              setSelectedRadio("no");
                               loadInterviewReport();
                             }
                           }}
                         >
-                          <input 
-                            type="radio" 
-                            name="addQuestion" 
-                            checked={selectedRadio === 'no'}
+                          <input
+                            type="radio"
+                            name="addQuestion"
+                            checked={selectedRadio === "no"}
                             disabled={selectedRadio !== null}
                           />
                           <span>아니요, 괜찮습니다.</span>
@@ -1447,7 +1468,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                         <Body3 color="gray800" align="left">
                           Q{index + 1}. {value}
                         </Body3>
-                        <div>
+                        <div style={{ width: "46px" }}>
                           <Body2 color="gray800" />
                         </div>
                       </li>
@@ -1737,21 +1758,33 @@ const ChatAddButton = styled.div`
           border: 1px solid ${palette.gray800};
           background: ${palette.gray800};
         }
+      }
+    }
 
-        &:disabled {
-          + span {
-            border-color: ${palette.gray300};
-            background: transparent;
-            cursor: not-allowed;
-          }
-        }
+    &[disabled] {
+      cursor: not-allowed;
+
+      span {
+        opacity: 0.5;
+        cursor: not-allowed;
 
         &:hover {
-          + span {
-            color: ${palette.white};
-            border: 1px solid ${palette.gray300};
-            background: ${palette.gray300};
-          }
+          color: ${palette.gray700};
+          border: 1px solid ${palette.gray700};
+          background: transparent;
+        }
+      }
+
+      input[type="radio"]:checked + span {
+        color: ${palette.white};
+        border: 1px solid ${palette.gray800};
+        background: ${palette.gray800};
+        opacity: 0.5;
+
+        &:hover {
+          color: ${palette.white};
+          border: 1px solid ${palette.gray800};
+          background: ${palette.gray800};
         }
       }
     }
@@ -2475,5 +2508,3 @@ const AddQuestionTitle = styled.div`
   justify-content: space-between;
   width: 100%;
 `;
-
-

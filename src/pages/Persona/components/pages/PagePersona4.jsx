@@ -105,9 +105,8 @@ const PagePersona4 = () => {
   const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(
     SELECTED_INTERVIEW_PURPOSE
   );
-  const [selectedInterviewPurposeData] = useAtom(
-    SELECTED_INTERVIEW_PURPOSE_DATA
-  );
+  const [selectedInterviewPurposeData, setSelectedInterviewPurposeData] =
+    useAtom(SELECTED_INTERVIEW_PURPOSE_DATA);
   const [reportReady, setReportReady] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
@@ -178,7 +177,7 @@ const PagePersona4 = () => {
         return "TropicalRainForest";
       case "유아/출산":
         return "DollarBill";
-      case "인사/비즈니스/법률":
+      case "인사/비즈니스":
         return "Olivine";
       case "제조/하드웨어":
         return "ChineseGreen";
@@ -194,12 +193,18 @@ const PagePersona4 = () => {
         return "Shadow";
       case "환경/에너지":
         return "Tuscany";
-      case "홈리빙/펫":
+      case "홈리빙":
         return "VeryLightTangelo";
       case "헬스케어/바이오":
         return "Orange";
       case "피트니스/스포츠":
         return "CarnationPink";
+      case "법률":
+        return "TurkishRose";
+      case "펫":
+        return "SuperPink";
+      case "기타":
+        return "NavyBlue";
       default:
         return "";
     }
@@ -261,7 +266,7 @@ const PagePersona4 = () => {
           reportLoadButtonState
         );
         if (savedProjectReportInfo) {
-          setSelectedInterviewPurpose(savedProjectReportInfo.theory_type);
+          setSelectedInterviewPurpose(savedProjectReportInfo.theoryType);
           setInterviewData(savedProjectReportInfo.interviewData);
           setSelectedPersonaList(savedProjectReportInfo.personaList);
           setInterviewReport(savedProjectReportInfo.interviewReport);
@@ -305,46 +310,7 @@ const PagePersona4 = () => {
                     reportTitle: selectedInterviewPurpose,
                     interviewData: interviewData.length,
                     selectedPersona: personaList.selected.length,
-                    createDate: new Date().toLocaleString("ko-KR", {
-                      timeZone: "Asia/Seoul",
-                    }),
-                  },
-                ],
-              },
-              isLoggedIn
-            );
-          } else if (selectedInterviewType === "single") {
-            await updateProjectReportOnServer(
-              reportId,
-              {
-                interviewType: selectedInterviewType,
-                theoryType: selectedInterviewPurposeData.theory_name,
-                interviewData: interviewData,
-                personaList: personaList.selected,
-                singleInterviewReportTab1: singleInterviewReportTab1,
-                singleInterviewReportTab2: singleInterviewReportTab2,
-                singleInterviewReportTab3: singleInterviewReportTab3,
-              },
-              isLoggedIn
-            );
-            const currentProject = await getProjectByIdFromIndexedDB(
-              projectId,
-              isLoggedIn
-            );
-            const currentReportList = currentProject?.reportList || [];
-
-            await updateProjectOnServer(
-              //프로젝트의 리포트 목록 업데이트하기 위해서 (나중에 모든 인터뷰 리포트 이력 확인 할 때 사용)
-              projectId,
-              {
-                reportList: [
-                  ...currentReportList, // 서버의 기존 데이터 유지
-                  {
-                    reportId: reportId,
-                    interviewType: selectedInterviewType,
-                    reportTitle: selectedInterviewPurposeData.theory_name,
-                    interviewData: interviewData.length,
-                    selectedPersona: personaList.selected.length,
+                    createTimestamp: new Date().getTime(),
                     createDate: new Date().toLocaleString("ko-KR", {
                       timeZone: "Asia/Seoul",
                     }),
@@ -760,10 +726,10 @@ const PagePersona4 = () => {
                   <img src={images.KeyCircle} alt="인터뷰 인사이트" />
 
                   <div>
-                    <H4 color="gray700">
+                    <H4 color="gray700" align="center">
                       인터뷰 내용에 대해 비즈니스 분야별 인사이트를 확인하세요
                     </H4>
-                    <Body3 color="gray500">
+                    <Body3 color="gray500" align="center">
                       여러가지 정보를 확인 하고 싶으시면 클릭해 보세요!
                     </Body3>
                   </div>
@@ -866,10 +832,7 @@ const PagePersona4 = () => {
                       <>
                         <Persona color="Linen" size="Large" Round>
                           <img
-                            src={
-                              personaImages[selectedPersonaList[0].image] ||
-                              personaImages.PersonaWomen01
-                            }
+                            src={`/ai_person/${selectedPersonaList[0].personaImg}.png`}
                             alt="페르소나"
                           />
                         </Persona>
@@ -895,9 +858,9 @@ const PagePersona4 = () => {
                     )}
                   </PersonaInfoContent>
 
-                  <Button Medium PrimaryLightest Fill>
+                  {/* <Button Medium PrimaryLightest Fill>
                     같은 페르소나에게 다른 질문하기
-                  </Button>
+                  </Button> */}
                 </PersonaInfoWrap>
 
                 <WaitPersonaWrap>

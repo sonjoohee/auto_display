@@ -180,7 +180,7 @@ const PagePersona2 = () => {
   const loadingRef = useRef(false);
   const [viewType, setViewType] = useState("list"); // 'list' 또는 'card'
   const [activeTab, setActiveTab] = useState("daily"); // 'daily' 또는 'business'
-
+  const [findPersonas, setFindPersonas] = useState([]);
   // 새로운 상태 추가 (컴포넌트 최상단)
   const [isLoadingDaily, setIsLoadingDaily] = useState(false);
   const [isLoadingBusiness, setIsLoadingBusiness] = useState(false);
@@ -293,6 +293,13 @@ const PagePersona2 = () => {
       }
     });
   };
+  const axiosConfig = {
+    timeout: 100000, // 100초
+    headers: {
+      "Content-Type": "application/json",
+    },
+    withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -344,7 +351,7 @@ const PagePersona2 = () => {
         return "TropicalRainForest";
       case "유아/출산":
         return "DollarBill";
-      case "인사/비즈니스/법률":
+      case "인사/비즈니스":
         return "Olivine";
       case "제조/하드웨어":
         return "ChineseGreen";
@@ -360,12 +367,18 @@ const PagePersona2 = () => {
         return "Shadow";
       case "환경/에너지":
         return "Tuscany";
-      case "홈리빙/펫":
+      case "홈리빙":
         return "VeryLightTangelo";
       case "헬스케어/바이오":
         return "Orange";
       case "피트니스/스포츠":
         return "CarnationPink";
+      case "법률":
+        return "TurkishRose";
+      case "펫":
+        return "SuperPink";
+      case "기타":
+        return "NavyBlue";
       default:
         return "";
     }
@@ -380,6 +393,8 @@ const PagePersona2 = () => {
             projectId,
             projectLoadButtonState
           );
+
+          // console.log("🚀 ~ loadProject ~ savedProjectInfo:", savedProjectInfo);
           if (savedProjectInfo) {
             setBusinessAnalysis(savedProjectInfo.businessAnalysis);
             setRequestPersonaList(savedProjectInfo.requestPersonaList);
@@ -400,6 +415,35 @@ const PagePersona2 = () => {
             if (savedProjectInfo.customTheoryData) {
               setCustomTheoryData(savedProjectInfo.customTheoryData);
             }
+
+            let availablePersonas = [];
+            // 초기 페르소나 데이터 로드
+            for (const category of Object.values(
+              savedProjectInfo.businessAnalysis.category
+            )) {
+              const response = await axios.post(
+                "https://wishresearch.kr/person/findPersonapreSet",
+                { target: category },
+                axiosConfig
+              );
+
+              response.data.forEach((newPersona) => {
+                // 이미 필터링된 페르소나는 제외
+                const isAlreadyFiltered = filteredProjectList.some(
+                  (filtered) => filtered.persona_id === newPersona.persona_id
+                );
+
+                if (
+                  !isAlreadyFiltered &&
+                  !availablePersonas.some(
+                    (p) => p.persona_id === newPersona.persona_id
+                  )
+                ) {
+                  availablePersonas.push(newPersona);
+                }
+              });
+            }
+            setFindPersonas(availablePersonas);
 
             // businessPersonaList에서 고유한 persona_type 추출
             const uniqueTypes = [
@@ -482,14 +526,19 @@ const PagePersona2 = () => {
                 if (!isDuplicate) {
                   unselectedPersonas.push(newPersonas[i]);
                 }
+                console.log(
+                  "🚀 ~ loadProject ~ unselectedPersonas:",
+                  unselectedPersonas
+                );
               }
             }
 
-            let personaList = {
+            let personfindList = {
               selected: [],
               unselected: unselectedPersonas,
             };
-            setPersonaList(personaList);
+            console.log("🚀 ~ loadProject ~ personfindList:", personfindList);
+            setPersonaList(personfindList);
           }
           // setIsLoadingPage(false); // 로딩 완료
         }
@@ -518,14 +567,6 @@ const PagePersona2 = () => {
   // if (isLoadingPage) {
   //   return <div>Loading...</div>;
   // }
-
-  const axiosConfig = {
-    timeout: 100000, // 100초
-    headers: {
-      "Content-Type": "application/json",
-    },
-    withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
-  };
 
   //페르소나 새로 생성
   const reloadPersona = async () => {
@@ -661,6 +702,7 @@ const PagePersona2 = () => {
       }
 
       let availablePersonas = [];
+      console.log("🚀 ~ availablePersonas:", availablePersonas);
 
       // 초기 페르소나 데이터 로드
       for (const category of Object.values(businessAnalysis.category)) {
@@ -1079,56 +1121,52 @@ const PagePersona2 = () => {
 
   const handleTypeToggle = async (typeId, isSelected) => {
     if (isSelected) {
-      // 선택 해제: 선택된 유형에서만 제거
+      // 선택 해제: 선택된 유형에서 제거하고 선택하지 않은 유형으로 이동
       setSelectedTypes((prev) => {
         const updatedSelected = prev.filter((type) => type.id !== typeId);
-        console.log("updatedSelected:", updatedSelected);
-
-        // 제거된 타입을 unselectedTypes에 추가하고 인덱스로 정렬
-        const typeToAddBack = originalUnselectedTypes.find(
-          (type) => type.id === typeId
-        );
-
-        if (typeToAddBack) {
-          setUnselectedTypes((prevUnselected) => {
-            const updatedUnselected = [...prevUnselected, typeToAddBack];
-            // index 기준으로 정렬
-            return updatedUnselected.sort((a, b) => a.index - b.index);
-          });
-        }
-
         return updatedSelected;
       });
-    } else {
-      // 선택: 선택된 유형에 추가
-      const typeToMove = unselectedTypes.find((type) => type.id === typeId);
-      setSelectedTypes((prev) => {
-        // 새로운 타입을 추가하고 index로 정렬
-        const updatedSelected = [
-          ...prev,
-          {
-            id: typeId,
-            label: typeToMove.label,
-            type: typeToMove.type,
-            count: typeToMove.count,
-            index: typeToMove.index, // index 값도 함께 저장
-          },
-        ];
-        // index 기준으로 정렬
-        return updatedSelected.sort((a, b) => a.index - b.index);
-      });
 
-      // 선택한 유형을 선택하지 않은 유형 목록에서 제거
-      setUnselectedTypes((prevUnselected) =>
-        prevUnselected.filter((type) => type.id !== typeId)
+      // visibleSelectedTypes에서도 제거
+      setVisibleSelectedTypes((prev) => 
+        prev.filter((type) => type.id !== typeId)
       );
+
+      // 제거된 타입을 unselectedTypes에 추가
+      const typeToAddBack = selectedTypes.find((type) => type.id === typeId);
+      if (typeToAddBack) {
+        setUnselectedTypes((prevUnselected) => {
+          if (!prevUnselected.some(type => type.id === typeId)) {
+            const updatedUnselected = [...prevUnselected, typeToAddBack];
+            return updatedUnselected.sort((a, b) => a.index - b.index);
+          }
+          return prevUnselected;
+        });
+      }
+    } else {
+      // 선택: visibleSelectedTypes에는 추가하지 않고 selectedTypes에만 추가
+      const typeToAdd = unselectedTypes.find((type) => type.id === typeId);
+      if (typeToAdd) {
+        setSelectedTypes((prev) => {
+          if (!prev.some(type => type.id === typeId)) {
+            return [...prev, typeToAdd].sort((a, b) => a.index - b.index);
+          }
+          return prev;
+        });
+      }
     }
   };
   // 선택 유형 보기 버튼 클릭 핸들러 수정
   const handleTypeSelection = async () => {
     setIsLoadingMore(true);
-    setShowTypeList(false); // 팝업 닫기
+    // setShowTypeList(false); // 이 줄 제거
     setVisibleSelectedTypes(selectedTypes.sort((a, b) => a.index - b.index));
+    
+    // 선택된 타입들을 unselectedTypes에서 제거
+    setUnselectedTypes(prev => 
+      prev.filter(type => !selectedTypes.some(selected => selected.id === type.id))
+    );
+    
     // 기존 displayedPersonas 초기화
     setDisplayedPersonas([]);
 
@@ -1137,8 +1175,6 @@ const PagePersona2 = () => {
       await loadBusinessPersona(type);
     }
 
-    // 선택된 유형을 visibleSelectedTypes에 설정
-    // setVisibleSelectedTypes(selectedTypes);
     setIsLoadingMore(false);
   };
 
@@ -1546,8 +1582,8 @@ const PagePersona2 = () => {
                               ) && (
                                 <LoadMoreButton onClick={handleLoadMore}>
                                   <Body3 color="gray700">
-                                    더보기 ({personaList?.unselected?.length}/
-                                    {filteredProjectList.length})
+                                    더보기 ({filteredProjectList.length}/
+                                    {findPersonas.length})
                                   </Body3>
                                 </LoadMoreButton>
                               )}
@@ -1632,23 +1668,18 @@ const PagePersona2 = () => {
                               {showTypeList && (
                                 <TypeList>
                                   <TypeItem>
-                                    <p>선택된 유형 ({selectedTypes.length})</p>
+                                    <p>선택된 유형 ({visibleSelectedTypes.length})</p>
                                     <TypeItemList style={{ padding: "0 12px" }}>
-                                      {selectedTypes.map((type) => (
+                                      {visibleSelectedTypes.map((type) => (
                                         <li key={type.id}>
                                           <CheckBox Round>
                                             <input
                                               type="checkbox"
                                               id={type.id}
                                               checked={true}
-                                              onChange={() =>
-                                                handleTypeToggle(type.id, true)
-                                              }
-                                              // onChange={() => { /* 아무것도 하지 않거나 다르게 처리 */ }}
+                                              onChange={() => handleTypeToggle(type.id, true)}
                                             />
-                                            <label htmlFor={type.id}>
-                                              {type.label}
-                                            </label>
+                                            <label htmlFor={type.id}>{type.label}</label>
                                           </CheckBox>
                                           <span>3명</span>
                                         </li>
@@ -1660,12 +1691,9 @@ const PagePersona2 = () => {
                                     <p>
                                       선택하지 않은 유형 (
                                       {unselectedTypes.length})<span>?</span>
-                                      <div>
-                                        <Caption2 color="white">
-                                          선택시 나타나는 변화에 대한 여러가지
-                                          설명
-                                        </Caption2>
-                                      </div>
+                                      <Caption2 color="white">
+                                        페르소나 생성 소요<br />시간이 발생됩니다.
+                                      </Caption2>
                                     </p>
                                     <TypeItemList>
                                       {unselectedTypes.map((type) => {
@@ -1828,6 +1856,21 @@ const PagePersona2 = () => {
         </MainContent>
       </ContentsWrap>
 
+      {/* 크레딧 소진팝업 */}
+      {/* <PopupWrap
+        Warning
+        title="크레딧이 모두 소진되었습니다"
+        message={
+          <>
+            매월 1일 (서비스)크레딧이 충전됩니다<br />
+            (베타서비스) 종료시 크레딧이 자동 소멸됩니다
+          </>
+        }
+        buttonType="Outline"
+        closeText="확인"
+        isModal={false}
+      /> */}
+
       {showPopup && (
         <PopupWrap
           Warning
@@ -1844,7 +1887,7 @@ const PagePersona2 = () => {
       {showCustomizePopup && (
         <PopupWrap
           TitleFlex
-          title="📝 맞춤형 페르소나 모집 요청하기"
+          title="📝 나만의 페르소나 커스터마이징"
           buttonType="Fill"
           confirmText={activeTabIndex === 0 ? "다음" : "맞춤 페르소나 모집하기"}
           isModal={true}
@@ -1858,7 +1901,7 @@ const PagePersona2 = () => {
             }
           }}
           showTabs={true}
-          tabs={["필수정보", "성격(OCEAN) 정보"]}
+          tabs={["필수정보", "OCEAN 정보"]}
           onTabChange={(index) => setActiveTabIndex(index)}
           activeTab={activeTabIndex}
           body={
@@ -2788,7 +2831,15 @@ const LoadMoreButton = styled.button`
   cursor: pointer;
   transition: all 0.5s;
 
-  &:before {
+  p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+  }
+
+  p:before {
+    margin-bottom: 3px;
     content: "+ ";
   }
 

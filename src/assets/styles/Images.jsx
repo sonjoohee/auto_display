@@ -73,6 +73,7 @@ import CheckMark from "../images/CheckMark.svg"
 import iconQuestionMark from "../images/iconQuestionMark.svg"
 import iconQuestionMark2 from "../images/iconQuestionMark2.svg"
 import QuestionCircle from "../images/question-circle.svg"
+import EventMark from "../images/event-mark.svg"
 
 import ProfessionalValue from "../images/ProfessionalValue.svg"
 import ProfessionalRoadmap from "../images/ProfessionalRoadmap.svg"
@@ -342,6 +343,7 @@ const images = {
   iconQuestionMark,
   iconQuestionMark2,
   QuestionCircle,
+  EventMark,
 
   ProfessionalValue,
   ProfessionalRoadmap,

@@ -41,6 +41,7 @@ import {
 import {
   H2,
   H4,
+  H6,
   Body1,
   Body2,
   Body2_1,
@@ -64,7 +65,7 @@ import { updateProjectReportOnServer } from "../../../../utils/indexedDB";
 import { getProjectReportByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
-import OrganismToastPopupSingleChat from "../organisms/OrganismToastPopupSingleChat";
+import OrganismToastPopupSingleChaComplete from "../organisms/OrganismToastPopupSingleChaComplete";
 
 const PagePersona4 = () => {
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
@@ -180,7 +181,7 @@ const PagePersona4 = () => {
         return "TropicalRainForest";
       case "유아/출산":
         return "DollarBill";
-      case "인사/비즈니스/법률":
+      case "인사/비즈니스":
         return "Olivine";
       case "제조/하드웨어":
         return "ChineseGreen";
@@ -196,12 +197,18 @@ const PagePersona4 = () => {
         return "Shadow";
       case "환경/에너지":
         return "Tuscany";
-      case "홈리빙/펫":
+      case "홈리빙":
         return "VeryLightTangelo";
       case "헬스케어/바이오":
         return "Orange";
       case "피트니스/스포츠":
         return "CarnationPink";
+      case "법률":
+        return "TurkishRose";
+      case "펫":
+        return "SuperPink";
+      case "기타":
+        return "NavyBlue";
       default:
         return "";
     }
@@ -603,18 +610,18 @@ const PagePersona4 = () => {
                       </UlList>
                     </div>
 
-                    {!showInsightCards ? (
+                    {/* {!showInsightCards ? (
                       <InterviewInsight
                         onClick={() => setShowInsightCards(!showInsightCards)}
                       >
                         <img src={images.KeyCircle} alt="인터뷰 인사이트" />
 
                         <div>
-                          <H4 color="gray700">
+                          <H4 color="gray700" align="center">
                             인터뷰 내용에 대해 비즈니스 분야별 인사이트를
                             확인하세요
                           </H4>
-                          <Body3 color="gray500">
+                          <Body3 color="gray500" align="center">
                             여러가지 정보를 확인 하고 싶으시면 클릭해 보세요!
                           </Body3>
                         </div>
@@ -661,11 +668,6 @@ const PagePersona4 = () => {
                                     <CardIcon>
                                       <img src={item.icon} />
                                     </CardIcon>
-                                    {/* <CardBadge text={item.badge.text}>
-                                      <span>{item.badge.icon}</span>
-                                      {item.badge.text}
-                                    </CardBadge> 
-                                    <CardTitle>{item.title}</CardTitle>*/}
                                   </>
                                 ) : (
                                   <>
@@ -685,7 +687,7 @@ const PagePersona4 = () => {
                           </CardWrap>
                         </FindCard>
                       </InterviewFind>
-                    )}
+                    )} */}
                   </ReportContent>
 
                   <ReportContent
@@ -696,12 +698,12 @@ const PagePersona4 = () => {
                       <H4>1. 페르소나 정보</H4>
                       <PersonaInformationWrap>
                         <PersonaInformation>
-                          <div className="thumb">
+                          <Persona color="Linen" size="Large" Round>
                             <img
-                              src={personaImages.PersonaMen28}
+                              src={`/ai_person/${selectedPersonaList[0]?.personaImg}.png`}
                               alt="페르소나"
                             />
-                          </div>
+                          </Persona>
                           <div className="info">
                             <Body1>
                               {selectedPersonaList[0]?.persona_view || ""}
@@ -1033,9 +1035,9 @@ const PagePersona4 = () => {
                     style={{ display: activeTab === 3 ? "flex" : "none" }}
                   >
                     <BgBoxItem>
-                      <H4 color="gray800">
+                      <H6 color="gray800">
                         {singleInterviewReportTab3?.persona_summary}
-                      </H4>
+                      </H6>
                     </BgBoxItem>
 
                     <div>
@@ -1051,7 +1053,7 @@ const PagePersona4 = () => {
                         </H4>
                       </ResultTitle>
 
-                      <UlList Disc>
+                      <UlList Disc Spacing>
                         <li>
                           {singleInterviewReportTab3?.insight_1
                             ?.insight_1_context || ""}
@@ -1076,7 +1078,7 @@ const PagePersona4 = () => {
                         </H4>
                       </ResultTitle>
 
-                      <UlList Disc>
+                      <UlList Disc Spacing>
                         <li>
                           {singleInterviewReportTab3?.insight_2
                             ?.insight_2_context || ""}
@@ -1101,7 +1103,7 @@ const PagePersona4 = () => {
                         </H4>
                       </ResultTitle>
 
-                      <UlList Disc>
+                      <UlList Disc Spacing>
                         <li>
                           {singleInterviewReportTab3?.insight_3
                             ?.insight_3_context || ""}
@@ -1146,10 +1148,7 @@ const PagePersona4 = () => {
                       <>
                         <Persona color="Linen" size="Large" Round>
                           <img
-                            src={
-                              personaImages[selectedPersonaList[0].image] ||
-                              personaImages.PersonaWomen01
-                            }
+                            src={`/ai_person/${selectedPersonaList[0]?.personaImg}.png`}
                             alt="페르소나"
                           />
                         </Persona>
@@ -1175,9 +1174,9 @@ const PagePersona4 = () => {
                     )}
                   </PersonaInfoContent>
 
-                  <Button Medium PrimaryLightest Fill>
+                  {/* <Button Medium PrimaryLightest Fill>
                     같은 페르소나에게 다른 질문하기
-                  </Button>
+                  </Button> */}
                 </PersonaInfoWrap>
 
                 <WaitPersonaWrap>
@@ -1217,7 +1216,7 @@ const PagePersona4 = () => {
             </SidebarWrap>
 
             {showToast && (
-              <OrganismToastPopupSingleChat
+              <OrganismToastPopupSingleChaComplete
                 isActive={showToast}
                 onClose={() => setShowToast(false)}
                 isComplete={true}

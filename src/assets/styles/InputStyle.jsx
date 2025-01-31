@@ -6,7 +6,7 @@ const getStatusColor = (props) => {
   if (props.status === "error") return palette.error;
   if (props.status === "valid") return palette.gray300;
   if (props.disabled) return palette.gray100;
-  return palette.gray300;
+  return palette.outlineGray;
 };
 
 export const FormBox = styled.div`
@@ -63,8 +63,8 @@ export const CustomInput = styled.input`
   font-size: 1rem;
   line-height: 1.2;
   color: ${props => props.status === "error" ? palette.error : palette.gray900};
-  padding: 16px;
-  border-radius: ${(props) => props.Round ? "50px" : "0"};
+  padding: 16px 20px;
+  border-radius: ${(props) => props.Round ? "50px" : "5px"};
   border: 1px solid ${getStatusColor};
   outline: none;
   transition: all 0.5s;
@@ -175,6 +175,16 @@ export const CustomTextarea = styled.textarea`
     font-weight: 300;
     // line-height: 1.5;
     color: ${palette.gray500};
+  }
+
+  
+  &:focus, &:hover {
+    border-color: ${(props) =>
+      props.status === "error"
+        ? palette.error
+        : props.status === "valid"
+        ? palette.outlineGray
+        : palette.main};
   }
 `;
 

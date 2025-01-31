@@ -136,6 +136,20 @@ const PagePersona3Select = () => {
     };
   }, []);
 
+  // showToast 상태가 변경될 때마다 body 스타일 업데이트
+  useEffect(() => {
+    if (showToast) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+
+    // 컴포넌트 언마운트 시 원래대로 복구
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [showToast]);
+
   const handleStartInterview = () => {
     console.log("인터뷰 시작");
     console.log("personaList", personaList);
@@ -272,7 +286,7 @@ const PagePersona3Select = () => {
                           ))}
                       </PersonaGroup>
                     </li>
-                    {selectedInterviewType === "multiple" ? (
+                    {/* {selectedInterviewType === "multiple" ? (
                       <></>
                     ) : selectedInterviewType === "single" ? (
                       <li>
@@ -299,7 +313,7 @@ const PagePersona3Select = () => {
                           <Body2 color="gray800">추가 질문 생성</Body2>
                         </SwitchToggle>
                       </li>
-                    ) : null}
+                    ) : null} */}
                   </ListBoxGroup>
                 </div>
 
