@@ -16,8 +16,9 @@ import {
   CreditDashBoardItem,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import { useAtom } from "jotai";
-import { BUSINESS_ANALYSIS, PERSONA_STEP } from "../../../AtomStates";
+import { BUSINESS_ANALYSIS, PERSONA_STEP, USER_CREDITS } from "../../../AtomStates";
 import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
+import { UserCreditInfo } from "../../../../utils/indexedDB";
 
 const MoleculeHeader = () => {
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
@@ -28,6 +29,7 @@ const MoleculeHeader = () => {
   const [showBusinessAnalysis, setShowBusinessAnalysis] = useState(false);
   const [showCreditToggle, setShowCreditToggle] = useState(false);
   const [isClosingCreditToggle, setIsClosingCreditToggle] = useState(false);
+  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
 
   // Persona/3 경로 체크를 위한 조건 수정
   const isPersona3Page =
@@ -74,6 +76,19 @@ const MoleculeHeader = () => {
       setShowCreditToggle(true);
     }
   };
+
+  useEffect(() => {
+    const fetchUserCredits = async () => {
+      const credits = await UserCreditInfo(true);
+      console.log(credits);
+      if (credits) {
+        setUserCredits(credits);
+      }
+    };
+
+    fetchUserCredits();
+  }, []);
+
 
   return (
     <>
@@ -129,7 +144,7 @@ const MoleculeHeader = () => {
                     color={palette.white}
                   />
                 </span>
-                <Sub2 color="gray800">123,456</Sub2>
+                <Sub2 color="gray800">{userCredits.regular_credit + userCredits.additional_credit + userCredits.event_credit}</Sub2>
               </div>
               <images.ChevronDown
                 width="20px"
@@ -156,7 +171,7 @@ const MoleculeHeader = () => {
                 <ul>
                   <li>
                     <CreditDashBoardItem NoLine>
-                      <div class="icon yellow">
+                      <div className="icon yellow">
                         <images.CoinFill
                           width="9.6"
                           height="6.1"
@@ -168,12 +183,12 @@ const MoleculeHeader = () => {
                       </Sub3>
                     </CreditDashBoardItem>
                     <Sub3 color="gray500" align="right">
-                      10,000
+                      {userCredits.additional_credit}
                     </Sub3>
                   </li>
                   <li>
                     <CreditDashBoardItem NoLine>
-                      <div class="icon green">
+                      <div className="icon green">
                         <images.CoinFill
                           width="9.6"
                           height="6.1"
@@ -185,12 +200,12 @@ const MoleculeHeader = () => {
                       </Sub3>
                     </CreditDashBoardItem>
                     <Sub3 color="gray500" align="right">
-                      10,000
+                      {userCredits.regular_credit}
                     </Sub3>
                   </li>
                   <li>
                     <CreditDashBoardItem NoLine>
-                      <div class="icon red">
+                      <div className="icon red">
                         <images.CoinFill
                           width="9.6"
                           height="6.1"
@@ -202,7 +217,7 @@ const MoleculeHeader = () => {
                       </Sub3>
                     </CreditDashBoardItem>
                     <Sub3 color="gray500" align="right">
-                      10,000
+                      {userCredits.event_credit}
                     </Sub3>
                   </li>
                 </ul>

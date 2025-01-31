@@ -21,6 +21,7 @@ export const USER_EMAIL = atom("");
 // 사용자 데이터 상태
 export const CURRENT_USER_STATUS = atom(null);
 export const ERROR_STATUS = atom(""); // 에러 상태 추가
+export const USER_CREDITS = atom({});
 
 // 패널 선택 상태
 export const SELECTED_COUNT = atom(0);
