@@ -105,9 +105,8 @@ const PagePersona4 = () => {
   const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(
     SELECTED_INTERVIEW_PURPOSE
   );
-  const [selectedInterviewPurposeData] = useAtom(
-    SELECTED_INTERVIEW_PURPOSE_DATA
-  );
+  const [selectedInterviewPurposeData, setSelectedInterviewPurposeData] =
+    useAtom(SELECTED_INTERVIEW_PURPOSE_DATA);
   const [reportReady, setReportReady] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
@@ -267,7 +266,7 @@ const PagePersona4 = () => {
           reportLoadButtonState
         );
         if (savedProjectReportInfo) {
-          setSelectedInterviewPurpose(savedProjectReportInfo.theory_type);
+          setSelectedInterviewPurpose(savedProjectReportInfo.theoryType);
           setInterviewData(savedProjectReportInfo.interviewData);
           setSelectedPersonaList(savedProjectReportInfo.personaList);
           setInterviewReport(savedProjectReportInfo.interviewReport);

@@ -356,13 +356,13 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             ...existingQuestions.commonQuestions,
             ...existingQuestions.specialQuestions,
           ];
-          setInterviewQuestionListState([combinedQuestions[0]]); // 질문 한개 테스트
-          // setInterviewQuestionListState(combinedQuestions);
+          // setInterviewQuestionListState([combinedQuestions[0]]); // 질문 한개 테스트
+          setInterviewQuestionListState(combinedQuestions);
 
           await new Promise((resolve) => setTimeout(resolve, 5000));
           setIsLoadingPrepare(false);
-          setInterviewStatus(["Pre"]); // 테스트 하나
-          // setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
+          // setInterviewStatus(["Pre"]); // 테스트 하나
+          setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
         } else {
           // 생성된 질문이 없다면 API 요청
           let data = {
@@ -374,7 +374,13 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             },
             theory_name: selectedInterviewPurposeData.title,
           };
-
+          {
+            /* <CardBadge text={item.badge.text}>
+                                      <span>{item.badge.icon}</span>
+                                      {item.badge.text}
+                                    </CardBadge> 
+                                    <CardTitle>{item.title}</CardTitle>*/
+          }
           let response = await InterviewXPersonaSingleInterviewGeneratorRequest(
             data,
             isLoggedIn
