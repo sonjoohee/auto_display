@@ -55,7 +55,13 @@ import { InterviewXPersonaSingleInterviewReportTab2 } from "../../../../utils/in
 import { InterviewXPersonaSingleInterviewReportTab3 } from "../../../../utils/indexedDB";
 import { SkeletonLine } from "../../../../assets/styles/Skeleton";
 
-const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
+const OrganismToastPopupSingleChat = ({
+  isActive,
+  onClose,
+  isComplete,
+  isIndepth,
+}) => {
+  console.log("🚀 ~ isIndepth:", isIndepth);
   const [selectedPersonaList, setSelectedPersonaList] = useAtom(
     SELECTED_PERSONA_LIST
   );
