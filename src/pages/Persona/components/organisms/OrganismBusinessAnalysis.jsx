@@ -34,6 +34,7 @@ import MoleculeRecreate from "../molecules/MoleculeRecreate";
 import { Body2, Body3, H5 } from "../../../../assets/styles/Typography";
 import { Tag } from "../../../../assets/styles/BusinessAnalysisStyle";
 import { IconButton } from "../../../../assets/styles/ButtonStyle";
+import { BusinessCategoryAnalysis } from "../../../../utils/indexedDB";
 
 const OrganismBusinessAnalysis = ({ personaStep }) => {
   const [isLoadingBusinessAnalysis, setIsLoadingBusinessAnalysis] = useAtom(
@@ -412,11 +413,13 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
           setIsLoadingBusinessAnalysis(true);
           console.log("data", data);
           // 버튼 클릭으로 API 호출
-          let response = await axios.post(
-            "https://wishresearch.kr/person/business_category",
-            data,
-            axiosConfig
-          );
+          // let response = await axios.post(
+          //   "https://wishresearch.kr/person/business_category",
+          //   data,
+          //   axiosConfig
+          // );
+          // 비즈니스 카테고리 분석 수정 예정
+          let response = await BusinessCategoryAnalysis(data, isLoggedIn);
 
           // 필요한 데이터가 없을 경우 재시도, 최대 5번
           while (
