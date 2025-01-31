@@ -153,7 +153,7 @@ const PageMyProfile = () => {
                     <img src={images.Headset} alt="고객 서비스" />
                     <Sub3 color="primary">고객 서비스</Sub3>
                   </Button>
-
+                  
                   {(isServiceMenuOpen || isClosing) && (
                     <ToggleBox $isClosing={isClosing}>
                       <Body3>고객 서비스</Body3>
