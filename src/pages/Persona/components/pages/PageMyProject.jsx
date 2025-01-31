@@ -71,10 +71,13 @@ import {
   USER_PAGE_CNT,
   USER_PROJECT_LIST,
   USER_CREDIT_LIST,
+  USER_PERSONA_LIST,
   CREDIT_TARGET_PAGE,
   PROJECT_TARGET_PAGE,
+  PERSONA_TARGET_PAGE,
 } from "../../../AtomStates";
 import OrganismProjectCard from "../organisms/OrganismProjectCard";
+
 import { getProjectListByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import OrganismEmptyProject from "../organisms/OrganismEmptyProject";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
@@ -157,10 +160,12 @@ const PageMyProject = () => {
     useAtom(CREDIT_TARGET_PAGE);
   const [userProjecTargetPage, setProjectTargetPage] =
     useAtom(PROJECT_TARGET_PAGE);
+  const [userPersonaTargetPage, setPersonaTagetPage] =
+    useAtom(PERSONA_TARGET_PAGE);
   const [userPageCnt, setUserPageCnt] = useAtom(USER_PAGE_CNT);
   const [userProjectList, setUserProjectList] = useAtom(USER_PROJECT_LIST);
-
   const [userCreditList, setUserCreditList] = useAtom(USER_CREDIT_LIST);
+  const [userPersonaList, setUserPersonaList] = useAtom(USER_PERSONA_LIST);
 
   const closeServiceMenu = () => {
     setIsClosing(true);
@@ -255,6 +260,18 @@ const PageMyProject = () => {
 
         console.log(creditListData.data);
         setUserCreditList(creditListData.data);
+
+        const personaListData = await axios.get(
+          `https://wishresearch.kr/api/user/myPage/personaList?page=${userPersonaTargetPage}&size=10`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        setUserPersonaList(personaListData.data);
+        console.log("PERSONA::", personaListData.data);
       } catch (err) {
         console.error("사용자 정보 조회 실패:", err);
 
@@ -421,11 +438,63 @@ const PageMyProject = () => {
     loadProjectPage();
   }, [userProjecTargetPage]); // userCreditData가 변경
 
-  // const handleLoadMore = () => {
-  //   if (panelList.length < filterdPanelCount) {
-  //     setCreditListPageCount((prevPageCount) => prevPageCount + 1);
-  //   }
-  // };
+  useEffect(() => {
+    const loadPersonaPage = async () => {
+      if (!userPersonaList) return; // userCreditData가 없으면 종료
+
+      const accessToken = sessionStorage.getItem("accessToken");
+      if (!accessToken) {
+        console.error("토큰이 없습니다.");
+        return;
+      }
+
+      try {
+        const personaListData = await axios.get(
+          `https://wishresearch.kr/api/user/myPage/personaList?page=${userPersonaTargetPage}&size=10`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        setUserPersonaList(personaListData.data);
+        console.log(personaListData.data);
+      } catch (error) {
+        console.error("페르소나  로드 실패:", error);
+      }
+    };
+
+    loadPersonaPage();
+  }, [userPersonaTargetPage]); // userCreditData가 변경
+
+  const handleCancel = (tid) => {
+    // 결제 취소 로직을 여기에 추가
+    const accessToken = sessionStorage.getItem("accessToken");
+    if (!accessToken) {
+      console.error("토큰이 없습니다.");
+      return;
+    }
+
+    console.log("Cancel payment with TID:", tid);
+    try {
+      const personaListData = axios.post(
+        `https://wishresearch.kr/payment/refundPay`,
+        // `http://127.0.0.1:8000/payment/refundPay`,
+        tid,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setUserPersonaList(personaListData.data);
+      console.log(personaListData.data);
+    } catch (error) {
+      console.error("페르소나  로드 실패:", error);
+    }
+  };
 
   return (
     <>
@@ -553,9 +622,11 @@ const PageMyProject = () => {
                           />
                         </span>
                         <H6 color="gray800">
-                          {userCreditData.event_credit +
+                          {(
+                            userCreditData.event_credit +
                             userCreditData.regular_credit +
-                            userCreditData.additional_credit}
+                            userCreditData.additional_credit
+                          ).toLocaleString()}
                         </H6>
                       </div>
                       <images.ChevronDown
@@ -586,7 +657,8 @@ const PageMyProject = () => {
                       isActive={activeTab === "persona"}
                       onClick={() => setActiveTab("persona")}
                     >
-                      페르소나 리스트
+                      페르소나 리스트 (
+                      {userPersonaList.count > 0 ? userPersonaList.count : 0})
                     </TabButtonType3>
                   </TabWrapType3>
 
@@ -710,48 +782,38 @@ const PageMyProject = () => {
                         <Body3 color="gray500">생성 완료일</Body3>
                       </ProjectHeader>
                       <ProjectContent>
-                        <ProjectItem>
-                          <ProjectInfo>
-                            <Name>
-                              <Caption2 color="gray500">
-                                홈리빙 플랫폼 서비스
-                              </Caption2>
-                              <Body2 color="gray800">
-                                가족과 함께 여가를 보내는 활동 지향형 소비자
-                              </Body2>
-                            </Name>
-                            <Persona>
-                              <Sub3 color="gray500">2024. 10. 26</Sub3>
-                            </Persona>
-                            <Report>
-                              <Badge Keyword>In Process</Badge>
-                              <Button Small Outline Fill>
-                                자세히
-                              </Button>
-                            </Report>
-                          </ProjectInfo>
-                        </ProjectItem>
-                        <ProjectItem>
-                          <ProjectInfo>
-                            <Name>
-                              <Caption2 color="gray500">
-                                홈리빙 플랫폼 서비스
-                              </Caption2>
-                              <Body2 color="gray800">
-                                가족과 함께 여가를 보내는 활동 지향형 소비자
-                              </Body2>
-                            </Name>
-                            <Persona>
-                              <Sub3 color="gray500">2024. 10. 26</Sub3>
-                            </Persona>
-                            <Report>
-                              <Sub3 color="gray500">2024. 10. 26</Sub3>
-                              <Button Small Outline Fill>
-                                자세히
-                              </Button>
-                            </Report>
-                          </ProjectInfo>
-                        </ProjectItem>
+                        {userPersonaList.count > 0 ? (
+                          userPersonaList.results.persona.map((persona) => (
+                            <ProjectItem key={persona.id}>
+                              <ProjectInfo>
+                                <Name>
+                                  <Caption2 color="gray500">
+                                    {persona.businessAnalysis.title}
+                                  </Caption2>
+                                  <Body2 color="gray800">
+                                    {persona.personaRequest.persona.persona}
+                                  </Body2>
+                                </Name>
+                                <Persona>
+                                  <Sub3 color="gray500">
+                                    {persona.requestDate}
+                                  </Sub3>
+                                </Persona>
+                                <Report>
+                                  <Badge Keyword>
+                                    Request
+                                    {/* In Process */}
+                                  </Badge>
+                                  <Button Small Outline Fill>
+                                    자세히
+                                  </Button>
+                                </Report>
+                              </ProjectInfo>
+                            </ProjectItem>
+                          ))
+                        ) : (
+                          <div>데이터가 없습니다.</div> // 데이터가 없을 경우 메시지 표시
+                        )}
                       </ProjectContent>
                     </ProjectList>
                   )}
@@ -775,9 +837,11 @@ const PageMyProject = () => {
               <CreditDashBoardWrap>
                 <H5>
                   잔여 크레딧 :
-                  {userCreditData.event_credit +
+                  {(
+                    userCreditData.event_credit +
                     userCreditData.regular_credit +
-                    userCreditData.additional_credit}
+                    userCreditData.additional_credit
+                  ).toLocaleString()}
                 </H5>
                 <CreditDashBoard>
                   <CreditDashBoardItem>
@@ -789,7 +853,7 @@ const PageMyProject = () => {
                         일반 크레딧
                       </Sub3>
                       <H6 color="gray800" align="left">
-                        {userCreditData.additional_credit}
+                        {userCreditData.additional_credit.toLocaleString()}
                       </H6>
                     </div>
                   </CreditDashBoardItem>
@@ -802,7 +866,7 @@ const PageMyProject = () => {
                         구독 크레딧
                       </Sub3>
                       <H6 color="gray800" align="left">
-                        {userCreditData.regular_credit}
+                        {userCreditData.regular_credit.toLocaleString()}
                       </H6>
                     </div>
                   </CreditDashBoardItem>
@@ -815,7 +879,7 @@ const PageMyProject = () => {
                         이벤트 크레딧
                       </Sub3>
                       <H6 color="gray800" align="left">
-                        {userCreditData.event_credit}
+                        {userCreditData.event_credit.toLocaleString()}
                       </H6>
                     </div>
                   </CreditDashBoardItem>
@@ -856,7 +920,17 @@ const PageMyProject = () => {
                             </CreditBadge>
                           ) : null}
                         </div>
-                        <Body3 color="gray500">{credit.title}</Body3>
+                        <Body3 color="gray500">
+                          {credit.title}
+                          {/* 
+                          {credit.tid !== null && (
+                            <Button onClick={() => handleCancel(credit.tid)}>
+                              결제 취소
+                            </Button>
+                          )} 
+                           */}
+                        </Body3>
+
                         <Body3 color="gray500">
                           {new Date(credit.credit_created).toLocaleDateString(
                             "ko-KR",
@@ -867,7 +941,7 @@ const PageMyProject = () => {
                             }
                           )}
                         </Body3>
-                        <Body3 color="gray500">-50</Body3>
+                        <Body3 color="gray500">{credit.credit}</Body3>
                       </CreditListItem>
                     ))}
                   </CreditDashBoardListContent>
@@ -895,8 +969,6 @@ const PageMyProject = () => {
                   )}
 
                   <NumbersWrapper>
-                    {/* <Pagination currentPage={1} totalPages={11} /> */}
-                    {/* 지선님 여기 디자인 부탁드립니다. 하단의 페이징 처리. !!! */}
                     {Array.from({
                       length: Math.ceil(userCreditList.count / 5),
                     }).map((_, pageIndex) => (
