@@ -79,10 +79,17 @@ const MoleculeHeader = () => {
 
   useEffect(() => {
     const fetchUserCredits = async () => {
-      const credits = await UserCreditInfo(true);
-      console.log(credits);
-      if (credits) {
-        setUserCredits(credits);
+      try {
+        const credits = await UserCreditInfo(true);
+        console.log(credits);
+        if (credits) {
+          setUserCredits(credits);
+        } else {
+          setUserCredits({ additional_credit: 0, regular_credit: 0, event_credit: 0 }); // 크레딧 값을 불러오지 못할 경우 기본값 설정
+        }
+      } catch (error) {
+        console.error("유저 크레딧 정보 조회 오류 발생:", error);
+        setUserCredits({ additional_credit: 0, regular_credit: 0, event_credit: 0 }); // 오류 발생 시 기본값 설정
       }
     };
 
@@ -144,7 +151,7 @@ const MoleculeHeader = () => {
                     color={palette.white}
                   />
                 </span>
-                <Sub2 color="gray800">{userCredits.regular_credit + userCredits.additional_credit + userCredits.event_credit}</Sub2>
+                <Sub2 color="gray800">{(userCredits.regular_credit || 0) + (userCredits.additional_credit || 0) + (userCredits.event_credit || 0)}</Sub2>
               </div>
               <images.ChevronDown
                 width="20px"
