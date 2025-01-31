@@ -34,7 +34,10 @@ import MoleculeRecreate from "../molecules/MoleculeRecreate";
 import { Body2, Body3, H5 } from "../../../../assets/styles/Typography";
 import { Tag } from "../../../../assets/styles/BusinessAnalysisStyle";
 import { IconButton } from "../../../../assets/styles/ButtonStyle";
+import { InterviewXBusinessCategoryModifyRequest } from "../../../../utils/indexedDB";
 import { BusinessCategoryAnalysis } from "../../../../utils/indexedDB";
+
+
 
 const OrganismBusinessAnalysis = ({ personaStep }) => {
   const [isLoadingBusinessAnalysis, setIsLoadingBusinessAnalysis] = useAtom(
@@ -245,14 +248,17 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
         },
         keyword: inputs.field2.value,
       };
-      let response = await axios.post(
-        "https://wishresearch.kr/person/business_category_modify",
-        data,
-        axiosConfig
-      );
+      // let response = await axios.post(
+      //   "https://wishresearch.kr/person/business_category_modify",
+      //   data,
+      //   axiosConfig
+      // );
+      //비즈니스 카테고리 분석 수정 API  수정 예정
+      let response = await InterviewXBusinessCategoryModifyRequest(data, isLoggedIn);
 
-      businessData = response.data.business_analysis;
-      categoryData = response.data.category;
+
+      businessData = response.response.business_analysis;
+      categoryData = response.response.category;
 
       if (attempts >= maxAttempts) {
         setShowErrorPopup(true);
@@ -425,33 +431,35 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
           while (
             attempts < maxAttempts &&
             (!response ||
-              !response.data ||
-              typeof response.data !== "object" ||
-              !response.data.hasOwnProperty("business_analysis") ||
-              !response.data.hasOwnProperty("category") ||
-              !response.data.business_analysis.hasOwnProperty("명칭") ||
-              !response.data.business_analysis.hasOwnProperty(
+              !response.response ||
+              typeof response.response !== "object" ||
+              !response.response.hasOwnProperty("business_analysis") ||
+              !response.response.hasOwnProperty("category") ||
+              !response.response.business_analysis.hasOwnProperty("명칭") ||
+              !response.response.business_analysis.hasOwnProperty(
                 "주요_목적_및_특징"
               ) ||
-              !response.data.business_analysis.hasOwnProperty("주요기능") ||
-              !response.data.business_analysis["명칭"] ||
-              !response.data.business_analysis["주요_목적_및_특징"].length ||
-              !response.data.business_analysis["주요기능"].length ||
-              !response.data.category.hasOwnProperty("first") ||
-              !response.data.category.first ||
-              response.data.category.first === "기타")
+              !response.response.business_analysis.hasOwnProperty("주요기능") ||
+              !response.response.business_analysis["명칭"] ||
+              !response.response.business_analysis["주요_목적_및_특징"].length ||
+              !response.response.business_analysis["주요기능"].length ||
+              !response.response.category.hasOwnProperty("first") ||
+              !response.response.category.first ||
+              response.response.category.first === "기타")
           ) {
             attempts += 1;
 
-            response = await axios.post(
-              "https://wishresearch.kr/person/business_category",
-              data,
-              axiosConfig
-            );
+            // response = await axios.post(
+            //   "https://wishresearch.kr/person/business_category",
+            //   data,
+            //   axiosConfig
+            // );
+            // 비즈니스 카테고리 분석 수정 예정
+            let response = await BusinessCategoryAnalysis(data, isLoggedIn);
           }
 
-          businessData = response.data.business_analysis;
-          categoryData = response.data.category;
+          businessData = response.response.business_analysis;
+          categoryData = response.response.category;
 
           const updatedBusinessAnalysis = {
             input: businessAnalysis.input,
@@ -522,43 +530,49 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
     try {
       setIsLoading(true);
       // 버튼 클릭으로 API 호출
-      let response = await axios.post(
-        "https://wishresearch.kr/person/business_category",
-        data,
-        axiosConfig
-      );
+      // let response = await axios.post(
+      //   "https://wishresearch.kr/person/business_category",
+      //   data,
+      //   axiosConfig
+      // );
+      // 비즈니스 카테고리 분석 수정 예정
+      let response = await BusinessCategoryAnalysis(data, isLoggedIn);
 
       // 필요한 데이터가 없을 경우 재시도, 최대 5번
       while (
         attempts < maxAttempts &&
         (!response ||
-          !response.data ||
-          typeof response.data !== "object" ||
-          !response.data.hasOwnProperty("business_analysis") ||
-          !response.data.hasOwnProperty("category") ||
-          !response.data.business_analysis.hasOwnProperty("명칭") ||
-          !response.data.business_analysis.hasOwnProperty(
+          !response.response ||
+          typeof response.response !== "object" ||
+          !response.response.hasOwnProperty("business_analysis") ||
+          !response.response.hasOwnProperty("category") ||
+          !response.response.business_analysis.hasOwnProperty("명칭") ||
+          !response.response.business_analysis.hasOwnProperty(
             "주요_목적_및_특징"
           ) ||
-          !response.data.business_analysis.hasOwnProperty("주요기능") ||
-          !response.data.business_analysis["명칭"] ||
-          !response.data.business_analysis["주요_목적_및_특징"].length ||
-          !response.data.business_analysis["주요기능"].length ||
-          !response.data.category.hasOwnProperty("first") ||
-          !response.data.category.first ||
-          response.data.category.first === "기타")
+          !response.response.business_analysis.hasOwnProperty("주요기능") ||
+          !response.response.business_analysis["명칭"] ||
+          !response.response.business_analysis["주요_목적_및_특징"].length ||
+          !response.response.business_analysis["주요기능"].length ||
+          !response.response.category.hasOwnProperty("first") ||
+          !response.response.category.first ||
+          response.response.category.first === "기타")
       ) {
         attempts += 1;
 
-        response = await axios.post(
-          "https://wishresearch.kr/person/business_category",
-          data,
-          axiosConfig
-        );
+        // response = await axios.post(
+        //   "https://wishresearch.kr/person/business_category",
+        //   data,
+        //   axiosConfig
+        // );
+
+        // 비즈니스 카테고리 분석 수정 예정
+        let response = await BusinessCategoryAnalysis(data, isLoggedIn);
+
       }
 
-      businessData = response.data.business_analysis;
-      categoryData = response.data.category;
+      businessData = response.response.business_analysis;
+      categoryData = response.response.category;
 
       const updatedBusinessAnalysis = {
         input: businessAnalysis.input,

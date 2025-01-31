@@ -103,6 +103,7 @@ import { createRequestPersonOnServer } from "../../../../utils/indexedDB";
 import MoleculeRecreate from "../molecules/MoleculeRecreate";
 import { InterviewXInterviewReportPersonaFilter } from "../../../../utils/indexedDB";
 import { InterviewXPersonaRequestType } from "../../../../utils/indexedDB";
+import { InterviewXPersonaRequestRequest } from "../../../../utils/indexedDB";
 
 const PagePersona2 = () => {
   const [customPersonaForm, setCustomPersonaForm] = useState({
@@ -427,7 +428,7 @@ const PagePersona2 = () => {
                 axiosConfig
               );
 
-              response.data.forEach((newPersona) => {
+              response.response.forEach((newPersona) => {
                 // 이미 필터링된 페르소나는 제외
                 const isAlreadyFiltered = filteredProjectList.some(
                   (filtered) => filtered.persona_id === newPersona.persona_id
@@ -510,7 +511,7 @@ const PagePersona2 = () => {
                 axiosConfig
               );
 
-              let newPersonas = response.data;
+              let newPersonas = response.response;
 
               // 이미 존재하는 페르소나는 제외
               for (let i = 0; i < newPersonas.length; i++) {
@@ -581,13 +582,15 @@ const PagePersona2 = () => {
           business_idea: businessAnalysis,
         };
 
-        response = await axios.post(
-          "https://wishresearch.kr/person/persona_request",
-          data,
-          axiosConfig
-        );
+        // response = await axios.post(
+        //   "https://wishresearch.kr/person/persona_request",
+        //   data,
+        //   axiosConfig
+        // );
+        // 페르소나 요청 API  수정 예정
+        response = await InterviewXPersonaRequestRequest(data, isLoggedIn);
 
-        let requestPersonaList = response.data;
+        let requestPersonaList = response.response;
 
         let retryCount = 0;
         const maxRetries = 10;
@@ -595,7 +598,7 @@ const PagePersona2 = () => {
         while (
           retryCount < maxRetries &&
           (!response ||
-            !response.data ||
+            !response.response ||
             !requestPersonaList.hasOwnProperty("persona_spectrum") ||
             requestPersonaList.persona_spectrum.length !== 3 ||
             !requestPersonaList.persona_spectrum[0].hasOwnProperty(
@@ -634,14 +637,17 @@ const PagePersona2 = () => {
               3 ||
             requestPersonaList.persona_spectrum[2].persona_3.keyword.length < 3)
         ) {
-          response = await axios.post(
-            "https://wishresearch.kr/person/persona_request",
-            data,
-            axiosConfig
-          );
+          // response = await axios.post(
+          //   "https://wishresearch.kr/person/persona_request",
+          //   data,
+          //   axiosConfig
+          // );
+          // 페르소나 요청 API  수정 예정
+           response = await InterviewXPersonaRequestRequest(data, isLoggedIn);
+           
           retryCount++;
 
-          requestPersonaList = response.data;
+          requestPersonaList = response.response;
         }
         if (retryCount >= maxRetries) {
           setShowErrorPopup(true);
@@ -712,7 +718,7 @@ const PagePersona2 = () => {
           axiosConfig
         );
 
-        response.data.forEach((newPersona) => {
+        response.response.forEach((newPersona) => {
           // 이미 필터링된 페르소나는 제외
           const isAlreadyFiltered = filteredProjectList.some(
             (filtered) => filtered.persona_id === newPersona.persona_id

@@ -20,7 +20,10 @@ import {
   INTERVIEW_REPORT_ADDITIONAL
 } from "../../pages/AtomStates";
 import { updateProjectOnServer } from "../../utils/indexedDB";
-
+import { InterviewXPersonaBusinessInterviewModuleRequest } from "../../utils/indexedDB";
+import { InterviewXPersonaInterviewModeratorRequest } from "../../utils/indexedDB";
+import { InterviewXInterviewReportRequest } from "../../utils/indexedDB";
+import { InterviewXInterviewReportAdditionalRequest } from "../../utils/indexedDB";
 const ToastPopupWrap = ({ isActive, onClose }) => {
   const [interviewReport, setInterviewReport] = useAtom(INTERVIEW_REPORT);
   const [interviewReportAdditional, setInterviewReportAdditional] = useAtom(INTERVIEW_REPORT_ADDITIONAL);
@@ -83,27 +86,31 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
               theory_name: selectedInterviewPurpose,
             };
 
-            let response = await axios.post(
-              "https://wishresearch.kr/person/persona_interview",
-              data,
-              axiosConfig
-            );
+            // let response = await axios.post(
+            //   "https://wishresearch.kr/person/persona_interview",
+            //   data,
+            //   axiosConfig
+            // );
+             // 페르소나 인터뷰 생성 API  수정 예정
+            let response = await InterviewXPersonaInterviewModeratorRequest(data, isLoggedIn);
       
-            let questionList = response.data;
+            let questionList = response.response;
             let retryCount = 0;
             const maxRetries = 10;
       
             while (
               retryCount < maxRetries &&
-              (!response || !response.data || response.data.length !== 5)
+              (!response || !response.response || response.response.length !== 5)
             ) {
-              response = await axios.post(
-                "https://wishresearch.kr/person/persona_interview",
-                data,
-                axiosConfig
-              );
+              // response = await axios.post(
+              //   "https://wishresearch.kr/person/persona_interview",
+              //   data,
+              //   axiosConfig
+              // );
+               //페르소나 인터뷰 생성 API  수정 예정
+               let response = await InterviewXPersonaInterviewModeratorRequest(data, isLoggedIn);
               retryCount++;
-              questionList = response.data;
+              questionList = response.response;
             }
 
             if (retryCount === maxRetries) {
@@ -191,14 +198,16 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
               last_interview: lastInterview
             };
 
-            const response = await axios.post(
-              "https://wishresearch.kr/person/persona_interview_module",
-              data,
-              axiosConfig
-            );
+            // const response = await axios.post(
+            //   "https://wishresearch.kr/person/persona_interview_module",
+            //   data,
+            //   axiosConfig
+            // );
+            // 페르소나 인터뷰 수행(단건) API  수정 예정
+            let response = await InterviewXPersonaBusinessInterviewModuleRequest(data, isLoggedIn);
 
             setIsGenerating(false);
-            allAnswers.push(response.data.answer);
+            allAnswers.push(response.response.answer);
 
             personaInfoState.push(personaInfo);
 
@@ -208,7 +217,7 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
                 ...prev[currentQuestionIndex],
                 {
                   persona: personaList.selected[i],
-                  answer: response.data.answer
+                  answer: response.response.answer
                 }
               ]
             }));
@@ -260,18 +269,20 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
                     theory_type: selectedInterviewPurpose
                   };
 
-                  const responseReport = await axios.post(
-                    "https://wishresearch.kr/person/interview_reports",
-                    finalData1,
-                    axiosConfig
-                  );
+                  // const responseReport = await axios.post(
+                  //   "https://wishresearch.kr/person/interview_reports",
+                  //   finalData1,
+                  //   axiosConfig
+                  // );
+                  // 인터뷰 결과 보고서 요청 API  수정 예정
+                  const response = await InterviewXInterviewReportRequest(data, isLoggedIn);
 
-                  setInterviewReport(responseReport.data);
+                  setInterviewReport(response.response);
 
                   const finalData2 = {
                     business_idea: businessAnalysis,
                     persona_info: personaInfoState,
-                    report_data: responseReport.data,
+                    report_data: response.response,
                     interview_data: [
                       ...interviewData,
                       {
@@ -282,15 +293,17 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
                     theory_type: selectedInterviewPurpose
                   };
 
-                  const responseReportAdditional = await axios.post(
-                    "https://wishresearch.kr/person/interview_report_additional",
-                    finalData2,
-                    axiosConfig
-                  );
+                  // const responseReportAdditional = await axios.post(
+                  //   "https://wishresearch.kr/person/interview_report_additional",
+                  //   finalData2,
+                  //   axiosConfig
+                  // );
+                  //인터뷰 결과 추가 보고서 요청 수정 예정
+                  const responseReportAdditional = await InterviewXInterviewReportAdditionalRequest(data, isLoggedIn);
 
-                  setInterviewReportAdditional(responseReportAdditional.data);
+                  setInterviewReportAdditional(responseReportAdditional.response);
 
-                  if (responseReport.data && responseReportAdditional.data) {
+                  if (response.response && responseReportAdditional.response) {
                     setIsAnalyzing(false);
                     setIsAnalysisComplete(true);
                     // 필요한 경우 분석 결과 저장

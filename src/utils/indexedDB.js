@@ -1196,3 +1196,267 @@ export const BusinessCategoryAnalysis = async (data, isLoggedIn) => {
     throw error;
   }
 };
+
+
+// interviewx 1.1 api 수정 250131
+// 페르소나 인터뷰 생성 API 250131
+export const InterviewXPersonaInterviewModeratorRequest = async (data, isLoggedIn) => {
+  console.log("페르소나 인터뷰 생성 API  - 입력 데이터:", data);
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/person/temporary/persona_interview",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+    return result;
+    // return response.data;
+  } catch (error) {
+    console.error("페르소나 인터뷰 생성 API 중 오류 발생:", error);
+    console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
+// interviewx 1.1 api 수정 250131
+// 페르소나 인터뷰 수행(단건) API 250131
+export const InterviewXPersonaBusinessInterviewModuleRequest = async (data, isLoggedIn) => {
+  console.log("페르소나 인터뷰 수행(단건) API  - 입력 데이터:", data);
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/person/temporary/persona_interview_module",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+    return result;
+    // return response.data;
+  } catch (error) {
+    console.error("페르소나 인터뷰 수행(단건) API 중 오류 발생:", error);
+    console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
+// interviewx 1.1 api 수정 250131
+// 페르소나 요청 API 250131
+export const InterviewXPersonaRequestRequest = async (data, isLoggedIn) => {
+  console.log("페르소나 요청 API  - 입력 데이터:", data);
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/person/temporary/persona_request",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+    return result;
+
+  } catch (error) {
+    console.error("페르소나 요청 API 중 오류 발생:", error);
+    console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
+// interviewx 1.1 api 수정 250131
+// 인터뷰 결과 보고서 요청 API 250131
+export const InterviewXInterviewReportRequest = async (data, isLoggedIn) => {
+  console.log("인터뷰 결과 보고서 요청 API  - 입력 데이터:", data);
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/person/temporary/interview_reports",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+    return result;
+
+  } catch (error) {
+    console.error("인터뷰 결과 보고서 요청 API 중 오류 발생:", error);
+    console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
+// interviewx 1.1 api 수정 250131
+//비즈니스 카테고리 분석 수정 API 250131
+export const InterviewXBusinessCategoryModifyRequest = async (data, isLoggedIn) => {
+  console.log("비즈니스 카테고리 분석 수정 API  - 입력 데이터:", data);
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/person/temporary/business_category_modify",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+    return result;
+
+  } catch (error) {
+    console.error("비즈니스 카테고리 분석 수정 API 중 오류 발생:", error);
+    console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
+// interviewx 1.1 api 수정 250131
+//인터뷰 결과 추가 보고서 요청 수정 API 250131
+export const InterviewXInterviewReportAdditionalRequest = async (data, isLoggedIn) => {
+  console.log("인터뷰 결과 추가 보고서 요청 API  - 입력 데이터:", data);
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/person/temporary/interview_report_additional",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+    return result;
+
+  } catch (error) {
+    console.error("인터뷰 결과 추가 보고서 요청 API 중 오류 발생:", error);
+    console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+  }
+};

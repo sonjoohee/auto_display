@@ -31,7 +31,10 @@ import {
 import { updateProjectOnServer } from "../../utils/indexedDB";
 import { createProjectReportOnServer } from "../../utils/indexedDB";
 import MoleculeRecreate from "../../pages/Persona/components/molecules/MoleculeRecreate";
-
+import { InterviewXPersonaBusinessInterviewModuleRequest } from "../../utils/indexedDB";
+import { InterviewXPersonaInterviewModeratorRequest } from "../../utils/indexedDB";
+import { InterviewXInterviewReportRequest } from "../../utils/indexedDB";
+import { InterviewXInterviewReportAdditionalRequest } from "../../utils/indexedDB";
 
 const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
   const [selectedPersonaList, setSelectedPersonaList] = useAtom(
@@ -190,28 +193,32 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             theory_name: selectedInterviewPurpose,
           };
 
-          let response = await axios.post(
-            "https://wishresearch.kr/person/persona_interview",
-            data,
-            axiosConfig
-          );
+          // let response = await axios.post(
+          //   "https://wishresearch.kr/person/persona_interview",
+          //   data,
+          //   axiosConfig
+          // );
+          // 페르소나 인터뷰 생성 API  수정 예정
+          let response = await InterviewXPersonaInterviewModeratorRequest(data, isLoggedIn);
 
-          let questionList = response.data; //응답 반환하는 부분 (질문 받아옴)
+          let questionList = response.response; //응답 반환하는 부분 (질문 받아옴)
           let retryCount = 0;
           const maxRetries = 10;
 
           while (
             retryCount < maxRetries &&
-            (!response || !response.data || response.data.length !== 5)
+            (!response || !response.response || response.response.length !== 5)
           ) {
-            response = await axios.post(
-              //인터뷰 질문 생성 api
-              "https://wishresearch.kr/person/persona_interview",
-              data,
-              axiosConfig
-            );
+            // response = await axios.post(
+            //   //인터뷰 질문 생성 api
+            //   "https://wishresearch.kr/person/persona_interview",
+            //   data,
+            //   axiosConfig
+            // );
+            // 페르소나 인터뷰 생성 API  수정 예정
+            let response = await InterviewXPersonaInterviewModeratorRequest(data, isLoggedIn);
             retryCount++;
-            questionList = response.data;
+            questionList = response.response;
           }
 
           if (retryCount >= maxRetries) {
@@ -289,25 +296,27 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
         theory_type: selectedInterviewPurpose,
       };
 
-      let responseReport;
+      let response;
       let retryCount = 0;
       const maxRetries = 10;
 
       while (retryCount < maxRetries) {
-        responseReport = await axios.post(
-          //인터뷰 보고서 생성 api (요약보고서) 
-          "https://wishresearch.kr/person/interview_reports",
-          finalData1,
-          axiosConfig
-        );
+        // responseReport = await axios.post(
+        //   //인터뷰 보고서 생성 api (요약보고서) 
+        //   "https://wishresearch.kr/person/interview_reports",
+        //   finalData1,
+        //   axiosConfig
+        // );
+        // 인터뷰 결과 보고서 요청 API  수정 예정
+         response = await InterviewXInterviewReportRequest(finalData1, isLoggedIn);
 
         // 응답 데이터가 유효한지 확인
         if (
-          responseReport &&
-          responseReport.data &&
-          responseReport.data.length > 0 &&
-          responseReport.data[0].title &&
-          responseReport.data[0].text
+          response &&
+          response.response &&
+          response.response.length > 0 &&
+          response.response[0].title &&
+          response.response[0].text
         ) {
           break;
         }
@@ -321,12 +330,12 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
         return;
       }
 
-      setInterviewReport(responseReport.data);
+      setInterviewReport(response.response);
 
       const finalData2 = {
         business_idea: businessAnalysis,
         persona_info: personaInfoState,
-        report_data: responseReport.data,
+        report_data: response.response,
         interview_data: [
           ...interviewData,
           {
@@ -342,22 +351,24 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
       retryCount = 0;
 
       while (retryCount < maxRetries) {
-        responseReportAdditional = await axios.post(
-          //추가 보고서 생성 api (기본 보고서의 데이터 포함) (상세보고서 : 인사이트 부분 )
-          "https://wishresearch.kr/person/interview_report_additional",
-          finalData2,
-          axiosConfig
-        );
+        // responseReportAdditional = await axios.post(
+        //   //추가 보고서 생성 api (기본 보고서의 데이터 포함) (상세보고서 : 인사이트 부분 )
+        //   "https://wishresearch.kr/person/interview_report_additional",
+        //   finalData2,
+        //   axiosConfig
+        // );
+        //인터뷰 결과 추가 보고서 요청 수정 예정
+        responseReportAdditional  = await InterviewXInterviewReportAdditionalRequest(finalData2, isLoggedIn);
 
         // 응답 데이터의 유효성 검사
 
         if (
           responseReportAdditional &&
-          responseReportAdditional.data &&
-          responseReportAdditional.data.title &&
-          responseReportAdditional.data.suggestion_list &&
-          responseReportAdditional.data.suggestion_list.length === 5 &&
-          responseReportAdditional.data.suggestion_list.every(
+          responseReportAdditional.response &&
+          responseReportAdditional.response.title &&
+          responseReportAdditional.response.suggestion_list &&
+          responseReportAdditional.response.suggestion_list.length === 5 &&
+          responseReportAdditional.response.suggestion_list.every(
             (item) =>
               (item.title &&
                 item.title_text &&
@@ -383,9 +394,9 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
         return;
       }
 
-      setInterviewReportAdditional(responseReportAdditional.data);
+      setInterviewReportAdditional(responseReportAdditional.response);
 
-      if (responseReport.data && responseReportAdditional.data) {
+      if (response.response && responseReportAdditional.response) {
         setIsAnalyzing(false);
         setIsAnalysisComplete(true);
         // 필요한 경우 분석 결과 저장
@@ -478,12 +489,14 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               last_interview: lastInterview,
             };
 
-            let response = await axios.post(
-               //페르소나 답변 생성하는 api
-              "https://wishresearch.kr/person/persona_interview_module",
-              data,
-              axiosConfig
-            );
+            // let response = await axios.post(
+            //    //페르소나 답변 생성하는 api
+            //   "https://wishresearch.kr/person/persona_interview_module",
+            //   data,
+            //   axiosConfig
+            // );
+            // 페르소나 인터뷰 수행(단건) API  수정 예정
+            let response = await InterviewXPersonaBusinessInterviewModuleRequest(data, isLoggedIn);
 
             let retryCount = 0;
             const maxRetries = 10;
@@ -492,16 +505,18 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             while (
               retryCount < maxRetries &&
               (!response ||
-                !response.data ||
-                !response.data.hasOwnProperty("answer") ||
-                !response.data.answer)
+                !response.response ||
+                !response.response.hasOwnProperty("answer") ||
+                !response.response.answer)
             ) {
-              response = await axios.post(
+              // response = await axios.post(
               
-                "https://wishresearch.kr/person/persona_interview_module",
-                data,
-                axiosConfig
-              );
+              //   "https://wishresearch.kr/person/persona_interview_module",
+              //   data,
+              //   axiosConfig
+              // );
+              // 페르소나 인터뷰 수행(단건) API  수정 예정
+              response = await InterviewXPersonaBusinessInterviewModuleRequest(data, isLoggedIn);
               retryCount++;
             }
 
@@ -511,7 +526,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             }
 
             setIsGenerating(false);
-            allAnswers.push(response.data.answer);
+            allAnswers.push(response.response.answer);
 
             personaInfoState.push(personaInfo);
 
@@ -535,7 +550,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                   gender: gender,
                   age: age,
                   job: job,
-                  answer: response.data.answer,
+                  answer: response.response.answer,
                 },
               ],
             }));
