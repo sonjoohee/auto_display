@@ -4,8 +4,17 @@ import styled, { css } from "styled-components";
 import { Link, useLocation } from "react-router-dom";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
-import { Body2, Sub1, Sub2, Sub3, Caption2 } from "../../../../assets/styles/Typography";
-import { CreditTotal, CreditDashBoardItem } from "../../../../assets/styles/BusinessAnalysisStyle";
+import {
+  Body2,
+  Sub1,
+  Sub2,
+  Sub3,
+  Caption2,
+} from "../../../../assets/styles/Typography";
+import {
+  CreditTotal,
+  CreditDashBoardItem,
+} from "../../../../assets/styles/BusinessAnalysisStyle";
 import { useAtom } from "jotai";
 import { BUSINESS_ANALYSIS, PERSONA_STEP } from "../../../AtomStates";
 import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
@@ -21,19 +30,22 @@ const MoleculeHeader = () => {
   const [isClosingCreditToggle, setIsClosingCreditToggle] = useState(false);
 
   // Persona/3 경로 체크를 위한 조건 수정
-  const isPersona3Page = /^\/Persona\/(3\/[^/]+|3\/Select\/[^/]+|4\/[^/]+|4\/Single\/[^/]+)$/.test(location.pathname);
+  const isPersona3Page =
+    /^\/Persona\/(3\/[^/]+|3\/Select\/[^/]+|4\/[^/]+|4\/Single\/[^/]+)$/.test(
+      location.pathname
+    );
 
   // 첫 페이지 체크 (루트 경로 확인)
-  const isRootPage = location.pathname === '/';
+  const isRootPage = location.pathname === "/";
 
   // MyProject 경로 체크 추가
-  const isMyProjectPage = location.pathname === '/MyProject';
+  const isMyProjectPage = location.pathname === "/MyProject";
 
   // MyProfile 경로 체크 추가
-  const isMyProfilePage = location.pathname === '/MyProfile';
+  const isMyProfilePage = location.pathname === "/MyProfile";
 
   // Payment 경로 체크 추가
-  const isPaymentPage = location.pathname === '/Payment';
+  const isPaymentPage = location.pathname === "/Payment";
 
   const handleAlertToggle = () => {
     if (showAlert) {
@@ -62,134 +74,164 @@ const MoleculeHeader = () => {
       setShowCreditToggle(true);
     }
   };
-  
+
   return (
     <>
-    <HeaderWrap>
-      {(personaStep > 0 || isMyProjectPage || isMyProfilePage || isPaymentPage) && (
-        <>
-        <Title>
-          {isMyProjectPage 
-            ? "작업관리" 
-            : isMyProfilePage
-            ? "계정관리"
-            : isPaymentPage
-            ? "크레딧"
-            : (businessAnalysis.title ? businessAnalysis.title : "새로운 프로젝트")
-          }
-          {isPersona3Page && (
-            <>
-              <images.ChatPlus color={palette.primary} onClick={handleBusinessAnalysisToggle} />
-              {showBusinessAnalysis && 
+      <HeaderWrap>
+        {(personaStep > 0 ||
+          isMyProjectPage ||
+          isMyProfilePage ||
+          isPaymentPage) && (
+          <>
+            <Title>
+              {isMyProjectPage
+                ? "작업관리"
+                : isMyProfilePage
+                ? "계정관리"
+                : isPaymentPage
+                ? "크레딧"
+                : businessAnalysis.title
+                ? businessAnalysis.title
+                : "새로운 프로젝트"}
+              {isPersona3Page && (
                 <>
-                <div className="businessAnalysis">
-                  <OrganismBusinessAnalysis personaStep={2} />
-                  <CloseButton onClick={handleBusinessAnalysisToggle} />
-                </div>
+                  <images.ChatPlus
+                    color={palette.primary}
+                    onClick={handleBusinessAnalysisToggle}
+                  />
+                  {showBusinessAnalysis && (
+                    <>
+                      <div className="businessAnalysis">
+                        <OrganismBusinessAnalysis personaStep={2} />
+                        <CloseButton onClick={handleBusinessAnalysisToggle} />
+                      </div>
+                    </>
+                  )}
                 </>
-              }
-            </>
-          )}
-        </Title>
-        </>
-      )}
-
-      <div className="gnb">
-        {isRootPage && (
-          <Sub2>
-            서비스 소개
-          </Sub2>
+              )}
+            </Title>
+          </>
         )}
 
-        <TotalCreditToggle>
-          <CreditTotal onClick={handleCreditToggle} style={{ cursor: 'pointer' }}>
-            <div>
-              <span>
-                <images.CoinSmall
-                  width="12px"
-                  height="8px"
-                  color={palette.white}
-                />
-              </span>
-              <Sub2 color="gray800">
-                123,456
-              </Sub2>
-            </div>
-            <images.ChevronDown
-              width="20px"
-              height="20px"
-              color={palette.gray300}
-              style={{
-                transform: showCreditToggle ? 'rotate(180deg)' : 'rotate(0deg)',
-                transition: 'transform 0.3s ease'
-              }}
-            />
-          </CreditTotal>
+        <div className="gnb">
+          {isRootPage && <Sub2>서비스 소개</Sub2>}
 
-          {showCreditToggle && (
-            <CreditToggle className={isClosingCreditToggle ? 'closing' : ''}>
-              <div className="title">
-                <Sub1 color="gray700">크레딧 내역</Sub1>
-                <button>
-                  <Caption2 color="primary">충전하기</Caption2>
-                </button>
+          <TotalCreditToggle>
+            <CreditTotal
+              onClick={handleCreditToggle}
+              style={{ cursor: "pointer" }}
+            >
+              <div>
+                <span>
+                  <images.CoinSmall
+                    width="12px"
+                    height="8px"
+                    color={palette.white}
+                  />
+                </span>
+                <Sub2 color="gray800">123,456</Sub2>
               </div>
+              <images.ChevronDown
+                width="20px"
+                height="20px"
+                color={palette.gray300}
+                style={{
+                  transform: showCreditToggle
+                    ? "rotate(180deg)"
+                    : "rotate(0deg)",
+                  transition: "transform 0.3s ease",
+                }}
+              />
+            </CreditTotal>
 
-              <ul>
-                <li>
-                  <CreditDashBoardItem NoLine>
-                    <div class="icon yellow">
-                      <images.CoinFill width="9.6" height="6.1" color="#FFD54A" />
-                    </div>
-                    <Sub3 color="gray500" align="left">일반 크레딧</Sub3>
-                  </CreditDashBoardItem>
-                  <Sub3 color="gray500" align="right">10,000</Sub3>
-                </li>
-                <li>
-                  <CreditDashBoardItem NoLine>
-                    <div class="icon green">
-                      <images.CoinFill width="9.6" height="6.1" color="#34C759" />
-                    </div>
-                    <Sub3 color="gray500" align="left">구독 크레딧</Sub3>
-                  </CreditDashBoardItem>
-                  <Sub3 color="gray500" align="right">10,000</Sub3>
-                </li>
-                <li>
-                  <CreditDashBoardItem NoLine>
-                    <div class="icon red">
-                      <images.CoinFill width="9.6" height="6.1" color="#FF5322" />
-                    </div>
-                    <Sub3 color="gray500" align="left">이벤트 크레딧</Sub3>
-                  </CreditDashBoardItem>
-                  <Sub3 color="gray500" align="right">10,000</Sub3>
-                </li>
-              </ul>
-            </CreditToggle>
-          )}
-        </TotalCreditToggle>
+            {showCreditToggle && (
+              <CreditToggle className={isClosingCreditToggle ? "closing" : ""}>
+                <div className="title">
+                  <Sub1 color="gray700">크레딧 내역</Sub1>
+                  <button>
+                    <Caption2 color="primary">충전하기</Caption2>
+                  </button>
+                </div>
 
-        <Notify Alarm onClick={handleAlertToggle}>
-          <img src={images.IconBell} alt="" />
-        </Notify>
-        {/* <div className="userInfo">
+                <ul>
+                  <li>
+                    <CreditDashBoardItem NoLine>
+                      <div class="icon yellow">
+                        <images.CoinFill
+                          width="9.6"
+                          height="6.1"
+                          color="#FFD54A"
+                        />
+                      </div>
+                      <Sub3 color="gray500" align="left">
+                        일반 크레딧
+                      </Sub3>
+                    </CreditDashBoardItem>
+                    <Sub3 color="gray500" align="right">
+                      10,000
+                    </Sub3>
+                  </li>
+                  <li>
+                    <CreditDashBoardItem NoLine>
+                      <div class="icon green">
+                        <images.CoinFill
+                          width="9.6"
+                          height="6.1"
+                          color="#34C759"
+                        />
+                      </div>
+                      <Sub3 color="gray500" align="left">
+                        구독 크레딧
+                      </Sub3>
+                    </CreditDashBoardItem>
+                    <Sub3 color="gray500" align="right">
+                      10,000
+                    </Sub3>
+                  </li>
+                  <li>
+                    <CreditDashBoardItem NoLine>
+                      <div class="icon red">
+                        <images.CoinFill
+                          width="9.6"
+                          height="6.1"
+                          color="#FF5322"
+                        />
+                      </div>
+                      <Sub3 color="gray500" align="left">
+                        이벤트 크레딧
+                      </Sub3>
+                    </CreditDashBoardItem>
+                    <Sub3 color="gray500" align="right">
+                      10,000
+                    </Sub3>
+                  </li>
+                </ul>
+              </CreditToggle>
+            )}
+          </TotalCreditToggle>
+
+          <Notify Alarm onClick={handleAlertToggle}>
+            <img src={images.IconBell} alt="" />
+          </Notify>
+          {/* <div className="userInfo">
           유저프로필
         </div> */}
-      </div>
-    </HeaderWrap>
+        </div>
+      </HeaderWrap>
 
-    {showAlert && ( 
-      <AlertToogle className={isClosing ? 'closing' : ''}>
-        <AlertHeader>알림</AlertHeader>
+      {showAlert && (
+        <AlertToogle className={isClosing ? "closing" : ""}>
+          <AlertHeader>알림</AlertHeader>
 
-        <AlertContent>
-          {/* 메시지 있을 때 */}
-          <Messageox NoAlarm>
-            <img src={images.NoAlarm} alt="" />
-            <p>알림이 없습니다.</p>
-          </Messageox>
+          <AlertContent>
+            {/* 메시지 있을 때 */}
+            <Messageox NoAlarm>
+              <img src={images.NoAlarm} alt="" />
+              <p>알림이 없습니다.</p>
+            </Messageox>
 
-          {/* 메시지 있을 떄 */}
-          {/*
+            {/* 메시지 있을 떄 */}
+            {/*
           <Messageox>
             <img src={images.CheckMark} alt="" />
             <Message>
@@ -218,10 +260,9 @@ const MoleculeHeader = () => {
             </Message>
           </Messageox> 
           */}
-
-        </AlertContent>
-      </AlertToogle>
-    )}
+          </AlertContent>
+        </AlertToogle>
+      )}
     </>
   );
 };
@@ -247,7 +288,7 @@ const CreditToggle = styled.div`
   padding: 16px;
   border-radius: 5px;
   background: ${palette.white};
-  box-shadow: 0px 6px 30px 0px rgba(0, 0, 0, 0.10);
+  box-shadow: 0px 6px 30px 0px rgba(0, 0, 0, 0.1);
   animation: fadeIn 0.3s ease-in-out;
   z-index: 100;
 
@@ -283,7 +324,7 @@ const CreditToggle = styled.div`
     justify-content: space-between;
 
     button {
-      font-family: 'Pretendard', 'Poppins';
+      font-family: "Pretendard", "Poppins";
       padding: 2px 4px;
       border-radius: 5px;
       border: 0;
@@ -295,7 +336,7 @@ const CreditToggle = styled.div`
     display: flex;
     flex-direction: column;
     gap: 8px;
-    
+
     li {
       display: flex;
       justify-content: space-between;
@@ -314,9 +355,9 @@ const HeaderWrap = styled.div`
   top: 0;
   left: 0;
   width: 100%;
-  display:flex;
+  display: flex;
   align-items: center;
-  padding:10px 28px;
+  padding: 10px 28px;
   border-bottom: 1px solid ${palette.lineGray};
   background: ${palette.white};
   z-index: 99;
@@ -325,11 +366,11 @@ const HeaderWrap = styled.div`
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    font-size:1rem;
+    font-size: 1rem;
   }
 
   .gnb {
-    display:flex;
+    display: flex;
     align-items: center;
     gap: 32px;
     margin-left: auto;
@@ -358,7 +399,7 @@ const Title = styled(Body2)`
 
     &:hover {
       path {
-        fill: #0B45B1;
+        fill: #0b45b1;
       }
     }
   }
@@ -403,7 +444,7 @@ const CloseButton = styled.div`
 
   &:before,
   &:after {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
@@ -425,25 +466,33 @@ const Notify = styled.div`
   position: relative;
   cursor: pointer;
 
-  // ${props => props.Alarm && css`
-  //   &::after {
-  //     position: absolute;
-  //     top: -5px;
-  //     right: -5px;
-  //     width: 6px;
-  //     height: 6px;
-  //     background: ${palette.red};
-  //     border-radius: 100px;
-  //     content: '';
-  //     animation: blink 1.5s infinite;
-  //   }
+  ${(props) =>
+    props.Alarm &&
+    css`
+      /* &::after {
+       position: absolute;
+       top: -5px;
+       right: -5px;
+       width: 6px;
+       height: 6px;
+       background: ${palette.red};
+       border-radius: 100px;
+       content: '';
+       animation: blink 1.5s infinite;
+     } */
 
-    @keyframes blink {
-      0% { opacity: 1; }
-      50% { opacity: 0; }
-      100% { opacity: 1; }
-    }
-  `}
+      @keyframes blink {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+    `}
 `;
 
 const AlertToogle = styled.div`
@@ -524,12 +573,12 @@ const AlertContent = styled.div`
 
 const Messageox = styled.div`
   display: flex;
-  flex-direction: ${props => props.NoAlarm ? 'column' : 'row'};
+  flex-direction: ${(props) => (props.NoAlarm ? "column" : "row")};
   justify-content: flex-start;
   align-items: center;
   gap: 16px;
   width: 100%;
-  padding: ${props => props.NoAlarm ? '38px 0' : '16px'};
+  padding: ${(props) => (props.NoAlarm ? "38px 0" : "16px")};
   // padding: 16px;
   transition: all 0.5s;
 
@@ -550,7 +599,8 @@ const Messageox = styled.div`
   }
 
   &:hover {
-    background: ${props => props.NoAlarm ? 'transparent' : 'rgba(34, 111, 255, 0.04)'};
+    background: ${(props) =>
+      props.NoAlarm ? "transparent" : "rgba(34, 111, 255, 0.04)"};
     // background: rgba(34, 111, 255, 0.04);
   }
 `;
