@@ -124,6 +124,8 @@ const PagePersona3Select = () => {
   const [personaButtonState3, setPersonaButtonState3] = useAtom(
     PERSONA_BUTTON_STATE_3
   );
+  const [isIndepthEnabled, setIsIndepthEnabled] = useState(false);
+
   useEffect(() => {
     // 접근 가능 여부를 확인하여 차단 로직 수행
     if (!isPersonaAccessible) {
@@ -139,14 +141,14 @@ const PagePersona3Select = () => {
   // showToast 상태가 변경될 때마다 body 스타일 업데이트
   useEffect(() => {
     if (showToast) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     }
 
     // 컴포넌트 언마운트 시 원래대로 복구
     return () => {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     };
   }, [showToast]);
 
@@ -286,7 +288,7 @@ const PagePersona3Select = () => {
                           ))}
                       </PersonaGroup>
                     </li>
-                    {/* {selectedInterviewType === "multiple" ? (
+                    {selectedInterviewType === "multiple" ? (
                       <></>
                     ) : selectedInterviewType === "single" ? (
                       <li>
@@ -306,14 +308,20 @@ const PagePersona3Select = () => {
                         </Body2>
                         <SwitchToggle>
                           <SwitchToggleItem>
-                            <input type="checkbox" />
+                            <input
+                              type="checkbox"
+                              checked={isIndepthEnabled}
+                              onChange={(e) =>
+                                setIsIndepthEnabled(e.target.checked)
+                              }
+                            />
                             <span data-on="ON" data-off="OFF" />
                             <SwitchHandle />
                           </SwitchToggleItem>
                           <Body2 color="gray800">추가 질문 생성</Body2>
                         </SwitchToggle>
                       </li>
-                    ) : null} */}
+                    ) : null}
                   </ListBoxGroup>
                 </div>
 
@@ -396,7 +404,11 @@ const PagePersona3Select = () => {
       {selectedInterviewType === "multiple" ? (
         <OrganismToastPopup isActive={showToast} autoClose={false} />
       ) : selectedInterviewType === "single" ? (
-        <OrganismToastPopupSingleChat isActive={showToast} autoClose={false} />
+        <OrganismToastPopupSingleChat
+          isActive={showToast}
+          autoClose={false}
+          isIndepth={isIndepthEnabled}
+        />
       ) : null}
     </>
   );

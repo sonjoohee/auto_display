@@ -1135,7 +1135,7 @@ const PagePersona2 = () => {
       });
 
       // visibleSelectedTypes에서도 제거
-      setVisibleSelectedTypes((prev) => 
+      setVisibleSelectedTypes((prev) =>
         prev.filter((type) => type.id !== typeId)
       );
 
@@ -1143,7 +1143,7 @@ const PagePersona2 = () => {
       const typeToAddBack = selectedTypes.find((type) => type.id === typeId);
       if (typeToAddBack) {
         setUnselectedTypes((prevUnselected) => {
-          if (!prevUnselected.some(type => type.id === typeId)) {
+          if (!prevUnselected.some((type) => type.id === typeId)) {
             const updatedUnselected = [...prevUnselected, typeToAddBack];
             return updatedUnselected.sort((a, b) => a.index - b.index);
           }
@@ -1155,7 +1155,7 @@ const PagePersona2 = () => {
       const typeToAdd = unselectedTypes.find((type) => type.id === typeId);
       if (typeToAdd) {
         setSelectedTypes((prev) => {
-          if (!prev.some(type => type.id === typeId)) {
+          if (!prev.some((type) => type.id === typeId)) {
             return [...prev, typeToAdd].sort((a, b) => a.index - b.index);
           }
           return prev;
@@ -1168,12 +1168,14 @@ const PagePersona2 = () => {
     setIsLoadingMore(true);
     // setShowTypeList(false); // 이 줄 제거
     setVisibleSelectedTypes(selectedTypes.sort((a, b) => a.index - b.index));
-    
+
     // 선택된 타입들을 unselectedTypes에서 제거
-    setUnselectedTypes(prev => 
-      prev.filter(type => !selectedTypes.some(selected => selected.id === type.id))
+    setUnselectedTypes((prev) =>
+      prev.filter(
+        (type) => !selectedTypes.some((selected) => selected.id === type.id)
+      )
     );
-    
+
     // 기존 displayedPersonas 초기화
     setDisplayedPersonas([]);
 
@@ -1675,7 +1677,10 @@ const PagePersona2 = () => {
                               {showTypeList && (
                                 <TypeList>
                                   <TypeItem>
-                                    <p>선택된 유형 ({visibleSelectedTypes.length})</p>
+                                    <p>
+                                      선택된 유형 ({visibleSelectedTypes.length}
+                                      )
+                                    </p>
                                     <TypeItemList style={{ padding: "0 12px" }}>
                                       {visibleSelectedTypes.map((type) => (
                                         <li key={type.id}>
@@ -1684,9 +1689,13 @@ const PagePersona2 = () => {
                                               type="checkbox"
                                               id={type.id}
                                               checked={true}
-                                              onChange={() => handleTypeToggle(type.id, true)}
+                                              onChange={() =>
+                                                handleTypeToggle(type.id, true)
+                                              }
                                             />
-                                            <label htmlFor={type.id}>{type.label}</label>
+                                            <label htmlFor={type.id}>
+                                              {type.label}
+                                            </label>
                                           </CheckBox>
                                           <span>3명</span>
                                         </li>
@@ -1699,7 +1708,9 @@ const PagePersona2 = () => {
                                       선택하지 않은 유형 (
                                       {unselectedTypes.length})<span>?</span>
                                       <Caption2 color="white">
-                                        페르소나 생성 소요<br />시간이 발생됩니다.
+                                        페르소나 생성 소요
+                                        <br />
+                                        시간이 발생됩니다.
                                       </Caption2>
                                     </p>
                                     <TypeItemList>
