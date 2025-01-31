@@ -557,7 +557,16 @@ const PagePersona4 = () => {
                       isActive={activeTab === 3}
                       onClick={() => handleTabClick(3)}
                     >
-                      감정 요인 분석
+                      {selectedInterviewPurposeData.id === 1
+                        ? "소비자 가치 분석"
+                        : selectedInterviewPurposeData.id === 2
+                        ? "감정 요인 분석"
+                        : selectedInterviewPurposeData.id === 3
+                        ? "구매 장벽 요인 분석"
+                        : selectedInterviewPurposeData.id === 4
+                        ? "요인 분석"
+                        : ""}
+                      {/* 감정 요인 분석 */}
                     </TabButtonType3>
                   </TabWrapType3>
 
