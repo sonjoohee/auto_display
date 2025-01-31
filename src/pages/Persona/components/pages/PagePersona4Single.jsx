@@ -1,3 +1,4 @@
+
 //작업관리/ 프로젝트 리스트/ 자세히 보기/인터뷰 상세보기
 import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
@@ -557,7 +558,16 @@ const PagePersona4 = () => {
                       isActive={activeTab === 3}
                       onClick={() => handleTabClick(3)}
                     >
-                      감정 요인 분석
+                      {selectedInterviewPurposeData.id === 1
+                        ? "소비자 가치 분석"
+                        : selectedInterviewPurposeData.id === 2
+                        ? "감정 요인 분석"
+                        : selectedInterviewPurposeData.id === 3
+                        ? "구매 장벽 요인 분석"
+                        : selectedInterviewPurposeData.id === 4
+                        ? "요인 분석"
+                        : ""}
+                      {/* 감정 요인 분석 */}
                     </TabButtonType3>
                   </TabWrapType3>
 
