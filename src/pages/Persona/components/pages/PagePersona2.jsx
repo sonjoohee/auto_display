@@ -980,6 +980,7 @@ const PagePersona2 = () => {
       const requestData = {
         business_idea: businessAnalysis.title,
         business_analysis_data: businessAnalysis,
+        request_persona_list: allBusinessPersonas,
         persona_type: personaType.label,
       };
 
