@@ -1119,13 +1119,8 @@ export const InterviewXPersonaSingleInterviewReportTab3 = async (
   }
 };
 
-
-
-//1:1 인터뷰 결과보고서 탭3
-export const UserCreditInfo = async (
-  isLoggedIn
-) => {
-
+// 유저 크레딧 조회
+export const UserCreditInfo = async (isLoggedIn) => {
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -1139,7 +1134,44 @@ export const UserCreditInfo = async (
 
     const response = await axios.get(
       "https://wishresearch.kr/api/user/userInfo/",
-  
+
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+  } catch (error) {
+    console.error("유저 크레딧 정보 조회 오류 발생:", error);
+    console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+// interviewx 1.1 api 수정 250131
+// 비즈니스 카테고리 분석 250131
+export const BusinessCategoryAnalysis = async (data, isLoggedIn) => {
+  console.log("비즈니스 카테고리 분석  - 입력 데이터:", data);
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/person/temporary/business_category",
+      data,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -1153,10 +1185,13 @@ export const UserCreditInfo = async (
       return response.data;
     }
 
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
 
-
+    const result = await getTermkeyResult(response.data.objectId);
+    return result;
+    // return response.data;
   } catch (error) {
-    console.error("유저 크레딧 정보 조회 오류 발생:", error);
+    console.error("비즈니스 카테고리 분석 처리 중 오류 발생:", error);
     console.error("오류 상세:", error.response?.data || error.message);
     throw error;
   }
