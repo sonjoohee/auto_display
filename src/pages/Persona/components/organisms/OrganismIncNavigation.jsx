@@ -1456,7 +1456,7 @@ const OrganismIncNavigation = () => {
 
                 <ul>
                   {/* 소셜 로그인 상태가 아닐 때만 비밀번호 변경 버튼을 표시 */}
-                  {!isSocialLoggedIn && (
+                  {(
                     // <li>
                     //   <button type="button" onClick={handleAccountClick}>
                     //     <img src={images.AccountSetting} alt="" />

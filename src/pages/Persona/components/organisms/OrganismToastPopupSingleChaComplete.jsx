@@ -35,7 +35,7 @@ import {
 } from "../../../AtomStates";
 import { InterviewXPersonaSingleInterviewRequestAddQuestion } from "../../../../utils/indexedDB";
 
-const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
+const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete, }) => {
   console.log("=================================isComplete", isComplete);
   const [selectedPersonaList, setSelectedPersonaList] = useAtom(
     SELECTED_PERSONA_LIST
@@ -115,6 +115,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             };
           });
         });
+        console.log("페르소나", personaList);
         setAnswers(newAnswers);
         console.log("🚀 ~ interviewLoading ~ newAnswers:", newAnswers);
 
@@ -161,31 +162,31 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
       if (status === "Complete" && item.question && item.answer) {
         return (
           <React.Fragment key={index}>
-            <ChatItem $moder>
-              <Persona $color="Gainsboro" $size="Medium" $round>
+            <ChatItem Moder>
+              <Persona Moder color="Gainsboro" size="Medium" Round>
                 <img src={personaImages.PersonaModer} alt="모더" />
                 <span>
                   <img src={images.PatchCheckFill} alt="" />
-                  <Helptext $color="primary">모더</Helptext>
+                  <Helptext color="primary">모더</Helptext>
                 </span>
               </Persona>
-              <ChatBox $moder>
-                <Sub1 $color="gray800" $align="left">
+              <ChatBox Moder>
+                <Sub1 color="gray800" align="left">
                   Q{index + 1}.{" "}
                   {typeof item.question === "string" ? item.question : ""}
                 </Sub1>
               </ChatBox>
             </ChatItem>
 
-            <ChatItem $persona>
-              <Persona $color="Linen" $size="Medium" $round>
+            <ChatItem Persona>
+              <Persona Persona color="Linen" size="Medium" Round>
                 <img
-                  src={personaImages.PersonaDefault} // 기본 이미지 경로 수정
+                  src={`/ai_person/${selectedPersonaList[0].personaImg}.png`}
                   alt="페르소나"
                 />
               </Persona>
-              <ChatBox $persona>
-                <Sub1 $color="gray800" $align="left">
+              <ChatBox Persona>
+                <Sub1 color="gray800" align="left">
                   {typeof item.answer === "string" ? item.answer : ""}
                 </Sub1>
               </ChatBox>
@@ -210,8 +211,9 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             <QuestionList>
               {interviewData.length > 0 ? (
                 interviewData.map((item, index) => {
+                  const status = interviewStatus[index];
                   return (
-                    <QuestionItem key={index}>
+                    <QuestionItem key={index} checked={status === "Complete" ? true : item.checked}>
                       <Sub2 color="gray800">
                         Q{index + 1}. {item.question}
                       </Sub2>
@@ -234,7 +236,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                 <ColseButton onClick={handleClose} />
               </Title>
               <ul>
-                {personaList.selected.map((persona) => {
+                {selectedPersonaList.map((persona) => {
                   return (
                     <li key={persona.persona_id}>
                       <Thumb>
