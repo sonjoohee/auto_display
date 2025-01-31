@@ -603,7 +603,7 @@ const PagePersona4 = () => {
                       </UlList>
                     </div>
 
-                    {!showInsightCards ? (
+                    {/* {!showInsightCards ? (
                       <InterviewInsight
                         onClick={() => setShowInsightCards(!showInsightCards)}
                       >
@@ -661,11 +661,6 @@ const PagePersona4 = () => {
                                     <CardIcon>
                                       <img src={item.icon} />
                                     </CardIcon>
-                                    {/* <CardBadge text={item.badge.text}>
-                                      <span>{item.badge.icon}</span>
-                                      {item.badge.text}
-                                    </CardBadge> 
-                                    <CardTitle>{item.title}</CardTitle>*/}
                                   </>
                                 ) : (
                                   <>
@@ -685,7 +680,7 @@ const PagePersona4 = () => {
                           </CardWrap>
                         </FindCard>
                       </InterviewFind>
-                    )}
+                    )} */}
                   </ReportContent>
 
                   <ReportContent
@@ -696,12 +691,12 @@ const PagePersona4 = () => {
                       <H4>1. 페르소나 정보</H4>
                       <PersonaInformationWrap>
                         <PersonaInformation>
-                          <div className="thumb">
+                          <Persona color="Linen" size="Large" Round>
                             <img
-                              src={personaImages.PersonaMen28}
+                              src={`/ai_person/${selectedPersonaList[0]?.personaImg}.png`}
                               alt="페르소나"
                             />
-                          </div>
+                          </Persona>
                           <div className="info">
                             <Body1>
                               {selectedPersonaList[0]?.persona_view || ""}
@@ -1146,7 +1141,7 @@ const PagePersona4 = () => {
                       <>
                         <Persona color="Linen" size="Large" Round>
                           <img
-                            src={`/ai_person/${selectedPersonaList[0].personaImg}.png`}
+                            src={`/ai_person/${selectedPersonaList[0]?.personaImg}.png`}
                             alt="페르소나"
                           />
                         </Persona>
