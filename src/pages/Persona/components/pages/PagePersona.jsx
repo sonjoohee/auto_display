@@ -155,10 +155,7 @@ const PagePersona = () => {
                   <CreateCard>
                     <Body2 color="gray500">
                       <img src={images.PeopleChatSquareFill} alt="" />
-                      나의 비즈니스 고객은 누구일까요? 그리고 어떤 생각을 하고
-                      있을까요?
-                      <br />
-                      당신의 타겟 고객에게 바로 물어보세요
+                      내 비즈니스에 가장 중요한 고객은 누구일가요?<br />혹시 놓친 고객은 없을지 지금 바로 확인해보세요 
                     </Body2>
 
                     <Button

@@ -41,6 +41,7 @@ import {
 import {
   H2,
   H4,
+  H6,
   Body1,
   Body2,
   Body2_1,
@@ -180,7 +181,7 @@ const PagePersona4 = () => {
         return "TropicalRainForest";
       case "유아/출산":
         return "DollarBill";
-      case "인사/비즈니스/법률":
+      case "인사/비즈니스":
         return "Olivine";
       case "제조/하드웨어":
         return "ChineseGreen";
@@ -196,12 +197,18 @@ const PagePersona4 = () => {
         return "Shadow";
       case "환경/에너지":
         return "Tuscany";
-      case "홈리빙/펫":
+      case "홈리빙":
         return "VeryLightTangelo";
       case "헬스케어/바이오":
         return "Orange";
       case "피트니스/스포츠":
         return "CarnationPink";
+      case "법률":
+        return "TurkishRose";
+      case "펫":
+        return "SuperPink";
+      case "기타":
+        return "NavyBlue";
       default:
         return "";
     }
@@ -610,11 +617,11 @@ const PagePersona4 = () => {
                         <img src={images.KeyCircle} alt="인터뷰 인사이트" />
 
                         <div>
-                          <H4 color="gray700">
+                          <H4 color="gray700" align="center">
                             인터뷰 내용에 대해 비즈니스 분야별 인사이트를
                             확인하세요
                           </H4>
-                          <Body3 color="gray500">
+                          <Body3 color="gray500" align="center">
                             여러가지 정보를 확인 하고 싶으시면 클릭해 보세요!
                           </Body3>
                         </div>
@@ -1033,9 +1040,9 @@ const PagePersona4 = () => {
                     style={{ display: activeTab === 3 ? "flex" : "none" }}
                   >
                     <BgBoxItem>
-                      <H4 color="gray800">
+                      <H6 color="gray800">
                         {singleInterviewReportTab3?.persona_summary}
-                      </H4>
+                      </H6>
                     </BgBoxItem>
 
                     <div>
@@ -1051,7 +1058,7 @@ const PagePersona4 = () => {
                         </H4>
                       </ResultTitle>
 
-                      <UlList Disc>
+                      <UlList Disc Spacing>
                         <li>
                           {singleInterviewReportTab3?.insight_1
                             ?.insight_1_context || ""}
@@ -1076,7 +1083,7 @@ const PagePersona4 = () => {
                         </H4>
                       </ResultTitle>
 
-                      <UlList Disc>
+                      <UlList Disc Spacing>
                         <li>
                           {singleInterviewReportTab3?.insight_2
                             ?.insight_2_context || ""}
@@ -1101,7 +1108,7 @@ const PagePersona4 = () => {
                         </H4>
                       </ResultTitle>
 
-                      <UlList Disc>
+                      <UlList Disc Spacing>
                         <li>
                           {singleInterviewReportTab3?.insight_3
                             ?.insight_3_context || ""}

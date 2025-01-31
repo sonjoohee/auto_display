@@ -193,7 +193,7 @@ const PagePersona2 = () => {
         return "TropicalRainForest";
       case "유아/출산":
         return "DollarBill";
-      case "인사/비즈니스/법률":
+      case "인사/비즈니스":
         return "Olivine";
       case "제조/하드웨어":
         return "ChineseGreen";
@@ -209,12 +209,18 @@ const PagePersona2 = () => {
         return "Shadow";
       case "환경/에너지":
         return "Tuscany";
-      case "홈리빙/펫":
+      case "홈리빙":
         return "VeryLightTangelo";
       case "헬스케어/바이오":
         return "Orange";
       case "피트니스/스포츠":
         return "CarnationPink";
+      case "법률":
+        return "TurkishRose";
+      case "펫":
+        return "SuperPink";
+      case "기타":
+        return "NavyBlue";
       default:
         return "";
     }

@@ -4,6 +4,7 @@ import styled, { css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import { Button } from "../../../../assets/styles/ButtonStyle";
+import PopupWrap from "../../../../assets/styles/Popup";
 import { H4, Body1, Body3, Sub3, Caption2 } from "../../../../assets/styles/Typography";
 import {
   ListBoxItem,
@@ -46,6 +47,7 @@ const MoleculePersonaCard = ({
 }) => {
   const [isChecked, setIsChecked] = useState(false);
   const [requestStatus, setRequestStatus] = useState(isRequest);
+  const [showRequestPopup, setShowRequestPopup] = useState(false);
 
   const [selectedPersonaForPopup, setSelectedPersonaForPopup] = useState(null);
   const [activeTab1, setActiveTab1] = useState("lifestyle");
@@ -75,6 +77,11 @@ const MoleculePersonaCard = ({
   };
 
   const handleRequestClick = () => {
+    setShowRequestPopup(true);
+  };
+
+  const handleCloseRequestPopup = () => {
+    setShowRequestPopup(false);
     setRequestStatus(false);
   };
 
@@ -319,17 +326,17 @@ const MoleculePersonaCard = ({
                 </TabWrapType2>
 
                 {activeTab1 === "lifestyle" && (
-                  <TabContent>
+                  <TabContent Daily>
                     <Body3 color="gray700">{personaData.lifestyle}</Body3>
                   </TabContent>
                 )}
                 {activeTab1 === "interests" && (
-                  <TabContent>
+                  <TabContent Daily>
                     <Body3 color="gray700">{personaData.interest}</Body3>
                   </TabContent>
                 )}
                 {activeTab1 === "consumption" && (
-                  <TabContent>
+                  <TabContent Daily>
                     <Body3 color="gray700">
                       {personaData.consumption_pattern}
                     </Body3>
@@ -419,6 +426,27 @@ const MoleculePersonaCard = ({
           </InterviewPopup>
         </>
       )}
+
+      {/* 모집 요청 팝업 추가 */}
+      {showRequestPopup && (
+        <PopupWrap
+          Event
+          title="페르소나 모집 요청"
+          message={
+            <>
+              현재 (베타서비스) 기간으로 (서비스)크레딧이 소진됩니다.<br />
+              (10 크레딧)
+            </>
+          }
+          buttonType="Outline"
+          closeText="취소"
+          confirmText="시작하기"
+          isModal={false}
+          onCancel={() => setShowRequestPopup(false)}
+          onConfirm={handleCloseRequestPopup}
+        />
+      )}
+
     </>
   );
 };

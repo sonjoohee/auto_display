@@ -1080,7 +1080,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                     <Body3 color="gray800">
                       Q{index + 1}. 페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.
                     </Body3>
-                    <div>
+                    <div style={{ maxWidth: "48px", width: "100%", }}>
                       <Body2 color="gray800" />
                     </div>
                   </li>
