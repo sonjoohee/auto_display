@@ -1118,3 +1118,46 @@ export const InterviewXPersonaSingleInterviewReportTab3 = async (
     throw error;
   }
 };
+
+
+
+//1:1 인터뷰 결과보고서 탭3
+export const UserCreditInfo = async (
+  isLoggedIn
+) => {
+
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.get(
+      "https://wishresearch.kr/api/user/userInfo/",
+  
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+
+
+  } catch (error) {
+    console.error("유저 크레딧 정보 조회 오류 발생:", error);
+    console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+  }
+};
