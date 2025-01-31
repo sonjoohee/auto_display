@@ -65,7 +65,7 @@ import { updateProjectReportOnServer } from "../../../../utils/indexedDB";
 import { getProjectReportByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
-import OrganismToastPopupSingleChat from "../organisms/OrganismToastPopupSingleChat";
+import OrganismToastPopupSingleChaComplete from "../organisms/OrganismToastPopupSingleChaComplete";
 
 const PagePersona4 = () => {
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
@@ -1216,7 +1216,7 @@ const PagePersona4 = () => {
             </SidebarWrap>
 
             {showToast && (
-              <OrganismToastPopupSingleChat
+              <OrganismToastPopupSingleChaComplete
                 isActive={showToast}
                 onClose={() => setShowToast(false)}
                 isComplete={true}
