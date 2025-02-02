@@ -169,11 +169,11 @@ const MoleculeInterviewPurpose = ({
       if (response.response) {
         const commonQuestions = response.response
           .filter((item) => item.question_type === "공통질문")
-          .map((item) => item.question);
+          .map((item) => item);
 
         const specialQuestions = response.response
           .filter((item) => item.question_type === "특화질문")
-          .map((item) => item.question);
+          .map((item) => item);
 
         const newQuestionData = {
           theory_name:
@@ -292,7 +292,7 @@ const MoleculeInterviewPurpose = ({
   };
 
   return (
-    <ListBoxItem 
+    <ListBoxItem
       Small={Small}
       active={selectedPurpose === purpose["id"]}
       showQuestions={showQuestions[purpose["id"]]}

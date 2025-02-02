@@ -211,12 +211,6 @@ const OrganismToastPopupSingleChat = ({
         let retryCount = 0;
         const maxRetries = 10;
 
-        //   answer_template = {
-        //     "moderator_question_1" : "모더레이터 질문 or 0",
-        //     "moderator_question_2" : "모더레이터 질문 or 0",
-        //     "moderator_question_3" : "모더레이터 질문 or 0",
-        //     "check_inputdata" : 0
-        // }
         while (
           retryCount < maxRetries &&
           (!response ||
@@ -284,10 +278,12 @@ const OrganismToastPopupSingleChat = ({
         console.log("인터뷰 불러오기 1");
         const questions = interviewData.map((item) => {
           // 모든 question 키를 찾아서 값이 있는 첫 번째 question을 반환
-          const questionKeys = Object.keys(item).filter((key) =>
-            key.startsWith("question_")
+          const questionKeys = Object.keys(item.question).filter((key) =>
+            key.startsWith("question")
           );
-          const question = questionKeys.map((key) => item[key]).find((q) => q);
+          const question = questionKeys
+            .map((key) => item[key].question)
+            .find((q) => q);
           return { question };
         });
         console.log("Loaded questions:", questions); // 여기 콘솔로
@@ -357,6 +353,11 @@ const OrganismToastPopupSingleChat = ({
           existingQuestions.commonQuestions &&
           existingQuestions.specialQuestions
         ) {
+          console.log(
+            "🚀 ~ loadInterviewQuestion ~ existingQuestions:",
+            existingQuestions
+          );
+
           // 이미 질문이 생성된 상태면 상태값 설정 후 5초 대기
           const combinedQuestions = [
             ...existingQuestions.commonQuestions,
@@ -413,11 +414,11 @@ const OrganismToastPopupSingleChat = ({
             if (response.response) {
               const commonQuestions = response.response
                 .filter((item) => item.question_type === "공통질문")
-                .map((item) => item.question);
+                .map((item) => item);
 
               const specialQuestions = response.response
                 .filter((item) => item.question_type === "특화질문")
-                .map((item) => item.question);
+                .map((item) => item);
 
               const newQuestionData = {
                 theory_name: selectedInterviewPurposeData.title,
@@ -669,185 +670,234 @@ const OrganismToastPopupSingleChat = ({
     }
   };
 
-  // !인터뷰 진행
+  // 추가 질문 관련 상태 추가
+  const [additionalQuestions, setAdditionalQuestions] = useState({});
+  const [isGeneratingAdditional, setIsGeneratingAdditional] = useState(false);
+
+  // 더미 데이터 - 실제 구현시 API로 대체
+  const dummyAdditionalQuestion = {
+    question_type: "추가질문",
+    question: "이 서비스의 가장 큰 장점은 무엇이라고 생각하시나요?",
+  };
+  const dummyAdditionalAnswer =
+    "이 서비스의 가장 큰 장점은 사용자 편의성이라고 생각합니다. 직관적인 인터페이스와 빠른 응답 속도가 매우 인상적입니다.";
+
+  // processInterview 함수 수정
   const processInterview = async () => {
     if (!isLoadingPrepare && interviewStatus[currentQuestionIndex] === "Pre") {
       try {
-        // 상태를 Ing로 변경
         const newStatus = [...interviewStatus];
         newStatus[currentQuestionIndex] = "Ing";
         setInterviewStatus(newStatus);
 
-        // answers 초기화
         setAnswers((prev) => ({
           ...prev,
           [currentQuestionIndex]: [],
         }));
 
-        // 모든 페르소나의 답변을 저장할 배열
         let allAnswers = [];
 
-        // 각 페르소나에 대해 답변 생성
-        for (let i = 0; i < personaList.selected.length; i++) {
-          setIsGenerating(true);
+        // 추가 질문 생성 및 처리 로직
+        const shouldGenerateAdditional =
+          isIndepth &&
+          interviewData[currentQuestionIndex].question.question_type ===
+            "특화질문";
 
-          // 현재까지의 대화 내용 수집
-          const lastInterview = [];
-          for (let q = 0; q < currentQuestionIndex; q++) {
-            const questionAnswers = answers[q] || [];
-            const personaAnswer = questionAnswers.find(
-              (ans) =>
-                ans.persona.personIndex === personaList.selected[i].personIndex
-            );
-            if (personaAnswer) {
-              lastInterview.push({
-                question: interviewQuestionListState[q],
-                answer: personaAnswer.answer,
-              });
-            }
-          }
+        if (shouldGenerateAdditional) {
+          setIsGeneratingAdditional(true);
 
-          // API 요청 데이터 준비
-          const data = {
-            business_analysis_data: businessAnalysis,
-            question: interviewQuestionListState[currentQuestionIndex],
-            theory_data: purposeItemsSingleAtom,
-            persona_info: {
-              id: personaList.selected[i].persona_id.replace(/[^0-9]/g, ""),
-              name: personaList.selected[i].persona,
-              keyword: personaList.selected[i].persona_keyword,
-              hashtag: personaList.selected[i].lifestyle,
-              summary: personaList.selected[i].consumption_pattern,
+          // 더미 데이터 사용 - 실제 구현시 API 호출로 대체
+          const additionalQuestion = dummyAdditionalQuestion;
+
+
+
+
+          
+          const additionalAnswer = dummyAdditionalAnswer;
+
+          // 추가 질문 저장
+          setAdditionalQuestions((prev) => ({
+            ...prev,
+            [currentQuestionIndex]: {
+              question: additionalQuestion,
+              answer: additionalAnswer,
+              status: "Complete",
             },
-            last_interview: lastInterview,
-          };
+          }));
 
-          // API 호출 및 응답 처리
-          let response = await InterviewXPersonaSingleInterviewRequest(
+          // interviewData에 추가 질문/답변 추가
+          setInterviewData((prev) => {
+            const newData = [...(prev || [])];
+            const additionalIndex = `${currentQuestionIndex}_additional`;
+            newData[additionalIndex] = {
+              question: additionalQuestion,
+              answer: additionalAnswer,
+            };
+            return newData;
+          });
+
+          setIsGeneratingAdditional(false);
+        }
+
+        // 기존 인터뷰 진행 로직
+        // for (let i = 0; i < personaList.selected.length; i++) {
+        setIsGenerating(true);
+
+        // 현재까지의 대화 내용 수집
+        const lastInterview = [];
+        for (let q = 0; q < currentQuestionIndex; q++) {
+          const questionAnswers = answers[q] || [];
+          const personaAnswer = questionAnswers.find(
+            (ans) =>
+              ans.persona.personIndex === personaList.selected[0].personIndex
+          );
+          if (personaAnswer) {
+            lastInterview.push({
+              question: interviewQuestionListState[q],
+              answer: personaAnswer.answer,
+            });
+          }
+        }
+
+        // API 요청 데이터 준비
+        const data = {
+          business_analysis_data: businessAnalysis,
+          question: interviewQuestionListState[currentQuestionIndex],
+          theory_data: purposeItemsSingleAtom,
+          persona_info: {
+            id: personaList.selected[0].persona_id.replace(/[^0-9]/g, ""),
+            name: personaList.selected[0].persona,
+            keyword: personaList.selected[0].persona_keyword,
+            hashtag: personaList.selected[0].lifestyle,
+            summary: personaList.selected[0].consumption_pattern,
+          },
+          last_interview: lastInterview,
+        };
+
+        // API 호출 및 응답 처리
+        let response = await InterviewXPersonaSingleInterviewRequest(
+          data,
+          isLoggedIn
+        );
+
+        // 재시도 로직
+        let retryCount = 0;
+        const maxRetries = 10;
+        while (
+          retryCount < maxRetries &&
+          (!response || !response.response || !response.response.answer)
+        ) {
+          response = await InterviewXPersonaSingleInterviewRequest(
             data,
             isLoggedIn
           );
-
-          // 재시도 로직
-          let retryCount = 0;
-          const maxRetries = 10;
-          while (
-            retryCount < maxRetries &&
-            (!response || !response.response || !response.response.answer)
-          ) {
-            response = await InterviewXPersonaSingleInterviewRequest(
-              data,
-              isLoggedIn
-            );
-            retryCount++;
-          }
-
-          if (retryCount >= maxRetries) {
-            setShowErrorPopup(true);
-            return;
-          }
-          // 답변 저장
-          if (response && response.response && response.response.answer) {
-            setCurrentAnswerData(response.response.answer);
-            // answers 상태 업데이트
-            setAnswers((prev) => {
-              const newAnswers = {
-                ...prev,
-                [currentQuestionIndex]: [
-                  ...(prev[currentQuestionIndex] || []),
-                  {
-                    persona: personaList.selected[i],
-                    answer: response.response.answer,
-                  },
-                ],
-              };
-              return newAnswers;
-            });
-          }
-
-          setIsGenerating(false);
-
-          // 마지막 페르소나의 답변이 완료되면
-          if (i === personaList.selected.length - 1) {
-            // interviewData 업데이트 수정
-            setInterviewData((prev) => {
-              const newData = [...(prev || [])];
-              const currentQuestion =
-                interviewQuestionListState[currentQuestionIndex];
-
-              // 현재 질문에 대한 답변이 있는지 확인
-              const currentAnswer = response?.response?.answer || allAnswers[0];
-
-              if (currentAnswer) {
-                // 기존 데이터가 있다면 유지, 없으면 새로 생성
-                newData[currentQuestionIndex] = {
-                  ...newData[currentQuestionIndex],
-                  question: currentQuestion,
-                  answer: currentAnswer,
-                };
-              }
-
-              return newData;
-            });
-
-            setInterviewDataState((prev) => {
-              const newData = [...(prev || [])];
-              const currentQuestion =
-                interviewQuestionListState[currentQuestionIndex];
-
-              // 현재 질문에 대한 답변이 있는지 확인
-              const currentAnswer = response?.response?.answer || allAnswers[0];
-
-              if (currentAnswer) {
-                // 기존 데이터가 있다면 유지, 없으면 새로 생성
-                newData[currentQuestionIndex] = {
-                  ...newData[currentQuestionIndex],
-                  question: currentQuestion,
-                  answer: currentAnswer,
-                };
-              }
-
-              return newData;
-            });
-
-            // 상태를 Complete로 변경하기 전에 답변이 저장되었는지 확인
-            if (response?.response?.answer || allAnswers[0]) {
-              newStatus[currentQuestionIndex] = "Complete";
-              setInterviewStatus(newStatus);
-            }
-
-            // 다음 질문으로 이동
-            if (currentQuestionIndex < interviewQuestionListState.length - 1) {
-              setCurrentQuestionIndex((prev) => prev + 1);
-            }
-          } // 모든 인터뷰가 완료되었는지 확인
-          const allComplete = newStatus.every(
-            (status) => status === "Complete"
-          );
-          if (allComplete && countAdditionalQuestion === 0) {
-            // 데이터가 모두 저장될 때까지 잠시 대기
-            await new Promise((resolve) => setTimeout(resolve, 2000));
-
-            // 마지막으로 interviewDataState가 모든 질문을 포함하는지 확인
-            setInterviewDataState((prev) => {
-              const finalData = [...prev];
-              interviewQuestionListState.forEach((question, index) => {
-                if (!finalData[index]) {
-                  finalData[index] = {
-                    question: question,
-                    answer: "", // 빈 답변으로 초기화
-                  };
-                }
-              });
-              return finalData;
-            });
-
-            // 한번 더 대기하여 상태 업데이트 완료 확인
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-
-            loadInterviewReport(response.response.answer);
-          }
+          retryCount++;
         }
+
+        if (retryCount >= maxRetries) {
+          setShowErrorPopup(true);
+          return;
+        }
+        // 답변 저장
+        if (response && response.response && response.response.answer) {
+          setCurrentAnswerData(response.response.answer);
+          // answers 상태 업데이트
+          setAnswers((prev) => {
+            const newAnswers = {
+              ...prev,
+              [currentQuestionIndex]: [
+                ...(prev[currentQuestionIndex] || []),
+                {
+                  persona: personaList.selected[0],
+                  answer: response.response.answer,
+                },
+              ],
+            };
+            return newAnswers;
+          });
+        }
+
+        setIsGenerating(false);
+
+        // 마지막 페르소나의 답변이 완료되면
+        // if (i === personaList.selected.length - 1) {
+        // interviewData 업데이트 수정
+        setInterviewData((prev) => {
+          const newData = [...(prev || [])];
+          const currentQuestion =
+            interviewQuestionListState[currentQuestionIndex];
+
+          // 현재 질문에 대한 답변이 있는지 확인
+          const currentAnswer = response?.response?.answer || allAnswers[0];
+
+          if (currentAnswer) {
+            // 기존 데이터가 있다면 유지, 없으면 새로 생성
+            newData[currentQuestionIndex] = {
+              ...newData[currentQuestionIndex],
+              question: currentQuestion,
+              answer: currentAnswer,
+            };
+          }
+
+          return newData;
+        });
+
+        setInterviewDataState((prev) => {
+          const newData = [...(prev || [])];
+          const currentQuestion =
+            interviewQuestionListState[currentQuestionIndex];
+
+          // 현재 질문에 대한 답변이 있는지 확인
+          const currentAnswer = response?.response?.answer || allAnswers[0];
+
+          if (currentAnswer) {
+            // 기존 데이터가 있다면 유지, 없으면 새로 생성
+            newData[currentQuestionIndex] = {
+              ...newData[currentQuestionIndex],
+              question: currentQuestion,
+              answer: currentAnswer,
+            };
+          }
+
+          return newData;
+        });
+
+        // 상태를 Complete로 변경하기 전에 답변이 저장되었는지 확인
+        if (response?.response?.answer || allAnswers[0]) {
+          newStatus[currentQuestionIndex] = "Complete";
+          setInterviewStatus(newStatus);
+        }
+
+        // 다음 질문으로 이동
+        if (currentQuestionIndex < interviewQuestionListState.length - 1) {
+          setCurrentQuestionIndex((prev) => prev + 1);
+        }
+        // } // 모든 인터뷰가 완료되었는지 확인
+        const allComplete = newStatus.every((status) => status === "Complete");
+        if (allComplete && countAdditionalQuestion === 0) {
+          // 데이터가 모두 저장될 때까지 잠시 대기
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+
+          // 마지막으로 interviewDataState가 모든 질문을 포함하는지 확인
+          setInterviewDataState((prev) => {
+            const finalData = [...prev];
+            interviewQuestionListState.forEach((question, index) => {
+              if (!finalData[index]) {
+                finalData[index] = {
+                  question: question.question,
+                  answer: "", // 빈 답변으로 초기화
+                };
+              }
+            });
+            return finalData;
+          });
+
+          // 한번 더 대기하여 상태 업데이트 완료 확인
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+
+          loadInterviewReport(response.response.answer);
+        }
+        // }
       } catch (error) {
         console.error("Error in processInterview:", error);
         setIsGenerating(false);
@@ -875,36 +925,6 @@ const OrganismToastPopupSingleChat = ({
   useEffect(() => {
     renderInterviewItems();
   }, [interviewStatus]);
-
-  const renderAnswersComplete = (questionIndex) => {
-    const questionAnswers = answers[questionIndex] || [];
-
-    return (
-      <>
-        {questionAnswers.map((answer, index) => (
-          <AnswerItem key={index}>
-            <TypeName>
-              <Thumb>
-                <img
-                  src={`/ai_person/${answer.persona.personaImg}.png`}
-                  alt={answer.persona.persona}
-                />
-              </Thumb>
-              <div>
-                {answer.persona.persona}
-                <p>
-                  <span>{answer.gender}</span>
-                  <span>{answer.age}세</span>
-                  <span>{answer.job}</span>
-                </p>
-              </div>
-            </TypeName>
-            <TextContainer>{answer.answer}</TextContainer>
-          </AnswerItem>
-        ))}
-      </>
-    );
-  };
 
   useEffect(() => {
     setActive(isActive);
@@ -969,9 +989,11 @@ const OrganismToastPopupSingleChat = ({
     return interviewQuestionListState.map((item, index) => {
       const status = interviewStatus[index] || "Pre";
       if (status === "Ing" || status === "Complete") {
-        return (
-          <React.Fragment key={index}>
-            {/* 모더레이터의 질문 */}
+        const elements = [];
+
+        // 기존 질문/답변 렌더링
+        elements.push(
+          <React.Fragment key={`main-${index}`}>
             <ChatItem Moder>
               <Persona Moder color="Gainsboro" size="Medium" Round>
                 <img src={personaImages.PersonaModer} alt="모더" />
@@ -982,17 +1004,13 @@ const OrganismToastPopupSingleChat = ({
               </Persona>
               <ChatBox Moder>
                 <Sub1 color="gray800" align="left">
-                  {console.log("현재 질문:", item.question)}
-                  {/* Q{index + 1}.{" "}
-                  {item.question} */}
-                  {/* 콘솔에 질문 출력 */}Q{index + 1}. {item}
+                  Q{index + 1}. {item.question}
                 </Sub1>
               </ChatBox>
             </ChatItem>
 
-            {/* 페르소나들의 답변 */}
             {answers[index]?.map((answer, answerIndex) => (
-              <ChatItem Persona key={`${index}-${answerIndex}`}>
+              <ChatItem key={`answer-${answerIndex}`} Persona>
                 <Persona color="Linen" size="Medium" Round>
                   <img
                     src={`/ai_person/${answer.persona.personaImg}.png`}
@@ -1026,71 +1044,60 @@ const OrganismToastPopupSingleChat = ({
             )}
           </React.Fragment>
         );
+
+        // 추가 질문이 있고 기존 질문/답변이 완료된 경우에만 추가 질문 렌더링
+        if (additionalQuestions[index] && status === "Complete") {
+          elements.push(
+            <React.Fragment key={`additional-${index}`}>
+              <ChatItem Moder>
+                <Persona Moder color="Gainsboro" size="Medium" Round>
+                  <img src={personaImages.PersonaModer} alt="모더" />
+                  <span>
+                    <img src={images.PatchCheckFill} alt="" />
+                    <Helptext color="primary">모더</Helptext>
+                  </span>
+                </Persona>
+                <ChatBox Moder>
+                  <Sub1 color="gray800" align="left">
+                    {additionalQuestions[index].question}
+                  </Sub1>
+                </ChatBox>
+              </ChatItem>
+              <ChatItem Persona>
+                <Persona color="Linen" size="Medium" Round>
+                  <img
+                    src={`/ai_person/${personaList.selected[0].personaImg}.png`}
+                    alt={personaList.selected[0].persona}
+                  />
+                </Persona>
+                <ChatBox Persona>
+                  <Sub1 color="gray800" align="left">
+                    {additionalQuestions[index].answer}
+                  </Sub1>
+                </ChatBox>
+              </ChatItem>
+
+              {/* 추가 답변 생성 중인 경우 */}
+              {status === "Ing" && isGeneratingAdditional && (
+                <ChatItem Persona>
+                  <Persona color="Linen" size="Medium" Round>
+                    <img
+                      src={`/ai_person/${personaList.selected[0].personaImg}.png`}
+                      alt="페르소나"
+                    />
+                  </Persona>
+                  <ChatBox Persona>
+                    <Entering />
+                  </ChatBox>
+                </ChatItem>
+              )}
+            </React.Fragment>
+          );
+        }
+
+        return elements;
       }
       return null;
-    });
-  };
-
-  // 이미 완료된 인터뷰를 확인할 때 사용
-  const renderInterviewItemsComplete = () => {
-    console.log("인터뷰 완료 렌더링");
-
-    // interviewData에서 질문과 답변을 추출
-    const questionsAndAnswers = interviewData
-      .map((item) => {
-        const questionKeys = Object.keys(item).filter((key) =>
-          key.startsWith("question")
-        );
-        const question = questionKeys.map((key) => item[key]).find((q) => q);
-        const answer = item.answer; // 답변을 가져옴
-        return { question, answer }; // 질문과 답변을 반환
-      })
-      .filter((q) => q.question); // 유효한 질문만 필터
-
-    return questionsAndAnswers.map((item, index) => {
-      const status = interviewStatus[index]; // 질문 상태 가져오기
-      console.log("질문 상태:", status); // 각 질문의 상태 로그
-      if (status === "Complete") {
-        console.log("질문:", item.question); // 질문 로그
-        console.log("답변:", item.answer); // 답변 로그
-        return (
-          <React.Fragment key={index}>
-            {/* 모더레이터의 질문 */}
-            <ChatItem Moder>
-              <Persona color="Gainsboro" size="Medium" Round>
-                <img src={personaImages.PersonaModer} alt="모더" />
-                <span>
-                  <img src={images.PatchCheckFill} alt="" />
-                  <Helptext color="primary">모더</Helptext>
-                </span>
-              </Persona>
-              <ChatBox Moder>
-                <Sub1 color="gray800" align="left">
-                  {console.log("현재 질문:", item.question)}Q{index + 1}.{" "}
-                  {item.question}
-                </Sub1>
-              </ChatBox>
-            </ChatItem>
-          </React.Fragment>
-
-          //   <ChatItem Persona>
-          //     <Persona color="Linen" size="Medium" Round>
-          //       {/* <img
-          //         src={`/ai_person/${item.answer.persona.personaImg}.jpg`} // Adjusted to use item.answer
-          //         alt={item.answer.persona.persona}
-          //       /> */}
-          //     </Persona>
-          //     <ChatBox Persona>
-          //       <Sub1 color="gray800" align="left">
-          //         {console.log("현재 질문:",item.answer)}
-          //         {item.answer}
-          //       </Sub1>
-          //     </ChatBox>
-          //   </ChatItem>
-          // </React.Fragment>
-        );
-      }
-      return null; // 상태가 "Complete"가 아닐 경우 null 반환
     });
   };
 
@@ -1112,42 +1119,6 @@ const OrganismToastPopupSingleChat = ({
     //replace: true 현재 페이지를 대체하여 이동( 뒤로 가기 시 이전 인터뷰 화면으로 돌아감 방지)
   };
 
-  // const handleQuestionSelect = (index, questionText) => {
-  //   setSelectedQuestions((prev) => {
-  //     if (prev.includes(index)) {
-  //       return prev.filter((item) => item !== index);
-  //     } else {
-  //       // 인터뷰 질문 목록에 새로운 질문을 추가
-  //       setInterviewQuestionListState((prevList) => {
-  //         const updatedList = [...prevList, questionText];
-
-  //         // interviewData도 함께 업데이트
-  //         setInterviewData((prev) => {
-  //           const newData = [...(prev || [])];
-  //           newData[updatedList.length - 1] = {
-  //             [`question_${updatedList.length}`]: questionText,
-  //             [`answer_${updatedList.length}`]: [], // 빈 배열로 초기화
-  //           };
-  //           return newData;
-  //         });
-
-  //         // 인터뷰 상태 업데이트
-  //         setInterviewStatus((prevStatus) => {
-  //           const newStatus = [...prevStatus, "Pre"];
-  //           return newStatus;
-  //         });
-
-  //         // 현재 질문 인덱스를 새로 추가된 질문의 인덱스로 업데이트
-  //         setCurrentQuestionIndex(updatedList.length - 1);
-
-  //         return updatedList;
-  //       });
-
-  //       setCountAdditionalQuestion(countAdditionalQuestion - 1);
-  //       return [...prev, index];
-  //     }
-  //   });
-  // };
   const handleQuestionSelect = async (index, questionText) => {
     try {
       // 이미 선택된 질문인 경우 처리
@@ -1205,6 +1176,10 @@ const OrganismToastPopupSingleChat = ({
               {/* Dynamically displaying the interview questions */}
               {interviewQuestionListState.length > 0 ? (
                 interviewQuestionListState.map((item, index) => {
+                  console.log(
+                    "🚀 ~ interviewQuestionListState.map ~ item:",
+                    item
+                  );
                   // interviewQuestionListState.slice(0, 1).map((item, index) => {
                   const status = interviewStatus[index] || "Pre"; // 현재 질문의 상태를 가져옴
                   return (
@@ -1214,7 +1189,7 @@ const OrganismToastPopupSingleChat = ({
                       disabled={status === "Pre"}
                     >
                       <Sub2 color="gray800">
-                        Q{index + 1}. {item}
+                        Q{index + 1}. {item.question}
                       </Sub2>
                       <span>
                         {status === "Complete" ? (
@@ -1312,7 +1287,7 @@ const OrganismToastPopupSingleChat = ({
                 ))}
 
               {!isLoadingPrepare && isComplete
-                ? renderInterviewItemsComplete()
+                ? renderInterviewItems()
                 : renderInterviewItems()}
 
               <ChatListWrap>
@@ -1368,23 +1343,6 @@ const OrganismToastPopupSingleChat = ({
                           />
                           <span>아니요, 괜찮습니다.</span>
                         </label>
-
-                        {/* <button
-                          type="button"
-                          disabled={countAdditionalQuestion === 0}
-                          onClick={() => {
-                            setIsInputEnabled(true); // 입력 필드 활성화
-                            setInputValue(""); // 입력 필드 초기화
-                          }}
-                        >
-                          네, 있습니다!
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => loadInterviewReport()} // 질문 목록 숨기기
-                        >
-                          아니요, 괜찮습니다.
-                        </button> */}
                       </ChatAddButton>
                     </ChatItem>
                   )}

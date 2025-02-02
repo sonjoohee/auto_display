@@ -577,7 +577,7 @@ const PageMyProject = () => {
                 <DashboardCard>
                   <Body2 color="gray500">생성 완료 페르소나</Body2>
                   <DashboardAmount>
-                    <H3 color="gray800">0건(아직안됨)</H3>
+                    <H3 color="gray800">0건</H3>
                     <Badge New>new</Badge>
                   </DashboardAmount>
                 </DashboardCard>
