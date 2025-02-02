@@ -35,7 +35,7 @@ import {
 } from "../../../AtomStates";
 import { InterviewXPersonaSingleInterviewRequestAddQuestion } from "../../../../utils/indexedDB";
 
-const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete, }) => {
+const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
   console.log("=================================isComplete", isComplete);
   const [selectedPersonaList, setSelectedPersonaList] = useAtom(
     SELECTED_PERSONA_LIST
@@ -159,7 +159,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete, }) => {
 
       const status = interviewStatus[index];
 
-      if (status === "Complete" && item.question && item.answer) {
+      if (status === "Complete" && item.question.question && item.answer) {
         return (
           <React.Fragment key={index}>
             <ChatItem Moder>
@@ -173,7 +173,9 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete, }) => {
               <ChatBox Moder>
                 <Sub1 color="gray800" align="left">
                   Q{index + 1}.{" "}
-                  {typeof item.question === "string" ? item.question : ""}
+                  {typeof item.question.question === "string"
+                    ? item.question.question
+                    : ""}
                 </Sub1>
               </ChatBox>
             </ChatItem>
@@ -213,9 +215,12 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete, }) => {
                 interviewData.map((item, index) => {
                   const status = interviewStatus[index];
                   return (
-                    <QuestionItem key={index} checked={status === "Complete" ? true : item.checked}>
+                    <QuestionItem
+                      key={index}
+                      checked={status === "Complete" ? true : item.checked}
+                    >
                       <Sub2 color="gray800">
-                        Q{index + 1}. {item.question}
+                        Q{index + 1}. {item.question.question}
                       </Sub2>
                       <span>
                         <img src={images.CheckGreen} alt="완료" />

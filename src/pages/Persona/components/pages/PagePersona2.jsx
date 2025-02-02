@@ -294,6 +294,7 @@ const PagePersona2 = () => {
       }
     });
   };
+
   const axiosConfig = {
     timeout: 100000, // 100초
     headers: {
@@ -418,6 +419,8 @@ const PagePersona2 = () => {
             }
 
             let availablePersonas = [];
+            let findCountPersonas = [];
+            setFindPersonas([]);
             // 초기 페르소나 데이터 로드
             for (const category of Object.values(
               savedProjectInfo.businessAnalysis.category
@@ -428,7 +431,7 @@ const PagePersona2 = () => {
                 axiosConfig
               );
 
-              response.response.forEach((newPersona) => {
+              response.data.forEach((newPersona) => {
                 // 이미 필터링된 페르소나는 제외
                 const isAlreadyFiltered = filteredProjectList.some(
                   (filtered) => filtered.persona_id === newPersona.persona_id
@@ -442,9 +445,16 @@ const PagePersona2 = () => {
                 ) {
                   availablePersonas.push(newPersona);
                 }
+                if (
+                  !findCountPersonas.some(
+                    (p) => p.persona_id === newPersona.persona_id
+                  )
+                ) {
+                  findCountPersonas.push(newPersona);
+                }
               });
             }
-            setFindPersonas(availablePersonas);
+            setFindPersonas(findCountPersonas);
 
             // businessPersonaList에서 고유한 persona_type 추출
             const uniqueTypes = [
@@ -643,8 +653,8 @@ const PagePersona2 = () => {
           //   axiosConfig
           // );
           // 페르소나 요청 API  수정 예정
-           response = await InterviewXPersonaRequestRequest(data, isLoggedIn);
-           
+          response = await InterviewXPersonaRequestRequest(data, isLoggedIn);
+
           retryCount++;
 
           requestPersonaList = response.response;
@@ -708,17 +718,21 @@ const PagePersona2 = () => {
       }
 
       let availablePersonas = [];
-      console.log("🚀 ~ availablePersonas:", availablePersonas);
+      let findCountPersonas = [];
+      setFindPersonas([]);
 
       // 초기 페르소나 데이터 로드
       for (const category of Object.values(businessAnalysis.category)) {
+        console.log(
+          "🚀 ~ availablePersonas ~ category:",
+          businessAnalysis.category
+        );
         const response = await axios.post(
           "https://wishresearch.kr/person/findPersonapreSet",
           { target: category },
           axiosConfig
         );
-
-        response.response.forEach((newPersona) => {
+        response.data.forEach((newPersona) => {
           // 이미 필터링된 페르소나는 제외
           const isAlreadyFiltered = filteredProjectList.some(
             (filtered) => filtered.persona_id === newPersona.persona_id
@@ -732,8 +746,16 @@ const PagePersona2 = () => {
           ) {
             availablePersonas.push(newPersona);
           }
+          if (
+            !findCountPersonas.some(
+              (p) => p.persona_id === newPersona.persona_id
+            )
+          ) {
+            findCountPersonas.push(newPersona);
+          }
         });
       }
+      setFindPersonas(findCountPersonas);
 
       // 초기 로드시 3번(9개), 더보기 클릭시 1번(3개) 필터링
       const filteringCount = isInitial ? 1 : 1;
@@ -742,7 +764,6 @@ const PagePersona2 = () => {
       // let filteredPersonas = [];
       let filterResponse = null;
 
-      console.log("🚀 ~ availablePersonas:", availablePersonas);
       // 3번의 필터링 수행
       // for (let i = 0; i < 3 && availablePersonas.length > 0; i++) {
       for (let i = 0; i < filteringCount && availablePersonas.length > 0; i++) {
@@ -954,12 +975,6 @@ const PagePersona2 = () => {
   const loadBusinessPersona = async (personaType) => {
     try {
       setIsLoadingBusiness(true);
-      console.log("🚀 ~ loadBusinessPersona ~ personaType:", personaType);
-
-      console.log(
-        "🚀 ~ loadBusinessPersona ~ allBusinessPersonas:",
-        allBusinessPersonas
-      );
       setIsLoadingMore(true);
       setCurrentLoadingType(personaType); // 현재 로딩 중인 타입 설정
       // 페르소나 타입이 이미 로드되었는지 확인
@@ -1001,35 +1016,23 @@ const PagePersona2 = () => {
         return; // Exit the function if validation fails
       }
 
-      console.log(`=== ${personaType.label} 페르소나 요청 시작 ===`);
-      console.log("요청 데이터:", requestData);
-
       const result = await InterviewXPersonaRequestType(
         requestData,
         isLoggedIn
       );
-      console.log("API 응답 결과:", result);
-      console.log("페르소나 스펙트럼:", result?.response?.persona_spectrum);
 
       if (result?.response?.persona_spectrum) {
         const newPersonas = result.response.persona_spectrum.map(
           (p) => Object.values(p)[0]
         );
-        console.log("새로운 페르소나 데이터 누적:", newPersonas);
 
         const updatedList = [...businessPersonaList, ...newPersonas]; // 누적된 리스트
-        console.log("누적된 전체 비즈니스 페르소나:", updatedList);
         // setBusinessPersonaList(updatedList);
         // console.log('businessPersonaList:', businessPersonaList);
         // 기존 상태에 새로운 페르소나를 추가
         // setBusinessPersonaList(updatedList);
 
         allBusinessPersonas.push(...updatedList);
-        console.log("Updated allBusinessPersonas:", allBusinessPersonas);
-
-        // setBusinessPersonaList(allBusinessPersonas);
-        console.log("businessPersonaList:", businessPersonaList);
-
         setDisplayedPersonas((prevDisplayed) => [
           ...prevDisplayed,
           ...newPersonas,
@@ -1586,8 +1589,8 @@ const PagePersona2 = () => {
                               // !isLoadingMore &&
                               !isLoadingDaily &&
                               !(
-                                filteredProjectList.length ===
-                                personaList.unselected.length
+                                filteredProjectList.length >=
+                                findPersonas.length
                               ) && (
                                 <LoadMoreButton onClick={handleLoadMore}>
                                   <Body3 color="gray700">

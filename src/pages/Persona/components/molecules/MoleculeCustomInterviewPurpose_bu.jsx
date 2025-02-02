@@ -55,7 +55,8 @@ const MoleculeCustomInterviewPurpose = ({
   const [showRegenerateButton, setShowRegenerateButton] = useState(false);
   const [showQuestions, setShowQuestions] = useState(false);
   const [isQuestionOpen, setIsQuestionOpen] = useState(false);
-  const [purposeItemsSingle, setPurposeItemsSingle] = useAtom(PURPOSE_ITEMS_SINGLE);
+  const [purposeItemsSingle, setPurposeItemsSingle] =
+    useAtom(PURPOSE_ITEMS_SINGLE);
   console.log("purpose", purpose);
 
   if (!purpose) {
@@ -98,11 +99,11 @@ const MoleculeCustomInterviewPurpose = ({
       if (response.response) {
         const commonQuestions = response.response
           .filter((item) => item.question_type === "공통질문")
-          .map((item) => item.question);
+          .map((item) => item);
 
         const specialQuestions = response.response
           .filter((item) => item.question_type === "특화질문")
-          .map((item) => item.question);
+          .map((item) => item);
 
         const newQuestionData = {
           theory_name: title,
@@ -204,7 +205,9 @@ const MoleculeCustomInterviewPurpose = ({
               <TitleSection>
                 <Title>{purpose?.theory_title}</Title>
               </TitleSection>
-              {purpose?.description && <Description>{purpose.description}</Description>}
+              {purpose?.description && (
+                <Description>{purpose.description}</Description>
+              )}
             </ContentWrapper>
 
             <ToggleButton
@@ -227,7 +230,10 @@ const MoleculeCustomInterviewPurpose = ({
                 </span>
               ) : showRegenerateButton ? (
                 <ListUL>
-                  <MoleculeRecreate Small onRegenerate={loadInterviewQuestion} />
+                  <MoleculeRecreate
+                    Small
+                    onRegenerate={loadInterviewQuestion}
+                  />
                 </ListUL>
               ) : (
                 <div>
@@ -248,10 +254,9 @@ const MoleculeCustomInterviewPurpose = ({
                         return (
                           questions?.commonQuestions?.map((question, index) => (
                             <BgBoxItem key={index}>
-                              <Body3 color="gray700">{`${String(index + 1).padStart(
-                                2,
-                                "0"
-                              )}.`}</Body3>
+                              <Body3 color="gray700">{`${String(
+                                index + 1
+                              ).padStart(2, "0")}.`}</Body3>
                               <Body3 color="gray700">{question}</Body3>
                             </BgBoxItem>
                           )) || null
@@ -273,15 +278,16 @@ const MoleculeCustomInterviewPurpose = ({
                           (item) => item.theory_name === purpose?.theory_title
                         );
                         return (
-                          questions?.specialQuestions?.map((question, index) => (
-                            <BgBoxItem key={index}>
-                              <Body3 color="gray700">{`${String(index + 1).padStart(
-                                2,
-                                "0"
-                              )}.`}</Body3>
-                              <Body3 color="gray700">{question}</Body3>
-                            </BgBoxItem>
-                          )) || null
+                          questions?.specialQuestions?.map(
+                            (question, index) => (
+                              <BgBoxItem key={index}>
+                                <Body3 color="gray700">{`${String(
+                                  index + 1
+                                ).padStart(2, "0")}.`}</Body3>
+                                <Body3 color="gray700">{question}</Body3>
+                              </BgBoxItem>
+                            )
+                          ) || null
                         );
                       })()
                     )}

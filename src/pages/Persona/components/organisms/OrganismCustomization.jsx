@@ -209,11 +209,11 @@ const OrganismCustomization = ({
       if (result?.response) {
         const commonQuestions = result.response
           .filter((item) => item.question_type === "공통질문")
-          .map((item) => item.question);
+          .map((item) => item);
 
         const specialQuestions = result.response
           .filter((item) => item.question_type === "특화질문")
-          .map((item) => item.question);
+          .map((item) => item);
 
         const newQuestionList = {
           theory_name: customTheoryData.theory_title,
