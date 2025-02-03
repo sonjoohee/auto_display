@@ -54,6 +54,7 @@ import { InterviewXPersonaSingleInterviewReportTab1 } from "../../../../utils/in
 import { InterviewXPersonaSingleInterviewReportTab2 } from "../../../../utils/indexedDB";
 import { InterviewXPersonaSingleInterviewReportTab3 } from "../../../../utils/indexedDB";
 import { SkeletonLine } from "../../../../assets/styles/Skeleton";
+import { InterviewXPersonaSingleIndepthInterviewGeneratorRequest } from "../../../../utils/indexedDB";
 
 const OrganismToastPopupSingleChat = ({
   isActive,
@@ -703,20 +704,6 @@ const OrganismToastPopupSingleChat = ({
           "공통질문";
         const shouldGenerateIndepth = isIndepth && isSpecialQuestion;
 
-        console.log(
-          "🚀 ~ interviewQuestionListState:",
-          interviewQuestionListState
-        );
-        console.log(
-          "🚀 ~ processInterview ~ shouldGenerateIndepth:",
-          shouldGenerateIndepth
-        );
-
-        // 조건이 만족되면 IndepthInterview 함수 호출
-        if (shouldGenerateIndepth) {
-          processIndepthInterview(currentQuestionIndex);
-        }
-
         // 기존 인터뷰 진행 로직 (메인 질문 처리)
         setIsGenerating(true);
 
@@ -805,6 +792,7 @@ const OrganismToastPopupSingleChat = ({
           };
           return newData;
         });
+
         setInterviewDataState((prev) => {
           const newData = [...(prev || [])];
           const currentQuestion =
@@ -820,6 +808,11 @@ const OrganismToastPopupSingleChat = ({
           };
           return newData;
         });
+
+        // 조건이 만족되면 IndepthInterview 함수 호출
+        if (shouldGenerateIndepth) {
+          processIndepthInterview(currentQuestionIndex);
+        }
 
         // 다음 질문으로 이동
         if (currentQuestionIndex < interviewQuestionListState.length - 1) {
@@ -1103,7 +1096,6 @@ const OrganismToastPopupSingleChat = ({
 
     // dummyIndepthInterview는 IndepthInterview용 더미 데이터입니다.
     // 실제 구현 시 API 호출로 대체하세요.
-    const indepthInterview = dummyIndepthInterview; // 예: { question_type: "IndepthInterview", question: "이 서비스의 가장 큰 장점은 무엇이라고 생각하시나요?" }
 
     // IndepthInterview의 컨텍스트를 위해 지금까지의 대화내용 수집
     const lastInterviewForIndepth = [];
@@ -1122,6 +1114,26 @@ const OrganismToastPopupSingleChat = ({
       }
     }
 
+    console.log(
+      "🚀 ~ processIndepthInterview ~ lastInterviewForIndepth:",
+      lastInterviewForIndepth
+    );
+    const questionData = {
+      business_idea: businessAnalysis.title,
+      business_analysis_data: businessAnalysis,
+      theory_data: purposeItemsSingleAtom,
+      last_interview: lastInterviewForIndepth,
+    };
+    console.log("🚀 ~ processIndepthInterview ~ questionData:", questionData);
+
+    // let responseIndepthInterview =
+    //   await InterviewXPersonaSingleIndepthInterviewGeneratorRequest(
+    //     questionData,
+    //     isLoggedIn
+    //   );
+
+    // const indepthInterview = responseIndepthInterview.response.response;
+    const indepthInterview = dummyIndepthInterview;
     // IndepthInterview API 요청 데이터 준비
     const indepthData = {
       business_analysis_data: businessAnalysis,
