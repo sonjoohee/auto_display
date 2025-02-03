@@ -196,12 +196,11 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
               </Persona>
               <ChatBox Persona>
                 <Sub1 color="gray800" align="left">
-                  {typeof item.main.answer === "string"
-                    ? item.main.answer
-                    : ""}
+                  {typeof item.main.answer === "string" ? item.main.answer : ""}
                 </Sub1>
               </ChatBox>
             </ChatItem>
+
 
             {/* indepth 항목이 존재할 경우 추가 UI 렌더링 */}
             {console.log("🚀 ~ item.indepth:", item.indepth)}
@@ -242,6 +241,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                 </ChatItem>
               </>
             )}
+
           </React.Fragment>
         );
       }
