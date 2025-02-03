@@ -2612,7 +2612,7 @@ const AddQuestion = styled.div`
 
       div ${Body2} {
         &:before {
-          content: "Done";
+          // content: "Done";
         }
       }
     }
