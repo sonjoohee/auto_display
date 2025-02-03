@@ -3004,7 +3004,9 @@ export const SwitchToggleInput = styled.input`
 
 export const Tooltip = styled.div`
   position: relative;
-  display: inline-block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   min-width: 14px !important;
   width: 14px !important;
 
@@ -3014,8 +3016,9 @@ export const Tooltip = styled.div`
     justify-content: center;
     width: 14px;
     height: 14px;
-    font-size: 0.75rem;
+    font-size: 0.63rem;
     color: ${palette.gray500};
+    line-height: 14px;
     border-radius: 50%;
     border: 0.5px solid ${palette.outlineGray};
     background-color: ${palette.chatGray};
