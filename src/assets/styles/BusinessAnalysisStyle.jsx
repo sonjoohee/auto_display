@@ -2317,7 +2317,7 @@ export const CreditDashBoardItem = styled.div`
   padding: ${(props) => (props.NoLine ? "0" : "24px")};
   border-radius: 10px;
   border: ${(props) =>
-    props.NoLine ? "0" : "1px solid ${palette.outlineGray}"};
+    props.NoLine ? "0" : `1px solid ${palette.outlineGray}`};
 
   .icon {
     display: flex;
@@ -3088,4 +3088,15 @@ export const Dot = styled.div`
   height: 3px;
   background: ${palette.gray300};
   border-radius: 50%;
+`;
+
+export const NoData = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: ${(props) => (props.border ? "90px 0 78px" : "72px 0")}; 
+  border-radius: ${(props) => (props.border ? "10px" : "0")};
+  border: ${(props) => (props.border ? `1px solid ${palette.outlineGray}` : "none")};
 `;

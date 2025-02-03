@@ -203,6 +203,7 @@ import CheckGreen from "../images/check-green.svg"
 import FileText from "../images/file-text.svg"
 import People from "../images/people.svg"
 import PeopleFill from "../images/people-fill.svg"
+import PeopleFill2 from "../icons/PeopleFill";
 import ReportSearch from "../images/report-search.svg"
 import PersonCircle from "../images/person-circle.svg"
 import PersonFill from "../images/person-fill.svg"
@@ -255,6 +256,7 @@ import CoinSmall from '../icons/CoinSmall';
 import CoinMedium from '../icons/CoinMedium';
 import CoinLarge from '../icons/CoinLarge';
 import CoinFill from '../icons/CoinFill';
+import CoinLargeFill from '../icons/CoinLargeFill';
 
 import RocketSuccess from "../images/rocket-success.svg";
 import RocketFail from "../images/rocket-fail.svg";
@@ -472,6 +474,7 @@ const images = {
   FileText,
   People,
   PeopleFill,
+  PeopleFill2,
   ReportSearch,
   PersonCircle,  
   PersonFill,
@@ -513,6 +516,7 @@ const images = {
   CoinMedium,
   CoinLarge,
   CoinFill,
+  CoinLargeFill,
 
   RocketSuccess,
   RocketFail,
