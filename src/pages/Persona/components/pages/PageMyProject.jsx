@@ -38,6 +38,7 @@ import {
   ArrowButton,
   Dots,
   Dot,
+  NoData,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../../assets/styles/Images";
 import { useNavigate } from "react-router-dom";
@@ -894,56 +895,50 @@ const PageMyProject = () => {
                   </CreditDashBoardListHeader>
 
                   <CreditDashBoardListContent>
-                    {userCreditList.results.map((credit) => (
-                      <CreditListItem>
-                        <div>
-                          {credit.credit_type === "일반 크레딧" ? (
-                            <CreditBadge General>
-                              <span>
-                                <images.CoinFill color="#FFD54A" />
-                              </span>
-                              <Sub2_1>{credit.credit_type}</Sub2_1>
-                            </CreditBadge>
-                          ) : credit.credit_type === "구독 크레딧" ? (
-                            <CreditBadge Subscription>
-                              <span>
-                                <images.CoinFill color="#34C759" />
-                              </span>
-                              <Sub2_1>{credit.credit_type}</Sub2_1>
-                            </CreditBadge>
-                          ) : credit.credit_type === "이벤트 크레딧" ? (
-                            <CreditBadge Event>
-                              <span>
-                                <images.CoinFill color="#FF5322" />
-                              </span>
-                              <Sub2_1>{credit.credit_type}</Sub2_1>
-                            </CreditBadge>
-                          ) : null}
-                        </div>
-                        <Body3 color="gray500">
-                          {credit.title}
-                          {/* 
-                          {credit.tid !== null && (
-                            <Button onClick={() => handleCancel(credit.tid)}>
-                              결제 취소
-                            </Button>
-                          )} 
-                           */}
-                        </Body3>
-
-                        <Body3 color="gray500">
-                          {new Date(credit.credit_created).toLocaleDateString(
-                            "ko-KR",
-                            {
+                    {userCreditList.results.length > 0 ? (
+                      userCreditList.results.map((credit) => (
+                        <CreditListItem>
+                          <div>
+                            {credit.credit_type === "일반 크레딧" ? (
+                              <CreditBadge General>
+                                <span>
+                                  <images.CoinFill color="#FFD54A" />
+                                </span>
+                                <Sub2_1>{credit.credit_type}</Sub2_1>
+                              </CreditBadge>
+                            ) : credit.credit_type === "구독 크레딧" ? (
+                              <CreditBadge Subscription>
+                                <span>
+                                  <images.CoinFill color="#34C759" />
+                                </span>
+                                <Sub2_1>{credit.credit_type}</Sub2_1>
+                              </CreditBadge>
+                            ) : credit.credit_type === "이벤트 크레딧" ? (
+                              <CreditBadge Event>
+                                <span>
+                                  <images.CoinFill color="#FF5322" />
+                                </span>
+                                <Sub2_1>{credit.credit_type}</Sub2_1>
+                              </CreditBadge>
+                            ) : null}
+                          </div>
+                          <Body3 color="gray500">{credit.title}</Body3>
+                          <Body3 color="gray500">
+                            {new Date(credit.credit_created).toLocaleDateString("ko-KR", {
                               year: "numeric",
                               month: "long",
                               day: "numeric",
-                            }
-                          )}
-                        </Body3>
-                        <Body3 color="gray500">{credit.credit}</Body3>
-                      </CreditListItem>
-                    ))}
+                            })}
+                          </Body3>
+                          <Body3 color="gray500">{credit.credit}</Body3>
+                        </CreditListItem>
+                      ))
+                    ) : (
+                      <NoData>
+                        <images.CoinLargeFill color="#EBEBEB" />
+                        <Body3 color="gray500">크레딧 사용 내역이 없습니다.</Body3>
+                      </NoData>
+                    )}
                   </CreditDashBoardListContent>
                 </CreditDashBoardList>
 

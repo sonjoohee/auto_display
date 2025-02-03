@@ -255,6 +255,7 @@ import CoinSmall from '../icons/CoinSmall';
 import CoinMedium from '../icons/CoinMedium';
 import CoinLarge from '../icons/CoinLarge';
 import CoinFill from '../icons/CoinFill';
+import CoinLargeFill from '../icons/CoinLargeFill';
 
 import RocketSuccess from "../images/rocket-success.svg";
 import RocketFail from "../images/rocket-fail.svg";
@@ -513,6 +514,7 @@ const images = {
   CoinMedium,
   CoinLarge,
   CoinFill,
+  CoinLargeFill,
 
   RocketSuccess,
   RocketFail,
