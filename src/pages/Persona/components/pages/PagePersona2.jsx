@@ -256,9 +256,12 @@ const PagePersona2 = () => {
   });
 
   const handleOceanChange = (trait, value) => {
-    setOceanValues((prev) => ({
+    // 값을 0 또는 1로 스냅
+    const snappedValue = Number(value) <= 0.5 ? 0 : 1;
+    
+    setOceanValues(prev => ({
       ...prev,
-      [trait]: Number(value),
+      [trait]: snappedValue
     }));
   };
 
@@ -2045,7 +2048,7 @@ const PagePersona2 = () => {
               {activeTabIndex === 1 && (
                 <>
                   <div>
-                    <BgBoxItem NoOutline>
+                    <BgBoxItem NoOutline style={{ marginBottom: "40px" }}>
                       <Sub3 color="gray500" align="left">
                         OCEAN이란?
                         <br />
@@ -2074,9 +2077,7 @@ const PagePersona2 = () => {
                             max="1"
                             step="0.5"
                             value={oceanValues.openness}
-                            onChange={(e) =>
-                              handleOceanChange("openness", e.target.value)
-                            }
+                            onChange={(e) => handleOceanChange("openness", e.target.value)}
                             disabled={ignoreOcean}
                             $ignored={ignoreOcean}
                           />
@@ -2160,7 +2161,7 @@ const PagePersona2 = () => {
                       방법들이 있습니다. 원하는 바를 위해 최대한 커스터마이징
                       하여 페르소나를 도출해 내시기를 기원합니다.
                     </Body3> */}
-                    <CheckBox>
+                    <CheckBox Fill>
                       <input
                         type="checkbox"
                         id="chk1"
@@ -2169,7 +2170,7 @@ const PagePersona2 = () => {
                         onChange={handleIgnoreOcean}
                       />
                       <label htmlFor="chk1">
-                        페르소나의 성격 유형은 신경 쓰지 않습니다.
+                        페르소나의 성격 유형을 랜덤으로 생성 하겠습니다.
                       </label>
                     </CheckBox>
                   </div>
