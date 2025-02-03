@@ -12,7 +12,7 @@ export const ContentsWrap = styled.div`
   gap: ${(props) => (props.isMobile ? "20px" : "40px")};
   padding: ${(props) => (props.isMobile ? "20px" : "0")};
   min-height: 100vh;
-  overflow: ${({ noScroll }) => (noScroll ? "hidden" : "auto")};
+  // overflow: ${({ noScroll }) => (noScroll ? "hidden" : "auto")};
 `;
 
 export const ContentSection = styled.div`
