@@ -6,7 +6,7 @@ import { Badge } from "../../../../assets/styles/BusinessAnalysisStyle";
 import { palette } from "../../../../assets/styles/Palette";
 import personaImages from "../../../../assets/styles/PersonaImages";
 import { useAtom } from "jotai";
-import { PERSONA_LIST } from "../../../AtomStates";
+import { PERSONA_LIST, FILTERED_PROJECT_LIST } from "../../../AtomStates";
 
 const MoleculePersonaSelectCard = ({
   interviewType,
@@ -18,7 +18,9 @@ const MoleculePersonaSelectCard = ({
   console.log("🚀 ~ selectedPersonas:", selectedPersonas);
   console.log("🚀 ~ personaList:", personaList);
   const [personaListState, setPersonaListState] = useAtom(PERSONA_LIST);
-
+  const [filteredProjectList, setFilteredProjectList] = useAtom(
+    FILTERED_PROJECT_LIST
+  );
   // 컴포넌트 마운트 시 초기 unselected 리스트 설정
   useEffect(() => {
     if (personaList && personaList.length > 0) {
@@ -104,7 +106,7 @@ const MoleculePersonaSelectCard = ({
   return (
     <CardGroupWrap>
       {/* 선택된 페르소나 렌더링 */}
-      {personaListState.selected.map((persona) => (
+      {filteredProjectList.map((persona) => (
         <ListBoxItem
           key={persona.persona_id}
           selected={true}

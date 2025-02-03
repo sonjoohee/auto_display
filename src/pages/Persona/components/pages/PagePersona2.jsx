@@ -1769,10 +1769,6 @@ const PagePersona2 = () => {
                                     >
                                       선택 유형 보기
                                     </Button>
-
-                                    <Caption2 color="gray500">
-                                      유형 추가 중 입니다. 몇 초걸림...
-                                    </Caption2>
                                   </TypeItem>
                                 </TypeList>
                               )}
