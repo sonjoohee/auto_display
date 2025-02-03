@@ -670,7 +670,7 @@ const PageMyProject = () => {
                         <ProjectHeader>
                           <Body3 color="gray500">프로젝트 명</Body3>
                           <Body3 color="gray500">맞춤 페르소나</Body3>
-                          <Body3 color="gray500">페르소나 모집</Body3>
+                          <Body3 color="gray500">페르소나 요청</Body3>
                           <Body3 color="gray500">결과 리포트</Body3>
                         </ProjectHeader>
                         <ProjectContent>
@@ -1107,17 +1107,17 @@ const ProjectHeader = styled.div`
   }
 
   > p:nth-child(1) {
-    max-width: 475px;
+    max-width: 440px;
     width: 100%;
   }
 
   > p:nth-child(2) {
-    max-width: 220px;
+    max-width: 240px;
     width: 100%;
   }
 
   > p:nth-child(3) {
-    max-width: 150px;
+    max-width: 165px;
     width: 100%;
   }
 `;

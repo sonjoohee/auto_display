@@ -142,7 +142,7 @@ const OrganismProjectCard = ({ project, index }) => {
     <>
       <ProjectItem $isOpen={openStates[index]}>
         <ProjectInfo>
-          <Name>
+          <Name style={{ maxWidth: "410px" }}>
             <Body2>{project.businessAnalysis.title}</Body2>
             <Caption2 color="gray500">
               작성일 - {project.createDate || project.updateDate}
@@ -158,8 +158,8 @@ const OrganismProjectCard = ({ project, index }) => {
             </div>
             <div>
               <span>
-                <img src={images.StatusBadgeCustom} alt="커스터마이즈" />
-                커스터마이즈
+                <img src={images.StatusBadgeCustom} alt="" />
+                비즈니스
               </span>
               <p>
                 {project.customPersonaList?.persona?.length || 0}명
@@ -168,8 +168,17 @@ const OrganismProjectCard = ({ project, index }) => {
                 )}
               </p>
             </div>
+            <div>
+              <span>
+                <img src={images.StatusBadgePersona} alt="" />
+                나만의 페르소나
+              </span>
+              <p className={getRecruitStatus(project)}>
+                {getRecruitStatusText(project)}
+              </p>
+            </div>
           </Persona>
-          <Recruit>
+          {/* <Recruit>
             <span>
               <img src={images.People} alt="" />
               {project.requestPersonaList?.persona?.length || 0}개 페르소나
@@ -177,7 +186,7 @@ const OrganismProjectCard = ({ project, index }) => {
             <p className={getRecruitStatus(project)}>
               {getRecruitStatusText(project)}
             </p>
-          </Recruit>
+          </Recruit> */}
           <Report>
             <div>
               <span>
@@ -378,7 +387,8 @@ const Persona = styled.div`
   align-items: center;
   justify-content: flex-start;
   gap: 12px;
-  max-width: 230px;
+  // max-width: 230px;
+  max-width: 330px;
   width: 100%;
   padding: 8px;
 
@@ -468,6 +478,8 @@ const Report = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+  max-width: 160px;
+  margin-left: auto;
   padding: 8px 0;
 
   span {

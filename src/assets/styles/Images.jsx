@@ -189,6 +189,7 @@ import CheckCircleFill from "../images/check-circle-fill.svg"
 import FolderArrowDown from "../images/folder-arrow-down.svg"
 import StatusBadgeBasic from "../images/status-badge-basic.svg"
 import StatusBadgeCustom from "../images/status-badge-custom.svg"
+import StatusBadgePersona from "../images/status-badge-persona.svg"
 import GenderMen from "../images/gender-men.svg"
 import GenderWomen from "../images/gender-women.svg"
 import FileSearch from "../images/file-search.svg"
@@ -460,6 +461,7 @@ const images = {
   FolderArrowDown,
   StatusBadgeBasic,
   StatusBadgeCustom,
+  StatusBadgePersona,
   GenderMen,
   GenderWomen,
   FileSearch,
