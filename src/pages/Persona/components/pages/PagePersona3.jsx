@@ -692,7 +692,7 @@ const PagePersona3 = () => {
               </InterviewWayContent>
 
               <BottomBar W100>
-                <Body2 color="gray800">
+                <Body2 color={!selectedInterviewType || !selectedInterviewPurpose ? "gray300" : "gray800"}>
                   {selectedInterviewPurpose === "product_experience_new"
                     ? "제품 경험 평가"
                     : ""}{" "}

@@ -260,9 +260,9 @@ const PagePersona3Select = () => {
                     </li>
                     <li>
                       <Body2 color="gray500">페르소나 선택</Body2>
-                      <PersonaGroup>
-                        {selectedPersonas &&
-                          (Array.isArray(selectedPersonas) ? (
+                      {selectedPersonas ? (
+                        <PersonaGroup>
+                          {Array.isArray(selectedPersonas) ? (
                             <>
                               {selectedPersonas.length > 3 && (
                                 <span>+{selectedPersonas.length - 3}</span>
@@ -285,8 +285,13 @@ const PagePersona3Select = () => {
                                 alt={selectedPersonas.persona}
                               />
                             </Persona>
-                          ))}
-                      </PersonaGroup>
+                          )}
+                        </PersonaGroup>
+                      ) : (
+                        <Body2 color="gray300">
+                          페르소나가 선택되지 않았습니다. 하단에서 페르소나를 선택해 주세요!
+                        </Body2>
+                      )}
                     </li>
                     {selectedInterviewType === "multiple" ? (
                       <></>
@@ -300,9 +305,7 @@ const PagePersona3Select = () => {
                               반응형 인터뷰란?
                               <br />
                               페르소나의 답변에 맞춰, 모더레이터가 자동으로 추가
-                              질문을 제시하는
-                              <br />
-                              맞춤형 인터뷰 방식 입니다.
+                              질문을 제시하는 맞춤형 인터뷰 방식 입니다.
                             </Caption2>
                           </Tooltip>
                         </Body2>
@@ -318,7 +321,12 @@ const PagePersona3Select = () => {
                             <span data-on="ON" data-off="OFF" />
                             <SwitchHandle />
                           </SwitchToggleItem>
-                          <Body2 color="gray800">추가 질문 생성</Body2>
+                          <Body2 color={isIndepthEnabled ? "gray800" : "gray300"}>
+                            추가 질문 생성
+                            {!isIndepthEnabled && (
+                              <Sub3 color="gray300">(Basic 사용 불가)</Sub3>
+                            )}
+                          </Body2>
                         </SwitchToggle>
                       </li>
                     ) : null}

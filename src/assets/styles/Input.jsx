@@ -53,7 +53,10 @@ export const CheckBox = styled.div`
 
     &:checked {
       border-color: ${palette.primary};
-      background: transparent;
+      background: ${props => props.Fill 
+        ? palette.primary 
+        : `url(${images.Check}) no-repeat center / auto 6px`
+      };
 
       &:before {
         content: "";
@@ -70,9 +73,11 @@ export const CheckBox = styled.div`
         background: ${(props) =>
           props.Round
           ? `url(${images.CheckCircleFill})` 
+          : props.Fill
+          ? `url(${images.IconCheck3}) no-repeat center`
           : `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M10 3L4.5 8.5L2 6' stroke='%23226FFF' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center no-repeat`
         };
-        background-size: 100%;
+        background-size: ${(props) => (props.Fill ? "10px" : "100%")};
       }
     }
   }

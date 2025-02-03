@@ -1039,7 +1039,7 @@ export const TypeListItem = styled.li`
   background: ${(props) =>
     props.isSelected ? "rgba(34, 111, 255, 0.04)" : "transparent"};
   border-radius: 8px;
-  padding: ${(props) => (props.isSelected ? "8px 12px" : "0 12px")};
+  padding: ${(props) => (props.isSelected ? "1px 12px" : "1px 12px")};
   transition: background-color 0.2s ease;
 
   /* 체크박스 스타일 수정 */
@@ -2134,47 +2134,55 @@ export const RangeSlider = styled.input`
   -webkit-appearance: none;
   position: relative;
   width: 100%;
-  height: 24px; // thumb 높이와 동일하게 설정
-  background: transparent; // 배경을 투명하게
+  height: 24px;
+  background: transparent;
   outline: none;
-  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
+  opacity: ${props => props.disabled ? 0.5 : 1};
   transition: all 0.2s;
 
   // 트랙 스타일링
   &::-webkit-slider-runnable-track {
     width: 100%;
     height: 1px;
-    background: linear-gradient(
-      to right,
-      ${palette.outlineGray} calc(50% - 1px),
-      transparent calc(50% - 1px) calc(50% + 1px),
-      ${palette.outlineGray} calc(50% + 1px)
-    );
-  }
-
-  &::-moz-range-track {
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(
-      to right,
-      ${palette.outlineGray} calc(50% - 1px),
-      transparent calc(50% - 1px) calc(50% + 1px),
-      ${palette.outlineGray} calc(50% + 1px)
-    );
+    background: ${palette.outlineGray};
+    
+    // 중앙 구분선
+    &::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 2px;
+      height: 8px;
+      background: ${palette.outlineGray};
+    }
   }
 
   // thumb 스타일링
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
     position: relative;
-    top: 50%; // 중앙 정렬
-    transform: translateY(-50%); // 중앙 정렬
+    top: 50%;
+    transform: translateY(-50%);
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background: ${(props) => (props.$ignored ? palette.gray500 : palette.primary)};
-    cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+    background: ${props => props.$ignored ? palette.gray500 : palette.primary};
+    cursor: ${props => props.disabled ? "not-allowed" : "pointer"};
     transition: all 0.2s;
+    
+    // 스냅 효과
+    &:active {
+      transform: translateY(-50%) scale(1.1);
+    }
+  }
+
+  // Firefox 지원
+  &::-moz-range-track {
+    width: 100%;
+    height: 1px;
+    background: ${palette.outlineGray};
   }
 
   &::-moz-range-thumb {
@@ -2182,20 +2190,30 @@ export const RangeSlider = styled.input`
     height: 24px;
     border: none;
     border-radius: 50%;
-    background: ${(props) => (props.$ignored ? palette.gray500 : palette.primary)};
-    cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+    background: ${props => props.$ignored ? palette.gray500 : palette.primary};
+    cursor: ${props => props.disabled ? "not-allowed" : "pointer"};
     transition: all 0.2s;
+    
+    &:active {
+      transform: scale(1.1);
+    }
   }
 
-  // Firefox에서 focus 스타일 제거
-  &::-moz-focus-outer {
-    border: 0;
-  }
-
-  &:focus {
-    outline: none;
-    cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
-    transition: all 0.2s;
+  // 중앙 구분선 (Firefox)
+  &::-moz-range-progress {
+    height: 8px;
+    background: transparent;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 2px;
+      height: 8px;
+      background: ${palette.outlineGray};
+    }
   }
 `;
 
@@ -2986,7 +3004,9 @@ export const SwitchToggleInput = styled.input`
 
 export const Tooltip = styled.div`
   position: relative;
-  display: inline-block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   min-width: 14px !important;
   width: 14px !important;
 
@@ -2996,8 +3016,9 @@ export const Tooltip = styled.div`
     justify-content: center;
     width: 14px;
     height: 14px;
-    font-size: 0.75rem;
+    font-size: 0.63rem;
     color: ${palette.gray500};
+    line-height: 14px;
     border-radius: 50%;
     border: 0.5px solid ${palette.outlineGray};
     background-color: ${palette.chatGray};
