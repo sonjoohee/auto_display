@@ -767,7 +767,6 @@ export const getTermkeyResult = async (termkey) => {
             withCredentials: true,
           }
         );
-        console.log("🚀 ~ getTermkeyResult ~ response:", response);
 
         if (!response?.data) {
           throw new Error("응답 데이터가 없습니다.");
@@ -1459,6 +1458,50 @@ export const InterviewXInterviewReportAdditionalRequest = async (
     return result;
   } catch (error) {
     console.error("인터뷰 결과 추가 보고서 요청 API 중 오류 발생:", error);
+    console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+//인뎁스 인터뷰 질문 생성 요청 API
+export const InterviewXPersonaSingleIndepthInterviewGeneratorRequest = async (
+  data,
+  isLoggedIn
+) => {
+  console.log("인뎁스 인터뷰 질문 생성 요청 API  - 입력 데이터:", data);
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/project/temporary/personaSingleIndepthInterviewGenerator",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+    return result;
+  } catch (error) {
+    console.error("인뎁스 인터뷰 질문 생성 요청 API 중 오류 발생:", error);
     console.error("오류 상세:", error.response?.data || error.message);
     throw error;
   }
