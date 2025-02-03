@@ -1481,7 +1481,7 @@ export const InterviewXPersonaSingleIndepthInterviewGeneratorRequest = async (
     }
 
     const response = await axios.post(
-      "https://wishresearch.kr/person/temporary/personaSingleIndepthInterviewGenerator",
+      "https://wishresearch.kr/project/temporary/personaSingleIndepthInterviewGenerator",
       data,
       {
         headers: {
