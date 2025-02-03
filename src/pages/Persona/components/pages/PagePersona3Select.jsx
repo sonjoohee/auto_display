@@ -260,9 +260,9 @@ const PagePersona3Select = () => {
                     </li>
                     <li>
                       <Body2 color="gray500">페르소나 선택</Body2>
-                      <PersonaGroup>
-                        {selectedPersonas &&
-                          (Array.isArray(selectedPersonas) ? (
+                      {selectedPersonas ? (
+                        <PersonaGroup>
+                          {Array.isArray(selectedPersonas) ? (
                             <>
                               {selectedPersonas.length > 3 && (
                                 <span>+{selectedPersonas.length - 3}</span>
@@ -285,8 +285,13 @@ const PagePersona3Select = () => {
                                 alt={selectedPersonas.persona}
                               />
                             </Persona>
-                          ))}
-                      </PersonaGroup>
+                          )}
+                        </PersonaGroup>
+                      ) : (
+                        <Body2 color="gray300">
+                          페르소나가 선택되지 않았습니다. 하단에서 페르소나를 선택해 주세요!
+                        </Body2>
+                      )}
                     </li>
                     {selectedInterviewType === "multiple" ? (
                       <></>
