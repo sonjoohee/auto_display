@@ -64,7 +64,7 @@ const MoleculePersonaSelectCard = ({
         ? selectedPersonas
         : [];
 
-      if (currentSelected.some(p => p.persona_id === persona.persona_id)) {
+      if (currentSelected.some((p) => p.persona_id === persona.persona_id)) {
         // 이미 선택된 페르소나인 경우 선택 해제
         const removedPersona = personaListState.selected.find(
           (p) => p.persona_id === persona.persona_id
@@ -215,23 +215,21 @@ const ListBoxItem = styled.div`
   width: 100%;
   padding: 16px;
   border-radius: 10px;
-  background: ${(props) => 
-    props.selected && props.interviewType === "single" 
-      ? palette.primaryLightest 
-      : props.theme.white
-  };
+  background: ${(props) =>
+    props.selected && props.interviewType === "single"
+      ? palette.primaryLightest
+      : props.theme.white};
   opacity: ${(props) =>
     props.interviewType === "single" && props.anySelected && !props.selected
       ? 0.5
-      : 1
-  };
-  
+      : 1};
+
   // hover 효과 추가
   transition: background-color 0.2s ease;
-  
+
   ${(props) =>
     ((props.interviewType === "single" && !props.selected) ||
-     props.interviewType === "multiple") &&
+      props.interviewType === "multiple") &&
     `
     &:hover {
       border-radius: 10px;
@@ -249,9 +247,10 @@ const ListBoxItem = styled.div`
       }
     }
   `}
-  
+
   ${(props) =>
-    props.selected && props.interviewType === "multiple" &&
+    props.selected &&
+    props.interviewType === "multiple" &&
     `
     &:hover {
       ${Button} {
@@ -265,7 +264,8 @@ const ListBoxItem = styled.div`
   `}
 
   ${(props) =>
-    props.selected && props.interviewType === "single" &&
+    props.selected &&
+    props.interviewType === "single" &&
     `
       ${Button} {
         color: ${palette.primary};

@@ -73,8 +73,10 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
   //저장되었던 인터뷰 로드
   useEffect(() => {
     const interviewLoading = async () => {
+      console.log("🚀 ~ interviewLoading ~ interviewData:", interviewData);
       // 인터뷰 스크립트 보기, 인터뷰 상세보기로 진입 시 isComplete는 True
       if (isComplete) {
+        console.log("🚀 ~ questions ~ interviewData:", interviewData);
         console.log("인터뷰 불러오기 1");
         const questions = interviewData.map((item) => {
           // 모든 question 키를 찾아서 값이 있는 첫 번째 question을 반환
@@ -155,11 +157,19 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
     console.log("인터뷰 완료 렌더링");
 
     return interviewData.map((item, index) => {
+      console.log(
+        "🚀 ~ returninterviewData.map ~ interviewData:",
+        interviewData
+      );
       console.log("현재 처리중인 item:", item);
 
       const status = interviewStatus[index];
 
-      if (status === "Complete" && item.question.question && item.answer) {
+      if (
+        status === "Complete" &&
+        item.main.question.question &&
+        item.main.answer
+      ) {
         return (
           <React.Fragment key={index}>
             <ChatItem Moder>
@@ -173,8 +183,8 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
               <ChatBox Moder>
                 <Sub1 color="gray800" align="left">
                   Q{index + 1}.{" "}
-                  {typeof item.question.question === "string"
-                    ? item.question.question
+                  {typeof item.main.question.question === "string"
+                    ? item.main.question.question
                     : ""}
                 </Sub1>
               </ChatBox>
@@ -189,7 +199,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
               </Persona>
               <ChatBox Persona>
                 <Sub1 color="gray800" align="left">
-                  {typeof item.answer === "string" ? item.answer : ""}
+                  {typeof item.main.answer === "string" ? item.main.answer : ""}
                 </Sub1>
               </ChatBox>
             </ChatItem>
@@ -220,7 +230,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                       checked={status === "Complete" ? true : item.checked}
                     >
                       <Sub2 color="gray800">
-                        Q{index + 1}. {item.question.question}
+                        Q{index + 1}. {item.main.question.question}
                       </Sub2>
                       <span>
                         <img src={images.CheckGreen} alt="완료" />

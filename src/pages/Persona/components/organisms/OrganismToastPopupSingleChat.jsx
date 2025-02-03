@@ -671,25 +671,25 @@ const OrganismToastPopupSingleChat = ({
   };
 
   // 추가 질문 관련 상태 추가
-  const [additionalQuestions, setAdditionalQuestions] = useState({});
-  const [isGeneratingAdditional, setIsGeneratingAdditional] = useState(false);
+  const [isGeneratingIndepth, setIsGeneratingIndepth] = useState(false);
+  const [indepthInterviews, setIndepthInterviews] = useState({});
 
   // 더미 데이터 - 실제 구현시 API로 대체
-  const dummyAdditionalQuestion = {
-    question_type: "추가질문",
+  const dummyIndepthInterview = {
+    question_type: "IndepthInterview",
     question: "이 서비스의 가장 큰 장점은 무엇이라고 생각하시나요?",
   };
-  const dummyAdditionalAnswer =
-    "이 서비스의 가장 큰 장점은 사용자 편의성이라고 생각합니다. 직관적인 인터페이스와 빠른 응답 속도가 매우 인상적입니다.";
 
   // processInterview 함수 수정
   const processInterview = async () => {
     if (!isLoadingPrepare && interviewStatus[currentQuestionIndex] === "Pre") {
       try {
+        // 현재 질문 상태를 "Ing"로 변경
         const newStatus = [...interviewStatus];
         newStatus[currentQuestionIndex] = "Ing";
         setInterviewStatus(newStatus);
 
+        // 현재 질문의 답변 초기화
         setAnswers((prev) => ({
           ...prev,
           [currentQuestionIndex]: [],
@@ -697,53 +697,29 @@ const OrganismToastPopupSingleChat = ({
 
         let allAnswers = [];
 
-        // 추가 질문 생성 및 처리 로직
-        const shouldGenerateAdditional =
-          isIndepth &&
-          interviewQuestionListState[currentQuestionIndex].question
-            .question_type === "특화질문";
+        // IndepthInterview 생성 조건 (심층 인터뷰 && 현재 질문이 '특화질문')
+        const isSpecialQuestion =
+          interviewQuestionListState[currentQuestionIndex].question_type ===
+          "공통질문";
+        const shouldGenerateIndepth = isIndepth && isSpecialQuestion;
 
         console.log(
-          "🚀 ~ processInterview ~ shouldGenerateAdditional:",
-          shouldGenerateAdditional
+          "🚀 ~ interviewQuestionListState:",
+          interviewQuestionListState
         );
-        if (shouldGenerateAdditional) {
-          setIsGeneratingAdditional(true);
+        console.log(
+          "🚀 ~ processInterview ~ shouldGenerateIndepth:",
+          shouldGenerateIndepth
+        );
 
-          // 더미 데이터 사용 - 실제 구현시 API 호출로 대체
-          const additionalQuestion = dummyAdditionalQuestion;
-
-          const additionalAnswer = dummyAdditionalAnswer;
-
-          // 추가 질문 저장
-          setAdditionalQuestions((prev) => ({
-            ...prev,
-            [currentQuestionIndex]: {
-              question: additionalQuestion,
-              answer: additionalAnswer,
-              status: "Complete",
-            },
-          }));
-
-          // interviewData에 추가 질문/답변 추가
-          setInterviewData((prev) => {
-            const newData = [...(prev || [])];
-            const additionalIndex = `${currentQuestionIndex}_additional`;
-            newData[additionalIndex] = {
-              question: additionalQuestion,
-              answer: additionalAnswer,
-            };
-            return newData;
-          });
-
-          setIsGeneratingAdditional(false);
+        // 조건이 만족되면 IndepthInterview 함수 호출
+        if (shouldGenerateIndepth) {
+          processIndepthInterview(currentQuestionIndex);
         }
 
-        // 기존 인터뷰 진행 로직
-        // for (let i = 0; i < personaList.selected.length; i++) {
+        // 기존 인터뷰 진행 로직 (메인 질문 처리)
         setIsGenerating(true);
 
-        // 현재까지의 대화 내용 수집
         const lastInterview = [];
         for (let q = 0; q < currentQuestionIndex; q++) {
           const questionAnswers = answers[q] || [];
@@ -759,7 +735,6 @@ const OrganismToastPopupSingleChat = ({
           }
         }
 
-        // API 요청 데이터 준비
         const data = {
           business_analysis_data: businessAnalysis,
           question: interviewQuestionListState[currentQuestionIndex],
@@ -774,13 +749,10 @@ const OrganismToastPopupSingleChat = ({
           last_interview: lastInterview,
         };
 
-        // API 호출 및 응답 처리
         let response = await InterviewXPersonaSingleInterviewRequest(
           data,
           isLoggedIn
         );
-
-        // 재시도 로직
         let retryCount = 0;
         const maxRetries = 10;
         while (
@@ -793,15 +765,14 @@ const OrganismToastPopupSingleChat = ({
           );
           retryCount++;
         }
-
         if (retryCount >= maxRetries) {
           setShowErrorPopup(true);
           return;
         }
-        // 답변 저장
+
+        // 메인 질문 응답 저장
         if (response && response.response && response.response.answer) {
           setCurrentAnswerData(response.response.answer);
-          // answers 상태 업데이트
           setAnswers((prev) => {
             const newAnswers = {
               ...prev,
@@ -816,91 +787,53 @@ const OrganismToastPopupSingleChat = ({
             return newAnswers;
           });
         }
-
         setIsGenerating(false);
 
-        // 마지막 페르소나의 답변이 완료되면
-        // if (i === personaList.selected.length - 1) {
-        // interviewData 업데이트 수정
+        // interviewData 업데이트
         setInterviewData((prev) => {
           const newData = [...(prev || [])];
           const currentQuestion =
             interviewQuestionListState[currentQuestionIndex];
-
-          // 현재 질문에 대한 답변이 있는지 확인
           const currentAnswer = response?.response?.answer || allAnswers[0];
-
-          if (currentAnswer) {
-            // 기존 데이터가 있다면 유지, 없으면 새로 생성
-            newData[currentQuestionIndex] = {
-              ...newData[currentQuestionIndex],
+          const existingEntry = newData[currentQuestionIndex] || {};
+          newData[currentQuestionIndex] = {
+            ...existingEntry,
+            main: {
               question: currentQuestion,
               answer: currentAnswer,
-            };
-          }
-
+            },
+          };
           return newData;
         });
-
         setInterviewDataState((prev) => {
           const newData = [...(prev || [])];
           const currentQuestion =
             interviewQuestionListState[currentQuestionIndex];
-
-          // 현재 질문에 대한 답변이 있는지 확인
           const currentAnswer = response?.response?.answer || allAnswers[0];
-
-          if (currentAnswer) {
-            // 기존 데이터가 있다면 유지, 없으면 새로 생성
-            newData[currentQuestionIndex] = {
-              ...newData[currentQuestionIndex],
+          const existingEntry = newData[currentQuestionIndex] || {};
+          newData[currentQuestionIndex] = {
+            ...existingEntry,
+            main: {
               question: currentQuestion,
               answer: currentAnswer,
-            };
-          }
-
+            },
+          };
           return newData;
         });
-
-        // 상태를 Complete로 변경하기 전에 답변이 저장되었는지 확인
-        if (response?.response?.answer || allAnswers[0]) {
-          newStatus[currentQuestionIndex] = "Complete";
-          setInterviewStatus(newStatus);
-        }
 
         // 다음 질문으로 이동
         if (currentQuestionIndex < interviewQuestionListState.length - 1) {
           setCurrentQuestionIndex((prev) => prev + 1);
         }
-        // } // 모든 인터뷰가 완료되었는지 확인
-        const allComplete = newStatus.every((status) => status === "Complete");
-        if (allComplete && countAdditionalQuestion === 0) {
-          // 데이터가 모두 저장될 때까지 잠시 대기
-          await new Promise((resolve) => setTimeout(resolve, 2000));
 
-          // 마지막으로 interviewDataState가 모든 질문을 포함하는지 확인
-          setInterviewDataState((prev) => {
-            const finalData = [...prev];
-            interviewQuestionListState.forEach((question, index) => {
-              if (!finalData[index]) {
-                finalData[index] = {
-                  question: question.question,
-                  answer: "", // 빈 답변으로 초기화
-                };
-              }
-            });
-            return finalData;
-          });
-
-          // 한번 더 대기하여 상태 업데이트 완료 확인
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-
-          loadInterviewReport(response.response.answer);
-        }
-        // }
+        // 현재 질문의 상태를 "Complete"로 업데이트
+        const newStatusAfter = [...interviewStatus];
+        newStatusAfter[currentQuestionIndex] = "Complete";
+        setInterviewStatus(newStatusAfter);
       } catch (error) {
         console.error("Error in processInterview:", error);
         setIsGenerating(false);
+        setIsGeneratingIndepth(false);
         setShowErrorPopup(true);
       }
     }
@@ -1046,9 +979,9 @@ const OrganismToastPopupSingleChat = ({
         );
 
         // 추가 질문이 있고 기존 질문/답변이 완료된 경우에만 추가 질문 렌더링
-        if (additionalQuestions[index] && status === "Complete") {
+        if (indepthInterviews[index] && status === "Complete") {
           elements.push(
-            <React.Fragment key={`additional-${index}`}>
+            <React.Fragment key={`indepth-${index}`}>
               <ChatItem Moder>
                 <Persona Moder color="Gainsboro" size="Medium" Round>
                   <img src={personaImages.PersonaModer} alt="모더" />
@@ -1059,7 +992,7 @@ const OrganismToastPopupSingleChat = ({
                 </Persona>
                 <ChatBox Moder>
                   <Sub1 color="gray800" align="left">
-                    {additionalQuestions[index].question}
+                    {indepthInterviews[index].question}
                   </Sub1>
                 </ChatBox>
               </ChatItem>
@@ -1072,13 +1005,13 @@ const OrganismToastPopupSingleChat = ({
                 </Persona>
                 <ChatBox Persona>
                   <Sub1 color="gray800" align="left">
-                    {additionalQuestions[index].answer}
+                    {indepthInterviews[index].answer}
                   </Sub1>
                 </ChatBox>
               </ChatItem>
 
               {/* 추가 답변 생성 중인 경우 */}
-              {status === "Ing" && isGeneratingAdditional && (
+              {status === "Ing" && isGeneratingIndepth && (
                 <ChatItem Persona>
                   <Persona color="Linen" size="Medium" Round>
                     <img
@@ -1164,6 +1097,115 @@ const OrganismToastPopupSingleChat = ({
 
   // 라디오 버튼 선택 상태를 관리하기 위한 새로운 state 추가
   const [selectedRadio, setSelectedRadio] = useState(null);
+
+  async function processIndepthInterview(currentQuestionIndex) {
+    setIsGeneratingIndepth(true);
+
+    // dummyIndepthInterview는 IndepthInterview용 더미 데이터입니다.
+    // 실제 구현 시 API 호출로 대체하세요.
+    const indepthInterview = dummyIndepthInterview; // 예: { question_type: "IndepthInterview", question: "이 서비스의 가장 큰 장점은 무엇이라고 생각하시나요?" }
+
+    // IndepthInterview의 컨텍스트를 위해 지금까지의 대화내용 수집
+    const lastInterviewForIndepth = [];
+    for (let q = 0; q < currentQuestionIndex; q++) {
+      const questionAnswers = answers[q] || [];
+      const personaAnswer = questionAnswers.find(
+        (ans) => ans.persona.personIndex === personaList.selected[0].personIndex
+      );
+      if (personaAnswer) {
+        lastInterviewForIndepth.push({
+          main: {
+            question: indepthInterview.question,
+            answer: personaAnswer.answer,
+          },
+        });
+      }
+    }
+
+    // IndepthInterview API 요청 데이터 준비
+    const indepthData = {
+      business_analysis_data: businessAnalysis,
+      question: indepthInterview,
+      theory_data: purposeItemsSingleAtom,
+      persona_info: {
+        id: personaList.selected[0].persona_id.replace(/[^0-9]/g, ""),
+        name: personaList.selected[0].persona,
+        keyword: personaList.selected[0].persona_keyword,
+        hashtag: personaList.selected[0].lifestyle,
+        summary: personaList.selected[0].consumption_pattern,
+      },
+      last_interview: lastInterviewForIndepth,
+    };
+
+    let indepthResponse = await InterviewXPersonaSingleInterviewRequest(
+      indepthData,
+      isLoggedIn
+    );
+
+    let retryCountIndepth = 0;
+    const maxRetries = 10;
+    while (
+      retryCountIndepth < maxRetries &&
+      (!indepthResponse ||
+        !indepthResponse.response ||
+        !indepthResponse.response.answer)
+    ) {
+      indepthResponse = await InterviewXPersonaSingleInterviewRequest(
+        indepthData,
+        isLoggedIn
+      );
+      retryCountIndepth++;
+    }
+
+    if (retryCountIndepth >= maxRetries) {
+      setShowErrorPopup(true);
+      setIsGeneratingIndepth(false);
+      return;
+    }
+
+    // IndepthInterview 응답이 정상적으로 도착하면
+    if (
+      indepthResponse &&
+      indepthResponse.response &&
+      indepthResponse.response.answer
+    ) {
+      // UI에 IndepthInterview 및 답변 표시 (렌더링 시 indepthInterviews 상태 참조)
+      setIndepthInterviews((prev) => ({
+        ...prev,
+        [currentQuestionIndex]: {
+          question: indepthInterview.question,
+          answer: indepthResponse.response.answer,
+        },
+      }));
+      // interviewData와 interviewDataState 업데이트 (보고서 생성 시 함께 전달)
+      setInterviewData((prev) => {
+        const newData = [...(prev || [])];
+        const existingEntry = newData[currentQuestionIndex] || {};
+        newData[currentQuestionIndex] = {
+          ...existingEntry,
+          indepth: {
+            question: indepthInterview.question,
+            answer: indepthResponse.response.answer,
+          },
+        };
+        return newData;
+      });
+      setInterviewDataState((prev) => {
+        const newData = [...(prev || [])];
+        const existingEntry = newData[currentQuestionIndex] || {};
+        newData[currentQuestionIndex] = {
+          ...existingEntry,
+          indepth: {
+            question: indepthInterview.question,
+            answer: indepthResponse.response.answer,
+          },
+        };
+        return newData;
+      });
+    }
+
+    setIsGeneratingIndepth(false);
+  }
 
   return (
     <>
@@ -2362,7 +2404,7 @@ const flash = keyframes`
   }
   100% {
     background-color: ${palette.gray300};
-    box-shadow: 12px 0 ${palette.gray500}, -12px 0 ${palette.gray300};
+    box-shadow: 12px 0 ${palette.gray505}, -12px 0 ${palette.gray300};
   }
 `;
 
