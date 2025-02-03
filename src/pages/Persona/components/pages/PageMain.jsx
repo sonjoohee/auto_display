@@ -901,6 +901,7 @@ const PageMain = () => {
                 </button>
               </div>
               <div className="maxLetter">
+                <images.ExclamationCircle2 width="14px" height="14px" color={palette.gray300} />
                 <Sub3 color="gray300">현재 서비스는 B2C 비즈니스에 특화되어 있습니다</Sub3>
                 <span id="letterCount">
                   {businessAnalysis.input.length}/300
@@ -1277,7 +1278,9 @@ const InputWrap = styled.div`
 
   .maxLetter {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 4px;
     color: ${palette.gray500};
     padding: 12px 20px;
     border-top: 1px solid ${palette.outlineGray};
@@ -1293,6 +1296,7 @@ const InputWrap = styled.div`
     span {
       font-size: 0.75rem;
       color: #525252;
+      margin-left: auto;
     }
   }
 `;
@@ -1432,8 +1436,8 @@ const ExpertCard = styled.div`
   }
 
   &:hover {
-    border: 1px solid ${palette.blue};
-    background: ${palette.blue};
+    border: 1px solid ${palette.primary};
+    background: ${palette.primary};
 
     div {
       color: ${palette.white};

@@ -266,6 +266,7 @@ import ChatPlus from "../icons/ChatPlus";
 
 import Repeat from "../images/repeat.svg";
 import NoUserThumb from "../images/no-user-thumb.svg";
+import ExclamationCircle2 from "../icons/ExclamationCircle";
 
 const images = {
   Logo,
@@ -523,6 +524,8 @@ const images = {
 
   Repeat,
   NoUserThumb,
+
+  ExclamationCircle2,
 }
 
 export default images;
