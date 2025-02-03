@@ -3096,7 +3096,13 @@ export const NoData = styled.div`
   align-items: center;
   justify-content: center;
   gap: 16px;
-  padding: ${(props) => (props.border ? "90px 0 78px" : "72px 0")}; 
+  padding: ${(props) => (
+    props.border 
+    ? "90px 0 78px" 
+    : props.Small
+    ? "8px 0"
+    : "72px 0"
+  )}; 
   border-radius: ${(props) => (props.border ? "10px" : "0")};
   border: ${(props) => (props.border ? `1px solid ${palette.outlineGray}` : "none")};
 `;

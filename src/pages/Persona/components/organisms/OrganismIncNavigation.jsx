@@ -11,7 +11,8 @@ import axios from "axios";
 import { SubtractiveBlending } from "three/src/constants.js";
 import panelimages from "../../../../assets/styles/PanelImages";
 import PopupWrap from "../../../../assets/styles/Popup";
-import { Caption2 } from "../../../../assets/styles/Typography";
+import { Sub3, Caption2 } from "../../../../assets/styles/Typography";
+import { NoData } from "../../../../assets/styles/BusinessAnalysisStyle";
 
 import {
   PASSWORD,
@@ -1536,11 +1537,11 @@ const OrganismIncNavigation = () => {
           {chatList && chatList.length > 0 ? (
             <>
               <HistoryList>
+                <strong>최근 대화</strong>
                 {chatList.some(
                   (chat) => Date.now() - chat.timestamp <= 604800000
-                ) && (
+                ) ? (
                   <>
-                    <strong>최근 대화</strong>
                     <ul>
                       {chatList
                         .filter(
@@ -1637,17 +1638,21 @@ const OrganismIncNavigation = () => {
                         ))}
                     </ul>
                   </>
+                ) : (
+                  <NoData Small>
+                    <Sub3 color="gray300">대화내역 없음</Sub3>
+                  </NoData>
                 )}
               </HistoryList>
 
               <HistoryList>
+                <strong>지난 7일 대화</strong>
                 {chatList.some(
                   (chat) =>
                     Date.now() - chat.timestamp > 604800000 &&
                     Date.now() - chat.timestamp <= 2592000000
-                ) && (
+                ) ? (
                   <>
-                    <strong>지난 7일 대화</strong>
                     <ul>
                       {chatList
                         .filter(
@@ -1747,15 +1752,19 @@ const OrganismIncNavigation = () => {
                         ))}
                     </ul>
                   </>
+                ) : (
+                  <NoData Small>
+                    <Sub3 color="gray300">대화내역 없음</Sub3>
+                  </NoData>
                 )}
               </HistoryList>
 
               <HistoryList>
+                <strong>지난 30일 대화</strong>
                 {chatList.some(
                   (chat) => Date.now() - chat.timestamp > 2592000000
-                ) && (
+                ) ? (
                   <>
-                    <strong>지난 30일 대화</strong>
                     <ul>
                       {chatList
                         .filter(
@@ -1853,6 +1862,10 @@ const OrganismIncNavigation = () => {
                         ))}
                     </ul>
                   </>
+                ) : (
+                  <NoData Small>
+                    <Sub3 color="gray300">대화내역 없음</Sub3>
+                  </NoData>
                 )}
               </HistoryList>
             </>
