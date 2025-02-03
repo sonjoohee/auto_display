@@ -1387,7 +1387,7 @@ const OrganismToastPopupSingleChat = ({
                           alt={persona.persona}
                         />
                       </Thumb>
-                      <span>{persona.persona}</span>
+                      <span>{persona.persona_view}</span>
                       <span>
                         {persona.gender} | {persona.age}세 | {persona.job}{" "}
                         {/* 성별, 나이, 직업 표시 */}
