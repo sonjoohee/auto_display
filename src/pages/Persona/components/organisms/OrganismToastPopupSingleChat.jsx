@@ -700,9 +700,13 @@ const OrganismToastPopupSingleChat = ({
         // 추가 질문 생성 및 처리 로직
         const shouldGenerateAdditional =
           isIndepth &&
-          interviewData[currentQuestionIndex].question.question_type ===
-            "특화질문";
+          interviewQuestionListState[currentQuestionIndex].question
+            .question_type === "특화질문";
 
+        console.log(
+          "🚀 ~ processInterview ~ shouldGenerateAdditional:",
+          shouldGenerateAdditional
+        );
         if (shouldGenerateAdditional) {
           setIsGeneratingAdditional(true);
 
@@ -1175,10 +1179,6 @@ const OrganismToastPopupSingleChat = ({
               {/* Dynamically displaying the interview questions */}
               {interviewQuestionListState.length > 0 ? (
                 interviewQuestionListState.map((item, index) => {
-                  console.log(
-                    "🚀 ~ interviewQuestionListState.map ~ item:",
-                    item
-                  );
                   // interviewQuestionListState.slice(0, 1).map((item, index) => {
                   const status = interviewStatus[index] || "Pre"; // 현재 질문의 상태를 가져옴
                   return (

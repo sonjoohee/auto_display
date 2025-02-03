@@ -583,16 +583,15 @@ const OrganismIncNavigation = () => {
     setNewChatName("");
   };
 
-
-//히스토리 부분?? 
-  //아코디언 생성 코드   //아코디언 :  클릭하면 펼처지고 다시 클릭하면 접히는 형태의 인터페이스 
-  //1. 높이 제한 
+  //히스토리 부분??
+  //아코디언 생성 코드   //아코디언 :  클릭하면 펼처지고 다시 클릭하면 접히는 형태의 인터페이스
+  //1. 높이 제한
   // 사이드바의 최대 높이 설정
   const maxSidebarHeight = 600; // 예시로 700px 설정
- //각 아이템의 높이 설정
+  //각 아이템의 높이 설정
   const ITEM_HEIGHT = 50;
 
-  // 2. 첫 번째 아코디언(보고서)와 두 번째 아코디언(대화 내역)의 높이를 계산하는 함수 
+  // 2. 첫 번째 아코디언(보고서)와 두 번째 아코디언(대화 내역)의 높이를 계산하는 함수
   const calculateAccordionHeight = () => {
     const reportHeight = reports.length * ITEM_HEIGHT; // 보고서 섹션 높이
     const chatHeight = chatList.length * ITEM_HEIGHT; // 대화 내역 높이
@@ -600,7 +599,7 @@ const OrganismIncNavigation = () => {
     return { reportHeight, chatHeight };
   };
 
-  //3. 높이 초과 체크 
+  //3. 높이 초과 체크
 
   const exceedsSidebarHeight = () => {
     const { reportHeight, chatHeight } = calculateAccordionHeight();
@@ -642,7 +641,7 @@ const OrganismIncNavigation = () => {
     });
   };
 
-  //아코디언 외부 클릭 감지 
+  //아코디언 외부 클릭 감지
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (toggleRef.current && !toggleRef.current.contains(event.target)) {
@@ -664,13 +663,13 @@ const OrganismIncNavigation = () => {
     const handleClickOutside = (event) => {
       if (
         insightEditBoxRef.current &&
-        !insightEditBoxRef.current.contains(event.target) && //클릭한 요소가 인사이트 편집 박스 내부가 아니면 
+        !insightEditBoxRef.current.contains(event.target) && //클릭한 요소가 인사이트 편집 박스 내부가 아니면
         !event.target.closest(".toggle")
       ) {
         setInsightEditToggleIndex(null); //클릭이 컴포넌트 외부에서 발생
       }
     };
-    document.addEventListener("mousedown", handleClickOutside); //문서 전체에 마우스 클릭 이벤트 적용 
+    document.addEventListener("mousedown", handleClickOutside); //문서 전체에 마우스 클릭 이벤트 적용
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -1222,7 +1221,6 @@ const OrganismIncNavigation = () => {
     setPersonaStep(0);
 
     window.location.href = "/";
-
   };
 
   const [showSubNav, setShowSubNav] = useState(false);
@@ -1309,9 +1307,9 @@ const OrganismIncNavigation = () => {
           <Logo />
         </Link>
 
-        <MenuList> 
-          <li onClick={handleNewProjectClick}> 
-            <svg 
+        <MenuList>
+          <li onClick={handleNewProjectClick}>
+            <svg
               width="32"
               height="33"
               viewBox="0 0 32 33"
@@ -1325,7 +1323,7 @@ const OrganismIncNavigation = () => {
                 rx="9.84615"
                 fill="#fff"
               />
-              <path //플러스 기호 
+              <path //플러스 기호
                 fill-rule="evenodd"
                 clip-rule="evenodd"
                 d="M16.999 13.1006C16.999 12.5483 16.5513 12.1006 15.999 12.1006C15.4467 12.1006 14.999 12.5483 14.999 13.1006V15.2676H12.833C12.2807 15.2676 11.833 15.7153 11.833 16.2676C11.833 16.8199 12.2807 17.2676 12.833 17.2676H14.999V19.4341C14.999 19.9864 15.4467 20.4341 15.999 20.4341C16.5513 20.4341 16.999 19.9864 16.999 19.4341V17.2676H19.1665C19.7188 17.2676 20.1665 16.8199 20.1665 16.2676C20.1665 15.7153 19.7188 15.2676 19.1665 15.2676H16.999V13.1006Z"
@@ -1356,15 +1354,15 @@ const OrganismIncNavigation = () => {
           </li>
 
           <li onClick={handleWorkManageClick} className="history">
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              width="18" 
-              height="16" 
-              viewBox="0 0 18 16" 
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="16"
+              viewBox="0 0 18 16"
               fill="none"
             >
-              <path 
-                d="M11.5866 11.0594C11.8059 11.29 11.7975 11.6549 11.5669 11.8764C10.4257 12.9656 8.72978 13.5899 6.91778 13.5899C6.34332 13.5899 5.77661 13.514 5.22188 13.3881L2.81153 15.1002C2.71098 15.1705 2.59356 15.2064 2.47685 15.2064C2.36013 15.2064 2.24622 15.1719 2.14778 15.1023C1.9481 14.9638 1.85598 14.7135 1.91927 14.4779L2.55489 12.1147C1.50161 11.2491 0.900391 10.0933 0.900391 8.88173C0.900391 7.79961 1.37922 6.74348 2.25039 5.90618C2.48102 5.68469 2.84594 5.69384 3.06602 5.92235C3.28751 6.15297 3.28047 6.51789 3.04984 6.73938C2.39805 7.36376 2.05422 8.10555 2.05422 8.88108C2.05422 9.84576 2.58367 10.7493 3.54133 11.4228C3.56454 11.439 3.58282 11.4608 3.60462 11.4784C3.61165 11.484 3.61727 11.4889 3.6243 11.4967C3.6693 11.5438 3.70727 11.5993 3.73399 11.6584C3.73962 11.6689 3.74313 11.6816 3.74665 11.6942C3.76985 11.7589 3.78813 11.8257 3.78813 11.896C3.78813 11.9467 3.7811 12.0022 3.76844 12.0507L3.45133 13.2263L4.75282 12.3031C4.81962 12.256 4.89696 12.2293 4.9757 12.2131C4.97922 12.2131 4.98484 12.2131 4.98836 12.211C5.0207 12.2054 5.05305 12.197 5.08539 12.197C5.09102 12.197 5.09453 12.2005 5.09945 12.2005C5.14656 12.2005 5.19297 12.204 5.24008 12.2166C5.7857 12.3608 6.34891 12.4346 6.91768 12.4346C8.43718 12.4346 9.84058 11.927 10.7694 11.0396C11 10.8202 11.3649 10.8273 11.5864 11.0593L11.5866 11.0594ZM16.8424 12.9227C16.7454 12.9874 16.6336 13.0197 16.5218 13.0197C16.3973 13.0197 16.2736 12.9804 16.1709 12.9009L12.8085 10.3323C12.047 10.5679 11.2244 10.6979 10.3659 10.6979C6.66887 10.6979 3.66092 8.35433 3.66092 5.47088C3.66092 2.58668 6.66887 0.238281 10.3659 0.238281C14.063 0.238281 17.0709 2.58533 17.0709 5.47088C17.0709 6.47917 16.7109 7.43828 16.0303 8.27153L17.0815 12.2948C17.1426 12.5339 17.047 12.7863 16.8424 12.9213L16.8424 12.9227ZM15.5388 10.9624L14.8371 8.2715C14.7851 8.07322 14.8512 7.88057 14.9791 7.74064L14.9721 7.73361C15.5894 7.06423 15.915 6.28095 15.915 5.46951C15.915 3.22161 13.4259 1.39281 10.3659 1.39281C7.30589 1.39281 4.81679 3.22161 4.81679 5.46951C4.81679 7.71741 7.30589 9.54126 10.3659 9.54126C11.1991 9.54126 11.995 9.40837 12.7312 9.1468L12.8177 9.12008L12.8212 9.12923C12.9759 9.1004 13.1398 9.12923 13.2748 9.23329L15.5389 10.9629L15.5388 10.9624Z" 
+              <path
+                d="M11.5866 11.0594C11.8059 11.29 11.7975 11.6549 11.5669 11.8764C10.4257 12.9656 8.72978 13.5899 6.91778 13.5899C6.34332 13.5899 5.77661 13.514 5.22188 13.3881L2.81153 15.1002C2.71098 15.1705 2.59356 15.2064 2.47685 15.2064C2.36013 15.2064 2.24622 15.1719 2.14778 15.1023C1.9481 14.9638 1.85598 14.7135 1.91927 14.4779L2.55489 12.1147C1.50161 11.2491 0.900391 10.0933 0.900391 8.88173C0.900391 7.79961 1.37922 6.74348 2.25039 5.90618C2.48102 5.68469 2.84594 5.69384 3.06602 5.92235C3.28751 6.15297 3.28047 6.51789 3.04984 6.73938C2.39805 7.36376 2.05422 8.10555 2.05422 8.88108C2.05422 9.84576 2.58367 10.7493 3.54133 11.4228C3.56454 11.439 3.58282 11.4608 3.60462 11.4784C3.61165 11.484 3.61727 11.4889 3.6243 11.4967C3.6693 11.5438 3.70727 11.5993 3.73399 11.6584C3.73962 11.6689 3.74313 11.6816 3.74665 11.6942C3.76985 11.7589 3.78813 11.8257 3.78813 11.896C3.78813 11.9467 3.7811 12.0022 3.76844 12.0507L3.45133 13.2263L4.75282 12.3031C4.81962 12.256 4.89696 12.2293 4.9757 12.2131C4.97922 12.2131 4.98484 12.2131 4.98836 12.211C5.0207 12.2054 5.05305 12.197 5.08539 12.197C5.09102 12.197 5.09453 12.2005 5.09945 12.2005C5.14656 12.2005 5.19297 12.204 5.24008 12.2166C5.7857 12.3608 6.34891 12.4346 6.91768 12.4346C8.43718 12.4346 9.84058 11.927 10.7694 11.0396C11 10.8202 11.3649 10.8273 11.5864 11.0593L11.5866 11.0594ZM16.8424 12.9227C16.7454 12.9874 16.6336 13.0197 16.5218 13.0197C16.3973 13.0197 16.2736 12.9804 16.1709 12.9009L12.8085 10.3323C12.047 10.5679 11.2244 10.6979 10.3659 10.6979C6.66887 10.6979 3.66092 8.35433 3.66092 5.47088C3.66092 2.58668 6.66887 0.238281 10.3659 0.238281C14.063 0.238281 17.0709 2.58533 17.0709 5.47088C17.0709 6.47917 16.7109 7.43828 16.0303 8.27153L17.0815 12.2948C17.1426 12.5339 17.047 12.7863 16.8424 12.9213L16.8424 12.9227ZM15.5388 10.9624L14.8371 8.2715C14.7851 8.07322 14.8512 7.88057 14.9791 7.74064L14.9721 7.73361C15.5894 7.06423 15.915 6.28095 15.915 5.46951C15.915 3.22161 13.4259 1.39281 10.3659 1.39281C7.30589 1.39281 4.81679 3.22161 4.81679 5.46951C4.81679 7.71741 7.30589 9.54126 10.3659 9.54126C11.1991 9.54126 11.995 9.40837 12.7312 9.1468L12.8177 9.12008L12.8212 9.12923C12.9759 9.1004 13.1398 9.12923 13.2748 9.23329L15.5389 10.9629L15.5388 10.9624Z"
                 fill="#666"
               />
             </svg>
@@ -1388,7 +1386,7 @@ const OrganismIncNavigation = () => {
             <span>전문가챗</span>
           </li>
 
-          <li className="storagebox">
+          {/*<li className="storagebox">
             <svg 
               xmlns="http://www.w3.org/2000/svg" 
               width="18" 
@@ -1409,11 +1407,11 @@ const OrganismIncNavigation = () => {
             </svg>
 
             <span>보관함</span>
-          </li>
+          </li>*/}
         </MenuList>
 
         <Setting className="logBtn">
-            {/*v CSS에서  */}
+          {/*v CSS에서  */}
           {isLoggedIn ? (
             // <button onClick={handleLogout}>로그아웃</button>
             <>
@@ -1450,13 +1448,15 @@ const OrganismIncNavigation = () => {
                     <Grade />
                   </div>
                   {/* 유저 이름 표시 */}
-                  <Caption2 color="gray500" align="left">{sessionStorage.getItem("userEmail")}</Caption2>
+                  <Caption2 color="gray500" align="left">
+                    {sessionStorage.getItem("userEmail")}
+                  </Caption2>
                   {/* 유저 이메일 표시 */}
                 </div>
 
                 <ul>
                   {/* 소셜 로그인 상태가 아닐 때만 비밀번호 변경 버튼을 표시 */}
-                  {(
+                  {
                     // <li>
                     //   <button type="button" onClick={handleAccountClick}>
                     //     <img src={images.AccountSetting} alt="" />
@@ -1464,12 +1464,15 @@ const OrganismIncNavigation = () => {
                     //   </button>
                     // </li>
                     <li>
-                      <button type="button" onClick={() => navigate("/MyProfile")}>
+                      <button
+                        type="button"
+                        onClick={() => navigate("/MyProfile")}
+                      >
                         <img src={images.AccountSetting} alt="" />
                         계정 설정
                       </button>
                     </li>
-                  )}
+                  }
 
                   {/* <li>
                     <button type="button">
@@ -1504,12 +1507,15 @@ const OrganismIncNavigation = () => {
         </Setting>
       </NavigationWrap>
 
-
       <SubNavigation show={showSubNav}>
-          {/* 히스토리 누르면 */}
+        {/* 히스토리 누르면 */}
         <SubTitle>
           <div>
-            <images.ClockClockwise width="17" height="17" color={palette.gray700} />
+            <images.ClockClockwise
+              width="17"
+              height="17"
+              color={palette.gray700}
+            />
             {/* <img src={images.ClockCounterclockwise} alt="" /> */}
             AI 전문가 대화내역
           </div>
@@ -1859,7 +1865,7 @@ const OrganismIncNavigation = () => {
       </SubNavigation>
       {isLoginPopupOpen && <MoleculeLoginPopup onClose={closeLoginPopup} />}
       {isSignupPopupOpen && <MoleculeSignPopup onClose={closeSignupPopup} />}
-     
+
       {isAccountPopupOpen && (
         <MoleculeAccountPopup onClose={closeAccountPopup} />
       )}
@@ -2687,7 +2693,7 @@ const LogoutToggle = styled.div`
       gap: 8px;
       font-family: "Pretendard", "Poppins";
       font-weight: 400;
-      color: rgba(0, 0, 0, 0.60);
+      color: rgba(0, 0, 0, 0.6);
       padding: 0;
       border: 0;
       background: none;
@@ -2701,22 +2707,15 @@ const Grade = styled.div`
   justify-content: center;
   padding: 2px 6px;
   border-radius: 4px;
-  background: ${(props) => (
-    props.General 
-    ? palette.primaryLightest 
-    : palette.primary
-  )};
+  background: ${(props) =>
+    props.General ? palette.primaryLightest : palette.primary};
 
   &:before {
     font-size: 0.63rem;
     font-weight: 500;
     line-height: 1.2;
     letter-spacing: -0.3px;
-    color: ${(props) => (
-      props.General 
-      ? palette.primary 
-      : palette.white
-    )};
-    content: "${props => props.General ? '일반' : '구독'}";
+    color: ${(props) => (props.General ? palette.primary : palette.white)};
+    content: "${(props) => (props.General ? "일반" : "구독")}";
   }
-`
+`;
