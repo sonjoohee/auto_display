@@ -364,13 +364,13 @@ const OrganismToastPopupSingleChat = ({
             ...existingQuestions.commonQuestions,
             ...existingQuestions.specialQuestions,
           ];
-          setInterviewQuestionListState(combinedQuestions.slice(0, 2)); // 질문 두개 테스트
-          // setInterviewQuestionListState(combinedQuestions);
+          // setInterviewQuestionListState(combinedQuestions.slice(0, 2)); // 질문 두개 테스트
+          setInterviewQuestionListState(combinedQuestions);
 
           await new Promise((resolve) => setTimeout(resolve, 5000));
           setIsLoadingPrepare(false);
-          setInterviewStatus(["Pre", "Pre"]); // 테스트 하나
-          // setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
+          // setInterviewStatus(["Pre", "Pre"]); // 테스트 하나
+          setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
         } else {
           // 생성된 질문이 없다면 API 요청
           let data = {
@@ -703,8 +703,8 @@ const OrganismToastPopupSingleChat = ({
         // IndepthInterview 생성 조건 (심층인터뷰 && 현재 질문이 특화질문인 경우)
         const isSpecialQuestion =
           interviewQuestionListState[currentQuestionIndex].question_type ===
-          // "특화질문";
-          "공통질문";
+          "특화질문";
+        // "공통질문";
         const shouldGenerateIndepth = isIndepth && isSpecialQuestion;
 
         // 기존 인터뷰 진행 로직 (메인 질문 처리)
@@ -1059,25 +1059,23 @@ const OrganismToastPopupSingleChat = ({
                     </ChatItem>
                   </>
                 )}
-              {indepthInterviews[index] &&
-                !isGeneratingIndepthQuestion &&
-                !isGeneratingIndepth && (
-                  <>
-                    <ChatItem Persona>
-                      <Persona color="Linen" size="Medium" Round>
-                        <img
-                          src={`/ai_person/${personaList.selected[0].personaImg}.png`}
-                          alt={personaList.selected[0].persona}
-                        />
-                      </Persona>
-                      <ChatBox Persona>
-                        <Sub1 color="gray800" align="left">
-                          {indepthInterviews[index].answer}
-                        </Sub1>
-                      </ChatBox>
-                    </ChatItem>
-                  </>
-                )}
+              {indepthInterviews[index] && indepthInterviews[index].answer && (
+                <>
+                  <ChatItem Persona>
+                    <Persona color="Linen" size="Medium" Round>
+                      <img
+                        src={`/ai_person/${personaList.selected[0].personaImg}.png`}
+                        alt={personaList.selected[0].persona}
+                      />
+                    </Persona>
+                    <ChatBox Persona>
+                      <Sub1 color="gray800" align="left">
+                        {indepthInterviews[index].answer}
+                      </Sub1>
+                    </ChatBox>
+                  </ChatItem>
+                </>
+              )}
 
               {status === "Ing" && isGeneratingIndepthQuestion && (
                 <ChatItem Moder>

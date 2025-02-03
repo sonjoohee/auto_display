@@ -17,6 +17,7 @@ export const SIGN_UP_ROLE = atom("user");
 export const SIGN_UP_STATUS = atom("active");
 export const USER_NAME = atom("");
 export const USER_EMAIL = atom("");
+export const USER_MEMBERSHIP = atom("");
 
 // 사용자 데이터 상태
 export const CURRENT_USER_STATUS = atom(null);

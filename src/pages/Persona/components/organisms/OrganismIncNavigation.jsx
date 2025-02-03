@@ -22,6 +22,7 @@ import {
   IS_LOGGED_IN,
   USER_NAME,
   USER_EMAIL,
+  USER_MEMBERSHIP,
   TITLE_OF_BUSINESS_INFORMATION,
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
   MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
@@ -161,6 +162,7 @@ const OrganismIncNavigation = () => {
   const [projectLoadButtonState, setProjectLoadButtonState] = useAtom(
     PROJECT_LOAD_BUTTON_STATE
   );
+  const [userMembership, setUserMembership] = useAtom(USER_MEMBERSHIP);
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
   const [projectReportId, setProjectReportId] = useAtom(PROJECT_REPORT_ID);
   const [projectList, setProjectList] = useAtom(PROJECT_LIST);
@@ -1444,9 +1446,11 @@ const OrganismIncNavigation = () => {
                   <div className="userName">
                     <strong>{sessionStorage.getItem("userName")}</strong>
                     {/* 일반일때 Grade General */}
-                    <Grade General />
-                    {/* 구독일때 Grade */}
-                    <Grade />
+                    {sessionStorage.getItem("userMembership") === "Normal" ? (
+                      <Grade General />
+                    ) : (
+                      <Grade />
+                    )}
                   </div>
                   {/* 유저 이름 표시 */}
                   <Caption2 color="gray500" align="left">
