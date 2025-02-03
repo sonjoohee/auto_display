@@ -1880,7 +1880,8 @@ export const ListSubtitle = styled.div`
       display: -webkit-box;
       -webkit-line-clamp: 5;
       -webkit-box-orient: vertical;
-      max-height: 102px;
+      // max-height: 102px;
+      height: 90px;
       overflow: hidden;
       margin-top: auto;
     `}
