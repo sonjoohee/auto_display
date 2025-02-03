@@ -911,7 +911,7 @@ const PageMain = () => {
           </MainSearchWrap>
 
           <ExpertSelectWrap>
-            <Body3>🔎 AI 전문가가와 비즈니스 인사이트를 나누세요</Body3>
+            <Body3>🔎 AI 전문가와 비즈니스 인사이트를 나누세요</Body3>
             <ExpertSelectBox>
               <ExpertCard
                 Strategy
@@ -920,7 +920,7 @@ const PageMain = () => {
                 }}
               >
                 <Body1>전략 컨설턴트</Body1>
-                <Caption1 color="gray500">차별화 전략과 리스트 분석 제시</Caption1>
+                <Caption1 color="gray500">차별화 전략과 리스크 분석 제시</Caption1>
                 <span>
                   <img src={images.ImgStrategy} alt="" />
                 </span>
