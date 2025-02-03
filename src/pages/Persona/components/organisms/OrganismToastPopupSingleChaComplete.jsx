@@ -157,21 +157,18 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
     console.log("인터뷰 완료 렌더링");
 
     return interviewData.map((item, index) => {
-      console.log(
-        "🚀 ~ returninterviewData.map ~ interviewData:",
-        interviewData
-      );
-      console.log("현재 처리중인 item:", item);
-
+      console.log("현재 인터뷰 항목:", item);
       const status = interviewStatus[index];
 
+      // 메인 질문과 답변이 존재하고 상태가 "Complete"인 경우 렌더링
       if (
         status === "Complete" &&
-        item.main.question.question &&
-        item.main.answer
+        item.main?.question?.question &&
+        item.main?.answer
       ) {
         return (
           <React.Fragment key={index}>
+            {/* 메인 질문 및 답변 */}
             <ChatItem Moder>
               <Persona Moder color="Gainsboro" size="Medium" Round>
                 <img src={personaImages.PersonaModer} alt="모더" />
@@ -207,9 +204,11 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             </ChatItem>
 
             {/* indepth 항목이 존재할 경우 추가 UI 렌더링 */}
+            {console.log("🚀 ~ item.indepth:", item.indepth)}
             {item.indepth && (
               <>
                 <ChatItem Moder>
+
                   <Persona Moder color="Gainsboro" size="Medium" Round>
                     <img src={personaImages.PersonaModer} alt="모더" />
                     <span>
