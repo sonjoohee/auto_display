@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled, { keyframes, css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import { Button } from "../../../../assets/styles/ButtonStyle";
@@ -364,13 +364,13 @@ const OrganismToastPopupSingleChat = ({
             ...existingQuestions.commonQuestions,
             ...existingQuestions.specialQuestions,
           ];
-          // setInterviewQuestionListState(combinedQuestions.slice(0, 2)); // 질문 두개 테스트
-          setInterviewQuestionListState(combinedQuestions);
+          setInterviewQuestionListState(combinedQuestions.slice(0, 2)); // 질문 두개 테스트
+          // setInterviewQuestionListState(combinedQuestions);
 
           await new Promise((resolve) => setTimeout(resolve, 5000));
           setIsLoadingPrepare(false);
-          // setInterviewStatus(["Pre", "Pre"]); // 테스트 하나
-          setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
+          setInterviewStatus(["Pre", "Pre"]); // 테스트 하나
+          // setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
         } else {
           // 생성된 질문이 없다면 API 요청
           let data = {
@@ -1325,6 +1325,24 @@ const OrganismToastPopupSingleChat = ({
     setIsGeneratingIndepth(false);
   }
 
+  const contentsRef = useRef(null);
+
+  // 채팅 내용이 업데이트될 때마다 스크롤을 최하단으로 이동
+  useEffect(() => {
+    if (contentsRef.current) {
+      contentsRef.current.scrollTop = contentsRef.current.scrollHeight;
+    }
+  }, [
+    answers, 
+    indepthInterviews, 
+    isGenerating, 
+    isGeneratingIndepth, 
+    isGeneratingIndepthQuestion,
+    isAnalyzing,           // 분석 중 상태 추가
+    isAnalysisComplete,    // 분석 완료 상태 추가
+    showRegenerateButton2  // 재시도 버튼 표시 상태 추가
+  ]);
+
   return (
     <>
       <PopupBox isActive={active}>
@@ -1398,7 +1416,7 @@ const OrganismToastPopupSingleChat = ({
               </ul>
             </Header>
 
-            <Contents showAddQuestion={showAddQuestion}>
+            <Contents ref={contentsRef} showAddQuestion={showAddQuestion}>
               {/* <LoadingBox Complete>
                 <img src={images.CheckCircleFill} alt="완료" />
 
@@ -2129,6 +2147,7 @@ const Contents = styled.div`
   overflow-y: auto;
   background: ${palette.chatGray};
   transition: all 0.3s ease-in-out;
+  scroll-behavior: smooth; // 부드러운 스크롤 효과 추가
 `;
 
 const LoadingBox = styled.div`
