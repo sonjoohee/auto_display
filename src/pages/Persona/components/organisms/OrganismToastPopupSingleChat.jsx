@@ -698,7 +698,7 @@ const OrganismToastPopupSingleChat = ({
 
         let allAnswers = [];
 
-        // IndepthInterview 생성 조건 (심층 인터뷰 && 현재 질문이 '특화질문')
+        // IndepthInterview 생성 조건 (심층인터뷰 && 현재 질문이 특화질문인 경우)
         const isSpecialQuestion =
           interviewQuestionListState[currentQuestionIndex].question_type ===
           "공통질문";
@@ -809,9 +809,29 @@ const OrganismToastPopupSingleChat = ({
           return newData;
         });
 
-        // 조건이 만족되면 IndepthInterview 함수 호출
+        const indepthLastInterview = [];
+        for (let q = 0; q < currentQuestionIndex; q++) {
+          const questionAnswers = answers[q] || [];
+          const personaAnswer = questionAnswers.find(
+            (ans) =>
+              ans.persona.personIndex === personaList.selected[0].personIndex
+          );
+          if (personaAnswer) {
+            indepthLastInterview.push({
+              question: interviewQuestionListState[q],
+              answer: personaAnswer.answer,
+            });
+          }
+        }
+
+        // 특화질문 데이터(현재 질문과 응답)를 인자로 전달하여 인뎁스 인터뷰 진행
         if (shouldGenerateIndepth) {
-          processIndepthInterview(currentQuestionIndex);
+          await processIndepthInterview(
+            currentQuestionIndex,
+            indepthLastInterview,
+            interviewQuestionListState[currentQuestionIndex],
+            response.response.answer
+          );
         }
 
         // 다음 질문으로 이동
@@ -1091,50 +1111,52 @@ const OrganismToastPopupSingleChat = ({
   // 라디오 버튼 선택 상태를 관리하기 위한 새로운 state 추가
   const [selectedRadio, setSelectedRadio] = useState(null);
 
-  async function processIndepthInterview(currentQuestionIndex) {
+  async function processIndepthInterview(
+    currentQuestionIndex,
+    indepthLastInterview,
+    specialQuestion,
+    specialAnswer
+  ) {
+    console.log("🚀 ~ indepthLastInterview:", indepthLastInterview);
     setIsGeneratingIndepth(true);
 
-    // dummyIndepthInterview는 IndepthInterview용 더미 데이터입니다.
-    // 실제 구현 시 API 호출로 대체하세요.
+    // 특화질문 데이터 객체 생성
+    const specialQA = {
+      question: specialQuestion,
+      answer: specialAnswer,
+    };
+    //질문생성
+    // 인뎁스 인터뷰에 사용할 데이터 구성 (특화질문 데이터 포함)
+    const questionData = {
+      business_idea: businessAnalysis.title,
+      business_analysis_data: businessAnalysis,
+      theory_data: selectedInterviewPurposeData.title,
+      last_interview: specialQA,
+    };
 
-    // IndepthInterview의 컨텍스트를 위해 지금까지의 대화내용 수집
-    const lastInterviewForIndepth = [];
+    let responseIndepthInterview =
+      await InterviewXPersonaSingleIndepthInterviewGeneratorRequest(
+        questionData,
+        isLoggedIn
+      );
+
+    console.log("🚀 ~ responseIndepthInterview:", responseIndepthInterview);
+    const indepthInterview = responseIndepthInterview.response;
+
+    //답변
+    const interview222 = [];
     for (let q = 0; q < currentQuestionIndex; q++) {
       const questionAnswers = answers[q] || [];
       const personaAnswer = questionAnswers.find(
         (ans) => ans.persona.personIndex === personaList.selected[0].personIndex
       );
       if (personaAnswer) {
-        lastInterviewForIndepth.push({
-          main: {
-            question: indepthInterview.question,
-            answer: personaAnswer.answer,
-          },
+        interview222.push({
+          question: interviewQuestionListState[q],
+          answer: personaAnswer.answer,
         });
       }
     }
-
-    console.log(
-      "🚀 ~ processIndepthInterview ~ lastInterviewForIndepth:",
-      lastInterviewForIndepth
-    );
-    const questionData = {
-      business_idea: businessAnalysis.title,
-      business_analysis_data: businessAnalysis,
-      theory_data: purposeItemsSingleAtom,
-      last_interview: lastInterviewForIndepth,
-    };
-    console.log("🚀 ~ processIndepthInterview ~ questionData:", questionData);
-
-    // let responseIndepthInterview =
-    //   await InterviewXPersonaSingleIndepthInterviewGeneratorRequest(
-    //     questionData,
-    //     isLoggedIn
-    //   );
-
-    // const indepthInterview = responseIndepthInterview.response.response;
-    const indepthInterview = dummyIndepthInterview;
-    // IndepthInterview API 요청 데이터 준비
     const indepthData = {
       business_analysis_data: businessAnalysis,
       question: indepthInterview,
@@ -1146,14 +1168,13 @@ const OrganismToastPopupSingleChat = ({
         hashtag: personaList.selected[0].lifestyle,
         summary: personaList.selected[0].consumption_pattern,
       },
-      last_interview: lastInterviewForIndepth,
+      last_interview: interview222,
     };
 
     let indepthResponse = await InterviewXPersonaSingleInterviewRequest(
       indepthData,
       isLoggedIn
     );
-
     let retryCountIndepth = 0;
     const maxRetries = 10;
     while (
@@ -1175,13 +1196,11 @@ const OrganismToastPopupSingleChat = ({
       return;
     }
 
-    // IndepthInterview 응답이 정상적으로 도착하면
     if (
       indepthResponse &&
       indepthResponse.response &&
       indepthResponse.response.answer
     ) {
-      // UI에 IndepthInterview 및 답변 표시 (렌더링 시 indepthInterviews 상태 참조)
       setIndepthInterviews((prev) => ({
         ...prev,
         [currentQuestionIndex]: {
@@ -1189,7 +1208,6 @@ const OrganismToastPopupSingleChat = ({
           answer: indepthResponse.response.answer,
         },
       }));
-      // interviewData와 interviewDataState 업데이트 (보고서 생성 시 함께 전달)
       setInterviewData((prev) => {
         const newData = [...(prev || [])];
         const existingEntry = newData[currentQuestionIndex] || {};
@@ -1215,7 +1233,6 @@ const OrganismToastPopupSingleChat = ({
         return newData;
       });
     }
-
     setIsGeneratingIndepth(false);
   }
 
