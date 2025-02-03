@@ -3127,3 +3127,8 @@ export const NoData = styled.div`
   border-radius: ${(props) => (props.border ? "10px" : "0")};
   border: ${(props) => (props.border ? `1px solid ${palette.outlineGray}` : "none")};
 `;
+
+export const CreditNoData = styled.div`
+  padding-top: 16px;
+  border-top: 1px solid ${palette.chatGray};
+`;
