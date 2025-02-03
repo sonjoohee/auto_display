@@ -2546,7 +2546,7 @@ const Popup = styled.div`
             background: none;
 
             &:last-child {
-              color: ${palette.blue};
+              color: ${palette.primary};
               background: none;
             }
           }

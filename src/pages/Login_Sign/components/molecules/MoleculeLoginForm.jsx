@@ -426,7 +426,7 @@ const StyledLoginButton = styled.button`
   padding: 15px;
   border-radius: 8px;
   border: none;
-  background-color: ${palette.blue};
+  background-color: ${palette.primary};
   font-size: 16px;
   cursor: pointer;
 
