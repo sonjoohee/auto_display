@@ -673,6 +673,8 @@ const OrganismToastPopupSingleChat = ({
 
   // 추가 질문 관련 상태 추가
   const [isGeneratingIndepth, setIsGeneratingIndepth] = useState(false);
+  const [isGeneratingIndepthQuestion, setIsGeneratingIndepthQuestion] =
+    useState(false);
   const [indepthInterviews, setIndepthInterviews] = useState({});
 
   // 더미 데이터 - 실제 구현시 API로 대체
@@ -885,6 +887,7 @@ const OrganismToastPopupSingleChat = ({
         console.error("Error in processInterview:", error);
         setIsGenerating(false);
         setIsGeneratingIndepth(false);
+        setIsGeneratingIndepthQuestion(false);
         setShowErrorPopup(true);
       }
     }
@@ -1032,40 +1035,63 @@ const OrganismToastPopupSingleChat = ({
         // 추가 질문이 있고 기존 질문/답변이 완료된 경우에만 추가 질문 렌더링
         if (
           indepthInterviews[index] ||
-          (status === "Ing" && isGeneratingIndepth)
+          (status === "Ing" &&
+            (isGeneratingIndepth || isGeneratingIndepthQuestion))
         ) {
           elements.push(
             <React.Fragment key={`indepth-${index}`}>
-              {indepthInterviews[index] && (
-                <>
-                  <ChatItem Moder>
-                    <Persona Moder color="Gainsboro" size="Medium" Round>
-                      <img src={personaImages.PersonaModer} alt="모더" />
-                      <span>
-                        <img src={images.PatchCheckFill} alt="" />
-                        <Helptext color="primary">모더</Helptext>
-                      </span>
-                    </Persona>
-                    <ChatBox Moder>
-                      <Sub1 color="gray800" align="left">
-                        {indepthInterviews[index].question}
-                      </Sub1>
-                    </ChatBox>
-                  </ChatItem>
-                  <ChatItem Persona>
-                    <Persona color="Linen" size="Medium" Round>
-                      <img
-                        src={`/ai_person/${personaList.selected[0].personaImg}.png`}
-                        alt={personaList.selected[0].persona}
-                      />
-                    </Persona>
-                    <ChatBox Persona>
-                      <Sub1 color="gray800" align="left">
-                        {indepthInterviews[index].answer}
-                      </Sub1>
-                    </ChatBox>
-                  </ChatItem>
-                </>
+              {indepthInterviews[index] &&
+                indepthInterviews[index].question && (
+                  <>
+                    <ChatItem Moder>
+                      <Persona Moder color="Gainsboro" size="Medium" Round>
+                        <img src={personaImages.PersonaModer} alt="모더" />
+                        <span>
+                          <img src={images.PatchCheckFill} alt="" />
+                          <Helptext color="primary">모더</Helptext>
+                        </span>
+                      </Persona>
+                      <ChatBox Moder>
+                        <Sub1 color="gray800" align="left">
+                          {indepthInterviews[index].question}
+                        </Sub1>
+                      </ChatBox>
+                    </ChatItem>
+                  </>
+                )}
+              {indepthInterviews[index] &&
+                !isGeneratingIndepthQuestion &&
+                !isGeneratingIndepth && (
+                  <>
+                    <ChatItem Persona>
+                      <Persona color="Linen" size="Medium" Round>
+                        <img
+                          src={`/ai_person/${personaList.selected[0].personaImg}.png`}
+                          alt={personaList.selected[0].persona}
+                        />
+                      </Persona>
+                      <ChatBox Persona>
+                        <Sub1 color="gray800" align="left">
+                          {indepthInterviews[index].answer}
+                        </Sub1>
+                      </ChatBox>
+                    </ChatItem>
+                  </>
+                )}
+
+              {status === "Ing" && isGeneratingIndepthQuestion && (
+                <ChatItem Moder>
+                  <Persona Moder color="Gainsboro" size="Medium" Round>
+                    <img src={personaImages.PersonaModer} alt="모더" />
+                    <span>
+                      <img src={images.PatchCheckFill} alt="" />
+                      <Helptext color="primary">모더</Helptext>
+                    </span>
+                  </Persona>
+                  <ChatBox Moder>
+                    <Entering />
+                  </ChatBox>
+                </ChatItem>
               )}
 
               {status === "Ing" && isGeneratingIndepth && (
@@ -1162,8 +1188,7 @@ const OrganismToastPopupSingleChat = ({
     specialAnswer
   ) {
     console.log("🚀 ~ indepthLastInterview:", indepthLastInterview);
-    setIsGeneratingIndepth(true);
-
+    setIsGeneratingIndepthQuestion(true);
     // 특화질문 데이터 객체 생성
     const specialQA = {
       question: specialQuestion,
@@ -1214,11 +1239,14 @@ const OrganismToastPopupSingleChat = ({
       },
       last_interview: interview222,
     };
+    setIsGeneratingIndepthQuestion(false);
 
+    setIsGeneratingIndepth(true);
     let indepthResponse = await InterviewXPersonaSingleInterviewRequest(
       indepthData,
       isLoggedIn
     );
+
     let retryCountIndepth = 0;
     const maxRetries = 10;
     while (
@@ -1237,6 +1265,7 @@ const OrganismToastPopupSingleChat = ({
     if (retryCountIndepth >= maxRetries) {
       setShowErrorPopup(true);
       setIsGeneratingIndepth(false);
+      setIsGeneratingIndepthQuestion(false);
       return;
     }
 
