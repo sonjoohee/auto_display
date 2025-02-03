@@ -111,6 +111,7 @@ export const Button = styled.button`
     background: ${palette.primary};
 
     &:hover {
+      border-color: #0B45B1;
       background: #0B45B1;
 
       // &:disabled {
