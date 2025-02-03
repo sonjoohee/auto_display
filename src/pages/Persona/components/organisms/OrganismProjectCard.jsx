@@ -158,8 +158,8 @@ const OrganismProjectCard = ({ project, index }) => {
             </div>
             <div>
               <span>
-                <img src={images.StatusBadgeCustom} alt="커스터마이즈" />
-                커스터마이즈
+                <img src={images.StatusBadgeCustom} alt="" />
+                비즈니스
               </span>
               <p>
                 {project.customPersonaList?.persona?.length || 0}명
@@ -168,8 +168,19 @@ const OrganismProjectCard = ({ project, index }) => {
                 )}
               </p>
             </div>
+            <div>
+              <span>
+                <img src={images.StatusBadgeCustom} alt="" />
+                나만의 페르소나
+                {/* <img src={images.People} alt="" />
+                {project.requestPersonaList?.persona?.length || 0}개 페르소나 */}
+              </span>
+              <p className={getRecruitStatus(project)}>
+                {getRecruitStatusText(project)}
+              </p>
+            </div>
           </Persona>
-          <Recruit>
+          {/* <Recruit>
             <span>
               <img src={images.People} alt="" />
               {project.requestPersonaList?.persona?.length || 0}개 페르소나
@@ -177,7 +188,7 @@ const OrganismProjectCard = ({ project, index }) => {
             <p className={getRecruitStatus(project)}>
               {getRecruitStatusText(project)}
             </p>
-          </Recruit>
+          </Recruit> */}
           <Report>
             <div>
               <span>
@@ -288,7 +299,7 @@ const OrganismProjectCard = ({ project, index }) => {
                   추천 페르소나와 인터뷰를 완료하시면 결과 리포트를 확인할 수
                   있습니다.
                   <Button
-                    DbExLarge
+                    Other
                     Primary
                     Round
                     onClick={() => navigateToPersonaPage(project._id)}
@@ -378,7 +389,8 @@ const Persona = styled.div`
   align-items: center;
   justify-content: flex-start;
   gap: 12px;
-  max-width: 230px;
+  // max-width: 230px;
+  max-width: 340px;
   width: 100%;
   padding: 8px;
 
@@ -460,6 +472,11 @@ const Recruit = styled.div`
       color: ${palette.green};
     }
   }
+
+  img {
+    filter: grayscale(100%);
+    opacity: 0.4;
+  }
 `;
 
 const Report = styled.div`
@@ -468,7 +485,10 @@ const Report = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+  max-width: 150px;
+  width:100%;
   padding: 8px 0;
+  margin-left: auto;
 
   span {
     display: flex;

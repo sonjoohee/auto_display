@@ -2312,7 +2312,7 @@ const Popup = styled.div`
         font-family: "Pretendard", "Poppins";
         font-size: 0.875rem;
         font-weight: 600;
-        color: ${palette.blue};
+        color: ${palette.primary};
         padding: 12px 20px;
         border-radius: 12px;
         border: 1px solid ${palette.blue};
@@ -2352,7 +2352,7 @@ const Popup = styled.div`
             background: none;
 
             &:last-child {
-              color: ${palette.blue};
+              color: ${palette.primary};
               background: none;
             }
           }

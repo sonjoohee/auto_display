@@ -38,6 +38,7 @@ import {
   ArrowButton,
   Dots,
   Dot,
+  NoData,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../../assets/styles/Images";
 import { useNavigate } from "react-router-dom";
@@ -509,7 +510,8 @@ const PageMyProject = () => {
               <MyDashboardHeader>
                 <MyDashboardTitle>
                   <H2>{userName}님 </H2>
-                  <Badge classBasic>Basic</Badge>
+                  <Badge classBasic>일반</Badge>
+                  <Badge Subscribe>구독</Badge>
                 </MyDashboardTitle>
 
                 {/* <ButtonGroup>
@@ -669,7 +671,7 @@ const PageMyProject = () => {
                         <ProjectHeader>
                           <Body3 color="gray500">프로젝트 명</Body3>
                           <Body3 color="gray500">맞춤 페르소나</Body3>
-                          <Body3 color="gray500">페르소나 모집</Body3>
+                          {/* <Body3 color="gray500">페르소나 모집</Body3> */}
                           <Body3 color="gray500">결과 리포트</Body3>
                         </ProjectHeader>
                         <ProjectContent>
@@ -812,7 +814,13 @@ const PageMyProject = () => {
                             </ProjectItem>
                           ))
                         ) : (
-                          <div>데이터가 없습니다.</div> // 데이터가 없을 경우 메시지 표시
+                          <NoData Border>
+                            <images.PeopleFill2 width="41px" height="23px" color="#EBEBEB" />
+                            <Body2 color="gray500">
+                                현재 요청된 맞춤 페르소나가 없습니다<br />
+                              비즈니스 분석 페이지에서 맞춤 요청을 진행해주세요
+                            </Body2>
+                          </NoData> // 데이터가 없을 경우 메시지 표시
                         )}
                       </ProjectContent>
                     </ProjectList>
@@ -944,6 +952,10 @@ const PageMyProject = () => {
                         <Body3 color="gray500">{credit.credit}</Body3>
                       </CreditListItem>
                     ))}
+                    <NoData>
+                      <images.CoinLargeFill width="34" height="32" color="#EBEBEB" />
+                      <Body2 color="gray500">크레딧 사용 내역이 없습니다.</Body2>
+                    </NoData>
                   </CreditDashBoardListContent>
                 </CreditDashBoardList>
 
@@ -1111,7 +1123,8 @@ const ProjectHeader = styled.div`
   }
 
   > p:nth-child(2) {
-    max-width: 220px;
+    // max-width: 220px;
+    max-width: 370px;
     width: 100%;
   }
 
