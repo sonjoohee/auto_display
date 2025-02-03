@@ -359,8 +359,8 @@ const Tag = styled.span`
         case 'MiddleBlueGreen': return 'AI, 딥테크, 블록체인';
         case 'GreenSheen': return '소셜미디어, 커뮤니티';
         case 'TropicalRainForest': return '여행, 레저';
-        case 'DollarBill': return '유아 출산';
-        case 'Olivine': return '인사, 비즈니스, 법률';
+        case 'DollarBill': return '유아, 출산';
+        case 'Olivine': return '인사, 비즈니스';
         case 'ChineseGreen': return '제조, 하드웨어';
         case 'Jonquil': return '커머스';
         case 'PastelOrange': return '콘텐츠, 예술';
@@ -368,9 +368,12 @@ const Tag = styled.span`
         case 'Copper': return '패션';
         case 'Shadow': return '푸드, 농업';
         case 'Tuscany': return '환경, 에너지';
-        case 'VeryLightTangelo': return '홈 리빙, 펫';
+        case 'VeryLightTangelo': return '홈리빙';
         case 'Orange': return '헬스케어, 바이오';
         case 'CarnationPink': return '피트니스, 스포츠';
+        case 'TurkishRose': return '법률';
+        case 'SuperPink': return '펫';
+        case 'NavyBlue': return '기타';
         default: return '';
       }
     }}";

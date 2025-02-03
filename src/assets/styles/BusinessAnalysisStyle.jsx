@@ -590,7 +590,7 @@ export const Tag = styled.span`
         case "TropicalRainForest":
           return "여행, 레저";
         case "DollarBill":
-          return "유아 출산";
+          return "유아, 출산";
         case "Olivine":
           return "인사, 비즈니스";
         case "ChineseGreen":
@@ -608,7 +608,7 @@ export const Tag = styled.span`
         case "Tuscany":
           return "환경, 에너지";
         case "VeryLightTangelo":
-          return "홈 리빙";
+          return "홈리빙";
         case "Orange":
           return "헬스케어, 바이오";
         case "CarnationPink":
