@@ -193,50 +193,55 @@ const PagePersona2 = () => {
   const [activeTabIndex, setActiveTabIndex] = useState(0);
 
   const [unselectedTypes, setUnselectedTypes] = useState([
-    { index: 1, id: "type1", label: "전형적 사용자 페르소나", count: 1 },
-    { index: 2, id: "type2", label: "극단적 사용자 페르소나", count: 2 },
-    { index: 3, id: "type3", label: "비교 소비자 페르소나", count: 1 },
-    { index: 4, id: "type4", label: "비전통적 사용자 페르소나", count: 1 },
-    { index: 5, id: "type5", label: "문제 해결 중심 페르소나", count: 3 },
-    { index: 6, id: "type6", label: "건강 중시 페르소나", count: 2 },
-    { index: 7, id: "type7", label: "시장 트렌드 리더 페르소나", count: 1 },
-    { index: 8, id: "type8", label: "예산 중시 소비자 페르소나", count: 1 },
-    { index: 9, id: "type9", label: "혁신 추구 소비자 페르소나", count: 1 },
-    { index: 10, id: "type10", label: "환경/윤리 중시 페르소나", count: 2 },
+    { index: 1, id: "type1", label: "전형적 사용자 페르소나", count: 1, wasSelected: false },
+    { index: 2, id: "type2", label: "극단적 사용자 페르소나", count: 2, wasSelected: false },
+    { index: 3, id: "type3", label: "비교 소비자 페르소나", count: 1, wasSelected: false },
+    { index: 4, id: "type4", label: "비전통적 사용자 페르소나", count: 1, wasSelected: false },
+    { index: 5, id: "type5", label: "문제 해결 중심 페르소나", count: 3, wasSelected: false },
+    { index: 6, id: "type6", label: "건강 중시 페르소나", count: 2, wasSelected: false },
+    { index: 7, id: "type7", label: "시장 트렌드 리더 페르소나", count: 1, wasSelected: false },
+    { index: 8, id: "type8", label: "예산 중시 소비자 페르소나", count: 1, wasSelected: false },
+    { index: 9, id: "type9", label: "혁신 추구 소비자 페르소나", count: 1, wasSelected: false },
+    { index: 10, id: "type10", label: "환경/윤리 중시 페르소나", count: 2, wasSelected: false },
     {
       index: 11,
       id: "type11",
       label: "기능/성능 중시 소비자 페르소나",
       count: 1,
+      wasSelected: false,
     },
-    { index: 12, id: "type12", label: "브랜드 충성 소비자 페르소나", count: 1 },
-    { index: 13, id: "type13", label: "감성적 소비자 페르소나", count: 3 },
-    { index: 14, id: "type14", label: "특정 상황 중심페르소나", count: 2 },
+    { index: 12, id: "type12", label: "브랜드 충성 소비자 페르소나", count: 1, wasSelected: false },
+    { index: 13, id: "type13", label: "감성적 소비자 페르소나", count: 3, wasSelected: false },
+    { index: 14, id: "type14", label: "특정 상황 중심페르소나", count: 2, wasSelected: false },
     {
       index: 15,
       id: "type15",
       label: "문화적/지역적 특성 중심 페르소나",
       count: 1,
+      wasSelected: false,
     },
     {
       index: 16,
       id: "type16",
       label: "DIY/커스터마이징 선호 페르소나",
       count: 1,
+      wasSelected: false,
     },
     {
       index: 17,
       id: "type17",
       label: "트렌드 회의적 소비자 페르소나",
       count: 1,
+      wasSelected: false,
     },
-    { index: 18, id: "type18", label: "단체 구매 소비자 페르소나", count: 3 },
-    { index: 19, id: "type19", label: "호기심 기반 소비자 페르소나", count: 2 },
+    { index: 18, id: "type18", label: "단체 구매 소비자 페르소나", count: 3, wasSelected: false },
+    { index: 19, id: "type19", label: "호기심 기반 소비자 페르소나", count: 2, wasSelected: false },
     {
       index: 20,
       id: "type20",
       label: "브랜드 전환 의향 소비자 페르소나",
       count: 1,
+      wasSelected: false,
     },
   ]);
 
@@ -1145,12 +1150,15 @@ const PagePersona2 = () => {
         prev.filter((type) => type.id !== typeId)
       );
 
-      // 제거된 타입을 unselectedTypes에 추가
+      // 제거된 타입을 unselectedTypes에 추가 (count 정보와 wasSelected 플래그 포함)
       const typeToAddBack = selectedTypes.find((type) => type.id === typeId);
       if (typeToAddBack) {
         setUnselectedTypes((prevUnselected) => {
           if (!prevUnselected.some((type) => type.id === typeId)) {
-            const updatedUnselected = [...prevUnselected, typeToAddBack];
+            const updatedUnselected = [
+              ...prevUnselected, 
+              { ...typeToAddBack, wasSelected: true }
+            ];
             return updatedUnselected.sort((a, b) => a.index - b.index);
           }
           return prevUnselected;
@@ -1703,7 +1711,7 @@ const PagePersona2 = () => {
                                               {type.label}
                                             </label>
                                           </CheckBox>
-                                          <span>3명</span>
+                                          <span>{type.count}명</span>
                                         </li>
                                       ))}
                                     </TypeItemList>
@@ -1748,6 +1756,7 @@ const PagePersona2 = () => {
                                                 {type.label}
                                               </label>
                                             </CheckBox>
+                                            {type.wasSelected && <span>{type.count}명</span>}
                                           </TypeListItem>
                                         );
                                       })}
