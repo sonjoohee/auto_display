@@ -255,7 +255,6 @@ import CoinSmall from '../icons/CoinSmall';
 import CoinMedium from '../icons/CoinMedium';
 import CoinLarge from '../icons/CoinLarge';
 import CoinFill from '../icons/CoinFill';
-import CoinLargeFill from '../icons/CoinLargeFill';
 
 import RocketSuccess from "../images/rocket-success.svg";
 import RocketFail from "../images/rocket-fail.svg";
@@ -267,9 +266,6 @@ import ChatPlus from "../icons/ChatPlus";
 
 import Repeat from "../images/repeat.svg";
 import NoUserThumb from "../images/no-user-thumb.svg";
-
-import ExclamationCircle2 from "../icons/ExclamationCircle";
-import PeopleFill2 from "../icons/PeopleFill2";
 
 const images = {
   Logo,
@@ -516,7 +512,6 @@ const images = {
   CoinMedium,
   CoinLarge,
   CoinFill,
-  CoinLargeFill,
 
   RocketSuccess,
   RocketFail,
@@ -528,9 +523,6 @@ const images = {
 
   Repeat,
   NoUserThumb,
-
-  ExclamationCircle2,
-  PeopleFill2,
 }
 
 export default images;

@@ -460,8 +460,6 @@ export const Badge = styled.div`
       ? palette.green
       : props.Ing
       ? palette.primary
-      : props.Subscribe
-      ? palette.white
       : palette.gray500};
   line-height: ${(props) => (props.classBasic || props.New ? "1.5" : "1.2")};
   padding: ${(props) =>
@@ -474,8 +472,7 @@ export const Badge = styled.div`
       : props.Ing
       ? "2px 10px 2px 15px"
       : "4px 8px"};
-  border-radius: ${(props) =>
-    props.classBasic || props.Subscribe ? "5px" : "50px"};
+  border-radius: ${(props) => (props.classBasic ? "5px" : "50px")};
   border: ${(props) =>
     props.Basic
       ? `1px solid rgba(52, 199, 89, 0.10)`
@@ -507,8 +504,6 @@ export const Badge = styled.div`
       ? `rgba(52, 199, 89, 0.06)`
       : props.Ing
       ? `rgba(34, 111, 255, 0.04)`
-      : props.Subscribe
-      ? palette.primary
       : palette.white};
 
   ${(props) =>
@@ -1886,8 +1881,7 @@ export const ListSubtitle = styled.div`
       display: -webkit-box;
       -webkit-line-clamp: 5;
       -webkit-box-orient: vertical;
-      // max-height: 102px;
-      height: 90px;
+      max-height: 102px;
       overflow: hidden;
       margin-top: auto;
     `}
@@ -2138,35 +2132,48 @@ export const OCEANRangeWrap = styled.div`
 
 export const RangeSlider = styled.input`
   -webkit-appearance: none;
-  width: calc(100% - 24px); // thumb 크기만큼 빼줌
-  margin: 0 12px; // 양쪽에 thumb 크기의 절반만큼 여백
-  height: 24px;
-  background: transparent;
+  position: relative;
+  width: 100%;
+  height: 24px; // thumb 높이와 동일하게 설정
+  background: transparent; // 배경을 투명하게
   outline: none;
-  opacity: ${props => props.$ignored ? "0.5" : "1"};
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
+  transition: all 0.2s;
 
+  // 트랙 스타일링
   &::-webkit-slider-runnable-track {
     width: 100%;
     height: 1px;
-    background: ${palette.outlineGray};
+    background: linear-gradient(
+      to right,
+      ${palette.outlineGray} calc(50% - 1px),
+      transparent calc(50% - 1px) calc(50% + 1px),
+      ${palette.outlineGray} calc(50% + 1px)
+    );
   }
 
   &::-moz-range-track {
     width: 100%;
     height: 1px;
-    background: ${palette.outlineGray};
+    background: linear-gradient(
+      to right,
+      ${palette.outlineGray} calc(50% - 1px),
+      transparent calc(50% - 1px) calc(50% + 1px),
+      ${palette.outlineGray} calc(50% + 1px)
+    );
   }
 
+  // thumb 스타일링
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
     position: relative;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 50%; // 중앙 정렬
+    transform: translateY(-50%); // 중앙 정렬
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background: ${props => props.$ignored ? palette.gray500 : palette.primary};
-    cursor: ${props => props.disabled ? "not-allowed" : "pointer"};
+    background: ${(props) => (props.$ignored ? palette.gray500 : palette.primary)};
+    cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
     transition: all 0.2s;
   }
 
@@ -2175,17 +2182,20 @@ export const RangeSlider = styled.input`
     height: 24px;
     border: none;
     border-radius: 50%;
-    background: ${props => props.$ignored ? palette.gray500 : palette.primary};
-    cursor: ${props => props.disabled ? "not-allowed" : "pointer"};
+    background: ${(props) => (props.$ignored ? palette.gray500 : palette.primary)};
+    cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
     transition: all 0.2s;
   }
 
+  // Firefox에서 focus 스타일 제거
   &::-moz-focus-outer {
     border: 0;
   }
 
   &:focus {
     outline: none;
+    cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+    transition: all 0.2s;
   }
 `;
 
@@ -2307,10 +2317,7 @@ export const CreditDashBoardItem = styled.div`
   padding: ${(props) => (props.NoLine ? "0" : "24px")};
   border-radius: 10px;
   border: ${(props) =>
-    props.NoLine 
-    ? "0" 
-    : `1px solid ${palette.outlineGray}`
-  };
+    props.NoLine ? "0" : "1px solid ${palette.outlineGray}"};
 
   .icon {
     display: flex;
@@ -3081,16 +3088,4 @@ export const Dot = styled.div`
   height: 3px;
   background: ${palette.gray300};
   border-radius: 50%;
-`;
-
-export const NoData = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-  width: 100%;
-  padding: ${(props) => props.Border ? "90px 0 78px" : "72px 0"};
-  border-radius: ${(props) => props.Border ? "10px" : "0"};
-  border: ${(props) => props.Border ? `1px solid ${palette.outlineGray}` : "0"};
 `;
