@@ -368,7 +368,7 @@ const MoleculeInterviewPurpose = ({
                           2,
                           "0"
                         )}.`}</Body3>
-                        <Body3 color="gray700">{question}</Body3>
+                        <Body3 color="gray700">{question.question}</Body3>
                       </BgBoxItem>
                     )) || null
                   );
@@ -413,7 +413,7 @@ const MoleculeInterviewPurpose = ({
                           2,
                           "0"
                         )}.`}</Body3>
-                        <Body3 color="gray700">{question}</Body3>
+                        <Body3 color="gray700">{question.question}</Body3>
                       </BgBoxItem>
                     )) || null
                   );
