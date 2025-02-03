@@ -163,7 +163,7 @@ const PageMyProfile = () => {
                             src={images.QuestionCircle}
                             alt="고객 서비스"
                           />
-                          <Sub3 color="gray700">문의하기 및 환불요청</Sub3>
+                          <Sub3 color="gray700">문의사기 및 환불요청</Sub3>
                         </IconButton>
                         <IconButton onClick={() => navigate("/Terms")}>
                           <img
@@ -192,7 +192,6 @@ const PageMyProfile = () => {
                   <div className="name">
                     <H4 color="gray800">OOO</H4>
                     <Grade />
-                    <Grade Subscribe />
                   </div>
                   <Caption2 color="gray500" align="left">
                     가입 날짜 24.10.19
@@ -520,17 +519,8 @@ const Grade = styled.div`
     line-height:1.55;
     letter-spacing: -0.42px;
     color: ${palette.primary};
-    content: '일반';
+    content: '충전 플랜';
   }
-
-  ${props => props.Subscribe && css`
-    background: ${palette.primary};
-
-    &:before {
-      color: ${palette.white};
-      content: '구독';
-    }
-  `}
 `;
 
 const WithdrawalButton = styled.div`

@@ -260,9 +260,9 @@ const PagePersona3Select = () => {
                     </li>
                     <li>
                       <Body2 color="gray500">페르소나 선택</Body2>
-                      {selectedPersonas ? (
-                        <PersonaGroup>
-                          {Array.isArray(selectedPersonas) ? (
+                      <PersonaGroup>
+                        {selectedPersonas &&
+                          (Array.isArray(selectedPersonas) ? (
                             <>
                               {selectedPersonas.length > 3 && (
                                 <span>+{selectedPersonas.length - 3}</span>
@@ -285,17 +285,11 @@ const PagePersona3Select = () => {
                                 alt={selectedPersonas.persona}
                               />
                             </Persona>
-                          )}
-                        </PersonaGroup>
-                      ) : (
-                        <Body2 color="gray300">
-                          페르소나가 선택되지 않았습니다. 하단에서 페르소나를 선택해 주세요!
-                        </Body2>
-                      )}
+                          ))}
+                      </PersonaGroup>
                     </li>
                     {selectedInterviewType === "multiple" ? (
-                      <>
-                      </>
+                      <></>
                     ) : selectedInterviewType === "single" ? (
                       <li>
                         <Body2 color="gray500">
@@ -306,7 +300,9 @@ const PagePersona3Select = () => {
                               반응형 인터뷰란?
                               <br />
                               페르소나의 답변에 맞춰, 모더레이터가 자동으로 추가
-                              질문을 제시하는 맞춤형 인터뷰 방식 입니다.
+                              질문을 제시하는
+                              <br />
+                              맞춤형 인터뷰 방식 입니다.
                             </Caption2>
                           </Tooltip>
                         </Body2>

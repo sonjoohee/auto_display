@@ -64,20 +64,6 @@ const MoleculePersonaCard = ({
     setIsChecked(checked);
   }, [checked]);
 
-  // 팝업이 열릴 때 body 스크롤 제어를 위한 useEffect 추가
-  useEffect(() => {
-    if (showPopup || showRequestPopup) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-
-    // 컴포넌트 언마운트 시 스크롤 상태 복구
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [showPopup, showRequestPopup]);
-
   const handleCheck = () => {
     if (isCustom) {
       onClick && onClick(); // 팝업 표시를 위한 콜백 실행

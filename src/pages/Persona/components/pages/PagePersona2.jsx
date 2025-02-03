@@ -248,7 +248,7 @@ const PagePersona2 = () => {
   const [visibleSelectedTypes, setVisibleSelectedTypes] = useState([]);
 
   const [oceanValues, setOceanValues] = useState({
-    openness: 0.5,
+    openness: 0.5, // 중간값 0.5로 시작
     conscientiousness: 0.5,
     extraversion: 0.5,
     agreeableness: 0.5,
@@ -256,11 +256,9 @@ const PagePersona2 = () => {
   });
 
   const handleOceanChange = (trait, value) => {
-    // value가 0.5에 가까우면 이전 값을 유지하거나 가까운 쪽으로 이동
-    const newValue = value > 0.5 ? 1 : 0;
-    setOceanValues(prev => ({
+    setOceanValues((prev) => ({
       ...prev,
-      [trait]: newValue
+      [trait]: Number(value),
     }));
   };
 
@@ -270,7 +268,6 @@ const PagePersona2 = () => {
 
   const handlePopupClose = () => {
     setShowPopup(false);
-    document.body.style.overflow = 'auto'; // 팝업 닫을 때 스크롤 허용
   };
 
   const [currentLoadingType, setCurrentLoadingType] = useState(null);
@@ -1145,16 +1142,12 @@ const PagePersona2 = () => {
         prev.filter((type) => type.id !== typeId)
       );
 
-      // 제거된 타입을 unselectedTypes에 추가 (count 값 유지)
+      // 제거된 타입을 unselectedTypes에 추가
       const typeToAddBack = selectedTypes.find((type) => type.id === typeId);
       if (typeToAddBack) {
         setUnselectedTypes((prevUnselected) => {
           if (!prevUnselected.some((type) => type.id === typeId)) {
-            // count 값을 포함하여 추가
-            const updatedUnselected = [...prevUnselected, {
-              ...typeToAddBack,
-              count: typeToAddBack.count // count 값 유지
-            }];
+            const updatedUnselected = [...prevUnselected, typeToAddBack];
             return updatedUnselected.sort((a, b) => a.index - b.index);
           }
           return prevUnselected;
@@ -1223,7 +1216,6 @@ const PagePersona2 = () => {
 
   const handleCustomizePopupClose = () => {
     setShowCustomizePopup(false);
-    document.body.style.overflow = 'auto'; // 팝업 닫을 때 스크롤 허용
   };
   const handleCustomizePopupConfirm = () => {
     submitCustomPersonaRequest();
@@ -1479,13 +1471,6 @@ const PagePersona2 = () => {
     setIgnoreOcean(e.target.checked);
   };
 
-  // 컴포넌트가 언마운트될 때 스크롤 상태 복원
-  useEffect(() => {
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, []);
-
   return (
     <>
       <ContentsWrap>
@@ -1715,7 +1700,7 @@ const PagePersona2 = () => {
                                               {type.label}
                                             </label>
                                           </CheckBox>
-                                          <span>{type.count}명</span>
+                                          <span>3명</span>
                                         </li>
                                       ))}
                                     </TypeItemList>
@@ -1738,9 +1723,6 @@ const PagePersona2 = () => {
                                             (selectedType) =>
                                               selectedType.id === type.id
                                           );
-                                        // 이 타입이 이전에 선택되었다가 해제된 것인지 확인
-                                        const wasSelectedBefore = selectedTypes.length > 0 && type.count !== undefined;
-                                        
                                         return (
                                           <TypeListItem
                                             key={type.id}
@@ -1763,8 +1745,6 @@ const PagePersona2 = () => {
                                                 {type.label}
                                               </label>
                                             </CheckBox>
-                                            {/* 이전에 선택되었던 타입인 경우에만 count 표시 */}
-                                            {wasSelectedBefore && <span>{type.count}명</span>}
                                           </TypeListItem>
                                         );
                                       })}
@@ -2065,7 +2045,7 @@ const PagePersona2 = () => {
               {activeTabIndex === 1 && (
                 <>
                   <div>
-                    <BgBoxItem NoOutline style={{ marginBottom: "40px" }}>
+                    <BgBoxItem NoOutline>
                       <Sub3 color="gray500" align="left">
                         OCEAN이란?
                         <br />
@@ -2180,7 +2160,7 @@ const PagePersona2 = () => {
                       방법들이 있습니다. 원하는 바를 위해 최대한 커스터마이징
                       하여 페르소나를 도출해 내시기를 기원합니다.
                     </Body3> */}
-                    <CheckBox Fill>
+                    <CheckBox>
                       <input
                         type="checkbox"
                         id="chk1"
@@ -2189,7 +2169,7 @@ const PagePersona2 = () => {
                         onChange={handleIgnoreOcean}
                       />
                       <label htmlFor="chk1">
-                        페르소나의 성격 유형을 랜덤으로 생성 하겠습니다.
+                        페르소나의 성격 유형은 신경 쓰지 않습니다.
                       </label>
                     </CheckBox>
                   </div>
