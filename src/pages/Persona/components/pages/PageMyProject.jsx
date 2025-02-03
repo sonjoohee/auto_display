@@ -813,7 +813,13 @@ const PageMyProject = () => {
                             </ProjectItem>
                           ))
                         ) : (
-                          <div>데이터가 없습니다.</div> // 데이터가 없을 경우 메시지 표시
+                          <NoData border>
+                            <images.PeopleFill2 color="#EBEBEB" />
+                            <Body3 color="gray500">
+                              현재 요청된 맞춤 페르소나가 없습니다<br />
+                              비즈니스 분석 페이지에서 맞춤 요청을 진행해주세요
+                            </Body3>
+                          </NoData>
                         )}
                       </ProjectContent>
                     </ProjectList>

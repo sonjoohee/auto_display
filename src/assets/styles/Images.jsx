@@ -203,6 +203,7 @@ import CheckGreen from "../images/check-green.svg"
 import FileText from "../images/file-text.svg"
 import People from "../images/people.svg"
 import PeopleFill from "../images/people-fill.svg"
+import PeopleFill2 from "../icons/PeopleFill";
 import ReportSearch from "../images/report-search.svg"
 import PersonCircle from "../images/person-circle.svg"
 import PersonFill from "../images/person-fill.svg"
@@ -473,6 +474,7 @@ const images = {
   FileText,
   People,
   PeopleFill,
+  PeopleFill2,
   ReportSearch,
   PersonCircle,  
   PersonFill,
