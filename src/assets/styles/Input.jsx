@@ -53,7 +53,10 @@ export const CheckBox = styled.div`
 
     &:checked {
       border-color: ${palette.primary};
-      background: ${props => props.Fill ? palette.primary : "transparent"};
+      background: ${props => props.Fill 
+        ? palette.primary 
+        : `url(${images.Check}) no-repeat center / auto 6px`
+      };
 
       &:before {
         content: "";
