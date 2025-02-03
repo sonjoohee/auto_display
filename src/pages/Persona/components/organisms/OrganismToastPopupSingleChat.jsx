@@ -709,10 +709,6 @@ const OrganismToastPopupSingleChat = ({
           // 더미 데이터 사용 - 실제 구현시 API 호출로 대체
           const additionalQuestion = dummyAdditionalQuestion;
 
-
-
-
-          
           const additionalAnswer = dummyAdditionalAnswer;
 
           // 추가 질문 저장
@@ -1131,7 +1127,10 @@ const OrganismToastPopupSingleChat = ({
       const newQuestionNumber = interviewQuestionListState.length;
 
       // 상태 업데이트를 순차적으로 처리
-      const updatedQuestionList = [...interviewQuestionListState, questionText];
+      const updatedQuestionList = [
+        ...interviewQuestionListState,
+        { question: questionText, question_type: "추가질문" },
+      ];
 
       // 기존 상태 업데이트
       setInterviewQuestionListState(updatedQuestionList);
