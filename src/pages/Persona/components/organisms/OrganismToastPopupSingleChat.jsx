@@ -1040,9 +1040,15 @@ const OrganismToastPopupSingleChat = ({
         ) {
           elements.push(
             <React.Fragment key={`indepth-${index}`}>
-              {indepthInterviews[index] &&
-                indepthInterviews[index].question && (
-                  <>
+              {/* 인뎁스 질문 및 답변 렌더링 */}
+              {indepthInterviews[index]?.question ||
+              indepthInterviews[index]?.answer ||
+              isGeneratingIndepthQuestion ||
+              isGeneratingIndepth ? (
+                <React.Fragment key={`indepth-${index}`}>
+                  {/* 모더 섹션: 인뎁스 질문 */}
+                  {indepthInterviews[index]?.question ? (
+                    // 질문 생성 완료 → 모더 질문 표시
                     <ChatItem Moder>
                       <Persona Moder color="Gainsboro" size="Medium" Round>
                         <img src={personaImages.PersonaModer} alt="모더" />
@@ -1057,54 +1063,59 @@ const OrganismToastPopupSingleChat = ({
                         </Sub1>
                       </ChatBox>
                     </ChatItem>
-                  </>
-                )}
-              {indepthInterviews[index] && indepthInterviews[index].answer && (
-                <>
-                  <ChatItem Persona>
-                    <Persona color="Linen" size="Medium" Round>
-                      <img
-                        src={`/ai_person/${personaList.selected[0].personaImg}.png`}
-                        alt={personaList.selected[0].persona}
-                      />
-                    </Persona>
-                    <ChatBox Persona>
-                      <Sub1 color="gray800" align="left">
-                        {indepthInterviews[index].answer}
-                      </Sub1>
-                    </ChatBox>
-                  </ChatItem>
-                </>
-              )}
+                  ) : (
+                    isGeneratingIndepthQuestion && (
+                      // 질문 생성 중 → 모더 Entering 애니메이션 표시
+                      <ChatItem Moder>
+                        <Persona Moder color="Gainsboro" size="Medium" Round>
+                          <img src={personaImages.PersonaModer} alt="모더" />
+                          <span>
+                            <img src={images.PatchCheckFill} alt="" />
+                            <Helptext color="primary">모더</Helptext>
+                          </span>
+                        </Persona>
+                        <ChatBox Moder>
+                          <Entering />
+                        </ChatBox>
+                      </ChatItem>
+                    )
+                  )}
 
-              {status === "Ing" && isGeneratingIndepthQuestion && (
-                <ChatItem Moder>
-                  <Persona Moder color="Gainsboro" size="Medium" Round>
-                    <img src={personaImages.PersonaModer} alt="모더" />
-                    <span>
-                      <img src={images.PatchCheckFill} alt="" />
-                      <Helptext color="primary">모더</Helptext>
-                    </span>
-                  </Persona>
-                  <ChatBox Moder>
-                    <Entering />
-                  </ChatBox>
-                </ChatItem>
-              )}
-
-              {status === "Ing" && isGeneratingIndepth && (
-                <ChatItem Persona>
-                  <Persona color="Linen" size="Medium" Round>
-                    <img
-                      src={`/ai_person/${personaList.selected[0].personaImg}.png`}
-                      alt="페르소나"
-                    />
-                  </Persona>
-                  <ChatBox Persona>
-                    <Entering />
-                  </ChatBox>
-                </ChatItem>
-              )}
+                  {/* 페르소나 섹션: 인뎁스 답변 */}
+                  {indepthInterviews[index]?.question &&
+                    (indepthInterviews[index]?.answer ? (
+                      // 답변 생성 완료 → 페르소나 답변 표시
+                      <ChatItem Persona>
+                        <Persona color="Linen" size="Medium" Round>
+                          <img
+                            src={`/ai_person/${personaList.selected[0].personaImg}.png`}
+                            alt={personaList.selected[0].persona}
+                          />
+                        </Persona>
+                        <ChatBox Persona>
+                          <Sub1 color="gray800" align="left">
+                            {indepthInterviews[index].answer}
+                          </Sub1>
+                        </ChatBox>
+                      </ChatItem>
+                    ) : (
+                      // 답변이 아직 없고, 답변 생성 중이면 → 페르소나 Entering 애니메이션 표시
+                      isGeneratingIndepth && (
+                        <ChatItem Persona>
+                          <Persona color="Linen" size="Medium" Round>
+                            <img
+                              src={`/ai_person/${personaList.selected[0].personaImg}.png`}
+                              alt="페르소나"
+                            />
+                          </Persona>
+                          <ChatBox Persona>
+                            <Entering />
+                          </ChatBox>
+                        </ChatItem>
+                      )
+                    ))}
+                </React.Fragment>
+              ) : null}
             </React.Fragment>
           );
         }
@@ -1187,61 +1198,55 @@ const OrganismToastPopupSingleChat = ({
   ) {
     console.log("🚀 ~ indepthLastInterview:", indepthLastInterview);
     setIsGeneratingIndepthQuestion(true);
+
     // 특화질문 데이터 객체 생성
     const specialQA = {
       question: specialQuestion,
       answer: specialAnswer,
     };
-    //질문생성
-    // 인뎁스 인터뷰에 사용할 데이터 구성 (특화질문 데이터 포함)
-    const questionData = {
-      business_idea: businessAnalysis.title,
-      business_analysis_data: businessAnalysis,
-      theory_data: selectedInterviewPurposeData.title,
-      last_interview: specialQA,
-    };
 
+    // 인뎁스 질문 생성 API 호출
     let responseIndepthInterview =
       await InterviewXPersonaSingleIndepthInterviewGeneratorRequest(
-        questionData,
+        {
+          business_idea: businessAnalysis.title,
+          business_analysis_data: businessAnalysis,
+          theory_data: selectedInterviewPurposeData.title,
+          last_interview: specialQA,
+        },
         isLoggedIn
       );
 
     console.log("🚀 ~ responseIndepthInterview:", responseIndepthInterview);
     const indepthInterview = responseIndepthInterview.response;
 
-    //답변
-    const interview222 = [];
-    for (let q = 0; q < currentQuestionIndex; q++) {
-      const questionAnswers = answers[q] || [];
-      const personaAnswer = questionAnswers.find(
-        (ans) => ans.persona.personIndex === personaList.selected[0].personIndex
-      );
-      if (personaAnswer) {
-        interview222.push({
-          question: interviewQuestionListState[q],
-          answer: personaAnswer.answer,
-        });
-      }
-    }
-    const indepthData = {
-      business_analysis_data: businessAnalysis,
-      question: indepthInterview,
-      theory_data: purposeItemsSingleAtom,
-      persona_info: {
-        id: personaList.selected[0].persona_id.replace(/[^0-9]/g, ""),
-        name: personaList.selected[0].persona,
-        keyword: personaList.selected[0].persona_keyword,
-        hashtag: personaList.selected[0].lifestyle,
-        summary: personaList.selected[0].consumption_pattern,
+    // 질문 생성 완료되면 질문만 바로 업데이트 (답변은 아직 없음)
+    setIndepthInterviews((prev) => ({
+      ...prev,
+      [currentQuestionIndex]: {
+        question: indepthInterview, // 질문만 업데이트
+        answer: prev[currentQuestionIndex]?.answer, // 기존 답변은 그대로
       },
-      last_interview: interview222,
-    };
+    }));
+
     setIsGeneratingIndepthQuestion(false);
 
+    // 이제 인뎁스 답변 생성을 시작
     setIsGeneratingIndepth(true);
     let indepthResponse = await InterviewXPersonaSingleInterviewRequest(
-      indepthData,
+      {
+        business_analysis_data: businessAnalysis,
+        question: indepthInterview,
+        theory_data: purposeItemsSingleAtom,
+        persona_info: {
+          id: personaList.selected[0].persona_id.replace(/[^0-9]/g, ""),
+          name: personaList.selected[0].persona,
+          keyword: personaList.selected[0].persona_keyword,
+          hashtag: personaList.selected[0].lifestyle,
+          summary: personaList.selected[0].consumption_pattern,
+        },
+        last_interview: indepthLastInterview,
+      },
       isLoggedIn
     );
 
@@ -1254,7 +1259,19 @@ const OrganismToastPopupSingleChat = ({
         !indepthResponse.response.answer)
     ) {
       indepthResponse = await InterviewXPersonaSingleInterviewRequest(
-        indepthData,
+        {
+          business_analysis_data: businessAnalysis,
+          question: indepthInterview,
+          theory_data: purposeItemsSingleAtom,
+          persona_info: {
+            id: personaList.selected[0].persona_id.replace(/[^0-9]/g, ""),
+            name: personaList.selected[0].persona,
+            keyword: personaList.selected[0].persona_keyword,
+            hashtag: personaList.selected[0].lifestyle,
+            summary: personaList.selected[0].consumption_pattern,
+          },
+          last_interview: indepthLastInterview,
+        },
         isLoggedIn
       );
       retryCountIndepth++;
@@ -1267,6 +1284,7 @@ const OrganismToastPopupSingleChat = ({
       return;
     }
 
+    // 답변 생성 완료되면 업데이트 (이미 질문은 업데이트된 상태)
     if (
       indepthResponse &&
       indepthResponse.response &&
@@ -1297,7 +1315,7 @@ const OrganismToastPopupSingleChat = ({
         newData[currentQuestionIndex] = {
           ...existingEntry,
           indepth: {
-            question: indepthInterview.question,
+            question: indepthInterview,
             answer: indepthResponse.response.answer,
           },
         };
