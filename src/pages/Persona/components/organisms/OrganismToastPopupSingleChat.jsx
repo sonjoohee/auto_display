@@ -364,8 +364,13 @@ const OrganismToastPopupSingleChat = ({
             ...existingQuestions.commonQuestions,
             ...existingQuestions.specialQuestions,
           ];
-          setInterviewQuestionListState([combinedQuestions[0]]); // 질문 한개 테스트
-          // setInterviewQuestionListState(combinedQuestions);
+
+          // setInterviewQuestionListState([combinedQuestions[0]]); // 질문 한개 테스트
+          setInterviewQuestionListState(combinedQuestions);
+          
+          // 추가질문 생성 결과 콘솔 출력 (기존 질문 사용)
+          console.log("Generated additional questions (from existing):", combinedQuestions);
+
 
           await new Promise((resolve) => setTimeout(resolve, 5000));
           setIsLoadingPrepare(false);
@@ -437,6 +442,9 @@ const OrganismToastPopupSingleChat = ({
               ];
               setInterviewQuestionListState(combinedQuestions);
               // setInterviewQuestionListState(combinedQuestions[0]);
+              
+            // 추가질문 생성 결과 콘솔 출력 (API로 새로 생성된 경우)
+            console.log("Generated additional questions (via API):", combinedQuestions);
               setIsLoadingPrepare(false);
               setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
 
@@ -708,6 +716,19 @@ const OrganismToastPopupSingleChat = ({
         setIsGenerating(true);
 
         const lastInterview = [];
+        // for (let q = 0; q < currentQuestionIndex; q++) {
+        //   const questionAnswers = answers[q] || [];
+        //   const personaAnswer = questionAnswers.find(
+        //     (ans) =>
+        //       ans.persona.personIndex === personaList.selected[0].personIndex
+        //   );
+        //   if (personaAnswer) {
+        //     lastInterview.push({
+        //       question: interviewQuestionListState[q],
+        //       answer: personaAnswer.answer,
+        //     });
+        //   }
+        // }
         for (let q = 0; q < currentQuestionIndex; q++) {
           const questionAnswers = answers[q] || [];
           const personaAnswer = questionAnswers.find(
@@ -715,13 +736,18 @@ const OrganismToastPopupSingleChat = ({
               ans.persona.personIndex === personaList.selected[0].personIndex
           );
           if (personaAnswer) {
+            // main과 indepth를 분리된 키로 저장
             lastInterview.push({
-              question: interviewQuestionListState[q],
-              answer: personaAnswer.answer,
+              main: {
+                question: interviewQuestionListState[q],
+                answer: personaAnswer.answer,
+              },
+              indepth: null, // 나중에 심층 인터뷰 응답이 있으면 업데이트
             });
           }
         }
-
+        console.log("lastInterview!!!:", lastInterview);
+        
         const data = {
           business_analysis_data: businessAnalysis,
           question: interviewQuestionListState[currentQuestionIndex],
@@ -735,6 +761,7 @@ const OrganismToastPopupSingleChat = ({
           },
           last_interview: lastInterview,
         };
+
 
         let response = await InterviewXPersonaSingleInterviewRequest(
           data,
@@ -759,7 +786,11 @@ const OrganismToastPopupSingleChat = ({
 
         // 메인 질문 응답 저장
         if (response && response.response && response.response.answer) {
+          
+          // 현재 답변 데이터를 업데이트
           setCurrentAnswerData(response.response.answer);
+          
+          // 기존 상태의 answers에 현재 질문의 응답을 추가하고 업데이트
           setAnswers((prev) => {
             const newAnswers = {
               ...prev,
@@ -771,6 +802,8 @@ const OrganismToastPopupSingleChat = ({
                 },
               ],
             };
+            // 업데이트된 newAnswers 객체도 콘솔에 출력
+            console.log("업데이트된 answers 상태:", newAnswers);
             return newAnswers;
           });
         }
@@ -1111,7 +1144,7 @@ const OrganismToastPopupSingleChat = ({
   // 라디오 버튼 선택 상태를 관리하기 위한 새로운 state 추가
   const [selectedRadio, setSelectedRadio] = useState(null);
 
-<<<<<<< HEAD
+
   // Contents 요소에 대한 ref 추가
   const contentsRef = useRef(null);
 
@@ -1179,7 +1212,7 @@ const OrganismToastPopupSingleChat = ({
   const handleInputClick = () => {
     scrollToBottom();
   };
-=======
+
   async function processIndepthInterview(
     currentQuestionIndex,
     indepthLastInterview,
@@ -1209,8 +1242,9 @@ const OrganismToastPopupSingleChat = ({
         isLoggedIn
       );
 
-    console.log("🚀 ~ responseIndepthInterview:", responseIndepthInterview);
     const indepthInterview = responseIndepthInterview.response;
+    console.log("🚀 ~ indepthInterview!:", indepthInterview);
+  
 
     //답변
     const interview222 = [];
@@ -1265,18 +1299,19 @@ const OrganismToastPopupSingleChat = ({
       return;
     }
 
-    if (
-      indepthResponse &&
-      indepthResponse.response &&
-      indepthResponse.response.answer
-    ) {
-      setIndepthInterviews((prev) => ({
-        ...prev,
-        [currentQuestionIndex]: {
-          question: indepthInterview.question,
-          answer: indepthResponse.response.answer,
-        },
-      }));
+    if (indepthResponse && indepthResponse.response && indepthResponse.response.answer) {
+      setIndepthInterviews((prev) => {
+        const newState = {
+          ...prev,
+          [currentQuestionIndex]: {
+            // 여기서 indepthInterview.question (API 응답 값)을 사용
+            question: indepthInterview,
+            answer: indepthResponse.response.answer,
+          },
+        };
+        console.log("업데이트된 indepthInterviews 상태:", newState);
+        return newState;
+      });
       setInterviewData((prev) => {
         const newData = [...(prev || [])];
         const existingEntry = newData[currentQuestionIndex] || {};
@@ -1304,7 +1339,7 @@ const OrganismToastPopupSingleChat = ({
     }
     setIsGeneratingIndepth(false);
   }
->>>>>>> 16e2f16d10cc9afd267655972cf058a7844a5d98
+
 
   return (
     <>
