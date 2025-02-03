@@ -27,6 +27,7 @@ import {
   IS_LOGIN_POPUP_OPEN,
   IS_MARKETING,
   CONVERSATION_ID,
+  USER_MEMBERSHIP,
   IS_SIGNUP_POPUP_OPEN,
 } from "../../../../pages/AtomStates"; // 아톰 임포트
 import { Link } from "react-router-dom";
@@ -38,6 +39,7 @@ import MoleculeResetPasswordPopup from "./MoleculeResetPasswordPopup";
 const MoleculeLoginForm = ({ onClosePopup }) => {
   const [signUpName, setSignUpName] = useAtom(SIGN_UP_NAME);
   const [email, setEmail] = useAtom(EMAIL);
+  const [userMembership, setUserMembership] = useAtom(USER_MEMBERSHIP);
   const [, setSignupEmail] = useAtom(SIGN_UP_EMAIL);
   const [password, setPassword] = useState("");
   const [, setSignupPassword] = useAtom(SIGN_UP_PASSWORD);
@@ -159,12 +161,15 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
 
         if (userInfoResponse.ok) {
           const userInfo = await userInfoResponse.json();
+          console.log("🚀 ~ handleLogin ~ userInfo:", userInfo);
 
           // 유저 정보 저장
           setUserName(userInfo.name);
           setUserEmail(userInfo.email);
+          setUserMembership(userInfo.membership);
           sessionStorage.setItem("userName", userInfo.name);
           sessionStorage.setItem("userEmail", userInfo.email);
+          sessionStorage.setItem("userMembership", userInfo.membership);
           setIsLoggedIn(true);
 
           // 모바일 기기 체크 후 처리 수정

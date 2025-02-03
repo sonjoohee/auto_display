@@ -11,7 +11,8 @@ import axios from "axios";
 import { SubtractiveBlending } from "three/src/constants.js";
 import panelimages from "../../../../assets/styles/PanelImages";
 import PopupWrap from "../../../../assets/styles/Popup";
-import { Caption2 } from "../../../../assets/styles/Typography";
+import { Sub3, Caption2 } from "../../../../assets/styles/Typography";
+import { NoData } from "../../../../assets/styles/BusinessAnalysisStyle";
 
 import {
   PASSWORD,
@@ -21,6 +22,7 @@ import {
   IS_LOGGED_IN,
   USER_NAME,
   USER_EMAIL,
+  USER_MEMBERSHIP,
   TITLE_OF_BUSINESS_INFORMATION,
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
   MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
@@ -160,6 +162,7 @@ const OrganismIncNavigation = () => {
   const [projectLoadButtonState, setProjectLoadButtonState] = useAtom(
     PROJECT_LOAD_BUTTON_STATE
   );
+  const [userMembership, setUserMembership] = useAtom(USER_MEMBERSHIP);
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
   const [projectReportId, setProjectReportId] = useAtom(PROJECT_REPORT_ID);
   const [projectList, setProjectList] = useAtom(PROJECT_LIST);
@@ -1443,9 +1446,11 @@ const OrganismIncNavigation = () => {
                   <div className="userName">
                     <strong>{sessionStorage.getItem("userName")}</strong>
                     {/* 일반일때 Grade General */}
-                    <Grade General />
-                    {/* 구독일때 Grade */}
-                    <Grade />
+                    {sessionStorage.getItem("userMembership") === "Normal" ? (
+                      <Grade General />
+                    ) : (
+                      <Grade />
+                    )}
                   </div>
                   {/* 유저 이름 표시 */}
                   <Caption2 color="gray500" align="left">
@@ -1536,11 +1541,11 @@ const OrganismIncNavigation = () => {
           {chatList && chatList.length > 0 ? (
             <>
               <HistoryList>
+                <strong>최근 대화</strong>
                 {chatList.some(
                   (chat) => Date.now() - chat.timestamp <= 604800000
-                ) && (
+                ) ? (
                   <>
-                    <strong>최근 대화</strong>
                     <ul>
                       {chatList
                         .filter(
@@ -1637,17 +1642,21 @@ const OrganismIncNavigation = () => {
                         ))}
                     </ul>
                   </>
+                ) : (
+                  <NoData Small>
+                    <Sub3 color="gray300">대화내역 없음</Sub3>
+                  </NoData>
                 )}
               </HistoryList>
 
               <HistoryList>
+                <strong>지난 7일 대화</strong>
                 {chatList.some(
                   (chat) =>
                     Date.now() - chat.timestamp > 604800000 &&
                     Date.now() - chat.timestamp <= 2592000000
-                ) && (
+                ) ? (
                   <>
-                    <strong>지난 7일 대화</strong>
                     <ul>
                       {chatList
                         .filter(
@@ -1747,15 +1756,19 @@ const OrganismIncNavigation = () => {
                         ))}
                     </ul>
                   </>
+                ) : (
+                  <NoData Small>
+                    <Sub3 color="gray300">대화내역 없음</Sub3>
+                  </NoData>
                 )}
               </HistoryList>
 
               <HistoryList>
+                <strong>지난 30일 대화</strong>
                 {chatList.some(
                   (chat) => Date.now() - chat.timestamp > 2592000000
-                ) && (
+                ) ? (
                   <>
-                    <strong>지난 30일 대화</strong>
                     <ul>
                       {chatList
                         .filter(
@@ -1853,6 +1866,10 @@ const OrganismIncNavigation = () => {
                         ))}
                     </ul>
                   </>
+                ) : (
+                  <NoData Small>
+                    <Sub3 color="gray300">대화내역 없음</Sub3>
+                  </NoData>
                 )}
               </HistoryList>
             </>
