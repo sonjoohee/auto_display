@@ -364,7 +364,9 @@ const PagePersona3Select = () => {
                 <Body2 color="gray800">
                   {selectedInterviewType === "multiple"
                     ? `선택한 ${getSelectedCount()}명의 페르소나와 인터뷰를 진행하시겠습니까?`
-                    : "선택한 페르소나와 인터뷰를 진행하시겠습니까?"}
+                    : getSelectedCount() === 0 
+                      ? "인터뷰할 페르소나를 선택해주세요"
+                      : "선택한 페르소나와 인터뷰를 진행하시겠습니까?"}
                 </Body2>
                 <Button
                   Large
