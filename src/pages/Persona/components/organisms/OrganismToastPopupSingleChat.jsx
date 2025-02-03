@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled, { keyframes, css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import { Button } from "../../../../assets/styles/ButtonStyle";
@@ -364,16 +364,18 @@ const OrganismToastPopupSingleChat = ({
             ...existingQuestions.commonQuestions,
             ...existingQuestions.specialQuestions,
           ];
+
           // setInterviewQuestionListState([combinedQuestions[0]]); // 질문 한개 테스트
           setInterviewQuestionListState(combinedQuestions);
           
           // 추가질문 생성 결과 콘솔 출력 (기존 질문 사용)
           console.log("Generated additional questions (from existing):", combinedQuestions);
 
+
           await new Promise((resolve) => setTimeout(resolve, 5000));
           setIsLoadingPrepare(false);
-          // setInterviewStatus(["Pre"]); // 테스트 하나
-          setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
+          setInterviewStatus(["Pre"]); // 테스트 하나
+          // setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
         } else {
           // 생성된 질문이 없다면 API 요청
           let data = {
@@ -1142,6 +1144,75 @@ const OrganismToastPopupSingleChat = ({
   // 라디오 버튼 선택 상태를 관리하기 위한 새로운 state 추가
   const [selectedRadio, setSelectedRadio] = useState(null);
 
+
+  // Contents 요소에 대한 ref 추가
+  const contentsRef = useRef(null);
+
+  // 스크롤을 하단으로 이동시키는 함수 수정
+  const scrollToBottom = () => {
+    if (contentsRef.current) {
+      // requestAnimationFrame을 사용하여 다음 프레임에서 스크롤 실행
+      requestAnimationFrame(() => {
+        contentsRef.current.scrollTop = contentsRef.current.scrollHeight;
+        // 한번 더 실행하여 확실히 스크롤이 이동되도록 보장
+        requestAnimationFrame(() => {
+          contentsRef.current.scrollTop = contentsRef.current.scrollHeight;
+        });
+      });
+    }
+  };
+
+  // 채팅 내용이 업데이트될 때마다 스크롤 이동
+  useEffect(() => {
+    // 즉시 실행
+    scrollToBottom();
+    // 약간의 지연 후 한번 더 실행 (UI 업데이트 완료 보장)
+    const timeoutId = setTimeout(scrollToBottom, 100);
+    return () => clearTimeout(timeoutId);
+  }, [answers, additionalQuestions, showAddQuestion, isAnalyzing, isAnalysisComplete]); // 의존성 배열에 상태 추가
+
+  // "아니요, 괜찮습니다" 클릭 핸들러 수정
+  const handleNoClick = () => {
+    if (selectedRadio === null) {
+      setSelectedRadio("no");
+      loadInterviewReport();
+      // 상태 변경 후 스크롤 이동
+      requestAnimationFrame(() => {
+        scrollToBottom();
+        requestAnimationFrame(scrollToBottom);
+      });
+    }
+  };
+
+  // "네, 있습니다!" 클릭 핸들러 수정
+  const handleYesClick = () => {
+    if (selectedRadio === null) {
+      setSelectedRadio("yes");
+      setIsInputEnabled(true);
+      setInputValue("");
+      // 상태 변경 후 스크롤 이동
+      requestAnimationFrame(() => {
+        scrollToBottom();
+        requestAnimationFrame(scrollToBottom);
+      });
+    }
+  };
+
+  // 라디오 버튼 핸들러 수정
+  const handleRadioChange = (value) => {
+    setSelectedRadio(value);
+    setIsInputEnabled(value === "yes");
+    // 즉시 스크롤 실행
+    scrollToBottom();
+    // 약간의 지연 후 한번 더 실행
+    setTimeout(scrollToBottom, 100);
+  };
+
+  // input 클릭 핸들러 추가
+  const handleInputClick = () => {
+    scrollToBottom();
+  };
+
   async function processIndepthInterview(
     currentQuestionIndex,
     indepthLastInterview,
@@ -1269,6 +1340,7 @@ const OrganismToastPopupSingleChat = ({
     setIsGeneratingIndepth(false);
   }
 
+
   return (
     <>
       <PopupBox isActive={active}>
@@ -1342,7 +1414,7 @@ const OrganismToastPopupSingleChat = ({
               </ul>
             </Header>
 
-            <Contents showAddQuestion={showAddQuestion}>
+            <Contents ref={contentsRef} showAddQuestion={showAddQuestion}>
               {/* <LoadingBox Complete>
                 <img src={images.CheckCircleFill} alt="완료" />
 
@@ -1412,13 +1484,7 @@ const OrganismToastPopupSingleChat = ({
                             countAdditionalQuestion === 0 ||
                             selectedRadio !== null
                           }
-                          onClick={() => {
-                            if (selectedRadio === null) {
-                              setSelectedRadio("yes");
-                              setIsInputEnabled(true);
-                              setInputValue("");
-                            }
-                          }}
+                          onClick={handleYesClick}
                         >
                           <input
                             type="radio"
@@ -1431,12 +1497,7 @@ const OrganismToastPopupSingleChat = ({
 
                         <label
                           disabled={selectedRadio !== null}
-                          onClick={() => {
-                            if (selectedRadio === null) {
-                              setSelectedRadio("no");
-                              loadInterviewReport();
-                            }
-                          }}
+                          onClick={handleNoClick}
                         >
                           <input
                             type="radio"

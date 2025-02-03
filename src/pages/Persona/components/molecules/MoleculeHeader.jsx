@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { Link, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
 import {
@@ -30,6 +31,9 @@ const MoleculeHeader = () => {
   const [showCreditToggle, setShowCreditToggle] = useState(false);
   const [isClosingCreditToggle, setIsClosingCreditToggle] = useState(false);
   const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
+
+  const navigate = useNavigate();
+
 
   // Persona/3 경로 체크를 위한 조건 수정
   const isPersona3Page =
@@ -170,7 +174,7 @@ const MoleculeHeader = () => {
               <CreditToggle className={isClosingCreditToggle ? "closing" : ""}>
                 <div className="title">
                   <Sub1 color="gray700">크레딧 내역</Sub1>
-                  <button>
+                  <button onClick={() => navigate("/Payment")}>
                     <Caption2 color="primary">충전하기</Caption2>
                   </button>
                 </div>

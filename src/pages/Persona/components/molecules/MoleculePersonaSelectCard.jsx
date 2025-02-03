@@ -102,101 +102,70 @@ const MoleculePersonaSelectCard = ({
     );
   };
 
-  // selected와 unselected 리스트를 순서대로 렌더링
   return (
     <CardGroupWrap>
-      {/* 선택된 페르소나 렌더링 */}
-      {filteredProjectList.map((persona) => (
-        <ListBoxItem
-          key={persona.persona_id}
-          selected={true}
-          anySelected={true}
-          interviewType={interviewType}
-        >
-          {/* 카드 내용 렌더링 */}
-          <Persona color="Linen" size="Large" Round>
-            <img
-              //   src={`/ai_person/ai_persona_0000003_avartar.png`}
-              src={`/ai_person/${persona.personaImg}.png`}
-              alt={persona.persona}
-            />
-          </Persona>
-          <ListText>
-            <ListTitle>
-              <Body1 color="gray800">{persona.persona_view}</Body1>
-              {/* {persona.isNew && <Badge New>비즈니스</Badge>} */}
-            </ListTitle>
-            <ListSubtitle>
-              <PersonaInfo>
-                <span>{persona.gender}</span>
-                <span>
-                  {persona.age.includes("세")
-                    ? persona.age
-                    : `${persona.age}세`}
-                </span>
-                <span>{persona.job}</span>
-              </PersonaInfo>
-            </ListSubtitle>
-          </ListText>
+      {personaList &&
+        personaList.map((persona) => {
+          // 현재 persona가 선택된 상태인지 확인 (personaListState.selected 에서 조회)
+          const isSelected = personaListState.selected.some(
+            (p) => p.persona_id === persona.persona_id
+          );
 
-          <ListButton>
-            <Button
-              Medium
-              PrimaryLightest={true}
-              Fill={true}
-              onClick={() => handlePersonaSelect(persona)}
+          return (
+            <ListBoxItem
+              key={persona.persona_id}
+              selected={isSelected}
+              anySelected={personaListState.selected.length > 0}
+              interviewType={interviewType}
             >
-              <Sub2 color="primary">Selected</Sub2>
-            </Button>
-          </ListButton>
-        </ListBoxItem>
-      ))}
-
-      {/* 선택되지 않은 페르소나 렌더링 */}
-      {personaListState.unselected.map((persona) => (
-        <ListBoxItem
-          key={persona.persona_id}
-          selected={false}
-          anySelected={personaListState.selected.length > 0}
-          interviewType={interviewType}
-        >
-          {/* 카드 내용 렌더링 */}
-          <Persona color="Linen" size="Large" Round>
-            <img
-              src={`/ai_person/${persona.personaImg}.png`}
-              alt={persona.persona}
-            />
-          </Persona>
-          <ListText>
-            <ListTitle>
-              <Body1 color="gray800">{persona.persona_view}</Body1>
-              {/* {persona.isNew && <Badge New>비즈니스</Badge>} */}
-            </ListTitle>
-            <ListSubtitle>
-              <PersonaInfo>
-                <span>{persona.gender}</span>
-                <span>
-                  {persona.age.includes("세")
-                    ? persona.age
-                    : `${persona.age}세`}
-                </span>
-                <span>{persona.job}</span>
-              </PersonaInfo>
-            </ListSubtitle>
-          </ListText>
-
-          <ListButton>
-            <Button
-              Medium
-              PrimaryLightest={false}
-              Fill={false}
-              onClick={() => handlePersonaSelect(persona)}
-            >
-              <Sub2 color="gray500">Add</Sub2>
-            </Button>
-          </ListButton>
-        </ListBoxItem>
-      ))}
+              {/* 카드 내용 렌더링 */}
+              <Persona color="Linen" size="Large" Round>
+                <img
+                  src={`/ai_person/${persona.personaImg}.png`}
+                  alt={persona.persona}
+                />
+              </Persona>
+              <ListText>
+                <ListTitle>
+                  <Body1 color="gray800">{persona.persona_view}</Body1>
+                  {/* {persona.isNew && <Badge New>비즈니스</Badge>} */}
+                </ListTitle>
+                <ListSubtitle>
+                  <PersonaInfo>
+                    <span>{persona.gender}</span>
+                    <span>
+                      {persona.age.includes("세")
+                        ? persona.age
+                        : `${persona.age}세`}
+                    </span>
+                    <span>{persona.job}</span>
+                  </PersonaInfo>
+                </ListSubtitle>
+              </ListText>
+              <ListButton>
+                {isSelected ? (
+                  <Button
+                    Medium
+                    PrimaryLightest={true}
+                    Fill={true}
+                    onClick={() => handlePersonaSelect(persona)}
+                  >
+                    <Sub2 color="primary">Selected</Sub2>
+                  </Button>
+                ) : (
+                  <Button
+                    Medium
+                    PrimaryLightest={false}
+                    Fill={false}
+                    onClick={() => handlePersonaSelect(persona)}
+                  >
+                    <Sub2 color="gray500">Add</Sub2>
+                  </Button>
+                )}
+              </ListButton>
+            </ListBoxItem>
+          );
+        })}
     </CardGroupWrap>
   );
 };
