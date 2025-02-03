@@ -199,50 +199,10 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
               </Persona>
               <ChatBox Persona>
                 <Sub1 color="gray800" align="left">
-                  {typeof item.main.answer === "string"
-                    ? item.main.answer
-                    : ""}
+                  {typeof item.main.answer === "string" ? item.main.answer : ""}
                 </Sub1>
               </ChatBox>
             </ChatItem>
-
-            {/* indepth 항목이 존재할 경우 추가 UI 렌더링 */}
-            {item.indepth && (
-              <>
-                <ChatItem Moder>
-                  <Persona Moder color="Gainsboro" size="Medium" Round>
-                    <img src={personaImages.PersonaModer} alt="모더" />
-                    <span>
-                      <img src={images.PatchCheckFill} alt="" />
-                      <Helptext color="primary">모더</Helptext>
-                    </span>
-                  </Persona>
-                  <ChatBox Moder>
-                    <Sub1 color="gray800" align="left">
-                      {typeof item.indepth.question === "string"
-                        ? item.indepth.question
-                        : ""}
-                    </Sub1>
-                  </ChatBox>
-                </ChatItem>
-
-                <ChatItem Persona>
-                  <Persona Persona color="Linen" size="Medium" Round>
-                    <img
-                      src={`/ai_person/${selectedPersonaList[0].personaImg}.png`}
-                      alt="페르소나"
-                    />
-                  </Persona>
-                  <ChatBox Persona>
-                    <Sub1 color="gray800" align="left">
-                      {typeof item.indepth.answer === "string"
-                        ? item.indepth.answer
-                        : ""}
-                    </Sub1>
-                  </ChatBox>
-                </ChatItem>
-              </>
-            )}
           </React.Fragment>
         );
       }
