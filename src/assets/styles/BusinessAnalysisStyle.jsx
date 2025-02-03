@@ -1039,7 +1039,7 @@ export const TypeListItem = styled.li`
   background: ${(props) =>
     props.isSelected ? "rgba(34, 111, 255, 0.04)" : "transparent"};
   border-radius: 8px;
-  padding: ${(props) => (props.isSelected ? "8px 12px" : "0 12px")};
+  padding: ${(props) => (props.isSelected ? "1px 12px" : "1px 12px")};
   transition: background-color 0.2s ease;
 
   /* 체크박스 스타일 수정 */
