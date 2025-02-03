@@ -155,6 +155,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
   // 이미 완료된 인터뷰를 확인할 때 사용
   const renderInterviewItemsComplete = () => {
     console.log("인터뷰 완료 렌더링");
+    console.log("🚀 ~ interviewData:", interviewData);
 
     return interviewData.map((item, index) => {
       console.log("현재 인터뷰 항목:", item);
