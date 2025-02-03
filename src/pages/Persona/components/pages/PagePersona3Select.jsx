@@ -321,7 +321,12 @@ const PagePersona3Select = () => {
                             <span data-on="ON" data-off="OFF" />
                             <SwitchHandle />
                           </SwitchToggleItem>
-                          <Body2 color="gray800">추가 질문 생성</Body2>
+                          <Body2 color={isIndepthEnabled ? "gray800" : "gray300"}>
+                            추가 질문 생성
+                            {!isIndepthEnabled && (
+                              <Sub3 color="gray300">(Basic 사용 불가)</Sub3>
+                            )}
+                          </Body2>
                         </SwitchToggle>
                       </li>
                     ) : null}
