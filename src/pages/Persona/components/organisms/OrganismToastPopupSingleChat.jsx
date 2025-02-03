@@ -364,13 +364,13 @@ const OrganismToastPopupSingleChat = ({
             ...existingQuestions.commonQuestions,
             ...existingQuestions.specialQuestions,
           ];
-          // setInterviewQuestionListState([combinedQuestions[0]]); // 질문 한개 테스트
-          setInterviewQuestionListState(combinedQuestions);
+          setInterviewQuestionListState([combinedQuestions[0]]); // 질문 한개 테스트
+          // setInterviewQuestionListState(combinedQuestions);
 
           await new Promise((resolve) => setTimeout(resolve, 5000));
           setIsLoadingPrepare(false);
-          // setInterviewStatus(["Pre"]); // 테스트 하나
-          setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
+          setInterviewStatus(["Pre"]); // 테스트 하나
+          // setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
         } else {
           // 생성된 질문이 없다면 API 요청
           let data = {
@@ -840,9 +840,46 @@ const OrganismToastPopupSingleChat = ({
         }
 
         // 현재 질문의 상태를 "Complete"로 업데이트
-        const newStatusAfter = [...interviewStatus];
-        newStatusAfter[currentQuestionIndex] = "Complete";
-        setInterviewStatus(newStatusAfter);
+        // const newStatusAfter = [...interviewStatus];
+        // newStatusAfter[currentQuestionIndex] = "Complete";
+        // setInterviewStatus(newStatusAfter);
+        // 상태를 Complete로 변경하기 전에 답변이 저장되었는지 확인
+        if (response?.response?.answer || allAnswers[0]) {
+          newStatus[currentQuestionIndex] = "Complete";
+          setInterviewStatus(newStatus);
+        }
+
+        // } // 모든 인터뷰가 완료되었는지 확인
+        const allComplete = newStatus.every((status) => status === "Complete");
+        console.log("🚀 ~ processInterview ~ allComplete:", allComplete);
+
+        if (allComplete && countAdditionalQuestion === 0) {
+          console.log(
+            "🚀 ~ processInterview ~ countAdditionalQuestion:",
+            countAdditionalQuestion
+          );
+          // 데이터가 모두 저장될 때까지 잠시 대기
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+
+          // 마지막으로 interviewDataState가 모든 질문을 포함하는지 확인
+          setInterviewDataState((prev) => {
+            const finalData = [...prev];
+            interviewQuestionListState.forEach((question, index) => {
+              if (!finalData[index]) {
+                finalData[index] = {
+                  question: question.question,
+                  answer: "", // 빈 답변으로 초기화
+                };
+              }
+            });
+            return finalData;
+          });
+
+          // 한번 더 대기하여 상태 업데이트 완료 확인
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+
+          loadInterviewReport(response.response.answer);
+        }
       } catch (error) {
         console.error("Error in processInterview:", error);
         setIsGenerating(false);
