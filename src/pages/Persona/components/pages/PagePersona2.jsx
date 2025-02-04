@@ -311,6 +311,19 @@ const PagePersona2 = () => {
     withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
   };
 
+  const [currentRequestedPersona, setCurrentRequestedPersona] = useState([]);
+  useEffect(() => {
+    const loadProject = async () => {
+      const currentProject = await getProjectByIdFromIndexedDB(
+        projectId,
+        isLoggedIn
+      );
+      const currentRequestedPersona = currentProject?.requestedPersona || [];
+      setCurrentRequestedPersona(currentRequestedPersona);
+    };
+    loadProject();
+  }, []);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -1482,6 +1495,8 @@ const PagePersona2 = () => {
     setIgnoreOcean(e.target.checked);
   };
 
+  console.log("currentRequestedPersona", currentRequestedPersona);
+
   return (
     <>
       <ContentsWrap>
@@ -1581,6 +1596,9 @@ const PagePersona2 = () => {
                                   }
                                   currentSelection={selectedPersonas.length}
                                   viewType={viewType}
+                                  isExist={currentRequestedPersona.some(
+                                    (personas) => personas.persona === persona.persona
+                                  )}
                                 />
                               ))}
                               {isLoadingMore && isLoadingDaily && (
