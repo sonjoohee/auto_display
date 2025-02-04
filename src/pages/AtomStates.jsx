@@ -505,11 +505,21 @@ export const CUSTOM_THEORY_DATA = atom({});
 
 export const IS_LOADING_QUESTION = atom(false);
 
+export const CREDIT_CUSTOM_THEORY = atom(0);
+export const CREDIT_ADDITIONAL_QUESTION = atom(0);
+export const CREDIT_INDEPTH_INTERVIEW = atom(0);
+export const CREDIT_REQUEST_CUSTOM_PERSONA = atom(0);
+export const CREDIT_REQUEST_BUSINESS_PERSONA = atom(0);
+export const EVENT_STATE = atom(false);
+export const EVENT_TITLE = atom("");
+export const TRIAL_STATE = atom(false);
+
 // setConversation([]);
 // setConversationStage(1);
 // setInputBusinessInfo("");
 // setTitleOfBusinessInfo("");
 // setMainFeaturesOfBusinessInformation([]);
+
 // setMainCharacteristicOfBusinessInformation([]);
 // setBusinessInformationTargetCustomer([]);
 // setSelectedExpertIndex("0");
