@@ -1060,7 +1060,7 @@ const OrganismToastPopupSingleChat = ({
                       </Persona>
                       <ChatBox Moder>
                         <Sub1 color="gray800" align="left">
-                          Q{index + 1}(추가) {indepthInterviews[index].question}
+                          Q{index + 1}-1 {indepthInterviews[index].question}
                         </Sub1>
                       </ChatBox>
                     </ChatItem>
@@ -1120,7 +1120,6 @@ const OrganismToastPopupSingleChat = ({
             </React.Fragment>
           );
         }
-
         return elements;
       }
       return null;
