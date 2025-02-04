@@ -1407,7 +1407,7 @@ const ChatWrap = styled.div`
   position: relative;
   // height: calc(100% - 55px);
   min-height: 90%;
-  padding-bottom: 60px;
+  padding-bottom: 180px;
 
   &:before {
     // position: sticky;
