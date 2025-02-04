@@ -1353,6 +1353,7 @@ const InterviewReport = styled.div`
   gap: 64px;
   width: 100%;
   margin-top: 20px;
+  margin-bottom: 80px;
 `;
 
 const ReportHeader = styled.div`
