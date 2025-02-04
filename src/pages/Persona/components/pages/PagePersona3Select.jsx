@@ -123,7 +123,9 @@ const PagePersona3Select = () => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [showCreditPopup, setShowCreditPopup] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [businessAnalysis, setBusinessAnalysis] = useState({ title: "맞춤 페르소나 인터뷰" });
+  const [businessAnalysis, setBusinessAnalysis] = useState({
+    title: "맞춤 페르소나 인터뷰",
+  });
   const [showRequestPopup, setShowRequestPopup] = useState(false);
 
   const [personaButtonState3, setPersonaButtonState3] = useAtom(
@@ -160,8 +162,6 @@ const PagePersona3Select = () => {
     };
   }, [showToast]);
 
-
-
   // 모집 요청 팝업 닫기 함수
   const handleCloseRequestPopup = () => {
     setShowRequestPopup(false);
@@ -170,11 +170,10 @@ const PagePersona3Select = () => {
   // 크레딧 체크 및 사용 함수
   const creditUse = async () => {
     try {
-
       const creditPayload = {
         // 기존 10 대신 additionalQuestionMount 사용
         mount: creditAdditionalQuestion,
-      }
+      };
 
       const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
       console.log("크레딧 체크 응답:", creditResponse);
@@ -193,7 +192,10 @@ const PagePersona3Select = () => {
         mount: creditAdditionalQuestion,
       };
 
-      const creditUseResponse = await UserCreditUse(creditUsePayload, isLoggedIn);
+      const creditUseResponse = await UserCreditUse(
+        creditUsePayload,
+        isLoggedIn
+      );
       console.log("크레딧 사용 응답:", creditUseResponse);
 
       // 이후 인터뷰 시작 등 추가 로직 처리 (예를 들어 인터뷰 준비 팝업 표시)
@@ -205,22 +207,19 @@ const PagePersona3Select = () => {
     }
   };
 
-
   const handleStartInterview = () => {
     console.log("인터뷰 시작");
     console.log("personaList", personaList);
     console.log("singleInterviewQuestionList", singleInterviewQuestionList);
     console.log("selectedInterviewPurposeData", selectedInterviewPurposeData);
     console.log("purposeItemsSingleAtom", purposeItemsSingleAtom);
-    
+
     if (isIndepthEnabled) {
-    
       setShowRequestPopup(true);
     } else {
       setShowPopup(true);
     }
   };
-
 
   const handlePopupClose = () => {
     setShowPopup(false);
@@ -349,7 +348,8 @@ const PagePersona3Select = () => {
                         </PersonaGroup>
                       ) : (
                         <Body2 color="gray300">
-                          페르소나가 선택되지 않았습니다. 하단에서 페르소나를 선택해 주세요!
+                          페르소나가 선택되지 않았습니다. 하단에서 페르소나를
+                          선택해 주세요!
                         </Body2>
                       )}
                     </li>
@@ -381,10 +381,14 @@ const PagePersona3Select = () => {
                             <span data-on="ON" data-off="OFF" />
                             <SwitchHandle />
                           </SwitchToggleItem>
-                          <Body2 color={isIndepthEnabled ? "gray800" : "gray300"}>
+                          <Body2
+                            color={isIndepthEnabled ? "gray800" : "gray300"}
+                          >
                             추가 질문 생성
                             {!isIndepthEnabled && (
-                              <Sub3 color="gray300" style={{ width: "auto" }}>(일반 플랜 사용 불가)</Sub3>
+                              <Sub3 color="gray300" style={{ width: "auto" }}>
+                                (일반 플랜 사용 불가)
+                              </Sub3>
                             )}
                           </Body2>
                         </SwitchToggle>
@@ -424,9 +428,9 @@ const PagePersona3Select = () => {
                 <Body2 color="gray800">
                   {selectedInterviewType === "multiple"
                     ? `선택한 ${getSelectedCount()}명의 페르소나와 인터뷰를 진행하시겠습니까?`
-                    : getSelectedCount() === 0 
-                      ? "인터뷰할 페르소나를 선택해주세요"
-                      : "선택한 페르소나와 인터뷰를 진행하시겠습니까?"}
+                    : getSelectedCount() === 0
+                    ? "인터뷰할 페르소나를 선택해주세요"
+                    : "선택한 페르소나와 인터뷰를 진행하시겠습니까?"}
                 </Body2>
                 <Button
                   Large
@@ -494,8 +498,63 @@ const PagePersona3Select = () => {
         />
       )}
 
-       {/* 모집 요청 팝업 추가 */}
-       {showRequestPopup && (
+      {/* 모집 요청 팝업 추가 */}
+      {/* {showRequestPopup &&
+        (eventState ? (
+          <PopupWrap
+            Event
+            title="인터뷰 커스터마이징 하기"
+            message={
+              <>
+                현재 {eventTitle} 기간으로 이벤트 크레딧이 소진됩니다.
+                <br />({creditCustomTheory} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => setShowRequestPopup(false)}
+            onConfirm={handleCloseRequestPopup}
+          />
+        ) : trialState ? (
+          <PopupWrap
+            Check
+            title="인터뷰 커스터마이징 하기"
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditCustomTheory} 크레딧)
+                <br />
+                신규 가입 2주간 무료로 사용 가능합니다.
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => setShowRequestPopup(false)}
+            onConfirm={handleCloseRequestPopup}
+          />
+        ) : (
+          <PopupWrap
+            Check
+            title="인터뷰 커스터마이징 하기"
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditCustomTheory} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => setShowRequestPopup(false)}
+            onConfirm={handleCloseRequestPopup}
+          />
+        ))} */}
+      {showRequestPopup && (
         <PopupWrap
           Event
           title="추가 질문"
@@ -517,8 +576,6 @@ const PagePersona3Select = () => {
           }}
         />
       )}
-
-      
     </>
   );
 };

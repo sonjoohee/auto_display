@@ -1,17 +1,17 @@
 //산업별 인기 페르소나 카드
 import React, { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
-import { palette } from "../../../../assets/styles/Palette";
-import images from "../../../../assets/styles/Images";
-import { Button } from "../../../../assets/styles/ButtonStyle";
-import PopupWrap from "../../../../assets/styles/Popup";
+import { palette } from "../../../../assets/styles/Palette.jsx";
+import images from "../../../../assets/styles/Images.jsx";
+import { Button } from "../../../../assets/styles/ButtonStyle.jsx";
+import PopupWrap from "../../../../assets/styles/Popup.jsx";
 import {
   H4,
   Body1,
   Body3,
   Sub3,
   Caption2,
-} from "../../../../assets/styles/Typography";
+} from "../../../../assets/styles/Typography.jsx";
 import {
   ListBoxItem,
   ListSubtitle,
@@ -28,24 +28,20 @@ import {
   TabWrapType2,
   TabButtonType2,
   TabContent,
-} from "../../../../assets/styles/BusinessAnalysisStyle";
+} from "../../../../assets/styles/BusinessAnalysisStyle.jsx";
 import axios from "axios";
-import { updateProjectOnServer } from "../../../../utils/indexedDB";
-import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
-import { createRequestPersonaOnServer } from "../../../../utils/indexedDB";
+import { updateProjectOnServer } from "../../../../utils/indexedDB.js";
+import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB.js";
+import { createRequestPersonaOnServer } from "../../../../utils/indexedDB.js";
 import { useAtom } from "jotai";
 import {
   PROJECT_ID,
   IS_LOGGED_IN,
   BUSINESS_ANALYSIS,
   USER_CREDITS,
-  CREDIT_REQUEST_BUSINESS_PERSONA,
-  EVENT_STATE,
-  EVENT_TITLE,
-  TRIAL_STATE,
-} from "../../../../pages/AtomStates.jsx";
+} from "../../../AtomStates.jsx";
 
-const MoleculePersonaCard = ({
+const MoleculeBussinessPersonaCard = ({
   title,
   keywords = [],
   gender,
@@ -66,17 +62,16 @@ const MoleculePersonaCard = ({
   viewType = "list",
   personaData = {},
   isExist = false,
+  eventState,
+  eventTitle,
+  trialState,
+  creditRequestBusinessPersona,
 }) => {
+  console.log("🚀 ~ personaData:", personaData);
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
   const [userCredits] = useAtom(USER_CREDITS);
-  const [creditRequestBusinessPersona] = useAtom(
-    CREDIT_REQUEST_BUSINESS_PERSONA
-  );
-  const [eventState] = useAtom(EVENT_STATE);
-  const [eventTitle] = useAtom(EVENT_TITLE);
-  const [trialState] = useAtom(TRIAL_STATE);
 
   const [isChecked, setIsChecked] = useState(false);
   const [requestStatus, setRequestStatus] = useState(isRequest);
@@ -88,9 +83,15 @@ const MoleculePersonaCard = ({
   const [showCreditPopup, setShowCreditPopup] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
+  const [localPersonaData, setLocalPersonaData] = useState(personaData);
+
   useEffect(() => {
     setIsChecked(checked);
   }, [checked]);
+
+  useEffect(() => {
+    setLocalPersonaData(personaData);
+  }, [personaData]);
 
   const handleCheck = () => {
     if (isCustom) {
@@ -117,33 +118,34 @@ const MoleculePersonaCard = ({
 
   const handleRequestPersona = async () => {
     setSelectedPersonaForPopup(null);
-
     try {
       // 현재 서버에 저장된 requestedPersona 값을 가져옴
       const currentProject = await getProjectByIdFromIndexedDB(
         projectId,
         isLoggedIn
       );
-      const currentRequestedPersona = currentProject?.requestedPersona || [];
+      const currentRequestedPersona = currentProject?.businessPersonaList || [];
+      // const filteredPersona = currentRequestedPersona.filter(
+      //   (persona) => persona.persona !== localPersonaData.persona
+      // );
+      // 현재 요청된 페르소나 목록에서 동일한 페르소나가 있는지 확인하고 status 업데이트
+      let filteredPersona = [];
+      currentRequestedPersona.forEach((persona) => {
+        if (persona.persona === localPersonaData.persona) {
+          persona.status = "ing";
+        }
+        filteredPersona.push(persona);
+      });
 
-      // 중복 체크
-      const isDuplicate = currentRequestedPersona.some(
-        (persona) => persona.persona === personaData.persona
-      );
-
-      if (!isDuplicate) {
+      // localPersonaData.status가 undefined일 때만 요청을 진행
+      if (localPersonaData.status === undefined) {
         // 새로운 requestedPersona 배열 생성
-        const newRequestedPersona = [
-          ...currentRequestedPersona,
-          { ...personaData, status: "ing" },
-        ];
+        const newRequestedPersona = [...filteredPersona];
 
         // 서버 업데이트
         await updateProjectOnServer(
           projectId,
-          {
-            businessPersonaList: newRequestedPersona,
-          },
+          { businessPersonaList: newRequestedPersona },
           isLoggedIn
         );
 
@@ -153,9 +155,12 @@ const MoleculePersonaCard = ({
             timeZone: "Asia/Seoul",
           }),
           businessAnalysis: businessAnalysis,
-          personaRequest: { ...personaData, status: "ing" },
+          personaRequest: { ...localPersonaData, status: "ing" },
         };
         createRequestPersonaOnServer(requestData, isLoggedIn);
+
+        // 상태 업데이트: status를 "ing"로 변경하여 뱃지에 반영
+        setLocalPersonaData({ ...localPersonaData, status: "ing" });
         setRequestStatus(false);
       } else {
         console.error("이미 요청된 페르소나입니다.");
@@ -249,6 +254,25 @@ const MoleculePersonaCard = ({
           <ListText>
             <ListTitle>
               <Body1>{title}</Body1>
+
+              {localPersonaData.status === undefined ? (
+                <Badge Request>
+                  <img src={images.Plus} alt="요청 필요" />
+                  요청 필요
+                </Badge>
+              ) : localPersonaData.status === "ing" ? (
+                <Badge Ing>
+                  {/* <img src={images.PersonaCustomizing} alt="모집 중" /> */}
+                  모집 중
+                </Badge>
+              ) : localPersonaData.status === "complete" ? (
+                <Badge Complete>
+                  <img src={images.CheckGreen} alt="모집 완료" />
+                  모집 완료
+                </Badge>
+              ) : (
+                <></>
+              )}
             </ListTitle>
 
             {keywords.length > 0 && (
@@ -261,6 +285,7 @@ const MoleculePersonaCard = ({
               </ListSubtitle>
             )}
           </ListText>
+
           <ListButton>
             <CustomButton
               Medium
@@ -270,6 +295,11 @@ const MoleculePersonaCard = ({
             >
               자세히
             </CustomButton>
+            {localPersonaData.status === undefined && (
+              <CustomButton Medium Primary Fill onClick={handleRequestClick}>
+                모집 요청
+              </CustomButton>
+            )}
           </ListButton>
         </ListBoxItem>
       )}
@@ -279,6 +309,24 @@ const MoleculePersonaCard = ({
         <CardListItem>
           <CardText>
             <CardTitle>
+              {localPersonaData.status === undefined ? (
+                <Badge Request>
+                  <img src={images.Plus} alt="요청 필요" />
+                  요청 필요
+                </Badge>
+              ) : localPersonaData.status === "ing" ? (
+                <Badge Ing>
+                  {/* <img src={images.PersonaCustomizing} alt="모집 중" /> */}
+                  모집 중
+                </Badge>
+              ) : localPersonaData.status === "complete" ? (
+                <Badge Complete>
+                  <img src={images.CheckGreen} alt="모집 완료" />
+                  모집 완료
+                </Badge>
+              ) : (
+                <></>
+              )}
               <Body1>{title}</Body1>
             </CardTitle>
 
@@ -291,7 +339,7 @@ const MoleculePersonaCard = ({
             </ListSubtitle>
 
             <ListSubtitle TextOverflow>
-              <Caption2 color="gray500">{personaData.lifestyle}</Caption2>
+              <Caption2 color="gray500">{localPersonaData.lifestyle}</Caption2>
             </ListSubtitle>
           </CardText>
 
@@ -304,6 +352,11 @@ const MoleculePersonaCard = ({
             >
               자세히
             </CustomButton>
+            {localPersonaData.status === undefined && (
+              <CustomButton Medium Primary Fill onClick={handleRequestClick}>
+                모집 요청
+              </CustomButton>
+            )}
           </CardButton>
         </CardListItem>
       )}
@@ -314,24 +367,24 @@ const MoleculePersonaCard = ({
             <div>
               <div className="header">
                 <H4>
-                  {personaData.persona_view}
+                  {localPersonaData.persona_view}
                   <span className="close" onClick={() => setShowPopup(false)} />
                 </H4>
                 <p className="info">
-                  <Sub3>{personaData.gender}</Sub3>
+                  <Sub3>{localPersonaData.gender}</Sub3>
                   <Sub3>
-                    {personaData.age.includes("세")
-                      ? personaData.age
-                      : `${personaData.age}세`}
+                    {localPersonaData.age.includes("세")
+                      ? localPersonaData.age
+                      : `${localPersonaData.age}세`}
                   </Sub3>
-                  <Sub3>{personaData.residence}</Sub3>
+                  <Sub3>{localPersonaData.residence}</Sub3>
                 </p>
               </div>
 
               <div className="keywords">
-                <Status>#{personaData.persona_keyword[0]}</Status>
-                <Status>#{personaData.persona_keyword[1]}</Status>
-                <Status>#{personaData.persona_keyword[2]}</Status>
+                <Status>#{localPersonaData.persona_keyword[0]}</Status>
+                <Status>#{localPersonaData.persona_keyword[1]}</Status>
+                <Status>#{localPersonaData.persona_keyword[2]}</Status>
               </div>
 
               <div className="content">
@@ -358,18 +411,18 @@ const MoleculePersonaCard = ({
 
                 {activeTab1 === "lifestyle" && (
                   <TabContent Daily>
-                    <Body3 color="gray700">{personaData.lifestyle}</Body3>
+                    <Body3 color="gray700">{localPersonaData.lifestyle}</Body3>
                   </TabContent>
                 )}
                 {activeTab1 === "interests" && (
                   <TabContent Daily>
-                    <Body3 color="gray700">{personaData.interest}</Body3>
+                    <Body3 color="gray700">{localPersonaData.interest}</Body3>
                   </TabContent>
                 )}
                 {activeTab1 === "consumption" && (
                   <TabContent Daily>
                     <Body3 color="gray700">
-                      {personaData.consumption_pattern}
+                      {localPersonaData.consumption_pattern}
                     </Body3>
                   </TabContent>
                 )}
@@ -389,24 +442,24 @@ const MoleculePersonaCard = ({
             <div>
               <div className="header">
                 <H4>
-                  {personaData.persona}
+                  {localPersonaData.persona}
                   <span className="close" onClick={() => setShowPopup(false)} />
                 </H4>
                 <p className="info">
-                  <Sub3>{personaData.gender}</Sub3>
+                  <Sub3>{localPersonaData.gender}</Sub3>
                   <Sub3>
-                    {personaData.age.includes("세")
-                      ? personaData.age
-                      : `${personaData.age}세`}
+                    {localPersonaData.age.includes("세")
+                      ? localPersonaData.age
+                      : `${localPersonaData.age}세`}
                   </Sub3>
-                  <Sub3>{personaData.residence}</Sub3>
+                  <Sub3>{localPersonaData.residence}</Sub3>
                 </p>
               </div>
 
               <div className="keywords">
-                <Status>#{personaData.keyword[0]}</Status>
-                <Status>#{personaData.keyword[1]}</Status>
-                <Status>#{personaData.keyword[2]}</Status>
+                <Status>#{localPersonaData.keyword[0]}</Status>
+                <Status>#{localPersonaData.keyword[1]}</Status>
+                <Status>#{localPersonaData.keyword[2]}</Status>
               </div>
 
               <div className="content">
@@ -433,18 +486,18 @@ const MoleculePersonaCard = ({
 
                 {activeTab1 === "lifestyle" && (
                   <TabContent>
-                    <Body3 color="gray700">{personaData.lifestyle}</Body3>
+                    <Body3 color="gray700">{localPersonaData.lifestyle}</Body3>
                   </TabContent>
                 )}
                 {activeTab1 === "interests" && (
                   <TabContent>
-                    <Body3 color="gray700">{personaData.interest}</Body3>
+                    <Body3 color="gray700">{localPersonaData.interest}</Body3>
                   </TabContent>
                 )}
                 {activeTab1 === "consumption" && (
                   <TabContent>
                     <Body3 color="gray700">
-                      {personaData.consumption_pattern}
+                      {localPersonaData.consumption_pattern}
                     </Body3>
                   </TabContent>
                 )}
@@ -459,30 +512,70 @@ const MoleculePersonaCard = ({
       )}
 
       {/* 모집 요청 팝업 추가 */}
-      {showRequestPopup && (
-        <PopupWrap
-          Event
-          title="페르소나 모집 요청"
-          message={
-            <>
-              현재 베타서비스 기간으로 서비스 크레딧이 소진됩니다.
-              {/* 현재 {eventTitle} 기간으로 이벤트 크레딧이 소진됩니다. */}
-              <br />
-              (10 크레딧)
-              {/* ({creditRequestBusinessPersona} 크레딧) */}
-            </>
-          }
-          buttonType="Outline"
-          closeText="취소"
-          confirmText="시작하기"
-          isModal={false}
-          onCancel={() => setShowRequestPopup(false)}
-          onConfirm={() => {
-            // handleCloseRequestPopup();
-            creditUse();
-          }}
-        />
-      )}
+      {showRequestPopup &&
+        (eventState ? (
+          <PopupWrap
+            Event
+            title="페르소나 모집 요청"
+            message={
+              <>
+                현재 {eventTitle} 기간으로 이벤트 크레딧이 소진됩니다.
+                <br />({creditRequestBusinessPersona} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => setShowRequestPopup(false)}
+            onConfirm={() => {
+              // handleCloseRequestPopup();
+              creditUse();
+            }}
+          />
+        ) : trialState ? (
+          <PopupWrap
+            Check
+            title="페르소나 모집 요청"
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditRequestBusinessPersona} 크레딧)
+                <br />
+                신규 가입 2주간 무료로 사용 가능합니다.
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => setShowRequestPopup(false)}
+            onConfirm={() => {
+              // handleCloseRequestPopup();
+              creditUse();
+            }}
+          />
+        ) : (
+          <PopupWrap
+            Check
+            title="페르소나 모집 요청"
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditRequestBusinessPersona} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => setShowRequestPopup(false)}
+            onConfirm={() => {
+              // handleCloseRequestPopup();
+              creditUse();
+            }}
+          />
+        ))}
       {showCreditPopup && (
         <PopupWrap
           Warning
@@ -504,7 +597,7 @@ const MoleculePersonaCard = ({
   );
 };
 
-export default MoleculePersonaCard;
+export default MoleculeBussinessPersonaCard;
 
 const CustomButton = styled(Button)`
   min-width: 92px;
