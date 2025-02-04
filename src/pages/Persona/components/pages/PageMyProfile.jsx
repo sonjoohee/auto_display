@@ -180,7 +180,7 @@ const PageMyProfile = () => {
                       <ToggleList>
                         <IconButton onClick={handleContactClick}>
                           <img src={images.QuestionCircle} alt="고객 서비스" />
-                          <Sub3 color="gray700">문의사기 및 환불요청</Sub3>
+                          <Sub3 color="gray700">문의하기 및 환불요청</Sub3>
                         </IconButton>
                         <IconButton onClick={() => navigate("/Terms")}>
                           <img src={images.ExclamationCircle} alt="이용약관" />
