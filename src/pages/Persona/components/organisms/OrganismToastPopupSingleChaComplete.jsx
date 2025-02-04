@@ -217,7 +217,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                   <ChatBox Moder>
                     <Sub1 color="gray800" align="left">
                       {typeof item.indepth.question === "string"
-                        ? `Q${index + 1}(추가) ${item.indepth.question}`
+                        ? `Q${index + 1}-1 ${item.indepth.question}`
                         : ""}
                     </Sub1>
                   </ChatBox>
