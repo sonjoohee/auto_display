@@ -88,7 +88,7 @@ const OrganismProjectCard = ({ project, index }) => {
   const getRecruitStatusText = (project) => {
     const requestedPersonaCount = project.requestedPersona?.length || 0;
 
-    if (requestedPersonaCount === 0) return "대기 중";
+    if (requestedPersonaCount === 0) return "0명";
     // if (requestedPersonaCount === 3) return "모집 완료";
     return `${requestedPersonaCount}명 모집 중`;
   };
