@@ -324,7 +324,7 @@ const PagePersona3Select = () => {
                           <Body2 color={isIndepthEnabled ? "gray800" : "gray300"}>
                             추가 질문 생성
                             {!isIndepthEnabled && (
-                              <Sub3 color="gray300">(Basic 사용 불가)</Sub3>
+                              <Sub3 color="gray300" style={{ width: "auto" }}>(일반 플랜 사용 불가)</Sub3>
                             )}
                           </Body2>
                         </SwitchToggle>

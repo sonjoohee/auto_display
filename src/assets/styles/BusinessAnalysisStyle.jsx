@@ -1819,7 +1819,7 @@ export const ListBoxItem = styled.div`
       ? `rgba(34, 111, 255, 0.10)`
       : palette.white};
   transition: background 0.2s ease;
-  // flex-wrap: wrap;
+  flex-wrap: wrap;
   opacity: 0;
   animation: fadeIn 0.3s ease forwards;
 
