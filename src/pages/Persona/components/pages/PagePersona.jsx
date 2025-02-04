@@ -39,7 +39,9 @@ import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
 
 const PagePersona = () => {
   const navigate = useNavigate();
-  const [isLoadingBusinessAnalysis, setIsLoadingBusinessAnalysis] = useAtom(IS_LOADING_BUSINESS_ANALYSIS);
+  const [isLoadingBusinessAnalysis, setIsLoadingBusinessAnalysis] = useAtom(
+    IS_LOADING_BUSINESS_ANALYSIS
+  );
   const [isEditMode, setIsEditMode] = useAtom(IS_EDIT_MODE);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectId, setprojectId] = useAtom(PROJECT_ID);
@@ -151,25 +153,29 @@ const PagePersona = () => {
               />
               <CardWrap>
                 {/* 맞춤 페르소나 생성 */}
-                {personaButtonState1 === 0 && !isEditMode && !isLoadingBusinessAnalysis && (
-                  <CreateCard>
-                    <Body2 color="gray500">
-                      <img src={images.PeopleChatSquareFill} alt="" />
-                      내 비즈니스에 가장 중요한 고객은 누구일가요?<br />혹시 놓친 고객은 없을지 지금 바로 확인해보세요 
-                    </Body2>
+                {personaButtonState1 === 0 &&
+                  !isEditMode &&
+                  !isLoadingBusinessAnalysis && (
+                    <CreateCard>
+                      <Body2 color="gray500">
+                        <img src={images.PeopleChatSquareFill} alt="" />
+                        내 비즈니스에 가장 중요한 고객은 누구일가요?
+                        <br />
+                        혹시 놓친 고객은 없을지 지금 바로 확인해보세요
+                      </Body2>
 
-                    <Button
-                      Other
-                      Primary
-                      Fill
-                      Round
-                      onClick={handleCreatePersona}
-                    >
-                      <Body2 color="white">맞춤 페르소나 생성</Body2>
-                      <img src={images.MagicStickFillWhite} alt="" />
-                    </Button>
-                  </CreateCard>
-                )}
+                      <Button
+                        Other
+                        Primary
+                        Fill
+                        Round
+                        onClick={handleCreatePersona}
+                      >
+                        <Body2 color="white">페르소나 추천 받기</Body2>
+                        <img src={images.MagicStickFillWhite} alt="" />
+                      </Button>
+                    </CreateCard>
+                  )}
               </CardWrap>
             </MainSection>
             {/* 

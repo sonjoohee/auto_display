@@ -40,7 +40,7 @@ import {
   BUSINESS_ANALYSIS,
   USER_CREDITS,
 } from "../../../AtomStates.jsx";
-
+import { UserCreditCheck, UserCreditUse } from "../../../../utils/indexedDB.js";
 const MoleculeBussinessPersonaCard = ({
   title,
   keywords = [],
@@ -190,55 +190,29 @@ const MoleculeBussinessPersonaCard = ({
     }
 
     // 크레딧 사용전 사용 확인
-    try {
-      const response = await axios.post(
-        "https://wishresearch.kr/api/user/credit/check",
-        {
-          // target: eventState ? "event_credit" : "business_credit",
-          target: "event_credit",
-          mount: creditRequestBusinessPersona,
-          // mount: 10,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+    const creditPayload = {
+      // 기존 10 대신 additionalQuestionMount 사용
+      mount: creditRequestBusinessPersona,
+    };
+    const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
+    console.log("크레딧 체크 응답:", creditResponse);
 
-      console.log(response.data);
-    } catch (error) {
-      console.error(error);
+    if (creditResponse?.state !== "use") {
       setShowCreditPopup(true);
       return;
     }
 
-    // 크레딧 소모 API 요청
-    try {
-      const response = await axios.post(
-        "https://wishresearch.kr/api/user/credit/use",
-        {
-          title: "현재 미정 어떻게받을지 정해야함!",
-          service_type: "페르소나 모집 요청",
-          target: "",
-          state: "use",
-          mount: creditRequestBusinessPersona,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+    // 크레딧이 사용 가능한 상태면 사용 API 호출
+    const creditUsePayload = {
+      title: businessAnalysis.title,
+      service_type: "비즈니스 페르소나 모집 요청",
+      target: "",
+      state: "use",
+      mount: creditRequestBusinessPersona,
+    };
 
-      console.log("크레딧 소모 성공:", response.data);
-    } catch (error) {
-      console.error("크레딧 소모 중 오류 발생:", error);
-      return;
-    }
-
+    const creditUseResponse = await UserCreditUse(creditUsePayload, isLoggedIn);
+    console.log("크레딧 사용 응답:", creditUseResponse);
     handleRequestPersona();
   };
 
