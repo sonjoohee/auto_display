@@ -15,6 +15,7 @@ import {
 import {
   CreditTotal,
   CreditDashBoardItem,
+  CreditNoData,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import { useAtom } from "jotai";
 import { BUSINESS_ANALYSIS, PERSONA_STEP, USER_CREDITS } from "../../../AtomStates";
@@ -31,6 +32,7 @@ const MoleculeHeader = () => {
   const [showCreditToggle, setShowCreditToggle] = useState(false);
   const [isClosingCreditToggle, setIsClosingCreditToggle] = useState(false);
   const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const navigate = useNavigate();
 
@@ -87,12 +89,15 @@ const MoleculeHeader = () => {
         console.log(credits);
         if (credits) {
           setUserCredits(credits);
+          setIsLoggedIn(true);
         } else {
-          setUserCredits({ additional_credit: 0, regular_credit: 0, event_credit: 0 }); // 크레딧 값을 불러오지 못할 경우 기본값 설정
+          setUserCredits({ additional_credit: 0, regular_credit: 0, event_credit: 0 });
+          setIsLoggedIn(false);
         }
       } catch (error) {
         console.error("유저 크레딧 정보 조회 오류 발생:", error);
-        setUserCredits({ additional_credit: 0, regular_credit: 0, event_credit: 0 }); // 오류 발생 시 기본값 설정
+        setUserCredits({ additional_credit: 0, regular_credit: 0, event_credit: 0 });
+        setIsLoggedIn(false);
       }
     };
 
@@ -178,59 +183,43 @@ const MoleculeHeader = () => {
                   </button>
                 </div>
 
-                <ul>
-                  <li>
-                    <CreditDashBoardItem NoLine>
-                      <div className="icon yellow">
-                        <images.CoinFill
-                          width="9.6"
-                          height="6.1"
-                          color="#FFD54A"
-                        />
-                      </div>
-                      <Sub3 color="gray500" align="left">
-                        일반 크레딧
-                      </Sub3>
-                    </CreditDashBoardItem>
-                    <Sub3 color="gray500" align="right">
-                      {userCredits.additional_credit}
+                {isLoggedIn ? (
+                  <ul>
+                    <li>
+                      <CreditDashBoardItem NoLine>
+                        <div className="icon yellow">
+                          <images.CoinFill width="9.6" height="6.1" color="#FFD54A" />
+                        </div>
+                        <Sub3 color="gray500" align="left">일반 크레딧</Sub3>
+                      </CreditDashBoardItem>
+                      <Sub3 color="gray500" align="right">{userCredits.additional_credit}</Sub3>
+                    </li>
+                    <li>
+                      <CreditDashBoardItem NoLine>
+                        <div className="icon green">
+                          <images.CoinFill width="9.6" height="6.1" color="#34C759" />
+                        </div>
+                        <Sub3 color="gray500" align="left">구독 크레딧</Sub3>
+                      </CreditDashBoardItem>
+                      <Sub3 color="gray500" align="right">{userCredits.regular_credit}</Sub3>
+                    </li>
+                    <li>
+                      <CreditDashBoardItem NoLine>
+                        <div className="icon red">
+                          <images.CoinFill width="9.6" height="6.1" color="#FF5322" />
+                        </div>
+                        <Sub3 color="gray500" align="left">이벤트 크레딧</Sub3>
+                      </CreditDashBoardItem>
+                      <Sub3 color="gray500" align="right">{userCredits.event_credit}</Sub3>
+                    </li>
+                  </ul>
+                ) : (
+                  <CreditNoData>
+                    <Sub3 color="gray500">
+                      크레딧 내역은 로그인 후,<br />확인 가능합니다.
                     </Sub3>
-                  </li>
-                  <li>
-                    <CreditDashBoardItem NoLine>
-                      <div className="icon green">
-                        <images.CoinFill
-                          width="9.6"
-                          height="6.1"
-                          color="#34C759"
-                        />
-                      </div>
-                      <Sub3 color="gray500" align="left">
-                        구독 크레딧
-                      </Sub3>
-                    </CreditDashBoardItem>
-                    <Sub3 color="gray500" align="right">
-                      {userCredits.regular_credit}
-                    </Sub3>
-                  </li>
-                  <li>
-                    <CreditDashBoardItem NoLine>
-                      <div className="icon red">
-                        <images.CoinFill
-                          width="9.6"
-                          height="6.1"
-                          color="#FF5322"
-                        />
-                      </div>
-                      <Sub3 color="gray500" align="left">
-                        이벤트 크레딧
-                      </Sub3>
-                    </CreditDashBoardItem>
-                    <Sub3 color="gray500" align="right">
-                      {userCredits.event_credit}
-                    </Sub3>
-                  </li>
-                </ul>
+                  </CreditNoData>
+                )}
               </CreditToggle>
             )}
           </TotalCreditToggle>

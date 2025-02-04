@@ -501,7 +501,7 @@ const DescriptionSection = styled.div`
 
 const ListUL = styled.div`
   padding: 20px;
-  border-radius: 15px;
+  border-radius: 10px;
   background: ${palette.chatGray};
 
   ul {

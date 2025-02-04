@@ -740,12 +740,12 @@ const PagePersona4 = () => {
                     <span
                       className="prev"
                       onClick={() => handleSlide("prev")}
-                      style={{ opacity: currentSlide === 0 ? 1 : 1 }}
+                      style={{ opacity: currentSlide === 0 ? 0 : 1 }}
                     />
                     <span
                       className="next"
                       onClick={() => handleSlide("next")}
-                      style={{ opacity: currentSlide === 3 ? 1 : 1 }}
+                      style={{ opacity: currentSlide === 3 ? 0 : 1 }}
                     />
                   </FindCardButton>
 

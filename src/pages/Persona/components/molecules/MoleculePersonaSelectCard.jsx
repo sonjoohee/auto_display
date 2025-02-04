@@ -289,11 +289,22 @@ const ListSubtitle = styled.div``;
 const PersonaInfo = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 
   span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     color: ${palette.gray500};
     font-size: 14px;
+
+    + span:before {
+      width: 1px;
+      height: 10px;
+      display: block;
+      background: ${palette.gray500};
+      content: "";
+    }
   }
 `;
 

@@ -12,7 +12,7 @@ export const ContentsWrap = styled.div`
   gap: ${(props) => (props.isMobile ? "20px" : "40px")};
   padding: ${(props) => (props.isMobile ? "20px" : "0")};
   min-height: 100vh;
-  overflow: ${({ noScroll }) => (noScroll ? "hidden" : "auto")};
+  // overflow: ${({ noScroll }) => (noScroll ? "hidden" : "auto")};
 `;
 
 export const ContentSection = styled.div`
@@ -590,7 +590,7 @@ export const Tag = styled.span`
         case "TropicalRainForest":
           return "여행, 레저";
         case "DollarBill":
-          return "유아 출산";
+          return "유아, 출산";
         case "Olivine":
           return "인사, 비즈니스";
         case "ChineseGreen":
@@ -608,7 +608,7 @@ export const Tag = styled.span`
         case "Tuscany":
           return "환경, 에너지";
         case "VeryLightTangelo":
-          return "홈 리빙";
+          return "홈리빙";
         case "Orange":
           return "헬스케어, 바이오";
         case "CarnationPink":
@@ -1819,8 +1819,7 @@ export const ListBoxItem = styled.div`
       ? `rgba(34, 111, 255, 0.10)`
       : palette.white};
   transition: background 0.2s ease;
-  flex-wrap: wrap;
-
+  // flex-wrap: wrap;
   opacity: 0;
   animation: fadeIn 0.3s ease forwards;
 
@@ -1881,7 +1880,8 @@ export const ListSubtitle = styled.div`
       display: -webkit-box;
       -webkit-line-clamp: 5;
       -webkit-box-orient: vertical;
-      max-height: 102px;
+      // max-height: 102px;
+      height: 90px;
       overflow: hidden;
       margin-top: auto;
     `}
@@ -3126,4 +3126,9 @@ export const NoData = styled.div`
   )}; 
   border-radius: ${(props) => (props.border ? "10px" : "0")};
   border: ${(props) => (props.border ? `1px solid ${palette.outlineGray}` : "none")};
+`;
+
+export const CreditNoData = styled.div`
+  padding-top: 16px;
+  border-top: 1px solid ${palette.chatGray};
 `;
