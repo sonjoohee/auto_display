@@ -30,6 +30,16 @@ import {
   TabContent,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import axios from "axios";
+import { updateProjectOnServer } from "../../../../utils/indexedDB";
+import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
+import { createRequestPersonaOnServer } from "../../../../utils/indexedDB";
+import { useAtom } from "jotai";
+import { 
+  PROJECT_ID, 
+  IS_LOGGED_IN, 
+  BUSINESS_ANALYSIS,
+  USER_CREDITS
+} from "../../../../pages/AtomStates.jsx";
 
 const MoleculePersonaCard = ({
   title,
@@ -52,6 +62,11 @@ const MoleculePersonaCard = ({
   viewType = "list",
   personaData = {},
 }) => {
+  const [projectId, setProjectId] = useAtom(PROJECT_ID);
+  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
+  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
+
   const [isChecked, setIsChecked] = useState(false);
   const [requestStatus, setRequestStatus] = useState(isRequest);
   const [showRequestPopup, setShowRequestPopup] = useState(false);
@@ -85,12 +100,67 @@ const MoleculePersonaCard = ({
 
   const handleRequestClick = () => {
     setShowRequestPopup(true);
+  }
+
+  const handleRequestPersona = async () => {
+    setSelectedPersonaForPopup(null);
+
+    try {
+      // 현재 서버에 저장된 requestedPersona 값을 가져옴
+      const currentProject = await getProjectByIdFromIndexedDB(
+        projectId,
+        isLoggedIn
+      );
+      const currentRequestedPersona = currentProject?.requestedPersona || [];
+
+      // // 중복 체크
+      // const isDuplicate = currentRequestedPersona.some(
+      //   (persona) => persona.personaIndex === personaIndex
+      // );
+
+      // if (!isDuplicate) {
+        // 새로운 requestedPersona 배열 생성
+        const newRequestedPersona = [
+          ...currentRequestedPersona,
+          personaData,
+        ];
+
+        console.log("newRequestedPersona", newRequestedPersona);
+
+        // 서버 업데이트
+        await updateProjectOnServer(
+          projectId,
+          {
+            requestedPersona: newRequestedPersona,
+          },
+          isLoggedIn
+        );
+
+        const requestData = {
+          projectId: projectId,
+          requestDate: new Date().toLocaleString("ko-KR", {
+            timeZone: "Asia/Seoul",
+          }),
+          businessAnalysis: businessAnalysis,
+          personaRequest: personaData,
+        };
+        createRequestPersonaOnServer(requestData, isLoggedIn);
+        // 로컬 상태 업데이트
+        // setRequestedPersona(newRequestedPersona);
+        // setShowRequestPopup(true);
+      // } else {
+      //   setShowSuccessPopup(true);
+      //   // console.log("이미 요청된 페르소나입니다.");
+      // }
+    } catch (error) {
+      console.error("페르소나 요청 중 오류 발생:", error);
+    }
   };
 
-  const handleCloseRequestPopup = () => {
-    setShowRequestPopup(false);
-    setRequestStatus(false);
-  };
+  // const handleCloseRequestPopup = () => {
+  //   setShowRequestPopup(false);
+  //   setRequestStatus(false);
+  // };
 
   const handleDetailClick = () => {
     setShowPopup(true);
@@ -99,6 +169,7 @@ const MoleculePersonaCard = ({
   const creditUse = async () => {
     // 팝업 닫기
     setShowRequestPopup(false);
+    setRequestStatus(false);
 
     const accessToken = sessionStorage.getItem("accessToken");
     if (!accessToken) {
@@ -106,33 +177,35 @@ const MoleculePersonaCard = ({
       return;
     }
 
-    // 크레딧 소모 API 요청
-    try {
-      const response = await axios.post(
-        // 크레딧 소모 API 엔드포인트
-        "https://wishresearch.kr/api/user/credit/use", 
-        // "http://localhost:8000/api/user/credit/use", 
-        {
-          title: "현재 미정 어떻게받을지 정해야함! ",
-          service_type: "페르소나 모집 요청",
-          target: "",
-          state: "use",
-          mount: 10,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+    // // 크레딧 소모 API 요청
+    // try {
+    //   const response = await axios.post(
+    //     // 크레딧 소모 API 엔드포인트
+    //     "https://wishresearch.kr/api/user/credit/use", 
+    //     // "http://localhost:8000/api/user/credit/use", 
+    //     {
+    //       title: "현재 미정 어떻게받을지 정해야함! ",
+    //       service_type: "페르소나 모집 요청",
+    //       target: "",
+    //       state: "use",
+    //       mount: 10,
+    //     },
+    //     {
+    //       headers: {
+    //         Authorization: `Bearer ${accessToken}`,
+    //         "Content-Type": "application/json",
+    //       },
+    //     }
+    //   );
 
-      console.log("크레딧 소모 성공:", response.data);
-      // 추가적인 성공 처리 로직
-    } catch (error) {
-      console.error("크레딧 소모 중 오류 발생:", error);
-      // 오류 처리 로직
-    }
+    //   console.log("크레딧 소모 성공:", response.data);
+    //   // 추가적인 성공 처리 로직
+    // } catch (error) {
+    //   console.error("크레딧 소모 중 오류 발생:", error);
+    //   // 오류 처리 로직
+    // }
+
+    handleRequestPersona();
   };
 
   return (
@@ -491,7 +564,7 @@ const MoleculePersonaCard = ({
           isModal={false}
           onCancel={() => setShowRequestPopup(false)}
           onConfirm={() => {
-            handleCloseRequestPopup();
+            // handleCloseRequestPopup();
             creditUse();
           }}
         />
