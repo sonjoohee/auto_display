@@ -69,7 +69,9 @@ import {
   PERSONA_BUTTON_STATE_3,
   SINGLE_INTERVIEW_QUESTION_LIST,
   PURPOSE_ITEMS_SINGLE,
+  CREDIT_ADDITIONAL_QUESTION,
 } from "../../../../pages/AtomStates.jsx";
+import { UserCreditCheck, UserCreditUse } from "../../../../utils/indexedDB";
 
 const FULL_DEFINITION_TEXT =
   "사용자 트렌드 민감도 분석은 사용자가 시장의 최신 트렌드에 얼마나 빠르고 효과적으로 반응하는지를 측정하는 방법론입니다. 이 분석은 사용자가 새로운 트렌드를 어떻게 인식하고, 그 트렌드에 따라 행동이 어떻게 변화하는지 파악하는 데 중점을 둡니다.";
@@ -119,11 +121,17 @@ const PagePersona3Select = () => {
   const [requestPersonaList, setRequestPersonaList] =
     useAtom(REQUEST_PERSONA_LIST);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  // const [allBusinessPersonas, setAllBusinessPersonas] = useState([]); // 전체 비즈니스 페르소나 상태
+  const [showCreditPopup, setShowCreditPopup] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [businessAnalysis, setBusinessAnalysis] = useState({ title: "맞춤 페르소나 인터뷰" });
+  const [showRequestPopup, setShowRequestPopup] = useState(false);
 
   const [personaButtonState3, setPersonaButtonState3] = useAtom(
     PERSONA_BUTTON_STATE_3
   );
+
+  const [creditAdditionalQuestion] = useAtom(CREDIT_ADDITIONAL_QUESTION);
+
   const [isIndepthEnabled, setIsIndepthEnabled] = useState(false);
 
   useEffect(() => {
@@ -152,15 +160,67 @@ const PagePersona3Select = () => {
     };
   }, [showToast]);
 
+
+
+  // 모집 요청 팝업 닫기 함수
+  const handleCloseRequestPopup = () => {
+    setShowRequestPopup(false);
+  };
+
+  // 크레딧 체크 및 사용 함수
+  const creditUse = async () => {
+    try {
+
+      const creditPayload = {
+        // 기존 10 대신 additionalQuestionMount 사용
+        mount: creditAdditionalQuestion,
+      }
+
+      const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
+      console.log("크레딧 체크 응답:", creditResponse);
+
+      if (creditResponse?.state !== "use") {
+        setShowCreditPopup(true);
+        return;
+      }
+
+      // 크레딧이 사용 가능한 상태면 사용 API 호출
+      const creditUsePayload = {
+        title: businessAnalysis.title,
+        service_type: "맞춤 페르소나",
+        target: "",
+        state: "use",
+        mount: creditAdditionalQuestion,
+      };
+
+      const creditUseResponse = await UserCreditUse(creditUsePayload, isLoggedIn);
+      console.log("크레딧 사용 응답:", creditUseResponse);
+
+      // 이후 인터뷰 시작 등 추가 로직 처리 (예를 들어 인터뷰 준비 팝업 표시)
+      setShowPopup(true);
+    } catch (error) {
+      console.error("크레딧 체크 실패:", error);
+      setShowCreditPopup(true);
+      return;
+    }
+  };
+
+
   const handleStartInterview = () => {
     console.log("인터뷰 시작");
     console.log("personaList", personaList);
     console.log("singleInterviewQuestionList", singleInterviewQuestionList);
-    // console.log("selectedInterviewPurpose", selectedInterviewPurpose);
     console.log("selectedInterviewPurposeData", selectedInterviewPurposeData);
     console.log("purposeItemsSingleAtom", purposeItemsSingleAtom);
-    setShowPopup(true);
+    
+    if (isIndepthEnabled) {
+    
+      setShowRequestPopup(true);
+    } else {
+      setShowPopup(true);
+    }
   };
+
 
   const handlePopupClose = () => {
     setShowPopup(false);
@@ -420,6 +480,45 @@ const PagePersona3Select = () => {
           isIndepth={isIndepthEnabled}
         />
       ) : null}
+
+      {showCreditPopup && (
+        <PopupWrap
+          Warning
+          title="크레딧 부족"
+          message="보유한 이벤트 크레딧이 부족합니다. 크레딧을 충전한 후 다시 시도해주세요."
+          buttonType="Outline"
+          closeText="확인"
+          isModal={false}
+          onCancel={() => setShowCreditPopup(false)}
+          onConfirm={() => setShowCreditPopup(false)}
+        />
+      )}
+
+       {/* 모집 요청 팝업 추가 */}
+       {showRequestPopup && (
+        <PopupWrap
+          Event
+          title="추가 질문"
+          message={
+            <>
+              현재 (베타서비스) 기간으로 (서비스)크레딧이 소진됩니다.
+              <br />
+              (10 크레딧)
+            </>
+          }
+          buttonType="Outline"
+          closeText="취소"
+          confirmText="시작하기"
+          isModal={false}
+          onCancel={() => setShowRequestPopup(false)}
+          onConfirm={() => {
+            handleCloseRequestPopup();
+            creditUse();
+          }}
+        />
+      )}
+
+      
     </>
   );
 };

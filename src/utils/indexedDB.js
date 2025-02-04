@@ -1119,6 +1119,43 @@ export const InterviewXPersonaSingleInterviewReportTab3 = async (
   }
 };
 
+
+// 크레딧 조회
+export const CreditInfo = async (isLoggedIn) => {
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.get(
+      "https://wishresearch.kr/api/user/credit/state",
+
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+
+    return response.data;
+  } catch (error) {
+   
+    console.error("크레딧 정보 조회 오류 발생:", error);
+    console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
 // 유저 크레딧 조회
 export const UserCreditInfo = async (isLoggedIn) => {
   if (!isLoggedIn) {
@@ -1144,15 +1181,114 @@ export const UserCreditInfo = async (isLoggedIn) => {
       }
     );
 
-    if (!response.data?.time || !response.data?.objectId) {
-      return response.data;
-    }
+
+    return response.data;
   } catch (error) {
+    if (
+      error.response &&
+      error.response.data &&
+      error.response.data.state === "Fail"
+    ) {
+
+      return error.response.data;
+    }
+
     console.error("유저 크레딧 정보 조회 오류 발생:", error);
     console.error("오류 상세:", error.response?.data || error.message);
     throw error;
   }
 };
+
+
+
+// 크레딧 사용전 사용 확인
+export const UserCreditCheck = async (data, isLoggedIn) => {
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/api/user/credit/check",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    if (
+      error.response &&
+      error.response.data &&
+      error.response.data.state === "Fail"
+    ) {
+
+      return error.response.data;
+    }
+
+    console.error("유저 크레딧 정보 조회 오류 발생:", error);
+    console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
+
+// 크레딧 사용
+export const UserCreditUse = async (data,isLoggedIn) => {
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/api/user/credit/use",
+      data,
+      {
+        headers: {
+
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    if (
+      error.response &&
+      error.response.data &&
+      error.response.data.state === "Fail"
+    ) {
+
+      return error.response.data;
+    }
+
+    console.error("유저 크레딧 정보 조회 오류 발생:", error);
+    console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
 
 // interviewx 1.1 api 수정 250131
 // 비즈니스 카테고리 분석 250131

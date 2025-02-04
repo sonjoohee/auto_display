@@ -136,6 +136,14 @@ import {
   PROJECT_LOADING,
   PROJECT_REFRESH_TRIGGER,
   IS_LOADING_BUSINESS_ANALYSIS,
+  CREDIT_CUSTOM_THEORY,
+  CREDIT_ADDITIONAL_QUESTION,
+  CREDIT_INDEPTH_INTERVIEW,
+  CREDIT_REQUEST_CUSTOM_PERSONA,
+  CREDIT_REQUEST_BUSINESS_PERSONA,
+  EVENT_TITLE,
+  EVENT_STATE,
+  TRIAL_STATE
 } from "../../../AtomStates";
 import { ContentsWrap } from "../../../../assets/styles/BusinessAnalysisStyle";
 import { Body1, Body3, Sub3, Caption1, Caption2 } from "../../../../assets/styles/Typography";
@@ -146,6 +154,9 @@ import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
 import MoleculeHeader from "../molecules/MoleculeHeader";
 import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
+import { CreditInfo } from "../../../../utils/indexedDB";
+
+
 const PageMain = () => {
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -451,6 +462,43 @@ const PageMain = () => {
   );
   const [isEditMode, setIsEditMode] = useAtom(IS_EDIT_MODE);
   const [isShowToast, setIsShowToast] = useAtom(IS_SHOW_TOAST);
+
+  // Credit-related atoms
+  const [setCreditRequestCustomPersona] = useAtom(CREDIT_REQUEST_CUSTOM_PERSONA);
+  const [setCreditRequestBusinessPersona] = useAtom(CREDIT_REQUEST_BUSINESS_PERSONA);
+  const [setCreditCustomTheory] = useAtom(CREDIT_CUSTOM_THEORY);
+  const [setCreditAdditionalQuestion] = useAtom(CREDIT_ADDITIONAL_QUESTION);
+  const [setCreditIndepthInterview] = useAtom(CREDIT_INDEPTH_INTERVIEW);
+  const [setEventTitle] = useAtom(EVENT_TITLE);
+  const [setEventState] = useAtom(EVENT_STATE);
+  const [setTrialState] = useAtom(TRIAL_STATE);
+  
+
+  useEffect(() => {
+    const fetchCreditInfo = async () => {
+      try {
+        const response = await CreditInfo(isLoggedIn);
+        console.log("Fetched credit info:", response);
+
+        if (response) {
+          setCreditRequestCustomPersona(response.request_custom_persona);
+          setCreditRequestBusinessPersona(response.request_business_persona);
+          setCreditCustomTheory(response.custom_theory);
+          setCreditAdditionalQuestion(response.additional_question);
+          setCreditIndepthInterview(response.indepth_interview);
+          setEventTitle(response.event_title);
+          setEventState(response.event_state);
+          setTrialState(response.trial_state);
+        }
+       
+      } catch (error) {
+        console.error("Failed to fetch credit info:", error);
+      }
+    };
+
+    // Call the API every time PageMain is rendered (or when isLoggedIn changes)
+    fetchCreditInfo();
+  }, [isLoggedIn]);
 
   useEffect(() => {
     window.scrollTo(0, 0);

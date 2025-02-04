@@ -29,6 +29,7 @@ import {
   INTERVIEW_QUESTION_LIST,
   CUSTOM_THEORY_DATA,
   All_BUSINESS_PERSONA_LIST,
+  CREDIT_REQUEST_CUSTOM_PERSONA,
 } from "../../../AtomStates";
 import {
   ContentsWrap,
@@ -104,6 +105,8 @@ import MoleculeRecreate from "../molecules/MoleculeRecreate";
 import { InterviewXInterviewReportPersonaFilter } from "../../../../utils/indexedDB";
 import { InterviewXPersonaRequestType } from "../../../../utils/indexedDB";
 import { InterviewXPersonaRequestRequest } from "../../../../utils/indexedDB";
+import { UserCreditCheck, UserCreditUse } from "../../../../utils/indexedDB";
+
 
 const PagePersona2 = () => {
   const [customPersonaForm, setCustomPersonaForm] = useState({
@@ -177,6 +180,10 @@ const PagePersona2 = () => {
   const [interviewQuestionList, setInterviewQuestionList] = useAtom(
     INTERVIEW_QUESTION_LIST
   );
+  //크래딧
+  const [creditRequestCustomPersona] = useAtom(CREDIT_REQUEST_CUSTOM_PERSONA);
+
+
   // 로딩 상태 관리
   const loadingRef = useRef(false);
   const [viewType, setViewType] = useState("list"); // 'list' 또는 'card'
@@ -280,6 +287,8 @@ const PagePersona2 = () => {
 
   const [currentLoadingType, setCurrentLoadingType] = useState(null);
   // const [isLoadingPage, setIsLoadingPage] = useState(true);
+
+  const [showCreditPopup, setShowCreditPopup] = useState(false);
 
   const [steps, setSteps] = useState([
     { number: 1, label: "비즈니스 분석", active: true },
@@ -1241,10 +1250,48 @@ const PagePersona2 = () => {
   const handleCustomizePopupClose = () => {
     setShowCustomizePopup(false);
   };
-  const handleCustomizePopupConfirm = () => {
-    submitCustomPersonaRequest();
-    setShowCustomizePopup(false);
+  // const handleCustomizePopupConfirm = () => {
+  //   submitCustomPersonaRequest();
+  //   setShowCustomizePopup(false);
+  // };
+
+  const handleCustomizePopupConfirm = async () => {
+    try {
+
+      const creditPayload = {
+        mount: creditRequestCustomPersona,
+      };
+     
+      const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
+      console.log("크레딧 체크 응답:", creditResponse);
+
+      if (creditResponse?.state !== "use") {
+        setShowCreditPopup(true);
+        return;
+      }
+
+      // 만약 creditResponse.state가 "use"라면 아래 payload 형식으로 API 호출
+      const creditUsePayload = {
+        title: businessAnalysis.title,
+        service_type: "맞춤 페르소나",
+        target: "",
+        state: "use",
+        mount: creditRequestCustomPersona,
+      };
+
+      const creditUseResponse = await UserCreditUse(creditUsePayload, isLoggedIn);
+      console.log("크레딧 사용 응답:", creditUseResponse);
+
+      // 이후 커스텀 페르소나 요청 진행 (예: 요청 API 호출)
+      submitCustomPersonaRequest();
+      setShowCustomizePopup(false);
+    } catch (error) {
+      console.error("크레딧 체크 실패:", error);
+      setShowCreditPopup(true);
+    }
   };
+
+
   const [state, setState] = useState({
     isAccordionOpen: false,
     formState: {
@@ -2432,6 +2479,18 @@ const PagePersona2 = () => {
         />
       )}
       {isLoadingType && <div className="loading-bar">Loading...</div>}
+      {showCreditPopup && (
+        <PopupWrap
+          Warning
+          title="크레딧 부족"
+          message="보유한 이벤트 크레딧이 부족합니다. 크레딧을 충전한 후 다시 시도해주세요."
+          buttonType="Outline"
+          closeText="확인"
+          isModal={false}
+          onCancel={() => setShowCreditPopup(false)}
+          onConfirm={() => setShowCreditPopup(false)}
+        />
+      )}
     </>
   );
 };
