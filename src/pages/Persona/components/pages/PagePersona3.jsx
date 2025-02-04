@@ -23,6 +23,7 @@ import {
   EVENT_STATE,
   EVENT_TITLE,
   TRIAL_STATE,
+  CREDIT_REQUEST_BUSINESS_PERSONA,
 } from "../../../AtomStates";
 // import { SELECTED_INTERVIEW_TYPE } from "../../../../AtomStates";
 
@@ -80,11 +81,14 @@ import PopupWrap from "../../../../assets/styles/Popup";
 import OrganismToastPopup from "../organisms/OrganismToastPopup";
 import MoleculeInterviewPurpose from "../molecules/MoleculeInterviewPurpose.jsx";
 import OrganismCustomization from "../organisms/OrganismCustomization.jsx";
+import { UserCreditCheck, UserCreditUse } from "../../../../utils/indexedDB";
 
 const FULL_DEFINITION_TEXT =
   "사용자 트렌드 민감도 분석은 사용자가 시장의 최신 트렌드에 얼마나 빠르고 효과적으로 반응하는지를 측정하는 방법론입니다. 이 분석은 사용자가 새로운 트렌드를 어떻게 인식하고, 그 트렌드에 따라 행동이 어떻게 변화하는지 파악하는 데 중점을 둡니다.";
 
 const PagePersona3 = () => {
+  const [creditRequestBusinessPersona, setCreditRequestBusinessPersona] =
+    useAtom(CREDIT_REQUEST_BUSINESS_PERSONA);
   const [eventState, setEventState] = useAtom(EVENT_STATE);
   const [eventTitle, setEventTitle] = useAtom(EVENT_TITLE);
   const [trialState, setTrialState] = useAtom(TRIAL_STATE);
@@ -167,6 +171,8 @@ const PagePersona3 = () => {
   const [personaListState, setPersonaListState] = useState(null);
   const [showInterviewTypeAlert, setShowInterviewTypeAlert] = useState(false);
   const [showRequestPopup, setShowRequestPopup] = useState(false);
+
+  const [showCreditPopup, setShowCreditPopup] = useState(false);
 
   // 인터뷰 목적 선택 핸들러 수정
   const handleInterviewPurposeSelect = (title) => {
@@ -478,21 +484,54 @@ const PagePersona3 = () => {
     setSelectedInterviewPurpose(purpose);
   };
 
-  const handleCloseRequestPopup = () => {
-    setShowRequestPopup(false);
-    setShowCustomButton(false);
-    setCustomizations((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        purposeText: "",
-        showMethodology: false,
-        isEditing: false,
-        definitionText: FULL_DEFINITION_TEXT,
-        editedDefinition: "",
-        editedPurpose: "",
-      },
-    ]);
+  const handleCloseRequestPopup = async () => {
+    try {
+      const creditPayload = {
+        mount: creditRequestBusinessPersona,
+      };
+
+      const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
+      console.log("크레딧 체크 응답:", creditResponse);
+
+      if (creditResponse?.state !== "use") {
+        setShowRequestPopup(false);
+        setShowCreditPopup(true);
+        return;
+      }
+
+      // 만약 creditResponse.state가 "use"라면 아래 payload 형식으로 API 호출
+      const creditUsePayload = {
+        title: businessAnalysis.title,
+        service_type: "맞춤 페르소나",
+        target: "",
+        state: "use",
+        mount: creditRequestBusinessPersona,
+      };
+
+      const creditUseResponse = await UserCreditUse(
+        creditUsePayload,
+        isLoggedIn
+      );
+      console.log("크레딧 사용 응답:", creditUseResponse);
+
+      setShowRequestPopup(false);
+      setShowCustomButton(false);
+      setCustomizations((prev) => [
+        ...prev,
+        {
+          id: Date.now(),
+          purposeText: "",
+          showMethodology: false,
+          isEditing: false,
+          definitionText: FULL_DEFINITION_TEXT,
+          editedDefinition: "",
+          editedPurpose: "",
+        },
+      ]);
+    } catch (error) {
+      console.error("크레딧 체크 실패:", error);
+      setShowCreditPopup(true);
+    }
   };
 
   return (
@@ -733,7 +772,8 @@ const PagePersona3 = () => {
             </MainSection>
 
             {/* 크레딧 소진팝업 */}
-            {/* <PopupWrap
+            {showCreditPopup && (
+            <PopupWrap
               Warning
               title="크레딧이 모두 소진되었습니다"
               message={
@@ -745,7 +785,10 @@ const PagePersona3 = () => {
               buttonType="Outline"
               closeText="확인"
               isModal={false}
-            /> */}
+              onCancel={() => setShowCreditPopup(false)}
+              onConfirm={() => setShowCreditPopup(false)}
+            />
+            )}
 
             {/* 인터뷰 커스터마이징 하기 팝업 */}
             {showRequestPopup &&
