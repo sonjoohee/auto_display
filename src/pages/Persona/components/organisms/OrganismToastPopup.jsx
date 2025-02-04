@@ -711,7 +711,8 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
       onClose();
     }
     setPersonaButtonState3(0);
-    onClose();
+    // onClose();
+    window.location.href = "/";
   };
 
   const handleWarningContinue = () => {
