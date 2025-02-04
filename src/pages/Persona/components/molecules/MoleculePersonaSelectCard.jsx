@@ -38,7 +38,9 @@ const MoleculePersonaSelectCard = ({
     ].find((p) => p.persona_id === persona.persona_id);
 
     if (interviewType === "single") {
-      if (selectedPersonas === persona.persona_id) {
+      console.log("personaListState.selected", personaListState.selected);
+      if (personaListState?.selected?.[0]?.persona_id === persona.persona_id) {
+        console.log("선택 해제");
         // 선택 해제
         setPersonaListState({
           selected: [],
@@ -46,6 +48,7 @@ const MoleculePersonaSelectCard = ({
         });
         onPersonaSelect(null);
       } else {
+        console.log("새로운 선택");
         // 새로운 선택
         const newUnselected = personaListState.unselected.filter(
           (p) => p.persona_id !== persona.persona_id
@@ -289,11 +292,22 @@ const ListSubtitle = styled.div``;
 const PersonaInfo = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 
   span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     color: ${palette.gray500};
     font-size: 14px;
+
+    + span:before {
+      width: 1px;
+      height: 10px;
+      display: block;
+      background: ${palette.gray500};
+      content: "";
+    }
   }
 `;
 

@@ -711,7 +711,8 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
       onClose();
     }
     setPersonaButtonState3(0);
-    onClose();
+    // onClose();
+    window.location.href = "/";
   };
 
   const handleWarningContinue = () => {
@@ -1343,6 +1344,7 @@ const Status = styled.div`
         width: 8px;
         height: 8px;
         background: url(${images.CheckGreen}) center no-repeat;
+        background-size: contain;
       }
     `}
 `;

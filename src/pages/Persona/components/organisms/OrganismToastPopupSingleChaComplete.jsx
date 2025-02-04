@@ -202,13 +202,11 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
               </ChatBox>
             </ChatItem>
 
-
             {/* indepth 항목이 존재할 경우 추가 UI 렌더링 */}
             {console.log("🚀 ~ item.indepth:", item.indepth)}
             {item.indepth && (
               <>
                 <ChatItem Moder>
-
                   <Persona Moder color="Gainsboro" size="Medium" Round>
                     <img src={personaImages.PersonaModer} alt="모더" />
                     <span>
@@ -219,7 +217,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                   <ChatBox Moder>
                     <Sub1 color="gray800" align="left">
                       {typeof item.indepth.question === "string"
-                        ? item.indepth.question
+                        ? `Q${index + 1}-1 ${item.indepth.question}`
                         : ""}
                     </Sub1>
                   </ChatBox>
@@ -242,7 +240,6 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                 </ChatItem>
               </>
             )}
-
           </React.Fragment>
         );
       }

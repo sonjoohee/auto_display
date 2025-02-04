@@ -432,7 +432,7 @@ const BgBoxList = styled.div`
   flex-direction: column;
   gap: 8px;
   width: 100%;
-  margin-top: 12px;
+  margin-top: 4px;
 `;
 
 const BgBoxItem = styled.div`

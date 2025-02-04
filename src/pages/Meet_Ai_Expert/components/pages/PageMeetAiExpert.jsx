@@ -774,7 +774,7 @@ const PageMeetAiExpert = () => {
                 }}
               >
                 <strong>전략 컨설턴트</strong>
-                <p>차별화 전략과 리스트 분석 제시</p>
+                <p>차별화 전략과 리스크 분석 제시</p>
                 <span>
                   <img src={images.ImgStrategy} alt="" />
                 </span>
