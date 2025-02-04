@@ -69,7 +69,10 @@ import {
   PERSONA_BUTTON_STATE_3,
   SINGLE_INTERVIEW_QUESTION_LIST,
   PURPOSE_ITEMS_SINGLE,
-  CREDIT_ADDITIONAL_QUESTION,
+  CREDIT_INDEPTH_INTERVIEW,
+  EVENT_STATE,
+  EVENT_TITLE,
+  TRIAL_STATE,
 } from "../../../../pages/AtomStates.jsx";
 import { UserCreditCheck, UserCreditUse } from "../../../../utils/indexedDB";
 
@@ -132,7 +135,10 @@ const PagePersona3Select = () => {
     PERSONA_BUTTON_STATE_3
   );
 
-  const [creditAdditionalQuestion] = useAtom(CREDIT_ADDITIONAL_QUESTION);
+  const [creditIndepthInterview] = useAtom(CREDIT_INDEPTH_INTERVIEW);
+  const [eventState] = useAtom(EVENT_STATE);
+  const [eventTitle] = useAtom(EVENT_TITLE);
+  const [trialState] = useAtom(TRIAL_STATE);
 
   const [isIndepthEnabled, setIsIndepthEnabled] = useState(false);
 
@@ -172,7 +178,7 @@ const PagePersona3Select = () => {
     try {
       const creditPayload = {
         // 기존 10 대신 additionalQuestionMount 사용
-        mount: creditAdditionalQuestion,
+        mount: creditIndepthInterview,
       };
 
       const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
@@ -186,10 +192,10 @@ const PagePersona3Select = () => {
       // 크레딧이 사용 가능한 상태면 사용 API 호출
       const creditUsePayload = {
         title: businessAnalysis.title,
-        service_type: "맞춤 페르소나",
+        service_type: "인뎁스 인터뷰",
         target: "",
         state: "use",
-        mount: creditAdditionalQuestion,
+        mount: creditIndepthInterview,
       };
 
       const creditUseResponse = await UserCreditUse(
@@ -499,15 +505,15 @@ const PagePersona3Select = () => {
       )}
 
       {/* 모집 요청 팝업 추가 */}
-      {/* {showRequestPopup &&
+      {showRequestPopup &&
         (eventState ? (
           <PopupWrap
             Event
-            title="인터뷰 커스터마이징 하기"
+            title="인뎁스 인터뷰"
             message={
               <>
                 현재 {eventTitle} 기간으로 이벤트 크레딧이 소진됩니다.
-                <br />({creditCustomTheory} 크레딧)
+                <br />({creditIndepthInterview} 크레딧)
               </>
             }
             buttonType="Outline"
@@ -515,16 +521,19 @@ const PagePersona3Select = () => {
             confirmText="시작하기"
             isModal={false}
             onCancel={() => setShowRequestPopup(false)}
-            onConfirm={handleCloseRequestPopup}
+            onConfirm={() => {
+              handleCloseRequestPopup();
+              creditUse();
+            }}
           />
         ) : trialState ? (
           <PopupWrap
             Check
-            title="인터뷰 커스터마이징 하기"
+            title="인뎁스 인터뷰"
             message={
               <>
                 해당 서비스 사용시 크레딧이 소진됩니다.
-                <br />({creditCustomTheory} 크레딧)
+                <br />({creditIndepthInterview} 크레딧)
                 <br />
                 신규 가입 2주간 무료로 사용 가능합니다.
               </>
@@ -534,16 +543,19 @@ const PagePersona3Select = () => {
             confirmText="시작하기"
             isModal={false}
             onCancel={() => setShowRequestPopup(false)}
-            onConfirm={handleCloseRequestPopup}
+            onConfirm={() => {
+              handleCloseRequestPopup();
+              creditUse();
+            }}
           />
         ) : (
           <PopupWrap
             Check
-            title="인터뷰 커스터마이징 하기"
+            title="인뎁스 인터뷰"
             message={
               <>
                 해당 서비스 사용시 크레딧이 소진됩니다.
-                <br />({creditCustomTheory} 크레딧)
+                <br />({creditIndepthInterview} 크레딧)
               </>
             }
             buttonType="Outline"
@@ -551,31 +563,12 @@ const PagePersona3Select = () => {
             confirmText="시작하기"
             isModal={false}
             onCancel={() => setShowRequestPopup(false)}
-            onConfirm={handleCloseRequestPopup}
+            onConfirm={() => {
+              handleCloseRequestPopup();
+              creditUse();
+            }}
           />
-        ))} */}
-      {showRequestPopup && (
-        <PopupWrap
-          Event
-          title="추가 질문"
-          message={
-            <>
-              현재 (베타서비스) 기간으로 (서비스)크레딧이 소진됩니다.
-              <br />
-              (10 크레딧)
-            </>
-          }
-          buttonType="Outline"
-          closeText="취소"
-          confirmText="시작하기"
-          isModal={false}
-          onCancel={() => setShowRequestPopup(false)}
-          onConfirm={() => {
-            handleCloseRequestPopup();
-            creditUse();
-          }}
-        />
-      )}
+        ))}
     </>
   );
 };

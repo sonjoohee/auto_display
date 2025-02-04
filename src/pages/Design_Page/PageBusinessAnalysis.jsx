@@ -8,11 +8,11 @@ import { useAtom } from "jotai";
 import { Button } from "../../assets/styles/ButtonStyle";
 import images from "../../assets/styles/Images";
 import { palette } from "../../assets/styles/Palette";
-import { 
-  ContentsWrap, 
-  MainContent, 
-  AnalysisWrap, 
-  MainSection, 
+import {
+  ContentsWrap,
+  MainContent,
+  AnalysisWrap,
+  MainSection,
   CardWrap,
 } from "../../assets/styles/BusinessAnalysisStyle";
 
@@ -29,7 +29,7 @@ const PageBusinessAnalysis = () => {
     showPersona: false,
     showInterview: false,
     showCustomizePersona: false,
-    selectedInterviewType: '',
+    selectedInterviewType: "",
     activeCategory: 1,
     showCardContent: true,
     showEditCard: false,
@@ -37,24 +37,35 @@ const PageBusinessAnalysis = () => {
     showInterviewReady: false,
     progress: 25,
     steps: [
-      { number: 1, label: '비즈니스 분석', active: true },
-      { number: 2, label: '맞춤 페르소나 추천', active: false },
-      { number: 3, label: '인터뷰 방법 선택', active: false },
-      { number: 4, label: '페르소나와 인터뷰', active: false },
-      { number: 5, label: '의견 분석', active: false }
+      { number: 1, label: "비즈니스 분석", active: true },
+      { number: 2, label: "맞춤 페르소나 추천", active: false },
+      { number: 3, label: "인터뷰 방법 선택", active: false },
+      { number: 4, label: "페르소나와 인터뷰", active: false },
+      { number: 5, label: "의견 분석", active: false },
     ],
     inputs: {
-      field1: { value: "쉽고 빠른 개인 금융업무 지원 모바일 서비스", isValid: false, isError: false, errorMessage: "" },
-      field2: { value: "이 애플리케이션은 사용자가 쉽고 빠르게 송금 및 이체를 할 수 있도록 돕는 것을 목표로 합니다.", isValid: false, isError: false, errorMessage: "" },
-      field3: { value: "", isValid: false, isError: false, errorMessage: "" }
-    }
+      field1: {
+        value: "쉽고 빠른 개인 금융업무 지원 모바일 서비스",
+        isValid: false,
+        isError: false,
+        errorMessage: "",
+      },
+      field2: {
+        value:
+          "이 애플리케이션은 사용자가 쉽고 빠르게 송금 및 이체를 할 수 있도록 돕는 것을 목표로 합니다.",
+        isValid: false,
+        isError: false,
+        errorMessage: "",
+      },
+      field3: { value: "", isValid: false, isError: false, errorMessage: "" },
+    },
   });
 
   const textareaRef = useRef(null);
 
   useEffect(() => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   }, [state.inputs.field2.value]);
@@ -66,8 +77,8 @@ const PageBusinessAnalysis = () => {
   const handlePopupClose = () => {
     setShowPopup(false);
     setShowInterviewReady(false);
-  }
-    
+  };
+
   const handleButtonClick = () => {
     window.location.href = "/CustomizePersona"; // 버튼 클릭 시 이동할 경로
   };
@@ -75,12 +86,12 @@ const PageBusinessAnalysis = () => {
   // 부모 스크롤 비활성화
   useEffect(() => {
     if (showToast) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     }
     return () => {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     };
   }, [showToast]);
 
@@ -100,11 +111,14 @@ const PageBusinessAnalysis = () => {
                 <CreateCard>
                   <p>
                     <img src={images.PeopleChatSquareFill} alt="" />
-                    나의 비즈니스 고객은 누구일까요? 그리고 어떤 생각을 하고 있을까요?<br />당신의 타겟 고객에게 바로 물어보세요
+                    나의 비즈니스 고객은 누구일까요? 그리고 어떤 생각을 하고
+                    있을까요?
+                    <br />
+                    당신의 타겟 고객에게 바로 물어보세요
                   </p>
 
                   <Button Large Primary Fill Round onClick={handleButtonClick}>
-                    맞춤 페르소나 생성
+                    페르소나 추천 받기
                     <img src={images.MagicStickFillWhite} alt="" />
                   </Button>
                 </CreateCard>
@@ -114,9 +128,9 @@ const PageBusinessAnalysis = () => {
             <Sidebar />
 
             {showPopup && (
-              <PopupWrap 
+              <PopupWrap
                 Warning
-                title="Request 상태의 페르소나는 선택이 제한됩니다." 
+                title="Request 상태의 페르소나는 선택이 제한됩니다."
                 message="인터뷰를 진행하려면 모집 요청을 먼저 진행해주세요"
                 buttonType="Outline"
                 closeText="확인"
@@ -126,14 +140,15 @@ const PageBusinessAnalysis = () => {
             )}
 
             {showInterviewReady && (
-              <PopupWrap 
+              <PopupWrap
                 Check
-                title="인터뷰 준비 완료" 
+                title="인터뷰 준비 완료"
                 message={
                   <>
-                    인터뷰 룸 이동 시, 바로 시작됩니다.<br />
+                    인터뷰 룸 이동 시, 바로 시작됩니다.
+                    <br />
                     인터뷰를 중단하면 모든 내역이 삭제되니 주의하세요
-                  </> 
+                  </>
                 }
                 buttonType="Outline"
                 closeText="취소"
@@ -147,12 +162,9 @@ const PageBusinessAnalysis = () => {
               />
             )}
 
-            {showToast && (
-              <ToastPopupWrap />
-            )}
+            {showToast && <ToastPopupWrap />}
 
-
-{/* 
+            {/* 
 <PopupWrap 
   TitleFlex
   title="📝 맞춤형 페르소나 모집 요청하기" 
@@ -217,13 +229,6 @@ const PageBusinessAnalysis = () => {
     </>
   }
 /> */}
-
-
-
-
-
-
-
           </AnalysisWrap>
         </MainContent>
       </ContentsWrap>
