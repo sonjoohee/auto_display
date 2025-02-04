@@ -344,7 +344,7 @@ const PagePersona3Select = () => {
                       </>
                     ) : selectedInterviewType === "single" ? (
                       <>
-                        <Body2 color="gray800">📌 추천 페르소나</Body2>
+                        <Body2 color="gray800">📌 참여가능 페르소나</Body2>
                         <Sub3 color="gray800">
                           {getSelectedCount()}명 선택됨
                         </Sub3>
