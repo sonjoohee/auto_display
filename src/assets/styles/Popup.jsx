@@ -35,6 +35,10 @@ const PopupWrap = ({
   activeTab,
   onTabChange,
   tabs,
+  eventState,
+  eventTitle,
+  trialState,
+  creditRequestCustomPersona,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
 
@@ -84,10 +88,10 @@ const PopupWrap = ({
             </Button>
           )}
           {confirmText && (
-            <Button 
-              Confirm 
+            <Button
+              Confirm
               Event={Event}
-              className="Outline" 
+              className="Outline"
               onClick={handleConfirm}
             >
               {confirmText}
@@ -113,10 +117,10 @@ const PopupWrap = ({
             >
               {confirmText}
               {confirmText === "다음" && (
-                <images.ChevronRight 
-                  width="20" 
-                  height="20" 
-                  color={!isFormValid ? palette.gray500 : palette.white} 
+                <images.ChevronRight
+                  width="20"
+                  height="20"
+                  color={!isFormValid ? palette.gray500 : palette.white}
                 />
               )}
             </Button>
@@ -137,14 +141,34 @@ const PopupWrap = ({
             {title}
             <CloseButton TitleFlex={TitleFlex} onClick={handleClose} />
           </Header>
-          
+
           {showTabs && tabs && (
             <>
               <AlertBox Green>
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M18.5 10C18.5 14.6944 14.6944 18.5 10 18.5C5.30558 18.5 1.5 14.6944 1.5 10C1.5 5.30558 5.30558 1.5 10 1.5C14.6944 1.5 18.5 5.30558 18.5 10ZM20 10C20 15.5228 15.5228 20 10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0C15.5228 0 20 4.47715 20 10ZM10.729 12.2828L10.871 6H9.11619L9.27103 12.2828H10.729ZM10.0065 13.0943C9.45166 13.1004 8.99362 13.5246 9.00007 14.041C8.99362 14.5697 9.45166 15 10.0065 15C10.542 15 11 14.5697 11 14.041C11 13.5246 10.542 13.1004 10.0065 13.0943Z" fill="#34C759"/>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M18.5 10C18.5 14.6944 14.6944 18.5 10 18.5C5.30558 18.5 1.5 14.6944 1.5 10C1.5 5.30558 5.30558 1.5 10 1.5C14.6944 1.5 18.5 5.30558 18.5 10ZM20 10C20 15.5228 15.5228 20 10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0C15.5228 0 20 4.47715 20 10ZM10.729 12.2828L10.871 6H9.11619L9.27103 12.2828H10.729ZM10.0065 13.0943C9.45166 13.1004 8.99362 13.5246 9.00007 14.041C8.99362 14.5697 9.45166 15 10.0065 15C10.542 15 11 14.5697 11 14.041C11 13.5246 10.542 13.1004 10.0065 13.0943Z"
+                    fill="#34C759"
+                  />
                 </svg>
-                <Sub3 color="green">(베타)서비스 기간으로 (서비스)크레딧이 사용되고 있습니다 (10 크레딧)</Sub3>
+                {eventState ? (
+                  <Sub3 color="green">
+                    {eventTitle} 기간으로 (서비스)크레딧이 사용되고 있습니다 (
+                    {creditRequestCustomPersona} 크레딧)
+                  </Sub3>
+                ) : (
+                  <Sub3 color="green">
+                    ({creditRequestCustomPersona} 크레딧)
+                  </Sub3>
+                )}
               </AlertBox>
 
               <TabWrapContainer>
@@ -226,7 +250,8 @@ export const AlertBox = styled.div`
   width: 100%;
   padding: 4px 8px;
   border-radius: 10px;
-  background: ${(props) => props.Green ? "rgba(52, 199, 89, 0.10)" : palette.gray100};
+  background: ${(props) =>
+    props.Green ? "rgba(52, 199, 89, 0.10)" : palette.gray100};
 `;
 
 export const TabWrapContainer = styled(TabWrapType3)`
@@ -457,7 +482,7 @@ export const Body = styled.div`
     .woman {
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='33' height='32' viewBox='0 0 33 32' fill='none'%3E%3Cpath d='M22.775 17.15C24.45 15.475 25.375 13.2437 25.375 10.875C25.375 8.50313 24.4531 6.275 22.775 4.6C21.1 2.925 18.8687 2 16.5 2C14.1312 2 11.9 2.92187 10.225 4.6C8.55 6.27812 7.625 8.50313 7.625 10.875C7.625 12.8687 8.27812 14.7625 9.48125 16.3094C9.70937 16.6031 9.95625 16.8812 10.2219 17.15C10.4875 17.4156 10.7687 17.6625 11.0594 17.8906C12.2969 18.8531 13.7562 19.4656 15.3125 19.6719V23H11.75C11.6125 23 11.5 23.1125 11.5 23.25V25.125C11.5 25.2625 11.6125 25.375 11.75 25.375H15.3125V29.75C15.3125 29.8875 15.425 30 15.5625 30H17.4375C17.575 30 17.6875 29.8875 17.6875 29.75V25.375H21.25C21.3875 25.375 21.5 25.2625 21.5 25.125V23.25C21.5 23.1125 21.3875 23 21.25 23H17.6875V19.6719C19.6094 19.4156 21.3812 18.5437 22.775 17.15ZM16.5 17.375C14.7625 17.375 13.1344 16.7 11.9031 15.4719C10.675 14.2438 10 12.6125 10 10.875C10 9.1375 10.675 7.50937 11.9031 6.27812C13.1312 5.04687 14.7625 4.375 16.5 4.375C18.2375 4.375 19.8656 5.05 21.0969 6.27812C22.325 7.50625 23 9.1375 23 10.875C23 12.6125 22.325 14.2406 21.0969 15.4719C19.8656 16.7 18.2375 17.375 16.5 17.375Z' fill='%23226FFF'/%3E%3C/svg%3E");
     }
-      
+
     .check-circle {
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='12' fill='%23226FFF'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     }
