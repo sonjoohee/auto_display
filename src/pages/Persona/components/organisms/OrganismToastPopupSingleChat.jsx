@@ -1059,7 +1059,7 @@ const OrganismToastPopupSingleChat = ({
                       </Persona>
                       <ChatBox Moder>
                         <Sub1 color="gray800" align="left">
-                          {indepthInterviews[index].question}
+                          Q{index + 1}(추가) {indepthInterviews[index].question}
                         </Sub1>
                       </ChatBox>
                     </ChatItem>
@@ -1333,14 +1333,14 @@ const OrganismToastPopupSingleChat = ({
       contentsRef.current.scrollTop = contentsRef.current.scrollHeight;
     }
   }, [
-    answers, 
-    indepthInterviews, 
-    isGenerating, 
-    isGeneratingIndepth, 
+    answers,
+    indepthInterviews,
+    isGenerating,
+    isGeneratingIndepth,
     isGeneratingIndepthQuestion,
-    isAnalyzing,           // 분석 중 상태 추가
-    isAnalysisComplete,    // 분석 완료 상태 추가
-    showRegenerateButton2  // 재시도 버튼 표시 상태 추가
+    isAnalyzing, // 분석 중 상태 추가
+    isAnalysisComplete, // 분석 완료 상태 추가
+    showRegenerateButton2, // 재시도 버튼 표시 상태 추가
   ]);
 
   return (
