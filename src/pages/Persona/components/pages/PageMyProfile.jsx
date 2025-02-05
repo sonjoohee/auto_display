@@ -50,10 +50,14 @@ const PageMyProfile = () => {
   const [isClosing, setIsClosing] = useState(false);
   const [isAccountPopupOpen, setAccountPopupOpen] = useState(false); // 계정설정 팝업
   const [isContactPopupOpen, setIsContactPopupOpen] = useState(false); // 문의하기 팝업
+  const [isMemberDeletePopupOpen, setIsMemberDeletePopupOpen] = useState(false); // 회원탈퇴 팝업
   const [contactForm, setContactForm] = useState({
     email: "",
     purpose: "",
     content: "",
+  });
+  const [memberDeleteForm, setMemberDeleteForm] = useState({
+    reason: "",
   });
   const [isSelectBoxOpen, setIsSelectBoxOpen] = useState(false);
   const [selectedPurpose, setSelectedPurpose] = useState("");
@@ -88,8 +92,19 @@ const PageMyProfile = () => {
     setIsContactPopupOpen(false);
   };
 
+  const closeMemberDeletePopup = () => {
+    setIsMemberDeletePopupOpen(false);
+  };
+
   const handleContactInputChange = (field, value) => {
     setContactForm((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const handleMemberDeleteInputChange = (field, value) => {
+    setMemberDeleteForm((prev) => ({
       ...prev,
       [field]: value,
     }));
@@ -99,7 +114,11 @@ const PageMyProfile = () => {
     return contactForm.email && contactForm.purpose && contactForm.content;
   };
 
-  const handleContactSubmit = async () => {
+  const isMemberDeleteFormValid = () => {
+    return memberDeleteForm.reason;
+  };
+
+  const handleContactSubmit = () => {
     if (isContactFormValid()) {
       // API 호출을 위한 데이터 준비
       const requestData = {
@@ -116,6 +135,13 @@ const PageMyProfile = () => {
       } catch (error) {
         console.error("문의하기 제출 실패:", error);
       }
+    }
+  };
+  const handleMemberDeleteSubmit = () => {
+    if (isMemberDeleteFormValid()) {
+      // TODO: 회원탈퇴 제출 로직 구현
+      console.log("회원탈퇴 제출:", memberDeleteForm);
+      closeMemberDeletePopup();
     }
   };
 
@@ -301,7 +327,7 @@ const PageMyProfile = () => {
               </ProfileContent> */}
             </ProfileInfoWrap>
 
-            <WithdrawalButton>
+            <WithdrawalButton onClick={() => setIsMemberDeletePopupOpen(true)}>
               <Sub3 color="gray500">회원 탈퇴하기</Sub3>
             </WithdrawalButton>
           </MyProfileWrap>
@@ -402,6 +428,53 @@ const PageMyProfile = () => {
                     }
                   />
                 </div>
+              </ContactUsWrap>
+            </>
+          }
+        />
+      )}
+      {isMemberDeletePopupOpen && (
+        <PopupWrap
+          TitleFlex
+          TitleBorder
+          Wide
+          title="회원탈퇴"
+          buttonType="Fill"
+          confirmText="이 버튼을 누르면, 바로 탈퇴가 진행됩니다."
+          isModal={true}
+          onClose={closeMemberDeletePopup}
+          onConfirm={handleMemberDeleteSubmit}
+          isFormValid={isMemberDeleteFormValid()}
+          body={
+            <>
+              <ContactUsWrap>
+                <div>
+                  <H5 color="gray800" align="left">
+                    더 나은 서비스를 위해, 탈퇴하신 이유를 간단히 알려주세요
+                  </H5>
+                  <CustomTextarea
+                    placeholder={"탈퇴하신 이유를 설명해주세요"}
+                    rows="8"
+                    value={memberDeleteForm.reason}
+                    onChange={(e) =>
+                      handleMemberDeleteInputChange("reason", e.target.value)
+                    }
+                  />
+                </div>{" "}
+                <BgBoxItem NoOutline style={{ marginBottom: "10px" }}>
+                  <Sub3 color="gray500" align="left">
+                    🚩 탈퇴 시, 주의사항 안내
+                    <br /> - 회원 탈퇴 시, 생성된 모든 데이터가 영구적으로
+                    삭제됩니다.
+                    <br /> - 보유하신 크레딧 역시 함께 삭제되며, 복구가
+                    불가능합니다.
+                    <br /> - 탈퇴 후에는 계정 및 관련 데이터 복원이 불가능하니
+                    신중하게 결정해 주세요.
+                    <br /> - 삭제된 데이터는 서비스 이용 기록, 설정 정보 등을
+                    포함할 수 있습니다.
+                    <br /> - 궁금한 점이 있으시면 고객센터로 문의해 주세요.
+                  </Sub3>
+                </BgBoxItem>
               </ContactUsWrap>
             </>
           }
@@ -614,4 +687,17 @@ const WithdrawalButton = styled.div`
   align-items: flex-end;
   margin-top: 68px;
   cursor: pointer;
+`;
+
+export const BgBoxItem = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 4px;
+  width: 100%;
+  padding: ${(props) => (props.NoOutline ? "12px" : "8px 12px")};
+  border-radius: 10px;
+  border: ${(props) =>
+    props.NoOutline ? "0" : `1px solid ${palette.outlineGray}`};
+  background: ${(props) => (props.white ? palette.white : palette.chatGray)};
 `;

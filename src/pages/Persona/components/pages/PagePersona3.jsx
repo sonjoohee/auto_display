@@ -389,7 +389,7 @@ const PagePersona3 = () => {
         definition: customTheoryData?.definition || "",
         objective: customTheoryData?.objective || "",
         characteristic: customTheoryData?.characteristic || [],
-        description: "사용자 커스텀 방법론" || "",
+        description: customTheoryData?.interview_purpose || [],
         custom_theory_data: customTheoryData || "",
       };
       setPurposeItemsSingleAtom((prev) => [...prev, generatedQuestions]);
@@ -773,21 +773,22 @@ const PagePersona3 = () => {
 
             {/* 크레딧 소진팝업 */}
             {showCreditPopup && (
-            <PopupWrap
-              Warning
-              title="크레딧이 모두 소진되었습니다"
-              message={
-                <>
-                  매월 1일 (서비스)크레딧이 충전됩니다<br />
-                  (베타서비스) 종료시 크레딧이 자동 소멸됩니다
-                </>
-              }
-              buttonType="Outline"
-              closeText="확인"
-              isModal={false}
-              onCancel={() => setShowCreditPopup(false)}
-              onConfirm={() => setShowCreditPopup(false)}
-            />
+              <PopupWrap
+                Warning
+                title="크레딧이 모두 소진되었습니다"
+                message={
+                  <>
+                    매월 1일 (서비스)크레딧이 충전됩니다
+                    <br />
+                    (베타서비스) 종료시 크레딧이 자동 소멸됩니다
+                  </>
+                }
+                buttonType="Outline"
+                closeText="확인"
+                isModal={false}
+                onCancel={() => setShowCreditPopup(false)}
+                onConfirm={() => setShowCreditPopup(false)}
+              />
             )}
 
             {/* 인터뷰 커스터마이징 하기 팝업 */}

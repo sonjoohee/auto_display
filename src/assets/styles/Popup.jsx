@@ -161,7 +161,7 @@ const PopupWrap = ({
                 </svg>
                 {eventState ? (
                   <Sub3 color="green">
-                    {eventTitle} 기간으로 (서비스)크레딧이 사용되고 있습니다 (
+                    {eventTitle} 기간으로 이벤트 크레딧이 사용되고 있습니다 (
                     {creditRequestCustomPersona} 크레딧)
                   </Sub3>
                 ) : (

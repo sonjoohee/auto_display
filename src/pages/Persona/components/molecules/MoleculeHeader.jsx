@@ -144,7 +144,7 @@ const MoleculeHeader = () => {
         )}
 
         <div className="gnb">
-          {isRootPage && <Sub2>서비스 소개</Sub2>}
+          {isRootPage && <Sub2 style={{cursor: "pointer"}} onClick={() => navigate("/ServiceLanding")}>서비스 소개</Sub2>}
 
           <TotalCreditToggle>
             <CreditTotal
@@ -179,7 +179,7 @@ const MoleculeHeader = () => {
                 <div className="title">
                   <Sub1 color="gray700">크레딧 내역</Sub1>
                   <button onClick={() => navigate("/Payment")}>
-                    <Caption2 color="primary">충전하기</Caption2>
+                    {isLoggedIn && <Caption2 color="primary">충전하기</Caption2>}
                   </button>
                 </div>
 

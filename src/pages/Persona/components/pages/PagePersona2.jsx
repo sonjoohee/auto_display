@@ -546,6 +546,8 @@ const PagePersona2 = () => {
             }
             if (savedProjectInfo.customTheoryData) {
               setCustomTheoryData(savedProjectInfo.customTheoryData);
+            } else {
+              setCustomTheoryData([]);
             }
 
             let availablePersonas = [];
@@ -1831,8 +1833,12 @@ const PagePersona2 = () => {
                           <CategoryView
                             // isLoadingMore와 isLoadingBusiness가 동시에 true일 때, pointer-events를 비활성화하고 opacity를 조절하여 UI가 비활성화된 것처럼 보이게 합니다.
                             style={{
-                              pointerEvents: isLoadingMore && isLoadingBusiness ? "none" : "auto",
-                              opacity: isLoadingMore && isLoadingBusiness ? 0.6 : 1,
+                              pointerEvents:
+                                isLoadingMore && isLoadingBusiness
+                                  ? "none"
+                                  : "auto",
+                              opacity:
+                                isLoadingMore && isLoadingBusiness ? 0.6 : 1,
                             }}
                             showLeftGradient={showLeftGradient}
                             showRightGradient={showRightGradient}
@@ -1848,7 +1854,8 @@ const PagePersona2 = () => {
                                     onClick={(e) => {
                                       e.stopPropagation();
                                       // 현재 버튼의 위치와 크기 정보
-                                      const rect = e.currentTarget.getBoundingClientRect();
+                                      const rect =
+                                        e.currentTarget.getBoundingClientRect();
                                       // 버튼 왼쪽 끝에서부터 클릭 지점까지의 거리
                                       const clickX = e.clientX - rect.left;
                                       // pseudo-element로 구현된 x 아이콘이 오른쪽에 있으므로,
@@ -1862,7 +1869,10 @@ const PagePersona2 = () => {
                                   </Choice>
                                 ))
                               ) : (
-                                <Sub2_1 color="gray500" style={{ padding: "6px 10px" }}>
+                                <Sub2_1
+                                  color="gray500"
+                                  style={{ padding: "6px 10px" }}
+                                >
                                   페르소나 유형을 선택해 주세요.
                                 </Sub2_1>
                               )}
@@ -1954,7 +1964,8 @@ const PagePersona2 = () => {
                                               </label>
                                             </CheckBox>
                                             {type.wasSelected && (
-                                              <span>{type.count}명</span>
+                                              // <span>{type.count}명</span>
+                                              <span>3명</span>
                                             )}
                                           </TypeListItem>
                                         );
@@ -2116,7 +2127,7 @@ const PagePersona2 = () => {
       {showCustomizePopup && (
         <PopupWrap
           TitleFlex
-          title="📝 나만의 페르소나 커스터마이징"
+          title="📝 맞춤 페르소나 커스터마이징"
           buttonType="Fill"
           confirmText={activeTabIndex === 0 ? "다음" : "맞춤 페르소나 모집하기"}
           isModal={true}

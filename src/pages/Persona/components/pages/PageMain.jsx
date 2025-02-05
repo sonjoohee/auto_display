@@ -752,9 +752,9 @@ const PageMain = () => {
   const handledSearch = async () => {
     // 로그인 상태인지 확인 후 처리
     if (isLoggedIn) {
-      const regex = /^[가-힣a-zA-Z0-9\s.,'"?!()\/\-·:\\%]*$/;
-      const specialChars = /^[.,'"?!()\/\-·:\\%]+$/;
-      const consecutiveSpecialChars = /[.,'"?!()\/\-·:\\%]{2,}/; // 특수문자가 2번 이상 연속되는 패턴
+      const regex = /^[가-힣a-zA-Z0-9\s.,'"?!()\/\-·:\\%~@#$^&*_+<>`]*$/;
+      const specialChars = /^[.,'"?!()\/\-·:\\%~@#$^&*_+<>`]+$/;
+      // const consecutiveSpecialChars = /[.,'"?!()\/\-·:\\%]{2,}/; // 특수문자가 2번 이상 연속되는 패턴
 
       // 단독으로 특수 문자만 사용된 경우
       if (specialChars.test(businessAnalysis.input.trim())) {
@@ -763,10 +763,10 @@ const PageMain = () => {
       }
 
       // 연속된 특수문자 체크
-      if (consecutiveSpecialChars.test(businessAnalysis.input.trim())) {
-        setIsPopupRegex(true);
-        return;
-      }
+      // if (consecutiveSpecialChars.test(businessAnalysis.input.trim())) {
+      //   setIsPopupRegex(true);
+      //   return;
+      // }
 
       // 입력 값에 대한 정규식 및 빈 값 체크
       if (!regex.test(businessAnalysis.input)) {
@@ -924,8 +924,8 @@ const PageMain = () => {
         <MainContent MainSearch>
           <MainSearchWrap MainSearch>
             <Title>
-              Connect with Your Persona
-              <p>타겟 페르소나와 소통하고, 비즈니스 인사이트를 확인하세요</p>
+              Validate Your Idea with AI Persona
+              <p>시장 반응을 예측하는 가장 스마트한 방법, AI 페르소나로 시작하세요</p>
             </Title>
 
             <InputWrap>

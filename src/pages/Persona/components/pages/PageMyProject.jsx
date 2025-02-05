@@ -13,6 +13,7 @@ import {
   Button,
   IconButton,
 } from "../../../../assets/styles/ButtonStyle";
+
 import {
   ContentsWrap,
   MainContent,
@@ -39,6 +40,11 @@ import {
   Dots,
   Dot,
   NoData,
+  InterviewPopup,
+  Status,
+  TabWrapType2,
+  TabButtonType2,
+  TabContent,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../../assets/styles/Images";
 import { useNavigate } from "react-router-dom";
@@ -83,7 +89,7 @@ import { getProjectListByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import OrganismEmptyProject from "../organisms/OrganismEmptyProject";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 import {
-  H2,
+  H4,
   H3,
   H5,
   H6,
@@ -98,9 +104,12 @@ import Pagination from "../../../../components/common/Pagination";
 const PageMyProject = () => {
   useDynamicViewport("width=1280");
 
-  const [showPopup, setShowPopup] = useState(false);
-  const handlePopupConfirm = () => {
-    setShowPopup(false);
+  const [activeTab1, setActiveTab1] = useState("lifestyle");
+
+  const [selectedPersona, setSelectedPersona] = useState(null);
+
+  const handleDetailClick = (persona) => {
+    setSelectedPersona(persona);
   };
 
   const [projectLoading, setProjectLoading] = useAtom(PROJECT_LOADING);
@@ -233,9 +242,8 @@ const PageMyProject = () => {
           }
         );
         setUserPageCnt(userPageCnt.data);
-        console.log(userPageCnt.data);
 
-        console.log("조타이 저장값 ::", userProjecTargetPage);
+        console.log("🚀 ~ fetchUserInfo ~ userPageCnt:", userPageCnt);
 
         const projectListData = await axios.get(
           `https://wishresearch.kr/api/user/myPage/projectList?page=${userProjecTargetPage}&size=10`,
@@ -247,7 +255,6 @@ const PageMyProject = () => {
           }
         );
         setUserProjectList(projectListData.data);
-        console.log(projectListData.data);
 
         const creditListData = await axios.get(
           `https://wishresearch.kr/api/user/myPage/creditList?page=${userCreditTargetPage}&size=5`,
@@ -259,7 +266,6 @@ const PageMyProject = () => {
           }
         );
 
-        console.log(creditListData.data);
         setUserCreditList(creditListData.data);
 
         const personaListData = await axios.get(
@@ -272,7 +278,6 @@ const PageMyProject = () => {
           }
         );
         setUserPersonaList(personaListData.data);
-        console.log("PERSONA::", personaListData.data);
       } catch (err) {
         console.error("사용자 정보 조회 실패:", err);
 
@@ -519,27 +524,27 @@ const PageMyProject = () => {
                   <Body2 color="gray500">요청 페르소나</Body2>
                   <DashboardAmount>
                     <H3 color="gray800">{userPageCnt.persona_count}건</H3>
-                    {/* <Badge New>new</Badge> */}
+                    {userPageCnt.persona_state === "new" && (
+                      <Badge New>new</Badge>
+                    )}
                   </DashboardAmount>
                 </DashboardCard>
                 <DashboardCard>
                   <Body2 color="gray500">생성 완료 페르소나</Body2>
                   <DashboardAmount>
-                    <H3 color="gray800">0건</H3>
-                    {/* <Badge New>new</Badge> */}
+                    <H3 color="gray800">{userPageCnt.complete_count}건</H3>
+                    {userPageCnt.complete_state === "new" && (
+                      <Badge New>new</Badge>
+                    )}
                   </DashboardAmount>
                 </DashboardCard>
                 <DashboardCard>
-                  <Body2 color="gray500">인터뷰 진행 건(수)</Body2>
+                  <Body2 color="gray500">보고서 생성 건(수)</Body2>
                   <DashboardAmount>
-                    {/* <H3 color="gray800">{userPageCnt.report_count}건</H3> */}
-                    <H3 color="gray800">
-                      {projectList.reduce(
-                        (total, proj) => total + (proj.reportList?.length || 0),
-                        0
-                      )}
-                      건
-                    </H3>
+                    <H3 color="gray800">{userPageCnt.report_count}건</H3>{" "}
+                    {userPageCnt.report_state === "new" && (
+                      <Badge New>new</Badge>
+                    )}
                   </DashboardAmount>
                 </DashboardCard>
                 <DashboardCard>
@@ -616,7 +621,7 @@ const PageMyProject = () => {
                       <ProjectList>
                         <ProjectHeader>
                           <Body3 color="gray500">프로젝트 명</Body3>
-                          <Body3 color="gray500">맞춤 페르소나</Body3>
+                          <Body3 color="gray500">AI 페르소나</Body3>
                           <Body3 color="gray500"></Body3>
                           <Body3 color="gray500">결과 리포트</Body3>
                         </ProjectHeader>
@@ -732,50 +737,60 @@ const PageMyProject = () => {
                       <ProjectContent>
                         {userPersonaList.count > 0 ? (
                           userPersonaList.results.persona.map((persona) => (
-                            <ProjectItem key={persona.id}>
-                              <ProjectInfo>
-                                <Name>
-                                  <Caption2 color="gray500">
-                                    {persona.businessAnalysis.title}
-                                  </Caption2>
-                                  <Body2 color="gray800">
-                                    {persona.personaRequest.persona}
-                                  </Body2>
-                                </Name>
-                                <Persona>
-                                  <Sub3 color="gray500">
-                                    {persona.requestDate}
-                                  </Sub3>
-                                </Persona>
-                                <Report>
-                                  {persona.personaRequest.status ===
-                                  undefined ? (
-                                    <Badge Request>
-                                      <img src={images.Plus} alt="요청 필요" />
-                                      요청 필요
-                                    </Badge>
-                                  ) : persona.personaRequest.status ===
-                                    "ing" ? (
-                                    <Badge Ing>모집 중</Badge>
-                                  ) : persona.personaRequest.status ===
-                                    "complete" ? (
-                                    <Badge Complete>
-                                      <img
-                                        src={images.CheckGreen}
-                                        alt="모집 완료"
-                                      />
-                                      모집 완료
-                                    </Badge>
-                                  ) : (
-                                    <></>
-                                  )}
-                                  {/* <Badge Keyword>Request</Badge> */}
-                                  <Button Small Outline Fill>
-                                    자세히
-                                  </Button>
-                                </Report>
-                              </ProjectInfo>
-                            </ProjectItem>
+                            <>
+                              <ProjectItem key={persona.id}>
+                                <ProjectInfo>
+                                  <Name>
+                                    <Caption2 color="gray500">
+                                      {persona.businessAnalysis.title}
+                                    </Caption2>
+                                    <Body2 color="gray800">
+                                      {persona.personaRequest.persona}
+                                    </Body2>
+                                  </Name>
+                                  <Persona>
+                                    <Sub3 color="gray500">
+                                      {persona.requestDate}
+                                    </Sub3>
+                                  </Persona>
+                                  <Report>
+                                    {persona.personaRequest.status ===
+                                    undefined ? (
+                                      <Badge Request>
+                                        <img
+                                          src={images.Plus}
+                                          alt="요청 필요"
+                                        />
+                                        요청 필요
+                                      </Badge>
+                                    ) : persona.personaRequest.status ===
+                                      "ing" ? (
+                                      <Badge Ing>모집 중</Badge>
+                                    ) : persona.personaRequest.status ===
+                                      "complete" ? (
+                                      <Badge Complete>
+                                        <img
+                                          src={images.CheckGreen}
+                                          alt="모집 완료"
+                                        />
+                                        모집 완료
+                                      </Badge>
+                                    ) : (
+                                      <></>
+                                    )}
+                                    {/* <Badge Keyword>Request</Badge> */}
+                                    <Button
+                                      Small
+                                      Outline
+                                      Fill
+                                      onClick={() => handleDetailClick(persona)}
+                                    >
+                                      자세히
+                                    </Button>
+                                  </Report>
+                                </ProjectInfo>
+                              </ProjectItem>
+                            </>
                           ))
                         ) : (
                           <NoData border>
@@ -796,6 +811,82 @@ const PageMyProject = () => {
           </MyProjectWrap>
         </MainContent>
       </ContentsWrap>
+
+      {selectedPersona && (
+        <InterviewPopup>
+          <div>
+            <div className="header">
+              <H4>
+                {selectedPersona.personaRequest.persona}
+                <span
+                  className="close"
+                  onClick={() => setSelectedPersona(null)}
+                />
+              </H4>
+              <p className="info">
+                <Sub3>{selectedPersona.personaRequest.gender}</Sub3>
+                <Sub3>
+                  {selectedPersona.personaRequest.age.includes("세")
+                    ? selectedPersona.personaRequest.age
+                    : `${selectedPersona.personaRequest.age}세`}
+                </Sub3>
+                <Sub3>{selectedPersona.personaRequest.residence}</Sub3>
+              </p>
+            </div>
+
+            <div className="keywords">
+              <Status>#{selectedPersona.personaRequest.keyword[0]}</Status>
+              <Status>#{selectedPersona.personaRequest.keyword[1]}</Status>
+              <Status>#{selectedPersona.personaRequest.keyword[2]}</Status>
+            </div>
+
+            <div className="content">
+              <TabWrapType2>
+                <TabButtonType2
+                  isActive={activeTab1 === "lifestyle"}
+                  onClick={() => setActiveTab1("lifestyle")}
+                >
+                  라이프스타일
+                </TabButtonType2>
+                <TabButtonType2
+                  isActive={activeTab1 === "interests"}
+                  onClick={() => setActiveTab1("interests")}
+                >
+                  관심사
+                </TabButtonType2>
+                <TabButtonType2
+                  isActive={activeTab1 === "consumption"}
+                  onClick={() => setActiveTab1("consumption")}
+                >
+                  소비성향
+                </TabButtonType2>
+              </TabWrapType2>
+
+              {activeTab1 === "lifestyle" && (
+                <TabContent>
+                  <Body3 color="gray700">
+                    {selectedPersona.personaRequest.lifestyle}
+                  </Body3>
+                </TabContent>
+              )}
+              {activeTab1 === "interests" && (
+                <TabContent>
+                  <Body3 color="gray700">
+                    {selectedPersona.personaRequest.interest}
+                  </Body3>
+                </TabContent>
+              )}
+              {activeTab1 === "consumption" && (
+                <TabContent>
+                  <Body3 color="gray700">
+                    {selectedPersona.personaRequest.consumption_pattern}
+                  </Body3>
+                </TabContent>
+              )}
+            </div>
+          </div>
+        </InterviewPopup>
+      )}
 
       {showCreditPopup && (
         <PopupWrap
