@@ -924,8 +924,8 @@ const PageMain = () => {
         <MainContent MainSearch>
           <MainSearchWrap MainSearch>
             <Title>
-              Connect with Your Persona
-              <p>타겟 페르소나와 소통하고, 비즈니스 인사이트를 확인하세요</p>
+              Validate Your Idea with AI Persona
+              <p>시장 반응을 예측하는 가장 스마트한 방법, AI 페르소나로 시작하세요</p>
             </Title>
 
             <InputWrap>
