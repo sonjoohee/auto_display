@@ -27,6 +27,7 @@ import {
 
 //pagemyproject에서 props받아옴
 const OrganismProjectCard = ({ project, index }) => {
+  console.log("🚀 ~ OrganismProjectCard ~ project:", project);
   const [
     reportDescriptionLoadButtonState,
     setReportDescriptionLoadButtonState,
@@ -152,7 +153,7 @@ const OrganismProjectCard = ({ project, index }) => {
             <div>
               <span>
                 <img src={images.StatusBadgeBasic} alt="기본형" />
-                기본형
+                일상
               </span>
               <p>{project.personaList || 0}명</p>
             </div>
@@ -162,16 +163,16 @@ const OrganismProjectCard = ({ project, index }) => {
                 비즈니스
               </span>
               <p>
-                {project.customPersonaList?.persona?.length || 0}명
-                {project.customPersonaList?.persona?.length > 0 && (
+                {project.businessPersonaList?.length || 0}명
+                {/* {project.businessPersonaList?.persona?.length > 0 && (
                   <Badge New />
-                )}
+                )} */}
               </p>
             </div>
             <div>
               <span>
                 <img src={images.StatusBadgePersona} alt="" />
-                나만의 페르소나
+                맞춤 페르소나
               </span>
               <p className={getRecruitStatus(project)}>
                 {getRecruitStatusText(project)}

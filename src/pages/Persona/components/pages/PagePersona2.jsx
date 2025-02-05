@@ -2126,7 +2126,7 @@ const PagePersona2 = () => {
       {showCustomizePopup && (
         <PopupWrap
           TitleFlex
-          title="📝 나만의 페르소나 커스터마이징"
+          title="📝 맞춤 페르소나 커스터마이징"
           buttonType="Fill"
           confirmText={activeTabIndex === 0 ? "다음" : "맞춤 페르소나 모집하기"}
           isModal={true}
