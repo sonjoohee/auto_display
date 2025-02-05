@@ -616,7 +616,7 @@ const PageMyProject = () => {
                       <ProjectList>
                         <ProjectHeader>
                           <Body3 color="gray500">프로젝트 명</Body3>
-                          <Body3 color="gray500">맞춤 페르소나</Body3>
+                          <Body3 color="gray500">AI 페르소나</Body3>
                           <Body3 color="gray500"></Body3>
                           <Body3 color="gray500">결과 리포트</Body3>
                         </ProjectHeader>
