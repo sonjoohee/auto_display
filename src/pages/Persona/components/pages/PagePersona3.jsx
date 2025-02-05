@@ -389,7 +389,7 @@ const PagePersona3 = () => {
         definition: customTheoryData?.definition || "",
         objective: customTheoryData?.objective || "",
         characteristic: customTheoryData?.characteristic || [],
-        description: customTheoryData?.interview_purpose || [],
+        description: "사용자 커스텀 방법론" || "",
         custom_theory_data: customTheoryData || "",
       };
       setPurposeItemsSingleAtom((prev) => [...prev, generatedQuestions]);

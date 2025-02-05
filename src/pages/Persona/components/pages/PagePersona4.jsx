@@ -74,6 +74,7 @@ const PagePersona4 = () => {
   const [selectedPersonaList, setSelectedPersonaList] = useAtom(
     SELECTED_PERSONA_LIST
   );
+  console.log("🚀 ~ PagePersona4 ~ selectedPersonaList:", selectedPersonaList);
   const [categoryColor, setCategoryColor] = useAtom(CATEGORY_COLOR);
   const [projectLoadButtonState, setProjectLoadButtonState] = useAtom(
     PROJECT_LOAD_BUTTON_STATE
@@ -828,29 +829,27 @@ const PagePersona4 = () => {
                   </PersonaInfoTitle>
 
                   <PersonaInfoContent>
-                    {selectedPersonaList?.[0] ? (
-                      <>
-                        <Persona color="Linen" size="Large" Round>
-                          <img
-                            src={`/ai_person/${selectedPersonaList[0].personaImg}.png`}
-                            alt="페르소나"
-                          />
-                        </Persona>
-                        <PersonaText>
-                          <Caption1 color="gray800" align="left">
-                            {selectedPersonaList[0].persona || "성향 정보 없음"}
-                          </Caption1>
-                          <PersonaInfo>
-                            <span>
-                              {selectedPersonaList[0].gender || "성별"}
-                            </span>
-                            <span>
-                              {selectedPersonaList[0].age || "나이"}세
-                            </span>
-                            <span>{selectedPersonaList[0].job || "직업"}</span>
-                          </PersonaInfo>
-                        </PersonaText>
-                      </>
+                    {selectedPersonaList?.length > 0 ? (
+                      selectedPersonaList.map((personaItem, index) => (
+                        <PersonaItem key={index}>
+                          <Persona color="Linen" size="Large" Round>
+                            <img
+                              src={`/ai_person/${personaItem.personaImg}.png`}
+                              alt="페르소나"
+                            />
+                          </Persona>
+                          <PersonaText>
+                            <Caption1 color="gray800" align="left">
+                              {personaItem.persona || "성향 정보 없음"}
+                            </Caption1>
+                            <PersonaInfo>
+                              <span>{personaItem.gender || "성별"}</span>
+                              <span>{personaItem.age || "나이"}세</span>
+                              <span>{personaItem.job || "직업"}</span>
+                            </PersonaInfo>
+                          </PersonaText>
+                        </PersonaItem>
+                      ))
                     ) : (
                       <Caption1 color="gray700" align="center">
                         선택된 페르소나가 없습니다
@@ -874,24 +873,17 @@ const PagePersona4 = () => {
                     </Sub3>
                   </WaitPersonaTitle>
 
-                  <Button Medium PrimaryLightest Fill>
+                  <Button
+                    Medium
+                    PrimaryLightest
+                    Fill
+                    onClick={navigateToPersonaPage}
+                  >
                     <img src={images.ListUserSearch} alt="" />
                     비즈니스 페르소나 보러가기
                   </Button>
                 </WaitPersonaWrap>
               </Sidebar>
-
-              {/* <SidebarBottom>
-                <strong>
-                  다른 페르소나의 이야기가 궁금하시다면,
-                  <br />
-                  지금 바로 대화해보세요 🙌🏻
-                </strong>
-
-                <span onClick={navigateToPersonaPage}>
-                  맞춤 페르소나 보러가기
-                </span>
-              </SidebarBottom> */}
             </SidebarWrap>
 
             {showToast && (
@@ -1456,15 +1448,22 @@ const PersonaInfoTitle = styled.div`
 
 const PersonaInfoContent = styled.div`
   display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+`;
+
+const PersonaItem = styled.div`
+  display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   width: 100%;
 `;
 
 const PersonaText = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
   width: 100%;
 `;
 
