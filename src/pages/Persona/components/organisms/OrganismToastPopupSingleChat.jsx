@@ -1625,7 +1625,7 @@ const OrganismToastPopupSingleChat = ({
                   value={inputValue}
                   onKeyPress={handleKeyPress} // 여기에 handleKeyPress 사용
                   onChange={handleInputChange}
-                  placeholder="현재 Beta 버전으로 한번만 추가 질문이 1회만 가능합니다."
+                  placeholder="현재 Beta 버전으로 추가 질문이 1회만 가능합니다."
                   disabled={!isInputEnabled}
                   style={{
                     pointerEvents: isInputEnabled ? "auto" : "none",

@@ -1964,7 +1964,8 @@ const PagePersona2 = () => {
                                               </label>
                                             </CheckBox>
                                             {type.wasSelected && (
-                                              <span>{type.count}명</span>
+                                              // <span>{type.count}명</span>
+                                              <span>3명</span>
                                             )}
                                           </TypeListItem>
                                         );

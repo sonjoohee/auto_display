@@ -104,9 +104,9 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
     }
     if (isLoading) return;
 
-    const regex = /^[가-힣a-zA-Z0-9\s.,'"?!()\/\-·:\\%]*$/;
-    const specialChars = /^[.,'"?!()\/\-·:\\%]+$/;
-    const consecutiveSpecialChars = /[.,'"?!()\/\-·:\\%]{2,}/; // 특수문자가 2번 이상 연속되는 패턴
+    const regex = /^[가-힣a-zA-Z0-9\s.,'"?!()\/\-·:\\%~@#$^&*_+<>`]*$/;
+    const specialChars = /^[.,'"?!()\/\-·:\\%~@#$^&*_+<>`]+$/;
+    // const consecutiveSpecialChars = /[.,'"?!()\/\-·:\\%]{2,}/; // 특수문자가 2번 이상 연속되는 패턴
 
     // 단독으로 특수 문자만 사용된 경우
     if (specialChars.test(inputValue.trim())) {
@@ -115,10 +115,10 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
     }
 
     // 연속된 특수문자 체크
-    if (consecutiveSpecialChars.test(inputValue.trim())) {
-      setIsPopupRegex(true);
-      return;
-    }
+    // if (consecutiveSpecialChars.test(inputValue.trim())) {
+    //   setIsPopupRegex(true);
+    //   return;
+    // }
 
     // 입력 값에 대한 정규식 및 빈 값 체크
     if (!regex.test(inputValue)) {
