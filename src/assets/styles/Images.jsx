@@ -3,6 +3,8 @@ import SymbolLogo from "../images/symbolLogo.svg";
 import SymbolLogoWhite from "../images/symbolLogoWhite.svg";
 import LogoVerticality from "../images/logo-verticality.svg";
 import LogoSymbolWhite from "../images/logo-symbol-white.svg";
+import Logo2 from "../icons/Logo";
+import LogoType from "../icons/LogoType";
 
 import Filter from "../images/Filter.svg";
 import BgSearch from "../images/BgSearch.png";
@@ -270,6 +272,16 @@ import ChatPlus from "../icons/ChatPlus";
 import Repeat from "../images/repeat.svg";
 import NoUserThumb from "../images/no-user-thumb.svg";
 import ExclamationCircle2 from "../icons/ExclamationCircle";
+import ServiceLandingImages from "../images/ServiceLandingImages.svg";
+import ServiceLandingImages2 from "../images/ServiceLandingImages2.svg";
+
+import ServiceLandingSection01 from "../images/ServiceLandingSection01.png";
+import ServiceLandingSectionBg from "../images/ServiceLandingSectionBg.png";
+import ServiceLandingSection02 from "../images/ServiceLandingSection02.png";
+
+import CarouselImg01 from "../images/carousel-img01.png";
+import CarouselImg02 from "../images/carousel-img02.png";
+import CarouselImg03 from "../images/carousel-img03.png";
 
 const images = {
   Logo,
@@ -277,6 +289,8 @@ const images = {
   SymbolLogoWhite,
   LogoVerticality,
   LogoSymbolWhite,
+  Logo2,
+  LogoType,
   
   Filter,
   BgSearch,
@@ -532,6 +546,16 @@ const images = {
   NoUserThumb,
 
   ExclamationCircle2,
+  ServiceLandingImages,
+  ServiceLandingImages2,
+
+  ServiceLandingSection01,
+  ServiceLandingSectionBg,
+  ServiceLandingSection02,
+
+  CarouselImg01,
+  CarouselImg02,
+  CarouselImg03,
 }
 
 export default images;
