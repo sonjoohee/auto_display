@@ -43,7 +43,7 @@ import {
   Caption2,
   InputText,
 } from "../../../../assets/styles/Typography";
-import axios from 'axios';
+import axios from "axios";
 
 const PageMyProfile = () => {
   const navigate = useNavigate();
@@ -146,8 +146,8 @@ const PageMyProfile = () => {
         const response = await axios.post(
           "https://wishresearch.kr/api/user/support/",
           {
-            "purpose": contactForm.purpose,
-            "content": contactForm.content,
+            purpose: contactForm.purpose,
+            content: contactForm.content,
           },
           axiosConfig
         );
@@ -166,7 +166,7 @@ const PageMyProfile = () => {
         const response = await axios.post(
           "https://wishresearch.kr/api/user/leave/",
           {
-            "leave_comment": memberDeleteForm.reason
+            leave_comment: memberDeleteForm.reason,
           },
           axiosConfig
         );
@@ -184,7 +184,6 @@ const PageMyProfile = () => {
         setUserName("");
         setUserEmail("");
         window.location.href = "/"; // 페이지 이동
-
       } catch (error) {
         console.error("회원탈퇴 제출 실패:", error);
       }
@@ -211,6 +210,28 @@ const PageMyProfile = () => {
           "- InterviewX에서 구매한 크레딧은 구매일로부터 7일 이내에만 환불이 가능하며, 이는 크레딧이 사용되지 않았을 경우에 한합니다.\n" +
           "- 구독 해지는 구독 관리 페이지에서 처리하실 수 있습니다."
         );
+
+      case "서비스 이용 관련 문의":
+        return (
+          "- 서비스 이용 중 발생한 문제나 사용 방법에 대한 어려움이 있으시면 문의해 주세요.\n" +
+          "- 보다 나은 서비스를 위해 소중한 의견과 개선 제안을 남겨 주세요.\n"
+        );
+
+      case "결제 및 청구 관련 문의":
+        return (
+          "- 결제 오류, 청구 내역 확인, 결제 수단 변경 등의 문제가 있으시면 문의해 주세요.\n" +
+          "- 결제와 관련된 정확한 정보를 제공해 주시면 보다 빠르게 도와드릴 수 있습니다.\n"
+        );
+
+      case "버그 리포트":
+        return (
+          "아래의 요건이 충족 되신 분들은 환불 요청이 가능합니다.\n" +
+          "- 서비스 사용 중 오류나 버그가 발생한 경우 알려 주세요.\n" +
+          "- 빠른 해결을 위해 버그 리포트 작성 시, 아래 내용을 포함해 주시면 보다 정확하게 버그 상황을 진단할 수 있습니다. \n" +
+          "  * 사용 중인 브라우저 및 기기 정보 (예: Chrome, iPhone 13)\n" +
+          "  * 인터넷 환경 (Wi-Fi 또는 모바일 데이터)\n" +
+          "  * 오류 발생 단계\n"
+        );
       default:
         return (
           "문의 내용을 작성해 주세요.\n" +
@@ -234,15 +255,21 @@ const PageMyProfile = () => {
               </H2>
 
               <ButtonGroup>
-                <Button Primary onClick={() => navigate("/Payment")}>
-                  <images.CoinSmall
-                    width="12px"
-                    height="8px"
-                    color={palette.primary}
-                  />
-
-                  <Sub3 color="primary">요금제 관리</Sub3>
-                </Button>
+                {(sessionStorage.getItem("userEmail") ===
+                  "pg_card@userconnect.kr" ||
+                  sessionStorage.getItem("userEmail") ===
+                    "sungeun_lee@userconnect.kr" ||
+                  sessionStorage.getItem("userEmail") ===
+                    "pixelweb@naver.com") && (
+                  <Button Primary onClick={() => navigate("/Payment")}>
+                    <images.CoinSmall
+                      width="12px"
+                      height="8px"
+                      color={palette.primary}
+                    />
+                    <Sub3 color="primary">요금제 관리</Sub3>
+                  </Button>
+                )}
                 {/* <img src={images.CoinSmall} alt="요금제 관리" /> */}
                 <div style={{ position: "relative" }}>
                   <Button
@@ -304,14 +331,26 @@ const PageMyProfile = () => {
                 </div>
               </ProfileInfo>
 
-              <Button Large Outline Round onClick={() => navigate("/Payment")}>
-                <images.CoinSmall
-                  width="12px"
-                  height="8"
-                  color={palette.gray800}
-                />
-                <InputText>크레딧 충전</InputText>
-              </Button>
+              {(sessionStorage.getItem("userEmail") ===
+                "pg_card@userconnect.kr" ||
+                sessionStorage.getItem("userEmail") ===
+                  "sungeun_lee@userconnect.kr" ||
+                sessionStorage.getItem("userEmail") ===
+                  "pixelweb@naver.com") && (
+                <Button
+                  Large
+                  Outline
+                  Round
+                  onClick={() => navigate("/Payment")}
+                >
+                  <images.CoinSmall
+                    width="12px"
+                    height="8"
+                    color={palette.gray800}
+                  />
+                  <InputText>크레딧 충전</InputText>
+                </Button>
+              )}
             </ProfileInfoWrap>
 
             <ProfileInfoWrap column>
@@ -404,7 +443,7 @@ const PageMyProfile = () => {
               <ContactUsWrap>
                 <div>
                   <H5 color="gray800" align="left">
-                  답변 받으실 Email 주소
+                    답변 받으실 Email 주소
                   </H5>
                   <CustomInput
                     type="text"
@@ -445,6 +484,31 @@ const PageMyProfile = () => {
                         >
                           <Body2 color="gray700" align="left">
                             문의사항 남기기
+                          </Body2>
+                        </SelectBoxItem>
+                        <SelectBoxItem
+                          onClick={() =>
+                            handlePurposeSelect("서비스 이용 관련 문의")
+                          }
+                        >
+                          <Body2 color="gray700" align="left">
+                            서비스 이용 관련 문의
+                          </Body2>
+                        </SelectBoxItem>
+                        <SelectBoxItem
+                          onClick={() =>
+                            handlePurposeSelect("결제 및 청구 관련 문의")
+                          }
+                        >
+                          <Body2 color="gray700" align="left">
+                            결제 및 청구 관련 문의
+                          </Body2>
+                        </SelectBoxItem>
+                        <SelectBoxItem
+                          onClick={() => handlePurposeSelect("버그 리포트")}
+                        >
+                          <Body2 color="gray700" align="left">
+                            버그 리포트
                           </Body2>
                         </SelectBoxItem>
                         <SelectBoxItem

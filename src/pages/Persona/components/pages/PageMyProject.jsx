@@ -243,8 +243,6 @@ const PageMyProject = () => {
         );
         setUserPageCnt(userPageCnt.data);
 
-        console.log("🚀 ~ fetchUserInfo ~ userPageCnt:", userPageCnt);
-
         const projectListData = await axios.get(
           `https://wishresearch.kr/api/user/myPage/projectList?page=${userProjecTargetPage}&size=10`,
           {
@@ -683,123 +681,127 @@ const PageMyProject = () => {
                   {activeTab === "persona" && (
                     /* 페르소나 리스트 */
                     <>
-                    <ProjectList>
-                      <ProjectHeader>
-                        <Body3 color="gray500" style={{maxWidth: '473px'}}>페르소나 명</Body3>
-                        <Body3 color="gray500">요청일</Body3>
-                        <Body3 color="gray500">생성 완료일</Body3>
-                      </ProjectHeader>
-                      <ProjectContent>
-                        {userPersonaList.count > 0 ? (
-                          userPersonaList.results.persona.map((persona) => (
-                            <>
-                              <ProjectItem key={persona.id}>
-                                <ProjectInfo>
-                                  <Name>
-                                    <Caption2 color="gray500">
-                                      {persona.businessAnalysis.title}
-                                    </Caption2>
-                                    <Body2 color="gray800">
-                                      {persona.personaRequest.persona}
-                                    </Body2>
-                                  </Name>
-                                  <Persona>
-                                    <Sub3 color="gray500">
-                                      {persona.requestDate}
-                                    </Sub3>
-                                  </Persona>
-                                  <Report>
-                                    {persona.personaRequest.status ===
-                                    undefined ? (
-                                      <Badge Request>
-                                        <img
-                                          src={images.Plus}
-                                          alt="요청 필요"
-                                        />
-                                        요청 필요
-                                      </Badge>
-                                    ) : persona.personaRequest.status ===
-                                      "ing" ? (
-                                      <Badge Ing>모집 중</Badge>
-                                    ) : persona.personaRequest.status ===
-                                      "complete" ? (
-                                      <Badge Complete>
-                                        <img
-                                          src={images.CheckGreen}
-                                          alt="모집 완료"
-                                        />
-                                        모집 완료
-                                      </Badge>
-                                    ) : (
-                                      <></>
-                                    )}
-                                    {/* <Badge Keyword>Request</Badge> */}
-                                    <Button
-                                      Small
-                                      Outline
-                                      Fill
-                                      onClick={() => handleDetailClick(persona)}
-                                    >
-                                      자세히
-                                    </Button>
-                                  </Report>
-                                </ProjectInfo>
-                              </ProjectItem>
-                            </>
-                          ))
-                        ) : (
-                          <NoData border>
-                            <images.PeopleFill2 color="#EBEBEB" />
-                            <Body3 color="gray500">
-                              현재 요청된 맞춤 페르소나가 없습니다
-                              <br />
-                              비즈니스 분석 페이지에서 맞춤 요청을 진행해주세요
-                            </Body3>
-                          </NoData>
-                        )}
-                      </ProjectContent>
-                    </ProjectList>
+                      <ProjectList>
+                        <ProjectHeader>
+                          <Body3 color="gray500" style={{ maxWidth: "473px" }}>
+                            페르소나 명
+                          </Body3>
+                          <Body3 color="gray500">요청일</Body3>
+                          <Body3 color="gray500">생성 완료일</Body3>
+                        </ProjectHeader>
+                        <ProjectContent>
+                          {userPersonaList.count > 0 ? (
+                            userPersonaList.results.persona.map((persona) => (
+                              <>
+                                <ProjectItem key={persona.id}>
+                                  <ProjectInfo>
+                                    <Name>
+                                      <Caption2 color="gray500">
+                                        {persona.businessAnalysis.title}
+                                      </Caption2>
+                                      <Body2 color="gray800">
+                                        {persona.personaRequest.persona}
+                                      </Body2>
+                                    </Name>
+                                    <Persona>
+                                      <Sub3 color="gray500">
+                                        {persona.requestDate}
+                                      </Sub3>
+                                    </Persona>
+                                    <Report>
+                                      {persona.personaRequest.status ===
+                                      undefined ? (
+                                        <Badge Request>
+                                          <img
+                                            src={images.Plus}
+                                            alt="요청 필요"
+                                          />
+                                          요청 필요
+                                        </Badge>
+                                      ) : persona.personaRequest.status ===
+                                        "ing" ? (
+                                        <Badge Ing>모집 중</Badge>
+                                      ) : persona.personaRequest.status ===
+                                        "complete" ? (
+                                        <Badge Complete>
+                                          <img
+                                            src={images.CheckGreen}
+                                            alt="모집 완료"
+                                          />
+                                          모집 완료
+                                        </Badge>
+                                      ) : (
+                                        <></>
+                                      )}
+                                      {/* <Badge Keyword>Request</Badge> */}
+                                      <Button
+                                        Small
+                                        Outline
+                                        Fill
+                                        onClick={() =>
+                                          handleDetailClick(persona)
+                                        }
+                                      >
+                                        자세히
+                                      </Button>
+                                    </Report>
+                                  </ProjectInfo>
+                                </ProjectItem>
+                              </>
+                            ))
+                          ) : (
+                            <NoData border>
+                              <images.PeopleFill2 color="#EBEBEB" />
+                              <Body3 color="gray500">
+                                현재 요청된 맞춤 페르소나가 없습니다
+                                <br />
+                                비즈니스 분석 페이지에서 맞춤 요청을
+                                진행해주세요
+                              </Body3>
+                            </NoData>
+                          )}
+                        </ProjectContent>
+                      </ProjectList>
 
-                    <PaginationWrap>
-                      <NumbersWrapper>
-                        {/* <Pagination currentPage={1} totalPages={11} /> */}
-                        {/* 지선님 여기 디자인 부탁드립니다. 하단의 페이징 처리. !!! */}
-                        {/*  PageWrap  이거 임시로 제가 영역잡아놧어여.. tempwrap도 전체를 묶기위해 만든것이니 제거가능. */}
-                        {Array.from({
-                          length: Math.ceil(userProjectList.count / 10),
-                        }).map((_, pageIndex) => (
-                          <li key={pageIndex}>
-                            <a
-                              onClick={() =>
-                                setProjectTargetPage(pageIndex + 1)
-                              }
-                              disabled={
-                                userProjecTargetPage === pageIndex + 1
-                              }
-                              className={
-                                userProjecTargetPage === pageIndex + 1
-                                  ? "active"
-                                  : ""
-                              }
-                            >
-                              <Body3 color="gray700">{pageIndex + 1}</Body3>
-                            </a>
-                            {/* 10페이지 이상이고 현재 페이지가 마지막 페이지가 아닐 때만 점 표시 */}
-                            {Math.ceil(userProjectList.count / 10) > 10 &&
-                              pageIndex <
-                                Math.ceil(userProjectList.count / 10) - 1 &&
-                              pageIndex === 4 && (
-                                <Dots>
-                                  <Dot />
-                                  <Dot />
-                                  <Dot />
-                                </Dots>
-                              )}
-                          </li>
-                        ))}
-                      </NumbersWrapper>
-                    </PaginationWrap>
-
+                      <PaginationWrap>
+                        <NumbersWrapper>
+                          {/* <Pagination currentPage={1} totalPages={11} /> */}
+                          {/* 지선님 여기 디자인 부탁드립니다. 하단의 페이징 처리. !!! */}
+                          {/*  PageWrap  이거 임시로 제가 영역잡아놧어여.. tempwrap도 전체를 묶기위해 만든것이니 제거가능. */}
+                          {Array.from({
+                            length: Math.ceil(userPersonaList.count / 10),
+                          }).map((_, pageIndex) => (
+                            <li key={pageIndex}>
+                              <a
+                                onClick={() =>
+                                  setPersonaTagetPage(pageIndex + 1)
+                                }
+                                disabled={
+                                  userPersonaTargetPage === pageIndex + 1
+                                }
+                                className={
+                                  userPersonaTargetPage === pageIndex + 1
+                                    ? "active"
+                                    : ""
+                                }
+                              >
+                                <Body3 color="gray700">{pageIndex + 1}</Body3>
+                              </a>
+                              {/* 10페이지 이상이고 현재 페이지가 마지막 페이지가 아닐 때만 점 표시 */}
+                              {Math.ceil(userPersonaList.count / 10) > 10 &&
+                                pageIndex <
+                                  Math.ceil(userPersonaList.count / 10) - 1 &&
+                                pageIndex === 4 && (
+                                  <Dots>
+                                    <Dot />
+                                    <Dot />
+                                    <Dot />
+                                  </Dots>
+                                )}
+                            </li>
+                          ))}
+                        </NumbersWrapper>
+                      </PaginationWrap>
                     </>
                   )}
                 </MyProjectList>
@@ -995,7 +997,9 @@ const PageMyProject = () => {
                               }
                             )}
                           </Body3>
-                          <Body3 color="gray500">{credit.credit}</Body3>
+                          <Body3 color="gray500">
+                            {credit.credit.toLocaleString()}
+                          </Body3>
                         </CreditListItem>
                       ))
                     ) : (
@@ -1129,7 +1133,7 @@ const ProjectHeader = styled.div`
   }
 
   > p:nth-child(2) {
-    max-width: 240px;
+    max-width: 220px;
     width: 100%;
   }
 

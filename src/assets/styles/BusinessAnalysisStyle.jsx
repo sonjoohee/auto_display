@@ -128,6 +128,17 @@ export const PopupTitle = styled.div`
   color: ${palette.gray700};
 `;
 
+export const PopupTitle2 = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 4px;
+  width: 100%;
+  font-size: 1rem;
+  font-weight: 600;
+  color: ${palette.gray700};
+`;
+
 export const PopupContent = styled.div`
   display: flex;
   gap: 12px;

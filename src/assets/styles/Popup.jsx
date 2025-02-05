@@ -144,29 +144,33 @@ const PopupWrap = ({
 
           {showTabs && tabs && (
             <>
-              <AlertBox Green>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M18.5 10C18.5 14.6944 14.6944 18.5 10 18.5C5.30558 18.5 1.5 14.6944 1.5 10C1.5 5.30558 5.30558 1.5 10 1.5C14.6944 1.5 18.5 5.30558 18.5 10ZM20 10C20 15.5228 15.5228 20 10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0C15.5228 0 20 4.47715 20 10ZM10.729 12.2828L10.871 6H9.11619L9.27103 12.2828H10.729ZM10.0065 13.0943C9.45166 13.1004 8.99362 13.5246 9.00007 14.041C8.99362 14.5697 9.45166 15 10.0065 15C10.542 15 11 14.5697 11 14.041C11 13.5246 10.542 13.1004 10.0065 13.0943Z"
-                    fill="#34C759"
-                  />
-                </svg>
+              <AlertBox {...(eventState ? { Green: true } : { Blue: true })}>
+                {eventState ?? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M18.5 10C18.5 14.6944 14.6944 18.5 10 18.5C5.30558 18.5 1.5 14.6944 1.5 10C1.5 5.30558 5.30558 1.5 10 1.5C14.6944 1.5 18.5 5.30558 18.5 10ZM20 10C20 15.5228 15.5228 20 10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0C15.5228 0 20 4.47715 20 10ZM10.729 12.2828L10.871 6H9.11619L9.27103 12.2828H10.729ZM10.0065 13.0943C9.45166 13.1004 8.99362 13.5246 9.00007 14.041C8.99362 14.5697 9.45166 15 10.0065 15C10.542 15 11 14.5697 11 14.041C11 13.5246 10.542 13.1004 10.0065 13.0943Z"
+                      fill="#34C759"
+                    />
+                  </svg>
+                )}
                 {eventState ? (
                   <Sub3 color="green">
                     {eventTitle} 기간으로 이벤트 크레딧이 사용되고 있습니다 (
-                    {creditRequestCustomPersona} 크레딧)
+                    {creditRequestCustomPersona.toLocaleString()} 크레딧이
+                    소진됩니다.)
                   </Sub3>
                 ) : (
-                  <Sub3 color="green">
-                    ({creditRequestCustomPersona} 크레딧)
+                  <Sub3 color="blue">
+                    {creditRequestCustomPersona.toLocaleString()} 크레딧이
+                    소진됩니다.
                   </Sub3>
                 )}
               </AlertBox>
@@ -251,7 +255,11 @@ export const AlertBox = styled.div`
   padding: 4px 8px;
   border-radius: 10px;
   background: ${(props) =>
-    props.Green ? "rgba(52, 199, 89, 0.10)" : palette.gray100};
+    props.Green
+      ? "rgba(52, 199, 89, 0.10)"
+      : props.Blue
+      ? "rgba(0, 112, 255, 0.10)"
+      : palette.gray100};
 `;
 
 export const TabWrapContainer = styled(TabWrapType3)`

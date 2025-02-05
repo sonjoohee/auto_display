@@ -498,8 +498,8 @@ const PagePersona3Select = () => {
       {showCreditPopup && (
         <PopupWrap
           Warning
-          title="크레딧 부족"
-          message="보유한 이벤트 크레딧이 부족합니다. 크레딧을 충전한 후 다시 시도해주세요."
+          title="크레딧이 모두 소진되었습니다"
+          message="보유한 크레딧이 부족합니다. 크레딧을 충전한 후 다시 시도해주세요."
           buttonType="Outline"
           closeText="확인"
           isModal={false}

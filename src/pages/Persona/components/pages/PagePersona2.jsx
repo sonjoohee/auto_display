@@ -34,6 +34,7 @@ import {
   EVENT_TITLE,
   TRIAL_STATE,
   CREDIT_REQUEST_BUSINESS_PERSONA,
+  USER_CREDITS,
 } from "../../../AtomStates";
 import {
   ContentsWrap,
@@ -41,16 +42,8 @@ import {
   MainContent,
   AnalysisWrap,
   MainSection,
-  Title,
   CardWrap,
   CustomizePersona,
-  AccordionSection,
-  AccordionHeader,
-  AccordionIcon,
-  AccordionContent,
-  CustomAccordionHeader,
-  CustomAccordionIcon,
-  CustomAccordionContent,
   BoxWrap,
   BottomBar,
   TabWrapType3,
@@ -73,12 +66,12 @@ import {
   OCEANRangeWrap,
   RangeSlider,
   BgBoxItem,
+  PopupTitle2,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import {
-  H4,
   Body2,
   Body3,
   Sub1,
@@ -97,7 +90,10 @@ import MoleculeHeader from "../molecules/MoleculeHeader";
 import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
 import MoleculePersonaCard from "../molecules/MoleculePersonaCard";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
-import { updateProjectOnServer } from "../../../../utils/indexedDB";
+import {
+  updateProjectOnServer,
+  UserCreditInfo,
+} from "../../../../utils/indexedDB";
 // import { updateProjectReportOnServer } from "../../../../utils/indexedDB";
 import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
 import AtomPersonaLoader from "../atoms/AtomPersonaLoader";
@@ -193,6 +189,7 @@ const PagePersona2 = () => {
   const [eventTitle] = useAtom(EVENT_TITLE);
   const [trialState] = useAtom(TRIAL_STATE);
 
+  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
   // 로딩 상태 관리
   const loadingRef = useRef(false);
   const [viewType, setViewType] = useState("list"); // 'list' 또는 'card'
@@ -526,7 +523,6 @@ const PagePersona2 = () => {
             projectLoadButtonState
           );
 
-          // console.log("🚀 ~ loadProject ~ savedProjectInfo:", savedProjectInfo);
           if (savedProjectInfo) {
             setBusinessAnalysis(savedProjectInfo.businessAnalysis);
             setRequestPersonaList(savedProjectInfo.requestPersonaList);
@@ -607,7 +603,6 @@ const PagePersona2 = () => {
                 count: type.count,
                 index: type.index,
               }));
-            console.log("🚀 ~ loadProject ~ typesToAdd:", typesToAdd);
             // selectedTypes와 visibleSelectedTypes 업데이트
             setSelectedTypes(typesToAdd);
             setVisibleSelectedTypes(typesToAdd);
@@ -618,7 +613,6 @@ const PagePersona2 = () => {
                 const isTypeSelected = uniqueTypes.includes(type.label);
                 return !isTypeSelected;
               });
-              console.log("필터링된 unselectedTypes:", filtered);
               return filtered;
             });
             // displayedPersonas 업데이트
@@ -669,10 +663,6 @@ const PagePersona2 = () => {
                 if (!isDuplicate) {
                   unselectedPersonas.push(newPersonas[i]);
                 }
-                console.log(
-                  "🚀 ~ loadProject ~ unselectedPersonas:",
-                  unselectedPersonas
-                );
               }
             }
 
@@ -680,7 +670,6 @@ const PagePersona2 = () => {
               selected: [],
               unselected: unselectedPersonas,
             };
-            console.log("🚀 ~ loadProject ~ personfindList:", personfindList);
             setPersonaList(personfindList);
           }
           // setIsLoadingPage(false); // 로딩 완료
@@ -699,7 +688,6 @@ const PagePersona2 = () => {
               setShowErrorPopup(true);
               break;
           }
-          console.error("Error details:", error);
         }
       }
     };
@@ -832,7 +820,6 @@ const PagePersona2 = () => {
             setShowErrorPopup(true);
             break;
         }
-        console.error("Error details:", error);
       }
     } finally {
       setIsLoading(false);
@@ -855,10 +842,6 @@ const PagePersona2 = () => {
 
       // 초기 페르소나 데이터 로드
       for (const category of Object.values(businessAnalysis.category)) {
-        console.log(
-          "🚀 ~ availablePersonas ~ category:",
-          businessAnalysis.category
-        );
         const response = await axios.post(
           "https://wishresearch.kr/person/findPersonapreSet",
           { target: category },
@@ -932,7 +915,6 @@ const PagePersona2 = () => {
             filterResponse?.response?.persona_2?.persona_keyword?.length < 3 ||
             filterResponse?.response?.persona_3?.persona_keyword?.length < 3)
         ) {
-          console.log("Retrying filter request. Attempt:", retryCount + 1);
           filterResponse = await InterviewXInterviewReportPersonaFilter(
             {
               business_idea: businessAnalysis.title,
@@ -963,18 +945,6 @@ const PagePersona2 = () => {
             persona_9,
           } = filterResponse.response;
 
-          console.log("Individual Personas:", {
-            persona_1: persona_1,
-            persona_2: persona_2,
-            persona_3: persona_3,
-            persona_4: persona_4,
-            persona_5: persona_5,
-            persona_6: persona_6,
-            persona_7: persona_7,
-            persona_8: persona_8,
-            persona_9: persona_9,
-          });
-
           // 유효한 페르소나 응답들을 배열로 구성
           const validPersonas = [
             persona_1,
@@ -988,11 +958,9 @@ const PagePersona2 = () => {
             persona_9,
           ]
             .filter((p) => {
-              console.log("Filtering persona:", p);
               return p && p.persona_filter;
             })
             .map((p) => {
-              console.log("Mapping persona:", p);
               // availablePersonas에서 일치하는 페르소나 찾기
               const matchingPersona = availablePersonas.find(
                 (available) => available.persona_id === p.persona_filter
@@ -1010,11 +978,8 @@ const PagePersona2 = () => {
             })
             .filter(Boolean); // null 값 제거
 
-          console.log("Valid Personas after processing:", validPersonas);
-
           // 필터된 페르소나 추가
           filteredPersonas.push(...validPersonas);
-          console.log("Updated filteredPersonas:", filteredPersonas);
 
           // 다음 필터링을 위해 사용되지 않은 페르소나만 남김
           availablePersonas = availablePersonas.filter(
@@ -1024,10 +989,6 @@ const PagePersona2 = () => {
                   filteredPersona.persona_id === availablePersona.persona_id
               )
           );
-
-          console.log("사용된 페르소나 수:", filteredPersonas.length);
-          console.log("남은 페르소나 수:", availablePersonas.length);
-          console.log(`=== 필터링 ${i + 1}차 종료 ===\n`);
         }
       }
 
@@ -1040,12 +1001,6 @@ const PagePersona2 = () => {
         persona: filteredPersonas,
         positioning: filterResponse?.positioning_analysis || {},
       };
-
-      console.log("=== 최종 저장 데이터 ===");
-      console.log("필터링된 페르소나 수:", filteredPersonas.length);
-      console.log("필터링된 페르소나:", filteredPersonas);
-      console.log("포지셔닝 데이터:", requestPersonaData.positioning);
-      console.log("=== 저장 완료 ===\n");
 
       setRequestPersonaList(requestPersonaData);
       // setPersonaList([...selectedPersonas]);
@@ -1080,7 +1035,6 @@ const PagePersona2 = () => {
             break;
         }
       }
-      console.error("Error in loadPersonaWithFilter:", error);
     } finally {
       if (isInitial) {
         setIsLoading(false);
@@ -1114,7 +1068,6 @@ const PagePersona2 = () => {
       const existingPersonas = allBusinessPersonas?.filter(
         (p) => p.persona_type === personaType.label
       );
-      console.log("existingPersona:", existingPersonas);
       if (existingPersonas.length > 0) {
         // 이미 존재하는 페르소나들을 UI에 업데이트
         setDisplayedPersonas((prevDisplayed) => {
@@ -1125,7 +1078,6 @@ const PagePersona2 = () => {
           ]);
           return Array.from(uniquePersonas);
         });
-        console.log("displayedPersonas:", displayedPersonas);
         setIsLoadingMore(false);
         return;
       }
@@ -1143,7 +1095,6 @@ const PagePersona2 = () => {
         !requestData.business_analysis_data ||
         !requestData.persona_type
       ) {
-        console.error("Invalid request data:", requestData);
         setShowErrorPopup(true);
         return; // Exit the function if validation fails
       }
@@ -1200,7 +1151,6 @@ const PagePersona2 = () => {
             break;
         }
       } else {
-        console.error("비즈니스 페르소나 로드 중 오류:", error);
         setShowErrorPopup(true);
       }
     } finally {
@@ -1326,17 +1276,11 @@ const PagePersona2 = () => {
   };
 
   const handleStartInterview = () => {
-    console.log(selectedPersonas);
     // 선택된 페르소나들을 selected에 반영
     setPersonaList((prev) => ({
       selected: [],
       unselected: filteredProjectList,
     }));
-
-    console.log(
-      "🚀 ~ setPersonaList ~ filteredProjectList:",
-      filteredProjectList
-    );
 
     setPersonaStep(3);
     setIsPersonaAccessible(true);
@@ -1364,9 +1308,12 @@ const PagePersona2 = () => {
       };
 
       const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
-      console.log("크레딧 체크 응답:", creditResponse);
 
       if (creditResponse?.state !== "use") {
+        console.log(
+          "🚀 ~ handleCustomizePopupConfirm ~ creditResponse:",
+          creditResponse
+        );
         setShowCreditPopup(true);
         return;
       }
@@ -1380,17 +1327,27 @@ const PagePersona2 = () => {
         mount: creditRequestCustomPersona,
       };
 
-      const creditUseResponse = await UserCreditUse(
-        creditUsePayload,
-        isLoggedIn
-      );
-      console.log("크레딧 사용 응답:", creditUseResponse);
+      await UserCreditUse(creditUsePayload, isLoggedIn);
+
+      // 크레딧 사용 후 사용자 정보 새로고침
+      const accessToken = sessionStorage.getItem("accessToken");
+      if (accessToken) {
+        const userCreditValue = await UserCreditInfo(isLoggedIn);
+        console.log(
+          "🚀 ~ handleCustomizePopupConfirm ~ userCreditValue:",
+          userCreditValue
+        );
+
+        // 전역 상태의 크레딧 정보 업데이트
+        setUserCredits(userCreditValue);
+      }
 
       // 이후 커스텀 페르소나 요청 진행 (예: 요청 API 호출)
       submitCustomPersonaRequest();
       setShowCustomizePopup(false);
     } catch (error) {
-      console.error("크레딧 체크 실패:", error);
+      console.log("🚀 ~ handleCustomizePopupConfirm ~ error:", error);
+
       setShowCreditPopup(true);
     }
   };
@@ -1428,9 +1385,7 @@ const PagePersona2 = () => {
   const handleAgeGroupChange = (ageGroup) => {
     setCustomPersonaForm((prev) => ({
       ...prev,
-      ageGroups: prev.ageGroups.includes(ageGroup)
-        ? prev.ageGroups.filter((age) => age !== ageGroup)
-        : [...prev.ageGroups, ageGroup],
+      ageGroups: [ageGroup], // 단일 선택만 가능하도록 배열에 하나의 값만 저장
     }));
   };
   const initialCustomPersonaForm = {
@@ -1460,6 +1415,14 @@ const PagePersona2 = () => {
             ageGroups: customPersonaForm.ageGroups,
           },
           additionalInfo: customPersonaForm.additionalInfo,
+          ocean: {
+            openness: oceanValues.openness,
+            conscientiousness: oceanValues.conscientiousness,
+            extraversion: oceanValues.extraversion,
+            agreeableness: oceanValues.agreeableness,
+            neuroticism: oceanValues.neuroticism,
+          },
+          ignoreOcean: ignoreOcean,
         },
       };
 
@@ -1494,7 +1457,6 @@ const PagePersona2 = () => {
             setShowErrorPopup(true);
             break;
         }
-        console.error("Error details:", error);
       }
     }
   };
@@ -1502,14 +1464,23 @@ const PagePersona2 = () => {
   // 폼 유효성 검사 함수 수정
   const isFormValid = () => {
     if (activeTabIndex === 0) {
-      // 첫 번째 탭에서는 성별과 연령대 선택 여부 확인
+      // 첫 번째 탭(필수정보)에서는 성별과 연령대 선택이 필수
       const isGenderSelected = customPersonaForm.gender !== "";
       const isAgeGroupSelected = customPersonaForm.ageGroups.length > 0;
 
       return isGenderSelected && isAgeGroupSelected;
     } else {
-      // 두 번째 탭에서는 항상 true 반환
-      return true;
+      // 두 번째 탭(OCEAN 정보)에서는 모든 OCEAN 값이 선택되어 있거나 랜덤 생성이 체크되어 있어야 함
+      if (ignoreOcean) {
+        return true;
+      }
+
+      // 모든 OCEAN 값이 0 또는 1인지 확인
+      const isAllOceanValuesSelected = Object.values(oceanValues).every(
+        (value) => value === 0 || value === 1 || value === "0" || value === "1"
+      );
+
+      return isAllOceanValuesSelected;
     }
   };
 
@@ -1585,7 +1556,6 @@ const PagePersona2 = () => {
         const filteredPersonas = prev.filter(
           (persona) => persona.persona_type !== typeToRemove.label
         );
-        console.log("Filtered displayedPersonas:", filteredPersonas);
         return filteredPersonas;
       });
     }
@@ -1644,8 +1614,6 @@ const PagePersona2 = () => {
   const handleIgnoreOcean = (e) => {
     setIgnoreOcean(e.target.checked);
   };
-
-  console.log("currentRequestedPersona", currentRequestedPersona);
 
   const reloadBusinessPersonaList = async () => {
     try {
@@ -1799,33 +1767,6 @@ const PagePersona2 = () => {
                                   </Body3>
                                 </LoadMoreButton>
                               )}
-
-                            {/* 
-                            <BannerPersona>
-                              <div>
-                                <h2>
-                                  나만의 페르소나 커스터마이징
-                                  <p>
-                                    페르소나를 커스터마이징하여 더 정확한
-                                    인터뷰를 진행해보세요.
-                                  </p>
-                                </h2>
-
-                                <Button
-                                  Large
-                                  Primary
-                                  onClick={handleCustomizeRequest}
-                                >
-                                  요청하기
-                                  <img
-                                    src={images.ChevronRightPrimary}
-                                    alt=""
-                                  />
-                                </Button>
-                              </div>
-                              <img src={images.PersonaCustomizing} alt="" />
-                            </BannerPersona>
-                             */}
                           </>
                         </ContentSection>
                       ) : (
@@ -2062,29 +2003,6 @@ const PagePersona2 = () => {
                               color={palette.white}
                             />
                           </span>
-                          {/* <p>
-                            {selectedPersonas.length > 0 ? (
-                              <>
-                                선택하신{" "}
-                                <span>{selectedPersonas.length}명</span>의
-                                페르소나와 인터뷰 하시겠어요? (
-                                {selectedPersonas.length}/5)
-                              </>
-                            ) : (
-                              `추천 페르소나 ${filteredProjectList.length}명이 인터뷰를 기다리고 있어요`
-                            )}
-                          </p>
-                          <Button
-                            DbExLarge
-                            Round
-                            Fill={selectedPersonas.length > 0}
-                            // Edit={selectedPersonas.length === 0}
-                            // disabled={selectedPersonas.length === 0}
-                            onClick={handleStartInterview}
-                          >
-                            <Sub1 color="gray800">인터뷰 시작하기</Sub1>
-                            <img src={images.ChevronRight} alt="" />
-                          </Button> */}
                         </BottomBar>
                       )}
                     </CustomizePersona>
@@ -2142,7 +2060,21 @@ const PagePersona2 = () => {
           }}
           showTabs={true}
           tabs={["필수정보", "OCEAN 정보"]}
-          onTabChange={(index) => setActiveTabIndex(index)}
+          onTabChange={(index) => {
+            // 필수정보 탭에서 OCEAN 탭으로 이동하려고 할 때 (index === 1)
+            if (index === 1) {
+              // 필수 입력값 검증
+              const isGenderSelected = customPersonaForm.gender !== "";
+              const isAgeGroupSelected = customPersonaForm.ageGroups.length > 0;
+
+              // 필수 정보가 모두 입력되지 않았다면 탭 전환을 하지 않음
+              if (!isGenderSelected || !isAgeGroupSelected) {
+                return;
+              }
+            }
+            // 필수 정보가 모두 입력되었거나, OCEAN 탭에서 필수정보 탭으로 이동할 때
+            setActiveTabIndex(index);
+          }}
           activeTab={activeTabIndex}
           eventState={eventState}
           eventTitle={eventTitle}
@@ -2153,13 +2085,9 @@ const PagePersona2 = () => {
               {activeTabIndex === 0 && (
                 <>
                   <div>
-                    <PopupTitle>
-                      성별
-                      <Sub3>
-                        * 선택하지 않는 경우, 성별 무관으로 페르소나를
-                        생성합니다.
-                      </Sub3>
-                    </PopupTitle>
+                    <PopupTitle2>
+                      성별<span style={{ color: "red" }}>*</span>
+                    </PopupTitle2>
 
                     <PopupContent>
                       <GenderRadioButton
@@ -2188,13 +2116,9 @@ const PagePersona2 = () => {
                   </div>
 
                   <div>
-                    <PopupTitle>
-                      연령 (다중 선택)
-                      <Sub3>
-                        * 선택하지 않는 경우, 연령 무관으로 페르소나를
-                        생성합니다.
-                      </Sub3>
-                    </PopupTitle>
+                    <PopupTitle2>
+                      연령<span style={{ color: "red" }}>*</span>
+                    </PopupTitle2>
 
                     <PopupContent>
                       <AgeGroup>
@@ -2202,12 +2126,10 @@ const PagePersona2 = () => {
                           {["10s", "20s", "30s", "40s"].map((age, index) => (
                             <React.Fragment key={age}>
                               <input
-                                type="checkbox"
+                                type="radio" // checkbox에서 radio로 변경
                                 id={`age${index + 1}`}
-                                name="age"
-                                checked={customPersonaForm.ageGroups.includes(
-                                  age
-                                )}
+                                name="age" // 같은 name으로 그룹화
+                                checked={customPersonaForm.ageGroups[0] === age} // 첫 번째(유일한) 값과 비교
                                 onChange={() => handleAgeGroupChange(age)}
                               />
                               <label
@@ -2223,12 +2145,10 @@ const PagePersona2 = () => {
                           {["50s", "60s", "70s"].map((age, index) => (
                             <React.Fragment key={age}>
                               <input
-                                type="checkbox"
+                                type="radio" // checkbox에서 radio로 변경
                                 id={`age${index + 5}`}
-                                name="age"
-                                checked={customPersonaForm.ageGroups.includes(
-                                  age
-                                )}
+                                name="age" // 같은 name으로 그룹화
+                                checked={customPersonaForm.ageGroups[0] === age} // 첫 번째(유일한) 값과 비교
                                 onChange={() => handleAgeGroupChange(age)}
                               />
                               <label
@@ -2272,7 +2192,7 @@ const PagePersona2 = () => {
               {activeTabIndex === 1 && (
                 <>
                   <div>
-                    <BgBoxItem NoOutline style={{ marginBottom: "40px" }}>
+                    <BgBoxItem NoOutline style={{ marginBottom: "10px" }}>
                       <Sub3 color="gray500" align="left">
                         OCEAN이란?
                         <br />
@@ -2282,14 +2202,6 @@ const PagePersona2 = () => {
                         안정성(Neuroticism)을 평가하는 방법입니다.
                       </Sub3>
                     </BgBoxItem>
-
-                    {/* <PopupTitle>
-                      성향
-                      <Sub3>
-                        * 선택하지 않는 경우, 성향 무관으로 페르소나를
-                        생성합니다.
-                      </Sub3>
-                    </PopupTitle> */}
 
                     <PopupContent>
                       <OCEANRangeWrap>
@@ -2381,12 +2293,6 @@ const PagePersona2 = () => {
                   </div>
 
                   <div style={{ marginTop: "12px", textAlign: "left" }}>
-                    {/* <Body3 color="gray500">
-                      페르소나 마다의 다양한 성향이 있습니다. 이러한 성향에 따라
-                      생성되는 페르소나는 각양각색의 무한한 가능성과 여러가지
-                      방법들이 있습니다. 원하는 바를 위해 최대한 커스터마이징
-                      하여 페르소나를 도출해 내시기를 기원합니다.
-                    </Body3> */}
                     <CheckBox Fill>
                       <input
                         type="checkbox"
@@ -2429,8 +2335,14 @@ const PagePersona2 = () => {
       {showCreditPopup && (
         <PopupWrap
           Warning
-          title="크레딧 부족"
-          message="보유한 이벤트 크레딧이 부족합니다. 크레딧을 충전한 후 다시 시도해주세요."
+          title="크레딧이 모두 소진되었습니다"
+          message={
+            <>
+              보유한 크레딧이 부족합니다.
+              <br />
+              크레딧을 충전한 후 다시 시도해주세요.
+            </>
+          }
           buttonType="Outline"
           closeText="확인"
           isModal={false}
