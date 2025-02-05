@@ -1,20 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
+import { ContentsWrap } from "../assets/styles/BusinessAnalysisStyle";
+import OrganismIncNavigation from "../pages/Persona/components/organisms/OrganismIncNavigation";
+import MoleculeHeader from "../pages/Persona/components/molecules/MoleculeHeader";
 
 const PageBlog = () => {
   return (
-    <BlogContainer>
-      <iframe 
-        src="https://www.notioniframe.com/notion/2cduo7gbv65" 
-        title="Blog Content"
-        style={{
-          width: '100%',
-          height: '100%',
-          border: 0,
-          padding: 0
-        }}
-      />
-    </BlogContainer>
+    <>
+      <ContentsWrap>
+        <OrganismIncNavigation />
+
+        <MoleculeHeader />
+
+        <BlogContainer>
+                  <iframe 
+                    src="https://www.notioniframe.com/notion/2cduo7gbv65" 
+                    title="Blog Content"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      border: 0,
+                      padding: 0
+                    }}
+                  />
+        </BlogContainer>
+      </ContentsWrap>
+    </>
   );
 };
 
