@@ -364,13 +364,13 @@ const OrganismToastPopupSingleChat = ({
             ...existingQuestions.commonQuestions,
             ...existingQuestions.specialQuestions,
           ];
-          // setInterviewQuestionListState(combinedQuestions.slice(0, 2)); // 질문 두개 테스트
-          setInterviewQuestionListState(combinedQuestions);
+          setInterviewQuestionListState(combinedQuestions.slice(0, 2)); // 질문 두개 테스트
+          // setInterviewQuestionListState(combinedQuestions);
 
           await new Promise((resolve) => setTimeout(resolve, 5000));
           setIsLoadingPrepare(false);
-          // setInterviewStatus(["Pre", "Pre"]); // 테스트 하나
-          setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
+          setInterviewStatus(["Pre", "Pre"]); // 테스트 하나
+          // setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
         } else {
           // 생성된 질문이 없다면 API 요청
           let data = {
