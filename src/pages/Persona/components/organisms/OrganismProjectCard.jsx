@@ -27,7 +27,7 @@ import {
 
 //pagemyproject에서 props받아옴
 const OrganismProjectCard = ({ project, index }) => {
-  console.log("🚀 ~ OrganismProjectCard ~ project:", project);
+  // console.log("🚀 ~ OrganismProjectCard ~ project:", project);
   const [
     reportDescriptionLoadButtonState,
     setReportDescriptionLoadButtonState,
