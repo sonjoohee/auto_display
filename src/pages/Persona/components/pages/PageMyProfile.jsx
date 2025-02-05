@@ -19,6 +19,7 @@ import {
   USER_EMAIL,
   USER_CREDIT_DATA,
   USER_MEMBERSHIP,
+  IS_SOCIAL_LOGGED_IN,
 } from "../../../AtomStates";
 import {
   ButtonGroup,
@@ -46,6 +47,8 @@ import axios from 'axios';
 
 const PageMyProfile = () => {
   const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [isSocialLoggedIn, setIsSocialLoggedIn] = useAtom(IS_SOCIAL_LOGGED_IN);
   const [isServiceMenuOpen, setIsServiceMenuOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [isAccountPopupOpen, setAccountPopupOpen] = useState(false); // 계정설정 팝업
@@ -118,6 +121,14 @@ const PageMyProfile = () => {
     return memberDeleteForm.reason;
   };
 
+  const axiosConfig = {
+    timeout: 100000,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    withCredentials: true,
+  };
+
   const handleContactSubmit = async () => {
     if (isContactFormValid()) {
       // API 호출을 위한 데이터 준비
@@ -129,7 +140,14 @@ const PageMyProfile = () => {
       console.log("🚀 ~ handleContactSubmit ~ requestData:", requestData);
 
       try {
-        const response = await axios.post('api/contact', requestData);
+        const response = await axios.post(
+          "https://wishresearch.kr/api/user/support/",
+          {
+            "ABC": contactForm.purpose,
+            "ddd": contactForm.content,
+          },
+          axiosConfig
+        );
         console.log("문의하기 제출 성공:", response.data);
         closeContactPopup();
       } catch (error) {
@@ -137,11 +155,36 @@ const PageMyProfile = () => {
       }
     }
   };
-  const handleMemberDeleteSubmit = () => {
+
+  const handleMemberDeleteSubmit = async () => {
     if (isMemberDeleteFormValid()) {
       // TODO: 회원탈퇴 제출 로직 구현
-      console.log("회원탈퇴 제출:", memberDeleteForm);
-      closeMemberDeletePopup();
+      try {
+        const response = await axios.post(
+          "https://wishresearch.kr/api/user/leave",
+          {
+            "leave_comment": memberDeleteForm.reason
+          },
+          axiosConfig
+        );
+        console.log("회원탈퇴 제출:", response.data);
+        closeMemberDeletePopup();
+
+        sessionStorage.removeItem("accessToken"); // 세션 스토리지에서 토큰 삭제
+        sessionStorage.removeItem("userName");
+        sessionStorage.removeItem("userEmail");
+        sessionStorage.removeItem("isSocialLogin");
+        localStorage.removeItem("userName");
+        localStorage.removeItem("userEmail");
+        setIsLoggedIn(false);
+        setIsSocialLoggedIn(false);
+        setUserName("");
+        setUserEmail("");
+        window.location.href = "/"; // 페이지 이동
+
+      } catch (error) {
+        console.error("회원탈퇴 제출 실패:", error);
+      }
     }
   };
 
