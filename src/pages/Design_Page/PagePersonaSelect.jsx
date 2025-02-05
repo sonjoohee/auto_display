@@ -10,16 +10,24 @@ import OrganismIncNavigation from "../Persona/components/organisms/OrganismIncNa
 import MoleculeHeader from "../Persona/components/molecules/MoleculeHeader";
 import PopupWrap from "../../assets/styles/Popup";
 import OrganismToastPopup from "../../assets/styles/ToastPopupChat";
-import { Button, ButtonGroup, IconButton } from "../../assets/styles/ButtonStyle";
+import {
+  Button,
+  ButtonGroup,
+  IconButton,
+} from "../../assets/styles/ButtonStyle";
 import images from "../../assets/styles/Images";
 import personaImages from "../../assets/styles/PersonaImages";
 import { palette } from "../../assets/styles/Palette";
-import { RadioButton, CustomTextarea, FormBox } from "../../assets/styles/InputStyle";
-import { 
-  ContentsWrap, 
-  MainContent, 
-  AnalysisWrap, 
-  MainSection, 
+import {
+  RadioButton,
+  CustomTextarea,
+  FormBox,
+} from "../../assets/styles/InputStyle";
+import {
+  ContentsWrap,
+  MainContent,
+  AnalysisWrap,
+  MainSection,
   CardWrap,
   CardGroupWrap,
   ListBoxItem,
@@ -42,30 +50,42 @@ import {
   PersonaInfo,
   SwitchToggle,
   SwitchToggleItem,
-  SwitchHandle
+  SwitchHandle,
 } from "../../assets/styles/BusinessAnalysisStyle";
-import { 
-  H5, Body1, Body2, Body3, Sub1, Sub2, Sub3, Caption1, Caption2 
+import {
+  H5,
+  Body1,
+  Body2,
+  Body3,
+  Sub1,
+  Sub2,
+  Sub3,
+  Caption1,
+  Caption2,
 } from "../../assets/styles/Typography";
-import { SELECTED_INTERVIEW_TYPE, SELECTED_INTERVIEW_PURPOSE } from "../../AtomStates";
+import {
+  SELECTED_INTERVIEW_TYPE,
+  SELECTED_INTERVIEW_PURPOSE,
+} from "../../AtomStates";
 
-const FULL_DEFINITION_TEXT = '사용자 트렌드 민감도 분석은 사용자가 시장의 최신 트렌드에 얼마나 빠르고 효과적으로 반응하는지를 측정하는 방법론입니다. 이 분석은 사용자가 새로운 트렌드를 어떻게 인식하고, 그 트렌드에 따라 행동이 어떻게 변화하는지 파악하는 데 중점을 둡니다.';
+const FULL_DEFINITION_TEXT =
+  "사용자 트렌드 민감도 분석은 사용자가 시장의 최신 트렌드에 얼마나 빠르고 효과적으로 반응하는지를 측정하는 방법론입니다. 이 분석은 사용자가 새로운 트렌드를 어떻게 인식하고, 그 트렌드에 따라 행동이 어떻게 변화하는지 파악하는 데 중점을 둡니다.";
 
 const PagePersonaSelect = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [showQuestions, setShowQuestions] = useState({
     radio3: false,
     radio4: false,
-    radio5: false
+    radio5: false,
   });
   const [showCustomization, setShowCustomization] = useState(false);
-  const [purposeText, setPurposeText] = useState('');
+  const [purposeText, setPurposeText] = useState("");
   const [showMethodology, setShowMethodology] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [editedDefinition, setEditedDefinition] = useState('');
-  const [editedPurpose, setEditedPurpose] = useState('');
+  const [editedDefinition, setEditedDefinition] = useState("");
+  const [editedPurpose, setEditedPurpose] = useState("");
   const [definitionText, setDefinitionText] = useState(
-    '사용자 트렌드 민감도 분석은 사용자가 시장의 최신 트렌드에 얼마나 빠르고 효과적으로 반응하는지를 측정하는 방법론입니다. 이 분석은 사용자가 새로운 트렌드를 어떻게 인식하고, 그 트렌드에 따라 행동이 어떻게 변화하는지 파악하는 데 중점을 둡니다.'
+    "사용자 트렌드 민감도 분석은 사용자가 시장의 최신 트렌드에 얼마나 빠르고 효과적으로 반응하는지를 측정하는 방법론입니다. 이 분석은 사용자가 새로운 트렌드를 어떻게 인식하고, 그 트렌드에 따라 행동이 어떻게 변화하는지 파악하는 데 중점을 둡니다."
   );
   const [showNewListBox, setShowNewListBox] = useState(false);
   const [customizations, setCustomizations] = useState([]);
@@ -99,15 +119,19 @@ const PagePersonaSelect = () => {
   const handleEditClick = (index) => {
     const newCustomizations = [...customizations];
     newCustomizations[index].isEditing = true;
-    newCustomizations[index].editedDefinition = newCustomizations[index].definitionText;
-    newCustomizations[index].editedPurpose = newCustomizations[index].purposeText;
+    newCustomizations[index].editedDefinition =
+      newCustomizations[index].definitionText;
+    newCustomizations[index].editedPurpose =
+      newCustomizations[index].purposeText;
     setCustomizations(newCustomizations);
   };
 
   const handleEditComplete = (index) => {
     const newCustomizations = [...customizations];
-    newCustomizations[index].definitionText = newCustomizations[index].editedDefinition;
-    newCustomizations[index].purposeText = newCustomizations[index].editedPurpose;
+    newCustomizations[index].definitionText =
+      newCustomizations[index].editedDefinition;
+    newCustomizations[index].purposeText =
+      newCustomizations[index].editedPurpose;
     newCustomizations[index].isEditing = false;
     setCustomizations(newCustomizations);
   };
@@ -145,9 +169,11 @@ const PagePersonaSelect = () => {
                   <ListBoxGroup>
                     <li>
                       <Body2 color="gray500">인터뷰 방식</Body2>
-                      {selectedInterviewType === 'multiple' ? (
-                        <Body2 color="gray800">여러 페르소나 인터뷰 (1:N)</Body2>
-                      ) : selectedInterviewType === 'single' ? (
+                      {selectedInterviewType === "multiple" ? (
+                        <Body2 color="gray800">
+                          여러 페르소나 인터뷰 (1:N)
+                        </Body2>
+                      ) : selectedInterviewType === "single" ? (
                         <Body2 color="gray800">한명과 심층 인터뷰 (1:1)</Body2>
                       ) : null}
                     </li>
@@ -160,43 +186,51 @@ const PagePersonaSelect = () => {
                       <PersonaGroup>
                         <span>+2</span>
                         <Persona color="Linen" size="Small" Round>
-                          <img src={personaImages.PersonaWomen01} alt="페르소나" />
+                          <img
+                            src={personaImages.PersonaWomen01}
+                            alt="페르소나"
+                          />
                         </Persona>
                         <Persona color="PastelPink" size="Small" Round>
-                          <img src={personaImages.PersonaWomen02} alt="페르소나" />
+                          <img
+                            src={personaImages.PersonaWomen02}
+                            alt="페르소나"
+                          />
                         </Persona>
                         <Persona color="Crayola" size="Small" Round>
-                          <img src={personaImages.PersonaWomen03} alt="페르소나" />
+                          <img
+                            src={personaImages.PersonaWomen03}
+                            alt="페르소나"
+                          />
                         </Persona>
                       </PersonaGroup>
                     </li>
-                    {selectedInterviewType === 'multiple' ? (
+                    {selectedInterviewType === "multiple" ? (
                       <></>
-                      ) : selectedInterviewType === 'single' ? (
-                        <li>
-                          <Body2 color="gray500">반응형 인터뷰</Body2>
-                          <SwitchToggle>
-                            <SwitchToggleItem>
-                              <input type="checkbox" />
-                              <span data-on="ON" data-off="OFF" />
-                              <SwitchHandle />
-                            </SwitchToggleItem>
-                            <Body2 color="gray800">추가 질문 생성</Body2>
-                          </SwitchToggle>
-                        </li>
-                      ) : null}
-
+                    ) : selectedInterviewType === "single" ? (
+                      <li>
+                        <Body2 color="gray500">인뎁스 인터뷰</Body2>
+                        <SwitchToggle>
+                          <SwitchToggleItem>
+                            <input type="checkbox" />
+                            <span data-on="ON" data-off="OFF" />
+                            <SwitchHandle />
+                          </SwitchToggleItem>
+                          <Body2 color="gray800">인뎁스 인터뷰 수행</Body2>
+                        </SwitchToggle>
+                      </li>
+                    ) : null}
                   </ListBoxGroup>
                 </div>
 
                 <div>
                   <Title>
-                    {selectedInterviewType === 'multiple' ? (
+                    {selectedInterviewType === "multiple" ? (
                       <>
                         <Body2 color="gray800">⭐ 페르소나 리스트</Body2>
                         <Sub3 color="gray800">2명 선택됨</Sub3>
                       </>
-                    ) : selectedInterviewType === 'single' ? (
+                    ) : selectedInterviewType === "single" ? (
                       <>
                         <Body2 color="gray800">📌 참여가능 페르소나</Body2>
                         <Sub3 color="gray800">2명 선택됨</Sub3>
@@ -204,17 +238,18 @@ const PagePersonaSelect = () => {
                     ) : null}
                   </Title>
 
-                  {selectedInterviewType === 'multiple' ? (
+                  {selectedInterviewType === "multiple" ? (
                     <CardGroupWrap>
                       <ListBoxItem>
                         <Persona color="Linen" size="Large" Round>
-                          <img src={personaImages.PersonaWomen01} alt="페르소나" />
+                          <img
+                            src={personaImages.PersonaWomen01}
+                            alt="페르소나"
+                          />
                         </Persona>
                         <ListText>
                           <ListTitle>
-                            <Body1 color="gray800">
-                              제품 경험 평가
-                            </Body1>
+                            <Body1 color="gray800">제품 경험 평가</Body1>
                             <Badge New>비즈니스</Badge>
                           </ListTitle>
                           <ListSubtitle>
@@ -227,9 +262,9 @@ const PagePersonaSelect = () => {
                         </ListText>
 
                         <ListButton>
-                          <Button 
-                            Medium 
-                            PrimaryLightest={selectedPersonas === "persona1"} 
+                          <Button
+                            Medium
+                            PrimaryLightest={selectedPersonas === "persona1"}
                             Fill={selectedPersonas === "persona1"}
                             onClick={() => handlePersonaSelect("persona1")}
                           >
@@ -244,13 +279,14 @@ const PagePersonaSelect = () => {
 
                       <ListBoxItem>
                         <Persona color="Linen" size="Large" Round>
-                          <img src={personaImages.PersonaWomen01} alt="페르소나" />
+                          <img
+                            src={personaImages.PersonaWomen01}
+                            alt="페르소나"
+                          />
                         </Persona>
                         <ListText>
                           <ListTitle>
-                            <Body1 color="gray800">
-                              제품 경험 평가
-                            </Body1>
+                            <Body1 color="gray800">제품 경험 평가</Body1>
                             <Badge New>비즈니스</Badge>
                           </ListTitle>
                           <ListSubtitle>
@@ -263,9 +299,9 @@ const PagePersonaSelect = () => {
                         </ListText>
 
                         <ListButton>
-                          <Button 
-                            Medium 
-                            PrimaryLightest={selectedPersonas === "persona2"} 
+                          <Button
+                            Medium
+                            PrimaryLightest={selectedPersonas === "persona2"}
                             Fill={selectedPersonas === "persona2"}
                             onClick={() => handlePersonaSelect("persona2")}
                           >
@@ -280,13 +316,14 @@ const PagePersonaSelect = () => {
 
                       <ListBoxItem>
                         <Persona color="Linen" size="Large" Round>
-                          <img src={personaImages.PersonaWomen01} alt="페르소나" />
+                          <img
+                            src={personaImages.PersonaWomen01}
+                            alt="페르소나"
+                          />
                         </Persona>
                         <ListText>
                           <ListTitle>
-                            <Body1 color="gray800">
-                              제품 경험 평가
-                            </Body1>
+                            <Body1 color="gray800">제품 경험 평가</Body1>
                             <Badge New>비즈니스</Badge>
                           </ListTitle>
                           <ListSubtitle>
@@ -299,9 +336,9 @@ const PagePersonaSelect = () => {
                         </ListText>
 
                         <ListButton>
-                          <Button 
-                            Medium 
-                            PrimaryLightest={selectedPersonas === "persona3"} 
+                          <Button
+                            Medium
+                            PrimaryLightest={selectedPersonas === "persona3"}
                             Fill={selectedPersonas === "persona3"}
                             onClick={() => handlePersonaSelect("persona3")}
                           >
@@ -316,13 +353,14 @@ const PagePersonaSelect = () => {
 
                       <ListBoxItem>
                         <Persona color="Linen" size="Large" Round>
-                          <img src={personaImages.PersonaWomen01} alt="페르소나" />
+                          <img
+                            src={personaImages.PersonaWomen01}
+                            alt="페르소나"
+                          />
                         </Persona>
                         <ListText>
                           <ListTitle>
-                            <Body1 color="gray800">
-                              제품 경험 평가
-                            </Body1>
+                            <Body1 color="gray800">제품 경험 평가</Body1>
                           </ListTitle>
                           <ListSubtitle>
                             <PersonaInfo>
@@ -334,9 +372,9 @@ const PagePersonaSelect = () => {
                         </ListText>
 
                         <ListButton>
-                          <Button 
-                            Medium 
-                            PrimaryLightest={selectedPersonas === "persona4"} 
+                          <Button
+                            Medium
+                            PrimaryLightest={selectedPersonas === "persona4"}
                             Fill={selectedPersonas === "persona4"}
                             onClick={() => handlePersonaSelect("persona4")}
                           >
@@ -349,16 +387,19 @@ const PagePersonaSelect = () => {
                         </ListButton>
                       </ListBoxItem>
                     </CardGroupWrap>
-                  ) : selectedInterviewType === 'single' ? (
-                    <CardGroupWrap style={{ gap: '8px' }}>
-                      <ListBorderItem 
-                        selected={selectedPersonas === "persona1"} 
+                  ) : selectedInterviewType === "single" ? (
+                    <CardGroupWrap style={{ gap: "8px" }}>
+                      <ListBorderItem
+                        selected={selectedPersonas === "persona1"}
                         anySelected={selectedPersonas !== null}
                       >
                         <Persona color="Linen" size="Large" Round>
-                          <img src={personaImages.PersonaWomen01} alt="페르소나" />
+                          <img
+                            src={personaImages.PersonaWomen01}
+                            alt="페르소나"
+                          />
                         </Persona>
-                        <ListText style={{ gap: '4px' }}>
+                        <ListText style={{ gap: "4px" }}>
                           <ListTitle>
                             <Body1 color="gray800">
                               가족과 함께 여가를 보내는 활동 지향형 소비자
@@ -375,9 +416,9 @@ const PagePersonaSelect = () => {
                         </ListText>
 
                         <ListButton>
-                          <Button 
-                            Medium 
-                            PrimaryLightest={selectedPersonas === "persona1"} 
+                          <Button
+                            Medium
+                            PrimaryLightest={selectedPersonas === "persona1"}
                             Fill={selectedPersonas === "persona1"}
                             onClick={() => handlePersonaSelect("persona1")}
                           >
@@ -390,14 +431,17 @@ const PagePersonaSelect = () => {
                         </ListButton>
                       </ListBorderItem>
 
-                      <ListBorderItem 
-                        selected={selectedPersonas === "persona2"} 
+                      <ListBorderItem
+                        selected={selectedPersonas === "persona2"}
                         anySelected={selectedPersonas !== null}
                       >
                         <Persona color="Linen" size="Large" Round>
-                          <img src={personaImages.PersonaWomen01} alt="페르소나" />
+                          <img
+                            src={personaImages.PersonaWomen01}
+                            alt="페르소나"
+                          />
                         </Persona>
-                        <ListText style={{ gap: '4px' }}>
+                        <ListText style={{ gap: "4px" }}>
                           <ListTitle>
                             <Body1 color="gray800">
                               가족과 함께 여가를 보내는 활동 지향형 소비자
@@ -414,9 +458,9 @@ const PagePersonaSelect = () => {
                         </ListText>
 
                         <ListButton>
-                          <Button 
-                            Medium 
-                            PrimaryLightest={selectedPersonas === "persona2"} 
+                          <Button
+                            Medium
+                            PrimaryLightest={selectedPersonas === "persona2"}
                             Fill={selectedPersonas === "persona2"}
                             onClick={() => handlePersonaSelect("persona2")}
                           >
@@ -429,14 +473,17 @@ const PagePersonaSelect = () => {
                         </ListButton>
                       </ListBorderItem>
 
-                      <ListBorderItem 
-                        selected={selectedPersonas === "persona3"} 
+                      <ListBorderItem
+                        selected={selectedPersonas === "persona3"}
                         anySelected={selectedPersonas !== null}
                       >
                         <Persona color="Linen" size="Large" Round>
-                          <img src={personaImages.PersonaWomen01} alt="페르소나" />
+                          <img
+                            src={personaImages.PersonaWomen01}
+                            alt="페르소나"
+                          />
                         </Persona>
-                        <ListText style={{ gap: '4px' }}>
+                        <ListText style={{ gap: "4px" }}>
                           <ListTitle>
                             <Body1 color="gray800">
                               가족과 함께 여가를 보내는 활동 지향형 소비자
@@ -453,9 +500,9 @@ const PagePersonaSelect = () => {
                         </ListText>
 
                         <ListButton>
-                          <Button 
-                            Medium 
-                            PrimaryLightest={selectedPersonas === "persona3"} 
+                          <Button
+                            Medium
+                            PrimaryLightest={selectedPersonas === "persona3"}
                             Fill={selectedPersonas === "persona3"}
                             onClick={() => handlePersonaSelect("persona3")}
                           >
@@ -468,14 +515,17 @@ const PagePersonaSelect = () => {
                         </ListButton>
                       </ListBorderItem>
 
-                      <ListBorderItem 
-                        selected={selectedPersonas === "persona4"} 
+                      <ListBorderItem
+                        selected={selectedPersonas === "persona4"}
                         anySelected={selectedPersonas !== null}
                       >
                         <Persona color="Linen" size="Large" Round>
-                          <img src={personaImages.PersonaWomen01} alt="페르소나" />
+                          <img
+                            src={personaImages.PersonaWomen01}
+                            alt="페르소나"
+                          />
                         </Persona>
-                        <ListText style={{ gap: '4px' }}>
+                        <ListText style={{ gap: "4px" }}>
                           <ListTitle>
                             <Body1 color="gray800">
                               가족과 함께 여가를 보내는 활동 지향형 소비자
@@ -491,9 +541,9 @@ const PagePersonaSelect = () => {
                         </ListText>
 
                         <ListButton>
-                          <Button 
-                            Medium 
-                            PrimaryLightest={selectedPersonas === "persona4"} 
+                          <Button
+                            Medium
+                            PrimaryLightest={selectedPersonas === "persona4"}
                             Fill={selectedPersonas === "persona4"}
                             onClick={() => handlePersonaSelect("persona4")}
                           >
@@ -507,7 +557,6 @@ const PagePersonaSelect = () => {
                       </ListBorderItem>
                     </CardGroupWrap>
                   ) : null}
-
                 </div>
               </InterviewWayContent>
 
@@ -515,13 +564,7 @@ const PagePersonaSelect = () => {
                 <Body2 color="gray800">
                   5명의 페르소나와 인터뷰를 진행하시겠습니까?
                 </Body2>
-                <Button 
-                  Large 
-                  Primary 
-                  Round 
-                  Fill
-                  onClick={handleStartInterview}
-                >
+                <Button Large Primary Round Fill onClick={handleStartInterview}>
                   인터뷰 시작
                   <img src={images.ChevronRight} alt="인터뷰 시작" />
                 </Button>
@@ -532,12 +575,13 @@ const PagePersonaSelect = () => {
       </ContentsWrap>
 
       {showPopup && (
-        <PopupWrap 
+        <PopupWrap
           Check
-          title="인터뷰 준비 완료" 
+          title="인터뷰 준비 완료"
           message={
             <>
-              인터뷰 룸 이동 시, 바로 시작됩니다.<br />
+              인터뷰 룸 이동 시, 바로 시작됩니다.
+              <br />
               인터뷰를 중단하면 모든 내역이 삭제되니 주의하세요
             </>
           }
@@ -551,11 +595,7 @@ const PagePersonaSelect = () => {
         />
       )}
 
-      <OrganismToastPopup
-        isActive={showToast}
-        autoClose={false}
-      />
-
+      <OrganismToastPopup isActive={showToast} autoClose={false} />
     </>
   );
 };
@@ -575,18 +615,10 @@ const InterviewWayTabItem = styled.div`
   justify-content: center;
   gap: 12px;
   flex: 1;
-  color: ${props => 
-    props.active 
-    ? palette.gray800 
-    : palette.gray300
-  };
+  color: ${(props) => (props.active ? palette.gray800 : palette.gray300)};
   padding: 20px 24px;
   border-radius: 15px;
-  background: ${props => 
-    props.active 
-    ? palette.chatGray 
-    : palette.white
-  };
+  background: ${(props) => (props.active ? palette.chatGray : palette.white)};
 
   > span {
     display: flex;
@@ -599,11 +631,8 @@ const InterviewWayTabItem = styled.div`
     line-height: 1.5;
     color: ${palette.white};
     border-radius: 50%;
-    background: ${props => 
-      props.active 
-      ? palette.primary 
-      : palette.gray300
-    };
+    background: ${(props) =>
+      props.active ? palette.primary : palette.gray300};
   }
 `;
 
@@ -645,7 +674,8 @@ const CustomizationWrap = styled.div`
     border-radius: 50%;
     border: 1px solid ${palette.gray700};
 
-    &::before, &::after {
+    &::before,
+    &::after {
       position: absolute;
       top: 50%;
       left: 50%;
@@ -653,7 +683,7 @@ const CustomizationWrap = styled.div`
       width: 8px;
       height: 1px;
       background: ${palette.gray700};
-      content: '';
+      content: "";
     }
 
     &::after {

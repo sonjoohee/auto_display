@@ -179,7 +179,7 @@ const MoleculeHeader = () => {
                 <div className="title">
                   <Sub1 color="gray700">크레딧 내역</Sub1>
                   <button onClick={() => navigate("/Payment")}>
-                    <Caption2 color="primary">충전하기</Caption2>
+                    {isLoggedIn && <Caption2 color="primary">충전하기</Caption2>}
                   </button>
                 </div>
 

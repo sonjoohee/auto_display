@@ -19,8 +19,14 @@ import {
   SELECTED_INTERVIEW_PURPOSE_DATA,
   PURPOSE_ITEMS_SINGLE,
   CUSTOM_THEORY_DATA,
+  CREDIT_CUSTOM_THEORY,
+  EVENT_STATE,
+  EVENT_TITLE,
+  TRIAL_STATE,
+  CREDIT_REQUEST_BUSINESS_PERSONA,
 } from "../../../AtomStates";
 // import { SELECTED_INTERVIEW_TYPE } from "../../../../AtomStates";
+
 import {
   ContentsWrap,
   MainContent,
@@ -75,11 +81,19 @@ import PopupWrap from "../../../../assets/styles/Popup";
 import OrganismToastPopup from "../organisms/OrganismToastPopup";
 import MoleculeInterviewPurpose from "../molecules/MoleculeInterviewPurpose.jsx";
 import OrganismCustomization from "../organisms/OrganismCustomization.jsx";
+import { UserCreditCheck, UserCreditUse } from "../../../../utils/indexedDB";
 
 const FULL_DEFINITION_TEXT =
   "사용자 트렌드 민감도 분석은 사용자가 시장의 최신 트렌드에 얼마나 빠르고 효과적으로 반응하는지를 측정하는 방법론입니다. 이 분석은 사용자가 새로운 트렌드를 어떻게 인식하고, 그 트렌드에 따라 행동이 어떻게 변화하는지 파악하는 데 중점을 둡니다.";
 
 const PagePersona3 = () => {
+  const [creditRequestBusinessPersona, setCreditRequestBusinessPersona] =
+    useAtom(CREDIT_REQUEST_BUSINESS_PERSONA);
+  const [eventState, setEventState] = useAtom(EVENT_STATE);
+  const [eventTitle, setEventTitle] = useAtom(EVENT_TITLE);
+  const [trialState, setTrialState] = useAtom(TRIAL_STATE);
+  const [creditCustomTheory, setCreditCustomTheory] =
+    useAtom(CREDIT_CUSTOM_THEORY);
   const [showPopup, setShowPopup] = useState(false);
 
   const [selectedRadio1, setSelectedRadio1] = useState();
@@ -157,6 +171,8 @@ const PagePersona3 = () => {
   const [personaListState, setPersonaListState] = useState(null);
   const [showInterviewTypeAlert, setShowInterviewTypeAlert] = useState(false);
   const [showRequestPopup, setShowRequestPopup] = useState(false);
+
+  const [showCreditPopup, setShowCreditPopup] = useState(false);
 
   // 인터뷰 목적 선택 핸들러 수정
   const handleInterviewPurposeSelect = (title) => {
@@ -373,7 +389,7 @@ const PagePersona3 = () => {
         definition: customTheoryData?.definition || "",
         objective: customTheoryData?.objective || "",
         characteristic: customTheoryData?.characteristic || [],
-        description: "사용자 커스텀 방법론" || "",
+        description: customTheoryData?.interview_purpose || [],
         custom_theory_data: customTheoryData || "",
       };
       setPurposeItemsSingleAtom((prev) => [...prev, generatedQuestions]);
@@ -441,13 +457,13 @@ const PagePersona3 = () => {
     }
     // 팝업이나 토스트가 닫혔을 때
     else {
-      document.body.style.overflow = "auto";  // "hidden"에서 "auto"로 변경
+      document.body.style.overflow = "auto"; // "hidden"에서 "auto"로 변경
       document.body.style.paddingRight = "0";
     }
 
     // 컴포넌트가 언마운트될 때 원래대로 복구
     return () => {
-      document.body.style.overflow = "auto";  // "hidden"에서 "auto"로 변경
+      document.body.style.overflow = "auto"; // "hidden"에서 "auto"로 변경
       document.body.style.paddingRight = "0";
     };
   }, [showToast, showInterviewReady, showEditPersona]);
@@ -468,21 +484,54 @@ const PagePersona3 = () => {
     setSelectedInterviewPurpose(purpose);
   };
 
-  const handleCloseRequestPopup = () => {
-    setShowRequestPopup(false);
-    setShowCustomButton(false);
-    setCustomizations((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        purposeText: "",
-        showMethodology: false,
-        isEditing: false,
-        definitionText: FULL_DEFINITION_TEXT,
-        editedDefinition: "",
-        editedPurpose: "",
-      },
-    ]);
+  const handleCloseRequestPopup = async () => {
+    try {
+      const creditPayload = {
+        mount: creditRequestBusinessPersona,
+      };
+
+      const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
+      console.log("크레딧 체크 응답:", creditResponse);
+
+      if (creditResponse?.state !== "use") {
+        setShowRequestPopup(false);
+        setShowCreditPopup(true);
+        return;
+      }
+
+      // 만약 creditResponse.state가 "use"라면 아래 payload 형식으로 API 호출
+      const creditUsePayload = {
+        title: businessAnalysis.title,
+        service_type: "맞춤 페르소나",
+        target: "",
+        state: "use",
+        mount: creditRequestBusinessPersona,
+      };
+
+      const creditUseResponse = await UserCreditUse(
+        creditUsePayload,
+        isLoggedIn
+      );
+      console.log("크레딧 사용 응답:", creditUseResponse);
+
+      setShowRequestPopup(false);
+      setShowCustomButton(false);
+      setCustomizations((prev) => [
+        ...prev,
+        {
+          id: Date.now(),
+          purposeText: "",
+          showMethodology: false,
+          isEditing: false,
+          definitionText: FULL_DEFINITION_TEXT,
+          editedDefinition: "",
+          editedPurpose: "",
+        },
+      ]);
+    } catch (error) {
+      console.error("크레딧 체크 실패:", error);
+      setShowCreditPopup(true);
+    }
   };
 
   return (
@@ -591,7 +640,6 @@ const PagePersona3 = () => {
                 </div>
 
                 <div>
-
                   {selectedInterviewType === "multiple" ? (
                     <InterviewSelect>
                       {/* <Title>인터뷰 목적 선택</Title> */}
@@ -692,7 +740,13 @@ const PagePersona3 = () => {
               </InterviewWayContent>
 
               <BottomBar W100>
-                <Body2 color={!selectedInterviewType || !selectedInterviewPurpose ? "gray300" : "gray800"}>
+                <Body2
+                  color={
+                    !selectedInterviewType || !selectedInterviewPurpose
+                      ? "gray300"
+                      : "gray800"
+                  }
+                >
                   {selectedInterviewPurpose === "product_experience_new"
                     ? "제품 경험 평가"
                     : ""}{" "}
@@ -707,46 +761,92 @@ const PagePersona3 = () => {
                   onClick={handleSelectPersona}
                 >
                   다음
-                  <images.ChevronRight width="20" height="20" color={palette.white} />
+                  <images.ChevronRight
+                    width="20"
+                    height="20"
+                    color={palette.white}
+                  />
                   {/* <img src={images.ChevronRight} alt="다음" /> */}
                 </Button>
               </BottomBar>
             </MainSection>
 
             {/* 크레딧 소진팝업 */}
-            {/* <PopupWrap
-              Warning
-              title="크레딧이 모두 소진되었습니다"
-              message={
-                <>
-                  매월 1일 (서비스)크레딧이 충전됩니다<br />
-                  (베타서비스) 종료시 크레딧이 자동 소멸됩니다
-                </>
-              }
-              buttonType="Outline"
-              closeText="확인"
-              isModal={false}
-            /> */}
-
-            {/* 인터뷰 커스터마이징 하기 팝업 */}
-            {showRequestPopup && (
+            {showCreditPopup && (
               <PopupWrap
-                Event
-                title="인터뷰 커스터마이징 하기"
+                Warning
+                title="크레딧이 모두 소진되었습니다"
                 message={
                   <>
-                    현재 (베타서비스) 기간으로 (서비스)크레딧이 소진됩니다.<br />
-                    (10 크레딧)
+                    매월 1일 (서비스)크레딧이 충전됩니다
+                    <br />
+                    (베타서비스) 종료시 크레딧이 자동 소멸됩니다
                   </>
                 }
                 buttonType="Outline"
-                closeText="취소"
-                confirmText="시작하기"
+                closeText="확인"
                 isModal={false}
-                onCancel={() => setShowRequestPopup(false)}
-                onConfirm={handleCloseRequestPopup}
+                onCancel={() => setShowCreditPopup(false)}
+                onConfirm={() => setShowCreditPopup(false)}
               />
             )}
+
+            {/* 인터뷰 커스터마이징 하기 팝업 */}
+            {showRequestPopup &&
+              (eventState ? (
+                <PopupWrap
+                  Event
+                  title="인터뷰 커스터마이징 하기"
+                  message={
+                    <>
+                      현재 {eventTitle} 기간으로 이벤트 크레딧이 소진됩니다.
+                      <br />({creditCustomTheory} 크레딧)
+                    </>
+                  }
+                  buttonType="Outline"
+                  closeText="취소"
+                  confirmText="시작하기"
+                  isModal={false}
+                  onCancel={() => setShowRequestPopup(false)}
+                  onConfirm={handleCloseRequestPopup}
+                />
+              ) : trialState ? (
+                <PopupWrap
+                  Check
+                  title="인터뷰 커스터마이징 하기"
+                  message={
+                    <>
+                      해당 서비스 사용시 크레딧이 소진됩니다.
+                      <br />({creditCustomTheory} 크레딧)
+                      <br />
+                      신규 가입 2주간 무료로 사용 가능합니다.
+                    </>
+                  }
+                  buttonType="Outline"
+                  closeText="취소"
+                  confirmText="시작하기"
+                  isModal={false}
+                  onCancel={() => setShowRequestPopup(false)}
+                  onConfirm={handleCloseRequestPopup}
+                />
+              ) : (
+                <PopupWrap
+                  Check
+                  title="인터뷰 커스터마이징 하기"
+                  message={
+                    <>
+                      해당 서비스 사용시 크레딧이 소진됩니다.
+                      <br />({creditCustomTheory} 크레딧)
+                    </>
+                  }
+                  buttonType="Outline"
+                  closeText="취소"
+                  confirmText="시작하기"
+                  isModal={false}
+                  onCancel={() => setShowRequestPopup(false)}
+                  onConfirm={handleCloseRequestPopup}
+                />
+              ))}
 
             {showEditPersona && (
               <PopupWrap

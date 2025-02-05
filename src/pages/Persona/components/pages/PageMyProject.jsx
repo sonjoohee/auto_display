@@ -13,6 +13,7 @@ import {
   Button,
   IconButton,
 } from "../../../../assets/styles/ButtonStyle";
+
 import {
   ContentsWrap,
   MainContent,
@@ -39,6 +40,11 @@ import {
   Dots,
   Dot,
   NoData,
+  InterviewPopup,
+  Status,
+  TabWrapType2,
+  TabButtonType2,
+  TabContent,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../../assets/styles/Images";
 import { useNavigate } from "react-router-dom";
@@ -83,7 +89,7 @@ import { getProjectListByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import OrganismEmptyProject from "../organisms/OrganismEmptyProject";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 import {
-  H2,
+  H4,
   H3,
   H5,
   H6,
@@ -98,9 +104,12 @@ import Pagination from "../../../../components/common/Pagination";
 const PageMyProject = () => {
   useDynamicViewport("width=1280");
 
-  const [showPopup, setShowPopup] = useState(false);
-  const handlePopupConfirm = () => {
-    setShowPopup(false);
+  const [activeTab1, setActiveTab1] = useState("lifestyle");
+
+  const [selectedPersona, setSelectedPersona] = useState(null);
+
+  const handleDetailClick = (persona) => {
+    setSelectedPersona(persona);
   };
 
   const [projectLoading, setProjectLoading] = useAtom(PROJECT_LOADING);
@@ -507,65 +516,12 @@ const PageMyProject = () => {
         <MainContent Wide>
           <MyProjectWrap>
             <MyDashboard>
-              <MyDashboardHeader>
+              {/* <MyDashboardHeader>
                 <MyDashboardTitle>
                   <H2>{userName}님 </H2>
                   <Badge classBasic>Basic</Badge>
                 </MyDashboardTitle>
-
-                {/* <ButtonGroup>
-                  <Button Primary onClick={() => navigate("/Payment")}>
-                    <images.CoinSmall
-                      width="12px"
-                      height="8px"
-                      color={palette.primary}
-                    />
-
-                    <Sub3 color="primary">요금제 관리</Sub3>
-                  </Button>
-                  <div style={{ position: "relative" }}>
-                    <Button
-                      Primary
-                      onClick={() => {
-                        if (isServiceMenuOpen) {
-                          closeServiceMenu();
-                        } else {
-                          setIsServiceMenuOpen(true);
-                        }
-                      }}
-                    >
-                      <img src={images.Headset} alt="고객 서비스" />
-                      <Sub3 color="primary">고객 서비스</Sub3>
-                    </Button>
-
-                    {(isServiceMenuOpen || isClosing) && (
-                      <ToggleBox $isClosing={isClosing}>
-                        <Body3>고객 서비스</Body3>
-                        <ToggleList>
-                          <IconButton>
-                            <img
-                              src={images.QuestionCircle}
-                              alt="고객 서비스"
-                            />
-                            <Sub3 color="gray700">문의사항</Sub3>
-                          </IconButton>
-                          <IconButton onClick={() => navigate("/Terms")}>
-                            <img
-                              src={images.ExclamationCircle}
-                              alt="이용약관"
-                            />
-                            <Sub3 color="gray700">이용약관</Sub3>
-                          </IconButton>
-                          <IconButton onClick={() => navigate("/Policy")}>
-                            <img src={images.Lock} alt="개인정보 이용 정책" />
-                            <Sub3 color="gray700">개인정보 이용 정책</Sub3>
-                          </IconButton>
-                        </ToggleList>
-                      </ToggleBox>
-                    )}
-                  </div>
-                </ButtonGroup> */}
-              </MyDashboardHeader>
+              </MyDashboardHeader> */}
 
               <MyDashboardContent>
                 <DashboardCard>
@@ -630,11 +586,11 @@ const PageMyProject = () => {
                           ).toLocaleString()}
                         </H6>
                       </div>
-                      <images.ChevronDown
+                      {/* <images.ChevronDown
                         width="20px"
                         height="20px"
                         color={palette.gray300}
-                      />
+                      /> */}
                     </CreditTotal>
                   </DashboardAmount>
                 </DashboardCard>
@@ -669,7 +625,7 @@ const PageMyProject = () => {
                       <ProjectList>
                         <ProjectHeader>
                           <Body3 color="gray500">프로젝트 명</Body3>
-                          <Body3 color="gray500">맞춤 페르소나</Body3>
+                          <Body3 color="gray500">AI 페르소나</Body3>
                           <Body3 color="gray500"></Body3>
                           <Body3 color="gray500">결과 리포트</Body3>
                         </ProjectHeader>
@@ -785,6 +741,7 @@ const PageMyProject = () => {
                       <ProjectContent>
                         {userPersonaList.count > 0 ? (
                           userPersonaList.results.persona.map((persona) => (
+                            <>
                             <ProjectItem key={persona.id}>
                               <ProjectInfo>
                                 <Name>
@@ -792,7 +749,7 @@ const PageMyProject = () => {
                                     {persona.businessAnalysis.title}
                                   </Caption2>
                                   <Body2 color="gray800">
-                                    {persona.personaRequest.persona.persona}
+                                    {persona.personaRequest.persona}
                                   </Body2>
                                 </Name>
                                 <Persona>
@@ -801,22 +758,42 @@ const PageMyProject = () => {
                                   </Sub3>
                                 </Persona>
                                 <Report>
-                                  <Badge Keyword>
-                                    Request
-                                    {/* In Process */}
-                                  </Badge>
-                                  <Button Small Outline Fill>
+                                  {persona.personaRequest.status ===
+                                  undefined ? (
+                                    <Badge Request>
+                                      <img src={images.Plus} alt="요청 필요" />
+                                      요청 필요
+                                    </Badge>
+                                  ) : persona.personaRequest.status ===
+                                    "ing" ? (
+                                    <Badge Ing>모집 중</Badge>
+                                  ) : persona.personaRequest.status ===
+                                    "complete" ? (
+                                    <Badge Complete>
+                                      <img
+                                        src={images.CheckGreen}
+                                        alt="모집 완료"
+                                      />
+                                      모집 완료
+                                    </Badge>
+                                  ) : (
+                                    <></>
+                                  )}
+                                  {/* <Badge Keyword>Request</Badge> */}
+                                  <Button Small Outline Fill onClick={() => handleDetailClick(persona)}>
                                     자세히
                                   </Button>
                                 </Report>
                               </ProjectInfo>
                             </ProjectItem>
+                            </>
                           ))
                         ) : (
                           <NoData border>
                             <images.PeopleFill2 color="#EBEBEB" />
                             <Body3 color="gray500">
-                              현재 요청된 맞춤 페르소나가 없습니다<br />
+                              현재 요청된 맞춤 페르소나가 없습니다
+                              <br />
                               비즈니스 분석 페이지에서 맞춤 요청을 진행해주세요
                             </Body3>
                           </NoData>
@@ -830,6 +807,79 @@ const PageMyProject = () => {
           </MyProjectWrap>
         </MainContent>
       </ContentsWrap>
+
+      {selectedPersona && (
+        <InterviewPopup>
+          <div>
+            <div className="header">
+              <H4>
+                {selectedPersona.personaRequest.persona}
+                <span className="close" onClick={() => setSelectedPersona(null)} />
+              </H4>
+              <p className="info">
+                <Sub3>{selectedPersona.personaRequest.gender}</Sub3>
+                <Sub3>
+                  {selectedPersona.personaRequest.age.includes("세")
+                    ? selectedPersona.personaRequest.age
+                    : `${selectedPersona.personaRequest.age}세`}
+                </Sub3>
+                <Sub3>{selectedPersona.personaRequest.residence}</Sub3>
+              </p>
+            </div>
+
+            <div className="keywords">
+              <Status>#{selectedPersona.personaRequest.keyword[0]}</Status>
+              <Status>#{selectedPersona.personaRequest.keyword[1]}</Status>
+              <Status>#{selectedPersona.personaRequest.keyword[2]}</Status>
+            </div>
+
+            <div className="content">
+              <TabWrapType2>
+                <TabButtonType2
+                  isActive={activeTab1 === "lifestyle"}
+                  onClick={() => setActiveTab1("lifestyle")}
+                >
+                  라이프스타일
+                </TabButtonType2>
+                <TabButtonType2
+                  isActive={activeTab1 === "interests"}
+                  onClick={() => setActiveTab1("interests")}
+                >
+                  관심사
+                </TabButtonType2>
+                <TabButtonType2
+                  isActive={activeTab1 === "consumption"}
+                  onClick={() => setActiveTab1("consumption")}
+                >
+                  소비성향
+                </TabButtonType2>
+              </TabWrapType2>
+
+              {activeTab1 === "lifestyle" && (
+                <TabContent>
+                  <Body3 color="gray700">
+                    {selectedPersona.personaRequest.lifestyle}
+                  </Body3>
+                </TabContent>
+              )}
+              {activeTab1 === "interests" && (
+                <TabContent>
+                  <Body3 color="gray700">
+                    {selectedPersona.personaRequest.interest}
+                  </Body3>
+                </TabContent>
+              )}
+              {activeTab1 === "consumption" && (
+                <TabContent>
+                  <Body3 color="gray700">
+                    {selectedPersona.personaRequest.consumption_pattern}
+                  </Body3>
+                </TabContent>
+              )}
+            </div>
+          </div>
+        </InterviewPopup>
+      )}
 
       {showCreditPopup && (
         <PopupWrap
@@ -930,11 +980,14 @@ const PageMyProject = () => {
                           </div>
                           <Body3 color="gray500">{credit.title}</Body3>
                           <Body3 color="gray500">
-                            {new Date(credit.credit_created).toLocaleDateString("ko-KR", {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            })}
+                            {new Date(credit.credit_created).toLocaleDateString(
+                              "ko-KR",
+                              {
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                              }
+                            )}
                           </Body3>
                           <Body3 color="gray500">{credit.credit}</Body3>
                         </CreditListItem>
@@ -942,7 +995,9 @@ const PageMyProject = () => {
                     ) : (
                       <NoData>
                         <images.CoinLargeFill color="#EBEBEB" />
-                        <Body3 color="gray500">크레딧 사용 내역이 없습니다.</Body3>
+                        <Body3 color="gray500">
+                          크레딧 사용 내역이 없습니다.
+                        </Body3>
                       </NoData>
                     )}
                   </CreditDashBoardListContent>

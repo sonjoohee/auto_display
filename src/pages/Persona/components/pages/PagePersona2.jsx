@@ -29,6 +29,11 @@ import {
   INTERVIEW_QUESTION_LIST,
   CUSTOM_THEORY_DATA,
   All_BUSINESS_PERSONA_LIST,
+  CREDIT_REQUEST_CUSTOM_PERSONA,
+  EVENT_STATE,
+  EVENT_TITLE,
+  TRIAL_STATE,
+  CREDIT_REQUEST_BUSINESS_PERSONA,
 } from "../../../AtomStates";
 import {
   ContentsWrap,
@@ -104,6 +109,8 @@ import MoleculeRecreate from "../molecules/MoleculeRecreate";
 import { InterviewXInterviewReportPersonaFilter } from "../../../../utils/indexedDB";
 import { InterviewXPersonaRequestType } from "../../../../utils/indexedDB";
 import { InterviewXPersonaRequestRequest } from "../../../../utils/indexedDB";
+import { UserCreditCheck, UserCreditUse } from "../../../../utils/indexedDB";
+import MoleculeBussinessPersonaCard from "../molecules/MoleculeBussinessPersonaCard";
 
 const PagePersona2 = () => {
   const [customPersonaForm, setCustomPersonaForm] = useState({
@@ -177,9 +184,19 @@ const PagePersona2 = () => {
   const [interviewQuestionList, setInterviewQuestionList] = useAtom(
     INTERVIEW_QUESTION_LIST
   );
+  //크래딧
+  const [creditRequestCustomPersona] = useAtom(CREDIT_REQUEST_CUSTOM_PERSONA);
+  const [creditRequestBusinessPersona] = useAtom(
+    CREDIT_REQUEST_BUSINESS_PERSONA
+  );
+  const [eventState] = useAtom(EVENT_STATE);
+  const [eventTitle] = useAtom(EVENT_TITLE);
+  const [trialState] = useAtom(TRIAL_STATE);
+
   // 로딩 상태 관리
   const loadingRef = useRef(false);
   const [viewType, setViewType] = useState("list"); // 'list' 또는 'card'
+
   const [activeTab, setActiveTab] = useState("daily"); // 'daily' 또는 'business'
   const [findPersonas, setFindPersonas] = useState([]);
   // 새로운 상태 추가 (컴포넌트 최상단)
@@ -193,16 +210,76 @@ const PagePersona2 = () => {
   const [activeTabIndex, setActiveTabIndex] = useState(0);
 
   const [unselectedTypes, setUnselectedTypes] = useState([
-    { index: 1, id: "type1", label: "전형적 사용자 페르소나", count: 1, wasSelected: false },
-    { index: 2, id: "type2", label: "극단적 사용자 페르소나", count: 2, wasSelected: false },
-    { index: 3, id: "type3", label: "비교 소비자 페르소나", count: 1, wasSelected: false },
-    { index: 4, id: "type4", label: "비전통적 사용자 페르소나", count: 1, wasSelected: false },
-    { index: 5, id: "type5", label: "문제 해결 중심 페르소나", count: 3, wasSelected: false },
-    { index: 6, id: "type6", label: "건강 중시 페르소나", count: 2, wasSelected: false },
-    { index: 7, id: "type7", label: "시장 트렌드 리더 페르소나", count: 1, wasSelected: false },
-    { index: 8, id: "type8", label: "예산 중시 소비자 페르소나", count: 1, wasSelected: false },
-    { index: 9, id: "type9", label: "혁신 추구 소비자 페르소나", count: 1, wasSelected: false },
-    { index: 10, id: "type10", label: "환경/윤리 중시 페르소나", count: 2, wasSelected: false },
+    {
+      index: 1,
+      id: "type1",
+      label: "전형적 사용자 페르소나",
+      count: 1,
+      wasSelected: false,
+    },
+    {
+      index: 2,
+      id: "type2",
+      label: "극단적 사용자 페르소나",
+      count: 2,
+      wasSelected: false,
+    },
+    {
+      index: 3,
+      id: "type3",
+      label: "비교 소비자 페르소나",
+      count: 1,
+      wasSelected: false,
+    },
+    {
+      index: 4,
+      id: "type4",
+      label: "비전통적 사용자 페르소나",
+      count: 1,
+      wasSelected: false,
+    },
+    {
+      index: 5,
+      id: "type5",
+      label: "문제 해결 중심 페르소나",
+      count: 3,
+      wasSelected: false,
+    },
+    {
+      index: 6,
+      id: "type6",
+      label: "건강 중시 페르소나",
+      count: 2,
+      wasSelected: false,
+    },
+    {
+      index: 7,
+      id: "type7",
+      label: "시장 트렌드 리더 페르소나",
+      count: 1,
+      wasSelected: false,
+    },
+    {
+      index: 8,
+      id: "type8",
+      label: "예산 중시 소비자 페르소나",
+      count: 1,
+      wasSelected: false,
+    },
+    {
+      index: 9,
+      id: "type9",
+      label: "혁신 추구 소비자 페르소나",
+      count: 1,
+      wasSelected: false,
+    },
+    {
+      index: 10,
+      id: "type10",
+      label: "환경/윤리 중시 페르소나",
+      count: 2,
+      wasSelected: false,
+    },
     {
       index: 11,
       id: "type11",
@@ -210,9 +287,27 @@ const PagePersona2 = () => {
       count: 1,
       wasSelected: false,
     },
-    { index: 12, id: "type12", label: "브랜드 충성 소비자 페르소나", count: 1, wasSelected: false },
-    { index: 13, id: "type13", label: "감성적 소비자 페르소나", count: 3, wasSelected: false },
-    { index: 14, id: "type14", label: "특정 상황 중심페르소나", count: 2, wasSelected: false },
+    {
+      index: 12,
+      id: "type12",
+      label: "브랜드 충성 소비자 페르소나",
+      count: 1,
+      wasSelected: false,
+    },
+    {
+      index: 13,
+      id: "type13",
+      label: "감성적 소비자 페르소나",
+      count: 3,
+      wasSelected: false,
+    },
+    {
+      index: 14,
+      id: "type14",
+      label: "특정 상황 중심페르소나",
+      count: 2,
+      wasSelected: false,
+    },
     {
       index: 15,
       id: "type15",
@@ -234,8 +329,20 @@ const PagePersona2 = () => {
       count: 1,
       wasSelected: false,
     },
-    { index: 18, id: "type18", label: "단체 구매 소비자 페르소나", count: 3, wasSelected: false },
-    { index: 19, id: "type19", label: "호기심 기반 소비자 페르소나", count: 2, wasSelected: false },
+    {
+      index: 18,
+      id: "type18",
+      label: "단체 구매 소비자 페르소나",
+      count: 3,
+      wasSelected: false,
+    },
+    {
+      index: 19,
+      id: "type19",
+      label: "호기심 기반 소비자 페르소나",
+      count: 2,
+      wasSelected: false,
+    },
     {
       index: 20,
       id: "type20",
@@ -263,10 +370,10 @@ const PagePersona2 = () => {
   const handleOceanChange = (trait, value) => {
     // 값을 0 또는 1로 스냅
     const snappedValue = Number(value) <= 0.5 ? 0 : 1;
-    
-    setOceanValues(prev => ({
+
+    setOceanValues((prev) => ({
       ...prev,
-      [trait]: snappedValue
+      [trait]: snappedValue,
     }));
   };
 
@@ -280,6 +387,8 @@ const PagePersona2 = () => {
 
   const [currentLoadingType, setCurrentLoadingType] = useState(null);
   // const [isLoadingPage, setIsLoadingPage] = useState(true);
+
+  const [showCreditPopup, setShowCreditPopup] = useState(false);
 
   const [steps, setSteps] = useState([
     { number: 1, label: "비즈니스 분석", active: true },
@@ -310,6 +419,19 @@ const PagePersona2 = () => {
     },
     withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
   };
+
+  const [currentRequestedPersona, setCurrentRequestedPersona] = useState([]);
+  useEffect(() => {
+    const loadProject = async () => {
+      const currentProject = await getProjectByIdFromIndexedDB(
+        projectId,
+        isLoggedIn
+      );
+      const currentRequestedPersona = currentProject?.requestedPersona || [];
+      setCurrentRequestedPersona(currentRequestedPersona);
+    };
+    loadProject();
+  }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -424,6 +546,8 @@ const PagePersona2 = () => {
             }
             if (savedProjectInfo.customTheoryData) {
               setCustomTheoryData(savedProjectInfo.customTheoryData);
+            } else {
+              setCustomTheoryData([]);
             }
 
             let availablePersonas = [];
@@ -1156,8 +1280,8 @@ const PagePersona2 = () => {
         setUnselectedTypes((prevUnselected) => {
           if (!prevUnselected.some((type) => type.id === typeId)) {
             const updatedUnselected = [
-              ...prevUnselected, 
-              { ...typeToAddBack, wasSelected: true }
+              ...prevUnselected,
+              { ...typeToAddBack, wasSelected: true },
             ];
             return updatedUnselected.sort((a, b) => a.index - b.index);
           }
@@ -1180,7 +1304,7 @@ const PagePersona2 = () => {
   // 선택 유형 보기 버튼 클릭 핸들러 수정
   const handleTypeSelection = async () => {
     setIsLoadingMore(true);
-    // setShowTypeList(false); // 이 줄 제거
+    setShowTypeList(false); // 리스트를 바로 숨김
     setVisibleSelectedTypes(selectedTypes.sort((a, b) => a.index - b.index));
 
     // 선택된 타입들을 unselectedTypes에서 제거
@@ -1228,10 +1352,49 @@ const PagePersona2 = () => {
   const handleCustomizePopupClose = () => {
     setShowCustomizePopup(false);
   };
-  const handleCustomizePopupConfirm = () => {
-    submitCustomPersonaRequest();
-    setShowCustomizePopup(false);
+  // const handleCustomizePopupConfirm = () => {
+  //   submitCustomPersonaRequest();
+  //   setShowCustomizePopup(false);
+  // };
+
+  const handleCustomizePopupConfirm = async () => {
+    try {
+      const creditPayload = {
+        mount: creditRequestCustomPersona,
+      };
+
+      const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
+      console.log("크레딧 체크 응답:", creditResponse);
+
+      if (creditResponse?.state !== "use") {
+        setShowCreditPopup(true);
+        return;
+      }
+
+      // 만약 creditResponse.state가 "use"라면 아래 payload 형식으로 API 호출
+      const creditUsePayload = {
+        title: businessAnalysis.title,
+        service_type: "맞춤 페르소나",
+        target: "",
+        state: "use",
+        mount: creditRequestCustomPersona,
+      };
+
+      const creditUseResponse = await UserCreditUse(
+        creditUsePayload,
+        isLoggedIn
+      );
+      console.log("크레딧 사용 응답:", creditUseResponse);
+
+      // 이후 커스텀 페르소나 요청 진행 (예: 요청 API 호출)
+      submitCustomPersonaRequest();
+      setShowCustomizePopup(false);
+    } catch (error) {
+      console.error("크레딧 체크 실패:", error);
+      setShowCreditPopup(true);
+    }
   };
+
   const [state, setState] = useState({
     isAccordionOpen: false,
     formState: {
@@ -1482,6 +1645,22 @@ const PagePersona2 = () => {
     setIgnoreOcean(e.target.checked);
   };
 
+  console.log("currentRequestedPersona", currentRequestedPersona);
+
+  const reloadBusinessPersonaList = async () => {
+    try {
+      const savedProjectInfo = await getProjectByIdFromIndexedDB(
+        projectId,
+        projectLoadButtonState
+      );
+      if (savedProjectInfo?.businessPersonaList) {
+        setDisplayedPersonas(savedProjectInfo.businessPersonaList);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <>
       <ContentsWrap>
@@ -1519,13 +1698,19 @@ const PagePersona2 = () => {
                         <TabWrapType3>
                           <TabButtonType3
                             isActive={activeTab === "daily"}
-                            onClick={() => setActiveTab("daily")}
+                            onClick={() => {
+                              setActiveTab("daily");
+                              reloadBusinessPersonaList();
+                            }}
                           >
                             일상 페르소나 ({getPersonaCount("daily")})
                           </TabButtonType3>
                           <TabButtonType3
                             isActive={activeTab === "business"}
-                            onClick={() => setActiveTab("business")}
+                            onClick={() => {
+                              setActiveTab("business");
+                              reloadBusinessPersonaList();
+                            }}
                           >
                             비즈니스 페르소나 ({getPersonaCount("business")})
                           </TabButtonType3>
@@ -1581,6 +1766,10 @@ const PagePersona2 = () => {
                                   }
                                   currentSelection={selectedPersonas.length}
                                   viewType={viewType}
+                                  isExist={currentRequestedPersona.some(
+                                    (personas) =>
+                                      personas.persona === persona.persona
+                                  )}
                                 />
                               ))}
                               {isLoadingMore && isLoadingDaily && (
@@ -1642,6 +1831,15 @@ const PagePersona2 = () => {
                       ) : (
                         <ContentSection>
                           <CategoryView
+                            // isLoadingMore와 isLoadingBusiness가 동시에 true일 때, pointer-events를 비활성화하고 opacity를 조절하여 UI가 비활성화된 것처럼 보이게 합니다.
+                            style={{
+                              pointerEvents:
+                                isLoadingMore && isLoadingBusiness
+                                  ? "none"
+                                  : "auto",
+                              opacity:
+                                isLoadingMore && isLoadingBusiness ? 0.6 : 1,
+                            }}
                             showLeftGradient={showLeftGradient}
                             showRightGradient={showRightGradient}
                           >
@@ -1655,7 +1853,16 @@ const PagePersona2 = () => {
                                     key={type.id}
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      handleRemoveType(type.id);
+                                      // 현재 버튼의 위치와 크기 정보
+                                      const rect =
+                                        e.currentTarget.getBoundingClientRect();
+                                      // 버튼 왼쪽 끝에서부터 클릭 지점까지의 거리
+                                      const clickX = e.clientX - rect.left;
+                                      // pseudo-element로 구현된 x 아이콘이 오른쪽에 있으므로,
+                                      // 버튼의 오른쪽 20px 정도 영역을 x 아이콘 영역으로 가정
+                                      if (clickX > rect.width - 20) {
+                                        handleRemoveType(type.id);
+                                      }
                                     }}
                                   >
                                     {type.label}
@@ -1689,7 +1896,7 @@ const PagePersona2 = () => {
                               </MoreButton>
 
                               {showTypeList && (
-                                <TypeList>
+                                <TypeList show={showTypeList}>
                                   <TypeItem>
                                     <p>
                                       선택된 유형 ({visibleSelectedTypes.length}
@@ -1711,7 +1918,7 @@ const PagePersona2 = () => {
                                               {type.label}
                                             </label>
                                           </CheckBox>
-                                          <span>{type.count}명</span>
+                                          {/* <span>{type.count}명</span> */}
                                         </li>
                                       ))}
                                     </TypeItemList>
@@ -1756,7 +1963,9 @@ const PagePersona2 = () => {
                                                 {type.label}
                                               </label>
                                             </CheckBox>
-                                            {type.wasSelected && <span>{type.count}명</span>}
+                                            {type.wasSelected && (
+                                              <span>{type.count}명</span>
+                                            )}
                                           </TypeListItem>
                                         );
                                       })}
@@ -1767,15 +1976,10 @@ const PagePersona2 = () => {
                                       PrimaryLightest
                                       Fill
                                       style={{ margin: "20px 12px 0" }}
-                                      // onClick={handleTypeSelection} // 버튼 클릭 시 선택된 타입 처리
                                       onClick={async () => {
+                                        setShowTypeList(false); // 리스트를 바로 숨김
                                         setIsLoadingMore(true); // 로딩 상태 시작
-                                        handleTypeSelection(); // 선택된 유형을 설정
-
-                                        // // 선택된 타입에 대한 페르소나 로드
-                                        // for (const type of selectedTypes) {
-                                        //   await loadBusinessPersona(type); // 선택한 타입에 대한 페르소나 로드
-                                        // }
+                                        await handleTypeSelection(); // 선택된 유형 처리
                                         setIsLoadingMore(false); // 로딩 상태 종료
                                       }}
                                     >
@@ -1789,7 +1993,7 @@ const PagePersona2 = () => {
 
                           <CardGroupWrap>
                             {displayedPersonas.map((persona, index) => (
-                              <MoleculePersonaCard
+                              <MoleculeBussinessPersonaCard
                                 key={index}
                                 title={persona.persona}
                                 keywords={[
@@ -1802,6 +2006,12 @@ const PagePersona2 = () => {
                                 isRequest={true}
                                 personaData={persona}
                                 isBasic={false} // 비즈니스페르소나랑 일상 페르소나 구분
+                                eventState={eventState}
+                                eventTitle={eventTitle}
+                                trialState={trialState}
+                                creditRequestBusinessPersona={
+                                  creditRequestBusinessPersona
+                                }
                                 onSelect={(isSelected) =>
                                   handlePersonaSelect(persona, isSelected)
                                 }
@@ -1916,7 +2126,7 @@ const PagePersona2 = () => {
       {showCustomizePopup && (
         <PopupWrap
           TitleFlex
-          title="📝 나만의 페르소나 커스터마이징"
+          title="📝 맞춤 페르소나 커스터마이징"
           buttonType="Fill"
           confirmText={activeTabIndex === 0 ? "다음" : "맞춤 페르소나 모집하기"}
           isModal={true}
@@ -1933,6 +2143,10 @@ const PagePersona2 = () => {
           tabs={["필수정보", "OCEAN 정보"]}
           onTabChange={(index) => setActiveTabIndex(index)}
           activeTab={activeTabIndex}
+          eventState={eventState}
+          eventTitle={eventTitle}
+          trialState={trialState}
+          creditRequestCustomPersona={creditRequestCustomPersona}
           body={
             <>
               {activeTabIndex === 0 && (
@@ -2086,7 +2300,9 @@ const PagePersona2 = () => {
                             max="1"
                             step="0.5"
                             value={oceanValues.openness}
-                            onChange={(e) => handleOceanChange("openness", e.target.value)}
+                            onChange={(e) =>
+                              handleOceanChange("openness", e.target.value)
+                            }
                             disabled={ignoreOcean}
                             $ignored={ignoreOcean}
                           />
@@ -2185,211 +2401,6 @@ const PagePersona2 = () => {
                   </div>
                 </>
               )}
-
-              {/* 
-              <Title>
-                <p className="required">어떤 페르소나가 필요하신가요?</p>
-              </Title>
-              <div style={{ width: "100%" }}>
-                <CustomTextarea
-                  rows={4}
-                  placeholder="필요한 페르소나의 특징과 역할을 적어주세요."
-                  value={customPersonaForm.description}
-                  onChange={(e) => {
-                    if (e.target.value.length <= 300) {
-                      handleCustomPersonaChange("description", e.target.value);
-                    }
-                  }}
-                />
-              </div>
-              <Title>
-                <p className="required">
-                  이 페르소나를 사용하려는 목적은 무엇인가요?
-                </p>
-              </Title>
-              <div style={{ width: "100%" }}>
-                <CustomTextarea
-                  rows={4}
-                  placeholder="해당 페르소나가 필요한 이유, 얻고 싶은 인사이트, 하고자 하는 목표 등을 입력해주세요."
-                  value={customPersonaForm.purpose}
-                  onChange={(e) => {
-                    if (e.target.value.length <= 300) {
-                      handleCustomPersonaChange("purpose", e.target.value);
-                    }
-                  }}
-                />
-              </div>
-              <Title>
-                <p className="required">
-                  몇명의 페르소나를 모집하시고 싶으신가요?(최대 30명)
-                </p>
-              </Title>
-              <Quantity>
-                <span
-                  className="down"
-                  onClick={() => handleQuantityChange("down")}
-                  disabled={customPersonaForm.quantity <= 1}
-                >
-                  줄이기
-                </span>
-                <CustomInput
-                  type="number"
-                  value={customPersonaForm.quantity}
-                  min={1}
-                  max={30}
-                  onChange={(e) => {
-                    const value = Math.max(
-                      1,
-                      Math.min(20, parseInt(e.target.value) || 1)
-                    );
-                    setCustomPersonaForm((prev) => ({
-                      ...prev,
-                      quantity: value,
-                    }));
-                  }}
-                />
-                <span
-                  className="up"
-                  onClick={() => handleQuantityChange("up")}
-                  disabled={customPersonaForm.quantity >= 30}
-                >
-                  늘리기
-                </span>
-              </Quantity>
-              <AccordionSection>
-                <CustomAccordionHeader
-                  None
-                  onClick={() =>
-                    setCustomizeFormState((prev) => ({
-                      ...prev,
-                      isAccordionOpen: !prev.isAccordionOpen,
-                    }))
-                  }
-                >
-                  🔍 세부 사항 설정
-                  <CustomAccordionIcon
-                    isOpen={customizeFormState.isAccordionOpen}
-                  />
-                </CustomAccordionHeader>
-                {customizeFormState.isAccordionOpen && (
-                  <CustomAccordionContent None>
-                    <dl>
-                      <dt>성별</dt>
-                      <dd>
-                        <input
-                          type="radio"
-                          id="gender1"
-                          name="gender"
-                          checked={customPersonaForm.gender === "male"}
-                          onClick={() => {
-                            // 현재 선택된 값과 같은 값을 클릭하면 선택 해제
-                            if (customPersonaForm.gender === "male") {
-                              handleCustomPersonaChange("gender", "");
-                            } else {
-                              handleCustomPersonaChange("gender", "male");
-                            }
-                          }}
-                        />
-                        <label htmlFor="gender1" className="gender men">
-                          <i class="icon man" />
-                          man
-                          <span className="check-circle" />
-                        </label>
-                        <input
-                          type="radio"
-                          id="gender2"
-                          name="gender"
-                          checked={customPersonaForm.gender === "female"}
-                          onClick={() => {
-                            // 현재 선택된 값과 같은 값을 클릭하면 선택 해제
-                            if (customPersonaForm.gender === "female") {
-                              handleCustomPersonaChange("gender", "");
-                            } else {
-                              handleCustomPersonaChange("gender", "female");
-                            }
-                          }}
-                        />
-                        <label htmlFor="gender2" className="gender women">
-                          <i class="icon woman" />
-                          woman
-                          <span className="check-circle" />
-                        </label>
-                      </dd>
-                    </dl>
-
-                    <dl>
-                      <dt>연령 (다중 선택)</dt>
-                      <dd>
-                        <AgeGroup>
-                          <div>
-                            {["10s", "20s", "30s", "40s"].map((age, index) => (
-                              <React.Fragment key={age}>
-                                <input
-                                  type="checkbox"
-                                  id={`age${index + 1}`}
-                                  name="age"
-                                  checked={customPersonaForm.ageGroups.includes(
-                                    age
-                                  )}
-                                  onChange={() => handleAgeGroupChange(age)}
-                                />
-                                <label
-                                  htmlFor={`age${index + 1}`}
-                                  className="age"
-                                >
-                                  {age.replace("s", "대")}
-                                </label>
-                              </React.Fragment>
-                            ))}
-                          </div>
-                          <div>
-                            {["50s", "60s", "70s"].map((age, index) => (
-                              <React.Fragment key={age}>
-                                <input
-                                  type="checkbox"
-                                  id={`age${index + 5}`}
-                                  name="age"
-                                  checked={customPersonaForm.ageGroups.includes(
-                                    age
-                                  )}
-                                  onChange={() => handleAgeGroupChange(age)}
-                                />
-                                <label
-                                  htmlFor={`age${index + 5}`}
-                                  className="age"
-                                >
-                                  {age.replace("s", "대")}
-                                </label>
-                              </React.Fragment>
-                            ))}
-                            <div className="empty-space"></div>
-                          </div>
-                        </AgeGroup>
-                      </dd>
-                    </dl>
-
-                    <dl>
-                      <dt>필수적으로 필요한 정보가 있다면, 알려주세요</dt>
-                      <dd>
-                        <CustomTextarea
-                          rows={3}
-                          placeholder="필수로 고려해야할 정보가 있다면 작성해주세요."
-                          value={customPersonaForm.additionalInfo}
-                          onChange={(e) => {
-                            if (e.target.value.length <= 300) {
-                              handleCustomPersonaChange(
-                                "additionalInfo",
-                                e.target.value
-                              );
-                            }
-                          }}
-                        />
-                      </dd>
-                    </dl>
-                  </CustomAccordionContent>
-                )}
-              </AccordionSection>
-               */}
             </>
           }
         />
@@ -2414,6 +2425,18 @@ const PagePersona2 = () => {
         />
       )}
       {isLoadingType && <div className="loading-bar">Loading...</div>}
+      {showCreditPopup && (
+        <PopupWrap
+          Warning
+          title="크레딧 부족"
+          message="보유한 이벤트 크레딧이 부족합니다. 크레딧을 충전한 후 다시 시도해주세요."
+          buttonType="Outline"
+          closeText="확인"
+          isModal={false}
+          onCancel={() => setShowCreditPopup(false)}
+          onConfirm={() => setShowCreditPopup(false)}
+        />
+      )}
     </>
   );
 };

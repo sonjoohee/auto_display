@@ -136,9 +136,23 @@ import {
   PROJECT_LOADING,
   PROJECT_REFRESH_TRIGGER,
   IS_LOADING_BUSINESS_ANALYSIS,
+  CREDIT_CUSTOM_THEORY,
+  CREDIT_ADDITIONAL_QUESTION,
+  CREDIT_INDEPTH_INTERVIEW,
+  CREDIT_REQUEST_CUSTOM_PERSONA,
+  CREDIT_REQUEST_BUSINESS_PERSONA,
+  EVENT_TITLE,
+  EVENT_STATE,
+  TRIAL_STATE,
 } from "../../../AtomStates";
 import { ContentsWrap } from "../../../../assets/styles/BusinessAnalysisStyle";
-import { Body1, Body3, Sub3, Caption1, Caption2 } from "../../../../assets/styles/Typography";
+import {
+  Body1,
+  Body3,
+  Sub3,
+  Caption1,
+  Caption2,
+} from "../../../../assets/styles/Typography";
 import { CustomTextarea } from "../../../../assets/styles/InputStyle";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
@@ -146,12 +160,18 @@ import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
 import MoleculeHeader from "../molecules/MoleculeHeader";
 import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
+import { CreditInfo } from "../../../../utils/indexedDB";
+
 const PageMain = () => {
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
   const [projectLoading, setProjectLoading] = useAtom(PROJECT_LOADING);
-  const [projectRefreshTrigger, setProjectRefreshTrigger] = useAtom(PROJECT_REFRESH_TRIGGER);
-  const [isLoadingBusinessAnalysis, setIsLoadingBusinessAnalysis] = useAtom(IS_LOADING_BUSINESS_ANALYSIS);
+  const [projectRefreshTrigger, setProjectRefreshTrigger] = useAtom(
+    PROJECT_REFRESH_TRIGGER
+  );
+  const [isLoadingBusinessAnalysis, setIsLoadingBusinessAnalysis] = useAtom(
+    IS_LOADING_BUSINESS_ANALYSIS
+  );
   const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
     IS_PERSONA_ACCESSIBLE
   );
@@ -207,7 +227,7 @@ const PageMain = () => {
   const [surveyQuestionList, setSurveyQuestionList] =
     useAtom(SURVEY_QUESTION_LIST);
   const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
-  const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG); 
+  const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
   const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
   const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
   const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
@@ -452,6 +472,45 @@ const PageMain = () => {
   const [isEditMode, setIsEditMode] = useAtom(IS_EDIT_MODE);
   const [isShowToast, setIsShowToast] = useAtom(IS_SHOW_TOAST);
 
+  // Credit-related atoms
+  const [, setCreditRequestCustomPersona] = useAtom(
+    CREDIT_REQUEST_CUSTOM_PERSONA
+  );
+  const [, setCreditRequestBusinessPersona] = useAtom(
+    CREDIT_REQUEST_BUSINESS_PERSONA
+  );
+  const [, setCreditCustomTheory] = useAtom(CREDIT_CUSTOM_THEORY);
+  const [, setCreditAdditionalQuestion] = useAtom(CREDIT_ADDITIONAL_QUESTION);
+  const [, setCreditIndepthInterview] = useAtom(CREDIT_INDEPTH_INTERVIEW);
+  const [, setEventTitle] = useAtom(EVENT_TITLE);
+  const [, setEventState] = useAtom(EVENT_STATE);
+  const [, setTrialState] = useAtom(TRIAL_STATE);
+
+  useEffect(() => {
+    const fetchCreditInfo = async () => {
+      try {
+        const response = await CreditInfo(isLoggedIn);
+        console.log("Fetched credit info:", response);
+
+        if (response) {
+          setCreditRequestCustomPersona(response.request_custom_persona);
+          setCreditRequestBusinessPersona(response.request_business_persona);
+          setCreditCustomTheory(response.custom_theory);
+          setCreditAdditionalQuestion(response.additional_question);
+          setCreditIndepthInterview(response.indepth_interview);
+          setEventTitle(response.event_title);
+          setEventState(response.event_state);
+          setTrialState(response.trial_state);
+        }
+      } catch (error) {
+        console.error("Failed to fetch credit info:", error);
+      }
+    };
+
+    // Call the API every time PageMain is rendered (or when isLoggedIn changes)
+    fetchCreditInfo();
+  }, [isLoggedIn]);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -507,7 +566,7 @@ const PageMain = () => {
     // }
 
     // Reset all states except inputBusinessInfo
-    //새로운 세션이나 페이지 전환 시 데이터 일관성 보장 
+    //새로운 세션이나 페이지 전환 시 데이터 일관성 보장
     setNewAddContent("");
     setIsAddingNow(false);
     setIsLoading(false);
@@ -625,20 +684,20 @@ const PageMain = () => {
     setProjectId("");
     setProjectReportId("");
     setProjectList([]);
-    setProjectReportList([]); 
+    setProjectReportList([]);
     setReportList([]);
     setPersonaList({
       selected: [],
-      unselected: []
+      unselected: [],
     });
     setSelectedPersonaList([]);
     setCustomizePersonaList({
       selected: [],
-      unselected: []
+      unselected: [],
     });
     setRequestPersonaList({
       persona: [],
-      positioning: {}
+      positioning: {},
     });
     setInterviewQuestionList([]);
     setSelectedInterviewPurpose("");
@@ -795,7 +854,7 @@ const PageMain = () => {
     }
   };
 
-  //전문가 부분 누르면 
+  //전문가 부분 누르면
   const handledExpertSelect = (index) => {
     if (isLoggedIn) {
       const initialMessage = getInitialSystemMessage(index);
@@ -862,7 +921,7 @@ const PageMain = () => {
 
         <MoleculeHeader />
 
-        <MainContent MainSearch> 
+        <MainContent MainSearch>
           <MainSearchWrap MainSearch>
             <Title>
               Connect with Your Persona
@@ -901,8 +960,14 @@ const PageMain = () => {
                 </button>
               </div>
               <div className="maxLetter">
-                <images.ExclamationCircle2 width="14px" height="14px" color={palette.gray300} />
-                <Sub3 color="gray300">현재 서비스는 B2C 비즈니스에 특화되어 있습니다</Sub3>
+                <images.ExclamationCircle2
+                  width="14px"
+                  height="14px"
+                  color={palette.gray300}
+                />
+                <Sub3 color="gray300">
+                  현재 서비스는 B2C 비즈니스에 특화되어 있습니다
+                </Sub3>
                 <span id="letterCount">
                   {businessAnalysis.input.length}/300
                 </span>
@@ -920,7 +985,9 @@ const PageMain = () => {
                 }}
               >
                 <Body1>전략 컨설턴트</Body1>
-                <Caption1 color="gray500">차별화 전략과 리스크 분석 제시</Caption1>
+                <Caption1 color="gray500">
+                  차별화 전략과 리스크 분석 제시
+                </Caption1>
                 <span>
                   <img src={images.ImgStrategy} alt="" />
                 </span>
@@ -968,7 +1035,9 @@ const PageMain = () => {
                 }}
               >
                 <Body1>BM 전문가</Body1>
-                <Caption1 color="gray500">비즈니스 모델 설계 및 최적화</Caption1>
+                <Caption1 color="gray500">
+                  비즈니스 모델 설계 및 최적화
+                </Caption1>
                 <span>
                   <img src={images.ImgBM} alt="" />
                 </span>
@@ -995,8 +1064,13 @@ const PageMain = () => {
               <Sub3 color="gray300">사업자등록번호 : 678 - 81 - 01795</Sub3>
             </div>
             <div>
-              <Sub3 color="gray300">통신판매업신고 : 제2025 - 경기안산 - 0424 호</Sub3>
-              <Sub3 color="gray300">주소: 경기도 안산시 상록구 해양3로 15, 1512호 ~ 1515호 (그랑시티 시그니처타워)</Sub3>
+              <Sub3 color="gray300">
+                통신판매업신고 : 제2025 - 경기안산 - 0424 호
+              </Sub3>
+              <Sub3 color="gray300">
+                주소: 경기도 안산시 상록구 해양3로 15, 1512호 ~ 1515호 (그랑시티
+                시그니처타워)
+              </Sub3>
             </div>
           </CopyRight>
         </MainContent>
@@ -1175,8 +1249,6 @@ const PageMain = () => {
 };
 
 export default PageMain;
-
-
 
 const MainContent = styled.div`
   display: flex;

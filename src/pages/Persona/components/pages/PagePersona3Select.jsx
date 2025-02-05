@@ -69,7 +69,12 @@ import {
   PERSONA_BUTTON_STATE_3,
   SINGLE_INTERVIEW_QUESTION_LIST,
   PURPOSE_ITEMS_SINGLE,
+  CREDIT_INDEPTH_INTERVIEW,
+  EVENT_STATE,
+  EVENT_TITLE,
+  TRIAL_STATE,
 } from "../../../../pages/AtomStates.jsx";
+import { UserCreditCheck, UserCreditUse } from "../../../../utils/indexedDB";
 
 const FULL_DEFINITION_TEXT =
   "사용자 트렌드 민감도 분석은 사용자가 시장의 최신 트렌드에 얼마나 빠르고 효과적으로 반응하는지를 측정하는 방법론입니다. 이 분석은 사용자가 새로운 트렌드를 어떻게 인식하고, 그 트렌드에 따라 행동이 어떻게 변화하는지 파악하는 데 중점을 둡니다.";
@@ -119,11 +124,22 @@ const PagePersona3Select = () => {
   const [requestPersonaList, setRequestPersonaList] =
     useAtom(REQUEST_PERSONA_LIST);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  // const [allBusinessPersonas, setAllBusinessPersonas] = useState([]); // 전체 비즈니스 페르소나 상태
+  const [showCreditPopup, setShowCreditPopup] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [businessAnalysis, setBusinessAnalysis] = useState({
+    title: "맞춤 페르소나 인터뷰",
+  });
+  const [showRequestPopup, setShowRequestPopup] = useState(false);
 
   const [personaButtonState3, setPersonaButtonState3] = useAtom(
     PERSONA_BUTTON_STATE_3
   );
+
+  const [creditIndepthInterview] = useAtom(CREDIT_INDEPTH_INTERVIEW);
+  const [eventState] = useAtom(EVENT_STATE);
+  const [eventTitle] = useAtom(EVENT_TITLE);
+  const [trialState] = useAtom(TRIAL_STATE);
+
   const [isIndepthEnabled, setIsIndepthEnabled] = useState(false);
 
   useEffect(() => {
@@ -152,14 +168,63 @@ const PagePersona3Select = () => {
     };
   }, [showToast]);
 
+  // 모집 요청 팝업 닫기 함수
+  const handleCloseRequestPopup = () => {
+    setShowRequestPopup(false);
+  };
+
+  // 크레딧 체크 및 사용 함수
+  const creditUse = async () => {
+    try {
+      const creditPayload = {
+        // 기존 10 대신 additionalQuestionMount 사용
+        mount: creditIndepthInterview,
+      };
+
+      const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
+      console.log("크레딧 체크 응답:", creditResponse);
+
+      if (creditResponse?.state !== "use") {
+        setShowCreditPopup(true);
+        return;
+      }
+
+      // 크레딧이 사용 가능한 상태면 사용 API 호출
+      const creditUsePayload = {
+        title: businessAnalysis.title,
+        service_type: "인뎁스 인터뷰",
+        target: "",
+        state: "use",
+        mount: creditIndepthInterview,
+      };
+
+      const creditUseResponse = await UserCreditUse(
+        creditUsePayload,
+        isLoggedIn
+      );
+      console.log("크레딧 사용 응답:", creditUseResponse);
+
+      // 이후 인터뷰 시작 등 추가 로직 처리 (예를 들어 인터뷰 준비 팝업 표시)
+      setShowPopup(true);
+    } catch (error) {
+      console.error("크레딧 체크 실패:", error);
+      setShowCreditPopup(true);
+      return;
+    }
+  };
+
   const handleStartInterview = () => {
     console.log("인터뷰 시작");
     console.log("personaList", personaList);
     console.log("singleInterviewQuestionList", singleInterviewQuestionList);
-    // console.log("selectedInterviewPurpose", selectedInterviewPurpose);
     console.log("selectedInterviewPurposeData", selectedInterviewPurposeData);
     console.log("purposeItemsSingleAtom", purposeItemsSingleAtom);
-    setShowPopup(true);
+
+    if (isIndepthEnabled) {
+      setShowRequestPopup(true);
+    } else {
+      setShowPopup(true);
+    }
   };
 
   const handlePopupClose = () => {
@@ -289,7 +354,8 @@ const PagePersona3Select = () => {
                         </PersonaGroup>
                       ) : (
                         <Body2 color="gray300">
-                          페르소나가 선택되지 않았습니다. 하단에서 페르소나를 선택해 주세요!
+                          페르소나가 선택되지 않았습니다. 하단에서 페르소나를
+                          선택해 주세요!
                         </Body2>
                       )}
                     </li>
@@ -298,11 +364,11 @@ const PagePersona3Select = () => {
                     ) : selectedInterviewType === "single" ? (
                       <li>
                         <Body2 color="gray500">
-                          반응형 인터뷰
+                          인뎁스 인터뷰
                           <Tooltip>
                             <span>?</span>
                             <Caption2 align="left" color="white">
-                              반응형 인터뷰란?
+                              인뎁스 인터뷰란?
                               <br />
                               페르소나의 답변에 맞춰, 모더레이터가 자동으로 추가
                               질문을 제시하는 맞춤형 인터뷰 방식 입니다.
@@ -321,10 +387,18 @@ const PagePersona3Select = () => {
                             <span data-on="ON" data-off="OFF" />
                             <SwitchHandle />
                           </SwitchToggleItem>
-                          <Body2 color={isIndepthEnabled ? "gray800" : "gray300"}>
-                            추가 질문 생성
-                            {!isIndepthEnabled && (
-                              <Sub3 color="gray300" style={{ width: "auto" }}>(일반 플랜 사용 불가)</Sub3>
+                          <Body2
+                            color={isIndepthEnabled ? "gray800" : "gray300"}
+                          >
+                            인뎁스 인터뷰 수행
+                            {!isIndepthEnabled ? (
+                              <Sub3 color="gray300" style={{ width: "auto" }}>
+                                ({creditIndepthInterview} 크레딧 소모)
+                              </Sub3>
+                            ) : (
+                              <Sub3 color="gray800" style={{ width: "auto" }}>
+                                ({creditIndepthInterview} 크레딧 소모)
+                              </Sub3>
                             )}
                           </Body2>
                         </SwitchToggle>
@@ -364,9 +438,9 @@ const PagePersona3Select = () => {
                 <Body2 color="gray800">
                   {selectedInterviewType === "multiple"
                     ? `선택한 ${getSelectedCount()}명의 페르소나와 인터뷰를 진행하시겠습니까?`
-                    : getSelectedCount() === 0 
-                      ? "인터뷰할 페르소나를 선택해주세요"
-                      : "선택한 페르소나와 인터뷰를 진행하시겠습니까?"}
+                    : getSelectedCount() === 0
+                    ? "인터뷰할 페르소나를 선택해주세요"
+                    : "선택한 페르소나와 인터뷰를 진행하시겠습니까?"}
                 </Body2>
                 <Button
                   Large
@@ -420,6 +494,85 @@ const PagePersona3Select = () => {
           isIndepth={isIndepthEnabled}
         />
       ) : null}
+
+      {showCreditPopup && (
+        <PopupWrap
+          Warning
+          title="크레딧 부족"
+          message="보유한 이벤트 크레딧이 부족합니다. 크레딧을 충전한 후 다시 시도해주세요."
+          buttonType="Outline"
+          closeText="확인"
+          isModal={false}
+          onCancel={() => setShowCreditPopup(false)}
+          onConfirm={() => setShowCreditPopup(false)}
+        />
+      )}
+
+      {/* 모집 요청 팝업 추가 */}
+      {showRequestPopup &&
+        (eventState ? (
+          <PopupWrap
+            Event
+            title="인뎁스 인터뷰"
+            message={
+              <>
+                현재 {eventTitle} 기간으로 이벤트 크레딧이 소진됩니다.
+                <br />({creditIndepthInterview} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => setShowRequestPopup(false)}
+            onConfirm={() => {
+              handleCloseRequestPopup();
+              creditUse();
+            }}
+          />
+        ) : trialState ? (
+          <PopupWrap
+            Check
+            title="인뎁스 인터뷰"
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditIndepthInterview} 크레딧)
+                <br />
+                신규 가입 2주간 무료로 사용 가능합니다.
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => setShowRequestPopup(false)}
+            onConfirm={() => {
+              handleCloseRequestPopup();
+              creditUse();
+            }}
+          />
+        ) : (
+          <PopupWrap
+            Check
+            title="인뎁스 인터뷰"
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditIndepthInterview} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => setShowRequestPopup(false)}
+            onConfirm={() => {
+              handleCloseRequestPopup();
+              creditUse();
+            }}
+          />
+        ))}
     </>
   );
 };
