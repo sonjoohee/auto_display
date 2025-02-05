@@ -118,7 +118,7 @@ const PageMyProfile = () => {
     return memberDeleteForm.reason;
   };
 
-  const handleContactSubmit = () => {
+  const handleContactSubmit = async () => {
     if (isContactFormValid()) {
       // API 호출을 위한 데이터 준비
       const requestData = {
@@ -348,6 +348,7 @@ const PageMyProfile = () => {
           confirmText="문의 등록하기"
           isModal={true}
           onClose={closeContactPopup}
+          onCancel={closeContactPopup}
           onConfirm={handleContactSubmit}
           isFormValid={isContactFormValid()}
           body={
@@ -443,6 +444,7 @@ const PageMyProfile = () => {
           confirmText="이 버튼을 누르면, 바로 탈퇴가 진행됩니다."
           isModal={true}
           onClose={closeMemberDeletePopup}
+          onCancel={closeMemberDeletePopup}
           onConfirm={handleMemberDeleteSubmit}
           isFormValid={isMemberDeleteFormValid()}
           body={
