@@ -1,8 +1,8 @@
-import React from 'react';
-import styled from 'styled-components';
-import { palette } from '../../assets/styles/Palette';
-import images from '../../assets/styles/Images';
-import { Body3 } from '../../assets/styles/Typography';
+import React from "react";
+import styled from "styled-components";
+import { palette } from "../../assets/styles/Palette";
+import images from "../../assets/styles/Images";
+import { Body3 } from "../../assets/styles/Typography";
 
 const Pagination = ({ currentPage, totalPages }) => {
   const renderPageNumbers = () => {
@@ -19,10 +19,10 @@ const Pagination = ({ currentPage, totalPages }) => {
 
   return (
     <PaginationWrapper>
-      <ArrowButton $direction="left">
+      {/* <ArrowButton $direction="left">
         <images.ChevronRight width="24" height="24" color={palette.gray500} />
       </ArrowButton>
-      
+       */}
       <NumbersWrapper>
         {renderPageNumbers()}
         <Dots>
@@ -35,9 +35,9 @@ const Pagination = ({ currentPage, totalPages }) => {
         </PageNumber>
       </NumbersWrapper>
 
-      <ArrowButton $direction="right">
+      {/* <ArrowButton $direction="right">
         <images.ChevronRight width="24" height="24" color={palette.gray500} />
-      </ArrowButton>
+      </ArrowButton> */}
     </PaginationWrapper>
   );
 };
@@ -52,11 +52,8 @@ const PaginationWrapper = styled.div`
 `;
 
 const ArrowButton = styled.div`
-  transform: ${props => 
-    props.$direction === 'left' 
-    ? 'rotate(180deg)' 
-    : 'rotate(0)'
-  };
+  transform: ${(props) =>
+    props.$direction === "left" ? "rotate(180deg)" : "rotate(0)"};
   cursor: pointer;
 `;
 
@@ -74,11 +71,11 @@ const PageNumber = styled.div`
   gap: 10px;
   padding: 0 9px;
   border-radius: 2px;
-  background: ${props => props.$isActive ? '#F0F4FF' : 'transparent'};
+  background: ${(props) => (props.$isActive ? "#F0F4FF" : "transparent")};
   cursor: pointer;
 
   p {
-    color: ${props => props.$isActive ? palette.primary : palette.gray700};
+    color: ${(props) => (props.$isActive ? palette.primary : palette.gray700)};
   }
 `;
 
@@ -96,4 +93,4 @@ const Dot = styled.div`
   border-radius: 50%;
 `;
 
-export default Pagination; 
+export default Pagination;
