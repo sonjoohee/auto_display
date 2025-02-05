@@ -293,7 +293,9 @@ const PageMyProfile = () => {
                   <div>
                     <Sub3 color="gray500">요금제 </Sub3>
                     <Sub3 color="gray800">
-                      {sessionStorage.getItem("userMembership")}
+                      {sessionStorage.getItem("userMembership") === "Normal"
+                        ? "일반 사용자"
+                        : "구독 사용자"}
                     </Sub3>
                   </div>
                 </ProfileContentItem>

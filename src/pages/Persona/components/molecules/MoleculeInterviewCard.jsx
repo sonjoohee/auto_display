@@ -1,5 +1,5 @@
 //인터뷰 목적 선택
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -22,6 +22,38 @@ import axios from "axios";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import MoleculeRecreate from "./MoleculeRecreate";
 import { InterviewXPersonaMultipleInterviewGeneratorRequest } from "../../../../utils/indexedDB";
+
+// 전역 로딩 상태를 구독할 리스너들을 저장할 Set
+const globalLoadingListeners = new Set();
+// 전역 로딩 변수 (초기값 false)
+let globalIsLoadingQuestion = false;
+
+/**
+ * 전역 로딩 값을 변경하고 구독 중인 모든 컴포넌트에 업데이트를 알립니다.
+ */
+export function setGlobalIsLoadingQuestion(value) {
+  globalIsLoadingQuestion = value;
+  globalLoadingListeners.forEach((listener) =>
+    listener(globalIsLoadingQuestion)
+  );
+}
+
+/**
+ * 전역 로딩 상태를 React state로 관리하기 위한 커스텀 훅
+ * 이 훅을 사용하는 컴포넌트는 글로벌 로딩 상태 변경 시 리렌더링됩니다.
+ */
+export function useGlobalIsLoading() {
+  const [loading, setLoading] = useState(globalIsLoadingQuestion);
+
+  useEffect(() => {
+    globalLoadingListeners.add(setLoading);
+    return () => {
+      globalLoadingListeners.delete(setLoading);
+    };
+  }, []);
+
+  return loading;
+}
 
 const MoleculeInterviewCard = ({
   title,
@@ -198,6 +230,9 @@ const MoleculeInterviewCard = ({
     }
   };
 
+  // 전역 로딩 상태를 사용 (여러 카드에서 공유)
+  const globalLoading = useGlobalIsLoading();
+
   return (
     <>
       <CardContainer
@@ -231,9 +266,21 @@ const MoleculeInterviewCard = ({
           <DescriptionSection $isExpanded={isExpanded}>
             {!state.showQuestions ? (
               <span
+                style={{
+                  pointerEvents: globalLoading ? "none" : "auto",
+                  opacity: globalLoading ? 0.6 : 1,
+                  cursor: globalLoading ? "not-allowed" : "pointer",
+                }}
                 onClick={async () => {
+                  // 전역 혹은 현재 카드의 로딩 상태가 true면 클릭 이벤트 무시
+                  if (globalLoading || isLoadingQuestion) return;
+
+                  // 전역 로딩 상태 시작
+                  setGlobalIsLoadingQuestion(true);
                   setState((prev) => ({ ...prev, showQuestions: true }));
                   await loadInterviewQuestion();
+                  // 전역 로딩 상태 종료 (이 시점에 구독 중인 모든 카드가 리렌더링되어 스타일이 갱신됨)
+                  setGlobalIsLoadingQuestion(false);
                 }}
               >
                 <img src={images.FileSearch} alt="문항보기" />
@@ -318,7 +365,9 @@ const CardContainer = styled.div`
     if (props.NoBackground) {
       return props.$isSelected ? "rgba(34, 111, 255, 0.10)" : palette.white;
     }
-    return props.$isSelected && !props.$isExpanded ? "rgba(34, 111, 255, 0.10)" : palette.white;
+    return props.$isSelected && !props.$isExpanded
+      ? "rgba(34, 111, 255, 0.10)"
+      : palette.white;
   }};
   cursor: pointer;
   transition: all 0.2s ease-in-out;
