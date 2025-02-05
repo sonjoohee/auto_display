@@ -18,7 +18,11 @@ import {
   CreditNoData,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import { useAtom } from "jotai";
-import { BUSINESS_ANALYSIS, PERSONA_STEP, USER_CREDITS } from "../../../AtomStates";
+import {
+  BUSINESS_ANALYSIS,
+  PERSONA_STEP,
+  USER_CREDITS,
+} from "../../../AtomStates";
 import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
 import { UserCreditInfo } from "../../../../utils/indexedDB";
 
@@ -86,24 +90,30 @@ const MoleculeHeader = () => {
     const fetchUserCredits = async () => {
       try {
         const credits = await UserCreditInfo(true);
-        console.log(credits);
         if (credits) {
           setUserCredits(credits);
           setIsLoggedIn(true);
         } else {
-          setUserCredits({ additional_credit: 0, regular_credit: 0, event_credit: 0 });
+          setUserCredits({
+            additional_credit: 0,
+            regular_credit: 0,
+            event_credit: 0,
+          });
           setIsLoggedIn(false);
         }
       } catch (error) {
         console.error("유저 크레딧 정보 조회 오류 발생:", error);
-        setUserCredits({ additional_credit: 0, regular_credit: 0, event_credit: 0 });
+        setUserCredits({
+          additional_credit: 0,
+          regular_credit: 0,
+          event_credit: 0,
+        });
         setIsLoggedIn(false);
       }
     };
 
     fetchUserCredits();
   }, []);
-
 
   return (
     <>
@@ -144,7 +154,14 @@ const MoleculeHeader = () => {
         )}
 
         <div className="gnb">
-          {isRootPage && <Sub2 style={{cursor: "pointer"}} onClick={() => navigate("/ServiceLanding")}>서비스 소개</Sub2>}
+          {isRootPage && (
+            <Sub2
+              style={{ cursor: "pointer" }}
+              onClick={() => navigate("/ServiceLanding")}
+            >
+              서비스 소개
+            </Sub2>
+          )}
 
           <TotalCreditToggle>
             <CreditTotal
@@ -159,7 +176,13 @@ const MoleculeHeader = () => {
                     color={palette.white}
                   />
                 </span>
-                <Sub2 color="gray800">{(userCredits.regular_credit || 0) + (userCredits.additional_credit || 0) + (userCredits.event_credit || 0)}</Sub2>
+                <Sub2 color="gray800">
+                  {(
+                    (userCredits.regular_credit || 0) +
+                    (userCredits.additional_credit || 0) +
+                    (userCredits.event_credit || 0)
+                  ).toLocaleString()}
+                </Sub2>
               </div>
               <images.ChevronDown
                 width="20px"
@@ -178,9 +201,17 @@ const MoleculeHeader = () => {
               <CreditToggle className={isClosingCreditToggle ? "closing" : ""}>
                 <div className="title">
                   <Sub1 color="gray700">크레딧 내역</Sub1>
-                  <button onClick={() => navigate("/Payment")}>
-                    {isLoggedIn && <Caption2 color="primary">충전하기</Caption2>}
-                  </button>
+                  {isLoggedIn &&
+                    (sessionStorage.getItem("userEmail") ===
+                      "pg_card@userconnect.kr" ||
+                      sessionStorage.getItem("userEmail") ===
+                        "sungeun_lee@userconnect.kr" ||
+                      sessionStorage.getItem("userEmail") ===
+                        "pixelweb@naver.com") && (
+                      <button onClick={() => navigate("/Payment")}>
+                        <Caption2 color="primary">충전하기</Caption2>
+                      </button>
+                    )}
                 </div>
 
                 {isLoggedIn ? (
@@ -188,35 +219,61 @@ const MoleculeHeader = () => {
                     <li>
                       <CreditDashBoardItem NoLine>
                         <div className="icon yellow">
-                          <images.CoinFill width="9.6" height="6.1" color="#FFD54A" />
+                          <images.CoinFill
+                            width="9.6"
+                            height="6.1"
+                            color="#FFD54A"
+                          />
                         </div>
-                        <Sub3 color="gray500" align="left">일반 크레딧</Sub3>
+                        <Sub3 color="gray500" align="left">
+                          일반 크레딧
+                        </Sub3>
                       </CreditDashBoardItem>
-                      <Sub3 color="gray500" align="right">{userCredits.additional_credit}</Sub3>
+                      <Sub3 color="gray500" align="right">
+                        {userCredits.additional_credit.toLocaleString()}
+                      </Sub3>
                     </li>
                     <li>
                       <CreditDashBoardItem NoLine>
                         <div className="icon green">
-                          <images.CoinFill width="9.6" height="6.1" color="#34C759" />
+                          <images.CoinFill
+                            width="9.6"
+                            height="6.1"
+                            color="#34C759"
+                          />
                         </div>
-                        <Sub3 color="gray500" align="left">구독 크레딧</Sub3>
+                        <Sub3 color="gray500" align="left">
+                          구독 크레딧
+                        </Sub3>
                       </CreditDashBoardItem>
-                      <Sub3 color="gray500" align="right">{userCredits.regular_credit}</Sub3>
+                      <Sub3 color="gray500" align="right">
+                        {userCredits.regular_credit.toLocaleString()}
+                      </Sub3>
                     </li>
                     <li>
                       <CreditDashBoardItem NoLine>
                         <div className="icon red">
-                          <images.CoinFill width="9.6" height="6.1" color="#FF5322" />
+                          <images.CoinFill
+                            width="9.6"
+                            height="6.1"
+                            color="#FF5322"
+                          />
                         </div>
-                        <Sub3 color="gray500" align="left">이벤트 크레딧</Sub3>
+                        <Sub3 color="gray500" align="left">
+                          이벤트 크레딧
+                        </Sub3>
                       </CreditDashBoardItem>
-                      <Sub3 color="gray500" align="right">{userCredits.event_credit}</Sub3>
+                      <Sub3 color="gray500" align="right">
+                        {userCredits.event_credit.toLocaleString()}
+                      </Sub3>
                     </li>
                   </ul>
                 ) : (
                   <CreditNoData>
                     <Sub3 color="gray500">
-                      크레딧 내역은 로그인 후,<br />확인 가능합니다.
+                      크레딧 내역은 로그인 후,
+                      <br />
+                      확인 가능합니다.
                     </Sub3>
                   </CreditNoData>
                 )}

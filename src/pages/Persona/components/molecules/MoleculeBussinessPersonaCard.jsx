@@ -67,7 +67,6 @@ const MoleculeBussinessPersonaCard = ({
   trialState,
   creditRequestBusinessPersona,
 }) => {
-  console.log("🚀 ~ personaData:", personaData);
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
@@ -494,7 +493,7 @@ const MoleculeBussinessPersonaCard = ({
             message={
               <>
                 현재 {eventTitle} 기간으로 이벤트 크레딧이 소진됩니다.
-                <br />({creditRequestBusinessPersona} 크레딧)
+                <br />({creditRequestBusinessPersona.toLocaleString()} 크레딧)
               </>
             }
             buttonType="Outline"
@@ -514,7 +513,7 @@ const MoleculeBussinessPersonaCard = ({
             message={
               <>
                 해당 서비스 사용시 크레딧이 소진됩니다.
-                <br />({creditRequestBusinessPersona} 크레딧)
+                <br />({creditRequestBusinessPersona.toLocaleString()} 크레딧)
                 <br />
                 신규 가입 2주간 무료로 사용 가능합니다.
               </>
@@ -536,7 +535,7 @@ const MoleculeBussinessPersonaCard = ({
             message={
               <>
                 해당 서비스 사용시 크레딧이 소진됩니다.
-                <br />({creditRequestBusinessPersona} 크레딧)
+                <br />({creditRequestBusinessPersona.toLocaleString()} 크레딧)
               </>
             }
             buttonType="Outline"
@@ -556,9 +555,9 @@ const MoleculeBussinessPersonaCard = ({
           title="크레딧이 모두 소진되었습니다"
           message={
             <>
-              매월 1일 (서비스)크레딧이 충전됩니다
+              보유한 크레딧이 부족합니다.
               <br />
-              (베타서비스) 종료시 크레딧이 자동 소멸됩니다
+              크레딧을 충전한 후 다시 시도해주세요.
             </>
           }
           buttonType="Outline"

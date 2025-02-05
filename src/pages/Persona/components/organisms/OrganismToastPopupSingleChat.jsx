@@ -1809,9 +1809,9 @@ const OrganismToastPopupSingleChat = ({
           title="크레딧이 모두 소진되었습니다"
           message={
             <>
-              매월 1일 (서비스)크레딧이 충전됩니다
+              보유한 크레딧이 부족합니다.
               <br />
-              (베타서비스) 종료시 크레딧이 자동 소멸됩니다
+              크레딧을 충전한 후 다시 시도해주세요.
             </>
           }
           buttonType="Outline"

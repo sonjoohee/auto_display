@@ -1650,7 +1650,6 @@ export const MarketingCustomerRecommendationRequest = async (
       data,
       {
         headers: {
-
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
@@ -1673,13 +1672,8 @@ export const MarketingCustomerRecommendationRequest = async (
   }
 };
 
-
 //마케팅 연구 보고서 요청 API
-export const MarketingResearchReportRequest = async (
-  data,
-  isLoggedIn
-
-) => {
+export const MarketingResearchReportRequest = async (data, isLoggedIn) => {
   console.log(" 마케팅 연구 보고서 요청 API  - 입력 데이터:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
@@ -1698,8 +1692,6 @@ export const MarketingResearchReportRequest = async (
       data,
       {
         headers: {
-
-
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
@@ -1720,22 +1712,13 @@ export const MarketingResearchReportRequest = async (
     console.error("오류 상세:", error.response?.data || error.message);
     throw error;
   }
-
 };
 
-
-
 //마케팅 비즈니스 모델 보고서 요청 API
-export const MarketingBmReportRequest = async (
-  data,
-  isLoggedIn
-
-
-) => {
+export const MarketingBmReportRequest = async (data, isLoggedIn) => {
   console.log(" 마케팅 비즈니스 모델 보고서 요청 API  - 입력 데이터:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
-
 
     return null;
   }
@@ -1751,9 +1734,6 @@ export const MarketingBmReportRequest = async (
       data,
       {
         headers: {
-
-
-
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
@@ -1774,17 +1754,10 @@ export const MarketingBmReportRequest = async (
     console.error("오류 상세:", error.response?.data || error.message);
     throw error;
   }
-
-
 };
 
-
 //마케팅 최종 보고서 요청 API
-export const MarketingFinalReportRequest = async (
-  data,
-  isLoggedIn
-
-) => {
+export const MarketingFinalReportRequest = async (data, isLoggedIn) => {
   console.log(" 마케팅 최종 보고서 요청 API  - 입력 데이터:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
@@ -1803,10 +1776,6 @@ export const MarketingFinalReportRequest = async (
       data,
       {
         headers: {
-
-
-
-
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
@@ -1827,24 +1796,13 @@ export const MarketingFinalReportRequest = async (
     console.error("오류 상세:", error.response?.data || error.message);
     throw error;
   }
-
-
-
 };
 
-
-
 //마케팅 MBTI 결과 요청 API
-export const MarketingMbtiResultRequest = async (
-  data,
-  isLoggedIn
-
-
-) => {
+export const MarketingMbtiResultRequest = async (data, isLoggedIn) => {
   console.log(" 마케팅 MBTI 결과 요청 API  - 입력 데이터:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
-
 
     return null;
   }
@@ -1860,7 +1818,6 @@ export const MarketingMbtiResultRequest = async (
       data,
       {
         headers: {
-
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
@@ -1881,8 +1838,4 @@ export const MarketingMbtiResultRequest = async (
     console.error("오류 상세:", error.response?.data || error.message);
     throw error;
   }
-
-
-
-
 };
