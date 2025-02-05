@@ -42,11 +42,16 @@ import {
   SINGLE_INTERVIEW_REPORT_TAB1,
   SINGLE_INTERVIEW_REPORT_TAB2,
   SINGLE_INTERVIEW_REPORT_TAB3,
+  TRIAL_STATE,
+  CREDIT_ADDITIONAL_QUESTION,
+  EVENT_STATE,
+  EVENT_TITLE,
 } from "../../../../pages/AtomStates";
-import { updateProjectOnServer } from "../../../../utils/indexedDB";
+import { updateProjectOnServer, UserCreditCheck, UserCreditUse } from "../../../../utils/indexedDB";
 import { createProjectReportOnServer } from "../../../../utils/indexedDB";
 import MoleculeRecreate from "../../../../pages/Persona/components/molecules/MoleculeRecreate";
 // import { InterviewXPersonaMultipleInterviewGeneratorRequest } from "../../../../utils/indexedDB";
+
 import { InterviewXPersonaSingleInterviewGeneratorRequest } from "../../../../utils/indexedDB";
 import { InterviewXPersonaSingleInterviewRequest } from "../../../../utils/indexedDB";
 import { InterviewXPersonaSingleInterviewRequestAddQuestion } from "../../../../utils/indexedDB";
@@ -55,6 +60,8 @@ import { InterviewXPersonaSingleInterviewReportTab2 } from "../../../../utils/in
 import { InterviewXPersonaSingleInterviewReportTab3 } from "../../../../utils/indexedDB";
 import { SkeletonLine } from "../../../../assets/styles/Skeleton";
 import { InterviewXPersonaSingleIndepthInterviewGeneratorRequest } from "../../../../utils/indexedDB";
+import { CreditUse } from "../../../../utils/indexedDB";
+
 
 const OrganismToastPopupSingleChat = ({
   isActive,
@@ -102,8 +109,16 @@ const OrganismToastPopupSingleChat = ({
     SINGLE_INTERVIEW_QUESTION_LIST
   );
 
+  const [trialState, setTrialState] = useAtom(TRIAL_STATE);
+  const [creditAdditionalQuestion, setCreditAdditionalQuestion] = useAtom(
+    CREDIT_ADDITIONAL_QUESTION
+  );
+  const [eventState, setEventState] = useAtom(EVENT_STATE);
+  const [eventTitle, setEventTitle] = useAtom(EVENT_TITLE);
+
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
   const [selectedInterviewPurposeData, setSelectedInterviewPurposeData] =
+
     useAtom(SELECTED_INTERVIEW_PURPOSE_DATA);
   const navigate = useNavigate();
 
@@ -142,6 +157,10 @@ const OrganismToastPopupSingleChat = ({
   const [allAnswersState, setAllAnswersState] = useState([]); // 상태로 관리
 
   const [isInputEnabled, setIsInputEnabled] = useState(false); // New state for input enable/disable
+
+  const [showRequestPopup, setShowRequestPopup] = useState(false);
+  const [showCreditPopup, setShowCreditPopup] = useState(false);
+
 
   const [countAdditionalQuestion, setCountAdditionalQuestion] = useState(1);
   const [addQuestionLoading, setAddQuestionLoading] = useState(false);
@@ -364,13 +383,13 @@ const OrganismToastPopupSingleChat = ({
             ...existingQuestions.commonQuestions,
             ...existingQuestions.specialQuestions,
           ];
-          // setInterviewQuestionListState(combinedQuestions.slice(0, 2)); // 질문 두개 테스트
-          setInterviewQuestionListState(combinedQuestions);
+          setInterviewQuestionListState(combinedQuestions.slice(0, 2)); // 질문 두개 테스트
+          // setInterviewQuestionListState(combinedQuestions);
 
           await new Promise((resolve) => setTimeout(resolve, 5000));
           setIsLoadingPrepare(false);
-          // setInterviewStatus(["Pre", "Pre"]); // 테스트 하나
-          setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
+          setInterviewStatus(["Pre", "Pre"]); // 테스트 하나
+          // setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
         } else {
           // 생성된 질문이 없다면 API 요청
           let data = {
@@ -1343,6 +1362,46 @@ const OrganismToastPopupSingleChat = ({
     showRegenerateButton2, // 재시도 버튼 표시 상태 추가
   ]);
 
+
+  const creditUse = async () => {
+    // 팝업 닫기
+    setShowRequestPopup(false);
+
+    const accessToken = sessionStorage.getItem("accessToken");
+    if (!accessToken) {
+      console.error("토큰이 없습니다.");
+      return;
+    }
+
+    // 크레딧 사용전 사용 확인
+    const creditPayload = {
+      mount: creditAdditionalQuestion,
+    };
+    const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
+    console.log("크레딧 체크 응답:", creditResponse);
+
+    if (creditResponse?.state !== "use") {
+      setShowCreditPopup(true);
+      return;
+    }
+
+    // 크레딧이 사용 가능한 상태면 사용 API 호출
+    const creditUsePayload = {
+      title: businessAnalysis.title,
+      service_type: "비즈니스 페르소나 모집 요청",
+      target: "",
+      state: "use",
+      mount: creditAdditionalQuestion,
+    };
+
+    const creditUseResponse = await UserCreditUse(creditUsePayload, isLoggedIn);
+    console.log("크레딧 사용 응답:", creditUseResponse);
+
+    // 크레딧 사용 처리가 완료되면 입력 활성화
+    setIsInputEnabled(true);
+  };
+
+
   return (
     <>
       <PopupBox isActive={active}>
@@ -1489,8 +1548,8 @@ const OrganismToastPopupSingleChat = ({
                           onClick={() => {
                             if (selectedRadio === null) {
                               setSelectedRadio("yes");
-                              setIsInputEnabled(true);
                               setInputValue("");
+                              setShowRequestPopup(true);
                             }
                           }}
                         >
@@ -1678,6 +1737,90 @@ const OrganismToastPopupSingleChat = ({
             setShowErrorPopup(false);
             window.location.href = "/";
           }}
+        />
+      )}
+
+
+
+{showRequestPopup &&
+        (eventState ? (
+          <PopupWrap
+            Event
+            title="페르소나 모집 요청"
+            message={
+              <>
+                현재 {eventTitle} 기간으로 이벤트 크레딧이 소진됩니다.
+                <br />({creditAdditionalQuestion} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => setShowRequestPopup(false)}
+            onConfirm={() => {
+              // handleCloseRequestPopup();
+              creditUse();
+            }}
+          />
+        ) : trialState ? (
+          <PopupWrap
+            Check
+            title="페르소나 모집 요청"
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditAdditionalQuestion} 크레딧)
+                <br />
+                신규 가입 2주간 무료로 사용 가능합니다.
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => setShowRequestPopup(false)}
+            onConfirm={() => {
+              // handleCloseRequestPopup();
+              creditUse();
+            }}
+          />
+        ) : (
+          <PopupWrap
+            Check
+            title="페르소나 모집 요청"
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditAdditionalQuestion} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => setShowRequestPopup(false)}
+            onConfirm={() => {
+              // handleCloseRequestPopup();
+              creditUse();
+            }}
+          />
+        ))}
+      {showCreditPopup && (
+        <PopupWrap
+          Warning
+          title="크레딧이 모두 소진되었습니다"
+          message={
+            <>
+              매월 1일 (서비스)크레딧이 충전됩니다
+              <br />
+              (베타서비스) 종료시 크레딧이 자동 소멸됩니다
+            </>
+          }
+          buttonType="Outline"
+          closeText="확인"
+          isModal={false}
+          onCancel={() => setShowCreditPopup(false)}
         />
       )}
     </>
