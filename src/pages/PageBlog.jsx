@@ -5,7 +5,7 @@ const PageBlog = () => {
   return (
     <BlogContainer>
       <iframe 
-        src="https://www.notioniframe.com/notion/1mevbyj6h8z" 
+        src="https://www.notioniframe.com/notion/2cduo7gbv65" 
         title="Blog Content"
         style={{
           width: '100%',
@@ -27,11 +27,4 @@ const BlogContainer = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-`;
-
-const BlogPost = styled.div`
-  margin-bottom: 20px;
-  padding: 15px;
-  border: 1px solid #eee;
-  border-radius: 8px;
 `;
