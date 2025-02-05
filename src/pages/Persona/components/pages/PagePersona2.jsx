@@ -1645,6 +1645,20 @@ const PagePersona2 = () => {
 
   console.log("currentRequestedPersona", currentRequestedPersona);
 
+  const reloadBusinessPersonaList = async () => {
+    try {
+      const savedProjectInfo = await getProjectByIdFromIndexedDB(
+        projectId,
+        projectLoadButtonState
+      );
+      if (savedProjectInfo?.businessPersonaList) {
+        setDisplayedPersonas(savedProjectInfo.businessPersonaList);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <>
       <ContentsWrap>
@@ -1682,13 +1696,19 @@ const PagePersona2 = () => {
                         <TabWrapType3>
                           <TabButtonType3
                             isActive={activeTab === "daily"}
-                            onClick={() => setActiveTab("daily")}
+                            onClick={() => {
+                              setActiveTab("daily");
+                              reloadBusinessPersonaList();
+                            }}
                           >
                             일상 페르소나 ({getPersonaCount("daily")})
                           </TabButtonType3>
                           <TabButtonType3
                             isActive={activeTab === "business"}
-                            onClick={() => setActiveTab("business")}
+                            onClick={() => {
+                              setActiveTab("business");
+                              reloadBusinessPersonaList();
+                            }}
                           >
                             비즈니스 페르소나 ({getPersonaCount("business")})
                           </TabButtonType3>
