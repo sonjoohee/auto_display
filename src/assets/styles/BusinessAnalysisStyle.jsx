@@ -2397,6 +2397,7 @@ export const CreditDashBoardList = styled.div`
   justify-content: flex-start;
   gap: 20px;
   width: 100%;
+  height: 400px;
   margin-top: 18px;
 `;
 
