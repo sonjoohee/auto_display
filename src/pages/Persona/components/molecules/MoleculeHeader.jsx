@@ -144,7 +144,7 @@ const MoleculeHeader = () => {
         )}
 
         <div className="gnb">
-          {isRootPage && <Sub2>서비스 소개</Sub2>}
+          {isRootPage && <Sub2 style={{cursor: "pointer"}} onClick={() => navigate("/ServiceLanding")}>서비스 소개</Sub2>}
 
           <TotalCreditToggle>
             <CreditTotal
