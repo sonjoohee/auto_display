@@ -981,7 +981,8 @@ const PageMain = () => {
               <ExpertCard
                 Strategy
                 onClick={() => {
-                  handledExpertSelect("1");
+                  // handledExpertSelect("1");
+                  setIsComingSoon(true);
                 }}
               >
                 <Body1>전략 컨설턴트</Body1>
@@ -996,7 +997,8 @@ const PageMain = () => {
               <ExpertCard
                 Hacker
                 onClick={() => {
-                  handledExpertSelect("6");
+                  // handledExpertSelect("6");
+                  setIsComingSoon(true);
                 }}
               >
                 <Body1>그로스 해커</Body1>
@@ -1013,7 +1015,8 @@ const PageMain = () => {
               <ExpertCard
                 Price
                 onClick={() => {
-                  handledExpertSelect("7");
+                  // handledExpertSelect("7");
+                  setIsComingSoon(true);
                 }}
               >
                 <Body1>가격 분석 전문가</Body1>
@@ -1030,8 +1033,8 @@ const PageMain = () => {
               <ExpertCard
                 BM
                 onClick={() => {
-                  handledExpertSelect("9");
-                  // setIsComingSoon(true);
+                  // handledExpertSelect("9");
+                  setIsComingSoon(true);
                 }}
               >
                 <Body1>BM 전문가</Body1>
