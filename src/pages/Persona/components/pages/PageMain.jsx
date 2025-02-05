@@ -165,6 +165,10 @@ import { CreditInfo } from "../../../../utils/indexedDB";
 const PageMain = () => {
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const [projectLoading, setProjectLoading] = useAtom(PROJECT_LOADING);
   const [projectRefreshTrigger, setProjectRefreshTrigger] = useAtom(
     PROJECT_REFRESH_TRIGGER

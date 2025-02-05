@@ -18,6 +18,10 @@ const PageServiceLanding = () => {
   const [openContent, setOpenContent] = useState(null);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
     }, 5000);

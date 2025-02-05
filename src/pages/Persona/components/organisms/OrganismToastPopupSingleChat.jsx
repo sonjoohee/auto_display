@@ -1442,7 +1442,7 @@ const OrganismToastPopupSingleChat = ({
                   );
                 })
               ) : (
-                <Sub2 color="gray800">질문이 없습니다.</Sub2> // 질문이 없을 때 메시지 표시
+                <Sub2 color="gray800">질문 문항을 불러오는 중입니다.</Sub2> // 질문이 없을 때 메시지 표시
               )}
             </QuestionList>
           </QuestionListWrap>

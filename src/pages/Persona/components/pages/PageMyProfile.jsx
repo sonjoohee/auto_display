@@ -121,10 +121,13 @@ const PageMyProfile = () => {
     return memberDeleteForm.reason;
   };
 
+  const token = sessionStorage.getItem("accessToken");
+
   const axiosConfig = {
     timeout: 100000,
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     withCredentials: true,
   };
@@ -143,8 +146,8 @@ const PageMyProfile = () => {
         const response = await axios.post(
           "https://wishresearch.kr/api/user/support/",
           {
-            "ABC": contactForm.purpose,
-            "ddd": contactForm.content,
+            "purpose": contactForm.purpose,
+            "content": contactForm.content,
           },
           axiosConfig
         );
@@ -161,7 +164,7 @@ const PageMyProfile = () => {
       // TODO: 회원탈퇴 제출 로직 구현
       try {
         const response = await axios.post(
-          "https://wishresearch.kr/api/user/leave",
+          "https://wishresearch.kr/api/user/leave/",
           {
             "leave_comment": memberDeleteForm.reason
           },
@@ -399,11 +402,11 @@ const PageMyProfile = () => {
               <ContactUsWrap>
                 <div>
                   <H5 color="gray800" align="left">
-                    E-mail
+                  답변 받으실 Email 주소
                   </H5>
                   <CustomInput
                     type="text"
-                    placeholder="가입하신 이메일 주소를 입력해주세요. (이메일 답변 발송 예정)"
+                    placeholder="입력하신 이메일로 답변이 발송되니, 다시 한번 확인 부탁드립니다."
                     value={contactForm.email}
                     onChange={(e) =>
                       handleContactInputChange("email", e.target.value)
@@ -495,10 +498,10 @@ const PageMyProfile = () => {
               <ContactUsWrap>
                 <div>
                   <H5 color="gray800" align="left">
-                    더 나은 서비스를 위해, 탈퇴하신 이유를 간단히 알려주세요
+                    더 나은 서비스를 위해, 탈퇴하시는 이유를 간단히 알려주세요
                   </H5>
                   <CustomTextarea
-                    placeholder={"탈퇴하신 이유를 설명해주세요"}
+                    placeholder={"탈퇴하시는 이유를 설명해주세요"}
                     rows="8"
                     value={memberDeleteForm.reason}
                     onChange={(e) =>
