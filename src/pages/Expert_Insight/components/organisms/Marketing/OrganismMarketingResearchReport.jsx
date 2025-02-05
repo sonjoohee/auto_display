@@ -16,6 +16,8 @@ import {
   MARKETING_START_BUTTON_STATE,
   MARKETING_RESEARCH_REPORT_DATA,
 } from "../../../../AtomStates";
+import { MarketingResearchReportRequest } from "../../../../../utils/indexedDB";
+import { isLoggedIn } from "../../../../../utils/indexedDB";
 
 import Loader from "../../atoms/AtomLoader";
 import { useSaveConversation } from "../../atoms/AtomSaveConversation";
@@ -85,6 +87,7 @@ const OrganismMarketingResearchReport = () => {
             data,
             axiosConfig
           );
+          // let response = await MarketingResearchReportRequest(data, isLoggedIn);
 
           let marketingResearchReport = response.data.marketing_research_report;
             
@@ -122,6 +125,7 @@ const OrganismMarketingResearchReport = () => {
               data,
               axiosConfig
             );
+            // response = await MarketingResearchReportRequest(data, isLoggedIn);
             retryCount++;
 
             marketingResearchReport = response.data.marketing_research_report;

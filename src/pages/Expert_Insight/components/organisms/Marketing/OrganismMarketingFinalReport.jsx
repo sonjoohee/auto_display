@@ -23,6 +23,8 @@ import {
 
 import Loader from "../../atoms/AtomLoader";
 import { useSaveConversation } from "../../atoms/AtomSaveConversation";
+import { MarketingFinalReportRequest } from "../../../../../utils/indexedDB";
+import { isLoggedIn } from "../../../../../utils/indexedDB";
 
 const OrganismMarketingFinalReport = () => {
   const { saveConversation } = useSaveConversation();
@@ -91,7 +93,7 @@ const OrganismMarketingFinalReport = () => {
             data,
             axiosConfig
           );
-
+          // let response = await MarketingFinalReportRequest(data, isLoggedIn);
           let marketingFinalReport = response.data.marketing_final_report;
             
           let retryCount = 0;
@@ -135,6 +137,7 @@ const OrganismMarketingFinalReport = () => {
               data,
               axiosConfig
             );
+            // response = await MarketingFinalReportRequest(data, isLoggedIn);
             retryCount++;
 
             marketingFinalReport = response.data.marketing_final_report;
