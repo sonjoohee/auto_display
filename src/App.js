@@ -54,6 +54,9 @@ import PageMyProfile from "./pages/Persona/components/pages/PageMyProfile";
 import PageTerms from "./pages/PageTerms";
 import PagePolicy from "./pages/PagePolicy";
 
+import PageServiceLanding from "./pages/PageServiceLanding";
+import PageBlog from "./pages/PageBlog";
+
 import PageStyleGuide from "./pages/Design_Page/PageStyleGuide";
 
 // 페르소나
@@ -288,6 +291,9 @@ function App() {
 
           <Route path="/Terms" element={<PageTerms />} />
           <Route path="/Policy" element={<PagePolicy />} />
+
+          <Route path="/ServiceLanding" element={<PageServiceLanding />} />
+          <Route path="/blog" element={<PageBlog />} />
 
           <Route path="/style_guide" element={<PageStyleGuide />} />
         </Routes>
