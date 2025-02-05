@@ -42,6 +42,7 @@ import {
   Caption2,
   InputText,
 } from "../../../../assets/styles/Typography";
+import axios from 'axios';
 
 const PageMyProfile = () => {
   const navigate = useNavigate();
@@ -119,9 +120,21 @@ const PageMyProfile = () => {
 
   const handleContactSubmit = () => {
     if (isContactFormValid()) {
-      // TODO: 문의하기 제출 로직 구현
-      console.log("문의하기 제출:", contactForm);
-      closeContactPopup();
+      // API 호출을 위한 데이터 준비
+      const requestData = {
+        email: contactForm.email,
+        purpose: contactForm.purpose,
+        content: contactForm.content,
+      };
+      console.log("🚀 ~ handleContactSubmit ~ requestData:", requestData);
+
+      try {
+        const response = await axios.post('api/contact', requestData);
+        console.log("문의하기 제출 성공:", response.data);
+        closeContactPopup();
+      } catch (error) {
+        console.error("문의하기 제출 실패:", error);
+      }
     }
   };
   const handleMemberDeleteSubmit = () => {

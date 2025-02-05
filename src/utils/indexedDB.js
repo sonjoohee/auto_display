@@ -1628,4 +1628,261 @@ export const InterviewXPersonaSingleIndepthInterviewGeneratorRequest = async (
   }
 };
 
-// MBTI API
+//마케팅 고객 추천 요청 API
+export const MarketingCustomerRecommendationRequest = async (
+  data,
+  isLoggedIn
+) => {
+  console.log(" 마케팅 고객 추천 요청 API  - 입력 데이터:", data);
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/panels/marketing/customer_recommendation",
+      data,
+      {
+        headers: {
+
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+    return result;
+  } catch (error) {
+    console.error("마케팅 고객 추천 요청 API 중 오류 발생:", error);
+    console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
+//마케팅 연구 보고서 요청 API
+export const MarketingResearchReportRequest = async (
+  data,
+  isLoggedIn
+
+) => {
+  console.log(" 마케팅 연구 보고서 요청 API  - 입력 데이터:", data);
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/panels/marketing/research_report",
+      data,
+      {
+        headers: {
+
+
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+    return result;
+  } catch (error) {
+    console.error("마케팅 연구 보고서 요청 API 중 오류 발생:", error);
+    console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+  }
+
+};
+
+
+
+//마케팅 비즈니스 모델 보고서 요청 API
+export const MarketingBmReportRequest = async (
+  data,
+  isLoggedIn
+
+
+) => {
+  console.log(" 마케팅 비즈니스 모델 보고서 요청 API  - 입력 데이터:", data);
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+
+
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/panels/marketing/bm_report",
+      data,
+      {
+        headers: {
+
+
+
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+    return result;
+  } catch (error) {
+    console.error("마케팅 비즈니스 모델 보고서 요청 API 중 오류 발생:", error);
+    console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+  }
+
+
+};
+
+
+//마케팅 최종 보고서 요청 API
+export const MarketingFinalReportRequest = async (
+  data,
+  isLoggedIn
+
+) => {
+  console.log(" 마케팅 최종 보고서 요청 API  - 입력 데이터:", data);
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/panels/marketing/final_report",
+      data,
+      {
+        headers: {
+
+
+
+
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+    return result;
+  } catch (error) {
+    console.error("마케팅 최종 보고서 요청 API 중 오류 발생:", error);
+    console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+  }
+
+
+
+};
+
+
+
+//마케팅 MBTI 결과 요청 API
+export const MarketingMbtiResultRequest = async (
+  data,
+  isLoggedIn
+
+
+) => {
+  console.log(" 마케팅 MBTI 결과 요청 API  - 입력 데이터:", data);
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+
+
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/panels/marketing/mbti_result",
+      data,
+      {
+        headers: {
+
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+    return result;
+  } catch (error) {
+    console.error("마케팅 MBTI 결과 요청 API 중 오류 발생:", error);
+    console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+  }
+
+
+
+
+};

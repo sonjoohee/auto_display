@@ -28,6 +28,8 @@ import {
 
 import Loader from "../../atoms/AtomLoader";
 import { useSaveConversation } from "../../atoms/AtomSaveConversation";
+import { MarketingCustomerRecommendationRequest } from "../../../../../utils/indexedDB";
+import { isLoggedIn } from "../../../../../utils/indexedDB";
 
 const MoleculeMarketingCustomer = ({ marketingCustomerCount }) => {
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
@@ -133,6 +135,7 @@ const MoleculeMarketingCustomer = ({ marketingCustomerCount }) => {
           data,
           axiosConfig
         );
+        // let response = await MarketingCustomerRecommendationRequest(data, isLoggedIn);
         let marketingCustomer = response.data.marketing_customer_recommendation;
 
         let retryCount = 0;
@@ -159,12 +162,13 @@ const MoleculeMarketingCustomer = ({ marketingCustomerCount }) => {
             !item.competence.hasOwnProperty("description")
           )
         )) {
-          // console.log(response);
+          console.log(response);
           response = await axios.post(
             "https://wishresearch.kr/panels/marketing/customer_recommendation",
             data,
             axiosConfig
           );
+          // response = await MarketingCustomerRecommendationRequest(data, isLoggedIn);
           retryCount++;
 
           marketingCustomer = response.data.marketing_customer_recommendation;

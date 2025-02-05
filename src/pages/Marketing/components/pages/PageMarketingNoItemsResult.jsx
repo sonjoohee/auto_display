@@ -30,6 +30,8 @@ import { useSaveConversation } from "../../../Expert_Insight/components/atoms/At
 import PopupWrap from "../../../../assets/styles/Popup";
 
 import html2canvas from 'html2canvas';
+import { MarketingMbtiResultRequest } from "../../../../utils/indexedDB";
+import { isLoggedIn } from "../../../../utils/indexedDB";
 
 import { Button } from "../../../../assets/styles/ButtonStyle";
 
@@ -162,6 +164,8 @@ const PageMarketingNoItemsResult = () => {
           data,
           axiosConfig
         );
+
+        // let response = await MarketingMbtiResultRequest(data, isLoggedIn);
         let recommendedItemData = response.data.marketing_mbti_result;
 
         let retryCount = 0;
@@ -196,6 +200,7 @@ const PageMarketingNoItemsResult = () => {
             data,
             axiosConfig
           );
+          // response = await MarketingMbtiResultRequest(data, isLoggedIn);
           recommendedItemData = response.data.marketing_mbti_result;
         }
 
@@ -375,8 +380,19 @@ const PageMarketingNoItemsResult = () => {
         }
         
         const shareUrl = `${window.location.origin}/MarketingSetting/Share/${marketingMbtiResult.name}`;
+
         await navigator.clipboard.writeText(shareUrl);
         setShowSuccessPopup(true);
+        
+        // // URL 복사 로직을 try-catch로 감싸서 오류를 처리
+        // try {
+        //   await navigator.clipboard.writeText(shareUrl);
+        //   console.log("URL 복사 성공:", shareUrl); // 이 부분이 출력되어야 함
+        //   setShowSuccessPopup(true);
+        // } catch (err) {
+        //   console.error("URL 복사 실패:", err); // 오류 메시지 출력
+        //   alert("URL 복사에 실패했습니다. 수동으로 복사해 주세요.");
+        // }
       } catch (shareError) {
         const link = document.createElement('a');
         link.href = image;
@@ -405,7 +421,9 @@ const PageMarketingNoItemsResult = () => {
           <Question
             className="capture-area"
             style={{
-              flex: isMobile ? questionFlex : "1 1 50%",
+              // flex: isMobile ? questionFlex : "1 1 50%",
+              flex: isMobile ? "1 1 100%" : "1 1 50%",
+              height: isMobile ? "100vh" : "auto", // 모바일의 경우 높이를 100vh로 설정
             }}
             isDragging={isDragging}
             questionFlex={questionFlex}
@@ -822,6 +840,51 @@ const QuestionWrap = styled.section`
     flex-direction: column;
   }
 `;
+
+// const Question = styled.div`
+//   position: relative;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   flex-direction: column;
+//   gap: 64px;
+//   flex: 1 1 50%;
+//   background: #5547ff;
+//   transition: all 0.5s;
+
+//   // 모바일 스타일 조정
+//   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+//     flex: 1 1 100%; // 전체 너비 사용
+//     padding: 20px; // 여백 추가
+//     text-align: center; // 텍스트 중앙 정렬
+
+//     > p {
+//       font-size: 1.5rem; // 폰트 크기 조정
+//       color: ${palette.white}; // 텍스트 색상
+//     }
+
+//     div {
+//       display: flex;
+//       flex-direction: column;
+//       gap: 16px;
+//       max-width: 100%; // 최대 너비 100%
+//       text-align: center; // 텍스트 중앙 정렬
+//       padding: 16px; // 여백 추가
+//       margin: 0 auto; // 중앙 정렬
+//       border-radius: 20px;
+//       background: ${palette.white};
+
+//       strong {
+//         font-size: 1.25rem; // 폰트 크기 조정
+//         color: #5547ff; // 텍스트 색상
+//       }
+
+//       p {
+//         font-size: 1rem; // 폰트 크기 조정
+//       }
+//     }
+//   }
+// `;
 
 const Question = styled.div`
   position: relative;

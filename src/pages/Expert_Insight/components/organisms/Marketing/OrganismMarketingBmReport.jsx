@@ -20,6 +20,8 @@ import {
 
 import Loader from "../../atoms/AtomLoader";
 import { useSaveConversation } from "../../atoms/AtomSaveConversation";
+import { MarketingBmReportRequest } from "../../../../../utils/indexedDB";
+import { isLoggedIn } from "../../../../../utils/indexedDB";
 
 const OrganismMarketingBmReport = () => {
   const { saveConversation } = useSaveConversation();
@@ -87,7 +89,7 @@ const OrganismMarketingBmReport = () => {
             data,
             axiosConfig
           );
-
+          // let response = await MarketingBmReportRequest(data, isLoggedIn);
           let marketingBmReport = response.data.marketing_bm_report;
             
           let retryCount = 0;
@@ -120,6 +122,7 @@ const OrganismMarketingBmReport = () => {
               data,
               axiosConfig
             );
+            // response = await MarketingBmReportRequest(data, isLoggedIn);
             retryCount++;
 
             marketingBmReport = response.data.marketing_bm_report;

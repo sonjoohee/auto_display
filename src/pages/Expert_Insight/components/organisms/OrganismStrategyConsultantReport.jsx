@@ -22,6 +22,8 @@ import {
 
 import Loader from "../atoms/AtomLoader"
 import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
+import { MarketingResearchReportRequest } from "../../../../utils/indexedDB";
+import { isLoggedIn } from "../../../../utils/indexedDB";
 
 const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
   const { saveConversation } = useSaveConversation();
@@ -119,6 +121,7 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
               data,
               axiosConfig
             );
+            // response = await MarketingResearchReportRequest(data, isLoggedIn);
             retryCount++;
 
             strategyConsultantReport = response.data.tabs[0];
