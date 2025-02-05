@@ -1302,7 +1302,7 @@ const PagePersona2 = () => {
   // 선택 유형 보기 버튼 클릭 핸들러 수정
   const handleTypeSelection = async () => {
     setIsLoadingMore(true);
-    // setShowTypeList(false); // 이 줄 제거
+    setShowTypeList(false); // 리스트를 바로 숨김
     setVisibleSelectedTypes(selectedTypes.sort((a, b) => a.index - b.index));
 
     // 선택된 타입들을 unselectedTypes에서 제거
@@ -1829,6 +1829,11 @@ const PagePersona2 = () => {
                       ) : (
                         <ContentSection>
                           <CategoryView
+                            // isLoadingMore와 isLoadingBusiness가 동시에 true일 때, pointer-events를 비활성화하고 opacity를 조절하여 UI가 비활성화된 것처럼 보이게 합니다.
+                            style={{
+                              pointerEvents: isLoadingMore && isLoadingBusiness ? "none" : "auto",
+                              opacity: isLoadingMore && isLoadingBusiness ? 0.6 : 1,
+                            }}
                             showLeftGradient={showLeftGradient}
                             showRightGradient={showRightGradient}
                           >
@@ -1842,17 +1847,22 @@ const PagePersona2 = () => {
                                     key={type.id}
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      handleRemoveType(type.id);
+                                      // 현재 버튼의 위치와 크기 정보
+                                      const rect = e.currentTarget.getBoundingClientRect();
+                                      // 버튼 왼쪽 끝에서부터 클릭 지점까지의 거리
+                                      const clickX = e.clientX - rect.left;
+                                      // pseudo-element로 구현된 x 아이콘이 오른쪽에 있으므로,
+                                      // 버튼의 오른쪽 20px 정도 영역을 x 아이콘 영역으로 가정
+                                      if (clickX > rect.width - 20) {
+                                        handleRemoveType(type.id);
+                                      }
                                     }}
                                   >
                                     {type.label}
                                   </Choice>
                                 ))
                               ) : (
-                                <Sub2_1
-                                  color="gray500"
-                                  style={{ padding: "6px 10px" }}
-                                >
+                                <Sub2_1 color="gray500" style={{ padding: "6px 10px" }}>
                                   페르소나 유형을 선택해 주세요.
                                 </Sub2_1>
                               )}
@@ -1876,7 +1886,7 @@ const PagePersona2 = () => {
                               </MoreButton>
 
                               {showTypeList && (
-                                <TypeList>
+                                <TypeList show={showTypeList}>
                                   <TypeItem>
                                     <p>
                                       선택된 유형 ({visibleSelectedTypes.length}
@@ -1898,7 +1908,7 @@ const PagePersona2 = () => {
                                               {type.label}
                                             </label>
                                           </CheckBox>
-                                          <span>{type.count}명</span>
+                                          {/* <span>{type.count}명</span> */}
                                         </li>
                                       ))}
                                     </TypeItemList>
@@ -1956,15 +1966,10 @@ const PagePersona2 = () => {
                                       PrimaryLightest
                                       Fill
                                       style={{ margin: "20px 12px 0" }}
-                                      // onClick={handleTypeSelection} // 버튼 클릭 시 선택된 타입 처리
                                       onClick={async () => {
+                                        setShowTypeList(false); // 리스트를 바로 숨김
                                         setIsLoadingMore(true); // 로딩 상태 시작
-                                        handleTypeSelection(); // 선택된 유형을 설정
-
-                                        // // 선택된 타입에 대한 페르소나 로드
-                                        // for (const type of selectedTypes) {
-                                        //   await loadBusinessPersona(type); // 선택한 타입에 대한 페르소나 로드
-                                        // }
+                                        await handleTypeSelection(); // 선택된 유형 처리
                                         setIsLoadingMore(false); // 로딩 상태 종료
                                       }}
                                     >
