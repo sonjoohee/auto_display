@@ -13,6 +13,7 @@ import {
   Button,
   IconButton,
 } from "../../../../assets/styles/ButtonStyle";
+
 import {
   ContentsWrap,
   MainContent,
@@ -39,6 +40,11 @@ import {
   Dots,
   Dot,
   NoData,
+  InterviewPopup,
+  Status,
+  TabWrapType2,
+  TabButtonType2,
+  TabContent,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../../assets/styles/Images";
 import { useNavigate } from "react-router-dom";
@@ -83,7 +89,7 @@ import { getProjectListByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import OrganismEmptyProject from "../organisms/OrganismEmptyProject";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 import {
-  H2,
+  H4,
   H3,
   H5,
   H6,
@@ -98,9 +104,12 @@ import Pagination from "../../../../components/common/Pagination";
 const PageMyProject = () => {
   useDynamicViewport("width=1280");
 
-  const [showPopup, setShowPopup] = useState(false);
-  const handlePopupConfirm = () => {
-    setShowPopup(false);
+  const [activeTab1, setActiveTab1] = useState("lifestyle");
+
+  const [selectedPersona, setSelectedPersona] = useState(null);
+
+  const handleDetailClick = (persona) => {
+    setSelectedPersona(persona);
   };
 
   const [projectLoading, setProjectLoading] = useAtom(PROJECT_LOADING);
@@ -732,6 +741,7 @@ const PageMyProject = () => {
                       <ProjectContent>
                         {userPersonaList.count > 0 ? (
                           userPersonaList.results.persona.map((persona) => (
+                            <>
                             <ProjectItem key={persona.id}>
                               <ProjectInfo>
                                 <Name>
@@ -770,12 +780,13 @@ const PageMyProject = () => {
                                     <></>
                                   )}
                                   {/* <Badge Keyword>Request</Badge> */}
-                                  <Button Small Outline Fill>
+                                  <Button Small Outline Fill onClick={() => handleDetailClick(persona)}>
                                     자세히
                                   </Button>
                                 </Report>
                               </ProjectInfo>
                             </ProjectItem>
+                            </>
                           ))
                         ) : (
                           <NoData border>
@@ -796,6 +807,79 @@ const PageMyProject = () => {
           </MyProjectWrap>
         </MainContent>
       </ContentsWrap>
+
+      {selectedPersona && (
+        <InterviewPopup>
+          <div>
+            <div className="header">
+              <H4>
+                {selectedPersona.personaRequest.persona}
+                <span className="close" onClick={() => setSelectedPersona(null)} />
+              </H4>
+              <p className="info">
+                <Sub3>{selectedPersona.personaRequest.gender}</Sub3>
+                <Sub3>
+                  {selectedPersona.personaRequest.age.includes("세")
+                    ? selectedPersona.personaRequest.age
+                    : `${selectedPersona.personaRequest.age}세`}
+                </Sub3>
+                <Sub3>{selectedPersona.personaRequest.residence}</Sub3>
+              </p>
+            </div>
+
+            <div className="keywords">
+              <Status>#{selectedPersona.personaRequest.keyword[0]}</Status>
+              <Status>#{selectedPersona.personaRequest.keyword[1]}</Status>
+              <Status>#{selectedPersona.personaRequest.keyword[2]}</Status>
+            </div>
+
+            <div className="content">
+              <TabWrapType2>
+                <TabButtonType2
+                  isActive={activeTab1 === "lifestyle"}
+                  onClick={() => setActiveTab1("lifestyle")}
+                >
+                  라이프스타일
+                </TabButtonType2>
+                <TabButtonType2
+                  isActive={activeTab1 === "interests"}
+                  onClick={() => setActiveTab1("interests")}
+                >
+                  관심사
+                </TabButtonType2>
+                <TabButtonType2
+                  isActive={activeTab1 === "consumption"}
+                  onClick={() => setActiveTab1("consumption")}
+                >
+                  소비성향
+                </TabButtonType2>
+              </TabWrapType2>
+
+              {activeTab1 === "lifestyle" && (
+                <TabContent>
+                  <Body3 color="gray700">
+                    {selectedPersona.personaRequest.lifestyle}
+                  </Body3>
+                </TabContent>
+              )}
+              {activeTab1 === "interests" && (
+                <TabContent>
+                  <Body3 color="gray700">
+                    {selectedPersona.personaRequest.interest}
+                  </Body3>
+                </TabContent>
+              )}
+              {activeTab1 === "consumption" && (
+                <TabContent>
+                  <Body3 color="gray700">
+                    {selectedPersona.personaRequest.consumption_pattern}
+                  </Body3>
+                </TabContent>
+              )}
+            </div>
+          </div>
+        </InterviewPopup>
+      )}
 
       {showCreditPopup && (
         <PopupWrap
