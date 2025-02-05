@@ -14,16 +14,18 @@ const PageBlog = () => {
         <MoleculeHeader />
 
         <BlogContainer>
-                  <iframe 
-                    src="https://www.notioniframe.com/notion/2cduo7gbv65" 
-                    title="Blog Content"
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      border: 0,
-                      padding: 0
-                    }}
-                  />
+          <iframe 
+            // src="https://www.notioniframe.com/notion/2cduo7gbv65" 
+            src="https://www.notioniframe.com/notion/1mevbyj6h8z"
+            title="Blog Content"
+            style={{
+              width: '100%',
+              height: '100%',
+              border: 0,
+              padding: 0
+            }}
+            allowFullScreen
+          />
         </BlogContainer>
       </ContentsWrap>
     </>
