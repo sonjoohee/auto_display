@@ -1810,6 +1810,7 @@ const FaqList = styled.ul`
       cursor: pointer;
 
       p {
+        font-family: Pretendard, "Poppins";
         font-size: 1.25rem;
         font-weight: 500;
         color: ${palette.white};
