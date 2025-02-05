@@ -1119,7 +1119,6 @@ export const InterviewXPersonaSingleInterviewReportTab3 = async (
   }
 };
 
-
 // 크레딧 조회
 export const CreditInfo = async (isLoggedIn) => {
   if (!isLoggedIn) {
@@ -1145,16 +1144,13 @@ export const CreditInfo = async (isLoggedIn) => {
       }
     );
 
-
     return response.data;
   } catch (error) {
-   
     console.error("크레딧 정보 조회 오류 발생:", error);
     console.error("오류 상세:", error.response?.data || error.message);
     throw error;
   }
 };
-
 
 // 유저 크레딧 조회
 export const UserCreditInfo = async (isLoggedIn) => {
@@ -1181,7 +1177,6 @@ export const UserCreditInfo = async (isLoggedIn) => {
       }
     );
 
-
     return response.data;
   } catch (error) {
     if (
@@ -1189,7 +1184,6 @@ export const UserCreditInfo = async (isLoggedIn) => {
       error.response.data &&
       error.response.data.state === "Fail"
     ) {
-
       return error.response.data;
     }
 
@@ -1198,8 +1192,6 @@ export const UserCreditInfo = async (isLoggedIn) => {
     throw error;
   }
 };
-
-
 
 // 크레딧 사용전 사용 확인
 export const UserCreditCheck = async (data, isLoggedIn) => {
@@ -1233,7 +1225,6 @@ export const UserCreditCheck = async (data, isLoggedIn) => {
       error.response.data &&
       error.response.data.state === "Fail"
     ) {
-
       return error.response.data;
     }
 
@@ -1243,14 +1234,11 @@ export const UserCreditCheck = async (data, isLoggedIn) => {
   }
 };
 
-
-
 // 크레딧 사용
-export const UserCreditUse = async (data,isLoggedIn) => {
+export const UserCreditUse = async (data, isLoggedIn) => {
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
-
   }
 
   try {
@@ -1264,7 +1252,6 @@ export const UserCreditUse = async (data,isLoggedIn) => {
       data,
       {
         headers: {
-
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
@@ -1279,7 +1266,6 @@ export const UserCreditUse = async (data,isLoggedIn) => {
       error.response.data &&
       error.response.data.state === "Fail"
     ) {
-
       return error.response.data;
     }
 
@@ -1288,7 +1274,6 @@ export const UserCreditUse = async (data,isLoggedIn) => {
     throw error;
   }
 };
-
 
 // interviewx 1.1 api 수정 250131
 // 비즈니스 카테고리 분석 250131
@@ -1642,3 +1627,5 @@ export const InterviewXPersonaSingleIndepthInterviewGeneratorRequest = async (
     throw error;
   }
 };
+
+// MBTI API
