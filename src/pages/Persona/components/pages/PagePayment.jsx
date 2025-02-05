@@ -72,8 +72,6 @@ import {
 } from "../../../../assets/styles/Typography";
 import PopupWrap from "../../../../assets/styles/Popup";
 
-
-
 const PagePayment = () => {
   const [userEmail, setUserEmail] = useAtom(USER_EMAIL);
   const location = useLocation();
@@ -98,24 +96,26 @@ const PagePayment = () => {
       const verifyPayment = async () => {
         try {
           // const response = await fetch("http://localhost:8000/payment/onePay", {
-            const response = await fetch("https://wishresearch.kr/payment/onePay", {
+          const response = await fetch(
+            "https://wishresearch.kr/payment/onePay",
+            {
+              method: "POST",
 
-            method: "POST",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+              withCredentials: true,
 
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-            withCredentials: true,
-
-            body: JSON.stringify({
-              tid: tid,
-              orderId: orderId,
-              status: status,
-              amount: mou,
-              // 필요한 다른 데이터들도 추가
-            }),
-          });
+              body: JSON.stringify({
+                tid: tid,
+                orderId: orderId,
+                status: status,
+                amount: mou,
+                // 필요한 다른 데이터들도 추가
+              }),
+            }
+          );
 
           const result = await response.json();
 
@@ -125,8 +125,8 @@ const PagePayment = () => {
             setShowSuccessPopup(true);
           } else {
             setShowFailPopup(true);
-              console.log(result.resultMsg)
-              // 이미 사용된 OrderId입니다 ==> 중복결제 오류 안내이후 확인누를시 새로고침 필요 ( 상단에 결제데이터 남아있음. )
+            console.log(result.resultMsg);
+            // 이미 사용된 OrderId입니다 ==> 중복결제 오류 안내이후 확인누를시 새로고침 필요 ( 상단에 결제데이터 남아있음. )
 
             // 결제 실패시 데이터 전달해서 결제 실패 사유를  사용자가 알아야할거같아요.
             // 실패 이후 확인시 네비게이터로  / Payment 로 이동
@@ -152,10 +152,10 @@ const PagePayment = () => {
 
   const onePayments = (e) => {
     if (window.AUTHNICE) {
-       // 상품 가격 추출
+      // 상품 가격 추출
       const priceElement = e.currentTarget.querySelector("[data-price]");
       const price = priceElement.getAttribute("data-price");
-      // 상품 이름 추출 + 충전할 크레딧 추출 
+      // 상품 이름 추출 + 충전할 크레딧 추출
       const creditElement = e.currentTarget.querySelector("[credit-name]");
       const credit = creditElement.getAttribute("credit-name");
 
@@ -372,7 +372,7 @@ const PagePayment = () => {
                   </li>
                   <li>
                     <img src={images.CheckGreen} alt="" />
-                    <H6 color="gray500">반응형 인터뷰 사용 불가능</H6>
+                    <H6 color="gray500">인뎁스 인터뷰 사용 불가능</H6>
                   </li>
                   <li>
                     <img src={images.CheckGreen} alt="" />
@@ -412,7 +412,7 @@ const PagePayment = () => {
                   </li>
                   <li>
                     <img src={images.CheckGreen} alt="" />
-                    <H6 color="gray500">반응형 인터뷰 1건 가능</H6>
+                    <H6 color="gray500">인뎁스 인터뷰 1건 가능</H6>
                   </li>
                   <li>
                     <img src={images.CheckGreen} alt="" />

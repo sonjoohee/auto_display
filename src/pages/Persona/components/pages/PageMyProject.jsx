@@ -507,65 +507,12 @@ const PageMyProject = () => {
         <MainContent Wide>
           <MyProjectWrap>
             <MyDashboard>
-              <MyDashboardHeader>
+              {/* <MyDashboardHeader>
                 <MyDashboardTitle>
                   <H2>{userName}님 </H2>
                   <Badge classBasic>Basic</Badge>
                 </MyDashboardTitle>
-
-                {/* <ButtonGroup>
-                  <Button Primary onClick={() => navigate("/Payment")}>
-                    <images.CoinSmall
-                      width="12px"
-                      height="8px"
-                      color={palette.primary}
-                    />
-
-                    <Sub3 color="primary">요금제 관리</Sub3>
-                  </Button>
-                  <div style={{ position: "relative" }}>
-                    <Button
-                      Primary
-                      onClick={() => {
-                        if (isServiceMenuOpen) {
-                          closeServiceMenu();
-                        } else {
-                          setIsServiceMenuOpen(true);
-                        }
-                      }}
-                    >
-                      <img src={images.Headset} alt="고객 서비스" />
-                      <Sub3 color="primary">고객 서비스</Sub3>
-                    </Button>
-
-                    {(isServiceMenuOpen || isClosing) && (
-                      <ToggleBox $isClosing={isClosing}>
-                        <Body3>고객 서비스</Body3>
-                        <ToggleList>
-                          <IconButton>
-                            <img
-                              src={images.QuestionCircle}
-                              alt="고객 서비스"
-                            />
-                            <Sub3 color="gray700">문의사항</Sub3>
-                          </IconButton>
-                          <IconButton onClick={() => navigate("/Terms")}>
-                            <img
-                              src={images.ExclamationCircle}
-                              alt="이용약관"
-                            />
-                            <Sub3 color="gray700">이용약관</Sub3>
-                          </IconButton>
-                          <IconButton onClick={() => navigate("/Policy")}>
-                            <img src={images.Lock} alt="개인정보 이용 정책" />
-                            <Sub3 color="gray700">개인정보 이용 정책</Sub3>
-                          </IconButton>
-                        </ToggleList>
-                      </ToggleBox>
-                    )}
-                  </div>
-                </ButtonGroup> */}
-              </MyDashboardHeader>
+              </MyDashboardHeader> */}
 
               <MyDashboardContent>
                 <DashboardCard>
@@ -630,11 +577,11 @@ const PageMyProject = () => {
                           ).toLocaleString()}
                         </H6>
                       </div>
-                      <images.ChevronDown
+                      {/* <images.ChevronDown
                         width="20px"
                         height="20px"
                         color={palette.gray300}
-                      />
+                      /> */}
                     </CreditTotal>
                   </DashboardAmount>
                 </DashboardCard>
@@ -792,7 +739,7 @@ const PageMyProject = () => {
                                     {persona.businessAnalysis.title}
                                   </Caption2>
                                   <Body2 color="gray800">
-                                    {persona.personaRequest.persona.persona}
+                                    {persona.personaRequest.persona}
                                   </Body2>
                                 </Name>
                                 <Persona>
@@ -801,10 +748,28 @@ const PageMyProject = () => {
                                   </Sub3>
                                 </Persona>
                                 <Report>
-                                  <Badge Keyword>
-                                    Request
-                                    {/* In Process */}
-                                  </Badge>
+                                  {persona.personaRequest.status ===
+                                  undefined ? (
+                                    <Badge Request>
+                                      <img src={images.Plus} alt="요청 필요" />
+                                      요청 필요
+                                    </Badge>
+                                  ) : persona.personaRequest.status ===
+                                    "ing" ? (
+                                    <Badge Ing>모집 중</Badge>
+                                  ) : persona.personaRequest.status ===
+                                    "complete" ? (
+                                    <Badge Complete>
+                                      <img
+                                        src={images.CheckGreen}
+                                        alt="모집 완료"
+                                      />
+                                      모집 완료
+                                    </Badge>
+                                  ) : (
+                                    <></>
+                                  )}
+                                  {/* <Badge Keyword>Request</Badge> */}
                                   <Button Small Outline Fill>
                                     자세히
                                   </Button>
@@ -816,7 +781,8 @@ const PageMyProject = () => {
                           <NoData border>
                             <images.PeopleFill2 color="#EBEBEB" />
                             <Body3 color="gray500">
-                              현재 요청된 맞춤 페르소나가 없습니다<br />
+                              현재 요청된 맞춤 페르소나가 없습니다
+                              <br />
                               비즈니스 분석 페이지에서 맞춤 요청을 진행해주세요
                             </Body3>
                           </NoData>
@@ -930,11 +896,14 @@ const PageMyProject = () => {
                           </div>
                           <Body3 color="gray500">{credit.title}</Body3>
                           <Body3 color="gray500">
-                            {new Date(credit.credit_created).toLocaleDateString("ko-KR", {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            })}
+                            {new Date(credit.credit_created).toLocaleDateString(
+                              "ko-KR",
+                              {
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                              }
+                            )}
                           </Body3>
                           <Body3 color="gray500">{credit.credit}</Body3>
                         </CreditListItem>
@@ -942,7 +911,9 @@ const PageMyProject = () => {
                     ) : (
                       <NoData>
                         <images.CoinLargeFill color="#EBEBEB" />
-                        <Body3 color="gray500">크레딧 사용 내역이 없습니다.</Body3>
+                        <Body3 color="gray500">
+                          크레딧 사용 내역이 없습니다.
+                        </Body3>
                       </NoData>
                     )}
                   </CreditDashBoardListContent>
