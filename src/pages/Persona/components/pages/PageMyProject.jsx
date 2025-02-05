@@ -682,9 +682,10 @@ const PageMyProject = () => {
 
                   {activeTab === "persona" && (
                     /* 페르소나 리스트 */
+                    <>
                     <ProjectList>
                       <ProjectHeader>
-                        <Body3 color="gray500">페르소나 명</Body3>
+                        <Body3 color="gray500" style={{maxWidth: '473px'}}>페르소나 명</Body3>
                         <Body3 color="gray500">요청일</Body3>
                         <Body3 color="gray500">생성 완료일</Body3>
                       </ProjectHeader>
@@ -758,6 +759,48 @@ const PageMyProject = () => {
                         )}
                       </ProjectContent>
                     </ProjectList>
+
+                    <PaginationWrap>
+                      <NumbersWrapper>
+                        {/* <Pagination currentPage={1} totalPages={11} /> */}
+                        {/* 지선님 여기 디자인 부탁드립니다. 하단의 페이징 처리. !!! */}
+                        {/*  PageWrap  이거 임시로 제가 영역잡아놧어여.. tempwrap도 전체를 묶기위해 만든것이니 제거가능. */}
+                        {Array.from({
+                          length: Math.ceil(userProjectList.count / 10),
+                        }).map((_, pageIndex) => (
+                          <li key={pageIndex}>
+                            <a
+                              onClick={() =>
+                                setProjectTargetPage(pageIndex + 1)
+                              }
+                              disabled={
+                                userProjecTargetPage === pageIndex + 1
+                              }
+                              className={
+                                userProjecTargetPage === pageIndex + 1
+                                  ? "active"
+                                  : ""
+                              }
+                            >
+                              <Body3 color="gray700">{pageIndex + 1}</Body3>
+                            </a>
+                            {/* 10페이지 이상이고 현재 페이지가 마지막 페이지가 아닐 때만 점 표시 */}
+                            {Math.ceil(userProjectList.count / 10) > 10 &&
+                              pageIndex <
+                                Math.ceil(userProjectList.count / 10) - 1 &&
+                              pageIndex === 4 && (
+                                <Dots>
+                                  <Dot />
+                                  <Dot />
+                                  <Dot />
+                                </Dots>
+                              )}
+                          </li>
+                        ))}
+                      </NumbersWrapper>
+                    </PaginationWrap>
+
+                    </>
                   )}
                 </MyProjectList>
               </>
