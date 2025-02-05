@@ -364,11 +364,11 @@ const PagePersona3Select = () => {
                     ) : selectedInterviewType === "single" ? (
                       <li>
                         <Body2 color="gray500">
-                          반응형 인터뷰
+                          인뎁스 인터뷰
                           <Tooltip>
                             <span>?</span>
                             <Caption2 align="left" color="white">
-                              반응형 인터뷰란?
+                              인뎁스 인터뷰란?
                               <br />
                               페르소나의 답변에 맞춰, 모더레이터가 자동으로 추가
                               질문을 제시하는 맞춤형 인터뷰 방식 입니다.
@@ -390,10 +390,14 @@ const PagePersona3Select = () => {
                           <Body2
                             color={isIndepthEnabled ? "gray800" : "gray300"}
                           >
-                            추가 질문 생성
-                            {!isIndepthEnabled && (
+                            인뎁스 인터뷰 수행
+                            {!isIndepthEnabled ? (
                               <Sub3 color="gray300" style={{ width: "auto" }}>
-                                (일반 플랜 사용 불가)
+                                ({creditIndepthInterview} 크레딧 소모)
+                              </Sub3>
+                            ) : (
+                              <Sub3 color="gray800" style={{ width: "auto" }}>
+                                ({creditIndepthInterview} 크레딧 소모)
                               </Sub3>
                             )}
                           </Body2>
