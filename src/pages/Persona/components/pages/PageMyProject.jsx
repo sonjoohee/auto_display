@@ -523,7 +523,7 @@ const PageMyProject = () => {
                 <DashboardCard>
                   <Body2 color="gray500">요청 페르소나</Body2>
                   <DashboardAmount>
-                    <H3 color="gray800">{userPageCnt.persona_count}건</H3>
+                    <H3 color="gray800">{userPageCnt.persona_count || 0}건</H3>
                     {userPageCnt.persona_state === "new" && (
                       <Badge New>new</Badge>
                     )}
@@ -532,7 +532,7 @@ const PageMyProject = () => {
                 <DashboardCard>
                   <Body2 color="gray500">생성 완료 페르소나</Body2>
                   <DashboardAmount>
-                    <H3 color="gray800">{userPageCnt.complete_count}건</H3>
+                    <H3 color="gray800">{userPageCnt.complete_count || 0}건</H3>
                     {userPageCnt.complete_state === "new" && (
                       <Badge New>new</Badge>
                     )}
@@ -541,7 +541,7 @@ const PageMyProject = () => {
                 <DashboardCard>
                   <Body2 color="gray500">보고서 생성 건(수)</Body2>
                   <DashboardAmount>
-                    <H3 color="gray800">{userPageCnt.report_count}건</H3>{" "}
+                    <H3 color="gray800">{userPageCnt.report_count || 0}건</H3>{" "}
                     {userPageCnt.report_state === "new" && (
                       <Badge New>new</Badge>
                     )}
@@ -639,28 +639,6 @@ const PageMyProject = () => {
                       </ProjectList>
 
                       <PaginationWrap>
-                        {userProjectList.count > 10 && (
-                          <ArrowButton
-                            $direction="left"
-                            onClick={() =>
-                              userProjecTargetPage > 1 &&
-                              setProjectTargetPage(userProjecTargetPage - 1)
-                            }
-                            style={{
-                              visibility:
-                                userProjecTargetPage <= 1
-                                  ? "hidden"
-                                  : "visible",
-                            }}
-                          >
-                            <images.ChevronRight
-                              width="24"
-                              height="24"
-                              color={palette.gray500}
-                            />
-                          </ArrowButton>
-                        )}
-
                         <NumbersWrapper>
                           {/* <Pagination currentPage={1} totalPages={11} /> */}
                           {/* 지선님 여기 디자인 부탁드립니다. 하단의 페이징 처리. !!! */}
@@ -698,30 +676,6 @@ const PageMyProject = () => {
                             </li>
                           ))}
                         </NumbersWrapper>
-
-                        {userProjectList.count > 10 && (
-                          <ArrowButton
-                            $direction="right"
-                            onClick={() =>
-                              userProjecTargetPage <
-                                Math.ceil(userProjectList.count / 10) &&
-                              setProjectTargetPage(userProjecTargetPage + 1)
-                            }
-                            style={{
-                              visibility:
-                                userProjecTargetPage >=
-                                Math.ceil(userProjectList.count / 10)
-                                  ? "hidden"
-                                  : "visible",
-                            }}
-                          >
-                            <images.ChevronRight
-                              width="24"
-                              height="24"
-                              color={palette.gray500}
-                            />
-                          </ArrowButton>
-                        )}
                       </PaginationWrap>
                     </tmpwarp>
                   )}
@@ -1011,26 +965,6 @@ const PageMyProject = () => {
                 </CreditDashBoardList>
 
                 <PaginationWrap>
-                  {userProjectList.count > 5 && (
-                    <ArrowButton
-                      $direction="left"
-                      onClick={() =>
-                        userProjecTargetPage > 1 &&
-                        setProjectTargetPage(userProjecTargetPage - 1)
-                      }
-                      style={{
-                        visibility:
-                          userProjecTargetPage <= 1 ? "hidden" : "visible",
-                      }}
-                    >
-                      <images.ChevronRight
-                        width="24"
-                        height="24"
-                        color={palette.gray500}
-                      />
-                    </ArrowButton>
-                  )}
-
                   <NumbersWrapper>
                     {Array.from({
                       length: Math.ceil(userCreditList.count / 5),
@@ -1061,30 +995,6 @@ const PageMyProject = () => {
                       </li>
                     ))}
                   </NumbersWrapper>
-
-                  {userProjectList.count > 5 && (
-                    <ArrowButton
-                      $direction="right"
-                      onClick={() =>
-                        userProjecTargetPage <
-                          Math.ceil(userProjectList.count / 5) &&
-                        setProjectTargetPage(userProjecTargetPage + 1)
-                      }
-                      style={{
-                        visibility:
-                          userProjecTargetPage >=
-                          Math.ceil(userProjectList.count / 5)
-                            ? "hidden"
-                            : "visible",
-                      }}
-                    >
-                      <images.ChevronRight
-                        width="24"
-                        height="24"
-                        color={palette.gray500}
-                      />
-                    </ArrowButton>
-                  )}
                 </PaginationWrap>
               </CreditDashBoardWrap>
             </>
