@@ -110,7 +110,11 @@ const OrganismCustomization = ({
       }
       console.log("🚀 ~ handlePurposeGeneration ~ result:", result);
       setApiResponse(result);
-      setCustomTheoryData(result?.response?.custom_theory_data);
+      if (result?.response?.custom_theory_data) {
+        setCustomTheoryData(result?.response?.custom_theory_data);
+      } else {
+        setCustomTheoryData([]);
+      }
       // Update project on server with the new data
 
       if (result?.response?.custom_theory_data?.theory_title) {
@@ -124,7 +128,8 @@ const OrganismCustomization = ({
           objective: result?.response?.custom_theory_data?.objective || "",
           characteristic:
             result?.response?.custom_theory_data?.characteristic || [],
-          description: "사용자 커스텀 방법론" || "",
+          description:
+            result?.response?.custom_theory_data?.interview_purpose || [],
           custom_theory_data: result?.response?.custom_theory_data || "",
           question_list:
             result?.response?.custom_theory_data?.question_list || [],
@@ -389,7 +394,9 @@ const OrganismCustomization = ({
                                 characteristic:
                                   apiResponse?.response?.custom_theory_data
                                     ?.characteristic || [],
-                                description: "사용자 커스텀 방법론" || "",
+                                description:
+                                  apiResponse?.response?.custom_theory_data
+                                    ?.interview_purpose || [],
                                 custom_theory_data:
                                   apiResponse?.response?.custom_theory_data ||
                                   "",
