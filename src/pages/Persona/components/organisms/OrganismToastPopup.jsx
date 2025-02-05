@@ -297,7 +297,10 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
         //   axiosConfig
         // );
         // 인터뷰 결과 보고서 요청 API  수정 예정
-        response = await InterviewXInterviewReportRequest(finalData1, isLoggedIn);
+        response = await InterviewXInterviewReportRequest(
+          finalData1,
+          isLoggedIn
+        );
 
         // 응답 데이터가 유효한지 확인
         if (
@@ -347,7 +350,11 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
         //   axiosConfig
         // );
         //인터뷰 결과 추가 보고서 요청 수정 예정
-        responseReportAdditional  = await InterviewXInterviewReportAdditionalRequest(finalData2, isLoggedIn);
+        responseReportAdditional =
+          await InterviewXInterviewReportAdditionalRequest(
+            finalData2,
+            isLoggedIn
+          );
 
         // 응답 데이터의 유효성 검사
 
@@ -810,6 +817,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
     } catch (error) {
       console.error("Failed to create project on server:", error);
     }
+    setSelectedPersonaList(personaList.selected);
     navigate(`/Persona/4/${projectId}`, { replace: true });
     //replace: true 현재 페이지를 대체하여 이동( 뒤로 가기 시 이전 인터뷰 화면으로 돌아감 방지)
   };

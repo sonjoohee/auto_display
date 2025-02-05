@@ -524,6 +524,7 @@ export const CreditBadge = styled.p`
   display: flex;
   align-items: center;
   justify-content: center;
+
   gap: 4px;
   max-width: 102px;
   color: ${(props) =>
@@ -783,7 +784,11 @@ export const CategoryView = styled.div`
     top: inherit;
     width: 25px;
     height: 32px;
-    background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 0) 100%
+    );
     pointer-events: none;
     opacity: ${(props) => (props.showLeftGradient ? 1 : 0)};
     transition: opacity 0.2s ease;
@@ -798,7 +803,11 @@ export const CategoryView = styled.div`
     top: inherit;
     width: 25px;
     height: 32px;
-    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 1) 100%
+    );
     pointer-events: none;
     opacity: ${(props) => (props.showRightGradient ? 1 : 0)};
     transition: opacity 0.2s ease;
@@ -2137,7 +2146,7 @@ export const RangeSlider = styled.input`
   height: 24px;
   background: transparent;
   outline: none;
-  opacity: ${props => props.disabled ? 0.5 : 1};
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
   transition: all 0.2s;
 
   // 트랙 스타일링
@@ -2145,10 +2154,10 @@ export const RangeSlider = styled.input`
     width: 100%;
     height: 1px;
     background: ${palette.outlineGray};
-    
+
     // 중앙 구분선
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       left: 50%;
       top: 50%;
@@ -2168,10 +2177,11 @@ export const RangeSlider = styled.input`
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background: ${props => props.$ignored ? palette.gray500 : palette.primary};
-    cursor: ${props => props.disabled ? "not-allowed" : "pointer"};
+    background: ${(props) =>
+      props.$ignored ? palette.gray500 : palette.primary};
+    cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
     transition: all 0.2s;
-    
+
     // 스냅 효과
     &:active {
       transform: translateY(-50%) scale(1.1);
@@ -2190,10 +2200,11 @@ export const RangeSlider = styled.input`
     height: 24px;
     border: none;
     border-radius: 50%;
-    background: ${props => props.$ignored ? palette.gray500 : palette.primary};
-    cursor: ${props => props.disabled ? "not-allowed" : "pointer"};
+    background: ${(props) =>
+      props.$ignored ? palette.gray500 : palette.primary};
+    cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
     transition: all 0.2s;
-    
+
     &:active {
       transform: scale(1.1);
     }
@@ -2203,9 +2214,9 @@ export const RangeSlider = styled.input`
   &::-moz-range-progress {
     height: 8px;
     background: transparent;
-    
+
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       left: 50%;
       top: 50%;
@@ -2386,14 +2397,17 @@ export const CreditDashBoardListHeader = styled.div`
   padding: 0 20px;
 
   p {
-    flex-grow: 0.8;
+    flex-grow: 0.9;
     text-align: left;
 
     &:nth-child(2) {
-      flex-grow: 2;
+      flex-grow: 4;
     }
-
+    &:nth-child(3) {
+      flex-grow: 0.8;
+    }
     &:nth-child(4) {
+      flex-grow: 0.5;
       text-align: right;
     }
   }
@@ -2412,7 +2426,7 @@ export const CreditListItem = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 40px;
+  gap: 20px;
   width: 100%;
   padding: 12px 20px;
   border-radius: 10px;
@@ -2433,10 +2447,13 @@ export const CreditListItem = styled.div`
     white-space: nowrap;
 
     &:nth-child(2) {
-      flex-grow: 2;
+      flex-grow: 3;
     }
-
+    &:nth-child(3) {
+      flex-grow: 1;
+    }
     &:nth-child(4) {
+      flex-grow: 0.5;
       text-align: right;
     }
   }
@@ -3117,15 +3134,11 @@ export const NoData = styled.div`
   align-items: center;
   justify-content: center;
   gap: 16px;
-  padding: ${(props) => (
-    props.border 
-    ? "90px 0 78px" 
-    : props.Small
-    ? "8px 0"
-    : "72px 0"
-  )}; 
+  padding: ${(props) =>
+    props.border ? "90px 0 78px" : props.Small ? "8px 0" : "72px 0"};
   border-radius: ${(props) => (props.border ? "10px" : "0")};
-  border: ${(props) => (props.border ? `1px solid ${palette.outlineGray}` : "none")};
+  border: ${(props) =>
+    props.border ? `1px solid ${palette.outlineGray}` : "none"};
 `;
 
 export const CreditNoData = styled.div`

@@ -47,7 +47,11 @@ import {
   EVENT_STATE,
   EVENT_TITLE,
 } from "../../../../pages/AtomStates";
-import { updateProjectOnServer, UserCreditCheck, UserCreditUse } from "../../../../utils/indexedDB";
+import {
+  updateProjectOnServer,
+  UserCreditCheck,
+  UserCreditUse,
+} from "../../../../utils/indexedDB";
 import { createProjectReportOnServer } from "../../../../utils/indexedDB";
 import MoleculeRecreate from "../../../../pages/Persona/components/molecules/MoleculeRecreate";
 // import { InterviewXPersonaMultipleInterviewGeneratorRequest } from "../../../../utils/indexedDB";
@@ -61,7 +65,6 @@ import { InterviewXPersonaSingleInterviewReportTab3 } from "../../../../utils/in
 import { SkeletonLine } from "../../../../assets/styles/Skeleton";
 import { InterviewXPersonaSingleIndepthInterviewGeneratorRequest } from "../../../../utils/indexedDB";
 import { CreditUse } from "../../../../utils/indexedDB";
-
 
 const OrganismToastPopupSingleChat = ({
   isActive,
@@ -118,7 +121,6 @@ const OrganismToastPopupSingleChat = ({
 
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
   const [selectedInterviewPurposeData, setSelectedInterviewPurposeData] =
-
     useAtom(SELECTED_INTERVIEW_PURPOSE_DATA);
   const navigate = useNavigate();
 
@@ -160,7 +162,6 @@ const OrganismToastPopupSingleChat = ({
 
   const [showRequestPopup, setShowRequestPopup] = useState(false);
   const [showCreditPopup, setShowCreditPopup] = useState(false);
-
 
   const [countAdditionalQuestion, setCountAdditionalQuestion] = useState(1);
   const [addQuestionLoading, setAddQuestionLoading] = useState(false);
@@ -1362,7 +1363,6 @@ const OrganismToastPopupSingleChat = ({
     showRegenerateButton2, // 재시도 버튼 표시 상태 추가
   ]);
 
-
   const creditUse = async () => {
     // 팝업 닫기
     setShowRequestPopup(false);
@@ -1400,7 +1400,6 @@ const OrganismToastPopupSingleChat = ({
     // 크레딧 사용 처리가 완료되면 입력 활성화
     setIsInputEnabled(true);
   };
-
 
   return (
     <>
@@ -1536,7 +1535,7 @@ const OrganismToastPopupSingleChat = ({
                       <ChatBox Moder>
                         <Sub1 color="gray800" align="left">
                           추가로 질문 하실 부분이 있으신가요?
-                          <span>(Basic {countAdditionalQuestion}회 가능)</span>
+                          <span>({creditAdditionalQuestion} 크레딧 소모)</span>
                         </Sub1>
                       </ChatBox>
                       <ChatAddButton>
@@ -1740,9 +1739,7 @@ const OrganismToastPopupSingleChat = ({
         />
       )}
 
-
-
-{showRequestPopup &&
+      {showRequestPopup &&
         (eventState ? (
           <PopupWrap
             Event

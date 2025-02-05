@@ -939,7 +939,9 @@ const PageMyProject = () => {
                               </CreditBadge>
                             ) : null}
                           </div>
-                          <Body3 color="gray500">{credit.title}</Body3>
+                          <Body3 color="gray500">
+                            {credit.title}-{credit.service_type}
+                          </Body3>
                           <Body3 color="gray500">
                             {new Date(credit.credit_created).toLocaleDateString(
                               "ko-KR",
