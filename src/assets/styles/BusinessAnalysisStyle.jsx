@@ -2246,6 +2246,7 @@ export const BoxListWrap = styled.div`
   width: 100%;
   margin-top: 16px;
   margin-left: 36px;
+  margin-bottom: 12px;
   padding-top: 20px;
   border-top: 1px solid ${palette.outlineGray};
 

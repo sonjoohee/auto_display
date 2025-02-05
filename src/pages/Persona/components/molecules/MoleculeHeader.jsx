@@ -478,7 +478,8 @@ const Title = styled(Body2)`
   .businessAnalysis {
     position: absolute;
     top: 30px;
-    left: 77px;
+    // left: 77px;
+    left: 50%;
     transform: none;
     width: 816px;
     margin-left: -408px;
