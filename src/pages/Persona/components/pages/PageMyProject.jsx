@@ -709,6 +709,9 @@ const PageMyProject = () => {
                                           요청 필요
                                         </Badge>
                                       ) : persona.personaRequest.status ===
+                                        "request" ? (
+                                        <Badge Check>요청 검토 중</Badge>
+                                      ) : persona.personaRequest.status ===
                                         "ing" ? (
                                         <Badge Ing>모집 중</Badge>
                                       ) : persona.personaRequest.status ===

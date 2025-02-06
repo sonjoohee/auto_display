@@ -370,13 +370,13 @@ const OrganismToastPopupSingleChat = ({
             ...existingQuestions.commonQuestions,
             ...existingQuestions.specialQuestions,
           ];
-          setInterviewQuestionListState(combinedQuestions.slice(0, 2)); // 질문 두개 테스트
-          // setInterviewQuestionListState(combinedQuestions);
+          // setInterviewQuestionListState(combinedQuestions.slice(0, 2)); // 질문 두개 테스트
+          setInterviewQuestionListState(combinedQuestions);
 
           await new Promise((resolve) => setTimeout(resolve, 5000));
           setIsLoadingPrepare(false);
-          setInterviewStatus(["Pre", "Pre"]); // 테스트 하나
-          // setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
+          // setInterviewStatus(["Pre", "Pre"]); // 테스트 하나
+          setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
         } else {
           // 생성된 질문이 없다면 API 요청
           let data = {
@@ -1370,7 +1370,7 @@ const OrganismToastPopupSingleChat = ({
     // 크레딧이 사용 가능한 상태면 사용 API 호출
     const creditUsePayload = {
       title: businessAnalysis.title,
-      service_type: "비즈니스 페르소나 모집 요청",
+      service_type: "추가 질문 수행",
       target: "",
       state: "use",
       mount: creditAdditionalQuestion,
@@ -1680,7 +1680,9 @@ const OrganismToastPopupSingleChat = ({
                     addQuestionLoading
                   }
                 >
-                  <Body1 color="primary">{showAddQuestion ? "재생성" : "질문 생성"}</Body1>
+                  <Body1 color="primary">
+                    {showAddQuestion ? "재생성" : "질문 생성"}
+                  </Body1>
                 </button>
               </ChatInput>
             </ChatFooter>
@@ -1724,7 +1726,7 @@ const OrganismToastPopupSingleChat = ({
         (eventState ? (
           <PopupWrap
             Event
-            title="페르소나 모집 요청"
+            title="추가 질문 수행"
             message={
               <>
                 현재 {eventTitle} 기간으로 이벤트 크레딧이 소진됩니다.
@@ -1747,7 +1749,7 @@ const OrganismToastPopupSingleChat = ({
         ) : trialState ? (
           <PopupWrap
             Check
-            title="페르소나 모집 요청"
+            title="추가 질문 수행"
             message={
               <>
                 해당 서비스 사용시 크레딧이 소진됩니다.
@@ -1772,7 +1774,7 @@ const OrganismToastPopupSingleChat = ({
         ) : (
           <PopupWrap
             Check
-            title="페르소나 모집 요청"
+            title="추가 질문 수행"
             message={
               <>
                 해당 서비스 사용시 크레딧이 소진됩니다.

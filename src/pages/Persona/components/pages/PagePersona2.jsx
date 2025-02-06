@@ -1396,6 +1396,7 @@ const PagePersona2 = () => {
         requestDate: new Date().toLocaleString("ko-KR", {
           timeZone: "Asia/Seoul",
         }),
+        status: "request",
         personaRequest: {
           description: customPersonaForm.description,
           purpose: customPersonaForm.purpose,
