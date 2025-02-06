@@ -2977,6 +2977,7 @@ export const SwitchToggle = styled.div`
   align-items: center;
   gap: 8px;
   width: 100%;
+  /* padding-bottom: 6px; */
 `;
 
 export const SwitchToggleItem = styled.label`

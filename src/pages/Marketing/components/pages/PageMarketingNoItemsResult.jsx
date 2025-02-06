@@ -29,7 +29,7 @@ import axios from "axios";
 import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
 import PopupWrap from "../../../../assets/styles/Popup";
 
-import html2canvas from 'html2canvas';
+import html2canvas from "html2canvas";
 import { MarketingMbtiResultRequest } from "../../../../utils/indexedDB";
 import { isLoggedIn } from "../../../../utils/indexedDB";
 
@@ -87,13 +87,13 @@ const getMbtiDescription = (mbtiChar) => {
     case "C":
       return "창의성 중심 (Creativity-centered)";
     case "R":
-        return "고위험 추구 (Risk-seeking)";
-      case "P":
-        return "계획 기반형 (Planning-driven)";
-      case "T":
-        return "협력 중시 (Teamwork-focused)";
-      case "A":
-        return "실용성 중심 (Application-centered)";
+      return "고위험 추구 (Risk-seeking)";
+    case "P":
+      return "계획 기반형 (Planning-driven)";
+    case "T":
+      return "협력 중시 (Teamwork-focused)";
+    case "A":
+      return "실용성 중심 (Application-centered)";
     default:
       return "";
   }
@@ -219,7 +219,6 @@ const PageMarketingNoItemsResult = () => {
   };
 
   const closePopup = () => {
-
     setIsPopup1Open(false);
   };
 
@@ -333,7 +332,7 @@ const PageMarketingNoItemsResult = () => {
           // response = await axios.post(
           //   "https://wishresearch.kr/panels/marketing/mbti_result",
           //   data,
-          
+
           //   axiosConfig
           // );
           response = await MarketingMbtiResultRequest(data);
@@ -474,66 +473,73 @@ const PageMarketingNoItemsResult = () => {
   const captureAndShare = async () => {
     setIsCapturing(true);
     try {
-      const questionElement = document.querySelector('.capture-area');
-      
+      const questionElement = document.querySelector(".capture-area");
+
       // 버튼 요소를 일시적으로 숨김
-      const shareButton = questionElement.querySelector('button');
+      const shareButton = questionElement.querySelector("button");
       if (shareButton) {
-        shareButton.style.display = 'none';
+        shareButton.style.display = "none";
       }
 
       // info 요소를 일시적으로 보이게 함
-      const infoDiv = questionElement.querySelector('.info');
+      const infoDiv = questionElement.querySelector(".info");
       if (infoDiv) {
-        infoDiv.style.display = 'flex'; // info 요소를 보이게 설정
+        infoDiv.style.display = "flex"; // info 요소를 보이게 설정
       }
 
       const canvas = await html2canvas(questionElement, {
-        backgroundColor: '#5547ff',
+        backgroundColor: "#5547ff",
         scale: 2,
         useCORS: true,
         logging: false,
         allowTaint: true,
       });
-      
+
       // 버튼을 다시 보이게 함
       if (shareButton) {
-        shareButton.style.display = '';
+        shareButton.style.display = "";
       }
 
       // info 요소를 다시 숨김
       if (infoDiv) {
-        infoDiv.style.display = 'none'; // info 요소를 다시 숨기기
+        infoDiv.style.display = "none"; // info 요소를 다시 숨기기
       }
 
-      const image = canvas.toDataURL('image/png', 1.0);
-      
-      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      
+      const image = canvas.toDataURL("image/png", 1.0);
+
+      const isMobile =
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent
+        );
+
       try {
         if (isMobile && navigator.share) {
           const blob = await (await fetch(image)).blob();
-          const file = new File([blob], `${marketingMbtiResult.name}_result.png`, { type: 'image/png' });
-          
+          const file = new File(
+            [blob],
+            `${marketingMbtiResult.name}_result.png`,
+            { type: "image/png" }
+          );
+
           await navigator.share({
             files: [file],
-            title: '창업 MBTI 결과',
+            title: "창업 MBTI 결과",
             text: `나의 창업 MBTI는 ${marketingMbtiResult.name}입니다!`,
           });
         } else {
-          const link = document.createElement('a');
+          const link = document.createElement("a");
           link.href = image;
           link.download = `${marketingMbtiResult.name}_result.png`;
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
         }
-        
+
         const shareUrl = `${window.location.origin}/MarketingSetting/Share/${marketingMbtiResult.name}`;
 
         await navigator.clipboard.writeText(shareUrl);
         setShowSuccessPopup(true);
-        
+
         // // URL 복사 로직을 try-catch로 감싸서 오류를 처리
         // try {
         //   await navigator.clipboard.writeText(shareUrl);
@@ -544,7 +550,7 @@ const PageMarketingNoItemsResult = () => {
         //   alert("URL 복사에 실패했습니다. 수동으로 복사해 주세요.");
         // }
       } catch (shareError) {
-        const link = document.createElement('a');
+        const link = document.createElement("a");
         link.href = image;
         link.download = `${marketingMbtiResult.name}_result.png`;
         document.body.appendChild(link);
@@ -570,8 +576,7 @@ const PageMarketingNoItemsResult = () => {
           <h1 className="mobile" onClick={() => setIsExitPopupOpen(true)}></h1>
         </Navbar>
         <QuestionWrap>
-
-        <Question
+          <Question
             className="capture-area"
             style={{
               flex: isMobile ? questionFlex : "1 1 50%",
@@ -581,10 +586,7 @@ const PageMarketingNoItemsResult = () => {
           >
             <p>
               <span>
-                <img
-                  src={getImageSrc(marketingMbtiResult.name)}
-                  alt=""
-                />
+                <img src={getImageSrc(marketingMbtiResult.name)} alt="" />
               </span>
               {marketingMbtiResult.category} <br />
               {marketingMbtiResult.name}
@@ -593,14 +595,22 @@ const PageMarketingNoItemsResult = () => {
               <strong>{marketingMbtiResult.summary}</strong>
               <p>{marketingMbtiResult.description}</p>
               {/* MBTI 유형에 맞는 기업가 목록 추가 */}
-              <div>
-                {getEntrepreneursByMbti(marketingMbtiResult.name).map((entrepreneur, index) => (
+              <strong>당신과 같은 유형의 창업가는?</strong>
+              {getEntrepreneursByMbti(marketingMbtiResult.name).map(
+                (entrepreneur, index) => (
                   <p key={index}>
                     {entrepreneur.name} - {entrepreneur.company}
                   </p>
-                ))}
-              </div>
-              <CustomButton DbExLarge PrimaryLightest Fill onClick={captureAndShare}>결과 공유하기</CustomButton>
+                )
+              )}
+              <CustomButton
+                DbExLarge
+                PrimaryLightest
+                Fill
+                onClick={captureAndShare}
+              >
+                결과 공유하기
+              </CustomButton>
             </div>
           </Question>
           {/* 모바일 전용 Question 컴포넌트   //일단 만들어본 것 주석처리
@@ -651,7 +661,7 @@ const PageMarketingNoItemsResult = () => {
                 {marketingMbtiResult.name}
               </p>
               {/* 데스크탑에서 보여줄 내용 */}
-              {/* <div className="info">
+          {/* <div className="info">
                 <strong>{marketingMbtiResult.summary}</strong>
                 <p>{marketingMbtiResult.description}</p>
                 <ShareButton onClick={captureAndShare}>결과 저장/공유하기</ShareButton>
@@ -671,21 +681,22 @@ const PageMarketingNoItemsResult = () => {
             questionFlex={questionFlex}
           >
             <ResultWrap>
-            
-                <div className="info">
-                  <strong>{marketingMbtiResult.summary}</strong>
-                  <p>{marketingMbtiResult.description}</p>
+              <div className="info">
+                <strong>{marketingMbtiResult.summary}</strong>
+                <p>{marketingMbtiResult.description}</p>
 
-                  <div>
-                {getEntrepreneursByMbti(marketingMbtiResult.name).map((entrepreneur, index) => (
-                  <p key={index}>
-                    {entrepreneur.name} - {entrepreneur.company}
-                  </p>
-                ))}
+                <strong>당신과 같은 유형의 창업가는?</strong>
+                {getEntrepreneursByMbti(marketingMbtiResult.name).map(
+                  (entrepreneur, index) => (
+                    <p key={index}>
+                      {entrepreneur.name} - {entrepreneur.company}
+                    </p>
+                  )
+                )}
+                <ShareButton onClick={captureAndShare}>
+                  결과 저장/공유하기
+                </ShareButton>
               </div>
-                  <ShareButton onClick={captureAndShare}>결과 저장/공유하기</ShareButton>
-                </div>
-            
 
               <div className="title">
                 <strong>💡 추천 아이템, 내 사업으로 만들기</strong>
@@ -747,7 +758,7 @@ const PageMarketingNoItemsResult = () => {
                       </div>
                     ))} */}
 
-                <div> 
+                    <div>
                       <p>
                         <strong>
                           {marketingRecommendedItemData?.example?.[0]?.name}
@@ -814,16 +825,29 @@ const PageMarketingNoItemsResult = () => {
                   </div>
                   <div className="body">
                     <ScrollWrap>
-                      {marketingRecommendedItemData?.example?.[popupIndex]?.mbti?.map((mbtiItem, mbtiIndex) => {
-                        console.log(`MBTI Item: ${marketingMbtiResult.name[mbtiIndex]}, Compatibility: ${mbtiItem.compatibility}`);
-                        {console.log(getMbtiDescription(marketingMbtiResult.name[mbtiIndex]))}
-                        {console.log(marketingMbtiResult.name[mbtiIndex])}
+                      {marketingRecommendedItemData?.example?.[
+                        popupIndex
+                      ]?.mbti?.map((mbtiItem, mbtiIndex) => {
+                        console.log(
+                          `MBTI Item: ${marketingMbtiResult.name[mbtiIndex]}, Compatibility: ${mbtiItem.compatibility}`
+                        );
+                        {
+                          console.log(
+                            getMbtiDescription(
+                              marketingMbtiResult.name[mbtiIndex]
+                            )
+                          );
+                        }
+                        {
+                          console.log(marketingMbtiResult.name[mbtiIndex]);
+                        }
                         return (
                           <div key={mbtiIndex}>
                             <strong>
-                           
                               <span>{marketingMbtiResult.name[mbtiIndex]}</span>
-                              {getMbtiDescription(marketingMbtiResult.name[mbtiIndex])}
+                              {getMbtiDescription(
+                                marketingMbtiResult.name[mbtiIndex]
+                              )}
                             </strong>
                             <p>{mbtiItem.compatibility}</p>
                           </div>
@@ -1101,6 +1125,16 @@ const Question = styled.div`
       font-size: 1.25rem;
       line-height: 1.6;
     }
+
+    .entrepreneur-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
@@ -1142,7 +1176,7 @@ const Question = styled.div`
 
 const CustomButton = styled(Button)`
   color: #5547ff;
-  background: rgba(85, 71, 255, .05);
+  background: rgba(85, 71, 255, 0.05);
 `;
 
 const Answer = styled.div`
