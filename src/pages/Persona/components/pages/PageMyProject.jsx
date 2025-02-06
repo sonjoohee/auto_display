@@ -686,7 +686,7 @@ const PageMyProject = () => {
                             페르소나 명
                           </Body3>
                           <Body3 color="gray500">요청일</Body3>
-                          <Body3 color="gray500">생성 완료일</Body3>
+                          <Body3 color="gray500">생성 현황</Body3>
                         </ProjectHeader>
                         <ProjectContent>
                           {userPersonaList.count > 0 ? (
