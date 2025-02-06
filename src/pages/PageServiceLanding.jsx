@@ -19,6 +19,7 @@ const PageServiceLanding = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+  const [isPopupOpen, setIsPopupOpen] = useState(true); // 팝업 상태 추가
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -657,6 +658,13 @@ const PageServiceLanding = () => {
           <div className="copyright">2025 Userconnect Inc. All rights reserved.</div>
         </div>
       </Footer>
+
+      {isPopupOpen && (
+        <Popup>
+          <span className="close" onClick={() => setIsPopupOpen(false)} />
+          <img src={images.Popup01} alt="" />
+        </Popup>
+      )}
     </>
   );
 };
@@ -2170,6 +2178,56 @@ const Footer = styled.div`
 
     ${media.mobile} {
       font-size: 0.75rem;
+    }
+  }
+`;
+
+const Popup = styled.div`
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 15px;
+  overflow: hidden;
+  z-index: 999;
+
+  ${media.mobile} {
+    width: calc(100vw - 40px);
+  }
+
+  img{
+    ${media.mobile} {
+      width: 100%;
+    }
+  }
+
+  .close {
+    position: absolute;
+    top: 32px;
+    right: 32px;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+
+    &:before,
+    &:after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width:100%;
+      height: 2px;
+      border-radius: 4px;
+      background: ${palette.gray700};
+      content: '';
+    }
+
+    &:before {
+      transform: rotate(45deg);
+    }
+
+    &:after {
+      transform: rotate(-45deg);
     }
   }
 `;

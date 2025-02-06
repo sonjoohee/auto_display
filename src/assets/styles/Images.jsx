@@ -283,6 +283,8 @@ import CarouselImg01 from "../images/carousel-img01.png";
 import CarouselImg02 from "../images/carousel-img02.png";
 import CarouselImg03 from "../images/carousel-img03.png";
 
+import Popup01 from "../images/popup01.png";
+
 const images = {
   Logo,
   SymbolLogo,
@@ -556,6 +558,8 @@ const images = {
   CarouselImg01,
   CarouselImg02,
   CarouselImg03,
+
+  Popup01,
 }
 
 export default images;
