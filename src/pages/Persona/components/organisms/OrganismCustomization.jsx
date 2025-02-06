@@ -104,32 +104,26 @@ const OrganismCustomization = ({
         retryCount++;
       }
       setApiResponse(result);
-      if (result?.response?.custom_theory_data) {
-        setCustomTheoryData(result?.response?.custom_theory_data);
-      } else {
-        setCustomTheoryData([]);
-      }
+      setCustomTheoryData(result?.response?.custom_theory_data);
+
       // Update project on server with the new data
 
-      if (result?.response?.custom_theory_data?.theory_title) {
-        const generatedQuestions = {
-          id: 4,
-          title: result?.response?.custom_theory_data?.theory_title || "",
-          theory_title:
-            result?.response?.custom_theory_data?.theory_title || "",
-          view_title: result?.response?.custom_theory_data?.theory_title || "",
-          definition: result?.response?.custom_theory_data?.definition || "",
-          objective: result?.response?.custom_theory_data?.objective || "",
-          characteristic:
-            result?.response?.custom_theory_data?.characteristic || [],
-          description:
-            result?.response?.custom_theory_data?.interview_purpose || [],
-          custom_theory_data: result?.response?.custom_theory_data || "",
-          question_list:
-            result?.response?.custom_theory_data?.question_list || [],
-        };
-        setPurposeItemsSingleAtom((prev) => [...prev, generatedQuestions]);
-      }
+      // if (result?.response?.custom_theory_data?.theory_title) {
+      //   const generatedQuestions = {
+      //     id: 4,
+      //     title: result?.response?.custom_theory_data?.theory_title || "",
+      //     theory_title: result?.response?.custom_theory_data?.theory_title || "",
+      //     view_title: result?.response?.custom_theory_data?.theory_title || "",
+      //     definition: result?.response?.custom_theory_data?.definition || "",
+      //     objective: result?.response?.custom_theory_data?.objective || "",
+      //     characteristic: result?.response?.custom_theory_data?.characteristic || [],
+      //     description: "사용자 커스텀 방법론" || "",
+      //     custom_theory_data: result?.response?.custom_theory_data || "",
+      //     question_list: result?.response?.custom_theory_data?.question_list || [],
+      //   };
+      //   // 카드 생성은 나중에 "질문 생성하기" 버튼에서 진행하므로 여기서는 주석 처리
+      //   // setPurposeItemsSingleAtom((prev) => [...prev, generatedQuestions]);
+      // }
 
       await updateProjectOnServer(
         projectId,
@@ -384,9 +378,8 @@ const OrganismCustomization = ({
                                 characteristic:
                                   apiResponse?.response?.custom_theory_data
                                     ?.characteristic || [],
-                                description:
-                                  apiResponse?.response?.custom_theory_data
-                                    ?.interview_purpose || [],
+                                description: "사용자 커스텀 방법론" || "",
+
                                 custom_theory_data:
                                   apiResponse?.response?.custom_theory_data ||
                                   "",
