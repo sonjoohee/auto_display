@@ -301,7 +301,7 @@ const PagePersona2 = () => {
     {
       index: 14,
       id: "type14",
-      label: "특정 상황 중심페르소나",
+      label: "특정 상황 중심 페르소나",
       count: 2,
       wasSelected: false,
     },
@@ -1911,6 +1911,7 @@ const PagePersona2 = () => {
                                       style={{ margin: "20px 12px 0" }}
                                       onClick={async () => {
                                         setShowTypeList(false); // 리스트를 바로 숨김
+                                        reloadBusinessPersonaList();
                                         setIsLoadingMore(true); // 로딩 상태 시작
                                         await handleTypeSelection(); // 선택된 유형 처리
                                         setIsLoadingMore(false); // 로딩 상태 종료
