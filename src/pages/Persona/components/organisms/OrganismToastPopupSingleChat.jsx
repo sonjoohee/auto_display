@@ -1150,6 +1150,7 @@ const OrganismToastPopupSingleChat = ({
       // 이미 선택된 질문인 경우 처리
       if (selectedQuestions.includes(index)) {
         setSelectedQuestions((prev) => prev.filter((item) => item !== index));
+        setIsInputEnabled(true); // input 활성화
         return;
       }
 
@@ -1168,6 +1169,9 @@ const OrganismToastPopupSingleChat = ({
       setCurrentQuestionIndex(newQuestionNumber);
       setSelectedQuestions((prev) => [...prev, index]);
       setCountAdditionalQuestion((prev) => prev - 1);
+      setIsInputEnabled(false); // input 비활성화
+      setInputValue(""); // input 값 초기화
+      setShowAddQuestion(false); // AddQuestion 컴포넌트 숨기기
     } catch (error) {
       console.error("Error in handleQuestionSelect:", error);
       setShowErrorPopup(true);
@@ -2150,8 +2154,11 @@ const ChatFooter = styled.div`
 
     &:disabled {
       background: ${palette.white};
+      cursor: not-allowed;
+      opacity: 0.5;
     }
   }
+  
   button {
     flex-shrink: 0;
     // width: 32px;
