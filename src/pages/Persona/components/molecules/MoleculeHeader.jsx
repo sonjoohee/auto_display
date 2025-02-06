@@ -27,7 +27,7 @@ import {
 import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
 import { UserCreditInfo } from "../../../../utils/indexedDB";
 
-const MoleculeHeader = ({ businessAnalysisTitle }) => {
+const MoleculeHeader = () => {
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
   const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
   const location = useLocation();
@@ -39,8 +39,6 @@ const MoleculeHeader = ({ businessAnalysisTitle }) => {
   const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
   const [isLoggedInState, setIsLoggedInState] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
-
-  console.log("🚀 ~ MoleculeHeader ~ personaStep:", personaStep);
 
   const navigate = useNavigate();
 
