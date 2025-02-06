@@ -522,7 +522,7 @@ export const Badge = styled.div`
       : props.Ing
       ? `rgba(34, 111, 255, 0.04)`
       : props.Check
-      ? `rgba(255, 165, 0, 0.04)`
+      ? `rgba(185, 185, 185, 0.04)`
       : palette.white};
 
   ${(props) =>
