@@ -86,6 +86,14 @@ const getMbtiDescription = (mbtiChar) => {
       return "독립성 중시 (Independence-focused)";
     case "C":
       return "창의성 중심 (Creativity-centered)";
+    case "R":
+        return "고위험 추구 (Risk-seeking)";
+      case "P":
+        return "계획 기반형 (Planning-driven)";
+      case "T":
+        return "협력 중시 (Teamwork-focused)";
+      case "A":
+        return "실용성 중심 (Application-centered)";
     default:
       return "";
   }
@@ -140,7 +148,8 @@ const PageMarketingNoItemsResult = () => {
   };
 
   const closePopup = () => {
-    setIsPopup1Open(false); // 팝업 닫기
+
+    setIsPopup1Open(false);
   };
 
   const [isExitPopupOpen, setIsExitPopupOpen] = useState(false);
@@ -489,7 +498,8 @@ const PageMarketingNoItemsResult = () => {
           <h1 className="mobile" onClick={() => setIsExitPopupOpen(true)}></h1>
         </Navbar>
         <QuestionWrap>
-          <Question
+
+        <Question
             className="capture-area"
             style={{
               flex: isMobile ? questionFlex : "1 1 50%",
@@ -550,10 +560,61 @@ const PageMarketingNoItemsResult = () => {
               <CustomButton DbExLarge PrimaryLightest Fill onClick={captureAndShare}>결과 공유하기</CustomButton>
             </div>
           </Question>
-
-
-
-      
+          {/* 모바일 전용 Question 컴포넌트
+          {isMobile && (
+            <Question
+              className="capture-area"
+              style={{
+                flex: questionFlex,
+              }}
+              isDragging={isDragging}
+              questionFlex={questionFlex}
+            >
+              <p>
+                <span>
+                  <img
+                    src={getImageSrc(marketingMbtiResult.name)}
+                    alt=""
+                  />
+                </span>
+                {marketingMbtiResult.category} <br />
+                {marketingMbtiResult.name}
+              </p>
+              <StyledDiv className="info">
+                <strong>{marketingMbtiResult.summary}</strong>
+                <p>{marketingMbtiResult.description}</p>
+                <ShareButton onClick={captureAndShare}>결과 저장/공유하기</ShareButton>
+              </StyledDiv>
+            </Question>
+          )}
+          {/* 데스크탑 전용 Question 컴포넌트 */}
+          {/* {!isMobile && (
+            <Question
+              className="capture-area"
+              style={{
+                flex: "1 1 50%",
+              }}
+              isDragging={isDragging}
+              questionFlex={questionFlex}
+            >
+              <p>
+                <span>
+                  <img
+                    src={getImageSrc(marketingMbtiResult.name)}
+                    alt=""
+                  />
+                </span>
+                {marketingMbtiResult.category} <br />
+                {marketingMbtiResult.name}
+              </p>
+              {/* 데스크탑에서 보여줄 내용 */}
+              {/* <div className="info">
+                <strong>{marketingMbtiResult.summary}</strong>
+                <p>{marketingMbtiResult.description}</p>
+                <ShareButton onClick={captureAndShare}>결과 저장/공유하기</ShareButton>
+              </div>
+            </Question>
+          )} */}
 
           <Answer
             onMouseDown={handleMouseDown}
@@ -702,15 +763,21 @@ const PageMarketingNoItemsResult = () => {
                   </div>
                   <div className="body">
                     <ScrollWrap>
-                      {marketingRecommendedItemData?.example?.[popupIndex]?.mbti?.map((mbtiItem, mbtiIndex) => (
-                        <div key={mbtiIndex}>
-                          <strong>
-                            <span>{marketingMbtiResult.name[mbtiIndex]}</span>
-                            {getMbtiDescription(marketingMbtiResult.name[mbtiIndex])}
-                          </strong>
-                          <p>{mbtiItem.compatibility}</p>
-                        </div>
-                      ))}
+                      {marketingRecommendedItemData?.example?.[popupIndex]?.mbti?.map((mbtiItem, mbtiIndex) => {
+                        console.log(`MBTI Item: ${marketingMbtiResult.name[mbtiIndex]}, Compatibility: ${mbtiItem.compatibility}`);
+                        {console.log(getMbtiDescription(marketingMbtiResult.name[mbtiIndex]))}
+                        {console.log(marketingMbtiResult.name[mbtiIndex])}
+                        return (
+                          <div key={mbtiIndex}>
+                            <strong>
+                           
+                              <span>{marketingMbtiResult.name[mbtiIndex]}</span>
+                              {getMbtiDescription(marketingMbtiResult.name[mbtiIndex])}
+                            </strong>
+                            <p>{mbtiItem.compatibility}</p>
+                          </div>
+                        );
+                      })}
                     </ScrollWrap>
 
                     <PopupButton>
