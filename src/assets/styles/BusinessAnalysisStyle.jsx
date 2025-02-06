@@ -1063,7 +1063,7 @@ export const TypeItemList = styled.ul`
       display: flex;
       align-items: center;
       justify-content: center;
-      min-width: 32px;
+      min-width: 62px;
       font-size: 0.75rem;
       font-weight: 400;
       line-height: 1.5;
