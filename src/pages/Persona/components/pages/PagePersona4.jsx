@@ -839,7 +839,7 @@ const PagePersona4 = () => {
                             <PersonaInfo>
                               <span>{personaItem.gender || "성별"}</span>
                               <span>{personaItem.age || "나이"}세</span>
-                              <span>{personaItem.job || "직업"}</span>
+                              <span className="job">{personaItem.job || "직업"}</span>
                             </PersonaInfo>
                           </PersonaText>
                         </PersonaItem>
@@ -1481,6 +1481,13 @@ const PersonaInfo = styled.div`
       margin-right: 6px;
       background: ${palette.gray500};
       content: "";
+    }
+
+    &.job {
+      max-width: 130px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 `;
