@@ -22,6 +22,7 @@ import {
   BUSINESS_ANALYSIS,
   PERSONA_STEP,
   USER_CREDITS,
+  IS_LOGGED_IN,
 } from "../../../AtomStates";
 import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
 import { UserCreditInfo } from "../../../../utils/indexedDB";
@@ -36,7 +37,8 @@ const MoleculeHeader = () => {
   const [showCreditToggle, setShowCreditToggle] = useState(false);
   const [isClosingCreditToggle, setIsClosingCreditToggle] = useState(false);
   const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedInState, setIsLoggedInState] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
 
   const navigate = useNavigate();
 
@@ -92,14 +94,14 @@ const MoleculeHeader = () => {
         const credits = await UserCreditInfo(true);
         if (credits) {
           setUserCredits(credits);
-          setIsLoggedIn(true);
+          setIsLoggedInState(true);
         } else {
           setUserCredits({
             additional_credit: 0,
             regular_credit: 0,
             event_credit: 0,
           });
-          setIsLoggedIn(false);
+          setIsLoggedInState(false);
         }
       } catch (error) {
         console.error("유저 크레딧 정보 조회 오류 발생:", error);
@@ -108,7 +110,7 @@ const MoleculeHeader = () => {
           regular_credit: 0,
           event_credit: 0,
         });
-        setIsLoggedIn(false);
+        setIsLoggedInState(false);
       }
     };
 
@@ -201,7 +203,7 @@ const MoleculeHeader = () => {
               <CreditToggle className={isClosingCreditToggle ? "closing" : ""}>
                 <div className="title">
                   <Sub1 color="gray700">크레딧 내역</Sub1>
-                  {isLoggedIn &&
+                  {isLoggedInState &&
                     (sessionStorage.getItem("userEmail") ===
                       "pg_card@userconnect.kr" ||
                       sessionStorage.getItem("userEmail") ===
