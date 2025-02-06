@@ -272,17 +272,6 @@ const OrganismProjectCard = ({ project, index }) => {
                     </div>
                   </div>
                   <div className="button">
-                    {/* <Button
-                      Small
-                      Outline
-                      Fill
-                      onClick={() =>
-                        navigateToInterviewReportDescriptionPage(report)
-                      }
-                      className="view"
-                    >
-                      인터뷰 상세 보기
-                    </Button> */}
                     <Button
                       Small
                       Primary

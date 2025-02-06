@@ -2580,7 +2580,7 @@ export const ViewInfo = styled.div`
   }
 
   .title {
-    flex: 4;
+    flex: 5;
     min-width: 0;
     display: flex;
     align-items: center; // flex-end에서 center로 변경
@@ -2640,7 +2640,7 @@ export const ViewInfo = styled.div`
   }
 
   .button {
-    flex: 2;
+    flex: 1;
     min-width: 0; // flex-basis 오버플로우 방지
     display: flex;
     align-items: center;

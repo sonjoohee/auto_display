@@ -69,6 +69,7 @@ const MoleculeHeader = () => {
       }, 300);
     } else {
       setShowAlert(true);
+      setShowCreditToggle(false);
     }
   };
 
@@ -85,6 +86,7 @@ const MoleculeHeader = () => {
       }, 300);
     } else {
       setShowCreditToggle(true);
+      setShowAlert(false);
     }
   };
 
@@ -299,8 +301,16 @@ const MoleculeHeader = () => {
           <AlertContent>
             {/* 메시지 있을 때 */}
             <Messageox NoAlarm>
-              <img src={images.NoAlarm} alt="" />
-              <p>알림이 없습니다.</p>
+              {isLoggedIn ? (
+                <>
+                  <img src={images.NoAlarm} alt="" />
+                  <p>알림이 없습니다.</p>
+                </>
+              ) : (
+                <Sub3 color="gray500">
+                  알림은 로그인 후, 확인 가능합니다.
+                </Sub3>
+              )}
             </Messageox>
 
             {/* 메시지 있을 떄 */}

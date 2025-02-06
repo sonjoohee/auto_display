@@ -386,7 +386,7 @@ const OrganismToastPopupSingleChat = ({
               characteristics: businessAnalysis.characteristics,
               features: businessAnalysis.features,
             },
-            theory_name: selectedInterviewPurposeData.title,
+            theory_name: selectedInterviewPurposeData?.title || "",
           };
           {
             /* <CardBadge text={item.badge.text}>
@@ -2173,7 +2173,7 @@ const ChatFooter = styled.div`
       opacity: 0.5;
     }
   }
-  
+
   button {
     flex-shrink: 0;
     // width: 32px;
