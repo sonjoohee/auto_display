@@ -1396,7 +1396,6 @@ const PagePersona2 = () => {
         requestDate: new Date().toLocaleString("ko-KR", {
           timeZone: "Asia/Seoul",
         }),
-        status: "request",
         personaRequest: {
           description: customPersonaForm.description,
           purpose: customPersonaForm.purpose,
@@ -1414,6 +1413,7 @@ const PagePersona2 = () => {
             neuroticism: oceanValues.neuroticism,
           },
           ignoreOcean: ignoreOcean,
+          status: "request",
         },
       };
 
@@ -1929,10 +1929,8 @@ const PagePersona2 = () => {
                               <MoleculeBussinessPersonaCard
                                 key={index}
                                 title={persona.persona}
-                                keywords={[
-                                  persona.persona_type,
-                                  ...persona.keyword,
-                                ]}
+                                persona_type={persona.persona_type}
+                                keywords={[...persona.keyword]}
                                 gender={persona.gender}
                                 age={persona.age}
                                 job={persona.job}
