@@ -10,7 +10,7 @@ export const ContentsWrap = styled.div`
   display: flex;
   flex-direction: ${(props) => (props.isMobile ? "column" : "row")};
   gap: ${(props) => (props.isMobile ? "20px" : "40px")};
-  padding: ${(props) => (props.isMobile ? "20px" : "0")};
+  padding: ${(props) => (props.isMobile ? "20px" : "0 4px 0 0")};
   min-height: 100vh;
   // overflow: ${({ noScroll }) => (noScroll ? "hidden" : "auto")};
 `;

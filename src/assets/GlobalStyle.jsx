@@ -118,6 +118,10 @@ const GlobalStyles = createGlobalStyle`
     box-sizing: border-box;
   }
 
+  html {
+    overflow-y: scroll;
+  }
+
   html, body {
     font-size:16px;
   }
