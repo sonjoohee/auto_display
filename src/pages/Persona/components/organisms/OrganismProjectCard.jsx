@@ -152,7 +152,11 @@ const OrganismProjectCard = ({ project, index }) => {
           <Name style={{ maxWidth: "410px" }}>
             <Body2>{project.businessAnalysis.title}</Body2>
             <Caption2 color="gray500">
-              작성일 - {project.createDate || project.updateDate}
+              작성일 -{" "}
+              {project.createDate.substring(
+                0,
+                project.createDate.lastIndexOf(":")
+              )}
             </Caption2>
           </Name>
           <Persona>
@@ -246,7 +250,12 @@ const OrganismProjectCard = ({ project, index }) => {
                     {report.interviewType === "single"
                       ? report.theoryType
                       : report.reportTitle}
-                    <span>{report.createDate}</span>
+                    <span>
+                      {report.createDate.substring(
+                        0,
+                        report.createDate.lastIndexOf(":")
+                      )}
+                    </span>
                   </div>
                   <div className="info">
                     <div>

@@ -174,11 +174,20 @@ const OrganismCustomization = ({
       setIsLoadingQuestion(true);
       setSelectedInterviewPurpose(4); // 커스텀 방법론의 ID
 
-      const selectedPurpose = purposeItemsSingleAtom.find(
-        (item) => item.id === 4
-      );
+      const selectedPurpose = {
+        id: 4,
+        title: customTheoryData?.theory_title || "",
+        theory_title: customTheoryData?.theory_title || "",
+        view_title: customTheoryData?.theory_title || "",
+        definition: customTheoryData?.definition || "",
+        objective: customTheoryData?.objective || "",
+        characteristic: customTheoryData?.characteristic || [],
+        description: "사용자 커스텀 방법론" || "",
+        custom_theory_data: customTheoryData || "",
+      };
 
       setSelectedInterviewPurposeData(selectedPurpose);
+
       // 2. 카드 열기
       setShowQuestions((prev) => ({
         ...prev,
