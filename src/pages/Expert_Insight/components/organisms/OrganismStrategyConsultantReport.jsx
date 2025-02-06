@@ -99,32 +99,32 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
             axiosConfig
           );
 
-          let strategyConsultantReport = response.data.tabs[0];
+          let strategyConsultantReport = response.response.tabs[0];
             
           let retryCount = 0;
           const maxRetries = 10;
 
           while (retryCount < maxRetries && (
             !response || 
-            !response.data || 
-            typeof response.data !== "object" ||
-            !response.data.hasOwnProperty("tabs") || 
-            !Array.isArray(response.data.tabs) ||
-            response.data.tabs.length === 0 ||
-            !response.data.tabs[0].hasOwnProperty("title") ||
-            !response.data.tabs[0].hasOwnProperty("sections") ||
-            !Array.isArray(response.data.tabs[0].sections) ||
-            response.data.tabs[0].sections.length === 0
+            !response.response || 
+            typeof response.response !== "object" ||
+            !response.response.hasOwnProperty("tabs") || 
+            !Array.isArray(response.response.tabs) ||
+            response.response.tabs.length === 0 ||
+            !response.response.tabs[0].hasOwnProperty("title") ||
+            !response.response.tabs[0].hasOwnProperty("sections") ||
+            !Array.isArray(response.response.tabs[0].sections) ||
+            response.response.tabs[0].sections.length === 0
           )) {
-            response = await axios.post(
-              "https://wishresearch.kr/panels/marketing/research_report",
-              data,
-              axiosConfig
-            );
-            // response = await MarketingResearchReportRequest(data, isLoggedIn);
+            // response = await axios.post(
+            //   "https://wishresearch.kr/panels/marketing/research_report",
+            //   data,
+            //   axiosConfig
+            // );
+            response = await MarketingResearchReportRequest(data);
             retryCount++;
 
-            strategyConsultantReport = response.data.tabs[0];
+            strategyConsultantReport = response.response.tabs[0];
           }
           if (retryCount === maxRetries) {
             throw new Error("Maximum retry attempts reached. Empty response persists.");

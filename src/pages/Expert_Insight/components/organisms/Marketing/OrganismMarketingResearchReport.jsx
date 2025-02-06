@@ -82,23 +82,23 @@ const OrganismMarketingResearchReport = () => {
             },
           };
 
-          let response = await axios.post(
-            "https://wishresearch.kr/panels/marketing/research_report",
-            data,
-            axiosConfig
-          );
-          // let response = await MarketingResearchReportRequest(data, isLoggedIn);
+          // let response = await axios.post(
+          //   "https://wishresearch.kr/panels/marketing/research_report",
+          //   data,
+          //   axiosConfig
+          // );
+          let response = await MarketingResearchReportRequest(data);
 
-          let marketingResearchReport = response.data.marketing_research_report;
+          let marketingResearchReport = response.response.marketing_research_report;
             
           let retryCount = 0;
           const maxRetries = 10;
 
           while (retryCount < maxRetries && (
             !response || 
-            !response.data || 
-            typeof response.data !== "object" ||
-            !response.data.hasOwnProperty("marketing_research_report") || 
+            !response.response || 
+            typeof response.response !== "object" ||
+            !response.response.hasOwnProperty("marketing_research_report") || 
             !Array.isArray(marketingResearchReport) ||
             marketingResearchReport.length !== 6 ||
             marketingResearchReport.slice(0, 5).some(item => 
@@ -120,15 +120,15 @@ const OrganismMarketingResearchReport = () => {
             !marketingResearchReport[3].content.hasOwnProperty("company_cases")
           )) 
           {
-            response = await axios.post(
-              "https://wishresearch.kr/panels/marketing/research_report",
-              data,
-              axiosConfig
-            );
-            // response = await MarketingResearchReportRequest(data, isLoggedIn);
+            // response = await axios.post(
+            //   "https://wishresearch.kr/panels/marketing/research_report",
+            //   data,
+            //   axiosConfig
+            // );
+            response = await MarketingResearchReportRequest(data);
             retryCount++;
 
-            marketingResearchReport = response.data.marketing_research_report;
+            marketingResearchReport = response.response.marketing_research_report;
           }
           if (retryCount === maxRetries) {
             throw new Error("Maximum retry attempts reached. Empty response persists.");

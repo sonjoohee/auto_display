@@ -84,22 +84,22 @@ const OrganismMarketingBmReport = () => {
             marketing_research_report: marketingResearchReportData
           };
 
-          let response = await axios.post(
-            "https://wishresearch.kr/panels/marketing/bm_report",
-            data,
-            axiosConfig
-          );
-          // let response = await MarketingBmReportRequest(data, isLoggedIn);
-          let marketingBmReport = response.data.marketing_bm_report;
+          // let response = await axios.post(
+          //   "https://wishresearch.kr/panels/marketing/bm_report",
+          //   data,
+          //   axiosConfig
+          // );
+          let response = await MarketingBmReportRequest(data);
+          let marketingBmReport = response.response.marketing_bm_report;
             
           let retryCount = 0;
           const maxRetries = 10;
 
           while (retryCount < maxRetries && (
             !response || 
-            !response.data || 
-            typeof response.data !== "object" ||
-            !response.data.hasOwnProperty("marketing_bm_report") || 
+            !response.response || 
+            typeof response.response !== "object" ||
+            !response.response.hasOwnProperty("marketing_bm_report") || 
             !Array.isArray(marketingBmReport) ||
             marketingBmReport.length !== 10 ||
             marketingBmReport.slice(0, 9).some(item => 
@@ -117,15 +117,15 @@ const OrganismMarketingBmReport = () => {
             !marketingBmReport[9].content.hasOwnProperty("conclusion") ||
             !marketingBmReport[9].content.hasOwnProperty("summary")
           ) {
-            response = await axios.post(
-              "https://wishresearch.kr/panels/marketing/bm_report",
-              data,
-              axiosConfig
-            );
-            // response = await MarketingBmReportRequest(data, isLoggedIn);
+            // response = await axios.post(
+            //   "https://wishresearch.kr/panels/marketing/bm_report",
+            //   data,
+            //   axiosConfig
+            // );
+            response = await MarketingBmReportRequest(data);
             retryCount++;
 
-            marketingBmReport = response.data.marketing_bm_report;
+            marketingBmReport = response.response.marketing_bm_report;
           }
           if (retryCount === maxRetries) {
             throw new Error("Maximum retry attempts reached. Empty response persists.");

@@ -240,6 +240,7 @@ const PageMyProject = () => {
             },
           }
         );
+        console.log("🚀 ~ fetchUserInfo ~ userPageCnt:", userPageCnt);
         setUserPageCnt(userPageCnt.data);
 
         const projectListData = await axios.get(
@@ -273,6 +274,10 @@ const PageMyProject = () => {
               "Content-Type": "application/json",
             },
           }
+        );
+        console.log(
+          "🚀 ~ fetchUserInfo ~ personaListData:",
+          personaListData.data
         );
         setUserPersonaList(personaListData.data);
       } catch (err) {
@@ -511,7 +516,11 @@ const PageMyProject = () => {
                 <DashboardCard>
                   <Body2 color="gray500">요청 페르소나</Body2>
                   <DashboardAmount>
-                    <H3 color="gray800">{userPageCnt.persona_count || 0}건</H3>
+                    <H3 color="gray800">
+                      {userPageCnt.persona_count + userPageCnt.person_count ||
+                        0}
+                      건
+                    </H3>
                     {userPageCnt.persona_state === "new" && (
                       <Badge New>new</Badge>
                     )}
@@ -681,7 +690,7 @@ const PageMyProject = () => {
                         </ProjectHeader>
                         <ProjectContent>
                           {userPersonaList.count > 0 ? (
-                            userPersonaList.results.persona.map((persona) => (
+                            userPersonaList.results.data.map((persona) => (
                               <>
                                 <ProjectItem key={persona.id}>
                                   <ProjectInfo>
@@ -690,7 +699,8 @@ const PageMyProject = () => {
                                         {persona.businessAnalysis.title}
                                       </Caption2>
                                       <Body2 color="gray800">
-                                        {persona.personaRequest.persona}
+                                        {persona.personaRequest.persona ||
+                                          "맞춤 페르소나"}
                                       </Body2>
                                     </Name>
                                     <Persona>
@@ -727,16 +737,18 @@ const PageMyProject = () => {
                                         <></>
                                       )}
                                       {/* <Badge Keyword>Request</Badge> */}
-                                      <Button
-                                        Small
-                                        Outline
-                                        Fill
-                                        onClick={() =>
-                                          handleDetailClick(persona)
-                                        }
-                                      >
-                                        자세히
-                                      </Button>
+                                      {persona.type === "persona" && (
+                                        <Button
+                                          Small
+                                          Outline
+                                          Fill
+                                          onClick={() =>
+                                            handleDetailClick(persona)
+                                          }
+                                        >
+                                          자세히
+                                        </Button>
+                                      )}
                                     </Report>
                                   </ProjectInfo>
                                 </ProjectItem>
