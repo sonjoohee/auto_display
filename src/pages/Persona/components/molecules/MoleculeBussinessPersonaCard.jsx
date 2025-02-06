@@ -194,7 +194,7 @@ const MoleculeBussinessPersonaCard = ({
       mount: creditRequestBusinessPersona,
     };
     const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
-    console.log("크레딧 체크 응답:", creditResponse);
+    // console.log("크레딧 체크 응답:", creditResponse);
 
     if (creditResponse?.state !== "use") {
       setShowCreditPopup(true);
@@ -211,7 +211,7 @@ const MoleculeBussinessPersonaCard = ({
     };
 
     const creditUseResponse = await UserCreditUse(creditUsePayload, isLoggedIn);
-    console.log("크레딧 사용 응답:", creditUseResponse);
+    // console.log("크레딧 사용 응답:", creditUseResponse);
     handleRequestPersona();
   };
 

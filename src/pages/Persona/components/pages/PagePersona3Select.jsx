@@ -182,7 +182,6 @@ const PagePersona3Select = () => {
       };
 
       const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
-      console.log("크레딧 체크 응답:", creditResponse);
 
       if (creditResponse?.state !== "use") {
         setShowCreditPopup(true);
@@ -202,7 +201,6 @@ const PagePersona3Select = () => {
         creditUsePayload,
         isLoggedIn
       );
-      console.log("크레딧 사용 응답:", creditUseResponse);
 
       // 이후 인터뷰 시작 등 추가 로직 처리 (예를 들어 인터뷰 준비 팝업 표시)
       setShowPopup(true);
@@ -214,12 +212,6 @@ const PagePersona3Select = () => {
   };
 
   const handleStartInterview = () => {
-    console.log("인터뷰 시작");
-    console.log("personaList", personaList);
-    console.log("singleInterviewQuestionList", singleInterviewQuestionList);
-    console.log("selectedInterviewPurposeData", selectedInterviewPurposeData);
-    console.log("purposeItemsSingleAtom", purposeItemsSingleAtom);
-
     if (isIndepthEnabled) {
       setShowRequestPopup(true);
     } else {
@@ -499,7 +491,13 @@ const PagePersona3Select = () => {
         <PopupWrap
           Warning
           title="크레딧이 모두 소진되었습니다"
-          message="보유한 크레딧이 부족합니다. 크레딧을 충전한 후 다시 시도해주세요."
+          message={
+            <>
+              보유한 크레딧이 부족합니다.
+              <br />
+              크레딧을 충전한 후 다시 시도해주세요.
+            </>
+          }
           buttonType="Outline"
           closeText="확인"
           isModal={false}

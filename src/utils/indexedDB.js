@@ -49,7 +49,7 @@ export const saveConversationToIndexedDB = async (
     // 사용자 로그인 시 서버에 저장
     try {
       const token = sessionStorage.getItem("accessToken"); // 액세스 토큰을 세션에서 가져오기
-      // console.log("token", token);
+      // // console.log("token", token);
 
       if (!token) {
         throw new Error("액세스 토큰이 존재하지 않습니다.");
@@ -58,8 +58,8 @@ export const saveConversationToIndexedDB = async (
       if (!conversationId) {
         throw new Error("대화 ID가 필요합니다.");
       }
-      // console.log("saveConversationToIndexedDB");
-      // console.log(conversation);
+      // // console.log("saveConversationToIndexedDB");
+      // // console.log(conversation);
       // 서버에 업데이트 요청을 보냄 (PUT 메서드 사용)
       const PUT_DATA = {
         id: conversationId,
@@ -70,7 +70,7 @@ export const saveConversationToIndexedDB = async (
         chat_data: conversation,
         expert_index: expertIndex,
       };
-      // console.log("🚀 ~ PUT_DATA:", PUT_DATA);
+      // // console.log("🚀 ~ PUT_DATA:", PUT_DATA);
       await axios.put(`https://wishresearch.kr/panels/update_chat`, PUT_DATA, {
         headers: {
           Authorization: `Bearer ${token}`, // Bearer 토큰을 헤더에 추가
@@ -108,12 +108,12 @@ export const getConversationByIdFromIndexedDB = async (id, isLoggedIn) => {
           },
         }
       );
-      // console.log("response");
+      // // console.log("response");
 
-      // console.log(response);
+      // // console.log(response);
       // setSelectedConversation(response.data); // 선택된 대화 내용 저장
 
-      // console.log(
+      // // console.log(
       //   "🚀 ~ getConversationByIdFromIndexedDB ~ response.data.chat_data:",
       //   response.data.chat_data
       // );
@@ -179,8 +179,8 @@ export const getAllRecordsFromIndexedDB = async () => {
 export const createChatOnServer = async () => {
   try {
     const token = sessionStorage.getItem("accessToken"); // 세션에서 액세스 토큰 가져오기
-    // console.log("token");
-    // console.log(token);
+    // // console.log("token");
+    // // console.log(token);
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
@@ -197,7 +197,7 @@ export const createChatOnServer = async () => {
       }
     );
 
-    // console.log(response.data.inserted_id);
+    // // console.log(response.data.inserted_id);
     return response.data.inserted_id; // 서버로부터 가져온 conversationId 반환
   } catch (error) {
     console.error("Error creating chat on server:", error);
@@ -216,8 +216,8 @@ export const createProjectOnServer = async (isLoggedIn) => {
   if (isLoggedIn) {
     try {
       const token = sessionStorage.getItem("accessToken"); // 세션에서 액세스 토큰 가져오기
-      // console.log("token");
-      // console.log(token);
+      // // console.log("token");
+      // // console.log(token);
       if (!token) {
         throw new Error("액세스 토큰이 존재하지 않습니다.");
       }
@@ -239,7 +239,7 @@ export const createProjectOnServer = async (isLoggedIn) => {
         }
       );
 
-      // console.log(response.data.inserted_id);
+      // // console.log(response.data.inserted_id);
       return response.data.inserted_id; // 서버로부터 가져온 conversationId 반환
     } catch (error) {
       console.error("Error creating chat on server:", error);
@@ -254,13 +254,13 @@ export const updateProjectOnServer = async (
   updateData,
   isLoggedIn
 ) => {
-  // console.log("🚀 ~ projectId:", projectId);
-  // console.log("🚀 ~ updateData:", updateData);
+  // // console.log("🚀 ~ projectId:", projectId);
+  // // console.log("🚀 ~ updateData:", updateData);
   if (isLoggedIn) {
     // 사용자 로그인 시 서버에 저장
     try {
       const token = sessionStorage.getItem("accessToken"); // 액세스 토큰을 세션에서 가져오기
-      // console.log("token", token);
+      // // console.log("token", token);
 
       if (!token) {
         throw new Error("액세스 토큰이 존재하지 않습니다.");
@@ -295,7 +295,7 @@ export const getProjectByIdFromIndexedDB = async (
   projectLoadButtonState
 ) => {
   //두개 매개변수 받음
-  // console.log("🚀 ~ getProjectByIdFromIndexedDB ~ projectId:", projectId);
+  // // console.log("🚀 ~ getProjectByIdFromIndexedDB ~ projectId:", projectId);
 
   if (projectLoadButtonState) {
     // 사용자 로그인 시 서버에서 데이터 가져오기
@@ -344,8 +344,8 @@ export const getProjectListByIdFromIndexedDB = async (isLoggedIn) => {
 export const createProjectReportOnServer = async () => {
   try {
     const token = sessionStorage.getItem("accessToken"); // 세션에서 액세스 토큰 가져오기
-    // console.log("token");
-    // console.log(token);
+    // // console.log("token");
+    // // console.log(token);
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
@@ -362,7 +362,7 @@ export const createProjectReportOnServer = async () => {
       }
     );
 
-    // console.log(response.data.inserted_id);
+    // // console.log(response.data.inserted_id);
     return response.data.inserted_id; // 서버로부터 가져온 conversationId 반환
   } catch (error) {
     console.error("Error creating chat on server:", error);
@@ -376,13 +376,13 @@ export const updateProjectReportOnServer = async (
   updateData,
   isLoggedIn
 ) => {
-  // console.log("🚀 ~ reportId:", reportId);
-  // console.log("🚀 ~ updateData:", updateData);
+  // // console.log("🚀 ~ reportId:", reportId);
+  // // console.log("🚀 ~ updateData:", updateData);
   if (isLoggedIn) {
     // 사용자 로그인 시 서버에 저장
     try {
       const token = sessionStorage.getItem("accessToken"); // 액세스 토큰을 세션에서 가져오기
-      // console.log("token", token);
+      // // console.log("token", token);
 
       if (!token) {
         throw new Error("액세스 토큰이 존재하지 않습니다.");
@@ -420,7 +420,7 @@ export const getProjectReportByIdFromIndexedDB = async (
   reportId,
   reportLoadButtonState
 ) => {
-  // console.log("🚀 ~ reportId:", reportId);
+  // // console.log("🚀 ~ reportId:", reportId);
 
   if (reportLoadButtonState) {
     // 사용자 로그인 시 서버에서 데이터 가져오기
@@ -434,7 +434,7 @@ export const getProjectReportByIdFromIndexedDB = async (
           },
         }
       );
-      // console.log("🚀 ~ response:", response);
+      // // console.log("🚀 ~ response:", response);
 
       return response.data;
     } catch (error) {
@@ -446,12 +446,12 @@ export const getProjectReportByIdFromIndexedDB = async (
 
 // AI Person 요청 업데이트 api
 export const createRequestPersonOnServer = async (updateData, isLoggedIn) => {
-  // console.log("🚀 ~ updateData:", updateData);
+  // // console.log("🚀 ~ updateData:", updateData);
   if (isLoggedIn) {
     // 사용자 로그인 시 서버에 저장
     try {
       const token = sessionStorage.getItem("accessToken"); // 액세스 토큰을 세션에서 가져오기
-      // console.log("token", token);
+      // // console.log("token", token);
 
       if (!token) {
         throw new Error("액세스 토큰이 존재하지 않습니다.");
@@ -473,7 +473,7 @@ export const createRequestPersonOnServer = async (updateData, isLoggedIn) => {
         }
       );
 
-      // console.log(response.data.inserted_id);
+      // // console.log(response.data.inserted_id);
       return response.data.inserted_id; // 서버로부터 가져온 conversationId 반환
     } catch (error) {
       console.error("Error creating chat on server:", error);
@@ -484,12 +484,12 @@ export const createRequestPersonOnServer = async (updateData, isLoggedIn) => {
 
 // AI Persona 요청 업데이트 api
 export const createRequestPersonaOnServer = async (updateData, isLoggedIn) => {
-  // console.log("🚀 ~ updateData:", updateData);
+  // // console.log("🚀 ~ updateData:", updateData);
   if (isLoggedIn) {
     // 사용자 로그인 시 서버에 저장
     try {
       const token = sessionStorage.getItem("accessToken"); // 액세스 토큰을 세션에서 가져오기
-      // console.log("token", token);
+      // // console.log("token", token);
 
       if (!token) {
         throw new Error("액세스 토큰이 존재하지 않습니다.");
@@ -511,7 +511,7 @@ export const createRequestPersonaOnServer = async (updateData, isLoggedIn) => {
         }
       );
 
-      // console.log(response.data.inserted_id);
+      // // console.log(response.data.inserted_id);
       return response.data.inserted_id; // 서버로부터 가져온 conversationId 반환
     } catch (error) {
       console.error("Error creating chat on server:", error);
@@ -528,7 +528,7 @@ export const InterviewXInterviewReportPersonaFilter = async (
   data,
   isLoggedIn
 ) => {
-  console.log("페르소나 필터 시작 - 입력 데이터:", data);
+  // console.log("페르소나 필터 시작 - 입력 데이터:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -569,7 +569,7 @@ export const InterviewXInterviewReportPersonaFilter = async (
 
 //비즈니스 페르소나 요청 api
 export const InterviewXPersonaRequestType = async (data, isLoggedIn) => {
-  console.log("비즈니스 페르소나 요청 시작 - 입력 데이터:", data);
+  // console.log("비즈니스 페르소나 요청 시작 - 입력 데이터:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -613,7 +613,7 @@ export const InterviewXPersonaSingleInterviewGeneratorRequest = async (
   data,
   isLoggedIn
 ) => {
-  console.log("1:1 인터뷰 방법론 별 질문 요청 시작  - 입력 데이터:", data);
+  // console.log("1:1 인터뷰 방법론 별 질문 요청 시작  - 입력 데이터:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -657,10 +657,10 @@ export const InterviewXPersonaSingleInterviewTheoryCustom = async (
   data,
   isLoggedIn
 ) => {
-  console.log(
-    "1:1 인터뷰 커스텀 방법론 생성 문 요청 시작  - 입력 데이터:",
-    data
-  );
+  // console.log(
+  //   "1:1 인터뷰 커스텀 방법론 생성 문 요청 시작  - 입력 데이터:",
+  //   data
+  // );
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -702,10 +702,10 @@ export const InterviewXPersonaSingleInterviewTheoryCustom = async (
 //1:1 인터뷰 커스텀 방법론 질문 생성
 export const InterviewXPersonaSingleInterviewGeneratorRequestTheoryCustom =
   async (data, isLoggedIn) => {
-    console.log(
-      "1:1 인터뷰 커스텀 방법론 질문 생성 요청 시작  - 입력 데이터:",
-      data
-    );
+    // console.log(
+    //   "1:1 인터뷰 커스텀 방법론 질문 생성 요청 시작  - 입력 데이터:",
+    //   data
+    // );
     if (!isLoggedIn) {
       console.error("로그인이 필요합니다.");
       return null;
@@ -774,7 +774,7 @@ export const getTermkeyResult = async (termkey) => {
 
         // state가 0이 아닐 때 (처리가 완료되었을 때) 즉시 결과 반환
         if (response.data.state !== 0) {
-          console.log("처리 완료, 결과 반환");
+          // console.log("처리 완료, 결과 반환");
           return response.data;
         }
 
@@ -798,7 +798,7 @@ export const InterviewXPersonaMultipleInterviewGeneratorRequest = async (
   data,
   isLoggedIn
 ) => {
-  console.log("1:N 인터뷰 방법론 질문 생성 요청 시작  - 입력 데이터:", data);
+  // console.log("1:N 인터뷰 방법론 질문 생성 요청 시작  - 입력 데이터:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -845,7 +845,7 @@ export const InterviewXPersonaMultipleInterviewRequest = async (
   data,
   isLoggedIn
 ) => {
-  console.log("1:N 인터뷰 방법론 질문 생성 요청 시작  - 입력 데이터:", data);
+  // console.log("1:N 인터뷰 방법론 질문 생성 요청 시작  - 입력 데이터:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -893,7 +893,7 @@ export const InterviewXPersonaSingleInterviewRequest = async (
   data,
   isLoggedIn
 ) => {
-  console.log("1:1 인터뷰 방법론 질문 생성 요청 시작  - 입력 데이터:", data);
+  // console.log("1:1 인터뷰 방법론 질문 생성 요청 시작  - 입력 데이터:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -941,7 +941,7 @@ export const InterviewXPersonaSingleInterviewRequestAddQuestion = async (
   data,
   isLoggedIn
 ) => {
-  console.log("1:1 인터뷰 방법론 질문 생성 요청 시작  - 입력 데이터:", data);
+  // console.log("1:1 인터뷰 방법론 질문 생성 요청 시작  - 입력 데이터:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -989,7 +989,7 @@ export const InterviewXPersonaSingleInterviewReportTab1 = async (
   data,
   isLoggedIn
 ) => {
-  console.log("1:1 인터뷰 결과 보고서 탭1 요청 시작  - 입력 데이터:", data);
+  // console.log("1:1 인터뷰 결과 보고서 탭1 요청 시작  - 입력 데이터:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -1034,7 +1034,7 @@ export const InterviewXPersonaSingleInterviewReportTab2 = async (
   data,
   isLoggedIn
 ) => {
-  console.log("1:1 인터뷰 결과 보고서 탭2 요청 시작  - 입력 데이터:", data);
+  // console.log("1:1 인터뷰 결과 보고서 탭2 요청 시작  - 입력 데이터:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -1079,7 +1079,7 @@ export const InterviewXPersonaSingleInterviewReportTab3 = async (
   data,
   isLoggedIn
 ) => {
-  console.log("1:1 인터뷰 결과 보고서 탭3 요청 시작  - 입력 데이터:", data);
+  // console.log("1:1 인터뷰 결과 보고서 탭3 요청 시작  - 입력 데이터:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -1278,7 +1278,7 @@ export const UserCreditUse = async (data, isLoggedIn) => {
 // interviewx 1.1 api 수정 250131
 // 비즈니스 카테고리 분석 250131
 export const BusinessCategoryAnalysis = async (data, isLoggedIn) => {
-  console.log("비즈니스 카테고리 분석  - 입력 데이터:", data);
+  // console.log("비즈니스 카테고리 분석  - 입력 데이터:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -1324,7 +1324,7 @@ export const InterviewXPersonaInterviewModeratorRequest = async (
   data,
   isLoggedIn
 ) => {
-  console.log("페르소나 인터뷰 생성 API  - 입력 데이터:", data);
+  // console.log("페르소나 인터뷰 생성 API  - 입력 데이터:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -1370,7 +1370,7 @@ export const InterviewXPersonaBusinessInterviewModuleRequest = async (
   data,
   isLoggedIn
 ) => {
-  console.log("페르소나 인터뷰 수행(단건) API  - 입력 데이터:", data);
+  // console.log("페르소나 인터뷰 수행(단건) API  - 입력 데이터:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -1413,7 +1413,7 @@ export const InterviewXPersonaBusinessInterviewModuleRequest = async (
 // interviewx 1.1 api 수정 250131
 // 페르소나 요청 API 250131
 export const InterviewXPersonaRequestRequest = async (data, isLoggedIn) => {
-  console.log("페르소나 요청 API  - 입력 데이터:", data);
+  // console.log("페르소나 요청 API  - 입력 데이터:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -1455,7 +1455,7 @@ export const InterviewXPersonaRequestRequest = async (data, isLoggedIn) => {
 // interviewx 1.1 api 수정 250131
 // 인터뷰 결과 보고서 요청 API 250131
 export const InterviewXInterviewReportRequest = async (data, isLoggedIn) => {
-  console.log("인터뷰 결과 보고서 요청 API  - 입력 데이터:", data);
+  // console.log("인터뷰 결과 보고서 요청 API  - 입력 데이터:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -1500,7 +1500,7 @@ export const InterviewXBusinessCategoryModifyRequest = async (
   data,
   isLoggedIn
 ) => {
-  console.log("비즈니스 카테고리 분석 수정 API  - 입력 데이터:", data);
+  // console.log("비즈니스 카테고리 분석 수정 API  - 입력 데이터:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -1545,7 +1545,7 @@ export const InterviewXInterviewReportAdditionalRequest = async (
   data,
   isLoggedIn
 ) => {
-  console.log("인터뷰 결과 추가 보고서 요청 API  - 입력 데이터:", data);
+  // console.log("인터뷰 결과 추가 보고서 요청 API  - 입력 데이터:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -1589,7 +1589,7 @@ export const InterviewXPersonaSingleIndepthInterviewGeneratorRequest = async (
   data,
   isLoggedIn
 ) => {
-  console.log("인뎁스 인터뷰 질문 생성 요청 API  - 입력 데이터:", data);
+  // console.log("인뎁스 인터뷰 질문 생성 요청 API  - 입력 데이터:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -1633,7 +1633,7 @@ export const MarketingCustomerRecommendationRequest = async (
   data,
   isLoggedIn
 ) => {
-  console.log(" 마케팅 고객 추천 요청 API  - 입력 데이터:", data);
+  // console.log(" 마케팅 고객 추천 요청 API  - 입력 데이터:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -1674,7 +1674,7 @@ export const MarketingCustomerRecommendationRequest = async (
 
 //마케팅 연구 보고서 요청 API
 export const MarketingResearchReportRequest = async (data, isLoggedIn) => {
-  console.log(" 마케팅 연구 보고서 요청 API  - 입력 데이터:", data);
+  // console.log(" 마케팅 연구 보고서 요청 API  - 입력 데이터:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
 
@@ -1716,7 +1716,7 @@ export const MarketingResearchReportRequest = async (data, isLoggedIn) => {
 
 //마케팅 비즈니스 모델 보고서 요청 API
 export const MarketingBmReportRequest = async (data, isLoggedIn) => {
-  console.log(" 마케팅 비즈니스 모델 보고서 요청 API  - 입력 데이터:", data);
+  // console.log(" 마케팅 비즈니스 모델 보고서 요청 API  - 입력 데이터:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
 
@@ -1758,7 +1758,7 @@ export const MarketingBmReportRequest = async (data, isLoggedIn) => {
 
 //마케팅 최종 보고서 요청 API
 export const MarketingFinalReportRequest = async (data, isLoggedIn) => {
-  console.log(" 마케팅 최종 보고서 요청 API  - 입력 데이터:", data);
+  // console.log(" 마케팅 최종 보고서 요청 API  - 입력 데이터:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
 
@@ -1800,7 +1800,7 @@ export const MarketingFinalReportRequest = async (data, isLoggedIn) => {
 
 //마케팅 MBTI 결과 요청 API
 export const MarketingMbtiResultRequest = async (data, isLoggedIn) => {
-  console.log(" 마케팅 MBTI 결과 요청 API  - 입력 데이터:", data);
+  // console.log(" 마케팅 MBTI 결과 요청 API  - 입력 데이터:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
 

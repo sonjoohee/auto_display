@@ -229,7 +229,6 @@ const PageMyProject = () => {
             },
           }
         );
-        console.log(userCreditValue.data);
         setUserCreditData(userCreditValue.data);
 
         const userPageCnt = await axios.get(
@@ -398,8 +397,6 @@ const PageMyProject = () => {
           }
         );
 
-        console.log(creditListData.data);
-        console.log("크레딧 리스트 로드 성공");
         setUserCreditList(creditListData.data);
       } catch (error) {
         console.error("크레딧 리스트 로드 실패:", error);
@@ -430,10 +427,6 @@ const PageMyProject = () => {
           }
         );
         setUserProjectList(projectListData.data);
-        console.log(
-          "ferwu8iayfgueriaksfghrjeilwhgiurlewhgujrileahdfiol",
-          projectListData.data
-        );
       } catch (error) {
         console.error("프로젝트 리스트 로드 실패:", error);
       }
@@ -463,7 +456,6 @@ const PageMyProject = () => {
           }
         );
         setUserPersonaList(personaListData.data);
-        console.log(personaListData.data);
       } catch (error) {
         console.error("페르소나  로드 실패:", error);
       }
@@ -480,7 +472,6 @@ const PageMyProject = () => {
       return;
     }
 
-    console.log("Cancel payment with TID:", tid);
     try {
       const personaListData = axios.post(
         `https://wishresearch.kr/payment/refundPay`,
@@ -494,7 +485,6 @@ const PageMyProject = () => {
         }
       );
       setUserPersonaList(personaListData.data);
-      console.log(personaListData.data);
     } catch (error) {
       console.error("페르소나  로드 실패:", error);
     }

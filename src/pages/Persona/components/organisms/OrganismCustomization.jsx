@@ -100,15 +100,9 @@ const OrganismCustomization = ({
           { input_data: custom.purposeText },
           isLoggedIn
         );
-        // response = await axios.post(
-        //   //인터뷰 질문 생성 api
-        //   "https://wishresearch.kr/person/persona_interview",
-        //   data,
-        //   axiosConfig
-        // );
+
         retryCount++;
       }
-      console.log("🚀 ~ handlePurposeGeneration ~ result:", result);
       setApiResponse(result);
       if (result?.response?.custom_theory_data) {
         setCustomTheoryData(result?.response?.custom_theory_data);
@@ -242,10 +236,6 @@ const OrganismCustomization = ({
             ],
           },
           isLoggedIn
-        );
-        console.log(
-          "🚀 ~ handleGenerateQuestions ~ singleInterviewQuestionList:",
-          singleInterviewQuestionList
         );
       }
     } catch (error) {
@@ -402,10 +392,6 @@ const OrganismCustomization = ({
                                   "",
                                 isQuestionVisible: true,
                               };
-                              console.log(
-                                "🚀 ~ generatedCustomInfo:",
-                                generatedCustomInfo
-                              );
 
                               if (purposeItemsSingleAtom.length < 4) {
                                 setPurposeItemsSingleAtom((prev) => {

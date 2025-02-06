@@ -193,10 +193,7 @@ const PagePersona3 = () => {
     //   selected: [],
     //   unselected: filteredProjectList,
     // }));
-    console.log(
-      "🚀 ~ handleSelectPersona ~ selectedInterviewPurposeData:",
-      selectedInterviewPurposeData
-    );
+
     setPersonaStep(3);
     setIsPersonaAccessible(true);
     navigate(`/Persona/3/Select/${projectId}`, { replace: true });
@@ -378,9 +375,7 @@ const PagePersona3 = () => {
 
   useEffect(() => {
     setPurposeItemsSingleAtom(purposeItemsSingle);
-    console.log("🚀 ~ useEffect ~ customTheoryData:", customTheoryData);
     if (customTheoryData?.theory_title) {
-      console.log("🚀 ~ useEffect ~ customTheoryData:", customTheoryData);
       const generatedQuestions = {
         id: 4,
         title: customTheoryData?.theory_title || "",
@@ -470,13 +465,8 @@ const PagePersona3 = () => {
 
   // radio6 선택 핸들러 수정
   const handlePurposeSelect = (purpose) => {
-    console.log("🚀 ~ handlePurposeSelect ~ purpose:", purpose);
     const selectedPurpose = purposeItemsSingleAtom.find(
       (item) => item.id === purpose
-    );
-    console.log(
-      "🚀 ~ handlePurposeSelect ~ purpose:",
-      selectedPurpose?.view_title
     );
 
     setSelectedInterviewPurposeData(selectedPurpose);
@@ -491,7 +481,6 @@ const PagePersona3 = () => {
       };
 
       const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
-      console.log("크레딧 체크 응답:", creditResponse);
 
       if (creditResponse?.state !== "use") {
         setShowRequestPopup(false);
@@ -512,8 +501,6 @@ const PagePersona3 = () => {
         creditUsePayload,
         isLoggedIn
       );
-      console.log("크레딧 사용 응답:", creditUseResponse);
-
       setShowRequestPopup(false);
       setShowCustomButton(false);
       setCustomizations((prev) => [

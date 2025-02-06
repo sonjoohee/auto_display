@@ -64,6 +64,7 @@ const MoleculeGoogleLoginForm = () => {
           },
           { withCredentials: true }
         );
+        console.log("🚀 ~ handleGoogleLogin ~ response:", response);
       }
 
       const userName = user.displayName;
@@ -72,6 +73,7 @@ const MoleculeGoogleLoginForm = () => {
       sessionStorage.setItem("accessToken", serverAccessToken); // 서버 토큰 저장
       sessionStorage.setItem("userName", userName); // 서버 토큰 저장
       sessionStorage.setItem("userEmail", userEmail); // 서버 토큰 저장
+      // sessionStorage.setItem("userMembership", response.data.membership); // 서버 토큰 저장
       sessionStorage.setItem("isSocialLogin", "true"); // 소셜 로그인 여부 저장
 
       // 로그인 성공 시 처리

@@ -72,7 +72,6 @@ const OrganismToastPopupSingleChat = ({
   isComplete,
   isIndepth,
 }) => {
-  console.log("🚀 ~ isIndepth:", isIndepth);
   const [selectedPersonaList, setSelectedPersonaList] = useAtom(
     SELECTED_PERSONA_LIST
   );
@@ -296,7 +295,6 @@ const OrganismToastPopupSingleChat = ({
     const interviewLoading = async () => {
       // 인터뷰 스크립트 보기, 인터뷰 상세보기로 진입 시 isComplete는 True
       if (isComplete) {
-        console.log("인터뷰 불러오기 1");
         const questions = interviewData.map((item) => {
           // 모든 question 키를 찾아서 값이 있는 첫 번째 question을 반환
           const questionKeys = Object.keys(item.question).filter((key) =>
@@ -307,12 +305,8 @@ const OrganismToastPopupSingleChat = ({
             .find((q) => q);
           return { question };
         });
-        console.log("Loaded questions:", questions); // 여기 콘솔로
-
-        console.log("questions:", questions);
 
         setInterviewQuestionListState(questions);
-        console.log("Updated interviewQuestionListState:", questions); // Log the updated state
         // 모든 질문을 Complete 상태로 설정
         const completedStatus = new Array(interviewData.length).fill(
           "Complete"
@@ -320,7 +314,6 @@ const OrganismToastPopupSingleChat = ({
         setInterviewStatus(completedStatus);
 
         const newAnswers = {};
-        console.log("인터뷰 불러오기 2", interviewData);
 
         questions.forEach((_, index) => {
           const answers = interviewData[index].answer;
@@ -339,7 +332,6 @@ const OrganismToastPopupSingleChat = ({
           });
         });
         setAnswers(newAnswers);
-        console.log("🚀 ~ interviewLoading ~ newAnswers:", newAnswers);
 
         // 모든 답변을 보이도록 설정
         const allVisible = {};
@@ -349,7 +341,6 @@ const OrganismToastPopupSingleChat = ({
         setVisibleAnswers(allVisible);
         setIsLoadingPrepare(false);
 
-        console.log("🚀 ~ questions.forEach ~ questions:", questions);
         return; // isComplete가 True일 때 API 호출 없이 종료
       }
 
@@ -374,11 +365,6 @@ const OrganismToastPopupSingleChat = ({
           existingQuestions.commonQuestions &&
           existingQuestions.specialQuestions
         ) {
-          console.log(
-            "🚀 ~ loadInterviewQuestion ~ existingQuestions:",
-            existingQuestions
-          );
-
           // 이미 질문이 생성된 상태면 상태값 설정 후 5초 대기
           const combinedQuestions = [
             ...existingQuestions.commonQuestions,
@@ -874,13 +860,8 @@ const OrganismToastPopupSingleChat = ({
 
         // } // 모든 인터뷰가 완료되었는지 확인
         const allComplete = newStatus.every((status) => status === "Complete");
-        console.log("🚀 ~ processInterview ~ allComplete:", allComplete);
 
         if (allComplete && countAdditionalQuestion === 0) {
-          console.log(
-            "🚀 ~ processInterview ~ countAdditionalQuestion:",
-            countAdditionalQuestion
-          );
           // 데이터가 모두 저장될 때까지 잠시 대기
           await new Promise((resolve) => setTimeout(resolve, 2000));
 
@@ -1216,7 +1197,6 @@ const OrganismToastPopupSingleChat = ({
     specialQuestion,
     specialAnswer
   ) {
-    console.log("🚀 ~ indepthLastInterview:", indepthLastInterview);
     setIsGeneratingIndepthQuestion(true);
 
     // 특화질문 데이터 객체 생성
@@ -1237,7 +1217,6 @@ const OrganismToastPopupSingleChat = ({
         isLoggedIn
       );
 
-    console.log("🚀 ~ responseIndepthInterview:", responseIndepthInterview);
     const indepthInterview = responseIndepthInterview.response;
 
     // 질문 생성 완료되면 질문만 바로 업데이트 (답변은 아직 없음)
@@ -1378,8 +1357,6 @@ const OrganismToastPopupSingleChat = ({
       mount: creditAdditionalQuestion,
     };
     const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
-    console.log("크레딧 체크 응답:", creditResponse);
-
     if (creditResponse?.state !== "use") {
       setShowCreditPopup(true);
       return;
@@ -1395,7 +1372,6 @@ const OrganismToastPopupSingleChat = ({
     };
 
     const creditUseResponse = await UserCreditUse(creditUsePayload, isLoggedIn);
-    console.log("크레딧 사용 응답:", creditUseResponse);
 
     // 크레딧 사용 처리가 완료되면 입력 활성화
     setIsInputEnabled(true);

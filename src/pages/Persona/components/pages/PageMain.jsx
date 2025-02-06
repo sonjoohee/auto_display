@@ -494,7 +494,6 @@ const PageMain = () => {
     const fetchCreditInfo = async () => {
       try {
         const response = await CreditInfo(isLoggedIn);
-        console.log("Fetched credit info:", response);
 
         if (response) {
           setCreditRequestCustomPersona(response.request_custom_persona);
@@ -929,7 +928,10 @@ const PageMain = () => {
           <MainSearchWrap MainSearch>
             <Title>
               Validate Your Idea with AI Persona
-              <p>시장 반응을 예측하는 가장 스마트한 방법, AI 페르소나로 시작하세요</p>
+              <p>
+                시장 반응을 예측하는 가장 스마트한 방법, AI 페르소나로
+                시작하세요
+              </p>
             </Title>
 
             <InputWrap>

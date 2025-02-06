@@ -36,7 +36,6 @@ import {
 import { InterviewXPersonaSingleInterviewRequestAddQuestion } from "../../../../utils/indexedDB";
 
 const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
-  console.log("=================================isComplete", isComplete);
   const [selectedPersonaList, setSelectedPersonaList] = useAtom(
     SELECTED_PERSONA_LIST
   );
@@ -73,11 +72,8 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
   //저장되었던 인터뷰 로드
   useEffect(() => {
     const interviewLoading = async () => {
-      console.log("🚀 ~ interviewLoading ~ interviewData:", interviewData);
       // 인터뷰 스크립트 보기, 인터뷰 상세보기로 진입 시 isComplete는 True
       if (isComplete) {
-        console.log("🚀 ~ questions ~ interviewData:", interviewData);
-        console.log("인터뷰 불러오기 1");
         const questions = interviewData.map((item) => {
           // 모든 question 키를 찾아서 값이 있는 첫 번째 question을 반환
           const questionKeys = Object.keys(item).filter((key) =>
@@ -86,12 +82,8 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
           const question = questionKeys.map((key) => item[key]).find((q) => q);
           return { question };
         });
-        console.log("Loaded questions:", questions); // 여기 콘솔로
-
-        console.log("questions:", questions);
 
         setInterviewQuestionListState(questions);
-        console.log("Updated interviewQuestionListState:", questions); // Log the updated state
         // 모든 질문을 Complete 상태로 설정
         const completedStatus = new Array(interviewData.length).fill(
           "Complete"
@@ -99,7 +91,6 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
         setInterviewStatus(completedStatus);
 
         const newAnswers = {};
-        console.log("인터뷰 불러오기 2", interviewData);
 
         questions.forEach((_, index) => {
           const answers = interviewData[index].answer;
@@ -117,10 +108,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             };
           });
         });
-        console.log("페르소나", personaList);
         setAnswers(newAnswers);
-        console.log("🚀 ~ interviewLoading ~ newAnswers:", newAnswers);
-
         // 모든 답변을 보이도록 설정
         const allVisible = {};
         questions.forEach((_, index) => {
@@ -129,7 +117,6 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
         setVisibleAnswers(allVisible);
         setIsLoadingPrepare(false);
 
-        console.log("🚀 ~ questions.forEach ~ questions:", questions);
         return; // isComplete가 True일 때 API 호출 없이 종료
       }
     };
@@ -154,11 +141,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
 
   // 이미 완료된 인터뷰를 확인할 때 사용
   const renderInterviewItemsComplete = () => {
-    console.log("인터뷰 완료 렌더링");
-    console.log("🚀 ~ interviewData:", interviewData);
-
     return interviewData.map((item, index) => {
-      console.log("현재 인터뷰 항목:", item);
       const status = interviewStatus[index];
 
       // 메인 질문과 답변이 존재하고 상태가 "Complete"인 경우 렌더링
@@ -203,7 +186,6 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             </ChatItem>
 
             {/* indepth 항목이 존재할 경우 추가 UI 렌더링 */}
-            {console.log("🚀 ~ item.indepth:", item.indepth)}
             {item.indepth && (
               <>
                 <ChatItem Moder>

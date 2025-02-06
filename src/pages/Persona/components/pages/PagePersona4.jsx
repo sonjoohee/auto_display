@@ -74,7 +74,6 @@ const PagePersona4 = () => {
   const [selectedPersonaList, setSelectedPersonaList] = useAtom(
     SELECTED_PERSONA_LIST
   );
-  console.log("🚀 ~ PagePersona4 ~ selectedPersonaList:", selectedPersonaList);
   const [categoryColor, setCategoryColor] = useAtom(CATEGORY_COLOR);
   const [projectLoadButtonState, setProjectLoadButtonState] = useAtom(
     PROJECT_LOAD_BUTTON_STATE
@@ -232,22 +231,15 @@ const PagePersona4 = () => {
   useEffect(() => {
     // console.log("🚀 ~ useEffect ~ reportId:", reportId);
     const loadProjectReport = async () => {
-      console.log("🚀 ~ loadProjectReport ~ reportId:", reportId);
       // 1. 로그인 여부 확인
       if (reportId && reportLoadButtonState) {
-        console.log("🚀 ~ loadProjectReport ~ reportId:", reportId);
         // console.log("🚀 ~ loadProjectReport ~ reportId:", reportId);
         // 2. 로그인 상태라면 서버에서 새로운 대화 ID를 생성하거나, 저장된 대화를 불러옴
         const savedProjectInfo = await getProjectByIdFromIndexedDB(
           projectId,
           reportLoadButtonState
         );
-        console.log("🚀 ~ savedProjectInfo:", savedProjectInfo);
         if (savedProjectInfo) {
-          console.log(
-            "🚀 ~ savedProjectInfo.reportList:",
-            savedProjectInfo.reportList
-          ); // reportList 콘솔 출력
           setBusinessAnalysis(savedProjectInfo.businessAnalysis);
           setReportList(savedProjectInfo.reportList);
           setCategoryColor({
