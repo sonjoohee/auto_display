@@ -1057,6 +1057,7 @@ const PagePersona2 = () => {
   };
 
   const loadBusinessPersona = async (personaType) => {
+    console.log("🚀 ~ loadBusinessPersona ~ personaType:", personaType);
     try {
       setIsLoadingBusiness(true);
       setIsLoadingMore(true);
@@ -1908,6 +1909,7 @@ const PagePersona2 = () => {
                                       Fill
                                       style={{ margin: "20px 12px 0" }}
                                       onClick={async () => {
+                                        reloadBusinessPersonaList();
                                         setShowTypeList(false); // 리스트를 바로 숨김
                                         setIsLoadingMore(true); // 로딩 상태 시작
                                         await handleTypeSelection(); // 선택된 유형 처리
