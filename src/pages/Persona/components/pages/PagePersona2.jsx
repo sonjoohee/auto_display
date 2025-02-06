@@ -542,8 +542,6 @@ const PagePersona2 = () => {
             }
             if (savedProjectInfo.customTheoryData) {
               setCustomTheoryData(savedProjectInfo.customTheoryData);
-            } else {
-              setCustomTheoryData([]);
             }
 
             let availablePersonas = [];
