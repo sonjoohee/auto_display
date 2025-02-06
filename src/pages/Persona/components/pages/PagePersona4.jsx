@@ -210,21 +210,24 @@ const PagePersona4 = () => {
     }
   };
   useEffect(() => {
-    // 팝업이 열려있을 때 배경 스크롤 맊음
+    // 팝업이 열려있을 때 배경 스크롤 막음
     if (showToast) {
       document.body.style.overflow = "hidden";
       document.body.style.paddingRight = "15px"; // 스크롤바 자리만큼 패딩 추가
+      document.documentElement.style.overflow = "hidden";
     }
     // 팝업이 닫혔을 때
     else {
       document.body.style.overflow = "auto";
       document.body.style.paddingRight = "0";
+      document.documentElement.style.overflow = "auto";
     }
 
     // 컴포넌트 언마운트 시 원래대로 복구
     return () => {
       document.body.style.overflow = "auto";
       document.body.style.paddingRight = "0";
+      document.documentElement.style.overflow = "auto";
     };
   }, [showToast]);
 

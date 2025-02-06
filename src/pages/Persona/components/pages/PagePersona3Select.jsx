@@ -160,17 +160,21 @@ const PagePersona3Select = () => {
     };
   }, []);
 
-  // showToast 상태가 변경될 때마다 body 스타일 업데이트
+  // 배경 scroll 방지
   useEffect(() => {
     if (showToast) {
+      // body와 html 모두 scroll을 막도록 설정
       document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
+      document.documentElement.style.overflow = "auto";
     }
-
-    // 컴포넌트 언마운트 시 원래대로 복구
+  
+    // 컴포넌트 언마운트 시 원상 복구
     return () => {
       document.body.style.overflow = "auto";
+      document.documentElement.style.overflow = "auto";
     };
   }, [showToast]);
 
