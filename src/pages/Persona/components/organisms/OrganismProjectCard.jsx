@@ -10,6 +10,7 @@ import {
   PROJECT_ID,
   PROJECT_REPORT_ID,
   PERSONA_STEP,
+  BUSINESS_ANALYSIS,
 } from "../../../AtomStates";
 import { useNavigate } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
@@ -24,9 +25,11 @@ import {
   ViewInfo,
   ViewInfoNodata,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
+import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 
 //pagemyproject에서 props받아옴
 const OrganismProjectCard = ({ project, index }) => {
+  const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
   // console.log("🚀 ~ OrganismProjectCard ~ project:", project);
   const [
     reportDescriptionLoadButtonState,
@@ -110,13 +113,16 @@ const OrganismProjectCard = ({ project, index }) => {
   };
 
   //결과 분석 보기
-  const navigateToInterviewReportPage = (report) => {
+  const navigateToInterviewReportPage = async (report) => {
     // console.log("🚀 ~ navigateToInterviewReportPage ~ reportId:", reportId);
     setProjectId(project._id);
     setReportId(report.reportId);
     // setPersonaStep(4);
     setReportLoadButtonState(true);
     setIsPersonaAccessible(true);
+
+    setPersonaStep(4);
+
     if (report.interviewType === "single") {
       navigate(`/Persona/4/Single/${project._id}`);
     } else {
