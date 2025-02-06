@@ -201,21 +201,37 @@ function App() {
           {/* <Route path="/MeetAiExpert" element={<PageMeetAiExpert />} /> */}
           <Route
             path="/ExpertInsight"
-            element={<RequireToken><PageExpertInsight /></RequireToken>}
+            element={
+              <RequireToken>
+                <PageExpertInsight />
+              </RequireToken>
+            }
           ></Route>
           <Route
             path="/MarketingExpertInsight"
-            element={<RequireToken><PageMarketingExpertInsight /></RequireToken>}
+            element={
+              <RequireToken>
+                <PageMarketingExpertInsight />
+              </RequireToken>
+            }
           ></Route>
           {isMarketing && approachPath !== 2 ? (
             <Route
               path="/conversation/:conversationId"
-              element={<RequireToken><PageMarketingExpertInsight /></RequireToken>}
+              element={
+                <RequireToken>
+                  <PageMarketingExpertInsight />
+                </RequireToken>
+              }
             />
           ) : (
             <Route
               path="/conversation/:conversationId"
-              element={<RequireToken><PageExpertInsight /></RequireToken>}
+              element={
+                <RequireToken>
+                  <PageExpertInsight />
+                </RequireToken>
+              }
             />
           )}
 
@@ -229,49 +245,106 @@ function App() {
           ></Route>
           <Route
             path="/MarketingSetting/1"
-            element={<RequireToken><PageMarketingYesItems /></RequireToken>}
+            element={
+              <RequireToken>
+                <PageMarketingYesItems />
+              </RequireToken>
+            }
           ></Route>
           <Route
             path="/MarketingSetting/2"
-            element={<RequireToken><PageMarketingNoItems /></RequireToken>}
+            element={
+              <RequireToken>
+                <PageMarketingNoItems />
+              </RequireToken>
+            }
           ></Route>
           <Route
             path="/MarketingSetting/2/Result"
-            element={<RequireToken><PageMarketingNoItemsResult /></RequireToken>}
+            element={
+              <RequireToken>
+                <PageMarketingNoItemsResult />
+              </RequireToken>
+            }
           ></Route>
 
           {/* 마케팅 쉐어 */}
           <Route
             path="/MarketingSetting/Share/:mbtiType"
-            element={<RequireToken><PageMarketingNoItemsShare /></RequireToken>}
+            element={
+              <RequireToken>
+                <PageMarketingNoItemsShare />
+              </RequireToken>
+            }
           />
 
           {/* 페르소나 */}
-          <Route path="/Persona" element={<RequireToken><PagePersona /></RequireToken>}></Route>
+          <Route
+            path="/Persona"
+            element={
+              <RequireToken>
+                <PagePersona />
+              </RequireToken>
+            }
+          ></Route>
           <Route path="/" element={<PageMain />}></Route>
-          <Route path="/Persona/:projectId" element={<RequireToken><PagePersona /></RequireToken>}></Route>
+          <Route
+            path="/Persona/:projectId"
+            element={
+              <RequireToken>
+                <PagePersona />
+              </RequireToken>
+            }
+          ></Route>
           <Route
             path="/Persona/2/:projectId"
-            element={<RequireToken><PagePersona2 /></RequireToken>}
+            element={
+              <RequireToken>
+                <PagePersona2 />
+              </RequireToken>
+            }
           ></Route>
           <Route
             path="/Persona/3/:projectId"
-            element={<RequireToken><PagePersona3 /></RequireToken>}
+            element={
+              <RequireToken>
+                <PagePersona3 />
+              </RequireToken>
+            }
           ></Route>
           <Route
             path="/Persona/3/Select/:projectId"
-            element={<RequireToken><PagePersona3Select /></RequireToken>}
+            element={
+              <RequireToken>
+                <PagePersona3Select />
+              </RequireToken>
+            }
           ></Route>
           <Route
             path="/Persona/4/:projectId"
-            element={<RequireToken><PagePersona4 /></RequireToken>}
+            element={
+              <RequireToken>
+                <PagePersona4 />
+              </RequireToken>
+            }
           ></Route>
           <Route
             path="/Persona/4/Single/:projectId"
-            element={<RequireToken><PagePersona4Single /></RequireToken>}
+            element={
+              <RequireToken>
+                <PagePersona4Single />
+              </RequireToken>
+            }
           ></Route>
 
-          <Route path="/MyProject" element={<RequireToken><PageMyProject /></RequireToken>} />
+          <Route
+            path="/MyProject"
+            element={
+              <RequireToken>
+                <PageMyProject />
+              </RequireToken>
+            }
+          />
           {/* <Route
             path="/CuratorStoryboard"
             element={<CuratorStoryboard />}
@@ -296,18 +369,46 @@ function App() {
           <Route path="/PersonaLoader" element={<PagePersonaLoader />} />
           <Route path="/Recreate" element={<PageRecreate />} />
           <Route path="/InterviewWay" element={<PageInterviewWay />} /> */}
-          <Route path="/PersonaSelect" element={<RequireToken><PagePersonaSelect /></RequireToken>} />
-          <Route path="/Payment" element={<RequireToken><PagePayment /></RequireToken>} />
+          <Route
+            path="/PersonaSelect"
+            element={
+              <RequireToken>
+                <PagePersonaSelect />
+              </RequireToken>
+            }
+          />
+          <Route
+            path="/Payment"
+            element={
+              <RequireToken>
+                <PagePayment />
+              </RequireToken>
+            }
+          />
 
-          <Route path="/MyProfile" element={<RequireToken><PageMyProfile /></RequireToken>} />
+          <Route
+            path="/MyProfile"
+            element={
+              <RequireToken>
+                <PageMyProfile />
+              </RequireToken>
+            }
+          />
 
-          <Route path="/Terms" element={<RequireToken><PageTerms /></RequireToken>} />
-          <Route path="/Policy" element={<RequireToken><PagePolicy /></RequireToken>} />
+          <Route path="/Terms" element={<PageTerms />} />
+          <Route path="/Policy" element={<PagePolicy />} />
 
           <Route path="/ServiceLanding" element={<PageServiceLanding />} />
           <Route path="/blog" element={<PageBlog />} />
 
-          <Route path="/style_guide" element={<RequireToken><PageStyleGuide /></RequireToken>} />
+          <Route
+            path="/style_guide"
+            element={
+              <RequireToken>
+                <PageStyleGuide />
+              </RequireToken>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </div>
