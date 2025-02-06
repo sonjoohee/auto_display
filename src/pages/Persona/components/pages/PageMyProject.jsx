@@ -737,16 +737,18 @@ const PageMyProject = () => {
                                         <></>
                                       )}
                                       {/* <Badge Keyword>Request</Badge> */}
-                                      <Button
-                                        Small
-                                        Outline
-                                        Fill
-                                        onClick={() =>
-                                          handleDetailClick(persona)
-                                        }
-                                      >
-                                        자세히
-                                      </Button>
+                                      {persona.type === "persona" && (
+                                        <Button
+                                          Small
+                                          Outline
+                                          Fill
+                                          onClick={() =>
+                                            handleDetailClick(persona)
+                                          }
+                                        >
+                                          자세히
+                                        </Button>
+                                      )}
                                     </Report>
                                   </ProjectInfo>
                                 </ProjectItem>
