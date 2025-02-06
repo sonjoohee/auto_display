@@ -471,6 +471,8 @@ export const Badge = styled.div`
       ? palette.green
       : props.Ing
       ? palette.primary
+      : props.Check
+      ? palette.gray700
       : palette.gray500};
   line-height: ${(props) => (props.classBasic || props.New ? "1.5" : "1.2")};
   padding: ${(props) =>
@@ -481,6 +483,8 @@ export const Badge = styled.div`
       : props.New
       ? "2px 10px"
       : props.Ing
+      ? "2px 10px 2px 15px"
+      : props.Check
       ? "2px 10px 2px 15px"
       : "4px 8px"};
   border-radius: ${(props) => (props.classBasic ? "5px" : "50px")};
@@ -501,6 +505,8 @@ export const Badge = styled.div`
       ? `1px solid ${palette.outlineGray}`
       : props.Ing
       ? `1px solid rgba(34, 111, 255, 0.50)`
+      : props.Check
+      ? `1px solid ${palette.gray300}`
       : palette.gray200};
   background: ${(props) =>
     props.Basic
@@ -515,6 +521,8 @@ export const Badge = styled.div`
       ? `rgba(52, 199, 89, 0.06)`
       : props.Ing
       ? `rgba(34, 111, 255, 0.04)`
+      : props.Check
+      ? `rgba(255, 165, 0, 0.04)`
       : palette.white};
 
   ${(props) =>
@@ -526,6 +534,19 @@ export const Badge = styled.div`
         border-radius: 50%;
         background: ${palette.primary};
         box-shadow: -4px 0 ${palette.primary}, 4px 0 ${palette.primary};
+        content: "";
+      }
+    `}
+
+  ${(props) =>
+    props.Check &&
+    css`
+      &:before {
+        width: 2px;
+        height: 2px;
+        border-radius: 50%;
+        background: ${palette.gray700};
+        box-shadow: -4px 0 ${palette.gray700}, 4px 0 ${palette.gray700};
         content: "";
       }
     `}

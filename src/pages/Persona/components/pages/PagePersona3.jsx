@@ -23,7 +23,6 @@ import {
   EVENT_STATE,
   EVENT_TITLE,
   TRIAL_STATE,
-  CREDIT_REQUEST_BUSINESS_PERSONA,
 } from "../../../AtomStates";
 // import { SELECTED_INTERVIEW_TYPE } from "../../../../AtomStates";
 
@@ -87,8 +86,6 @@ const FULL_DEFINITION_TEXT =
   "사용자 트렌드 민감도 분석은 사용자가 시장의 최신 트렌드에 얼마나 빠르고 효과적으로 반응하는지를 측정하는 방법론입니다. 이 분석은 사용자가 새로운 트렌드를 어떻게 인식하고, 그 트렌드에 따라 행동이 어떻게 변화하는지 파악하는 데 중점을 둡니다.";
 
 const PagePersona3 = () => {
-  const [creditRequestBusinessPersona, setCreditRequestBusinessPersona] =
-    useAtom(CREDIT_REQUEST_BUSINESS_PERSONA);
   const [eventState, setEventState] = useAtom(EVENT_STATE);
   const [eventTitle, setEventTitle] = useAtom(EVENT_TITLE);
   const [trialState, setTrialState] = useAtom(TRIAL_STATE);
@@ -477,7 +474,7 @@ const PagePersona3 = () => {
   const handleCloseRequestPopup = async () => {
     try {
       const creditPayload = {
-        mount: creditRequestBusinessPersona,
+        mount: creditCustomTheory,
       };
 
       const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
@@ -491,10 +488,10 @@ const PagePersona3 = () => {
       // 만약 creditResponse.state가 "use"라면 아래 payload 형식으로 API 호출
       const creditUsePayload = {
         title: businessAnalysis.title,
-        service_type: "맞춤 페르소나",
+        service_type: "커스텀 방법론",
         target: "",
         state: "use",
-        mount: creditRequestBusinessPersona,
+        mount: creditCustomTheory,
       };
 
       const creditUseResponse = await UserCreditUse(
