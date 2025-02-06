@@ -119,13 +119,10 @@ const PagePayment = () => {
 
           const result = await response.json();
 
-          console.log("result::", result);
-
           if (result.resultCode === "0000") {
             setShowSuccessPopup(true);
           } else {
             setShowFailPopup(true);
-            console.log(result.resultMsg);
             // 이미 사용된 OrderId입니다 ==> 중복결제 오류 안내이후 확인누를시 새로고침 필요 ( 상단에 결제데이터 남아있음. )
 
             // 결제 실패시 데이터 전달해서 결제 실패 사유를  사용자가 알아야할거같아요.
@@ -161,9 +158,6 @@ const PagePayment = () => {
 
       const createdOrderId = "UC_" + uuidv4();
       const goodsItem = "Credit" + credit;
-
-      console.log(price);
-      console.log(createdOrderId);
 
       window.AUTHNICE.requestPay({
         clientId: "S2_9fea099793f145afa7800b21958ab376",

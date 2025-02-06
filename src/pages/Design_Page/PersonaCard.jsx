@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import styled, { css } from 'styled-components';
-import { palette } from '../../assets/styles/Palette';
-import images from '../../assets/styles/Images';
-import { Button } from '../../assets/styles/ButtonStyle'
-import PopupWrap from '../../assets/styles/Popup';
-import { CustomTextarea } from '../../assets/styles/InputStyle';
+import React, { useState, useEffect } from "react";
+import styled, { css } from "styled-components";
+import { palette } from "../../assets/styles/Palette";
+import images from "../../assets/styles/Images";
+import { Button } from "../../assets/styles/ButtonStyle";
+import PopupWrap from "../../assets/styles/Popup";
+import { CustomTextarea } from "../../assets/styles/InputStyle";
 
-const PersonaCard = ({ 
-  title, 
-  keywords = [], 
-  description, 
-  expandedContent, 
-  isBasic = false, 
-  isCustom = false, 
+const PersonaCard = ({
+  title,
+  keywords = [],
+  description,
+  expandedContent,
+  isBasic = false,
+  isCustom = false,
   showDescription = false,
   hideCheckCircle = false,
   TitleFlex = false,
   onCheckChange,
   onInputChange,
-  onShowPopup
+  onShowPopup,
 }) => {
   const [state, setState] = useState({
     isExpanded: false,
@@ -26,56 +26,56 @@ const PersonaCard = ({
     showPopup: false,
     showRequestBadge: false,
     showCustomModal: false,
-    customTextarea: '',
+    customTextarea: "",
     showQuestions: false,
     showCustomPopup: false,
     isAccordionOpen: false,
     formState: {
-      purpose: '',
-      personaCount: '',
-      gender: '',
-      age: '',
-      additionalInfo: ''
+      purpose: "",
+      personaCount: "",
+      gender: "",
+      age: "",
+      additionalInfo: "",
     },
     showCompletionPopup: false,
   });
 
   useEffect(() => {
-    console.log('State updated:', state);
+    // console.log('State updated:', state);
   }, [state]);
 
   useEffect(() => {
     if (state.showPopup) {
-      console.log('Popup should be visible now');
-      console.log('Current state:', state);
+      // console.log('Popup should be visible now');
+      // console.log('Current state:', state);
     }
   }, [state.showPopup]);
 
   const handleToggle = (key) => {
-    setState(prevState => ({ ...prevState, [key]: !prevState[key] }));
+    setState((prevState) => ({ ...prevState, [key]: !prevState[key] }));
   };
 
   const handleTextareaChange = (value) => {
-    setState(prevState => ({
+    setState((prevState) => ({
       ...prevState,
       customTextarea: value,
     }));
   };
 
   const handleRequestClick = () => {
-    console.log('Request button clicked - before setState');
-    setState(prev => {
-      console.log('Inside setState callback');
+    // console.log('Request button clicked - before setState');
+    setState((prev) => {
+      // console.log('Inside setState callback');
       const newState = {
         ...prev,
         showPopup: true,
         showCustomModal: false,
-        showRequestBadge: false
+        showRequestBadge: false,
       };
-      console.log('New state:', newState);
+      // console.log('New state:', newState);
       return newState;
     });
-    console.log('After setState call');
+    // console.log('After setState call');
   };
 
   const handleCheckCircleClick = () => {
@@ -85,7 +85,7 @@ const PersonaCard = ({
       }
     } else {
       const newCheckedState = !state.isChecked;
-      setState(prevState => ({ ...prevState, isChecked: newCheckedState }));
+      setState((prevState) => ({ ...prevState, isChecked: newCheckedState }));
       if (onCheckChange) {
         onCheckChange(newCheckedState, false);
       }
@@ -94,68 +94,68 @@ const PersonaCard = ({
 
   const handleConfirm = () => {
     if (isFormValid()) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         showPopup: false,
         showRequestBadge: true,
-        showCompletionPopup: true
+        showCompletionPopup: true,
       }));
-      console.log("확인 버튼 클릭");
+      // console.log("확인 버튼 클릭");
     } else {
       alert("필수 항목을 입력해 주세요.");
     }
   };
 
   const handleCancel = () => {
-    setState(prevState => ({ ...prevState, showPopup: false }));
-    console.log("취소 버튼 클릭");
+    setState((prevState) => ({ ...prevState, showPopup: false }));
+    // console.log("취소 버튼 클릭");
   };
 
   const handleClose = () => {
-    setState(prevState => ({ 
-      ...prevState, 
-      showCustomModal: false 
+    setState((prevState) => ({
+      ...prevState,
+      showCustomModal: false,
     }));
     handleCancel();
     if (!state.isTextareaValid || !state.isRadioSelected) {
-      setState(prevState => ({ 
-        ...prevState, 
-        showRequestBadge: false 
+      setState((prevState) => ({
+        ...prevState,
+        showRequestBadge: false,
       }));
     }
   };
 
   const handlePopupClose = () => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       showPopup: false,
-      showCustomModal: false
+      showCustomModal: false,
     }));
   };
 
   const handleClick = () => {
     if (isCustom) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
-        showCustomPopup: true
+        showCustomPopup: true,
       }));
     }
   };
 
   const handleInputChange = (field, value) => {
-    console.log('Input changed:', field, value);
-    setState(prev => ({
+    // console.log('Input changed:', field, value);
+    setState((prev) => ({
       ...prev,
       formState: {
         ...prev.formState,
-        [field]: value
-      }
+        [field]: value,
+      },
     }));
   };
 
   const isFormValid = () => {
     const { purpose, personaCount } = state.formState;
-    return purpose.trim() !== '' && personaCount !== '';
+    return purpose.trim() !== "" && personaCount !== "";
   };
 
   return (
@@ -163,7 +163,7 @@ const PersonaCard = ({
       <CardContainer TitleFlex={TitleFlex} $isChecked={state.isChecked}>
         <MainContent>
           {!hideCheckCircle && (
-            <CheckCircle 
+            <CheckCircle
               $isChecked={state.isChecked}
               onClick={handleCheckCircleClick}
             />
@@ -171,11 +171,9 @@ const PersonaCard = ({
 
           <ContentWrapper>
             <TitleSection>
-              <Title>
-                {title}
-              </Title>
+              <Title>{title}</Title>
             </TitleSection>
-            
+
             {keywords.length > 0 && (
               <KeywordGroup>
                 {keywords.map((keyword, index) => (
@@ -184,11 +182,7 @@ const PersonaCard = ({
               </KeywordGroup>
             )}
 
-            {description && (
-              <Description>
-                {description}
-              </Description>
-            )}
+            {description && <Description>{description}</Description>}
           </ContentWrapper>
 
           {isBasic ? (
@@ -203,23 +197,27 @@ const PersonaCard = ({
                 커스터마이즈
               </Badge>
             ) : (
-              <Button 
-                Medium 
-                Primary 
-                onClick={handleRequestClick}
-              >
+              <Button Medium Primary onClick={handleRequestClick}>
                 모집 요청하기
               </Button>
             )
           ) : (
-            <ToggleButton className="toggleButton" $isExpanded={state.isExpanded} onClick={() => handleToggle('isExpanded')} />
+            <ToggleButton
+              className="toggleButton"
+              $isExpanded={state.isExpanded}
+              onClick={() => handleToggle("isExpanded")}
+            />
           )}
         </MainContent>
 
         {state.isExpanded && (
           <DescriptionSection $isExpanded={state.isExpanded}>
             {!state.showQuestions ? (
-              <span onClick={() => setState(prev => ({ ...prev, showQuestions: true }))}>
+              <span
+                onClick={() =>
+                  setState((prev) => ({ ...prev, showQuestions: true }))
+                }
+              >
                 <img src={images.FileSearch} alt="문항보기" />
                 문항보기
               </span>
@@ -244,8 +242,8 @@ const PersonaCard = ({
       </CardContainer>
 
       {state.showPopup && (
-        <PopupWrap 
-          title="📝 맞춤형 페르소나 모집 요청하기" 
+        <PopupWrap
+          title="📝 맞춤형 페르소나 모집 요청하기"
           buttonType="Fill"
           confirmText="맞춤 페르소나 모집하기"
           isModal={true}
@@ -254,7 +252,6 @@ const PersonaCard = ({
           onConfirm={handleConfirm}
           isFormValid={isFormValid()}
           body={
-
             <>
               <div className="bgBox">
                 <strong>도심에 거주하며 전문직에 종사하는 바쁜 생활인</strong>
@@ -266,61 +263,85 @@ const PersonaCard = ({
               </div>
 
               <dl>
-                <dt className="point">맞춤형 페르소나는 어떤 용도로 활용하실 계획이신가요?</dt>
+                <dt className="point">
+                  맞춤형 페르소나는 어떤 용도로 활용하실 계획이신가요?
+                </dt>
                 <dd>
-                  <CustomTextarea 
+                  <CustomTextarea
                     rows={3}
                     placeholder="생성하기 위한 목적을 적어 주세요."
                     value={state.formState.purpose}
-                    onChange={(e) => handleInputChange('purpose', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("purpose", e.target.value)
+                    }
                   />
                 </dd>
               </dl>
 
               <dl>
-                <dt className="point">몇명의 페르소나를 모집하시고 싶으신가요?</dt>
+                <dt className="point">
+                  몇명의 페르소나를 모집하시고 싶으신가요?
+                </dt>
                 <dd>
-                  <input 
-                    type="radio" 
-                    id="persona1" 
-                    name="persona" 
+                  <input
+                    type="radio"
+                    id="persona1"
+                    name="persona"
                     value="5"
-                    onChange={(e) => handleInputChange('personaCount', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("personaCount", e.target.value)
+                    }
                   />
-                  <label htmlFor="persona1" className="persona">5명</label>
-                  <input 
-                    type="radio" 
-                    id="persona2" 
-                    name="persona" 
+                  <label htmlFor="persona1" className="persona">
+                    5명
+                  </label>
+                  <input
+                    type="radio"
+                    id="persona2"
+                    name="persona"
                     value="10"
-                    onChange={(e) => handleInputChange('personaCount', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("personaCount", e.target.value)
+                    }
                   />
-                  <label htmlFor="persona2" className="persona">10명</label>
-                  <input 
-                    type="radio" 
-                    id="persona3" 
-                    name="persona" 
+                  <label htmlFor="persona2" className="persona">
+                    10명
+                  </label>
+                  <input
+                    type="radio"
+                    id="persona3"
+                    name="persona"
                     value="15"
-                    onChange={(e) => handleInputChange('personaCount', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("personaCount", e.target.value)
+                    }
                   />
-                  <label htmlFor="persona3" className="persona">15명</label>
-                  <input 
-                    type="radio" 
-                    id="persona4" 
-                    name="persona" 
+                  <label htmlFor="persona3" className="persona">
+                    15명
+                  </label>
+                  <input
+                    type="radio"
+                    id="persona4"
+                    name="persona"
                     value="20"
-                    onChange={(e) => handleInputChange('personaCount', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("personaCount", e.target.value)
+                    }
                   />
-                  <label htmlFor="persona4" className="persona">20명</label>
+                  <label htmlFor="persona4" className="persona">
+                    20명
+                  </label>
                 </dd>
               </dl>
 
               <AccordionSection>
-                <CustomAccordionHeader 
-                  onClick={() => setState(prev => ({
-                    ...prev,
-                    isAccordionOpen: !prev.isAccordionOpen
-                  }))}
+                <CustomAccordionHeader
+                  onClick={() =>
+                    setState((prev) => ({
+                      ...prev,
+                      isAccordionOpen: !prev.isAccordionOpen,
+                    }))
+                  }
                 >
                   🔍 추가정보를 입력하여, 더 정확한 타겟 페르소나를 찾으세요
                   <CustomAccordionIcon isOpen={state.isAccordionOpen} />
@@ -330,23 +351,27 @@ const PersonaCard = ({
                     <dl>
                       <dt>성별</dt>
                       <dd>
-                        <input 
-                          type="radio" 
-                          id="gender1" 
-                          name="gender" 
+                        <input
+                          type="radio"
+                          id="gender1"
+                          name="gender"
                           value="male"
-                          onChange={(e) => handleInputChange('gender', e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange("gender", e.target.value)
+                          }
                         />
                         <label htmlFor="gender1" className="gender men">
                           <img src={images.GenderMen} alt="GenderMen" />
                           남자
                         </label>
-                        <input 
-                          type="radio" 
-                          id="gender2" 
-                          name="gender" 
+                        <input
+                          type="radio"
+                          id="gender2"
+                          name="gender"
                           value="female"
-                          onChange={(e) => handleInputChange('gender', e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange("gender", e.target.value)
+                          }
                         />
                         <label htmlFor="gender2" className="gender women">
                           <img src={images.GenderWomen} alt="GenderWomen" />
@@ -358,65 +383,96 @@ const PersonaCard = ({
                     <dl>
                       <dt>
                         나이
-                        <p>* 선택하지 않는 경우, 연령 무관으로 페르소나를 생성합니다.</p>
+                        <p>
+                          * 선택하지 않는 경우, 연령 무관으로 페르소나를
+                          생성합니다.
+                        </p>
                       </dt>
                       <dd>
-                        <input 
-                          type="checkbox" 
-                          id="age1" 
-                          name="age" 
+                        <input
+                          type="checkbox"
+                          id="age1"
+                          name="age"
                           value="10"
-                          onChange={(e) => handleInputChange('age', e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange("age", e.target.value)
+                          }
                         />
-                        <label htmlFor="age1" className="age">10대</label>
-                        <input 
-                          type="checkbox" 
-                          id="age2" 
-                          name="age" 
+                        <label htmlFor="age1" className="age">
+                          10대
+                        </label>
+                        <input
+                          type="checkbox"
+                          id="age2"
+                          name="age"
                           value="20"
-                          onChange={(e) => handleInputChange('age', e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange("age", e.target.value)
+                          }
                         />
-                        <label htmlFor="age2" className="age">20대</label>
-                        <input 
-                          type="checkbox" 
-                          id="age3" 
-                          name="age" 
+                        <label htmlFor="age2" className="age">
+                          20대
+                        </label>
+                        <input
+                          type="checkbox"
+                          id="age3"
+                          name="age"
                           value="30"
-                          onChange={(e) => handleInputChange('age', e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange("age", e.target.value)
+                          }
                         />
-                        <label htmlFor="age3" className="age">30대</label>
-                        <input 
-                          type="checkbox" 
-                          id="age4" 
-                          name="age" 
+                        <label htmlFor="age3" className="age">
+                          30대
+                        </label>
+                        <input
+                          type="checkbox"
+                          id="age4"
+                          name="age"
                           value="40"
-                          onChange={(e) => handleInputChange('age', e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange("age", e.target.value)
+                          }
                         />
-                        <label htmlFor="age4" className="age">40대</label>
-                        <input 
-                          type="checkbox" 
-                          id="age5" 
-                          name="age" 
+                        <label htmlFor="age4" className="age">
+                          40대
+                        </label>
+                        <input
+                          type="checkbox"
+                          id="age5"
+                          name="age"
                           value="50"
-                          onChange={(e) => handleInputChange('age', e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange("age", e.target.value)
+                          }
                         />
-                        <label htmlFor="age5" className="age">50대</label>
-                        <input 
-                          type="checkbox" 
-                          id="age6" 
-                          name="age" 
+                        <label htmlFor="age5" className="age">
+                          50대
+                        </label>
+                        <input
+                          type="checkbox"
+                          id="age6"
+                          name="age"
                           value="60"
-                          onChange={(e) => handleInputChange('age', e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange("age", e.target.value)
+                          }
                         />
-                        <label htmlFor="age6" className="age">60대</label>
-                        <input 
-                          type="checkbox" 
-                          id="age7" 
-                          name="age" 
+                        <label htmlFor="age6" className="age">
+                          60대
+                        </label>
+                        <input
+                          type="checkbox"
+                          id="age7"
+                          name="age"
                           value="70"
-                          onChange={(e) => handleInputChange('age', e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange("age", e.target.value)
+                          }
                         />
-                        <label htmlFor="age7" className="age">70대 이상</label>
+                        <label htmlFor="age7" className="age">
+                          70대 이상
+                        </label>
                         <label htmlFor="age8" className="age none" />
                       </dd>
                     </dl>
@@ -424,11 +480,13 @@ const PersonaCard = ({
                     <dl>
                       <dt>더 상세하게 필요한 정보를 입력해주세요</dt>
                       <dd>
-                        <CustomTextarea 
+                        <CustomTextarea
                           rows={3}
                           placeholder="모집하고 싶은 페르소나의 성향, 목표, 행동 패턴을 구체적으로 입력해주세요"
                           value={state.formState.additionalInfo}
-                          onChange={(e) => handleInputChange('additionalInfo', e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange("additionalInfo", e.target.value)
+                          }
                         />
                       </dd>
                     </dl>
@@ -437,11 +495,11 @@ const PersonaCard = ({
               </AccordionSection>
             </>
           }
-         />
+        />
       )}
 
       {state.showCompletionPopup && (
-        <PopupWrap 
+        <PopupWrap
           Check
           title={
             <>
@@ -453,11 +511,11 @@ const PersonaCard = ({
           buttonType="Outline"
           closeText="확인"
           isModal={false}
-          onCancel={() => setState(prev => ({ ...prev, showCompletionPopup: false }))}
+          onCancel={() =>
+            setState((prev) => ({ ...prev, showCompletionPopup: false }))
+          }
         />
       )}
-
-
     </>
   );
 };
@@ -473,16 +531,20 @@ const CardContainer = styled.div`
   width: 100%;
   padding: 24px 20px;
   border-radius: 10px;
-  border: 1px solid ${props => props.$isChecked ? palette.primary : palette.outlineGray};
-  background: ${props => props.isActive ? 'rgba(34, 111, 255, 0.10)' : palette.white};
-  cursor: ${props => props.isClickable ? 'pointer' : 'default'};
+  border: 1px solid
+    ${(props) => (props.$isChecked ? palette.primary : palette.outlineGray)};
+  background: ${(props) =>
+    props.isActive ? "rgba(34, 111, 255, 0.10)" : palette.white};
+  cursor: ${(props) => (props.isClickable ? "pointer" : "default")};
   transition: all 0.2s ease-in-out;
 
-  ${props => props.TitleFlex && css`
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: space-between;
-  `}
+  ${(props) =>
+    props.TitleFlex &&
+    css`
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
+    `}
 `;
 
 const MainContent = styled.div`
@@ -504,7 +566,7 @@ const MainContent = styled.div`
       border-right: 2px solid ${palette.primary};
       border-top: 2px solid ${palette.primary};
       transform: rotate(45deg);
-      content: '';
+      content: "";
     }
   }
 `;
@@ -523,10 +585,10 @@ const CheckCircle = styled.div`
   height: 24px;
   border-radius: 50%;
   cursor: pointer;
-  background-image: ${props => props.$isChecked 
-    ? `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='12' fill='%23226FFF'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
-    : `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='11' stroke='%23E0E4EB' stroke-width='2'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='%23E0E4EB' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
-  };
+  background-image: ${(props) =>
+    props.$isChecked
+      ? `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='12' fill='%23226FFF'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
+      : `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='11' stroke='%23E0E4EB' stroke-width='2'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='%23E0E4EB' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`};
   transition: background-image 0.3s ease-in-out;
   cursor: pointer;
 `;
@@ -551,7 +613,7 @@ const Badge = styled.div`
   gap: 4px;
   font-size: 0.75rem;
   line-height: 18px;
-  color: ${props => {
+  color: ${(props) => {
     if (props.Basic) return `#34C759`;
     else if (props.Custom) return palette.primary;
     else return palette.gray500;
@@ -559,7 +621,7 @@ const Badge = styled.div`
   padding: 4px 8px;
   border-radius: 50px;
   border: 0;
-  background:${props => {
+  background: ${(props) => {
     if (props.Basic) return `rgba(52, 199, 89, 0.10)`;
     else if (props.Custom) return `rgba(34, 111, 255, 0.10)`;
     else return palette.gray50;
@@ -615,14 +677,15 @@ const ToggleButton = styled.button`
     top: 50%;
     left: 50%;
     width: 10px;
-    height:10px;
-    transform: ${props => props.$isExpanded 
-      ? 'translate(-50%, -50%) rotate(45deg)' 
-      : 'translate(-50%, -50%) rotate(-135deg)'};
+    height: 10px;
+    transform: ${(props) =>
+      props.$isExpanded
+        ? "translate(-50%, -50%) rotate(45deg)"
+        : "translate(-50%, -50%) rotate(-135deg)"};
     margin-top: 2px;
     border-top: 1px solid ${palette.gray500};
     border-left: 1px solid ${palette.gray500};
-    transition: all .5s;
+    transition: all 0.5s;
   }
 `;
 
@@ -633,9 +696,8 @@ const DescriptionSection = styled.div`
   color: ${palette.gray800};
   text-align: left;
   border-radius: 10px;
-  border: ${props => props.$isTabContent 
-    ? `1px solid ${palette.outlineGray}`
-    : 'none' };
+  border: ${(props) =>
+    props.$isTabContent ? `1px solid ${palette.outlineGray}` : "none"};
 
   > span {
     display: flex;
@@ -646,9 +708,8 @@ const DescriptionSection = styled.div`
     color: ${palette.gray800};
     padding: 20px;
     border-radius: 10px;
-    background: ${props => props.$isTabContent 
-      ? 'transparent'
-      : palette.chatGray};
+    background: ${(props) =>
+      props.$isTabContent ? "transparent" : palette.chatGray};
     cursor: pointer;
   }
 `;
@@ -687,7 +748,7 @@ const ListUL = styled.div`
     height: 20px;
     color: ${palette.primary};
     border-radius: 2px;
-    border: 1px solid rgba(34, 111, 255, 0.50);
+    border: 1px solid rgba(34, 111, 255, 0.5);
     background: rgba(34, 111, 255, 0.04);
   }
 `;
@@ -714,7 +775,7 @@ const CustomAccordionIcon = styled.span`
   height: 10px;
   border-right: 2px solid ${palette.gray800};
   border-bottom: 2px solid ${palette.gray800};
-  transform: ${props => props.isOpen ? 'rotate(-135deg)' : 'rotate(45deg)'};
+  transform: ${(props) => (props.isOpen ? "rotate(-135deg)" : "rotate(45deg)")};
   transition: transform 0.3s ease;
 `;
 
@@ -770,7 +831,8 @@ const CustomAccordionContent = styled.div`
     }
   }
 
-  input[type="radio"], input[type="checkbox"] {
+  input[type="radio"],
+  input[type="checkbox"] {
     display: none;
 
     &:checked + label {

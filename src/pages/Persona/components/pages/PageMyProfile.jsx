@@ -67,7 +67,6 @@ const PageMyProfile = () => {
 
   const [userCreditData, setUserCreditData] = useAtom(USER_CREDIT_DATA);
   const [userMembership, setUserMembership] = useAtom(USER_MEMBERSHIP);
-  console.log("🚀 ~ PageMyProfile ~ userMembership:", userMembership);
   const [userName, setUserName] = useAtom(USER_NAME); // 아톰에서 유저 이름 불러오기
   const [userEmail, setUserEmail] = useAtom(USER_EMAIL); // 아톰에서 유저 이메일 불러오기
   const handleAccountClick = () => {
@@ -140,7 +139,6 @@ const PageMyProfile = () => {
         purpose: contactForm.purpose,
         content: contactForm.content,
       };
-      console.log("🚀 ~ handleContactSubmit ~ requestData:", requestData);
 
       try {
         const response = await axios.post(
@@ -151,7 +149,6 @@ const PageMyProfile = () => {
           },
           axiosConfig
         );
-        console.log("문의하기 제출 성공:", response.data);
         closeContactPopup();
       } catch (error) {
         console.error("문의하기 제출 실패:", error);
@@ -170,7 +167,6 @@ const PageMyProfile = () => {
           },
           axiosConfig
         );
-        console.log("회원탈퇴 제출:", response.data);
         closeMemberDeletePopup();
 
         sessionStorage.removeItem("accessToken"); // 세션 스토리지에서 토큰 삭제

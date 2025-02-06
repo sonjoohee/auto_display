@@ -1310,10 +1310,6 @@ const PagePersona2 = () => {
       const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
 
       if (creditResponse?.state !== "use") {
-        console.log(
-          "🚀 ~ handleCustomizePopupConfirm ~ creditResponse:",
-          creditResponse
-        );
         setShowCreditPopup(true);
         return;
       }
@@ -1333,10 +1329,6 @@ const PagePersona2 = () => {
       const accessToken = sessionStorage.getItem("accessToken");
       if (accessToken) {
         const userCreditValue = await UserCreditInfo(isLoggedIn);
-        console.log(
-          "🚀 ~ handleCustomizePopupConfirm ~ userCreditValue:",
-          userCreditValue
-        );
 
         // 전역 상태의 크레딧 정보 업데이트
         setUserCredits(userCreditValue);
@@ -1346,8 +1338,6 @@ const PagePersona2 = () => {
       submitCustomPersonaRequest();
       setShowCustomizePopup(false);
     } catch (error) {
-      console.log("🚀 ~ handleCustomizePopupConfirm ~ error:", error);
-
       setShowCreditPopup(true);
     }
   };

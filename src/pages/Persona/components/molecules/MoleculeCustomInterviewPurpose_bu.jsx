@@ -57,7 +57,7 @@ const MoleculeCustomInterviewPurpose = ({
   const [isQuestionOpen, setIsQuestionOpen] = useState(false);
   const [purposeItemsSingle, setPurposeItemsSingle] =
     useAtom(PURPOSE_ITEMS_SINGLE);
-  console.log("purpose", purpose);
+  // console.log("purpose", purpose);
 
   if (!purpose) {
     return null;
@@ -70,7 +70,7 @@ const MoleculeCustomInterviewPurpose = ({
     );
 
     if (existingQuestions) {
-      console.log("이미 존재하는 질문입니다:", existingQuestions);
+      // console.log("이미 존재하는 질문입니다:", existingQuestions);
       return;
     }
 
@@ -86,7 +86,7 @@ const MoleculeCustomInterviewPurpose = ({
         custom_theory_data: purpose,
       };
 
-      console.log("API 요청 데이터:", data);
+      // console.log("API 요청 데이터:", data);
 
       let response =
         await InterviewXPersonaSingleInterviewGeneratorRequestTheoryCustom(
@@ -94,7 +94,7 @@ const MoleculeCustomInterviewPurpose = ({
           isLoggedIn
         );
 
-      console.log("API 응답:", response);
+      // console.log("API 응답:", response);
 
       if (response.response) {
         const commonQuestions = response.response
@@ -111,11 +111,8 @@ const MoleculeCustomInterviewPurpose = ({
           specialQuestions,
         };
 
-        console.log("새로운 질문 데이터:", newQuestionData);
-
         setSingleInterviewQuestionList((prev) => {
           const newState = [...prev, newQuestionData];
-          console.log("업데이트된 상태:", newState);
           return newState;
         });
 
@@ -167,7 +164,6 @@ const MoleculeCustomInterviewPurpose = ({
     // purposeItemsSingle에 새로운 항목 추가
     setPurposeItemsSingle((prev) => {
       const updatedList = [...prev, newPurposeItem];
-      console.log("업데이트된 purposeItemsSingle:", updatedList);
       return updatedList;
     });
   };
@@ -250,7 +246,6 @@ const MoleculeCustomInterviewPurpose = ({
                         const questions = singleInterviewQuestionList.find(
                           (item) => item.theory_name === purpose?.theory_title
                         );
-                        console.log("현재 표시할 질문:", questions);
                         return (
                           questions?.commonQuestions?.map((question, index) => (
                             <BgBoxItem key={index}>

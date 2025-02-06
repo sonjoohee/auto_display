@@ -201,8 +201,6 @@ const MoleculePersonaCard = ({
           },
         }
       );
-
-      console.log(response.data);
     } catch (error) {
       console.error(error);
       setShowCreditPopup(true);
@@ -227,8 +225,6 @@ const MoleculePersonaCard = ({
           },
         }
       );
-
-      console.log("크레딧 소모 성공:", response.data);
     } catch (error) {
       console.error("크레딧 소모 중 오류 발생:", error);
       return;

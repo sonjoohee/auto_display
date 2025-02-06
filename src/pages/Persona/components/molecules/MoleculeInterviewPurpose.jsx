@@ -49,8 +49,6 @@ const MoleculeInterviewPurpose = ({
   regenerateCount,
   setRegenerateCount,
 }) => {
-  console.log("🚀 ~ purpose:", purpose);
-
   const [businessAnalysis] = useAtom(BUSINESS_ANALYSIS);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectId] = useAtom(PROJECT_ID);
@@ -73,12 +71,6 @@ const MoleculeInterviewPurpose = ({
     useAtom(SELECTED_INTERVIEW_PURPOSE_DATA);
 
   const loadInterviewQuestion = async (title) => {
-    console.log("loadInterviewQuestion 시작", {
-      purposeId: purpose.id,
-      title,
-      isCustom: purpose.id === 4,
-    });
-
     setShowRegenerateButton(false);
 
     // 현재 카드의 로딩 상태 설정
@@ -88,14 +80,12 @@ const MoleculeInterviewPurpose = ({
           ...prev,
           [selectedInterviewPurpose]: true,
         };
-        console.log("loadingStates 설정:", newState);
         return newState;
       } else {
         const newState = {
           ...prev,
           [purpose.id]: true,
         };
-        console.log("loadingStates 설정:", newState);
         return newState;
       }
       // console.log("loadingStates 설정:", newState);
@@ -109,7 +99,6 @@ const MoleculeInterviewPurpose = ({
     );
 
     if (existingQuestions) {
-      console.log("이미 존재하는 질문입니다:", existingQuestions);
       setCheckGenerateQuestion("");
       setLoadingStates((prev) => ({
         ...prev,
@@ -123,7 +112,6 @@ const MoleculeInterviewPurpose = ({
 
       let response = {};
       if (purpose.id === 4) {
-        console.log("🚀 ~ loadInterviewQuestion ~ purpose.id === 4:", purpose);
         // const generatedQuestions = purposeItemsSingleAtom.find(
         //   (item) => item.id === 4
         // );
@@ -145,10 +133,8 @@ const MoleculeInterviewPurpose = ({
             isLoggedIn
           );
 
-        console.log("🚀 ~ loadInterviewQuestion ~ response:", response);
         // }
       } else if (purpose.id !== 4) {
-        console.log("🚀 ~ loadInterviewQuestion ~ purpose.id !== 4:", purpose);
         let data = {
           business_idea: businessAnalysis.input,
           business_analysis_data: {
@@ -163,7 +149,6 @@ const MoleculeInterviewPurpose = ({
           data,
           isLoggedIn
         );
-        console.log("API 응답:", response);
       }
 
       if (response.response) {
@@ -184,11 +169,8 @@ const MoleculeInterviewPurpose = ({
           specialQuestions,
         };
 
-        console.log("새로운 질문 데이터:", newQuestionData);
-
         setSingleInterviewQuestionList((prev) => {
           const newState = [...prev, newQuestionData];
-          console.log("업데이트된 상태:", newState);
           return newState;
         });
 
@@ -235,28 +217,15 @@ const MoleculeInterviewPurpose = ({
   };
 
   const handleQuestionClick = () => {
-    console.log("handleQuestionClick 시작", {
-      purposeId: purpose.id,
-      isCustom: purpose.id === 4,
-      showQuestions: showQuestions[purpose.id],
-      loadingStates: loadingStates,
-      isLoadingQuestion,
-    });
-
     setSelectedInterviewPurpose(purpose.id);
     const selectedPurpose = purposeItemsSingleAtom.find(
       (item) => item.id === purpose.id
-    );
-    console.log(
-      "🚀 ~ handlePurposeSelect ~ purpose:",
-      selectedPurpose?.view_title
     );
 
     setSelectedInterviewPurposeData(selectedPurpose);
     toggleQuestions(purpose.id);
 
     if (purpose.id !== 4 && !showQuestions[purpose.id]) {
-      console.log("일반 방법론 처리");
       const existingQuestions = singleInterviewQuestionList.find(
         (item) => item.theory_name === purpose.title
       );
@@ -270,17 +239,11 @@ const MoleculeInterviewPurpose = ({
         loadInterviewQuestion(purpose.title);
       }
     } else if (purpose.id === 4 && !showQuestions[purpose.id]) {
-      console.log("커스텀 방법론 처리", {
-        theoryTitle: purpose.theory_title,
-      });
-
       const existingQuestions = singleInterviewQuestionList.find(
         (item) => item.theory_name === purpose.theory_title
       );
-      console.log("existingQuestions:", existingQuestions);
 
       if (!existingQuestions) {
-        console.log("커스텀 방법론 질문 생성 시작");
         setLoadingStates((prev) => ({
           ...prev,
           [selectedInterviewPurpose]: true,

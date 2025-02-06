@@ -32,9 +32,9 @@ import {
 } from "../../../../pages/AtomStates"; // 아톰 임포트
 import { Link } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
+
 import MoleculeSignPopup from "./MoleculeSignPopup";
 import MoleculeResetPasswordPopup from "./MoleculeResetPasswordPopup";
-import { UserCreditInfo } from "../../../../utils/indexedDB";
 
 const MoleculeLoginForm = ({ onClosePopup }) => {
   const [signUpName, setSignUpName] = useAtom(SIGN_UP_NAME);
@@ -148,11 +148,20 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
         const accessToken = result.access_token;
         sessionStorage.setItem("accessToken", accessToken);
 
-        const userInfoResponse = await UserCreditInfo(isLoggedIn);
+        const userInfoResponse = await fetch(
+          "https://wishresearch.kr/api/user/userInfo/",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (userInfoResponse.ok) {
           const userInfo = await userInfoResponse.json();
-          console.log("🚀 ~ handleLogin ~ userInfo:", userInfo);
+          // console.log("🚀 ~ handleLogin ~ userInfo:", userInfo);
 
           // 유저 정보 저장
           setUserName(userInfo.name);
