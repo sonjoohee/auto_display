@@ -9,6 +9,7 @@ import theme from "../../../../assets/styles/Theme";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import AtomButton from "../atoms/AtomButton";
 import { isValidEmail } from "../atoms/AtomValidation";
+import { UserCreditInfo } from "../../../../utils/indexedDB";
 
 import images from "../../../../assets/styles/Images";
 import {
@@ -29,6 +30,7 @@ import {
   CONVERSATION_ID,
   USER_MEMBERSHIP,
   IS_SIGNUP_POPUP_OPEN,
+  USER_CREDITS,
 } from "../../../../pages/AtomStates"; // 아톰 임포트
 import { Link } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
@@ -37,6 +39,7 @@ import MoleculeSignPopup from "./MoleculeSignPopup";
 import MoleculeResetPasswordPopup from "./MoleculeResetPasswordPopup";
 
 const MoleculeLoginForm = ({ onClosePopup }) => {
+  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
   const [signUpName, setSignUpName] = useAtom(SIGN_UP_NAME);
   const [email, setEmail] = useAtom(EMAIL);
   const [userMembership, setUserMembership] = useAtom(USER_MEMBERSHIP);
@@ -170,6 +173,13 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
           sessionStorage.setItem("userName", userInfo.name);
           sessionStorage.setItem("userEmail", userInfo.email);
           sessionStorage.setItem("userMembership", userInfo.membership);
+          const accessToken = sessionStorage.getItem("accessToken");
+          if (accessToken) {
+            const userCreditValue = await UserCreditInfo(true);
+    
+            // 전역 상태의 크레딧 정보 업데이트
+            setUserCredits(userCreditValue);
+          }
           setIsLoggedIn(true);
 
           // 모바일 기기 체크 후 처리 수정

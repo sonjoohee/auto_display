@@ -17,16 +17,20 @@ import {
   IS_SOCIAL_LOGGED_IN,
   IS_MARKETING,
   CONVERSATION_ID,
+  USER_CREDITS,
 } from "../../../../pages/AtomStates"; // 아톰 임포트
 
 import firebase from "firebase/app";
 import "firebase/auth";
+import { UserCreditInfo } from "../../../../utils/indexedDB";
 
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeGoogleLoginForm = () => {
+  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
+
   const navigate = useNavigate();
-  const [, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [, setLoginSuccess] = useAtom(LOGIN_SUCCESS);
   const [, setUserName] = useAtom(USER_NAME); // 유저 이름 아톰
   const [, setUserEmail] = useAtom(USER_EMAIL); // 유저 이메일 아톰
@@ -75,6 +79,14 @@ const MoleculeGoogleLoginForm = () => {
       sessionStorage.setItem("userEmail", userEmail); // 서버 토큰 저장
       // sessionStorage.setItem("userMembership", response.data.membership); // 서버 토큰 저장
       sessionStorage.setItem("isSocialLogin", "true"); // 소셜 로그인 여부 저장
+
+      const accessToken = sessionStorage.getItem("accessToken");
+      if (accessToken) {
+        const userCreditValue = await UserCreditInfo(true);
+
+        // 전역 상태의 크레딧 정보 업데이트
+        setUserCredits(userCreditValue);
+      }
 
       // 로그인 성공 시 처리
       setIsLoggedIn(true); // 아톰 업데이트

@@ -1075,7 +1075,7 @@ const OrganismIncNavigation = () => {
     setUserName("");
     setUserEmail("");
     setIsLogoutPopup(false); // 로그아웃 팝업 닫기
-    navigate("/"); // 페이지 이동
+    window.location.href = "/"; // 페이지 이동
   };
 
   const handleCloseLogoutPopup = () => {
