@@ -131,7 +131,7 @@ const MoleculeBussinessPersonaCard = ({
       let filteredPersona = [];
       currentRequestedPersona.forEach((persona) => {
         if (persona.persona === localPersonaData.persona) {
-          persona.status = "ing";
+          persona.status = "request";
         }
         filteredPersona.push(persona);
       });
@@ -154,12 +154,12 @@ const MoleculeBussinessPersonaCard = ({
             timeZone: "Asia/Seoul",
           }),
           businessAnalysis: businessAnalysis,
-          personaRequest: { ...localPersonaData, status: "ing" },
+          personaRequest: { ...localPersonaData, status: "request" },
         };
         createRequestPersonaOnServer(requestData, isLoggedIn);
 
         // 상태 업데이트: status를 "ing"로 변경하여 뱃지에 반영
-        setLocalPersonaData({ ...localPersonaData, status: "ing" });
+        setLocalPersonaData({ ...localPersonaData, status: "request" });
         setRequestStatus(false);
       } else {
         console.error("이미 요청된 페르소나입니다.");
@@ -233,11 +233,10 @@ const MoleculeBussinessPersonaCard = ({
                   <img src={images.Plus} alt="요청 필요" />
                   요청 필요
                 </Badge>
+              ) : localPersonaData.status === "request" ? (
+                <Badge Check>요청 검토 중</Badge>
               ) : localPersonaData.status === "ing" ? (
-                <Badge Ing>
-                  {/* <img src={images.PersonaCustomizing} alt="모집 중" /> */}
-                  모집 중
-                </Badge>
+                <Badge Ing>모집 중</Badge>
               ) : localPersonaData.status === "complete" ? (
                 <Badge Complete>
                   <img src={images.CheckGreen} alt="모집 완료" />
@@ -287,6 +286,8 @@ const MoleculeBussinessPersonaCard = ({
                   <img src={images.Plus} alt="요청 필요" />
                   요청 필요
                 </Badge>
+              ) : localPersonaData.status === "request" ? (
+                <Badge Check>요청 검토 중</Badge>
               ) : localPersonaData.status === "ing" ? (
                 <Badge Ing>
                   {/* <img src={images.PersonaCustomizing} alt="모집 중" /> */}
