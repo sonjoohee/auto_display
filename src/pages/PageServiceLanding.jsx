@@ -661,8 +661,10 @@ const PageServiceLanding = () => {
 
       {isPopupOpen && (
         <Popup>
-          <span className="close" onClick={() => setIsPopupOpen(false)} />
-          <img src={images.Popup01} alt="" />
+          <div>
+            <span className="close" onClick={() => setIsPopupOpen(false)} />
+            <img src={images.Popup01} alt="" />
+          </div>
         </Popup>
       )}
     </>
@@ -1605,7 +1607,7 @@ const Section03 = styled.div`
 const Section04 = styled.div`
   position: relative;
   width: 100%;
-  padding: 250px 0 130px;
+  padding: 210px 0 130px;
   background: #010101;
   overflow: hidden;
 
@@ -2184,15 +2186,23 @@ const Footer = styled.div`
 
 const Popup = styled.div`
   position: fixed;
-  top: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-radius: 15px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   z-index: 999;
+  background: rgba(0, 0, 0, 0.6);
 
-  ${media.mobile} {
-    width: calc(100vw - 40px);
+  > div {
+    position: absolute;
+    top:50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 438px;
+    height: 668px;
+    border-radius: 15px;
+    overflow: hidden;
   }
 
   img{
