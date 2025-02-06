@@ -281,6 +281,8 @@ const PageServiceLanding = () => {
           <img src={images.ServiceLandingSection02} alt="" />
 
           <div className="text-wrapper">
+            <p>신뢰할 수 있는 AI Persona, 현실감 있는 대화의 시작</p>
+
             <h3>"신뢰할 수 있는 데이터 연구로 탄생한 AI Persona,<br />대화 속에서 경험을 공유합니다."</h3>
 
             <div>
@@ -763,7 +765,7 @@ const MainVisual = styled.div`
   overflow: hidden;
 
   ${media.mobile} {
-    height: 780px;
+    height: 100vh;
     background: radial-gradient(144.72% 66.79% at 50% 33.21%, #000 0%, #000 88.09%, rgba(0, 0, 0, 0.00) 100%);
   }
 
@@ -794,7 +796,8 @@ const MainVisual = styled.div`
     animation: fadeIn 1s ease 1s forwards; // 1초 지연 후 1초 동안 페이드인
 
     ${media.mobile} {
-      top: 49%;
+      top: 50.5vh;
+      left: 57vw;
     }
 
     &.blur {
@@ -861,6 +864,7 @@ const MainVisual = styled.div`
         line-height: 1;
         letter-spacing: -1.8px;
         text-align: left;
+        text-shadow: 13px 13px 4px rgba(255, 255, 255, 0.06);
       }
 
       &:nth-child(1) {
@@ -908,7 +912,7 @@ const MainVisual = styled.div`
         right: 0;
 
         ${media.mobile} {
-          right: 30%;
+          right: 10vw;
           width: 100%;
         }
       }
@@ -921,7 +925,7 @@ const MainVisual = styled.div`
         ${media.mobile} {
           left: 40%;
           top: auto;
-          bottom: -100px;
+          bottom: -10vh;
           width: 100%;
           text-align: left;
         }
@@ -947,7 +951,7 @@ const MainVisual = styled.div`
     animation: sdb05 1.5s infinite;
 
     ${media.mobile} {
-      bottom: 30%;
+      bottom: 20vh;
       width: 18px;
       height: 18px;
     }
@@ -973,7 +977,6 @@ const Section01 = styled.div`
 
   ${media.mobile} {
     margin: 0 auto;
-    padding: 120px 0 110px;
   }
 
   .bg-wrapper {
@@ -1030,7 +1033,7 @@ const Section01 = styled.div`
         animation: float3 5s ease-in-out infinite;
 
         ${media.mobile} {
-          bottom: 0;
+          bottom: 10vh;
           right: -4%;
           width: 82px;
           height: 85px;
@@ -1226,7 +1229,8 @@ const Section02 = styled.div`
   background: radial-gradient(114.49% 114.49% at 50% 114.49%, #000 0%, #000 88.09%, rgba(0, 0, 0, 0.00) 100%);
 
   ${media.mobile} {
-    padding: 205px 0 100px;
+    gap: 12px;
+    padding: 205px 20px 100px;
     background: radial-gradient(200.49% 200.49% at 50% 200.49%, #000 0%, #000 96.09%, rgba(0, 0, 0, 0.00) 100%);
   }
 
@@ -1240,12 +1244,22 @@ const Section02 = styled.div`
     margin: 0 auto;
     z-index: 2;
 
+    ${media.mobile} {
+      padding-top: 70px;
+    }
+
     h3 {
       font-size: 4.5rem;
       font-weight: 500;
       color: ${palette.white};
       line-height: 1.25;
       letter-spacing: -2.16px;
+
+      ${media.mobile} {
+        width: 100%;
+        font-size: 2.75rem;
+        text-align: left;
+      }
     }
 
     p {
@@ -1254,6 +1268,10 @@ const Section02 = styled.div`
       color: ${palette.white};
       line-height: 1.3;
       letter-spacing: -0.96px;
+
+      ${media.mobile} {
+        display: none;
+      }
     }
   }
 
@@ -1262,8 +1280,7 @@ const Section02 = styled.div`
     z-index: 1;
 
     ${media.mobile} {
-      width: 80%;
-      padding-top: 56px;
+      width: 70%;
     }
   }
 
@@ -1307,6 +1324,24 @@ const Section02 = styled.div`
     text-align: left;
     z-index: 1;
 
+    ${media.mobile} {
+      gap: 16px;
+    }
+
+    > p {
+      display: none;
+      font-size: 1rem;
+      font-weight: 500;
+      color: ${palette.white};
+      line-height: 1.3;
+      letter-spacing: -0.6px;
+      text-align: left;
+
+      ${media.mobile} {
+        display: block;
+      }
+    }
+
     h3 {
       font-size: 1.25rem;
       font-weight: 500;
@@ -1314,16 +1349,16 @@ const Section02 = styled.div`
       line-height: 1.3;
       letter-spacing: -0.6px;
       text-align: center;
+
+      ${media.mobile} {
+        font-size: 1rem;
+        text-align: left;
+      }
     }
 
     > div {
       display: flex;
       flex-direction: column;
-
-      ${media.mobile} {
-        gap: 15px;
-        margin-top: 24px;
-      }
 
       > p:nth-child(1) {
         margin-left: -60px;
@@ -1347,6 +1382,11 @@ const Section02 = styled.div`
       flex-direction: column;
       border-top: 1px solid rgba(255, 255, 255, 0.30);
 
+      ${media.mobile} {
+        border-top: none;
+        gap: 16px;
+      }
+
       li {
         font-size: 1.25rem;
         font-weight: 400;
@@ -1355,6 +1395,12 @@ const Section02 = styled.div`
         letter-spacing: -0.6px;
         padding: 12px 0;
         border-bottom: 1px solid rgba(255, 255, 255, 0.30);
+
+        ${media.mobile} {
+          font-size: 1rem;
+          padding: 0;
+          border-bottom: none;
+        }
       }
     }
   }
@@ -2152,12 +2198,18 @@ const Footer = styled.div`
         ${media.mobile} {
           font-size: 0.75rem;
           color: #B1B1B1;
+          gap: 10px;
+          flex-wrap: wrap;
         }
 
         span {
           display: flex;
           align-items: center;
           gap: 20px;
+
+          ${media.mobile} {
+            gap: 10px;
+          }
 
           &:before {
             width: 1px;
@@ -2200,12 +2252,17 @@ const Popup = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
     width: 438px;
-    height: 668px;
-    border-radius: 15px;
+    height: auto;
     overflow: hidden;
+
+    ${media.mobile} {
+      width: calc(100vw - 40px);
+    }
   }
 
   img{
+    border-radius: 15px;
+
     ${media.mobile} {
       width: 100%;
     }
