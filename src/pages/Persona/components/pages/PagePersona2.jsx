@@ -1183,6 +1183,7 @@ const PagePersona2 = () => {
           label: type.label,
           type: type.type,
           count: type.count,
+          wasSelected: false,
         }))
       );
 
@@ -1214,10 +1215,7 @@ const PagePersona2 = () => {
       // 선택 해제: 선택된 유형에서 제거하고 선택하지 않은 유형으로 이동
       setSelectedTypes((prev) => {
         const updatedSelected = prev.filter((type) => type.id !== typeId);
-        console.log(
-          "🚀 ~ setSelectedTypes ~ updatedSelected:",
-          updatedSelected
-        );
+
         return updatedSelected;
       });
 
@@ -1510,6 +1508,48 @@ const PagePersona2 = () => {
     });
   };
 
+  const handleTypeToggle222 = async (typeId, isSelected) => {
+    if (isSelected) {
+      // 선택 해제: 선택된 유형에서 제거하고 선택하지 않은 유형으로 이동
+      setSelectedTypes((prev) => {
+        const updatedSelected = prev.filter((type) => type.id !== typeId);
+
+        return updatedSelected;
+      });
+
+      // visibleSelectedTypes에서도 제거
+      setVisibleSelectedTypes((prev) =>
+        prev.filter((type) => type.id !== typeId)
+      );
+
+      // 제거된 타입을 unselectedTypes에 추가 (count 정보와 wasSelected 플래그 포함)
+      const typeToAddBack = selectedTypes.find((type) => type.id === typeId);
+      if (typeToAddBack) {
+        setUnselectedTypes((prevUnselected) => {
+          if (!prevUnselected.some((type) => type.id === typeId)) {
+            const updatedUnselected = [
+              ...prevUnselected,
+              { ...typeToAddBack, wasSelected: true },
+            ];
+            return updatedUnselected.sort((a, b) => a.index - b.index);
+          }
+          return prevUnselected;
+        });
+      }
+    } else {
+      // 선택: visibleSelectedTypes에는 추가하지 않고 selectedTypes에만 추가
+      const typeToAdd = unselectedTypes.find((type) => type.id === typeId);
+      if (typeToAdd) {
+        setSelectedTypes((prev) => {
+          if (!prev.some((type) => type.id === typeId)) {
+            return [...prev, typeToAdd].sort((a, b) => a.index - b.index);
+          }
+          return prev;
+        });
+      }
+    }
+  };
+
   const handleRemoveType = (typeId) => {
     // visibleSelectedTypes에서 제거할 타입 찾기
     const typeToRemove = visibleSelectedTypes.find(
@@ -1531,7 +1571,14 @@ const PagePersona2 = () => {
 
       // unselectedTypes에 추가 (원래 순서 유지)
       setUnselectedTypes((prev) => {
-        const updatedUnselected = [...prev, typeToRemove];
+        const updatedUnselected = [
+          ...prev,
+          { ...typeToRemove, wasSelected: true },
+        ];
+        console.log(
+          "🚀 ~ setUnselectedTypes ~ updatedUnselected:",
+          updatedUnselected
+        );
         // originalUnselectedTypes의 순서를 기준으로 정렬
         return updatedUnselected.sort((a, b) => {
           const aIndex = originalUnselectedTypes.findIndex(
@@ -1911,10 +1958,10 @@ const PagePersona2 = () => {
                                                 {type.label}
                                               </label>
                                             </CheckBox>
-                                            {/* {type.wasSelected && (
+                                            {type.wasSelected && (
                                               // <span>{type.count}명</span>
-                                              <span>3명</span>
-                                            )} */}
+                                              <span>생성 완료</span>
+                                            )}
                                           </TypeListItem>
                                         );
                                       })}
