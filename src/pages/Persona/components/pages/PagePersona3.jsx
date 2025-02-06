@@ -477,7 +477,7 @@ const PagePersona3 = () => {
   const handleCloseRequestPopup = async () => {
     try {
       const creditPayload = {
-        mount: creditRequestBusinessPersona,
+        mount: creditCustomTheory,
       };
 
       const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
