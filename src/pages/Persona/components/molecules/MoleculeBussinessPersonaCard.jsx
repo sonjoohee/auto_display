@@ -43,6 +43,7 @@ import {
 import { UserCreditCheck, UserCreditUse } from "../../../../utils/indexedDB.js";
 const MoleculeBussinessPersonaCard = ({
   title,
+  persona_type,
   keywords = [],
   gender,
   age,
@@ -83,6 +84,53 @@ const MoleculeBussinessPersonaCard = ({
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
   const [localPersonaData, setLocalPersonaData] = useState(personaData);
+
+  const getCategoryColor = (category) => {
+    switch (category) {
+      case "전형적 사용자 페르소나":
+        return "Red";
+      case "극단적 사용자 페르소나":
+        return "LavenderMagenta";
+      case "비교 소비자 페르소나":
+        return "Amethyst";
+      case "비전통적 사용자 페르소나":
+        return "TurkishRose";
+      case "문제 해결 중심 페르소나":
+        return "NavyBlue";
+      case "건강 중시 페르소나":
+        return "MidnightBlue";
+      case "시장 트렌드 리더 페르소나":
+        return "ButtonBlue";
+      case "예산 중시 소비자 페르소나":
+        return "MiddleBlueGreen";
+      case "혁신 추구 소비자 페르소나":
+        return "GreenSheen";
+      case "환경/윤리 중시 페르소나":
+        return "TropicalRainForest";
+      case "기능/성능 중시 소비자 페르소나":
+        return "DollarBill";
+      case "브랜드 충성 소비자 페르소나":
+        return "Olivine";
+      case "감성적 소비자 페르소나":
+        return "ChineseGreen";
+      case "특정 상황 중심페르소나":
+        return "Jonquil";
+      case "문화적/지역적 특성 중심 페르소나":
+        return "PastelOrange";
+      case "DIY/커스터마이징 선호 페르소나":
+        return "Tangerine";
+      case "트렌드 회의적 소비자 페르소나":
+        return "Copper";
+      case "단체 구매 소비자 페르소나":
+        return "Shadow";
+      case "호기심 기반 소비자 페르소나":
+        return "Tuscany";
+      case "브랜드 전환 의향 소비자 페르소나":
+        return "VeryLightTangelo";
+      default:
+        return "";
+    }
+  };
 
   useEffect(() => {
     setIsChecked(checked);
@@ -249,6 +297,9 @@ const MoleculeBussinessPersonaCard = ({
 
             {keywords.length > 0 && (
               <ListSubtitle>
+                <TagWrap>
+                  <TagType color={getCategoryColor(persona_type)} />
+                </TagWrap>
                 {keywords.map((keyword, index) => (
                   <Badge Keyword key={index}>
                     #{keyword}
@@ -908,4 +959,203 @@ const RecruitButton = styled.button`
     width: 16px;
     height: 16px;
   }
+`;
+
+const TagWrap = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+
+export const TagType = styled.span`
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.5;
+  padding: 4px 10px;
+  border-radius: 15px;
+
+  &::before {
+    content: "${(props) => {
+      switch (props.color) {
+        case "Red":
+          return "전형적 사용자 페르소나";
+        case "LavenderMagenta":
+          return "극단적 사용자 페르소나";
+        case "Amethyst":
+          return "비교 소비자 페르소나";
+        case "TurkishRose":
+          return "비전통적 사용자 페르소나";
+        case "NavyBlue":
+          return "문제 해결 중심 페르소나";
+        case "MidnightBlue":
+          return "건강 중시 페르소나";
+        case "ButtonBlue":
+          return "시장 트렌드 리더 페르소나";
+        case "MiddleBlueGreen":
+          return "예산 중시 소비자 페르소나";
+        case "GreenSheen":
+          return "혁신 추구 소비자 페르소나";
+        case "TropicalRainForest":
+          return "환경/윤리 중시 페르소나";
+        case "DollarBill":
+          return "기능/성능 중시 소비자 페르소나";
+        case "Olivine":
+          return "브랜드 충성 소비자 페르소나";
+        case "ChineseGreen":
+          return "감성적 소비자 페르소나";
+        case "Jonquil":
+          return "특정 상황 중심페르소나";
+        case "PastelOrange":
+          return "문화적/지역적 특성 중심 페르소나";
+        case "Tangerine":
+          return "DIY/커스터마이징 선호 페르소나";
+        case "Copper":
+          return "트렌드 회의적 소비자 페르소나";
+        case "Shadow":
+          return "단체 구매 소비자 페르소나";
+        case "Tuscany":
+          return "호기심 기반 소비자 페르소나";
+        case "VeryLightTangelo":
+          return "브랜드 전환 의향 소비자 페르소나";
+        default:
+          return "";
+      }
+    }}";
+  }
+
+  ${({ color }) => {
+    switch (color) {
+      case "Red":
+        return `
+          color: #E90102;
+          background: rgba(233, 1, 2, 0.06);
+        `;
+      case "LavenderMagenta":
+        return `
+          color: #ED7EED;
+          background: rgba(237, 126, 237, 0.06);
+        `;
+      case "Amethyst":
+        return `
+          color: #8B61D1;
+          background: rgba(139, 97, 209, 0.06);
+        `;
+      case "VistaBlue":
+        return `
+          color: #8B61D1;
+          background: rgba(125, 140, 225, 0.06);
+        `;
+      case "BlueYonder":
+        return `
+          color: #8B61D1;
+          background: rgba(84, 113, 171, 0.06);
+        `;
+      case "MidnightBlue":
+        return `
+          color: #03458F;
+          background: rgba(3, 69, 143, 0.06);
+        `;
+      case "ButtonBlue":
+        return `
+          color: #20B1EA;
+          background: rgba(32, 177, 234, 0.06);
+        `;
+      case "CeruleanFrost":
+        return `
+          color: #5E9EBF;
+          background: rgba(94, 158, 191, 0.06);
+        `;
+      case "MiddleBlueGreen":
+        return `
+          color: #7DCED2;
+          background: rgba(125, 206, 210, 0.06);
+        `;
+      case "GreenSheen":
+        return `
+          color: #74B49C;
+          background: rgba(116, 180, 156, 0.06);
+        `;
+      case "TropicalRainForest":
+        return `
+          color: #027355;
+          background: rgba(2, 115, 85, 0.06);
+        `;
+      case "DollarBill":
+        return `
+          color: #8DC955;
+          background: rgba(141, 201, 85, 0.06);
+        `;
+      case "Olivine":
+        return `
+          color: #AABC76;
+          background: rgba(170, 188, 118, 0.06);
+        `;
+      case "ChineseGreen":
+        return `
+          color: #C7D062;
+          background: rgba(199, 208, 98, 0.06);
+        `;
+      case "Jonquil":
+        return `
+          color: #F7CD17;
+          background: rgba(247, 205, 23, 0.06);
+        `;
+      case "PastelOrange":
+        return `
+          color: #FFBB52;
+          background: rgba(255, 187, 82, 0.06);
+        `;
+      case "Tangerine":
+        return `
+          color: #F48D0B;
+          background: rgba(244, 141, 11, 0.06);
+        `;
+      case "Copper":
+        return `
+          color: #BC742F;
+          background: rgba(188, 116, 47, 0.06);
+        `;
+      case "Shadow":
+        return `
+          color: #8C725B;
+          background: rgba(140, 114, 91, 0.06);
+        `;
+      case "Tuscany":
+        return `
+          color: #B1A098;
+          background: rgba(177, 160, 152, 0.06);
+        `;
+      case "VeryLightTangelo":
+        return `
+          color: #FAAD80;
+          background: rgba(250, 173, 128, 0.06);
+        `;
+      case "Orange":
+        return `
+          color: #FC6602;
+          background: rgba(252, 102, 2, 0.06);
+        `;
+      case "CarnationPink":
+        return `
+          color: #FFA8B9;
+          background: rgba(255, 168, 185, 0.06);
+        `;
+      case "TurkishRose":
+        return `
+          color: #B47489;
+          background: rgba(180, 116, 137, 0.06);
+        `;
+      case "SuperPink":
+        return `
+          color: #D161AC;
+          background: rgba(209, 97, 172, 0.06);
+        `;
+      case "NavyBlue":
+        return `
+          color: #020273;
+          background: rgba(2, 2, 115, 0.06);
+        `;
+      default:
+        return "display: none;";
+    }
+  }}
 `;

@@ -52,16 +52,18 @@ import {
   Caption1,
   Caption2,
 } from "../../../../assets/styles/Typography";
-import Header from "../molecules/MoleculeHeader";
+import MoleculeHeader from "../molecules/MoleculeHeader";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import personaImages from "../../../../assets/styles/PersonaImages";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 // import Sidebar from "../../../Design_Page/IncSidebar";
-import IncNavigation from "../organisms/OrganismIncNavigation";
+import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
+
 import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import { updateProjectReportOnServer } from "../../../../utils/indexedDB";
+
 import { getProjectReportByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
@@ -493,9 +495,9 @@ const PagePersona4 = () => {
   return (
     <>
       <ContentsWrap noScroll={showToast}>
-        <IncNavigation />
+        <OrganismIncNavigation />
 
-        <Header />
+        <MoleculeHeader />
 
         <MainContent Wide>
           <AnalysisWrap>

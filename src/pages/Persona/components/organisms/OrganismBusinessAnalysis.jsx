@@ -37,8 +37,6 @@ import { IconButton } from "../../../../assets/styles/ButtonStyle";
 import { InterviewXBusinessCategoryModifyRequest } from "../../../../utils/indexedDB";
 import { BusinessCategoryAnalysis } from "../../../../utils/indexedDB";
 
-
-
 const OrganismBusinessAnalysis = ({ personaStep }) => {
   const [isLoadingBusinessAnalysis, setIsLoadingBusinessAnalysis] = useAtom(
     IS_LOADING_BUSINESS_ANALYSIS
@@ -248,14 +246,11 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
         },
         keyword: inputs.field2.value,
       };
-      // let response = await axios.post(
-      //   "https://wishresearch.kr/person/business_category_modify",
-      //   data,
-      //   axiosConfig
-      // );
-      //비즈니스 카테고리 분석 수정 API  수정 예정
-      let response = await InterviewXBusinessCategoryModifyRequest(data, isLoggedIn);
 
+      let response = await InterviewXBusinessCategoryModifyRequest(
+        data,
+        isLoggedIn
+      );
 
       businessData = response.response.business_analysis;
       categoryData = response.response.category;
@@ -441,7 +436,8 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
               ) ||
               !response.response.business_analysis.hasOwnProperty("주요기능") ||
               !response.response.business_analysis["명칭"] ||
-              !response.response.business_analysis["주요_목적_및_특징"].length ||
+              !response.response.business_analysis["주요_목적_및_특징"]
+                .length ||
               !response.response.business_analysis["주요기능"].length ||
               !response.response.category.hasOwnProperty("first") ||
               !response.response.category.first ||
@@ -568,7 +564,6 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
 
         // 비즈니스 카테고리 분석 수정 예정
         let response = await BusinessCategoryAnalysis(data, isLoggedIn);
-
       }
 
       businessData = response.response.business_analysis;
