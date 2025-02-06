@@ -88,19 +88,19 @@ const OrganismMarketingFinalReport = () => {
             marketing_selected_customer: marketingFinalCustomer
           };
 
-          let response = await axios.post(
-            "https://wishresearch.kr/panels/marketing/final_report",
-            data,
-            axiosConfig
-          );
-          // let response = await MarketingFinalReportRequest(data, isLoggedIn);
-          let marketingFinalReport = response.data.marketing_final_report;
+          // let response = await axios.post(
+          //   "https://wishresearch.kr/panels/marketing/final_report",
+          //   data,
+          //   axiosConfig
+          // );
+          let response = await MarketingFinalReportRequest(data);
+          let marketingFinalReport = response.response.marketing_final_report;
             
           let retryCount = 0;
           const maxRetries = 10;
 
           while (retryCount < maxRetries && (
-            !response?.data?.marketing_final_report ||
+            !response?.response?.marketing_final_report ||
             !Array.isArray(marketingFinalReport) ||
             marketingFinalReport.length !== 3 ||
             !marketingFinalReport[0]?.title ||
@@ -132,15 +132,15 @@ const OrganismMarketingFinalReport = () => {
             !marketingFinalReport[2]?.session3?.content
           ))  
           {
-            response = await axios.post(
-              "https://wishresearch.kr/panels/marketing/final_report",
-              data,
-              axiosConfig
-            );
-            // response = await MarketingFinalReportRequest(data, isLoggedIn);
+            // response = await axios.post(
+            //   "https://wishresearch.kr/panels/marketing/final_report",
+            //   data,
+            //   axiosConfig
+            // );
+            response = await MarketingFinalReportRequest(data);
             retryCount++;
 
-            marketingFinalReport = response.data.marketing_final_report;
+            marketingFinalReport = response.response.marketing_final_report;
           }
           if (retryCount === maxRetries) {
             throw new Error("Maximum retry attempts reached. Empty response persists.");

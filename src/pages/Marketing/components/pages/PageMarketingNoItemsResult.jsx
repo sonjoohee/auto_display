@@ -35,6 +35,61 @@ import { isLoggedIn } from "../../../../utils/indexedDB";
 
 import { Button } from "../../../../assets/styles/ButtonStyle";
 
+// 이미지 소스 추출 함수
+const getImageSrc = (mbtiName) => {
+  switch (mbtiName) {
+    case "ROIC":
+      return images.ImgMBTIROIC;
+    case "ROIA":
+      return images.ImgMBTIROIA;
+    case "ROTC":
+      return images.ImgMBTIROTC;
+    case "ROTA":
+      return images.ImgMBTIROTA;
+    case "RPIA":
+      return images.ImgMBTIRPIA;
+    case "RPIC":
+      return images.ImgMBTIRPIC;
+    case "RPTA":
+      return images.ImgMBTIRPTA;
+    case "RPTC":
+      return images.ImgMBTIRPTC;
+    case "SOIA":
+      return images.ImgMBTISOIA;
+    case "SOIC":
+      return images.ImgMBTISOIC;
+    case "SOTA":
+      return images.ImgMBTISOTA;
+    case "SOTC":
+      return images.ImgMBTISOTC;
+    case "SPIA":
+      return images.ImgMBTISPIA;
+    case "SPIC":
+      return images.ImgMBTISPIC;
+    case "SPTA":
+      return images.ImgMBTISPTA;
+    case "SPTC":
+      return images.ImgMBTISPTC;
+    default:
+      return "";
+  }
+};
+
+// MBTI 설명 추출 함수
+const getMbtiDescription = (mbtiChar) => {
+  switch (mbtiChar) {
+    case "S":
+      return "안정 추구 (Safety-seeking)";
+    case "O":
+      return "기회 포착형 (Opportunity-driven)";
+    case "I":
+      return "독립성 중시 (Independence-focused)";
+    case "C":
+      return "창의성 중심 (Creativity-centered)";
+    default:
+      return "";
+  }
+};
 
 const PageMarketingNoItemsResult = () => {
   const navigate = useNavigate();
@@ -159,21 +214,21 @@ const PageMarketingNoItemsResult = () => {
         setIsLoadingRecommendedItem(true);
         setMarketingRecommendedItemButtonState(0);
 
-        let response = await axios.post(
-          "https://wishresearch.kr/panels/marketing/mbti_result",
-          data,
-          axiosConfig
-        );
+        // let response = await axios.post(
+        //   "https://wishresearch.kr/panels/marketing/mbti_result",
+        //   data,
+        //   axiosConfig
+        // );
 
-        // let response = await MarketingMbtiResultRequest(data, isLoggedIn);
-        let recommendedItemData = response.data.marketing_mbti_result;
+        let response = await MarketingMbtiResultRequest(data);
+        let recommendedItemData = response.response.marketing_mbti_result;
 
         let retryCount = 0;
         const maxRetries = 10;
 
         while (
           retryCount < maxRetries &&
-          (!response?.data?.marketing_mbti_result ||
+          (!response?.response?.marketing_mbti_result ||
             typeof recommendedItemData !== "object" ||
             !recommendedItemData?.overview?.name ||
             !recommendedItemData?.overview?.description ||
@@ -195,13 +250,14 @@ const PageMarketingNoItemsResult = () => {
         ) {
           retryCount += 1;
 
-          response = await axios.post(
-            "https://wishresearch.kr/panels/marketing/mbti_result",
-            data,
-            axiosConfig
-          );
-          // response = await MarketingMbtiResultRequest(data, isLoggedIn);
-          recommendedItemData = response.data.marketing_mbti_result;
+          // response = await axios.post(
+          //   "https://wishresearch.kr/panels/marketing/mbti_result",
+          //   data,
+          
+          //   axiosConfig
+          // );
+          response = await MarketingMbtiResultRequest(data);
+          recommendedItemData = response.response.marketing_mbti_result;
         }
 
         setMarketingRecommendedItemData(recommendedItemData);
@@ -333,7 +389,10 @@ const PageMarketingNoItemsResult = () => {
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
 
+  const [isCapturing, setIsCapturing] = useState(false);
+
   const captureAndShare = async () => {
+    setIsCapturing(true);
     try {
       const questionElement = document.querySelector('.capture-area');
       
@@ -342,6 +401,11 @@ const PageMarketingNoItemsResult = () => {
       if (shareButton) {
         shareButton.style.display = 'none';
       }
+
+      const styledDiv = questionElement.querySelector('.info'); // StyledDiv 선택
+              if (styledDiv) {
+                styledDiv.style.display = 'none'; // StyledDiv 숨기기
+              }
 
       const canvas = await html2canvas(questionElement, {
         backgroundColor: '#5547ff',
@@ -355,6 +419,11 @@ const PageMarketingNoItemsResult = () => {
       if (shareButton) {
         shareButton.style.display = '';
       }
+
+         if (styledDiv) {
+                styledDiv.style.display = ''; // StyledDiv 다시 보이기
+              }
+
       
       const image = canvas.toDataURL('image/png', 1.0);
       
@@ -405,6 +474,8 @@ const PageMarketingNoItemsResult = () => {
     } catch (err) {
       console.error("Error capturing or sharing:", err);
       setShowErrorPopup(true);
+    } finally {
+      setIsCapturing(false);
     }
   };
 
@@ -421,9 +492,7 @@ const PageMarketingNoItemsResult = () => {
           <Question
             className="capture-area"
             style={{
-              // flex: isMobile ? questionFlex : "1 1 50%",
-              flex: isMobile ? "1 1 100%" : "1 1 50%",
-              height: isMobile ? "100vh" : "auto", // 모바일의 경우 높이를 100vh로 설정
+              flex: isMobile ? questionFlex : "1 1 50%",
             }}
             isDragging={isDragging}
             questionFlex={questionFlex}
@@ -482,6 +551,10 @@ const PageMarketingNoItemsResult = () => {
             </div>
           </Question>
 
+
+
+      
+
           <Answer
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
@@ -494,11 +567,13 @@ const PageMarketingNoItemsResult = () => {
             questionFlex={questionFlex}
           >
             <ResultWrap>
-              <div className="info">
-                <strong>{marketingMbtiResult.summary}</strong>
-                <p>{marketingMbtiResult.description}</p>
-                <ShareButton onClick={captureAndShare}>결과 저장/공유하기</ShareButton>
-              </div>
+            
+                <div className="info">
+                  <strong>{marketingMbtiResult.summary}</strong>
+                  <p>{marketingMbtiResult.description}</p>
+                  <ShareButton onClick={captureAndShare}>결과 저장/공유하기</ShareButton>
+                </div>
+            
 
               <div className="title">
                 <strong>💡 추천 아이템, 내 사업으로 만들기</strong>
@@ -550,7 +625,17 @@ const PageMarketingNoItemsResult = () => {
                   </>
                 ) : (
                   <>
-                    <div>
+                    {/* {marketingRecommendedItemData?.example?.map((item, index) => (
+                      <div key={index}>
+                        <p>
+                          <strong>{item.name}</strong>
+                          {item.summary}
+                        </p>
+                        <span onClick={() => handleOpenPopup(index)}>시작하기</span>
+                      </div>
+                    ))} */}
+
+                <div> 
                       <p>
                         <strong>
                           {marketingRecommendedItemData?.example?.[0]?.name}
@@ -617,62 +702,15 @@ const PageMarketingNoItemsResult = () => {
                   </div>
                   <div className="body">
                     <ScrollWrap>
-                      <div>
-                        <strong>
-                          <span>{marketingMbtiResult.name[0]}</span>
-                          {marketingMbtiResult.name[0] === "S"
-                            ? "안정 추구 (Safety-seeking)"
-                            : "고위험 추구 (Risk-seeking)"}
-                        </strong>
-                        <p>
-                          {
-                            marketingRecommendedItemData?.example?.[popupIndex]
-                              ?.mbti?.[0]?.compatibility
-                          }
-                        </p>
-                      </div>
-                      <div>
-                        <strong>
-                          <span>{marketingMbtiResult.name[1]}</span>
-                          {marketingMbtiResult.name[1] === "O"
-                            ? "기회 포착형 (Opportunity-driven)"
-                            : "계획획 기반형 (Planning-driven)"}
-                        </strong>
-                        <p>
-                          {
-                            marketingRecommendedItemData?.example?.[popupIndex]
-                              ?.mbti?.[1]?.compatibility
-                          }
-                        </p>
-                      </div>
-                      <div>
-                        <strong>
-                          <span>{marketingMbtiResult.name[2]}</span>
-                          {marketingMbtiResult.name[2] === "I"
-                            ? "독립성 중시 (Independence-focused)"
-                            : "협력 중시 (Teamwork-focused)"}
-                        </strong>
-                        <p>
-                          {
-                            marketingRecommendedItemData?.example?.[popupIndex]
-                              ?.mbti?.[2]?.compatibility
-                          }
-                        </p>
-                      </div>
-                      <div>
-                        <strong>
-                          <span>{marketingMbtiResult.name[3]}</span>
-                          {marketingMbtiResult.name[3] === "C"
-                            ? "창의성 중심 (Creativity-centered)"
-                            : "실용성 중심 (Application-centered)"}
-                        </strong>
-                        <p>
-                          {
-                            marketingRecommendedItemData?.example?.[popupIndex]
-                              ?.mbti?.[3]?.compatibility
-                          }
-                        </p>
-                      </div>
+                      {marketingRecommendedItemData?.example?.[popupIndex]?.mbti?.map((mbtiItem, mbtiIndex) => (
+                        <div key={mbtiIndex}>
+                          <strong>
+                            <span>{marketingMbtiResult.name[mbtiIndex]}</span>
+                            {getMbtiDescription(marketingMbtiResult.name[mbtiIndex])}
+                          </strong>
+                          <p>{mbtiItem.compatibility}</p>
+                        </div>
+                      ))}
                     </ScrollWrap>
 
                     <PopupButton>
@@ -833,7 +871,7 @@ const Navbar = styled.div`
 
 const QuestionWrap = styled.section`
   position: relative;
-  height: 100dvh;
+  height: 100vh;
   display: flex;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
@@ -1554,5 +1592,13 @@ const ShareButton = styled.button`
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     padding: 12px 32px;
     font-size: 1rem;
+  }
+`;
+
+const StyledDiv = styled.div`
+  display: none; // 기본적으로 숨김
+
+  &.info {
+    display: block; // info 클래스일 경우 나타남
   }
 `;

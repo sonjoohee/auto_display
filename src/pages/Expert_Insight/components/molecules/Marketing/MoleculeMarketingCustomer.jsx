@@ -130,23 +130,23 @@ const MoleculeMarketingCustomer = ({ marketingCustomerCount }) => {
           marketing_bm_report: marketingBmReportData
         };
 
-        let response = await axios.post(
-          "https://wishresearch.kr/panels/marketing/customer_recommendation",
-          data,
-          axiosConfig
-        );
-        // let response = await MarketingCustomerRecommendationRequest(data, isLoggedIn);
-        let marketingCustomer = response.data.marketing_customer_recommendation;
+        // let response = await axios.post(
+        //   "https://wishresearch.kr/panels/marketing/customer_recommendation",
+        //   data,
+        //   axiosConfig
+        // );
+        let response = await MarketingCustomerRecommendationRequest(data);
+        let marketingCustomer = response.response.marketing_customer_recommendation;
 
         let retryCount = 0;
         const maxRetries = 10;
 
         while (retryCount < maxRetries && (
-          !response || !response.data || typeof response.data !== "object" ||
-          !response.data.hasOwnProperty("marketing_customer_recommendation") ||
-          !Array.isArray(response.data.marketing_customer_recommendation) ||
-          response.data.marketing_customer_recommendation.length !== 5 ||
-          response.data.marketing_customer_recommendation.some(item =>
+          !response || !response.response || typeof response.response !== "object" ||
+          !response.response.hasOwnProperty("marketing_customer_recommendation") ||
+          !Array.isArray(response.response.marketing_customer_recommendation) ||
+          response.response.marketing_customer_recommendation.length !== 5 ||
+          response.response.marketing_customer_recommendation.some(item =>
             !item.hasOwnProperty("name") ||
             !item.hasOwnProperty("characteristic") ||
             !item.characteristic.hasOwnProperty("summary") ||
@@ -163,15 +163,15 @@ const MoleculeMarketingCustomer = ({ marketingCustomerCount }) => {
           )
         )) {
           console.log(response);
-          response = await axios.post(
-            "https://wishresearch.kr/panels/marketing/customer_recommendation",
-            data,
-            axiosConfig
-          );
-          // response = await MarketingCustomerRecommendationRequest(data, isLoggedIn);
+          // response = await axios.post(
+          //   "https://wishresearch.kr/panels/marketing/customer_recommendation",
+          //   data,
+          //   axiosConfig
+          // );
+          response = await MarketingCustomerRecommendationRequest(data);
           retryCount++;
 
-          marketingCustomer = response.data.marketing_customer_recommendation;
+          marketingCustomer = response.response.marketing_customer_recommendation;
         }
         if (retryCount === maxRetries) {
           throw new Error("Maximum retry attempts reached. Empty response persists.");
