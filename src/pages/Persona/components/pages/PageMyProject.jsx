@@ -623,7 +623,7 @@ const PageMyProject = () => {
                           <Body3 color="gray500">결과 리포트</Body3>
                         </ProjectHeader>
                         <ProjectContent>
-                          {userProjectList?.results?.project?.map(
+                          {userProjectList?.results?.projects?.map(
                             (project, index) => (
                               <OrganismProjectCard
                                 key={index}
