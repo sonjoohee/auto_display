@@ -1363,6 +1363,7 @@ const OrganismToastPopupSingleChat = ({
     const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
     if (creditResponse?.state !== "use") {
       setShowCreditPopup(true);
+      setSelectedRadio(null);
       return;
     }
 
@@ -1734,7 +1735,10 @@ const OrganismToastPopupSingleChat = ({
             closeText="취소"
             confirmText="시작하기"
             isModal={false}
-            onCancel={() => setShowRequestPopup(false)}
+            onCancel={() => {
+              setSelectedRadio(null);
+              setShowRequestPopup(false);
+            }}
             onConfirm={() => {
               // handleCloseRequestPopup();
               creditUse();
@@ -1756,7 +1760,10 @@ const OrganismToastPopupSingleChat = ({
             closeText="취소"
             confirmText="시작하기"
             isModal={false}
-            onCancel={() => setShowRequestPopup(false)}
+            onCancel={() => {
+              setSelectedRadio(null);
+              setShowRequestPopup(false);
+            }}
             onConfirm={() => {
               // handleCloseRequestPopup();
               creditUse();
@@ -1776,7 +1783,10 @@ const OrganismToastPopupSingleChat = ({
             closeText="취소"
             confirmText="시작하기"
             isModal={false}
-            onCancel={() => setShowRequestPopup(false)}
+            onCancel={() => {
+              setSelectedRadio(null);
+              setShowRequestPopup(false);
+            }}
             onConfirm={() => {
               // handleCloseRequestPopup();
               creditUse();
@@ -1797,7 +1807,10 @@ const OrganismToastPopupSingleChat = ({
           buttonType="Outline"
           closeText="확인"
           isModal={false}
-          onCancel={() => setShowCreditPopup(false)}
+          onCancel={() => {
+            setSelectedRadio(null);
+            setShowCreditPopup(false);
+          }}
         />
       )}
     </>
