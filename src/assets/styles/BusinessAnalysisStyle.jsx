@@ -2597,7 +2597,7 @@ export const ViewInfo = styled.div`
   }
 
   .info {
-    flex: 6;
+    flex: 5;
     min-width: 0; // flex-basis 오버플로우 방지
     display: flex;
     align-items: center;
@@ -2640,7 +2640,7 @@ export const ViewInfo = styled.div`
   }
 
   .button {
-    flex: 1;
+    flex: 2;
     min-width: 0; // flex-basis 오버플로우 방지
     display: flex;
     align-items: center;
