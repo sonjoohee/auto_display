@@ -16,6 +16,7 @@ import {
   PROJECT_LOAD_BUTTON_STATE,
   PROJECT_ID,
   PURPOSE_ITEMS_SINGLE,
+  SELECTED_INTERVIEW_PURPOSE_DATA,
 } from "../../../AtomStates";
 import {
   ListBoxItem,
@@ -45,9 +46,13 @@ const MoleculeCustomInterviewPurpose = ({
   setRegenerateCount,
   NoBackground,
 }) => {
+  console.log("🚀 ~ purpose:", purpose);
+  const [selectedInterviewPurposeData, setSelectedInterviewPurposeData] =
+    useAtom(SELECTED_INTERVIEW_PURPOSE_DATA);
   const [businessAnalysis] = useAtom(BUSINESS_ANALYSIS);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectId] = useAtom(PROJECT_ID);
+
   const [singleInterviewQuestionList, setSingleInterviewQuestionList] = useAtom(
     SINGLE_INTERVIEW_QUESTION_LIST
   );
@@ -127,6 +132,7 @@ const MoleculeCustomInterviewPurpose = ({
           isLoggedIn
         );
       }
+      setSelectedInterviewPurposeData(purpose);
     } catch (error) {
       console.error("질문 로딩 중 에러 발생:", error);
       if (error.response) {
