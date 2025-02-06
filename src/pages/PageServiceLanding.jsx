@@ -416,7 +416,7 @@ const PageServiceLanding = () => {
 
       <Section04 id="section04" currentSlide={currentSlide}>
         <div className="title">
-          <h3>INNOVATING X's INSIGHTS</h3>
+          <h3>Innovating X’s Insight</h3>
           <p>X는 데이터를 넘어선 인사이트의 시작입니다</p>
         </div>
 
@@ -536,10 +536,10 @@ const PageServiceLanding = () => {
                 <div className={`answer ${openFaq === 4 ? 'open' : ''}`}>
                   <p>
                     InterviewX.ai는 누구나 쉽게 사용할 수 있도록 설계되었습니다.<br />
-                    1️⃣ 아이디어 입력 – 조사할 제품이나 서비스 개요 입력<br />
-                    2️⃣ 페르소나 자동 생성 – AI가 맞춤형 타겟 페르소나 추천<br />
-                    3️⃣ 인터뷰 진행 – 1:1, 1:N, 퀵서베이 중 원하는 방식 선택<br />
-                    4️⃣ 결과 분석 – AI가 인터뷰 내용을 분석하여 주요 인사이트 제공<br />
+                    아이디어 입력 – 조사할 제품이나 서비스 개요 입력<br />
+                    ️페르소나 자동 생성 – AI가 맞춤형 타겟 페르소나 추천<br />
+                    인터뷰 진행 – 1:1, 1:N, 퀵서베이 중 원하는 방식 선택<br />
+                    결과 분석 – AI가 인터뷰 내용을 분석하여 주요 인사이트 제공<br />
                     👉 몇 분 만에 실행 가능하며, 누구나 쉽게 시작할 수 있습니다! 🚀
                   </p>
                 </div>
@@ -552,7 +552,7 @@ const PageServiceLanding = () => {
                 <div className={`answer ${openFaq === 5 ? 'open' : ''}`}>
                   <p>
                     InterviewX.ai에 대한 더 자세한 정보가 필요하시거나, 맞춤형 사용 방법을 상담받고 싶다면, 아래의 이메일을 통해 문의해 주세요.<br />
-📧 이메일 문의 – info@userconnect.kr
+                    📧 이메일 문의 – info@userconnect.kr
                   </p>
                 </div>
               </li>
@@ -661,8 +661,10 @@ const PageServiceLanding = () => {
 
       {isPopupOpen && (
         <Popup>
-          <span className="close" onClick={() => setIsPopupOpen(false)} />
-          <img src={images.Popup01} alt="" />
+          <div>
+            <span className="close" onClick={() => setIsPopupOpen(false)} />
+            <img src={images.Popup01} alt="" />
+          </div>
         </Popup>
       )}
     </>
@@ -1605,7 +1607,7 @@ const Section03 = styled.div`
 const Section04 = styled.div`
   position: relative;
   width: 100%;
-  padding: 250px 0 130px;
+  padding: 210px 0 130px;
   background: #010101;
   overflow: hidden;
 
@@ -2184,15 +2186,23 @@ const Footer = styled.div`
 
 const Popup = styled.div`
   position: fixed;
-  top: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-radius: 15px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   z-index: 999;
+  background: rgba(0, 0, 0, 0.6);
 
-  ${media.mobile} {
-    width: calc(100vw - 40px);
+  > div {
+    position: absolute;
+    top:50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 438px;
+    height: 668px;
+    border-radius: 15px;
+    overflow: hidden;
   }
 
   img{
