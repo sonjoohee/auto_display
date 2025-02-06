@@ -1012,7 +1012,7 @@ const InterviewWayContent = styled.div`
   gap: 40px;
   width: 100%;
   text-align: left;
-  margin-bottom: 100px;
+  margin-bottom: 280px;
 
   > div {
     display: flex;
