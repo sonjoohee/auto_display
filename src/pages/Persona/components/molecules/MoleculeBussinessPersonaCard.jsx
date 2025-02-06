@@ -33,6 +33,7 @@ import axios from "axios";
 import { updateProjectOnServer } from "../../../../utils/indexedDB.js";
 import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB.js";
 import { createRequestPersonaOnServer } from "../../../../utils/indexedDB.js";
+import { UserCreditInfo } from "../../../../utils/indexedDB.js";
 import { useAtom } from "jotai";
 import {
   PROJECT_ID,
@@ -70,7 +71,7 @@ const MoleculeBussinessPersonaCard = ({
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
-  const [userCredits] = useAtom(USER_CREDITS);
+  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
 
   const [isChecked, setIsChecked] = useState(false);
   const [requestStatus, setRequestStatus] = useState(isRequest);
@@ -182,7 +183,7 @@ const MoleculeBussinessPersonaCard = ({
     // 팝업 닫기
     setShowRequestPopup(false);
 
-    const accessToken = sessionStorage.getItem("accessToken");
+    let accessToken = sessionStorage.getItem("accessToken");
     if (!accessToken) {
       console.error("토큰이 없습니다.");
       return;
@@ -212,6 +213,16 @@ const MoleculeBussinessPersonaCard = ({
 
     const creditUseResponse = await UserCreditUse(creditUsePayload, isLoggedIn);
     // console.log("크레딧 사용 응답:", creditUseResponse);
+
+          // 크레딧 사용 후 사용자 정보 새로고침
+          accessToken = sessionStorage.getItem("accessToken");
+          if (accessToken) {
+            const userCreditValue = await UserCreditInfo(isLoggedIn);
+    
+            // 전역 상태의 크레딧 정보 업데이트
+            setUserCredits(userCreditValue);
+          }
+
     handleRequestPersona();
   };
 

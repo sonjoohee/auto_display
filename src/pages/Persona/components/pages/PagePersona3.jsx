@@ -23,6 +23,7 @@ import {
   EVENT_STATE,
   EVENT_TITLE,
   TRIAL_STATE,
+  USER_CREDITS,
 } from "../../../AtomStates";
 // import { SELECTED_INTERVIEW_TYPE } from "../../../../AtomStates";
 
@@ -80,12 +81,13 @@ import PopupWrap from "../../../../assets/styles/Popup";
 import OrganismToastPopup from "../organisms/OrganismToastPopup";
 import MoleculeInterviewPurpose from "../molecules/MoleculeInterviewPurpose.jsx";
 import OrganismCustomization from "../organisms/OrganismCustomization.jsx";
-import { UserCreditCheck, UserCreditUse } from "../../../../utils/indexedDB";
+import { UserCreditCheck, UserCreditUse, UserCreditInfo } from "../../../../utils/indexedDB";
 
 const FULL_DEFINITION_TEXT =
   "사용자 트렌드 민감도 분석은 사용자가 시장의 최신 트렌드에 얼마나 빠르고 효과적으로 반응하는지를 측정하는 방법론입니다. 이 분석은 사용자가 새로운 트렌드를 어떻게 인식하고, 그 트렌드에 따라 행동이 어떻게 변화하는지 파악하는 데 중점을 둡니다.";
 
 const PagePersona3 = () => {
+  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
   const [eventState, setEventState] = useAtom(EVENT_STATE);
   const [eventTitle, setEventTitle] = useAtom(EVENT_TITLE);
   const [trialState, setTrialState] = useAtom(TRIAL_STATE);
@@ -512,6 +514,14 @@ const PagePersona3 = () => {
           editedPurpose: "",
         },
       ]);
+            // 크레딧 사용 후 사용자 정보 새로고침
+            const accessToken = sessionStorage.getItem("accessToken");
+            if (accessToken) {
+              const userCreditValue = await UserCreditInfo(isLoggedIn);
+      
+              // 전역 상태의 크레딧 정보 업데이트
+              setUserCredits(userCreditValue);
+            }
     } catch (error) {
       console.error("크레딧 체크 실패:", error);
       setShowCreditPopup(true);

@@ -11,7 +11,10 @@ import { palette } from "../../../../assets/styles/Palette";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import { InterviewXPersonaSingleInterviewTheoryCustom } from "../../../../utils/indexedDB";
 import { InterviewXPersonaSingleInterviewGeneratorRequestTheoryCustom } from "../../../../utils/indexedDB";
-import { updateProjectOnServer } from "../../../../utils/indexedDB";
+import {
+  updateProjectOnServer,
+  UserCreditInfo,
+} from "../../../../utils/indexedDB";
 import { useAtom } from "jotai";
 import AtomPersonaLoader from "../atoms/AtomPersonaLoader";
 import PopupWrap from "../../../../assets/styles/Popup";
@@ -24,6 +27,7 @@ import {
   IS_LOADING_QUESTION,
   SELECTED_INTERVIEW_PURPOSE,
   SELECTED_INTERVIEW_PURPOSE_DATA,
+  USER_CREDITS,
 } from "../../../AtomStates";
 
 const OrganismCustomization = ({
@@ -35,6 +39,7 @@ const OrganismCustomization = ({
   setShowCustomButton,
   setShowQuestions,
 }) => {
+  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
   const [projectId] = useAtom(PROJECT_ID);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [businessAnalysis] = useAtom(BUSINESS_ANALYSIS);
@@ -158,6 +163,15 @@ const OrganismCustomization = ({
       }
     } finally {
       setIsLoadingQuestion(false);
+
+      // 크레딧 사용 후 사용자 정보 새로고침
+      const accessToken = sessionStorage.getItem("accessToken");
+      if (accessToken) {
+        const userCreditValue = await UserCreditInfo(isLoggedIn);
+
+        // 전역 상태의 크레딧 정보 업데이트
+        setUserCredits(userCreditValue);
+      }
     }
   };
 
