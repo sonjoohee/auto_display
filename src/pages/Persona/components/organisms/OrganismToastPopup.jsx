@@ -1317,6 +1317,7 @@ const Status = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
   gap: 8px;
   max-width: 55px;
   width: 100%;
