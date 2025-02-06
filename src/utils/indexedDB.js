@@ -1629,15 +1629,13 @@ export const InterviewXPersonaSingleIndepthInterviewGeneratorRequest = async (
 };
 
 //마케팅 고객 추천 요청 API
-export const MarketingCustomerRecommendationRequest = async (
-  data,
-  isLoggedIn
-) => {
+export const MarketingCustomerRecommendationRequest = async (data) => { // isLoggedIn 제거
   // console.log(" 마케팅 고객 추천 요청 API  - 입력 데이터:", data);
-  if (!isLoggedIn) {
-    console.error("로그인이 필요합니다.");
-    return null;
-  }
+  // 로그인 체크 제거
+  // if (!isLoggedIn) {
+  //   console.error("로그인이 필요합니다.");
+  //   return null;
+  // }
 
   try {
     const token = sessionStorage.getItem("accessToken");
@@ -1646,7 +1644,7 @@ export const MarketingCustomerRecommendationRequest = async (
     }
 
     const response = await axios.post(
-      "https://wishresearch.kr/panels/marketing/customer_recommendation",
+      "https://wishresearch.kr/panels/marketing/temporary/customer_recommendation",
       data,
       {
         headers: {
@@ -1673,13 +1671,13 @@ export const MarketingCustomerRecommendationRequest = async (
 };
 
 //마케팅 연구 보고서 요청 API
-export const MarketingResearchReportRequest = async (data, isLoggedIn) => {
+export const MarketingResearchReportRequest = async (data) => { // isLoggedIn 제거
   // console.log(" 마케팅 연구 보고서 요청 API  - 입력 데이터:", data);
-  if (!isLoggedIn) {
-    console.error("로그인이 필요합니다.");
-
-    return null;
-  }
+  // 로그인 체크 제거
+  // if (!isLoggedIn) {
+  //   console.error("로그인이 필요합니다.");
+  //   return null;
+  // }
 
   try {
     const token = sessionStorage.getItem("accessToken");
@@ -1688,7 +1686,7 @@ export const MarketingResearchReportRequest = async (data, isLoggedIn) => {
     }
 
     const response = await axios.post(
-      "https://wishresearch.kr/panels/marketing/research_report",
+      "https://wishresearch.kr/panels/marketing/temporary/research_report",
       data,
       {
         headers: {
@@ -1715,13 +1713,13 @@ export const MarketingResearchReportRequest = async (data, isLoggedIn) => {
 };
 
 //마케팅 비즈니스 모델 보고서 요청 API
-export const MarketingBmReportRequest = async (data, isLoggedIn) => {
+export const MarketingBmReportRequest = async (data) => { // isLoggedIn 제거
   // console.log(" 마케팅 비즈니스 모델 보고서 요청 API  - 입력 데이터:", data);
-  if (!isLoggedIn) {
-    console.error("로그인이 필요합니다.");
-
-    return null;
-  }
+  // 로그인 체크 제거
+  // if (!isLoggedIn) {
+  //   console.error("로그인이 필요합니다.");
+  //   return null;
+  // }
 
   try {
     const token = sessionStorage.getItem("accessToken");
@@ -1730,7 +1728,7 @@ export const MarketingBmReportRequest = async (data, isLoggedIn) => {
     }
 
     const response = await axios.post(
-      "https://wishresearch.kr/panels/marketing/bm_report",
+      "https://wishresearch.kr/panels/marketing/temporary/bm_report",
       data,
       {
         headers: {
@@ -1757,13 +1755,13 @@ export const MarketingBmReportRequest = async (data, isLoggedIn) => {
 };
 
 //마케팅 최종 보고서 요청 API
-export const MarketingFinalReportRequest = async (data, isLoggedIn) => {
+export const MarketingFinalReportRequest = async (data) => { // isLoggedIn 제거
   // console.log(" 마케팅 최종 보고서 요청 API  - 입력 데이터:", data);
-  if (!isLoggedIn) {
-    console.error("로그인이 필요합니다.");
-
-    return null;
-  }
+  // 로그인 체크 제거
+  // if (!isLoggedIn) {
+  //   console.error("로그인이 필요합니다.");
+  //   return null;
+  // }
 
   try {
     const token = sessionStorage.getItem("accessToken");
@@ -1772,7 +1770,7 @@ export const MarketingFinalReportRequest = async (data, isLoggedIn) => {
     }
 
     const response = await axios.post(
-      "https://wishresearch.kr/panels/marketing/final_report",
+      "https://wishresearch.kr/panels/marketing/temporary/final_report",
       data,
       {
         headers: {
@@ -1799,13 +1797,13 @@ export const MarketingFinalReportRequest = async (data, isLoggedIn) => {
 };
 
 //마케팅 MBTI 결과 요청 API
-export const MarketingMbtiResultRequest = async (data, isLoggedIn) => {
+export const MarketingMbtiResultRequest = async (data) => { // isLoggedIn 제거
   // console.log(" 마케팅 MBTI 결과 요청 API  - 입력 데이터:", data);
-  if (!isLoggedIn) {
-    console.error("로그인이 필요합니다.");
-
-    return null;
-  }
+  // 로그인 체크 제거
+  // if (!isLoggedIn) {
+  //   console.error("로그인이 필요합니다.");
+  //   return null;
+  // }
 
   try {
     const token = sessionStorage.getItem("accessToken");
@@ -1814,7 +1812,7 @@ export const MarketingMbtiResultRequest = async (data, isLoggedIn) => {
     }
 
     const response = await axios.post(
-      "https://wishresearch.kr/panels/marketing/mbti_result",
+      "https://wishresearch.kr/panels/marketing/temporary/mbti_result",
       data,
       {
         headers: {
