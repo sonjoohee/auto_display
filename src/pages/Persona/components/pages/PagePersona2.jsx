@@ -34,6 +34,7 @@ import {
   EVENT_TITLE,
   TRIAL_STATE,
   CREDIT_REQUEST_BUSINESS_PERSONA,
+  SELECTED_INTERVIEW_TYPE,
   USER_CREDITS,
 } from "../../../AtomStates";
 import {
@@ -109,10 +110,14 @@ import { UserCreditCheck, UserCreditUse } from "../../../../utils/indexedDB";
 import MoleculeBussinessPersonaCard from "../molecules/MoleculeBussinessPersonaCard";
 
 const PagePersona2 = () => {
+  const [selectedInterviewType, setSelectedInterviewType] = useAtom(
+    SELECTED_INTERVIEW_TYPE
+  );
   const [customPersonaForm, setCustomPersonaForm] = useState({
     description: "", // 페르소나 특징과 역할
     purpose: "", // 사용 목적
     quantity: 1, // 모집 인원
+
     gender: "", // 성별 ('' | 'male' | 'female')
     ageGroups: [], // 연령대 선택 ['10s', '20s', ...]
     additionalInfo: "", // 추가 필요 정보
@@ -517,6 +522,7 @@ const PagePersona2 = () => {
   useEffect(() => {
     const loadProject = async () => {
       try {
+        setSelectedInterviewType("");
         if (projectLoadButtonState) {
           const savedProjectInfo = await getProjectByIdFromIndexedDB(
             projectId,
@@ -542,6 +548,8 @@ const PagePersona2 = () => {
             }
             if (savedProjectInfo.customTheoryData) {
               setCustomTheoryData(savedProjectInfo.customTheoryData);
+            } else {
+              setCustomTheoryData([]);
             }
 
             let availablePersonas = [];
