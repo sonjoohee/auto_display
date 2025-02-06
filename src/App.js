@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import GlobalStyles from "./assets/GlobalStyle";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { useAtom } from "jotai";
 import {
   IS_LOGGED_IN,
@@ -81,6 +81,15 @@ function App() {
   const [, setIsMobile] = useAtom(IS_MOBILE);
   const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
+
+  // 토큰 존재 여부 확인 컴포넌트
+  function RequireToken({ children }) {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      return <Navigate to="/" replace />;
+    }
+    return children;
+  }
 
   useEffect(() => {
     const handleResize = () => {
@@ -189,21 +198,24 @@ function App() {
         <Routes>
           <Route path="/" element={<PageMain />} />
           <Route path="*" element={<PageMain />} />
-          <Route path="/MeetAiExpert" element={<PageMeetAiExpert />} />
-          <Route path="/ExpertInsight" element={<PageExpertInsight />}></Route>
+          {/* <Route path="/MeetAiExpert" element={<PageMeetAiExpert />} /> */}
+          <Route
+            path="/ExpertInsight"
+            element={<RequireToken><PageExpertInsight /></RequireToken>}
+          ></Route>
           <Route
             path="/MarketingExpertInsight"
-            element={<PageMarketingExpertInsight />}
+            element={<RequireToken><PageMarketingExpertInsight /></RequireToken>}
           ></Route>
           {isMarketing && approachPath !== 2 ? (
             <Route
               path="/conversation/:conversationId"
-              element={<PageMarketingExpertInsight />}
+              element={<RequireToken><PageMarketingExpertInsight /></RequireToken>}
             />
           ) : (
             <Route
               path="/conversation/:conversationId"
-              element={<PageExpertInsight />}
+              element={<RequireToken><PageExpertInsight /></RequireToken>}
             />
           )}
 
@@ -217,49 +229,49 @@ function App() {
           ></Route>
           <Route
             path="/MarketingSetting/1"
-            element={<PageMarketingYesItems />}
+            element={<RequireToken><PageMarketingYesItems /></RequireToken>}
           ></Route>
           <Route
             path="/MarketingSetting/2"
-            element={<PageMarketingNoItems />}
+            element={<RequireToken><PageMarketingNoItems /></RequireToken>}
           ></Route>
           <Route
             path="/MarketingSetting/2/Result"
-            element={<PageMarketingNoItemsResult />}
+            element={<RequireToken><PageMarketingNoItemsResult /></RequireToken>}
           ></Route>
 
           {/* 마케팅 쉐어 */}
           <Route
             path="/MarketingSetting/Share/:mbtiType"
-            element={<PageMarketingNoItemsShare />}
+            element={<RequireToken><PageMarketingNoItemsShare /></RequireToken>}
           />
 
           {/* 페르소나 */}
-          <Route path="/Persona" element={<PagePersona />}></Route>
+          <Route path="/Persona" element={<RequireToken><PagePersona /></RequireToken>}></Route>
           <Route path="/" element={<PageMain />}></Route>
-          <Route path="/Persona/:projectId" element={<PagePersona />}></Route>
+          <Route path="/Persona/:projectId" element={<RequireToken><PagePersona /></RequireToken>}></Route>
           <Route
             path="/Persona/2/:projectId"
-            element={<PagePersona2 />}
+            element={<RequireToken><PagePersona2 /></RequireToken>}
           ></Route>
           <Route
             path="/Persona/3/:projectId"
-            element={<PagePersona3 />}
+            element={<RequireToken><PagePersona3 /></RequireToken>}
           ></Route>
           <Route
             path="/Persona/3/Select/:projectId"
-            element={<PagePersona3Select />}
+            element={<RequireToken><PagePersona3Select /></RequireToken>}
           ></Route>
           <Route
             path="/Persona/4/:projectId"
-            element={<PagePersona4 />}
+            element={<RequireToken><PagePersona4 /></RequireToken>}
           ></Route>
           <Route
             path="/Persona/4/Single/:projectId"
-            element={<PagePersona4Single />}
+            element={<RequireToken><PagePersona4Single /></RequireToken>}
           ></Route>
 
-          <Route path="/MyProject" element={<PageMyProject />} />
+          <Route path="/MyProject" element={<RequireToken><PageMyProject /></RequireToken>} />
           {/* <Route
             path="/CuratorStoryboard"
             element={<CuratorStoryboard />}
@@ -284,18 +296,18 @@ function App() {
           <Route path="/PersonaLoader" element={<PagePersonaLoader />} />
           <Route path="/Recreate" element={<PageRecreate />} />
           <Route path="/InterviewWay" element={<PageInterviewWay />} /> */}
-          <Route path="/PersonaSelect" element={<PagePersonaSelect />} />
-          <Route path="/Payment" element={<PagePayment />} />
+          <Route path="/PersonaSelect" element={<RequireToken><PagePersonaSelect /></RequireToken>} />
+          <Route path="/Payment" element={<RequireToken><PagePayment /></RequireToken>} />
 
-          <Route path="/MyProfile" element={<PageMyProfile />} />
+          <Route path="/MyProfile" element={<RequireToken><PageMyProfile /></RequireToken>} />
 
-          <Route path="/Terms" element={<PageTerms />} />
-          <Route path="/Policy" element={<PagePolicy />} />
+          <Route path="/Terms" element={<RequireToken><PageTerms /></RequireToken>} />
+          <Route path="/Policy" element={<RequireToken><PagePolicy /></RequireToken>} />
 
           <Route path="/ServiceLanding" element={<PageServiceLanding />} />
           <Route path="/blog" element={<PageBlog />} />
 
-          <Route path="/style_guide" element={<PageStyleGuide />} />
+          <Route path="/style_guide" element={<RequireToken><PageStyleGuide /></RequireToken>} />
         </Routes>
       </BrowserRouter>
     </div>
