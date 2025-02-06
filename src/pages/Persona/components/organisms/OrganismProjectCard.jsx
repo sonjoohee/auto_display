@@ -113,7 +113,7 @@ const OrganismProjectCard = ({ project, index }) => {
   };
 
   //결과 분석 보기
-  const navigateToInterviewReportPage = async (report) => {
+  const navigateToInterviewReportPage = (report) => {
     // console.log("🚀 ~ navigateToInterviewReportPage ~ reportId:", reportId);
     setProjectId(project._id);
     setReportId(report.reportId);
