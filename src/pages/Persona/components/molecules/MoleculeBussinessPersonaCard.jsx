@@ -114,7 +114,7 @@ const MoleculeBussinessPersonaCard = ({
         return "Olivine";
       case "감성적 소비자 페르소나":
         return "ChineseGreen";
-      case "특정 상황 중심페르소나":
+      case "특정 상황 중심 페르소나":
         return "Jonquil";
       case "문화적/지역적 특성 중심 페르소나":
         return "PastelOrange";
@@ -262,14 +262,14 @@ const MoleculeBussinessPersonaCard = ({
     const creditUseResponse = await UserCreditUse(creditUsePayload, isLoggedIn);
     // console.log("크레딧 사용 응답:", creditUseResponse);
 
-          // 크레딧 사용 후 사용자 정보 새로고침
-          accessToken = sessionStorage.getItem("accessToken");
-          if (accessToken) {
-            const userCreditValue = await UserCreditInfo(isLoggedIn);
-    
-            // 전역 상태의 크레딧 정보 업데이트
-            setUserCredits(userCreditValue);
-          }
+    // 크레딧 사용 후 사용자 정보 새로고침
+    accessToken = sessionStorage.getItem("accessToken");
+    if (accessToken) {
+      const userCreditValue = await UserCreditInfo(isLoggedIn);
+
+      // 전역 상태의 크레딧 정보 업데이트
+      setUserCredits(userCreditValue);
+    }
 
     handleRequestPersona();
   };
@@ -1014,7 +1014,7 @@ export const TagType = styled.span`
         case "ChineseGreen":
           return "감성적 소비자 페르소나";
         case "Jonquil":
-          return "특정 상황 중심페르소나";
+          return "특정 상황 중심 페르소나";
         case "PastelOrange":
           return "문화적/지역적 특성 중심 페르소나";
         case "Tangerine":

@@ -301,7 +301,7 @@ const PagePersona2 = () => {
     {
       index: 14,
       id: "type14",
-      label: "특정 상황 중심페르소나",
+      label: "특정 상황 중심 페르소나",
       count: 2,
       wasSelected: false,
     },
@@ -1057,7 +1057,6 @@ const PagePersona2 = () => {
   };
 
   const loadBusinessPersona = async (personaType) => {
-    console.log("🚀 ~ loadBusinessPersona ~ personaType:", personaType);
     try {
       setIsLoadingBusiness(true);
       setIsLoadingMore(true);
@@ -1215,6 +1214,10 @@ const PagePersona2 = () => {
       // 선택 해제: 선택된 유형에서 제거하고 선택하지 않은 유형으로 이동
       setSelectedTypes((prev) => {
         const updatedSelected = prev.filter((type) => type.id !== typeId);
+        console.log(
+          "🚀 ~ setSelectedTypes ~ updatedSelected:",
+          updatedSelected
+        );
         return updatedSelected;
       });
 
@@ -1612,7 +1615,21 @@ const PagePersona2 = () => {
         projectLoadButtonState
       );
       if (savedProjectInfo?.businessPersonaList) {
-        setDisplayedPersonas(savedProjectInfo.businessPersonaList);
+        console.log(
+          "🚀 ~ reloadBusinessPersonaList ~ savedProjectInfo?.businessPersonaList:",
+          savedProjectInfo?.businessPersonaList
+        );
+        console.log(
+          "🚀 ~ reloadBusinessPersonaList ~ visibleSelectedTypes:",
+          selectedTypes
+        );
+        setDisplayedPersonas(
+          savedProjectInfo.businessPersonaList.filter((persona) =>
+            selectedTypes.some(
+              (selectedType) => selectedType.label === persona.persona_type
+            )
+          )
+        );
       }
     } catch (error) {
       console.error(error);
@@ -1894,10 +1911,10 @@ const PagePersona2 = () => {
                                                 {type.label}
                                               </label>
                                             </CheckBox>
-                                            {type.wasSelected && (
+                                            {/* {type.wasSelected && (
                                               // <span>{type.count}명</span>
                                               <span>3명</span>
-                                            )}
+                                            )} */}
                                           </TypeListItem>
                                         );
                                       })}
@@ -1909,8 +1926,8 @@ const PagePersona2 = () => {
                                       Fill
                                       style={{ margin: "20px 12px 0" }}
                                       onClick={async () => {
-                                        reloadBusinessPersonaList();
                                         setShowTypeList(false); // 리스트를 바로 숨김
+                                        reloadBusinessPersonaList();
                                         setIsLoadingMore(true); // 로딩 상태 시작
                                         await handleTypeSelection(); // 선택된 유형 처리
                                         setIsLoadingMore(false); // 로딩 상태 종료
