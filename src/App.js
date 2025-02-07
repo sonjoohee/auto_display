@@ -271,11 +271,7 @@ function App() {
           {/* 마케팅 쉐어 */}
           <Route
             path="/MarketingSetting/Share/:mbtiType"
-            element={
-              <RequireToken>
-                <PageMarketingNoItemsShare />
-              </RequireToken>
-            }
+            element={<PageMarketingNoItemsShare />}
           />
 
           {/* 페르소나 */}
