@@ -426,7 +426,6 @@ const PageServiceLanding = () => {
           <div 
             className="carousel-container"
             style={{ 
-              transform: `translateX(-${currentSlide * 100}%)`,
               cursor: isDragging ? 'grabbing' : 'grab'
             }}
             onMouseDown={handleMouseDown}
@@ -1731,8 +1730,13 @@ const Section04 = styled.div`
 
     ${media.mobile} {
       overflow: hidden;
-      padding: 0 20px;
+      padding: 0;
       margin: 40px auto 0;
+      width: 100vw; // 전체 뷰포트 너비로 설정
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%); // 가운데 정렬
+      padding: 0 20px;
     }
 
     .carousel-container {
@@ -1743,10 +1747,11 @@ const Section04 = styled.div`
 
       ${media.mobile} {
         gap: 20px;
-        transform: translateX(calc(-${props => props.currentSlide * 100}% - ${props => props.currentSlide * 20}px));
+        width: 100%;
+        transform: translateX(-${props => props.currentSlide * (100 + 6)}%); // 간격 20px를 퍼센트로 변환
       }
-      user-select: none; /* Prevent text selection while dragging */
-      touch-action: pan-y pinch-zoom; /* Enable touch gestures */
+      user-select: none;
+      touch-action: pan-y pinch-zoom;
     }
 
     .carousel-item {
@@ -1757,12 +1762,14 @@ const Section04 = styled.div`
       opacity: 0.5;
 
       ${media.mobile} {
-        min-width: calc(100vw - 40px);
+        // min-width: calc(100% - 40px);
+        min-width: 100%;
         padding: 0;
         transform: scale(1);
         opacity: 1;
         display: flex;
         justify-content: center;
+        margin: 0;
       }
       
       &:nth-child(${props => props.currentSlide + 1}) {
