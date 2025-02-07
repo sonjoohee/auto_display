@@ -20,6 +20,7 @@ const PageServiceLanding = () => {
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
   const [isPopupOpen, setIsPopupOpen] = useState(true); // 팝업 상태 추가
+  const [scrollPosition, setScrollPosition] = useState(0); // 새로운 state 추가
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -32,11 +33,12 @@ const PageServiceLanding = () => {
 
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
+      setScrollPosition(scrollPosition); // 스크롤 위치 업데이트
       const isMobile = window.innerWidth <= 768; // 모바일 기준 너비 설정
       
       if (isMobile) {
         // 모바일일 때의 스크롤 위치 조건
-        if (scrollPosition > 700) {
+        if (scrollPosition > 720) {
           setTextColor('#000');
           setLogoColor(palette.black);
         } else if (scrollPosition > 0) {
@@ -171,7 +173,7 @@ const PageServiceLanding = () => {
 
   return (
     <>
-      <Header textColor={textColor}>
+      <Header textColor={textColor} scrollPosition={scrollPosition}>
         <h1 className="logo">
           <images.Logo2 color={logoColor} />
         </h1>
@@ -687,11 +689,24 @@ const Header = styled.div`
   padding: 10px;
   border-radius: 8px;
   background: transparent;
+  transition: background 0.3s ease;
 
   ${media.mobile} {
-    top: 20px;
-    width: calc(100% - 20px);
-    padding: 0;
+    top: 0;
+    left: 0;
+    transform: none;
+    width: 100%;
+    padding: 20px 20px 40px;
+    border-radius: 0;
+    background: ${props => {
+      if (props.scrollPosition > 1500) {
+        return 'linear-gradient(180deg, #000 60%, rgba(0, 0, 0, 0.00) 100%)';
+      } else if (props.scrollPosition > 720) {
+        return 'linear-gradient(180deg, #FFF 60%, rgba(255, 255, 255, 0.00) 100%)';
+      } else {
+        return 'linear-gradient(180deg, #000 60%, rgba(0, 0, 0, 0.00) 100%)';
+      }
+    }};
   }
 
   .logo svg {
@@ -1748,7 +1763,7 @@ const Section04 = styled.div`
       ${media.mobile} {
         gap: 20px;
         width: 100%;
-        transform: translateX(-${props => props.currentSlide * (100 + 6)}%); // 간격 20px를 퍼센트로 변환
+        transform: translateX(-${props => props.currentSlide * (100 + 6)}%);
       }
       user-select: none;
       touch-action: pan-y pinch-zoom;
