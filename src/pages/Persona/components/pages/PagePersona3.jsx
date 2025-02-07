@@ -199,7 +199,7 @@ const PagePersona3 = () => {
 
     setPersonaStep(3);
     setIsPersonaAccessible(true);
-    navigate(`/Persona/3/Select/${projectId}`, { replace: true });
+    navigate(`/Persona/3/Select`, { replace: true });
   };
   // const [isLoadingPage, setIsLoadingPage] = useState(true);
 

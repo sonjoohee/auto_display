@@ -109,7 +109,7 @@ const OrganismProjectCard = ({ project, index }) => {
     setPersonaStep(2);
     setProjectLoadButtonState(true);
     setIsPersonaAccessible(true);
-    navigate(`/Persona/2/${projectId}`);
+    navigate(`/Persona/2`);
   };
 
   //결과 분석 보기
@@ -124,9 +124,9 @@ const OrganismProjectCard = ({ project, index }) => {
     setPersonaStep(4);
 
     if (report.interviewType === "single") {
-      navigate(`/Persona/4/Single/${project._id}`);
+      navigate(`/Persona/4/Single`);
     } else {
-      navigate(`/Persona/4/${project._id}`);
+      navigate(`/Persona/4`);
     }
   };
 
@@ -139,9 +139,9 @@ const OrganismProjectCard = ({ project, index }) => {
     setReportLoadButtonState(true);
     setIsPersonaAccessible(true);
     if (report.interviewType === "single") {
-      navigate(`/Persona/4/Single/${project._id}`);
+      navigate(`/Persona/4/Single`);
     } else {
-      navigate(`/Persona/4/${project._id}`);
+      navigate(`/Persona/4`);
     }
   };
 

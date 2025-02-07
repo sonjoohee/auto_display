@@ -433,7 +433,7 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
   };
 
   const handleCheckResult = () => {
-    navigate(`/Persona/4/${projectId}`, { replace: true });
+    navigate(`/Persona/4`, { replace: true });
     handleWarningClose();
   };
 

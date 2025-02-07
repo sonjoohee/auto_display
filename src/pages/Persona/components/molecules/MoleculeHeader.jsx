@@ -181,11 +181,11 @@ const MoleculeHeader = () => {
                   />
                 </span>
                 <Sub2 color="gray800">
-                  {(
+                  {isLoggedIn ? (
                     (userCredits.regular_credit || 0) +
                     (userCredits.additional_credit || 0) +
                     (userCredits.event_credit || 0)
-                  ).toLocaleString()}
+                  ).toLocaleString() : 0}
                 </Sub2>
               </div>
               <images.ChevronDown

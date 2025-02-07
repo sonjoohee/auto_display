@@ -107,12 +107,12 @@ const PagePersona = () => {
             setIsPersonaAccessible(true);
             // setIsLoadingPage(false); // 로딩 완료
             // 새로운 대화 ID로 경로 변경
-            navigate(`/Persona/${newProjectId}`, { replace: true });
+            navigate(`/Persona`, { replace: true });
           } catch (error) {
             // setIsLoadingPage(false); // 로딩 완료
             setIsPersonaAccessible(true);
             console.error("Failed to create project on server:", error);
-            navigate(`/Persona/${projectId}`, { replace: true });
+            navigate(`/Persona`, { replace: true });
           }
         }
       }
@@ -129,7 +129,7 @@ const PagePersona = () => {
     setIsPersonaAccessible(true);
     // saveProject({ changingProject: { personaStep: 2 } });
     setPersonaButtonState2(1);
-    navigate(`/Persona/2/${projectId}`, { replace: true });
+    navigate(`/Persona/2`, { replace: true });
   };
 
   useEffect(() => {

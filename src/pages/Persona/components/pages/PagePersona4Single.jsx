@@ -486,7 +486,7 @@ const PagePersona4 = () => {
     setReportDescriptionLoadButtonState(false);
     setProjectLoadButtonState(true);
     setIsPersonaAccessible(true);
-    navigate(`/Persona/2/${projectId}`);
+    navigate(`/Persona/2`);
   };
 
   const handleTabClick = (tabNumber) => {
