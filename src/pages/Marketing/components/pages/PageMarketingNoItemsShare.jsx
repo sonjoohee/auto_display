@@ -168,6 +168,78 @@ const PageMarketingNoItemsShare = () => {
     }
   };
 
+
+  const getEntrepreneursByMbti = (mbtiName) => {
+    const entrepreneurs = {
+      ROIC: [
+        { name: "일론 머스크", company: "Tesla, SpaceX의 CEO" },
+        { name: "스티브 잡스", company: "Apple 공동창립자" },
+      ],
+      ROTC: [
+        { name: "래리 페이지", company: "Google 공동창립자" },
+        { name: "벤 코헨", company: "Ben & Jerry's Icecream 공동창립자" },
+      ],
+      SOIA: [
+        { name: "워렌 버핏", company: "Berkshire Hathaway CEO" },
+        { name: "제프 베조스", company: "Amazon 창립자" },
+      ],
+      RPTC: [
+        { name: "리드 헤이스팅스", company: "Netflix CEO" },
+        { name: "사티아 나델라", company: "Microsoft CEO" },
+      ],
+      ROTA: [
+        { name: "마윈", company: "Alibaba 창립자" },
+        { name: "짐 월튼", company: "Walmart 공동창립자" },
+      ],
+      SPIC: [
+        { name: "지미 웨일스", company: "위키피디아 창립자" },
+        { name: "피터 틸", company: "PayPal 공동창립자" },
+      ],
+      SOTC: [
+        { name: "브라이언 체스키", company: "Airbnb 공동창립자" },
+        { name: "케빈 시스트롬", company: "Instagram 공동창립자" },
+      ],
+      RPIA: [
+        { name: "마이클 블룸버그", company: "Bloomberg LP 창립자" },
+        { name: "조지 소로스", company: "독자적인 투자 전략으로 성공한 투자가" },
+      ],
+      ROIA: [
+        { name: "래리 엘리슨", company: "Oracle CEO" },
+        { name: "마이클 델", company: "Dell 창립자" },
+      ],
+      SPTC: [
+        { name: "순다 피차이", company: "Google CEO" },
+        { name: "새티아 나델라", company: "Microsoft CEO" },
+      ],
+      SPIA: [
+        { name: "찰스 슈왑", company: "Charles Schwab 창립자" },
+        { name: "레이 달리오", company: "Bridgewater Associates 창립자" },
+      ],
+      RPTA: [
+        { name: "리드 호프만", company: "LinkedIn 창립자" },
+        { name: "잭 웰치", company: "GE 전 CEO" },
+      ],
+      SOIC: [
+        { name: "존 보글", company: "Vanguard 창립자" },
+        { name: "하워드 마크스", company: "Oaktree Capital 창립자" },
+      ],
+      SOTA: [
+        { name: "빌 휴렛", company: "HP 공동창립자" },
+        { name: "진 크란츠", company: "Intel 전 CEO" },
+      ],
+      RPIC: [
+        { name: "닉 우드먼", company: "GoPro 창립자" },
+        { name: "리처드 브랜슨", company: "Virgin Group 창립자" },
+      ],
+      SPTA: [
+        { name: "메리 바라", company: "GM CEO" },
+        { name: "인드라 누이", company: "전 PepsiCo CEO" },
+      ],
+    };
+  
+    return entrepreneurs[mbtiName] || [];
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <QuestionWrap>
@@ -190,6 +262,19 @@ const PageMarketingNoItemsShare = () => {
           <div>
             <strong>{marketingMbtiResult?.summary}</strong>
             <p>{marketingMbtiResult?.description}</p>
+            <strong>당신과 같은 유형의 창업가는?</strong>
+              <EntrepreneurList className="entrepreneur-item">
+                {getEntrepreneursByMbti(marketingMbtiResult.name).map(
+                  (entrepreneur, index) => (
+                    <EntrepreneurBox className="entrepreneur-box" key={index}>
+                      {/* <Entrepreneurs/> */}
+                      <strong>{entrepreneur.name}</strong>
+                      <p>{entrepreneur.company}</p>
+                      {/* <Entrepreneurs/> */}
+                    </EntrepreneurBox>
+                  )
+                )}
+              </EntrepreneurList>
 
             <CustomButton DbExLarge PrimaryLightest Fill onClick={() => navigate("/MarketingLanding")}>
               창업해보기
@@ -203,6 +288,19 @@ const PageMarketingNoItemsShare = () => {
           <div className="info">
             <strong>{marketingMbtiResult.summary}</strong>
             <p>{marketingMbtiResult.description}</p>
+            <strong>당신과 같은 유형의 창업가는?</strong>
+              <EntrepreneurList className="entrepreneur-item">
+                {getEntrepreneursByMbti(marketingMbtiResult.name).map(
+                  (entrepreneur, index) => (
+                    <EntrepreneurBox className="entrepreneur-box" key={index}>
+                      {/* <Entrepreneurs/> */}
+                      <strong>{entrepreneur.name}</strong>
+                      <p>{entrepreneur.company}</p>
+                      {/* <Entrepreneurs/> */}
+                    </EntrepreneurBox>
+                  )
+                )}
+              </EntrepreneurList>
             <Button ExLarge onClick={() => navigate("/MarketingLanding")}>
               창업해보기
             </Button>
@@ -288,6 +386,37 @@ const Question = styled.div`
     }
   }
 
+
+   .entrepreneur-item {
+      display: flex;
+      flex-direction: row;
+      background: white;
+      border-radius: 12px;
+      white-space: nowrap;
+      justify-content: flex-start;
+      padding: 0px;
+      margin-left: 0px;
+      margin-bottom: 10px;
+    }
+
+    .entrepreneur-box {
+      border-radius: 12px;
+      flex:0 0 55%;
+      margin-left: 0px;
+      margin-right:0px;
+      // text-align: center;
+
+      strong{
+      font-weight: 600;
+      color: black;
+      font-size: 24px;
+  
+      }
+      
+
+    }
+
+    
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     flex: 1 1 100%;
     // justify-content:end;
@@ -387,3 +516,30 @@ const ResultWrap = styled.div`
     }
   }
 `;
+
+
+
+const EntrepreneurList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+`;
+
+const EntrepreneurBox = styled.div`
+  border-radius: 12px; 
+  padding: 16px; 
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const Entrepreneurs = styled.div`
+
+
+ h3{
+    font-weight: 600;
+    color: black;
+    font-size: 24px;
+  }
+
+`;
+
