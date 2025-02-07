@@ -68,6 +68,7 @@ import { getProjectReportByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 import OrganismToastPopupSingleChaComplete from "../organisms/OrganismToastPopupSingleChaComplete";
+import * as d3 from 'd3';
 
 const PagePersona4 = () => {
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
@@ -492,6 +493,148 @@ const PagePersona4 = () => {
     setActiveTab(tabNumber);
   };
 
+
+  const RadarChart = ({ data, maxValue = 3 }) => {  // maxValue 파라미터 추가
+    const svgRef = useRef();
+  
+    useEffect(() => {
+      if (!data) return;
+  
+      // SVG 크기 설정
+      const width = 300;
+      const height = 300;
+      const margin = 50;
+      const radius = Math.min(width, height) / 2 - margin;
+  
+      // SVG 요소 초기화
+      const svg = d3.select(svgRef.current)
+        .attr('width', width)
+        .attr('height', height);
+  
+      svg.selectAll('*').remove();
+  
+      const g = svg.append('g')
+        .attr('transform', `translate(${width/2},${height/2})`);
+  
+      // 각도 스케일 설정
+      const angleScale = d3.scaleLinear()
+        .domain([0, data.length])
+        .range([0, 2 * Math.PI]);
+  
+      // 반지름 스케일 설정 - maxValue 파라미터 사용
+      const radiusScale = d3.scaleLinear()
+        .domain([0, maxValue])
+        .range([0, radius]);
+  
+      // 배경 다각형 그리기 - maxValue에 맞춰 조정
+      const backgroundPolygons = Array.from({ length: maxValue }, (_, i) => maxValue - i).map(value => {
+        const points = data.map((_, i) => {
+          const angle = angleScale(i) - Math.PI/2;
+          const r = radiusScale(value);
+          return [r * Math.cos(angle), r * Math.sin(angle)];
+        });
+  
+        return g.append('polygon')
+          .attr('points', points.map(p => p.join(',')).join(' '))
+          .attr('fill', 'none')
+          .attr('stroke', palette.outlineGray)
+          .attr('stroke-width', 1)
+          .attr('stroke-dasharray', '4,4');
+      });
+  
+      // 축 그리기
+      const axes = g.selectAll('.axis')
+        .data(data)
+        .enter()
+        .append('g')
+        .attr('class', 'axis');
+  
+      axes.append('line')
+        .attr('x1', 0)
+        .attr('y1', 0)
+        .attr('x2', (d, i) => radius * Math.cos(angleScale(i) - Math.PI/2))
+        .attr('y2', (d, i) => radius * Math.sin(angleScale(i) - Math.PI/2))
+        .attr('stroke', palette.outlineGray)
+        .attr('stroke-width', 1);
+  
+      // 데이터 경로 그리기 - 애니메이션 추가
+      const line = d3.lineRadial()
+        .angle((d, i) => angleScale(i))
+        .radius(d => radiusScale(d.value))
+        .curve(d3.curveLinearClosed);
+  
+      const path = g.append('path')
+        .datum(data)
+        .attr('d', line)
+        .attr('fill', `${palette.primary}33`)
+        .attr('stroke', palette.primary)
+        .attr('stroke-width', 2)
+        .style('opacity', 0);
+  
+      // 데이터 포인트 그리기
+      g.selectAll('.data-point')
+        .data(data)
+        .enter()
+        .append('circle')
+        .attr('class', 'data-point')
+        .attr('cx', (d, i) => radiusScale(d.value) * Math.cos(angleScale(i) - Math.PI/2))
+        .attr('cy', (d, i) => radiusScale(d.value) * Math.sin(angleScale(i) - Math.PI/2))
+        .attr('r', 4)
+        .attr('fill', palette.primary);
+  
+      // 라벨 추가
+      axes.append('text')
+        .attr('x', (d, i) => (radius + 30) * Math.cos(angleScale(i) - Math.PI/2))
+        .attr('y', (d, i) => (radius + 30) * Math.sin(angleScale(i) - Math.PI/2))
+        .attr('dy', '0.35em')
+        .attr('text-anchor', (d, i) => {
+          const angle = angleScale(i);
+          if (angle < Math.PI/2 || angle > 3*Math.PI/2) return 'start';
+          if (angle === Math.PI/2 || angle === 3*Math.PI/2) return 'middle';
+          return 'end';
+        })
+        .each(function(d) {
+          const text = d3.select(this);
+          const words = d.label.split(' (');
+          if (words.length > 1) {
+            text.text('');
+            text.append('tspan')
+              .text(words[0])
+              .attr('x', text.attr('x'))
+              .attr('dy', '-0.6em');
+            text.append('tspan')
+              .text(`(${words[1]}`)
+              .attr('x', text.attr('x'))
+              .attr('dy', '1.2em');
+          } else {
+            text.text(d.label);
+          }
+        })
+        .style('font-size', '12px')
+        .style('fill', palette.gray700)
+        .style('font-weight', '500');
+  
+      // 값 라벨 추가
+      axes.append('text')
+        .attr('x', (d, i) => (radius - 20) * Math.cos(angleScale(i) - Math.PI/2))
+        .attr('y', (d, i) => (radius - 20) * Math.sin(angleScale(i) - Math.PI/2))
+        .attr('dy', '0.35em')
+        .attr('text-anchor', 'middle')
+        .text(d => d.value)
+        .style('font-size', '11px')
+        .style('fill', palette.primary)
+        .style('font-weight', '600');
+  
+      // 애니메이션 적용
+      path.transition()
+        .duration(800)
+        .style('opacity', .5);
+  
+    }, [data, maxValue]);  // maxValue 의존성 추가
+  
+    return <svg ref={svgRef} className="radar-chart" />;
+  };
+  
   return (
     <>
       <ContentsWrap noScroll={showToast}>
@@ -992,6 +1135,36 @@ const PagePersona4 = () => {
                           </UsageLevelGraphWrap>
                         </CategoryGraph>
                       </CategoryGraphWrap>
+
+                      <CategoryGraphWrap>
+                        <CategoryGraph>
+                          <Sub1>활용 수준</Sub1>
+                          <RadarChart 
+                            maxValue={7}  // 활용 수준은 0-7 범위 
+                            data={[
+                              { label: '관심도', value: singleInterviewReportTab2?.persona_attitude?.[0]?.interest_score || 0 },
+                              { label: '품질 선호도', value: singleInterviewReportTab2?.persona_attitude?.[1]?.quality_preference_score || 0 },
+                              { label: '정보 탐색', value: singleInterviewReportTab2?.persona_attitude?.[2]?.search_behavior_score || 0 },
+                              { label: '가격 민감도', value: singleInterviewReportTab2?.persona_attitude?.[3]?.price_sensitivity_score || 0 },
+                              { label: '사용 빈도', value: singleInterviewReportTab2?.persona_attitude?.[4]?.product_service_usage_frequency_score || 0 }
+                            ]} 
+                          />
+                        </CategoryGraph>
+
+                        <CategoryGraph>
+                          <Sub1>행동 패턴</Sub1>
+                          <RadarChart 
+                            maxValue={3}  // 행동 패턴은 0-3 범위
+                            data={[
+                              { label: '개방성 (Openness)', value: singleInterviewReportTab2?.big_five_personality_traits?.[0]?.openness_score || 0 },
+                              { label: '성실성 (Conscientiousness)', value: singleInterviewReportTab2?.big_five_personality_traits?.[1]?.conscientiousness_score || 0 },
+                              { label: '외향성 (Extraversion)', value: singleInterviewReportTab2?.big_five_personality_traits?.[2]?.extraversion_score || 0 },
+                              { label: '친화성 (Agreeableness)', value: singleInterviewReportTab2?.big_five_personality_traits?.[3]?.agreeableness_score || 0 },
+                              { label: '신경성 (Neuroticism)', value: singleInterviewReportTab2?.big_five_personality_traits?.[4]?.neuroticism_score || 0 }
+                            ]} 
+                          />
+                        </CategoryGraph>
+                      </CategoryGraphWrap>
                     </div>
 
                     <div>
@@ -1277,6 +1450,11 @@ const CategoryGraph = styled.div`
   flex-direction: column;
   gap: 14px;
   width: 50%;
+
+  .radar-chart {
+    width: 100%;
+    height: 300px;
+  }
 `;
 
 const UsageLevelGraphWrap = styled.div`
