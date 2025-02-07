@@ -316,7 +316,7 @@ function App() {
           ></Route>
           <Route path="/" element={<PageMain />}></Route>
           <Route
-            path="/Persona/:projectId"
+            path="/Persona"
             element={
               <RequireToken>
                 <PagePersona />
@@ -324,7 +324,7 @@ function App() {
             }
           ></Route>
           <Route
-            path="/Persona/2/:projectId"
+            path="/Persona/2"
             element={
               <RequireToken>
                 <PagePersona2 />
@@ -332,7 +332,7 @@ function App() {
             }
           ></Route>
           <Route
-            path="/Persona/3/:projectId"
+            path="/Persona/3"
             element={
               <RequireToken>
                 <PagePersona3 />
@@ -340,7 +340,7 @@ function App() {
             }
           ></Route>
           <Route
-            path="/Persona/3/Select/:projectId"
+            path="/Persona/3/Select"
             element={
               <RequireToken>
                 <PagePersona3Select />
@@ -348,7 +348,7 @@ function App() {
             }
           ></Route>
           <Route
-            path="/Persona/4/:projectId"
+            path="/Persona/4"
             element={
               <RequireToken>
                 <PagePersona4 />
@@ -356,7 +356,7 @@ function App() {
             }
           ></Route>
           <Route
-            path="/Persona/4/Single/:projectId"
+            path="/Persona/4/Single"
             element={
               <RequireToken>
                 <PagePersona4Single />
