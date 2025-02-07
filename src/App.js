@@ -15,6 +15,9 @@ import {
   APPROACH_PATH,
 } from "./pages/AtomStates"; // 로그인 상태 아톰 임포트
 import axios from "axios";
+import styled, { css } from "styled-components";
+import images from "./assets/styles/Images";
+import { palette } from "./assets/styles/Palette";
 
 import PageLogin from "./pages/Login_Sign/components/pages/PageLogin";
 import PageSignup from "./pages/Login_Sign/components/pages/PageSignup";
@@ -154,20 +157,20 @@ function App() {
           setIsServerDown(false);
         }
       } catch (error) {
-        // 서버가 응답하지 않거나 에러 발생 시 서버 다운 처리
-        setIsServerDown(true);
+        if (window.location.pathname !== "/ServiceLanding") {
+          // 서버가 응답하지 않거나 에러 발생 시 서버 다운 처리
+          setIsServerDown(true);
 
-        sessionStorage.removeItem("accessToken"); // 세션 스토리지에서 토큰 삭제
-        sessionStorage.removeItem("userName");
-        sessionStorage.removeItem("userEmail");
-        sessionStorage.removeItem("isSocialLogin");
-        localStorage.removeItem("userName");
-        localStorage.removeItem("userEmail");
-        setIsLoggedIn(false);
-        setUserName("");
-        setUserEmail("");
-
-        window.location.href = "/";
+          sessionStorage.removeItem("accessToken"); // 세션 스토리지에서 토큰 삭제
+          sessionStorage.removeItem("userName");
+          sessionStorage.removeItem("userEmail");
+          sessionStorage.removeItem("isSocialLogin");
+          localStorage.removeItem("userName");
+          localStorage.removeItem("userEmail");
+          setIsLoggedIn(false);
+          setUserName("");
+          setUserEmail("");
+        }
       }
     };
 
@@ -189,9 +192,37 @@ function App() {
 
       {/* 서버 점검 중 경고창 */}
       {isServerDown && (
-        <div className="server-down-alert">
-          <p>서버가 점검 중입니다. 잠시 후 다시 시도해 주세요.</p>
-        </div>
+        <Popup
+          Cancel
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              window.location.href = "/";
+            }
+          }}
+        >
+          <div>
+            <button
+              type="button"
+              className="closePopup"
+              onClick={() => window.location.href = "/"}
+            >
+              닫기
+            </button>
+            <span>
+              <img src={images.ExclamationMark2} alt="" />
+            </span>
+            <p>
+              서버가 점검 중입니다
+              <br />
+              잠시 후 다시 시도해 주세요
+            </p>
+            <div className="btnWrap">
+              <button type="button" onClick={() => window.location.href = "/"}>
+                확인
+              </button>
+            </div>
+          </div>
+        </Popup>
       )}
 
       <BrowserRouter>
@@ -285,7 +316,7 @@ function App() {
           ></Route>
           <Route path="/" element={<PageMain />}></Route>
           <Route
-            path="/Persona/:projectId"
+            path="/Persona"
             element={
               <RequireToken>
                 <PagePersona />
@@ -293,7 +324,7 @@ function App() {
             }
           ></Route>
           <Route
-            path="/Persona/2/:projectId"
+            path="/Persona/2"
             element={
               <RequireToken>
                 <PagePersona2 />
@@ -301,7 +332,7 @@ function App() {
             }
           ></Route>
           <Route
-            path="/Persona/3/:projectId"
+            path="/Persona/3"
             element={
               <RequireToken>
                 <PagePersona3 />
@@ -309,7 +340,7 @@ function App() {
             }
           ></Route>
           <Route
-            path="/Persona/3/Select/:projectId"
+            path="/Persona/3/Select"
             element={
               <RequireToken>
                 <PagePersona3Select />
@@ -317,7 +348,7 @@ function App() {
             }
           ></Route>
           <Route
-            path="/Persona/4/:projectId"
+            path="/Persona/4"
             element={
               <RequireToken>
                 <PagePersona4 />
@@ -325,7 +356,7 @@ function App() {
             }
           ></Route>
           <Route
-            path="/Persona/4/Single/:projectId"
+            path="/Persona/4/Single"
             element={
               <RequireToken>
                 <PagePersona4Single />
@@ -412,3 +443,130 @@ function App() {
 }
 
 export default App;
+
+const Popup = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  transition: all 0.5s;
+  z-index: 9999;
+
+  .closePopup {
+    position: absolute;
+    right: 24px;
+    top: 24px;
+    width: 16px;
+    height: 16px;
+    font-size: 0;
+    padding: 11px;
+    border: 0;
+    background: none;
+
+    &:before,
+    &:after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 2px;
+      height: 100%;
+      border-radius: 10px;
+      background: ${palette.black};
+      content: "";
+    }
+
+    &:before {
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    &:after {
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
+  }
+
+  > div {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    // overflow:hidden;
+    padding: 45px 24px 24px;
+    border-radius: 10px;
+    background: ${palette.white};
+
+    p {
+      font-family: "Pretendard", "Poppins";
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin: 20px auto 24px;
+      line-height: 1.5;
+    }
+
+    .btnWrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      button {
+        flex: 1;
+        font-family: "Pretendard", "Poppins";
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: ${palette.blue};
+        padding: 12px 20px;
+        border-radius: 8px;
+        border: 1px solid ${palette.blue};
+        background: ${palette.white};
+
+        &:last-child {
+          color: ${palette.white};
+          background: ${palette.blue};
+        }
+      }
+    }
+
+    ${(props) =>
+      props.Cancel &&
+      css`
+        p {
+          strong {
+            font-weight: 500;
+            display: block;
+          }
+          span {
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: ${palette.gray500};
+            display: block;
+            margin-top: 8px;
+          }
+        }
+
+        .btnWrap {
+          padding-top: 16px;
+          border-top: 1px solid ${palette.lineGray};
+
+          button {
+            font-family: "Pretendard", "Poppins";
+            color: ${palette.gray};
+            font-weight: 600;
+            padding: 0;
+            border: 0;
+            background: none;
+
+            &:last-child {
+              color: ${palette.blue};
+              background: none;
+            }
+          }
+        }
+      `}
+  }
+`;

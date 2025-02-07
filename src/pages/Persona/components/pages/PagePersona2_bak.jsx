@@ -635,7 +635,7 @@ const PagePersona2 = () => {
 
     setPersonaStep(3);
     setIsPersonaAccessible(true);
-    navigate(`/Persona/3/${projectId}`, { replace: true });
+    navigate(`/Persona/3`, { replace: true });
   };
 
   const [showTooltip, setShowTooltip] = useState(false);

@@ -818,7 +818,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
       console.error("Failed to create project on server:", error);
     }
     setSelectedPersonaList(personaList.selected);
-    navigate(`/Persona/4/${projectId}`, { replace: true });
+    navigate(`/Persona/4`, { replace: true });
     //replace: true 현재 페이지를 대체하여 이동( 뒤로 가기 시 이전 인터뷰 화면으로 돌아감 방지)
   };
 
