@@ -1439,21 +1439,21 @@ const PersonaInfoWrap = styled.div`
 const PersonaInfoTitle = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
   width: 100%;
 `;
 
 const PersonaInfoContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
   width: 100%;
 `;
 
 const PersonaItem = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   width: 100%;
 `;
 
