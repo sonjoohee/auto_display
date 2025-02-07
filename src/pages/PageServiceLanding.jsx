@@ -491,7 +491,7 @@ const PageServiceLanding = () => {
           <div>
             <h3>
               FAQ<em>?</em>
-              <span>Blog로 이동<i /></span>
+              <span onClick={() => navigate('/blog')}>Blog로 이동<i /></span>
             </h3>
 
             <FaqList>
@@ -2106,6 +2106,7 @@ const FaqWrap = styled.div`
       font-weight: 500;
       line-height: 1.3;
       letter-spacing: -0.54px;
+      cursor: pointer;
 
       ${media.mobile} {
         display: flex;
