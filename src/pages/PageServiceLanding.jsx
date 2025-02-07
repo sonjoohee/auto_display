@@ -2105,7 +2105,7 @@ const FaqList = styled.ul`
         font-size: 1rem;
         font-weight: 400;
         color: ${palette.white};
-        line-height: 1.25;
+        line-height: 1.5;
         letter-spacing: -0.48px;
         text-align: left;
       }
