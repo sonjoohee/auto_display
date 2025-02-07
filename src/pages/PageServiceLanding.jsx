@@ -151,7 +151,9 @@ const PageServiceLanding = () => {
 
   const handleMouseDown = (e) => {
     setIsDragging(true);
-    setStartX(e.pageX - e.currentTarget.offsetLeft);
+    // 터치 이벤트인 경우와 마우스 이벤트인 경우를 구분
+    const pageX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
+    setStartX(pageX - e.currentTarget.offsetLeft);
     setScrollLeft(currentSlide);
   };
 
@@ -163,12 +165,27 @@ const PageServiceLanding = () => {
     if (!isDragging) return;
     e.preventDefault();
     
-    const x = e.pageX - e.currentTarget.offsetLeft;
-    const walk = (x - startX) * 2; // * 2 for faster sliding speed
+    // 터치 이벤트인 경우와 마우스 이벤트인 경우를 구분
+    const pageX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
+    const x = pageX - e.currentTarget.offsetLeft;
+    const walk = (x - startX) * 2;
     const slideMove = Math.round(walk / e.currentTarget.offsetWidth);
     const newSlide = Math.max(0, Math.min(scrollLeft - slideMove, totalSlides - 1));
     
     setCurrentSlide(newSlide);
+  };
+
+  // 터치 이벤트 핸들러 추가
+  const handleTouchStart = (e) => {
+    handleMouseDown(e);
+  };
+
+  const handleTouchMove = (e) => {
+    handleMouseMove(e);
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
   };
 
   return (
@@ -295,11 +312,11 @@ const PageServiceLanding = () => {
                 </li>
                 <li>
                   <p>프로파일링 패터닝 기술</p>
-                  <p>(실존하는 연령, 직업, 관심사, 라이프스타일 등의 패터닝)</p>
+                  <p>(실존하는 연령, 직업, 관심사, 라이프스타일 등 패터닝)</p>
                 </li>
                 <li>
                   <p>동적 인터뷰 기술</p>
-                  <p>(AI 모더레이팅을 통한 1:1 심층 인터뷰 및 1:N 퀵서베이 지원)</p>
+                  <p>(AI 모더레이팅을 통한 1:1 심층 인터뷰 및 1:N 퀵서베이)</p>
                 </li>
               </ul>
             </div>
@@ -337,7 +354,7 @@ const PageServiceLanding = () => {
               </ul>
             </div>
 
-            <p>
+            <p className={openContent === 0 ? 'show' : ''}>
               <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
                 <path d="M2.55957 20.5V9.5H5.55957V20.5H2.55957Z" stroke="white" stroke-width="1.2" stroke-linejoin="round"/>
                 <path d="M5.55957 9.50004C9.1119 6.21504 11.1714 4.33171 11.7381 3.85004C12.5881 3.12704 13.5481 3.43054 13.5481 5.23954C13.5481 7.04854 10.9166 8.12204 10.9166 9.50004C10.9146 9.50871 14.2949 9.50921 21.0576 9.50154C21.2547 9.50128 21.4499 9.53987 21.6321 9.6151C21.8143 9.69033 21.9799 9.80074 22.1193 9.94C22.2588 10.0793 22.3695 10.2446 22.4451 10.4267C22.5206 10.6088 22.5595 10.8039 22.5596 11.001V11.0025C22.5596 11.1998 22.5208 11.3952 22.4454 11.5775C22.3699 11.7598 22.2593 11.9254 22.1198 12.0649C21.9803 12.2045 21.8147 12.3151 21.6325 12.3907C21.4502 12.4662 21.2549 12.505 21.0576 12.505H17.5511C16.9477 16.489 16.6149 18.6555 16.5526 19.0045C16.4586 19.527 15.9596 20.5 14.5256 20.5H5.55957V9.50004Z" stroke="white" stroke-width="1.2" stroke-linejoin="round"/>
@@ -434,6 +451,9 @@ const PageServiceLanding = () => {
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
             onMouseMove={handleMouseMove}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
           >
             <div className="carousel-item">
               <img src={images.CarouselImg01} alt="캐러셀 이미지 1" />
@@ -469,7 +489,10 @@ const PageServiceLanding = () => {
 
         <FaqWrap>
           <div>
-            <h3>FAQ</h3>
+            <h3>
+              FAQ<em>?</em>
+              <span>Blog로 이동<i /></span>
+            </h3>
 
             <FaqList>
               <li>
@@ -478,9 +501,11 @@ const PageServiceLanding = () => {
                   <i />
                 </button>
                 <div className={`answer ${openFaq === 0 ? 'open' : ''}`}>
-                  <p>
+                  <p className="gray">
                     기존 시장 조사는 패널 모집, 설문 설계, 데이터 분석 등에 많은 시간과 비용이 소요됩니다.<br />
-                    InterviewX.ai는 AI 페르소나와 대화형 인터뷰를 통해 즉각적인 인사이트 도출이 가능하며, 기존 조사 방식보다 더 정밀하고 신뢰도 높은 피드백을 자동으로 분석합니다.<br />
+                    InterviewX.ai는 AI 페르소나와 대화형 인터뷰를 통해 즉각적인 인사이트 도출이 가능하며, 기존 조사 방식보다 더 정밀하고 신뢰도 높은 피드백을 자동으로 분석합니다.
+                  </p>
+                  <p>
                     ✔ 빠른 실행 – 몇 분 만에 AI 페르소나와 인터뷰 진행<br />
                     ✔ 심층 분석 – 단순 응답이 아닌, 맥락과 감정을 반영한 피드백 제공<br />
                     ✔ 자동화된 인사이트 – 인터뷰 후 AI가 주요 인사이트를 요약하여 제공
@@ -493,10 +518,12 @@ const PageServiceLanding = () => {
                   <i />
                 </button>
                 <div className={`answer ${openFaq === 1 ? 'open' : ''}`}>
-                  <p>
+                  <p className="gray">
                     🚀 스타트업 창업자 – 제품 아이디어 검증, 타겟 고객 인터뷰, 시장 반응 분석<br />
                     📢 마케팅 전문가 – 광고 메시지 테스트, 브랜드 포지셔닝, 캠페인 효과 분석<br />
-                    🔬 UX 및 리서처 – 사용자 경험 조사, 제품 사용성 테스트, 소비자 심리 분석<br />
+                    🔬 UX 및 리서처 – 사용자 경험 조사, 제품 사용성 테스트, 소비자 심리 분석
+                  </p>
+                  <p>
                     InterviewX.ai는 소비자의 행동과 반응을 분석하여 맞춤형 피드백을 제공하는 강력한 AI 리서치 도구입니다.
                   </p>
                 </div>
@@ -507,8 +534,10 @@ const PageServiceLanding = () => {
                   <i />
                 </button>
                 <div className={`answer ${openFaq === 2 ? 'open' : ''}`}>
+                  <p className="gray">
+                    InterviewX.ai의 AI 페르소나는 단순한 챗봇이 아니라, 공공 데이터, 학술 연구, 시장 조사 데이터를 기반으로 학습된 AI 모델입니다.
+                  </p>
                   <p>
-                    InterviewX.ai의 AI 페르소나는 단순한 챗봇이 아니라, 공공 데이터, 학술 연구, 시장 조사 데이터를 기반으로 학습된 AI 모델입니다.<br />
                     ✔ 200개 이상의 실제 프로파일 반영 – 연령, 직업, 관심사, 소비 패턴 등<br />
                     ✔ 실제 사용자 인터뷰 데이터 학습 – 현실적인 반응을 제공하도록 설계<br />
                     ✔ 자동 데이터 검증 및 개선 – AI가 지속적으로 학습하며 정확도 향상<br />
@@ -526,7 +555,9 @@ const PageServiceLanding = () => {
                     InterviewX.ai는 다양한 비즈니스 요구에 맞춰 유연한 인터뷰 방식을 제공합니다.<br />
                     📍 1:1 심층 인터뷰 – 개별 AI 페르소나와 심층적인 대화 진행<br />
                     📍 1:N 인터뷰 – 최대 5명의 AI 페르소나와 동시 인터뷰 가능<br />
-                    📍 퀵서베이 – 50명 이상의 AI 페르소나를 대상으로 대량 의견 조사<br />
+                    📍 퀵서베이 – 50명 이상의 AI 페르소나를 대상으로 대량 의견 조사
+                  </p>
+                  <p className="gray">
                     이를 통해 제품 기획, 마케팅 전략 수립, 소비자 인사이트 분석 등의 다양한 리서치를 효율적으로 수행할 수 있습니다.
                   </p>
                 </div>
@@ -537,8 +568,10 @@ const PageServiceLanding = () => {
                   <i />
                 </button>
                 <div className={`answer ${openFaq === 4 ? 'open' : ''}`}>
+                  <p className="gray">
+                    InterviewX.ai는 누구나 쉽게 사용할 수 있도록 설계되었습니다.
+                  </p>
                   <p>
-                    InterviewX.ai는 누구나 쉽게 사용할 수 있도록 설계되었습니다.<br />
                     아이디어 입력 – 조사할 제품이나 서비스 개요 입력<br />
                     ️페르소나 자동 생성 – AI가 맞춤형 타겟 페르소나 추천<br />
                     인터뷰 진행 – 1:1, 1:N, 퀵서베이 중 원하는 방식 선택<br />
@@ -1100,7 +1133,7 @@ const Section01 = styled.div`
     letter-spacing: -1.08px;
 
     ${media.mobile} {
-      font-size: 1.25rem;
+      font-size: 1.13rem;
     }
   }
 
@@ -1166,7 +1199,7 @@ const Section01 = styled.div`
     transition: all .5s;
 
     ${media.mobile} {
-      font-size: 1.25rem;
+      font-size: 1.13rem;
       padding: 12px 20px;
       margin: 20px auto 12px;
     }
@@ -1271,8 +1304,7 @@ const Section02 = styled.div`
 
       ${media.mobile} {
         width: 100%;
-        font-size: 2.75rem;
-        text-align: left;
+        font-size: 2.5rem;
       }
     }
 
@@ -1284,7 +1316,7 @@ const Section02 = styled.div`
       letter-spacing: -0.96px;
 
       ${media.mobile} {
-        display: none;
+        font-size: 1rem;
       }
     }
   }
@@ -1340,6 +1372,7 @@ const Section02 = styled.div`
 
     ${media.mobile} {
       gap: 16px;
+      text-align: center;
     }
 
     > p {
@@ -1350,9 +1383,9 @@ const Section02 = styled.div`
       line-height: 1.3;
       letter-spacing: -0.6px;
       text-align: left;
+      display: none;
 
       ${media.mobile} {
-        display: block;
       }
     }
 
@@ -1365,14 +1398,20 @@ const Section02 = styled.div`
       text-align: center;
 
       ${media.mobile} {
-        font-size: 1rem;
-        text-align: left;
+        font-size: 0.88rem;
+        font-weight: 400;
+        color: #BCBCBC;
       }
     }
 
     > div {
       display: flex;
       flex-direction: column;
+
+      ${media.mobile} {
+        padding-top: 16px;
+        border-top: 1px solid rgba(255, 255, 255, 0.30);
+      }
 
       > p:nth-child(1) {
         margin-left: -60px;
@@ -1414,6 +1453,25 @@ const Section02 = styled.div`
           font-size: 1rem;
           padding: 0;
           border-bottom: none;
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        p {
+          ${media.mobile} {
+            font-size: 0.88rem;
+            line-height: 1.3;
+            letter-spacing: -0.54px;
+          }
+
+          &:nth-child(1) {
+            ${media.mobile} {
+              font-size: 1.13rem;
+              font-weight: 600;
+            }
+          }
         }
       }
     }
@@ -1512,6 +1570,10 @@ const Section03 = styled.div`
     border: 1px solid ${palette.white};
     transition: all .5s;
 
+    ${media.mobile} {
+      padding: 20px 16px 12px;
+    }
+
     &:hover {
       border: 1px solid transparent;
       background: linear-gradient(180deg, rgba(34, 111, 255, 0.30) 0%, #020204 100%);
@@ -1536,6 +1598,10 @@ const Section03 = styled.div`
 
       svg {
         flex-shrink: 0;
+      }
+
+      &.show {
+        display: flex;
       }
     }
 
@@ -1636,6 +1702,10 @@ const Section03 = styled.div`
         line-height: 1.5;
         letter-spacing: -0.48px;
 
+        ${media.mobile} {
+          align-items: flex-start;
+        }
+
         &::before {
           width: 20px;
           height: 20px;
@@ -1729,7 +1799,7 @@ const Section04 = styled.div`
       z-index: 1;
 
       ${media.mobile} {
-        font-size: 1.25rem;
+        font-size: 1rem;
       }
     }
   }
@@ -2012,10 +2082,62 @@ const FaqWrap = styled.div`
     line-height: 1.25;
     letter-spacing: -1.92px;
     z-index: 1;
+    display: flex;
 
     ${media.mobile} {
       font-size: 2rem;
       text-align: left;
+    }
+
+    em {
+      font-style: normal;
+      display: none;
+      
+      ${media.mobile} {
+        display: block;
+      }
+    }
+
+    span {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.13rem;
+      font-weight: 500;
+      line-height: 1.3;
+      letter-spacing: -0.54px;
+
+      ${media.mobile} {
+        display: flex;
+        margin-left: auto;
+      }
+
+      i {
+        position: relative;
+        width: 20px;
+        height: 8px;
+
+        &:before,
+        &:after {
+          position: absolute;
+          height: 2px;
+          border-radius: 4px;
+          background: ${palette.white};
+          content: "";
+        }
+
+        &:before {
+          bottom: 0;
+          width: 100%;
+        }
+
+        &:after {
+          right: 0;
+          bottom: 4px;
+          transform: rotate(45deg);
+          width: 10px;
+        }
+      }
     }
   }
 `;
@@ -2039,6 +2161,10 @@ const FaqList = styled.ul`
       background: transparent;
       border: none;
       cursor: pointer;
+
+      ${media.mobile} {
+        padding: 12px 0;
+      }
 
       p {
         font-family: Pretendard, "Poppins";
@@ -2091,6 +2217,9 @@ const FaqList = styled.ul`
       overflow: hidden;
       transition: max-height 0.3s ease;
       padding: 0 32px 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
       
       &.open {
         max-height: 500px;
@@ -2108,6 +2237,10 @@ const FaqList = styled.ul`
         line-height: 1.5;
         letter-spacing: -0.48px;
         text-align: left;
+
+        &.gray {
+          color: ${palette.lightGray};
+        }
       }
 
       ul {
