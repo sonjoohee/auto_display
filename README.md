@@ -73,7 +73,3 @@ npm install three
 
 npm install xlsx
 npm install d3
-
-** notion 관련 설치파일
-npm install mem @notionhq/client
-npm install @notionhq/client

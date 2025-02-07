@@ -1537,7 +1537,7 @@ const CategoryGraph = styled.div`
 const UsageLevelGraphWrap = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 23px;
   width: 100%;
 `;
 
