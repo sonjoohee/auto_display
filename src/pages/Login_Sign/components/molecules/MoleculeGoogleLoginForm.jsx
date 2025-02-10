@@ -18,6 +18,7 @@ import {
   IS_MARKETING,
   CONVERSATION_ID,
   USER_CREDITS,
+  USER_MEMBERSHIP,
 } from "../../../../pages/AtomStates"; // 아톰 임포트
 
 import firebase from "firebase/app";
@@ -37,6 +38,7 @@ const MoleculeGoogleLoginForm = () => {
   const [, setIsSocialLoggedIn] = useAtom(IS_SOCIAL_LOGGED_IN); // 소셜 로그인 아톰
   const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
+  const [, setUserMembership] = useAtom(USER_MEMBERSHIP);
 
   const handleGoogleLogin = async () => {
     try {
@@ -68,19 +70,43 @@ const MoleculeGoogleLoginForm = () => {
           },
           { withCredentials: true }
         );
-        console.log("🚀 ~ handleGoogleLogin ~ response:", response);
+      }
+      if (response.status === 200) {
+        const accessToken = response.data.access_token;
+        sessionStorage.setItem("accessToken", accessToken);
+
+        const userInfoResponse = await fetch(
+          "https://wishresearch.kr/api/user/userInfo/",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (userInfoResponse.status === 200) {
+          const userInfo = await userInfoResponse.json();
+
+          // 유저 정보 저장
+          setUserMembership(userInfo.membership);
+          sessionStorage.setItem("userMembership", userInfo.membership);
+          sessionStorage.setItem("userCreatedAt", userInfo.signup_date);
+
+        } else {
+          console.error("유저 정보를 불러오는 중 오류가 발생했습니다.");
+        }
+      } else {
+        const result = await response.json();
+        console.error(result.message || "로그인 중 오류가 발생했습니다.");
       }
 
       const userName = user.displayName;
-      console.log("🚀 ~ handleGoogleLogin ~ user:", user);
       const userEmail = user.email;
-      const serverAccessToken = response.data.access_token; // 서버에서 받은 토큰
-      sessionStorage.setItem("accessToken", serverAccessToken); // 서버 토큰 저장
       sessionStorage.setItem("userName", userName); // 서버 토큰 저장
       sessionStorage.setItem("userEmail", userEmail); // 서버 토큰 저장
-      sessionStorage.setItem("userMembership", response.data.membership); // 서버 토큰 저장
       sessionStorage.setItem("isSocialLogin", "true"); // 소셜 로그인 여부 저장
-      sessionStorage.setItem("userCreatedAt", response.data.signup_date); // 서버 토큰 저장
 
       const accessToken = sessionStorage.getItem("accessToken");
       if (accessToken) {

@@ -972,12 +972,8 @@ const OrganismLeftSideBar = () => {
 
   const handleLogoutConfirm = () => {
     // 로그아웃 확인 버튼을 눌렀을 때 실행
-    sessionStorage.removeItem("accessToken"); // 세션 스토리지에서 토큰 삭제
-    sessionStorage.removeItem("userName");
-    sessionStorage.removeItem("userEmail");
-    sessionStorage.removeItem("isSocialLogin");
-    localStorage.removeItem("userName");
-    localStorage.removeItem("userEmail");
+    sessionStorage.clear(); // 세션 스토리지 모두 삭제
+    localStorage.clear(); // 로컬 스토리지 모두 삭제
     setIsLoggedIn(false);
     setIsSocialLoggedIn(false);
     setUserName("");
