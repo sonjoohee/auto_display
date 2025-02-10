@@ -338,14 +338,13 @@ const PageMarketingNoItemsResult = () => {
   const captureAndShare = async () => {
     setIsCapturing(true);
     try {
-      
       const questionElement = document.querySelector(".capture-area");
-      console.log("선택된 capture-area 요소:", questionElement); 
+      console.log("선택된 capture-area 요소:", questionElement);
 
       // 버튼 요소를 일시적으로 숨김
       const shareButton = questionElement.querySelector("button");
       if (shareButton) {
-        shareButton.style.display = 'none';
+        shareButton.style.display = "none";
       }
 
       // const styledDiv = questionElement.querySelector('.info'); // StyledDiv 선택
@@ -366,13 +365,12 @@ const PageMarketingNoItemsResult = () => {
         shareButton.style.display = "";
       }
 
-        //  if (styledDiv) {
-        //         styledDiv.style.display = ''; // StyledDiv 다시 보이기
-        //       }
+      //  if (styledDiv) {
+      //         styledDiv.style.display = ''; // StyledDiv 다시 보이기
+      //       }
 
-      
-      const image = canvas.toDataURL('image/png', 1.0);
-      
+      const image = canvas.toDataURL("image/png", 1.0);
+
       // const shareUrl = `${window.location.origin}/MarketingSetting/Share/${marketingMbtiResult.name}`;
       // const mobileShareUrl = `${window.location.origin}/MarketingSetting/Share/${marketingMbtiResult.name}?mobile=true`; // 모바일용 URL 추가
 
@@ -380,9 +378,11 @@ const PageMarketingNoItemsResult = () => {
 
       await navigator.clipboard.writeText(shareUrl);
 
+      const isMobile =
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent
+        );
 
-      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      
       try {
         if (isMobile && navigator.share) {
           const blob = await (await fetch(image)).blob();
@@ -410,12 +410,10 @@ const PageMarketingNoItemsResult = () => {
 
         await navigator.clipboard.writeText(shareUrl);
 
-
         // await navigator.clipboard.writeText(isMobile ? mobileShareUrl : shareUrl); // 모바일 여부에 따라 URL 선택
         // console.log("URL 복사 성공:", isMobile ? mobileShareUrl : shareUrl); // 모바일 여부에 따라 로그 출력
         setShowSuccessPopup(true);
 
-        
         // // URL 복사 로직을 try-catch로 감싸서 오류를 처리
         // try {
         //   await navigator.clipboard.writeText(shareUrl);
@@ -425,8 +423,6 @@ const PageMarketingNoItemsResult = () => {
         //   console.error("URL 복사 실패:", err); // 오류 메시지 출력
         //   alert("URL 복사에 실패했습니다. 수동으로 복사해 주세요.");
         // }
-
-
       } catch (shareError) {
         const link = document.createElement("a");
         link.href = image;
@@ -434,10 +430,12 @@ const PageMarketingNoItemsResult = () => {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        console.log("Download successful:", `${marketingMbtiResult.name}_result.png`); // 다운로드 성공하면 콘솔로
+        console.log(
+          "Download successful:",
+          `${marketingMbtiResult.name}_result.png`
+        ); // 다운로드 성공하면 콘솔로
         setShowSuccessPopup(true);
       }
-        
     } catch (err) {
       console.error("Error capturing or sharing:", err);
       setShowErrorPopup(true);
@@ -447,139 +445,142 @@ const PageMarketingNoItemsResult = () => {
   };
 
   // 이미지 소스 추출 함수
-const getImageSrc = (mbtiName) => {
-  switch (mbtiName) {
-    case "ROIC":
-      return images.ImgMBTIROIC;
-    case "ROIA":
-      return images.ImgMBTIROIA;
-    case "ROTC":
-      return images.ImgMBTIROTC;
-    case "ROTA":
-      return images.ImgMBTIROTA;
-    case "RPIA":
-      return images.ImgMBTIRPIA;
-    case "RPIC":
-      return images.ImgMBTIRPIC;
-    case "RPTA":
-      return images.ImgMBTIRPTA;
-    case "RPTC":
-      return images.ImgMBTIRPTC;
-    case "SOIA":
-      return images.ImgMBTISOIA;
-    case "SOIC":
-      return images.ImgMBTISOIC;
-    case "SOTA":
-      return images.ImgMBTISOTA;
-    case "SOTC":
-      return images.ImgMBTISOTC;
-    case "SPIA":
-      return images.ImgMBTISPIA;
-    case "SPIC":
-      return images.ImgMBTISPIC;
-    case "SPTA":
-      return images.ImgMBTISPTA;
-    case "SPTC":
-      return images.ImgMBTISPTC;
-    default:
-      return "";
-  }
-};
-
-// MBTI 설명 추출 함수
-const getMbtiDescription = (mbtiChar) => {
-  switch (mbtiChar) {
-    case "S":
-      return "안정 추구 (Safety-seeking)";
-    case "O":
-      return "기회 포착형 (Opportunity-driven)";
-    case "I":
-      return "독립성 중시 (Independence-focused)";
-    case "C":
-      return "창의성 중심 (Creativity-centered)";
-    case "R":
-      return "고위험 추구 (Risk-seeking)";
-    case "P":
-      return "계획 기반형 (Planning-driven)";
-    case "T":
-      return "협력 중시 (Teamwork-focused)";
-    case "A":
-      return "실용성 중심 (Application-centered)";
-    default:
-      return "";
-  }
-};
-
-const getEntrepreneursByMbti = (mbtiName) => {
-  const entrepreneurs = {
-    ROIC: [
-      { name: "일론 머스크", company: "Tesla, SpaceX의 CEO" },
-      { name: "스티브 잡스", company: "Apple 공동창립자" },
-    ],
-    ROTC: [
-      { name: "래리 페이지", company: "Google 공동창립자" },
-      { name: "벤 코헨", company: "Ben & Jerry's Icecream 공동창립자" },
-    ],
-    SOIA: [
-      { name: "워렌 버핏", company: "Berkshire Hathaway CEO" },
-      { name: "제프 베조스", company: "Amazon 창립자" },
-    ],
-    RPTC: [
-      { name: "리드 헤이스팅스", company: "Netflix CEO" },
-      { name: "사티아 나델라", company: "Microsoft CEO" },
-    ],
-    ROTA: [
-      { name: "마윈", company: "Alibaba 창립자" },
-      { name: "짐 월튼", company: "Walmart 공동창립자" },
-    ],
-    SPIC: [
-      { name: "지미 웨일스", company: "위키피디아 창립자" },
-      { name: "피터 틸", company: "PayPal 공동창립자" },
-    ],
-    SOTC: [
-      { name: "브라이언 체스키", company: "Airbnb 공동창립자" },
-      { name: "케빈 시스트롬", company: "Instagram 공동창립자" },
-    ],
-    RPIA: [
-      { name: "마이클 블룸버그", company: "Bloomberg LP 창립자" },
-      { name: "조지 소로스", company: "독자적인 투자 전략으로 성공한 투자가" },
-    ],
-    ROIA: [
-      { name: "래리 엘리슨", company: "Oracle CEO" },
-      { name: "마이클 델", company: "Dell 창립자" },
-    ],
-    SPTC: [
-      { name: "순다 피차이", company: "Google CEO" },
-      { name: "새티아 나델라", company: "Microsoft CEO" },
-    ],
-    SPIA: [
-      { name: "찰스 슈왑", company: "Charles Schwab 창립자" },
-      { name: "레이 달리오", company: "Bridgewater Associates 창립자" },
-    ],
-    RPTA: [
-      { name: "리드 호프만", company: "LinkedIn 창립자" },
-      { name: "잭 웰치", company: "GE 전 CEO" },
-    ],
-    SOIC: [
-      { name: "존 보글", company: "Vanguard 창립자" },
-      { name: "하워드 마크스", company: "Oaktree Capital 창립자" },
-    ],
-    SOTA: [
-      { name: "빌 휴렛", company: "HP 공동창립자" },
-      { name: "진 크란츠", company: "Intel 전 CEO" },
-    ],
-    RPIC: [
-      { name: "닉 우드먼", company: "GoPro 창립자" },
-      { name: "리처드 브랜슨", company: "Virgin Group 창립자" },
-    ],
-    SPTA: [
-      { name: "메리 바라", company: "GM CEO" },
-      { name: "인드라 누이", company: "전 PepsiCo CEO" },
-    ],
+  const getImageSrc = (mbtiName) => {
+    switch (mbtiName) {
+      case "ROIC":
+        return images.ImgMBTIROIC;
+      case "ROIA":
+        return images.ImgMBTIROIA;
+      case "ROTC":
+        return images.ImgMBTIROTC;
+      case "ROTA":
+        return images.ImgMBTIROTA;
+      case "RPIA":
+        return images.ImgMBTIRPIA;
+      case "RPIC":
+        return images.ImgMBTIRPIC;
+      case "RPTA":
+        return images.ImgMBTIRPTA;
+      case "RPTC":
+        return images.ImgMBTIRPTC;
+      case "SOIA":
+        return images.ImgMBTISOIA;
+      case "SOIC":
+        return images.ImgMBTISOIC;
+      case "SOTA":
+        return images.ImgMBTISOTA;
+      case "SOTC":
+        return images.ImgMBTISOTC;
+      case "SPIA":
+        return images.ImgMBTISPIA;
+      case "SPIC":
+        return images.ImgMBTISPIC;
+      case "SPTA":
+        return images.ImgMBTISPTA;
+      case "SPTC":
+        return images.ImgMBTISPTC;
+      default:
+        return "";
+    }
   };
 
-  return entrepreneurs[mbtiName] || [];
-};
+  // MBTI 설명 추출 함수
+  const getMbtiDescription = (mbtiChar) => {
+    switch (mbtiChar) {
+      case "S":
+        return "안정 추구 (Safety-seeking)";
+      case "O":
+        return "기회 포착형 (Opportunity-driven)";
+      case "I":
+        return "독립성 중시 (Independence-focused)";
+      case "C":
+        return "창의성 중심 (Creativity-centered)";
+      case "R":
+        return "고위험 추구 (Risk-seeking)";
+      case "P":
+        return "계획 기반형 (Planning-driven)";
+      case "T":
+        return "협력 중시 (Teamwork-focused)";
+      case "A":
+        return "실용성 중심 (Application-centered)";
+      default:
+        return "";
+    }
+  };
+
+  const getEntrepreneursByMbti = (mbtiName) => {
+    const entrepreneurs = {
+      ROIC: [
+        { name: "일론 머스크", company: "Tesla, SpaceX의 CEO" },
+        { name: "스티브 잡스", company: "Apple 공동창립자" },
+      ],
+      ROTC: [
+        { name: "래리 페이지", company: "Google 공동창립자" },
+        { name: "벤 코헨", company: "Ben & Jerry's Icecream 공동창립자" },
+      ],
+      SOIA: [
+        { name: "워렌 버핏", company: "Berkshire Hathaway CEO" },
+        { name: "제프 베조스", company: "Amazon 창립자" },
+      ],
+      RPTC: [
+        { name: "리드 헤이스팅스", company: "Netflix CEO" },
+        { name: "사티아 나델라", company: "Microsoft CEO" },
+      ],
+      ROTA: [
+        { name: "마윈", company: "Alibaba 창립자" },
+        { name: "짐 월튼", company: "Walmart 공동창립자" },
+      ],
+      SPIC: [
+        { name: "지미 웨일스", company: "위키피디아 창립자" },
+        { name: "피터 틸", company: "PayPal 공동창립자" },
+      ],
+      SOTC: [
+        { name: "브라이언 체스키", company: "Airbnb 공동창립자" },
+        { name: "케빈 시스트롬", company: "Instagram 공동창립자" },
+      ],
+      RPIA: [
+        { name: "마이클 블룸버그", company: "Bloomberg LP 창립자" },
+        {
+          name: "조지 소로스",
+          company: "독자적인 투자 전략으로 성공한 투자가",
+        },
+      ],
+      ROIA: [
+        { name: "래리 엘리슨", company: "Oracle CEO" },
+        { name: "마이클 델", company: "Dell 창립자" },
+      ],
+      SPTC: [
+        { name: "순다 피차이", company: "Google CEO" },
+        { name: "새티아 나델라", company: "Microsoft CEO" },
+      ],
+      SPIA: [
+        { name: "찰스 슈왑", company: "Charles Schwab 창립자" },
+        { name: "레이 달리오", company: "Bridgewater Associates 창립자" },
+      ],
+      RPTA: [
+        { name: "리드 호프만", company: "LinkedIn 창립자" },
+        { name: "잭 웰치", company: "GE 전 CEO" },
+      ],
+      SOIC: [
+        { name: "존 보글", company: "Vanguard 창립자" },
+        { name: "하워드 마크스", company: "Oaktree Capital 창립자" },
+      ],
+      SOTA: [
+        { name: "빌 휴렛", company: "HP 공동창립자" },
+        { name: "진 크란츠", company: "Intel 전 CEO" },
+      ],
+      RPIC: [
+        { name: "닉 우드먼", company: "GoPro 창립자" },
+        { name: "리처드 브랜슨", company: "Virgin Group 창립자" },
+      ],
+      SPTA: [
+        { name: "메리 바라", company: "GM CEO" },
+        { name: "인드라 누이", company: "전 PepsiCo CEO" },
+      ],
+    };
+
+    return entrepreneurs[mbtiName] || [];
+  };
 
   return (
     <>
@@ -649,20 +650,26 @@ const getEntrepreneursByMbti = (mbtiName) => {
               <strong>{marketingMbtiResult.summary}</strong>
               <p>{marketingMbtiResult.description}</p>
 
-              
               <strong>당신과 같은 유형의 창업가는?</strong>
-                <EntrepreneurList className="entrepreneur-item">
-                  {getEntrepreneursByMbti(marketingMbtiResult.name).map(
-                    (entrepreneur, index) => (
-                      <EntrepreneurBox className="entrepreneur-box" key={index}>
-                        <strong>{entrepreneur.name}</strong>
-                        <p>{entrepreneur.company}</p>
-                      </EntrepreneurBox>
-                    )
-                  )}
-                </EntrepreneurList>
+              <EntrepreneurList className="entrepreneur-item">
+                {getEntrepreneursByMbti(marketingMbtiResult.name).map(
+                  (entrepreneur, index) => (
+                    <EntrepreneurBox className="entrepreneur-box" key={index}>
+                      <strong>{entrepreneur.name}</strong>
+                      <p>{entrepreneur.company}</p>
+                    </EntrepreneurBox>
+                  )
+                )}
+              </EntrepreneurList>
 
-              <CustomButton DbExLarge PrimaryLightest Fill onClick={captureAndShare}>결과 공유하기</CustomButton>
+              <CustomButton
+                DbExLarge
+                PrimaryLightest
+                Fill
+                onClick={captureAndShare}
+              >
+                결과 공유하기
+              </CustomButton>
             </div>
           </Question>
 
@@ -677,28 +684,25 @@ const getEntrepreneursByMbti = (mbtiName) => {
             isDragging={isDragging}
             questionFlex={questionFlex}
           >
-
-
             <ResultWrap>
-              
               <div className="info">
-              <div className="capture-area">
-                <strong>{marketingMbtiResult.summary}</strong>
-                <p>{marketingMbtiResult.description}</p>
+                <div className="capture-area">
+                  <strong>{marketingMbtiResult.summary}</strong>
+                  <p>{marketingMbtiResult.description}</p>
 
-                <strong>당신과 같은 유형의 창업가는?</strong>
-                <EntrepreneurList>
-                  {getEntrepreneursByMbti(marketingMbtiResult.name).map(
-                    (entrepreneur, index) => (
-                      <EntrepreneurBox key={index}>
-                        <Entrepreneurs/>
-                        <h3>{entrepreneur.name}</h3>
-                        <p>{entrepreneur.company}</p>
-                        <Entrepreneurs/>
-                      </EntrepreneurBox>
-                    )
-                  )}
-                </EntrepreneurList>
+                  <strong>당신과 같은 유형의 창업가는?</strong>
+                  <EntrepreneurList>
+                    {getEntrepreneursByMbti(marketingMbtiResult.name).map(
+                      (entrepreneur, index) => (
+                        <EntrepreneurBox key={index}>
+                          <Entrepreneurs />
+                          <h3>{entrepreneur.name}</h3>
+                          <p>{entrepreneur.company}</p>
+                          <Entrepreneurs />
+                        </EntrepreneurBox>
+                      )
+                    )}
+                  </EntrepreneurList>
                 </div>
                 <ShareButton onClick={captureAndShare}>
                   결과 저장/공유하기
@@ -1133,7 +1137,7 @@ const Question = styled.div`
       line-height: 1.6;
     }
 
-      .entrepreneur-item {
+    .entrepreneur-item {
       display: flex;
       flex-direction: row;
       background: white;
@@ -1147,19 +1151,16 @@ const Question = styled.div`
 
     .entrepreneur-box {
       border-radius: 12px;
-      flex:0 0 55%;
+      flex: 0 0 55%;
       margin-left: 0px;
-      margin-right:0px;
+      margin-right: 0px;
       // text-align: center;
 
-      strong{
-      font-weight: 600;
-      color: black;
-      font-size: 24px;
-  
+      strong {
+        font-weight: 600;
+        color: black;
+        font-size: 24px;
       }
-      
-
     }
   }
 
@@ -1246,7 +1247,7 @@ const ResultWrap = styled.div`
 
     strong {
       font-size: 1.13rem;
-      font-weight: 500; 
+      font-weight: 500;
       color: #5547ff;
     }
 
@@ -1254,7 +1255,6 @@ const ResultWrap = styled.div`
       font-weight: 300;
       line-height: 1.6;
     }
-
   }
 
   .title {
@@ -1284,9 +1284,6 @@ const ResultWrap = styled.div`
     text-align: left;
   }
 
-  
-      
-
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     padding: 44px 20px;
     margin: 0 auto;
@@ -1305,16 +1302,12 @@ const ResultWrap = styled.div`
       }
     }
 
-
     .comment {
       font-size: 0.75rem;
       letter-spacing: -0.5px;
     }
-
-    
-  
+  }
 `;
-
 
 const ListBox = styled.div`
   display: flex;
@@ -1792,23 +1785,18 @@ const EntrepreneurList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-
 `;
 
 const EntrepreneurBox = styled.div`
-  border-radius: 12px; 
-  padding: 16px; 
+  border-radius: 12px;
+  padding: 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 `;
 
 const Entrepreneurs = styled.div`
-
-
- h3{
+  h3 {
     font-weight: 600;
     color: black;
     font-size: 24px;
   }
-
 `;
-
