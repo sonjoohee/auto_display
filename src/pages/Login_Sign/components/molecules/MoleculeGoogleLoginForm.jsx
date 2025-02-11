@@ -107,6 +107,8 @@ const MoleculeGoogleLoginForm = () => {
       sessionStorage.setItem("userName", userName); // 서버 토큰 저장
       sessionStorage.setItem("userEmail", userEmail); // 서버 토큰 저장
       sessionStorage.setItem("isSocialLogin", "true"); // 소셜 로그인 여부 저장
+      //api 호출 타임스탬프 저장
+      // sessionStorage.setItem("apiTimestamp", response.data.timestamp);
 
       const accessToken = sessionStorage.getItem("accessToken");
       if (accessToken) {

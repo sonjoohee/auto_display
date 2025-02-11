@@ -26,6 +26,7 @@ import {
 } from "../../../AtomStates";
 import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
 import { UserCreditInfo } from "../../../../utils/indexedDB";
+// import { AlarmCreate } from '../../../utils/indexedDB';
 
 const MoleculeHeader = () => {
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
@@ -61,13 +62,19 @@ const MoleculeHeader = () => {
   const isPaymentPage = location.pathname === "/Payment";
 
   const handleAlertToggle = () => {
+
+    const timestamp = new Date().toISOString(); // 현재 타임스탬프 생성
+    sessionStorage.setItem('alertTimestamp', timestamp); // 세션에 저장
+
+        // 여기에 API 호출 코드 추가 recentime
+
     if (showAlert) {
       setIsClosing(true);
       setTimeout(() => {
         setShowAlert(false);
         setIsClosing(false);
       }, 300);
-    } else {
+    } else {                        
       setShowAlert(true);
       setShowCreditToggle(false);
     }
@@ -118,6 +125,40 @@ const MoleculeHeader = () => {
 
     fetchUserCredits();
   }, []);
+
+
+  // const [showRedDot, setShowRedDot] = useState(false); // 빨간 점 상태 추가//
+  
+  // useEffect(() => {
+  //   const createInitialAlarm = async () => {
+  //     const data = {
+  //       // 알림에 필요한 데이터 설정
+  //       user: "" 
+  //       // 추가 데이터 필요 시 여기에 추가
+  //     };
+  
+  //     const result = await AlarmCreate(data, isLoggedIn);
+  //     if (result) {
+  //       // console.log("알림 생성 성공:", result);
+  //       const apiTimestamp = result.timestamp; // API에서 받은 타임스탬프
+  
+  //       // 타임스탬프 비교
+  //       // const storedTimestamp = recentimeapi 
+  //       if (new Date(apiTimestamp) > new Date(storedTimestamp)) {
+  //         // 빨간 점 표시 로직 추가
+  //      setShowRedDot(true); // 빨간 점을 표시하는 상태 업데이트
+  //       }
+  //     } else {
+  //       setShowRedDot(false); 
+  //       console.error("알림 생성 실패");
+  //     }
+  //   };
+  
+  //   createInitialAlarm();
+  // }, [location]);
+
+
+
 
   return (
     <>
@@ -285,7 +326,8 @@ const MoleculeHeader = () => {
             )}
           </TotalCreditToggle>
 
-          <Notify Alarm onClick={handleAlertToggle}>
+          {/* <Notify Alarm={showRedDot}  onClick={handleAlertToggle}> */}
+          <Notify Alarm  onClick={handleAlertToggle}>
             <img src={images.IconBell} alt="" />
           </Notify>
           {/* <div className="userInfo">
@@ -314,7 +356,7 @@ const MoleculeHeader = () => {
             </Messageox>
 
             {/* 메시지 있을 떄 */}
-            {/*
+            
           <Messageox>
             <img src={images.CheckMark} alt="" />
             <Message>
@@ -342,7 +384,7 @@ const MoleculeHeader = () => {
               </ButtonWrap>
             </Message>
           </Messageox> 
-          */}
+         
           </AlertContent>
         </AlertToogle>
       )}
@@ -553,7 +595,7 @@ const Notify = styled.div`
   ${(props) =>
     props.Alarm &&
     css`
-      /* &::after {
+      &::after {
        position: absolute;
        top: -5px;
        right: -5px;
@@ -563,7 +605,7 @@ const Notify = styled.div`
        border-radius: 100px;
        content: '';
        animation: blink 1.5s infinite;
-     } */
+     } 
 
       @keyframes blink {
         0% {

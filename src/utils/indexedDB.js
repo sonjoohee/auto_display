@@ -2,6 +2,7 @@ import axios from "axios";
 import { useAtom } from "jotai";
 import { IS_LOGGED_IN, SELECTED_EXPERT_INDEX } from "../pages/AtomStates"; // AtomStates 파일에서 IS_LOGGED_IN 임포트
 
+
 export const fetchDataById = async (id) => {
   try {
     const apiUrl = `${process.env.REACT_APP_SERVER_URL}/data/${id}`; // 숫자에 해당하는 데이터 가져오기
@@ -1835,5 +1836,52 @@ export const MarketingMbtiResultRequest = async (data) => { // isLoggedIn 제거
     console.error("마케팅 MBTI 결과 요청 API 중 오류 발생:", error);
     console.error("오류 상세:", error.response?.data || error.message);
     throw error;
+  }
+};
+
+
+
+
+// 알림 기능 
+  export const AlarmCreate= async (data,isLoggedIn) => {
+    if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/api/user/myPage/alarmCreate",
+      data,
+
+
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    if (
+      error.response &&
+      error.response.data &&
+      error.response.data.state === "Fail"
+    ) {
+      return error.response.data;
+    }
+
+    console.error("알림 기능 오류 발생:", error);
+    console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+
   }
 };
