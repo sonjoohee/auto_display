@@ -173,10 +173,11 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
           sessionStorage.setItem("userName", userInfo.name);
           sessionStorage.setItem("userEmail", userInfo.email);
           sessionStorage.setItem("userMembership", userInfo.membership);
+          sessionStorage.setItem("userCreatedAt", userInfo.signup_date); // 서버 토큰 저장
           const accessToken = sessionStorage.getItem("accessToken");
           if (accessToken) {
             const userCreditValue = await UserCreditInfo(true);
-    
+
             // 전역 상태의 크레딧 정보 업데이트
             setUserCredits(userCreditValue);
           }

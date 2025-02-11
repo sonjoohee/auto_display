@@ -44,6 +44,7 @@ import {
   InputText,
 } from "../../../../assets/styles/Typography";
 import axios from "axios";
+import { unixDay } from "d3";
 
 const PageMyProfile = () => {
   const navigate = useNavigate();
@@ -320,9 +321,12 @@ const PageMyProfile = () => {
                     )}
                     {/* <Grade /> */}
                   </div>
-                  <Caption2 color="gray500" align="left">
-                    가입 날짜 24.10.19
-                  </Caption2>
+                  {sessionStorage.getItem("userCreatedAt") !== undefined && (
+                    <Caption2 color="gray500" align="left">
+                      가입 날짜{" "}
+                      {sessionStorage.getItem("userCreatedAt").split("T")[0]}
+                    </Caption2>
+                  )}
                 </div>
               </ProfileInfo>
 

@@ -5,7 +5,6 @@ import OrganismIncNavigation from "../pages/Persona/components/organisms/Organis
 import MoleculeHeader from "../pages/Persona/components/molecules/MoleculeHeader";
 
 const PageBlog = () => {
-
   return (
     <>
       <ContentsWrap>
@@ -14,15 +13,15 @@ const PageBlog = () => {
         <MoleculeHeader />
 
         <BlogContainer>
-          <iframe 
-            // src="https://www.notioniframe.com/notion/2cduo7gbv65" 
-            src="https://www.notioniframe.com/notion/1mevbyj6h8z"
+          <iframe
+            src="https://www.notioniframe.com/notion/2cduo7gbv65"
+            // src="https://www.notioniframe.com/notion/1mevbyj6h8z"
             title="Blog Content"
             style={{
-              width: '100%',
-              height: '100%',
+              width: "100%",
+              height: "100%",
               border: 0,
-              padding: 0
+              padding: 0,
             }}
             allowFullScreen
           />

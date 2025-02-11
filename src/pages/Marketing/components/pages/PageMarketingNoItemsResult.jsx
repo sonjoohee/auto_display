@@ -1802,4 +1802,3 @@ const Entrepreneurs = styled.div`
   }
 
 `;
-
