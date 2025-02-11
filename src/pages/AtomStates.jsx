@@ -514,6 +514,8 @@ export const EVENT_STATE = atom(false);
 export const EVENT_TITLE = atom("");
 export const TRIAL_STATE = atom(false);
 
+export const CUSTOM_PERSONA_LIST = atom([]);
+
 // setConversation([]);
 // setConversationStage(1);
 // setInputBusinessInfo("");
@@ -636,10 +638,6 @@ export const TRIAL_STATE = atom(false);
 // setCustomizePersonaList({
 //   selected: [],
 //   unselected: [],
-// });
-// setRequestPersonaList({
-//   persona: [],
-//   positioning: {},
 // });
 // setInterviewQuestionList([]);
 // setSelectedInterviewPurpose("");

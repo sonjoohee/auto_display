@@ -154,8 +154,6 @@ const PagePersona3 = () => {
     SELECTED_INTERVIEW_PURPOSE
   );
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
-  const [requestPersonaList, setRequestPersonaList] =
-    useAtom(REQUEST_PERSONA_LIST);
 
   const [purposeItemsSingleAtom, setPurposeItemsSingleAtom] =
     useAtom(PURPOSE_ITEMS_SINGLE);

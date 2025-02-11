@@ -74,6 +74,8 @@ import {
   EVENT_TITLE,
   TRIAL_STATE,
   USER_CREDITS,
+  All_BUSINESS_PERSONA_LIST,
+  CUSTOM_PERSONA_LIST,
 } from "../../../../pages/AtomStates.jsx";
 import {
   UserCreditCheck,
@@ -85,6 +87,12 @@ const FULL_DEFINITION_TEXT =
   "사용자 트렌드 민감도 분석은 사용자가 시장의 최신 트렌드에 얼마나 빠르고 효과적으로 반응하는지를 측정하는 방법론입니다. 이 분석은 사용자가 새로운 트렌드를 어떻게 인식하고, 그 트렌드에 따라 행동이 어떻게 변화하는지 파악하는 데 중점을 둡니다.";
 
 const PagePersona3Select = () => {
+  const [customPersonaList, setCustomPersonaList] = useAtom(
+    CUSTOM_PERSONA_LIST
+  );
+  const [allBusinessPersonas, setAllBusinessPersonas] = useAtom(
+    All_BUSINESS_PERSONA_LIST
+  );
   const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
   const [showPopup, setShowPopup] = useState(false);
   const [showQuestions, setShowQuestions] = useState({
@@ -127,8 +135,6 @@ const PagePersona3Select = () => {
     FILTERED_PROJECT_LIST
   );
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
-  const [requestPersonaList, setRequestPersonaList] =
-    useAtom(REQUEST_PERSONA_LIST);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [showCreditPopup, setShowCreditPopup] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
@@ -438,7 +444,9 @@ const PagePersona3Select = () => {
                   </Title>
                   <MoleculePersonaSelectCard
                     interviewType={selectedInterviewType}
-                    personaList={filteredProjectList}
+                    filteredPersonaList={filteredProjectList}
+                    businessPersonaList={allBusinessPersonas.filter(persona => persona?.status === "complete")}
+                    customPersonaList={customPersonaList}
                     selectedPersonas={selectedPersonas}
                     onPersonaSelect={setSelectedPersonas}
                   />
