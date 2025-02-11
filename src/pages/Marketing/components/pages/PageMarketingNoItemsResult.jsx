@@ -332,11 +332,12 @@ const PageMarketingNoItemsResult = () => {
 
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
-
-  const [isCapturing, setIsCapturing] = useState(false);
+  const [isCapturing, setIsCapturing] = useState(false); 
 
   const captureAndShare = async () => {
+    if (isCapturing) return; // 이미 캡처 중이면 실행하지 않음
     setIsCapturing(true);
+    
     try {
       
       const questionElement = document.querySelector(".capture-area");
@@ -348,10 +349,18 @@ const PageMarketingNoItemsResult = () => {
         shareButton.style.display = 'none';
       }
 
-      // const styledDiv = questionElement.querySelector('.info'); // StyledDiv 선택
-      //         if (styledDiv) {
-      //           styledDiv.style.display = 'none'; // StyledDiv 숨기기
-      //         }
+
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      console.log("Is mobile:", isMobile); 
+      
+
+      // let originalStyle = questionElement.style.cssText; // 기존 스타일 저장
+      if (isMobile) { // isCapturing이 false일 때만 실행
+        questionElement.style.width = "1200px"; // PC 화면 너비로 설정
+        questionElement.style.height = "800px"; // PC 화면 높이로 설정   
+        console.log("변경된 스타일:", questionElement.style.cssText);
+      }
+
 
       const canvas = await html2canvas(questionElement, {
         backgroundColor: "#5547ff",
@@ -361,27 +370,23 @@ const PageMarketingNoItemsResult = () => {
         allowTaint: true,
       });
 
+
+      // //캡쳐 후 원래 스타일로 복원
+      // questionElement.style.cssText = originalStyle;
+
       // 버튼을 다시 보이게 함
       if (shareButton) {
         shareButton.style.display = "";
       }
-
-        //  if (styledDiv) {
-        //         styledDiv.style.display = ''; // StyledDiv 다시 보이기
-        //       }
-
       
       const image = canvas.toDataURL('image/png', 1.0);
-      
-      // const shareUrl = `${window.location.origin}/MarketingSetting/Share/${marketingMbtiResult.name}`;
-      // const mobileShareUrl = `${window.location.origin}/MarketingSetting/Share/${marketingMbtiResult.name}?mobile=true`; // 모바일용 URL 추가
 
       const shareUrl = `${window.location.origin}/MarketingSetting/Share/${marketingMbtiResult.name}`;
 
       await navigator.clipboard.writeText(shareUrl);
 
 
-      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      // const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       
       try {
         if (isMobile && navigator.share) {
@@ -410,21 +415,7 @@ const PageMarketingNoItemsResult = () => {
 
         await navigator.clipboard.writeText(shareUrl);
 
-
-        // await navigator.clipboard.writeText(isMobile ? mobileShareUrl : shareUrl); // 모바일 여부에 따라 URL 선택
-        // console.log("URL 복사 성공:", isMobile ? mobileShareUrl : shareUrl); // 모바일 여부에 따라 로그 출력
         setShowSuccessPopup(true);
-
-        
-        // // URL 복사 로직을 try-catch로 감싸서 오류를 처리
-        // try {
-        //   await navigator.clipboard.writeText(shareUrl);
-        //   console.log("URL 복사 성공:", shareUrl); // 이 부분이 출력되어야 함
-        //   setShowSuccessPopup(true);
-        // } catch (err) {
-        //   console.error("URL 복사 실패:", err); // 오류 메시지 출력
-        //   alert("URL 복사에 실패했습니다. 수동으로 복사해 주세요.");
-        // }
 
 
       } catch (shareError) {
@@ -442,7 +433,7 @@ const PageMarketingNoItemsResult = () => {
       console.error("Error capturing or sharing:", err);
       setShowErrorPopup(true);
     } finally {
-      setIsCapturing(false);
+      setIsCapturing(false); 
     }
   };
 
@@ -1139,7 +1130,7 @@ const Question = styled.div`
       background: white;
       border-radius: 12px;
       white-space: nowrap;
-      justify-content: flex-start;
+      justify-content: space-between;
       padding: 0px;
       margin-left: 0px;
       margin-bottom: 10px;
@@ -1147,7 +1138,7 @@ const Question = styled.div`
 
     .entrepreneur-box {
       border-radius: 12px;
-      flex:0 0 55%;
+      flex:0 0 53%;
       margin-left: 0px;
       margin-right:0px;
       // text-align: center;
