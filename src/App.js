@@ -233,35 +233,35 @@ function App() {
           <Route
             path="/ExpertInsight"
             element={
-              <RequireToken>
+              // <RequireToken>
                 <PageExpertInsight />
-              </RequireToken>
+              // </RequireToken>
             }
           ></Route>
           <Route
             path="/MarketingExpertInsight"
             element={
-              <RequireToken>
+              // <RequireToken>
                 <PageMarketingExpertInsight />
-              </RequireToken>
+              // </RequireToken>
             }
           ></Route>
           {isMarketing && approachPath !== 2 ? (
             <Route
               path="/conversation/:conversationId"
               element={
-                <RequireToken>
+                // <RequireToken>
                   <PageMarketingExpertInsight />
-                </RequireToken>
+                // </RequireToken>
               }
             />
           ) : (
             <Route
               path="/conversation/:conversationId"
               element={
-                <RequireToken>
+                // <RequireToken>
                   <PageExpertInsight />
-                </RequireToken>
+                // </RequireToken>
               }
             />
           )}
