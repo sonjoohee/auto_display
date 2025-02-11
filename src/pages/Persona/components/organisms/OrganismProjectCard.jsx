@@ -75,20 +75,6 @@ const OrganismProjectCard = ({ project, index }) => {
     }
   };
 
-  //   const getRecruitStatusText = (project) => {
-  //     const selectedCount = project.personaList?.selected?.length || 0;
-  //     const requestCount = project.requestPersonaList?.persona?.length || 0;
-
-  //     if (selectedCount === 0 && requestCount === 0) return "대기중";
-  //     if (selectedCount === requestCount) return "모집 완료";
-  //     return "모집 중";
-  //   };
-  //   const getRecruitStatus = (project) => {
-  //     const status = getRecruitStatusText(project);
-  //     if (status === "모집 완료") return "complete";
-  //     if (status === "모집 중") return "ing";
-  //     return "";
-  //   };
   const getRecruitStatusText = (project) => {
     const requestedPersonaCount = project.requestedPersona?.length || 0;
 
@@ -189,15 +175,6 @@ const OrganismProjectCard = ({ project, index }) => {
               </p>
             </div>
           </Persona>
-          {/* <Recruit>
-            <span>
-              <img src={images.People} alt="" />
-              {project.requestPersonaList?.persona?.length || 0}개 페르소나
-            </span>
-            <p className={getRecruitStatus(project)}>
-              {getRecruitStatusText(project)}
-            </p>
-          </Recruit> */}
           <Report>
             <div>
               <span>

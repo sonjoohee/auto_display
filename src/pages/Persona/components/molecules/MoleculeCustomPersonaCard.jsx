@@ -1,4 +1,3 @@
-//산업별 인기 페르소나 카드
 import React, { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette.jsx";
@@ -42,32 +41,13 @@ import {
   USER_CREDITS,
 } from "../../../AtomStates.jsx";
 import { UserCreditCheck, UserCreditUse } from "../../../../utils/indexedDB.js";
-const MoleculeBussinessPersonaCard = ({
+const MoleculeCustomPersonaCard = ({
   title,
-  persona_type,
   keywords = [],
-  gender,
-  age,
-  job,
-  isBasic = false,
-  isCustom = false,
-  isComplete = false,
   isRequest = true,
-  hideCheckCircle = false,
-  TitleFlex = false,
-  NoLine = false,
-  onSelect,
-  currentSelection,
-  onClick,
   checked = null,
-  newLine = false,
   viewType = "list",
   personaData = {},
-  isExist = false,
-  eventState,
-  eventTitle,
-  trialState,
-  creditRequestBusinessPersona,
 }) => {
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
@@ -86,53 +66,6 @@ const MoleculeBussinessPersonaCard = ({
 
   const [localPersonaData, setLocalPersonaData] = useState(personaData);
 
-  const getCategoryColor = (category) => {
-    switch (category) {
-      case "전형적 사용자 페르소나":
-        return "Red";
-      case "극단적 사용자 페르소나":
-        return "LavenderMagenta";
-      case "비교 소비자 페르소나":
-        return "Amethyst";
-      case "비전통적 사용자 페르소나":
-        return "TurkishRose";
-      case "문제 해결 중심 페르소나":
-        return "NavyBlue";
-      case "건강 중시 페르소나":
-        return "MidnightBlue";
-      case "시장 트렌드 리더 페르소나":
-        return "ButtonBlue";
-      case "예산 중시 소비자 페르소나":
-        return "MiddleBlueGreen";
-      case "혁신 추구 소비자 페르소나":
-        return "GreenSheen";
-      case "환경/윤리 중시 페르소나":
-        return "TropicalRainForest";
-      case "기능/성능 중시 소비자 페르소나":
-        return "DollarBill";
-      case "브랜드 충성 소비자 페르소나":
-        return "Olivine";
-      case "감성적 소비자 페르소나":
-        return "ChineseGreen";
-      case "특정 상황 중심 페르소나":
-        return "Jonquil";
-      case "문화적/지역적 특성 중심 페르소나":
-        return "PastelOrange";
-      case "DIY/커스터마이징 선호 페르소나":
-        return "Tangerine";
-      case "트렌드 회의적 소비자 페르소나":
-        return "Copper";
-      case "단체 구매 소비자 페르소나":
-        return "Shadow";
-      case "호기심 기반 소비자 페르소나":
-        return "Tuscany";
-      case "브랜드 전환 의향 소비자 페르소나":
-        return "VeryLightTangelo";
-      default:
-        return "";
-    }
-  };
-
   useEffect(() => {
     setIsChecked(checked);
   }, [checked]);
@@ -140,84 +73,6 @@ const MoleculeBussinessPersonaCard = ({
   useEffect(() => {
     setLocalPersonaData(personaData);
   }, [personaData]);
-
-  const handleCheck = () => {
-    if (isCustom) {
-      onClick && onClick(); // 팝업 표시를 위한 콜백 실행
-      return;
-    }
-    onSelect && onSelect();
-
-    // 이미 선택된 상태면 항상 해제 가능
-    if (isChecked && checked === null) {
-      setIsChecked(false);
-      onSelect(false);
-    }
-    // 새로 선택하는 경우, 최대 선택 개수 확인
-    else if (currentSelection < 5 && checked === null) {
-      setIsChecked(true);
-      onSelect(true);
-    }
-  };
-
-  const handleRequestClick = () => {
-    setShowRequestPopup(true);
-  };
-
-  const handleRequestPersona = async () => {
-    setSelectedPersonaForPopup(null);
-    try {
-      // 현재 서버에 저장된 requestedPersona 값을 가져옴
-      const currentProject = await getProjectByIdFromIndexedDB(
-        projectId,
-        isLoggedIn
-      );
-      const currentRequestedPersona = currentProject?.businessPersonaList || [];
-      // const filteredPersona = currentRequestedPersona.filter(
-      //   (persona) => persona.persona !== localPersonaData.persona
-      // );
-      // 현재 요청된 페르소나 목록에서 동일한 페르소나가 있는지 확인하고 status 업데이트
-      let filteredPersona = [];
-      currentRequestedPersona.forEach((persona) => {
-        if (persona.persona === localPersonaData.persona) {
-          persona.status = "request";
-        }
-        filteredPersona.push(persona);
-      });
-
-      // localPersonaData.status가 undefined일 때만 요청을 진행
-      if (localPersonaData.status === undefined) {
-        // 새로운 requestedPersona 배열 생성
-        const newRequestedPersona = [...filteredPersona];
-
-        // 서버 업데이트
-        await updateProjectOnServer(
-          projectId,
-          { businessPersonaList: newRequestedPersona },
-          isLoggedIn
-        );
-
-        const requestData = {
-          projectId: projectId,
-          requestDate: new Date().toLocaleString("ko-KR", {
-            timeZone: "Asia/Seoul",
-          }),
-          requestTimeStamp: Date.now(),
-          businessAnalysis: businessAnalysis,
-          personaRequest: { ...localPersonaData, status: "request" },
-        };
-        createRequestPersonaOnServer(requestData, isLoggedIn);
-
-        // 상태 업데이트: status를 "ing"로 변경하여 뱃지에 반영
-        setLocalPersonaData({ ...localPersonaData, status: "request" });
-        setRequestStatus(false);
-      } else {
-        console.error("이미 요청된 페르소나입니다.");
-      }
-    } catch (error) {
-      console.error("페르소나 요청 중 오류 발생:", error);
-    }
-  };
 
   // const handleCloseRequestPopup = () => {
   //   setShowRequestPopup(false);
@@ -228,76 +83,20 @@ const MoleculeBussinessPersonaCard = ({
     setShowPopup(true);
   };
 
-  const creditUse = async () => {
-    // 팝업 닫기
-    setShowRequestPopup(false);
-
-    let accessToken = sessionStorage.getItem("accessToken");
-    if (!accessToken) {
-      console.error("토큰이 없습니다.");
-      return;
-    }
-
-    // 크레딧 사용전 사용 확인
-    const creditPayload = {
-      // 기존 10 대신 additionalQuestionMount 사용
-      mount: creditRequestBusinessPersona,
-    };
-    const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
-    // console.log("크레딧 체크 응답:", creditResponse);
-
-    if (creditResponse?.state !== "use") {
-      setShowCreditPopup(true);
-      return;
-    }
-
-    // 크레딧이 사용 가능한 상태면 사용 API 호출
-    const creditUsePayload = {
-      title: businessAnalysis.title,
-      service_type: "비즈니스 페르소나 모집 요청",
-      target: "",
-      state: "use",
-      mount: creditRequestBusinessPersona,
-    };
-
-    const creditUseResponse = await UserCreditUse(creditUsePayload, isLoggedIn);
-    // console.log("크레딧 사용 응답:", creditUseResponse);
-
-    // 크레딧 사용 후 사용자 정보 새로고침
-    accessToken = sessionStorage.getItem("accessToken");
-    if (accessToken) {
-      const userCreditValue = await UserCreditInfo(isLoggedIn);
-
-      // 전역 상태의 크레딧 정보 업데이트
-      setUserCredits(userCreditValue);
-    }
-
-    handleRequestPersona();
-  };
-
   return (
     <>
       {/* 리스트 버전 */}
       {viewType === "list" && (
         <ListBoxItem
-          TitleFlex={TitleFlex}
+          TitleFlex={false }
           $isChecked={isChecked}
-          NoLine={NoLine}
+          NoLine={false}
         >
           <ListText>
             <ListTitle>
               <Body1>{title}</Body1>
 
               {localPersonaData.status === undefined ? (
-                <Badge Request>
-                  <img src={images.Plus} alt="요청 필요" />
-                  요청 필요
-                </Badge>
-              ) : localPersonaData.status === "request" ? (
-                <Badge Check>요청 검토 중</Badge>
-              ) : localPersonaData.status === "ing" ? (
-                <Badge Ing>모집 중</Badge>
-              ) : localPersonaData.status === "complete" ? (
                 <Badge Complete>
                   <img src={images.CheckGreen} alt="모집 완료" />
                   모집 완료
@@ -309,9 +108,6 @@ const MoleculeBussinessPersonaCard = ({
 
             {keywords.length > 0 && (
               <ListSubtitle>
-                <TagWrap>
-                  <TagType color={getCategoryColor(persona_type)} />
-                </TagWrap>
                 {keywords.map((keyword, index) => (
                   <Badge Keyword key={index}>
                     #{keyword}
@@ -330,11 +126,6 @@ const MoleculeBussinessPersonaCard = ({
             >
               자세히
             </CustomButton>
-            {localPersonaData.status === undefined && (
-              <CustomButton Medium Primary Fill onClick={handleRequestClick}>
-                모집 요청
-              </CustomButton>
-            )}
           </ListButton>
         </ListBoxItem>
       )}
@@ -345,18 +136,6 @@ const MoleculeBussinessPersonaCard = ({
           <CardText>
             <CardTitle>
               {localPersonaData.status === undefined ? (
-                <Badge Request>
-                  <img src={images.Plus} alt="요청 필요" />
-                  요청 필요
-                </Badge>
-              ) : localPersonaData.status === "request" ? (
-                <Badge Check>요청 검토 중</Badge>
-              ) : localPersonaData.status === "ing" ? (
-                <Badge Ing>
-                  {/* <img src={images.PersonaCustomizing} alt="모집 중" /> */}
-                  모집 중
-                </Badge>
-              ) : localPersonaData.status === "complete" ? (
                 <Badge Complete>
                   <img src={images.CheckGreen} alt="모집 완료" />
                   모집 완료
@@ -389,91 +168,11 @@ const MoleculeBussinessPersonaCard = ({
             >
               자세히
             </CustomButton>
-            {localPersonaData.status === undefined && (
-              <CustomButton Medium Primary Fill onClick={handleRequestClick}>
-                모집 요청
-              </CustomButton>
-            )}
           </CardButton>
         </CardListItem>
       )}
 
-      {showPopup && isBasic && (
-        <>
-          <InterviewPopup>
-            <div>
-              <div className="header">
-                <H4>
-                  {localPersonaData.persona_view}
-                  <span className="close" onClick={() => setShowPopup(false)} />
-                </H4>
-                <p className="info">
-                  <Sub3>{localPersonaData.gender}</Sub3>
-                  <Sub3>
-                    {localPersonaData.age.includes("세")
-                      ? localPersonaData.age
-                      : `${localPersonaData.age}세`}
-                  </Sub3>
-                  <Sub3>{localPersonaData.residence}</Sub3>
-                </p>
-              </div>
-
-              <div className="keywords">
-                <Status>#{localPersonaData.persona_keyword[0]}</Status>
-                <Status>#{localPersonaData.persona_keyword[1]}</Status>
-                <Status>#{localPersonaData.persona_keyword[2]}</Status>
-              </div>
-
-              <div className="content">
-                <TabWrapType2>
-                  <TabButtonType2
-                    isActive={activeTab1 === "lifestyle"}
-                    onClick={() => setActiveTab1("lifestyle")}
-                  >
-                    라이프스타일
-                  </TabButtonType2>
-                  <TabButtonType2
-                    isActive={activeTab1 === "interests"}
-                    onClick={() => setActiveTab1("interests")}
-                  >
-                    관심사
-                  </TabButtonType2>
-                  <TabButtonType2
-                    isActive={activeTab1 === "consumption"}
-                    onClick={() => setActiveTab1("consumption")}
-                  >
-                    소비성향
-                  </TabButtonType2>
-                </TabWrapType2>
-
-                {activeTab1 === "lifestyle" && (
-                  <TabContent Daily>
-                    <Body3 color="gray700">{localPersonaData.lifestyle}</Body3>
-                  </TabContent>
-                )}
-                {activeTab1 === "interests" && (
-                  <TabContent Daily>
-                    <Body3 color="gray700">{localPersonaData.interest}</Body3>
-                  </TabContent>
-                )}
-                {activeTab1 === "consumption" && (
-                  <TabContent Daily>
-                    <Body3 color="gray700">
-                      {localPersonaData.consumption_pattern}
-                    </Body3>
-                  </TabContent>
-                )}
-              </div>
-
-              {/* <Button Large Primary Fill>
-                인터뷰 준비 요청하기
-              </Button> */}
-            </div>
-          </InterviewPopup>
-        </>
-      )}
-
-      {showPopup && !isBasic && (
+      {showPopup && (
         <>
           <InterviewPopup>
             <div>
@@ -547,94 +246,11 @@ const MoleculeBussinessPersonaCard = ({
           </InterviewPopup>
         </>
       )}
-
-      {/* 모집 요청 팝업 추가 */}
-      {showRequestPopup &&
-        (eventState ? (
-          <PopupWrap
-            Event
-            title="페르소나 모집 요청"
-            message={
-              <>
-                현재 {eventTitle} 기간으로 이벤트 크레딧이 소진됩니다.
-                <br />({creditRequestBusinessPersona.toLocaleString()} 크레딧)
-              </>
-            }
-            buttonType="Outline"
-            closeText="취소"
-            confirmText="시작하기"
-            isModal={false}
-            onCancel={() => setShowRequestPopup(false)}
-            onConfirm={() => {
-              // handleCloseRequestPopup();
-              creditUse();
-            }}
-          />
-        ) : trialState ? (
-          <PopupWrap
-            Check
-            title="페르소나 모집 요청"
-            message={
-              <>
-                해당 서비스 사용시 크레딧이 소진됩니다.
-                <br />({creditRequestBusinessPersona.toLocaleString()} 크레딧)
-                <br />
-                신규 가입 2주간 무료로 사용 가능합니다.
-              </>
-            }
-            buttonType="Outline"
-            closeText="취소"
-            confirmText="시작하기"
-            isModal={false}
-            onCancel={() => setShowRequestPopup(false)}
-            onConfirm={() => {
-              // handleCloseRequestPopup();
-              creditUse();
-            }}
-          />
-        ) : (
-          <PopupWrap
-            Check
-            title="페르소나 모집 요청"
-            message={
-              <>
-                해당 서비스 사용시 크레딧이 소진됩니다.
-                <br />({creditRequestBusinessPersona.toLocaleString()} 크레딧)
-              </>
-            }
-            buttonType="Outline"
-            closeText="취소"
-            confirmText="시작하기"
-            isModal={false}
-            onCancel={() => setShowRequestPopup(false)}
-            onConfirm={() => {
-              // handleCloseRequestPopup();
-              creditUse();
-            }}
-          />
-        ))}
-      {showCreditPopup && (
-        <PopupWrap
-          Warning
-          title="크레딧이 모두 소진되었습니다"
-          message={
-            <>
-              보유한 크레딧이 부족합니다.
-              <br />
-              크레딧을 충전한 후 다시 시도해주세요.
-            </>
-          }
-          buttonType="Outline"
-          closeText="확인"
-          isModal={false}
-          onCancel={() => setShowCreditPopup(false)}
-        />
-      )}
     </>
   );
 };
 
-export default MoleculeBussinessPersonaCard;
+export default MoleculeCustomPersonaCard;
 
 const CustomButton = styled(Button)`
   min-width: 92px;

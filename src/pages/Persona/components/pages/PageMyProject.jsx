@@ -125,8 +125,6 @@ const PageMyProject = () => {
   const [customizePersonaList, setCustomizePersonaList] = useAtom(
     CUSTOMIZE_PERSONA_LIST
   );
-  const [requestPersonaList, setRequestPersonaList] =
-    useAtom(REQUEST_PERSONA_LIST);
   const [interviewQuestionList, setInterviewQuestionList] = useAtom(
     INTERVIEW_QUESTION_LIST
   );
@@ -300,7 +298,6 @@ const PageMyProject = () => {
       setPersonaList([]);
       setSelectedPersonaList([]);
       setCustomizePersonaList([]);
-      setRequestPersonaList([]);
       setInterviewQuestionList([]);
       setSelectedInterviewPurpose("");
       setCategoryColor("");
