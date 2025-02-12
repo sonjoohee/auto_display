@@ -1270,9 +1270,6 @@ const PagePersona2 = () => {
         }),
         requestTimeStamp: Date.now(),
         personaRequest: {
-          description: customPersonaForm.description,
-          purpose: customPersonaForm.purpose,
-          quantity: customPersonaForm.quantity,
           preferences: {
             gender: customPersonaForm.gender,
             ageGroups: customPersonaForm.ageGroups,
