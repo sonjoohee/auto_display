@@ -23,7 +23,11 @@ const MoleculePersonaSelectCard = ({
     if (filteredPersonaList && filteredPersonaList.length > 0) {
       setPersonaList({
         selected: [],
-        unselected: [...customPersonaList, ...businessPersonaList, ...filteredPersonaList],
+        unselected: [
+          ...customPersonaList,
+          ...businessPersonaList,
+          ...filteredPersonaList,
+        ],
       });
     }
   }, [filteredPersonaList]);
@@ -35,7 +39,10 @@ const MoleculePersonaSelectCard = ({
     ].find((p) => p.persona_id === persona.persona_id);
 
     if (interviewType === "single") {
-      if (personaList?.selected?.[0]?.persona_id === persona.persona_id && personaList?.selected?.length > 0) {
+      if (
+        personaList?.selected?.[0]?.persona_id === persona.persona_id &&
+        personaList?.selected?.length > 0
+      ) {
         // 선택 해제
         setPersonaList({
           selected: [],
@@ -103,7 +110,11 @@ const MoleculePersonaSelectCard = ({
   return (
     <CardGroupWrap>
       {filteredPersonaList &&
-        [...customPersonaList, ...businessPersonaList, ...filteredPersonaList].map((persona) => {
+        [
+          ...customPersonaList,
+          ...businessPersonaList,
+          ...filteredPersonaList,
+        ].map((persona) => {
           // 현재 persona가 선태된 상태인지 확인 (personaList.selected 에서 조회)
           const isSelected = personaList.selected.some(
             (p) => p.persona_id === persona.persona_id
@@ -125,7 +136,14 @@ const MoleculePersonaSelectCard = ({
               </Persona>
               <ListText>
                 <ListTitle>
-                  <Body1 color="gray800">{persona.persona_view || persona.persona}</Body1>
+                  <Body1 color="gray800">
+                    {persona.persona_view || persona.persona}
+                  </Body1>{" "}
+                  {persona.request_persona_type === "business" ? (
+                    <Badge New>비즈니스</Badge>
+                  ) : persona.request_persona_type === "custom" ? (
+                    <Badge Custom>맞춤</Badge>
+                  ) : null}
                   {/* {persona.isNew && <Badge New>비즈니스</Badge>} */}
                 </ListTitle>
                 <ListSubtitle>

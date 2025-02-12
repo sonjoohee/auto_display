@@ -518,18 +518,22 @@ const PageMyProject = () => {
                         0}
                       건
                     </H3>
-                    {userPageCnt.persona_state === "new" && (
+                    {userPageCnt.persona_state === "new" ? (
                       <Badge New>new</Badge>
-                    )}
+                    ) : userPageCnt.person_state === "new" ? (
+                      <Badge New>new</Badge>
+                    ) : null}
                   </DashboardAmount>
                 </DashboardCard>
                 <DashboardCard>
                   <Body2 color="gray500">생성 완료 페르소나</Body2>
                   <DashboardAmount>
                     <H3 color="gray800">{userPageCnt.complete_count || 0}건</H3>
-                    {userPageCnt.complete_state === "new" && (
+                    {userPageCnt.complete_state === "new" ? (
                       <Badge New>new</Badge>
-                    )}
+                    ) : userPageCnt.person_complete_state === "new" ? (
+                      <Badge New>new</Badge>
+                    ) : null}
                   </DashboardAmount>
                 </DashboardCard>
                 <DashboardCard>
