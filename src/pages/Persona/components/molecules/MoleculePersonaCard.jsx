@@ -147,12 +147,18 @@ const MoleculePersonaCard = ({
           },
           isLoggedIn
         );
-
+        const checkDate = new Date().toLocaleString("ko-KR", {
+          timeZone: "Asia/Seoul",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        });
         const requestData = {
           projectId: projectId,
-          requestDate: new Date().toLocaleString("ko-KR", {
-            timeZone: "Asia/Seoul",
-          }),
+          requestDate: checkDate,
           businessAnalysis: businessAnalysis,
           personaRequest: { ...personaData, status: "ing" },
         };
@@ -231,14 +237,14 @@ const MoleculePersonaCard = ({
       return;
     }
 
-          // 크레딧 사용 후 사용자 정보 새로고침
-          accessToken = sessionStorage.getItem("accessToken");
-          if (accessToken) {
-            const userCreditValue = await UserCreditInfo(isLoggedIn);
-    
-            // 전역 상태의 크레딧 정보 업데이트
-            setUserCredits(userCreditValue);
-          }
+    // 크레딧 사용 후 사용자 정보 새로고침
+    accessToken = sessionStorage.getItem("accessToken");
+    if (accessToken) {
+      const userCreditValue = await UserCreditInfo(isLoggedIn);
+
+      // 전역 상태의 크레딧 정보 업데이트
+      setUserCredits(userCreditValue);
+    }
 
     handleRequestPersona();
   };

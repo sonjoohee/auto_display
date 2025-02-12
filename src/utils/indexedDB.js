@@ -2,7 +2,6 @@ import axios from "axios";
 import { useAtom } from "jotai";
 import { IS_LOGGED_IN, SELECTED_EXPERT_INDEX } from "../pages/AtomStates"; // AtomStates 파일에서 IS_LOGGED_IN 임포트
 
-
 export const fetchDataById = async (id) => {
   try {
     const apiUrl = `${process.env.REACT_APP_SERVER_URL}/data/${id}`; // 숫자에 해당하는 데이터 가져오기
@@ -226,6 +225,12 @@ export const createProjectOnServer = async (isLoggedIn) => {
       const PUT_DATA = {
         createDate: new Date().toLocaleString("ko-KR", {
           timeZone: "Asia/Seoul",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
         }),
       };
       const response = await axios.post(
@@ -275,6 +280,12 @@ export const updateProjectOnServer = async (
         ...updateData,
         updateDate: new Date().toLocaleString("ko-KR", {
           timeZone: "Asia/Seoul",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
         }),
       };
       await axios.put(`https://wishresearch.kr/project/update`, PUT_DATA, {
@@ -397,6 +408,12 @@ export const updateProjectReportOnServer = async (
         ...updateData,
         createDate: new Date().toLocaleString("ko-KR", {
           timeZone: "Asia/Seoul",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
         }),
       };
       await axios.put(
@@ -1630,7 +1647,8 @@ export const InterviewXPersonaSingleIndepthInterviewGeneratorRequest = async (
 };
 
 //마케팅 고객 추천 요청 API
-export const MarketingCustomerRecommendationRequest = async (data) => { // isLoggedIn 제거
+export const MarketingCustomerRecommendationRequest = async (data) => {
+  // isLoggedIn 제거
   // console.log(" 마케팅 고객 추천 요청 API  - 입력 데이터:", data);
   // 로그인 체크 제거
   // if (!isLoggedIn) {
@@ -1672,7 +1690,8 @@ export const MarketingCustomerRecommendationRequest = async (data) => { // isLog
 };
 
 //마케팅 연구 보고서 요청 API
-export const MarketingResearchReportRequest = async (data) => { // isLoggedIn 제거
+export const MarketingResearchReportRequest = async (data) => {
+  // isLoggedIn 제거
   // console.log(" 마케팅 연구 보고서 요청 API  - 입력 데이터:", data);
   // 로그인 체크 제거
   // if (!isLoggedIn) {
@@ -1714,7 +1733,8 @@ export const MarketingResearchReportRequest = async (data) => { // isLoggedIn �
 };
 
 //마케팅 비즈니스 모델 보고서 요청 API
-export const MarketingBmReportRequest = async (data) => { // isLoggedIn 제거
+export const MarketingBmReportRequest = async (data) => {
+  // isLoggedIn 제거
   // console.log(" 마케팅 비즈니스 모델 보고서 요청 API  - 입력 데이터:", data);
   // 로그인 체크 제거
   // if (!isLoggedIn) {
@@ -1756,7 +1776,8 @@ export const MarketingBmReportRequest = async (data) => { // isLoggedIn 제거
 };
 
 //마케팅 최종 보고서 요청 API
-export const MarketingFinalReportRequest = async (data) => { // isLoggedIn 제거
+export const MarketingFinalReportRequest = async (data) => {
+  // isLoggedIn 제거
   // console.log(" 마케팅 최종 보고서 요청 API  - 입력 데이터:", data);
   // 로그인 체크 제거
   // if (!isLoggedIn) {
@@ -1798,7 +1819,8 @@ export const MarketingFinalReportRequest = async (data) => { // isLoggedIn 제�
 };
 
 //마케팅 MBTI 결과 요청 API
-export const MarketingMbtiResultRequest = async (data) => { // isLoggedIn 제거
+export const MarketingMbtiResultRequest = async (data) => {
+  // isLoggedIn 제거
   // console.log(" 마케팅 MBTI 결과 요청 API  - 입력 데이터:", data);
   // 로그인 체크 제거
   // if (!isLoggedIn) {
@@ -1839,12 +1861,9 @@ export const MarketingMbtiResultRequest = async (data) => { // isLoggedIn 제거
   }
 };
 
-
-
-
-// 알림 기능 
-  export const AlarmList= async (isLoggedIn) => {
-    if (!isLoggedIn) {
+// 알림 기능
+export const AlarmList = async (isLoggedIn) => {
+  if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
   }
@@ -1869,16 +1888,12 @@ export const MarketingMbtiResultRequest = async (data) => { // isLoggedIn 제거
 
     return response.data;
   } catch (error) {
-    if (
-      error.response &&
-      error.response.data 
-    ) {
+    if (error.response && error.response.data) {
       return error.response.data;
     }
 
     console.error("알림 기능 오류 발생:", error);
     console.error("오류 상세:", error.response?.data || error.message);
     throw error;
-
   }
 };

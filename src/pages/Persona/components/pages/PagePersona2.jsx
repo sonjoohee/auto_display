@@ -112,9 +112,8 @@ import MoleculeBussinessPersonaCard from "../molecules/MoleculeBussinessPersonaC
 import MoleculeCustomPersonaCard from "../molecules/MoleculeCustomPersonaCard";
 
 const PagePersona2 = () => {
-  const [customPersonaList, setCustomPersonaList] = useAtom(
-    CUSTOM_PERSONA_LIST
-  );
+  const [customPersonaList, setCustomPersonaList] =
+    useAtom(CUSTOM_PERSONA_LIST);
   const [selectedInterviewType, setSelectedInterviewType] = useAtom(
     SELECTED_INTERVIEW_TYPE
   );
@@ -454,7 +453,6 @@ const PagePersona2 = () => {
       setIsPersonaAccessible(false); // 페이지 떠날 때 접근 불가로 설정
     };
   }, [navigate]);
-
 
   const getCategoryColor = (category) => {
     switch (category) {
@@ -1263,6 +1261,12 @@ const PagePersona2 = () => {
         businessAnalysis: businessAnalysis,
         requestDate: new Date().toLocaleString("ko-KR", {
           timeZone: "Asia/Seoul",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
         }),
         requestTimeStamp: Date.now(),
         personaRequest: {
@@ -1568,13 +1572,12 @@ const PagePersona2 = () => {
                 <CardWrap>
                   <AtomPersonaLoader message="페르소나를 추천하기 위해 분석하고 있어요" />
                 </CardWrap>
-              ) 
-              // : showRegenerateButton ? (
-              //   <CardWrap>
-              //     <MoleculeRecreate Large onRegenerate={reloadPersona} />
-              //   </CardWrap>
-              // ) 
-              : (
+              ) : (
+                // : showRegenerateButton ? (
+                //   <CardWrap>
+                //     <MoleculeRecreate Large onRegenerate={reloadPersona} />
+                //   </CardWrap>
+                // )
                 <CardWrap>
                   <>
                     <BoxWrap>
