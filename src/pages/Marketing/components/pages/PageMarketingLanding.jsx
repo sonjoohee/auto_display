@@ -188,13 +188,18 @@ const PageMarketLanding = () => {
           </VisualImg>
 
           <StartIdeaWrap isFixed={isFixed}>
-            <p>시작하고 싶은 아이디어가 있으신가요?</p>
+            {/* <p>시작하고 싶은 아이디어가 있으신가요?</p> */}
+            <p>당신의 창업 유형을 확인해 보세요!</p>
             <div>
-              <Link to="#" onClick={() => handleSubmit(true)}>
+              {/* <Link to="#" onClick={() => handleSubmit(true)}>
                 <span>💡</span>네! 있어요
               </Link>
               <Link to="#" onClick={() => handleSubmit(false)}>
                 <span>🔎</span>아직 없어요
+              </Link> */}
+              <Link to="#" onClick={() => handleSubmit(false)}>
+                <span>🔎</span>
+                {"  "}창업{"  "}MBTI{"  "}진단하기{"  "}
               </Link>
             </div>
           </StartIdeaWrap>
@@ -663,6 +668,7 @@ const StartIdeaWrap = styled.div`
 
   div {
     display: flex;
+    justify-content: center;
     align-items: center;
     gap: 10px;
     padding: 8px 10px;
