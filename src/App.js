@@ -149,6 +149,7 @@ function App() {
             headers: {
               Authorization: `Bearer ${token}`,
             },
+            timeout: 3000 // 3초 타임아웃 설정
           }
         );
 
