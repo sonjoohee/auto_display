@@ -1843,7 +1843,7 @@ export const MarketingMbtiResultRequest = async (data) => { // isLoggedIn 제거
 
 
 // 알림 기능 
-  export const AlarmCreate= async (data,isLoggedIn) => {
+  export const AlarmList= async (isLoggedIn) => {
     if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -1855,10 +1855,8 @@ export const MarketingMbtiResultRequest = async (data) => { // isLoggedIn 제거
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
 
-    const response = await axios.post(
-      "https://wishresearch.kr/api/user/myPage/alarmCreate",
-      data,
-
+    const response = await axios.get(
+      "https://wishresearch.kr/api/user/alarm/alarmList",
 
       {
         headers: {
@@ -1873,8 +1871,7 @@ export const MarketingMbtiResultRequest = async (data) => { // isLoggedIn 제거
   } catch (error) {
     if (
       error.response &&
-      error.response.data &&
-      error.response.data.state === "Fail"
+      error.response.data 
     ) {
       return error.response.data;
     }
