@@ -108,6 +108,9 @@ const MoleculeCustomPersonaCard = ({
 
             {keywords.length > 0 && (
               <ListSubtitle>
+                <TagWrap>
+                  <TagType color={"CeruleanFrost"} />
+                </TagWrap>
                 {keywords.map((keyword, index) => (
                   <Badge Keyword key={index}>
                     #{keyword}
@@ -147,6 +150,9 @@ const MoleculeCustomPersonaCard = ({
             </CardTitle>
 
             <ListSubtitle>
+                <TagWrap>
+                  <TagType color={"CeruleanFrost"} />
+                </TagWrap>
               {keywords.map((keyword, index) => (
                 <Badge Keyword key={index}>
                   #{keyword}
@@ -644,8 +650,10 @@ export const TagType = styled.span`
           return "호기심 기반 소비자 페르소나";
         case "VeryLightTangelo":
           return "브랜드 전환 의향 소비자 페르소나";
+        case "CeruleanFrost":
+          return "맞춤 페르소나";
         default:
-          return "";
+          return "맞춤 페르소나";
       }
     }}";
   }
@@ -783,7 +791,10 @@ export const TagType = styled.span`
           background: rgba(2, 2, 115, 0.06);
         `;
       default:
-        return "display: none;";
+        return `
+          color: #020273;
+          background: rgba(2, 2, 115, 0.06);
+        `;
     }
   }}
 `;
