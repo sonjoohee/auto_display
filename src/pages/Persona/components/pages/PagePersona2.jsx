@@ -112,9 +112,8 @@ import MoleculeBussinessPersonaCard from "../molecules/MoleculeBussinessPersonaC
 import MoleculeCustomPersonaCard from "../molecules/MoleculeCustomPersonaCard";
 
 const PagePersona2 = () => {
-  const [customPersonaList, setCustomPersonaList] = useAtom(
-    CUSTOM_PERSONA_LIST
-  );
+  const [customPersonaList, setCustomPersonaList] =
+    useAtom(CUSTOM_PERSONA_LIST);
   const [selectedInterviewType, setSelectedInterviewType] = useAtom(
     SELECTED_INTERVIEW_TYPE
   );
@@ -454,7 +453,6 @@ const PagePersona2 = () => {
       setIsPersonaAccessible(false); // 페이지 떠날 때 접근 불가로 설정
     };
   }, [navigate]);
-
 
   const getCategoryColor = (category) => {
     switch (category) {
@@ -1263,6 +1261,12 @@ const PagePersona2 = () => {
         businessAnalysis: businessAnalysis,
         requestDate: new Date().toLocaleString("ko-KR", {
           timeZone: "Asia/Seoul",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
         }),
         requestTimeStamp: Date.now(),
         personaRequest: {
@@ -1302,37 +1306,6 @@ const PagePersona2 = () => {
         });
 
         handleCustomizePopupClose();
-
-        // 맞춤 페르소나 칼럼 생성
-        if (customPersonaList.length === 0) {
-          await updateProjectOnServer(
-            projectId,
-            {
-              customPersonaList: [
-                {
-                  persona_id: "pre_persona_20",
-                  persona: "고단백 식단을 선호하는 20대 운동 애호가",
-                  persona_view: "고단백 식단 애호가 ",
-                  age: "27",
-                  gender: "남성",
-                  job: "IT 개발자",
-                  family: "독신, 혼자 거주",
-                  income: "월 300~400만 원",
-                  residence: "경기 성남시 분당구",
-                  lifestyle: "평일에는 IT 개발 업무 후 헬스장에서 강도 높은 운동을 하고, 주말에는 대량 조리를 통해 주간 식단을 준비합니다. 닭가슴살과…",
-                  interest: "운동 후 빠른 회복을 위한 고단백 식품과 보충제, 운동 목표 지원 디지털 도구, 식단 계획 앱, 운동과 식단 균형 유지 팁",
-                  consumption_pattern: "고품질 단백질 보충제와 운동 용품에 지출하며, 브랜드 신뢰성을 중시합니다. 온라인 리뷰를 참고하여 구매하고, 운동 관련 정기구…",
-                  category: "푸드/농업",
-                  keyword: ["고단백 식단", "피트니스 중심 생활", "디지털 도구 활용"],
-                  personaImg: "ai_persona_0000020_avartar",
-                  persona_keyword: ["고단백 영양바 섭취", "운동 후 에너지 충전", "휴대 간편 단백질 보충"],
-                  reason: "고단백 식단을 선호하는 20대 운동 애호가는 페르소나 에너지바의 '균형 잡힌 영양 공급'과 '에너지 공급'이라는 핵심 가치에 …"
-                }
-              ],
-            },
-              isLoggedIn
-            );
-        }
       }
     } catch (error) {
       if (error.response) {
@@ -1599,13 +1572,12 @@ const PagePersona2 = () => {
                 <CardWrap>
                   <AtomPersonaLoader message="페르소나를 추천하기 위해 분석하고 있어요" />
                 </CardWrap>
-              ) 
-              // : showRegenerateButton ? (
-              //   <CardWrap>
-              //     <MoleculeRecreate Large onRegenerate={reloadPersona} />
-              //   </CardWrap>
-              // ) 
-              : (
+              ) : (
+                // : showRegenerateButton ? (
+                //   <CardWrap>
+                //     <MoleculeRecreate Large onRegenerate={reloadPersona} />
+                //   </CardWrap>
+                // )
                 <CardWrap>
                   <>
                     <BoxWrap>

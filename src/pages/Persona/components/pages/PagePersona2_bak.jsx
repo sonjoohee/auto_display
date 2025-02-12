@@ -92,8 +92,8 @@ const PagePersona2 = () => {
   );
   const [personaButtonState2, setPersonaButtonState2] = useAtom(
     PERSONA_BUTTON_STATE_2
-  );//페르소나 생성/로딩 상태 관리 setPersonaButtonState2(0) :  api 호출 완료
-  
+  ); //페르소나 생성/로딩 상태 관리 setPersonaButtonState2(0) :  api 호출 완료
+
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
   const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
@@ -226,7 +226,6 @@ const PagePersona2 = () => {
     }
   };
 
-
   //특정 카테고리에 맞는 페르소나 찾는 api 호출
   useEffect(() => {
     const loadProject = async () => {
@@ -347,7 +346,7 @@ const PagePersona2 = () => {
         //   axiosConfig
         // );
         // 페르소나 요청 API  수정 예정
-         response = await InterviewXPersonaRequestRequest(data, isLoggedIn);
+        response = await InterviewXPersonaRequestRequest(data, isLoggedIn);
 
         let requestPersonaList = response.response;
 
@@ -403,7 +402,7 @@ const PagePersona2 = () => {
           // );
           // 페르소나 요청 API  수정 예정
           response = await InterviewXPersonaRequestRequest(data, isLoggedIn);
-          
+
           retryCount++;
 
           requestPersonaList = response.response;
@@ -706,6 +705,12 @@ const PagePersona2 = () => {
         businessAnalysis: businessAnalysis,
         requestDate: new Date().toLocaleString("ko-KR", {
           timeZone: "Asia/Seoul",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
         }),
         personaRequest: {
           description: customPersonaForm.description,
@@ -791,20 +796,27 @@ const PagePersona2 = () => {
                   <>
                     <BoxWrap>
                       <img src={images.BgUserChatDots} alt="" />
-                      <Body3 color="gray700">바로 대화를 원하시면 일상 페르소나와 함께 !<br />맞춤형 비즈니스 대화를 원하시면 비즈니스 페르소나를 요청해주세요 </Body3>
+                      <Body3 color="gray700">
+                        바로 대화를 원하시면 일상 페르소나와 함께 !<br />
+                        맞춤형 비즈니스 대화를 원하시면 비즈니스 페르소나를
+                        요청해주세요{" "}
+                      </Body3>
                     </BoxWrap>
 
                     <CustomizePersona>
-
                       <Tabheader>
                         <TabWrapType3>
                           <TabButtonType3>일상 페르소나 (12)</TabButtonType3>
-                          <TabButtonType3>비즈니스 페르소나 (12)</TabButtonType3>
+                          <TabButtonType3>
+                            비즈니스 페르소나 (12)
+                          </TabButtonType3>
                         </TabWrapType3>
 
                         <FillterWrap>
                           <ViewType>
-                            <TypeButton List active>리스트</TypeButton>
+                            <TypeButton List active>
+                              리스트
+                            </TypeButton>
                             <TypeButton Card>카드</TypeButton>
                           </ViewType>
 
@@ -815,12 +827,10 @@ const PagePersona2 = () => {
                         </FillterWrap>
                       </Tabheader>
 
-
-
                       <ContentSection>
-                          <>
-                            <PersonaCards>
-                              {/* {requestPersonaList.persona.map((persona, index) => (
+                        <>
+                          <PersonaCards>
+                            {/* {requestPersonaList.persona.map((persona, index) => (
                             <MoleculePersonaCard
                               key={index}
                               title={persona[`persona_${index + 1}`].persona}
@@ -833,91 +843,86 @@ const PagePersona2 = () => {
                               currentSelection={selectedPersonas.length}
                             />
                           ))} */}
-                              {personaList.unselected.map((persona, index) => {
-                                const profileArray = persona.profile
-                                  .replace(/['\[\]]/g, "")
-                                  .split(", ");
-                                const age = profileArray[0].split(": ")[1];
-                                const gender =
-                                  profileArray[1].split(": ")[1] === "남성"
-                                    ? "남성"
-                                    : "여성";
-                                const job = profileArray[2].split(": ")[1];
+                            {personaList.unselected.map((persona, index) => {
+                              const profileArray = persona.profile
+                                .replace(/['\[\]]/g, "")
+                                .split(", ");
+                              const age = profileArray[0].split(": ")[1];
+                              const gender =
+                                profileArray[1].split(": ")[1] === "남성"
+                                  ? "남성"
+                                  : "여성";
+                              const job = profileArray[2].split(": ")[1];
 
-                                return (
-                                  <MoleculePersonaCard
-                                    key={index}
-                                    title={persona.persona}
-                                    keywords={persona.keyword.split(",")}
-                                    gender={gender}
-                                    age={age}
-                                    job={job}
-                                    isBasic={true}
-                                    onSelect={(isSelected) =>
-                                      handlePersonaSelect(persona, isSelected)
-                                    }
-                                    currentSelection={selectedPersonas.length}
-                                  />
-                                );
-                              })}
-                            </PersonaCards>
+                              return (
+                                <MoleculePersonaCard
+                                  key={index}
+                                  title={persona.persona}
+                                  keywords={persona.keyword.split(",")}
+                                  gender={gender}
+                                  age={age}
+                                  job={job}
+                                  isBasic={true}
+                                  onSelect={(isSelected) =>
+                                    handlePersonaSelect(persona, isSelected)
+                                  }
+                                  currentSelection={selectedPersonas.length}
+                                />
+                              );
+                            })}
+                          </PersonaCards>
 
-                            {/* 나만의 페르소나 커스터마이징 배너 */}
-                            <BannerPersona>
-                              <div>
-                                <h2>
-                                  나만의 페르소나 커스터마이징
-                                  <p>
-                                    페르소나를 커스터마이징하여 더 정확한
-                                    인터뷰를 진행해보세요.
-                                  </p>
-                                </h2>
+                          {/* 나만의 페르소나 커스터마이징 배너 */}
+                          <BannerPersona>
+                            <div>
+                              <h2>
+                                나만의 페르소나 커스터마이징
+                                <p>
+                                  페르소나를 커스터마이징하여 더 정확한 인터뷰를
+                                  진행해보세요.
+                                </p>
+                              </h2>
 
-                                <Button
-                                  Large
-                                  Primary
-                                  onClick={handleCustomizeRequest}
-                                >
-                                  요청하기
-                                  <img
-                                    src={images.ChevronRightPrimary}
-                                    alt=""
-                                  />
-                                </Button>
-                              </div>
-                              <img src={images.PersonaCustomizing} alt="" />
-                            </BannerPersona>
-                          </>
-                          {!personaButtonState2 && (
-                            <BottomBar>
-                              <p>
-                                {selectedPersonas.length > 0 ? (
-                                  <>
-                                    선택하신{" "}
-                                    <span>{selectedPersonas.length}명</span>의
-                                    페르소나와 인터뷰 하시겠어요? (
-                                    {selectedPersonas.length}/5)
-                                  </>
-                                ) : (
-                                  "페르소나를 선택하고 그들의 인터뷰를 시작해 보세요 (최대 5명 선택 가능)"
-                                )}
-                              </p>
                               <Button
                                 Large
                                 Primary
-                                Fill={selectedPersonas.length > 0}
-                                // Edit={selectedPersonas.length === 0}
-                                disabled={selectedPersonas.length === 0}
-                                onClick={handleStartInterview}
+                                onClick={handleCustomizeRequest}
                               >
-                                인터뷰 시작하기
-                                <img src={images.ChevronRight} alt="" />
+                                요청하기
+                                <img src={images.ChevronRightPrimary} alt="" />
                               </Button>
-                            </BottomBar>
-                          )}
-                        </ContentSection>
-
-
+                            </div>
+                            <img src={images.PersonaCustomizing} alt="" />
+                          </BannerPersona>
+                        </>
+                        {!personaButtonState2 && (
+                          <BottomBar>
+                            <p>
+                              {selectedPersonas.length > 0 ? (
+                                <>
+                                  선택하신{" "}
+                                  <span>{selectedPersonas.length}명</span>의
+                                  페르소나와 인터뷰 하시겠어요? (
+                                  {selectedPersonas.length}/5)
+                                </>
+                              ) : (
+                                "페르소나를 선택하고 그들의 인터뷰를 시작해 보세요 (최대 5명 선택 가능)"
+                              )}
+                            </p>
+                            <Button
+                              Large
+                              Primary
+                              Fill={selectedPersonas.length > 0}
+                              // Edit={selectedPersonas.length === 0}
+                              disabled={selectedPersonas.length === 0}
+                              onClick={handleStartInterview}
+                            >
+                              인터뷰 시작하기
+                              <img src={images.ChevronRight} alt="" />
+                            </Button>
+                          </BottomBar>
+                        )}
+                      </ContentSection>
 
                       {/* 
                       <Title Column>
@@ -949,7 +954,6 @@ const PagePersona2 = () => {
 
                     {!personaButtonState2 && (
                       <CustomizePersona>
-                        
                         <Title Column>
                           <Body2>산업별 인기 페르소나</Body2>
                           <p>
@@ -1123,7 +1127,6 @@ const PagePersona2 = () => {
                         </ContentSection>
                       </CustomizePersona>
                     )}
-                    
                   </>
                 </CardWrap>
               )}

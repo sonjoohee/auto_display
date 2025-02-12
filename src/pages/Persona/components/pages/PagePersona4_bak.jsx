@@ -177,7 +177,7 @@ const PagePersona4 = () => {
     }
   };
   useEffect(() => {
-    // 팝업이 열려있을 때 배경 스크롤 맊음 
+    // 팝업이 열려있을 때 배경 스크롤 맊음
     if (showToast) {
       document.body.style.overflow = "hidden";
       document.body.style.paddingRight = "15px"; // 스크롤바 자리만큼 패딩 추가
@@ -256,7 +256,8 @@ const PagePersona4 = () => {
           );
           const currentReportList = currentProject?.reportList || [];
 
-          await updateProjectOnServer( //프로젝트의 리포트 목록 업데이트하기 위해서 (나중에 모든 인터뷰 리포트 이력 확인 할 때 사용)
+          await updateProjectOnServer(
+            //프로젝트의 리포트 목록 업데이트하기 위해서 (나중에 모든 인터뷰 리포트 이력 확인 할 때 사용)
             projectId,
             {
               reportList: [
@@ -268,6 +269,12 @@ const PagePersona4 = () => {
                   selectedPersona: personaList.selected.length,
                   createDate: new Date().toLocaleString("ko-KR", {
                     timeZone: "Asia/Seoul",
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
                   }),
                 },
               ],
@@ -345,7 +352,7 @@ const PagePersona4 = () => {
       .filter((item) => item.value !== 0);
   };
 
-  //작업관리 / 인터뷰 시작하기/ 바로가기 인터뷰 목적 선택 
+  //작업관리 / 인터뷰 시작하기/ 바로가기 인터뷰 목적 선택
   const getInterviewPurposeDescription = (purpose) => {
     switch (purpose) {
       case "제품 경험 평가":
@@ -707,7 +714,6 @@ const PagePersona4 = () => {
               <Sidebar>
                 <h5>Key Insight</h5>
 
-            
                 <ProgressBar>
                   <span className="icon">🚀</span>
                   <Progress progress={100} />

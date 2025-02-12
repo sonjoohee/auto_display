@@ -76,12 +76,14 @@ const MoleculeHeader = () => {
       }
       setIsClosing(true);
       setTimeout(() => {
+        fetchAlarms();
         setShowAlert(false);
         setIsClosing(false);
       }, 300);
     } else {                        
       setShowAlert(true);
       setShowCreditToggle(false);
+      setShowRedDot(false);
     }
 
     // if (showAlert) {
@@ -142,29 +144,29 @@ const MoleculeHeader = () => {
     fetchUserCredits();
   }, []);
 
-  useEffect(() => {
-    const fetchAlarms = async () => {
-      if (!isLoggedIn) {
-        return;
-      }
-      try {
-        const response = await AlarmList(isLoggedIn); // AlarmCreate API 호출
-        console.log(response);
+  const fetchAlarms = async () => {
+    if (!isLoggedIn) {
+      return;
+    }
+    try {
+      const response = await AlarmList(isLoggedIn); // AlarmCreate API 호출
+      console.log(response);
 
-        if (response && response.status === "success") {
-          const hasNewAlerts = response.alarms.some(alarm => alarm.isNew); // isNew가 true인 알림이 있는지 확인
-          setShowRedDot(hasNewAlerts); // 빨간 점 상태 업데이트
-          setAlarms(response.alarms); // Store alarms in state
-          console.log(alarms);
-        } else {
-          setShowRedDot(false);
-        }
-      } catch (error) {
-        console.error("알림 조회 오류 발생:", error);
+      if (response && response.status === "success") {
+        const hasNewAlerts = response.alarms.some(alarm => alarm.isNew); // isNew가 true인 알림이 있는지 확인
+        setShowRedDot(hasNewAlerts); // 빨간 점 상태 업데이트
+        setAlarms(response.alarms); // Store alarms in state
+        console.log(alarms);
+      } else {
         setShowRedDot(false);
       }
-    };
+    } catch (error) {
+      console.error("알림 조회 오류 발생:", error);
+      setShowRedDot(false);
+    }
+  };
 
+  useEffect(() => {
     fetchAlarms();
   }, [location, isLoggedIn]);
 

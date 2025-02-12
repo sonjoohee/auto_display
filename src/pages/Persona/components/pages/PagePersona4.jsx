@@ -313,6 +313,12 @@ const PagePersona4 = () => {
                     createTimestamp: new Date().getTime(),
                     createDate: new Date().toLocaleString("ko-KR", {
                       timeZone: "Asia/Seoul",
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      second: "2-digit",
                     }),
                   },
                 ],
@@ -842,7 +848,9 @@ const PagePersona4 = () => {
                             <PersonaInfo>
                               <span>{personaItem.gender || "성별"}</span>
                               <span>{personaItem.age || "나이"}세</span>
-                              <span className="job">{personaItem.job || "직업"}</span>
+                              <span className="job">
+                                {personaItem.job || "직업"}
+                              </span>
                             </PersonaInfo>
                           </PersonaText>
                         </PersonaItem>
