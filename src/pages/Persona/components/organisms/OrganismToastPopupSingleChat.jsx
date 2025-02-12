@@ -736,11 +736,21 @@ const OrganismToastPopupSingleChat = ({
           question: interviewQuestionListState[currentQuestionIndex],
           theory_data: purposeItemsSingleAtom,
           persona_info: {
-            id: personaList.selected[0].persona_id.replace(/[^0-9]/g, ""),
+            // id: personaList.selected[0].persona_id.replace(/[^0-9]/g, ""),
+            id: personaList.selected[0].hasOwnProperty("request_persona_type")
+              ? `${personaList.selected[0].request_persona_type}_${personaList.selected[0].persona_id}`
+              : personaList.selected[0].persona_id.replace(/[^0-9]/g, ""),
             name: personaList.selected[0].persona,
-            keyword: personaList.selected[0].persona_keyword,
+            keyword: personaList.selected[0].hasOwnProperty(
+              "request_persona_type"
+            )
+              ? personaList.selected[0].keyword
+              : personaList.selected[0].persona_keyword,
+            // keyword: personaList.selected[0].persona_keyword,
             hashtag: personaList.selected[0].lifestyle,
             summary: personaList.selected[0].consumption_pattern,
+            request_persona_type:
+              personaList.selected[0].request_persona_type || "preset",
           },
           last_interview: lastInterview,
         };
@@ -1446,8 +1456,11 @@ const OrganismToastPopupSingleChat = ({
                       </Thumb>
                       <span>{persona.persona_view}</span>
                       <span>
-                        {persona.gender} | {persona.age}세 | {persona.job}{" "}
-                        {/* 성별, 나이, 직업 표시 */}
+                        {persona.gender} |{" "}
+                        {persona.age.includes("세")
+                          ? persona.age
+                          : `${persona.age}세`}{" "}
+                        | {persona.job} {/* 성별, 나이, 직업 표시 */}
                       </span>
                     </li>
                   );

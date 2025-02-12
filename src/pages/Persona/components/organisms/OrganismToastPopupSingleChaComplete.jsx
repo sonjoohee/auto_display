@@ -281,7 +281,11 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                       </Thumb>
                       <span>{persona.persona}</span>
                       <span>
-                        {persona.gender} | {persona.age}세 | {persona.job}{" "}
+                        {persona.gender} |{" "}
+                        {persona.age.includes("세")
+                          ? persona.age
+                          : `${persona.age}세`}{" "}
+                        | {persona.job}{" "}
                       </span>
                     </li>
                   );
