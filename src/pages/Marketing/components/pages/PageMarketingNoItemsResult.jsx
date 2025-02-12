@@ -35,6 +35,8 @@ import { isLoggedIn } from "../../../../utils/indexedDB";
 
 import { Button } from "../../../../assets/styles/ButtonStyle";
 
+
+
 const PageMarketingNoItemsResult = () => {
   const navigate = useNavigate();
   const { saveConversation } = useSaveConversation();
@@ -335,105 +337,120 @@ const PageMarketingNoItemsResult = () => {
   const [isCapturing, setIsCapturing] = useState(false); 
 
   const captureAndShare = async () => {
-    if (isCapturing) return; // 이미 캡처 중이면 실행하지 않음
+    if (isCapturing) return;
     setIsCapturing(true);
     
     try {
-      
-      const questionElement = document.querySelector(".capture-area");
-      console.log("선택된 capture-area 요소:", questionElement); 
-
-      // 버튼 요소를 일시적으로 숨김
-      const shareButton = questionElement.querySelector("button");
-      if (shareButton) {
-        shareButton.style.display = 'none';
-      }
-
-
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      console.log("Is mobile:", isMobile); 
-      
+      const elementToCapture = isMobile 
+        ? document.querySelector(".mobile-result-card")
+        : document.querySelector(".capture-area");
 
-      // let originalStyle = questionElement.style.cssText; // 기존 스타일 저장
-      if (isMobile) { // isCapturing이 false일 때만 실행
-        questionElement.style.width = "1200px"; // PC 화면 너비로 설정
-        questionElement.style.height = "800px"; // PC 화면 높이로 설정   
-        console.log("변경된 스타일:", questionElement.style.cssText);
+      // 이미지 로드 대기
+      const images = elementToCapture.getElementsByTagName('img');
+      await Promise.all([...images].map(img => {
+        if (img.complete) return Promise.resolve();
+        return new Promise(resolve => {
+          img.onload = resolve;
+          img.onerror = resolve;
+        });
+      }));
+
+      // 캡쳐 전 스타일 조정
+      if (isMobile) {
+        elementToCapture.style.display = 'block';
+        elementToCapture.style.visibility = 'visible';
+        elementToCapture.style.position = 'absolute';
+        elementToCapture.style.top = '-9999px';  // 화면 밖으로 이동
+        elementToCapture.style.left = '-9999px';
+        elementToCapture.style.width = '100%';
+        elementToCapture.style.height = 'auto';
+        elementToCapture.style.background = '#5547ff';
       }
 
+      await new Promise(resolve => setTimeout(resolve, 100));
 
-      const canvas = await html2canvas(questionElement, {
+      const canvas = await html2canvas(elementToCapture, {
         backgroundColor: "#5547ff",
         scale: 2,
         useCORS: true,
-        logging: false,
+        logging: true,
         allowTaint: true,
+        imageTimeout: 0,
+        onclone: (document) => {
+          const clonedElement = document.querySelector('.mobile-result-card');
+          if (clonedElement) {
+            clonedElement.style.display = 'block';
+            clonedElement.style.visibility = 'visible';
+          }
+        }
       });
 
-
-      // //캡쳐 후 원래 스타일로 복원
-      // questionElement.style.cssText = originalStyle;
-
-      // 버튼을 다시 보이게 함
-      if (shareButton) {
-        shareButton.style.display = "";
+      // 원래 스타일로 복원
+      if (isMobile) {
+        elementToCapture.style.display = 'none';
+        elementToCapture.style.visibility = 'hidden';
+        elementToCapture.style.position = 'absolute';
+        elementToCapture.style.left = '-9999px';
+        elementToCapture.style.top = '-9999px';
       }
-      
-      const image = canvas.toDataURL('image/png', 1.0);
 
-      const shareUrl = `${window.location.origin}/MarketingSetting/Share/${marketingMbtiResult.name}`;
-
-      await navigator.clipboard.writeText(shareUrl);
-
-
-      // const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      
-      try {
-        if (isMobile && navigator.share) {
-          const blob = await (await fetch(image)).blob();
-          const file = new File(
-            [blob],
-            `${marketingMbtiResult.name}_result.png`,
-            { type: "image/png" }
-          );
-
-          await navigator.share({
-            files: [file],
-            title: "창업 MBTI 결과",
-            text: `나의 창업 MBTI는 ${marketingMbtiResult.name}입니다!`,
-          });
-        } else {
-          const link = document.createElement("a");
-          link.href = image;
-          link.download = `${marketingMbtiResult.name}_result.png`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
+      // Blob 생성 및 다운로드/공유
+      canvas.toBlob(async (blob) => {
+        if (!blob) {
+          throw new Error('Canvas to Blob conversion failed');
         }
 
-        const shareUrl = `${window.location.origin}/MarketingSetting/Share/${marketingMbtiResult.name}`;
+        try {
+          if (isMobile && navigator.share) {
+            const file = new File([blob], `${marketingMbtiResult.name}_result.png`, { type: 'image/png' });
+            downloadWithBlob(blob); // 무조건 먼저 다운로드
+            try {
+              await navigator.share({
+                files: [file],
+                title: "창업 MBTI 결과",
+                text: `나의 창업 MBTI는 ${marketingMbtiResult.name}입니다!`,
+              });
+              setShowSuccessPopup(true);
+            } catch (shareError) {
+              console.error("Sharing failed:", shareError);
+            }
+          } else {
+            // 데스크톱이나 공유 불가능한 모바일의 경우
+            downloadWithBlob(blob);
+          }
+        } catch (error) {
+          console.error("Error in blob handling:", error);
+          setShowErrorPopup(true);
+        }
+      }, 'image/png', 1.0);
 
-        await navigator.clipboard.writeText(shareUrl);
-
-        setShowSuccessPopup(true);
-
-
-      } catch (shareError) {
-        const link = document.createElement("a");
-        link.href = image;
-        link.download = `${marketingMbtiResult.name}_result.png`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        console.log("Download successful:", `${marketingMbtiResult.name}_result.png`); // 다운로드 성공하면 콘솔로
-        setShowSuccessPopup(true);
-      }
-        
     } catch (err) {
-      console.error("Error capturing or sharing:", err);
+      console.error("Error capturing:", err);
       setShowErrorPopup(true);
     } finally {
-      setIsCapturing(false); 
+      setIsCapturing(false);
+    }
+  };
+
+  // Blob을 사용한 다운로드 함수
+  const downloadWithBlob = (blob) => {
+    try {
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = `${marketingMbtiResult.name}_result.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      // Blob URL 해제
+      setTimeout(() => {
+        URL.revokeObjectURL(blobUrl);
+      }, 100);
+      setShowSuccessPopup(true);
+    } catch (error) {
+      console.error("Download failed:", error);
+      setShowErrorPopup(true);
     }
   };
 
@@ -593,43 +610,7 @@ const getEntrepreneursByMbti = (mbtiName) => {
             <p>
               <span>
                 <img
-                  src={
-                    marketingMbtiResult.name === "ROIC"
-                      ? images.ImgMBTIROIC
-                      : marketingMbtiResult.name === "ROIA"
-                      ? images.ImgMBTIROIA
-                      : marketingMbtiResult.name === "ROTC"
-                      ? images.ImgMBTIROTC
-                      : marketingMbtiResult.name === "ROTA"
-                      ? images.ImgMBTIROTA
-                      : marketingMbtiResult.name === "RPIA"
-                      ? images.ImgMBTIRPIA
-                      : marketingMbtiResult.name === "RPIC"
-                      ? images.ImgMBTIRPIC
-                      : marketingMbtiResult.name === "RPTA"
-                      ? images.ImgMBTIRPTA
-                      : marketingMbtiResult.name === "RPTC"
-                      ? images.ImgMBTIRPTC
-                      : marketingMbtiResult.name === "SOIA"
-                      ? images.ImgMBTISOIA
-                      : marketingMbtiResult.name === "SOIC"
-                      ? images.ImgMBTISOIC
-                      : marketingMbtiResult.name === "SOTA"
-                      ? images.ImgMBTISOTA
-                      : marketingMbtiResult.name === "SOTC"
-                      ? images.ImgMBTISOTC
-                      : marketingMbtiResult.name === "SPIA"
-                      ? images.ImgMBTISPIA
-                      : marketingMbtiResult.name === "SPIC"
-                      ? images.ImgMBTISPIC
-                      : marketingMbtiResult.name === "SPTA"
-                      ? images.ImgMBTISPTA
-                      : marketingMbtiResult.name === "SPTC"
-                      ? images.ImgMBTISPTC
-                      : marketingMbtiResult.name === "SPTA"
-                      ? images.ImgMBTISPTA
-                      : ""
-                  }
+                  src={getImageSrc(marketingMbtiResult.name)}
                   alt=""
                 />
               </span>
@@ -640,22 +621,57 @@ const getEntrepreneursByMbti = (mbtiName) => {
               <strong>{marketingMbtiResult.summary}</strong>
               <p>{marketingMbtiResult.description}</p>
 
-              
               <strong>당신과 같은 유형의 창업가는?</strong>
-                <EntrepreneurList className="entrepreneur-item">
-                  {getEntrepreneursByMbti(marketingMbtiResult.name).map(
-                    (entrepreneur, index) => (
-                      <EntrepreneurBox className="entrepreneur-box" key={index}>
-                        <strong>{entrepreneur.name}</strong>
-                        <p>{entrepreneur.company}</p>
-                      </EntrepreneurBox>
-                    )
-                  )}
-                </EntrepreneurList>
+              <EntrepreneurList className="entrepreneur-item">
+                {getEntrepreneursByMbti(marketingMbtiResult.name).map(
+                  (entrepreneur, index) => (
+                    <EntrepreneurBox className="entrepreneur-box" key={index}>
+                      <strong>{entrepreneur.name}</strong>
+                      <p>{entrepreneur.company}</p>
+                    </EntrepreneurBox>
+                  )
+                )}
+              </EntrepreneurList>
 
-              <CustomButton DbExLarge PrimaryLightest Fill onClick={captureAndShare}>결과 공유하기</CustomButton>
+              {!isCapturing && (
+                <CustomButton DbExLarge PrimaryLightest Fill onClick={captureAndShare}>
+                  결과 공유하기
+                </CustomButton>
+              )}
             </div>
           </Question>
+
+          {/* 새로운 모바일 결과 카드 추가 */}
+          <MobileResultCard className="mobile-result-card">
+            <div className="icon-wrapper">
+              <img src={getImageSrc(marketingMbtiResult.name)} alt={`${marketingMbtiResult.name} 아이콘`} />
+            </div>
+            <div className="mbti-result">
+              <h2>{marketingMbtiResult.category}</h2>
+              <h3>{marketingMbtiResult.name}</h3>
+            </div> 
+
+            <div className="description-card">
+              <p className="light-bulb">
+                <strong>{marketingMbtiResult.summary}</strong>
+              </p>
+              <p className="main-description">
+                {marketingMbtiResult.description}
+              </p>
+              <div className="entrepreneurs">
+                <h4>당신과 같은 유형의 창업가는?</h4>
+                {getEntrepreneursByMbti(marketingMbtiResult.name).map((entrepreneur, index) => (
+                  <div className="entrepreneur-box" key={index}>
+                    <div className="info">
+                      <div className="name">{entrepreneur.name}</div>
+                      <div className="company">{entrepreneur.company}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          
+          </MobileResultCard>
 
           <Answer
             onMouseDown={handleMouseDown}
@@ -1239,13 +1255,20 @@ const ResultWrap = styled.div`
       font-size: 1.13rem;
       font-weight: 500; 
       color: #5547ff;
+      margin-bottom: 12px;
+      display: block;
     }
 
     p {
       font-weight: 300;
       line-height: 1.6;
+      margin-bottom: 20px;
     }
 
+    strong:nth-of-type(2) {
+      display: block;
+      margin-bottom: 1px;
+    }
   }
 
   .title {
@@ -1758,7 +1781,7 @@ const ShareButton = styled.button`
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  margin-top: 16px;
+  margin-top: 10px;
 
   &:hover {
     transform: scale(1.05);
@@ -1771,18 +1794,14 @@ const ShareButton = styled.button`
   }
 `;
 
-const StyledDiv = styled.div`
-  display: none; // 기본적으로 숨김
 
-  &.info {
-    display: block; // info 클래스일 경우 나타남
-  }
-`;
 
 const EntrepreneurList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  justify-content: space-between; // 세로 중앙 정렬
+  gap: 12px;
+  margin-top: 12px;  // 상단 간격 추가
 
 `;
 
@@ -1790,15 +1809,166 @@ const EntrepreneurBox = styled.div`
   border-radius: 12px; 
   padding: 16px; 
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; // 세로 중앙 정렬
+
+
+   h3 {
+    font-weight: 600;
+    color: black;
+    font-size: 20px;
+    text-align: left;
+    margin-bottom: 4px;
+    margin-top: 10px;
+  }
+  
+  p {
+    text-align: left;
+    color: #666;
+    font-size: 16px;
+  }
+
 `;
 
 const Entrepreneurs = styled.div`
+   display: flex;
+  flex-direction: column;
+  justify-content: center; // 세로 중앙 정렬
 
 
  h3{
     font-weight: 600;
     color: black;
-    font-size: 24px;
+    font-size: 20px;
+    text-align: left;
+    margin-bottom: 8px;
   }
+
+    
+  p {
+    text-align: left;
+    color: #666;
+    font-size: 16px;
+  }
+
+`;
+
+
+// 새로운 모바일 카드 컴포넌트 추가
+const MobileResultCard = styled.div`
+  // 기본적으로 숨김 상태
+  display: none;
+  visibility: hidden;
+  position: absolute;
+  left: -9999px;
+  top: -9999px;  // top 위치도 화면 밖으로 이동
+  
+  // 나머지 스타일은 동일하게 유지
+  background: #5547ff;
+  padding: 40px 20px;
+  padding-bottom: 0;
+  text-align: center;
+  color: ${palette.white};
+  width: 100%;
+  max-width: 500px;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    display: none;
+    visibility: hidden;
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+  }
+  
+  .icon-wrapper {
+    margin-bottom: 20px;
+    img {
+      width: 180px;
+      height: 120px;
+      object-fit: contain;
+    }
+  }
+
+  .mbti-result {
+    margin-bottom: 32px;
+    h2 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    h3 {
+      font-size: 32px;
+      font-weight: 700;
+    }
+  }
+
+  .description-card {
+    background: ${palette.white};
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 0; // 마진 제거
+    
+    .light-bulb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #5547ff;
+      font-size: 14px;
+      margin-bottom: 16px;
+      
+      strong {
+        flex: 1;
+      }
+    }
+
+    .main-description {
+      color: #333;
+      font-size: 16px;
+      line-height: 1.6;
+      text-align: left;
+      margin-bottom: 24px;
+    }
+
+    .entrepreneurs {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      
+      h4 {
+        color: #5547ff;
+        font-size: 16px;
+        font-weight: 500;
+        text-align: left;
+        font-weight: 500;
+      }
+
+      .entrepreneur-box {
+        display: flex;
+        justify-content: space-between;
+        background: #F8F9FA;
+        padding: 16px;
+        border-radius: 12px;
+        
+        .info {
+          text-align: left;
+          
+          .name {
+            font-weight: 600;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 4px;
+          }
+          
+          .company {
+            font-size: 14px;
+            color: #666;
+          }
+        }
+      }
+    }
+  }
+
 
 `;
