@@ -147,6 +147,7 @@ import {
   IS_EDIT_MODE,
   IS_SHOW_TOAST,
   PROJECT_REFRESH_TRIGGER,
+  CUSTOM_PERSONA_LIST,
 } from "../../../AtomStates";
 import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
@@ -158,6 +159,7 @@ import OrganismReportPopup from "../../../Expert_Insight/components/organisms/Or
 
 const OrganismIncNavigation = () => {
   const location = useLocation();
+  const [customPersonaList, setCustomPersonaList] = useAtom(CUSTOM_PERSONA_LIST);
   const [, setRefreshTrigger] = useAtom(PROJECT_REFRESH_TRIGGER);
   const [projectLoadButtonState, setProjectLoadButtonState] = useAtom(
     PROJECT_LOAD_BUTTON_STATE
@@ -1258,6 +1260,7 @@ const OrganismIncNavigation = () => {
     setInterviewReportAdditional([]);
     setIsEditMode(false);
     setIsShowToast(false);
+    setCustomPersonaList([]);
 
     if (isLoggedIn) {
       setRefreshTrigger((prev) => prev + 1); // 트리거 증가로 새로고침 실행
