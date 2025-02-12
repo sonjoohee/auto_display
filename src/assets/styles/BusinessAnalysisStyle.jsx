@@ -354,6 +354,27 @@ export const TabButtonType3 = styled(TabButton)`
       `}
 `;
 
+export const TabWrapType4 = styled(TabWrap)`
+  gap: 16px !important;
+`;
+
+export const TabButtonType4 = styled(TabButton)`
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid ${palette.outlineGray};
+  cursor: pointer;
+
+  ${({ isActive }) =>
+    isActive
+    ? `
+      background: ${palette.chatGray};
+    `
+    : `
+      background: ${palette.white};
+    `
+  }
+`;
+
 export const TabContent = styled.div`
   display: flex;
   flex-direction: column;
@@ -3179,4 +3200,201 @@ export const NoData = styled.div`
 export const CreditNoData = styled.div`
   padding-top: 16px;
   border-top: 1px solid ${palette.chatGray};
+`;
+
+export const ExploreList = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 20px 16px;
+  margin-bottom: 200px;
+`;
+
+export const ExploreCard = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  max-width: 192px;
+  width: 100%;
+  height: 290px;
+  padding: 30px;
+  border-radius: 20px;
+  background: ${palette.chatGray};
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.5s;
+
+  > span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: ${palette.gray700};
+    line-height: 1.55;
+    letter-spacing: -0.36px;
+  }
+
+  p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 97px;
+    margin-top: auto;
+
+    img {
+      padding: 10px;
+    }
+  }
+
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 30px 22px;
+    background: rgba(50, 50, 50, 0.9);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s;
+
+    > span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: ${palette.white};
+      line-height: 1.55;
+      letter-spacing: -0.36px;
+      padding: 4px 12px;
+      border-radius: 5px;
+      background: ${palette.primary};
+    }
+
+    .text {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: auto;
+
+      i {
+        position: relative;
+        width: 64px;
+        height: 12px;
+        margin: 0 auto;
+
+        &:before,
+        &:after {
+          position: absolute;
+          right: 0;
+          border-radius: 4px;
+          background: ${palette.white};
+          content: "";
+        }
+
+        &:before {
+          bottom: 0;
+          width: 100%;
+          height: 2px;
+        }
+
+        &:after {
+          bottom: 5px;
+          right: -1px;
+          transform: rotate(45deg);
+          width: 14px;
+          height: 2px;
+        }
+      }
+    }
+  }
+
+  ${Body1} {
+    margin-top: 26px;
+
+    em {
+      display: none;
+    }
+  }
+
+  &:hover {
+    .overlay {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  ${(props) =>
+    props.Research &&
+    css`
+      .overlay {
+        > span {
+          background: ${palette.green};
+        }
+      }
+    `
+  }
+
+  ${(props) =>
+    props.Ready &&
+    css`
+      cursor: not-allowed;
+      pointer-events: auto; // 마우스 오버 이벤트 허용
+
+      ${Body1} {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        margin-top: 0;
+
+        em {
+          display: block;
+          font-size: 0.75rem;
+          font-weight: 500;
+          font-style: normal;
+          color: ${palette.gray500};
+          line-height: 1.2;
+          letter-spacing: -0.36px;
+          padding: 4px 8px;
+          border-radius: 50px;
+          border: 1px solid ${palette.outlineGray};
+        }
+      }
+
+      .overlay {
+        opacity: 0; // 기본적으로는 숨김
+        visibility: hidden;
+        pointer-events: none; // 오버레이의 클릭 이벤트 차단
+        
+        em {
+          color: ${palette.white};
+        }
+
+        i {
+          &:before,
+          &:after {
+            display: none;
+          }
+        }
+      }
+
+      &:hover .overlay {
+        opacity: 1;
+        visibility: visible;
+      }
+    `}
 `;

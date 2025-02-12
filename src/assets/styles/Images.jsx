@@ -285,6 +285,19 @@ import CarouselImg03 from "../images/carousel-img03.png";
 
 import Popup01 from "../images/popup01.png";
 
+import ImgExplore01 from "../images/img-explore01.png";
+import ImgExplore02 from "../images/img-explore02.png";
+import ImgExplore03 from "../images/img-explore03.png";
+import ImgExplore04 from "../images/img-explore04.png";
+import ImgExplore05 from "../images/img-explore05.png";
+import ImgExplore06 from "../images/img-explore06.png";
+import ImgExplore07 from "../images/img-explore07.png";
+import ImgExplore08 from "../images/img-explore08.png";
+import ImgExplore09 from "../images/img-explore09.png";
+import ImgExploreNoData from "../images/img-explore-nodata.png";
+
+import LightningChargeFill from "../icons/LightningChargeFill";
+
 const images = {
   Logo,
   SymbolLogo,
@@ -560,6 +573,19 @@ const images = {
   CarouselImg03,
 
   Popup01,
+
+  ImgExplore01,
+  ImgExplore02,
+  ImgExplore03,
+  ImgExplore04,
+  ImgExplore05,
+  ImgExplore06,
+  ImgExplore07,
+  ImgExplore08,
+  ImgExplore09,
+  ImgExploreNoData,
+
+  LightningChargeFill,
 }
 
 export default images;

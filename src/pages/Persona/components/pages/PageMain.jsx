@@ -145,8 +145,15 @@ import {
   EVENT_STATE,
   TRIAL_STATE,
 } from "../../../AtomStates";
-import { ContentsWrap } from "../../../../assets/styles/BusinessAnalysisStyle";
+import { 
+  ContentsWrap,
+  TabWrapType4,
+  TabButtonType4,
+  ExploreList,
+  ExploreCard,
+} from "../../../../assets/styles/BusinessAnalysisStyle";
 import {
+  H4,
   Body1,
   Body3,
   Sub3,
@@ -917,6 +924,39 @@ const PageMain = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // 검색어 목록과 현재 표시할 검색어 인덱스를 위한 state 추가
+  const [searchKeywords] = useState([
+    "MZ 세대를 위한 맞춤형 건강식 구독 서비스",
+    "반려동물 산책 매칭 서비스", 
+    "1인 가구를 위한 식사 구독 서비스",
+    "직장인 점심 식사 예약 서비스",
+    "실시간 운동 코칭 플랫폼"
+  ]);
+  const [currentKeywordIndex, setCurrentKeywordIndex] = useState(0);
+
+  // 검색어 자동 순환을 위한 useEffect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentKeywordIndex((prev) => (prev + 1) % searchKeywords.length);
+    }, 5000); // 5초마다 변경
+
+    return () => clearInterval(interval);
+  }, [searchKeywords.length]);
+
+  // 탭 상태 관리를 위한 state 추가
+  const [activeTab, setActiveTab] = useState("all");
+
+  // 카드 필터링 함수 수정
+  const filterCards = (card) => {
+    if (activeTab === "all") return true;
+    
+    if (card.props.Expert) return activeTab === "expert";
+    if (card.props.Research) return activeTab === "research";
+    if (card.props.Analysis) return activeTab === "analysis";
+    
+    return false;
+  };
+
   return (
     <>
       <ContentsWrap>
@@ -934,53 +974,411 @@ const PageMain = () => {
               </p>
             </Title>
 
-            <InputWrap>
-              <div className="inputWrap">
-                <CustomTextarea
-                  Edit
-                  rows={1}
-                  placeholder="비즈니스 설명을 입력하면, 최적의 페르소나를 제안해드려요"
-                  onInput={(e) => {
-                    // 입력값을 최대 300자로 제한
-                    if (e.target.value.length > 300) {
-                      e.target.value = e.target.value.substring(0, 300);
-                    }
-                    setBusinessAnalysis({
-                      input: e.target.value,
-                      title: "",
-                      characteristics: "",
-                      features: [],
-                      category: {},
-                    });
+            <div>
+              <InputWrap>
+                <div className="inputWrap">
+                  <CustomTextarea
+                    Edit
+                    rows={1}
+                    placeholder="비즈니스 설명을 입력하면, 최적의 페르소나를 제안해드려요"
+                    onInput={(e) => {
+                      // 입력값을 최대 300자로 제한
+                      if (e.target.value.length > 300) {
+                        e.target.value = e.target.value.substring(0, 300);
+                      }
+                      setBusinessAnalysis({
+                        input: e.target.value,
+                        title: "",
+                        characteristics: "",
+                        features: [],
+                        category: {},
+                      });
 
-                    // // 글자 수 표시
-                    // const currentLength = e.target.value.length;
-                    // document.getElementById(
-                    //   "letterCount"
-                    // ).innerText = `${currentLength}/300`;
-                  }}
-                  onKeyDown={handleKeyPress}
-                ></CustomTextarea>
-                <button type="button" onClick={handledSearch}>
-                  검색
-                </button>
-              </div>
-              <div className="maxLetter">
-                <images.ExclamationCircle2
-                  width="14px"
-                  height="14px"
-                  color={palette.gray300}
-                />
-                <Sub3 color="gray300">
-                  현재 서비스는 B2C 비즈니스에 특화되어 있습니다
-                </Sub3>
-                <span id="letterCount">
-                  {businessAnalysis.input.length}/300
-                </span>
-              </div>
-            </InputWrap>
+                      // // 글자 수 표시
+                      // const currentLength = e.target.value.length;
+                      // document.getElementById(
+                      //   "letterCount"
+                      // ).innerText = `${currentLength}/300`;
+                    }}
+                    onKeyDown={handleKeyPress}
+                  ></CustomTextarea>
+                  <button type="button" onClick={handledSearch}>
+                    검색
+                  </button>
+                </div>
+                <div className="maxLetter">
+                  <images.ExclamationCircle2
+                    width="14px"
+                    height="14px"
+                    color={palette.gray300}
+                  />
+                  <Sub3 color="gray300">
+                    현재 서비스는 B2C 비즈니스에 특화되어 있습니다
+                  </Sub3>
+                  <span id="letterCount">
+                    {businessAnalysis.input.length}/300
+                  </span>
+                </div>
+              </InputWrap>
+
+              <KeywordSearch>
+                <Sub3 color="gray500">창업자들은</Sub3>
+                <div>
+                  <Sub3 
+                    color="primary" 
+                    style={{
+                      opacity: 1,
+                      transition: 'opacity 0.5s ease-in-out'
+                    }}
+                  >
+                    "{searchKeywords[currentKeywordIndex]}"
+                  </Sub3>
+                </div>
+                <Sub3 color="gray500">키워드로 검색했어요</Sub3>
+              </KeywordSearch>
+            </div>
           </MainSearchWrap>
 
+          <ExploreWrap>
+            <H4 align="left">Explore</H4>
+            
+            <TabWrapType4>
+              <TabButtonType4 
+                isActive={activeTab === "all"}
+                onClick={() => setActiveTab("all")}
+              >
+                <Caption1 color="gray700">All</Caption1>
+              </TabButtonType4>
+              <TabButtonType4 
+                isActive={activeTab === "expert"}
+                onClick={() => setActiveTab("expert")}
+              >
+                <Caption1 color="gray700">Business Expert</Caption1>
+              </TabButtonType4>
+              <TabButtonType4 
+                isActive={activeTab === "research"}
+                onClick={() => setActiveTab("research")}
+              >
+                <Caption1 color="gray700">Research Tool</Caption1>
+              </TabButtonType4>
+              <TabButtonType4 
+                isActive={activeTab === "analysis"}
+                onClick={() => setActiveTab("analysis")}
+              >
+                <Caption1 color="gray700">Analysis Tool</Caption1>
+              </TabButtonType4>
+            </TabWrapType4>
+
+            <ExploreList>
+              {[
+                // Expert 카드들
+                <ExploreCard Expert Ready key="expert-1">
+                  <span>
+                    <images.LightningChargeFill color={palette.gray700} />
+                    Expert
+                  </span>
+                  <p><img src={images.ImgExplore01} alt="" /></p>
+                  <Body1 color="gray800">
+                    <em>준비중</em>
+                    전략 컨설턴트
+                  </Body1>
+
+                  <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
+                    <span>
+                      <images.LightningChargeFill color={palette.white} />
+                      Expert
+                    </span>
+
+                    <div className="text">
+                      <Body1 color="white">
+                        <em>준비중</em>
+                        전략 컨설턴트
+                      </Body1>
+                      <Caption1 color="white" align="left">차별화된 비즈니스 전략과 리스크 분석을 통해 시장 경쟁력을 강화하는 방법을 제시드려요</Caption1>
+                      <i />
+                    </div>
+                  </div>
+                </ExploreCard>,
+                
+                <ExploreCard Expert key="expert-2">
+                  <span>
+                    <images.LightningChargeFill color={palette.gray700} />
+                    Expert
+                  </span>
+                  <p><img src={images.ImgExplore02} alt="" /></p>
+                  <Body1 color="gray800">
+                    <em>준비중</em>
+                    가격 분석 전문가
+                  </Body1>
+
+                  <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
+                    <span>
+                      <images.LightningChargeFill color={palette.white} />
+                      Expert
+                    </span>
+
+                    <div className="text">
+                      <Body1 color="white">가격 분석 전문가</Body1>
+                      <Caption1 color="white" align="left">시장 데이터 기반 최적 가격을 분석하여 수익성과 경쟁력을 극대화할 수 있어요 (제품 한정)</Caption1>
+                      <i />
+                    </div>
+                  </div>
+                </ExploreCard>,
+                
+                <ExploreCard Expert key="expert-3">
+                  <span>
+                    <images.LightningChargeFill color={palette.gray700} />
+                    Expert
+                  </span>
+                  <p><img src={images.ImgExplore03} alt="" /></p>
+                  <Body1 color="gray800">
+                    <em>준비중</em>
+                    BM 전문가
+                  </Body1>
+
+                  <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
+                    <span>
+                      <images.LightningChargeFill color={palette.white} />
+                      Expert
+                    </span>
+
+                    <div className="text">
+                      <Body1 color="white">BM 전문가</Body1>
+                      <Caption1 color="white" align="left">비즈니스 모델을 설계하고 최적화하여 지속 가능한 수익 구조를 구축하는 방향을 설정해드려요 </Caption1>
+                      <i />
+                    </div>
+                  </div>
+                </ExploreCard>,
+                
+                <ExploreCard Expert key="expert-4">
+                  <span>
+                    <images.LightningChargeFill color={palette.gray700} />
+                    Expert
+                  </span>
+                  <p><img src={images.ImgExplore04} alt="" /></p>
+                  <Body1 color="gray800">
+                    <em>준비중</em>
+                    그로스 해커
+                  </Body1>
+
+                  <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
+                    <span>
+                      <images.LightningChargeFill color={palette.white} />
+                      Expert
+                    </span>
+
+                    <div className="text">
+                      <Body1 color="white">그로스 해커</Body1>
+                      <Caption1 color="white" align="left">사용자 여정을 분석하여 각 마케팅 퍼널 단계별 최적의 전략을 도출하고 실행 방안을 제시드려요</Caption1>
+                      <i />
+                    </div>
+                  </div>
+                </ExploreCard>,
+                
+                <ExploreCard Expert key="expert-5">
+                  <span>
+                    <images.LightningChargeFill color={palette.gray700} />
+                    Expert
+                  </span>
+                  <p><img src={images.ImgExploreNoData} alt="" /></p>
+                  <Body1 color="gray300">
+                    <em>준비중</em>
+                    Coming Soon
+                  </Body1>
+
+                  <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
+                    <span>
+                      <images.LightningChargeFill color={palette.white} />
+                      Expert
+                    </span>
+
+                    <div className="text">
+                      <Body1 color="white">Coming Soon</Body1>
+                      <Caption1 color="white" align="left">Coming Soon</Caption1>
+                      <i />
+                    </div>
+                  </div>
+                </ExploreCard>,
+
+                <ExploreCard Research key="research-1">
+                  <span>
+                    <images.LightningChargeFill color={palette.gray700} />
+                    Tool
+                  </span>
+                  <p><img src={images.ImgExplore05} alt="" /></p>
+                  <Body1 color="gray800">
+                    <em>준비중</em>
+                    타겟 디스커버리
+                  </Body1>
+
+                  <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
+                    <span>
+                      <images.LightningChargeFill color={palette.white} />
+                      Tool
+                    </span>
+
+                    <div className="text">
+                      <Body1 color="white">타겟 디스커버리</Body1>
+                      <Caption1 color="white" align="left">Contextual Inquiry  및 시나리오 분석 기법을 활용해 제품 및 서비스의 잠재고객 탐색 툴</Caption1>
+                      <i />
+                    </div>
+                  </div>
+                </ExploreCard>,
+                
+                <ExploreCard Research key="research-2">
+                  <span>
+                    <images.LightningChargeFill color={palette.gray700} />
+                    Tool
+                  </span>
+                  <p><img src={images.ImgExplore06} alt="" /></p>
+                  <Body1 color="gray800">
+                    <em>준비중</em>
+                    고객 핵심 가치 분석기
+                  </Body1>
+
+                  <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
+                    <span>
+                      <images.LightningChargeFill color={palette.white} />
+                      Tool
+                    </span>
+
+                    <div className="text">
+                      <Body1 color="white">고객 핵심 가치 분석기</Body1>
+                      <Caption1 color="white" align="left">고객여정맵을 기반으로 핵심 구매 요인을 도출하고 고객 중심의 경쟁력을 강화하는 툴</Caption1>
+                      <i />
+                    </div>
+                  </div>
+                </ExploreCard>,
+                
+                <ExploreCard Research key="research-3">
+                  <span>
+                    <images.LightningChargeFill color={palette.gray700} />
+                    Tool
+                  </span>
+                  <p><img src={images.ImgExplore07} alt="" /></p>
+                  <Body1 color="gray800">
+                    <em>준비중</em>
+                    아이디어 제너레이터
+                  </Body1>
+
+                  <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
+                    <span>
+                      <images.LightningChargeFill color={palette.white} />
+                      Tool
+                    </span>
+
+                    <div className="text">
+                      <Body1 color="white">아이디어 제너레이터</Body1>
+                      <Caption1 color="white" align="left">Mandal Art 기법을 활용하여 창의적이고 구조적인 아이디어를 발산하고 구체화 하는 툴</Caption1>
+                      <i />
+                    </div>
+                  </div>
+                </ExploreCard>,
+
+                <ExploreCard Research key="research-4">
+                  <span>
+                    <images.LightningChargeFill color={palette.gray700} />
+                    Tool
+                  </span>
+                  <p><img src={images.ImgExplore08} alt="" /></p>
+                  <Body1 color="gray800">
+                    <em>준비중</em>
+                    컨셉 검증 플래너
+                  </Body1>
+
+                  <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
+                    <span>
+                      <images.LightningChargeFill color={palette.white} />
+                      Tool
+                    </span>
+
+                    <div className="text">
+                      <Body1 color="white">컨셉 검증 플래너</Body1>
+                      <Caption1 color="white" align="left">MVP/PoC 검증을 위한 체계저인 플랜을 수립하여 실행 가능성을 높이는 플랜 제시 툴</Caption1>
+                      <i />
+                    </div>
+                  </div>
+                </ExploreCard>,
+                
+                <ExploreCard Research key="research-5">
+                  <span>
+                    <images.LightningChargeFill color={palette.gray700} />
+                    Tool
+                  </span>
+                  <p><img src={images.ImgExplore09} alt="" /></p>
+                  <Body1 color="gray800">
+                    <em>준비중</em>
+                    사용자 시뮬레이터
+                  </Body1>
+
+                  <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
+                    <span>
+                      <images.LightningChargeFill color={palette.white} />
+                      Tool
+                    </span>
+
+                    <div className="text">
+                      <Body1 color="white">사용자 시뮬레이터</Body1>
+                      <Caption1 color="white" align="left">특정 AI Persona 그룹을 대상으로 핵심적인 질문을 제시하여 응답 패턴과 경향성을 분석하는 툴</Caption1>
+                      <i />
+                    </div>
+                  </div>
+                </ExploreCard>,
+
+                <ExploreCard Analysis key="analysis-1">
+                  <span>
+                    <images.LightningChargeFill color={palette.gray700} />
+                    Tool
+                  </span>
+                  <p><img src={images.ImgExplore02} alt="" /></p>
+                  <Body1 color="gray800">
+                    <em>준비중</em>
+                    Analysis Tool
+                  </Body1>
+
+                  <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
+                    <span>
+                      <images.LightningChargeFill color={palette.white} />
+                      Tool
+                    </span>
+
+                    <div className="text">
+                      <Body1 color="white">Analysis Tool</Body1>
+                      <Caption1 color="white" align="left">Analysis Tool</Caption1>
+                      <i />
+                    </div>
+                  </div>
+                </ExploreCard>,
+
+                <ExploreCard Analysis key="analysis-2">
+                  <span>
+                    <images.LightningChargeFill color={palette.gray700} />
+                    Tool
+                  </span>
+                  <p><img src={images.ImgExplore02} alt="" /></p>
+                  <Body1 color="gray800">
+                    <em>준비중</em>
+                    Analysis Tool2
+                  </Body1>
+
+                  <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
+                    <span>
+                      <images.LightningChargeFill color={palette.white} />
+                      Tool
+                    </span>
+
+                    <div className="text">
+                      <Body1 color="white">Analysis Tool</Body1>
+                      <Caption1 color="white" align="left">Analysis Tool</Caption1>
+                      <i />
+                    </div>
+                  </div>
+                </ExploreCard>,
+              ].filter(filterCards)}
+            </ExploreList>
+          </ExploreWrap>
+
+          {/* 
           <ExpertSelectWrap>
             <Body3>🔎 AI 전문가와 비즈니스 인사이트를 나누세요</Body3>
             <ExpertSelectBox>
@@ -1061,7 +1459,8 @@ const PageMain = () => {
                 </div>
               </ExpertCard>
             </ExpertSelectBox>
-          </ExpertSelectWrap>
+          </ExpertSelectWrap> 
+          */}
 
           <CopyRight>
             <div>
@@ -1283,6 +1682,14 @@ const MainSearchWrap = styled.div`
 
   gap: 42px;
   height: 85dvh;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 616px;
+    width: 100%;
+  }
 `;
 
 const Title = styled.h1`
@@ -1303,7 +1710,7 @@ const Title = styled.h1`
 `;
 
 const InputWrap = styled.div`
-  max-width: ${(props) => (props.isMobile ? "100%" : "616px")};
+  // max-width: ${(props) => (props.isMobile ? "100%" : "616px")};
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -1379,6 +1786,38 @@ const InputWrap = styled.div`
       color: #525252;
       margin-left: auto;
     }
+  }
+`;
+
+const KeywordSearch = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 21px;
+    
+    p {
+      transition: opacity 0.5s ease-in-out;
+    }
+  }
+`;
+
+const ExploreWrap = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  max-width: 1024px;
+  width: 100%;
+
+  > h4 {
+    margin-bottom: 12px;
   }
 `;
 
