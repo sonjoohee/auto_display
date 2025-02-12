@@ -95,15 +95,10 @@ const MoleculeCustomPersonaCard = ({
           <ListText>
             <ListTitle>
               <Body1>{title}</Body1>
-
-              {localPersonaData.status === undefined ? (
                 <Badge Complete>
                   <img src={images.CheckGreen} alt="모집 완료" />
                   모집 완료
                 </Badge>
-              ) : (
-                <></>
-              )}
             </ListTitle>
 
             {keywords.length > 0 && (
@@ -138,14 +133,10 @@ const MoleculeCustomPersonaCard = ({
         <CardListItem>
           <CardText>
             <CardTitle>
-              {localPersonaData.status === undefined ? (
                 <Badge Complete>
                   <img src={images.CheckGreen} alt="모집 완료" />
                   모집 완료
                 </Badge>
-              ) : (
-                <></>
-              )}
               <Body1>{title}</Body1>
             </CardTitle>
 
