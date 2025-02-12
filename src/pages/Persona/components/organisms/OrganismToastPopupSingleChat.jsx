@@ -1454,7 +1454,11 @@ const OrganismToastPopupSingleChat = ({
                           alt={persona.persona}
                         />
                       </Thumb>
-                      <span>{persona.persona_view}</span>
+                      <span>
+                        {persona.request_persona_type
+                          ? persona.persona
+                          : persona.persona_view || persona.persona}
+                      </span>
                       <span>
                         {persona.gender} |{" "}
                         {persona.age.includes("세")

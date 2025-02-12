@@ -627,7 +627,9 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               </Thumb>
 
               <div>
-                {answer.persona.persona}
+                {answer.persona.request_persona_type
+                  ? answer.persona.persona
+                  : answer.persona.persona_view}
                 <p>
                   <span>{answer.gender}</span>
                   <span>
@@ -694,7 +696,9 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                 />
               </Thumb>
               <div>
-                {answer.persona.persona}
+                {answer.persona.request_persona_type
+                  ? answer.persona.persona
+                  : answer.persona.persona_view}
                 <p>
                   <span>{answer.gender}</span>
                   <span>
