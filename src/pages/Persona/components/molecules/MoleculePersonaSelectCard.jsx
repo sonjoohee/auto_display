@@ -140,7 +140,7 @@ const MoleculePersonaSelectCard = ({
                     {persona.persona_view || persona.persona}
                   </Body1>{" "}
                   {persona.request_persona_type === "business" ? (
-                    <Badge New>비즈니스</Badge>
+                    <Badge New>커스텀</Badge>
                   ) : persona.request_persona_type === "custom" ? (
                     <Badge Custom>맞춤</Badge>
                   ) : null}

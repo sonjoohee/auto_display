@@ -1583,9 +1583,8 @@ const PagePersona2 = () => {
                     <BoxWrap>
                       <img src={images.BgUserChatDots} alt="" />
                       <Body3 color="gray700">
-                        바로 대화를 원하시면 일상 페르소나와 함께 !<br />
-                        맞춤형 비즈니스 대화를 원하시면 비즈니스 페르소나를
-                        요청해주세요{" "}
+                        바로 인터뷰를 원하시면 라이브 페르소나와 함께하세요!<br />
+                        맞춤형 비즈니스 대화가 필요하시다면 커스텀 페르소나를 요청해 보세요.{" "}
                       </Body3>
                     </BoxWrap>
 
@@ -1599,7 +1598,7 @@ const PagePersona2 = () => {
                               reloadBusinessPersonaList();
                             }}
                           >
-                            일상 페르소나 ({getPersonaCount("daily")})
+                            라이브 페르소나 ({getPersonaCount("daily")})
                           </TabButtonType3>
                           <TabButtonType3
                             isActive={activeTab === "business"}
@@ -1608,7 +1607,7 @@ const PagePersona2 = () => {
                               reloadBusinessPersonaList();
                             }}
                           >
-                            비즈니스 페르소나 ({getPersonaCount("business")})
+                            커스텀 페르소나 ({getPersonaCount("business")})
                           </TabButtonType3>
                         </TabWrapType3>
 
