@@ -425,6 +425,10 @@ const PageMarketingNoItemsResult = () => {
         }
       }, 'image/png', 1.0);
 
+      const shareUrl = `${window.location.origin}/MarketingSetting/Share/${marketingMbtiResult.name}`;
+ 
+      await navigator.clipboard.writeText(shareUrl);
+
     } catch (err) {
       console.error("Error capturing:", err);
       setShowErrorPopup(true);
