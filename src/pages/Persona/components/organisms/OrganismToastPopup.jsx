@@ -470,11 +470,19 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             }
 
             const personaInfo = {
-              id: personaList.selected[i].persona_id.replace(/[^0-9]/g, ""),
+              id: personaList.selected[i].hasOwnProperty("request_persona_type")
+                ? `${personaList.selected[i].request_persona_type}_${personaList.selected[i].persona_id}`
+                : personaList.selected[i].persona_id.replace(/[^0-9]/g, ""),
               name: personaList.selected[i].persona,
-              keyword: personaList.selected[i].persona_keyword,
+              keyword: personaList.selected[i].hasOwnProperty(
+                "request_persona_type"
+              )
+                ? personaList.selected[i].keyword
+                : personaList.selected[i].persona_keyword,
               hashtag: personaList.selected[i].lifestyle,
               summary: personaList.selected[i].consumption_pattern,
+              request_persona_type:
+                personaList.selected[i].request_persona_type || "preset",
             };
 
             //수집된 답변들 api요청에 포함
@@ -619,10 +627,14 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               </Thumb>
 
               <div>
-                {answer.persona.persona}
+                {answer.persona.request_persona_type
+                  ? answer.persona.persona
+                  : answer.persona.persona_view}
                 <p>
                   <span>{answer.gender}</span>
-                  <span>{answer.age}세</span>
+                  <span>
+                    {answer.age.includes("세") ? answer.age : `${answer.age}세`}
+                  </span>
                   <span>{answer.job}</span>
                 </p>
               </div>
@@ -648,7 +660,11 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                     {personaList.selected[questionAnswers.length].gender}
                   </span>
                   <span>
-                    {personaList.selected[questionAnswers.length].age}세
+                    {personaList.selected[questionAnswers.length].age.includes(
+                      "세"
+                    )
+                      ? personaList.selected[questionAnswers.length].age
+                      : `${personaList.selected[questionAnswers.length].age}세`}
                   </span>
                   <span>
                     {personaList.selected[questionAnswers.length].job}
@@ -680,10 +696,14 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                 />
               </Thumb>
               <div>
-                {answer.persona.persona}
+                {answer.persona.request_persona_type
+                  ? answer.persona.persona
+                  : answer.persona.persona_view}
                 <p>
                   <span>{answer.gender}</span>
-                  <span>{answer.age}세</span>
+                  <span>
+                    {answer.age.includes("세") ? answer.age : `${answer.age}세`}
+                  </span>
                   <span>{answer.job}</span>
                 </p>
               </div>

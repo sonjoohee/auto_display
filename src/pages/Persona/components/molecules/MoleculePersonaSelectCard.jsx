@@ -10,48 +10,56 @@ import { PERSONA_LIST, FILTERED_PROJECT_LIST } from "../../../AtomStates";
 
 const MoleculePersonaSelectCard = ({
   interviewType,
-  personaList,
+  filteredPersonaList,
+  businessPersonaList,
+  customPersonaList,
   selectedPersonas,
   onPersonaSelect,
 }) => {
-  const [personaListState, setPersonaListState] = useAtom(PERSONA_LIST);
-  const [filteredProjectList, setFilteredProjectList] = useAtom(
-    FILTERED_PROJECT_LIST
-  );
+  const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
+
   // 컴포넌트 마운트 시 초기 unselected 리스트 설정
   useEffect(() => {
-    if (personaList && personaList.length > 0) {
-      setPersonaListState({
+    if (filteredPersonaList && filteredPersonaList.length > 0) {
+      setPersonaList({
         selected: [],
-        unselected: personaList,
+        unselected: [
+          ...customPersonaList,
+          ...businessPersonaList,
+          ...filteredPersonaList,
+        ],
       });
     }
-  }, [personaList]);
+  }, [filteredPersonaList]);
 
   const handlePersonaSelect = (persona) => {
     const targetPersona = [
-      ...personaListState.selected,
-      ...personaListState.unselected,
+      ...personaList.selected,
+      ...personaList.unselected,
     ].find((p) => p.persona_id === persona.persona_id);
 
     if (interviewType === "single") {
-      if (personaListState?.selected?.[0]?.persona_id === persona.persona_id) {
+      if (
+        personaList?.selected?.[0]?.persona_id === persona.persona_id &&
+        personaList?.selected?.length > 0
+      ) {
         // 선택 해제
-        setPersonaListState({
+        setPersonaList({
           selected: [],
-          unselected: [...personaListState.unselected, targetPersona],
+          unselected: [...personaList.unselected, targetPersona],
         });
         onPersonaSelect(null);
       } else {
         // 새로운 선택
-        const newUnselected = personaListState.unselected.filter(
+        console.log("새로운 선택");
+        const newUnselected = personaList.unselected.filter(
           (p) => p.persona_id !== persona.persona_id
         );
-        if (personaListState.selected.length > 0) {
+        if (personaList.selected.length > 0) {
           // 기존 선택된 항목이 있으면 unselected로 이동
-          newUnselected.push(personaListState.selected[0]);
+          newUnselected.push(personaList.selected[0]);
         }
-        setPersonaListState({
+        setPersonaList({
           selected: [targetPersona],
           unselected: newUnselected,
         });
@@ -65,23 +73,23 @@ const MoleculePersonaSelectCard = ({
 
       if (currentSelected.some((p) => p.persona_id === persona.persona_id)) {
         // 이미 선택된 페르소나인 경우 선택 해제
-        const removedPersona = personaListState.selected.find(
+        const removedPersona = personaList.selected.find(
           (p) => p.persona_id === persona.persona_id
         );
-        setPersonaListState({
-          selected: personaListState.selected.filter(
+        setPersonaList({
+          selected: personaList.selected.filter(
             (p) => p.persona_id !== persona.persona_id
           ),
-          unselected: [...personaListState.unselected, removedPersona],
+          unselected: [...personaList.unselected, removedPersona],
         });
         onPersonaSelect(
           currentSelected.filter((p) => p.persona_id !== persona.persona_id)
         );
       } else if (currentSelected.length < 5) {
         // 새로운 선택 (최대 5개)
-        setPersonaListState({
-          selected: [...personaListState.selected, targetPersona],
-          unselected: personaListState.unselected.filter(
+        setPersonaList({
+          selected: [...personaList.selected, targetPersona],
+          unselected: personaList.unselected.filter(
             (p) => p.persona_id !== persona.persona_id
           ),
         });
@@ -101,10 +109,14 @@ const MoleculePersonaSelectCard = ({
 
   return (
     <CardGroupWrap>
-      {personaList &&
-        personaList.map((persona) => {
-          // 현재 persona가 선택된 상태인지 확인 (personaListState.selected 에서 조회)
-          const isSelected = personaListState.selected.some(
+      {filteredPersonaList &&
+        [
+          ...customPersonaList,
+          ...businessPersonaList,
+          ...filteredPersonaList,
+        ].map((persona) => {
+          // 현재 persona가 선태된 상태인지 확인 (personaList.selected 에서 조회)
+          const isSelected = personaList.selected.some(
             (p) => p.persona_id === persona.persona_id
           );
 
@@ -112,7 +124,7 @@ const MoleculePersonaSelectCard = ({
             <ListBoxItem
               key={persona.persona_id}
               selected={isSelected}
-              anySelected={personaListState.selected.length > 0}
+              anySelected={personaList.selected.length > 0}
               interviewType={interviewType}
             >
               {/* 카드 내용 렌더링 */}
@@ -124,7 +136,14 @@ const MoleculePersonaSelectCard = ({
               </Persona>
               <ListText>
                 <ListTitle>
-                  <Body1 color="gray800">{persona.persona_view}</Body1>
+                  <Body1 color="gray800">
+                    {persona.persona_view || persona.persona}
+                  </Body1>{" "}
+                  {persona.request_persona_type === "business" ? (
+                    <Badge New>커스텀</Badge>
+                  ) : persona.request_persona_type === "custom" ? (
+                    <Badge Custom>맞춤</Badge>
+                  ) : null}
                   {/* {persona.isNew && <Badge New>비즈니스</Badge>} */}
                 </ListTitle>
                 <ListSubtitle>

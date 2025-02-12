@@ -472,6 +472,7 @@ export const Badge = styled.div`
   font-size: ${(props) =>
     props.Basic ||
     props.Custom ||
+    props.New ||
     props.Keyword ||
     props.None ||
     props.classBasic

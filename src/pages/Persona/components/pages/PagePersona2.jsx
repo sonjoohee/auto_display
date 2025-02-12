@@ -36,6 +36,7 @@ import {
   CREDIT_REQUEST_BUSINESS_PERSONA,
   SELECTED_INTERVIEW_TYPE,
   USER_CREDITS,
+  CUSTOM_PERSONA_LIST,
 } from "../../../AtomStates";
 import {
   ContentsWrap,
@@ -108,8 +109,11 @@ import { InterviewXPersonaRequestType } from "../../../../utils/indexedDB";
 import { InterviewXPersonaRequestRequest } from "../../../../utils/indexedDB";
 import { UserCreditCheck, UserCreditUse } from "../../../../utils/indexedDB";
 import MoleculeBussinessPersonaCard from "../molecules/MoleculeBussinessPersonaCard";
+import MoleculeCustomPersonaCard from "../molecules/MoleculeCustomPersonaCard";
 
 const PagePersona2 = () => {
+  const [customPersonaList, setCustomPersonaList] =
+    useAtom(CUSTOM_PERSONA_LIST);
   const [selectedInterviewType, setSelectedInterviewType] = useAtom(
     SELECTED_INTERVIEW_TYPE
   );
@@ -127,7 +131,6 @@ const PagePersona2 = () => {
   const [projectLoadButtonState, setProjectLoadButtonState] = useAtom(
     PROJECT_LOAD_BUTTON_STATE
   );
-  const [requestPersonaListReady, setRequestPersonaListReady] = useState(false);
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
@@ -148,8 +151,6 @@ const PagePersona2 = () => {
     BUSINESS_PERSONA_LIST
   );
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
-  const [requestPersonaList, setRequestPersonaList] =
-    useAtom(REQUEST_PERSONA_LIST);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   // const [allBusinessPersonas, setAllBusinessPersonas] = useState([]); // 전체 비즈니스 페르소나 상태
   const [allBusinessPersonas, setAllBusinessPersonas] = useAtom(
@@ -177,7 +178,7 @@ const PagePersona2 = () => {
 
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [regenerateCount, setRegenerateCount] = useState(0);
-  const [showRegenerateButton, setShowRegenerateButton] = useState(false);
+  // const [showRegenerateButton, setShowRegenerateButton] = useState(false);
   const [hasMorePersonas, setHasMorePersonas] = useState(true);
   const [singleInterviewQuestionList, setSingleInterviewQuestionList] = useAtom(
     SINGLE_INTERVIEW_QUESTION_LIST
@@ -453,12 +454,6 @@ const PagePersona2 = () => {
     };
   }, [navigate]);
 
-  useEffect(() => {
-    if (projectId) {
-      setRequestPersonaListReady(true);
-    }
-  }, [projectId]);
-
   const getCategoryColor = (category) => {
     switch (category) {
       case "광고/마케팅":
@@ -531,12 +526,14 @@ const PagePersona2 = () => {
 
           if (savedProjectInfo) {
             setBusinessAnalysis(savedProjectInfo.businessAnalysis);
-            setRequestPersonaList(savedProjectInfo.requestPersonaList);
             if (savedProjectInfo.filteredPersonaList) {
               setFilteredProjectList(savedProjectInfo.filteredPersonaList);
             }
             if (savedProjectInfo.businessPersonaList) {
               setAllBusinessPersonas(savedProjectInfo.businessPersonaList);
+            }
+            if (savedProjectInfo.customPersonaList) {
+              setCustomPersonaList(savedProjectInfo.customPersonaList);
             }
             if (savedProjectInfo.singleInterviewQuestionList) {
               setSingleInterviewQuestionList(
@@ -700,137 +697,6 @@ const PagePersona2 = () => {
 
     loadProject();
   }, [projectId, projectLoadButtonState, navigate]);
-
-  // if (isLoadingPage) {
-  //   return <div>Loading...</div>;
-  // }
-
-  //페르소나 새로 생성
-  const reloadPersona = async () => {
-    try {
-      if (personaButtonState2) {
-        setIsLoading(true);
-        setShowRegenerateButton(false);
-
-        let data, response;
-
-        data = {
-          business_idea: businessAnalysis,
-        };
-
-        // response = await axios.post(
-        //   "https://wishresearch.kr/person/persona_request",
-        //   data,
-        //   axiosConfig
-        // );
-        // 페르소나 요청 API  수정 예정
-        response = await InterviewXPersonaRequestRequest(data, isLoggedIn);
-
-        let requestPersonaList = response.response;
-
-        let retryCount = 0;
-        const maxRetries = 10;
-
-        while (
-          retryCount < maxRetries &&
-          (!response ||
-            !response.response ||
-            !requestPersonaList.hasOwnProperty("persona_spectrum") ||
-            requestPersonaList.persona_spectrum.length !== 3 ||
-            !requestPersonaList.persona_spectrum[0].hasOwnProperty(
-              "persona_1"
-            ) ||
-            !requestPersonaList.persona_spectrum[1].hasOwnProperty(
-              "persona_2"
-            ) ||
-            !requestPersonaList.persona_spectrum[2].hasOwnProperty(
-              "persona_3"
-            ) ||
-            !requestPersonaList.persona_spectrum[0].persona_1.hasOwnProperty(
-              "persona"
-            ) ||
-            !requestPersonaList.persona_spectrum[1].persona_2.hasOwnProperty(
-              "persona"
-            ) ||
-            !requestPersonaList.persona_spectrum[2].persona_3.hasOwnProperty(
-              "persona"
-            ) ||
-            !requestPersonaList.persona_spectrum[0].persona_1.persona ||
-            !requestPersonaList.persona_spectrum[1].persona_2.persona ||
-            !requestPersonaList.persona_spectrum[2].persona_3.persona ||
-            !requestPersonaList.persona_spectrum[0].persona_1.hasOwnProperty(
-              "keyword"
-            ) ||
-            !requestPersonaList.persona_spectrum[1].persona_2.hasOwnProperty(
-              "keyword"
-            ) ||
-            !requestPersonaList.persona_spectrum[2].persona_3.hasOwnProperty(
-              "keyword"
-            ) ||
-            requestPersonaList.persona_spectrum[0].persona_1.keyword.length <
-              3 ||
-            requestPersonaList.persona_spectrum[1].persona_2.keyword.length <
-              3 ||
-            requestPersonaList.persona_spectrum[2].persona_3.keyword.length < 3)
-        ) {
-          // response = await axios.post(
-          //   "https://wishresearch.kr/person/persona_request",
-          //   data,
-          //   axiosConfig
-          // );
-          // 페르소나 요청 API  수정 예정
-          response = await InterviewXPersonaRequestRequest(data, isLoggedIn);
-
-          retryCount++;
-
-          requestPersonaList = response.response;
-        }
-        if (retryCount >= maxRetries) {
-          setShowErrorPopup(true);
-          return;
-        }
-        setPersonaButtonState2(0);
-
-        const requestPersonaData = {
-          persona: requestPersonaList.persona_spectrum,
-          positioning: requestPersonaList.positioning_analysis,
-        };
-
-        setRequestPersonaList(requestPersonaData);
-
-        await updateProjectOnServer(
-          projectId,
-          {
-            personaList: personaList.unselected.length,
-            requestPersonaList: requestPersonaData,
-          },
-          isLoggedIn
-        );
-      }
-    } catch (error) {
-      if (error.response) {
-        switch (error.response.status) {
-          case 500:
-            setShowErrorPopup(true);
-            break;
-          case 504:
-            if (regenerateCount >= 3) {
-              setShowErrorPopup(true);
-              return;
-            } else {
-              setShowRegenerateButton(true);
-              setRegenerateCount(regenerateCount + 1);
-            }
-            break;
-          default:
-            setShowErrorPopup(true);
-            break;
-        }
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const loadPersonaWithFilter = async (isInitial = true) => {
     try {
@@ -1002,21 +868,11 @@ const PagePersona2 = () => {
       setFilteredProjectList(filteredPersonas);
       setHasMorePersonas(availablePersonas.length > 0);
 
-      // 최종 데이터 저장
-      const requestPersonaData = {
-        persona: filteredPersonas,
-        positioning: filterResponse?.positioning_analysis || {},
-      };
-
-      setRequestPersonaList(requestPersonaData);
-      // setPersonaList([...selectedPersonas]);
-
       await updateProjectOnServer(
         projectId,
         {
           personaList: filteredPersonas.length,
           filteredPersonaList: filteredPersonas,
-          requestPersonaList: requestPersonaData,
         },
         isLoggedIn
       );
@@ -1032,8 +888,9 @@ const PagePersona2 = () => {
             if (regenerateCount >= 6) {
               setShowErrorPopup(true);
             } else {
-              setShowRegenerateButton(true);
-              setRegenerateCount((prev) => prev + 1);
+              // setShowRegenerateButton(true);
+              // setRegenerateCount((prev) => prev + 1);
+              setShowErrorPopup(true);
             }
             break;
           default:
@@ -1148,8 +1005,9 @@ const PagePersona2 = () => {
             if (regenerateCount >= 3) {
               setShowErrorPopup(true);
             } else {
-              setShowRegenerateButton(true);
-              setRegenerateCount((prev) => prev + 1);
+              // setShowRegenerateButton(true);
+              // setRegenerateCount((prev) => prev + 1);
+              setShowErrorPopup(true);
             }
             break;
           default:
@@ -1403,7 +1261,14 @@ const PagePersona2 = () => {
         businessAnalysis: businessAnalysis,
         requestDate: new Date().toLocaleString("ko-KR", {
           timeZone: "Asia/Seoul",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
         }),
+        requestTimeStamp: Date.now(),
         personaRequest: {
           description: customPersonaForm.description,
           purpose: customPersonaForm.purpose,
@@ -1441,7 +1306,6 @@ const PagePersona2 = () => {
         });
 
         handleCustomizePopupClose();
-        // 성공 메시지 표시 등 추가 처리
       }
     } catch (error) {
       if (error.response) {
@@ -1451,6 +1315,7 @@ const PagePersona2 = () => {
             break;
           case 504:
             // 재생성하기
+            setShowErrorPopup(true);
             break;
           default:
             setShowErrorPopup(true);
@@ -1707,19 +1572,19 @@ const PagePersona2 = () => {
                 <CardWrap>
                   <AtomPersonaLoader message="페르소나를 추천하기 위해 분석하고 있어요" />
                 </CardWrap>
-              ) : showRegenerateButton ? (
-                <CardWrap>
-                  <MoleculeRecreate Large onRegenerate={reloadPersona} />
-                </CardWrap>
               ) : (
+                // : showRegenerateButton ? (
+                //   <CardWrap>
+                //     <MoleculeRecreate Large onRegenerate={reloadPersona} />
+                //   </CardWrap>
+                // )
                 <CardWrap>
                   <>
                     <BoxWrap>
                       <img src={images.BgUserChatDots} alt="" />
                       <Body3 color="gray700">
-                        바로 대화를 원하시면 일상 페르소나와 함께 !<br />
-                        맞춤형 비즈니스 대화를 원하시면 비즈니스 페르소나를
-                        요청해주세요{" "}
+                        바로 인터뷰를 원하시면 라이브 페르소나와 함께하세요!<br />
+                        맞춤형 비즈니스 대화가 필요하시다면 커스텀 페르소나를 요청해 보세요.{" "}
                       </Body3>
                     </BoxWrap>
 
@@ -1733,7 +1598,7 @@ const PagePersona2 = () => {
                               reloadBusinessPersonaList();
                             }}
                           >
-                            일상 페르소나 ({getPersonaCount("daily")})
+                            라이브 페르소나 ({getPersonaCount("daily")})
                           </TabButtonType3>
                           <TabButtonType3
                             isActive={activeTab === "business"}
@@ -1742,7 +1607,7 @@ const PagePersona2 = () => {
                               reloadBusinessPersonaList();
                             }}
                           >
-                            비즈니스 페르소나 ({getPersonaCount("business")})
+                            커스텀 페르소나 ({getPersonaCount("business")})
                           </TabButtonType3>
                         </TabWrapType3>
 
@@ -1997,6 +1862,17 @@ const PagePersona2 = () => {
                           </CategoryView>
 
                           <CardGroupWrap>
+                            {customPersonaList.map((persona, index) => (
+                              <MoleculeCustomPersonaCard
+                                key={index}
+                                title={persona.persona}
+                                keywords={[...persona.keyword]}
+                                isRequest={true}
+                                personaData={persona}
+                                viewType={viewType}
+                              />
+                            ))}
+
                             {displayedPersonas.map((persona, index) => (
                               <MoleculeBussinessPersonaCard
                                 key={index}
