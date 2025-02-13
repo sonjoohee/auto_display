@@ -149,14 +149,14 @@ const OrganismProjectCard = ({ project, index }) => {
             <div>
               <span>
                 <img src={images.StatusBadgeBasic} alt="기본형" />
-                일상
+                라이브
               </span>
               <p>{project.personaList || 0}명</p>
             </div>
             <div>
               <span>
                 <img src={images.StatusBadgeCustom} alt="" />
-                비즈니스
+                커스텀
               </span>
               <p>
                 {project.businessPersonaList?.length || 0}명
@@ -171,7 +171,7 @@ const OrganismProjectCard = ({ project, index }) => {
                 맞춤 페르소나
               </span>
               <p className={getRecruitStatus(project)}>
-                {getRecruitStatusText(project)}
+                {project.customPersonaList?.length || 0}명
               </p>
             </div>
           </Persona>

@@ -1506,7 +1506,7 @@ const PagePersona2 = () => {
 
     // business 탭일 때는 personaList.unselected의 길이 반환
     if (tabType === "business") {
-      return displayedPersonas?.length || 0;
+      return customPersonaList?.length + displayedPersonas?.length || 0;
     }
 
     return 0;
@@ -1580,8 +1580,10 @@ const PagePersona2 = () => {
                     <BoxWrap>
                       <img src={images.BgUserChatDots} alt="" />
                       <Body3 color="gray700">
-                        바로 인터뷰를 원하시면 라이브 페르소나와 함께하세요!<br />
-                        맞춤형 비즈니스 대화가 필요하시다면 커스텀 페르소나를 요청해 보세요.{" "}
+                        바로 인터뷰를 원하시면 라이브 페르소나와 함께하세요!
+                        <br />
+                        맞춤형 비즈니스 대화가 필요하시다면 커스텀 페르소나를
+                        요청해 보세요.{" "}
                       </Body3>
                     </BoxWrap>
 
