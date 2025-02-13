@@ -238,6 +238,19 @@ export const Button = styled.button`
     background: ${palette.chatGray};
   `}
 
+  ${props => props.More && css`
+    justify-content: flex-start;
+    width: 100%;
+    font-weight: 500;
+    color: ${palette.gray500};
+    border: 1px solid ${palette.outlineGray};
+    background: ${palette.chatGray};
+
+    &:disabled {
+      background: ${palette.chatGray};
+    }
+  `}
+
 `;
 
 export const ButtonGroup = styled.div`

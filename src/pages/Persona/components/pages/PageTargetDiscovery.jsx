@@ -373,7 +373,7 @@ const PageTargetDiscovery = () => {
                       </div>
                       <ListText>
                         <ListTitle>
-                          <Body1>가족과 함께 여가를 보내는 활동 지향형 소비자</Body1>
+                          <Body1 color={selectedPersonas.includes('persona1') ? "primary" : "gray800"}>가족과 함께 여가를 보내는 활동 지향형 소비자</Body1>
                         </ListTitle>
 
                         <ListSubtitle>
@@ -415,7 +415,7 @@ const PageTargetDiscovery = () => {
                       </div>
                       <ListText>
                         <ListTitle>
-                          <Body1>가족과 함께 여가를 보내는 활동 지향형 소비자</Body1>
+                          <Body1 color={selectedPersonas.includes('persona2') ? "primary" : "gray800"}>가족과 함께 여가를 보내는 활동 지향형 소비자</Body1>
                         </ListTitle>
 
                         <ListSubtitle>
@@ -481,7 +481,7 @@ const PageTargetDiscovery = () => {
                     <ListBoxItem>
                       <ListText>
                         <ListTitle>
-                          <Body1>가족과 함께 여가를 보내는 활동 지향형 소비자</Body1>
+                          <Body1 color="gray800">가족과 함께 여가를 보내는 활동 지향형 소비자</Body1>
                         </ListTitle>
 
                         <ListSubtitle>
@@ -511,7 +511,7 @@ const PageTargetDiscovery = () => {
                     <ListBoxItem>
                       <ListText>
                         <ListTitle>
-                          <Body1>가족과 함께 여가를 보내는 활동 지향형 소비자</Body1>
+                          <Body1 color="gray800">가족과 함께 여가를 보내는 활동 지향형 소비자</Body1>
                         </ListTitle>
 
                         <ListSubtitle>
