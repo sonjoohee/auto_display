@@ -920,11 +920,41 @@ const PageMain = () => {
 
   // 검색어 목록과 현재 표시할 검색어 인덱스를 위한 state 추가
   const [searchKeywords] = useState([
-    "MZ 세대를 위한 맞춤형 건강식 구독 서비스",
-    "반려동물 산책 매칭 서비스", 
-    "1인 가구를 위한 식사 구독 서비스",
-    "직장인 점심 식사 예약 서비스",
-    "실시간 운동 코칭 플랫폼"
+    {
+      prefix: "패션 브랜드 운영자들은 '",
+      keyword: "개인 스타일 추천을 위한 코디 서비스",
+      suffix: "' 키워드로 검색했어요."
+    },
+    {
+      prefix: "교육 스타트업 창업자들은 '",
+      keyword: "AI 기반 영어 회화 튜터 앱",
+      suffix: "' 키워드로 검색했어요."
+    },
+    {
+      prefix: "피트니스 전문가들은 '",
+      keyword: "홈트레이닝에 최적화된 운동 코치",
+      suffix: "' 키워드로 검색했어요."
+    },
+    {
+      prefix: "모빌리티 스타트업은 '",
+      keyword: "실시간 도로 환경 인식 및 위험 예측 AI 모델",
+      suffix: "' 키워드로 검색했어요."
+    },
+    {
+      prefix: "마케팅 담당자들은 '",
+      keyword: "SNS에서 자연스럽게 확산되는 바이럴 광고",
+      suffix: "' 키워드로 검색했어요."
+    },
+    {
+      prefix: "행사 주최자들은 '",
+      keyword: "스마트 홈 가전 신제품 출시 체험회",
+      suffix: "' 키워드로 검색했어요."
+    },
+    {
+      prefix: "축제 기획자들은 '",
+      keyword: "지역 문화와 예술을 만나는 전통 축제",
+      suffix: "' 키워드로 검색했어요."
+    }
   ]);
   const [currentKeywordIndex, setCurrentKeywordIndex] = useState(0);
 
@@ -932,7 +962,7 @@ const PageMain = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentKeywordIndex((prev) => (prev + 1) % searchKeywords.length);
-    }, 5000); // 5초마다 변경
+    }, 3000); // 3초마다 변경
 
     return () => clearInterval(interval);
   }, [searchKeywords.length]);
@@ -1016,7 +1046,7 @@ const PageMain = () => {
               </InputWrap>
 
               <KeywordSearch>
-                <Sub3 color="gray500">창업자들은</Sub3>
+                <Sub3 color="gray500">{searchKeywords[currentKeywordIndex].prefix}</Sub3>
                 <div>
                   <Sub3 
                     color="primary" 
@@ -1025,10 +1055,10 @@ const PageMain = () => {
                       transition: 'opacity 0.5s ease-in-out'
                     }}
                   >
-                    "{searchKeywords[currentKeywordIndex]}"
+                    {searchKeywords[currentKeywordIndex].keyword}
                   </Sub3>
                 </div>
-                <Sub3 color="gray500">키워드로 검색했어요</Sub3>
+                <Sub3 color="gray500">{searchKeywords[currentKeywordIndex].suffix}</Sub3>
               </KeywordSearch>
             </div>
           </MainSearchWrap>
@@ -1787,9 +1817,9 @@ const KeywordSearch = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
 
   > div {
+    position: relative;
     display: flex;
     flex-direction: column;
     overflow: hidden;

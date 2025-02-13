@@ -12,13 +12,19 @@ const getStatusColor = (props) => {
 export const FormBox = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: ${(props) =>
+    props.Large
+    ? "0"
+    : "32px"
+  };
   width: 100%;
   padding: ${(props) =>
     props.Small 
     ? "8px 12px" 
     : props.Medium 
     ? "8px 16px" 
+    : props.Large
+    ? "16px 20px"
     : "16px"
   };
   border-radius: 10px;
@@ -56,6 +62,72 @@ export const Label = styled.span`
   pointer-events: none;
   transition: all 0.5s;
 `;
+
+
+export const SelectBox = styled.div`
+  position: relative;
+  width: 100%;
+`;
+
+export const SelectBoxItem = styled.div`
+  cursor: pointer;
+  transition: all 0.5s;
+
+  &:hover {
+    background-color: ${palette.primaryLightest};
+  }
+`;
+
+export const SelectBoxTitle = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-radius: 5px;
+  border: 1px solid ${palette.outlineGray};
+  cursor: pointer;
+  z-index: 1;
+  background-color: ${palette.white};
+
+  &:hover {
+    border-color: ${palette.primary};
+  }
+`;
+
+export const SelectBoxList = styled.div`
+  position: absolute;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0px 0px 5px 5px;
+  border: 1px solid ${palette.outlineGray};
+  border-top: none;
+  background: ${palette.white};
+  box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.12);
+  z-index: 2;
+
+  // 드롭다운이 위로 표시될 때의 스타일
+  ${props => props.dropUp && css`
+    bottom: 100%;
+    border-radius: 5px 5px 0 0;
+    border-bottom: none;
+    border-top: 1px solid ${palette.outlineGray};
+    box-shadow: 0px -4px 8px 0px rgba(0, 0, 0, 0.12);
+  `}
+
+  // 드롭다운이 아래로 표시될 때의 스타일
+  ${props => !props.dropUp && css`
+    top: 100%;
+    border-radius: 0 0 5px 5px;
+    border-top: none;
+    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.12);
+  `}
+
+  > div {
+    padding: 13px 20px;
+  }
+`;
+
 
 export const CustomInput = styled.input`
   width: ${(props) => props.width || "100%"};
@@ -102,7 +174,18 @@ export const CustomInput = styled.input`
         padding: 0 4px;
         background: ${palette.white};
       }
-    `}
+    `
+  }
+
+  ${(props) =>
+    props.NoLine &&
+    css`
+      font-size: 1rem;
+      line-height: 1.55;
+      padding: 0;
+      border: 0;
+    `
+  }
 
   &:focus, &:hover {
     border-color: ${(props) =>
@@ -162,9 +245,16 @@ export const CustomTextarea = styled.textarea`
       font-size: 1rem;
       line-height: 1.5;
       padding: 0;
+      margin: 0;
       border-radius: 0;
       border: 0;
-    `}
+
+      &::placeholder {
+        font-weight: 300;
+        color: ${palette.gray300} !important;
+      }
+    `
+  }
 
   &:disabled {
     background: ${palette.gray100};
@@ -231,6 +321,21 @@ export const RadioButton = ({ id, name, checked, onChange, disabled }) => {
     <CheckCircle 
       as="input"
       type="radio"
+      id={id}
+      name={name}
+      checked={checked}
+      onChange={onChange}
+      disabled={disabled}
+    />
+  );
+};
+
+// 체크박스 버튼 컴포넌트
+export const CheckBoxButton = ({ id, name, checked, onChange, disabled }) => {
+  return (
+    <CheckCircle 
+      as="input"
+      type="checkbox"
       id={id}
       name={name}
       checked={checked}

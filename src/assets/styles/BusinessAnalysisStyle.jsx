@@ -33,7 +33,13 @@ export const MainContent = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  max-width: ${(props) => (props.Wide ? "1024px" : "816px")};
+  max-width: ${(props) => (
+    props.Wide 
+    ? "1024px" 
+    : props.Wide1030
+    ? "1030px"
+    : "816px"
+  )};
   // max-width: 1024px;
   // min-height: 100vh;
   width: 100%;
@@ -375,6 +381,89 @@ export const TabButtonType4 = styled(TabButton)`
   }
 `;
 
+export const TabWrapType5 = styled(TabWrap)`
+  justify-content: center;
+  gap: 0;
+`;
+
+export const TabButtonType5 = styled(TabButton)`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 0;
+  border-radius: 0;
+  border: 0;
+  background: transparent;
+  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+  pointer-events: ${props => props.disabled ? 'none' : 'auto'};
+
+  + button {
+    padding-left: 100px;
+
+    &:before {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 60px;
+      height: 1px;
+      background: ${palette.gray300};
+      content: "";
+    }
+
+    &:after {
+      position: absolute;
+      left: 72px;
+      top: 50%;
+      transform: translateY(-50%) rotate(45deg);
+      width: 7px;
+      height: 7px;
+      border-top: 1px solid ${palette.gray300};
+      border-right: 1px solid ${palette.gray300};
+      content: "";
+    }
+  }
+
+  span {
+    font-size: 1rem;
+    font-weight: 400;
+    color: ${palette.gray500};
+    line-height: 1.55;
+    letter-spacing: -0.48px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    background: ${palette.gray200};
+  }
+
+  .text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: ${palette.gray700};
+
+    > * {
+      line-height: 1.45;
+    }
+  }
+
+  ${({ isActive }) => isActive && css`
+    span {
+      color: ${palette.gray800};
+      background: ${palette.primary};
+      color: ${palette.white};
+    }
+
+    .text {
+      color: ${palette.gray800};
+    }
+  `}
+`;
+
 export const TabContent = styled.div`
   display: flex;
   flex-direction: column;
@@ -382,6 +471,45 @@ export const TabContent = styled.div`
   text-align: left;
   height: ${(props) => (props.Daily ? "175px" : "275px")};
   overflow-y: auto;
+`;
+
+export const TabContent5 = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: ${(props) => (props.Small ? "40px" : "64px")};
+  width: 100%;
+  max-width: ${(props) => (props.Small ? "820px" : "100%")};
+  margin: 0 auto;
+
+  .title {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    max-width: 820px;
+    width: 100%;
+    margin: 0 auto;
+  }
+`;
+
+export const TabContent5Item = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+
+  .title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+  }
 `;
 
 export const Status = styled.div`
@@ -460,6 +588,12 @@ export const Status = styled.div`
         content: "완료";
       }
     `}
+`;
+
+export const Keyword = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
 `;
 
 export const Badge = styled.div`
@@ -1876,7 +2010,9 @@ export const ListBoxItem = styled.div`
   border: 1px solid
     ${(props) => (props.active ? palette.primary : palette.outlineGray)};
   background: ${(props) =>
-    props.active && props.showQuestions
+    props.NoBg 
+      ? palette.white
+      : props.active && props.showQuestions
       ? palette.white
       : props.active
       ? `rgba(34, 111, 255, 0.10)`
@@ -1892,6 +2028,39 @@ export const ListBoxItem = styled.div`
     }
   }
 `;
+
+export const ListBoxWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 100%;
+`;
+
+export const ListBoxTitle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+`;
+
+export const ListBoxContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  padding-top: 16px;
+  border-top: 1px solid ${palette.gray200};
+`;
+
+
 
 export const ListBorderItem = styled(ListBoxItem)`
   position: relative;
@@ -2314,15 +2483,31 @@ export const BgBoxList = styled.div`
 
 export const BgBoxItem = styled.div`
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   gap: 4px;
   width: 100%;
-  padding: ${(props) => (props.NoOutline ? "12px" : "8px 12px")};
-  border-radius: 10px;
+  padding: ${(props) => (
+    props.NoOutline 
+    ? "12px" 
+    : props.primaryLightest
+    ? "20px"
+    : "8px 12px"
+  )};
+  border-radius: ${(props) => (props.primaryLightest ? "15px" : "10px")};
   border: ${(props) =>
-    props.NoOutline ? "0" : `1px solid ${palette.outlineGray}`};
-  background: ${(props) => (props.white ? palette.white : palette.chatGray)};
+    props.NoOutline || props.primaryLightest
+    ? "0" 
+    : `1px solid ${palette.outlineGray}`
+  };
+  background: ${(props) => (
+    props.white 
+    ? palette.white 
+    : props.primaryLightest
+    ? "rgba(34, 111, 255, 0.05)"
+    : palette.chatGray
+  )};
 `;
 
 export const TextInfo = styled.div`

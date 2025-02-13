@@ -85,9 +85,14 @@ export const Button = styled.button`
     }
 
     &:disabled {
-      color: ${palette.gray500};
-      background: #ECEFF3;
+      color: ${palette.white};
+      border: none;
+      background: ${palette.gray300};
       cursor: not-allowed;
+
+      &:hover {
+        background: ${palette.gray300};
+      }
     }
   `}
 
