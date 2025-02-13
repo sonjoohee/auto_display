@@ -2338,6 +2338,12 @@ export const InterviewPopup = styled.div`
     flex-direction: column;
     gap: 18px;
     width: 100%;
+
+    &.type2 {
+      gap: 16px;
+      padding-top: 16px;
+      border-top: 1px solid ${palette.outlineGray};
+    }
   }
 `;
 
@@ -2508,6 +2514,29 @@ export const BgBoxItem = styled.div`
     ? "rgba(34, 111, 255, 0.05)"
     : palette.chatGray
   )};
+`;
+
+export const ListRowWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 18px;
+  width: 100%;
+`;
+
+export const ListRowItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  width: 100%;
+
+  ${Body1} {
+    flex-shrink: 0;
+    max-width: 80px;
+    width: 100%;
+  }
 `;
 
 export const TextInfo = styled.div`

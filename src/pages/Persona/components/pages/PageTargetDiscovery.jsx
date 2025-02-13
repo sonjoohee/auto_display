@@ -20,10 +20,14 @@ import {
   SelectBoxList,
   CheckBoxButton,
 } from "../../../../assets/styles/InputStyle";
+import PopupWrap from "../../../../assets/styles/Popup";
 import {
   ContentsWrap,
   MainContent,
   Badge,
+  TabWrapType2,
+  TabButtonType2,
+  TabContent,
   TabWrapType5,
   TabButtonType5,
   TabContent5,
@@ -40,23 +44,33 @@ import {
   ListBoxTitle,
   ListBoxContent,
   Keyword,
+  InterviewPopup,
+  Status,
+  ListRowWrap,
+  ListRowItem,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../../assets/styles/Images";
 import {
   H4,
   H3,
   H5,
+  Sub3,
   Body1,
   Body2,
   Body3,
 } from "../../../../assets/styles/Typography";
 
 const PageTargetDiscovery = () => {
+  const [showPopup, setShowPopup] = useState(false);
+  const [showPopupMore, setShowPopupMore] = useState(false);
+  const [showPopupSave, setShowPopupSave] = useState(false);
+  const [showPopupError, setShowPopupError] = useState(false);
   const [selectedPersonas, setSelectedPersonas] = useState([]);
   const [isSelectBoxOpen, setIsSelectBoxOpen] = useState(false);
   const [selectedPurpose, setSelectedPurpose] = useState("");
   const [selectedInterviewType, setSelectedInterviewType] = useState(null);
   const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useState(null);
+  const [activeTab1, setActiveTab1] = useState("personaInfo");
   const [contactForm, setContactForm] = useState({
     email: "",
     purpose: "",
@@ -68,6 +82,10 @@ const PageTargetDiscovery = () => {
   const [completedSteps, setCompletedSteps] = useState([]);  // 완료된 단계를 추적
   const [businessDescription, setBusinessDescription] = useState("");
   const [targetCustomer, setTargetCustomer] = useState("");
+  const [personaData, setPersonaData] = useState({
+    personaInfo: "",
+    personaScenario: "",
+  });
 
   const calculateDropDirection = () => {
     if (selectBoxRef.current) {
@@ -121,6 +139,7 @@ const PageTargetDiscovery = () => {
   const handleNextStep = (currentStep) => {
     setCompletedSteps([...completedSteps, currentStep]);
     setActiveTab(currentStep + 1);
+    setShowPopupError(false);
   };
 
   // 필수 필드가 모두 입력되었는지 확인하는 함수
@@ -130,7 +149,10 @@ const PageTargetDiscovery = () => {
 
   // 비즈니스 설명 입력 핸들러
   const handleBusinessDescriptionChange = (e) => {
-    setBusinessDescription(e.target.value);
+    const input = e.target.value;
+    if (input.length <= 150) {
+      setBusinessDescription(input);
+    }
   };
 
   // 타겟 고객 입력 핸들러
@@ -211,6 +233,7 @@ const PageTargetDiscovery = () => {
                         placeholder="잠재고객을 도출하고 싶은 비즈니스에 대해서 설명해주세요 (예: 친환경 전기 자전거 공유 플랫폼 등)" 
                         onChange={handleBusinessDescriptionChange}
                         value={businessDescription}
+                        maxLength={150}
                         status="valid" 
                       />
                       <Body2 color="gray300" align="right">
@@ -318,7 +341,7 @@ const PageTargetDiscovery = () => {
                   Primary 
                   Fill 
                   Round
-                  onClick={() => handleNextStep(1)}
+                  onClick={() => setShowPopupError(true)}
                   disabled={!isRequiredFieldsFilled()}
                 >
                     다음
@@ -370,6 +393,7 @@ const PageTargetDiscovery = () => {
                           Medium
                           PrimaryLightest
                           Fill
+                          onClick={() => setShowPopup(true)}
                         >
                           자세히
                         </CustomButton>
@@ -411,6 +435,7 @@ const PageTargetDiscovery = () => {
                           Medium
                           PrimaryLightest
                           Fill
+                          onClick={() => setShowPopup(true)}
                         >
                           자세히
                         </CustomButton>
@@ -476,6 +501,7 @@ const PageTargetDiscovery = () => {
                           Medium
                           PrimaryLightest
                           Fill
+                          onClick={() => setShowPopupMore(true)}
                         >
                           자세히
                         </CustomButton>
@@ -505,6 +531,7 @@ const PageTargetDiscovery = () => {
                           Medium
                           PrimaryLightest
                           Fill
+                          onClick={() => setShowPopupMore(true)}
                         >
                           자세히
                         </CustomButton>
@@ -545,7 +572,7 @@ const PageTargetDiscovery = () => {
                 <InsightAnalysis>
                   <div className="title">
                     <H4 color="gray800">잠재력이 가장 높은 페르소나는 OOO 입니다.</H4>
-                    <Button Primary>리포트 저장하기</Button>
+                    <Button Primary onClick={() => setShowPopupSave(true)}>리포트 저장하기</Button>
                   </div>
 
                   <div className="content">
@@ -639,12 +666,164 @@ const PageTargetDiscovery = () => {
                   </ListBoxItem>
                 </ListBoxWrap>
 
-                <Button Small Primary>리포트 저장하기</Button>
+                <Button Small Primary onClick={() => setShowPopupSave(true)}>리포트 저장하기</Button>
               </TabContent5>
             )}
           </TargetDiscoveryWrap>
         </MainContent>
       </ContentsWrap>
+
+      {showPopup && (
+        <InterviewPopup>
+          <div style={{maxWidth: "565px"}}>
+            <div className="header" style={{gap: "16px"}}>
+              <H4>
+                시간이 부족한 바쁜 프리랜서
+                <span className="close" onClick={() => setShowPopup(false)} />
+              </H4>
+              <div className="keywords">
+                <Status>#시간 관리</Status>
+                <Status>#페르소나 키워드</Status>
+                <Status>#업무 효율율</Status>
+              </div>
+            </div>
+
+            <div className="content type2">
+              <ListRowWrap>
+                <ListRowItem>
+                  <Body1 color="gray700" align="left">누가<br />(Who) </Body1>
+                  <Body3 color="gray700" align="left">40대 이상, 자녀 독립 후 여유로운 삶을 추구하는 고소득층, 전원주택/별장 소유자. DIY, 인테리어, 건축 관련 취미를 가짐</Body3>
+                </ListRowItem>
+                <ListRowItem>
+                  <Body1 color="gray700" align="left">언제<br />(When)</Body1>
+                  <Body3 color="gray700" align="left">주택 리모델링, 증축 계획 시, 또는 새로운 공간 활용 아이디어를 얻고 싶을 때</Body3>
+                </ListRowItem>
+                <ListRowItem>
+                  <Body1 color="gray700" align="left">어디서<br />(Where)</Body1>
+                  <Body3 color="gray700" align="left">개인 주택, 별장, 세컨하우스 등</Body3>
+                </ListRowItem>
+                <ListRowItem>
+                  <Body1 color="gray700" align="left">무엇을<br />(What)</Body1>
+                  <Body3 color="gray700" align="left">전원적인 삶의 질을 높이고, 개성을 표현할 수 있는 인테리어 아이디어, 지역 특색을 살린 공간 디자인에 대한 정보</Body3>
+                </ListRowItem>
+                <ListRowItem>
+                  <Body1 color="gray700" align="left">어떻게<br />(How)</Body1>
+                  <Body3 color="gray700" align="left">플랫폼을 통해 전문가의 자문, 맞춤형 디자인 제안, 지역 기반의 시공업체 정보 획득, 커뮤니티 참여를 통한 정보 공유</Body3>
+                </ListRowItem>
+                <ListRowItem>
+                  <Body1 color="gray700" align="left">왜<br />(Why)</Body1>
+                  <Body3 color="gray700" align="left">기존의 획일화된 인테리어에서 벗어나, 자신만의 취향과 라이프스타일을 반영한 공간을 창출하고, 지역사회와의 연결을 강화하고자 함.</Body3>
+                </ListRowItem>
+              </ListRowWrap>
+            </div>
+          </div>
+        </InterviewPopup>
+      )}
+
+      {showPopupMore && (
+        <InterviewPopup>
+          <div style={{maxWidth: "565px"}}>
+            <div className="header">
+              <H4>
+                시간이 부족한 바쁜 프리랜서
+                <span className="close" onClick={() => setShowPopupMore(false)} />
+              </H4>
+              <p className="info">
+                <Sub3>여성</Sub3>
+                <Sub3>25세</Sub3>
+              </p>
+            </div>
+
+            <div className="keywords">
+              <Status>#시간 관리</Status>
+              <Status>#페르소나 키워드</Status>
+              <Status>#업무 효율율</Status>
+            </div>
+
+            <div className="content">
+              <TabWrapType2>
+                <TabButtonType2
+                  isActive={activeTab1 === "personaInfo"}
+                  onClick={() => setActiveTab1("personaInfo")}
+                >
+                  페르소나 정보
+                </TabButtonType2>
+                <TabButtonType2
+                  isActive={activeTab1 === "personaScenario"}
+                  onClick={() => setActiveTab1("personaScenario")}
+                >
+                  페르소나 시나리오
+                </TabButtonType2>
+              </TabWrapType2>
+
+              {activeTab1 === "personaInfo" && (
+                <TabContent>
+                  <ListRowWrap>
+                    <ListRowItem>
+                      <Body1 color="gray700" align="left">누가<br />(Who) </Body1>
+                      <Body3 color="gray700" align="left">40대 이상, 자녀 독립 후 여유로운 삶을 추구하는 고소득층, 전원주택/별장 소유자. DIY, 인테리어, 건축 관련 취미를 가짐</Body3>
+                    </ListRowItem>
+                    <ListRowItem>
+                      <Body1 color="gray700" align="left">언제<br />(When)</Body1>
+                      <Body3 color="gray700" align="left">주택 리모델링, 증축 계획 시, 또는 새로운 공간 활용 아이디어를 얻고 싶을 때</Body3>
+                    </ListRowItem>
+                    <ListRowItem>
+                      <Body1 color="gray700" align="left">어디서<br />(Where)</Body1>
+                      <Body3 color="gray700" align="left">개인 주택, 별장, 세컨하우스 등</Body3>
+                    </ListRowItem>
+                    <ListRowItem>
+                      <Body1 color="gray700" align="left">무엇을<br />(What)</Body1>
+                      <Body3 color="gray700" align="left">전원적인 삶의 질을 높이고, 개성을 표현할 수 있는 인테리어 아이디어, 지역 특색을 살린 공간 디자인에 대한 정보</Body3>
+                    </ListRowItem>
+                    <ListRowItem>
+                      <Body1 color="gray700" align="left">어떻게<br />(How)</Body1>
+                      <Body3 color="gray700" align="left">플랫폼을 통해 전문가의 자문, 맞춤형 디자인 제안, 지역 기반의 시공업체 정보 획득, 커뮤니티 참여를 통한 정보 공유</Body3>
+                    </ListRowItem>
+                    <ListRowItem>
+                      <Body1 color="gray700" align="left">왜<br />(Why)</Body1>
+                      <Body3 color="gray700" align="left">기존의 획일화된 인테리어에서 벗어나, 자신만의 취향과 라이프스타일을 반영한 공간을 창출하고, 지역사회와의 연결을 강화하고자 함.</Body3>
+                    </ListRowItem>
+                  </ListRowWrap>
+                </TabContent>
+              )}
+              {activeTab1 === "personaScenario" && (
+                <TabContent>
+                  <Body1 color="gray700">신뢰할 수 있는 정보와 전문가 도움, 실제 제품 확인이 중요하다.</Body1>
+                  <Body3 color="gray700">
+                    30대 초반 직장인인 수진(가명)씨와 남편은 새롭게 마련한 신혼집 인테리어를 위해 인테리어 콘텐츠 공유 커뮤니티 및 커머스 플랫폼을 이용한다.  수진씨는 온라인 플랫폼에서 다양한 인테리어 디자인 사진과 영상을 보며 디자인 영감을 얻고, 마음에 드는 가구와 소품을 찾는다.  하지만,  제품의 실제 색감이나 재질을 확인할 수 없어 고민하고,  비슷한 스타일의 제품을 여러 사이트에서 비교하는 데 어려움을 느낀다.  또한,  합리적인 가격대의 고급 인테리어 제품을 찾고 싶지만, 제품 정보가 부족하거나 가격 비교가 어려워 시간이 많이 소요된다.  DIY 인테리어에 관심이 많아 커뮤니티에 참여하여 다른 사용자들과 정보를 공유하고,  조언을 구하지만 전문적인 도움이 부족하다고 느낀다.  특히,  전문가의 도움 없이 직접 인테리어를 계획하고 시공하는 데 어려움을 겪고 있으며,  실제 시공 후 결과물에 대한 불확실성 때문에 고민이 많다.  경쟁 플랫폼에서는  더욱 다양한 스타일과 제품을 제공하지만,  수진씨는  자신들의 취향에 맞는  신뢰할 수 있는 정보와 전문가의 조언을 원한다.  플랫폼에서  제품 구매 후 실제 사용 후기를 확인하고, 전문가의 디자인 컨설팅 서비스를 추가로 제공한다면 더욱 만족스러울 것이다.
+                  </Body3>
+                </TabContent>
+              )}
+            </div>
+          </div>
+        </InterviewPopup>
+      )}
+
+      {showPopupError && (
+        <PopupWrap
+          Warning
+          title="다시 입력해 주세요."
+          message="현재 입력하신 정보는 목적을 생성할 수 없습니다."
+          buttonType="Outline"
+          confirmText="확인"
+          isModal={false}
+          onConfirm={() => handleNextStep(1)}
+        />
+      )}
+
+      {showPopupSave && (
+        <PopupWrap
+          Check
+          title="리포트가 저장되었습니다."
+          message="저장된 리포트는 ‘보관함’을 확인해주세요"
+          buttonType="Outline"
+          closeText="보관함 바로가기"
+          confirmText="리포트 계속 확인"
+          isModal={false}
+          onCancel={() => setShowPopupSave(false)}
+          onConfirm={() => setShowPopupSave(false)}
+        />
+      )}
     </>
   );
 };
