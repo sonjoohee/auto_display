@@ -12,6 +12,10 @@ import PopupWrap from "../../../../assets/styles/Popup";
 import {
   CustomInput,
   CustomTextarea,
+  SelectBox,
+  SelectBoxItem,
+  SelectBoxTitle,
+  SelectBoxList,
 } from "../../../../assets/styles/InputStyle";
 import {
   IS_LOGGED_IN,
@@ -598,54 +602,6 @@ const PageMyProfile = () => {
 };
 
 export default PageMyProfile;
-
-const SelectBox = styled.div`
-  position: relative;
-`;
-
-const SelectBoxItem = styled.div`
-  cursor: pointer;
-  transition: all 0.5s;
-
-  &:hover {
-    background-color: ${palette.primaryLightest};
-  }
-`;
-
-const SelectBoxTitle = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 20px;
-  border-radius: 5px;
-  border: 1px solid ${palette.outlineGray};
-  cursor: pointer;
-  z-index: 1;
-  background-color: ${palette.white};
-
-  &:hover {
-    border-color: ${palette.primary};
-  }
-`;
-
-const SelectBoxList = styled.div`
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  border-radius: 0px 0px 5px 5px;
-  border: 1px solid ${palette.outlineGray};
-  border-top: none;
-  background: ${palette.white};
-  box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.12);
-  z-index: 2;
-
-  > div {
-    padding: 13px 20px;
-  }
-`;
 
 const ContactUsWrap = styled.div`
   display: flex;

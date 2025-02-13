@@ -33,7 +33,13 @@ export const MainContent = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  max-width: ${(props) => (props.Wide ? "1024px" : "816px")};
+  max-width: ${(props) => (
+    props.Wide 
+    ? "1024px" 
+    : props.Wide1030
+    ? "1030px"
+    : "816px"
+  )};
   // max-width: 1024px;
   // min-height: 100vh;
   width: 100%;
@@ -354,6 +360,110 @@ export const TabButtonType3 = styled(TabButton)`
       `}
 `;
 
+export const TabWrapType4 = styled(TabWrap)`
+  gap: 16px !important;
+`;
+
+export const TabButtonType4 = styled(TabButton)`
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid ${palette.outlineGray};
+  cursor: pointer;
+
+  ${({ isActive }) =>
+    isActive
+    ? `
+      background: ${palette.chatGray};
+    `
+    : `
+      background: ${palette.white};
+    `
+  }
+`;
+
+export const TabWrapType5 = styled(TabWrap)`
+  justify-content: center;
+  gap: 0;
+`;
+
+export const TabButtonType5 = styled(TabButton)`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 0;
+  border-radius: 0;
+  border: 0;
+  background: transparent;
+  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+  pointer-events: ${props => props.disabled ? 'none' : 'auto'};
+
+  + button {
+    padding-left: 100px;
+
+    &:before {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 60px;
+      height: 1px;
+      background: ${palette.gray300};
+      content: "";
+    }
+
+    &:after {
+      position: absolute;
+      left: 72px;
+      top: 50%;
+      transform: translateY(-50%) rotate(45deg);
+      width: 7px;
+      height: 7px;
+      border-top: 1px solid ${palette.gray300};
+      border-right: 1px solid ${palette.gray300};
+      content: "";
+    }
+  }
+
+  span {
+    font-size: 1rem;
+    font-weight: 400;
+    color: ${palette.gray500};
+    line-height: 1.55;
+    letter-spacing: -0.48px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    background: ${palette.gray200};
+  }
+
+  .text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: ${palette.gray700};
+
+    > * {
+      line-height: 1.45;
+    }
+  }
+
+  ${({ isActive }) => isActive && css`
+    span {
+      color: ${palette.gray800};
+      background: ${palette.primary};
+      color: ${palette.white};
+    }
+
+    .text {
+      color: ${palette.gray800};
+    }
+  `}
+`;
+
 export const TabContent = styled.div`
   display: flex;
   flex-direction: column;
@@ -361,6 +471,45 @@ export const TabContent = styled.div`
   text-align: left;
   height: ${(props) => (props.Daily ? "175px" : "275px")};
   overflow-y: auto;
+`;
+
+export const TabContent5 = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: ${(props) => (props.Small ? "40px" : "64px")};
+  width: 100%;
+  max-width: ${(props) => (props.Small ? "820px" : "100%")};
+  margin: 0 auto;
+
+  .title {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    max-width: 820px;
+    width: 100%;
+    margin: 0 auto;
+  }
+`;
+
+export const TabContent5Item = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+
+  .title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+  }
 `;
 
 export const Status = styled.div`
@@ -439,6 +588,12 @@ export const Status = styled.div`
         content: "완료";
       }
     `}
+`;
+
+export const Keyword = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
 `;
 
 export const Badge = styled.div`
@@ -1855,7 +2010,9 @@ export const ListBoxItem = styled.div`
   border: 1px solid
     ${(props) => (props.active ? palette.primary : palette.outlineGray)};
   background: ${(props) =>
-    props.active && props.showQuestions
+    props.NoBg 
+      ? palette.white
+      : props.active && props.showQuestions
       ? palette.white
       : props.active
       ? `rgba(34, 111, 255, 0.10)`
@@ -1871,6 +2028,39 @@ export const ListBoxItem = styled.div`
     }
   }
 `;
+
+export const ListBoxWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 100%;
+`;
+
+export const ListBoxTitle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+`;
+
+export const ListBoxContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  padding-top: 16px;
+  border-top: 1px solid ${palette.gray200};
+`;
+
+
 
 export const ListBorderItem = styled(ListBoxItem)`
   position: relative;
@@ -2293,15 +2483,31 @@ export const BgBoxList = styled.div`
 
 export const BgBoxItem = styled.div`
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   gap: 4px;
   width: 100%;
-  padding: ${(props) => (props.NoOutline ? "12px" : "8px 12px")};
-  border-radius: 10px;
+  padding: ${(props) => (
+    props.NoOutline 
+    ? "12px" 
+    : props.primaryLightest
+    ? "20px"
+    : "8px 12px"
+  )};
+  border-radius: ${(props) => (props.primaryLightest ? "15px" : "10px")};
   border: ${(props) =>
-    props.NoOutline ? "0" : `1px solid ${palette.outlineGray}`};
-  background: ${(props) => (props.white ? palette.white : palette.chatGray)};
+    props.NoOutline || props.primaryLightest
+    ? "0" 
+    : `1px solid ${palette.outlineGray}`
+  };
+  background: ${(props) => (
+    props.white 
+    ? palette.white 
+    : props.primaryLightest
+    ? "rgba(34, 111, 255, 0.05)"
+    : palette.chatGray
+  )};
 `;
 
 export const TextInfo = styled.div`
@@ -3180,4 +3386,201 @@ export const NoData = styled.div`
 export const CreditNoData = styled.div`
   padding-top: 16px;
   border-top: 1px solid ${palette.chatGray};
+`;
+
+export const ExploreList = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 20px 16px;
+  margin-bottom: 200px;
+`;
+
+export const ExploreCard = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  max-width: 192px;
+  width: 100%;
+  height: 290px;
+  padding: 30px;
+  border-radius: 20px;
+  background: ${palette.chatGray};
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.5s;
+
+  > span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: ${palette.gray700};
+    line-height: 1.55;
+    letter-spacing: -0.36px;
+  }
+
+  p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 97px;
+    margin-top: auto;
+
+    img {
+      padding: 10px;
+    }
+  }
+
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 30px 22px;
+    background: rgba(50, 50, 50, 0.9);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s;
+
+    > span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: ${palette.white};
+      line-height: 1.55;
+      letter-spacing: -0.36px;
+      padding: 4px 12px;
+      border-radius: 5px;
+      background: ${palette.primary};
+    }
+
+    .text {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: auto;
+
+      i {
+        position: relative;
+        width: 64px;
+        height: 12px;
+        margin: 0 auto;
+
+        &:before,
+        &:after {
+          position: absolute;
+          right: 0;
+          border-radius: 4px;
+          background: ${palette.white};
+          content: "";
+        }
+
+        &:before {
+          bottom: 0;
+          width: 100%;
+          height: 2px;
+        }
+
+        &:after {
+          bottom: 5px;
+          right: -1px;
+          transform: rotate(45deg);
+          width: 14px;
+          height: 2px;
+        }
+      }
+    }
+  }
+
+  ${Body1} {
+    margin-top: 26px;
+
+    em {
+      display: none;
+    }
+  }
+
+  &:hover {
+    .overlay {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  ${(props) =>
+    props.Research &&
+    css`
+      .overlay {
+        > span {
+          background: ${palette.green};
+        }
+      }
+    `
+  }
+
+  ${(props) =>
+    props.Ready &&
+    css`
+      cursor: not-allowed;
+      pointer-events: auto; // 마우스 오버 이벤트 허용
+
+      ${Body1} {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        margin-top: 0;
+
+        em {
+          display: block;
+          font-size: 0.75rem;
+          font-weight: 500;
+          font-style: normal;
+          color: ${palette.gray500};
+          line-height: 1.2;
+          letter-spacing: -0.36px;
+          padding: 4px 8px;
+          border-radius: 50px;
+          border: 1px solid ${palette.outlineGray};
+        }
+      }
+
+      .overlay {
+        opacity: 0; // 기본적으로는 숨김
+        visibility: hidden;
+        pointer-events: none; // 오버레이의 클릭 이벤트 차단
+        
+        em {
+          color: ${palette.white};
+        }
+
+        i {
+          &:before,
+          &:after {
+            display: none;
+          }
+        }
+      }
+
+      &:hover .overlay {
+        opacity: 1;
+        visibility: visible;
+      }
+    `}
 `;
