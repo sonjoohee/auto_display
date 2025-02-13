@@ -13,6 +13,7 @@ import {
   IS_MOBILE,
   IS_MARKETING,
   APPROACH_PATH,
+  ACCESSABLE_EXPERT,
 } from "./pages/AtomStates"; // 로그인 상태 아톰 임포트
 import axios from "axios";
 import styled, { css } from "styled-components";
@@ -94,6 +95,39 @@ function App() {
     }
     return children;
   }
+
+  const [accessableExpert, setAccessableExpert] = useAtom(ACCESSABLE_EXPERT);
+
+  useEffect(() => {
+    const userEmail = sessionStorage.getItem("userEmail");
+    if (userEmail === "yspark@userconnect.kr" 
+      || userEmail === "jsjun0319@hanyang.ac.kr"
+      || userEmail === "sjjjang00@gmail.com"
+      || userEmail === "sungeun_lee@userconnect.kr"
+      || userEmail === "okhyund@userconnect.kr"
+      || userEmail === "hsb4557@naver.com"
+      || userEmail === "choi9110@nate.com"
+      || userEmail === "gusrms2346@naver.com"
+      || userEmail === "08doyun@naver.com"
+      || userEmail === "ehdbs08@hanyang.ac.kr"
+      || userEmail === "suauncle@gmail.com"
+      || userEmail === "pleasure4ur@gmail.com"
+      || userEmail === "r_pleasure4u@naver.com"
+      || userEmail === "lhm1186@naver.com"
+      || userEmail === "pixelweb@naver.com"
+      || userEmail === "hyeeun@userconnect.kr"
+      || userEmail === "pasrk0821@naver.com"
+      || userEmail === "okhyund@gmail.com"
+      || userEmail === "sunbin12325@gmail.com"
+      || userEmail === "yspark.uc@gmail.com"
+      || userEmail === "uvaluator@naver.com"
+      || userEmail === "jungmin_lee@userconnect.kr"
+      || userEmail === "syyoon@userconnect.kr"
+      || userEmail === "star7613son@gmail.com"
+    ) {
+    setAccessableExpert(true);
+  }
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {

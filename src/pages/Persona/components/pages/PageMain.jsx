@@ -144,6 +144,7 @@ import {
   EVENT_TITLE,
   EVENT_STATE,
   TRIAL_STATE,
+  ACCESSABLE_EXPERT,
 } from "../../../AtomStates";
 import { 
   ContentsWrap,
@@ -175,6 +176,8 @@ const PageMain = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const [accessableExpert, setAccessableExpert] = useAtom(ACCESSABLE_EXPERT);
 
   const [projectLoading, setProjectLoading] = useAtom(PROJECT_LOADING);
   const [projectRefreshTrigger, setProjectRefreshTrigger] = useAtom(
@@ -858,15 +861,21 @@ const PageMain = () => {
     }
   };
 
+  const hadleToolSelect = (index) => {
+    if (isLoggedIn) {
+      switch (index) {
+        case "1":
+          navigate("/TargetDiscovery");
+          break;
+      }
+    } else {
+      setIsPopupLogin(true);
+    }
+  };
+
   //전문가 부분 누르면
   const handledExpertSelect = (index) => {
-    const userEmail = sessionStorage.getItem("userEmail");
-    console.log(userEmail);
     if (isLoggedIn) {
-      if (!(userEmail === "yspark@userconnect.kr" || userEmail === "jsjun0319@hanyang.ac.kr")) {
-        setIsComingSoon(true);
-        return;
-      }
       const initialMessage = getInitialSystemMessage(index);
 
       setConversation([
@@ -948,7 +957,7 @@ const PageMain = () => {
     },
     {
       prefix: "마케팅 담당자들은 '",
-      keyword: "SNS에서 자연스럽게 확산되는 바이럴 광고",
+      keyword: "SNS에서 자연스럽게 확산되는 바이럴 광고", 
       suffix: "' 키워드로 검색했어요."
     },
     {
@@ -968,7 +977,7 @@ const PageMain = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentKeywordIndex((prev) => (prev + 1) % searchKeywords.length);
-    }, 3000); // 3초마다 변경
+    }, 5000); // 5초마다 변경
 
     return () => clearInterval(interval);
   }, [searchKeywords.length]);
@@ -1091,18 +1100,18 @@ const PageMain = () => {
               >
                 <Caption1 color="gray700">Research Tool</Caption1>
               </TabButtonType4>
-              <TabButtonType4 
+              {/* <TabButtonType4 
                 isActive={activeTab === "analysis"}
                 onClick={() => setActiveTab("analysis")}
               >
                 <Caption1 color="gray700">Analysis Tool</Caption1>
-              </TabButtonType4>
+              </TabButtonType4> */}
             </TabWrapType4>
 
             <ExploreList>
               {[
                 // Expert 카드들
-                <ExploreCard Expert Ready key="expert-1">
+                <ExploreCard Expert key="expert-1" {...(!accessableExpert && { Ready: true })}>
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
                     Expert
@@ -1113,7 +1122,7 @@ const PageMain = () => {
                     전략 컨설턴트
                   </Body1>
 
-                  <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
+                  <div className="overlay" onClick={() => { handledExpertSelect("1"); }}>
                     <span>
                       <images.LightningChargeFill color={palette.white} />
                       Expert
@@ -1130,7 +1139,7 @@ const PageMain = () => {
                   </div>
                 </ExploreCard>,
                 
-                <ExploreCard Expert key="expert-2">
+                <ExploreCard Expert key="expert-2" {...(!accessableExpert && { Ready: true })}>
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
                     Expert
@@ -1141,21 +1150,21 @@ const PageMain = () => {
                     가격 분석 전문가
                   </Body1>
 
-                  <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
+                  <div className="overlay" onClick={() => { handledExpertSelect("7"); }}>
                     <span>
                       <images.LightningChargeFill color={palette.white} />
                       Expert
                     </span>
 
                     <div className="text">
-                      <Body1 color="white">가격 분석 전문가</Body1>
+                      <Body1 color="white"><em>준비중</em>가격 분석 전문가</Body1>
                       <Caption1 color="white" align="left">시장 데이터 기반 최적 가격을 분석하여 수익성과 경쟁력을 극대화할 수 있어요 (제품 한정)</Caption1>
                       <i />
                     </div>
                   </div>
                 </ExploreCard>,
                 
-                <ExploreCard Expert key="expert-3">
+                <ExploreCard Expert key="expert-3" {...(!accessableExpert && { Ready: true })}>
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
                     Expert
@@ -1166,21 +1175,21 @@ const PageMain = () => {
                     BM 전문가
                   </Body1>
 
-                  <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
+                  <div className="overlay" onClick={() => { handledExpertSelect("9"); }}>
                     <span>
                       <images.LightningChargeFill color={palette.white} />
                       Expert
                     </span>
 
                     <div className="text">
-                      <Body1 color="white">BM 전문가</Body1>
+                      <Body1 color="white"><em>준비중</em>BM 전문가</Body1>
                       <Caption1 color="white" align="left">비즈니스 모델을 설계하고 최적화하여 지속 가능한 수익 구조를 구축하는 방향을 설정해드려요 </Caption1>
                       <i />
                     </div>
                   </div>
                 </ExploreCard>,
                 
-                <ExploreCard Expert key="expert-4">
+                <ExploreCard Expert key="expert-4" {...(!accessableExpert && { Ready: true })}>
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
                     Expert
@@ -1191,21 +1200,21 @@ const PageMain = () => {
                     그로스 해커
                   </Body1>
 
-                  <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
+                  <div className="overlay" onClick={() => { handledExpertSelect("6"); }}>
                     <span>
                       <images.LightningChargeFill color={palette.white} />
                       Expert
                     </span>
 
                     <div className="text">
-                      <Body1 color="white">그로스 해커</Body1>
+                      <Body1 color="white"><em>준비중</em>그로스 해커</Body1>
                       <Caption1 color="white" align="left">사용자 여정을 분석하여 각 마케팅 퍼널 단계별 최적의 전략을 도출하고 실행 방안을 제시드려요</Caption1>
                       <i />
                     </div>
                   </div>
                 </ExploreCard>,
                 
-                <ExploreCard Expert key="expert-5">
+                <ExploreCard Expert key="expert-5" style={{ cursor: 'default' }}>
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
                     Expert
@@ -1215,22 +1224,9 @@ const PageMain = () => {
                     <em>준비중</em>
                     Coming Soon
                   </Body1>
-
-                  <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
-                    <span>
-                      <images.LightningChargeFill color={palette.white} />
-                      Expert
-                    </span>
-
-                    <div className="text">
-                      <Body1 color="white">Coming Soon</Body1>
-                      <Caption1 color="white" align="left">Coming Soon</Caption1>
-                      <i />
-                    </div>
-                  </div>
                 </ExploreCard>,
 
-                <ExploreCard Research key="research-1">
+                <ExploreCard Research key="research-1" {...(!accessableExpert && { Ready: true })}>
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
                     Tool
@@ -1241,252 +1237,172 @@ const PageMain = () => {
                     타겟 디스커버리
                   </Body1>
 
-                  <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
+                  <div className="overlay" onClick={() => { hadleToolSelect("1"); }}>
                     <span>
                       <images.LightningChargeFill color={palette.white} />
                       Tool
                     </span>
 
                     <div className="text">
-                      <Body1 color="white">타겟 디스커버리</Body1>
+                      <Body1 color="white"><em>준비중</em>타겟 디스커버리</Body1>
                       <Caption1 color="white" align="left">Contextual Inquiry  및 시나리오 분석 기법을 활용해 제품 및 서비스의 잠재고객 탐색 툴</Caption1>
                       <i />
                     </div>
                   </div>
                 </ExploreCard>,
                 
-                <ExploreCard Research key="research-2">
-                  <span>
-                    <images.LightningChargeFill color={palette.gray700} />
-                    Tool
-                  </span>
-                  <p><img src={images.ImgExplore06} alt="" /></p>
-                  <Body1 color="gray800">
-                    <em>준비중</em>
-                    고객 핵심 가치 분석기
-                  </Body1>
+                // <ExploreCard Research key="research-2">
+                //   <span>
+                //     <images.LightningChargeFill color={palette.gray700} />
+                //     Tool
+                //   </span>
+                //   <p><img src={images.ImgExplore06} alt="" /></p>
+                //   <Body1 color="gray800">
+                //     <em>준비중</em>
+                //     고객 핵심 가치 분석기
+                //   </Body1>
 
-                  <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
-                    <span>
-                      <images.LightningChargeFill color={palette.white} />
-                      Tool
-                    </span>
+                //   <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
+                //     <span>
+                //       <images.LightningChargeFill color={palette.white} />
+                //       Tool
+                //     </span>
 
-                    <div className="text">
-                      <Body1 color="white">고객 핵심 가치 분석기</Body1>
-                      <Caption1 color="white" align="left">고객여정맵을 기반으로 핵심 구매 요인을 도출하고 고객 중심의 경쟁력을 강화하는 툴</Caption1>
-                      <i />
-                    </div>
-                  </div>
-                </ExploreCard>,
+                //     <div className="text">
+                //       <Body1 color="white">고객 핵심 가치 분석기</Body1>
+                //       <Caption1 color="white" align="left">고객여정맵을 기반으로 핵심 구매 요인을 도출하고 고객 중심의 경쟁력을 강화하는 툴</Caption1>
+                //       <i />
+                //     </div>
+                //   </div>
+                // </ExploreCard>,
                 
-                <ExploreCard Research key="research-3">
-                  <span>
-                    <images.LightningChargeFill color={palette.gray700} />
-                    Tool
-                  </span>
-                  <p><img src={images.ImgExplore07} alt="" /></p>
-                  <Body1 color="gray800">
-                    <em>준비중</em>
-                    아이디어 제너레이터
-                  </Body1>
+                // <ExploreCard Research key="research-3">
+                //   <span>
+                //     <images.LightningChargeFill color={palette.gray700} />
+                //     Tool
+                //   </span>
+                //   <p><img src={images.ImgExplore07} alt="" /></p>
+                //   <Body1 color="gray800">
+                //     <em>준비중</em>
+                //     아이디어 제너레이터
+                //   </Body1>
 
-                  <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
-                    <span>
-                      <images.LightningChargeFill color={palette.white} />
-                      Tool
-                    </span>
+                //   <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
+                //     <span>
+                //       <images.LightningChargeFill color={palette.white} />
+                //       Tool
+                //     </span>
 
-                    <div className="text">
-                      <Body1 color="white">아이디어 제너레이터</Body1>
-                      <Caption1 color="white" align="left">Mandal Art 기법을 활용하여 창의적이고 구조적인 아이디어를 발산하고 구체화 하는 툴</Caption1>
-                      <i />
-                    </div>
-                  </div>
-                </ExploreCard>,
+                //     <div className="text">
+                //       <Body1 color="white">아이디어 제너레이터</Body1>
+                //       <Caption1 color="white" align="left">Mandal Art 기법을 활용하여 창의적이고 구조적인 아이디어를 발산하고 구체화 하는 툴</Caption1>
+                //       <i />
+                //     </div>
+                //   </div>
+                // </ExploreCard>,
 
-                <ExploreCard Research key="research-4">
-                  <span>
-                    <images.LightningChargeFill color={palette.gray700} />
-                    Tool
-                  </span>
-                  <p><img src={images.ImgExplore08} alt="" /></p>
-                  <Body1 color="gray800">
-                    <em>준비중</em>
-                    컨셉 검증 플래너
-                  </Body1>
+                // <ExploreCard Research key="research-4">
+                //   <span>
+                //     <images.LightningChargeFill color={palette.gray700} />
+                //     Tool
+                //   </span>
+                //   <p><img src={images.ImgExplore08} alt="" /></p>
+                //   <Body1 color="gray800">
+                //     <em>준비중</em>
+                //     컨셉 검증 플래너
+                //   </Body1>
 
-                  <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
-                    <span>
-                      <images.LightningChargeFill color={palette.white} />
-                      Tool
-                    </span>
+                //   <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
+                //     <span>
+                //       <images.LightningChargeFill color={palette.white} />
+                //       Tool
+                //     </span>
 
-                    <div className="text">
-                      <Body1 color="white">컨셉 검증 플래너</Body1>
-                      <Caption1 color="white" align="left">MVP/PoC 검증을 위한 체계저인 플랜을 수립하여 실행 가능성을 높이는 플랜 제시 툴</Caption1>
-                      <i />
-                    </div>
-                  </div>
-                </ExploreCard>,
+                //     <div className="text">
+                //       <Body1 color="white">컨셉 검증 플래너</Body1>
+                //       <Caption1 color="white" align="left">MVP/PoC 검증을 위한 체계저인 플랜을 수립하여 실행 가능성을 높이는 플랜 제시 툴</Caption1>
+                //       <i />
+                //     </div>
+                //   </div>
+                // </ExploreCard>,
                 
-                <ExploreCard Research key="research-5">
-                  <span>
-                    <images.LightningChargeFill color={palette.gray700} />
-                    Tool
-                  </span>
-                  <p><img src={images.ImgExplore09} alt="" /></p>
-                  <Body1 color="gray800">
-                    <em>준비중</em>
-                    사용자 시뮬레이터
-                  </Body1>
+                // <ExploreCard Research key="research-5">
+                //   <span>
+                //     <images.LightningChargeFill color={palette.gray700} />
+                //     Tool
+                //   </span>
+                //   <p><img src={images.ImgExplore09} alt="" /></p>
+                //   <Body1 color="gray800">
+                //     <em>준비중</em>
+                //     사용자 시뮬레이터
+                //   </Body1>
 
-                  <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
-                    <span>
-                      <images.LightningChargeFill color={palette.white} />
-                      Tool
-                    </span>
+                //   <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
+                //     <span>
+                //       <images.LightningChargeFill color={palette.white} />
+                //       Tool
+                //     </span>
 
-                    <div className="text">
-                      <Body1 color="white">사용자 시뮬레이터</Body1>
-                      <Caption1 color="white" align="left">특정 AI Persona 그룹을 대상으로 핵심적인 질문을 제시하여 응답 패턴과 경향성을 분석하는 툴</Caption1>
-                      <i />
-                    </div>
-                  </div>
-                </ExploreCard>,
+                //     <div className="text">
+                //       <Body1 color="white">사용자 시뮬레이터</Body1>
+                //       <Caption1 color="white" align="left">특정 AI Persona 그룹을 대상으로 핵심적인 질문을 제시하여 응답 패턴과 경향성을 분석하는 툴</Caption1>
+                //       <i />
+                //     </div>
+                //   </div>
+                // </ExploreCard>,
 
-                <ExploreCard Analysis key="analysis-1">
-                  <span>
-                    <images.LightningChargeFill color={palette.gray700} />
-                    Tool
-                  </span>
-                  <p><img src={images.ImgExplore02} alt="" /></p>
-                  <Body1 color="gray800">
-                    <em>준비중</em>
-                    Analysis Tool
-                  </Body1>
+                // <ExploreCard Analysis key="analysis-1">
+                //   <span>
+                //     <images.LightningChargeFill color={palette.gray700} />
+                //     Tool
+                //   </span>
+                //   <p><img src={images.ImgExplore02} alt="" /></p>
+                //   <Body1 color="gray800">
+                //     <em>준비중</em>
+                //     Analysis Tool
+                //   </Body1>
 
-                  <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
-                    <span>
-                      <images.LightningChargeFill color={palette.white} />
-                      Tool
-                    </span>
+                //   <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
+                //     <span>
+                //       <images.LightningChargeFill color={palette.white} />
+                //       Tool
+                //     </span>
 
-                    <div className="text">
-                      <Body1 color="white">Analysis Tool</Body1>
-                      <Caption1 color="white" align="left">Analysis Tool</Caption1>
-                      <i />
-                    </div>
-                  </div>
-                </ExploreCard>,
+                //     <div className="text">
+                //       <Body1 color="white">Analysis Tool</Body1>
+                //       <Caption1 color="white" align="left">Analysis Tool</Caption1>
+                //       <i />
+                //     </div>
+                //   </div>
+                // </ExploreCard>,
 
-                <ExploreCard Analysis key="analysis-2">
-                  <span>
-                    <images.LightningChargeFill color={palette.gray700} />
-                    Tool
-                  </span>
-                  <p><img src={images.ImgExplore02} alt="" /></p>
-                  <Body1 color="gray800">
-                    <em>준비중</em>
-                    Analysis Tool2
-                  </Body1>
+                // <ExploreCard Analysis key="analysis-2">
+                //   <span>
+                //     <images.LightningChargeFill color={palette.gray700} />
+                //     Tool
+                //   </span>
+                //   <p><img src={images.ImgExplore02} alt="" /></p>
+                //   <Body1 color="gray800">
+                //     <em>준비중</em>
+                //     Analysis Tool2
+                //   </Body1>
 
-                  <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
-                    <span>
-                      <images.LightningChargeFill color={palette.white} />
-                      Tool
-                    </span>
+                //   <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
+                //     <span>
+                //       <images.LightningChargeFill color={palette.white} />
+                //       Tool
+                //     </span>
 
-                    <div className="text">
-                      <Body1 color="white">Analysis Tool</Body1>
-                      <Caption1 color="white" align="left">Analysis Tool</Caption1>
-                      <i />
-                    </div>
-                  </div>
-                </ExploreCard>,
+                //     <div className="text">
+                //       <Body1 color="white">Analysis Tool</Body1>
+                //       <Caption1 color="white" align="left">Analysis Tool</Caption1>
+                //       <i />
+                //     </div>
+                //   </div>
+                // </ExploreCard>,
               ].filter(filterCards)}
             </ExploreList>
           </ExploreWrap>
-
-          {/* 
-          <ExpertSelectWrap>
-            <Body3>🔎 AI 전문가와 비즈니스 인사이트를 나누세요</Body3>
-            <ExpertSelectBox>
-              <ExpertCard
-                Strategy
-                onClick={() => {
-                  handledExpertSelect("1");
-                }}
-              >
-                <Body1>전략 컨설턴트</Body1>
-                <Caption1 color="gray500">
-                  차별화 전략과 리스크 분석 제시
-                </Caption1>
-                <span>
-                  <img src={images.ImgStrategy} alt="" />
-                </span>
-              </ExpertCard>
-
-              <ExpertCard
-                Hacker
-                onClick={() => {
-                  handledExpertSelect("6");
-                }}
-              >
-                <Body1>그로스 해커</Body1>
-                <Caption1 color="gray500">
-                  고객 여정을 분석하여, 마케팅
-                  <br />
-                  퍼널별 전략 제시
-                </Caption1>
-                <span>
-                  <img src={images.ImgHacker} alt="" />
-                </span>
-              </ExpertCard>
-
-              <ExpertCard
-                Price
-                onClick={() => {
-                  handledExpertSelect("7");
-                }}
-              >
-                <Body1>가격 분석 전문가</Body1>
-                <Caption1 color="gray500">
-                  시장 데이터를 기반으로 최적의
-                  <br />
-                  가격 전략 제시 (제품 한정)
-                </Caption1>
-                <span>
-                  <img src={images.ImgPrice} alt="" />
-                </span>
-              </ExpertCard>
-
-              <ExpertCard
-                BM
-                onClick={() => {
-                  handledExpertSelect("9");
-                }}
-              >
-                <Body1>BM 전문가</Body1>
-                <Caption1 color="gray500">
-                  비즈니스 모델 설계 및 최적화
-                </Caption1>
-                <span>
-                  <img src={images.ImgBM} alt="" />
-                </span>
-              </ExpertCard>
-
-              <ExpertCard Coming>
-                <div>
-                  <span>
-                    <img src={images.ImgComing} alt="" />
-                  </span>
-                  <Caption1 color="gray500">coming soon</Caption1>
-                </div>
-              </ExpertCard>
-            </ExpertSelectBox>
-          </ExpertSelectWrap> 
-          */}
 
           <CopyRight>
             <div>
@@ -1707,7 +1623,8 @@ const MainSearchWrap = styled.div`
   }};
 
   gap: 42px;
-  height: 85dvh;
+  // height: 85dvh;
+  height: 74dvh;
 
   > div {
     display: flex;
