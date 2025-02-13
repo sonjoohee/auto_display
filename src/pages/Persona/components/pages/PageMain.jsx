@@ -860,7 +860,13 @@ const PageMain = () => {
 
   //전문가 부분 누르면
   const handledExpertSelect = (index) => {
+    const userEmail = sessionStorage.getItem("userEmail");
+    console.log(userEmail);
     if (isLoggedIn) {
+      if (!(userEmail === "yspark@userconnect.kr" || userEmail === "jsjun0319@hanyang.ac.kr")) {
+        setIsComingSoon(true);
+        return;
+      }
       const initialMessage = getInitialSystemMessage(index);
 
       setConversation([
@@ -1409,8 +1415,7 @@ const PageMain = () => {
               <ExpertCard
                 Strategy
                 onClick={() => {
-                  // handledExpertSelect("1");
-                  setIsComingSoon(true);
+                  handledExpertSelect("1");
                 }}
               >
                 <Body1>전략 컨설턴트</Body1>
@@ -1425,8 +1430,7 @@ const PageMain = () => {
               <ExpertCard
                 Hacker
                 onClick={() => {
-                  // handledExpertSelect("6");
-                  setIsComingSoon(true);
+                  handledExpertSelect("6");
                 }}
               >
                 <Body1>그로스 해커</Body1>
@@ -1443,8 +1447,7 @@ const PageMain = () => {
               <ExpertCard
                 Price
                 onClick={() => {
-                  // handledExpertSelect("7");
-                  setIsComingSoon(true);
+                  handledExpertSelect("7");
                 }}
               >
                 <Body1>가격 분석 전문가</Body1>
@@ -1461,8 +1464,7 @@ const PageMain = () => {
               <ExpertCard
                 BM
                 onClick={() => {
-                  // handledExpertSelect("9");
-                  setIsComingSoon(true);
+                  handledExpertSelect("9");
                 }}
               >
                 <Body1>BM 전문가</Body1>
