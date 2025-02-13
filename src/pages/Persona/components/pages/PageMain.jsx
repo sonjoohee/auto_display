@@ -861,6 +861,18 @@ const PageMain = () => {
     }
   };
 
+  const hadleToolSelect = (index) => {
+    if (isLoggedIn) {
+      switch (index) {
+        case "1":
+          navigate("/TargetDiscovery");
+          break;
+      }
+    } else {
+      setIsPopupLogin(true);
+    }
+  };
+
   //전문가 부분 누르면
   const handledExpertSelect = (index) => {
     if (isLoggedIn) {
@@ -1082,13 +1094,13 @@ const PageMain = () => {
               >
                 <Caption1 color="gray700">Business Expert</Caption1>
               </TabButtonType4>
-              {/* <TabButtonType4 
+              <TabButtonType4 
                 isActive={activeTab === "research"}
                 onClick={() => setActiveTab("research")}
               >
                 <Caption1 color="gray700">Research Tool</Caption1>
               </TabButtonType4>
-              <TabButtonType4 
+              {/* <TabButtonType4 
                 isActive={activeTab === "analysis"}
                 onClick={() => setActiveTab("analysis")}
               >
@@ -1214,30 +1226,30 @@ const PageMain = () => {
                   </Body1>
                 </ExploreCard>,
 
-                // <ExploreCard Research key="research-1">
-                //   <span>
-                //     <images.LightningChargeFill color={palette.gray700} />
-                //     Tool
-                //   </span>
-                //   <p><img src={images.ImgExplore05} alt="" /></p>
-                //   <Body1 color="gray800">
-                //     <em>준비중</em>
-                //     타겟 디스커버리
-                //   </Body1>
+                <ExploreCard Research key="research-1" {...(!accessableExpert && { Ready: true })}>
+                  <span>
+                    <images.LightningChargeFill color={palette.gray700} />
+                    Tool
+                  </span>
+                  <p><img src={images.ImgExplore05} alt="" /></p>
+                  <Body1 color="gray800">
+                    <em>준비중</em>
+                    타겟 디스커버리
+                  </Body1>
 
-                //   <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
-                //     <span>
-                //       <images.LightningChargeFill color={palette.white} />
-                //       Tool
-                //     </span>
+                  <div className="overlay" onClick={() => { hadleToolSelect("1"); }}>
+                    <span>
+                      <images.LightningChargeFill color={palette.white} />
+                      Tool
+                    </span>
 
-                //     <div className="text">
-                //       <Body1 color="white">타겟 디스커버리</Body1>
-                //       <Caption1 color="white" align="left">Contextual Inquiry  및 시나리오 분석 기법을 활용해 제품 및 서비스의 잠재고객 탐색 툴</Caption1>
-                //       <i />
-                //     </div>
-                //   </div>
-                // </ExploreCard>,
+                    <div className="text">
+                      <Body1 color="white"><em>준비중</em>타겟 디스커버리</Body1>
+                      <Caption1 color="white" align="left">Contextual Inquiry  및 시나리오 분석 기법을 활용해 제품 및 서비스의 잠재고객 탐색 툴</Caption1>
+                      <i />
+                    </div>
+                  </div>
+                </ExploreCard>,
                 
                 // <ExploreCard Research key="research-2">
                 //   <span>
