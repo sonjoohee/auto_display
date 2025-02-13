@@ -19,6 +19,7 @@ import {
   SIGN_UP_PASSWORD,
   CONFIRM_PASSWORD,
   ERROR_STATUS,
+  ACCESSABLE_EXPERT,
 } from "../../../AtomStates";
 import {
   IS_LOGGED_IN,
@@ -58,6 +59,7 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
   const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [showMobileWarning, setShowMobileWarning] = useState(false);
+  const [accessableExpert, setAccessableExpert] = useAtom(ACCESSABLE_EXPERT);
 
   const [isExitPopupOpen, setIsExitPopupOpen] = useState(false);
 
@@ -166,6 +168,33 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
           const userInfo = await userInfoResponse.json();
           // console.log("🚀 ~ handleLogin ~ userInfo:", userInfo);
 
+          if (userInfo.email === "yspark@userconnect.kr" 
+              || userInfo.email === "jsjun0319@hanyang.ac.kr"
+              || userInfo.email === "sjjjang00@gmail.com"
+              || userInfo.email === "sungeun_lee@userconnect.kr"
+              || userInfo.email === "okhyund@userconnect.kr"
+              || userInfo.email === "hsb4557@naver.com"
+              || userInfo.email === "choi9110@nate.com"
+              || userInfo.email === "gusrms2346@naver.com"
+              || userInfo.email === "08doyun@naver.com"
+              || userInfo.email === "ehdbs08@hanyang.ac.kr"
+              || userInfo.email === "suauncle@gmail.com"
+              || userInfo.email === "pleasure4ur@gmail.com"
+              || userInfo.email === "r_pleasure4u@naver.com"
+              || userInfo.email === "lhm1186@naver.com"
+              || userInfo.email === "pixelweb@naver.com"
+              || userInfo.email === "hyeeun@userconnect.kr"
+              || userInfo.email === "pasrk0821@naver.com"
+              || userInfo.email === "okhyund@gmail.com"
+              || userInfo.email === "sunbin12325@gmail.com"
+              || userInfo.email === "yspark.uc@gmail.com"
+              || userInfo.email === "uvaluator@naver.com"
+              || userInfo.email === "jungmin_lee@userconnect.kr"
+              || userInfo.email === "syyoon@userconnect.kr"
+              || userInfo.email === "star7613son@gmail.com"
+            ) {
+            setAccessableExpert(true);
+          }
           // 유저 정보 저장
           setUserName(userInfo.name);
           setUserEmail(userInfo.email);

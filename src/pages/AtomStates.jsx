@@ -516,6 +516,8 @@ export const TRIAL_STATE = atom(false);
 
 export const CUSTOM_PERSONA_LIST = atom([]);
 
+export const ACCESSABLE_EXPERT = atom(false);
+
 // setConversation([]);
 // setConversationStage(1);
 // setInputBusinessInfo("");
