@@ -1160,6 +1160,16 @@ const PagePersona2 = () => {
   };
 
   const handleCustomizePopupClose = () => {
+    setCustomPersonaForm({
+      description: "",
+      purpose: "",
+      quantity: 1,
+      gender: "",
+      ageGroups: [],
+      additionalInfo: "",
+    });
+    setActiveTabIndex(0);
+    setIgnoreOcean(false);
     setShowCustomizePopup(false);
   };
   // const handleCustomizePopupConfirm = () => {
@@ -1195,13 +1205,24 @@ const PagePersona2 = () => {
       const accessToken = sessionStorage.getItem("accessToken");
       if (accessToken) {
         const userCreditValue = await UserCreditInfo(isLoggedIn);
-
-        // 전역 상태의 크레딧 정보 업데이트
         setUserCredits(userCreditValue);
       }
 
       // 이후 커스텀 페르소나 요청 진행 (예: 요청 API 호출)
-      submitCustomPersonaRequest();
+      await submitCustomPersonaRequest();
+      setActiveTabIndex(0);
+
+      setIgnoreOcean(false);
+      // 필드에 입력된 데이터 초기화
+      setCustomPersonaForm({
+        description: "",
+        purpose: "",
+        quantity: 1,
+        gender: "",
+        ageGroups: [],
+        additionalInfo: "",
+      });
+
       setShowCustomizePopup(false);
     } catch (error) {
       setShowCreditPopup(true);
