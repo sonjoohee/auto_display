@@ -19,6 +19,7 @@ import {
   CONVERSATION_ID,
   USER_CREDITS,
   USER_MEMBERSHIP,
+  ACCESSABLE_EXPERT,
 } from "../../../../pages/AtomStates"; // 아톰 임포트
 
 import firebase from "firebase/app";
@@ -29,6 +30,7 @@ import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeGoogleLoginForm = () => {
   const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
+  const [accessableExpert, setAccessableExpert] = useAtom(ACCESSABLE_EXPERT);
 
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
@@ -104,6 +106,35 @@ const MoleculeGoogleLoginForm = () => {
 
       const userName = user.displayName;
       const userEmail = user.email;
+
+      if (userEmail === "yspark@userconnect.kr" 
+        || userEmail === "jsjun0319@hanyang.ac.kr"
+        || userEmail === "sjjjang00@gmail.com"
+        || userEmail === "sungeun_lee@userconnect.kr"
+        || userEmail === "okhyund@userconnect.kr"
+        || userEmail === "hsb4557@naver.com"
+        || userEmail === "choi9110@nate.com"
+        || userEmail === "gusrms2346@naver.com"
+        || userEmail === "08doyun@naver.com"
+        || userEmail === "ehdbs08@hanyang.ac.kr"
+        || userEmail === "suauncle@gmail.com"
+        || userEmail === "pleasure4ur@gmail.com"
+        || userEmail === "r_pleasure4u@naver.com"
+        || userEmail === "lhm1186@naver.com"
+        || userEmail === "pixelweb@naver.com"
+        || userEmail === "hyeeun@userconnect.kr"
+        || userEmail === "pasrk0821@naver.com"
+        || userEmail === "okhyund@gmail.com"
+        || userEmail === "sunbin12325@gmail.com"
+        || userEmail === "yspark.uc@gmail.com"
+        || userEmail === "uvaluator@naver.com"
+        || userEmail === "jungmin_lee@userconnect.kr"
+        || userEmail === "syyoon@userconnect.kr"
+        || userEmail === "star7613son@gmail.com"
+      ) {
+      setAccessableExpert(true);
+    }
+
       sessionStorage.setItem("userName", userName); // 서버 토큰 저장
       sessionStorage.setItem("userEmail", userEmail); // 서버 토큰 저장
       sessionStorage.setItem("isSocialLogin", "true"); // 소셜 로그인 여부 저장
