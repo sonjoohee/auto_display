@@ -1094,7 +1094,7 @@ const PageMarketingExpertInsight = () => {
                   <>
                     {ideaPriority.length !== 0 && <OrganismBizExpertSelect />}
                   </>
-                // ) : selectedExpertIndex === "6" ? (
+                ) : // ) : selectedExpertIndex === "6" ? (
                 //   <>
                 //     {buttonState.growthHackerKPI === 1 && (
                 //       <OrganismBizExpertSelect />
@@ -1106,17 +1106,17 @@ const PageMarketingExpertInsight = () => {
                 //       <OrganismBizExpertSelect />
                 //     )}
                 //   </>
-                ) : selectedExpertIndex === "8" ? (
+                selectedExpertIndex === "8" ? (
                   <>
                     {buttonState.caseEnough === 1 && (
                       <OrganismBizExpertSelect />
                     )}
                   </>
-                // ) : selectedExpertIndex === "9" ? (
+                ) : // ) : selectedExpertIndex === "9" ? (
                 //   <>
                 //     {buttonState.bmEnough === 1 && <OrganismBizExpertSelect />}
                 //   </>
-                ) : selectedExpertIndex === "10" ? (
+                selectedExpertIndex === "10" ? (
                   <>
                     {buttonState.surveyEnd === 1 && <OrganismBizExpertSelect />}
                   </>
@@ -1400,12 +1400,12 @@ const ChatWrap = styled.div`
 
   &:before {
     // position: sticky;
-    position:fixed;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     // height: 0;
-    height:40px;
+    height: 40px;
     display: block;
     // height:170px;
     background: rgb(255, 255, 255);
@@ -1414,7 +1414,7 @@ const ChatWrap = styled.div`
     //   rgba(255, 255, 255, 0) 0%,
     //   rgba(255, 255, 255, 1) 30%
     // );
-    background:${palette.white};
+    background: ${palette.white};
     z-index: 1;
     content: "";
   }

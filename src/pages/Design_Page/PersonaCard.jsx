@@ -41,13 +41,13 @@ const PersonaCard = ({
   });
 
   useEffect(() => {
-    // console.log('State updated:', state);
+    // console.log("State updated:", state);
   }, [state]);
 
   useEffect(() => {
     if (state.showPopup) {
-      // console.log('Popup should be visible now');
-      // console.log('Current state:', state);
+      // console.log("Popup should be visible now");
+      // console.log("Current state:", state);
     }
   }, [state.showPopup]);
 
@@ -63,19 +63,19 @@ const PersonaCard = ({
   };
 
   const handleRequestClick = () => {
-    // console.log('Request button clicked - before setState');
+    // console.log("Request button clicked - before setState");
     setState((prev) => {
-      // console.log('Inside setState callback');
+      // console.log("Inside setState callback");
       const newState = {
         ...prev,
         showPopup: true,
         showCustomModal: false,
         showRequestBadge: false,
       };
-      // console.log('New state:', newState);
+      // console.log("New state:", newState);
       return newState;
     });
-    // console.log('After setState call');
+    // console.log("After setState call");
   };
 
   const handleCheckCircleClick = () => {
@@ -143,7 +143,7 @@ const PersonaCard = ({
   };
 
   const handleInputChange = (field, value) => {
-    // console.log('Input changed:', field, value);
+    // console.log("Input changed:", field, value);
     setState((prev) => ({
       ...prev,
       formState: {

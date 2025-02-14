@@ -51,7 +51,7 @@ const MoleculePersonaSelectCard = ({
         onPersonaSelect(null);
       } else {
         // 새로운 선택
-        console.log("새로운 선택");
+        // console.log("새로운 선택");
         const newUnselected = personaList.unselected.filter(
           (p) => p.persona_id !== persona.persona_id
         );

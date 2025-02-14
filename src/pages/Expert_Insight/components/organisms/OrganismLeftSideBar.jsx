@@ -519,7 +519,7 @@ const OrganismLeftSideBar = () => {
 
     // 두 아코디언이 열렸을 때의 총 높이 계산
     const totalHeight = reportHeight + chatHeight; // 조건 없이 둘 다 더함
-    //  console.log("Total Height:", totalHeight);
+    //  // console.log("Total Height:", totalHeight);
 
     return totalHeight > maxSidebarHeight; // maxSidebarHeight와 비교하여 넘는지 확인
   };
@@ -603,7 +603,7 @@ const OrganismLeftSideBar = () => {
   }, [historyEditBoxRef]);
 
   const editBoxToggle = (index, event, category) => {
-    // console.log('editBoxPosition:', editBoxPosition);
+    // console.log("editBoxPosition:", editBoxPosition);
     if (editToggleIndex === index) {
       setEditToggleIndex(null);
       return;
@@ -980,7 +980,6 @@ const OrganismLeftSideBar = () => {
     setUserEmail("");
     setIsLogoutPopup(false); // 로그아웃 팝업 닫기
     window.location.href = "/"; // 페이지 이동
-    
   };
 
   const handleCloseLogoutPopup = () => {
@@ -2764,24 +2763,22 @@ const AccordionContent = styled.div`
     margin-top: 20px;
   }
 
-    ul {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      margin: 0 12px;
-      // margin-top: 10px;
-    }
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 0 12px;
+    // margin-top: 10px;
+  }
 
-    li:hover span.toggle,
-    li.active span.toggle {
-      opacity: 1;
-    }
+  li:hover span.toggle,
+  li.active span.toggle {
+    opacity: 1;
+  }
 
-
-    span.toggle {
-      opacity: 0;
-    }
-
+  span.toggle {
+    opacity: 0;
+  }
 
   p {
     width: 100%;
@@ -2801,7 +2798,7 @@ const AccordionContent = styled.div`
     text-align: left;
     padding: 8px 0;
     user-select: none; /* 드래그 방지 */
-  }    
+  }
 
   li {
     position: relative;
@@ -2833,94 +2830,94 @@ const AccordionContent = styled.div`
       width: 10px;
       height: 10px;
       font-family: "Pretendard", "Poppins";
-      font-size:0.63rem;
-      font-weight:700;
-      color:${palette.darkGray};
-      text-align:center;
+      font-size: 0.63rem;
+      font-weight: 700;
+      color: ${palette.darkGray};
+      text-align: center;
       border-radius: 2px;
-      background: #CECECE;
+      background: #cecece;
       content: "";
       transition: all 0.5s;
     }
 
     /* 비즈니스 */
     &[data-expert-index="0"]:before {
-      width:15px;
-      height:15px;
-      line-height:15px;
-      // background: #ff0000; 
-      content:'B';
+      width: 15px;
+      height: 15px;
+      line-height: 15px;
+      // background: #ff0000;
+      content: "B";
     }
 
     /* 전문가 */
     &[data-expert-index="1"]:before {
-      width:15px;
-      height:15px;
-      line-height:15px;
-      // background: #00ff00; 
-      content:'E';
+      width: 15px;
+      height: 15px;
+      line-height: 15px;
+      // background: #00ff00;
+      content: "E";
     }
 
     /* 추가질문 */
     &[data-expert-index="2"]:before {
-      width:15px;
-      height:15px;
-      line-height:15px;
+      width: 15px;
+      height: 15px;
+      line-height: 15px;
       // background: #800080;
-      content:'A';
+      content: "A";
     }
 
     /* 사용자 추가질문 */
     &[data-expert-index="3"]:before {
-      width:15px;
-      height:15px;
-      line-height:15px;
-      // background: #ffa500; 
-      content:'C';
+      width: 15px;
+      height: 15px;
+      line-height: 15px;
+      // background: #ffa500;
+      content: "C";
     }
 
     /* 추천 타겟 */
     &[data-expert-index="4"]:before {
-      width:15px;
-      height:15px;
-      line-height:15px;
-      // background: #00ff00; 
-      content:'E';
+      width: 15px;
+      height: 15px;
+      line-height: 15px;
+      // background: #00ff00;
+      content: "E";
     }
 
     /* 아이디어 우선순위 */
     &[data-expert-index="5"]:before {
-      width:15px;
-      height:15px;
-      line-height:15px;
-      // background: #00ff00; 
-      content:'E';
+      width: 15px;
+      height: 15px;
+      line-height: 15px;
+      // background: #00ff00;
+      content: "E";
     }
 
     /* 마케팅 분석과 개선 솔루션 제안 */
     &[data-expert-index="6"]:before {
-      width:15px;
-      height:15px;
-      line-height:15px;
-      // background: #00ff00; 
-      content:'E';
+      width: 15px;
+      height: 15px;
+      line-height: 15px;
+      // background: #00ff00;
+      content: "E";
     }
 
     /* 사례 분석 */
     &[data-expert-index="8"]:before {
-      width:15px;
-      height:15px;
-      line-height:15px;
-      // background: #00ff00; 
-      content:'E';
+      width: 15px;
+      height: 15px;
+      line-height: 15px;
+      // background: #00ff00;
+      content: "E";
     }
 
     /* 조사 설계 */
     &[data-expert-index="10"]:before {
-      width:15px;
-      height:15px;
-      line-height:15px;
-      content:'E';
+      width: 15px;
+      height: 15px;
+      line-height: 15px;
+      content: "E";
     }
 
     p {
@@ -2931,7 +2928,7 @@ const AccordionContent = styled.div`
       white-space: nowrap;
       overflow: hidden;
       color: ${palette.darkGray};
-      display:inline-block;
+      display: inline-block;
     }
 
     span {
@@ -2950,11 +2947,10 @@ const AccordionContent = styled.div`
       }
     }
 
-      span {
-        display: flex;
-      }
+    span {
+      display: flex;
     }
-  
+  }
 `;
 
 const LoginButtonWrap = styled.div`

@@ -16,7 +16,7 @@ import Graph1 from "../assets_copy/images/graph1.png";
 import Graph2 from "../assets_copy/images/graph2.png";
 import Graph3 from "../assets_copy/images/graph3.png";
 
-import OrganismHeader from './AI_Panel/components/organisms/OrganismHeader';
+import OrganismHeader from "./AI_Panel/components/organisms/OrganismHeader";
 
 import { useAtom } from "jotai";
 import {
@@ -51,7 +51,6 @@ const Lending = () => {
     setIsPopupOpen_2(false);
     setIsPopupOpen_3(false);
     setIsPopupOpen_4(false);
-    
   };
 
   useEffect(() => {
@@ -455,9 +454,9 @@ const VisualTitle = styled.h1`
 `;
 
 const VisualBg = styled.div`
-  height:40dvh;
+  height: 40dvh;
   background: url(${visualImage}) bottom center no-repeat;
-  background-size:auto 40dvh;
+  background-size: auto 40dvh;
 `;
 
 const CaretTextarea = styled.div`
