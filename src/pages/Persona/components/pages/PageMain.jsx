@@ -867,6 +867,9 @@ const PageMain = () => {
         case "1":
           navigate("/TargetDiscovery");
           break;
+        case "2":
+          navigate("/CustomerValueAnalyzer");
+          break;
       }
     } else {
       setIsPopupLogin(true);
@@ -1251,30 +1254,30 @@ const PageMain = () => {
                   </div>
                 </ExploreCard>,
                 
-                // <ExploreCard Research key="research-2">
-                //   <span>
-                //     <images.LightningChargeFill color={palette.gray700} />
-                //     Tool
-                //   </span>
-                //   <p><img src={images.ImgExplore06} alt="" /></p>
-                //   <Body1 color="gray800">
-                //     <em>준비중</em>
-                //     고객 핵심 가치 분석기
-                //   </Body1>
+                <ExploreCard Research key="research-2" {...(!accessableExpert && { Ready: true })}>
+                  <span>
+                    <images.LightningChargeFill color={palette.gray700} />
+                    Tool
+                  </span>
+                  <p><img src={images.ImgExplore06} alt="" /></p>
+                  <Body1 color="gray800">
+                    <em>준비중</em>
+                    고객 핵심 가치 분석기
+                  </Body1>
 
-                //   <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
-                //     <span>
-                //       <images.LightningChargeFill color={palette.white} />
-                //       Tool
-                //     </span>
+                  <div className="overlay" onClick={() => { hadleToolSelect("2"); }}>
+                    <span>
+                      <images.LightningChargeFill color={palette.white} />
+                      Tool
+                    </span>
 
-                //     <div className="text">
-                //       <Body1 color="white">고객 핵심 가치 분석기</Body1>
-                //       <Caption1 color="white" align="left">고객여정맵을 기반으로 핵심 구매 요인을 도출하고 고객 중심의 경쟁력을 강화하는 툴</Caption1>
-                //       <i />
-                //     </div>
-                //   </div>
-                // </ExploreCard>,
+                    <div className="text">
+                      <Body1 color="white"><em>준비중</em>고객 핵심 가치 분석기</Body1>
+                      <Caption1 color="white" align="left">고객여정맵을 기반으로 핵심 구매 요인을 도출하고 고객 중심의 경쟁력을 강화하는 툴</Caption1>
+                      <i />
+                    </div>
+                  </div>
+                </ExploreCard>,
                 
                 // <ExploreCard Research key="research-3">
                 //   <span>
