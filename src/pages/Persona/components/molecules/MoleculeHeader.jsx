@@ -27,7 +27,7 @@ import {
 import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
 import { UserCreditInfo } from "../../../../utils/indexedDB";
 // import { AlarmCreate } from '../../../utils/indexedDB';
-import { AlarmList } from '../../../../utils/indexedDB';
+import { AlarmList } from "../../../../utils/indexedDB";
 
 const MoleculeHeader = () => {
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
@@ -67,11 +67,9 @@ const MoleculeHeader = () => {
   const handleAlertToggle = () => {
     if (showAlert) {
       if (isLoggedIn) {
-  
         // const timestamp = Math.floor(new Date().getTime() / 1000); // 현재 유닉스 타임스탬프 생성
         // console.log(timestamp);
         // sessionStorage.setItem('alertTimestamp', timestamp); // 세션에 저장
-
         // 로그인 상태일 때 추가 작업
       }
       setIsClosing(true);
@@ -80,7 +78,7 @@ const MoleculeHeader = () => {
         setShowAlert(false);
         setIsClosing(false);
       }, 300);
-    } else {                        
+    } else {
       setShowAlert(true);
       setShowCreditToggle(false);
       setShowRedDot(false);
@@ -92,7 +90,7 @@ const MoleculeHeader = () => {
     //     setShowAlert(false);
     //     setIsClosing(false);
     //   }, 300);
-    // } else {                        
+    // } else {
     //   setShowAlert(true);
     //   setShowCreditToggle(false);
     // }
@@ -131,7 +129,7 @@ const MoleculeHeader = () => {
           setIsLoggedInState(false);
         }
       } catch (error) {
-        console.error("유저 크레딧 정보 조회 오류 발생:", error);
+        // console.error("유저 크레딧 정보 조회 오류 발생:", error);
         setUserCredits({
           additional_credit: 0,
           regular_credit: 0,
@@ -150,18 +148,18 @@ const MoleculeHeader = () => {
     }
     try {
       const response = await AlarmList(isLoggedIn); // AlarmCreate API 호출
-      console.log(response);
+      // console.log(response);
 
       if (response && response.status === "success") {
-        const hasNewAlerts = response.alarms.some(alarm => alarm.isNew); // isNew가 true인 알림이 있는지 확인
+        const hasNewAlerts = response.alarms.some((alarm) => alarm.isNew); // isNew가 true인 알림이 있는지 확인
         setShowRedDot(hasNewAlerts); // 빨간 점 상태 업데이트
         setAlarms(response.alarms); // Store alarms in state
-        console.log(alarms);
+        // console.log(alarms);
       } else {
         setShowRedDot(false);
       }
     } catch (error) {
-      console.error("알림 조회 오류 발생:", error);
+      // console.error("알림 조회 오류 발생:", error);
       setShowRedDot(false);
     }
   };
@@ -170,31 +168,27 @@ const MoleculeHeader = () => {
     fetchAlarms();
   }, [location, isLoggedIn]);
 
-
-  
   const handleLinkNavigation = (link) => {
     if (!link) return;
 
     try {
       const url = new URL(link);
-      if (url.hostname === 'www.interviewx.ai') {
+      if (url.hostname === "www.interviewx.ai") {
         // interviewx.ai 도메인인 경우 pathname으로 내부 이동
         navigate(url.pathname);
       } else {
         // 다른 외부 링크는 새 창에서 열기
-        window.open(link, '_blank');
+        window.open(link, "_blank");
       }
     } catch (e) {
       // URL 파싱 실패시 (상대 경로인 경우) 직접 이동
-      if (link.startsWith('/')) {
+      if (link.startsWith("/")) {
         navigate(link);
       } else {
-        window.open(link, '_blank');
+        window.open(link, "_blank");
       }
     }
   };
-
-
 
   return (
     <>
@@ -258,11 +252,13 @@ const MoleculeHeader = () => {
                   />
                 </span>
                 <Sub2 color="gray800">
-                  {isLoggedIn ? (
-                    (userCredits.regular_credit || 0) +
-                    (userCredits.additional_credit || 0) +
-                    (userCredits.event_credit || 0)
-                  ).toLocaleString() : 0}
+                  {isLoggedIn
+                    ? (
+                        (userCredits.regular_credit || 0) +
+                        (userCredits.additional_credit || 0) +
+                        (userCredits.event_credit || 0)
+                      ).toLocaleString()
+                    : 0}
                 </Sub2>
               </div>
               <images.ChevronDown
@@ -362,14 +358,14 @@ const MoleculeHeader = () => {
             )}
           </TotalCreditToggle>
 
-{/*   
+          {/*   
           <Notify Alarm  onClick={handleAlertToggle}>
             <img src={images.IconBell} alt="" />
           </Notify> */}
 
           <Notify Alarm={showRedDot} onClick={handleAlertToggle}>
-              <img src={images.IconBell} alt="" />
-            </Notify>
+            <img src={images.IconBell} alt="" />
+          </Notify>
 
           {/* <div className="userInfo">
           유저프로필
@@ -380,41 +376,42 @@ const MoleculeHeader = () => {
       {showAlert && (
         <AlertToogle className={isClosing ? "closing" : ""}>
           <AlertHeader>알림</AlertHeader>
-          <AlertContent style={{ width: '100%' }}>
-              {!isLoggedIn ? ( // 로그인 안한 상태
-                <Messageox NoAlarm style={{ width: '100%' }}>
-                  <Sub3 color="gray500">
-                    알림은 로그인 후, 확인 가능합니다.
-                  </Sub3>
-                </Messageox>
-              ) : alarms.length === 0 ? ( // 로그인 했지만 알림이 없는 상태
-                <Messageox NoAlarm style={{ width: '100%' }}>
-                  <>
-                    <img src={images.NoAlarm} alt="" />
-                    <p>알림이 없습니다.</p>
-                  </>
-                </Messageox>
-              ) : ( // 로그인 상태이고 알림이 있는 경우
-                <React.Fragment>
-                  {alarms.map((item, index) => (
-                    <Messageox key={index}>
-                      <img src={images.CheckMark} alt="" />
-                      <Message>
-                        <MessageContent>
-                          <p>{item.title}</p>
-                          <span>{new Date(item.createTime).toLocaleString()}</span>
-                        </MessageContent>
-               
-                        <ButtonWrap>
-                          <Button onClick={() => handleLinkNavigation(item.link)}>
-                           {item.linkText}
-                          </Button>
-                        </ButtonWrap>
-                      </Message>
-                    </Messageox>
-                  ))}
-                </React.Fragment>
-              )}
+          <AlertContent style={{ width: "100%" }}>
+            {!isLoggedIn ? ( // 로그인 안한 상태
+              <Messageox NoAlarm style={{ width: "100%" }}>
+                <Sub3 color="gray500">알림은 로그인 후, 확인 가능합니다.</Sub3>
+              </Messageox>
+            ) : alarms.length === 0 ? ( // 로그인 했지만 알림이 없는 상태
+              <Messageox NoAlarm style={{ width: "100%" }}>
+                <>
+                  <img src={images.NoAlarm} alt="" />
+                  <p>알림이 없습니다.</p>
+                </>
+              </Messageox>
+            ) : (
+              // 로그인 상태이고 알림이 있는 경우
+              <React.Fragment>
+                {alarms.map((item, index) => (
+                  <Messageox key={index}>
+                    <img src={images.CheckMark} alt="" />
+                    <Message>
+                      <MessageContent>
+                        <p>{item.title}</p>
+                        <span>
+                          {new Date(item.createTime).toLocaleString()}
+                        </span>
+                      </MessageContent>
+
+                      <ButtonWrap>
+                        <Button onClick={() => handleLinkNavigation(item.link)}>
+                          {item.linkText}
+                        </Button>
+                      </ButtonWrap>
+                    </Message>
+                  </Messageox>
+                ))}
+              </React.Fragment>
+            )}
           </AlertContent>
         </AlertToogle>
       )}
@@ -626,16 +623,16 @@ const Notify = styled.div`
     props.Alarm &&
     css`
       &::after {
-       position: absolute;
-       top: -5px;
-       right: -5px;
-       width: 6px;
-       height: 6px;
-       background: ${palette.red};
-       border-radius: 100px;
-       content: '';
-       animation: blink 1.5s infinite;
-     } 
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        width: 6px;
+        height: 6px;
+        background: ${palette.red};
+        border-radius: 100px;
+        content: "";
+        animation: blink 1.5s infinite;
+      }
 
       @keyframes blink {
         0% {
@@ -813,5 +810,5 @@ const Button = styled.div`
   border-radius: 4px;
   border: 1px solid ${palette.primary};
   background: ${palette.white};
-  cursor: pointer;  /* 추가된 부분 */
+  cursor: pointer; /* 추가된 부분 */
 `;

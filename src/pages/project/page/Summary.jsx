@@ -52,7 +52,7 @@ const Summary = () => {
     return pro.P_Idx === parseInt(projectId);
   });
 
-  console.log("MODMODMOD", module);
+  // console.log("MODMODMOD", module);
   var modules = MODULES_ALL_DATA.init.Data.find(function (mod) {
     return mod.P_Idx === parseInt(nowModule.P_Idx) && mod.module === module;
   });
@@ -143,7 +143,11 @@ const Summary = () => {
               </div>
               <div>
                 <img src={Interview} alt="" />
-                <span>FGI<br /><em>(Focus Group Interview)</em></span>
+                <span>
+                  FGI
+                  <br />
+                  <em>(Focus Group Interview)</em>
+                </span>
               </div>
             </Method>
           </BorderBox>
@@ -194,13 +198,13 @@ const Method = styled.div`
   gap: 30px;
 
   > div {
-    width:100%;
-    text-align:center;
+    width: 100%;
+    text-align: center;
 
     + div {
-      padding-top:20px;
-      margin-top:10px;
-      border-top:1px solid ${palette.lineGray};
+      padding-top: 20px;
+      margin-top: 10px;
+      border-top: 1px solid ${palette.lineGray};
     }
   }
 
@@ -211,13 +215,13 @@ const Method = styled.div`
   span {
     display: block;
     font-size: 1rem;
-    font-weight:700;
+    font-weight: 700;
 
     em {
-      font-size:0.875rem;
-      font-style:normal;
-      font-weight:300;
-      color:${palette.gray};
+      font-size: 0.875rem;
+      font-style: normal;
+      font-weight: 300;
+      color: ${palette.gray};
     }
   }
 `;
@@ -273,8 +277,8 @@ const WebzineList = styled.div`
 
     p {
       font-size: 1.125rem;
-      line-height:1.3;
-      color:${palette.DimGray};
+      line-height: 1.3;
+      color: ${palette.DimGray};
       margin: 20px auto 30px;
     }
   }

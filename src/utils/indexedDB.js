@@ -49,7 +49,7 @@ export const saveConversationToIndexedDB = async (
     // 사용자 로그인 시 서버에 저장
     try {
       const token = sessionStorage.getItem("accessToken"); // 액세스 토큰을 세션에서 가져오기
-      // // console.log("token", token);
+      // console.log("token", token);
 
       if (!token) {
         throw new Error("액세스 토큰이 존재하지 않습니다.");
@@ -58,8 +58,8 @@ export const saveConversationToIndexedDB = async (
       if (!conversationId) {
         throw new Error("대화 ID가 필요합니다.");
       }
-      // // console.log("saveConversationToIndexedDB");
-      // // console.log(conversation);
+      // console.log("saveConversationToIndexedDB");
+      // console.log(conversation);
       // 서버에 업데이트 요청을 보냄 (PUT 메서드 사용)
       const PUT_DATA = {
         id: conversationId,
@@ -70,7 +70,7 @@ export const saveConversationToIndexedDB = async (
         chat_data: conversation,
         expert_index: expertIndex,
       };
-      // // console.log("🚀 ~ PUT_DATA:", PUT_DATA);
+      // console.log("🚀 ~ PUT_DATA:", PUT_DATA);
       await axios.put(`https://wishresearch.kr/panels/update_chat`, PUT_DATA, {
         headers: {
           Authorization: `Bearer ${token}`, // Bearer 토큰을 헤더에 추가
@@ -108,12 +108,12 @@ export const getConversationByIdFromIndexedDB = async (id, isLoggedIn) => {
           },
         }
       );
-      // // console.log("response");
+      // console.log("response");
 
-      // // console.log(response);
+      // console.log(response);
       // setSelectedConversation(response.data); // 선택된 대화 내용 저장
 
-      // // console.log(
+      // console.log(
       //   "🚀 ~ getConversationByIdFromIndexedDB ~ response.data.chat_data:",
       //   response.data.chat_data
       // );
@@ -179,8 +179,8 @@ export const getAllRecordsFromIndexedDB = async () => {
 export const createChatOnServer = async () => {
   try {
     const token = sessionStorage.getItem("accessToken"); // 세션에서 액세스 토큰 가져오기
-    // // console.log("token");
-    // // console.log(token);
+    // console.log("token");
+    // console.log(token);
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
@@ -197,7 +197,7 @@ export const createChatOnServer = async () => {
       }
     );
 
-    // // console.log(response.data.inserted_id);
+    // console.log(response.data.inserted_id);
     return response.data.inserted_id; // 서버로부터 가져온 conversationId 반환
   } catch (error) {
     console.error("Error creating chat on server:", error);
@@ -216,8 +216,7 @@ export const createProjectOnServer = async (isLoggedIn) => {
   if (isLoggedIn) {
     try {
       const token = sessionStorage.getItem("accessToken"); // 세션에서 액세스 토큰 가져오기
-      // // console.log("token");
-      // // console.log(token);
+
       if (!token) {
         throw new Error("액세스 토큰이 존재하지 않습니다.");
       }
@@ -245,7 +244,7 @@ export const createProjectOnServer = async (isLoggedIn) => {
         }
       );
 
-      // // console.log(response.data.inserted_id);
+      // console.log(response.data.inserted_id);
       return response.data.inserted_id; // 서버로부터 가져온 conversationId 반환
     } catch (error) {
       console.error("Error creating chat on server:", error);
@@ -260,13 +259,13 @@ export const updateProjectOnServer = async (
   updateData,
   isLoggedIn
 ) => {
-  // // console.log("🚀 ~ projectId:", projectId);
-  // // console.log("🚀 ~ updateData:", updateData);
+  // console.log("🚀 ~ projectId:", projectId);
+  // console.log("🚀 ~ updateData:", updateData);
   if (isLoggedIn) {
     // 사용자 로그인 시 서버에 저장
     try {
       const token = sessionStorage.getItem("accessToken"); // 액세스 토큰을 세션에서 가져오기
-      // // console.log("token", token);
+      // console.log("token", token);
 
       if (!token) {
         throw new Error("액세스 토큰이 존재하지 않습니다.");
@@ -307,7 +306,7 @@ export const getProjectByIdFromIndexedDB = async (
   projectLoadButtonState
 ) => {
   //두개 매개변수 받음
-  // // console.log("🚀 ~ getProjectByIdFromIndexedDB ~ projectId:", projectId);
+  // console.log("🚀 ~ getProjectByIdFromIndexedDB ~ projectId:", projectId);
 
   if (projectLoadButtonState) {
     // 사용자 로그인 시 서버에서 데이터 가져오기
@@ -356,8 +355,8 @@ export const getProjectListByIdFromIndexedDB = async (isLoggedIn) => {
 export const createProjectReportOnServer = async () => {
   try {
     const token = sessionStorage.getItem("accessToken"); // 세션에서 액세스 토큰 가져오기
-    // // console.log("token");
-    // // console.log(token);
+    // console.log("token");
+    // console.log(token);
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
@@ -374,7 +373,7 @@ export const createProjectReportOnServer = async () => {
       }
     );
 
-    // // console.log(response.data.inserted_id);
+    // console.log(response.data.inserted_id);
     return response.data.inserted_id; // 서버로부터 가져온 conversationId 반환
   } catch (error) {
     console.error("Error creating chat on server:", error);
@@ -388,13 +387,13 @@ export const updateProjectReportOnServer = async (
   updateData,
   isLoggedIn
 ) => {
-  // // console.log("🚀 ~ reportId:", reportId);
-  // // console.log("🚀 ~ updateData:", updateData);
+  // console.log("🚀 ~ reportId:", reportId);
+  // console.log("🚀 ~ updateData:", updateData);
   if (isLoggedIn) {
     // 사용자 로그인 시 서버에 저장
     try {
       const token = sessionStorage.getItem("accessToken"); // 액세스 토큰을 세션에서 가져오기
-      // // console.log("token", token);
+      // console.log("token", token);
 
       if (!token) {
         throw new Error("액세스 토큰이 존재하지 않습니다.");
@@ -438,7 +437,7 @@ export const getProjectReportByIdFromIndexedDB = async (
   reportId,
   reportLoadButtonState
 ) => {
-  // // console.log("🚀 ~ reportId:", reportId);
+  // console.log("🚀 ~ reportId:", reportId);
 
   if (reportLoadButtonState) {
     // 사용자 로그인 시 서버에서 데이터 가져오기
@@ -452,7 +451,7 @@ export const getProjectReportByIdFromIndexedDB = async (
           },
         }
       );
-      // // console.log("🚀 ~ response:", response);
+      // console.log("🚀 ~ response:", response);
 
       return response.data;
     } catch (error) {
@@ -464,12 +463,12 @@ export const getProjectReportByIdFromIndexedDB = async (
 
 // AI Person 요청 업데이트 api
 export const createRequestPersonOnServer = async (updateData, isLoggedIn) => {
-  // // console.log("🚀 ~ updateData:", updateData);
+  // console.log("🚀 ~ updateData:", updateData);
   if (isLoggedIn) {
     // 사용자 로그인 시 서버에 저장
     try {
       const token = sessionStorage.getItem("accessToken"); // 액세스 토큰을 세션에서 가져오기
-      // // console.log("token", token);
+      // console.log("token", token);
 
       if (!token) {
         throw new Error("액세스 토큰이 존재하지 않습니다.");
@@ -491,7 +490,7 @@ export const createRequestPersonOnServer = async (updateData, isLoggedIn) => {
         }
       );
 
-      // // console.log(response.data.inserted_id);
+      // console.log(response.data.inserted_id);
       return response.data.inserted_id; // 서버로부터 가져온 conversationId 반환
     } catch (error) {
       console.error("Error creating chat on server:", error);
@@ -502,12 +501,12 @@ export const createRequestPersonOnServer = async (updateData, isLoggedIn) => {
 
 // AI Persona 요청 업데이트 api
 export const createRequestPersonaOnServer = async (updateData, isLoggedIn) => {
-  // // console.log("🚀 ~ updateData:", updateData);
+  // console.log("🚀 ~ updateData:", updateData);
   if (isLoggedIn) {
     // 사용자 로그인 시 서버에 저장
     try {
       const token = sessionStorage.getItem("accessToken"); // 액세스 토큰을 세션에서 가져오기
-      // // console.log("token", token);
+      // console.log("token", token);
 
       if (!token) {
         throw new Error("액세스 토큰이 존재하지 않습니다.");
@@ -529,7 +528,7 @@ export const createRequestPersonaOnServer = async (updateData, isLoggedIn) => {
         }
       );
 
-      // // console.log(response.data.inserted_id);
+      // console.log(response.data.inserted_id);
       return response.data.inserted_id; // 서버로부터 가져온 conversationId 반환
     } catch (error) {
       console.error("Error creating chat on server:", error);

@@ -238,7 +238,7 @@ const PageMyProject = () => {
             },
           }
         );
-        console.log("🚀 ~ fetchUserInfo ~ userPageCnt:", userPageCnt);
+        // console.log("🚀 ~ fetchUserInfo ~ userPageCnt:", userPageCnt);
         setUserPageCnt(userPageCnt.data);
 
         const projectListData = await axios.get(
@@ -273,10 +273,7 @@ const PageMyProject = () => {
             },
           }
         );
-        console.log(
-          "🚀 ~ fetchUserInfo ~ personaListData:",
-          personaListData.data
-        );
+
         setUserPersonaList(personaListData.data);
       } catch (err) {
         console.error("사용자 정보 조회 실패:", err);

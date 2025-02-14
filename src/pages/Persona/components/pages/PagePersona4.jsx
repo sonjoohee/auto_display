@@ -242,10 +242,7 @@ const PagePersona4 = () => {
           projectId,
           reportLoadButtonState
         );
-        console.log(
-          "🚀 ~ loadProjectReport ~ savedProjectInfo:",
-          savedProjectInfo
-        );
+
         if (savedProjectInfo) {
           setBusinessAnalysis(savedProjectInfo.businessAnalysis);
           setReportList(savedProjectInfo.reportList);

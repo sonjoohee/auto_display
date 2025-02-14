@@ -153,7 +153,10 @@ const OrganismPanelSectionInstruction = () => {
     setIsPanelNull(true);
 
     const fetchInitialPanelList = async () => {
-      // console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
+      // console.log(
+        "process.env.REACT_APP_SERVER_URL",
+        process.env.REACT_APP_SERVER_URL
+      );
       try {
         const response = await axios.get(
           `${process.env.REACT_APP_SERVER_URL}/panels/list?page=1&size=20&searchBehabioralType=&searchUtilizationTime=&searchGender=&searchAge=&searchTag=&searchMarriage=&searchChildM=&searchChildF=`
@@ -162,7 +165,7 @@ const OrganismPanelSectionInstruction = () => {
         setTotalPanelCount(response.data.count); // 전체 패널 개수
         setFilterdPanelCount(response.data.count); // 필터링된 패널 개수
 
-        // console.log(panelList)
+        // console.log(panelList);
         // console.log(response);
 
         if (response.data.results.length < 20) setIsAllPanelsLoaded(true); // 20개 미만의 데이터가 오면 동작
@@ -185,7 +188,10 @@ const OrganismPanelSectionInstruction = () => {
 
       setIsLoading(true); // 검색 시작 시 로딩 상태 활성화
       const fetchAdditionalPanelList = async () => {
-        // console.log("process.env.REACT_APP_SERVER_URL", process.env.REACT_APP_SERVER_URL);
+        // console.log(
+          "process.env.REACT_APP_SERVER_URL",
+          process.env.REACT_APP_SERVER_URL
+        );
 
         try {
           let apiUrl = ``;
@@ -206,8 +212,8 @@ const OrganismPanelSectionInstruction = () => {
           ]); // 리스트 초기화 하지 않고 아래에 붙이기
           setFilterdPanelCount(response.data.count); // 필터링된 패널 개수
 
-          // console.log(panelList)
-          // console.log(response)
+          // console.log(panelList);
+          // console.log(response);
 
           // 20개 미만의 패널이 오거나, 더 이상 불러올 패널이 없을 때 활성화
           if (
