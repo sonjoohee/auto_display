@@ -518,7 +518,8 @@ export const CUSTOM_PERSONA_LIST = atom([]);
 
 export const ACCESSABLE_EXPERT = atom(false);
 
-export const TARGET_DISCOVERY_INFO = atom({
+export const TARGET_DISCOVERY_INFO = atom({ 
+  type: "",
   business: "",    
   target: "",
   specific_situation: "",

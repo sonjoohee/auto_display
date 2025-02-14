@@ -1896,3 +1896,140 @@ export const AlarmList = async (isLoggedIn) => {
     throw error;
   }
 };
+
+
+//타겟 디스커버리 페르소나 찾기
+export const InterviewXTargetDiscoveryPersonaRequest = async (
+  data,
+  isLoggedIn
+) => {
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/panels/tool/create_tool",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+  
+    console.log("타겟 디스커버리 페르소나 찾기 API 응답:", response);
+    const result = await getTermkeyResult(response.data.objectId);
+    console.log("타겟 디스커버리 페르소나 찾기 API 응답:", result);
+
+    return result;
+  } catch (error) {
+    console.error("타겟 디스커버리 페르소나 찾기 API 중 오류 발생:", error);
+    console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
+
+//타겟 디스커버리 페르소나 시나리오
+export const  InterviewXTargetDiscoveryScenarioRequest = async (
+  data,
+  isLoggedIn
+) => {
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/project/panels/tool/create_tool",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+    return result;
+  } catch (error) {
+    console.error("타겟 디스커버리 페르소나 시나리오 API 중 오류 발생:", error);
+    console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
+//타겟 디스커버리 최종 보고서
+export const  InterviewXTargetDiscoveryFinalReportRequest= async (
+  data,
+  isLoggedIn
+) => {
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/panels/tool/create_tool",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+    return result;
+  } catch (error) {
+    console.error("타겟 디스커버리 최종 보고서 API 중 오류 발생:", error);
+    console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
