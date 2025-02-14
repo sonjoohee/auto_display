@@ -510,7 +510,10 @@ const PageMyProject = () => {
               </MyDashboardHeader> */}
 
               <MyDashboardContent>
-                <DashboardCard>
+                <DashboardCard
+                  onClick={() => setActiveTab("persona")}
+                  style={{ cursor: "pointer" }}
+                >
                   <Body2 color="gray500">요청 페르소나</Body2>
                   <DashboardAmount>
                     <H3 color="gray800">
@@ -525,7 +528,10 @@ const PageMyProject = () => {
                     ) : null}
                   </DashboardAmount>
                 </DashboardCard>
-                <DashboardCard>
+                <DashboardCard
+                  onClick={() => setActiveTab("persona")}
+                  style={{ cursor: "pointer" }}
+                >
                   <Body2 color="gray500">생성 완료 페르소나</Body2>
                   <DashboardAmount>
                     <H3 color="gray800">{userPageCnt.complete_count || 0}건</H3>
@@ -536,7 +542,10 @@ const PageMyProject = () => {
                     ) : null}
                   </DashboardAmount>
                 </DashboardCard>
-                <DashboardCard>
+                <DashboardCard
+                  onClick={() => setActiveTab("project")}
+                  style={{ cursor: "pointer" }}
+                >
                   <Body2 color="gray500">보고서 생성 건(수)</Body2>
                   <DashboardAmount>
                     <H3 color="gray800">{userPageCnt.report_count || 0}건</H3>{" "}

@@ -82,7 +82,7 @@ import {
   UserCreditUse,
   UserCreditInfo,
 } from "../../../../utils/indexedDB";
-
+import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 const FULL_DEFINITION_TEXT =
   "사용자 트렌드 민감도 분석은 사용자가 시장의 최신 트렌드에 얼마나 빠르고 효과적으로 반응하는지를 측정하는 방법론입니다. 이 분석은 사용자가 새로운 트렌드를 어떻게 인식하고, 그 트렌드에 따라 행동이 어떻게 변화하는지 파악하는 데 중점을 둡니다.";
 
@@ -154,6 +154,8 @@ const PagePersona3Select = () => {
 
   const [isIndepthEnabled, setIsIndepthEnabled] = useState(false);
 
+  useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
+
   useEffect(() => {
     // 접근 가능 여부를 확인하여 차단 로직 수행
     if (!isPersonaAccessible) {
@@ -164,7 +166,7 @@ const PagePersona3Select = () => {
     return () => {
       setIsPersonaAccessible(false); // 페이지 떠날 때 접근 불가로 설정
     };
-  }, []);
+  }, [navigate]);
 
   // 배경 scroll 방지
   useEffect(() => {
